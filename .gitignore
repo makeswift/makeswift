@@ -1,0 +1,55 @@
+# Node.js / NPM
+node_modules
+
+# Log files
+*.log
+yarn-debug.log*
+yarn-error.log*
+
+# Compiled output
+dist
+lib
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+!/.env
+
+# For local patches
+.local/
+
+# Cache
+.cache
+.eslintcache
+.stylelintcache
+
+# VS Code
+# https://github.com/github/gitignore/blob/master/Global/VisualStudioCode.gitignore
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Local History for Visual Studio Code
+.history/
+
+# Other editors and IDEs
+.idea
+**/.projections.json
+
+# macOS
+.DS_Store
+
+# Storybook
+storybook-static
+
+# Next.js
+.next
+
+# Vercel
+.vercel
+
+# Turbo
+.turbo
