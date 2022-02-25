@@ -85,6 +85,8 @@
     "@types/styled-components": "^5.1.5",
     "@types/use-sync-external-store": "^0.0.3",
     "css-box-model": "^1.2.1",
+    "csstype": "^2.6.5",
+    "framer-motion": "^6.0.0",
     "immutable": "^4.0.0-rc.12",
     "ot-json0": "^1.1.0",
     "polished": "3.0.3",

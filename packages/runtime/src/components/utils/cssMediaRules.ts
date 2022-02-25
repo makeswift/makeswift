@@ -1,4 +1,22 @@
 import { css, CSSObject } from 'styled-components'
+import {
+  WidthProperty,
+  MarginProperty,
+  MarginTopProperty,
+  MarginRightProperty,
+  MarginBottomProperty,
+  MarginLeftProperty,
+  PaddingProperty,
+  PaddingTopProperty,
+  PaddingRightProperty,
+  PaddingBottomProperty,
+  PaddingLeftProperty,
+  BorderRadiusProperty,
+  BorderTopLeftRadiusProperty,
+  BorderTopRightRadiusProperty,
+  BorderBottomLeftRadiusProperty,
+  BorderBottomRightRadiusProperty,
+} from 'csstype'
 
 import {
   ResponsiveValue,
@@ -12,6 +30,12 @@ import {
   join as joinResponsiveValues,
 } from './devices'
 import { getIndexes } from './columns'
+import {
+  BorderRadiusValue,
+  MarginValue,
+  PaddingValue,
+  WidthValue,
+} from '../../prop-controllers/descriptors'
 
 type CSSRules = ReturnType<typeof css>
 
@@ -37,6 +61,151 @@ export function cssMediaRules<V, A extends ReadonlyArray<ResponsiveValue<V> | nu
         }
       `
     }, css`` as CSSRules)
+}
+
+export function cssWidth(
+  defaultValue: LengthValue | WidthProperty<string | number> = '100%',
+): (props: { width?: WidthValue }) => CSSRules {
+  return props => css`
+    max-width: 100%;
+    ${cssMediaRules(
+      [props.width] as const,
+      ([width = defaultValue]) => css`
+        width: ${typeof width === 'object' ? `${width.value}${width.unit}` : width};
+      `,
+    )}
+  `
+}
+
+function getMarginSide(marginSide: LengthValue | MarginProperty<string | number>) {
+  return typeof marginSide === 'object' ? `${marginSide.value}${marginSide.unit}` : marginSide
+}
+
+export function cssMargin(
+  defaultValue: {
+    marginTop?: LengthValue | MarginTopProperty<string | number>
+    marginRight?: LengthValue | MarginRightProperty<string | number>
+    marginBottom?: LengthValue | MarginBottomProperty<string | number>
+    marginLeft?: LengthValue | MarginLeftProperty<string | number>
+  } = {},
+): (props: { margin?: MarginValue }) => CSSRules {
+  const defaultMarginTop = defaultValue.marginTop === undefined ? 0 : defaultValue.marginTop
+  const defaultMarginRight =
+    defaultValue.marginRight === undefined ? 'auto' : defaultValue.marginRight
+  const defaultMarginBottom =
+    defaultValue.marginBottom === undefined ? 0 : defaultValue.marginBottom
+  const defaultMarginLeft = defaultValue.marginLeft === undefined ? 'auto' : defaultValue.marginLeft
+
+  return props => css`
+    ${cssMediaRules(
+      [props.margin] as const,
+      ([
+        {
+          marginTop,
+          marginRight,
+          marginBottom,
+          marginLeft,
+        } = {} as ExtractResponsiveValue<MarginValue>,
+      ]) => css`
+        margin-top: ${getMarginSide(marginTop || defaultMarginTop)};
+        margin-right: ${getMarginSide(marginRight || defaultMarginRight)};
+        margin-bottom: ${getMarginSide(marginBottom || defaultMarginBottom)};
+        margin-left: ${getMarginSide(marginLeft || defaultMarginLeft)};
+      `,
+    )}
+  `
+}
+
+function getPaddingSide(paddingSide: LengthValue | PaddingProperty<string | number>) {
+  return typeof paddingSide === 'object' ? `${paddingSide.value}${paddingSide.unit}` : paddingSide
+}
+
+export function cssPadding(
+  defaultValue: {
+    paddingTop?: LengthValue | PaddingTopProperty<string | number>
+    paddingRight?: LengthValue | PaddingRightProperty<string | number>
+    paddingBottom?: LengthValue | PaddingBottomProperty<string | number>
+    paddingLeft?: LengthValue | PaddingLeftProperty<string | number>
+  } = {},
+): (props: { padding?: PaddingValue }) => CSSRules {
+  const defaultPaddingTop = defaultValue.paddingTop === undefined ? 0 : defaultValue.paddingTop
+  const defaultPaddingRight =
+    defaultValue.paddingRight === undefined ? 0 : defaultValue.paddingRight
+  const defaultPaddingBottom =
+    defaultValue.paddingBottom === undefined ? 0 : defaultValue.paddingBottom
+  const defaultPaddingLeft = defaultValue.paddingLeft === undefined ? 0 : defaultValue.paddingLeft
+
+  return props => css`
+    ${cssMediaRules(
+      [props.padding] as const,
+      ([
+        {
+          paddingTop,
+          paddingRight,
+          paddingBottom,
+          paddingLeft,
+        } = {} as ExtractResponsiveValue<PaddingValue>,
+      ]) => css`
+        padding-top: ${getPaddingSide(paddingTop || defaultPaddingTop)};
+        padding-right: ${getPaddingSide(paddingRight || defaultPaddingRight)};
+        padding-bottom: ${getPaddingSide(paddingBottom || defaultPaddingBottom)};
+        padding-left: ${getPaddingSide(paddingLeft || defaultPaddingLeft)};
+      `,
+    )}
+  `
+}
+
+function getBorderRadiusCorner(
+  borderRadiusCorner: LengthValue | BorderRadiusProperty<string | number>,
+) {
+  return typeof borderRadiusCorner === 'object'
+    ? `${borderRadiusCorner.value}${borderRadiusCorner.unit}`
+    : borderRadiusCorner
+}
+
+export function cssBorderRadius(
+  defaultValue: {
+    borderTopLeftRadius?: LengthValue | BorderTopLeftRadiusProperty<string | number>
+    borderTopRightRadius?: LengthValue | BorderTopRightRadiusProperty<string | number>
+    borderBottomLeftRadius?: LengthValue | BorderBottomLeftRadiusProperty<string | number>
+    borderBottomRightRadius?: LengthValue | BorderBottomRightRadiusProperty<string | number>
+  } = {},
+): (props: { borderRadius?: BorderRadiusValue }) => CSSRules {
+  const defaultBorderTopLeftRadius =
+    defaultValue.borderTopLeftRadius === undefined ? 0 : defaultValue.borderTopLeftRadius
+  const defaultBorderTopRightRadius =
+    defaultValue.borderTopRightRadius === undefined ? 0 : defaultValue.borderTopRightRadius
+  const defaultPaddingBottom =
+    defaultValue.borderBottomLeftRadius === undefined ? 0 : defaultValue.borderBottomLeftRadius
+  const defaultPaddingLeft =
+    defaultValue.borderBottomRightRadius === undefined ? 0 : defaultValue.borderBottomRightRadius
+
+  return props => css`
+    ${cssMediaRules(
+      [props.borderRadius] as const,
+      ([
+        {
+          borderTopLeftRadius,
+          borderTopRightRadius,
+          borderBottomLeftRadius,
+          borderBottomRightRadius,
+        } = {} as ExtractResponsiveValue<BorderRadiusValue>,
+      ]) => css`
+        border-top-left-radius: ${getBorderRadiusCorner(
+          borderTopLeftRadius || defaultBorderTopLeftRadius,
+        )};
+        border-top-right-radius: ${getBorderRadiusCorner(
+          borderTopRightRadius || defaultBorderTopRightRadius,
+        )};
+        border-bottom-left-radius: ${getBorderRadiusCorner(
+          borderBottomLeftRadius || defaultPaddingBottom,
+        )};
+        border-bottom-right-radius: ${getBorderRadiusCorner(
+          borderBottomRightRadius || defaultPaddingLeft,
+        )};
+      `,
+    )}
+  `
 }
 
 const floor = (d: number) => (v: number): number => Math.floor(10 ** d * v) / 10 ** d
