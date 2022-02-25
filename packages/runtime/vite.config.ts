@@ -8,8 +8,8 @@ export default defineConfig({
     emptyOutDir: false,
     sourcemap: true,
     minify: false,
-    // @ts-expect-error: we provide `build.rollupOptions.input` so `build.lib.entry` isn't required.
-    lib: { formats: ['es', 'cjs'] },
+    // NOTE(miguel): `lib.entry` is unused since we provide `rollupOptions.input`.
+    lib: { entry: '', formats: ['es', 'cjs'] },
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, 'src'),
