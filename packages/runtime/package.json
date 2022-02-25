@@ -5,6 +5,9 @@
   "main": "dist/main.cjs",
   "module": "dist/main.es",
   "types": "dist/types",
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
       "import": "./dist/main.es.js",
