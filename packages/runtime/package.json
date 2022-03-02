@@ -32,35 +32,17 @@
   "typesVersions": {
     "*": {
       "prop-controllers": [
-        "src/prop-controllers/index.ts"
+        "dist/types/prop-controllers/index.d.ts"
       ],
       "react": [
-        "src/react.ts"
+        "dist/types/react.d.ts"
       ],
       "box-model": [
-        "src/box-model.ts"
+        "dist/types/box-model.d.ts"
       ],
       "components": [
-        "src/components/index.ts"
+        "dist/types/components/index.d.ts"
       ]
-    }
-  },
-  "publishConfig": {
-    "typesVersions": {
-      "*": {
-        "prop-controllers": [
-          "dist/types/prop-controllers/index.d.ts"
-        ],
-        "react": [
-          "dist/types/react.d.ts"
-        ],
-        "box-model": [
-          "dist/types/box-model.d.ts"
-        ],
-        "components": [
-          "dist/types/components/index.d.ts"
-        ]
-      }
     }
   },
   "scripts": {
