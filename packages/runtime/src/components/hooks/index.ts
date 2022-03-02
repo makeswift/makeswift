@@ -1,5 +1,7 @@
 export * from './useBackgrounds'
 export * from './useBorder'
 export * from './useBoxShadow'
+export * from './useColor'
 export * from './useFile'
 export * from './useMediaQuery'
+export * from './usePage'

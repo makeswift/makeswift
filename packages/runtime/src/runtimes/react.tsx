@@ -108,6 +108,12 @@ export function RuntimeProvider({
   return <Context.Provider value={store}>{children}</Context.Provider>
 }
 
+const DocumentContext = createContext<string | null>(null)
+
+function useDocumentKey(): string | null {
+  return useContext(DocumentContext)
+}
+
 type State = ReactPage.State | ReactBuilderPreview.State
 
 function useSelector<R>(selector: (state: State) => R): R {
@@ -118,6 +124,16 @@ function useSelector<R>(selector: (state: State) => R): R {
 
 function useComponent(type: string): ReactPage.ComponentType | null {
   return useSelector(state => ReactPage.getReactComponent(state, type))
+}
+
+export function useElementId(elementKey: string | null | undefined): string | null {
+  const documentKey = useDocumentKey()
+
+  return useSelector(state =>
+    documentKey == null || elementKey == null
+      ? null
+      : ReactPage.getElementId(state, documentKey, elementKey),
+  )
 }
 
 function useDocumentRootElement(documentKey: string): ReactPage.Element | null {
@@ -223,5 +239,9 @@ export const Document = memo(function Document({ documentKey }: DocumentProps): 
     )
   }
 
-  return <Element element={documentRootElement} />
+  return (
+    <DocumentContext.Provider value={documentKey}>
+      <Element element={documentRootElement} />
+    </DocumentContext.Provider>
+  )
 })

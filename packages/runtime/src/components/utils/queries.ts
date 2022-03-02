@@ -40,3 +40,12 @@ export const FILES_BY_ID = gql`
     }
   }
 `
+
+export const PAGE_PATHNAMES_BY_ID = gql`
+  query PagePathnamesById($ids: [ID!]!) {
+    pagePathnamesById(ids: $ids) {
+      id
+      pathname
+    }
+  }
+`
