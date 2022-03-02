@@ -13,7 +13,7 @@ export function getInitialState({
   return propControllerDescriptors
 }
 
-function getPropControllerDescriptors(
+export function getPropControllerDescriptors(
   state: State,
 ): Map<string, Record<string, PropControllerDescriptor>> {
   return state

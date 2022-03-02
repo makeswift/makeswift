@@ -7,6 +7,7 @@ import {
   BorderValue,
   ElementIDValue,
   ImageValue,
+  LinkValue,
   MarginValue,
   PaddingValue,
   ResponsiveOpacityValue,
@@ -33,11 +34,13 @@ import {
 } from '../hooks'
 import { placeholders } from '../utils/placeholders'
 import { useIsInBuilder } from '../../react'
+import { Link } from '../Link'
 
 type Props = {
   id?: ElementIDValue
   file?: ImageValue
   altText?: TextInputValue
+  link?: LinkValue
   width?: WidthValue
   margin?: MarginValue
   padding?: PaddingValue
@@ -84,6 +87,7 @@ const ImageContainer = styled.div<{
   borderRadius: Props['borderRadius']
   boxShadow?: BoxShadowPropControllerData | null | undefined
   opacity: Props['opacity']
+  link?: Props['link']
   dimensions: { width: number; height: number }
 }>`
   line-height: 0;
@@ -122,6 +126,7 @@ export default forwardRef(function Image(
     border,
     borderRadius,
     altText,
+    link,
     opacity,
     boxShadow,
     placeholder = placeholders.image,
@@ -161,6 +166,8 @@ export default forwardRef(function Image(
 
   return (
     <ImageContainer
+      as={link ? Link : 'div'}
+      link={link}
       dimensions={dimensions}
       ref={ref}
       id={id}
