@@ -98,6 +98,7 @@ export const Types = {
   Image: 'Image',
   Images: 'Images',
   Link: 'Link',
+  List: 'List',
   Margin: 'Margin',
   NavigationLinks: 'NavigationLinks',
   Number: 'Number',
@@ -110,6 +111,7 @@ export const Types = {
   ResponsiveSelect: 'ResponsiveSelect',
   RichText: 'RichText',
   Shadows: 'Shadows',
+  Shape: 'Shape',
   SocialLinks: 'SocialLinks',
   Table: 'Table',
   TableFormFields: 'TableFormFields',
@@ -348,6 +350,26 @@ type LinkDescriptor<_T = LinkValue> = { type: typeof Types.Link; options: LinkOp
 
 export function Link(options: LinkOptions = {}): LinkDescriptor {
   return { type: Types.Link, options }
+}
+
+type ListValueItem<T extends Data> = { id: string; value?: T }
+
+type ListValue<T extends Data = Data> = ListValueItem<T>[]
+
+type ListOptions<T extends Data> = Options<{
+  type: PanelDescriptor<T>
+  label?: string
+  preset?: ListValue<T>
+  defaultValue?: ListValue<T>
+}>
+
+type ListDescriptor<T extends ListValue> = {
+  type: typeof Types.List
+  options: ListOptions<T[number]['value']>
+}
+
+export function List<T extends Data>(options: ListOptions<T>): ListDescriptor<ListValue<T>> {
+  return { type: Types.List, options }
 }
 
 type MarginSide = { value: number; unit: 'px' } | 'auto'
@@ -633,6 +655,24 @@ export function Shadows(options: ShadowsOptions = {}): ShadowsDescriptor {
   return { type: Types.Shadows, options }
 }
 
+export type ShapeValue<T extends Data = Data> = Record<string, T>
+
+type ShapeOptions<T extends Record<string, Descriptor>> = {
+  type: T
+  preset?: { [K in keyof T]?: DescriptorValueType<T[K]> }
+}
+
+type ShapeDescriptor<_T extends Record<string, Data>, U extends Record<string, Descriptor>> = {
+  type: typeof Types.Shape
+  options: ShapeOptions<U>
+}
+
+export function Shape<T extends Record<string, Descriptor>>(
+  options: ShapeOptions<T>,
+): ShapeDescriptor<{ [K in keyof T]?: DescriptorValueType<T[K]> }, T> {
+  return { type: Types.Shape, options }
+}
+
 type SocialLinkType =
   | 'angellist'
   | 'codepen'
@@ -793,6 +833,7 @@ export type Descriptor<T extends Data = Data> =
   | ImageDescriptor<T>
   | ImagesDescriptor<T>
   | LinkDescriptor<T>
+  | ListDescriptor<T extends ListValue ? T : ListValue>
   | MarginDescriptor<T>
   | NavigationLinksDescriptor<T>
   | NumberDescriptor<T>
@@ -809,6 +850,7 @@ export type Descriptor<T extends Data = Data> =
     >
   | RichTextDescriptor<T>
   | ShadowsDescriptor<T>
+  | ShapeDescriptor<T extends ShapeValue ? T : ShapeValue, any>
   | SocialLinksDescriptor<T>
   | TableDescriptor<T>
   | TableFormFieldsDescriptor<T>
@@ -817,5 +859,42 @@ export type Descriptor<T extends Data = Data> =
   | TextStyleDescriptor<T>
   | VideoDescriptor<T>
   | WidthDescriptor<T>
+
+type PanelDescriptorType =
+  | typeof Types.Backgrounds
+  | typeof Types.ResponsiveIconRadioGroup
+  | typeof Types.Margin
+  | typeof Types.Padding
+  | typeof Types.Border
+  | typeof Types.Shadows
+  | typeof Types.GapY
+  | typeof Types.GapX
+  | typeof Types.BorderRadius
+  | typeof Types.Checkbox
+  | typeof Types.TextInput
+  | typeof Types.Link
+  | typeof Types.List
+  | typeof Types.Shape
+  | typeof Types.ResponsiveSelect
+  | typeof Types.ResponsiveColor
+  | typeof Types.TextStyle
+  | typeof Types.Images
+  | typeof Types.ResponsiveNumber
+  | typeof Types.Number
+  | typeof Types.Date
+  | typeof Types.Font
+  | typeof Types.TextArea
+  | typeof Types.Table
+  | typeof Types.RichText
+  | typeof Types.Image
+  | typeof Types.ResponsiveOpacity
+  | typeof Types.SocialLinks
+  | typeof Types.Video
+  | typeof Types.NavigationLinks
+
+export type PanelDescriptor<T extends Data = Data> = Extract<
+  Descriptor<T>,
+  { type: PanelDescriptorType }
+>
 
 export type DescriptorValueType<T extends Descriptor> = T extends Descriptor<infer U> ? U : never

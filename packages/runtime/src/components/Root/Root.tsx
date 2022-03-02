@@ -11,6 +11,7 @@ import {
 } from '../../prop-controllers/descriptors'
 import { Element } from '../../react'
 import { cssGridItem } from '../utils/cssMediaRules'
+import BackgroundsContainer from '../BackgroundsContainer'
 
 const Normalize = createGlobalStyle`
   html {
@@ -44,29 +45,31 @@ type Props = {
 }
 
 export default forwardRef(function Page(
-  { children, rowGap, columnGap }: Props,
+  { children, backgrounds, rowGap, columnGap }: Props,
   ref: Ref<HTMLDivElement>,
 ) {
   return (
     <>
       <Normalize />
-      <Grid ref={ref}>
-        {children && children.elements.length > 0 ? (
-          children.elements.map((child, index) => (
-            <GridItem
-              key={child.key}
-              grid={children.columns}
-              index={index}
-              columnGap={columnGap}
-              rowGap={rowGap}
-            >
-              <Element element={child} />
-            </GridItem>
-          ))
-        ) : (
-          <Placeholder />
-        )}
-      </Grid>
+      <BackgroundsContainer ref={ref} style={{ background: 'white' }} backgrounds={backgrounds}>
+        <Grid>
+          {children && children.elements.length > 0 ? (
+            children.elements.map((child, index) => (
+              <GridItem
+                key={child.key}
+                grid={children.columns}
+                index={index}
+                columnGap={columnGap}
+                rowGap={rowGap}
+              >
+                <Element element={child} />
+              </GridItem>
+            ))
+          ) : (
+            <Placeholder />
+          )}
+        </Grid>
+      </BackgroundsContainer>
     </>
   )
 })

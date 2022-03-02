@@ -22,7 +22,7 @@ export default defineConfig({
         entryFileNames: '[name].[format].js',
         chunkFileNames: '[name].[format].js',
       },
-      external: ['react', 'styled-components'],
+      external: id => /^(@apollo\/client|next|react|styled-components)($|\/)/.test(id),
     },
   },
 })
