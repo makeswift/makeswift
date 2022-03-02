@@ -6,3 +6,4 @@ export type {
   PropControllerDescriptor,
   PropControllerDescriptorValueType,
 } from './prop-controllers'
+export type { Element } from './state/react-page'
