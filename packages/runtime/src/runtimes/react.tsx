@@ -124,6 +124,10 @@ function useDocumentRootElement(documentKey: string): ReactPage.Element | null {
   return useSelector(state => ReactPage.getDocumentRootElement(state, documentKey))
 }
 
+export function useIsInBuilder(): boolean {
+  return useSelector(state => ReactPage.getIsInBuilder(state))
+}
+
 type Dispatch = ReactPage.Dispatch & ReactBuilderPreview.Dispatch
 
 function useDispatch(): Dispatch {

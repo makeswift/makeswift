@@ -36,6 +36,13 @@ import {
   PaddingValue,
   WidthValue,
 } from '../../prop-controllers/descriptors'
+import { colorToString } from './colorToString'
+import {
+  BorderSide,
+  BorderPropControllerData,
+  BoxShadowData,
+  BoxShadowPropControllerData,
+} from '../hooks'
 
 type CSSRules = ReturnType<typeof css>
 
@@ -155,6 +162,48 @@ export function cssPadding(
   `
 }
 
+const defaultBorderSide = { width: 0, style: 'solid', color: null }
+
+const getBorderSide = ({ width, style, color }: BorderSide) =>
+  `${width != null ? width : 0}px ${style} ${color != null ? colorToString(color) : 'black'}`
+
+export function cssBorder(
+  defaultValue: {
+    borderTop?: BorderSide
+    borderRight?: BorderSide
+    borderBottom?: BorderSide
+    borderLeft?: BorderSide
+  } = {},
+): (props: { border?: BorderPropControllerData | null | undefined }) => CSSRules {
+  const defaultBorderTop =
+    defaultValue.borderTop === undefined ? defaultBorderSide : defaultValue.borderTop
+  const defaultBorderRight =
+    defaultValue.borderRight === undefined ? defaultBorderSide : defaultValue.borderRight
+  const defaultBorderBottom =
+    defaultValue.borderBottom === undefined ? defaultBorderSide : defaultValue.borderBottom
+  const defaultBorderLeft =
+    defaultValue.borderLeft === undefined ? defaultBorderSide : defaultValue.borderLeft
+
+  return props => css`
+    ${cssMediaRules(
+      [props.border] as const,
+      ([
+        {
+          borderTop,
+          borderRight,
+          borderBottom,
+          borderLeft,
+        } = {} as ExtractResponsiveValue<BorderPropControllerData>,
+      ]) => css`
+        border-top: ${getBorderSide(borderTop || defaultBorderTop)};
+        border-right: ${getBorderSide(borderRight || defaultBorderRight)};
+        border-bottom: ${getBorderSide(borderBottom || defaultBorderBottom)};
+        border-left: ${getBorderSide(borderLeft || defaultBorderLeft)};
+      `,
+    )}
+  `
+}
+
 function getBorderRadiusCorner(
   borderRadiusCorner: LengthValue | BorderRadiusProperty<string | number>,
 ) {
@@ -203,6 +252,32 @@ export function cssBorderRadius(
         border-bottom-right-radius: ${getBorderRadiusCorner(
           borderBottomRightRadius || defaultPaddingLeft,
         )};
+      `,
+    )}
+  `
+}
+
+const getBoxShadow = (shadows: BoxShadowData) =>
+  shadows
+    .map(
+      ({ payload: { inset, offsetX, offsetY, blurRadius, spreadRadius, color } }) =>
+        `${inset ? 'inset ' : ''}${offsetX.toFixed(1)}px ${offsetY.toFixed(
+          1,
+        )}px ${blurRadius}px ${spreadRadius}px ${
+          color != null ? colorToString(color) : 'rgba(0,0,0,0.2)'
+        }`,
+    )
+    .filter(Boolean)
+    .join()
+
+export function cssBoxShadow(
+  defaultValue: BoxShadowData = [],
+): (props: { boxShadow?: BoxShadowPropControllerData | null | undefined }) => CSSRules {
+  return props => css`
+    ${cssMediaRules(
+      [props.boxShadow] as const,
+      ([boxShadow = defaultValue]) => css`
+        box-shadow: ${getBoxShadow(boxShadow)};
       `,
     )}
   `

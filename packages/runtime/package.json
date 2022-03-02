@@ -1,6 +1,6 @@
 {
   "name": "@makeswift/runtime",
-  "version": "0.0.0-891612a",
+  "version": "0.0.0-7ccfb7a",
   "main": "dist/main.cjs",
   "module": "dist/main.es",
   "types": "dist/types",
@@ -48,9 +48,16 @@
   "scripts": {
     "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'vite build --watch'",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "yarn publish . --new-version 0.0.0-$(git rev-parse --short HEAD) --access public"
   },
   "peerDependenciesMeta": {
+    "@apollo/client": {
+      "optional": true
+    },
+    "next": {
+      "optional": true
+    },
     "react": {
       "optional": true
     },
@@ -59,6 +66,8 @@
     }
   },
   "peerDependencies": {
+    "@apollo/client": "^3.3.5",
+    "next": "12.0.2",
     "react": "^17.0.1",
     "styled-components": "5.2.0"
   },
@@ -72,14 +81,17 @@
     "immutable": "^4.0.0-rc.12",
     "ot-json0": "^1.1.0",
     "polished": "3.0.3",
+    "react-player": "^1.12.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "use-sync-external-store": "^1.0.0-rc.0"
   },
   "devDependencies": {
+    "@apollo/client": "^3.3.5",
     "@types/node": "^17.0.21",
     "@vitejs/plugin-react": "^1.1.4",
     "concurrently": "^5.3.0",
+    "next": "12.0.2",
     "react": "^17.0.1",
     "typescript": "^4.5.5",
     "vite": "^2.7.2"

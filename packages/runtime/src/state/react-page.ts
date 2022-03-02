@@ -28,6 +28,7 @@ const reducer = combineReducers({
   reactComponents: ReactComponents.reducer,
   componentsMeta: ComponentsMeta.reducer,
   propControllers: PropControllers.reducer,
+  isInBuilder: (state: boolean = false, _action: Action): boolean => state,
 })
 
 export type State = ReturnType<typeof reducer>
@@ -52,6 +53,10 @@ export function getReactComponent(
   type: string,
 ): ReactComponents.ComponentType | null {
   return ReactComponents.getReactComponent(getReactComponentsStateSlice(state), type)
+}
+
+export function getIsInBuilder(state: State): boolean {
+  return state.isInBuilder
 }
 
 export type Dispatch = ThunkDispatch<State, unknown, Action>
