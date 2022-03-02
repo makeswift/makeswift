@@ -2,9 +2,8 @@ import { useState, useRef, useLayoutEffect, useCallback, ReactNode, CSSPropertie
 import clamp from '../../../../utils/clamp'
 
 function isScrollable(element: HTMLElement) {
-  const { overflow, overflowY, overflowX } = element.ownerDocument.defaultView!.getComputedStyle(
-    element,
-  )
+  const { overflow, overflowY, overflowX } =
+    element.ownerDocument.defaultView!.getComputedStyle(element)
 
   return /(auto|scroll)/.test(overflow + overflowX + overflowY)
 }
@@ -48,10 +47,8 @@ export default function Parallax({ strength, children, ...rest }: Props): JSX.El
       containerDocument.defaultView!.requestAnimationFrame(() => {
         if (!container.current) return
 
-        const {
-          top: containerTop,
-          bottom: containerBottom,
-        } = container.current.getBoundingClientRect()
+        const { top: containerTop, bottom: containerBottom } =
+          container.current.getBoundingClientRect()
         const { top: scrollParentTop, bottom: scrollParentBottom } =
           scrollParent === containerDocument.documentElement
             ? { top: 0, bottom: containerDocument.defaultView!.innerHeight }

@@ -56,12 +56,12 @@ export function join<V, A extends ReadonlyArray<ResponsiveValue<V> | null | unde
   return DEVICES.map(({ id }) => id)
     .map(deviceId => {
       const value = joinFn(
-        (responsiveValues.map(responsiveValue => {
+        responsiveValues.map(responsiveValue => {
           const deviceValue =
             responsiveValue && findDeviceOverride(responsiveValue, deviceId, strategy)
 
           return deviceValue == null ? undefined : deviceValue.value
-        }) as unknown) as { [I in keyof A]: ExtractResponsiveValue<A[I] | undefined> },
+        }) as unknown as { [I in keyof A]: ExtractResponsiveValue<A[I] | undefined> },
       )
 
       if (value == null) return null

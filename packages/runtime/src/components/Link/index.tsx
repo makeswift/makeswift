@@ -93,7 +93,7 @@ export const Link = forwardRef<HTMLAnchorElement, Props>(function Link(
 
       if (href != null && href === hash) {
         event.preventDefault()
-        const view = (event.view as unknown) as Window
+        const view = event.view as unknown as Window
 
         scrollIntoView(view.document.querySelector(hash)!, {
           behavior: 'smooth',

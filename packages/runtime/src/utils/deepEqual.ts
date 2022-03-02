@@ -1,22 +1,16 @@
-import shallowEqual from "./shallowEqual";
+import shallowEqual from './shallowEqual'
 
-const { hasOwnProperty } = Object.prototype;
+const { hasOwnProperty } = Object.prototype
 
 const deepEqual = (a: unknown, b: unknown): boolean => {
-  if (shallowEqual(a, b)) return true;
+  if (shallowEqual(a, b)) return true
 
-  if (
-    typeof a !== "object" ||
-    a === null ||
-    typeof b !== "object" ||
-    b === null
-  )
-    return false;
+  if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) return false
 
-  const keysA = Object.keys(a);
-  const keysB = Object.keys(b);
+  const keysA = Object.keys(a)
+  const keysB = Object.keys(b)
 
-  if (keysA.length !== keysB.length) return false;
+  if (keysA.length !== keysB.length) return false
 
   for (let i = 0; i < keysA.length; i += 1) {
     if (
@@ -24,10 +18,10 @@ const deepEqual = (a: unknown, b: unknown): boolean => {
       // @ts-expect-error: {}[string] is OK.
       !deepEqual(a[keysA[i]], b[keysA[i]])
     )
-      return false;
+      return false
   }
 
-  return true;
-};
+  return true
+}
 
-export default deepEqual;
+export default deepEqual
