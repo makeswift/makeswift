@@ -150,15 +150,12 @@ export default forwardRef(function Box(
         const borderBoxElement = innerRef.current
         const marginBoxElement = boxElement
         const borderBox = innerRef.current?.getBoundingClientRect()
-        const paddingBoxComputedStyle = paddingBoxElement?.ownerDocument.defaultView?.getComputedStyle(
-          paddingBoxElement,
-        )
-        const borderBoxComputedStyle = borderBoxElement?.ownerDocument.defaultView?.getComputedStyle(
-          borderBoxElement,
-        )
-        const marginBoxComputedStyle = marginBoxElement?.ownerDocument.defaultView?.getComputedStyle(
-          marginBoxElement,
-        )
+        const paddingBoxComputedStyle =
+          paddingBoxElement?.ownerDocument.defaultView?.getComputedStyle(paddingBoxElement)
+        const borderBoxComputedStyle =
+          borderBoxElement?.ownerDocument.defaultView?.getComputedStyle(borderBoxElement)
+        const marginBoxComputedStyle =
+          marginBoxElement?.ownerDocument.defaultView?.getComputedStyle(marginBoxElement)
         const padding = paddingBoxComputedStyle && {
           top: parse(paddingBoxComputedStyle.paddingTop),
           right: parse(paddingBoxComputedStyle.paddingRight),

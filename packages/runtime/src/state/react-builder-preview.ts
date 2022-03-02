@@ -192,71 +192,76 @@ export function initialize(): ThunkAction<() => void, State, unknown, Action> {
 export type Dispatch = ThunkDispatch<State, unknown, Action>
 
 function measureBoxModelsMiddleware(): Middleware<Dispatch, State, Dispatch> {
-  return ({ dispatch }: MiddlewareAPI<Dispatch>) => (next: ReduxDispatch<Action>) => {
-    return (action: Action): Action => {
-      switch (action.type) {
-        case ActionTypes.CHANGE_COMPONENT_HANDLE: {
-          if (BoxModels.isMeasurable(action.payload.componentHandle)) {
-            dispatch(registerMeasurable(action.payload.elementKey, action.payload.componentHandle))
-          } else {
-            dispatch(unregisterMeasurable(action.payload.elementKey))
+  return ({ dispatch }: MiddlewareAPI<Dispatch>) =>
+    (next: ReduxDispatch<Action>) => {
+      return (action: Action): Action => {
+        switch (action.type) {
+          case ActionTypes.CHANGE_COMPONENT_HANDLE: {
+            if (BoxModels.isMeasurable(action.payload.componentHandle)) {
+              dispatch(
+                registerMeasurable(action.payload.elementKey, action.payload.componentHandle),
+              )
+            } else {
+              dispatch(unregisterMeasurable(action.payload.elementKey))
+            }
+
+            break
           }
 
-          break
+          case ActionTypes.UNMOUNT_COMPONENT:
+            dispatch(unregisterMeasurable(action.payload.elementKey))
+            break
         }
 
-        case ActionTypes.UNMOUNT_COMPONENT:
-          dispatch(unregisterMeasurable(action.payload.elementKey))
-          break
+        return next(action)
       }
-
-      return next(action)
     }
-  }
 }
 
 export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch> {
-  return ({ dispatch, getState }: MiddlewareAPI<Dispatch, State>) => (
-    next: ReduxDispatch<Action>,
-  ) => {
-    const messageChannel = new MessageChannel()
+  return ({ dispatch, getState }: MiddlewareAPI<Dispatch, State>) =>
+    (next: ReduxDispatch<Action>) => {
+      const messageChannel = new MessageChannel()
 
-    window.parent.postMessage(messageChannel.port2, '*', [messageChannel.port2])
+      window.parent.postMessage(messageChannel.port2, '*', [messageChannel.port2])
 
-    messageChannel.port1.onmessage = (event: MessageEvent<Action>) => dispatch(event.data)
+      messageChannel.port1.onmessage = (event: MessageEvent<Action>) => dispatch(event.data)
 
-    const state = getState()
-    const registeredComponentsMeta = getComponentsMeta(state)
+      const state = getState()
+      const registeredComponentsMeta = getComponentsMeta(state)
 
-    registeredComponentsMeta.forEach((componentMeta, componentType) => {
-      const propControllerDescriptors = getComponentPropControllerDescriptors(state, componentType)
-
-      if (propControllerDescriptors != null) {
-        messageChannel.port1.postMessage(
-          registerComponent(componentType, componentMeta, propControllerDescriptors),
+      registeredComponentsMeta.forEach((componentMeta, componentType) => {
+        const propControllerDescriptors = getComponentPropControllerDescriptors(
+          state,
+          componentType,
         )
+
+        if (propControllerDescriptors != null) {
+          messageChannel.port1.postMessage(
+            registerComponent(componentType, componentMeta, propControllerDescriptors),
+          )
+        }
+      })
+
+      return (action: Action): Action => {
+        switch (action.type) {
+          case ActionTypes.CHANGE_ELEMENT_BOX_MODELS:
+          case ActionTypes.MOUNT_COMPONENT:
+          case ActionTypes.UNMOUNT_COMPONENT:
+          case ActionTypes.REGISTER_COMPONENT:
+          case ActionTypes.UNREGISTER_COMPONENT:
+          case ActionTypes.CHANGE_DOCUMENT_ELEMENT_SIZE:
+            messageChannel.port1.postMessage(action)
+            break
+
+          case ActionTypes.CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP:
+            window.document.documentElement.scrollTop = action.payload.scrollTop
+            break
+        }
+
+        return next(action)
       }
-    })
-
-    return (action: Action): Action => {
-      switch (action.type) {
-        case ActionTypes.CHANGE_ELEMENT_BOX_MODELS:
-        case ActionTypes.MOUNT_COMPONENT:
-        case ActionTypes.UNMOUNT_COMPONENT:
-        case ActionTypes.REGISTER_COMPONENT:
-        case ActionTypes.UNREGISTER_COMPONENT:
-        case ActionTypes.CHANGE_DOCUMENT_ELEMENT_SIZE:
-          messageChannel.port1.postMessage(action)
-          break
-
-        case ActionTypes.CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP:
-          window.document.documentElement.scrollTop = action.payload.scrollTop
-          break
-      }
-
-      return next(action)
     }
-  }
 }
 
 export type Store = ReduxStore<State, Action> & { dispatch: Dispatch }

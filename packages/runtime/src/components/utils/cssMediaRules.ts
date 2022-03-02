@@ -48,9 +48,9 @@ type CSSRules = ReturnType<typeof css>
 
 export function cssMediaRules<V, A extends ReadonlyArray<ResponsiveValue<V> | null | undefined>, P>(
   responsiveValues: A | ((props: P) => A),
-  join: (
-    values: { [K in keyof A]: ExtractResponsiveValue<A[K]> | undefined },
-  ) => CSSRules | CSSObject,
+  join: (values: { [K in keyof A]: ExtractResponsiveValue<A[K]> | undefined }) =>
+    | CSSRules
+    | CSSObject,
   strategy?: FallbackStrategy<V>,
 ): (props: P) => CSSRules {
   return props =>
@@ -283,7 +283,10 @@ export function cssBoxShadow(
   `
 }
 
-const floor = (d: number) => (v: number): number => Math.floor(10 ** d * v) / 10 ** d
+const floor =
+  (d: number) =>
+  (v: number): number =>
+    Math.floor(10 ** d * v) / 10 ** d
 
 export function cssGridItem(): (props: {
   grid: ResponsiveValue<{ spans: Array<Array<number>>; count: number }>

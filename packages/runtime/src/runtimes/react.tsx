@@ -30,7 +30,7 @@ const contextDefaultValue = ReactPage.configureStore()
 export const ReactRuntime = {
   registerComponent<
     P extends Record<string, PropControllerDescriptor>,
-    C extends ReactPage.ComponentType<{ [K in keyof P]?: PropControllerDescriptorValueType<P[K]> }>
+    C extends ReactPage.ComponentType<{ [K in keyof P]?: PropControllerDescriptorValueType<P[K]> }>,
   >(
     component: C,
     {
@@ -46,7 +46,7 @@ export const ReactRuntime = {
     )
 
     const unregisterReactComponent = contextDefaultValue.dispatch(
-      registerReactComponentEffect(type, (component as unknown) as ReactPage.ComponentType),
+      registerReactComponentEffect(type, component as unknown as ReactPage.ComponentType),
     )
 
     return () => {
