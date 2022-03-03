@@ -142,7 +142,7 @@ export default forwardRef<HTMLDivElement, Props>(function Navigation(
           width={logoWidth}
         />
       )}
-      <div css={{ display: 'flex', flexGrow: 1, justifyContent: 'flex-end' }}>
+      <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'flex-end' }}>
         <LinksContainer alignment={alignment} mobileMenuAnimation={mobileMenuAnimation}>
           {links.length > 0 ? (
             links.map((link, i) => (

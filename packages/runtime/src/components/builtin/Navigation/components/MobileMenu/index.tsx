@@ -93,7 +93,9 @@ export default function MobileMenu({
       <CloseIconContainer color={useColor(closeIconColor)} onClick={onClose}>
         <Times16 />
       </CloseIconContainer>
-      <div css={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
+      <div
+        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}
+      >
         {links.map(link => (
           <Fragment key={link.id}>
             {link.type === 'button' && (
