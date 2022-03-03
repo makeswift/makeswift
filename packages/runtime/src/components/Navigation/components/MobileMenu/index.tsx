@@ -10,7 +10,7 @@ import {
 import { ColorValue as Color } from '../../../utils/types'
 import { colorToString } from '../../../utils/colorToString'
 import { useColor } from '../../../hooks'
-import Times16 from '../../../icons/times-16.svg'
+import { ReactComponent as Times16 } from '../../../icons/times-16.svg'
 
 import Button from '../../../Button'
 import DropDownButton from './components/MobileDropDownButton'

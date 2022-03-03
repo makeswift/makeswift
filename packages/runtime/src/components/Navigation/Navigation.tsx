@@ -1,7 +1,7 @@
 import { forwardRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
-import MobileMenu28 from '../icons/mobile-menu-28.svg'
+import { ReactComponent as MobileMenu28 } from '../icons/mobile-menu-28.svg'
 
 import GutterContainer from '../shared/GutterContainer'
 import Image from '../Image'
