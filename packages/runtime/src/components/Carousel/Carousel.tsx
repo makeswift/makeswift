@@ -413,8 +413,7 @@ export default forwardRef(function Carousel(
                     width={[{ deviceId: 'desktop', value: { value: 100, unit: '%' } }]}
                     file={imageProps.file}
                     altText={imageProps.altText}
-                    // TODO: Add link here
-                    // link={imageProps.link}
+                    link={imageProps.link}
                     border={slideBorder}
                     borderRadius={slideBorderRadius}
                   />
