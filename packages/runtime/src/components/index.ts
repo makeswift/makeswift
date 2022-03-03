@@ -1,5 +1,6 @@
 export { default as Root } from './Root'
 export { default as Box } from './Box'
+export { default as Button } from './Button'
 export { default as Carousel } from './Carousel'
 export { default as Countdown } from './Countdown'
 export { default as Divider } from './Divider'
