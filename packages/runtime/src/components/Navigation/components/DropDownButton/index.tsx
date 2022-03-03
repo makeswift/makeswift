@@ -1,10 +1,10 @@
 import { ComponentPropsWithoutRef, useRef, useState, useLayoutEffect } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
-import CaretDown8 from '../../../../icons/caret-down-8.svg'
-import Plus8 from '../../../../icons/plus-8.svg'
-import ArrowDown8 from '../../../../icons/arrow-down-8.svg'
-import ChevronDown8 from '../../../../icons/chevron-down-8.svg'
+import CaretDown8 from '../../../icons/caret-down-8.svg'
+import Plus8 from '../../../icons/plus-8.svg'
+import ArrowDown8 from '../../../icons/arrow-down-8.svg'
+import ChevronDown8 from '../../../icons/chevron-down-8.svg'
 import { cssMediaRules } from '../../../utils/cssMediaRules'
 import {
   ResponsiveValue,
