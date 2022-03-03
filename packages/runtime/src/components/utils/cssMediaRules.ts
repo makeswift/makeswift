@@ -34,6 +34,7 @@ import {
   BorderRadiusValue,
   MarginValue,
   PaddingValue,
+  TextStyleValue,
   WidthValue,
 } from '../../prop-controllers/descriptors'
 import { colorToString } from './colorToString'
@@ -334,5 +335,69 @@ export function cssGridItem(): (props: {
             }
       },
     )}
+  `
+}
+
+export function cssTextStyle(
+  defaultValue: {
+    fontFamily?: string | null | undefined
+    letterSpacing: number | null | undefined
+    fontSize: LengthValue | null | undefined
+    fontWeight: number | null | undefined
+    textTransform: Array<'uppercase'>
+    fontStyle: Array<'italic'>
+  } = {
+    fontFamily: null,
+    letterSpacing: null,
+    fontSize: null,
+    fontWeight: null,
+    textTransform: [],
+    fontStyle: [],
+  },
+): (arg0: { textStyle?: TextStyleValue | null | undefined }) => CSSRules {
+  return props => css`
+    ${cssMediaRules([props.textStyle], ([textStyle = defaultValue]) => {
+      const {
+        fontSize,
+        fontWeight,
+        fontStyle = [],
+        textTransform = [],
+        letterSpacing,
+        fontFamily,
+      } = textStyle
+
+      return css`
+        ${fontFamily != null
+          ? css`
+              font-family: '${fontFamily}';
+            `
+          : ''};
+        ${fontWeight != null
+          ? css`
+              font-weight: ${fontWeight};
+            `
+          : ''};
+        ${letterSpacing != null
+          ? css`
+              letter-spacing: ${letterSpacing}px;
+            `
+          : ''};
+        ${fontSize != null
+          ? css`
+              font-size: ${`${fontSize.value}${fontSize.unit}`};
+            `
+          : ''};
+        ${textTransform.includes('uppercase')
+          ? css`
+              text-transform: uppercase;
+            `
+          : ''};
+        ${fontStyle.includes('italic')
+          ? css`
+              font-style: italic;
+            `
+          : ''};
+      `
+    })}
   `
 }
