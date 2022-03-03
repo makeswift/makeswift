@@ -92,6 +92,7 @@
   },
   "devDependencies": {
     "@apollo/client": "^3.3.5",
+    "@svgr/rollup": "^6.2.1",
     "@types/node": "^17.0.21",
     "@vitejs/plugin-react": "^1.1.4",
     "concurrently": "^5.3.0",
