@@ -85,9 +85,9 @@ export default function MobileDropDownButton({
   return (
     <>
       <ButtonLink {...restOfProps} onPointerDown={() => setIsOpen(prev => !prev)}>
-        <div css={{ display: 'flex', alignItems: 'center' }}>
-          <span css={{ marginRight: 6 }}>{label}</span>
-          <span css={{ display: 'inline-flex', fill: 'currentColor' }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <span style={{ marginRight: 6 }}>{label}</span>
+          <span style={{ display: 'inline-flex', fill: 'currentColor' }}>
             <>
               {caret === 'caret' && <CaretDown8 />}
               {caret === 'plus' && <Plus8 />}

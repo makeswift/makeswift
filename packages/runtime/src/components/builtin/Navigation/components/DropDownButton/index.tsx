@@ -146,9 +146,9 @@ export default function DropDownButton({
   return (
     <DropDownContainer ref={container}>
       <Button {...restOfProps}>
-        <div css={{ display: 'flex', alignItems: 'center' }}>
-          <span css={{ marginRight: 6 }}>{label}</span>
-          <span css={{ display: 'inline-flex', fill: 'currentColor' }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <span style={{ marginRight: 6 }}>{label}</span>
+          <span style={{ display: 'inline-flex', fill: 'currentColor' }}>
             {caret === 'caret' && <CaretDown8 />}
             {caret === 'plus' && <Plus8 />}
             {caret === 'arrow-down' && <ArrowDown8 />}
