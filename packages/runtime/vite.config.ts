@@ -1,9 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import svgr from '@svgr/rollup'
 import * as path from 'path'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [svgr(), react()],
   build: {
     emptyOutDir: false,
     sourcemap: true,
