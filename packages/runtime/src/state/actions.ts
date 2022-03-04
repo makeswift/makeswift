@@ -21,7 +21,8 @@ export const ActionTypes = {
   MOUNT_COMPONENT: 'MOUNT_COMPONENT',
   UNMOUNT_COMPONENT: 'UNMOUNT_COMPONENT',
 
-  CHANGE_COMPONENT_HANDLE: 'CHANGE_COMPONENT_HANDLE',
+  REGISTER_COMPONENT_HANDLE: 'REGISTER_COMPONENT_HANDLE',
+  UNREGISTER_COMPONENT_HANDLE: 'UNREGISTER_COMPONENT_HANDLE',
 
   REGISTER_MEASURABLE: 'REGISTER_MEASURABLE',
   UNREGISTER_MEASURABLE: 'UNREGISTER_MEASURABLE',
@@ -78,9 +79,14 @@ type UnmountComponentAction = {
   payload: { documentKey: string; elementKey: string }
 }
 
-type ChangeComponentHandleAction = {
-  type: typeof ActionTypes.CHANGE_COMPONENT_HANDLE
+type RegisterComponentHandleAction = {
+  type: typeof ActionTypes.REGISTER_COMPONENT_HANDLE
   payload: { documentKey: string; elementKey: string; componentHandle: unknown }
+}
+
+type UnregisterComponentHandleAction = {
+  type: typeof ActionTypes.UNREGISTER_COMPONENT_HANDLE
+  payload: { documentKey: string; elementKey: string }
 }
 
 type RegisterMeasurableAction = {
@@ -150,7 +156,8 @@ export type Action =
   | UnregisterReactComponentAction
   | MountComponentAction
   | UnmountComponentAction
-  | ChangeComponentHandleAction
+  | RegisterComponentHandleAction
+  | UnregisterComponentHandleAction
   | RegisterMeasurableAction
   | UnregisterMeasurableAction
   | ChangeElementBoxModelsAction
@@ -241,14 +248,35 @@ export function mountComponentEffect(
   }
 }
 
-export function changeComponentHandle(
+function registerComponentHandle(
   documentKey: string,
   elementKey: string,
   componentHandle: unknown,
-): ChangeComponentHandleAction {
+): RegisterComponentHandleAction {
   return {
-    type: ActionTypes.CHANGE_COMPONENT_HANDLE,
+    type: ActionTypes.REGISTER_COMPONENT_HANDLE,
     payload: { documentKey, elementKey, componentHandle },
+  }
+}
+
+function unregisterComponentHandle(
+  documentKey: string,
+  elementKey: string,
+): UnregisterComponentHandleAction {
+  return { type: ActionTypes.UNREGISTER_COMPONENT_HANDLE, payload: { documentKey, elementKey } }
+}
+
+export function registerComponentHandleEffect(
+  documentKey: string,
+  elementKey: string,
+  componentHandle: unknown,
+): ThunkAction<() => void, unknown, unknown, Action> {
+  return dispatch => {
+    dispatch(registerComponentHandle(documentKey, elementKey, componentHandle))
+
+    return () => {
+      dispatch(unregisterComponentHandle(documentKey, elementKey))
+    }
   }
 }
 

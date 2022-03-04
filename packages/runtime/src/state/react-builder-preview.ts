@@ -28,7 +28,6 @@ import {
   registerPropControllersHandle,
   unregisterMeasurable,
   unregisterPropControllers,
-  unregisterPropControllersHandle,
 } from './actions'
 import { ActionTypes } from './actions'
 import { createPropController, PropController } from '../prop-controllers/instances'
@@ -209,19 +208,17 @@ function measureBoxModelsMiddleware(): Middleware<Dispatch, State, Dispatch> {
     (next: ReduxDispatch<Action>) => {
       return (action: Action): Action => {
         switch (action.type) {
-          case ActionTypes.CHANGE_COMPONENT_HANDLE: {
+          case ActionTypes.REGISTER_COMPONENT_HANDLE: {
             if (BoxModels.isMeasurable(action.payload.componentHandle)) {
               dispatch(
                 registerMeasurable(action.payload.elementKey, action.payload.componentHandle),
               )
-            } else {
-              dispatch(unregisterMeasurable(action.payload.elementKey))
             }
 
             break
           }
 
-          case ActionTypes.UNMOUNT_COMPONENT:
+          case ActionTypes.UNREGISTER_COMPONENT_HANDLE:
             dispatch(unregisterMeasurable(action.payload.elementKey))
             break
         }
@@ -341,7 +338,7 @@ function propControllerHandlesMiddleware(): Middleware<Dispatch, State, Dispatch
     (next: ReduxDispatch<Action>) => {
       return (action: Action): Action => {
         switch (action.type) {
-          case ActionTypes.CHANGE_COMPONENT_HANDLE: {
+          case ActionTypes.REGISTER_COMPONENT_HANDLE: {
             if (PropControllerHandles.isPropControllersHandle(action.payload.componentHandle)) {
               dispatch(
                 registerAndSetPropControllersHandle(
@@ -350,21 +347,14 @@ function propControllerHandlesMiddleware(): Middleware<Dispatch, State, Dispatch
                   action.payload.componentHandle,
                 ),
               )
-            } else {
-              dispatch(
-                unregisterAndUnsetPropControllersHandle(
-                  action.payload.documentKey,
-                  action.payload.elementKey,
-                ),
-              )
             }
 
             break
           }
 
-          case ActionTypes.UNMOUNT_COMPONENT:
+          case ActionTypes.UNREGISTER_COMPONENT_HANDLE:
             dispatch(
-              unregisterPropControllersHandle(
+              unregisterAndUnsetPropControllersHandle(
                 action.payload.documentKey,
                 action.payload.elementKey,
               ),
