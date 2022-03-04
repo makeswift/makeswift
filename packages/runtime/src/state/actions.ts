@@ -6,6 +6,8 @@ import type { ThunkAction } from 'redux-thunk'
 import { ComponentMeta } from './modules/components-meta'
 import { PropControllerDescriptor } from '../prop-controllers'
 import type { Size } from './react-builder-preview'
+import type { PropControllersHandle } from './modules/prop-controller-handles'
+import type { PropController } from '../prop-controllers/instances'
 
 export const ActionTypes = {
   CHANGE_DOCUMENT: 'CHANGE_DOCUMENT',
@@ -28,6 +30,13 @@ export const ActionTypes = {
 
   CHANGE_DOCUMENT_ELEMENT_SIZE: 'CHANGE_DOCUMENT_ELEMENT_SIZE',
   CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP: 'CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP',
+
+  REGISTER_PROP_CONTROLLERS_HANDLE: 'REGISTER_PROP_CONTROLLERS_HANDLE',
+  UNREGISTER_PROP_CONTROLLERS_HANDLE: 'UNREGISTER_PROP_CONTROLLERS_HANDLE',
+  REGISTER_PROP_CONTROLLERS: 'REGISTER_PROP_CONTROLLERS',
+  UNREGISTER_PROP_CONTROLLERS: 'UNREGISTER_PROP_CONTROLLERS',
+  MESSAGE_HOST_PROP_CONTROLLER: 'MESSAGE_HOST_PROP_CONTROLLER',
+  MESSAGE_BUILDER_PROP_CONTROLLER: 'MESSAGE_BUILDER_PROP_CONTROLLER',
 } as const
 
 type ChangeDocumentAction = {
@@ -61,17 +70,17 @@ type UnregisterReactComponentAction = {
 
 type MountComponentAction = {
   type: typeof ActionTypes.MOUNT_COMPONENT
-  payload: { elementKey: string }
+  payload: { documentKey: string; elementKey: string }
 }
 
 type UnmountComponentAction = {
   type: typeof ActionTypes.UNMOUNT_COMPONENT
-  payload: { elementKey: string }
+  payload: { documentKey: string; elementKey: string }
 }
 
 type ChangeComponentHandleAction = {
   type: typeof ActionTypes.CHANGE_COMPONENT_HANDLE
-  payload: { elementKey: string; componentHandle: unknown }
+  payload: { documentKey: string; elementKey: string; componentHandle: unknown }
 }
 
 type RegisterMeasurableAction = {
@@ -99,6 +108,40 @@ type ChangeDocumentElementScrollTopAction = {
   payload: { scrollTop: number }
 }
 
+type RegisterPropControllersHandleAction = {
+  type: typeof ActionTypes.REGISTER_PROP_CONTROLLERS_HANDLE
+  payload: { documentKey: string; elementKey: string; handle: PropControllersHandle }
+}
+
+type UnregisterPropControllersHandleAction = {
+  type: typeof ActionTypes.UNREGISTER_PROP_CONTROLLERS_HANDLE
+  payload: { documentKey: string; elementKey: string }
+}
+
+type RegisterPropControllersAction = {
+  type: typeof ActionTypes.REGISTER_PROP_CONTROLLERS
+  payload: {
+    documentKey: string
+    elementKey: string
+    propControllers: Record<string, PropController>
+  }
+}
+
+type UnregisterPropControllersAction = {
+  type: typeof ActionTypes.UNREGISTER_PROP_CONTROLLERS
+  payload: { documentKey: string; elementKey: string }
+}
+
+type MessageHostPropControllerAction<T = unknown> = {
+  type: typeof ActionTypes.MESSAGE_HOST_PROP_CONTROLLER
+  payload: { documentKey: string; elementKey: string; propName: string; message: T }
+}
+
+type MessageBuilderPropControllerAction<T = unknown> = {
+  type: typeof ActionTypes.MESSAGE_BUILDER_PROP_CONTROLLER
+  payload: { documentKey: string; elementKey: string; propName: string; message: T }
+}
+
 export type Action =
   | ChangeDocumentAction
   | RegisterComponentAction
@@ -113,6 +156,12 @@ export type Action =
   | ChangeElementBoxModelsAction
   | ChangeDocumentElementSizeAction
   | ChangeDocumentElementScrollTopAction
+  | RegisterPropControllersHandleAction
+  | UnregisterPropControllersHandleAction
+  | RegisterPropControllersAction
+  | UnregisterPropControllersAction
+  | MessageHostPropControllerAction
+  | MessageBuilderPropControllerAction
 
 export function changeDocument(documentKey: string, operation: Operation): ChangeDocumentAction {
   return { type: ActionTypes.CHANGE_DOCUMENT, payload: { documentKey, operation } }
@@ -171,31 +220,36 @@ export function registerReactComponentEffect(
   }
 }
 
-export function mountComponent(elementKey: string): MountComponentAction {
-  return { type: ActionTypes.MOUNT_COMPONENT, payload: { elementKey } }
+export function mountComponent(documentKey: string, elementKey: string): MountComponentAction {
+  return { type: ActionTypes.MOUNT_COMPONENT, payload: { documentKey, elementKey } }
 }
 
-export function unmountComponent(elementKey: string): UnmountComponentAction {
-  return { type: ActionTypes.UNMOUNT_COMPONENT, payload: { elementKey } }
+export function unmountComponent(documentKey: string, elementKey: string): UnmountComponentAction {
+  return { type: ActionTypes.UNMOUNT_COMPONENT, payload: { documentKey, elementKey } }
 }
 
 export function mountComponentEffect(
+  documentKey: string,
   elementKey: string,
 ): ThunkAction<() => void, unknown, unknown, Action> {
   return dispatch => {
-    dispatch(mountComponent(elementKey))
+    dispatch(mountComponent(documentKey, elementKey))
 
     return () => {
-      dispatch(unmountComponent(elementKey))
+      dispatch(unmountComponent(documentKey, elementKey))
     }
   }
 }
 
 export function changeComponentHandle(
+  documentKey: string,
   elementKey: string,
   componentHandle: unknown,
 ): ChangeComponentHandleAction {
-  return { type: ActionTypes.CHANGE_COMPONENT_HANDLE, payload: { elementKey, componentHandle } }
+  return {
+    type: ActionTypes.CHANGE_COMPONENT_HANDLE,
+    payload: { documentKey, elementKey, componentHandle },
+  }
 }
 
 export function registerMeasurable(
@@ -236,4 +290,67 @@ export function changeDocumentElementScrollTop(
   scrollTop: number,
 ): ChangeDocumentElementScrollTopAction {
   return { type: ActionTypes.CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP, payload: { scrollTop } }
+}
+
+export function registerPropControllersHandle(
+  documentKey: string,
+  elementKey: string,
+  handle: PropControllersHandle,
+): RegisterPropControllersHandleAction {
+  return {
+    type: ActionTypes.REGISTER_PROP_CONTROLLERS_HANDLE,
+    payload: { documentKey, elementKey, handle },
+  }
+}
+
+export function unregisterPropControllersHandle(
+  documentKey: string,
+  elementKey: string,
+): UnregisterPropControllersHandleAction {
+  return {
+    type: ActionTypes.UNREGISTER_PROP_CONTROLLERS_HANDLE,
+    payload: { documentKey, elementKey },
+  }
+}
+
+export function registerPropControllers(
+  documentKey: string,
+  elementKey: string,
+  propControllers: Record<string, PropController>,
+): RegisterPropControllersAction {
+  return {
+    type: ActionTypes.REGISTER_PROP_CONTROLLERS,
+    payload: { documentKey, elementKey, propControllers },
+  }
+}
+
+export function unregisterPropControllers(
+  documentKey: string,
+  elementKey: string,
+): UnregisterPropControllersAction {
+  return { type: ActionTypes.UNREGISTER_PROP_CONTROLLERS, payload: { documentKey, elementKey } }
+}
+
+export function messageHostPropController<T>(
+  documentKey: string,
+  elementKey: string,
+  propName: string,
+  message: T,
+): MessageHostPropControllerAction<T> {
+  return {
+    type: ActionTypes.MESSAGE_HOST_PROP_CONTROLLER,
+    payload: { documentKey, elementKey, propName, message },
+  }
+}
+
+export function messageBuilderPropController<T>(
+  documentKey: string,
+  elementKey: string,
+  propName: string,
+  message: T,
+): MessageBuilderPropControllerAction<T> {
+  return {
+    type: ActionTypes.MESSAGE_BUILDER_PROP_CONTROLLER,
+    payload: { documentKey, elementKey, propName, message },
+  }
 }

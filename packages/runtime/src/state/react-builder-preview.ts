@@ -16,14 +16,22 @@ import * as ReactComponents from './modules/react-components'
 import * as BoxModels from './modules/box-models'
 import * as ComponentsMeta from './modules/components-meta'
 import * as PropControllers from './modules/prop-controllers'
+import * as PropControllerHandles from './modules/prop-controller-handles'
+import * as ReactPage from './react-page'
 import {
   Action,
   changeDocumentElementSize,
+  messageBuilderPropController,
   registerComponent,
   registerMeasurable,
+  registerPropControllers,
+  registerPropControllersHandle,
   unregisterMeasurable,
+  unregisterPropControllers,
+  unregisterPropControllersHandle,
 } from './actions'
 import { ActionTypes } from './actions'
+import { createPropController, PropController } from '../prop-controllers/instances'
 
 export type { Operation } from './modules/read-write-documents'
 export type { BoxModelHandle } from './modules/box-models'
@@ -35,6 +43,7 @@ const reducer = combineReducers({
   boxModels: BoxModels.reducer,
   componentsMeta: ComponentsMeta.reducer,
   propControllers: PropControllers.reducer,
+  propControllerHandles: PropControllerHandles.reducer,
   isInBuilder: (state: boolean = true, _action: Action): boolean => state,
 })
 
@@ -76,6 +85,10 @@ function getComponentPropControllerDescriptors(
     getPropControllersStateSlice(state),
     componentType,
   )
+}
+
+function getPropControllerHandlesStateSlice(state: State): PropControllerHandles.State {
+  return state.propControllerHandles
 }
 
 function measureElements(): ThunkAction<void, State, unknown, Action> {
@@ -251,12 +264,123 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
           case ActionTypes.REGISTER_COMPONENT:
           case ActionTypes.UNREGISTER_COMPONENT:
           case ActionTypes.CHANGE_DOCUMENT_ELEMENT_SIZE:
+          case ActionTypes.MESSAGE_BUILDER_PROP_CONTROLLER:
             messageChannel.port1.postMessage(action)
             break
 
           case ActionTypes.CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP:
             window.document.documentElement.scrollTop = action.payload.scrollTop
             break
+        }
+
+        return next(action)
+      }
+    }
+}
+
+function createAndRegisterPropControllers(
+  documentKey: string,
+  elementKey: string,
+): ThunkAction<Record<string, PropController> | null, State, unknown, Action> {
+  return (dispatch, getState) => {
+    const descriptors = ReactPage.getElementPropControllerDescriptors(
+      getState(),
+      documentKey,
+      elementKey,
+    )
+
+    if (descriptors == null) return null
+
+    const propControllers = Object.entries(descriptors).reduce((acc, [propName, descriptor]) => {
+      const propController = createPropController(descriptor, message =>
+        dispatch(messageBuilderPropController(documentKey, elementKey, propName, message)),
+      ) as PropController
+
+      return { ...acc, [propName]: propController }
+    }, {} as Record<string, PropController>)
+
+    dispatch(registerPropControllers(documentKey, elementKey, propControllers))
+
+    return propControllers
+  }
+}
+
+function registerAndSetPropControllersHandle(
+  documentKey: string,
+  elementKey: string,
+  handle: PropControllerHandles.PropControllersHandle,
+): ThunkAction<void, State, unknown, Action> {
+  return dispatch => {
+    dispatch(registerPropControllersHandle(documentKey, elementKey, handle))
+
+    const propControllers = dispatch(createAndRegisterPropControllers(documentKey, elementKey))
+
+    handle.setPropControllers(propControllers)
+  }
+}
+
+function unregisterAndUnsetPropControllersHandle(
+  documentKey: string,
+  elementKey: string,
+): ThunkAction<void, State, unknown, Action> {
+  return (dispatch, getState) => {
+    const handle = PropControllerHandles.getPropControllersHandle(
+      getPropControllerHandlesStateSlice(getState()),
+      documentKey,
+      elementKey,
+    )
+
+    handle?.setPropControllers(null)
+
+    dispatch(unregisterPropControllers(documentKey, elementKey))
+  }
+}
+
+function propControllerHandlesMiddleware(): Middleware<Dispatch, State, Dispatch> {
+  return ({ dispatch, getState }: MiddlewareAPI<Dispatch, State>) =>
+    (next: ReduxDispatch<Action>) => {
+      return (action: Action): Action => {
+        switch (action.type) {
+          case ActionTypes.CHANGE_COMPONENT_HANDLE: {
+            if (PropControllerHandles.isPropControllersHandle(action.payload.componentHandle)) {
+              dispatch(
+                registerAndSetPropControllersHandle(
+                  action.payload.documentKey,
+                  action.payload.elementKey,
+                  action.payload.componentHandle,
+                ),
+              )
+            } else {
+              dispatch(
+                unregisterAndUnsetPropControllersHandle(
+                  action.payload.documentKey,
+                  action.payload.elementKey,
+                ),
+              )
+            }
+
+            break
+          }
+
+          case ActionTypes.UNMOUNT_COMPONENT:
+            dispatch(
+              unregisterPropControllersHandle(
+                action.payload.documentKey,
+                action.payload.elementKey,
+              ),
+            )
+            break
+
+          case ActionTypes.MESSAGE_HOST_PROP_CONTROLLER: {
+            const propController = PropControllerHandles.getPropController(
+              getPropControllerHandlesStateSlice(getState()),
+              action.payload.documentKey,
+              action.payload.elementKey,
+              action.payload.propName,
+            )
+
+            if (propController) propController.recv(action.payload.message)
+          }
         }
 
         return next(action)
@@ -272,6 +396,11 @@ export function configureStore({
   return createStore(
     reducer,
     preloadedState,
-    applyMiddleware(thunk, measureBoxModelsMiddleware(), messageChannelMiddleware()),
+    applyMiddleware(
+      thunk,
+      measureBoxModelsMiddleware(),
+      messageChannelMiddleware(),
+      propControllerHandlesMiddleware(),
+    ),
   )
 }
