@@ -4,7 +4,6 @@ import {
   memo,
   ReactNode,
   Ref,
-  useCallback,
   useContext,
   useEffect,
   useState,
@@ -14,9 +13,9 @@ import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/w
 import * as ReactPage from '../state/react-page'
 import type * as ReactBuilderPreview from '../state/react-builder-preview'
 import {
-  changeComponentHandle,
   mountComponentEffect,
   registerComponentEffect,
+  registerComponentHandleEffect,
   registerReactComponentEffect,
 } from '../state/actions'
 import type {
@@ -206,12 +205,13 @@ export const Element = memo(function Element({ element }: ElementProps): JSX.Ele
   const elementKey = element.key
   const dispatch = useDispatch()
   const documentKey = useDocumentKey()
-  const ref = useCallback(
-    (handle: unknown): void => {
-      if (documentKey) dispatch(changeComponentHandle(documentKey, elementKey, handle))
-    },
-    [dispatch, elementKey],
-  )
+  const [handle, setHandle] = useState<unknown>(null)
+
+  useEffect(() => {
+    if (documentKey == null) return
+
+    return dispatch(registerComponentHandleEffect(documentKey, elementKey, handle))
+  }, [dispatch, documentKey, elementKey, handle])
 
   useEffect(() => {
     if (documentKey == null) return
@@ -220,9 +220,9 @@ export const Element = memo(function Element({ element }: ElementProps): JSX.Ele
   }, [dispatch, documentKey, elementKey])
 
   return ReactPage.isElementReference(element) ? (
-    <ElementReference key={elementKey} ref={ref} elementReference={element} />
+    <ElementReference key={elementKey} ref={setHandle} elementReference={element} />
   ) : (
-    <ElementData key={elementKey} ref={ref} elementData={element} />
+    <ElementData key={elementKey} ref={setHandle} elementData={element} />
   )
 })
 
