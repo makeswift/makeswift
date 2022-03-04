@@ -5,7 +5,11 @@
   "module": "dist/main.es",
   "types": "dist/types",
   "files": [
-    "dist"
+    "dist",
+    "prop-controllers.js",
+    "react.js",
+    "box-model.js",
+    "components.js"
   ],
   "exports": {
     ".": {
