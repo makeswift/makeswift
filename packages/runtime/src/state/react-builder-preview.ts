@@ -21,6 +21,7 @@ import * as ReactPage from './react-page'
 import {
   Action,
   changeDocumentElementSize,
+  changeElementBoxModels,
   messageBuilderPropController,
   registerComponent,
   registerMeasurable,
@@ -52,16 +53,20 @@ function getBoxModelsStateSlice(state: State): BoxModels.State {
   return state.boxModels
 }
 
-function getMeasurables(state: State): Map<string, BoxModels.Measurable> {
+function getMeasurables(state: State): Map<string, Map<string, BoxModels.Measurable>> {
   return BoxModels.getMeasurables(getBoxModelsStateSlice(state))
 }
 
-function getBoxModels(state: State): Map<string, BoxModels.BoxModel> {
+function getBoxModels(state: State): Map<string, Map<string, BoxModels.BoxModel>> {
   return BoxModels.getBoxModels(getBoxModelsStateSlice(state))
 }
 
-function getBoxModel(state: State, elementKey: string): BoxModels.BoxModel | null {
-  return BoxModels.getBoxModel(getBoxModelsStateSlice(state), elementKey)
+function getBoxModel(
+  state: State,
+  documentKey: string,
+  elementKey: string,
+): BoxModels.BoxModel | null {
+  return BoxModels.getBoxModel(getBoxModelsStateSlice(state), documentKey, elementKey)
 }
 
 function getComponentsMetaStateSlice(state: State): ComponentsMeta.State {
@@ -94,35 +99,55 @@ function measureElements(): ThunkAction<void, State, unknown, Action> {
   return (dispatch, getState) => {
     const measurables = getMeasurables(getState())
     const currentBoxModels = getBoxModels(getState())
-    const measuredBoxModels = new Map(
-      Array.from(measurables.entries())
-        .map(([elementKey, measurable]) => {
-          const boxModel = BoxModels.measure(measurable)
+    const measuredBoxModels = new Map<string, Map<string, BoxModels.BoxModel>>()
 
-          return boxModel ? ([elementKey, boxModel] as const) : null
-        })
-        .filter((entry): entry is NonNullable<typeof entry> => entry != null),
-    )
-    const changedBoxModels = new Map<string, BoxModels.BoxModel | null>()
+    measurables.forEach((documentMeasurables, documentKey) => {
+      const measuredDocumentBoxModels = new Map<string, BoxModels.BoxModel>()
 
-    currentBoxModels.forEach((_boxModel, elementKey) => {
-      if (!measuredBoxModels.has(elementKey)) changedBoxModels.set(elementKey, null)
-    })
+      documentMeasurables.forEach((measurable, elementKey) => {
+        const boxModel = BoxModels.measure(measurable)
 
-    measuredBoxModels.forEach((measuredBoxModel, elementKey) => {
-      const currentBoxModel = getBoxModel(getState(), elementKey)
+        if (boxModel != null) measuredDocumentBoxModels.set(elementKey, boxModel)
+      })
 
-      if (currentBoxModel == null || !deepEqual(currentBoxModel, measuredBoxModel)) {
-        changedBoxModels.set(elementKey, measuredBoxModel)
+      if (measuredDocumentBoxModels.size > 0) {
+        measuredBoxModels.set(documentKey, measuredDocumentBoxModels)
       }
     })
 
-    if (changedBoxModels.size > 0) {
-      dispatch({
-        type: ActionTypes.CHANGE_ELEMENT_BOX_MODELS,
-        payload: { changedElementBoxModels: changedBoxModels },
+    const changedBoxModels = new Map<string, Map<string, BoxModels.BoxModel | null>>()
+
+    currentBoxModels.forEach((currentDocumentBoxModels, documentKey) => {
+      currentDocumentBoxModels.forEach((_boxModel, elementKey) => {
+        const changedDocumentBoxModels = new Map<string, BoxModels.BoxModel | null>()
+
+        if (!measuredBoxModels.get(documentKey)?.has(elementKey)) {
+          changedDocumentBoxModels.set(elementKey, null)
+        }
+
+        if (changedDocumentBoxModels.size > 0) {
+          changedBoxModels.set(documentKey, changedDocumentBoxModels)
+        }
       })
-    }
+    })
+
+    measuredBoxModels.forEach((measuredDocumentBoxModels, documentKey) => {
+      const changedDocumentBoxModels = new Map<string, BoxModels.BoxModel | null>()
+
+      measuredDocumentBoxModels.forEach((measuredBoxModel, elementKey) => {
+        const currentBoxModel = getBoxModel(getState(), documentKey, elementKey)
+
+        if (currentBoxModel == null || !deepEqual(currentBoxModel, measuredBoxModel)) {
+          changedDocumentBoxModels.set(elementKey, measuredBoxModel)
+        }
+      })
+
+      if (changedDocumentBoxModels.size > 0) {
+        changedBoxModels.set(documentKey, changedDocumentBoxModels)
+      }
+    })
+
+    if (changedBoxModels.size > 0) dispatch(changeElementBoxModels(changedBoxModels))
   }
 }
 
@@ -211,7 +236,11 @@ function measureBoxModelsMiddleware(): Middleware<Dispatch, State, Dispatch> {
           case ActionTypes.REGISTER_COMPONENT_HANDLE: {
             if (BoxModels.isMeasurable(action.payload.componentHandle)) {
               dispatch(
-                registerMeasurable(action.payload.elementKey, action.payload.componentHandle),
+                registerMeasurable(
+                  action.payload.documentKey,
+                  action.payload.elementKey,
+                  action.payload.componentHandle,
+                ),
               )
             }
 
@@ -219,7 +248,7 @@ function measureBoxModelsMiddleware(): Middleware<Dispatch, State, Dispatch> {
           }
 
           case ActionTypes.UNREGISTER_COMPONENT_HANDLE:
-            dispatch(unregisterMeasurable(action.payload.elementKey))
+            dispatch(unregisterMeasurable(action.payload.documentKey, action.payload.elementKey))
             break
         }
 

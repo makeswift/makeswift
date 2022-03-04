@@ -52,43 +52,53 @@ export function measure(measurable: Measurable): BoxModel | null {
 }
 
 export type State = {
-  measurables: Map<string, Measurable>
-  boxModels: Map<string, BoxModel>
+  measurables: Map<string, Map<string, Measurable>>
+  boxModels: Map<string, Map<string, BoxModel>>
 }
 
 export function getInitialState(): State {
   return { measurables: new Map(), boxModels: new Map() }
 }
 
-export function getMeasurables(state: State): Map<string, Measurable> {
+export function getMeasurables(state: State): Map<string, Map<string, Measurable>> {
   return state.measurables
 }
 
-export function getBoxModels(state: State): Map<string, BoxModel> {
+export function getBoxModels(state: State): Map<string, Map<string, BoxModel>> {
   return state.boxModels
 }
 
-export function getBoxModel(state: State, elementKey: string): BoxModel | null {
-  return getBoxModels(state).get(elementKey) ?? null
+export function getBoxModel(
+  state: State,
+  documentKey: string,
+  elementKey: string,
+): BoxModel | null {
+  return getBoxModels(state).get(documentKey)?.get(elementKey) ?? null
 }
 
 export function reducer(state: State = getInitialState(), action: Action) {
   switch (action.type) {
-    case ActionTypes.REGISTER_MEASURABLE:
+    case ActionTypes.REGISTER_MEASURABLE: {
+      const { documentKey, elementKey, measurable } = action.payload
+
       return {
         ...state,
-        measurables: new Map(getMeasurables(state)).set(
-          action.payload.elementKey,
-          action.payload.measurable,
+        measurables: new Map(state.measurables).set(
+          documentKey,
+          new Map(state.measurables.get(documentKey) ?? []).set(elementKey, measurable),
         ),
       }
+    }
 
     case ActionTypes.UNREGISTER_MEASURABLE: {
-      const nextMeasurables = new Map(getMeasurables(state))
+      const { documentKey, elementKey } = action.payload
+      const nextMeasurables = new Map(state.measurables.get(documentKey) ?? [])
 
-      const deleted = nextMeasurables.delete(action.payload.elementKey)
+      const deleted = nextMeasurables.delete(elementKey)
 
-      return deleted ? { ...state, measurables: nextMeasurables } : state
+      return deleted
+        ? { ...state, measurables: new Map(state.measurables).set(documentKey, nextMeasurables) }
+        : state
     }
 
     case ActionTypes.CHANGE_ELEMENT_BOX_MODELS: {
@@ -96,11 +106,17 @@ export function reducer(state: State = getInitialState(), action: Action) {
 
       if (changedElementBoxModels.size === 0) return state
 
-      const nextBoxModels = new Map(getBoxModels(state))
+      const nextBoxModels = new Map(state.boxModels)
 
-      changedElementBoxModels.forEach((boxModel, elementKey) => {
-        if (boxModel == null) nextBoxModels.delete(elementKey)
-        else nextBoxModels.set(elementKey, boxModel)
+      changedElementBoxModels.forEach((changedBoxModels, documentKey) => {
+        const nextDocumentBoxModels = new Map(nextBoxModels.get(documentKey) ?? [])
+
+        changedBoxModels.forEach((changedBoxModel, elementKey) => {
+          if (changedBoxModel == null) nextDocumentBoxModels.delete(elementKey)
+          else nextDocumentBoxModels.set(elementKey, changedBoxModel)
+        })
+
+        if (nextDocumentBoxModels.size > 0) nextBoxModels.set(documentKey, nextDocumentBoxModels)
       })
 
       return { ...state, boxModels: nextBoxModels }
