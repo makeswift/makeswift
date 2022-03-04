@@ -91,17 +91,17 @@ type UnregisterComponentHandleAction = {
 
 type RegisterMeasurableAction = {
   type: typeof ActionTypes.REGISTER_MEASURABLE
-  payload: { elementKey: string; measurable: Measurable }
+  payload: { documentKey: string; elementKey: string; measurable: Measurable }
 }
 
 type UnregisterMeasurableAction = {
   type: typeof ActionTypes.UNREGISTER_MEASURABLE
-  payload: { elementKey: string }
+  payload: { documentKey: string; elementKey: string }
 }
 
 type ChangeElementBoxModelsAction = {
   type: typeof ActionTypes.CHANGE_ELEMENT_BOX_MODELS
-  payload: { changedElementBoxModels: Map<string, BoxModel | null> }
+  payload: { changedElementBoxModels: Map<string, Map<string, BoxModel | null>> }
 }
 
 type ChangeDocumentElementSizeAction = {
@@ -281,31 +281,36 @@ export function registerComponentHandleEffect(
 }
 
 export function registerMeasurable(
+  documentKey: string,
   elementKey: string,
   measurable: Measurable,
 ): RegisterMeasurableAction {
-  return { type: ActionTypes.REGISTER_MEASURABLE, payload: { elementKey, measurable } }
+  return { type: ActionTypes.REGISTER_MEASURABLE, payload: { documentKey, elementKey, measurable } }
 }
 
-export function unregisterMeasurable(elementKey: string): UnregisterMeasurableAction {
-  return { type: ActionTypes.UNREGISTER_MEASURABLE, payload: { elementKey } }
+export function unregisterMeasurable(
+  documentKey: string,
+  elementKey: string,
+): UnregisterMeasurableAction {
+  return { type: ActionTypes.UNREGISTER_MEASURABLE, payload: { documentKey, elementKey } }
 }
 
 export function registerMeasurableEffect(
+  documentKey: string,
   elementKey: string,
   measurable: Measurable,
 ): ThunkAction<() => void, unknown, unknown, Action> {
   return dispatch => {
-    dispatch(registerMeasurable(elementKey, measurable))
+    dispatch(registerMeasurable(documentKey, elementKey, measurable))
 
     return () => {
-      dispatch(unregisterMeasurable(elementKey))
+      dispatch(unregisterMeasurable(documentKey, elementKey))
     }
   }
 }
 
 export function changeElementBoxModels(
-  changedElementBoxModels: Map<string, BoxModel | null>,
+  changedElementBoxModels: Map<string, Map<string, BoxModel | null>>,
 ): ChangeElementBoxModelsAction {
   return { type: ActionTypes.CHANGE_ELEMENT_BOX_MODELS, payload: { changedElementBoxModels } }
 }
