@@ -121,6 +121,18 @@ export function getElement(
   return getDocumentElements(state, documentKey).get(elementKey) ?? null
 }
 
+export function getElementPropControllerDescriptors(
+  state: State,
+  documentKey: string,
+  elementKey: string,
+): Record<string, PropControllers.PropControllerDescriptor> | null {
+  const element = getElement(state, documentKey, elementKey)
+
+  if (element == null || Documents.isElementReference(element)) return null
+
+  return getComponentPropControllerDescriptors(state, element.type)
+}
+
 export function getElementId(state: State, documentKey: string, elementKey: string): string | null {
   const element = getElement(state, documentKey, elementKey)
 

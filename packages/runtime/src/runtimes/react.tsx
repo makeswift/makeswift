@@ -205,14 +205,19 @@ type ElementProps = {
 export const Element = memo(function Element({ element }: ElementProps): JSX.Element {
   const elementKey = element.key
   const dispatch = useDispatch()
+  const documentKey = useDocumentKey()
   const ref = useCallback(
     (handle: unknown): void => {
-      dispatch(changeComponentHandle(elementKey, handle))
+      if (documentKey) dispatch(changeComponentHandle(documentKey, elementKey, handle))
     },
     [dispatch, elementKey],
   )
 
-  useEffect(() => dispatch(mountComponentEffect(elementKey)), [dispatch, elementKey])
+  useEffect(() => {
+    if (documentKey == null) return
+
+    return dispatch(mountComponentEffect(documentKey, elementKey))
+  }, [dispatch, documentKey, elementKey])
 
   return ReactPage.isElementReference(element) ? (
     <ElementReference key={elementKey} ref={ref} elementReference={element} />
