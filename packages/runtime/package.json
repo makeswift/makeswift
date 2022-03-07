@@ -53,7 +53,7 @@
     "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'vite build --watch'",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "deploy": "yarn publish . --new-version 0.0.0-$(git rev-parse --short HEAD) --access public",
+    "deploy": "yarn publish . --new-version 0.0.0-$(git rev-parse --short HEAD) --access public && git push origin main",
     "prepare": "yarn build"
   },
   "peerDependenciesMeta": {
