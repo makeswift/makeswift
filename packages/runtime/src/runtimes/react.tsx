@@ -40,12 +40,13 @@ export const ReactRuntime = {
       hidden = false,
       props,
     }: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P },
+    store = contextDefaultValue,
   ): () => void {
-    const unregisterComponent = contextDefaultValue.dispatch(
+    const unregisterComponent = store.dispatch(
       registerComponentEffect(type, { label, icon, hidden }, props ?? {}),
     )
 
-    const unregisterReactComponent = contextDefaultValue.dispatch(
+    const unregisterReactComponent = store.dispatch(
       registerReactComponentEffect(type, component as unknown as ReactPage.ComponentType),
     )
 
