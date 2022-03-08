@@ -24,6 +24,7 @@ import type {
   PropControllerDescriptorValueType,
 } from '../prop-controllers'
 import { ComponentIcon } from '../state/modules/components-meta'
+import { useBuiltinComponents } from '../components/hooks'
 
 const contextDefaultValue = ReactPage.configureStore()
 
@@ -74,6 +75,7 @@ export function RuntimeProvider({
       rootElements: defaultRootElements,
     }),
   )
+  useBuiltinComponents(store)
 
   useEffect(() => {
     // TODO(miguel): perform a more robust validation.
@@ -190,7 +192,7 @@ const ElementReference = memo(
   ): JSX.Element {
     return (
       <div ref={ref as Ref<HTMLDivElement>}>
-        <p>Not Implemented</p>
+        <p>Not Implemented yetigoz123zdda</p>
         <pre>
           <code>{JSON.stringify(elementReference, null, 2)}</code>
         </pre>
