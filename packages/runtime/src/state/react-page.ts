@@ -29,7 +29,7 @@ const reducer = combineReducers({
   reactComponents: ReactComponents.reducer,
   componentsMeta: ComponentsMeta.reducer,
   propControllers: PropControllers.reducer,
-  isInBuilder: (state: boolean = false, _action: Action): boolean => state,
+  isInBuilder: (_state: boolean = false, _action: Action): boolean => false,
 })
 
 export type State = ReturnType<typeof reducer>
