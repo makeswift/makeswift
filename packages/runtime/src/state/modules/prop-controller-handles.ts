@@ -1,15 +1,11 @@
-import type { Dispatch as ReactDispatch, SetStateAction } from 'react'
-
 import { Action, ActionTypes } from '../actions'
-import type { Data } from './read-only-documents'
-import { PropController } from '../../prop-controllers/instances'
+import type { DescriptorsPropControllers, PropController } from '../../prop-controllers/instances'
+import type { Descriptor } from '../../prop-controllers/descriptors'
 
-export type PropsPropControllers<T extends Record<string, Data> = Record<string, Data>> = {
-  [K in keyof T]: PropController
-}
-
-export interface PropControllersHandle<T extends Record<string, Data> = Record<string, Data>> {
-  setPropControllers: ReactDispatch<SetStateAction<PropsPropControllers<T> | null>>
+export interface PropControllersHandle<
+  T extends Record<string, Descriptor> = Record<string, Descriptor>,
+> {
+  setPropControllers(propControllers: DescriptorsPropControllers<T> | null): void
 }
 
 export function isPropControllersHandle(value: unknown): value is PropControllersHandle {

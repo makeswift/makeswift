@@ -49,3 +49,42 @@ export const PAGE_PATHNAMES_BY_ID = gql`
     }
   }
 `
+
+export const TYPOGRAPHY_FRAGMENT = gql`
+  fragment Typography on Typography {
+    id
+    name
+    style {
+      deviceId
+      value {
+        fontFamily
+        fontSize {
+          value
+          unit
+        }
+        color {
+          swatchId
+          alpha
+        }
+        lineHeight
+        letterSpacing
+        fontWeight
+        textAlign
+        uppercase
+        underline
+        strikethrough
+        italic
+      }
+    }
+  }
+`
+
+export const TYPOGRAPHIES_BY_ID = gql`
+  query TypographiesById($ids: [ID!]!) {
+    typographies(ids: $ids) {
+      ...Typography
+    }
+  }
+
+  ${TYPOGRAPHY_FRAGMENT}
+`

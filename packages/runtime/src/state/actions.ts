@@ -7,7 +7,7 @@ import { ComponentMeta } from './modules/components-meta'
 import { PropControllerDescriptor } from '../prop-controllers'
 import type { Size } from './react-builder-preview'
 import type { PropControllersHandle } from './modules/prop-controller-handles'
-import type { PropController } from '../prop-controllers/instances'
+import type { PropController, PropControllerMessage } from '../prop-controllers/instances'
 
 export const ActionTypes = {
   CHANGE_DOCUMENT: 'CHANGE_DOCUMENT',
@@ -138,12 +138,12 @@ type UnregisterPropControllersAction = {
   payload: { documentKey: string; elementKey: string }
 }
 
-type MessageHostPropControllerAction<T = unknown> = {
+type MessageHostPropControllerAction<T = PropControllerMessage> = {
   type: typeof ActionTypes.MESSAGE_HOST_PROP_CONTROLLER
   payload: { documentKey: string; elementKey: string; propName: string; message: T }
 }
 
-type MessageBuilderPropControllerAction<T = unknown> = {
+type MessageBuilderPropControllerAction<T = PropControllerMessage> = {
   type: typeof ActionTypes.MESSAGE_BUILDER_PROP_CONTROLLER
   payload: { documentKey: string; elementKey: string; propName: string; message: T }
 }

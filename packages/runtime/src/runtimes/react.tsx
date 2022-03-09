@@ -104,6 +104,36 @@ export function RuntimeProvider({
     }
   }, [])
 
+  useEffect(() => {
+    // TODO(miguel): perform a more robust validation.
+    const isInBuilder = window.parent !== window
+
+    if (!isInBuilder) return
+
+    window.addEventListener('focusin', handleFocusIn)
+    window.addEventListener('focusout', handlefocusOut)
+
+    return () => {
+      window.addEventListener('focusin', handleFocusIn)
+      window.removeEventListener('focusout', handlefocusOut)
+    }
+
+    function handleFocusIn(event: FocusEvent) {
+      if (!(event.target instanceof window.HTMLElement) || !event.target.isContentEditable) {
+        window.parent.focus()
+      }
+    }
+
+    function handlefocusOut(event: FocusEvent) {
+      if (
+        !(event.relatedTarget instanceof window.HTMLElement) ||
+        !event.relatedTarget.isContentEditable
+      ) {
+        window.parent.focus()
+      }
+    }
+  })
+
   return <Context.Provider value={store}>{children}</Context.Provider>
 }
 

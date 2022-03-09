@@ -625,7 +625,7 @@ export type RichTextValue = IndexSignatureHack<Slate.ValueJSON>
 
 type RichTextOptions = Options<{ preset?: RichTextValue }>
 
-type RichTextDescriptor<_T extends Data = RichTextValue> = {
+export type RichTextDescriptor<_T extends Data = RichTextValue> = {
   type: typeof Types.RichText
   options: RichTextOptions
 }

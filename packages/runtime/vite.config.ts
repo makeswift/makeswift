@@ -23,7 +23,12 @@ export default defineConfig({
         entryFileNames: '[name].[format].js',
         chunkFileNames: '[name].[format].js',
       },
-      external: id => /^(@apollo\/client|next|react|styled-components)($|\/)/.test(id),
+      external: id => {
+        const regExp =
+          /^(@apollo\/client|graphql|next|react|react-dom|slate|slate-react|styled-components)($|\/)/
+
+        return regExp.test(id)
+      },
     },
   },
 })
