@@ -1,6 +1,6 @@
 {
   "name": "@makeswift/runtime",
-  "version": "0.0.0-98e16f9",
+  "version": "0.0.0-e76fc43",
   "main": "dist/main.cjs",
   "module": "dist/main.es",
   "types": "dist/types",
