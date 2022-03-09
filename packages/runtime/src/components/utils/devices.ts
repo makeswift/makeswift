@@ -1,4 +1,5 @@
 import type { Device as DeviceID, DeviceOverride, ResponsiveValue } from '../../prop-controllers'
+import shallowMerge from '../../utils/shallowMerge'
 
 export type Device = {
   id: DeviceID
@@ -30,6 +31,18 @@ function defaultStrategy<V>(
   fallbacks: ResponsiveValue<V>,
 ): DeviceOverride<V> | undefined {
   return value || fallbacks[0]
+}
+
+export function shallowMergeFallbacks<V extends Record<string, unknown>>(
+  value: DeviceOverride<V> | undefined,
+  fallbacks: ResponsiveValue<V>,
+): DeviceOverride<V> | undefined {
+  return [value, ...fallbacks]
+    .filter((override): override is DeviceOverride<V> => Boolean(override))
+    .reduce((a, b) => ({
+      deviceId: a.deviceId || b.deviceId,
+      value: shallowMerge(a.value, b.value),
+    }))
 }
 
 export function findDeviceOverride<S>(
