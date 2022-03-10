@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 import { motion, useAnimation } from 'framer-motion'
 import { useGesture } from 'react-use-gesture'
 import { wrap } from '@popmotion/popcorn'
+import uuid from 'uuid/v4'
 
 import { cssMediaRules, cssWidth, cssMargin } from '../../utils/cssMediaRules'
 import { colorToString } from '../../utils/colorToString'
@@ -25,6 +26,8 @@ import {
   BorderValue,
   BorderRadiusValue,
 } from '../../../prop-controllers/descriptors'
+import { ReactRuntime } from '../../../react'
+import { Props } from '../../../prop-controllers'
 
 const LeftChevron = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="10" height="14" viewBox="0 0 10 14">
@@ -286,7 +289,7 @@ const Dot = styled.div<{ active: boolean }>`
 const SWIPE_THRESHOLD = 20
 const swipePower = (dx: number, velocity: number) => dx * (1 + velocity)
 
-export default forwardRef(function Carousel(
+const Carousel = forwardRef(function Carousel(
   {
     images = [],
     width,
@@ -454,3 +457,91 @@ export default forwardRef(function Carousel(
     </Wrapper>
   )
 })
+
+export default Carousel
+
+export function registerComponent(runtime: ReactRuntime) {
+  return runtime.registerComponent(Carousel, {
+    type: './components/Carousel/index.js',
+    label: 'Carousel',
+    icon: 'Carousel40',
+    props: {
+      id: Props.ElementID(),
+      images: Props.Images({
+        preset: [
+          { key: uuid(), props: {} },
+          { key: uuid(), props: {} },
+          { key: uuid(), props: {} },
+        ],
+      }),
+      width: Props.Width({ defaultValue: { value: 400, unit: 'px' } }),
+      margin: Props.Margin(),
+      pageSize: Props.ResponsiveNumber({
+        label: 'Images shown',
+        defaultValue: 1,
+        min: 1,
+        // max: images?.length ?? 0,
+        step: 1,
+      }),
+      step: Props.ResponsiveNumber({
+        label: 'Step',
+        defaultValue: 1,
+        min: 1,
+        // max: findDeviceOverride(pageSize, device)?.value ?? 1,
+        step: 1,
+      }),
+      slideAlignment: Props.ResponsiveIconRadioGroup({
+        label: 'Alignment',
+        options: [
+          { label: 'Top', value: 'flex-start', icon: 'VerticalAlignStart16' },
+          { label: 'Middle', value: 'center', icon: 'VerticalAlignMiddle16' },
+          { label: 'Bottom', value: 'flex-end', icon: 'VerticalAlignEnd16' },
+        ],
+        defaultValue: 'center',
+      }),
+      gap: Props.GapX({
+        label: 'Gap',
+        step: 5,
+        defaultValue: { value: 0, unit: 'px' },
+      }),
+      autoplay: Props.Checkbox({ label: 'Autoplay' }),
+      delay: Props.Number({
+        label: 'Delay',
+        preset: 5,
+        min: 1,
+        step: 0.1,
+        suffix: 'seconds',
+        // hidden: !props.autoplay,
+      }),
+      showArrows: Props.Checkbox({ preset: true, label: 'Show arrows' }),
+      arrowPosition: Props.ResponsiveIconRadioGroup({
+        label: 'Arrow position',
+        options: [
+          { label: 'Inside', value: 'inside', icon: 'ArrowInside16' },
+          { label: 'Center', value: 'center', icon: 'ArrowCenter16' },
+          { label: 'Outside', value: 'outside', icon: 'ArrowOutside16' },
+        ],
+        defaultValue: 'inside',
+        // hidden: props.showArrows === false,
+      }),
+      arrowColor: Props.ResponsiveColor({
+        label: 'Arrow color',
+        placeholder: 'black',
+        // hidden: props.showArrows === false,
+      }),
+      arrowBackground: Props.ResponsiveColor({
+        label: 'Arrow background',
+        placeholder: 'white',
+        // hidden: props.showArrows === false,
+      }),
+      showDots: Props.Checkbox({ preset: true, label: 'Show dots' }),
+      dotColor: Props.ResponsiveColor({
+        label: 'Dot color',
+        placeholder: 'black',
+        // hidden: props.showDots === false,
+      }),
+      slideBorder: Props.Border(),
+      slideBorderRadius: Props.BorderRadius(),
+    },
+  })
+}

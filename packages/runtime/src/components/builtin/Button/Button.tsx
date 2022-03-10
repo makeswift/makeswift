@@ -19,6 +19,8 @@ import { ColorValue as Color } from '../../utils/types'
 import { colorToString } from '../../utils/colorToString'
 import { Link } from '../../shared/Link'
 import { useColor } from '../../hooks'
+import { ReactRuntime } from '../../../react'
+import { Props } from '../../../prop-controllers'
 
 type ControllerProps = {
   id?: ElementIDValue
@@ -247,7 +249,7 @@ type BaseProps = {
 
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<typeof StyledButton>, keyof BaseProps>
 
-export default forwardRef<HTMLAnchorElement, Props>(function Button(
+const Button = forwardRef<HTMLAnchorElement, Props>(function Button(
   {
     id,
     children,
@@ -284,3 +286,68 @@ export default forwardRef<HTMLAnchorElement, Props>(function Button(
     </StyledButton>
   )
 })
+
+export default Button
+
+export function registerComponent(runtime: ReactRuntime) {
+  return runtime.registerComponent(Button, {
+    type: './components/Button/index.js',
+    label: 'Button',
+    props: {
+      id: Props.ElementID(),
+      children: Props.TextInput({ placeholder: 'Button text' }),
+      link: Props.Link({
+        defaultValue: {
+          type: 'OPEN_PAGE',
+          payload: {
+            pageId: null,
+            openInNewTab: false,
+          },
+        },
+      }),
+      variant: Props.ResponsiveSelect({
+        label: 'Style',
+        labelOrientation: 'horizontal',
+        options: [
+          { value: 'flat', label: 'Flat' },
+          { value: 'outline', label: 'Outline' },
+          { value: 'shadow', label: 'Floating' },
+          { value: 'clear', label: 'Clear' },
+          { value: 'blocky', label: 'Blocky' },
+          { value: 'bubbly', label: 'Bubbly' },
+          { value: 'skewed', label: 'Skewed' },
+        ],
+        defaultValue: 'flat',
+      }),
+      shape: Props.ResponsiveIconRadioGroup({
+        label: 'Shape',
+        options: [
+          { label: 'Pill', value: 'pill', icon: 'ButtonPill16' },
+          { label: 'Rounded', value: 'rounded', icon: 'ButtonRounded16' },
+          { label: 'Square', value: 'square', icon: 'ButtonSquare16' },
+        ],
+        defaultValue: 'rounded',
+      }),
+      size: Props.ResponsiveIconRadioGroup({
+        label: 'Size',
+        options: [
+          { label: 'Small', value: 'small', icon: 'SizeSmall16' },
+          { label: 'Medium', value: 'medium', icon: 'SizeMedium16' },
+          { label: 'Large', value: 'large', icon: 'SizeLarge16' },
+        ],
+        defaultValue: 'medium',
+      }),
+      color: Props.ResponsiveColor({
+        placeholder: 'black',
+        // hidden: findDeviceOverride<ButtonVariant>(variant, device)?.value === 'clear',
+      }),
+      textColor: Props.ResponsiveColor({
+        label: 'Text color',
+        placeholder: 'white',
+      }),
+      textStyle: Props.TextStyle(),
+      width: Props.Width(),
+      margin: Props.Margin(),
+    },
+  })
+}

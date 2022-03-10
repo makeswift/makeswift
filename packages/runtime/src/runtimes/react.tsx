@@ -23,6 +23,7 @@ import type {
   PropControllerDescriptorValueType,
 } from '../prop-controllers'
 import { ComponentIcon } from '../state/modules/components-meta'
+import { registerBuiltinComponents } from '../components'
 
 const contextDefaultValue = ReactPage.configureStore()
 
@@ -74,6 +75,10 @@ export function RuntimeProvider({
       rootElements: defaultRootElements,
     }),
   )
+
+  useEffect(() => {
+    return registerBuiltinComponents(createReactRuntime(store))
+  }, [store])
 
   useEffect(() => {
     // TODO(miguel): perform a more robust validation.

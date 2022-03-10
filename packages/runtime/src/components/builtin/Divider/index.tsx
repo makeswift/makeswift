@@ -1,1 +1,1 @@
-export { default } from './Divider'
+export { default, registerComponent } from './Divider'

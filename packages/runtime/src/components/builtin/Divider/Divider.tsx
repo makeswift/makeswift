@@ -14,6 +14,8 @@ import {
 import { colorToString } from '../../utils/colorToString'
 import { ColorValue as Color } from '../../utils/types'
 import { useColor } from '../../hooks'
+import { ReactRuntime } from '../../../react'
+import { Props } from '../../../prop-controllers'
 
 type DividerVariant = 'solid' | 'dashed' | 'dotted' | 'blended'
 
@@ -90,7 +92,7 @@ const Line = styled.div<{
     )}
 `
 
-export default forwardRef(function Divider(
+const Divider = forwardRef(function Divider(
   { id, variant, thickness, color, width, margin }: Props,
   ref: Ref<HTMLDivElement>,
 ) {
@@ -103,3 +105,35 @@ export default forwardRef(function Divider(
     </IE11MinHeightContainer>
   )
 })
+
+export default Divider
+
+export function registerComponent(runtime: ReactRuntime) {
+  return runtime.registerComponent(Divider, {
+    type: './components/Divider/index.js',
+    label: 'Divider',
+    icon: 'Divider40',
+    props: {
+      id: Props.ElementID(),
+      variant: Props.ResponsiveSelect({
+        label: 'Style',
+        labelOrientation: 'horizontal',
+        options: [
+          { value: 'solid', label: 'Solid' },
+          { value: 'dashed', label: 'Dashed' },
+          { value: 'dotted', label: 'Dotted' },
+          { value: 'blended', label: 'Blended' },
+        ],
+        defaultValue: 'solid',
+      }),
+      thickness: Props.ResponsiveLength({
+        label: 'Height',
+        defaultValue: { value: 1, unit: 'px' },
+        options: [{ value: 'px', label: 'Pixels', icon: 'Px16' }],
+      }),
+      color: Props.ResponsiveColor({ placeholder: 'black' }),
+      width: Props.Width({ defaultValue: { value: 100, unit: '%' } }),
+      margin: Props.Margin(),
+    },
+  })
+}
