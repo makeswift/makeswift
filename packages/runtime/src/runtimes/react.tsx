@@ -63,11 +63,13 @@ const Context = createContext(contextDefaultValue)
 type RuntimeProviderProps = {
   defaultRootElements?: Map<string, ReactPage.Element>
   children?: ReactNode
+  registerComponents?: (runtime: ReactRuntime) => () => void
 }
 
 export function RuntimeProvider({
   children,
   defaultRootElements,
+  registerComponents,
 }: RuntimeProviderProps): JSX.Element {
   const [store, setStore] = useState(() =>
     ReactPage.configureStore({
@@ -79,6 +81,10 @@ export function RuntimeProvider({
   useEffect(() => {
     return registerBuiltinComponents(createReactRuntime(store))
   }, [store])
+
+  useEffect(() => {
+    return registerComponents?.(createReactRuntime(store))
+  }, [store, registerComponents])
 
   useEffect(() => {
     // TODO(miguel): perform a more robust validation.
