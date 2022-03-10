@@ -26,34 +26,36 @@ import { ComponentIcon } from '../state/modules/components-meta'
 
 const contextDefaultValue = ReactPage.configureStore()
 
-export const ReactRuntime = {
+export interface ReactRuntime {
   registerComponent<
     P extends Record<string, PropControllerDescriptor>,
     C extends ReactPage.ComponentType<{ [K in keyof P]?: PropControllerDescriptorValueType<P[K]> }>,
   >(
     component: C,
-    {
-      type,
-      label,
-      icon = 'Cube40',
-      hidden = false,
-      props,
-    }: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P },
-  ): () => void {
-    const unregisterComponent = contextDefaultValue.dispatch(
-      registerComponentEffect(type, { label, icon, hidden }, props ?? {}),
-    )
-
-    const unregisterReactComponent = contextDefaultValue.dispatch(
-      registerReactComponentEffect(type, component as unknown as ReactPage.ComponentType),
-    )
-
-    return () => {
-      unregisterComponent()
-      unregisterReactComponent()
-    }
-  },
+    meta: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P },
+  ): () => void
 }
+
+export function createReactRuntime(store: ReactPage.Store): ReactRuntime {
+  return {
+    registerComponent(component, { type, label, icon = 'Cube40', hidden = false, props }) {
+      const unregisterComponent = store.dispatch(
+        registerComponentEffect(type, { label, icon, hidden }, props ?? {}),
+      )
+
+      const unregisterReactComponent = store.dispatch(
+        registerReactComponentEffect(type, component as unknown as ReactPage.ComponentType),
+      )
+
+      return () => {
+        unregisterComponent()
+        unregisterReactComponent()
+      }
+    },
+  }
+}
+
+export const ReactRuntime = createReactRuntime(contextDefaultValue)
 
 const Context = createContext(contextDefaultValue)
 
