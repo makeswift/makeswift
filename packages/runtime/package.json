@@ -101,6 +101,8 @@
     "@types/slate-react": "^0.22.9",
     "@types/styled-components": "^5.1.5",
     "@types/use-sync-external-store": "^0.0.3",
+    "@types/uuid": "^7.0.3",
+    "corporate-ipsum": "^1.0.1",
     "css-box-model": "^1.2.1",
     "csstype": "^2.6.5",
     "framer-motion": "^6.0.0",
