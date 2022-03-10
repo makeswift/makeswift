@@ -9,9 +9,10 @@ import {
   GapXValue,
   GapYValue,
 } from '../../../prop-controllers/descriptors'
-import { Element } from '../../../react'
+import { Element, ReactRuntime } from '../../../react'
 import { cssGridItem } from '../../utils/cssMediaRules'
 import BackgroundsContainer from '../../shared/BackgroundsContainer'
+import { Props } from '../../../prop-controllers'
 
 const Normalize = createGlobalStyle`
   html {
@@ -44,7 +45,7 @@ type Props = {
   columnGap?: GapXValue
 }
 
-export default forwardRef(function Page(
+const Root = forwardRef(function Page(
   { children, backgrounds, rowGap, columnGap }: Props,
   ref: Ref<HTMLDivElement>,
 ) {
@@ -73,3 +74,19 @@ export default forwardRef(function Page(
     </>
   )
 })
+
+export default Root
+
+export function registerComponent(runtime: ReactRuntime) {
+  return runtime.registerComponent(Root, {
+    type: './components/Root/index.js',
+    label: 'Page',
+    hidden: true,
+    props: {
+      children: Props.Grid(),
+      backgrounds: Props.Backgrounds(),
+      rowGap: Props.GapY(),
+      columnGap: Props.GapX(),
+    },
+  })
+}

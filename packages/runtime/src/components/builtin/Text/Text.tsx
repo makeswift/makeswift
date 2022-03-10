@@ -13,6 +13,8 @@ import { Editor, OnChangeParam } from 'slate-react'
 import { Value, ValueJSON } from 'slate'
 // @ts-expect-error: no types for 'slate-hotkeys'
 import Hotkeys from 'slate-hotkeys'
+// @ts-expect-error: there are no types for 'corporate-ipsum'
+import ipsum from 'corporate-ipsum'
 
 import {
   ElementIDValue,
@@ -25,8 +27,9 @@ import { cssWidth, cssMargin } from '../../utils/cssMediaRules'
 import { BoxModelHandle, getBox } from '../../../box-model'
 import { PropControllersHandle } from '../../../state/modules/prop-controller-handles'
 import { RichTextEditor } from './components/RichTextEditor'
-import { useIsInBuilder } from '../../../react'
+import { ReactRuntime, useIsInBuilder } from '../../../react'
 import { DescriptorsPropControllers } from '../../../prop-controllers/instances'
+import { Props } from '../../../prop-controllers'
 
 type Props = {
   id?: ElementIDValue
@@ -52,7 +55,7 @@ const COMMIT_DEBOUNCE_DELAY = 500
 
 type Descriptors = { text?: RichTextDescriptor }
 
-export default forwardRef(function Text(
+const Text = forwardRef(function Text(
   { id, text, width, margin }: Props,
   ref: Ref<BoxModelHandle & PropControllersHandle<Descriptors>>,
 ) {
@@ -179,3 +182,76 @@ export default forwardRef(function Text(
     />
   )
 })
+
+export default Text
+
+export function registerComponent(runtime: ReactRuntime) {
+  return runtime.registerComponent(Text, {
+    type: './components/Text/index.js',
+    label: 'Text',
+    props: {
+      id: Props.ElementID(),
+      // TODO: generate a different preset each time.
+      text: Props.RichText({
+        preset: {
+          document: {
+            nodes: [
+              {
+                object: 'block',
+                type: 'paragraph',
+                nodes: [
+                  {
+                    object: 'text',
+                    text: ipsum(3),
+                    marks: [
+                      {
+                        object: 'mark',
+                        type: 'typography',
+                        data: {
+                          value: {
+                            id: null,
+                            style: [
+                              {
+                                deviceId: 'mobile',
+                                value: { fontSize: { value: 16, unit: 'px' } },
+                              },
+                              {
+                                deviceId: 'desktop',
+                                value: {
+                                  fontWeight: 400,
+                                  fontSize: { value: 18, unit: 'px' },
+                                  lineHeight: 1.5,
+                                },
+                              },
+                            ],
+                          },
+                        },
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      }),
+      width: Props.Width({
+        preset: [{ deviceId: 'desktop', value: { value: 700, unit: 'px' } }],
+        defaultValue: { value: 100, unit: '%' },
+      }),
+      margin: Props.Margin({
+        preset: [
+          {
+            deviceId: 'desktop',
+            value: {
+              marginTop: null,
+              marginRight: 'auto',
+              marginBottom: { value: 20, unit: 'px' },
+              marginLeft: 'auto',
+            },
+          },
+        ],
+      }),
+    },
+  })
+}

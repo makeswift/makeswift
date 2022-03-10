@@ -1,1 +1,1 @@
-export { default } from './Root'
+export { default, registerComponent } from './Root'

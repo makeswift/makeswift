@@ -33,8 +33,9 @@ import {
   useFile,
 } from '../../hooks'
 import { placeholders } from '../../utils/placeholders'
-import { useIsInBuilder } from '../../../react'
+import { ReactRuntime, useIsInBuilder } from '../../../react'
 import { Link } from '../../shared/Link'
+import { Props } from '../../../prop-controllers'
 
 type Props = {
   id?: ElementIDValue
@@ -116,7 +117,7 @@ type Dimensions = {
   height: number
 }
 
-export default forwardRef(function Image(
+const ImageComponent = forwardRef(function Image(
   {
     id,
     width,
@@ -195,3 +196,25 @@ export default forwardRef(function Image(
     </ImageContainer>
   )
 })
+
+export default ImageComponent
+
+export function registerComponent(runtime: ReactRuntime) {
+  return runtime.registerComponent(ImageComponent, {
+    type: './components/Image/index.js',
+    label: 'Image',
+    props: {
+      id: Props.ElementID(),
+      file: Props.Image(),
+      altText: Props.TextInput({ label: 'Alt text' }),
+      link: Props.Link({ label: 'On click' }),
+      width: Props.Width(),
+      margin: Props.Margin(),
+      padding: Props.Padding(),
+      border: Props.Border(),
+      borderRadius: Props.BorderRadius(),
+      boxShadow: Props.Shadows(),
+      opacity: Props.ResponsiveOpacity(),
+    },
+  })
+}

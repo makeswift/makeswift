@@ -10,6 +10,8 @@ import {
   TextAreaValue,
   WidthValue,
 } from '../../../prop-controllers/descriptors'
+import { Props } from '../../../prop-controllers'
+import { ReactRuntime } from '../../../react'
 
 type Props = {
   id?: ElementIDValue
@@ -49,7 +51,7 @@ const defaultHtml = `<div style="padding: 24px; background-color: rgba(161, 168,
 </div>`
 const SCRIPT_TAG = 'script'
 
-export default forwardRef(function Embed(
+const Embed = forwardRef(function Embed(
   { id, width, margin, html = defaultHtml }: Props,
   ref: Ref<HTMLDivElement | null>,
 ) {
@@ -124,3 +126,19 @@ export default forwardRef(function Embed(
     />
   )
 })
+
+export default Embed
+
+export function registerComponent(runtime: ReactRuntime) {
+  return runtime.registerComponent(Embed, {
+    type: './components/Embed/index.js',
+    label: 'Embed',
+    icon: 'Code40',
+    props: {
+      id: Props.ElementID(),
+      html: Props.TextArea({ label: 'Code', rows: 20 }),
+      width: Props.Width(),
+      margin: Props.Margin(),
+    },
+  })
+}
