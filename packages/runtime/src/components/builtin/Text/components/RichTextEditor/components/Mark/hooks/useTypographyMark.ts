@@ -1,11 +1,10 @@
-import { useQuery } from '@apollo/client'
-
 import { Length as LengthValue } from '../../../../../../../../prop-controllers'
 import { ColorValue as Color } from '../../../../../../../utils/types'
 import { findDeviceOverride } from '../../../../../../../utils/devices'
 import type { DeviceOverride } from '../../../../../../../../prop-controllers'
 import { SWATCHES_BY_ID } from '../../../../../../../utils/queries'
 import { useTypography, TypographyStyle } from '../../../../../../../hooks/useTypography'
+import { useQuery } from '../../../../../../../../api/react'
 
 export type TypographyMarkDataValue = {
   fontWeight?: number
