@@ -75,12 +75,18 @@ export function RuntimeProvider({
   registerComponents,
   makeswiftApiEndpoint,
 }: RuntimeProviderProps): JSX.Element {
-  const [store, setStore] = useState(() =>
-    ReactPage.configureStore({
+  const [store, setStore] = useState(() => {
+    const store = ReactPage.configureStore({
       preloadedState: contextDefaultValue.getState(),
       rootElements: defaultRootElements,
-    }),
-  )
+    })
+    const runtime = createReactRuntime(store)
+
+    registerBuiltinComponents(runtime)
+    registerComponents?.(runtime)
+
+    return store
+  })
   const [client, setClient] = useState(
     new ApolloClient({ uri: makeswiftApiEndpoint, cache: new InMemoryCache() }),
   )
