@@ -1,9 +1,8 @@
-import { useQuery } from '@apollo/client'
-
 import type { ColorValue } from '../utils/types'
 import type { Length as LengthValue } from '../../prop-controllers'
 import { DeviceOverride } from '../../prop-controllers'
 import { TYPOGRAPHIES_BY_ID } from '../utils/queries'
+import { useQuery } from '../../api/react'
 
 export type TypographyStyleValue = {
   fontFamily?: string

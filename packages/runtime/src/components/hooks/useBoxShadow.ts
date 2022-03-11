@@ -1,10 +1,9 @@
-import { useQuery } from '@apollo/client'
-
 import { isNonNullable } from '../utils/isNonNullable'
 import type { ColorValue as Color } from '../utils/types'
 import { SWATCHES_BY_ID } from '../utils/queries'
 import type { ResponsiveValue } from '../../prop-controllers'
 import type { ShadowsValue as ResponsiveShadowsValue } from '../../prop-controllers/descriptors'
+import { useQuery } from '../../api/react'
 
 type ShadowData = {
   id: string

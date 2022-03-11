@@ -1,9 +1,8 @@
-import { useQuery } from '@apollo/client'
-
 import type { ResponsiveValue } from '../../prop-controllers'
 import { SWATCHES_BY_ID } from '../utils/queries'
 import { isNonNullable } from '../utils/isNonNullable'
 import type { ColorValue as Color } from '../utils/types'
+import { useQuery } from '../../api/react'
 
 export function useColor(
   color:

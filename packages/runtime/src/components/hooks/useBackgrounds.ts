@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client'
 import { useMemo } from 'react'
 
 import { ColorValue as Color } from '../utils/types'
@@ -6,6 +5,7 @@ import { ResponsiveValue } from '../../prop-controllers'
 import { FILES_BY_ID, SWATCHES_BY_ID } from '../utils/queries'
 import { isNonNullable } from '../utils/isNonNullable'
 import { BackgroundsValue as ResponsiveBackgroundsValue } from '../../prop-controllers/descriptors'
+import { useQuery } from '../../api/react'
 
 type BackgroundColorData = Color
 

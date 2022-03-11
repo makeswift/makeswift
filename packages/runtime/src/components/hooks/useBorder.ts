@@ -1,11 +1,11 @@
 import { BorderStyleProperty } from 'csstype'
-import { useQuery } from '@apollo/client'
 
 import { isNonNullable } from '../utils/isNonNullable'
 import { SWATCHES_BY_ID } from '../utils/queries'
 import type { ColorValue as Color } from '../utils/types'
 import { ResponsiveValue } from '../../prop-controllers'
 import { BorderValue as ResponsiveBorderValue } from '../../prop-controllers/descriptors'
+import { useQuery } from '../../api/react'
 
 function mapSideColor(swatches: any, { color, ...restOfSide }: any) {
   return {
