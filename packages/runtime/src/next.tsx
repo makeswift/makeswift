@@ -50,9 +50,9 @@ type PageProps = {
 export async function getServerSideProps({
   query: { pageId },
 }: GetServerSidePropsContext): Promise<GetServerSidePropsResult<PageProps>> {
-  const url = `${process.env.MAKESWIFT_API_HOST}/v0/preview-page-data?id=${pageId}`
+  const url = `${process['env'].MAKESWIFT_API_HOST}/v0/preview-page-data?id=${pageId}`
   const res = await fetch(url, {
-    headers: { 'x-api-key': process.env.MAKESWIFT_SITE_API_KEY! },
+    headers: { 'x-api-key': process['env'].MAKESWIFT_SITE_API_KEY! },
   })
 
   if (res.status !== 200) {
@@ -69,7 +69,7 @@ export async function getServerSideProps({
     props: {
       pageId: page.id,
       rootElement: page.data,
-      makeswiftApiEndpoint: `${process.env.MAKESWIFT_API_HOST}/graphql`,
+      makeswiftApiEndpoint: `${process['env'].MAKESWIFT_API_HOST}/graphql`,
     },
   }
 }
@@ -79,10 +79,10 @@ export async function getStaticProps({
 }: GetStaticPropsContext<{ path: string[] }>): Promise<GetStaticPropsResult<PageProps>> {
   if (params == null) return { notFound: true, revalidate: REVALIDATE_SECONDS }
   const { path = [] } = params
-  const url = `${process.env.MAKESWIFT_API_HOST}/v0/live-page-data?path=${path.join('/')}`
+  const url = `${process['env'].MAKESWIFT_API_HOST}/v0/live-page-data?path=${path.join('/')}`
 
   const res = await fetch(url, {
-    headers: { 'x-api-key': process.env.MAKESWIFT_SITE_API_KEY! },
+    headers: { 'x-api-key': process['env'].MAKESWIFT_SITE_API_KEY! },
   })
 
   if (res.status !== 200) {
@@ -99,7 +99,7 @@ export async function getStaticProps({
     props: {
       pageId: page.id,
       rootElement: page.data,
-      makeswiftApiEndpoint: `${process.env.MAKESWIFT_API_HOST}/graphql`,
+      makeswiftApiEndpoint: `${process['env'].MAKESWIFT_API_HOST}/graphql`,
     },
     revalidate: REVALIDATE_SECONDS,
   }
