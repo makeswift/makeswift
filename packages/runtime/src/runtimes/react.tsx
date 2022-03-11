@@ -101,33 +101,14 @@ export function RuntimeProvider({
     // TODO(miguel): perform a more robust validation.
     const isInBuilder = window.parent !== window
 
-    if (!isInBuilder) return
+    if (isInBuilder) setReactBuilderPreviewStore()
 
-    const initializePromise = initializeReactBuilderPreview()
-
-    return () => {
-      initializePromise.then(cleanUp => {
-        cleanUp()
-      })
-    }
-
-    async function initializeReactBuilderPreview(): Promise<() => void> {
+    async function setReactBuilderPreviewStore(): Promise<void> {
       const ReactBuilderPreview = await import('../state/react-builder-preview')
 
-      const store = await new Promise<ReactBuilderPreview.Store>(resolve => {
-        setStore(store => {
-          const nextStore = ReactBuilderPreview.configureStore({
-            preloadedState: store.getState(),
-            client,
-          })
-
-          resolve(nextStore)
-
-          return nextStore
-        })
-      })
-
-      return store.dispatch(ReactBuilderPreview.initialize())
+      setStore(store =>
+        ReactBuilderPreview.configureStore({ preloadedState: store.getState(), client }),
+      )
     }
   }, [client])
 

@@ -263,6 +263,7 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
   return ({ dispatch, getState }: MiddlewareAPI<Dispatch, State>) =>
     (next: ReduxDispatch<Action>) => {
       const messageChannel = new MessageChannel()
+      let cleanUp = () => {}
 
       window.parent.postMessage(messageChannel.port2, '*', [messageChannel.port2])
 
@@ -298,6 +299,14 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
 
           case ActionTypes.CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP:
             window.document.documentElement.scrollTop = action.payload.scrollTop
+            break
+
+          case ActionTypes.INIT:
+            cleanUp = dispatch(initialize())
+            break
+
+          case ActionTypes.CLEAN_UP:
+            cleanUp()
             break
         }
 

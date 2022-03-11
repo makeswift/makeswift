@@ -11,6 +11,9 @@ import type { PropController, PropControllerMessage } from '../prop-controllers/
 import type { APIResource } from '../api/types'
 
 export const ActionTypes = {
+  INIT: 'INIT',
+  CLEAN_UP: 'CLEAN_UP',
+
   CHANGE_DOCUMENT: 'CHANGE_DOCUMENT',
 
   REGISTER_COMPONENT: 'REGISTER_COMPONENT',
@@ -42,6 +45,10 @@ export const ActionTypes = {
 
   CHANGE_API_RESOURCE: 'CHANGE_API_RESOURCE',
 } as const
+
+type InitAction = { type: typeof ActionTypes.INIT }
+
+type CleanUpAction = { type: typeof ActionTypes.CLEAN_UP }
 
 type ChangeDocumentAction = {
   type: typeof ActionTypes.CHANGE_DOCUMENT
@@ -157,6 +164,8 @@ type ChangeAPIResourceAction = {
 }
 
 export type Action =
+  | InitAction
+  | CleanUpAction
   | ChangeDocumentAction
   | RegisterComponentAction
   | UnregisterComponentAction
@@ -178,6 +187,14 @@ export type Action =
   | MessageHostPropControllerAction
   | MessageBuilderPropControllerAction
   | ChangeAPIResourceAction
+
+export function init(): InitAction {
+  return { type: ActionTypes.INIT }
+}
+
+export function cleanUp(): CleanUpAction {
+  return { type: ActionTypes.CLEAN_UP }
+}
 
 export function changeDocument(documentKey: string, operation: Operation): ChangeDocumentAction {
   return { type: ActionTypes.CHANGE_DOCUMENT, payload: { documentKey, operation } }

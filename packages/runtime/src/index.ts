@@ -3,6 +3,8 @@ export {
   ActionTypes,
   changeDocument,
   changeDocumentElementScrollTop,
+  cleanUp,
+  init,
   messageHostPropController,
   changeApiResource,
 } from './state/actions'
