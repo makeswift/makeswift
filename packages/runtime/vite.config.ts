@@ -2,6 +2,13 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import svgr from '@svgr/rollup'
 import * as path from 'path'
+import pkg from './package.json'
+
+const deps = Object.keys({
+  ...pkg.peerDependencies,
+  ...pkg.dependencies,
+  ...pkg.devDependencies,
+})
 
 export default defineConfig({
   plugins: [svgr(), react()],
@@ -19,16 +26,13 @@ export default defineConfig({
         ['box-model']: path.resolve(__dirname, 'src', 'box-model'),
         components: path.resolve(__dirname, 'src', 'components'),
         api: path.resolve(__dirname, 'src', 'api'),
+        next: path.resolve(__dirname, 'src', 'next'),
       },
       output: {
         entryFileNames: '[name].[format].js',
         chunkFileNames: '[name].[format].js',
       },
-      external: id => {
-        const regExp = /^(next|react|react-dom|slate|slate-react|styled-components)($|\/)/
-
-        return regExp.test(id)
-      },
+      external: new RegExp(`^(${deps.join('|')})($|\/)`),
     },
   },
 })
