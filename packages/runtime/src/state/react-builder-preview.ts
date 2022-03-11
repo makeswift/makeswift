@@ -32,6 +32,8 @@ import {
 } from './actions'
 import { ActionTypes } from './actions'
 import { createPropController, PropController } from '../prop-controllers/instances'
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
+import { Fragments } from '../api'
 
 export type { Operation } from './modules/read-write-documents'
 export type { BoxModelHandle } from './modules/box-models'
@@ -407,11 +409,39 @@ function propControllerHandlesMiddleware(): Middleware<Dispatch, State, Dispatch
     }
 }
 
+function apolloClientCacheSyncMiddleware(
+  client: ApolloClient<NormalizedCacheObject>,
+): Middleware<Dispatch, State, Dispatch> {
+  return () => (next: ReduxDispatch<Action>) => {
+    return (action: Action): Action => {
+      switch (action.type) {
+        case ActionTypes.CHANGE_API_RESOURCE: {
+          const { resource } = action.payload
+
+          client.cache.writeFragment({
+            id: client.cache.identify(resource),
+            fragment: Fragments[resource.__typename],
+            data: resource,
+          })
+
+          break
+        }
+      }
+
+      return next(action)
+    }
+  }
+}
+
 export type Store = ReduxStore<State, Action> & { dispatch: Dispatch }
 
 export function configureStore({
   preloadedState,
-}: { preloadedState?: PreloadedState<State> } = {}): Store {
+  client,
+}: {
+  preloadedState?: PreloadedState<State>
+  client: ApolloClient<NormalizedCacheObject>
+}): Store {
   return createStore(
     reducer,
     preloadedState,
@@ -420,6 +450,7 @@ export function configureStore({
       measureBoxModelsMiddleware(),
       messageChannelMiddleware(),
       propControllerHandlesMiddleware(),
+      apolloClientCacheSyncMiddleware(client),
     ),
   )
 }

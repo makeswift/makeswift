@@ -8,6 +8,7 @@ import { PropControllerDescriptor } from '../prop-controllers'
 import type { Size } from './react-builder-preview'
 import type { PropControllersHandle } from './modules/prop-controller-handles'
 import type { PropController, PropControllerMessage } from '../prop-controllers/instances'
+import type { APIResource } from '../api/types'
 
 export const ActionTypes = {
   CHANGE_DOCUMENT: 'CHANGE_DOCUMENT',
@@ -38,6 +39,8 @@ export const ActionTypes = {
   UNREGISTER_PROP_CONTROLLERS: 'UNREGISTER_PROP_CONTROLLERS',
   MESSAGE_HOST_PROP_CONTROLLER: 'MESSAGE_HOST_PROP_CONTROLLER',
   MESSAGE_BUILDER_PROP_CONTROLLER: 'MESSAGE_BUILDER_PROP_CONTROLLER',
+
+  CHANGE_API_RESOURCE: 'CHANGE_API_RESOURCE',
 } as const
 
 type ChangeDocumentAction = {
@@ -148,6 +151,11 @@ type MessageBuilderPropControllerAction<T = PropControllerMessage> = {
   payload: { documentKey: string; elementKey: string; propName: string; message: T }
 }
 
+type ChangeAPIResourceAction = {
+  type: typeof ActionTypes.CHANGE_API_RESOURCE
+  payload: { resource: APIResource }
+}
+
 export type Action =
   | ChangeDocumentAction
   | RegisterComponentAction
@@ -169,6 +177,7 @@ export type Action =
   | UnregisterPropControllersAction
   | MessageHostPropControllerAction
   | MessageBuilderPropControllerAction
+  | ChangeAPIResourceAction
 
 export function changeDocument(documentKey: string, operation: Operation): ChangeDocumentAction {
   return { type: ActionTypes.CHANGE_DOCUMENT, payload: { documentKey, operation } }
@@ -386,4 +395,8 @@ export function messageBuilderPropController<T>(
     type: ActionTypes.MESSAGE_BUILDER_PROP_CONTROLLER,
     payload: { documentKey, elementKey, propName, message },
   }
+}
+
+export function changeApiResource(resource: APIResource): ChangeAPIResourceAction {
+  return { type: ActionTypes.CHANGE_API_RESOURCE, payload: { resource } }
 }

@@ -1,0 +1,53 @@
+fragment Swatch on Swatch {
+  __typename
+  id
+  hue
+  saturation
+  lightness
+}
+
+fragment File on File {
+  __typename
+  id
+  name
+  publicUrl
+  extension
+  dimensions {
+    width
+    height
+  }
+}
+
+fragment Typography on Typography {
+  __typename
+  id
+  name
+  style {
+    deviceId
+    value {
+      fontFamily
+      fontSize {
+        value
+        unit
+      }
+      color {
+        swatchId
+        alpha
+      }
+      lineHeight
+      letterSpacing
+      fontWeight
+      textAlign
+      uppercase
+      underline
+      strikethrough
+      italic
+    }
+  }
+}
+
+fragment PagePathnameSlice on PagePathnameSlice {
+  __typename
+  id
+  pathname
+}

@@ -1,5 +1,4 @@
-import { useQuery } from '@apollo/client'
-
+import { useQuery } from '../../api/react'
 import { PAGE_PATHNAMES_BY_ID } from '../utils/queries'
 
 type Page = {

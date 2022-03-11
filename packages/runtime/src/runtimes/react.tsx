@@ -9,6 +9,7 @@ import {
   useState,
 } from 'react'
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector'
+import { ApolloClient, InMemoryCache } from '@apollo/client'
 
 import * as ReactPage from '../state/react-page'
 import type * as ReactBuilderPreview from '../state/react-builder-preview'
@@ -24,6 +25,7 @@ import type {
 } from '../prop-controllers'
 import { ComponentIcon } from '../state/modules/components-meta'
 import { registerBuiltinComponents } from '../components'
+import { ApolloProvider } from '../api/react'
 
 const contextDefaultValue = ReactPage.configureStore()
 
@@ -64,12 +66,14 @@ type RuntimeProviderProps = {
   defaultRootElements?: Map<string, ReactPage.Element>
   children?: ReactNode
   registerComponents?: (runtime: ReactRuntime) => () => void
+  makeswiftApiEndpoint?: string
 }
 
 export function RuntimeProvider({
   children,
   defaultRootElements,
   registerComponents,
+  makeswiftApiEndpoint,
 }: RuntimeProviderProps): JSX.Element {
   const [store, setStore] = useState(() =>
     ReactPage.configureStore({
@@ -77,6 +81,13 @@ export function RuntimeProvider({
       rootElements: defaultRootElements,
     }),
   )
+  const [client, setClient] = useState(
+    new ApolloClient({ uri: makeswiftApiEndpoint, cache: new InMemoryCache() }),
+  )
+
+  useEffect(() => {
+    setClient(({ cache }) => new ApolloClient({ uri: makeswiftApiEndpoint, cache }))
+  }, [makeswiftApiEndpoint])
 
   useEffect(() => {
     return registerBuiltinComponents(createReactRuntime(store))
@@ -105,7 +116,10 @@ export function RuntimeProvider({
 
       const store = await new Promise<ReactBuilderPreview.Store>(resolve => {
         setStore(store => {
-          const nextStore = ReactBuilderPreview.configureStore({ preloadedState: store.getState() })
+          const nextStore = ReactBuilderPreview.configureStore({
+            preloadedState: store.getState(),
+            client,
+          })
 
           resolve(nextStore)
 
@@ -115,7 +129,7 @@ export function RuntimeProvider({
 
       return store.dispatch(ReactBuilderPreview.initialize())
     }
-  }, [])
+  }, [client])
 
   useEffect(() => {
     // TODO(miguel): perform a more robust validation.
@@ -147,7 +161,11 @@ export function RuntimeProvider({
     }
   })
 
-  return <Context.Provider value={store}>{children}</Context.Provider>
+  return (
+    <Context.Provider value={store}>
+      <ApolloProvider client={client}>{children}</ApolloProvider>
+    </Context.Provider>
+  )
 }
 
 const DocumentContext = createContext<string | null>(null)

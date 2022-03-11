@@ -1,0 +1,11 @@
+overwrite: true
+schema: https://api.makeswift.com/graphql
+documents: 'src/**/*.graphql'
+generates:
+  src/api/generated/graphql.ts:
+    plugins:
+      - typescript-operations
+      - typed-document-node
+hooks:
+  afterOneFileWrite:
+    - prettier --write

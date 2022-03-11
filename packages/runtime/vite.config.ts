@@ -18,14 +18,14 @@ export default defineConfig({
         react: path.resolve(__dirname, 'src', 'react'),
         ['box-model']: path.resolve(__dirname, 'src', 'box-model'),
         components: path.resolve(__dirname, 'src', 'components'),
+        api: path.resolve(__dirname, 'src', 'api'),
       },
       output: {
         entryFileNames: '[name].[format].js',
         chunkFileNames: '[name].[format].js',
       },
       external: id => {
-        const regExp =
-          /^(@apollo\/client|graphql|next|react|react-dom|slate|slate-react|styled-components)($|\/)/
+        const regExp = /^(next|react|react-dom|slate|slate-react|styled-components)($|\/)/
 
         return regExp.test(id)
       },

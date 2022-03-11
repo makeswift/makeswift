@@ -1,5 +1,4 @@
-import { useQuery } from '@apollo/client'
-
+import { useQuery } from '../../api/react'
 import { FILE_BY_ID } from '../utils/queries'
 
 type File = {
