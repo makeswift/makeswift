@@ -159,7 +159,7 @@ export function RuntimeProvider({
         window.parent.focus()
       }
     }
-  })
+  }, [])
 
   return (
     <Context.Provider value={store}>
