@@ -11,10 +11,8 @@ dist
 lib
 
 # Environment variables
-.env
 .env.local
 .env.*.local
-!/.env
 
 # For local patches
 .local/
