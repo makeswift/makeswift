@@ -9,8 +9,8 @@ export type Device = {
 
 export const DEVICES: Array<Device> = [
   { id: 'desktop', minWidth: 769 },
-  { id: 'tablet', minWidth: 476, maxWidth: 768 },
-  { id: 'mobile', maxWidth: 475 },
+  { id: 'tablet', minWidth: 576, maxWidth: 768 },
+  { id: 'mobile', maxWidth: 575 },
 ]
 
 export const getDevice = (deviceId: DeviceID): Device => {
