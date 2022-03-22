@@ -17,7 +17,8 @@
     "declarationMap": true,
     "declarationDir": "dist/types",
     "emitDeclarationOnly": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "types": ["vitest/importMeta"]
   },
   "include": ["./src", "./types"]
 }
