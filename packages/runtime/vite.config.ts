@@ -1,3 +1,5 @@
+/// <reference types="vitest" />
+
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import svgr from '@svgr/rollup'
@@ -11,6 +13,12 @@ const deps = Object.keys({
 })
 
 export default defineConfig({
+  test: {
+    includeSource: ['src/**/*.{js,ts}'],
+  },
+  define: {
+    'import.meta.vitest': false,
+  },
   plugins: [svgr(), react()],
   build: {
     emptyOutDir: false,

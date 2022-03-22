@@ -72,7 +72,8 @@
     "preview": "vite preview",
     "deploy": "yarn publish . --new-version 0.0.0-$(git rev-parse --short HEAD) --access public && git push origin main",
     "prepare": "yarn build",
-    "generate": "graphql-codegen --config codegen.yml"
+    "generate": "graphql-codegen --config codegen.yml",
+    "test": "vitest"
   },
   "peerDependencies": {
     "next": "^12.0.2",
@@ -128,6 +129,7 @@
     "slate-react": "^0.22.9",
     "styled-components": "5.2.0",
     "typescript": "^4.5.5",
-    "vite": "^2.7.2"
+    "vite": "^2.8.6",
+    "vitest": "^0.7.4"
   }
 }
