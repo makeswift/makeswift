@@ -41,7 +41,7 @@ export class Document extends NextDocument {
 
 const REVALIDATE_SECONDS = 1
 
-type PageProps = {
+export type PageProps = {
   pageId: string
   rootElement: Element
   makeswiftApiEndpoint: string
