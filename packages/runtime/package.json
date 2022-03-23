@@ -103,6 +103,7 @@
     "corporate-ipsum": "^1.0.1",
     "css-box-model": "^1.2.1",
     "csstype": "^2.6.5",
+    "formik": "^2.2.9",
     "framer-motion": "^6.0.0",
     "graphql": "^16.3.0",
     "immutable": "^4.0.0-rc.12",
