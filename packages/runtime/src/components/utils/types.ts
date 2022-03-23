@@ -1,4 +1,4 @@
-type SwatchValue = {
+export type SwatchValue = {
   hue: number
   saturation: number
   lightness: number
