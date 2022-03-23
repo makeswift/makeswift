@@ -13,5 +13,9 @@ export type {
   ResponsiveValueType,
 } from './descriptors'
 export * as Props from './descriptors'
-export type { PropControllerMessage, RichTextPropControllerMessage } from './instances'
-export { RichTextPropControllerMessageType } from './instances'
+export type {
+  PropControllerMessage,
+  RichTextPropControllerMessage,
+  TableFormFieldsMessage,
+} from './instances'
+export { RichTextPropControllerMessageType, TableFormFieldsMessageType } from './instances'

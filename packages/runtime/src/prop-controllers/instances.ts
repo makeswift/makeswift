@@ -1,8 +1,9 @@
 import { Editor } from 'slate-react'
 import { ValueJSON } from 'slate'
 import { OnChangeParam } from 'slate-react'
-import { Descriptor, RichTextDescriptor, Types } from './descriptors'
+import { Descriptor, RichTextDescriptor, TableFormFieldsDescriptor, Types } from './descriptors'
 import { BuilderEditMode } from '../utils/constants'
+import { BoxModel } from '../state/modules/box-models'
 
 export const RichTextPropControllerMessageType = {
   CHANGE_BUILDER_EDIT_MODE: 'CHANGE_BUILDER_EDIT_MODE',
@@ -46,7 +47,7 @@ export type RichTextPropControllerMessage =
   | UndoRichTextPropControllerMessage
   | RedoRichTextPropControllerMessage
 
-export type PropControllerMessage = RichTextPropControllerMessage
+export type PropControllerMessage = RichTextPropControllerMessage | TableFormFieldsMessage
 
 type Send<T = PropControllerMessage> = (message: T) => void
 
@@ -120,8 +121,41 @@ class RichTextPropController extends PropController<RichTextPropControllerMessag
   }
 }
 
+export const TableFormFieldsMessageType = {
+  TABLE_FORM_LAYOUT_CHANGE: 'TABLE_FORM_LAYOUT_CHANGE',
+  TABLE_FORM_FIELD_LAYOUT_CHANGE: 'TABLE_FORM_FIELD_LAYOUT_CHANGE',
+} as const
+
+type TableLayoutTableFormFieldsMessage = {
+  type: typeof TableFormFieldsMessageType.TABLE_FORM_LAYOUT_CHANGE
+  payload: { layout: BoxModel }
+}
+
+type TableFieldLayoutTableFormFieldsMessage = {
+  type: typeof TableFormFieldsMessageType.TABLE_FORM_FIELD_LAYOUT_CHANGE
+  payload: { layout: BoxModel; index: number }
+}
+
+export type TableFormFieldsMessage =
+  | TableLayoutTableFormFieldsMessage
+  | TableFieldLayoutTableFormFieldsMessage
+
+export class TableFormFieldsPropController extends PropController<TableFormFieldsMessage> {
+  recv(): void {}
+
+  tableFormLayoutChange(payload: { layout: BoxModel }) {
+    this.send({ type: TableFormFieldsMessageType.TABLE_FORM_LAYOUT_CHANGE, payload })
+  }
+
+  tableFormFieldLayoutChange(payload: { layout: BoxModel; index: number }) {
+    this.send({ type: TableFormFieldsMessageType.TABLE_FORM_FIELD_LAYOUT_CHANGE, payload })
+  }
+}
+
 type DescriptorPropController<T extends Descriptor> = T extends { type: typeof Types.RichText }
   ? RichTextPropController
+  : T extends { type: typeof Types.TableFormFields }
+  ? TableFormFieldsPropController
   : DefaultPropController
 
 export type DescriptorsPropControllers<T extends Record<string, Descriptor>> = {
@@ -130,17 +164,32 @@ export type DescriptorsPropControllers<T extends Record<string, Descriptor>> = {
     : DescriptorPropController<T[K]>
 }
 
+type AnyPropController =
+  | DefaultPropController
+  | RichTextPropController
+  | TableFormFieldsPropController
+
 export function createPropController(
   descriptor: RichTextDescriptor,
   send: Send<RichTextPropControllerMessage>,
 ): RichTextPropController
-export function createPropController(descriptor: Descriptor, send: Send): PropController
-export function createPropController(descriptor: Descriptor, send: Send): PropController {
+export function createPropController(
+  descriptor: TableFormFieldsDescriptor,
+  send: Send<TableFormFieldsMessage>,
+): TableFormFieldsPropController
+export function createPropController(descriptor: Descriptor, send: Send): DefaultPropController
+export function createPropController<T extends PropControllerMessage>(
+  descriptor: Descriptor,
+  send: Send<T>,
+): AnyPropController {
   switch (descriptor.type) {
     case Types.RichText:
-      return new RichTextPropController(send)
+      return new RichTextPropController(send as Send<RichTextPropControllerMessage>)
+
+    case Types.TableFormFields:
+      return new TableFormFieldsPropController(send as Send<TableFormFieldsMessage>)
 
     default:
-      return new DefaultPropController(send)
+      return new DefaultPropController(send as Send)
   }
 }
