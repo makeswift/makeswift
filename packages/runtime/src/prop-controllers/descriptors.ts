@@ -1,6 +1,8 @@
 import type * as Slate from 'slate'
 import type { Element, Data } from '../state/react-page'
 
+export type { Data }
+
 // See https://github.com/microsoft/TypeScript/issues/15300
 export type IndexSignatureHack<T> = T extends Record<string, any>
   ? { [K in keyof T]: IndexSignatureHack<T[K]> }
@@ -354,18 +356,19 @@ export function Link(options: LinkOptions = {}): LinkDescriptor {
 
 type ListValueItem<T extends Data> = { id: string; value?: T }
 
-type ListValue<T extends Data = Data> = ListValueItem<T>[]
+export type ListValue<T extends Data = Data> = ListValueItem<T>[]
 
-type ListOptions<T extends Data> = Options<{
+export type ListOptions<T extends Data> = {
   type: PanelDescriptor<T>
   label?: string
+  getItemLabel?: ((value: T | undefined) => string) | ((value: T | undefined) => Promise<string>)
   preset?: ListValue<T>
   defaultValue?: ListValue<T>
-}>
+}
 
-type ListDescriptor<T extends ListValue> = {
+export type ListDescriptor<T extends ListValue = ListValue> = {
   type: typeof Types.List
-  options: ListOptions<T[number]['value']>
+  options: ListOptions<T extends ListValue<infer U> ? U : never>
 }
 
 export function List<T extends Data>(options: ListOptions<T>): ListDescriptor<ListValue<T>> {

@@ -35,6 +35,7 @@ export default defineConfig({
         components: path.resolve(__dirname, 'src', 'components'),
         api: path.resolve(__dirname, 'src', 'api'),
         next: path.resolve(__dirname, 'src', 'next'),
+        builder: path.resolve(__dirname, 'src', 'builder'),
       },
       output: {
         entryFileNames: '[name].[format].js',
