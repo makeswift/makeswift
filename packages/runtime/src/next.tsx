@@ -8,7 +8,12 @@ import {
 import NextDocument, { DocumentContext, DocumentInitialProps } from 'next/document'
 import { ServerStyleSheet } from 'styled-components'
 
-import { RuntimeProvider, Document as DocumentComponent, ReactRuntime } from './runtimes/react'
+import {
+  RuntimeProvider,
+  Document as DocumentComponent,
+  ReactRuntime,
+  PageIdProvider,
+} from './runtimes/react'
 import { Element } from './state/react-page'
 
 export class Document extends NextDocument {
@@ -112,12 +117,14 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 
 export function Page({ pageId, rootElement, makeswiftApiEndpoint, registerComponents }: PageProps) {
   return (
-    <RuntimeProvider
-      defaultRootElements={new Map([[pageId, rootElement]])}
-      makeswiftApiEndpoint={makeswiftApiEndpoint}
-      registerComponents={registerComponents}
-    >
-      <DocumentComponent documentKey={pageId} />
-    </RuntimeProvider>
+    <PageIdProvider value={pageId}>
+      <RuntimeProvider
+        defaultRootElements={new Map([[pageId, rootElement]])}
+        makeswiftApiEndpoint={makeswiftApiEndpoint}
+        registerComponents={registerComponents}
+      >
+        <DocumentComponent documentKey={pageId} />
+      </RuntimeProvider>
+    </PageIdProvider>
   )
 }

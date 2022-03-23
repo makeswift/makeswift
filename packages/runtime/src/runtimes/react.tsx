@@ -161,6 +161,22 @@ function useDocumentKey(): string | null {
   return useContext(DocumentContext)
 }
 
+const PageIdContext = createContext<string | null>(null)
+
+export function usePageIdOrNull(): string | null {
+  return useContext(PageIdContext)
+}
+
+export function usePageId(): string {
+  const pageIdOption = usePageIdOrNull()
+
+  if (pageIdOption == null) throw new Error('PageId context must be provided.')
+
+  return pageIdOption
+}
+
+export const PageIdProvider = PageIdContext.Provider
+
 type State = ReactPage.State | ReactBuilderPreview.State
 
 function useSelector<R>(selector: (state: State) => R): R {
