@@ -23,10 +23,11 @@ import {
   changeDocumentElementSize,
   changeElementBoxModels,
   messageBuilderPropController,
-  registerComponent,
+  registerBuilderComponent,
   registerMeasurable,
   registerPropControllers,
   registerPropControllersHandle,
+  unregisterBuilderComponent,
   unregisterMeasurable,
   unregisterPropControllers,
 } from './actions'
@@ -34,6 +35,7 @@ import { ActionTypes } from './actions'
 import { createPropController, PropController } from '../prop-controllers/instances'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { Fragments } from '../api'
+import { serializeControls } from '../builder'
 
 export type { Operation } from './modules/read-write-documents'
 export type { BoxModelHandle } from './modules/box-models'
@@ -279,8 +281,11 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
         )
 
         if (propControllerDescriptors != null) {
+          const [serializedControls, transferables] = serializeControls(propControllerDescriptors)
+
           messageChannel.port1.postMessage(
-            registerComponent(componentType, componentMeta, propControllerDescriptors),
+            registerBuilderComponent(componentType, componentMeta, serializedControls),
+            transferables,
           )
         }
       })
@@ -290,11 +295,24 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
           case ActionTypes.CHANGE_ELEMENT_BOX_MODELS:
           case ActionTypes.MOUNT_COMPONENT:
           case ActionTypes.UNMOUNT_COMPONENT:
-          case ActionTypes.REGISTER_COMPONENT:
-          case ActionTypes.UNREGISTER_COMPONENT:
           case ActionTypes.CHANGE_DOCUMENT_ELEMENT_SIZE:
           case ActionTypes.MESSAGE_BUILDER_PROP_CONTROLLER:
             messageChannel.port1.postMessage(action)
+            break
+
+          case ActionTypes.REGISTER_COMPONENT: {
+            const { type, meta, propControllerDescriptors } = action.payload
+            const [serializedControls, transferables] = serializeControls(propControllerDescriptors)
+
+            messageChannel.port1.postMessage(
+              registerBuilderComponent(type, meta, serializedControls),
+              transferables,
+            )
+            break
+          }
+
+          case ActionTypes.UNREGISTER_COMPONENT:
+            messageChannel.port1.postMessage(unregisterBuilderComponent(action.payload.type))
             break
 
           case ActionTypes.CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP:

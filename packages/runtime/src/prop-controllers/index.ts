@@ -1,12 +1,16 @@
 export type {
+  Data,
   Descriptor as PropControllerDescriptor,
   DescriptorValueType as PropControllerDescriptorValueType,
-  PanelDescriptor,
   Device,
   DeviceOverride,
+  Length,
+  ListDescriptor,
+  ListValue,
+  ListOptions,
+  PanelDescriptor,
   ResponsiveValue,
   ResponsiveValueType,
-  Length,
 } from './descriptors'
 export * as Props from './descriptors'
 export type { PropControllerMessage, RichTextPropControllerMessage } from './instances'

@@ -12,7 +12,8 @@
     "box-model.js",
     "components.js",
     "api.js",
-    "next.js"
+    "next.js",
+    "builder.js"
   ],
   "exports": {
     ".": {
@@ -42,6 +43,10 @@
     "./next": {
       "import": "./dist/next.es.js",
       "require": "./dist/next.cjs.js"
+    },
+    "./builder": {
+      "import": "./dist/builder.es.js",
+      "require": "./dist/builder.cjs.js"
     }
   },
   "typesVersions": {
@@ -63,6 +68,9 @@
       ],
       "next": [
         "dist/types/next.d.ts"
+      ],
+      "builder": [
+        "dist/types/builder/index.d.ts"
       ]
     }
   },

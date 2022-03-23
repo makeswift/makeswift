@@ -9,6 +9,7 @@ import type { Size } from './react-builder-preview'
 import type { PropControllersHandle } from './modules/prop-controller-handles'
 import type { PropController, PropControllerMessage } from '../prop-controllers/instances'
 import type { APIResource } from '../api/types'
+import type { SerializedControl } from '../builder'
 
 export const ActionTypes = {
   INIT: 'INIT',
@@ -18,6 +19,9 @@ export const ActionTypes = {
 
   REGISTER_COMPONENT: 'REGISTER_COMPONENT',
   UNREGISTER_COMPONENT: 'UNREGISTER_COMPONENT',
+
+  REGISTER_BUILDER_COMPONENT: 'REGISTER_BUILDER_COMPONENT',
+  UNREGISTER_BUILDER_COMPONENT: 'UNREGISTER_BUILDER_COMPONENT',
 
   REGISTER_REACT_COMPONENT: 'REGISTER_REACT_COMPONENT',
   UNREGISTER_REACT_COMPONENT: 'UNREGISTER_REACT_COMPONENT',
@@ -66,6 +70,20 @@ type RegisterComponentAction = {
 
 type UnregisterComponentAction = {
   type: typeof ActionTypes.UNREGISTER_COMPONENT
+  payload: { type: string }
+}
+
+type RegisterBuilderComponentAction = {
+  type: typeof ActionTypes.REGISTER_BUILDER_COMPONENT
+  payload: {
+    type: string
+    meta: ComponentMeta
+    serializedControls: Record<string, SerializedControl>
+  }
+}
+
+type UnregisterBuilderComponentAction = {
+  type: typeof ActionTypes.UNREGISTER_BUILDER_COMPONENT
   payload: { type: string }
 }
 
@@ -169,6 +187,8 @@ export type Action =
   | ChangeDocumentAction
   | RegisterComponentAction
   | UnregisterComponentAction
+  | RegisterBuilderComponentAction
+  | UnregisterBuilderComponentAction
   | RegisterReactComponentAction
   | UnregisterReactComponentAction
   | MountComponentAction
@@ -227,6 +247,21 @@ export function registerComponentEffect(
       dispatch(unregisterComponent(type))
     }
   }
+}
+
+export function registerBuilderComponent(
+  type: string,
+  meta: ComponentMeta,
+  serializedControls: Record<string, SerializedControl>,
+): RegisterBuilderComponentAction {
+  return {
+    type: ActionTypes.REGISTER_BUILDER_COMPONENT,
+    payload: { type, meta, serializedControls },
+  }
+}
+
+export function unregisterBuilderComponent(type: string): UnregisterBuilderComponentAction {
+  return { type: ActionTypes.UNREGISTER_BUILDER_COMPONENT, payload: { type } }
 }
 
 function registerReactComponent(
