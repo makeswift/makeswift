@@ -11,3 +11,5 @@ Visit our [getting started guide](https://makeswift.notion.site/Getting-started-
 ## API Reference
 
 Visit our [API Reference](https://makeswift.notion.site/API-reference-for-Code-Components-74b567b592de4b0e8d6070f5af45a748) to learn more about Makeswift Code Components.
+
+(shouldn't be allowed)
