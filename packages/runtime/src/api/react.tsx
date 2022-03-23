@@ -7,7 +7,13 @@ import {
   QueryResult,
   TypedDocumentNode,
   useQuery as useApolloQuery,
+  useMutation as useApolloMutation,
+  DefaultContext,
+  ApolloCache,
+  MutationHookOptions,
+  MutationTuple,
 } from '@apollo/client'
+export { gql } from '@apollo/client'
 import { ApolloProviderProps } from '@apollo/client/react/context'
 import { createContext, useContext } from 'react'
 
@@ -20,6 +26,20 @@ export function useQuery<TData = any, TVariables = OperationVariables>(
   const client = useContext(Context)
 
   return useApolloQuery(query, { client, ...options })
+}
+
+export function useMutation<
+  TData = any,
+  TVariables = OperationVariables,
+  TContext = DefaultContext,
+  TCache extends ApolloCache<any> = ApolloCache<any>,
+>(
+  mutation: DocumentNode | TypedDocumentNode<TData, TVariables>,
+  options?: MutationHookOptions<TData, TVariables, TContext>,
+): MutationTuple<TData, TVariables, TContext, TCache> {
+  const client = useContext(Context)
+
+  return useApolloMutation(mutation, { client, ...options })
 }
 
 export function ApolloProvider({ client, children }: ApolloProviderProps<NormalizedCacheObject>) {
