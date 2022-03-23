@@ -88,3 +88,28 @@ export const TYPOGRAPHIES_BY_ID = gql`
 
   ${TYPOGRAPHY_FRAGMENT}
 `
+
+export const TABLE_BY_ID = gql`
+  query TableById($id: ID!) {
+    table(id: $id) {
+      id
+      name
+      columns {
+        id
+        name
+        ... on MultipleSelectTableColumn {
+          options {
+            id
+            name
+          }
+        }
+        ... on SingleSelectTableColumn {
+          options {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+`

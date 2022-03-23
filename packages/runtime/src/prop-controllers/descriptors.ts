@@ -746,7 +746,7 @@ export type TableFormFieldsValue = { fields: TableFormField[]; grid: ResponsiveV
 
 type TableFormFieldsOptions = Options<{ preset?: TableFormFieldsValue }>
 
-type TableFormFieldsDescriptor<_T = TableFormFieldsValue> = {
+export type TableFormFieldsDescriptor<_T = TableFormFieldsValue> = {
   type: typeof Types.TableFormFields
   options: TableFormFieldsOptions
 }
