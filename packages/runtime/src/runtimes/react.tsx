@@ -1,4 +1,5 @@
 import {
+  ComponentPropsWithoutRef,
   createContext,
   forwardRef,
   memo,
@@ -153,6 +154,29 @@ export function RuntimeProvider({
       <ApolloProvider client={client}>{children}</ApolloProvider>
     </Context.Provider>
   )
+}
+
+const PageContext = createContext<string | null>(null)
+
+function usePageIdOrNull(): string | null {
+  return useContext(PageContext)
+}
+
+export function usePageId(): string {
+  const pageIdOrNull = usePageIdOrNull()
+
+  if (pageIdOrNull == null) throw new Error('`usePageId` must be used with `<PageProvider>`')
+
+  return pageIdOrNull
+}
+
+type PageProviderProps = {
+  id: string
+  children: ComponentPropsWithoutRef<typeof PageContext['Provider']>['children']
+}
+
+export function PageProvider({ id, children }: PageProviderProps) {
+  return <PageContext.Provider value={id}>{children}</PageContext.Provider>
 }
 
 const DocumentContext = createContext<string | null>(null)
