@@ -48,6 +48,33 @@ export type PagePathnameSliceFragment = {
 
 export type GlobalElementFragment = { __typename: 'GlobalElement'; id: string; data: any }
 
+export type TableFragment = {
+  __typename: 'Table'
+  id: string
+  name: string
+  columns: Array<
+    | { __typename?: 'CheckboxTableColumn'; id: string; name: string }
+    | { __typename?: 'EmailTableColumn'; id: string; name: string }
+    | { __typename?: 'LongTextTableColumn'; id: string; name: string }
+    | {
+        __typename?: 'MultipleSelectTableColumn'
+        id: string
+        name: string
+        options: Array<{ __typename?: 'MultipleSelectTableColumnOption'; id: string; name: string }>
+      }
+    | { __typename?: 'NumberTableColumn'; id: string; name: string }
+    | { __typename?: 'PhoneNumberTableColumn'; id: string; name: string }
+    | { __typename?: 'SingleLineTextTableColumn'; id: string; name: string }
+    | {
+        __typename?: 'SingleSelectTableColumn'
+        id: string
+        name: string
+        options: Array<{ __typename?: 'SingleSelectTableColumnOption'; id: string; name: string }>
+      }
+    | { __typename?: 'URLTableColumn'; id: string; name: string }
+  >
+}
+
 export const SwatchFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -203,3 +230,78 @@ export const GlobalElementFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<GlobalElementFragment, unknown>
+export const TableFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'Table' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Table' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'columns' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'MultipleSelectTableColumn' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'options' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'SingleSelectTableColumn' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'options' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<TableFragment, unknown>

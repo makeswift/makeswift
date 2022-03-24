@@ -6,6 +6,7 @@ import {
   TypographyFragmentDoc,
   PagePathnameSliceFragmentDoc,
   GlobalElementFragmentDoc,
+  TableFragmentDoc,
 } from './generated/graphql'
 import type { APIResourceType } from './types'
 
@@ -15,4 +16,5 @@ export const Fragments: Record<APIResourceType, DocumentNode> = {
   Typography: TypographyFragmentDoc,
   PagePathnameSlice: PagePathnameSliceFragmentDoc,
   GlobalElement: GlobalElementFragmentDoc,
+  Table: TableFragmentDoc,
 }
