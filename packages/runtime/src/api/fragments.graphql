@@ -57,3 +57,27 @@ fragment GlobalElement on GlobalElement {
   id
   data
 }
+
+fragment Table on Table {
+  __typename
+  id
+  name
+  columns {
+    id
+    name
+
+    ... on MultipleSelectTableColumn {
+      options {
+        id
+        name
+      }
+    }
+
+    ... on SingleSelectTableColumn {
+      options {
+        id
+        name
+      }
+    }
+  }
+}
