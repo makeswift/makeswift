@@ -47,23 +47,25 @@ export function getDocument(state: State, documentKey: string): ReadOnlyDocument
 }
 
 export function reducer(state: State = getInitialState(), action: Action): State {
+  const nextState = ReadOnlyDocuments.reducer(state, action)
+
   switch (action.type) {
     case ActionTypes.CHANGE_DOCUMENT: {
-      const currentRootElement = getDocument(state, action.payload.documentKey)?.rootElement
+      const currentRootElement = getDocument(nextState, action.payload.documentKey)?.rootElement
 
-      if (currentRootElement == null) return state
+      if (currentRootElement == null) return nextState
 
       const nextRootElement = apply(currentRootElement, action.payload.operation)
 
       return currentRootElement === nextRootElement
-        ? state
-        : new Map(state).set(
+        ? nextState
+        : new Map(nextState).set(
             action.payload.documentKey,
             ReadOnlyDocuments.createDocument(action.payload.documentKey, nextRootElement),
           )
     }
 
     default:
-      return state
+      return nextState
   }
 }

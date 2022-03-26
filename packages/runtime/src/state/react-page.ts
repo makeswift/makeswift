@@ -22,7 +22,11 @@ export type {
   ElementData,
   ElementReference,
 } from './modules/read-only-documents'
-export { createDocumentReference, isElementReference } from './modules/read-only-documents'
+export {
+  createDocument,
+  createDocumentReference,
+  isElementReference,
+} from './modules/read-only-documents'
 export type { ComponentType } from './modules/react-components'
 
 const reducer = combineReducers({

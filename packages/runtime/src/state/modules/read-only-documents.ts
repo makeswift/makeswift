@@ -1,4 +1,4 @@
-import type { Action } from '../actions'
+import { Action, ActionTypes } from '../actions'
 
 export type Data = undefined | null | boolean | number | string | Data[] | { [key: string]: Data }
 
@@ -51,6 +51,20 @@ export function getDocument(state: State, documentKey: string): Document | null 
   return getDocuments(state).get(documentKey) ?? null
 }
 
-export function reducer(state: State = getInitialState(), _action: Action): State {
-  return state
+export function reducer(state: State = getInitialState(), action: Action): State {
+  switch (action.type) {
+    case ActionTypes.REGISTER_DOCUMENT:
+      return new Map(state).set(action.payload.documentKey, action.payload.document)
+
+    case ActionTypes.UNREGISTER_DOCUMENT: {
+      const nextState = new Map(state)
+
+      const deleted = nextState.delete(action.payload.documentKey)
+
+      return deleted ? nextState : state
+    }
+
+    default:
+      return state
+  }
 }

@@ -7,6 +7,8 @@ export {
   init,
   messageHostPropController,
   changeApiResource,
+  registerDocument,
+  unregisterDocument,
 } from './state/actions'
 export type { Operation } from './state/modules/read-write-documents'
 export type { ComponentMeta } from './state/modules/components-meta'
@@ -15,3 +17,4 @@ export type {
   PropControllerDescriptorValueType,
 } from './prop-controllers'
 export type { Element } from './state/react-page'
+export { createDocument } from './state/react-page'

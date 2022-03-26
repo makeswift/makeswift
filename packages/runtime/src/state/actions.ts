@@ -1,5 +1,6 @@
 import type { Operation } from 'ot-json0'
 
+import type { Document } from './modules/read-only-documents'
 import type { ComponentType } from './modules/react-components'
 import type { Measurable, BoxModel } from './modules/box-models'
 import type { ThunkAction } from 'redux-thunk'
@@ -14,6 +15,9 @@ import type { SerializedControl } from '../builder'
 export const ActionTypes = {
   INIT: 'INIT',
   CLEAN_UP: 'CLEAN_UP',
+
+  REGISTER_DOCUMENT: 'REGISTER_DOCUMENT',
+  UNREGISTER_DOCUMENT: 'UNREGISTER_DOCUMENT',
 
   CHANGE_DOCUMENT: 'CHANGE_DOCUMENT',
 
@@ -53,6 +57,16 @@ export const ActionTypes = {
 type InitAction = { type: typeof ActionTypes.INIT }
 
 type CleanUpAction = { type: typeof ActionTypes.CLEAN_UP }
+
+type RegisterDocumentAction = {
+  type: typeof ActionTypes.REGISTER_DOCUMENT
+  payload: { documentKey: string; document: Document }
+}
+
+type UnregisterDocumentAction = {
+  type: typeof ActionTypes.UNREGISTER_DOCUMENT
+  payload: { documentKey: string }
+}
 
 type ChangeDocumentAction = {
   type: typeof ActionTypes.CHANGE_DOCUMENT
@@ -185,6 +199,8 @@ export type Action =
   | InitAction
   | CleanUpAction
   | ChangeDocumentAction
+  | RegisterDocumentAction
+  | UnregisterDocumentAction
   | RegisterComponentAction
   | UnregisterComponentAction
   | RegisterBuilderComponentAction
@@ -214,6 +230,26 @@ export function init(): InitAction {
 
 export function cleanUp(): CleanUpAction {
   return { type: ActionTypes.CLEAN_UP }
+}
+
+export function registerDocument(document: Document): RegisterDocumentAction {
+  return { type: ActionTypes.REGISTER_DOCUMENT, payload: { documentKey: document.key, document } }
+}
+
+export function unregisterDocument(documentKey: string): UnregisterDocumentAction {
+  return { type: ActionTypes.UNREGISTER_DOCUMENT, payload: { documentKey } }
+}
+
+export function registerDocumentEffect(
+  document: Document,
+): ThunkAction<() => void, unknown, unknown, Action> {
+  return dispatch => {
+    dispatch(registerDocument(document))
+
+    return () => {
+      dispatch(unregisterDocument(document.key))
+    }
+  }
 }
 
 export function changeDocument(documentKey: string, operation: Operation): ChangeDocumentAction {
