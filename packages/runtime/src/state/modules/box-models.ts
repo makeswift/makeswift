@@ -117,6 +117,7 @@ export function reducer(state: State = getInitialState(), action: Action) {
         })
 
         if (nextDocumentBoxModels.size > 0) nextBoxModels.set(documentKey, nextDocumentBoxModels)
+        else nextBoxModels.delete(documentKey)
       })
 
       return { ...state, boxModels: nextBoxModels }
