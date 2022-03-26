@@ -51,3 +51,9 @@ fragment PagePathnameSlice on PagePathnameSlice {
   id
   pathname
 }
+
+fragment GlobalElement on GlobalElement {
+  __typename
+  id
+  data
+}

@@ -11,7 +11,7 @@ import {
   useState,
 } from 'react'
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector'
-import { ApolloClient, InMemoryCache } from '@apollo/client'
+import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
 
 import * as ReactPage from '../state/react-page'
 import type * as ReactBuilderPreview from '../state/react-builder-preview'
@@ -27,7 +27,7 @@ import type {
 } from '../prop-controllers'
 import { ComponentIcon } from '../state/modules/components-meta'
 import { registerBuiltinComponents } from '../components'
-import { ApolloProvider } from '../api/react'
+import { ApolloProvider, useQuery } from '../api/react'
 
 const contextDefaultValue = ReactPage.configureStore()
 
@@ -259,13 +259,46 @@ const ElementReference = memo(
     { elementReference }: ElementRefereceProps,
     ref: Ref<unknown>,
   ): JSX.Element {
-    return (
-      <div ref={ref as Ref<HTMLDivElement>}>
-        <p>Not Implemented</p>
-        <pre>
-          <code>{JSON.stringify(elementReference, null, 2)}</code>
-        </pre>
-      </div>
+    const { error, data } = useQuery(
+      gql`
+        query ElementReferenceGlobalElement($id: ID!) {
+          globalElement(id: $id) {
+            id
+            data
+          }
+        }
+      `,
+      { variables: { id: elementReference.value } },
+    )
+    const globalElementData = data?.globalElement?.data as ReactPage.ElementData | undefined
+    const elementReferenceDocument = useDocument(elementReference.key)
+
+    if (error != null) {
+      return (
+        <div ref={ref as Ref<HTMLDivElement>}>
+          <p>Something went wrong!</p>
+          <pre>
+            <code>{JSON.stringify(error, null, 2)}</code>
+          </pre>
+        </div>
+      )
+    }
+
+    if (globalElementData == null) {
+      return (
+        <div ref={ref as Ref<HTMLDivElement>}>
+          <p>Not Found</p>
+          <pre>
+            <code>{JSON.stringify(elementReference, null, 2)}</code>
+          </pre>
+        </div>
+      )
+    }
+
+    return elementReferenceDocument != null ? (
+      <Document document={elementReferenceDocument} ref={ref} />
+    ) : (
+      <ElementData elementData={globalElementData} ref={ref} />
     )
   }),
 )

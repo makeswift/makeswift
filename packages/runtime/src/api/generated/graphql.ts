@@ -46,6 +46,8 @@ export type PagePathnameSliceFragment = {
   pathname: any
 }
 
+export type GlobalElementFragment = { __typename: 'GlobalElement'; id: string; data: any }
+
 export const SwatchFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -183,3 +185,21 @@ export const PagePathnameSliceFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<PagePathnameSliceFragment, unknown>
+export const GlobalElementFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'GlobalElement' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'GlobalElement' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'data' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GlobalElementFragment, unknown>
