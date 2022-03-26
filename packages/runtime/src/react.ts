@@ -5,6 +5,7 @@ export {
   RuntimeProvider,
   ReactRuntime,
   useIsInBuilder,
+  DocumentReference,
   PageProvider,
   usePageId,
 } from './runtimes/react'
