@@ -7,6 +7,7 @@ import {
   Ref,
   useContext,
   useEffect,
+  useImperativeHandle,
   useState,
 } from 'react'
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector'
@@ -273,52 +274,58 @@ type ElementProps = {
   element: ReactPage.Element
 }
 
-export const Element = memo(function Element({ element }: ElementProps): JSX.Element {
-  const elementKey = element.key
-  const dispatch = useDispatch()
-  const documentKey = useDocumentKey()
-  const [handle, setHandle] = useState<unknown>(null)
+export const Element = memo(
+  forwardRef(function Element({ element }: ElementProps, ref: Ref<unknown>): JSX.Element {
+    const elementKey = element.key
+    const dispatch = useDispatch()
+    const documentKey = useDocumentKey()
+    const [handle, setHandle] = useState<unknown>(null)
 
-  useEffect(() => {
-    if (documentKey == null) return
+    useImperativeHandle(ref, () => handle, [handle])
 
-    return dispatch(registerComponentHandleEffect(documentKey, elementKey, handle))
-  }, [dispatch, documentKey, elementKey, handle])
+    useEffect(() => {
+      if (documentKey == null) return
 
-  useEffect(() => {
-    if (documentKey == null) return
+      return dispatch(registerComponentHandleEffect(documentKey, elementKey, handle))
+    }, [dispatch, documentKey, elementKey, handle])
 
-    return dispatch(mountComponentEffect(documentKey, elementKey))
-  }, [dispatch, documentKey, elementKey])
+    useEffect(() => {
+      if (documentKey == null) return
 
-  return ReactPage.isElementReference(element) ? (
-    <ElementReference key={elementKey} ref={setHandle} elementReference={element} />
-  ) : (
-    <ElementData key={elementKey} ref={setHandle} elementData={element} />
-  )
-})
+      return dispatch(mountComponentEffect(documentKey, elementKey))
+    }, [dispatch, documentKey, elementKey])
+
+    return ReactPage.isElementReference(element) ? (
+      <ElementReference key={elementKey} ref={setHandle} elementReference={element} />
+    ) : (
+      <ElementData key={elementKey} ref={setHandle} elementData={element} />
+    )
+  }),
+)
 
 type DocumentProps = {
   documentKey: string
 }
 
-export const Document = memo(function Document({ documentKey }: DocumentProps): JSX.Element {
-  const documentRootElement = useDocumentRootElement(documentKey)
+export const Document = memo(
+  forwardRef(function Document({ documentKey }: DocumentProps, ref: Ref<unknown>): JSX.Element {
+    const documentRootElement = useDocumentRootElement(documentKey)
 
-  if (documentRootElement == null) {
+    if (documentRootElement == null) {
+      return (
+        <div ref={ref as Ref<HTMLDivElement>}>
+          <p>Document Not Found</p>
+          <pre>
+            <code>{JSON.stringify({ documentKey }, null, 2)}</code>
+          </pre>
+        </div>
+      )
+    }
+
     return (
-      <div>
-        <p>Document Not Found</p>
-        <pre>
-          <code>{JSON.stringify({ documentKey }, null, 2)}</code>
-        </pre>
-      </div>
+      <DocumentContext.Provider value={documentKey}>
+        <Element ref={ref} element={documentRootElement} />
+      </DocumentContext.Provider>
     )
-  }
-
-  return (
-    <DocumentContext.Provider value={documentKey}>
-      <Element element={documentRootElement} />
-    </DocumentContext.Provider>
-  )
-})
+  }),
+)
