@@ -122,9 +122,9 @@ function measureElements(): ThunkAction<void, State, unknown, Action> {
     const changedBoxModels = new Map<string, Map<string, BoxModels.BoxModel | null>>()
 
     currentBoxModels.forEach((currentDocumentBoxModels, documentKey) => {
-      currentDocumentBoxModels.forEach((_boxModel, elementKey) => {
-        const changedDocumentBoxModels = new Map<string, BoxModels.BoxModel | null>()
+      const changedDocumentBoxModels = new Map<string, BoxModels.BoxModel | null>()
 
+      currentDocumentBoxModels.forEach((_boxModel, elementKey) => {
         if (!measuredBoxModels.get(documentKey)?.has(elementKey)) {
           changedDocumentBoxModels.set(elementKey, null)
         }
