@@ -52,6 +52,7 @@ export const ActionTypes = {
   MESSAGE_BUILDER_PROP_CONTROLLER: 'MESSAGE_BUILDER_PROP_CONTROLLER',
 
   CHANGE_API_RESOURCE: 'CHANGE_API_RESOURCE',
+  EVICT_API_RESOURCE: 'EVICT_API_RESOURCE',
 } as const
 
 type InitAction = { type: typeof ActionTypes.INIT }
@@ -195,6 +196,11 @@ type ChangeAPIResourceAction = {
   payload: { resource: APIResource }
 }
 
+type EvictAPIResourceAction = {
+  type: typeof ActionTypes.EVICT_API_RESOURCE
+  payload: { id: string }
+}
+
 export type Action =
   | InitAction
   | CleanUpAction
@@ -223,6 +229,7 @@ export type Action =
   | MessageHostPropControllerAction
   | MessageBuilderPropControllerAction
   | ChangeAPIResourceAction
+  | EvictAPIResourceAction
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }
@@ -487,4 +494,8 @@ export function messageBuilderPropController<T>(
 
 export function changeApiResource(resource: APIResource): ChangeAPIResourceAction {
   return { type: ActionTypes.CHANGE_API_RESOURCE, payload: { resource } }
+}
+
+export function evictApiResource(id: string): EvictAPIResourceAction {
+  return { type: ActionTypes.EVICT_API_RESOURCE, payload: { id } }
 }

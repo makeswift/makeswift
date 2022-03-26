@@ -7,6 +7,7 @@ export {
   init,
   messageHostPropController,
   changeApiResource,
+  evictApiResource,
   registerDocument,
   unregisterDocument,
 } from './state/actions'

@@ -453,6 +453,10 @@ function apolloClientCacheSyncMiddleware(
 
           break
         }
+
+        case ActionTypes.EVICT_API_RESOURCE:
+          client.cache.evict({ id: action.payload.id })
+          break
       }
 
       return next(action)
