@@ -17,11 +17,12 @@ import { Action } from './actions'
 export type {
   Data,
   Document,
+  DocumentReference,
   Element,
   ElementData,
   ElementReference,
 } from './modules/read-only-documents'
-export { isElementReference } from './modules/read-only-documents'
+export { createDocumentReference, isElementReference } from './modules/read-only-documents'
 export type { ComponentType } from './modules/react-components'
 
 const reducer = combineReducers({
@@ -38,11 +39,8 @@ function getDocumentsStateSlice(state: State): Documents.State {
   return state.documents
 }
 
-export function getDocumentRootElement(
-  state: State,
-  documentKey: string,
-): Documents.Element | null {
-  return Documents.getDocumentRootElement(getDocumentsStateSlice(state), documentKey)
+export function getDocument(state: State, documentKey: string): Documents.Document | null {
+  return Documents.getDocument(getDocumentsStateSlice(state), documentKey)
 }
 
 function getReactComponentsStateSlice(state: State): ReactComponents.State {
@@ -105,12 +103,12 @@ function normalizeElement(
 }
 
 function getDocumentElements(state: State, documentKey: string): Map<string, Documents.Element> {
-  const rootElement = getDocumentRootElement(state, documentKey)
+  const document = getDocument(state, documentKey)
   const descriptors = getPropControllerDescriptors(state)
 
-  if (rootElement == null) return new Map()
+  if (document == null) return new Map()
 
-  return normalizeElement(rootElement, descriptors)
+  return normalizeElement(document.rootElement, descriptors)
 }
 
 export function getElement(

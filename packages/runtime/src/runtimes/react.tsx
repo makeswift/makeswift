@@ -208,8 +208,8 @@ export function useElementId(elementKey: string | null | undefined): string | nu
   )
 }
 
-function useDocumentRootElement(documentKey: string): ReactPage.Element | null {
-  return useSelector(state => ReactPage.getDocumentRootElement(state, documentKey))
+function useDocument(documentKey: string): ReactPage.Document | null {
+  return useSelector(state => ReactPage.getDocument(state, documentKey))
 }
 
 export function useIsInBuilder(): boolean {
@@ -304,28 +304,41 @@ export const Element = memo(
 )
 
 type DocumentProps = {
-  documentKey: string
+  document: ReactPage.Document
 }
 
-export const Document = memo(
-  forwardRef(function Document({ documentKey }: DocumentProps, ref: Ref<unknown>): JSX.Element {
-    const documentRootElement = useDocumentRootElement(documentKey)
+const Document = memo(
+  forwardRef(function Document({ document }: DocumentProps, ref: Ref<unknown>): JSX.Element {
+    return (
+      <DocumentContext.Provider value={document.key}>
+        <Element ref={ref} element={document.rootElement} />
+      </DocumentContext.Provider>
+    )
+  }),
+)
 
-    if (documentRootElement == null) {
+type DocumentReferenceProps = {
+  documentReference: ReactPage.DocumentReference
+}
+
+export const DocumentReference = memo(
+  forwardRef(function DocumentReference(
+    { documentReference }: DocumentReferenceProps,
+    ref: Ref<unknown>,
+  ): JSX.Element {
+    const document = useDocument(documentReference.key)
+
+    if (document == null) {
       return (
         <div ref={ref as Ref<HTMLDivElement>}>
           <p>Document Not Found</p>
           <pre>
-            <code>{JSON.stringify({ documentKey }, null, 2)}</code>
+            <code>{JSON.stringify(documentReference, null, 2)}</code>
           </pre>
         </div>
       )
     }
 
-    return (
-      <DocumentContext.Provider value={documentKey}>
-        <Element ref={ref} element={documentRootElement} />
-      </DocumentContext.Provider>
-    )
+    return <Document ref={ref} document={document} />
   }),
 )

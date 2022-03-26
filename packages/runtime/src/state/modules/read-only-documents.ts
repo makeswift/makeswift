@@ -12,12 +12,21 @@ export function isElementReference(element: Element): element is ElementReferenc
   return !('props' in element)
 }
 
+export type DocumentReference = {
+  key: string
+}
+
+export function createDocumentReference(key: string): DocumentReference {
+  return { key }
+}
+
 export type Document = {
+  key: string
   rootElement: Element
 }
 
-export function createDocument(rootElement: Element): Document {
-  return { rootElement }
+export function createDocument(key: string, rootElement: Element): Document {
+  return { key, rootElement }
 }
 
 export type State = Map<string, Document>
@@ -27,8 +36,8 @@ export function getInitialState({
 }: { rootElements?: Map<string, Element> } = {}): State {
   const initialState = new Map()
 
-  rootElements.forEach((rootElement, elementKey) => {
-    initialState.set(elementKey, createDocument(rootElement))
+  rootElements.forEach((rootElement, documentKey) => {
+    initialState.set(documentKey, createDocument(documentKey, rootElement))
   })
 
   return initialState
@@ -40,10 +49,6 @@ function getDocuments(state: State): Map<string, Document> {
 
 export function getDocument(state: State, documentKey: string): Document | null {
   return getDocuments(state).get(documentKey) ?? null
-}
-
-export function getDocumentRootElement(state: State, documentKey: string): Element | null {
-  return getDocument(state, documentKey)?.rootElement ?? null
 }
 
 export function reducer(state: State = getInitialState(), _action: Action): State {

@@ -8,8 +8,8 @@ import {
 import NextDocument, { DocumentContext, DocumentInitialProps } from 'next/document'
 import { ServerStyleSheet } from 'styled-components'
 
-import { RuntimeProvider, Document as DocumentComponent, ReactRuntime } from './runtimes/react'
-import { Element } from './state/react-page'
+import { RuntimeProvider, DocumentReference, ReactRuntime } from './runtimes/react'
+import { Element, createDocumentReference } from './state/react-page'
 
 export class Document extends NextDocument {
   static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
@@ -117,7 +117,7 @@ export function Page({ pageId, rootElement, makeswiftApiEndpoint, registerCompon
       makeswiftApiEndpoint={makeswiftApiEndpoint}
       registerComponents={registerComponents}
     >
-      <DocumentComponent documentKey={pageId} />
+      <DocumentReference documentReference={createDocumentReference(pageId)} />
     </RuntimeProvider>
   )
 }

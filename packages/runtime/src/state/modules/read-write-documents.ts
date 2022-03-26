@@ -42,20 +42,14 @@ function getReadOnlyDocumentsStateSlice(state: State): ReadOnlyDocuments.State {
   return state
 }
 
-export function getDocumentRootElement(
-  state: State,
-  documentKey: string,
-): ReadOnlyDocuments.Element | null {
-  return ReadOnlyDocuments.getDocumentRootElement(
-    getReadOnlyDocumentsStateSlice(state),
-    documentKey,
-  )
+export function getDocument(state: State, documentKey: string): ReadOnlyDocuments.Document | null {
+  return ReadOnlyDocuments.getDocument(getReadOnlyDocumentsStateSlice(state), documentKey)
 }
 
 export function reducer(state: State = getInitialState(), action: Action): State {
   switch (action.type) {
     case ActionTypes.CHANGE_DOCUMENT: {
-      const currentRootElement = getDocumentRootElement(state, action.payload.documentKey)
+      const currentRootElement = getDocument(state, action.payload.documentKey)?.rootElement
 
       if (currentRootElement == null) return state
 
@@ -65,7 +59,7 @@ export function reducer(state: State = getInitialState(), action: Action): State
         ? state
         : new Map(state).set(
             action.payload.documentKey,
-            ReadOnlyDocuments.createDocument(nextRootElement),
+            ReadOnlyDocuments.createDocument(action.payload.documentKey, nextRootElement),
           )
     }
 
