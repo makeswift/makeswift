@@ -8,6 +8,8 @@ export type {
   ListDescriptor,
   ListValue,
   ListOptions,
+  ShapeDescriptor,
+  ShapeValue,
   TypeaheadDescriptor,
   TypeaheadValue,
   TypeaheadOptions,
