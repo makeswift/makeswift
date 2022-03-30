@@ -666,7 +666,10 @@ type ShapeOptions<T extends Record<string, Descriptor>> = {
   preset?: { [K in keyof T]?: DescriptorValueType<T[K]> }
 }
 
-type ShapeDescriptor<_T extends Record<string, Data>, U extends Record<string, Descriptor>> = {
+export type ShapeDescriptor<
+  _T extends Record<string, Data>,
+  U extends Record<string, Descriptor>,
+> = {
   type: typeof Types.Shape
   options: ShapeOptions<U>
 }
