@@ -3,6 +3,9 @@ import {
   ListDescriptor as ListControl,
   ListOptions as ListControlConfig,
   ListValue as ListControlValue,
+  TypeaheadDescriptor as TypeaheadControl,
+  TypeaheadOptions as TypeaheadControlConfig,
+  TypeaheadValue as TypeaheadControlValue,
   PanelDescriptor,
   PropControllerDescriptor as Control,
   Props as Controls,
@@ -66,14 +69,73 @@ function deserializeListControl<T extends Data>(
   }
 }
 
-export type SerializedControl = Exclude<Control, ListControl> | SerializedListControl
+type SerializedTypeaheadControlConfig<T extends Data> = {
+  getItems: SerializedFunction<TypeaheadControlConfig<T>['getItems']>
+  label?: string
+  preset?: TypeaheadControlValue<T>
+  defaultValue?: TypeaheadControlValue<T>
+}
 
-export type DeserializedControl = Exclude<Control, ListControl> | DeserializedListControl
+type SerializedTypeaheadControl<T extends TypeaheadControlValue = TypeaheadControlValue> = {
+  type: typeof Controls.Types.Typeahead
+  options: SerializedTypeaheadControlConfig<T['value']>
+}
+
+function serializeTypeaheadControl<T extends Data>(
+  control: TypeaheadControl<TypeaheadControlValue<T>>,
+): [SerializedTypeaheadControl<TypeaheadControlValue<T>>, Transferable[]] {
+  const { getItems } = control.options
+
+  const serializedGetItems = getItems && serializeFunction(getItems)
+
+  return [
+    { ...control, options: { ...control.options, getItems: serializedGetItems } },
+    serializedGetItems == null ? [] : [serializedGetItems],
+  ]
+}
+
+type DeserializedTypeaheadControlConfig<T extends Data> = {
+  getItems: DeserializedFunction<TypeaheadControlConfig<T>['getItems']>
+  label?: string
+  preset?: TypeaheadControlValue<T>
+  defaultValue?: TypeaheadControlValue<T>
+}
+
+type DeserializedTypeaheadControl<T extends TypeaheadControlValue = TypeaheadControlValue> = {
+  type: typeof Controls.Types.Typeahead
+  options: DeserializedTypeaheadControlConfig<T['value']>
+}
+
+function deserializeTypeaheadControl<T extends Data>(
+  serializedControl: SerializedTypeaheadControl<TypeaheadControlValue<T>>,
+): DeserializedTypeaheadControl<TypeaheadControlValue<T>> {
+  const { getItems } = serializedControl.options
+
+  const deserializedGetItems = getItems && deserializeFunction(getItems)
+
+  return {
+    ...serializedControl,
+    options: { ...serializedControl.options, getItems: deserializedGetItems },
+  }
+}
+
+export type SerializedControl =
+  | Exclude<Control, ListControl | TypeaheadControl>
+  | SerializedListControl
+  | SerializedTypeaheadControl
+
+export type DeserializedControl =
+  | Exclude<Control, ListControl | TypeaheadControl>
+  | DeserializedListControl
+  | DeserializedTypeaheadControl
 
 function serializeControl(control: Control): [SerializedControl, Transferable[]] {
   switch (control.type) {
     case Controls.Types.List:
       return serializeListControl(control)
+
+    case Controls.Types.Typeahead:
+      return serializeTypeaheadControl(control)
 
     default:
       return [control, []]
@@ -84,6 +146,9 @@ function deserializeControl(serializedControl: SerializedControl): DeserializedC
   switch (serializedControl.type) {
     case Controls.Types.List:
       return deserializeListControl(serializedControl)
+
+    case Controls.Types.Typeahead:
+      return deserializeTypeaheadControl(serializedControl)
 
     default:
       return serializedControl
