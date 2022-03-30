@@ -6,7 +6,6 @@ import {
   TypeaheadDescriptor as TypeaheadControl,
   TypeaheadOptions as TypeaheadControlConfig,
   TypeaheadValue as TypeaheadControlValue,
-  PanelDescriptor,
   PropControllerDescriptor as Control,
   Props as Controls,
 } from '../../prop-controllers'
@@ -18,7 +17,7 @@ import {
 } from './function-serialization'
 
 type SerializedListControlConfig<T extends Data> = {
-  type: PanelDescriptor<T>
+  type: SerializedControl<T>
   label?: string
   getItemLabel?: SerializedFunction<Exclude<ListControlConfig<T>['getItemLabel'], undefined>>
   preset?: ListControlValue<T>
@@ -27,24 +26,32 @@ type SerializedListControlConfig<T extends Data> = {
 
 type SerializedListControl<T extends ListControlValue = ListControlValue> = {
   type: typeof Controls.Types.List
-  options: SerializedListControlConfig<T[number]['value']>
+  options: SerializedListControlConfig<T extends ListControlValue<infer U> ? U : never>
 }
 
 function serializeListControl<T extends Data>(
   control: ListControl<ListControlValue<T>>,
 ): [SerializedListControl<ListControlValue<T>>, Transferable[]] {
-  const { getItemLabel } = control.options
+  const { type, getItemLabel } = control.options
+  const transferables: Transferable[] = []
 
+  const [serializedType, serializedTypeTransferables] = serializeControl(type)
   const serializedGetItemLabel = getItemLabel && serializeFunction(getItemLabel)
 
+  transferables.push(...serializedTypeTransferables)
+  if (serializedGetItemLabel != null) transferables.push(serializedGetItemLabel)
+
   return [
-    { ...control, options: { ...control.options, getItemLabel: serializedGetItemLabel } },
-    serializedGetItemLabel == null ? [] : [serializedGetItemLabel],
+    {
+      ...control,
+      options: { ...control.options, type: serializedType, getItemLabel: serializedGetItemLabel },
+    },
+    transferables,
   ]
 }
 
 type DeserializedListControlConfig<T extends Data> = {
-  type: PanelDescriptor<T>
+  type: DeserializedControl<T>
   label?: string
   getItemLabel?: DeserializedFunction<Exclude<ListControlConfig<T>['getItemLabel'], undefined>>
   preset?: ListControlValue<T>
@@ -53,19 +60,24 @@ type DeserializedListControlConfig<T extends Data> = {
 
 type DeserializedListControl<T extends ListControlValue = ListControlValue> = {
   type: typeof Controls.Types.List
-  options: DeserializedListControlConfig<T[number]['value']>
+  options: DeserializedListControlConfig<T extends ListControlValue<infer U> ? U : never>
 }
 
 function deserializeListControl<T extends Data>(
   serializedControl: SerializedListControl<ListControlValue<T>>,
 ): DeserializedListControl<ListControlValue<T>> {
-  const { getItemLabel } = serializedControl.options
+  const { type, getItemLabel } = serializedControl.options
 
+  const deserializedType = deserializeControl(type)
   const deserializedGetItemLabel = getItemLabel && deserializeFunction(getItemLabel)
 
   return {
     ...serializedControl,
-    options: { ...serializedControl.options, getItemLabel: deserializedGetItemLabel },
+    options: {
+      ...serializedControl.options,
+      type: deserializedType,
+      getItemLabel: deserializedGetItemLabel,
+    },
   }
 }
 
@@ -119,17 +131,27 @@ function deserializeTypeaheadControl<T extends Data>(
   }
 }
 
-export type SerializedControl =
-  | Exclude<Control, ListControl | TypeaheadControl>
-  | SerializedListControl
-  | SerializedTypeaheadControl
+export type SerializedControl<T extends Data = Data> =
+  | Exclude<
+      Control<T>,
+      | ListControl<T extends ListControlValue ? T : ListControlValue>
+      | TypeaheadControl<T extends TypeaheadControlValue ? T : TypeaheadControlValue>
+    >
+  | SerializedListControl<T extends ListControlValue ? T : ListControlValue>
+  | SerializedTypeaheadControl<T extends TypeaheadControlValue ? T : TypeaheadControlValue>
 
-export type DeserializedControl =
-  | Exclude<Control, ListControl | TypeaheadControl>
-  | DeserializedListControl
-  | DeserializedTypeaheadControl
+export type DeserializedControl<T extends Data = Data> =
+  | Exclude<
+      Control<T>,
+      | ListControl<T extends ListControlValue ? T : ListControlValue>
+      | TypeaheadControl<T extends TypeaheadControlValue ? T : TypeaheadControlValue>
+    >
+  | DeserializedListControl<T extends ListControlValue ? T : ListControlValue>
+  | DeserializedTypeaheadControl<T extends TypeaheadControlValue ? T : TypeaheadControlValue>
 
-function serializeControl(control: Control): [SerializedControl, Transferable[]] {
+function serializeControl<T extends Data>(
+  control: Control<T>,
+): [SerializedControl<T>, Transferable[]] {
   switch (control.type) {
     case Controls.Types.List:
       return serializeListControl(control)
@@ -142,7 +164,9 @@ function serializeControl(control: Control): [SerializedControl, Transferable[]]
   }
 }
 
-function deserializeControl(serializedControl: SerializedControl): DeserializedControl {
+function deserializeControl<T extends Data>(
+  serializedControl: SerializedControl<T>,
+): DeserializedControl<T> {
   switch (serializedControl.type) {
     case Controls.Types.List:
       return deserializeListControl(serializedControl)
