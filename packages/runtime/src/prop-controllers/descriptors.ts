@@ -117,6 +117,7 @@ export const Types = {
   SocialLinks: 'SocialLinks',
   Table: 'Table',
   TableFormFields: 'TableFormFields',
+  Typeahead: 'Typeahead',
   TextArea: 'TextArea',
   TextInput: 'TextInput',
   TextStyle: 'TextStyle',
@@ -755,6 +756,30 @@ export function TableFormFields(options: TableFormFieldsOptions = {}): TableForm
   return { type: Types.TableFormFields, options }
 }
 
+export type TypeaheadValue<T extends Data = Data> = {
+  id: string
+  label: string
+  value: T
+}
+
+export type TypeaheadOptions<T extends Data> = {
+  getItems: (query: string) => Promise<TypeaheadValue<T>[]>
+  label?: string
+  preset?: TypeaheadValue<T>
+  defaultValue?: TypeaheadValue<T>
+}
+
+export type TypeaheadDescriptor<T extends TypeaheadValue = TypeaheadValue> = {
+  type: typeof Types.Typeahead
+  options: TypeaheadOptions<T extends TypeaheadValue<infer U> ? U : never>
+}
+
+export function Typeahead<T extends Data>(
+  options: TypeaheadOptions<T>,
+): TypeaheadDescriptor<TypeaheadValue<T>> {
+  return { type: Types.Typeahead, options }
+}
+
 export type TextAreaValue = string
 
 type TextAreaOptions = Options<{ preset?: TextAreaValue; label?: string; rows?: number }>
@@ -857,6 +882,7 @@ export type Descriptor<T extends Data = Data> =
   | SocialLinksDescriptor<T>
   | TableDescriptor<T>
   | TableFormFieldsDescriptor<T>
+  | TypeaheadDescriptor<T extends TypeaheadValue ? T : TypeaheadValue>
   | TextAreaDescriptor<T>
   | TextInputDescriptor<T>
   | TextStyleDescriptor<T>
@@ -888,6 +914,7 @@ type PanelDescriptorType =
   | typeof Types.Font
   | typeof Types.TextArea
   | typeof Types.Table
+  | typeof Types.Typeahead
   | typeof Types.RichText
   | typeof Types.Image
   | typeof Types.ResponsiveOpacity
