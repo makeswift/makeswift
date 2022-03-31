@@ -661,20 +661,20 @@ export function Shadows(options: ShadowsOptions = {}): ShadowsDescriptor {
 
 export type ShapeValue<T extends Data = Data> = Record<string, T>
 
-type ShapeOptions<T extends Record<string, Descriptor>> = {
+type ShapeOptions<T extends Record<string, PanelDescriptor>> = {
   type: T
   preset?: { [K in keyof T]?: DescriptorValueType<T[K]> }
 }
 
 export type ShapeDescriptor<
   _T extends Record<string, Data>,
-  U extends Record<string, Descriptor>,
+  U extends Record<string, PanelDescriptor>,
 > = {
   type: typeof Types.Shape
   options: ShapeOptions<U>
 }
 
-export function Shape<T extends Record<string, Descriptor>>(
+export function Shape<T extends Record<string, PanelDescriptor>>(
   options: ShapeOptions<T>,
 ): ShapeDescriptor<{ [K in keyof T]?: DescriptorValueType<T[K]> }, T> {
   return { type: Types.Shape, options }
@@ -892,7 +892,7 @@ export type Descriptor<T extends Data = Data> =
   | VideoDescriptor<T>
   | WidthDescriptor<T>
 
-type PanelDescriptorType =
+export type PanelDescriptorType =
   | typeof Types.Backgrounds
   | typeof Types.ResponsiveIconRadioGroup
   | typeof Types.Margin
@@ -931,3 +931,7 @@ export type PanelDescriptor<T extends Data = Data> = Extract<
 >
 
 export type DescriptorValueType<T extends Descriptor> = T extends Descriptor<infer U> ? U : never
+
+export type PanelDescriptorValueType<T extends PanelDescriptor> = T extends PanelDescriptor<infer U>
+  ? U
+  : never

@@ -14,6 +14,8 @@ export type {
   TypeaheadValue,
   TypeaheadOptions,
   PanelDescriptor,
+  PanelDescriptorType,
+  PanelDescriptorValueType,
   ResponsiveValue,
   ResponsiveValueType,
 } from './descriptors'
