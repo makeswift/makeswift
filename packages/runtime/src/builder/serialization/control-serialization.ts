@@ -3,12 +3,14 @@ import {
   ListDescriptor as ListControl,
   ListOptions as ListControlConfig,
   ListValue as ListControlValue,
-  PropControllerDescriptorValueType as ControlValueType,
   ShapeDescriptor as ShapeControl,
   ShapeValue as ShapeControlValue,
   TypeaheadDescriptor as TypeaheadControl,
   TypeaheadOptions as TypeaheadControlConfig,
   TypeaheadValue as TypeaheadControlValue,
+  PanelDescriptor as PanelControl,
+  PanelDescriptorType as PanelControlType,
+  PanelDescriptorValueType as PanelControlValueType,
   PropControllerDescriptor as Control,
   Props as Controls,
 } from '../../prop-controllers'
@@ -19,33 +21,41 @@ import {
   serializeFunction,
 } from './function-serialization'
 
-type SerializedShapeControlConfig<T extends Record<string, SerializedControl>> = {
+type SerializedShapeControlConfig<T extends Record<string, SerializedPanelControl>> = {
   type: T
-  preset?: { [K in keyof T]?: SerializedControlValueType<T[K]> }
+  preset?: { [K in keyof T]?: SerializedPanelControlValueType<T[K]> }
 }
 
 type SerializedShapeControl<
   _T extends Record<string, Data>,
-  U extends Record<string, SerializedControl>,
+  U extends Record<string, SerializedPanelControl>,
 > = {
   type: typeof Controls.Types.Shape
   options: SerializedShapeControlConfig<U>
 }
 
-function serializeShapeControl<T extends Record<string, Data>, U extends Record<string, Control>>(
+function serializeShapeControl<
+  T extends Record<string, Data>,
+  U extends Record<string, PanelControl>,
+>(
   control: ShapeControl<T, U>,
 ): [
-  SerializedShapeControl<T, { [K in keyof U]: SerializedControl<ControlValueType<U[K]>> }>,
+  SerializedShapeControl<
+    T,
+    { [K in keyof U]: SerializedPanelControl<PanelControlValueType<U[K]>> }
+  >,
   Transferable[],
 ] {
   const { type } = control.options
   const transferables: Transferable[] = []
-  const serializedType = {} as { [K in keyof U]: SerializedControl<ControlValueType<U[K]>> }
+  const serializedType = {} as {
+    [K in keyof U]: SerializedPanelControl<PanelControlValueType<U[K]>>
+  }
 
   Object.entries(type).forEach(([key, control]) => {
     const [serializedControl, serializedControlTransferables] = serializeControl(control)
 
-    serializedType[key as keyof typeof type] = serializedControl
+    serializedType[key as keyof typeof type] = serializedControl as SerializedPanelControl
     transferables.push(...serializedControlTransferables)
   })
 
@@ -53,14 +63,14 @@ function serializeShapeControl<T extends Record<string, Data>, U extends Record<
   return [{ ...control, options: { ...control.options, type: serializedType } }, transferables]
 }
 
-type DeserializedShapeControlConfig<T extends Record<string, DeserializedControl>> = {
+type DeserializedShapeControlConfig<T extends Record<string, DeserializedPanelControl>> = {
   type: T
-  preset?: { [K in keyof T]?: DeserializedControlValueType<T[K]> }
+  preset?: { [K in keyof T]?: DeserializedPanelControlValueType<T[K]> }
 }
 
 type DeserializedShapeControl<
   _T extends Record<string, Data>,
-  U extends Record<string, DeserializedControl>,
+  U extends Record<string, DeserializedPanelControl>,
 > = {
   type: typeof Controls.Types.Shape
   options: DeserializedShapeControlConfig<U>
@@ -68,20 +78,22 @@ type DeserializedShapeControl<
 
 function deserializeShapeControl<
   T extends Record<string, Data>,
-  U extends Record<string, SerializedControl>,
+  U extends Record<string, SerializedPanelControl>,
 >(
   control: SerializedShapeControl<T, U>,
 ): DeserializedShapeControl<
   T,
-  { [K in keyof U]: DeserializedControl<SerializedControlValueType<U[K]>> }
+  { [K in keyof U]: DeserializedPanelControl<SerializedPanelControlValueType<U[K]>> }
 > {
   const { type } = control.options
   const deserializedType = {} as {
-    [K in keyof U]: DeserializedControl<SerializedControlValueType<U[K]>>
+    [K in keyof U]: DeserializedPanelControl<SerializedPanelControlValueType<U[K]>>
   }
 
   Object.entries(type).forEach(([key, control]) => {
-    deserializedType[key as keyof typeof type] = deserializeControl(control)
+    deserializedType[key as keyof typeof type] = deserializeControl(
+      control,
+    ) as DeserializedPanelControl
   })
 
   // @ts-expect-error: preset types are incompatible
@@ -89,7 +101,7 @@ function deserializeShapeControl<
 }
 
 type SerializedListControlConfig<T extends Data> = {
-  type: SerializedControl<T>
+  type: SerializedPanelControl<T>
   label?: string
   getItemLabel?: SerializedFunction<Exclude<ListControlConfig<T>['getItemLabel'], undefined>>
   preset?: ListControlValue<T>
@@ -116,14 +128,18 @@ function serializeListControl<T extends Data>(
   return [
     {
       ...control,
-      options: { ...control.options, type: serializedType, getItemLabel: serializedGetItemLabel },
+      options: {
+        ...control.options,
+        type: serializedType as SerializedPanelControl,
+        getItemLabel: serializedGetItemLabel,
+      },
     },
     transferables,
   ]
 }
 
 type DeserializedListControlConfig<T extends Data> = {
-  type: DeserializedControl<T>
+  type: DeserializedPanelControl<T>
   label?: string
   getItemLabel?: DeserializedFunction<Exclude<ListControlConfig<T>['getItemLabel'], undefined>>
   preset?: ListControlValue<T>
@@ -140,7 +156,7 @@ function deserializeListControl<T extends Data>(
 ): DeserializedListControl<ListControlValue<T>> {
   const { type, getItemLabel } = serializedControl.options
 
-  const deserializedType = deserializeControl(type)
+  const deserializedType = deserializeControl(type) as DeserializedPanelControl
   const deserializedGetItemLabel = getItemLabel && deserializeFunction(getItemLabel)
 
   return {
@@ -214,9 +230,13 @@ export type SerializedControl<T extends Data = Data> =
   | SerializedShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
   | SerializedTypeaheadControl<T extends TypeaheadControlValue ? T : TypeaheadControlValue>
 
-type SerializedControlValueType<T extends SerializedControl> = T extends SerializedControl<infer U>
-  ? U
-  : never
+type SerializedPanelControl<T extends Data = Data> = Extract<
+  SerializedControl<T>,
+  { type: PanelControlType }
+>
+
+type SerializedPanelControlValueType<T extends SerializedPanelControl> =
+  T extends SerializedPanelControl<infer U> ? U : never
 
 export type DeserializedControl<T extends Data = Data> =
   | Exclude<
@@ -229,11 +249,13 @@ export type DeserializedControl<T extends Data = Data> =
   | DeserializedShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
   | DeserializedTypeaheadControl<T extends TypeaheadControlValue ? T : TypeaheadControlValue>
 
-type DeserializedControlValueType<T extends DeserializedControl> = T extends DeserializedControl<
-  infer U
+type DeserializedPanelControl<T extends Data = Data> = Extract<
+  DeserializedControl<T>,
+  { type: PanelControlType }
 >
-  ? U
-  : never
+
+type DeserializedPanelControlValueType<T extends DeserializedPanelControl> =
+  T extends DeserializedPanelControl<infer U> ? U : never
 
 function serializeControl<T extends Data>(
   control: Control<T>,
