@@ -91,7 +91,7 @@ function normalizeElement(
 
     if (Documents.isElementReference(current)) continue
 
-    const elementDescriptors = descriptors.get(element.type)
+    const elementDescriptors = descriptors.get(current.type)
 
     if (elementDescriptors == null) continue
 
