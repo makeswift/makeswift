@@ -9,6 +9,7 @@ export {
   changeApiResource,
   evictApiResource,
   registerDocument,
+  scrollDocumentElement,
   unregisterDocument,
 } from './state/actions'
 export type { Operation } from './state/modules/read-write-documents'

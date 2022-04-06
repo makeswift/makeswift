@@ -319,6 +319,10 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
             window.document.documentElement.scrollTop = action.payload.scrollTop
             break
 
+          case ActionTypes.SCROLL_DOCUMENT_ELEMENT:
+            window.document.documentElement.scrollTop += action.payload.scrollTopDelta
+            break
+
           case ActionTypes.INIT:
             cleanUp = dispatch(initialize())
             break

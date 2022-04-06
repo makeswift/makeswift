@@ -126,10 +126,13 @@ export function RuntimeProvider({
 
     if (!isInBuilder) return
 
+    const lastDocumentOverflow = window.document.documentElement.style.overflow
+    window.document.documentElement.style.overflow = 'hidden'
     window.addEventListener('focusin', handleFocusIn)
     window.addEventListener('focusout', handlefocusOut)
 
     return () => {
+      window.document.documentElement.style.overflow = lastDocumentOverflow
       window.addEventListener('focusin', handleFocusIn)
       window.removeEventListener('focusout', handlefocusOut)
     }

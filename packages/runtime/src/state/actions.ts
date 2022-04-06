@@ -43,6 +43,7 @@ export const ActionTypes = {
 
   CHANGE_DOCUMENT_ELEMENT_SIZE: 'CHANGE_DOCUMENT_ELEMENT_SIZE',
   CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP: 'CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP',
+  SCROLL_DOCUMENT_ELEMENT: 'SCROLL_DOCUMENT_ELEMENT',
 
   REGISTER_PROP_CONTROLLERS_HANDLE: 'REGISTER_PROP_CONTROLLERS_HANDLE',
   UNREGISTER_PROP_CONTROLLERS_HANDLE: 'UNREGISTER_PROP_CONTROLLERS_HANDLE',
@@ -157,6 +158,11 @@ type ChangeDocumentElementScrollTopAction = {
   payload: { scrollTop: number }
 }
 
+type ScrollDocumentElementAction = {
+  type: typeof ActionTypes.SCROLL_DOCUMENT_ELEMENT
+  payload: { scrollTopDelta: number }
+}
+
 type RegisterPropControllersHandleAction = {
   type: typeof ActionTypes.REGISTER_PROP_CONTROLLERS_HANDLE
   payload: { documentKey: string; elementKey: string; handle: PropControllersHandle }
@@ -222,6 +228,7 @@ export type Action =
   | ChangeElementBoxModelsAction
   | ChangeDocumentElementSizeAction
   | ChangeDocumentElementScrollTopAction
+  | ScrollDocumentElementAction
   | RegisterPropControllersHandleAction
   | UnregisterPropControllersHandleAction
   | RegisterPropControllersAction
@@ -427,6 +434,10 @@ export function changeDocumentElementScrollTop(
   scrollTop: number,
 ): ChangeDocumentElementScrollTopAction {
   return { type: ActionTypes.CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP, payload: { scrollTop } }
+}
+
+export function scrollDocumentElement(scrollTopDelta: number): ScrollDocumentElementAction {
+  return { type: ActionTypes.SCROLL_DOCUMENT_ELEMENT, payload: { scrollTopDelta } }
 }
 
 export function registerPropControllersHandle(
