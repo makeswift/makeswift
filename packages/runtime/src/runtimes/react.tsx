@@ -126,13 +126,15 @@ export function RuntimeProvider({
 
     if (!isInBuilder) return
 
-    const lastDocumentOverflow = window.document.documentElement.style.overflow
-    window.document.documentElement.style.overflow = 'hidden'
+    // TODO(miguel): Uncomment the lines below once we figure out how to make it so that we can hide
+    // the scrollbar in the builder without preventing scrolling in preview mode.
+    // const lastDocumentOverflow = window.document.documentElement.style.overflow
+    // window.document.documentElement.style.overflow = 'hidden'
     window.addEventListener('focusin', handleFocusIn)
     window.addEventListener('focusout', handlefocusOut)
 
     return () => {
-      window.document.documentElement.style.overflow = lastDocumentOverflow
+      // window.document.documentElement.style.overflow = lastDocumentOverflow
       window.addEventListener('focusin', handleFocusIn)
       window.removeEventListener('focusout', handlefocusOut)
     }
