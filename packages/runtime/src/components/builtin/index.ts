@@ -25,6 +25,7 @@ import { registerComponent as registerNavigationComponent } from './Navigation'
 import { registerComponent as registerRootComponent } from './Root'
 import { registerComponent as registerSocialLinksComponent } from './SocialLinks'
 import { registerComponent as registerTextComponent } from './Text'
+import { registerComponent as registerVideoComponent } from './Video'
 
 export function registerBuiltinComponents(runtime: ReactRuntime) {
   const unregisterBoxComponent = registerBoxComponent(runtime)
@@ -39,6 +40,7 @@ export function registerBuiltinComponents(runtime: ReactRuntime) {
   const unregisterRootComponent = registerRootComponent(runtime)
   const unregisterSocialLinksComponent = registerSocialLinksComponent(runtime)
   const unregisterTextComponent = registerTextComponent(runtime)
+  const unregisterVideoComponent = registerVideoComponent(runtime)
 
   return () => {
     unregisterBoxComponent()
@@ -53,5 +55,7 @@ export function registerBuiltinComponents(runtime: ReactRuntime) {
     unregisterRootComponent()
     unregisterSocialLinksComponent()
     unregisterTextComponent()
+    unregisterTextComponent()
+    unregisterVideoComponent()
   }
 }
