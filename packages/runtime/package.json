@@ -106,6 +106,7 @@
     "formik": "^2.2.9",
     "framer-motion": "^6.0.0",
     "graphql": "^16.3.0",
+    "html-react-parser": "^1.2.4",
     "immutable": "^4.0.0-rc.12",
     "ot-json0": "^1.1.0",
     "polished": "3.0.3",

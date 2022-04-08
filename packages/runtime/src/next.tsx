@@ -11,8 +11,9 @@ import { useState } from 'react'
 import { ServerStyleSheet } from 'styled-components'
 
 import { MakeswiftClient } from './api/react'
-import { RuntimeProvider, DocumentReference } from './runtimes/react'
-import { Element, createDocumentReference } from './state/react-page'
+import { Element } from './state/react-page'
+import { RuntimeProvider } from './runtimes/react'
+import { Page as PageMeta, PageData } from './components'
 
 export class Document extends NextDocument {
   static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
@@ -45,10 +46,14 @@ export class Document extends NextDocument {
 const REVALIDATE_SECONDS = 1
 
 export type PageProps = {
-  pageId: string
+  page: PageData
   rootElement: Element
   makeswiftApiEndpoint: string
   cacheData: NormalizedCacheObject
+}
+
+type APIResult = PageData & {
+  data: any
 }
 
 export async function getServerSideProps({
@@ -65,7 +70,7 @@ export async function getServerSideProps({
     return { notFound: true }
   }
 
-  const page = await res.json()
+  const page: APIResult = await res.json()
 
   if (page == null) return { notFound: true }
 
@@ -75,7 +80,7 @@ export async function getServerSideProps({
 
   return {
     props: {
-      pageId: page.id,
+      page,
       rootElement: page.data,
       makeswiftApiEndpoint,
       cacheData,
@@ -100,7 +105,7 @@ export async function getStaticProps({
     return { notFound: true, revalidate: REVALIDATE_SECONDS }
   }
 
-  const page = await res.json()
+  const page: APIResult = await res.json()
 
   if (page == null) return { notFound: true, revalidate: REVALIDATE_SECONDS }
 
@@ -110,7 +115,7 @@ export async function getStaticProps({
 
   return {
     props: {
-      pageId: page.id,
+      page,
       rootElement: page.data,
       makeswiftApiEndpoint,
       cacheData,
@@ -123,12 +128,12 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   return { paths: [], fallback: 'blocking' }
 }
 
-export function Page({ pageId, rootElement, makeswiftApiEndpoint, cacheData }: PageProps) {
+export function Page({ page, rootElement, makeswiftApiEndpoint, cacheData }: PageProps) {
   const [client] = useState(() => new MakeswiftClient({ uri: makeswiftApiEndpoint, cacheData }))
 
   return (
-    <RuntimeProvider client={client} defaultRootElements={new Map([[pageId, rootElement]])}>
-      <DocumentReference documentReference={createDocumentReference(pageId)} />
+    <RuntimeProvider client={client} defaultRootElements={new Map([[page.id, rootElement]])}>
+      <PageMeta page={page} />
     </RuntimeProvider>
   )
 }
