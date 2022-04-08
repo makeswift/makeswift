@@ -1,3 +1,4 @@
+import { NormalizedCacheObject } from '@apollo/client'
 import {
   GetServerSidePropsContext,
   GetServerSidePropsResult,
@@ -6,8 +7,10 @@ import {
   GetStaticPropsResult,
 } from 'next'
 import NextDocument, { DocumentContext, DocumentInitialProps } from 'next/document'
+import { useState } from 'react'
 import { ServerStyleSheet } from 'styled-components'
 
+import { MakeswiftClient } from './api/react'
 import { RuntimeProvider, DocumentReference } from './runtimes/react'
 import { Element, createDocumentReference } from './state/react-page'
 
@@ -45,6 +48,7 @@ export type PageProps = {
   pageId: string
   rootElement: Element
   makeswiftApiEndpoint: string
+  cacheData: NormalizedCacheObject
 }
 
 export async function getServerSideProps({
@@ -65,11 +69,16 @@ export async function getServerSideProps({
 
   if (page == null) return { notFound: true }
 
+  const makeswiftApiEndpoint = `${process['env'].MAKESWIFT_API_HOST}/graphql`
+  const client = new MakeswiftClient({ uri: makeswiftApiEndpoint })
+  const cacheData = await client.prefetch(page.data)
+
   return {
     props: {
       pageId: page.id,
       rootElement: page.data,
-      makeswiftApiEndpoint: `${process['env'].MAKESWIFT_API_HOST}/graphql`,
+      makeswiftApiEndpoint,
+      cacheData,
     },
   }
 }
@@ -95,11 +104,16 @@ export async function getStaticProps({
 
   if (page == null) return { notFound: true, revalidate: REVALIDATE_SECONDS }
 
+  const makeswiftApiEndpoint = `${process['env'].MAKESWIFT_API_HOST}/graphql`
+  const client = new MakeswiftClient({ uri: makeswiftApiEndpoint })
+  const cacheData = await client.prefetch(page.data)
+
   return {
     props: {
       pageId: page.id,
       rootElement: page.data,
-      makeswiftApiEndpoint: `${process['env'].MAKESWIFT_API_HOST}/graphql`,
+      makeswiftApiEndpoint,
+      cacheData,
     },
     revalidate: REVALIDATE_SECONDS,
   }
@@ -109,12 +123,11 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   return { paths: [], fallback: 'blocking' }
 }
 
-export function Page({ pageId, rootElement, makeswiftApiEndpoint }: PageProps) {
+export function Page({ pageId, rootElement, makeswiftApiEndpoint, cacheData }: PageProps) {
+  const [client] = useState(() => new MakeswiftClient({ uri: makeswiftApiEndpoint, cacheData }))
+
   return (
-    <RuntimeProvider
-      defaultRootElements={new Map([[pageId, rootElement]])}
-      makeswiftApiEndpoint={makeswiftApiEndpoint}
-    >
+    <RuntimeProvider client={client} defaultRootElements={new Map([[pageId, rootElement]])}>
       <DocumentReference documentReference={createDocumentReference(pageId)} />
     </RuntimeProvider>
   )

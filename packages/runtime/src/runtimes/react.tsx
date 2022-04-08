@@ -27,7 +27,7 @@ import type {
 } from '../prop-controllers'
 import { ComponentIcon } from '../state/modules/components-meta'
 import { registerBuiltinComponents } from '../components'
-import { ApolloProvider, createApolloClient, useQuery } from '../api/react'
+import { MakeswiftProvider, MakeswiftClient, useQuery } from '../api/react'
 
 const contextDefaultValue = ReactPage.configureStore()
 
@@ -65,15 +65,15 @@ export const ReactRuntime = createReactRuntime(contextDefaultValue)
 const Context = createContext(contextDefaultValue)
 
 type RuntimeProviderProps = {
+  client: MakeswiftClient
   defaultRootElements?: Map<string, ReactPage.Element>
   children?: ReactNode
-  makeswiftApiEndpoint?: string
 }
 
 export function RuntimeProvider({
+  client,
   children,
   defaultRootElements,
-  makeswiftApiEndpoint,
 }: RuntimeProviderProps): JSX.Element {
   const [store, setStore] = useState(() => {
     const store = ReactPage.configureStore({
@@ -86,13 +86,6 @@ export function RuntimeProvider({
 
     return store
   })
-  const [client, setClient] = useState(createApolloClient({ uri: makeswiftApiEndpoint }))
-
-  useEffect(() => {
-    setClient(({ cache }) =>
-      createApolloClient({ uri: makeswiftApiEndpoint, cacheData: cache.extract() }),
-    )
-  }, [makeswiftApiEndpoint])
 
   useEffect(() => {
     return registerBuiltinComponents(createReactRuntime(store))
@@ -108,7 +101,10 @@ export function RuntimeProvider({
       const ReactBuilderPreview = await import('../state/react-builder-preview')
 
       setStore(store =>
-        ReactBuilderPreview.configureStore({ preloadedState: store.getState(), client }),
+        ReactBuilderPreview.configureStore({
+          preloadedState: store.getState(),
+          client: client.apolloClient,
+        }),
       )
     }
   }, [client])
@@ -150,7 +146,7 @@ export function RuntimeProvider({
 
   return (
     <Context.Provider value={store}>
-      <ApolloProvider client={client}>{children}</ApolloProvider>
+      <MakeswiftProvider client={client}>{children}</MakeswiftProvider>
     </Context.Provider>
   )
 }
