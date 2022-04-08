@@ -15,38 +15,13 @@ import {
   InMemoryCache,
   TypePolicies,
 } from '@apollo/client'
+import { getDataFromTree } from '@apollo/client/react/ssr'
 export { gql } from '@apollo/client'
-import { ApolloProviderProps } from '@apollo/client/react/context'
-import { createContext, useContext } from 'react'
+import { createContext, ReactNode, useContext } from 'react'
+import uuid from 'uuid/v4'
 
-const Context = createContext<ApolloClient<NormalizedCacheObject> | undefined>(undefined)
-
-export function useQuery<TData = any, TVariables = OperationVariables>(
-  query: DocumentNode | TypedDocumentNode<TData, TVariables>,
-  options?: QueryHookOptions<TData, TVariables>,
-): QueryResult<TData, TVariables> {
-  const client = useContext(Context)
-
-  return useApolloQuery(query, { client, ...options })
-}
-
-export function useMutation<
-  TData = any,
-  TVariables = OperationVariables,
-  TContext = DefaultContext,
-  TCache extends ApolloCache<any> = ApolloCache<any>,
->(
-  mutation: DocumentNode | TypedDocumentNode<TData, TVariables>,
-  options?: MutationHookOptions<TData, TVariables, TContext>,
-): MutationTuple<TData, TVariables, TContext, TCache> {
-  const client = useContext(Context)
-
-  return useApolloMutation(mutation, { client, ...options })
-}
-
-export function ApolloProvider({ client, children }: ApolloProviderProps<NormalizedCacheObject>) {
-  return <Context.Provider value={client}>{children}</Context.Provider>
-}
+import { DocumentReference, RuntimeProvider } from '../react'
+import { createDocumentReference, Element } from '../state/react-page'
 
 const typePolicies: TypePolicies = {
   Query: {
@@ -99,4 +74,63 @@ export function createApolloClient({ uri, cacheData }: CreateApolloClientParams)
   if (cacheData) cache.restore(cacheData)
 
   return new ApolloClient({ uri, cache })
+}
+
+export type MakeswiftClientOptions = {
+  uri?: string
+  cacheData?: NormalizedCacheObject
+}
+
+export class MakeswiftClient {
+  apolloClient: ApolloClient<NormalizedCacheObject>
+
+  constructor({ uri, cacheData }: MakeswiftClientOptions) {
+    this.apolloClient = createApolloClient({ uri, cacheData })
+  }
+
+  async prefetch(element: Element): Promise<NormalizedCacheObject> {
+    const id = uuid()
+
+    await getDataFromTree(
+      <RuntimeProvider client={this} defaultRootElements={new Map([[id, element]])}>
+        <DocumentReference documentReference={createDocumentReference(id)} />
+      </RuntimeProvider>,
+    )
+
+    return this.apolloClient.cache.extract()
+  }
+}
+
+const Context = createContext<MakeswiftClient | undefined>(undefined)
+
+export function useQuery<TData = any, TVariables = OperationVariables>(
+  query: DocumentNode | TypedDocumentNode<TData, TVariables>,
+  options?: QueryHookOptions<TData, TVariables>,
+): QueryResult<TData, TVariables> {
+  const client = useContext(Context)
+
+  return useApolloQuery(query, { client: client?.apolloClient, ...options })
+}
+
+export function useMutation<
+  TData = any,
+  TVariables = OperationVariables,
+  TContext = DefaultContext,
+  TCache extends ApolloCache<any> = ApolloCache<any>,
+>(
+  mutation: DocumentNode | TypedDocumentNode<TData, TVariables>,
+  options?: MutationHookOptions<TData, TVariables, TContext>,
+): MutationTuple<TData, TVariables, TContext, TCache> {
+  const client = useContext(Context)
+
+  return useApolloMutation(mutation, { client: client?.apolloClient, ...options })
+}
+
+type MakeswiftProviderProps = {
+  client: MakeswiftClient
+  children: ReactNode
+}
+
+export function MakeswiftProvider({ client, children }: MakeswiftProviderProps) {
+  return <Context.Provider value={client}>{children}</Context.Provider>
 }
