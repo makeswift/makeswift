@@ -53,34 +53,36 @@ const typePolicies: TypePolicies = {
     fields: {
       swatches(existingData, { args, toReference }) {
         return (
-          existingData ?? args?.ids.map((id: string) => toReference({ __typename: 'Swatch', id }))
+          existingData ??
+          args?.ids.map((id: string) => toReference({ __typename: 'Swatch', id }, true))
         )
       },
       file(existingData, { args, toReference }) {
-        return existingData ?? toReference({ __typename: 'File', id: args?.id })
+        return existingData ?? toReference({ __typename: 'File', id: args?.id }, true)
       },
       files(existingData, { args, toReference }) {
         return (
-          existingData ?? args?.ids.map((id: string) => toReference({ __typename: 'File', id }))
+          existingData ??
+          args?.ids.map((id: string) => toReference({ __typename: 'File', id }, true))
         )
       },
       typographies(existingData, { args, toReference }) {
         return (
           existingData ??
-          args?.ids.map((id: string) => toReference({ __typename: 'Typography', id }))
+          args?.ids.map((id: string) => toReference({ __typename: 'Typography', id }, true))
         )
       },
       pagePathnamesById(existingData, { args, toReference }) {
         return (
           existingData ??
-          args?.ids.map((id: string) => toReference({ __typename: 'PagePathnameSlice', id }))
+          args?.ids.map((id: string) => toReference({ __typename: 'PagePathnameSlice', id }, true))
         )
       },
       globalElement(existingData, { args, toReference }) {
-        return existingData ?? toReference({ __typename: 'GlobalElement', id: args?.id })
+        return existingData ?? toReference({ __typename: 'GlobalElement', id: args?.id }, true)
       },
       table(existingData, { args, toReference }) {
-        return existingData ?? toReference({ __typename: 'Table', id: args?.id })
+        return existingData ?? toReference({ __typename: 'Table', id: args?.id }, true)
       },
     },
   },
