@@ -67,14 +67,12 @@ const Context = createContext(contextDefaultValue)
 type RuntimeProviderProps = {
   defaultRootElements?: Map<string, ReactPage.Element>
   children?: ReactNode
-  registerComponents?: (runtime: ReactRuntime) => () => void
   makeswiftApiEndpoint?: string
 }
 
 export function RuntimeProvider({
   children,
   defaultRootElements,
-  registerComponents,
   makeswiftApiEndpoint,
 }: RuntimeProviderProps): JSX.Element {
   const [store, setStore] = useState(() => {
@@ -85,7 +83,6 @@ export function RuntimeProvider({
     const runtime = createReactRuntime(store)
 
     registerBuiltinComponents(runtime)
-    registerComponents?.(runtime)
 
     return store
   })
@@ -100,10 +97,6 @@ export function RuntimeProvider({
   useEffect(() => {
     return registerBuiltinComponents(createReactRuntime(store))
   }, [store])
-
-  useEffect(() => {
-    return registerComponents?.(createReactRuntime(store))
-  }, [store, registerComponents])
 
   useEffect(() => {
     // TODO(miguel): perform a more robust validation.

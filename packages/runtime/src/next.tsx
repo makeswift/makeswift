@@ -8,7 +8,7 @@ import {
 import NextDocument, { DocumentContext, DocumentInitialProps } from 'next/document'
 import { ServerStyleSheet } from 'styled-components'
 
-import { RuntimeProvider, DocumentReference, ReactRuntime } from './runtimes/react'
+import { RuntimeProvider, DocumentReference } from './runtimes/react'
 import { Element, createDocumentReference } from './state/react-page'
 
 export class Document extends NextDocument {
@@ -45,7 +45,6 @@ export type PageProps = {
   pageId: string
   rootElement: Element
   makeswiftApiEndpoint: string
-  registerComponents?(runtime: ReactRuntime): () => void
 }
 
 export async function getServerSideProps({
@@ -110,12 +109,11 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   return { paths: [], fallback: 'blocking' }
 }
 
-export function Page({ pageId, rootElement, makeswiftApiEndpoint, registerComponents }: PageProps) {
+export function Page({ pageId, rootElement, makeswiftApiEndpoint }: PageProps) {
   return (
     <RuntimeProvider
       defaultRootElements={new Map([[pageId, rootElement]])}
       makeswiftApiEndpoint={makeswiftApiEndpoint}
-      registerComponents={registerComponents}
     >
       <DocumentReference documentReference={createDocumentReference(pageId)} />
     </RuntimeProvider>
