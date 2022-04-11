@@ -125,7 +125,7 @@ export const Types = {
   Width: 'Width',
 } as const
 
-type Options<T> = T | ((props: Record<string, unknown>, decideMode: Device) => T)
+type Options<T> = T | ((props: Record<string, unknown>, deviceMode: Device) => T)
 
 type ColorBackground = { type: 'color'; id: string; payload: Color | null }
 
