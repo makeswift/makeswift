@@ -28,6 +28,7 @@ import type {
 import { ComponentIcon } from '../state/modules/components-meta'
 import { registerBuiltinComponents } from '../components'
 import { MakeswiftProvider, MakeswiftClient, useQuery } from '../api/react'
+import { FallbackComponent } from '../components/shared/FallbackComponent'
 
 const contextDefaultValue = ReactPage.configureStore()
 
@@ -230,14 +231,7 @@ const ElementData = memo(
     const Component = useComponent(elementData.type)
 
     if (Component == null) {
-      return (
-        <div ref={ref as Ref<HTMLDivElement>}>
-          <p>Component Not Found</p>
-          <pre>
-            <code>{JSON.stringify(elementData, null, 2)}</code>
-          </pre>
-        </div>
-      )
+      return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Component not found" />
     }
 
     return <Component {...elementData.props} key={elementData.key} ref={ref} />
@@ -268,24 +262,15 @@ const ElementReference = memo(
     const elementReferenceDocument = useDocument(elementReference.key)
 
     if (error != null) {
-      return (
-        <div ref={ref as Ref<HTMLDivElement>}>
-          <p>Something went wrong!</p>
-          <pre>
-            <code>{JSON.stringify(error, null, 2)}</code>
-          </pre>
-        </div>
-      )
+      return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Something went wrong!" />
     }
 
     if (globalElementData == null) {
       return (
-        <div ref={ref as Ref<HTMLDivElement>}>
-          <p>Not Found</p>
-          <pre>
-            <code>{JSON.stringify(elementReference, null, 2)}</code>
-          </pre>
-        </div>
+        <FallbackComponent
+          ref={ref as Ref<HTMLDivElement>}
+          text="This global component doesn't exist"
+        />
       )
     }
 
@@ -356,14 +341,7 @@ export const DocumentReference = memo(
     const document = useDocument(documentReference.key)
 
     if (document == null) {
-      return (
-        <div ref={ref as Ref<HTMLDivElement>}>
-          <p>Document Not Found</p>
-          <pre>
-            <code>{JSON.stringify(documentReference, null, 2)}</code>
-          </pre>
-        </div>
-      )
+      return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Document not found" />
     }
 
     return <Document ref={ref} document={document} />
