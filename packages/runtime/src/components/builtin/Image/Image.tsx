@@ -36,6 +36,7 @@ import { placeholders } from '../../utils/placeholders'
 import { ReactRuntime, useIsInBuilder } from '../../../react'
 import { Link } from '../../shared/Link'
 import { Props } from '../../../prop-controllers'
+import { useIsPrefetching } from '../../../api/react'
 
 type Props = {
   id?: ElementIDValue
@@ -142,6 +143,7 @@ const ImageComponent = forwardRef(function Image(
   const dataDimensions = fileData?.publicUrl ? fileData?.dimensions : placeholder.dimensions
   const [measuredDimensions, setMeasuredDimensions] = useState<Dimensions | null>(null)
   const isInBuilder = useIsInBuilder()
+  const isPrefetching = useIsPrefetching()
 
   useEffect(() => {
     if (dataDimensions) return
@@ -164,6 +166,8 @@ const ImageComponent = forwardRef(function Image(
   const dimensions = dataDimensions ?? measuredDimensions
 
   if (!dimensions) return null
+
+  if (isPrefetching) return null
 
   return (
     <ImageContainer
