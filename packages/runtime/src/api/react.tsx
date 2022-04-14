@@ -63,6 +63,12 @@ const typePolicies: TypePolicies = {
   },
 }
 
+const PrefetchContext = createContext(false)
+
+export function useIsPrefetching(): boolean {
+  return useContext(PrefetchContext)
+}
+
 type CreateApolloClientParams = {
   uri?: string
   cacheData?: NormalizedCacheObject
@@ -92,9 +98,11 @@ export class MakeswiftClient {
     const id = uuid()
 
     await getDataFromTree(
-      <RuntimeProvider client={this} defaultRootElements={new Map([[id, element]])}>
-        <DocumentReference documentReference={createDocumentReference(id)} />
-      </RuntimeProvider>,
+      <PrefetchContext.Provider value={true}>
+        <RuntimeProvider client={this} defaultRootElements={new Map([[id, element]])}>
+          <DocumentReference documentReference={createDocumentReference(id)} />
+        </RuntimeProvider>
+      </PrefetchContext.Provider>,
     )
 
     return this.apolloClient.cache.extract()
