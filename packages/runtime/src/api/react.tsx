@@ -18,6 +18,7 @@ import {
 import { getDataFromTree } from '@apollo/client/react/ssr'
 export { gql } from '@apollo/client'
 import { createContext, ReactNode, useContext } from 'react'
+import { KeyUtils } from 'slate'
 import uuid from 'uuid/v4'
 
 import { DocumentReference, RuntimeProvider } from '../react'
@@ -104,6 +105,8 @@ export class MakeswiftClient {
         </RuntimeProvider>
       </PrefetchContext.Provider>,
     )
+
+    KeyUtils.resetGenerator()
 
     return this.apolloClient.cache.extract()
   }
