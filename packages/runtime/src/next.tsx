@@ -16,6 +16,8 @@ import { Element } from './state/react-page'
 import { RuntimeProvider } from './runtimes/react'
 import { Page as PageMeta, PageData } from './components'
 
+export { MakeswiftClient }
+
 export class Document extends NextDocument {
   static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
     const sheet = new ServerStyleSheet()
