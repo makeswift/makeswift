@@ -3,7 +3,7 @@ import parse from 'html-react-parser'
 import Head from 'next/head'
 
 import { BodySnippet } from './BodySnippet'
-import { DocumentReference } from '../../react'
+import { DocumentReference } from '../../runtimes/react'
 import { createDocumentReference } from '../../state/react-page'
 
 enum SnippetLocation {
