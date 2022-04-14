@@ -49,7 +49,7 @@ type IconName =
   | 'StarRoundedSquare16'
   | 'StarSquare16'
 
-type Gap = { value: number; unit: 'px' }
+export type Gap = { value: number; unit: 'px' }
 
 export type Length = { value: number; unit: 'px' | '%' }
 
@@ -223,13 +223,13 @@ export function BorderRadius(options: BorderRadiusOptions = {}): BorderRadiusDes
 
 export type CheckboxValue = boolean
 
-type CheckboxOptions = Options<{
+export type CheckboxOptions = Options<{
   preset?: CheckboxValue
   label: string
   hidden?: boolean
 }>
 
-type CheckboxDescriptor<_T = CheckboxValue> = {
+export type CheckboxDescriptor<_T = CheckboxValue> = {
   type: typeof Types.Checkbox
   options: CheckboxOptions
 }
@@ -273,7 +273,7 @@ export function Font(options: FontOptions = {}): FontDescriptor {
 
 export type GapXValue = ResponsiveValue<Gap>
 
-type GapXOptions = Options<{
+export type GapXOptions = Options<{
   preset?: GapXValue
   label?: string
   defaultValue?: Gap
@@ -283,7 +283,7 @@ type GapXOptions = Options<{
   hidden?: boolean
 }>
 
-type GapXDescriptor<_T = GapXValue> = { type: typeof Types.GapX; options: GapXOptions }
+export type GapXDescriptor<_T = GapXValue> = { type: typeof Types.GapX; options: GapXOptions }
 
 export function GapX(options: GapXOptions = {}): GapXDescriptor {
   return { type: Types.GapX, options }
@@ -291,7 +291,7 @@ export function GapX(options: GapXOptions = {}): GapXDescriptor {
 
 export type GapYValue = ResponsiveValue<Gap>
 
-type GapYOptions = Options<{
+export type GapYOptions = Options<{
   preset?: GapYValue
   label?: string
   defaultValue?: Gap
@@ -301,7 +301,7 @@ type GapYOptions = Options<{
   hidden?: boolean
 }>
 
-type GapYDescriptor<_T = GapYValue> = { type: typeof Types.GapY; options: GapYOptions }
+export type GapYDescriptor<_T = GapYValue> = { type: typeof Types.GapY; options: GapYOptions }
 
 export function GapY(options: GapYOptions = {}): GapYDescriptor {
   return { type: Types.GapY, options }
@@ -560,7 +560,7 @@ export function ResponsiveLength(
 
 export type ResponsiveNumberValue = ResponsiveValue<number>
 
-type ResponsiveNumberOptions = Options<{
+export type ResponsiveNumberOptions = Options<{
   label?: string
   defaultValue?: number
   min?: number
@@ -570,7 +570,7 @@ type ResponsiveNumberOptions = Options<{
   hidden?: boolean
 }>
 
-type ResponsiveNumberDescriptor<_T = ResponsiveNumberValue> = {
+export type ResponsiveNumberDescriptor<_T = ResponsiveNumberValue> = {
   type: typeof Types.ResponsiveNumber
   options: ResponsiveNumberOptions
 }
