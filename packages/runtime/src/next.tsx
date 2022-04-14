@@ -7,7 +7,7 @@ import {
   GetStaticPropsResult,
 } from 'next'
 import NextDocument, { DocumentContext, DocumentInitialProps } from 'next/document'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ServerStyleSheet } from 'styled-components'
 import { KeyUtils } from 'slate'
 

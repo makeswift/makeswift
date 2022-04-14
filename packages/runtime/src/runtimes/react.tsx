@@ -19,6 +19,7 @@ import {
   mountComponentEffect,
   registerComponentEffect,
   registerComponentHandleEffect,
+  registerDocumentEffect,
   registerReactComponentEffect,
 } from '../state/actions'
 import type {
@@ -91,6 +92,19 @@ export function RuntimeProvider({
   useEffect(() => {
     return registerBuiltinComponents(createReactRuntime(store))
   }, [store])
+
+  useEffect(() => {
+    const unregisterDocuments = Array.from(defaultRootElements?.entries() ?? []).map(
+      ([documentKey, rootElement]) =>
+        store.dispatch(registerDocumentEffect(ReactPage.createDocument(documentKey, rootElement))),
+    )
+
+    return () => {
+      unregisterDocuments.forEach(unregisterDocument => {
+        unregisterDocument()
+      })
+    }
+  }, [store, defaultRootElements])
 
   useEffect(() => {
     // TODO(miguel): perform a more robust validation.
