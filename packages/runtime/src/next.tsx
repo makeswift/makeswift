@@ -9,6 +9,7 @@ import {
 import NextDocument, { DocumentContext, DocumentInitialProps } from 'next/document'
 import { useState } from 'react'
 import { ServerStyleSheet } from 'styled-components'
+import { KeyUtils } from 'slate'
 
 import { MakeswiftClient } from './api/react'
 import { Element } from './state/react-page'
@@ -27,6 +28,8 @@ export class Document extends NextDocument {
         })
 
       const initialProps = await NextDocument.getInitialProps(ctx)
+
+      KeyUtils.resetGenerator()
 
       return {
         ...initialProps,
