@@ -448,7 +448,7 @@ export type DeserializedControl<T extends Data = Data> =
   | DeserializedResponsiveNumberControl<T>
   | DeserializedCheckboxControl<T>
 
-type DeserializedPanelControl<T extends Data = Data> = Extract<
+export type DeserializedPanelControl<T extends Data = Data> = Extract<
   DeserializedControl<T>,
   { type: PanelControlType }
 >
