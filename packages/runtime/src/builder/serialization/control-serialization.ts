@@ -1,8 +1,18 @@
 import {
+  CheckboxDescriptor as CheckboxControl,
+  CheckboxValue as CheckboxControlValue,
   Data,
+  Device,
+  Gap,
+  GapXDescriptor as GapXControl,
+  GapXValue as GapXControlValue,
+  GapYDescriptor as GapYControl,
+  GapYValue as GapYControlValue,
   ListDescriptor as ListControl,
   ListOptions as ListControlConfig,
   ListValue as ListControlValue,
+  ResponsiveNumberDescriptor as ResponsiveNumberControl,
+  ResponsiveNumberValue as ResponsiveNumberControlValue,
   ShapeDescriptor as ShapeControl,
   ShapeValue as ShapeControlValue,
   TypeaheadDescriptor as TypeaheadControl,
@@ -17,6 +27,7 @@ import {
 import {
   DeserializedFunction,
   deserializeFunction,
+  isSerializedFunction,
   SerializedFunction,
   serializeFunction,
 } from './function-serialization'
@@ -219,16 +230,196 @@ function deserializeTypeaheadControl<T extends Data>(
   }
 }
 
+type SerializedConfig<T> =
+  | T
+  | SerializedFunction<(props: Record<string, unknown>, deviceMode: Device) => T>
+
+type DeserializedConfig<T> =
+  | T
+  | DeserializedFunction<(props: Record<string, unknown>, deviceMode: Device) => T>
+
+type GapXControlConfig = {
+  preset?: GapXControlValue
+  label?: string
+  defaultValue?: Gap
+  min?: number
+  max?: number
+  step?: number
+  hidden?: boolean
+}
+
+type SerializedGapXControl<_T = GapXControlValue> = {
+  type: typeof Controls.Types.GapX
+  options: SerializedConfig<GapXControlConfig>
+}
+
+function serializeGapXControl(control: GapXControl): [SerializedGapXControl, Transferable[]] {
+  const { options } = control
+
+  if (typeof options !== 'function') return [{ ...control, options }, []]
+
+  const serializedOptions = serializeFunction(options)
+
+  return [{ ...control, options: serializedOptions }, [serializedOptions]]
+}
+
+type DeserializedGapXControl<_T = GapXControlValue> = {
+  type: typeof Controls.Types.GapX
+  options: DeserializedConfig<GapXControlConfig>
+}
+
+function deserializeGapXControl(serializedControl: SerializedGapXControl): DeserializedGapXControl {
+  const { options } = serializedControl
+
+  if (!isSerializedFunction(options)) return { ...serializedControl, options }
+
+  const deserializedOptions = deserializeFunction(options)
+
+  return { ...serializedControl, options: deserializedOptions }
+}
+
+type GapYControlConfig = {
+  preset?: GapYControlValue
+  label?: string
+  defaultValue?: Gap
+  min?: number
+  max?: number
+  step?: number
+  hidden?: boolean
+}
+
+type SerializedGapYControl<_T = GapYControlValue> = {
+  type: typeof Controls.Types.GapY
+  options: SerializedConfig<GapYControlConfig>
+}
+
+function serializeGapYControl(control: GapYControl): [SerializedGapYControl, Transferable[]] {
+  const { options } = control
+
+  if (typeof options !== 'function') return [{ ...control, options }, []]
+
+  const serializedOptions = serializeFunction(options)
+
+  return [{ ...control, options: serializedOptions }, [serializedOptions]]
+}
+
+type DeserializedGapYControl<_T = GapYControlValue> = {
+  type: typeof Controls.Types.GapY
+  options: DeserializedConfig<GapYControlConfig>
+}
+
+function deserializeGapYControl(serializedControl: SerializedGapYControl): DeserializedGapYControl {
+  const { options } = serializedControl
+
+  if (!isSerializedFunction(options)) return { ...serializedControl, options }
+
+  const deserializedOptions = deserializeFunction(options)
+
+  return { ...serializedControl, options: deserializedOptions }
+}
+
+type ResponsiveNumberControlConfig = {
+  preset?: ResponsiveNumberControlValue
+  label?: string
+  defaultValue?: number
+  min?: number
+  max?: number
+  step?: number
+  hidden?: boolean
+}
+
+type SerializedResponsiveNumberControl<_T = ResponsiveNumberControlValue> = {
+  type: typeof Controls.Types.ResponsiveNumber
+  options: SerializedConfig<ResponsiveNumberControlConfig>
+}
+
+function serializeResponsiveNumberControl(
+  control: ResponsiveNumberControl,
+): [SerializedResponsiveNumberControl, Transferable[]] {
+  const { options } = control
+
+  if (typeof options !== 'function') return [{ ...control, options }, []]
+
+  const serializedOptions = serializeFunction(options)
+
+  return [{ ...control, options: serializedOptions }, [serializedOptions]]
+}
+
+type DeserializedResponsiveNumberControl<_T = ResponsiveNumberControlValue> = {
+  type: typeof Controls.Types.ResponsiveNumber
+  options: DeserializedConfig<ResponsiveNumberControlConfig>
+}
+
+function deserializeResponsiveNumberControl(
+  serializedControl: SerializedResponsiveNumberControl,
+): DeserializedResponsiveNumberControl {
+  const { options } = serializedControl
+
+  if (!isSerializedFunction(options)) return { ...serializedControl, options }
+
+  const deserializedOptions = deserializeFunction(options)
+
+  return { ...serializedControl, options: deserializedOptions }
+}
+
+type CheckboxControlConfig = {
+  preset?: CheckboxControlValue
+  label: string
+  hidden?: boolean
+}
+
+type SerializedCheckboxControl<_T = CheckboxControlValue> = {
+  type: typeof Controls.Types.Checkbox
+  options: SerializedConfig<CheckboxControlConfig>
+}
+
+function serializeCheckboxControl(
+  control: CheckboxControl,
+): [SerializedCheckboxControl, Transferable[]] {
+  const { options } = control
+
+  if (typeof options !== 'function') return [{ ...control, options }, []]
+
+  const serializedOptions = serializeFunction(options)
+
+  return [{ ...control, options: serializedOptions }, [serializedOptions]]
+}
+
+type DeserializedCheckboxControl<_T = CheckboxControlValue> = {
+  type: typeof Controls.Types.Checkbox
+  options: DeserializedConfig<CheckboxControlConfig>
+}
+
+function deserializeCheckboxControl(
+  serializedControl: SerializedCheckboxControl,
+): DeserializedCheckboxControl {
+  const { options } = serializedControl
+
+  if (!isSerializedFunction(options)) return { ...serializedControl, options }
+
+  const deserializedOptions = deserializeFunction(options)
+
+  return { ...serializedControl, options: deserializedOptions }
+}
+
 export type SerializedControl<T extends Data = Data> =
   | Exclude<
       Control<T>,
       | ListControl<T extends ListControlValue ? T : ListControlValue>
       | ShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
       | TypeaheadControl<T extends TypeaheadControlValue ? T : TypeaheadControlValue>
+      | GapXControl<T>
+      | GapYControl<T>
+      | ResponsiveNumberControl<T>
+      | CheckboxControl<T>
     >
   | SerializedListControl<T extends ListControlValue ? T : ListControlValue>
   | SerializedShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
   | SerializedTypeaheadControl<T extends TypeaheadControlValue ? T : TypeaheadControlValue>
+  | SerializedGapXControl<T>
+  | SerializedGapYControl<T>
+  | SerializedResponsiveNumberControl<T>
+  | SerializedCheckboxControl<T>
 
 type SerializedPanelControl<T extends Data = Data> = Extract<
   SerializedControl<T>,
@@ -244,10 +435,18 @@ export type DeserializedControl<T extends Data = Data> =
       | ListControl<T extends ListControlValue ? T : ListControlValue>
       | ShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
       | TypeaheadControl<T extends TypeaheadControlValue ? T : TypeaheadControlValue>
+      | GapXControl<T>
+      | GapYControl<T>
+      | ResponsiveNumberControl<T>
+      | CheckboxControl<T>
     >
   | DeserializedListControl<T extends ListControlValue ? T : ListControlValue>
   | DeserializedShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
   | DeserializedTypeaheadControl<T extends TypeaheadControlValue ? T : TypeaheadControlValue>
+  | DeserializedGapXControl<T>
+  | DeserializedGapYControl<T>
+  | DeserializedResponsiveNumberControl<T>
+  | DeserializedCheckboxControl<T>
 
 type DeserializedPanelControl<T extends Data = Data> = Extract<
   DeserializedControl<T>,
@@ -261,6 +460,9 @@ function serializeControl<T extends Data>(
   control: Control<T>,
 ): [SerializedControl<T>, Transferable[]] {
   switch (control.type) {
+    case Controls.Types.Checkbox:
+      return serializeCheckboxControl(control)
+
     case Controls.Types.List:
       return serializeListControl(control)
 
@@ -269,6 +471,15 @@ function serializeControl<T extends Data>(
 
     case Controls.Types.Typeahead:
       return serializeTypeaheadControl(control)
+
+    case Controls.Types.GapX:
+      return serializeGapXControl(control)
+
+    case Controls.Types.GapY:
+      return serializeGapYControl(control)
+
+    case Controls.Types.ResponsiveNumber:
+      return serializeResponsiveNumberControl(control)
 
     default:
       return [control, []]
@@ -279,6 +490,9 @@ function deserializeControl<T extends Data>(
   serializedControl: SerializedControl<T>,
 ): DeserializedControl<T> {
   switch (serializedControl.type) {
+    case Controls.Types.Checkbox:
+      return deserializeCheckboxControl(serializedControl)
+
     case Controls.Types.List:
       return deserializeListControl(serializedControl)
 
@@ -287,6 +501,15 @@ function deserializeControl<T extends Data>(
 
     case Controls.Types.Typeahead:
       return deserializeTypeaheadControl(serializedControl)
+
+    case Controls.Types.GapX:
+      return deserializeGapXControl(serializedControl)
+
+    case Controls.Types.GapY:
+      return deserializeGapYControl(serializedControl)
+
+    case Controls.Types.ResponsiveNumber:
+      return deserializeResponsiveNumberControl(serializedControl)
 
     default:
       return serializedControl

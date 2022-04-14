@@ -28,6 +28,7 @@ import {
   BackgroundsValue,
   BorderValue,
   ShadowsValue,
+  ResponsiveValue,
 } from '../../../prop-controllers/descriptors'
 import {
   cssWidth,
@@ -48,6 +49,7 @@ import {
   useBoxShadow,
 } from '../../hooks'
 import { Props } from '../../../prop-controllers'
+import { findDeviceOverride } from '../../utils/devices'
 
 type Props = {
   id?: ElementIDValue
@@ -255,6 +257,19 @@ const Box = forwardRef(function Box(
 export default Box
 
 export function registerComponent(runtime: ReactRuntime) {
+  function isHiddenBasedOnAnimationType(
+    props: Record<string, unknown>,
+    deviceId: string,
+    property: 'boxAnimateType' | 'itemAnimateType',
+  ): boolean {
+    const animateIn = props[property] as ResponsiveValue<BoxAnimateIn>
+    return (findDeviceOverride<BoxAnimateIn>(animateIn, deviceId)?.value ?? 'none') === 'none'
+  }
+  const isHiddenBasedOnBoxAnimation = (props: Record<string, unknown>, deviceId: string) =>
+    isHiddenBasedOnAnimationType(props, deviceId, 'boxAnimateType')
+  const isHiddenBasedOnItemAnimation = (props: Record<string, unknown>, deviceId: string) =>
+    isHiddenBasedOnAnimationType(props, deviceId, 'itemAnimateType')
+
   return runtime.registerComponent(Box, {
     type: './components/Box/index.js',
     label: 'Box',
@@ -301,12 +316,12 @@ export function registerComponent(runtime: ReactRuntime) {
       border: Props.Border(),
       borderRadius: Props.BorderRadius(),
       boxShadow: Props.Shadows(),
-      rowGap: Props.GapY({
-        // hidden: props.children == null,
-      }),
-      columnGap: Props.GapX({
-        // hidden: props.children == null,
-      }),
+      rowGap: Props.GapY(props => ({
+        hidden: props.children == null,
+      })),
+      columnGap: Props.GapX(props => ({
+        hidden: props.children == null,
+      })),
       boxAnimateType: Props.ResponsiveSelect({
         label: 'Animate box in',
         labelOrientation: 'vertical',
@@ -323,22 +338,22 @@ export function registerComponent(runtime: ReactRuntime) {
         ],
         defaultValue: 'none',
       }),
-      boxAnimateDuration: Props.ResponsiveNumber({
+      boxAnimateDuration: Props.ResponsiveNumber((props, device) => ({
         label: 'Box duration',
         defaultValue: DEFAULT_BOX_ANIMATE_DURATION,
         min: 0.1,
         step: 0.05,
         suffix: 's',
-        // hidden: isHiddenBasedOnBoxAnimation(props, device),
-      }),
-      boxAnimateDelay: Props.ResponsiveNumber({
+        hidden: isHiddenBasedOnBoxAnimation(props, device),
+      })),
+      boxAnimateDelay: Props.ResponsiveNumber((props, device) => ({
         label: 'Box delay',
         defaultValue: DEFAULT_BOX_ANIMATE_DELAY,
         min: 0,
         step: 0.05,
         suffix: 's',
-        // hidden: isHiddenBasedOnBoxAnimation(props, device),
-      }),
+        hidden: isHiddenBasedOnBoxAnimation(props, device),
+      })),
       itemAnimateType: Props.ResponsiveSelect({
         label: 'Animate items in',
         labelOrientation: 'vertical',
@@ -355,34 +370,34 @@ export function registerComponent(runtime: ReactRuntime) {
         ],
         defaultValue: 'none',
       }),
-      itemAnimateDuration: Props.ResponsiveNumber({
+      itemAnimateDuration: Props.ResponsiveNumber((props, device) => ({
         label: 'Items duration',
         defaultValue: DEFAULT_BOX_ANIMATE_DURATION,
         min: 0.1,
         step: 0.05,
         suffix: 's',
-        // hidden: isHiddenBasedOnItemAnimation(props, device),
-      }),
-      itemAnimateDelay: Props.ResponsiveNumber({
+        hidden: isHiddenBasedOnItemAnimation(props, device),
+      })),
+      itemAnimateDelay: Props.ResponsiveNumber((props, device) => ({
         label: 'Items delay',
         defaultValue: DEFAULT_ITEM_ANIMATE_DELAY,
         min: 0,
         step: 0.05,
         suffix: 's',
-        // hidden: isHiddenBasedOnItemAnimation(props, device),
-      }),
-      itemStaggerDuration: Props.ResponsiveNumber({
+        hidden: isHiddenBasedOnItemAnimation(props, device),
+      })),
+      itemStaggerDuration: Props.ResponsiveNumber((props, device) => ({
         label: 'Stagger',
         min: 0,
         step: 0.05,
         suffix: 's',
         defaultValue: DEFAULT_ITEM_STAGGER_DURATION,
-        // hidden: isHiddenBasedOnItemAnimation(props, device),
-      }),
-      hidePlaceholder: Props.Checkbox({
+        hidden: isHiddenBasedOnItemAnimation(props, device),
+      })),
+      hidePlaceholder: Props.Checkbox(props => ({
         label: 'Hide placeholder',
-        // hidden: props.children != null,
-      }),
+        hidden: props.children != null,
+      })),
       children: Props.Grid(),
     },
   })

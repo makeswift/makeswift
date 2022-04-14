@@ -12,6 +12,10 @@ export type DeserializedFunction<T extends AnyFunction> = (
   ...args: Parameters<T>
 ) => Promise<SerializedFunctionReturnType<T>>
 
+export function isSerializedFunction(value: any): value is SerializedFunction<AnyFunction> {
+  return value instanceof MessagePort
+}
+
 type CallID = number
 
 export function serializeFunction<T extends AnyFunction>(func: T): SerializedFunction<T> {
@@ -79,6 +83,30 @@ if (import.meta.vitest) {
 
       // Assert
       expect(results).toEqual([1, 2, 3, 4, 5])
+    })
+  })
+
+  describe.concurrent('isSerializedFunction', () => {
+    test('trivial case', () => {
+      // Arrange
+      const add = serializeFunction((a, b) => a + b)
+
+      // Act
+      const result = isSerializedFunction(add)
+
+      // Assert
+      expect(result).toBe(true)
+    })
+
+    test('false positive', () => {
+      // Arrange
+      const add = (a: number, b: number) => a + b
+
+      // Act
+      const result = isSerializedFunction(add)
+
+      // Assert
+      expect(result).toBe(false)
     })
   })
 }
