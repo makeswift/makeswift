@@ -110,6 +110,10 @@ export class MakeswiftClient {
 
     return this.apolloClient.cache.extract()
   }
+
+  updateCacheData(cacheData: NormalizedCacheObject): void {
+    this.apolloClient.cache.restore(cacheData)
+  }
 }
 
 const Context = createContext<MakeswiftClient | undefined>(undefined)

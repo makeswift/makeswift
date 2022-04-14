@@ -136,6 +136,10 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 export function Page({ page, rootElement, makeswiftApiEndpoint, cacheData }: PageProps) {
   const [client] = useState(() => new MakeswiftClient({ uri: makeswiftApiEndpoint, cacheData }))
 
+  useEffect(() => {
+    client.updateCacheData(cacheData)
+  }, [client, cacheData])
+
   return (
     <RuntimeProvider client={client} rootElements={new Map([[page.id, rootElement]])}>
       <PageMeta page={page} />
