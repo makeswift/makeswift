@@ -18,8 +18,6 @@ type Snippet = {
   id: string
   liveEnabled: boolean
   location: SnippetLocation
-  name: string
-  shouldAddToNewPages: boolean
 }
 
 export type PageData = {
