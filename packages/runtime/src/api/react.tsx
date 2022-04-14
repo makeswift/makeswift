@@ -100,7 +100,7 @@ export class MakeswiftClient {
 
     await getDataFromTree(
       <PrefetchContext.Provider value={true}>
-        <RuntimeProvider client={this} defaultRootElements={new Map([[id, element]])}>
+        <RuntimeProvider client={this} rootElements={new Map([[id, element]])}>
           <DocumentReference documentReference={createDocumentReference(id)} />
         </RuntimeProvider>
       </PrefetchContext.Provider>,
