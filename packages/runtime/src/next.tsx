@@ -137,7 +137,7 @@ export function Page({ page, rootElement, makeswiftApiEndpoint, cacheData }: Pag
   const [client] = useState(() => new MakeswiftClient({ uri: makeswiftApiEndpoint, cacheData }))
 
   return (
-    <RuntimeProvider client={client} defaultRootElements={new Map([[page.id, rootElement]])}>
+    <RuntimeProvider client={client} rootElements={new Map([[page.id, rootElement]])}>
       <PageMeta page={page} />
     </RuntimeProvider>
   )

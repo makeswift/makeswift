@@ -68,19 +68,19 @@ const Context = createContext(contextDefaultValue)
 
 type RuntimeProviderProps = {
   client: MakeswiftClient
-  defaultRootElements?: Map<string, ReactPage.Element>
+  rootElements?: Map<string, ReactPage.Element>
   children?: ReactNode
 }
 
 export function RuntimeProvider({
   client,
   children,
-  defaultRootElements,
+  rootElements,
 }: RuntimeProviderProps): JSX.Element {
   const [store, setStore] = useState(() => {
     const store = ReactPage.configureStore({
       preloadedState: contextDefaultValue.getState(),
-      rootElements: defaultRootElements,
+      rootElements,
     })
     const runtime = createReactRuntime(store)
 
@@ -94,7 +94,7 @@ export function RuntimeProvider({
   }, [store])
 
   useEffect(() => {
-    const unregisterDocuments = Array.from(defaultRootElements?.entries() ?? []).map(
+    const unregisterDocuments = Array.from(rootElements?.entries() ?? []).map(
       ([documentKey, rootElement]) =>
         store.dispatch(registerDocumentEffect(ReactPage.createDocument(documentKey, rootElement))),
     )
@@ -104,7 +104,7 @@ export function RuntimeProvider({
         unregisterDocument()
       })
     }
-  }, [store, defaultRootElements])
+  }, [store, rootElements])
 
   useEffect(() => {
     // TODO(miguel): perform a more robust validation.
