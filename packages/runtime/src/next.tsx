@@ -5,6 +5,7 @@ import {
   GetStaticPathsResult,
   GetStaticPropsContext,
   GetStaticPropsResult,
+  Redirect,
 } from 'next'
 import NextDocument, { DocumentContext, DocumentInitialProps } from 'next/document'
 import { useEffect, useState } from 'react'
@@ -57,7 +58,7 @@ export type PageProps = {
   cacheData: NormalizedCacheObject
 }
 
-type APIResult = PageData & {
+type PreviewPageAPIResult = PageData & {
   data: any
 }
 
@@ -75,7 +76,7 @@ export async function getServerSideProps({
     return { notFound: true }
   }
 
-  const page: APIResult = await res.json()
+  const page: PreviewPageAPIResult = await res.json()
 
   if (page == null) return { notFound: true }
 
@@ -92,6 +93,14 @@ export async function getServerSideProps({
     },
   }
 }
+
+type LivePageAPIResult =
+  | (PageData & {
+      data: any
+    })
+  | {
+      redirect: Redirect
+    }
 
 export async function getStaticProps({
   params,
@@ -110,7 +119,9 @@ export async function getStaticProps({
     return { notFound: true, revalidate: REVALIDATE_SECONDS }
   }
 
-  const page: APIResult = await res.json()
+  const page: LivePageAPIResult = await res.json()
+
+  if ('redirect' in page) return { redirect: page.redirect, revalidate: REVALIDATE_SECONDS }
 
   if (page == null) return { notFound: true, revalidate: REVALIDATE_SECONDS }
 
