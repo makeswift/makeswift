@@ -146,3 +146,116 @@ export function Page({ page, rootElement, makeswiftApiEndpoint, cacheData }: Pag
     </RuntimeProvider>
   )
 }
+
+export async function robotsTxtGetServerSideProps({
+  req,
+  res,
+}: GetServerSidePropsContext): Promise<GetServerSidePropsResult<Record<string, never>>> {
+  const baseUrl = new URL(`https://${req.headers.host}`)
+
+  res.setHeader('Content-Type', 'text/plain')
+
+  const sitemapUrl = new URL(`sitemap.xml`, baseUrl)
+
+  res.write(
+    `User-agent: *
+Allow: /
+Sitemap: ${sitemapUrl}`,
+  )
+
+  res.end()
+
+  return {
+    props: {},
+  }
+}
+
+export function RobotsTxt(): null {
+  return null
+}
+
+const DEFAULT_PRIORITY = 0.75
+const DEFAULT_FREQUENCY = 'hourly'
+
+const mapToPriority = (potentialPriority: unknown) => {
+  if (typeof potentialPriority != 'number') return DEFAULT_PRIORITY
+  return Math.max(0, Math.min(potentialPriority, 1))
+}
+
+const validFrequency = ['always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never']
+
+const mapToFrequency = (potentialFrequency: unknown) => {
+  if (typeof potentialFrequency != 'string' || !validFrequency.includes(potentialFrequency))
+    return DEFAULT_FREQUENCY
+  return potentialFrequency
+}
+
+type SitemapAPIResult = {
+  id: string
+  isArchived: boolean
+  pages: {
+    id: string
+    seo: {
+      sitemapFrequency: number
+      sitemapPriority: string
+      isIndexingBlocked: boolean
+    }
+    publicUrl: string
+    deployment: {
+      createdAt: string
+    }
+  }[]
+}
+
+export async function sitemapXmlGetServerSideProps({
+  res,
+}: GetServerSidePropsContext): Promise<GetServerSidePropsResult<Record<string, never>>> {
+  const url = `${process['env'].MAKESWIFT_API_HOST}/v0/sitemap`
+
+  const apiResponse = await fetch(url, {
+    headers: { 'x-api-key': process['env'].MAKESWIFT_SITE_API_KEY! },
+  })
+
+  if (apiResponse.status !== 200) {
+    console.error(await apiResponse.json())
+
+    return { notFound: true }
+  }
+
+  const site: SitemapAPIResult = await apiResponse.json()
+
+  if (site == null || site?.isArchived) {
+    return { notFound: true }
+  }
+
+  res.setHeader('Content-Type', 'text/xml')
+
+  res.write(
+    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+${site.pages
+  .filter(page => !!page.deployment?.createdAt)
+  .filter(page => !page.seo.isIndexingBlocked)
+  .map(page => {
+    return `<url>
+    <loc>${page.publicUrl}</loc>
+    <lastmod>${new Date(page.deployment?.createdAt).toISOString()}</lastmod>
+    <changefreq>${mapToFrequency(page.seo.sitemapFrequency)}</changefreq>
+    <priority>${mapToPriority(page.seo.sitemapPriority)}</priority>
+</url>
+    `
+  })
+  .join('')}
+</urlset>
+    `,
+  )
+
+  res.end()
+
+  return {
+    props: {},
+  }
+}
+
+export function SitemapXml(): null {
+  return null
+}
