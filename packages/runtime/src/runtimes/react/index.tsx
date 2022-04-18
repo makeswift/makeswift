@@ -13,23 +13,20 @@ import {
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector'
 import { gql } from '@apollo/client'
 
-import * as ReactPage from '../state/react-page'
-import type * as ReactBuilderPreview from '../state/react-builder-preview'
+import * as ReactPage from '../../state/react-page'
+import type * as ReactBuilderPreview from '../../state/react-builder-preview'
 import {
   mountComponentEffect,
   registerComponentEffect,
   registerComponentHandleEffect,
   registerDocumentEffect,
   registerReactComponentEffect,
-} from '../state/actions'
-import type {
-  PropControllerDescriptor,
-  PropControllerDescriptorValueType,
-} from '../prop-controllers'
-import { ComponentIcon } from '../state/modules/components-meta'
-import { registerBuiltinComponents } from '../components'
-import { MakeswiftProvider, MakeswiftClient, useQuery } from '../api/react'
-import { FallbackComponent } from '../components/shared/FallbackComponent'
+} from '../../state/actions'
+import type { PropControllerDescriptor } from '../../prop-controllers'
+import { ComponentIcon } from '../../state/modules/components-meta'
+import { registerBuiltinComponents } from '../../components'
+import { MakeswiftProvider, MakeswiftClient, useQuery } from '../../api/react'
+import { FallbackComponent } from '../../components/shared/FallbackComponent'
 
 const contextDefaultValue = ReactPage.configureStore()
 
@@ -113,7 +110,7 @@ export function RuntimeProvider({
     if (isInBuilder) setReactBuilderPreviewStore()
 
     async function setReactBuilderPreviewStore(): Promise<void> {
-      const ReactBuilderPreview = await import('../state/react-builder-preview')
+      const ReactBuilderPreview = await import('../../state/react-builder-preview')
 
       setStore(store =>
         ReactBuilderPreview.configureStore({
