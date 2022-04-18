@@ -1,5 +1,6 @@
 import { forwardRef, useState } from 'react'
 import styled, { css } from 'styled-components'
+import { cx } from '@emotion/css'
 
 import { ReactComponent as MobileMenu28 } from '../../icons/mobile-menu-28.svg'
 
@@ -23,9 +24,8 @@ import {
   ResponsiveSelectValue,
   TextInputValue,
   TextStyleValue,
-  WidthValue,
 } from '../../../prop-controllers/descriptors'
-import { cssMargin, cssMediaRules, cssTextStyle, cssWidth } from '../../utils/cssMediaRules'
+import { cssMargin, cssMediaRules, cssTextStyle } from '../../utils/cssMediaRules'
 import { ColorValue as Color } from '../../utils/types'
 import { colorToString } from '../../utils/colorToString'
 import { ReactRuntime } from '../../../react'
@@ -47,18 +47,13 @@ type Props = {
   mobileMenuOpenIconColor?: ResponsiveColor
   mobileMenuCloseIconColor?: ResponsiveColor
   mobileMenuBackgroundColor?: ResponsiveColor
-  width?: WidthValue
+  width?: string
   margin?: MarginValue
 }
 
-const Container = styled.nav<{
-  width: Props['width']
-  margin: Props['margin']
-  textStyle: Props['linkTextStyle']
-}>`
+const Container = styled.nav<{ margin: Props['margin']; textStyle: Props['linkTextStyle'] }>`
   display: flex;
   align-items: center;
-  ${cssWidth()}
   ${cssMargin()}
   ${cssTextStyle()}
 `
@@ -133,7 +128,7 @@ const Navigation = forwardRef<HTMLDivElement, Props>(function Navigation(
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <Container ref={ref} id={id} margin={margin} width={width} textStyle={linkTextStyle}>
+    <Container ref={ref} id={id} className={cx(width)} margin={margin} textStyle={linkTextStyle}>
       {showLogo === true && (
         <Image
           altText={logoAltText}

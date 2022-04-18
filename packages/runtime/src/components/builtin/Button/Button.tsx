@@ -1,8 +1,9 @@
 import { ReactElement, ComponentPropsWithoutRef, forwardRef } from 'react'
 import styled, { css } from 'styled-components'
 import ColorHelper from 'color'
+import { cx, css as toClass } from '@emotion/css'
 
-import { cssMediaRules, cssWidth, cssMargin, cssTextStyle } from '../../utils/cssMediaRules'
+import { cssMediaRules, cssMargin, cssTextStyle } from '../../utils/cssMediaRules'
 import {
   ResponsiveValue,
   ElementIDValue,
@@ -20,6 +21,7 @@ import { Link } from '../../shared/Link'
 import { ReactRuntime } from '../../../react'
 import { Props } from '../../../prop-controllers'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
+import { responsiveWidth } from '../../utils/responsive-style'
 
 type ControllerProps = {
   id?: ElementIDValue
@@ -38,7 +40,6 @@ type ControllerProps = {
 }
 
 const StyledButton = styled(Link)<{
-  width: ControllerProps['width']
   margin: ControllerProps['margin']
   variant: ControllerProps['variant']
   shape: ControllerProps['shape']
@@ -55,7 +56,6 @@ const StyledButton = styled(Link)<{
   font-family: inherit;
   text-decoration: none;
   text-align: center;
-  ${cssWidth('auto')}
   ${cssMargin()}
   ${p =>
     cssMediaRules(
@@ -242,7 +242,7 @@ type BaseProps = {
   textColor?: ControllerProps['textColor']
   color?: ControllerProps['color']
   textStyle?: ControllerProps['textStyle']
-  width?: ControllerProps['width']
+  width?: WidthValue
   margin?: ControllerProps['margin']
 }
 
@@ -270,6 +270,7 @@ const Button = forwardRef<HTMLAnchorElement, Props>(function Button(
       {...restOfProps}
       ref={ref}
       id={id}
+      className={cx(toClass(responsiveWidth(width, 'auto')))}
       // @ts-expect-error: HTMLAnchorElement `color` attribute conflicts with prop
       color={color}
       link={link}
@@ -279,7 +280,6 @@ const Button = forwardRef<HTMLAnchorElement, Props>(function Button(
       textColor={textColor}
       textStyle={textStyle}
       variant={variant}
-      width={width}
     >
       {children == null ? 'Button Text' : children}
     </StyledButton>
@@ -345,7 +345,7 @@ export function registerComponent(runtime: ReactRuntime) {
         placeholder: 'white',
       }),
       textStyle: Props.TextStyle(),
-      width: Props.Width(),
+      width: Props.Width({ format: Props.Width.Formats.ResponsiveValue }),
       margin: Props.Margin(),
     },
   })

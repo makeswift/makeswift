@@ -2,27 +2,22 @@
 
 import { useState, useEffect, useLayoutEffect, forwardRef, Ref, useImperativeHandle } from 'react'
 import styled from 'styled-components'
+import { cx } from '@emotion/css'
 
-import { cssMargin, cssWidth } from '../../utils/cssMediaRules'
-import {
-  ElementIDValue,
-  MarginValue,
-  TextAreaValue,
-  WidthValue,
-} from '../../../prop-controllers/descriptors'
+import { cssMargin } from '../../utils/cssMediaRules'
+import { ElementIDValue, MarginValue, TextAreaValue } from '../../../prop-controllers/descriptors'
 import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../react'
 
 type Props = {
   id?: ElementIDValue
   html?: TextAreaValue
-  width?: WidthValue
+  width?: string
   margin?: MarginValue
 }
 
-const Container = styled.div<{ width: Props['width']; margin: Props['margin'] }>`
+const Container = styled.div<{ margin: Props['margin'] }>`
   min-height: 15px;
-  ${cssWidth()}
   ${cssMargin()}
 `
 
@@ -120,8 +115,8 @@ const Embed = forwardRef(function Embed(
     <Container
       ref={setContainer}
       id={id}
+      className={cx(width)}
       margin={margin}
-      width={width}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   )

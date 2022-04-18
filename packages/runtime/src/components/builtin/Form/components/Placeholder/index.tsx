@@ -2,7 +2,7 @@ import { forwardRef, Ref } from 'react'
 import styled from 'styled-components'
 
 import { MarginValue, WidthValue } from '../../../../../prop-controllers/descriptors'
-import { cssMargin, cssWidth } from '../../../../utils/cssMediaRules'
+import { cssMargin } from '../../../../utils/cssMediaRules'
 
 const Container = styled.div<{
   width?: WidthValue
@@ -10,7 +10,6 @@ const Container = styled.div<{
 }>`
   display: flex;
   flex-direction: column;
-  ${cssWidth()};
   ${cssMargin()};
 `
 
@@ -43,16 +42,16 @@ const Button = styled.div`
 `
 
 type Props = {
-  width?: WidthValue
+  className?: string
   margin?: MarginValue
 }
 
 export default forwardRef(function Placeholder(
-  { width, margin }: Props,
+  { className, margin }: Props,
   ref: Ref<HTMLDivElement>,
 ): JSX.Element {
   return (
-    <Container ref={ref} width={width} margin={margin}>
+    <Container ref={ref} className={className} margin={margin}>
       <div style={{ display: 'flex', flexDirection: 'column', marginBottom: 16 }}>
         <Label />
         <Input />

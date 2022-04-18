@@ -1,6 +1,7 @@
 import { forwardRef, Ref, useImperativeHandle, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
+import { cx } from '@emotion/css'
 
 import { Element, ReactRuntime } from '../../../react'
 import Placeholder from './components/Placeholder'
@@ -15,7 +16,6 @@ import {
 import {
   BorderRadiusValue,
   ElementIDValue,
-  WidthValue,
   MarginValue,
   PaddingValue,
   ResponsiveIconRadioGroupValue,
@@ -31,7 +31,6 @@ import {
   ResponsiveValue,
 } from '../../../prop-controllers/descriptors'
 import {
-  cssWidth,
   cssMargin,
   cssPadding,
   cssBorderRadius,
@@ -54,7 +53,7 @@ import { findDeviceOverride } from '../../utils/devices'
 type Props = {
   id?: ElementIDValue
   backgrounds?: BackgroundsValue
-  width?: WidthValue
+  width?: string
   height?: ResponsiveIconRadioGroupValue<'auto' | 'stretch'>
   verticalAlign?: ResponsiveIconRadioGroupValue<
     'flex-start' | 'center' | 'flex-end' | 'space-between'
@@ -78,13 +77,11 @@ type Props = {
 }
 
 const StyledBackgroundsContainer = styled(BackgroundsContainer)<{
-  width: Props['width']
   margin: Props['margin']
   borderRadius: Props['borderRadius']
   alignSelf: Props['height']
 }>`
   display: flex;
-  ${cssWidth()}
   ${cssMargin()}
   ${cssBorderRadius()}
   ${props => cssMediaRules([props.alignSelf] as const, ([alignSelf = 'auto']) => ({ alignSelf }))}
@@ -210,8 +207,8 @@ const Box = forwardRef(function Box(
     <StyledBackgroundsContainer
       ref={setBoxElement}
       id={id}
+      className={cx(width)}
       backgrounds={backgrounds}
-      width={width}
       margin={margin}
       borderRadius={borderRadius}
       alignSelf={height}

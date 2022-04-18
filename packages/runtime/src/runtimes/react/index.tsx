@@ -245,7 +245,7 @@ const ElementData = memo(
     ref: Ref<unknown>,
   ): JSX.Element {
     const Component = useComponent(elementData.type)
-    const props = useProps(elementData.props, elementData.type)
+    const props = useProps(elementData)
 
     if (Component == null) {
       return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Component not found" />
