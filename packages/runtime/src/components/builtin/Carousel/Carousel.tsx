@@ -8,7 +8,7 @@ import uuid from 'uuid/v4'
 import { cssMediaRules, cssWidth, cssMargin } from '../../utils/cssMediaRules'
 import { colorToString } from '../../utils/colorToString'
 import { ColorValue as Color } from '../../utils/types'
-import { useColor, useMediaQuery } from '../../hooks'
+import { useMediaQuery } from '../../hooks'
 
 import Image from '../Image'
 import {
@@ -22,12 +22,12 @@ import {
   GapXValue,
   CheckboxValue,
   NumberValue,
-  ResponsiveColorValue,
   BorderValue,
   BorderRadiusValue,
 } from '../../../prop-controllers/descriptors'
 import { ReactRuntime } from '../../../react'
 import { Props } from '../../../prop-controllers'
+import { ResponsiveColor } from '../../../runtimes/react/controls'
 
 const LeftChevron = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="10" height="14" viewBox="0 0 10 14">
@@ -72,10 +72,10 @@ type Props = {
   delay?: NumberValue
   showArrows?: CheckboxValue
   arrowPosition?: ResponsiveIconRadioGroupValue<'inside' | 'center' | 'outside'>
-  arrowColor?: ResponsiveColorValue
-  arrowBackground?: ResponsiveColorValue
+  arrowColor?: ResponsiveColor
+  arrowBackground?: ResponsiveColor
   showDots?: CheckboxValue
-  dotColor?: ResponsiveColorValue
+  dotColor?: ResponsiveColor
   slideBorder?: BorderValue
   slideBorderRadius?: BorderRadiusValue
 }
@@ -429,10 +429,10 @@ const Carousel = forwardRef(function Carousel(
           onClick={() => paginate(-1)}
           position={arrowPosition}
           // @ts-expect-error: HTMLDivElement `color` attribute conflicts with prop
-          color={useColor(arrowColor)}
+          color={arrowColor}
           hidden={!showArrows || isFirstPage}
         >
-          <Arrow background={useColor(arrowBackground)}>
+          <Arrow background={arrowBackground}>
             <LeftChevron />
           </Arrow>
         </LeftSlop>
@@ -440,16 +440,16 @@ const Carousel = forwardRef(function Carousel(
           onClick={() => paginate(1)}
           position={arrowPosition}
           // @ts-expect-error: HTMLDivElement `color` attribute conflicts with prop
-          color={useColor(arrowColor)}
+          color={arrowColor}
           hidden={!showArrows || isLastPage}
         >
-          <Arrow background={useColor(arrowBackground)}>
+          <Arrow background={arrowBackground}>
             <RightChevron />
           </Arrow>
         </RightSlop>
       </Container>
       {/* @ts-expect-error: HTMLDivElement attributes conflicts with `color` prop */}
-      <Dots color={useColor(dotColor)} hidden={!showDots}>
+      <Dots color={dotColor} hidden={!showDots}>
         {Array.from({ length: pageCount }).map((_, i) => (
           <Dot key={i} active={i === pageIndex} onClick={() => paginate(i - pageIndex)} />
         ))}

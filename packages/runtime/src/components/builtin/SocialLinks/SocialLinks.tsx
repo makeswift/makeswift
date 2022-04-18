@@ -5,7 +5,6 @@ import { Link } from '../../shared/Link'
 import { cssMediaRules, cssWidth, cssMargin } from '../../utils/cssMediaRules'
 import { colorToString } from '../../utils/colorToString'
 import { ColorValue as Color } from '../../utils/types'
-import { useColor } from '../../hooks'
 import { SocialLinksOptions } from './options'
 import GutterContainer from '../../shared/GutterContainer'
 import SocialLinksPlaceholder from './components/SocialLinksPlaceholder'
@@ -15,13 +14,13 @@ import {
   SocialLinksValue,
   ResponsiveIconRadioGroupValue,
   ResponsiveSelectValue,
-  ResponsiveColorValue,
   GapXValue,
   WidthValue,
   MarginValue,
 } from '../../../prop-controllers/descriptors'
 import { ReactRuntime } from '../../../react'
 import { Props } from '../../../prop-controllers'
+import { ResponsiveColor } from '../../../runtimes/react/controls'
 
 type Props = {
   id?: ElementIDValue
@@ -29,8 +28,8 @@ type Props = {
   shape?: ResponsiveIconRadioGroupValue<'naked' | 'circle' | 'rounded' | 'square'>
   size?: ResponsiveIconRadioGroupValue<'small' | 'medium' | 'large'>
   hoverStyle?: ResponsiveSelectValue<'none' | 'grow' | 'shrink' | 'fade'>
-  fill?: ResponsiveColorValue
-  backgroundColor?: ResponsiveColorValue
+  fill?: ResponsiveColor
+  backgroundColor?: ResponsiveColor
   alignment?: ResponsiveIconRadioGroupValue<'flex-start' | 'center' | 'flex-end'>
   gutter?: GapXValue
   width?: WidthValue
@@ -128,9 +127,6 @@ const SocialLinks = forwardRef(function SocialLinks(
   }: Props,
   ref: Ref<HTMLDivElement>,
 ) {
-  const fillData = useColor(fill)
-  const backgroundColorData = useColor(backgroundColor)
-
   return (
     <Container ref={ref} id={id} alignment={alignment} width={width} margin={margin}>
       {links.length > 0 ? (
@@ -147,9 +143,9 @@ const SocialLinks = forwardRef(function SocialLinks(
               last={i === links.length - 1}
             >
               <StyledLink
-                backgroundColor={backgroundColorData}
+                backgroundColor={backgroundColor}
                 brandColor={option.brandColor}
-                fill={fillData}
+                fill={fill}
                 hoverStyle={hoverStyle}
                 link={{ type: 'OPEN_URL', payload: { url: link.payload.url, openInNewTab } }}
                 shape={shape}

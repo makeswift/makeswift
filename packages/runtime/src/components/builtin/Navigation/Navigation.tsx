@@ -18,7 +18,6 @@ import {
   LinkValue,
   MarginValue,
   NavigationLinksValue,
-  ResponsiveColorValue,
   ResponsiveIconRadioGroupValue,
   ResponsiveLengthValue,
   ResponsiveSelectValue,
@@ -29,9 +28,9 @@ import {
 import { cssMargin, cssMediaRules, cssTextStyle, cssWidth } from '../../utils/cssMediaRules'
 import { ColorValue as Color } from '../../utils/types'
 import { colorToString } from '../../utils/colorToString'
-import { useColor } from '../../hooks'
 import { ReactRuntime } from '../../../react'
 import { Props } from '../../../prop-controllers'
+import { ResponsiveColor } from '../../../runtimes/react/controls'
 
 type Props = {
   id?: ElementIDValue
@@ -45,9 +44,9 @@ type Props = {
   alignment?: ResponsiveIconRadioGroupValue<'flex-start' | 'center' | 'flex-end'>
   gutter?: GapXValue
   mobileMenuAnimation?: ResponsiveSelectValue<'coverRight' | 'coverLeft'>
-  mobileMenuOpenIconColor?: ResponsiveColorValue
-  mobileMenuCloseIconColor?: ResponsiveColorValue
-  mobileMenuBackgroundColor?: ResponsiveColorValue
+  mobileMenuOpenIconColor?: ResponsiveColor
+  mobileMenuCloseIconColor?: ResponsiveColor
+  mobileMenuBackgroundColor?: ResponsiveColor
   width?: WidthValue
   margin?: MarginValue
 }
@@ -165,7 +164,7 @@ const Navigation = forwardRef<HTMLDivElement, Props>(function Navigation(
         <OpenIconContainer
           alignment={alignment}
           // @ts-expect-error: HTMLButtonElement `color` attribute conflicts with prop
-          color={useColor(mobileMenuOpenIconColor)}
+          color={mobileMenuOpenIconColor}
           mobileMenuAnimation={mobileMenuAnimation}
           onClick={() => setIsOpen(true)}
         >

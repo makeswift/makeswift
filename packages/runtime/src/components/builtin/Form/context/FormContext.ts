@@ -1,10 +1,7 @@
 import { createContext, useContext } from 'react'
 
-import {
-  ResponsiveValue,
-  ResponsiveColorValue,
-  TextStyleValue,
-} from '../../../../prop-controllers/descriptors'
+import { ResponsiveValue, TextStyleValue } from '../../../../prop-controllers/descriptors'
+import { ResponsiveColor } from '../../../../runtimes/react/controls'
 import { ColorValue } from '../../../utils/types'
 
 export const Shapes = Object.freeze({
@@ -36,7 +33,7 @@ export type Value = {
   contrast: ResponsiveValue<Contrast> | null | undefined
   brandColor: ResponsiveValue<ColorValue> | null | undefined
   labelTextStyle?: TextStyleValue
-  labelTextColor?: ResponsiveColorValue
+  labelTextColor?: ResponsiveColor
 }
 
 const Context = createContext<Value>({} as Value)
