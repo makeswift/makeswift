@@ -1,8 +1,9 @@
 import { forwardRef, Ref } from 'react'
 import styled, { css } from 'styled-components'
+import { cx } from '@emotion/css'
 
 import { Link } from '../../shared/Link'
-import { cssMediaRules, cssWidth, cssMargin } from '../../utils/cssMediaRules'
+import { cssMediaRules, cssMargin } from '../../utils/cssMediaRules'
 import { colorToString } from '../../utils/colorToString'
 import { ColorValue as Color } from '../../utils/types'
 import { SocialLinksOptions } from './options'
@@ -15,7 +16,6 @@ import {
   ResponsiveIconRadioGroupValue,
   ResponsiveSelectValue,
   GapXValue,
-  WidthValue,
   MarginValue,
 } from '../../../prop-controllers/descriptors'
 import { ReactRuntime } from '../../../react'
@@ -32,19 +32,17 @@ type Props = {
   backgroundColor?: ResponsiveColor
   alignment?: ResponsiveIconRadioGroupValue<'flex-start' | 'center' | 'flex-end'>
   gutter?: GapXValue
-  width?: WidthValue
+  width?: string
   margin?: MarginValue
 }
 
 const Container = styled.div<{
-  width: Props['width']
   margin: Props['margin']
   alignment: Props['alignment']
 }>`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  ${cssWidth()}
   ${cssMargin()}
   ${p =>
     cssMediaRules(
@@ -128,7 +126,7 @@ const SocialLinks = forwardRef(function SocialLinks(
   ref: Ref<HTMLDivElement>,
 ) {
   return (
-    <Container ref={ref} id={id} alignment={alignment} width={width} margin={margin}>
+    <Container ref={ref} id={id} className={cx(width)} alignment={alignment} margin={margin}>
       {links.length > 0 ? (
         links.map((link, i) => {
           const option = SocialLinksOptions.find(o => o.type === link.payload.type)

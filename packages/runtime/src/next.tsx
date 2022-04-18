@@ -10,6 +10,8 @@ import NextDocument, { DocumentContext, DocumentInitialProps } from 'next/docume
 import { useEffect, useState } from 'react'
 import { ServerStyleSheet } from 'styled-components'
 import { KeyUtils } from 'slate'
+import createEmotionServer from '@emotion/server/create-instance'
+import { cache } from '@emotion/css'
 
 import { MakeswiftClient } from './api/react'
 import { Element } from './state/react-page'
@@ -33,12 +35,19 @@ export class Document extends NextDocument {
 
       KeyUtils.resetGenerator()
 
+      const { extractCritical } = createEmotionServer(cache)
+      const { ids, css } = extractCritical(initialProps.html)
+
       return {
         ...initialProps,
         styles: (
           <>
             {initialProps.styles}
             {sheet.getStyleElement()}
+            <style
+              data-emotion={`css ${ids.join(' ')}`}
+              dangerouslySetInnerHTML={{ __html: css }}
+            />
           </>
         ),
       }

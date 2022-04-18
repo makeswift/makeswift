@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components'
 import { useState, useEffect, Ref, forwardRef } from 'react'
 import NextImage from 'next/image'
+import { css as toClass, cx } from '@emotion/css'
 
 import {
   BorderRadiusValue,
@@ -22,7 +23,6 @@ import {
   cssMargin,
   cssMediaRules,
   cssPadding,
-  cssWidth,
 } from '../../utils/cssMediaRules'
 import { DEVICES, findDeviceOverride } from '../../utils/devices'
 import {
@@ -37,6 +37,7 @@ import { ReactRuntime, useIsInBuilder } from '../../../react'
 import { Link } from '../../shared/Link'
 import { Props } from '../../../prop-controllers'
 import { useIsPrefetching } from '../../../api/react'
+import { responsiveWidth } from '../../utils/responsive-style'
 
 type Props = {
   id?: ElementIDValue
@@ -82,7 +83,6 @@ function imageSizes(width?: Props['width']): string {
 }
 
 const ImageContainer = styled.div<{
-  width?: Props['width']
   margin?: Props['margin']
   padding?: Props['padding']
   border?: BorderPropControllerData | null | undefined
@@ -90,11 +90,9 @@ const ImageContainer = styled.div<{
   boxShadow?: BoxShadowPropControllerData | null | undefined
   opacity: Props['opacity']
   link?: Props['link']
-  dimensions: { width: number; height: number }
 }>`
   line-height: 0;
   overflow: hidden;
-  ${props => cssWidth(`${props.dimensions.width}px`)(props)}
   ${cssMargin()}
   ${cssPadding()}
   ${cssBorder()}
@@ -167,17 +165,17 @@ const ImageComponent = forwardRef(function Image(
 
   if (!dimensions) return null
 
+  const widthClass = toClass(responsiveWidth(width, `${dimensions.width}px`))
+
   if (isPrefetching) return null
 
   return (
     <ImageContainer
       as={link ? Link : 'div'}
       link={link}
-      dimensions={dimensions}
       ref={ref}
       id={id}
-      className={className}
-      width={width}
+      className={cx(className, widthClass)}
       margin={margin}
       opacity={opacity}
       padding={padding}
@@ -212,7 +210,7 @@ export function registerComponent(runtime: ReactRuntime) {
       file: Props.Image(),
       altText: Props.TextInput({ label: 'Alt text' }),
       link: Props.Link({ label: 'On click' }),
-      width: Props.Width(),
+      width: Props.Width({ format: Props.Width.Formats.ResponsiveValue }),
       margin: Props.Margin(),
       padding: Props.Padding(),
       border: Props.Border(),

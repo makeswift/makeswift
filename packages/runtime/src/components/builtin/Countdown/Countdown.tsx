@@ -1,9 +1,10 @@
 import { useState, useEffect, Ref, forwardRef } from 'react'
 import styled, { css } from 'styled-components'
+import { cx } from '@emotion/css'
 
 import { colorToString } from '../../utils/colorToString'
 import { ColorValue as Color } from '../../utils/types'
-import { cssMediaRules, cssWidth, cssMargin } from '../../utils/cssMediaRules'
+import { cssMediaRules, cssMargin } from '../../utils/cssMediaRules'
 import {
   ResponsiveValue,
   DateValue,
@@ -13,7 +14,6 @@ import {
   MarginValue,
   ResponsiveIconRadioGroupValue,
   TextInputValue,
-  WidthValue,
 } from '../../../prop-controllers/descriptors'
 import { ReactRuntime } from '../../../react'
 import { Props } from '../../../prop-controllers'
@@ -33,7 +33,7 @@ type Props = {
   blockColor?: ResponsiveColor
   labelFont?: FontValue
   labelColor?: ResponsiveColor
-  width?: WidthValue
+  width?: string
   margin?: MarginValue
   daysLabel?: TextInputValue
   hoursLabel?: TextInputValue
@@ -57,7 +57,6 @@ const Segment = styled.div`
 `
 
 const Container = styled.div<{
-  width: Props['width']
   margin: Props['margin']
   variant: Props['variant']
   size: Props['size']
@@ -70,7 +69,6 @@ const Container = styled.div<{
   labelFont?: ResponsiveValue<string>
 }>`
   display: flex;
-  ${cssWidth('560px')}
   ${cssMargin()}
   ${p =>
     cssMediaRules([p.size] as const, ([size = 'medium']) => {
@@ -308,7 +306,7 @@ const Countdown = forwardRef(function Countdown(
     <Container
       ref={ref}
       id={id}
-      width={width}
+      className={cx(width)}
       margin={margin}
       variant={variant}
       size={size}

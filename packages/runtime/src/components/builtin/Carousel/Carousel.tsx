@@ -4,8 +4,9 @@ import { motion, useAnimation } from 'framer-motion'
 import { useGesture } from 'react-use-gesture'
 import { wrap } from '@popmotion/popcorn'
 import uuid from 'uuid/v4'
+import { cx } from '@emotion/css'
 
-import { cssMediaRules, cssWidth, cssMargin } from '../../utils/cssMediaRules'
+import { cssMediaRules, cssMargin } from '../../utils/cssMediaRules'
 import { colorToString } from '../../utils/colorToString'
 import { ColorValue as Color } from '../../utils/types'
 import { useMediaQuery } from '../../hooks'
@@ -17,7 +18,6 @@ import {
   ImagesValue,
   MarginValue,
   ResponsiveNumberValue,
-  WidthValue,
   ResponsiveIconRadioGroupValue,
   GapXValue,
   CheckboxValue,
@@ -62,7 +62,7 @@ const Container = styled.div`
 type Props = {
   id?: ElementIDValue
   images?: ImagesValue
-  width?: WidthValue
+  width?: string
   margin?: MarginValue
   pageSize?: ResponsiveNumberValue
   step?: ResponsiveNumberValue
@@ -80,11 +80,10 @@ type Props = {
   slideBorderRadius?: BorderRadiusValue
 }
 
-const Wrapper = styled.div<{ width: Props['width']; margin: Props['margin'] }>`
+const Wrapper = styled.div<{ margin: Props['margin'] }>`
   position: relative;
   display: flex;
   flex-direction: column;
-  ${cssWidth('400px')}
   ${cssMargin()}
 
   &:focus {
@@ -372,7 +371,7 @@ const Carousel = forwardRef(function Carousel(
   return (
     <Wrapper
       ref={ref}
-      width={width}
+      className={cx(width)}
       margin={margin}
       tabIndex={-1}
       onKeyDown={e => {

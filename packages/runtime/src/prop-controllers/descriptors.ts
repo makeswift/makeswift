@@ -127,6 +127,8 @@ export const Types = {
 
 type Options<T> = T | ((props: Record<string, unknown>, deviceMode: Device) => T)
 
+export type ResolveOptions<T extends Options<unknown>> = T extends Options<infer U> ? U : never
+
 type ColorBackground = { type: 'color'; id: string; payload: Color | null }
 
 type GradientStop = { id: string; location: number; color: Color | null }
@@ -842,13 +844,32 @@ export function Video(options: VideoOptions = {}): VideoDescriptor {
 
 export type WidthValue = ResponsiveValue<Length>
 
-type WidthOptions = Options<{ preset?: WidthValue; defaultValue?: Length }>
+export const WidthControlValueFormats = {
+  ClassName: 'ClassName',
+  ResponsiveValue: 'ResponsiveValue',
+} as const
 
-type WidthDescriptor<_T = WidthValue> = { type: typeof Types.Width; options: WidthOptions }
+type WidthControlValueFormat =
+  typeof WidthControlValueFormats[keyof typeof WidthControlValueFormats]
 
-export function Width(options: WidthOptions = {}): WidthDescriptor {
+type WidthOptions = Options<{
+  preset?: WidthValue
+  defaultValue?: Length
+  format?: WidthControlValueFormat
+}>
+
+export type WidthDescriptor<_T = WidthValue, U extends WidthOptions = WidthOptions> = {
+  type: typeof Types.Width
+  options: U
+}
+
+export function Width<T extends WidthOptions>(
+  options: T = {} as T,
+): WidthDescriptor<WidthValue, T> {
   return { type: Types.Width, options }
 }
+
+Width.Formats = WidthControlValueFormats
 
 export type Descriptor<T extends Data = Data> =
   | BackgroundsDescriptor<T>

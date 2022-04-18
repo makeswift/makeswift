@@ -15,15 +15,15 @@ import { Value, ValueJSON } from 'slate'
 import Hotkeys from 'slate-hotkeys'
 // @ts-expect-error: there are no types for 'corporate-ipsum'
 import ipsum from 'corporate-ipsum'
+import { cx } from '@emotion/css'
 
 import {
   ElementIDValue,
   MarginValue,
   RichTextDescriptor,
   RichTextValue,
-  WidthValue,
 } from '../../../prop-controllers/descriptors'
-import { cssWidth, cssMargin } from '../../utils/cssMediaRules'
+import { cssMargin } from '../../utils/cssMediaRules'
 import { BoxModelHandle, getBox } from '../../../box-model'
 import { PropControllersHandle } from '../../../state/modules/prop-controller-handles'
 import { RichTextEditor } from './components/RichTextEditor'
@@ -34,15 +34,11 @@ import { Props } from '../../../prop-controllers'
 type Props = {
   id?: ElementIDValue
   text?: RichTextValue
-  width?: WidthValue
+  width?: string
   margin?: MarginValue
 }
 
-const StyledRichTextEditor = styled(RichTextEditor)<{
-  width: Props['width']
-  margin: Props['margin']
-}>`
-  ${cssWidth()}
+const StyledRichTextEditor = styled(RichTextEditor)<{ margin: Props['margin'] }>`
   ${cssMargin()}
 `
 
@@ -172,8 +168,8 @@ const Text = forwardRef(function Text(
       // @ts-expect-error: types don't allow for 'id' prop even though it's used.
       id={id}
       ref={setEditor}
+      className={cx(width)}
       readOnly={!isInBuilder}
-      width={width}
       margin={margin}
       value={value}
       onChange={handleChange}

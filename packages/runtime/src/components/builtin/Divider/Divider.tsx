@@ -1,14 +1,14 @@
 import { forwardRef, Ref } from 'react'
 import styled, { css } from 'styled-components'
+import { cx } from '@emotion/css'
 
-import { cssMediaRules, cssWidth, cssMargin } from '../../utils/cssMediaRules'
+import { cssMediaRules, cssMargin } from '../../utils/cssMediaRules'
 import {
   ResponsiveValue,
   ElementIDValue,
   MarginValue,
   ResponsiveLengthValue,
   ResponsiveSelectValue,
-  WidthValue,
 } from '../../../prop-controllers/descriptors'
 import { colorToString } from '../../utils/colorToString'
 import { ColorValue as Color } from '../../utils/types'
@@ -23,17 +23,16 @@ type Props = {
   variant?: ResponsiveSelectValue<DividerVariant>
   thickness?: ResponsiveLengthValue
   color?: ResponsiveColor
-  width?: WidthValue
+  width?: string
   margin?: MarginValue
 }
 
 // IE11 has a bug with Flexbox vertical centering with min height if height is not set.
 // Wrapping it in another flex container fixes it for some reason, read more here:
 // https://stackoverflow.com/questions/19371626/flexbox-not-centering-vertically-in-ie
-const IE11MinHeightContainer = styled.div<{ width: Props['width']; margin: Props['margin'] }>`
+const IE11MinHeightContainer = styled.div<{ margin: Props['margin'] }>`
   display: flex;
   width: 100%;
-  ${cssWidth()}
   ${cssMargin()}
 `
 
@@ -96,7 +95,7 @@ const Divider = forwardRef(function Divider(
   ref: Ref<HTMLDivElement>,
 ) {
   return (
-    <IE11MinHeightContainer ref={ref} id={id} width={width} margin={margin}>
+    <IE11MinHeightContainer ref={ref} id={id} className={cx(width)} margin={margin}>
       <Container>
         {/* @ts-expect-error: HTMLDivElement `color` attribute conflicts with prop */}
         <Line variant={variant} thickness={thickness} color={color} />

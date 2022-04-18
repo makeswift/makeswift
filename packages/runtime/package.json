@@ -91,6 +91,8 @@
   "dependencies": {
     "@apollo/client": "^3.5.10",
     "@convertkit/slate-lists": "^0.2.4",
+    "@emotion/css": "^11.9.0",
+    "@emotion/server": "^11.4.0",
     "@popmotion/popcorn": "^0.4.4",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.2",
