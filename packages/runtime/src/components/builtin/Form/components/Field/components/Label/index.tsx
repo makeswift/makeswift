@@ -6,7 +6,6 @@ import { cssMediaRules, cssTextStyle } from '../../../../../../utils/cssMediaRul
 import { colorToString } from '../../../../../../utils/colorToString'
 
 import { useFormContext, Size, Sizes, Contrast, Contrasts } from '../../../../context/FormContext'
-import { useColor } from '../../../../../../hooks'
 import { ColorValue } from '../../../../../../utils/types'
 
 export function getSizeHeight(size: Size): number {
@@ -68,7 +67,7 @@ export default function Label(props: Props): JSX.Element {
       contrast={contrast}
       size={size}
       textStyle={labelTextStyle}
-      textColor={useColor(labelTextColor)}
+      textColor={labelTextColor}
     />
   )
 }

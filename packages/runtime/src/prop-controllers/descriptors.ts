@@ -499,7 +499,7 @@ export type ResponsiveColorValue = ResponsiveValue<Color>
 
 type ResponsiveColorOptions = Options<{ label?: string; placeholder?: string; hidden?: boolean }>
 
-type ResponsiveColorDescriptor<_T = ResponsiveColorValue> = {
+export type ResponsiveColorDescriptor<_T = ResponsiveColorValue> = {
   type: typeof Types.ResponsiveColor
   options: ResponsiveColorOptions
 }

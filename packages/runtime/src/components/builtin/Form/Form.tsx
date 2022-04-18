@@ -28,14 +28,13 @@ import Placeholder from './components/Placeholder'
 import Field from './components/Field'
 import Spinner from './components/Spinner'
 import Button from '../Button'
-import { TableColumn, useColor, useTable } from '../../hooks'
+import { TableColumn, useTable } from '../../hooks'
 import { cssGridItem, cssMargin, cssMediaRules, cssWidth } from '../../utils/cssMediaRules'
 import {
   ElementIDValue,
   GapYValue,
   LinkValue,
   MarginValue,
-  ResponsiveColorValue,
   ResponsiveIconRadioGroupValue,
   ResponsiveLengthValue,
   ResponsiveSelectValue,
@@ -54,6 +53,7 @@ import { useTableFormFieldRefs } from '../../hooks/useTableFormFieldRefs'
 import { ReactRuntime } from '../../../react'
 import { Props } from '../../../prop-controllers'
 import { useMutation, gql } from '../../../api/react'
+import { ResponsiveColor } from '../../../runtimes/react/controls'
 
 const LOCAL_STORAGE_NAMESPACE = '@@makeswift/components/form'
 
@@ -91,10 +91,10 @@ type Props = {
   size?: ResponsiveIconRadioGroupValue<Size>
   contrast?: ResponsiveIconRadioGroupValue<Contrast>
   labelTextStyle?: TextStyleValue
-  labelTextColor?: ResponsiveColorValue
+  labelTextColor?: ResponsiveColor
   submitTextStyle?: TextStyleValue
-  brandColor?: ResponsiveColorValue
-  submitTextColor?: ResponsiveColorValue
+  brandColor?: ResponsiveColor
+  submitTextColor?: ResponsiveColor
   submitLabel?: TextInputValue
   submitVariant?: ResponsiveSelectValue<
     'flat' | 'outline' | 'shadow' | 'clear' | 'blocky' | 'bubbly' | 'skewed'
@@ -374,11 +374,9 @@ const Form = forwardRef(function Form(
     )
   }, [fields, table])
 
-  const brandColorData = useColor(brandColor)
-
   return (
     <FormContextProvider
-      value={{ shape, size, contrast, brandColor: brandColorData, labelTextStyle, labelTextColor }}
+      value={{ shape, size, contrast, brandColor, labelTextStyle, labelTextColor }}
     >
       {tableId == null ? (
         <Placeholder ref={setRefEl} width={width} margin={margin} />

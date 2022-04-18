@@ -68,7 +68,7 @@ function getPropControllerDescriptors(
   return PropControllers.getPropControllerDescriptors(getPropControllersStateSlice(state))
 }
 
-function getComponentPropControllerDescriptors(
+export function getComponentPropControllerDescriptors(
   state: State,
   componentType: string,
 ): Record<string, PropControllers.PropControllerDescriptor> | null {

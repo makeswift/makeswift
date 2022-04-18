@@ -1,7 +1,6 @@
 import { useState, useEffect, Ref, forwardRef } from 'react'
 import styled, { css } from 'styled-components'
 
-import { useColor } from '../../hooks'
 import { colorToString } from '../../utils/colorToString'
 import { ColorValue as Color } from '../../utils/types'
 import { cssMediaRules, cssWidth, cssMargin } from '../../utils/cssMediaRules'
@@ -12,13 +11,13 @@ import {
   FontValue,
   GapXValue,
   MarginValue,
-  ResponsiveColorValue,
   ResponsiveIconRadioGroupValue,
   TextInputValue,
   WidthValue,
 } from '../../../prop-controllers/descriptors'
 import { ReactRuntime } from '../../../react'
 import { Props } from '../../../prop-controllers'
+import { ResponsiveColor } from '../../../runtimes/react/controls'
 
 type Props = {
   id?: ElementIDValue
@@ -30,10 +29,10 @@ type Props = {
   size?: ResponsiveIconRadioGroupValue<'small' | 'medium' | 'large'>
   gap?: GapXValue
   numberFont?: FontValue
-  numberColor?: ResponsiveColorValue
-  blockColor?: ResponsiveColorValue
+  numberColor?: ResponsiveColor
+  blockColor?: ResponsiveColor
   labelFont?: FontValue
-  labelColor?: ResponsiveColorValue
+  labelColor?: ResponsiveColor
   width?: WidthValue
   margin?: MarginValue
   daysLabel?: TextInputValue
@@ -314,11 +313,11 @@ const Countdown = forwardRef(function Countdown(
       variant={variant}
       size={size}
       shape={shape}
-      labelColor={useColor(labelColor)}
+      labelColor={labelColor}
       labelFont={labelFont}
-      numberColor={useColor(numberColor)}
+      numberColor={numberColor}
       numberFont={numberFont}
-      blockColor={useColor(blockColor)}
+      blockColor={blockColor}
       gap={gap}
     >
       <Segment>

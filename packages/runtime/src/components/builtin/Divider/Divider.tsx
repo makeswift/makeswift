@@ -6,16 +6,15 @@ import {
   ResponsiveValue,
   ElementIDValue,
   MarginValue,
-  ResponsiveColorValue,
   ResponsiveLengthValue,
   ResponsiveSelectValue,
   WidthValue,
 } from '../../../prop-controllers/descriptors'
 import { colorToString } from '../../utils/colorToString'
 import { ColorValue as Color } from '../../utils/types'
-import { useColor } from '../../hooks'
 import { ReactRuntime } from '../../../react'
 import { Props } from '../../../prop-controllers'
+import { ResponsiveColor } from '../../../runtimes/react/controls'
 
 type DividerVariant = 'solid' | 'dashed' | 'dotted' | 'blended'
 
@@ -23,7 +22,7 @@ type Props = {
   id?: ElementIDValue
   variant?: ResponsiveSelectValue<DividerVariant>
   thickness?: ResponsiveLengthValue
-  color?: ResponsiveColorValue
+  color?: ResponsiveColor
   width?: WidthValue
   margin?: MarginValue
 }
@@ -100,7 +99,7 @@ const Divider = forwardRef(function Divider(
     <IE11MinHeightContainer ref={ref} id={id} width={width} margin={margin}>
       <Container>
         {/* @ts-expect-error: HTMLDivElement `color` attribute conflicts with prop */}
-        <Line variant={variant} thickness={thickness} color={useColor(color)} />
+        <Line variant={variant} thickness={thickness} color={color} />
       </Container>
     </IE11MinHeightContainer>
   )

@@ -2,18 +2,14 @@ import { Fragment } from 'react'
 import styled, { css } from 'styled-components'
 
 import { cssMediaRules } from '../../../../utils/cssMediaRules'
-import {
-  ResponsiveValue,
-  NavigationLinksValue,
-  ResponsiveColorValue,
-} from '../../../../../prop-controllers/descriptors'
+import { ResponsiveValue, NavigationLinksValue } from '../../../../../prop-controllers/descriptors'
 import { ColorValue as Color } from '../../../../utils/types'
 import { colorToString } from '../../../../utils/colorToString'
-import { useColor } from '../../../../hooks'
 import { ReactComponent as Times16 } from '../../../../icons/times-16.svg'
 
 import Button from '../../../Button'
 import DropDownButton from './components/MobileDropDownButton'
+import { ResponsiveColor } from '../../../../../runtimes/react/controls'
 
 const ButtonLink = styled(Button)`
   margin: 8px 0;
@@ -72,8 +68,8 @@ const CloseIconContainer = styled.button<{ color?: ResponsiveValue<Color> | null
 
 type Props = {
   animation?: ResponsiveValue<'coverRight' | 'coverLeft'>
-  backgroundColor?: ResponsiveColorValue
-  closeIconColor?: ResponsiveColorValue
+  backgroundColor?: ResponsiveColor
+  closeIconColor?: ResponsiveColor
   links?: NavigationLinksValue
   onClose?: () => unknown
   open?: boolean
@@ -88,9 +84,9 @@ export default function MobileMenu({
   onClose = () => {},
 }: Props): JSX.Element {
   return (
-    <Container animation={animation} backgroundColor={useColor(backgroundColor)} open={open}>
+    <Container animation={animation} backgroundColor={backgroundColor} open={open}>
       {/* @ts-expect-error: HTMLButtonElement `color` attribute conflicts with prop */}
-      <CloseIconContainer color={useColor(closeIconColor)} onClick={onClose}>
+      <CloseIconContainer color={closeIconColor} onClick={onClose}>
         <Times16 />
       </CloseIconContainer>
       <div

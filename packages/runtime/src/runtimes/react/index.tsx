@@ -27,13 +27,14 @@ import { ComponentIcon } from '../../state/modules/components-meta'
 import { registerBuiltinComponents } from '../../components'
 import { MakeswiftProvider, MakeswiftClient, useQuery } from '../../api/react'
 import { FallbackComponent } from '../../components/shared/FallbackComponent'
+import { MappedDescriptorValueType, useProps } from './controls'
 
 const contextDefaultValue = ReactPage.configureStore()
 
 export interface ReactRuntime {
   registerComponent<
     P extends Record<string, PropControllerDescriptor>,
-    C extends ReactPage.ComponentType<{ [K in keyof P]?: PropControllerDescriptorValueType<P[K]> }>,
+    C extends ReactPage.ComponentType<{ [K in keyof P]?: MappedDescriptorValueType<P[K]> }>,
   >(
     component: C,
     meta: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P },
@@ -194,8 +195,12 @@ function useDocumentKey(): string | null {
 
 type State = ReactPage.State | ReactBuilderPreview.State
 
+export function useStore(): ReactPage.Store {
+  return useContext(Context)
+}
+
 function useSelector<R>(selector: (state: State) => R): R {
-  const store = useContext(Context)
+  const store = useStore()
 
   return useSyncExternalStoreWithSelector(store.subscribe, store.getState, store.getState, selector)
 }
@@ -240,12 +245,13 @@ const ElementData = memo(
     ref: Ref<unknown>,
   ): JSX.Element {
     const Component = useComponent(elementData.type)
+    const props = useProps(elementData.props, elementData.type)
 
     if (Component == null) {
       return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Component not found" />
     }
 
-    return <Component {...elementData.props} key={elementData.key} ref={ref} />
+    return <Component {...props} key={elementData.key} ref={ref} />
   }),
 )
 

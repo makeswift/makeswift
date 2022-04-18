@@ -7,7 +7,6 @@ import {
   ResponsiveValue,
   ElementIDValue,
   MarginValue,
-  ResponsiveColorValue,
   TextInputValue,
   ResponsiveSelectValue,
   ResponsiveIconRadioGroupValue,
@@ -18,9 +17,9 @@ import {
 import { ColorValue as Color } from '../../utils/types'
 import { colorToString } from '../../utils/colorToString'
 import { Link } from '../../shared/Link'
-import { useColor } from '../../hooks'
 import { ReactRuntime } from '../../../react'
 import { Props } from '../../../prop-controllers'
+import { ResponsiveColor } from '../../../runtimes/react/controls'
 
 type ControllerProps = {
   id?: ElementIDValue
@@ -31,8 +30,8 @@ type ControllerProps = {
   >
   shape?: ResponsiveIconRadioGroupValue<'pill' | 'rounded' | 'square'>
   size?: ResponsiveIconRadioGroupValue<'small' | 'medium' | 'large'>
-  color?: ResponsiveColorValue
-  textColor?: ResponsiveColorValue
+  color?: ResponsiveColor
+  textColor?: ResponsiveColor
   textStyle?: TextStyleValue
   width?: WidthValue
   margin?: MarginValue
@@ -272,12 +271,12 @@ const Button = forwardRef<HTMLAnchorElement, Props>(function Button(
       ref={ref}
       id={id}
       // @ts-expect-error: HTMLAnchorElement `color` attribute conflicts with prop
-      color={useColor(color)}
+      color={color}
       link={link}
       margin={margin}
       shape={shape}
       size={size}
-      textColor={useColor(textColor)}
+      textColor={textColor}
       textStyle={textStyle}
       variant={variant}
       width={width}
