@@ -132,7 +132,7 @@ export function registerComponent(runtime: ReactRuntime) {
     props: {
       id: Props.ElementID(),
       html: Props.TextArea({ label: 'Code', rows: 20 }),
-      width: Props.Width(),
+      width: Props.Width({ format: Props.Width.Formats.ClassName }),
       margin: Props.Margin(),
     },
   })

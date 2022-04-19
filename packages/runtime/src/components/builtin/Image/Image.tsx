@@ -210,7 +210,7 @@ export function registerComponent(runtime: ReactRuntime) {
       file: Props.Image(),
       altText: Props.TextInput({ label: 'Alt text' }),
       link: Props.Link({ label: 'On click' }),
-      width: Props.Width({ format: Props.Width.Formats.ResponsiveValue }),
+      width: Props.Width(),
       margin: Props.Margin(),
       padding: Props.Padding(),
       border: Props.Border(),

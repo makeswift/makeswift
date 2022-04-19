@@ -345,7 +345,7 @@ export function registerComponent(runtime: ReactRuntime) {
         placeholder: 'white',
       }),
       textStyle: Props.TextStyle(),
-      width: Props.Width({ format: Props.Width.Formats.ResponsiveValue }),
+      width: Props.Width(),
       margin: Props.Margin(),
     },
   })

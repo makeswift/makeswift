@@ -595,6 +595,7 @@ export function registerComponent(runtime: ReactRuntime) {
         // hidden: props.tableId == null,
       }),
       width: Props.Width({
+        format: Props.Width.Formats.ClassName,
         preset: [{ deviceId: 'desktop', value: { value: 550, unit: 'px' } }],
         defaultValue: { value: 100, unit: '%' },
       }),

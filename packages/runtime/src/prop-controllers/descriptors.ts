@@ -864,7 +864,7 @@ export type WidthDescriptor<_T = WidthValue, U extends WidthOptions = WidthOptio
 }
 
 export function Width<T extends WidthOptions>(
-  options: T = {} as T,
+  options: T & WidthOptions = {} as T,
 ): WidthDescriptor<WidthValue, T> {
   return { type: Types.Width, options }
 }

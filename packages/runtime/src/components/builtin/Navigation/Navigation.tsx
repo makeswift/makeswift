@@ -252,7 +252,10 @@ export function registerComponent(runtime: ReactRuntime) {
         placeholder: 'black',
         // hidden: !findDeviceOverride(mobileMenuAnimation, device),
       }),
-      width: Props.Width({ defaultValue: { value: 100, unit: '%' } }),
+      width: Props.Width({
+        format: Props.Width.Formats.ClassName,
+        defaultValue: { value: 100, unit: '%' },
+      }),
       margin: Props.Margin(),
     },
   })

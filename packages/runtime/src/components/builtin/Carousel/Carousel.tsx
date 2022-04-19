@@ -473,7 +473,10 @@ export function registerComponent(runtime: ReactRuntime) {
           { key: uuid(), props: {} },
         ],
       }),
-      width: Props.Width({ defaultValue: { value: 400, unit: 'px' } }),
+      width: Props.Width({
+        format: Props.Width.Formats.ClassName,
+        defaultValue: { value: 400, unit: 'px' },
+      }),
       margin: Props.Margin(),
       pageSize: Props.ResponsiveNumber({
         label: 'Images shown',
