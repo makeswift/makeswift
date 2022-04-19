@@ -41,9 +41,9 @@ function useWidth(
 
   return useMemo(
     () =>
-      options.format === WidthControlValueFormats.ResponsiveValue
-        ? value
-        : css(responsiveWidth(value, options.defaultValue)),
+      options.format === WidthControlValueFormats.ClassName
+        ? css(responsiveWidth(value, options.defaultValue))
+        : value,
     [value, options.defaultValue, options.format],
   )
 }
@@ -80,7 +80,7 @@ export function useProps(element: ReactPage.ElementData): Record<string, unknown
 
 type ResolveWidthControlValue<T extends Descriptor> = T extends WidthDescriptor
   ? undefined extends ResolveOptions<T['options']>['format']
-    ? string
+    ? WidthValue | undefined
     : ResolveOptions<T['options']>['format'] extends typeof WidthControlValueFormats.ClassName
     ? string
     : ResolveOptions<T['options']>['format'] extends typeof WidthControlValueFormats.ResponsiveValue
