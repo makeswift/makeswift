@@ -187,8 +187,7 @@ export function registerComponent(runtime: ReactRuntime) {
     label: 'Text',
     props: {
       id: Props.ElementID(),
-      // TODO: generate a different preset each time.
-      text: Props.RichText({
+      text: Props.RichText(() => ({
         preset: {
           document: {
             nodes: [
@@ -230,7 +229,7 @@ export function registerComponent(runtime: ReactRuntime) {
             ],
           },
         },
-      }),
+      })),
       width: Props.Width({
         format: Props.Width.Formats.ClassName,
         preset: [{ deviceId: 'desktop', value: { value: 700, unit: 'px' } }],

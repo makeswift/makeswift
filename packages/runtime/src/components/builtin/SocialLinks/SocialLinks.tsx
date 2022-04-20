@@ -189,46 +189,69 @@ export function registerComponent(runtime: ReactRuntime) {
           openInNewTab: false,
         },
       }),
-      shape: Props.ResponsiveIconRadioGroup({
-        label: 'Shape',
-        options: [
-          { label: 'Naked', value: 'naked', icon: 'Star16' },
-          { label: 'Circle', value: 'circle', icon: 'StarCircle16' },
-          { label: 'Rounded', value: 'rounded', icon: 'StarRoundedSquare16' },
-          { label: 'Square', value: 'square', icon: 'StarSquare16' },
-        ],
-        defaultValue: 'naked',
-        // hidden: links == null || links.links.length === 0,
+      shape: Props.ResponsiveIconRadioGroup(props => {
+        const links = props.links as SocialLinksValue
+
+        return {
+          label: 'Shape',
+          options: [
+            { label: 'Naked', value: 'naked', icon: 'Star16' },
+            { label: 'Circle', value: 'circle', icon: 'StarCircle16' },
+            { label: 'Rounded', value: 'rounded', icon: 'StarRoundedSquare16' },
+            { label: 'Square', value: 'square', icon: 'StarSquare16' },
+          ],
+          defaultValue: 'naked',
+          hidden: links == null || links.links.length === 0,
+        }
       }),
-      size: Props.ResponsiveIconRadioGroup({
-        label: 'Size',
-        options: [
-          { label: 'Small', value: 'small', icon: 'SizeSmall16' },
-          { label: 'Medium', value: 'medium', icon: 'SizeMedium16' },
-          { label: 'Large', value: 'large', icon: 'SizeLarge16' },
-        ],
-        defaultValue: 'medium',
-        // hidden: links == null || links.links.length === 0,
+      size: Props.ResponsiveIconRadioGroup(props => {
+        const links = props.links as SocialLinksValue
+
+        return {
+          label: 'Size',
+          options: [
+            { label: 'Small', value: 'small', icon: 'SizeSmall16' },
+            { label: 'Medium', value: 'medium', icon: 'SizeMedium16' },
+            { label: 'Large', value: 'large', icon: 'SizeLarge16' },
+          ],
+          defaultValue: 'medium',
+          hidden: links == null || links.links.length === 0,
+        }
       }),
-      hoverStyle: Props.ResponsiveSelect({
-        label: 'On hover',
-        options: [
-          { value: 'none', label: 'None' },
-          { value: 'grow', label: 'Grow' },
-          { value: 'shrink', label: 'Shrink' },
-          { value: 'fade', label: 'Fade' },
-        ],
-        defaultValue: 'none',
-        labelOrientation: 'horizontal',
-        // hidden: links == null || links.links.length === 0,
+      hoverStyle: Props.ResponsiveSelect(props => {
+        const links = props.links as SocialLinksValue
+        const hidden = links == null || links.links.length === 0
+
+        return {
+          label: 'On hover',
+          options: [
+            { value: 'none', label: 'None' },
+            { value: 'grow', label: 'Grow' },
+            { value: 'shrink', label: 'Shrink' },
+            { value: 'fade', label: 'Fade' },
+          ],
+          defaultValue: 'none',
+          labelOrientation: 'horizontal',
+          hidden,
+        }
       }),
-      fill: Props.ResponsiveColor({
-        label: 'Icon color',
-        // hidden: links == null || links.links.length === 0,
+      fill: Props.ResponsiveColor(props => {
+        const links = props.links as SocialLinksValue
+        const hidden = links == null || links.links.length === 0
+
+        return {
+          label: 'Icon color',
+          hidden,
+        }
       }),
-      backgroundColor: Props.ResponsiveColor({
-        label: 'Shape color',
-        // hidden: links == null || links.links.length === 0,
+      backgroundColor: Props.ResponsiveColor(props => {
+        const links = props.links as SocialLinksValue
+        const hidden = links == null || links.links.length === 0
+
+        return {
+          label: 'Shape color',
+          hidden,
+        }
       }),
       alignment: Props.ResponsiveIconRadioGroup({
         label: 'Alignment',

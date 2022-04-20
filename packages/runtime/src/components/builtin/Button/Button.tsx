@@ -22,14 +22,15 @@ import { ReactRuntime } from '../../../react'
 import { Props } from '../../../prop-controllers'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { responsiveWidth } from '../../utils/responsive-style'
+import { findDeviceOverride } from '../../utils/devices'
+
+type ButtonVariant = 'flat' | 'outline' | 'shadow' | 'clear' | 'blocky' | 'bubbly' | 'skewed'
 
 type ControllerProps = {
   id?: ElementIDValue
   children?: TextInputValue
   link?: LinkValue
-  variant?: ResponsiveSelectValue<
-    'flat' | 'outline' | 'shadow' | 'clear' | 'blocky' | 'bubbly' | 'skewed'
-  >
+  variant?: ResponsiveSelectValue<ButtonVariant>
   shape?: ResponsiveIconRadioGroupValue<'pill' | 'rounded' | 'square'>
   size?: ResponsiveIconRadioGroupValue<'small' | 'medium' | 'large'>
   color?: ResponsiveColor
@@ -336,9 +337,11 @@ export function registerComponent(runtime: ReactRuntime) {
         ],
         defaultValue: 'medium',
       }),
-      color: Props.ResponsiveColor({
-        placeholder: 'black',
-        // hidden: findDeviceOverride<ButtonVariant>(variant, device)?.value === 'clear',
+      color: Props.ResponsiveColor((props, device) => {
+        const variant = props.variant as ResponsiveValue<ButtonVariant>
+        const hidden = findDeviceOverride<ButtonVariant>(variant, device)?.value === 'clear'
+
+        return { placeholder: 'black', hidden }
       }),
       textColor: Props.ResponsiveColor({
         label: 'Text color',

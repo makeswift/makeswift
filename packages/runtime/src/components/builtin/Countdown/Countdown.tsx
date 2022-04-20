@@ -355,10 +355,9 @@ export function registerComponent(runtime: ReactRuntime) {
     icon: 'Countdown40',
     props: {
       id: Props.ElementID(),
-      // TODO: Make this a function
-      date: Props.Date({
+      date: Props.Date(() => ({
         preset: new Date(Date.now() + 1000 * 60 * 60 * 24 * 2).toISOString(),
-      }),
+      })),
       variant: Props.ResponsiveIconRadioGroup({
         label: 'Style',
         options: [

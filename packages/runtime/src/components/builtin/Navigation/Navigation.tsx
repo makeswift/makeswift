@@ -31,6 +31,7 @@ import { colorToString } from '../../utils/colorToString'
 import { ReactRuntime } from '../../../react'
 import { Props } from '../../../prop-controllers'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
+import { findDeviceOverride } from '../../utils/devices'
 
 type Props = {
   id?: ElementIDValue
@@ -188,31 +189,36 @@ export function registerComponent(runtime: ReactRuntime) {
     props: {
       id: Props.ElementID(),
       links: Props.NavigationLinks(),
-      linkTextStyle: Props.TextStyle({
-        label: 'Link text style',
-        // hidden: links == null || links.length === 0,
+      linkTextStyle: Props.TextStyle(props => {
+        const links = props.links as NavigationLinksValue
+
+        return {
+          label: 'Link text style',
+          hidden: links == null || links.length === 0,
+        }
       }),
       showLogo: Props.Checkbox({ preset: true, label: 'Show logo' }),
-      logoFile: Props.Image({
+      logoFile: Props.Image(props => ({
         label: 'Logo',
-        // hidden: props.showLogo === false,
-      }),
-      logoWidth: Props.ResponsiveLength({
-        // preset: [{ deviceId: 'desktop', value: { value: 100, unit: 'px' } }],
+        hidden: props.showLogo === false,
+      })),
+      logoWidth: Props.ResponsiveLength(props => ({
+        preset: [{ deviceId: 'desktop', value: { value: 100, unit: 'px' } }],
         label: 'Logo width',
-        // min: 0,
-        // max: 1000,
+        min: 0,
+        max: 1000,
+        // TODO: This is hardcoded value, import it from LengthInputOptions
         options: [{ value: 'px', label: 'Pixels', icon: 'Px16' }],
-        // hidden: props.showLogo === false,
-      }),
-      logoAltText: Props.TextInput({
+        hidden: props.showLogo === false,
+      })),
+      logoAltText: Props.TextInput(props => ({
         label: 'Logo alt text',
-        // hidden: props.showLogo === false,
-      }),
-      logoLink: Props.Link({
+        hidden: props.showLogo === false,
+      })),
+      logoLink: Props.Link(props => ({
         label: 'Logo on click',
-        // hidden: props.showLogo === false,
-      }),
+        hidden: props.showLogo === false,
+      })),
       alignment: Props.ResponsiveIconRadioGroup({
         label: 'Alignment',
         options: [
@@ -237,20 +243,35 @@ export function registerComponent(runtime: ReactRuntime) {
           { value: 'coverLeft', label: 'Cover from left' },
         ],
       }),
-      mobileMenuOpenIconColor: Props.ResponsiveColor({
-        label: 'Open icon color',
-        placeholder: 'rgba(161, 168, 194, 0.5)',
-        // hidden: !findDeviceOverride(mobileMenuAnimation, device),
+      mobileMenuOpenIconColor: Props.ResponsiveColor((props, device) => {
+        const mobileMenuAnimation = props.mobileMenuAnimation as ResponsiveValue<string>
+        const hidden = !findDeviceOverride(mobileMenuAnimation, device)
+
+        return {
+          label: 'Open icon color',
+          placeholder: 'rgba(161, 168, 194, 0.5)',
+          hidden,
+        }
       }),
-      mobileMenuCloseIconColor: Props.ResponsiveColor({
-        label: 'Close icon color',
-        placeholder: 'rgba(161, 168, 194, 0.5)',
-        // hidden: !findDeviceOverride(mobileMenuAnimation, device),
+      mobileMenuCloseIconColor: Props.ResponsiveColor((props, device) => {
+        const mobileMenuAnimation = props.mobileMenuAnimation as ResponsiveValue<string>
+        const hidden = !findDeviceOverride(mobileMenuAnimation, device)
+
+        return {
+          label: 'Close icon color',
+          placeholder: 'rgba(161, 168, 194, 0.5)',
+          hidden,
+        }
       }),
-      mobileMenuBackgroundColor: Props.ResponsiveColor({
-        label: 'Menu BG color',
-        placeholder: 'black',
-        // hidden: !findDeviceOverride(mobileMenuAnimation, device),
+      mobileMenuBackgroundColor: Props.ResponsiveColor((props, device) => {
+        const mobileMenuAnimation = props.mobileMenuAnimation as ResponsiveValue<string>
+        const hidden = !findDeviceOverride(mobileMenuAnimation, device)
+
+        return {
+          label: 'Menu BG color',
+          placeholder: 'black',
+          hidden,
+        }
       }),
       width: Props.Width({
         format: Props.Width.Formats.ClassName,

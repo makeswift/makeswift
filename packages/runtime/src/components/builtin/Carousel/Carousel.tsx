@@ -28,6 +28,7 @@ import {
 import { ReactRuntime } from '../../../react'
 import { Props } from '../../../prop-controllers'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
+import { findDeviceOverride } from '../../utils/devices'
 
 const LeftChevron = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="10" height="14" viewBox="0 0 10 14">
@@ -478,19 +479,29 @@ export function registerComponent(runtime: ReactRuntime) {
         defaultValue: { value: 400, unit: 'px' },
       }),
       margin: Props.Margin(),
-      pageSize: Props.ResponsiveNumber({
-        label: 'Images shown',
-        defaultValue: 1,
-        min: 1,
-        // max: images?.length ?? 0,
-        step: 1,
+      pageSize: Props.ResponsiveNumber(props => {
+        const images = props.images as unknown[]
+        const imagesLength = images?.length ?? 0
+
+        return {
+          label: 'Images shown',
+          defaultValue: 1,
+          min: 1,
+          max: imagesLength,
+          step: 1,
+        }
       }),
-      step: Props.ResponsiveNumber({
-        label: 'Step',
-        defaultValue: 1,
-        min: 1,
-        // max: findDeviceOverride(pageSize, device)?.value ?? 1,
-        step: 1,
+      step: Props.ResponsiveNumber((props, device) => {
+        const pageSize = props.pageSize as ResponsiveValue<number>
+        const pageSizeValue = findDeviceOverride(pageSize, device)?.value ?? 1
+
+        return {
+          label: 'Step',
+          defaultValue: 1,
+          min: 1,
+          max: pageSizeValue,
+          step: 1,
+        }
       }),
       slideAlignment: Props.ResponsiveIconRadioGroup({
         label: 'Alignment',
@@ -507,16 +518,16 @@ export function registerComponent(runtime: ReactRuntime) {
         defaultValue: { value: 0, unit: 'px' },
       }),
       autoplay: Props.Checkbox({ label: 'Autoplay' }),
-      delay: Props.Number({
+      delay: Props.Number(props => ({
         label: 'Delay',
         preset: 5,
         min: 1,
         step: 0.1,
         suffix: 'seconds',
-        // hidden: !props.autoplay,
-      }),
+        hidden: !props.autoplay,
+      })),
       showArrows: Props.Checkbox({ preset: true, label: 'Show arrows' }),
-      arrowPosition: Props.ResponsiveIconRadioGroup({
+      arrowPosition: Props.ResponsiveIconRadioGroup(props => ({
         label: 'Arrow position',
         options: [
           { label: 'Inside', value: 'inside', icon: 'ArrowInside16' },
@@ -524,24 +535,24 @@ export function registerComponent(runtime: ReactRuntime) {
           { label: 'Outside', value: 'outside', icon: 'ArrowOutside16' },
         ],
         defaultValue: 'inside',
-        // hidden: props.showArrows === false,
-      }),
-      arrowColor: Props.ResponsiveColor({
+        hidden: props.showArrows === false,
+      })),
+      arrowColor: Props.ResponsiveColor(props => ({
         label: 'Arrow color',
         placeholder: 'black',
-        // hidden: props.showArrows === false,
-      }),
-      arrowBackground: Props.ResponsiveColor({
+        hidden: props.showArrows === false,
+      })),
+      arrowBackground: Props.ResponsiveColor(props => ({
         label: 'Arrow background',
         placeholder: 'white',
-        // hidden: props.showArrows === false,
-      }),
+        hidden: props.showArrows === false,
+      })),
       showDots: Props.Checkbox({ preset: true, label: 'Show dots' }),
-      dotColor: Props.ResponsiveColor({
+      dotColor: Props.ResponsiveColor(props => ({
         label: 'Dot color',
         placeholder: 'black',
-        // hidden: props.showDots === false,
-      }),
+        hidden: props.showDots === false,
+      })),
       slideBorder: Props.Border(),
       slideBorderRadius: Props.BorderRadius(),
     },
