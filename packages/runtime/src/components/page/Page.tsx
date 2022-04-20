@@ -34,6 +34,10 @@ export type PageData = {
     family: string
     variants: string[]
   }>
+  seo: {
+    canonicalUrl: string
+    isIndexingBlocked: boolean
+  }
 }
 
 const defaultFavicon = {
@@ -77,6 +81,7 @@ export function Page({ page, preview = false }: Props): JSX.Element {
   console.log({ page })
   const favicon = page.meta.favicon ?? defaultFavicon
   const { title, description, keywords, socialImage } = page.meta
+  const { canonicalUrl, isIndexingBlocked } = page.seo
   const fontFamilyParamValue = page.fonts
     .map(({ family, variants }) => {
       return `${family.replace(/ /g, '+')}:${variants.join()}`
@@ -127,6 +132,10 @@ export function Page({ page, preview = false }: Props): JSX.Element {
         </style>
 
         <link rel="icon" type={favicon.mimetype} href={favicon.publicUrl} />
+
+        {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+
+        {isIndexingBlocked && <meta name="robots" content="noindex" />}
 
         {title && (
           <>
