@@ -78,7 +78,6 @@ type Props = {
 }
 
 export function Page({ page, preview = false }: Props): JSX.Element {
-  console.log({ page })
   const favicon = page.meta.favicon ?? defaultFavicon
   const { title, description, keywords, socialImage } = page.meta
   const { canonicalUrl, isIndexingBlocked } = page.seo
