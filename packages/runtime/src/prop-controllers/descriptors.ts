@@ -242,9 +242,9 @@ export function Checkbox(options: CheckboxOptions): CheckboxDescriptor {
 
 export type DateValue = string
 
-type DateOptions = Options<{ preset?: DateValue }>
+export type DateOptions = Options<{ preset?: DateValue }>
 
-type DateDescriptor<_T = DateValue> = { type: typeof Types.Date; options: DateOptions }
+export type DateDescriptor<_T = DateValue> = { type: typeof Types.Date; options: DateOptions }
 
 export function Date(options: DateOptions = {}): DateDescriptor {
   return { type: Types.Date, options }
@@ -323,9 +323,9 @@ export function Grid(options: GridOptions = {}): GridDescriptor {
 
 export type ImageValue = string
 
-type ImageOptions = Options<{ label?: string; hidden?: boolean }>
+export type ImageOptions = Options<{ label?: string; hidden?: boolean }>
 
-type ImageDescriptor<_T = ImageValue> = { type: typeof Types.Image; options: ImageOptions }
+export type ImageDescriptor<_T = ImageValue> = { type: typeof Types.Image; options: ImageOptions }
 
 export function Image(options: ImageOptions = {}): ImageDescriptor {
   return { type: Types.Image, options }
@@ -343,7 +343,7 @@ export function Images(options: ImagesOptions = {}): ImagesDescriptor {
 
 export type LinkValue = Link
 
-type LinkOptions = Options<{
+export type LinkOptions = Options<{
   preset?: LinkValue
   label?: string
   defaultValue?: Link
@@ -351,7 +351,7 @@ type LinkOptions = Options<{
   hidden?: boolean
 }>
 
-type LinkDescriptor<_T = LinkValue> = { type: typeof Types.Link; options: LinkOptions }
+export type LinkDescriptor<_T = LinkValue> = { type: typeof Types.Link; options: LinkOptions }
 
 export function Link(options: LinkOptions = {}): LinkDescriptor {
   return { type: Types.Link, options }
@@ -461,7 +461,7 @@ export function NavigationLinks(options: NavigationLinksOptions = {}): Navigatio
 
 export type NumberValue = number
 
-type NumberOptions = Options<{
+export type NumberOptions = Options<{
   preset?: NumberValue
   label?: string
   defaultValue?: number
@@ -472,7 +472,10 @@ type NumberOptions = Options<{
   hidden?: boolean
 }>
 
-type NumberDescriptor<_T = NumberValue> = { type: typeof Types.Number; options: NumberOptions }
+export type NumberDescriptor<_T = NumberValue> = {
+  type: typeof Types.Number
+  options: NumberOptions
+}
 
 export function Number(options: NumberOptions = {}): NumberDescriptor {
   return { type: Types.Number, options }
@@ -512,16 +515,18 @@ export function ResponsiveColor(options: ResponsiveColorOptions = {}): Responsiv
 
 type IconRadioGroupOption<T extends string> = { value: T; label: string; icon: IconName }
 
-export type ResponsiveIconRadioGroupValue<T extends string> = ResponsiveValue<T>
+export type ResponsiveIconRadioGroupValue<T extends string = string> = ResponsiveValue<T>
 
-type ResponsiveIconRadioGroupOptions<T extends string, U extends T = T> = Options<{
+export type ResponsiveIconRadioGroupOptions<T extends string = string, U extends T = T> = Options<{
   label?: string
   options: IconRadioGroupOption<T>[]
   defaultValue?: U
   hidden?: boolean
 }>
 
-type ResponsiveIconRadioGroupDescriptor<T extends ResponsiveIconRadioGroupValue<string>> = {
+export type ResponsiveIconRadioGroupDescriptor<
+  T extends ResponsiveIconRadioGroupValue<string> = ResponsiveIconRadioGroupValue<string>,
+> = {
   type: typeof Types.ResponsiveIconRadioGroup
   options: ResponsiveIconRadioGroupOptions<ResponsiveValueType<T>>
 }
@@ -542,14 +547,14 @@ type LengthOption =
   | { value: 'px'; label: 'Pixels'; icon: 'Px16' }
   | { value: '%'; label: 'Percentage'; icon: 'Percent16' }
 
-type ResponsiveLengthOptions = Options<{
+export type ResponsiveLengthOptions = Options<{
   label?: string
   options?: LengthOption[]
   defaultValue?: Length
   hidden?: boolean
 }>
 
-type ResponsiveLengthDescriptor<_T = ResponsiveLengthValue> = {
+export type ResponsiveLengthDescriptor<_T = ResponsiveLengthValue> = {
   type: typeof Types.ResponsiveLength
   options: ResponsiveLengthOptions
 }
@@ -598,13 +603,13 @@ export function ResponsiveOpacity(
   return { type: Types.ResponsiveOpacity, options }
 }
 
-export type ResponsiveSelectValue<T extends string> = ResponsiveValue<T>
+export type ResponsiveSelectValue<T extends string = string> = ResponsiveValue<T>
 
 type SelectLabelOrientation = 'vertical' | 'horizontal'
 
 type SelectOption<T extends string> = { value: T; label: string }
 
-type ResponsiveSelectOptions<T extends string, U extends T = T> = Options<{
+export type ResponsiveSelectOptions<T extends string = string, U extends T = T> = Options<{
   label?: string
   labelOrientation?: SelectLabelOrientation
   options: SelectOption<T>[]
@@ -612,7 +617,9 @@ type ResponsiveSelectOptions<T extends string, U extends T = T> = Options<{
   hidden?: boolean
 }>
 
-type ResponsiveSelectDescriptor<T extends ResponsiveSelectValue<string>> = {
+export type ResponsiveSelectDescriptor<
+  T extends ResponsiveSelectValue<string> = ResponsiveSelectValue<string>,
+> = {
   type: typeof Types.ResponsiveSelect
   options: ResponsiveSelectOptions<ResponsiveValueType<T>>
 }
@@ -629,7 +636,7 @@ export function ResponsiveSelect<_T extends string, T extends _T, U extends T>(
 
 export type RichTextValue = IndexSignatureHack<Slate.ValueJSON>
 
-type RichTextOptions = Options<{ preset?: RichTextValue }>
+export type RichTextOptions = Options<{ preset?: RichTextValue }>
 
 export type RichTextDescriptor<_T extends Data = RichTextValue> = {
   type: typeof Types.RichText
@@ -800,9 +807,9 @@ export function TextArea(options: TextAreaOptions = {}): TextAreaDescriptor {
 
 export type TextInputValue = string
 
-type TextInputOptions = Options<{ label?: string; placeholder?: string; hidden?: boolean }>
+export type TextInputOptions = Options<{ label?: string; placeholder?: string; hidden?: boolean }>
 
-type TextInputDescriptor<_T = TextInputValue> = {
+export type TextInputDescriptor<_T = TextInputValue> = {
   type: typeof Types.TextInput
   options: TextInputOptions
 }
@@ -813,9 +820,13 @@ export function TextInput(options: TextInputOptions = {}): TextInputDescriptor {
 
 export type TextStyleValue = ResponsiveValue<TextStyle>
 
-type TextStyleOptions = Options<{ preset?: TextStyleValue; label?: string; hidden?: boolean }>
+export type TextStyleOptions = Options<{
+  preset?: TextStyleValue
+  label?: string
+  hidden?: boolean
+}>
 
-type TextStyleDescriptor<_T = TextStyleValue> = {
+export type TextStyleDescriptor<_T = TextStyleValue> = {
   type: typeof Types.TextStyle
   options: TextStyleOptions
 }

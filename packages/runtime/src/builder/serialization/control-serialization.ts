@@ -3,18 +3,50 @@ import {
   CheckboxValue as CheckboxControlValue,
   Data,
   Device,
+  DateDescriptor as DateControl,
+  DateOptions as DateControlConfig,
+  DateValue as DateControlValue,
   Gap,
   GapXDescriptor as GapXControl,
   GapXValue as GapXControlValue,
   GapYDescriptor as GapYControl,
   GapYValue as GapYControlValue,
+  ImageDescriptor as ImageControl,
+  ImageOptions as ImageControlConfig,
+  ImageValue as ImageControlValue,
+  LinkDescriptor as LinkControl,
+  LinkOptions as LinkControlConfig,
+  LinkValue as LinkControlValue,
   ListDescriptor as ListControl,
   ListOptions as ListControlConfig,
   ListValue as ListControlValue,
+  NumberDescriptor as NumberControl,
+  NumberOptions as NumberControlConfig,
+  NumberValue as NumberControlValue,
+  ResponsiveColorDescriptor as ResponsiveColorControl,
+  ResponsiveColorValue as ResponsiveColorControlValue,
   ResponsiveNumberDescriptor as ResponsiveNumberControl,
   ResponsiveNumberValue as ResponsiveNumberControlValue,
+  ResponsiveIconRadioGroupDescriptor as ResponsiveIconRadioGroupControl,
+  ResponsiveIconRadioGroupOptions as ResponsiveIconRadioGroupControlConfig,
+  ResponsiveIconRadioGroupValue as ResponsiveIconRadioGroupControlValue,
+  ResponsiveSelectDescriptor as ResponsiveSelectControl,
+  ResponsiveSelectOptions as ResponsiveSelectControlConfig,
+  ResponsiveSelectValue as ResponsiveSelectControlValue,
+  ResponsiveLengthDescriptor as ResponsiveLengthControl,
+  ResponsiveLengthOptions as ResponsiveLengthControlConfig,
+  ResponsiveLengthValue as ResponsiveLengthControlValue,
+  RichTextDescriptor as RichTextControl,
+  RichTextOptions as RichTextControlConfig,
+  RichTextValue as RichTextControlValue,
   ShapeDescriptor as ShapeControl,
   ShapeValue as ShapeControlValue,
+  TextInputDescriptor as TextInputControl,
+  TextInputOptions as TextInputControlConfig,
+  TextInputValue as TextInputControlValue,
+  TextStyleDescriptor as TextStyleControl,
+  TextStyleOptions as TextStyleControlConfig,
+  TextStyleValue as TextStyleControlValue,
   TypeaheadDescriptor as TypeaheadControl,
   TypeaheadOptions as TypeaheadControlConfig,
   TypeaheadValue as TypeaheadControlValue,
@@ -402,6 +434,370 @@ function deserializeCheckboxControl(
   return { ...serializedControl, options: deserializedOptions }
 }
 
+type ResponsiveColorControlConfig = { label?: string; placeholder?: string; hidden?: boolean }
+
+type SerializedResponsiveColorControl<_T = ResponsiveColorControlValue> = {
+  type: typeof Controls.Types.ResponsiveColor
+  options: SerializedConfig<ResponsiveColorControlConfig>
+}
+
+function serializeResponsiveColorControl(
+  control: ResponsiveColorControl,
+): [SerializedResponsiveColorControl, Transferable[]] {
+  const { options } = control
+
+  if (typeof options !== 'function') return [{ ...control, options }, []]
+
+  const serializedOptions = serializeFunction(options)
+
+  return [{ ...control, options: serializedOptions }, [serializedOptions]]
+}
+
+type DeserializedResponsiveColorControl<_T = ResponsiveColorControlValue> = {
+  type: typeof Controls.Types.ResponsiveColor
+  options: DeserializedConfig<ResponsiveColorControlConfig>
+}
+
+function deserializeResponsiveColorControl(
+  serializedControl: SerializedResponsiveColorControl,
+): DeserializedResponsiveColorControl {
+  const { options } = serializedControl
+
+  if (!isSerializedFunction(options)) return { ...serializedControl, options }
+
+  const deserializedOptions = deserializeFunction(options)
+
+  return { ...serializedControl, options: deserializedOptions }
+}
+
+type SerializedNumberControl<_T = NumberControlValue> = {
+  type: typeof Controls.Types.Number
+  options: SerializedConfig<NumberControlConfig>
+}
+
+function serializeNumberControl(control: NumberControl): [SerializedNumberControl, Transferable[]] {
+  const { options } = control
+
+  if (typeof options !== 'function') return [{ ...control, options }, []]
+
+  const serializedOptions = serializeFunction(options)
+
+  return [{ ...control, options: serializedOptions }, [serializedOptions]]
+}
+
+type DeserializedNumberControl<_T = NumberControlValue> = {
+  type: typeof Controls.Types.Number
+  options: DeserializedConfig<NumberControlConfig>
+}
+
+function deserializeNumberControl(
+  serializedControl: SerializedNumberControl,
+): DeserializedNumberControl {
+  const { options } = serializedControl
+
+  if (!isSerializedFunction(options)) return { ...serializedControl, options }
+
+  const deserializedOptions = deserializeFunction(options)
+
+  return { ...serializedControl, options: deserializedOptions }
+}
+
+type SerializedResponsiveIconRadioGroupControl<_T = ResponsiveIconRadioGroupControlValue> = {
+  type: typeof Controls.Types.ResponsiveIconRadioGroup
+  options: SerializedConfig<ResponsiveIconRadioGroupControlConfig>
+}
+
+function serializeResponsiveIconRadioGroupControl(
+  control: ResponsiveIconRadioGroupControl,
+): [SerializedResponsiveIconRadioGroupControl, Transferable[]] {
+  const { options } = control
+
+  if (typeof options !== 'function') return [{ ...control, options }, []]
+
+  const serializedOptions = serializeFunction(options)
+
+  return [{ ...control, options: serializedOptions }, [serializedOptions]]
+}
+
+type DeserializedResponsiveIconRadioGroupControl<_T = ResponsiveIconRadioGroupControlValue> = {
+  type: typeof Controls.Types.ResponsiveIconRadioGroup
+  options: DeserializedConfig<ResponsiveIconRadioGroupControlConfig>
+}
+
+function deserializeResponsiveIconRadioGroupControl(
+  serializedControl: SerializedResponsiveIconRadioGroupControl,
+): DeserializedResponsiveIconRadioGroupControl {
+  const { options } = serializedControl
+
+  if (!isSerializedFunction(options)) return { ...serializedControl, options }
+
+  const deserializedOptions = deserializeFunction(options)
+
+  return { ...serializedControl, options: deserializedOptions }
+}
+
+type SerializedDateControl<_T = DateControlValue> = {
+  type: typeof Controls.Types.Date
+  options: SerializedConfig<DateControlConfig>
+}
+
+function serializeDateControl(control: DateControl): [SerializedDateControl, Transferable[]] {
+  const { options } = control
+
+  if (typeof options !== 'function') return [{ ...control, options }, []]
+
+  const serializedOptions = serializeFunction(options)
+
+  return [{ ...control, options: serializedOptions }, [serializedOptions]]
+}
+
+type DeserializedDateControl<_T = DateControlValue> = {
+  type: typeof Controls.Types.Date
+  options: DeserializedConfig<DateControlConfig>
+}
+
+function deserializeDateControl(serializedControl: SerializedDateControl): DeserializedDateControl {
+  const { options } = serializedControl
+
+  if (!isSerializedFunction(options)) return { ...serializedControl, options }
+
+  const deserializedOptions = deserializeFunction(options)
+
+  return { ...serializedControl, options: deserializedOptions }
+}
+
+type SerializedLinkControl<_T = LinkControlValue> = {
+  type: typeof Controls.Types.Link
+  options: SerializedConfig<LinkControlConfig>
+}
+
+function serializeLinkControl(control: LinkControl): [SerializedLinkControl, Transferable[]] {
+  const { options } = control
+
+  if (typeof options !== 'function') return [{ ...control, options }, []]
+
+  const serializedOptions = serializeFunction(options)
+
+  return [{ ...control, options: serializedOptions }, [serializedOptions]]
+}
+
+type DeserializedLinkControl<_T = LinkControlValue> = {
+  type: typeof Controls.Types.Link
+  options: DeserializedConfig<LinkControlConfig>
+}
+
+function deserializeLinkControl(serializedControl: SerializedLinkControl): DeserializedLinkControl {
+  const { options } = serializedControl
+
+  if (!isSerializedFunction(options)) return { ...serializedControl, options }
+
+  const deserializedOptions = deserializeFunction(options)
+
+  return { ...serializedControl, options: deserializedOptions }
+}
+
+type SerializedTextInputControl<_T = TextInputControlValue> = {
+  type: typeof Controls.Types.TextInput
+  options: SerializedConfig<TextInputControlConfig>
+}
+
+function serializeTextInputControl(
+  control: TextInputControl,
+): [SerializedTextInputControl, Transferable[]] {
+  const { options } = control
+
+  if (typeof options !== 'function') return [{ ...control, options }, []]
+
+  const serializedOptions = serializeFunction(options)
+
+  return [{ ...control, options: serializedOptions }, [serializedOptions]]
+}
+
+type DeserializedTextInputControl<_T = TextInputControlValue> = {
+  type: typeof Controls.Types.TextInput
+  options: DeserializedConfig<TextInputControlConfig>
+}
+
+function deserializeTextInputControl(
+  serializedControl: SerializedTextInputControl,
+): DeserializedTextInputControl {
+  const { options } = serializedControl
+
+  if (!isSerializedFunction(options)) return { ...serializedControl, options }
+
+  const deserializedOptions = deserializeFunction(options)
+
+  return { ...serializedControl, options: deserializedOptions }
+}
+
+type SerializedResponsiveSelectControl<_T = ResponsiveSelectControlValue> = {
+  type: typeof Controls.Types.ResponsiveSelect
+  options: SerializedConfig<ResponsiveSelectControlConfig>
+}
+
+function serializeResponsiveSelectControl(
+  control: ResponsiveSelectControl,
+): [SerializedResponsiveSelectControl, Transferable[]] {
+  const { options } = control
+
+  if (typeof options !== 'function') return [{ ...control, options }, []]
+
+  const serializedOptions = serializeFunction(options)
+
+  return [{ ...control, options: serializedOptions }, [serializedOptions]]
+}
+
+type DeserializedResponsiveSelectControl<_T = ResponsiveSelectControlValue> = {
+  type: typeof Controls.Types.ResponsiveSelect
+  options: DeserializedConfig<ResponsiveSelectControlConfig>
+}
+
+function deserializeResponsiveSelectControl(
+  serializedControl: SerializedResponsiveSelectControl,
+): DeserializedResponsiveSelectControl {
+  const { options } = serializedControl
+
+  if (!isSerializedFunction(options)) return { ...serializedControl, options }
+
+  const deserializedOptions = deserializeFunction(options)
+
+  return { ...serializedControl, options: deserializedOptions }
+}
+
+type SerializedResponsiveLengthControl<_T = ResponsiveLengthControlValue> = {
+  type: typeof Controls.Types.ResponsiveLength
+  options: SerializedConfig<ResponsiveLengthControlConfig>
+}
+
+function serializeResponsiveLengthControl(
+  control: ResponsiveLengthControl,
+): [SerializedResponsiveLengthControl, Transferable[]] {
+  const { options } = control
+
+  if (typeof options !== 'function') return [{ ...control, options }, []]
+
+  const serializedOptions = serializeFunction(options)
+
+  return [{ ...control, options: serializedOptions }, [serializedOptions]]
+}
+
+type DeserializedResponsiveLengthControl<_T = ResponsiveLengthControlValue> = {
+  type: typeof Controls.Types.ResponsiveLength
+  options: DeserializedConfig<ResponsiveLengthControlConfig>
+}
+
+function deserializeResponsiveLengthControl(
+  serializedControl: SerializedResponsiveLengthControl,
+): DeserializedResponsiveLengthControl {
+  const { options } = serializedControl
+
+  if (!isSerializedFunction(options)) return { ...serializedControl, options }
+
+  const deserializedOptions = deserializeFunction(options)
+
+  return { ...serializedControl, options: deserializedOptions }
+}
+
+type SerializedTextStyleControl<_T = TextStyleControlValue> = {
+  type: typeof Controls.Types.TextStyle
+  options: SerializedConfig<TextStyleControlConfig>
+}
+
+function serializeTextStyleControl(
+  control: TextStyleControl,
+): [SerializedTextStyleControl, Transferable[]] {
+  const { options } = control
+
+  if (typeof options !== 'function') return [{ ...control, options }, []]
+
+  const serializedOptions = serializeFunction(options)
+
+  return [{ ...control, options: serializedOptions }, [serializedOptions]]
+}
+
+type DeserializedTextStyleControl<_T = TextStyleControlValue> = {
+  type: typeof Controls.Types.TextStyle
+  options: DeserializedConfig<TextStyleControlConfig>
+}
+
+function deserializeTextStyleControl(
+  serializedControl: SerializedTextStyleControl,
+): DeserializedTextStyleControl {
+  const { options } = serializedControl
+
+  if (!isSerializedFunction(options)) return { ...serializedControl, options }
+
+  const deserializedOptions = deserializeFunction(options)
+
+  return { ...serializedControl, options: deserializedOptions }
+}
+
+type SerializedImageControl<_T = ImageControlValue> = {
+  type: typeof Controls.Types.Image
+  options: SerializedConfig<ImageControlConfig>
+}
+
+function serializeImageControl(control: ImageControl): [SerializedImageControl, Transferable[]] {
+  const { options } = control
+
+  if (typeof options !== 'function') return [{ ...control, options }, []]
+
+  const serializedOptions = serializeFunction(options)
+
+  return [{ ...control, options: serializedOptions }, [serializedOptions]]
+}
+
+type DeserializedImageControl<_T = ImageControlValue> = {
+  type: typeof Controls.Types.Image
+  options: DeserializedConfig<ImageControlConfig>
+}
+
+function deserializeImageControl(
+  serializedControl: SerializedImageControl,
+): DeserializedImageControl {
+  const { options } = serializedControl
+
+  if (!isSerializedFunction(options)) return { ...serializedControl, options }
+
+  const deserializedOptions = deserializeFunction(options)
+
+  return { ...serializedControl, options: deserializedOptions }
+}
+
+type SerializedRichTextControl<_T = RichTextControlValue> = {
+  type: typeof Controls.Types.RichText
+  options: SerializedConfig<RichTextControlConfig>
+}
+
+function serializeRichTextControl(
+  control: RichTextControl,
+): [SerializedRichTextControl, Transferable[]] {
+  const { options } = control
+
+  if (typeof options !== 'function') return [{ ...control, options }, []]
+
+  const serializedOptions = serializeFunction(options)
+
+  return [{ ...control, options: serializedOptions }, [serializedOptions]]
+}
+
+type DeserializedRichTextControl<_T = RichTextControlValue> = {
+  type: typeof Controls.Types.RichText
+  options: DeserializedConfig<RichTextControlConfig>
+}
+
+function deserializeRichTextControl(
+  serializedControl: SerializedRichTextControl,
+): DeserializedRichTextControl {
+  const { options } = serializedControl
+
+  if (!isSerializedFunction(options)) return { ...serializedControl, options }
+
+  const deserializedOptions = deserializeFunction(options)
+
+  return { ...serializedControl, options: deserializedOptions }
+}
+
 export type SerializedControl<T extends Data = Data> =
   | Exclude<
       Control<T>,
@@ -412,6 +808,21 @@ export type SerializedControl<T extends Data = Data> =
       | GapYControl<T>
       | ResponsiveNumberControl<T>
       | CheckboxControl<T>
+      | ResponsiveColorControl<T>
+      | NumberControl<T>
+      | ResponsiveIconRadioGroupControl<
+          T extends ResponsiveIconRadioGroupControlValue ? T : ResponsiveIconRadioGroupControlValue
+        >
+      | ResponsiveSelectControl<
+          T extends ResponsiveSelectControlValue ? T : ResponsiveSelectControlValue
+        >
+      | ResponsiveLengthControl<T>
+      | DateControl<T>
+      | LinkControl<T>
+      | TextInputControl<T>
+      | TextStyleControl<T>
+      | ImageControl<T>
+      | RichTextControl<T>
     >
   | SerializedListControl<T extends ListControlValue ? T : ListControlValue>
   | SerializedShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
@@ -420,6 +831,17 @@ export type SerializedControl<T extends Data = Data> =
   | SerializedGapYControl<T>
   | SerializedResponsiveNumberControl<T>
   | SerializedCheckboxControl<T>
+  | SerializedResponsiveColorControl<T>
+  | SerializedNumberControl<T>
+  | SerializedResponsiveIconRadioGroupControl<T>
+  | SerializedResponsiveSelectControl<T>
+  | SerializedResponsiveLengthControl<T>
+  | SerializedDateControl<T>
+  | SerializedLinkControl<T>
+  | SerializedTextInputControl<T>
+  | SerializedTextStyleControl<T>
+  | SerializedImageControl<T>
+  | SerializedRichTextControl<T>
 
 type SerializedPanelControl<T extends Data = Data> = Extract<
   SerializedControl<T>,
@@ -439,6 +861,21 @@ export type DeserializedControl<T extends Data = Data> =
       | GapYControl<T>
       | ResponsiveNumberControl<T>
       | CheckboxControl<T>
+      | ResponsiveColorControl<T>
+      | NumberControl<T>
+      | ResponsiveIconRadioGroupControl<
+          T extends ResponsiveIconRadioGroupControlValue ? T : ResponsiveIconRadioGroupControlValue
+        >
+      | ResponsiveSelectControl<
+          T extends ResponsiveSelectControlValue ? T : ResponsiveSelectControlValue
+        >
+      | ResponsiveLengthControl<T>
+      | DateControl<T>
+      | LinkControl<T>
+      | TextInputControl<T>
+      | TextStyleControl<T>
+      | ImageControl<T>
+      | RichTextControl<T>
     >
   | DeserializedListControl<T extends ListControlValue ? T : ListControlValue>
   | DeserializedShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
@@ -447,6 +884,17 @@ export type DeserializedControl<T extends Data = Data> =
   | DeserializedGapYControl<T>
   | DeserializedResponsiveNumberControl<T>
   | DeserializedCheckboxControl<T>
+  | DeserializedResponsiveColorControl<T>
+  | DeserializedNumberControl<T>
+  | DeserializedResponsiveIconRadioGroupControl<T>
+  | DeserializedResponsiveSelectControl<T>
+  | DeserializedResponsiveLengthControl<T>
+  | DeserializedDateControl<T>
+  | DeserializedLinkControl<T>
+  | DeserializedTextInputControl<T>
+  | DeserializedTextStyleControl<T>
+  | DeserializedImageControl<T>
+  | DeserializedRichTextControl<T>
 
 export type DeserializedPanelControl<T extends Data = Data> = Extract<
   DeserializedControl<T>,
@@ -478,8 +926,41 @@ function serializeControl<T extends Data>(
     case Controls.Types.GapY:
       return serializeGapYControl(control)
 
+    case Controls.Types.ResponsiveColor:
+      return serializeResponsiveColorControl(control)
+
     case Controls.Types.ResponsiveNumber:
       return serializeResponsiveNumberControl(control)
+
+    case Controls.Types.Number:
+      return serializeNumberControl(control)
+
+    case Controls.Types.ResponsiveIconRadioGroup:
+      return serializeResponsiveIconRadioGroupControl(control)
+
+    case Controls.Types.ResponsiveSelect:
+      return serializeResponsiveSelectControl(control)
+
+    case Controls.Types.ResponsiveLength:
+      return serializeResponsiveLengthControl(control)
+
+    case Controls.Types.Date:
+      return serializeDateControl(control)
+
+    case Controls.Types.Link:
+      return serializeLinkControl(control)
+
+    case Controls.Types.TextInput:
+      return serializeTextInputControl(control)
+
+    case Controls.Types.TextStyle:
+      return serializeTextStyleControl(control)
+
+    case Controls.Types.Image:
+      return serializeImageControl(control)
+
+    case Controls.Types.RichText:
+      return serializeRichTextControl(control)
 
     default:
       return [control, []]
@@ -508,8 +989,41 @@ function deserializeControl<T extends Data>(
     case Controls.Types.GapY:
       return deserializeGapYControl(serializedControl)
 
+    case Controls.Types.ResponsiveColor:
+      return deserializeResponsiveColorControl(serializedControl)
+
     case Controls.Types.ResponsiveNumber:
       return deserializeResponsiveNumberControl(serializedControl)
+
+    case Controls.Types.Number:
+      return deserializeNumberControl(serializedControl)
+
+    case Controls.Types.ResponsiveIconRadioGroup:
+      return deserializeResponsiveIconRadioGroupControl(serializedControl)
+
+    case Controls.Types.ResponsiveSelect:
+      return deserializeResponsiveSelectControl(serializedControl)
+
+    case Controls.Types.ResponsiveLength:
+      return deserializeResponsiveLengthControl(serializedControl)
+
+    case Controls.Types.Date:
+      return deserializeDateControl(serializedControl)
+
+    case Controls.Types.Link:
+      return deserializeLinkControl(serializedControl)
+
+    case Controls.Types.TextInput:
+      return deserializeTextInputControl(serializedControl)
+
+    case Controls.Types.TextStyle:
+      return deserializeTextStyleControl(serializedControl)
+
+    case Controls.Types.Image:
+      return deserializeImageControl(serializedControl)
+
+    case Controls.Types.RichText:
+      return deserializeRichTextControl(serializedControl)
 
     default:
       return serializedControl
