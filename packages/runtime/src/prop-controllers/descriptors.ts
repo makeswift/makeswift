@@ -1,5 +1,9 @@
 import type * as Slate from 'slate'
+import { StyleControlDefinition, StyleControlType } from '../controls/style'
+import { ResolveWidthControlValue } from '../runtimes/react/controls'
+import { StyleControlFormattedValue } from '../runtimes/react/controls/style'
 import type { Element, Data } from '../state/react-page'
+import type { ResponsiveColor } from '../runtimes/react/controls'
 
 export type { Data }
 
@@ -123,6 +127,7 @@ export const Types = {
   TextStyle: 'TextStyle',
   Video: 'Video',
   Width: 'Width',
+  Style: StyleControlType,
 } as const
 
 type Options<T> = T | ((props: Record<string, unknown>, deviceMode: Device) => T)
@@ -923,6 +928,7 @@ export type Descriptor<T extends Data = Data> =
   | TextStyleDescriptor<T>
   | VideoDescriptor<T>
   | WidthDescriptor<T>
+  | StyleControlDefinition
 
 export type PanelDescriptorType =
   | typeof Types.Backgrounds
@@ -962,7 +968,15 @@ export type PanelDescriptor<T extends Data = Data> = Extract<
   { type: PanelDescriptorType }
 >
 
-export type DescriptorValueType<T extends Descriptor> = T extends Descriptor<infer U> ? U : never
+export type DescriptorValueType<T extends Descriptor> = T extends StyleControlDefinition
+  ? StyleControlFormattedValue
+  : T['type'] extends typeof Types.ResponsiveColor
+  ? ResponsiveColor
+  : T['type'] extends typeof Types.Width
+  ? ResolveWidthControlValue<T>
+  : T extends Descriptor<infer U>
+  ? U
+  : never
 
 export type PanelDescriptorValueType<T extends PanelDescriptor> = T extends PanelDescriptor<infer U>
   ? U
