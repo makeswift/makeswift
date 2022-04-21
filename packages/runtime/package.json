@@ -78,7 +78,6 @@
     "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'vite build --watch'",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "deploy": "yarn publish . --new-version 0.0.0-$(git rev-parse --short HEAD) --tag prerelease --access public && git push origin main --follow-tags",
     "prepare": "yarn build",
     "generate": "graphql-codegen --config codegen.yml",
     "test": "vitest"
