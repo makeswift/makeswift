@@ -4,7 +4,6 @@ import {
   Data,
   Device,
   DateDescriptor as DateControl,
-  DateOptions as DateControlConfig,
   DateValue as DateControlValue,
   Gap,
   GapXDescriptor as GapXControl,
@@ -12,40 +11,31 @@ import {
   GapYDescriptor as GapYControl,
   GapYValue as GapYControlValue,
   ImageDescriptor as ImageControl,
-  ImageOptions as ImageControlConfig,
   ImageValue as ImageControlValue,
   LinkDescriptor as LinkControl,
-  LinkOptions as LinkControlConfig,
   LinkValue as LinkControlValue,
   ListDescriptor as ListControl,
   ListOptions as ListControlConfig,
   ListValue as ListControlValue,
   NumberDescriptor as NumberControl,
-  NumberOptions as NumberControlConfig,
   NumberValue as NumberControlValue,
   ResponsiveColorDescriptor as ResponsiveColorControl,
   ResponsiveColorValue as ResponsiveColorControlValue,
   ResponsiveNumberDescriptor as ResponsiveNumberControl,
   ResponsiveNumberValue as ResponsiveNumberControlValue,
   ResponsiveIconRadioGroupDescriptor as ResponsiveIconRadioGroupControl,
-  ResponsiveIconRadioGroupOptions as ResponsiveIconRadioGroupControlConfig,
   ResponsiveIconRadioGroupValue as ResponsiveIconRadioGroupControlValue,
   ResponsiveSelectDescriptor as ResponsiveSelectControl,
-  ResponsiveSelectOptions as ResponsiveSelectControlConfig,
   ResponsiveSelectValue as ResponsiveSelectControlValue,
   ResponsiveLengthDescriptor as ResponsiveLengthControl,
-  ResponsiveLengthOptions as ResponsiveLengthControlConfig,
   ResponsiveLengthValue as ResponsiveLengthControlValue,
   RichTextDescriptor as RichTextControl,
-  RichTextOptions as RichTextControlConfig,
   RichTextValue as RichTextControlValue,
   ShapeDescriptor as ShapeControl,
   ShapeValue as ShapeControlValue,
   TextInputDescriptor as TextInputControl,
-  TextInputOptions as TextInputControlConfig,
   TextInputValue as TextInputControlValue,
   TextStyleDescriptor as TextStyleControl,
-  TextStyleOptions as TextStyleControlConfig,
   TextStyleValue as TextStyleControlValue,
   TypeaheadDescriptor as TypeaheadControl,
   TypeaheadOptions as TypeaheadControlConfig,
@@ -56,6 +46,13 @@ import {
   PropControllerDescriptor as Control,
   Props as Controls,
 } from '../../prop-controllers'
+import {
+  IconRadioGroupOption,
+  LengthOption,
+  SelectLabelOrientation,
+  SelectOption,
+  Length,
+} from '../../prop-controllers/descriptors'
 import {
   DeserializedFunction,
   deserializeFunction,
@@ -469,6 +466,16 @@ function deserializeResponsiveColorControl(
 
   return { ...serializedControl, options: deserializedOptions }
 }
+type NumberControlConfig = {
+  preset?: NumberControlValue
+  label?: string
+  defaultValue?: number
+  min?: number
+  max?: number
+  step?: number
+  suffix?: string
+  hidden?: boolean
+}
 
 type SerializedNumberControl<_T = NumberControlValue> = {
   type: typeof Controls.Types.Number
@@ -500,6 +507,12 @@ function deserializeNumberControl(
   const deserializedOptions = deserializeFunction(options)
 
   return { ...serializedControl, options: deserializedOptions }
+}
+type ResponsiveIconRadioGroupControlConfig<T extends string = string, U extends T = T> = {
+  label?: string
+  options: IconRadioGroupOption<T>[]
+  defaultValue?: U
+  hidden?: boolean
 }
 
 type SerializedResponsiveIconRadioGroupControl<_T = ResponsiveIconRadioGroupControlValue> = {
@@ -536,6 +549,8 @@ function deserializeResponsiveIconRadioGroupControl(
   return { ...serializedControl, options: deserializedOptions }
 }
 
+type DateControlConfig = { preset?: DateControlValue }
+
 type SerializedDateControl<_T = DateControlValue> = {
   type: typeof Controls.Types.Date
   options: SerializedConfig<DateControlConfig>
@@ -564,6 +579,14 @@ function deserializeDateControl(serializedControl: SerializedDateControl): Deser
   const deserializedOptions = deserializeFunction(options)
 
   return { ...serializedControl, options: deserializedOptions }
+}
+
+type LinkControlConfig = {
+  preset?: LinkControlValue
+  label?: string
+  defaultValue?: LinkControlValue
+  options?: { value: LinkControlValue['type']; label: string }[]
+  hidden?: boolean
 }
 
 type SerializedLinkControl<_T = LinkControlValue> = {
@@ -595,6 +618,8 @@ function deserializeLinkControl(serializedControl: SerializedLinkControl): Deser
 
   return { ...serializedControl, options: deserializedOptions }
 }
+
+type TextInputControlConfig = { label?: string; placeholder?: string; hidden?: boolean }
 
 type SerializedTextInputControl<_T = TextInputControlValue> = {
   type: typeof Controls.Types.TextInput
@@ -647,6 +672,14 @@ function serializeResponsiveSelectControl(
   return [{ ...control, options: serializedOptions }, [serializedOptions]]
 }
 
+type ResponsiveSelectControlConfig<T extends string = string, U extends T = T> = {
+  label?: string
+  labelOrientation?: SelectLabelOrientation
+  options: SelectOption<T>[]
+  defaultValue?: U
+  hidden?: boolean
+}
+
 type DeserializedResponsiveSelectControl<_T = ResponsiveSelectControlValue> = {
   type: typeof Controls.Types.ResponsiveSelect
   options: DeserializedConfig<ResponsiveSelectControlConfig>
@@ -662,6 +695,13 @@ function deserializeResponsiveSelectControl(
   const deserializedOptions = deserializeFunction(options)
 
   return { ...serializedControl, options: deserializedOptions }
+}
+
+type ResponsiveLengthControlConfig = {
+  label?: string
+  options?: LengthOption[]
+  defaultValue?: Length
+  hidden?: boolean
 }
 
 type SerializedResponsiveLengthControl<_T = ResponsiveLengthControlValue> = {
@@ -715,6 +755,12 @@ function serializeTextStyleControl(
   return [{ ...control, options: serializedOptions }, [serializedOptions]]
 }
 
+type TextStyleControlConfig = {
+  preset?: TextStyleControlValue
+  label?: string
+  hidden?: boolean
+}
+
 type DeserializedTextStyleControl<_T = TextStyleControlValue> = {
   type: typeof Controls.Types.TextStyle
   options: DeserializedConfig<TextStyleControlConfig>
@@ -731,6 +777,8 @@ function deserializeTextStyleControl(
 
   return { ...serializedControl, options: deserializedOptions }
 }
+
+type ImageControlConfig = { label?: string; hidden?: boolean }
 
 type SerializedImageControl<_T = ImageControlValue> = {
   type: typeof Controls.Types.Image
@@ -763,6 +811,8 @@ function deserializeImageControl(
 
   return { ...serializedControl, options: deserializedOptions }
 }
+
+type RichTextControlConfig = { preset?: RichTextControlValue }
 
 type SerializedRichTextControl<_T = RichTextControlValue> = {
   type: typeof Controls.Types.RichText

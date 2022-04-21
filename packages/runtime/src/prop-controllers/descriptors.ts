@@ -513,7 +513,7 @@ export function ResponsiveColor(options: ResponsiveColorOptions = {}): Responsiv
   return { type: Types.ResponsiveColor, options }
 }
 
-type IconRadioGroupOption<T extends string> = { value: T; label: string; icon: IconName }
+export type IconRadioGroupOption<T extends string> = { value: T; label: string; icon: IconName }
 
 export type ResponsiveIconRadioGroupValue<T extends string = string> = ResponsiveValue<T>
 
@@ -543,7 +543,7 @@ export function ResponsiveIconRadioGroup<_T extends string, T extends _T, U exte
 
 export type ResponsiveLengthValue = ResponsiveValue<Length>
 
-type LengthOption =
+export type LengthOption =
   | { value: 'px'; label: 'Pixels'; icon: 'Px16' }
   | { value: '%'; label: 'Percentage'; icon: 'Percent16' }
 
@@ -605,9 +605,9 @@ export function ResponsiveOpacity(
 
 export type ResponsiveSelectValue<T extends string = string> = ResponsiveValue<T>
 
-type SelectLabelOrientation = 'vertical' | 'horizontal'
+export type SelectLabelOrientation = 'vertical' | 'horizontal'
 
-type SelectOption<T extends string> = { value: T; label: string }
+export type SelectOption<T extends string> = { value: T; label: string }
 
 export type ResponsiveSelectOptions<T extends string = string, U extends T = T> = Options<{
   label?: string
