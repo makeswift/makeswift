@@ -13,7 +13,8 @@
     "components.js",
     "api.js",
     "next.js",
-    "builder.js"
+    "builder.js",
+    "controls.js"
   ],
   "exports": {
     ".": {
@@ -47,6 +48,10 @@
     "./builder": {
       "import": "./dist/builder.es.js",
       "require": "./dist/builder.cjs.js"
+    },
+    "./controls": {
+      "import": "./dist/controls.es.js",
+      "require": "./dist/controls.cjs.js"
     }
   },
   "typesVersions": {
@@ -71,6 +76,9 @@
       ],
       "builder": [
         "dist/types/builder/index.d.ts"
+      ],
+      "controls": [
+        "dist/types/controls/index.d.ts"
       ]
     }
   },

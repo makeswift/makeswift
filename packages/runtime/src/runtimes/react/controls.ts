@@ -5,7 +5,6 @@ import * as ReactPage from '../../state/react-page'
 import { Props } from '../../prop-controllers'
 import {
   Descriptor,
-  DescriptorValueType,
   Device,
   ResolveOptions,
   ResponsiveColorValue,
@@ -18,6 +17,8 @@ import { css } from '@emotion/css'
 import { useColor } from '../../components'
 import type { ColorValue } from '../../components/utils/types'
 import { responsiveWidth } from '../../components/utils/responsive-style'
+import { StyleControlType } from '../../controls'
+import { useFormattedStyle } from './controls/style'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -71,6 +72,9 @@ export function useProps(element: ReactPage.ElementData): Record<string, unknown
         case Props.Types.Width:
           return [propName, useWidth(props[propName], descriptor, props)]
 
+        case StyleControlType:
+          return [propName, useFormattedStyle(props[propName], descriptor)]
+
         default:
           return [propName, props[propName]]
       }
@@ -78,7 +82,7 @@ export function useProps(element: ReactPage.ElementData): Record<string, unknown
   )
 }
 
-type ResolveWidthControlValue<T extends Descriptor> = T extends WidthDescriptor
+export type ResolveWidthControlValue<T extends Descriptor> = T extends WidthDescriptor
   ? undefined extends ResolveOptions<T['options']>['format']
     ? WidthValue | undefined
     : ResolveOptions<T['options']>['format'] extends typeof WidthControlValueFormats.ClassName
@@ -87,10 +91,3 @@ type ResolveWidthControlValue<T extends Descriptor> = T extends WidthDescriptor
     ? WidthValue | undefined
     : never
   : never
-
-export type MappedDescriptorValueType<T extends Descriptor> =
-  T['type'] extends typeof Props.Types.ResponsiveColor
-    ? ResponsiveColor
-    : T['type'] extends typeof Props.Types.Width
-    ? ResolveWidthControlValue<T>
-    : DescriptorValueType<T>
