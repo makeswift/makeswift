@@ -22,19 +22,22 @@ import {
   registerDocumentEffect,
   registerReactComponentEffect,
 } from '../../state/actions'
-import type { PropControllerDescriptor } from '../../prop-controllers'
+import type {
+  PropControllerDescriptor,
+  PropControllerDescriptorValueType,
+} from '../../prop-controllers'
 import { ComponentIcon } from '../../state/modules/components-meta'
 import { registerBuiltinComponents } from '../../components'
 import { MakeswiftProvider, MakeswiftClient, useQuery } from '../../api/react'
 import { FallbackComponent } from '../../components/shared/FallbackComponent'
-import { MappedDescriptorValueType, useProps } from './controls'
+import { useProps } from './controls'
 
 const contextDefaultValue = ReactPage.configureStore()
 
 export interface ReactRuntime {
   registerComponent<
     P extends Record<string, PropControllerDescriptor>,
-    C extends ReactPage.ComponentType<{ [K in keyof P]?: MappedDescriptorValueType<P[K]> }>,
+    C extends ReactPage.ComponentType<{ [K in keyof P]?: PropControllerDescriptorValueType<P[K]> }>,
   >(
     component: C,
     meta: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P },
