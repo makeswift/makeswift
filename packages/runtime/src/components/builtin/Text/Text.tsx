@@ -128,7 +128,7 @@ const Text = forwardRef(function Text(
   function handleChange(change: OnChangeParam) {
     setValue(change.value as Value)
 
-    if (change.value.document !== value.document) {
+    if (change.value !== value) {
       setShouldCommit(false)
 
       controller?.onChange(change)
