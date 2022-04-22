@@ -30,7 +30,7 @@ jobs:
         with:
           publish: yarn changeset publish
           commit: 'chore: version packages'
-          title: 'chore: version packages'
+          title: 'Version and publish packages'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
