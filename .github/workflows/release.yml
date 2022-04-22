@@ -28,7 +28,7 @@ jobs:
       - name: Create release pull request or publish to NPM
         uses: changesets/action@v1
         with:
-          publish: yarn changeset publish --tag changesets
+          publish: yarn changeset publish
           commit: 'chore: version packages'
           title: 'chore: version packages'
         env:
