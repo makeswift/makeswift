@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.0.2
+
+### Patch Changes
+
+- fc7b4f8: Fix Text selection bug not being send to builder
+
 ## 0.0.1
 
 ### Patch Changes
