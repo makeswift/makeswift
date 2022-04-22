@@ -35,8 +35,8 @@ export type PageData = {
     variants: string[]
   }>
   seo: {
-    canonicalUrl: string
-    isIndexingBlocked: boolean
+    canonicalUrl?: string | null | undefined
+    isIndexingBlocked?: boolean | null | undefined
   }
 }
 
