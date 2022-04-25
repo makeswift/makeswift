@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.0.3
+
+### Patch Changes
+
+- 265739f: Upgrade Styled Components to latest version. The old version was causing React to log a hook warning whenever a styled component was defined.
+- 302e3e7: Add React 18 to peer dependencies.
+
 ## 0.0.2
 
 ### Patch Changes
