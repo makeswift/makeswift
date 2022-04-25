@@ -2,7 +2,14 @@
 
 ## How to use
 
-First, install the dependencies:
+1. Download the example:
+
+```bash
+npx degit makeswift/makeswift/examples/basic-typescript basic-typescript
+cd basic-typescript
+```
+
+2. Install dependencies:
 
 ```bash
 yarn install
@@ -10,7 +17,7 @@ yarn install
 npm install
 ```
 
-Then, update the `.env` file to include your Makeswift site's API key:
+3. Update the `.env` file to include your Makeswift site's API key:
 
 ```diff
    MAKESWIFT_API_HOST=https://api.makeswift.com
@@ -18,7 +25,7 @@ Then, update the `.env` file to include your Makeswift site's API key:
 ++ MAKESWIFT_SITE_API_KEY=<YOUR_MAKESWIFT_SITE_API_KEY>
 ```
 
-Run the local dev script:
+4. Run the local dev script:
 
 ```bash
 yarn dev
@@ -28,4 +35,4 @@ npm run dev
 
 Your host should be up and running on http://localhost:3000.
 
-Finally, go to your Makeswift site settings and add http://localhost:3000/makeswift as the custom host preview URL and you're all set!
+5. Finally, go to your Makeswift site settings and add http://localhost:3000/makeswift as the custom host preview URL and you're all set!
