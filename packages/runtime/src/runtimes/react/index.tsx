@@ -8,8 +8,10 @@ import {
   useContext,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useState,
 } from 'react'
+import { isForwardRef } from 'react-is'
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector'
 import { gql } from '@apollo/client'
 
@@ -250,18 +252,17 @@ const ElementData = memo(
   ): JSX.Element {
     const Component = useComponent(elementData.type)
     const props = useProps(elementData)
-    const [handle, setHandle] = useState<unknown | null>(null)
-    const [foundDomNode, setFoundDomNode] = useState<Element | Text | null>(null)
-
-    useImperativeHandle(ref, () => handle ?? foundDomNode, [handle, foundDomNode])
+    const forwardsRef = useMemo(() => isForwardRef(Component), [Component])
 
     if (Component == null) {
       return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Component not found" />
     }
 
-    return (
-      <FindDomNode ref={setFoundDomNode}>
-        <Component {...props} key={elementData.key} ref={setHandle} />
+    return forwardsRef ? (
+      <Component {...props} key={elementData.key} ref={ref} />
+    ) : (
+      <FindDomNode ref={ref as Ref<Element | Text | null>}>
+        <Component {...props} key={elementData.key} />
       </FindDomNode>
     )
   }),
