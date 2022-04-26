@@ -8,7 +8,6 @@ yarn-error.log*
 
 # Compiled output
 dist
-lib
 
 # Environment variables
 .env.local
