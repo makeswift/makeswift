@@ -1,4 +1,4 @@
-import { forwardRef, useState } from 'react'
+import { ComponentPropsWithoutRef, forwardRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 import { cx } from '@emotion/css'
 
@@ -24,6 +24,7 @@ import {
   ResponsiveSelectValue,
   TextInputValue,
   TextStyleValue,
+  NavigationButton as NavigationButtonValue,
 } from '../../../prop-controllers/descriptors'
 import { cssMargin, cssMediaRules, cssTextStyle } from '../../utils/cssMediaRules'
 import { ColorValue as Color } from '../../utils/types'
@@ -32,6 +33,7 @@ import { ReactRuntime } from '../../../react'
 import { Props } from '../../../prop-controllers'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { findDeviceOverride } from '../../utils/devices'
+import { useColor } from '../../hooks'
 
 type Props = {
   id?: ElementIDValue
@@ -100,6 +102,15 @@ const OpenIconContainer = styled.button<{
     )}
 `
 
+type NavigationButtonProps = NavigationButtonValue['payload'] &
+  Omit<ComponentPropsWithoutRef<typeof Button>, 'color' | 'textColor'>
+
+function NavigationButton(props: NavigationButtonProps): JSX.Element {
+  const { textColor, color, ...restOfProps } = props
+
+  return <Button {...restOfProps} textColor={useColor(textColor)} color={useColor(color)} />
+}
+
 const placeholder = {
   src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='93.12' height='36' viewBox='0 0 93.12 36'%3E%3Cg id='Layer_2' data-name='Layer 2'%3E%3Cg id='Layer_1-2' data-name='Layer 1'%3E%3Cpath d='M18,0A18,18,0,1,1,0,18,18,18,0,0,1,18,0ZM49.36,21.94h6.36V24H46.8V10h2.56Zm9.06.72a4.88,4.88,0,0,1-1.64-3.72,5,5,0,0,1,1.64-3.74,5.57,5.57,0,0,1,7.7,0,5.09,5.09,0,0,1,.26,7.18l-.26.26a5.56,5.56,0,0,1-7.7,0Zm1.68-6a3.39,3.39,0,0,0,0,4.52,3,3,0,0,0,4.24.08l.08-.08a3.39,3.39,0,0,0,0-4.52,3,3,0,0,0-4.24-.08Zm10,10.68,1-1.92a5.28,5.28,0,0,0,3.3,1.22,3.6,3.6,0,0,0,2.32-.72,2.73,2.73,0,0,0,.9-2.26V22.5a3.61,3.61,0,0,1-1.45,1.26,4.35,4.35,0,0,1-2,.46,4.57,4.57,0,0,1-3.58-1.54A5.48,5.48,0,0,1,69.2,18.9a5.42,5.42,0,0,1,1.36-3.74,4.64,4.64,0,0,1,3.62-1.5,4,4,0,0,1,3.44,1.72v-1.5h2.46v9a6.13,6.13,0,0,1-1.43,4.46,5.27,5.27,0,0,1-4,1.44,7.09,7.09,0,0,1-4.53-1.42Zm1.54-8.44a3.4,3.4,0,0,0,.82,2.3,2.72,2.72,0,0,0,2.17.94,3.13,3.13,0,0,0,1.21-.22,2.89,2.89,0,0,0,1-.62,3.08,3.08,0,0,0,.63-1,3.62,3.62,0,0,0,.21-1.3,4,4,0,0,0-.23-1.33,3.3,3.3,0,0,0-.63-1.05,2.74,2.74,0,0,0-1-.68,3.35,3.35,0,0,0-1.25-.24,2.92,2.92,0,0,0-1.2.24,2.58,2.58,0,0,0-.93.67,3,3,0,0,0-.59,1,3.89,3.89,0,0,0-.19,1.31ZM83.8,22.66a4.88,4.88,0,0,1-1.64-3.72A5,5,0,0,1,83.8,15.2a5.57,5.57,0,0,1,7.7,0,5.09,5.09,0,0,1,.26,7.18,3.19,3.19,0,0,1-.26.26,5.56,5.56,0,0,1-7.7,0Zm1.68-6a3.39,3.39,0,0,0,0,4.52,3,3,0,0,0,4.24.08l.08-.08a3.39,3.39,0,0,0,0-4.52,3,3,0,0,0-4.24-.08Z' fill='%23a1a8c2' opacity='0.4' style='isolation: isolate'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E%0A",
   dimensions: { width: 93, height: 36 },
@@ -149,7 +160,9 @@ const Navigation = forwardRef<HTMLDivElement, Props>(function Navigation(
                 first={i === 0}
                 last={i === links.length - 1}
               >
-                {link.type === 'button' && <Button {...link.payload}>{link.payload.label}</Button>}
+                {link.type === 'button' && (
+                  <NavigationButton {...link.payload}>{link.payload.label}</NavigationButton>
+                )}
                 {link.type === 'dropdown' && <DropDownButton {...link.payload} />}
               </GutterContainer>
             ))
