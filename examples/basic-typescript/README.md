@@ -2,7 +2,7 @@
 
 ## Demo
 
-https://makeswift-makeswift.vercel.app/
+https://makeswift-examples-basic-typescript.vercel.app/
 
 ## How to use
 
