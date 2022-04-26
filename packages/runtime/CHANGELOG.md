@@ -1,5 +1,16 @@
 # @makeswift/runtime
 
+## 0.0.4
+
+### Patch Changes
+
+- 82f6afc: Suppress findDOMNode warning.
+- a1c8c6a: Fix issue with Navigation builtin component and using colors.
+- 5756f33: Use react-is to determine when to forward ref.
+- a87afe0: Automatically find DOM nodes if registered component doesn't forward the ref.
+
+  This functionality relies on [`findDOMNode`](https://reactjs.org/docs/react-dom.html#finddomnode), which has been deprecated in `StrictMode`. This means that in `StrictMode` users will see a warning. Moreover, since we're passing the `ref` prop to registered components regardless, if the ref isn't forwarded, users will see a warning from React during development prompting them to forward the ref.
+
 ## 0.0.3
 
 ### Patch Changes
