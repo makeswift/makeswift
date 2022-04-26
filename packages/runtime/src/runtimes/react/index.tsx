@@ -31,6 +31,7 @@ import { registerBuiltinComponents } from '../../components'
 import { MakeswiftProvider, MakeswiftClient, useQuery } from '../../api/react'
 import { FallbackComponent } from '../../components/shared/FallbackComponent'
 import { useProps } from './controls'
+import { FindDomNode } from './find-dom-node'
 
 const contextDefaultValue = ReactPage.configureStore()
 
@@ -249,12 +250,20 @@ const ElementData = memo(
   ): JSX.Element {
     const Component = useComponent(elementData.type)
     const props = useProps(elementData)
+    const [handle, setHandle] = useState<unknown | null>(null)
+    const [foundDomNode, setFoundDomNode] = useState<Element | Text | null>(null)
+
+    useImperativeHandle(ref, () => handle ?? foundDomNode, [handle, foundDomNode])
 
     if (Component == null) {
       return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Component not found" />
     }
 
-    return <Component {...props} key={elementData.key} ref={ref} />
+    return (
+      <FindDomNode ref={setFoundDomNode}>
+        <Component {...props} key={elementData.key} ref={setHandle} />
+      </FindDomNode>
+    )
   }),
 )
 
