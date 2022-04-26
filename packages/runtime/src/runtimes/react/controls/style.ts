@@ -1,4 +1,7 @@
-import { css } from '@emotion/css'
+import * as React from 'react'
+import { cache, CSSObject } from '@emotion/css'
+import { serializeStyles } from '@emotion/serialize'
+import { insertStyles } from '@emotion/utils'
 
 import { useBorder, BorderSide } from '../../../components'
 import { colorToString } from '../../../components/utils/colorToString'
@@ -14,13 +17,13 @@ import {
   WidthPropertyData,
 } from '../../../controls'
 
-function useStyleControlDataClass(
+function useStyleControlCssObject(
   style: StyleControlData | undefined,
   controlDefinition: StyleControlDefinition,
-): string {
+): CSSObject {
   const { properties } = controlDefinition.config
 
-  return css({
+  return {
     ...(properties.includes(StyleControlProperty.Width) && {
       maxWidth: '100%',
     }),
@@ -62,7 +65,7 @@ function useStyleControlDataClass(
         }),
       }),
     ),
-  })
+  }
 
   function widthToString(widthProperty: WidthPropertyData | undefined): string | null {
     if (widthProperty == null) return null
@@ -106,11 +109,21 @@ function useStyleControlDataClass(
   }
 }
 
+// @ts-expect-error: React types are outdated.
+const useInsertionEffect = React.useInsertionEffect ?? React.useLayoutEffect
+
 export type StyleControlFormattedValue = string
 
 export function useFormattedStyle(
   styleControlData: StyleControlData | undefined,
   controlDefinition: StyleControlDefinition,
 ): StyleControlFormattedValue {
-  return useStyleControlDataClass(styleControlData, controlDefinition)
+  const style = useStyleControlCssObject(styleControlData, controlDefinition)
+  const serialized = serializeStyles([style], cache.registered)
+
+  useInsertionEffect(() => {
+    insertStyles(cache, serialized, false)
+  })
+
+  return `${cache.key}-${serialized.name}`
 }
