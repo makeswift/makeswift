@@ -1,8 +1,12 @@
-import { Fragment } from 'react'
+import { ComponentPropsWithoutRef, Fragment } from 'react'
 import styled, { css } from 'styled-components'
 
 import { cssMediaRules } from '../../../../utils/cssMediaRules'
-import { ResponsiveValue, NavigationLinksValue } from '../../../../../prop-controllers/descriptors'
+import {
+  ResponsiveValue,
+  NavigationLinksValue,
+  NavigationButton as NavigationButtonValue,
+} from '../../../../../prop-controllers/descriptors'
 import { ColorValue as Color } from '../../../../utils/types'
 import { colorToString } from '../../../../utils/colorToString'
 import { ReactComponent as Times16 } from '../../../../icons/times-16.svg'
@@ -10,8 +14,18 @@ import { ReactComponent as Times16 } from '../../../../icons/times-16.svg'
 import Button from '../../../Button'
 import DropDownButton from './components/MobileDropDownButton'
 import { ResponsiveColor } from '../../../../../runtimes/react/controls'
+import { useColor } from '../../../../hooks'
 
-const ButtonLink = styled(Button)`
+type NavigationButtonProps = NavigationButtonValue['payload'] &
+  Omit<ComponentPropsWithoutRef<typeof Button>, 'color' | 'textColor'>
+
+function NavigationButton(props: NavigationButtonProps): JSX.Element {
+  const { textColor, color, ...restOfProps } = props
+
+  return <Button {...restOfProps} textColor={useColor(textColor)} color={useColor(color)} />
+}
+
+const ButtonLink = styled(NavigationButton)`
   margin: 8px 0;
 `
 

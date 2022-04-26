@@ -408,7 +408,7 @@ type ButtonShape = 'pill' | 'rounded' | 'square'
 
 type ButtonSize = 'small' | 'medium' | 'large'
 
-type NavigationButton = {
+export type NavigationButton = {
   id: string
   type: 'button'
   payload: {

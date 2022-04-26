@@ -126,6 +126,8 @@ export default function DropDownButton({
   label,
   caret = 'caret',
   links = [],
+  textColor,
+  color,
   ...restOfProps
 }: Props): JSX.Element {
   const container = useRef<HTMLDivElement>(null)
@@ -145,7 +147,7 @@ export default function DropDownButton({
 
   return (
     <DropDownContainer ref={container}>
-      <Button {...restOfProps}>
+      <Button {...restOfProps} textColor={useColor(textColor)} color={useColor(color)}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <span style={{ marginRight: 6 }}>{label}</span>
           <span style={{ display: 'inline-flex', fill: 'currentColor' }}>
