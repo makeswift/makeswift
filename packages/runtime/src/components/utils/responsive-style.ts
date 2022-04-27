@@ -41,7 +41,7 @@ export function responsiveWidth(
   defaultValue: LengthValue | WidthProperty<string | number> = '100%',
 ): CSSObject {
   return {
-    width: '100%',
+    maxWidth: '100%',
     ...responsiveStyle([widthData], ([width = defaultValue]) => ({
       width: typeof width === 'object' ? `${width.value}${width.unit}` : width,
     })),
