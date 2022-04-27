@@ -1,5 +1,16 @@
 # @makeswift/runtime
 
+## 0.0.5
+
+### Patch Changes
+
+- e14fac2: Opt in to `useInsertionEffect` with Style control.
+- a8272e8: Fix Width control mapping so that it uses `maxWidth` instead of `width`.
+- 6b36df9: Suppress React warning when passing ref to function component.
+- c410d49: Revert change that used `react-is` to detect when to forward ref.
+
+  Unfortunately using `react-is` won't work since `isForwardRef` doesn't give the correct result is the component uses `React.memo`, `React.lazy`, or similar variants. Also, `react-is` would need to be a peer dependency, increasing the integration burden.
+
 ## 0.0.4
 
 ### Patch Changes
