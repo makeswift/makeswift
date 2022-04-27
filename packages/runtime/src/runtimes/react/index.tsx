@@ -8,6 +8,7 @@ import {
   useContext,
   useEffect,
   useImperativeHandle,
+  useRef,
   useState,
 } from 'react'
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector'
@@ -239,6 +240,30 @@ function useDispatch(): Dispatch {
   return store.dispatch
 }
 
+function useSuppressRefWarning(ownerName: string) {
+  const originalErrorRef = useRef(console.error)
+  const patchedRef = useRef(false)
+
+  if (patchedRef.current === false) {
+    console.error = (...args) => {
+      const [msg, ...substitutions] = args
+      const text = substitutions.reduce(
+        (text, substitution) => text.replace('%s', substitution),
+        msg,
+      )
+
+      if (
+        !text.includes('Function components cannot be given refs.') ||
+        !text.includes(`Check the render method of \`${ownerName}\`.`)
+      ) {
+        originalErrorRef.current(...args)
+      }
+    }
+
+    patchedRef.current = true
+  }
+}
+
 type ElementDataProps = {
   elementData: ReactPage.ElementData
 }
@@ -254,6 +279,8 @@ const ElementData = memo(
     const [foundDomNode, setFoundDomNode] = useState<Element | Text | null>(null)
 
     useImperativeHandle(ref, () => handle ?? foundDomNode, [handle, foundDomNode])
+
+    useSuppressRefWarning(`\`ForwardRef(${ElementData.name})\``)
 
     if (Component == null) {
       return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Component not found" />
