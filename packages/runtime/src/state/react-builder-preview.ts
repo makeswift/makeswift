@@ -27,6 +27,8 @@ import {
   registerMeasurable,
   registerPropControllers,
   registerPropControllersHandle,
+  registerDocument,
+  registerComponentHandle,
   unregisterBuilderComponent,
   unregisterMeasurable,
   unregisterPropControllers,
@@ -401,7 +403,17 @@ function propControllerHandlesMiddleware(): Middleware<Dispatch, State, Dispatch
       return (action: Action): Action => {
         switch (action.type) {
           case ActionTypes.REGISTER_COMPONENT_HANDLE: {
-            if (PropControllerHandles.isPropControllersHandle(action.payload.componentHandle)) {
+            const element = ReactPage.getElement(
+              getState(),
+              action.payload.documentKey,
+              action.payload.elementKey,
+            )
+
+            if (
+              element != null &&
+              !ReactPage.isElementReference(element) &&
+              PropControllerHandles.isPropControllersHandle(action.payload.componentHandle)
+            ) {
               dispatch(
                 registerAndSetPropControllersHandle(
                   action.payload.documentKey,
@@ -438,6 +450,44 @@ function propControllerHandlesMiddleware(): Middleware<Dispatch, State, Dispatch
         return next(action)
       }
     }
+}
+
+if (import.meta.vitest) {
+  const { describe, it, fn, expect } = import.meta.vitest
+
+  describe('propControllerHandlesMiddleware', () => {
+    it('registers prop controllers for element data', () => {
+      // Arrange
+      const documentKey = 'documentKey'
+      const element: ReactPage.Element = { key: 'elementKey', type: 'type', props: {} }
+      const store = createStore(reducer, applyMiddleware(thunk, propControllerHandlesMiddleware()))
+      const handle = { setPropControllers: fn() }
+
+      store.dispatch(registerDocument(ReactPage.createDocument(documentKey, element)))
+
+      // Act
+      store.dispatch(registerComponentHandle(documentKey, element.key, handle))
+
+      // Assert
+      expect(handle.setPropControllers).toHaveBeenCalled()
+    })
+
+    it("doesn't register prop controllers for element references", () => {
+      // Arrange
+      const documentKey = 'documentKey'
+      const element: ReactPage.Element = { type: 'reference', key: 'elementKey', value: 'value' }
+      const store = createStore(reducer, applyMiddleware(thunk, propControllerHandlesMiddleware()))
+      const handle = { setPropControllers: fn() }
+
+      store.dispatch(registerDocument(ReactPage.createDocument(documentKey, element)))
+
+      // Act
+      store.dispatch(registerComponentHandle(documentKey, element.key, handle))
+
+      // Assert
+      expect(handle.setPropControllers).not.toHaveBeenCalled()
+    })
+  })
 }
 
 function apolloClientCacheSyncMiddleware(

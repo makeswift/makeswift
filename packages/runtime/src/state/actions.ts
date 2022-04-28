@@ -359,7 +359,7 @@ export function mountComponentEffect(
   }
 }
 
-function registerComponentHandle(
+export function registerComponentHandle(
   documentKey: string,
   elementKey: string,
   componentHandle: unknown,
