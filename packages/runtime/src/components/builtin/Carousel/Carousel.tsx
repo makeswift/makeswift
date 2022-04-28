@@ -73,10 +73,10 @@ type Props = {
   delay?: NumberValue
   showArrows?: CheckboxValue
   arrowPosition?: ResponsiveIconRadioGroupValue<'inside' | 'center' | 'outside'>
-  arrowColor?: ResponsiveColor
-  arrowBackground?: ResponsiveColor
+  arrowColor?: ResponsiveColor | null
+  arrowBackground?: ResponsiveColor | null
   showDots?: CheckboxValue
-  dotColor?: ResponsiveColor
+  dotColor?: ResponsiveColor | null
   slideBorder?: BorderValue
   slideBorderRadius?: BorderRadiusValue
 }

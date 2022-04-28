@@ -82,8 +82,8 @@ const CloseIconContainer = styled.button<{ color?: ResponsiveValue<Color> | null
 
 type Props = {
   animation?: ResponsiveValue<'coverRight' | 'coverLeft'>
-  backgroundColor?: ResponsiveColor
-  closeIconColor?: ResponsiveColor
+  backgroundColor?: ResponsiveColor | null
+  closeIconColor?: ResponsiveColor | null
   links?: NavigationLinksValue
   onClose?: () => unknown
   open?: boolean

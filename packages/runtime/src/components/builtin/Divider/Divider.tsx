@@ -22,7 +22,7 @@ type Props = {
   id?: ElementIDValue
   variant?: ResponsiveSelectValue<DividerVariant>
   thickness?: ResponsiveLengthValue
-  color?: ResponsiveColor
+  color?: ResponsiveColor | null
   width?: string
   margin?: MarginValue
 }

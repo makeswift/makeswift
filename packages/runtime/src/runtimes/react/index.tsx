@@ -39,7 +39,7 @@ const contextDefaultValue = ReactPage.configureStore()
 export interface ReactRuntime {
   registerComponent<
     P extends Record<string, PropControllerDescriptor>,
-    C extends ReactPage.ComponentType<{ [K in keyof P]?: PropControllerDescriptorValueType<P[K]> }>,
+    C extends ReactPage.ComponentType<{ [K in keyof P]: PropControllerDescriptorValueType<P[K]> }>,
   >(
     component: C,
     meta: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P },

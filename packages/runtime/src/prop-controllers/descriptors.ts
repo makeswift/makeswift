@@ -971,11 +971,11 @@ export type PanelDescriptor<T extends Data = Data> = Extract<
 export type DescriptorValueType<T extends Descriptor> = T extends StyleControlDefinition
   ? StyleControlFormattedValue
   : T['type'] extends typeof Types.ResponsiveColor
-  ? ResponsiveColor
+  ? ResponsiveColor | null | undefined
   : T['type'] extends typeof Types.Width
   ? ResolveWidthControlValue<T>
   : T extends Descriptor<infer U>
-  ? U
+  ? U | undefined
   : never
 
 export type PanelDescriptorValueType<T extends PanelDescriptor> = T extends PanelDescriptor<infer U>

@@ -47,9 +47,9 @@ type Props = {
   alignment?: ResponsiveIconRadioGroupValue<'flex-start' | 'center' | 'flex-end'>
   gutter?: GapXValue
   mobileMenuAnimation?: ResponsiveSelectValue<'coverRight' | 'coverLeft'>
-  mobileMenuOpenIconColor?: ResponsiveColor
-  mobileMenuCloseIconColor?: ResponsiveColor
-  mobileMenuBackgroundColor?: ResponsiveColor
+  mobileMenuOpenIconColor?: ResponsiveColor | null
+  mobileMenuCloseIconColor?: ResponsiveColor | null
+  mobileMenuBackgroundColor?: ResponsiveColor | null
   width?: string
   margin?: MarginValue
 }
