@@ -54,11 +54,22 @@ type Props = {
   margin?: MarginValue
 }
 
-const Container = styled.nav<{ margin: Props['margin']; textStyle: Props['linkTextStyle'] }>`
+const Container = styled.nav<{
+  margin: Props['margin']
+  textStyle: Props['linkTextStyle']
+  gutter: Props['gutter']
+}>`
   display: flex;
   align-items: center;
   ${cssMargin()}
   ${cssTextStyle()}
+  ${p =>
+    cssMediaRules(
+      [p.gutter] as const,
+      ([gutter = { value: 0, unit: 'px' }]) => css`
+        gap: ${gutter.value}${gutter.unit};
+      `,
+    )}
 `
 
 const LinksContainer = styled.div<{
@@ -140,7 +151,14 @@ const Navigation = forwardRef<HTMLDivElement, Props>(function Navigation(
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <Container ref={ref} id={id} className={cx(width)} margin={margin} textStyle={linkTextStyle}>
+    <Container
+      ref={ref}
+      id={id}
+      className={cx(width)}
+      margin={margin}
+      textStyle={linkTextStyle}
+      gutter={gutter}
+    >
       {showLogo === true && (
         <Image
           altText={logoAltText}
