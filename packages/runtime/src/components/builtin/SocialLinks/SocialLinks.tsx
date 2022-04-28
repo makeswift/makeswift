@@ -28,8 +28,8 @@ type Props = {
   shape?: ResponsiveIconRadioGroupValue<'naked' | 'circle' | 'rounded' | 'square'>
   size?: ResponsiveIconRadioGroupValue<'small' | 'medium' | 'large'>
   hoverStyle?: ResponsiveSelectValue<'none' | 'grow' | 'shrink' | 'fade'>
-  fill?: ResponsiveColor
-  backgroundColor?: ResponsiveColor
+  fill?: ResponsiveColor | null
+  backgroundColor?: ResponsiveColor | null
   alignment?: ResponsiveIconRadioGroupValue<'flex-start' | 'center' | 'flex-end'>
   gutter?: GapXValue
   width?: string

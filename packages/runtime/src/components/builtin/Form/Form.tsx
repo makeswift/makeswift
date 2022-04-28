@@ -93,10 +93,10 @@ type Props = {
   size?: ResponsiveIconRadioGroupValue<Size>
   contrast?: ResponsiveIconRadioGroupValue<Contrast>
   labelTextStyle?: TextStyleValue
-  labelTextColor?: ResponsiveColor
+  labelTextColor?: ResponsiveColor | null
   submitTextStyle?: TextStyleValue
-  brandColor?: ResponsiveColor
-  submitTextColor?: ResponsiveColor
+  brandColor?: ResponsiveColor | null
+  submitTextColor?: ResponsiveColor | null
   submitLabel?: TextInputValue
   submitVariant?: ResponsiveSelectValue<
     'flat' | 'outline' | 'shadow' | 'clear' | 'blocky' | 'bubbly' | 'skewed'

@@ -29,10 +29,10 @@ type Props = {
   size?: ResponsiveIconRadioGroupValue<'small' | 'medium' | 'large'>
   gap?: GapXValue
   numberFont?: FontValue
-  numberColor?: ResponsiveColor
-  blockColor?: ResponsiveColor
+  numberColor?: ResponsiveColor | null
+  blockColor?: ResponsiveColor | null
   labelFont?: FontValue
-  labelColor?: ResponsiveColor
+  labelColor?: ResponsiveColor | null
   width?: string
   margin?: MarginValue
   daysLabel?: TextInputValue

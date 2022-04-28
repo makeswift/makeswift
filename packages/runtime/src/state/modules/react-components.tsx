@@ -1,16 +1,10 @@
-import type {
-  ClassAttributes,
-  ComponentClass,
-  PropsWithoutRef,
-  RefAttributes,
-  VoidFunctionComponent,
-} from 'react'
+import type { Component, PropsWithoutRef, ReactElement, RefAttributes } from 'react'
 
 import { Action, ActionTypes } from '../actions'
 
 export type ComponentType<P = Record<string, any>, T = any> =
-  | ComponentClass<PropsWithoutRef<P> & ClassAttributes<T>>
-  | VoidFunctionComponent<PropsWithoutRef<P> & RefAttributes<T>>
+  | { new (props: PropsWithoutRef<P> & RefAttributes<T>, context?: any): Component<P> }
+  | ((props: PropsWithoutRef<P> & RefAttributes<T>, context?: any) => ReactElement<any, any> | null)
 
 export type State = Map<string, ComponentType>
 

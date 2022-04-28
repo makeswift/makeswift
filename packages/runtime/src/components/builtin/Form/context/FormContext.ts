@@ -33,7 +33,7 @@ export type Value = {
   contrast: ResponsiveValue<Contrast> | null | undefined
   brandColor: ResponsiveValue<ColorValue> | null | undefined
   labelTextStyle?: TextStyleValue
-  labelTextColor?: ResponsiveColor
+  labelTextColor?: ResponsiveColor | null
 }
 
 const Context = createContext<Value>({} as Value)
