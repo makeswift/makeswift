@@ -17,6 +17,7 @@ import { useResponsiveColor } from '../../components'
 import type { ColorValue } from '../../components/utils/types'
 import { responsiveWidth } from '../../components/utils/responsive-style'
 import {
+  ColorControlType,
   NumberControlType,
   StyleControlType,
   TextAreaControlType,
@@ -26,6 +27,7 @@ import { useFormattedStyle } from './controls/style'
 import { useNumber } from './controls/number'
 import { useTextInputValue } from './controls/text-input'
 import { useTextAreaValue } from './controls/text-area'
+import { useColorValue } from './controls/color'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -74,6 +76,9 @@ export function useProps(element: ReactPage.ElementData): Record<string, unknown
 
         case TextAreaControlType:
           return [propName, useTextAreaValue(props[propName], descriptor)]
+
+        case ColorControlType:
+          return [propName, useColorValue(props[propName], descriptor)]
 
         case Props.Types.ResponsiveColor: {
           const color = useResponsiveColor(props[propName])
