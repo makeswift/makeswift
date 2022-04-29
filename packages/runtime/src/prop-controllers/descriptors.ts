@@ -4,6 +4,8 @@ import { ResolveWidthControlValue } from '../runtimes/react/controls'
 import { StyleControlFormattedValue } from '../runtimes/react/controls/style'
 import type { Element, Data } from '../state/react-page'
 import type { ResponsiveColor } from '../runtimes/react/controls'
+import { NumberControlDefinition } from '../controls/number'
+import { NumberControlValue } from '../runtimes/react/controls/number'
 
 export type { Data }
 
@@ -929,6 +931,7 @@ export type Descriptor<T extends Data = Data> =
   | VideoDescriptor<T>
   | WidthDescriptor<T>
   | StyleControlDefinition
+  | NumberControlDefinition
 
 export type PanelDescriptorType =
   | typeof Types.Backgrounds
@@ -968,7 +971,9 @@ export type PanelDescriptor<T extends Data = Data> = Extract<
   { type: PanelDescriptorType }
 >
 
-export type DescriptorValueType<T extends Descriptor> = T extends StyleControlDefinition
+export type DescriptorValueType<T extends Descriptor> = T extends NumberControlDefinition
+  ? NumberControlValue<T>
+  : T extends StyleControlDefinition
   ? StyleControlFormattedValue
   : T['type'] extends typeof Types.ResponsiveColor
   ? ResponsiveColor | null | undefined
