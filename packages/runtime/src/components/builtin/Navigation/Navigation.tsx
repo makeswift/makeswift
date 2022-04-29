@@ -33,7 +33,7 @@ import { ReactRuntime } from '../../../react'
 import { Props } from '../../../prop-controllers'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { findDeviceOverride } from '../../utils/devices'
-import { useColor } from '../../hooks'
+import { useResponsiveColor } from '../../hooks'
 
 type Props = {
   id?: ElementIDValue
@@ -119,7 +119,13 @@ type NavigationButtonProps = NavigationButtonValue['payload'] &
 function NavigationButton(props: NavigationButtonProps): JSX.Element {
   const { textColor, color, ...restOfProps } = props
 
-  return <Button {...restOfProps} textColor={useColor(textColor)} color={useColor(color)} />
+  return (
+    <Button
+      {...restOfProps}
+      textColor={useResponsiveColor(textColor)}
+      color={useResponsiveColor(color)}
+    />
+  )
 }
 
 const placeholder = {

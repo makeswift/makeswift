@@ -7,14 +7,13 @@ import {
   Descriptor,
   Device,
   ResolveOptions,
-  ResponsiveColorValue,
   ResponsiveValue,
   WidthControlValueFormats,
   WidthDescriptor,
   WidthValue,
 } from '../../prop-controllers/descriptors'
 import { css } from '@emotion/css'
-import { useColor } from '../../components'
+import { useResponsiveColor } from '../../components'
 import type { ColorValue } from '../../components/utils/types'
 import { responsiveWidth } from '../../components/utils/responsive-style'
 import {
@@ -55,10 +54,6 @@ function useWidth(
         : value,
     [value, options.defaultValue, options.format],
   )
-}
-
-function useResponsiveColor(value: ResponsiveColorValue): ResponsiveColor | null | undefined {
-  return useColor(value)
 }
 
 export function useProps(element: ReactPage.ElementData): Record<string, unknown> {

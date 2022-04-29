@@ -10,7 +10,7 @@ import {
 } from '../../../../../../../prop-controllers/descriptors'
 import { ColorValue as Color } from '../../../../../../utils/types'
 import { colorToString } from '../../../../../../utils/colorToString'
-import { useColor } from '../../../../../../hooks'
+import { useResponsiveColor } from '../../../../../../hooks'
 
 import { ReactComponent as CaretDown8 } from '../../../../../../icons/caret-down-8.svg'
 import { ReactComponent as Plus8 } from '../../../../../../icons/plus-8.svg'
@@ -58,7 +58,7 @@ type DropDownItemProps = BaseDropDownItemProps &
 
 function DropDownItem({ color, ...restOfProps }: DropDownItemProps) {
   // @ts-expect-error: HTMLAnchorElement `color` attribute conflict with props
-  return <StyledLink {...restOfProps} color={useColor(color)} />
+  return <StyledLink {...restOfProps} color={useResponsiveColor(color)} />
 }
 
 type Props = ComponentPropsWithoutRef<typeof Button> & {
@@ -88,8 +88,8 @@ export default function MobileDropDownButton({
     <>
       <ButtonLink
         {...restOfProps}
-        textColor={useColor(textColor)}
-        color={useColor(color)}
+        textColor={useResponsiveColor(textColor)}
+        color={useResponsiveColor(color)}
         onPointerDown={() => setIsOpen(prev => !prev)}
       >
         <div style={{ display: 'flex', alignItems: 'center' }}>

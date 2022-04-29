@@ -14,7 +14,7 @@ import {
 } from '../../../../../prop-controllers/descriptors'
 import { ColorValue as Color } from '../../../../utils/types'
 import { colorToString } from '../../../../utils/colorToString'
-import { useColor } from '../../../../hooks'
+import { useResponsiveColor } from '../../../../hooks'
 
 import { Link } from '../../../../shared/Link'
 import Button from '../../../Button'
@@ -107,7 +107,7 @@ type DropDownItemProps = BaseDropDownItemProps &
 
 function DropDownItem({ color, ...restOfProps }: DropDownItemProps) {
   // @ts-expect-error: HTMLDivElement `color` attribute conflicts with prop.
-  return <StyledDropDownItem {...restOfProps} color={useColor(color)} />
+  return <StyledDropDownItem {...restOfProps} color={useResponsiveColor(color)} />
 }
 
 type Props = ComponentPropsWithoutRef<typeof Button> & {
@@ -147,7 +147,11 @@ export default function DropDownButton({
 
   return (
     <DropDownContainer ref={container}>
-      <Button {...restOfProps} textColor={useColor(textColor)} color={useColor(color)}>
+      <Button
+        {...restOfProps}
+        textColor={useResponsiveColor(textColor)}
+        color={useResponsiveColor(color)}
+      >
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <span style={{ marginRight: 6 }}>{label}</span>
           <span style={{ display: 'inline-flex', fill: 'currentColor' }}>
