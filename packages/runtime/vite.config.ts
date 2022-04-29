@@ -19,7 +19,7 @@ export default defineConfig({
   define: {
     'import.meta.vitest': false,
   },
-  plugins: [svgr(), react()],
+  plugins: [svgr({ svgo: false }), react()],
   build: {
     emptyOutDir: false,
     sourcemap: true,
