@@ -17,8 +17,9 @@ import { css } from '@emotion/css'
 import { useColor } from '../../components'
 import type { ColorValue } from '../../components/utils/types'
 import { responsiveWidth } from '../../components/utils/responsive-style'
-import { StyleControlType } from '../../controls'
+import { NumberControlType, StyleControlType } from '../../controls'
 import { useFormattedStyle } from './controls/style'
+import { useNumber } from './controls/number'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -63,6 +64,9 @@ export function useProps(element: ReactPage.ElementData): Record<string, unknown
   return Object.fromEntries(
     Object.entries(propControllerDescriptorsRef.current).map(([propName, descriptor]) => {
       switch (descriptor.type) {
+        case NumberControlType:
+          return [propName, useNumber(props[propName], descriptor)]
+
         case Props.Types.ResponsiveColor: {
           const color = useResponsiveColor(props[propName])
 
