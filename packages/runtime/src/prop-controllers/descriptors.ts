@@ -6,9 +6,14 @@ import type { Element, Data } from '../state/react-page'
 import type { ResponsiveColor } from '../runtimes/react/controls'
 import { NumberControlDefinition } from '../controls/number'
 import { NumberControlValue } from '../runtimes/react/controls/number'
-import { TextAreaControlDefinition, TextInputControlDefinition } from '../controls'
+import {
+  ColorControlDefinition,
+  TextAreaControlDefinition,
+  TextInputControlDefinition,
+} from '../controls'
 import { TextInputControlValue } from '../runtimes/react/controls/text-input'
 import { TextAreaControlValue } from '../runtimes/react/controls/text-area'
+import { ColorControlValue } from '../runtimes/react/controls/color'
 
 export type { Data }
 
@@ -937,6 +942,7 @@ export type Descriptor<T extends Data = Data> =
   | NumberControlDefinition
   | TextInputControlDefinition
   | TextAreaControlDefinition
+  | ColorControlDefinition
 
 export type PanelDescriptorType =
   | typeof Types.Backgrounds
@@ -982,6 +988,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? TextInputControlValue<T>
   : T extends TextAreaControlDefinition
   ? TextAreaControlValue<T>
+  : T extends ColorControlDefinition
+  ? ColorControlValue<T>
   : T extends StyleControlDefinition
   ? StyleControlFormattedValue
   : T['type'] extends typeof Types.ResponsiveColor
