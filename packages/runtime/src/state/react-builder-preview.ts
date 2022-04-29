@@ -17,6 +17,7 @@ import * as BoxModels from './modules/box-models'
 import * as ComponentsMeta from './modules/components-meta'
 import * as PropControllers from './modules/prop-controllers'
 import * as PropControllerHandles from './modules/prop-controller-handles'
+import * as IsInBuilder from './modules/is-in-builder'
 import * as ReactPage from './react-page'
 import {
   Action,
@@ -32,6 +33,7 @@ import {
   unregisterBuilderComponent,
   unregisterMeasurable,
   unregisterPropControllers,
+  setIsInBuilder,
 } from './actions'
 import { ActionTypes } from './actions'
 import { createPropController, PropController } from '../prop-controllers/instances'
@@ -50,7 +52,7 @@ const reducer = combineReducers({
   componentsMeta: ComponentsMeta.reducer,
   propControllers: PropControllers.reducer,
   propControllerHandles: PropControllerHandles.reducer,
-  isInBuilder: (_state: boolean = true, _action: Action): boolean => true,
+  isInBuilder: IsInBuilder.reducer,
 })
 
 export type State = ReturnType<typeof reducer>
@@ -260,12 +262,14 @@ export function initialize(): ThunkAction<() => void, State, unknown, Action> {
     const stopMeasuringDocumentElement = dispatch(startMeasuringDocumentElement())
     const stopHandlingFocusEvent = startHandlingFocusEvents()
     const unlockDocumentScroll = lockDocumentScroll()
+    dispatch(setIsInBuilder(true))
 
     return () => {
       stopMeasuringElements()
       stopMeasuringDocumentElement()
       stopHandlingFocusEvent()
       unlockDocumentScroll()
+      dispatch(setIsInBuilder(false))
     }
   }
 }

@@ -11,6 +11,7 @@ import * as Documents from './modules/read-only-documents'
 import * as ReactComponents from './modules/react-components'
 import * as ComponentsMeta from './modules/components-meta'
 import * as PropControllers from './modules/prop-controllers'
+import * as IsInBuilder from './modules/is-in-builder'
 import * as Introspection from '../prop-controllers/introspection'
 import { Action } from './actions'
 
@@ -34,7 +35,7 @@ const reducer = combineReducers({
   reactComponents: ReactComponents.reducer,
   componentsMeta: ComponentsMeta.reducer,
   propControllers: PropControllers.reducer,
-  isInBuilder: (_state: boolean = false, _action: Action): boolean => false,
+  isInBuilder: IsInBuilder.reducer,
 })
 
 export type State = ReturnType<typeof reducer>

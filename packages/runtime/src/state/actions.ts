@@ -54,6 +54,8 @@ export const ActionTypes = {
 
   CHANGE_API_RESOURCE: 'CHANGE_API_RESOURCE',
   EVICT_API_RESOURCE: 'EVICT_API_RESOURCE',
+
+  SET_IS_IN_BUILDER: 'SET_IS_IN_BUILDER',
 } as const
 
 type InitAction = { type: typeof ActionTypes.INIT }
@@ -207,6 +209,11 @@ type EvictAPIResourceAction = {
   payload: { id: string }
 }
 
+type SetIsInBuilderAction = {
+  type: typeof ActionTypes.SET_IS_IN_BUILDER
+  payload: boolean
+}
+
 export type Action =
   | InitAction
   | CleanUpAction
@@ -237,6 +244,7 @@ export type Action =
   | MessageBuilderPropControllerAction
   | ChangeAPIResourceAction
   | EvictAPIResourceAction
+  | SetIsInBuilderAction
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }
@@ -509,4 +517,8 @@ export function changeApiResource(resource: APIResource): ChangeAPIResourceActio
 
 export function evictApiResource(id: string): EvictAPIResourceAction {
   return { type: ActionTypes.EVICT_API_RESOURCE, payload: { id } }
+}
+
+export function setIsInBuilder(isInBuilder: boolean): SetIsInBuilderAction {
+  return { type: ActionTypes.SET_IS_IN_BUILDER, payload: isInBuilder }
 }
