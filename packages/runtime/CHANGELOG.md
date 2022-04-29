@@ -1,5 +1,15 @@
 # @makeswift/runtime
 
+## 0.0.6
+
+### Patch Changes
+
+- 85c08d0: Hide scrollbar in builder mode but not in preview.
+- d06a708: Apply gutter to navigation logo
+- f27521f: Fix Text in preview mode being editable.
+- b467150: Fix social icons not sized correctly.
+- 0cb56d9: Fix bug where editing global element with Text as the root element isn't working.
+
 ## 0.0.5
 
 ### Patch Changes
