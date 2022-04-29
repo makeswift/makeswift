@@ -127,41 +127,6 @@ export function RuntimeProvider({
     }
   }, [client])
 
-  useEffect(() => {
-    // TODO(miguel): perform a more robust validation.
-    const isInBuilder = window.parent !== window
-
-    if (!isInBuilder) return
-
-    // TODO(miguel): Uncomment the lines below once we figure out how to make it so that we can hide
-    // the scrollbar in the builder without preventing scrolling in preview mode.
-    // const lastDocumentOverflow = window.document.documentElement.style.overflow
-    // window.document.documentElement.style.overflow = 'hidden'
-    window.addEventListener('focusin', handleFocusIn)
-    window.addEventListener('focusout', handlefocusOut)
-
-    return () => {
-      // window.document.documentElement.style.overflow = lastDocumentOverflow
-      window.addEventListener('focusin', handleFocusIn)
-      window.removeEventListener('focusout', handlefocusOut)
-    }
-
-    function handleFocusIn(event: FocusEvent) {
-      if (!(event.target instanceof window.HTMLElement) || !event.target.isContentEditable) {
-        window.parent.focus()
-      }
-    }
-
-    function handlefocusOut(event: FocusEvent) {
-      if (
-        !(event.relatedTarget instanceof window.HTMLElement) ||
-        !event.relatedTarget.isContentEditable
-      ) {
-        window.parent.focus()
-      }
-    }
-  }, [])
-
   return (
     <Context.Provider value={store}>
       <MakeswiftProvider client={client}>{children}</MakeswiftProvider>
