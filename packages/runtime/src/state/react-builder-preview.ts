@@ -197,6 +197,40 @@ function getElementSize(element: HTMLElement): Size {
   }
 }
 
+function lockDocumentScroll(): () => void {
+  const lastDocumentOverflow = window.document.documentElement.style.overflow
+  window.document.documentElement.style.overflow = 'hidden'
+
+  return () => {
+    window.document.documentElement.style.overflow = lastDocumentOverflow
+  }
+}
+
+function startHandlingFocusEvents(): () => void {
+  window.addEventListener('focusin', handleFocusIn)
+  window.addEventListener('focusout', handleFocusOut)
+
+  return () => {
+    window.addEventListener('focusin', handleFocusIn)
+    window.removeEventListener('focusout', handleFocusOut)
+  }
+
+  function handleFocusIn(event: FocusEvent) {
+    if (!(event.target instanceof window.HTMLElement) || !event.target.isContentEditable) {
+      window.parent.focus()
+    }
+  }
+
+  function handleFocusOut(event: FocusEvent) {
+    if (
+      !(event.relatedTarget instanceof window.HTMLElement) ||
+      !event.relatedTarget.isContentEditable
+    ) {
+      window.parent.focus()
+    }
+  }
+}
+
 function startMeasuringDocumentElement(): ThunkAction<() => void, unknown, unknown, Action> {
   return dispatch => {
     let animationFrameHandle = requestAnimationFrame(handleAnimationFrameRequest)
@@ -224,10 +258,14 @@ export function initialize(): ThunkAction<() => void, State, unknown, Action> {
   return dispatch => {
     const stopMeasuringElements = dispatch(startMeasuringElements())
     const stopMeasuringDocumentElement = dispatch(startMeasuringDocumentElement())
+    const stopHandlingFocusEvent = startHandlingFocusEvents()
+    const unlockDocumentScroll = lockDocumentScroll()
 
     return () => {
       stopMeasuringElements()
       stopMeasuringDocumentElement()
+      stopHandlingFocusEvent()
+      unlockDocumentScroll()
     }
   }
 }
