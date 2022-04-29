@@ -17,10 +17,16 @@ import { css } from '@emotion/css'
 import { useColor } from '../../components'
 import type { ColorValue } from '../../components/utils/types'
 import { responsiveWidth } from '../../components/utils/responsive-style'
-import { NumberControlType, StyleControlType, TextInputControlType } from '../../controls'
+import {
+  NumberControlType,
+  StyleControlType,
+  TextAreaControlType,
+  TextInputControlType,
+} from '../../controls'
 import { useFormattedStyle } from './controls/style'
 import { useNumber } from './controls/number'
 import { useTextInputValue } from './controls/text-input'
+import { useTextAreaValue } from './controls/text-area'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -70,6 +76,9 @@ export function useProps(element: ReactPage.ElementData): Record<string, unknown
 
         case TextInputControlType:
           return [propName, useTextInputValue(props[propName], descriptor)]
+
+        case TextAreaControlType:
+          return [propName, useTextAreaValue(props[propName], descriptor)]
 
         case Props.Types.ResponsiveColor: {
           const color = useResponsiveColor(props[propName])
