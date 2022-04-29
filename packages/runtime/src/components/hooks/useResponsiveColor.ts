@@ -4,7 +4,7 @@ import { isNonNullable } from '../utils/isNonNullable'
 import type { ColorValue as Color } from '../utils/types'
 import { useQuery } from '../../api/react'
 
-export function useColor(
+export function useResponsiveColor(
   color:
     | ResponsiveValue<{
         swatchId: string
