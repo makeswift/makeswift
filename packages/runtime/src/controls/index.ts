@@ -1,5 +1,6 @@
 export * from './checkbox'
 export * from './color'
+export * from './image'
 export * from './number'
 export * from './select'
 export * from './style'
