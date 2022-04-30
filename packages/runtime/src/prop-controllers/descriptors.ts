@@ -9,6 +9,7 @@ import { NumberControlValue } from '../runtimes/react/controls/number'
 import {
   CheckboxControlDefinition,
   ColorControlDefinition,
+  ImageControlDefinition,
   SelectControlDefinition,
   TextAreaControlDefinition,
   TextInputControlDefinition,
@@ -18,6 +19,7 @@ import { TextAreaControlValue } from '../runtimes/react/controls/text-area'
 import { ColorControlValue } from '../runtimes/react/controls/color'
 import { SelectControlValue } from '../runtimes/react/controls/select'
 import { CheckboxControlValue } from '../runtimes/react/controls/checkbox'
+import { ImageControlValue } from '../runtimes/react/controls/image'
 
 export type { Data }
 
@@ -949,6 +951,7 @@ export type Descriptor<T extends Data = Data> =
   | TextAreaControlDefinition
   | SelectControlDefinition
   | ColorControlDefinition
+  | ImageControlDefinition
 
 export type PanelDescriptorType =
   | typeof Types.Backgrounds
@@ -1002,6 +1005,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ColorControlValue<T>
   : T extends StyleControlDefinition
   ? StyleControlFormattedValue
+  : T extends ImageControlDefinition
+  ? ImageControlValue
   : T['type'] extends typeof Types.ResponsiveColor
   ? ResponsiveColor | null | undefined
   : T['type'] extends typeof Types.Width
