@@ -7,6 +7,7 @@ import type { ResponsiveColor } from '../runtimes/react/controls'
 import { NumberControlDefinition } from '../controls/number'
 import { NumberControlValue } from '../runtimes/react/controls/number'
 import {
+  CheckboxControlDefinition,
   ColorControlDefinition,
   SelectControlDefinition,
   TextAreaControlDefinition,
@@ -16,6 +17,7 @@ import { TextInputControlValue } from '../runtimes/react/controls/text-input'
 import { TextAreaControlValue } from '../runtimes/react/controls/text-area'
 import { ColorControlValue } from '../runtimes/react/controls/color'
 import { SelectControlValue } from '../runtimes/react/controls/select'
+import { CheckboxControlValue } from '../runtimes/react/controls/checkbox'
 
 export type { Data }
 
@@ -942,6 +944,7 @@ export type Descriptor<T extends Data = Data> =
   | WidthDescriptor<T>
   | StyleControlDefinition
   | NumberControlDefinition
+  | CheckboxControlDefinition
   | TextInputControlDefinition
   | TextAreaControlDefinition
   | SelectControlDefinition
@@ -987,6 +990,8 @@ export type PanelDescriptor<T extends Data = Data> = Extract<
 
 export type DescriptorValueType<T extends Descriptor> = T extends NumberControlDefinition
   ? NumberControlValue<T>
+  : T extends CheckboxControlDefinition
+  ? CheckboxControlValue<T>
   : T extends TextInputControlDefinition
   ? TextInputControlValue<T>
   : T extends TextAreaControlDefinition

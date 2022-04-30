@@ -1,3 +1,4 @@
+export * from './checkbox'
 export * from './color'
 export * from './number'
 export * from './select'
