@@ -8,12 +8,14 @@ import { NumberControlDefinition } from '../controls/number'
 import { NumberControlValue } from '../runtimes/react/controls/number'
 import {
   ColorControlDefinition,
+  SelectControlDefinition,
   TextAreaControlDefinition,
   TextInputControlDefinition,
 } from '../controls'
 import { TextInputControlValue } from '../runtimes/react/controls/text-input'
 import { TextAreaControlValue } from '../runtimes/react/controls/text-area'
 import { ColorControlValue } from '../runtimes/react/controls/color'
+import { SelectControlValue } from '../runtimes/react/controls/select'
 
 export type { Data }
 
@@ -942,6 +944,7 @@ export type Descriptor<T extends Data = Data> =
   | NumberControlDefinition
   | TextInputControlDefinition
   | TextAreaControlDefinition
+  | SelectControlDefinition
   | ColorControlDefinition
 
 export type PanelDescriptorType =
@@ -988,6 +991,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? TextInputControlValue<T>
   : T extends TextAreaControlDefinition
   ? TextAreaControlValue<T>
+  : T extends SelectControlDefinition
+  ? SelectControlValue<T>
   : T extends ColorControlDefinition
   ? ColorControlValue<T>
   : T extends StyleControlDefinition

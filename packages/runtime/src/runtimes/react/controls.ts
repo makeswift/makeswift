@@ -19,6 +19,7 @@ import { responsiveWidth } from '../../components/utils/responsive-style'
 import {
   ColorControlType,
   NumberControlType,
+  SelectControlType,
   StyleControlType,
   TextAreaControlType,
   TextInputControlType,
@@ -28,6 +29,7 @@ import { useNumber } from './controls/number'
 import { useTextInputValue } from './controls/text-input'
 import { useTextAreaValue } from './controls/text-area'
 import { useColorValue } from './controls/color'
+import { useSelectControlValue } from './controls/select'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -76,6 +78,9 @@ export function useProps(element: ReactPage.ElementData): Record<string, unknown
 
         case TextAreaControlType:
           return [propName, useTextAreaValue(props[propName], descriptor)]
+
+        case SelectControlType:
+          return [propName, useSelectControlValue(props[propName], descriptor)]
 
         case ColorControlType:
           return [propName, useColorValue(props[propName], descriptor)]

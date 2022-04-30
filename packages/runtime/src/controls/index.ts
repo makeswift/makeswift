@@ -1,5 +1,6 @@
 export * from './color'
 export * from './number'
+export * from './select'
 export * from './style'
 export * from './text-area'
 export * from './text-input'
