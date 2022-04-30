@@ -17,6 +17,7 @@ import { useResponsiveColor } from '../../components'
 import type { ColorValue } from '../../components/utils/types'
 import { responsiveWidth } from '../../components/utils/responsive-style'
 import {
+  CheckboxControlType,
   ColorControlType,
   NumberControlType,
   SelectControlType,
@@ -30,6 +31,7 @@ import { useTextInputValue } from './controls/text-input'
 import { useTextAreaValue } from './controls/text-area'
 import { useColorValue } from './controls/color'
 import { useSelectControlValue } from './controls/select'
+import { useCheckboxControlValue } from './controls/checkbox'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -72,6 +74,9 @@ export function useProps(element: ReactPage.ElementData): Record<string, unknown
       switch (descriptor.type) {
         case NumberControlType:
           return [propName, useNumber(props[propName], descriptor)]
+
+        case CheckboxControlType:
+          return [propName, useCheckboxControlValue(props[propName], descriptor)]
 
         case TextInputControlType:
           return [propName, useTextInputValue(props[propName], descriptor)]
