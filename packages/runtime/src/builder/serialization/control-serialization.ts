@@ -1,3 +1,4 @@
+import { ListControlDefinition, ListControlType } from '../../controls'
 import {
   CheckboxDescriptor as CheckboxControl,
   CheckboxValue as CheckboxControlValue,
@@ -53,6 +54,8 @@ import {
   SelectOption,
   Length,
 } from '../../prop-controllers/descriptors'
+import { deserializeListControlDefinition, serializeListControlDefinition } from './controls/list'
+import { Deserialize, Serialize } from './controls/types'
 import {
   DeserializedFunction,
   deserializeFunction,
@@ -873,6 +876,7 @@ export type SerializedControl<T extends Data = Data> =
       | TextStyleControl<T>
       | ImageControl<T>
       | RichTextControl<T>
+      | ListControlDefinition
     >
   | SerializedListControl<T extends ListControlValue ? T : ListControlValue>
   | SerializedShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
@@ -892,6 +896,7 @@ export type SerializedControl<T extends Data = Data> =
   | SerializedTextStyleControl<T>
   | SerializedImageControl<T>
   | SerializedRichTextControl<T>
+  | Serialize<ListControlDefinition>
 
 type SerializedPanelControl<T extends Data = Data> = Extract<
   SerializedControl<T>,
@@ -926,6 +931,7 @@ export type DeserializedControl<T extends Data = Data> =
       | TextStyleControl<T>
       | ImageControl<T>
       | RichTextControl<T>
+      | ListControlDefinition
     >
   | DeserializedListControl<T extends ListControlValue ? T : ListControlValue>
   | DeserializedShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
@@ -945,6 +951,7 @@ export type DeserializedControl<T extends Data = Data> =
   | DeserializedTextStyleControl<T>
   | DeserializedImageControl<T>
   | DeserializedRichTextControl<T>
+  | Deserialize<Serialize<ListControlDefinition>>
 
 export type DeserializedPanelControl<T extends Data = Data> = Extract<
   DeserializedControl<T>,
@@ -1012,6 +1019,9 @@ function serializeControl<T extends Data>(
     case Controls.Types.RichText:
       return serializeRichTextControl(control)
 
+    case ListControlType:
+      return serializeListControlDefinition(control)
+
     default:
       return [control, []]
   }
@@ -1074,6 +1084,9 @@ function deserializeControl<T extends Data>(
 
     case Controls.Types.RichText:
       return deserializeRichTextControl(serializedControl)
+
+    case ListControlType:
+      return deserializeListControlDefinition(serializedControl)
 
     default:
       return serializedControl
