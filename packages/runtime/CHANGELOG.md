@@ -1,5 +1,19 @@
 # @makeswift/runtime
 
+## 0.0.7
+
+### Patch Changes
+
+- d1dd2fa: Add new `Number` control.
+- 0b64822: Add new `Select` control.
+- 053e1cd: Improve inferred TypeScript types when registering a component.
+- 252fece: Add new `Image` control.
+- c76d470: Add new `TextArea` control.
+- ab35043: Add new `Checkbox` control.
+- 471766b: Add new `Color` control.
+- b860dde: Add new `TextInput` control.
+- 1e93d48: Add new `List` and `Shape` controls.
+
 ## 0.0.6
 
 ### Patch Changes
