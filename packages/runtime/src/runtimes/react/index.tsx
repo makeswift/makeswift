@@ -31,7 +31,7 @@ import { ComponentIcon } from '../../state/modules/components-meta'
 import { registerBuiltinComponents } from '../../components'
 import { MakeswiftProvider, MakeswiftClient, useQuery } from '../../api/react'
 import { FallbackComponent } from '../../components/shared/FallbackComponent'
-import { useProps } from './controls'
+import { PropsValue } from './controls'
 import { FindDomNode } from './find-dom-node'
 
 const contextDefaultValue = ReactPage.configureStore()
@@ -239,7 +239,6 @@ const ElementData = memo(
     ref: Ref<unknown>,
   ): JSX.Element {
     const Component = useComponent(elementData.type)
-    const props = useProps(elementData)
     const [handle, setHandle] = useState<unknown | null>(null)
     const [foundDomNode, setFoundDomNode] = useState<Element | Text | null>(null)
 
@@ -253,7 +252,9 @@ const ElementData = memo(
 
     return (
       <FindDomNode ref={setFoundDomNode}>
-        <Component {...props} key={elementData.key} ref={setHandle} />
+        <PropsValue element={elementData}>
+          {props => <Component {...props} key={elementData.key} ref={setHandle} />}
+        </PropsValue>
       </FindDomNode>
     )
   }),
