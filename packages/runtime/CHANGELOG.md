@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.0.9
+
+The last release, `0.0.8` didn't properly fix the `useInsertionEffect` issue. This time it's for real, though!
+
+### Patch Changes
+
+- f8b5b96: Fix (again) the opt-in to `useInsertionEffect`, making sure that transpilers will not attempt to inline the import specifier.
+
 ## 0.0.8
 
 ### Patch Changes
