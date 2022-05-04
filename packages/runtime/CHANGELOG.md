@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.0.8
+
+### Patch Changes
+
+- a4006a7: Fix transpilation issue that caused `useInsertionEffect` to be referenced directly in import specifiers.
+
 ## 0.0.7
 
 ### Patch Changes
