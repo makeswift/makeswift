@@ -109,8 +109,9 @@ function useStyleControlCssObject(
   }
 }
 
+const useInsertionEffectSpecifier = 'useInsertionEffect'
 // @ts-expect-error: React types are outdated.
-const useInsertionEffect = React['useInsertion' + 'Effect'] ?? React.useLayoutEffect
+const useInsertionEffect = React[useInsertionEffectSpecifier] ?? React.useLayoutEffect
 
 export type StyleControlFormattedValue = string
 
