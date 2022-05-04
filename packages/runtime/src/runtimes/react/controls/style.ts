@@ -110,7 +110,7 @@ function useStyleControlCssObject(
 }
 
 // @ts-expect-error: React types are outdated.
-const useInsertionEffect = React.useInsertionEffect ?? React.useLayoutEffect
+const useInsertionEffect = React['useInsertion' + 'Effect'] ?? React.useLayoutEffect
 
 export type StyleControlFormattedValue = string
 
