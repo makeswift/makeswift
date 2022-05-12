@@ -16,6 +16,7 @@ import Hotkeys from 'slate-hotkeys'
 // @ts-expect-error: there are no types for 'corporate-ipsum'
 import ipsum from 'corporate-ipsum'
 import { cx } from '@emotion/css'
+import { isHotkey } from 'is-hotkey'
 
 import {
   ElementIDValue,
@@ -152,6 +153,12 @@ const Text = forwardRef(function Text(
 
       if (Hotkeys.isRedo(event)) {
         lastController.current?.redo()
+
+        return true
+      }
+
+      if (isHotkey('escape')(event)) {
+        lastController.current?.blur()
 
         return true
       }
