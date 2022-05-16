@@ -182,6 +182,8 @@ const Text = forwardRef(function Text(
       onChange={handleChange}
       onFocus={handleFocus}
       onKeyDown={handleKeyDown}
+      // Workaround for: clicking on any of the text panel will remove the text selection.
+      onBlur={e => e.preventDefault()}
     />
   )
 })
