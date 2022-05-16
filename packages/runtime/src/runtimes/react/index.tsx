@@ -260,6 +260,8 @@ const ElementData = memo(
   }),
 )
 
+const DisableRegisterElement = createContext(false)
+
 type ElementRefereceProps = {
   elementReference: ReactPage.ElementReference
 }
@@ -299,7 +301,9 @@ const ElementReference = memo(
     return elementReferenceDocument != null ? (
       <Document document={elementReferenceDocument} ref={ref} />
     ) : (
-      <ElementData elementData={globalElementData} ref={ref} />
+      <DisableRegisterElement.Provider value={true}>
+        <ElementData elementData={globalElementData} ref={ref} />
+      </DisableRegisterElement.Provider>
     )
   }),
 )
@@ -314,20 +318,21 @@ export const Element = memo(
     const dispatch = useDispatch()
     const documentKey = useDocumentKey()
     const [handle, setHandle] = useState<unknown>(null)
+    const isRegisterElementDisabled = useContext(DisableRegisterElement)
 
     useImperativeHandle(ref, () => handle, [handle])
 
     useEffect(() => {
-      if (documentKey == null) return
+      if (documentKey == null || isRegisterElementDisabled) return
 
       return dispatch(registerComponentHandleEffect(documentKey, elementKey, handle))
-    }, [dispatch, documentKey, elementKey, handle])
+    }, [dispatch, documentKey, elementKey, handle, isRegisterElementDisabled])
 
     useEffect(() => {
-      if (documentKey == null) return
+      if (documentKey == null || isRegisterElementDisabled) return
 
       return dispatch(mountComponentEffect(documentKey, elementKey))
-    }, [dispatch, documentKey, elementKey])
+    }, [dispatch, documentKey, elementKey, isRegisterElementDisabled])
 
     return ReactPage.isElementReference(element) ? (
       <ElementReference key={elementKey} ref={setHandle} elementReference={element} />
