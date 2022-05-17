@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.0.10
+
+### Patch Changes
+
+- 84c1324: Handle ESC key to change from content mode to build mode.
+- 2d3dab2: Fix if you have text selection in the builder, clicking on any of the text panel will remove the text selection bug.
+- bb78979: Fix overlay for nested global components are showing the wrong selection, making you unable to edit.
+
 ## 0.0.9
 
 The last release, `0.0.8` didn't properly fix the `useInsertionEffect` issue. This time it's for real, though!
