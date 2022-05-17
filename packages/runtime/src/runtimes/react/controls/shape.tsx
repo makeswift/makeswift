@@ -16,7 +16,7 @@ export function ShapeControlValue<T extends ShapeControlDefinition>({
   data,
   children,
 }: ShapeControlValueProps<T>) {
-  return Object.entries(definition.config.type).reduce(
+  return Object.entries(definition.config.type).reduceRight(
     (renderFn, [key, controlDefinition]) =>
       shapeControlValue =>
         (
