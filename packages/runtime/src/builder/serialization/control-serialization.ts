@@ -961,7 +961,7 @@ export type DeserializedPanelControl<T extends Data = Data> = Extract<
 type DeserializedPanelControlValueType<T extends DeserializedPanelControl> =
   T extends DeserializedPanelControl<infer U> ? U : never
 
-function serializeControl<T extends Data>(
+export function serializeControl<T extends Data>(
   control: Control<T>,
 ): [SerializedControl<T>, Transferable[]] {
   switch (control.type) {
@@ -1027,7 +1027,7 @@ function serializeControl<T extends Data>(
   }
 }
 
-function deserializeControl<T extends Data>(
+export function deserializeControl<T extends Data>(
   serializedControl: SerializedControl<T>,
 ): DeserializedControl<T> {
   switch (serializedControl.type) {
