@@ -4,7 +4,6 @@ export const ShapeControlType = 'makeswift::controls::shape'
 
 type ShapeControlConfig = {
   type: Record<string, ControlDefinition>
-  label?: string
 }
 
 export type ShapeControlDefinition<C extends ShapeControlConfig = ShapeControlConfig> = {
