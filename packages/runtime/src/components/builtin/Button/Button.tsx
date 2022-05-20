@@ -262,6 +262,7 @@ const Button = forwardRef<HTMLAnchorElement, Props>(function Button(
     textStyle,
     width,
     margin,
+    className,
     ...restOfProps
   },
   ref,
@@ -271,7 +272,7 @@ const Button = forwardRef<HTMLAnchorElement, Props>(function Button(
       {...restOfProps}
       ref={ref}
       id={id}
-      className={cx(toClass(responsiveWidth(width, 'auto')))}
+      className={cx(toClass(responsiveWidth(width, 'auto')), className)}
       // @ts-expect-error: HTMLAnchorElement `color` attribute conflicts with prop
       color={color}
       link={link}
