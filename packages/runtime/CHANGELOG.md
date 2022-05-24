@@ -1,5 +1,15 @@
 # @makeswift/runtime
 
+## 0.0.11
+
+### Patch Changes
+
+- 3f140f5: Change Shape control formated value property sort order.
+- e815641: Recursively serialize List control. This fixes an issue where nested types in a List control would not be serialized.
+- eefeec7: Avoid calling `includes` on non-string value when suppressing React warnings.
+- dd97bce: Fix Form button alignment prop not being applied
+- e703d17: Remove label from Shape control.
+
 ## 0.0.10
 
 ### Patch Changes
