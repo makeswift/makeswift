@@ -205,24 +205,24 @@ function useDispatch(): Dispatch {
   return store.dispatch
 }
 
+/**
+ * @see https://github.com/facebook/react/blob/a2505792ed17fd4d7ddc69561053c3ac90899491/packages/react-reconciler/src/ReactFiberBeginWork.new.js#L1814-L1890
+ */
 function useSuppressRefWarning(ownerName: string) {
   const originalErrorRef = useRef(console.error)
   const patchedRef = useRef(false)
 
   if (patchedRef.current === false) {
     console.error = (...args) => {
-      const [msg, ...substitutions] = args
-      const text = substitutions.reduce(
-        (text, substitution) => text.replace('%s', substitution),
-        msg,
-      )
-
       if (
-        !text.includes('Function components cannot be given refs.') ||
-        !text.includes(`Check the render method of \`${ownerName}\`.`)
+        typeof args[0] === 'string' &&
+        args[0].includes('Function components cannot be given refs.') &&
+        args[0].includes(`Check the render method of \`${ownerName}\`.`)
       ) {
-        originalErrorRef.current(...args)
+        return
       }
+
+      return originalErrorRef.current(...args)
     }
 
     patchedRef.current = true

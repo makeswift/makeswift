@@ -9,18 +9,18 @@ type FindDomNodeClassComponentProps = {
   children?: ReactNode
 }
 
+/**
+ * @see https://github.com/facebook/react/blob/a2505792ed17fd4d7ddc69561053c3ac90899491/packages/react-reconciler/src/ReactFiberReconciler.new.js#L179-L244
+ */
 function suppressWarningAndFindDomNode(
   instance: ReactInstance | null | undefined,
 ): Element | Text | null {
   const error = console.error
 
   console.error = (...args) => {
-    const [msg, ...substitutions] = args
-    const text = substitutions.reduce((text, substitution) => text.replace('%s', substitution), msg)
+    if (typeof args[0] === 'string' && args[0].includes('%s is deprecated in StrictMode.')) return
 
-    if (!text.includes('findDOMNode is deprecated in StrictMode.')) {
-      error.apply(console, args)
-    }
+    return error.apply(console, args)
   }
 
   const foundDomNode = findDOMNode(instance)
