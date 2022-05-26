@@ -3,11 +3,7 @@ import { ReactRuntime } from '@makeswift/runtime/react'
 
 // Register your components here!
 
-type Props = {
-  className?: string
-}
-
-function HelloWorld(props: Props) {
+function HelloWorld(props: { className?: string }) {
   return <p {...props}>Hello, world!</p>
 }
 
