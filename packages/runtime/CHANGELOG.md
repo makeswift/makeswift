@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.0.12
+
+### Patch Changes
+
+- 4ebe3dc: Fix snippets not updated immediately after changes
+- aa558b3: Fix snippets invoked twice
+- 936ab95: Fix scrolling doesn't work in content mode when hovering over a text block
+- 392227e: Fix font not applied when added to site
+
 ## 0.0.11
 
 ### Patch Changes
