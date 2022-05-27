@@ -34,6 +34,7 @@ import {
   unregisterMeasurable,
   unregisterPropControllers,
   setIsInBuilder,
+  handleWheel,
 } from './actions'
 import { ActionTypes } from './actions'
 import { createPropController, PropController } from '../prop-controllers/instances'
@@ -199,12 +200,21 @@ function getElementSize(element: HTMLElement): Size {
   }
 }
 
-function lockDocumentScroll(): () => void {
-  const lastDocumentOverflow = window.document.documentElement.style.overflow
-  window.document.documentElement.style.overflow = 'hidden'
+function lockDocumentScroll(): ThunkAction<() => void, State, unknown, Action> {
+  return dispatch => {
+    const lastDocumentOverflow = window.document.documentElement.style.overflow
+    window.document.documentElement.style.overflow = 'hidden'
 
-  return () => {
-    window.document.documentElement.style.overflow = lastDocumentOverflow
+    window.document.documentElement.addEventListener('wheel', handleWheelEvent)
+
+    return () => {
+      window.document.documentElement.style.overflow = lastDocumentOverflow
+      window.document.documentElement.removeEventListener('wheel', handleWheelEvent)
+    }
+
+    function handleWheelEvent({ deltaX, deltaY }: WheelEvent) {
+      dispatch(handleWheel({ deltaX, deltaY }))
+    }
   }
 }
 
@@ -261,7 +271,7 @@ export function initialize(): ThunkAction<() => void, State, unknown, Action> {
     const stopMeasuringElements = dispatch(startMeasuringElements())
     const stopMeasuringDocumentElement = dispatch(startMeasuringDocumentElement())
     const stopHandlingFocusEvent = startHandlingFocusEvents()
-    const unlockDocumentScroll = lockDocumentScroll()
+    const unlockDocumentScroll = dispatch(lockDocumentScroll())
     dispatch(setIsInBuilder(true))
 
     return () => {
@@ -341,6 +351,7 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
           case ActionTypes.UNMOUNT_COMPONENT:
           case ActionTypes.CHANGE_DOCUMENT_ELEMENT_SIZE:
           case ActionTypes.MESSAGE_BUILDER_PROP_CONTROLLER:
+          case ActionTypes.HANDLE_WHEEL:
             messageChannel.port1.postMessage(action)
             break
 

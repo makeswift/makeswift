@@ -56,6 +56,8 @@ export const ActionTypes = {
   EVICT_API_RESOURCE: 'EVICT_API_RESOURCE',
 
   SET_IS_IN_BUILDER: 'SET_IS_IN_BUILDER',
+
+  HANDLE_WHEEL: 'HANDLE_WHEEL',
 } as const
 
 type InitAction = { type: typeof ActionTypes.INIT }
@@ -214,6 +216,11 @@ type SetIsInBuilderAction = {
   payload: boolean
 }
 
+type HandleWheelAction = {
+  type: typeof ActionTypes.HANDLE_WHEEL
+  payload: { deltaX: number; deltaY: number }
+}
+
 export type Action =
   | InitAction
   | CleanUpAction
@@ -245,6 +252,7 @@ export type Action =
   | ChangeAPIResourceAction
   | EvictAPIResourceAction
   | SetIsInBuilderAction
+  | HandleWheelAction
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }
@@ -521,4 +529,8 @@ export function evictApiResource(id: string): EvictAPIResourceAction {
 
 export function setIsInBuilder(isInBuilder: boolean): SetIsInBuilderAction {
   return { type: ActionTypes.SET_IS_IN_BUILDER, payload: isInBuilder }
+}
+
+export function handleWheel(payload: { deltaX: number; deltaY: number }): HandleWheelAction {
+  return { type: ActionTypes.HANDLE_WHEEL, payload }
 }
