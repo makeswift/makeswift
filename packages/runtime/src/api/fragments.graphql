@@ -81,3 +81,31 @@ fragment Table on Table {
     }
   }
 }
+
+fragment Snippet on Snippet {
+  __typename
+  id
+  name
+  code
+  cleanup
+  location
+  shouldAddToNewPages
+  liveEnabled
+  builderEnabled
+}
+
+fragment Page on Page {
+  __typename
+  id
+  snippets {
+    __typename
+    id
+    name
+    code
+    cleanup
+    location
+    shouldAddToNewPages
+    liveEnabled
+    builderEnabled
+  }
+}

@@ -5,6 +5,8 @@ import Head from 'next/head'
 import { BodySnippet } from './BodySnippet'
 import { DocumentReference } from '../../runtimes/react'
 import { createDocumentReference } from '../../state/react-page'
+import { useQuery, gql } from '../../api/react'
+import { useIsInBuilder } from '../../react'
 
 enum SnippetLocation {
   Body = 'BODY',
@@ -77,7 +79,33 @@ type Props = {
   preview?: boolean
 }
 
+export const PAGE_SNIPPETS = gql`
+  query PageById($id: ID!) {
+    page(id: $id) {
+      __typename
+      id
+      snippets {
+        __typename
+        id
+        name
+        code
+        cleanup
+        location
+        shouldAddToNewPages
+        liveEnabled
+        builderEnabled
+      }
+    }
+  }
+`
+
 export function Page({ page, preview = false }: Props): JSX.Element {
+  const isInBuilder = useIsInBuilder()
+  const { data } = useQuery<{ page: { snippets: Snippet[] } }>(PAGE_SNIPPETS, {
+    variables: { id: page.id },
+    skip: isInBuilder === false,
+  })
+
   const favicon = page.meta.favicon ?? defaultFavicon
   const { title, description, keywords, socialImage } = page.meta
   const { canonicalUrl, isIndexingBlocked } = page.seo
@@ -86,10 +114,11 @@ export function Page({ page, preview = false }: Props): JSX.Element {
       return `${family.replace(/ /g, '+')}:${variants.join()}`
     })
     .join('|')
-  const snippets = useMemo(
-    () => page.snippets.filter(snippet => (preview ? snippet.builderEnabled : snippet.liveEnabled)),
-    [page, preview],
-  )
+  const snippets = useMemo(() => {
+    const snippets = data?.page.snippets ?? page.snippets
+
+    return snippets.filter(snippet => (preview ? snippet.builderEnabled : snippet.liveEnabled))
+  }, [data, page, preview])
   const headSnippets = useMemo(
     () => snippets.filter(snippet => snippet.location === SnippetLocation.Head),
     [snippets],

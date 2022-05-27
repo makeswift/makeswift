@@ -64,6 +64,7 @@ export type PageProps = {
   rootElement: Element
   makeswiftApiEndpoint: string
   cacheData: NormalizedCacheObject
+  preview: boolean
 }
 
 type APIResult = PageData & {
@@ -98,6 +99,7 @@ export async function getServerSideProps({
       rootElement: page.data,
       makeswiftApiEndpoint,
       cacheData,
+      preview: true,
     },
   }
 }
@@ -133,6 +135,7 @@ export async function getStaticProps({
       rootElement: page.data,
       makeswiftApiEndpoint,
       cacheData,
+      preview: false,
     },
     revalidate: REVALIDATE_SECONDS,
   }
@@ -142,7 +145,7 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   return { paths: [], fallback: 'blocking' }
 }
 
-export function Page({ page, rootElement, makeswiftApiEndpoint, cacheData }: PageProps) {
+export function Page({ page, rootElement, makeswiftApiEndpoint, cacheData, preview }: PageProps) {
   const [client] = useState(() => new MakeswiftClient({ uri: makeswiftApiEndpoint, cacheData }))
 
   useEffect(() => {
@@ -151,7 +154,7 @@ export function Page({ page, rootElement, makeswiftApiEndpoint, cacheData }: Pag
 
   return (
     <RuntimeProvider client={client} rootElements={new Map([[page.id, rootElement]])}>
-      <PageMeta page={page} />
+      <PageMeta page={page} preview={preview} />
     </RuntimeProvider>
   )
 }

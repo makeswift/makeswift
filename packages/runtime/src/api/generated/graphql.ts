@@ -1,4 +1,8 @@
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core'
+export enum SnippetLocation {
+  Body = 'BODY',
+  Head = 'HEAD',
+}
 export type SwatchFragment = {
   __typename: 'Swatch'
   id: string
@@ -73,6 +77,34 @@ export type TableFragment = {
       }
     | { __typename?: 'URLTableColumn'; id: string; name: string }
   >
+}
+
+export type SnippetFragment = {
+  __typename: 'Snippet'
+  id: string
+  name: string
+  code: string
+  cleanup?: string | null
+  location: SnippetLocation
+  shouldAddToNewPages: boolean
+  liveEnabled: boolean
+  builderEnabled: boolean
+}
+
+export type PageFragment = {
+  __typename: 'Page'
+  id: string
+  snippets: Array<{
+    __typename: 'Snippet'
+    id: string
+    name: string
+    code: string
+    cleanup?: string | null
+    location: SnippetLocation
+    shouldAddToNewPages: boolean
+    liveEnabled: boolean
+    builderEnabled: boolean
+  }>
 }
 
 export const SwatchFragmentDoc = {
@@ -305,3 +337,62 @@ export const TableFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<TableFragment, unknown>
+export const SnippetFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'Snippet' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Snippet' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'cleanup' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'location' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'shouldAddToNewPages' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'liveEnabled' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'builderEnabled' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<SnippetFragment, unknown>
+export const PageFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'Page' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Page' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'snippets' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'cleanup' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'location' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'shouldAddToNewPages' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'liveEnabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'builderEnabled' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<PageFragment, unknown>

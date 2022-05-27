@@ -6,6 +6,8 @@ generates:
     plugins:
       - typescript-operations
       - typed-document-node
+      - add:
+          content: export enum SnippetLocation { Body = 'BODY', Head = 'HEAD' }
 hooks:
   afterOneFileWrite:
     - prettier --write
