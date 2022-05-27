@@ -1,4 +1,4 @@
-import { ReactElement, Children, createElement, useMemo, useEffect, useRef } from 'react'
+import { ReactElement, Children, createElement, useMemo, useEffect, useRef, useState } from 'react'
 import parse from 'html-react-parser'
 import Head from 'next/head'
 
@@ -7,6 +7,7 @@ import { DocumentReference } from '../../runtimes/react'
 import { createDocumentReference } from '../../state/react-page'
 import { useQuery, gql } from '../../api/react'
 import { useIsInBuilder } from '../../react'
+import deepEqual from '../../utils/deepEqual'
 
 enum SnippetLocation {
   Body = 'BODY',
@@ -77,6 +78,20 @@ function snippetToElement(snippet: Pick<Snippet, 'id' | 'code'>): (string | Reac
   })
 }
 
+const filterUsedSnippetProperties = ({
+  code,
+  builderEnabled,
+  liveEnabled,
+  location,
+  cleanup,
+}: Snippet) => ({
+  code,
+  builderEnabled,
+  liveEnabled,
+  location,
+  cleanup,
+})
+
 type Props = {
   page: PageData
   preview?: boolean
@@ -140,14 +155,25 @@ export const SITE_FONTS_QUERY = gql`
 
 export function Page({ page, preview = false }: Props): JSX.Element {
   const isInBuilder = useIsInBuilder()
+  const [snippets, setSnippets] = useState(page.snippets)
   // We're using useQuery here for page snippets and site fonts so that anytime the user change
   // the snippets or fonts on the builder, the change would be reflected here.
   // See this PR for discussions and things we can do to improve it in the future:
   // https://github.com/makeswift/makeswift/pull/77
-  const { data: pageData } = useQuery<{ page: { snippets: Snippet[] } }>(PAGE_SNIPPETS_QUERY, {
+  useQuery<{ page: { snippets: Snippet[] } }>(PAGE_SNIPPETS_QUERY, {
     variables: { id: page.id },
     skip: isInBuilder === false,
     fetchPolicy: 'cache-only',
+    onCompleted(data) {
+      if (data == null) return
+
+      const oldSnippets = snippets.map(filterUsedSnippetProperties)
+      const newSnippets = data.page.snippets.map(filterUsedSnippetProperties)
+
+      if (deepEqual(newSnippets, oldSnippets)) return
+
+      setSnippets(data.page.snippets)
+    },
   })
   const { data: siteData } = useQuery<SiteFontsSiteQuery>(SITE_FONTS_QUERY, {
     variables: { id: page.site.id },
@@ -183,14 +209,13 @@ export function Page({ page, preview = false }: Props): JSX.Element {
       .join('|')
   }, [siteData, page])
 
-  const snippets = useMemo(() => {
-    const snippets = pageData?.page.snippets ?? page.snippets
-
-    return snippets.filter(snippet => (preview ? snippet.builderEnabled : snippet.liveEnabled))
-  }, [pageData, page, preview])
-  const headSnippets = useMemo(
-    () => snippets.filter(snippet => snippet.location === SnippetLocation.Head),
+  const filteredSnippets = useMemo(
+    () => snippets.filter(snippet => (preview ? snippet.builderEnabled : snippet.liveEnabled)),
     [snippets],
+  )
+  const headSnippets = useMemo(
+    () => filteredSnippets.filter(snippet => snippet.location === SnippetLocation.Head),
+    [filteredSnippets],
   )
 
   const previousHeadSnippets = useRef<PageData['snippets'] | null>(null)
@@ -286,7 +311,7 @@ export function Page({ page, preview = false }: Props): JSX.Element {
 
       <DocumentReference documentReference={createDocumentReference(page.id)} />
 
-      {snippets
+      {filteredSnippets
         .filter(snippet => snippet.location === SnippetLocation.Body)
         .map(snippet => (
           <BodySnippet key={snippet.id} code={snippet.code} cleanup={snippet.cleanup} />
