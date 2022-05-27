@@ -63,6 +63,9 @@ const typePolicies: TypePolicies = {
       page(existingData, { args, toReference }) {
         return existingData ?? toReference({ __typename: 'Page', id: args?.id }, true)
       },
+      site(existingData, { args, toReference }) {
+        return existingData ?? toReference({ __typename: 'Site', id: args?.id }, true)
+      },
     },
   },
 }

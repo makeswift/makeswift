@@ -7,6 +7,7 @@ import {
   TableFragment as Table,
   SnippetFragment as Snippet,
   PageFragment as Page,
+  SiteFragment as Site,
 } from './generated/graphql'
 
 export type APIResource =
@@ -18,5 +19,6 @@ export type APIResource =
   | Table
   | Snippet
   | Page
+  | Site
 
 export type APIResourceType = APIResource['__typename']

@@ -107,6 +107,23 @@ export type PageFragment = {
   }>
 }
 
+export type SiteFragment = {
+  __typename: 'Site'
+  id: string
+  googleFonts: {
+    __typename?: 'SiteGoogleFontConnection'
+    edges: Array<{
+      __typename?: 'SiteGoogleFontEdge'
+      activeVariants: Array<{ __typename?: 'GoogleFontVariant'; specifier: string }>
+      node: {
+        __typename?: 'GoogleFont'
+        family: string
+        variants: Array<{ __typename?: 'GoogleFontVariant'; specifier: string }>
+      }
+    } | null>
+  }
+}
+
 export const SwatchFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -396,3 +413,68 @@ export const PageFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<PageFragment, unknown>
+export const SiteFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'Site' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Site' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'googleFonts' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'edges' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'activeVariants' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'specifier' } },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'node' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'family' } },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'variants' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  { kind: 'Field', name: { kind: 'Name', value: 'specifier' } },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<SiteFragment, unknown>
