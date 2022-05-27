@@ -9,6 +9,7 @@ import {
   TableFragmentDoc,
   SnippetFragmentDoc,
   PageFragmentDoc,
+  SiteFragmentDoc,
 } from './generated/graphql'
 import type { APIResourceType } from './types'
 
@@ -21,4 +22,5 @@ export const Fragments: Record<APIResourceType, DocumentNode> = {
   Table: TableFragmentDoc,
   Snippet: SnippetFragmentDoc,
   Page: PageFragmentDoc,
+  Site: SiteFragmentDoc,
 }

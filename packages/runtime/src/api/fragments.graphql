@@ -109,3 +109,21 @@ fragment Page on Page {
     builderEnabled
   }
 }
+
+fragment Site on Site {
+  __typename
+  id
+  googleFonts {
+    edges {
+      activeVariants {
+        specifier
+      }
+      node {
+        family
+        variants {
+          specifier
+        }
+      }
+    }
+  }
+}

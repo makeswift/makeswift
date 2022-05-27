@@ -40,6 +40,9 @@ export type PageData = {
     canonicalUrl?: string | null | undefined
     isIndexingBlocked?: boolean | null | undefined
   }
+  site: {
+    id: string
+  }
 }
 
 const defaultFavicon = {
@@ -79,7 +82,7 @@ type Props = {
   preview?: boolean
 }
 
-export const PAGE_SNIPPETS = gql`
+export const PAGE_SNIPPETS_QUERY = gql`
   query PageById($id: ID!) {
     page(id: $id) {
       __typename
@@ -99,26 +102,92 @@ export const PAGE_SNIPPETS = gql`
   }
 `
 
+export type SiteFontsSiteQuery = {
+  site?: {
+    id: string
+    googleFonts: {
+      edges: Array<{
+        activeVariants: Array<{ specifier: string }>
+        node: {
+          family: string
+          variants: Array<{ specifier: string }>
+        }
+      } | null>
+    }
+  } | null
+}
+
+export const SITE_FONTS_QUERY = gql`
+  query SiteById($id: ID!) {
+    site(id: $id) {
+      id
+      googleFonts {
+        edges {
+          activeVariants {
+            specifier
+          }
+          node {
+            family
+            variants {
+              specifier
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 export function Page({ page, preview = false }: Props): JSX.Element {
   const isInBuilder = useIsInBuilder()
-  const { data } = useQuery<{ page: { snippets: Snippet[] } }>(PAGE_SNIPPETS, {
+  // We're using useQuery here for page snippets and site fonts so that anytime the user change
+  // the snippets or fonts on the builder, the change would be reflected here.
+  // See this PR for discussions and things we can do to improve it in the future:
+  // https://github.com/makeswift/makeswift/pull/77
+  const { data: pageData } = useQuery<{ page: { snippets: Snippet[] } }>(PAGE_SNIPPETS_QUERY, {
     variables: { id: page.id },
     skip: isInBuilder === false,
+    fetchPolicy: 'cache-only',
+  })
+  const { data: siteData } = useQuery<SiteFontsSiteQuery>(SITE_FONTS_QUERY, {
+    variables: { id: page.site.id },
+    skip: isInBuilder === false,
+    fetchPolicy: 'cache-only',
   })
 
   const favicon = page.meta.favicon ?? defaultFavicon
   const { title, description, keywords, socialImage } = page.meta
   const { canonicalUrl, isIndexingBlocked } = page.seo
-  const fontFamilyParamValue = page.fonts
-    .map(({ family, variants }) => {
-      return `${family.replace(/ /g, '+')}:${variants.join()}`
-    })
-    .join('|')
+
+  const fontFamilyParamValue = useMemo(() => {
+    if (siteData?.site == null) {
+      return page.fonts
+        .map(({ family, variants }) => {
+          return `${family.replace(/ /g, '+')}:${variants.join()}`
+        })
+        .join('|')
+    }
+
+    return siteData.site.googleFonts.edges
+      .filter((edge): edge is NonNullable<typeof edge> => edge != null)
+      .map(({ activeVariants, node: { family, variants } }) => {
+        const activeVariantSpecifiers = variants
+          .filter(variant =>
+            activeVariants.some(activeVariant => activeVariant.specifier === variant.specifier),
+          )
+          .map(variant => variant.specifier)
+          .join()
+
+        return `${family.replace(/ /g, '+')}:${activeVariantSpecifiers}`
+      })
+      .join('|')
+  }, [siteData, page])
+
   const snippets = useMemo(() => {
-    const snippets = data?.page.snippets ?? page.snippets
+    const snippets = pageData?.page.snippets ?? page.snippets
 
     return snippets.filter(snippet => (preview ? snippet.builderEnabled : snippet.liveEnabled))
-  }, [data, page, preview])
+  }, [pageData, page, preview])
   const headSnippets = useMemo(
     () => snippets.filter(snippet => snippet.location === SnippetLocation.Head),
     [snippets],
