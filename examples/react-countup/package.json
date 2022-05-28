@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@makeswift/runtime": "^0.0.13",
+    "@makeswift/runtime": "^0.0.14",
     "next": "12.1.5",
     "react": "18.0.0",
     "react-countup": "^6.2.0",

@@ -321,10 +321,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@makeswift/runtime@^0.0.13":
-  version "0.0.13"
-  resolved "https://registry.yarnpkg.com/@makeswift/runtime/-/runtime-0.0.13.tgz#4bbaadb5c8bb034752fe68022afa61d473213183"
-  integrity sha512-kBpVeorkxvnLNRl8jPjxah09TH2cTRgMaAKkHu8YJ5Dk1LNITVM5GL/dgrdBR/EjkwN+jyH11CIrqIMmq486ZA==
+"@makeswift/runtime@^0.0.14":
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/@makeswift/runtime/-/runtime-0.0.14.tgz#f07e5ecc81f66068793900c57c90ac178fdf3366"
+  integrity sha512-iRC5sfEYQMxZkFaeg7H8MrunxvY2DSdL6dqA2oILgbB7WyxYZo1kGBpG2dkIbhyBtRtxaH2wBhzofmN9gfBeWA==
   dependencies:
     "@apollo/client" "^3.5.10"
     "@convertkit/slate-lists" "^0.2.4"
