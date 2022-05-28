@@ -1,4 +1,3 @@
-import { NormalizedCacheObject } from '@apollo/client'
 import {
   GetServerSidePropsContext,
   GetServerSidePropsResult,
@@ -6,40 +5,71 @@ import {
   GetStaticPropsContext,
   GetStaticPropsResult,
 } from 'next'
-import NextDocument, { DocumentContext, DocumentInitialProps } from 'next/document'
+import NextDocument, { DocumentContext, DocumentInitialProps, DocumentProps } from 'next/document'
 import { useEffect, useState } from 'react'
 import { ServerStyleSheet } from 'styled-components'
 import { KeyUtils } from 'slate'
 import createEmotionServer from '@emotion/server/create-instance'
 import { cache } from '@emotion/css'
 
-import { MakeswiftClient } from './api/react'
+import { garbageCollectGlobalCacheData, getGlobalCacheData, MakeswiftClient } from './api/react'
 import { Element } from './state/react-page'
 import { RuntimeProvider } from './runtimes/react'
 import { Page as PageMeta, PageData } from './components'
+import { getDataFromTree } from '@apollo/client/react/ssr'
+import { AppPropsType } from 'next/dist/shared/lib/utils'
+import { NextRouter } from 'next/router'
+import { NormalizedCacheObject } from '@apollo/client'
 
 export { MakeswiftClient }
 
-export class Document extends NextDocument {
+type CacheDataProps = {
+  cacheData: NormalizedCacheObject
+}
+
+export class Document extends NextDocument<CacheDataProps> {
+  constructor(props: DocumentProps & CacheDataProps) {
+    super(props)
+
+    const { __NEXT_DATA__, cacheData } = props
+
+    __NEXT_DATA__.props.pageProps.cacheData = cacheData
+  }
+
   static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
     const sheet = new ServerStyleSheet()
     const originalRenderPage = ctx.renderPage
+    let appProps: AppPropsType<NextRouter>
 
     try {
       ctx.renderPage = () =>
         originalRenderPage({
-          enhanceApp: App => props => sheet.collectStyles(<App {...props} />),
+          enhanceApp: App => props => {
+            if (appProps == null) appProps = props
+
+            return sheet.collectStyles(<App {...props} />)
+          },
         })
 
-      const initialProps = await NextDocument.getInitialProps(ctx)
+      garbageCollectGlobalCacheData()
+
+      await ctx.renderPage()
+
+      // @ts-expect-error: TypeScript thinks that `appProps` hasn't been assigned but we know that
+      // is has been due to our call of `ctx.renderPage()` above.
+      await getDataFromTree(<ctx.AppTree {...appProps} />)
 
       KeyUtils.resetGenerator()
+
+      const initialProps = await NextDocument.getInitialProps(ctx)
 
       const { extractCritical } = createEmotionServer(cache)
       const { ids, css } = extractCritical(initialProps.html)
 
       return {
         ...initialProps,
+        // @ts-expect-error: We're hacking around Next.js internals here to get Apollo SSR working.
+        cacheData: getGlobalCacheData(),
         styles: (
           <>
             {initialProps.styles}
@@ -63,7 +93,7 @@ export type PageProps = {
   page: PageData
   rootElement: Element
   makeswiftApiEndpoint: string
-  cacheData: NormalizedCacheObject
+  cacheData?: NormalizedCacheObject
   preview: boolean
 }
 
@@ -90,15 +120,12 @@ export async function getServerSideProps({
   if (page == null) return { notFound: true }
 
   const makeswiftApiEndpoint = `${process['env'].MAKESWIFT_API_HOST}/graphql`
-  const client = new MakeswiftClient({ uri: makeswiftApiEndpoint })
-  const cacheData = await client.prefetch(page.data)
 
   return {
     props: {
       page,
       rootElement: page.data,
       makeswiftApiEndpoint,
-      cacheData,
       preview: true,
     },
   }
@@ -126,15 +153,12 @@ export async function getStaticProps({
   if (page == null) return { notFound: true, revalidate: REVALIDATE_SECONDS }
 
   const makeswiftApiEndpoint = `${process['env'].MAKESWIFT_API_HOST}/graphql`
-  const client = new MakeswiftClient({ uri: makeswiftApiEndpoint })
-  const cacheData = await client.prefetch(page.data)
 
   return {
     props: {
       page,
       rootElement: page.data,
       makeswiftApiEndpoint,
-      cacheData,
       preview: false,
     },
     revalidate: REVALIDATE_SECONDS,
@@ -149,7 +173,7 @@ export function Page({ page, rootElement, makeswiftApiEndpoint, cacheData, previ
   const [client] = useState(() => new MakeswiftClient({ uri: makeswiftApiEndpoint, cacheData }))
 
   useEffect(() => {
-    client.updateCacheData(cacheData)
+    if (cacheData) client.updateCacheData(cacheData)
   }, [client, cacheData])
 
   return (
