@@ -321,16 +321,17 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@makeswift/runtime@0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@makeswift/runtime/-/runtime-0.0.7.tgz#61ca36a6b6dd33faef673e2d4c40940a2aa00776"
-  integrity sha512-6y6NrCP8kBEre2aNOmmGvUDJyCgKygeTYrxrz3Kz9LjEA6IZphGviRlnSGBjFs0u+dAX1mhVfjkvLp/pa11iwA==
+"@makeswift/runtime@^0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@makeswift/runtime/-/runtime-0.0.13.tgz#4bbaadb5c8bb034752fe68022afa61d473213183"
+  integrity sha512-kBpVeorkxvnLNRl8jPjxah09TH2cTRgMaAKkHu8YJ5Dk1LNITVM5GL/dgrdBR/EjkwN+jyH11CIrqIMmq486ZA==
   dependencies:
     "@apollo/client" "^3.5.10"
     "@convertkit/slate-lists" "^0.2.4"
     "@emotion/css" "^11.9.0"
     "@emotion/server" "^11.4.0"
     "@popmotion/popcorn" "^0.4.4"
+    "@types/is-hotkey" "^0.1.7"
     "@types/react" "^17.0.3"
     "@types/react-dom" "^17.0.2"
     "@types/slate" "0.47.11"
@@ -347,6 +348,7 @@
     graphql "^16.3.0"
     html-react-parser "^1.2.4"
     immutable "^4.0.0-rc.12"
+    is-hotkey "^0.1.4"
     ot-json0 "^1.1.0"
     polished "3.0.3"
     react-player "^1.12.0"
@@ -482,6 +484,11 @@
   dependencies:
     "@types/react" "*"
     hoist-non-react-statics "^3.3.0"
+
+"@types/is-hotkey@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@types/is-hotkey/-/is-hotkey-0.1.7.tgz#30ec6d4234895230b576728ef77e70a52962f3b3"
+  integrity sha512-yB5C7zcOM7idwYZZ1wKQ3pTfjA9BbvFqRWvKB46GFddxnJtHwi/b9y84ykQtxQPg5qhdpg4Q/kWU3EGoCTmLzQ==
 
 "@types/json5@^0.0.29":
   version "0.0.29"
