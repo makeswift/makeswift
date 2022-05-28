@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { cache, CSSObject } from '@emotion/css'
+import { css, cache, CSSObject } from '@emotion/css'
 import { serializeStyles } from '@emotion/serialize'
 import { insertStyles } from '@emotion/utils'
 
@@ -112,6 +112,7 @@ function useStyleControlCssObject(
 const useInsertionEffectSpecifier = 'useInsertionEffect'
 // @ts-expect-error: React types are outdated.
 const useInsertionEffect = React[useInsertionEffectSpecifier] ?? React.useLayoutEffect
+const isServer = typeof window === 'undefined'
 
 export type StyleControlFormattedValue = string
 
@@ -120,6 +121,9 @@ export function useFormattedStyle(
   controlDefinition: StyleControlDefinition,
 ): StyleControlFormattedValue {
   const style = useStyleControlCssObject(styleControlData, controlDefinition)
+
+  if (isServer) return css(style)
+
   const serialized = serializeStyles([style], cache.registered)
 
   useInsertionEffect(() => {
