@@ -7,14 +7,14 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@makeswift/runtime": "^0.0.14",
-    "next": "12.1.5",
-    "react": "18.0.0",
-    "react-dom": "18.0.0"
+    "@makeswift/runtime": "0.0.13",
+    "next": "^12.1.6",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0"
   },
   "devDependencies": {
     "@types/node": "17.0.27",
-    "@types/react": "18.0.6",
+    "@types/react": "^18.0.9",
     "eslint": "8.14.0",
     "eslint-config-next": "12.1.5",
     "typescript": "4.6.3"
