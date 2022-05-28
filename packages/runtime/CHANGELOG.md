@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.0.13
+
+### Patch Changes
+
+- 6dd8bfb: Fix FOUC when using Style control.
+- 394afc1: Fix SSR issues with `next/image` and Next.js' router.
+
 ## 0.0.12
 
 ### Patch Changes
