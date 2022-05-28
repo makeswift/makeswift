@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.0.15
+
+### Patch Changes
+
+- 0135bd1: Fix font family isn’t being applied to dropdown links in nav component
+- 41a70cd: Revert Document SSR fix.
+
 ## 0.0.14
 
 ### Patch Changes
