@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.0.14
+
+### Patch Changes
+
+- 2c2e7e2: Fix Document component.
+
 ## 0.0.13
 
 ### Patch Changes
