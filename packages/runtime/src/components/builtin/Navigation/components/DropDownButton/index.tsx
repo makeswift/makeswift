@@ -5,7 +5,7 @@ import { ReactComponent as CaretDown8 } from '../../../../icons/caret-down-8.svg
 import { ReactComponent as Plus8 } from '../../../../icons/plus-8.svg'
 import { ReactComponent as ArrowDown8 } from '../../../../icons/arrow-down-8.svg'
 import { ReactComponent as ChevronDown8 } from '../../../../icons/chevron-down-8.svg'
-import { cssMediaRules } from '../../../../utils/cssMediaRules'
+import { cssMediaRules, cssTextStyle } from '../../../../utils/cssMediaRules'
 import {
   ResponsiveValue,
   ResponsiveColorValue,
@@ -74,6 +74,7 @@ const StyledDropDownItem = styled(Link)<{
   color: black;
   background-color: transparent;
   transition: background-color 0.2s;
+  ${cssTextStyle()}
   ${p =>
     cssMediaRules([p.color, p.textStyle] as const, ([color, textStyle = {}]) => {
       const fontSize = textStyle.fontSize || { value: 14, unit: 'px' }
