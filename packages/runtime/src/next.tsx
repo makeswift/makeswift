@@ -39,7 +39,7 @@ export class Document extends NextDocument<CacheDataProps> {
   static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
     const sheet = new ServerStyleSheet()
     const originalRenderPage = ctx.renderPage
-    let appProps: AppPropsType<NextRouter> | null = null
+    let appProps: AppPropsType<NextRouter>
 
     try {
       ctx.renderPage = () =>
@@ -53,11 +53,11 @@ export class Document extends NextDocument<CacheDataProps> {
 
       garbageCollectGlobalCacheData()
 
-      if (appProps) {
-        await ctx.renderPage()
+      await ctx.renderPage()
 
-        await getDataFromTree(<ctx.AppTree {...appProps} />)
-      }
+      // @ts-expect-error: TypeScript thinks that `appProps` hasn't been assigned but we know that
+      // is has been due to our call of `ctx.renderPage()` above.
+      await getDataFromTree(<ctx.AppTree {...appProps} />)
 
       KeyUtils.resetGenerator()
 
