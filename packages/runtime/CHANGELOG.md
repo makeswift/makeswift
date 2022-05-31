@@ -1,5 +1,21 @@
 # @makeswift/runtime
 
+## 0.0.16
+
+### Patch Changes
+
+- 7611533: Revert "fix: fix Document component"
+
+  This reverts commit 2c2e7e231d1127d4262bd9cb26164d3df85036ba.
+
+- 6201155: Revert "fix: revert Document fix"
+
+  This reverts commit 41a70cd4e0684a9f6e26c66b6495e456417a9ec7.
+
+- 3afd933: Revert "fix: SSR for `next/image` and Next.js router"
+
+  This reverts commit 394afc19f2c4b20e992ed3058aa386c1d3d22301.
+
 ## 0.0.15
 
 ### Patch Changes
