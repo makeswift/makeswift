@@ -15,8 +15,14 @@ import {
   InMemoryCache,
   TypePolicies,
 } from '@apollo/client'
+import { getDataFromTree } from '@apollo/client/react/ssr'
 export { gql } from '@apollo/client'
 import { createContext, ReactNode, useContext } from 'react'
+import { KeyUtils } from 'slate'
+import uuid from 'uuid/v4'
+
+import { DocumentReference, RuntimeProvider } from '../react'
+import { createDocumentReference, Element } from '../state/react-page'
 
 const typePolicies: TypePolicies = {
   Query: {
@@ -64,15 +70,10 @@ const typePolicies: TypePolicies = {
   },
 }
 
-const isServer = typeof window === 'undefined'
-let globalApolloClient: ApolloClient<NormalizedCacheObject> | null = null
+const PrefetchContext = createContext(false)
 
-export function garbageCollectGlobalCacheData() {
-  globalApolloClient = null
-}
-
-export function getGlobalCacheData() {
-  return globalApolloClient?.cache.extract()
+export function useIsPrefetching(): boolean {
+  return useContext(PrefetchContext)
 }
 
 type CreateApolloClientParams = {
@@ -85,7 +86,7 @@ export function createApolloClient({ uri, cacheData }: CreateApolloClientParams)
 
   if (cacheData) cache.restore(cacheData)
 
-  return new ApolloClient({ uri, cache, ssrMode: isServer })
+  return new ApolloClient({ uri, cache })
 }
 
 export type MakeswiftClientOptions = {
@@ -97,10 +98,23 @@ export class MakeswiftClient {
   apolloClient: ApolloClient<NormalizedCacheObject>
 
   constructor({ uri, cacheData }: MakeswiftClientOptions) {
-    if (globalApolloClient == null) globalApolloClient = createApolloClient({ uri, cacheData })
-    else if (cacheData != null) globalApolloClient.cache.restore(cacheData)
+    this.apolloClient = createApolloClient({ uri, cacheData })
+  }
 
-    this.apolloClient = globalApolloClient
+  async prefetch(element: Element): Promise<NormalizedCacheObject> {
+    const id = uuid()
+
+    await getDataFromTree(
+      <PrefetchContext.Provider value={true}>
+        <RuntimeProvider client={this} rootElements={new Map([[id, element]])}>
+          <DocumentReference documentReference={createDocumentReference(id)} />
+        </RuntimeProvider>
+      </PrefetchContext.Provider>,
+    )
+
+    KeyUtils.resetGenerator()
+
+    return this.apolloClient.cache.extract()
   }
 
   updateCacheData(cacheData: NormalizedCacheObject): void {
