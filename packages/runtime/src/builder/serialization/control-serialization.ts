@@ -1,4 +1,6 @@
 import {
+  ComboboxControlDefinition,
+  ComboboxControlType,
   ListControlDefinition,
   ListControlType,
   ShapeControlDefinition,
@@ -59,6 +61,10 @@ import {
   SelectOption,
   Length,
 } from '../../prop-controllers/descriptors'
+import {
+  deserializeComboboxControlDefinition,
+  serializeComboboxControlDefinition,
+} from './controls/combobox'
 import { deserializeListControlDefinition, serializeListControlDefinition } from './controls/list'
 import {
   deserializeShapeControlDefinition,
@@ -885,6 +891,7 @@ export type SerializedControl<T extends Data = Data> =
       | TextStyleControl<T>
       | ImageControl<T>
       | RichTextControl<T>
+      | ComboboxControlDefinition
       | ShapeControlDefinition
       | ListControlDefinition
     >
@@ -906,6 +913,7 @@ export type SerializedControl<T extends Data = Data> =
   | SerializedTextStyleControl<T>
   | SerializedImageControl<T>
   | SerializedRichTextControl<T>
+  | Serialize<ComboboxControlDefinition>
   | Serialize<ShapeControlDefinition>
   | Serialize<ListControlDefinition>
 
@@ -942,6 +950,7 @@ export type DeserializedControl<T extends Data = Data> =
       | TextStyleControl<T>
       | ImageControl<T>
       | RichTextControl<T>
+      | ComboboxControlDefinition
       | ShapeControlDefinition
       | ListControlDefinition
     >
@@ -963,6 +972,7 @@ export type DeserializedControl<T extends Data = Data> =
   | DeserializedTextStyleControl<T>
   | DeserializedImageControl<T>
   | DeserializedRichTextControl<T>
+  | Deserialize<Serialize<ComboboxControlDefinition>>
   | Deserialize<Serialize<ShapeControlDefinition>>
   | Deserialize<Serialize<ListControlDefinition>>
 
@@ -1032,6 +1042,9 @@ export function serializeControl<T extends Data>(
     case Controls.Types.RichText:
       return serializeRichTextControl(control)
 
+    case ComboboxControlType:
+      return serializeComboboxControlDefinition(control)
+
     case ShapeControlType:
       return serializeShapeControlDefinition(control)
 
@@ -1100,6 +1113,9 @@ export function deserializeControl<T extends Data>(
 
     case Controls.Types.RichText:
       return deserializeRichTextControl(serializedControl)
+
+    case ComboboxControlType:
+      return deserializeComboboxControlDefinition(serializedControl)
 
     case ShapeControlType:
       return deserializeShapeControlDefinition(serializedControl)

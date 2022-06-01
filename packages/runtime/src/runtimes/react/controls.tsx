@@ -19,6 +19,7 @@ import { responsiveWidth } from '../../components/utils/responsive-style'
 import {
   CheckboxControlType,
   ColorControlType,
+  ComboboxControlType,
   ImageControlType,
   ListControlType,
   NumberControlType,
@@ -94,6 +95,7 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
           case SelectControlType:
           case ColorControlType:
           case ImageControlType:
+          case ComboboxControlType:
           case ShapeControlType:
           case ListControlType:
             return (

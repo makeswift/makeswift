@@ -9,6 +9,7 @@ import { NumberControlValue } from '../runtimes/react/controls/number'
 import {
   CheckboxControlDefinition,
   ColorControlDefinition,
+  ComboboxControlDefinition,
   ImageControlDefinition,
   ListControlDefinition,
   SelectControlDefinition,
@@ -24,6 +25,7 @@ import { CheckboxControlValue } from '../runtimes/react/controls/checkbox'
 import { ImageControlValue } from '../runtimes/react/controls/image'
 import { ShapeControlValue } from '../runtimes/react/controls/shape'
 import { ListControlValue } from '../runtimes/react/controls/list'
+import { ComboboxControlValue } from '../runtimes/react/controls/combobox'
 
 export type { Data }
 
@@ -956,6 +958,7 @@ export type Descriptor<T extends Data = Data> =
   | SelectControlDefinition
   | ColorControlDefinition
   | ImageControlDefinition
+  | ComboboxControlDefinition
   | ShapeControlDefinition
   | ListControlDefinition
 
@@ -1013,6 +1016,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? StyleControlFormattedValue
   : T extends ImageControlDefinition
   ? ImageControlValue
+  : T extends ComboboxControlDefinition
+  ? ComboboxControlValue<T>
   : T extends ShapeControlDefinition
   ? ShapeControlValue<T>
   : T extends ListControlDefinition
