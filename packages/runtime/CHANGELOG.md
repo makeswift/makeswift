@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.0.17
+
+### Patch Changes
+
+- c85b202: Recursively serialize Shape control.
+- 60d22a3: Add Combobox control.
+
 ## 0.0.16
 
 ### Patch Changes
