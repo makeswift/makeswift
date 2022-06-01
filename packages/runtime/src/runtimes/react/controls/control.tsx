@@ -5,6 +5,9 @@ import {
   ColorControlData,
   ColorControlDefinition,
   ColorControlType,
+  ComboboxControlData,
+  ComboboxControlDefinition,
+  ComboboxControlType,
   ControlDefinition,
   ControlDefinitionData,
   ImageControlData,
@@ -32,6 +35,7 @@ import {
 import { RenderHook } from '../components'
 import { CheckboxControlValue, useCheckboxControlValue } from './checkbox'
 import { ColorControlValue, useColorValue } from './color'
+import { ComboboxControlValue, useComboboxControlValue } from './combobox'
 import { ImageControlValue, useImageControlValue } from './image'
 import { ListControlValue } from './list'
 import { NumberControlValue, useNumber } from './number'
@@ -55,6 +59,8 @@ export type ControlDefinitionValue<T extends ControlDefinition> =
     ? ColorControlValue<T>
     : T extends ImageControlDefinition
     ? ImageControlValue
+    : T extends ComboboxControlDefinition
+    ? ComboboxControlValue<T>
     : T extends ShapeControlDefinition
     ? ShapeControlValue<T>
     : T extends ListControlDefinition
@@ -145,6 +151,17 @@ export function ControlValue<T extends ControlDefinition>({
           key={definition.type}
           hook={useImageControlValue}
           parameters={[data as ImageControlData]}
+        >
+          {value => children(value as ControlDefinitionValue<T>)}
+        </RenderHook>
+      )
+
+    case ComboboxControlType:
+      return (
+        <RenderHook
+          key={definition.type}
+          hook={useComboboxControlValue}
+          parameters={[data as ComboboxControlData]}
         >
           {value => children(value as ControlDefinitionValue<T>)}
         </RenderHook>
