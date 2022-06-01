@@ -8,13 +8,14 @@ import { createDocumentReference } from '../../state/react-page'
 import { useQuery, gql } from '../../api/react'
 import { useIsInBuilder } from '../../react'
 import deepEqual from '../../utils/deepEqual'
+import { MakeswiftBadgeSnippet } from './MakeswiftBadge'
 
 enum SnippetLocation {
   Body = 'BODY',
   Head = 'HEAD',
 }
 
-type Snippet = {
+export type Snippet = {
   builderEnabled: boolean
   cleanup?: string | null
   code: string
@@ -43,6 +44,7 @@ export type PageData = {
   }
   site: {
     id: string
+    premium?: boolean
   }
 }
 
@@ -209,10 +211,15 @@ export function Page({ page, preview = false }: Props): JSX.Element {
       .join('|')
   }, [siteData, page])
 
-  const filteredSnippets = useMemo(
-    () => snippets.filter(snippet => (preview ? snippet.builderEnabled : snippet.liveEnabled)),
-    [snippets],
-  )
+  // Site is premium by default.
+  const isPremiumSite = page.site?.premium ?? true
+
+  const filteredSnippets = useMemo(() => {
+    return [
+      ...snippets.filter(snippet => (preview ? snippet.builderEnabled : snippet.liveEnabled)),
+      ...(isPremiumSite ? [] : [MakeswiftBadgeSnippet]),
+    ]
+  }, [snippets, preview, isPremiumSite])
   const headSnippets = useMemo(
     () => filteredSnippets.filter(snippet => snippet.location === SnippetLocation.Head),
     [filteredSnippets],
