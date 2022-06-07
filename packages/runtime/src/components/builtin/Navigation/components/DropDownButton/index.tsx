@@ -23,7 +23,9 @@ const DROP_DOWN_MENU_WIDTH = 200
 
 type Position = 'left' | 'right'
 
-const DropDownMenu = styled.div<{ position: Position }>`
+const DropDownMenu = styled.div.withConfig({
+  shouldForwardProp: prop => !['position'].includes(prop.toString()),
+})<{ position: Position }>`
   position: absolute;
   top: 100%;
   left: ${props => (props.position === 'left' ? 0 : 'auto')};
@@ -63,7 +65,9 @@ const DropDownContainer = styled.div`
   }
 `
 
-const StyledDropDownItem = styled(Link)<{
+const StyledDropDownItem = styled(Link).withConfig({
+  shouldForwardProp: prop => !['color', 'textStyle'].includes(prop.toString()),
+})<{
   color?: ResponsiveValue<Color> | null
   textStyle?: TextStyleValue
 }>`

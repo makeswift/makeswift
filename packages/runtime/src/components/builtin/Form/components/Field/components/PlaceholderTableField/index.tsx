@@ -6,7 +6,9 @@ import { getSizeHeight as getInputSizeHeight } from '../Input'
 import { getShapeBorderRadius } from '../../services/cssField'
 import { cssMediaRules } from '../../../../../../utils/cssMediaRules'
 
-const Label = styled.div<Pick<Value, 'size'>>`
+const Label = styled.div.withConfig({
+  shouldForwardProp: prop => !['size'].includes(prop.toString()),
+})<Pick<Value, 'size'>>`
   display: block;
   max-width: 120px;
   min-width: 60px;
@@ -24,7 +26,9 @@ const Label = styled.div<Pick<Value, 'size'>>`
     )}
 `
 
-const Input = styled.div<Pick<Value, 'shape' | 'size'>>`
+const Input = styled.div.withConfig({
+  shouldForwardProp: prop => !['shape', 'size'].includes(prop.toString()),
+})<Pick<Value, 'shape' | 'size'>>`
   display: block;
   width: 100%;
   border-width: 2px;

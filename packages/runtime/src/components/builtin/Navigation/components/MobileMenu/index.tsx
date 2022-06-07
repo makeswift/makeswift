@@ -35,7 +35,9 @@ const ButtonLink = styled(NavigationButton)`
   margin: 8px 0;
 `
 
-const Container = styled.div<{
+const Container = styled.div.withConfig({
+  shouldForwardProp: prop => !['animation', 'backgroundColor', 'open'].includes(prop.toString()),
+})<{
   animation?: ResponsiveValue<'coverRight' | 'coverLeft'>
   backgroundColor?: ResponsiveValue<Color> | null
   open: boolean
@@ -68,7 +70,9 @@ const Container = styled.div<{
     )}
 `
 
-const CloseIconContainer = styled.button<{ color?: ResponsiveValue<Color> | null }>`
+const CloseIconContainer = styled.button.withConfig({
+  shouldForwardProp: prop => !['color'].includes(prop.toString()),
+})<{ color?: ResponsiveValue<Color> | null }>`
   position: absolute;
   top: 15px;
   right: 15px;

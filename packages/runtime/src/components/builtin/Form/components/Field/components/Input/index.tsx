@@ -21,9 +21,11 @@ export function getSizeHeight(size: Size): number {
   }
 }
 
-const Base = styled.input<
-  Pick<Value, 'shape' | 'size' | 'contrast' | 'brandColor'> & { error?: boolean }
->`
+const Base = styled.input.withConfig({
+  shouldForwardProp: (prop, defaultValidator) =>
+    !['shape', 'size', 'contrast', 'brandColor', 'error'].includes(prop.toString()) &&
+    defaultValidator(prop),
+})<Pick<Value, 'shape' | 'size' | 'contrast' | 'brandColor'> & { error?: boolean }>`
   ${cssField()}
   ${props =>
     cssMediaRules(

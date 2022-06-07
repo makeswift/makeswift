@@ -39,7 +39,9 @@ type Props = {
   margin?: MarginValue
 }
 
-const StyledRichTextEditor = styled(RichTextEditor)<{ margin: Props['margin'] }>`
+const StyledRichTextEditor = styled(RichTextEditor).withConfig({
+  shouldForwardProp: prop => !['margin'].includes(prop.toString()),
+})<{ margin: Props['margin'] }>`
   ${cssMargin()}
 `
 

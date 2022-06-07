@@ -4,7 +4,9 @@ import styled from 'styled-components'
 import { MarginValue, WidthValue } from '../../../../../prop-controllers/descriptors'
 import { cssMargin } from '../../../../utils/cssMediaRules'
 
-const Container = styled.div<{
+const Container = styled.div.withConfig({
+  shouldForwardProp: prop => !['width', 'margin'].includes(prop.toString()),
+})<{
   width?: WidthValue
   margin?: MarginValue
 }>`

@@ -81,7 +81,9 @@ type Props = {
   slideBorderRadius?: BorderRadiusValue
 }
 
-const Wrapper = styled.div<{ margin: Props['margin'] }>`
+const Wrapper = styled.div.withConfig({
+  shouldForwardProp: prop => !['margin'].includes(prop),
+})<{ margin: Props['margin'] }>`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -92,7 +94,9 @@ const Wrapper = styled.div<{ margin: Props['margin'] }>`
   }
 `
 
-const Arrow = styled.div<{ background?: ResponsiveValue<Color> | null }>`
+const Arrow = styled.div.withConfig({
+  shouldForwardProp: prop => !['background'].includes(prop),
+})<{ background?: ResponsiveValue<Color> | null }>`
   padding: 10px;
   border-radius: 50%;
   outline: 0;
@@ -118,7 +122,9 @@ const Arrow = styled.div<{ background?: ResponsiveValue<Color> | null }>`
   }
 `
 
-const Slop = styled.div<{
+const Slop = styled.div.withConfig({
+  shouldForwardProp: prop => !['color'].includes(prop),
+})<{
   color?: ResponsiveValue<Color> | null
 }>`
   position: absolute;
@@ -137,7 +143,9 @@ const Slop = styled.div<{
     )}
 `
 
-const Slide = styled(motion.div)<{
+const Slide = styled(motion.div).withConfig({
+  shouldForwardProp: prop => !['pageSize', 'alignItems'].includes(prop),
+})<{
   pageSize: Props['pageSize']
   alignItems: Props['slideAlignment']
 }>`
@@ -155,7 +163,9 @@ const Slide = styled(motion.div)<{
   ${p => cssMediaRules([p.alignItems], ([alignItems = 'center']) => ({ alignItems }))}
 `
 
-const Reel = styled(motion.div)<{ gap: Props['gap'] }>`
+const Reel = styled(motion.div).withConfig({
+  shouldForwardProp: prop => !['gap'].includes(prop),
+})<{ gap: Props['gap'] }>`
   display: flex;
   position: relative;
   flex-wrap: nowrap;
@@ -177,7 +187,9 @@ const Page = styled(motion.div)`
   width: 100%;
 `
 
-const LeftSlop = styled(Slop)<{ position: Props['arrowPosition'] }>`
+const LeftSlop = styled(Slop).withConfig({
+  shouldForwardProp: prop => !['position'].includes(prop),
+})<{ position: Props['arrowPosition'] }>`
   ${p =>
     cssMediaRules([p.position] as const, ([position = 'inside']) => {
       switch (position) {
@@ -204,7 +216,9 @@ const LeftSlop = styled(Slop)<{ position: Props['arrowPosition'] }>`
   }
 `
 
-const RightSlop = styled(Slop)<{ position: Props['arrowPosition'] }>`
+const RightSlop = styled(Slop).withConfig({
+  shouldForwardProp: prop => !['position'].includes(prop),
+})<{ position: Props['arrowPosition'] }>`
   ${p =>
     cssMediaRules([p.position] as const, ([position = 'inside']) => {
       switch (position) {
@@ -235,7 +249,9 @@ const ClipMask = styled.div`
   overflow: hidden;
 `
 
-const Dots = styled.div<{ color?: ResponsiveValue<Color> | null }>`
+const Dots = styled.div.withConfig({
+  shouldForwardProp: prop => !['color'].includes(prop),
+})<{ color?: ResponsiveValue<Color> | null }>`
   display: ${props => (props.hidden ? 'none' : 'flex')};
   justify-content: center;
   margin-top: 20px;
@@ -248,7 +264,9 @@ const Dots = styled.div<{ color?: ResponsiveValue<Color> | null }>`
     )}
 `
 
-const Dot = styled.div<{ active: boolean }>`
+const Dot = styled.div.withConfig({
+  shouldForwardProp: prop => !['active'].includes(prop),
+})<{ active: boolean }>`
   position: relative;
   margin: 0 6px;
   border-radius: 50%;

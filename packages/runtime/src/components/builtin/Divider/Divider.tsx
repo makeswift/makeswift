@@ -30,7 +30,9 @@ type Props = {
 // IE11 has a bug with Flexbox vertical centering with min height if height is not set.
 // Wrapping it in another flex container fixes it for some reason, read more here:
 // https://stackoverflow.com/questions/19371626/flexbox-not-centering-vertically-in-ie
-const IE11MinHeightContainer = styled.div<{ margin: Props['margin'] }>`
+const IE11MinHeightContainer = styled.div.withConfig({
+  shouldForwardProp: prop => !['margin'].includes(prop),
+})<{ margin: Props['margin'] }>`
   display: flex;
   width: 100%;
   ${cssMargin()}
@@ -44,7 +46,9 @@ const Container = styled.div`
   width: 100%;
 `
 
-const Line = styled.div<{
+const Line = styled.div.withConfig({
+  shouldForwardProp: prop => !['variant', 'color', 'thickness'].includes(prop),
+})<{
   variant: Props['variant']
   color?: ResponsiveValue<Color> | null
   thickness: Props['thickness']

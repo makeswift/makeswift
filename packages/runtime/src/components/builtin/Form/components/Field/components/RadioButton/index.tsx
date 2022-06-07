@@ -16,7 +16,9 @@ function getCheckmarkColor({
   return Color({ h, s, l }).alpha(a).isLight() ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.95)'
 }
 
-const Container = styled.div<Pick<Value, 'size'>>`
+const Container = styled.div.withConfig({
+  shouldForwardProp: prop => !['size'].includes(prop.toString()),
+})<Pick<Value, 'size'>>`
   position: relative;
   ${props =>
     cssMediaRules(
@@ -28,7 +30,9 @@ const Container = styled.div<Pick<Value, 'size'>>`
     )}
 `
 
-const FakeRadioButton = styled.div<Pick<Value, 'contrast'> & { error?: boolean }>`
+const FakeRadioButton = styled.div.withConfig({
+  shouldForwardProp: prop => !['contrast', 'error'].includes(prop.toString()),
+})<Pick<Value, 'contrast'> & { error?: boolean }>`
   position: absolute;
   width: 100%;
   height: 100%;
@@ -46,9 +50,11 @@ const FakeRadioButton = styled.div<Pick<Value, 'contrast'> & { error?: boolean }
     )}
 `
 
-const HiddenRadioButton = styled.input.attrs({ type: 'radio' })<
-  Pick<Value, 'brandColor' | 'contrast'> & { error?: boolean }
->`
+const HiddenRadioButton = styled.input
+  .withConfig({
+    shouldForwardProp: prop => !['brandColor', 'contrast', 'error'].includes(prop.toString()),
+  })
+  .attrs({ type: 'radio' })<Pick<Value, 'brandColor' | 'contrast'> & { error?: boolean }>`
   position: absolute;
   opacity: 0;
   width: 100%;

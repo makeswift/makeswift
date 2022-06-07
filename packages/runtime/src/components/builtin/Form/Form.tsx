@@ -107,7 +107,9 @@ type Props = {
   margin?: MarginValue
 }
 
-const GridForm = styled.form<{
+const GridForm = styled.form.withConfig({
+  shouldForwardProp: prop => !['size', 'width', 'margin'].includes(prop),
+})<{
   size: Props['size']
   margin: Props['margin']
 }>`
@@ -124,7 +126,9 @@ const GridForm = styled.form<{
   ${cssMargin()}
 `
 
-const GridItem = styled.div`
+const GridItem = styled.div.withConfig({
+  shouldForwardProp: prop => !['grid', 'index', 'rowGap', 'columnGap'].includes(prop),
+})`
   align-self: flex-end;
   flex-direction: column;
   ${cssGridItem()}
@@ -143,7 +147,9 @@ function getAlignmentMargin(alignment: Alignment): string {
 
 const StyledButton = styled((props: ComponentPropsWithoutRef<typeof Button>) => (
   <Button {...props} as="button" />
-))<{
+)).withConfig({
+  shouldForwardProp: prop => !['alignment'].includes(prop.toString()),
+})<{
   size: Props['size']
   alignment: Props['submitAlignment']
 }>`

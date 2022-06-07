@@ -76,7 +76,9 @@ type Props = {
   children?: GridValue
 }
 
-const StyledBackgroundsContainer = styled(BackgroundsContainer)<{
+const StyledBackgroundsContainer = styled(BackgroundsContainer).withConfig({
+  shouldForwardProp: prop => !['margin', 'borderRadius', 'alignSelf'].includes(prop.toString()),
+})<{
   margin: Props['margin']
   borderRadius: Props['borderRadius']
   alignSelf: Props['height']
@@ -87,7 +89,9 @@ const StyledBackgroundsContainer = styled(BackgroundsContainer)<{
   ${props => cssMediaRules([props.alignSelf] as const, ([alignSelf = 'auto']) => ({ alignSelf }))}
 `
 
-const Grid = styled(motion.div)<{
+const Grid = styled(motion.div).withConfig({
+  shouldForwardProp: prop => !['padding', 'border', 'boxShadow', 'alignContent'].includes(prop),
+})<{
   padding: Props['padding']
   border: BorderPropControllerData | null | undefined
   boxShadow: BoxShadowPropControllerData | null | undefined
@@ -104,7 +108,9 @@ const Grid = styled(motion.div)<{
       alignContent,
     }))}
 `
-const GridItem = styled(motion.div)<{
+const GridItem = styled(motion.div).withConfig({
+  shouldForwardProp: prop => !['grid', 'alignItems', 'index', 'columnGap', 'rowGap'].includes(prop),
+})<{
   grid: NonNullable<Props['children']>['columns']
   alignItems: Props['verticalAlign']
   index: number

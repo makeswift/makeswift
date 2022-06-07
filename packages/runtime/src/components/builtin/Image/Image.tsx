@@ -82,7 +82,19 @@ function imageSizes(width?: Props['width']): string {
     .reduce((sourceSizes, sourceSize) => `${sourceSize}, ${sourceSizes}`, baseWidthSize)
 }
 
-const ImageContainer = styled.div<{
+const ImageContainer = styled.div.withConfig({
+  shouldForwardProp: prop =>
+    ![
+      'margin',
+      'padding',
+      'border',
+      'borderRadius',
+      'boxShadow',
+      'opacity',
+      'link',
+      'dimensions',
+    ].includes(prop.toString()),
+})<{
   margin?: Props['margin']
   padding?: Props['padding']
   border?: BorderPropControllerData | null | undefined

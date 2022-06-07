@@ -32,7 +32,9 @@ const Grid = styled.div`
   width: 100%;
 `
 
-const GridItem = styled.div`
+const GridItem = styled.div.withConfig({
+  shouldForwardProp: prop => !['grid', 'index', 'rowGap', 'columnGap'].includes(prop.toString()),
+})`
   display: flex;
   align-items: flex-start;
   ${cssGridItem()}

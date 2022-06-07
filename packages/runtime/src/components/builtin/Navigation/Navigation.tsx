@@ -54,7 +54,9 @@ type Props = {
   margin?: MarginValue
 }
 
-const Container = styled.nav<{
+const Container = styled.nav.withConfig({
+  shouldForwardProp: prop => !['margin', 'textStyle', 'gutter'].includes(prop.toString()),
+})<{
   margin: Props['margin']
   textStyle: Props['linkTextStyle']
   gutter: Props['gutter']
@@ -72,7 +74,9 @@ const Container = styled.nav<{
     )}
 `
 
-const LinksContainer = styled.div<{
+const LinksContainer = styled.div.withConfig({
+  shouldForwardProp: prop => !['alignment', 'mobileMenuAnimation'].includes(prop.toString()),
+})<{
   alignment: Props['alignment']
   mobileMenuAnimation: Props['mobileMenuAnimation']
 }>`
@@ -89,7 +93,10 @@ const LinksContainer = styled.div<{
     )}
 `
 
-const OpenIconContainer = styled.button<{
+const OpenIconContainer = styled.button.withConfig({
+  shouldForwardProp: prop =>
+    !['mobileMenuAnimation', 'alignment', 'color'].includes(prop.toString()),
+})<{
   mobileMenuAnimation: Props['mobileMenuAnimation']
   alignment: Props['alignment']
   color: ResponsiveValue<Color> | null | undefined

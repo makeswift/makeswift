@@ -36,7 +36,9 @@ type Props = {
   margin?: MarginValue
 }
 
-const Container = styled.div<{
+const Container = styled.div.withConfig({
+  shouldForwardProp: prop => !['width', 'margin', 'alignment'].includes(prop.toString()),
+})<{
   margin: Props['margin']
   alignment: Props['alignment']
 }>`
@@ -53,7 +55,12 @@ const Container = styled.div<{
     )}
 `
 
-const StyledLink = styled(Link)<{
+const StyledLink = styled(Link).withConfig({
+  shouldForwardProp: prop =>
+    !['brandColor', 'shape', 'size', 'hoverStyle', 'fill', 'backgroundColor'].includes(
+      prop.toString(),
+    ),
+})<{
   brandColor: string
   shape: Props['shape']
   size: Props['size']
