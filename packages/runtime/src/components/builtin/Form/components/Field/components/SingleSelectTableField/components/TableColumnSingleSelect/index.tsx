@@ -10,7 +10,10 @@ import cssField, {
 } from '../../../../services/cssField'
 import Label from '../../../Label'
 
-const Container = styled.div<Value & { error?: boolean }>`
+const Container = styled.div.withConfig({
+  shouldForwardProp: prop =>
+    !['error', 'shape', 'size', 'contrast', 'brandColor'].includes(prop.toString()),
+})<Value & { error?: boolean }>`
   ${cssField()}
   display: flex;
   align-items: center;

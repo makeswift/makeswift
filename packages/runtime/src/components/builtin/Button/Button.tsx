@@ -40,7 +40,12 @@ type ControllerProps = {
   margin?: MarginValue
 }
 
-const StyledButton = styled(Link)<{
+const StyledButton = styled(Link).withConfig({
+  shouldForwardProp: prop =>
+    !['margin', 'variant', 'shape', 'size', 'textColor', 'color', 'textStyle'].includes(
+      prop.toString(),
+    ),
+})<{
   margin: ControllerProps['margin']
   variant: ControllerProps['variant']
   shape: ControllerProps['shape']
@@ -78,7 +83,6 @@ const StyledButton = styled(Link)<{
           border-radius: ${{ square: 0, rounded: 4, pill: 500 }[shape]}px;
           padding: ${{ small: '8px 12px', medium: '12px 16px', large: '16px 20px' }[size]};
           font-size: ${`${fontSize.value}${fontSize.unit}`};
-
           ${{
             flat: css`
               background: ${colorToString(color)};
@@ -230,7 +234,7 @@ const StyledButton = styled(Link)<{
         `
       },
     )}
-    ${cssTextStyle()}
+  ${cssTextStyle()}
 `
 
 type BaseProps = {

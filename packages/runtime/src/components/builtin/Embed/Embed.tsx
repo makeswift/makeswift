@@ -16,7 +16,9 @@ type Props = {
   margin?: MarginValue
 }
 
-const Container = styled.div<{ margin: Props['margin'] }>`
+const Container = styled.div.withConfig({
+  shouldForwardProp: prop => !['margin'].includes(prop),
+})<{ margin: Props['margin'] }>`
   min-height: 15px;
   ${cssMargin()}
 `

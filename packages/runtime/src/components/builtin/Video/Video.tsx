@@ -22,7 +22,9 @@ type Props = {
   borderRadius?: BorderRadiusValue
 }
 
-const Container = styled.div<{ margin: Props['margin']; borderRadius: Props['borderRadius'] }>`
+const Container = styled.div.withConfig({
+  shouldForwardProp: prop => !['margin', 'borderRadius'].includes(prop.toString()),
+})<{ margin: Props['margin']; borderRadius: Props['borderRadius'] }>`
   display: flex;
   flex-direction: column;
   overflow: hidden;

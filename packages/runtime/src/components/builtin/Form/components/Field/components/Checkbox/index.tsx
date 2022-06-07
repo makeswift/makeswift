@@ -24,7 +24,9 @@ function getCheckmarkColor({
   return Color({ h, s, l }).alpha(a).isLight() ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.95)'
 }
 
-const Container = styled.div<Pick<FormContextValue, 'size'>>`
+const Container = styled.div.withConfig({
+  shouldForwardProp: prop => !['size'].includes(prop),
+})<Pick<FormContextValue, 'size'>>`
   position: relative;
   ${props =>
     cssMediaRules(
@@ -36,7 +38,9 @@ const Container = styled.div<Pick<FormContextValue, 'size'>>`
     )}
 `
 
-const FakeCheckbox = styled.div<Pick<FormContextValue, 'contrast'> & { error?: boolean }>`
+const FakeCheckbox = styled.div.withConfig({
+  shouldForwardProp: prop => !['contrast', 'error'].includes(prop),
+})<Pick<FormContextValue, 'contrast'> & { error?: boolean }>`
   position: absolute;
   width: 100%;
   height: 100%;
@@ -54,7 +58,10 @@ const FakeCheckbox = styled.div<Pick<FormContextValue, 'contrast'> & { error?: b
     )}
 `
 
-const HiddenCheckbox = styled.input<
+const HiddenCheckbox = styled.input.withConfig({
+  shouldForwardProp: (prop, defaultValidator) =>
+    !['size', 'brandColor', 'contrast', 'error'].includes(prop) && defaultValidator(prop),
+})<
   Pick<FormContextValue, 'size' | 'brandColor' | 'contrast'> & {
     error?: boolean
   }

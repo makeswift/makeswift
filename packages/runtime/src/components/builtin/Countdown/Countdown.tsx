@@ -56,7 +56,21 @@ const Segment = styled.div`
   text-align: center;
 `
 
-const Container = styled.div<{
+const Container = styled.div.withConfig({
+  shouldForwardProp: prop =>
+    ![
+      'margin',
+      'variant',
+      'size',
+      'shape',
+      'gap',
+      'labelColor',
+      'numberFont',
+      'numberColor',
+      'blockColor',
+      'labelFont',
+    ].includes(prop),
+})<{
   margin: Props['margin']
   variant: Props['variant']
   size: Props['size']
@@ -163,7 +177,7 @@ const Container = styled.div<{
                   z-index: 1;
                 }
 
-                :before {
+                ::before {
                   content: '';
                   position: absolute;
                   top: 0;
@@ -175,7 +189,7 @@ const Container = styled.div<{
                   background: ${colorToString(blockColor)};
                 }
 
-                :after {
+                ::after {
                   content: '';
                   position: absolute;
                   left: 0;
@@ -206,7 +220,7 @@ const Container = styled.div<{
                   z-index: 1;
                 }
 
-                :before {
+                ::before {
                   content: '';
                   position: absolute;
                   top: 50%;

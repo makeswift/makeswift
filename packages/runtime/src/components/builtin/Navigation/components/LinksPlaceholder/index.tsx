@@ -3,7 +3,9 @@ import styled from 'styled-components'
 import { ResponsiveLengthValue } from '../../../../../prop-controllers/descriptors'
 import GutterContainer from '../../../../shared/GutterContainer'
 
-const PlaceholderLink = styled.div<{ width: number; button?: boolean }>`
+const PlaceholderLink = styled.div.withConfig({
+  shouldForwardProp: prop => !['width', 'button'].includes(prop.toString()),
+})<{ width: number; button?: boolean }>`
   width: ${props => props.width}px;
   height: ${props => (props.button === true ? 32 : 8)}px;
   background-color: #a1a8c2;

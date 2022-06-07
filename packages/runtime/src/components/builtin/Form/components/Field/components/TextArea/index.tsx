@@ -4,7 +4,11 @@ import styled from 'styled-components'
 import cssField from '../../services/cssField'
 import { Value, useFormContext } from '../../../../context/FormContext'
 
-const Base = styled.textarea<Value & { error?: boolean }>`
+const Base = styled.textarea.withConfig({
+  shouldForwardProp: (prop, defaultValidator) =>
+    !['error', 'shape', 'size', 'contrast', 'brandColor'].includes(prop.toString()) &&
+    defaultValidator(prop),
+})<Value & { error?: boolean }>`
   resize: vertical;
   ${cssField()}
 `

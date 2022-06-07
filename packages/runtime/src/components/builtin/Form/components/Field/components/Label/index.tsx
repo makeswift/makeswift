@@ -37,7 +37,11 @@ function getContrastColor(contrast: Contrast): string {
   }
 }
 
-const Base = styled.label<{
+const Base = styled.label.withConfig({
+  shouldForwardProp: (prop, defaultValidator) =>
+    !['contrast', 'size', 'textStyle', 'textColor'].includes(prop.toString()) &&
+    defaultValidator(prop),
+})<{
   contrast?: ResponsiveValue<Contrast> | null | undefined
   size?: ResponsiveValue<Size> | null | undefined
   textStyle?: TextStyleValue | null | undefined

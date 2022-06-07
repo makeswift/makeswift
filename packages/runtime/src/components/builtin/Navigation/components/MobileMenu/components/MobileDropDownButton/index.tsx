@@ -20,7 +20,9 @@ import { ReactComponent as ChevronDown8 } from '../../../../../../icons/chevron-
 import { Link } from '../../../../../../shared/Link'
 import Button from '../../../../../Button'
 
-const DropDownMenu = styled.div<{ open: boolean }>`
+const DropDownMenu = styled.div.withConfig({
+  shouldForwardProp: prop => !['open'].includes(prop.toString()),
+})<{ open: boolean }>`
   display: ${props => (props.open ? 'flex' : 'none')};
   flex-direction: column;
   padding: 8px;
@@ -30,7 +32,9 @@ const ButtonLink = styled(Button)`
   margin: 8px 0;
 `
 
-const StyledLink = styled(Link)<{
+const StyledLink = styled(Link).withConfig({
+  shouldForwardProp: prop => !['textStyle', 'color'].includes(prop.toString()),
+})<{
   textStyle?: TextStyleValue
   color?: ResponsiveValue<Color> | null
 }>`
