@@ -59,3 +59,23 @@ export function registerBuiltinComponents(runtime: ReactRuntime) {
     unregisterVideoComponent()
   }
 }
+
+export function isBuiltinComponent(elementType: string) {
+  const builtInComponentTypes = [
+    './components/Button/index.js',
+    './components/Box/index.js',
+    './components/Button/index.js',
+    './components/Carousel/index.js',
+    './components/Countdown/index.js',
+    './components/Divider/index.js',
+    './components/Embed/index.js',
+    './components/Form/index.js',
+    './components/Image/index.js',
+    './components/Navigation/index.js',
+    './components/Root/index.js',
+    './components/SocialLinks/index.js',
+    './components/Text/index.js',
+  ]
+
+  return builtInComponentTypes.includes(elementType)
+}

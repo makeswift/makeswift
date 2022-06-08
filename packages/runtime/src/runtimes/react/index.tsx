@@ -28,8 +28,8 @@ import type {
   PropControllerDescriptorValueType,
 } from '../../prop-controllers'
 import { ComponentIcon } from '../../state/modules/components-meta'
-import { registerBuiltinComponents } from '../../components'
-import { MakeswiftProvider, MakeswiftClient, useQuery } from '../../api/react'
+import { isBuiltinComponent, registerBuiltinComponents } from '../../components'
+import { MakeswiftProvider, MakeswiftClient, useQuery, useIsPrefetching } from '../../api/react'
 import { FallbackComponent } from '../../components/shared/FallbackComponent'
 import { PropsValue } from './controls'
 import { FindDomNode } from './find-dom-node'
@@ -241,6 +241,7 @@ const ElementData = memo(
     const Component = useComponent(elementData.type)
     const [handle, setHandle] = useState<unknown | null>(null)
     const [foundDomNode, setFoundDomNode] = useState<Element | Text | null>(null)
+    const isPrefetching = useIsPrefetching()
 
     useImperativeHandle(ref, () => handle ?? foundDomNode, [handle, foundDomNode])
 
@@ -248,6 +249,14 @@ const ElementData = memo(
 
     if (Component == null) {
       return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Component not found" />
+    }
+
+    // During prefetching, we don't render custom components. We're using Apollo's getDataFromTree
+    // and the custom components would get error when trying to use next/image or useRouter.
+    // We should remove this block once we stop using getDataFromTree.
+    // We also need to remove this workaround once we implement the Slot prop controller.
+    if (isPrefetching && !isBuiltinComponent(elementData.type)) {
+      return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Prefetching Apollo data" />
     }
 
     return (
