@@ -1,6 +1,8 @@
-import { useState, useLayoutEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import ReactPlayer from 'react-player'
 import styled from 'styled-components'
+
+import { useIsomorphicLayoutEffect } from '../../../../hooks/useIsomorphicLayoutEffect'
 
 const Container = styled.div`
   position: absolute;
@@ -49,7 +51,7 @@ export default function BackgroundVideo({
   const [scale, setScale] = useState(1)
   const container = useRef<HTMLDivElement>(null)
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const { current: containerEl } = container
 
     if (!containerEl) return undefined

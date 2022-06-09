@@ -1,5 +1,6 @@
-import { useState, useRef, useLayoutEffect, useCallback, ReactNode, CSSProperties } from 'react'
+import { useState, useRef, useCallback, ReactNode, CSSProperties } from 'react'
 import clamp from '../../../../../utils/clamp'
+import { useIsomorphicLayoutEffect } from '../../../../hooks/useIsomorphicLayoutEffect'
 
 function isScrollable(element: HTMLElement) {
   const { overflow, overflowY, overflowX } =
@@ -30,7 +31,7 @@ export default function Parallax({ strength, children, ...rest }: Props): JSX.El
   const [containerScrollTop, setContainerScrollTop] = useState(strength == null ? 0 : strength)
   const lastScrollParentScrollTop = useRef(0)
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!container.current || strength == null || strength === 0) return undefined
 
     const containerDocument = container.current.ownerDocument

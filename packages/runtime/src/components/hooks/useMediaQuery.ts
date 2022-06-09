@@ -1,15 +1,16 @@
 /* eslint-env browser */
 
-import { useState, useLayoutEffect } from 'react'
+import { useState } from 'react'
 
 import { DeviceOverride } from '../../prop-controllers'
 import { DEVICES, findDeviceOverride, getDeviceMediaQuery } from '../utils/devices'
+import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect'
 
 export function useMediaQuery<S>(responsiveValue?: Array<DeviceOverride<S>>): S | void {
   const [deviceId, setDeviceId] = useState(DEVICES[0].id)
   const { value } = findDeviceOverride(responsiveValue, deviceId) || {}
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (responsiveValue == null || window == null) return () => {}
 
     const cleanUpFns = DEVICES.map(device => {
