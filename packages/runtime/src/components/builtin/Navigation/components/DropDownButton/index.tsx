@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, useRef, useState, useLayoutEffect } from 'react'
+import { ComponentPropsWithoutRef, useRef, useState } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 import { ReactComponent as CaretDown8 } from '../../../../icons/caret-down-8.svg'
@@ -18,6 +18,7 @@ import { useResponsiveColor } from '../../../../hooks'
 
 import { Link } from '../../../../shared/Link'
 import Button from '../../../Button'
+import { useIsomorphicLayoutEffect } from '../../../../hooks/useIsomorphicLayoutEffect'
 
 const DROP_DOWN_MENU_WIDTH = 200
 
@@ -138,7 +139,7 @@ export default function DropDownButton({
   const container = useRef<HTMLDivElement>(null)
   const [position, setPosition] = useState<Position>('left')
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (
       container.current &&
       container.current.ownerDocument.defaultView!.innerWidth <

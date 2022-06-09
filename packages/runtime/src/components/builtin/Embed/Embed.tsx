@@ -1,6 +1,6 @@
 /* eslint-env browser */
 
-import { useState, useEffect, useLayoutEffect, forwardRef, Ref, useImperativeHandle } from 'react'
+import { useState, useEffect, forwardRef, Ref, useImperativeHandle } from 'react'
 import styled from 'styled-components'
 import { cx } from '@emotion/css'
 
@@ -8,6 +8,7 @@ import { cssMargin } from '../../utils/cssMediaRules'
 import { ElementIDValue, MarginValue, TextAreaValue } from '../../../prop-controllers/descriptors'
 import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../react'
+import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect'
 
 type Props = {
   id?: ElementIDValue
@@ -55,7 +56,7 @@ const Embed = forwardRef(function Embed(
   const [container, setContainer] = useState<HTMLDivElement | null>(null)
   const [shouldRender, setShouldRender] = useState(false)
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     setShouldRender(true)
   }, [])
 
