@@ -6,8 +6,8 @@
 
 ## Getting Started
 
-Visit our [getting started guide](https://makeswift.notion.site/Getting-started-with-Code-Components-6115abea0322425c8d0fdb10a404532c) to get started with Makeswift Code Components.
+Visit our [getting started guide](https://www.makeswift.com/docs/guides/getting-started) to get started with Makeswift Code Components.
 
 ## API Reference
 
-Visit our [API Reference](https://makeswift.notion.site/API-reference-for-Code-Components-74b567b592de4b0e8d6070f5af45a748) to learn more about Makeswift Code Components.
+Visit our [API Reference](https://www.makeswift.com/docs/controls/checkbox) to learn more about Makeswift Code Components.
