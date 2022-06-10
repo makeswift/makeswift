@@ -15,6 +15,7 @@ import {
   InMemoryCache,
   TypePolicies,
 } from '@apollo/client'
+import { BatchHttpLink } from '@apollo/client/link/batch-http'
 import { getDataFromTree } from '@apollo/client/react/ssr'
 export { gql } from '@apollo/client'
 import { createContext, ReactNode, useContext } from 'react'
@@ -86,7 +87,7 @@ export function createApolloClient({ uri, cacheData }: CreateApolloClientParams)
 
   if (cacheData) cache.restore(cacheData)
 
-  return new ApolloClient({ uri, cache })
+  return new ApolloClient({ link: new BatchHttpLink({ uri, batchMax: 100 }), cache })
 }
 
 export type MakeswiftClientOptions = {
