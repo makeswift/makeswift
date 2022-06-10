@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://www.makeswift.com/code-components">
+  <a href="https://www.makeswift.com">
     <img width="100%" alt="Makeswift" src="https://user-images.githubusercontent.com/5677929/158899343-ca3fe00e-a3ef-4d6b-bae5-a279c5599d33.svg">
   </a>
 </p>
