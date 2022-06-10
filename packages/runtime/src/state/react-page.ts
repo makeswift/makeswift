@@ -63,7 +63,7 @@ function getPropControllersStateSlice(state: State): PropControllers.State {
   return state.propControllers
 }
 
-function getPropControllerDescriptors(
+export function getPropControllerDescriptors(
   state: State,
 ): Map<string, Record<string, PropControllers.PropControllerDescriptor>> {
   return PropControllers.getPropControllerDescriptors(getPropControllersStateSlice(state))

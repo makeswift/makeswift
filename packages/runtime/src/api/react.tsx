@@ -16,14 +16,39 @@ import {
   TypePolicies,
 } from '@apollo/client'
 import { BatchHttpLink } from '@apollo/client/link/batch-http'
-import { getDataFromTree } from '@apollo/client/react/ssr'
 export { gql } from '@apollo/client'
 import { createContext, ReactNode, useContext } from 'react'
 import { KeyUtils } from 'slate'
-import uuid from 'uuid/v4'
+import {
+  getElementChildren,
+  getElementSwatchIds,
+  getFileIds,
+  getPageIds,
+  getTableIds,
+  getTypographyIds,
+} from '../prop-controllers/introspection'
 
-import { DocumentReference, RuntimeProvider } from '../react'
-import { createDocumentReference, Element } from '../state/react-page'
+import {
+  ELEMENT_REFERENCE_GLOBAL_ELEMENT,
+  INTROSPECTION_QUERY,
+  TYPOGRAPHIES_BY_ID,
+} from '../components/utils/queries'
+
+import {
+  Element,
+  ElementData,
+  getPropControllerDescriptors,
+  isElementReference,
+  Store,
+} from '../state/react-page'
+import {
+  PagePathnameSliceFragment,
+  PagePathnameSliceFragmentDoc,
+  TypographyFragment,
+} from './generated/graphql'
+import { PropControllerDescriptor } from '../prop-controllers'
+import { ListControlData, ListControlType, ShapeControlData, ShapeControlType } from '../controls'
+import { storeContextDefaultValue } from '../runtimes/react'
 
 const typePolicies: TypePolicies = {
   Query: {
@@ -95,6 +120,112 @@ export type MakeswiftClientOptions = {
   cacheData?: NormalizedCacheObject
 }
 
+async function introspect(
+  element: Element,
+  client: ApolloClient<NormalizedCacheObject>,
+  store: Store,
+) {
+  const descriptors = getPropControllerDescriptors(store.getState())
+  const swatchIds = new Set<string>()
+  const fileIds = new Set<string>()
+  const typographyIds = new Set<string>()
+  const tableIds = new Set<string>()
+  const pageIds = new Set<string>()
+
+  const remaining = [element]
+  let current: Element | undefined
+
+  while ((current = remaining.pop())) {
+    let element: ElementData
+
+    if (isElementReference(current)) {
+      const query = await client.query({
+        query: ELEMENT_REFERENCE_GLOBAL_ELEMENT,
+        variables: { id: current.value },
+      })
+
+      const elementData = query.data?.globalElement?.data
+
+      if (elementData == null) continue
+
+      element = elementData
+    } else {
+      element = current
+    }
+
+    const elementDescriptors = descriptors.get(element.type)
+
+    if (elementDescriptors == null) continue
+
+    getResourcesFromElementDescriptors(elementDescriptors, element.props)
+
+    function getResourcesFromElementDescriptors(
+      elementDescriptors: Record<string, PropControllerDescriptor>,
+      props: ElementData['props'],
+    ) {
+      Object.entries(elementDescriptors).forEach(([propName, descriptor]) => {
+        getElementSwatchIds(descriptor, props[propName]).forEach(swatchId => {
+          swatchIds.add(swatchId)
+        })
+
+        getFileIds(descriptor, props[propName]).forEach(fileId => fileIds.add(fileId))
+
+        getTypographyIds(descriptor, props[propName]).forEach(typographyId =>
+          typographyIds.add(typographyId),
+        )
+
+        getTableIds(descriptor, props[propName]).forEach(tableId => tableIds.add(tableId))
+
+        getPageIds(descriptor, props[propName]).forEach(pageId => pageIds.add(pageId))
+
+        getElementChildren(descriptor, props[propName]).forEach(child => remaining.push(child))
+
+        if (descriptor.type === ShapeControlType) {
+          const prop = props[propName] as ShapeControlData
+
+          if (prop == null) return
+
+          getResourcesFromElementDescriptors(descriptor.config.type, prop)
+        }
+
+        if (descriptor.type === ListControlType) {
+          const prop = props[propName] as ListControlData
+
+          if (prop == null) return
+
+          prop.forEach(item => {
+            getResourcesFromElementDescriptors(
+              { propName: descriptor.config.type },
+              { propName: item.value },
+            )
+          })
+        }
+      })
+    }
+  }
+
+  const typographiesResult = await client.query({
+    query: TYPOGRAPHIES_BY_ID,
+    variables: { ids: [...typographyIds] },
+  })
+
+  typographiesResult?.data?.typographies.forEach((typography: TypographyFragment) => {
+    typography.style.forEach(style => {
+      const swatchId = style.value.color?.swatchId
+
+      if (swatchId != null) swatchIds.add(swatchId)
+    })
+  })
+
+  return {
+    swatchIds: [...swatchIds],
+    fileIds: [...fileIds],
+    typographyIds: [...typographyIds],
+    tableIds: [...tableIds],
+    pageIds: [...pageIds],
+  }
+}
+
 export class MakeswiftClient {
   apolloClient: ApolloClient<NormalizedCacheObject>
 
@@ -103,15 +234,23 @@ export class MakeswiftClient {
   }
 
   async prefetch(element: Element): Promise<NormalizedCacheObject> {
-    const id = uuid()
+    const introspectionData = await introspect(element, this.apolloClient, storeContextDefaultValue)
 
-    await getDataFromTree(
-      <PrefetchContext.Provider value={true}>
-        <RuntimeProvider client={this} rootElements={new Map([[id, element]])}>
-          <DocumentReference documentReference={createDocumentReference(id)} />
-        </RuntimeProvider>
-      </PrefetchContext.Provider>,
-    )
+    const res = await this.apolloClient.query({
+      query: INTROSPECTION_QUERY,
+      variables: introspectionData,
+    })
+
+    // We're doing this because the API return the id without turning it to nodeId:
+    // '87237bda-e775-48d8-92cc-399c65577bb7' vs 'UGFnZTo4NzIzN2JkYS1lNzc1LTQ4ZDgtOTJjYy0zOTljNjU1NzdiYjc='
+    res.data.pagePathnamesById.forEach((pagePathnameSlice: PagePathnameSliceFragment) => {
+      const id = Buffer.from(`Page:${pagePathnameSlice.id}`).toString('base64')
+
+      this.apolloClient.cache.writeFragment({
+        fragment: PagePathnameSliceFragmentDoc,
+        data: { ...pagePathnameSlice, id },
+      })
+    })
 
     KeyUtils.resetGenerator()
 

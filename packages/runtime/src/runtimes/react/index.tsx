@@ -12,7 +12,6 @@ import {
   useState,
 } from 'react'
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector'
-import { gql } from '@apollo/client'
 
 import * as ReactPage from '../../state/react-page'
 import type * as ReactBuilderPreview from '../../state/react-builder-preview'
@@ -33,8 +32,9 @@ import { MakeswiftProvider, MakeswiftClient, useQuery } from '../../api/react'
 import { FallbackComponent } from '../../components/shared/FallbackComponent'
 import { PropsValue } from './controls'
 import { FindDomNode } from './find-dom-node'
+import { ELEMENT_REFERENCE_GLOBAL_ELEMENT } from '../../components/utils/queries'
 
-const contextDefaultValue = ReactPage.configureStore()
+export const storeContextDefaultValue = ReactPage.configureStore()
 
 export interface ReactRuntime {
   registerComponent<
@@ -46,7 +46,7 @@ export interface ReactRuntime {
   ): () => void
 }
 
-export function createReactRuntime(store: ReactPage.Store): ReactRuntime {
+function createReactRuntime(store: ReactPage.Store): ReactRuntime {
   return {
     registerComponent(component, { type, label, icon = 'Cube40', hidden = false, props }) {
       const unregisterComponent = store.dispatch(
@@ -65,9 +65,11 @@ export function createReactRuntime(store: ReactPage.Store): ReactRuntime {
   }
 }
 
-export const ReactRuntime = createReactRuntime(contextDefaultValue)
+export const ReactRuntime = createReactRuntime(storeContextDefaultValue)
 
-const Context = createContext(contextDefaultValue)
+registerBuiltinComponents(ReactRuntime)
+
+const Context = createContext(storeContextDefaultValue)
 
 type RuntimeProviderProps = {
   client: MakeswiftClient
@@ -82,19 +84,12 @@ export function RuntimeProvider({
 }: RuntimeProviderProps): JSX.Element {
   const [store, setStore] = useState(() => {
     const store = ReactPage.configureStore({
-      preloadedState: contextDefaultValue.getState(),
+      preloadedState: storeContextDefaultValue.getState(),
       rootElements,
     })
-    const runtime = createReactRuntime(store)
-
-    registerBuiltinComponents(runtime)
 
     return store
   })
-
-  useEffect(() => {
-    return registerBuiltinComponents(createReactRuntime(store))
-  }, [store])
 
   useEffect(() => {
     const unregisterDocuments = Array.from(rootElements?.entries() ?? []).map(
@@ -271,17 +266,9 @@ const ElementReference = memo(
     { elementReference }: ElementRefereceProps,
     ref: Ref<unknown>,
   ): JSX.Element {
-    const { error, data } = useQuery(
-      gql`
-        query ElementReferenceGlobalElement($id: ID!) {
-          globalElement(id: $id) {
-            id
-            data
-          }
-        }
-      `,
-      { variables: { id: elementReference.value } },
-    )
+    const { error, data } = useQuery(ELEMENT_REFERENCE_GLOBAL_ELEMENT, {
+      variables: { id: elementReference.value },
+    })
     const globalElementData = data?.globalElement?.data as ReactPage.ElementData | undefined
     const elementReferenceDocument = useDocument(elementReference.key)
 
