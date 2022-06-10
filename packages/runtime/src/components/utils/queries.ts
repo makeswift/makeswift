@@ -113,3 +113,72 @@ export const TABLE_BY_ID = gql`
     }
   }
 `
+
+export const ELEMENT_REFERENCE_GLOBAL_ELEMENT = gql`
+  query ElementReferenceGlobalElement($id: ID!) {
+    globalElement(id: $id) {
+      id
+      data
+    }
+  }
+`
+
+export const INTROSPECTION_QUERY = gql`
+  query Introspection(
+    $swatchIds: [ID!]!
+    $fileIds: [ID!]!
+    $pageIds: [ID!]!
+    $typographyIds: [ID!]!
+    $tableIds: [ID!]!
+  ) {
+    swatches(ids: $swatchIds) {
+      id
+      hue
+      saturation
+      lightness
+    }
+
+    files(ids: $fileIds) {
+      id
+      name
+      publicUrl
+      extension
+      dimensions {
+        width
+        height
+      }
+    }
+
+    pagePathnamesById(ids: $pageIds) {
+      id
+      pathname
+    }
+
+    typographies(ids: $typographyIds) {
+      ...Typography
+    }
+
+    tables(ids: $tableIds) {
+      id
+      name
+      columns {
+        id
+        name
+        ... on MultipleSelectTableColumn {
+          options {
+            id
+            name
+          }
+        }
+        ... on SingleSelectTableColumn {
+          options {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+
+  ${TYPOGRAPHY_FRAGMENT}
+`
