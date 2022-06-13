@@ -49,6 +49,7 @@ import {
 import { PropControllerDescriptor } from '../prop-controllers'
 import { ListControlData, ListControlType, ShapeControlData, ShapeControlType } from '../controls'
 import { storeContextDefaultValue } from '../runtimes/react'
+import { ListValue, ShapeValue, Types } from '../prop-controllers/descriptors'
 
 const typePolicies: TypePolicies = {
   Query: {
@@ -196,6 +197,27 @@ async function introspect(
           prop.forEach(item => {
             getResourcesFromElementDescriptors(
               { propName: descriptor.config.type },
+              { propName: item.value },
+            )
+          })
+        }
+
+        if (descriptor.type === Types.Shape) {
+          const prop = props[propName] as ShapeValue
+
+          if (prop == null) return
+
+          getResourcesFromElementDescriptors(descriptor.options.type, prop)
+        }
+
+        if (descriptor.type === Types.List) {
+          const prop = props[propName] as ListValue
+
+          if (prop == null) return
+
+          prop.forEach(item => {
+            getResourcesFromElementDescriptors(
+              { propName: descriptor.options.type },
               { propName: item.value },
             )
           })
