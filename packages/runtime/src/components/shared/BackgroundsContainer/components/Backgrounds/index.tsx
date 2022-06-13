@@ -8,7 +8,6 @@ import { ColorValue as Color } from '../../../../utils/types'
 import { colorToString } from '../../../../utils/colorToString'
 import Parallax from '../Parallax'
 import BackgroundVideo from '../BackgroundVideo'
-import { useIsPrefetching } from '../../../../../api/react'
 
 function getColor(color: Color | null | undefined) {
   if (color == null) return 'black'
@@ -64,10 +63,6 @@ const BackgroundsContainer = styled(Container)<{ visibility: ResponsiveValue<boo
 type Props = { backgrounds: BackgroundsPropControllerData | null | undefined }
 
 export default function Backgrounds({ backgrounds }: Props): JSX.Element {
-  const isPrefetching = useIsPrefetching()
-
-  if (isPrefetching) return <></>
-
   if (backgrounds == null) return <></>
 
   return (
