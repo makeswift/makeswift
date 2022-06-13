@@ -73,12 +73,6 @@ const typePolicies: TypePolicies = {
   },
 }
 
-const PrefetchContext = createContext(false)
-
-export function useIsPrefetching(): boolean {
-  return useContext(PrefetchContext)
-}
-
 type CreateApolloClientParams = {
   uri?: string
   cacheData?: NormalizedCacheObject
