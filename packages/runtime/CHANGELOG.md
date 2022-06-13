@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.0.18
+
+### Patch Changes
+
+- b9dc1ee: Add batching to ApolloClient.
+- c57fb67: Use introspection for SSR. This would solve the issues that were happening when using next/image or useRouter.
+- 6aca0b1: Filter props out of HTML attributes
+- 1683722: Fix useLayoutEffect SSR warning.
+
 ## 0.0.17
 
 ### Patch Changes
