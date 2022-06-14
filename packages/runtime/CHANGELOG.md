@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.0.19
+
+### Patch Changes
+
+- d4f61e6: Fix regression introduced in 0.0.18 where link wasn't working on Image component.
+
 ## 0.0.18
 
 ### Patch Changes
