@@ -83,16 +83,9 @@ function imageSizes(width?: Props['width']): string {
 
 const ImageContainer = styled.div.withConfig({
   shouldForwardProp: prop =>
-    ![
-      'margin',
-      'padding',
-      'border',
-      'borderRadius',
-      'boxShadow',
-      'opacity',
-      'link',
-      'dimensions',
-    ].includes(prop.toString()),
+    !['margin', 'padding', 'border', 'borderRadius', 'boxShadow', 'opacity', 'dimensions'].includes(
+      prop.toString(),
+    ),
 })<{
   margin?: Props['margin']
   padding?: Props['padding']
