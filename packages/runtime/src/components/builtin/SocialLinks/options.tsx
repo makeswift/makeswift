@@ -1,5 +1,6 @@
 import { ReactComponent as LogoAngellist20 } from '../../icons/logo-angellist-20.svg'
 import { ReactComponent as LogoCodepen20 } from '../../icons/logo-codepen-20.svg'
+import { ReactComponent as LogoDiscord20 } from '../../icons/logo-discord-20.svg'
 import { ReactComponent as LogoDribbble20 } from '../../icons/logo-dribbble-20.svg'
 import { ReactComponent as LogoFacebook20 } from '../../icons/logo-facebook-20.svg'
 import { ReactComponent as LogoGithub20 } from '../../icons/logo-github-20.svg'
@@ -24,6 +25,7 @@ import { ReactComponent as LogoYoutube20 } from '../../icons/logo-youtube-20.svg
 export const SocialLinksOptions = [
   { type: 'angellist', label: 'AngelList', icon: <LogoAngellist20 />, brandColor: 'black' },
   { type: 'codepen', label: 'CodePen', icon: <LogoCodepen20 />, brandColor: 'black' },
+  { type: 'discord', label: 'Discord', icon: <LogoDiscord20 />, brandColor: '#5865F2' },
   { type: 'dribbble', label: 'Dribbble', icon: <LogoDribbble20 />, brandColor: '#ea4c89' },
   { type: 'facebook', label: 'Facebook', icon: <LogoFacebook20 />, brandColor: '#3b5998' },
   { type: 'github', label: 'GitHub', icon: <LogoGithub20 />, brandColor: 'black' },
