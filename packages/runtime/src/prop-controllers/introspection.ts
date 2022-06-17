@@ -154,7 +154,7 @@ export function getElementSwatchIds<T extends Data>(
 
       function getMarkSwatchIds(mark: MarkJSON): string[] {
         return (
-          mark.data?.value.style
+          mark.data?.value?.style
             .map((override: any) => override.value)
             .flatMap((typographyStyle: any) => typographyStyle.color?.swatchId)
             .filter((swatchId: any) => swatchId != null) ?? []
@@ -245,7 +245,7 @@ export function getTypographyIds<T extends Data>(
       }
 
       function getMarkTypographyIds(mark: MarkJSON): string[] {
-        return [mark.data?.value.id].filter(id => id != null)
+        return [mark.data?.value?.id].filter(id => id != null)
       }
     }
 
