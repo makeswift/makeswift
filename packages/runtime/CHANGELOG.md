@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.0.20
+
+### Patch Changes
+
+- 44afd95: Fix error on introspection function when there's a null on Typography value.
+- a8f037e: Add Discord icon to Social Links component.
+
 ## 0.0.19
 
 ### Patch Changes
