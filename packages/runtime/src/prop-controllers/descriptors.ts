@@ -22,7 +22,7 @@ import { TextAreaControlValue } from '../runtimes/react/controls/text-area'
 import { ColorControlValue } from '../runtimes/react/controls/color'
 import { SelectControlValue } from '../runtimes/react/controls/select'
 import { CheckboxControlValue } from '../runtimes/react/controls/checkbox'
-import { ImageControlValue } from '../runtimes/react/controls/image'
+import { ResolveImageControlValue } from '../runtimes/react/controls/image'
 import { ShapeControlValue } from '../runtimes/react/controls/shape'
 import { ListControlValue } from '../runtimes/react/controls/list'
 import { ComboboxControlValue } from '../runtimes/react/controls/combobox'
@@ -1015,7 +1015,7 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   : T extends StyleControlDefinition
   ? StyleControlFormattedValue
   : T extends ImageControlDefinition
-  ? ImageControlValue
+  ? ResolveImageControlValue<T>
   : T extends ComboboxControlDefinition
   ? ComboboxControlValue<T>
   : T extends ShapeControlDefinition
