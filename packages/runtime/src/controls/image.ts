@@ -2,10 +2,24 @@ export type ImageControlData = string
 
 export const ImageControlType = 'makeswift::controls::image'
 
-type ImageControlConfig = { label?: string }
+export const ImageControlValueFormat = {
+  URL: 'makeswift::controls::image::format::url',
+  WithDimensions: 'makeswift::controls::image::format::with-dimensions',
+} as const
 
-export type ImageControlDefinition = { type: typeof ImageControlType; config: ImageControlConfig }
+type ImageControlValueFormat = typeof ImageControlValueFormat[keyof typeof ImageControlValueFormat]
 
-export function Image(config: ImageControlConfig = {}): ImageControlDefinition {
+type ImageControlConfig = { label?: string; format?: ImageControlValueFormat }
+
+export type ImageControlDefinition<T extends ImageControlConfig = ImageControlConfig> = {
+  type: typeof ImageControlType
+  config: T
+}
+
+export function Image<T extends ImageControlConfig>(
+  config: T = {} as T,
+): ImageControlDefinition<T> {
   return { type: ImageControlType, config }
 }
+
+Image.Format = ImageControlValueFormat

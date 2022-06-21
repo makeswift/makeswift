@@ -36,7 +36,7 @@ import { RenderHook } from '../components'
 import { CheckboxControlValue, useCheckboxControlValue } from './checkbox'
 import { ColorControlValue, useColorValue } from './color'
 import { ComboboxControlValue, useComboboxControlValue } from './combobox'
-import { ImageControlValue, useImageControlValue } from './image'
+import { ResolveImageControlValue, useImageControlValue } from './image'
 import { ListControlValue } from './list'
 import { NumberControlValue, useNumber } from './number'
 import { SelectControlValue, useSelectControlValue } from './select'
@@ -58,7 +58,7 @@ export type ControlDefinitionValue<T extends ControlDefinition> =
     : T extends ColorControlDefinition
     ? ColorControlValue<T>
     : T extends ImageControlDefinition
-    ? ImageControlValue
+    ? ResolveImageControlValue<T>
     : T extends ComboboxControlDefinition
     ? ComboboxControlValue<T>
     : T extends ShapeControlDefinition
@@ -150,7 +150,7 @@ export function ControlValue<T extends ControlDefinition>({
         <RenderHook
           key={definition.type}
           hook={useImageControlValue}
-          parameters={[data as ImageControlData]}
+          parameters={[data as ImageControlData, definition]}
         >
           {value => children(value as ControlDefinitionValue<T>)}
         </RenderHook>
