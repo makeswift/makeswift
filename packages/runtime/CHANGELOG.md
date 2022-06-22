@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.0.21
+
+### Patch Changes
+
+- f2f90a8: Add new format for Image Control: `WithDimensions`. Now you can pass `WithDimensions` format to Image Control's config. This will make the prop of the Image control have dimensions of the image. See the documentation for further details.
+
 ## 0.0.20
 
 ### Patch Changes
