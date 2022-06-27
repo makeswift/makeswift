@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.0.22
+
+### Patch Changes
+
+- 9914800: Check for potentially missing typography values when prefetching page data using introspection.
+
 ## 0.0.21
 
 ### Patch Changes
