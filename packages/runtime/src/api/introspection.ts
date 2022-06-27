@@ -130,8 +130,8 @@ export async function introspect(
     variables: { ids: [...typographyIds] },
   })
 
-  typographiesResult?.data?.typographies.forEach((typography: TypographyFragment) => {
-    typography.style.forEach(style => {
+  typographiesResult?.data?.typographies.forEach((typography: TypographyFragment | null) => {
+    typography?.style.forEach(style => {
       const swatchId = style.value.color?.swatchId
 
       if (swatchId != null) swatchIds.add(swatchId)
