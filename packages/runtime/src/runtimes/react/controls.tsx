@@ -13,7 +13,7 @@ import {
   WidthValue,
 } from '../../prop-controllers/descriptors'
 import { css } from '@emotion/css'
-import { useResponsiveColor } from '../../components'
+import { useResponsiveColor } from '../../components/hooks'
 import type { ColorValue } from '../../components/utils/types'
 import { responsiveWidth } from '../../components/utils/responsive-style'
 import {

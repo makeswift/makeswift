@@ -27,7 +27,7 @@ import type {
   PropControllerDescriptorValueType,
 } from '../../prop-controllers'
 import { ComponentIcon } from '../../state/modules/components-meta'
-import { registerBuiltinComponents } from '../../components'
+import { registerBuiltinComponents } from '../../components/builtin/register'
 import { MakeswiftProvider, MakeswiftClient, useQuery } from '../../api/react'
 import { FallbackComponent } from '../../components/shared/FallbackComponent'
 import { PropsValue } from './controls'

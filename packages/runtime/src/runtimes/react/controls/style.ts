@@ -3,7 +3,7 @@ import { css, cache, CSSObject } from '@emotion/css'
 import { serializeStyles } from '@emotion/serialize'
 import { insertStyles } from '@emotion/utils'
 
-import { useBorder, BorderSide } from '../../../components'
+import { useBorder, BorderSide } from '../../../components/hooks'
 import { colorToString } from '../../../components/utils/colorToString'
 import { responsiveStyle } from '../../../components/utils/responsive-style'
 
