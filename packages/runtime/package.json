@@ -13,6 +13,7 @@
     "components.js",
     "api.js",
     "next.js",
+    "next/plugin.js",
     "builder.js",
     "controls.js"
   ],
@@ -45,6 +46,7 @@
       "import": "./dist/next.es.js",
       "require": "./dist/next.cjs.js"
     },
+    "./next/plugin": "./next/plugin.js",
     "./builder": {
       "import": "./dist/builder.es.js",
       "require": "./dist/builder.cjs.js"
@@ -100,6 +102,7 @@
     "@convertkit/slate-lists": "^0.2.4",
     "@emotion/css": "^11.9.0",
     "@emotion/server": "^11.4.0",
+    "@makeswift/next-plugin": "0.0.0",
     "@popmotion/popcorn": "^0.4.4",
     "@types/is-hotkey": "^0.1.7",
     "@types/react": "^17.0.3",
