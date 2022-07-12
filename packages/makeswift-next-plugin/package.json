@@ -1,0 +1,20 @@
+{
+  "name": "@makeswift/next-plugin",
+  "version": "0.0.0",
+  "description": "Makeswift Next.js plugin",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "license": "MIT",
+  "repository": {
+    "url": "makeswift/makeswift",
+    "directory": "packages/makeswift-next-plugin"
+  },
+  "keywords": [
+    "makeswift",
+    "next",
+    "plugin"
+  ],
+  "dependencies": {
+    "next-transpile-modules": "^9.0.0"
+  }
+}
