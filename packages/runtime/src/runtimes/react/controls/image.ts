@@ -1,4 +1,4 @@
-import { useFile } from '../../../components'
+import { useFile } from '../../../components/hooks'
 import {
   ControlDefinition,
   ImageControlData,
