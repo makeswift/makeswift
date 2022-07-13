@@ -1,1 +1,1 @@
-export { default, registerComponent } from './Countdown'
+export { default } from './Countdown'
