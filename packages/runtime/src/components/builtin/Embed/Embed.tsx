@@ -6,8 +6,6 @@ import { cx } from '@emotion/css'
 
 import { cssMargin } from '../../utils/cssMediaRules'
 import { ElementIDValue, MarginValue, TextAreaValue } from '../../../prop-controllers/descriptors'
-import { Props } from '../../../prop-controllers'
-import { ReactRuntime } from '../../../react'
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect'
 
 type Props = {
@@ -126,17 +124,3 @@ const Embed = forwardRef(function Embed(
 })
 
 export default Embed
-
-export function registerComponent(runtime: ReactRuntime) {
-  return runtime.registerComponent(Embed, {
-    type: './components/Embed/index.js',
-    label: 'Embed',
-    icon: 'Code40',
-    props: {
-      id: Props.ElementID(),
-      html: Props.TextArea({ label: 'Code', rows: 20 }),
-      width: Props.Width({ format: Props.Width.Formats.ClassName }),
-      margin: Props.Margin(),
-    },
-  })
-}
