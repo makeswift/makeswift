@@ -6,7 +6,7 @@ import { registerComponent as registerCountdownComponent } from './Countdown/reg
 import { registerComponent as registerDividerComponent } from './Divider/register'
 import { registerComponent as registerEmbedComponent } from './Embed/register'
 import { registerComponent as registerFormComponent } from './Form/register'
-import { registerComponent as registerImageComponent } from './Image'
+import { registerComponent as registerImageComponent } from './Image/register'
 import { registerComponent as registerNavigationComponent } from './Navigation/register'
 import { registerComponent as registerRootComponent } from './Root/register'
 import { registerComponent as registerSocialLinksComponent } from './SocialLinks/register'

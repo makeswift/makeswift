@@ -1,1 +1,1 @@
-export { default, registerComponent } from './Image'
+export { default } from './Image'
