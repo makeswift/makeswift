@@ -12,8 +12,6 @@ import {
 } from '../../../prop-controllers/descriptors'
 import { colorToString } from '../../utils/colorToString'
 import { ColorValue as Color } from '../../utils/types'
-import { ReactRuntime } from '../../../react'
-import { Props } from '../../../prop-controllers'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 
 type DividerVariant = 'solid' | 'dashed' | 'dotted' | 'blended'
@@ -109,36 +107,3 @@ const Divider = forwardRef(function Divider(
 })
 
 export default Divider
-
-export function registerComponent(runtime: ReactRuntime) {
-  return runtime.registerComponent(Divider, {
-    type: './components/Divider/index.js',
-    label: 'Divider',
-    icon: 'Divider40',
-    props: {
-      id: Props.ElementID(),
-      variant: Props.ResponsiveSelect({
-        label: 'Style',
-        labelOrientation: 'horizontal',
-        options: [
-          { value: 'solid', label: 'Solid' },
-          { value: 'dashed', label: 'Dashed' },
-          { value: 'dotted', label: 'Dotted' },
-          { value: 'blended', label: 'Blended' },
-        ],
-        defaultValue: 'solid',
-      }),
-      thickness: Props.ResponsiveLength({
-        label: 'Height',
-        defaultValue: { value: 1, unit: 'px' },
-        options: [{ value: 'px', label: 'Pixels', icon: 'Px16' }],
-      }),
-      color: Props.ResponsiveColor({ placeholder: 'black' }),
-      width: Props.Width({
-        format: Props.Width.Formats.ClassName,
-        defaultValue: { value: 100, unit: '%' },
-      }),
-      margin: Props.Margin(),
-    },
-  })
-}
