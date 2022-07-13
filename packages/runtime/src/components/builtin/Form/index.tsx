@@ -1,1 +1,1 @@
-export { default, registerComponent } from './Form'
+export { default } from './Form'
