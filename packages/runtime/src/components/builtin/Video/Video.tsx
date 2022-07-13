@@ -11,8 +11,6 @@ import {
 } from '../../../prop-controllers/descriptors'
 import { cssBorderRadius, cssMargin } from '../../utils/cssMediaRules'
 import { placeholders } from '../../utils/placeholders'
-import { ReactRuntime } from '../../../react'
-import { Props } from '../../../prop-controllers'
 
 type Props = {
   id?: ElementIDValue
@@ -68,21 +66,3 @@ const Video = forwardRef(function Video(
 })
 
 export default Video
-
-export function registerComponent(runtime: ReactRuntime) {
-  return runtime.registerComponent(Video, {
-    type: './components/Video/index.js',
-    label: 'Video',
-    icon: 'Video40',
-    props: {
-      id: Props.ElementID(),
-      video: Props.Video({ preset: { controls: true } }),
-      width: Props.Width({
-        format: Props.Width.Formats.ClassName,
-        defaultValue: { value: 560, unit: 'px' },
-      }),
-      margin: Props.Margin(),
-      borderRadius: Props.BorderRadius(),
-    },
-  })
-}

@@ -11,7 +11,7 @@ import { registerComponent as registerNavigationComponent } from './Navigation'
 import { registerComponent as registerRootComponent } from './Root/register'
 import { registerComponent as registerSocialLinksComponent } from './SocialLinks'
 import { registerComponent as registerTextComponent } from './Text'
-import { registerComponent as registerVideoComponent } from './Video'
+import { registerComponent as registerVideoComponent } from './Video/register'
 
 export function registerBuiltinComponents(runtime: ReactRuntime) {
   const unregisterBoxComponent = registerBoxComponent(runtime)
