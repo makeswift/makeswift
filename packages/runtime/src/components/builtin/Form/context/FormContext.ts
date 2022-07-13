@@ -4,6 +4,14 @@ import { ResponsiveValue, TextStyleValue } from '../../../../prop-controllers/de
 import { ResponsiveColor } from '../../../../runtimes/react/controls'
 import { ColorValue } from '../../../utils/types'
 
+export const Alignments = {
+  LEFT: 'left',
+  CENTER: 'center',
+  RIGHT: 'right',
+} as const
+
+export type Alignment = typeof Alignments[keyof typeof Alignments]
+
 export const Shapes = Object.freeze({
   SQUARE: 'square',
   ROUNDED: 'rounded',
