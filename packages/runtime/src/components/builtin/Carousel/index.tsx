@@ -1,1 +1,1 @@
-export { default, registerComponent } from './Carousel'
+export { default } from './Carousel'
