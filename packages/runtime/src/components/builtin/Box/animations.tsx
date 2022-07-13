@@ -12,17 +12,16 @@ import { useCallback, useEffect, useState } from 'react'
 import { ResponsiveValue } from '../../../prop-controllers'
 import { useMediaQuery } from '../../hooks'
 import { Element } from '../../../state/react-page'
-
-export type BoxAnimateIn =
-  | 'none'
-  | 'fadeIn'
-  | 'fadeUp'
-  | 'fadeDown'
-  | 'fadeLeft'
-  | 'fadeRight'
-  | 'blurIn'
-  | 'scaleUp'
-  | 'scaleDown'
+import {
+  BoxAnimateIn,
+  DEFAULT_BOX_ANIMATE_DELAY,
+  DEFAULT_BOX_ANIMATE_DURATION,
+  DEFAULT_BOX_ANIMATE_TYPE,
+  DEFAULT_ITEM_ANIMATE_DELAY,
+  DEFAULT_ITEM_ANIMATE_DURATION,
+  DEFAULT_ITEM_ANIMATE_TYPE,
+  DEFAULT_ITEM_STAGGER_DURATION,
+} from './constants'
 
 const defaultExitedProps = {
   opacity: 0,
@@ -219,14 +218,6 @@ const useElementOnScreen = (element: HTMLElement | null, options: IntersectionOb
 
   return isVisible
 }
-
-export const DEFAULT_BOX_ANIMATE_TYPE = 'none'
-export const DEFAULT_BOX_ANIMATE_DELAY = 0.0
-export const DEFAULT_BOX_ANIMATE_DURATION = 0.75
-export const DEFAULT_ITEM_ANIMATE_TYPE = 'none'
-export const DEFAULT_ITEM_ANIMATE_DELAY = 0.0
-export const DEFAULT_ITEM_ANIMATE_DURATION = 0.75
-export const DEFAULT_ITEM_STAGGER_DURATION = 0.0
 
 type UseBoxAnimationsPayload = {
   initial?: { container: MotionProps['initial']; parent: MotionProps['initial'] }

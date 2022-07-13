@@ -1,5 +1,5 @@
-import { ReactRuntime } from '../../react'
-import { registerComponent as registerBoxComponent } from './Box'
+import { ReactRuntime } from '../../runtimes/react'
+import { registerComponent as registerBoxComponent } from './Box/register'
 import { registerComponent as registerButtonComponent } from './Button/register'
 import { registerComponent as registerCarouselComponent } from './Carousel/register'
 import { registerComponent as registerCountdownComponent } from './Countdown/register'
@@ -10,7 +10,7 @@ import { registerComponent as registerImageComponent } from './Image/register'
 import { registerComponent as registerNavigationComponent } from './Navigation/register'
 import { registerComponent as registerRootComponent } from './Root/register'
 import { registerComponent as registerSocialLinksComponent } from './SocialLinks/register'
-import { registerComponent as registerTextComponent } from './Text'
+import { registerComponent as registerTextComponent } from './Text/register'
 import { registerComponent as registerVideoComponent } from './Video/register'
 
 export function registerBuiltinComponents(runtime: ReactRuntime) {

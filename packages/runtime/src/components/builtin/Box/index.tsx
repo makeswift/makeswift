@@ -1,4 +1,4 @@
-export { default, registerComponent } from './Box'
+export { default } from './Box'
 export {
   DEFAULT_BOX_ANIMATE_TYPE,
   DEFAULT_BOX_ANIMATE_DELAY,
@@ -7,4 +7,4 @@ export {
   DEFAULT_ITEM_ANIMATE_DELAY,
   DEFAULT_ITEM_ANIMATE_DURATION,
   DEFAULT_ITEM_STAGGER_DURATION,
-} from './animations'
+} from './constants'
