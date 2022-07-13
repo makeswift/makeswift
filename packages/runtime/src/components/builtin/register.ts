@@ -1,6 +1,6 @@
 import { ReactRuntime } from '../../react'
 import { registerComponent as registerBoxComponent } from './Box'
-import { registerComponent as registerButtonComponent } from './Button'
+import { registerComponent as registerButtonComponent } from './Button/register'
 import { registerComponent as registerCarouselComponent } from './Carousel'
 import { registerComponent as registerCountdownComponent } from './Countdown/register'
 import { registerComponent as registerDividerComponent } from './Divider/register'
