@@ -1,1 +1,1 @@
-export { default, registerComponent } from './Embed'
+export { default } from './Embed'
