@@ -9,7 +9,7 @@ import { registerComponent as registerFormComponent } from './Form'
 import { registerComponent as registerImageComponent } from './Image'
 import { registerComponent as registerNavigationComponent } from './Navigation'
 import { registerComponent as registerRootComponent } from './Root/register'
-import { registerComponent as registerSocialLinksComponent } from './SocialLinks'
+import { registerComponent as registerSocialLinksComponent } from './SocialLinks/register'
 import { registerComponent as registerTextComponent } from './Text'
 import { registerComponent as registerVideoComponent } from './Video/register'
 
