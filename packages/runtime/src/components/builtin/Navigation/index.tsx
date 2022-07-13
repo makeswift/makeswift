@@ -1,1 +1,1 @@
-export { default, registerComponent } from './Navigation'
+export { default } from './Navigation'
