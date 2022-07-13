@@ -1,1 +1,1 @@
-export { default, registerComponent } from './SocialLinks'
+export { default } from './SocialLinks'
