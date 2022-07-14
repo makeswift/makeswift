@@ -7,6 +7,7 @@ import {
   useCallback,
   useRef,
   KeyboardEvent as ReactKeyboardEvent,
+  FocusEvent as ReactFocusEvent,
 } from 'react'
 import styled from 'styled-components'
 import { Editor, OnChangeParam } from 'slate-react'
@@ -166,6 +167,15 @@ const Text = forwardRef(function Text(
     },
     [],
   )
+  const handleBlur = useCallback((event: ReactFocusEvent, _editor: Editor, next: () => any) => {
+    // Normally, after a user highlight a text, clicking on the panel will remove the text selection.
+    // This line is a workaround for that. Because the panel is not in the iframe, relatedTarget
+    // would be null, and we return early so we don't remove the selection.
+    if (event.relatedTarget == null) return true
+
+    // Blur the selection if the user is clicking on other text.
+    return next()
+  }, [])
 
   const isInBuilder = useIsInBuilder()
 
@@ -181,8 +191,7 @@ const Text = forwardRef(function Text(
       onChange={handleChange}
       onFocus={handleFocus}
       onKeyDown={handleKeyDown}
-      // Workaround for: clicking on any of the text panel will remove the text selection.
-      onBlur={e => e.preventDefault()}
+      onBlur={handleBlur}
     />
   )
 })
