@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.1.1
+
+### Patch Changes
+
+- fb7cae9: Fix issue where Form component built output wasn't a proper ES module resulting in an issue with code-splitting and component registration.
+
 ## 0.1.0
 
 ⚠️ BREAKING CHANGE ⚠️
