@@ -29,7 +29,7 @@ import Placeholder from './components/Placeholder'
 import Field from './components/Field'
 import Spinner from './components/Spinner'
 import Button from '../Button'
-import { TableColumn, useTable } from '../../hooks'
+import type { TableColumn, Table } from './types'
 import { cssGridItem, cssMargin, cssMediaRules } from '../../utils/cssMediaRules'
 import {
   ElementIDValue,
@@ -50,8 +50,9 @@ import { BoxModelHandle, getBox } from '../../../box-model'
 import { PropControllersHandle } from '../../../state/modules/prop-controller-handles'
 import { DescriptorsPropControllers } from '../../../prop-controllers/instances'
 import { useTableFormFieldRefs } from '../../hooks/useTableFormFieldRefs'
-import { useMutation, gql } from '../../../api/react'
+import { useMutation, gql, useQuery } from '../../../api/react'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
+import { TABLE_BY_ID } from '../../utils/queries'
 
 const LOCAL_STORAGE_NAMESPACE = '@@makeswift/components/form'
 
@@ -235,7 +236,10 @@ const Form = forwardRef(function Form(
 ) {
   const fields = useMemo(() => fieldsProp?.fields ?? [], [fieldsProp])
   const grid = useMemo(() => fieldsProp?.grid ?? [], [fieldsProp])
-  const { data: { table } = {} } = useTable(tableId)
+  const { data: { table } = {} } = useQuery<{ table: Table | null }>(TABLE_BY_ID, {
+    skip: tableId == null,
+    variables: { id: tableId },
+  })
   const [createTableRecord] = useMutation(CREATE_TABLE_RECORD)
   const [refEl, setRefEl] = useState<HTMLElement | null>(null)
   const [propControllers, setPropControllers] =
