@@ -1,0 +1,15 @@
+{
+  "mode": "pre",
+  "tag": "next",
+  "initialVersions": {
+    "makeswift": "0.0.0",
+    "@makeswift/next-plugin": "0.0.0",
+    "@makeswift/runtime": "0.0.22"
+  },
+  "changesets": [
+    "dirty-brooms-teach",
+    "giant-colts-cough",
+    "mean-cups-call",
+    "twenty-stingrays-switch"
+  ]
+}

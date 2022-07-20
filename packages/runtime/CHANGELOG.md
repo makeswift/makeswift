@@ -1,5 +1,34 @@
 # @makeswift/runtime
 
+## 0.1.0-next.0
+
+### Minor Changes
+
+- b6fecc0: Add code-splitting to all builtin components.
+- 32129c0: Add @makeswift/next-plugin to @makeswift/runtime.
+
+  Our new Next.js plugin is available at `@makeswift/runtime/next/plugin`. It enables code-splitting
+  via `next/dynamic` and also removes the need to manually configure `next/image` domains.
+
+  ```js
+  const withMakeswift = require("@makeswift/runtime/next/plugin")();
+
+  /**
+   * @type {import('next').NextConfig}
+   */
+  const nextConfig = {
+    /* config options here */
+  };
+
+  module.exports = withMakeswift(nextConfig);
+  ```
+
+### Patch Changes
+
+- 28eb919: Fix text selection is preserved even after we change the focus to other text.
+- Updated dependencies [0e26971]
+  - @makeswift/next-plugin@0.1.0-next.0
+
 ## 0.0.22
 
 ### Patch Changes
