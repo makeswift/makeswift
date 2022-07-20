@@ -11,7 +11,7 @@ import EmailTableField from './components/EmailTableField'
 import URLTableField from './components/URLTableField'
 import NumberTableField from './components/NumberTableField'
 import PlaceholderTableField from './components/PlaceholderTableField'
-import { TableColumn } from '../../../../hooks'
+import { TableColumn } from '../../types'
 
 function getTypeMismatchErrorMessage(tableColumn: TableColumn | null | undefined, label: string) {
   switch ((tableColumn || {}).__typename) {

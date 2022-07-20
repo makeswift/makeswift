@@ -1,6 +1,3 @@
-import { useQuery } from '../../api/react'
-import { TABLE_BY_ID } from '../utils/queries'
-
 export type SingleLineTextTableColumn = {
   id: string
   name: string
@@ -78,15 +75,8 @@ export type TableColumn =
   | URLTableColumn
   | NumberTableColumn
 
-type Table = {
+export type Table = {
   id: string
   name: string
   columns: Array<TableColumn>
-}
-
-export function useTable(tableId: string | null | undefined) {
-  return useQuery<{ table: Table | null }>(TABLE_BY_ID, {
-    skip: tableId == null,
-    variables: { id: tableId },
-  })
 }
