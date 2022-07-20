@@ -2,6 +2,34 @@
 
 ## 0.1.0
 
+⚠️ BREAKING CHANGE ⚠️
+
+Our new Next.js plugin is available at `@makeswift/runtime/next/plugin`. It enables code-splitting
+via `next/dynamic` and also removes the need to manually configure `next/image` domains.
+
+All builtin components now use `next/dynamic` so make sure to configure the Makeswift Next.js plugin
+when upgrading to `0.1.0`. You can read more about code-splitting on our
+[docs](https://www.makeswift.com/docs/guides/code-splitting).
+
+### How to upgrade
+
+Make the following changes to your Next.js config file:
+
+```diff
++ const withMakeswift = require('@makeswift/runtime/next/plugin')()
+
+  /** @type {import('next').NextConfig} */
+  const nextConfig = {
+    reactStrictMode: true,
+-   images: {
+-     domains: ['s.mkswft.com'],
+-   },
+  }
+
+- module.exports = nextConfig
++ module.exports = withMakeswift(nextConfig)
+```
+
 ### Minor Changes
 
 - b6fecc0: Add code-splitting to all builtin components.
