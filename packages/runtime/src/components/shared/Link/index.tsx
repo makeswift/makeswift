@@ -22,7 +22,7 @@ export const Link = forwardRef<HTMLAnchorElement, Props>(function Link(
     link?.type === 'SCROLL_TO_ELEMENT' ? link.payload.elementIdConfig?.elementKey : null
   const elementId = useElementId(elementKey)
 
-  let href = ''
+  let href = '#'
   let target: '_blank' | '_self' | undefined
   let block: 'start' | 'center' | 'end' | undefined
 
