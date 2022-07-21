@@ -200,14 +200,14 @@ function useDispatch(): Dispatch {
   return store.dispatch
 }
 
+const originalError = console.error
+let patched = false
+
 /**
  * @see https://github.com/facebook/react/blob/a2505792ed17fd4d7ddc69561053c3ac90899491/packages/react-reconciler/src/ReactFiberBeginWork.new.js#L1814-L1890
  */
-function useSuppressRefWarning(ownerName: string) {
-  const originalErrorRef = useRef(console.error)
-  const patchedRef = useRef(false)
-
-  if (patchedRef.current === false) {
+function suppressRefWarning(ownerName: string): void {
+  if (patched === false) {
     console.error = (...args) => {
       if (
         typeof args[0] === 'string' &&
@@ -217,10 +217,10 @@ function useSuppressRefWarning(ownerName: string) {
         return
       }
 
-      return originalErrorRef.current(...args)
+      return originalError(...args)
     }
 
-    patchedRef.current = true
+    patched = true
   }
 }
 
@@ -239,7 +239,7 @@ const ElementData = memo(
 
     useImperativeHandle(ref, () => handle ?? foundDomNode, [handle, foundDomNode])
 
-    useSuppressRefWarning(`\`ForwardRef(${ElementData.name})\``)
+    suppressRefWarning(`\`ForwardRef(${ElementData.name})\``)
 
     if (Component == null) {
       return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Component not found" />
