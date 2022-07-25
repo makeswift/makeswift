@@ -1,4 +1,7 @@
 {
   "name": "makeswift",
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "dependencies": {
+    "commander": "^9.4.0"
+  }
 }
