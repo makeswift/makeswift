@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.1.2
+
+### Patch Changes
+
+- 21f9e8b: Add TextStyle option to Style control
+- 4e0e38d: Fix `console.error` stack overflow.
+- 1058fb2: Avoid passing an empty string to `next/link` `href` prop.
+
 ## 0.1.1
 
 ### Patch Changes
