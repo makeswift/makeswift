@@ -103,12 +103,85 @@ export type BorderRadiusPropertyData = {
   borderBottomLeftRadius: LengthPercentageData | null | undefined
 }
 
+/**
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/font-family
+ *
+ * @todos
+ * - Remove `null` from possible values of longhand properties
+ * - Remove `undefined` from possible values and make fields optional
+ */
+export type FontFamilyPropertyData = string | null | undefined
+
+/**
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/letter-spacing
+ *
+ * @todos
+ * - Remove `null` from possible values of longhand properties
+ * - Remove `undefined` from possible values and make fields optional
+ */
+export type LetterSpacingPropertyData = number | null | undefined
+
+/**
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/font-size
+ *
+ * @todos
+ * - Remove `null` from possible values of longhand properties
+ * - Remove `undefined` from possible values and make fields optional
+ */
+export type FontSizePropertyData =
+  | {
+      value: number
+      unit: 'px'
+    }
+  | null
+  | undefined
+
+/**
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight
+ *
+ * @todos
+ * - Remove `null` from possible values of longhand properties
+ * - Remove `undefined` from possible values and make fields optional
+ */
+export type FontWeightPropertyData = number | null | undefined
+
+/**
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform
+ *
+ * @todos
+ * - Match the type with specification
+ */
+export type TextTransformPropertyData = 'uppercase'[]
+
+/**
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/font-style
+ *
+ * @todos
+ * - Match the type with specification
+ */
+export type FontStylePropertyData = 'italic'[]
+
+/**
+ * @todos
+ * - Remove `null` from possible values of longhand properties
+ * - Remove `undefined` from possible values and make fields optional
+ */
+export type TextStylePropertyData = {
+  fontFamily?: FontFamilyPropertyData | null | undefined
+  letterSpacing: LetterSpacingPropertyData | null | undefined
+  fontSize: FontSizePropertyData | null | undefined
+  fontWeight: FontWeightPropertyData | null | undefined
+  textTransform: TextTransformPropertyData
+  fontStyle: FontStylePropertyData
+}
+
 export type StyleControlData = {
   width?: ResponsiveValue<WidthPropertyData>
   margin?: ResponsiveValue<MarginPropertyData>
   padding?: ResponsiveValue<PaddingPropertyData>
   border?: ResponsiveValue<BorderPropertyData>
   borderRadius?: ResponsiveValue<BorderRadiusPropertyData>
+  textStyle?: ResponsiveValue<TextStylePropertyData>
 }
 
 export const StyleControlType = 'makeswift::controls::style'
@@ -119,6 +192,7 @@ export const StyleControlProperty = {
   Padding: 'makeswift::controls::style::property::padding',
   Border: 'makeswift::controls::style::property::border',
   BorderRadius: 'makeswift::controls::style::property::border-radius',
+  TextStyle: 'makeswift::controls::style::property::text-style',
 } as const
 
 export type StyleControlProperty = typeof StyleControlProperty[keyof typeof StyleControlProperty]
@@ -138,6 +212,7 @@ const AllStyleControlProperties: StyleControlProperty[] = [
   StyleControlProperty.Padding,
   StyleControlProperty.Border,
   StyleControlProperty.BorderRadius,
+  StyleControlProperty.TextStyle,
 ]
 
 export type StyleControlDefinition = {
@@ -166,3 +241,4 @@ Style.Margin = StyleControlProperty.Margin
 Style.Padding = StyleControlProperty.Padding
 Style.Border = StyleControlProperty.Border
 Style.BorderRadius = StyleControlProperty.BorderRadius
+Style.TextStyle = StyleControlProperty.TextStyle

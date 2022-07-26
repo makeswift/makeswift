@@ -9,6 +9,7 @@ import { responsiveStyle } from '../../../components/utils/responsive-style'
 
 import {
   BorderRadiusLonghandPropertyData,
+  FontSizePropertyData,
   MarginLonghandPropertyData,
   PaddingLonghandPropertyData,
   StyleControlData,
@@ -34,8 +35,9 @@ function useStyleControlCssObject(
         style?.padding,
         useBorder(style?.border),
         style?.borderRadius,
+        style?.textStyle,
       ] as const,
-      ([width, margin, padding, border, borderRadius]) => ({
+      ([width, margin, padding, border, borderRadius, textStyle]) => ({
         ...(properties.includes(StyleControlProperty.Width) && {
           width: widthToString(width) ?? '100%',
         }),
@@ -62,6 +64,14 @@ function useStyleControlCssObject(
           borderTopRightRadius: borderRadiusToString(borderRadius?.borderTopRightRadius) ?? 0,
           borderBottomRightRadius: borderRadiusToString(borderRadius?.borderBottomRightRadius) ?? 0,
           borderBottomLeftRadius: borderRadiusToString(borderRadius?.borderBottomLeftRadius) ?? 0,
+        }),
+        ...(properties.includes(StyleControlProperty.TextStyle) && {
+          ...(textStyle?.fontFamily && { fontFamily: textStyle.fontFamily }),
+          ...(textStyle?.letterSpacing && { letterSpacing: textStyle.letterSpacing }),
+          ...(textStyle?.fontSize && { fontSize: fontSizeToString(textStyle.fontSize) }),
+          ...(textStyle?.fontWeight && { fontWeight: textStyle.fontWeight }),
+          textTransform: textStyle?.textTransform ?? [],
+          fontStyle: textStyle?.fontStyle ?? [],
         }),
       }),
     ),
@@ -106,6 +116,10 @@ function useStyleControlCssObject(
     if (borderRadius == null) return null
 
     return `${borderRadius.value}${borderRadius.unit}`
+  }
+
+  function fontSizeToString(fontSize: NonNullable<FontSizePropertyData>) {
+    return `${fontSize.value}${fontSize.unit}`
   }
 }
 
