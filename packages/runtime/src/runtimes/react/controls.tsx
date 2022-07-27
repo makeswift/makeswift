@@ -5,6 +5,9 @@ import * as ReactPage from '../../state/react-page'
 import { Props } from '../../prop-controllers'
 import {
   Descriptor,
+  PaddingDescriptor,
+  PaddingPropControllerFormat,
+  PaddingValue,
   ResolveOptions,
   ResponsiveValue,
   WidthPropControllerFormat,
@@ -13,7 +16,7 @@ import {
 } from '../../prop-controllers/descriptors'
 import { useResponsiveColor } from '../../components/hooks'
 import type { ColorValue } from '../../components/utils/types'
-import { responsiveWidth } from '../../components/utils/responsive-style'
+import { responsivePadding, responsiveWidth } from '../../components/utils/responsive-style'
 import {
   CheckboxControlType,
   ColorControlType,
@@ -51,6 +54,22 @@ export type ResolveWidthControlValue<T extends Descriptor> = T extends WidthDesc
         T['options']
       >['format'] extends typeof WidthPropControllerFormat.ResponsiveValue
     ? WidthValue | undefined
+    : never
+  : never
+
+function usePaddingStyle(value: PaddingValue | undefined): string {
+  return useStyle(responsivePadding(value))
+}
+
+export type ResolvePaddingControlValue<T extends Descriptor> = T extends PaddingDescriptor
+  ? undefined extends ResolveOptions<T['options']>['format']
+    ? PaddingValue | undefined
+    : ResolveOptions<T['options']>['format'] extends typeof PaddingPropControllerFormat.ClassName
+    ? string
+    : ResolveOptions<
+        T['options']
+      >['format'] extends typeof PaddingPropControllerFormat.ResponsiveValue
+    ? PaddingValue | undefined
     : never
   : never
 
@@ -127,6 +146,23 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                     key={descriptor.type}
                     hook={useWidthStyle}
                     parameters={[props[propName], descriptor]}
+                  >
+                    {value => renderFn({ ...propsValue, [propName]: value })}
+                  </RenderHook>
+                )
+
+              default:
+                return renderFn({ ...propsValue, [propName]: props[propName] })
+            }
+
+          case Props.Types.Padding:
+            switch (descriptor.options.format) {
+              case PaddingPropControllerFormat.ClassName:
+                return (
+                  <RenderHook
+                    key={descriptor.type}
+                    hook={usePaddingStyle}
+                    parameters={[props[propName]]}
                   >
                     {value => renderFn({ ...propsValue, [propName]: value })}
                   </RenderHook>

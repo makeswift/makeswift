@@ -1,6 +1,6 @@
 import type * as Slate from 'slate'
 import { StyleControlDefinition, StyleControlType } from '../controls/style'
-import { ResolveWidthControlValue } from '../runtimes/react/controls'
+import { ResolvePaddingControlValue, ResolveWidthControlValue } from '../runtimes/react/controls'
 import { StyleControlFormattedValue } from '../runtimes/react/controls/style'
 import type { Element, Data } from '../state/react-page'
 import type { ResponsiveColor } from '../runtimes/react/controls'
@@ -523,13 +523,28 @@ type Padding = {
 
 export type PaddingValue = ResponsiveValue<Padding>
 
-type PaddingOptions = Options<{ preset?: PaddingValue }>
+export const PaddingPropControllerFormat = {
+  ClassName: 'makeswift::prop-controllers::padding::format::class-name',
+  ResponsiveValue: 'makeswift::prop-controllers::padding::format::responsive-value',
+} as const
 
-type PaddingDescriptor<_T = PaddingValue> = { type: typeof Types.Padding; options: PaddingOptions }
+export type PaddingPropControllerFormat =
+  typeof PaddingPropControllerFormat[keyof typeof PaddingPropControllerFormat]
 
-export function Padding(options: PaddingOptions = {}): PaddingDescriptor {
+type PaddingOptions = { preset?: PaddingValue; format?: PaddingPropControllerFormat }
+
+export type PaddingDescriptor<_T = PaddingValue, U extends PaddingOptions = PaddingOptions> = {
+  type: typeof Types.Padding
+  options: U
+}
+
+export function Padding<T extends PaddingOptions>(
+  options: T & PaddingOptions = {} as T,
+): PaddingDescriptor<PaddingValue, T> {
   return { type: Types.Padding, options }
 }
+
+Padding.Format = PaddingPropControllerFormat
 
 export type ResponsiveColorValue = ResponsiveValue<Color>
 
@@ -1036,6 +1051,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResponsiveColor | null | undefined
   : T['type'] extends typeof Types.Width
   ? ResolveWidthControlValue<T>
+  : T['type'] extends typeof Types.Padding
+  ? ResolvePaddingControlValue<T>
   : T extends Descriptor<infer U>
   ? U | undefined
   : never

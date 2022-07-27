@@ -8,13 +8,15 @@ import {
   BorderRadiusLonghandPropertyData,
   FontSizePropertyData,
   MarginLonghandPropertyData,
-  PaddingLonghandPropertyData,
   StyleControlData,
   StyleControlDefinition,
   StyleControlProperty,
   WidthPropertyData,
 } from '../../../controls'
 import { useStyle } from '../use-style'
+import { lengthDataToString } from '../../../css/length'
+import { lengthPercentageDataToString } from '../../../css/length-percentage'
+import { paddingPropertyDataToStyle } from '../../../css/padding'
 
 function useStyleControlCssObject(
   style: StyleControlData | undefined,
@@ -45,12 +47,14 @@ function useStyleControlCssObject(
           marginBottom: marginToString(margin?.marginBottom) ?? 0,
           marginLeft: marginToString(margin?.marginLeft) ?? 'auto',
         }),
-        ...(properties.includes(StyleControlProperty.Padding) && {
-          paddingTop: paddingToString(padding?.paddingTop) ?? 0,
-          paddingRight: paddingToString(padding?.paddingRight) ?? 0,
-          paddingBottom: paddingToString(padding?.paddingBottom) ?? 0,
-          paddingLeft: paddingToString(padding?.paddingLeft) ?? 0,
-        }),
+        ...(properties.includes(StyleControlProperty.Padding) &&
+          padding != null &&
+          paddingPropertyDataToStyle(padding, {
+            paddingTop: 0,
+            paddingRight: 0,
+            paddingBottom: 0,
+            paddingLeft: 0,
+          })),
         ...(properties.includes(StyleControlProperty.Border) && {
           borderTop: borderSideToString(border?.borderTop) ?? '0 solid black',
           borderRight: borderSideToString(border?.borderRight) ?? '0 solid black',
@@ -78,7 +82,7 @@ function useStyleControlCssObject(
   function widthToString(widthProperty: WidthPropertyData | undefined): string | null {
     if (widthProperty == null) return null
 
-    return `${widthProperty.value}${widthProperty.unit}`
+    return lengthPercentageDataToString(widthProperty)
   }
 
   function marginToString(
@@ -88,15 +92,7 @@ function useStyleControlCssObject(
 
     if (marginProperty === 'auto') return marginProperty
 
-    return `${marginProperty.value}${marginProperty.unit}`
-  }
-
-  function paddingToString(
-    paddingProperty: PaddingLonghandPropertyData | null | undefined,
-  ): string | null {
-    if (paddingProperty == null) return null
-
-    return `${paddingProperty.value}${paddingProperty.unit}`
+    return lengthDataToString(marginProperty)
   }
 
   function borderSideToString(borderSide: BorderSide | null | undefined): string | null {
@@ -113,7 +109,7 @@ function useStyleControlCssObject(
   ): string | null {
     if (borderRadius == null) return null
 
-    return `${borderRadius.value}${borderRadius.unit}`
+    return lengthPercentageDataToString(borderRadius)
   }
 
   function fontSizeToString(fontSize: NonNullable<FontSizePropertyData>) {

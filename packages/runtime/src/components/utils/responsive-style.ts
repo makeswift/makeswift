@@ -6,6 +6,7 @@ import {
   ResponsiveValueType as ExtractResponsiveValue,
   Length as LengthValue,
   WidthValue,
+  PaddingValue,
 } from '../../prop-controllers/descriptors'
 import {
   FallbackStrategy,
@@ -13,6 +14,7 @@ import {
   getDeviceMediaQuery,
   join as joinResponsiveValues,
 } from './devices'
+import { PaddingPropertyData, paddingPropertyDataToStyle } from '../../css/padding'
 
 export function responsiveStyle<V, A extends ReadonlyArray<ResponsiveValue<V> | null | undefined>>(
   responsiveValues: A,
@@ -46,4 +48,19 @@ export function responsiveWidth(
       width: typeof width === 'object' ? `${width.value}${width.unit}` : width,
     })),
   }
+}
+
+export function responsivePadding(
+  paddingData: PaddingValue | undefined,
+  defaultValue: PaddingPropertyData = {} as PaddingPropertyData,
+): CSSObject {
+  return responsiveStyle([paddingData], ([padding = {} as PaddingPropertyData]) =>
+    paddingPropertyDataToStyle(
+      padding,
+      Object.assign(
+        { paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0 },
+        defaultValue,
+      ),
+    ),
+  )
 }
