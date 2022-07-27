@@ -1,23 +1,9 @@
-import { CopyContext, ReplacementContext } from '../state/react-page'
+import type { LengthData } from '../css/length'
+import type { LengthPercentageData } from '../css/length-percentage'
+import { PaddingPropertyData } from '../css/padding'
 import { ColorData, ResponsiveValue } from './types'
-
+import { CopyContext, ReplacementContext } from '../state/react-page'
 import { copyColorData } from './color'
-
-/**
- * @see https://developer.mozilla.org/en-US/docs/Web/CSS/length
- *
- * @todos
- * - Add additional units
- * - Rename `value` field to `amount` or a more descriptive name representative of the "distance"
- *   represented by a CSS length
- */
-export type LengthData = { value: number; unit: 'px' }
-
-/** @see https://developer.mozilla.org/en-US/docs/Web/CSS/percentage */
-export type PercentageData = { value: number; unit: '%' }
-
-/** @see https://developer.mozilla.org/en-US/docs/Web/CSS/length-percentage */
-export type LengthPercentageData = LengthData | PercentageData
 
 /** @see https://developer.mozilla.org/en-US/docs/Web/CSS/width */
 export type WidthPropertyData = LengthPercentageData
@@ -37,23 +23,6 @@ export type MarginPropertyData = {
   marginRight: MarginLonghandPropertyData | null | undefined
   marginBottom: MarginLonghandPropertyData | null | undefined
   marginLeft: MarginLonghandPropertyData | null | undefined
-}
-
-/** @see https://developer.mozilla.org/en-US/docs/Web/CSS/padding#constituent_properties */
-export type PaddingLonghandPropertyData = LengthData
-
-/**
- * @see https://developer.mozilla.org/en-US/docs/Web/CSS/padding
- *
- * @todos
- * - Remove `null` from possible values
- * - Remove `undefined` from possible values and make fields optional
- */
-export type PaddingPropertyData = {
-  paddingTop: PaddingLonghandPropertyData | null | undefined
-  paddingRight: PaddingLonghandPropertyData | null | undefined
-  paddingBottom: PaddingLonghandPropertyData | null | undefined
-  paddingLeft: PaddingLonghandPropertyData | null | undefined
 }
 
 /**

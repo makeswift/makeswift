@@ -60,6 +60,7 @@ export function registerComponent(runtime: ReactRuntime) {
         }),
         margin: Props.Margin(),
         padding: Props.Padding({
+          format: Props.Padding.Format.ClassName,
           preset: [
             {
               deviceId: 'desktop',

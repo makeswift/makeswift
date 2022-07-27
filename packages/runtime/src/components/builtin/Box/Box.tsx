@@ -10,7 +10,6 @@ import {
   BorderRadiusValue,
   ElementIDValue,
   MarginValue,
-  PaddingValue,
   ResponsiveIconRadioGroupValue,
   GridValue,
   GapYValue,
@@ -24,7 +23,6 @@ import {
 } from '../../../prop-controllers/descriptors'
 import {
   cssMargin,
-  cssPadding,
   cssBorderRadius,
   cssGridItem,
   cssMediaRules,
@@ -50,7 +48,7 @@ type Props = {
     'flex-start' | 'center' | 'flex-end' | 'space-between'
   >
   margin?: MarginValue
-  padding?: PaddingValue
+  padding?: string
   border?: BorderValue
   borderRadius?: BorderRadiusValue
   boxShadow?: ShadowsValue
@@ -81,9 +79,8 @@ const StyledBackgroundsContainer = styled(BackgroundsContainer).withConfig({
 `
 
 const Grid = styled.div.withConfig({
-  shouldForwardProp: prop => !['padding', 'border', 'boxShadow', 'alignContent'].includes(prop),
+  shouldForwardProp: prop => !['border', 'boxShadow', 'alignContent'].includes(prop),
 })<{
-  padding: Props['padding']
   border: BorderPropControllerData | null | undefined
   boxShadow: BoxShadowPropControllerData | null | undefined
   alignContent: Props['verticalAlign']
@@ -91,7 +88,6 @@ const Grid = styled.div.withConfig({
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  ${cssPadding()}
   ${cssBorder()}
   ${cssBoxShadow()}
   ${props =>
@@ -220,7 +216,7 @@ const Box = forwardRef(function Box(
       <Grid
         as={hasAnimations ? motion.div : 'div'}
         ref={innerRef}
-        padding={padding}
+        className={cx(padding)}
         border={borderData}
         boxShadow={boxShadowData}
         alignContent={verticalAlign}
