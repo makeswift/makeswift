@@ -96,7 +96,6 @@ export function responsiveGridItem(props: {
 }): CSSObject {
   return {
     display: 'flex',
-    alignItems: 'flex-start',
     ...responsiveStyle(
       [props.grid, props.columnGap, props.rowGap] as const,
       ([
