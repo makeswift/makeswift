@@ -1,44 +1,18 @@
-import styled, { createGlobalStyle } from 'styled-components'
 import { normalize } from 'polished'
 import { forwardRef, Ref } from 'react'
 
 import Placeholder from './components/Placeholder'
-import {
+import type {
   GridValue,
   BackgroundsValue,
   GapXValue,
   GapYValue,
 } from '../../../prop-controllers/descriptors'
 import { Element } from '../../../runtimes/react'
-import { cssGridItem } from '../../utils/cssMediaRules'
 import BackgroundsContainer from '../../shared/BackgroundsContainer'
-import { Props } from '../../../prop-controllers'
-
-const Normalize = createGlobalStyle`
-  html {
-    box-sizing: border-box;
-  }
-
-  *, *::before, *::after {
-    box-sizing: inherit;
-  }
-
-  ${normalize()}
-`
-
-const Grid = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-`
-
-const GridItem = styled.div.withConfig({
-  shouldForwardProp: prop => !['grid', 'index', 'rowGap', 'columnGap'].includes(prop.toString()),
-})`
-  display: flex;
-  align-items: flex-start;
-  ${cssGridItem()}
-`
+import { useGlobalStyle } from '../../../runtimes/react/use-global-style'
+import { GridItem } from '../../shared/grid-item'
+import { useStyle } from '../../../runtimes/react/use-style'
 
 type Props = {
   children?: GridValue
@@ -51,29 +25,37 @@ const Root = forwardRef(function Page(
   { children, backgrounds, rowGap, columnGap }: Props,
   ref: Ref<HTMLDivElement>,
 ) {
+  useGlobalStyle({
+    html: {
+      boxSizing: 'border-box',
+    },
+    '*, *::before, *::after': {
+      boxSizing: 'inherit',
+    },
+  })
+
+  useGlobalStyle(normalize())
+
   return (
-    <>
-      <Normalize />
-      <BackgroundsContainer ref={ref} style={{ background: 'white' }} backgrounds={backgrounds}>
-        <Grid>
-          {children && children.elements.length > 0 ? (
-            children.elements.map((child, index) => (
-              <GridItem
-                key={child.key}
-                grid={children.columns}
-                index={index}
-                columnGap={columnGap}
-                rowGap={rowGap}
-              >
-                <Element element={child} />
-              </GridItem>
-            ))
-          ) : (
-            <Placeholder />
-          )}
-        </Grid>
-      </BackgroundsContainer>
-    </>
+    <BackgroundsContainer ref={ref} style={{ background: 'white' }} backgrounds={backgrounds}>
+      <div className={useStyle({ display: 'flex', flexWrap: 'wrap', width: '100%' })}>
+        {children && children.elements.length > 0 ? (
+          children.elements.map((child, index) => (
+            <GridItem
+              key={child.key}
+              grid={children.columns}
+              index={index}
+              columnGap={columnGap}
+              rowGap={rowGap}
+            >
+              <Element element={child} />
+            </GridItem>
+          ))
+        ) : (
+          <Placeholder />
+        )}
+      </div>
+    </BackgroundsContainer>
   )
 })
 
