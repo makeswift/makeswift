@@ -1,18 +1,17 @@
 import { forwardRef } from 'react'
-import styled from 'styled-components'
+import { useStyle } from '../../../../../runtimes/react/use-style'
 
-const PlaceholderBase = styled.div`
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-  height: 80px;
-  padding: 8px;
-`
-
-type Props = Record<string, never>
-
-export default forwardRef<HTMLDivElement, Props>(function Placeholder(props: Props, ref) {
+export default forwardRef<HTMLDivElement>(function Placeholder(_props, ref) {
   return (
-    <PlaceholderBase {...props} ref={ref}>
+    <div
+      ref={ref}
+      className={useStyle({
+        width: '100%',
+        background: 'rgba(161, 168, 194, 0.18)',
+        height: 80,
+        padding: 8,
+      })}
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="100%"
@@ -32,6 +31,6 @@ export default forwardRef<HTMLDivElement, Props>(function Placeholder(props: Pro
           ry="4"
         />
       </svg>
-    </PlaceholderBase>
+    </div>
   )
 })
