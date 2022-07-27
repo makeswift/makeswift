@@ -22,7 +22,6 @@ import {
 } from '../../../prop-controllers/descriptors'
 import {
   cssBorderRadius,
-  cssGridItem,
   cssMediaRules,
   cssBorder,
   cssBoxShadow,
@@ -36,6 +35,9 @@ import {
   useBoxShadow,
 } from '../../hooks'
 import { BoxAnimateIn } from './constants'
+import { responsiveStyle } from '../../utils/responsive-style'
+import { GridItem } from '../../shared/grid-item'
+import { useStyle } from '../../../runtimes/react/use-style'
 
 type Props = {
   id?: ElementIDValue
@@ -90,23 +92,6 @@ const Grid = styled.div.withConfig({
     cssMediaRules([props.alignContent] as const, ([alignContent = 'flex-start']) => ({
       alignContent,
     }))}
-`
-const GridItem = styled.div.withConfig({
-  shouldForwardProp: prop => !['grid', 'alignItems', 'index', 'columnGap', 'rowGap'].includes(prop),
-})<{
-  grid: NonNullable<Props['children']>['columns']
-  alignItems: Props['verticalAlign']
-  index: number
-  columnGap: Props['columnGap']
-  rowGap: Props['rowGap']
-}>`
-  display: flex;
-
-  /* IE11 doesn't recognize space-between and treats it as stretch, so we fall back to flex-start */
-  align-items: flex-start;
-  ${cssGridItem()}
-  ${props =>
-    cssMediaRules([props.alignItems] as const, ([alignItems = 'flex-start']) => ({ alignItems }))}
 `
 
 const Box = forwardRef(function Box(
@@ -181,6 +166,10 @@ const Box = forwardRef(function Box(
   const borderData = useBorder(border)
   const boxShadowData = useBoxShadow(boxShadow)
 
+  const gridItemClassName = useStyle(
+    responsiveStyle([verticalAlign], ([alignItems = 'flex-start']) => ({ alignItems })),
+  )
+
   const { initial, animate, variants, transition, key } = useBoxAnimations({
     boxAnimateType,
     boxAnimateDuration,
@@ -224,11 +213,12 @@ const Box = forwardRef(function Box(
             <GridItem
               as={hasAnimations ? motion.div : 'div'}
               key={child.key}
+              className={gridItemClassName}
               grid={children.columns}
               index={index}
               columnGap={columnGap}
               rowGap={rowGap}
-              alignItems={verticalAlign}
+              // @ts-ignore: `variants` is not a prop for `div`, but it is for `motion.div`.
               variants={variants?.child}
               transition={transition?.child}
             >
