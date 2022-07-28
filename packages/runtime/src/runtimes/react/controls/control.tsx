@@ -13,6 +13,9 @@ import {
   ImageControlData,
   ImageControlDefinition,
   ImageControlType,
+  LinkControlData,
+  LinkControlDefinition,
+  LinkControlType,
   ListControlData,
   ListControlDefinition,
   ListControlType,
@@ -37,6 +40,7 @@ import { CheckboxControlValue, useCheckboxControlValue } from './checkbox'
 import { ColorControlValue, useColorValue } from './color'
 import { ComboboxControlValue, useComboboxControlValue } from './combobox'
 import { ResolveImageControlValue, useImageControlValue } from './image'
+import { LinkControlValue, useLinkControlValue } from './link'
 import { ListControlValue } from './list'
 import { NumberControlValue, useNumber } from './number'
 import { SelectControlValue, useSelectControlValue } from './select'
@@ -59,6 +63,8 @@ export type ControlDefinitionValue<T extends ControlDefinition> =
     ? ColorControlValue<T>
     : T extends ImageControlDefinition
     ? ResolveImageControlValue<T>
+    : T extends LinkControlDefinition
+    ? LinkControlValue<T>
     : T extends ComboboxControlDefinition
     ? ComboboxControlValue<T>
     : T extends ShapeControlDefinition
@@ -151,6 +157,17 @@ export function ControlValue<T extends ControlDefinition>({
           key={definition.type}
           hook={useImageControlValue}
           parameters={[data as ImageControlData, definition]}
+        >
+          {value => children(value as ControlDefinitionValue<T>)}
+        </RenderHook>
+      )
+
+    case LinkControlType:
+      return (
+        <RenderHook
+          key={definition.type}
+          hook={useLinkControlValue}
+          parameters={[data as LinkControlData, definition]}
         >
           {value => children(value as ControlDefinitionValue<T>)}
         </RenderHook>

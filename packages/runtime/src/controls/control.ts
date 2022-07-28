@@ -2,6 +2,7 @@ import { CheckboxControlData, CheckboxControlDefinition } from './checkbox'
 import { ColorControlData, ColorControlDefinition } from './color'
 import { ComboboxControlData, ComboboxControlDefinition } from './combobox'
 import { ImageControlData, ImageControlDefinition } from './image'
+import { LinkControlData, LinkControlDefinition } from './link'
 import { ListControlData, ListControlDefinition } from './list'
 import { NumberControlData, NumberControlDefinition } from './number'
 import { SelectControlData, SelectControlDefinition } from './select'
@@ -20,6 +21,7 @@ export type ControlDefinition =
   | ComboboxControlDefinition
   | ShapeControlDefinition
   | ListControlDefinition<any>
+  | LinkControlDefinition
 
 export type ControlDefinitionData<T extends ControlDefinition> = T extends CheckboxControlDefinition
   ? CheckboxControlData
@@ -41,4 +43,6 @@ export type ControlDefinitionData<T extends ControlDefinition> = T extends Check
   ? ShapeControlData<T>
   : T extends ListControlDefinition
   ? ListControlData<T>
+  : T extends LinkControlDefinition
+  ? LinkControlData
   : never
