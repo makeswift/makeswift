@@ -131,10 +131,16 @@ export async function getServerSideProps({
   const url = `${getApiOrigin()}/v0/preview-page-data?id=${pageId}`
   const res = await fetch(url, { headers: { 'x-api-key': getApiKey() } })
 
-  if (res.status !== 200) {
+  if (res.status === 404) {
     console.error(await res.json())
 
     return { notFound: true }
+  }
+
+  if (!res.ok) {
+    const json = await res.json()
+
+    throw new Error(json.message)
   }
 
   const page: APIResult = await res.json()
@@ -165,10 +171,16 @@ export async function getStaticProps({
 
   const res = await fetch(url, { headers: { 'x-api-key': getApiKey() } })
 
-  if (res.status !== 200) {
+  if (res.status === 404) {
     console.error(await res.json())
 
     return { notFound: true, revalidate: REVALIDATE_SECONDS }
+  }
+
+  if (!res.ok) {
+    const json = await res.json()
+
+    throw new Error(json.message)
   }
 
   const page: APIResult = await res.json()
