@@ -24,7 +24,6 @@ npm install
 3. Update the `.env` file to include your Makeswift site's API key:
 
 ```diff
-   MAKESWIFT_API_HOST=https://api.makeswift.com
 -- MAKESWIFT_SITE_API_KEY=
 ++ MAKESWIFT_SITE_API_KEY=<YOUR_MAKESWIFT_SITE_API_KEY>
 ```
