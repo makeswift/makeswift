@@ -21,6 +21,7 @@ import {
   ColorControlType,
   ComboboxControlType,
   ImageControlType,
+  LinkControlType,
   ListControlType,
   NumberControlType,
   SelectControlType,
@@ -98,6 +99,7 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
           case ComboboxControlType:
           case ShapeControlType:
           case ListControlType:
+          case LinkControlType:
             return (
               <ControlValue definition={descriptor} data={props[propName]}>
                 {value => renderFn({ ...propsValue, [propName]: value })}

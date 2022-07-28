@@ -11,6 +11,7 @@ import {
   ColorControlDefinition,
   ComboboxControlDefinition,
   ImageControlDefinition,
+  LinkControlDefinition,
   ListControlDefinition,
   SelectControlDefinition,
   ShapeControlDefinition,
@@ -26,6 +27,7 @@ import { ResolveImageControlValue } from '../runtimes/react/controls/image'
 import { ShapeControlValue } from '../runtimes/react/controls/shape'
 import { ListControlValue } from '../runtimes/react/controls/list'
 import { ComboboxControlValue } from '../runtimes/react/controls/combobox'
+import { LinkControlValue } from '../runtimes/react/controls/link'
 
 export type { Data }
 
@@ -961,6 +963,7 @@ export type Descriptor<T extends Data = Data> =
   | ComboboxControlDefinition
   | ShapeControlDefinition
   | ListControlDefinition
+  | LinkControlDefinition
 
 export type PanelDescriptorType =
   | typeof Types.Backgrounds
@@ -1022,6 +1025,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ShapeControlValue<T>
   : T extends ListControlDefinition
   ? ListControlValue<T>
+  : T extends LinkControlDefinition
+  ? LinkControlValue<T>
   : T['type'] extends typeof Types.ResponsiveColor
   ? ResponsiveColor | null | undefined
   : T['type'] extends typeof Types.Width
