@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.1.3
+
+### Patch Changes
+
+- 8c7cc26: Improve error messages when provided invalid environment variables. Also removes the need for the MAKESWIFT_API_HOST environment variable.
+- 587a0f8: Improve error handling for getServerSideProps and getStaticProps.
+
 ## 0.1.2
 
 ### Patch Changes
