@@ -82,13 +82,54 @@ type APIResult = PageData & {
   data: any
 }
 
+function getApiOrigin(): string {
+  const apiOriginString = process['env'].MAKESWIFT_API_HOST ?? 'https://api.makeswift.com'
+
+  try {
+    const url = new URL(apiOriginString)
+
+    return url.origin
+  } catch (error) {
+    const errorMessage =
+      '"MAKESWIFT_API_HOST" environment variable must be a valid URL. ' +
+      `Expected something like "https://api.makeswift.com" but instead received "${apiOriginString}".`
+
+    throw new Error(errorMessage)
+  }
+}
+
+const uuidRegExp =
+  /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/
+
+function getApiKey(): string {
+  const apiKey = process['env'].MAKESWIFT_SITE_API_KEY
+
+  if (apiKey == null) {
+    const errorMessage =
+      '"MAKESWIFT_SITE_API_KEY" environment variable must be set. ' +
+      'Please add your site API key to your `.env.local` file. ' +
+      'More info: https://www.makeswift.com/docs/guides/manual-setup#add-environment-variables'
+
+    throw new Error(errorMessage)
+  }
+
+  if (!uuidRegExp.test(apiKey)) {
+    const errorMEssage =
+      `Invalid Makeswift site API key "${apiKey}". ` +
+      'Please check your `.env.local` file for the "MAKESWIFT_SITE_API_KEY" environment variable. ' +
+      'More info: https://www.makeswift.com/docs/guides/manual-setup#add-environment-variables'
+
+    throw new Error(errorMEssage)
+  }
+
+  return apiKey
+}
+
 export async function getServerSideProps({
   query: { pageId },
 }: GetServerSidePropsContext): Promise<GetServerSidePropsResult<PageProps>> {
-  const url = `${process['env'].MAKESWIFT_API_HOST}/v0/preview-page-data?id=${pageId}`
-  const res = await fetch(url, {
-    headers: { 'x-api-key': process['env'].MAKESWIFT_SITE_API_KEY! },
-  })
+  const url = `${getApiOrigin()}/v0/preview-page-data?id=${pageId}`
+  const res = await fetch(url, { headers: { 'x-api-key': getApiKey() } })
 
   if (res.status !== 200) {
     console.error(await res.json())
@@ -100,7 +141,7 @@ export async function getServerSideProps({
 
   if (page == null) return { notFound: true }
 
-  const makeswiftApiEndpoint = `${process['env'].MAKESWIFT_API_HOST}/graphql`
+  const makeswiftApiEndpoint = `${getApiOrigin()}/graphql`
   const client = new MakeswiftClient({ uri: makeswiftApiEndpoint })
   const cacheData = await client.prefetch(page.data)
 
@@ -120,11 +161,9 @@ export async function getStaticProps({
 }: GetStaticPropsContext<{ path: string[] }>): Promise<GetStaticPropsResult<PageProps>> {
   if (params == null) return { notFound: true, revalidate: REVALIDATE_SECONDS }
   const { path = [] } = params
-  const url = `${process['env'].MAKESWIFT_API_HOST}/v0/live-page-data?path=${path.join('/')}`
+  const url = `${getApiOrigin()}/v0/live-page-data?path=${path.join('/')}`
 
-  const res = await fetch(url, {
-    headers: { 'x-api-key': process['env'].MAKESWIFT_SITE_API_KEY! },
-  })
+  const res = await fetch(url, { headers: { 'x-api-key': getApiKey() } })
 
   if (res.status !== 200) {
     console.error(await res.json())
@@ -136,7 +175,7 @@ export async function getStaticProps({
 
   if (page == null) return { notFound: true, revalidate: REVALIDATE_SECONDS }
 
-  const makeswiftApiEndpoint = `${process['env'].MAKESWIFT_API_HOST}/graphql`
+  const makeswiftApiEndpoint = `${getApiOrigin()}/graphql`
   const client = new MakeswiftClient({ uri: makeswiftApiEndpoint })
   const cacheData = await client.prefetch(page.data)
 
