@@ -49,7 +49,7 @@ type BackgroundData =
   | { id: string; type: 'gradient'; payload: BackgroundGradientData | null | undefined }
   | { id: string; type: 'video'; payload: BackgroundVideoData | null | undefined }
 
-type BackgroundsData = Array<BackgroundData>
+export type BackgroundsData = Array<BackgroundData>
 
 export type BackgroundsPropControllerData = ResponsiveValue<BackgroundsData>
 

@@ -1,13 +1,14 @@
-import styled, { css } from 'styled-components'
 import NextImage from 'next/image'
 
-import { cssMediaRules } from '../../../../utils/cssMediaRules'
-import { BackgroundsPropControllerData } from '../../../../hooks'
+import { BackgroundsPropControllerData, BackgroundsData } from '../../../../hooks'
 import { ResponsiveValue } from '../../../../../prop-controllers'
 import { ColorValue as Color } from '../../../../utils/types'
 import { colorToString } from '../../../../utils/colorToString'
 import Parallax from '../Parallax'
 import BackgroundVideo from '../BackgroundVideo'
+import { CSSObject } from '@emotion/css'
+import { useStyle } from '../../../../../runtimes/react/use-style'
+import { responsiveStyle } from '../../../../utils/responsive-style'
 
 function getColor(color: Color | null | undefined) {
   if (color == null) return 'black'
@@ -24,41 +25,18 @@ type GradientStop = { color: Color | null | undefined; location: number }
 const getStopsStyle = (stops: GradientStop[]) =>
   stops.map(({ color, location }) => `${getColor(color)} ${location}%`).join(',')
 
-type AspectRatio = 'wide' | 'standard'
-
-const getAspectRatio = (aspectRatio: AspectRatio) => {
-  switch (aspectRatio) {
-    case 'wide':
-      return 16 / 9
-    case 'standard':
-      return 4 / 3
-    default:
-      return 16 / 9
-  }
+const absoluteFillStyle: CSSObject = {
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0,
 }
 
-const AbsoluteFill = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-`
-
-const Container = styled(AbsoluteFill)`
-  border-radius: inherit;
-`
-
-const BackgroundsContainer = styled(Container)<{ visibility: ResponsiveValue<boolean> }>`
-  overflow: hidden;
-  ${p =>
-    cssMediaRules(
-      [p.visibility],
-      ([visibility]) => css`
-        display: ${visibility === true ? 'block' : 'none'};
-      `,
-    )}
-`
+const containerStyle: CSSObject = {
+  ...absoluteFillStyle,
+  borderRadius: 'inherit',
+}
 
 type Props = { backgrounds: BackgroundsPropControllerData | null | undefined }
 
@@ -73,108 +51,209 @@ export default function Backgrounds({ backgrounds }: Props): JSX.Element {
           value: v.deviceId === deviceId,
         }))
 
-        return (
-          <BackgroundsContainer key={deviceId} visibility={visibility}>
-            {[...value].reverse().map(bg => {
-              if (bg.type === 'color') {
-                return (
-                  <Container
-                    key={bg.id}
-                    style={{
-                      backgroundColor: getColor(bg.payload),
-                    }}
-                  />
-                )
-              }
-
-              if (bg.type === 'image' && bg.payload) {
-                const {
-                  publicUrl,
-                  position,
-                  repeat = 'no-repeat',
-                  size = 'cover',
-                  opacity,
-                  parallax,
-                } = bg.payload
-                const backgroundPosition = `${position.x}% ${position.y}%`
-
-                if (repeat === 'no-repeat' && size !== 'auto' && publicUrl != null) {
-                  return (
-                    <Parallax key={bg.id} strength={parallax}>
-                      {getParallaxProps => (
-                        <div {...getParallaxProps({ style: { opacity, overflow: 'hidden' } })}>
-                          <NextImage
-                            src={publicUrl}
-                            layout="fill"
-                            objectPosition={backgroundPosition}
-                            objectFit={size}
-                          />
-                        </div>
-                      )}
-                    </Parallax>
-                  )
-                }
-
-                return (
-                  <Parallax key={bg.id} strength={parallax}>
-                    {getParallaxProps => (
-                      <Container
-                        {...getParallaxProps({
-                          style: {
-                            backgroundImage: publicUrl != null ? `url('${publicUrl}')` : undefined,
-                            backgroundPosition,
-                            backgroundRepeat: repeat,
-                            backgroundSize: size,
-                            opacity,
-                          },
-                        })}
-                      />
-                    )}
-                  </Parallax>
-                )
-              }
-
-              if (bg.type === 'gradient' && bg.payload) {
-                const { angle, stops, isRadial } = bg.payload
-                const gradient = `${getStopsStyle(stops)}`
-
-                return (
-                  <Container
-                    key={bg.id}
-                    style={{
-                      background: isRadial
-                        ? `radial-gradient(${gradient})`
-                        : `linear-gradient(${angle}rad, ${gradient})`,
-                    }}
-                  />
-                )
-              }
-
-              if (bg.type === 'video' && bg.payload) {
-                const { url, aspectRatio, maskColor, zoom, opacity, parallax } = bg.payload
-
-                return (
-                  <Parallax key={bg.id} strength={parallax}>
-                    {getParallaxProps => (
-                      <Container {...getParallaxProps({})}>
-                        <BackgroundVideo
-                          url={url}
-                          zoom={zoom}
-                          opacity={opacity}
-                          aspectRatio={getAspectRatio(aspectRatio)}
-                          maskColor={getColor(maskColor)}
-                        />
-                      </Container>
-                    )}
-                  </Parallax>
-                )
-              }
-
-              return null
-            })}
-          </BackgroundsContainer>
-        )
+        return <BackgroundDeviceLayer key={deviceId} layer={value} visibility={visibility} />
       })}
     </>
+  )
+}
+
+type BackgroundLayerProps = {
+  layer: BackgroundsData
+  visibility: ResponsiveValue<boolean>
+}
+
+function BackgroundDeviceLayer({ layer, visibility }: BackgroundLayerProps) {
+  const visibilityStyle = responsiveStyle([visibility], ([v]) => ({
+    display: v === true ? 'block' : 'none',
+  }))
+
+  return (
+    <div className={useStyle({ ...containerStyle, ...visibilityStyle, overflow: 'hidden' })}>
+      {[...layer].reverse().map(bg => {
+        if (bg.type === 'color') {
+          return <ColorBackground key={bg.id} color={getColor(bg.payload)} />
+        }
+
+        if (bg.type === 'image' && bg.payload) {
+          return <ImageBackground {...bg.payload} key={bg.id} />
+        }
+
+        if (bg.type === 'gradient' && bg.payload) {
+          return (
+            <GradientBackground
+              {...bg.payload}
+              key={bg.id}
+              gradient={getStopsStyle(bg.payload.stops)}
+            />
+          )
+        }
+
+        if (bg.type === 'video' && bg.payload) {
+          return (
+            <VideoBackground
+              {...bg.payload}
+              key={bg.id}
+              maskColor={getColor(bg.payload.maskColor)}
+            />
+          )
+        }
+
+        return null
+      })}
+    </div>
+  )
+}
+
+type ColorBackgroundProps = { color: string }
+
+function ColorBackground({ color }: ColorBackgroundProps) {
+  return <div className={useStyle({ ...containerStyle, backgroundColor: color })} />
+}
+
+const ImageBackgroundRepeat = {
+  NoRepeat: 'no-repeat',
+  RepeatX: 'repeat-x',
+  RepeatY: 'repeat-y',
+  Repeat: 'repeat',
+} as const
+
+type ImageBackgroundRepeat = typeof ImageBackgroundRepeat[keyof typeof ImageBackgroundRepeat]
+
+const ImageBackgroundSize = {
+  Cover: 'cover',
+  Contain: 'contain',
+  Auto: 'auto',
+} as const
+
+type ImageBackgroundSize = typeof ImageBackgroundSize[keyof typeof ImageBackgroundSize]
+
+type ImageBackgroundProps = {
+  publicUrl?: string
+  position: { x: number; y: number }
+  repeat: ImageBackgroundRepeat
+  size?: ImageBackgroundSize
+  opacity?: number
+  parallax?: number
+}
+
+function ImageBackground({
+  publicUrl,
+  position,
+  repeat = ImageBackgroundRepeat.NoRepeat,
+  size = ImageBackgroundSize.Cover,
+  opacity,
+  parallax,
+}: ImageBackgroundProps) {
+  const backgroundPosition = `${position.x}% ${position.y}%`
+  const containerClassName = useStyle(containerStyle)
+
+  if (repeat === 'no-repeat' && size !== 'auto' && publicUrl != null) {
+    return (
+      <Parallax strength={parallax}>
+        {getParallaxProps => (
+          <div {...getParallaxProps({ style: { opacity, overflow: 'hidden' } })}>
+            <NextImage
+              src={publicUrl}
+              layout="fill"
+              objectPosition={backgroundPosition}
+              objectFit={size}
+            />
+          </div>
+        )}
+      </Parallax>
+    )
+  }
+
+  return (
+    <Parallax strength={parallax}>
+      {getParallaxProps => (
+        <div
+          className={containerClassName}
+          {...getParallaxProps({
+            style: {
+              backgroundImage: publicUrl != null ? `url('${publicUrl}')` : undefined,
+              backgroundPosition,
+              backgroundRepeat: repeat,
+              backgroundSize: size,
+              opacity,
+            },
+          })}
+        />
+      )}
+    </Parallax>
+  )
+}
+
+type GradientBackgroundProps = {
+  gradient: string
+  angle: number
+  isRadial: boolean
+}
+
+function GradientBackground({ gradient, isRadial, angle }: GradientBackgroundProps) {
+  return (
+    <div
+      className={useStyle({
+        ...containerStyle,
+        background: isRadial
+          ? `radial-gradient(${gradient})`
+          : `linear-gradient(${angle}rad, ${gradient})`,
+      })}
+    />
+  )
+}
+
+const BackgroundVideoAspectRatio = {
+  Wide: 'wide',
+  Standard: 'standard',
+} as const
+
+type BackgroundVideoAspectRatio =
+  typeof BackgroundVideoAspectRatio[keyof typeof BackgroundVideoAspectRatio]
+
+function getAspectRatio(aspectRatio: BackgroundVideoAspectRatio): number {
+  switch (aspectRatio) {
+    case 'wide':
+      return 16 / 9
+
+    case 'standard':
+      return 4 / 3
+
+    default:
+      return 16 / 9
+  }
+}
+
+type VideoBackgroundProps = {
+  url: string
+  aspectRatio: BackgroundVideoAspectRatio
+  maskColor: string
+  zoom: number
+  opacity: number
+  parallax: number
+}
+
+function VideoBackground({
+  url,
+  aspectRatio,
+  maskColor,
+  zoom,
+  opacity,
+  parallax,
+}: VideoBackgroundProps) {
+  return (
+    <Parallax strength={parallax}>
+      {getParallaxProps => (
+        <div {...getParallaxProps({ className: useStyle(containerStyle) })}>
+          <BackgroundVideo
+            url={url}
+            zoom={zoom}
+            opacity={opacity}
+            aspectRatio={getAspectRatio(aspectRatio)}
+            maskColor={maskColor}
+          />
+        </div>
+      )}
+    </Parallax>
   )
 }
