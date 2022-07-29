@@ -58,7 +58,7 @@ export function registerComponent(runtime: ReactRuntime) {
           ],
           defaultValue: 'flex-start',
         }),
-        margin: Props.Margin(),
+        margin: Props.Margin({ format: Props.Margin.Format.ClassName }),
         padding: Props.Padding({
           format: Props.Padding.Format.ClassName,
           preset: [

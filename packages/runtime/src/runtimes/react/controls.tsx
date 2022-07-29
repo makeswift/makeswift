@@ -5,6 +5,9 @@ import * as ReactPage from '../../state/react-page'
 import { Props } from '../../prop-controllers'
 import {
   Descriptor,
+  MarginDescriptor,
+  MarginPropControllerFormat,
+  MarginValue,
   PaddingDescriptor,
   PaddingPropControllerFormat,
   PaddingValue,
@@ -16,7 +19,11 @@ import {
 } from '../../prop-controllers/descriptors'
 import { useResponsiveColor } from '../../components/hooks'
 import type { ColorValue } from '../../components/utils/types'
-import { responsivePadding, responsiveWidth } from '../../components/utils/responsive-style'
+import {
+  responsiveMargin,
+  responsivePadding,
+  responsiveWidth,
+} from '../../components/utils/responsive-style'
 import {
   CheckboxControlType,
   ColorControlType,
@@ -70,6 +77,22 @@ export type ResolvePaddingControlValue<T extends Descriptor> = T extends Padding
         T['options']
       >['format'] extends typeof PaddingPropControllerFormat.ResponsiveValue
     ? PaddingValue | undefined
+    : never
+  : never
+
+function useMarginStyle(value: MarginValue | undefined): string {
+  return useStyle(responsiveMargin(value))
+}
+
+export type ResolveMarginControlValue<T extends Descriptor> = T extends MarginDescriptor
+  ? undefined extends ResolveOptions<T['options']>['format']
+    ? MarginValue | undefined
+    : ResolveOptions<T['options']>['format'] extends typeof MarginPropControllerFormat.ClassName
+    ? string
+    : ResolveOptions<
+        T['options']
+      >['format'] extends typeof MarginPropControllerFormat.ResponsiveValue
+    ? MarginValue | undefined
     : never
   : never
 
@@ -162,6 +185,23 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                   <RenderHook
                     key={descriptor.type}
                     hook={usePaddingStyle}
+                    parameters={[props[propName]]}
+                  >
+                    {value => renderFn({ ...propsValue, [propName]: value })}
+                  </RenderHook>
+                )
+
+              default:
+                return renderFn({ ...propsValue, [propName]: props[propName] })
+            }
+
+          case Props.Types.Margin:
+            switch (descriptor.options.format) {
+              case MarginPropControllerFormat.ClassName:
+                return (
+                  <RenderHook
+                    key={descriptor.type}
+                    hook={useMarginStyle}
                     parameters={[props[propName]]}
                   >
                     {value => renderFn({ ...propsValue, [propName]: value })}

@@ -7,15 +7,14 @@ import { responsiveStyle } from '../../../components/utils/responsive-style'
 import {
   BorderRadiusLonghandPropertyData,
   FontSizePropertyData,
-  MarginLonghandPropertyData,
   StyleControlData,
   StyleControlDefinition,
   StyleControlProperty,
   WidthPropertyData,
 } from '../../../controls'
 import { useStyle } from '../use-style'
-import { lengthDataToString } from '../../../css/length'
 import { lengthPercentageDataToString } from '../../../css/length-percentage'
+import { marginPropertyDataToStyle } from '../../../css/margin'
 import { paddingPropertyDataToStyle } from '../../../css/padding'
 
 function useStyleControlCssObject(
@@ -41,12 +40,14 @@ function useStyleControlCssObject(
         ...(properties.includes(StyleControlProperty.Width) && {
           width: widthToString(width) ?? '100%',
         }),
-        ...(properties.includes(StyleControlProperty.Margin) && {
-          marginTop: marginToString(margin?.marginTop) ?? 0,
-          marginRight: marginToString(margin?.marginRight) ?? 'auto',
-          marginBottom: marginToString(margin?.marginBottom) ?? 0,
-          marginLeft: marginToString(margin?.marginLeft) ?? 'auto',
-        }),
+        ...(properties.includes(StyleControlProperty.Margin) &&
+          margin != null &&
+          marginPropertyDataToStyle(margin, {
+            marginTop: 0,
+            marginRight: 'auto',
+            marginBottom: 0,
+            marginLeft: 'auto',
+          })),
         ...(properties.includes(StyleControlProperty.Padding) &&
           padding != null &&
           paddingPropertyDataToStyle(padding, {
@@ -83,16 +84,6 @@ function useStyleControlCssObject(
     if (widthProperty == null) return null
 
     return lengthPercentageDataToString(widthProperty)
-  }
-
-  function marginToString(
-    marginProperty: MarginLonghandPropertyData | null | undefined,
-  ): string | null {
-    if (marginProperty == null) return null
-
-    if (marginProperty === 'auto') return marginProperty
-
-    return lengthDataToString(marginProperty)
   }
 
   function borderSideToString(borderSide: BorderSide | null | undefined): string | null {
