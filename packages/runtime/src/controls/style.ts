@@ -1,3 +1,4 @@
+import { BorderRadiusPropertyData } from '../css/border-radius'
 import type { LengthPercentageData } from '../css/length-percentage'
 import { MarginPropertyData } from '../css/margin'
 import { PaddingPropertyData } from '../css/padding'
@@ -39,23 +40,6 @@ export type BorderPropertyData = {
   borderRight: BorderSideShorthandPropertyData | null | undefined
   borderBottom: BorderSideShorthandPropertyData | null | undefined
   borderLeft: BorderSideShorthandPropertyData | null | undefined
-}
-
-/** @see https://developer.mozilla.org/en-US/docs/Web/CSS/border-radius#constituent_properties */
-export type BorderRadiusLonghandPropertyData = LengthPercentageData
-
-/**
- * @see https://developer.mozilla.org/en-US/docs/Web/CSS/border-radius
- *
- * @todos
- * - Remove `null` from possible values of longhand properties
- * - Remove `undefined` from possible values and make fields optional
- */
-export type BorderRadiusPropertyData = {
-  borderTopLeftRadius: LengthPercentageData | null | undefined
-  borderTopRightRadius: LengthPercentageData | null | undefined
-  borderBottomRightRadius: LengthPercentageData | null | undefined
-  borderBottomLeftRadius: LengthPercentageData | null | undefined
 }
 
 /**
