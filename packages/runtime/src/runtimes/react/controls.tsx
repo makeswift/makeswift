@@ -4,6 +4,9 @@ import { useDocumentKey, useSelector, useStore } from '.'
 import * as ReactPage from '../../state/react-page'
 import { Props } from '../../prop-controllers'
 import {
+  BorderRadiusDescriptor,
+  BorderRadiusPropControllerFormat,
+  BorderRadiusValue,
   Descriptor,
   MarginDescriptor,
   MarginPropControllerFormat,
@@ -20,6 +23,7 @@ import {
 import { useResponsiveColor } from '../../components/hooks'
 import type { ColorValue } from '../../components/utils/types'
 import {
+  responsiveBorderRadius,
   responsiveMargin,
   responsivePadding,
   responsiveWidth,
@@ -93,6 +97,24 @@ export type ResolveMarginControlValue<T extends Descriptor> = T extends MarginDe
         T['options']
       >['format'] extends typeof MarginPropControllerFormat.ResponsiveValue
     ? MarginValue | undefined
+    : never
+  : never
+
+export function useBorderRadiusStyle(value: BorderRadiusValue | undefined): string {
+  return useStyle(responsiveBorderRadius(value))
+}
+
+export type ResolveBorderRadiusControlValue<T extends Descriptor> = T extends BorderRadiusDescriptor
+  ? undefined extends ResolveOptions<T['options']>['format']
+    ? BorderRadiusValue | undefined
+    : ResolveOptions<
+        T['options']
+      >['format'] extends typeof BorderRadiusPropControllerFormat.ClassName
+    ? string
+    : ResolveOptions<
+        T['options']
+      >['format'] extends typeof BorderRadiusPropControllerFormat.ResponsiveValue
+    ? BorderRadiusValue | undefined
     : never
   : never
 
@@ -202,6 +224,23 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                   <RenderHook
                     key={descriptor.type}
                     hook={useMarginStyle}
+                    parameters={[props[propName]]}
+                  >
+                    {value => renderFn({ ...propsValue, [propName]: value })}
+                  </RenderHook>
+                )
+
+              default:
+                return renderFn({ ...propsValue, [propName]: props[propName] })
+            }
+
+          case Props.Types.BorderRadius:
+            switch (descriptor.options.format) {
+              case BorderRadiusPropControllerFormat.ClassName:
+                return (
+                  <RenderHook
+                    key={descriptor.type}
+                    hook={useBorderRadiusStyle}
                     parameters={[props[propName]]}
                   >
                     {value => renderFn({ ...propsValue, [propName]: value })}

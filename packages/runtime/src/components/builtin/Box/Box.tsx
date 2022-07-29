@@ -7,7 +7,6 @@ import { Element } from '../../../runtimes/react'
 import Placeholder from './components/Placeholder'
 import { useBoxAnimations } from './animations'
 import {
-  BorderRadiusValue,
   ElementIDValue,
   ResponsiveIconRadioGroupValue,
   GridValue,
@@ -20,12 +19,7 @@ import {
   BorderValue,
   ShadowsValue,
 } from '../../../prop-controllers/descriptors'
-import {
-  cssBorderRadius,
-  cssMediaRules,
-  cssBorder,
-  cssBoxShadow,
-} from '../../utils/cssMediaRules'
+import { cssMediaRules, cssBorder, cssBoxShadow } from '../../utils/cssMediaRules'
 import { BoxModelHandle, parse, createBox } from '../../../box-model'
 import BackgroundsContainer from '../../shared/BackgroundsContainer'
 import {
@@ -50,7 +44,7 @@ type Props = {
   margin?: string
   padding?: string
   border?: BorderValue
-  borderRadius?: BorderRadiusValue
+  borderRadius?: string
   boxShadow?: ShadowsValue
   rowGap?: GapYValue
   columnGap?: GapXValue
@@ -66,13 +60,11 @@ type Props = {
 }
 
 const StyledBackgroundsContainer = styled(BackgroundsContainer).withConfig({
-  shouldForwardProp: prop => !['borderRadius', 'alignSelf'].includes(prop.toString()),
+  shouldForwardProp: prop => !['alignSelf'].includes(prop.toString()),
 })<{
-  borderRadius: Props['borderRadius']
   alignSelf: Props['height']
 }>`
   display: flex;
-  ${cssBorderRadius()}
   ${props => cssMediaRules([props.alignSelf] as const, ([alignSelf = 'auto']) => ({ alignSelf }))}
 `
 
@@ -187,9 +179,8 @@ const Box = forwardRef(function Box(
       ref={setBoxElement}
       hasAnimations={hasAnimations}
       id={id}
-      className={cx(width, margin)}
+      className={cx(width, margin, borderRadius)}
       backgrounds={backgrounds}
-      borderRadius={borderRadius}
       alignSelf={height}
       animate={animate?.container}
       initial={initial?.container}

@@ -5,7 +5,6 @@ import { colorToString } from '../../../components/utils/colorToString'
 import { responsiveStyle } from '../../../components/utils/responsive-style'
 
 import {
-  BorderRadiusLonghandPropertyData,
   FontSizePropertyData,
   StyleControlData,
   StyleControlDefinition,
@@ -13,6 +12,7 @@ import {
   WidthPropertyData,
 } from '../../../controls'
 import { useStyle } from '../use-style'
+import { BorderRadiusLonghandPropertyData } from '../../../css/border-radius'
 import { lengthPercentageDataToString } from '../../../css/length-percentage'
 import { marginPropertyDataToStyle } from '../../../css/margin'
 import { paddingPropertyDataToStyle } from '../../../css/padding'

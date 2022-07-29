@@ -8,6 +8,7 @@ import {
   WidthValue,
   PaddingValue,
   MarginValue,
+  BorderRadiusValue,
 } from '../../prop-controllers/descriptors'
 import {
   FallbackStrategy,
@@ -18,6 +19,7 @@ import {
 import { getIndexes } from './columns'
 import { PaddingPropertyData, paddingPropertyDataToStyle } from '../../css/padding'
 import { MarginPropertyData, marginPropertyDataToStyle } from '../../css/margin'
+import { BorderRadiusPropertyData, borderRadiusPropertyDataToStyle } from '../../css/border-radius'
 
 export function responsiveStyle<V, A extends ReadonlyArray<ResponsiveValue<V> | null | undefined>>(
   responsiveValues: A,
@@ -77,6 +79,26 @@ export function responsiveMargin(
       margin,
       Object.assign(
         { marginTop: 0, marginRight: 'auto', marginBottom: 0, marginLeft: 'auto' },
+        defaultValue,
+      ),
+    ),
+  )
+}
+
+export function responsiveBorderRadius(
+  borderRadiusData: BorderRadiusValue | undefined,
+  defaultValue: BorderRadiusPropertyData = {} as BorderRadiusPropertyData,
+): CSSObject {
+  return responsiveStyle([borderRadiusData], ([borderRadius = {}]) =>
+    borderRadiusPropertyDataToStyle(
+      borderRadius,
+      Object.assign(
+        {
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0,
+          borderBottomRightRadius: 0,
+          borderBottomLeftRadius: 0,
+        },
         defaultValue,
       ),
     ),

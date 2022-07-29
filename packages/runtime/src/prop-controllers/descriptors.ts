@@ -1,6 +1,7 @@
 import type * as Slate from 'slate'
 import { StyleControlDefinition, StyleControlType } from '../controls/style'
 import {
+  ResolveBorderRadiusControlValue,
   ResolveMarginControlValue,
   ResolvePaddingControlValue,
   ResolveWidthControlValue,
@@ -247,16 +248,31 @@ type BorderRadius = {
 
 export type BorderRadiusValue = ResponsiveValue<BorderRadius>
 
-type BorderRadiusOptions = Options<Record<string, never>>
+export const BorderRadiusPropControllerFormat = {
+  ClassName: 'makeswift::prop-controllers::border-radius::format::class-name',
+  ResponsiveValue: 'makeswift::prop-controllers::border-radius::format::responsive-value',
+} as const
 
-type BorderRadiusDescriptor<_T = BorderRadiusValue> = {
+export type BorderRadiusPropControllerFormat =
+  typeof BorderRadiusPropControllerFormat[keyof typeof BorderRadiusPropControllerFormat]
+
+type BorderRadiusOptions = { format?: BorderRadiusPropControllerFormat }
+
+export type BorderRadiusDescriptor<
+  _T = BorderRadiusValue,
+  U extends BorderRadiusOptions = BorderRadiusOptions,
+> = {
   type: typeof Types.BorderRadius
-  options: BorderRadiusOptions
+  options: U
 }
 
-export function BorderRadius(options: BorderRadiusOptions = {}): BorderRadiusDescriptor {
+export function BorderRadius<T extends BorderRadiusOptions>(
+  options: T & BorderRadiusOptions = {} as T,
+): BorderRadiusDescriptor<BorderRadiusValue, T> {
   return { type: Types.BorderRadius, options }
 }
+
+BorderRadius.Format = BorderRadiusPropControllerFormat
 
 export type CheckboxValue = boolean
 
@@ -1074,6 +1090,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolvePaddingControlValue<T>
   : T['type'] extends typeof Types.Margin
   ? ResolveMarginControlValue<T>
+  : T['type'] extends typeof Types.BorderRadius
+  ? ResolveBorderRadiusControlValue<T>
   : T extends Descriptor<infer U>
   ? U | undefined
   : never
