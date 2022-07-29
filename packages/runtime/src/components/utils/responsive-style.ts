@@ -7,6 +7,7 @@ import {
   Length as LengthValue,
   WidthValue,
   PaddingValue,
+  MarginValue,
 } from '../../prop-controllers/descriptors'
 import {
   FallbackStrategy,
@@ -15,6 +16,7 @@ import {
   join as joinResponsiveValues,
 } from './devices'
 import { PaddingPropertyData, paddingPropertyDataToStyle } from '../../css/padding'
+import { MarginPropertyData, marginPropertyDataToStyle } from '../../css/margin'
 
 export function responsiveStyle<V, A extends ReadonlyArray<ResponsiveValue<V> | null | undefined>>(
   responsiveValues: A,
@@ -59,6 +61,21 @@ export function responsivePadding(
       padding,
       Object.assign(
         { paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0 },
+        defaultValue,
+      ),
+    ),
+  )
+}
+
+export function responsiveMargin(
+  marginData: MarginValue | undefined,
+  defaultValue: MarginPropertyData = {} as MarginPropertyData,
+): CSSObject {
+  return responsiveStyle([marginData], ([margin = {} as MarginPropertyData]) =>
+    marginPropertyDataToStyle(
+      margin,
+      Object.assign(
+        { marginTop: 0, marginRight: 'auto', marginBottom: 0, marginLeft: 'auto' },
         defaultValue,
       ),
     ),

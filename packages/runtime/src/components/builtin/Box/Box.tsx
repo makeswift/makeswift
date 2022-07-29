@@ -9,7 +9,6 @@ import { useBoxAnimations } from './animations'
 import {
   BorderRadiusValue,
   ElementIDValue,
-  MarginValue,
   ResponsiveIconRadioGroupValue,
   GridValue,
   GapYValue,
@@ -22,7 +21,6 @@ import {
   ShadowsValue,
 } from '../../../prop-controllers/descriptors'
 import {
-  cssMargin,
   cssBorderRadius,
   cssGridItem,
   cssMediaRules,
@@ -47,7 +45,7 @@ type Props = {
   verticalAlign?: ResponsiveIconRadioGroupValue<
     'flex-start' | 'center' | 'flex-end' | 'space-between'
   >
-  margin?: MarginValue
+  margin?: string
   padding?: string
   border?: BorderValue
   borderRadius?: BorderRadiusValue
@@ -66,14 +64,12 @@ type Props = {
 }
 
 const StyledBackgroundsContainer = styled(BackgroundsContainer).withConfig({
-  shouldForwardProp: prop => !['margin', 'borderRadius', 'alignSelf'].includes(prop.toString()),
+  shouldForwardProp: prop => !['borderRadius', 'alignSelf'].includes(prop.toString()),
 })<{
-  margin: Props['margin']
   borderRadius: Props['borderRadius']
   alignSelf: Props['height']
 }>`
   display: flex;
-  ${cssMargin()}
   ${cssBorderRadius()}
   ${props => cssMediaRules([props.alignSelf] as const, ([alignSelf = 'auto']) => ({ alignSelf }))}
 `
@@ -202,9 +198,8 @@ const Box = forwardRef(function Box(
       ref={setBoxElement}
       hasAnimations={hasAnimations}
       id={id}
-      className={cx(width)}
+      className={cx(width, margin)}
       backgrounds={backgrounds}
-      margin={margin}
       borderRadius={borderRadius}
       alignSelf={height}
       animate={animate?.container}

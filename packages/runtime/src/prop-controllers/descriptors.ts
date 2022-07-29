@@ -1,6 +1,10 @@
 import type * as Slate from 'slate'
 import { StyleControlDefinition, StyleControlType } from '../controls/style'
-import { ResolvePaddingControlValue, ResolveWidthControlValue } from '../runtimes/react/controls'
+import {
+  ResolveMarginControlValue,
+  ResolvePaddingControlValue,
+  ResolveWidthControlValue,
+} from '../runtimes/react/controls'
 import { StyleControlFormattedValue } from '../runtimes/react/controls/style'
 import type { Element, Data } from '../state/react-page'
 import type { ResponsiveColor } from '../runtimes/react/controls'
@@ -420,13 +424,28 @@ type Margin = {
 
 export type MarginValue = ResponsiveValue<Margin>
 
-type MarginOptions = Options<{ preset?: MarginValue }>
+export const MarginPropControllerFormat = {
+  ClassName: 'makeswift::prop-controllers::margin::format::class-name',
+  ResponsiveValue: 'makeswift::prop-controllers::margin::format::responsive-value',
+} as const
 
-type MarginDescriptor<_T = MarginValue> = { type: typeof Types.Margin; options: MarginOptions }
+export type MarginPropControllerFormat =
+  typeof MarginPropControllerFormat[keyof typeof MarginPropControllerFormat]
 
-export function Margin(options: MarginOptions = {}): MarginDescriptor {
+type MarginOptions = { preset?: MarginValue; format?: MarginPropControllerFormat }
+
+export type MarginDescriptor<_T = MarginValue, U extends MarginOptions = MarginOptions> = {
+  type: typeof Types.Margin
+  options: U
+}
+
+export function Margin<T extends MarginOptions>(
+  options: T & MarginOptions = {} as T,
+): MarginDescriptor<MarginValue, T> {
   return { type: Types.Margin, options }
 }
+
+Margin.Format = MarginPropControllerFormat
 
 type ButtonVariant = 'flat' | 'outline' | 'shadow' | 'clear' | 'blocky' | 'bubbly' | 'skewed'
 
@@ -1053,6 +1072,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveWidthControlValue<T>
   : T['type'] extends typeof Types.Padding
   ? ResolvePaddingControlValue<T>
+  : T['type'] extends typeof Types.Margin
+  ? ResolveMarginControlValue<T>
   : T extends Descriptor<infer U>
   ? U | undefined
   : never

@@ -1,5 +1,5 @@
-import type { LengthData } from '../css/length'
 import type { LengthPercentageData } from '../css/length-percentage'
+import { MarginPropertyData } from '../css/margin'
 import { PaddingPropertyData } from '../css/padding'
 import { ColorData, ResponsiveValue } from './types'
 import { CopyContext, ReplacementContext } from '../state/react-page'
@@ -7,23 +7,6 @@ import { copyColorData } from './color'
 
 /** @see https://developer.mozilla.org/en-US/docs/Web/CSS/width */
 export type WidthPropertyData = LengthPercentageData
-
-/** @see https://developer.mozilla.org/en-US/docs/Web/CSS/margin#constituent_properties */
-export type MarginLonghandPropertyData = LengthData | 'auto'
-
-/**
- * @see https://developer.mozilla.org/en-US/docs/Web/CSS/margin
- *
- * @todos
- * - Remove `null` from possible values
- * - Remove `undefined` from possible values and make fields optional
- */
-export type MarginPropertyData = {
-  marginTop: MarginLonghandPropertyData | null | undefined
-  marginRight: MarginLonghandPropertyData | null | undefined
-  marginBottom: MarginLonghandPropertyData | null | undefined
-  marginLeft: MarginLonghandPropertyData | null | undefined
-}
 
 /**
  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/border-style
