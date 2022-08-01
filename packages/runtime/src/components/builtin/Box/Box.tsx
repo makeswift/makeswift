@@ -59,15 +59,6 @@ type Props = {
   children?: GridValue
 }
 
-const StyledBackgroundsContainer = styled(BackgroundsContainer).withConfig({
-  shouldForwardProp: prop => !['alignSelf'].includes(prop.toString()),
-})<{
-  alignSelf: Props['height']
-}>`
-  display: flex;
-  ${props => cssMediaRules([props.alignSelf] as const, ([alignSelf = 'auto']) => ({ alignSelf }))}
-`
-
 const Grid = styled.div.withConfig({
   shouldForwardProp: prop => !['border', 'boxShadow', 'alignContent'].includes(prop),
 })<{
@@ -175,13 +166,18 @@ const Box = forwardRef(function Box(
   })
 
   return (
-    <StyledBackgroundsContainer
+    <BackgroundsContainer
       ref={setBoxElement}
       hasAnimations={hasAnimations}
       id={id}
-      className={cx(width, margin, borderRadius)}
+      className={cx(
+        width,
+        margin,
+        borderRadius,
+        useStyle({ display: 'flex' }),
+        useStyle(responsiveStyle([height], ([alignSelf = 'auto']) => ({ alignSelf }))),
+      )}
       backgrounds={backgrounds}
-      alignSelf={height}
       animate={animate?.container}
       initial={initial?.container}
       variants={variants?.container}
@@ -220,7 +216,7 @@ const Box = forwardRef(function Box(
           <Placeholder hide={hidePlaceholder} />
         )}
       </Grid>
-    </StyledBackgroundsContainer>
+    </BackgroundsContainer>
   )
 })
 
