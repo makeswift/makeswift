@@ -1,6 +1,7 @@
 import type * as Slate from 'slate'
 import { StyleControlDefinition, StyleControlType } from '../controls/style'
 import {
+  ResolveBorderControlValue,
   ResolveBorderRadiusControlValue,
   ResolveMarginControlValue,
   ResolvePaddingControlValue,
@@ -232,13 +233,28 @@ type Border = {
 
 export type BorderValue = ResponsiveValue<Border>
 
-type BorderOptions = Options<Record<string, never>>
+export const BorderPropControllerFormat = {
+  ClassName: 'makeswift::prop-controllers::border::format::class-name',
+  ResponsiveValue: 'makeswift::prop-controllers:border::format::responsive-value',
+} as const
 
-type BorderDescriptor<_T = BorderValue> = { type: typeof Types.Border; options: BorderOptions }
+export type BorderPropControllerFormat =
+  typeof BorderPropControllerFormat[keyof typeof BorderPropControllerFormat]
 
-export function Border(options: BorderOptions = {}): BorderDescriptor {
+type BorderOptions = { format?: BorderPropControllerFormat }
+
+export type BorderDescriptor<_T = BorderValue, U extends BorderOptions = BorderOptions> = {
+  type: typeof Types.Border
+  options: U
+}
+
+export function Border<T extends BorderOptions>(
+  options: T & BorderOptions = {} as T,
+): BorderDescriptor<BorderValue, T> {
   return { type: Types.Border, options }
 }
+
+Border.Format = BorderPropControllerFormat
 
 type BorderRadius = {
   [K in 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' as `border${Capitalize<K>}Radius`]:
@@ -1110,6 +1126,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveBorderRadiusControlValue<T>
   : T['type'] extends typeof Types.Shadows
   ? ResolveShadowsControlValue<T>
+  : T['type'] extends typeof Types.Border
+  ? ResolveBorderControlValue<T>
   : T extends Descriptor<infer U>
   ? U | undefined
   : never

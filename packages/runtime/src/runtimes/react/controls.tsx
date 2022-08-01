@@ -4,9 +4,12 @@ import { useDocumentKey, useSelector, useStore } from '.'
 import * as ReactPage from '../../state/react-page'
 import { Props } from '../../prop-controllers'
 import {
+  BorderDescriptor,
+  BorderPropControllerFormat,
   BorderRadiusDescriptor,
   BorderRadiusPropControllerFormat,
   BorderRadiusValue,
+  BorderValue,
   Descriptor,
   MarginDescriptor,
   MarginPropControllerFormat,
@@ -23,9 +26,14 @@ import {
   WidthDescriptor,
   WidthValue,
 } from '../../prop-controllers/descriptors'
-import { useBoxShadow, useResponsiveColor } from '../../components/hooks'
+import {
+  useBoxShadow,
+  useResponsiveColor,
+  useBorder as useBorderData,
+} from '../../components/hooks'
 import type { ColorValue } from '../../components/utils/types'
 import {
+  responsiveBorder,
   responsiveBorderRadius,
   responsiveMargin,
   responsivePadding,
@@ -130,6 +138,11 @@ export type ResolveBorderRadiusControlValue<T extends Descriptor> = T extends Bo
     : never
   : never
 
+export function useBorderStyle(value: BorderValue | undefined): string | BorderValue | undefined {
+  const borderData = useBorderData(value)
+
+  return useStyle(responsiveBorder(borderData ?? undefined))
+}
 export type ResolveShadowsControlValue<T extends Descriptor> = T extends ShadowsDescriptor
   ? undefined extends ResolveOptions<T['options']>['format']
     ? ShadowsValue | undefined
@@ -139,6 +152,18 @@ export type ResolveShadowsControlValue<T extends Descriptor> = T extends Shadows
         T['options']
       >['format'] extends typeof ShadowsPropControllerFormat.ResponsiveValue
     ? ShadowsValue | undefined
+    : never
+  : never
+
+export type ResolveBorderControlValue<T extends Descriptor> = T extends BorderDescriptor
+  ? undefined extends ResolveOptions<T['options']>['format']
+    ? BorderValue | undefined
+    : ResolveOptions<T['options']>['format'] extends typeof BorderPropControllerFormat.ClassName
+    ? string
+    : ResolveOptions<
+        T['options']
+      >['format'] extends typeof BorderPropControllerFormat.ResponsiveValue
+    ? BorderValue | undefined
     : never
   : never
 
@@ -282,6 +307,23 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                   <RenderHook
                     key={descriptor.type}
                     hook={useShadowsStyle}
+                    parameters={[props[propName]]}
+                  >
+                    {value => renderFn({ ...propsValue, [propName]: value })}
+                  </RenderHook>
+                )
+
+              default:
+                return renderFn({ ...propsValue, [propName]: props[propName] })
+            }
+
+          case Props.Types.Border:
+            switch (descriptor.options.format) {
+              case BorderPropControllerFormat.ClassName:
+                return (
+                  <RenderHook
+                    key={descriptor.type}
+                    hook={useBorderStyle}
                     parameters={[props[propName]]}
                   >
                     {value => renderFn({ ...propsValue, [propName]: value })}

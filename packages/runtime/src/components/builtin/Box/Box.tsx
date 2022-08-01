@@ -16,12 +16,10 @@ import {
   ResponsiveSelectValue,
   ResponsiveNumberValue,
   BackgroundsValue,
-  BorderValue,
 } from '../../../prop-controllers/descriptors'
-import { cssMediaRules, cssBorder } from '../../utils/cssMediaRules'
+import { cssMediaRules } from '../../utils/cssMediaRules'
 import { BoxModelHandle, parse, createBox } from '../../../box-model'
 import BackgroundsContainer from '../../shared/BackgroundsContainer'
-import { BorderPropControllerData, useBorder } from '../../hooks'
 import { BoxAnimateIn } from './constants'
 import { responsiveStyle } from '../../utils/responsive-style'
 import { GridItem } from '../../shared/grid-item'
@@ -37,7 +35,7 @@ type Props = {
   >
   margin?: string
   padding?: string
-  border?: BorderValue
+  border?: string
   borderRadius?: string
   boxShadow?: string
   rowGap?: GapYValue
@@ -54,15 +52,11 @@ type Props = {
 }
 
 const Grid = styled.div.withConfig({
-  shouldForwardProp: prop => !['border', 'alignContent'].includes(prop),
-})<{
-  border: BorderPropControllerData | null | undefined
-  alignContent: Props['verticalAlign']
-}>`
+  shouldForwardProp: prop => !['alignContent'].includes(prop),
+})<{ alignContent: Props['verticalAlign'] }>`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  ${cssBorder()}
   ${props =>
     cssMediaRules([props.alignContent] as const, ([alignContent = 'flex-start']) => ({
       alignContent,
@@ -138,8 +132,6 @@ const Box = forwardRef(function Box(
     [boxElement],
   )
 
-  const borderData = useBorder(border)
-
   const gridItemClassName = useStyle(
     responsiveStyle([verticalAlign], ([alignItems = 'flex-start']) => ({ alignItems })),
   )
@@ -178,8 +170,7 @@ const Box = forwardRef(function Box(
       <Grid
         as={hasAnimations ? motion.div : 'div'}
         ref={innerRef}
-        className={cx(padding, boxShadow)}
-        border={borderData}
+        className={cx(padding, boxShadow, border)}
         alignContent={verticalAlign}
         animate={animate?.parent}
         initial={initial?.parent}
