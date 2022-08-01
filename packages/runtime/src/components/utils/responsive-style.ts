@@ -20,8 +20,10 @@ import { getIndexes } from './columns'
 import { PaddingPropertyData, paddingPropertyDataToStyle } from '../../css/padding'
 import { MarginPropertyData, marginPropertyDataToStyle } from '../../css/margin'
 import { BorderRadiusPropertyData, borderRadiusPropertyDataToStyle } from '../../css/border-radius'
-import type { BoxShadowData, BoxShadowPropControllerData } from '../hooks'
+import { BorderPropertyData, borderPropertyDataToStyle } from '../../css/border'
+import { BorderPropControllerData } from '../hooks/useBorder'
 import { colorToString } from './colorToString'
+import { BoxShadowData, BoxShadowPropControllerData } from '../hooks'
 
 export function responsiveStyle<V, A extends ReadonlyArray<ResponsiveValue<V> | null | undefined>>(
   responsiveValues: A,
@@ -100,6 +102,26 @@ export function responsiveBorderRadius(
           borderTopRightRadius: 0,
           borderBottomRightRadius: 0,
           borderBottomLeftRadius: 0,
+        },
+        defaultValue,
+      ),
+    ),
+  )
+}
+
+export function responsiveBorder(
+  borderData: BorderPropControllerData | undefined,
+  defaultValue: BorderPropertyData = {},
+): CSSObject {
+  return responsiveStyle([borderData], ([border = {}]) =>
+    borderPropertyDataToStyle(
+      border,
+      Object.assign(
+        {
+          borderTop: '0px solid black',
+          borderRight: '0px solid black',
+          borderBottom: '0px solid black',
+          borderLeft: '0px solid black',
         },
         defaultValue,
       ),
