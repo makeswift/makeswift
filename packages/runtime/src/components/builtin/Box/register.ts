@@ -75,7 +75,7 @@ export function registerComponent(runtime: ReactRuntime) {
         }),
         border: Props.Border(),
         borderRadius: Props.BorderRadius({ format: Props.BorderRadius.Format.ClassName }),
-        boxShadow: Props.Shadows(),
+        boxShadow: Props.Shadows({ format: Props.Shadows.Format.ClassName }),
         rowGap: Props.GapY(props => ({
           hidden: props.children == null,
         })),

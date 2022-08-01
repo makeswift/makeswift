@@ -20,6 +20,8 @@ import { getIndexes } from './columns'
 import { PaddingPropertyData, paddingPropertyDataToStyle } from '../../css/padding'
 import { MarginPropertyData, marginPropertyDataToStyle } from '../../css/margin'
 import { BorderRadiusPropertyData, borderRadiusPropertyDataToStyle } from '../../css/border-radius'
+import type { BoxShadowData, BoxShadowPropControllerData } from '../hooks'
+import { colorToString } from './colorToString'
 
 export function responsiveStyle<V, A extends ReadonlyArray<ResponsiveValue<V> | null | undefined>>(
   responsiveValues: A,
@@ -155,4 +157,23 @@ export function responsiveGridItem(props: {
       },
     ),
   }
+}
+
+const getBoxShadow = (shadows: BoxShadowData) =>
+  shadows
+    .map(
+      ({ payload: { inset, offsetX, offsetY, blurRadius, spreadRadius, color } }) =>
+        `${inset ? 'inset ' : ''}${offsetX.toFixed(1)}px ${offsetY.toFixed(
+          1,
+        )}px ${blurRadius}px ${spreadRadius}px ${
+          color != null ? colorToString(color) : 'rgba(0,0,0,0.2)'
+        }`,
+    )
+    .filter(Boolean)
+    .join()
+
+export function responsiveShadow(value: BoxShadowPropControllerData | undefined): CSSObject {
+  return responsiveStyle([value], ([shadow = []]) => ({
+    boxShadow: getBoxShadow(shadow),
+  }))
 }
