@@ -17,17 +17,11 @@ import {
   ResponsiveNumberValue,
   BackgroundsValue,
   BorderValue,
-  ShadowsValue,
 } from '../../../prop-controllers/descriptors'
-import { cssMediaRules, cssBorder, cssBoxShadow } from '../../utils/cssMediaRules'
+import { cssMediaRules, cssBorder } from '../../utils/cssMediaRules'
 import { BoxModelHandle, parse, createBox } from '../../../box-model'
 import BackgroundsContainer from '../../shared/BackgroundsContainer'
-import {
-  BorderPropControllerData,
-  BoxShadowPropControllerData,
-  useBorder,
-  useBoxShadow,
-} from '../../hooks'
+import { BorderPropControllerData, useBorder } from '../../hooks'
 import { BoxAnimateIn } from './constants'
 import { responsiveStyle } from '../../utils/responsive-style'
 import { GridItem } from '../../shared/grid-item'
@@ -45,7 +39,7 @@ type Props = {
   padding?: string
   border?: BorderValue
   borderRadius?: string
-  boxShadow?: ShadowsValue
+  boxShadow?: string
   rowGap?: GapYValue
   columnGap?: GapXValue
   boxAnimateType?: ResponsiveSelectValue<BoxAnimateIn>
@@ -60,17 +54,15 @@ type Props = {
 }
 
 const Grid = styled.div.withConfig({
-  shouldForwardProp: prop => !['border', 'boxShadow', 'alignContent'].includes(prop),
+  shouldForwardProp: prop => !['border', 'alignContent'].includes(prop),
 })<{
   border: BorderPropControllerData | null | undefined
-  boxShadow: BoxShadowPropControllerData | null | undefined
   alignContent: Props['verticalAlign']
 }>`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
   ${cssBorder()}
-  ${cssBoxShadow()}
   ${props =>
     cssMediaRules([props.alignContent] as const, ([alignContent = 'flex-start']) => ({
       alignContent,
@@ -147,7 +139,6 @@ const Box = forwardRef(function Box(
   )
 
   const borderData = useBorder(border)
-  const boxShadowData = useBoxShadow(boxShadow)
 
   const gridItemClassName = useStyle(
     responsiveStyle([verticalAlign], ([alignItems = 'flex-start']) => ({ alignItems })),
@@ -187,9 +178,8 @@ const Box = forwardRef(function Box(
       <Grid
         as={hasAnimations ? motion.div : 'div'}
         ref={innerRef}
-        className={cx(padding)}
+        className={cx(padding, boxShadow)}
         border={borderData}
-        boxShadow={boxShadowData}
         alignContent={verticalAlign}
         animate={animate?.parent}
         initial={initial?.parent}

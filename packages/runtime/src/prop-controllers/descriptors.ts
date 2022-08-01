@@ -4,6 +4,7 @@ import {
   ResolveBorderRadiusControlValue,
   ResolveMarginControlValue,
   ResolvePaddingControlValue,
+  ResolveShadowsControlValue,
   ResolveWidthControlValue,
 } from '../runtimes/react/controls'
 import { StyleControlFormattedValue } from '../runtimes/react/controls/style'
@@ -741,13 +742,28 @@ type Shadows = { id: string; payload: Shadow }[]
 
 export type ShadowsValue = ResponsiveValue<Shadows>
 
-type ShadowsOptions = Options<Record<string, never>>
+export const ShadowsPropControllerFormat = {
+  ClassName: 'makeswift::prop-controllers::shadows::format::class-name',
+  ResponsiveValue: 'makeswift::prop-controllers::shadows::format::responsive-value',
+} as const
 
-type ShadowsDescriptor<_T = ShadowsValue> = { type: typeof Types.Shadows; options: ShadowsOptions }
+export type ShadowsPropControllerFormat =
+  typeof ShadowsPropControllerFormat[keyof typeof ShadowsPropControllerFormat]
 
-export function Shadows(options: ShadowsOptions = {}): ShadowsDescriptor {
+type ShadowsOptions = { format?: ShadowsPropControllerFormat }
+
+export type ShadowsDescriptor<_T = ShadowsValue, U extends ShadowsOptions = ShadowsOptions> = {
+  type: typeof Types.Shadows
+  options: U
+}
+
+export function Shadows<T extends ShadowsOptions>(
+  options: T & ShadowsOptions = {} as T,
+): ShadowsDescriptor<ShadowsValue, T> {
   return { type: Types.Shadows, options }
 }
+
+Shadows.Format = ShadowsPropControllerFormat
 
 export type ShapeValue<T extends Data = Data> = Record<string, T>
 
@@ -1092,6 +1108,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveMarginControlValue<T>
   : T['type'] extends typeof Types.BorderRadius
   ? ResolveBorderRadiusControlValue<T>
+  : T['type'] extends typeof Types.Shadows
+  ? ResolveShadowsControlValue<T>
   : T extends Descriptor<infer U>
   ? U | undefined
   : never

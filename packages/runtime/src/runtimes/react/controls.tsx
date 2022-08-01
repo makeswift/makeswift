@@ -16,16 +16,20 @@ import {
   PaddingValue,
   ResolveOptions,
   ResponsiveValue,
+  ShadowsDescriptor,
+  ShadowsPropControllerFormat,
+  ShadowsValue,
   WidthPropControllerFormat,
   WidthDescriptor,
   WidthValue,
 } from '../../prop-controllers/descriptors'
-import { useResponsiveColor } from '../../components/hooks'
+import { useBoxShadow, useResponsiveColor } from '../../components/hooks'
 import type { ColorValue } from '../../components/utils/types'
 import {
   responsiveBorderRadius,
   responsiveMargin,
   responsivePadding,
+  responsiveShadow,
   responsiveWidth,
 } from '../../components/utils/responsive-style'
 import {
@@ -104,6 +108,14 @@ export function useBorderRadiusStyle(value: BorderRadiusValue | undefined): stri
   return useStyle(responsiveBorderRadius(value))
 }
 
+export function useShadowsStyle(
+  value: ShadowsValue | undefined,
+): string | ShadowsValue | undefined {
+  const shadowValue = useBoxShadow(value)
+
+  return useStyle(responsiveShadow(shadowValue ?? undefined))
+}
+
 export type ResolveBorderRadiusControlValue<T extends Descriptor> = T extends BorderRadiusDescriptor
   ? undefined extends ResolveOptions<T['options']>['format']
     ? BorderRadiusValue | undefined
@@ -115,6 +127,18 @@ export type ResolveBorderRadiusControlValue<T extends Descriptor> = T extends Bo
         T['options']
       >['format'] extends typeof BorderRadiusPropControllerFormat.ResponsiveValue
     ? BorderRadiusValue | undefined
+    : never
+  : never
+
+export type ResolveShadowsControlValue<T extends Descriptor> = T extends ShadowsDescriptor
+  ? undefined extends ResolveOptions<T['options']>['format']
+    ? ShadowsValue | undefined
+    : ResolveOptions<T['options']>['format'] extends typeof ShadowsPropControllerFormat.ClassName
+    ? string
+    : ResolveOptions<
+        T['options']
+      >['format'] extends typeof ShadowsPropControllerFormat.ResponsiveValue
+    ? ShadowsValue | undefined
     : never
   : never
 
@@ -241,6 +265,23 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                   <RenderHook
                     key={descriptor.type}
                     hook={useBorderRadiusStyle}
+                    parameters={[props[propName]]}
+                  >
+                    {value => renderFn({ ...propsValue, [propName]: value })}
+                  </RenderHook>
+                )
+
+              default:
+                return renderFn({ ...propsValue, [propName]: props[propName] })
+            }
+
+          case Props.Types.Shadows:
+            switch (descriptor.options.format) {
+              case ShadowsPropControllerFormat.ClassName:
+                return (
+                  <RenderHook
+                    key={descriptor.type}
+                    hook={useShadowsStyle}
                     parameters={[props[propName]]}
                   >
                     {value => renderFn({ ...propsValue, [propName]: value })}
