@@ -1,5 +1,4 @@
 import { forwardRef, Ref, useImperativeHandle, useRef, useState } from 'react'
-import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import { cx } from '@emotion/css'
 
@@ -17,7 +16,6 @@ import {
   ResponsiveNumberValue,
   BackgroundsValue,
 } from '../../../prop-controllers/descriptors'
-import { cssMediaRules } from '../../utils/cssMediaRules'
 import { BoxModelHandle, parse, createBox } from '../../../box-model'
 import BackgroundsContainer from '../../shared/BackgroundsContainer'
 import { BoxAnimateIn } from './constants'
@@ -51,18 +49,6 @@ type Props = {
   children?: GridValue
 }
 
-const Grid = styled.div.withConfig({
-  shouldForwardProp: prop => !['alignContent'].includes(prop),
-})<{ alignContent: Props['verticalAlign'] }>`
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  ${props =>
-    cssMediaRules([props.alignContent] as const, ([alignContent = 'flex-start']) => ({
-      alignContent,
-    }))}
-`
-
 const Box = forwardRef(function Box(
   {
     id,
@@ -92,6 +78,7 @@ const Box = forwardRef(function Box(
   const innerRef = useRef<HTMLDivElement | null>(null)
   const [boxElement, setBoxElement] = useState<HTMLElement | null>(null)
   const hasAnimations = boxAnimateType != null || itemAnimateType != null
+  const Grid = hasAnimations ? motion.div : 'div'
 
   useImperativeHandle(
     ref,
@@ -168,10 +155,16 @@ const Box = forwardRef(function Box(
       key={key?.container}
     >
       <Grid
-        as={hasAnimations ? motion.div : 'div'}
         ref={innerRef}
-        className={cx(padding, boxShadow, border)}
-        alignContent={verticalAlign}
+        className={cx(
+          padding,
+          boxShadow,
+          border,
+          useStyle({ display: 'flex', flexWrap: 'wrap', width: '100%' }),
+          useStyle(
+            responsiveStyle([verticalAlign], ([alignContent = 'flex-start']) => ({ alignContent })),
+          ),
+        )}
         animate={animate?.parent}
         initial={initial?.parent}
         transition={transition?.parent}
