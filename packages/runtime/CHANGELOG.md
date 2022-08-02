@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.1.4
+
+### Patch Changes
+
+- 5083814: Add Link Control. This control lets you add links to your custom components, like links to other pages, links to other websites, or scroll to other elements.
+
 ## 0.1.3
 
 ### Patch Changes
