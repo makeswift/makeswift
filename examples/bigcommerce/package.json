@@ -1,0 +1,28 @@
+{
+  "name": "bigcommerce",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@makeswift/runtime": "^0.1.4",
+    "next": "12.2.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "18.6.3",
+    "@types/react": "18.0.15",
+    "@types/react-dom": "18.0.6",
+    "autoprefixer": "^10.4.8",
+    "eslint-config-next": "^12.2.3",
+    "eslint-config-prettier": "^8.5.0",
+    "postcss": "^8.4.14",
+    "tailwindcss": "^3.1.7",
+    "typescript": "4.7.4"
+  }
+}
