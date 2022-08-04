@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@makeswift/runtime": "^0.1.4",
     "next": "12.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -19,7 +20,6 @@
     "@types/react": "18.0.15",
     "@types/react-dom": "18.0.6",
     "autoprefixer": "^10.4.8",
-
     "eslint-config-next": "^12.2.3",
     "eslint-config-prettier": "^8.5.0",
     "postcss": "^8.4.14",

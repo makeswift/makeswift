@@ -1,10 +1,11 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+
+const withMakeswift = require('@makeswift/runtime/next/plugin')()
+
+module.exports = withMakeswift({
   reactStrictMode: true,
   swcMinify: true,
   images: {
     domains: ['cdn11.bigcommerce.com'],
   },
-}
-
-module.exports = nextConfig
+})
