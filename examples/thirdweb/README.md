@@ -1,6 +1,10 @@
 # Visually build with Thirdweb components
 
-In this example, you can visually build NFT Drop minting pages and more using [Makeswift](https://www.makeswift.com).
+In this example, you'll learn how to integrate thirdweb components from your Next.js app into [Makeswift](https://www.makeswift.com) to make it visually editable.
+
+## Demo
+
+[https://makeswift-examples-thirdweb.vercel.app/](https://makeswift-examples-thirdweb.vercel.app/)
 
 ## Tools
 
