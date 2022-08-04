@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = any
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
+export const getBearerToken = async () => {
   if (!process.env.ACCESS_TOKEN) {
     console.error({ env: process.env })
     throw new Error('You need ACCESS_TOKEN in your env')
@@ -26,18 +26,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       }),
     },
   ).then(a => a.json())
-  console.log(response.data.token)
+  return response
+}
 
-  const result = await fetch('https://makeswift-example.mybigcommerce.com/graphql', {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
+  const cursor = req.query.cursor
+
+  const bearerTokenResponse = await getBearerToken()
+
+  if (bearerTokenResponse.errors) {
+    return res.status(500).json(bearerTokenResponse.errors)
+  }
+
+  const response = await fetch('https://makeswift-example.mybigcommerce.com/graphql', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + response.data.token,
+      Authorization: 'Bearer ' + bearerTokenResponse.data.token,
     },
     body: JSON.stringify({
       query: `
-
-
       query paginateProducts(
         $pageSize: Int = 6
         $cursor: String
@@ -49,6 +57,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             pageInfo {
               startCursor
               endCursor
+              hasNextPage
+              hasPreviousPage
             }
             edges {
               cursor
@@ -84,14 +94,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
           }
         }
       }
-
         `,
       variables: {
-        cursor: 'YXJyYXljb25uZWN0aW9uOjI=',
+        cursor: cursor ?? null,
       },
     }),
   }).then(a => a.json())
-  console.log(result)
 
-  res.status(200).json(result)
+  if (response.errors) {
+    return res.status(500).json(response.errors)
+  }
+
+  res.status(200).json(response)
 }
