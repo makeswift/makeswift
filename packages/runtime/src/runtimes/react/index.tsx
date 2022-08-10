@@ -241,7 +241,7 @@ const ElementData = memo(
     suppressRefWarning(`\`ForwardRef(${ElementData.name})\``)
 
     if (Component == null) {
-      return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Component not found" />
+      return <FallbackComponent ref={setHandle} text="Component not found" />
     }
 
     return (
