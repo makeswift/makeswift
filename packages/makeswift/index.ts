@@ -1,3 +1,5 @@
+import { login } from "./authentication";
+
 const { Command } = require("commander");
 const program = new Command();
 
@@ -19,6 +21,25 @@ program
 
     console.log(`name: ${JSON.stringify(name, null, 2)}`);
     console.log(`Hello ${name}`);
+  });
+
+program
+  .command("login")
+  .description(
+    "Login and store a token that will give you access to the Makeswift API."
+  )
+  .action(() => {
+    const config = {
+      auth0ClientId: "6yMkMqiFxBrBR1l0bF7zxSq71u68Y9Xp",
+      auth0Domain: "makeswift-staging.auth0.com",
+      auth0TokenAudience: "https://api.staging.makeswift.com",
+      auth0TokenScope: "profile",
+      port: 42225,
+      // 5 minutes
+      timeout: 5 * 60 * 1000,
+    };
+
+    login(config);
   });
 
 program.parse();

@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "es2017",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "lib",
+    "declaration": true,
+    "declarationDir": "lib",
+    "noUnusedLocals": false,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "alwaysStrict": true,
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "incremental": true
+  },
+  "exclude": [
+    "node_modules",
+    "lib",
+    "test"
+  ],
+  "include": [
+    "src"
+  ]
+}
