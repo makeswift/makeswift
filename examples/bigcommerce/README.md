@@ -1,6 +1,6 @@
 # Demo
 
-[https://www.makeswift-examples-bigcommerce.vercel.app](https://www.makeswift-examples-bigcommerce.vercel.app)
+[https://makeswift-examples-bigcommerce.vercel.app](https://makeswift-examples-bigcommerce.vercel.app)
 
 # Visually build with BigCommerce components
 
