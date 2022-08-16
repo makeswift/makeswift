@@ -13,9 +13,9 @@ export function ProductList({ className, categoryEntityId, count }: Props) {
   const products = useProducts({ categoryEntityId, count })
 
   return (
-    <div className={`${className} flex gap-3 flex-wrap justify-center`}>
+    <div className={`${className} flex gap-5 flex-wrap justify-center`}>
       {products.length === 0 && count !== 0 ? (
-        <p className="font-sans text-lg">Looks like that category doesn't have any products</p>
+        <p className="font-sans text-lg">Looks like that category doesn&apos;t have any products</p>
       ) : (
         products.map(product => {
           return (
@@ -31,11 +31,9 @@ export function ProductList({ className, categoryEntityId, count }: Props) {
                   ></Image>
                   <div className="absolute inset-0 group-hover:bg-white/10 group-hover:backdrop-saturate-10 transition-all"></div>
                 </div>
-                <div className="p-5 pt-3 flex flex-col gap-2">
+                <div className="pt-3 flex flex-col">
                   <p className="font-light text-xl">{product.name}</p>
-                  <p className="text-base text-gray-700 font-bold">
-                    $ {product.prices.price.value}
-                  </p>
+                  <p className="text-base text-green">$ {product.prices.price.value}</p>
                 </div>
               </a>
             </Link>

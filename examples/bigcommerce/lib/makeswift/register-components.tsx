@@ -20,13 +20,15 @@ ReactRuntime.registerComponent(ProductList, {
     className: Style({ properties: Style.All }),
     categoryEntityId: Combobox({
       async getOptions() {
-        const categories: Category[] = await fetch(`/api/categories`).then(r => r.json())
-
-        return categories.map(category => ({
-          id: category.entityId.toString(),
-          label: category.name,
-          value: category.entityId.toString(),
-        }))
+        return fetch(`/api/categories`)
+          .then(r => r.json())
+          .then((categories: Category[]) =>
+            categories.map(category => ({
+              id: category.entityId.toString(),
+              label: category.name,
+              value: category.entityId.toString(),
+            })),
+          )
       },
       label: 'Category',
     }),

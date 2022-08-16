@@ -20,6 +20,7 @@ export function ProductImages({ className }: ProductImagesProps) {
           layout="responsive"
           width="650"
           height="740"
+          priority={true}
         />
 
         <div className="flex gap-2 justify-center items-center">

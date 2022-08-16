@@ -9,7 +9,7 @@ export function ProductCart({ className }: ProductCartProps) {
   const { items } = useCart()
 
   return (
-    <div className={`${className} relative z-0 `}>
+    <button className={`${className} relative z-0 `}>
       <svg
         width="34"
         height="34"
@@ -45,7 +45,7 @@ export function ProductCart({ className }: ProductCartProps) {
       <div className="absolute flex justify-center items-center bg-green text-white h-5 w-5 rounded-full text-xs -translate-x-4 -translate-y-1 top-1/2 left-1/2">
         {items.length}
       </div>
-    </div>
+    </button>
   )
 }
 
