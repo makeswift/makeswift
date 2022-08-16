@@ -29,11 +29,11 @@ This example includes a home page for listing products by category and a product
    Instead of using `create-next-app`, run this command from the terminal:
 
    ```bash
-   npx degit makeswift/makeswift/examples/bigcommerce  bigcommerce
+   npx degit makeswift/makeswift/examples/bigcommerce bigcommerce
    cd bigcommerce
    ```
 
-   It will download this subdirectory of the `makeswift/makeswift` repo without including git history
+   It will download this subdirectory of the `makeswift/makeswift` repo without including git history.
 
 3. **Update environment variables**
 
@@ -43,20 +43,18 @@ This example includes a home page for listing products by category and a product
 
        <img src="https://user-images.githubusercontent.com/20950876/184250701-c7af5854-ad4a-4dec-b8e1-1653cddbff1c.png" width="600" />
 
-   - `BIGCOMMERCE_ACCESS_TOKEN` and `BIGCOMMERCE_CLIENT_ID` require you to [create an API account](https://support.bigcommerce.com/s/article/Store-API-Accounts?language=en_US)
+   - `BIGCOMMERCE_ACCESS_TOKEN` requires you to [create an API account](https://support.bigcommerce.com/s/article/Store-API-Accounts?language=en_US)
    - and finally the `MAKESWIFT_SITE_API_KEY` comes from your Makeswift site. It is the value you copied from step 1.
 
    ```diff
    - BIGCOMMERCE_STORE_NAME=
    - BIGCOMMERCE_STORE_HASH=
    - BIGCOMMERCE_ACCESS_TOKEN=
-   - BIGCOMMERCE_CLIENT_ID=
 
    - MAKESWIFT_SITE_API_KEY=
    + BIGCOMMERCE_STORE_NAME=<YOUR_BIGCOMMERCE_STORE_NAME>
    + BIGCOMMERCE_STORE_HASH=<YOUR_BIGCOMMERCE_STORE_HASH>
    + BIGCOMMERCE_ACCESS_TOKEN=<YOUR_BIGCOMMERCE_ACCESS_TOKEN>
-   + BIGCOMMERCE_CLIENT_ID=<YOUR_BIGCOMMERCE_CLIENT_ID>
 
    + MAKESWIFT_SITE_API_KEY=<YOUR_MAKESWIFT_SITE_API_KEY>
    ```
@@ -67,27 +65,25 @@ This example includes a home page for listing products by category and a product
 
    ```bash
    yarn dev
-   # or
-   npm run dev
    ```
 
-   Your next.js app should be up and running at http://localhost:3000.
+   Your Next.js app should be up and running at http://localhost:3000.
 
 5. **Create a home page with a list of products**
 
    1. Create a blank page
 
-      Look for the plus button in the left toolbar and specify "Blank page."
+      Look for the plus button in the left toolbar and specify "Blank page".
 
    2. Edit the page's URL to be `/`
 
       Hover over the "Untitled page" you just created, click on the ellipsis that appears, and click "Edit URL".
 
-   3. Drop in the Product List component
+   3. Drop in the Product list component
 
-      Look for the ellipsis menu in the left toolbar and drop the Product List component into Makeswift.
+      Look for the ellipsis menu in the left toolbar and drop the Product list component into Makeswift.
 
-      With the Product List component selected, update the category you want to display and the number of products in the right panels labeled 'Category' and 'Count' respectively
+      With the Product list component selected, update the category you want to display and the number of products in the right panels labeled 'Category' and 'Count' respectively.
 
 6. **Create a product page template with product specific details**
 
@@ -99,7 +95,7 @@ This example includes a home page for listing products by category and a product
 
       Hover over the "Untitled page" you just created, click on the ellipsis that appears, and click "Edit URL".
 
-      You should set this value to the `productTemplatePathname` from `/lib/config.ts` which comes predefined in this template as `/__product__`
+      You should set this value to the `productTemplatePathname` from `/lib/config.ts` which comes predefined in this template as `/__product__`.
 
    3. Drop in Product specific components
 
@@ -109,11 +105,11 @@ This example includes a home page for listing products by category and a product
 
 ## Putting it all together
 
-With a home page and product template pages created it's probably a good time to explain what's going on
+With a home page and product template pages created it's probably a good time to explain what's going on.
 
 ### How is BigCommerce product data getting to components?
 
-The `/pages/[[...path]].tsx` route uses Next.js' `getStaticProps` to get page data from Makeswift
+The `/pages/[[...path]].tsx` route uses Next.js' `getStaticProps` to get page data from Makeswift.
 
 ```tsx
 const makeswiftResult = await makeswiftGetStaticProps(ctx)
@@ -126,13 +122,13 @@ const products = await getProducts()
 const product = await getProduct()
 ```
 
-Both Makeswift and BigCommerce data is then passed into the Page component via props
+Both Makeswift and BigCommerce data is then passed into the Page component via props.
 
 ```tsx
 return { ...makeswiftResult, props: { ...makeswiftResult.props, products, product } }
 ```
 
-And exposed to components via context in `/pages/_app.tsx`
+And exposed to components via context in `/pages/_app.tsx`.
 
 ```tsx
 export default function App({ Component, pageProps }: AppProps) {
@@ -161,7 +157,7 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 }
 ```
 
-The resulting pages use the same makeswift data from the template (`/__product__`) makeswift page
+The resulting pages use the same makeswift data from the template (`/__product__`) makeswift page.
 
 ```tsx
 const makeswiftResult = await makeswiftGetStaticProps({
@@ -173,7 +169,7 @@ const makeswiftResult = await makeswiftGetStaticProps({
 })
 ```
 
-While dynamically pulling different products from BigCommerce based on the slug
+While dynamically pulling different products from BigCommerce based on the slug.
 
 ```tsx
 const slug = ctx.params?.slug
