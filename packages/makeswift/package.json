@@ -1,7 +1,17 @@
 {
   "name": "makeswift",
   "version": "0.0.0",
+  "scripts": {
+    "build": "tsc",
+    "start": "node -r esbuild-register ./index.ts"
+  },
   "dependencies": {
-    "commander": "^9.4.0"
+    "commander": "^9.4.0",
+    "create-next-app": "^12.2.5",
+    "cross-spawn": "^7.0.3"
+  },
+  "devDependencies": {
+    "@types/cross-spawn": "^6.0.2",
+    "esbuild-register": "^3.3.3"
   }
 }
