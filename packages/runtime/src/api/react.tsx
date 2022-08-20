@@ -108,7 +108,9 @@ export class MakeswiftClient {
 
     // We're doing this because the API return the id without turning it to nodeId:
     // '87237bda-e775-48d8-92cc-399c65577bb7' vs 'UGFnZTo4NzIzN2JkYS1lNzc1LTQ4ZDgtOTJjYy0zOTljNjU1NzdiYjc='
-    res.data.pagePathnamesById.forEach((pagePathnameSlice: PagePathnameSliceFragment) => {
+    res.data.pagePathnamesById.forEach((pagePathnameSlice: PagePathnameSliceFragment | null) => {
+      if (pagePathnameSlice == null) return
+
       const id = Buffer.from(`Page:${pagePathnameSlice.id}`).toString('base64')
 
       this.apolloClient.cache.writeFragment({
