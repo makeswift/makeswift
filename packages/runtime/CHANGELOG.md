@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.1.5
+
+### Patch Changes
+
+- e2b16ee: Fix not-found components not being selectable in the builder.
+- a449fd9: Fix issue where links to deleted pages would cause 500 errors.
+
 ## 0.1.4
 
 ### Patch Changes
