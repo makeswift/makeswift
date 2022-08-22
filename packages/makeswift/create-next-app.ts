@@ -7,22 +7,11 @@ export function createNextApp({
 }: {
   dir: string;
   example: string;
-}): Promise<void> {
+}): void {
   const url = coerceExampleToUrl(example);
 
-  return new Promise((resolve, reject) => {
-    const child = spawn(
-      "npx",
-      ["--yes", "create-next-app", "--example", url, dir],
-      { stdio: "inherit", cwd: __dirname }
-    );
-
-    child.on("close", (code) => {
-      if (code !== 0)
-        reject(
-          new Error(`Failed to create Next.js app with exit code ${code}`)
-        );
-      else resolve();
-    });
+  spawn.sync("npx", ["--yes", "create-next-app", "--example", url, dir], {
+    stdio: "inherit",
+    cwd: __dirname,
   });
 }
