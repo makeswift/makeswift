@@ -21,20 +21,24 @@ async function init(
     dir: nextAppDir,
     example,
   });
+  const handshakePort = await detect(5600);
+  const nextAppPort = await detect(3000);
 
-  const callbackUrl = `http://localhost:5005/${siteSelectionPath}`;
+  const callbackUrl = `http://localhost:${handshakePort}/${siteSelectionPath}`;
   // Handshake Step 1
   await open(
     `${MAKESWIFT_APP}/cli/select-site?project_name=${name}&callback_url=${callbackUrl}`
   );
 
   // Handshake Step 2 - the browser goes to `callbackUrl`
-  const nextAppPort = await detect(3000);
   const nextAppUrl = `http://localhost:${nextAppPort}`;
   const redirectUrl = `${MAKESWIFT_APP}/link-site&host_url=${nextAppUrl}`;
 
   // Handshake Step 3 - we redirect the browser to redirectUrl
-  const { siteApiKey } = await getSiteApiKey({ port: 5005, redirectUrl });
+  const { siteApiKey } = await getSiteApiKey({
+    port: handshakePort,
+    redirectUrl,
+  });
 
   // In the background, we're setting up the Next app with the API key
   // and starting the app at `nextAppPort`
