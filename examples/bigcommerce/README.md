@@ -179,6 +179,12 @@ const slug = ctx.params?.slug
 const product = await getProduct(Number.parseInt(slug.toString(), 10))
 ```
 
+### Why are cart API requests routed through `/page/api/[checkout|cart]`?
+
+At the time of making this example the BigCommerce Storefront API is readonly and doesn't include cart mutations. In order to keep the `BIGCOMMERCE_ACCESS_TOKEN` private we are proxying all BigCommerce Management requests through `/page/api/[checkout|cart]`
+
+More details on managing carts on a custom storefront can be found [here](https://developer.bigcommerce.com/docs/ZG9jOjE4MjIyNjUx-managing-carts).
+
 ---
 
 ## Next steps
