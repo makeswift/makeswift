@@ -32,7 +32,7 @@ async function init(
 
   // Handshake Step 2 - the browser goes to `callbackUrl`
   const nextAppUrl = `http://localhost:${nextAppPort}`;
-  const redirectUrl = `${MAKESWIFT_APP}/link-site&host_url=${nextAppUrl}`;
+  const redirectUrl = `${MAKESWIFT_APP}/cli/link-site&host_url=${nextAppUrl}`;
 
   // Handshake Step 3 - we redirect the browser to redirectUrl
   const { siteApiKey } = await getSiteApiKey({
