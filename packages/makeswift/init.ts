@@ -81,8 +81,11 @@ async function getSiteApiKey({
           return;
         }
 
+        // add the api key in the redirect URL
+        const destinationURL = new URL(redirectUrl);
+        destinationURL.searchParams.set("api_key", siteApiKey);
         res.writeHead(302, {
-          Location: redirectUrl,
+          Location: destinationURL.toString(),
         });
         res.end();
         server.close();
