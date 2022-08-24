@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.1.6
+
+### Patch Changes
+
+- e6338a7: Fix Twitter Cards meta tags.
+
 ## 0.1.5
 
 ### Patch Changes
