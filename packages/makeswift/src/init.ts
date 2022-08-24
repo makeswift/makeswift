@@ -4,12 +4,10 @@ import * as path from "path";
 import * as http from "http";
 import open from "open";
 import * as fs from "fs";
-import detectCb from "detect-port";
-import { promisify } from "util";
+import detect from "detect-port";
 
-const detect = promisify(detectCb);
-
-const MAKESWIFT_APP = `http://localhost:7000`;
+const MAKESWIFT_APP_ORIGIN =
+  process.env.MAKESWIFT_APP_ORIGIN || "https://app.makeswift.com";
 const siteSelectionPath = "select-site";
 
 async function init(
@@ -26,14 +24,14 @@ async function init(
 
   const callbackUrl = `http://localhost:${handshakePort}/${siteSelectionPath}`;
   // Handshake Step 1
-  const selectSiteUrl = new URL(`${MAKESWIFT_APP}/cli/select-site`);
+  const selectSiteUrl = new URL(`${MAKESWIFT_APP_ORIGIN}/cli/select-site`);
   selectSiteUrl.searchParams.set("project_name", name);
   selectSiteUrl.searchParams.set("callback_url", callbackUrl);
   await open(selectSiteUrl.toString());
 
   // Handshake Step 2 - the browser goes to `callbackUrl`
   const nextAppUrl = `http://localhost:${nextAppPort}/makeswift`;
-  const redirectUrl = new URL(`${MAKESWIFT_APP}/cli/link-site`);
+  const redirectUrl = new URL(`${MAKESWIFT_APP_ORIGIN}/cli/link-site`);
   redirectUrl.searchParams.set("host_url", nextAppUrl);
 
   // Handshake Step 3 - we redirect the browser to redirectUrl
@@ -52,7 +50,7 @@ async function init(
     cwd: nextAppDir,
   });
 
-  // Handshake Step 4 - Leo redirects to the builder with the site open,
+  // Handshake Step 4 - Makeswift redirects to the builder with the site open,
   //                    with the host using `nextAppUrl` for the builder
 }
 
