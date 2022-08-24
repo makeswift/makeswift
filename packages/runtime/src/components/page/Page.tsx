@@ -282,9 +282,9 @@ export function Page({ page, preview = false }: Props): JSX.Element {
         {socialImage && (
           <>
             <meta property="og:image" content={socialImage.publicUrl} />
-            <meta property="og:image:type" content={socialImage.publicUrl} />
+            <meta property="og:image:type" content={socialImage.mimetype} />
             <meta name="twitter:image" content={socialImage.publicUrl} />
-            <meta name="twitter:card" content={socialImage.publicUrl} />
+            <meta name="twitter:card" content="summary_large_image" />
             <meta itemProp="image" content={socialImage.publicUrl} />
           </>
         )}
