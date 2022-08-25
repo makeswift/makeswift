@@ -1,6 +1,6 @@
-import { ComponentPropsWithoutRef } from "react"
+import { ComponentPropsWithoutRef } from 'react'
 
-export function Minus(props: ComponentPropsWithoutRef<"svg">) {
+export function Minus(props: ComponentPropsWithoutRef<'svg'>) {
   return (
     <svg
       {...props}

@@ -1,4 +1,4 @@
-import { ProductFragment } from "./types";
+import { ProductFragment } from './types'
 
 export const DEFAULT_PRODUCT: ProductFragment = {
   entityId: 113,

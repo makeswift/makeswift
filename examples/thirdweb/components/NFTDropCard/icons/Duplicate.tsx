@@ -1,6 +1,6 @@
-import { ComponentPropsWithoutRef } from "react"
+import { ComponentPropsWithoutRef } from 'react'
 
-export function Duplicate(props: ComponentPropsWithoutRef<"svg">) {
+export function Duplicate(props: ComponentPropsWithoutRef<'svg'>) {
   return (
     <svg
       {...props}

@@ -151,16 +151,16 @@ Make the following changes to your Next.js config file:
   via `next/dynamic` and also removes the need to manually configure `next/image` domains.
 
   ```js
-  const withMakeswift = require("@makeswift/runtime/next/plugin")();
+  const withMakeswift = require('@makeswift/runtime/next/plugin')()
 
   /**
    * @type {import('next').NextConfig}
    */
   const nextConfig = {
     /* config options here */
-  };
+  }
 
-  module.exports = withMakeswift(nextConfig);
+  module.exports = withMakeswift(nextConfig)
   ```
 
 ### Patch Changes
@@ -357,24 +357,24 @@ The last release, `0.0.8` didn't properly fix the `useInsertionEffect` issue. Th
   For example:
 
   ```tsx
-  import { ReactRuntime } from "@makeswift/runtime/react";
-  import { Style } from "@makeswift/runtime/controls";
+  import { ReactRuntime } from '@makeswift/runtime/react'
+  import { Style } from '@makeswift/runtime/controls'
 
   ReactRuntime.registerComponent(HelloWorld, {
-    type: "hello-world",
-    label: "Hello, world!",
+    type: 'hello-world',
+    label: 'Hello, world!',
     props: {
-      className: Style()
-    }
-  });
+      className: Style(),
+    },
+  })
 
   const HelloWorld = forwardRef(function HelloWorld(props, ref) {
     return (
       <p {...props} ref={ref}>
         Hello, world!
       </p>
-    );
-  });
+    )
+  })
   ```
 
   By default `Style` is configured to provide width and margin overlays and panels. This can be overwritten with the `properties` configuration option.

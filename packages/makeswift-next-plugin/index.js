@@ -19,5 +19,7 @@ module.exports =
       },
     }
 
-    return withTmInitializer(NEXT_TRANSPILE_MODULES_MODULES, { resolveSymlinks })(enhancedConfig)
+    return withTmInitializer(NEXT_TRANSPILE_MODULES_MODULES, {
+      resolveSymlinks,
+    })(enhancedConfig)
   }

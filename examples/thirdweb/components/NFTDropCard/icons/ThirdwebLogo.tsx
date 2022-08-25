@@ -1,6 +1,6 @@
-import { ComponentPropsWithoutRef } from "react"
+import { ComponentPropsWithoutRef } from 'react'
 
-export function ThirdwebLogo(props: ComponentPropsWithoutRef<"svg">) {
+export function ThirdwebLogo(props: ComponentPropsWithoutRef<'svg'>) {
   return (
     <svg
       {...props}

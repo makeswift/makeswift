@@ -1,6 +1,6 @@
-import { ComponentPropsWithoutRef } from "react"
+import { ComponentPropsWithoutRef } from 'react'
 
-export function Wallet(props: ComponentPropsWithoutRef<"svg">) {
+export function Wallet(props: ComponentPropsWithoutRef<'svg'>) {
   return (
     <svg
       {...props}
