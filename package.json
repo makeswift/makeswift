@@ -3,7 +3,11 @@
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {
+    "build": "turbo run build"
+  },
   "devDependencies": {
-    "@changesets/cli": "^2.22.0"
+    "@changesets/cli": "^2.22.0",
+    "turbo": "^1.4.3"
   }
 }
