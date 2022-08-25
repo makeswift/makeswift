@@ -15,7 +15,7 @@ import {
   useNetworkMismatch,
   useNetwork,
   useClaimIneligibilityReasons,
-} from "@thirdweb-dev/react"
+} from '@thirdweb-dev/react'
 import {
   useToast,
   ChakraProvider,
@@ -36,24 +36,24 @@ import {
   PopoverTrigger,
   PopoverContent,
   Tooltip,
-} from "@chakra-ui/react"
-import { formatUnits, parseUnits } from "ethers/lib/utils"
-import { useState, forwardRef, Ref, useMemo } from "react"
-import { ThirdwebProvider } from "@thirdweb-dev/react"
-import { StyleFunctionProps } from "@chakra-ui/theme-tools"
+} from '@chakra-ui/react'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import { useState, forwardRef, Ref, useMemo } from 'react'
+import { ThirdwebProvider } from '@thirdweb-dev/react'
+import { StyleFunctionProps } from '@chakra-ui/theme-tools'
 
-import { Diamond } from "./icons/Diamond"
-import { MetamaskLogo } from "./icons/MetamaskLogo"
-import { WalletConnectLogo } from "./icons/WalletConnectLogo"
-import { CoinbaseLogo } from "./icons/CoinbaseLogo"
-import { Minus } from "./icons/Minus"
-import { Plus } from "./icons/Plus"
-import { ThirdwebLogo } from "./icons/ThirdwebLogo"
-import { Coin } from "./icons/Coin"
-import { Wallet } from "./icons/Wallet"
-import { Duplicate } from "./icons/Duplicate"
-import { Unlink } from "./icons/Unlink"
-import { parseIneligibility } from "./utils/parseIneligibility"
+import { Diamond } from './icons/Diamond'
+import { MetamaskLogo } from './icons/MetamaskLogo'
+import { WalletConnectLogo } from './icons/WalletConnectLogo'
+import { CoinbaseLogo } from './icons/CoinbaseLogo'
+import { Minus } from './icons/Minus'
+import { Plus } from './icons/Plus'
+import { ThirdwebLogo } from './icons/ThirdwebLogo'
+import { Coin } from './icons/Coin'
+import { Wallet } from './icons/Wallet'
+import { Duplicate } from './icons/Duplicate'
+import { Unlink } from './icons/Unlink'
+import { parseIneligibility } from './utils/parseIneligibility'
 
 type Props = {
   className?: string
@@ -73,7 +73,7 @@ const NFTDropCard = forwardRef(function NFTDropCard(
     showDescription,
     showClaimed,
   }: Props,
-  ref: Ref<HTMLDivElement>
+  ref: Ref<HTMLDivElement>,
 ) {
   const toast = useToast()
   const nftDrop = useNFTDrop(contractAddress)
@@ -111,8 +111,8 @@ const NFTDropCard = forwardRef(function NFTDropCard(
   const useDefault = useMemo(
     () =>
       !snapshot ||
-      snapshot?.find((user) => user.address === address)?.maxClaimable === "0",
-    [snapshot, address]
+      snapshot?.find((user) => user.address === address)?.maxClaimable === '0',
+    [snapshot, address],
   )
 
   const maxClaimable = useDefault
@@ -123,7 +123,7 @@ const NFTDropCard = forwardRef(function NFTDropCard(
 
   const lowerMaxClaimable = Math.min(
     maxClaimable,
-    unclaimedSupply?.toNumber() || 1000
+    unclaimedSupply?.toNumber() || 1000,
   )
 
   // Check if there's any NFTs left
@@ -138,8 +138,8 @@ const NFTDropCard = forwardRef(function NFTDropCard(
 
   // Check price
   const price = parseUnits(
-    activeClaimCondition?.currencyMetadata.displayValue || "0",
-    activeClaimCondition?.currencyMetadata.decimals
+    activeClaimCondition?.currencyMetadata.displayValue || '0',
+    activeClaimCondition?.currencyMetadata.decimals,
   )
 
   // Multiply depending on quantity
@@ -162,7 +162,7 @@ const NFTDropCard = forwardRef(function NFTDropCard(
 
         toast({
           title: `Switching to correct network, please try again.`,
-          status: "warning",
+          status: 'warning',
         })
       }
 
@@ -174,18 +174,18 @@ const NFTDropCard = forwardRef(function NFTDropCard(
       {
         onSuccess: () => {
           toast({
-            title: `Successfully minted NFT${quantity > 1 ? "s" : ""}!`,
-            status: "success",
+            title: `Successfully minted NFT${quantity > 1 ? 's' : ''}!`,
+            status: 'success',
           })
         },
         onError: (err: any) => {
           toast({
-            title: `Error minting NFT${quantity > 1 ? "s" : ""}`,
-            description: err?.message || "Something went wrong.",
-            status: "error",
+            title: `Error minting NFT${quantity > 1 ? 's' : ''}`,
+            description: err?.message || 'Something went wrong.',
+            status: 'error',
           })
         },
-      }
+      },
     )
   }
 
@@ -282,16 +282,16 @@ const NFTDropCard = forwardRef(function NFTDropCard(
                     disabled={claimNFT.isLoading}
                     leftIcon={<Diamond />}
                   >
-                    {claimNFT.isLoading ? "Minting..." : `Mint`}
+                    {claimNFT.isLoading ? 'Minting...' : `Mint`}
                     <Text ml={2} fontSize="sm" opacity={0.8}>
                       {activeClaimCondition?.price.eq(0)
-                        ? " Free"
+                        ? ' Free'
                         : activeClaimCondition?.currencyMetadata.displayValue
                         ? ` (${formatUnits(
                             priceToMint,
-                            activeClaimCondition.currencyMetadata.decimals
+                            activeClaimCondition.currencyMetadata.decimals,
                           )} ${activeClaimCondition?.currencyMetadata.symbol})`
-                        : ""}
+                        : ''}
                     </Text>
                   </Button>
                 </Flex>
@@ -300,7 +300,7 @@ const NFTDropCard = forwardRef(function NFTDropCard(
                   <Text as="h2" fontSize="2xl">
                     {parseIneligibility(
                       claimIneligibilityReasons.data,
-                      quantity
+                      quantity,
                     )}
                   </Text>
                 </Flex>
@@ -343,7 +343,7 @@ const NFTDropCard = forwardRef(function NFTDropCard(
           </Box>
           <Divider />
           <Flex
-            justify={balance?.data && address ? "space-between" : "center"}
+            justify={balance?.data && address ? 'space-between' : 'center'}
             align="center"
           >
             <Tooltip label="Powered by thirdweb">
@@ -405,10 +405,10 @@ const NFTDropCard = forwardRef(function NFTDropCard(
                       onClick={() =>
                         navigator.clipboard.writeText(address).then(() =>
                           toast({
-                            title: "Address copied to clipboard!",
-                            status: "success",
+                            title: 'Address copied to clipboard!',
+                            status: 'success',
                             duration: 3000,
-                          })
+                          }),
                         )
                       }
                     >
@@ -445,7 +445,7 @@ const NFTDropCardProvider = forwardRef(function NFTDropCardProvider(
     showDescription,
     showClaimed,
   }: ProviderProps,
-  ref: Ref<HTMLDivElement>
+  ref: Ref<HTMLDivElement>,
 ) {
   return (
     <ThirdwebProvider desiredChainId={Number(chainId)}>
@@ -457,7 +457,7 @@ const NFTDropCardProvider = forwardRef(function NFTDropCardProvider(
           },
           components: {
             Divider: {
-              baseStyle: { borderColor: "rgba(0,0,0,0.2)" },
+              baseStyle: { borderColor: 'rgba(0,0,0,0.2)' },
             },
             Menu: {
               baseStyle: {
@@ -492,19 +492,19 @@ const NFTDropCardProvider = forwardRef(function NFTDropCardProvider(
                   },
                 },
                 outline: (props: StyleFunctionProps) =>
-                  props.colorScheme === "footer" && {
-                    borderColor: "rgba(0,0,0,0.15)",
-                    color: "rgba(0,0,0,0.5)",
-                    _hover: { bg: "rgba(0,0,0,0.05)" },
-                    _active: { bg: "rgba(0,0,0,0.08)" },
+                  props.colorScheme === 'footer' && {
+                    borderColor: 'rgba(0,0,0,0.15)',
+                    color: 'rgba(0,0,0,0.5)',
+                    _hover: { bg: 'rgba(0,0,0,0.05)' },
+                    _active: { bg: 'rgba(0,0,0,0.08)' },
                   },
               },
             },
             Badge: {
               variants: {
                 subtle: {
-                  bg: "#fff",
-                  color: "#000",
+                  bg: '#fff',
+                  color: '#000',
                   opacity: 0.8,
                 },
               },

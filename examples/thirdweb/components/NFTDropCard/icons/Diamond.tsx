@@ -1,6 +1,6 @@
-import { ComponentPropsWithoutRef } from "react"
+import { ComponentPropsWithoutRef } from 'react'
 
-export function Diamond(props: ComponentPropsWithoutRef<"svg">) {
+export function Diamond(props: ComponentPropsWithoutRef<'svg'>) {
   return (
     <svg
       {...props}

@@ -1,11 +1,11 @@
-import { ClaimEligibility } from "@thirdweb-dev/sdk"
+import { ClaimEligibility } from '@thirdweb-dev/sdk'
 
 export function parseIneligibility(
   reasons: ClaimEligibility[],
-  quantity = 0
+  quantity = 0,
 ): string {
   if (!reasons.length) {
-    return ""
+    return ''
   }
 
   const reason = reasons[0]
@@ -15,7 +15,7 @@ export function parseIneligibility(
     reason === ClaimEligibility.NoActiveClaimPhase ||
     reason === ClaimEligibility.NoClaimConditionSet
   ) {
-    return "This drop is not ready to be claimed."
+    return 'This drop is not ready to be claimed.'
   } else if (reason === ClaimEligibility.NotEnoughTokens) {
     return "You don't have enough currency to claim."
   } else if (reason === ClaimEligibility.AddressNotAllowed) {
@@ -23,7 +23,7 @@ export function parseIneligibility(
       return `You are not eligible to claim ${quantity} tokens.`
     }
 
-    return "You are not eligible to claim at this time."
+    return 'You are not eligible to claim at this time.'
   }
 
   return reason

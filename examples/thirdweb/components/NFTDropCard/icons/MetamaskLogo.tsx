@@ -1,6 +1,6 @@
-import { ComponentPropsWithoutRef } from "react"
+import { ComponentPropsWithoutRef } from 'react'
 
-export function MetamaskLogo(props: ComponentPropsWithoutRef<"svg">) {
+export function MetamaskLogo(props: ComponentPropsWithoutRef<'svg'>) {
   return (
     <svg
       {...props}

@@ -1,6 +1,6 @@
-import { ComponentPropsWithoutRef } from "react"
+import { ComponentPropsWithoutRef } from 'react'
 
-export function Unlink(props: ComponentPropsWithoutRef<"svg">) {
+export function Unlink(props: ComponentPropsWithoutRef<'svg'>) {
   return (
     <svg {...props} width="16" height="16" xmlns="http://www.w3.org/2000/svg">
       <path

@@ -1,1 +1,1 @@
-export * from "./NFTDropCard"
+export * from './NFTDropCard'

@@ -4,9 +4,11 @@ const style = {
   fontFamily: 'monospace',
   fontSize: 26,
   fontWeight: 'bold',
-  textAlign: 'center'
+  textAlign: 'center',
 }
 
 export function CountUp({ suffix = '', ...restOfProps }) {
-  return <ReactCountUp {...restOfProps} style={style} suffix={suffix} useEasing />
+  return (
+    <ReactCountUp {...restOfProps} style={style} suffix={suffix} useEasing />
+  )
 }
