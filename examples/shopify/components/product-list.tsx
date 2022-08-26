@@ -13,7 +13,9 @@ export function ProductList({ className, collectionId, count }: Props) {
   const products = useProducts({ collectionId, count })
 
   return (
-    <div className={`${className} flex gap-5 flex-wrap justify-center`}>
+    <div
+      className={`${className} grid grid-cols-[repeat(auto-fit,minmax(325px,max-content))] justify-center gap-5`}
+    >
       {products.length === 0 && count !== 0 ? (
         <p className="font-sans text-lg">Looks like that category doesn&apos;t have any products</p>
       ) : (

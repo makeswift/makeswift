@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.6.6",
     "@makeswift/runtime": "^0.1.4",
     "next": "^12.1.6",
     "react": "^18.1.0",
-    "react-dom": "^18.1.0"
+    "react-dom": "^18.1.0",
+    "tiny-invariant": "^1.2.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.37",
