@@ -1,5 +1,11 @@
 # makeswift
 
+## 0.0.3
+
+### Patch Changes
+
+- b4bdb21: Fix directory name in npx
+
 ## 0.0.2
 
 ### Patch Changes
