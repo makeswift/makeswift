@@ -42,4 +42,18 @@ export const DEFAULT_PRODUCT: ProductFragment = {
       },
     ],
   },
+  variants: {
+    edges: [
+      {
+        node: {
+          id: 'gid://shopify/Product/7815104332028',
+          title: 'Monstera',
+          unitPrice: {
+            amount: '79.0',
+            currencyCode: 'USD',
+          },
+        },
+      },
+    ],
+  },
 }

@@ -24,6 +24,10 @@ This example includes a home page for listing products by category and a product
 
    Then head over to [Shopify](https://www.shopify.com/) and create a store. Here is [a good starting point](https://www.shopify.com/online) to get you started.
 
+   Note: This custom storefront example assumes all products are in stock, so make sure all products have "Track quantity" unchecked as pictured below.
+
+      <img width="600" src="https://user-images.githubusercontent.com/20950876/187238713-22fd0c65-8d9b-4eab-b94e-1e498053f270.png">
+
 2. **Clone this template**
 
    Instead of using `create-next-app`, run this command from the terminal:
@@ -110,14 +114,14 @@ With a home page and product template pages created it's probably a good time to
 The `/pages/[[...path]].tsx` route uses Next.js' `getStaticProps` to get page data from Makeswift.
 
 ```tsx
-const makeswiftResult = await makeswiftGetStaticProps(ctx);
+const makeswiftResult = await makeswiftGetStaticProps(ctx)
 ```
 
 It also uses `getStaticProps` to get product data from Shopify.
 
 ```tsx
-const products = await getProducts();
-const product = await getProduct();
+const products = await getProducts()
+const product = await getProduct()
 ```
 
 Both Makeswift and Shopify data is then passed into the Page component via props.
@@ -126,7 +130,7 @@ Both Makeswift and Shopify data is then passed into the Page component via props
 return {
   ...makeswiftResult,
   props: { ...makeswiftResult.props, products, product },
-};
+}
 ```
 
 And exposed to components via context in `/pages/_app.tsx`.
@@ -139,7 +143,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
       </ProductContext.Provider>
     </ProductsContext.Provider>
-  );
+  )
 }
 ```
 
@@ -149,14 +153,14 @@ The `/pages/product/[slug].tsx` route uses Next.js' `getStaticPaths` api to gene
 
 ```tsx
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-  const products = await getProducts();
+  const products = await getProducts()
 
   return {
-    paths: products.map((product) => ({
+    paths: products.map(product => ({
       params: { slug: product.entityId.toString() },
     })),
-    fallback: "blocking",
-  };
+    fallback: 'blocking',
+  }
 }
 ```
 
@@ -167,21 +171,19 @@ const makeswiftResult = await makeswiftGetStaticProps({
   ...ctx,
   params: {
     ...ctx.params,
-    path: config.makeswift.productTemplatePathname
-      .replace(/^\//, "")
-      .split("/"),
+    path: config.makeswift.productTemplatePathname.replace(/^\//, '').split('/'),
   },
-});
+})
 ```
 
 While dynamically pulling different products from Shopify based on the slug.
 
 ```tsx
-const slug = ctx.params?.slug;
+const slug = ctx.params?.slug
 
 /* ... */
 
-const product = await getProduct(Number.parseInt(slug.toString(), 10));
+const product = await getProduct(Number.parseInt(slug.toString(), 10))
 ```
 
 ---
