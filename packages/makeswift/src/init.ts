@@ -14,7 +14,7 @@ async function init(
   name: string,
   { example = "basic-typescript" }: { example?: string }
 ): Promise<void> {
-  const nextAppDir = path.join(__dirname, name);
+  const nextAppDir = path.join(process.cwd(), name);
   createNextApp({
     dir: nextAppDir,
     example,
