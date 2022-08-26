@@ -24,10 +24,10 @@ import { KeyUtils } from 'slate'
 import createEmotionServer from '@emotion/server/create-instance'
 import { cache } from '@emotion/css'
 
-import { MakeswiftClient } from './api/react'
-import { Element } from './state/react-page'
-import { RuntimeProvider } from './runtimes/react'
-import { Page as PageMeta, PageData } from './components/page'
+import { MakeswiftClient } from '../api/react'
+import { Element } from '../state/react-page'
+import { RuntimeProvider } from '../runtimes/react'
+import { Page as PageMeta, PageData } from '../components/page'
 
 export { MakeswiftClient }
 
