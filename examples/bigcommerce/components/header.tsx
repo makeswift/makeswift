@@ -1,12 +1,23 @@
 import Link from 'next/link'
+import { MouseEvent } from 'react'
 
-import { ProductCart } from './product-cart'
+import { Cart } from './cart'
+
+type LinkValue = {
+  href: string
+  target: '_blank' | '_self' | undefined
+  onClick(event: MouseEvent<HTMLElement>): void
+}
 
 type Props = {
   className?: string
+  links: {
+    text?: string
+    link?: LinkValue
+  }[]
 }
 
-export function Header({ className }: Props) {
+export function Header({ className, links }: Props) {
   return (
     <div className={`${className} flex gap-3 flex-wrap justify-between items-center`}>
       <div className="flex space-x-5 items-center">
@@ -26,22 +37,20 @@ export function Header({ className }: Props) {
             </svg>
           </a>
         </Link>
-        <Link href={'/'}>
-          <a>Featured</a>
-        </Link>
-        <Link href={'/'}>
-          <a>All Plants</a>
-        </Link>
-        <Link href={'/'}>
-          <a>About</a>
-        </Link>
+        {links.map((link, i) => (
+          <Link
+            href={link.link?.href ?? '#'}
+            target={link.link?.target}
+            onClick={link.link?.onClick}
+            key={i}
+          >
+            <a>{link.text}</a>
+          </Link>
+        ))}
       </div>
 
       <div className="flex items-center space-x-5">
-        <Link href={'/'}>
-          <a>Account</a>
-        </Link>
-        <ProductCart />
+        <Cart />
       </div>
     </div>
   )
