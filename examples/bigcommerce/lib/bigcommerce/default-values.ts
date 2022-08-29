@@ -7,7 +7,7 @@ export const DEFAULT_PRODUCT: ProductFragment = {
     '<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a.  Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis.</p>',
   defaultImage: {
     urlOriginal:
-      'https://cdn11.bigcommerce.com/s-uvhswop3wh/images/stencil/original/products/113/376/image_1__70039.1659643611.png',
+      'https://cdn11.bigcommerce.com/s-uvhswop3wh/images/stencil/original/products/113/396/image_2__07829.1660659630.png',
     altText: 'monsterra plan',
   },
   images: {
@@ -15,7 +15,7 @@ export const DEFAULT_PRODUCT: ProductFragment = {
       {
         node: {
           urlOriginal:
-            'https://cdn11.bigcommerce.com/s-uvhswop3wh/images/stencil/original/products/113/376/image_1__70039.1659643611.png',
+            'https://cdn11.bigcommerce.com/s-uvhswop3wh/images/stencil/original/products/113/396/image_2__07829.1660659630.png',
           altText: 'monsterra plan',
         },
       },
