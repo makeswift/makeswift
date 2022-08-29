@@ -1,4 +1,4 @@
-import { Combobox, Number, Style } from '@makeswift/runtime/controls'
+import { Combobox, Link, List, Number, Shape, Style, TextInput } from '@makeswift/runtime/controls'
 import { ReactRuntime } from '@makeswift/runtime/react'
 
 import {
@@ -88,6 +88,16 @@ ReactRuntime.registerComponent(Header, {
   label: 'Header',
   props: {
     className: Style({ properties: Style.All }),
+    links: List({
+      type: Shape({
+        type: {
+          link: Link(),
+          text: TextInput({ label: 'Text' }),
+        },
+      }),
+      label: 'Links',
+      getItemLabel: item => item?.text ?? '',
+    }),
   },
 })
 
