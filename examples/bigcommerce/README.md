@@ -17,9 +17,17 @@ This example includes a home page for listing products by category and a product
 
 ## Deploy your own
 
-Deploy your own with [Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fbigcommerce&env=MAKESWIFT_SITE_API_KEY,BIGCOMMERCE_STORE_NAME,BIGCOMMERCE_STORE_HASH,BIGCOMMERCE_ACCESS_TOKEN&envDescription=Check%20step%203%20of%20the%20example%20README.md%20for%20details%20on%20where%20to%20find%20these%20values.&envLink=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fbigcommerce%23using-this-repo&project-name=makeswift-bigcommerce-example&repo-name=makeswift-bigcommerce-example) or preview live with [StackBlitz](https://stackblitz.com/github/makeswift/makeswift/tree/main/examples/bigcommerce)
+Deploy your own with [Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fbigcommerce&env=MAKESWIFT_SITE_API_KEY,BIGCOMMERCE_STORE_NAME,BIGCOMMERCE_STORE_HASH,BIGCOMMERCE_ACCESS_TOKEN&envDescription=Check%20step%203%20of%20the%20example%20README.md%20for%20details%20on%20where%20to%20find%20these%20values.&envLink=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fbigcommerce%23using-this-repo&project-name=makeswift-bigcommerce-example&repository-name=makeswift-bigcommerce-example) or preview live with [StackBlitz](https://stackblitz.com/github/makeswift/makeswift/tree/main/examples/bigcommerce)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fbigcommerce&env=MAKESWIFT_SITE_API_KEY,BIGCOMMERCE_STORE_NAME,BIGCOMMERCE_STORE_HASH,BIGCOMMERCE_ACCESS_TOKEN&envDescription=Check%20step%203%20of%20the%20example%20README.md%20for%20details%20on%20where%20to%20find%20these%20values.&envLink=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fbigcommerce%23using-this-repo&project-name=makeswift-bigcommerce-example&repo-name=makeswift-bigcommerce-example)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fbigcommerce&env=MAKESWIFT_SITE_API_KEY,BIGCOMMERCE_STORE_NAME,BIGCOMMERCE_STORE_HASH,BIGCOMMERCE_ACCESS_TOKEN&envDescription=Check%20step%203%20of%20the%20example%20README.md%20for%20details%20on%20where%20to%20find%20these%20values.&envLink=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fbigcommerce%23using-this-repo&project-name=makeswift-bigcommerce-example&repository-name=makeswift-bigcommerce-example)
+
+Note: If you are just trying out Makeswift with our e-commerce template feel free use this example store and the read-only access token for your deployment.
+
+```
+BIGCOMMERCE_STORE_NAME=makeswift-example
+BIGCOMMERCE_STORE_HASH=uvhswop3wh
+BIGCOMMERCE_ACCESS_TOKEN=5lw9ulikcp186tjgg3rs39kh4fg3vci
+```
 
 ---
 
@@ -31,6 +39,14 @@ Deploy your own with [Vercel](https://vercel.com/new/clone?repository-url=https%
    and copy the Site API key. You will need it in step 3.
 
    Then head over to [BigCommerce](https://www.bigcommerce.com/) and create a store. Here is [a guide](https://support.bigcommerce.com/s/article/Starting-a-Bigcommerce-Trial) to get you started.
+
+   Note: If you are just trying out Makeswift with our e-commerce template feel free use this example store and the read-only access token for your development.
+
+   ```
+   BIGCOMMERCE_STORE_NAME=makeswift-example
+   BIGCOMMERCE_STORE_HASH=uvhswop3wh
+   BIGCOMMERCE_ACCESS_TOKEN=5lw9ulikcp186tjgg3rs39kh4fg3vci
+   ```
 
 2. **Clone this template**
 

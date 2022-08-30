@@ -17,9 +17,16 @@ This example includes a home page for listing products by category and a product
 
 ## Deploy your own
 
-Deploy your own with [Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify&env=MAKESWIFT_SITE_API_KEY,NEXT_PUBLIC_SHOPIFY_STORE_NAME,NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN&envDescription=Check%20step%203%20of%20the%20example%20README.md%20for%20details%20on%20where%20to%20find%20these%20values.&envLink=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify%23using-this-repo&project-name=makeswift-shopify-example&repo-name=makeswift-shopify-example) or preview live with [StackBlitz](https://stackblitz.com/github/makeswift/makeswift/tree/main/examples/shopify)
+Deploy your own with [Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify&env=MAKESWIFT_SITE_API_KEY,NEXT_PUBLIC_SHOPIFY_STORE_NAME,NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN&envDescription=Check%20step%203%20of%20the%20example%20README.md%20for%20details%20on%20where%20to%20find%20these%20values.&envLink=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify%23using-this-repo&project-name=makeswift-shopify-example&repository-name=makeswift-shopify-example) or preview live with [StackBlitz](https://stackblitz.com/github/makeswift/makeswift/tree/main/examples/shopify)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify&env=MAKESWIFT_SITE_API_KEY,NEXT_PUBLIC_SHOPIFY_STORE_NAME,NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN&envDescription=Check%20step%203%20of%20the%20example%20README.md%20for%20details%20on%20where%20to%20find%20these%20values.&envLink=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify%23using-this-repo&project-name=makeswift-shopify-example&repo-name=makeswift-shopify-example)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify&env=MAKESWIFT_SITE_API_KEY,NEXT_PUBLIC_SHOPIFY_STORE_NAME,NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN&envDescription=Check%20step%203%20of%20the%20example%20README.md%20for%20details%20on%20where%20to%20find%20these%20values.&envLink=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify%23using-this-repo&project-name=makeswift-shopify-example&repository-name=makeswift-shopify-example)
+
+Note: If you are just trying trying out Makeswift with our e-commerce template feel free use this example store and the read-only access token for your deployment.
+
+```
+NEXT_PUBLIC_SHOPIFY_STORE_NAME=makeswift-example
+NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
+```
 
 ## Using this repo
 
@@ -30,7 +37,14 @@ Deploy your own with [Vercel](https://vercel.com/new/clone?repository-url=https%
 
    Then head over to [Shopify](https://www.shopify.com/) and create a store. Here is [a good starting point](https://www.shopify.com/online) to get you started.
 
-   Note: This custom storefront example assumes all products are in stock, so make sure all products have "Track quantity" unchecked as pictured below.
+   Note: If you are just trying trying out Makeswift with our e-commerce template feel free use this example store and the read-only access token for your development.
+
+   ```
+   NEXT_PUBLIC_SHOPIFY_STORE_NAME=makeswift-example
+   NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
+   ```
+
+   Note 2: This custom storefront example assumes all products are in stock, so make sure all products have "Track quantity" unchecked as pictured below.
 
       <img width="600" src="https://user-images.githubusercontent.com/20950876/187238713-22fd0c65-8d9b-4eab-b94e-1e498053f270.png">
 
