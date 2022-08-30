@@ -17,10 +17,14 @@ async function init(
 ): Promise<void> {
   const nextAppDir = path.join(process.cwd(), name)
 
-  createNextApp({
-    dir: nextAppDir,
-    example,
-  })
+  if (isNextApp(nextAppDir)) {
+    integrateNextApp({ dir: nextAppDir })
+  } else {
+    createNextApp({
+      dir: nextAppDir,
+      example,
+    })
+  }
 
   const handshakePort = await detect(5600)
   const nextAppPort = await detect(3000)
