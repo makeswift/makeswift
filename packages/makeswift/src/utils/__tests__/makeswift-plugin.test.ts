@@ -1,4 +1,4 @@
-import { editNextConfig } from '../makeswift-babel-plugin'
+import { manipulateNextConfig } from '../manipulate-next-config'
 
 test('exporting config object', () => {
   // Arrange
@@ -32,7 +32,7 @@ const nextConfig = {
 module.exports = withMakeswift(nextConfig);`
 
   // Act
-  const output = editNextConfig(input)
+  const output = manipulateNextConfig(input)
 
   // Assert
   console.log(output)
@@ -51,7 +51,7 @@ test('exporting config object directly', () => {
 module.exports = withMakeswift({});`
 
   // Act
-  const output = editNextConfig(input)
+  const output = manipulateNextConfig(input)
 
   // Assert
   console.log(output)
@@ -71,7 +71,7 @@ const withFoo = require('foo');
 module.exports = withMakeswift(withFoo({}));`
 
   // Act
-  const output = editNextConfig(input)
+  const output = manipulateNextConfig(input)
 
   // Assert
   console.log(output)
@@ -96,7 +96,7 @@ module.exports = withMakeswift(withFoo(withCSS({
 })));`
 
   // Act
-  const output = editNextConfig(input)
+  const output = manipulateNextConfig(input)
 
   // Assert
   console.log(output)

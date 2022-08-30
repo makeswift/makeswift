@@ -1,6 +1,7 @@
 import spawn from 'cross-spawn'
 import * as fs from 'fs'
 import path from 'path'
+import { manipulateNextConfig } from './utils/manipulate-next-config'
 import { yarnOrNpm } from './utils/yarn-or-npm'
 
 export function integrateNextApp({ dir }: { dir: string }): void {
@@ -11,6 +12,9 @@ export function integrateNextApp({ dir }: { dir: string }): void {
 
   // Step 2 - add Makeswift pages
   addMakeswiftPages({ dir })
+
+  // Step 3 - adding the Makeswift Next.js plugin
+  addMakeswiftNextjsPlugin({ dir })
 }
 
 function installMakeswiftRuntime({ dir }: { dir: string }): void {
@@ -88,4 +92,25 @@ function getExtension({ dir }: { dir: string }): 'js' | 'ts' {
   }
 
   return 'js'
+}
+
+function addMakeswiftNextjsPlugin({ dir }: { dir: string }) {
+  const configFilename = path.join(dir, 'next.config.js')
+  const alreadyExists = fs.existsSync(configFilename)
+
+  if (!alreadyExists) {
+    const nextConfig = `
+const withMakeswift = require('@makeswift/runtime/next/plugin')()
+
+module.exports = withMakeswift({})
+    `
+    fs.writeFileSync(configFilename, nextConfig)
+
+    return
+  }
+
+  const code = fs.readFileSync(configFilename)
+  const outputCode = manipulateNextConfig(code.toString('utf-8'))
+
+  fs.writeFileSync(configFilename, outputCode)
 }
