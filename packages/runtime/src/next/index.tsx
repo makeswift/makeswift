@@ -1,4 +1,16 @@
-import { NormalizedCacheObject } from '@apollo/client'
+import { useEffect, useState } from 'react'
+
+import { RuntimeProvider } from '../runtimes/react'
+import { Page as PageMeta } from '../components/page'
+import { MakeswiftClient } from '../api/react'
+import { MakeswiftPageSnapshot } from './client'
+
+export { MakeswiftClient }
+
+export type PageProps = {
+  snapshot: MakeswiftPageSnapshot
+}
+
 import {
   GetServerSidePropsContext,
   GetServerSidePropsResult,
@@ -6,81 +18,8 @@ import {
   GetStaticPropsContext,
   GetStaticPropsResult,
 } from 'next'
-
-import NextDocument, { DocumentContext, DocumentInitialProps } from 'next/document'
-import {
-  ComponentType,
-  ForwardRefExoticComponent,
-  ForwardedRef,
-  PropsWithoutRef,
-  RefAttributes,
-  createElement,
-  forwardRef,
-  useEffect,
-  useState,
-} from 'react'
-import { ServerStyleSheet } from 'styled-components'
-import { KeyUtils } from 'slate'
-import createEmotionServer from '@emotion/server/create-instance'
-import { cache } from '@emotion/css'
-
-import { MakeswiftClient } from '../api/react'
-import { Element } from '../state/react-page'
-import { RuntimeProvider } from '../runtimes/react'
-import { Page as PageMeta, PageData } from '../components/page'
-
-export { MakeswiftClient }
-
-export class Document extends NextDocument {
-  static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
-    const sheet = new ServerStyleSheet()
-    const originalRenderPage = ctx.renderPage
-
-    try {
-      ctx.renderPage = () =>
-        originalRenderPage({
-          enhanceApp: App => props => sheet.collectStyles(<App {...props} />),
-        })
-
-      const initialProps = await NextDocument.getInitialProps(ctx)
-
-      KeyUtils.resetGenerator()
-
-      const { extractCritical } = createEmotionServer(cache)
-      const { ids, css } = extractCritical(initialProps.html)
-
-      return {
-        ...initialProps,
-        styles: (
-          <>
-            {initialProps.styles}
-            {sheet.getStyleElement()}
-            <style
-              data-emotion={`css ${ids.join(' ')}`}
-              dangerouslySetInnerHTML={{ __html: css }}
-            />
-          </>
-        ),
-      }
-    } finally {
-      sheet.seal()
-    }
-  }
-}
-
-const REVALIDATE_SECONDS = 1
-
-export type PageProps = {
-  page: PageData
-  rootElement: Element
-  makeswiftApiEndpoint: string
-  cacheData: NormalizedCacheObject
-  preview: boolean
-}
-
-type APIResult = PageData & {
-  data: any
-}
+import { Makeswift } from './client'
+import { MakeswiftPreviewData } from './preview-mode'
 
 function getApiOrigin(): string {
   const apiOriginString = process['env'].MAKESWIFT_API_HOST ?? 'https://api.makeswift.com'
@@ -125,144 +64,87 @@ function getApiKey(): string {
   return apiKey
 }
 
-export async function getServerSideProps({
-  query: { pageId },
-}: GetServerSidePropsContext): Promise<GetServerSidePropsResult<PageProps>> {
-  const url = `${getApiOrigin()}/v0/preview-page-data?id=${pageId}`
-  const res = await fetch(url, { headers: { 'x-api-key': getApiKey() } })
+type ParsedUrlQuery = { path?: string[] }
 
-  if (res.status === 404) {
-    console.error(await res.json())
+function deprecationWarning(methodName: string): void {
+  const warningMessage =
+    `The \`${methodName}\` export has been deprecated and will be removed in the next minor version. ` +
+    'More info: https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.2.0'
 
-    return { notFound: true }
-  }
+  if (process.env['NODE_ENV'] !== 'production') console.warn(warningMessage)
+}
 
-  if (!res.ok) {
-    const json = await res.json()
+export async function getStaticPaths(): Promise<GetStaticPathsResult<ParsedUrlQuery>> {
+  deprecationWarning('getStaticPaths')
 
-    throw new Error(json.message)
-  }
-
-  const page: APIResult = await res.json()
-
-  if (page == null) return { notFound: true }
-
-  const makeswiftApiEndpoint = `${getApiOrigin()}/graphql`
-  const client = new MakeswiftClient({ uri: makeswiftApiEndpoint })
-  const cacheData = await client.prefetch(page.data)
+  const makeswift = new Makeswift(getApiKey(), { apiOrigin: getApiOrigin() })
+  const pages = await makeswift.getPages()
 
   return {
-    props: {
-      page,
-      rootElement: page.data,
-      makeswiftApiEndpoint,
-      cacheData,
-      preview: true,
-    },
+    paths: pages.map(page => ({
+      params: { path: page.path.split('/').filter(segment => segment !== '') },
+    })),
+    fallback: 'blocking',
   }
 }
 
-export async function getStaticProps({
-  params,
-}: GetStaticPropsContext<{ path: string[] }>): Promise<GetStaticPropsResult<PageProps>> {
-  if (params == null) return { notFound: true, revalidate: REVALIDATE_SECONDS }
-  const { path = [] } = params
-  const url = `${getApiOrigin()}/v0/live-page-data?path=${path.join('/')}`
+const REVALIDATE_SECONDS = 1
 
-  const res = await fetch(url, { headers: { 'x-api-key': getApiKey() } })
+export async function getStaticProps(
+  ctx: GetStaticPropsContext<ParsedUrlQuery, MakeswiftPreviewData>,
+): Promise<GetStaticPropsResult<PageProps>> {
+  deprecationWarning('getStaticProps')
 
-  if (res.status === 404) {
-    console.error(await res.json())
+  const makeswift = new Makeswift(getApiKey(), { apiOrigin: getApiOrigin() })
+  const path = '/' + (ctx.params?.path ?? []).join('/')
+  const snapshot = await makeswift.getPageSnapshot(path, {
+    preview: ctx.previewData?.makeswift === true,
+  })
 
-    return { notFound: true, revalidate: REVALIDATE_SECONDS }
-  }
+  if (snapshot == null) return { notFound: true, revalidate: REVALIDATE_SECONDS }
 
-  if (!res.ok) {
-    const json = await res.json()
-
-    throw new Error(json.message)
-  }
-
-  const page: APIResult = await res.json()
-
-  if (page == null) return { notFound: true, revalidate: REVALIDATE_SECONDS }
-
-  const makeswiftApiEndpoint = `${getApiOrigin()}/graphql`
-  const client = new MakeswiftClient({ uri: makeswiftApiEndpoint })
-  const cacheData = await client.prefetch(page.data)
-
-  return {
-    props: {
-      page,
-      rootElement: page.data,
-      makeswiftApiEndpoint,
-      cacheData,
-      preview: false,
-    },
-    revalidate: REVALIDATE_SECONDS,
-  }
+  return { props: { snapshot }, revalidate: REVALIDATE_SECONDS }
 }
 
-export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-  return { paths: [], fallback: 'blocking' }
+export async function getServerSideProps(
+  ctx: GetServerSidePropsContext<{ path?: string[] }>,
+): Promise<GetServerSidePropsResult<PageProps>> {
+  deprecationWarning('getServerSideProps')
+
+  const makeswift = new Makeswift(getApiKey(), { apiOrigin: getApiOrigin() })
+  const path = '/' + (ctx.params?.path ?? []).join('/')
+  const snapshot = await makeswift.getPageSnapshot(path, { preview: true })
+
+  if (snapshot == null) return { notFound: true }
+
+  return { props: { snapshot } }
 }
 
-export function Page({ page, rootElement, makeswiftApiEndpoint, cacheData, preview }: PageProps) {
-  const [client] = useState(() => new MakeswiftClient({ uri: makeswiftApiEndpoint, cacheData }))
+export function Page({ snapshot }: PageProps) {
+  const [client] = useState(
+    () =>
+      new MakeswiftClient({
+        uri: new URL('graphql', snapshot.apiOrigin).href,
+        cacheData: snapshot.cacheData,
+      }),
+  )
 
   useEffect(() => {
-    client.updateCacheData(cacheData)
-  }, [client, cacheData])
+    client.updateCacheData(snapshot.cacheData)
+  }, [client, snapshot])
 
   return (
-    <RuntimeProvider client={client} rootElements={new Map([[page.id, rootElement]])}>
-      <PageMeta page={page} preview={preview} />
+    <RuntimeProvider
+      client={client}
+      rootElements={new Map([[snapshot.document.id, snapshot.document.data]])}
+    >
+      <PageMeta document={snapshot.document} />
     </RuntimeProvider>
   )
 }
 
-const FORWARDED_NEXT_DYNAMIC_REF_KEY = '__forwarded_next_dynamic_ref__'
-
-type WithSavedForwardedRef<P, T> = P & {
-  [FORWARDED_NEXT_DYNAMIC_REF_KEY]: ForwardedRef<T>
-}
-
-function saveForwardedRef<P, T>(props: P, ref: ForwardedRef<T>): WithSavedForwardedRef<P, T> {
-  return { ...props, [FORWARDED_NEXT_DYNAMIC_REF_KEY]: ref }
-}
-
-type WithLoadedForwardedRef<P, T> = Omit<P, typeof FORWARDED_NEXT_DYNAMIC_REF_KEY> & {
-  ref: ForwardedRef<T>
-}
-
-function loadForwardedRef<P, T>({
-  [FORWARDED_NEXT_DYNAMIC_REF_KEY]: ref,
-  ...props
-}: WithSavedForwardedRef<P, T>): WithLoadedForwardedRef<P, T> {
-  return { ...props, ref }
-}
-
-type LoaderComponent<P> = Promise<ComponentType<P> | { default: ComponentType<P> }>
-
-function resolve(obj: any) {
-  return obj && obj.__esModule ? obj.default : obj
-}
-
-type PatchedLoaderComponent<P, T> = LoaderComponent<WithSavedForwardedRef<P, T>>
-
-type PatchLoaderComponent = <P, T>(
-  loaderComponent: LoaderComponent<P>,
-) => PatchedLoaderComponent<P, T>
-
-export function forwardNextDynamicRef<T, P>(
-  nextDynamicThunk: (patch: PatchLoaderComponent) => ComponentType<WithSavedForwardedRef<P, T>>,
-): ForwardRefExoticComponent<PropsWithoutRef<P> & RefAttributes<T>> {
-  const Dynamic = nextDynamicThunk(loaderComponent =>
-    loaderComponent.then(moduleOrComponent => ({
-      __esModule: true,
-      default: props => createElement(resolve(moduleOrComponent), loadForwardedRef(props)),
-    })),
-  )
-
-  return forwardRef<T, P>((props, ref) => <Dynamic {...saveForwardedRef(props, ref)} />)
-}
+export * from './client'
+export * from './preview-mode'
+export * from './document'
+export * from './api-handler'
+export * from './dynamic'
