@@ -27,7 +27,7 @@ export async function getApiToken(): Promise<string> {
       body: JSON.stringify({
         channel_id: 1,
         expires_at: A_WEEK_FROM_NOW,
-        allowed_cors_origins: [`https://${config.bigcommerce.storeName}.mybigcommerce.com`],
+        allowed_cors_origins: config.bigcommerce.allowedCorsOrigins,
       }),
     },
   )

@@ -3,6 +3,7 @@ export type Config = {
     storeName: string
     storeHash: string
     accessToken: string
+    allowedCorsOrigins: string[]
   }
   makeswift: {
     siteApiKey: string
@@ -24,6 +25,10 @@ export function getConfig(): Config {
       accessToken: getEnvVarOrThrow('BIGCOMMERCE_ACCESS_TOKEN'),
       storeHash: getEnvVarOrThrow('BIGCOMMERCE_STORE_HASH'),
       storeName: getEnvVarOrThrow('BIGCOMMERCE_STORE_NAME'),
+      allowedCorsOrigins:
+        process.env.NODE_ENV === 'production' && process.env.VERCEL === '1'
+          ? [new URL(`https://${getEnvVarOrThrow('VERCEL_URL')}`).origin]
+          : [],
     },
     makeswift: {
       siteApiKey: getEnvVarOrThrow('MAKESWIFT_SITE_API_KEY'),
