@@ -8,42 +8,22 @@ import { createDocumentReference } from '../../state/react-page'
 import { useQuery, gql } from '../../api/react'
 import { useIsInBuilder } from '../../react'
 import deepEqual from '../../utils/deepEqual'
+import { MakeswiftPageDocument } from '../../next'
 
-enum SnippetLocation {
-  Body = 'BODY',
-  Head = 'HEAD',
-}
+const SnippetLocation = {
+  Body: 'BODY',
+  Head: 'HEAD',
+} as const
+
+type SnippetLocation = typeof SnippetLocation[keyof typeof SnippetLocation]
 
 type Snippet = {
   builderEnabled: boolean
-  cleanup?: string | null
+  cleanup: string | null
   code: string
   id: string
   liveEnabled: boolean
   location: SnippetLocation
-}
-
-export type PageData = {
-  id: string
-  meta: {
-    title?: string | null | undefined
-    description?: string | null | undefined
-    keywords?: string | null | undefined
-    socialImage?: { id: string; publicUrl: any; mimetype: any } | null | undefined
-    favicon?: { id: string; publicUrl: any; mimetype: any } | null | undefined
-  }
-  snippets: Snippet[]
-  fonts: Array<{
-    family: string
-    variants: string[]
-  }>
-  seo: {
-    canonicalUrl?: string | null | undefined
-    isIndexingBlocked?: boolean | null | undefined
-  }
-  site: {
-    id: string
-  }
 }
 
 const defaultFavicon = {
@@ -93,8 +73,7 @@ const filterUsedSnippetProperties = ({
 })
 
 type Props = {
-  page: PageData
-  preview?: boolean
+  document: MakeswiftPageDocument
 }
 
 export const PAGE_SNIPPETS_QUERY = gql`
@@ -153,7 +132,7 @@ export const SITE_FONTS_QUERY = gql`
   }
 `
 
-export function Page({ page, preview = false }: Props): JSX.Element {
+export function Page({ document: page }: Props): JSX.Element {
   const isInBuilder = useIsInBuilder()
   const [snippets, setSnippets] = useState(page.snippets)
   // We're using useQuery here for page snippets and site fonts so that anytime the user change
@@ -210,15 +189,15 @@ export function Page({ page, preview = false }: Props): JSX.Element {
   }, [siteData, page])
 
   const filteredSnippets = useMemo(
-    () => snippets.filter(snippet => (preview ? snippet.builderEnabled : snippet.liveEnabled)),
-    [snippets],
+    () => snippets.filter(snippet => (isInBuilder ? snippet.builderEnabled : snippet.liveEnabled)),
+    [snippets, isInBuilder],
   )
   const headSnippets = useMemo(
     () => filteredSnippets.filter(snippet => snippet.location === SnippetLocation.Head),
     [filteredSnippets],
   )
 
-  const previousHeadSnippets = useRef<PageData['snippets'] | null>(null)
+  const previousHeadSnippets = useRef<MakeswiftPageDocument['snippets'] | null>(null)
   useEffect(() => {
     const headSnippetsToCleanUp = (previousHeadSnippets.current ?? [])
       .filter(previousSnippet => previousSnippet.cleanup != null)
