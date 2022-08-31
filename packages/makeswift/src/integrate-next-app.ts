@@ -109,7 +109,10 @@ function addMakeswiftNextjsPlugin({ dir }: { dir: string }) {
     const nextConfig = `
 const withMakeswift = require('@makeswift/runtime/next/plugin')()
 
-module.exports = withMakeswift({})
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
+
+module.exports = withMakeswift(nextConfig)
     `
     fs.writeFileSync(configFilename, nextConfig)
 
