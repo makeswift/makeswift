@@ -1,4 +1,5 @@
 import spawn from 'cross-spawn'
+import glob from 'glob'
 import * as fs from 'fs'
 import path from 'path'
 import { manipulateNextConfig } from './utils/manipulate-next-config'
@@ -52,13 +53,19 @@ function addMakeswiftPages({ dir }: { dir: string }): void {
 `
 
   // @todo: need to detect if a catch all route already exists
-  if (
+  const catchAllRouteFilename =
     fs.existsSync(path.join(pagesFolder, `index.${extension}`)) ||
     fs.existsSync(path.join(pagesFolder, `index.${extension}x`))
-  ) {
-    fs.writeFileSync(path.join(pagesFolder, `[...path].${extension}`), catchAllRoute)
+      ? `[...path].${extension}`
+      : `[[...path]].${extension}`
+
+  // catch-all-route does not exist
+  if (glob.sync(path.join(pagesFolder, `\\[*\\].${extension}*`)).length === 0) {
+    fs.writeFileSync(path.join(pagesFolder, catchAllRouteFilename), catchAllRoute)
   } else {
-    fs.writeFileSync(path.join(pagesFolder, `[[...path]].${extension}`), catchAllRoute)
+    throw new Error(
+      'A catch all route already exists, you will have to manually integrate: https://www.makeswift.com/docs/guides/advanced-setup#custom-live-route',
+    )
   }
 
   // custom document
