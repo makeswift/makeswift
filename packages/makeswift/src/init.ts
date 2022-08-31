@@ -2,20 +2,23 @@ import spawn from 'cross-spawn'
 import detect from 'detect-port'
 import * as fs from 'fs'
 import * as http from 'http'
+import inquirer from 'inquirer'
 import open from 'open'
 import * as path from 'path'
 import { createNextApp } from './create-next-app'
 import { integrateNextApp } from './integrate-next-app'
+import { getProjectName } from './utils/get-name'
 import isNextApp from './utils/is-next-app'
 
 const MAKESWIFT_APP_ORIGIN = process.env.MAKESWIFT_APP_ORIGIN || 'https://app.makeswift.com'
 const siteSelectionPath = 'select-site'
 
 async function init(
-  name: string,
+  name: string | undefined,
   { example = 'basic-typescript' }: { example?: string },
 ): Promise<void> {
-  const nextAppDir = path.join(process.cwd(), name)
+  const projectName = name || (await getProjectName())
+  const nextAppDir = path.join(process.cwd(), projectName)
 
   if (isNextApp(nextAppDir)) {
     integrateNextApp({ dir: nextAppDir })
@@ -32,7 +35,7 @@ async function init(
   const callbackUrl = `http://localhost:${handshakePort}/${siteSelectionPath}`
   // Handshake Step 1
   const selectSiteUrl = new URL(`${MAKESWIFT_APP_ORIGIN}/cli/select-site`)
-  selectSiteUrl.searchParams.set('project_name', name)
+  selectSiteUrl.searchParams.set('project_name', projectName)
   selectSiteUrl.searchParams.set('callback_url', callbackUrl)
   await open(selectSiteUrl.toString())
 
