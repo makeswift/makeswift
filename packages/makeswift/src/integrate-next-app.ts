@@ -95,6 +95,13 @@ function getExtension({ dir }: { dir: string }): 'js' | 'ts' {
 }
 
 function addMakeswiftNextjsPlugin({ dir }: { dir: string }) {
+  // @todo: support ES modules
+  if (fs.existsSync(path.join(dir, 'next.config.mjs'))) {
+    throw new Error(
+      "We currently don't support automatic integration an ES modules Next.js config.",
+    )
+  }
+
   const configFilename = path.join(dir, 'next.config.js')
   const alreadyExists = fs.existsSync(configFilename)
 
