@@ -1,5 +1,11 @@
 # makeswift
 
+## 0.0.4
+
+### Patch Changes
+
+- dc5f977: Added support for running `makeswift init` in existing Next.js applications
+
 ## 0.0.3
 
 ### Patch Changes
