@@ -21,7 +21,7 @@ function hasNextDependency(appDirectory: string): boolean {
 function hasPagesFolder(appDirectory: string): boolean {
   return (
     fs.existsSync(path.join(appDirectory, 'pages')) ||
-    fs.existsSync(path.join(appDirectory, 'src/pages'))
+    fs.existsSync(path.join(appDirectory, 'src', 'pages'))
   )
 }
 
