@@ -50,7 +50,16 @@ function addMakeswiftPages({ dir }: { dir: string }): void {
   Page as default
 } from '@makeswift/runtime/next'
 `
-  fs.writeFileSync(path.join(pagesFolder, `[[...path]].${extension}`), catchAllRoute)
+
+  // @todo: need to detect if a catch all route already exists
+  if (
+    fs.existsSync(path.join(pagesFolder, `index.${extension}`)) ||
+    fs.existsSync(path.join(pagesFolder, `index.${extension}x`))
+  ) {
+    fs.writeFileSync(path.join(pagesFolder, `[...path].${extension}`), catchAllRoute)
+  } else {
+    fs.writeFileSync(path.join(pagesFolder, `[[...path]].${extension}`), catchAllRoute)
+  }
 
   // custom document
   const customDocument = `export { Document as default } from '@makeswift/runtime/next'`
