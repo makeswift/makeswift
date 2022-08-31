@@ -6,7 +6,6 @@ export function createNextApp({ dir, example }: { dir: string; example: string }
 
   const output = spawn.sync('npx', ['--yes', 'create-next-app', '--example', url, dir], {
     stdio: 'inherit',
-    cwd: __dirname,
   })
 
   if (output.status === 1) {
