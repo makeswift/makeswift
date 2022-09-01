@@ -1,5 +1,11 @@
 # makeswift
 
+## 0.0.5
+
+### Patch Changes
+
+- f53dd00: Make name an optional parameter
+
 ## 0.0.4
 
 ### Patch Changes
