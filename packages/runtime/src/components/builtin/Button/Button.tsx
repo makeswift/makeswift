@@ -1,9 +1,8 @@
 import { ReactElement, ComponentPropsWithoutRef, forwardRef } from 'react'
 import styled, { css } from 'styled-components'
 import ColorHelper from 'color'
-import { cx, css as toClass } from '@emotion/css'
 
-import { cssMediaRules, cssMargin, cssTextStyle } from '../../utils/cssMediaRules'
+import { cssMediaRules, cssMargin, cssTextStyle, cssWidth } from '../../utils/cssMediaRules'
 import {
   ResponsiveValue,
   ElementIDValue,
@@ -19,7 +18,6 @@ import { ColorValue as Color } from '../../utils/types'
 import { colorToString } from '../../utils/colorToString'
 import { Link } from '../../shared/Link'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
-import { responsiveWidth } from '../../utils/responsive-style'
 import { ButtonVariant } from './contants'
 
 type ControllerProps = {
@@ -38,10 +36,11 @@ type ControllerProps = {
 
 const StyledButton = styled(Link).withConfig({
   shouldForwardProp: prop =>
-    !['margin', 'variant', 'shape', 'size', 'textColor', 'color', 'textStyle'].includes(
+    !['width', 'margin', 'variant', 'shape', 'size', 'textColor', 'color', 'textStyle'].includes(
       prop.toString(),
     ),
 })<{
+  width: ControllerProps['width']
   margin: ControllerProps['margin']
   variant: ControllerProps['variant']
   shape: ControllerProps['shape']
@@ -58,6 +57,7 @@ const StyledButton = styled(Link).withConfig({
   font-family: inherit;
   text-decoration: none;
   text-align: center;
+  ${cssWidth('auto')}
   ${cssMargin()}
   ${p =>
     cssMediaRules(
@@ -243,7 +243,7 @@ type BaseProps = {
   textColor?: ControllerProps['textColor']
   color?: ControllerProps['color']
   textStyle?: ControllerProps['textStyle']
-  width?: WidthValue
+  width?: ControllerProps['width']
   margin?: ControllerProps['margin']
 }
 
@@ -272,10 +272,11 @@ const Button = forwardRef<HTMLAnchorElement, Props>(function Button(
       {...restOfProps}
       ref={ref}
       id={id}
-      className={cx(toClass(responsiveWidth(width, 'auto')), className)}
+      className={className}
       // @ts-expect-error: HTMLAnchorElement `color` attribute conflicts with prop
       color={color}
       link={link}
+      width={width}
       margin={margin}
       shape={shape}
       size={size}

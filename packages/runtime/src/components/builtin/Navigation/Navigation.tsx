@@ -1,6 +1,5 @@
 import { ComponentPropsWithoutRef, forwardRef, useState } from 'react'
 import styled, { css } from 'styled-components'
-import { cx } from '@emotion/css'
 
 import { ReactComponent as MobileMenu28 } from '../../icons/mobile-menu-28.svg'
 
@@ -25,8 +24,9 @@ import {
   TextInputValue,
   TextStyleValue,
   NavigationButton as NavigationButtonValue,
+  WidthValue,
 } from '../../../prop-controllers/descriptors'
-import { cssMargin, cssMediaRules, cssTextStyle } from '../../utils/cssMediaRules'
+import { cssMargin, cssMediaRules, cssTextStyle, cssWidth } from '../../utils/cssMediaRules'
 import { ColorValue as Color } from '../../utils/types'
 import { colorToString } from '../../utils/colorToString'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
@@ -47,19 +47,21 @@ type Props = {
   mobileMenuOpenIconColor?: ResponsiveColor | null
   mobileMenuCloseIconColor?: ResponsiveColor | null
   mobileMenuBackgroundColor?: ResponsiveColor | null
-  width?: string
+  width?: WidthValue
   margin?: MarginValue
 }
 
 const Container = styled.nav.withConfig({
-  shouldForwardProp: prop => !['margin', 'textStyle', 'gutter'].includes(prop.toString()),
+  shouldForwardProp: prop => !['width', 'margin', 'textStyle', 'gutter'].includes(prop.toString()),
 })<{
+  width: Props['width']
   margin: Props['margin']
   textStyle: Props['linkTextStyle']
   gutter: Props['gutter']
 }>`
   display: flex;
   align-items: center;
+  ${cssWidth()}
   ${cssMargin()}
   ${cssTextStyle()}
   ${p =>
@@ -164,7 +166,7 @@ const Navigation = forwardRef<HTMLDivElement, Props>(function Navigation(
     <Container
       ref={ref}
       id={id}
-      className={cx(width)}
+      width={width}
       margin={margin}
       textStyle={linkTextStyle}
       gutter={gutter}

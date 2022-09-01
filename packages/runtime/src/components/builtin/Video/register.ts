@@ -14,10 +14,7 @@ export function registerComponent(runtime: ReactRuntime) {
       props: {
         id: Props.ElementID(),
         video: Props.Video({ preset: { controls: true } }),
-        width: Props.Width({
-          format: Props.Width.Formats.ClassName,
-          defaultValue: { value: 560, unit: 'px' },
-        }),
+        width: Props.Width({ defaultValue: { value: 560, unit: 'px' } }),
         margin: Props.Margin(),
         borderRadius: Props.BorderRadius(),
       },

@@ -14,7 +14,6 @@ import { Editor, OnChangeParam } from 'slate-react'
 import { Value, ValueJSON } from 'slate'
 // @ts-expect-error: no types for 'slate-hotkeys'
 import Hotkeys from 'slate-hotkeys'
-import { cx } from '@emotion/css'
 import { isHotkey } from 'is-hotkey'
 
 import {
@@ -22,8 +21,9 @@ import {
   MarginValue,
   RichTextDescriptor,
   RichTextValue,
+  WidthValue,
 } from '../../../prop-controllers/descriptors'
-import { cssMargin } from '../../utils/cssMediaRules'
+import { cssMargin, cssWidth } from '../../utils/cssMediaRules'
 import { BoxModelHandle, getBox } from '../../../box-model'
 import { PropControllersHandle } from '../../../state/modules/prop-controller-handles'
 import { RichTextEditor } from './components/RichTextEditor'
@@ -33,13 +33,14 @@ import { DescriptorsPropControllers } from '../../../prop-controllers/instances'
 type Props = {
   id?: ElementIDValue
   text?: RichTextValue
-  width?: string
+  width?: WidthValue
   margin?: MarginValue
 }
 
 const StyledRichTextEditor = styled(RichTextEditor).withConfig({
-  shouldForwardProp: prop => !['margin'].includes(prop.toString()),
-})<{ margin: Props['margin'] }>`
+  shouldForwardProp: prop => !['width', 'margin'].includes(prop.toString()),
+})<{ width: Props['width']; margin: Props['margin'] }>`
+  ${cssWidth()}
   ${cssMargin()}
 `
 
@@ -184,7 +185,7 @@ const Text = forwardRef(function Text(
       // @ts-expect-error: types don't allow for 'id' prop even though it's used.
       id={id}
       ref={setEditor}
-      className={cx(width)}
+      width={width}
       readOnly={!isInBuilder}
       margin={margin}
       value={value}

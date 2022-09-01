@@ -74,10 +74,7 @@ export function registerComponent(runtime: ReactRuntime) {
           label: 'Label color',
           placeholder: 'black',
         }),
-        width: Props.Width({
-          format: Props.Width.Formats.ClassName,
-          defaultValue: { value: 560, unit: 'px' },
-        }),
+        width: Props.Width({ defaultValue: { value: 560, unit: 'px' } }),
         margin: Props.Margin(),
         daysLabel: Props.TextInput({ label: 'Days label', placeholder: 'Days' }),
         hoursLabel: Props.TextInput({ label: 'Hours label', placeholder: 'Hours' }),

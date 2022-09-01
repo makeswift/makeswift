@@ -29,10 +29,7 @@ export function registerComponent(runtime: ReactRuntime) {
           options: [{ value: 'px', label: 'Pixels', icon: 'Px16' }],
         }),
         color: Props.ResponsiveColor({ placeholder: 'black' }),
-        width: Props.Width({
-          format: Props.Width.Formats.ClassName,
-          defaultValue: { value: 100, unit: '%' },
-        }),
+        width: Props.Width({ defaultValue: { value: 100, unit: '%' } }),
         margin: Props.Margin(),
       },
     },

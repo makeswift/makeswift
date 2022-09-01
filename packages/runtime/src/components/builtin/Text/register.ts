@@ -58,7 +58,6 @@ export function registerComponent(runtime: ReactRuntime) {
           },
         })),
         width: Props.Width({
-          format: Props.Width.Formats.ClassName,
           preset: [{ deviceId: 'desktop', value: { value: 700, unit: 'px' } }],
           defaultValue: { value: 100, unit: '%' },
         }),

@@ -34,7 +34,7 @@ export function registerComponent(runtime: ReactRuntime) {
       props: {
         id: Props.ElementID(),
         backgrounds: Props.Backgrounds(),
-        width: Props.Width({ format: Props.Width.Formats.ClassName }),
+        width: Props.Width(),
         height: Props.ResponsiveIconRadioGroup({
           label: 'Height',
           options: [

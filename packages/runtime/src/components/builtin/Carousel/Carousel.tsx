@@ -3,9 +3,8 @@ import styled, { css } from 'styled-components'
 import { motion, useAnimation } from 'framer-motion'
 import { useGesture } from 'react-use-gesture'
 import { wrap } from '@popmotion/popcorn'
-import { cx } from '@emotion/css'
 
-import { cssMediaRules, cssMargin } from '../../utils/cssMediaRules'
+import { cssMediaRules, cssMargin, cssWidth } from '../../utils/cssMediaRules'
 import { colorToString } from '../../utils/colorToString'
 import { ColorValue as Color } from '../../utils/types'
 import { useMediaQuery } from '../../hooks'
@@ -23,6 +22,7 @@ import {
   NumberValue,
   BorderValue,
   BorderRadiusValue,
+  WidthValue,
 } from '../../../prop-controllers/descriptors'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 
@@ -59,7 +59,7 @@ const Container = styled.div`
 type Props = {
   id?: ElementIDValue
   images?: ImagesValue
-  width?: string
+  width?: WidthValue
   margin?: MarginValue
   pageSize?: ResponsiveNumberValue
   step?: ResponsiveNumberValue
@@ -78,11 +78,12 @@ type Props = {
 }
 
 const Wrapper = styled.div.withConfig({
-  shouldForwardProp: prop => !['margin'].includes(prop),
-})<{ margin: Props['margin'] }>`
+  shouldForwardProp: prop => !['margin', 'width'].includes(prop),
+})<{ width: Props['width']; margin: Props['margin'] }>`
   position: relative;
   display: flex;
   flex-direction: column;
+  ${cssWidth()}
   ${cssMargin()}
 
   &:focus {
@@ -386,7 +387,7 @@ const Carousel = forwardRef(function Carousel(
   return (
     <Wrapper
       ref={ref}
-      className={cx(width)}
+      width={width}
       margin={margin}
       tabIndex={-1}
       onKeyDown={e => {
