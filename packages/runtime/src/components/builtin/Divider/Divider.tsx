@@ -1,14 +1,14 @@
 import { forwardRef, Ref } from 'react'
 import styled, { css } from 'styled-components'
-import { cx } from '@emotion/css'
 
-import { cssMediaRules, cssMargin } from '../../utils/cssMediaRules'
+import { cssMediaRules, cssMargin, cssWidth } from '../../utils/cssMediaRules'
 import {
   ResponsiveValue,
   ElementIDValue,
   MarginValue,
   ResponsiveLengthValue,
   ResponsiveSelectValue,
+  WidthValue,
 } from '../../../prop-controllers/descriptors'
 import { colorToString } from '../../utils/colorToString'
 import { ColorValue as Color } from '../../utils/types'
@@ -21,7 +21,7 @@ type Props = {
   variant?: ResponsiveSelectValue<DividerVariant>
   thickness?: ResponsiveLengthValue
   color?: ResponsiveColor | null
-  width?: string
+  width?: WidthValue
   margin?: MarginValue
 }
 
@@ -29,10 +29,11 @@ type Props = {
 // Wrapping it in another flex container fixes it for some reason, read more here:
 // https://stackoverflow.com/questions/19371626/flexbox-not-centering-vertically-in-ie
 const IE11MinHeightContainer = styled.div.withConfig({
-  shouldForwardProp: prop => !['margin'].includes(prop),
-})<{ margin: Props['margin'] }>`
+  shouldForwardProp: prop => !['width', 'margin'].includes(prop),
+})<{ width: Props['width']; margin: Props['margin'] }>`
   display: flex;
   width: 100%;
+  ${cssWidth()}
   ${cssMargin()}
 `
 
@@ -97,7 +98,7 @@ const Divider = forwardRef(function Divider(
   ref: Ref<HTMLDivElement>,
 ) {
   return (
-    <IE11MinHeightContainer ref={ref} id={id} className={cx(width)} margin={margin}>
+    <IE11MinHeightContainer ref={ref} id={id} width={width} margin={margin}>
       <Container>
         {/* @ts-expect-error: HTMLDivElement `color` attribute conflicts with prop */}
         <Line variant={variant} thickness={thickness} color={color} />

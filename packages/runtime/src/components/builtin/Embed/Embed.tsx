@@ -2,23 +2,28 @@
 
 import { useState, useEffect, forwardRef, Ref, useImperativeHandle } from 'react'
 import styled from 'styled-components'
-import { cx } from '@emotion/css'
 
-import { cssMargin } from '../../utils/cssMediaRules'
-import { ElementIDValue, MarginValue, TextAreaValue } from '../../../prop-controllers/descriptors'
+import { cssMargin, cssWidth } from '../../utils/cssMediaRules'
+import {
+  ElementIDValue,
+  MarginValue,
+  TextAreaValue,
+  WidthValue,
+} from '../../../prop-controllers/descriptors'
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect'
 
 type Props = {
   id?: ElementIDValue
   html?: TextAreaValue
-  width?: string
+  width?: WidthValue
   margin?: MarginValue
 }
 
 const Container = styled.div.withConfig({
-  shouldForwardProp: prop => !['margin'].includes(prop),
-})<{ margin: Props['margin'] }>`
+  shouldForwardProp: prop => !['width', 'margin'].includes(prop),
+})<{ width: Props['width']; margin: Props['margin'] }>`
   min-height: 15px;
+  ${cssWidth()}
   ${cssMargin()}
 `
 
@@ -116,7 +121,7 @@ const Embed = forwardRef(function Embed(
     <Container
       ref={setContainer}
       id={id}
-      className={cx(width)}
+      width={width}
       margin={margin}
       dangerouslySetInnerHTML={{ __html: html }}
     />

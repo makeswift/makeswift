@@ -10,7 +10,6 @@ import {
 } from 'react'
 import styled, { css } from 'styled-components'
 import { Formik, getIn } from 'formik'
-import { cx } from '@emotion/css'
 
 import { ReactComponent as Check12 } from '../../icons/check-12.svg'
 
@@ -30,7 +29,7 @@ import Field from './components/Field'
 import Spinner from './components/Spinner'
 import Button from '../Button'
 import type { TableColumn, Table } from './types'
-import { cssGridItem, cssMargin, cssMediaRules } from '../../utils/cssMediaRules'
+import { cssGridItem, cssMargin, cssMediaRules, cssWidth } from '../../utils/cssMediaRules'
 import {
   ElementIDValue,
   GapYValue,
@@ -44,6 +43,7 @@ import {
   TableValue,
   TextInputValue,
   TextStyleValue,
+  WidthValue,
 } from '../../../prop-controllers/descriptors'
 import { Link } from '../../shared/Link'
 import { BoxModelHandle, getBox } from '../../../box-model'
@@ -92,7 +92,7 @@ type Props = {
   >
   submitWidth?: ResponsiveLengthValue
   submitAlignment?: ResponsiveIconRadioGroupValue<Alignment>
-  width?: string
+  width?: WidthValue
   margin?: MarginValue
 }
 
@@ -100,6 +100,7 @@ const GridForm = styled.form.withConfig({
   shouldForwardProp: prop => !['size', 'width', 'margin'].includes(prop),
 })<{
   size: Props['size']
+  width: Props['width']
   margin: Props['margin']
 }>`
   display: flex;
@@ -112,6 +113,7 @@ const GridForm = styled.form.withConfig({
         font-size: ${getSizeFontSize(size)}px;
       `,
     )}
+  ${cssWidth()}
   ${cssMargin()}
 `
 
@@ -377,7 +379,7 @@ const Form = forwardRef(function Form(
       value={{ shape, size, contrast, brandColor, labelTextStyle, labelTextColor }}
     >
       {tableId == null ? (
-        <Placeholder ref={setRefEl} className={cx(width)} margin={margin} />
+        <Placeholder ref={setRefEl} width={width} margin={margin} />
       ) : (
         <>
           <Formik
@@ -405,7 +407,7 @@ const Form = forwardRef(function Form(
                   <GridForm
                     ref={setRefEl}
                     id={id}
-                    className={cx(width)}
+                    width={width}
                     margin={margin}
                     size={size}
                     onSubmit={formik.handleSubmit}

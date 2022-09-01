@@ -1,10 +1,9 @@
 import { useState, useEffect, Ref, forwardRef } from 'react'
 import styled, { css } from 'styled-components'
-import { cx } from '@emotion/css'
 
 import { colorToString } from '../../utils/colorToString'
 import { ColorValue as Color } from '../../utils/types'
-import { cssMediaRules, cssMargin } from '../../utils/cssMediaRules'
+import { cssMediaRules, cssMargin, cssWidth } from '../../utils/cssMediaRules'
 import {
   ResponsiveValue,
   DateValue,
@@ -14,6 +13,7 @@ import {
   MarginValue,
   ResponsiveIconRadioGroupValue,
   TextInputValue,
+  WidthValue,
 } from '../../../prop-controllers/descriptors'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 
@@ -31,7 +31,7 @@ type Props = {
   blockColor?: ResponsiveColor | null
   labelFont?: FontValue
   labelColor?: ResponsiveColor | null
-  width?: string
+  width?: WidthValue
   margin?: MarginValue
   daysLabel?: TextInputValue
   hoursLabel?: TextInputValue
@@ -57,6 +57,7 @@ const Segment = styled.div`
 const Container = styled.div.withConfig({
   shouldForwardProp: prop =>
     ![
+      'width',
       'margin',
       'variant',
       'size',
@@ -69,6 +70,7 @@ const Container = styled.div.withConfig({
       'labelFont',
     ].includes(prop),
 })<{
+  width: Props['width']
   margin: Props['margin']
   variant: Props['variant']
   size: Props['size']
@@ -81,6 +83,7 @@ const Container = styled.div.withConfig({
   labelFont?: ResponsiveValue<string>
 }>`
   display: flex;
+  ${cssWidth()}
   ${cssMargin()}
   ${p =>
     cssMediaRules([p.size] as const, ([size = 'medium']) => {
@@ -318,7 +321,7 @@ const Countdown = forwardRef(function Countdown(
     <Container
       ref={ref}
       id={id}
-      className={cx(width)}
+      width={width}
       margin={margin}
       variant={variant}
       size={size}
