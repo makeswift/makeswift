@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.1.7
+
+### Patch Changes
+
+- b9ee340: Fix: revert builtin components width control back to use Styled Components.
+
 ## 0.1.6
 
 ### Patch Changes
