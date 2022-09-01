@@ -8,6 +8,7 @@ export type Config = {
   makeswift: {
     siteApiKey: string
     productTemplatePathname: string
+    revalidationSecret: string
   }
 }
 
@@ -33,6 +34,7 @@ export function getConfig(): Config {
     makeswift: {
       siteApiKey: getEnvVarOrThrow('MAKESWIFT_SITE_API_KEY'),
       productTemplatePathname: '/__product__',
+      revalidationSecret: 'secret',
     },
   }
 }
