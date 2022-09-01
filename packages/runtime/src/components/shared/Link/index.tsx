@@ -22,14 +22,21 @@ export const Link = forwardRef<HTMLAnchorElement, Props>(function Link(
     link?.type === 'SCROLL_TO_ELEMENT' ? link.payload.elementIdConfig?.elementKey : null
   const elementId = useElementId(elementKey)
 
-  let href = '#'
+  // We don't want to use `next/link` with relative paths because Next.js will attempt to normalize
+  // it and mess up the path.
+  let useNextLink: boolean | undefined
+  let href: string | undefined
   let target: '_blank' | '_self' | undefined
   let block: 'start' | 'center' | 'end' | undefined
 
   if (link) {
     switch (link.type) {
       case 'OPEN_PAGE': {
-        if (page) href = `/${page.pathname}`
+        if (page) {
+          useNextLink = true
+
+          href = `/${page.pathname}`
+        }
 
         target = link.payload.openInNewTab ? '_blank' : '_self'
 
@@ -37,6 +44,8 @@ export const Link = forwardRef<HTMLAnchorElement, Props>(function Link(
       }
 
       case 'OPEN_URL': {
+        useNextLink = true
+
         href = link.payload.url
 
         target = link.payload.openInNewTab ? '_blank' : '_self'
@@ -45,6 +54,8 @@ export const Link = forwardRef<HTMLAnchorElement, Props>(function Link(
       }
 
       case 'SEND_EMAIL': {
+        useNextLink = false
+
         const { to, subject = '', body = '' } = link.payload
 
         if (to != null) href = `mailto:${to}?subject=${subject}&body=${body}`
@@ -53,13 +64,18 @@ export const Link = forwardRef<HTMLAnchorElement, Props>(function Link(
       }
 
       case 'CALL_PHONE': {
+        useNextLink = false
+
         href = `tel:${link.payload.phoneNumber}`
 
         break
       }
 
       case 'SCROLL_TO_ELEMENT': {
+        useNextLink = false
+
         href = `#${elementId ?? ''}`
+
         block = link.payload.block
 
         break
@@ -86,12 +102,12 @@ export const Link = forwardRef<HTMLAnchorElement, Props>(function Link(
       let hash: string | undefined
 
       try {
-        hash = new URL(`http://www.example.com/${href}`).hash
+        if (href != null) hash = new URL(`http://www.example.com/${href}`).hash
       } catch (error) {
         console.error(`Link received invalid href: ${href}`, error)
       }
 
-      if (href != null && href === hash) {
+      if (href != null && hash != null && href === hash) {
         event.preventDefault()
         const view = event.view as unknown as Window
 
@@ -105,10 +121,15 @@ export const Link = forwardRef<HTMLAnchorElement, Props>(function Link(
     }
   }
 
-  return (
-    <NextLink href={href}>
-      {/* eslint-disable-next-line */}
-      <a {...restOfProps} ref={ref} target={target} onClick={handleClick} />
-    </NextLink>
-  )
+  if (useNextLink && href != null) {
+    return (
+      <NextLink href={href}>
+        {/* eslint-disable-next-line */}
+        <a {...restOfProps} ref={ref} target={target} onClick={handleClick} />
+      </NextLink>
+    )
+  }
+
+  // eslint-disable-next-line
+  return <a {...restOfProps} ref={ref} href={href} target={target} onClick={handleClick} />
 })
