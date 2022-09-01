@@ -11,6 +11,7 @@ type PrivateConfig = {
   makeswift: {
     siteApiKey: string
     productTemplatePathname: string
+    revalidationSecret: string
   }
 }
 
@@ -40,6 +41,7 @@ export function getConfig(): Config {
     makeswift: {
       siteApiKey: process.env.MAKESWIFT_SITE_API_KEY,
       productTemplatePathname: '/__product__',
+      revalidationSecret: 'secret',
     },
   }
 }
