@@ -379,10 +379,10 @@
   dependencies:
     next-transpile-modules "^9.0.0"
 
-"@makeswift/runtime@^0.1.4":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@makeswift/runtime/-/runtime-0.1.6.tgz#c403ba0befc2ac6b24ac32534c56ef71e18a42ed"
-  integrity sha512-C4U4n4HVqc7kW9MQbx6AcyCbyZzib/X6GVPZqVZdkYddsjOola5YGHngQJw5YpDe1VRYDktDYhBTSFSP6Awu/g==
+"@makeswift/runtime@^0.1.8":
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/@makeswift/runtime/-/runtime-0.1.8.tgz#ae14ffce5ef433549d63826781808cd8744141b9"
+  integrity sha512-5H1KcX4TMk17UT1KXDABi7esG/DV1YIowqYtamX2VG9ANlqfAm38mgWrPFgYFfFS7jgicVPSSfNlJbvCGRtQ3Q==
   dependencies:
     "@apollo/client" "^3.5.10"
     "@convertkit/slate-lists" "^0.2.4"
