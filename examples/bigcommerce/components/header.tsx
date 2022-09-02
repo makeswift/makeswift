@@ -21,7 +21,7 @@ export function Header({ className, links }: Props) {
   return (
     <div className={`${className} flex gap-3 flex-wrap justify-between items-center`}>
       <div className="flex space-x-5 items-center">
-        <Link href={'/'}>
+        <Link href={'/home'}>
           <a>
             <svg
               width="28"
