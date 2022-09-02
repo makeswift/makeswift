@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.1.8
+
+### Patch Changes
+
+- c414fd5: Fix Text component not working on Chrome 105.
+- bbbf781: Avoid using `next/link` with relative paths. `next/link` pre-pends the current page's path to
+  relative paths and this is often undesirable.
+
 ## 0.1.7
 
 ### Patch Changes
