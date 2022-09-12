@@ -7,7 +7,7 @@ import {
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next'
 
 import { PageProps } from 'lib/types'
-import { getProduct, getProducts } from '../lib/bigcommerce'
+import { DEFAULT_PRODUCT, getProducts } from '../lib/bigcommerce'
 
 type Props = MakeswiftPageProps & PageProps
 
@@ -19,7 +19,7 @@ export async function getServerSideProps(
   if (!('props' in makeswiftResult)) return makeswiftResult
 
   const products = await getProducts()
-  const product = await getProduct()
+  const product = DEFAULT_PRODUCT
 
   return {
     ...makeswiftResult,

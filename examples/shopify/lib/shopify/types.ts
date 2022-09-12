@@ -67,7 +67,7 @@ export type ProductsQuery = {
 }
 
 export type ProductQuery = {
-  product: ProductFragment
+  product: ProductFragment | null
 }
 
 export type CartLineFragment = {

@@ -6,7 +6,7 @@ import {
 } from '@makeswift/runtime/next'
 import { GetStaticPropsContext, GetStaticPropsResult } from 'next'
 
-import { getProduct, getProducts } from 'lib/bigcommerce'
+import { DEFAULT_PRODUCT, getProducts } from 'lib/bigcommerce'
 import { PageProps } from 'lib/types'
 
 type Props = MakeswiftPageProps & PageProps
@@ -19,7 +19,7 @@ export async function getStaticProps(
   if (!('props' in makeswiftResult)) return makeswiftResult
 
   const products = await getProducts()
-  const product = await getProduct()
+  const product = DEFAULT_PRODUCT
 
   return { ...makeswiftResult, props: { ...makeswiftResult.props, products, product } }
 }

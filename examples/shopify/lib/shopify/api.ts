@@ -80,9 +80,7 @@ export async function getCollections(): Promise<Collection[]> {
   return result.data.collections.edges.map(edge => edge.node)
 }
 
-export async function getProduct(handle?: string): Promise<ProductFragment> {
-  if (handle == null) return DEFAULT_PRODUCT
-
+export async function getProduct(handle: string): Promise<ProductFragment | null> {
   const config = getConfig()
   const response = await fetch(
     `https://${config.shopify.storeName}.myshopify.com/api/2022-07/graphql.json`,
