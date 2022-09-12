@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.1.9
+
+### Patch Changes
+
+- 1617692: Fix: handle undefined style on getMarkSwatchIds
+- 918098b: Fix: default width for Carousel, Countdown, and Video components
+
 ## 0.1.8
 
 ### Patch Changes
