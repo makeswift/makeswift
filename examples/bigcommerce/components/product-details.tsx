@@ -46,7 +46,7 @@ export function ProductBreadcrumbs({ className }: ProductBreadcrumbProps) {
         All Plants
       </Link>
       <div className="text-black/60">/</div>
-      <Link className="text-black" href={'/'}>
+      <Link className="text-black" href={`/product/${product.entityId}`}>
         {product.name}
       </Link>
     </div>
