@@ -99,9 +99,7 @@ export async function getCategories(): Promise<Category[]> {
   return result.data.site.categoryTree
 }
 
-export async function getProduct(id?: number): Promise<ProductFragment> {
-  if (id == null) return DEFAULT_PRODUCT
-
+export async function getProduct(id: number): Promise<ProductFragment | null> {
   const config = getConfig()
   const apiToken = await getApiToken()
   const response = await fetch(
@@ -130,7 +128,5 @@ export async function getProduct(id?: number): Promise<ProductFragment> {
 
   const [productEdge] = result.data.site.products.edges
 
-  if (productEdge == null) throw new Error(`Product with ID "${id}" not found.`)
-
-  return productEdge.node
+  return productEdge?.node ?? null
 }

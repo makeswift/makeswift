@@ -7,7 +7,7 @@ import {
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next'
 
 import { PageProps } from 'lib/types'
-import { getProduct, getProducts } from 'lib/shopify'
+import { getProducts, DEFAULT_PRODUCT } from 'lib/shopify'
 
 type Props = MakeswiftPageProps & PageProps
 
@@ -19,7 +19,7 @@ export async function getServerSideProps(
   if (!('props' in makeswiftResult)) return makeswiftResult
 
   const products = await getProducts()
-  const product = await getProduct()
+  const product = DEFAULT_PRODUCT
 
   return {
     ...makeswiftResult,
