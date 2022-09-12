@@ -26,7 +26,7 @@ const Container = styled.div.withConfig({
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  ${cssWidth()}
+  ${cssWidth('560px')}
   ${cssMargin()}
   ${cssBorderRadius()}
 `

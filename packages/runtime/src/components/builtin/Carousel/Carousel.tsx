@@ -83,7 +83,7 @@ const Wrapper = styled.div.withConfig({
   position: relative;
   display: flex;
   flex-direction: column;
-  ${cssWidth()}
+  ${cssWidth('400px')}
   ${cssMargin()}
 
   &:focus {

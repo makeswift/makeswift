@@ -83,7 +83,7 @@ const Container = styled.div.withConfig({
   labelFont?: ResponsiveValue<string>
 }>`
   display: flex;
-  ${cssWidth()}
+  ${cssWidth('560px')}
   ${cssMargin()}
   ${p =>
     cssMediaRules([p.size] as const, ([size = 'medium']) => {
