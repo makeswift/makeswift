@@ -1,15 +1,9 @@
 import { createContext, useContext } from 'react'
 
-import { ProductFragment } from './shopify'
+import { DEFAULT_PRODUCT, ProductFragment } from './shopify'
 
-export const ProductContext = createContext<ProductFragment | null>(null)
+export const ProductContext = createContext<ProductFragment>(DEFAULT_PRODUCT)
 
-export function useProduct(): ProductFragment {
-  const product = useContext(ProductContext)
-
-  if (product != null) {
-    return product
-  }
-
-  throw new Error('useProduct should only be used inside a ProductProvider')
+export function useProduct() {
+  return useContext(ProductContext)
 }

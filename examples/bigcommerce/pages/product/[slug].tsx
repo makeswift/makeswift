@@ -3,14 +3,17 @@ import '../../lib/makeswift/register-components'
 import {
   getStaticProps as makeswiftGetStaticProps,
   PageProps as MakeswiftPageProps,
+  Page as MakeswiftPage,
 } from '@makeswift/runtime/next'
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from 'next'
 
 import { getProduct, getProducts } from 'lib/bigcommerce'
 import { getConfig } from 'lib/config'
-import { PageProps } from 'lib/types'
+import { ProductPageProps } from 'lib/types'
+import { ProductsContext } from 'lib/products-context'
+import { ProductContext } from 'lib/product-context'
 
-type Props = MakeswiftPageProps & PageProps
+type Props = MakeswiftPageProps & ProductPageProps
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const products = await getProducts()
@@ -47,4 +50,12 @@ export async function getStaticProps(
   return { ...makeswiftResult, props: { ...makeswiftResult.props, products, product } }
 }
 
-export { Page as default } from '@makeswift/runtime/next'
+export default function Page({ products, product, ...restOfProps }: Props) {
+  return (
+    <ProductsContext.Provider value={products}>
+      <ProductContext.Provider value={product}>
+        <MakeswiftPage {...restOfProps} />
+      </ProductContext.Provider>
+    </ProductsContext.Provider>
+  )
+}
