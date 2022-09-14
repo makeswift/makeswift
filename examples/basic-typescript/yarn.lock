@@ -321,23 +321,23 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@makeswift/next-plugin@0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@makeswift/next-plugin/-/next-plugin-0.1.0.tgz#f0b7a71862d7e78e4683ddd1203d2ce5475dbd10"
-  integrity sha512-WaZlImEWOMS5KNEggKMPJ9cI7CyWBhYwR3uPrUwD8ym6epyxuMjMeJRskFxSGp5r8IQxd/Sa939/cLqIUn849A==
+"@makeswift/next-plugin@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@makeswift/next-plugin/-/next-plugin-0.1.1.tgz#48ccec9a740b63c291486e217dac9081027f0ca7"
+  integrity sha512-L4w02/eKJELVTgSW8WinmUJ/60fvCqRVYKLC/f9YpeapVYARQi82ZQ14Jc8gtZ7+eCd523KhNr7N9O+l6ekOmg==
   dependencies:
     next-transpile-modules "^9.0.0"
 
-"@makeswift/runtime@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@makeswift/runtime/-/runtime-0.1.3.tgz#bd5bbd0a31c99c0c7071a9bb2050643e46f044d7"
-  integrity sha512-sNoHgvxM/5qPRp9RVhXiigHGsBQiCwGYTfLVMPhcXbc90RtE7u1lUKfKW08XO7YzcdqbgsoVWuaPh9l62AwaJQ==
+"@makeswift/runtime@^0.1.10":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@makeswift/runtime/-/runtime-0.1.10.tgz#71d0119a6dcfc40f59721570ee89ac867f0b57c4"
+  integrity sha512-8tCea/Ic9wclBE6cm4/tIvNOXNdDk50rkYFItAOu7WCzkkrDk/orhG4IlfCM+momvD4bH572+4KcmHXSz040Kw==
   dependencies:
     "@apollo/client" "^3.5.10"
     "@convertkit/slate-lists" "^0.2.4"
     "@emotion/css" "^11.9.0"
     "@emotion/server" "^11.4.0"
-    "@makeswift/next-plugin" "0.1.0"
+    "@makeswift/next-plugin" "0.1.1"
     "@popmotion/popcorn" "^0.4.4"
     "@types/is-hotkey" "^0.1.7"
     "@types/react" "^17.0.3"
