@@ -4,6 +4,7 @@ import { OnChangeParam } from 'slate-react'
 import { Descriptor, RichTextDescriptor, TableFormFieldsDescriptor, Types } from './descriptors'
 import { BuilderEditMode } from '../utils/constants'
 import { BoxModel } from '../state/modules/box-models'
+import { SlotControl, SlotControlMessage, SlotControlType } from '../controls'
 
 export const RichTextPropControllerMessageType = {
   CHANGE_BUILDER_EDIT_MODE: 'CHANGE_BUILDER_EDIT_MODE',
@@ -47,9 +48,12 @@ export type RichTextPropControllerMessage =
   | UndoRichTextPropControllerMessage
   | RedoRichTextPropControllerMessage
 
-export type PropControllerMessage = RichTextPropControllerMessage | TableFormFieldsMessage
+export type PropControllerMessage =
+  | RichTextPropControllerMessage
+  | TableFormFieldsMessage
+  | SlotControlMessage
 
-type Send<T = PropControllerMessage> = (message: T) => void
+export type Send<T = PropControllerMessage> = (message: T) => void
 
 export abstract class PropController<T = PropControllerMessage> {
   protected send: Send<T>
@@ -168,6 +172,7 @@ type AnyPropController =
   | DefaultPropController
   | RichTextPropController
   | TableFormFieldsPropController
+  | SlotControl
 
 export function createPropController(
   descriptor: RichTextDescriptor,
@@ -188,6 +193,9 @@ export function createPropController<T extends PropControllerMessage>(
 
     case Types.TableFormFields:
       return new TableFormFieldsPropController(send as Send<TableFormFieldsMessage>)
+
+    case SlotControlType:
+      return new SlotControl(send as Send<SlotControlMessage>)
 
     default:
       return new DefaultPropController(send as Send)

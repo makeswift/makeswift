@@ -1,6 +1,6 @@
 import { useMemo, useRef } from 'react'
 
-import { useStore } from '.'
+import { useDocumentKey, useSelector, useStore } from '.'
 import * as ReactPage from '../../state/react-page'
 import { Props } from '../../prop-controllers'
 import {
@@ -26,6 +26,8 @@ import {
   NumberControlType,
   SelectControlType,
   ShapeControlType,
+  SlotControl,
+  SlotControlType,
   StyleControlType,
   TextAreaControlType,
   TextInputControlType,
@@ -33,6 +35,7 @@ import {
 import { useFormattedStyle } from './controls/style'
 import { ControlValue } from './controls/control'
 import { RenderHook } from './components'
+import { useSlot } from './controls/slot'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -84,6 +87,13 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
     ReactPage.getComponentPropControllerDescriptors(store.getState(), element.type) ?? {},
   )
   const props = element.props as Record<string, any>
+  const documentKey = useDocumentKey()
+
+  const propControllers = useSelector(state => {
+    if (documentKey == null) return null
+
+    return ReactPage.getPropControllers(state, documentKey, element.key)
+  })
 
   return Object.entries(propControllerDescriptorsRef.current).reduceRight(
     (renderFn, [propName, descriptor]) =>
@@ -116,6 +126,20 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                 {value => renderFn({ ...propsValue, [propName]: value })}
               </RenderHook>
             )
+
+          case SlotControlType: {
+            const control = (propControllers?.[propName] ?? null) as SlotControl | null
+
+            return (
+              <RenderHook
+                key={descriptor.type}
+                hook={useSlot}
+                parameters={[props[propName], control]}
+              >
+                {value => renderFn({ ...propsValue, [propName]: value })}
+              </RenderHook>
+            )
+          }
 
           case Props.Types.Width:
             return (
