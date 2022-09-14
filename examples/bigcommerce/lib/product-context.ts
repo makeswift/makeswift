@@ -1,14 +1,9 @@
 import { createContext, useContext } from 'react'
-import { ProductFragment } from './bigcommerce/types'
 
-export const ProductContext = createContext<ProductFragment | null>(null)
+import { ProductFragment, DEFAULT_PRODUCT } from './bigcommerce'
 
-export function useProduct(): ProductFragment {
-  const product = useContext(ProductContext)
+export const ProductContext = createContext<ProductFragment>(DEFAULT_PRODUCT)
 
-  if (product != null) {
-    return product
-  }
-
-  throw new Error('useProduct should only be used inside a ProductProvider')
+export function useProduct() {
+  return useContext(ProductContext)
 }
