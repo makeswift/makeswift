@@ -38,13 +38,21 @@ export function getPropControllersHandle(
   return state.handles.get(documentKey)?.get(elementKey) ?? null
 }
 
+export function getPropControllers(
+  state: State,
+  documentKey: string,
+  elementKey: string,
+): Record<string, PropController> | null {
+  return state.instances.get(documentKey)?.get(elementKey) ?? null
+}
+
 export function getPropController(
   state: State,
   documentKey: string,
   elementKey: string,
   propName: string,
 ): PropController | null {
-  return state.instances.get(documentKey)?.get(elementKey)?.[propName] ?? null
+  return getPropControllers(state, documentKey, elementKey)?.[propName] ?? null
 }
 
 export function reducer(state: State = getInitialState(), action: Action): State {

@@ -153,7 +153,7 @@ export function PageProvider({ id, children }: PageProviderProps) {
 
 const DocumentContext = createContext<string | null>(null)
 
-function useDocumentKey(): string | null {
+export function useDocumentKey(): string | null {
   return useContext(DocumentContext)
 }
 
@@ -163,7 +163,7 @@ export function useStore(): ReactPage.Store {
   return useContext(Context)
 }
 
-function useSelector<R>(selector: (state: State) => R): R {
+export function useSelector<R>(selector: (state: State) => R): R {
   const store = useStore()
 
   return useSyncExternalStoreWithSelector(store.subscribe, store.getState, store.getState, selector)

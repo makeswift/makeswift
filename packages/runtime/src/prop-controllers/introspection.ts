@@ -16,7 +16,14 @@ import {
   Types,
 } from './descriptors'
 import { Data, Element } from '../state/react-page'
-import { ColorControlData, ColorControlType, ImageControlData, ImageControlType } from '../controls'
+import {
+  ColorControlData,
+  ColorControlType,
+  ImageControlData,
+  ImageControlType,
+  SlotControlData,
+  SlotControlType,
+} from '../controls'
 
 export function getElementChildren<T extends Data>(
   descriptor: Descriptor<T>,
@@ -27,6 +34,9 @@ export function getElementChildren<T extends Data>(
   switch (descriptor.type) {
     case Types.Grid:
       return (prop as GridValue).elements
+
+    case SlotControlType:
+      return (prop as SlotControlData).elements
 
     default:
       return []

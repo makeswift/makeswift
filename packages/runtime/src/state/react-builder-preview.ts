@@ -419,74 +419,44 @@ function createAndRegisterPropControllers(
   }
 }
 
-function registerAndSetPropControllersHandle(
-  documentKey: string,
-  elementKey: string,
-  handle: PropControllerHandles.PropControllersHandle,
-): ThunkAction<void, State, unknown, Action> {
-  return dispatch => {
-    dispatch(registerPropControllersHandle(documentKey, elementKey, handle))
-
-    const propControllers = dispatch(createAndRegisterPropControllers(documentKey, elementKey))
-
-    handle.setPropControllers(propControllers)
-  }
-}
-
-function unregisterAndUnsetPropControllersHandle(
-  documentKey: string,
-  elementKey: string,
-): ThunkAction<void, State, unknown, Action> {
-  return (dispatch, getState) => {
-    const handle = PropControllerHandles.getPropControllersHandle(
-      getPropControllerHandlesStateSlice(getState()),
-      documentKey,
-      elementKey,
-    )
-
-    handle?.setPropControllers(null)
-
-    dispatch(unregisterPropControllers(documentKey, elementKey))
-  }
-}
-
 function propControllerHandlesMiddleware(): Middleware<Dispatch, State, Dispatch> {
   return ({ dispatch, getState }: MiddlewareAPI<Dispatch, State>) =>
     (next: ReduxDispatch<Action>) => {
       return (action: Action): Action => {
         switch (action.type) {
           case ActionTypes.REGISTER_COMPONENT_HANDLE: {
-            const element = ReactPage.getElement(
-              getState(),
-              action.payload.documentKey,
-              action.payload.elementKey,
+            const { documentKey, elementKey, componentHandle } = action.payload
+            const element = ReactPage.getElement(getState(), documentKey, elementKey)
+            const propControllers = dispatch(
+              createAndRegisterPropControllers(documentKey, elementKey),
             )
 
             if (
               element != null &&
               !ReactPage.isElementReference(element) &&
-              PropControllerHandles.isPropControllersHandle(action.payload.componentHandle)
+              PropControllerHandles.isPropControllersHandle(componentHandle)
             ) {
-              dispatch(
-                registerAndSetPropControllersHandle(
-                  action.payload.documentKey,
-                  action.payload.elementKey,
-                  action.payload.componentHandle,
-                ),
-              )
+              dispatch(registerPropControllersHandle(documentKey, elementKey, componentHandle))
+              componentHandle.setPropControllers(propControllers)
             }
 
             break
           }
 
-          case ActionTypes.UNREGISTER_COMPONENT_HANDLE:
-            dispatch(
-              unregisterAndUnsetPropControllersHandle(
-                action.payload.documentKey,
-                action.payload.elementKey,
-              ),
+          case ActionTypes.UNREGISTER_COMPONENT_HANDLE: {
+            const { documentKey, elementKey } = action.payload
+            const handle = PropControllerHandles.getPropControllersHandle(
+              getPropControllerHandlesStateSlice(getState()),
+              documentKey,
+              elementKey,
             )
+
+            handle?.setPropControllers(null)
+
+            dispatch(unregisterPropControllers(documentKey, elementKey))
+
             break
+          }
 
           case ActionTypes.MESSAGE_HOST_PROP_CONTROLLER: {
             const propController = PropControllerHandles.getPropController(

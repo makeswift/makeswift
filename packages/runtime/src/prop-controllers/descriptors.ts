@@ -15,6 +15,7 @@ import {
   ListControlDefinition,
   SelectControlDefinition,
   ShapeControlDefinition,
+  SlotControlDefinition,
   TextAreaControlDefinition,
   TextInputControlDefinition,
 } from '../controls'
@@ -964,6 +965,7 @@ export type Descriptor<T extends Data = Data> =
   | ShapeControlDefinition
   | ListControlDefinition
   | LinkControlDefinition
+  | SlotControlDefinition
 
 export type PanelDescriptorType =
   | typeof Types.Backgrounds
