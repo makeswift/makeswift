@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.1.11
+
+### Patch Changes
+
+- 882dc0b: Properly infer Slot control prop types.
+
 ## 0.1.10
 
 ### Patch Changes
