@@ -20,7 +20,7 @@ export type ComboboxControlDefinitionOption<T extends ComboboxControlDefinition>
 export type ComboboxControlData<T extends ComboboxControlDefinition = ComboboxControlDefinition> =
   ComboboxControlOption<ComboboxControlDefinitionOption<T>>
 
-export function Combobox<T extends string, C extends ComboboxControlConfig<T>>(
+export function Combobox<T extends Data, C extends ComboboxControlConfig<T>>(
   config: C & {
     getOptions(query: string): ComboboxControlOption<T>[] | Promise<ComboboxControlOption<T>[]>
   },
