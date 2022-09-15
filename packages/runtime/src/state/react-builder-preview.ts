@@ -266,6 +266,25 @@ function startMeasuringDocumentElement(): ThunkAction<() => void, unknown, unkno
   }
 }
 
+function registerFavicon(): ThunkAction<Promise<void>, unknown, unknown, Action> {
+  return async dispatch => {
+    // if (faviconPathFromUserConfig) {
+    //    return dispatch({ type: ActionTypes.REGISTER_FAVICON, payload: { path: faviconPathFromUserConfig } })
+    // }
+
+    const DEFAULT_FAVICON_PATH = '/favicon.ico'
+    const res = await fetch(DEFAULT_FAVICON_PATH)
+
+    if (res.status === 200) {
+      dispatch({ type: ActionTypes.REGISTER_FAVICON, payload: { path: DEFAULT_FAVICON_PATH } })
+    }
+  }
+}
+
+export function unregisterFavicon(): Action {
+  return { type: ActionTypes.UNREGISTER_FAVICON }
+}
+
 export function initialize(): ThunkAction<() => void, State, unknown, Action> {
   return dispatch => {
     const stopMeasuringElements = dispatch(startMeasuringElements())
@@ -273,6 +292,7 @@ export function initialize(): ThunkAction<() => void, State, unknown, Action> {
     const stopHandlingFocusEvent = startHandlingFocusEvents()
     const unlockDocumentScroll = dispatch(lockDocumentScroll())
     dispatch(setIsInBuilder(true))
+    dispatch(registerFavicon())
 
     return () => {
       stopMeasuringElements()
@@ -280,6 +300,7 @@ export function initialize(): ThunkAction<() => void, State, unknown, Action> {
       stopHandlingFocusEvent()
       unlockDocumentScroll()
       dispatch(setIsInBuilder(false))
+      dispatch(unregisterFavicon())
     }
   }
 }
@@ -352,6 +373,8 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
           case ActionTypes.CHANGE_DOCUMENT_ELEMENT_SIZE:
           case ActionTypes.MESSAGE_BUILDER_PROP_CONTROLLER:
           case ActionTypes.HANDLE_WHEEL:
+          case ActionTypes.REGISTER_FAVICON:
+          case ActionTypes.UNREGISTER_FAVICON:
             messageChannel.port1.postMessage(action)
             break
 

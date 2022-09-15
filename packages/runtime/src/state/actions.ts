@@ -58,6 +58,9 @@ export const ActionTypes = {
   SET_IS_IN_BUILDER: 'SET_IS_IN_BUILDER',
 
   HANDLE_WHEEL: 'HANDLE_WHEEL',
+
+  REGISTER_FAVICON: 'REGISTER_FAVICON',
+  UNREGISTER_FAVICON: 'UNREGISTER_FAVICON',
 } as const
 
 type InitAction = { type: typeof ActionTypes.INIT }
@@ -221,6 +224,15 @@ type HandleWheelAction = {
   payload: { deltaX: number; deltaY: number }
 }
 
+type RegisterFaviconAction = {
+  type: typeof ActionTypes.REGISTER_FAVICON
+  payload: { path: string }
+}
+
+type UnregisterFaviconAction = {
+  type: typeof ActionTypes.UNREGISTER_FAVICON
+}
+
 export type Action =
   | InitAction
   | CleanUpAction
@@ -253,6 +265,8 @@ export type Action =
   | EvictAPIResourceAction
   | SetIsInBuilderAction
   | HandleWheelAction
+  | RegisterFaviconAction
+  | UnregisterFaviconAction
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }

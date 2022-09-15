@@ -46,12 +46,6 @@ export type PageData = {
   }
 }
 
-const defaultFavicon = {
-  mimetype: 'image/png',
-  publicUrl:
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAACXBIWXMAABcRAAAXEQHKJvM/AAABjElEQVRYhc2XzU3EMBCFB8TddAAXn6EE6GCpgNABZ1/IXnymBOgAOmA7YM8+ABVsXEHQQFaKQryeN3Yk3ilKJtEnv/nLUd/3pFG0riGi88yrnQn+UfJ5FUi0riWiB2H4nQn+KRd0DFP8agXEfkqCYJBoHdtxIQxfm+DfFgEhoith3NYE30o/qgGR2BJB+xY7kdYEL8oNFUi0jiFMJuxVWrJqEMFxsyUNCsE6AeNztvBp7aJ143vXksoRnwhYtmNdSoIQa6RlO9YXEWW7KgoCleOgxgTf1QZBT+RZ2lXFING6UxCCq+ceeUE8fYdknY599v9sJvzGBP+yCEgC7GPmETc0OJ+0awAlkhe2pAbIXAeFZ8xe2g2Nk3c3ub0xwWt6zY9qbmiqGVMbZK21ZC/YmhlbeBMTzZNDQqcvDb1kM1x32iqZSt1HaqukfKvq34BAOTLsrH+ETNmUkKHHA+428RgeclPVWozeSyAI2EdWB34jtqXNTAySOY3i/KgFIlqOa4GkFmBegorzg4joG07he/M7zl6jAAAAAElFTkSuQmCC',
-}
-
 // Taken from https://github.com/facebook/react/blob/14bac6193a334eda42e727336e8967419f08f5df/packages/react-dom/src/server/ReactPartialRenderer.js#L208
 const VALID_TAG_REGEX = /^[a-zA-Z][a-zA-Z:_.\-\d]*$/
 
@@ -181,7 +175,7 @@ export function Page({ page, preview = false }: Props): JSX.Element {
     fetchPolicy: 'cache-only',
   })
 
-  const favicon = page.meta.favicon ?? defaultFavicon
+  const favicon = page.meta.favicon
   const { title, description, keywords, socialImage } = page.meta
   const { canonicalUrl, isIndexingBlocked } = page.seo
 
@@ -253,7 +247,7 @@ export function Page({ page, preview = false }: Props): JSX.Element {
           `}
         </style>
 
-        <link rel="icon" type={favicon.mimetype} href={favicon.publicUrl} />
+        {favicon && <link rel="icon" type={favicon.mimetype} href={favicon.publicUrl} />}
 
         {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
 
