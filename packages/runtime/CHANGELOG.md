@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.1.12
+
+### Patch Changes
+
+- f22b832: Infer non-string TS types for Combobox control.
+- 0025d7e: Add MakeswiftComponentType constant.
+
 ## 0.1.11
 
 ### Patch Changes
