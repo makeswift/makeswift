@@ -4,13 +4,14 @@ import { forwardNextDynamicRef } from '../../../next'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findDeviceOverride } from '../../utils/devices'
+import { MakeswiftComponentType } from '../constants'
 import { Alignments, Contrast, Contrasts, Shapes, Sizes } from './context/FormContext'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
     forwardNextDynamicRef(patch => dynamic(() => patch(import('./Form')))),
     {
-      type: './components/Form/index.js',
+      type: MakeswiftComponentType.Form,
       label: 'Form',
       icon: 'Form40',
       props: {

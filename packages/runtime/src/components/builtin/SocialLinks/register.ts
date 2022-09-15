@@ -4,12 +4,13 @@ import { forwardNextDynamicRef } from '../../../next'
 import { Props } from '../../../prop-controllers'
 import { SocialLinksValue } from '../../../prop-controllers/descriptors'
 import { ReactRuntime } from '../../../runtimes/react'
+import { MakeswiftComponentType } from '../constants'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
     forwardNextDynamicRef(patch => dynamic(() => patch(import('./SocialLinks')))),
     {
-      type: './components/SocialLinks/index.js',
+      type: MakeswiftComponentType.SocialLinks,
       label: 'Social Links',
       icon: 'SocialLinks40',
       props: {

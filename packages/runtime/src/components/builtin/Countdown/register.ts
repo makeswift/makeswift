@@ -2,12 +2,13 @@ import dynamic from 'next/dynamic'
 import { forwardNextDynamicRef } from '../../../next'
 import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
+import { MakeswiftComponentType } from '../constants'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
     forwardNextDynamicRef(patch => dynamic(() => patch(import('./Countdown')))),
     {
-      type: './components/Countdown/index.js',
+      type: MakeswiftComponentType.Countdown,
       label: 'Countdown',
       icon: 'Countdown40',
       props: {
