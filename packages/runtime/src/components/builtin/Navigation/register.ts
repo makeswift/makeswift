@@ -4,12 +4,13 @@ import { Props } from '../../../prop-controllers'
 import { NavigationLinksValue, ResponsiveValue } from '../../../prop-controllers/descriptors'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findDeviceOverride } from '../../utils/devices'
+import { MakeswiftComponentType } from '../constants'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
     forwardNextDynamicRef(patch => dynamic(() => patch(import('./Navigation')))),
     {
-      type: './components/Navigation/index.js',
+      type: MakeswiftComponentType.Navigation,
       label: 'Navigation',
       icon: 'Navigation40',
       props: {

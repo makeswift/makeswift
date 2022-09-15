@@ -3,13 +3,14 @@ import { forwardNextDynamicRef } from '../../../next'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findDeviceOverride } from '../../utils/devices'
+import { MakeswiftComponentType } from '../constants'
 import { ButtonVariant } from './contants'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
     forwardNextDynamicRef(patch => dynamic(() => patch(import('./Button')))),
     {
-      type: './components/Button/index.js',
+      type: MakeswiftComponentType.Button,
       label: 'Button',
       props: {
         id: Props.ElementID(),

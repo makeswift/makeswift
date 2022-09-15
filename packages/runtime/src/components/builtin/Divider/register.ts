@@ -2,12 +2,13 @@ import dynamic from 'next/dynamic'
 import { forwardNextDynamicRef } from '../../../next'
 import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
+import { MakeswiftComponentType } from '../constants'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
     forwardNextDynamicRef(patch => dynamic(() => patch(import('./Divider')))),
     {
-      type: './components/Divider/index.js',
+      type: MakeswiftComponentType.Divider,
       label: 'Divider',
       icon: 'Divider40',
       props: {

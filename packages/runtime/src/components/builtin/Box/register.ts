@@ -4,6 +4,7 @@ import { forwardNextDynamicRef } from '../../../next'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findDeviceOverride } from '../../utils/devices'
+import { MakeswiftComponentType } from '../constants'
 import {
   BoxAnimateIn,
   DEFAULT_BOX_ANIMATE_DELAY,
@@ -29,7 +30,7 @@ export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
     forwardNextDynamicRef(patch => dynamic(() => patch(import('./Box')))),
     {
-      type: './components/Box/index.js',
+      type: MakeswiftComponentType.Box,
       label: 'Box',
       props: {
         id: Props.ElementID(),

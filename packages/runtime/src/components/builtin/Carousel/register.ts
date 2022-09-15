@@ -5,12 +5,13 @@ import { forwardNextDynamicRef } from '../../../next'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findDeviceOverride } from '../../utils/devices'
+import { MakeswiftComponentType } from '../constants'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
     forwardNextDynamicRef(patch => dynamic(() => patch(import('./Carousel')))),
     {
-      type: './components/Carousel/index.js',
+      type: MakeswiftComponentType.Carousel,
       label: 'Carousel',
       icon: 'Carousel40',
       props: {

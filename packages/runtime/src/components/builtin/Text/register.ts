@@ -5,12 +5,13 @@ import ipsum from 'corporate-ipsum'
 import { forwardNextDynamicRef } from '../../../next'
 import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
+import { MakeswiftComponentType } from '../constants'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
     forwardNextDynamicRef(patch => dynamic(() => patch(import('./Text')))),
     {
-      type: './components/Text/index.js',
+      type: MakeswiftComponentType.Text,
       label: 'Text',
       props: {
         id: Props.ElementID(),
