@@ -16,5 +16,8 @@
   ],
   "dependencies": {
     "next-transpile-modules": "^9.0.0"
+  },
+  "peerDependencies": {
+    "@makeswift/modules-swc-plugin": "0.1.0"
   }
 }
