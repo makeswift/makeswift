@@ -64,6 +64,24 @@ export function MakeswiftApiHandler(
         })
       }
 
+      case 'revalidate': {
+        if (req.query.secret !== apiKey) {
+          return res.status(401).json({ message: 'Unauthorized' })
+        }
+
+        if (typeof req.query.path !== 'string') {
+          return res.status(400).json({ message: 'Bad Request' })
+        }
+
+        try {
+          await res.revalidate(req.query.path)
+
+          return res.json({ revalidated: true })
+        } catch (error) {
+          return res.status(500).json({ message: 'Error Revalidating' })
+        }
+      }
+
       case 'proxy-preview-mode': {
         if (req.query.secret !== apiKey) return res.status(401).send('Unauthorized')
 
