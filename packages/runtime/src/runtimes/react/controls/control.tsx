@@ -34,6 +34,9 @@ import {
   TextInputControlData,
   TextInputControlDefinition,
   TextInputControlType,
+  TextStyleControlData,
+  TextStyleControlDefinition,
+  TextStyleControlType,
 } from '../../../controls'
 import { RenderHook } from '../components'
 import { CheckboxControlValue, useCheckboxControlValue } from './checkbox'
@@ -47,6 +50,7 @@ import { SelectControlValue, useSelectControlValue } from './select'
 import { ShapeControlValue } from './shape'
 import { TextAreaControlValue, useTextAreaValue } from './text-area'
 import { TextInputControlValue, useTextInputValue } from './text-input'
+import { TextStyleControlValue, useTextStyleValue } from './text-style'
 
 export type ControlDefinitionValue<T extends ControlDefinition> =
   T extends CheckboxControlDefinition
@@ -71,6 +75,8 @@ export type ControlDefinitionValue<T extends ControlDefinition> =
     ? ShapeControlValue<T>
     : T extends ListControlDefinition
     ? ListControlValue<T>
+    : T extends TextStyleControlDefinition
+    ? TextStyleControlValue<T>
     : never
 
 type ControlValueProps<T extends ControlDefinition> = {
@@ -124,6 +130,17 @@ export function ControlValue<T extends ControlDefinition>({
           key={definition.type}
           hook={useTextAreaValue}
           parameters={[data as TextAreaControlData, definition]}
+        >
+          {value => children(value as ControlDefinitionValue<T>)}
+        </RenderHook>
+      )
+
+    case TextStyleControlType:
+      return (
+        <RenderHook
+          key={definition.type}
+          hook={useTextStyleValue}
+          parameters={[data as TextStyleControlData, definition]}
         >
           {value => children(value as ControlDefinitionValue<T>)}
         </RenderHook>

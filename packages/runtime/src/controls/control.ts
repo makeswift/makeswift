@@ -9,6 +9,7 @@ import { SelectControlData, SelectControlDefinition } from './select'
 import { ShapeControlData, ShapeControlDefinition } from './shape'
 import { TextAreaControlData, TextAreaControlDefinition } from './text-area'
 import { TextInputControlData, TextInputControlDefinition } from './text-input'
+import { TextStyleControlData, TextStyleControlDefinition } from './text-style'
 
 export type ControlDefinition =
   | CheckboxControlDefinition
@@ -22,6 +23,7 @@ export type ControlDefinition =
   | ShapeControlDefinition
   | ListControlDefinition<any>
   | LinkControlDefinition
+  | TextStyleControlDefinition
 
 export type ControlDefinitionData<T extends ControlDefinition> = T extends CheckboxControlDefinition
   ? CheckboxControlData
@@ -31,6 +33,8 @@ export type ControlDefinitionData<T extends ControlDefinition> = T extends Check
   ? TextInputControlData
   : T extends TextAreaControlDefinition
   ? TextAreaControlData
+  : T extends TextStyleControlDefinition
+  ? TextStyleControlData
   : T extends SelectControlDefinition
   ? SelectControlData<T>
   : T extends ColorControlDefinition

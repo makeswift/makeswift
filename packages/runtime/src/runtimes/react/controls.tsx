@@ -31,6 +31,7 @@ import {
   StyleControlType,
   TextAreaControlType,
   TextInputControlType,
+  TextStyleControlType,
 } from '../../controls'
 import { useFormattedStyle } from './controls/style'
 import { ControlValue } from './controls/control'
@@ -110,6 +111,7 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
           case ShapeControlType:
           case ListControlType:
           case LinkControlType:
+          case TextStyleControlType:
             return (
               <ControlValue definition={descriptor} data={props[propName]}>
                 {value => renderFn({ ...propsValue, [propName]: value })}

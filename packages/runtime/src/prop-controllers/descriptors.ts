@@ -18,6 +18,7 @@ import {
   SlotControlDefinition,
   TextAreaControlDefinition,
   TextInputControlDefinition,
+  TextStyleControlDefinition,
 } from '../controls'
 import { TextInputControlValue } from '../runtimes/react/controls/text-input'
 import { TextAreaControlValue } from '../runtimes/react/controls/text-area'
@@ -30,6 +31,7 @@ import { ListControlValue } from '../runtimes/react/controls/list'
 import { ComboboxControlValue } from '../runtimes/react/controls/combobox'
 import { LinkControlValue } from '../runtimes/react/controls/link'
 import { SlotControlValue } from '../runtimes/react/controls/slot'
+import { TextStyleControlValue } from '../runtimes/react/controls/text-style'
 
 export type { Data }
 
@@ -959,6 +961,7 @@ export type Descriptor<T extends Data = Data> =
   | CheckboxControlDefinition
   | TextInputControlDefinition
   | TextAreaControlDefinition
+  | TextStyleControlDefinition
   | SelectControlDefinition
   | ColorControlDefinition
   | ImageControlDefinition
@@ -1014,6 +1017,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? TextInputControlValue<T>
   : T extends TextAreaControlDefinition
   ? TextAreaControlValue<T>
+  : T extends TextStyleControlDefinition
+  ? TextStyleControlValue<T>
   : T extends SelectControlDefinition
   ? SelectControlValue<T>
   : T extends ColorControlDefinition
