@@ -59,13 +59,6 @@ function addMakeswiftPages({ dir }: { dir: string }): void {
   const pagesFolder = getPagesFolder({ dir })
   const extension = getExtension({ dir })
 
-  const previewRoute = `export {
-  getServerSideProps,
-  Page as default
-} from '@makeswift/runtime/next'
-`
-  fs.writeFileSync(path.join(pagesFolder, `makeswift.${extension}`), previewRoute)
-
   // catch all route
   const catchAllRoute = `export {
   getStaticProps,
