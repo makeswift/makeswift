@@ -4,6 +4,7 @@ import * as fs from 'fs'
 import path from 'path'
 import { manipulateNextConfig } from './utils/manipulate-next-config'
 import { yarnOrNpm } from './utils/yarn-or-npm'
+import { createFolderIfNotExists } from './utils/create-folder-if-not-exists'
 
 export function integrateNextApp({ dir }: { dir: string }): void {
   console.log('Integrating Next.js app')
@@ -11,10 +12,13 @@ export function integrateNextApp({ dir }: { dir: string }): void {
   // Step 1 - install the runtime
   installMakeswiftRuntime({ dir })
 
-  // Step 2 - add Makeswift pages
+  // Step 2 - add Makeswift API route
+  addMakeswiftApiRoute({ dir })
+
+  // Step 3 - add Makeswift pages
   addMakeswiftPages({ dir })
 
-  // Step 3 - adding the Makeswift Next.js plugin
+  // Step 4 - adding the Makeswift Next.js plugin
   addMakeswiftNextjsPlugin({ dir })
 }
 
@@ -31,6 +35,24 @@ function installMakeswiftRuntime({ dir }: { dir: string }): void {
       cwd: dir,
     })
   }
+}
+
+function addMakeswiftApiRoute({ dir }: { dir: string }): void {
+  const pagesFolder = getPagesFolder({ dir })
+  const extension = getExtension({ dir })
+
+  // If Makeswift API folder does not exist, create
+  createFolderIfNotExists(path.join(pagesFolder, 'api'))
+  createFolderIfNotExists(path.join(pagesFolder, 'api', 'makeswift'))
+
+  const apiRoute = `import { MakeswiftApiHandler } from '@makeswift/runtime/next'
+
+export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY)
+`
+  fs.writeFileSync(
+    path.join(pagesFolder, 'api', 'makeswift', `[...makeswift].${extension}`),
+    apiRoute,
+  )
 }
 
 function addMakeswiftPages({ dir }: { dir: string }): void {
