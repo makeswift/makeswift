@@ -40,7 +40,7 @@ async function init(
   await open(selectSiteUrl.toString())
 
   // Handshake Step 2 - the browser goes to `callbackUrl`
-  const nextAppUrl = `http://localhost:${nextAppPort}/makeswift`
+  const nextAppUrl = `http://localhost:${nextAppPort}`
   const redirectUrl = new URL(`${MAKESWIFT_APP_ORIGIN}/cli/link-site`)
   redirectUrl.searchParams.set('host_url', nextAppUrl)
 
