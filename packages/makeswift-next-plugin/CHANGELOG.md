@@ -1,5 +1,11 @@
 # @makeswift/next-plugin
 
+## 0.1.3
+
+### Patch Changes
+
+- 51dc17b: Fix Preview Mode rewrite source so that it matches `/`.
+
 ## 0.1.2
 
 ### Patch Changes
