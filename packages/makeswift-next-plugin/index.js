@@ -26,6 +26,12 @@ module.exports = ({ resolveSymlinks } = {}) => async (nextConfig = {}) => {
     },
   }
 
+  await createComponentsManifest()
+
+  return withTmInitializer(NEXT_TRANSPILE_MODULES_MODULES, { resolveSymlinks })(enhancedConfig)
+}
+
+async function createComponentsManifest() {
   let makeswiftConfig
   try {
     // @todo: When will this assumption fail? Monorepos?
@@ -57,8 +63,6 @@ module.exports = ({ resolveSymlinks } = {}) => async (nextConfig = {}) => {
 
   const outFile = path.join(outDir, 'components-manifest.json')
   fs.promises.writeFile(outFile, JSON.stringify({ components }))
-
-  return withTmInitializer(NEXT_TRANSPILE_MODULES_MODULES, { resolveSymlinks })(enhancedConfig)
 }
 
 async function createDotMakeswiftDirectory(outDir) {
