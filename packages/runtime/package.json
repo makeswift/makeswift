@@ -4,7 +4,7 @@
   "license": "MIT",
   "main": "dist/main.cjs",
   "module": "dist/main.es",
-  "types": "dist/types",
+  "types": "dist/types/src",
   "files": [
     "dist",
     "prop-controllers.js",
@@ -59,28 +59,28 @@
   "typesVersions": {
     "*": {
       "prop-controllers": [
-        "dist/types/prop-controllers/index.d.ts"
+        "dist/types/src/prop-controllers/index.d.ts"
       ],
       "react": [
-        "dist/types/react.d.ts"
+        "dist/types/src/react.d.ts"
       ],
       "box-model": [
-        "dist/types/box-model.d.ts"
+        "dist/types/src/box-model.d.ts"
       ],
       "components": [
-        "dist/types/components/index.d.ts"
+        "dist/types/src/components/index.d.ts"
       ],
       "api": [
-        "dist/types/api/index.d.ts"
+        "dist/types/src/api/index.d.ts"
       ],
       "next": [
         "dist/types/src/next/index.d.ts"
       ],
       "builder": [
-        "dist/types/builder/index.d.ts"
+        "dist/types/src/builder/index.d.ts"
       ],
       "controls": [
-        "dist/types/controls/index.d.ts"
+        "dist/types/src/controls/index.d.ts"
       ]
     }
   },

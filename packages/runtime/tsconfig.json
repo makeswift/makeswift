@@ -16,6 +16,7 @@
     "skipLibCheck": true,
     "declaration": true,
     "declarationMap": true,
+    "rootDir": ".",
     "declarationDir": "dist/types",
     "emitDeclarationOnly": true,
     "jsx": "react-jsx",
