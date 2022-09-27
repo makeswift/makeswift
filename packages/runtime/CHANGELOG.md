@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.2.1
+
+### Patch Changes
+
+- fca39c0: Fix TypeScript type declarations.
+
 ## 0.2.0
 
 ### Minor Changes
