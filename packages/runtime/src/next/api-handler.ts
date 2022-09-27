@@ -73,8 +73,21 @@ export function MakeswiftApiHandler(
           return res.status(400).json({ message: 'Bad Request' })
         }
 
+        const revalidate = res.revalidate ?? res.unstable_revalidate
+
+        if (typeof revalidate !== 'function') {
+          const message =
+            `Cannot revalidate path "${req.query.path}" because \`revalidate\` function does not exist in API handler response. ` +
+            'Please update to Next.js v12.2.0 or higher for support for on-demand revalidation.\n' +
+            'Read more here: https://nextjs.org/blog/next-12-2#on-demand-incremental-static-regeneration-stable'
+
+          console.warn(message)
+
+          return res.json({ revalidated: false })
+        }
+
         try {
-          await res.revalidate(req.query.path)
+          await revalidate(req.query.path)
 
           return res.json({ revalidated: true })
         } catch (error) {
