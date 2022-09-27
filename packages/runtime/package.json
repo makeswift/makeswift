@@ -86,7 +86,8 @@
   },
   "scripts": {
     "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'vite build --watch'",
-    "build": "tsc && vite build",
+    "clean": "rm -rf dist",
+    "build": "yarn clean && tsc && vite build",
     "preview": "vite preview",
     "prepare": "yarn build",
     "generate": "graphql-codegen --config codegen.yml",
