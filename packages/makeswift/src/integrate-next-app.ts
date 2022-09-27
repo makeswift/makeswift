@@ -59,20 +59,89 @@ function addMakeswiftPages({ dir }: { dir: string }): void {
   const pagesFolder = getPagesFolder({ dir })
   const extension = getExtension({ dir })
 
+  function generateCatchAllRoute(extension: ReturnType<typeof getExtension>) {
+    switch (extension) {
+      case 'js':
+        return `import { Makeswift, Page as MakeswiftPage } from '@makeswift/runtime/next'
+
+export async function getStaticPaths() {
+  const makeswift = new Makeswift(process.env.MAKESWIFT_SITE_API_KEY)
+  const pages = await makeswift.getPages()
+
+  return {
+    paths: pages.map((page) => ({
+      params: {
+        path: page.path.split('/').filter((segment) => segment !== ''),
+      },
+    })),
+    fallback: 'blocking',
+  }
+}
+
+export async function getStaticProps(ctx) {
+  const makeswift = new Makeswift(process.env.MAKESWIFT_SITE_API_KEY)
+  const path = '/' + (ctx.params?.path ?? []).join('/')
+  const snapshot = await makeswift.getPageSnapshot(path, {
+    preview: ctx.preview,
+  })
+
+  if (snapshot == null) return { notFound: true }
+
+  return { props: { snapshot } }
+}
+
+export default function Page({ snapshot }) {
+  return <MakeswiftPage snapshot={snapshot} />
+}`
+      case 'ts':
+        return `import { Makeswift } from '@makeswift/runtime/next'
+import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from 'next'
+
+import { Page as MakeswiftPage, PageProps as MakeswiftPageProps } from '@makeswift/runtime/next'
+
+type ParsedUrlQuery = { path?: string[] }
+
+export async function getStaticPaths(): Promise<GetStaticPathsResult<ParsedUrlQuery>> {
+  const makeswift = new Makeswift(process.env.MAKESWIFT_SITE_API_KEY!)
+  const pages = await makeswift.getPages()
+
+  return {
+    paths: pages.map(page => ({
+      params: { path: page.path.split('/').filter(segment => segment !== '') },
+    })),
+    fallback: 'blocking',
+  }
+}
+
+type Props = MakeswiftPageProps
+
+export async function getStaticProps(
+  ctx: GetStaticPropsContext<ParsedUrlQuery>,
+): Promise<GetStaticPropsResult<Props>> {
+  const makeswift = new Makeswift(process.env.MAKESWIFT_SITE_API_KEY!)
+  const path = '/' + (ctx.params?.path ?? []).join('/')
+  const snapshot = await makeswift.getPageSnapshot(path, { preview: ctx.preview })
+
+  if (snapshot == null) return { notFound: true }
+
+  return { props: { snapshot } }
+}
+
+export default function Page({ snapshot }: Props) {
+  return <MakeswiftPage snapshot={snapshot} />
+}`
+    }
+  }
+
   // catch all route
-  const catchAllRoute = `export {
-  getStaticProps,
-  getStaticPaths,
-  Page as default
-} from '@makeswift/runtime/next'
-`
+  const catchAllRoute = generateCatchAllRoute(extension)
 
   // @todo: need to detect if a catch all route already exists
   const catchAllRouteFilename =
     fs.existsSync(path.join(pagesFolder, `index.${extension}`)) ||
     fs.existsSync(path.join(pagesFolder, `index.${extension}x`))
-      ? `[...path].${extension}`
-      : `[[...path]].${extension}`
+      ? `[...path].${extension}x`
+      : `[[...path]].${extension}x`
 
   // catch-all-route does not exist
   if (glob.sync(path.join(pagesFolder, `\\[*\\].${extension}*`)).length === 0) {
