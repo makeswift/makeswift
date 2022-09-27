@@ -36,7 +36,7 @@ module.exports =
                   value: '(?<secret>.+)',
                 },
               ],
-              source: '/:path*',
+              source: '/:path(.*)',
               destination: '/api/makeswift/proxy-preview-mode',
             },
             {
@@ -47,7 +47,7 @@ module.exports =
                   value: '(?<secret>.+)',
                 },
               ],
-              source: '/:path*',
+              source: '/:path(.*)',
               destination: '/api/makeswift/proxy-preview-mode',
             },
             ...(Array.isArray(rewrites) ? [] : rewrites?.beforeFiles ?? []),
