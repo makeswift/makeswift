@@ -1,5 +1,11 @@
 # @makeswift/next-plugin
 
+## 0.1.2
+
+### Patch Changes
+
+- a033573: Add Preview Mode rewrites to @makeswift/next-plugin.
+
 ## 0.1.1
 
 ### Patch Changes
