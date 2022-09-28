@@ -8,15 +8,16 @@ import { createFolderIfNotExists } from './utils/create-folder-if-not-exists'
 
 export function integrateNextApp({ dir }: { dir: string }): void {
   console.log('Integrating Next.js app')
+  const isTS = isTypeScript({ dir })
 
   // Step 1 - install the runtime
   installMakeswiftRuntime({ dir })
 
   // Step 2 - add Makeswift API route
-  addMakeswiftApiRoute({ dir })
+  addMakeswiftApiRoute({ dir, isTypeScript: isTS })
 
   // Step 3 - add Makeswift pages
-  addMakeswiftPages({ dir })
+  addMakeswiftPages({ dir, isTypeScript: isTS })
 
   // Step 4 - adding the Makeswift Next.js plugin
   addMakeswiftNextjsPlugin({ dir })
@@ -37,9 +38,9 @@ function installMakeswiftRuntime({ dir }: { dir: string }): void {
   }
 }
 
-function addMakeswiftApiRoute({ dir }: { dir: string }): void {
+function addMakeswiftApiRoute({ dir, isTypeScript }: { dir: string; isTypeScript: boolean }): void {
   const pagesFolder = getPagesFolder({ dir })
-  const extension = getExtension({ dir })
+  const extension = isTypeScript ? 'ts' : 'js'
 
   // If Makeswift API folder does not exist, create
   createFolderIfNotExists(path.join(pagesFolder, 'api'))
@@ -55,13 +56,12 @@ export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY)
   )
 }
 
-function addMakeswiftPages({ dir }: { dir: string }): void {
+function addMakeswiftPages({ dir, isTypeScript }: { dir: string; isTypeScript: boolean }): void {
   const pagesFolder = getPagesFolder({ dir })
-  const extension = getExtension({ dir })
 
-  function generateCatchAllRoute(extension: ReturnType<typeof getExtension>) {
-    switch (extension) {
-      case 'js':
+  function generateCatchAllRoute(isTypeScript: boolean) {
+    switch (isTypeScript) {
+      case false:
         return `import { Makeswift, Page as MakeswiftPage } from '@makeswift/runtime/next'
 
 export async function getStaticPaths() {
@@ -93,7 +93,7 @@ export async function getStaticProps(ctx) {
 export default function Page({ snapshot }) {
   return <MakeswiftPage snapshot={snapshot} />
 }`
-      case 'ts':
+      case true:
         return `import { Makeswift } from '@makeswift/runtime/next'
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from 'next'
 
@@ -134,7 +134,8 @@ export default function Page({ snapshot }: Props) {
   }
 
   // catch all route
-  const catchAllRoute = generateCatchAllRoute(extension)
+  const catchAllRoute = generateCatchAllRoute(isTypeScript)
+  const extension = isTypeScript ? 'ts' : 'js'
 
   // @todo: need to detect if a catch all route already exists
   const catchAllRouteFilename =
@@ -177,7 +178,7 @@ function getPagesFolder({ dir }: { dir: string }): string {
   throw Error('Cannot find pages directory in Next.js app.')
 }
 
-function getExtension({ dir }: { dir: string }): 'js' | 'ts' {
+function isTypeScript({ dir }: { dir: string }): boolean {
   function hasTSConfig(dir: string): boolean {
     return fs.existsSync(path.join(dir, 'tsconfig.json'))
   }
@@ -196,10 +197,10 @@ function getExtension({ dir }: { dir: string }): 'js' | 'ts' {
   }
 
   if (hasTSConfig(dir) || hasTSDependency(dir)) {
-    return 'ts'
+    return true
   }
 
-  return 'js'
+  return false
 }
 
 function addMakeswiftNextjsPlugin({ dir }: { dir: string }) {
