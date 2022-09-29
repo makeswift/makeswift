@@ -43,6 +43,16 @@ export interface ReactRuntime {
     component: C,
     meta: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P },
   ): () => void
+
+  lazyRegisterComponent<
+    P extends Record<string, PropControllerDescriptor>,
+    C extends ReactPage.ComponentType<{ [K in keyof P]: PropControllerDescriptorValueType<P[K]> }>,
+  >(
+    type: string,
+    icon: ComponentIcon,
+    component: C,
+    meta: Promise<{ label: string; hidden?: boolean; props?: P }>,
+  ): Promise<() => void>
 }
 
 function createReactRuntime(store: ReactPage.Store): ReactRuntime {
@@ -56,6 +66,21 @@ function createReactRuntime(store: ReactPage.Store): ReactRuntime {
         registerReactComponentEffect(type, component as unknown as ReactPage.ComponentType),
       )
 
+      return () => {
+        unregisterComponent()
+        unregisterReactComponent()
+      }
+    },
+
+    async lazyRegisterComponent(type, icon, component, meta) {
+      const { label, hidden = false, props } = await meta
+      const unregisterComponent = store.dispatch(
+        registerComponentEffect(type, { label, icon, hidden }, props ?? {}),
+      )
+
+      const unregisterReactComponent = store.dispatch(
+        registerReactComponentEffect(type, component as unknown as ReactPage.ComponentType),
+      )
       return () => {
         unregisterComponent()
         unregisterReactComponent()
