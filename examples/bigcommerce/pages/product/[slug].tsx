@@ -1,9 +1,9 @@
 import '../../lib/makeswift/register-components'
 
 import {
-  getStaticProps as makeswiftGetStaticProps,
   PageProps as MakeswiftPageProps,
   Page as MakeswiftPage,
+  Makeswift,
 } from '@makeswift/runtime/next'
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from 'next'
 
@@ -28,15 +28,13 @@ export async function getStaticProps(
   ctx: GetStaticPropsContext,
 ): Promise<GetStaticPropsResult<Props>> {
   const config = getConfig()
-  const makeswiftResult = await makeswiftGetStaticProps({
-    ...ctx,
-    params: {
-      ...ctx.params,
-      path: config.makeswift.productTemplatePathname.replace(/^\//, '').split('/'),
-    },
+  const makeswift = new Makeswift(config.makeswift.siteApiKey)
+
+  const snapshot = await makeswift.getPageSnapshot(config.makeswift.productTemplatePathname, {
+    preview: ctx.preview,
   })
 
-  if (!('props' in makeswiftResult)) return makeswiftResult
+  if (snapshot == null) return { notFound: true }
 
   const slug = ctx.params?.slug
 
@@ -47,14 +45,14 @@ export async function getStaticProps(
 
   if (product == null) return { notFound: true }
 
-  return { ...makeswiftResult, props: { ...makeswiftResult.props, products, product } }
+  return { props: { snapshot, products, product }, revalidate: 1 }
 }
 
-export default function Page({ products, product, ...restOfProps }: Props) {
+export default function Page({ products, product, snapshot }: Props) {
   return (
     <ProductsContext.Provider value={products}>
       <ProductContext.Provider value={product}>
-        <MakeswiftPage {...restOfProps} />
+        <MakeswiftPage snapshot={snapshot} />
       </ProductContext.Provider>
     </ProductsContext.Provider>
   )
