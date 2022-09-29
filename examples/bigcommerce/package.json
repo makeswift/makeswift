@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.6.6",
-    "@makeswift/runtime": "^0.1.10",
-    "next": "12.1.6",
+    "@makeswift/runtime": "^0.2.2",
+    "next": "^12.3.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0"
   },
@@ -24,6 +24,6 @@
     "eslint-config-prettier": "^8.5.0",
     "postcss": "^8.4.14",
     "tailwindcss": "^3.1.7",
-    "typescript": "^4.7.2"
+    "typescript": "^4.8.4"
   }
 }
