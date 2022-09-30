@@ -46,7 +46,12 @@ function addMakeswiftApiRoute({ dir, isTypeScript }: { dir: string; isTypeScript
   createFolderIfNotExists(path.join(pagesFolder, 'api'))
   createFolderIfNotExists(path.join(pagesFolder, 'api', 'makeswift'))
 
-  const apiRoute = `import { MakeswiftApiHandler } from '@makeswift/runtime/next'
+  const apiRoute = isTypeScript
+    ? `import { MakeswiftApiHandler } from '@makeswift/runtime/next'
+
+export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY!)
+`
+    : `import { MakeswiftApiHandler } from '@makeswift/runtime/next'
 
 export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY)
 `
