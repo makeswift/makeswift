@@ -129,39 +129,48 @@ NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
 
 With a home page and product template pages created it's probably a good time to explain what's going on.
 
+This explanation is loaded with technical terms. Here is a point of reference if you are unfamiliar:
+
+- "dynamic product route"
+  - This is the Next.js page that creates product pages based on Shopify products and our Makeswift template layout
+  - It can be found here: `/pages/product/[slug].tsx`
+  - Here is [more info on dynamic routes](https://nextjs.org/docs/routing/dynamic-routes)
+- "optional catch all route"
+  - This is the Next.js page that creates pages based on pages in your Makeswift site
+  - It can be found here : `/pages/[[...path]].tsx`
+  - Here is [more info on optional catch all routes](https://nextjs.org/docs/routing/dynamic-routes#optional-catch-all-routes)
+
 ### How is Shopify product data getting to components?
 
-The `/pages/[[...path]].tsx` route uses Next.js' `getStaticProps` to get page data from Makeswift.
+The "optional catch all route" uses Next.js' `getStaticProps` to get a page snapshot from Makeswift.
 
 ```tsx
-const makeswiftResult = await makeswiftGetStaticProps(ctx)
+const makeswift = new Makeswift(config.makeswift.siteApiKey)
+const path = '/' + (ctx.params?.path ?? []).join('/')
+const snapshot = await makeswift.getPageSnapshot(path, {
+  preview: ctx.preview,
+})
 ```
 
 It also uses `getStaticProps` to get product data from Shopify.
 
 ```tsx
 const products = await getProducts()
-const product = await getProduct()
 ```
 
 Both Makeswift and Shopify data is then passed into the Page component via props.
 
 ```tsx
-return {
-  ...makeswiftResult,
-  props: { ...makeswiftResult.props, products, product },
-}
+return { props: { snapshot, products } }
 ```
 
-And exposed to components via context in `/pages/_app.tsx`.
+And we wrap the `MakeswiftPage` with a context provider for our Shopify data
 
 ```tsx
-export default function App({ Component, pageProps }: AppProps) {
+export default function Page({ products, snapshot }: Props) {
   return (
-    <ProductsContext.Provider value={pageProps.products}>
-      <ProductContext.Provider value={pageProps.product}>
-        <Component {...pageProps} />
-      </ProductContext.Provider>
+    <ProductsContext.Provider value={products}>
+      <MakeswiftPage snapshot={snapshot} />
     </ProductsContext.Provider>
   )
 }
@@ -169,7 +178,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
 ### How are product pages being generated from the template (`/__product__`) route?
 
-The `/pages/product/[slug].tsx` route uses Next.js' `getStaticPaths` api to generate page slugs from Shopify products.
+The "dynamic product route" uses Next.js' `getStaticPaths` API to generate page slugs from Shopify products.
 
 ```tsx
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
@@ -187,12 +196,9 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 The resulting pages use the same makeswift data from the template (`/__product__`) makeswift page.
 
 ```tsx
-const makeswiftResult = await makeswiftGetStaticProps({
-  ...ctx,
-  params: {
-    ...ctx.params,
-    path: config.makeswift.productTemplatePathname.replace(/^\//, '').split('/'),
-  },
+const makeswift = new Makeswift(config.makeswift.siteApiKey)
+const snapshot = await makeswift.getPageSnapshot(config.makeswift.productTemplatePathname, {
+  preview: ctx.preview,
 })
 ```
 
@@ -205,6 +211,12 @@ const slug = ctx.params?.slug
 
 const product = await getProduct(Number.parseInt(slug.toString(), 10))
 ```
+
+### Why is the "dynamic product route" using a low revalidation period when the "optional catch all route" is using on-demand revalidation?
+
+Pages are created in the "optional catch all route" based on pages in a Makeswift site. Since Makeswift is aware of what pages are published it can use [on-demand revalidation](https://nextjs.org/docs/basic-features/data-fetching/incremental-static-regeneration#using-on-demand-revalidation) with an api route in `/pages/api/makeswift/[...makeswift].ts` to rebuild pages on publish
+
+Unlike the "optional catch all route", the "dynamic product route" creates pages based on Shopify products. These routes are unknown to Makeswift and thus it doesn't revalidate them on-demand. Instead, we use a low revalidation period to update them.
 
 ---
 
