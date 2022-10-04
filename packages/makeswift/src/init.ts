@@ -21,7 +21,7 @@ async function init(
   const nextAppDir = path.join(process.cwd(), projectName)
 
   if (isNextApp(nextAppDir)) {
-    integrateNextApp({ dir: nextAppDir })
+    await integrateNextApp({ dir: nextAppDir })
   } else {
     createNextApp({
       dir: nextAppDir,

@@ -5,8 +5,40 @@ import path from 'path'
 import { manipulateNextConfig } from './utils/manipulate-next-config'
 import { yarnOrNpm } from './utils/yarn-or-npm'
 import { createFolderIfNotExists } from './utils/create-folder-if-not-exists'
+import inquirer from 'inquirer'
+import chalk from 'chalk'
 
-export function integrateNextApp({ dir }: { dir: string }): void {
+async function getApprovalToIntegrate(dir: string): Promise<boolean> {
+  const projectName = dir.split('/').reduce((prev, curr) => curr)
+  return new Promise(resolve => {
+    const questions = [
+      {
+        type: 'confirm',
+        name: 'approval',
+        default: false,
+        message: `It appears ${chalk.cyan(
+          projectName,
+        )} is an existing Next.js app — would you like to integrate it?`,
+      },
+    ]
+
+    inquirer.prompt(questions).then(answers => {
+      if (typeof answers.approval == 'boolean') {
+        resolve(answers.approval)
+      } else {
+        throw Error('Something went wrong')
+      }
+    })
+  })
+}
+
+export async function integrateNextApp({ dir }: { dir: string }): Promise<void> {
+  const approval = await getApprovalToIntegrate(dir)
+  if (!approval) {
+    console.log('Will not integrate project ${dir}.')
+    return
+  }
+
   console.log('Integrating Next.js app')
   const isTS = isTypeScript({ dir })
 
