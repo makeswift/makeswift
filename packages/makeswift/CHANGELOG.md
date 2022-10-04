@@ -1,5 +1,11 @@
 # makeswift
 
+## 0.0.6
+
+### Patch Changes
+
+- 8e45e6b: Add support for preview mode
+
 ## 0.0.5
 
 ### Patch Changes
