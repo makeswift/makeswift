@@ -11,6 +11,7 @@ import { getProjectName } from './utils/get-name'
 import isNextApp from './utils/is-next-app'
 
 const MAKESWIFT_APP_ORIGIN = process.env.MAKESWIFT_APP_ORIGIN || 'https://app.makeswift.com'
+const MAKESWIFT_API_HOST = process.env.MAKESWIFT_API_HOST
 const siteSelectionPath = 'select-site'
 
 async function init(
@@ -52,7 +53,10 @@ async function init(
 
   // In the background, we're setting up the Next app with the API key
   // and starting the app at `nextAppPort`
-  const envLocal = `MAKESWIFT_SITE_API_KEY=${siteApiKey}\n`
+  const envLocal = buildLocalEnvFile({
+    MAKESWIFT_SITE_API_KEY: siteApiKey,
+    MAKESWIFT_API_HOST,
+  })
   fs.writeFileSync(`${nextAppDir}/.env.local`, envLocal)
 
   spawn.sync('yarn', ['dev', '--port', nextAppPort.toString()], {
@@ -102,6 +106,14 @@ async function getSiteApiKey({
       })
       .listen(port)
   })
+}
+
+function buildLocalEnvFile(variables: { [key: string]: string | undefined }): string {
+  return Object.entries(variables)
+    .filter(([key, value]) => value != null)
+    .reduce((envFile, [key, value]) => {
+      return envFile + `${key}=${value}\n`
+    }, '')
 }
 
 export default init
