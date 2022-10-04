@@ -73,3 +73,7 @@ export function manipulateNextConfig(code: string): string {
 
   return changedCode
 }
+
+export function isAlreadyIntegrated(code: string): boolean {
+  return code.includes('withMakeswift')
+}
