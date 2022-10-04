@@ -7,6 +7,7 @@ import open from 'open'
 import * as path from 'path'
 import { createNextApp } from './create-next-app'
 import { integrateNextApp } from './integrate-next-app'
+import { checkForConflictingFiles } from './utils/check-for-conflicting-files'
 import { getProjectName } from './utils/get-name'
 import isNextApp from './utils/is-next-app'
 
@@ -22,6 +23,14 @@ async function init(
   const nextAppDir = path.join(process.cwd(), projectName)
 
   if (isNextApp(nextAppDir)) {
+    const conflictingFiles = checkForConflictingFiles({ dir: nextAppDir })
+
+    if (conflictingFiles.length > 0) {
+      // @todo: this needs better formatting
+      throw Error(
+        `Cannot integrate your Next.js app. We found the following conflicting files: ${conflictingFiles}`,
+      )
+    }
     await integrateNextApp({ dir: nextAppDir })
   } else {
     createNextApp({
