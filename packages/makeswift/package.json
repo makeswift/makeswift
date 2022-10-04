@@ -31,6 +31,7 @@
     "@babel/generator": "^7.18.13",
     "@babel/template": "^7.18.10",
     "@babel/traverse": "^7.18.13",
+    "chalk": "^4.1.2",
     "commander": "^9.4.0",
     "create-next-app": "^12.2.5",
     "cross-spawn": "^7.0.3",
