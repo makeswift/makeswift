@@ -12,7 +12,9 @@ function hasNextDependency(appDirectory: string): boolean {
 
     return 'next' in dependencies
   } catch (error) {
-    if (error instanceof Error) console.log(error.message)
+    if (error instanceof Error) {
+      /* do nothing */
+    }
   }
 
   return false
