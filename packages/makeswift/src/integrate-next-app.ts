@@ -2,7 +2,7 @@ import spawn from 'cross-spawn'
 import glob from 'glob'
 import * as fs from 'fs'
 import path from 'path'
-import { manipulateNextConfig } from './utils/manipulate-next-config'
+import { isAlreadyIntegrated, manipulateNextConfig } from './utils/manipulate-next-config'
 import { yarnOrNpm } from './utils/yarn-or-npm'
 import { createFolderIfNotExists } from './utils/create-folder-if-not-exists'
 import inquirer from 'inquirer'
@@ -265,8 +265,12 @@ module.exports = withMakeswift(nextConfig)
     return
   }
 
-  const code = fs.readFileSync(configFilename)
-  const outputCode = manipulateNextConfig(code.toString('utf-8'))
+  const code = fs.readFileSync(configFilename).toString('utf-8')
+  if (!isAlreadyIntegrated(code)) {
+    const outputCode = manipulateNextConfig(code)
 
-  fs.writeFileSync(configFilename, outputCode)
+    fs.writeFileSync(configFilename, outputCode)
+  } else {
+    throw Error('The next.config.js appears to already be integrated.')
+  }
 }

@@ -1,4 +1,4 @@
-import { manipulateNextConfig } from '../manipulate-next-config'
+import { isAlreadyIntegrated, manipulateNextConfig } from '../manipulate-next-config'
 
 test('exporting config object', () => {
   // Arrange
@@ -101,4 +101,22 @@ module.exports = withMakeswift(withFoo(withCSS({
   // Assert
   console.log(output)
   expect(output).toBe(expected)
+})
+
+test('already integrated, should not reintegrate', () => {
+  // Arrange
+  const alreadyIntegrated = `const withMakeswift = require("@makeswift/runtime/next/plugin")();
+
+const withFoo = require('foo');
+
+module.exports = withMakeswift(withFoo(withCSS({
+  hello: "world",
+  more: "things"
+})));`
+
+  // Act
+  const output = isAlreadyIntegrated(alreadyIntegrated)
+
+  // Assert
+  expect(output).toBe(true)
 })
