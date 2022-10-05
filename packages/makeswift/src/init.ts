@@ -17,8 +17,16 @@ const siteSelectionPath = 'select-site'
 
 async function init(
   name: string | undefined,
-  { example = 'basic-typescript' }: { example?: string },
+  {
+    example = 'basic-typescript',
+    useNpm,
+    usePnpm,
+  }: { example?: string; useNpm: boolean; usePnpm: boolean },
 ): Promise<void> {
+  if (useNpm && usePnpm) {
+    throw Error('Cannot use both --use-npm and --use-pnpm args. Choose 1 package manager.')
+  }
+
   const projectName = name || (await getProjectName())
   const nextAppDir = path.join(process.cwd(), projectName)
 
@@ -36,6 +44,8 @@ async function init(
     createNextApp({
       dir: nextAppDir,
       example,
+      useNpm,
+      usePnpm,
     })
   }
 
