@@ -1,10 +1,28 @@
 import spawn from 'cross-spawn'
 import { coerceExampleToUrl } from './utils/coerce-example-to-URL'
 
-export function createNextApp({ dir, example }: { dir: string; example: string }): void {
+export function createNextApp({
+  dir,
+  example,
+  useNpm,
+  usePnpm,
+}: {
+  dir: string
+  example: string
+  useNpm: boolean
+  usePnpm: boolean
+}): void {
   const url = coerceExampleToUrl(example)
+  const npxArgs = ['--yes', 'create-next-app', '--example', url, dir]
 
-  const output = spawn.sync('npx', ['--yes', 'create-next-app', '--example', url, dir], {
+  if (useNpm) {
+    npxArgs.push('--use-npm')
+  }
+  if (usePnpm) {
+    npxArgs.push('--use-pnpm')
+  }
+
+  const output = spawn.sync('npx', npxArgs, {
     stdio: 'inherit',
   })
 
