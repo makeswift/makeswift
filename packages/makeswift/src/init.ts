@@ -12,7 +12,7 @@ import { getProjectName } from './utils/get-name'
 import isNextApp from './utils/is-next-app'
 
 const MAKESWIFT_APP_ORIGIN = process.env.MAKESWIFT_APP_ORIGIN || 'https://app.makeswift.com'
-const MAKESWIFT_API_HOST = process.env.MAKESWIFT_API_HOST
+const MAKESWIFT_API_ORIGIN = process.env.MAKESWIFT_API_ORIGIN
 const siteSelectionPath = 'select-site'
 
 async function init(
@@ -64,7 +64,7 @@ async function init(
   // and starting the app at `nextAppPort`
   const envLocal = buildLocalEnvFile({
     MAKESWIFT_SITE_API_KEY: siteApiKey,
-    MAKESWIFT_API_HOST,
+    MAKESWIFT_API_ORIGIN,
   })
   fs.writeFileSync(`${nextAppDir}/.env.local`, envLocal)
 
