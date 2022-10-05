@@ -6,15 +6,12 @@ function isNextApp(appDirectory: string): boolean {
 }
 
 function hasNextDependency(appDirectory: string): boolean {
-  try {
+  const filePath = path.join(appDirectory, 'package.json')
+  if (fs.existsSync(filePath)) {
     const packageJson = require(path.join(appDirectory, 'package.json'))
     const { dependencies } = packageJson
 
     return 'next' in dependencies
-  } catch (error) {
-    if (error instanceof Error) {
-      /* do nothing */
-    }
   }
 
   return false
