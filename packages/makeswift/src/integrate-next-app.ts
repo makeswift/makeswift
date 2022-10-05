@@ -9,7 +9,7 @@ import inquirer from 'inquirer'
 import chalk from 'chalk'
 
 async function getApprovalToIntegrate(dir: string): Promise<boolean> {
-  const projectName = dir.split('/').reduce((prev, curr) => curr)
+  const projectName = dir.split('/').at(-1)
   return new Promise(resolve => {
     const questions = [
       {
