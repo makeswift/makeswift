@@ -31,7 +31,6 @@ async function askForProjectName(): Promise<string> {
 }
 
 async function askToUseCurrentDirectory(dir: string): Promise<boolean> {
-  const projectName = dir.split('/').at(-1)
   return new Promise(resolve => {
     const questions = [
       {
