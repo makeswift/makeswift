@@ -27,8 +27,7 @@ async function init(
     throw Error('Cannot use both --use-npm and --use-pnpm args. Choose 1 package manager.')
   }
 
-  const projectName = name || (await getProjectName())
-  const nextAppDir = path.join(process.cwd(), projectName)
+  const { directory: nextAppDir, name: projectName } = await getProjectName(name)
 
   if (isNextApp(nextAppDir)) {
     const conflictingFiles = checkForConflictingFiles({ dir: nextAppDir })
