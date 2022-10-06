@@ -1,4 +1,5 @@
 import spawn from 'cross-spawn'
+import MakeswiftError from './errors/MakeswiftError'
 import { coerceExampleToUrl } from './utils/coerce-example-to-URL'
 
 export function createNextApp({
@@ -27,6 +28,6 @@ export function createNextApp({
   })
 
   if (output.status === 1) {
-    throw Error('Unable to create a Next.js app. There should be output above.')
+    throw new MakeswiftError('Unable to create a Next.js app. There should be output above.')
   }
 }

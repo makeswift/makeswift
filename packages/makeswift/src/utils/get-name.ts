@@ -2,6 +2,7 @@ import chalk from 'chalk'
 import * as fs from 'fs'
 import inquirer from 'inquirer'
 import path from 'path'
+import MakeswiftError from '../errors/MakeswiftError'
 import isNextApp from './is-next-app'
 
 async function validateProjectName(input: string) {
@@ -47,7 +48,7 @@ async function askToUseCurrentDirectory(dir: string): Promise<boolean> {
       if (typeof answers.approval == 'boolean') {
         resolve(answers.approval)
       } else {
-        throw Error('Something went wrong')
+        throw new MakeswiftError('Something went wrong')
       }
     })
   })
@@ -69,11 +70,7 @@ async function askApprovalToIntegrateIfNeeded(dir: string): Promise<void> {
       ]
 
       inquirer.prompt(questions).then(answers => {
-        if (typeof answers.approval == 'boolean') {
-          resolve(answers.approval)
-        } else {
-          throw Error('Something went wrong')
-        }
+        resolve(answers.approval)
       })
     })
   }
@@ -82,7 +79,7 @@ async function askApprovalToIntegrateIfNeeded(dir: string): Promise<void> {
     const approval = await askApproval()
 
     if (!approval) {
-      throw Error('Will not integrate Next app.')
+      throw new MakeswiftError('Will not integrate Next app.')
     }
   }
 }
