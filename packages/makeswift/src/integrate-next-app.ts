@@ -242,6 +242,12 @@ module.exports = withMakeswift(nextConfig)
 
     fs.writeFileSync(configFilename, outputCode)
   } else {
-    throw new MakeswiftError('The next.config.js appears to already be integrated.')
+    throw new MakeswiftError(
+      `The ${chalk.cyan(
+        'next.config.js',
+      )} appears to already be integrated. Did you mean to do this? The CLI needs a normal, unintegrated ${chalk.cyan(
+        'next.config.js',
+      )} in order to work.`,
+    )
   }
 }
