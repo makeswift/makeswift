@@ -4,21 +4,6 @@ import inquirer from 'inquirer'
 import path from 'path'
 import isNextApp from './is-next-app'
 
-const DEFAULT_PROJECT_NAME = 'my-app'
-function getDefaultName() {
-  let name = DEFAULT_PROJECT_NAME
-  let folderPath = path.join(process.cwd(), DEFAULT_PROJECT_NAME)
-
-  let i = 1
-  while (fs.existsSync(folderPath)) {
-    name = `${DEFAULT_PROJECT_NAME}-${i}`
-    folderPath = path.join(process.cwd(), name)
-    i += 1
-  }
-
-  return name
-}
-
 async function validateProjectName(input: string) {
   if (/\.+($|\/)/.test(input)) {
     return 'Relative pathnames not allowed.'
@@ -27,7 +12,7 @@ async function validateProjectName(input: string) {
   return true
 }
 
-async function askForProjectName(): Promise<string | undefined> {
+async function askForProjectName(): Promise<string> {
   return new Promise(resolve => {
     const questions = [
       {
@@ -35,6 +20,7 @@ async function askForProjectName(): Promise<string | undefined> {
         name: 'projectName',
         message: 'What would you like to name your project?',
         validate: validateProjectName,
+        default: 'my-app',
       },
     ]
 
@@ -127,11 +113,6 @@ export async function getProjectName(
 
   // 3. Prompt the user for the project name
   const projectName = await askForProjectName()
-
-  if (projectName == null || projectName.length === 0) {
-    const name = getDefaultName()
-    return { name, directory: path.join(currentDir, name) }
-  }
 
   const nextAppDir = path.join(process.cwd(), projectName)
   await askApprovalToIntegrateIfNeeded(nextAppDir)
