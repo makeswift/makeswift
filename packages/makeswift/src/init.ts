@@ -6,6 +6,7 @@ import inquirer from 'inquirer'
 import open from 'open'
 import * as path from 'path'
 import { createNextApp } from './create-next-app'
+import MakeswiftError from './errors/MakeswiftError'
 import { integrateNextApp } from './integrate-next-app'
 import { checkForConflictingFiles } from './utils/check-for-conflicting-files'
 import { getProjectName } from './utils/get-name'
@@ -15,16 +16,29 @@ const MAKESWIFT_APP_ORIGIN = process.env.MAKESWIFT_APP_ORIGIN || 'https://app.ma
 const MAKESWIFT_API_ORIGIN = process.env.MAKESWIFT_API_ORIGIN
 const siteSelectionPath = 'select-site'
 
+type InitArgs = { example?: string; useNpm: boolean; usePnpm: boolean }
+
+export default async function wrappedInit(name: string | undefined, args: InitArgs) {
+  try {
+    await init(name, args)
+  } catch (err) {
+    if (err instanceof MakeswiftError) {
+      console.log(err.message)
+      process.exit(0)
+    } else {
+      throw err
+    }
+  }
+}
+
 async function init(
   name: string | undefined,
-  {
-    example = 'basic-typescript',
-    useNpm,
-    usePnpm,
-  }: { example?: string; useNpm: boolean; usePnpm: boolean },
+  { example = 'basic-typescript', useNpm, usePnpm }: InitArgs,
 ): Promise<void> {
   if (useNpm && usePnpm) {
-    throw Error('Cannot use both --use-npm and --use-pnpm args. Choose 1 package manager.')
+    throw new MakeswiftError(
+      'Cannot use both --use-npm and --use-pnpm args. Choose 1 package manager.',
+    )
   }
 
   const { directory: nextAppDir, name: projectName } = await getProjectName(name)
@@ -33,9 +47,12 @@ async function init(
     const conflictingFiles = checkForConflictingFiles({ dir: nextAppDir })
 
     if (conflictingFiles.length > 0) {
-      // @todo: this needs better formatting
-      throw Error(
-        `Cannot integrate your Next.js app. We found the following conflicting files: ${conflictingFiles}`,
+      throw new MakeswiftError(
+        `Cannot integrate your Next.js app. We found the following conflicting files:\n${JSON.stringify(
+          conflictingFiles,
+          null,
+          '\n',
+        )}\n`,
       )
     }
     await integrateNextApp({ dir: nextAppDir })
@@ -133,5 +150,3 @@ function buildLocalEnvFile(variables: { [key: string]: string | undefined }): st
       return envFile + `${key}=${value}\n`
     }, '')
 }
-
-export default init

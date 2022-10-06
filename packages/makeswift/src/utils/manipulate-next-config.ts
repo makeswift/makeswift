@@ -2,6 +2,7 @@ import * as babel from '@babel/core'
 import * as t from '@babel/types'
 import template from '@babel/template'
 import { NodePath } from '@babel/core'
+import MakeswiftError from '../errors/MakeswiftError'
 
 export function manipulateNextConfig(code: string): string {
   function makeswiftNextConfigPlugin() {
@@ -66,7 +67,7 @@ export function manipulateNextConfig(code: string): string {
   const changedCode = output!.code
 
   if (changedCode == null || !changedCode.includes('withMakeswift')) {
-    throw Error(
+    throw new MakeswiftError(
       'Cannot automatically edit your next.config.js.\n\nSee this link on how to do so: https://www.makeswift.com/docs/guides/manual-setup#adding-the-makeswift-nextjs-plugin',
     )
   }

@@ -7,6 +7,7 @@ import { yarnOrNpm } from './utils/yarn-or-npm'
 import { createFolderIfNotExists } from './utils/create-folder-if-not-exists'
 import inquirer from 'inquirer'
 import chalk from 'chalk'
+import MakeswiftError from './errors/MakeswiftError'
 
 export async function integrateNextApp({ dir }: { dir: string }): Promise<void> {
   console.log('Integrating Next.js app')
@@ -155,7 +156,7 @@ export default function Page({ snapshot }: Props) {
   if (glob.sync(path.join(pagesFolder, `\\[*\\].${extension}*`)).length === 0) {
     fs.writeFileSync(path.join(pagesFolder, catchAllRouteFilename), catchAllRoute)
   } else {
-    throw new Error(
+    throw new MakeswiftError(
       'A catch all route already exists, you will have to manually integrate: https://www.makeswift.com/docs/guides/advanced-setup#custom-live-route',
     )
   }
@@ -165,7 +166,7 @@ export default function Page({ snapshot }: Props) {
     fs.existsSync(path.join(pagesFolder, `_document.${extension}`)) ||
     fs.existsSync(path.join(pagesFolder, `_document.${extension}x`))
   ) {
-    throw new Error(
+    throw new MakeswiftError(
       'A custom document already exists, you will have to manually integrate: https://www.makeswift.com/docs/guides/manual-setup#set-up-custom-document',
     )
   }
@@ -182,7 +183,7 @@ function getPagesFolder({ dir }: { dir: string }): string {
     return path.join(dir, '/src/pages')
   }
 
-  throw Error('Cannot find pages directory in Next.js app.')
+  throw new MakeswiftError('Cannot find pages directory in Next.js app.')
 }
 
 function isTypeScript({ dir }: { dir: string }): boolean {
@@ -191,13 +192,13 @@ function isTypeScript({ dir }: { dir: string }): boolean {
   }
 
   function hasTSDependency(dir: string): boolean {
-    try {
-      const packageJson = require(path.join(dir, 'package.json'))
+    const packageJsonFile = path.join(dir, 'package.json')
+
+    if (fs.existsSync(packageJsonFile)) {
+      const packageJson = require(packageJsonFile)
       const { dependencies, devDependencies } = packageJson
 
       return 'typescript' in dependencies || 'typescript' in devDependencies
-    } catch (error) {
-      if (error instanceof Error) console.log(error.message)
     }
 
     return false
@@ -213,7 +214,7 @@ function isTypeScript({ dir }: { dir: string }): boolean {
 function addMakeswiftNextjsPlugin({ dir }: { dir: string }) {
   // @todo: support ES modules
   if (fs.existsSync(path.join(dir, 'next.config.mjs'))) {
-    throw new Error(
+    throw new MakeswiftError(
       "We currently don't support automatic integration an ES modules Next.js config.",
     )
   }
@@ -241,6 +242,6 @@ module.exports = withMakeswift(nextConfig)
 
     fs.writeFileSync(configFilename, outputCode)
   } else {
-    throw Error('The next.config.js appears to already be integrated.')
+    throw new MakeswiftError('The next.config.js appears to already be integrated.')
   }
 }
