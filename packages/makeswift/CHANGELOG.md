@@ -1,5 +1,19 @@
 # makeswift
 
+## 0.0.7
+
+### Patch Changes
+
+- 19ae5ea: Use a better workflow for deciding on the project name
+- 764e971: Support --use-npm & --use-pnpm parameters
+- 3823c46: - Less noisy log output
+  - Ask approval before integrating and existing Next step
+  - Support `MAKESWIFT_API_HOST` env var
+  - Check for conflicting files before integrating
+  - Don't integrate if the next config already integrated
+  - Upgrade create-next-app
+- 9e613bc: Cleaner error messaging
+
 ## 0.0.6
 
 ### Patch Changes
