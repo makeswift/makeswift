@@ -44,17 +44,8 @@ async function init(
   const { directory: nextAppDir, name: projectName } = await getProjectName(name)
 
   if (isNextApp(nextAppDir)) {
-    const conflictingFiles = checkForConflictingFiles({ dir: nextAppDir })
+    checkForConflictingFiles({ dir: nextAppDir })
 
-    if (conflictingFiles.length > 0) {
-      throw new MakeswiftError(
-        `Cannot integrate your Next.js app. We found the following conflicting files:\n${JSON.stringify(
-          conflictingFiles,
-          null,
-          '\n',
-        )}\n`,
-      )
-    }
     await integrateNextApp({ dir: nextAppDir })
   } else {
     createNextApp({
