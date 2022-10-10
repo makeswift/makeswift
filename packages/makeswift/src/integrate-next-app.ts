@@ -1,6 +1,8 @@
+import * as os from 'os'
 import spawn from 'cross-spawn'
 import glob from 'glob'
 import * as fs from 'fs'
+import * as fse from 'fs-extra'
 import path from 'path'
 import { isAlreadyIntegrated, manipulateNextConfig } from './utils/manipulate-next-config'
 import { yarnOrNpm } from './utils/yarn-or-npm'
@@ -9,21 +11,45 @@ import inquirer from 'inquirer'
 import chalk from 'chalk'
 import MakeswiftError from './errors/MakeswiftError'
 
+function generateTemporaryApp({ dir }: { dir: string }) {
+  const temporaryDirectory = fs.mkdtempSync(os.tmpdir())
+
+  fse.copySync(path.join(dir, 'pages'), path.join(temporaryDirectory, 'pages'))
+
+  const nextConfig = path.join(dir, 'next.config.js')
+  if (fs.existsSync(nextConfig)) {
+    fs.copyFileSync(nextConfig, path.join(temporaryDirectory, 'next.config.js'))
+  }
+
+  return temporaryDirectory
+}
+
+function overwriteIntegratedFiles({ dir, temporaryDir }: { dir: string; temporaryDir: string }) {
+  fse.copySync(path.join(temporaryDir, 'pages'), path.join(dir, 'pages'), { overwrite: true })
+  fs.copyFileSync(path.join(temporaryDir, 'next.config.js'), path.join(dir, 'next.config.js'))
+}
+
 export async function integrateNextApp({ dir }: { dir: string }): Promise<void> {
   console.log('Integrating Next.js app')
   const isTS = isTypeScript({ dir })
 
-  // Step 1 - install the runtime
+  // Integrate pages in a temporary directory
+  const temporaryDirectory = generateTemporaryApp({ dir })
+
+  // Step 1 - add Makeswift API route
+  addMakeswiftApiRoute({ dir: temporaryDirectory, isTypeScript: isTS })
+
+  // Step 2 - add Makeswift pages
+  addMakeswiftPages({ dir: temporaryDirectory, isTypeScript: isTS })
+
+  // Step 3 - adding the Makeswift Next.js plugin
+  addMakeswiftNextjsPlugin({ dir: temporaryDirectory })
+
+  // Overwrite pages and next.config.js with output from temporary directory
+  overwriteIntegratedFiles({ dir, temporaryDir: temporaryDirectory })
+
+  // Step 4 - install the runtime
   installMakeswiftRuntime({ dir })
-
-  // Step 2 - add Makeswift API route
-  addMakeswiftApiRoute({ dir, isTypeScript: isTS })
-
-  // Step 3 - add Makeswift pages
-  addMakeswiftPages({ dir, isTypeScript: isTS })
-
-  // Step 4 - adding the Makeswift Next.js plugin
-  addMakeswiftNextjsPlugin({ dir })
 }
 
 function installMakeswiftRuntime({ dir }: { dir: string }): void {
