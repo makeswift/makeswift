@@ -14,19 +14,45 @@ import MakeswiftError from './errors/MakeswiftError'
 function generateTemporaryApp({ dir }: { dir: string }) {
   const temporaryDirectory = fs.mkdtempSync(os.tmpdir())
 
-  fse.copySync(path.join(dir, 'pages'), path.join(temporaryDirectory, 'pages'))
-
-  const nextConfig = path.join(dir, 'next.config.js')
-  if (fs.existsSync(nextConfig)) {
-    fs.copyFileSync(nextConfig, path.join(temporaryDirectory, 'next.config.js'))
-  }
+  createFolderIfNotExists(path.join(temporaryDirectory, 'pages'))
 
   return temporaryDirectory
 }
 
 function overwriteIntegratedFiles({ dir, temporaryDir }: { dir: string; temporaryDir: string }) {
-  fse.copySync(path.join(temporaryDir, 'pages'), path.join(dir, 'pages'), { overwrite: true })
-  fs.copyFileSync(path.join(temporaryDir, 'next.config.js'), path.join(dir, 'next.config.js'))
+  const makeswiftFiles = readAllFilesInDir(temporaryDir)
+
+  for (const file of makeswiftFiles) {
+    const relativePath = file.split(`${temporaryDir}/`)[1]
+    const filePath = path.join(dir, relativePath)
+    const filePathObject = path.parse(filePath)
+    fs.mkdirSync(filePathObject.dir, { recursive: true })
+
+    fs.copyFileSync(file, filePath)
+  }
+}
+
+function readAllFilesInDir(dir: string) {
+  function recursivelyReadFolder(dir: string, files: string[]) {
+    const filesInDir = fs.readdirSync(dir)
+
+    for (const file of filesInDir) {
+      const fullFilepath = path.join(dir, file)
+      if (fs.lstatSync(fullFilepath).isDirectory()) {
+        recursivelyReadFolder(fullFilepath, files)
+        continue
+      }
+
+      files.push(fullFilepath)
+    }
+
+    return files
+  }
+
+  const files: string[] = []
+  recursivelyReadFolder(dir, files)
+
+  return files
 }
 
 export async function integrateNextApp({ dir }: { dir: string }): Promise<void> {
@@ -37,19 +63,19 @@ export async function integrateNextApp({ dir }: { dir: string }): Promise<void> 
   const temporaryDirectory = generateTemporaryApp({ dir })
 
   // Step 1 - add Makeswift API route
-  addMakeswiftApiRoute({ dir: temporaryDirectory, isTypeScript: isTS })
+  addMakeswiftApiRoute({ dir, temporaryDir: temporaryDirectory, isTypeScript: isTS })
 
   // Step 2 - add Makeswift pages
-  addMakeswiftPages({ dir: temporaryDirectory, isTypeScript: isTS })
+  addMakeswiftPages({ dir, temporaryDir: temporaryDirectory, isTypeScript: isTS })
 
   // Step 3 - adding the Makeswift Next.js plugin
-  addMakeswiftNextjsPlugin({ dir: temporaryDirectory })
-
-  // Overwrite pages and next.config.js with output from temporary directory
-  overwriteIntegratedFiles({ dir, temporaryDir: temporaryDirectory })
+  addMakeswiftNextjsPlugin({ dir, temporaryDir: temporaryDirectory })
 
   // Step 4 - install the runtime
   installMakeswiftRuntime({ dir })
+
+  // Overwrite pages and next.config.js with output from temporary directory
+  overwriteIntegratedFiles({ dir, temporaryDir: temporaryDirectory })
 }
 
 function installMakeswiftRuntime({ dir }: { dir: string }): void {
@@ -67,13 +93,21 @@ function installMakeswiftRuntime({ dir }: { dir: string }): void {
   }
 }
 
-function addMakeswiftApiRoute({ dir, isTypeScript }: { dir: string; isTypeScript: boolean }): void {
-  const pagesFolder = getPagesFolder({ dir })
+function addMakeswiftApiRoute({
+  dir,
+  temporaryDir,
+  isTypeScript,
+}: {
+  dir: string
+  temporaryDir: string
+  isTypeScript: boolean
+}): void {
+  const temporaryPagesFolder = path.join(temporaryDir, 'pages')
   const extension = isTypeScript ? 'ts' : 'js'
 
   // If Makeswift API folder does not exist, create
-  createFolderIfNotExists(path.join(pagesFolder, 'api'))
-  createFolderIfNotExists(path.join(pagesFolder, 'api', 'makeswift'))
+  createFolderIfNotExists(path.join(temporaryPagesFolder, 'api'))
+  createFolderIfNotExists(path.join(temporaryPagesFolder, 'api', 'makeswift'))
 
   const apiRoute = isTypeScript
     ? `import { MakeswiftApiHandler } from '@makeswift/runtime/next'
@@ -85,13 +119,22 @@ export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY!)
 export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY)
 `
   fs.writeFileSync(
-    path.join(pagesFolder, 'api', 'makeswift', `[...makeswift].${extension}`),
+    path.join(temporaryPagesFolder, 'api', 'makeswift', `[...makeswift].${extension}`),
     apiRoute,
   )
 }
 
-function addMakeswiftPages({ dir, isTypeScript }: { dir: string; isTypeScript: boolean }): void {
+function addMakeswiftPages({
+  dir,
+  temporaryDir,
+  isTypeScript,
+}: {
+  dir: string
+  temporaryDir: string
+  isTypeScript: boolean
+}): void {
   const pagesFolder = getPagesFolder({ dir })
+  const temporaryPagesFolder = path.join(temporaryDir, 'pages')
 
   function generateCatchAllRoute(isTypeScript: boolean) {
     switch (isTypeScript) {
@@ -180,7 +223,7 @@ export default function Page({ snapshot }: Props) {
 
   // catch-all-route does not exist
   if (glob.sync(path.join(pagesFolder, `\\[*\\].${extension}*`)).length === 0) {
-    fs.writeFileSync(path.join(pagesFolder, catchAllRouteFilename), catchAllRoute)
+    fs.writeFileSync(path.join(temporaryPagesFolder, catchAllRouteFilename), catchAllRoute)
   } else {
     throw new MakeswiftError(
       'A catch all route already exists, you will have to manually integrate: https://www.makeswift.com/docs/guides/advanced-setup#custom-live-route',
@@ -197,7 +240,7 @@ export default function Page({ snapshot }: Props) {
     )
   }
   const customDocument = `export { Document as default } from '@makeswift/runtime/next'`
-  fs.writeFileSync(path.join(pagesFolder, `_document.${extension}`), customDocument)
+  fs.writeFileSync(path.join(temporaryPagesFolder, `_document.${extension}`), customDocument)
 }
 
 function getPagesFolder({ dir }: { dir: string }): string {
@@ -237,7 +280,7 @@ function isTypeScript({ dir }: { dir: string }): boolean {
   return false
 }
 
-function addMakeswiftNextjsPlugin({ dir }: { dir: string }) {
+function addMakeswiftNextjsPlugin({ dir, temporaryDir }: { dir: string; temporaryDir: string }) {
   // @todo: support ES modules
   if (fs.existsSync(path.join(dir, 'next.config.mjs'))) {
     throw new MakeswiftError(
@@ -246,6 +289,7 @@ function addMakeswiftNextjsPlugin({ dir }: { dir: string }) {
   }
 
   const configFilename = path.join(dir, 'next.config.js')
+  const writeLocation = path.join(temporaryDir, 'next.config.js')
   const alreadyExists = fs.existsSync(configFilename)
 
   if (!alreadyExists) {
@@ -257,7 +301,7 @@ const nextConfig = {}
 
 module.exports = withMakeswift(nextConfig)
     `
-    fs.writeFileSync(configFilename, nextConfig)
+    fs.writeFileSync(writeLocation, nextConfig)
 
     return
   }
@@ -266,7 +310,7 @@ module.exports = withMakeswift(nextConfig)
   if (!isAlreadyIntegrated(code)) {
     const outputCode = manipulateNextConfig(code)
 
-    fs.writeFileSync(configFilename, outputCode)
+    fs.writeFileSync(writeLocation, outputCode)
   } else {
     throw new MakeswiftError(
       `The ${chalk.cyan(
