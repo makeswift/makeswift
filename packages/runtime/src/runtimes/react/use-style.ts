@@ -5,7 +5,6 @@ import { registerStyles, insertStyles } from '@emotion/utils'
 
 const isServer = typeof window === 'undefined'
 const useInsertionEffectSpecifier = 'useInsertionEffect'
-// @ts-expect-error: React types are outdated.
 const useInsertionEffect = React[useInsertionEffectSpecifier] ?? React.useLayoutEffect
 
 export function useStyle(style: CSSObject): string {

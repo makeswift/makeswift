@@ -88,7 +88,7 @@ export default function Parallax({ strength, children, ...rest }: Props): JSX.El
   }, [strength])
 
   const getProps = useCallback(
-    ({ style, ...restOfChildrenProps }) => ({
+    ({ style, ...restOfChildrenProps }: any) => ({
       ...restOfChildrenProps,
       style: {
         ...style,
