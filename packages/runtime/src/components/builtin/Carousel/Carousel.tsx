@@ -337,7 +337,7 @@ const Carousel = forwardRef(function Carousel(
   const isFirstPage = pageIndex === 0
   const isLastPage = pageIndex === pageCount - 1
   const paginate = useCallback(
-    pageDistance => {
+    (pageDistance: number) => {
       if (pageDistance === 0) return
 
       const direction = pageDistance / Math.abs(pageDistance)
