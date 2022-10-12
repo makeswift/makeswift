@@ -9,10 +9,21 @@ type MakeswiftApiHandlerConfig = {
   appOrigin?: string
 }
 
+export type MakeswiftApiHandlerErrorResponse = { message: string }
+export type MakeswiftApiHandlerRevalidateErrorResponse = string
+export type MakeswiftApiHandlerRevalidateResponse = { revalidated: boolean }
+export type MakeswiftApiHandlerManifestResponse = { version: string; previewMode: boolean }
+
+export type MakeswiftApiHandlerResponse =
+  | MakeswiftApiHandlerErrorResponse
+  | MakeswiftApiHandlerRevalidateErrorResponse
+  | MakeswiftApiHandlerRevalidateResponse
+  | MakeswiftApiHandlerManifestResponse
+
 export function MakeswiftApiHandler(
   apiKey: string,
   { appOrigin = 'https://app.makeswift.com' }: MakeswiftApiHandlerConfig = {},
-): NextApiHandler {
+): NextApiHandler<MakeswiftApiHandlerResponse> {
   const cors = Cors({ origin: appOrigin })
   const previewModeProxy = createProxyServer()
 
