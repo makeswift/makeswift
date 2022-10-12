@@ -72,7 +72,7 @@ export async function integrateNextApp({ dir }: { dir: string }): Promise<void> 
   addMakeswiftApiRoute({ isTypeScript: isTS, pagesFolder })
 
   // Step 2 - add Makeswift pages
-  addMakeswiftPages({ isTypeScript: isTS, pagesFolder })
+  addMakeswiftPages({ temporaryDir, isTypeScript: isTS, pagesFolder })
 
   // Step 3 - adding the Makeswift Next.js plugin
   addMakeswiftNextjsPlugin({ dir, temporaryDir })
@@ -126,16 +126,20 @@ export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY)
 }
 
 function addMakeswiftPages({
+  temporaryDir,
   isTypeScript,
   pagesFolder,
 }: {
+  temporaryDir: string
   isTypeScript: boolean
   pagesFolder: PagesFolder
 }): void {
   function generateCatchAllRoute(isTypeScript: boolean) {
     switch (isTypeScript) {
       case false:
-        return `import { Makeswift, Page as MakeswiftPage } from '@makeswift/runtime/next'
+        return `import '../lib/makeswift/register-components'
+
+import { Makeswift, Page as MakeswiftPage } from '@makeswift/runtime/next'
 
 export async function getStaticPaths() {
   const makeswift = new Makeswift(process.env.MAKESWIFT_SITE_API_KEY)
@@ -167,7 +171,9 @@ export default function Page({ snapshot }) {
   return <MakeswiftPage snapshot={snapshot} />
 }`
       case true:
-        return `import { Makeswift } from '@makeswift/runtime/next'
+        return `import '../lib/makeswift/register-components'
+
+import { Makeswift } from '@makeswift/runtime/next'
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from 'next'
 
 import { Page as MakeswiftPage, PageProps as MakeswiftPageProps } from '@makeswift/runtime/next'
@@ -247,6 +253,56 @@ export default function Page({ snapshot }: Props) {
   }
   const customDocument = `export { Document as default } from '@makeswift/runtime/next'`
   fs.writeFileSync(path.join(pagesFolder.temporary, `_document.${extension}`), customDocument)
+
+  // register components file
+  fs.mkdirSync(path.join(temporaryDir, 'lib', 'makeswift'), { recursive: true })
+  const registerComponentsFile = `import { Style } from '@makeswift/runtime/controls'
+import { ReactRuntime } from '@makeswift/runtime/react'
+import HelloWorld from '../../components/hello-world'
+
+// Register your components here!
+
+ReactRuntime.registerComponent(HelloWorld, {
+  type: 'hello-world',
+  label: 'Hello, world!',
+  props: {
+    className: Style({ properties: Style.All }),
+  },
+})
+`
+  fs.writeFileSync(
+    path.join(
+      temporaryDir,
+      'lib',
+      'makeswift',
+      `register-components.${isTypeScript ? 'ts' : 'js'}x`,
+    ),
+    registerComponentsFile,
+  )
+
+  // hello world component
+  fs.mkdirSync(path.join(temporaryDir, 'components'))
+  if (isTypeScript) {
+    fs.writeFileSync(
+      path.join(temporaryDir, 'components', 'hello-world.tsx'),
+      `import React from 'react'
+
+export default function HelloWorld(props: { className?: string }) {
+  return <p {...props}>Hello, world!</p>
+}
+`,
+    )
+  } else {
+    fs.writeFileSync(
+      path.join(temporaryDir, 'components', 'hello-world.jsx'),
+      `import React from 'react'
+
+      export default function HelloWorld(props) {
+  return <p {...props}>Hello, world!</p>
+}
+`,
+    )
+  }
 }
 
 function getPagesFolder({ dir, temporaryDir }: { dir: string; temporaryDir: string }): PagesFolder {
