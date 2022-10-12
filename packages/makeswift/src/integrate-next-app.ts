@@ -214,15 +214,25 @@ export default function Page({ snapshot }: Props) {
   const catchAllRoute = generateCatchAllRoute(isTypeScript)
   const extension = isTypeScript ? 'ts' : 'js'
 
-  // @todo: need to detect if a catch all route already exists
-  const catchAllRouteFilename =
-    fs.existsSync(path.join(pagesFolder, `index.${extension}`)) ||
-    fs.existsSync(path.join(pagesFolder, `index.${extension}x`))
-      ? `[...path].${extension}x`
-      : `[[...path]].${extension}x`
-
   // catch-all-route does not exist
   if (glob.sync(path.join(pagesFolder, `\\[*\\].${extension}*`)).length === 0) {
+    const useOptionalCatchAllRoute =
+      !fs.existsSync(path.join(pagesFolder, `index.${extension}`)) &&
+      !fs.existsSync(path.join(pagesFolder, `index.${extension}x`))
+
+    let catchAllRouteFilename
+    if (useOptionalCatchAllRoute) {
+      catchAllRouteFilename = `[[...path]].${extension}x`
+    } else {
+      catchAllRouteFilename = `[...path].${extension}x`
+
+      console.log(
+        `\nWe noticed you have an index page, therefore we have created a ${chalk.yellow(
+          'normal catch-all route',
+        )} in Next.js. This will not match the index route \`/\`.\n`,
+      )
+    }
+
     fs.writeFileSync(path.join(temporaryPagesFolder, catchAllRouteFilename), catchAllRoute)
   } else {
     throw new MakeswiftError(
