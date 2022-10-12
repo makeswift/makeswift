@@ -7,7 +7,6 @@ import path from 'path'
 import { isAlreadyIntegrated, manipulateNextConfig } from './utils/manipulate-next-config'
 import { yarnOrNpm } from './utils/yarn-or-npm'
 import { createFolderIfNotExists } from './utils/create-folder-if-not-exists'
-import inquirer from 'inquirer'
 import chalk from 'chalk'
 import MakeswiftError from './errors/MakeswiftError'
 
