@@ -6,6 +6,12 @@ import MakeswiftError from '../errors/MakeswiftError'
 import isNextApp from './is-next-app'
 
 async function validateProjectName(input: string) {
+  // taken from https://github.com/dword-design/package-name-regex/blob/master/src/index.js
+  const packageNameRegex = /^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/
+  if (!packageNameRegex.test(input)) {
+    return 'Project name must be a valid NPM package name.'
+  }
+
   if (/\.+($|\/)/.test(input)) {
     return 'Relative pathnames not allowed.'
   }
