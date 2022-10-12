@@ -37,7 +37,7 @@ async function askToUseCurrentDirectory(dir: string): Promise<boolean> {
       {
         type: 'confirm',
         name: 'approval',
-        default: false,
+        default: true,
         message: `It appears this directory is an existing ${chalk.green(
           'Next.js',
         )} app — would you like to use it?`,
@@ -62,7 +62,7 @@ async function askApprovalToIntegrateIfNeeded(dir: string): Promise<void> {
         {
           type: 'confirm',
           name: 'approval',
-          default: false,
+          default: true,
           message: `It appears ${chalk.cyan(
             projectName,
           )} is an existing Next.js app — would you like to integrate it?`,
