@@ -12,7 +12,7 @@ program
   .version(pkg.version)
 
 program
-  .command('init')
+  .command('init', { isDefault: true })
   .description('Create a new Next.js app or integrate an existing one, to use with Makeswift.')
   .argument('[name]', 'The name of the folder to create.')
   .option('--example <example>', 'The Github URL, or name of the Makeswift example to clone.')
