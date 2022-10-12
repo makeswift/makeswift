@@ -1,3 +1,4 @@
+import chalk from 'chalk'
 import spawn from 'cross-spawn'
 import detect from 'detect-port'
 import * as fs from 'fs'
@@ -64,7 +65,14 @@ async function init(
   const selectSiteUrl = new URL(`${MAKESWIFT_APP_ORIGIN}/cli/select-site`)
   selectSiteUrl.searchParams.set('project_name', projectName)
   selectSiteUrl.searchParams.set('callback_url', callbackUrl)
-  await open(selectSiteUrl.toString())
+
+  const selectSiteUrlString = selectSiteUrl.toString()
+  console.log(
+    `\nRedirecting you to ${chalk.blue(
+      selectSiteUrlString,
+    )}\n\nIf anything happens, re-open that URL.`,
+  )
+  await open(selectSiteUrlString)
 
   // Handshake Step 2 - the browser goes to `callbackUrl`
   const nextAppUrl = `http://localhost:${nextAppPort}`
