@@ -10,10 +10,16 @@ import { createFolderIfNotExists } from './utils/create-folder-if-not-exists'
 import chalk from 'chalk'
 import MakeswiftError from './errors/MakeswiftError'
 
+type PagesFolder = {
+  absolute: string
+  temporary: string
+}
+
 function generateTemporaryApp({ dir }: { dir: string }) {
   const temporaryDirectory = fs.mkdtempSync(os.tmpdir())
+  const pagesFolder = getPagesFolder({ dir, temporaryDir: temporaryDirectory })
 
-  createFolderIfNotExists(path.join(temporaryDirectory, 'pages'))
+  createFolderIfNotExists(pagesFolder.temporary)
 
   return temporaryDirectory
 }
@@ -59,22 +65,23 @@ export async function integrateNextApp({ dir }: { dir: string }): Promise<void> 
   const isTS = isTypeScript({ dir })
 
   // Integrate pages in a temporary directory
-  const temporaryDirectory = generateTemporaryApp({ dir })
+  const temporaryDir = generateTemporaryApp({ dir })
+  const pagesFolder = getPagesFolder({ dir, temporaryDir })
 
   // Step 1 - add Makeswift API route
-  addMakeswiftApiRoute({ dir, temporaryDir: temporaryDirectory, isTypeScript: isTS })
+  addMakeswiftApiRoute({ isTypeScript: isTS, pagesFolder })
 
   // Step 2 - add Makeswift pages
-  addMakeswiftPages({ dir, temporaryDir: temporaryDirectory, isTypeScript: isTS })
+  addMakeswiftPages({ isTypeScript: isTS, pagesFolder })
 
   // Step 3 - adding the Makeswift Next.js plugin
-  addMakeswiftNextjsPlugin({ dir, temporaryDir: temporaryDirectory })
+  addMakeswiftNextjsPlugin({ dir, temporaryDir })
 
   // Step 4 - install the runtime
   installMakeswiftRuntime({ dir })
 
   // Overwrite pages and next.config.js with output from temporary directory
-  overwriteIntegratedFiles({ dir, temporaryDir: temporaryDirectory })
+  overwriteIntegratedFiles({ dir, temporaryDir })
 }
 
 function installMakeswiftRuntime({ dir }: { dir: string }): void {
@@ -93,20 +100,15 @@ function installMakeswiftRuntime({ dir }: { dir: string }): void {
 }
 
 function addMakeswiftApiRoute({
-  dir,
-  temporaryDir,
   isTypeScript,
+  pagesFolder,
 }: {
-  dir: string
-  temporaryDir: string
   isTypeScript: boolean
+  pagesFolder: PagesFolder
 }): void {
-  const temporaryPagesFolder = path.join(temporaryDir, 'pages')
   const extension = isTypeScript ? 'ts' : 'js'
 
-  // If Makeswift API folder does not exist, create
-  createFolderIfNotExists(path.join(temporaryPagesFolder, 'api'))
-  createFolderIfNotExists(path.join(temporaryPagesFolder, 'api', 'makeswift'))
+  fs.mkdirSync(path.join(pagesFolder.temporary, 'api', 'makeswift'), { recursive: true })
 
   const apiRoute = isTypeScript
     ? `import { MakeswiftApiHandler } from '@makeswift/runtime/next'
@@ -118,23 +120,18 @@ export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY!)
 export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY)
 `
   fs.writeFileSync(
-    path.join(temporaryPagesFolder, 'api', 'makeswift', `[...makeswift].${extension}`),
+    path.join(pagesFolder.temporary, 'api', 'makeswift', `[...makeswift].${extension}`),
     apiRoute,
   )
 }
 
 function addMakeswiftPages({
-  dir,
-  temporaryDir,
   isTypeScript,
+  pagesFolder,
 }: {
-  dir: string
-  temporaryDir: string
   isTypeScript: boolean
+  pagesFolder: PagesFolder
 }): void {
-  const pagesFolder = getPagesFolder({ dir })
-  const temporaryPagesFolder = path.join(temporaryDir, 'pages')
-
   function generateCatchAllRoute(isTypeScript: boolean) {
     switch (isTypeScript) {
       case false:
@@ -214,10 +211,10 @@ export default function Page({ snapshot }: Props) {
   const extension = isTypeScript ? 'ts' : 'js'
 
   // catch-all-route does not exist
-  if (glob.sync(path.join(pagesFolder, `\\[*\\].${extension}*`)).length === 0) {
+  if (glob.sync(path.join(pagesFolder.absolute, `\\[*\\].${extension}*`)).length === 0) {
     const useOptionalCatchAllRoute =
-      !fs.existsSync(path.join(pagesFolder, `index.${extension}`)) &&
-      !fs.existsSync(path.join(pagesFolder, `index.${extension}x`))
+      !fs.existsSync(path.join(pagesFolder.absolute, `index.${extension}`)) &&
+      !fs.existsSync(path.join(pagesFolder.absolute, `index.${extension}x`))
 
     let catchAllRouteFilename
     if (useOptionalCatchAllRoute) {
@@ -232,7 +229,7 @@ export default function Page({ snapshot }: Props) {
       )
     }
 
-    fs.writeFileSync(path.join(temporaryPagesFolder, catchAllRouteFilename), catchAllRoute)
+    fs.writeFileSync(path.join(pagesFolder.temporary, catchAllRouteFilename), catchAllRoute)
   } else {
     throw new MakeswiftError(
       'A catch all route already exists, you will have to manually integrate: https://www.makeswift.com/docs/guides/advanced-setup#custom-live-route',
@@ -241,24 +238,30 @@ export default function Page({ snapshot }: Props) {
 
   // custom document
   if (
-    fs.existsSync(path.join(pagesFolder, `_document.${extension}`)) ||
-    fs.existsSync(path.join(pagesFolder, `_document.${extension}x`))
+    fs.existsSync(path.join(pagesFolder.absolute, `_document.${extension}`)) ||
+    fs.existsSync(path.join(pagesFolder.absolute, `_document.${extension}x`))
   ) {
     throw new MakeswiftError(
       'A custom document already exists, you will have to manually integrate: https://www.makeswift.com/docs/guides/manual-setup#set-up-custom-document',
     )
   }
   const customDocument = `export { Document as default } from '@makeswift/runtime/next'`
-  fs.writeFileSync(path.join(temporaryPagesFolder, `_document.${extension}`), customDocument)
+  fs.writeFileSync(path.join(pagesFolder.temporary, `_document.${extension}`), customDocument)
 }
 
-function getPagesFolder({ dir }: { dir: string }): string {
+function getPagesFolder({ dir, temporaryDir }: { dir: string; temporaryDir: string }): PagesFolder {
   if (fs.existsSync(path.join(dir, 'pages'))) {
-    return path.join(dir, 'pages')
+    return {
+      absolute: path.join(dir, 'pages'),
+      temporary: path.join(temporaryDir, 'pages'),
+    }
   }
 
   if (fs.existsSync(path.join(dir, 'src/pages'))) {
-    return path.join(dir, '/src/pages')
+    return {
+      absolute: path.join(dir, '/src/pages'),
+      temporary: path.join(temporaryDir, '/src/pages'),
+    }
   }
 
   throw new MakeswiftError('Cannot find pages directory in Next.js app.')
