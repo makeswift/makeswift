@@ -79,7 +79,7 @@ async function askApprovalToIntegrateIfNeeded(dir: string): Promise<void> {
     const approval = await askApproval()
 
     if (!approval) {
-      throw new MakeswiftError('Will not integrate Next app.')
+      throw new MakeswiftError()
     }
   }
 }
