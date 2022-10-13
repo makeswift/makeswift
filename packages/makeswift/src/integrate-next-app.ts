@@ -250,7 +250,9 @@ export default function Page({ snapshot }: Props) {
     fs.existsSync(path.join(pagesFolder.absolute, `_document.${extension}x`))
   ) {
     throw new MakeswiftError(
-      'A custom document already exists, you will have to manually integrate: https://www.makeswift.com/docs/guides/manual-setup#set-up-custom-document',
+      `A custom document already exists, you will have to manually integrate: ${chalk.blue(
+        'https://www.makeswift.com/docs/guides/advanced-setup#extending-the-custom-document',
+      )}`,
     )
   }
   const customDocument = `export { Document as default } from '@makeswift/runtime/next'`
