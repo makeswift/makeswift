@@ -68,7 +68,7 @@ async function init(
 
   const selectSiteUrlString = selectSiteUrl.toString()
   console.log(
-    `\nRedirecting you to ${chalk.blue(
+    `\nOpening your browser at ${chalk.blue(
       selectSiteUrlString,
     )}\n\nIf anything happens, re-open that URL.`,
   )
