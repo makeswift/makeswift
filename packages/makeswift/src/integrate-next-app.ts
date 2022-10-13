@@ -231,7 +231,9 @@ export default function Page({ snapshot }: Props) {
       console.log(
         `\nWe noticed you have an index page, therefore we have created a ${chalk.yellow(
           'normal catch-all route',
-        )} in Next.js. This will not match the index route \`/\`.\n`,
+        )} in Next.js. This will not match the index route \`/\`.\nRead more about that here: ${chalk.blue(
+          'https://nextjs.org/docs/routing/dynamic-routes#catch-all-routes',
+        )}`,
       )
     }
 
