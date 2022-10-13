@@ -262,7 +262,7 @@ export default function Page({ snapshot }: Props) {
   fs.mkdirSync(path.join(temporaryDir, 'lib', 'makeswift'), { recursive: true })
   const registerComponentsFile = `import { Style } from '@makeswift/runtime/controls'
 import { ReactRuntime } from '@makeswift/runtime/react'
-import HelloWorld from '../../components/hello-world'
+import { HelloWorld } from '../../components/hello-world'
 
 // Register your components here!
 
@@ -279,7 +279,7 @@ ReactRuntime.registerComponent(HelloWorld, {
       temporaryDir,
       'lib',
       'makeswift',
-      `register-components.${isTypeScript ? 'ts' : 'js'}x`,
+      `register-components.${isTypeScript ? 'ts' : 'js'}`,
     ),
     registerComponentsFile,
   )
@@ -291,8 +291,12 @@ ReactRuntime.registerComponent(HelloWorld, {
       path.join(temporaryDir, 'components', 'hello-world.tsx'),
       `import React from 'react'
 
-export default function HelloWorld(props: { className?: string }) {
-  return <p {...props}>Hello, world!</p>
+type Props = {
+  className?: string
+}
+
+export function HelloWorld({ className }: Props) {
+  return <p className={className}>Hello, world!</p>
 }
 `,
     )
@@ -301,7 +305,7 @@ export default function HelloWorld(props: { className?: string }) {
       path.join(temporaryDir, 'components', 'hello-world.jsx'),
       `import React from 'react'
 
-      export default function HelloWorld(props) {
+      export function HelloWorld(props) {
   return <p {...props}>Hello, world!</p>
 }
 `,
