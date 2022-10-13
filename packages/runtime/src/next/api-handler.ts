@@ -5,24 +5,36 @@ import { NextApiHandler } from 'next'
 import { parse } from 'set-cookie-parser'
 import { version } from '../../package.json'
 
+type Fonts = Font[]
+
+type Font = {
+  family: string
+  variants: FontVariant[]
+}
+
+type FontVariant = { weight: string; style: 'italic' | 'normal'; src?: string }
+
 type MakeswiftApiHandlerConfig = {
   appOrigin?: string
+  getFonts?: () => Fonts | Promise<Fonts>
 }
 
 export type MakeswiftApiHandlerErrorResponse = { message: string }
 export type MakeswiftApiHandlerRevalidateErrorResponse = string
 export type MakeswiftApiHandlerRevalidateResponse = { revalidated: boolean }
 export type MakeswiftApiHandlerManifestResponse = { version: string; previewMode: boolean }
+export type MakeswiftApiHandlerFontsResponse = Fonts
 
 export type MakeswiftApiHandlerResponse =
   | MakeswiftApiHandlerErrorResponse
   | MakeswiftApiHandlerRevalidateErrorResponse
   | MakeswiftApiHandlerRevalidateResponse
   | MakeswiftApiHandlerManifestResponse
+  | MakeswiftApiHandlerFontsResponse
 
 export function MakeswiftApiHandler(
   apiKey: string,
-  { appOrigin = 'https://app.makeswift.com' }: MakeswiftApiHandlerConfig = {},
+  { appOrigin = 'https://app.makeswift.com', getFonts }: MakeswiftApiHandlerConfig = {},
 ): NextApiHandler<MakeswiftApiHandlerResponse> {
   const cors = Cors({ origin: appOrigin })
   const previewModeProxy = createProxyServer()
@@ -146,6 +158,11 @@ export function MakeswiftApiHandler(
             else resolve()
           }),
         )
+      }
+
+      case 'fonts': {
+        const fonts = (await getFonts?.()) ?? []
+        return res.json(fonts)
       }
 
       default:
