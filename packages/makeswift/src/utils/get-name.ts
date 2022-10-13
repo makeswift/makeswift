@@ -85,7 +85,7 @@ async function askApprovalToIntegrateIfNeeded(dir: string): Promise<void> {
     const approval = await askApproval()
 
     if (!approval) {
-      throw new MakeswiftError()
+      process.exit(0)
     }
   }
 }
