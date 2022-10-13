@@ -240,7 +240,7 @@ export default function Page({ snapshot }: Props) {
     fs.writeFileSync(path.join(pagesFolder.temporary, catchAllRouteFilename), catchAllRoute)
   } else {
     throw new MakeswiftError(
-      'A catch all route already exists, you will have to manually integrate: https://www.makeswift.com/docs/guides/advanced-setup#custom-live-route',
+      'A dynamic route already exists, you will have to manually integrate: https://www.makeswift.com/docs/guides/advanced-setup#custom-live-route',
     )
   }
 
