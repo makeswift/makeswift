@@ -3,7 +3,7 @@
  * where we want the program to simply exit.
  */
 export default class MakeswiftError extends Error {
-  constructor(message: string | undefined = '') {
+  constructor(message: string = '') {
     super(message)
     this.message = message
   }
