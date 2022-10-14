@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.2.3
+
+### Patch Changes
+
+- 79c2405: Upgrade @types/react and @types/react-dom.
+- 317a825: Add API handler for font registration.
+
 ## 0.2.2
 
 ### Patch Changes

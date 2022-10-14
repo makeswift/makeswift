@@ -1,5 +1,17 @@
 # makeswift
 
+## 0.0.8
+
+### Patch Changes
+
+- 5452780: Perform file integration operations in a staging environment
+- f04722c: - fix error where next.config.js fails and CLI keeps going
+  - make default value for integrating true
+  - make `init` the default entrypoint to `npx makeswift`
+  - support `src/pages` folder structures for integration
+  - validate app name is a valid NPM package name
+  - add a `register-components.ts` file upon integration
+
 ## 0.0.7
 
 ### Patch Changes
