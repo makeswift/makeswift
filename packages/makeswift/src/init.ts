@@ -112,6 +112,7 @@ async function getSiteApiKey({
   return new Promise<{ siteApiKey: string }>((resolve, reject) => {
     const server = http
       .createServer((req, res) => {
+        res.shouldKeepAlive = false
         const url = new URL(req.url!, `http://${req.headers.host}`)
         if (url.pathname !== `/${siteSelectionPath}`) {
           reject(new Error('The CLI does not know how to handle that path.'))
@@ -132,11 +133,12 @@ async function getSiteApiKey({
           Location: destinationURL.toString(),
         })
         res.end()
-        server.close()
 
-        resolve({
-          siteApiKey,
-        })
+        server.close(() =>
+          resolve({
+            siteApiKey,
+          }),
+        )
       })
       .listen(port)
   })
