@@ -27,7 +27,7 @@ function formatErrorMessage({ dir, files }: { dir: string; files: string[] }): s
 
   const uniqueFilesOrFolders = Array.from(new Set(relativeFiles))
 
-  const directoryName = dir.split('/').at(-1)
+  const directoryName = dir.split('/').slice(-1)[0]
 
   const prettyFiles = uniqueFilesOrFolders
     .map(fileOrFolder => `  ${chalk.dim(fileOrFolder)}`)

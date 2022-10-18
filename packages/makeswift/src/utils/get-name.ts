@@ -61,7 +61,7 @@ async function askToUseCurrentDirectory(dir: string): Promise<boolean> {
 }
 
 async function askApprovalToIntegrateIfNeeded(dir: string): Promise<void> {
-  const projectName = dir.split('/').at(-1)
+  const projectName = dir.split('/').slice(-1)[0]
   async function askApproval(): Promise<boolean> {
     return new Promise(resolve => {
       const questions = [
