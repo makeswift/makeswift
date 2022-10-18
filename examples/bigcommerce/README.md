@@ -31,69 +31,24 @@ BIGCOMMERCE_ACCESS_TOKEN=5lw9ulikcp186tjgg3rs39kh4fg3vci
 
 ---
 
-## Using this repo
+Here is [a guide](https://support.bigcommerce.com/s/article/Starting-a-BigCommerce-Trial) to get you started.
 
-1. **Create a site in Makeswift and a shop in BigCommerce**
 
-   Head over to [Makeswift](https://app.makeswift.com) and sign up for a free account. Create a site using the option to "Integrate with Next.js",
-   and copy the Site API key. You will need it in step 3.
+## Using this repo locally
 
-   Then head over to [BigCommerce](https://www.bigcommerce.com/) and create a store. Here is [a guide](https://support.bigcommerce.com/s/article/Starting-a-BigCommerce-Trial) to get you started.
-
-   Note: If you are just trying out Makeswift with our e-commerce template feel free use this example store and the read-only access token for your development.
-
-   ```
-   BIGCOMMERCE_STORE_NAME=makeswift-example
-   BIGCOMMERCE_STORE_HASH=uvhswop3wh
-   BIGCOMMERCE_ACCESS_TOKEN=5lw9ulikcp186tjgg3rs39kh4fg3vci
-   ```
-
-2. **Clone this template**
-
-   Instead of using `create-next-app`, run this command from the terminal:
+1. **Clone this template using the Makeswift CLI**
 
    ```bash
-   npx degit makeswift/makeswift/examples/bigcommerce bigcommerce
-   cd bigcommerce
+   npx makeswift@latest init \
+      --example bigcommerce \
+      --env BIGCOMMERCE_STORE_NAME=makeswift-example \
+      --env BIGCOMMERCE_STORE_HASH=uvhswop3wh \
+      --env BIGCOMMERCE_ACCESS_TOKEN=5lw9ulikcp186tjgg3rs39kh4fg3vci
    ```
 
-   It will download this subdirectory of the `makeswift/makeswift` repo without including git history.
+   Once the CLI is done running, it will be running `yarn dev` locally. This template will be setup for you locally and integrated with Makeswift.
 
-3. **Update environment variables**
-
-   Rename `.env.local.example` to `.env.local` and update it with values from your BigCommerce and Makeswift accounts.
-
-   - `BIGCOMMERCE_STORE_NAME` and `BIGCOMMERCE_STORE_HASH` can be found in the BigCommerce dashboard
-
-       <img src="https://user-images.githubusercontent.com/20950876/184250701-c7af5854-ad4a-4dec-b8e1-1653cddbff1c.png" width="600" />
-
-   - `BIGCOMMERCE_ACCESS_TOKEN` requires you to [create an API account](https://support.bigcommerce.com/s/article/Store-API-Accounts?language=en_US)
-   - and finally the `MAKESWIFT_SITE_API_KEY` comes from your Makeswift site. It is the value you copied from step 1.
-
-   ```diff
-   - BIGCOMMERCE_STORE_NAME=
-   - BIGCOMMERCE_STORE_HASH=
-   - BIGCOMMERCE_ACCESS_TOKEN=
-
-   - MAKESWIFT_SITE_API_KEY=
-   + BIGCOMMERCE_STORE_NAME=<YOUR_BIGCOMMERCE_STORE_NAME>
-   + BIGCOMMERCE_STORE_HASH=<YOUR_BIGCOMMERCE_STORE_HASH>
-   + BIGCOMMERCE_ACCESS_TOKEN=<YOUR_BIGCOMMERCE_ACCESS_TOKEN>
-
-   + MAKESWIFT_SITE_API_KEY=<YOUR_MAKESWIFT_SITE_API_KEY>
-   ```
-
-4. **Start the dev server**
-
-   Run this command from the terminal:
-
-   ```bash
-   yarn dev
-   ```
-
-   Your Next.js app should be up and running at http://localhost:3000.
-
-5. **Create a home page with a list of products**
+2. **Create a home page with a list of products**
 
    1. Create a blank page
 
@@ -109,7 +64,7 @@ BIGCOMMERCE_ACCESS_TOKEN=5lw9ulikcp186tjgg3rs39kh4fg3vci
 
       With the Product list component selected, update the category you want to display and the number of products in the right panels labeled 'Category' and 'Count' respectively.
 
-6. **Create a product page template with product specific details**
+3. **Create a product page template with product specific details**
 
    1. Create a blank page
 
@@ -124,6 +79,30 @@ BIGCOMMERCE_ACCESS_TOKEN=5lw9ulikcp186tjgg3rs39kh4fg3vci
    3. Drop in Product specific components
 
       Look for the ellipsis menu in the left toolbar again and drop the Product price, Product name, and Add to cart button into Makeswift.
+
+4. Using your own BigCommerce store
+
+   Here is [a guide](https://support.bigcommerce.com/s/article/Starting-a-BigCommerce-Trial) on how to get your own BigCommerce store going.
+
+   Once you have that, you'll need the environment variables.
+
+   `BIGCOMMERCE_STORE_NAME` and `BIGCOMMERCE_STORE_HASH` can be found in the BigCommerce dashboard
+
+   <img src="https://user-images.githubusercontent.com/20950876/184250701-c7af5854-ad4a-4dec-b8e1-1653cddbff1c.png" width="600" />
+
+   If you've already run the CLI, you can replace the values in your `.env.local` file. Otherwise, you can run the CLI with your own values.
+
+   ```bash
+   npx makeswift@latest init \
+      --example bigcommerce \
+      --env BIGCOMMERCE_STORE_NAME=<store-name> \
+      --env BIGCOMMERCE_STORE_HASH=<store-hash> \
+      --env BIGCOMMERCE_ACCESS_TOKEN=<access-token>
+   ```
+
+   > **Note**
+   > Our CLI just writes these values to your `.env.local` file — nothing else.
+
 
 ---
 
