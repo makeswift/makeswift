@@ -16,7 +16,7 @@ const MAKESWIFT_APP_ORIGIN = process.env.MAKESWIFT_APP_ORIGIN || 'https://app.ma
 const MAKESWIFT_API_ORIGIN = process.env.MAKESWIFT_API_ORIGIN
 const siteSelectionPath = 'select-site'
 
-type InitArgs = { example?: string; useNpm: boolean; usePnpm: boolean }
+type InitArgs = { example?: string; useNpm: boolean; usePnpm: boolean; env: string[] }
 
 export default async function wrappedInit(name: string | undefined, args: InitArgs) {
   try {
@@ -33,7 +33,7 @@ export default async function wrappedInit(name: string | undefined, args: InitAr
 
 async function init(
   name: string | undefined,
-  { example = 'basic-typescript', useNpm, usePnpm }: InitArgs,
+  { example = 'basic-typescript', useNpm, usePnpm, env }: InitArgs,
 ): Promise<void> {
   if (useNpm && usePnpm) {
     throw new MakeswiftError(
@@ -86,10 +86,13 @@ async function init(
 
   // In the background, we're setting up the Next app with the API key
   // and starting the app at `nextAppPort`
-  const envLocal = buildLocalEnvFile({
-    MAKESWIFT_SITE_API_KEY: siteApiKey,
-    MAKESWIFT_API_ORIGIN,
-  })
+  const envLocal = buildLocalEnvFile(
+    {
+      MAKESWIFT_SITE_API_KEY: siteApiKey,
+      MAKESWIFT_API_ORIGIN,
+    },
+    env,
+  )
   fs.writeFileSync(`${nextAppDir}/.env.local`, envLocal)
 
   spawn.sync('yarn', ['dev', '--port', nextAppPort.toString()], {
@@ -159,10 +162,19 @@ async function getSiteApiKey({
   })
 }
 
-function buildLocalEnvFile(variables: { [key: string]: string | undefined }): string {
-  return Object.entries(variables)
+function buildLocalEnvFile(
+  variables: { [key: string]: string | undefined },
+  predefinedValues?: string[],
+): string {
+  const envFile = Object.entries(variables)
     .filter(([key, value]) => value != null)
     .reduce((envFile, [key, value]) => {
       return envFile + `${key}=${value}\n`
     }, '')
+
+  if (predefinedValues != null) {
+    return envFile + predefinedValues.join('\n')
+  }
+
+  return envFile
 }
