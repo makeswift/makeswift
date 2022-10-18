@@ -30,66 +30,40 @@ NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
 
 ## Using this repo
 
-1. **Create a site in Makeswift and a shop in Shopify**
+> **Note**
+> If you just want to see this example in action, skip to step 3.
 
-   Head over to [Makeswift](https://app.makeswift.com) and sign up for a free account. Create a site using the option to "Integrate with Next.js",
-   and copy the Site API key. You will need it in step 3.
+1. **Create a Shopify store**
 
-   Then head over to [Shopify](https://www.shopify.com/) and create a store. Here is [a good starting point](https://www.shopify.com/online) to get you started.
+   - Head over to [Shopify](https://www.shopify.com/) and create a store. Here is [a good starting point](https://www.shopify.com/online).
 
-   Note: If you are just trying trying out Makeswift with our e-commerce template feel free use this example store and the read-only access token for your development.
+     > **Note**
+     > This custom storefront example assumes all products are in stock, so make sure all products have "Track quantity" unchecked as pictured below.
 
-   ```
-   NEXT_PUBLIC_SHOPIFY_STORE_NAME=makeswift-example
-   NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
-   ```
+     <img width="600" src="https://user-images.githubusercontent.com/20950876/187238713-22fd0c65-8d9b-4eab-b94e-1e498053f270.png">
 
-   Note 2: This custom storefront example assumes all products are in stock, so make sure all products have "Track quantity" unchecked as pictured below.
-
-      <img width="600" src="https://user-images.githubusercontent.com/20950876/187238713-22fd0c65-8d9b-4eab-b94e-1e498053f270.png">
-
-2. **Clone this template**
-
-   Instead of using `create-next-app`, run this command from the terminal:
-
-   ```bash
-   npx degit makeswift/makeswift/examples/shopify shopify
-   cd shopify
-   ```
-
-   It will download this subdirectory of the `makeswift/makeswift` repo without including git history.
-
-3. **Update environment variables**
-
-   Rename `.env.local.example` to `.env.local` and update it with values from your Shopify and Makeswift accounts.
+2. **Get environment variables**
 
    - `SHOPIFY_STORE_NAME` can be found in the Shopify dashboard
 
        <img src="https://user-images.githubusercontent.com/20950876/184916524-667084c1-06a0-4fa3-8f4b-73aff5a88e65.png" width="600" />
 
    - `SHOPIFY_ACCESS_TOKEN` requires you to [register an app](https://www.shopify.com/partners/blog/17056443-how-to-generate-a-shopify-api-token)
-   - and finally the `MAKESWIFT_SITE_API_KEY` comes from your Makeswift site. It is the value you copied from step 1.
 
-   ```diff
-   - SHOPIFY_STORE_NAME=
-   - SHOPIFY_ACCESS_TOKEN=
 
-   - MAKESWIFT_SITE_API_KEY=
-   + SHOPIFY_STORE_NAME=<YOUR_SHOPIFY_STORE_NAME>
-   + SHOPIFY_ACCESS_TOKEN=<YOUR_SHOPIFY_ACCESS_TOKEN>
+3. **Run the Makeswift CLI**
 
-   + MAKESWIFT_SITE_API_KEY=<YOUR_MAKESWIFT_SITE_API_KEY>
-   ```
+    Either use our example values to use our example store, or use your own Shopify credentials.
 
-4. **Start the dev server**
+    ```bash
+    npx makeswift@latest init \
+        --example shopify \
+        --env NEXT_PUBLIC_SHOPIFY_STORE_NAME=makeswift-example \
+        --env NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
+    ```
 
-   Run this command from the terminal:
+    You can always change these values later in the `.env.local` file.
 
-   ```bash
-   yarn dev
-   ```
-
-   Your Next.js app should be up and running at http://localhost:3000.
 
 5. **Create a home page with a list of products**
 
