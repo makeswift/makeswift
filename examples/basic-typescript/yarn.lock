@@ -328,10 +328,10 @@
   dependencies:
     next-transpile-modules "^9.0.0"
 
-"@makeswift/runtime@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@makeswift/runtime/-/runtime-0.2.2.tgz#6a6402e90b183b0bf2456b5bfde1400827180d6b"
-  integrity sha512-RtQQR/vYlbwR61jo/wp0fPQ5N186Jj2ZIYYaPzPsf7w9KudrBG3rsvjX78tfwKOlvRARefiQtRUOvZe2xIDYjg==
+"@makeswift/runtime@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@makeswift/runtime/-/runtime-0.2.3.tgz#3b1ab3cb7e0fef0b54914a630233ccd2286af425"
+  integrity sha512-MgXaBxzqz0mbwre8pgguEKeMJqMDaLp7OBmYpevm95ksfrCZyu99+ljDFvADzJdtmB5kIa0HFPo/KwGuBTxeqQ==
   dependencies:
     "@apollo/client" "^3.5.10"
     "@convertkit/slate-lists" "^0.2.4"
@@ -342,8 +342,8 @@
     "@types/cookie" "^0.5.1"
     "@types/http-proxy" "^1.17.9"
     "@types/is-hotkey" "^0.1.7"
-    "@types/react" "^17.0.3"
-    "@types/react-dom" "^17.0.2"
+    "@types/react" "^18.0.21"
+    "@types/react-dom" "^18.0.6"
     "@types/set-cookie-parser" "^2.4.2"
     "@types/slate" "0.47.11"
     "@types/slate-react" "^0.22.9"
@@ -554,12 +554,12 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.5.tgz#5f19d2b85a98e9558036f6a3cacc8819420f05cf"
   integrity sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==
 
-"@types/react-dom@^17.0.2":
-  version "17.0.16"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-17.0.16.tgz#7caba93cf2806c51e64d620d8dff4bae57e06cc4"
-  integrity sha512-DWcXf8EbMrO/gWnQU7Z88Ws/p16qxGpPyjTKTpmBSFKeE+HveVubqGO1CVK7FrwlWD5MuOcvh8gtd0/XO38NdQ==
+"@types/react-dom@^18.0.6":
+  version "18.0.6"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.0.6.tgz#36652900024842b74607a17786b6662dd1e103a1"
+  integrity sha512-/5OFZgfIPSwy+YuIBP/FgJnQnsxhZhjjrnxudMddeblOouIodEQ75X14Rr4wGSG/bknL+Omy9iWlLo1u/9GzAA==
   dependencies:
-    "@types/react" "^17"
+    "@types/react" "*"
 
 "@types/react@*":
   version "18.0.8"
@@ -570,10 +570,10 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/react@^17", "@types/react@^17.0.3":
-  version "17.0.44"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.44.tgz#c3714bd34dd551ab20b8015d9d0dbec812a51ec7"
-  integrity sha512-Ye0nlw09GeMp2Suh8qoOv0odfgCoowfM/9MG6WeRD60Gq9wS90bdkdRtYbRkNhXOpG4H+YXGvj4wOWhAC0LJ1g==
+"@types/react@^18.0.21":
+  version "18.0.21"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.21.tgz#b8209e9626bb00a34c76f55482697edd2b43cc67"
+  integrity sha512-7QUCOxvFgnD5Jk8ZKlUAhVcRj7GuJRjnjjiY/IUBWKgOlnvDvTMLD4RTF7NPyVmbRhNrbomZiOepg7M/2Kj1mA==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
