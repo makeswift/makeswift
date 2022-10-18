@@ -18,6 +18,10 @@ program
   .option('--example <example>', 'The Github URL, or name of the Makeswift example to clone.')
   .option('--use-npm', 'Explicitly tell the CLI to bootstrap the app using npm')
   .option('--use-pnpm', 'Explicitly tell the CLI to bootstrap the app using pnpm')
+  .option(
+    '--env <items...>',
+    "Provide environment variables as comma-separated key=value pairs to go into the Next app's .env file.",
+  )
   .action(init)
 
 program.parse()
