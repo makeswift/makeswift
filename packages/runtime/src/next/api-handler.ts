@@ -153,10 +153,15 @@ export function MakeswiftApiHandler(
           .join(';')
 
         return await new Promise<void>((resolve, reject) =>
-          previewModeProxy.web(req, res, { target, headers: { cookie } }, err => {
-            if (err) reject(err)
-            else resolve()
-          }),
+          previewModeProxy.web(
+            req,
+            res,
+            { target, headers: { cookie }, followRedirects: true },
+            err => {
+              if (err) reject(err)
+              else resolve()
+            },
+          ),
         )
       }
 
