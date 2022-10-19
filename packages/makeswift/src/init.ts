@@ -1,3 +1,4 @@
+import util from 'util'
 import chalk from 'chalk'
 import spawn from 'cross-spawn'
 import detect from 'detect-port'
@@ -12,6 +13,7 @@ import { integrateNextApp } from './integrate-next-app'
 import { checkForConflictingFiles } from './utils/check-for-conflicting-files'
 import { getProjectName } from './utils/get-name'
 import isNextApp from './utils/is-next-app'
+import { Socket } from 'node:net'
 
 const MAKESWIFT_APP_ORIGIN = process.env.MAKESWIFT_APP_ORIGIN || 'https://app.makeswift.com'
 const MAKESWIFT_API_ORIGIN = process.env.MAKESWIFT_API_ORIGIN
@@ -110,19 +112,21 @@ async function getSiteApiKey({
   redirectUrl: string
 }): Promise<{ siteApiKey: string }> {
   return new Promise<{ siteApiKey: string }>((resolve, reject) => {
+    const sockets: Socket[] = []
     const server = http
       .createServer((req, res) => {
-        res.shouldKeepAlive = false
         const url = new URL(req.url!, `http://${req.headers.host}`)
         if (url.pathname !== `/${siteSelectionPath}`) {
-          reject(new Error('The CLI does not know how to handle that path.'))
+          res.writeHead(400)
+          res.end()
           return
         }
 
         const queryParams = url.searchParams
         const siteApiKey = queryParams.get('site_api_key')
         if (!siteApiKey) {
-          reject(new Error('Select site redirect URL does not contain Site API Key.'))
+          res.writeHead(400)
+          res.end()
           return
         }
 
@@ -132,15 +136,29 @@ async function getSiteApiKey({
         res.writeHead(302, {
           Location: destinationURL.toString(),
         })
-        res.end()
+        res.end(() => {
+          server.close(err => {
+            if (err != null) {
+              reject(err)
+            }
+            resolve({
+              siteApiKey,
+            })
+          })
 
-        server.close(() =>
-          resolve({
-            siteApiKey,
-          }),
-        )
+          // Google Chrome very aggressively holds on to the socket
+          for (const socket of sockets) {
+            if (!socket.destroyed) {
+              socket.destroy()
+            }
+          }
+        })
       })
       .listen(port)
+
+    server.on('connection', function(socket: Socket) {
+      sockets.push(socket)
+    })
   })
 }
 
