@@ -1,5 +1,11 @@
 # makeswift
 
+## 0.0.9
+
+### Patch Changes
+
+- ce1bd01: Fix two bugs — the server not closing and `at` used on older Node versions
+
 ## 0.0.8
 
 ### Patch Changes
