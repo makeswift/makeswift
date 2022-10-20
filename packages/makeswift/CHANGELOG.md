@@ -1,5 +1,11 @@
 # makeswift
 
+## 0.0.10
+
+### Patch Changes
+
+- d946c97: Fix Google Chrome persistent connections issue
+
 ## 0.0.9
 
 ### Patch Changes
