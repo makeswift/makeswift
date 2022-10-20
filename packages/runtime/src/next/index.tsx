@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 
 import { RuntimeProvider } from '../runtimes/react'
 import { Page as PageMeta } from '../components/page'
@@ -120,7 +120,7 @@ export async function getServerSideProps(
   return { props: { snapshot } }
 }
 
-export function Page({ snapshot }: PageProps) {
+export const Page = memo(({ snapshot }: PageProps) => {
   const [client] = useState(
     () =>
       new MakeswiftClient({
@@ -141,7 +141,7 @@ export function Page({ snapshot }: PageProps) {
       <PageMeta document={snapshot.document} />
     </RuntimeProvider>
   )
-}
+})
 
 export * from './client'
 export * from './preview-mode'
