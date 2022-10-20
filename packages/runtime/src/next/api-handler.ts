@@ -39,7 +39,7 @@ export function MakeswiftApiHandler(
   const cors = Cors({ origin: appOrigin })
   const previewModeProxy = createProxyServer()
 
-  previewModeProxy.on('proxyReq', proxyReq => {
+  previewModeProxy.on('proxyReq', (proxyReq, req) => {
     proxyReq.removeHeader('X-Makeswift-Preview-Mode')
 
     const url = new URL(proxyReq.path, 'http://n')
@@ -47,6 +47,26 @@ export function MakeswiftApiHandler(
     url.searchParams.delete('x-makeswift-preview-mode')
 
     proxyReq.path = url.pathname + url.search
+
+    console.log(
+      JSON.stringify(
+        {
+          proxyReq: {
+            host: proxyReq.host,
+            method: proxyReq.method,
+            path: proxyReq.path,
+          },
+          req: {
+            headers: req.headers,
+            httpVersion: req.httpVersion,
+            method: req.method,
+            url: req.url,
+          },
+        },
+        null,
+        2,
+      ),
+    )
   })
 
   if (typeof apiKey !== 'string') {
@@ -151,6 +171,24 @@ export function MakeswiftApiHandler(
         const cookie = parse(setCookie)
           .map(cookie => serialize(cookie.name, cookie.value, cookie as CookieSerializeOptions))
           .join(';')
+
+        console.log(
+          JSON.stringify(
+            {
+              req: {
+                headers: req.headers,
+                httpVersion: req.httpVersion,
+                method: req.method,
+                url: req.url,
+                query: req.query,
+                target,
+                cookie,
+              },
+            },
+            null,
+            2,
+          ),
+        )
 
         return await new Promise<void>((resolve, reject) =>
           previewModeProxy.web(

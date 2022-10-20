@@ -1,5 +1,29 @@
 # @makeswift/runtime
 
+## 0.0.0-20221020195708
+
+### Patch Changes
+
+- f2819a5: Update logging
+
+## 0.0.0-20221020184910
+
+### Patch Changes
+
+- Update logging
+
+## 0.0.0-20221020182013
+
+### Patch Changes
+
+- Added logging
+
+## 0.0.0-20221020181709
+
+### Patch Changes
+
+- 7224fa5: Follow redirects in Preview Mode proxy.
+
 ## 0.2.3
 
 ### Patch Changes
