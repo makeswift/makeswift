@@ -87,6 +87,8 @@ BIGCOMMERCE_ACCESS_TOKEN=5lw9ulikcp186tjgg3rs39kh4fg3vci
 
    <img src="https://user-images.githubusercontent.com/20950876/184250701-c7af5854-ad4a-4dec-b8e1-1653cddbff1c.png" width="600" />
 
+   - `BIGCOMMERCE_ACCESS_TOKEN` requires you to [create an API account](https://support.bigcommerce.com/s/article/Store-API-Accounts?language=en_US)
+
    If you've already run the CLI, you can replace the values in your `.env.local` file. Otherwise, you can run the CLI with your own values.
 
    ```bash
