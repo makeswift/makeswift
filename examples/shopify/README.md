@@ -30,8 +30,50 @@ NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
 
 ## Using this repo
 
-> **Note**
-> If you just want to see this example in action, skip to step 3.
+1. **Clone this template using the Makeswift CLI**
+
+    ```bash
+    npx makeswift@latest init \
+        --example shopify \
+        --env NEXT_PUBLIC_SHOPIFY_STORE_NAME=makeswift-example \
+        --env NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
+    ```
+
+2. **Create a home page with a list of products**
+
+   1. Create a blank page
+
+      Look for the plus button in the left toolbar and specify "Blank page".
+
+   2. Edit the page's URL to be `/`
+
+      Hover over the "Untitled page" you just created, click on the ellipsis that appears, and click "Edit URL".
+
+   3. Drop in the Product list component
+
+      Look for the ellipsis menu in the left toolbar and drop the Product list component into Makeswift.
+
+      With the Product list component selected, update the category you want to display and the number of products in the right panels labeled 'Category' and 'Count' respectively.
+
+3. **Create a product page template with product specific details**
+
+   1. Create a blank page
+
+      Look for the plus button in the left toolbar and specify "Blank page."
+
+   2. Edit page's URL to be `/__product__`
+
+      Hover over the "Untitled page" you just created, click on the ellipsis that appears, and click "Edit URL".
+
+      You should set this value to the `productTemplatePathname` from `/lib/config.ts` which comes predefined in this template as `/__product__`.
+
+   3. Drop in Product specific components
+
+      Look for the ellipsis menu in the left toolbar again and drop the Product price, Product name, and Add to cart button into Makeswift.
+
+
+## Using your own Shopify store
+
 
 1. **Create a Shopify store**
 
@@ -58,44 +100,15 @@ NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
     ```bash
     npx makeswift@latest init \
         --example shopify \
-        --env NEXT_PUBLIC_SHOPIFY_STORE_NAME=makeswift-example \
-        --env NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
+        --env NEXT_PUBLIC_SHOPIFY_STORE_NAME=<shopify-store-name> \
+        --env NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=<shopify-access-token>
     ```
 
-    You can always change these values later in the `.env.local` file.
+    If you've already run the CLI, and have a working Next.Js app with our Shopify store, then you can simply edit the `.env.local` file.
+
+    Make sure you do steps 2 and 3 in the `Using this repo` section.
 
 
-5. **Create a home page with a list of products**
-
-   1. Create a blank page
-
-      Look for the plus button in the left toolbar and specify "Blank page".
-
-   2. Edit the page's URL to be `/`
-
-      Hover over the "Untitled page" you just created, click on the ellipsis that appears, and click "Edit URL".
-
-   3. Drop in the Product list component
-
-      Look for the ellipsis menu in the left toolbar and drop the Product list component into Makeswift.
-
-      With the Product list component selected, update the category you want to display and the number of products in the right panels labeled 'Category' and 'Count' respectively.
-
-6. **Create a product page template with product specific details**
-
-   1. Create a blank page
-
-      Look for the plus button in the left toolbar and specify "Blank page."
-
-   2. Edit page's URL to be `/__product__`
-
-      Hover over the "Untitled page" you just created, click on the ellipsis that appears, and click "Edit URL".
-
-      You should set this value to the `productTemplatePathname` from `/lib/config.ts` which comes predefined in this template as `/__product__`.
-
-   3. Drop in Product specific components
-
-      Look for the ellipsis menu in the left toolbar again and drop the Product price, Product name, and Add to cart button into Makeswift.
 
 ---
 
