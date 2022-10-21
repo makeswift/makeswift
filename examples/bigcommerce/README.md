@@ -31,9 +31,6 @@ BIGCOMMERCE_ACCESS_TOKEN=5lw9ulikcp186tjgg3rs39kh4fg3vci
 
 ---
 
-Here is [a guide](https://support.bigcommerce.com/s/article/Starting-a-BigCommerce-Trial) to get you started.
-
-
 ## Using this repo locally
 
 1. **Clone this template using the Makeswift CLI**
@@ -80,7 +77,7 @@ Here is [a guide](https://support.bigcommerce.com/s/article/Starting-a-BigCommer
 
       Look for the ellipsis menu in the left toolbar again and drop the Product price, Product name, and Add to cart button into Makeswift.
 
-4. Using your own BigCommerce store
+## Using your own BigCommerce store
 
    Here is [a guide](https://support.bigcommerce.com/s/article/Starting-a-BigCommerce-Trial) on how to get your own BigCommerce store going.
 
@@ -102,6 +99,10 @@ Here is [a guide](https://support.bigcommerce.com/s/article/Starting-a-BigCommer
 
    > **Note**
    > Our CLI just writes these values to your `.env.local` file — nothing else.
+
+   If you are deploying to Vercel, simply provide them in the environment variable section.
+
+   <img src="https://user-images.githubusercontent.com/7907782/197216891-93be5f0f-01f6-4a3d-8087-c3c2f9536545.png" width="600" />
 
 
 ---
