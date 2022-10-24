@@ -1,7 +1,7 @@
 // @ts-check
 
 /** @typedef {import('next').NextConfig} NextConfig */
-/** @typedef {{ resolveSymlinks?: boolean }} MakeswiftNextPluginOptions */
+/** @typedef {{ resolveSymlinks?: boolean; appOrigin?: string }} MakeswiftNextPluginOptions */
 
 const withTmInitializer = require('next-transpile-modules')
 
@@ -10,7 +10,7 @@ const NEXT_TRANSPILE_MODULES_MODULES = ['@makeswift/runtime']
 
 /** @type {(options: MakeswiftNextPluginOptions) => (nextConfig: NextConfig) => NextConfig} */
 module.exports =
-  ({ resolveSymlinks } = {}) =>
+  ({ resolveSymlinks, appOrigin = 'https://app.makeswift.com' } = {}) =>
   (nextConfig = {}) => {
     /** @type {NextConfig} */
     const enhancedConfig = {
@@ -57,6 +57,29 @@ module.exports =
             : rewrites?.afterFiles ?? [],
           fallback: Array.isArray(rewrites) ? [] : rewrites?.fallback ?? [],
         }
+      },
+      async headers() {
+        const headers = await nextConfig.headers?.()
+
+        return [
+          ...headers,
+          {
+            source: '/:path*',
+            has: [
+              {
+                type: 'query',
+                key: 'x-makeswift-allow-origin',
+                value: 'true',
+              },
+            ],
+            headers: [
+              {
+                key: 'Access-Control-Allow-Origin',
+                value: appOrigin,
+              },
+            ],
+          },
+        ]
       },
     }
 
