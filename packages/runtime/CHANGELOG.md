@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.2.4
+
+### Patch Changes
+
+- 4c5d410: Fix changes in builder disappear on fast refresh.
+- Updated dependencies [fcf33f5]
+  - @makeswift/next-plugin@0.1.4
+
 ## 0.2.3
 
 ### Patch Changes
