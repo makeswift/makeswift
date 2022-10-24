@@ -1,5 +1,11 @@
 # @makeswift/next-plugin
 
+## 0.1.5
+
+### Patch Changes
+
+- e777f28: Hotfix: next plugin errors when `headers` is null.
+
 ## 0.1.4
 
 ### Patch Changes
