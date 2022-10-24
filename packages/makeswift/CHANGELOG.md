@@ -1,5 +1,15 @@
 # makeswift
 
+## 0.1.0
+
+### Minor Changes
+
+- e59fd1c: Release version 0.1.0 of the CLI
+
+### Patch Changes
+
+- e59fd1c: Add --env flag
+
 ## 0.0.10
 
 ### Patch Changes
