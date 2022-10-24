@@ -59,7 +59,7 @@ module.exports =
         }
       },
       async headers() {
-        const headers = await nextConfig.headers?.()
+        const headers = (await nextConfig.headers?.()) ?? []
 
         return [
           ...headers,
