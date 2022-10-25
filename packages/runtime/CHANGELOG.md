@@ -1,5 +1,41 @@
 # @makeswift/runtime
 
+## 0.0.0-20221025174920
+
+### Patch Changes
+
+- || all the headers
+
+## 0.0.0-20221025145623
+
+### Patch Changes
+
+- test followredirect
+
+## 0.0.0-20221024212124
+
+### Patch Changes
+
+- fallback to forwardedssl
+
+## 0.0.0-20221024210318
+
+### Patch Changes
+
+- yuh
+
+## 0.0.0-20221024204502
+
+### Patch Changes
+
+- more updates
+
+## 0.0.0-20221024204131
+
+### Patch Changes
+
+- hardcode proto
+
 ## 0.0.0-20221020195708
 
 ### Patch Changes

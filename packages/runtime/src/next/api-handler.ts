@@ -146,8 +146,14 @@ export function MakeswiftApiHandler(
         if (host == null) return res.status(400).send('Bad Request')
 
         const forwardedProto = req.headers['x-forwarded-proto']
+        const isForwardedProtoHttps =
+          typeof forwardedProto === 'string' && forwardedProto === 'https'
 
-        const proto = typeof forwardedProto === 'string' ? forwardedProto : 'http'
+        const forwardedSSL = req.headers['x-forwarded-ssl']
+        const isForwardedSSL = typeof forwardedSSL === 'string' && forwardedSSL === 'on'
+
+        const proto = isForwardedProtoHttps || isForwardedSSL ? 'https' : 'http'
+
         let target = `${proto}://${host}`
 
         // During local development we want to use the local Next.js address for proxying. The
@@ -183,6 +189,7 @@ export function MakeswiftApiHandler(
                 query: req.query,
                 target,
                 cookie,
+                proto,
               },
             },
             null,
@@ -191,15 +198,10 @@ export function MakeswiftApiHandler(
         )
 
         return await new Promise<void>((resolve, reject) =>
-          previewModeProxy.web(
-            req,
-            res,
-            { target, headers: { cookie }, followRedirects: true },
-            err => {
-              if (err) reject(err)
-              else resolve()
-            },
-          ),
+          previewModeProxy.web(req, res, { target, headers: { cookie } }, err => {
+            if (err) reject(err)
+            else resolve()
+          }),
         )
       }
 
