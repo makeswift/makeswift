@@ -39,16 +39,6 @@ export function MakeswiftApiHandler(
   const cors = Cors({ origin: appOrigin })
   const previewModeProxy = createProxyServer()
 
-  previewModeProxy.on('proxyReq', proxyReq => {
-    proxyReq.removeHeader('X-Makeswift-Preview-Mode')
-
-    const url = new URL(proxyReq.path, 'http://n')
-
-    url.searchParams.delete('x-makeswift-preview-mode')
-
-    proxyReq.path = url.pathname + url.search
-  })
-
   if (typeof apiKey !== 'string') {
     throw new Error(
       'The Makeswift Next.js API handler must be passed a valid Makeswift site API key: ' +
@@ -143,6 +133,10 @@ export function MakeswiftApiHandler(
           if (port != null) target = `http://localhost:${port}`
         }
 
+        const url = new URL(req.url ?? '/', 'http://n')
+        url.searchParams.delete('x-makeswift-preview-mode')
+        req.url = url.pathname + url.search
+
         const setCookie = res.setPreviewData({ makeswift: true }).getHeader('Set-Cookie')
         res.removeHeader('Set-Cookie')
 
@@ -153,10 +147,15 @@ export function MakeswiftApiHandler(
           .join(';')
 
         return await new Promise<void>((resolve, reject) =>
-          previewModeProxy.web(req, res, { target, headers: { cookie } }, err => {
-            if (err) reject(err)
-            else resolve()
-          }),
+          previewModeProxy.web(
+            req,
+            res,
+            { target, headers: { cookie }, followRedirects: true },
+            err => {
+              if (err) reject(err)
+              else resolve()
+            },
+          ),
         )
       }
 
