@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.0.0-20221025183814
+
+### Patch Changes
+
+- test followRedirect
+
 ## 0.0.0-20221025174920
 
 ### Patch Changes

@@ -39,36 +39,6 @@ export function MakeswiftApiHandler(
   const cors = Cors({ origin: appOrigin })
   const previewModeProxy = createProxyServer()
 
-  previewModeProxy.on('proxyReq', (proxyReq, req) => {
-    proxyReq.removeHeader('X-Makeswift-Preview-Mode')
-
-    const url = new URL(proxyReq.path, 'http://n')
-
-    url.searchParams.delete('x-makeswift-preview-mode')
-
-    proxyReq.path = url.pathname + url.search
-
-    console.log(
-      JSON.stringify(
-        {
-          proxyReq: {
-            host: proxyReq.host,
-            method: proxyReq.method,
-            path: proxyReq.path,
-          },
-          req: {
-            headers: req.headers,
-            httpVersion: req.httpVersion,
-            method: req.method,
-            url: req.url,
-          },
-        },
-        null,
-        2,
-      ),
-    )
-  })
-
   if (typeof apiKey !== 'string') {
     throw new Error(
       'The Makeswift Next.js API handler must be passed a valid Makeswift site API key: ' +
@@ -146,13 +116,16 @@ export function MakeswiftApiHandler(
         if (host == null) return res.status(400).send('Bad Request')
 
         const forwardedProto = req.headers['x-forwarded-proto']
-        const isForwardedProtoHttps =
-          typeof forwardedProto === 'string' && forwardedProto === 'https'
+        const proto = typeof forwardedProto === 'string' ? forwardedProto : 'http'
 
-        const forwardedSSL = req.headers['x-forwarded-ssl']
-        const isForwardedSSL = typeof forwardedSSL === 'string' && forwardedSSL === 'on'
+        // proxyReq.removeHeader('X-Makeswift-Preview-Mode')
+        // const url = new URL(proxyReq.path, 'http://n')
+        // url.searchParams.delete('x-makeswift-preview-mode')
+        // proxyReq.path = url.pathname + url.search
 
-        const proto = isForwardedProtoHttps || isForwardedSSL ? 'https' : 'http'
+        const url = new URL(req.url ?? '/', 'http://n')
+        url.searchParams.delete('x-makeswift-preview-mode')
+        req.url = url.pathname + url.search
 
         let target = `${proto}://${host}`
 
@@ -198,10 +171,15 @@ export function MakeswiftApiHandler(
         )
 
         return await new Promise<void>((resolve, reject) =>
-          previewModeProxy.web(req, res, { target, headers: { cookie } }, err => {
-            if (err) reject(err)
-            else resolve()
-          }),
+          previewModeProxy.web(
+            req,
+            res,
+            { target, headers: { cookie }, followRedirects: true },
+            err => {
+              if (err) reject(err)
+              else resolve()
+            },
+          ),
         )
       }
 
