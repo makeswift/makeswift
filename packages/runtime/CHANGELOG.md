@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.2.7
+
+### Patch Changes
+
+- 427a709: Add better error message
+
 ## 0.2.6
 
 ### Patch Changes
