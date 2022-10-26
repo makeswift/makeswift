@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.2.6
+
+### Patch Changes
+
+- bb532b5: update preview mode proxy more flexibly determine protocol
+
 ## 0.2.5
 
 ### Patch Changes
