@@ -4,6 +4,7 @@ import { createProxyServer } from 'http-proxy'
 import { NextApiHandler } from 'next'
 import { parse } from 'set-cookie-parser'
 import { version } from '../../package.json'
+import isErrorWithMessage from '../utils/isErrorWithMessage'
 
 type Fonts = Font[]
 
@@ -114,6 +115,10 @@ export function MakeswiftApiHandler(
 
           return res.json({ revalidated: true })
         } catch (error) {
+          if (isErrorWithMessage(error)) {
+            return res.status(500).json({ message: error.message })
+          }
+
           return res.status(500).json({ message: 'Error Revalidating' })
         }
       }
