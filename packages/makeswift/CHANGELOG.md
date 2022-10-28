@@ -1,5 +1,11 @@
 # makeswift
 
+## 0.1.1
+
+### Patch Changes
+
+- 3f0f42d: Add ability for user to select example during setup process with `npx makeswift` CLI.
+
 ## 0.1.0
 
 ### Minor Changes
