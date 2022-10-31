@@ -1,8 +1,13 @@
 export type Config = {
   bigcommerce: {
-    storeName: string
-    storeHash: string
-    accessToken: string
+
+    storeClientId: string;
+    storeToken: string;
+    storeURL: string;
+
+    storefrontURL: string;
+    storefrontToken: string;
+
     allowedCorsOrigins: string[]
   }
   makeswift: {
@@ -22,9 +27,14 @@ function getEnvVarOrThrow(key: string): string {
 export function getConfig(): Config {
   return {
     bigcommerce: {
-      accessToken: getEnvVarOrThrow('BIGCOMMERCE_ACCESS_TOKEN'),
-      storeHash: getEnvVarOrThrow('BIGCOMMERCE_STORE_HASH'),
-      storeName: getEnvVarOrThrow('BIGCOMMERCE_STORE_NAME'),
+      storeClientId: getEnvVarOrThrow('BIGCOMMERCE_STORE_API_CLIENT_ID'),
+      storeToken: getEnvVarOrThrow('BIGCOMMERCE_STORE_API_TOKEN'),
+      storeURL: getEnvVarOrThrow('BIGCOMMERCE_STORE_API_URL'),
+      
+
+      storefrontURL: getEnvVarOrThrow('BIGCOMMERCE_STOREFRONT_API_URL'),
+      storefrontToken:  getEnvVarOrThrow('BIGCOMMERCE_STOREFRONT_API_TOKEN'),
+
       allowedCorsOrigins:
         process.env.NODE_ENV === 'production' && process.env.VERCEL === '1'
           ? [new URL(`https://${getEnvVarOrThrow('VERCEL_URL')}`).origin]

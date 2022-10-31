@@ -14,12 +14,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const response = await fetch(
-      `https://api.bigcommerce.com/stores/${config.bigcommerce.storeHash}/v3/carts/${req.query.cartId}`,
+      `${config.bigcommerce.storeURL}/v3/carts/${req.query.cartId}`,
       {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'X-Auth-Token': config.bigcommerce.accessToken,
+          'X-Auth-Token': config.bigcommerce.storeToken,
         },
       },
     )
@@ -33,13 +33,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'POST') {
     if (req.query.cartId == null) {
+
+      const url = new URL('carts', config.bigcommerce.storeURL)
+      console.log({url: `${config.bigcommerce.storeURL}/v3/carts`,});
+      
       const response = await fetch(
-        `https://api.bigcommerce.com/stores/${config.bigcommerce.storeHash}/v3/carts`,
+        `${config.bigcommerce.storeURL}/v3/carts`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-Auth-Token': config.bigcommerce.accessToken,
+            'X-Auth-Token': config.bigcommerce.storeToken,
           },
           body: JSON.stringify({
             line_items: [JSON.parse(req.body).line_item],
@@ -56,12 +60,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const response = await fetch(
-      `https://api.bigcommerce.com/stores/${config.bigcommerce.storeHash}/v3/carts/${req.query.cartId}/items`,
+      `${config.bigcommerce.storeURL}/v3/carts/${req.query.cartId}/items`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Auth-Token': config.bigcommerce.accessToken,
+          'X-Auth-Token': config.bigcommerce.storeToken,
         },
         body: JSON.stringify({
           line_items: [JSON.parse(req.body).line_item],
@@ -91,12 +95,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const response = await fetch(
-      `https://api.bigcommerce.com/stores/${config.bigcommerce.storeHash}/v3/carts/${req.query.cartId}/items/${req.query.lineItemId}`,
+      `${config.bigcommerce.storeURL}/v3/carts/${req.query.cartId}/items/${req.query.lineItemId}`,
       {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'X-Auth-Token': config.bigcommerce.accessToken,
+          'X-Auth-Token': config.bigcommerce.storeToken,
         },
         body: req.body,
       },
@@ -123,12 +127,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const response = await fetch(
-      `https://api.bigcommerce.com/stores/${config.bigcommerce.storeHash}/v3/carts/${req.query.cartId}/items/${req.query.lineItemId}`,
+      `${config.bigcommerce.storeURL}/v3/carts/${req.query.cartId}/items/${req.query.lineItemId}`,
       {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          'X-Auth-Token': config.bigcommerce.accessToken,
+          'X-Auth-Token': config.bigcommerce.storeToken,
         },
       },
     )
