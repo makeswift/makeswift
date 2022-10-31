@@ -1,5 +1,4 @@
 import { getConfig } from '../config'
-import { DEFAULT_PRODUCT } from './default-values'
 import { CATEGORY_QUERY, PRODUCTS_QUERY, PRODUCT_QUERY } from './graphql'
 import {
   CategoriesQuery,
@@ -17,12 +16,12 @@ const A_WEEK_FROM_NOW = Math.floor(
 export async function getApiToken(): Promise<string> {
   const config = getConfig()
   const response = await fetch(
-    `https://api.bigcommerce.com/stores/${config.bigcommerce.storeHash}/v3/storefront/api-token`,
+    `${config.bigcommerce.storeURL}storefront/api-token`,
     {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Auth-Token': config.bigcommerce.accessToken,
+        'X-Auth-Token': config.bigcommerce.storeToken,
       },
       body: JSON.stringify({
         channel_id: 1,
@@ -41,14 +40,14 @@ export async function getApiToken(): Promise<string> {
 
 export async function getProducts(): Promise<ProductFragment[]> {
   const config = getConfig()
-  const apiToken = await getApiToken()
+  // const apiToken = await getApiToken()
   const response = await fetch(
-    `https://${config.bigcommerce.storeName}.mybigcommerce.com/graphql`,
+    config.bigcommerce.storefrontURL,
     {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + apiToken,
+        Authorization: 'Bearer ' + config.bigcommerce.storefrontToken,
       },
       body: JSON.stringify({ query: PRODUCTS_QUERY }),
     },
@@ -71,14 +70,14 @@ export async function getProducts(): Promise<ProductFragment[]> {
 
 export async function getCategories(): Promise<Category[]> {
   const config = await getConfig()
-  const apiToken = await getApiToken()
+  // const apiToken = await getApiToken()
   const response = await fetch(
-    `https://${config.bigcommerce.storeName}.mybigcommerce.com/graphql`,
+    config.bigcommerce.storefrontURL,
     {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + apiToken,
+        Authorization: 'Bearer ' + config.bigcommerce.storefrontToken,
       },
       body: JSON.stringify({ query: CATEGORY_QUERY }),
     },
@@ -101,14 +100,14 @@ export async function getCategories(): Promise<Category[]> {
 
 export async function getProduct(id: number): Promise<ProductFragment | null> {
   const config = getConfig()
-  const apiToken = await getApiToken()
+  // const apiToken = await getApiToken()
   const response = await fetch(
-    `https://${config.bigcommerce.storeName}.mybigcommerce.com/graphql`,
+    config.bigcommerce.storefrontURL,
     {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + apiToken,
+        Authorization: 'Bearer ' + config.bigcommerce.storefrontToken,
       },
       body: JSON.stringify({ query: PRODUCT_QUERY, variables: { entityId: id } }),
     },
