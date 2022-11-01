@@ -1,3 +1,4 @@
+import urlJoin from 'url-join'
 import { getConfig } from '../config'
 import { CATEGORY_QUERY, PRODUCTS_QUERY, PRODUCT_QUERY } from './graphql'
 import {
@@ -15,21 +16,18 @@ const A_WEEK_FROM_NOW = Math.floor(
 
 export async function getApiToken(): Promise<string> {
   const config = getConfig()
-  const response = await fetch(
-    `${config.bigcommerce.storeURL}storefront/api-token`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Auth-Token': config.bigcommerce.storeToken,
-      },
-      body: JSON.stringify({
-        channel_id: 1,
-        expires_at: A_WEEK_FROM_NOW,
-        allowed_cors_origins: config.bigcommerce.allowedCorsOrigins,
-      }),
+  const response = await fetch(urlJoin(config.bigcommerce.storeURL, '/storefront/api-token'), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Auth-Token': config.bigcommerce.storeToken,
     },
-  )
+    body: JSON.stringify({
+      channel_id: 1,
+      expires_at: A_WEEK_FROM_NOW,
+      allowed_cors_origins: config.bigcommerce.allowedCorsOrigins,
+    }),
+  })
 
   if (!response.ok) throw new Error(response.statusText)
 
@@ -40,18 +38,14 @@ export async function getApiToken(): Promise<string> {
 
 export async function getProducts(): Promise<ProductFragment[]> {
   const config = getConfig()
-  // const apiToken = await getApiToken()
-  const response = await fetch(
-    config.bigcommerce.storefrontURL,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + config.bigcommerce.storefrontToken,
-      },
-      body: JSON.stringify({ query: PRODUCTS_QUERY }),
+  const response = await fetch(config.bigcommerce.storefrontURL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + config.bigcommerce.storefrontToken,
     },
-  )
+    body: JSON.stringify({ query: PRODUCTS_QUERY }),
+  })
 
   if (!response.ok) throw new Error(response.statusText)
 
@@ -70,18 +64,14 @@ export async function getProducts(): Promise<ProductFragment[]> {
 
 export async function getCategories(): Promise<Category[]> {
   const config = await getConfig()
-  // const apiToken = await getApiToken()
-  const response = await fetch(
-    config.bigcommerce.storefrontURL,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + config.bigcommerce.storefrontToken,
-      },
-      body: JSON.stringify({ query: CATEGORY_QUERY }),
+  const response = await fetch(config.bigcommerce.storefrontURL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + config.bigcommerce.storefrontToken,
     },
-  )
+    body: JSON.stringify({ query: CATEGORY_QUERY }),
+  })
 
   if (!response.ok) throw new Error(response.statusText)
 
@@ -100,18 +90,14 @@ export async function getCategories(): Promise<Category[]> {
 
 export async function getProduct(id: number): Promise<ProductFragment | null> {
   const config = getConfig()
-  // const apiToken = await getApiToken()
-  const response = await fetch(
-    config.bigcommerce.storefrontURL,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + config.bigcommerce.storefrontToken,
-      },
-      body: JSON.stringify({ query: PRODUCT_QUERY, variables: { entityId: id } }),
+  const response = await fetch(config.bigcommerce.storefrontURL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + config.bigcommerce.storefrontToken,
     },
-  )
+    body: JSON.stringify({ query: PRODUCT_QUERY, variables: { entityId: id } }),
+  })
 
   if (!response.ok) throw new Error(response.statusText)
 

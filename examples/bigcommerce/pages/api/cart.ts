@@ -2,6 +2,7 @@ import { getConfig } from 'lib/config'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import { CartResponse, RestResponse } from 'lib/bigcommerce'
+import urlJoin from 'url-join'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const config = getConfig()
@@ -14,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const response = await fetch(
-      `${config.bigcommerce.storeURL}/v3/carts/${req.query.cartId}`,
+      urlJoin(config.bigcommerce.storeURL, `/v3/carts/${req.query.cartId}`),
       {
         method: 'GET',
         headers: {
@@ -33,24 +34,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'POST') {
     if (req.query.cartId == null) {
-
-      const url = new URL('carts', config.bigcommerce.storeURL)
-      console.log({url: `${config.bigcommerce.storeURL}/v3/carts`,});
-      
-      const response = await fetch(
-        `${config.bigcommerce.storeURL}/v3/carts`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Auth-Token': config.bigcommerce.storeToken,
-          },
-          body: JSON.stringify({
-            line_items: [JSON.parse(req.body).line_item],
-            channel_id: 1,
-          }),
+      const response = await fetch(urlJoin(config.bigcommerce.storeURL, '/v3/carts'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Auth-Token': config.bigcommerce.storeToken,
         },
-      )
+        body: JSON.stringify({
+          line_items: [JSON.parse(req.body).line_item],
+          channel_id: 1,
+        }),
+      })
 
       if (!response.ok) throw new Error(response.statusText)
 
@@ -60,7 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const response = await fetch(
-      `${config.bigcommerce.storeURL}/v3/carts/${req.query.cartId}/items`,
+      urlJoin(config.bigcommerce.storeURL, `/v3/carts/${req.query.cartId}/items`),
       {
         method: 'POST',
         headers: {
@@ -95,7 +89,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const response = await fetch(
-      `${config.bigcommerce.storeURL}/v3/carts/${req.query.cartId}/items/${req.query.lineItemId}`,
+      urlJoin(
+        config.bigcommerce.storeURL,
+        `/v3/carts/${req.query.cartId}/items/${req.query.lineItemId}`,
+      ),
       {
         method: 'PUT',
         headers: {
@@ -127,7 +124,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const response = await fetch(
-      `${config.bigcommerce.storeURL}/v3/carts/${req.query.cartId}/items/${req.query.lineItemId}`,
+      urlJoin(
+        config.bigcommerce.storeURL,
+        `/v3/carts/${req.query.cartId}/items/${req.query.lineItemId}`,
+      ),
       {
         method: 'DELETE',
         headers: {
