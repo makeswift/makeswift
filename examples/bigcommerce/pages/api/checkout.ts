@@ -2,6 +2,7 @@ import { getConfig } from 'lib/config'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import { RedirectURLResponse, RestResponse } from 'lib/bigcommerce'
+import urlJoin from 'url-join'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const config = getConfig()
@@ -17,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const response = await fetch(
-    `${config.bigcommerce.storeURL}/v3/carts/${req.query.cartId}/redirect_urls`,
+    urlJoin(config.bigcommerce.storeURL, `/v3/carts/${req.query.cartId}/redirect_urls`),
     {
       method: 'POST',
       headers: {
