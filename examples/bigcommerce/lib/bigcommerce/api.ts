@@ -1,40 +1,6 @@
-import urlJoin from 'url-join'
 import { getConfig } from '../config'
 import { CATEGORY_QUERY, PRODUCTS_QUERY, PRODUCT_QUERY } from './graphql'
-import {
-  CategoriesQuery,
-  Category,
-  GraphQLResponse,
-  ProductFragment,
-  ProductQuery,
-  StorefrontApiTokenResponse,
-} from './types'
-
-const A_WEEK_FROM_NOW = Math.floor(
-  new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7).getTime() / 1000,
-)
-
-export async function getApiToken(): Promise<string> {
-  const config = getConfig()
-  const response = await fetch(urlJoin(config.bigcommerce.storeURL, '/storefront/api-token'), {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Auth-Token': config.bigcommerce.storeToken,
-    },
-    body: JSON.stringify({
-      channel_id: 1,
-      expires_at: A_WEEK_FROM_NOW,
-      allowed_cors_origins: config.bigcommerce.allowedCorsOrigins,
-    }),
-  })
-
-  if (!response.ok) throw new Error(response.statusText)
-
-  const result: StorefrontApiTokenResponse = await response.json()
-
-  return result.data.token
-}
+import { CategoriesQuery, Category, GraphQLResponse, ProductFragment, ProductQuery } from './types'
 
 export async function getProducts(): Promise<ProductFragment[]> {
   const config = getConfig()
