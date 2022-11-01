@@ -1,6 +1,5 @@
 export type Config = {
   bigcommerce: {
-    storeClientId: string
     storeToken: string
     storeURL: string
     storefrontURL: string
@@ -24,7 +23,6 @@ function getEnvVarOrThrow(key: string): string {
 export function getConfig(): Config {
   return {
     bigcommerce: {
-      storeClientId: getEnvVarOrThrow('BIGCOMMERCE_STORE_API_CLIENT_ID'),
       storeToken: getEnvVarOrThrow('BIGCOMMERCE_STORE_API_TOKEN'),
       storeURL: getEnvVarOrThrow('BIGCOMMERCE_STORE_API_URL'),
       storefrontURL: getEnvVarOrThrow('BIGCOMMERCE_STOREFRONT_API_URL'),

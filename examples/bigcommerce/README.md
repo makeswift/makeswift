@@ -15,97 +15,108 @@ This example includes a home page for listing products by category and a product
 
 ---
 
-## Deploy your own
+## Using this example
 
-Deploy your own with [Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fbigcommerce&env=MAKESWIFT_SITE_API_KEY,BIGCOMMERCE_STORE_NAME,BIGCOMMERCE_STORE_HASH,BIGCOMMERCE_ACCESS_TOKEN&envDescription=Check%20step%203%20of%20the%20example%20README.md%20for%20details%20on%20where%20to%20find%20these%20values.&envLink=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fbigcommerce%23using-this-repo&project-name=makeswift-bigcommerce-example&repository-name=makeswift-bigcommerce-example) or preview live with [StackBlitz](https://stackblitz.com/github/makeswift/makeswift/tree/main/examples/bigcommerce)
+To quickly try this example either deploy to Vercel or use our CLI. If you already have a Bigcommerce store and know you want to use this example scroll down to "Using your own BigCommerce store."
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fbigcommerce&env=MAKESWIFT_SITE_API_KEY,BIGCOMMERCE_STORE_NAME,BIGCOMMERCE_STORE_HASH,BIGCOMMERCE_ACCESS_TOKEN&envDescription=Check%20step%203%20of%20the%20example%20README.md%20for%20details%20on%20where%20to%20find%20these%20values.&envLink=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fbigcommerce%23using-this-repo&project-name=makeswift-bigcommerce-example&repository-name=makeswift-bigcommerce-example)
+### Deploy your own on Vercel
 
-Note: If you are just trying out Makeswift with our e-commerce template feel free use this example store and the read-only access token for your deployment.
+The deploy link below includes integrations with BigCommerce and Makeswift to get you up in running quickly.
 
-```
-BIGCOMMERCE_STORE_NAME=makeswift-example
-BIGCOMMERCE_STORE_HASH=uvhswop3wh
-BIGCOMMERCE_ACCESS_TOKEN=5lw9ulikcp186tjgg3rs39kh4fg3vci
-```
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fbigcommerce&project-name=bigcommerce-makeswift-example&repo-name=bigcommerce-makeswift-example&redirect-url=https%3A%2F%2Fapp.makeswift.com&integration-ids=oac_51ryd7Pob5ZsyTFzNzVvpsGq,oac_MuWZiE4jtmQ2ejZQaQ7ncuDT)
 
 ---
 
-## Using this repo locally
+### Using the Makeswift CLI
 
-1. **Clone this template using the Makeswift CLI**
+If you instead want to run the example locally we have created an example Bigcommerce store so you can do that easily.
+
+1. Use this template with the Makeswift CLI
 
    ```bash
    npx makeswift@latest init \
       --example bigcommerce \
-      --env BIGCOMMERCE_STORE_NAME=makeswift-example \
-      --env BIGCOMMERCE_STORE_HASH=uvhswop3wh \
-      --env BIGCOMMERCE_ACCESS_TOKEN=5lw9ulikcp186tjgg3rs39kh4fg3vci
+      --env BIGCOMMERCE_STORE_API_URL=https://api.bigcommerce.com/stores/uvhswop3wh \
+      --env BIGCOMMERCE_STORE_API_TOKEN=5lw9ulikcp186tjgg3rs39kh4fg3vci \
+      --env BIGCOMMERCE_STOREFRONT_API_URL="https://makeswift-example.mybigcommerce.com/graphql" \
+      --env BIGCOMMERCE_STOREFRONT_API_TOKEN="eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJjaWQiOjEsImNvcnMiOlsiaHR0cHM6Ly9tYWtlc3dpZnQtZXhhbXBsZS5teWJpZ2NvbW1lcmNlLmNvbSJdLCJlYXQiOjE2Njc5MzI1MTUsImlhdCI6MTY2NzMyNzcxNSwiaXNzIjoiQkMiLCJzaWQiOjEwMDI1OTU3MTAsInN1YiI6Ijlzem1mc2txeWRmdXc5MnkwajYyZjkxYXQ1bnAzdHciLCJzdWJfdHlwZSI6MiwidG9rZW5fdHlwZSI6MX0.X4A2EWh05-baaG5do_or3mEJgQbmg2pMNg4kLLadWp0ywmzqYI3piExNxSbVgOnvzG5U9gxOKCZsOVPeh0mzfA"
    ```
 
-   Once the CLI is done running, it will be running `yarn dev` locally. This template will be setup for you locally and integrated with Makeswift.
+2. When prompted log in or sign up for Makeswift and select the "Ecommerce" template. (It's at the end of the template page)
 
-2. **Create a home page with a list of products**
+3. Once the CLI is done running, it runs `yarn dev` and opens Makeswift for you.
 
-   1. Create a blank page
+4. Go to the "Home" page and drop in the "Product list" component
 
-      Look for the plus button in the left toolbar and specify "Blank page".
+   - The home page is in the left toolbar
+   - Look for the ellipsis menu(again left toolbar) and drop the Product list component into Makeswift.
 
-   2. Edit the page's URL to be `/`
+     With the Product list component selected, update the category you want to display and the number of products in the right panels labeled 'Category' and 'Count' respectively.
 
-      Hover over the "Untitled page" you just created, click on the ellipsis that appears, and click "Edit URL".
+5. Go to the "\_\_product\_\_" page (also called the product template page) and drop in the product-specific components
 
-   3. Drop in the Product list component
+   - The product template page is in the left toolbar
+   - Look for the ellipsis menu(again left toolbar) and drop in the Product specific components
 
-      Look for the ellipsis menu in the left toolbar and drop the Product list component into Makeswift.
-
-      With the Product list component selected, update the category you want to display and the number of products in the right panels labeled 'Category' and 'Count' respectively.
-
-3. **Create a product page template with product specific details**
-
-   1. Create a blank page
-
-      Look for the plus button in the left toolbar and specify "Blank page."
-
-   2. Edit page's URL to be `/__product__`
-
-      Hover over the "Untitled page" you just created, click on the ellipsis that appears, and click "Edit URL".
-
-      You should set this value to the `productTemplatePathname` from `/lib/config.ts` which comes predefined in this template as `/__product__`.
-
-   3. Drop in Product specific components
-
-      Look for the ellipsis menu in the left toolbar again and drop the Product price, Product name, and Add to cart button into Makeswift.
+     These include the Product price, Product description, Product price, Product name, and Add to cart components.
 
 ## Using your own BigCommerce store
 
-   Here is [a guide](https://support.bigcommerce.com/s/article/Starting-a-BigCommerce-Trial) on how to get your own BigCommerce store going.
+Once you have given the example a try it's time to use your own BigCommerce store. Here is [a guide](https://support.bigcommerce.com/s/article/Starting-a-BigCommerce-Trial) on how to set one up.
 
-   Once you have that, you'll need the environment variables.
+Note: the env for this example corresponds to the [Vercel Commerce BigCommerce example](https://github.com/vercel/commerce/tree/main/packages/bigcommerce).
 
-   `BIGCOMMERCE_STORE_NAME` and `BIGCOMMERCE_STORE_HASH` can be found in the BigCommerce dashboard
+### How to get the environment variables from your store:
 
-   <img src="https://user-images.githubusercontent.com/20950876/184250701-c7af5854-ad4a-4dec-b8e1-1653cddbff1c.png" width="600" />
+- `BIGCOMMERCE_STORE_API_TOKEN` requires an [API account](https://support.bigcommerce.com/s/article/Store-API-Accounts?language=en_US)
 
-   - `BIGCOMMERCE_ACCESS_TOKEN` requires you to [create an API account](https://support.bigcommerce.com/s/article/Store-API-Accounts?language=en_US)
+  - This token needs modify rights on Cart, Checkout, and Storefront API Tokens, and read rights on Products and Content.
+  - The "Access Token" created is the value that is used as `BIGCOMMERCE_STORE_API_TOKEN`
 
-   If you've already run the CLI, you can replace the values in your `.env.local` file. Otherwise, you can run the CLI with your own values.
+- `BIGCOMMERCE_STORE_API_URL`
 
-   ```bash
-   npx makeswift@latest init \
-      --example bigcommerce \
-      --env BIGCOMMERCE_STORE_NAME=<store-name> \
-      --env BIGCOMMERCE_STORE_HASH=<store-hash> \
-      --env BIGCOMMERCE_ACCESS_TOKEN=<access-token>
-   ```
+  - An ID can be found in the URL of your BigCommerce dashboard
+    ![CleanShot 2022-11-01 at 15 09 40@2x](https://user-images.githubusercontent.com/20950876/199331796-06b8b86f-5891-4344-9589-b02e78fd34f1.png)
+  - This ID should be inserted into `https://api.bigcommerce.com/stores/<ID>` like "uvhswop3wh" is in our example store(`https://api.bigcommerce.com/stores/uvhswop3wh`)
 
-   > **Note**
-   > Our CLI just writes these values to your `.env.local` file — nothing else.
+- `BIGCOMMERCE_STOREFRONT_API_URL`
 
-   If you are deploying to Vercel, simply provide them in the environment variable section.
+  - A StoreFront API URL is the [href](https://developer.mozilla.org/en-US/docs/Web/API/URL/href) your BigCommerce dashboard + `/graphql`
+    ![CleanShot 2022-11-01 at 15 11 04@2x](https://user-images.githubusercontent.com/20950876/199331779-7a27631a-1035-40d9-9df6-40217cd14e06.png)
+  - Since the example dashboard is found at `https://store-uvhswop3wh.mybigcommerce.com/` the example storefront API URL is `https://store-uvhswop3wh.mybigcommerce.com/graphql`
+
+- `BIGCOMMERCE_STOREFRONT_API_TOKEN`
+
+  - The StoreFront API token is a JWT. To create it use [this endpoint](https://developer.bigcommerce.com/api-reference/044bc7b21e5b4-create-a-token). More details can be found [here](https://developer.bigcommerce.com/api-reference/35bac0e4eda61-graph-ql-storefront-api#request-tokens-with-rest-api)
+
+  For the example store I create this token like so:
+
+  ```bash
+  curl -H "X-Auth-Token: 5lw9ulikcp186tjgg3rs39kh4fg3vci" -H "Content-Type: application/json" -X POST -d '{"channel_id":1,"expires_at":1982692202}' https://api.bigcommerce.com/stores/uvhswop3wh/v3/storefront/api-token
+  ```
+
+### Updating the deployed host on Vercel
+
+If you clicked the "Deploy" button earlier you can change the environment variable in vercel.com
 
    <img src="https://user-images.githubusercontent.com/7907782/197216891-93be5f0f-01f6-4a3d-8087-c3c2f9536545.png" width="600" />
 
+### Updating the locally running host
+
+If you started out with the CLI you can update the generated `.env.local` with any new values from your BigCommerce store.
+
+For the example store this `.env.local` looks like:
+
+```
+MAKESWIFT_SITE_API_KEY=XXX-XXX-XXX
+
+BIGCOMMERCE_STORE_API_TOKEN=5lw9ulikcp186tjgg3rs39kh4fg3vci
+BIGCOMMERCE_STORE_API_URL=https://api.bigcommerce.com/stores/uvhswop3wh
+BIGCOMMERCE_STOREFRONT_API_URL=https://store-uvhswop3wh.mybigcommerce.com/graphql
+BIGCOMMERCE_STOREFRONT_API_TOKEN="eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJjaWQiOjEsImNvcnMiOlsiaHR0cHM6Ly9tYWtlc3dpZnQtZXhhbXBsZS5teWJpZ2NvbW1lcmNlLmNvbSJdLCJlYXQiOjE2Njc5MzI1MTUsImlhdCI6MTY2NzMyNzcxNSwiaXNzIjoiQkMiLCJzaWQiOjEwMDI1OTU3MTAsInN1YiI6Ijlzem1mc2txeWRmdXc5MnkwajYyZjkxYXQ1bnAzdHciLCJzdWJfdHlwZSI6MiwidG9rZW5fdHlwZSI6MX0.X4A2EWh05-baaG5do_or3mEJgQbmg2pMNg4kLLadWp0ywmzqYI3piExNxSbVgOnvzG5U9gxOKCZsOVPeh0mzfA"
+```
+
+If you are struggling to configure this env feel free to reach out in our [Discord](https://discord.com/invite/7dDpz6y) and we will be happy to help!
 
 ---
 
