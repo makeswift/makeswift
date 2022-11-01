@@ -1,5 +1,3 @@
-export type StorefrontApiTokenResponse = { data: { token: string } }
-
 export type GraphQLError = { message: string }
 
 export type GraphQLResponse<T> =
