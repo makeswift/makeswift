@@ -34,7 +34,7 @@ export async function getStaticProps(
     preview: ctx.preview,
   })
 
-  if (snapshot == null) return { notFound: true }
+  if (snapshot == null) return { notFound: true, revalidate: 1 }
 
   const slug = ctx.params?.slug
 
@@ -43,7 +43,7 @@ export async function getStaticProps(
   const products = await getProducts()
   const product = await getProduct(Number.parseInt(slug.toString(), 10))
 
-  if (product == null) return { notFound: true }
+  if (product == null) return { notFound: true, revalidate: 1 }
 
   return { props: { snapshot, products, product }, revalidate: 1 }
 }
