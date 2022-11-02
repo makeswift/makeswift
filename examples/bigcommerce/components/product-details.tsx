@@ -1,4 +1,4 @@
-import Image from 'next/image'
+/* eslint-disable @next/next/no-img-element */
 import Link from 'next/link'
 
 import { useProduct } from 'lib/product-context'
@@ -13,20 +13,12 @@ export function ProductImages({ className }: ProductImagesProps) {
   return (
     <div className={`${className} grid grid-cols-1 gap-6`}>
       <div className="flex flex-col gap-3">
-        <Image
-          className=""
-          src={image.urlOriginal}
-          alt={image.altText}
-          layout="responsive"
-          width="650"
-          height="740"
-          priority={true}
-        />
+        <img className="" src={image.urlOriginal} alt={image.altText} />
 
         <div className="flex gap-2 justify-center items-center">
-          <Image src={image.urlOriginal} alt={image.altText} width="80" height="80" />
-          <Image src={image.urlOriginal} alt={image.altText} width="80" height="80" />
-          <Image src={image.urlOriginal} alt={image.altText} width="80" height="80" />
+          <img src={image.urlOriginal} alt={image.altText} width="80" />
+          <img src={image.urlOriginal} alt={image.altText} width="80" />
+          <img src={image.urlOriginal} alt={image.altText} width="80" />
         </div>
       </div>
     </div>

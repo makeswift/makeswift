@@ -1,5 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
 import { Popover, Transition } from '@headlessui/react'
-import Image from 'next/image'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -25,13 +25,7 @@ function CartLineItem({ lineItem }: CartLineItemProps) {
   return (
     <Link href={`/product/${lineItem.product_id}`}>
       <a className={`flex w-full space-x-4 items-end`} key={lineItem.id}>
-        <Image
-          src={lineItem.image_url}
-          alt={`Product image for ${lineItem.name}`}
-          layout="fixed"
-          width={70}
-          height={80}
-        />
+        <img src={lineItem.image_url} alt={`Product image for ${lineItem.name}`} width={70} />
         <div className="flex flex-col flex-grow items-start justify-between">
           <div className="text-base text-black">{lineItem.name}</div>
           <div className="text-sm text-green mb-2">{formatPrice(lineItem.list_price)}</div>
