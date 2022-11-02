@@ -1,5 +1,11 @@
 # makeswift
 
+## 0.1.2
+
+### Patch Changes
+
+- e59a756: Fix bug where --example flag is ignored
+
 ## 0.1.1
 
 ### Patch Changes
