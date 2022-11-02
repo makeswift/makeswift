@@ -91,7 +91,7 @@ async function init(
     // Handshake Step 4 - Makeswift redirects to the builder with the site open,
     //                    with the host using `nextAppUrl` for the builder
 
-    return { nextAppPort, envLocal, example }
+    return { nextAppPort, envLocal, example: example || passedInExample || null }
   }
 
   validate()
