@@ -41,6 +41,7 @@ We have created an example Bigcommerce store, so you can try this example withou
       --example bigcommerce \
       --env BIGCOMMERCE_STORE_API_URL=https://api.bigcommerce.com/stores/uvhswop3wh \
       --env BIGCOMMERCE_STORE_API_TOKEN=5lw9ulikcp186tjgg3rs39kh4fg3vci \
+      --env BIGCOMMERCE_CHANNEL_ID=1 \
       --env BIGCOMMERCE_STOREFRONT_API_URL="https://makeswift-example.mybigcommerce.com/graphql" \
       --env BIGCOMMERCE_STOREFRONT_API_TOKEN="eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJjaWQiOjEsImNvcnMiOlsiaHR0cHM6Ly9tYWtlc3dpZnQtZXhhbXBsZS5teWJpZ2NvbW1lcmNlLmNvbSJdLCJlYXQiOjE2Njc5MzI1MTUsImlhdCI6MTY2NzMyNzcxNSwiaXNzIjoiQkMiLCJzaWQiOjEwMDI1OTU3MTAsInN1YiI6Ijlzem1mc2txeWRmdXc5MnkwajYyZjkxYXQ1bnAzdHciLCJzdWJfdHlwZSI6MiwidG9rZW5fdHlwZSI6MX0.X4A2EWh05-baaG5do_or3mEJgQbmg2pMNg4kLLadWp0ywmzqYI3piExNxSbVgOnvzG5U9gxOKCZsOVPeh0mzfA"
    ```
@@ -82,6 +83,12 @@ Note: the env for this example corresponds to the [Vercel Commerce BigCommerce e
     ![CleanShot 2022-11-01 at 15 09 40@2x](https://user-images.githubusercontent.com/20950876/199331796-06b8b86f-5891-4344-9589-b02e78fd34f1.png)
   - This ID should be inserted into `https://api.bigcommerce.com/stores/<ID>` 
   - Since the example ID is "uvhswop3wh" the example storefront API URL is (`https://api.bigcommerce.com/stores/uvhswop3wh`)
+
+- `BIGCOMMERCE_CHANNEL_ID`
+
+  - The channel ID can be found by going to "Channel Manager", click "Edit settings" on the storefront you want to use. It's the number in the URL after `channel/`.
+    ![Bigcommerce channel id](https://user-images.githubusercontent.com/13066728/199454743-3554ef12-3e7c-4ead-863d-4f0f995b0444.png)
+  - Channel ID 1 returns the default BigCommerce storefront.
 
 - `BIGCOMMERCE_STOREFRONT_API_URL`
 

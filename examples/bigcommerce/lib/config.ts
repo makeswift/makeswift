@@ -4,6 +4,7 @@ export type Config = {
     storeURL: string
     storefrontURL: string
     storefrontToken: string
+    channelId: string
     allowedCorsOrigins: string[]
   }
   makeswift: {
@@ -27,6 +28,7 @@ export function getConfig(): Config {
       storeURL: getEnvVarOrThrow('BIGCOMMERCE_STORE_API_URL'),
       storefrontURL: getEnvVarOrThrow('BIGCOMMERCE_STOREFRONT_API_URL'),
       storefrontToken: getEnvVarOrThrow('BIGCOMMERCE_STOREFRONT_API_TOKEN'),
+      channelId: getEnvVarOrThrow('BIGCOMMERCE_CHANNEL_ID'),
       allowedCorsOrigins:
         process.env.NODE_ENV === 'production' && process.env.VERCEL === '1'
           ? [new URL(`https://${getEnvVarOrThrow('VERCEL_URL')}`).origin]

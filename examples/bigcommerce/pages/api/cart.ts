@@ -42,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
         body: JSON.stringify({
           line_items: [JSON.parse(req.body).line_item],
-          channel_id: 1,
+          channel_id: config.bigcommerce.channelId,
         }),
       })
 
@@ -63,7 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
         body: JSON.stringify({
           line_items: [JSON.parse(req.body).line_item],
-          channel_id: 1,
+          channel_id: config.bigcommerce.channelId,
         }),
       },
     )
