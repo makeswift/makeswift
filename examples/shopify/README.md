@@ -17,9 +17,9 @@ This example includes a home page for listing products by category and a product
 
 ## Deploy your own
 
-Deploy your own with [Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify&env=MAKESWIFT_SITE_API_KEY,NEXT_PUBLIC_SHOPIFY_STORE_NAME,NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN&envDescription=Check%20step%203%20of%20the%20example%20README.md%20for%20details%20on%20where%20to%20find%20these%20values.&envLink=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify%23using-this-repo&project-name=makeswift-shopify-example&repository-name=makeswift-shopify-example) or preview live with [StackBlitz](https://stackblitz.com/github/makeswift/makeswift/tree/main/examples/shopify)
+Deploy your own with Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify&env=MAKESWIFT_SITE_API_KEY,NEXT_PUBLIC_SHOPIFY_STORE_NAME,NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN&envDescription=Check%20step%203%20of%20the%20example%20README.md%20for%20details%20on%20where%20to%20find%20these%20values.&envLink=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify%23using-this-repo&project-name=makeswift-shopify-example&repository-name=makeswift-shopify-example)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify&env=NEXT_PUBLIC_SHOPIFY_STORE_NAME,NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN&envDescription=Check%20the%20example%20README.md%20for%20details%20on%20where%20to%20find%20these%20values.&envLink=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify%23using-your-own-shopify-store&project-name=makeswift-shopify-example&repo-name=makeswift-shopify-example&redirect-url=https%3A%2F%2Fapp.makeswift.com&integration-ids=oac_51ryd7Pob5ZsyTFzNzVvpsGq)
 
 Note: If you are just trying trying out Makeswift with our e-commerce template feel free use this example store and the read-only access token for your deployment.
 
@@ -32,12 +32,12 @@ NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
 
 1. **Clone this template using the Makeswift CLI**
 
-    ```bash
-    npx makeswift@latest init \
-        --example shopify \
-        --env NEXT_PUBLIC_SHOPIFY_STORE_NAME=makeswift-example \
-        --env NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
-    ```
+   ```bash
+   npx makeswift@latest init \
+       --example shopify \
+       --env NEXT_PUBLIC_SHOPIFY_STORE_NAME=makeswift-example \
+       --env NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
+   ```
 
 2. **Create a home page with a list of products**
 
@@ -71,9 +71,7 @@ NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
 
       Look for the ellipsis menu in the left toolbar again and drop the Product price, Product name, and Add to cart button into Makeswift.
 
-
 ## Using your own Shopify store
-
 
 1. **Create a Shopify store**
 
@@ -92,23 +90,20 @@ NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
 
    - `SHOPIFY_ACCESS_TOKEN` requires you to [register an app](https://www.shopify.com/partners/blog/17056443-how-to-generate-a-shopify-api-token)
 
-
 3. **Run the Makeswift CLI**
 
-    Either use our example values to use our example store, or use your own Shopify credentials.
+   Either use our example values to use our example store, or use your own Shopify credentials.
 
-    ```bash
-    npx makeswift@latest init \
-        --example shopify \
-        --env NEXT_PUBLIC_SHOPIFY_STORE_NAME=<shopify-store-name> \
-        --env NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=<shopify-access-token>
-    ```
+   ```bash
+   npx makeswift@latest init \
+       --example shopify \
+       --env NEXT_PUBLIC_SHOPIFY_STORE_NAME=<shopify-store-name> \
+       --env NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=<shopify-access-token>
+   ```
 
-    If you've already run the CLI, and have a working Next.Js app with our Shopify store, then you can simply edit the `.env.local` file.
+   If you've already run the CLI, and have a working Next.Js app with our Shopify store, then you can simply edit the `.env.local` file.
 
-    Make sure you do steps 2 and 3 in the `Using this repo` section.
-
-
+   Make sure you do steps 2 and 3 in the `Using this repo` section.
 
 ---
 
