@@ -33,7 +33,7 @@ export default async function wrappedInit(name: string | undefined, args: InitAr
 
 async function init(
   name: string | undefined,
-  { example: passedInExample, useNpm, usePnpm, env }: InitArgs,
+  { example: passedInExample, useNpm, usePnpm, env = [] }: InitArgs,
 ): Promise<void> {
   function validate() {
     if (useNpm && usePnpm) {
@@ -59,6 +59,10 @@ async function init(
     selectSiteUrl.searchParams.set('using_existing_next_app', String(usingExistingNextApp))
     passedInExample && selectSiteUrl.searchParams.set('example', passedInExample)
 
+    if (env.length > 0) {
+      selectSiteUrl.searchParams.set('env_vars', env.join(','))
+    }
+
     const selectSiteUrlString = selectSiteUrl.toString()
     console.log(
       `\nOpening your browser at ${chalk.blue(
@@ -73,7 +77,7 @@ async function init(
     redirectUrl.searchParams.set('host_url', nextAppUrl)
 
     // Handshake Step 3 - we redirect the browser to redirectUrl
-    const { siteApiKey, example } = await getSiteMetadata({
+    const { siteApiKey, example, envVars } = await getSiteMetadata({
       port: handshakePort,
       redirectUrl: redirectUrl.toString(),
     })
@@ -85,7 +89,7 @@ async function init(
         MAKESWIFT_SITE_API_KEY: siteApiKey,
         MAKESWIFT_API_ORIGIN,
       },
-      env,
+      [...env, ...envVars],
     )
 
     // Handshake Step 4 - Makeswift redirects to the builder with the site open,
@@ -128,8 +132,16 @@ async function getSiteMetadata({
 }: {
   port: number
   redirectUrl: string
-}): Promise<{ siteApiKey: string; example: string | null }> {
-  return new Promise<{ siteApiKey: string; example: string | null }>((resolve, reject) => {
+}): Promise<{
+  siteApiKey: string
+  example: string | null
+  envVars: string[]
+}> {
+  return new Promise<{
+    siteApiKey: string
+    example: string | null
+    envVars: string[]
+  }>((resolve, reject) => {
     const sockets: Socket[] = []
     const server = http
       .createServer((req, res) => {
@@ -150,6 +162,15 @@ async function getSiteMetadata({
 
         const example = queryParams.get('example')
 
+        const commaSeparatedEnvVars = queryParams.get('env_vars')
+        let envVars: string[] = []
+
+        if (commaSeparatedEnvVars != null && commaSeparatedEnvVars.length != 0) {
+          const pairs = commaSeparatedEnvVars.split(',')
+
+          envVars = pairs
+        }
+
         // add the api key in the redirect URL
         const destinationURL = new URL(redirectUrl)
         destinationURL.searchParams.set('api_key', siteApiKey)
@@ -164,6 +185,7 @@ async function getSiteMetadata({
             resolve({
               siteApiKey,
               example,
+              envVars,
             })
           })
 
