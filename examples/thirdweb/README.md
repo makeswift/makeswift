@@ -8,9 +8,9 @@ In this example, you'll learn how to integrate thirdweb components from your Nex
 
 ## Deploy your own
 
-Deploy your own with [Vercel](https://vercel.com/new/git/external?repository-url=https://github.com/makeswift/makeswift/tree/main/examples/thirdweb&project-name=makeswift-thirdweb-example&repository-name=makeswift-thirdweb-example&env=MAKESWIFT_SITE_API_KEY&envDescription=The%20API%20key%20for%20your%20Makeswift%20site&envLink=https%3A%2F%2Fwww.makeswift.com%2Fdocs%2Fguides%2Fgetting-started%23configure-the-makeswift-site-api-key) or preview live with [StackBlitz](https://stackblitz.com/github/makeswift/makeswift/tree/main/examples/thirdweb)
+Deploy your own with Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/makeswift/makeswift/tree/main/examples/thirdweb&project-name=makeswift-thirdweb-example&repository-name=makeswift-thirdweb-example&env=MAKESWIFT_SITE_API_KEY&envDescription=The%20API%20key%20for%20your%20Makeswift%20site&envLink=https%3A%2F%2Fwww.makeswift.com%2Fdocs%2Fguides%2Fgetting-started%23configure-the-makeswift-site-api-key)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fthirdweb&project-name=makeswift-thirdweb-example&repo-name=makeswift-thirdweb-example&redirect-url=https%3A%2F%2Fapp.makeswift.com&integration-ids=oac_51ryd7Pob5ZsyTFzNzVvpsGq)
 
 ## Tools
 
