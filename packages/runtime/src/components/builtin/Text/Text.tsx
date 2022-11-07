@@ -168,14 +168,16 @@ const Text = forwardRef(function Text(
     },
     [],
   )
-  const handleBlur = useCallback((event: ReactFocusEvent, _editor: Editor, next: () => any) => {
+  const handleBlur = useCallback((event: ReactFocusEvent, editor: Editor, next: () => any) => {
+    const selection = editor.value.selection
+
+    next()
+
     // Normally, after a user highlight a text, clicking on the panel will remove the text selection.
     // This line is a workaround for that. Because the panel is not in the iframe, relatedTarget
-    // would be null, and we return early so we don't remove the selection.
-    if (event.relatedTarget == null) return true
-
-    // Blur the selection if the user is clicking on other text.
-    return next()
+    // would be null, and we select the previous text selection to maintain the text highlight.
+    // Inspiration: https://github.com/ianstormtaylor/slate/issues/3412#issuecomment-663906003
+    if (event.relatedTarget == null) editor.select(selection)
   }, [])
 
   const isInBuilder = useIsInBuilder()
