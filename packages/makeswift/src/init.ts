@@ -84,6 +84,9 @@ async function init(
 
     // In the background, we're setting up the Next app with the API key
     // and starting the app at `nextAppPort`
+    // @todo: once we can define env vars in the browser, remove ...env.
+    //        This is because we want the browser choices to override the
+    //        ones passed in via the CLI.
     const envLocal = buildLocalEnvFile(
       {
         MAKESWIFT_SITE_API_KEY: siteApiKey,
