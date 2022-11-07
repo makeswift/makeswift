@@ -11,6 +11,10 @@ function hasNextDependency(appDirectory: string): boolean {
     const packageJson = require(path.join(appDirectory, 'package.json'))
     const { dependencies } = packageJson
 
+    if (dependencies == null) {
+      return false
+    }
+
     return 'next' in dependencies
   }
 
