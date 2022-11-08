@@ -1,5 +1,11 @@
 # makeswift
 
+## 0.1.4
+
+### Patch Changes
+
+- 29eb2fd: Fix cryptic error that occurs if you run the CLI at the root of a monorepo. Now, a new Next.js app will be created.
+
 ## 0.1.3
 
 ### Patch Changes
