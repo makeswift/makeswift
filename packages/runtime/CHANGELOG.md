@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.2.8
+
+### Patch Changes
+
+- 79e2c26: Fix builder randomly put user into content mode when editing page.
+
 ## 0.2.7
 
 ### Patch Changes
