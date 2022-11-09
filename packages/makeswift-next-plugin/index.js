@@ -38,6 +38,7 @@ module.exports =
               ],
               source: '/:path(.*)',
               destination: '/api/makeswift/proxy-preview-mode',
+              locale: false,
             },
             {
               has: [
@@ -49,6 +50,7 @@ module.exports =
               ],
               source: '/:path(.*)',
               destination: '/api/makeswift/proxy-preview-mode',
+              locale: false,
             },
             ...(Array.isArray(rewrites) ? [] : rewrites?.beforeFiles ?? []),
           ],
