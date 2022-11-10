@@ -92,7 +92,7 @@ async function init(
         MAKESWIFT_SITE_API_KEY: siteApiKey,
         MAKESWIFT_API_ORIGIN,
       },
-      [...env, ...envVars],
+      envVars,
     )
 
     // Handshake Step 4 - Makeswift redirects to the builder with the site open,
