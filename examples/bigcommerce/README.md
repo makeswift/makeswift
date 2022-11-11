@@ -6,7 +6,7 @@
 
 In this example, you will learn how to integrate [BigCommerce](https://www.bigcommerce.com/) with [Makeswift](https://www.makeswift.com) to create a visually editable ecommerce store.
 
-This example includes a home page for listing products by category and a product template page for product details.
+This example includes a home page for listing products by category and a product template page for showing product details.
 
 ## Tools
 
@@ -17,52 +17,49 @@ This example includes a home page for listing products by category and a product
 
 ## Using this example
 
-To quickly try this example either deploy to Vercel or use our CLI. If you already have a Bigcommerce store and know you want to use this example scroll down to "Using your own BigCommerce store."
+To quickly try this example either [deploy to Vercel](#deploy-this-example-to-vercel) or [use our CLI](#use-this-example-locally-with-the-makeswift-cli).
+
+If you have already created a BigCommerce store and know you want to use this example, scroll down to ["Using your own BigCommerce store."](#using-your-own-bigcommerce-store)
 
 ### Deploy this example to Vercel
 
-The deploy link below includes integrations with BigCommerce and Makeswift. 
+The deploy link below includes integrations with BigCommerce and Makeswift.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fbigcommerce&project-name=bigcommerce-makeswift-example&repo-name=bigcommerce-makeswift-example&redirect-url=https%3A%2F%2Fapp.makeswift.com&integration-ids=oac_51ryd7Pob5ZsyTFzNzVvpsGq,oac_MuWZiE4jtmQ2ejZQaQ7ncuDT)
 
 > **Note**
-> During the Makeswift integration we recommend using the the "Ecommerce" template (at the bottom of the page)
+> During the Makeswift integration we recommend using the the "Ecommerce - BigCommerce" template. It comes prefilled with ecommerce components.
 
----
+With your deployment completed, [take a tour of the newly created store](#take-a-tour-of-your-ecommerce-store)
 
 ### Use this example locally with the Makeswift CLI
 
-We have created an example Bigcommerce store, so you can try this example without creating one. 
-
-1. Use this example with the Makeswift CLI
+1. Run the Makeswift CLI command
 
    ```bash
-   npx makeswift@latest init \
-      --example bigcommerce \
-      --env BIGCOMMERCE_STORE_API_URL=https://api.bigcommerce.com/stores/uvhswop3wh \
-      --env BIGCOMMERCE_STORE_API_TOKEN=5lw9ulikcp186tjgg3rs39kh4fg3vci \
-      --env BIGCOMMERCE_CHANNEL_ID=1 \
-      --env BIGCOMMERCE_STOREFRONT_API_URL="https://makeswift-example.mybigcommerce.com/graphql" \
-      --env BIGCOMMERCE_STOREFRONT_API_TOKEN="eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJjaWQiOjEsImNvcnMiOlsiaHR0cHM6Ly9tYWtlc3dpZnQtZXhhbXBsZS5teWJpZ2NvbW1lcmNlLmNvbSJdLCJlYXQiOjE2Njc5MzI1MTUsImlhdCI6MTY2NzMyNzcxNSwiaXNzIjoiQkMiLCJzaWQiOjEwMDI1OTU3MTAsInN1YiI6Ijlzem1mc2txeWRmdXc5MnkwajYyZjkxYXQ1bnAzdHciLCJzdWJfdHlwZSI6MiwidG9rZW5fdHlwZSI6MX0.X4A2EWh05-baaG5do_or3mEJgQbmg2pMNg4kLLadWp0ywmzqYI3piExNxSbVgOnvzG5U9gxOKCZsOVPeh0mzfA"
+   npx makeswift@latest init
    ```
 
-2. When prompted log in or sign up for Makeswift and select the "Ecommerce" template. (It's at the end of the template page)
+2. When prompted log in or sign up for Makeswift
 
-3. Once the CLI is done running, it starts the Next app with `yarn dev` and opens Makeswift for you.
+3. Select the "Ecommerce - BigCommerce" template, and confirm the default env vars provided. These values correspond to an example BigCommerce store, and selecting this template will download this example next.js app.
 
-4. Go to the "Home" page and drop in the "Product list" component
+Once completed, the CLI runs `yarn dev` and opens Makeswift for you. From there you can use provided custom ecommerce components.
 
-   - The home page is in the left toolbar
-   - Once there, look for the ellipsis menu(also in the left toolbar) and drop the Product list component into Makeswift.
+### Take a tour of your ecommerce store
 
-     With the Product list component selected, update the category you want to display and the number of products in the right panels labeled 'Category' and 'Count' respectively.
+After integration, you will be redirected to app.makeswift.com.
 
-5. Go to the "\_\_product\_\_" page (also called the product template page) and drop in the product-specific components
+- Navigate to the "Home" page on the left to test out the custom "Header" and "Product list" components
 
-   - The product template page is in the left toolbar
-   - Once there, look for the ellipsis menu(also in the left toolbar) and drop in the Product specific components
+  - The "Header" is a functional cart integrated with the BigCommerce API
+  - The "Product list" is a list of products from BigCommerce. To customize the category or count of products to show, select the "Product list" and update the right panels labeled 'Category' and 'Count' respectively.
 
-     These include the Product price, Product name, Product images, Product description, Product breadcrumbs, and Add to cart components.
+- Then, go to the "\_\_product\_\_" page and test out the product-specific components
+
+  - This page is also called the product template page because it is the template structure for all product pages.
+  - The "Add to cart" is a functional button integrated with the BigCommerce API
+  - All the other components — Product price, Product name, Product images, Product description, and Product breadcrumbs — are composable for creating a custom product page.
 
 ## Using your own BigCommerce store
 
@@ -81,7 +78,7 @@ Note: the env for this example corresponds to the [Vercel Commerce BigCommerce e
 
   - An ID can be found in the URL of your BigCommerce dashboard
     ![BigCommerce Store API URL](https://user-images.githubusercontent.com/20950876/199331796-06b8b86f-5891-4344-9589-b02e78fd34f1.png)
-  - This ID should be inserted into `https://api.bigcommerce.com/stores/<ID>` 
+  - This ID should be inserted into `https://api.bigcommerce.com/stores/<ID>`
   - Since the example ID is "uvhswop3wh" the example storefront API URL is (`https://api.bigcommerce.com/stores/uvhswop3wh`)
 
 - `BIGCOMMERCE_CHANNEL_ID`
@@ -110,7 +107,7 @@ Note: the env for this example corresponds to the [Vercel Commerce BigCommerce e
 
 If you clicked the "Deploy" button earlier you can change the environment variable in vercel.com
 
-   <img src="https://user-images.githubusercontent.com/7907782/197216891-93be5f0f-01f6-4a3d-8087-c3c2f9536545.png" width="600" />
+   <img src="https://user-images.githubusercontent.com/20950876/201372509-5e48b4ed-df3b-423e-98ef-cf41cd1ee5a6.png" width="600" />
 
 ### Updating the locally running host
 
@@ -127,15 +124,13 @@ BIGCOMMERCE_STOREFRONT_API_URL=https://store-uvhswop3wh.mybigcommerce.com/graphq
 BIGCOMMERCE_STOREFRONT_API_TOKEN="eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJjaWQiOjEsImNvcnMiOlsiaHR0cHM6Ly9tYWtlc3dpZnQtZXhhbXBsZS5teWJpZ2NvbW1lcmNlLmNvbSJdLCJlYXQiOjE2Njc5MzI1MTUsImlhdCI6MTY2NzMyNzcxNSwiaXNzIjoiQkMiLCJzaWQiOjEwMDI1OTU3MTAsInN1YiI6Ijlzem1mc2txeWRmdXc5MnkwajYyZjkxYXQ1bnAzdHciLCJzdWJfdHlwZSI6MiwidG9rZW5fdHlwZSI6MX0.X4A2EWh05-baaG5do_or3mEJgQbmg2pMNg4kLLadWp0ywmzqYI3piExNxSbVgOnvzG5U9gxOKCZsOVPeh0mzfA"
 ```
 
-If you are struggling to configure this these env vars feel free to reach out in our [Discord](https://discord.com/invite/7dDpz6y) and we will be happy to help!
+If you are struggling to configure these env vars feel free to reach out in our [Discord](https://discord.com/invite/7dDpz6y) and we will be happy to help!
 
 ---
 
 ## Putting it all together
 
-With a home page and product template pages created it's probably a good time to explain what's going on.
-
-This explanation is loaded with technical terms. Here is a point of reference if you are unfamiliar:
+It's probably a good time to explain what's going on. Here is a point of reference for the technical terms below:
 
 - "dynamic product route"
   - This is the Next.js page that creates product pages based on BigCommerce products and our Makeswift template layout

@@ -15,103 +15,99 @@ This example includes a home page for listing products by category and a product
 
 ---
 
-## Deploy your own
+## Using this example
+
+To quickly try this example either [deploy to Vercel](#deploy-this-example-to-vercel) or [use our CLI](#use-this-example-locally-with-the-makeswift-cli).
+
+If you have already created a Shopify store and know you want to use this example, scroll down to ["Using your own Shopify store."](#using-your-own-shopify-store)
+
+### Deploy this example to Vercel
 
 Deploy your own with Vercel
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify&env=NEXT_PUBLIC_SHOPIFY_STORE_NAME,NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN&envDescription=Check%20the%20example%20README.md%20for%20details%20on%20where%20to%20find%20these%20values.&envLink=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify%23using-your-own-shopify-store&project-name=makeswift-shopify-example&repo-name=makeswift-shopify-example&redirect-url=https%3A%2F%2Fapp.makeswift.com&integration-ids=oac_51ryd7Pob5ZsyTFzNzVvpsGq)
 
-Note: If you are just trying trying out Makeswift with our e-commerce template feel free use this example store and the read-only access token for your deployment.
+Note: We have created an example store, so no Shopify account is required.
 
 ```
 NEXT_PUBLIC_SHOPIFY_STORE_NAME=makeswift-example
 NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
 ```
 
-## Using this repo
+With your deployment completed, [take a tour of the newly created store](#take-a-tour-of-your-ecommerce-store)
 
-1. **Clone this template using the Makeswift CLI**
+### Use this example locally with the Makeswift CLI
+
+1. Run the Makeswift CLI command
 
    ```bash
-   npx makeswift@latest init \
-       --example shopify \
-       --env NEXT_PUBLIC_SHOPIFY_STORE_NAME=makeswift-example \
-       --env NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
+   npx makeswift@latest init
    ```
 
-2. **Create a home page with a list of products**
+2. When prompted log in or sign up for Makeswift
 
-   1. Create a blank page
+3. Select the "Ecommerce - Shopify" template, and confirm the default env vars provided. These values correspond to an example Shopify store, and selecting this template will download this example next.js app.
 
-      Look for the plus button in the left toolbar and specify "Blank page".
+Once completed, the CLI runs `yarn dev` and opens Makeswift for you. From there you can use provided custom ecommerce components.
 
-   2. Edit the page's URL to be `/`
+### Take a tour of your ecommerce store
 
-      Hover over the "Untitled page" you just created, click on the ellipsis that appears, and click "Edit URL".
+After integration, you will be redirected to app.makeswift.com.
 
-   3. Drop in the Product list component
+- Navigate to the "Home" page on the left to test out the custom "Header" and "Product list" components
 
-      Look for the ellipsis menu in the left toolbar and drop the Product list component into Makeswift.
+  - The "Header" is a functional cart integrated with the Shopify API
+  - The "Product list" is a list of products from Shopify. To customize the collection or count of products to show, select the "Product list" and update the right panels labeled 'Collection' and 'Count' respectively.
 
-      With the Product list component selected, update the category you want to display and the number of products in the right panels labeled 'Category' and 'Count' respectively.
+- Then, go to the "\_\_product\_\_" page and test out the product-specific components
 
-3. **Create a product page template with product specific details**
-
-   1. Create a blank page
-
-      Look for the plus button in the left toolbar and specify "Blank page."
-
-   2. Edit page's URL to be `/__product__`
-
-      Hover over the "Untitled page" you just created, click on the ellipsis that appears, and click "Edit URL".
-
-      You should set this value to the `productTemplatePathname` from `/lib/config.ts` which comes predefined in this template as `/__product__`.
-
-   3. Drop in Product specific components
-
-      Look for the ellipsis menu in the left toolbar again and drop the Product price, Product name, and Add to cart button into Makeswift.
+  - This page is also called the product template page because it is the template structure for all product pages.
+  - The "Add to cart" is a functional button integrated with the Shopify API
+  - All the other components — Product price, Product name, Product images, Product description, and Product breadcrumbs — are composable for creating a custom product page.
 
 ## Using your own Shopify store
 
-1. **Create a Shopify store**
+Once you have given the example a try it's time to use your own Shopify store. Head over to [Shopify](https://www.shopify.com/) and create a store. Here is [a good starting point](https://www.shopify.com/online).
 
-   - Head over to [Shopify](https://www.shopify.com/) and create a store. Here is [a good starting point](https://www.shopify.com/online).
+> **Note**
+> This custom storefront example assumes all products are in stock, so make sure all products have "Track quantity" unchecked as pictured below.
 
-     > **Note**
-     > This custom storefront example assumes all products are in stock, so make sure all products have "Track quantity" unchecked as pictured below.
+<img width="600" src="https://user-images.githubusercontent.com/20950876/187238713-22fd0c65-8d9b-4eab-b94e-1e498053f270.png">
 
-     <img width="600" src="https://user-images.githubusercontent.com/20950876/187238713-22fd0c65-8d9b-4eab-b94e-1e498053f270.png">
+### How to get the environment variables from your store:
 
-2. **Get environment variables**
+- `SHOPIFY_STORE_NAME` can be found in the Shopify dashboard
 
-   - `SHOPIFY_STORE_NAME` can be found in the Shopify dashboard
+    <img src="https://user-images.githubusercontent.com/20950876/184916524-667084c1-06a0-4fa3-8f4b-73aff5a88e65.png" width="600" />
 
-       <img src="https://user-images.githubusercontent.com/20950876/184916524-667084c1-06a0-4fa3-8f4b-73aff5a88e65.png" width="600" />
+- `SHOPIFY_ACCESS_TOKEN` requires you to [register an app](https://www.shopify.com/partners/blog/17056443-how-to-generate-a-shopify-api-token)
 
-   - `SHOPIFY_ACCESS_TOKEN` requires you to [register an app](https://www.shopify.com/partners/blog/17056443-how-to-generate-a-shopify-api-token)
+### Updating the deployed host on Vercel
 
-3. **Run the Makeswift CLI**
+If you clicked the "Deploy" button earlier you can change the environment variable in vercel.com
 
-   Either use our example values to use our example store, or use your own Shopify credentials.
+   <img src="https://user-images.githubusercontent.com/20950876/201371948-2258365c-18bb-4891-9d9f-26a66b2b3745.png" width="600" />
 
-   ```bash
-   npx makeswift@latest init \
-       --example shopify \
-       --env NEXT_PUBLIC_SHOPIFY_STORE_NAME=<shopify-store-name> \
-       --env NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=<shopify-access-token>
-   ```
+### Updating the locally running host
 
-   If you've already run the CLI, and have a working Next.Js app with our Shopify store, then you can simply edit the `.env.local` file.
+If you started out with the CLI you can update the generated `.env.local` with any new values from your Shopify store.
 
-   Make sure you do steps 2 and 3 in the `Using this repo` section.
+The example store `.env.local` looks like:
+
+```
+MAKESWIFT_SITE_API_KEY=XXX-XXX-XXX
+
+NEXT_PUBLIC_SHOPIFY_STORE_NAME=makeswift-example
+NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
+```
+
+If you are struggling to configure these env vars feel free to reach out in our [Discord](https://discord.com/invite/7dDpz6y) and we will be happy to help!
 
 ---
 
 ## Putting it all together
 
-With a home page and product template pages created it's probably a good time to explain what's going on.
-
-This explanation is loaded with technical terms. Here is a point of reference if you are unfamiliar:
+It's probably a good time to explain what's going on. Here is a point of reference for the technical terms below:
 
 - "dynamic product route"
   - This is the Next.js page that creates product pages based on Shopify products and our Makeswift template layout

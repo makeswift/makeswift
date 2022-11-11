@@ -1,16 +1,10 @@
-# Visually build with Thirdweb components
-
-In this example, you'll learn how to integrate thirdweb components from your Next.js app into [Makeswift](https://www.makeswift.com) to make it visually editable.
-
 ## Demo
 
 [https://makeswift-examples-thirdweb.vercel.app/](https://makeswift-examples-thirdweb.vercel.app/)
 
-## Deploy your own
+# Visually build with Thirdweb components
 
-Deploy your own with Vercel
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fthirdweb&project-name=makeswift-thirdweb-example&repo-name=makeswift-thirdweb-example&redirect-url=https%3A%2F%2Fapp.makeswift.com&integration-ids=oac_51ryd7Pob5ZsyTFzNzVvpsGq)
+In this example, you'll learn how to integrate thirdweb components from your Next.js app into [Makeswift](https://www.makeswift.com) to make it visually editable.
 
 ## Tools
 
@@ -18,48 +12,43 @@ Deploy your own with Vercel
 - [**TypeScript SDK**](https://docs.thirdweb.com/typescript): to view the claimed supply, total supply, and mint NFTs from the drop.
 - [**Makeswift SDK**](https://www.makeswift.com/docs): to register components into Makeswift's visual builder.
 
-## Using this repo
+---
 
-1. **Create a site on Makeswift**
+## Using this example
 
-   Head over to [Makeswift](https://app.makeswift.com) and sign up for a free account. Create a site using the option to "Integrate with Next.js".
+To quickly try this example either [deploy to Vercel](#deploy-your-own-to-vercel) or [use our CLI](#use-this-example-locally-with-the-makeswift-cli).
 
-2. **Clone this template**
+### Deploy your own to Vercel
 
-   Instead of using `create-next-app`, run this command from the terminal:
+Deploy your own with Vercel
 
-   ```bash
-   npx thirdweb create --template makeswift
-   ```
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fthirdweb&project-name=makeswift-thirdweb-example&repo-name=makeswift-thirdweb-example&redirect-url=https%3A%2F%2Fapp.makeswift.com&integration-ids=oac_51ryd7Pob5ZsyTFzNzVvpsGq)
 
-3. **Update environment variables**
+With your deployment completed, [take a tour of the newly created store](#take-a-tour-of-your-web3-website)
 
-   Rename `.env.local.example` to `.env.local` and add your site API key from Makeswift.
+### Use this example locally with the Makeswift CLI
 
-   ```diff
-   - MAKESWIFT_SITE_API_KEY=
-   + MAKESWIFT_SITE_API_KEY=<YOUR_MAKESWIFT_SITE_API_KEY>
-   ```
-
-4. **Start the dev server**
-
-   Run this command from the terminal:
+1. Run the Makeswift CLI command
 
    ```bash
-   yarn dev
-   # or
-   npm run dev
+   npx makeswift@latest init
    ```
 
-   Your host should be up and running on http://localhost:3000.
+2. When prompted log in or sign up for Makeswift
 
-5. **Add the NFT Drop component into your Makeswift page**
+3. Select the "Ecommerce - Thirdweb" template. Selecting this template will download this example next.js app.
 
-   Look for the ellipsis menu in the left toolbar and drop the NFT Drop component into Makeswift.
+Once completed, the CLI runs `yarn dev` and redirects you to app.makeswift.com.
 
-   With the NFT drop component selected, paste your NFT drop contract address from Thirdweb into the "Contract address" panel and select the correct chain.
+### Take a tour of your web3 website
 
-   > If you don't have an NFT drop contract, [read this guide](https://portal.thirdweb.com/guides/release-an-nft-drop-with-no-code#create-a-drop-contract) to learn how to create one using Thirdweb without any code.
+After integration, you will be redirected to app.makeswift.com. You can see the "NFT Drop" component on the right-hand side of the screen.
+
+With the NFT drop component selected, paste your NFT drop contract address from Thirdweb into the "Contract address" panel and select the correct chain.
+
+> If you don't have an NFT drop contract, [read this guide](https://portal.thirdweb.com/guides/release-an-nft-drop-with-no-code#create-a-drop-contract) to learn how to create one using Thirdweb without any code.
+
+If you are struggling with this example reach out in our [Discord](https://discord.com/invite/7dDpz6y) and we will be happy to help!
 
 ---
 
