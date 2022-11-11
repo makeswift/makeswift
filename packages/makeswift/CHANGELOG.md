@@ -1,5 +1,11 @@
 # makeswift
 
+## 0.1.5
+
+### Patch Changes
+
+- c2be15e: Fix issue where environment variables are double written in .env.local.
+
 ## 0.1.4
 
 ### Patch Changes
