@@ -171,7 +171,7 @@ function pollBoxModel({
   onBoxModelChange,
 }: {
   element: Element
-  onBoxModelChange(boxModel: BoxModel): void
+  onBoxModelChange(boxModel: BoxModel | null): void
 }): () => void {
   let currentBoxModel: BoxModel | null = null
 
@@ -191,5 +191,7 @@ function pollBoxModel({
 
   return () => {
     cancelAnimationFrame(animationFrameHandle)
+
+    onBoxModelChange(null)
   }
 }
