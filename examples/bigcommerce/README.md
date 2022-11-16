@@ -31,7 +31,7 @@ The deploy link below includes integrations with BigCommerce and Makeswift.
 > **Note**
 > During the Makeswift integration we recommend using the the "Ecommerce - BigCommerce" template. It comes prefilled with ecommerce components.
 
-With your deployment completed, [take a tour of the newly created store](#take-a-tour-of-your-ecommerce-store)
+With your deployment completed, [take a tour of your ecommerce store](#take-a-tour-of-your-ecommerce-store)
 
 ### Use this example locally with the Makeswift CLI
 
@@ -41,7 +41,7 @@ With your deployment completed, [take a tour of the newly created store](#take-a
    npx makeswift@latest init
    ```
 
-2. When prompted log in or sign up for Makeswift
+2. When prompted — log in or sign up for Makeswift
 
 3. Select the "Ecommerce - BigCommerce" template, and confirm the default env vars provided. These values correspond to an example BigCommerce store, and selecting this template will download this example next.js app.
 
@@ -54,7 +54,7 @@ After integration, you will be redirected to app.makeswift.com.
 - Navigate to the "Home" page on the left to test out the custom "Header" and "Product list" components
 
   - The "Header" is a functional cart integrated with the BigCommerce API
-  - The "Product list" is a list of products from BigCommerce. To customize the category or count of products to show, select the "Product list" and update the right panels labeled 'Category' and 'Count' respectively.
+  - The "Product list" is a list of products from BigCommerce. To customize the category or number of visible products, select the "Product list" and update the panels to the right labeled 'Category' and 'Count' respectively.
 
 - Then, go to the "\_\_product\_\_" page and test out the product-specific components
 

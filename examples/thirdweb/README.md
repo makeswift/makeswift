@@ -34,7 +34,7 @@ With your deployment completed, [take a tour of the newly created store](#take-a
    npx makeswift@latest init
    ```
 
-2. When prompted log in or sign up for Makeswift
+2. When prompted — log in or sign up for Makeswift
 
 3. Select the "Ecommerce - Thirdweb" template. Selecting this template will download this example next.js app.
 
