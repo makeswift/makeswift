@@ -41,7 +41,7 @@ With your deployment completed, [take a tour of your ecommerce store](#take-a-to
 1. Run the Makeswift CLI command
 
    ```bash
-   npx makeswift@latest init
+   npx makeswift@latest init --template=ecommerce-shopify
    ```
 
 2. When prompted — log in or sign up for Makeswift

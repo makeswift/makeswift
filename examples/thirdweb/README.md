@@ -31,7 +31,7 @@ With your deployment completed, [take a tour of the newly created store](#take-a
 1. Run the Makeswift CLI command
 
    ```bash
-   npx makeswift@latest init
+   npx makeswift@latest init --template=ecommerce-thirdweb
    ```
 
 2. When prompted — log in or sign up for Makeswift
