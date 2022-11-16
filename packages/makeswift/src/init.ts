@@ -16,7 +16,13 @@ const MAKESWIFT_APP_ORIGIN = process.env.MAKESWIFT_APP_ORIGIN || 'https://app.ma
 const MAKESWIFT_API_ORIGIN = process.env.MAKESWIFT_API_ORIGIN
 const siteSelectionPath = 'select-site'
 
-type InitArgs = { example: string | undefined; useNpm: boolean; usePnpm: boolean; env: string[] }
+type InitArgs = {
+  example: string | undefined
+  template: string | undefined
+  useNpm: boolean
+  usePnpm: boolean
+  env: string[]
+}
 
 export default async function wrappedInit(name: string | undefined, args: InitArgs) {
   try {
@@ -33,7 +39,7 @@ export default async function wrappedInit(name: string | undefined, args: InitAr
 
 async function init(
   name: string | undefined,
-  { example: passedInExample, useNpm, usePnpm, env = [] }: InitArgs,
+  { example: passedInExample, template, useNpm, usePnpm, env = [] }: InitArgs,
 ): Promise<void> {
   function validate() {
     if (useNpm && usePnpm) {
@@ -58,12 +64,14 @@ async function init(
     selectSiteUrl.searchParams.set('callback_url', callbackUrl)
     selectSiteUrl.searchParams.set('using_existing_next_app', String(usingExistingNextApp))
     passedInExample && selectSiteUrl.searchParams.set('example', passedInExample)
+    template && selectSiteUrl.searchParams.set('template', template)
 
     if (env.length > 0) {
       selectSiteUrl.searchParams.set('env_vars', env.join(','))
     }
 
     const selectSiteUrlString = selectSiteUrl.toString()
+
     console.log(
       `\nOpening your browser at ${chalk.blue(
         selectSiteUrlString,
