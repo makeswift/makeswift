@@ -27,12 +27,12 @@ export const SlotControlMessageType = {
 
 type SlotControlContainerBoxModelChangeMessage = {
   type: typeof SlotControlMessageType.CONTAINER_BOX_MODEL_CHANGE
-  payload: { boxModel: BoxModel }
+  payload: { boxModel: BoxModel | null }
 }
 
 type SlotControlItemBoxModelChangeMessage = {
   type: typeof SlotControlMessageType.ITEM_BOX_MODEL_CHANGE
-  payload: { index: number; boxModel: BoxModel }
+  payload: { index: number; boxModel: BoxModel | null }
 }
 
 export type SlotControlMessage =
@@ -42,11 +42,11 @@ export type SlotControlMessage =
 export class SlotControl extends PropController<SlotControlMessage> {
   recv(): void {}
 
-  changeContainerBoxModel(boxModel: BoxModel): void {
+  changeContainerBoxModel(boxModel: BoxModel | null): void {
     this.send({ type: SlotControlMessageType.CONTAINER_BOX_MODEL_CHANGE, payload: { boxModel } })
   }
 
-  changeItemBoxModel(index: number, boxModel: BoxModel): void {
+  changeItemBoxModel(index: number, boxModel: BoxModel | null): void {
     this.send({ type: SlotControlMessageType.ITEM_BOX_MODEL_CHANGE, payload: { index, boxModel } })
   }
 }
