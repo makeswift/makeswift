@@ -34,7 +34,7 @@ NEXT_PUBLIC_SHOPIFY_STORE_NAME=makeswift-example
 NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
 ```
 
-With your deployment completed, [take a tour of the newly created store](#take-a-tour-of-your-ecommerce-store)
+With your deployment completed, [take a tour of your ecommerce store](#take-a-tour-of-your-ecommerce-store)
 
 ### Use this example locally with the Makeswift CLI
 
@@ -44,7 +44,7 @@ With your deployment completed, [take a tour of the newly created store](#take-a
    npx makeswift@latest init
    ```
 
-2. When prompted log in or sign up for Makeswift
+2. When prompted — log in or sign up for Makeswift
 
 3. Select the "Ecommerce - Shopify" template, and confirm the default env vars provided. These values correspond to an example Shopify store, and selecting this template will download this example next.js app.
 
@@ -57,7 +57,7 @@ After integration, you will be redirected to app.makeswift.com.
 - Navigate to the "Home" page on the left to test out the custom "Header" and "Product list" components
 
   - The "Header" is a functional cart integrated with the Shopify API
-  - The "Product list" is a list of products from Shopify. To customize the collection or count of products to show, select the "Product list" and update the right panels labeled 'Collection' and 'Count' respectively.
+  - The "Product list" is a list of products from Shopify. To customize the collection or number of visible products, select the "Product list" and update the panels to the right labeled 'Collection' and 'Count' respectively.
 
 - Then, go to the "\_\_product\_\_" page and test out the product-specific components
 
