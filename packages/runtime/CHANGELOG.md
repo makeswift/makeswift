@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.2.9
+
+### Patch Changes
+
+- 7f56a4e: Fix issue where drop zones would appear for slots that weren't visible anymore.
+
 ## 0.2.8
 
 ### Patch Changes
