@@ -44,9 +44,11 @@ With your deployment completed, [take a tour of your ecommerce store](#take-a-to
    npx makeswift@latest init --template=ecommerce-shopify
    ```
 
-2. When prompted — log in or sign up for Makeswift
+   Note: the `--template=ecommerce-shopify` above will auto-select the "Ecommerce - Shopify" template in Makeswift and download this example Next.js store to your local machine.
 
-3. Select the "Ecommerce - Shopify" template, and confirm the default env vars provided. These values correspond to an example Shopify store, and selecting this template will download this example next.js app.
+2. Log in or sign up for Makeswift
+
+3. Confirm the default env vars provided
 
 Once completed, the CLI runs `yarn dev` and opens Makeswift for you. From there you can use provided custom ecommerce components.
 

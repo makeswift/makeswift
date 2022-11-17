@@ -25,7 +25,6 @@ If you have already created a BigCommerce store and know you want to use this ex
 
 The deploy link below includes integrations with BigCommerce and Makeswift.
 
-
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fbigcommerce&project-name=bigcommerce-makeswift-example&repo-name=bigcommerce-makeswift-example&redirect-url=https%3A%2F%2Fapp.makeswift.com&integration-ids=oac_51ryd7Pob5ZsyTFzNzVvpsGq,oac_MuWZiE4jtmQ2ejZQaQ7ncuDT&external-id=ecommerce-bigcommerce)
 
 > **Note**
@@ -41,9 +40,11 @@ With your deployment completed, [take a tour of your ecommerce store](#take-a-to
    npx makeswift@latest init --template=ecommerce-bigcommerce
    ```
 
-2. When prompted — log in or sign up for Makeswift
+   Note: the `--template=ecommerce-bigcommerce` above will auto-select the "Ecommerce - Bigcommerce" template in Makeswift and download this example Next.js store to your local machine.
 
-3. Select the "Ecommerce - BigCommerce" template, and confirm the default env vars provided. These values correspond to an example BigCommerce store, and selecting this template will download this example next.js app.
+2. Log in or sign up for Makeswift
+
+3. Confirm the default env vars provided
 
 Once completed, the CLI runs `yarn dev` and opens Makeswift for you. From there you can use provided custom ecommerce components.
 
