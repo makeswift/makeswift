@@ -1,7 +1,6 @@
 import {
   useClaimedNFTSupply,
   useContractMetadata,
-  useNFTDrop,
   useUnclaimedNFTSupply,
   useActiveClaimCondition,
   useClaimNFT,
@@ -15,6 +14,7 @@ import {
   useNetworkMismatch,
   useNetwork,
   useClaimIneligibilityReasons,
+  useContract,
 } from '@thirdweb-dev/react'
 import {
   useToast,
@@ -76,7 +76,7 @@ const NFTDropCard = forwardRef(function NFTDropCard(
   ref: Ref<HTMLDivElement>,
 ) {
   const toast = useToast()
-  const nftDrop = useNFTDrop(contractAddress)
+  const { contract: nftDrop } = useContract(contractAddress, 'nft-drop')
   const address = useAddress()
   const balance = useBalance()
   const connectWithMetamask = useMetamask()
@@ -90,11 +90,11 @@ const NFTDropCard = forwardRef(function NFTDropCard(
   const [quantity, setQuantity] = useState<number>(1) // default to 1
   const claimIneligibilityReasons = useClaimIneligibilityReasons(nftDrop, {
     quantity,
-    walletAddress: address,
+    walletAddress: address ?? '',
   })
 
   // Load contract metadata
-  const { data: contractMetadata } = useContractMetadata(contractAddress)
+  const { data: contractMetadata } = useContractMetadata(nftDrop)
 
   // Load claimed supply and unclaimed supply
   const { data: unclaimedSupply } = useUnclaimedNFTSupply(nftDrop)
@@ -103,8 +103,7 @@ const NFTDropCard = forwardRef(function NFTDropCard(
   // Load the active claim condition
   const { data: activeClaimCondition } = useActiveClaimCondition(nftDrop)
 
-  const quantityLimitPerTransaction =
-    activeClaimCondition?.quantityLimitPerTransaction
+  const quantityLimitPerWallet = activeClaimCondition?.maxClaimablePerWallet
 
   const snapshot = activeClaimCondition?.snapshot
 
@@ -116,9 +115,9 @@ const NFTDropCard = forwardRef(function NFTDropCard(
   )
 
   const maxClaimable = useDefault
-    ? isNaN(Number(quantityLimitPerTransaction))
+    ? isNaN(Number(quantityLimitPerWallet))
       ? 1000
-      : Number(quantityLimitPerTransaction)
+      : Number(quantityLimitPerWallet)
     : Number(snapshot?.find((user) => user.address === address)?.maxClaimable)
 
   const lowerMaxClaimable = Math.min(
