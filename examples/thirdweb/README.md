@@ -34,9 +34,9 @@ With your deployment completed, [take a tour of the newly created store](#take-a
    npx makeswift@latest init --template=ecommerce-thirdweb
    ```
 
-2. When prompted — log in or sign up for Makeswift
+   Note: the `--template=ecommerce-thirdweb` above will auto-select the "Ecommerce - Thirdweb" template in Makeswift and download this example Next.js app to your local machine
 
-3. Select the "Ecommerce - Thirdweb" template. Selecting this template will download this example next.js app.
+2. Log in or sign up for Makeswift
 
 Once completed, the CLI runs `yarn dev` and redirects you to app.makeswift.com.
 
