@@ -1,5 +1,11 @@
 # makeswift
 
+## 0.1.6
+
+### Patch Changes
+
+- b9d329d: Add flag for preselecting template
+
 ## 0.1.5
 
 ### Patch Changes
