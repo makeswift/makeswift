@@ -1,4 +1,4 @@
-import { useState, useEffect, Ref, forwardRef } from 'react'
+import { useState, Ref, forwardRef } from 'react'
 import NextImage from 'next/image'
 
 import {
@@ -58,15 +58,15 @@ type Props = {
   className?: string
 }
 
-function loadImage(src: string): Promise<HTMLImageElement> {
-  return new Promise<HTMLImageElement>((resolve, reject) => {
-    const image = new Image()
+// function loadImage(src: string): Promise<HTMLImageElement> {
+//   return new Promise<HTMLImageElement>((resolve, reject) => {
+//     const image = new Image()
 
-    image.onload = () => resolve(image)
-    image.onerror = reject
-    image.src = src
-  })
-}
+//     image.onload = () => resolve(image)
+//     image.onerror = reject
+//     image.src = src
+//   })
+// }
 
 function imageSizes(width?: Props['width']): string {
   const baseDevice = DEVICES.find(device => device.maxWidth == null)
@@ -97,26 +97,26 @@ const ImageComponent = forwardRef(function Image(
   const fileData = useFile(file)
   const imageSrc = fileData?.publicUrl ? fileData.publicUrl : placeholder.src
   const dataDimensions = fileData?.publicUrl ? fileData?.dimensions : placeholder.dimensions
-  const [measuredDimensions, setMeasuredDimensions] = useState<Dimensions | null>(null)
+  const [measuredDimensions] = useState<Dimensions | null>(null)
   const isInBuilder = useIsInBuilder()
 
-  useEffect(() => {
-    if (dataDimensions) return
+  // useEffect(() => {
+  //   if (dataDimensions) return
 
-    let cleanedUp = false
+  //   let cleanedUp = false
 
-    loadImage(imageSrc)
-      .then(image => {
-        if (!cleanedUp) {
-          setMeasuredDimensions({ width: image.naturalWidth, height: image.naturalHeight })
-        }
-      })
-      .catch(console.error)
+  //   loadImage(imageSrc)
+  //     .then(image => {
+  //       if (!cleanedUp) {
+  //         setMeasuredDimensions({ width: image.naturalWidth, height: image.naturalHeight })
+  //       }
+  //     })
+  //     .catch(console.error)
 
-    return () => {
-      cleanedUp = true
-    }
-  }, [dataDimensions, imageSrc])
+  //   return () => {
+  //     cleanedUp = true
+  //   }
+  // }, [dataDimensions, imageSrc])
 
   const dimensions = dataDimensions ?? measuredDimensions
 

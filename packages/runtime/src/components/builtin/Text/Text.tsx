@@ -40,7 +40,7 @@ const defaultText: ValueJSON = {
   data: {},
 }
 
-const COMMIT_DEBOUNCE_DELAY = 500
+// const COMMIT_DEBOUNCE_DELAY = 500
 
 type Descriptors = { text?: RichTextDescriptor }
 
@@ -48,7 +48,7 @@ const Text = forwardRef(function Text(
   { id, text, width, margin }: Props,
   ref: Ref<BoxModelHandle & PropControllersHandle<Descriptors>>,
 ) {
-  const [editor, setEditor] = useState<Editor | null>(null)
+  const [editor] = useState<Editor | null>(null)
   const [propControllers, setPropControllers] =
     useState<DescriptorsPropControllers<Descriptors> | null>(null)
   const controller = propControllers?.text
@@ -87,45 +87,41 @@ const Text = forwardRef(function Text(
    * typing we avoid to commit prop data. But once they've stopped typing, we commit it as soon as
    * possible. This is known as a debounce.
    */
-  const [value, setValue] = useState(() => {
+  const [value] = useState(() => {
     const { selection, ...textWithoutSelection } = text ?? defaultText
 
     return Value.fromJSON(textWithoutSelection)
   })
-  const [shouldCommit, setShouldCommit] = useState(true)
+  const [shouldCommit] = useState(true)
+
+  // useEffect(() => {
+  //   if (shouldCommit) {
+  //     const nextValue = Value.fromJSON(text ?? defaultText)
+
+  //     setValue(currentValue =>
+  //       currentValue.selection.isBlurred
+  //         ? Value.fromJSON(nextValue.toJSON({ preserveSelection: false }))
+  //         : nextValue,
+  //     )
+  //   }
+  // }, [shouldCommit, text])
 
   useEffect(() => {
-    if (shouldCommit) {
-      const nextValue = Value.fromJSON(text ?? defaultText)
-
-      setValue(currentValue =>
-        currentValue.selection.isBlurred
-          ? Value.fromJSON(nextValue.toJSON({ preserveSelection: false }))
-          : nextValue,
-      )
-    }
-  }, [shouldCommit, text])
-
-  useEffect(() => {
-    if (shouldCommit) return
-
-    const timeoutId = window.setTimeout(() => {
-      setShouldCommit(true)
-    }, COMMIT_DEBOUNCE_DELAY)
-
-    return () => {
-      window.clearTimeout(timeoutId)
-    }
+    // if (shouldCommit) return
+    // const timeoutId = window.setTimeout(() => {
+    //   setShouldCommit(true)
+    // }, COMMIT_DEBOUNCE_DELAY)
+    // return () => {
+    //   window.clearTimeout(timeoutId)
+    // }
   }, [shouldCommit])
 
-  function handleChange(change: OnChangeParam) {
-    setValue(change.value as Value)
-
-    if (change.value !== value) {
-      setShouldCommit(false)
-
-      controller?.onChange(change)
-    }
+  function handleChange(_change: OnChangeParam) {
+    // setValue(change.value as Value)
+    // if (change.value !== value) {
+    //   setShouldCommit(false)
+    //   controller?.onChange(change)
+    // }
   }
 
   // HACK: Slate holds on to the very first DOM event handlers passed in and doesn't update them
@@ -177,7 +173,7 @@ const Text = forwardRef(function Text(
     <RichTextEditor
       // @ts-expect-error: types don't allow for 'id' prop even though it's used.
       id={id}
-      ref={setEditor}
+      // ref={setEditor}
       width={width}
       readOnly={!isInBuilder}
       margin={margin}

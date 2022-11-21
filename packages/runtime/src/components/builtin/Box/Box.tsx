@@ -85,7 +85,7 @@ const Box = forwardRef(function Box(
   ref: Ref<BoxModelHandle>,
 ) {
   const innerRef = useRef<HTMLDivElement | null>(null)
-  const [boxElement, setBoxElement] = useState<HTMLElement | null>(null)
+  const [boxElement] = useState<HTMLElement | null>(null)
 
   useImperativeHandle(
     ref,
@@ -127,7 +127,7 @@ const Box = forwardRef(function Box(
   )
 
   return (
-    <div ref={setBoxElement} id={id}>
+    <div id={id}>
       <div ref={innerRef}>
         {children && children.elements.length > 0 ? (
           children.elements.map(child => (

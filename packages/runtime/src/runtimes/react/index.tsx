@@ -8,6 +8,7 @@ import {
   useContext,
   useEffect,
   useImperativeHandle,
+  // useRef,
   useState,
 } from 'react'
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector'
@@ -18,7 +19,7 @@ import {
   mountComponentEffect,
   registerComponentEffect,
   registerComponentHandleEffect,
-  registerDocumentEffect,
+  // registerDocumentEffect,
   registerReactComponentEffect,
 } from '../../state/actions'
 import type {
@@ -30,7 +31,7 @@ import { registerBuiltinComponents } from '../../components/builtin/register'
 import { MakeswiftProvider, MakeswiftClient, useQuery } from '../../api/react'
 import { FallbackComponent } from '../../components/shared/FallbackComponent'
 import { PropsValue } from './controls'
-import { FindDomNode } from './find-dom-node'
+// import { FindDomNode } from './find-dom-node'
 import { ELEMENT_REFERENCE_GLOBAL_ELEMENT } from '../../components/utils/queries'
 
 export const storeContextDefaultValue = ReactPage.configureStore()
@@ -90,18 +91,18 @@ export function RuntimeProvider({
     return store
   })
 
-  useEffect(() => {
-    const unregisterDocuments = Array.from(rootElements?.entries() ?? []).map(
-      ([documentKey, rootElement]) =>
-        store.dispatch(registerDocumentEffect(ReactPage.createDocument(documentKey, rootElement))),
-    )
+  // useEffect(() => {
+  //   const unregisterDocuments = Array.from(rootElements?.entries() ?? []).map(
+  //     ([documentKey, rootElement]) =>
+  //       store.dispatch(registerDocumentEffect(ReactPage.createDocument(documentKey, rootElement))),
+  //   )
 
-    return () => {
-      unregisterDocuments.forEach(unregisterDocument => {
-        unregisterDocument()
-      })
-    }
-  }, [store, rootElements])
+  //   return () => {
+  //     unregisterDocuments.forEach(unregisterDocument => {
+  //       unregisterDocument()
+  //     })
+  //   }
+  // }, [store, rootElements])
 
   useEffect(() => {
     // TODO(miguel): perform a more robust validation.
@@ -233,23 +234,21 @@ const ElementData = memo(
     ref: Ref<unknown>,
   ): JSX.Element {
     const Component = useComponent(elementData.type)
-    const [handle, setHandle] = useState<unknown | null>(null)
-    const [foundDomNode, setFoundDomNode] = useState<Element | Text | null>(null)
+    const [handle] = useState<unknown | null>(null)
+    const [foundDomNode] = useState<Element | Text | null>(null)
 
     useImperativeHandle(ref, () => handle ?? foundDomNode, [handle, foundDomNode])
 
     suppressRefWarning(`\`ForwardRef(${ElementData.name})\``)
 
     if (Component == null) {
-      return <FallbackComponent ref={setHandle} text="Component not found" />
+      return <FallbackComponent text="Component not found" />
     }
 
     return (
-      <FindDomNode ref={setFoundDomNode}>
-        <PropsValue element={elementData}>
-          {props => <Component {...props} key={elementData.key} ref={setHandle} />}
-        </PropsValue>
-      </FindDomNode>
+      <PropsValue element={elementData}>
+        {props => <Component {...props} key={elementData.key} />}
+      </PropsValue>
     )
   }),
 )

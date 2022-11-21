@@ -41,12 +41,12 @@ export default forwardRef<HTMLDivElement | null, Props>(function BackgroundsCont
   { backgrounds, children, ...restOfProps }: Props,
   ref: Ref<HTMLDivElement | null>,
 ) {
-  const [handle, setHandle] = useState<HTMLDivElement | null>(null)
+  const [handle] = useState<HTMLDivElement | null>(null)
 
   useImperativeHandle(ref, () => handle, [handle])
 
   return (
-    <OuterContainer {...restOfProps} ref={setHandle}>
+    <OuterContainer {...restOfProps}>
       <Backgrounds backgrounds={useBackgrounds(backgrounds)} />
       {Children.only(children)}
     </OuterContainer>
