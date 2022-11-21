@@ -132,12 +132,14 @@ export class MakeswiftClient {
 const Context = createContext<MakeswiftClient | undefined>(undefined)
 
 export function useQuery<TData = any, TVariables = OperationVariables>(
-  query: DocumentNode | TypedDocumentNode<TData, TVariables>,
+  _query: DocumentNode | TypedDocumentNode<TData, TVariables>,
   options?: QueryHookOptions<TData, TVariables>,
 ): QueryResult<TData, TVariables> {
   const client = useContext(Context)
 
-  return useApolloQuery(query, { client: client?.apolloClient, ...options })
+  // @ts-ignore
+  return { ...options, data: undefined, client: client?.apolloClient! }
+  // return useApolloQuery(query, { client: client?.apolloClient, ...options })
 }
 
 export function useMutation<
