@@ -8,6 +8,7 @@ import { ButtonVariant } from './contants'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
+    // @ts-ignore
     forwardNextDynamicRef(patch => dynamic(() => patch(import('./Button')))),
     {
       type: MakeswiftComponentType.Button,

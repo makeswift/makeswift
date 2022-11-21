@@ -9,7 +9,6 @@ import {
   KeyboardEvent as ReactKeyboardEvent,
   FocusEvent as ReactFocusEvent,
 } from 'react'
-import styled from 'styled-components'
 import { Editor, OnChangeParam } from 'slate-react'
 import { Value, ValueJSON } from 'slate'
 // @ts-expect-error: no types for 'slate-hotkeys'
@@ -23,7 +22,6 @@ import {
   RichTextValue,
   WidthValue,
 } from '../../../prop-controllers/descriptors'
-import { cssMargin, cssWidth } from '../../utils/cssMediaRules'
 import { BoxModelHandle, getBox } from '../../../box-model'
 import { PropControllersHandle } from '../../../state/modules/prop-controller-handles'
 import { RichTextEditor } from './components/RichTextEditor'
@@ -36,13 +34,6 @@ type Props = {
   width?: WidthValue
   margin?: MarginValue
 }
-
-const StyledRichTextEditor = styled(RichTextEditor).withConfig({
-  shouldForwardProp: prop => !['width', 'margin'].includes(prop.toString()),
-})<{ width: Props['width']; margin: Props['margin'] }>`
-  ${cssWidth()}
-  ${cssMargin()}
-`
 
 const defaultText: ValueJSON = {
   document: { nodes: [{ object: 'block' as const, type: 'paragraph' as const, nodes: [] }] },
@@ -183,7 +174,7 @@ const Text = forwardRef(function Text(
   const isInBuilder = useIsInBuilder()
 
   return (
-    <StyledRichTextEditor
+    <RichTextEditor
       // @ts-expect-error: types don't allow for 'id' prop even though it's used.
       id={id}
       ref={setEditor}

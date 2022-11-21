@@ -14,7 +14,6 @@ import { ReactComponent as Times16 } from '../../../../icons/times-16.svg'
 import Button from '../../../Button'
 import DropDownButton from './components/MobileDropDownButton'
 import { ResponsiveColor } from '../../../../../runtimes/react/controls'
-import { useResponsiveColor } from '../../../../hooks'
 
 type NavigationButtonProps = NavigationButtonValue['payload'] &
   Omit<ComponentPropsWithoutRef<typeof Button>, 'color' | 'textColor'>
@@ -22,13 +21,7 @@ type NavigationButtonProps = NavigationButtonValue['payload'] &
 function NavigationButton(props: NavigationButtonProps): JSX.Element {
   const { textColor, color, ...restOfProps } = props
 
-  return (
-    <Button
-      {...restOfProps}
-      textColor={useResponsiveColor(textColor)}
-      color={useResponsiveColor(color)}
-    />
-  )
+  return <Button {...restOfProps} />
 }
 
 const ButtonLink = styled(NavigationButton)`

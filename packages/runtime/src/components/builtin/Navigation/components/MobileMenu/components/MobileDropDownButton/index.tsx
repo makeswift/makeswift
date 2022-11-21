@@ -87,15 +87,10 @@ export default function MobileDropDownButton({
   textColor,
   ...restOfProps
 }: Props): JSX.Element {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen] = useState(false)
   return (
     <>
-      <ButtonLink
-        {...restOfProps}
-        textColor={useResponsiveColor(textColor)}
-        color={useResponsiveColor(color)}
-        onPointerDown={() => setIsOpen(prev => !prev)}
-      >
+      <ButtonLink {...restOfProps}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <span style={{ marginRight: 6 }}>{label}</span>
           <span style={{ display: 'inline-flex', fill: 'currentColor' }}>

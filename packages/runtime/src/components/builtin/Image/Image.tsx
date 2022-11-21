@@ -1,4 +1,3 @@
-import styled, { css } from 'styled-components'
 import { useState, useEffect, Ref, forwardRef } from 'react'
 import NextImage from 'next/image'
 
@@ -25,16 +24,23 @@ import {
   cssWidth,
 } from '../../utils/cssMediaRules'
 import { DEVICES, findDeviceOverride } from '../../utils/devices'
-import {
-  BorderPropControllerData,
-  BoxShadowPropControllerData,
-  useBorder,
-  useBoxShadow,
-  useFile,
-} from '../../hooks'
+import { useBorder, useBoxShadow, useFile } from '../../hooks'
 import { placeholders } from '../../utils/placeholders'
 import { useIsInBuilder } from '../../../runtimes/react'
 import { Link } from '../../shared/Link'
+
+console.log({
+  cssBorder,
+  cssBorderRadius,
+  cssBoxShadow,
+  cssMargin,
+  cssMediaRules,
+  cssPadding,
+  cssWidth,
+  useBorder,
+  useBoxShadow,
+  Link,
+})
 
 type Props = {
   id?: ElementIDValue
@@ -79,76 +85,16 @@ function imageSizes(width?: Props['width']): string {
     .reduce((sourceSizes, sourceSize) => `${sourceSize}, ${sourceSizes}`, baseWidthSize)
 }
 
-const ImageContainer = styled.div.withConfig({
-  shouldForwardProp: prop =>
-    ![
-      'width',
-      'margin',
-      'padding',
-      'border',
-      'borderRadius',
-      'boxShadow',
-      'opacity',
-      'dimensions',
-    ].includes(prop.toString()),
-})<{
-  width?: Props['width']
-  margin?: Props['margin']
-  padding?: Props['padding']
-  border?: BorderPropControllerData | null | undefined
-  borderRadius: Props['borderRadius']
-  boxShadow?: BoxShadowPropControllerData | null | undefined
-  opacity: Props['opacity']
-  link?: Props['link']
-  dimensions: { width: number; height: number }
-}>`
-  line-height: 0;
-  overflow: hidden;
-  ${props => cssWidth(`${props.dimensions.width}px`)(props)}
-  ${cssMargin()}
-  ${cssPadding()}
-  ${cssBorder()}
-  ${cssBorderRadius()}
-  ${cssBoxShadow()}
-  ${p =>
-    cssMediaRules(
-      [p.opacity],
-      ([opacity = 1]) => css`
-        opacity: ${opacity};
-      `,
-    )}
-`
-
-const UnoptimizedImage = styled.img`
-  width: 100%;
-`
-
 type Dimensions = {
   width: number
   height: number
 }
 
 const ImageComponent = forwardRef(function Image(
-  {
-    id,
-    width,
-    margin,
-    padding,
-    file,
-    border,
-    borderRadius,
-    altText,
-    link,
-    opacity,
-    boxShadow,
-    placeholder = placeholders.image,
-    className,
-  }: Props,
+  { id, width, file, altText, placeholder = placeholders.image, className }: Props,
   ref: Ref<HTMLImageElement>,
 ) {
   const fileData = useFile(file)
-  const borderData = useBorder(border)
-  const boxShadowData = useBoxShadow(boxShadow)
   const imageSrc = fileData?.publicUrl ? fileData.publicUrl : placeholder.src
   const dataDimensions = fileData?.publicUrl ? fileData?.dimensions : placeholder.dimensions
   const [measuredDimensions, setMeasuredDimensions] = useState<Dimensions | null>(null)
@@ -177,23 +123,9 @@ const ImageComponent = forwardRef(function Image(
   if (!dimensions) return null
 
   return (
-    <ImageContainer
-      as={link ? Link : 'div'}
-      link={link}
-      dimensions={dimensions}
-      ref={ref}
-      id={id}
-      className={className}
-      width={width}
-      margin={margin}
-      opacity={opacity}
-      padding={padding}
-      border={borderData}
-      borderRadius={borderRadius}
-      boxShadow={boxShadowData}
-    >
+    <div ref={ref} id={id} className={className}>
       {isInBuilder ? (
-        <UnoptimizedImage src={imageSrc} alt={altText} />
+        <img src={imageSrc} alt={altText} />
       ) : (
         <NextImage
           layout="responsive"
@@ -204,7 +136,7 @@ const ImageComponent = forwardRef(function Image(
           height={dimensions.height}
         />
       )}
-    </ImageContainer>
+    </div>
   )
 })
 

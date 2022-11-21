@@ -1,15 +1,10 @@
 import { forwardRef, Ref } from 'react'
-import styled, { css } from 'styled-components'
 
 import { Link } from '../../shared/Link'
-import { cssMediaRules, cssMargin, cssWidth } from '../../utils/cssMediaRules'
-import { colorToString } from '../../utils/colorToString'
-import { ColorValue as Color } from '../../utils/types'
 import { SocialLinksOptions } from './options'
 import GutterContainer from '../../shared/GutterContainer'
 import SocialLinksPlaceholder from './components/SocialLinksPlaceholder'
 import {
-  ResponsiveValue,
   ElementIDValue,
   SocialLinksValue,
   ResponsiveIconRadioGroupValue,
@@ -34,106 +29,12 @@ type Props = {
   margin?: MarginValue
 }
 
-const Container = styled.div.withConfig({
-  shouldForwardProp: prop => !['width', 'margin', 'alignment'].includes(prop.toString()),
-})<{
-  width: Props['width']
-  margin: Props['margin']
-  alignment: Props['alignment']
-}>`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  ${cssWidth()}
-  ${cssMargin()}
-  ${p =>
-    cssMediaRules(
-      [p.alignment] as const,
-      ([alignment = 'center']) => css`
-        justify-content: ${alignment};
-      `,
-    )}
-`
-
-const StyledLink = styled(Link).withConfig({
-  shouldForwardProp: prop =>
-    !['brandColor', 'shape', 'size', 'hoverStyle', 'fill', 'backgroundColor'].includes(
-      prop.toString(),
-    ),
-})<{
-  brandColor: string
-  shape: Props['shape']
-  size: Props['size']
-  hoverStyle: Props['hoverStyle']
-  fill: ResponsiveValue<Color> | null | undefined
-  backgroundColor: ResponsiveValue<Color> | null | undefined
-}>`
-  display: block;
-  color: ${props => props.brandColor};
-  transition: transform, opacity 0.18s;
-
-  svg {
-    display: block;
-  }
-
-  ${p =>
-    cssMediaRules(
-      [p.shape, p.size, p.hoverStyle, p.fill, p.backgroundColor] as const,
-      ([shape = 'naked', size = 'medium', hoverStyle = 'none', fill, backgroundColor]) => css`
-        padding: ${shape === 'naked' ? 0 : { small: 10, medium: 12, large: 14 }[size]}px;
-        border-radius: ${{ circle: '50%', rounded: '8px', naked: 0, square: 0 }[shape]};
-        background: ${shape === 'naked'
-          ? 'transparent'
-          : backgroundColor == null
-          ? 'currentColor'
-          : colorToString(backgroundColor)};
-
-        :hover {
-          ${{
-            none: '',
-            grow: css`
-              transform: scale(1.1);
-            `,
-            shrink: css`
-              transform: scale(0.9);
-            `,
-            fade: css`
-              opacity: 0.65;
-            `,
-          }[hoverStyle]}
-        }
-
-        svg {
-          fill: ${fill == null
-            ? shape === 'naked' || backgroundColor != null
-              ? 'currentColor'
-              : 'white'
-            : colorToString(fill)};
-          width: ${{ small: 16, medium: 20, large: 24 }[size]}px;
-          height: ${{ small: 16, medium: 20, large: 24 }[size]}px;
-        }
-      `,
-    )}
-`
-
 const SocialLinks = forwardRef(function SocialLinks(
-  {
-    id,
-    links: { links, openInNewTab } = { links: [], openInNewTab: false },
-    shape,
-    size,
-    hoverStyle,
-    fill,
-    backgroundColor,
-    alignment,
-    gutter,
-    width,
-    margin,
-  }: Props,
+  { id, links: { links, openInNewTab } = { links: [], openInNewTab: false }, gutter }: Props,
   ref: Ref<HTMLDivElement>,
 ) {
   return (
-    <Container ref={ref} id={id} width={width} alignment={alignment} margin={margin}>
+    <div ref={ref} id={id}>
       {links.length > 0 ? (
         links.map((link, i) => {
           const option = SocialLinksOptions.find(o => o.type === link.payload.type)
@@ -147,24 +48,16 @@ const SocialLinks = forwardRef(function SocialLinks(
               first={i === 0}
               last={i === links.length - 1}
             >
-              <StyledLink
-                backgroundColor={backgroundColor}
-                brandColor={option.brandColor}
-                fill={fill}
-                hoverStyle={hoverStyle}
-                link={{ type: 'OPEN_URL', payload: { url: link.payload.url, openInNewTab } }}
-                shape={shape}
-                size={size}
-              >
+              <Link link={{ type: 'OPEN_URL', payload: { url: link.payload.url, openInNewTab } }}>
                 {option == null ? null : option.icon}
-              </StyledLink>
+              </Link>
             </GutterContainer>
           )
         })
       ) : (
         <SocialLinksPlaceholder gutter={gutter} />
       )}
-    </Container>
+    </div>
   )
 })
 

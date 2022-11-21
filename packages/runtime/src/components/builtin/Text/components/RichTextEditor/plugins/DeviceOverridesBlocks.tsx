@@ -1,7 +1,5 @@
 import { Plugin } from 'slate-react'
 
-import Block from '../components/Block'
-
 export default function DeviceOverridesBlockPlugin(): Plugin {
   return {
     renderBlock(props, _editor, next): JSX.Element {
@@ -11,58 +9,58 @@ export default function DeviceOverridesBlockPlugin(): Plugin {
       switch (node.type) {
         case 'paragraph':
           return (
-            <Block {...attributes} {...blockProps} as="p">
+            <p {...attributes} {...blockProps}>
               {children}
-            </Block>
+            </p>
           )
 
         case 'heading-one':
           return (
-            <Block {...attributes} {...blockProps} as="h1">
+            <h1 {...attributes} {...blockProps}>
               {children}
-            </Block>
+            </h1>
           )
 
         case 'heading-two':
           return (
-            <Block {...attributes} {...blockProps} as="h2">
+            <h2 {...attributes} {...blockProps}>
               {children}
-            </Block>
+            </h2>
           )
 
         case 'heading-three':
           return (
-            <Block {...attributes} {...blockProps} as="h3">
+            <h3 {...attributes} {...blockProps}>
               {children}
-            </Block>
+            </h3>
           )
 
         case 'heading-four':
           return (
-            <Block {...attributes} {...blockProps} as="h4">
+            <h4 {...attributes} {...blockProps}>
               {children}
-            </Block>
+            </h4>
           )
 
         case 'heading-five':
           return (
-            <Block {...attributes} {...blockProps} as="h5">
+            <h5 {...attributes} {...blockProps}>
               {children}
-            </Block>
+            </h5>
           )
 
         case 'heading-six':
           return (
-            <Block {...attributes} {...blockProps} as="h6">
+            <h6 {...attributes} {...blockProps}>
               {children}
-            </Block>
+            </h6>
           )
 
         case 'blockquote':
           return (
-            <Block {...attributes} {...blockProps} as="blockquote">
+            <blockquote {...attributes} {...blockProps}>
               {children}
-            </Block>
+            </blockquote>
           )
 
         default:

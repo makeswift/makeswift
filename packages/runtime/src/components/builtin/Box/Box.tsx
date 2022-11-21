@@ -34,13 +34,25 @@ import {
 } from '../../utils/cssMediaRules'
 import { BoxModelHandle, parse, createBox } from '../../../box-model'
 import BackgroundsContainer from '../../shared/BackgroundsContainer'
-import {
-  BorderPropControllerData,
-  BoxShadowPropControllerData,
+import { useBorder, useBoxShadow } from '../../hooks'
+import { BoxAnimateIn } from './constants'
+
+console.log({
+  styled,
+  motion,
+  useBoxAnimations,
+  cssWidth,
+  cssMargin,
+  cssPadding,
+  cssBorderRadius,
+  cssGridItem,
+  cssMediaRules,
+  cssBorder,
+  cssBoxShadow,
+  BackgroundsContainer,
   useBorder,
   useBoxShadow,
-} from '../../hooks'
-import { BoxAnimateIn } from './constants'
+})
 
 type Props = {
   id?: ElementIDValue
@@ -68,83 +80,8 @@ type Props = {
   children?: GridValue
 }
 
-const StyledBackgroundsContainer = styled(BackgroundsContainer).withConfig({
-  shouldForwardProp: prop =>
-    !['width', 'margin', 'borderRadius', 'alignSelf'].includes(prop.toString()),
-})<{
-  width: Props['width']
-  margin: Props['margin']
-  borderRadius: Props['borderRadius']
-  alignSelf: Props['height']
-}>`
-  display: flex;
-  ${cssWidth()}
-  ${cssMargin()}
-  ${cssBorderRadius()}
-  ${props => cssMediaRules([props.alignSelf] as const, ([alignSelf = 'auto']) => ({ alignSelf }))}
-`
-
-const Grid = styled(motion.div).withConfig({
-  shouldForwardProp: prop => !['padding', 'border', 'boxShadow', 'alignContent'].includes(prop),
-})<{
-  padding: Props['padding']
-  border: BorderPropControllerData | null | undefined
-  boxShadow: BoxShadowPropControllerData | null | undefined
-  alignContent: Props['verticalAlign']
-}>`
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  ${cssPadding()}
-  ${cssBorder()}
-  ${cssBoxShadow()}
-  ${props =>
-    cssMediaRules([props.alignContent] as const, ([alignContent = 'flex-start']) => ({
-      alignContent,
-    }))}
-`
-const GridItem = styled(motion.div).withConfig({
-  shouldForwardProp: prop => !['grid', 'alignItems', 'index', 'columnGap', 'rowGap'].includes(prop),
-})<{
-  grid: NonNullable<Props['children']>['columns']
-  alignItems: Props['verticalAlign']
-  index: number
-  columnGap: Props['columnGap']
-  rowGap: Props['rowGap']
-}>`
-  display: flex;
-
-  /* IE11 doesn't recognize space-between and treats it as stretch, so we fall back to flex-start */
-  align-items: flex-start;
-  ${cssGridItem()}
-  ${props =>
-    cssMediaRules([props.alignItems] as const, ([alignItems = 'flex-start']) => ({ alignItems }))}
-`
-
 const Box = forwardRef(function Box(
-  {
-    id,
-    backgrounds,
-    width,
-    height,
-    margin,
-    padding,
-    border,
-    children,
-    borderRadius,
-    boxShadow,
-    rowGap,
-    columnGap,
-    hidePlaceholder,
-    verticalAlign,
-    boxAnimateType,
-    boxAnimateDuration,
-    boxAnimateDelay,
-    itemAnimateDelay,
-    itemAnimateType,
-    itemAnimateDuration,
-    itemStaggerDuration,
-  }: Props,
+  { id, children, hidePlaceholder }: Props,
   ref: Ref<BoxModelHandle>,
 ) {
   const innerRef = useRef<HTMLDivElement | null>(null)
@@ -189,66 +126,20 @@ const Box = forwardRef(function Box(
     [boxElement],
   )
 
-  const borderData = useBorder(border)
-  const boxShadowData = useBoxShadow(boxShadow)
-
-  const { initial, animate, variants, transition, key } = useBoxAnimations({
-    boxAnimateType,
-    boxAnimateDuration,
-    boxAnimateDelay,
-    itemAnimateDelay,
-    itemAnimateType,
-    itemAnimateDuration,
-    itemStaggerDuration,
-    boxElement,
-    elements: children?.elements,
-  })
-
   return (
-    <StyledBackgroundsContainer
-      ref={setBoxElement}
-      id={id}
-      backgrounds={backgrounds}
-      width={width}
-      margin={margin}
-      borderRadius={borderRadius}
-      alignSelf={height}
-      animate={animate?.container}
-      initial={initial?.container}
-      variants={variants?.container}
-      transition={transition?.container}
-      key={key?.container}
-    >
-      <Grid
-        ref={innerRef}
-        padding={padding}
-        border={borderData}
-        boxShadow={boxShadowData}
-        alignContent={verticalAlign}
-        animate={animate?.parent}
-        initial={initial?.parent}
-        transition={transition?.parent}
-      >
+    <div ref={setBoxElement} id={id}>
+      <div ref={innerRef}>
         {children && children.elements.length > 0 ? (
-          children.elements.map((child, index) => (
-            <GridItem
-              key={child.key}
-              grid={children.columns}
-              index={index}
-              columnGap={columnGap}
-              rowGap={rowGap}
-              alignItems={verticalAlign}
-              variants={variants?.child}
-              transition={transition?.child}
-            >
+          children.elements.map(child => (
+            <div key={child.key}>
               <Element element={child} />
-            </GridItem>
+            </div>
           ))
         ) : (
           <Placeholder hide={hidePlaceholder} />
         )}
-      </Grid>
-    </StyledBackgroundsContainer>
+      </div>
+    </div>
   )
 })
 

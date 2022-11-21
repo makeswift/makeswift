@@ -153,11 +153,7 @@ export default function DropDownButton({
 
   return (
     <DropDownContainer ref={container}>
-      <Button
-        {...restOfProps}
-        textColor={useResponsiveColor(textColor)}
-        color={useResponsiveColor(color)}
-      >
+      <Button {...restOfProps}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <span style={{ marginRight: 6 }}>{label}</span>
           <span style={{ display: 'inline-flex', fill: 'currentColor' }}>

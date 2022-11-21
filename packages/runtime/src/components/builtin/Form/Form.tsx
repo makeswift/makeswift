@@ -137,7 +137,7 @@ function getAlignmentMargin(alignment: Alignment): string {
 }
 
 const StyledButton = styled((props: ComponentPropsWithoutRef<typeof Button>) => (
-  <Button {...props} as="button" />
+  <Button {...props} />
 )).withConfig({
   shouldForwardProp: prop => !['alignment'].includes(prop.toString()),
 })<{
@@ -437,9 +437,8 @@ const Form = forwardRef(function Form(
                       rowGap={gap}
                       columnGap={gap}
                     >
+                      {/* @ts-ignore */}
                       <StyledButton
-                        type="submit"
-                        disabled={formik.isSubmitting || isDone}
                         shape={shape}
                         size={size}
                         color={brandColor}

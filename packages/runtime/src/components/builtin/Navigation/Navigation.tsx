@@ -30,7 +30,6 @@ import { cssMargin, cssMediaRules, cssTextStyle, cssWidth } from '../../utils/cs
 import { ColorValue as Color } from '../../utils/types'
 import { colorToString } from '../../utils/colorToString'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
-import { useResponsiveColor } from '../../hooks'
 
 type Props = {
   id?: ElementIDValue
@@ -125,13 +124,7 @@ type NavigationButtonProps = NavigationButtonValue['payload'] &
 function NavigationButton(props: NavigationButtonProps): JSX.Element {
   const { textColor, color, ...restOfProps } = props
 
-  return (
-    <Button
-      {...restOfProps}
-      textColor={useResponsiveColor(textColor)}
-      color={useResponsiveColor(color)}
-    />
-  )
+  return <Button {...restOfProps} />
 }
 
 const placeholder = {
