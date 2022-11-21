@@ -2,7 +2,7 @@ import {
   ComponentPropsWithoutRef,
   createContext,
   forwardRef,
-  memo,
+  // memo,
   ReactNode,
   Ref,
   useContext,
@@ -228,30 +228,28 @@ type ElementDataProps = {
   elementData: ReactPage.ElementData
 }
 
-const ElementData = memo(
-  forwardRef(function ElementData(
-    { elementData }: ElementDataProps,
-    ref: Ref<unknown>,
-  ): JSX.Element {
-    const Component = useComponent(elementData.type)
-    const [handle] = useState<unknown | null>(null)
-    const [foundDomNode] = useState<Element | Text | null>(null)
+const ElementData = forwardRef(function ElementData(
+  { elementData }: ElementDataProps,
+  ref: Ref<unknown>,
+): JSX.Element {
+  const Component = useComponent(elementData.type)
+  const [handle] = useState<unknown | null>(null)
+  const [foundDomNode] = useState<Element | Text | null>(null)
 
-    useImperativeHandle(ref, () => handle ?? foundDomNode, [handle, foundDomNode])
+  useImperativeHandle(ref, () => handle ?? foundDomNode, [handle, foundDomNode])
 
-    suppressRefWarning(`\`ForwardRef(${ElementData.name})\``)
+  suppressRefWarning(`\`ForwardRef(${ElementData.name})\``)
 
-    if (Component == null) {
-      return <FallbackComponent text="Component not found" />
-    }
+  if (Component == null) {
+    return <FallbackComponent text="Component not found" />
+  }
 
-    return (
-      <PropsValue element={elementData}>
-        {props => <Component {...props} key={elementData.key} />}
-      </PropsValue>
-    )
-  }),
-)
+  return (
+    <PropsValue element={elementData}>
+      {props => <Component {...props} key={elementData.key} />}
+    </PropsValue>
+  )
+})
 
 const DisableRegisterElement = createContext(false)
 
@@ -259,103 +257,101 @@ type ElementRefereceProps = {
   elementReference: ReactPage.ElementReference
 }
 
-const ElementReference = memo(
-  forwardRef(function ElementReference(
-    { elementReference }: ElementRefereceProps,
-    ref: Ref<unknown>,
-  ): JSX.Element {
-    const { error, data } = useQuery(ELEMENT_REFERENCE_GLOBAL_ELEMENT, {
-      variables: { id: elementReference.value },
-    })
-    const globalElementData = data?.globalElement?.data as ReactPage.ElementData | undefined
-    const elementReferenceDocument = useDocument(elementReference.key)
+const ElementReference = forwardRef(function ElementReference(
+  { elementReference }: ElementRefereceProps,
+  ref: Ref<unknown>,
+): JSX.Element {
+  const { error, data } = useQuery(ELEMENT_REFERENCE_GLOBAL_ELEMENT, {
+    variables: { id: elementReference.value },
+  })
+  const globalElementData = data?.globalElement?.data as ReactPage.ElementData | undefined
+  const elementReferenceDocument = useDocument(elementReference.key)
 
-    if (error != null) {
-      return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Something went wrong!" />
-    }
+  if (error != null) {
+    return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Something went wrong!" />
+  }
 
-    if (globalElementData == null) {
-      return (
-        <FallbackComponent
-          ref={ref as Ref<HTMLDivElement>}
-          text="This global component doesn't exist"
-        />
-      )
-    }
-
-    return elementReferenceDocument != null ? (
-      <Document document={elementReferenceDocument} ref={ref} />
-    ) : (
-      <DisableRegisterElement.Provider value={true}>
-        <ElementData elementData={globalElementData} ref={ref} />
-      </DisableRegisterElement.Provider>
+  if (globalElementData == null) {
+    return (
+      <FallbackComponent
+        ref={ref as Ref<HTMLDivElement>}
+        text="This global component doesn't exist"
+      />
     )
-  }),
-)
+  }
+
+  return elementReferenceDocument != null ? (
+    <Document document={elementReferenceDocument} ref={ref} />
+  ) : (
+    <DisableRegisterElement.Provider value={true}>
+      <ElementData elementData={globalElementData} ref={ref} />
+    </DisableRegisterElement.Provider>
+  )
+})
 
 type ElementProps = {
   element: ReactPage.Element
 }
 
-export const Element = memo(
-  forwardRef(function Element({ element }: ElementProps, ref: Ref<unknown>): JSX.Element {
-    const elementKey = element.key
-    const dispatch = useDispatch()
-    const documentKey = useDocumentKey()
-    const [handle, setHandle] = useState<unknown>(null)
-    const isRegisterElementDisabled = useContext(DisableRegisterElement)
+export const Element = forwardRef(function Element(
+  { element }: ElementProps,
+  ref: Ref<unknown>,
+): JSX.Element {
+  const elementKey = element.key
+  const dispatch = useDispatch()
+  const documentKey = useDocumentKey()
+  const [handle, setHandle] = useState<unknown>(null)
+  const isRegisterElementDisabled = useContext(DisableRegisterElement)
 
-    useImperativeHandle(ref, () => handle, [handle])
+  useImperativeHandle(ref, () => handle, [handle])
 
-    useEffect(() => {
-      if (documentKey == null || isRegisterElementDisabled) return
+  useEffect(() => {
+    if (documentKey == null || isRegisterElementDisabled) return
 
-      return dispatch(registerComponentHandleEffect(documentKey, elementKey, handle))
-    }, [dispatch, documentKey, elementKey, handle, isRegisterElementDisabled])
+    return dispatch(registerComponentHandleEffect(documentKey, elementKey, handle))
+  }, [dispatch, documentKey, elementKey, handle, isRegisterElementDisabled])
 
-    useEffect(() => {
-      if (documentKey == null || isRegisterElementDisabled) return
+  useEffect(() => {
+    if (documentKey == null || isRegisterElementDisabled) return
 
-      return dispatch(mountComponentEffect(documentKey, elementKey))
-    }, [dispatch, documentKey, elementKey, isRegisterElementDisabled])
+    return dispatch(mountComponentEffect(documentKey, elementKey))
+  }, [dispatch, documentKey, elementKey, isRegisterElementDisabled])
 
-    return ReactPage.isElementReference(element) ? (
-      <ElementReference key={elementKey} ref={setHandle} elementReference={element} />
-    ) : (
-      <ElementData key={elementKey} ref={setHandle} elementData={element} />
-    )
-  }),
-)
+  return ReactPage.isElementReference(element) ? (
+    <ElementReference key={elementKey} ref={setHandle} elementReference={element} />
+  ) : (
+    <ElementData key={elementKey} ref={setHandle} elementData={element} />
+  )
+})
 
 type DocumentProps = {
   document: ReactPage.Document
 }
 
-const Document = memo(
-  forwardRef(function Document({ document }: DocumentProps, ref: Ref<unknown>): JSX.Element {
-    return (
-      <DocumentContext.Provider value={document.key}>
-        <Element ref={ref} element={document.rootElement} />
-      </DocumentContext.Provider>
-    )
-  }),
-)
+const Document = forwardRef(function Document(
+  { document }: DocumentProps,
+  ref: Ref<unknown>,
+): JSX.Element {
+  return (
+    <DocumentContext.Provider value={document.key}>
+      <Element ref={ref} element={document.rootElement} />
+    </DocumentContext.Provider>
+  )
+})
 
 type DocumentReferenceProps = {
   documentReference: ReactPage.DocumentReference
 }
 
-export const DocumentReference = memo(
-  forwardRef(function DocumentReference(
-    { documentReference }: DocumentReferenceProps,
-    ref: Ref<unknown>,
-  ): JSX.Element {
-    const document = useDocument(documentReference.key)
+export const DocumentReference = forwardRef(function DocumentReference(
+  { documentReference }: DocumentReferenceProps,
+  ref: Ref<unknown>,
+): JSX.Element {
+  const document = useDocument(documentReference.key)
 
-    if (document == null) {
-      return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Document not found" />
-    }
+  if (document == null) {
+    return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Document not found" />
+  }
 
-    return <Document ref={ref} document={document} />
-  }),
-)
+  return <Document ref={ref} document={document} />
+})
