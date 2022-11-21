@@ -9,6 +9,7 @@ import { MakeswiftComponentType } from '../constants'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
+    // @ts-ignore
     forwardNextDynamicRef(patch => dynamic(() => patch(import('./Text')))),
     {
       type: MakeswiftComponentType.Text,
