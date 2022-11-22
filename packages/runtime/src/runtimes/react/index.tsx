@@ -27,7 +27,7 @@ import type {
   PropControllerDescriptorValueType,
 } from '../../prop-controllers'
 import { ComponentIcon } from '../../state/modules/components-meta'
-import { registerBuiltinComponents } from '../../components/builtin/register'
+// import { registerBuiltinComponents } from '../../components/builtin/register'
 import { MakeswiftProvider, MakeswiftClient, useQuery } from '../../api/react'
 import { FallbackComponent } from '../../components/shared/FallbackComponent'
 import { PropsValue } from './controls'
@@ -67,7 +67,7 @@ function createReactRuntime(store: ReactPage.Store): ReactRuntime {
 
 export const ReactRuntime = createReactRuntime(storeContextDefaultValue)
 
-registerBuiltinComponents(ReactRuntime)
+// registerBuiltinComponents(ReactRuntime)
 
 const Context = createContext(storeContextDefaultValue)
 
