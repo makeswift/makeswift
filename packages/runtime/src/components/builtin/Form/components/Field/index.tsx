@@ -126,7 +126,10 @@ export default function Field({
   }
 
   return (
-    <FormikField name={tableColumn.name} validate={validate}>
+    // We're using `['${tableColumn.name}']` to avoid default Formik nested object behavior
+    // which was causing an issue for table column names containing a dot.
+    // https://formik.org/docs/guides/arrays#avoid-nesting
+    <FormikField name={`['${tableColumn.name}']`} validate={validate}>
       {({ field, form }: any) =>
         hidden ? (
           <input {...field} ref={input} type="hidden" />
