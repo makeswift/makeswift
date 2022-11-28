@@ -59,10 +59,12 @@ export function registerComponent(runtime: ReactRuntime) {
           },
         })),
         width: Props.Width({
+          format: Props.Width.Format.ClassName,
           preset: [{ deviceId: 'desktop', value: { value: 700, unit: 'px' } }],
           defaultValue: { value: 100, unit: '%' },
         }),
         margin: Props.Margin({
+          format: Props.Margin.Format.ClassName,
           preset: [
             {
               deviceId: 'desktop',
