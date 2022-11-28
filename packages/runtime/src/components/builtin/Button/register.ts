@@ -68,7 +68,7 @@ export function registerComponent(runtime: ReactRuntime) {
         }),
         textStyle: Props.TextStyle(),
         width: Props.Width(),
-        margin: Props.Margin(),
+        margin: Props.Margin({ format: Props.Margin.Format.ClassName }),
       },
     },
   )

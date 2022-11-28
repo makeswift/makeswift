@@ -439,6 +439,7 @@ const Form = forwardRef(function Form(
                     >
                       <StyledButton
                         type="submit"
+                        // @ts-ignore: `disabled` is in `'button'` but not in `T`.
                         disabled={formik.isSubmitting || isDone}
                         shape={shape}
                         size={size}

@@ -116,7 +116,7 @@ function DropDownItem({ color, ...restOfProps }: DropDownItemProps) {
   return <StyledDropDownItem {...restOfProps} color={useResponsiveColor(color)} />
 }
 
-type Props = ComponentPropsWithoutRef<typeof Button> & {
+type Props = Omit<ComponentPropsWithoutRef<typeof Button>, 'textColor' | 'color'> & {
   label: string
   caret?: 'caret' | 'plus' | 'arrow-down' | 'chevron-down'
   links?: Array<{
@@ -126,6 +126,8 @@ type Props = ComponentPropsWithoutRef<typeof Button> & {
       label: string
     }
   }>
+  textColor?: ResponsiveColorValue
+  color?: ResponsiveColorValue
 }
 
 export default function DropDownButton({
