@@ -43,6 +43,7 @@ export interface ReactRuntime {
     component: C,
     meta: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P },
   ): () => void
+  __store(): ReactPage.Store
 }
 
 function createReactRuntime(store: ReactPage.Store): ReactRuntime {
@@ -60,6 +61,9 @@ function createReactRuntime(store: ReactPage.Store): ReactRuntime {
         unregisterComponent()
         unregisterReactComponent()
       }
+    },
+    __store() {
+      return store
     },
   }
 }
