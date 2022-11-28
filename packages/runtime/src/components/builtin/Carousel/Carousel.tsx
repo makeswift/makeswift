@@ -20,8 +20,6 @@ import {
   GapXValue,
   CheckboxValue,
   NumberValue,
-  BorderValue,
-  BorderRadiusValue,
   WidthValue,
 } from '../../../prop-controllers/descriptors'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
@@ -73,8 +71,8 @@ type Props = {
   arrowBackground?: ResponsiveColor | null
   showDots?: CheckboxValue
   dotColor?: ResponsiveColor | null
-  slideBorder?: BorderValue
-  slideBorderRadius?: BorderRadiusValue
+  slideBorder?: string
+  slideBorderRadius?: string
 }
 
 const Wrapper = styled.div.withConfig({
