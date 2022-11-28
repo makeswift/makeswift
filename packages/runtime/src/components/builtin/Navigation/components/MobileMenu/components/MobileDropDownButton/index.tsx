@@ -65,7 +65,7 @@ function DropDownItem({ color, ...restOfProps }: DropDownItemProps) {
   return <StyledLink {...restOfProps} color={useResponsiveColor(color)} />
 }
 
-type Props = ComponentPropsWithoutRef<typeof Button> & {
+type Props = Omit<ComponentPropsWithoutRef<typeof Button>, 'textColor' | 'color'> & {
   label: string
   links?: Array<{
     id: string
@@ -76,6 +76,8 @@ type Props = ComponentPropsWithoutRef<typeof Button> & {
   }>
   onClose?: () => unknown
   caret?: string
+  textColor?: ResponsiveColorValue
+  color?: ResponsiveColorValue
 }
 
 export default function MobileDropDownButton({
