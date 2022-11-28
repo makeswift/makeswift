@@ -4,6 +4,7 @@ import { createProxyServer } from 'http-proxy'
 import { NextApiHandler } from 'next'
 import { parse } from 'set-cookie-parser'
 import { version } from '../../package.json'
+import { createNewElementTree, createReplacementContext } from '../api/templates'
 import isErrorWithMessage from '../utils/isErrorWithMessage'
 
 type Fonts = Font[]
@@ -25,6 +26,7 @@ export type MakeswiftApiHandlerRevalidateErrorResponse = string
 export type MakeswiftApiHandlerRevalidateResponse = { revalidated: boolean }
 export type MakeswiftApiHandlerManifestResponse = { version: string; previewMode: boolean }
 export type MakeswiftApiHandlerFontsResponse = Fonts
+export type MakeswiftApiHandlerElementTreeResponse = { elementTree: any }
 
 export type MakeswiftApiHandlerResponse =
   | MakeswiftApiHandlerErrorResponse
@@ -32,6 +34,7 @@ export type MakeswiftApiHandlerResponse =
   | MakeswiftApiHandlerRevalidateResponse
   | MakeswiftApiHandlerManifestResponse
   | MakeswiftApiHandlerFontsResponse
+  | MakeswiftApiHandlerElementTreeResponse
 
 export function MakeswiftApiHandler(
   apiKey: string,
@@ -173,6 +176,30 @@ export function MakeswiftApiHandler(
       case 'fonts': {
         const fonts = (await getFonts?.()) ?? []
         return res.json(fonts)
+      }
+
+      case 'element-tree': {
+        if (req.query.secret !== apiKey) return res.status(401).json({ message: 'Unauthorized' })
+
+        const elementTree = req.body.elementTree
+        const serializedReplacementContext = req.body.replacementContext
+
+        if (elementTree == null) {
+          return res.status(400).json({ message: 'elementTree must be defined' })
+        }
+
+        if (serializedReplacementContext == null) {
+          return res.status(400).json({ message: 'replacementContext must be defined' })
+        }
+
+        const replacementContext = createReplacementContext(serializedReplacementContext)
+        const generatedElementTree = createNewElementTree({
+          elementTree,
+          replacementContext,
+        })
+
+        const response = { elementTree: generatedElementTree }
+        return res.json(response)
       }
 
       default:

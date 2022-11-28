@@ -204,7 +204,7 @@ export type BackgroundsValue = ResponsiveValue<Background[]>
 
 type BackgroundsOptions = Options<Record<string, never>>
 
-type BackgroundsDescriptor<_T = BackgroundsValue> = {
+export type BackgroundsDescriptor<_T = BackgroundsValue> = {
   type: typeof Types.Backgrounds
   options: BackgroundsOptions
 }
