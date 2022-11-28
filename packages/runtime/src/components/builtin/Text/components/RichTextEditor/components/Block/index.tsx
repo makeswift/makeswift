@@ -1,41 +1,44 @@
-import { forwardRef, ElementType, ComponentPropsWithoutRef } from 'react'
-import styled, { css } from 'styled-components'
+import { cx } from '@emotion/css'
+import { forwardRef, ComponentPropsWithoutRef, ForwardedRef, ElementRef, ElementType } from 'react'
 
-import { cssMediaRules } from '../../../../../../utils/cssMediaRules'
 import type { ResponsiveValue } from '../../../../../../../prop-controllers'
+import { useStyle } from '../../../../../../../runtimes/react/use-style'
+import { responsiveStyle } from '../../../../../../utils/responsive-style'
 
-type StyledBlockProps = {
+type BaseProps<T extends ElementType> = {
+  as?: T
   textAlign?: ResponsiveValue<'left' | 'center' | 'right' | 'justify'>
-  as?: ElementType
 }
 
-const StyledBlock = styled.div<StyledBlockProps>`
-  margin: 0;
-  ${p =>
-    cssMediaRules([p.textAlign] as const, ([textAlign]) =>
-      textAlign == null
-        ? css``
-        : css`
-            text-align: ${textAlign};
-          `,
-    )}
+type Props<T extends ElementType> = BaseProps<T> &
+  Omit<ComponentPropsWithoutRef<T>, keyof BaseProps<T>>
 
-  ${p =>
-    p.as === 'blockquote'
-      ? css`
-          padding: 0.5em 10px;
-          font-size: 1.25em;
-          font-weight: 300;
-          border-left: 5px solid rgba(0, 0, 0, 0.1);
-        `
-      : ''}
-`
-
-type Props = ComponentPropsWithoutRef<typeof StyledBlock>
-
-export default forwardRef<HTMLDivElement, Props>(function Block(
-  { textAlign, ...restOfProps }: Props,
-  ref,
+export default forwardRef(function Block<T extends ElementType>(
+  { textAlign, className, as, ...restOfProps }: Props<T>,
+  ref: ForwardedRef<ElementRef<T>>,
 ) {
-  return <StyledBlock {...restOfProps} ref={ref} textAlign={textAlign} />
+  const Component = as ?? 'div'
+
+  return (
+    // @ts-ignore: `ref` types don't match.
+    <Component
+      {...restOfProps}
+      ref={ref}
+      className={cx(
+        className,
+        useStyle({ margin: 0 }),
+        useStyle(responsiveStyle([textAlign], ([textAlign = 'left']) => ({ textAlign }))),
+        useStyle(
+          as === 'blockquote'
+            ? {
+                padding: '0.5em 10px',
+                fontSize: '1.25em',
+                fontWeight: '300',
+                borderLeft: '5px solid rgba(0, 0, 0, 0.1)',
+              }
+            : {},
+        ),
+      )}
+    />
+  )
 })

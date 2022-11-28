@@ -1,23 +1,32 @@
 import { ComponentPropsWithoutRef } from 'react'
-import styled, { css } from 'styled-components'
 
 import useTypographyMark, {
   TypographyMarkValue,
-  TypographyMarkData,
   overrideTypographyStyle,
   TypographyMarkDataValue,
 } from './hooks/useTypographyMark'
-import { cssMediaRules } from '../../../../../../utils/cssMediaRules'
 import { colorToString } from '../../../../../../utils/colorToString'
 import { shallowMergeFallbacks } from '../../../../../../utils/devices'
+import { cx } from '@emotion/css'
+import { useStyle } from '../../../../../../../runtimes/react/use-style'
+import { responsiveStyle } from '../../../../../../utils/responsive-style'
+import { ResponsiveValue } from '../../../../../../../prop-controllers/descriptors'
 
 export type { TypographyMarkValue }
 export { overrideTypographyStyle }
 
-const Span = styled.span<{ typographyStyle: TypographyMarkData | null | undefined }>`
-  ${p =>
-    cssMediaRules(
-      [p.typographyStyle] as const,
+type BaseProps = { value: TypographyMarkValue }
+
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
+
+export default function Mark({ value, className, ...restOfProps }: Props): JSX.Element {
+  const typographyStyle = useTypographyMark(value)
+  const typographyClassName = useStyle(
+    responsiveStyle<
+      TypographyMarkDataValue,
+      [ResponsiveValue<TypographyMarkDataValue> | null | undefined]
+    >(
+      [typographyStyle],
       ([
         {
           color,
@@ -31,76 +40,33 @@ const Span = styled.span<{ typographyStyle: TypographyMarkData | null | undefine
           strikethrough,
           italic,
         } = {} as TypographyMarkDataValue,
-      ]) => css`
-        ${color == null
-          ? ''
-          : css`
-              color: ${colorToString(color)};
-            `}
-
-        ${fontFamily == null
-          ? ''
-          : css`
-              font-family: '${fontFamily}';
-            `}
-
-        ${fontSize == null || fontSize.value == null || fontSize.unit == null
-          ? ''
-          : css`
-              font-size: ${`${fontSize.value}${fontSize.unit}`};
-            `}
-
-        ${fontWeight == null
-          ? ''
-          : css`
-              font-weight: ${fontWeight};
-            `}
-
-        ${lineHeight == null
-          ? ''
-          : css`
-              line-height: ${lineHeight};
-            `}
-
-        ${letterSpacing == null
-          ? ''
-          : css`
-              letter-spacing: ${letterSpacing / 10}em;
-            `}
-
-        ${underline == null && strikethrough == null
-          ? ''
-          : css`
-              text-decoration: ${[
+      ]) => ({
+        ...(color == null ? {} : { color: colorToString(color) }),
+        ...(fontFamily == null ? {} : { fontFamily }),
+        ...(fontSize == null || fontSize.value == null || fontSize.unit == null
+          ? {}
+          : { fontSize: `${fontSize.value}${fontSize.unit}` }),
+        ...(fontWeight == null ? {} : { fontWeight }),
+        ...(lineHeight == null ? {} : { lineHeight }),
+        ...(letterSpacing == null ? {} : { letterSpacing: `${letterSpacing / 10}em` }),
+        ...(uppercase == null
+          ? {}
+          : { textTransform: uppercase === true ? 'uppercase' : 'initial' }),
+        ...(underline == null && strikethrough == null
+          ? {}
+          : {
+              textDecoration: [
                 Boolean(underline) && 'underline',
                 Boolean(strikethrough) && 'line-through',
               ]
                 .filter(Boolean)
-                .join(' ')};
-            `}
-
-        ${uppercase == null
-          ? ''
-          : css`
-              text-transform: ${uppercase === true ? 'uppercase' : 'initial'};
-            `}
-
-        ${italic == null
-          ? ''
-          : css`
-              font-style: ${italic === true ? 'italic' : 'initial'};
-            `}
-      `,
+                .join(' '),
+            }),
+        ...(italic == null ? {} : { fontStyle: italic === true ? 'italic' : 'initial' }),
+      }),
       shallowMergeFallbacks,
-    )}
-`
+    ),
+  )
 
-type BaseProps = { value: TypographyMarkValue }
-
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<typeof Span>, keyof BaseProps>
-
-export default function Mark({ value, ...restOfProps }: Props): JSX.Element {
-  const typographyStyle = useTypographyMark(value)
-
-  return <Span {...restOfProps} typographyStyle={typographyStyle} />
+  return <span {...restOfProps} className={cx(className, typographyClassName)} />
 }
