@@ -99,8 +99,8 @@ export function registerComponent(runtime: ReactRuntime) {
           placeholder: 'black',
           hidden: props.showDots === false,
         })),
-        slideBorder: Props.Border(),
-        slideBorderRadius: Props.BorderRadius(),
+        slideBorder: Props.Border({ format: Props.Border.Format.ClassName }),
+        slideBorderRadius: Props.BorderRadius({ format: Props.BorderRadius.Format.ClassName }),
       },
     },
   )
