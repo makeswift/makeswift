@@ -1,7 +1,7 @@
-import { ReplacementContext } from '../../api/templates'
+import { CopyContext } from '../../state/react-page'
 import { BackgroundsValue } from '../descriptors'
 
-export function copy(value: BackgroundsValue, replacementContext: ReplacementContext) {
+export function copy(value: BackgroundsValue, context: CopyContext) {
   if (value == null) return value
 
   return value.map(override => ({
@@ -17,7 +17,7 @@ export function copy(value: BackgroundsValue, replacementContext: ReplacementCon
                 : {
                     ...backgroundItem.payload,
                     swatchId:
-                      replacementContext.swatchIds.get(backgroundItem.payload.swatchId) ??
+                      context.replacementContext.swatchIds.get(backgroundItem.payload.swatchId) ??
                       backgroundItem.payload.swatchId,
                   },
           }
@@ -35,7 +35,7 @@ export function copy(value: BackgroundsValue, replacementContext: ReplacementCon
                     : {
                         ...stop.color,
                         swatchId:
-                          replacementContext.swatchIds.get(stop.color.swatchId) ??
+                          context.replacementContext.swatchIds.get(stop.color.swatchId) ??
                           stop.color.swatchId,
                       },
               })),
@@ -48,7 +48,7 @@ export function copy(value: BackgroundsValue, replacementContext: ReplacementCon
             payload: {
               ...backgroundItem.payload,
               imageId:
-                replacementContext.fileIds.get(backgroundItem.payload.imageId) ??
+                context.replacementContext.fileIds.get(backgroundItem.payload.imageId) ??
                 backgroundItem.payload.imageId,
             },
           }

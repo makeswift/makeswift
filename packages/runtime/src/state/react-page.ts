@@ -15,6 +15,7 @@ import * as PropControllerHandles from './modules/prop-controller-handles'
 import * as IsInBuilder from './modules/is-in-builder'
 import * as Introspection from '../prop-controllers/introspection'
 import { Action } from './actions'
+import { copy as copyFromControl } from '../prop-controllers/copy'
 
 export type {
   Data,
@@ -166,6 +167,116 @@ export function getElementId(state: State, documentKey: string, elementKey: stri
   }, null as string | null)
 
   return elementId
+}
+
+export type ReplacementContext = {
+  elementHtmlIds: Set<string>
+  elementKeys: Map<string, string>
+  swatchIds: Map<string, string>
+  fileIds: Map<string, string>
+  typographyIds: Map<string, string>
+  tableIds: Map<string, string>
+  tableColumnIds: Map<string, string>
+  pageIds: Map<string, string>
+  globalElementIds: Map<string, string>
+  globalElementData: Map<string, Documents.ElementData>
+}
+
+export function createReplacementContext(jsonReplacementContext: {
+  elementHtmlIds: string[]
+  elementKeys: { [s: string]: string }
+  swatchIds: { [s: string]: string }
+  fileIds: { [s: string]: string }
+  typographyIds: { [s: string]: string }
+  tableIds: { [s: string]: string }
+  tableColumnIds: { [s: string]: string }
+  pageIds: { [s: string]: string }
+  globalElementIds: { [s: string]: string }
+  globalElementData: { [s: string]: Documents.ElementData }
+}): ReplacementContext {
+  const rc: ReplacementContext = {
+    elementHtmlIds: new Set(jsonReplacementContext.elementHtmlIds),
+    elementKeys: new Map(
+      jsonReplacementContext.elementKeys && Object.entries(jsonReplacementContext.elementKeys),
+    ),
+    swatchIds: new Map(
+      jsonReplacementContext.swatchIds && Object.entries(jsonReplacementContext.swatchIds),
+    ),
+    fileIds: new Map(
+      jsonReplacementContext.fileIds && Object.entries(jsonReplacementContext.fileIds),
+    ),
+    typographyIds: new Map(
+      jsonReplacementContext.typographyIds && Object.entries(jsonReplacementContext.typographyIds),
+    ),
+    tableIds: new Map(
+      jsonReplacementContext.tableIds && Object.entries(jsonReplacementContext.tableIds),
+    ),
+    tableColumnIds: new Map(
+      jsonReplacementContext.tableColumnIds &&
+        Object.entries(jsonReplacementContext.tableColumnIds),
+    ),
+    pageIds: new Map(
+      jsonReplacementContext.pageIds && Object.entries(jsonReplacementContext.pageIds),
+    ),
+    globalElementIds: new Map(
+      jsonReplacementContext.globalElementIds &&
+        Object.entries(jsonReplacementContext.globalElementIds),
+    ),
+    globalElementData: new Map(
+      jsonReplacementContext.globalElementData &&
+        Object.entries(jsonReplacementContext.globalElementData),
+    ),
+  }
+
+  return rc
+}
+
+export type CopyContext = {
+  replacementContext: ReplacementContext
+  copyElement: (node: Documents.Element) => Documents.Element
+}
+
+export function copyElementTree(
+  state: State,
+  elementTree: Documents.ElementData,
+  replacementContext: ReplacementContext,
+) {
+  /*
+   * This is structured a bit weird.
+   *
+   * This is done so that we can pass a callable function into some of the copy functions
+   * themselves, to enable mutual recursion.
+   *
+   * Consider the slot control. It has to iterate through its elements, and for each of them,
+   * call some version of the below function.
+   *
+   * That is how the recursing through the tree happens.
+   */
+  function copyElementTreeNode(state: State, replacementContext: ReplacementContext) {
+    return function (node: Documents.Element) {
+      if ('props' in node) {
+        for (const propKey of Object.keys(node.props)) {
+          const descriptors = getComponentPropControllerDescriptors(state, node.type)
+          if (descriptors == null) continue
+
+          const descriptor = descriptors[propKey]
+
+          const context = {
+            replacementContext,
+            copyElement: copyElementTreeNode(state, replacementContext),
+          }
+
+          node.props[propKey] = copyFromControl(descriptor, node.props[propKey], context)
+        }
+      }
+
+      return node
+    }
+  }
+
+  const copy = JSON.parse(JSON.stringify(elementTree)) as Documents.ElementData
+
+  return copyElementTreeNode(state, replacementContext)(copy)
 }
 
 export function getIsInBuilder(state: State): boolean {

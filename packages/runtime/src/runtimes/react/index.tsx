@@ -43,7 +43,10 @@ export interface ReactRuntime {
     component: C,
     meta: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P },
   ): () => void
-  __store(): ReactPage.Store
+  copyElementTree(
+    elementTree: ReactPage.ElementData,
+    replacementContext: ReactPage.ReplacementContext,
+  ): ReactPage.Element
 }
 
 function createReactRuntime(store: ReactPage.Store): ReactRuntime {
@@ -62,8 +65,11 @@ function createReactRuntime(store: ReactPage.Store): ReactRuntime {
         unregisterReactComponent()
       }
     },
-    __store() {
-      return store
+    copyElementTree(
+      elementTree: ReactPage.ElementData,
+      replacementContext: ReactPage.ReplacementContext,
+    ) {
+      return ReactPage.copyElementTree(store.getState(), elementTree, replacementContext)
     },
   }
 }
