@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.2.10
+
+### Patch Changes
+
+- 80aeb24: Fix table column names containing a period cause the form to not record data for that column.
+
 ## 0.2.9
 
 ### Patch Changes
