@@ -4,7 +4,8 @@ import { createProxyServer } from 'http-proxy'
 import { NextApiHandler } from 'next'
 import { parse } from 'set-cookie-parser'
 import { version } from '../../package.json'
-import { createNewElementTree, createReplacementContext } from '../api/templates'
+import { ReactRuntime } from '../react'
+import { createReplacementContext } from '../state/react-page'
 import isErrorWithMessage from '../utils/isErrorWithMessage'
 
 type Fonts = Font[]
@@ -193,10 +194,7 @@ export function MakeswiftApiHandler(
         }
 
         const replacementContext = createReplacementContext(serializedReplacementContext)
-        const generatedElementTree = createNewElementTree({
-          elementTree,
-          replacementContext,
-        })
+        const generatedElementTree = ReactRuntime.copyElementTree(elementTree, replacementContext)
 
         const response = { elementTree: generatedElementTree }
         return res.json(response)

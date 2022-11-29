@@ -1,15 +1,16 @@
 import { Descriptor } from './descriptors'
-import { copy as BackgroundsCopy } from './copy/Backgrounds'
+import { copy as backgroundsCopy } from './copy/backgrounds'
+import { copy as gridCopy } from './copy/grid'
+import { CopyContext } from '../state/react-page'
 
-function defaultCopy(props: any) {
-  return props
-}
-
-export function getCopyFunction(descriptor: Descriptor) {
+// @note: note typing value, because would then have to type narrow `Data` per case
+export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
   switch (descriptor.type) {
     case 'Backgrounds':
-      return BackgroundsCopy
+      return backgroundsCopy(value, context)
+    case 'Grid':
+      return gridCopy(value, context)
     default:
-      return defaultCopy
+      return value
   }
 }
