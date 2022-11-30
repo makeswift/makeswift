@@ -84,7 +84,7 @@ const StyledBackgroundsContainer = styled(BackgroundsContainer).withConfig({
   ${props => cssMediaRules([props.alignSelf] as const, ([alignSelf = 'auto']) => ({ alignSelf }))}
 `
 
-const Grid = styled(motion.div).withConfig({
+const Grid = styled.div.withConfig({
   shouldForwardProp: prop => !['padding', 'border', 'boxShadow', 'alignContent'].includes(prop),
 })<{
   padding: Props['padding']
@@ -103,7 +103,7 @@ const Grid = styled(motion.div).withConfig({
       alignContent,
     }))}
 `
-const GridItem = styled(motion.div).withConfig({
+const GridItem = styled.div.withConfig({
   shouldForwardProp: prop => !['grid', 'alignItems', 'index', 'columnGap', 'rowGap'].includes(prop),
 })<{
   grid: NonNullable<Props['children']>['columns']
@@ -149,6 +149,7 @@ const Box = forwardRef(function Box(
 ) {
   const innerRef = useRef<HTMLDivElement | null>(null)
   const [boxElement, setBoxElement] = useState<HTMLElement | null>(null)
+  const hasAnimations = boxAnimateType != null || itemAnimateType != null
 
   useImperativeHandle(
     ref,
@@ -207,6 +208,7 @@ const Box = forwardRef(function Box(
   return (
     <StyledBackgroundsContainer
       ref={setBoxElement}
+      hasAnimations={hasAnimations}
       id={id}
       backgrounds={backgrounds}
       width={width}
@@ -220,6 +222,7 @@ const Box = forwardRef(function Box(
       key={key?.container}
     >
       <Grid
+        as={hasAnimations ? motion.div : 'div'}
         ref={innerRef}
         padding={padding}
         border={borderData}
@@ -232,6 +235,7 @@ const Box = forwardRef(function Box(
         {children && children.elements.length > 0 ? (
           children.elements.map((child, index) => (
             <GridItem
+              as={hasAnimations ? motion.div : 'div'}
               key={child.key}
               grid={children.columns}
               index={index}

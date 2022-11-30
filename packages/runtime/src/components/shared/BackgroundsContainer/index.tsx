@@ -15,7 +15,7 @@ import { BackgroundsValue as BackgroundsPropControllerValue } from '../../../pro
 import { useBackgrounds } from '../../hooks'
 import { Ref } from 'react'
 
-const OuterContainer = styled(motion.div)`
+const OuterContainer = styled.div`
   position: relative;
   width: 100%;
   margin: 0 auto;
@@ -31,6 +31,7 @@ const OuterContainer = styled(motion.div)`
 `
 
 type BaseProps = {
+  hasAnimations?: boolean
   backgrounds: BackgroundsPropControllerValue | null | undefined
   children: ReactElement<ElementType>
 }
@@ -38,7 +39,7 @@ type BaseProps = {
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<typeof OuterContainer>, keyof BaseProps>
 
 export default forwardRef<HTMLDivElement | null, Props>(function BackgroundsContainer(
-  { backgrounds, children, ...restOfProps }: Props,
+  { hasAnimations = false, backgrounds, children, ...restOfProps }: Props,
   ref: Ref<HTMLDivElement | null>,
 ) {
   const [handle, setHandle] = useState<HTMLDivElement | null>(null)
@@ -46,7 +47,7 @@ export default forwardRef<HTMLDivElement | null, Props>(function BackgroundsCont
   useImperativeHandle(ref, () => handle, [handle])
 
   return (
-    <OuterContainer {...restOfProps} ref={setHandle}>
+    <OuterContainer {...restOfProps} as={hasAnimations ? motion.div : 'div'} ref={setHandle}>
       <Backgrounds backgrounds={useBackgrounds(backgrounds)} />
       {Children.only(children)}
     </OuterContainer>
