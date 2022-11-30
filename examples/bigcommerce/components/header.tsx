@@ -1,3 +1,4 @@
+import { useIsOnline } from 'lib/useIsOnline'
 import Link from 'next/link'
 import { MouseEvent } from 'react'
 
@@ -16,11 +17,14 @@ type Props = {
     text?: string
     link?: LinkValue
   }[]
+  localeSwitcherDisabled?: boolean
+  cartDisabled?: boolean
 }
 
-export function Header({ className, links }: Props) {
+export function Header({ className, links, localeSwitcherDisabled, cartDisabled }: Props) {
+  const isOnline = useIsOnline()
   return (
-    <div className={`${className} flex gap-3 flex-wrap justify-between items-center`}>
+    <div className={`${className} h-12 grid  grid-cols-3 `}>
       <div className="flex space-x-5 items-center">
         <Link href={'/'}>
           <a>
@@ -49,10 +53,35 @@ export function Header({ className, links }: Props) {
           </Link>
         ))}
       </div>
+      {isOnline ? (
+        <div />
+      ) : (
+        <div className="fixed z-10 bottom-3 inset-x-7 md:col-start-2 md:absolute md:flex md:bottom-auto md:inset-x-1/3 ">
+          <div className="flex max-w-[318px] mx-auto justify-self-center space-x-3 items-center justify-center text-white bg-green px-6  lg:px-14 pt-[9px] pb-[11px]">
+            <svg
+              width="22"
+              height="20"
+              viewBox="0 0 22 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="shrink-0"
+            >
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M3.90106 6.43659C2.04617 7.24652 0.75 9.09647 0.75 11.25C0.75 14.1495 3.10051 16.5 6 16.5H13.9645L12.4645 15H6C3.92894 15 2.25 13.3211 2.25 11.25C2.25 9.49724 3.45312 8.02438 5.07839 7.61392L3.90106 6.43659ZM18.7614 14.2259C19.3685 13.6769 19.75 12.883 19.75 12C19.75 10.4459 18.5677 9.16698 17.0539 9.01515C16.7259 8.98225 16.4579 8.73905 16.3933 8.41581C15.8902 5.89741 13.6659 4 11 4C10.2702 4 9.57339 4.14214 8.93592 4.40038L7.80542 3.26989C8.76299 2.77784 9.84892 2.5 11 2.5C14.2115 2.5 16.9166 4.66207 17.7416 7.60975C19.7501 8.06164 21.25 9.85526 21.25 12C21.25 13.2972 20.7011 14.4662 19.823 15.2874L18.7614 14.2259Z"
+                fill="white"
+              />
+              <path d="M3 2L19 18" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            <span className="text-base leading-7 whitespace-nowrap">You are currently offline</span>
+          </div>
+        </div>
+      )}
 
-      <div className="flex items-center space-x-5">
-        <LocaleSwitcher />
-        <Cart />
+      <div className="justify-self-end flex items-center space-x-5 col-start-3">
+        <LocaleSwitcher disabled={localeSwitcherDisabled} />
+        <Cart disabled={cartDisabled} />
       </div>
     </div>
   )
