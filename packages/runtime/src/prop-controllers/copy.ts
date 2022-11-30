@@ -4,6 +4,7 @@ import { copy as gridCopy } from './copy/grid'
 import { copy as navigationLinksCopy } from './copy/navigation-links'
 import { copy as linkCopy } from './copy/link'
 import { copy as shadowsCopy } from './copy/shadows'
+import { copy as imageCopy } from './copy/image'
 import { CopyContext } from '../state/react-page'
 
 // @note: note typing value, because would then have to type narrow `Data` per case
@@ -19,6 +20,8 @@ export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
       return linkCopy(value, context)
     case 'Shadows':
       return shadowsCopy(value, context)
+    case 'Image':
+      return imageCopy(value, context)
     default:
       return value
   }
