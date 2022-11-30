@@ -254,6 +254,7 @@ export function copyElementTree(
    */
   function copyElementTreeNode(state: State, replacementContext: ReplacementContext) {
     return function (node: Documents.Element) {
+      // @note: This is not handling global elements yet
       if ('props' in node) {
         for (const propKey of Object.keys(node.props)) {
           const descriptors = getComponentPropControllerDescriptors(state, node.type)
