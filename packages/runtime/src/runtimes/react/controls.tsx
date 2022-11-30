@@ -1,18 +1,16 @@
-import { useMemo, useRef } from 'react'
+import { useRef } from 'react'
 
 import { useDocumentKey, useSelector, useStore } from '.'
 import * as ReactPage from '../../state/react-page'
 import { Props } from '../../prop-controllers'
 import {
   Descriptor,
-  Device,
   ResolveOptions,
   ResponsiveValue,
-  WidthControlValueFormats,
+  WidthPropControllerFormat,
   WidthDescriptor,
   WidthValue,
 } from '../../prop-controllers/descriptors'
-import { css } from '@emotion/css'
 import { useResponsiveColor } from '../../components/hooks'
 import type { ColorValue } from '../../components/utils/types'
 import { responsiveWidth } from '../../components/utils/responsive-style'
@@ -36,42 +34,22 @@ import { useFormattedStyle } from './controls/style'
 import { ControlValue } from './controls/control'
 import { RenderHook } from './components'
 import { useSlot } from './controls/slot'
+import { useStyle } from './use-style'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
-function useDeviceMode(): Device {
-  return 'desktop'
-}
-
-function useWidth(
-  value: WidthValue | undefined,
-  descriptor: WidthDescriptor,
-  props: Record<string, unknown>,
-): string | WidthValue | undefined {
-  const deviceMode = useDeviceMode()
-  const options = useMemo(
-    () =>
-      typeof descriptor.options === 'function'
-        ? descriptor.options(props, deviceMode)
-        : descriptor.options,
-    [props, deviceMode],
-  )
-
-  return useMemo(
-    () =>
-      options.format === WidthControlValueFormats.ClassName
-        ? css(responsiveWidth(value, options.defaultValue))
-        : value,
-    [value, options.defaultValue, options.format],
-  )
+function useWidthStyle(value: WidthValue | undefined, descriptor: WidthDescriptor): string {
+  return useStyle(responsiveWidth(value, descriptor.options.defaultValue))
 }
 
 export type ResolveWidthControlValue<T extends Descriptor> = T extends WidthDescriptor
   ? undefined extends ResolveOptions<T['options']>['format']
     ? WidthValue | undefined
-    : ResolveOptions<T['options']>['format'] extends typeof WidthControlValueFormats.ClassName
+    : ResolveOptions<T['options']>['format'] extends typeof WidthPropControllerFormat.ClassName
     ? string
-    : ResolveOptions<T['options']>['format'] extends typeof WidthControlValueFormats.ResponsiveValue
+    : ResolveOptions<
+        T['options']
+      >['format'] extends typeof WidthPropControllerFormat.ResponsiveValue
     ? WidthValue | undefined
     : never
   : never
@@ -142,15 +120,21 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
           }
 
           case Props.Types.Width:
-            return (
-              <RenderHook
-                key={descriptor.type}
-                hook={useWidth}
-                parameters={[props[propName], descriptor, props]}
-              >
-                {value => renderFn({ ...propsValue, [propName]: value })}
-              </RenderHook>
-            )
+            switch (descriptor.options.format) {
+              case WidthPropControllerFormat.ClassName:
+                return (
+                  <RenderHook
+                    key={descriptor.type}
+                    hook={useWidthStyle}
+                    parameters={[props[propName], descriptor]}
+                  >
+                    {value => renderFn({ ...propsValue, [propName]: value })}
+                  </RenderHook>
+                )
+
+              default:
+                return renderFn({ ...propsValue, [propName]: props[propName] })
+            }
 
           case Props.Types.ResponsiveColor:
             return (
