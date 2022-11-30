@@ -886,19 +886,19 @@ export function Video(options: VideoOptions = {}): VideoDescriptor {
 
 export type WidthValue = ResponsiveValue<Length>
 
-export const WidthControlValueFormats = {
-  ClassName: 'ClassName',
-  ResponsiveValue: 'ResponsiveValue',
+export const WidthPropControllerFormat = {
+  ClassName: 'makeswift::prop-controllers::width::format::class-name',
+  ResponsiveValue: 'makeswift::prop-controllers::width::format::responsive-value',
 } as const
 
 type WidthControlValueFormat =
-  typeof WidthControlValueFormats[keyof typeof WidthControlValueFormats]
+  typeof WidthPropControllerFormat[keyof typeof WidthPropControllerFormat]
 
-type WidthOptions = Options<{
+type WidthOptions = {
   preset?: WidthValue
   defaultValue?: Length
   format?: WidthControlValueFormat
-}>
+}
 
 export type WidthDescriptor<_T = WidthValue, U extends WidthOptions = WidthOptions> = {
   type: typeof Types.Width
@@ -911,7 +911,7 @@ export function Width<T extends WidthOptions>(
   return { type: Types.Width, options }
 }
 
-Width.Formats = WidthControlValueFormats
+Width.Format = WidthPropControllerFormat
 
 export type Descriptor<T extends Data = Data> =
   | BackgroundsDescriptor<T>
