@@ -1,5 +1,19 @@
 # @makeswift/runtime
 
+## 0.2.11
+
+### Patch Changes
+
+- 1d6c968: Add copy functions NavigationLinks and Links default prop controllers. This advances work on the ReactRuntime.copyElementTree function.
+- 0dea000: Add copy function for the Image prop controller. This advances work on ReactRuntime.copyElementTree.
+- 25995d2: Add new endpoint to create an element tree from an existing one.
+
+  At this point it is not complete. We will complete it under the hood, then switch over our template functionality to use it.
+
+- b3ff4e4: Add copy function for ResponsiveColor control. This advances work done for ReactRuntime.copyElementTree.
+- 1d22db7: Add copy function for ShadowPropController. This advances work for ReactRuntime.copyElementTree.
+- 2ed68d6: Fix apostrophe in table column causing form data to not be recorded.
+
 ## 0.2.10
 
 ### Patch Changes
