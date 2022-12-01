@@ -85,6 +85,11 @@ type Props = {
   tableFormField: TableFormField
 }
 
+// Escape characters: [ ] '
+function escapeCharacters(string: string) {
+  return string.replace(/[[\]']/g, '\\$&')
+}
+
 export default function Field({
   tableColumn,
   tableFormField: {
@@ -125,11 +130,17 @@ export default function Field({
     return errorMessage
   }
 
+  // We're using `['${tableColumn.name}']` to avoid default Formik nested object behavior
+  // which was causing an issue for table column names containing a dot.
+  // https://formik.org/docs/guides/arrays#avoid-nesting
+  // We need to escape square brackets [ ] because it's also used by Lodash
+  // set array: https://lodash.com/docs/4.17.15#set, which is used by Formik.
+  // We need to escape ' because otherwise Formik will wrap the field name inside a ''
+  // for example, if we have hello'world, Formik will name the field 'hello'world'
+  const formikFieldName = `['${escapeCharacters(tableColumn.name)}']`
+
   return (
-    // We're using `['${tableColumn.name}']` to avoid default Formik nested object behavior
-    // which was causing an issue for table column names containing a dot.
-    // https://formik.org/docs/guides/arrays#avoid-nesting
-    <FormikField name={`['${tableColumn.name}']`} validate={validate}>
+    <FormikField name={formikFieldName} validate={validate}>
       {({ field, form }: any) =>
         hidden ? (
           <input {...field} ref={input} type="hidden" />
