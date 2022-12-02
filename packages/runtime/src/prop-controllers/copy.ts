@@ -8,6 +8,7 @@ import { copy as imageCopy } from './copy/image'
 import { copy as responsiveColorCopy } from './copy/responsive-color'
 import { copy as tableFormFieldsCopy } from './copy/table-form-fields'
 import { copy as tableCopy } from './copy/table'
+import { copy as borderCopy } from './copy/border'
 import { CopyContext } from '../state/react-page'
 
 // @note: note typing value, because would then have to type narrow `Data` per case
@@ -31,6 +32,8 @@ export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
       return tableFormFieldsCopy(value, context)
     case 'Table':
       return tableCopy(value, context)
+    case 'Border':
+      return borderCopy(value, context)
     default:
       return value
   }
