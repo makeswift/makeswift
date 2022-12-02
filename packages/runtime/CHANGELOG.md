@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.2.12
+
+### Patch Changes
+
+- 3184597: Add copy function for element references. This completes the first version of ReactRuntime.copyElementTree.
+- e70bab1: Add copy function for element id. This advances work for ReactRuntime.copyElementTree.
+- beb1fce: Add copy functions for RichText and Images. This advances work on ReactRuntime.copyElementTree.
+- 01cc35c: Add copy functions for table and border prop controllers. This gets closer to a complete ReactRuntime.copyElementTree.
+
 ## 0.2.11
 
 ### Patch Changes
