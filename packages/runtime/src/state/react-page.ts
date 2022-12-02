@@ -15,7 +15,7 @@ import * as PropControllerHandles from './modules/prop-controller-handles'
 import * as IsInBuilder from './modules/is-in-builder'
 import * as Introspection from '../prop-controllers/introspection'
 import { Action } from './actions'
-import { copy as copyFromControl } from '../prop-controllers/copy'
+import { copy as copyFromControl, copyElementReference } from '../prop-controllers/copy'
 
 export type {
   Data,
@@ -255,6 +255,11 @@ export function copyElementTree(
   function copyElementTreeNode(state: State, replacementContext: ReplacementContext) {
     return function (node: Documents.Element) {
       // @note: This is not handling global elements yet
+      const context = {
+        replacementContext,
+        copyElement: copyElementTreeNode(state, replacementContext),
+      }
+
       if ('props' in node) {
         for (const propKey of Object.keys(node.props)) {
           const descriptors = getComponentPropControllerDescriptors(state, node.type)
@@ -262,13 +267,10 @@ export function copyElementTree(
 
           const descriptor = descriptors[propKey]
 
-          const context = {
-            replacementContext,
-            copyElement: copyElementTreeNode(state, replacementContext),
-          }
-
           node.props[propKey] = copyFromControl(descriptor, node.props[propKey], context)
         }
+      } else if (node.type === 'reference') {
+        return { ...node, value: copyElementReference(node.value, context) }
       }
 
       return node
