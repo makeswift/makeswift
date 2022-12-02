@@ -11,6 +11,7 @@ import { copy as tableFormFieldsCopy } from './copy/table-form-fields'
 import { copy as tableCopy } from './copy/table'
 import { copy as borderCopy } from './copy/border'
 import { copy as richTextCopy } from './copy/rich-text'
+import { copy as elementIdCopy } from './copy/element-id'
 import { CopyContext } from '../state/react-page'
 
 // @note: note typing value, because would then have to type narrow `Data` per case
@@ -40,6 +41,8 @@ export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
       return borderCopy(value, context)
     case 'RichText':
       return richTextCopy(value, context)
+    case 'ElementID':
+      return elementIdCopy(value, context)
     default:
       return value
   }
