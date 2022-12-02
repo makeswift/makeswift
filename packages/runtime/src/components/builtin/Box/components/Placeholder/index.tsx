@@ -1,13 +1,5 @@
 import { forwardRef, Ref } from 'react'
-import styled from 'styled-components'
-
-const PlaceholderBase = styled.div<{ hide: boolean }>`
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-  height: 80px;
-  padding: 8px;
-  visibility: ${({ hide }) => (hide === true ? 'hidden' : 'initial')};
-`
+import { useStyle } from '../../../../../runtimes/react/use-style'
 
 type Props = { hide?: boolean }
 
@@ -16,7 +8,17 @@ export default forwardRef(function Placeholder(
   ref: Ref<HTMLDivElement>,
 ) {
   return (
-    <PlaceholderBase {...restOfProps} hide={hide} ref={ref}>
+    <div
+      {...restOfProps}
+      ref={ref}
+      style={{ visibility: hide ? 'hidden' : 'initial' }}
+      className={useStyle({
+        width: '100%',
+        background: 'rgba(161, 168, 194, 0.18)',
+        height: 80,
+        padding: 8,
+      })}
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="100%"
@@ -36,6 +38,6 @@ export default forwardRef(function Placeholder(
           ry="4"
         />
       </svg>
-    </PlaceholderBase>
+    </div>
   )
 })
