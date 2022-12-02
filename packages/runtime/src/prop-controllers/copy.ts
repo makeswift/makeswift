@@ -5,6 +5,7 @@ import { copy as navigationLinksCopy } from './copy/navigation-links'
 import { copy as linkCopy } from './copy/link'
 import { copy as shadowsCopy } from './copy/shadows'
 import { copy as imageCopy } from './copy/image'
+import { copy as imagesCopy } from './copy/images'
 import { copy as responsiveColorCopy } from './copy/responsive-color'
 import { copy as tableFormFieldsCopy } from './copy/table-form-fields'
 import { copy as tableCopy } from './copy/table'
@@ -27,6 +28,8 @@ export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
       return shadowsCopy(value, context)
     case 'Image':
       return imageCopy(value, context)
+    case 'Images':
+      return imagesCopy(value, context)
     case 'ResponsiveColor':
       return responsiveColorCopy(value, context)
     case 'TableFormFields':
