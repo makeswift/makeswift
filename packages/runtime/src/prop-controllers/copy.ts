@@ -47,3 +47,7 @@ export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
       return value
   }
 }
+
+export function copyElementReference(value: string, context: CopyContext) {
+  return context.replacementContext.globalElementIds.get(value) || value
+}
