@@ -180,8 +180,6 @@ export function MakeswiftApiHandler(
       }
 
       case 'element-tree': {
-        if (req.query.secret !== apiKey) return res.status(401).json({ message: 'Unauthorized' })
-
         const elementTree = req.body.elementTree
         const serializedReplacementContext = req.body.replacementContext
 
