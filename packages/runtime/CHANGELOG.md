@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.2.14
+
+### Patch Changes
+
+- 7116b8b: Remove authorization for producing a new element tree.
+
 ## 0.2.13
 
 ### Patch Changes
