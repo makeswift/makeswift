@@ -1,5 +1,5 @@
 import { CopyContext, ReplacementContext } from '../../state/react-page'
-import { ImagesValue, ImageValue } from '../descriptors'
+import { ImagesValue } from '../descriptors'
 
 export function copy(
   value: ImagesValue | undefined,
