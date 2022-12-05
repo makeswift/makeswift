@@ -1,5 +1,5 @@
 import { CopyContext, ReplacementContext } from '../../state/react-page'
-import { BorderValue, TableValue } from '../descriptors'
+import { BorderValue } from '../descriptors'
 
 export function copy(
   value: BorderValue | undefined,
