@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.2.15
+
+### Patch Changes
+
+- 3611500: Use serializable replacement context in ReactRuntime.copyElementTree public API.
+
 ## 0.2.14
 
 ### Patch Changes
