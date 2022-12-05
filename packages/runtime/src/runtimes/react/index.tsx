@@ -45,7 +45,7 @@ export interface ReactRuntime {
   ): () => void
   copyElementTree(
     elementTree: ReactPage.ElementData,
-    replacementContext: ReactPage.ReplacementContext,
+    replacementContext: ReactPage.SerializableReplacementContext,
   ): ReactPage.Element
 }
 
@@ -67,7 +67,7 @@ function createReactRuntime(store: ReactPage.Store): ReactRuntime {
     },
     copyElementTree(
       elementTree: ReactPage.ElementData,
-      replacementContext: ReactPage.ReplacementContext,
+      replacementContext: ReactPage.SerializableReplacementContext,
     ) {
       return ReactPage.copyElementTree(store.getState(), elementTree, replacementContext)
     },

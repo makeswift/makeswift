@@ -182,7 +182,7 @@ export type ReplacementContext = {
   globalElementData: Map<string, Documents.ElementData>
 }
 
-export function createReplacementContext(jsonReplacementContext: {
+export type SerializableReplacementContext = {
   elementHtmlIds: string[]
   elementKeys: { [s: string]: string }
   swatchIds: { [s: string]: string }
@@ -193,38 +193,48 @@ export function createReplacementContext(jsonReplacementContext: {
   pageIds: { [s: string]: string }
   globalElementIds: { [s: string]: string }
   globalElementData: { [s: string]: Documents.ElementData }
-}): ReplacementContext {
+}
+
+export function createReplacementContext(
+  serializableReplacementContext: SerializableReplacementContext,
+): ReplacementContext {
   const rc: ReplacementContext = {
-    elementHtmlIds: new Set(jsonReplacementContext.elementHtmlIds),
+    elementHtmlIds: new Set(serializableReplacementContext.elementHtmlIds),
     elementKeys: new Map(
-      jsonReplacementContext.elementKeys && Object.entries(jsonReplacementContext.elementKeys),
+      serializableReplacementContext.elementKeys &&
+        Object.entries(serializableReplacementContext.elementKeys),
     ),
     swatchIds: new Map(
-      jsonReplacementContext.swatchIds && Object.entries(jsonReplacementContext.swatchIds),
+      serializableReplacementContext.swatchIds &&
+        Object.entries(serializableReplacementContext.swatchIds),
     ),
     fileIds: new Map(
-      jsonReplacementContext.fileIds && Object.entries(jsonReplacementContext.fileIds),
+      serializableReplacementContext.fileIds &&
+        Object.entries(serializableReplacementContext.fileIds),
     ),
     typographyIds: new Map(
-      jsonReplacementContext.typographyIds && Object.entries(jsonReplacementContext.typographyIds),
+      serializableReplacementContext.typographyIds &&
+        Object.entries(serializableReplacementContext.typographyIds),
     ),
     tableIds: new Map(
-      jsonReplacementContext.tableIds && Object.entries(jsonReplacementContext.tableIds),
+      serializableReplacementContext.tableIds &&
+        Object.entries(serializableReplacementContext.tableIds),
     ),
     tableColumnIds: new Map(
-      jsonReplacementContext.tableColumnIds &&
-        Object.entries(jsonReplacementContext.tableColumnIds),
+      serializableReplacementContext.tableColumnIds &&
+        Object.entries(serializableReplacementContext.tableColumnIds),
     ),
     pageIds: new Map(
-      jsonReplacementContext.pageIds && Object.entries(jsonReplacementContext.pageIds),
+      serializableReplacementContext.pageIds &&
+        Object.entries(serializableReplacementContext.pageIds),
     ),
     globalElementIds: new Map(
-      jsonReplacementContext.globalElementIds &&
-        Object.entries(jsonReplacementContext.globalElementIds),
+      serializableReplacementContext.globalElementIds &&
+        Object.entries(serializableReplacementContext.globalElementIds),
     ),
     globalElementData: new Map(
-      jsonReplacementContext.globalElementData &&
-        Object.entries(jsonReplacementContext.globalElementData),
+      serializableReplacementContext.globalElementData &&
+        Object.entries(serializableReplacementContext.globalElementData),
     ),
   }
 
@@ -239,7 +249,7 @@ export type CopyContext = {
 export function copyElementTree(
   state: State,
   elementTree: Documents.ElementData,
-  replacementContext: ReplacementContext,
+  replacementContext: SerializableReplacementContext,
 ) {
   /*
    * This is structured a bit weird.
@@ -279,7 +289,7 @@ export function copyElementTree(
 
   const copy = JSON.parse(JSON.stringify(elementTree)) as Documents.ElementData
 
-  return copyElementTreeNode(state, replacementContext)(copy)
+  return copyElementTreeNode(state, createReplacementContext(replacementContext))(copy)
 }
 
 export function getIsInBuilder(state: State): boolean {

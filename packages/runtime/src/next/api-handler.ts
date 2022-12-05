@@ -5,7 +5,6 @@ import { NextApiHandler } from 'next'
 import { parse } from 'set-cookie-parser'
 import { version } from '../../package.json'
 import { ReactRuntime } from '../react'
-import { createReplacementContext } from '../state/react-page'
 import isErrorWithMessage from '../utils/isErrorWithMessage'
 
 type Fonts = Font[]
@@ -181,17 +180,16 @@ export function MakeswiftApiHandler(
 
       case 'element-tree': {
         const elementTree = req.body.elementTree
-        const serializedReplacementContext = req.body.replacementContext
+        const replacementContext = req.body.replacementContext
 
         if (elementTree == null) {
           return res.status(400).json({ message: 'elementTree must be defined' })
         }
 
-        if (serializedReplacementContext == null) {
+        if (replacementContext == null) {
           return res.status(400).json({ message: 'replacementContext must be defined' })
         }
 
-        const replacementContext = createReplacementContext(serializedReplacementContext)
         const generatedElementTree = ReactRuntime.copyElementTree(elementTree, replacementContext)
 
         const response = { elementTree: generatedElementTree }
