@@ -1,31 +1,18 @@
 /* eslint-env browser */
 
 import { useState, useEffect, forwardRef, Ref, useImperativeHandle } from 'react'
-import styled from 'styled-components'
 
-import { cssMargin, cssWidth } from '../../utils/cssMediaRules'
-import {
-  ElementIDValue,
-  MarginValue,
-  TextAreaValue,
-  WidthValue,
-} from '../../../prop-controllers/descriptors'
+import { ElementIDValue, TextAreaValue } from '../../../prop-controllers/descriptors'
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect'
+import { useStyle } from '../../../runtimes/react/use-style'
+import { cx } from '@emotion/css'
 
 type Props = {
   id?: ElementIDValue
   html?: TextAreaValue
-  width?: WidthValue
-  margin?: MarginValue
+  width?: string
+  margin?: string
 }
-
-const Container = styled.div.withConfig({
-  shouldForwardProp: prop => !['width', 'margin'].includes(prop),
-})<{ width: Props['width']; margin: Props['margin'] }>`
-  min-height: 15px;
-  ${cssWidth()}
-  ${cssMargin()}
-`
 
 const defaultHtml = `<div style="padding: 24px; background-color: rgba(161, 168, 194, 0.18); overflow: hidden;">
 <svg width="316" height="168" viewBox="0 0 316 168" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -115,14 +102,15 @@ const Embed = forwardRef(function Embed(
     })
   }, [container, html])
 
+  const className = useStyle({ minHeight: 15 })
+
   if (shouldRender === false) return null
 
   return (
-    <Container
+    <div
       ref={setContainer}
       id={id}
-      width={width}
-      margin={margin}
+      className={cx(className, width, margin)}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   )
