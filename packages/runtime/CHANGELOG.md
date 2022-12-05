@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.2.13
+
+### Patch Changes
+
+- 4400d23: Fix type errors in runtime.
+
 ## 0.2.12
 
 ### Patch Changes
