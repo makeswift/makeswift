@@ -1,15 +1,7 @@
-import styled from 'styled-components'
-
 import { ResponsiveValue, Length } from '../../../../../prop-controllers/descriptors'
+import { useStyle } from '../../../../../runtimes/react/use-style'
 
 import GutterContainer from '../../../../shared/GutterContainer'
-
-const PlaceholderLink = styled.div`
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background-color: rgba(161, 168, 194, 0.4);
-`
 
 const links = [{ id: '1' }, { id: '2' }, { id: '3' }]
 
@@ -29,5 +21,18 @@ export default function SocialLinksPlaceholder({ gutter }: Props): JSX.Element {
         </GutterContainer>
       ))}
     </>
+  )
+}
+
+function PlaceholderLink() {
+  return (
+    <div
+      className={useStyle({
+        width: 44,
+        height: 44,
+        borderRadius: '50%',
+        backgroundColor: 'rgba(161, 168, 194, 0.4)',
+      })}
+    />
   )
 }

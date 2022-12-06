@@ -1,21 +1,31 @@
-import styled, { css } from 'styled-components'
-
+import { cx } from '@emotion/css'
+import { ComponentPropsWithoutRef } from 'react'
 import { ResponsiveValue, Length } from '../../../prop-controllers/descriptors'
-import { cssMediaRules } from '../../utils/cssMediaRules'
+import { useStyle } from '../../../runtimes/react/use-style'
+import { responsiveStyle } from '../../utils/responsive-style'
 
-const GutterContainer = styled.div<{
+type BaseProps = {
+  className?: string
   gutter?: ResponsiveValue<Length>
   first: boolean
   last: boolean
-}>`
-  ${p =>
-    cssMediaRules(
-      [p.gutter],
-      ([gutter = { value: 0, unit: 'px' }]) => css`
-        padding-left: ${p.first ? '0px' : `${gutter.value / 2}${gutter.unit}`};
-        padding-right: ${p.last ? '0px' : `${gutter.value / 2}${gutter.unit}`};
-      `,
-    )}
-`
+}
 
-export default GutterContainer
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
+
+export default function GutterContainer({ className, gutter, first, last, ...restOfProps }: Props) {
+  return (
+    <div
+      {...restOfProps}
+      className={cx(
+        className,
+        useStyle(
+          responsiveStyle([gutter] as const, ([gutter = { value: 0, unit: 'px' }]) => ({
+            paddingLeft: first ? '0px' : `${gutter.value / 2}${gutter.unit}`,
+            paddingRight: last ? '0px' : `${gutter.value / 2}${gutter.unit}`,
+          })),
+        ),
+      )}
+    />
+  )
+}
