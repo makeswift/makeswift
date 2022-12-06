@@ -3,6 +3,16 @@ import { ProductFragment } from './bigcommerce/types'
 
 export const ProductsContext = createContext<ProductFragment[] | null>(null)
 
+export function useProduct(id: number): ProductFragment | undefined {
+  const products = useContext(ProductsContext)
+
+  if (products != null) {
+    return products.find(product => product.entityId === id)
+  }
+
+  throw new Error('useProducts should only be used inside a ProductsProvider')
+}
+
 export function useProducts({
   count = 4,
   categoryEntityId,

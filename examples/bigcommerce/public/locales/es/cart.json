@@ -1,0 +1,11 @@
+{
+  "image-for": "Imagen para",
+  "add-to-cart": "Agregar al carrito",
+  "add-to-cart-confirming": "Agregado",
+  "decrease-quantity": "Disminuir cantidad",
+  "remove-from-cart": "Eliminar",
+  "increase-quantity": "Aumentar cantidad",
+  "proceed-to-checkout": "Proceder al pago",
+  "error-in-checkout": "Algo salió mal",
+  "redirecting-to-checkout": "Redirigir al pago"
+}

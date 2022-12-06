@@ -1,4 +1,14 @@
-import { Combobox, Link, List, Number, Shape, Style, TextInput } from '@makeswift/runtime/controls'
+import {
+  Combobox,
+  Link,
+  List,
+  Number,
+  Select,
+  Shape,
+  Slot,
+  Style,
+  TextInput,
+} from '@makeswift/runtime/controls'
 import { ReactRuntime } from '@makeswift/runtime/react'
 
 import {
@@ -9,9 +19,12 @@ import {
   ProductBreadcrumbs,
   ProductDescription,
   ProductName,
+  LocaleProvider,
   ProductPrice,
+  LocaleSwitcher,
 } from 'components'
 import { Category } from 'lib/bigcommerce'
+import { Locale } from 'lib/locale'
 
 ReactRuntime.registerComponent(ProductList, {
   type: 'product-list',
@@ -106,5 +119,35 @@ ReactRuntime.registerComponent(ProductAddToCartButton, {
   label: 'Add to cart button',
   props: {
     className: Style({ properties: [Style.Margin] }),
+  },
+})
+
+ReactRuntime.registerComponent(LocaleProvider, {
+  type: 'locale-provider',
+  label: 'Locale Provider',
+  props: {
+    className: Style(),
+    previewLocale: Select({
+      options: Object.keys(Locale).map(key => ({
+        value: Locale[key as keyof typeof Locale],
+        label: key,
+      })),
+    }),
+    english: Slot(),
+    spanish: Slot(),
+  },
+})
+
+ReactRuntime.registerComponent(LocaleSwitcher, {
+  type: 'locale-switcher',
+  label: 'Locale Switcher',
+  props: {
+    className: Style(),
+    previewLocale: Select({
+      options: Object.keys(Locale).map(key => ({
+        value: Locale[key as keyof typeof Locale],
+        label: key,
+      })),
+    }),
   },
 })

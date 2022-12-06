@@ -1,14 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from 'next/link'
+import { useTranslation } from 'next-i18next'
 
-import { useProduct } from 'lib/product-context'
+import { useProductFromPath } from 'lib/product-context'
 
 type ProductImagesProps = {
   className?: string
 }
 
 export function ProductImages({ className }: ProductImagesProps) {
-  const product = useProduct()
+  const product = useProductFromPath()
   const image = product.images.edges[0]?.node
   return (
     <div className={`${className} grid grid-cols-1 gap-6`}>
@@ -30,12 +31,13 @@ type ProductBreadcrumbProps = {
 }
 
 export function ProductBreadcrumbs({ className }: ProductBreadcrumbProps) {
-  const product = useProduct()
+  const product = useProductFromPath()
+  const { t } = useTranslation('product')
 
   return (
     <div className={`${className} bg-[#FEF6F1] text-sm space-x-1 font-light flex py-4 px-5`}>
       <Link className="text-black/60" href={'/'}>
-        All Plants
+        {t('all-plants')}
       </Link>
       <div className="text-black/60">/</div>
       <Link className="text-black" href={`/product/${product.entityId}`}>
@@ -50,7 +52,7 @@ type ProductPriceProps = {
 }
 
 export function ProductPrice({ className }: ProductPriceProps) {
-  const product = useProduct()
+  const product = useProductFromPath()
 
   return (
     <div className={`${className} text-[28px] text-green font-light`}>
@@ -64,7 +66,7 @@ type ProductNameProps = {
 }
 
 export function ProductName({ className }: ProductNameProps) {
-  const product = useProduct()
+  const product = useProductFromPath()
 
   return <div className={`${className} text-[44px] text-black font-light`}>{product.name}</div>
 }
@@ -74,7 +76,7 @@ type ProductDescriptionProps = {
 }
 
 export function ProductDescription({ className }: ProductDescriptionProps) {
-  const product = useProduct()
+  const product = useProductFromPath()
 
   return (
     <div

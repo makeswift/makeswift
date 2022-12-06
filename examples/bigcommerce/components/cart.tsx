@@ -3,11 +3,13 @@ import { Popover, Transition } from '@headlessui/react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useState } from 'react'
+import { useTranslation } from 'next-i18next'
 
 import { useCart } from 'lib/cart-context'
-import { useProduct } from 'lib/product-context'
+import { useProductFromPath } from 'lib/product-context'
 import { Cart34, Minus28, Minus36, Plus28, Plus36, Spinner22, Spinner28 } from './icons'
 import { LineItemRequest } from 'lib/bigcommerce'
+import { useProduct } from 'lib/products-context'
 
 function formatPrice(value?: number) {
   return value == null ? '$0.00' : `$${value.toFixed(2)}`
@@ -21,19 +23,26 @@ type CartLineItemProps = {
 
 function CartLineItem({ lineItem }: CartLineItemProps) {
   const { updateItem, deleteItem } = useCart()
+  const product = useProduct(lineItem.product_id)
   const [cartState, setCartItemState] = useState<CartLineItemState>('initial')
+  const { t } = useTranslation('cart')
+
   return (
     <Link href={`/product/${lineItem.product_id}`}>
       <a className={`flex w-full space-x-4 items-end`} key={lineItem.id}>
-        <img src={lineItem.image_url} alt={`Product image for ${lineItem.name}`} width={70} />
+        <img
+          src={lineItem.image_url}
+          alt={`${t('image-for')} ${product?.name ?? lineItem.name}`}
+          width={70}
+        />
         <div className="flex flex-col flex-grow items-start justify-between">
-          <div className="text-base text-black">{lineItem.name}</div>
+          <div className="text-base text-black">{product?.name ?? lineItem.name}</div>
           <div className="text-sm text-green mb-2">{formatPrice(lineItem.list_price)}</div>
           <div className="flex justify-center items-center space-x-2">
             <button
               disabled={cartState === 'loading'}
               className="disabled:cursor-not-allowed"
-              aria-label="Decrease quantity"
+              aria-label={t<string>('decrease-quantity')}
               onClick={async e => {
                 e.preventDefault()
                 setCartItemState('loading')
@@ -52,7 +61,7 @@ function CartLineItem({ lineItem }: CartLineItemProps) {
             <button
               disabled={cartState === 'loading'}
               className="disabled:cursor-not-allowed"
-              aria-label="Increase quantity"
+              aria-label={t<string>('increase-quantity')}
               onClick={async e => {
                 e.preventDefault()
                 setCartItemState('loading')
@@ -77,7 +86,7 @@ function CartLineItem({ lineItem }: CartLineItemProps) {
           }}
           className="h-8 px-3 text-xs border-2 border-solid border-[rgba(0,0,0,0.15)] rounded-full disabled:cursor-not-allowed"
         >
-          Remove
+          {t('remove-from-cart')}
         </button>
       </a>
     </Link>
@@ -94,9 +103,10 @@ export function Cart({ className }: CartProps) {
   const { cart, getCheckoutUrl } = useCart()
   const router = useRouter()
   const [cartState, setCartState] = useState<CartState>('initial')
-
+  const { t } = useTranslation('cart')
   const itemCount =
     cart?.line_items.physical_items.reduce((acc, curr) => curr.quantity + acc, 0) ?? 0
+
   return (
     <Popover className={className}>
       <Popover.Button className={'relative z-0'}>
@@ -123,7 +133,7 @@ export function Cart({ className }: CartProps) {
         leaveFrom="transform translate-y-0 opacity-100"
         leaveTo="transform translate-y-2 opacity-0"
       >
-        <Popover.Panel className="translate-y-4 sm:relative sm:w-[400px] sm:-translate-x-[calc(100%-34px)] sm:translate-y-2 p-5 bg-white  shadow-[0px_4px_16px_0px_#00000026] space-y-4 divide-solid">
+        <Popover.Panel className="translate-y-2 sm:relative sm:w-[400px] sm:-translate-x-[calc(100%-34px)] p-5 bg-white shadow-[0px_4px_16px_0px_#00000026] space-y-4 divide-solid">
           <div className="text-[22px] text-black text-sans">My cart</div>
           <div className="border-t-[1px]" />
           {cart?.line_items.physical_items.length == null ? (
@@ -176,10 +186,10 @@ export function Cart({ className }: CartProps) {
                 >
                   {
                     {
-                      initial: 'Proceed to checkout',
-                      loading: 'Proceed to checkout',
-                      error: "Something wen't wrong",
-                      redirecting: 'Redirecting to checkout',
+                      initial: t('proceed-to-checkout'),
+                      loading: t('proceed-to-checkout'),
+                      error: t('error-in-checkout'),
+                      redirecting: t('redirecting-to-checkout'),
                     }[cartState]
                   }
                 </Transition>
@@ -202,7 +212,8 @@ export function ProductAddToCartButton({ className }: ProductAddToCartButtonProp
   const [quantity, setQuantity] = useState(1)
   const [addToCartState, setAddToCartState] = useState<AddToCartState>('initial')
   const { addItem } = useCart()
-  const product = useProduct()
+  const product = useProductFromPath()
+  const { t } = useTranslation('cart')
 
   return (
     <div className={`${className} space-x-5 flex`}>
@@ -253,9 +264,9 @@ export function ProductAddToCartButton({ className }: ProductAddToCartButtonProp
         >
           {
             {
-              initial: 'Add to cart',
-              loading: 'Add to cart',
-              confirming: 'Added',
+              initial: t('add-to-cart'),
+              loading: t('add-to-cart'),
+              confirming: t('add-to-cart-confirming'),
             }[addToCartState]
           }
         </Transition>
