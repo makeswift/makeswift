@@ -1,25 +1,41 @@
-import '../../lib/makeswift/register-components'
+import 'lib/makeswift/register-components'
 
 import {
   PageProps as MakeswiftPageProps,
   Page as MakeswiftPage,
   Makeswift,
 } from '@makeswift/runtime/next'
-import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from 'next'
+import {
+  GetStaticPathsContext,
+  GetStaticPathsResult,
+  GetStaticPropsContext,
+  GetStaticPropsResult,
+} from 'next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import { getProduct, getProducts } from 'lib/bigcommerce'
 import { getConfig } from 'lib/config'
 import { ProductPageProps } from 'lib/types'
 import { ProductsContext } from 'lib/products-context'
 import { ProductContext } from 'lib/product-context'
+import { DEFAULT_LOCALE } from 'lib/locale'
 
 type Props = MakeswiftPageProps & ProductPageProps
 
-export async function getStaticPaths(): Promise<GetStaticPathsResult> {
+export async function getStaticPaths(ctx: GetStaticPathsContext): Promise<GetStaticPathsResult> {
   const products = await getProducts()
 
+  const productsWithLocale = products.flatMap(product => {
+    if (ctx.locales == null) return { product, locale: ctx.defaultLocale }
+
+    return ctx.locales.map(locale => ({ product, locale }))
+  })
+
   return {
-    paths: products.map(product => ({ params: { slug: product.entityId.toString() } })),
+    paths: productsWithLocale.map(({ product, locale }) => ({
+      params: { slug: product.entityId.toString() },
+      locale,
+    })),
     fallback: 'blocking',
   }
 }
@@ -40,12 +56,24 @@ export async function getStaticProps(
 
   if (slug == null) throw new Error('"slug" URL parameter must be defined.')
 
-  const products = await getProducts()
-  const product = await getProduct(Number.parseInt(slug.toString(), 10))
+  const products = await getProducts({ locale: ctx.locale })
+  const product = await getProduct(Number.parseInt(slug.toString(), 10), { locale: ctx.locale })
 
   if (product == null) return { notFound: true, revalidate: 1 }
 
-  return { props: { snapshot, products, product }, revalidate: 1 }
+  return {
+    props: {
+      ...(await serverSideTranslations(ctx.locale ?? DEFAULT_LOCALE, [
+        'common',
+        'cart',
+        'product',
+      ])),
+      snapshot,
+      products,
+      product,
+    },
+    revalidate: 1,
+  }
 }
 
 export default function Page({ products, product, snapshot }: Props) {

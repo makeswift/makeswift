@@ -105,6 +105,55 @@ Note: the env for this example corresponds to the [Vercel Commerce BigCommerce e
   curl -H "X-Auth-Token: 5lw9ulikcp186tjgg3rs39kh4fg3vci" -H "Content-Type: application/json" -X POST -d '{"channel_id":1,"expires_at":1982692202}' https://api.bigcommerce.com/stores/uvhswop3wh/v3/storefront/api-token
   ```
 
+### How to add localization information to your store:
+
+BigCommerce doesn't support localization as a first-class feature. This example uses the `metafields` [api](https://developer.bigcommerce.com/api-reference/1fc3689311c97-create-metafields) to store translations for each locale. `Metafields` are only accessible via API. This section will show you how to use the management API to add product translations.
+
+Managing `metafields` with the Management API requires an [API account](https://support.bigcommerce.com/s/article/Store-API-Accounts?language=en_US) with product "modify" permissions. This API account should be different than the one used to deploy your site.
+
+<figure style="margin-bottom:20px">
+    <img width="286" alt="CleanShot 2022-12-06 at 16 28 49@2x" src="https://user-images.githubusercontent.com/20950876/206038013-62e02a0d-ae50-404b-be18-80c895128b82.png">
+    <figcaption>the permission required to modify `metafields`</figcaption>
+</figure>
+
+Once you have created the new API account you can use it with the curl commands below.
+
+> **Note**
+> Don't forget to replace the PRODUCT_MODIFY_BIGCOMMERCE_STORE_API_TOKEN with the "Access Token" from creating your API account above.
+
+#### Creating locale `metafields` for a product
+
+To create a `metafield` you will need a `permission_set`, a `namespace`, a `key`, and a `value`.
+
+- `permission_set`
+  - This determines what APIs have access to this `metafield`. Since we query product data from the storefront API, we will need the `read_and_sf_access` `permission_set`.
+- `namespace`
+  - This indicates the locale that this `metafield` belongs to. In our situation, it should match the identifier this translation belongs to.
+  - A translation to Spanish would go under the `es` namespace.
+- `key`
+  - The property in our product that this translation corresponds to.
+- `value`
+  - The translated text itself.
+
+Here is an example of how we translated the values in our plant store. Blue Lily is Lirio Azul in Spanish.
+To add the `metafield` for this translation I used the `namespace` of "es", the `key` of "name", and the `value` of "Lirio Azul".
+
+```bash
+curl -X POST https://api.bigcommerce.com/stores/uvhswop3wh/v3/catalog/products/114/metafields \
+   -H 'Content-Type: application/json' \
+   -H 'X-Auth-Token: PRODUCT_MODIFY_BIGCOMMERCE_STORE_API_TOKEN'\
+   -d '{"permission_set":"read_and_sf_access","namespace":"es","key":"name","value":"Lirio Azul"}'
+```
+
+#### Deleting locale `metafields`
+
+If you make a mistake when adding a `metafield`, this curl command can be used to delete the mistaken `metafield`. Note the different HTTP method and `metafield` id at the end of the URL.
+
+```bash
+curl -X DELETE https://api.bigcommerce.com/stores/uvhswop3wh/v3/catalog/products/114/metafields/24 \
+   -H 'X-Auth-Token: PRODUCT_MODIFY_BIGCOMMERCE_STORE_API_TOKEN'
+```
+
 ### Updating the deployed host on Vercel
 
 If you clicked the "Deploy" button earlier you can change the environment variable in vercel.com

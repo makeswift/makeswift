@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { MouseEvent } from 'react'
 
 import { Cart } from './cart'
+import { LocaleSwitcher } from './locale/locale-switcher'
 
 type LinkValue = {
   href: string
@@ -50,6 +51,7 @@ export function Header({ className, links }: Props) {
       </div>
 
       <div className="flex items-center space-x-5">
+        <LocaleSwitcher />
         <Cart />
       </div>
     </div>

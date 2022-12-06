@@ -10,6 +10,7 @@ module.exports = {
       },
       colors: {
         green: '#335510',
+        peach: '#FEF6F1',
       },
     },
   },

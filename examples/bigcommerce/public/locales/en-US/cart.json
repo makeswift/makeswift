@@ -1,0 +1,11 @@
+{
+  "product-image-for": "Image for",
+  "add-to-cart": "Add to cart",
+  "add-to-cart-confirming": "Added",
+  "decrease-quantity": "Decrease quantity",
+  "remove-from-cart": "Remove",
+  "increase-quantity": "Increase quantity",
+  "proceed-to-checkout": "Proceed to checkout",
+  "error-in-checkout": "Something went wrong",
+  "redirecting-to-checkout": "Redirecting to checkout"
+}
