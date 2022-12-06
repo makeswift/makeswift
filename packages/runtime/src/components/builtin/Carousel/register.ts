@@ -23,8 +23,11 @@ export function registerComponent(runtime: ReactRuntime) {
             { key: uuid(), props: {} },
           ],
         }),
-        width: Props.Width({ defaultValue: { value: 400, unit: 'px' } }),
-        margin: Props.Margin(),
+        width: Props.Width({
+          format: Props.Width.Format.ClassName,
+          defaultValue: { value: 400, unit: 'px' },
+        }),
+        margin: Props.Margin({ format: Props.Margin.Format.ClassName }),
         pageSize: Props.ResponsiveNumber(props => {
           const images = props.images as unknown[]
           const imagesLength = images?.length ?? 0

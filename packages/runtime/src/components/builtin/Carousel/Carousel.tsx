@@ -1,28 +1,33 @@
-import { useState, useRef, useEffect, useCallback, forwardRef, Ref } from 'react'
-import styled, { css } from 'styled-components'
+import {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  forwardRef,
+  Ref,
+  ComponentPropsWithoutRef,
+} from 'react'
 import { motion, useAnimation } from 'framer-motion'
 import { useGesture } from 'react-use-gesture'
 import { wrap } from '@popmotion/popcorn'
 
-import { cssMediaRules, cssMargin, cssWidth } from '../../utils/cssMediaRules'
 import { colorToString } from '../../utils/colorToString'
-import { ColorValue as Color } from '../../utils/types'
 import { useMediaQuery } from '../../hooks'
 
 import Image from '../Image'
 import {
-  ResponsiveValue,
   ElementIDValue,
   ImagesValue,
-  MarginValue,
   ResponsiveNumberValue,
   ResponsiveIconRadioGroupValue,
   GapXValue,
   CheckboxValue,
   NumberValue,
-  WidthValue,
 } from '../../../prop-controllers/descriptors'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
+import { useStyle } from '../../../runtimes/react/use-style'
+import { cx } from '@emotion/css'
+import { responsiveStyle } from '../../utils/responsive-style'
 
 const LeftChevron = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="10" height="14" viewBox="0 0 10 14">
@@ -48,17 +53,11 @@ const RightChevron = () => (
   </svg>
 )
 
-// NOTE: We set height to 100% here to fix an issue on IE11 where the child height of a flex column extends too far
-const Container = styled.div`
-  position: relative;
-  height: 100%;
-`
-
 type Props = {
   id?: ElementIDValue
   images?: ImagesValue
-  width?: WidthValue
-  margin?: MarginValue
+  width?: string
+  margin?: string
   pageSize?: ResponsiveNumberValue
   step?: ResponsiveNumberValue
   slideAlignment?: ResponsiveIconRadioGroupValue<'flex-start' | 'center' | 'flex-end'>
@@ -74,230 +73,6 @@ type Props = {
   slideBorder?: string
   slideBorderRadius?: string
 }
-
-const Wrapper = styled.div.withConfig({
-  shouldForwardProp: prop => !['margin', 'width'].includes(prop),
-})<{ width: Props['width']; margin: Props['margin'] }>`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  ${cssWidth('400px')}
-  ${cssMargin()}
-
-  &:focus {
-    outline: 0;
-  }
-`
-
-const Arrow = styled.div.withConfig({
-  shouldForwardProp: prop => !['background'].includes(prop),
-})<{ background?: ResponsiveValue<Color> | null }>`
-  padding: 10px;
-  border-radius: 50%;
-  outline: 0;
-  border: 0;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  user-select: none;
-  ${p =>
-    cssMediaRules(
-      [p.background] as const,
-      ([background = { swatch: { hue: 0, saturation: 0, lightness: 100 }, alpha: 1 }]) => css`
-        background: ${colorToString(background)};
-      `,
-    )}
-
-  svg {
-    transition: transform 0.15s;
-    stroke: currentColor;
-  }
-`
-
-const Slop = styled.div.withConfig({
-  shouldForwardProp: prop => !['color'].includes(prop),
-})<{
-  color?: ResponsiveValue<Color> | null
-}>`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  display: ${props => (props.hidden ? 'none' : 'flex')};
-  align-items: center;
-  cursor: pointer;
-  z-index: 2;
-  ${p =>
-    cssMediaRules(
-      [p.color] as const,
-      ([color = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 }]) => css`
-        color: ${colorToString(color)};
-      `,
-    )}
-`
-
-const Slide = styled(motion.div).withConfig({
-  shouldForwardProp: prop => !['pageSize', 'alignItems'].includes(prop),
-})<{
-  pageSize: Props['pageSize']
-  alignItems: Props['slideAlignment']
-}>`
-  display: flex;
-  ${p =>
-    cssMediaRules(
-      [p.pageSize],
-      ([pageSize = 1]) => css`
-        flex-basis: ${100 / pageSize}%;
-        max-width: ${100 / pageSize}%;
-        min-width: ${100 / pageSize}%;
-      `,
-    )}
-
-  ${p => cssMediaRules([p.alignItems], ([alignItems = 'center']) => ({ alignItems }))}
-`
-
-const Reel = styled(motion.div).withConfig({
-  shouldForwardProp: prop => !['gap'].includes(prop),
-})<{ gap: Props['gap'] }>`
-  display: flex;
-  position: relative;
-  flex-wrap: nowrap;
-  ${p =>
-    cssMediaRules(
-      [p.gap] as const,
-      ([gap = { value: 0, unit: 'px' }]) => css`
-        margin: 0 ${`${-gap.value / 2}${gap.unit}`};
-
-        & > ${Slide} {
-          padding: 0 ${`${gap.value / 2}${gap.unit}`};
-        }
-      `,
-    )}
-`
-
-const Page = styled(motion.div)`
-  position: relative;
-  width: 100%;
-`
-
-const LeftSlop = styled(Slop).withConfig({
-  shouldForwardProp: prop => !['position'].includes(prop),
-})<{ position: Props['arrowPosition'] }>`
-  ${p =>
-    cssMediaRules([p.position] as const, ([position = 'inside']) => {
-      switch (position) {
-        case 'inside':
-          return css`
-            transform: translateX(8px);
-          `
-        case 'outside':
-          return css`
-            transform: translateX(calc(-100% - 8px));
-          `
-        default:
-          return css`
-            transform: translateX(calc(-50%));
-          `
-      }
-    })}
-  left: 0;
-
-  &:hover > ${Arrow} {
-    & > svg {
-      transform: translateX(-2px);
-    }
-  }
-`
-
-const RightSlop = styled(Slop).withConfig({
-  shouldForwardProp: prop => !['position'].includes(prop),
-})<{ position: Props['arrowPosition'] }>`
-  ${p =>
-    cssMediaRules([p.position] as const, ([position = 'inside']) => {
-      switch (position) {
-        case 'inside':
-          return css`
-            transform: translateX(-8px);
-          `
-        case 'outside':
-          return css`
-            transform: translateX(calc(100% + 8px));
-          `
-        default:
-          return css`
-            transform: translateX(calc(50%));
-          `
-      }
-    })}
-  right: 0;
-
-  &:hover > ${Arrow} {
-    & > svg {
-      transform: translateX(2px);
-    }
-  }
-`
-
-const ClipMask = styled.div`
-  overflow: hidden;
-`
-
-const Dots = styled.div.withConfig({
-  shouldForwardProp: prop => !['color'].includes(prop),
-})<{ color?: ResponsiveValue<Color> | null }>`
-  display: ${props => (props.hidden ? 'none' : 'flex')};
-  justify-content: center;
-  margin-top: 20px;
-  ${p =>
-    cssMediaRules(
-      [p.color] as const,
-      ([color = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 }]) => css`
-        color: ${colorToString(color)};
-      `,
-    )}
-`
-
-const Dot = styled.div.withConfig({
-  shouldForwardProp: prop => !['active'].includes(prop),
-})<{ active: boolean }>`
-  position: relative;
-  margin: 0 6px;
-  border-radius: 50%;
-  cursor: pointer;
-  width: 16px;
-  height: 16px;
-
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    display: block;
-    border-radius: 50%;
-    transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
-
-  &::before {
-    box-shadow: 0 0 0 2px currentColor;
-    transform: translate3d(-50%, -50%, 0);
-    width: ${props => (props.active ? 16 : 10)}px;
-    height: ${props => (props.active ? 16 : 10)}px;
-  }
-
-  &::after {
-    background: currentColor;
-    transform: translate3d(-50%, -50%, 0) scale(${props => (props.active ? 1 : 0)});
-    width: 10px;
-    height: 10px;
-  }
-
-  &:hover::after {
-    transform: translate3d(-50%, -50%, 0) scale(${props => (props.active ? 1 : 0.5)});
-  }
-`
 
 const SWIPE_THRESHOLD = 20
 const swipePower = (dx: number, velocity: number) => dx * (1 + velocity)
@@ -382,11 +157,153 @@ const Carousel = forwardRef(function Carousel(
     return () => clearInterval(intervalId)
   }, [autoplay, delay, paginate, isLastPage])
 
+  const clipMaskClassName = useStyle({ overflow: 'hidden' })
+  const pageClassName = useStyle({ position: 'relative', width: '100%' })
+  const slideClassName = cx(
+    useStyle({ display: 'flex' }),
+    useStyle(
+      responsiveStyle([responsivePageSize] as const, ([pageSize = 1]) => ({
+        flexBasis: `${100 / pageSize}%`,
+        maxWidth: `${100 / pageSize}%`,
+        minWidth: `${100 / pageSize}%`,
+      })),
+    ),
+    useStyle(
+      responsiveStyle([slideAlignment] as const, ([alignItems = 'center']) => ({ alignItems })),
+    ),
+  )
+  const reelClassName = cx(
+    useStyle({ display: 'flex', position: 'relative', flexWrap: 'nowrap' }),
+    useStyle(
+      responsiveStyle([gap] as const, ([gap = { value: 0, unit: 'px' }]) => ({
+        margin: `0 ${`${-gap.value / 2}${gap.unit}`}`,
+        [`& > .${slideClassName}`]: {
+          padding: `0 ${`${gap.value / 2}${gap.unit}`}`,
+        },
+      })),
+    ),
+  )
+  const arrowClassName = cx(
+    useStyle({
+      padding: 10,
+      borderRadius: '50%',
+      outline: 0,
+      border: 0,
+      width: 40,
+      height: 40,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      userSelect: 'none',
+    }),
+    useStyle(
+      responsiveStyle(
+        [arrowBackground] as const,
+        ([background = { swatch: { hue: 0, saturation: 0, lightness: 100 }, alpha: 1 }]) => ({
+          background: colorToString(background),
+        }),
+      ),
+    ),
+    useStyle({ svg: { transition: 'transform 0.15s', stroke: 'currentcolor' } }),
+  )
+  const slopClassName = cx(
+    useStyle({
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+
+      display: 'flex',
+      '&[hidden]': {
+        display: 'none',
+      },
+
+      alignItems: 'center',
+      cursor: 'pointer',
+      zIndex: 2,
+    }),
+    useStyle(
+      responsiveStyle(
+        [arrowColor] as const,
+        ([color = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 }]) => ({
+          color: colorToString(color),
+        }),
+      ),
+    ),
+  )
+  const leftSlopClassName = cx(
+    slopClassName,
+    useStyle(
+      responsiveStyle([arrowPosition] as const, ([position = 'inside']) => {
+        switch (position) {
+          case 'inside':
+            return { transform: 'translateX(8px)' }
+
+          case 'outside':
+            return { transform: 'translateX(calc(-100% - 8px))' }
+
+          default:
+            return { transform: 'translateX(calc(-50%))' }
+        }
+      }),
+    ),
+    useStyle({
+      left: 0,
+
+      [`&:hover > .${arrowClassName}`]: {
+        '& > svg': {
+          transform: 'translateX(-2px)',
+        },
+      },
+    }),
+  )
+  const rightSlopClassName = cx(
+    slopClassName,
+    useStyle(
+      responsiveStyle([arrowPosition] as const, ([position = 'inside']) => {
+        switch (position) {
+          case 'inside':
+            return { transform: 'translateX(-8px)' }
+
+          case 'outside':
+            return { transform: 'translateX(calc(100% + 8px))' }
+
+          default:
+            return { transform: 'translateX(calc(50%))' }
+        }
+      }),
+    ),
+    useStyle({
+      right: 0,
+
+      [`&:hover > .${arrowClassName}`]: {
+        '& > svg': {
+          transform: 'translateX(2px)',
+        },
+      },
+    }),
+  )
+  const dotsClassName = cx(
+    useStyle({ display: showDots ? 'flex' : 'none', justifyContent: 'center', marginTop: 20 }),
+    useStyle(
+      responsiveStyle(
+        [dotColor] as const,
+        ([color = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 }]) => ({
+          color: colorToString(color),
+        }),
+      ),
+    ),
+  )
+
   return (
-    <Wrapper
+    <div
       ref={ref}
-      width={width}
-      margin={margin}
+      className={cx(
+        useStyle({ position: 'relative', display: 'flex', flexDirection: 'column' }),
+        width,
+        margin,
+        useStyle({ '&:focus': { outline: 0 } }),
+      )}
       tabIndex={-1}
       onKeyDown={e => {
         switch (e.key) {
@@ -400,11 +317,12 @@ const Carousel = forwardRef(function Carousel(
         }
       }}
     >
-      <Container>
-        <ClipMask>
-          <Page {...bindPage()} animate={animation}>
-            <Reel
-              gap={gap}
+      {/* NOTE: We set height to 100% here to fix an issue on IE11 where the child height of a flex column extends too far */}
+      <div className={useStyle({ position: 'relative', height: '100%' })}>
+        <div className={clipMaskClassName}>
+          <motion.div {...bindPage()} className={pageClassName} animate={animation}>
+            <motion.div
+              className={reelClassName}
               animate={{ x: `${-(100 / pageSize) * startIndex}%` }}
               transition={{
                 x: {
@@ -415,11 +333,10 @@ const Carousel = forwardRef(function Carousel(
               }}
             >
               {images.map(({ props: imageProps, key }) => (
-                <Slide
+                <motion.div
                   id={key}
                   key={key}
-                  pageSize={responsivePageSize}
-                  alignItems={slideAlignment}
+                  className={slideClassName}
                   onMouseDown={e => e.preventDefault()}
                   onClick={e => {
                     if (swipe.current !== 0) e.preventDefault()
@@ -433,42 +350,91 @@ const Carousel = forwardRef(function Carousel(
                     border={slideBorder}
                     borderRadius={slideBorderRadius}
                   />
-                </Slide>
+                </motion.div>
               ))}
-            </Reel>
-          </Page>
-        </ClipMask>
-        <LeftSlop
+            </motion.div>
+          </motion.div>
+        </div>
+        <div
           onClick={() => paginate(-1)}
-          position={arrowPosition}
-          // @ts-expect-error: HTMLDivElement `color` attribute conflicts with prop
-          color={arrowColor}
+          className={leftSlopClassName}
           hidden={!showArrows || isFirstPage}
         >
-          <Arrow background={arrowBackground}>
+          <div className={arrowClassName}>
             <LeftChevron />
-          </Arrow>
-        </LeftSlop>
-        <RightSlop
+          </div>
+        </div>
+        <div
           onClick={() => paginate(1)}
-          position={arrowPosition}
-          // @ts-expect-error: HTMLDivElement `color` attribute conflicts with prop
-          color={arrowColor}
+          className={rightSlopClassName}
           hidden={!showArrows || isLastPage}
         >
-          <Arrow background={arrowBackground}>
+          <div className={arrowClassName}>
             <RightChevron />
-          </Arrow>
-        </RightSlop>
-      </Container>
-      {/* @ts-expect-error: HTMLDivElement attributes conflicts with `color` prop */}
-      <Dots color={dotColor} hidden={!showDots}>
+          </div>
+        </div>
+      </div>
+      <div className={dotsClassName}>
         {Array.from({ length: pageCount }).map((_, i) => (
           <Dot key={i} active={i === pageIndex} onClick={() => paginate(i - pageIndex)} />
         ))}
-      </Dots>
-    </Wrapper>
+      </div>
+    </div>
   )
 })
 
 export default Carousel
+
+type DotBaseProps = {
+  className?: string
+  active: boolean
+}
+
+type DotProps = DotBaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof DotBaseProps>
+
+function Dot({ className, active, ...restOfProps }: DotProps) {
+  return (
+    <div
+      {...restOfProps}
+      className={cx(
+        className,
+        useStyle({
+          position: 'relative',
+          margin: '0 6px',
+          borderRadius: '50%',
+          cursor: 'pointer',
+          width: 16,
+          height: 16,
+
+          '&::before, &::after': {
+            content: '""',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            display: 'block',
+            borderRadius: '50%',
+            transition: 'all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+          },
+
+          '&::before': {
+            boxShadow: '0 0 0 2px currentColor',
+            transform: 'translate3d(-50%, -50%, 0)',
+            width: active ? 16 : 10,
+            height: active ? 16 : 10,
+          },
+
+          '&::after': {
+            background: 'currentColor',
+            transform: `translate3d(-50%, -50%, 0) scale(${active ? 1 : 0})`,
+            width: 10,
+            height: 10,
+          },
+
+          '&:hover::after': {
+            transform: `translate3d(-50%, -50%, 0) scale(${active ? 1 : 0})`,
+          },
+        }),
+      )}
+    />
+  )
+}
