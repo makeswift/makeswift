@@ -1,35 +1,18 @@
+import { cx } from '@emotion/css'
 import { forwardRef, Ref } from 'react'
-import styled from 'styled-components'
 import ReactPlayer from 'react-player'
 
-import {
-  BorderRadiusValue,
-  ElementIDValue,
-  MarginValue,
-  VideoValue,
-  WidthValue,
-} from '../../../prop-controllers/descriptors'
-import { cssBorderRadius, cssMargin, cssWidth } from '../../utils/cssMediaRules'
+import { ElementIDValue, VideoValue } from '../../../prop-controllers/descriptors'
+import { useStyle } from '../../../runtimes/react/use-style'
 import { placeholders } from '../../utils/placeholders'
 
 type Props = {
   id?: ElementIDValue
   video?: VideoValue
-  width?: WidthValue
-  margin?: MarginValue
-  borderRadius?: BorderRadiusValue
+  width?: string
+  margin?: string
+  borderRadius?: string
 }
-
-const Container = styled.div.withConfig({
-  shouldForwardProp: prop => !['width', 'margin', 'borderRadius'].includes(prop.toString()),
-})<{ width: Props['width']; margin: Props['margin']; borderRadius: Props['borderRadius'] }>`
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  ${cssWidth('560px')}
-  ${cssMargin()}
-  ${cssBorderRadius()}
-`
 
 const ASPECT_RATIO = 16 / 9
 
@@ -40,7 +23,16 @@ const Video = forwardRef(function Video(
   const canPlayUrl = video && video.url != null && ReactPlayer.canPlay(video.url)
 
   return (
-    <Container ref={ref} id={id} width={width} margin={margin} borderRadius={borderRadius}>
+    <div
+      ref={ref}
+      id={id}
+      className={cx(
+        useStyle({ display: 'flex', flexDirection: 'column', overflow: 'hidden' }),
+        width,
+        margin,
+        borderRadius,
+      )}
+    >
       <div style={{ position: 'relative', paddingTop: `${100 / ASPECT_RATIO}%` }}>
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
           {canPlayUrl === true ? (
@@ -62,7 +54,7 @@ const Video = forwardRef(function Video(
           )}
         </div>
       </div>
-    </Container>
+    </div>
   )
 })
 
