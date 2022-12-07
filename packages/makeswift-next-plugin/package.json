@@ -1,6 +1,6 @@
 {
   "name": "@makeswift/next-plugin",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Makeswift Next.js plugin",
   "main": "index.js",
   "types": "index.d.ts",

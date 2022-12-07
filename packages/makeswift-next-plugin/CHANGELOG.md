@@ -1,5 +1,11 @@
 # @makeswift/next-plugin
 
+## 0.1.6
+
+### Patch Changes
+
+- c21792b: Set Preview Mode rewrites `locale` option to `false` so that it matches when using Next.js i18n features.
+
 ## 0.1.5
 
 ### Patch Changes
