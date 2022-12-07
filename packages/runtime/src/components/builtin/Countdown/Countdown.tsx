@@ -1,21 +1,19 @@
-import { useState, useEffect, Ref, forwardRef } from 'react'
-import styled, { css } from 'styled-components'
-
-import { colorToString } from '../../utils/colorToString'
-import { ColorValue as Color } from '../../utils/types'
-import { cssMediaRules, cssMargin, cssWidth } from '../../utils/cssMediaRules'
+import { cx } from '@emotion/css'
+import { ComponentPropsWithoutRef, ForwardedRef, forwardRef, Ref, useEffect, useState } from 'react'
 import {
-  ResponsiveValue,
   DateValue,
   ElementIDValue,
   FontValue,
   GapXValue,
-  MarginValue,
   ResponsiveIconRadioGroupValue,
+  ResponsiveValue,
   TextInputValue,
-  WidthValue,
 } from '../../../prop-controllers/descriptors'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
+import { useStyle } from '../../../runtimes/react/use-style'
+import { colorToString } from '../../utils/colorToString'
+import { responsiveStyle } from '../../utils/responsive-style'
+import { ColorValue as Color } from '../../utils/types'
 
 type Props = {
   id?: ElementIDValue
@@ -31,47 +29,60 @@ type Props = {
   blockColor?: ResponsiveColor | null
   labelFont?: FontValue
   labelColor?: ResponsiveColor | null
-  width?: WidthValue
-  margin?: MarginValue
+  width?: string
+  margin?: string
   daysLabel?: TextInputValue
   hoursLabel?: TextInputValue
   minutesLabel?: TextInputValue
   secondsLabel?: TextInputValue
 }
 
-const Block = styled.div`
-  display: block;
-  padding: 0.5em;
-  font-size: 1em;
-`
+const BLOCK_CLASS_NAME = 'block'
 
-const Label = styled.div`
-  margin-top: 0.25em;
-`
+type BlockProps = ComponentPropsWithoutRef<'div'>
 
-const Segment = styled.div`
-  flex: 1;
-  text-align: center;
-`
+function Block({ className, ...restOfProps }: BlockProps) {
+  return (
+    <div
+      {...restOfProps}
+      className={cx(
+        BLOCK_CLASS_NAME,
+        className,
+        useStyle({ display: 'block', padding: '0.5em', fontSize: '1em' }),
+      )}
+    />
+  )
+}
 
-const Container = styled.div.withConfig({
-  shouldForwardProp: prop =>
-    ![
-      'width',
-      'margin',
-      'variant',
-      'size',
-      'shape',
-      'gap',
-      'labelColor',
-      'numberFont',
-      'numberColor',
-      'blockColor',
-      'labelFont',
-    ].includes(prop),
-})<{
-  width: Props['width']
-  margin: Props['margin']
+const LABEL_CLASS_NAME = 'label'
+
+type LabelProps = ComponentPropsWithoutRef<'div'>
+
+function Label({ className, ...restOfProps }: LabelProps) {
+  return (
+    <div
+      {...restOfProps}
+      className={cx(LABEL_CLASS_NAME, className, useStyle({ marginTop: '0.25em' }))}
+    />
+  )
+}
+
+const SEGMENT_CLASS_NAME = 'segment'
+
+type SegmentProps = ComponentPropsWithoutRef<'div'>
+
+function Segment({ className, ...restOfProps }: SegmentProps) {
+  return (
+    <div
+      {...restOfProps}
+      className={cx(SEGMENT_CLASS_NAME, className, useStyle({ flex: 1, textAlign: 'center' }))}
+    />
+  )
+}
+
+type ContainerBaseProps = {
+  width?: string
+  margin?: string
   variant: Props['variant']
   size: Props['size']
   shape: Props['shape']
@@ -81,184 +92,192 @@ const Container = styled.div.withConfig({
   numberColor?: ResponsiveValue<Color> | null
   blockColor?: ResponsiveValue<Color> | null
   labelFont?: ResponsiveValue<string>
-}>`
-  display: flex;
-  ${cssWidth('560px')}
-  ${cssMargin()}
-  ${p =>
-    cssMediaRules([p.size] as const, ([size = 'medium']) => {
-      switch (size) {
-        case 'small':
-          return css`
-            font-size: 18px;
+}
 
-            ${Label} {
-              font-size: 14px;
+type ContainerProps = ContainerBaseProps &
+  Omit<ComponentPropsWithoutRef<'div'>, keyof ContainerBaseProps>
+
+const Container = forwardRef(function Container(
+  {
+    className,
+    width,
+    margin,
+    variant,
+    size,
+    shape,
+    gap,
+    labelColor,
+    numberFont,
+    numberColor,
+    blockColor,
+    labelFont,
+    ...restOfProps
+  }: ContainerProps,
+  ref: ForwardedRef<HTMLDivElement>,
+) {
+  return (
+    <div
+      {...restOfProps}
+      ref={ref}
+      className={cx(
+        className,
+        useStyle({ display: 'flex' }),
+        width,
+        margin,
+        useStyle(
+          responsiveStyle([size] as const, ([size = 'medium']) => {
+            switch (size) {
+              case 'small':
+                return { fontSize: 18, [`.${LABEL_CLASS_NAME}`]: { fontSize: 14 } }
+
+              case 'large':
+                return { fontSize: 32, [`.${LABEL_CLASS_NAME}`]: { fontSize: 18 } }
+
+              default:
+                return { fontSize: 24, [`.${LABEL_CLASS_NAME}`]: { fontSize: 16 } }
             }
-          `
-        case 'large':
-          return css`
-            font-size: 32px;
+          }),
+        ),
+        useStyle({
+          [`.${SEGMENT_CLASS_NAME}`]: responsiveStyle([gap] as const, ([gap]) => ({
+            margin: `0 ${gap == null ? 0 : `${gap.value / 2}${gap.unit}`}`,
 
-            ${Label} {
-              font-size: 18px;
+            '&:first-child': {
+              marginLeft: 0,
+            },
+
+            '&:last-child': {
+              marginRight: 0,
+            },
+          })),
+        }),
+        useStyle({
+          [`.${BLOCK_CLASS_NAME}`]: responsiveStyle([shape] as const, ([shape = 'rounded']) => {
+            switch (shape) {
+              case 'pill':
+                return { borderRadius: 500 }
+
+              case 'rounded':
+                return { borderRadius: 6 }
+
+              default:
+                return { borderRadius: 0 }
             }
-          `
-        default:
-          return css`
-            font-size: 24px;
+          }),
+        }),
+        useStyle({
+          [`.${BLOCK_CLASS_NAME}`]: responsiveStyle(
+            [variant, blockColor, numberColor, numberFont] as const,
+            ([
+              variant = 'filled',
+              blockColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 },
+              numberColor = { swatch: { hue: 0, saturation: 0, lightness: 100 }, alpha: 1 },
+              numberFont = 'sans-serif',
+            ]) => {
+              switch (variant) {
+                case 'filled':
+                  return {
+                    fontFamily: numberFont,
+                    color: colorToString(numberColor),
+                    background: colorToString(blockColor),
+                  }
 
-            ${Label} {
-              font-size: 16px;
-            }
-          `
-      }
-    })}
+                case 'filled-split':
+                  return {
+                    position: 'relative',
+                    color: colorToString(numberColor),
+                    fontFamily: numberFont,
 
-  ${Segment} {
-    ${p =>
-      cssMediaRules(
-        [p.gap] as const,
-        ([gap]) => css`
-          margin: 0 ${gap == null ? 0 : `${gap.value / 2}${gap.unit}`};
+                    '> span': {
+                      position: 'relative',
+                      zIndex: 1,
+                    },
 
-          &:first-child {
-            margin-left: 0;
-          }
+                    '::before': {
+                      content: '""',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 'calc(50% + 1px)',
+                      borderTopLeftRadius: 'inherit',
+                      borderTopRightRadius: 'inherit',
+                      background: colorToString(blockColor),
+                    },
 
-          &:last-child {
-            margin-right: 0;
-          }
-        `,
+                    '::after': {
+                      content: '""',
+                      position: 'absolute',
+                      left: 0,
+                      right: 0,
+                      top: 'calc(50% + 1px)',
+                      bottom: 0,
+                      borderBottomLeftRadius: 'inherit',
+                      borderBottomRightRadius: 'inherit',
+                      background: colorToString(blockColor),
+                    },
+                  }
+
+                case 'outline':
+                  return {
+                    fontFamily: numberFont,
+                    color: colorToString(numberColor),
+                    background: 'transparent',
+                    border: `2px solid ${colorToString(blockColor)}`,
+                  }
+
+                case 'outline-split':
+                  return {
+                    position: 'relative',
+                    fontFamily: numberFont,
+                    color: colorToString(numberColor),
+                    border: `2px solid ${colorToString(blockColor)}`,
+
+                    '> span': {
+                      position: 'relative',
+                      zIndex: 1,
+                    },
+
+                    '::before': {
+                      content: '""',
+                      position: 'absolute',
+                      top: '50%',
+                      left: 0,
+                      right: 0,
+                      height: 2,
+                      marginTop: -1,
+                      background: colorToString(blockColor),
+                    },
+                  }
+
+                default:
+                  return {
+                    fontFamily: numberFont,
+                    background: 'transparent',
+                    color: colorToString(numberColor),
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                  }
+              }
+            },
+          ),
+        }),
+        useStyle({
+          [`.${LABEL_CLASS_NAME}`]: responsiveStyle(
+            [labelColor, labelFont] as const,
+            ([
+              labelColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 },
+              labelFont = 'sans-serif',
+            ]) => ({
+              fontFamily: labelFont,
+              color: colorToString(labelColor),
+            }),
+          ),
+        }),
       )}
-  }
-
-  ${Block} {
-    ${p =>
-      cssMediaRules([p.shape] as const, ([shape = 'rounded']) => {
-        switch (shape) {
-          case 'pill':
-            return css`
-              border-radius: 500px;
-            `
-          case 'rounded':
-            return css`
-              border-radius: 6px;
-            `
-          default:
-            return css`
-              border-radius: 0;
-            `
-        }
-      })}
-    ${p =>
-      cssMediaRules(
-        [p.variant, p.blockColor, p.numberColor, p.numberFont] as const,
-        ([
-          variant = 'filled',
-          blockColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 },
-          numberColor = { swatch: { hue: 0, saturation: 0, lightness: 100 }, alpha: 1 },
-          numberFont = 'sans-serif',
-        ]) => {
-          switch (variant) {
-            case 'filled':
-              return css`
-                font-family: '${numberFont}';
-                color: ${colorToString(numberColor)};
-                background: ${colorToString(blockColor)};
-              `
-            case 'filled-split':
-              return css`
-                position: relative;
-                color: ${colorToString(numberColor)};
-                font-family: '${numberFont}';
-
-                > span {
-                  position: relative;
-                  z-index: 1;
-                }
-
-                ::before {
-                  content: '';
-                  position: absolute;
-                  top: 0;
-                  left: 0;
-                  right: 0;
-                  bottom: calc(50% + 1px);
-                  border-top-left-radius: inherit;
-                  border-top-right-radius: inherit;
-                  background: ${colorToString(blockColor)};
-                }
-
-                ::after {
-                  content: '';
-                  position: absolute;
-                  left: 0;
-                  right: 0;
-                  top: calc(50% + 1px);
-                  bottom: 0;
-                  border-bottom-left-radius: inherit;
-                  border-bottom-right-radius: inherit;
-                  background: ${colorToString(blockColor)};
-                }
-              `
-            case 'outline':
-              return css`
-                font-family: '${numberFont}';
-                color: ${colorToString(numberColor)};
-                background: transparent;
-                border: 2px solid ${colorToString(blockColor)};
-              `
-            case 'outline-split':
-              return css`
-                position: relative;
-                font-family: '${numberFont}';
-                color: ${colorToString(numberColor)};
-                border: 2px solid ${colorToString(blockColor)};
-
-                > span {
-                  position: relative;
-                  z-index: 1;
-                }
-
-                ::before {
-                  content: '';
-                  position: absolute;
-                  top: 50%;
-                  left: 0;
-                  right: 0;
-                  height: 2px;
-                  margin-top: -1px;
-                  background: ${colorToString(blockColor)};
-                }
-              `
-            default:
-              return css`
-                font-family: '${numberFont}';
-                background: transparent;
-                color: ${colorToString(numberColor)};
-                padding-top: 0;
-                padding-bottom: 0;
-              `
-          }
-        },
-      )}
-  }
-
-  ${Label} {
-    ${p =>
-      cssMediaRules(
-        [p.labelColor, p.labelFont] as const,
-        ([
-          labelColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 },
-          labelFont = 'sans-serif',
-        ]) => css`
-          font-family: '${labelFont}';
-          color: ${colorToString(labelColor)};
-        `,
-      )}
-  }
-`
+    />
+  )
+})
 
 const getRemaining = (date: Props['date'] | undefined) => {
   if (date == null) return { days: 0, hours: 0, minutes: 0, seconds: 0 }
