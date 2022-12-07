@@ -1,7 +1,10 @@
 import { CopyContext, ReplacementContext } from '../../state/react-page'
 import { ShadowsValue } from '../descriptors'
 
-export function copy(value: ShadowsValue, context: CopyContext): ShadowsValue {
+export function copy(
+  value: ShadowsValue | undefined,
+  context: CopyContext,
+): ShadowsValue | undefined {
   if (value == null) return value
 
   return value.map(override => ({ ...override, value: override.value.map(copyShadowItem) }))

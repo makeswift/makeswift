@@ -1,7 +1,10 @@
 import { CopyContext } from '../../state/react-page'
 import { BackgroundsValue } from '../descriptors'
 
-export function copy(value: BackgroundsValue, context: CopyContext) {
+export function copy(
+  value: BackgroundsValue | undefined,
+  context: CopyContext,
+): BackgroundsValue | undefined {
   if (value == null) return value
 
   return value.map(override => ({

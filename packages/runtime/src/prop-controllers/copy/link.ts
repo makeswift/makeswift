@@ -1,7 +1,7 @@
 import { CopyContext } from '../../state/react-page'
 import { LinkValue } from '../descriptors'
 
-export function copy(value: LinkValue, context: CopyContext): LinkValue {
+export function copy(value: LinkValue | undefined, context: CopyContext): LinkValue | undefined {
   if (value == null) return value
 
   switch (value.type) {

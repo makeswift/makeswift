@@ -1,4 +1,7 @@
+import { CopyContext } from '../state/react-page'
 import { ControlDefinition, ControlDefinitionData } from './control'
+
+import { copy as controlCopy } from './control'
 
 export const ShapeControlType = 'makeswift::controls::shape'
 
@@ -17,4 +20,22 @@ export function Shape<C extends ShapeControlConfig>(config: C): ShapeControlDefi
 
 export type ShapeControlData<T extends ShapeControlDefinition = ShapeControlDefinition> = {
   [K in keyof T['config']['type']]?: ControlDefinitionData<T['config']['type'][K]>
+}
+
+export function copyShapeData(
+  definition: ShapeControlDefinition,
+  value: ShapeControlData | undefined,
+  context: CopyContext,
+): ShapeControlData | undefined {
+  if (value == null) return value
+
+  const newValue: ShapeControlData = {}
+
+  for (const [key, itemDefinition] of Object.entries(definition.config.type)) {
+    const prop = value[key]
+
+    newValue[key] = controlCopy(itemDefinition, prop, context)
+  }
+
+  return newValue
 }

@@ -1,4 +1,7 @@
+import { CopyContext } from '../state/react-page'
 import { ControlDefinition, ControlDefinitionData } from './control'
+
+import { copy as controlCopy } from './control'
 
 export const ListControlType = 'makeswift::controls::list'
 
@@ -31,3 +34,19 @@ export type ListControlItemData<T extends ListControlDefinition> = {
 
 export type ListControlData<T extends ListControlDefinition = ListControlDefinition> =
   ListControlItemData<T>[]
+
+export function copyListData(
+  definition: ListControlDefinition,
+  value: ListControlData | undefined,
+  context: CopyContext,
+): ListControlData | undefined {
+  if (value == null) return value
+
+  return (
+    value &&
+    value.map(item => ({
+      ...item,
+      value: controlCopy(definition.config.type, item.value, context),
+    }))
+  )
+}
