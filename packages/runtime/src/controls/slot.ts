@@ -1,6 +1,6 @@
 import { PropController } from '../prop-controllers/instances'
 import { BoxModel } from '../state/modules/box-models'
-import { Element } from '../state/react-page'
+import { CopyContext, Element } from '../state/react-page'
 import { ResponsiveValue } from './types'
 
 type SlotControlColumnData = { count: number; spans: number[][] }
@@ -48,5 +48,17 @@ export class SlotControl extends PropController<SlotControlMessage> {
 
   changeItemBoxModel(index: number, boxModel: BoxModel | null): void {
     this.send({ type: SlotControlMessageType.ITEM_BOX_MODEL_CHANGE, payload: { index, boxModel } })
+  }
+}
+
+export function copySlotData(
+  value: SlotControlData | undefined,
+  context: CopyContext,
+): SlotControlData | undefined {
+  if (value == null) return value
+
+  return {
+    ...value,
+    elements: value.elements.map(element => context.copyElement(element)),
   }
 }

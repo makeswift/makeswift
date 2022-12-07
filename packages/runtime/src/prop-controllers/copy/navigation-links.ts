@@ -2,7 +2,10 @@ import { CopyContext, ReplacementContext } from '../../state/react-page'
 import { copy as linkCopy } from './link'
 import { NavigationLinksValue } from '../descriptors'
 
-export function copy(value: NavigationLinksValue, context: CopyContext): NavigationLinksValue {
+export function copy(
+  value: NavigationLinksValue | undefined,
+  context: CopyContext,
+): NavigationLinksValue | undefined {
   if (value == null) return value
 
   return value.map(copyNavigationLinksPanelItem)

@@ -1,7 +1,7 @@
 import { CopyContext, ReplacementContext } from '../../state/react-page'
 import { ImageValue } from '../descriptors'
 
-export function copy(value: ImageValue, context: CopyContext): ImageValue {
+export function copy(value: ImageValue | undefined, context: CopyContext): ImageValue | undefined {
   if (value == null) return value
 
   return context.replacementContext.fileIds.get(value) ?? value

@@ -1,7 +1,10 @@
 import { CopyContext } from '../../state/react-page'
 import { ResponsiveColorValue } from '../descriptors'
 
-export function copy(value: ResponsiveColorValue, context: CopyContext): ResponsiveColorValue {
+export function copy(
+  value: ResponsiveColorValue | undefined,
+  context: CopyContext,
+): ResponsiveColorValue | undefined {
   if (value == null) return value
 
   return value.map(override => ({ ...override, value: copyColorValue(override.value) }))
