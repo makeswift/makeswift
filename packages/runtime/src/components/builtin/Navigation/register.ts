@@ -100,8 +100,11 @@ export function registerComponent(runtime: ReactRuntime) {
             hidden,
           }
         }),
-        width: Props.Width({ defaultValue: { value: 100, unit: '%' } }),
-        margin: Props.Margin(),
+        width: Props.Width({
+          format: Props.Width.Format.ClassName,
+          defaultValue: { value: 100, unit: '%' },
+        }),
+        margin: Props.Margin({ format: Props.Margin.Format.ClassName }),
       },
     },
   )

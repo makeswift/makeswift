@@ -1,14 +1,10 @@
 import { ComponentPropsWithoutRef, useState } from 'react'
-import styled, { css } from 'styled-components'
 
-import { cssMediaRules, cssTextStyle } from '../../../../../../utils/cssMediaRules'
 import {
-  ResponsiveValue,
   ResponsiveColorValue,
   TextStyleValue,
   LinkValue,
 } from '../../../../../../../prop-controllers/descriptors'
-import { ColorValue as Color } from '../../../../../../utils/types'
 import { colorToString } from '../../../../../../utils/colorToString'
 import { useResponsiveColor } from '../../../../../../hooks'
 
@@ -19,50 +15,73 @@ import { ReactComponent as ChevronDown8 } from '../../../../../../icons/chevron-
 
 import { Link } from '../../../../../../shared/Link'
 import Button from '../../../../../Button'
+import { cx } from '@emotion/css'
+import { useStyle } from '../../../../../../../runtimes/react/use-style'
+import { responsiveStyle, responsiveTextStyle } from '../../../../../../utils/responsive-style'
 
-const DropDownMenu = styled.div.withConfig({
-  shouldForwardProp: prop => !['open'].includes(prop.toString()),
-})<{ open: boolean }>`
-  display: ${props => (props.open ? 'flex' : 'none')};
-  flex-direction: column;
-  padding: 8px;
-`
+type DropDownMenuBaseProps = {
+  className?: string
+  open: boolean
+}
 
-const ButtonLink = styled(Button)`
-  margin: 8px 0;
-`
+type DropDownMenuProps = DropDownMenuBaseProps &
+  Omit<ComponentPropsWithoutRef<'div'>, keyof DropDownMenuBaseProps>
 
-const StyledLink = styled(Link).withConfig({
-  shouldForwardProp: prop => !['textStyle', 'color'].includes(prop.toString()),
-})<{
-  textStyle?: TextStyleValue
-  color?: ResponsiveValue<Color> | null
-}>`
-  text-decoration: none;
-  line-height: 1.4;
-  padding: 8px 16px;
-  color: black;
-  ${cssTextStyle()}
-  ${p =>
-    cssMediaRules(
-      [p.color] as const,
-      ([color]) => css`
-        color: ${color == null ? 'black' : colorToString(color)};
-      `,
-    )}
-`
+function DropDownMenu({ className, open, ...restOfProps }: DropDownMenuProps) {
+  return (
+    <div
+      {...restOfProps}
+      className={cx(
+        className,
+        useStyle({ display: open ? 'flex' : 'none', flexDirection: 'column', padding: 8 }),
+      )}
+    />
+  )
+}
+
+type ButtonLinkBaseProps = {
+  className?: string
+}
+
+type ButtonLinkProps = ButtonLinkBaseProps &
+  Omit<ComponentPropsWithoutRef<typeof Button>, keyof ButtonLinkBaseProps>
+
+function ButtonLink({ className, ...restOfProps }: ButtonLinkProps) {
+  return <Button {...restOfProps} className={cx(className, useStyle({ margin: '8px 0' }))} />
+}
 
 type BaseDropDownItemProps = {
+  className?: string
   color?: ResponsiveColorValue
   textStyle?: TextStyleValue
 }
 
 type DropDownItemProps = BaseDropDownItemProps &
-  Omit<ComponentPropsWithoutRef<typeof StyledLink>, keyof BaseDropDownItemProps>
+  Omit<ComponentPropsWithoutRef<typeof Link>, keyof BaseDropDownItemProps>
 
-function DropDownItem({ color, ...restOfProps }: DropDownItemProps) {
-  // @ts-expect-error: HTMLAnchorElement `color` attribute conflict with props
-  return <StyledLink {...restOfProps} color={useResponsiveColor(color)} />
+function DropDownItem({ color, className, textStyle, ...restOfProps }: DropDownItemProps) {
+  const colorData = useResponsiveColor(color)
+
+  return (
+    <Link
+      {...restOfProps}
+      className={cx(
+        className,
+        useStyle({
+          textDecoration: 'none',
+          lineHeight: 1.4,
+          padding: '8px 16px',
+          color: 'black',
+        }),
+        useStyle(responsiveTextStyle(textStyle)),
+        useStyle(
+          responsiveStyle([colorData] as const, ([color]) => ({
+            color: color == null ? 'black' : colorToString(color),
+          })),
+        ),
+      )}
+    />
+  )
 }
 
 type Props = Omit<ComponentPropsWithoutRef<typeof Button>, 'textColor' | 'color'> & {

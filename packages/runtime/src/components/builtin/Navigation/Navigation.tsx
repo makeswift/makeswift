@@ -1,5 +1,4 @@
-import { ComponentPropsWithoutRef, forwardRef, useState } from 'react'
-import styled, { css } from 'styled-components'
+import { ComponentPropsWithoutRef, ForwardedRef, forwardRef, useState } from 'react'
 
 import { ReactComponent as MobileMenu28 } from '../../icons/mobile-menu-28.svg'
 
@@ -16,7 +15,6 @@ import {
   GapXValue,
   ImageValue,
   LinkValue,
-  MarginValue,
   NavigationLinksValue,
   ResponsiveIconRadioGroupValue,
   ResponsiveLengthValue,
@@ -24,13 +22,14 @@ import {
   TextInputValue,
   TextStyleValue,
   NavigationButton as NavigationButtonValue,
-  WidthValue,
 } from '../../../prop-controllers/descriptors'
-import { cssMargin, cssMediaRules, cssTextStyle, cssWidth } from '../../utils/cssMediaRules'
 import { ColorValue as Color } from '../../utils/types'
 import { colorToString } from '../../utils/colorToString'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { useResponsiveColor } from '../../hooks'
+import { cx } from '@emotion/css'
+import { responsiveStyle, responsiveTextStyle } from '../../utils/responsive-style'
+import { useStyle } from '../../../runtimes/react/use-style'
 
 type Props = {
   id?: ElementIDValue
@@ -47,77 +46,127 @@ type Props = {
   mobileMenuOpenIconColor?: ResponsiveColor | null
   mobileMenuCloseIconColor?: ResponsiveColor | null
   mobileMenuBackgroundColor?: ResponsiveColor | null
-  width?: WidthValue
-  margin?: MarginValue
+  width?: string
+  margin?: string
 }
 
-const Container = styled.nav.withConfig({
-  shouldForwardProp: prop => !['width', 'margin', 'textStyle', 'gutter'].includes(prop.toString()),
-})<{
-  width: Props['width']
-  margin: Props['margin']
+type ContainerBaseProps = {
+  width?: string
+  margin?: string
   textStyle: Props['linkTextStyle']
   gutter: Props['gutter']
-}>`
-  display: flex;
-  align-items: center;
-  ${cssWidth()}
-  ${cssMargin()}
-  ${cssTextStyle()}
-  ${p =>
-    cssMediaRules(
-      [p.gutter] as const,
-      ([gutter = { value: 0, unit: 'px' }]) => css`
-        gap: ${gutter.value}${gutter.unit};
-      `,
-    )}
-`
+}
 
-const LinksContainer = styled.div.withConfig({
-  shouldForwardProp: prop => !['alignment', 'mobileMenuAnimation'].includes(prop.toString()),
-})<{
+type ContainerProps = ContainerBaseProps &
+  Omit<ComponentPropsWithoutRef<'nav'>, keyof ContainerBaseProps>
+
+const Container = forwardRef(function Container(
+  { className, width, margin, textStyle, gutter, ...restOfProps }: ContainerProps,
+  ref: ForwardedRef<HTMLElement>,
+) {
+  return (
+    <nav
+      {...restOfProps}
+      ref={ref}
+      className={cx(
+        className,
+        useStyle({ display: 'flex', alignItems: 'center' }),
+        width,
+        margin,
+        useStyle(responsiveTextStyle(textStyle)),
+        useStyle(
+          responsiveStyle([gutter] as const, ([gutter = { value: 0, unit: 'px' }]) => ({
+            gap: `${gutter.value}${gutter.unit}`,
+          })),
+        ),
+      )}
+    />
+  )
+})
+
+type LinksContainerBaseProps = {
   alignment: Props['alignment']
   mobileMenuAnimation: Props['mobileMenuAnimation']
-}>`
-  display: flex;
-  align-items: center;
-  flex-grow: 1;
-  ${p =>
-    cssMediaRules(
-      [p.alignment, p.mobileMenuAnimation] as const,
-      ([alignment = 'flex-end', mobileMenuAnimation]) => css`
-        display: ${mobileMenuAnimation == null ? 'flex' : 'none'};
-        justify-content: ${alignment};
-      `,
-    )}
-`
+}
 
-const OpenIconContainer = styled.button.withConfig({
-  shouldForwardProp: prop =>
-    !['mobileMenuAnimation', 'alignment', 'color'].includes(prop.toString()),
-})<{
+type LinksContainerProps = LinksContainerBaseProps &
+  Omit<ComponentPropsWithoutRef<'div'>, keyof LinksContainerBaseProps>
+
+function LinksContainer({
+  className,
+  alignment,
+  mobileMenuAnimation,
+  ...restOfProps
+}: LinksContainerProps) {
+  return (
+    <div
+      {...restOfProps}
+      className={cx(
+        className,
+        useStyle({
+          display: 'flex',
+          alignItems: 'center',
+          flexGrow: 1,
+        }),
+        useStyle(
+          responsiveStyle(
+            [alignment, mobileMenuAnimation] as const,
+            ([alignment = 'flex-end', mobileMenuAnimation]) => ({
+              display: mobileMenuAnimation == null ? 'flex' : 'none',
+              justifyContent: alignment,
+            }),
+          ),
+        ),
+      )}
+    />
+  )
+}
+
+type OpenIconContainerBaseProps = {
   mobileMenuAnimation: Props['mobileMenuAnimation']
   alignment: Props['alignment']
   color: ResponsiveValue<Color> | null | undefined
-}>`
-  display: none;
-  flex-grow: 1;
-  align-items: center;
-  background: none;
-  outline: 0;
-  border: 0;
-  padding: 0;
-  fill: currentColor;
-  ${p =>
-    cssMediaRules(
-      [p.mobileMenuAnimation, p.alignment, p.color] as const,
-      ([mobileMenuAnimation, alignment = 'flex-end', color]) => css`
-        display: ${mobileMenuAnimation == null ? 'none' : 'flex'};
-        justify-content: ${alignment};
-        color: ${color == null ? 'rgba(161, 168, 194, 0.5)' : colorToString(color)};
-      `,
-    )}
-`
+}
+
+type OpenIconContainerProps = OpenIconContainerBaseProps &
+  Omit<ComponentPropsWithoutRef<'button'>, keyof OpenIconContainerBaseProps>
+
+function OpenIconContainer({
+  className,
+  mobileMenuAnimation,
+  alignment,
+  color,
+  ...restOfProps
+}: OpenIconContainerProps) {
+  return (
+    <button
+      {...restOfProps}
+      className={cx(
+        className,
+        useStyle({
+          display: 'none',
+          flexGrow: 1,
+          alignItems: 'center',
+          background: 'none',
+          outline: 0,
+          border: 0,
+          padding: 0,
+          fill: 'currentcolor',
+        }),
+        useStyle(
+          responsiveStyle(
+            [mobileMenuAnimation, alignment, color] as const,
+            ([mobileMenuAnimation, alignment = 'flex-end', color]) => ({
+              display: mobileMenuAnimation == null ? 'none' : 'flex',
+              justifyContent: alignment,
+              color: color == null ? 'rgba(161, 168, 194, 0.5)' : colorToString(color),
+            }),
+          ),
+        ),
+      )}
+    />
+  )
+}
 
 type NavigationButtonProps = NavigationButtonValue['payload'] &
   Omit<ComponentPropsWithoutRef<typeof Button>, 'color' | 'textColor'>
@@ -202,7 +251,6 @@ const Navigation = forwardRef<HTMLDivElement, Props>(function Navigation(
         </LinksContainer>
         <OpenIconContainer
           alignment={alignment}
-          // @ts-expect-error: HTMLButtonElement `color` attribute conflicts with prop
           color={mobileMenuOpenIconColor}
           mobileMenuAnimation={mobileMenuAnimation}
           onClick={() => setIsOpen(true)}
