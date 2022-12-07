@@ -1,17 +1,25 @@
-import styled from 'styled-components'
-
 import { ResponsiveLengthValue } from '../../../../../prop-controllers/descriptors'
+import { useStyle } from '../../../../../runtimes/react/use-style'
 import GutterContainer from '../../../../shared/GutterContainer'
 
-const PlaceholderLink = styled.div.withConfig({
-  shouldForwardProp: prop => !['width', 'button'].includes(prop.toString()),
-})<{ width: number; button?: boolean }>`
-  width: ${props => props.width}px;
-  height: ${props => (props.button === true ? 32 : 8)}px;
-  background-color: #a1a8c2;
-  border-radius: ${props => (props.button === true ? 6 : 2)}px;
-  opacity: 0.4;
-`
+type PlaceholderLinkProps = {
+  width: number
+  button?: boolean
+}
+
+function PlaceholderLink({ width, button }: PlaceholderLinkProps) {
+  return (
+    <div
+      className={useStyle({
+        width,
+        height: button === true ? 32 : 8,
+        backgroundColor: '#a1a8c2',
+        borderRadius: button === true ? 6 : 2,
+        opacity: 0.4,
+      })}
+    />
+  )
+}
 
 type Props = { gutter?: ResponsiveLengthValue }
 

@@ -9,6 +9,7 @@ import {
   PaddingValue,
   MarginValue,
   BorderRadiusValue,
+  TextStyleValue,
 } from '../../prop-controllers/descriptors'
 import {
   FallbackStrategy,
@@ -198,4 +199,38 @@ export function responsiveShadow(value: BoxShadowPropControllerData | undefined)
   return responsiveStyle([value], ([shadow = []]) => ({
     boxShadow: getBoxShadow(shadow),
   }))
+}
+
+export function responsiveTextStyle(value: TextStyleValue | undefined): CSSObject {
+  return responsiveStyle(
+    [value],
+    ([
+      textStyle = {
+        fontFamily: null,
+        letterSpacing: null,
+        fontSize: null,
+        fontWeight: null,
+        textTransform: [],
+        fontStyle: [],
+      },
+    ]) => {
+      const {
+        fontSize,
+        fontWeight,
+        fontStyle = [],
+        textTransform = [],
+        letterSpacing,
+        fontFamily,
+      } = textStyle
+
+      return {
+        ...(fontFamily == null ? {} : { fontFamily }),
+        ...(fontWeight == null ? {} : { fontWeight }),
+        ...(letterSpacing == null ? {} : { letterSpacing }),
+        ...(fontSize == null ? {} : { fontSize: `${fontSize.value}${fontSize.unit}` }),
+        ...(textTransform.includes('uppercase') ? { textTransform: 'uppercase' } : {}),
+        ...(fontStyle.includes('italic') ? { fontStyle: 'italic' } : {}),
+      }
+    },
+  )
 }

@@ -21,7 +21,7 @@ import { Link } from '../../shared/Link'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { ButtonVariant } from './contants'
 import { useStyle } from '../../../runtimes/react/use-style'
-import { responsiveStyle, responsiveWidth } from '../../utils/responsive-style'
+import { responsiveStyle, responsiveTextStyle, responsiveWidth } from '../../utils/responsive-style'
 import { cx } from '@emotion/css'
 
 type BaseProps<T extends ElementType> = {
@@ -261,39 +261,7 @@ const Button = forwardRef(function Button<T extends ElementType = 'button'>(
             },
           ),
         ),
-        useStyle(
-          responsiveStyle(
-            [textStyle],
-            ([
-              textStyle = {
-                fontFamily: null,
-                letterSpacing: null,
-                fontSize: null,
-                fontWeight: null,
-                textTransform: [],
-                fontStyle: [],
-              },
-            ]) => {
-              const {
-                fontSize,
-                fontWeight,
-                fontStyle = [],
-                textTransform = [],
-                letterSpacing,
-                fontFamily,
-              } = textStyle
-
-              return {
-                ...(fontFamily == null ? {} : { fontFamily }),
-                ...(fontWeight == null ? {} : { fontWeight }),
-                ...(letterSpacing == null ? {} : { letterSpacing }),
-                ...(fontSize == null ? {} : { fontSize: `${fontSize.value}${fontSize.unit}` }),
-                ...(textTransform.includes('uppercase') ? { textTransform: 'uppercase' } : {}),
-                ...(fontStyle.includes('italic') ? { fontStyle: 'italic' } : {}),
-              }
-            },
-          ),
-        ),
+        useStyle(responsiveTextStyle(textStyle)),
       )}
       link={link}
     >
