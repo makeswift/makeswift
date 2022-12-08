@@ -134,10 +134,10 @@ export function Cart({ className }: CartProps) {
         leaveTo="transform translate-y-2 opacity-0"
       >
         <Popover.Panel className="translate-y-2 sm:relative sm:w-[400px] sm:-translate-x-[calc(100%-34px)] p-5 bg-white shadow-[0px_4px_16px_0px_#00000026] space-y-4 divide-solid">
-          <div className="text-[22px] text-black text-sans">My cart</div>
+          <div className="text-[22px] text-black text-sans">{t('my-cart')}</div>
           <div className="border-t-[1px]" />
           {cart?.line_items.physical_items.length == null ? (
-            <div className="text-green">Your cart is empty</div>
+            <div className="text-green">{t('cart-is-empty')}</div>
           ) : (
             <>
               {cart?.line_items.physical_items.map(lineItem => {
