@@ -61,6 +61,7 @@ export async function getStaticProps(
       snapshot,
       products,
     },
+    revalidate: 1,
   }
 }
 
