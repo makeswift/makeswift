@@ -8,7 +8,7 @@ export const DEFAULT_PRODUCT: ProductFragment = {
   defaultImage: {
     urlOriginal:
       'https://cdn11.bigcommerce.com/s-uvhswop3wh/images/stencil/original/products/113/396/image_2__07829.1660659630.png',
-    altText: 'monsterra plan',
+    altText: 'monstera plant',
   },
   images: {
     edges: [
@@ -16,7 +16,7 @@ export const DEFAULT_PRODUCT: ProductFragment = {
         node: {
           urlOriginal:
             'https://cdn11.bigcommerce.com/s-uvhswop3wh/images/stencil/original/products/113/396/image_2__07829.1660659630.png',
-          altText: 'monsterra plan',
+          altText: 'monstera plant',
         },
       },
     ],
@@ -41,6 +41,16 @@ export const DEFAULT_PRODUCT: ProductFragment = {
           entityId: 24,
           name: 'Plants',
           path: '/plants/',
+        },
+      },
+    ],
+  },
+  spanishTranslations: {
+    edges: [
+      {
+        node: {
+          key: 'name',
+          value: 'Monstera',
         },
       },
     ],

@@ -2,9 +2,7 @@ import { getConfig } from '../config'
 import { CATEGORY_QUERY, PRODUCTS_QUERY, PRODUCT_QUERY } from './graphql'
 import { CategoriesQuery, Category, GraphQLResponse, ProductFragment, ProductQuery } from './types'
 
-export async function getProducts({ locale }: { locale?: string } = {}): Promise<
-  ProductFragment[]
-> {
+export async function getProducts(): Promise<ProductFragment[]> {
   const config = getConfig()
   const response = await fetch(config.bigcommerce.storefrontURL, {
     method: 'POST',
@@ -14,7 +12,6 @@ export async function getProducts({ locale }: { locale?: string } = {}): Promise
     },
     body: JSON.stringify({
       query: PRODUCTS_QUERY,
-      variables: { hasLocale: locale != null, locale },
     }),
   })
 
@@ -30,18 +27,7 @@ export async function getProducts({ locale }: { locale?: string } = {}): Promise
     throw new Error('There was an error fetching the products.')
   }
 
-  return result.data.site.products.edges.map(edge => {
-    const localeSpecificProductData =
-      edge.node.localeMeta?.edges.reduce(
-        (acc, curr) => ({
-          ...acc,
-          [curr.node.key]: curr.node.value,
-        }),
-        {},
-      ) ?? {}
-
-    return { ...edge.node, ...localeSpecificProductData }
-  })
+  return result.data.site.products.edges.map(edge => edge.node)
 }
 
 export async function getCategories(): Promise<Category[]> {
@@ -70,10 +56,7 @@ export async function getCategories(): Promise<Category[]> {
   return result.data.site.categoryTree
 }
 
-export async function getProduct(
-  id: number,
-  { locale }: { locale?: string } = {},
-): Promise<ProductFragment | null> {
+export async function getProduct(id: number): Promise<ProductFragment | null> {
   const config = getConfig()
   const response = await fetch(config.bigcommerce.storefrontURL, {
     method: 'POST',
@@ -83,7 +66,7 @@ export async function getProduct(
     },
     body: JSON.stringify({
       query: PRODUCT_QUERY,
-      variables: { entityId: id, hasLocale: locale != null, locale },
+      variables: { entityId: id },
     }),
   })
 
@@ -100,14 +83,6 @@ export async function getProduct(
   }
 
   const [productEdge] = result.data.site.products.edges
-  const localeSpecificProductData =
-    productEdge.node.localeMeta?.edges.reduce(
-      (acc, curr) => ({
-        ...acc,
-        [curr.node.key]: curr.node.value,
-      }),
-      {},
-    ) ?? {}
 
-  return { ...productEdge.node, ...localeSpecificProductData }
+  return productEdge.node
 }

@@ -30,8 +30,7 @@ export const PRODUCT_FRAGMENT = /* GraphQL */ `
         }
       }
     }
-    localeMeta: metafields(namespace: $locale, keys: ["name", "description"])
-      @include(if: $hasLocale) {
+    spanishTranslations: metafields(namespace: "es", keys: ["name", "description"]) {
       edges {
         node {
           key
@@ -43,7 +42,7 @@ export const PRODUCT_FRAGMENT = /* GraphQL */ `
 `
 
 export const PRODUCTS_QUERY = /* GraphQL */ `
-  query Products($hasLocale: Boolean = false, $locale: String = "null") {
+  query Products {
     site {
       products(first: 20) {
         edges {
@@ -59,7 +58,7 @@ export const PRODUCTS_QUERY = /* GraphQL */ `
 `
 
 export const PRODUCT_QUERY = /* GraphQL */ `
-  query Product($entityId: Int!, $hasLocale: Boolean = false, $locale: String = "null") {
+  query Product($entityId: Int!) {
     site {
       products(entityIds: [$entityId]) {
         edges {

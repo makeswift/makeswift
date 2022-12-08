@@ -56,8 +56,8 @@ export async function getStaticProps(
 
   if (slug == null) throw new Error('"slug" URL parameter must be defined.')
 
-  const products = await getProducts({ locale: ctx.locale })
-  const product = await getProduct(Number.parseInt(slug.toString(), 10), { locale: ctx.locale })
+  const products = await getProducts()
+  const product = await getProduct(Number.parseInt(slug.toString(), 10))
 
   if (product == null) return { notFound: true, revalidate: 1 }
 
