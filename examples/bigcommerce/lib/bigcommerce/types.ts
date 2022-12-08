@@ -47,19 +47,18 @@ export type ProductFragment = {
       node: Category
     }[]
   }
-}
-
-export type ProductLocalizationMetadata = {
-  localeMeta: {
+  spanishTranslations: {
     edges: { node: { key: string; value: string } }[]
   }
 }
+
+export type TranslatedProductFragment = Omit<ProductFragment, 'spanishTranslations'>
 
 export type ProductsQuery = {
   site: {
     products: {
       edges: {
-        node: ProductFragment & ProductLocalizationMetadata
+        node: ProductFragment
       }[]
     }
   }
@@ -69,7 +68,7 @@ export type ProductQuery = {
   site: {
     products: {
       edges: {
-        node: ProductFragment & ProductLocalizationMetadata
+        node: ProductFragment
       }[]
     }
   }

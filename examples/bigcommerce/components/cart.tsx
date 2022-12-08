@@ -3,13 +3,13 @@ import { Popover, Transition } from '@headlessui/react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useState } from 'react'
-import { useTranslation } from 'next-i18next'
 
 import { useCart } from 'lib/cart-context'
 import { useProductFromPath } from 'lib/product-context'
 import { Cart34, Minus28, Minus36, Plus28, Plus36, Spinner22, Spinner28 } from './icons'
 import { LineItemRequest } from 'lib/bigcommerce'
 import { useProduct } from 'lib/products-context'
+import { usePreviewableTranslation } from './locale'
 
 function formatPrice(value?: number) {
   return value == null ? '$0.00' : `$${value.toFixed(2)}`
@@ -25,7 +25,7 @@ function CartLineItem({ lineItem }: CartLineItemProps) {
   const { updateItem, deleteItem } = useCart()
   const product = useProduct(lineItem.product_id)
   const [cartState, setCartItemState] = useState<CartLineItemState>('initial')
-  const { t } = useTranslation('cart')
+  const { t } = usePreviewableTranslation('cart')
 
   return (
     <Link href={`/product/${lineItem.product_id}`}>
@@ -103,7 +103,7 @@ export function Cart({ className }: CartProps) {
   const { cart, getCheckoutUrl } = useCart()
   const router = useRouter()
   const [cartState, setCartState] = useState<CartState>('initial')
-  const { t } = useTranslation('cart')
+  const { t } = usePreviewableTranslation('cart')
   const itemCount =
     cart?.line_items.physical_items.reduce((acc, curr) => curr.quantity + acc, 0) ?? 0
 
@@ -213,7 +213,7 @@ export function ProductAddToCartButton({ className }: ProductAddToCartButtonProp
   const [addToCartState, setAddToCartState] = useState<AddToCartState>('initial')
   const { addItem } = useCart()
   const product = useProductFromPath()
-  const { t } = useTranslation('cart')
+  const { t } = usePreviewableTranslation('cart')
 
   return (
     <div className={`${className} space-x-5 flex`}>

@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from 'next/link'
-import { useTranslation } from 'next-i18next'
 
 import { useProductFromPath } from 'lib/product-context'
+import { usePreviewableTranslation } from 'components'
 
 type ProductImagesProps = {
   className?: string
@@ -32,7 +32,7 @@ type ProductBreadcrumbProps = {
 
 export function ProductBreadcrumbs({ className }: ProductBreadcrumbProps) {
   const product = useProductFromPath()
-  const { t } = useTranslation('product')
+  const { t } = usePreviewableTranslation('product')
 
   return (
     <div className={`${className} bg-[#FEF6F1] text-sm space-x-1 font-light flex py-4 px-5`}>

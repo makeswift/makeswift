@@ -49,15 +49,16 @@ export async function getStaticProps(
 
   if (snapshot == null) return { notFound: true }
 
-  const products = await getProducts({ locale: ctx.locale })
+  const products = await getProducts()
 
   return {
     props: {
-      ...(await serverSideTranslations(ctx.locale ?? DEFAULT_LOCALE, [
-        'common',
-        'cart',
-        'product',
-      ])),
+      ...(await serverSideTranslations(
+        ctx.locale ?? DEFAULT_LOCALE,
+        ['common', 'cart', 'product'],
+        null,
+        [Locale.English, Locale.Spanish],
+      )),
       snapshot,
       products,
     },
