@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.2.17
+
+### Patch Changes
+
+- 04aee01: Implement copy functions for all controls, enabling templates to use code components.
+
 ## 0.2.16
 
 ### Patch Changes
