@@ -124,7 +124,7 @@ ReactRuntime.registerComponent(ProductAddToCartButton, {
 
 ReactRuntime.registerComponent(LocaleProvider, {
   type: 'locale-provider',
-  label: 'Locale Provider',
+  label: 'Locale provider',
   props: {
     className: Style(),
     previewLocale: Select({
@@ -140,7 +140,7 @@ ReactRuntime.registerComponent(LocaleProvider, {
 
 ReactRuntime.registerComponent(LocaleSwitcher, {
   type: 'locale-switcher',
-  label: 'Locale Switcher',
+  label: 'Locale switcher',
   props: {
     className: Style(),
     previewLocale: Select({
