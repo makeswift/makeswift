@@ -28,11 +28,17 @@ if (window.parent !== window) {
       } else {
         const originalFetch = window.fetch
 
-        window.fetch = function patchedFetch(input, init) {
-          return originalFetch.call(this, input, {
-            ...init,
-            headers: { ...init?.headers, [headerName]: secret },
-          })
+        window.fetch = function patchedFetch(resource, options) {
+          const request = new Request(resource, options)
+
+          if (new URL(request.url).origin !== window.location.origin) {
+            return originalFetch.call(this, resource, options)
+          }
+
+          return originalFetch.call(
+            this,
+            new Request(request, { headers: { [headerName]: secret } }),
+          )
         }
       }
     }
