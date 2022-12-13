@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.2.18
+
+### Patch Changes
+
+- fb3dce6: Fix issue where patched fetch API was sending Preview Mode header to a separate origin, causing CORS problems.
+
 ## 0.2.17
 
 ### Patch Changes
