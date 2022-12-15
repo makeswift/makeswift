@@ -35,6 +35,7 @@ import {
   unregisterPropControllers,
   setIsInBuilder,
   handleWheel,
+  handlePointerMove,
 } from './actions'
 import { ActionTypes } from './actions'
 import { createPropController, PropController } from '../prop-controllers/instances'
@@ -218,6 +219,20 @@ function lockDocumentScroll(): ThunkAction<() => void, State, unknown, Action> {
   }
 }
 
+function startHandlingPointerMoveEvent(): ThunkAction<() => void, State, unknown, Action> {
+  return dispatch => {
+    window.document.documentElement.addEventListener('pointermove', handlePointerMoveEvent)
+
+    return () => {
+      window.document.documentElement.removeEventListener('pointermove', handlePointerMoveEvent)
+    }
+
+    function handlePointerMoveEvent({ clientX, clientY }: PointerEvent) {
+      dispatch(handlePointerMove({ clientX, clientY }))
+    }
+  }
+}
+
 function startHandlingFocusEvents(): () => void {
   window.addEventListener('focusin', handleFocusIn)
   window.addEventListener('focusout', handleFocusOut)
@@ -272,6 +287,7 @@ export function initialize(): ThunkAction<() => void, State, unknown, Action> {
     const stopMeasuringDocumentElement = dispatch(startMeasuringDocumentElement())
     const stopHandlingFocusEvent = startHandlingFocusEvents()
     const unlockDocumentScroll = dispatch(lockDocumentScroll())
+    const stopHandlingPointerMoveEvent = dispatch(startHandlingPointerMoveEvent())
     dispatch(setIsInBuilder(true))
 
     return () => {
@@ -279,6 +295,7 @@ export function initialize(): ThunkAction<() => void, State, unknown, Action> {
       stopMeasuringDocumentElement()
       stopHandlingFocusEvent()
       unlockDocumentScroll()
+      stopHandlingPointerMoveEvent()
       dispatch(setIsInBuilder(false))
     }
   }
@@ -352,6 +369,7 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
           case ActionTypes.CHANGE_DOCUMENT_ELEMENT_SIZE:
           case ActionTypes.MESSAGE_BUILDER_PROP_CONTROLLER:
           case ActionTypes.HANDLE_WHEEL:
+          case ActionTypes.HANDLE_POINTER_MOVE:
             messageChannel.port1.postMessage(action)
             break
 
