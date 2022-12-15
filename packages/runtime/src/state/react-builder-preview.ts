@@ -223,7 +223,7 @@ function startHandlingFocusEvents(): () => void {
   window.addEventListener('focusout', handleFocusOut)
 
   return () => {
-    window.addEventListener('focusin', handleFocusIn)
+    window.removeEventListener('focusin', handleFocusIn)
     window.removeEventListener('focusout', handleFocusOut)
   }
 
