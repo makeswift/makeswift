@@ -58,6 +58,7 @@ export const ActionTypes = {
   SET_IS_IN_BUILDER: 'SET_IS_IN_BUILDER',
 
   HANDLE_WHEEL: 'HANDLE_WHEEL',
+  HANDLE_POINTER_MOVE: 'HANDLE_POINTER_MOVE',
 } as const
 
 type InitAction = { type: typeof ActionTypes.INIT }
@@ -221,6 +222,11 @@ type HandleWheelAction = {
   payload: { deltaX: number; deltaY: number }
 }
 
+type HandlePointerMoveAction = {
+  type: typeof ActionTypes.HANDLE_POINTER_MOVE
+  payload: { clientX: number; clientY: number }
+}
+
 export type Action =
   | InitAction
   | CleanUpAction
@@ -253,6 +259,7 @@ export type Action =
   | EvictAPIResourceAction
   | SetIsInBuilderAction
   | HandleWheelAction
+  | HandlePointerMoveAction
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }
@@ -533,4 +540,11 @@ export function setIsInBuilder(isInBuilder: boolean): SetIsInBuilderAction {
 
 export function handleWheel(payload: { deltaX: number; deltaY: number }): HandleWheelAction {
   return { type: ActionTypes.HANDLE_WHEEL, payload }
+}
+
+export function handlePointerMove(payload: {
+  clientX: number
+  clientY: number
+}): HandlePointerMoveAction {
+  return { type: ActionTypes.HANDLE_POINTER_MOVE, payload }
 }
