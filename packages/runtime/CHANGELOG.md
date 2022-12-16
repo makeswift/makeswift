@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.2.19
+
+### Patch Changes
+
+- 7ec440b: Fix content-mode overlay doesn't appear properly.
+
 ## 0.2.18
 
 ### Patch Changes
