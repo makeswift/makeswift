@@ -9,42 +9,25 @@ import NextDocument, {
   NextScript,
 } from 'next/document'
 import { KeyUtils } from 'slate'
-import { ServerStyleSheet } from 'styled-components'
 import { PreviewModeScript } from './preview-mode'
 
 export class Document extends NextDocument {
   static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
-    const sheet = new ServerStyleSheet()
-    const originalRenderPage = ctx.renderPage
+    const initialProps = await NextDocument.getInitialProps(ctx)
 
-    try {
-      ctx.renderPage = () =>
-        originalRenderPage({
-          enhanceApp: App => props => sheet.collectStyles(<App {...props} />),
-        })
+    KeyUtils.resetGenerator()
 
-      const initialProps = await NextDocument.getInitialProps(ctx)
+    const { extractCritical } = createEmotionServer(cache)
+    const { ids, css } = extractCritical(initialProps.html)
 
-      KeyUtils.resetGenerator()
-
-      const { extractCritical } = createEmotionServer(cache)
-      const { ids, css } = extractCritical(initialProps.html)
-
-      return {
-        ...initialProps,
-        styles: (
-          <>
-            {initialProps.styles}
-            {sheet.getStyleElement()}
-            <style
-              data-emotion={`css ${ids.join(' ')}`}
-              dangerouslySetInnerHTML={{ __html: css }}
-            />
-          </>
-        ),
-      }
-    } finally {
-      sheet.seal()
+    return {
+      ...initialProps,
+      styles: (
+        <>
+          {initialProps.styles}
+          <style data-emotion={`css ${ids.join(' ')}`} dangerouslySetInnerHTML={{ __html: css }} />
+        </>
+      ),
     }
   }
 
