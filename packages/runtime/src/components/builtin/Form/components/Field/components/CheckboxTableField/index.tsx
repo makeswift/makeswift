@@ -1,30 +1,13 @@
-import { forwardRef, SyntheticEvent } from 'react'
-import styled, { css } from 'styled-components'
+import { ForwardedRef, forwardRef, SyntheticEvent } from 'react'
 import { FormikProps } from 'formik'
 
-import { useFormContext, Sizes, Value } from '../../../../context/FormContext'
+import { useFormContext, Sizes } from '../../../../context/FormContext'
 import Label from '../Label'
 import { getSizeHeight as getInputSizeHeight } from '../Input'
 import Checkbox from '../Checkbox'
-import { cssMediaRules } from '../../../../../../utils/cssMediaRules'
-
-const StyledLabel = styled(Label)<Pick<Value, 'size'>>`
-  display: flex;
-  align-items: center;
-  margin: 0;
-  ${props =>
-    cssMediaRules(
-      [props.size] as const,
-      ([size = Sizes.MEDIUM]) => css`
-        min-height: ${getInputSizeHeight(size)}px;
-        max-height: ${getInputSizeHeight(size)}px;
-      `,
-    )}
-`
-
-const CheckboxContainer = styled.span`
-  margin-right: 8px;
-`
+import { useStyle } from '../../../../../../../runtimes/react/use-style'
+import { responsiveStyle } from '../../../../../../utils/responsive-style'
+import { cx } from '@emotion/css'
 
 type Props = {
   form: FormikProps<{
@@ -37,9 +20,9 @@ type Props = {
   error?: string
 }
 
-export default forwardRef<HTMLInputElement, Props>(function CheckboxTableField(
+export default forwardRef(function CheckboxTableField(
   { form, id, name, label = '', value = false, error, ...restOfProps }: Props,
-  ref,
+  ref: ForwardedRef<HTMLInputElement>,
 ) {
   const { size } = useFormContext()
 
@@ -48,8 +31,19 @@ export default forwardRef<HTMLInputElement, Props>(function CheckboxTableField(
   }
 
   return (
-    <StyledLabel htmlFor={id} size={size}>
-      <CheckboxContainer>
+    <Label
+      className={cx(
+        useStyle({ display: 'flex', alignItems: 'center', margin: 0 }),
+        useStyle(
+          responsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
+            minHeight: getInputSizeHeight(size),
+            maxHeight: getInputSizeHeight(size),
+          })),
+        ),
+      )}
+      htmlFor={id}
+    >
+      <span className={useStyle({ marginRight: 8 })}>
         <Checkbox
           {...restOfProps}
           aria-label={label}
@@ -59,8 +53,8 @@ export default forwardRef<HTMLInputElement, Props>(function CheckboxTableField(
           id={id}
           error={error != null}
         />
-      </CheckboxContainer>
+      </span>
       {label}
-    </StyledLabel>
+    </Label>
   )
 })

@@ -1,22 +1,39 @@
-import { forwardRef, useRef, useImperativeHandle, SyntheticEvent } from 'react'
-import styled from 'styled-components'
+import { cx } from '@emotion/css'
+import {
+  forwardRef,
+  useRef,
+  useImperativeHandle,
+  SyntheticEvent,
+  ComponentPropsWithoutRef,
+} from 'react'
+import { useStyle } from '../../../../../../../../../runtimes/react/use-style'
 
 import Label from '../../../Label'
 import RadioButton from '../../../RadioButton'
 
-const StyledLabel = styled(Label)`
-  display: flex;
-  align-items: center;
-  margin: 8px 0;
+function StyledLabel({ className, ...restOfProps }: ComponentPropsWithoutRef<typeof Label>) {
+  return (
+    <Label
+      {...restOfProps}
+      className={cx(
+        className,
+        useStyle({
+          display: 'flex',
+          alignItems: 'center',
+          margin: '8px 0',
 
-  &:last-of-type {
-    margin-bottom: 0;
-  }
-`
+          '&:last-of-type': {
+            marginBottom: 0,
+          },
+        }),
+      )}
+    />
+  )
+}
 
-const RadioButtonContainer = styled.span`
-  margin-right: 8px;
-`
+function RadioButtonContainer({ className, ...restOfProps }: ComponentPropsWithoutRef<'span'>) {
+  return <span {...restOfProps} className={cx(className, useStyle({ marginRight: 8 }))} />
+}
 
 type Props = {
   id: string

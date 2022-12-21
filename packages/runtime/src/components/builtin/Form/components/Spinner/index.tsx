@@ -1,5 +1,5 @@
-import styled, { keyframes } from 'styled-components'
-
+import { keyframes } from '@emotion/css'
+import { useStyle } from '../../../../../runtimes/react/use-style'
 import { ReactComponent as Spinner20 } from '../../../../icons/spinner-20.svg'
 
 const spin = keyframes`
@@ -11,12 +11,14 @@ const spin = keyframes`
   }
 `
 
-const Icon = styled(Spinner20)`
-  display: inline-flex;
-  animation: ${spin} 1s linear infinite;
-  stroke: currentColor;
-`
-
 export default function Spinner(): JSX.Element {
-  return <Icon />
+  return (
+    <Spinner20
+      className={useStyle({
+        display: 'inline-flex',
+        animation: `${spin} 1s linear infinite`,
+        stroke: 'currentColor',
+      })}
+    />
+  )
 }

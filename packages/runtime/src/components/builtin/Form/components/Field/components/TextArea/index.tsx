@@ -1,21 +1,12 @@
+import { cx } from '@emotion/css'
 import { forwardRef, ComponentPropsWithoutRef } from 'react'
-import styled from 'styled-components'
-
-import cssField from '../../services/cssField'
-import { Value, useFormContext } from '../../../../context/FormContext'
-
-const Base = styled.textarea.withConfig({
-  shouldForwardProp: (prop, defaultValidator) =>
-    !['error', 'shape', 'size', 'contrast', 'brandColor'].includes(prop.toString()) &&
-    defaultValidator(prop),
-})<Value & { error?: boolean }>`
-  resize: vertical;
-  ${cssField()}
-`
+import { useStyle } from '../../../../../../../runtimes/react/use-style'
+import { useFormContext } from '../../../../context/FormContext'
+import responsiveField from '../../services/responsiveField'
 
 type BaseProps = { error?: boolean; form?: unknown }
 
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<typeof Base>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'textarea'>, keyof BaseProps>
 
 export default forwardRef<HTMLTextAreaElement, Props>(function TextArea(
   { error = false, form, ...restOfProps }: Props,
@@ -24,15 +15,14 @@ export default forwardRef<HTMLTextAreaElement, Props>(function TextArea(
   const { shape, size, contrast, brandColor } = useFormContext()
 
   return (
-    <Base
+    <textarea
       {...restOfProps}
       ref={ref}
+      className={cx(
+        useStyle({ resize: 'vertical' }),
+        useStyle(responsiveField({ error, shape, size, contrast, brandColor })),
+      )}
       rows={4}
-      error={error}
-      shape={shape}
-      size={size}
-      contrast={contrast}
-      brandColor={brandColor}
     />
   )
 })

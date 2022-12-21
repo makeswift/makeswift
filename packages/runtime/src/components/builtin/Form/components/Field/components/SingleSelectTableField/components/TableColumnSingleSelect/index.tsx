@@ -1,60 +1,93 @@
-import { forwardRef } from 'react'
-import styled, { css } from 'styled-components'
+import { cx } from '@emotion/css'
+import { ComponentPropsWithoutRef, ForwardedRef, forwardRef } from 'react'
+import { useStyle } from '../../../../../../../../../runtimes/react/use-style'
 
-import { cssMediaRules } from '../../../../../../../../utils/cssMediaRules'
+import { responsiveStyle } from '../../../../../../../../utils/responsive-style'
 import { useFormContext, Sizes, Contrasts, Value } from '../../../../../../context/FormContext'
-import cssField, {
+import responsiveField, {
   getSizeHeight,
   getSizeHorizontalPadding,
   getContrastColor,
-} from '../../../../services/cssField'
+} from '../../../../services/responsiveField'
 import Label from '../../../Label'
 
-const Container = styled.div.withConfig({
-  shouldForwardProp: prop =>
-    !['error', 'shape', 'size', 'contrast', 'brandColor'].includes(prop.toString()),
-})<Value & { error?: boolean }>`
-  ${cssField()}
-  display: flex;
-  align-items: center;
-  position: relative;
-  user-select: none;
-  border-color: #f19eb9;
+type BaseContainerProps = Value & { error?: boolean }
 
-  &:focus,
-  &:focus-within {
-    border-color: #e54e7f;
-  }
+type ContainerProps = BaseContainerProps &
+  Omit<ComponentPropsWithoutRef<'div'>, keyof BaseContainerProps>
 
-  ${props =>
-    cssMediaRules(
-      [props.size, props.contrast] as const,
-      ([size = Sizes.MEDIUM, contrast = Contrasts.LIGHT]) => css`
-        min-height: ${getSizeHeight(size)}px;
-        max-height: ${getSizeHeight(size)}px;
+function Container({
+  shape,
+  size,
+  contrast,
+  brandColor,
+  error,
+  className,
+  ...restOfProps
+}: ContainerProps) {
+  return (
+    <div
+      {...restOfProps}
+      className={cx(
+        className,
+        useStyle(responsiveField({ shape, size, contrast, brandColor, error })),
+        useStyle({
+          display: 'flex',
+          alignItems: 'center',
+          position: 'relative',
+          userSelect: 'none',
+          borderColor: '#f19eb9',
 
-        &::after {
-          content: '';
-          position: absolute;
-          right: ${getSizeHorizontalPadding(size)}px;
-          top: 50%;
-          transform: translate3d(0, -25%, 0);
-          border: solid 0.35em transparent;
-          border-top-color: ${getContrastColor(contrast)};
-        }
-      `,
-    )}
-`
+          '&:focus, &:focus-within': {
+            borderColor: '#e54e7f',
+          },
 
-const Select = styled.select`
-  appearance: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  width: 100%;
-  height: 100%;
-`
+          ...responsiveStyle(
+            [size, contrast] as const,
+            ([size = Sizes.MEDIUM, contrast = Contrasts.LIGHT]) => ({
+              minHeight: getSizeHeight(size),
+              maxHeight: getSizeHeight(size),
+
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                right: getSizeHorizontalPadding(size),
+                top: '50%',
+                transform: 'translate3d(0, -25%, 0)',
+                border: 'solid 0.35em transparent',
+                borderTopColor: getContrastColor(contrast),
+              },
+            }),
+          ),
+        }),
+      )}
+    />
+  )
+}
+
+const Select = forwardRef(function Select(
+  { className, ...restOfProps }: ComponentPropsWithoutRef<'select'>,
+  ref: ForwardedRef<HTMLSelectElement>,
+) {
+  return (
+    <select
+      {...restOfProps}
+      ref={ref}
+      className={cx(
+        className,
+        useStyle({
+          appearance: 'none',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          opacity: 0,
+          width: '100%',
+          height: '100%',
+        }),
+      )}
+    />
+  )
+})
 
 type Props = {
   id: string

@@ -1,26 +1,40 @@
-import { forwardRef, useRef, useImperativeHandle, SyntheticEvent } from 'react'
-import styled from 'styled-components'
+import {
+  forwardRef,
+  useRef,
+  useImperativeHandle,
+  SyntheticEvent,
+  ComponentPropsWithoutRef,
+} from 'react'
 
 import Label from '../Label'
 import Checkbox from '../Checkbox'
+import { cx } from '@emotion/css'
+import { useStyle } from '../../../../../../../runtimes/react/use-style'
 
-const MainLabel = styled(Label)`
-  margin: 0 0 4px 0;
-`
+function MainLabel({ className, ...restOfProps }: ComponentPropsWithoutRef<typeof Label>) {
+  return <Label {...restOfProps} className={cx(className, useStyle({ margin: '0 0 4px 0' }))} />
+}
 
-const StyledLabel = styled(Label)`
-  display: flex;
-  align-items: center;
-  margin: 8px 0;
+function StyledLabel({ className, ...restOfProps }: ComponentPropsWithoutRef<typeof Label>) {
+  return (
+    <Label
+      {...restOfProps}
+      className={cx(
+        className,
+        useStyle({
+          display: 'flex',
+          alignItems: 'center',
+          margin: '8px 0',
+          '&:last-of-type': { marginBottom: 0 },
+        }),
+      )}
+    />
+  )
+}
 
-  &:last-of-type {
-    margin-bottom: 0;
-  }
-`
-
-const CheckboxContainer = styled.span`
-  margin-right: 8px;
-`
+function CheckboxContainer({ className, ...restOfProps }: ComponentPropsWithoutRef<'span'>) {
+  return <span {...restOfProps} className={cx(className, useStyle({ marginRight: 8 }))} />
+}
 
 type Props = {
   id: string

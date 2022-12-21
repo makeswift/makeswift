@@ -1,53 +1,58 @@
+import { cx } from '@emotion/css'
 import { forwardRef, Ref } from 'react'
-import styled from 'styled-components'
 
-import { MarginValue, WidthValue } from '../../../../../prop-controllers/descriptors'
-import { cssMargin, cssWidth } from '../../../../utils/cssMediaRules'
+import { useStyle } from '../../../../../runtimes/react/use-style'
 
-const Container = styled.div.withConfig({
-  shouldForwardProp: prop => !['width', 'margin'].includes(prop.toString()),
-})<{
-  width?: WidthValue
-  margin?: MarginValue
-}>`
-  display: flex;
-  flex-direction: column;
-  ${cssWidth()};
-  ${cssMargin()};
-`
+function Label() {
+  return (
+    <div
+      className={useStyle({
+        maxWidth: 120,
+        minWidth: 60,
+        height: 8,
+        borderRadius: 2,
+        backgroundColor: '#a1a8c2',
+        opacity: 0.4,
+        marginBottom: 8,
+      })}
+    />
+  )
+}
 
-const Label = styled.div`
-  max-width: 120px;
-  min-width: 60px;
-  height: 8px;
-  border-radius: 2px;
-  background-color: #a1a8c2;
-  opacity: 0.4;
-  margin-bottom: 8px;
-`
+function Input() {
+  return (
+    <div
+      className={useStyle({
+        minWidth: 80,
+        height: 32,
+        borderRadius: 4,
+        borderWidth: 2,
+        borderStyle: 'solid',
+        borderColor: '#a1a8c2',
+        opacity: 0.4,
+      })}
+    />
+  )
+}
 
-const Input = styled.div`
-  min-width: 80px;
-  height: 32px;
-  border-radius: 4px;
-  border-width: 2px;
-  border-style: solid;
-  border-color: #a1a8c2;
-  opacity: 0.4;
-`
-
-const Button = styled.div`
-  min-width: 140px;
-  height: 32px;
-  border-radius: 4px;
-  background-color: #a1a8c2;
-  opacity: 0.4;
-`
+function Button() {
+  return (
+    <div
+      className={useStyle({
+        minWidth: 140,
+        height: 32,
+        borderRadius: 4,
+        backgroundColor: '#a1a8c2',
+        opacity: 0.4,
+      })}
+    />
+  )
+}
 
 type Props = {
   className?: string
-  width?: WidthValue
-  margin?: MarginValue
+  width?: string
+  margin?: string
 }
 
 export default forwardRef(function Placeholder(
@@ -55,7 +60,15 @@ export default forwardRef(function Placeholder(
   ref: Ref<HTMLDivElement>,
 ): JSX.Element {
   return (
-    <Container ref={ref} className={className} width={width} margin={margin}>
+    <div
+      ref={ref}
+      className={cx(
+        className,
+        useStyle({ display: 'flex', flexDirection: 'column' }),
+        width,
+        margin,
+      )}
+    >
       <div style={{ display: 'flex', flexDirection: 'column', marginBottom: 16 }}>
         <Label />
         <Input />
@@ -67,6 +80,6 @@ export default forwardRef(function Placeholder(
       <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
         <Button />
       </div>
-    </Container>
+    </div>
   )
 })

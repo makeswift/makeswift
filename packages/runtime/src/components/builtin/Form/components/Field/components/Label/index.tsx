@@ -1,12 +1,10 @@
-import { ComponentPropsWithoutRef } from 'react'
-import styled, { css } from 'styled-components'
-import { ResponsiveValue } from '../../../../../../../prop-controllers'
-import { TextStyleValue } from '../../../../../../../prop-controllers/descriptors'
-import { cssMediaRules, cssTextStyle } from '../../../../../../utils/cssMediaRules'
+import { ComponentPropsWithoutRef, ElementType } from 'react'
 import { colorToString } from '../../../../../../utils/colorToString'
 
 import { useFormContext, Size, Sizes, Contrast, Contrasts } from '../../../../context/FormContext'
-import { ColorValue } from '../../../../../../utils/types'
+import { cx } from '@emotion/css'
+import { useStyle } from '../../../../../../../runtimes/react/use-style'
+import { responsiveStyle, responsiveTextStyle } from '../../../../../../utils/responsive-style'
 
 export function getSizeHeight(size: Size): number {
   switch (size) {
@@ -37,41 +35,38 @@ function getContrastColor(contrast: Contrast): string {
   }
 }
 
-const Base = styled.label.withConfig({
-  shouldForwardProp: (prop, defaultValidator) =>
-    !['contrast', 'size', 'textStyle', 'textColor'].includes(prop.toString()) &&
-    defaultValidator(prop),
-})<{
-  contrast?: ResponsiveValue<Contrast> | null | undefined
-  size?: ResponsiveValue<Size> | null | undefined
-  textStyle?: TextStyleValue | null | undefined
-  textColor?: ResponsiveValue<ColorValue> | null | undefined
-}>`
-  display: block;
-  margin: 0 0 0.25em 0;
-  ${cssTextStyle()}
-  ${props =>
-    cssMediaRules(
-      [props.size, props.contrast, props.textColor] as const,
-      ([size = Sizes.MEDIUM, contrast = Contrasts.LIGHT, textColor]) => css`
-        min-height: ${getSizeHeight(size)}px;
-        color: ${textColor == null ? getContrastColor(contrast) : colorToString(textColor)};
-      `,
-    )}
-`
+type BaseProps<T extends ElementType> = {
+  as?: T
+}
 
-type Props = ComponentPropsWithoutRef<typeof Base>
+type Props<T extends ElementType> = BaseProps<T> &
+  Omit<ComponentPropsWithoutRef<'label'>, keyof BaseProps<T>>
 
-export default function Label(props: Props): JSX.Element {
+export default function Label<T extends ElementType = 'label'>({
+  as,
+  className,
+  ...restOfProps
+}: Props<T>): JSX.Element {
+  const Component = as ?? 'label'
   const { contrast, size, labelTextStyle, labelTextColor } = useFormContext()
 
   return (
-    <Base
-      {...props}
-      contrast={contrast}
-      size={size}
-      textStyle={labelTextStyle}
-      textColor={labelTextColor}
+    <Component
+      {...restOfProps}
+      className={cx(
+        className,
+        useStyle({ display: 'block', margin: '0 0 0.25em 0' }),
+        useStyle(responsiveTextStyle(labelTextStyle)),
+        useStyle(
+          responsiveStyle(
+            [size, contrast, labelTextColor] as const,
+            ([size = Sizes.MEDIUM, contrast = Contrasts.LIGHT, textColor]) => ({
+              minHeight: getSizeHeight(size),
+              color: textColor == null ? getContrastColor(contrast) : colorToString(textColor),
+            }),
+          ),
+        ),
+      )}
     />
   )
 }
