@@ -1,29 +1,56 @@
-import { useState, useRef } from 'react'
+import { cx } from '@emotion/css'
+import { useState, useRef, ComponentPropsWithoutRef, ForwardedRef, forwardRef } from 'react'
 import ReactPlayer from 'react-player'
-import styled from 'styled-components'
+import { useStyle } from '../../../../../runtimes/react/use-style'
 
 import { useIsomorphicLayoutEffect } from '../../../../hooks/useIsomorphicLayoutEffect'
 
-const Container = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  overflow: hidden;
-`
+const Container = forwardRef(function Container(
+  { className, ...restOfProps }: ComponentPropsWithoutRef<'div'>,
+  ref: ForwardedRef<HTMLDivElement>,
+) {
+  return (
+    <div
+      {...restOfProps}
+      ref={ref}
+      className={cx(
+        className,
+        useStyle({
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          pointerEvents: 'none',
+          overflow: 'hidden',
+        }),
+      )}
+    />
+  )
+})
 
-const Mask = styled.div<{ backgroundColor: string | undefined; visible: boolean }>`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: ${props => props.backgroundColor};
-  opacity: ${props => (props.visible ? 1 : 0)};
-  transition: opacity 1s;
-`
+function Mask({
+  backgroundColor,
+  visible,
+}: {
+  backgroundColor: string | undefined
+  visible: boolean
+}) {
+  return (
+    <div
+      className={useStyle({
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: backgroundColor,
+        opacity: visible ? 1 : 0,
+        transition: 'opacity 1s',
+      })}
+    />
+  )
+}
 
 const getScale = (element: HTMLElement, aspectRatio: number, zoom: number) => {
   const { offsetWidth: width, offsetHeight: height } = element
