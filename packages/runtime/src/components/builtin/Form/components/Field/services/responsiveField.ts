@@ -1,6 +1,3 @@
-import { css } from 'styled-components'
-
-import { cssMediaRules } from '../../../../../utils/cssMediaRules'
 import { colorToString } from '../../../../../utils/colorToString'
 
 import {
@@ -12,6 +9,8 @@ import {
   Contrasts,
   Value,
 } from '../../../context/FormContext'
+import { responsiveStyle } from '../../../../../utils/responsive-style'
+import { CSSObject } from '@emotion/css'
 
 export function getSizeHeight(size: Size): number {
   switch (size) {
@@ -129,38 +128,38 @@ function getContrastPlaceholderColor(contrast: Contrast) {
   }
 }
 
-export default function cssField() {
-  return css<Pick<Value, 'shape' | 'size' | 'contrast' | 'brandColor'> & { error?: boolean }>`
-    display: block;
-    width: 100%;
-    outline: none;
-    border-width: 1px;
-    border-style: solid;
-    transition: border-color 200ms;
-    ${props =>
-      cssMediaRules(
-        [props.shape, props.size, props.contrast, props.brandColor] as const,
-        ([
-          shape = Shapes.ROUNDED,
-          size = Sizes.MEDIUM,
-          contrast = Contrasts.LIGHT,
-          brandColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 },
-        ]) => css`
-          padding: ${getSizeVerticalPadding(size)}px ${getSizeHorizontalPadding(size)}px;
-          border-radius: ${getShapeBorderRadius(shape)}px;
-          border-color: ${getContrastBorderColor(contrast, props.error)};
-          color: ${getContrastColor(contrast)};
-          background-color: ${getContrastBackgroundColor(contrast)};
+export default function responsiveField(
+  props: Pick<Value, 'shape' | 'size' | 'contrast' | 'brandColor'> & { error?: boolean },
+): CSSObject {
+  return {
+    display: 'block',
+    width: '100%',
+    outline: 'none',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    transition: 'border-color 200ms',
+    ...responsiveStyle(
+      [props.shape, props.size, props.contrast, props.brandColor] as const,
+      ([
+        shape = Shapes.ROUNDED,
+        size = Sizes.MEDIUM,
+        contrast = Contrasts.LIGHT,
+        brandColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 },
+      ]) => ({
+        padding: `${getSizeVerticalPadding(size)}px ${getSizeHorizontalPadding(size)}px`,
+        borderRadius: getShapeBorderRadius(shape),
+        borderColor: getContrastBorderColor(contrast, props.error),
+        color: getContrastColor(contrast),
+        backgroundColor: getContrastBackgroundColor(contrast),
 
-          :focus,
-          :focus-within {
-            border-color: ${colorToString(brandColor)};
-          }
+        ':focus, :focus-within': {
+          borderColor: colorToString(brandColor),
+        },
 
-          ::placeholder {
-            color: ${getContrastPlaceholderColor(contrast)};
-          }
-        `,
-      )}
-  `
+        '::placeholder': {
+          color: getContrastPlaceholderColor(contrast),
+        },
+      }),
+    ),
+  }
 }

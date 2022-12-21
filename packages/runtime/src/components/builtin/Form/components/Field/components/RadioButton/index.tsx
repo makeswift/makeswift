@@ -1,13 +1,14 @@
-import { forwardRef, CSSProperties, ComponentPropsWithoutRef } from 'react'
-import styled, { css } from 'styled-components'
+import { forwardRef, CSSProperties, ComponentPropsWithoutRef, ForwardedRef } from 'react'
 import Color from 'color'
 
 import { getSizeHeight as getSize } from '../Label'
 import { useFormContext, Sizes, Contrasts, Value } from '../../../../context/FormContext'
-import { getContrastBorderColor, getContrastBackgroundColor } from '../../services/cssField'
-import { cssMediaRules } from '../../../../../../utils/cssMediaRules'
+import { getContrastBorderColor, getContrastBackgroundColor } from '../../services/responsiveField'
 import { colorToString } from '../../../../../../utils/colorToString'
 import { ColorValue } from '../../../../../../utils/types'
+import { cx } from '@emotion/css'
+import { responsiveStyle } from '../../../../../../utils/responsive-style'
+import { useStyle } from '../../../../../../../runtimes/react/use-style'
 
 function getCheckmarkColor({
   swatch: { hue: h, saturation: s, lightness: l } = { hue: 0, saturation: 0, lightness: 0 },
@@ -16,113 +17,143 @@ function getCheckmarkColor({
   return Color({ h, s, l }).alpha(a).isLight() ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.95)'
 }
 
-const Container = styled.div.withConfig({
-  shouldForwardProp: prop => !['size'].includes(prop.toString()),
-})<Pick<Value, 'size'>>`
-  position: relative;
-  ${props =>
-    cssMediaRules(
-      [props.size],
-      ([size = Sizes.MEDIUM]) => css`
-        height: ${getSize(size)}px;
-        width: ${getSize(size)}px;
-      `,
-    )}
-`
+type ContainerBaseProps = Pick<Value, 'size'>
 
-const FakeRadioButton = styled.div.withConfig({
-  shouldForwardProp: prop => !['contrast', 'error'].includes(prop.toString()),
-})<Pick<Value, 'contrast'> & { error?: boolean }>`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-style: solid;
-  border-radius: 50%;
-  pointer-events: none;
-  border-width: 1px;
-  ${props =>
-    cssMediaRules(
-      [props.contrast],
-      ([contrast = Contrasts.LIGHT]) => css`
-        border-color: ${getContrastBorderColor(contrast, props.error)};
-        background-color: ${getContrastBackgroundColor(contrast)};
-      `,
-    )}
-`
+type ContainerProps = ContainerBaseProps &
+  Omit<ComponentPropsWithoutRef<'div'>, keyof ContainerBaseProps>
 
-const HiddenRadioButton = styled.input
-  .withConfig({
-    shouldForwardProp: prop => !['brandColor', 'contrast', 'error'].includes(prop.toString()),
-  })
-  .attrs({ type: 'radio' })<Pick<Value, 'brandColor' | 'contrast'> & { error?: boolean }>`
-  position: absolute;
-  opacity: 0;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-
-  &:disabled {
-    cursor: no-drop;
-
-    & ~ ${FakeRadioButton} {
-      opacity: 0.5;
-    }
-  }
-
-  &:checked ~ ${FakeRadioButton} {
-    ${props =>
-      cssMediaRules(
-        [props.brandColor] as const,
-        ([brandColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 }]) => css`
-          background-color: ${colorToString(brandColor)};
-        `,
+function Container({ size }: ContainerProps) {
+  return (
+    <div
+      className={cx(
+        useStyle({ position: 'relative' }),
+        useStyle(
+          responsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
+            height: getSize(size),
+            width: getSize(size),
+          })),
+        ),
       )}
-    border-color: transparent;
+    />
+  )
+}
 
-    &::after {
-      content: '';
-      position: absolute;
-      box-sizing: content-box;
-      top: 50%;
-      left: 50%;
-      width: 50%;
-      height: 50%;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      ${props =>
-        cssMediaRules(
-          [props.brandColor] as const,
-          ([brandColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 }]) => css`
-            background-color: ${getCheckmarkColor(brandColor)};
-          `,
-        )}
-    }
-  }
+const FAKE_RADIO_BUTTON_CLASS_NAME = 'fake-radio-button'
 
-  &:not(:disabled) {
-    &:focus ~ ${FakeRadioButton} {
-      ${props =>
-        cssMediaRules(
-          [props.brandColor] as const,
-          ([brandColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 }]) => css`
-            border-color: ${colorToString(brandColor)};
-          `,
-        )}
-    }
-  }
+type FakeRadioButtonBaseProps = Pick<Value, 'contrast'> & { error?: boolean }
 
-  &:not(:disabled):checked {
-    &:focus ~ ${FakeRadioButton} {
-      ${props =>
-        cssMediaRules(
-          [props.contrast] as const,
-          ([contrast = Contrasts.LIGHT]) => css`
-            border-color: ${getContrastBorderColor(contrast, props.error)};
-          `,
-        )}
-    }
-  }
-`
+type FakeRadioButtonProps = FakeRadioButtonBaseProps &
+  Omit<ComponentPropsWithoutRef<'div'>, keyof FakeRadioButtonBaseProps>
+
+function FakeRadioButton({ className, contrast, error, ...restOfProps }: FakeRadioButtonProps) {
+  return (
+    <div
+      {...restOfProps}
+      className={cx(
+        FAKE_RADIO_BUTTON_CLASS_NAME,
+        useStyle({
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+          borderStyle: 'solid',
+          borderRadius: '50%',
+          pointerEvents: 'none',
+          borderWidth: 1,
+        }),
+        useStyle(
+          responsiveStyle([contrast] as const, ([contrast = Contrasts.LIGHT]) => ({
+            borderColor: getContrastBorderColor(contrast, error),
+            backgroundColor: getContrastBackgroundColor(contrast),
+          })),
+        ),
+      )}
+    />
+  )
+}
+
+type HiddenRadioButtonBaseProps = Partial<Pick<Value, 'brandColor' | 'contrast'>> & {
+  error?: boolean
+}
+
+type HiddenRadioButtonProps = HiddenRadioButtonBaseProps &
+  Omit<ComponentPropsWithoutRef<'input'>, keyof HiddenRadioButtonBaseProps>
+
+const HiddenRadioButton = forwardRef(function HiddenRadioButton(
+  { className, brandColor, contrast, error, ...restOfProps }: HiddenRadioButtonProps,
+  ref: ForwardedRef<HTMLInputElement>,
+) {
+  return (
+    <input
+      {...restOfProps}
+      type="radio"
+      className={cx(
+        className,
+        useStyle({
+          position: 'absolute',
+          opacity: 0,
+          width: '100%',
+          height: '100%',
+          cursor: 'pointer',
+
+          '&:disabled': {
+            cursor: 'no-drop',
+
+            [`& ~ .${FAKE_RADIO_BUTTON_CLASS_NAME}`]: {
+              opacity: 0.5,
+            },
+          },
+
+          [`&:checked ~ .${FAKE_RADIO_BUTTON_CLASS_NAME}`]: {
+            ...responsiveStyle(
+              [brandColor] as const,
+              ([brandColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 }]) => ({
+                backgroundColor: colorToString(brandColor),
+              }),
+            ),
+            borderColor: 'transparent',
+
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              boxSizing: 'content-box',
+              top: '50%',
+              left: '50%',
+              width: '50%',
+              height: '50%',
+              borderRadius: '50%',
+              transform: 'translate(-50%, -50%)',
+              ...responsiveStyle(
+                [brandColor] as const,
+                ([brandColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 }]) => ({
+                  backgroundColor: getCheckmarkColor(brandColor),
+                }),
+              ),
+            },
+          },
+
+          '&:not(:disabled)': {
+            [`&:focus ~ .${FAKE_RADIO_BUTTON_CLASS_NAME}`]: responsiveStyle(
+              [brandColor] as const,
+              ([brandColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 }]) => ({
+                borderColor: colorToString(brandColor),
+              }),
+            ),
+          },
+
+          '&:not(:disabled):checked': {
+            [`&:focus ~ .${FAKE_RADIO_BUTTON_CLASS_NAME}`]: responsiveStyle(
+              [contrast] as const,
+              ([contrast = Contrasts.LIGHT]) => ({
+                borderColor: getContrastBorderColor(contrast, error),
+              }),
+            ),
+          },
+        }),
+      )}
+      ref={ref}
+    />
+  )
+})
 
 type BaseProps = {
   error?: boolean

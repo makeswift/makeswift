@@ -7,8 +7,8 @@ import {
   ComponentPropsWithoutRef,
   Ref,
   useImperativeHandle,
+  ForwardedRef,
 } from 'react'
-import styled, { css } from 'styled-components'
 import { Formik, getIn } from 'formik'
 
 import { ReactComponent as Check12 } from '../../icons/check-12.svg'
@@ -29,21 +29,19 @@ import Field from './components/Field'
 import Spinner from './components/Spinner'
 import Button from '../Button'
 import type { TableColumn, Table } from './types'
-import { cssGridItem, cssMargin, cssMediaRules, cssWidth } from '../../utils/cssMediaRules'
 import {
   ElementIDValue,
   GapYValue,
   LinkValue,
-  MarginValue,
   ResponsiveIconRadioGroupValue,
   ResponsiveLengthValue,
   ResponsiveSelectValue,
+  ResponsiveValue,
   TableFormFieldsDescriptor,
   TableFormFieldsValue,
   TableValue,
   TextInputValue,
   TextStyleValue,
-  WidthValue,
 } from '../../../prop-controllers/descriptors'
 import { Link } from '../../shared/Link'
 import { BoxModelHandle, getBox } from '../../../box-model'
@@ -53,6 +51,9 @@ import { useTableFormFieldRefs } from '../../hooks/useTableFormFieldRefs'
 import { useMutation, gql, useQuery } from '../../../api/react'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { TABLE_BY_ID } from '../../utils/queries'
+import { cx } from '@emotion/css'
+import { responsiveGridItem, responsiveStyle } from '../../utils/responsive-style'
+import { useStyle } from '../../../runtimes/react/use-style'
 
 const LOCAL_STORAGE_NAMESPACE = '@@makeswift/components/form'
 
@@ -92,38 +93,62 @@ type Props = {
   >
   submitWidth?: ResponsiveLengthValue
   submitAlignment?: ResponsiveIconRadioGroupValue<Alignment>
-  width?: WidthValue
-  margin?: MarginValue
+  width?: string
+  margin?: string
 }
 
-const GridForm = styled.form.withConfig({
-  shouldForwardProp: prop => !['size', 'width', 'margin'].includes(prop),
-})<{
-  size: Props['size']
-  width: Props['width']
-  margin: Props['margin']
-}>`
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  ${props =>
-    cssMediaRules(
-      [props.size],
-      ([size = Sizes.MEDIUM]) => css`
-        font-size: ${getSizeFontSize(size)}px;
-      `,
-    )}
-  ${cssWidth()}
-  ${cssMargin()}
-`
+type GridFormBaseProps = { size?: Props['size'] }
 
-const GridItem = styled.div.withConfig({
-  shouldForwardProp: prop => !['grid', 'index', 'rowGap', 'columnGap'].includes(prop),
-})`
-  align-self: flex-end;
-  flex-direction: column;
-  ${cssGridItem()}
-`
+type GridFormProps = GridFormBaseProps &
+  Omit<ComponentPropsWithoutRef<'form'>, keyof GridFormBaseProps>
+
+const GridForm = forwardRef(function GridFrom(
+  { className, size, ...restOfProps }: GridFormProps,
+  ref: ForwardedRef<HTMLFormElement>,
+) {
+  return (
+    <form
+      {...restOfProps}
+      ref={ref}
+      className={cx(
+        className,
+        useStyle({ display: 'flex', flexWrap: 'wrap', width: '100%' }),
+        useStyle(
+          responsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
+            fontSize: getSizeFontSize(size),
+          })),
+        ),
+      )}
+    />
+  )
+})
+
+type GridItemBaseProps = {
+  grid: ResponsiveValue<{ spans: number[][]; count: number }>
+  index: number
+  rowGap: Props['gap']
+  columnGap: Props['gap']
+}
+
+type GridItemProps = GridItemBaseProps &
+  Omit<ComponentPropsWithoutRef<'div'>, keyof GridItemBaseProps>
+
+const GridItem = forwardRef(function GridItem(
+  { className, grid, index, rowGap, columnGap, ...restOfProps }: GridItemProps,
+  ref: ForwardedRef<HTMLDivElement>,
+) {
+  return (
+    <div
+      {...restOfProps}
+      ref={ref}
+      className={cx(
+        className,
+        useStyle({ alignSelf: 'flex-end', flexDirection: 'column' }),
+        useStyle(responsiveGridItem({ grid, index, rowGap, columnGap })),
+      )}
+    />
+  )
+})
 
 function getAlignmentMargin(alignment: Alignment): string {
   switch (alignment) {
@@ -136,46 +161,68 @@ function getAlignmentMargin(alignment: Alignment): string {
   }
 }
 
-const StyledButton = styled((props: ComponentPropsWithoutRef<typeof Button>) => (
-  <Button {...props} as="button" />
-)).withConfig({
-  shouldForwardProp: prop => !['alignment'].includes(prop.toString()),
-})<{
-  size: Props['size']
-  alignment: Props['submitAlignment']
-}>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  ${props =>
-    cssMediaRules(
-      [props.size, props.alignment] as const,
-      ([size = Sizes.MEDIUM, alignment = Alignments.CENTER]) => css`
-        min-height: ${getInputSizeHeight(size)}px;
-        max-height: ${getInputSizeHeight(size)}px;
-        margin: ${getAlignmentMargin(alignment)};
-        padding-top: 0;
-        padding-bottom: 0;
-      `,
-    )}
-`
+type StyledButtonBaseProps = { size?: Props['size']; alignment?: Props['submitAlignment'] }
 
-const ErrorContainer = styled.div`
-  padding: 8px 16px;
-  background-color: #f19eb9;
-  border-radius: 4px;
-  margin-top: 16px;
-`
+type StyledButtonProps = StyledButtonBaseProps &
+  Omit<ComponentPropsWithoutRef<typeof Button>, keyof StyledButtonBaseProps>
 
-const IconContainer = styled.div`
-  fill: currentColor;
-`
+function StyledButton({ className, size, alignment, ...restOfProps }: StyledButtonProps) {
+  return (
+    <Button
+      {...restOfProps}
+      as="button"
+      className={cx(
+        className,
+        useStyle({ display: 'flex', alignItems: 'center', justifyContent: 'center' }),
+        useStyle(
+          responsiveStyle(
+            [size, alignment] as const,
+            ([size = Sizes.MEDIUM, alignment = Alignments.CENTER]) => ({
+              minHeight: getInputSizeHeight(size),
+              maxHeight: getInputSizeHeight(size),
+              margin: getAlignmentMargin(alignment),
+              paddingTop: 0,
+              paddingBottom: 0,
+            }),
+          ),
+        ),
+      )}
+    />
+  )
+}
 
-const ErrorMessage = styled.p`
-  font-size: 12px;
-  margin: 8px 0;
-  color: rgba(127, 0, 0, 0.95);
-`
+function ErrorContainer({ className, ...restOfProps }: ComponentPropsWithoutRef<'div'>) {
+  return (
+    <div
+      {...restOfProps}
+      className={cx(
+        className,
+        useStyle({
+          padding: '8px 16px',
+          backgroundColor: '#f19eb9',
+          borderRadius: 4,
+          marginTop: 16,
+        }),
+      )}
+    />
+  )
+}
+
+function IconContainer({ className, ...restOfProps }: ComponentPropsWithoutRef<'div'>) {
+  return <div {...restOfProps} className={cx(className, useStyle({ fill: 'currentColor' }))} />
+}
+
+function ErrorMessage({ className, ...restOfProps }: ComponentPropsWithoutRef<'p'>) {
+  return (
+    <p
+      {...restOfProps}
+      className={cx(
+        className,
+        useStyle({ fontSize: 12, margin: '8px 0', color: 'rgba(127, 0, 0, 0.95)' }),
+      )}
+    />
+  )
+}
 
 function getTableColumnDefaultValue(tableColumn: TableColumn) {
   switch (tableColumn.__typename) {
@@ -407,8 +454,7 @@ const Form = forwardRef(function Form(
                   <GridForm
                     ref={setRefEl}
                     id={id}
-                    width={width}
-                    margin={margin}
+                    className={cx(width, margin)}
                     size={size}
                     onSubmit={formik.handleSubmit}
                     onReset={formik.handleReset}

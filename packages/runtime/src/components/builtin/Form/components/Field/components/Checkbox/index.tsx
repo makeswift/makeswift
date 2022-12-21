@@ -1,5 +1,4 @@
-import { forwardRef, CSSProperties, ComponentPropsWithoutRef } from 'react'
-import styled, { css } from 'styled-components'
+import { forwardRef, CSSProperties, ComponentPropsWithoutRef, ForwardedRef } from 'react'
 import Color from 'color'
 
 import { getSizeHeight as getSize } from '../Label'
@@ -9,10 +8,12 @@ import {
   Sizes,
   Contrasts,
 } from '../../../../context/FormContext'
-import { getContrastBorderColor, getContrastBackgroundColor } from '../../services/cssField'
-import { cssMediaRules } from '../../../../../../utils/cssMediaRules'
+import { getContrastBorderColor, getContrastBackgroundColor } from '../../services/responsiveField'
 import { colorToString } from '../../../../../../utils/colorToString'
 import { SwatchValue } from '../../../../../../utils/types'
+import { useStyle } from '../../../../../../../runtimes/react/use-style'
+import { cx } from '@emotion/css'
+import { responsiveStyle } from '../../../../../../utils/responsive-style'
 
 function getCheckmarkColor({
   swatch: { hue: h, saturation: s, lightness: l },
@@ -24,123 +25,130 @@ function getCheckmarkColor({
   return Color({ h, s, l }).alpha(a).isLight() ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.95)'
 }
 
-const Container = styled.div.withConfig({
-  shouldForwardProp: prop => !['size'].includes(prop),
-})<Pick<FormContextValue, 'size'>>`
-  position: relative;
-  ${props =>
-    cssMediaRules(
-      [props.size] as const,
-      ([size = Sizes.MEDIUM]) => css`
-        height: ${getSize(size)}px;
-        width: ${getSize(size)}px;
-      `,
-    )}
-`
+type FakeCheckboxProps = {
+  className?: string
+  style?: CSSProperties
+  contrast?: FormContextValue['contrast']
+  error?: boolean
+}
 
-const FakeCheckbox = styled.div.withConfig({
-  shouldForwardProp: prop => !['contrast', 'error'].includes(prop),
-})<Pick<FormContextValue, 'contrast'> & { error?: boolean }>`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-style: solid;
-  border-radius: 4px;
-  pointer-events: none;
-  border-width: 1px;
-  ${props =>
-    cssMediaRules(
-      [props.contrast] as const,
-      ([contrast = Contrasts.LIGHT]) => css`
-        border-color: ${getContrastBorderColor(contrast, props.error)};
-        background-color: ${getContrastBackgroundColor(contrast)};
-      `,
-    )}
-`
+const FAKE_CHECKBOX_CLASS_NAME = 'fake-checkbox'
 
-const HiddenCheckbox = styled.input.withConfig({
-  shouldForwardProp: (prop, defaultValidator) =>
-    !['size', 'brandColor', 'contrast', 'error'].includes(prop) && defaultValidator(prop),
-})<
-  Pick<FormContextValue, 'size' | 'brandColor' | 'contrast'> & {
-    error?: boolean
-  }
->`
-  position: absolute;
-  opacity: 0;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-
-  &:disabled {
-    cursor: no-drop;
-
-    & ~ ${FakeCheckbox} {
-      opacity: 0.5;
-    }
-  }
-
-  &:checked ~ ${FakeCheckbox} {
-    ${props =>
-      cssMediaRules(
-        [props.brandColor] as const,
-        ([{ swatch = { hue: 0, saturation: 0, lightness: 0 }, alpha = 1 } = {}]) => css`
-          background-color: ${colorToString({ swatch, alpha })};
-        `,
+function FakeCheckbox({ className, style, contrast, error }: FakeCheckboxProps) {
+  return (
+    <div
+      style={style}
+      className={cx(
+        FAKE_CHECKBOX_CLASS_NAME,
+        className,
+        useStyle({
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+          borderStyle: 'solid',
+          borderRadius: 4,
+          pointerEvents: 'none',
+          borderWidth: 1,
+        }),
+        useStyle(
+          responsiveStyle([contrast] as const, ([contrast = Contrasts.LIGHT]) => ({
+            borderColor: getContrastBorderColor(contrast, error),
+            backgroundColor: getContrastBackgroundColor(contrast),
+          })),
+        ),
       )}
-    border-color: transparent;
+    />
+  )
+}
 
-    &::after {
-      content: '';
-      position: absolute;
-      box-sizing: content-box;
-      width: 25%;
-      height: 50%;
-      ${props =>
-        cssMediaRules(
-          [props.size] as const,
-          ([size = Sizes.MEDIUM]) => css`
-            border-width: ${getSize(size) * 0.1}px;
-            border-left: 0;
-            border-top: 0;
-          `,
-        )}
-      border-style: solid;
-      ${props =>
-        cssMediaRules(
-          [props.brandColor] as const,
-          ([{ swatch = { hue: 0, saturation: 0, lightness: 0 }, alpha = 1 } = {}]) => css`
-            border-color: ${getCheckmarkColor({ swatch, alpha })};
-          `,
-        )}
-      transform: rotate(45deg) translate3d(91%, -23%, 0);
-    }
-  }
+type HiddenCheckboxBaseProps = Partial<
+  Pick<FormContextValue, 'size' | 'brandColor' | 'contrast'>
+> & {
+  error?: boolean
+}
 
-  &:not(:disabled) {
-    &:focus ~ ${FakeCheckbox} {
-      ${props =>
-        cssMediaRules(
-          [props.brandColor],
-          ([brandColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 }]) => css`
-            border-color: ${colorToString(brandColor)};
-          `,
-        )}
-    }
-  }
+type HiddenCheckboxProps = HiddenCheckboxBaseProps &
+  Omit<ComponentPropsWithoutRef<'input'>, keyof HiddenCheckboxBaseProps>
 
-  &:not(:disabled):checked {
-    &:focus ~ ${FakeCheckbox} {
-      ${props =>
-        cssMediaRules(
-          [props.contrast],
-          ([contrast = Contrasts.LIGHT]) => css`
-            border-color: ${getContrastBorderColor(contrast, props.error)};
-          `,
-        )}
-    }
-  }
-`
+const HiddenCheckbox = forwardRef(function HiddenCheckbox(
+  { size, brandColor, contrast, error, className, ...restOfProps }: HiddenCheckboxProps,
+  ref: ForwardedRef<HTMLInputElement>,
+) {
+  return (
+    <input
+      {...restOfProps}
+      ref={ref}
+      className={cx(
+        className,
+        useStyle({
+          position: 'absolute',
+          opacity: 0,
+          width: '100%',
+          height: '100%',
+          cursor: 'pointer',
+
+          '&:disabled': {
+            cursor: 'no-drop',
+
+            [`& ~ .${FAKE_CHECKBOX_CLASS_NAME}`]: {
+              opacity: 0.5,
+            },
+          },
+
+          [`&:checked ~ .${FAKE_CHECKBOX_CLASS_NAME}`]: {
+            ...responsiveStyle(
+              [brandColor] as const,
+              ([{ swatch = { hue: 0, saturation: 0, lightness: 0 }, alpha = 1 } = {}]) => ({
+                backgroundColor: colorToString({ swatch, alpha }),
+              }),
+            ),
+            borderColor: 'transparent',
+
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              boxSizing: 'content-box',
+              width: '25%',
+              height: '50%',
+              borderStyle: 'solid',
+              ...responsiveStyle(
+                [size, brandColor] as const,
+                ([
+                  size = Sizes.MEDIUM,
+                  { swatch = { hue: 0, saturation: 0, lightness: 0 }, alpha = 1 } = {},
+                ]) => ({
+                  borderWidth: getSize(size) * 0.1,
+                  borderLeft: 0,
+                  borderTop: 0,
+                  borderColor: getCheckmarkColor({ swatch, alpha }),
+                }),
+              ),
+              transform: 'rotate(45deg) translate3d(91%, -23%, 0)',
+            },
+          },
+
+          '&:not(:disabled)': {
+            [`&:focus ~ .${FAKE_CHECKBOX_CLASS_NAME}`]: responsiveStyle(
+              [brandColor] as const,
+              ([brandColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 }]) => ({
+                borderColor: colorToString(brandColor),
+              }),
+            ),
+          },
+
+          '&:not(:disabled):checked': {
+            [`&:focus ~ .${FAKE_CHECKBOX_CLASS_NAME}`]: responsiveStyle(
+              [contrast] as const,
+              ([contrast = Contrasts.LIGHT]) => ({
+                borderColor: getContrastBorderColor(contrast, error),
+              }),
+            ),
+          },
+        }),
+      )}
+    />
+  )
+})
 
 type BaseProps = {
   error?: boolean
@@ -158,18 +166,27 @@ export default forwardRef<HTMLInputElement, Props>(function Checkbox(
   const { size, contrast, brandColor } = useFormContext()
 
   return (
-    <Container size={size}>
+    <div
+      className={cx(
+        useStyle({ position: 'relative' }),
+        useStyle(
+          responsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
+            height: getSize(size),
+            width: getSize(size),
+          })),
+        ),
+      )}
+    >
       <HiddenCheckbox
         {...restOfProps}
         type="checkbox"
         ref={ref}
         error={error}
-        // @ts-expect-error: HTMLInputElement `size` attribute conflicts with prop
         size={size}
         contrast={contrast}
         brandColor={brandColor}
       />
       <FakeCheckbox className={className} error={error} contrast={contrast} style={style} />
-    </Container>
+    </div>
   )
 })

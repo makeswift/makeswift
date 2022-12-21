@@ -1,9 +1,10 @@
-import { ComponentPropsWithoutRef, forwardRef } from 'react'
-import styled, { css } from 'styled-components'
+import { cx } from '@emotion/css'
+import { ComponentPropsWithoutRef, ForwardedRef, forwardRef } from 'react'
+import { useStyle } from '../../../../../../../runtimes/react/use-style'
 
-import { cssMediaRules } from '../../../../../../utils/cssMediaRules'
-import { Size, useFormContext, Sizes, Value } from '../../../../context/FormContext'
-import cssField from '../../services/cssField'
+import { responsiveStyle } from '../../../../../../utils/responsive-style'
+import { Size, useFormContext, Sizes } from '../../../../context/FormContext'
+import responsiveField from '../../services/responsiveField'
 
 export function getSizeHeight(size: Size): number {
   switch (size) {
@@ -21,42 +22,30 @@ export function getSizeHeight(size: Size): number {
   }
 }
 
-const Base = styled.input.withConfig({
-  shouldForwardProp: (prop, defaultValidator) =>
-    !['shape', 'size', 'contrast', 'brandColor', 'error'].includes(prop.toString()) &&
-    defaultValidator(prop),
-})<Pick<Value, 'shape' | 'size' | 'contrast' | 'brandColor'> & { error?: boolean }>`
-  ${cssField()}
-  ${props =>
-    cssMediaRules(
-      [props.size] as const,
-      ([size = Sizes.MEDIUM]) => css`
-        min-height: ${getSizeHeight(size)}px;
-        max-height: ${getSizeHeight(size)}px;
-      `,
-    )}
-`
-
 type BaseProps = { error?: boolean; form?: unknown }
 
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<typeof Base>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'input'>, keyof BaseProps>
 
-export default forwardRef<HTMLInputElement, Props>(function Input(
-  { error = false, form, ...restOfProps }: Props,
-  ref,
+export default forwardRef(function Input(
+  { error = false, form, className, ...restOfProps }: Props,
+  ref: ForwardedRef<HTMLInputElement>,
 ) {
   const { shape, size, contrast, brandColor } = useFormContext()
 
   return (
-    <Base
+    <input
       {...restOfProps}
       ref={ref}
-      error={error}
-      shape={shape}
-      // @ts-expect-error: HTMLInputEleent `size` attribute conflicts with prop
-      size={size}
-      contrast={contrast}
-      brandColor={brandColor}
+      className={cx(
+        className,
+        useStyle(responsiveField({ shape, size, contrast, brandColor, error })),
+        useStyle(
+          responsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
+            minHeight: getSizeHeight(size),
+            maxHeight: getSizeHeight(size),
+          })),
+        ),
+      )}
     />
   )
 })
