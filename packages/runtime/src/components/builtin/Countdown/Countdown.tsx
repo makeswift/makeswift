@@ -279,8 +279,8 @@ const Container = forwardRef(function Container(
   )
 })
 
-const getRemaining = (date: Props['date'] | undefined) => {
-  if (date == null) return { days: 0, hours: 0, minutes: 0, seconds: 0 }
+const getRemaining = (date: Props['date'] | null | undefined) => {
+  if (date == null) return { days: '0', hours: '0', minutes: '0', seconds: '0' }
 
   const timeDiff = new Date(date).getTime() - Date.now()
 
@@ -299,7 +299,12 @@ const getRemaining = (date: Props['date'] | undefined) => {
 
   const seconds = parseInt(String(delta % 60), 10)
 
-  return { days, hours, minutes, seconds }
+  return {
+    days: days.toString(),
+    hours: hours.toString(),
+    minutes: minutes.toString(),
+    seconds: seconds.toString(),
+  }
 }
 
 const Countdown = forwardRef(function Countdown(
@@ -324,7 +329,7 @@ const Countdown = forwardRef(function Countdown(
   }: Props,
   ref: Ref<HTMLDivElement>,
 ) {
-  const [{ days, hours, minutes, seconds }, setRemaining] = useState(getRemaining(date))
+  const [{ days, hours, minutes, seconds }, setRemaining] = useState(getRemaining(null))
 
   useEffect(() => {
     setRemaining(getRemaining(date))
