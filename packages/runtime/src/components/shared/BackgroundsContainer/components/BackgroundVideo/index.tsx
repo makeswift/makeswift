@@ -14,7 +14,6 @@ const Container = forwardRef(function Container(
       {...restOfProps}
       ref={ref}
       className={cx(
-        className,
         useStyle({
           position: 'absolute',
           top: 0,
@@ -24,6 +23,7 @@ const Container = forwardRef(function Container(
           pointerEvents: 'none',
           overflow: 'hidden',
         }),
+        className,
       )}
     />
   )

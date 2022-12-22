@@ -47,8 +47,8 @@ function Block({ className, ...restOfProps }: BlockProps) {
       {...restOfProps}
       className={cx(
         BLOCK_CLASS_NAME,
-        className,
         useStyle({ display: 'block', padding: '0.5em', fontSize: '1em' }),
+        className,
       )}
     />
   )
@@ -62,7 +62,7 @@ function Label({ className, ...restOfProps }: LabelProps) {
   return (
     <div
       {...restOfProps}
-      className={cx(LABEL_CLASS_NAME, className, useStyle({ marginTop: '0.25em' }))}
+      className={cx(LABEL_CLASS_NAME, useStyle({ marginTop: '0.25em' }), className)}
     />
   )
 }
@@ -75,7 +75,7 @@ function Segment({ className, ...restOfProps }: SegmentProps) {
   return (
     <div
       {...restOfProps}
-      className={cx(SEGMENT_CLASS_NAME, className, useStyle({ flex: 1, textAlign: 'center' }))}
+      className={cx(SEGMENT_CLASS_NAME, useStyle({ flex: 1, textAlign: 'center' }), className)}
     />
   )
 }
@@ -120,7 +120,6 @@ const Container = forwardRef(function Container(
       {...restOfProps}
       ref={ref}
       className={cx(
-        className,
         useStyle({ display: 'flex' }),
         width,
         margin,
@@ -274,6 +273,7 @@ const Container = forwardRef(function Container(
             }),
           ),
         }),
+        className,
       )}
     />
   )

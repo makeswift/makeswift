@@ -37,7 +37,6 @@ export default forwardRef(function Input(
       {...restOfProps}
       ref={ref}
       className={cx(
-        className,
         useStyle(responsiveField({ shape, size, contrast, brandColor, error })),
         useStyle(
           responsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
@@ -45,6 +44,7 @@ export default forwardRef(function Input(
             maxHeight: getSizeHeight(size),
           })),
         ),
+        className,
       )}
     />
   )

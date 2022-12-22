@@ -12,7 +12,7 @@ import { cx } from '@emotion/css'
 import { useStyle } from '../../../../../../../runtimes/react/use-style'
 
 function MainLabel({ className, ...restOfProps }: ComponentPropsWithoutRef<typeof Label>) {
-  return <Label {...restOfProps} className={cx(className, useStyle({ margin: '0 0 4px 0' }))} />
+  return <Label {...restOfProps} className={cx(useStyle({ margin: '0 0 4px 0' }), className)} />
 }
 
 function StyledLabel({ className, ...restOfProps }: ComponentPropsWithoutRef<typeof Label>) {
@@ -20,20 +20,20 @@ function StyledLabel({ className, ...restOfProps }: ComponentPropsWithoutRef<typ
     <Label
       {...restOfProps}
       className={cx(
-        className,
         useStyle({
           display: 'flex',
           alignItems: 'center',
           margin: '8px 0',
           '&:last-of-type': { marginBottom: 0 },
         }),
+        className,
       )}
     />
   )
 }
 
 function CheckboxContainer({ className, ...restOfProps }: ComponentPropsWithoutRef<'span'>) {
-  return <span {...restOfProps} className={cx(className, useStyle({ marginRight: 8 }))} />
+  return <span {...restOfProps} className={cx(useStyle({ marginRight: 8 }), className)} />
 }
 
 type Props = {

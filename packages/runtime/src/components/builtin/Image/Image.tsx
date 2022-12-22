@@ -111,7 +111,6 @@ const ImageComponent = forwardRef(function Image(
   const dimensions = dataDimensions ?? measuredDimensions
   const Container = link ? Link : 'div'
   const containerClassName = cx(
-    className,
     useStyle({ lineHeight: 0, overflow: 'hidden' }),
     useStyle(responsiveWidth(width, dimensions?.width)),
     useStyle(responsiveStyle([opacity] as const, ([opacity = 1]) => ({ opacity }))),
@@ -120,6 +119,7 @@ const ImageComponent = forwardRef(function Image(
     border,
     borderRadius,
     boxShadow,
+    className,
   )
   const unoptimizedImageClassName = useStyle({ width: '100%' })
 

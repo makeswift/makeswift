@@ -29,7 +29,7 @@ function ButtonLink({
   return (
     <Button
       {...restOfProps}
-      className={cx(className, useStyle({ margin: '8px 0' }))}
+      className={cx(useStyle({ margin: '8px 0' }), className)}
       textColor={useResponsiveColor(textColor)}
       color={useResponsiveColor(color)}
     />
@@ -57,7 +57,6 @@ function Container({
     <div
       {...restOfProps}
       className={cx(
-        className,
         useStyle({
           position: 'fixed',
           flexDirection: 'column',
@@ -85,6 +84,7 @@ function Container({
             }
           }),
         ),
+        className,
       )}
     />
   )
@@ -103,7 +103,6 @@ function CloseIconContainer({ className, color, ...restOfProps }: CloseIconConta
     <button
       {...restOfProps}
       className={cx(
-        className,
         useStyle({
           position: 'absolute',
           top: 15,
@@ -119,6 +118,7 @@ function CloseIconContainer({ className, color, ...restOfProps }: CloseIconConta
             color: color == null ? 'rgba(161, 168, 194, 0.5)' : colorToString(color),
           })),
         ),
+        className,
       )}
     />
   )

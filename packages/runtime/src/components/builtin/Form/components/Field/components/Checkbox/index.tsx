@@ -40,7 +40,6 @@ function FakeCheckbox({ className, style, contrast, error }: FakeCheckboxProps) 
       style={style}
       className={cx(
         FAKE_CHECKBOX_CLASS_NAME,
-        className,
         useStyle({
           position: 'absolute',
           width: '100%',
@@ -56,6 +55,7 @@ function FakeCheckbox({ className, style, contrast, error }: FakeCheckboxProps) 
             backgroundColor: getContrastBackgroundColor(contrast),
           })),
         ),
+        className,
       )}
     />
   )
@@ -79,7 +79,6 @@ const HiddenCheckbox = forwardRef(function HiddenCheckbox(
       {...restOfProps}
       ref={ref}
       className={cx(
-        className,
         useStyle({
           position: 'absolute',
           opacity: 0,
@@ -145,6 +144,7 @@ const HiddenCheckbox = forwardRef(function HiddenCheckbox(
             ),
           },
         }),
+        className,
       )}
     />
   )

@@ -397,7 +397,6 @@ function Dot({ className, active, ...restOfProps }: DotProps) {
     <div
       {...restOfProps}
       className={cx(
-        className,
         useStyle({
           position: 'relative',
           margin: '0 6px',
@@ -434,6 +433,7 @@ function Dot({ className, active, ...restOfProps }: DotProps) {
             transform: `translate3d(-50%, -50%, 0) scale(${active ? 1 : 0})`,
           },
         }),
+        className,
       )}
     />
   )

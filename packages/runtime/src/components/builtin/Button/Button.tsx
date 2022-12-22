@@ -70,7 +70,6 @@ const Button = forwardRef(function Button<T extends ElementType = 'button'>(
       ref={ref}
       id={id}
       className={cx(
-        className,
         useStyle({
           display: 'table',
           border: 0,
@@ -262,6 +261,7 @@ const Button = forwardRef(function Button<T extends ElementType = 'button'>(
           ),
         ),
         useStyle(responsiveTextStyle(textStyle)),
+        className,
       )}
       link={link}
     >

@@ -32,8 +32,8 @@ function DropDownMenu({ className, open, ...restOfProps }: DropDownMenuProps) {
     <div
       {...restOfProps}
       className={cx(
-        className,
         useStyle({ display: open ? 'flex' : 'none', flexDirection: 'column', padding: 8 }),
+        className,
       )}
     />
   )
@@ -47,7 +47,7 @@ type ButtonLinkProps = ButtonLinkBaseProps &
   Omit<ComponentPropsWithoutRef<typeof Button>, keyof ButtonLinkBaseProps>
 
 function ButtonLink({ className, ...restOfProps }: ButtonLinkProps) {
-  return <Button {...restOfProps} className={cx(className, useStyle({ margin: '8px 0' }))} />
+  return <Button {...restOfProps} className={cx(useStyle({ margin: '8px 0' }), className)} />
 }
 
 type BaseDropDownItemProps = {
@@ -66,7 +66,6 @@ function DropDownItem({ color, className, textStyle, ...restOfProps }: DropDownI
     <Link
       {...restOfProps}
       className={cx(
-        className,
         useStyle({
           textDecoration: 'none',
           lineHeight: 1.4,
@@ -79,6 +78,7 @@ function DropDownItem({ color, className, textStyle, ...restOfProps }: DropDownI
             color: color == null ? 'black' : colorToString(color),
           })),
         ),
+        className,
       )}
     />
   )

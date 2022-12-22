@@ -111,13 +111,13 @@ const GridForm = forwardRef(function GridFrom(
       {...restOfProps}
       ref={ref}
       className={cx(
-        className,
         useStyle({ display: 'flex', flexWrap: 'wrap', width: '100%' }),
         useStyle(
           responsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
             fontSize: getSizeFontSize(size),
           })),
         ),
+        className,
       )}
     />
   )
@@ -142,9 +142,9 @@ const GridItem = forwardRef(function GridItem(
       {...restOfProps}
       ref={ref}
       className={cx(
-        className,
         useStyle({ alignSelf: 'flex-end', flexDirection: 'column' }),
         useStyle(responsiveGridItem({ grid, index, rowGap, columnGap })),
+        className,
       )}
     />
   )
@@ -172,7 +172,6 @@ function StyledButton({ className, size, alignment, ...restOfProps }: StyledButt
       {...restOfProps}
       as="button"
       className={cx(
-        className,
         useStyle({ display: 'flex', alignItems: 'center', justifyContent: 'center' }),
         useStyle(
           responsiveStyle(
@@ -186,6 +185,7 @@ function StyledButton({ className, size, alignment, ...restOfProps }: StyledButt
             }),
           ),
         ),
+        className,
       )}
     />
   )
@@ -196,20 +196,20 @@ function ErrorContainer({ className, ...restOfProps }: ComponentPropsWithoutRef<
     <div
       {...restOfProps}
       className={cx(
-        className,
         useStyle({
           padding: '8px 16px',
           backgroundColor: '#f19eb9',
           borderRadius: 4,
           marginTop: 16,
         }),
+        className,
       )}
     />
   )
 }
 
 function IconContainer({ className, ...restOfProps }: ComponentPropsWithoutRef<'div'>) {
-  return <div {...restOfProps} className={cx(className, useStyle({ fill: 'currentColor' }))} />
+  return <div {...restOfProps} className={cx(useStyle({ fill: 'currentColor' }), className)} />
 }
 
 function ErrorMessage({ className, ...restOfProps }: ComponentPropsWithoutRef<'p'>) {
@@ -217,8 +217,8 @@ function ErrorMessage({ className, ...restOfProps }: ComponentPropsWithoutRef<'p
     <p
       {...restOfProps}
       className={cx(
-        className,
         useStyle({ fontSize: 12, margin: '8px 0', color: 'rgba(127, 0, 0, 0.95)' }),
+        className,
       )}
     />
   )

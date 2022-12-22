@@ -123,7 +123,6 @@ function StyledLink({
     <Link
       {...restOfProps}
       className={cx(
-        className,
         useStyle({
           display: 'block',
           color: brandColor,
@@ -163,6 +162,7 @@ function StyledLink({
             }),
           ),
         ),
+        className,
       )}
     />
   )

@@ -16,7 +16,6 @@ function StyledLabel({ className, ...restOfProps }: ComponentPropsWithoutRef<typ
     <Label
       {...restOfProps}
       className={cx(
-        className,
         useStyle({
           display: 'flex',
           alignItems: 'center',
@@ -26,13 +25,14 @@ function StyledLabel({ className, ...restOfProps }: ComponentPropsWithoutRef<typ
             marginBottom: 0,
           },
         }),
+        className,
       )}
     />
   )
 }
 
 function RadioButtonContainer({ className, ...restOfProps }: ComponentPropsWithoutRef<'span'>) {
-  return <span {...restOfProps} className={cx(className, useStyle({ marginRight: 8 }))} />
+  return <span {...restOfProps} className={cx(useStyle({ marginRight: 8 }), className)} />
 }
 
 type Props = {

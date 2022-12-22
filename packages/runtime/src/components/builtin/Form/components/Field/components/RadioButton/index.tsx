@@ -66,6 +66,7 @@ function FakeRadioButton({ className, contrast, error, ...restOfProps }: FakeRad
             backgroundColor: getContrastBackgroundColor(contrast),
           })),
         ),
+        className,
       )}
     />
   )
@@ -87,7 +88,6 @@ const HiddenRadioButton = forwardRef(function HiddenRadioButton(
       {...restOfProps}
       type="radio"
       className={cx(
-        className,
         useStyle({
           position: 'absolute',
           opacity: 0,
@@ -149,6 +149,7 @@ const HiddenRadioButton = forwardRef(function HiddenRadioButton(
             ),
           },
         }),
+        className,
       )}
       ref={ref}
     />

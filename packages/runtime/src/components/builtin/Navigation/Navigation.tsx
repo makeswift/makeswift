@@ -69,7 +69,6 @@ const Container = forwardRef(function Container(
       {...restOfProps}
       ref={ref}
       className={cx(
-        className,
         useStyle({ display: 'flex', alignItems: 'center' }),
         width,
         margin,
@@ -79,6 +78,7 @@ const Container = forwardRef(function Container(
             gap: `${gutter.value}${gutter.unit}`,
           })),
         ),
+        className,
       )}
     />
   )
@@ -102,7 +102,6 @@ function LinksContainer({
     <div
       {...restOfProps}
       className={cx(
-        className,
         useStyle({
           display: 'flex',
           alignItems: 'center',
@@ -117,6 +116,7 @@ function LinksContainer({
             }),
           ),
         ),
+        className,
       )}
     />
   )
@@ -142,7 +142,6 @@ function OpenIconContainer({
     <button
       {...restOfProps}
       className={cx(
-        className,
         useStyle({
           display: 'none',
           flexGrow: 1,
@@ -163,6 +162,7 @@ function OpenIconContainer({
             }),
           ),
         ),
+        className,
       )}
     />
   )
