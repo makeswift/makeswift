@@ -38,7 +38,6 @@ function DropDownMenu({ className, position, ...restOfProps }: DropDownMenuProps
       {...restOfProps}
       className={cx(
         DROP_DOWN_MENU_CLASS_NAME,
-        className,
         useStyle({
           position: 'absolute',
           top: '100%',
@@ -58,6 +57,7 @@ function DropDownMenu({ className, position, ...restOfProps }: DropDownMenuProps
           transformStyle: 'preserve-3d',
           display: 'none',
         }),
+        className,
       )}
     />
   )
@@ -85,7 +85,6 @@ const DropDownContainer = forwardRef(function DropDownContainer(
       {...restOfProps}
       ref={ref}
       className={cx(
-        className,
         useStyle({
           position: 'relative',
           [`&:hover .${DROP_DOWN_MENU_CLASS_NAME}`]: {
@@ -93,6 +92,7 @@ const DropDownContainer = forwardRef(function DropDownContainer(
             animation: `${dropIn} 0.25s`,
           },
         }),
+        className,
       )}
     />
   )
@@ -114,7 +114,6 @@ function DropDownItem({ className, color, textStyle, ...restOfProps }: DropDownI
     <Link
       {...restOfProps}
       className={cx(
-        className,
         useStyle({
           display: 'block',
           textDecoration: 'none',
@@ -148,6 +147,7 @@ function DropDownItem({ className, color, textStyle, ...restOfProps }: DropDownI
             backgroundColor: 'rgba(0, 0, 0, 0.04)',
           },
         }),
+        className,
       )}
     />
   )

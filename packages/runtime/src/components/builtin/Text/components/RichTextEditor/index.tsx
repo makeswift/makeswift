@@ -32,7 +32,7 @@ export const RichTextEditor = forwardRef<SlateEditor, Props>(function RichTextEd
       // Problem: https://linear.app/makeswift/issue/PRD-434/our-rich-text-component-breaks-in-the-latest-version-of-chrome
       // Workaround: https://github.com/ianstormtaylor/slate/issues/5110#issuecomment-1234951122
       style={{ WebkitUserModify: undefined }}
-      className={cx(className, useStyle({ 'ul, ol': { margin: 0 } }))}
+      className={cx(useStyle({ 'ul, ol': { margin: 0 } }), className)}
       ref={ref}
       autoFocus={false}
       plugins={plugins}

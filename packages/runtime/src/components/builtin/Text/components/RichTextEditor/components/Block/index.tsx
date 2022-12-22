@@ -25,7 +25,6 @@ export default forwardRef(function Block<T extends ElementType>(
       {...restOfProps}
       ref={ref}
       className={cx(
-        className,
         useStyle({ margin: 0 }),
         useStyle(responsiveStyle([textAlign], ([textAlign = 'left']) => ({ textAlign }))),
         useStyle(
@@ -38,6 +37,7 @@ export default forwardRef(function Block<T extends ElementType>(
               }
             : {},
         ),
+        className,
       )}
     />
   )

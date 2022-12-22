@@ -54,7 +54,6 @@ export default function Label<T extends ElementType = 'label'>({
     <Component
       {...restOfProps}
       className={cx(
-        className,
         useStyle({ display: 'block', margin: '0 0 0.25em 0' }),
         useStyle(responsiveTextStyle(labelTextStyle)),
         useStyle(
@@ -66,6 +65,7 @@ export default function Label<T extends ElementType = 'label'>({
             }),
           ),
         ),
+        className,
       )}
     />
   )

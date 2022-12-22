@@ -18,13 +18,13 @@ export default function GutterContainer({ className, gutter, first, last, ...res
     <div
       {...restOfProps}
       className={cx(
-        className,
         useStyle(
           responsiveStyle([gutter] as const, ([gutter = { value: 0, unit: 'px' }]) => ({
             paddingLeft: first ? '0px' : `${gutter.value / 2}${gutter.unit}`,
             paddingRight: last ? '0px' : `${gutter.value / 2}${gutter.unit}`,
           })),
         ),
+        className,
       )}
     />
   )

@@ -68,5 +68,5 @@ export default function Mark({ value, className, ...restOfProps }: Props): JSX.E
     ),
   )
 
-  return <span {...restOfProps} className={cx(className, typographyClassName)} />
+  return <span {...restOfProps} className={cx(typographyClassName, className)} />
 }

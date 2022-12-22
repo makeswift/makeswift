@@ -63,10 +63,10 @@ export default forwardRef(function Placeholder(
     <div
       ref={ref}
       className={cx(
-        className,
         useStyle({ display: 'flex', flexDirection: 'column' }),
         width,
         margin,
+        className,
       )}
     >
       <div style={{ display: 'flex', flexDirection: 'column', marginBottom: 16 }}>

@@ -29,7 +29,6 @@ function Container({
     <div
       {...restOfProps}
       className={cx(
-        className,
         useStyle(responsiveField({ shape, size, contrast, brandColor, error })),
         useStyle({
           display: 'flex',
@@ -60,6 +59,7 @@ function Container({
             }),
           ),
         }),
+        className,
       )}
     />
   )
@@ -74,7 +74,6 @@ const Select = forwardRef(function Select(
       {...restOfProps}
       ref={ref}
       className={cx(
-        className,
         useStyle({
           appearance: 'none',
           position: 'absolute',
@@ -84,6 +83,7 @@ const Select = forwardRef(function Select(
           width: '100%',
           height: '100%',
         }),
+        className,
       )}
     />
   )
