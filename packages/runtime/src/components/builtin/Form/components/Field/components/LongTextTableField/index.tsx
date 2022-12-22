@@ -1,4 +1,5 @@
 import { forwardRef } from 'react'
+import { TableColumn } from '../../../../types'
 
 import Label from '../Label'
 import TextArea from '../TextArea'
@@ -8,10 +9,11 @@ type Props = {
   label?: string
   error?: string
   hideLabel?: boolean
+  tableColumn?: TableColumn | null
 }
 
 export default forwardRef<HTMLTextAreaElement, Props>(function LongTextTableField(
-  { id, label = '', error, hideLabel = false, ...restOfProps }: Props,
+  { id, label = '', error, hideLabel = false, tableColumn, ...restOfProps }: Props,
   ref,
 ) {
   return (
