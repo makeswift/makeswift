@@ -8,6 +8,7 @@ import Checkbox from '../Checkbox'
 import { useStyle } from '../../../../../../../runtimes/react/use-style'
 import { responsiveStyle } from '../../../../../../utils/responsive-style'
 import { cx } from '@emotion/css'
+import { TableColumn } from '../../../../types'
 
 type Props = {
   form: FormikProps<{
@@ -18,10 +19,22 @@ type Props = {
   name: string
   value?: boolean
   error?: string
+  hideLabel?: boolean
+  tableColumn?: TableColumn | null
 }
 
 export default forwardRef(function CheckboxTableField(
-  { form, id, name, label = '', value = false, error, ...restOfProps }: Props,
+  {
+    form,
+    id,
+    name,
+    label = '',
+    value = false,
+    error,
+    hideLabel,
+    tableColumn,
+    ...restOfProps
+  }: Props,
   ref: ForwardedRef<HTMLInputElement>,
 ) {
   const { size } = useFormContext()
