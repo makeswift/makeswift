@@ -1,5 +1,11 @@
 # @makeswift/next-plugin
 
+## 0.1.7
+
+### Patch Changes
+
+- 5b06076: Remove `styledComponents` from Next.js config.
+
 ## 0.1.6
 
 ### Patch Changes

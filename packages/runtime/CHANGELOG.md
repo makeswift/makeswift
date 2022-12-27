@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.3.1
+
+### Patch Changes
+
+- 3bcb4a1: Fix Style control default values for margin and padding.
+- Updated dependencies [5b06076]
+  - @makeswift/next-plugin@0.1.7
+
 ## 0.3.0
 
 This version is a BREAKING change. No public APIs have changed but there was a major rewrite of the CSS runtime and a major dependency dropped so some built in components could exhibit new unexpected behavior. If you encounter a bug, please open an issue and we'll address it ASAP!
@@ -303,9 +311,9 @@ This version is a BREAKING change. No public APIs have changed but there was a m
     const pages = await makeswift.getPages()
 
     return {
-      paths: pages.map(page => ({
+      paths: pages.map((page) => ({
         params: {
-          path: page.path.split('/').filter(segment => segment !== ''),
+          path: page.path.split('/').filter((segment) => segment !== ''),
         },
       })),
       fallback: 'blocking',
