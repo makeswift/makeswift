@@ -1,5 +1,25 @@
 # @makeswift/runtime
 
+## 0.3.0
+
+This version is a BREAKING change. No public APIs have changed but there was a major rewrite of the CSS runtime and a major dependency dropped so some built in components could exhibit new unexpected behavior. If you encounter a bug, please open an issue and we'll address it ASAP!
+
+### Minor Changes
+
+- #126: Perf Boost: Removal of Styled Components dependency and efficient animations.
+
+  This change completely reworks how Makeswift handles CSS styles, resulting in improved performance. We've updated all components to use a lighter CSS runtime built on top of Emotion CSS' core utilities. On our benchmarks we've seen Total Blocking Time improve by ~25%. This change also reduces the amount of shipped JS by dropping the Styled Component depenency. There's still more work to do to get our CSS runtime even more lightweight: we want to completely drop the CSS runtime when serving live pages outside the Makeswift builder. But at this point we've squeezed as much performance as is reasonable from the CSS runtime and are hitting diminishing returns. We will return to the CSS runtime once we've addressed other areas where performance can be improved.
+
+  We've also improved the Box component by only using Framer Motion when the Box is animated. Now, when there's no animations in a Box component, we use plain ol' divs. This had a noticeable boost on Total Blocking Time as well.
+
+  The common thread in these improvements is reduced Total Blocking Time, which directly comes from React hydration. This is just the first of many performance boost updates we have planned, so stay tuned!
+
+### Patch Changes
+
+- cf83c8e: Fix class format for width prop controller.
+- d64d203: Use the `useStyle` hook instead of Styled Components in the `Root` builtin component.
+- e38c912: Only use Framer Motion components in the Box when animations are configured. This reduced, on average, Total Blocking Time by 195ms in our benchmarks.
+
 ## 0.2.19
 
 ### Patch Changes
@@ -283,9 +303,9 @@
     const pages = await makeswift.getPages()
 
     return {
-      paths: pages.map((page) => ({
+      paths: pages.map(page => ({
         params: {
-          path: page.path.split('/').filter((segment) => segment !== ''),
+          path: page.path.split('/').filter(segment => segment !== ''),
         },
       })),
       fallback: 'blocking',
