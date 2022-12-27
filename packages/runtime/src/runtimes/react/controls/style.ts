@@ -17,6 +17,20 @@ import { lengthPercentageDataToString } from '../../../css/length-percentage'
 import { marginPropertyDataToStyle } from '../../../css/margin'
 import { paddingPropertyDataToStyle } from '../../../css/padding'
 
+const defaultMargin = {
+  marginTop: 0,
+  marginRight: 'auto',
+  marginBottom: 0,
+  marginLeft: 'auto',
+}
+
+const defaultPadding = {
+  paddingTop: 0,
+  paddingRight: 0,
+  paddingBottom: 0,
+  paddingLeft: 0,
+}
+
 function useStyleControlCssObject(
   style: StyleControlData | undefined,
   controlDefinition: StyleControlDefinition,
@@ -41,21 +55,9 @@ function useStyleControlCssObject(
           width: widthToString(width) ?? '100%',
         }),
         ...(properties.includes(StyleControlProperty.Margin) &&
-          margin != null &&
-          marginPropertyDataToStyle(margin, {
-            marginTop: 0,
-            marginRight: 'auto',
-            marginBottom: 0,
-            marginLeft: 'auto',
-          })),
+          marginPropertyDataToStyle(margin ?? defaultMargin, defaultMargin)),
         ...(properties.includes(StyleControlProperty.Padding) &&
-          padding != null &&
-          paddingPropertyDataToStyle(padding, {
-            paddingTop: 0,
-            paddingRight: 0,
-            paddingBottom: 0,
-            paddingLeft: 0,
-          })),
+          paddingPropertyDataToStyle(padding ?? defaultPadding, defaultPadding)),
         ...(properties.includes(StyleControlProperty.Border) && {
           borderTop: borderSideToString(border?.borderTop) ?? '0 solid black',
           borderRight: borderSideToString(border?.borderRight) ?? '0 solid black',
