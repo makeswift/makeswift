@@ -15,10 +15,6 @@ module.exports =
     /** @type {NextConfig} */
     const enhancedConfig = {
       ...nextConfig,
-      compiler: {
-        ...nextConfig.compiler,
-        styledComponents: true,
-      },
       images: {
         ...nextConfig.images,
         domains: [...(nextConfig.images?.domains ?? []), ...NEXT_IMAGE_DOMAINS],
