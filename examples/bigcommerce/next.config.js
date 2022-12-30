@@ -7,6 +7,7 @@ const withPWA = require('next-pwa')({
   fallbacks: {
     image: '/fallback/image.png',
   },
+  disable: process.env.NODE_ENV !== 'production',
 })
 
 /** @type {import('next').NextConfig} */
