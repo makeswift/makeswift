@@ -34,7 +34,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'POST') {
     if (req.query.cartId == null) {
-      const lineItem = JSON.parse(req.body)?.line_item
       const response = await fetch(urlJoin(config.bigcommerce.storeURL, '/v3/carts'), {
         method: 'POST',
         headers: {
@@ -42,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           'X-Auth-Token': config.bigcommerce.storeToken,
         },
         body: JSON.stringify({
-          line_items: lineItem ? [lineItem] : [],
+          line_items: [JSON.parse(req.body).line_item],
           channel_id: config.bigcommerce.channelId,
         }),
       })
@@ -54,7 +53,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).json(result)
     }
 
-    const lineItem = JSON.parse(req.body)?.line_item
     const response = await fetch(
       urlJoin(config.bigcommerce.storeURL, `/v3/carts/${req.query.cartId}/items`),
       {
@@ -64,7 +62,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           'X-Auth-Token': config.bigcommerce.storeToken,
         },
         body: JSON.stringify({
-          line_items: lineItem ? [lineItem] : [],
+          line_items: [JSON.parse(req.body).line_item],
           channel_id: config.bigcommerce.channelId,
         }),
       },
@@ -141,26 +139,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!response.ok) throw new Error(response.statusText)
 
-    // empty cart case
-    if (response.status === 204) {
-      const response = await fetch(urlJoin(config.bigcommerce.storeURL, '/v3/carts'), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Auth-Token': config.bigcommerce.storeToken,
-        },
-        body: JSON.stringify({
-          line_items: [],
-          channel_id: config.bigcommerce.channelId,
-        }),
-      })
-
-      if (!response.ok) throw new Error(response.statusText)
-
-      const result: RestResponse<CartResponse | null> = await response.json()
-
-      return res.status(200).json(result)
-    }
+    if (response.status === 204) return res.status(204).json({})
 
     const result: RestResponse<CartResponse | null> = await response.json()
 

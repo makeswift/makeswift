@@ -12,9 +12,7 @@ import {
 
 import { DEFAULT_LOCALE, Locale } from 'lib/locale'
 
-type PreviewableLocale = Locale | undefined
-
-const Context = createContext<[PreviewableLocale, Dispatch<SetStateAction<PreviewableLocale>>]>([
+const Context = createContext<[Locale | undefined, Dispatch<SetStateAction<Locale | undefined>>]>([
   DEFAULT_LOCALE,
   () => {},
 ])
@@ -25,32 +23,32 @@ type Props = {
 
 export function PreviewableLocaleProvider({ children }: Props) {
   const router = useRouter()
-  const localePreviewState = useState(router.locale as PreviewableLocale)
+  const localePreviewState = useState(router.locale as Locale | undefined)
 
   return <Context.Provider value={localePreviewState}>{children}</Context.Provider>
 }
 
-export function usePreviewableLocale(previewLocale?: PreviewableLocale): PreviewableLocale {
+export function usePreviewableLocale(previewLocale?: Locale | undefined): Locale | undefined {
   const router = useRouter()
-  const [previewableLocale, setPreviewableLocale] = useContext(Context)
+  const [previewableLocale, setPreviewLocale] = useContext(Context)
   const lastPreviewLocale = useRef(previewLocale)
-  const lastPreviewableLocale = useRef(previewableLocale)
+  const lastPreviewableLocale = useRef(router.locale)
 
   useEffect(() => {
     if (lastPreviewLocale.current !== previewLocale) {
       lastPreviewLocale.current = previewLocale
-      setPreviewableLocale(previewLocale)
+
+      setPreviewLocale(previewLocale)
     }
-  }, [previewLocale, setPreviewableLocale])
+  }, [previewLocale, setPreviewLocale])
 
   useEffect(() => {
-    const previewableLocale = router.locale as PreviewableLocale
-
     if (lastPreviewableLocale.current !== router.locale) {
-      lastPreviewableLocale.current = previewableLocale
-      setPreviewableLocale(previewableLocale)
+      lastPreviewableLocale.current = router.locale as Locale | undefined
+
+      setPreviewLocale(router.locale as Locale | undefined)
     }
-  }, [router.locale, setPreviewableLocale])
+  }, [router.locale, setPreviewLocale])
 
   return previewableLocale
 }
