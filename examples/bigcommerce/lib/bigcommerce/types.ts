@@ -74,16 +74,12 @@ export type ProductQuery = {
   }
 }
 
-export type LineItemRequest = {
-  id?: string
+export type LineItem = {
   product_id: number
   quantity: number
-  name: string
-  image_url: string
-  original_price: number
 }
 
-export type LineItemResponse = {
+export type LineItemRequest = {
   id: string
   product_id: number
   quantity: number

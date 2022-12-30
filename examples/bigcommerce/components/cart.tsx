@@ -2,7 +2,7 @@
 import { Popover, Transition } from '@headlessui/react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { useCart } from 'lib/cart-context'
 import { useProductFromPath } from 'lib/product-context'
@@ -10,7 +10,6 @@ import { Cart34, Minus28, Minus36, Plus28, Plus36, Spinner22, Spinner28 } from '
 import { LineItemRequest } from 'lib/bigcommerce'
 import { useProduct } from 'lib/products-context'
 import { usePreviewableTranslation } from './locale'
-import { useIsOnline } from 'lib/useIsOnline'
 
 function formatPrice(value?: number) {
   return value == null ? '$0.00' : `$${value.toFixed(2)}`
@@ -38,7 +37,7 @@ function CartLineItem({ lineItem }: CartLineItemProps) {
         />
         <div className="flex flex-col flex-grow items-start justify-between">
           <div className="text-base text-black">{product?.name ?? lineItem.name}</div>
-          <div className="text-sm text-green mb-2">{formatPrice(lineItem.original_price)}</div>
+          <div className="text-sm text-green mb-2">{formatPrice(lineItem.list_price)}</div>
           <div className="flex justify-center items-center space-x-2">
             <button
               disabled={cartState === 'loading'}
@@ -48,9 +47,9 @@ function CartLineItem({ lineItem }: CartLineItemProps) {
                 e.preventDefault()
                 setCartItemState('loading')
                 lineItem.quantity === 1
-                  ? await deleteItem(lineItem.product_id)
-                  : await updateItem(lineItem.product_id, {
-                      ...lineItem,
+                  ? await deleteItem(lineItem.id)
+                  : await updateItem(lineItem.id, {
+                      product_id: lineItem.product_id,
                       quantity: lineItem.quantity - 1,
                     })
                 setCartItemState('initial')
@@ -66,8 +65,8 @@ function CartLineItem({ lineItem }: CartLineItemProps) {
               onClick={async e => {
                 e.preventDefault()
                 setCartItemState('loading')
-                await updateItem(lineItem.product_id, {
-                  ...lineItem,
+                await updateItem(lineItem.id, {
+                  product_id: lineItem.product_id,
                   quantity: lineItem.quantity + 1,
                 })
                 setCartItemState('initial')
@@ -82,7 +81,7 @@ function CartLineItem({ lineItem }: CartLineItemProps) {
           onClick={async e => {
             e.preventDefault()
             setCartItemState('loading')
-            await deleteItem(lineItem.product_id)
+            await deleteItem(lineItem.id)
             setCartItemState('initial')
           }}
           className="h-8 px-3 text-xs border-2 border-solid border-[rgba(0,0,0,0.15)] rounded-full disabled:cursor-not-allowed"
@@ -94,32 +93,23 @@ function CartLineItem({ lineItem }: CartLineItemProps) {
   )
 }
 
-type CartState = 'initial' | 'loading' | 'redirecting' | 'error' | 'offline'
+type CartState = 'initial' | 'loading' | 'redirecting' | 'error'
 
 type CartProps = {
   className?: string
-  disabled?: boolean
 }
 
-export function Cart({ className, disabled }: CartProps) {
-  const { cart, getCheckoutURL, loading } = useCart()
+export function Cart({ className }: CartProps) {
+  const { cart, getCheckoutUrl } = useCart()
   const router = useRouter()
   const [cartState, setCartState] = useState<CartState>('initial')
-  const isOnline = useIsOnline()
   const { t } = usePreviewableTranslation('cart')
   const itemCount =
     cart?.line_items.physical_items.reduce((acc, curr) => curr.quantity + acc, 0) ?? 0
 
-  useEffect(() => {
-    isOnline ? setCartState('initial') : setCartState('offline')
-  }, [isOnline])
-
   return (
     <Popover className={className}>
-      <Popover.Button
-        disabled={loading || disabled}
-        className={`relative z-0 disabled:cursor-not-allowed`}
-      >
+      <Popover.Button className={'relative z-0'}>
         <Cart34 />
         <Transition
           className="absolute flex justify-center items-center bg-green text-white h-5 w-5 rounded-full text-xs -translate-x-4 -translate-y-1 top-1/2 left-1/2"
@@ -129,21 +119,9 @@ export function Cart({ className, disabled }: CartProps) {
           leave="transition-opacity duration-150 delay-500"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
-          show={itemCount > 0 && !loading}
+          show={itemCount > 0}
         >
           {itemCount}
-        </Transition>
-        <Transition
-          className="absolute flex justify-center items-center bg-green text-white h-5 w-5 p-1 rounded-full text-xs -translate-x-4 -translate-y-1 top-1/2 left-1/2"
-          enter="transition-opacity duration-150"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="transition-opacity duration-150 delay-500"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-          show={loading}
-        >
-          <Spinner22 className="animate-spin" />
         </Transition>
       </Popover.Button>
       <Transition
@@ -158,7 +136,7 @@ export function Cart({ className, disabled }: CartProps) {
         <Popover.Panel className="translate-y-2 sm:relative sm:w-[400px] sm:-translate-x-[calc(100%-34px)] p-5 bg-white shadow-[0px_4px_16px_0px_#00000026] space-y-4 divide-solid">
           <div className="text-[22px] text-black text-sans">{t('my-cart')}</div>
           <div className="border-t-[1px]" />
-          {!cart?.line_items.physical_items.length ? (
+          {cart?.line_items.physical_items.length == null ? (
             <div className="text-green">{t('cart-is-empty')}</div>
           ) : (
             <>
@@ -173,12 +151,10 @@ export function Cart({ className, disabled }: CartProps) {
               </div>
               <button
                 disabled={cartState !== 'initial'}
-                className={`${className} ${
-                  cartState === 'offline' ? 'bg-grey disabled:text-green' : ''
-                } disabled:cursor-not-allowed block w-full h-11 text-base text-white bg-green text-center relative z-0`}
+                className={`${className} block w-full h-11 text-base text-white bg-green text-center relative z-0`}
                 onClick={async () => {
                   setCartState('loading')
-                  const checkoutUrl = await getCheckoutURL()
+                  const checkoutUrl = await getCheckoutUrl()
                   if (checkoutUrl) {
                     setCartState('redirecting')
                     router.push(checkoutUrl)
@@ -214,7 +190,6 @@ export function Cart({ className, disabled }: CartProps) {
                       loading: t('proceed-to-checkout'),
                       error: t('error-in-checkout'),
                       redirecting: t('redirecting-to-checkout'),
-                      offline: t('proceed-to-checkout-offline'),
                     }[cartState]
                   }
                 </Transition>
@@ -258,13 +233,7 @@ export function ProductAddToCartButton({ className }: ProductAddToCartButtonProp
         disabled={addToCartState !== 'initial'}
         onClick={async () => {
           setAddToCartState('loading')
-          await addItem({
-            product_id: product.entityId,
-            quantity,
-            original_price: product.prices.price.value,
-            image_url: product.images.edges?.[0].node.urlOriginal,
-            name: product.name,
-          })
+          await addItem({ product_id: product.entityId, quantity })
           setQuantity(1)
           setAddToCartState('confirming')
           setTimeout(() => setAddToCartState('initial'), 2000)

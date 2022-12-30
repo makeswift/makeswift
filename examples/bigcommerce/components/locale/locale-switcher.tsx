@@ -4,18 +4,15 @@ import { useRouter } from 'next/router'
 import { DEFAULT_LOCALE, getLocaleLabel, Locale } from 'lib/locale'
 
 import { usePreviewableLocale } from './locale-context'
-import { useIsOnline } from 'lib/useIsOnline'
 
 type Props = {
   className?: string
   previewLocale?: Locale
-  disabled?: boolean
 }
 
-export function LocaleSwitcher({ className, previewLocale, disabled }: Props) {
+export function LocaleSwitcher({ className, previewLocale }: Props) {
   const router = useRouter()
   const { locales } = router
-  const isOnline = useIsOnline()
   const activeLocale = usePreviewableLocale(previewLocale) ?? DEFAULT_LOCALE
 
   return (
@@ -25,13 +22,9 @@ export function LocaleSwitcher({ className, previewLocale, disabled }: Props) {
         onChange={locale => {
           router.push({ pathname: router.pathname, query: router.query }, router.asPath, { locale })
         }}
-        disabled={disabled || !isOnline}
       >
         <div className="relative text-base">
-          <Listbox.Button
-            disabled={disabled || !isOnline}
-            className="relative flex justify-center items-center space-x-2 w-full cursor-pointer bg-white py-2 px-3 text-left disabled:cursor-not-allowed"
-          >
+          <Listbox.Button className="relative flex justify-center items-center space-x-2 w-full cursor-pointer bg-white py-2 px-3 text-left ">
             <span className="block truncate">{getLocaleLabel(activeLocale)}</span>{' '}
             <svg
               width="12"
