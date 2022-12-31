@@ -99,7 +99,6 @@
     "react-dom": "^17.0.1 || ^18.0.0"
   },
   "dependencies": {
-    "@apollo/client": "^3.5.10",
     "@convertkit/slate-lists": "^0.2.4",
     "@emotion/css": "^11.9.0",
     "@emotion/server": "^11.4.0",
@@ -145,7 +144,7 @@
   "devDependencies": {
     "@graphql-codegen/add": "^3.1.0",
     "@graphql-codegen/cli": "2.6.2",
-    "@graphql-codegen/typed-document-node": "^2.2.7",
+    "@graphql-codegen/typescript-document-nodes": "^2.3.12",
     "@graphql-codegen/typescript-operations": "2.3.4",
     "@svgr/rollup": "^6.2.1",
     "@types/color": "^3.0.2",

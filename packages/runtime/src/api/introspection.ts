@@ -1,4 +1,3 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import {
   getElementChildren,
   getElementSwatchIds,
@@ -7,7 +6,6 @@ import {
   getTableIds,
   getTypographyIds,
 } from '../prop-controllers/introspection'
-import { ELEMENT_REFERENCE_GLOBAL_ELEMENT, TYPOGRAPHIES_BY_ID } from '../components/utils/queries'
 import {
   Element,
   ElementData,
@@ -15,16 +13,24 @@ import {
   isElementReference,
   Store,
 } from '../state/react-page'
-import { TypographyFragment } from './generated/graphql'
 import { PropControllerDescriptor } from '../prop-controllers'
 import { ListControlData, ListControlType, ShapeControlData, ShapeControlType } from '../controls'
 import { ListValue, ShapeValue, Types } from '../prop-controllers/descriptors'
+import { MakeswiftClient } from './react'
+
+export type IntrospectedResourceIds = {
+  swatchIds: string[]
+  fileIds: string[]
+  typographyIds: string[]
+  tableIds: string[]
+  pageIds: string[]
+}
 
 export async function introspect(
   element: Element,
-  client: ApolloClient<NormalizedCacheObject>,
+  client: MakeswiftClient,
   store: Store,
-) {
+): Promise<IntrospectedResourceIds> {
   const descriptors = getPropControllerDescriptors(store.getState())
   const swatchIds = new Set<string>()
   const fileIds = new Set<string>()
@@ -39,16 +45,12 @@ export async function introspect(
     let element: ElementData
 
     if (isElementReference(current)) {
-      const query = await client.query({
-        query: ELEMENT_REFERENCE_GLOBAL_ELEMENT,
-        variables: { id: current.value },
-      })
-
-      const elementData = query.data?.globalElement?.data
+      const globalElement = await client.fetchGlobalElement(current.value)
+      const elementData = globalElement?.data
 
       if (elementData == null) continue
 
-      element = elementData
+      element = elementData as ElementData
     } else {
       element = current
     }
@@ -125,12 +127,9 @@ export async function introspect(
     }
   }
 
-  const typographiesResult = await client.query({
-    query: TYPOGRAPHIES_BY_ID,
-    variables: { ids: [...typographyIds] },
-  })
+  const typographies = await client.fetchTypographies([...typographyIds])
 
-  typographiesResult?.data?.typographies.forEach((typography: TypographyFragment | null) => {
+  typographies.forEach(typography => {
     typography?.style.forEach(style => {
       const swatchId = style.value.color?.swatchId
 

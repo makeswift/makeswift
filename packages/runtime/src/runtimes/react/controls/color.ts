@@ -1,31 +1,19 @@
 import Color from 'color'
-
-import { useQuery } from '../../../api/react'
-import { SWATCHES_BY_ID } from '../../../components/utils/queries'
 import { ColorControlData, ColorControlDefinition } from '../../../controls/color'
+import { useSwatch } from '../hooks/makeswift-api'
 
 export type ColorControlValue<T extends ColorControlDefinition> =
   undefined extends T['config']['defaultValue'] ? string | undefined : string
 
-type Swatch = {
-  id: string
-  hue: number
-  saturation: number
-  lightness: number
-}
-
-type SwatchesById = { swatches: Swatch[] }
-
 export function useColorValue<T extends ColorControlDefinition>(
   data: ColorControlData | undefined,
   definition: T,
-): ColorControlValue<T> {
-  const result = useQuery<SwatchesById>(SWATCHES_BY_ID, {
-    variables: { ids: [data?.swatchId] },
-    skip: data?.swatchId == null,
-  })
+): ColorControlValue<any> {
+  const swatchId = data?.swatchId ?? null
+  const swatch = useSwatch(swatchId)
+  const alpha = data?.alpha ?? 1
 
-  if (data === undefined) {
+  if (swatch == null) {
     const { defaultValue } = definition.config
 
     if (defaultValue === undefined) return undefined as ColorControlValue<T>
@@ -40,10 +28,8 @@ export function useColorValue<T extends ColorControlDefinition>(
     return defaultColor.rgb().string()
   }
 
-  const [swatch] = result.data?.swatches ?? [null]
-
-  return Color({ h: swatch?.hue, s: swatch?.saturation, l: swatch?.lightness })
-    .alpha(data.alpha)
+  return Color({ h: swatch.hue, s: swatch.saturation, l: swatch.lightness })
+    .alpha(alpha)
     .rgb()
     .string()
 }

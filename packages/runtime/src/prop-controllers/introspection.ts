@@ -24,6 +24,8 @@ import {
   SlotControlData,
   SlotControlType,
 } from '../controls'
+import { Typography } from '../api'
+import { isNonNullable } from '../components/utils/isNonNullable'
 
 export function getElementChildren<T extends Data>(
   descriptor: Descriptor<T>,
@@ -58,6 +60,68 @@ export function getElementId<T extends Data>(
   }
 }
 
+export function getBackgroundsSwatchIds(value: BackgroundsValue | null | undefined): string[] {
+  return (
+    value
+      ?.flatMap(override => override.value)
+      .flatMap(backgroundItem => {
+        switch (backgroundItem.type) {
+          case 'color':
+            return backgroundItem.payload?.swatchId == null ? [] : [backgroundItem.payload.swatchId]
+
+          case 'gradient':
+            return backgroundItem.payload.stops.flatMap(stop =>
+              stop.color == null ? [] : stop.color.swatchId,
+            )
+
+          default:
+            return []
+        }
+      }) ?? []
+  )
+}
+
+export function getBorderSwatchIds(value: BorderValue | null | undefined): string[] {
+  return (
+    value
+      ?.flatMap(override => override.value)
+      .flatMap(borderValue => {
+        return [
+          borderValue.borderTop?.color?.swatchId,
+          borderValue.borderRight?.color?.swatchId,
+          borderValue.borderBottom?.color?.swatchId,
+          borderValue.borderLeft?.color?.swatchId,
+        ].filter((swatchId): swatchId is NonNullable<typeof swatchId> => swatchId != null)
+      }) ?? []
+  )
+}
+
+export function getBoxShadowsSwatchIds(value: ShadowsValue | null | undefined): string[] {
+  return (
+    value
+      ?.flatMap(override => override.value)
+      .map(item => item.payload.color?.swatchId)
+      .filter((swatchId): swatchId is NonNullable<typeof swatchId> => swatchId != null) ?? []
+  )
+}
+
+export function getResponsiveColorSwatchIds(
+  value: ResponsiveColorValue | null | undefined,
+): string[] {
+  return value?.map(override => override.value).map(color => color.swatchId) ?? []
+}
+
+export function getTypographyStyleSwatchIds(
+  style: Typography['style'] | null | undefined,
+): string[] {
+  return (
+    style
+      ?.map(override => override.value)
+      .flatMap(typographyStyle => typographyStyle.color?.swatchId)
+      .filter(isNonNullable) ?? []
+  )
+}
+
 export function getElementSwatchIds<T extends Data>(
   descriptor: Descriptor<T>,
   prop: T | undefined,
@@ -65,45 +129,11 @@ export function getElementSwatchIds<T extends Data>(
   if (prop == null) return []
 
   switch (descriptor.type) {
-    case Types.Backgrounds: {
-      const value = prop as BackgroundsValue
-      return (
-        value
-          ?.flatMap(override => override.value)
-          .flatMap(backgroundItem => {
-            switch (backgroundItem.type) {
-              case 'color':
-                return backgroundItem.payload?.swatchId == null
-                  ? []
-                  : [backgroundItem.payload.swatchId]
+    case Types.Backgrounds:
+      return getBackgroundsSwatchIds(prop as BackgroundsValue)
 
-              case 'gradient':
-                return backgroundItem.payload.stops.flatMap(stop =>
-                  stop.color == null ? [] : stop.color.swatchId,
-                )
-
-              default:
-                return []
-            }
-          }) ?? []
-      )
-    }
-
-    case Types.Border: {
-      const value = prop as BorderValue
-      return (
-        value
-          ?.flatMap(override => override.value)
-          .flatMap(borderValue => {
-            return [
-              borderValue.borderTop?.color?.swatchId,
-              borderValue.borderRight?.color?.swatchId,
-              borderValue.borderBottom?.color?.swatchId,
-              borderValue.borderLeft?.color?.swatchId,
-            ].filter((swatchId): swatchId is NonNullable<typeof swatchId> => swatchId != null)
-          }) ?? []
-      )
-    }
+    case Types.Border:
+      return getBorderSwatchIds(prop as BorderValue)
 
     case Types.NavigationLinks: {
       const value = prop as NavigationLinksValue
@@ -125,20 +155,11 @@ export function getElementSwatchIds<T extends Data>(
       )
     }
 
-    case Types.ResponsiveColor: {
-      const value = prop as ResponsiveColorValue
-      return value?.map(override => override.value).map(color => color.swatchId) ?? []
-    }
+    case Types.ResponsiveColor:
+      return getResponsiveColorSwatchIds(prop as ResponsiveColorValue)
 
-    case Types.Shadows: {
-      const value = prop as ShadowsValue
-      return (
-        value
-          ?.flatMap(override => override.value)
-          .map(item => item.payload.color?.swatchId)
-          .filter((swatchId): swatchId is NonNullable<typeof swatchId> => swatchId != null) ?? []
-      )
-    }
+    case Types.Shadows:
+      return getBoxShadowsSwatchIds(prop as ShadowsValue)
 
     case Types.RichText: {
       const value = prop as RichTextValue
@@ -163,12 +184,7 @@ export function getElementSwatchIds<T extends Data>(
       }
 
       function getMarkSwatchIds(mark: MarkJSON): string[] {
-        return (
-          mark.data?.value?.style
-            ?.map((override: any) => override.value)
-            .flatMap((typographyStyle: any) => typographyStyle.color?.swatchId)
-            .filter((swatchId: any) => swatchId != null) ?? []
-        )
+        return getTypographyStyleSwatchIds(mark.data?.value?.style)
       }
     }
 
@@ -182,6 +198,22 @@ export function getElementSwatchIds<T extends Data>(
   }
 }
 
+export function getBackgroundsFileIds(value: BackgroundsValue | null | undefined): string[] {
+  return (
+    value
+      ?.flatMap(override => override.value)
+      .flatMap(backgroundItem => {
+        switch (backgroundItem.type) {
+          case 'image':
+            return [backgroundItem.payload.imageId]
+
+          default:
+            return []
+        }
+      }) ?? []
+  )
+}
+
 export function getFileIds<T extends Data>(
   descriptor: Descriptor<T>,
   prop: T | undefined,
@@ -189,22 +221,8 @@ export function getFileIds<T extends Data>(
   if (prop == null) return []
 
   switch (descriptor.type) {
-    case Types.Backgrounds: {
-      const value = prop as BackgroundsValue
-      return (
-        value
-          ?.flatMap(override => override.value)
-          .flatMap(backgroundItem => {
-            switch (backgroundItem.type) {
-              case 'image':
-                return [backgroundItem.payload.imageId]
-
-              default:
-                return []
-            }
-          }) ?? []
-      )
-    }
+    case Types.Backgrounds:
+      return getBackgroundsFileIds(prop as BackgroundsValue)
 
     case Types.Image: {
       const value = prop as ImageValue

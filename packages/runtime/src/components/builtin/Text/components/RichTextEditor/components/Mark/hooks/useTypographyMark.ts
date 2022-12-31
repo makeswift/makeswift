@@ -2,9 +2,13 @@ import { Length as LengthValue } from '../../../../../../../../prop-controllers'
 import { ColorValue as Color } from '../../../../../../../utils/types'
 import { findDeviceOverride } from '../../../../../../../utils/devices'
 import type { DeviceOverride } from '../../../../../../../../prop-controllers'
-import { SWATCHES_BY_ID } from '../../../../../../../utils/queries'
-import { useTypography, TypographyStyle } from '../../../../../../../hooks/useTypography'
-import { useQuery } from '../../../../../../../../api/react'
+import {
+  useSwatches,
+  useTypography,
+} from '../../../../../../../../runtimes/react/hooks/makeswift-api'
+import { Swatch, Typography } from '../../../../../../../../api'
+import { getTypographyStyleSwatchIds } from '../../../../../../../../prop-controllers/introspection'
+import { isNonNullable } from '../../../../../../../utils/isNonNullable'
 
 export type TypographyMarkDataValue = {
   fontWeight?: number
@@ -22,31 +26,33 @@ export type TypographyMarkDataValue = {
 
 export type TypographyMarkValue = {
   id: string | null | undefined
-  style: TypographyStyle
+  style: Typography['style']
 }
 
 export type TypographyMarkData = Array<DeviceOverride<TypographyMarkDataValue>>
 
-const concat = <A extends unknown[], B extends unknown[]>(a: A, b: B) => a.concat(b)
-const getSwatchId = ({ value: { color } }: any) => color && color.swatchId
-const getDeviceId = ({ deviceId }: any) => deviceId
+const getDeviceId = ({ deviceId }: DeviceOverride<unknown>) => deviceId
 
 const withColor =
-  (swatches: any) =>
-  ({ value: { color, ...restOfValue }, ...rest }: any) => ({
-    ...rest,
-    value: {
-      ...restOfValue,
-      ...(color
-        ? {
-            color: {
-              swatch: swatches.find((s: any) => s && s.id === color.swatchId),
-              alpha: color.alpha,
-            },
-          }
-        : {}),
-    },
-  })
+  (swatches: Swatch[]) =>
+  ({
+    value: { color, ...restOfValue },
+    ...rest
+  }: Typography['style'][number]): DeviceOverride<TypographyMarkDataValue> =>
+    ({
+      ...rest,
+      value: {
+        ...restOfValue,
+        ...(color
+          ? {
+              color: {
+                swatch: swatches.find(s => s && s.id === color.swatchId),
+                alpha: color.alpha,
+              },
+            }
+          : {}),
+      } as TypographyMarkDataValue,
+    } as DeviceOverride<TypographyMarkDataValue>)
 
 export const overrideTypographyStyle = <A>(
   source: Array<DeviceOverride<A>>,
@@ -54,7 +60,7 @@ export const overrideTypographyStyle = <A>(
 ): Array<DeviceOverride<A>> => {
   const devices = [...new Set(source.map(getDeviceId).concat(override.map(getDeviceId)))]
 
-  return devices.map((deviceId: any) => ({
+  return devices.map(deviceId => ({
     deviceId,
     value: {
       ...(findDeviceOverride(source, deviceId) || { value: {} }).value,
@@ -66,26 +72,15 @@ export const overrideTypographyStyle = <A>(
 export default function useTypographyMark(
   value: TypographyMarkValue | null | undefined,
 ): TypographyMarkData | null | undefined {
-  const typography = useTypography(value && value.id)
-
+  const typography = useTypography(value?.id ?? null)
   const swatchIds = [
-    (typography && typography.style.map(getSwatchId)) || [],
-    (value && value.style.map(getSwatchId)) || [],
+    ...getTypographyStyleSwatchIds(value?.style),
+    ...getTypographyStyleSwatchIds(typography?.style),
   ]
-    .reduce(concat)
-    .filter(Boolean)
-
-  const { error: colorError, data: colorData = {} } = useQuery(SWATCHES_BY_ID, {
-    skip: swatchIds == null || swatchIds.length === 0,
-    variables: { ids: swatchIds },
-  })
-
-  const { swatches = [] } = colorData
-
-  if (colorError != null) return null
+  const swatches = useSwatches(swatchIds)
 
   return overrideTypographyStyle(
-    (typography && typography.style.map(withColor(swatches))) || [],
-    (value && value.style.map(withColor(swatches))) || [],
+    typography?.style.map(withColor(swatches.filter(isNonNullable))) ?? [],
+    value?.style.map(withColor(swatches.filter(isNonNullable))) ?? [],
   )
 }
