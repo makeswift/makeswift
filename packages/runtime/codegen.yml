@@ -1,13 +1,58 @@
 overwrite: true
 schema: https://api.makeswift.com/graphql
-documents: 'src/**/*.graphql'
 generates:
-  src/api/generated/graphql.ts:
+  src/api/graphql/generated/fragment-document-nodes.ts:
+    documents: 'src/api/graphql/documents/fragments.ts'
     plugins:
-      - typescript-operations
-      - typed-document-node
+      - typescript-document-nodes:
+          documentMode: documentNode
+  src/api/graphql/generated/types.ts:
+    documents: 'src/api/graphql/documents/*.ts'
+    plugins:
+      - typescript-operations:
+          operationResultSuffix: Result
+          skipTypename: true
+          avoidOptionals: true
+          defaultScalarType: unknown
+          scalars:
+            URL: string
+            URLPathname: string
+            JSON: Json
+
       - add:
-          content: export enum SnippetLocation { Body = 'BODY', Head = 'HEAD' }
+          content: |
+            export type Maybe<T> = T | null
+            export type InputMaybe<T> = Maybe<T>
+            export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
+
+            type Json = null | boolean | number | string | Json[] | { [key: string]: Json }
+
+            type Scalars = {
+              ID: string
+              JSON: Json
+            }
+
+            export type CreateTableRecordInput = {
+              data: CreateTableRecordInputData
+            }
+
+            export type CreateTableRecordInputData = {
+              columns: Array<CreateTableRecordInputDataColumn>
+              tableId?: InputMaybe<Scalars['ID']>
+            }
+
+            export type CreateTableRecordInputDataColumn = {
+              columnId: Scalars['ID']
+              data: Scalars['JSON']
+            }
+
+            export const SnippetLocation = {
+              Body: 'BODY',
+              Head: 'HEAD'
+            } as const
+
+            export type SnippetLocation = typeof SnippetLocation[keyof typeof SnippetLocation]
+
 hooks:
   afterOneFileWrite:
     - prettier --write

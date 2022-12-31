@@ -2,10 +2,13 @@ import { useMemo } from 'react'
 
 import { ColorValue as Color } from '../utils/types'
 import { ResponsiveValue } from '../../prop-controllers'
-import { FILES_BY_ID, SWATCHES_BY_ID } from '../utils/queries'
 import { isNonNullable } from '../utils/isNonNullable'
 import { BackgroundsValue as ResponsiveBackgroundsValue } from '../../prop-controllers/descriptors'
-import { useQuery } from '../../api/react'
+import { useFiles, useSwatches } from '../../runtimes/react/hooks/makeswift-api'
+import {
+  getBackgroundsFileIds,
+  getBackgroundsSwatchIds,
+} from '../../prop-controllers/introspection'
 
 type BackgroundColorData = Color
 
@@ -16,31 +19,31 @@ type BackgroundGradientStopData = {
 }
 
 type BackgroundGradientData = {
-  angle: number
-  isRadial: boolean
+  angle?: number
+  isRadial?: boolean
   stops: Array<BackgroundGradientStopData>
 }
 
 type BackgroundImageData = {
   publicUrl?: string
-  dimensions: { width: number; height: number } | null
+  dimensions?: { width: number; height: number } | null
   position: {
     x: number
     y: number
   }
-  size: 'cover' | 'contain' | 'auto'
-  repeat: 'no-repeat' | 'repeat-x' | 'repeat-y' | 'repeat'
+  size?: 'cover' | 'contain' | 'auto'
+  repeat?: 'no-repeat' | 'repeat-x' | 'repeat-y' | 'repeat'
   opacity?: number
   parallax?: number
 }
 
 type BackgroundVideoData = {
-  url: string
+  url?: string
   maskColor: Color | null | undefined
-  aspectRatio: 'wide' | 'standard'
-  opacity: number
-  zoom: number
-  parallax: number
+  aspectRatio?: 'wide' | 'standard'
+  opacity?: number
+  zoom?: number
+  parallax?: number
 }
 
 type BackgroundData =
@@ -56,77 +59,21 @@ export type BackgroundsPropControllerData = ResponsiveValue<BackgroundsData>
 export function useBackgrounds(
   value: ResponsiveBackgroundsValue | null | undefined,
 ): BackgroundsPropControllerData | null | undefined {
-  const fileIds =
-    value == null
-      ? []
-      : value
-          .map(({ value: backgrounds }) =>
-            backgrounds
-              .map(background =>
-                background.type === 'image' && background.payload != null
-                  ? background.payload.imageId
-                  : null,
-              )
-              .filter(isNonNullable)
-              .reduce((a, b) => a.concat(b), [] as string[]),
-          )
-          .reduce((a, b) => a.concat(b), [])
-  const swatchIds =
-    value == null
-      ? []
-      : value
-          .map(({ value: backgrounds }) =>
-            backgrounds
-              .map(background => {
-                if (background.type === 'color' && background.payload != null) {
-                  return [background.payload.swatchId]
-                }
-
-                if (background.type === 'gradient' && background.payload != null) {
-                  return background.payload.stops
-                    .map(stop => stop.color && stop.color.swatchId)
-                    .filter(isNonNullable)
-                }
-
-                if (background.type === 'video' && background.payload != null) {
-                  return [background.payload.maskColor && background.payload.maskColor.swatchId]
-                }
-
-                return null
-              })
-              .filter(isNonNullable)
-              .reduce((a, b) => a.concat(b), []),
-          )
-          .reduce((a, b) => a.concat(b), [])
-          .filter(isNonNullable)
-  const skip = value == null
-  const filesResult = useQuery(FILES_BY_ID, {
-    skip: skip || fileIds.length === 0,
-    variables: { ids: fileIds },
-  })
-  const swatchesResult = useQuery(SWATCHES_BY_ID, {
-    skip: skip || swatchIds.length === 0,
-    variables: { ids: swatchIds },
-  })
+  const fileIds = getBackgroundsFileIds(value)
+  const files = useFiles(fileIds)
+  const swatchIds = getBackgroundsSwatchIds(value)
+  const swatches = useSwatches(swatchIds)
 
   return useMemo(() => {
-    const { data: filesData = {} } = filesResult
-    const { data: swatchesData = {} } = swatchesResult
-
-    if (value == null || filesResult.error != null || swatchesResult.error != null) {
-      return null
-    }
-
-    const { files = [] } = filesData
-    const { swatches = [] } = swatchesData
+    if (value == null) return null
 
     return value.map(({ value: backgrounds, ...restOfValue }) => ({
       ...restOfValue,
       value: backgrounds
-        .map(bg => {
+        .map((bg): BackgroundData | null | undefined => {
           if (bg.type === 'image' && bg.payload != null && bg.payload.imageId != null) {
             const { imageId, ...restOfPayload } = bg.payload
-            const file = files.find((f: any) => f && f.id === imageId)
+            const file = files.find(f => f && f.id === imageId)
 
             return (
               file && {
@@ -143,7 +90,7 @@ export function useBackgrounds(
 
           if (bg.type === 'color' && bg.payload != null) {
             const { swatchId, alpha } = bg.payload
-            const swatch = swatches.find((s: any) => s && s.id === swatchId)
+            const swatch = swatches.filter(isNonNullable).find(s => s && s.id === swatchId)
 
             return { id: bg.id, type: 'color', payload: { swatch, alpha } }
           }
@@ -158,7 +105,7 @@ export function useBackgrounds(
                 stops: bg.payload.stops.map(({ color, ...restOfStop }) => ({
                   ...restOfStop,
                   color: color && {
-                    swatch: swatches.find((s: any) => s && s.id === color.swatchId),
+                    swatch: swatches.filter(isNonNullable).find(s => s && s.id === color.swatchId),
                     alpha: color.alpha,
                   },
                 })),
@@ -168,7 +115,7 @@ export function useBackgrounds(
 
           if (bg.type === 'video' && bg.payload != null) {
             const { maskColor, ...restOfPayload } = bg.payload
-            const swatch = maskColor && swatches.find((s: any) => s && s.id === maskColor.swatchId)
+            const swatch = maskColor && swatches.find(s => s && s.id === maskColor.swatchId)
 
             return {
               id: bg.id,
@@ -182,7 +129,7 @@ export function useBackgrounds(
 
           return null
         })
-        .filter(Boolean),
+        .filter(isNonNullable),
     }))
-  }, [filesResult, swatchesResult, value])
+  }, [files, swatches, value])
 }

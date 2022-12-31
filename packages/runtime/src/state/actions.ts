@@ -9,8 +9,11 @@ import { PropControllerDescriptor } from '../prop-controllers'
 import type { Size } from './react-builder-preview'
 import type { PropControllersHandle } from './modules/prop-controller-handles'
 import type { PropController, PropControllerMessage } from '../prop-controllers/instances'
-import type { APIResource } from '../api/types'
+import type { APIResource, APIResourceType, Typography } from '../api/graphql/types'
 import type { SerializedControl } from '../builder'
+import { IntrospectedResourcesQueryResult } from '../api/graphql/generated/types'
+import { IntrospectedResourceIds } from '../api/introspection'
+import { SerializedState } from './modules/api-resources'
 
 export const ActionTypes = {
   INIT: 'INIT',
@@ -59,6 +62,12 @@ export const ActionTypes = {
 
   HANDLE_WHEEL: 'HANDLE_WHEEL',
   HANDLE_POINTER_MOVE: 'HANDLE_POINTER_MOVE',
+
+  API_RESOURCE_FULFILLED: 'API_RESOURCE_FULFILLED',
+  INTROSPECTED_RESOURCES_FULFILLED: 'INTROSPECTED_RESOURCES_FULFILLED',
+  TYPOGRAPHIES_FULFILLED: 'TYPOGRAPHIES_FULFILLED',
+
+  RESTORE_API_RESOURCES_CACHE: 'RESTORE_API_RESOURCES_CACHE',
 } as const
 
 type InitAction = { type: typeof ActionTypes.INIT }
@@ -227,6 +236,29 @@ type HandlePointerMoveAction = {
   payload: { clientX: number; clientY: number }
 }
 
+type APIResourceFulfilledAction = {
+  type: typeof ActionTypes.API_RESOURCE_FULFILLED
+  payload: { resourceType: APIResourceType; resourceId: string; resource: APIResource | null }
+}
+
+type IntrospectedResourcesFulfilled = {
+  type: typeof ActionTypes.INTROSPECTED_RESOURCES_FULFILLED
+  payload: {
+    introspectedResourceIds: IntrospectedResourceIds
+    introspectedResources: IntrospectedResourcesQueryResult
+  }
+}
+
+type TypographiesFulfilledAction = {
+  type: typeof ActionTypes.TYPOGRAPHIES_FULFILLED
+  payload: { typographyIds: string[]; typographies: (Typography | null)[] }
+}
+
+type RestoreAPIResourcesCacheAction = {
+  type: typeof ActionTypes.RESTORE_API_RESOURCES_CACHE
+  payload: { serializedState: SerializedState }
+}
+
 export type Action =
   | InitAction
   | CleanUpAction
@@ -260,6 +292,10 @@ export type Action =
   | SetIsInBuilderAction
   | HandleWheelAction
   | HandlePointerMoveAction
+  | APIResourceFulfilledAction
+  | IntrospectedResourcesFulfilled
+  | TypographiesFulfilledAction
+  | RestoreAPIResourcesCacheAction
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }
@@ -547,4 +583,38 @@ export function handlePointerMove(payload: {
   clientY: number
 }): HandlePointerMoveAction {
   return { type: ActionTypes.HANDLE_POINTER_MOVE, payload }
+}
+
+export function apiResourceFulfilled(
+  resourceType: APIResourceType,
+  resourceId: string,
+  resource: APIResource | null,
+): APIResourceFulfilledAction {
+  return {
+    type: ActionTypes.API_RESOURCE_FULFILLED,
+    payload: { resourceType, resourceId, resource },
+  }
+}
+
+export function typographiesFulfilled(
+  typographyIds: string[],
+  typographies: (Typography | null)[],
+): TypographiesFulfilledAction {
+  return { type: ActionTypes.TYPOGRAPHIES_FULFILLED, payload: { typographyIds, typographies } }
+}
+
+export function introspectedResourcesFulfilled(
+  introspectedResourceIds: IntrospectedResourceIds,
+  introspectedResources: IntrospectedResourcesQueryResult,
+): IntrospectedResourcesFulfilled {
+  return {
+    type: ActionTypes.INTROSPECTED_RESOURCES_FULFILLED,
+    payload: { introspectedResourceIds, introspectedResources },
+  }
+}
+
+export function restoreAPIResourcesCache(
+  serializedState: SerializedState,
+): RestoreAPIResourcesCacheAction {
+  return { type: ActionTypes.RESTORE_API_RESOURCES_CACHE, payload: { serializedState } }
 }

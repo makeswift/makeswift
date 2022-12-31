@@ -39,9 +39,8 @@ import {
 } from './actions'
 import { ActionTypes } from './actions'
 import { createPropController, PropController } from '../prop-controllers/instances'
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
-import { Fragments } from '../api'
 import { serializeControls } from '../builder'
+import { MakeswiftClient } from '../api/react'
 
 export type { Operation } from './modules/read-write-documents'
 export type { BoxModelHandle } from './modules/box-models'
@@ -531,28 +530,12 @@ if (import.meta.vitest) {
   })
 }
 
-function apolloClientCacheSyncMiddleware(
-  client: ApolloClient<NormalizedCacheObject>,
+function makeswiftApiClientSyncMiddleware(
+  client: MakeswiftClient,
 ): Middleware<Dispatch, State, Dispatch> {
   return () => (next: ReduxDispatch<Action>) => {
     return (action: Action): Action => {
-      switch (action.type) {
-        case ActionTypes.CHANGE_API_RESOURCE: {
-          const { resource } = action.payload
-
-          client.cache.writeFragment({
-            id: client.cache.identify(resource),
-            fragment: Fragments[resource.__typename],
-            data: resource,
-          })
-
-          break
-        }
-
-        case ActionTypes.EVICT_API_RESOURCE:
-          client.cache.evict({ id: action.payload.id })
-          break
-      }
+      client.makeswiftApiClient.dispatch(action)
 
       return next(action)
     }
@@ -566,7 +549,7 @@ export function configureStore({
   client,
 }: {
   preloadedState?: PreloadedState<State>
-  client: ApolloClient<NormalizedCacheObject>
+  client: MakeswiftClient
 }): Store {
   return createStore(
     reducer,
@@ -576,7 +559,7 @@ export function configureStore({
       measureBoxModelsMiddleware(),
       messageChannelMiddleware(),
       propControllerHandlesMiddleware(),
-      apolloClientCacheSyncMiddleware(client),
+      makeswiftApiClientSyncMiddleware(client),
     ),
   )
 }

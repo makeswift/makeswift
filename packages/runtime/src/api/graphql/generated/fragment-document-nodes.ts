@@ -1,130 +1,5 @@
-import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core'
-export enum SnippetLocation {
-  Body = 'BODY',
-  Head = 'HEAD',
-}
-export type SwatchFragment = {
-  __typename: 'Swatch'
-  id: string
-  hue: number
-  saturation: number
-  lightness: number
-}
-
-export type FileFragment = {
-  __typename: 'File'
-  id: string
-  name: string
-  publicUrl: any
-  extension?: string | null
-  dimensions?: { __typename?: 'ImageDimensions'; width: number; height: number } | null
-}
-
-export type TypographyFragment = {
-  __typename: 'Typography'
-  id: string
-  name: string
-  style: Array<{
-    __typename?: 'TypographyStyle'
-    deviceId: string
-    value: {
-      __typename?: 'TypographyStyleValue'
-      fontFamily?: string | null
-      lineHeight?: number | null
-      letterSpacing?: number | null
-      fontWeight?: number | null
-      textAlign?: string | null
-      uppercase?: boolean | null
-      underline?: boolean | null
-      strikethrough?: boolean | null
-      italic?: boolean | null
-      fontSize?: { __typename?: 'Length'; value?: number | null; unit?: string | null } | null
-      color?: { __typename?: 'Color'; swatchId?: string | null; alpha?: number | null } | null
-    }
-  }>
-}
-
-export type PagePathnameSliceFragment = {
-  __typename: 'PagePathnameSlice'
-  id: string
-  pathname: any
-}
-
-export type GlobalElementFragment = { __typename: 'GlobalElement'; id: string; data: any }
-
-export type TableFragment = {
-  __typename: 'Table'
-  id: string
-  name: string
-  columns: Array<
-    | { __typename?: 'CheckboxTableColumn'; id: string; name: string }
-    | { __typename?: 'EmailTableColumn'; id: string; name: string }
-    | { __typename?: 'LongTextTableColumn'; id: string; name: string }
-    | {
-        __typename?: 'MultipleSelectTableColumn'
-        id: string
-        name: string
-        options: Array<{ __typename?: 'MultipleSelectTableColumnOption'; id: string; name: string }>
-      }
-    | { __typename?: 'NumberTableColumn'; id: string; name: string }
-    | { __typename?: 'PhoneNumberTableColumn'; id: string; name: string }
-    | { __typename?: 'SingleLineTextTableColumn'; id: string; name: string }
-    | {
-        __typename?: 'SingleSelectTableColumn'
-        id: string
-        name: string
-        options: Array<{ __typename?: 'SingleSelectTableColumnOption'; id: string; name: string }>
-      }
-    | { __typename?: 'URLTableColumn'; id: string; name: string }
-  >
-}
-
-export type SnippetFragment = {
-  __typename: 'Snippet'
-  id: string
-  name: string
-  code: string
-  cleanup?: string | null
-  location: SnippetLocation
-  shouldAddToNewPages: boolean
-  liveEnabled: boolean
-  builderEnabled: boolean
-}
-
-export type PageFragment = {
-  __typename: 'Page'
-  id: string
-  snippets: Array<{
-    __typename: 'Snippet'
-    id: string
-    name: string
-    code: string
-    cleanup?: string | null
-    location: SnippetLocation
-    shouldAddToNewPages: boolean
-    liveEnabled: boolean
-    builderEnabled: boolean
-  }>
-}
-
-export type SiteFragment = {
-  __typename: 'Site'
-  id: string
-  googleFonts: {
-    __typename?: 'SiteGoogleFontConnection'
-    edges: Array<{
-      __typename?: 'SiteGoogleFontEdge'
-      activeVariants: Array<{ __typename?: 'GoogleFontVariant'; specifier: string }>
-      node: {
-        __typename?: 'GoogleFont'
-        family: string
-        variants: Array<{ __typename?: 'GoogleFontVariant'; specifier: string }>
-      }
-    } | null>
-  }
-}
-
-export const SwatchFragmentDoc = {
+import { DocumentNode } from 'graphql'
+export const Swatch = {
   kind: 'Document',
   definitions: [
     {
@@ -143,8 +18,8 @@ export const SwatchFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<SwatchFragment, unknown>
-export const FileFragmentDoc = {
+} as unknown as DocumentNode
+export const File = {
   kind: 'Document',
   definitions: [
     {
@@ -174,8 +49,8 @@ export const FileFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<FileFragment, unknown>
-export const TypographyFragmentDoc = {
+} as unknown as DocumentNode
+export const Typography = {
   kind: 'Document',
   definitions: [
     {
@@ -242,8 +117,8 @@ export const TypographyFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<TypographyFragment, unknown>
-export const PagePathnameSliceFragmentDoc = {
+} as unknown as DocumentNode
+export const PagePathnameSlice = {
   kind: 'Document',
   definitions: [
     {
@@ -260,8 +135,8 @@ export const PagePathnameSliceFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<PagePathnameSliceFragment, unknown>
-export const GlobalElementFragmentDoc = {
+} as unknown as DocumentNode
+export const GlobalElement = {
   kind: 'Document',
   definitions: [
     {
@@ -278,8 +153,8 @@ export const GlobalElementFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<GlobalElementFragment, unknown>
-export const TableFragmentDoc = {
+} as unknown as DocumentNode
+export const Table = {
   kind: 'Document',
   definitions: [
     {
@@ -298,6 +173,7 @@ export const TableFragmentDoc = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                 {
@@ -353,8 +229,8 @@ export const TableFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<TableFragment, unknown>
-export const SnippetFragmentDoc = {
+} as unknown as DocumentNode
+export const Snippet = {
   kind: 'Document',
   definitions: [
     {
@@ -377,8 +253,8 @@ export const SnippetFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<SnippetFragment, unknown>
-export const PageFragmentDoc = {
+} as unknown as DocumentNode
+export const Page = {
   kind: 'Document',
   definitions: [
     {
@@ -395,25 +271,34 @@ export const PageFragmentDoc = {
             name: { kind: 'Name', value: 'snippets' },
             selectionSet: {
               kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'cleanup' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'location' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'shouldAddToNewPages' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'liveEnabled' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'builderEnabled' } },
-              ],
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Snippet' } }],
             },
           },
         ],
       },
     },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'Snippet' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Snippet' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'cleanup' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'location' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'shouldAddToNewPages' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'liveEnabled' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'builderEnabled' } },
+        ],
+      },
+    },
   ],
-} as unknown as DocumentNode<PageFragment, unknown>
-export const SiteFragmentDoc = {
+} as unknown as DocumentNode
+export const Site = {
   kind: 'Document',
   definitions: [
     {
@@ -477,4 +362,4 @@ export const SiteFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<SiteFragment, unknown>
+} as unknown as DocumentNode

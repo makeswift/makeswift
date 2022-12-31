@@ -130,7 +130,7 @@ type ImageBackgroundSize = typeof ImageBackgroundSize[keyof typeof ImageBackgrou
 type ImageBackgroundProps = {
   publicUrl?: string
   position: { x: number; y: number }
-  repeat: ImageBackgroundRepeat
+  repeat?: ImageBackgroundRepeat
   size?: ImageBackgroundSize
   opacity?: number
   parallax?: number
@@ -186,11 +186,15 @@ function ImageBackground({
 
 type GradientBackgroundProps = {
   gradient: string
-  angle: number
-  isRadial: boolean
+  angle?: number
+  isRadial?: boolean
 }
 
-function GradientBackground({ gradient, isRadial, angle }: GradientBackgroundProps) {
+function GradientBackground({
+  gradient,
+  isRadial = false,
+  angle = Math.PI,
+}: GradientBackgroundProps) {
   return (
     <div
       className={useStyle({
@@ -211,7 +215,7 @@ const BackgroundVideoAspectRatio = {
 type BackgroundVideoAspectRatio =
   typeof BackgroundVideoAspectRatio[keyof typeof BackgroundVideoAspectRatio]
 
-function getAspectRatio(aspectRatio: BackgroundVideoAspectRatio): number {
+function getAspectRatio(aspectRatio: BackgroundVideoAspectRatio | null | undefined): number {
   switch (aspectRatio) {
     case 'wide':
       return 16 / 9
@@ -225,12 +229,12 @@ function getAspectRatio(aspectRatio: BackgroundVideoAspectRatio): number {
 }
 
 type VideoBackgroundProps = {
-  url: string
-  aspectRatio: BackgroundVideoAspectRatio
+  url?: string
+  aspectRatio?: BackgroundVideoAspectRatio
   maskColor: string
-  zoom: number
-  opacity: number
-  parallax: number
+  zoom?: number
+  opacity?: number
+  parallax?: number
 }
 
 function VideoBackground({

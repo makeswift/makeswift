@@ -1,9 +1,9 @@
 import { isNonNullable } from '../utils/isNonNullable'
 import type { ColorValue as Color } from '../utils/types'
-import { SWATCHES_BY_ID } from '../utils/queries'
 import type { ResponsiveValue } from '../../prop-controllers'
 import type { ShadowsValue as ResponsiveShadowsValue } from '../../prop-controllers/descriptors'
-import { useQuery } from '../../api/react'
+import { getBoxShadowsSwatchIds } from '../../prop-controllers/introspection'
+import { useSwatches } from '../../runtimes/react/hooks/makeswift-api'
 
 type ShadowData = {
   id: string
@@ -33,28 +33,10 @@ export type BoxShadowPropControllerData = ResponsiveValue<BoxShadowData>
 export function useBoxShadow(
   value: ResponsiveShadowsValue | null | undefined,
 ): BoxShadowPropControllerData | null | undefined {
-  const swatchIds =
-    value == null
-      ? []
-      : [
-          ...Array.from(
-            new Set(
-              value
-                .map(({ value: shadows }) =>
-                  shadows.map(({ payload: { color } }) => color && color.swatchId),
-                )
-                .reduce((a, b) => a.concat(b), [])
-                .filter(isNonNullable),
-            ),
-          ),
-        ]
+  const swatchIds = getBoxShadowsSwatchIds(value)
+  const swatches = useSwatches(swatchIds)
 
-  const skip = value == null || swatchIds.length === 0
-  const { error, data = {} } = useQuery(SWATCHES_BY_ID, { skip, variables: { ids: swatchIds } })
-
-  if (value == null || error != null) return null
-
-  const { swatches = [] } = data
+  if (value == null) return null
 
   return value.map(({ value: shadows, ...restOfValue }) => ({
     ...restOfValue,
@@ -68,7 +50,7 @@ export function useBoxShadow(
           color:
             color != null
               ? {
-                  swatch: swatches.find((s: any) => s && s.id === color.swatchId),
+                  swatch: swatches.filter(isNonNullable).find(s => s && s.id === color.swatchId),
                   alpha: color.alpha,
                 }
               : null,

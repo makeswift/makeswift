@@ -27,11 +27,11 @@ import type {
 } from '../../prop-controllers'
 import { ComponentIcon } from '../../state/modules/components-meta'
 import { registerBuiltinComponents } from '../../components/builtin/register'
-import { MakeswiftProvider, MakeswiftClient, useQuery } from '../../api/react'
+import { MakeswiftProvider, MakeswiftClient } from '../../api/react'
 import { FallbackComponent } from '../../components/shared/FallbackComponent'
 import { PropsValue } from './controls'
 import { FindDomNode } from './find-dom-node'
-import { ELEMENT_REFERENCE_GLOBAL_ELEMENT } from '../../components/utils/queries'
+import { useGlobalElement } from './hooks/makeswift-api'
 
 export const storeContextDefaultValue = ReactPage.configureStore()
 
@@ -123,10 +123,7 @@ export function RuntimeProvider({
       const ReactBuilderPreview = await import('../../state/react-builder-preview')
 
       setStore(store =>
-        ReactBuilderPreview.configureStore({
-          preloadedState: store.getState(),
-          client: client.apolloClient,
-        }),
+        ReactBuilderPreview.configureStore({ preloadedState: store.getState(), client }),
       )
     }
   }, [client])
@@ -275,15 +272,9 @@ const ElementReference = memo(
     { elementReference }: ElementRefereceProps,
     ref: Ref<unknown>,
   ): JSX.Element {
-    const { error, data } = useQuery(ELEMENT_REFERENCE_GLOBAL_ELEMENT, {
-      variables: { id: elementReference.value },
-    })
-    const globalElementData = data?.globalElement?.data as ReactPage.ElementData | undefined
+    const globalElement = useGlobalElement(elementReference.value)
+    const globalElementData = globalElement?.data as ReactPage.ElementData | undefined
     const elementReferenceDocument = useDocument(elementReference.key)
-
-    if (error != null) {
-      return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Something went wrong!" />
-    }
 
     if (globalElementData == null) {
       return (

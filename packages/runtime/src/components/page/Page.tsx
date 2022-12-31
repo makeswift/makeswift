@@ -1,14 +1,16 @@
 import { ReactElement, Children, createElement, useMemo, useEffect, useRef, useState } from 'react'
+import { useSyncExternalStore } from 'use-sync-external-store/shim'
 import parse from 'html-react-parser'
 import Head from 'next/head'
 
 import { BodySnippet } from './BodySnippet'
 import { DocumentReference } from '../../runtimes/react'
 import { createDocumentReference } from '../../state/react-page'
-import { useQuery, gql } from '../../api/react'
+import { useMakeswiftClient } from '../../api/react'
 import { useIsInBuilder } from '../../react'
 import deepEqual from '../../utils/deepEqual'
 import { MakeswiftPageDocument } from '../../next'
+import { Page as PageType, Site } from '../../api'
 
 const SnippetLocation = {
   Body: 'BODY',
@@ -76,96 +78,32 @@ type Props = {
   document: MakeswiftPageDocument
 }
 
-export const PAGE_SNIPPETS_QUERY = gql`
-  query PageById($id: ID!) {
-    page(id: $id) {
-      __typename
-      id
-      snippets {
-        __typename
-        id
-        name
-        code
-        cleanup
-        location
-        shouldAddToNewPages
-        liveEnabled
-        builderEnabled
-      }
-    }
-  }
-`
-
-export type SiteFontsSiteQuery = {
-  site?: {
-    id: string
-    googleFonts: {
-      edges: Array<{
-        activeVariants: Array<{ specifier: string }>
-        node: {
-          family: string
-          variants: Array<{ specifier: string }>
-        }
-      } | null>
-    }
-  } | null
-}
-
-export const SITE_FONTS_QUERY = gql`
-  query SiteById($id: ID!) {
-    site(id: $id) {
-      id
-      googleFonts {
-        edges {
-          activeVariants {
-            specifier
-          }
-          node {
-            family
-            variants {
-              specifier
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
 export function Page({ document: page }: Props): JSX.Element {
   const isInBuilder = useIsInBuilder()
   const [snippets, setSnippets] = useState(page.snippets)
-  // We're using useQuery here for page snippets and site fonts so that anytime the user change
-  // the snippets or fonts on the builder, the change would be reflected here.
+  // We're using cached results here for page snippets and site fonts so that anytime the user
+  // changes the snippets or fonts on the builder, the change would be reflected here.
   // See this PR for discussions and things we can do to improve it in the future:
   // https://github.com/makeswift/makeswift/pull/77
-  useQuery<{ page: { snippets: Snippet[] } }>(PAGE_SNIPPETS_QUERY, {
-    variables: { id: page.id },
-    skip: isInBuilder === false,
-    fetchPolicy: 'cache-only',
-    onCompleted(data) {
-      if (data == null) return
+  const cachedPage = useCachedPage(isInBuilder ? page.id : null)
+  useEffect(() => {
+    if (cachedPage == null) return
 
-      const oldSnippets = snippets.map(filterUsedSnippetProperties)
-      const newSnippets = data.page.snippets.map(filterUsedSnippetProperties)
+    const oldSnippets = snippets.map(filterUsedSnippetProperties)
+    const newSnippets = cachedPage.snippets.map(filterUsedSnippetProperties)
 
-      if (deepEqual(newSnippets, oldSnippets)) return
+    if (deepEqual(newSnippets, oldSnippets)) return
 
-      setSnippets(data.page.snippets)
-    },
-  })
-  const { data: siteData } = useQuery<SiteFontsSiteQuery>(SITE_FONTS_QUERY, {
-    variables: { id: page.site.id },
-    skip: isInBuilder === false,
-    fetchPolicy: 'cache-only',
-  })
+    setSnippets(cachedPage.snippets)
+  }, [cachedPage])
+  const site = useCachedSite(isInBuilder ? page.site.id : null)
 
   const favicon = page.meta.favicon ?? defaultFavicon
   const { title, description, keywords, socialImage } = page.meta
   const { canonicalUrl, isIndexingBlocked } = page.seo
 
   const fontFamilyParamValue = useMemo(() => {
-    if (siteData?.site == null) {
+    if (site == null) {
       return page.fonts
         .map(({ family, variants }) => {
           return `${family.replace(/ /g, '+')}:${variants.join()}`
@@ -173,7 +111,7 @@ export function Page({ document: page }: Props): JSX.Element {
         .join('|')
     }
 
-    return siteData.site.googleFonts.edges
+    return site.googleFonts.edges
       .filter((edge): edge is NonNullable<typeof edge> => edge != null)
       .map(({ activeVariants, node: { family, variants } }) => {
         const activeVariantSpecifiers = variants
@@ -186,7 +124,7 @@ export function Page({ document: page }: Props): JSX.Element {
         return `${family.replace(/ /g, '+')}:${activeVariantSpecifiers}`
       })
       .join('|')
-  }, [siteData, page])
+  }, [site, page])
 
   const filteredSnippets = useMemo(
     () => snippets.filter(snippet => (isInBuilder ? snippet.builderEnabled : snippet.liveEnabled)),
@@ -297,4 +235,22 @@ export function Page({ document: page }: Props): JSX.Element {
         ))}
     </>
   )
+}
+
+function useCachedPage(pageId: string | null): PageType | null {
+  const client = useMakeswiftClient()
+  const getSnapshot = () => (pageId == null ? null : client.readPage(pageId))
+
+  const page = useSyncExternalStore(client.subscribe, getSnapshot, getSnapshot)
+
+  return page
+}
+
+function useCachedSite(siteId: string | null): Site | null {
+  const client = useMakeswiftClient()
+  const getSnapshot = () => (siteId == null ? null : client.readSite(siteId))
+
+  const site = useSyncExternalStore(client.subscribe, getSnapshot, getSnapshot)
+
+  return site
 }

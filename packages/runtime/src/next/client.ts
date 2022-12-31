@@ -1,5 +1,4 @@
-import { NormalizedCacheObject } from '@apollo/client'
-import { MakeswiftClient } from '../api/react'
+import { CacheData, MakeswiftClient } from '../api/react'
 import { Element } from '../state/react-page'
 
 export type MakeswiftPage = {
@@ -44,7 +43,7 @@ export type MakeswiftPageDocument = {
 export type MakeswiftPageSnapshot = {
   document: MakeswiftPageDocument
   apiOrigin: string
-  cacheData: NormalizedCacheObject
+  cacheData: CacheData
 }
 
 type MakeswiftConfig = {

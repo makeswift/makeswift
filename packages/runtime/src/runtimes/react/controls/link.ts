@@ -2,8 +2,8 @@ import { MouseEvent, useCallback, useMemo } from 'react'
 
 import scrollIntoView from 'scroll-into-view-if-needed'
 import { useElementId } from '../'
-import { usePage } from '../../../components/hooks'
 import { LinkControlData, LinkControlDefinition } from '../../../controls'
+import { usePagePathnameSlice } from '../hooks/makeswift-api'
 
 type LinkValue = {
   href: string
@@ -17,7 +17,8 @@ export function useLinkControlValue<T extends LinkControlDefinition>(
   link: LinkControlData | undefined,
   _definition: T,
 ): LinkControlValue<T> {
-  const page = usePage(link && link.type === 'OPEN_PAGE' ? link.payload.pageId : null)
+  const pageId = link && link.type === 'OPEN_PAGE' ? link.payload.pageId : null
+  const page = usePagePathnameSlice(pageId ?? null)
   const elementKey =
     link?.type === 'SCROLL_TO_ELEMENT' ? link.payload.elementIdConfig?.elementKey : null
   const elementId = useElementId(elementKey)

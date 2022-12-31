@@ -222,7 +222,11 @@ export function Backgrounds(options: BackgroundsOptions = {}): BackgroundsDescri
 
 type BorderSideStyle = 'dashed' | 'dotted' | 'solid'
 
-type BorderSide = { width: number | null | undefined; style: BorderSideStyle; color?: Color | null }
+export type BorderSide = {
+  width: number | null | undefined
+  style: BorderSideStyle
+  color?: Color | null
+}
 
 type Border = {
   [K in 'top' | 'right' | 'bottom' | 'left' as `border${Capitalize<K>}`]:

@@ -1,10 +1,10 @@
-import { useFile } from '../../../components/hooks'
 import {
   ControlDefinition,
   ImageControlData,
   ImageControlDefinition,
   ImageControlValueFormat,
 } from '../../../controls'
+import { useFile } from '../hooks/makeswift-api'
 
 type ImageWithDimensions = {
   url: string
@@ -18,7 +18,8 @@ export function useImageControlValue(
   definition: ImageControlDefinition,
 ): ImageControlValue {
   const format = definition.config.format ?? ImageControlValueFormat.URL
-  const file = useFile(data)
+  const fileId = data ?? null
+  const file = useFile(fileId)
 
   if (format === ImageControlValueFormat.URL) {
     return file?.publicUrl
