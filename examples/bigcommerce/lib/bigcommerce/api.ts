@@ -97,81 +97,67 @@ export async function getProduct(id: number): Promise<ProductFragment | null> {
   return productEdge.node
 }
 
-export async function createCart(): Promise<CartResponse | null> {
+export async function attemptGetCart(cartId: string): Promise<CartResponse | null> {
   try {
-    const response = await fetch(`/api/cart`, {
-      method: 'POST',
-      body: JSON.stringify(null),
-    })
+    const response = await fetch(`/api/cart?cartId=${cartId}`)
     const result: RestResponse<CartResponse> = await response.json()
     return result.data
-  } catch (e) {
-    console.error(`There was an error creating a Cart`, e)
+  } catch {
     return null
   }
+}
+export async function createCart(): Promise<CartResponse> {
+  const response = await fetch(`/api/cart`, {
+    method: 'POST',
+    body: JSON.stringify(null),
+  })
+  const result: RestResponse<CartResponse> = await response.json()
+  return result.data
 }
 
 export async function addLineItem(
   cart: CartResponse | null,
   lineItem: LineItemRequest,
-): Promise<CartResponse | null> {
-  try {
-    const response = await fetch(`/api/cart${cart ? `?cartId=${cart.id}` : ''}`, {
-      method: 'POST',
-      body: JSON.stringify({
-        line_item: lineItem,
-      }),
-    })
-    const result: RestResponse<CartResponse> = await response.json()
-    return result.data
-  } catch (e) {
-    console.error(`There was an error adding a Line Item`, e)
-    return cart
-  }
+): Promise<CartResponse> {
+  const response = await fetch(`/api/cart${cart ? `?cartId=${cart.id}` : ''}`, {
+    method: 'POST',
+    body: JSON.stringify({
+      line_item: lineItem,
+    }),
+  })
+  const result: RestResponse<CartResponse> = await response.json()
+  return result.data
 }
 
 export async function updateLineItem(
-  cart: CartResponse | null,
+  cart: CartResponse,
   productId: number,
   lineItem: LineItemRequest,
-): Promise<CartResponse | null> {
+): Promise<CartResponse> {
   const relatedLineItem = cart?.line_items.physical_items.find(
     lineItem => lineItem.product_id === productId,
   )
-  if (!cart || !relatedLineItem) return null
-  try {
-    const response = await fetch(`/api/cart?cartId=${cart.id}&lineItemId=${relatedLineItem.id}`, {
-      method: 'PUT',
-      body: JSON.stringify({
-        line_item: lineItem,
-      }),
-    })
-    const result: RestResponse<CartResponse> = await response.json()
-    return result.data
-  } catch (e) {
-    console.error(`There was an error updating a Line Item`, e)
-    return cart
-  }
+  if (!relatedLineItem) return cart
+  const response = await fetch(`/api/cart?cartId=${cart.id}&lineItemId=${relatedLineItem.id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      line_item: lineItem,
+    }),
+  })
+  const result: RestResponse<CartResponse> = await response.json()
+  return result.data
 }
 
-export async function deleteLineItem(
-  cart: CartResponse | null,
-  productId: number,
-): Promise<CartResponse | null> {
+export async function deleteLineItem(cart: CartResponse, productId: number): Promise<CartResponse> {
   const relatedLineItem = cart?.line_items.physical_items.find(
     lineItem => lineItem.product_id === productId,
   )
-  if (!cart || !relatedLineItem) return null
-  try {
-    const response = await fetch(`/api/cart?cartId=${cart.id}&lineItemId=${relatedLineItem.id}`, {
-      method: 'DELETE',
-    })
-    const result: RestResponse<CartResponse | null> = await response.json()
-    return result.data
-  } catch (e) {
-    console.error(`There was an error deleting a Line Item`, e)
-    return cart
-  }
+  if (!relatedLineItem) return cart
+  const response = await fetch(`/api/cart?cartId=${cart.id}&lineItemId=${relatedLineItem.id}`, {
+    method: 'DELETE',
+  })
+  const result: RestResponse<CartResponse> = await response.json()
+  return result.data
 }
 
 export async function getCheckoutURL(cart: CartResponse | null): Promise<string | null> {

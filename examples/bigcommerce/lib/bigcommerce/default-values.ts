@@ -1,4 +1,4 @@
-import { ProductFragment } from './types'
+import { CartResponse, ProductFragment } from './types'
 
 export const DEFAULT_PRODUCT: ProductFragment = {
   entityId: 113,
@@ -55,4 +55,26 @@ export const DEFAULT_PRODUCT: ProductFragment = {
       },
     ],
   },
+}
+
+export const DEFAULT_CART: CartResponse = {
+  id: '50d74e46-d8b8-4a0b-8d9c-833aefd59f41',
+  customer_id: 0,
+  channel_id: 1,
+  email: '',
+  currency: { code: 'USD' },
+  tax_included: 'false',
+  base_amount: 0,
+  discount_amount: 0,
+  cart_amount: 0,
+  coupons: [],
+  line_items: {
+    physical_items: [],
+    digital_items: [],
+    gift_certificates: [],
+    custom_items: [],
+  },
+  created_time: '2023-01-03T20:25:08+00:00',
+  updated_time: '2023-01-03T20:25:09+00:00',
+  locale: 'en',
 }

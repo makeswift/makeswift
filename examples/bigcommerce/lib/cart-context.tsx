@@ -2,8 +2,10 @@ import {
   addLineItem,
   createCart,
   deleteLineItem,
+  attemptGetCart,
   getCheckoutURL,
   updateLineItem,
+  DEFAULT_CART,
 } from 'lib/bigcommerce'
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react'
 
@@ -21,6 +23,30 @@ export const CartContext = createContext<{
 
 const LOCAL_STORAGE_CART = '@@makeswift:bigcommerce-example:cart'
 const LOCAL_STORAGE_OFFLINE_OPERATIONS = '@@makeswift:bigcommerce-example:offline-operations'
+
+function parseCart(cartString?: string | null): CartResponse | null {
+  try {
+    const potentialCart = JSON.parse(cartString ?? '')
+    if (typeof potentialCart === 'object' && 'id' in potentialCart) {
+      return potentialCart
+    }
+    return null
+  } catch (error) {
+    return null
+  }
+}
+
+function parseOfflineOperations(offlineOperationString?: string | null): CartOperation[] {
+  try {
+    const potentialOfflineOperations = JSON.parse(offlineOperationString ?? '')
+    if (potentialOfflineOperations instanceof Array) {
+      return potentialOfflineOperations
+    }
+    return []
+  } catch (error) {
+    return []
+  }
+}
 
 export type CartOperation =
   | {
@@ -41,53 +67,59 @@ export function applyOfflineOperationsToCart(
   cart: CartResponse | null,
   offlineOperations: CartOperation[],
 ) {
-  if (cart == null) return null
-  return offlineOperations?.reduce((acc, curr) => {
+  if (typeof window === 'undefined') return DEFAULT_CART
+
+  return offlineOperations.reduce((cart, operation) => {
+    const nextCart = structuredClone(cart)
     let index: number
-    switch (curr.type) {
+    switch (operation.type) {
       case 'ADD':
-        index = acc.line_items.physical_items.findIndex(
-          lineItem => lineItem.product_id === curr.lineItem.product_id,
+        index = cart.line_items.physical_items.findIndex(
+          lineItem => lineItem.product_id === operation.lineItem.product_id,
         )
         if (index === -1) {
-          acc.line_items.physical_items = [...acc.line_items.physical_items, curr.lineItem]
-          acc.base_amount = acc.base_amount + curr.lineItem.original_price * curr.lineItem.quantity
+          nextCart.line_items.physical_items = [
+            ...cart.line_items.physical_items,
+            operation.lineItem,
+          ]
+          nextCart.base_amount =
+            cart.base_amount + operation.lineItem.original_price * operation.lineItem.quantity
         } else {
-          acc.base_amount = acc.base_amount + curr.lineItem.quantity * curr.lineItem.original_price
+          nextCart.base_amount =
+            cart.base_amount + operation.lineItem.quantity * operation.lineItem.original_price
 
-          acc.line_items.physical_items[index].quantity =
-            acc.line_items.physical_items[index].quantity + curr.lineItem.quantity
+          nextCart.line_items.physical_items[index].quantity =
+            cart.line_items.physical_items[index].quantity + operation.lineItem.quantity
         }
-
         break
       case 'UPDATE':
-        index = acc.line_items.physical_items.findIndex(
-          lineItem => lineItem.product_id === curr.productId,
+        index = cart.line_items.physical_items.findIndex(
+          lineItem => lineItem.product_id === operation.productId,
         )
         if (index !== -1) {
           const quantityDiff =
-            curr.lineItem.quantity - acc.line_items.physical_items[index].quantity
+            operation.lineItem.quantity - cart.line_items.physical_items[index].quantity
 
-          acc.base_amount = acc.base_amount + quantityDiff * curr.lineItem.original_price
-          acc.line_items.physical_items[index].quantity = curr.lineItem.quantity
+          nextCart.base_amount = cart.base_amount + quantityDiff * operation.lineItem.original_price
+          nextCart.line_items.physical_items[index].quantity = operation.lineItem.quantity
         }
         break
       case 'DELETE':
-        index = acc.line_items.physical_items.findIndex(
-          lineItem => lineItem.product_id === curr.productId,
+        index = cart.line_items.physical_items.findIndex(
+          lineItem => lineItem.product_id === operation.productId,
         )
         if (index !== -1) {
-          const lineItems = acc.line_items.physical_items
+          const lineItems = [...cart.line_items.physical_items]
           const lineItem = lineItems[index]
           lineItems.splice(index, 1)
-          acc.line_items.physical_items = lineItems
-          acc.base_amount = acc.base_amount - lineItem.quantity * lineItem.original_price
+          nextCart.line_items.physical_items = lineItems
+          nextCart.base_amount = cart.base_amount - lineItem.quantity * lineItem.original_price
         }
         break
     }
 
-    return acc
-  }, structuredClone(cart))
+    return nextCart
+  }, structuredClone(cart) ?? structuredClone(DEFAULT_CART))
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
@@ -100,71 +132,51 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const savedCart = localStorage.getItem(LOCAL_STORAGE_CART)
     const savedOfflineOperations = localStorage.getItem(LOCAL_STORAGE_OFFLINE_OPERATIONS)
 
-    if (savedCart == null) {
-      createNewCart()
+    if (!window.navigator.onLine) {
+      setCart(parseCart(savedCart))
+      setOfflineOperations(parseOfflineOperations(savedOfflineOperations))
     } else {
-      const cart: CartResponse = JSON.parse(savedCart)
-      setCart(cart)
-      if (!window.navigator.onLine) {
-        setOfflineOperations(savedOfflineOperations ? JSON.parse(savedOfflineOperations) : [])
-      } else {
-        syncExistingCart(savedCart, savedOfflineOperations)
+      if (savedOfflineOperations) {
+        syncOfflineOperations(parseOfflineOperations(savedOfflineOperations), parseCart(savedCart))
       }
     }
 
-    async function createNewCart() {
-      try {
-        setLoading(true)
-        const cart = await createCart()
-        setCart(cart)
-        localStorage.setItem(LOCAL_STORAGE_CART, JSON.stringify(cart))
-      } catch {}
-      setLoading(false)
-    }
-
-    async function syncExistingCart(
-      cartString?: string | null,
-      offlineOperationsString?: string | null,
+    async function syncOfflineOperations(
+      offlineOperations: CartOperation[],
+      cart: CartResponse | null,
     ) {
       try {
         setLoading(true)
-        if (cartString != null) {
-          const cart: CartResponse = JSON.parse(cartString)
-          const response = await fetch(`/api/cart?cartId=${cart.id}`)
-          const result: RestResponse<CartResponse> = await response.json()
-          setCart(result.data)
+        let currentCart: CartResponse =
+          (cart && (await attemptGetCart(cart.id))) ?? (await createCart())
+        setCart(currentCart)
+        setOfflineOperations(offlineOperations)
+        let currentOperation: CartOperation | undefined
 
-          if (offlineOperationsString != null) {
-            const offlineOperations: CartOperation[] = JSON.parse(offlineOperationsString)
-
-            setOfflineOperations(offlineOperations)
-            let currentCart: CartResponse | null = cart
-            for (let index = 0; index < offlineOperations.length; index++) {
-              const curr: CartOperation = offlineOperations[index]
-              switch (curr.type) {
-                case 'ADD':
-                  currentCart = await addLineItem(currentCart, curr.lineItem)
-                  break
-                case 'UPDATE':
-                  currentCart = await updateLineItem(currentCart, curr.productId, curr.lineItem)
-                  break
-                case 'DELETE':
-                  currentCart = await deleteLineItem(currentCart, curr.productId)
-                  break
-              }
-            }
-
-            setOfflineOperations([])
-            localStorage.removeItem(LOCAL_STORAGE_OFFLINE_OPERATIONS)
-            setCart(currentCart)
+        while (typeof (currentOperation = offlineOperations.shift()) !== 'undefined') {
+          switch (currentOperation.type) {
+            case 'ADD':
+              currentCart = await addLineItem(currentCart, currentOperation.lineItem)
+              break
+            case 'UPDATE':
+              currentCart = await updateLineItem(
+                currentCart,
+                currentOperation.productId,
+                currentOperation.lineItem,
+              )
+              break
+            case 'DELETE':
+              currentCart = await deleteLineItem(currentCart, currentOperation.productId)
+              break
           }
-        } else {
-          const cart = await createCart()
-          setCart(cart)
-          localStorage.setItem(LOCAL_STORAGE_CART, JSON.stringify(cart))
-          localStorage.removeItem(LOCAL_STORAGE_OFFLINE_OPERATIONS)
+          setOfflineOperations(offlineOperations)
+          localStorage.setItem(LOCAL_STORAGE_OFFLINE_OPERATIONS, JSON.stringify(offlineOperations))
+          setCart(currentCart)
+          localStorage.setItem(LOCAL_STORAGE_CART, JSON.stringify(currentCart))
         }
-      } catch {}
+      } catch (e) {
+        console.error('There was an error syncing your cart', e)
+      }
       setLoading(false)
     }
   }, [])
@@ -202,7 +214,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             )
             return nextOfflineOperations
           })
-        } else {
+        } else if (cart) {
           const nextCart = await updateLineItem(cart, productId, lineItem)
           setCart(nextCart)
           localStorage.setItem(LOCAL_STORAGE_CART, JSON.stringify(nextCart))
@@ -218,7 +230,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             )
             return nextOfflineOperations
           })
-        } else {
+        } else if (cart) {
           const nextCart = await deleteLineItem(cart, productId)
           setCart(nextCart)
           localStorage.setItem(LOCAL_STORAGE_CART, JSON.stringify(nextCart))
