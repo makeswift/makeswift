@@ -236,7 +236,7 @@ type ProductAddToCartButtonProps = {
 export function ProductAddToCartButton({ className }: ProductAddToCartButtonProps) {
   const [quantity, setQuantity] = useState(1)
   const [addToCartState, setAddToCartState] = useState<AddToCartState>('initial')
-  const { addItem } = useCart()
+  const { addItem, loading: cartLoading } = useCart()
   const product = useProductFromPath()
   const { t } = usePreviewableTranslation('cart')
 
@@ -255,7 +255,7 @@ export function ProductAddToCartButton({ className }: ProductAddToCartButtonProp
         </button>
       </div>
       <button
-        disabled={addToCartState !== 'initial'}
+        disabled={cartLoading && addToCartState !== 'initial'}
         onClick={async () => {
           setAddToCartState('loading')
           await addItem({
