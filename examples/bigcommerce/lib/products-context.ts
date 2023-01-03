@@ -1,9 +1,10 @@
 import { usePreviewableLocale } from 'components'
 import { createContext, useContext } from 'react'
+import { DEFAULT_PRODUCT } from './bigcommerce'
 import { ProductFragment, TranslatedProductFragment } from './bigcommerce/types'
 import { DEFAULT_LOCALE, Locale } from './locale'
 
-export const ProductsContext = createContext<ProductFragment[] | null>(null)
+export const ProductsContext = createContext<ProductFragment[]>([DEFAULT_PRODUCT])
 
 export function translateProduct(
   product: ProductFragment,
@@ -30,13 +31,9 @@ export function useProduct(id: number): TranslatedProductFragment | undefined {
   const products = useContext(ProductsContext)
   const locale = usePreviewableLocale()
 
-  if (products != null) {
-    const product = products.find(product => product.entityId === id)
+  const product = products.find(product => product.entityId === id)
 
-    return product ? translateProduct(product, locale) : undefined
-  }
-
-  throw new Error('useProducts should only be used inside a ProductsProvider')
+  return product ? translateProduct(product, locale) : undefined
 }
 
 export function useProducts({
@@ -49,16 +46,12 @@ export function useProducts({
   const products = useContext(ProductsContext)
   const locale = usePreviewableLocale()
 
-  if (products != null) {
-    return products
-      .filter((product: ProductFragment) =>
-        categoryEntityId
-          ? product.categories.edges.some(c => c.node.entityId.toString() === categoryEntityId)
-          : true,
-      )
-      .slice(0, count)
-      .map(product => translateProduct(product, locale))
-  }
-
-  throw new Error('useProducts should only be used inside a ProductsProvider')
+  return products
+    .filter((product: ProductFragment) =>
+      categoryEntityId
+        ? product.categories.edges.some(c => c.node.entityId.toString() === categoryEntityId)
+        : true,
+    )
+    .slice(0, count)
+    .map(product => translateProduct(product, locale))
 }

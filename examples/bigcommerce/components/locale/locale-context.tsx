@@ -12,7 +12,9 @@ import {
 
 import { DEFAULT_LOCALE, Locale } from 'lib/locale'
 
-const Context = createContext<[Locale | undefined, Dispatch<SetStateAction<Locale | undefined>>]>([
+type PreviewableLocale = Locale | undefined
+
+const Context = createContext<[PreviewableLocale, Dispatch<SetStateAction<PreviewableLocale>>]>([
   DEFAULT_LOCALE,
   () => {},
 ])
@@ -23,32 +25,32 @@ type Props = {
 
 export function PreviewableLocaleProvider({ children }: Props) {
   const router = useRouter()
-  const localePreviewState = useState(router.locale as Locale | undefined)
+  const localePreviewState = useState(router.locale as PreviewableLocale)
 
   return <Context.Provider value={localePreviewState}>{children}</Context.Provider>
 }
 
-export function usePreviewableLocale(previewLocale?: Locale | undefined): Locale | undefined {
+export function usePreviewableLocale(previewLocale?: PreviewableLocale): PreviewableLocale {
   const router = useRouter()
-  const [previewableLocale, setPreviewLocale] = useContext(Context)
+  const [previewableLocale, setPreviewableLocale] = useContext(Context)
   const lastPreviewLocale = useRef(previewLocale)
-  const lastPreviewableLocale = useRef(router.locale)
+  const lastPreviewableLocale = useRef(previewableLocale)
 
   useEffect(() => {
     if (lastPreviewLocale.current !== previewLocale) {
       lastPreviewLocale.current = previewLocale
-
-      setPreviewLocale(previewLocale)
+      setPreviewableLocale(previewLocale)
     }
-  }, [previewLocale, setPreviewLocale])
+  }, [previewLocale, setPreviewableLocale])
 
   useEffect(() => {
-    if (lastPreviewableLocale.current !== router.locale) {
-      lastPreviewableLocale.current = router.locale as Locale | undefined
+    const previewableLocale = router.locale as PreviewableLocale
 
-      setPreviewLocale(router.locale as Locale | undefined)
+    if (lastPreviewableLocale.current !== router.locale) {
+      lastPreviewableLocale.current = previewableLocale
+      setPreviewableLocale(previewableLocale)
     }
-  }, [router.locale, setPreviewLocale])
+  }, [router.locale, setPreviewableLocale])
 
   return previewableLocale
 }

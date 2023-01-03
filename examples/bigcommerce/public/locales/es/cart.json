@@ -8,6 +8,7 @@
   "remove-from-cart": "Eliminar",
   "increase-quantity": "Aumentar cantidad",
   "proceed-to-checkout": "Proceder al pago",
+  "proceed-to-checkout-offline": "Debes estar en línea para pagar",
   "error-in-checkout": "Algo salió mal",
   "redirecting-to-checkout": "Redirigir al pago"
 }
