@@ -124,10 +124,15 @@ export const Link = forwardRef<HTMLAnchorElement, Props>(function Link(
 
   if (useNextLink && href != null) {
     return (
-      <NextLink href={href}>
-        {/* eslint-disable-next-line */}
-        <a {...restOfProps} ref={ref} target={target} onClick={handleClick} />
-      </NextLink>
+      <NextLink
+        {...restOfProps}
+        ref={ref}
+        target={target}
+        onClick={handleClick}
+        href={href}
+        // Next.js v12 has legacyBehavior set to true by default
+        legacyBehavior={false}
+      />
     )
   }
 
