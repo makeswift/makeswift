@@ -138,6 +138,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     } else {
       if (savedOfflineOperations) {
         syncOfflineOperations(parseOfflineOperations(savedOfflineOperations), parseCart(savedCart))
+      } else if (savedCart) {
+        setCart(parseCart(savedCart))
       }
     }
 
