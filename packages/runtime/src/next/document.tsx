@@ -8,14 +8,11 @@ import NextDocument, {
   Main,
   NextScript,
 } from 'next/document'
-import { KeyUtils } from 'slate'
 import { PreviewModeScript } from './preview-mode'
 
 export class Document extends NextDocument {
   static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
     const initialProps = await NextDocument.getInitialProps(ctx)
-
-    KeyUtils.resetGenerator()
 
     const { extractCritical } = createEmotionServer(cache)
     const { ids, css } = extractCritical(initialProps.html)
