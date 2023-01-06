@@ -13,6 +13,7 @@ import * as ComponentsMeta from './modules/components-meta'
 import * as PropControllers from './modules/prop-controllers'
 import * as PropControllerHandles from './modules/prop-controller-handles'
 import * as IsInBuilder from './modules/is-in-builder'
+import * as IsPreview from './modules/is-preview'
 import * as Introspection from '../prop-controllers/introspection'
 import { Action } from './actions'
 import { copyElementReference } from '../prop-controllers/copy'
@@ -40,6 +41,7 @@ const reducer = combineReducers({
   propControllers: PropControllers.reducer,
   propControllerHandles: PropControllerHandles.reducer,
   isInBuilder: IsInBuilder.reducer,
+  isPreview: IsPreview.reducer,
 })
 
 export type State = ReturnType<typeof reducer>
@@ -293,6 +295,10 @@ export function copyElementTree(
 
 export function getIsInBuilder(state: State): boolean {
   return state.isInBuilder
+}
+
+export function getIsPreview(state: State): boolean {
+  return IsPreview.getIsPreview(state.isPreview)
 }
 
 export type Dispatch = ThunkDispatch<State, unknown, Action>

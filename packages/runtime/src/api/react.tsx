@@ -1,5 +1,4 @@
 import { createContext, ReactNode, useContext } from 'react'
-import { KeyUtils } from 'slate'
 
 import { Element } from '../state/react-page'
 import { storeContextDefaultValue } from '../runtimes/react'
@@ -70,8 +69,6 @@ export class MakeswiftClient {
     await this.makeswiftApiClient.dispatch(
       MakeswiftApiClient.fetchIntrospectedResources(introspectionData),
     )
-
-    KeyUtils.resetGenerator()
 
     return MakeswiftApiClient.getSerializedState(this.makeswiftApiClient.getState())
   }

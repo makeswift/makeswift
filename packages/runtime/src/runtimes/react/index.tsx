@@ -158,6 +158,10 @@ export function useIsInBuilder(): boolean {
   return useSelector(state => ReactPage.getIsInBuilder(state))
 }
 
+export function useIsPreview(): boolean {
+  return useSelector(state => ReactPage.getIsPreview(state))
+}
+
 type Dispatch = ReactPage.Dispatch & ReactBuilderPreview.Dispatch
 
 function useDispatch(): Dispatch {

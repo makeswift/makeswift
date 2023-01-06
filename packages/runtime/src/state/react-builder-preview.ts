@@ -18,6 +18,7 @@ import * as ComponentsMeta from './modules/components-meta'
 import * as PropControllers from './modules/prop-controllers'
 import * as PropControllerHandles from './modules/prop-controller-handles'
 import * as IsInBuilder from './modules/is-in-builder'
+import * as IsPreview from './modules/is-preview'
 import * as ReactPage from './react-page'
 import {
   Action,
@@ -54,6 +55,7 @@ const reducer = combineReducers({
   propControllers: PropControllers.reducer,
   propControllerHandles: PropControllerHandles.reducer,
   isInBuilder: IsInBuilder.reducer,
+  isPreview: IsPreview.reducer,
 })
 
 export type State = ReturnType<typeof reducer>
@@ -559,6 +561,7 @@ export function configureStore({
   const initialState: PreloadedState<State> = {
     ...preloadedState,
     documents: Documents.getInitialState({ rootElements }),
+    isPreview: IsPreview.getInitialState(true),
   }
 
   return createStore(
