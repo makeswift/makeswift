@@ -5,6 +5,7 @@ import {
   memo,
   ReactNode,
   Ref,
+  Suspense,
   useContext,
   useEffect,
   useImperativeHandle,
@@ -252,11 +253,13 @@ const ElementData = memo(
     }
 
     return (
-      <FindDomNode ref={setFoundDomNode}>
-        <PropsValue element={elementData}>
-          {props => <Component {...props} key={elementData.key} ref={setHandle} />}
-        </PropsValue>
-      </FindDomNode>
+      <Suspense>
+        <FindDomNode ref={setFoundDomNode}>
+          <PropsValue element={elementData}>
+            {props => <Component {...props} key={elementData.key} ref={setHandle} />}
+          </PropsValue>
+        </FindDomNode>
+      </Suspense>
     )
   }),
 )
