@@ -41,7 +41,6 @@ export function registerBuiltinComponents(runtime: ReactRuntime) {
     unregisterRootComponent()
     unregisterSocialLinksComponent()
     unregisterTextComponent()
-    unregisterTextComponent()
     unregisterVideoComponent()
   }
 }
