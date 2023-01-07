@@ -101,7 +101,10 @@
   "dependencies": {
     "@convertkit/slate-lists": "^0.2.4",
     "@emotion/css": "^11.9.0",
+    "@emotion/serialize": "^1.0.3",
     "@emotion/server": "^11.4.0",
+    "@emotion/sheet": "^1.0.3",
+    "@emotion/utils": "^1.0.0",
     "@makeswift/next-plugin": "0.2.0",
     "@popmotion/popcorn": "^0.4.4",
     "@types/cookie": "^0.5.1",
