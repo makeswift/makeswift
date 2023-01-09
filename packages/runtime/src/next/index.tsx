@@ -137,6 +137,7 @@ export const Page = memo(({ snapshot }: PageProps) => {
     <RuntimeProvider
       client={client}
       rootElements={new Map([[snapshot.document.id, snapshot.document.data]])}
+      preview={snapshot.preview}
     >
       <PageMeta document={snapshot.document} />
     </RuntimeProvider>
