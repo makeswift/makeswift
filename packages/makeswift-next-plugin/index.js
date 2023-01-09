@@ -4,6 +4,7 @@
 /** @typedef {{ resolveSymlinks?: boolean; appOrigin?: string }} MakeswiftNextPluginOptions */
 
 const withTmInitializer = require('next-transpile-modules')
+const { satisfies } = require('semver')
 
 const NEXT_IMAGE_DOMAINS = ['s.mkswft.com']
 const NEXT_TRANSPILE_MODULES_MODULES = ['@makeswift/runtime']
@@ -81,7 +82,38 @@ module.exports =
       },
     }
 
-    return withTmInitializer(NEXT_TRANSPILE_MODULES_MODULES, {
-      resolveSymlinks,
-    })(enhancedConfig)
+    const nextVersion = require('next/package.json').version
+
+    if (satisfies(nextVersion, '<12.2.0')) {
+      throw new Error(
+        'Makeswift requires a minimum Next.js version of 12.2.0. Please upgrade to Next.js version ^12.2.0 if you want to use Next.js v12, or version ^13.0.0 if you want to use Next.js v13.',
+      )
+    }
+
+    if (satisfies(nextVersion, '<13.0.0')) {
+      return withTmInitializer(NEXT_TRANSPILE_MODULES_MODULES, {
+        resolveSymlinks,
+      })(enhancedConfig)
+    }
+
+    if (satisfies(nextVersion, '<13.1.0')) {
+      return {
+        ...enhancedConfig,
+        experimental: {
+          ...enhancedConfig.experimental,
+          transpilePackages: [
+            ...(enhancedConfig.experimental?.transpilePackages ?? []),
+            ...NEXT_TRANSPILE_MODULES_MODULES,
+          ],
+        },
+      }
+    }
+
+    return {
+      ...enhancedConfig,
+      transpilePackages: [
+        ...(nextConfig?.transpilePackages ?? []),
+        ...NEXT_TRANSPILE_MODULES_MODULES,
+      ],
+    }
   }
