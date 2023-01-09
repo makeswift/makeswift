@@ -6,8 +6,6 @@ import {
   forwardRef,
   ReactElement,
   Ref,
-  useImperativeHandle,
-  useState,
 } from 'react'
 import { BackgroundsValue as BackgroundsPropControllerValue } from '../../../prop-controllers/descriptors'
 import { useStyle } from '../../../runtimes/react/use-style'
@@ -23,16 +21,12 @@ type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 export default forwardRef<HTMLDivElement | null, Props>(function BackgroundsContainer(
   { backgrounds, children, className, ...restOfProps }: Props,
-  ref: Ref<HTMLDivElement | null>,
+  ref: Ref<HTMLDivElement>,
 ) {
-  const [handle, setHandle] = useState<HTMLDivElement | null>(null)
-
-  useImperativeHandle(ref, () => handle, [handle])
-
   return (
     <div
       {...restOfProps}
-      ref={setHandle}
+      ref={ref}
       className={cx(
         useStyle({
           position: 'relative',
