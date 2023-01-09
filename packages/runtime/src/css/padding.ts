@@ -42,10 +42,10 @@ export function paddingPropertyDataToStyle(
   const paddingLeft = data.paddingLeft ?? defaultValue.paddingLeft
   const style: CSSObject = {}
 
-  if (paddingTop) style.paddingTop = lengthDataToString(paddingTop)
-  if (paddingRight) style.paddingRight = lengthDataToString(paddingRight)
-  if (paddingBottom) style.paddingBottom = lengthDataToString(paddingBottom)
-  if (paddingLeft) style.paddingLeft = lengthDataToString(paddingLeft)
+  if (paddingTop != null) style.paddingTop = lengthDataToString(paddingTop)
+  if (paddingRight != null) style.paddingRight = lengthDataToString(paddingRight)
+  if (paddingBottom != null) style.paddingBottom = lengthDataToString(paddingBottom)
+  if (paddingLeft != null) style.paddingLeft = lengthDataToString(paddingLeft)
 
   return style
 }

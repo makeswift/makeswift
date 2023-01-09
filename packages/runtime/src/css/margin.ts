@@ -38,10 +38,10 @@ export function marginPropertyDataToStyle(
   const marginLeft = data.marginLeft ?? defaultValue.marginLeft
   const style: CSSObject = {}
 
-  if (marginTop) style.marginTop = lengthDataToString(marginTop)
-  if (marginRight) style.marginRight = lengthDataToString(marginRight)
-  if (marginBottom) style.marginBottom = lengthDataToString(marginBottom)
-  if (marginLeft) style.marginLeft = lengthDataToString(marginLeft)
+  if (marginTop != null) style.marginTop = lengthDataToString(marginTop)
+  if (marginRight != null) style.marginRight = lengthDataToString(marginRight)
+  if (marginBottom != null) style.marginBottom = lengthDataToString(marginBottom)
+  if (marginLeft != null) style.marginLeft = lengthDataToString(marginLeft)
 
   return style
 }

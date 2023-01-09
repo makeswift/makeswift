@@ -51,19 +51,19 @@ export function borderRadiusPropertyDataToStyle(
   const borderBottomLeftRadius = data.borderBottomLeftRadius ?? defaultValue.borderBottomLeftRadius
   const style: CSSObject = {}
 
-  if (borderTopLeftRadius) {
+  if (borderTopLeftRadius != null) {
     style.borderTopLeftRadius = lengthPercentageDataToString(borderTopLeftRadius)
   }
 
-  if (borderTopRightRadius) {
+  if (borderTopRightRadius != null) {
     style.borderTopRightRadius = lengthPercentageDataToString(borderTopRightRadius)
   }
 
-  if (borderBottomRightRadius) {
+  if (borderBottomRightRadius != null) {
     style.borderBottomRightRadius = lengthPercentageDataToString(borderBottomRightRadius)
   }
 
-  if (borderBottomLeftRadius) {
+  if (borderBottomLeftRadius != null) {
     style.borderBottomLeftRadius = lengthPercentageDataToString(borderBottomLeftRadius)
   }
 

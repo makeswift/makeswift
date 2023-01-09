@@ -64,10 +64,10 @@ export function borderPropertyDataToStyle(
   const borderLeft = data.borderLeft ?? defaultValue.borderLeft
   const style: CSSObject = {}
 
-  if (borderTop) style.borderTop = borderSideToString(borderTop)
-  if (borderRight) style.borderRight = borderSideToString(borderRight)
-  if (borderBottom) style.borderBottom = borderSideToString(borderBottom)
-  if (borderLeft) style.borderLeft = borderSideToString(borderLeft)
+  if (borderTop != null) style.borderTop = borderSideToString(borderTop)
+  if (borderRight != null) style.borderRight = borderSideToString(borderRight)
+  if (borderBottom != null) style.borderBottom = borderSideToString(borderBottom)
+  if (borderLeft != null) style.borderLeft = borderSideToString(borderLeft)
 
   return style
 }
