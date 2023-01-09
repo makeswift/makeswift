@@ -44,6 +44,7 @@ export type MakeswiftPageSnapshot = {
   document: MakeswiftPageDocument
   apiOrigin: string
   cacheData: CacheData
+  preview: boolean
 }
 
 type MakeswiftConfig = {
@@ -96,11 +97,14 @@ export class Makeswift {
     return json
   }
 
-  private async createSnapshot(document: MakeswiftPageDocument): Promise<MakeswiftPageSnapshot> {
+  private async createSnapshot(
+    document: MakeswiftPageDocument,
+    preview: boolean,
+  ): Promise<MakeswiftPageSnapshot> {
     const client = new MakeswiftClient({ uri: new URL('graphql', this.apiOrigin).href })
     const cacheData = await client.prefetch(document.data)
 
-    return { document, apiOrigin: this.apiOrigin.href, cacheData }
+    return { document, apiOrigin: this.apiOrigin.href, cacheData, preview }
   }
 
   private async getPageSnapshotByPageId(
@@ -118,7 +122,7 @@ export class Makeswift {
 
     const document: MakeswiftPageDocument = await response.json()
 
-    return await this.createSnapshot(document)
+    return await this.createSnapshot(document, preview)
   }
 
   async getPageSnapshot(

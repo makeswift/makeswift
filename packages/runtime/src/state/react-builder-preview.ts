@@ -334,8 +334,11 @@ function measureBoxModelsMiddleware(): Middleware<Dispatch, State, Dispatch> {
 export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch> {
   return ({ dispatch, getState }: MiddlewareAPI<Dispatch, State>) =>
     (next: ReduxDispatch<Action>) => {
-      const messageChannel = new MessageChannel()
       let cleanUp = () => {}
+
+      if (typeof window === 'undefined') return cleanUp
+
+      const messageChannel = new window.MessageChannel()
 
       window.parent.postMessage(messageChannel.port2, '*', [messageChannel.port2])
 
@@ -545,15 +548,22 @@ function makeswiftApiClientSyncMiddleware(
 export type Store = ReduxStore<State, Action> & { dispatch: Dispatch }
 
 export function configureStore({
+  rootElements,
   preloadedState,
   client,
 }: {
+  rootElements?: Map<string, Documents.Element>
   preloadedState?: PreloadedState<State>
   client: MakeswiftClient
 }): Store {
+  const initialState: PreloadedState<State> = {
+    ...preloadedState,
+    documents: Documents.getInitialState({ rootElements }),
+  }
+
   return createStore(
     reducer,
-    preloadedState,
+    initialState,
     applyMiddleware(
       thunk,
       measureBoxModelsMiddleware(),

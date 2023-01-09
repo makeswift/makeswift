@@ -12,6 +12,7 @@ import {
   useState,
 } from 'react'
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector'
+import dynamic from 'next/dynamic'
 
 import * as ReactPage from '../../state/react-page'
 import type * as ReactBuilderPreview from '../../state/react-builder-preview'
@@ -19,7 +20,6 @@ import {
   mountComponentEffect,
   registerComponentEffect,
   registerComponentHandleEffect,
-  registerDocumentEffect,
   registerReactComponentEffect,
 } from '../../state/actions'
 import type {
@@ -28,7 +28,7 @@ import type {
 } from '../../prop-controllers'
 import { ComponentIcon } from '../../state/modules/components-meta'
 import { registerBuiltinComponents } from '../../components/builtin/register'
-import { MakeswiftProvider, MakeswiftClient } from '../../api/react'
+import { MakeswiftClient } from '../../api/react'
 import { FallbackComponent } from '../../components/shared/FallbackComponent'
 import { PropsValue } from './controls'
 import { FindDomNode } from './find-dom-node'
@@ -79,61 +79,20 @@ export const ReactRuntime = createReactRuntime(storeContextDefaultValue)
 
 registerBuiltinComponents(ReactRuntime)
 
-const Context = createContext(storeContextDefaultValue)
+export const StoreContext = createContext(storeContextDefaultValue)
 
 type RuntimeProviderProps = {
   client: MakeswiftClient
+  preview: boolean
   rootElements?: Map<string, ReactPage.Element>
   children?: ReactNode
 }
 
-export function RuntimeProvider({
-  client,
-  children,
-  rootElements,
-}: RuntimeProviderProps): JSX.Element {
-  const [store, setStore] = useState(() => {
-    const store = ReactPage.configureStore({
-      preloadedState: storeContextDefaultValue.getState(),
-      rootElements,
-    })
+const PreviewProvider = dynamic(() => import('./components/PreviewProvider'))
+const LiveProvider = dynamic(() => import('./components/LiveProvider'))
 
-    return store
-  })
-
-  useEffect(() => {
-    const unregisterDocuments = Array.from(rootElements?.entries() ?? []).map(
-      ([documentKey, rootElement]) =>
-        store.dispatch(registerDocumentEffect(ReactPage.createDocument(documentKey, rootElement))),
-    )
-
-    return () => {
-      unregisterDocuments.forEach(unregisterDocument => {
-        unregisterDocument()
-      })
-    }
-  }, [store, rootElements])
-
-  useEffect(() => {
-    // TODO(miguel): perform a more robust validation.
-    const isInBuilder = window.parent !== window
-
-    if (isInBuilder) setReactBuilderPreviewStore()
-
-    async function setReactBuilderPreviewStore(): Promise<void> {
-      const ReactBuilderPreview = await import('../../state/react-builder-preview')
-
-      setStore(store =>
-        ReactBuilderPreview.configureStore({ preloadedState: store.getState(), client }),
-      )
-    }
-  }, [client])
-
-  return (
-    <Context.Provider value={store}>
-      <MakeswiftProvider client={client}>{children}</MakeswiftProvider>
-    </Context.Provider>
-  )
+export function RuntimeProvider({ preview, ...props }: RuntimeProviderProps): JSX.Element {
+  return preview ? <PreviewProvider {...props} /> : <LiveProvider {...props} />
 }
 
 const PageContext = createContext<string | null>(null)
@@ -168,7 +127,7 @@ export function useDocumentKey(): string | null {
 type State = ReactPage.State | ReactBuilderPreview.State
 
 export function useStore(): ReactPage.Store {
-  return useContext(Context)
+  return useContext(StoreContext)
 }
 
 export function useSelector<R>(selector: (state: State) => R): R {
@@ -202,7 +161,7 @@ export function useIsInBuilder(): boolean {
 type Dispatch = ReactPage.Dispatch & ReactBuilderPreview.Dispatch
 
 function useDispatch(): Dispatch {
-  const store = useContext(Context)
+  const store = useContext(StoreContext)
 
   return store.dispatch
 }
