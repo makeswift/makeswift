@@ -1,5 +1,6 @@
 import { useState, useEffect, Ref, forwardRef } from 'react'
 import NextImage from 'next/image'
+import type NextLegacyImageType from 'next/legacy/image'
 
 import {
   ElementIDValue,
@@ -17,6 +18,9 @@ import { cx } from '@emotion/css'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { responsiveStyle, responsiveWidth } from '../../utils/responsive-style'
 import { useFile } from '../../../runtimes/react/hooks/makeswift-api'
+import { major as nextMajorVersion } from '../../../next/next-version'
+
+const NextLegacyImage = NextImage as typeof NextLegacyImageType
 
 type Props = {
   id?: ElementIDValue
@@ -129,14 +133,26 @@ const ImageComponent = forwardRef(function Image(
     <Container link={link} ref={ref} id={id} className={containerClassName}>
       {isInBuilder ? (
         <img className={unoptimizedImageClassName} src={imageSrc} alt={altText} />
-      ) : (
-        <NextImage
+      ) : nextMajorVersion < 13 ? (
+        <NextLegacyImage
           layout="responsive"
           src={imageSrc}
           sizes={imageSizes(width)}
           alt={altText}
           width={dimensions.width}
           height={dimensions.height}
+        />
+      ) : (
+        <NextImage
+          src={imageSrc}
+          sizes={imageSizes(width)}
+          alt={altText ?? ''}
+          width={dimensions.width}
+          height={dimensions.height}
+          style={{
+            width: '100%',
+            height: 'auto',
+          }}
         />
       )}
     </Container>
