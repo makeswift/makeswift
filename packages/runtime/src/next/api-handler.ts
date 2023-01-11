@@ -100,7 +100,7 @@ export function MakeswiftApiHandler(
           return res.status(400).json({ message: 'Bad Request' })
         }
 
-        const revalidate = res.revalidate ?? res.unstable_revalidate
+        const revalidate = res.revalidate
 
         if (typeof revalidate !== 'function') {
           const message =
