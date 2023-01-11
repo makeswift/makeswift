@@ -125,15 +125,12 @@ const ImageComponent = forwardRef(function Image(
     boxShadow,
     className,
   )
-  const unoptimizedImageClassName = useStyle({ width: '100%' })
 
   if (!dimensions) return null
 
   return (
     <Container link={link} ref={ref} id={id} className={containerClassName}>
-      {isInBuilder ? (
-        <img className={unoptimizedImageClassName} src={imageSrc} alt={altText} />
-      ) : nextMajorVersion < 13 ? (
+      {nextMajorVersion < 13 ? (
         <NextLegacyImage
           layout="responsive"
           src={imageSrc}
@@ -141,6 +138,7 @@ const ImageComponent = forwardRef(function Image(
           alt={altText}
           width={dimensions.width}
           height={dimensions.height}
+          unoptimized={isInBuilder}
         />
       ) : (
         <NextImage
@@ -153,6 +151,7 @@ const ImageComponent = forwardRef(function Image(
             width: '100%',
             height: 'auto',
           }}
+          unoptimized={isInBuilder}
         />
       )}
     </Container>
