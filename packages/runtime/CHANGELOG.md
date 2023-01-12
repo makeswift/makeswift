@@ -2,7 +2,11 @@
 
 ## 0.5.0
 
-### Minor Changes
+This is our first release that supports Next.js v13.
+
+Update `@makeswift/runtime` in `package.json` to use the latest version.
+
+If you have any issues with either Next.js v12 or Next.js v13, please reach out to us or open a new issue in GitHub.
 
 - d70c32b: Add Next.js v13 support.
 - 115e3ee: BREAKING CHANGE: The Image component will use the new `next/image` if the host is using Next.js v13.
