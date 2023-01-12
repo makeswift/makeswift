@@ -1,5 +1,4 @@
 import { cx } from '@emotion/css'
-import { motion } from 'framer-motion'
 import {
   Children,
   ComponentPropsWithoutRef,
@@ -16,25 +15,22 @@ import { useBackgrounds } from '../../hooks'
 import Backgrounds from './components/Backgrounds'
 
 type BaseProps = {
-  hasAnimations?: boolean
   backgrounds: BackgroundsPropControllerValue | null | undefined
   children: ReactElement<ElementType>
 }
 
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<typeof motion.div>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 export default forwardRef<HTMLDivElement | null, Props>(function BackgroundsContainer(
-  { hasAnimations = false, backgrounds, children, className, ...restOfProps }: Props,
+  { backgrounds, children, className, ...restOfProps }: Props,
   ref: Ref<HTMLDivElement | null>,
 ) {
   const [handle, setHandle] = useState<HTMLDivElement | null>(null)
-  const Component = hasAnimations ? motion.div : 'div'
 
   useImperativeHandle(ref, () => handle, [handle])
 
   return (
-    // @ts-ignore: props for `div` and `motion.div` don't match.
-    <Component
+    <div
       {...restOfProps}
       ref={setHandle}
       className={cx(
@@ -55,6 +51,6 @@ export default forwardRef<HTMLDivElement | null, Props>(function BackgroundsCont
     >
       <Backgrounds backgrounds={useBackgrounds(backgrounds)} />
       {Children.only(children)}
-    </Component>
+    </div>
   )
 })

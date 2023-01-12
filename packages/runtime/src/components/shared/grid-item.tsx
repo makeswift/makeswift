@@ -1,32 +1,52 @@
 import { cx } from '@emotion/css'
-import { ComponentPropsWithoutRef, ElementType } from 'react'
-import { ResponsiveValue, Length as LengthValue } from '../../prop-controllers'
+import { ComponentPropsWithoutRef } from 'react'
+import {
+  ResponsiveValue,
+  Length as LengthValue,
+  ResponsiveNumberValue,
+} from '../../prop-controllers'
 import { useStyle } from '../../runtimes/react/use-style'
+import { useItemAnimation } from '../builtin/Box/animations'
 import { responsiveGridItem } from '../utils/responsive-style'
 
-type BaseProps<T extends ElementType> = {
-  as?: T
+type BaseProps = {
   className?: string
   grid: ResponsiveValue<{ spans: Array<Array<number>>; count: number }>
   index: number
   columnGap?: ResponsiveValue<LengthValue>
   rowGap?: ResponsiveValue<LengthValue>
+  itemAnimateDuration?: ResponsiveNumberValue
+  itemAnimateDelay?: ResponsiveNumberValue
+  itemStaggerDuration?: ResponsiveNumberValue
 }
 
-type Props<T extends ElementType> = BaseProps<T> &
-  Omit<ComponentPropsWithoutRef<T>, keyof BaseProps<T>>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
-export function GridItem<T extends ElementType = 'div'>({
-  as,
+export const gridItemIdentifierClassName = 'grid-item'
+
+export function GridItem({
   grid,
   index,
   columnGap,
   rowGap,
   className,
+  itemAnimateDuration,
+  itemAnimateDelay,
+  itemStaggerDuration,
   ...restOfProps
-}: Props<T>) {
+}: Props) {
   const gridItemClassName = useStyle(responsiveGridItem({ grid, index, columnGap, rowGap }))
-  const Component = as ?? 'div'
+  const animationClassName = useItemAnimation(
+    itemAnimateDuration,
+    itemAnimateDelay,
+    itemStaggerDuration,
+    index,
+  )
 
-  return <Component {...restOfProps} className={cx(gridItemClassName, className)} />
+  return (
+    <div
+      {...restOfProps}
+      className={cx(gridItemClassName, className, animationClassName, gridItemIdentifierClassName)}
+    />
+  )
 }
