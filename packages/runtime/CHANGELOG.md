@@ -11,9 +11,6 @@ If you have any issues with either Next.js v12 or Next.js v13, please reach out 
 - d70c32b: Add Next.js v13 support.
 - 115e3ee: BREAKING CHANGE: The Image component will use the new `next/image` if the host is using Next.js v13.
 - f79ea18: BREAKING CHANGE: Drop support for Next.js v12.1. Makeswift requires a minimum Next.js version of 12.2.0. Please upgrade to Next.js version ^12.2.0 if you want to use Next.js v12, or version ^13.0.0 if you want to use Next.js v13.
-
-### Patch Changes
-
 - Updated dependencies [c3041ff]
   - @makeswift/next-plugin@0.2.0
 
