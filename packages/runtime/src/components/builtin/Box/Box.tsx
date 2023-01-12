@@ -1,10 +1,10 @@
-import { forwardRef, Ref, useImperativeHandle, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
+import { forwardRef, Ref, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { cx } from '@emotion/css'
+import { v4 as uuid } from 'uuid'
 
 import { Element } from '../../../runtimes/react'
 import Placeholder from './components/Placeholder'
-import { useBoxAnimations } from './animations'
+import { areBoxAnimationPropsEqual, BoxAnimationProps, useBoxAnimation } from './animations'
 import {
   ElementIDValue,
   ResponsiveIconRadioGroupValue,
@@ -12,13 +12,10 @@ import {
   GapYValue,
   GapXValue,
   CheckboxValue,
-  ResponsiveSelectValue,
-  ResponsiveNumberValue,
   BackgroundsValue,
 } from '../../../prop-controllers/descriptors'
 import { BoxModelHandle, parse, createBox } from '../../../box-model'
 import BackgroundsContainer from '../../shared/BackgroundsContainer'
-import { BoxAnimateIn } from './constants'
 import { responsiveStyle } from '../../utils/responsive-style'
 import { GridItem } from '../../shared/grid-item'
 import { useStyle } from '../../../runtimes/react/use-style'
@@ -38,16 +35,9 @@ type Props = {
   boxShadow?: string
   rowGap?: GapYValue
   columnGap?: GapXValue
-  boxAnimateType?: ResponsiveSelectValue<BoxAnimateIn>
-  boxAnimateDuration?: ResponsiveNumberValue
-  boxAnimateDelay?: ResponsiveNumberValue
-  itemAnimateType?: ResponsiveSelectValue<BoxAnimateIn>
-  itemAnimateDuration?: ResponsiveNumberValue
-  itemAnimateDelay?: ResponsiveNumberValue
-  itemStaggerDuration?: ResponsiveNumberValue
   hidePlaceholder?: CheckboxValue
   children?: GridValue
-}
+} & BoxAnimationProps
 
 const Box = forwardRef(function Box(
   {
@@ -77,8 +67,6 @@ const Box = forwardRef(function Box(
 ) {
   const innerRef = useRef<HTMLDivElement | null>(null)
   const [boxElement, setBoxElement] = useState<HTMLElement | null>(null)
-  const hasAnimations = boxAnimateType != null || itemAnimateType != null
-  const Grid = hasAnimations ? motion.div : 'div'
 
   useImperativeHandle(
     ref,
@@ -123,22 +111,38 @@ const Box = forwardRef(function Box(
     responsiveStyle([verticalAlign], ([alignItems = 'flex-start']) => ({ alignItems })),
   )
 
-  const { initial, animate, variants, transition, key } = useBoxAnimations({
+  const [animationClassName, replayAnimation] = useBoxAnimation(
+    boxElement,
     boxAnimateType,
     boxAnimateDuration,
     boxAnimateDelay,
-    itemAnimateDelay,
+    itemAnimateType,
+  )
+
+  const [key, setKey] = useState(() => uuid())
+
+  const animationProps = {
+    boxAnimateType,
+    boxAnimateDuration,
+    boxAnimateDelay,
     itemAnimateType,
     itemAnimateDuration,
+    itemAnimateDelay,
     itemStaggerDuration,
-    boxElement,
-    elements: children?.elements,
-  })
+  }
+
+  const prevAnimationProps = useRef(animationProps)
+  useEffect(() => {
+    if (!areBoxAnimationPropsEqual(prevAnimationProps.current, animationProps)) {
+      replayAnimation()
+      setKey(uuid())
+      prevAnimationProps.current = animationProps
+    }
+  }, [replayAnimation, animationProps])
 
   return (
     <BackgroundsContainer
       ref={setBoxElement}
-      hasAnimations={hasAnimations}
       id={id}
       className={cx(
         width,
@@ -146,16 +150,13 @@ const Box = forwardRef(function Box(
         borderRadius,
         useStyle({ display: 'flex' }),
         useStyle(responsiveStyle([height], ([alignSelf = 'auto']) => ({ alignSelf }))),
+        animationClassName,
       )}
       backgrounds={backgrounds}
-      animate={animate?.container}
-      initial={initial?.container}
-      variants={variants?.container}
-      transition={transition?.container}
-      key={key?.container}
     >
-      <Grid
+      <div
         ref={innerRef}
+        key={key}
         className={cx(
           padding,
           boxShadow,
@@ -165,23 +166,19 @@ const Box = forwardRef(function Box(
             responsiveStyle([verticalAlign], ([alignContent = 'flex-start']) => ({ alignContent })),
           ),
         )}
-        animate={animate?.parent}
-        initial={initial?.parent}
-        transition={transition?.parent}
       >
         {children && children.elements.length > 0 ? (
           children.elements.map((child, index) => (
             <GridItem
-              as={hasAnimations ? motion.div : 'div'}
               key={child.key}
               className={gridItemClassName}
               grid={children.columns}
               index={index}
+              itemAnimateDuration={itemAnimateDuration}
+              itemAnimateDelay={itemAnimateDelay}
+              itemStaggerDuration={itemStaggerDuration}
               columnGap={columnGap}
               rowGap={rowGap}
-              // @ts-ignore: `variants` is not a prop for `div`, but it is for `motion.div`.
-              variants={variants?.child}
-              transition={transition?.child}
             >
               <Element element={child} />
             </GridItem>
@@ -189,7 +186,7 @@ const Box = forwardRef(function Box(
         ) : (
           <Placeholder hide={hidePlaceholder} />
         )}
-      </Grid>
+      </div>
     </BackgroundsContainer>
   )
 })

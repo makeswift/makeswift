@@ -1,201 +1,21 @@
+import { CSSObject } from '@emotion/css'
+import { useState, useEffect, useCallback } from 'react'
 import {
-  TargetAndTransition,
-  Transition,
-  useAnimation,
-  useReducedMotion,
-  Variants,
-  MotionProps,
-} from 'framer-motion'
-import { TransitionMap } from 'framer-motion/types/types'
-import { useCallback, useEffect, useState } from 'react'
-
-import { ResponsiveValue } from '../../../prop-controllers'
+  ResponsiveNumberValue,
+  ResponsiveSelectValue,
+  ResponsiveValue,
+} from '../../../prop-controllers'
+import { useStyle } from '../../../runtimes/react/use-style'
 import { useMediaQuery } from '../../hooks'
-import { Element } from '../../../state/react-page'
+import { gridItemIdentifierClassName } from '../../shared/grid-item'
 import {
   BoxAnimateIn,
   DEFAULT_BOX_ANIMATE_DELAY,
   DEFAULT_BOX_ANIMATE_DURATION,
   DEFAULT_BOX_ANIMATE_TYPE,
-  DEFAULT_ITEM_ANIMATE_DELAY,
-  DEFAULT_ITEM_ANIMATE_DURATION,
   DEFAULT_ITEM_ANIMATE_TYPE,
   DEFAULT_ITEM_STAGGER_DURATION,
 } from './constants'
-
-const defaultExitedProps = {
-  opacity: 0,
-  x: 0,
-  y: 0,
-  scale: 1,
-}
-
-type BoxAnimationVariants = {
-  entered: TargetAndTransition
-  exited: TargetAndTransition
-}
-
-export const boxAnimations: {
-  [key in BoxAnimateIn]: {
-    transition: TransitionMap
-  } & BoxAnimationVariants
-} = {
-  none: {
-    entered: {
-      opacity: 1,
-    },
-    exited: {
-      ...defaultExitedProps,
-      opacity: 1,
-    },
-    transition: {},
-  },
-  fadeIn: {
-    exited: defaultExitedProps,
-    entered: {
-      opacity: 1,
-    },
-    transition: {},
-  },
-  fadeLeft: {
-    exited: {
-      ...defaultExitedProps,
-      x: 60,
-    },
-    entered: {
-      opacity: 1,
-      x: 0,
-    },
-    transition: {
-      x: {
-        type: 'tween',
-        ease: [0.165, 0.84, 0.44, 1],
-      },
-    },
-  },
-  fadeRight: {
-    exited: {
-      ...defaultExitedProps,
-      x: -60,
-    },
-    entered: {
-      opacity: 1,
-      x: 0,
-    },
-    transition: {
-      x: {
-        type: 'tween',
-        ease: [0.165, 0.84, 0.44, 1],
-      },
-    },
-  },
-  fadeUp: {
-    exited: {
-      ...defaultExitedProps,
-      y: 80,
-    },
-    entered: {
-      opacity: 1,
-      y: 0,
-    },
-    transition: {
-      y: {
-        type: 'tween',
-        ease: [0.165, 0.84, 0.44, 1],
-      },
-    },
-  },
-  fadeDown: {
-    exited: {
-      ...defaultExitedProps,
-      y: -80,
-    },
-    entered: {
-      opacity: 1,
-      y: 0,
-    },
-    transition: {
-      y: {
-        type: 'tween',
-        ease: [0.165, 0.84, 0.44, 1],
-      },
-    },
-  },
-  blurIn: {
-    exited: {
-      ...defaultExitedProps,
-      filter: 'blur(20px)',
-    },
-    entered: {
-      opacity: 1,
-      filter: 'blur(0px)',
-    },
-    transition: {},
-  },
-  scaleDown: {
-    exited: {
-      ...defaultExitedProps,
-      scale: 1.2,
-    },
-    entered: {
-      opacity: 1,
-      scale: 1,
-    },
-    transition: {
-      scale: {
-        type: 'tween',
-        ease: [0.165, 0.84, 0.44, 1],
-      },
-    },
-  },
-  scaleUp: {
-    exited: {
-      ...defaultExitedProps,
-      scale: 0.75,
-    },
-    entered: {
-      opacity: 1,
-      scale: 1,
-    },
-    transition: {
-      scale: {
-        type: 'tween',
-        ease: [0.165, 0.84, 0.44, 1],
-      },
-    },
-  },
-}
-
-const mergeCustomTransitionWithDefault = (
-  transitions: TransitionMap,
-  props: Transition,
-): TransitionMap | Transition =>
-  transitions
-    ? Object.keys(transitions).reduce(
-        (a, c) => ({
-          ...a,
-          [c]: {
-            ...transitions[c as string],
-            ...props,
-          },
-        }),
-        props,
-      )
-    : props
-
-export type BoxAnimationType = {
-  containerAnimationProps: {
-    transition: Transition
-    variants: Variants
-  }
-  parentAnimationProps: {
-    transition: Transition
-  }
-  childAnimationProps: {
-    transition: Transition
-    variants: Variants
-  }
-}
 
 const useElementOnScreen = (element: HTMLElement | null, options: IntersectionObserverInit) => {
   const [isVisible, setIsVisible] = useState(false)
@@ -219,147 +39,156 @@ const useElementOnScreen = (element: HTMLElement | null, options: IntersectionOb
   return isVisible
 }
 
-type UseBoxAnimationsPayload = {
-  initial?: { container: MotionProps['initial']; parent: MotionProps['initial'] }
-  animate?: { container: MotionProps['animate']; parent: MotionProps['animate'] }
-  variants?: { container: MotionProps['variants']; child: MotionProps['variants'] }
-  transition?: {
-    container: MotionProps['transition']
-    parent: MotionProps['transition']
-    child: MotionProps['transition']
-  }
-  key?: { container: string }
+export type BoxAnimationProps = {
+  boxAnimateType?: ResponsiveSelectValue<BoxAnimateIn>
+  boxAnimateDuration?: ResponsiveNumberValue
+  boxAnimateDelay?: ResponsiveNumberValue
+  itemAnimateType?: ResponsiveSelectValue<BoxAnimateIn>
+  itemAnimateDuration?: ResponsiveNumberValue
+  itemAnimateDelay?: ResponsiveNumberValue
+  itemStaggerDuration?: ResponsiveNumberValue
 }
 
-export const useBoxAnimations = ({
-  boxElement,
-  elements,
-  ...props
-}: {
-  boxAnimateType: ResponsiveValue<BoxAnimateIn> | undefined
-  boxAnimateDuration: ResponsiveValue<number> | undefined
-  boxAnimateDelay: ResponsiveValue<number> | undefined
-  itemAnimateType: ResponsiveValue<BoxAnimateIn> | undefined
-  itemAnimateDuration: ResponsiveValue<number> | undefined
-  itemAnimateDelay: ResponsiveValue<number> | undefined
-  itemStaggerDuration: ResponsiveValue<number> | undefined
-  boxElement: HTMLElement | null
-  elements: Element[] | undefined
-}): UseBoxAnimationsPayload => {
-  const reducedMotion = useReducedMotion()
-  const boxAnimateType = useMediaQuery(props.boxAnimateType) || DEFAULT_BOX_ANIMATE_TYPE
-  const boxAnimateDuration = useMediaQuery(props.boxAnimateDuration) || DEFAULT_BOX_ANIMATE_DURATION
-  const boxAnimateDelay = useMediaQuery(props.boxAnimateDelay) || DEFAULT_BOX_ANIMATE_DELAY
-  const itemAnimateType = useMediaQuery(props.itemAnimateType) || DEFAULT_ITEM_ANIMATE_TYPE
-  const itemAnimateDuration =
-    useMediaQuery(props.itemAnimateDuration) || DEFAULT_ITEM_ANIMATE_DURATION
-  const itemAnimateDelay = useMediaQuery(props.itemAnimateDelay) || DEFAULT_ITEM_ANIMATE_DELAY
-  const itemStaggerDuration =
-    useMediaQuery(props.itemStaggerDuration) || DEFAULT_ITEM_STAGGER_DURATION
+function compareResponsiveValues<T>(a?: ResponsiveValue<T>, b?: ResponsiveValue<T>) {
+  if (a == null && b == null) {
+    return true
+  }
+  if (a != null && b != null) {
+    let isEqual = true
+    a.forEach((currentA, index) => {
+      const currentB = b.at(index)
+      if (currentB == null) {
+        isEqual = false
+        return
+      }
 
-  const isBoxVisible = useElementOnScreen(boxElement, {
+      if (currentA.deviceId != currentB?.deviceId || currentA.value != currentB.value) {
+        isEqual = false
+      }
+    })
+    return isEqual
+  }
+
+  return false
+}
+
+export function areBoxAnimationPropsEqual(prevProps: BoxAnimationProps, props: BoxAnimationProps) {
+  return (
+    compareResponsiveValues(prevProps.boxAnimateType, props.boxAnimateType) &&
+    compareResponsiveValues(prevProps.boxAnimateDuration, props.boxAnimateDuration) &&
+    compareResponsiveValues(prevProps.boxAnimateDelay, props.boxAnimateDelay) &&
+    compareResponsiveValues(prevProps.itemAnimateType, props.itemAnimateType) &&
+    compareResponsiveValues(prevProps.itemAnimateDuration, props.itemAnimateDuration) &&
+    compareResponsiveValues(prevProps.itemAnimateDelay, props.itemAnimateDelay) &&
+    compareResponsiveValues(prevProps.itemStaggerDuration, props.itemStaggerDuration)
+  )
+}
+
+const exitedBoxAnimationProperties: { [key in BoxAnimateIn]: CSSObject } = {
+  none: { opacity: 1 },
+  fadeIn: { opacity: 0 },
+  fadeLeft: { transform: 'translate3d(60px,0,0)', opacity: 0 },
+  fadeRight: { transform: 'translate3d(-60px,0,0)', opacity: 0 },
+  fadeDown: { transform: 'translate3d(0,-80px,0)', opacity: 0 },
+  fadeUp: { transform: 'translate3d(0,80px,0)', opacity: 0 },
+  blurIn: { filter: 'blur(20px)', opacity: 0 },
+  scaleDown: {
+    transform: 'scale(1.2)',
+    opacity: 0,
+  },
+  scaleUp: {
+    transform: 'scale(.75)',
+    opacity: 0,
+  },
+}
+
+const enteredBoxAnimationProperties: { [key in BoxAnimateIn]: CSSObject } = {
+  none: { opacity: 1 },
+  fadeIn: { opacity: 1 },
+  fadeLeft: { transform: 'translate3d(0px,0,0)', opacity: 1 },
+  fadeRight: { transform: 'translate3d(0px,0,0)', opacity: 1 },
+  fadeDown: { transform: 'translate3d(0,0px,0)', opacity: 1 },
+  fadeUp: { transform: 'translate3d(0,0px,0)', opacity: 1 },
+  blurIn: { filter: 'blur(0px)', opacity: 1 },
+  scaleDown: {
+    transform: 'scale(1)',
+    opacity: 1,
+  },
+  scaleUp: {
+    transform: 'scale(1)',
+    opacity: 1,
+  },
+}
+
+export function useBoxAnimation(
+  boxElement: HTMLElement | null,
+  responsiveAnimationType: ResponsiveValue<BoxAnimateIn> | undefined,
+  responsiveDuration: ResponsiveValue<number> | undefined,
+  responisveDelay: ResponsiveValue<number> | undefined,
+  itemResponsiveAnimationType: ResponsiveValue<BoxAnimateIn> | undefined,
+): [string, () => void] {
+  const isVisible = useElementOnScreen(boxElement, {
     root: null,
     rootMargin: `0px 0px -10% 0px`,
     threshold: 0.2,
   })
+  const animationType = useMediaQuery(responsiveAnimationType) || DEFAULT_BOX_ANIMATE_TYPE
+  const itemAnimationType = useMediaQuery(itemResponsiveAnimationType) || DEFAULT_ITEM_ANIMATE_TYPE
+  const duration = useMediaQuery(responsiveDuration) || DEFAULT_BOX_ANIMATE_DURATION
+  const delay = useMediaQuery(responisveDelay) || DEFAULT_BOX_ANIMATE_DELAY
+  const actualDelay = delay * 1000
+  const actualDuration = duration * 1000
 
-  const itemControls = useAnimation()
-  const boxControls = useAnimation()
-
-  const setSequence = useCallback(
-    (variant: keyof BoxAnimationVariants) => {
-      boxControls.stop()
-      itemControls.stop()
-      boxControls.set(variant)
-      itemControls.set(variant)
-    },
-    [boxControls, itemControls],
-  )
-
-  const playSequence = useCallback(() => {
-    boxControls.stop()
-    itemControls.stop()
-    boxControls.set('exited')
-    itemControls.set('exited')
-    boxControls.start('entered')
-    itemControls.start('entered')
-  }, [boxControls, itemControls])
-
-  useEffect(() => {
-    if (isBoxVisible) {
-      setSequence('entered')
-    }
-  }, [
-    elements
-      ?.map(e => e.key)
-      .sort()
-      .join(),
-    setSequence,
-  ])
-
-  useEffect(() => {
-    if (isBoxVisible) {
-      playSequence()
-    }
-  }, [
-    isBoxVisible,
-    boxAnimateType,
-    boxAnimateDuration,
-    boxAnimateDelay,
-    itemAnimateType,
-    itemAnimateDuration,
-    itemAnimateDelay,
-    itemStaggerDuration,
-    reducedMotion,
-    playSequence,
-  ])
-
-  const boxVariant = boxAnimations[boxAnimateType]
-  const itemVariant = boxAnimations[itemAnimateType]
-
-  return {
-    initial: {
-      container: reducedMotion ? 'entered' : 'exited',
-      parent: reducedMotion ? 'entered' : 'exited',
-    },
-    animate: {
-      container: reducedMotion ? undefined : boxControls,
-      parent: reducedMotion ? undefined : itemControls,
-    },
-    variants: {
-      container: {
-        exited: boxVariant.exited,
-        entered: boxVariant.entered,
-      },
-      child: {
-        exited: itemVariant.exited,
-        entered: itemVariant.entered,
-      },
-    },
-    transition: {
-      container: mergeCustomTransitionWithDefault(boxVariant.transition, {
-        delay: boxAnimateDelay,
-        duration: boxAnimateDuration,
-      }),
-      parent: {
-        delayChildren: itemAnimateDelay,
-        staggerChildren: itemStaggerDuration,
-        duration: itemAnimateDuration,
-      },
-      child: mergeCustomTransitionWithDefault(itemVariant.transition, {
-        duration: itemAnimateDuration,
-      }),
-    },
-    key: {
-      container:
-        boxAnimateType +
-        boxAnimateDuration +
-        boxAnimateDelay +
-        itemAnimateType +
-        itemAnimateDuration +
-        itemAnimateDelay +
-        itemStaggerDuration +
-        reducedMotion,
+  const entered = {
+    ...enteredBoxAnimationProperties[animationType],
+    transition: `transform ${actualDuration}ms cubic-bezier(0.16, 0.84, 0.44, 1) ${actualDelay}ms,filter ${actualDuration}ms cubic-bezier(0.16, 0.84, 0.44, 1) ${actualDelay}ms, opacity ${actualDuration}ms ease ${actualDelay}ms`,
+    [`& > div > .${gridItemIdentifierClassName}`]: {
+      ...enteredBoxAnimationProperties[itemAnimationType],
     },
   }
+
+  const exited = {
+    ...exitedBoxAnimationProperties[animationType],
+    transition: `all 0ms`,
+    [`& > div > .${gridItemIdentifierClassName}`]: {
+      ...exitedBoxAnimationProperties[itemAnimationType],
+    },
+  }
+
+  const [isEntered, setEntered] = useState(false)
+
+  useEffect(() => {
+    if (isVisible && !isEntered) setEntered(true)
+  }, [isVisible, entered])
+
+  const replayAnimation = useCallback(() => {
+    setEntered(false)
+  }, [])
+
+  return [
+    useStyle({
+      '@media (prefers-reduced-motion: no-preference)': isEntered ? entered : exited,
+    }),
+    replayAnimation,
+  ]
+}
+
+export function useItemAnimation(
+  responsiveDuration: ResponsiveValue<number> | undefined,
+  responisveDelay: ResponsiveValue<number> | undefined,
+  responsiveStagger: ResponsiveValue<number> | undefined,
+  index: number,
+) {
+  const duration = useMediaQuery(responsiveDuration) || DEFAULT_BOX_ANIMATE_DURATION
+  const delay = useMediaQuery(responisveDelay) || DEFAULT_BOX_ANIMATE_DELAY
+  const stagger = useMediaQuery(responsiveStagger) || DEFAULT_ITEM_STAGGER_DURATION
+  const delayFromStagger = responsiveStagger == null || index == null ? 0 : stagger * index
+  const actualDelay = (delay + delayFromStagger) * 1000
+  const actualDuration = duration * 1000
+
+  return useStyle({
+    '@media (prefers-reduced-motion: no-preference)': {
+      transition: `transform ${actualDuration}ms cubic-bezier(0.16, 0.84, 0.44, 1) ${actualDelay}ms,filter ${actualDuration}ms cubic-bezier(0.16, 0.84, 0.44, 1) ${actualDelay}ms, opacity ${actualDuration}ms ease ${actualDelay}ms`,
+    },
+  })
 }
