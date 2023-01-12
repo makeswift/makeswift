@@ -178,7 +178,7 @@ const Text = forwardRef(function Text(
       id={id}
       ref={setEditor}
       className={cx(width, margin)}
-      readOnly={!isInBuilder}
+      readOnly={!isInBuilder || controller == null}
       value={value}
       onChange={handleChange}
       onFocus={handleFocus}
