@@ -2,7 +2,7 @@
 
 ## 0.2.0
 
-### Minor Changes
+BREAKING CHANGE: The Next.js plugin will now check the version of Next.js being used and if it is less than v12.2.0 an error is thrown.
 
 - c3041ff: Adds Next.js version checking, and transpile package support for Next.js 13.
 
