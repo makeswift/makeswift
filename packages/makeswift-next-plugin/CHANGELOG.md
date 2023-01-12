@@ -1,5 +1,11 @@
 # @makeswift/next-plugin
 
+## 0.2.0
+
+### Minor Changes
+
+- c3041ff: Adds Next.js version checking, and transpile package support for Next.js 13.
+
 ## 0.1.7
 
 ### Patch Changes
