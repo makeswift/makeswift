@@ -1,5 +1,15 @@
 # @makeswift/runtime
 
+## 0.5.3
+
+### Patch Changes
+
+- 9849bea: Fix SSR hydration mismatch due to attempting to render ReactPlayer on the server.
+
+  See https://github.com/cookpete/react-player/issues/1428.
+
+- 55c8439: Fix issue where API resource cache was filled too late resulting in unnecessary API requests.
+
 ## 0.5.2
 
 ### Patch Changes
