@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.5.1
+
+### Patch Changes
+
+- 5a657ea: Swap @framer/motion box animation for a light CSS version.
+
 ## 0.5.0
 
 This is our first release that supports Next.js v13.
