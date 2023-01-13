@@ -1,33 +1,33 @@
-/* eslint-env browser */
-
-import { useState } from 'react'
-
+import { useSyncExternalStore } from 'use-sync-external-store/shim'
 import { DeviceOverride } from '../../prop-controllers'
 import { DEVICES, findDeviceOverride, getDeviceMediaQuery } from '../utils/devices'
-import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect'
 
-export function useMediaQuery<S>(responsiveValue?: Array<DeviceOverride<S>>): S | void {
-  const [deviceId, setDeviceId] = useState(DEVICES[0].id)
-  const { value } = findDeviceOverride(responsiveValue, deviceId) || {}
+const DEVICE_QUERIES = DEVICES.map(device => ({
+  id: device.id,
+  query: getDeviceMediaQuery(device).replace('@media', ''),
+}))
 
-  useIsomorphicLayoutEffect(() => {
-    if (responsiveValue == null || window == null) return () => {}
-
-    const cleanUpFns = DEVICES.map(device => {
-      const mediaQueryList = window.matchMedia(getDeviceMediaQuery(device).replace('@media', ''))
-
-      const listener = () => {
-        if (mediaQueryList.matches) setDeviceId(device.id)
-      }
-
-      listener()
-      mediaQueryList.addListener(listener)
-
-      return () => mediaQueryList.removeListener(listener)
-    })
-
-    return () => cleanUpFns.forEach(fn => fn())
+function subscribe(notify: () => void) {
+  const cleanUpFns = DEVICE_QUERIES.map(q => {
+    const mediaQueryList = window.matchMedia(q.query)
+    mediaQueryList.addEventListener('change', notify)
+    return () => mediaQueryList.removeEventListener('change', notify)
   })
+  return () => cleanUpFns.forEach(fn => fn())
+}
 
-  return value
+export function useMediaQuery<S>(responsiveValue?: Array<DeviceOverride<S>>): S | undefined {
+  const getServerSnapshot = () => findDeviceOverride(responsiveValue, DEVICES[0].id)?.value
+
+  function getSnapshot() {
+    const deviceId: string = DEVICE_QUERIES.reduce((matchedDevice, deviceQueries) => {
+      if (window.matchMedia(deviceQueries.query).matches) {
+        return deviceQueries.id
+      }
+      return matchedDevice
+    }, DEVICE_QUERIES[0].id)
+    return findDeviceOverride(responsiveValue, deviceId)?.value
+  }
+
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 }
