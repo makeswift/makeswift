@@ -1,3 +1,10 @@
+/**
+ * We _cannot_ interpolate fragments into other fragments. Doing so results in a document with
+ * multiple fragment definitions, which is ambiguous when attempting to read a fragment from the
+ * cache. This ambiguity results in an error being thrown by `@apollo/client` in the Makeswift
+ * builder when attempting to send API resources to the host's runtime.
+ */
+
 export const SwatchFragment = /* GraphQL */ `
   fragment Swatch on Swatch {
     __typename
@@ -114,11 +121,17 @@ export const PageFragment = /* GraphQL */ `
     __typename
     id
     snippets {
-      ...Snippet
+      __typename
+      id
+      name
+      code
+      cleanup
+      location
+      shouldAddToNewPages
+      liveEnabled
+      builderEnabled
     }
   }
-
-  ${SnippetFragment}
 `
 
 export const SiteFragment = /* GraphQL */ `
