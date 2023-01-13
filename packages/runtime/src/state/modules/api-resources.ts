@@ -46,9 +46,6 @@ export function getAPIResource<T extends APIResourceType>(
 
 export function reducer(state: State = getInitialState(), action: Action): State {
   switch (action.type) {
-    case ActionTypes.RESTORE_API_RESOURCES_CACHE:
-      return getInitialState(action.payload.serializedState)
-
     case ActionTypes.API_RESOURCE_FULFILLED: {
       const { resourceType, resourceId, resource } = action.payload
 

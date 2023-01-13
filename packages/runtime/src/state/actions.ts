@@ -13,7 +13,6 @@ import type { APIResource, APIResourceType, Typography } from '../api/graphql/ty
 import type { SerializedControl } from '../builder'
 import { IntrospectedResourcesQueryResult } from '../api/graphql/generated/types'
 import { IntrospectedResourceIds } from '../api/introspection'
-import { SerializedState } from './modules/api-resources'
 
 export const ActionTypes = {
   INIT: 'INIT',
@@ -66,8 +65,6 @@ export const ActionTypes = {
   API_RESOURCE_FULFILLED: 'API_RESOURCE_FULFILLED',
   INTROSPECTED_RESOURCES_FULFILLED: 'INTROSPECTED_RESOURCES_FULFILLED',
   TYPOGRAPHIES_FULFILLED: 'TYPOGRAPHIES_FULFILLED',
-
-  RESTORE_API_RESOURCES_CACHE: 'RESTORE_API_RESOURCES_CACHE',
 } as const
 
 type InitAction = { type: typeof ActionTypes.INIT }
@@ -254,11 +251,6 @@ type TypographiesFulfilledAction = {
   payload: { typographyIds: string[]; typographies: (Typography | null)[] }
 }
 
-type RestoreAPIResourcesCacheAction = {
-  type: typeof ActionTypes.RESTORE_API_RESOURCES_CACHE
-  payload: { serializedState: SerializedState }
-}
-
 export type Action =
   | InitAction
   | CleanUpAction
@@ -295,7 +287,6 @@ export type Action =
   | APIResourceFulfilledAction
   | IntrospectedResourcesFulfilled
   | TypographiesFulfilledAction
-  | RestoreAPIResourcesCacheAction
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }
@@ -611,10 +602,4 @@ export function introspectedResourcesFulfilled(
     type: ActionTypes.INTROSPECTED_RESOURCES_FULFILLED,
     payload: { introspectedResourceIds, introspectedResources },
   }
-}
-
-export function restoreAPIResourcesCache(
-  serializedState: SerializedState,
-): RestoreAPIResourcesCacheAction {
-  return { type: ActionTypes.RESTORE_API_RESOURCES_CACHE, payload: { serializedState } }
 }
