@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import Image from 'next/legacy/image'
 import Link from 'next/link'
 
 import { useProducts } from 'lib/products-context'
@@ -21,25 +21,27 @@ export function ProductList({ className, collectionId, count }: Props) {
       ) : (
         products.map(product => {
           return (
-            <Link href={`/product/${product.handle}`} key={product.id}>
-              <a className="w-[325px] max-w-full group">
-                <div className="relative z-0">
-                  <Image
-                    className=""
-                    src={product.featuredImage.url}
-                    alt={product.featuredImage.altText}
-                    width="325"
-                    height="400"
-                  ></Image>
-                  <div className="absolute inset-0 group-hover:bg-white/10 group-hover:backdrop-saturate-10 transition-all"></div>
-                </div>
-                <div className="pt-3 flex flex-col">
-                  <p className="font-light text-xl">{product.title}</p>
-                  <p className="text-base text-green">
-                    $ {parseFloat(product.priceRange.minVariantPrice.amount).toFixed(0)}
-                  </p>
-                </div>
-              </a>
+            <Link
+              href={`/product/${product.handle}`}
+              key={product.id}
+              className="w-[325px] max-w-full group"
+            >
+              <div className="relative z-0">
+                <Image
+                  className=""
+                  src={product.featuredImage.url}
+                  alt={product.featuredImage.altText}
+                  width="325"
+                  height="400"
+                ></Image>
+                <div className="absolute inset-0 group-hover:bg-white/10 group-hover:backdrop-saturate-10 transition-all"></div>
+              </div>
+              <div className="pt-3 flex flex-col">
+                <p className="font-light text-xl">{product.title}</p>
+                <p className="text-base text-green">
+                  $ {parseFloat(product.priceRange.minVariantPrice.amount).toFixed(0)}
+                </p>
+              </div>
             </Link>
           )
         })

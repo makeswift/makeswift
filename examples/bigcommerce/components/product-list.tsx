@@ -21,22 +21,24 @@ export function ProductList({ className, categoryEntityId, count }: Props) {
       ) : (
         products.map(product => {
           return (
-            <Link href={`/product/${product.entityId}`} key={product.entityId}>
-              <a className="w-[325px] max-w-full group">
-                <div className="relative z-0">
-                  <img
-                    className=""
-                    src={product.defaultImage.urlOriginal}
-                    alt={product.defaultImage.altText}
-                    width="325"
-                  />
-                  <div className="absolute inset-0 group-hover:bg-white/10 group-hover:backdrop-saturate-10 transition-all"></div>
-                </div>
-                <div className="pt-3 flex flex-col">
-                  <p className="font-light text-xl">{product.name}</p>
-                  <p className="text-base text-green">$ {product.prices.price.value}</p>
-                </div>
-              </a>
+            <Link
+              href={`/product/${product.entityId}`}
+              key={product.entityId}
+              className="w-[325px] max-w-full group"
+            >
+              <div className="relative z-0">
+                <img
+                  className=""
+                  src={product.defaultImage.urlOriginal}
+                  alt={product.defaultImage.altText}
+                  width="325"
+                />
+                <div className="absolute inset-0 group-hover:bg-white/10 group-hover:backdrop-saturate-10 transition-all"></div>
+              </div>
+              <div className="pt-3 flex flex-col">
+                <p className="font-light text-xl">{product.name}</p>
+                <p className="text-base text-green">$ {product.prices.price.value}</p>
+              </div>
             </Link>
           )
         })
