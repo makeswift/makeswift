@@ -1,5 +1,5 @@
 import { Popover, Transition } from '@headlessui/react'
-import Image from 'next/image'
+import Image from 'next/legacy/image'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -23,72 +23,74 @@ function CartItem({ line }: CartItemProps) {
   const { updateLines, removeLines } = useCart()
   const [cartState, setCartItemState] = useState<CartItemState>('initial')
   return (
-    <Link href={`/product/${line.merchandise.product.handle}`}>
-      <a className={`flex w-full space-x-4 items-end`} key={line.id}>
-        <Image
-          src={line.merchandise.image.url}
-          alt={line.merchandise.image.altText}
-          layout="fixed"
-          width={70}
-          height={80}
-        />
-        <div className="flex flex-col flex-grow items-start justify-between">
-          <div className="text-base text-black">{line.merchandise.product.title}</div>
-          <div className="text-sm text-green mb-2">{formatPrice(line.cost.totalAmount.amount)}</div>
-          <div className="flex justify-center items-center space-x-2">
-            <button
-              disabled={cartState === 'loading'}
-              className="disabled:cursor-not-allowed"
-              aria-label="Decrease quantity"
-              onClick={async e => {
-                e.preventDefault()
-                if (line.quantity <= 0) return
-                setCartItemState('loading')
-                await updateLines([
-                  {
-                    id: line.id,
-                    quantity: line.quantity - 1,
-                  },
-                ])
-                setCartItemState('initial')
-              }}
-            >
-              <Minus28 />
-            </button>
-            <div>{line.quantity}</div>
-            <button
-              disabled={cartState === 'loading'}
-              className="disabled:cursor-not-allowed"
-              aria-label="Increase quantity"
-              onClick={async e => {
-                e.preventDefault()
-                setCartItemState('loading')
-                await updateLines([
-                  {
-                    id: line.id,
-                    quantity: line.quantity + 1,
-                  },
-                ])
-                setCartItemState('initial')
-              }}
-            >
-              <Plus28 />
-            </button>
-          </div>
+    <Link
+      href={`/product/${line.merchandise.product.handle}`}
+      className={`flex w-full space-x-4 items-end`}
+      key={line.id}
+    >
+      <Image
+        src={line.merchandise.image.url}
+        alt={line.merchandise.image.altText}
+        layout="fixed"
+        width={70}
+        height={80}
+      />
+      <div className="flex flex-col flex-grow items-start justify-between">
+        <div className="text-base text-black">{line.merchandise.product.title}</div>
+        <div className="text-sm text-green mb-2">{formatPrice(line.cost.totalAmount.amount)}</div>
+        <div className="flex justify-center items-center space-x-2">
+          <button
+            disabled={cartState === 'loading'}
+            className="disabled:cursor-not-allowed"
+            aria-label="Decrease quantity"
+            onClick={async e => {
+              e.preventDefault()
+              if (line.quantity <= 0) return
+              setCartItemState('loading')
+              await updateLines([
+                {
+                  id: line.id,
+                  quantity: line.quantity - 1,
+                },
+              ])
+              setCartItemState('initial')
+            }}
+          >
+            <Minus28 />
+          </button>
+          <div>{line.quantity}</div>
+          <button
+            disabled={cartState === 'loading'}
+            className="disabled:cursor-not-allowed"
+            aria-label="Increase quantity"
+            onClick={async e => {
+              e.preventDefault()
+              setCartItemState('loading')
+              await updateLines([
+                {
+                  id: line.id,
+                  quantity: line.quantity + 1,
+                },
+              ])
+              setCartItemState('initial')
+            }}
+          >
+            <Plus28 />
+          </button>
         </div>
-        <button
-          disabled={cartState === 'loading'}
-          onClick={async e => {
-            e.preventDefault()
-            setCartItemState('loading')
-            await removeLines([line.id])
-            setCartItemState('initial')
-          }}
-          className="h-8 px-3 text-xs border-2 border-solid border-[rgba(0,0,0,0.15)] rounded-full disabled:cursor-not-allowed"
-        >
-          Remove
-        </button>
-      </a>
+      </div>
+      <button
+        disabled={cartState === 'loading'}
+        onClick={async e => {
+          e.preventDefault()
+          setCartItemState('loading')
+          await removeLines([line.id])
+          setCartItemState('initial')
+        }}
+        className="h-8 px-3 text-xs border-2 border-solid border-[rgba(0,0,0,0.15)] rounded-full disabled:cursor-not-allowed"
+      >
+        Remove
+      </button>
     </Link>
   )
 }
