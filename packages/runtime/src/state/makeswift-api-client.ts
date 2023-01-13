@@ -6,7 +6,6 @@ import {
   Action,
   apiResourceFulfilled,
   typographiesFulfilled,
-  restoreAPIResourcesCache,
   introspectedResourcesFulfilled,
 } from './actions'
 import { APIResource, APIResourceType, Typography } from '../api'
@@ -181,8 +180,6 @@ export function fetchTypographies(typographyIds: string[]): Thunk<Promise<(Typog
     return typographies
   }
 }
-
-export { restoreAPIResourcesCache }
 
 export type Dispatch = ThunkDispatch<State, GraphQLClient, Action>
 

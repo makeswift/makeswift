@@ -76,10 +76,6 @@ export class MakeswiftClient {
     return MakeswiftApiClient.getSerializedState(this.makeswiftApiClient.getState())
   }
 
-  updateCacheData(cacheData: CacheData): void {
-    this.makeswiftApiClient.dispatch(MakeswiftApiClient.restoreAPIResourcesCache(cacheData))
-  }
-
   readSwatch(swatchId: string): Swatch | null {
     return MakeswiftApiClient.getAPIResource(
       this.makeswiftApiClient.getState(),

@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from 'react'
+import { memo, useMemo } from 'react'
 
 import { RuntimeProvider } from '../runtimes/react'
 import { Page as PageMeta } from '../components/page'
@@ -121,17 +121,14 @@ export async function getServerSideProps(
 }
 
 export const Page = memo(({ snapshot }: PageProps) => {
-  const [client] = useState(
+  const client = useMemo(
     () =>
       new MakeswiftClient({
         uri: new URL('graphql', snapshot.apiOrigin).href,
         cacheData: snapshot.cacheData,
       }),
+    [snapshot],
   )
-
-  useEffect(() => {
-    client.updateCacheData(snapshot.cacheData)
-  }, [client, snapshot])
 
   return (
     <RuntimeProvider
