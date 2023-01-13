@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.5.2
+
+### Patch Changes
+
+- cf486bb: Fix suspense boundary hydration issue.
+
 ## 0.5.1
 
 ### Patch Changes
