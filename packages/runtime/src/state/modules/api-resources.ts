@@ -1,4 +1,5 @@
 import { APIResource, APIResourceType } from '../../api'
+import deepEqual from '../../utils/deepEqual'
 import { Action, ActionTypes } from '../actions'
 
 type State = Map<APIResourceType, Map<string, APIResource | null>>
@@ -109,7 +110,15 @@ export function reducer(state: State = getInitialState(), action: Action): State
       return new Map(state).set(APIResourceType.Typography, typographies)
     }
 
-    case ActionTypes.CHANGE_API_RESOURCE:
+    case ActionTypes.CHANGE_API_RESOURCE: {
+      const existingApiResource = getAPIResource(
+        state,
+        action.payload.resource.__typename,
+        action.payload.resource.id,
+      )
+
+      if (deepEqual(existingApiResource, action.payload.resource)) return state
+
       return new Map(state).set(
         action.payload.resource.__typename,
         new Map(state.get(action.payload.resource.__typename)!).set(
@@ -117,6 +126,7 @@ export function reducer(state: State = getInitialState(), action: Action): State
           action.payload.resource,
         ),
       )
+    }
 
     case ActionTypes.EVICT_API_RESOURCE: {
       const [resourceType, resourceId] = action.payload.id.split(':')
