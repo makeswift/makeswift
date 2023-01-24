@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.5.5
+
+### Patch Changes
+
+- 13e1ab4: Re-add `MakeswiftComponentType` back to `@makeswift/runtime/components`
+
 ## 0.5.4
 
 ### Patch Changes
