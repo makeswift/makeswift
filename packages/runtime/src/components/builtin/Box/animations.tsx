@@ -1,5 +1,5 @@
 import { CSSObject } from '@emotion/css'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   ResponsiveNumberValue,
   ResponsiveSelectValue,
@@ -17,26 +17,29 @@ import {
   DEFAULT_ITEM_STAGGER_DURATION,
 } from './constants'
 
-const useElementOnScreen = (element: HTMLElement | null, options: IntersectionObserverInit) => {
+function useElementOnScreen(
+  options: IntersectionObserverInit,
+): [boolean, (element: HTMLElement | null) => void] {
   const [isVisible, setIsVisible] = useState(false)
+  const intersectionObserverRef = useRef<IntersectionObserver | null>(null)
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(intersectionCallback, options)
+  const setElement = useCallback((element: HTMLElement | null) => {
+    if (element != null) {
+      const observer = new IntersectionObserver(([entry]) => {
+        if (entry?.isIntersecting) setIsVisible(true)
+      }, options)
 
-    if (element) observer.observe(element)
+      observer.observe(element)
 
-    return () => {
-      if (element) observer.unobserve(element)
+      intersectionObserverRef.current = observer
+    } else {
+      intersectionObserverRef.current?.disconnect()
+
+      intersectionObserverRef.current = null
     }
+  }, [])
 
-    function intersectionCallback([entry]: IntersectionObserverEntry[]) {
-      if (entry?.isIntersecting) {
-        setIsVisible(true)
-      }
-    }
-  }, [element, options])
-
-  return isVisible
+  return [isVisible, setElement]
 }
 
 export type BoxAnimationProps = {
@@ -121,13 +124,12 @@ const enteredBoxAnimationProperties: { [key in BoxAnimateIn]: CSSObject } = {
 }
 
 export function useBoxAnimation(
-  boxElement: HTMLElement | null,
   responsiveAnimationType: ResponsiveValue<BoxAnimateIn> | undefined,
   responsiveDuration: ResponsiveValue<number> | undefined,
   responisveDelay: ResponsiveValue<number> | undefined,
   itemResponsiveAnimationType: ResponsiveValue<BoxAnimateIn> | undefined,
-): [string, () => void] {
-  const isVisible = useElementOnScreen(boxElement, {
+): [string, () => void, (element: HTMLElement | null) => void] {
+  const [isVisible, setElement] = useElementOnScreen({
     root: null,
     rootMargin: `0px 0px -10% 0px`,
     threshold: 0.2,
@@ -170,6 +172,7 @@ export function useBoxAnimation(
       '@media (prefers-reduced-motion: no-preference)': isEntered ? entered : exited,
     }),
     replayAnimation,
+    setElement,
   ]
 }
 
