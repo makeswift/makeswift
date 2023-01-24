@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.5.4
+
+### Patch Changes
+
+- 01f0c0a: Move `MakeswiftComponentType` from `@makeswift/runtime/components` to `@makeswift/runtime`
+- ef785cc: Fix snippets don't run on client-side navigation.
+
 ## 0.5.3
 
 ### Patch Changes
