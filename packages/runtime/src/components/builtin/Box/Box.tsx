@@ -1,4 +1,12 @@
-import { forwardRef, Ref, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import {
+  forwardRef,
+  Ref,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 import { cx } from '@emotion/css'
 import { v4 as uuid } from 'uuid'
 
@@ -66,7 +74,18 @@ const Box = forwardRef(function Box(
   ref: Ref<BoxModelHandle>,
 ) {
   const innerRef = useRef<HTMLDivElement | null>(null)
-  const [boxElement, setBoxElement] = useState<HTMLElement | null>(null)
+  const boxElementObjectRef = useRef<HTMLElement | null>(null)
+  const [animationClassName, replayAnimation, setElement] = useBoxAnimation(
+    boxAnimateType,
+    boxAnimateDuration,
+    boxAnimateDelay,
+    itemAnimateType,
+  )
+  const boxElementCallbackRef = useCallback((current: HTMLElement | null) => {
+    boxElementObjectRef.current = current
+
+    setElement(current)
+  }, [])
 
   useImperativeHandle(
     ref,
@@ -74,7 +93,7 @@ const Box = forwardRef(function Box(
       getBoxModel() {
         const paddingBoxElement = innerRef.current
         const borderBoxElement = innerRef.current
-        const marginBoxElement = boxElement
+        const marginBoxElement = boxElementObjectRef.current
         const borderBox = innerRef.current?.getBoundingClientRect()
         const paddingBoxComputedStyle =
           paddingBoxElement?.ownerDocument.defaultView?.getComputedStyle(paddingBoxElement)
@@ -104,19 +123,11 @@ const Box = forwardRef(function Box(
         return borderBox ? createBox({ borderBox, padding, border, margin }) : null
       },
     }),
-    [boxElement],
+    [],
   )
 
   const gridItemClassName = useStyle(
     responsiveStyle([verticalAlign], ([alignItems = 'flex-start']) => ({ alignItems })),
-  )
-
-  const [animationClassName, replayAnimation] = useBoxAnimation(
-    boxElement,
-    boxAnimateType,
-    boxAnimateDuration,
-    boxAnimateDelay,
-    itemAnimateType,
   )
 
   const [key, setKey] = useState(() => uuid())
@@ -142,7 +153,7 @@ const Box = forwardRef(function Box(
 
   return (
     <BackgroundsContainer
-      ref={setBoxElement}
+      ref={boxElementCallbackRef}
       id={id}
       className={cx(
         width,
