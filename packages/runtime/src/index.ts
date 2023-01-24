@@ -20,3 +20,4 @@ export type {
 } from './prop-controllers'
 export type { Element } from './state/react-page'
 export { createDocument } from './state/react-page'
+export { MakeswiftComponentType } from './components/builtin/constants'
