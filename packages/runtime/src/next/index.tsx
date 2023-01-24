@@ -136,7 +136,8 @@ export const Page = memo(({ snapshot }: PageProps) => {
       rootElements={new Map([[snapshot.document.id, snapshot.document.data]])}
       preview={snapshot.preview}
     >
-      <PageMeta document={snapshot.document} />
+      {/* We use a key here to reset the Snippets state in the PageMeta component */}
+      <PageMeta key={snapshot.document.data.key} document={snapshot.document} />
     </RuntimeProvider>
   )
 })
