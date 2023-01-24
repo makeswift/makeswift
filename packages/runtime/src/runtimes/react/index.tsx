@@ -6,10 +6,11 @@ import {
   ReactNode,
   Ref,
   Suspense,
+  useCallback,
   useContext,
   useEffect,
   useImperativeHandle,
-  useState,
+  useRef,
 } from 'react'
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector'
 import dynamic from 'next/dynamic'
@@ -33,6 +34,7 @@ import { FallbackComponent } from '../../components/shared/FallbackComponent'
 import { PropsValue } from './controls'
 import { FindDomNode } from './find-dom-node'
 import { useGlobalElement } from './hooks/makeswift-api'
+import { ElementImperativeHandle } from './element-imperative-handle'
 
 export const storeContextDefaultValue = ReactPage.configureStore()
 
@@ -204,24 +206,18 @@ const ElementData = memo(
     ref: Ref<unknown>,
   ): JSX.Element {
     const Component = useComponent(elementData.type)
-    const [handle, setHandle] = useState<unknown | null>(null)
-    const [foundDomNode, setFoundDomNode] = useState<Element | Text | null>(null)
-
-    useImperativeHandle(ref, () => handle ?? foundDomNode, [handle, foundDomNode])
 
     suppressRefWarning(`\`ForwardRef(${ElementData.name})\``)
 
     if (Component == null) {
-      return <FallbackComponent ref={setHandle} text="Component not found" />
+      return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Component not found" />
     }
 
     return (
       <Suspense>
-        <FindDomNode ref={setFoundDomNode}>
-          <PropsValue element={elementData}>
-            {props => <Component {...props} key={elementData.key} ref={setHandle} />}
-          </PropsValue>
-        </FindDomNode>
+        <PropsValue element={elementData}>
+          {props => <Component {...props} key={elementData.key} ref={ref} />}
+        </PropsValue>
       </Suspense>
     )
   }),
@@ -236,7 +232,7 @@ type ElementRefereceProps = {
 const ElementReference = memo(
   forwardRef(function ElementReference(
     { elementReference }: ElementRefereceProps,
-    ref: Ref<unknown>,
+    ref: Ref<ElementImperativeHandle>,
   ): JSX.Element {
     const globalElement = useGlobalElement(elementReference.value)
     const globalElementData = globalElement?.data as ReactPage.ElementData | undefined
@@ -266,20 +262,31 @@ type ElementProps = {
 }
 
 export const Element = memo(
-  forwardRef(function Element({ element }: ElementProps, ref: Ref<unknown>): JSX.Element {
+  forwardRef(function Element(
+    { element }: ElementProps,
+    ref: Ref<ElementImperativeHandle>,
+  ): JSX.Element {
     const elementKey = element.key
     const dispatch = useDispatch()
     const documentKey = useDocumentKey()
-    const [handle, setHandle] = useState<unknown>(null)
+    const imperativeHandleRef = useRef(new ElementImperativeHandle())
+    const findDomNodeCallbackRef = useCallback((current: (() => Element | Text | null) | null) => {
+      imperativeHandleRef.current.callback(() => current?.() ?? null)
+    }, [])
+    const elementCallbackRef = useCallback((current: unknown | null) => {
+      imperativeHandleRef.current.callback(() => current)
+    }, [])
     const isRegisterElementDisabled = useContext(DisableRegisterElement)
 
-    useImperativeHandle(ref, () => handle, [handle])
+    useImperativeHandle(ref, () => imperativeHandleRef.current, [])
 
     useEffect(() => {
       if (documentKey == null || isRegisterElementDisabled) return
 
-      return dispatch(registerComponentHandleEffect(documentKey, elementKey, handle))
-    }, [dispatch, documentKey, elementKey, handle, isRegisterElementDisabled])
+      return dispatch(
+        registerComponentHandleEffect(documentKey, elementKey, imperativeHandleRef.current),
+      )
+    }, [dispatch, documentKey, elementKey, isRegisterElementDisabled])
 
     useEffect(() => {
       if (documentKey == null || isRegisterElementDisabled) return
@@ -287,10 +294,14 @@ export const Element = memo(
       return dispatch(mountComponentEffect(documentKey, elementKey))
     }, [dispatch, documentKey, elementKey, isRegisterElementDisabled])
 
-    return ReactPage.isElementReference(element) ? (
-      <ElementReference key={elementKey} ref={setHandle} elementReference={element} />
-    ) : (
-      <ElementData key={elementKey} ref={setHandle} elementData={element} />
+    return (
+      <FindDomNode ref={findDomNodeCallbackRef}>
+        {ReactPage.isElementReference(element) ? (
+          <ElementReference key={elementKey} ref={elementCallbackRef} elementReference={element} />
+        ) : (
+          <ElementData key={elementKey} ref={elementCallbackRef} elementData={element} />
+        )}
+      </FindDomNode>
     )
   }),
 )
@@ -300,7 +311,10 @@ type DocumentProps = {
 }
 
 const Document = memo(
-  forwardRef(function Document({ document }: DocumentProps, ref: Ref<unknown>): JSX.Element {
+  forwardRef(function Document(
+    { document }: DocumentProps,
+    ref: Ref<ElementImperativeHandle>,
+  ): JSX.Element {
     return (
       <DocumentContext.Provider value={document.key}>
         <Element ref={ref} element={document.rootElement} />
@@ -316,7 +330,7 @@ type DocumentReferenceProps = {
 export const DocumentReference = memo(
   forwardRef(function DocumentReference(
     { documentReference }: DocumentReferenceProps,
-    ref: Ref<unknown>,
+    ref: Ref<ElementImperativeHandle>,
   ): JSX.Element {
     const document = useDocument(documentReference.key)
 

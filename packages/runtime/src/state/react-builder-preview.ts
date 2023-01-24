@@ -42,6 +42,7 @@ import { ActionTypes } from './actions'
 import { createPropController, PropController } from '../prop-controllers/instances'
 import { serializeControls } from '../builder'
 import { MakeswiftClient } from '../api/react'
+import { ElementImperativeHandle } from '../runtimes/react/element-imperative-handle'
 
 export type { Operation } from './modules/read-write-documents'
 export type { BoxModelHandle } from './modules/box-models'
@@ -506,7 +507,10 @@ if (import.meta.vitest) {
       const documentKey = 'documentKey'
       const element: ReactPage.Element = { key: 'elementKey', type: 'type', props: {} }
       const store = createStore(reducer, applyMiddleware(thunk, propControllerHandlesMiddleware()))
-      const handle = { setPropControllers: fn() }
+      const setPropControllers = fn()
+      const handle = new ElementImperativeHandle()
+
+      handle.callback(() => ({ setPropControllers }))
 
       store.dispatch(registerDocument(ReactPage.createDocument(documentKey, element)))
 
@@ -514,7 +518,7 @@ if (import.meta.vitest) {
       store.dispatch(registerComponentHandle(documentKey, element.key, handle))
 
       // Assert
-      expect(handle.setPropControllers).toHaveBeenCalled()
+      expect(setPropControllers).toHaveBeenCalled()
     })
 
     it("doesn't register prop controllers for element references", () => {
@@ -522,7 +526,10 @@ if (import.meta.vitest) {
       const documentKey = 'documentKey'
       const element: ReactPage.Element = { type: 'reference', key: 'elementKey', value: 'value' }
       const store = createStore(reducer, applyMiddleware(thunk, propControllerHandlesMiddleware()))
-      const handle = { setPropControllers: fn() }
+      const setPropControllers = fn()
+      const handle = new ElementImperativeHandle()
+
+      handle.callback(() => ({ setPropControllers }))
 
       store.dispatch(registerDocument(ReactPage.createDocument(documentKey, element)))
 
@@ -530,7 +537,7 @@ if (import.meta.vitest) {
       store.dispatch(registerComponentHandle(documentKey, element.key, handle))
 
       // Assert
-      expect(handle.setPropControllers).not.toHaveBeenCalled()
+      expect(setPropControllers).not.toHaveBeenCalled()
     })
   })
 }
