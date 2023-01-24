@@ -13,6 +13,7 @@ import type { APIResource, APIResourceType, Typography } from '../api/graphql/ty
 import type { SerializedControl } from '../builder'
 import { IntrospectedResourcesQueryResult } from '../api/graphql/generated/types'
 import { IntrospectedResourceIds } from '../api/introspection'
+import { ElementImperativeHandle } from '../runtimes/react/element-imperative-handle'
 
 export const ActionTypes = {
   INIT: 'INIT',
@@ -136,7 +137,7 @@ type UnmountComponentAction = {
 
 type RegisterComponentHandleAction = {
   type: typeof ActionTypes.REGISTER_COMPONENT_HANDLE
-  payload: { documentKey: string; elementKey: string; componentHandle: unknown }
+  payload: { documentKey: string; elementKey: string; componentHandle: ElementImperativeHandle }
 }
 
 type UnregisterComponentHandleAction = {
@@ -412,7 +413,7 @@ export function mountComponentEffect(
 export function registerComponentHandle(
   documentKey: string,
   elementKey: string,
-  componentHandle: unknown,
+  componentHandle: ElementImperativeHandle,
 ): RegisterComponentHandleAction {
   return {
     type: ActionTypes.REGISTER_COMPONENT_HANDLE,
@@ -430,7 +431,7 @@ function unregisterComponentHandle(
 export function registerComponentHandleEffect(
   documentKey: string,
   elementKey: string,
-  componentHandle: unknown,
+  componentHandle: ElementImperativeHandle,
 ): ThunkAction<() => void, unknown, unknown, Action> {
   return dispatch => {
     dispatch(registerComponentHandle(documentKey, elementKey, componentHandle))
