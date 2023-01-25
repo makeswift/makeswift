@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.2.20
+
+### Patch Changes
+
+- 701ab88: Fix snippets don't run on client-side navigation.
+
 ## 0.2.19
 
 ### Patch Changes
