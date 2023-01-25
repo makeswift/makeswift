@@ -269,11 +269,16 @@ export const Element = memo(
     const elementKey = element.key
     const dispatch = useDispatch()
     const documentKey = useDocumentKey()
+    const useFindDomNodeRef = useRef(true)
     const imperativeHandleRef = useRef(new ElementImperativeHandle())
     const findDomNodeCallbackRef = useCallback((current: (() => Element | Text | null) | null) => {
-      imperativeHandleRef.current.callback(() => current?.() ?? null)
+      if (useFindDomNodeRef.current === true) {
+        imperativeHandleRef.current.callback(() => current?.() ?? null)
+      }
     }, [])
     const elementCallbackRef = useCallback((current: unknown | null) => {
+      useFindDomNodeRef.current = false
+
       imperativeHandleRef.current.callback(() => current)
     }, [])
     const isRegisterElementDisabled = useContext(DisableRegisterElement)
