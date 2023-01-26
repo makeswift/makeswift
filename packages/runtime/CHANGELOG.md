@@ -1,5 +1,23 @@
 # @makeswift/runtime
 
+## 0.6.0
+
+### Minor Changes
+
+- 99f5bc9: Adds a slimmer rich text component for live pages so that large dependencies like Slate and Immutable aren't included in bundles for live pages and are only used in the Makeswift builder. This reduces the overhead of the Makeswift runtime for live pages and boosts performance.
+
+  While behavior is intended to be the same, these changes modify the structure of the DOM for live pages, which could cause issues with existing sites if they're relying on the DOM structure of the Text component. For this reason we're releasing this in a minor update as a _breaking change_.
+
+### Patch Changes
+
+- 2662228: Fix duplicate cleanup call in component registration function.
+- c2ee57e: Avoid re-render from Box animations.
+- e05070e: Add missing Emotion dependencies that was causing Vite to include unnecessary JavaScript in the bundle.
+- 8e587d7: Use `findDOMNode` only if ref isn't being forwarded.
+- 0d9c55c: Avoid using React state to track element handle.
+- ed0f027: Avoid using React state for tracking BackgroundsContainer ref as it results in an extra render when the component mounts.
+- 0498e3d: Avoid registering documents in the live provider since document registration is currently only needed in the builder.
+
 ## 0.5.5
 
 ### Patch Changes
