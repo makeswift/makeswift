@@ -1,84 +1,58 @@
 import {
-  useState,
-  Ref,
-  useImperativeHandle,
-  forwardRef,
-  useEffect,
+  ReactNode,
   useCallback,
+  useEffect,
   useRef,
+  useState,
   KeyboardEvent as ReactKeyboardEvent,
   FocusEvent as ReactFocusEvent,
 } from 'react'
-import { Editor, OnChangeParam } from 'slate-react'
-import { Value, ValueJSON } from 'slate'
+
+import {
+  RichTextControl,
+  RichTextControlData,
+  RichTextDefinition,
+} from '../../../controls/rich-text'
+import { Text } from '../../../components'
+import { RichTextEditor } from '../../../components/builtin/Text/components/RichTextEditor'
 // @ts-expect-error: no types for 'slate-hotkeys'
 import Hotkeys from 'slate-hotkeys'
 import { isHotkey } from 'is-hotkey'
 
-import {
-  ElementIDValue,
-  RichTextDescriptor,
-  RichTextValue,
-} from '../../../prop-controllers/descriptors'
-import { BoxModelHandle, getBox } from '../../../box-model'
-import { PropControllersHandle } from '../../../state/modules/prop-controller-handles'
-import { RichTextEditor } from './components/RichTextEditor'
-import { useIsInBuilder } from '../../../runtimes/react'
-import { DescriptorsPropControllers } from '../../../prop-controllers/instances'
+import { Value } from 'slate'
+import { Editor, OnChangeParam } from 'slate-react'
+import { useIsInBuilder } from '../../../react'
 import { cx } from '@emotion/css'
-import { pollBoxModel } from '../../../runtimes/react/controls/slot'
-
-type Props = {
-  id?: ElementIDValue
-  text?: RichTextValue
-  width?: string
-  margin?: string
-}
-
-const defaultText: ValueJSON = {
-  document: { nodes: [{ object: 'block' as const, type: 'paragraph' as const, nodes: [] }] },
-  data: {},
-}
+import { pollBoxModel } from './slot'
+export type RichTextControlValue = ReactNode
 
 const COMMIT_DEBOUNCE_DELAY = 500
 
-type Descriptors = { text?: RichTextDescriptor }
-
-const Text = forwardRef(function Text(
-  { id, text, width, margin }: Props,
-  ref: Ref<BoxModelHandle & PropControllersHandle<Descriptors>>,
+export function useRichText(
+  data: RichTextControlData,
+  control: RichTextControl | null,
+  descriptor: RichTextDefinition,
 ) {
   const [element, setElement] = useState<HTMLElement | null>(null)
   const [editor, setEditor] = useState<Editor | null>(null)
-  const [propControllers, setPropControllers] =
-    useState<DescriptorsPropControllers<Descriptors> | null>(null)
-  const controller = propControllers?.text
 
   useEffect(() => {
-    if (element == null || controller == null) return
+    if (element == null || control == null) return
 
     return pollBoxModel({
       element,
-      onBoxModelChange: boxModel => controller.changeBoxModel(boxModel),
+      onBoxModelChange: boxModel => control.changeBoxModel(boxModel),
     })
-  }, [element, controller])
+  }, [element, control])
 
-  useImperativeHandle(
-    ref,
-    () => ({
-      getBoxModel() {
-        const el = editor?.findDOMNode([])
+  // console.log({ data, config: definition })
 
-        return el instanceof Element ? getBox(el) : null
-      },
-      setPropControllers,
-    }),
-    [editor, setPropControllers],
-  )
+  // if (value == null)
+  //   return <div style={{ backgroundColor: 'blue', width: '10px', height: '10px' }} />
 
   useEffect(() => {
-    if (editor) controller?.setSlateEditor(editor)
-  }, [controller, editor])
+    if (editor) control?.setSlateEditor(editor)
+  }, [control, editor])
 
   /**
    * We must keep local state so that we can reflect the user's typed changes immediately. At the
@@ -98,7 +72,7 @@ const Text = forwardRef(function Text(
    * possible. This is known as a debounce.
    */
   const [value, setValue] = useState(() => {
-    const { selection, ...textWithoutSelection } = text ?? defaultText
+    const { selection, ...textWithoutSelection } = data ?? descriptor.config.defaultValue
 
     return Value.fromJSON(textWithoutSelection)
   })
@@ -106,7 +80,7 @@ const Text = forwardRef(function Text(
 
   useEffect(() => {
     if (shouldCommit) {
-      const nextValue = Value.fromJSON(text ?? defaultText)
+      const nextValue = Value.fromJSON(data ?? descriptor.config.defaultValue)
 
       setValue(currentValue =>
         currentValue.selection.isBlurred
@@ -114,7 +88,7 @@ const Text = forwardRef(function Text(
           : nextValue,
       )
     }
-  }, [shouldCommit, text])
+  }, [shouldCommit, data])
 
   useEffect(() => {
     if (shouldCommit) return
@@ -134,33 +108,31 @@ const Text = forwardRef(function Text(
     if (change.value !== value) {
       setShouldCommit(false)
 
-      controller?.onChange(change)
+      control?.onChange(change)
     }
   }
 
-  // HACK: Slate holds on to the very first DOM event handlers passed in and doesn't update them
-  // even if they change. Since `controller` is first `undefined` then we must use a ref.
-  const lastController = useRef(controller)
-  if (lastController.current !== controller) lastController.current = controller
+  const lastControl = useRef(control)
+  if (lastControl.current !== control) lastControl.current = control
   const handleFocus = useCallback(() => {
-    lastController.current?.focus()
+    lastControl.current?.focus()
   }, [])
   const handleKeyDown = useCallback(
     (event: ReactKeyboardEvent, _editor: Editor, next: () => any) => {
       if (Hotkeys.isUndo(event)) {
-        lastController.current?.undo()
+        lastControl.current?.undo()
 
         return true
       }
 
       if (Hotkeys.isRedo(event)) {
-        lastController.current?.redo()
+        lastControl.current?.redo()
 
         return true
       }
 
       if (isHotkey('escape')(event)) {
-        lastController.current?.blur()
+        lastControl.current?.blur()
 
         return true
       }
@@ -169,6 +141,7 @@ const Text = forwardRef(function Text(
     },
     [],
   )
+
   const handleBlur = useCallback((event: ReactFocusEvent, editor: Editor, next: () => any) => {
     const selection = editor.value.selection
 
@@ -182,23 +155,52 @@ const Text = forwardRef(function Text(
   }, [])
 
   const isInBuilder = useIsInBuilder()
+  console.log({ render: 'rich-text' })
 
   return (
-    <div ref={setElement} style={{ border: '1px solid blue' }}>
+    <div ref={setElement} style={{ border: '1px solid black' }}>
       <RichTextEditor
-        // @ts-expect-error: types don't allow for 'id' prop even though it's used.
-        id={id}
         ref={setEditor}
-        className={cx(width, margin)}
-        readOnly={!isInBuilder || controller == null}
+        // className={cx(width, margin)}
+        readOnly={!isInBuilder || control == null}
         value={value}
         onChange={handleChange}
         onFocus={handleFocus}
         onKeyDown={handleKeyDown}
         onBlur={handleBlur}
       />
+
+      <p>{JSON.stringify(value, null, 2)}</p>
     </div>
   )
-})
+}
 
-export default Text
+// function pollBoxModel({
+//   element,
+//   onBoxModelChange,
+// }: {
+//   element: Element
+//   onBoxModelChange(boxModel: BoxModel | null): void
+// }): () => void {
+//   let currentBoxModel: BoxModel | null = null
+
+//   const handleAnimationFrameRequest = () => {
+//     const measuredBoxModel = getBox(element)
+
+//     if (!deepEqual(currentBoxModel, measuredBoxModel)) {
+//       currentBoxModel = measuredBoxModel
+
+//       onBoxModelChange(currentBoxModel)
+//     }
+
+//     animationFrameHandle = requestAnimationFrame(handleAnimationFrameRequest)
+//   }
+
+//   let animationFrameHandle = requestAnimationFrame(handleAnimationFrameRequest)
+
+//   return () => {
+//     cancelAnimationFrame(animationFrameHandle)
+
+//     onBoxModelChange(null)
+//   }
+// }

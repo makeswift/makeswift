@@ -60,4 +60,8 @@ export type {
   RichTextPropControllerMessage,
   TableFormFieldsMessage,
 } from './instances'
-export { RichTextPropControllerMessageType, TableFormFieldsMessageType } from './instances'
+export {
+  RichTextPropControllerMessageType,
+  TableFormFieldsMessageType,
+  RichTextPropController,
+} from './instances'

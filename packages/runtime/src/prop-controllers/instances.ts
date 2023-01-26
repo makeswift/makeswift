@@ -4,7 +4,14 @@ import { OnChangeParam } from 'slate-react'
 import { Descriptor, RichTextDescriptor, TableFormFieldsDescriptor, Types } from './descriptors'
 import { BuilderEditMode } from '../utils/constants'
 import { BoxModel } from '../state/modules/box-models'
-import { SlotControl, SlotControlMessage, SlotControlType } from '../controls'
+import {
+  RichTextControl,
+  RichTextControlMessage,
+  RichTextControlType,
+  SlotControl,
+  SlotControlMessage,
+  SlotControlType,
+} from '../controls'
 
 export const RichTextPropControllerMessageType = {
   CHANGE_BUILDER_EDIT_MODE: 'CHANGE_BUILDER_EDIT_MODE',
@@ -14,6 +21,7 @@ export const RichTextPropControllerMessageType = {
   BLUR: 'BLUR',
   UNDO: 'UNDO',
   REDO: 'REDO',
+  BOX_MODEL_CHANGE: 'BOX_MODEL_CHANGE',
 } as const
 
 type ChangeBuilderEditModeRichTextPropControllerMessage = {
@@ -39,6 +47,11 @@ type UndoRichTextPropControllerMessage = { type: typeof RichTextPropControllerMe
 
 type RedoRichTextPropControllerMessage = { type: typeof RichTextPropControllerMessageType.REDO }
 
+type BoxModelChangeRichControlMessage = {
+  type: typeof RichTextPropControllerMessageType.BOX_MODEL_CHANGE
+  payload: { boxModel: BoxModel | null }
+}
+
 export type RichTextPropControllerMessage =
   | ChangeBuilderEditModeRichTextPropControllerMessage
   | InitializeEditorRichTextPropControllerMessage
@@ -47,11 +60,13 @@ export type RichTextPropControllerMessage =
   | BlurRichTextPropControllerMessage
   | UndoRichTextPropControllerMessage
   | RedoRichTextPropControllerMessage
+  | BoxModelChangeRichControlMessage
 
 export type PropControllerMessage =
   | RichTextPropControllerMessage
   | TableFormFieldsMessage
   | SlotControlMessage
+  | RichTextControlMessage
 
 export type Send<T = PropControllerMessage> = (message: T) => void
 
@@ -71,10 +86,11 @@ class DefaultPropController extends PropController {
   }
 }
 
-class RichTextPropController extends PropController<RichTextPropControllerMessage> {
+export class RichTextPropController extends PropController<RichTextPropControllerMessage> {
   private editor: Editor | null = null
 
   recv(message: RichTextPropControllerMessage): void {
+    console.log({ messageFromText: message })
     switch (message.type) {
       case RichTextPropControllerMessageType.CHANGE_BUILDER_EDIT_MODE: {
         switch (message.editMode) {
@@ -122,6 +138,10 @@ class RichTextPropController extends PropController<RichTextPropControllerMessag
 
   redo() {
     this.send({ type: RichTextPropControllerMessageType.REDO })
+  }
+
+  changeBoxModel(boxModel: BoxModel | null): void {
+    this.send({ type: RichTextPropControllerMessageType.BOX_MODEL_CHANGE, payload: { boxModel } })
   }
 }
 
@@ -173,6 +193,7 @@ type AnyPropController =
   | RichTextPropController
   | TableFormFieldsPropController
   | SlotControl
+  | RichTextControl
 
 export function createPropController(
   descriptor: RichTextDescriptor,
@@ -196,6 +217,9 @@ export function createPropController<T extends PropControllerMessage>(
 
     case SlotControlType:
       return new SlotControl(send as Send<SlotControlMessage>)
+
+    case RichTextControlType:
+      return new RichTextControl(send as Send<RichTextControlMessage>)
 
     default:
       return new DefaultPropController(send as Send)

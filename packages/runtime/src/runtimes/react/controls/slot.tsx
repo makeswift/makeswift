@@ -166,7 +166,7 @@ function SlotPlaceholder({ control }: SlotPlaceholderProps): JSX.Element {
   )
 }
 
-function pollBoxModel({
+export function pollBoxModel({
   element,
   onBoxModelChange,
 }: {
