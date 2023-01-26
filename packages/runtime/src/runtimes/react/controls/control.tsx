@@ -16,6 +16,7 @@ import {
   LinkControlData,
   LinkControlDefinition,
   LinkControlType,
+  ListControl,
   ListControlData,
   ListControlDefinition,
   ListControlType,
@@ -28,6 +29,10 @@ import {
   ShapeControlData,
   ShapeControlDefinition,
   ShapeControlType,
+  SlotControl,
+  SlotControlData,
+  SlotControlDefinition,
+  SlotControlType,
   TextAreaControlData,
   TextAreaControlDefinition,
   TextAreaControlType,
@@ -35,6 +40,7 @@ import {
   TextInputControlDefinition,
   TextInputControlType,
 } from '../../../controls'
+import { AnyPropController } from '../../../prop-controllers/instances'
 import { RenderHook } from '../components'
 import { CheckboxControlValue, useCheckboxControlValue } from './checkbox'
 import { ColorControlValue, useColorValue } from './color'
@@ -45,6 +51,7 @@ import { ListControlValue } from './list'
 import { NumberControlValue, useNumber } from './number'
 import { SelectControlValue, useSelectControlValue } from './select'
 import { ShapeControlValue } from './shape'
+import { SlotControlValue, useSlot } from './slot'
 import { TextAreaControlValue, useTextAreaValue } from './text-area'
 import { TextInputControlValue, useTextInputValue } from './text-input'
 
@@ -71,18 +78,22 @@ export type ControlDefinitionValue<T extends ControlDefinition> =
     ? ShapeControlValue<T>
     : T extends ListControlDefinition
     ? ListControlValue<T>
+    : T extends SlotControlDefinition
+    ? SlotControlValue
     : never
 
 type ControlValueProps<T extends ControlDefinition> = {
   definition: T
   data: ControlDefinitionData<T> | undefined
   children(value: ControlDefinitionValue<T>): JSX.Element
+  control?: AnyPropController
 }
 
 export function ControlValue<T extends ControlDefinition>({
   data,
   definition,
   children,
+  control,
 }: ControlValueProps<T>): JSX.Element {
   switch (definition.type) {
     case CheckboxControlType:
@@ -193,9 +204,24 @@ export function ControlValue<T extends ControlDefinition>({
 
     case ListControlType:
       return (
-        <ListControlValue definition={definition} data={data as ListControlData}>
+        <ListControlValue
+          definition={definition}
+          data={data as ListControlData}
+          control={control as ListControl}
+        >
           {value => children(value as ControlDefinitionValue<T>)}
         </ListControlValue>
+      )
+
+    case SlotControlType:
+      return (
+        <RenderHook
+          key={definition.type}
+          hook={useSlot}
+          parameters={[data as SlotControlData, control as SlotControl]}
+        >
+          {value => children(value as ControlDefinitionValue<T>)}
+        </RenderHook>
       )
 
     default:
