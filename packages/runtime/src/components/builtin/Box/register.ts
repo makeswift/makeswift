@@ -35,7 +35,10 @@ export function registerComponent(runtime: ReactRuntime) {
       props: {
         id: Props.ElementID(),
         backgrounds: Props.Backgrounds(),
-        width: Props.Width({ format: Props.Width.Format.ClassName }),
+        width: Props.Width({
+          format: Props.Width.Format.ClassName,
+          defaultValue: { value: 100, unit: '%' },
+        }),
         height: Props.ResponsiveIconRadioGroup({
           label: 'Height',
           options: [
