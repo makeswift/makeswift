@@ -12,7 +12,6 @@ import {
 } from '../../../prop-controllers/descriptors'
 import { DEVICES, findDeviceOverride } from '../../utils/devices'
 import { placeholders } from '../../utils/placeholders'
-import { useIsInBuilder } from '../../../runtimes/react'
 import { Link } from '../../shared/Link'
 import { cx } from '@emotion/css'
 import { useStyle } from '../../../runtimes/react/use-style'
@@ -92,7 +91,6 @@ const ImageComponent = forwardRef(function Image(
   const imageSrc = fileData?.publicUrl ? fileData.publicUrl : placeholder.src
   const dataDimensions = fileData?.publicUrl ? fileData?.dimensions : placeholder.dimensions
   const [measuredDimensions, setMeasuredDimensions] = useState<Dimensions | null>(null)
-  const isInBuilder = useIsInBuilder()
 
   useEffect(() => {
     if (dataDimensions) return
@@ -138,7 +136,6 @@ const ImageComponent = forwardRef(function Image(
           alt={altText}
           width={dimensions.width}
           height={dimensions.height}
-          unoptimized={isInBuilder}
         />
       ) : (
         <NextImage
@@ -151,7 +148,6 @@ const ImageComponent = forwardRef(function Image(
             width: '100%',
             height: 'auto',
           }}
-          unoptimized={isInBuilder}
         />
       )}
     </Container>
