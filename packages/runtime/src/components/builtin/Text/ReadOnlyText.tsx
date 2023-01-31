@@ -89,6 +89,9 @@ function Block({ type, data, nodes }: BlockJSON) {
     'heading-five': 'h5',
     'heading-six': 'h6',
     blockquote: 'blockquote',
+    'ordered-list': 'ol',
+    'unordered-list': 'ul',
+    'list-item': 'li',
   }[type]
 
   return (
