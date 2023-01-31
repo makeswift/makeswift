@@ -1,4 +1,5 @@
 import { CacheData, MakeswiftClient } from '../api/react'
+import { SerializedState } from '../state/makeswift-api-client'
 import { Element } from '../state/react-page'
 
 export type MakeswiftPage = {
@@ -105,6 +106,14 @@ export class Makeswift {
     const cacheData = await client.prefetch(document.data)
 
     return { document, apiOrigin: this.apiOrigin.href, cacheData, preview }
+  }
+
+  async createNormalizedSnapshot(elementTree: Element): Promise<SerializedState> {
+    const client = new MakeswiftClient({ uri: new URL('graphql', this.apiOrigin).href })
+
+    const snapshot = await client.prefetch(elementTree)
+
+    return snapshot
   }
 
   private async getPageSnapshotByPageId(

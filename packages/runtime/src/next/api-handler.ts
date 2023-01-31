@@ -6,6 +6,7 @@ import { parse } from 'set-cookie-parser'
 import { version } from '../../package.json'
 import { ReactRuntime } from '../react'
 import isErrorWithMessage from '../utils/isErrorWithMessage'
+import { Makeswift } from './client'
 
 type Fonts = Font[]
 
@@ -18,6 +19,7 @@ type FontVariant = { weight: string; style: 'italic' | 'normal'; src?: string }
 
 type MakeswiftApiHandlerConfig = {
   appOrigin?: string
+  apiOrigin?: string
   getFonts?: () => Fonts | Promise<Fonts>
 }
 
@@ -27,6 +29,7 @@ export type MakeswiftApiHandlerRevalidateResponse = { revalidated: boolean }
 export type MakeswiftApiHandlerManifestResponse = { version: string; previewMode: boolean }
 export type MakeswiftApiHandlerFontsResponse = Fonts
 export type MakeswiftApiHandlerElementTreeResponse = { elementTree: any }
+export type MakeswiftApiHandlerSnapshotResponse = { snapshot: any }
 
 export type MakeswiftApiHandlerResponse =
   | MakeswiftApiHandlerErrorResponse
@@ -35,10 +38,15 @@ export type MakeswiftApiHandlerResponse =
   | MakeswiftApiHandlerManifestResponse
   | MakeswiftApiHandlerFontsResponse
   | MakeswiftApiHandlerElementTreeResponse
+  | MakeswiftApiHandlerSnapshotResponse
 
 export function MakeswiftApiHandler(
   apiKey: string,
-  { appOrigin = 'https://app.makeswift.com', getFonts }: MakeswiftApiHandlerConfig = {},
+  {
+    appOrigin = 'https://app.makeswift.com',
+    apiOrigin = 'https://api.makeswift.com',
+    getFonts,
+  }: MakeswiftApiHandlerConfig = {},
 ): NextApiHandler<MakeswiftApiHandlerResponse> {
   const cors = Cors({ origin: appOrigin })
   const previewModeProxy = createProxyServer()
@@ -193,6 +201,23 @@ export function MakeswiftApiHandler(
         const generatedElementTree = ReactRuntime.copyElementTree(elementTree, replacementContext)
 
         const response = { elementTree: generatedElementTree }
+        return res.json(response)
+      }
+
+      case 'snapshot': {
+        const elementTree = req.body.elementTree
+
+        if (elementTree == null) {
+          return res.status(400).json({ message: 'elementTree must be defined' })
+        }
+
+        const client = new Makeswift(apiKey, {
+          apiOrigin,
+        })
+
+        const snapshot = await client.createNormalizedSnapshot(elementTree)
+
+        const response = { snapshot }
         return res.json(response)
       }
 
