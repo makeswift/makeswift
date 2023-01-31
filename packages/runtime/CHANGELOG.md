@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.6.2
+
+### Patch Changes
+
+- 155820f: Add default value to width prop for built-in Box component.
+- 8942b00: Handle ordered and unordered list for live pages in Text built-in component.
+
 ## 0.6.1
 
 ### Patch Changes
