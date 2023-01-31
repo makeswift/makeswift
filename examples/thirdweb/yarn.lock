@@ -1937,10 +1937,10 @@
     next-transpile-modules "^9.0.0"
     semver "^7.3.8"
 
-"@makeswift/runtime@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@makeswift/runtime/-/runtime-0.6.0.tgz#a3b78ca9d2f4ce525740aae2cfb755c296d41250"
-  integrity sha512-D5LdAbkMYBcbu6e5Dn8OFW+aVMEJlVAiPfUzywAkh+DIA8QqPVkabsRhYlgQOlTM1Ch8W9bxafQzlhWUv1+XAQ==
+"@makeswift/runtime@^0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@makeswift/runtime/-/runtime-0.6.1.tgz#5e536afda67b549d804365a73689c4c2aae27fac"
+  integrity sha512-FOonPwUsCdvMgiJC9zgQeWOatG6ZYteqGDM/m0Rca+oSg7XxjhypaiA4rOm81AYrCWZ5CDR0aMNY5gP2SFcmKA==
   dependencies:
     "@convertkit/slate-lists" "^0.2.4"
     "@emotion/css" "^11.9.0"
