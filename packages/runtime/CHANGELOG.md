@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.6.1
+
+### Patch Changes
+
+- 9d2ec07: Fix the single select column not rendering radio buttons on the built-in Form component.
+
 ## 0.6.0
 
 ### Minor Changes
