@@ -22,9 +22,10 @@ type ContainerBaseProps = Pick<Value, 'size'>
 type ContainerProps = ContainerBaseProps &
   Omit<ComponentPropsWithoutRef<'div'>, keyof ContainerBaseProps>
 
-function Container({ size }: ContainerProps) {
+function Container({ size, className, ...restOfProps }: ContainerProps) {
   return (
     <div
+      {...restOfProps}
       className={cx(
         useStyle({ position: 'relative' }),
         useStyle(
@@ -33,6 +34,7 @@ function Container({ size }: ContainerProps) {
             width: getSize(size),
           })),
         ),
+        className,
       )}
     />
   )
