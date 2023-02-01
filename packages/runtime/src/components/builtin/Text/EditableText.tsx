@@ -27,6 +27,7 @@ import { DescriptorsPropControllers } from '../../../prop-controllers/instances'
 import { cx } from '@emotion/css'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { useIsInBuilder } from '../../../runtimes/react'
+import { pollBoxModel } from '../../../runtimes/react/poll-box-model'
 
 type Props = {
   id?: ElementIDValue
@@ -52,6 +53,15 @@ const EditableText = forwardRef(function EditableText(
   const [propControllers, setPropControllers] =
     useState<DescriptorsPropControllers<Descriptors> | null>(null)
   const controller = propControllers?.text
+
+  useEffect(() => {
+    const element = editor?.findDOMNode([])
+    if (element == null || !(element instanceof HTMLElement) || controller == null) return
+    return pollBoxModel({
+      element: element,
+      onBoxModelChange: boxModel => controller.changeBoxModel(boxModel),
+    })
+  }, [editor, controller])
 
   useImperativeHandle(
     ref,
