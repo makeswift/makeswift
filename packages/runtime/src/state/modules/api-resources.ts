@@ -18,10 +18,9 @@ export function getInitialState(serializedState: SerializedState = []): State {
 }
 
 export function getSerializedState(state: State): SerializedState {
-  return Array.from(state.entries()).map(([resourceType, resources]) => [
-    resourceType,
-    Array.from(resources.entries()),
-  ])
+  const entries = Array.from(state.entries())
+  console.log(`entries: ${JSON.stringify(entries, null, 2)}`)
+  return entries.map(([resourceType, resources]) => [resourceType, Array.from(resources.entries())])
 }
 
 export function getHasAPIResource(
