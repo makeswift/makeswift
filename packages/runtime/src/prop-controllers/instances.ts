@@ -4,7 +4,14 @@ import { OnChangeParam } from 'slate-react'
 import { Descriptor, RichTextDescriptor, TableFormFieldsDescriptor, Types } from './descriptors'
 import { BuilderEditMode } from '../utils/constants'
 import { BoxModel } from '../state/modules/box-models'
-import { SlotControl, SlotControlMessage, SlotControlType } from '../controls'
+import {
+  RichTextControl,
+  RichTextControlMessage,
+  RichTextControlType,
+  SlotControl,
+  SlotControlMessage,
+  SlotControlType,
+} from '../controls'
 
 export const RichTextPropControllerMessageType = {
   CHANGE_BUILDER_EDIT_MODE: 'CHANGE_BUILDER_EDIT_MODE',
@@ -14,6 +21,7 @@ export const RichTextPropControllerMessageType = {
   BLUR: 'BLUR',
   UNDO: 'UNDO',
   REDO: 'REDO',
+  CHANGE_BOX_MODEL: 'CHANGE_BOX_MODEL',
 } as const
 
 type ChangeBuilderEditModeRichTextPropControllerMessage = {
@@ -39,6 +47,11 @@ type UndoRichTextPropControllerMessage = { type: typeof RichTextPropControllerMe
 
 type RedoRichTextPropControllerMessage = { type: typeof RichTextPropControllerMessageType.REDO }
 
+type ChangeBoxModelRichTextPropControllerMessage = {
+  type: typeof RichTextPropControllerMessageType.CHANGE_BOX_MODEL
+  payload: { boxModel: BoxModel | null }
+}
+
 export type RichTextPropControllerMessage =
   | ChangeBuilderEditModeRichTextPropControllerMessage
   | InitializeEditorRichTextPropControllerMessage
@@ -47,11 +60,13 @@ export type RichTextPropControllerMessage =
   | BlurRichTextPropControllerMessage
   | UndoRichTextPropControllerMessage
   | RedoRichTextPropControllerMessage
+  | ChangeBoxModelRichTextPropControllerMessage
 
 export type PropControllerMessage =
   | RichTextPropControllerMessage
   | TableFormFieldsMessage
   | SlotControlMessage
+  | RichTextControlMessage
 
 export type Send<T = PropControllerMessage> = (message: T) => void
 
@@ -81,12 +96,11 @@ class RichTextPropController extends PropController<RichTextPropControllerMessag
           case BuilderEditMode.BUILD:
             this.editor?.deselect().blur()
             break
-
-          case BuilderEditMode.CONTENT:
-            this.editor?.focus().moveToRangeOfDocument()
-            break
         }
-
+        break
+      }
+      case RichTextPropControllerMessageType.FOCUS: {
+        this.editor?.focus().moveToRangeOfDocument()
         break
       }
     }
@@ -122,6 +136,10 @@ class RichTextPropController extends PropController<RichTextPropControllerMessag
 
   redo() {
     this.send({ type: RichTextPropControllerMessageType.REDO })
+  }
+
+  changeBoxModel(boxModel: BoxModel | null): void {
+    this.send({ type: RichTextPropControllerMessageType.CHANGE_BOX_MODEL, payload: { boxModel } })
   }
 }
 
@@ -173,6 +191,7 @@ type AnyPropController =
   | RichTextPropController
   | TableFormFieldsPropController
   | SlotControl
+  | RichTextControl
 
 export function createPropController(
   descriptor: RichTextDescriptor,
@@ -196,6 +215,9 @@ export function createPropController<T extends PropControllerMessage>(
 
     case SlotControlType:
       return new SlotControl(send as Send<SlotControlMessage>)
+
+    case RichTextControlType:
+      return new RichTextControl(send as Send<RichTextControlMessage>)
 
     default:
       return new DefaultPropController(send as Send)
