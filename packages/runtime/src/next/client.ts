@@ -41,6 +41,18 @@ export type MakeswiftPageDocument = {
   }
 }
 
+export type SiteResources = {
+  swatches: any[]
+  typographies: any[]
+  files: any[]
+  pagePathnameSlices: any[]
+}
+export type Snapshot = {
+  resources: SiteResources
+  elementTree: Element
+  runtimeVersion: string
+}
+
 export type MakeswiftPageSnapshot = {
   document: MakeswiftPageDocument
   apiOrigin: string
@@ -108,12 +120,34 @@ export class Makeswift {
     return { document, apiOrigin: this.apiOrigin.href, cacheData, preview }
   }
 
-  async createNormalizedSnapshot(elementTree: Element): Promise<SerializedState> {
+  async createNormalizedSnapshot(elementTree: Element): Promise<Snapshot> {
     const client = new MakeswiftClient({ uri: new URL('graphql', this.apiOrigin).href })
 
-    const snapshot = await client.prefetch(elementTree)
+    const cacheData = await client.prefetch(elementTree)
+    const resources = await this.convertCacheDataIntoResources(cacheData)
+    const runtimeVersion = '0.0.0'
 
-    return snapshot
+    return { resources, elementTree, runtimeVersion }
+  }
+
+  private async convertCacheDataIntoResources(cacheData: SerializedState): Promise<SiteResources> {
+    const parsedResources = cacheData
+      .flatMap(resource => resource)
+      .filter((x): x is any[] => Array.isArray(x))
+      .flatMap(resource => resource)
+      .flatMap(resource => resource)
+      .filter(x => typeof x === 'object')
+
+    const resources = parsedResources.map(resource => ({ id: resource.id, value: resource }))
+
+    const swatches = resources.filter(resource => resource.value.__typename === 'Swatch')
+    const typographies = resources.filter(resource => resource.value.__typename === 'Typography')
+    const files = resources.filter(resource => resource.value.__typename === 'File')
+    const pagePathnameSlices = resources.filter(
+      resource => resource.value.__typename === 'PagePathnameSlice',
+    )
+
+    return { swatches, typographies, files, pagePathnameSlices }
   }
 
   private async getPageSnapshotByPageId(
