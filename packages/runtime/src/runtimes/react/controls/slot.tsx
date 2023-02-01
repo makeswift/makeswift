@@ -6,7 +6,7 @@ import { getIndexes } from '../../../components/utils/columns'
 import { responsiveStyle } from '../../../components/utils/responsive-style'
 import { useStyle } from '../use-style'
 import { cx } from '@emotion/css'
-import { pollBoxModel } from '../pollBoxModel'
+import { pollBoxModel } from '../poll-box-model'
 
 export type SlotControlValue = ReactNode
 

@@ -176,6 +176,8 @@ export class TableFormFieldsPropController extends PropController<TableFormField
 
 type DescriptorPropController<T extends Descriptor> = T extends { type: typeof Types.RichText }
   ? RichTextPropController
+  : T extends { type: typeof RichTextControlType }
+  ? RichTextControl
   : T extends { type: typeof Types.TableFormFields }
   ? TableFormFieldsPropController
   : DefaultPropController
