@@ -114,12 +114,24 @@ export type TextStylePropertyData = {
   fontStyle: FontStylePropertyData
 }
 
+/**
+ * Primitives like `string` and `number` are excluded from the style data because the relevant
+ * panels from the Makeswift builder were originally implemented only to support object values, and
+ * not CSS strings. For example, 100 pixels would be `{ value: 100, unit: 'px' }` but never `100` or
+ * `'100px'`.
+ */
 export type StyleControlData = {
-  width?: ResponsiveValue<WidthPropertyData>
-  margin?: ResponsiveValue<MarginPropertyData>
-  padding?: ResponsiveValue<PaddingPropertyData>
+  width?: ResponsiveValue<Exclude<WidthPropertyData, string | number>>
+  margin?: ResponsiveValue<{
+    [K in keyof MarginPropertyData]: Exclude<MarginPropertyData[K], string | number> | 'auto'
+  }>
+  padding?: ResponsiveValue<{
+    [K in keyof PaddingPropertyData]: Exclude<PaddingPropertyData[K], string | number>
+  }>
   border?: ResponsiveValue<BorderPropertyData>
-  borderRadius?: ResponsiveValue<BorderRadiusPropertyData>
+  borderRadius?: ResponsiveValue<{
+    [K in keyof BorderRadiusPropertyData]: Exclude<BorderRadiusPropertyData[K], string | number>
+  }>
   textStyle?: ResponsiveValue<TextStylePropertyData>
 }
 
