@@ -34,6 +34,7 @@ export type MakeswiftApiHandlerManifestResponse = {
   previewMode: boolean
   interactionMode: boolean
   clientSideNavigation: boolean
+  elementFromPoint: boolean
 }
 export type MakeswiftApiHandlerFontsResponse = Fonts
 export type MakeswiftApiHandlerElementTreeResponse = { elementTree: any }
@@ -114,6 +115,7 @@ export function MakeswiftApiHandler(
           previewMode: true,
           interactionMode: true,
           clientSideNavigation: true,
+          elementFromPoint: true,
         })
       }
 

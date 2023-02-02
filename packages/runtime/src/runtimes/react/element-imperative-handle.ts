@@ -36,4 +36,29 @@ export class ElementImperativeHandle<
 
     this.lastPropControllers = propControllers
   }
+
+  getDomNode(): Element | null {
+    const current = this.getCurrent()
+
+    if (isDomNodeHandle(current)) return current.getDomNode()
+
+    return current instanceof Element ? current : null
+  }
+}
+
+type DomNodeHandle = {
+  getDomNode(): Element | null
+}
+
+export function isDomNodeHandle(value: unknown): value is DomNodeHandle {
+  if (
+    typeof value === 'object' &&
+    value !== null &&
+    'getDomNode' in value &&
+    typeof (value as { getDomNode: unknown }).getDomNode === 'function'
+  ) {
+    return true
+  }
+
+  return false
 }

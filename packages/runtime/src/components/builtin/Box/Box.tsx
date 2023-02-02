@@ -90,6 +90,9 @@ const Box = forwardRef(function Box(
   useImperativeHandle(
     ref,
     () => ({
+      getDomNode() {
+        return boxElementObjectRef.current
+      },
       getBoxModel() {
         const paddingBoxElement = innerRef.current
         const borderBoxElement = innerRef.current

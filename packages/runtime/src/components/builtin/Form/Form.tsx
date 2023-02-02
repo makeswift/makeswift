@@ -301,6 +301,9 @@ const Form = forwardRef(function Form(
   useImperativeHandle(
     ref,
     () => ({
+      getDomNode() {
+        return refEl instanceof Element ? refEl : null
+      },
       getBoxModel() {
         return refEl instanceof Element ? getBox(refEl) : null
       },

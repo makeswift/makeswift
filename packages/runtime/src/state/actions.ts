@@ -15,6 +15,7 @@ import { IntrospectedResourcesQueryResult } from '../api/graphql/generated/types
 import { IntrospectedResourceIds } from '../api/introspection'
 import { ElementImperativeHandle } from '../runtimes/react/element-imperative-handle'
 import { BuilderEditMode } from './modules/builder-edit-mode'
+import type { Point } from './modules/pointer'
 
 export const ActionTypes = {
   INIT: 'INIT',
@@ -75,6 +76,9 @@ export const ActionTypes = {
   CHANGE_PATHNAME: 'CHANGE_PATHNAME',
   CHANGE_PATHNAME_START: 'CHANGE_PATHNAME_START',
   CHANGE_PATHNAME_COMPLETE: 'CHANGE_PATHNAME_COMPLETE',
+
+  BUILDER_POINTER_MOVE: 'BUILDER_POINTER_MOVE',
+  ELEMENT_FROM_POINT_CHANGE: 'ELEMENT_FROM_POINT_CHANGE',
 } as const
 
 type InitAction = { type: typeof ActionTypes.INIT }
@@ -279,6 +283,16 @@ type ChangePathnameCompleteAction = {
   type: typeof ActionTypes.CHANGE_PATHNAME_COMPLETE
 }
 
+type BuilderPointerMoveAction = {
+  type: typeof ActionTypes.BUILDER_POINTER_MOVE
+  payload: { pointer: Point | null }
+}
+
+type ElementFromPointChangeAction = {
+  type: typeof ActionTypes.ELEMENT_FROM_POINT_CHANGE
+  payload: { keys: { documentKey: string; elementKey: string } | null }
+}
+
 export type Action =
   | InitAction
   | CleanUpAction
@@ -319,6 +333,8 @@ export type Action =
   | ChangePathnameAction
   | ChangePathnameStartAction
   | ChangePathnameCompleteAction
+  | BuilderPointerMoveAction
+  | ElementFromPointChangeAction
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }
@@ -660,4 +676,17 @@ export function changePathnameComplete(): ChangePathnameCompleteAction {
   return {
     type: ActionTypes.CHANGE_PATHNAME_COMPLETE,
   }
+}
+
+export function builderPointerMove(pointer: Point | null): BuilderPointerMoveAction {
+  return { type: ActionTypes.BUILDER_POINTER_MOVE, payload: { pointer } }
+}
+
+export function elementFromPointChange(
+  keys: {
+    documentKey: string
+    elementKey: string
+  } | null,
+): ElementFromPointChangeAction {
+  return { type: ActionTypes.ELEMENT_FROM_POINT_CHANGE, payload: { keys } }
 }
