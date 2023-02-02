@@ -69,6 +69,11 @@ const EditableText = forwardRef(function EditableText(
   useImperativeHandle(
     ref,
     () => ({
+      getDomNode() {
+        const el = editor?.findDOMNode([])
+
+        return el instanceof Element ? el : null
+      },
       getBoxModel() {
         const el = editor?.findDOMNode([])
 

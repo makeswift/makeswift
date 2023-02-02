@@ -23,6 +23,8 @@ import * as PropControllerHandles from './modules/prop-controller-handles'
 import * as IsInBuilder from './modules/is-in-builder'
 import * as IsPreview from './modules/is-preview'
 import * as BuilderEditMode from './modules/builder-edit-mode'
+import * as Pointer from './modules/pointer'
+import * as ElementImperativeHandles from './modules/element-imperative-handles'
 import * as ReactPage from './react-page'
 import {
   Action,
@@ -44,6 +46,7 @@ import {
   setBuilderEditMode,
   changePathnameStart,
   changePathnameComplete,
+  elementFromPointChange,
 } from './actions'
 import { ActionTypes } from './actions'
 import { createPropController, PropController } from '../prop-controllers/instances'
@@ -65,6 +68,8 @@ const reducer = combineReducers({
   isInBuilder: IsInBuilder.reducer,
   isPreview: IsPreview.reducer,
   builderEditMode: BuilderEditMode.reducer,
+  pointer: Pointer.reducer,
+  elementImperativeHandles: ElementImperativeHandles.reducer,
 })
 
 export type State = ReturnType<typeof reducer>
@@ -113,6 +118,42 @@ function getComponentPropControllerDescriptors(
 
 function getPropControllerHandlesStateSlice(state: State): PropControllerHandles.State {
   return state.propControllerHandles
+}
+
+function getPointer(state: State): Pointer.Point | null {
+  return Pointer.getPointer(state.pointer)
+}
+
+function getElementImperativeHandles(
+  state: State,
+): Map<string, Map<string, ElementImperativeHandle>> {
+  return ElementImperativeHandles.getElementImperativeHandles(state.elementImperativeHandles)
+}
+
+function getElementImperativeHandlesContainingElement(
+  state: State,
+  element: Element,
+): Map<string, Map<string, ElementImperativeHandle>> {
+  const elementImperativeHandles = getElementImperativeHandles(state)
+  const filteredElementImperativeHandles = new Map<string, Map<string, ElementImperativeHandle>>()
+
+  for (const [documentKey, byElementKey] of elementImperativeHandles) {
+    const filteredByElementKey = new Map<string, ElementImperativeHandle>()
+
+    for (const [elementKey, elementImperativeHandle] of byElementKey) {
+      const handleElement = elementImperativeHandle.getDomNode()
+
+      if (handleElement?.contains(element)) {
+        filteredByElementKey.set(elementKey, elementImperativeHandle)
+      }
+    }
+
+    if (filteredByElementKey.size > 0) {
+      filteredElementImperativeHandles.set(documentKey, filteredByElementKey)
+    }
+  }
+
+  return filteredElementImperativeHandles
 }
 
 function measureElements(): ThunkAction<void, State, unknown, Action> {
@@ -324,6 +365,63 @@ function startHandlingKeyDownEvent(): ThunkAction<() => void, State, unknown, Ac
   }
 }
 
+function elementKeysFromElementFromPoint(
+  elementFromPoint: Element | null,
+): ThunkAction<{ documentKey: string; elementKey: string } | null, State, unknown, Action> {
+  return (_dispatch, getState) => {
+    if (elementFromPoint == null) return null
+
+    const elementImperativeHandles = getElementImperativeHandlesContainingElement(
+      getState(),
+      elementFromPoint,
+    )
+
+    let currentElement: Element | null = elementFromPoint
+    let keys = null
+
+    while (currentElement != null) {
+      for (const [documentKey, byElementKey] of elementImperativeHandles) {
+        for (const [elementKey, elementImperativeHandle] of byElementKey) {
+          if (elementImperativeHandle.getDomNode() === currentElement) {
+            return { documentKey, elementKey }
+          }
+        }
+      }
+
+      currentElement = currentElement.parentElement
+    }
+
+    return keys
+  }
+}
+
+function startPollingElementFromPoint(): ThunkAction<() => void, State, unknown, Action> {
+  return (dispatch, getState) => {
+    let lastElementFromPoint: Element | null = null
+    let animationFrameRequestId = requestAnimationFrame(handleAnimationFrameRequest)
+
+    return () => {
+      cancelAnimationFrame(animationFrameRequestId)
+    }
+
+    function handleAnimationFrameRequest() {
+      const pointer = getPointer(getState())
+      const elementFromPoint =
+        pointer == null ? null : document.elementFromPoint(pointer.x, pointer.y)
+
+      if (elementFromPoint !== lastElementFromPoint) {
+        lastElementFromPoint = elementFromPoint
+
+        const keys = dispatch(elementKeysFromElementFromPoint(elementFromPoint))
+
+        dispatch(elementFromPointChange(keys))
+      }
+
+      animationFrameRequestId = requestAnimationFrame(handleAnimationFrameRequest)
+    }
+  }
+}
+
 export function initialize(): ThunkAction<() => void, State, unknown, Action> {
   return dispatch => {
     const stopMeasuringElements = dispatch(startMeasuringElements())
@@ -332,6 +430,7 @@ export function initialize(): ThunkAction<() => void, State, unknown, Action> {
     const unlockDocumentScroll = dispatch(lockDocumentScroll())
     const stopHandlingPointerMoveEvent = dispatch(startHandlingPointerMoveEvent())
     const stopHandlingKeyDownEvent = dispatch(startHandlingKeyDownEvent())
+    const stopPollingElementFromPoint = dispatch(startPollingElementFromPoint())
     dispatch(setIsInBuilder(true))
 
     return () => {
@@ -341,6 +440,7 @@ export function initialize(): ThunkAction<() => void, State, unknown, Action> {
       unlockDocumentScroll()
       stopHandlingPointerMoveEvent()
       stopHandlingKeyDownEvent()
+      stopPollingElementFromPoint()
       dispatch(setIsInBuilder(false))
     }
   }
@@ -426,6 +526,7 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
           case ActionTypes.MESSAGE_BUILDER_PROP_CONTROLLER:
           case ActionTypes.HANDLE_WHEEL:
           case ActionTypes.HANDLE_POINTER_MOVE:
+          case ActionTypes.ELEMENT_FROM_POINT_CHANGE:
             messageChannel.port1.postMessage(action)
             break
 
