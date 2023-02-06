@@ -4,24 +4,60 @@ import { Action, ActionTypes } from '../actions'
 
 type State = Map<APIResourceType, Map<string, APIResource | null>>
 
-type SerializedMap<K, V> = [K, V][]
+export type SerializedState = {
+  [key in APIResourceType]: { id: string; value: APIResource }[]
+}
 
-export type SerializedState = SerializedMap<
-  APIResourceType,
-  SerializedMap<string, APIResource | null>
->
-
-export function getInitialState(serializedState: SerializedState = []): State {
+export function getInitialState(
+  serializedState: SerializedState = {
+    Swatch: [],
+    File: [],
+    Typography: [],
+    PagePathnameSlice: [],
+    GlobalElement: [],
+    Table: [],
+    Snippet: [],
+    Page: [],
+    Site: [],
+  },
+): State {
   return new Map(
-    serializedState.map(([resourceType, resources]) => [resourceType, new Map(resources)]),
+    Object.entries(serializedState).map(
+      ([apiResourceType, resources]) =>
+        [
+          apiResourceType,
+          new Map(resources.map(({ id, value }) => [id, value] as [string, APIResource])),
+        ] as [APIResourceType, Map<string, APIResource>],
+    ),
   )
 }
 
 export function getSerializedState(state: State): SerializedState {
-  return Array.from(state.entries()).map(([resourceType, resources]) => [
-    resourceType,
-    Array.from(resources.entries()),
-  ])
+  const resourceMap: SerializedState = {
+    Swatch: [],
+    File: [],
+    Typography: [],
+    PagePathnameSlice: [],
+    GlobalElement: [],
+    Table: [],
+    Snippet: [],
+    Page: [],
+    Site: [],
+  }
+
+  Array.from(state.entries()).forEach(([resourceType, resources]) => {
+    const particularResourceMap: { id: string; value: any }[] = []
+
+    Array.from(resources.entries()).forEach(([id, value]) => {
+      if (value != null) {
+        particularResourceMap.push({ id, value })
+      }
+    })
+
+    resourceMap[resourceType] = particularResourceMap
+  })
+
+  return resourceMap
 }
 
 export function getHasAPIResource(
