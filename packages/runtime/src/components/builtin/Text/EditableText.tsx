@@ -8,6 +8,7 @@ import {
   useRef,
   KeyboardEvent as ReactKeyboardEvent,
   FocusEvent as ReactFocusEvent,
+  MouseEvent as ReactMouseEvent,
 } from 'react'
 import { Editor, OnChangeParam } from 'slate-react'
 import { Value, ValueJSON } from 'slate'
@@ -26,8 +27,9 @@ import { RichTextEditor } from './components/RichTextEditor'
 import { DescriptorsPropControllers } from '../../../prop-controllers/instances'
 import { cx } from '@emotion/css'
 import { useStyle } from '../../../runtimes/react/use-style'
-import { useIsInBuilder } from '../../../runtimes/react'
 import { pollBoxModel } from '../../../runtimes/react/poll-box-model'
+import { useBuilderEditMode } from '../../../runtimes/react'
+import { BuilderEditMode } from '../../../state/modules/builder-edit-mode'
 
 type Props = {
   id?: ElementIDValue
@@ -53,6 +55,7 @@ const EditableText = forwardRef(function EditableText(
   const [propControllers, setPropControllers] =
     useState<DescriptorsPropControllers<Descriptors> | null>(null)
   const controller = propControllers?.text
+  const editMode = useBuilderEditMode()
 
   useEffect(() => {
     const element = editor?.findDOMNode([])
@@ -181,7 +184,19 @@ const EditableText = forwardRef(function EditableText(
     if (event.relatedTarget == null) editor.select(selection)
   }, [])
 
-  const isInBuilder = useIsInBuilder()
+  // HACK: Slate holds on to the very first DOM event handlers passed in and doesn't update them
+  // even if they change.
+  const lastEditMode = useRef(editMode)
+  if (lastEditMode.current !== editMode) lastEditMode.current = editMode
+
+  const handleClick = (event: ReactMouseEvent, _editor: Editor, next: () => any) => {
+    next()
+
+    // This is needed to prevent clicks from propagating in content mode.
+    // This is not ideal because it might break if we implement a plugin in the future that depends on click.
+    // Also, we might also want to stop hover/mousedown event
+    if (lastEditMode.current === BuilderEditMode.CONTENT) event.stopPropagation()
+  }
 
   return (
     <RichTextEditor
@@ -194,7 +209,8 @@ const EditableText = forwardRef(function EditableText(
       onFocus={handleFocus}
       onKeyDown={handleKeyDown}
       onBlur={handleBlur}
-      readOnly={!isInBuilder || controller == null}
+      onClick={handleClick}
+      readOnly={editMode !== BuilderEditMode.CONTENT}
     />
   )
 })
