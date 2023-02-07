@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.6.3
+
+### Patch Changes
+
+- 017675b: Fix type issues with `Style` control data.
+- ac7bfe7: Stop using `unoptimized` prop for `next/image` in built-in Image component when in builder. This fixes an SSR hydration mismatch.
+- 061f787: Create RichText control for usage within custom components.
+
 ## 0.6.2
 
 ### Patch Changes
