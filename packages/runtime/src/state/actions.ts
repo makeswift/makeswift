@@ -14,6 +14,7 @@ import type { SerializedControl } from '../builder'
 import { IntrospectedResourcesQueryResult } from '../api/graphql/generated/types'
 import { IntrospectedResourceIds } from '../api/introspection'
 import { ElementImperativeHandle } from '../runtimes/react/element-imperative-handle'
+import { BuilderEditMode } from './modules/builder-edit-mode'
 
 export const ActionTypes = {
   INIT: 'INIT',
@@ -66,6 +67,8 @@ export const ActionTypes = {
   API_RESOURCE_FULFILLED: 'API_RESOURCE_FULFILLED',
   INTROSPECTED_RESOURCES_FULFILLED: 'INTROSPECTED_RESOURCES_FULFILLED',
   TYPOGRAPHIES_FULFILLED: 'TYPOGRAPHIES_FULFILLED',
+
+  SET_BUILDER_EDIT_MODE: 'SET_BUILDER_EDIT_MODE',
 } as const
 
 type InitAction = { type: typeof ActionTypes.INIT }
@@ -252,6 +255,11 @@ type TypographiesFulfilledAction = {
   payload: { typographyIds: string[]; typographies: (Typography | null)[] }
 }
 
+type SetBuilderEditModeAction = {
+  type: typeof ActionTypes.SET_BUILDER_EDIT_MODE
+  payload: { editMode: BuilderEditMode }
+}
+
 export type Action =
   | InitAction
   | CleanUpAction
@@ -288,6 +296,7 @@ export type Action =
   | APIResourceFulfilledAction
   | IntrospectedResourcesFulfilled
   | TypographiesFulfilledAction
+  | SetBuilderEditModeAction
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }
@@ -602,5 +611,12 @@ export function introspectedResourcesFulfilled(
   return {
     type: ActionTypes.INTROSPECTED_RESOURCES_FULFILLED,
     payload: { introspectedResourceIds, introspectedResources },
+  }
+}
+
+export function setBuilderEditMode(editMode: BuilderEditMode): SetBuilderEditModeAction {
+  return {
+    type: ActionTypes.SET_BUILDER_EDIT_MODE,
+    payload: { editMode },
   }
 }

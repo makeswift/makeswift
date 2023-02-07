@@ -19,6 +19,7 @@ import * as PropControllers from './modules/prop-controllers'
 import * as PropControllerHandles from './modules/prop-controller-handles'
 import * as IsInBuilder from './modules/is-in-builder'
 import * as IsPreview from './modules/is-preview'
+import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as ReactPage from './react-page'
 import {
   Action,
@@ -57,6 +58,7 @@ const reducer = combineReducers({
   propControllerHandles: PropControllerHandles.reducer,
   isInBuilder: IsInBuilder.reducer,
   isPreview: IsPreview.reducer,
+  builderEditMode: BuilderEditMode.reducer,
 })
 
 export type State = ReturnType<typeof reducer>

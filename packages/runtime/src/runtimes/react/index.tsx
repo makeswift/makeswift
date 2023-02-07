@@ -35,6 +35,7 @@ import { PropsValue } from './controls'
 import { FindDomNode } from './find-dom-node'
 import { useGlobalElement } from './hooks/makeswift-api'
 import { ElementImperativeHandle } from './element-imperative-handle'
+import { BuilderEditMode } from '../../state/modules/builder-edit-mode'
 
 export const storeContextDefaultValue = ReactPage.configureStore()
 
@@ -162,6 +163,10 @@ export function useIsInBuilder(): boolean {
 
 export function useIsPreview(): boolean {
   return useSelector(state => ReactPage.getIsPreview(state))
+}
+
+export function useBuilderEditMode(): BuilderEditMode | null {
+  return useSelector(state => ReactPage.getBuilderEditMode(state))
 }
 
 type Dispatch = ReactPage.Dispatch & ReactBuilderPreview.Dispatch
