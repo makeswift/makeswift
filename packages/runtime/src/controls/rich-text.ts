@@ -1,6 +1,6 @@
 import { IndexSignatureHack } from '../prop-controllers/descriptors'
 import type * as Slate from 'slate'
-import { BuilderEditMode } from '../utils/constants'
+import { BuilderEditMode } from '../state/modules/builder-edit-mode'
 import { PropController } from '../prop-controllers/instances'
 import { OnChangeParam, Editor } from 'slate-react'
 import { BoxModel } from '../box-model'

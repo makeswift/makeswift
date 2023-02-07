@@ -2,7 +2,7 @@ import { Editor } from 'slate-react'
 import { ValueJSON } from 'slate'
 import { OnChangeParam } from 'slate-react'
 import { Descriptor, RichTextDescriptor, TableFormFieldsDescriptor, Types } from './descriptors'
-import { BuilderEditMode } from '../utils/constants'
+import { BuilderEditMode } from '../state/modules/builder-edit-mode'
 import { BoxModel } from '../state/modules/box-models'
 import {
   RichTextControl,
