@@ -22,11 +22,16 @@ const ReadOnlyText = forwardRef(function ReadOnlyText(
   { id, text, width, margin }: Props,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
-  const plaintext = text?.document == null ? '' : getNodeText(text.document)
+  // NOTE: Adding `object: 'document'` here is done to support some old bad data that didn't have
+  // the `object` field in the document node. This was due to the value not being passed in the
+  // `Props.RichText` preset.
+  const document: DocumentJSON | null =
+    text?.document == null ? null : { ...text.document, object: 'document' }
+  const plaintext = document == null ? '' : getNodeText(document)
 
   return (
     <div ref={ref} id={id} className={cx(width, margin)}>
-      {plaintext === '' ? <Placeholder /> : <Node {...text?.document} />}
+      {plaintext === '' ? <Placeholder /> : <Node {...document} />}
     </div>
   )
 })

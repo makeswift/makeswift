@@ -18,6 +18,7 @@ export function registerComponent(runtime: ReactRuntime) {
         text: Props.RichText(() => ({
           preset: {
             document: {
+              object: 'document',
               nodes: [
                 {
                   object: 'block',
