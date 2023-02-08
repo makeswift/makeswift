@@ -94,6 +94,7 @@ class RichTextPropController extends PropController<RichTextPropControllerMessag
       case RichTextPropControllerMessageType.CHANGE_BUILDER_EDIT_MODE: {
         switch (message.editMode) {
           case BuilderEditMode.BUILD:
+          case BuilderEditMode.INTERACT:
             this.editor?.deselect().blur()
             break
         }

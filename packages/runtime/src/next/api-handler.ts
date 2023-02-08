@@ -24,7 +24,11 @@ type MakeswiftApiHandlerConfig = {
 export type MakeswiftApiHandlerErrorResponse = { message: string }
 export type MakeswiftApiHandlerRevalidateErrorResponse = string
 export type MakeswiftApiHandlerRevalidateResponse = { revalidated: boolean }
-export type MakeswiftApiHandlerManifestResponse = { version: string; previewMode: boolean }
+export type MakeswiftApiHandlerManifestResponse = {
+  version: string
+  previewMode: boolean
+  interactionMode: boolean
+}
 export type MakeswiftApiHandlerFontsResponse = Fonts
 export type MakeswiftApiHandlerElementTreeResponse = { elementTree: any }
 
@@ -88,6 +92,7 @@ export function MakeswiftApiHandler(
         return res.json({
           version,
           previewMode: true,
+          interactionMode: true,
         })
       }
 
