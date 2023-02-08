@@ -9,6 +9,8 @@ import {
   Store as ReduxStore,
 } from 'redux'
 import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk'
+import isHotkey from 'is-hotkey'
+
 import deepEqual from '../utils/deepEqual'
 
 import * as Documents from './modules/read-write-documents'
@@ -38,6 +40,7 @@ import {
   setIsInBuilder,
   handleWheel,
   handlePointerMove,
+  setBuilderEditMode,
 } from './actions'
 import { ActionTypes } from './actions'
 import { createPropController, PropController } from '../prop-controllers/instances'
@@ -237,27 +240,37 @@ function startHandlingPointerMoveEvent(): ThunkAction<() => void, State, unknown
   }
 }
 
-function startHandlingFocusEvents(): () => void {
-  window.addEventListener('focusin', handleFocusIn)
-  window.addEventListener('focusout', handleFocusOut)
+function startHandlingFocusEvents(): ThunkAction<() => void, State, unknown, Action> {
+  return (_dispatch, getState) => {
+    window.addEventListener('focusin', handleFocusIn)
+    window.addEventListener('focusout', handleFocusOut)
 
-  return () => {
-    window.removeEventListener('focusin', handleFocusIn)
-    window.removeEventListener('focusout', handleFocusOut)
-  }
-
-  function handleFocusIn(event: FocusEvent) {
-    if (!(event.target instanceof window.HTMLElement) || !event.target.isContentEditable) {
-      window.parent.focus()
+    return () => {
+      window.removeEventListener('focusin', handleFocusIn)
+      window.removeEventListener('focusout', handleFocusOut)
     }
-  }
 
-  function handleFocusOut(event: FocusEvent) {
-    if (
-      !(event.relatedTarget instanceof window.HTMLElement) ||
-      !event.relatedTarget.isContentEditable
-    ) {
-      window.parent.focus()
+    function handleFocusIn(event: FocusEvent) {
+      if (ReactPage.getBuilderEditMode(getState()) === BuilderEditMode.BuilderEditMode.INTERACT) {
+        return
+      }
+
+      if (!(event.target instanceof window.HTMLElement) || !event.target.isContentEditable) {
+        window.parent.focus()
+      }
+    }
+
+    function handleFocusOut(event: FocusEvent) {
+      if (ReactPage.getBuilderEditMode(getState()) === BuilderEditMode.BuilderEditMode.INTERACT) {
+        return
+      }
+
+      if (
+        !(event.relatedTarget instanceof window.HTMLElement) ||
+        !event.relatedTarget.isContentEditable
+      ) {
+        window.parent.focus()
+      }
     }
   }
 }
@@ -285,13 +298,37 @@ function startMeasuringDocumentElement(): ThunkAction<() => void, unknown, unkno
   }
 }
 
+function startHandlingKeyDownEvent(): ThunkAction<() => void, State, unknown, Action> {
+  return (dispatch, getState) => {
+    window.document.body.addEventListener('keydown', handle)
+
+    return () => {
+      window.document.body.removeEventListener('keydown', handle)
+    }
+
+    function handle(event: KeyboardEvent) {
+      if (event.defaultPrevented) return
+
+      if (ReactPage.getBuilderEditMode(getState()) !== BuilderEditMode.BuilderEditMode.INTERACT) {
+        return
+      }
+
+      if (isHotkey('escape')(event)) {
+        window.parent.focus()
+        dispatch(setBuilderEditMode(BuilderEditMode.BuilderEditMode.BUILD))
+      }
+    }
+  }
+}
+
 export function initialize(): ThunkAction<() => void, State, unknown, Action> {
   return dispatch => {
     const stopMeasuringElements = dispatch(startMeasuringElements())
     const stopMeasuringDocumentElement = dispatch(startMeasuringDocumentElement())
-    const stopHandlingFocusEvent = startHandlingFocusEvents()
+    const stopHandlingFocusEvent = dispatch(startHandlingFocusEvents())
     const unlockDocumentScroll = dispatch(lockDocumentScroll())
     const stopHandlingPointerMoveEvent = dispatch(startHandlingPointerMoveEvent())
+    const stopHandlingKeyDownEvent = dispatch(startHandlingKeyDownEvent())
     dispatch(setIsInBuilder(true))
 
     return () => {
@@ -300,6 +337,7 @@ export function initialize(): ThunkAction<() => void, State, unknown, Action> {
       stopHandlingFocusEvent()
       unlockDocumentScroll()
       stopHandlingPointerMoveEvent()
+      stopHandlingKeyDownEvent()
       dispatch(setIsInBuilder(false))
     }
   }
@@ -401,6 +439,11 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
 
           case ActionTypes.SCROLL_DOCUMENT_ELEMENT:
             window.document.documentElement.scrollTop += action.payload.scrollTopDelta
+            break
+
+          case ActionTypes.SET_BUILDER_EDIT_MODE:
+            messageChannel.port1.postMessage(action)
+            window.getSelection()?.removeAllRanges()
             break
 
           case ActionTypes.INIT:
