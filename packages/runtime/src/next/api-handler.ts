@@ -5,7 +5,9 @@ import { NextApiHandler } from 'next'
 import { parse } from 'set-cookie-parser'
 import { version } from '../../package.json'
 import { ReactRuntime } from '../react'
+import { Element } from '../state/react-page'
 import isErrorWithMessage from '../utils/isErrorWithMessage'
+import { Makeswift, MakeswiftResources, unstable_Snapshot } from './client'
 
 type Fonts = Font[]
 
@@ -18,6 +20,7 @@ type FontVariant = { weight: string; style: 'italic' | 'normal'; src?: string }
 
 type MakeswiftApiHandlerConfig = {
   appOrigin?: string
+  apiOrigin?: string
   getFonts?: () => Fonts | Promise<Fonts>
 }
 
@@ -27,6 +30,15 @@ export type MakeswiftApiHandlerRevalidateResponse = { revalidated: boolean }
 export type MakeswiftApiHandlerManifestResponse = { version: string; previewMode: boolean }
 export type MakeswiftApiHandlerFontsResponse = Fonts
 export type MakeswiftApiHandlerElementTreeResponse = { elementTree: any }
+export type MakeswiftApiHandlerCreateSnapshotResponse = {
+  pageId: string
+  snapshot: unstable_Snapshot
+  livePageChanges?: {
+    online?: boolean
+    pathname?: string
+  }
+  usedResources: string[]
+}
 
 export type MakeswiftApiHandlerResponse =
   | MakeswiftApiHandlerErrorResponse
@@ -35,10 +47,15 @@ export type MakeswiftApiHandlerResponse =
   | MakeswiftApiHandlerManifestResponse
   | MakeswiftApiHandlerFontsResponse
   | MakeswiftApiHandlerElementTreeResponse
+  | MakeswiftApiHandlerCreateSnapshotResponse
 
 export function MakeswiftApiHandler(
   apiKey: string,
-  { appOrigin = 'https://app.makeswift.com', getFonts }: MakeswiftApiHandlerConfig = {},
+  {
+    appOrigin = 'https://app.makeswift.com',
+    apiOrigin = 'https://api.makeswift.com',
+    getFonts,
+  }: MakeswiftApiHandlerConfig = {},
 ): NextApiHandler<MakeswiftApiHandlerResponse> {
   const cors = Cors({ origin: appOrigin })
   const previewModeProxy = createProxyServer()
@@ -193,6 +210,53 @@ export function MakeswiftApiHandler(
         const generatedElementTree = ReactRuntime.copyElementTree(elementTree, replacementContext)
 
         const response = { elementTree: generatedElementTree }
+        return res.json(response)
+      }
+
+      case 'snapshot': {
+        type CreateSnapshotBody = {
+          pageId: string
+          publishedResources?: Partial<MakeswiftResources>
+          deletedResources?: Partial<MakeswiftResources>
+          publishedElementTree?: Element
+          currentSnapshot: unstable_Snapshot
+          livePageChanges: {
+            online?: boolean
+            pathname?: string
+          }
+        }
+        function validateBody(body: CreateSnapshotBody) {
+          if (body.pageId == null) {
+            return res.status(400).json({ message: 'Must define pageId.' })
+          }
+          if (body.currentSnapshot == null && body.publishedElementTree == null) {
+            return res
+              .status(400)
+              .json({ message: 'Either currentSnapshot or publishedElementTree must be defined.' })
+          }
+        }
+
+        const body: CreateSnapshotBody = req.body
+        validateBody(body)
+
+        const client = new Makeswift(apiKey, {
+          apiOrigin,
+        })
+
+        const snapshot = await client.unstable_createSnapshot({
+          publishedResources: body.publishedResources,
+          deletedResources: body.deletedResources,
+          publishedElementTree: body.publishedElementTree,
+          currentSnapshot: body.currentSnapshot,
+        })
+        const usedResources = client.unstable_getSnapshotResourceMapping(snapshot)
+        const response = {
+          pageId: body.pageId,
+          snapshot,
+          livePageChanges: body.livePageChanges,
+          usedResources,
+        }
+
         return res.json(response)
       }
 
