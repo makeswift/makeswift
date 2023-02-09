@@ -8,7 +8,6 @@ export type MakeswiftPage = {
   path: string
 }
 
-// @note: open to whatever name
 export type MakeswiftPageData = {
   pageId: string
   siteId: string
