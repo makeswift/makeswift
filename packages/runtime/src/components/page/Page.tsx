@@ -9,7 +9,7 @@ import { createDocumentReference } from '../../state/react-page'
 import { useMakeswiftClient } from '../../api/react'
 import { useIsInBuilder } from '../../react'
 import deepEqual from '../../utils/deepEqual'
-import { MakeswiftPageDocument } from '../../next'
+import { MakeswiftPageData, MakeswiftPageDocument } from '../../next'
 import { Page as PageType, Site } from '../../api'
 
 const SnippetLocation = {
@@ -227,6 +227,167 @@ export function Page({ document: page }: Props): JSX.Element {
       </Head>
 
       <DocumentReference documentReference={createDocumentReference(page.id)} />
+
+      {filteredSnippets
+        .filter(snippet => snippet.location === SnippetLocation.Body)
+        .map(snippet => (
+          <BodySnippet key={snippet.id} code={snippet.code} cleanup={snippet.cleanup} />
+        ))}
+    </>
+  )
+}
+
+type unstable_Props = { pageData: MakeswiftPageData }
+
+export function unstable_Page({ pageData }: unstable_Props): JSX.Element {
+  const isInBuilder = useIsInBuilder()
+  const [snippets, setSnippets] = useState(pageData.snapshot.resources.snippets)
+  // We're using cached results here for page snippets and site fonts so that anytime the user
+  // changes the snippets or fonts on the builder, the change would be reflected here.
+  // See this PR for discussions and things we can do to improve it in the future:
+  // https://github.com/makeswift/makeswift/pull/77
+  const cachedPage = useCachedPage(isInBuilder ? pageData.pageId : null)
+  useEffect(() => {
+    if (cachedPage == null) return
+
+    const oldSnippets = snippets.map(filterUsedSnippetProperties)
+    const newSnippets = cachedPage.snippets.map(filterUsedSnippetProperties)
+
+    if (deepEqual(newSnippets, oldSnippets)) return
+
+    setSnippets(cachedPage.snippets)
+  }, [cachedPage])
+  const site = useCachedSite(isInBuilder ? pageData.siteId : null)
+
+  const favicon = pageData.snapshot.resources.meta.favicon ?? defaultFavicon
+  const { title, description, keywords, socialImage } = pageData.snapshot.resources.meta
+  const { canonicalUrl, isIndexingBlocked } = pageData.snapshot.resources.seo
+
+  const fontFamilyParamValue = useMemo(() => {
+    if (site == null) {
+      return pageData.snapshot.resources.fonts
+        .map(({ family, variants }) => {
+          return `${family.replace(/ /g, '+')}:${variants.join()}`
+        })
+        .join('|')
+    }
+
+    return site.googleFonts.edges
+      .filter((edge): edge is NonNullable<typeof edge> => edge != null)
+      .map(({ activeVariants, node: { family, variants } }) => {
+        const activeVariantSpecifiers = variants
+          .filter(variant =>
+            activeVariants.some(activeVariant => activeVariant.specifier === variant.specifier),
+          )
+          .map(variant => variant.specifier)
+          .join()
+
+        return `${family.replace(/ /g, '+')}:${activeVariantSpecifiers}`
+      })
+      .join('|')
+  }, [site, pageData.snapshot.resources.fonts])
+
+  const filteredSnippets = useMemo(
+    () => snippets.filter(snippet => (isInBuilder ? snippet.builderEnabled : snippet.liveEnabled)),
+    [snippets, isInBuilder],
+  )
+  const headSnippets = useMemo(
+    () => filteredSnippets.filter(snippet => snippet.location === SnippetLocation.Head),
+    [filteredSnippets],
+  )
+
+  const previousHeadSnippets = useRef<MakeswiftPageDocument['snippets'] | null>(null)
+  useEffect(() => {
+    const headSnippetsToCleanUp = (previousHeadSnippets.current ?? [])
+      .filter(previousSnippet => previousSnippet.cleanup != null)
+      .filter(previousSnippet => !headSnippets.some(snippet => previousSnippet.id === snippet.id))
+
+    headSnippetsToCleanUp.forEach(snippetToCleanUp => {
+      if (snippetToCleanUp.cleanup == null) return
+
+      const cleanUp = new Function(snippetToCleanUp.cleanup)
+
+      try {
+        cleanUp()
+      } catch {
+        // Ignore errors from user input.
+      }
+    })
+
+    previousHeadSnippets.current = headSnippets
+  }, [headSnippets])
+
+  return (
+    <>
+      <Head>
+        <style>
+          {`
+            html {
+              font-family: sans-serif;
+            }
+            div#__next {
+              overflow: hidden;
+            }
+          `}
+        </style>
+
+        <link rel="icon" type={favicon.mimetype} href={favicon.publicUrl} />
+
+        {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+
+        {isIndexingBlocked && <meta name="robots" content="noindex" />}
+
+        {title && (
+          <>
+            <title>{title}</title>
+            <meta property="og:title" content={title} />
+            <meta name="twitter:title" content={title} />
+            <meta itemProp="name" content={title} />
+          </>
+        )}
+
+        {description && (
+          <>
+            <meta name="description" content={description} />
+            <meta property="og:description" content={description} />
+            <meta name="twitter:description" content={description} />
+            <meta itemProp="description" content={description} />
+          </>
+        )}
+
+        {keywords && <meta name="keywords" content={keywords} />}
+
+        {socialImage && (
+          <>
+            <meta property="og:image" content={socialImage.publicUrl} />
+            <meta property="og:image:type" content={socialImage.mimetype} />
+            <meta name="twitter:image" content={socialImage.publicUrl} />
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta itemProp="image" content={socialImage.publicUrl} />
+          </>
+        )}
+
+        {fontFamilyParamValue !== '' && (
+          <>
+            <link
+              rel="stylesheet"
+              href={`https://fonts.googleapis.com/css?family=${fontFamilyParamValue}&display=swap`}
+            />
+          </>
+        )}
+
+        {headSnippets.map(snippetToElement).map(children =>
+          Children.map(children, child => {
+            if (typeof child === 'string') return child
+
+            if (VALID_HEAD_ELEMENT_TYPES.includes(child.type as string)) return child
+
+            return null
+          }),
+        )}
+      </Head>
+
+      <DocumentReference documentReference={createDocumentReference(pageData.pageId)} />
 
       {filteredSnippets
         .filter(snippet => snippet.location === SnippetLocation.Body)

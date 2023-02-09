@@ -1,14 +1,17 @@
 import { memo, useMemo } from 'react'
 
 import { RuntimeProvider } from '../runtimes/react'
-import { Page as PageMeta } from '../components/page'
-import { MakeswiftClient } from '../api/react'
-import { MakeswiftPageSnapshot } from './client'
+import { unstable_Page as PageMetaUnstable, Page as PageMeta } from '../components/page'
+import { CacheData, MakeswiftClient } from '../api/react'
+import { MakeswiftPageData, MakeswiftPageSnapshot, MakeswiftResources } from './client'
 
 export { MakeswiftClient }
 
 export type PageProps = {
   snapshot: MakeswiftPageSnapshot
+}
+export type unstable_PageProps = {
+  pageData: MakeswiftPageData
 }
 
 import {
@@ -138,6 +141,42 @@ export const Page = memo(({ snapshot }: PageProps) => {
     >
       {/* We use a key here to reset the Snippets state in the PageMeta component */}
       <PageMeta key={snapshot.document.data.key} document={snapshot.document} />
+    </RuntimeProvider>
+  )
+})
+
+export const unstable_Page = memo(({ pageData }: unstable_PageProps) => {
+  function resourcesToCacheData(resources: MakeswiftResources | undefined): CacheData | undefined {
+    if (resources == null) return undefined
+    return {
+      Swatch: resources.Swatch,
+      File: resources.File,
+      Typography: resources.Typography,
+      PagePathnameSlice: resources.PagePathnameSlice,
+      GlobalElement: resources.GlobalElement,
+      Table: resources.Table,
+      Snippet: resources.Snippet,
+      Page: resources.Page,
+      Site: resources.Site,
+    }
+  }
+  const client = useMemo(
+    () =>
+      new MakeswiftClient({
+        uri: new URL('graphql', pageData.options.apiOrigin).href,
+        cacheData: resourcesToCacheData(pageData.snapshot.resources),
+      }),
+    [pageData],
+  )
+
+  return (
+    <RuntimeProvider
+      client={client}
+      rootElements={new Map([[pageData.pageId, pageData.snapshot.elementTree]])}
+      preview={pageData.options.preview}
+    >
+      {/* We use a key here to reset the Snippets state in the PageMeta component */}
+      <PageMetaUnstable pageData={pageData} />
     </RuntimeProvider>
   )
 })
