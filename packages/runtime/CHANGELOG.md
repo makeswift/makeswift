@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.6.5
+
+### Patch Changes
+
+- af0e818: Refactored SerializedState format.
+- be2aa16: Added latent snapshotting functionality.
+
 ## 0.6.4
 
 ### Patch Changes
