@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.6.4
+
+### Patch Changes
+
+- 8207b36: Prevent clicks from propagating in content mode. This issue affected for example when you have a Text on a Accordion: if you click the text in content mode, the click also triggered the accordion open/close state.
+- ba6d869: Add support for interaction mode.
+- d258829: Handle missing `object` field in `Props.RichText` preset for built-in `Text` component.
+
 ## 0.6.3
 
 ### Patch Changes
