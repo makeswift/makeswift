@@ -3,7 +3,7 @@ import { memo, useMemo } from 'react'
 import { RuntimeProvider } from '../runtimes/react'
 import { unstable_Page as PageMetaUnstable, Page as PageMeta } from '../components/page'
 import { CacheData, MakeswiftClient } from '../api/react'
-import { MakeswiftPageData, MakeswiftPageSnapshot, MakeswiftResources } from './client'
+import { MakeswiftPageData, MakeswiftPageSnapshot, MakeswiftSnapshotResources } from './client'
 
 export { MakeswiftClient }
 
@@ -146,7 +146,9 @@ export const Page = memo(({ snapshot }: PageProps) => {
 })
 
 export const unstable_Page = memo(({ pageData }: unstable_PageProps) => {
-  function resourcesToCacheData(resources: MakeswiftResources | undefined): CacheData | undefined {
+  function resourcesToCacheData(
+    resources: MakeswiftSnapshotResources | undefined,
+  ): CacheData | undefined {
     if (resources == null) return undefined
     return {
       Swatch: resources.Swatch,

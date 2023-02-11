@@ -7,7 +7,8 @@ import { version } from '../../package.json'
 import { ReactRuntime } from '../react'
 import { Element } from '../state/react-page'
 import isErrorWithMessage from '../utils/isErrorWithMessage'
-import { Makeswift, MakeswiftResources, unstable_Snapshot } from './client'
+import { Makeswift, unstable_Snapshot } from './client'
+import { MakeswiftSnapshotResources } from './snapshots'
 
 type Fonts = Font[]
 
@@ -223,8 +224,8 @@ export function MakeswiftApiHandler(
       case 'snapshot': {
         type CreateSnapshotBody = {
           pageId: string
-          publishedResources?: Partial<MakeswiftResources>
-          deletedResources?: Partial<MakeswiftResources>
+          publishedResources?: Partial<MakeswiftSnapshotResources>
+          deletedResources?: Partial<MakeswiftSnapshotResources>
           publishedElementTree?: Element
           currentSnapshot: unstable_Snapshot
           livePageChanges: {
