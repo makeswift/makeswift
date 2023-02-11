@@ -1,7 +1,9 @@
 import { version as runtimeVersion } from '../../package.json'
 import { APIResource } from '../api'
 import { CacheData, MakeswiftClient } from '../api/react'
+import { getSnapshotResourcesFromSerializedState } from '../state/modules/api-resources'
 import { Element } from '../state/react-page'
+import { MakeswiftSnapshotResources, normalizeToMakeswiftResources } from './snapshots'
 
 export type MakeswiftPage = {
   id: string
@@ -19,7 +21,11 @@ export type MakeswiftPageDocument = {
   id: string
   site: { id: string }
   data: Element
-} & NonElementTreeResources
+  snippets: Snippet[]
+  fonts: Font[]
+  meta: Meta
+  seo: Seo
+}
 
 export type MakeswiftPageSnapshot = {
   document: MakeswiftPageDocument
@@ -27,8 +33,6 @@ export type MakeswiftPageSnapshot = {
   cacheData: CacheData
   preview: boolean
 }
-
-type ElementTreeResources = CacheData
 
 type Snippet = {
   id: string
@@ -59,16 +63,9 @@ type Seo = {
   canonicalUrl?: string | null
   isIndexingBlocked?: boolean | null
 }
-type NonElementTreeResources = {
-  snippets: Snippet[]
-  fonts: Font[]
-  meta: Meta
-  seo: Seo
-}
-export type MakeswiftResources = ElementTreeResources & NonElementTreeResources
 
 export type unstable_Snapshot = {
-  resources: MakeswiftResources
+  resources: MakeswiftSnapshotResources
   elementTree: Element
   runtimeVersion: string
 }
@@ -245,33 +242,12 @@ export class Makeswift {
     publishedElementTree,
     currentSnapshot,
   }: {
-    publishedResources?: Partial<MakeswiftResources>
-    deletedResources?: Partial<MakeswiftResources>
+    publishedResources?: Partial<MakeswiftSnapshotResources>
+    deletedResources?: Partial<MakeswiftSnapshotResources>
     publishedElementTree?: Element
     currentSnapshot?: unstable_Snapshot
   }): Promise<unstable_Snapshot> {
     const client = new MakeswiftClient({ uri: new URL('graphql', this.apiOrigin).href })
-
-    function normalizeToMakeswiftResources(
-      partialResources?: Partial<MakeswiftResources>,
-    ): MakeswiftResources {
-      const resources: MakeswiftResources = {
-        Swatch: partialResources?.Swatch || [],
-        File: partialResources?.File || [],
-        Typography: partialResources?.Typography || [],
-        PagePathnameSlice: partialResources?.PagePathnameSlice || [],
-        GlobalElement: partialResources?.GlobalElement || [],
-        Table: partialResources?.Table || [],
-        Snippet: partialResources?.Snippet || [],
-        Page: partialResources?.Page || [],
-        Site: partialResources?.Site || [],
-        snippets: partialResources?.snippets || [],
-        fonts: partialResources?.fonts || [],
-        meta: partialResources?.meta || {},
-        seo: partialResources?.seo || {},
-      }
-      return resources
-    }
 
     function mergeResources({
       resourcesFromPublishedElementTree,
@@ -279,19 +255,17 @@ export class Makeswift {
       publishedResources,
       deletedResources,
     }: {
-      resourcesFromPublishedElementTree: MakeswiftResources
-      resourcesFromCurrentSnapshot: MakeswiftResources
-      publishedResources: MakeswiftResources
-      deletedResources: MakeswiftResources
+      resourcesFromPublishedElementTree: MakeswiftSnapshotResources
+      resourcesFromCurrentSnapshot: MakeswiftSnapshotResources
+      publishedResources: MakeswiftSnapshotResources
+      deletedResources: MakeswiftSnapshotResources
     }) {
       // chooses the last set value per id
-      function mergeElementTreeResource(
-        resourceSet: { id: string; value: APIResource }[],
-        deletedResources: { id: string; value: APIResource }[],
-      ): { id: string; value: APIResource }[] {
-        const map = new Map(
-          resourceSet.map(({ id, value }) => [id, value] as [string, APIResource]),
-        )
+      function mergeIdSpecifiedResource<T>(
+        resourceSet: { id: string; value: T }[],
+        deletedResources: { id: string; value: T }[],
+      ): { id: string; value: T }[] {
+        const map = new Map(resourceSet.map(({ id, value }) => [id, value] as [string, T]))
 
         deletedResources.forEach(({ id }) => map.delete(id))
 
@@ -304,108 +278,69 @@ export class Makeswift {
 
         return finalResourceSet
       }
-      // return an array of unique snippets, where uniqueness
-      // is determined by id
-      function mergeSnippets(snippets: Snippet[], deletedSnippet: Snippet[]): Snippet[] {
-        const map = new Map(snippets.map(value => [value.id, value]))
 
-        deletedSnippet.forEach(({ id }) => map.delete(id))
-
-        const uniqueSnippets: Snippet[] = []
-        Array.from(map.entries()).forEach(([_, value]) => {
-          uniqueSnippets.push(value)
-        })
-
-        return uniqueSnippets
-      }
-
-      function mergeFonts(fonts: Font[], deletedFonts: Font[]): Font[] {
-        const map = new Map(fonts.map(value => [value.family, value]))
-
-        deletedFonts.forEach(({ family }) => map.delete(family))
-
-        const uniqueFonts: Font[] = []
-        Array.from(map.entries()).forEach(([_, value]) => {
-          uniqueFonts.push(value)
-        })
-
-        return uniqueFonts
-      }
-      const resources: MakeswiftResources = {
-        Swatch: mergeElementTreeResource(
+      const resources: MakeswiftSnapshotResources = {
+        swatches: mergeIdSpecifiedResource(
           [
-            ...resourcesFromPublishedElementTree.Swatch,
-            ...resourcesFromCurrentSnapshot.Swatch,
-            ...publishedResources.Swatch,
+            ...resourcesFromPublishedElementTree.swatches,
+            ...resourcesFromCurrentSnapshot.swatches,
+            ...publishedResources.swatches,
           ],
-          deletedResources.Swatch,
+          deletedResources.swatches,
         ),
-        File: mergeElementTreeResource(
+        files: mergeIdSpecifiedResource(
           [
-            ...resourcesFromPublishedElementTree.File,
-            ...resourcesFromCurrentSnapshot.File,
-            ...publishedResources.File,
+            ...resourcesFromPublishedElementTree.files,
+            ...resourcesFromCurrentSnapshot.files,
+            ...publishedResources.files,
           ],
-          deletedResources.File,
+          deletedResources.files,
         ),
-        Typography: mergeElementTreeResource(
+        typographies: mergeIdSpecifiedResource(
           [
-            ...resourcesFromPublishedElementTree.Typography,
-            ...resourcesFromCurrentSnapshot.Typography,
-            ...publishedResources.Typography,
+            ...resourcesFromPublishedElementTree.typographies,
+            ...resourcesFromCurrentSnapshot.typographies,
+            ...publishedResources.typographies,
           ],
-          deletedResources.Typography,
+          deletedResources.typographies,
         ),
-        PagePathnameSlice: mergeElementTreeResource(
+        pagePathnameSlices: mergeIdSpecifiedResource(
           [
-            ...resourcesFromPublishedElementTree.PagePathnameSlice,
-            ...resourcesFromCurrentSnapshot.PagePathnameSlice,
-            ...publishedResources.PagePathnameSlice,
+            ...resourcesFromPublishedElementTree.pagePathnameSlices,
+            ...resourcesFromCurrentSnapshot.pagePathnameSlices,
+            ...publishedResources.pagePathnameSlices,
           ],
-          deletedResources.PagePathnameSlice,
+          deletedResources.pagePathnameSlices,
         ),
-        GlobalElement: mergeElementTreeResource(
+        globalElements: mergeIdSpecifiedResource(
           [
-            ...resourcesFromPublishedElementTree.GlobalElement,
-            ...resourcesFromCurrentSnapshot.GlobalElement,
-            ...publishedResources.GlobalElement,
+            ...resourcesFromPublishedElementTree.globalElements,
+            ...resourcesFromCurrentSnapshot.globalElements,
+            ...publishedResources.globalElements,
           ],
-          deletedResources.GlobalElement,
+          deletedResources.globalElements,
         ),
-        Table: mergeElementTreeResource(
+        snippets: mergeIdSpecifiedResource(
           [
-            ...resourcesFromPublishedElementTree.Table,
-            ...resourcesFromCurrentSnapshot.Table,
-            ...publishedResources.Table,
-          ],
-          deletedResources.Table,
-        ),
-        snippets: mergeSnippets(
-          [
-            ...resourcesFromCurrentSnapshot.snippets,
             ...resourcesFromPublishedElementTree.snippets,
+            ...resourcesFromCurrentSnapshot.snippets,
             ...publishedResources.snippets,
           ],
           deletedResources.snippets,
         ),
-        fonts: mergeFonts(
+        fonts: mergeIdSpecifiedResource(
           [
-            ...resourcesFromCurrentSnapshot.fonts,
             ...resourcesFromPublishedElementTree.fonts,
+            ...resourcesFromCurrentSnapshot.fonts,
             ...publishedResources.fonts,
           ],
           deletedResources.fonts,
         ),
-        meta: {
-          ...resourcesFromCurrentSnapshot.meta,
-          ...publishedResources.meta,
+        pageMetadata: {
+          ...resourcesFromCurrentSnapshot.pageMetadata,
+          ...publishedResources.pageMetadata,
         },
-        seo: { ...resourcesFromCurrentSnapshot.seo, ...publishedResources.seo },
-
-        // included resources just for type consistency
-        Snippet: [],
-        Page: [],
-        Site: [],
+        pageSeo: { ...resourcesFromCurrentSnapshot.pageSeo, ...publishedResources.pageSeo },
       }
 
       return resources
@@ -413,7 +348,9 @@ export class Makeswift {
 
     const resourcesFromPublishedElementTree =
       publishedElementTree != null
-        ? normalizeToMakeswiftResources(await client.prefetch(publishedElementTree))
+        ? normalizeToMakeswiftResources(
+            getSnapshotResourcesFromSerializedState(await client.prefetch(publishedElementTree)),
+          )
         : normalizeToMakeswiftResources({})
     const resourcesFromCurrentSnapshot = normalizeToMakeswiftResources(
       currentSnapshot?.resources || {},
@@ -445,12 +382,11 @@ export class Makeswift {
     }
 
     return [
-      ...resources.Swatch.map(parseResourceIds),
-      ...resources.File.map(parseResourceIds),
-      ...resources.Typography.map(parseResourceIds),
-      ...resources.PagePathnameSlice.map(parseResourceIds),
-      ...resources.GlobalElement.map(parseResourceIds),
-      ...resources.Table.map(parseResourceIds),
+      ...resources.swatches.map(parseResourceIds),
+      ...resources.files.map(parseResourceIds),
+      ...resources.typographies.map(parseResourceIds),
+      ...resources.pagePathnameSlices.map(parseResourceIds),
+      ...resources.globalElements.map(parseResourceIds),
       ...resources.snippets.map(parseResourceIds),
     ]
   }

@@ -1,4 +1,13 @@
-import { APIResource, APIResourceType } from '../../api'
+import {
+  APIResource,
+  APIResourceType,
+  Swatch,
+  Typography,
+  File,
+  PagePathnameSlice,
+  GlobalElement,
+} from '../../api'
+import { IdSpecified, MakeswiftSnapshotResources } from '../../next/snapshots'
 import deepEqual from '../../utils/deepEqual'
 import { Action, ActionTypes } from '../actions'
 
@@ -7,6 +16,33 @@ type State = Map<APIResourceType, Map<string, APIResource | null>>
 export type SerializedState = {
   [key in APIResourceType]: { id: string; value: APIResource }[]
 }
+
+// If we change SerializedState, update this function as well
+export function getSnapshotResourcesFromSerializedState(
+  serializedState: SerializedState,
+): Partial<MakeswiftSnapshotResources> {
+  // @note: remember TS is nominally typed, so extra parameters will come into the
+  //        objects coming out of this function. That's fine.
+  const resources: Partial<MakeswiftSnapshotResources> = {
+    swatches: serializedState.Swatch.filter((swatch): swatch is IdSpecified<Swatch> => true),
+    typographies: serializedState.Typography.filter(
+      (typography): typography is IdSpecified<Typography> => true,
+    ),
+    files: serializedState.File.filter((file): file is IdSpecified<File> => true),
+    pagePathnameSlices: serializedState.PagePathnameSlice.filter(
+      (pagePathnameSlice): pagePathnameSlice is IdSpecified<PagePathnameSlice> => true,
+    ),
+    globalElements: serializedState.GlobalElement.filter(
+      (globalElement): globalElement is IdSpecified<GlobalElement> => true,
+    ),
+  }
+
+  return resources
+}
+
+// @todo: write the reverse function, going from `MakeswiftSnapshotResources` to `SerializedState`
+//        it is critical that the two are untied from each other, otherwise
+//        we can no longer change `SerializedState`
 
 export function getInitialState(
   serializedState: SerializedState = {
