@@ -184,7 +184,7 @@ export class Makeswift {
     const response = await this.fetch(`/v1/pages/${pageId}/document?preview=false`)
 
     if (!response.ok) {
-      if (response.status === 404) throw Error('bad')
+      if (response.status === 404) throw Error('Document not found.')
 
       throw new Error(`Failed to create snapshot with error: "${response.statusText}"`)
     }
