@@ -4,10 +4,11 @@ import { createProxyServer } from 'http-proxy'
 import { NextApiHandler } from 'next'
 import { parse } from 'set-cookie-parser'
 import { version } from '../../package.json'
+import { MakeswiftClient } from '../api/react'
 import { ReactRuntime } from '../react'
 import { Element } from '../state/react-page'
 import isErrorWithMessage from '../utils/isErrorWithMessage'
-import { Makeswift, unstable_Snapshot } from './client'
+import { Makeswift, MakeswiftPageDocument, unstable_Snapshot } from './client'
 import { MakeswiftSnapshotResources } from './snapshots'
 
 type Fonts = Font[]
@@ -222,9 +223,39 @@ export function MakeswiftApiHandler(
       }
 
       case 'snapshot': {
+        type PublishedResources = {
+          swatches?: string[]
+          typographies?: string[]
+          files?: string[]
+          pagePathnameSlices?: string[]
+          globalElements?: string[]
+          snippets?: string[]
+          fonts?: []
+          pageMetadata?: {
+            title?: string | null
+            description?: string | null
+            keywords?: string | null
+            socialImage?: {
+              id: string
+              publicUrl: string
+              mimetype: string
+            } | null
+            favicon?: {
+              id: string
+              publicUrl: string
+              mimetype: string
+            } | null
+          }
+          pageSeo?: {
+            canonicalUrl?: string | null
+            isIndexingBlocked?: boolean | null
+          }
+        }
         type CreateSnapshotBody = {
           pageId: string
-          publishedResources?: Partial<MakeswiftSnapshotResources>
+          // @note: trying out defining this more sparsely, and seeing if having this endpoint hydrate
+          //        it is such a disaster
+          publishedResources?: PublishedResources
           deletedResources?: {
             swatches: string[]
             typographies: string[]
@@ -258,13 +289,136 @@ export function MakeswiftApiHandler(
         const client = new Makeswift(apiKey, {
           apiOrigin,
         })
+        const makeswiftApiClient = new MakeswiftClient({ uri: new URL('graphql', apiOrigin).href })
+
+        async function formMakeswiftResources(
+          publishedResources?: PublishedResources,
+        ): Promise<Partial<MakeswiftSnapshotResources>> {
+          const publishedResourcesInMakeswiftSnapshotFormat: Partial<MakeswiftSnapshotResources> = {
+            swatches: [],
+            typographies: [],
+            files: [],
+            pagePathnameSlices: [],
+            globalElements: [],
+            snippets: [],
+            fonts: [],
+            pageMetadata: publishedResources?.pageMetadata,
+            pageSeo: publishedResources?.pageSeo,
+          }
+
+          if (publishedResources == null) {
+            return publishedResourcesInMakeswiftSnapshotFormat
+          }
+
+          // swatches
+          for await (const swatchId of publishedResources.swatches || []) {
+            const swatch = await makeswiftApiClient.fetchSwatch(swatchId)
+            if (swatch != null) {
+              publishedResourcesInMakeswiftSnapshotFormat.swatches?.push({
+                id: swatchId,
+                value: swatch,
+              })
+            }
+          }
+
+          // typographies
+          for await (const typographyId of publishedResources.typographies || []) {
+            const typography = await makeswiftApiClient.fetchTypography(typographyId)
+            if (typography != null) {
+              publishedResourcesInMakeswiftSnapshotFormat.typographies?.push({
+                id: typographyId,
+                value: typography,
+              })
+            }
+          }
+
+          // files
+          for await (const fileId of publishedResources.files || []) {
+            const file = await makeswiftApiClient.fetchFile(fileId)
+            if (file != null) {
+              publishedResourcesInMakeswiftSnapshotFormat.files?.push({
+                id: fileId,
+                value: file,
+              })
+            }
+          }
+
+          // pagePathnameSlices
+          for await (const pageId of publishedResources.pagePathnameSlices || []) {
+            const pagePathnameSlice = await makeswiftApiClient.fetchPagePathnameSlice(pageId)
+            if (pagePathnameSlice != null) {
+              publishedResourcesInMakeswiftSnapshotFormat.pagePathnameSlices?.push({
+                id: pageId,
+                value: pagePathnameSlice,
+              })
+            }
+          }
+
+          // globalElements
+          for await (const globalElementId of publishedResources.globalElements || []) {
+            const globalElement = await makeswiftApiClient.fetchGlobalElement(globalElementId)
+            if (globalElement != null) {
+              publishedResourcesInMakeswiftSnapshotFormat.globalElements?.push({
+                id: globalElementId,
+                value: globalElement,
+              })
+            }
+          }
+
+          // @todo: create a cleaner pattern for snippets and fonts
+          if (publishedResources.snippets != null || publishedResources.fonts != null) {
+            // @fixme: this will fail for creating the first snapshot
+            const response = await fetch(
+              new URL(`/v1/pages/${body.pageId}/document?preview=false`, apiOrigin).toString(),
+              {
+                headers: { ['X-API-Key']: apiKey },
+              },
+            )
+
+            if (!response.ok) {
+              throw new Error(`Failed to hit live page endpoint: "${response.statusText}"`)
+            }
+
+            const document: MakeswiftPageDocument = await response.json()
+
+            const availableSnippets = document.snippets
+            const availableFonts = document.fonts
+
+            // snippets
+            for await (const snippetId of publishedResources.snippets || []) {
+              const snippet = availableSnippets.find(
+                availableSnippet => availableSnippet.id === snippetId,
+              )
+              if (snippet != null) {
+                publishedResourcesInMakeswiftSnapshotFormat.snippets?.push({
+                  id: snippetId,
+                  value: snippet,
+                })
+              }
+            }
+
+            // fonts
+            for await (const family of publishedResources.fonts || []) {
+              const font = availableFonts.find(availableFont => availableFont.family === family)
+              if (font != null) {
+                publishedResourcesInMakeswiftSnapshotFormat.fonts?.push({
+                  id: family,
+                  value: font,
+                })
+              }
+            }
+          }
+
+          return publishedResourcesInMakeswiftSnapshotFormat
+        }
 
         const snapshot = await client.unstable_createSnapshot({
-          publishedResources: body.publishedResources,
+          publishedResources: await formMakeswiftResources(body.publishedResources),
           deletedResources: body.deletedResources,
           publishedElementTree: body.publishedElementTree,
           currentSnapshot: body.currentSnapshot,
         })
+
         const usedResources = client.unstable_getSnapshotResourceMapping(snapshot)
         const response = {
           pageId: body.pageId,
