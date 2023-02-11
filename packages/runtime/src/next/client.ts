@@ -233,6 +233,7 @@ export class Makeswift {
       fonts: fetchedDocument.fonts,
     }
 
+    // @ts-expect-error: this method is now broken. @fixme!
     return { resources, elementTree: fetchedDocument.data, runtimeVersion }
   }
 
