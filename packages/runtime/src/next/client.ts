@@ -244,7 +244,15 @@ export class Makeswift {
     currentSnapshot,
   }: {
     publishedResources?: Partial<MakeswiftSnapshotResources>
-    deletedResources?: Partial<MakeswiftSnapshotResources>
+    deletedResources?: {
+      swatches: string[]
+      typographies: string[]
+      files: string[]
+      pagePathnameSlices: string[]
+      globalElements: string[]
+      snippets: string[]
+      fonts: []
+    }
     publishedElementTree?: Element
     currentSnapshot?: unstable_Snapshot
   }): Promise<unstable_Snapshot> {
@@ -259,16 +267,24 @@ export class Makeswift {
       resourcesFromPublishedElementTree: MakeswiftSnapshotResources
       resourcesFromCurrentSnapshot: MakeswiftSnapshotResources
       publishedResources: MakeswiftSnapshotResources
-      deletedResources: MakeswiftSnapshotResources
+      deletedResources?: {
+        swatches: string[]
+        typographies: string[]
+        files: string[]
+        pagePathnameSlices: string[]
+        globalElements: string[]
+        snippets: string[]
+        fonts: []
+      }
     }) {
       // chooses the last set value per id
       function mergeIdSpecifiedResource<T>(
         resourceSet: { id: string; value: T }[],
-        deletedResources: { id: string; value: T }[],
+        deletedResources?: string[],
       ): { id: string; value: T }[] {
         const map = new Map(resourceSet.map(({ id, value }) => [id, value] as [string, T]))
 
-        deletedResources.forEach(({ id }) => map.delete(id))
+        deletedResources?.forEach(id => map.delete(id))
 
         const finalResourceSet: { id: string; value: any }[] = []
         Array.from(map.entries()).forEach(([id, value]) => {
@@ -287,7 +303,7 @@ export class Makeswift {
             ...resourcesFromCurrentSnapshot.swatches,
             ...publishedResources.swatches,
           ],
-          deletedResources.swatches,
+          deletedResources?.swatches,
         ),
         files: mergeIdSpecifiedResource(
           [
@@ -295,7 +311,7 @@ export class Makeswift {
             ...resourcesFromCurrentSnapshot.files,
             ...publishedResources.files,
           ],
-          deletedResources.files,
+          deletedResources?.files,
         ),
         typographies: mergeIdSpecifiedResource(
           [
@@ -303,7 +319,7 @@ export class Makeswift {
             ...resourcesFromCurrentSnapshot.typographies,
             ...publishedResources.typographies,
           ],
-          deletedResources.typographies,
+          deletedResources?.typographies,
         ),
         pagePathnameSlices: mergeIdSpecifiedResource(
           [
@@ -311,7 +327,7 @@ export class Makeswift {
             ...resourcesFromCurrentSnapshot.pagePathnameSlices,
             ...publishedResources.pagePathnameSlices,
           ],
-          deletedResources.pagePathnameSlices,
+          deletedResources?.pagePathnameSlices,
         ),
         globalElements: mergeIdSpecifiedResource(
           [
@@ -319,7 +335,7 @@ export class Makeswift {
             ...resourcesFromCurrentSnapshot.globalElements,
             ...publishedResources.globalElements,
           ],
-          deletedResources.globalElements,
+          deletedResources?.globalElements,
         ),
         snippets: mergeIdSpecifiedResource(
           [
@@ -327,7 +343,7 @@ export class Makeswift {
             ...resourcesFromCurrentSnapshot.snippets,
             ...publishedResources.snippets,
           ],
-          deletedResources.snippets,
+          deletedResources?.snippets,
         ),
         fonts: mergeIdSpecifiedResource(
           [
@@ -335,7 +351,7 @@ export class Makeswift {
             ...resourcesFromCurrentSnapshot.fonts,
             ...publishedResources.fonts,
           ],
-          deletedResources.fonts,
+          deletedResources?.fonts,
         ),
         pageMetadata: {
           ...resourcesFromCurrentSnapshot.pageMetadata,
@@ -360,7 +376,7 @@ export class Makeswift {
       resourcesFromPublishedElementTree,
       resourcesFromCurrentSnapshot,
       publishedResources: normalizeToMakeswiftResources(publishedResources),
-      deletedResources: normalizeToMakeswiftResources(deletedResources),
+      deletedResources,
     })
 
     const elementTree = publishedElementTree || currentSnapshot?.elementTree

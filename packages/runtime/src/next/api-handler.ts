@@ -225,7 +225,15 @@ export function MakeswiftApiHandler(
         type CreateSnapshotBody = {
           pageId: string
           publishedResources?: Partial<MakeswiftSnapshotResources>
-          deletedResources?: Partial<MakeswiftSnapshotResources>
+          deletedResources?: {
+            swatches: string[]
+            typographies: string[]
+            files: string[]
+            pagePathnameSlices: string[]
+            globalElements: string[]
+            snippets: string[]
+            fonts: []
+          }
           publishedElementTree?: Element
           currentSnapshot: unstable_Snapshot
           livePageChanges: {
