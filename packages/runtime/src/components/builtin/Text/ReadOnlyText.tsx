@@ -1,5 +1,5 @@
 import { cx } from '@emotion/css'
-import { ForwardedRef, forwardRef, ReactNode } from 'react'
+import { ComponentPropsWithoutRef, ForwardedRef, forwardRef, ReactNode } from 'react'
 import type { BlockJSON, DocumentJSON, InlineJSON, MarkJSON, NodeJSON, TextJSON } from 'slate'
 import type {
   ElementIDValue,
@@ -84,6 +84,30 @@ function Document({ nodes }: DocumentJSON) {
   )
 }
 
+type OrderedListProps = ComponentPropsWithoutRef<'ol'>
+
+function OrderedList(props: OrderedListProps) {
+  return <ol className="ordered-list" {...props} style={{ listStylePosition: 'inside' }} />
+}
+
+type UnorderedListProps = ComponentPropsWithoutRef<'ul'>
+
+function UnorderedList(props: UnorderedListProps) {
+  return <ul className="unordered-list" {...props} style={{ listStylePosition: 'inside' }} />
+}
+
+type ListItemProps = ComponentPropsWithoutRef<'li'>
+
+function ListItem(props: ListItemProps) {
+  return <li className="list-item" {...props} />
+}
+
+type ListItemChildProps = ComponentPropsWithoutRef<'span'>
+
+function ListItemChild(props: ListItemChildProps) {
+  return <span className="list-item-child" {...props} />
+}
+
 function Block({ type, data, nodes }: BlockJSON) {
   const component = {
     paragraph: 'p',
@@ -94,9 +118,10 @@ function Block({ type, data, nodes }: BlockJSON) {
     'heading-five': 'h5',
     'heading-six': 'h6',
     blockquote: 'blockquote',
-    'ordered-list': 'ol',
-    'unordered-list': 'ul',
-    'list-item': 'li',
+    'ordered-list': OrderedList,
+    'unordered-list': UnorderedList,
+    'list-item': ListItem,
+    'list-item-child': ListItemChild,
   }[type]
 
   return (
