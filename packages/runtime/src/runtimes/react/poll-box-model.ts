@@ -11,6 +11,7 @@ export function pollBoxModel({
   let currentBoxModel: BoxModel | null = null
 
   const handleAnimationFrameRequest = () => {
+    
     const measuredBoxModel = getBox(element)
 
     if (!deepEqual(currentBoxModel, measuredBoxModel)) {
