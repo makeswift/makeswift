@@ -225,10 +225,12 @@ export function MakeswiftApiHandler(
           swatches?: string[]
           typographies?: string[]
           files?: string[]
+          // @todo: I think this should be removed, and only derived from the element tree
           pagePathnameSlices?: string[]
           globalElements?: string[]
           snippets?: string[]
-          fonts?: []
+          // @todo: add a font test case
+          fonts?: string[]
           pageMetadata?: {
             title?: string | null
             description?: string | null
@@ -251,20 +253,18 @@ export function MakeswiftApiHandler(
         }
         type CreateSnapshotBody = {
           pageId: string
-          // @note: trying out defining this more sparsely, and seeing if having this endpoint hydrate
-          //        it is such a disaster
           publishedResources?: PublishedResources
           deletedResources?: {
-            swatches: string[]
-            typographies: string[]
-            files: string[]
-            pagePathnameSlices: string[]
-            globalElements: string[]
-            snippets: string[]
-            fonts: []
+            swatches?: string[]
+            typographies?: string[]
+            files?: string[]
+            pagePathnameSlices?: string[]
+            globalElements?: string[]
+            snippets?: string[]
+            fonts?: string[]
           }
           publishedElementTree?: Element
-          currentSnapshot: unstable_Snapshot
+          currentSnapshot?: unstable_Snapshot
           livePageChanges: {
             online?: boolean
             pathname?: string

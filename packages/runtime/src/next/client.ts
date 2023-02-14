@@ -245,13 +245,13 @@ export class Makeswift {
   }: {
     publishedResources?: Partial<MakeswiftSnapshotResources>
     deletedResources?: {
-      swatches: string[]
-      typographies: string[]
-      files: string[]
-      pagePathnameSlices: string[]
-      globalElements: string[]
-      snippets: string[]
-      fonts: []
+      swatches?: string[]
+      typographies?: string[]
+      files?: string[]
+      pagePathnameSlices?: string[]
+      globalElements?: string[]
+      snippets?: string[]
+      fonts?: string[]
     }
     publishedElementTree?: Element
     currentSnapshot?: unstable_Snapshot
@@ -268,13 +268,13 @@ export class Makeswift {
       resourcesFromCurrentSnapshot: MakeswiftSnapshotResources
       publishedResources: MakeswiftSnapshotResources
       deletedResources?: {
-        swatches: string[]
-        typographies: string[]
-        files: string[]
-        pagePathnameSlices: string[]
-        globalElements: string[]
-        snippets: string[]
-        fonts: []
+        swatches?: string[]
+        typographies?: string[]
+        files?: string[]
+        pagePathnameSlices?: string[]
+        globalElements?: string[]
+        snippets?: string[]
+        fonts?: string[]
       }
     }) {
       // chooses the last set value per id
