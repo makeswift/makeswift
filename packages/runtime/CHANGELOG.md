@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.2.21
+
+### Patch Changes
+
+- f9a4ce6: Handle global element cycles.
+
 ## 0.2.20
 
 ### Patch Changes
