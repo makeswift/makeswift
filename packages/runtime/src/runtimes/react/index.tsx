@@ -9,6 +9,7 @@ import {
   useEffect,
   useImperativeHandle,
   useState,
+  useMemo,
 } from 'react'
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector'
 
@@ -167,6 +168,16 @@ export function useDocumentKey(): string | null {
   return useContext(DocumentContext)
 }
 
+/**
+ * @note Instead of leveraging `DocumentContext` to detect cycles we have to use a separate
+ * construct because not all global element documents are wrapped in `DocumentContext.Provider`. The
+ * reason for this is to maintain legacy behavior where we don't register the elements in a global
+ * element's document so that they're not selectable. This is clearly suboptimal and the ideal
+ * scenario would be to have the builder be aware of multiple documents and only show telegraphs
+ * for the document that's currently "active".
+ */
+const DocumentCyclesContext = createContext<string[]>([])
+
 type State = ReactPage.State | ReactBuilderPreview.State
 
 export function useStore(): ReactPage.Store {
@@ -280,6 +291,12 @@ const ElementReference = memo(
     })
     const globalElementData = data?.globalElement?.data as ReactPage.ElementData | undefined
     const elementReferenceDocument = useDocument(elementReference.key)
+    const documentKey = elementReference.key
+    const documentKeys = useContext(DocumentCyclesContext)
+    const providedDocumentKeys = useMemo(
+      () => [...documentKeys, documentKey],
+      [documentKeys, documentKey],
+    )
 
     if (error != null) {
       return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Something went wrong!" />
@@ -294,12 +311,25 @@ const ElementReference = memo(
       )
     }
 
-    return elementReferenceDocument != null ? (
-      <Document document={elementReferenceDocument} ref={ref} />
-    ) : (
-      <DisableRegisterElement.Provider value={true}>
-        <ElementData elementData={globalElementData} ref={ref} />
-      </DisableRegisterElement.Provider>
+    if (documentKeys.includes(documentKey)) {
+      return (
+        <FallbackComponent
+          ref={ref as Ref<HTMLDivElement>}
+          text="This global component contains itself!"
+        />
+      )
+    }
+
+    return (
+      <DocumentCyclesContext.Provider value={providedDocumentKeys}>
+        {elementReferenceDocument != null ? (
+          <Document document={elementReferenceDocument} ref={ref} />
+        ) : (
+          <DisableRegisterElement.Provider value={true}>
+            <ElementData elementData={globalElementData} ref={ref} />
+          </DisableRegisterElement.Provider>
+        )}
+      </DocumentCyclesContext.Provider>
     )
   }),
 )

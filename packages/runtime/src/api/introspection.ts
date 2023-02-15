@@ -33,6 +33,7 @@ export async function introspect(
   const pageIds = new Set<string>()
 
   const remaining = [element]
+  const seen = new Set<string>()
   let current: Element | undefined
 
   while ((current = remaining.pop())) {
@@ -78,7 +79,13 @@ export async function introspect(
 
         getPageIds(descriptor, props[propName]).forEach(pageId => pageIds.add(pageId))
 
-        getElementChildren(descriptor, props[propName]).forEach(child => remaining.push(child))
+        getElementChildren(descriptor, props[propName]).forEach(child => {
+          if (!seen.has(child.key)) {
+            seen.add(child.key)
+
+            remaining.push(child)
+          }
+        })
 
         if (descriptor.type === ShapeControlType) {
           const prop = props[propName] as ShapeControlData
