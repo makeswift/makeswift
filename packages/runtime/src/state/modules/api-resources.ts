@@ -24,16 +24,14 @@ export function getSnapshotResourcesFromSerializedState(
   // @note: remember TS is nominally typed, so extra parameters will come into the
   //        objects coming out of this function. That's fine.
   const resources: Partial<MakeswiftSnapshotResources> = {
-    swatches: serializedState.Swatch.filter((swatch): swatch is IdSpecified<Swatch> => true),
-    typographies: serializedState.Typography.filter(
-      (typography): typography is IdSpecified<Typography> => true,
-    ),
-    files: serializedState.File.filter((file): file is IdSpecified<File> => true),
+    swatches: serializedState.Swatch.filter((_): _ is IdSpecified<Swatch> => true),
+    typographies: serializedState.Typography.filter((_): _ is IdSpecified<Typography> => true),
+    files: serializedState.File.filter((_): _ is IdSpecified<File> => true),
     pagePathnameSlices: serializedState.PagePathnameSlice.filter(
-      (pagePathnameSlice): pagePathnameSlice is IdSpecified<PagePathnameSlice> => true,
+      (_): _ is IdSpecified<PagePathnameSlice> => true,
     ),
     globalElements: serializedState.GlobalElement.filter(
-      (globalElement): globalElement is IdSpecified<GlobalElement> => true,
+      (_): _ is IdSpecified<GlobalElement> => true,
     ),
   }
 
