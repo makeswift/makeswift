@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.6.7
+
+### Patch Changes
+
+- a40bb65: Separate snapshot format from serialized state.
+
 ## 0.6.6
 
 ### Patch Changes
