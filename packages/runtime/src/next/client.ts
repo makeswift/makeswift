@@ -223,16 +223,18 @@ export class Makeswift {
     const client = new MakeswiftClient({ uri: new URL('graphql', this.apiOrigin).href })
     const prefetchedResources = await client.prefetch(fetchedDocument.data)
 
-    // @todo: Make the format of all the resources even more consistent
-    const resources = {
-      ...prefetchedResources,
-      snippets: fetchedDocument.snippets,
-      meta: fetchedDocument.meta,
-      seo: fetchedDocument.seo,
-      fonts: fetchedDocument.fonts,
-    }
+    const resources = normalizeToMakeswiftResources(
+      getSnapshotResourcesFromSerializedState(prefetchedResources),
+    )
 
-    // @ts-expect-error: this method is now broken. @fixme!
+    resources.snippets = fetchedDocument.snippets.map(snippet => ({
+      id: snippet.id,
+      value: snippet,
+    }))
+    resources.pageMetadata = fetchedDocument.meta
+    resources.pageSeo = fetchedDocument.seo
+    resources.fonts = fetchedDocument.fonts.map(font => ({ id: font.family, value: font }))
+
     return { resources, elementTree: fetchedDocument.data, runtimeVersion }
   }
 
