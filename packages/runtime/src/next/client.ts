@@ -1,5 +1,4 @@
 import { version as runtimeVersion } from '../../package.json'
-import { APIResource } from '../api'
 import { CacheData, MakeswiftClient } from '../api/react'
 import { getSnapshotResourcesFromSerializedState } from '../state/modules/api-resources'
 import { Element } from '../state/react-page'
