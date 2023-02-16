@@ -169,7 +169,7 @@ export class Makeswift {
     if (page == null) return null
 
     const document = await this.getDocumentForPage(page.id)
-    const snapshot = await this.unstable_createSnapshotForPage({ document, pageId: page.id })
+    const snapshot = await this.unstable_createSnapshotOnDemand({ document, pageId: page.id })
 
     return {
       pageId: page.id,
@@ -193,7 +193,7 @@ export class Makeswift {
     return document
   }
 
-  async unstable_createSnapshotForPage({
+  private async unstable_createSnapshotOnDemand({
     document,
     pageId,
   }: {
