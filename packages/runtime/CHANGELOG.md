@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.6.6
+
+### Patch Changes
+
+- 75b31d9: Add support for client-side navigation.
+- 9dde8e8: Fix inconsistencies between the builder and live pages for rich text list blocks.
+- 6496ff0: Handle global element cycles.
+
 ## 0.6.5
 
 ### Patch Changes
