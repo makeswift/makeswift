@@ -1,6 +1,6 @@
-import { Editor } from 'slate-react'
-import { ValueJSON } from 'slate'
-import { OnChangeParam } from 'slate-react'
+// import { Editor } from '../old-slate-react-types'
+import { ValueJSON } from '../old-slate-types'
+// import { OnChangeParam } from '../old-slate-react-types'
 import { Descriptor, RichTextDescriptor, TableFormFieldsDescriptor, Types } from './descriptors'
 import { BuilderEditMode } from '../state/modules/builder-edit-mode'
 import { BoxModel } from '../state/modules/box-models'
@@ -12,6 +12,8 @@ import {
   SlotControlMessage,
   SlotControlType,
 } from '../controls'
+import { Editor, Transforms } from 'slate'
+import { ReactEditor } from 'slate-react'
 
 export const RichTextPropControllerMessageType = {
   CHANGE_BUILDER_EDIT_MODE: 'CHANGE_BUILDER_EDIT_MODE',
@@ -95,19 +97,33 @@ class RichTextPropController extends PropController<RichTextPropControllerMessag
         switch (message.editMode) {
           case BuilderEditMode.BUILD:
           case BuilderEditMode.INTERACT:
-            this.editor?.deselect().blur()
+            if (this.editor) {
+              Transforms.deselect(this.editor)
+              ReactEditor.blur(this.editor)
+            }
             break
         }
         break
       }
       case RichTextPropControllerMessageType.FOCUS: {
-        this.editor?.focus().moveToRangeOfDocument()
+        console.log('focused')
+
+        console.log(this.editor)
+
+        if (this.editor) {
+          ReactEditor.focus(this.editor)
+
+          // Transforms.select(this.editor, {
+          //   anchor: Editor.start(this.editor, []),
+          //   focus: Editor.end(this.editor, []),
+          // })
+        }
         break
       }
     }
   }
 
-  setSlateEditor(editor: Editor) {
+  setSlateEditor(editor: any /* Editor */) {
     this.editor = editor
 
     this.send({
@@ -116,7 +132,7 @@ class RichTextPropController extends PropController<RichTextPropControllerMessag
     })
   }
 
-  onChange(change: OnChangeParam) {
+  onChange(change: any /* OnChangeParam */) {
     this.send({
       type: RichTextPropControllerMessageType.CHANGE_EDITOR_VALUE,
       value: change.value.toJSON({ preserveSelection: true }),

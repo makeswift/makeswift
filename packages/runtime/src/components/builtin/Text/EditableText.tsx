@@ -10,8 +10,8 @@ import {
   FocusEvent as ReactFocusEvent,
   MouseEvent as ReactMouseEvent,
 } from 'react'
-import { Editor, OnChangeParam } from 'slate-react'
-import { Value, ValueJSON } from 'slate'
+// import { Editor, OnChangeParam } from '../../../old-slate-react-types'
+import { ValueJSON } from '../../../old-slate-types'
 // @ts-expect-error: no types for 'slate-hotkeys'
 import Hotkeys from 'slate-hotkeys'
 import { isHotkey } from 'is-hotkey'
@@ -51,7 +51,7 @@ const EditableText = forwardRef(function EditableText(
   { id, text, width, margin }: Props,
   ref: Ref<BoxModelHandle & PropControllersHandle<Descriptors>>,
 ) {
-  const [editor, setEditor] = useState<Editor | null>(null)
+  const [editor, setEditor] = useState<any /* Editor */ | null>(null)
   const [propControllers, setPropControllers] =
     useState<DescriptorsPropControllers<Descriptors> | null>(null)
   const controller = propControllers?.text
@@ -103,19 +103,18 @@ const EditableText = forwardRef(function EditableText(
   const [value, setValue] = useState(() => {
     const { selection, ...textWithoutSelection } = text ?? defaultText
 
-    return Value.fromJSON(textWithoutSelection)
+    // return Value.fromJSON(textWithoutSelection)
   })
   const [shouldCommit, setShouldCommit] = useState(true)
 
   useEffect(() => {
     if (shouldCommit) {
-      const nextValue = Value.fromJSON(text ?? defaultText)
-
-      setValue(currentValue =>
-        currentValue.selection.isBlurred
-          ? Value.fromJSON(nextValue.toJSON({ preserveSelection: false }))
-          : nextValue,
-      )
+      // const nextValue = Value.fromJSON(text ?? defaultText)
+      // setValue(currentValue =>
+      //   currentValue.selection.isBlurred
+      //     ? Value.fromJSON(nextValue.toJSON({ preserveSelection: false }))
+      //     : nextValue,
+      // )
     }
   }, [shouldCommit, text])
 
@@ -131,8 +130,8 @@ const EditableText = forwardRef(function EditableText(
     }
   }, [shouldCommit])
 
-  function handleChange(change: OnChangeParam) {
-    setValue(change.value as Value)
+  function handleChange(change: any /* OnChangeParam */) {
+    // setValue(change.value as Value)
 
     if (change.value !== value) {
       setShouldCommit(false)
@@ -149,7 +148,7 @@ const EditableText = forwardRef(function EditableText(
     lastController.current?.focus()
   }, [])
   const handleKeyDown = useCallback(
-    (event: ReactKeyboardEvent, _editor: Editor, next: () => any) => {
+    (event: ReactKeyboardEvent, _editor: any /* Editor */, next: () => any) => {
       if (Hotkeys.isUndo(event)) {
         lastController.current?.undo()
 
@@ -172,24 +171,27 @@ const EditableText = forwardRef(function EditableText(
     },
     [],
   )
-  const handleBlur = useCallback((event: ReactFocusEvent, editor: Editor, next: () => any) => {
-    const selection = editor.value.selection
+  const handleBlur = useCallback(
+    (event: ReactFocusEvent, editor: any /* Editor */, next: () => any) => {
+      const selection = editor.value.selection
 
-    next()
+      next()
 
-    // Normally, after a user highlight a text, clicking on the panel will remove the text selection.
-    // This line is a workaround for that. Because the panel is not in the iframe, relatedTarget
-    // would be null, and we select the previous text selection to maintain the text highlight.
-    // Inspiration: https://github.com/ianstormtaylor/slate/issues/3412#issuecomment-663906003
-    if (event.relatedTarget == null) editor.select(selection)
-  }, [])
+      // Normally, after a user highlight a text, clicking on the panel will remove the text selection.
+      // This line is a workaround for that. Because the panel is not in the iframe, relatedTarget
+      // would be null, and we select the previous text selection to maintain the text highlight.
+      // Inspiration: https://github.com/ianstormtaylor/slate/issues/3412#issuecomment-663906003
+      if (event.relatedTarget == null) editor.select(selection)
+    },
+    [],
+  )
 
   // HACK: Slate holds on to the very first DOM event handlers passed in and doesn't update them
   // even if they change.
   const lastEditMode = useRef(editMode)
   if (lastEditMode.current !== editMode) lastEditMode.current = editMode
 
-  const handleClick = (event: ReactMouseEvent, _editor: Editor, next: () => any) => {
+  const handleClick = (event: ReactMouseEvent, _editor: any /* Editor */, next: () => any) => {
     next()
 
     // This is needed to prevent clicks from propagating in content mode.

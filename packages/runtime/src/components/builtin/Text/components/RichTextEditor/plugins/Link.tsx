@@ -1,6 +1,6 @@
 import { cx } from '@emotion/css'
 import { ComponentPropsWithoutRef } from 'react'
-import { Plugin } from 'slate-react'
+// import { Plugin } from '../../../../../../old-slate-react-types'
 import { useStyle } from '../../../../../../runtimes/react/use-style'
 
 import { Link } from '../../../../../shared/Link'
@@ -9,9 +9,13 @@ function StyledLink({ className, ...restOfProps }: ComponentPropsWithoutRef<type
   return <Link {...restOfProps} className={cx(useStyle({ textDecoration: 'none' }), className)} />
 }
 
-export default function LinkPlugin(): Plugin {
+export default function LinkPlugin(): any /* Plugin  */ {
   return {
-    renderInline(props, _editor, next) {
+    renderInline(
+      props: { attributes: any; children: any; node: any },
+      _editor: any,
+      next: () => any,
+    ) {
       const { attributes, children, node } = props
 
       switch (node.type) {

@@ -1,4 +1,4 @@
-import { InlineJSON, MarkJSON, NodeJSON } from 'slate'
+import { InlineJSON, MarkJSON, NodeJSON } from '../old-slate-types'
 import {
   BackgroundsValue,
   BorderValue,
@@ -168,7 +168,7 @@ export function getElementSwatchIds<T extends Data>(
 
       return getNodeSwatchIds(value.document)
 
-      function getNodeSwatchIds(node: NodeJSON): string[] {
+      function getNodeSwatchIds(node: any): string[] {
         switch (node.object) {
           case 'document':
           case 'block':

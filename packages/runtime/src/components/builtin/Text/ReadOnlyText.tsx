@@ -1,6 +1,13 @@
 import { cx } from '@emotion/css'
 import { ForwardedRef, forwardRef, ReactNode } from 'react'
-import type { BlockJSON, DocumentJSON, InlineJSON, MarkJSON, NodeJSON, TextJSON } from 'slate'
+import type {
+  BlockJSON,
+  DocumentJSON,
+  InlineJSON,
+  MarkJSON,
+  NodeJSON,
+  TextJSON,
+} from '../../../old-slate-types'
 import type {
   ElementIDValue,
   LinkValue,

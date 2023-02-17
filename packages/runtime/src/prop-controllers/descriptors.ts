@@ -1,4 +1,4 @@
-import type * as Slate from 'slate'
+import type * as Slate from '../old-slate-types'
 import { StyleControlDefinition, StyleControlType } from '../controls/style'
 import {
   ResolveBorderControlValue,

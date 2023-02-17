@@ -1,0 +1,807 @@
+
+const initialValue: ValueJSON = {
+  object: 'value',
+  document: {
+    object: 'document',
+    data: {},
+    nodes: [
+      {
+        object: 'block',
+        type: 'paragraph',
+        data: {},
+        nodes: [
+          {
+            object: 'text',
+            text: 'Bold',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [
+                      {
+                        deviceId: 'desktop',
+                        value: {
+                          italic: false,
+                          fontWeight: 700,
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        object: 'block',
+        type: 'paragraph',
+        data: {},
+        nodes: [
+          {
+            object: 'text',
+            text: 'Underline',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [
+                      {
+                        deviceId: 'desktop',
+                        value: {
+                          underline: true,
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        object: 'block',
+        type: 'paragraph',
+        data: {},
+        nodes: [
+          {
+            object: 'text',
+            text: 'Regular',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        object: 'block',
+        type: 'paragraph',
+        data: {},
+        nodes: [
+          {
+            object: 'text',
+            text: 'Strike',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [
+                      {
+                        deviceId: 'desktop',
+                        value: {
+                          strikethrough: true,
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        object: 'block',
+        type: 'paragraph',
+        data: {},
+        nodes: [
+          {
+            object: 'text',
+            text: 'Uppercase',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [
+                      {
+                        deviceId: 'desktop',
+                        value: {
+                          uppercase: true,
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        object: 'block',
+        type: 'paragraph',
+        data: {},
+        nodes: [
+          {
+            object: 'text',
+            text: '',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        object: 'block',
+        type: 'paragraph',
+        data: {},
+        nodes: [
+          {
+            object: 'text',
+            text: 'Ov',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [
+                      {
+                        deviceId: 'desktop',
+                        value: {
+                          underline: true,
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+          {
+            object: 'text',
+            text: 'e',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [
+                      {
+                        deviceId: 'desktop',
+                        value: {
+                          underline: true,
+                          italic: false,
+                          fontWeight: 700,
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+          {
+            object: 'text',
+            text: 'r',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [
+                      {
+                        deviceId: 'desktop',
+                        value: {
+                          underline: false,
+                          italic: false,
+                          fontWeight: 700,
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+          {
+            object: 'text',
+            text: 'lap',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [
+                      {
+                        deviceId: 'desktop',
+                        value: {
+                          underline: false,
+                          italic: false,
+                          fontWeight: 700,
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        object: 'block',
+        type: 'paragraph',
+        data: {},
+        nodes: [
+          {
+            object: 'text',
+            text: '',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        object: 'block',
+        type: 'paragraph',
+        data: {},
+        nodes: [
+          {
+            object: 'text',
+            text: 'Text Left',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        object: 'block',
+        type: 'paragraph',
+        data: {
+          textAlign: [
+            {
+              deviceId: 'desktop',
+              value: 'center',
+            },
+          ],
+        },
+        nodes: [
+          {
+            object: 'text',
+            text: 'Text Center',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        object: 'block',
+        type: 'paragraph',
+        data: {
+          textAlign: [
+            {
+              deviceId: 'desktop',
+              value: 'right',
+            },
+          ],
+        },
+        nodes: [
+          {
+            object: 'text',
+            text: 'Text Right ',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        object: 'block',
+        type: 'paragraph',
+        data: {
+          textAlign: [
+            {
+              deviceId: 'desktop',
+              value: 'justify',
+            },
+          ],
+        },
+        nodes: [
+          {
+            object: 'text',
+            text: 'Text Justify',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        object: 'block',
+        type: 'paragraph',
+        data: {},
+        nodes: [
+          {
+            object: 'text',
+            text: '',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        object: 'block',
+        type: 'paragraph',
+        data: {},
+        nodes: [
+          {
+            object: 'text',
+            text: '',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [],
+                  },
+                },
+              },
+            ],
+          },
+          {
+            object: 'inline',
+            type: 'code',
+            data: {},
+            nodes: [
+              {
+                object: 'text',
+                text: 'code',
+                marks: [
+                  {
+                    object: 'mark',
+                    type: 'typography',
+                    data: {
+                      value: {
+                        id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                        style: [],
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            object: 'text',
+            text: '',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        object: 'block',
+        type: 'paragraph',
+        data: {},
+        nodes: [
+          {
+            object: 'text',
+            text: '',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [],
+                  },
+                },
+              },
+            ],
+          },
+          {
+            object: 'inline',
+            type: 'link',
+            data: {
+              type: 'OPEN_URL',
+              payload: {
+                openInNewTab: false,
+                url: 'https://makeswift.com',
+              },
+            },
+            nodes: [
+              {
+                object: 'text',
+                text: 'link',
+                marks: [
+                  {
+                    object: 'mark',
+                    type: 'typography',
+                    data: {
+                      value: {
+                        id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                        style: [],
+                      },
+                    },
+                  },
+                ],
+              },
+              {
+                object: 'inline',
+                type: 'code',
+                data: {},
+                nodes: [
+                  {
+                    object: 'text',
+                    text: '',
+                    marks: [
+                      {
+                        object: 'mark',
+                        type: 'typography',
+                        data: {
+                          value: {
+                            id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                            style: [],
+                          },
+                        },
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                object: 'text',
+                text: '',
+                marks: [
+                  {
+                    object: 'mark',
+                    type: 'typography',
+                    data: {
+                      value: {
+                        id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                        style: [],
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            object: 'text',
+            text: '',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        object: 'block',
+        type: 'paragraph',
+        data: {},
+        nodes: [
+          {
+            object: 'text',
+            text: '',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [],
+                  },
+                },
+              },
+            ],
+          },
+          {
+            object: 'inline',
+            type: 'subscript',
+            data: {},
+            nodes: [
+              {
+                object: 'text',
+                text: 'subscript',
+                marks: [
+                  {
+                    object: 'mark',
+                    type: 'typography',
+                    data: {
+                      value: {
+                        id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                        style: [],
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            object: 'text',
+            text: '',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        object: 'block',
+        type: 'paragraph',
+        data: {},
+        nodes: [
+          {
+            object: 'text',
+            text: '',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [],
+                  },
+                },
+              },
+            ],
+          },
+          {
+            object: 'inline',
+            type: 'superscript',
+            data: {},
+            nodes: [
+              {
+                object: 'text',
+                text: 'superscript',
+                marks: [
+                  {
+                    object: 'mark',
+                    type: 'typography',
+                    data: {
+                      value: {
+                        id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                        style: [],
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            object: 'text',
+            text: '',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        object: 'block',
+        type: 'paragraph',
+        data: {},
+        nodes: [
+          {
+            object: 'text',
+            text: '',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        object: 'block',
+        type: 'paragraph',
+        data: {},
+        nodes: [
+          {
+            object: 'text',
+            text: 'sadsf',
+            marks: [
+              {
+                object: 'mark',
+                type: 'typography',
+                data: {
+                  value: {
+                    id: 'VHlwb2dyYXBoeTpiZjFhNzNlNi0yMGNkLTQwZjEtOThmMC02MDc5OWU2ZWJmZmE=',
+                    style: [],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        object: 'block',
+        type: 'paragraph',
+        data: {},
+        nodes: [
+          {
+            object: 'text',
+            text: '',
+            marks: [],
+          },
+        ],
+      },
+    ],
+  },
+  selection: {
+    object: 'selection',
+    anchor: {
+      object: 'point',
+      offset: 11,
+      path: [9, 0],
+    },
+    focus: {
+      object: 'point',
+      offset: 11,
+      path: [9, 0],
+    },
+    isFocused: true,
+    marks: null,
+  },
+}

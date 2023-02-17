@@ -138,9 +138,9 @@
     "redux-thunk": "^2.3.0",
     "scroll-into-view-if-needed": "^2.2.20",
     "set-cookie-parser": "^2.5.1",
-    "slate": "^0.47.8",
+    "slate": "^0.90.0",
     "slate-hotkeys": "^0.2.9",
-    "slate-react": "^0.22.9",
+    "slate-react": "0.90.0",
     "use-sync-external-store": "^1.0.0-rc.0",
     "uuid": "^3.3.3"
   },

@@ -1,10 +1,14 @@
-import { Plugin } from 'slate-react'
+// import { Plugin } from '../../../../../../old-slate-react-types'
 
 import Block from '../components/Block'
 
-export default function DeviceOverridesBlockPlugin(): Plugin {
+export default function DeviceOverridesBlockPlugin(): any /* Plugin  */ {
   return {
-    renderBlock(props, _editor, next): JSX.Element {
+    renderBlock(
+      props: { node: any; attributes: any; children: any },
+      _editor: any,
+      next: () => JSX.Element,
+    ): JSX.Element {
       const { node, attributes, children } = props
       const blockProps = { textAlign: node.data.get('textAlign') }
 

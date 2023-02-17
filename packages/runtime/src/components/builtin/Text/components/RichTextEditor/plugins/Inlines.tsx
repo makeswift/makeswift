@@ -1,8 +1,12 @@
-import { Plugin } from 'slate-react'
+// import { Plugin } from '../../../../../../old-slate-react-types'
 
-export default function Inlines(): Plugin {
+export default function Inlines(): any /* Plugin  */ {
   return {
-    renderInline(props, _editor, next) {
+    renderInline(
+      props: { attributes: any; children: any; node: any },
+      _editor: any,
+      next: () => any,
+    ) {
       const { attributes, children, node } = props
 
       switch (node.type) {

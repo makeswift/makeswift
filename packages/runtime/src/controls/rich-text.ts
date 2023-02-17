@@ -1,8 +1,8 @@
 import { IndexSignatureHack } from '../prop-controllers/descriptors'
-import type * as Slate from 'slate'
+import type * as Slate from '../old-slate-types'
 import { BuilderEditMode } from '../state/modules/builder-edit-mode'
 import { PropController } from '../prop-controllers/instances'
-import { OnChangeParam, Editor } from 'slate-react'
+// import { OnChangeParam, Editor } from '../old-slate-react-types'
 import { BoxModel } from '../box-model'
 
 export type RichTextControlData = IndexSignatureHack<Slate.ValueJSON>
@@ -67,39 +67,38 @@ export type RichTextControlMessage =
   | BoxModelChangeRichControlMessage
 
 export class RichTextControl extends PropController<RichTextControlMessage> {
-  private editor: Editor | null = null
+  // private editor: Editor | null = null
 
   recv(message: RichTextControlMessage): void {
     switch (message.type) {
       case RichTextControlMessageType.CHANGE_BUILDER_EDIT_MODE: {
         switch (message.editMode) {
           case BuilderEditMode.BUILD:
-            this.editor?.deselect().blur()
+            // this.editor?.deselect().blur()
             break
         }
         break
       }
       case RichTextControlMessageType.FOCUS: {
-        this.editor?.focus().moveToRangeOfDocument()
+        // this.editor?.focus().moveToRangeOfDocument()
         break
       }
     }
   }
 
-  setSlateEditor(editor: Editor) {
-    this.editor = editor
-
-    this.send({
-      type: RichTextControlMessageType.INITIALIZE_EDITOR,
-      value: editor.value.toJSON({ preserveSelection: false }),
-    })
+  setSlateEditor(editor: any) {
+    // this.editor = editor
+    // this.send({
+    //   type: RichTextControlMessageType.INITIALIZE_EDITOR,
+    //   value: editor.value.toJSON({ preserveSelection: false }),
+    // })
   }
 
-  onChange(change: OnChangeParam) {
-    this.send({
-      type: RichTextControlMessageType.CHANGE_EDITOR_VALUE,
-      value: change.value.toJSON({ preserveSelection: true }),
-    })
+  onChange(change: any /* OnChangeParam */) {
+    // this.send({
+    //   type: RichTextControlMessageType.CHANGE_EDITOR_VALUE,
+    //   value: change.value.toJSON({ preserveSelection: true }),
+    // })
   }
 
   focus() {
