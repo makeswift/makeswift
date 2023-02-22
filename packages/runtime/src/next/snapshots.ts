@@ -1,3 +1,5 @@
+import { File } from '../api'
+
 /*
  * @note(Alex): DO NOT tie this to SerializedState.
  *
@@ -15,7 +17,7 @@ export type IdSpecified<T> = {
 export type MakeswiftSnapshotResources = {
   swatches: IdSpecified<SwatchResource>[]
   typographies: IdSpecified<TypographyResource>[]
-  files: IdSpecified<FileResource>[]
+  files: IdSpecified<FileSnapshot>[]
   pagePathnameSlices: IdSpecified<PathPathnameSliceResource>[]
   globalElements: IdSpecified<GlobalElementResource>[]
   // @todo: Do we need tables?
@@ -71,7 +73,7 @@ type TypographyResource = {
   }>
 }
 
-type FileResource = {
+type FileSnapshot = {
   id: string
   name: string
   publicUrl: string
@@ -113,4 +115,10 @@ export function normalizeToMakeswiftResources(
     pageSeo: partialResources?.pageSeo || {},
   }
   return resources
+}
+
+export function fileToFileSnapshot(file: File): FileSnapshot {
+  const { publicUrlV2, ...restOfFile } = file
+
+  return { ...restOfFile, publicUrl: publicUrlV2 }
 }

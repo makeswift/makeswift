@@ -9,7 +9,7 @@ import { ReactRuntime } from '../react'
 import { Element } from '../state/react-page'
 import isErrorWithMessage from '../utils/isErrorWithMessage'
 import { Makeswift, MakeswiftPageDocument, unstable_Snapshot } from './client'
-import { MakeswiftSnapshotResources } from './snapshots'
+import { fileToFileSnapshot, MakeswiftSnapshotResources } from './snapshots'
 
 type Fonts = Font[]
 
@@ -338,7 +338,7 @@ export function MakeswiftApiHandler(
             if (file != null) {
               publishedResourcesInMakeswiftSnapshotFormat.files?.push({
                 id: fileId,
-                value: file,
+                value: fileToFileSnapshot(file),
               })
             }
           }

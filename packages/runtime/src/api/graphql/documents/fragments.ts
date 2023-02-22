@@ -20,7 +20,7 @@ export const FileFragment = /* GraphQL */ `
     __typename
     id
     name
-    publicUrl
+    publicUrlV2
     extension
     dimensions {
       width
