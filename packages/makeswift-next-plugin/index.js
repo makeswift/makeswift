@@ -2,11 +2,19 @@
 
 /** @typedef {import('next').NextConfig} NextConfig */
 /** @typedef {{ resolveSymlinks?: boolean; appOrigin?: string }} MakeswiftNextPluginOptions */
+/** @typedef {NonNullable<import('next').NextConfig['images']>} ImageConfig */
+/** @typedef {ImageConfig['domains']} ImageConfigDomains */
 
 const withTmInitializer = require('next-transpile-modules')
 
-const NEXT_IMAGE_DOMAINS = ['s.mkswft.com']
 const NEXT_TRANSPILE_MODULES_MODULES = ['@makeswift/runtime']
+const GOOGLE_STORAGE_BUCKETS = [
+  's.mkswft.com',
+  's.staging.mkswft.com',
+  's-development.cd.mkswft.com',
+]
+/** @type ImageConfigDomains */
+const NEXT_IMAGE_DOMAINS = ['storage.googleapis.com', ...GOOGLE_STORAGE_BUCKETS]
 
 /** @type {(options: MakeswiftNextPluginOptions) => (nextConfig: NextConfig) => NextConfig} */
 module.exports =
