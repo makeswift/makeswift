@@ -15,8 +15,8 @@ export type FileFragment = {
   __typename: 'File'
   id: string
   name: string
-  publicUrl: any
   extension?: string | null
+  publicUrl: any
   dimensions?: { __typename?: 'ImageDimensions'; width: number; height: number } | null
 }
 
@@ -157,7 +157,11 @@ export const FileFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'publicUrl' } },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'publicUrl' },
+            name: { kind: 'Name', value: 'publicUrlV2' },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
           {
             kind: 'Field',

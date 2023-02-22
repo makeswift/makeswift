@@ -10,7 +10,7 @@ fragment File on File {
   __typename
   id
   name
-  publicUrl
+  publicUrl: publicUrlV2
   extension
   dimensions {
     width

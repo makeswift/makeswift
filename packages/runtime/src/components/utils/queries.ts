@@ -16,7 +16,7 @@ export const FILE_BY_ID = gql`
     file(id: $id) {
       id
       name
-      publicUrl
+      publicUrl: publicUrlV2
       extension
       dimensions {
         width
@@ -31,7 +31,7 @@ export const FILES_BY_ID = gql`
     files(ids: $ids) {
       id
       name
-      publicUrl
+      publicUrl: publicUrlV2
       extension
       dimensions {
         width
@@ -141,7 +141,7 @@ export const INTROSPECTION_QUERY = gql`
     files(ids: $fileIds) {
       id
       name
-      publicUrl
+      publicUrlV2
       extension
       dimensions {
         width
