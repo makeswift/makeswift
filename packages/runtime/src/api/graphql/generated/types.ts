@@ -42,7 +42,7 @@ export type FileFragment = {
   __typename: 'File'
   id: string
   name: string
-  publicUrl: string
+  publicUrlV2: string
   extension: string | null
   dimensions: { width: number; height: number } | null
 }
@@ -163,7 +163,7 @@ export type IntrospectedResourcesQueryResult = {
     __typename: 'File'
     id: string
     name: string
-    publicUrl: string
+    publicUrlV2: string
     extension: string | null
     dimensions: { width: number; height: number } | null
   } | null>
@@ -240,7 +240,7 @@ export type FileQueryResult = {
     __typename: 'File'
     id: string
     name: string
-    publicUrl: string
+    publicUrlV2: string
     extension: string | null
     dimensions: { width: number; height: number } | null
   } | null

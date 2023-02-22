@@ -3,11 +3,10 @@ import {
   APIResourceType,
   Swatch,
   Typography,
-  File,
   PagePathnameSlice,
   GlobalElement,
 } from '../../api'
-import { IdSpecified, MakeswiftSnapshotResources } from '../../next/snapshots'
+import { fileToFileSnapshot, IdSpecified, MakeswiftSnapshotResources } from '../../next/snapshots'
 import deepEqual from '../../utils/deepEqual'
 import { Action, ActionTypes } from '../actions'
 
@@ -15,6 +14,10 @@ type State = Map<APIResourceType, Map<string, APIResource | null>>
 
 export type SerializedState = {
   [key in APIResourceType]: { id: string; value: APIResource }[]
+}
+
+function isNonNullable<T>(value: T): value is NonNullable<T> {
+  return value != null
 }
 
 // If we change SerializedState, update this function as well
@@ -26,7 +29,9 @@ export function getSnapshotResourcesFromSerializedState(
   const resources: Partial<MakeswiftSnapshotResources> = {
     swatches: serializedState.Swatch.filter((_): _ is IdSpecified<Swatch> => true),
     typographies: serializedState.Typography.filter((_): _ is IdSpecified<Typography> => true),
-    files: serializedState.File.filter((_): _ is IdSpecified<File> => true),
+    files: serializedState.File.map(({ id, value }) =>
+      value.__typename === APIResourceType.File ? { id, value: fileToFileSnapshot(value) } : null,
+    ).filter(isNonNullable),
     pagePathnameSlices: serializedState.PagePathnameSlice.filter(
       (_): _ is IdSpecified<PagePathnameSlice> => true,
     ),

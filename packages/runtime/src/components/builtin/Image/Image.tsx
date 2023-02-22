@@ -88,8 +88,8 @@ const ImageComponent = forwardRef(function Image(
   ref: Ref<HTMLAnchorElement & HTMLDivElement>,
 ) {
   const fileData = useFile(file ?? null)
-  const imageSrc = fileData?.publicUrl ? fileData.publicUrl : placeholder.src
-  const dataDimensions = fileData?.publicUrl ? fileData?.dimensions : placeholder.dimensions
+  const imageSrc = fileData?.publicUrlV2 ? fileData.publicUrlV2 : placeholder.src
+  const dataDimensions = fileData?.publicUrlV2 ? fileData?.dimensions : placeholder.dimensions
   const [measuredDimensions, setMeasuredDimensions] = useState<Dimensions | null>(null)
 
   useEffect(() => {

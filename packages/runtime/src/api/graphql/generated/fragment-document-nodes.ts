@@ -32,7 +32,7 @@ export const File = {
           { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'publicUrl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'publicUrlV2' } },
           { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
           {
             kind: 'Field',
