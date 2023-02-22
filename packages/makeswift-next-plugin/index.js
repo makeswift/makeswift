@@ -2,12 +2,27 @@
 
 /** @typedef {import('next').NextConfig} NextConfig */
 /** @typedef {{ resolveSymlinks?: boolean; appOrigin?: string }} MakeswiftNextPluginOptions */
+/** @typedef {NonNullable<import('next').NextConfig['images']>} ImageConfig */
+/** @typedef {ImageConfig['domains']} ImageConfigDomains */
+/** @typedef {ImageConfig['remotePatterns']} ImageConfigRemotePatterns */
 
 const withTmInitializer = require('next-transpile-modules')
 const { satisfies } = require('semver')
 
-const NEXT_IMAGE_DOMAINS = ['s.mkswft.com']
 const NEXT_TRANSPILE_MODULES_MODULES = ['@makeswift/runtime']
+const GOOGLE_STORAGE_BUCKETS = [
+  's.mkswft.com',
+  's.staging.mkswft.com',
+  's-development.cd.makeswift.com',
+]
+/** @type ImageConfigDomains */
+const NEXT_IMAGE_DOMAINS = GOOGLE_STORAGE_BUCKETS
+/** @type ImageConfigRemotePatterns */
+const NEXT_IMAGE_REMOTE_PATTERNS = GOOGLE_STORAGE_BUCKETS.map((bucket) => ({
+  protocol: 'https',
+  hostname: 'storage.googleapis.com',
+  pathname: `/${bucket}/**`,
+}))
 
 /** @type {(options: MakeswiftNextPluginOptions) => (nextConfig: NextConfig) => NextConfig} */
 module.exports =
@@ -19,6 +34,10 @@ module.exports =
       images: {
         ...nextConfig.images,
         domains: [...(nextConfig.images?.domains ?? []), ...NEXT_IMAGE_DOMAINS],
+        remotePatterns: [
+          ...(nextConfig.images?.remotePatterns ?? []),
+          ...NEXT_IMAGE_REMOTE_PATTERNS,
+        ],
       },
       async rewrites() {
         const rewrites = await nextConfig.rewrites?.()
