@@ -1,5 +1,11 @@
 # @makeswift/next-plugin
 
+## 0.2.1
+
+### Patch Changes
+
+- 050f6f9: Add Makeswift Google Storage image remote patterns to Next.js config.
+
 ## 0.2.0
 
 BREAKING CHANGE: The Next.js plugin will now check the version of Next.js being used and if it is less than v12.2.0 an error is thrown.
