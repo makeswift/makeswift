@@ -1,5 +1,16 @@
 # @makeswift/runtime
 
+## 0.7.0
+
+### Minor Changes
+
+- f0a53c0: Use Google Storage URL for files instead of s.mkswft.com.
+
+### Patch Changes
+
+- Updated dependencies [050f6f9]
+  - @makeswift/next-plugin@0.2.1
+
 ## 0.6.7
 
 ### Patch Changes
