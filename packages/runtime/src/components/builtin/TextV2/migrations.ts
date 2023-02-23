@@ -190,6 +190,7 @@ const toElementNode = (node: BlockElementUnion): BlockJSON[] => {
     {
       type: node.type,
       data,
+      object: 'block',
       nodes: node.children?.flatMap(toNode) ?? [],
     },
   ]
@@ -210,11 +211,12 @@ const toNode = (oldNode: Descendant): Array<BlockJSON | InlineJSON | TextJSON> =
   }
 }
 
-export const toJSON = (descendants: Descendant[], selection: Selection): ValueJSON => {
+export const toJSON = (descendants: Descendant[], selection?: Selection): ValueJSON => {
   return {
     document: {
       nodes: descendants.flatMap(toNode),
     },
+    object: 'value',
     selection: selection ?? undefined,
   }
 }

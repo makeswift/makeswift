@@ -10,8 +10,8 @@ import { registerComponent as registerImageComponent } from './Image/register'
 import { registerComponent as registerNavigationComponent } from './Navigation/register'
 import { registerComponent as registerRootComponent } from './Root/register'
 import { registerComponent as registerSocialLinksComponent } from './SocialLinks/register'
-import { registerComponent as registerTextComponent } from './Text/register'
-// import { registerComponent as registerTextComponent } from './TextV2/register'
+// import { registerComponent as registerTextComponent } from './Text/register'
+import { registerComponent as registerTextComponent } from './TextV2/register'
 import { registerComponent as registerVideoComponent } from './Video/register'
 
 export function registerBuiltinComponents(runtime: ReactRuntime) {

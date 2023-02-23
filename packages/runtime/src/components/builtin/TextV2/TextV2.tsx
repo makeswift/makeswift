@@ -12,7 +12,7 @@ type Props = {
 }
 
 const Text = forwardRef(function Text(props: Props, ref: ForwardedRef<unknown>) {
-  return <EditableTextV2 {...props}  />
+  return <EditableTextV2 {...props} ref={ref as any} />
 })
 
 export default Text

@@ -12,8 +12,9 @@ import {
   SlotControlMessage,
   SlotControlType,
 } from '../controls'
-import { Editor, Transforms } from 'slate'
+import { Descendant, Editor, Transforms, Selection } from 'slate'
 import { ReactEditor } from 'slate-react'
+import { toJSON } from '../components/builtin/TextV2/migrations'
 
 export const RichTextPropControllerMessageType = {
   CHANGE_BUILDER_EDIT_MODE: 'CHANGE_BUILDER_EDIT_MODE',
@@ -92,6 +93,8 @@ class RichTextPropController extends PropController<RichTextPropControllerMessag
   private editor: Editor | null = null
 
   recv(message: RichTextPropControllerMessage): void {
+    console.log('message from cosmos', message)
+
     switch (message.type) {
       case RichTextPropControllerMessageType.CHANGE_BUILDER_EDIT_MODE: {
         switch (message.editMode) {
@@ -111,8 +114,7 @@ class RichTextPropController extends PropController<RichTextPropControllerMessag
         console.log(this.editor)
 
         if (this.editor) {
-          ReactEditor.focus(this.editor)
-
+          // ReactEditor.focus(this.editor)
           // Transforms.select(this.editor, {
           //   anchor: Editor.start(this.editor, []),
           //   focus: Editor.end(this.editor, []),
@@ -123,19 +125,21 @@ class RichTextPropController extends PropController<RichTextPropControllerMessag
     }
   }
 
-  setSlateEditor(editor: any /* Editor */) {
+  setSlateEditor(editor: Editor, value: ValueJSON) {
     this.editor = editor
-
+    console.log(editor, value)
     this.send({
       type: RichTextPropControllerMessageType.INITIALIZE_EDITOR,
-      value: editor.value.toJSON({ preserveSelection: false }),
+      value,
     })
   }
 
-  onChange(change: any /* OnChangeParam */) {
+  onChange(value: ValueJSON) {
+    console.log('onChange', value)
+
     this.send({
       type: RichTextPropControllerMessageType.CHANGE_EDITOR_VALUE,
-      value: change.value.toJSON({ preserveSelection: true }),
+      value,
     })
   }
 

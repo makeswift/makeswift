@@ -1,6 +1,15 @@
-import { forwardRef, Ref, useCallback, useEffect, useImperativeHandle, useState } from 'react'
+import {
+  forwardRef,
+  Ref,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+  MouseEvent,
+} from 'react'
 
-import { createEditor, BaseEditor, Descendant } from 'slate'
+import { createEditor, BaseEditor, Descendant, Editor } from 'slate'
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
 
 import { ElementIDValue, RichTextValue } from '../../../prop-controllers/descriptors'
@@ -13,8 +22,10 @@ import { DescriptorsPropControllers } from '../../../prop-controllers/instances'
 import { Descriptors } from '../../../runtimes/react/controls/rich-text'
 import { BoxModelHandle, getBox } from '../../../box-model'
 import { PropControllersHandle } from '../../../state/modules/prop-controller-handles'
-import { fromJSON, selectionFromJSON } from './migrations'
+import { fromJSON, selectionFromJSON, toJSON } from './migrations'
 import { ValueJSON } from '../../../old-slate-types'
+import { BuilderEditMode } from '../../../state/modules/builder-edit-mode'
+import { useBuilderEditMode } from '../../../runtimes/react'
 
 type Props = {
   id?: ElementIDValue
@@ -61,26 +72,45 @@ export const EditableTextV2 = forwardRef(function EditableTextV2(
       getBoxModel() {
         return getBox(ReactEditor.toDOMNode(editor, editor))
       },
-      setPropControllers,
+      setPropControllers(asdf: any) {
+        console.log('asdf', asdf)
+        return setPropControllers(asdf)
+      },
     }),
     [editor, setPropControllers],
   )
 
+  const [value, setValue] = useState(() => (text ? fromJSON(text) : []))
   useEffect(() => {
-    console.log(controller, propControllers)
+    console.log('setSlateEditor', controller)
 
-    if (controller) controller.setSlateEditor(editor)
+    if (controller) controller.setSlateEditor(editor, toJSON(value))
   }, [controller, editor])
 
-  const [value, setValue] = useState(() => (text ? fromJSON(text) : []))
+  if (text) {
+    console.log('render', text, fromJSON(text), toJSON(fromJSON(text)))
+  }
+
+
+  const editMode = useBuilderEditMode()
+  const lastEditMode = useRef(editMode)
+  if (lastEditMode.current !== editMode) lastEditMode.current = editMode
+
+  const handleClick = (event: MouseEvent<HTMLDivElement>) => {
+    // This is needed to prevent clicks from propagating in content mode.
+    // This is not ideal because it might break if we implement a plugin in the future that depends on click.
+    // Also, we might also want to stop hover/mousedown event
+    if (lastEditMode.current === BuilderEditMode.CONTENT) event.stopPropagation()
+  }
 
   return (
-    <Slate editor={editor} value={value}>
+    <Slate editor={editor} value={value} onChange={setValue}>
       <Editable
         id={id}
         // onFocus={handleFocus}
         // onBlur={handleBlur}
 
+        onClick={handleClick}
         className={cx(useStyle({ 'ul, ol': { margin: 0 } }), width, margin)}
         renderElement={Element}
         renderLeaf={Leaf}

@@ -4,6 +4,7 @@ import { BuilderEditMode } from '../state/modules/builder-edit-mode'
 import { PropController } from '../prop-controllers/instances'
 // import { OnChangeParam, Editor } from '../old-slate-react-types'
 import { BoxModel } from '../box-model'
+import { Descendant } from 'slate'
 
 export type RichTextControlData = IndexSignatureHack<Slate.ValueJSON>
 
@@ -86,7 +87,7 @@ export class RichTextControl extends PropController<RichTextControlMessage> {
     }
   }
 
-  setSlateEditor(editor: any) {
+  setSlateEditor(editor: any, value: any) {
     // this.editor = editor
     // this.send({
     //   type: RichTextControlMessageType.INITIALIZE_EDITOR,
@@ -94,7 +95,7 @@ export class RichTextControl extends PropController<RichTextControlMessage> {
     // })
   }
 
-  onChange(change: any /* OnChangeParam */) {
+  onChange(change: any ) {
     // this.send({
     //   type: RichTextControlMessageType.CHANGE_EDITOR_VALUE,
     //   value: change.value.toJSON({ preserveSelection: true }),
