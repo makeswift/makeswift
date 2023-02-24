@@ -4,9 +4,33 @@ export type Data = undefined | null | boolean | number | string | Data[] | { [ke
 
 export type ElementData = { type: string; key: string; props: Record<string, Data> }
 
-export type ElementReference = { type: 'reference'; key: string; value: string }
+export type ElementReference = {
+  type: 'reference'
+  key: string
+  value: string
+  overrides?: Partial<ElementData>
+}
 
 export type Element = ElementData | ElementReference
+
+type ElementKey = string
+
+type ElementDataOverride = {
+  __type: 'data'
+  overrides: Record<string, Data>
+}
+
+type ElementReferenceOverride = { __type: 'reference'; overrides: ElementTreeOverrides }
+
+type ElementOverride = ElementDataOverride | ElementReferenceOverride
+
+type ElementTreeOverrides = Map<ElementKey, ElementOverride>
+
+type ElementTree = {
+  rootElementKey: string
+  elements: Map<string, Element>
+  overrides: ElementTreeOverrides
+}
 
 export function isElementReference(element: Element): element is ElementReference {
   return !('props' in element)

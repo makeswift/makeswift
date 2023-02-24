@@ -15,6 +15,8 @@ import {
 } from 'react'
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector'
 import dynamic from 'next/dynamic'
+// @ts-ignore
+import merge from 'lodash.merge'
 
 import * as ReactPage from '../../state/react-page'
 import type * as ReactBuilderPreview from '../../state/react-builder-preview'
@@ -22,6 +24,7 @@ import {
   mountComponentEffect,
   registerComponentEffect,
   registerComponentHandleEffect,
+  registerDocumentEffect,
   registerReactComponentEffect,
 } from '../../state/actions'
 import type {
@@ -239,8 +242,6 @@ const ElementData = memo(
   }),
 )
 
-const DisableRegisterElement = createContext(false)
-
 type ElementRefereceProps = {
   elementReference: ReactPage.ElementReference
 }
@@ -252,7 +253,13 @@ const ElementReference = memo(
   ): JSX.Element {
     const globalElement = useGlobalElement(elementReference.value)
     const globalElementData = globalElement?.data as ReactPage.ElementData | undefined
-    const elementReferenceDocument = useDocument(elementReference.key)
+    const elementReferenceDocument = useMemo(() => {
+      if (globalElementData == null) return null
+
+      const mergedData = merge({}, globalElementData, { props: elementReference.overrides?.props })
+
+      return ReactPage.createDocument(elementReference.key, mergedData)
+    }, [elementReference, globalElementData])
     const documentKey = elementReference.key
     const documentKeys = useContext(DocumentCyclesContext)
     const providedDocumentKeys = useMemo(
@@ -260,7 +267,15 @@ const ElementReference = memo(
       [documentKeys, documentKey],
     )
 
-    if (globalElementData == null) {
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+      if (elementReferenceDocument == null) return
+
+      return dispatch(registerDocumentEffect(elementReferenceDocument))
+    }, [dispatch, elementReferenceDocument])
+
+    if (elementReferenceDocument == null) {
       return (
         <FallbackComponent
           ref={ref as Ref<HTMLDivElement>}
@@ -280,13 +295,7 @@ const ElementReference = memo(
 
     return (
       <DocumentCyclesContext.Provider value={providedDocumentKeys}>
-        {elementReferenceDocument != null ? (
-          <Document document={elementReferenceDocument} ref={ref} />
-        ) : (
-          <DisableRegisterElement.Provider value={true}>
-            <ElementData elementData={globalElementData} ref={ref} />
-          </DisableRegisterElement.Provider>
-        )}
+        <Document document={elementReferenceDocument} ref={ref} />
       </DocumentCyclesContext.Provider>
     )
   }),
@@ -316,23 +325,22 @@ export const Element = memo(
 
       imperativeHandleRef.current.callback(() => current)
     }, [])
-    const isRegisterElementDisabled = useContext(DisableRegisterElement)
 
     useImperativeHandle(ref, () => imperativeHandleRef.current, [])
 
     useEffect(() => {
-      if (documentKey == null || isRegisterElementDisabled) return
+      if (documentKey == null) return
 
       return dispatch(
         registerComponentHandleEffect(documentKey, elementKey, imperativeHandleRef.current),
       )
-    }, [dispatch, documentKey, elementKey, isRegisterElementDisabled])
+    }, [dispatch, documentKey, elementKey])
 
     useEffect(() => {
-      if (documentKey == null || isRegisterElementDisabled) return
+      if (documentKey == null) return
 
       return dispatch(mountComponentEffect(documentKey, elementKey))
-    }, [dispatch, documentKey, elementKey, isRegisterElementDisabled])
+    }, [dispatch, documentKey, elementKey])
 
     return (
       <FindDomNode ref={findDomNodeCallbackRef}>
