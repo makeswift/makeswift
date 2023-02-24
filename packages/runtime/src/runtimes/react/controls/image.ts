@@ -22,13 +22,13 @@ export function useImageControlValue(
   const file = useFile(fileId)
 
   if (format === ImageControlValueFormat.URL) {
-    return file?.publicUrlV2
+    return file?.publicUrl
   }
 
   if (file == null || file.dimensions == null) return undefined
 
   return {
-    url: file.publicUrlV2,
+    url: file.publicUrl,
     dimensions: { width: file.dimensions.width, height: file.dimensions.height },
   }
 }

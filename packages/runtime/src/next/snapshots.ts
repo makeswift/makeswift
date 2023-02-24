@@ -145,7 +145,5 @@ export function normalizeToMakeswiftResources(
 }
 
 export function fileToFileSnapshot(file: File): FileSnapshot {
-  const { publicUrlV2, ...restOfFile } = file
-
-  return { ...restOfFile, publicUrl: publicUrlV2 }
+  return file
 }
