@@ -1,5 +1,11 @@
 # @makeswift/next-plugin
 
+## 0.1.8
+
+### Patch Changes
+
+- 569f53e: Add Makeswift Google Storage image remote patterns to Next.js config.
+
 ## 0.1.6
 
 ### Patch Changes

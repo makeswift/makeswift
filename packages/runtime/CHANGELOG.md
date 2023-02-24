@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.2.22
+
+### Patch Changes
+
+- 4b3b5db: Use Google Storage URL for files instead of s.mkswft.com.
+- Updated dependencies [569f53e]
+  - @makeswift/next-plugin@0.1.8
+
 ## 0.2.21
 
 ### Patch Changes
@@ -295,9 +303,9 @@
     const pages = await makeswift.getPages()
 
     return {
-      paths: pages.map((page) => ({
+      paths: pages.map(page => ({
         params: {
-          path: page.path.split('/').filter((segment) => segment !== ''),
+          path: page.path.split('/').filter(segment => segment !== ''),
         },
       })),
       fallback: 'blocking',
