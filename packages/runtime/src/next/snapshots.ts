@@ -18,9 +18,9 @@ export type MakeswiftSnapshotResources = {
   swatches: IdSpecified<SwatchResource>[]
   typographies: IdSpecified<TypographyResource>[]
   files: IdSpecified<FileSnapshot>[]
+  tables: IdSpecified<TableResource>[]
   pagePathnameSlices: IdSpecified<PathPathnameSliceResource>[]
   globalElements: IdSpecified<GlobalElementResource>[]
-  // @todo: Do we need tables?
   snippets: IdSpecified<SnippetResource>[]
   // will use family as id to simplify
   fonts: IdSpecified<FontResource>[]
@@ -81,6 +81,32 @@ type FileSnapshot = {
   dimensions: { width: number; height: number } | null
 }
 
+type TableResource = {
+  id: string
+  name: string
+  columns: Array<
+    | { __typename: 'CheckboxTableColumn'; id: string; name: string }
+    | { __typename: 'EmailTableColumn'; id: string; name: string }
+    | { __typename: 'LongTextTableColumn'; id: string; name: string }
+    | {
+        __typename: 'MultipleSelectTableColumn'
+        id: string
+        name: string
+        options: Array<{ id: string; name: string }>
+      }
+    | { __typename: 'NumberTableColumn'; id: string; name: string }
+    | { __typename: 'PhoneNumberTableColumn'; id: string; name: string }
+    | { __typename: 'SingleLineTextTableColumn'; id: string; name: string }
+    | {
+        __typename: 'SingleSelectTableColumn'
+        id: string
+        name: string
+        options: Array<{ id: string; name: string }>
+      }
+    | { __typename: 'URLTableColumn'; id: string; name: string }
+  >
+}
+
 type PathPathnameSliceResource = {
   id: string
   pathname: string
@@ -107,6 +133,7 @@ export function normalizeToMakeswiftResources(
     swatches: partialResources?.swatches || [],
     typographies: partialResources?.typographies || [],
     files: partialResources?.files || [],
+    tables: partialResources?.tables || [],
     pagePathnameSlices: partialResources?.pagePathnameSlices || [],
     globalElements: partialResources?.globalElements || [],
     snippets: partialResources?.snippets || [],

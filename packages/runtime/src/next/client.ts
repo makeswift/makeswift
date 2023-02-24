@@ -272,6 +272,7 @@ export class Makeswift {
         swatches?: string[]
         typographies?: string[]
         files?: string[]
+        tables?: string[]
         pagePathnameSlices?: string[]
         globalElements?: string[]
         snippets?: string[]
@@ -313,6 +314,14 @@ export class Makeswift {
             ...publishedResources.files,
           ],
           deletedResources?.files,
+        ),
+        tables: mergeIdSpecifiedResource(
+          [
+            ...resourcesFromPublishedElementTree.tables,
+            ...resourcesFromCurrentSnapshot.tables,
+            ...publishedResources.tables,
+          ],
+          deletedResources?.tables,
         ),
         typographies: mergeIdSpecifiedResource(
           [
@@ -370,6 +379,7 @@ export class Makeswift {
             getSnapshotResourcesFromSerializedState(await client.prefetch(publishedElementTree)),
           )
         : normalizeToMakeswiftResources({})
+
     const resourcesFromCurrentSnapshot = normalizeToMakeswiftResources(
       currentSnapshot?.resources || {},
     )
@@ -402,6 +412,7 @@ export class Makeswift {
     return [
       ...resources.swatches.map(parseResourceIds),
       ...resources.files.map(parseResourceIds),
+      ...resources.tables.map(parseResourceIds),
       ...resources.typographies.map(parseResourceIds),
       ...resources.pagePathnameSlices.map(parseResourceIds),
       ...resources.globalElements.map(parseResourceIds),

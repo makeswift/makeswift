@@ -227,6 +227,7 @@ export function MakeswiftApiHandler(
           swatches?: string[]
           typographies?: string[]
           files?: string[]
+          tables?: string[]
           // @todo: I think this should be removed, and only derived from the element tree
           pagePathnameSlices?: string[]
           globalElements?: string[]
@@ -298,6 +299,7 @@ export function MakeswiftApiHandler(
             swatches: [],
             typographies: [],
             files: [],
+            tables: [],
             pagePathnameSlices: [],
             globalElements: [],
             snippets: [],
@@ -339,6 +341,17 @@ export function MakeswiftApiHandler(
               publishedResourcesInMakeswiftSnapshotFormat.files?.push({
                 id: fileId,
                 value: fileToFileSnapshot(file),
+              })
+            }
+          }
+
+          // tables
+          for await (const tableId of publishedResources.tables || []) {
+            const table = await makeswiftApiClient.fetchTable(tableId)
+            if (table != null) {
+              publishedResourcesInMakeswiftSnapshotFormat.tables?.push({
+                id: tableId,
+                value: table,
               })
             }
           }
