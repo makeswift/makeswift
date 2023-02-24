@@ -81,7 +81,7 @@ export function useBackgrounds(
                 type: 'image',
                 payload: {
                   ...restOfPayload,
-                  publicUrl: file.publicUrlV2,
+                  publicUrl: file.publicUrl,
                   dimensions: file.dimensions,
                 },
               }
