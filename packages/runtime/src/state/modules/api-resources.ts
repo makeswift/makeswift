@@ -5,6 +5,7 @@ import {
   Typography,
   PagePathnameSlice,
   GlobalElement,
+  Table,
 } from '../../api'
 import { fileToFileSnapshot, IdSpecified, MakeswiftSnapshotResources } from '../../next/snapshots'
 import deepEqual from '../../utils/deepEqual'
@@ -24,7 +25,7 @@ function isNonNullable<T>(value: T): value is NonNullable<T> {
 export function getSnapshotResourcesFromSerializedState(
   serializedState: SerializedState,
 ): Partial<MakeswiftSnapshotResources> {
-  // @note: remember TS is nominally typed, so extra parameters will come into the
+  // @note: remember TS is structurally typed, so extra parameters will come into the
   //        objects coming out of this function. That's fine.
   const resources: Partial<MakeswiftSnapshotResources> = {
     swatches: serializedState.Swatch.filter((_): _ is IdSpecified<Swatch> => true),
@@ -32,6 +33,7 @@ export function getSnapshotResourcesFromSerializedState(
     files: serializedState.File.map(({ id, value }) =>
       value.__typename === APIResourceType.File ? { id, value: fileToFileSnapshot(value) } : null,
     ).filter(isNonNullable),
+    tables: serializedState.Table.filter((_): _ is IdSpecified<Table> => true),
     pagePathnameSlices: serializedState.PagePathnameSlice.filter(
       (_): _ is IdSpecified<PagePathnameSlice> => true,
     ),
