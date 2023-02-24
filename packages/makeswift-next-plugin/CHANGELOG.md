@@ -1,5 +1,11 @@
 # @makeswift/next-plugin
 
+## 0.2.2
+
+### Patch Changes
+
+- 0e12b08: Fix development Google Storage bucket URL.
+
 ## 0.2.1
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.7.1
+
+### Patch Changes
+
+- 16c434d: Support tables in snapshot creation.
+- 49986c8: Alias `publicUrlV2` to `publicUrl`.
+- Updated dependencies [0e12b08]
+  - @makeswift/next-plugin@0.2.2
+
 ## 0.7.0
 
 ### Minor Changes
