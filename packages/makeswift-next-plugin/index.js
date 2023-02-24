@@ -13,7 +13,7 @@ const NEXT_TRANSPILE_MODULES_MODULES = ['@makeswift/runtime']
 const GOOGLE_STORAGE_BUCKETS = [
   's.mkswft.com',
   's.staging.mkswft.com',
-  's-development.cd.makeswift.com',
+  's-development.cd.mkswft.com',
 ]
 /** @type ImageConfigDomains */
 const NEXT_IMAGE_DOMAINS = GOOGLE_STORAGE_BUCKETS
