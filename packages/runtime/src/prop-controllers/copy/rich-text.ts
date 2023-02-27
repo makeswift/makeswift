@@ -1,4 +1,4 @@
-import { InlineJSON, MarkJSON, NodeJSON } from 'slate'
+import { NodeJSON, InlineJSON, MarkJSON } from '../../controls'
 import { CopyContext, ReplacementContext } from '../../state/react-page'
 import { RichTextValue } from '../descriptors'
 

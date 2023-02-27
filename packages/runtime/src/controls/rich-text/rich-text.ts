@@ -1,11 +1,11 @@
-import { IndexSignatureHack } from '../prop-controllers/descriptors'
-import type * as Slate from 'slate'
-import { BuilderEditMode } from '../state/modules/builder-edit-mode'
-import { PropController } from '../prop-controllers/instances'
-import { OnChangeParam, Editor } from 'slate-react'
-import { BoxModel } from '../box-model'
+import { BuilderEditMode } from '../../state/modules/builder-edit-mode'
+import { PropController } from '../../prop-controllers/instances'
+import { BoxModel } from '../../box-model'
+import { RichTextDTO } from './dto-types'
+import { Editor } from 'slate'
+import { richTextDAOToDTO } from './translation'
 
-export type RichTextControlData = IndexSignatureHack<Slate.ValueJSON>
+export type RichTextControlData = RichTextDTO
 
 export const RichTextControlType = 'makeswift::controls::rich-text'
 
@@ -35,12 +35,12 @@ type ChangeBuilderEditModeRichTextControlMessage = {
 
 type InitializeEditorRichTextControlMessage = {
   type: typeof RichTextControlMessageType.INITIALIZE_EDITOR
-  value: Slate.ValueJSON
+  value: RichTextDTO
 }
 
 type ChangeEditorValueRichTextControlMessage = {
   type: typeof RichTextControlMessageType.CHANGE_EDITOR_VALUE
-  value: Slate.ValueJSON
+  value: RichTextDTO
 }
 
 type FocusRichTextControlMessage = { type: typeof RichTextControlMessageType.FOCUS }
@@ -74,13 +74,13 @@ export class RichTextControl extends PropController<RichTextControlMessage> {
       case RichTextControlMessageType.CHANGE_BUILDER_EDIT_MODE: {
         switch (message.editMode) {
           case BuilderEditMode.BUILD:
-            this.editor?.deselect().blur()
+            // this.editor?.deselect().blur()
             break
         }
         break
       }
       case RichTextControlMessageType.FOCUS: {
-        this.editor?.focus().moveToRangeOfDocument()
+        // this.editor?.focus().moveToRangeOfDocument()
         break
       }
     }
@@ -91,15 +91,18 @@ export class RichTextControl extends PropController<RichTextControlMessage> {
 
     this.send({
       type: RichTextControlMessageType.INITIALIZE_EDITOR,
-      value: editor.value.toJSON({ preserveSelection: false }),
+      value: richTextDAOToDTO(editor.children, editor.selection),
     })
-  }
 
-  onChange(change: OnChangeParam) {
-    this.send({
-      type: RichTextControlMessageType.CHANGE_EDITOR_VALUE,
-      value: change.value.toJSON({ preserveSelection: true }),
-    })
+    const _onChange = editor.onChange
+    this.editor.onChange = (...params) => {
+      _onChange(...params)
+
+      this.send({
+        type: RichTextControlMessageType.CHANGE_EDITOR_VALUE,
+        value: richTextDAOToDTO(editor.children, editor.selection),
+      })
+    }
   }
 
   focus() {
