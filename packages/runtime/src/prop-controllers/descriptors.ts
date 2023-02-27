@@ -1,4 +1,3 @@
-import type * as Slate from 'slate'
 import { StyleControlDefinition, StyleControlType } from '../controls/style'
 import {
   ResolveBorderControlValue,
@@ -37,7 +36,7 @@ import { ListControlValue } from '../runtimes/react/controls/list'
 import { ComboboxControlValue } from '../runtimes/react/controls/combobox'
 import { LinkControlValue } from '../runtimes/react/controls/link'
 import { SlotControlValue } from '../runtimes/react/controls/slot'
-import { RichTextControlDefinition } from '../controls/rich-text'
+import { RichTextControlDefinition, RichTextDTO } from '../controls/rich-text'
 import { RichTextControlValue } from '../runtimes/react/controls/rich-text'
 
 export type { Data }
@@ -738,7 +737,7 @@ export function ResponsiveSelect<_T extends string, T extends _T, U extends T>(
   return { type: Types.ResponsiveSelect, options }
 }
 
-export type RichTextValue = IndexSignatureHack<Slate.ValueJSON>
+export type RichTextValue = IndexSignatureHack<RichTextDTO>
 
 export type RichTextOptions = Options<{ preset?: RichTextValue }>
 
