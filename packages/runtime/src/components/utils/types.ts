@@ -4,4 +4,4 @@ export type SwatchValue = {
   lightness: number
 }
 
-export type ColorValue = { swatch?: SwatchValue; alpha: number }
+export type ColorValue = { swatch?: SwatchValue; alpha?: number }
