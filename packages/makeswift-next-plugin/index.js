@@ -23,6 +23,14 @@ const NEXT_IMAGE_REMOTE_PATTERNS = GOOGLE_STORAGE_BUCKETS.map((bucket) => ({
   hostname: 'storage.googleapis.com',
   pathname: `/${bucket}/**`,
 }))
+/** @type ImageConfigRemotePatterns */
+const NEXT_IMAGE_REVIEW_APP_REMOTE_PATTERNS = [
+  {
+    protocol: 'https',
+    hostname: 'storage.googleapis.com',
+    pathname: '/s-*.cd.mkswft.com/**',
+  },
+]
 
 /** @type {(options: MakeswiftNextPluginOptions) => (nextConfig: NextConfig) => NextConfig} */
 module.exports =
@@ -37,6 +45,7 @@ module.exports =
         remotePatterns: [
           ...(nextConfig.images?.remotePatterns ?? []),
           ...NEXT_IMAGE_REMOTE_PATTERNS,
+          ...NEXT_IMAGE_REVIEW_APP_REMOTE_PATTERNS,
         ],
       },
       async rewrites() {
