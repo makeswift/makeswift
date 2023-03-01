@@ -1,8 +1,7 @@
 import { ForwardedRef, forwardRef } from 'react'
 import { RichTextValue } from '../../../prop-controllers'
 import { ElementIDValue } from '../../../prop-controllers/descriptors'
-
-import EditableText from './EditableText'
+import { EditableText } from './EditableText'
 
 type Props = {
   id?: ElementIDValue
