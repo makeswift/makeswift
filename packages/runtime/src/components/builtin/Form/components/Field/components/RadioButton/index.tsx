@@ -12,7 +12,7 @@ import { useStyle } from '../../../../../../../runtimes/react/use-style'
 
 function getCheckmarkColor({
   swatch: { hue: h, saturation: s, lightness: l } = { hue: 0, saturation: 0, lightness: 0 },
-  alpha: a,
+  alpha: a = 1,
 }: ColorValue) {
   return Color({ h, s, l }).alpha(a).isLight() ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.95)'
 }
