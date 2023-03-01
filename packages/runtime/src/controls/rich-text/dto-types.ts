@@ -36,7 +36,7 @@ export interface DocumentJSON {
 
 export interface BlockJSON {
   object?: typeof ObjectType.Block | undefined
-  type: typeof BlockTypes[keyof typeof BlockTypes]
+  type: typeof BlockType[keyof typeof BlockType]
   key?: string | undefined
   nodes?: Array<BlockJSON | InlineJSON | TextJSON> | undefined
   data?: { [key: string]: any } | undefined
