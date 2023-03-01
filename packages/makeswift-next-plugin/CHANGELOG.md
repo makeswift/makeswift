@@ -1,5 +1,11 @@
 # @makeswift/next-plugin
 
+## 0.2.3
+
+### Patch Changes
+
+- a165537: Add Makeswift review app image remote patterns to Next.js config.
+
 ## 0.2.2
 
 ### Patch Changes
