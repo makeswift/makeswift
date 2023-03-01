@@ -3,13 +3,14 @@ import { forwardRef, Ref, useEffect, useImperativeHandle, useMemo, useState } fr
 import { createEditor } from 'slate'
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
 
-import { ElementIDValue, RichTextValue } from '../../../prop-controllers/descriptors'
+import { ElementIDValue, RichTextValue } from '../../../../prop-controllers/descriptors'
 import { cx } from '@emotion/css'
-import { DescriptorsPropControllers } from '../../../prop-controllers/instances'
-import { Descriptors } from '../../../runtimes/react/controls/rich-text'
-import { getBox } from '../../../box-model'
-import { PropControllersHandle } from '../../../state/modules/prop-controller-handles'
-import { BlockType, RichTextDAO, richTextDTOtoDAO, TextType } from '../../../controls'
+import { DescriptorsPropControllers } from '../../../../prop-controllers/instances'
+import { Descriptors } from '../../../../runtimes/react/controls/rich-text'
+import { getBox } from '../../../../box-model'
+import { PropControllersHandle } from '../../../../state/modules/prop-controller-handles'
+import { BlockType, RichTextDAO, richTextDTOtoDAO, TextType } from '../../../../controls'
+import { Leaf } from './Leaf'
 
 type Props = {
   id?: ElementIDValue
@@ -22,7 +23,7 @@ const defaultText: RichTextDAO = [
   { type: BlockType.Paragraph, children: [{ type: TextType.Text, text: '' }] },
 ]
 
-const EditableText = forwardRef(function EditableText(
+export const EditableText = forwardRef(function EditableText(
   { id, text, width, margin }: Props,
   ref: Ref<PropControllersHandle<Descriptors>>,
 ) {
@@ -56,9 +57,7 @@ const EditableText = forwardRef(function EditableText(
 
   return (
     <Slate editor={editor} value={initialValue}>
-      <Editable id={id} className={cx(width, margin)} />
+      <Editable id={id} renderLeaf={Leaf} className={cx(width, margin)} />
     </Slate>
   )
 })
-
-export default EditableText
