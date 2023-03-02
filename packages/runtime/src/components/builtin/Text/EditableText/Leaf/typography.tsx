@@ -1,6 +1,7 @@
 import { CSSObject } from '@emotion/serialize'
-import { ReactNode } from 'react'
+import { RenderLeafProps } from 'slate-react'
 import { Swatch, Typography as TypographyDTO } from '../../../../../api'
+import { TypographyText } from '../../../../../controls'
 import { DeviceOverride, ResponsiveValue } from '../../../../../prop-controllers'
 import { getTypographyStyleSwatchIds } from '../../../../../prop-controllers/introspection'
 import { useTypography, useSwatches } from '../../../../../runtimes/react/hooks/makeswift-api'
@@ -150,16 +151,15 @@ export function useTypographyClassName(value: EnhancedTypography): string {
   )
 }
 
-export type TypographyLeafProps = {
-  typography: Typography
-  children: ReactNode
+export interface TypographyRenderLeafProps extends RenderLeafProps {
+  leaf: TypographyText
 }
 
-export function TypographyLeaf({ typography, children, ...props }: TypographyLeafProps) {
-  const enhancedTypography = useEnhancedTypography(typography)
+export function TypographyLeaf({ leaf, children, attributes }: TypographyRenderLeafProps) {
+  const enhancedTypography = useEnhancedTypography(leaf.typography)
   const typographyClassName = useTypographyClassName(enhancedTypography)
   return (
-    <span {...props} className={typographyClassName}>
+    <span {...attributes} className={typographyClassName}>
       {children}
     </span>
   )
