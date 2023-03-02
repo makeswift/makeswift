@@ -11,6 +11,7 @@ import { getBox } from '../../../../box-model'
 import { PropControllersHandle } from '../../../../state/modules/prop-controller-handles'
 import { BlockType, RichTextDAO, richTextDTOtoDAO, TextType } from '../../../../controls'
 import { Leaf } from './Leaf'
+import { Element } from './Element'
 
 type Props = {
   id?: ElementIDValue
@@ -52,7 +53,7 @@ export const EditableText = forwardRef(function EditableText(
 
   return (
     <Slate editor={editor} value={initialValue}>
-      <Editable id={id} renderLeaf={Leaf} className={cx(width, margin)} />
+      <Editable id={id} renderLeaf={Leaf} renderElement={Element} className={cx(width, margin)} />
     </Slate>
   )
 })
