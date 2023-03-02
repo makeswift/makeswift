@@ -124,13 +124,18 @@ class RichTextPropController extends PropController<RichTextPropControllerMessag
     })
 
     const _onChange = editor.onChange
-    this.editor.onChange = (...params) => {
-      _onChange(...params)
+    this.editor.onChange = options => {
+      _onChange(options)
 
-      this.send({
-        type: RichTextPropControllerMessageType.CHANGE_EDITOR_VALUE,
-        value: richTextDAOToDTO(editor.children, editor.selection),
-      })
+      // if onChange is local then it will include an operation(s)
+      // that is the only case in which we want to push updates
+      // this prevent infinite loops that can occur when collaborating
+      if (options?.operation != null) {
+        this.send({
+          type: RichTextPropControllerMessageType.CHANGE_EDITOR_VALUE,
+          value: richTextDAOToDTO(editor.children, editor.selection),
+        })
+      }
     }
   }
 
