@@ -1,4 +1,4 @@
-import { Descendant, Editor, Selection } from 'slate'
+import { Editor } from 'slate'
 import { Descriptor, RichTextDescriptor, TableFormFieldsDescriptor, Types } from './descriptors'
 import { BuilderEditMode } from '../state/modules/builder-edit-mode'
 import { BoxModel } from '../state/modules/box-models'
@@ -8,6 +8,8 @@ import {
   RichTextControlType,
   richTextDAOToDTO,
   RichTextDTO,
+  richTextDTOtoDAO,
+  richTextDTOtoSelection,
   SlotControl,
   SlotControlMessage,
   SlotControlType,
@@ -103,6 +105,13 @@ class RichTextPropController extends PropController<RichTextPropControllerMessag
       case RichTextPropControllerMessageType.FOCUS: {
         // this.editor?.focus().moveToRangeOfDocument()
         break
+      }
+      case RichTextPropControllerMessageType.CHANGE_EDITOR_VALUE: {
+        if (this.editor) {
+          this.editor.children = richTextDTOtoDAO(message.value)
+          this.editor.selection = richTextDTOtoSelection(message.value)
+          this.editor.onChange()
+        }
       }
     }
   }
