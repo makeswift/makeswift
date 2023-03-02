@@ -12,6 +12,7 @@ import { PropControllersHandle } from '../../../../state/modules/prop-controller
 import { BlockType, RichTextDAO, richTextDTOtoDAO, TextType } from '../../../../controls'
 import { Leaf } from './Leaf'
 import { Element } from './Element'
+import { useSyncWithBuilder } from './useSyncWithBuilder'
 
 type Props = {
   id?: ElementIDValue
@@ -29,6 +30,7 @@ export const EditableText = forwardRef(function EditableText(
   ref: Ref<PropControllersHandle<Descriptors>>,
 ) {
   const [editor] = useState(() => withReact(createEditor()))
+  const delaySync = useSyncWithBuilder(editor, text)
 
   const [propControllers, setPropControllers] =
     useState<DescriptorsPropControllers<Descriptors> | null>(null)
@@ -57,7 +59,7 @@ export const EditableText = forwardRef(function EditableText(
   }, [controller, editor])
 
   return (
-    <Slate editor={editor} value={initialValue}>
+    <Slate editor={editor} value={initialValue} onChange={delaySync}>
       <Editable id={id} renderLeaf={Leaf} renderElement={Element} className={cx(width, margin)} />
     </Slate>
   )
