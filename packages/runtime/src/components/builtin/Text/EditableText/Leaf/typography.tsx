@@ -132,6 +132,8 @@ export function useTypographyClassName(value: EnhancedTypography): string {
         if (value.fontWeight != null) styles.fontWeight = value.fontWeight
         if (value.lineHeight != null) styles.lineHeight = value.lineHeight
         if (value.letterSpacing != null) styles.letterSpacing = `${value.letterSpacing / 10}em`
+        console.log(value.uppercase, value.uppercase === true ? 'uppercase' : 'initial')
+
         if (value.uppercase != null)
           styles.textTransform = value.uppercase === true ? 'uppercase' : 'initial'
         if (value.underline != null || value.strikethrough != null)

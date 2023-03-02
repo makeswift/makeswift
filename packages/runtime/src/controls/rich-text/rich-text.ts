@@ -70,6 +70,7 @@ export class RichTextControl extends PropController<RichTextControlMessage> {
   private editor: Editor | null = null
 
   recv(message: RichTextControlMessage): void {
+    console.log('message before switch', message)
     switch (message.type) {
       case RichTextControlMessageType.CHANGE_BUILDER_EDIT_MODE: {
         switch (message.editMode) {
@@ -82,6 +83,9 @@ export class RichTextControl extends PropController<RichTextControlMessage> {
       case RichTextControlMessageType.FOCUS: {
         // this.editor?.focus().moveToRangeOfDocument()
         break
+      }
+      case RichTextControlMessageType.CHANGE_EDITOR_VALUE: {
+        console.log('message', message)
       }
     }
   }

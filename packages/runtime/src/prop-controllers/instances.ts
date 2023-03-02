@@ -1,4 +1,4 @@
-import { Descendant, Editor, Selection } from 'slate'
+import { Descendant, Editor, Operation, Selection, Transforms } from 'slate'
 import { Descriptor, RichTextDescriptor, TableFormFieldsDescriptor, Types } from './descriptors'
 import { BuilderEditMode } from '../state/modules/builder-edit-mode'
 import { BoxModel } from '../state/modules/box-models'
@@ -8,6 +8,10 @@ import {
   RichTextControlType,
   richTextDAOToDTO,
   RichTextDTO,
+  richTextDTOtoDAO,
+  richTextDTOtoSelection,
+  richTextOperationDTOToOperationDAO,
+  RichTextOperationDTO,
   SlotControl,
   SlotControlMessage,
   SlotControlType,
@@ -17,6 +21,7 @@ export const RichTextPropControllerMessageType = {
   CHANGE_BUILDER_EDIT_MODE: 'CHANGE_BUILDER_EDIT_MODE',
   INITIALIZE_EDITOR: 'INITIALIZE_EDITOR',
   CHANGE_EDITOR_VALUE: 'CHANGE_EDITOR_VALUE',
+  CHANGE_EDITOR_VIA_OPERATIONS: 'CHANGE_EDITOR_VIA_OPERATIONS',
   FOCUS: 'FOCUS',
   BLUR: 'BLUR',
   UNDO: 'UNDO',
@@ -39,6 +44,11 @@ type ChangeEditorValueRichTextPropControllerMessage = {
   value: RichTextDTO
 }
 
+type ChangeEditorViaOperationsRichTextPropControllerMessage = {
+  type: typeof RichTextPropControllerMessageType.CHANGE_EDITOR_VIA_OPERATIONS
+  value: RichTextOperationDTO[]
+}
+
 type FocusRichTextPropControllerMessage = { type: typeof RichTextPropControllerMessageType.FOCUS }
 
 type BlurRichTextPropControllerMessage = { type: typeof RichTextPropControllerMessageType.BLUR }
@@ -56,6 +66,7 @@ export type RichTextPropControllerMessage =
   | ChangeBuilderEditModeRichTextPropControllerMessage
   | InitializeEditorRichTextPropControllerMessage
   | ChangeEditorValueRichTextPropControllerMessage
+  | ChangeEditorViaOperationsRichTextPropControllerMessage
   | FocusRichTextPropControllerMessage
   | BlurRichTextPropControllerMessage
   | UndoRichTextPropControllerMessage
@@ -104,6 +115,41 @@ class RichTextPropController extends PropController<RichTextPropControllerMessag
         // this.editor?.focus().moveToRangeOfDocument()
         break
       }
+
+      // case RichTextPropControllerMessageType.CHANGE_EDITOR_VIA_OPERATIONS: {
+      //   console.log('CHANGE_EDITOR_VIA_OPERATIONS HOST', message)
+
+      //   if (this.editor) {
+      //     console.log(this.editor.operations, this.editor.children[0].children[0].typography)
+      //   }
+
+      //   if (this.editor) {
+      //     message.value.forEach(op => {
+      //       if (this.editor) {
+      //         console.log('transforming with: ', op)
+      //         const operation = richTextOperationDTOToOperationDAO(op)
+      //         if (operation) Transforms.transform(this.editor, operation)
+
+      //       }
+      //     })
+      //     // Editor.normalize(this.editor)
+      //   }
+
+      //   if (this.editor) {
+      //     console.log(this.editor.operations, this.editor.children[0].children[0].typography)
+      //   }
+
+      //   return
+      // }
+
+      case RichTextPropControllerMessageType.CHANGE_EDITOR_VALUE: {
+        console.log('CHANGE_EDITOR_VALUE HOST', message)
+        if (this.editor) {
+          this.editor.children = richTextDTOtoDAO(message.value)
+          this.editor.selection = richTextDTOtoSelection(message.value)
+          this.editor.onChange()
+        }
+      }
     }
   }
 
@@ -115,7 +161,15 @@ class RichTextPropController extends PropController<RichTextPropControllerMessag
       value: richTextDAOToDTO(editor.children, editor.selection),
     })
 
-    this.editor.onChange = () => {
+    this.editor.onChange = operation => {
+      if (operation?.operation?.origin === 'builder') {
+        console.log('CHANGE_EDITOR_VALUE HOST', {
+          type: RichTextPropControllerMessageType.CHANGE_EDITOR_VALUE,
+          value: richTextDAOToDTO(editor.children, editor.selection),
+          operationOrigin: operation?.operation?.origin,
+        })
+        return
+      }
       this.send({
         type: RichTextPropControllerMessageType.CHANGE_EDITOR_VALUE,
         value: richTextDAOToDTO(editor.children, editor.selection),

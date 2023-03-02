@@ -51,8 +51,17 @@ export const EditableText = forwardRef(function EditableText(
   }, [controller, editor])
 
   return (
-    <Slate editor={editor} value={initialValue}>
-      <Editable id={id} renderLeaf={Leaf} className={cx(width, margin)} />
+    <Slate
+      editor={editor}
+      // key={JSON.stringify(text)}
+      value={initialValue}
+    >
+      <Editable
+        // key={JSON.stringify(text)}
+        id={id}
+        renderLeaf={Leaf}
+        className={cx(width, margin)}
+      />
     </Slate>
   )
 })

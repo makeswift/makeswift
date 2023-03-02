@@ -1,4 +1,4 @@
-import { BaseEditor, Descendant } from 'slate'
+import { BaseEditor, Descendant, BaseOperation } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { Typography } from '../../api'
 import { LinkControlData } from '../link'
@@ -84,10 +84,15 @@ export type Element = Block | Inline
 
 export type RichTextDAO = Descendant[]
 
+export type MakeswiftOperation = BaseOperation & {
+  origin?: 'host' | 'builder'
+}
+
 declare module 'slate' {
   interface CustomTypes {
     Editor: BaseEditor & ReactEditor
     Element: Element
     Text: Text
+    Operation: MakeswiftOperation
   }
 }

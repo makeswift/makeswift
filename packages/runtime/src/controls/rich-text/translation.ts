@@ -1,6 +1,6 @@
-import { Descendant, Text, Selection } from 'slate'
+import { Descendant, Text, Selection, Operation, Transforms } from 'slate'
 import { LinkControlData } from '../link'
-import { BlockType, Inline, InlineType, RichTextDAO, TextType } from './types'
+import { BlockType, Inline, InlineType, RichTextDAO, TextType, TypographyMarkValue } from './types'
 import {
   BlockJSON,
   InlineJSON,
@@ -9,7 +9,14 @@ import {
   TextJSON,
   RichTextDTO,
   ObjectType,
+  RichTextOperationDTO,
+  OperationDTOType,
+  MarkJSON,
 } from './dto-types'
+
+function toTypography(node: MarkJSON): TypographyMarkValue {
+  return node.data?.value
+}
 
 function toTextDAO(node: TextJSON): Text[] {
   const typographyMark = node.marks?.find(mark => mark.type === TextType.Typography)
@@ -19,7 +26,7 @@ function toTextDAO(node: TextJSON): Text[] {
       {
         text: node.text ?? '',
         type: TextType.Typography,
-        typography: typographyMark.data?.value,
+        typography: toTypography(typographyMark),
       },
     ]
   }
@@ -102,6 +109,41 @@ export function richTextDTOtoSelection(data: RichTextDTO): Selection {
         path: data.selection.focus.path,
       },
     }
+
+  return null
+}
+
+export function richTextOperationDTOToOperationDAO(
+  operation: RichTextOperationDTO,
+): Operation | null {
+  switch (operation.type) {
+    case OperationDTOType.AddMark:
+      console.log('add', operation.mark, toTypography(operation.mark))
+      if (operation.mark.type === 'typography')
+        return {
+          type: 'set_node',
+          path: operation.path,
+          properties: {},
+          newProperties: {
+            typography: toTypography(operation.mark),
+          },
+        }
+
+    case OperationDTOType.RemoveMark:
+      console.log('remove', operation.mark, toTypography(operation.mark))
+      if (operation.mark.type === 'typography')
+        return {
+          type: 'set_node',
+          path: operation.path,
+          properties: {},
+          newProperties: {
+            typography: undefined,
+          },
+        }
+
+    default:
+      break
+  }
 
   return null
 }
