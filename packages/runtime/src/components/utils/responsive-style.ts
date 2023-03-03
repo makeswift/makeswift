@@ -224,7 +224,7 @@ export function responsiveTextStyle(value: TextStyleValue | undefined): CSSObjec
       } = textStyle
 
       return {
-        ...(fontFamily == null ? {} : { fontFamily }),
+        ...(fontFamily == null ? {} : { fontFamily: `"${fontFamily}"` }),
         ...(fontWeight == null ? {} : { fontWeight }),
         ...(letterSpacing == null ? {} : { letterSpacing }),
         ...(fontSize == null ? {} : { fontSize: `${fontSize.value}${fontSize.unit}` }),

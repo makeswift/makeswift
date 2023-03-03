@@ -42,7 +42,7 @@ export default function Mark({ value, className, ...restOfProps }: Props): JSX.E
         } = {} as TypographyMarkDataValue,
       ]) => ({
         ...(color == null ? {} : { color: colorToString(color) }),
-        ...(fontFamily == null ? {} : { fontFamily }),
+        ...(fontFamily == null ? {} : { fontFamily: `"${fontFamily}"` }),
         ...(fontSize == null || fontSize.value == null || fontSize.unit == null
           ? {}
           : { fontSize: `${fontSize.value}${fontSize.unit}` }),

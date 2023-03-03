@@ -71,7 +71,7 @@ function useStyleControlCssObject(
           borderBottomLeftRadius: borderRadiusToString(borderRadius?.borderBottomLeftRadius) ?? 0,
         }),
         ...(properties.includes(StyleControlProperty.TextStyle) && {
-          ...(textStyle?.fontFamily && { fontFamily: textStyle.fontFamily }),
+          ...(textStyle?.fontFamily && { fontFamily: `"${textStyle.fontFamily}"` }),
           ...(textStyle?.letterSpacing && { letterSpacing: textStyle.letterSpacing }),
           ...(textStyle?.fontSize && { fontSize: fontSizeToString(textStyle.fontSize) }),
           ...(textStyle?.fontWeight && { fontWeight: textStyle.fontWeight }),
