@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.7.4
+
+### Patch Changes
+
+- 0787dce: Fix issue where certain font families were not loading properly.
+
 ## 0.7.3
 
 ### Patch Changes
