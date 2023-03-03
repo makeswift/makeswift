@@ -60,8 +60,10 @@ export const InlineType = {
 
 export type InlineType = typeof InlineType[keyof typeof InlineType]
 
+export type BlockTextAlignment = ResponsiveValue<'left' | 'center' | 'right' | 'justify'>
+
 type BaseBlockElement = {
-  textAlign?: ResponsiveValue<'left' | 'center' | 'right' | 'justify'>
+  textAlign?: BlockTextAlignment
   children: Array<Descendant>
   type: BlockType
 }

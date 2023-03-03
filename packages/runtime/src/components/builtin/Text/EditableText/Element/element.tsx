@@ -21,6 +21,6 @@ export function Element({ element, ...props }: RenderElementProps) {
     case BlockType.ListItemChild:
       return <BlockElement element={element} {...props} />
     default:
-      return props.children
+      return <span {...props.attributes}>{props.children}</span>
   }
 }
