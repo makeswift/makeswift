@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.7.3
+
+### Patch Changes
+
+- Updated dependencies [e61c4f2]
+  - @makeswift/next-plugin@0.2.4
+
 ## 0.7.2
 
 ### Patch Changes
