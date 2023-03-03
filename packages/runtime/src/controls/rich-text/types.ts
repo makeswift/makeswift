@@ -4,11 +4,6 @@ import { Typography } from '../../api'
 import { LinkControlData } from '../link'
 import { ResponsiveValue } from '../types'
 
-export type TypographyMarkValue = {
-  id: string | null | undefined
-  style: Typography['style']
-}
-
 export const TextType = {
   Typography: 'typography',
   Text: 'text',
@@ -19,7 +14,7 @@ export type TextType = typeof TextType[keyof typeof TextType]
 export type TypographyText = {
   type: typeof TextType.Typography
   text: string
-  typography: TypographyMarkValue
+  typography: Typography
 }
 
 type BaseText = {

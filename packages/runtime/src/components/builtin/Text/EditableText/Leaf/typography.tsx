@@ -1,6 +1,6 @@
 import { CSSObject } from '@emotion/serialize'
 import { RenderLeafProps } from 'slate-react'
-import { Swatch, Typography as TypographyDTO } from '../../../../../api'
+import { Swatch, Typography } from '../../../../../api'
 import { TypographyText } from '../../../../../controls'
 import { DeviceOverride, ResponsiveValue } from '../../../../../prop-controllers'
 import { getTypographyStyleSwatchIds } from '../../../../../prop-controllers/introspection'
@@ -12,32 +12,20 @@ import { isNonNullable } from '../../../../utils/isNonNullable'
 import { responsiveStyle } from '../../../../utils/responsive-style'
 import { ColorValue } from '../../../../utils/types'
 
-type TypographyValue = TypographyDTO['style'][number]['value']
+export type TypographyValue = Typography['style'][number]['value']
 
-export type Typography = {
-  id: string | null | undefined
-  style: TypographyDTO['style']
+type EnhancedColor = {
+  color?: ColorValue
 }
 
-type EnhancedTypographyValue = {
-  fontFamily: string | null
-  lineHeight: number | null
-  letterSpacing: number | null
-  fontWeight: number | null
-  textAlign: string | null
-  uppercase: boolean | null
-  underline: boolean | null
-  strikethrough: boolean | null
-  italic: boolean | null
-  fontSize: { value: number | null; unit: string | null } | null
-  color: ColorValue | null
-}
+type EnhancedTypographyValue = Omit<TypographyValue, keyof EnhancedColor> & EnhancedColor
 
 export type EnhancedTypography = Array<DeviceOverride<EnhancedTypographyValue>>
 
-export function isDeviceOverride(
-  value: TypographyDTO['style'][number],
-): value is DeviceOverride<TypographyValue> {
+export function isDeviceOverride(value: {
+  deviceId: string
+  value: TypographyValue
+}): value is DeviceOverride<TypographyValue> {
   return value.deviceId === 'desktop' || value.deviceId === 'tablet' || value.deviceId === 'mobile'
 }
 
@@ -49,12 +37,10 @@ const withColor =
     const { value, deviceId } = deviceRawTypographyValue
 
     if (value.color == null) {
+      const { color, ...nextValue } = value
       return {
         deviceId,
-        value: {
-          ...value,
-          color: null,
-        },
+        value: nextValue,
       }
     }
     return {

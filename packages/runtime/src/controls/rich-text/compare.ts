@@ -1,6 +1,6 @@
 import { Descendant, Selection } from 'slate'
+import { Typography } from '../../api'
 import { LinkControlData } from '../link'
-import { RichTextTypography } from './dto-types'
 import {
   Text,
   Inline,
@@ -26,7 +26,7 @@ function compareLists<T>(compareFunc: (a: T, b: T) => boolean, a?: T[], b?: T[])
   )
 }
 
-function compareRichTextTypography(a: RichTextTypography, b: RichTextTypography) {
+function compareRichTextTypography(a: Typography, b: Typography) {
   if (a.id !== b.id) return false
 
   return a.style.reduce((acc, curra, index) => {
