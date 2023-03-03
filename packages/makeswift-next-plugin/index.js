@@ -37,7 +37,7 @@ module.exports =
   ({ resolveSymlinks, appOrigin = 'https://app.makeswift.com' } = {}) =>
   (nextConfig = {}) => {
     /** @type {NextConfig} */
-    const enhancedConfig = {
+    let enhancedConfig = {
       ...nextConfig,
       images: {
         ...nextConfig.images,
@@ -116,6 +116,23 @@ module.exports =
       throw new Error(
         'Makeswift requires a minimum Next.js version of 12.2.0. Please upgrade to Next.js version ^12.2.0 if you want to use Next.js v12, or version ^13.0.0 if you want to use Next.js v13.',
       )
+    }
+
+    if (satisfies(nextVersion, '<12.3.0')) {
+      enhancedConfig = {
+        ...enhancedConfig,
+        experimental: {
+          ...enhancedConfig.experimental,
+          images: {
+            ...enhancedConfig.experimental?.images,
+            remotePatterns: [
+              ...(enhancedConfig.experimental?.images?.remotePatterns ?? []),
+              ...NEXT_IMAGE_REMOTE_PATTERNS,
+              ...NEXT_IMAGE_REVIEW_APP_REMOTE_PATTERNS,
+            ],
+          },
+        },
+      }
     }
 
     if (satisfies(nextVersion, '<13.0.0')) {
