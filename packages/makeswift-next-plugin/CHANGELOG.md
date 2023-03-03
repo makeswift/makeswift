@@ -1,5 +1,11 @@
 # @makeswift/next-plugin
 
+## 0.2.4
+
+### Patch Changes
+
+- e61c4f2: Fix images are not loading when using Next.js version `12.2.x`.
+
 ## 0.2.3
 
 ### Patch Changes
