@@ -176,7 +176,7 @@ const Container = forwardRef(function Container(
               switch (variant) {
                 case 'filled':
                   return {
-                    fontFamily: numberFont,
+                    fontFamily: `"${numberFont}"`,
                     color: colorToString(numberColor),
                     background: colorToString(blockColor),
                   }
@@ -185,7 +185,7 @@ const Container = forwardRef(function Container(
                   return {
                     position: 'relative',
                     color: colorToString(numberColor),
-                    fontFamily: numberFont,
+                    fontFamily: `"${numberFont}"`,
 
                     '> span': {
                       position: 'relative',
@@ -219,7 +219,7 @@ const Container = forwardRef(function Container(
 
                 case 'outline':
                   return {
-                    fontFamily: numberFont,
+                    fontFamily: `"${numberFont}"`,
                     color: colorToString(numberColor),
                     background: 'transparent',
                     border: `2px solid ${colorToString(blockColor)}`,
@@ -228,7 +228,7 @@ const Container = forwardRef(function Container(
                 case 'outline-split':
                   return {
                     position: 'relative',
-                    fontFamily: numberFont,
+                    fontFamily: `"${numberFont}"`,
                     color: colorToString(numberColor),
                     border: `2px solid ${colorToString(blockColor)}`,
 
@@ -251,7 +251,7 @@ const Container = forwardRef(function Container(
 
                 default:
                   return {
-                    fontFamily: numberFont,
+                    fontFamily: `"${numberFont}"`,
                     background: 'transparent',
                     color: colorToString(numberColor),
                     paddingTop: 0,
@@ -268,7 +268,7 @@ const Container = forwardRef(function Container(
               labelColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 },
               labelFont = 'sans-serif',
             ]) => ({
-              fontFamily: labelFont,
+              fontFamily: `"${labelFont}"`,
               color: colorToString(labelColor),
             }),
           ),
