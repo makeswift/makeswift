@@ -94,7 +94,10 @@ export class RichTextControl extends PropController<RichTextControlMessage> {
       value: richTextDAOToDTO(editor.children, editor.selection),
     })
 
-    this.editor.onChange = () => {
+    const _onChange = editor.onChange
+    this.editor.onChange = (...params) => {
+      _onChange(...params)
+
       this.send({
         type: RichTextControlMessageType.CHANGE_EDITOR_VALUE,
         value: richTextDAOToDTO(editor.children, editor.selection),

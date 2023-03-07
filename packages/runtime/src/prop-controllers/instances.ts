@@ -1,4 +1,4 @@
-import { Descendant, Editor, Selection } from 'slate'
+import { Editor } from 'slate'
 import { Descriptor, RichTextDescriptor, TableFormFieldsDescriptor, Types } from './descriptors'
 import { BuilderEditMode } from '../state/modules/builder-edit-mode'
 import { BoxModel } from '../state/modules/box-models'
@@ -115,7 +115,10 @@ class RichTextPropController extends PropController<RichTextPropControllerMessag
       value: richTextDAOToDTO(editor.children, editor.selection),
     })
 
-    this.editor.onChange = () => {
+    const _onChange = editor.onChange
+    this.editor.onChange = (...params) => {
+      _onChange(...params)
+
       this.send({
         type: RichTextPropControllerMessageType.CHANGE_EDITOR_VALUE,
         value: richTextDAOToDTO(editor.children, editor.selection),
