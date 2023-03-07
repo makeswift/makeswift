@@ -1,6 +1,6 @@
-import { forwardRef, Ref, useEffect, useImperativeHandle, useMemo, useState } from 'react'
+import { forwardRef, Ref, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 
-import { createEditor } from 'slate'
+import { createEditor, Transforms } from 'slate'
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
 
 import { ElementIDValue, RichTextValue } from '../../../../prop-controllers/descriptors'
@@ -40,9 +40,7 @@ export const EditableText = forwardRef(function EditableText(
     ref,
     () => ({
       getDomNode() {
-        const el = editor?.findDOMNode([])
-
-        return el instanceof Element ? el : null
+        return ReactEditor.toDOMNode(editor, editor)
       },
       getBoxModel() {
         return getBox(ReactEditor.toDOMNode(editor, editor))
