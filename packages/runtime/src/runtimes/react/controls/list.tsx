@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from 'use-sync-external-store'
 import { ListControl, ListControlData, ListControlDefinition } from '../../../controls'
 import { ControlDefinitionValue, ControlValue } from './control'
 
@@ -20,17 +21,25 @@ export function ListControlValue<T extends ListControlDefinition>({
   children,
   control,
 }: ListControlValueProps<T>): JSX.Element {
+  const defaultSubscribe = () => () => {}
+  const controls = useSyncExternalStore(
+    control?.subscribe ?? defaultSubscribe,
+    () => control?.controls,
+    () => control?.controls,
+  )
+
   return (data ?? []).reduce(
-    (renderFn, item) => listControlValue =>
-      (
+    (renderFn, item) => listControlValue => {
+      return (
         <ControlValue
           definition={definition.config.type}
           data={item.value}
-          control={control?.controls.get(item.id)}
+          control={controls?.get(item.id)}
         >
           {value => renderFn([value as ListControlItemValue<T>, ...listControlValue])}
         </ControlValue>
-      ),
+      )
+    },
     children,
   )([])
 }

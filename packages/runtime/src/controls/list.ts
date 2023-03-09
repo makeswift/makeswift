@@ -66,6 +66,7 @@ export class ListControl extends PropController<ListControlMessage> {
   controls: Map<string, AnyPropController>
   descriptor: ListControlDefinition
   send: any
+  listeners: Array<() => void>
 
   constructor(send: any, descriptor: ListControlDefinition, prop: any) {
     super(send)
@@ -73,6 +74,7 @@ export class ListControl extends PropController<ListControlMessage> {
     this.descriptor = descriptor
     this.send = send
     this.controls = new Map<string, AnyPropController>()
+    this.listeners = []
 
     this.setChildrenControls(prop)
   }
@@ -85,7 +87,7 @@ export class ListControl extends PropController<ListControlMessage> {
     }
   }
 
-  setChildrenControls(value: any) {
+  setChildrenControls = (value: any) => {
     const controls = new Map<string, AnyPropController>()
 
     value?.forEach((item: any) => {
@@ -102,9 +104,24 @@ export class ListControl extends PropController<ListControlMessage> {
       controls.set(item.id, control)
     })
 
-    console.log({ controls })
-
     this.controls = controls
+
+    this.emitChange()
+  }
+
+  subscribe = (listener: () => void) => {
+    console.log({ listeners: this.listeners })
+    this.listeners = [...this.listeners, listener]
+
+    return () => {
+      this.listeners = this.listeners.filter(l => l !== listener)
+    }
+  }
+
+  emitChange = () => {
+    for (let listener of this.listeners) {
+      listener()
+    }
   }
 }
 
