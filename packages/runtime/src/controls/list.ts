@@ -55,17 +55,29 @@ export type ListControlMessage = ListControItemControlMessage
 
 export class ListControl extends PropController<ListControlMessage> {
   controls: Map<string, AnyPropController>
+  descriptor: ListControlDefinition
+  send: any
 
   constructor(send: any, descriptor: ListControlDefinition, prop: any) {
     super(send)
 
+    this.setChildrenControls(prop)
+
+    this.descriptor = descriptor
+    this.send = send
+    this.controls = new Map<string, AnyPropController>()
+  }
+
+  recv(): void {}
+
+  setChildrenControls(value: any) {
     const controls = new Map<string, AnyPropController>()
 
-    prop?.forEach((item: any) => {
+    value?.forEach((item: any) => {
       const control = createPropController(
-        descriptor.config.type,
+        this.descriptor.config.type,
         message =>
-          send({
+          this.send({
             type: ListControlMessageType.LIST_CONTROL_ITEM_CONTROL_MESSAGE,
             payload: { message, itemId: item.id },
           }),
@@ -77,8 +89,6 @@ export class ListControl extends PropController<ListControlMessage> {
 
     this.controls = controls
   }
-
-  recv(): void {}
 }
 
 export function copyListData(
