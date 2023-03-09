@@ -1,3 +1,9 @@
+import {
+  AnyPropController,
+  createPropController,
+  PropController,
+  PropControllerMessage,
+} from '../prop-controllers/instances'
 import { CopyContext } from '../state/react-page'
 import { ControlDefinition, ControlDefinitionData } from './control'
 
@@ -34,6 +40,46 @@ export type ListControlItemData<T extends ListControlDefinition> = {
 
 export type ListControlData<T extends ListControlDefinition = ListControlDefinition> =
   ListControlItemData<T>[]
+
+export const ListControlMessageType = {
+  LIST_CONTROL_ITEM_CONTROL_MESSAGE:
+    'makeswift::controls::lists::message::list-control-item-control-message',
+} as const
+
+type ListControItemControlMessage = {
+  type: typeof ListControlMessageType.LIST_CONTROL_ITEM_CONTROL_MESSAGE
+  payload: { message: PropControllerMessage; itemId: string }
+}
+
+export type ListControlMessage = ListControItemControlMessage
+
+export class ListControl extends PropController<ListControlMessage> {
+  controls: Map<string, AnyPropController>
+
+  constructor(send: any, descriptor: ListControlDefinition, prop: any) {
+    super(send)
+
+    const controls = new Map<string, AnyPropController>()
+
+    prop?.forEach((item: any) => {
+      const control = createPropController(
+        descriptor.config.type,
+        message =>
+          send({
+            type: ListControlMessageType.LIST_CONTROL_ITEM_CONTROL_MESSAGE,
+            payload: { message, itemId: item.id },
+          }),
+        item.value,
+      )
+
+      controls.set(item.id, control)
+    })
+
+    this.controls = controls
+  }
+
+  recv(): void {}
+}
 
 export function copyListData(
   definition: ListControlDefinition,

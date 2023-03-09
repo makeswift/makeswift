@@ -590,12 +590,18 @@ function createAndRegisterPropControllers(
       documentKey,
       elementKey,
     )
+    const element = ReactPage.getElement(getState(), documentKey, elementKey)
 
-    if (descriptors == null) return null
+    if (descriptors == null || element == null) return null
+
+    if (ReactPage.isElementReference(element)) return null
 
     const propControllers = Object.entries(descriptors).reduce((acc, [propName, descriptor]) => {
-      const propController = createPropController(descriptor, message =>
-        dispatch(messageBuilderPropController(documentKey, elementKey, propName, message)),
+      const propController = createPropController(
+        descriptor,
+        message =>
+          dispatch(messageBuilderPropController(documentKey, elementKey, propName, message)),
+        element.props[propName],
       ) as PropController
 
       return { ...acc, [propName]: propController }

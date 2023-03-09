@@ -8,6 +8,8 @@ import {
   RichTextControl,
   RichTextControlMessage,
   RichTextControlType,
+  ListControl,
+  ListControlType,
   SlotControl,
   SlotControlMessage,
   SlotControlType,
@@ -189,25 +191,33 @@ export type DescriptorsPropControllers<T extends Record<string, Descriptor>> = {
     : DescriptorPropController<T[K]>
 }
 
-type AnyPropController =
+export type AnyPropController =
   | DefaultPropController
   | RichTextPropController
   | TableFormFieldsPropController
   | SlotControl
   | RichTextControl
+  | ListControl
 
 export function createPropController(
   descriptor: RichTextDescriptor,
   send: Send<RichTextPropControllerMessage>,
+  prop: any,
 ): RichTextPropController
 export function createPropController(
   descriptor: TableFormFieldsDescriptor,
   send: Send<TableFormFieldsMessage>,
+  prop: any,
 ): TableFormFieldsPropController
-export function createPropController(descriptor: Descriptor, send: Send): DefaultPropController
+export function createPropController(
+  descriptor: Descriptor,
+  send: Send,
+  prop: any,
+): DefaultPropController
 export function createPropController<T extends PropControllerMessage>(
   descriptor: Descriptor,
   send: Send<T>,
+  prop: any,
 ): AnyPropController {
   switch (descriptor.type) {
     case Types.RichText:
@@ -221,6 +231,9 @@ export function createPropController<T extends PropControllerMessage>(
 
     case RichTextControlType:
       return new RichTextControl(send as Send<RichTextControlMessage>)
+
+    case ListControlType:
+      return new ListControl(send as Send<unknown>, descriptor, prop)
 
     default:
       return new DefaultPropController(send as Send)
