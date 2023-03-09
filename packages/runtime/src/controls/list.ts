@@ -44,14 +44,23 @@ export type ListControlData<T extends ListControlDefinition = ListControlDefinit
 export const ListControlMessageType = {
   LIST_CONTROL_ITEM_CONTROL_MESSAGE:
     'makeswift::controls::lists::message::list-control-item-control-message',
+  LIST_CONTROL_UPDATE_CHILDREN_CONTROLS:
+    'makeswift::controls::lists::message::update-children-controls-message',
 } as const
 
-type ListControItemControlMessage = {
+type ListControlItemControlMessage = {
   type: typeof ListControlMessageType.LIST_CONTROL_ITEM_CONTROL_MESSAGE
   payload: { message: PropControllerMessage; itemId: string }
 }
 
-export type ListControlMessage = ListControItemControlMessage
+type ListControlUpdateChildrenControlsMessage = {
+  type: typeof ListControlMessageType.LIST_CONTROL_UPDATE_CHILDREN_CONTROLS
+  payload: { value: any }
+}
+
+export type ListControlMessage =
+  | ListControlItemControlMessage
+  | ListControlUpdateChildrenControlsMessage
 
 export class ListControl extends PropController<ListControlMessage> {
   controls: Map<string, AnyPropController>
@@ -61,14 +70,20 @@ export class ListControl extends PropController<ListControlMessage> {
   constructor(send: any, descriptor: ListControlDefinition, prop: any) {
     super(send)
 
-    this.setChildrenControls(prop)
-
     this.descriptor = descriptor
     this.send = send
     this.controls = new Map<string, AnyPropController>()
+
+    this.setChildrenControls(prop)
   }
 
-  recv(): void {}
+  recv = (message: ListControlMessage) => {
+    console.log({ message })
+    switch (message.type) {
+      case ListControlMessageType.LIST_CONTROL_UPDATE_CHILDREN_CONTROLS:
+        this.setChildrenControls(message.payload.value)
+    }
+  }
 
   setChildrenControls(value: any) {
     const controls = new Map<string, AnyPropController>()
@@ -86,6 +101,8 @@ export class ListControl extends PropController<ListControlMessage> {
 
       controls.set(item.id, control)
     })
+
+    console.log({ controls })
 
     this.controls = controls
   }

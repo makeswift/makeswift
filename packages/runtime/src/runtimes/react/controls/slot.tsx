@@ -125,6 +125,7 @@ function SlotPlaceholder({ control }: SlotPlaceholderProps): JSX.Element {
   const [element, setElement] = useState<Element | null>(null)
 
   useEffect(() => {
+    console.log({ element, control })
     if (element == null || control == null) return
 
     return pollBoxModel({
