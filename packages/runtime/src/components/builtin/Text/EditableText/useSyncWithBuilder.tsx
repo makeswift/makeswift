@@ -14,7 +14,7 @@ export function useSyncWithBuilder(editor: Editor, text?: RichTextValue) {
   const [shouldCommit, setShouldCommit] = useState(true)
 
   useEffect(() => {
-    if (shouldCommit && text) {
+    if (false && text) {
       const nextValue = richTextDTOtoDAO(text)
       const nextSelection = richTextDTOtoSelection(text)
       if (
