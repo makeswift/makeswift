@@ -80,7 +80,6 @@ export class ListControl extends PropController<ListControlMessage> {
   }
 
   recv = (message: ListControlMessage) => {
-    console.log({ message })
     switch (message.type) {
       case ListControlMessageType.LIST_CONTROL_UPDATE_CHILDREN_CONTROLS:
         this.setChildrenControls(message.payload.value)
@@ -89,6 +88,8 @@ export class ListControl extends PropController<ListControlMessage> {
 
   setChildrenControls = (value: any) => {
     const controls = new Map<string, AnyPropController>()
+
+    if (value == null || !Array.isArray(value)) return
 
     value?.forEach((item: any) => {
       const control = createPropController(
@@ -110,7 +111,6 @@ export class ListControl extends PropController<ListControlMessage> {
   }
 
   subscribe = (listener: () => void) => {
-    console.log({ listeners: this.listeners })
     this.listeners = [...this.listeners, listener]
 
     return () => {
