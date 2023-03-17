@@ -1,0 +1,2 @@
+export const LIST_ITEM_CHILD_POSITION = 0
+export const LIST_ITEM_LIST_POSITION = 1
