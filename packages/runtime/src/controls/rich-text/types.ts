@@ -40,16 +40,84 @@ export const BlockType = {
 } as const
 export type BlockType = typeof BlockType[keyof typeof BlockType]
 
-const BasicInlineType = {
+export type ParagraphElement = {
+  textAlign?: BlockTextAlignment
+  children: Array<Descendant>
+  type: typeof BlockType.Paragraph
+}
+
+export type Heading1Element = {
+  textAlign?: BlockTextAlignment
+  children: Array<Descendant>
+  type: typeof BlockType.Heading1
+}
+
+export type Heading2Element = {
+  textAlign?: BlockTextAlignment
+  children: Array<Descendant>
+  type: typeof BlockType.Heading2
+}
+
+export type Heading3Element = {
+  textAlign?: BlockTextAlignment
+  children: Array<Descendant>
+  type: typeof BlockType.Heading3
+}
+
+export type Heading4Element = {
+  textAlign?: BlockTextAlignment
+  children: Array<Descendant>
+  type: typeof BlockType.Heading4
+}
+
+export type Heading5Element = {
+  textAlign?: BlockTextAlignment
+  children: Array<Descendant>
+  type: typeof BlockType.Heading5
+}
+
+export type Heading6Element = {
+  textAlign?: BlockTextAlignment
+  children: Array<Descendant>
+  type: typeof BlockType.Heading6
+}
+
+export type BlockQuoteElement = {
+  textAlign?: BlockTextAlignment
+  children: Array<Descendant>
+  type: typeof BlockType.BlockQuote
+}
+
+export type UnorderedListElement = {
+  textAlign?: BlockTextAlignment
+  children: Array<Descendant>
+  type: typeof BlockType.UnorderedList
+}
+
+export type OrderedListElement = {
+  textAlign?: BlockTextAlignment
+  children: Array<Descendant>
+  type: typeof BlockType.OrderedList
+}
+
+export type ListElement = OrderedListElement | UnorderedListElement
+
+export type ListItemElement = {
+  textAlign?: BlockTextAlignment
+  children: Array<Descendant>
+  type: typeof BlockType.ListItem
+}
+
+export type ListItemChildElement = {
+  textAlign?: BlockTextAlignment
+  children: Array<Descendant>
+  type: typeof BlockType.ListItemChild
+}
+
+export const InlineType = {
   Code: 'code',
   SuperScript: 'superscript',
   SubScript: 'subscript',
-} as const
-
-export type BasicInlineType = typeof BasicInlineType[keyof typeof BasicInlineType]
-
-export const InlineType = {
-  ...BasicInlineType,
   Link: 'link',
 } as const
 
@@ -57,25 +125,39 @@ export type InlineType = typeof InlineType[keyof typeof InlineType]
 
 export type BlockTextAlignment = ResponsiveValue<'left' | 'center' | 'right' | 'justify'>
 
-type BaseBlockElement = {
-  textAlign?: BlockTextAlignment
-  children: Array<Descendant>
-  type: BlockType
-}
-
-type BaseInlineElement = {
+type CodeElement = {
   children: Array<Text | Inline>
-  type: BasicInlineType
+  type: typeof InlineType.Code
+}
+type SuperElement = {
+  children: Array<Text | Inline>
+  type: typeof InlineType.SuperScript
+}
+type SubElement = {
+  children: Array<Text | Inline>
+  type: typeof InlineType.SubScript
 }
 
-type LinkInlineElement = {
+type LinkElement = {
   children: Array<Text | Inline>
   type: typeof InlineType.Link
   link: LinkControlData
 }
 
-export type Block = BaseBlockElement
-export type Inline = BaseInlineElement | LinkInlineElement
+export type Block =
+  | ParagraphElement
+  | Heading1Element
+  | Heading2Element
+  | Heading3Element
+  | Heading4Element
+  | Heading5Element
+  | Heading6Element
+  | BlockQuoteElement
+  | ListElement
+  | ListItemElement
+  | ListItemChildElement
+
+export type Inline = CodeElement | SuperElement | SubElement | LinkElement
 
 export type Element = Block | Inline
 
