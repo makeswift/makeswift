@@ -133,8 +133,6 @@ function compareInlineAndText(a: Text | Inline, b: Text | Inline): boolean {
 
 function compareRichTextDescendant(a: Descendant, b: Descendant): boolean {
   if (a.type !== b.type) {
-    console.log('1')
-
     return false
   }
 
