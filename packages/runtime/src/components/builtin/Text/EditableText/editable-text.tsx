@@ -1,7 +1,8 @@
-import { forwardRef, Ref, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
+import { forwardRef, Ref, useEffect, useImperativeHandle, useMemo, useState } from 'react'
 
-import { createEditor, Transforms } from 'slate'
+import { createEditor } from 'slate'
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
+import { withHistory } from 'slate-history'
 
 import { ElementIDValue, RichTextValue } from '../../../../prop-controllers/descriptors'
 import { cx } from '@emotion/css'
@@ -13,6 +14,7 @@ import { BlockType, RichTextDAO, richTextDTOtoDAO, TextType } from '../../../../
 import { Leaf } from './Leaf'
 import { Element } from './Element'
 import { useSyncWithBuilder } from './useSyncWithBuilder'
+import { onKeyDown, withList } from './ListPlugin'
 
 type Props = {
   id?: ElementIDValue
@@ -29,7 +31,7 @@ export const EditableText = forwardRef(function EditableText(
   { id, text, width, margin }: Props,
   ref: Ref<PropControllersHandle<Descriptors>>,
 ) {
-  const [editor] = useState(() => withReact(createEditor()))
+  const [editor] = useState(() => withList(withHistory(withReact(createEditor()))))
   const delaySync = useSyncWithBuilder(editor, text)
 
   const [propControllers, setPropControllers] =
@@ -58,7 +60,13 @@ export const EditableText = forwardRef(function EditableText(
 
   return (
     <Slate editor={editor} value={initialValue} onChange={delaySync}>
-      <Editable id={id} renderLeaf={Leaf} renderElement={Element} className={cx(width, margin)} />
+      <Editable
+        id={id}
+        renderLeaf={Leaf}
+        renderElement={Element}
+        onKeyDown={e => onKeyDown(e, editor)}
+        className={cx(width, margin)}
+      />
     </Slate>
   )
 })
