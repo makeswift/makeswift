@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.7.6
+
+### Patch Changes
+
+- aaeeef4: Disable element from point. This is temporary until the drop zones algorithm is finished.
+- 777d51b: Fix element from point selection issue for nested documents (i.e., global elements).
+
 ## 0.7.5
 
 ### Patch Changes
