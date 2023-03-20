@@ -136,6 +136,28 @@ function getDocumentElements(state: State, documentKey: string): Map<string, Doc
   return normalizeElement(document.rootElement, descriptors)
 }
 
+/**
+ * Returns all document keys sorted by depth, i.e., parent documents come before child documents.
+ *
+ * @todo Make this selector more efficient.
+ */
+export function getDocumentKeysSortedByDepth(state: State): string[] {
+  const documents = Documents.getDocuments(getDocumentsStateSlice(state))
+  const keys = Array.from(documents.keys())
+
+  if (keys.length < 2) return keys
+
+  const elements = new Map<string, Map<string, Documents.Element>>()
+
+  keys.forEach(key => {
+    elements.set(key, getDocumentElements(state, key))
+  })
+
+  keys.sort((a, b) => (elements.get(a)?.has(b) ? -1 : 1))
+
+  return keys
+}
+
 export function getElement(
   state: State,
   documentKey: string,

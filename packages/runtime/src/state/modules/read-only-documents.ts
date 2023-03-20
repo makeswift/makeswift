@@ -43,7 +43,7 @@ export function getInitialState({
   return initialState
 }
 
-function getDocuments(state: State): Map<string, Document> {
+export function getDocuments(state: State): Map<string, Document> {
   return state
 }
 
