@@ -375,12 +375,18 @@ function elementKeysFromElementFromPoint(
       getState(),
       elementFromPoint,
     )
+    const acendingDepthDocumentKeys = ReactPage.getDocumentKeysSortedByDepth(getState())
+    const descendingDepthDocumentKeys = acendingDepthDocumentKeys.slice().reverse()
 
     let currentElement: Element | null = elementFromPoint
     let keys = null
 
     while (currentElement != null) {
-      for (const [documentKey, byElementKey] of elementImperativeHandles) {
+      for (const documentKey of descendingDepthDocumentKeys) {
+        const byElementKey = elementImperativeHandles.get(documentKey)
+
+        if (byElementKey == null) continue
+
         for (const [elementKey, elementImperativeHandle] of byElementKey) {
           if (elementImperativeHandle.getDomNode() === currentElement) {
             return { documentKey, elementKey }
