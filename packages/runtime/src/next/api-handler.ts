@@ -115,7 +115,7 @@ export function MakeswiftApiHandler(
           previewMode: true,
           interactionMode: true,
           clientSideNavigation: true,
-          elementFromPoint: true,
+          elementFromPoint: false,
         })
       }
 
