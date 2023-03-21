@@ -1,6 +1,6 @@
 import { forwardRef, Ref, useEffect, useImperativeHandle, useMemo, useState } from 'react'
 
-import { createEditor } from 'slate'
+import { createEditor, Editor, Selection, Transforms } from 'slate'
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
 import { withHistory } from 'slate-history'
 
@@ -15,6 +15,7 @@ import { Leaf } from './Leaf'
 import { Element } from './Element'
 import { useSyncWithBuilder } from './useSyncWithBuilder'
 import { onKeyDown, withList } from './ListPlugin'
+import { FakeCursor, getSelectionRects, SelectionRect } from './fake-cursor'
 
 type Props = {
   id?: ElementIDValue
@@ -31,7 +32,7 @@ export const EditableText = forwardRef(function EditableText(
   { id, text, width, margin }: Props,
   ref: Ref<PropControllersHandle<Descriptors>>,
 ) {
-  const [editor] = useState(() => withList(withHistory(withReact(createEditor()))))
+  const editor = useMemo(() => withList(withHistory(withReact(createEditor()))), [])
   const delaySync = useSyncWithBuilder(editor, text)
 
   const [propControllers, setPropControllers] =
@@ -58,6 +59,8 @@ export const EditableText = forwardRef(function EditableText(
     controller?.setSlateEditor(editor)
   }, [controller, editor])
 
+  const [fakeCursor, setFakeCursor] = useState<SelectionRect[]>([])
+
   return (
     <Slate editor={editor} value={initialValue} onChange={delaySync}>
       <Editable
@@ -65,8 +68,28 @@ export const EditableText = forwardRef(function EditableText(
         renderLeaf={Leaf}
         renderElement={Element}
         onKeyDown={e => onKeyDown(e, editor)}
+        onFocus={e => {
+          console.log('focus', e)
+        }}
+        onBlur={e => {
+          console.log('blur', editor.selection)
+          const selObj = window.getSelection()
+          console.log({ selObj })
+          if (editor.selection) {
+            Transforms.select(editor, editor.selection)
+          }
+        }}
+        onMouseUp={e => {
+          console.log('onDragEnd')
+
+          const selectionRects = getSelectionRects(editor)
+          console.log({ range: selectionRects })
+
+          setFakeCursor(selectionRects)
+        }}
         className={cx(width, margin)}
       />
+      <FakeCursor selectionRects={fakeCursor} />
     </Slate>
   )
 })
