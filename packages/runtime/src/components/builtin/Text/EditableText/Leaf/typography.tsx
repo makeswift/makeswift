@@ -1,5 +1,5 @@
 import { CSSObject } from '@emotion/serialize'
-import { RenderLeafProps } from 'slate-react'
+import { RenderLeafProps, useFocused } from 'slate-react'
 import { Swatch, Typography } from '../../../../../api'
 import { TypographyText } from '../../../../../controls'
 import { DeviceOverride, ResponsiveValue } from '../../../../../prop-controllers'
@@ -144,8 +144,13 @@ export interface TypographyRenderLeafProps extends RenderLeafProps {
 export function TypographyLeaf({ leaf, children, attributes }: TypographyRenderLeafProps) {
   const enhancedTypography = useEnhancedTypography(leaf.typography)
   const typographyClassName = useTypographyClassName(enhancedTypography)
+
   return (
-    <span {...attributes} className={typographyClassName}>
+    <span
+      {...attributes}
+      className={typographyClassName}
+      style={leaf.selected ? { background: 'rgba(0,0,0,.1)' } : {}}
+    >
       {children}
     </span>
   )

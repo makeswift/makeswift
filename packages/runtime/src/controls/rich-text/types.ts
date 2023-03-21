@@ -15,11 +15,13 @@ export type TypographyText = {
   type: typeof TextType.Typography
   text: string
   typography: Typography
+  selected?: boolean
 }
 
 type BaseText = {
   type: typeof TextType.Text
   text: string
+  selected?: boolean
 }
 
 export type Text = BaseText | TypographyText
