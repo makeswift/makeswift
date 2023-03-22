@@ -1,4 +1,4 @@
-import { Editor } from 'slate'
+import { Editor, Transforms } from 'slate'
 import { Descriptor, RichTextDescriptor, TableFormFieldsDescriptor, Types } from './descriptors'
 import { BuilderEditMode } from '../state/modules/builder-edit-mode'
 import { BoxModel } from '../state/modules/box-models'
@@ -18,6 +18,7 @@ import {
   SlotControlMessage,
   SlotControlType,
 } from '../controls'
+import { ReactEditor } from 'slate-react'
 
 export const RichTextPropControllerMessageType = {
   CHANGE_BUILDER_EDIT_MODE: 'CHANGE_BUILDER_EDIT_MODE',
@@ -98,18 +99,23 @@ class RichTextPropController extends PropController<RichTextPropControllerMessag
   private editor: Editor | null = null
 
   recv(message: RichTextPropControllerMessage): void {
+    if (!this.editor) return
     switch (message.type) {
       case RichTextPropControllerMessageType.CHANGE_BUILDER_EDIT_MODE: {
         switch (message.editMode) {
           case BuilderEditMode.BUILD:
           case BuilderEditMode.INTERACT:
-          // this.editor?.deselect().blur()
-          // break
+            ReactEditor.deselect(this.editor)
+            ReactEditor.blur(this.editor)
         }
         break
       }
       case RichTextPropControllerMessageType.FOCUS: {
-        // this.editor?.focus().moveToRangeOfDocument()
+        ReactEditor.focus(this.editor)
+        Transforms.select(this.editor, {
+          anchor: Editor.start(this.editor, []),
+          focus: Editor.end(this.editor, []),
+        })
         break
       }
     }

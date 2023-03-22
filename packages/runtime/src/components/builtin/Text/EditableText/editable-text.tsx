@@ -1,8 +1,16 @@
-import { forwardRef, Ref, useEffect, useImperativeHandle, useMemo, useState } from 'react'
+import {
+  forwardRef,
+  KeyboardEvent,
+  Ref,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from 'react'
 
 import { createEditor } from 'slate'
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
-import { withHistory } from 'slate-history'
 
 import { ElementIDValue, RichTextValue } from '../../../../prop-controllers/descriptors'
 import { cx } from '@emotion/css'
@@ -15,6 +23,9 @@ import { Leaf } from './Leaf'
 import { Element } from './Element'
 import { useSyncWithBuilder } from './useSyncWithBuilder'
 import { onKeyDown, withList } from './ListPlugin'
+import isHotkey from 'is-hotkey'
+import { useBuilderEditMode } from '../../../../runtimes/react'
+import { BuilderEditMode } from '../../../../state/modules/builder-edit-mode'
 
 type Props = {
   id?: ElementIDValue
@@ -31,8 +42,9 @@ export const EditableText = forwardRef(function EditableText(
   { id, text, width, margin }: Props,
   ref: Ref<PropControllersHandle<Descriptors>>,
 ) {
-  const [editor] = useState(() => withList(withHistory(withReact(createEditor()))))
+  const [editor] = useState(() => withList(withReact(createEditor())))
   const delaySync = useSyncWithBuilder(editor, text)
+  const editMode = useBuilderEditMode()
 
   const [propControllers, setPropControllers] =
     useState<DescriptorsPropControllers<Descriptors> | null>(null)
@@ -58,14 +70,30 @@ export const EditableText = forwardRef(function EditableText(
     controller?.setSlateEditor(editor)
   }, [controller, editor])
 
+  const handleFocus = useCallback(() => {
+    controller?.focus()
+  }, [controller])
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (isHotkey('mod+shift+z', e)) return controller?.redo()
+      if (isHotkey('mod+z', e)) return controller?.undo()
+      if (isHotkey('escape')(e)) return controller?.blur()
+      onKeyDown(e, editor)
+    },
+    [controller, editor],
+  )
+
   return (
     <Slate editor={editor} value={initialValue} onChange={delaySync}>
       <Editable
         id={id}
         renderLeaf={Leaf}
         renderElement={Element}
-        onKeyDown={e => onKeyDown(e, editor)}
+        onKeyDown={handleKeyDown}
+        onFocus={handleFocus}
         className={cx(width, margin)}
+        readOnly={editMode === BuilderEditMode.INTERACT}
       />
     </Slate>
   )
