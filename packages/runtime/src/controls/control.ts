@@ -29,6 +29,7 @@ export type ControlDefinition =
   | ListControlDefinition<any>
   | LinkControlDefinition
   | SlotControlDefinition
+  | ShapeControlDefinition
 
 export type ControlDefinitionData<T extends ControlDefinition> = T extends CheckboxControlDefinition
   ? CheckboxControlData
