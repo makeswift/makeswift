@@ -205,7 +205,11 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
           case ListControlType:
           case LinkControlType:
             return (
-              <ControlValue definition={descriptor} data={props[propName]}>
+              <ControlValue
+                definition={descriptor}
+                data={props[propName]}
+                control={propControllers?.[propName]}
+              >
                 {value => renderFn({ ...propsValue, [propName]: value })}
               </ControlValue>
             )

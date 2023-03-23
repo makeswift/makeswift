@@ -2,11 +2,12 @@ import { CopyContext } from '../state/react-page'
 import { ControlDefinition, ControlDefinitionData } from './control'
 
 import { copy as controlCopy } from './control'
+import { SlotControlDefinition } from './slot'
 
 export const ShapeControlType = 'makeswift::controls::shape'
 
 type ShapeControlConfig = {
-  type: Record<string, ControlDefinition>
+  type: Record<string, Exclude<ControlDefinition, SlotControlDefinition>>
 }
 
 export type ShapeControlDefinition<C extends ShapeControlConfig = ShapeControlConfig> = {

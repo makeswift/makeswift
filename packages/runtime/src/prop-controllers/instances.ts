@@ -5,6 +5,9 @@ import { Descriptor, RichTextDescriptor, TableFormFieldsDescriptor, Types } from
 import { BuilderEditMode } from '../state/modules/builder-edit-mode'
 import { BoxModel } from '../state/modules/box-models'
 import {
+  ListControl,
+  ListControlMessage,
+  ListControlType,
   RichTextControl,
   RichTextControlMessage,
   RichTextControlType,
@@ -67,6 +70,7 @@ export type PropControllerMessage =
   | TableFormFieldsMessage
   | SlotControlMessage
   | RichTextControlMessage
+  | ListControlMessage
 
 export type Send<T = PropControllerMessage> = (message: T) => void
 
@@ -189,12 +193,13 @@ export type DescriptorsPropControllers<T extends Record<string, Descriptor>> = {
     : DescriptorPropController<T[K]>
 }
 
-type AnyPropController =
+export type AnyPropController =
   | DefaultPropController
   | RichTextPropController
   | TableFormFieldsPropController
   | SlotControl
   | RichTextControl
+  | ListControl
 
 export function createPropController(
   descriptor: RichTextDescriptor,
@@ -221,6 +226,9 @@ export function createPropController<T extends PropControllerMessage>(
 
     case RichTextControlType:
       return new RichTextControl(send as Send<RichTextControlMessage>)
+
+    case ListControlType:
+      return new ListControl(send as Send<ListControlMessage>, descriptor)
 
     default:
       return new DefaultPropController(send as Send)
