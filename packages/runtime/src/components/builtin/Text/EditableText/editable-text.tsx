@@ -19,8 +19,8 @@ import { Descriptors } from '../../../../runtimes/react/controls/rich-text'
 import { getBox } from '../../../../box-model'
 import { PropControllersHandle } from '../../../../state/modules/prop-controller-handles'
 import { BlockType, RichTextDAO, richTextDTOtoDAO, TextType } from '../../../../controls'
-import { Leaf } from './Leaf'
-import { Element } from './Element'
+import { Leaf } from '../components/Leaf'
+import { Element } from '../components/Element'
 import { useSyncWithBuilder } from './useSyncWithBuilder'
 import { onKeyDown, withList } from './ListPlugin'
 import isHotkey from 'is-hotkey'
@@ -98,3 +98,5 @@ export const EditableText = forwardRef(function EditableText(
     </Slate>
   )
 })
+
+export default EditableText
