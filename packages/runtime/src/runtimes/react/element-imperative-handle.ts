@@ -18,9 +18,10 @@ export class ElementImperativeHandle<
     const current = this.getCurrent()
 
     if (current === null) this.setPropControllers(null)
-    else if (this.lastPropControllers !== null) this.setPropControllers(this.lastPropControllers)
 
     this.getCurrent = getCurrent
+
+    if (this.lastPropControllers !== null) this.setPropControllers(this.lastPropControllers)
   }
 
   getBoxModel(): BoxModel | null {
