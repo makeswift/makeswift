@@ -8,7 +8,7 @@ import {
   ComponentPropsWithoutRef,
 } from 'react'
 import { motion, useAnimation } from 'framer-motion'
-import { useGesture } from 'react-use-gesture'
+import { useGesture } from '@use-gesture/react'
 import { wrap } from '@popmotion/popcorn'
 
 import { colorToString } from '../../utils/colorToString'
@@ -125,9 +125,9 @@ const Carousel = forwardRef(function Carousel(
   const animation = useAnimation({ x: 0, transition: { type: 'spring', stiffness: 100 } })
   const bindPage = useGesture(
     {
-      onDrag: ({ movement: [mx], delta: [dx], velocity }) => {
+      onDrag: ({ movement: [mx], delta: [dx], velocity: [vx] }) => {
         animation.start({ x: mx })
-        swipe.current = swipePower(dx, velocity)
+        swipe.current = swipePower(dx, vx)
       },
       onDragEnd: () => {
         animation.start({ x: 0 })
@@ -320,6 +320,8 @@ const Carousel = forwardRef(function Carousel(
       {/* NOTE: We set height to 100% here to fix an issue on IE11 where the child height of a flex column extends too far */}
       <div className={useStyle({ position: 'relative', height: '100%' })}>
         <div className={clipMaskClassName}>
+          {/* https://github.com/framer/motion/issues/1723 */}
+          {/* @ts-expect-error: React HTMLElement typings conflict with motion components */}
           <motion.div {...bindPage()} className={pageClassName} animate={animation}>
             <motion.div
               className={reelClassName}
