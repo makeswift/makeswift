@@ -10,7 +10,7 @@ import { ShapeControlData, ShapeControlDefinition, copyShapeData, ShapeControlTy
 import { TextAreaControlData, TextAreaControlDefinition } from './text-area'
 import { TextInputControlData, TextInputControlDefinition } from './text-input'
 import { copyStyleData, StyleControlType } from './style'
-import { copySlotData, SlotControlType } from './slot'
+import { copySlotData, SlotControlDefinition, SlotControlType } from './slot'
 
 import { Descriptor, Types } from '../prop-controllers/descriptors'
 import { copy as propControllerCopy } from '../prop-controllers/copy'
@@ -28,6 +28,7 @@ export type ControlDefinition =
   | ShapeControlDefinition
   | ListControlDefinition<any>
   | LinkControlDefinition
+  | SlotControlDefinition
 
 export type ControlDefinitionData<T extends ControlDefinition> = T extends CheckboxControlDefinition
   ? CheckboxControlData
