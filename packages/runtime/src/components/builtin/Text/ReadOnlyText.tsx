@@ -1,15 +1,21 @@
 import { cx } from '@emotion/css'
-import { ComponentPropsWithoutRef, ForwardedRef, forwardRef, ReactNode } from 'react'
-import type { BlockJSON, DocumentJSON, InlineJSON, MarkJSON, NodeJSON, TextJSON } from 'slate'
-import type {
-  ElementIDValue,
-  LinkValue,
-  RichTextValue,
-} from '../../../prop-controllers/descriptors'
+import { ForwardedRef, forwardRef } from 'react'
+import { Descendant } from 'slate'
+import {
+  Block,
+  BlockType,
+  Inline,
+  InlineType,
+  richTextDTOtoDAO,
+  Text,
+  TextType,
+  TypographyText,
+} from '../../../controls'
+import type { ElementIDValue, RichTextValue } from '../../../prop-controllers/descriptors'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { Link } from '../../shared/Link'
-import DeviceOverrideBlock from './components/RichTextEditor/components/Block'
-import DeviceOverrideMark from './components/RichTextEditor/components/Mark'
+import { responsiveStyle } from '../../utils/responsive-style'
+import useEnhancedTypography, { useTypographyClassName } from './components/Leaf/typography'
 
 type Props = {
   id?: ElementIDValue
@@ -22,16 +28,10 @@ const ReadOnlyText = forwardRef(function ReadOnlyText(
   { id, text, width, margin }: Props,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
-  // NOTE: Adding `object: 'document'` here is done to support some old bad data that didn't have
-  // the `object` field in the document node. This was due to the value not being passed in the
-  // `Props.RichText` preset.
-  const document: DocumentJSON | null =
-    text?.document == null ? null : { ...text.document, object: 'document' }
-  const plaintext = document == null ? '' : getNodeText(document)
-
+  const descendants = text == null ? '' : richTextDTOtoDAO(text)
   return (
     <div ref={ref} id={id} className={cx(width, margin)}>
-      {plaintext === '' ? <Placeholder /> : <Node {...document} />}
+      {descendants === '' ? <Placeholder /> : <Descendants descendants={descendants} />}
     </div>
   )
 })
@@ -55,150 +55,187 @@ function Placeholder({ text = 'Write some text...' }: { text?: string }) {
   )
 }
 
-function Node(props: NodeJSON) {
-  switch (props.object) {
-    case 'document':
-      return <Document {...props} />
-
-    case 'block':
-      return <Block {...props} />
-
-    case 'inline':
-      return <Inline {...props} />
-
-    case 'text':
-      return <Text {...props} />
-
-    default:
-      return null
-  }
+export interface TextProps {
+  descendant: Text
 }
 
-function Document({ nodes }: DocumentJSON) {
-  return (
-    <>
-      {nodes?.map((node, idx) => (
-        <Node key={idx.toString()} {...node} />
-      ))}
-    </>
-  )
+export function TextElement({ descendant }: TextProps) {
+  return <span>{descendant.text}</span>
 }
 
-type OrderedListProps = ComponentPropsWithoutRef<'ol'>
-
-function OrderedList(props: OrderedListProps) {
-  return <ol className="ordered-list" {...props} style={{ listStylePosition: 'inside' }} />
+export interface TypographyProps {
+  descendant: TypographyText
 }
 
-type UnorderedListProps = ComponentPropsWithoutRef<'ul'>
+export function TypographyElement({ descendant }: TypographyProps) {
+  const enhancedTypography = useEnhancedTypography(descendant.typography)
+  const typographyClassName = useTypographyClassName(enhancedTypography)
 
-function UnorderedList(props: UnorderedListProps) {
-  return <ul className="unordered-list" {...props} style={{ listStylePosition: 'inside' }} />
+  return <span className={typographyClassName}>{descendant.text}</span>
 }
 
-type ListItemProps = ComponentPropsWithoutRef<'li'>
-
-function ListItem(props: ListItemProps) {
-  return <li className="list-item" {...props} />
+export interface InlineProps {
+  descendant: Inline
 }
 
-type ListItemChildProps = ComponentPropsWithoutRef<'span'>
-
-function ListItemChild(props: ListItemChildProps) {
-  return <span className="list-item-child" {...props} />
-}
-
-function Block({ type, data, nodes }: BlockJSON) {
-  const component = {
-    paragraph: 'p',
-    'heading-one': 'h1',
-    'heading-two': 'h2',
-    'heading-three': 'h3',
-    'heading-four': 'h4',
-    'heading-five': 'h5',
-    'heading-six': 'h6',
-    blockquote: 'blockquote',
-    'ordered-list': OrderedList,
-    'unordered-list': UnorderedList,
-    'list-item': ListItem,
-    'list-item-child': ListItemChild,
-  }[type]
-
-  return (
-    <DeviceOverrideBlock as={component} textAlign={data?.textAlign}>
-      {nodes?.map((node, idx) => (
-        <Node key={idx.toString()} {...node} />
-      ))}
-    </DeviceOverrideBlock>
-  )
-}
-
-function Inline({ type, nodes, data }: InlineJSON) {
-  const children = nodes?.map((node, idx) => <Node key={idx.toString()} {...node} />)
+function InlineElement({ descendant }: InlineProps) {
   const linkClassName = useStyle({ textDecoration: 'none' })
 
-  switch (type) {
-    case 'code':
-      return <code>{children}</code>
-
-    case 'superscript':
-      return <sup>{children}</sup>
-
-    case 'subscript':
-      return <sub>{children}</sub>
-
-    case 'link':
+  switch (descendant.type) {
+    case InlineType.Code:
       return (
-        <Link className={linkClassName} link={data as LinkValue | undefined}>
-          {children}
+        <code>
+          <Descendants descendants={descendant.children} />
+        </code>
+      )
+
+    case InlineType.SuperScript:
+      return (
+        <sup>
+          <Descendants descendants={descendant.children} />
+        </sup>
+      )
+
+    case InlineType.SubScript:
+      return (
+        <sub>
+          <Descendants descendants={descendant.children} />
+        </sub>
+      )
+
+    case InlineType.Link:
+      return (
+        <Link className={linkClassName} link={descendant.link}>
+          <Descendants descendants={descendant.children} />
         </Link>
       )
-
-    default:
-      return <>{children}</>
   }
 }
 
-function Text({ marks, text = '' }: TextJSON) {
+export interface BlockProps {
+  descendant: Block
+}
+
+export function BlockElement({ descendant }: BlockProps) {
+  const blockStyles = [
+    useStyle({ margin: 0 }),
+    useStyle(responsiveStyle([descendant.textAlign], ([textAlign = 'left']) => ({ textAlign }))),
+  ]
+
+  switch (descendant.type) {
+    case BlockType.Paragraph:
+      return (
+        <p className={cx(...blockStyles)}>
+          <Descendants descendants={descendant.children} />
+        </p>
+      )
+    case BlockType.Heading1:
+      return (
+        <h1 className={cx(...blockStyles)}>
+          <Descendants descendants={descendant.children} />
+        </h1>
+      )
+    case BlockType.Heading2:
+      return (
+        <h2 className={cx(...blockStyles)}>
+          <Descendants descendants={descendant.children} />
+        </h2>
+      )
+    case BlockType.Heading3:
+      return (
+        <h3 className={cx(...blockStyles)}>
+          <Descendants descendants={descendant.children} />
+        </h3>
+      )
+    case BlockType.Heading4:
+      return (
+        <h4 className={cx(...blockStyles)}>
+          <Descendants descendants={descendant.children} />
+        </h4>
+      )
+    case BlockType.Heading5:
+      return (
+        <h5 className={cx(...blockStyles)}>
+          <Descendants descendants={descendant.children} />
+        </h5>
+      )
+    case BlockType.Heading6:
+      return (
+        <h6 className={cx(...blockStyles)}>
+          <Descendants descendants={descendant.children} />
+        </h6>
+      )
+    case BlockType.BlockQuote:
+      return (
+        <blockquote
+          className={cx(
+            ...blockStyles,
+            useStyle({
+              padding: '0.5em 10px',
+              fontSize: '1.25em',
+              fontWeight: '300',
+              borderLeft: '5px solid rgba(0, 0, 0, 0.1)',
+            }),
+          )}
+        >
+          <Descendants descendants={descendant.children} />
+        </blockquote>
+      )
+    case BlockType.OrderedList:
+      return (
+        <ol className={cx(...blockStyles)} style={{ listStylePosition: 'inside' }}>
+          <Descendants descendants={descendant.children} />
+        </ol>
+      )
+    case BlockType.UnorderedList:
+      return (
+        <ul className={cx(...blockStyles)} style={{ listStylePosition: 'inside' }}>
+          <Descendants descendants={descendant.children} />
+        </ul>
+      )
+    case BlockType.ListItem:
+      return (
+        <li className={cx(...blockStyles)}>
+          <Descendants descendants={descendant.children} />
+        </li>
+      )
+    case BlockType.ListItemChild:
+      return (
+        <span className={cx(...blockStyles)}>
+          <Descendants descendants={descendant.children} />
+        </span>
+      )
+  }
+}
+
+function Descendants({ descendants }: { descendants: Descendant[] }) {
   return (
     <>
-      {(marks ?? []).reduce(
-        (element, mark) => (
-          <Mark {...mark}>{element}</Mark>
-        ),
-        <>{text === '' ? '\uFEFF' : text}</>,
-      )}
+      {descendants.map(d => {
+        switch (d.type) {
+          case TextType.Typography:
+            return <TypographyElement descendant={d} />
+          case TextType.Text:
+            return <TextElement descendant={d} />
+          case InlineType.Link:
+          case InlineType.Code:
+          case InlineType.SubScript:
+          case InlineType.SuperScript:
+            return <InlineElement descendant={d} />
+          case BlockType.Heading1:
+          case BlockType.Heading2:
+          case BlockType.Heading3:
+          case BlockType.BlockQuote:
+          case BlockType.Paragraph:
+          case BlockType.OrderedList:
+          case BlockType.UnorderedList:
+          case BlockType.ListItem:
+          case BlockType.ListItemChild:
+            return <BlockElement descendant={d} />
+          default:
+            return null
+        }
+      })}
     </>
   )
-}
-
-const TYPOGRAPHY_MARK_TYPE = 'typography'
-
-function Mark({ type, children, data }: MarkJSON & { children: ReactNode }) {
-  if (type !== TYPOGRAPHY_MARK_TYPE) return <>{children}</>
-
-  return <DeviceOverrideMark value={data?.value}>{children}</DeviceOverrideMark>
-}
-
-function getNodeText(node: NodeJSON): string {
-  switch (node.object) {
-    case 'document':
-      return node?.nodes?.map(node => getNodeText(node)).join('\n') ?? ''
-
-    case 'block':
-      return (
-        node?.nodes
-          ?.map(node => getNodeText(node))
-          .join(node.nodes.every(node => node.object === 'block') ? '\n' : '') ?? ''
-      )
-
-    case 'inline':
-      return node?.nodes?.map(node => getNodeText(node)).join('') ?? ''
-
-    case 'text':
-      return node.text ?? ''
-
-    default:
-      return ''
-  }
 }

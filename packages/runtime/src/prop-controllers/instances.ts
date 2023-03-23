@@ -1,6 +1,4 @@
-import { Editor } from 'slate-react'
-import { ValueJSON } from 'slate'
-import { OnChangeParam } from 'slate-react'
+import { Editor, Transforms } from 'slate'
 import { Descriptor, RichTextDescriptor, TableFormFieldsDescriptor, Types } from './descriptors'
 import { BuilderEditMode } from '../state/modules/builder-edit-mode'
 import { BoxModel } from '../state/modules/box-models'
@@ -14,10 +12,13 @@ import {
   ShapeControl,
   ShapeControlMessage,
   ShapeControlType,
+  richTextDAOToDTO,
+  RichTextDTO,
   SlotControl,
   SlotControlMessage,
   SlotControlType,
 } from '../controls'
+import { ReactEditor } from 'slate-react'
 
 export const RichTextPropControllerMessageType = {
   CHANGE_BUILDER_EDIT_MODE: 'CHANGE_BUILDER_EDIT_MODE',
@@ -37,12 +38,12 @@ type ChangeBuilderEditModeRichTextPropControllerMessage = {
 
 type InitializeEditorRichTextPropControllerMessage = {
   type: typeof RichTextPropControllerMessageType.INITIALIZE_EDITOR
-  value: ValueJSON
+  value: RichTextDTO
 }
 
 type ChangeEditorValueRichTextPropControllerMessage = {
   type: typeof RichTextPropControllerMessageType.CHANGE_EDITOR_VALUE
-  value: ValueJSON
+  value: RichTextDTO
 }
 
 type FocusRichTextPropControllerMessage = { type: typeof RichTextPropControllerMessageType.FOCUS }
@@ -98,18 +99,23 @@ class RichTextPropController extends PropController<RichTextPropControllerMessag
   private editor: Editor | null = null
 
   recv(message: RichTextPropControllerMessage): void {
+    if (!this.editor) return
     switch (message.type) {
       case RichTextPropControllerMessageType.CHANGE_BUILDER_EDIT_MODE: {
         switch (message.editMode) {
           case BuilderEditMode.BUILD:
           case BuilderEditMode.INTERACT:
-            this.editor?.deselect().blur()
-            break
+            ReactEditor.deselect(this.editor)
+            ReactEditor.blur(this.editor)
         }
         break
       }
       case RichTextPropControllerMessageType.FOCUS: {
-        this.editor?.focus().moveToRangeOfDocument()
+        ReactEditor.focus(this.editor)
+        Transforms.select(this.editor, {
+          anchor: Editor.start(this.editor, []),
+          focus: Editor.end(this.editor, []),
+        })
         break
       }
     }
@@ -120,15 +126,23 @@ class RichTextPropController extends PropController<RichTextPropControllerMessag
 
     this.send({
       type: RichTextPropControllerMessageType.INITIALIZE_EDITOR,
-      value: editor.value.toJSON({ preserveSelection: false }),
+      value: richTextDAOToDTO(editor.children, editor.selection),
     })
-  }
 
-  onChange(change: OnChangeParam) {
-    this.send({
-      type: RichTextPropControllerMessageType.CHANGE_EDITOR_VALUE,
-      value: change.value.toJSON({ preserveSelection: true }),
-    })
+    const _onChange = editor.onChange
+    this.editor.onChange = options => {
+      _onChange(options)
+
+      // if onChange is local then it will include an operation(s)
+      // that is the only case in which we want to push updates
+      // this prevent infinite loops that can occur when collaborating
+      if (options?.operation != null) {
+        this.send({
+          type: RichTextPropControllerMessageType.CHANGE_EDITOR_VALUE,
+          value: richTextDAOToDTO(editor.children, editor.selection),
+        })
+      }
+    }
   }
 
   focus() {
