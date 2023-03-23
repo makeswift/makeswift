@@ -1,4 +1,3 @@
-import { InlineJSON, MarkJSON, NodeJSON } from 'slate'
 import {
   BackgroundsValue,
   BorderValue,
@@ -21,6 +20,9 @@ import {
   ColorControlType,
   ImageControlData,
   ImageControlType,
+  InlineJSON,
+  MarkJSON,
+  NodeJSON,
   SlotControlData,
   SlotControlType,
 } from '../controls'
