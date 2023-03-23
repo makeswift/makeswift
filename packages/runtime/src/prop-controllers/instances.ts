@@ -11,6 +11,9 @@ import {
   RichTextControl,
   RichTextControlMessage,
   RichTextControlType,
+  ShapeControl,
+  ShapeControlMessage,
+  ShapeControlType,
   SlotControl,
   SlotControlMessage,
   SlotControlType,
@@ -71,6 +74,7 @@ export type PropControllerMessage =
   | SlotControlMessage
   | RichTextControlMessage
   | ListControlMessage
+  | ShapeControlMessage
 
 export type Send<T = PropControllerMessage> = (message: T) => void
 
@@ -200,6 +204,7 @@ export type AnyPropController =
   | SlotControl
   | RichTextControl
   | ListControl
+  | ShapeControl
 
 export function createPropController(
   descriptor: RichTextDescriptor,
@@ -229,6 +234,9 @@ export function createPropController<T extends PropControllerMessage>(
 
     case ListControlType:
       return new ListControl(send as Send<ListControlMessage>, descriptor)
+
+    case ShapeControlType:
+      return new ShapeControl(send as Send<ShapeControlMessage>, descriptor)
 
     default:
       return new DefaultPropController(send as Send)
