@@ -26,6 +26,7 @@ import {
   SelectControlData,
   SelectControlDefinition,
   SelectControlType,
+  ShapeControl,
   ShapeControlData,
   ShapeControlDefinition,
   ShapeControlType,
@@ -197,7 +198,11 @@ export function ControlValue<T extends ControlDefinition>({
 
     case ShapeControlType:
       return (
-        <ShapeControlValue definition={definition} data={data as ShapeControlData}>
+        <ShapeControlValue
+          definition={definition}
+          data={data as ShapeControlData}
+          control={control as ShapeControl}
+        >
           {value => children(value as ControlDefinitionValue<T>)}
         </ShapeControlValue>
       )
