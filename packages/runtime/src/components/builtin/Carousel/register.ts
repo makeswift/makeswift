@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic'
-import uuid from 'uuid/v4'
+import { v4 as uuid } from 'uuid'
 
 import { forwardNextDynamicRef } from '../../../next'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
