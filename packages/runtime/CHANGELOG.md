@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.7.7
+
+### Patch Changes
+
+- 54ecf45: Make `ShapeControl` composable.
+- 7335423: Make `ListControl` composable.
+
 ## 0.7.6
 
 ### Patch Changes
