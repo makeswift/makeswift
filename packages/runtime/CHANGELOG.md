@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.7.10
+
+### Patch Changes
+
+- 40e3bf9: Fix `Text` element not editable when placed inside a `ListControl` or `ShapeControl`.
+
 ## 0.7.9
 
 ### Patch Changes
