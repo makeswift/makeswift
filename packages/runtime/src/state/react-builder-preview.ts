@@ -9,7 +9,6 @@ import {
   Store as ReduxStore,
 } from 'redux'
 import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk'
-import isHotkey from 'is-hotkey'
 import Router from 'next/router'
 
 import deepEqual from '../utils/deepEqual'
@@ -43,7 +42,6 @@ import {
   setIsInBuilder,
   handleWheel,
   handlePointerMove,
-  setBuilderEditMode,
   changePathnameStart,
   changePathnameComplete,
   elementFromPointChange,
@@ -342,29 +340,6 @@ function startMeasuringDocumentElement(): ThunkAction<() => void, unknown, unkno
   }
 }
 
-function startHandlingKeyDownEvent(): ThunkAction<() => void, State, unknown, Action> {
-  return (dispatch, getState) => {
-    window.document.body.addEventListener('keydown', handle)
-
-    return () => {
-      window.document.body.removeEventListener('keydown', handle)
-    }
-
-    function handle(event: KeyboardEvent) {
-      if (event.defaultPrevented) return
-
-      if (ReactPage.getBuilderEditMode(getState()) !== BuilderEditMode.BuilderEditMode.INTERACT) {
-        return
-      }
-
-      if (isHotkey('escape')(event)) {
-        window.parent.focus()
-        dispatch(setBuilderEditMode(BuilderEditMode.BuilderEditMode.BUILD))
-      }
-    }
-  }
-}
-
 function elementKeysFromElementFromPoint(
   elementFromPoint: Element | null,
 ): ThunkAction<{ documentKey: string; elementKey: string } | null, State, unknown, Action> {
@@ -435,7 +410,6 @@ export function initialize(): ThunkAction<() => void, State, unknown, Action> {
     const stopHandlingFocusEvent = dispatch(startHandlingFocusEvents())
     const unlockDocumentScroll = dispatch(lockDocumentScroll())
     const stopHandlingPointerMoveEvent = dispatch(startHandlingPointerMoveEvent())
-    const stopHandlingKeyDownEvent = dispatch(startHandlingKeyDownEvent())
     const stopPollingElementFromPoint = dispatch(startPollingElementFromPoint())
     dispatch(setIsInBuilder(true))
 
@@ -445,7 +419,6 @@ export function initialize(): ThunkAction<() => void, State, unknown, Action> {
       stopHandlingFocusEvent()
       unlockDocumentScroll()
       stopHandlingPointerMoveEvent()
-      stopHandlingKeyDownEvent()
       stopPollingElementFromPoint()
       dispatch(setIsInBuilder(false))
     }
