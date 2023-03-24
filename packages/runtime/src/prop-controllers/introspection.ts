@@ -21,8 +21,12 @@ import {
   ImageControlData,
   ImageControlType,
   InlineJSON,
+  ListControlData,
+  ListControlType,
   MarkJSON,
   NodeJSON,
+  ShapeControlData,
+  ShapeControlType,
   SlotControlData,
   SlotControlType,
 } from '../controls'
@@ -41,6 +45,19 @@ export function getElementChildren<T extends Data>(
 
     case SlotControlType:
       return (prop as SlotControlData).elements
+
+    case ListControlType:
+      return (prop as ListControlData).flatMap(({ value }) =>
+        getElementChildren(descriptor.config.type, value),
+      )
+
+    case ShapeControlType: {
+      const shapeControlData = prop as ShapeControlData
+
+      return Object.keys(shapeControlData).flatMap(key =>
+        getElementChildren(descriptor.config.type[key], shapeControlData[key]),
+      )
+    }
 
     default:
       return []
