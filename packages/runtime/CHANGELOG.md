@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- 5482d7c: Remove `escape` shortcut during interaction mode. This means to get out of interaction mode you need to click the Move (Pointer) button. We remove this because the `escape` shortcut could interfere with users code.
+- 5482d7c: Remove `escape` shortcut during interaction mode. This means to get out of interaction mode you need to click the Move (Pointer) button. We remove this because the `escape` shortcut could interfere with user's code.
 
 ## 0.7.8
 
