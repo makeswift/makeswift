@@ -47,7 +47,7 @@ export class ShapeControl<
   descriptor: ShapeControlDefinition
   send: Send<ShapeControlMessage>
 
-  constructor(send: any, descriptor: T) {
+  constructor(send: Send<ShapeControlMessage>, descriptor: T) {
     super(send)
 
     this.descriptor = descriptor
