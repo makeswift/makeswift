@@ -1,5 +1,5 @@
 import { Editor, Transforms, Path, Node } from 'slate'
-import { BlockType } from '../../../../../../controls'
+import { BlockType } from '../../../controls'
 import { LIST_ITEM_CHILD_POSITION, LIST_ITEM_LIST_POSITION } from '../constants'
 import { EditorUtils } from './utils/editor'
 import { filterForSubtreeRoots } from './utils/filterForSubtreeRoots'

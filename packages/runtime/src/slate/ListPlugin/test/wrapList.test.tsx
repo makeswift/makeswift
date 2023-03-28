@@ -4,7 +4,7 @@
 import { TestEditor, jsx } from './slate-test-helper'
 import { List } from '..'
 import { describe, it, expect } from 'vitest'
-import { BlockType } from '../../../../../../controls'
+import { BlockType } from '../../../controls'
 
 describe('Wrap List', () => {
   it('WHEN wrapList on Paragraph THEN turns in to an Unordered List', () => {

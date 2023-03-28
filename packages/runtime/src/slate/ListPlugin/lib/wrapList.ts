@@ -1,5 +1,5 @@
 import { Editor, Element, Transforms } from 'slate'
-import { BlockType } from '../../../../../../controls'
+import { BlockType } from '../../../controls'
 import { ElementUtils } from './utils/element'
 
 type WrapListOptions = {

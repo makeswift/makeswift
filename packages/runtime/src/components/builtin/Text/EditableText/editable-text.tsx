@@ -22,7 +22,7 @@ import { BlockType, RichTextDAO, richTextDTOtoDAO, TextType } from '../../../../
 import { Leaf } from '../components/Leaf'
 import { Element } from '../components/Element'
 import { useSyncWithBuilder } from './useSyncWithBuilder'
-import { onKeyDown, withList } from './ListPlugin'
+import { onKeyDown, withList } from '../../../../slate/ListPlugin'
 import isHotkey from 'is-hotkey'
 import { useBuilderEditMode } from '../../../../runtimes/react'
 import { BuilderEditMode } from '../../../../state/modules/builder-edit-mode'

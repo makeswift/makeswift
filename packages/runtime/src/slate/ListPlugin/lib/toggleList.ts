@@ -1,5 +1,5 @@
 import { Editor, Node, Path, Transforms } from 'slate'
-import { BlockType } from '../../../../../../controls'
+import { BlockType } from '../../../controls'
 import { unwrapList } from './unwrapList'
 import { ElementUtils } from './utils/element'
 import { LocationUtils } from './utils/location'

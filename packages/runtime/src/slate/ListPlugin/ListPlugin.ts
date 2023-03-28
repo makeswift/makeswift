@@ -5,7 +5,7 @@ import { ElementUtils } from './lib/utils/element'
 import { unwrapList, wrapList, indent, dedent, toggleList } from './lib'
 import { EditorUtils } from './lib/utils/editor'
 import { LIST_ITEM_CHILD_POSITION } from './constants'
-import { BlockType } from '../../../../../controls'
+import { BlockType } from '../../controls'
 
 export const List = {
   unwrapList,

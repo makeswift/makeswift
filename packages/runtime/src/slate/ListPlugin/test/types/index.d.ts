@@ -1,5 +1,5 @@
-import { Typography as TypographyType } from '../../../../../../../api'
-import { BlockTextAlignment } from '../../../../../../../controls'
+import { Typography as TypographyType } from '../../../../api'
+import { BlockTextAlignment } from '../../../../controls'
 import {
   Anchor,
   BlockQuote,
