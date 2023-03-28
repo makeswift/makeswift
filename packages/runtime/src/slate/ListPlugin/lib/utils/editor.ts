@@ -1,5 +1,5 @@
 import { Path, Editor, NodeEntry } from 'slate'
-import { ListElement, ListItemElement } from '../../../../../../../controls'
+import { ListElement, ListItemElement } from '../../../../controls'
 import { ElementUtils } from './element'
 
 export const EditorUtils = {

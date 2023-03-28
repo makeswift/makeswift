@@ -8,7 +8,7 @@ import {
   UnorderedListElement,
   ListItemElement,
   ListItemChildElement,
-} from '../../../../../../../controls'
+} from '../../../../controls'
 
 export const ElementUtils = {
   isConvertibleToListTextNode(node: Node) {

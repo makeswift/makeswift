@@ -54,6 +54,10 @@
     "./controls": {
       "import": "./dist/controls.es.js",
       "require": "./dist/controls.cjs.js"
+    },
+    "./slate": {
+      "import": "./dist/slate.es.js",
+      "require": "./dist/slate.cjs.js"
     }
   },
   "typesVersions": {
@@ -81,6 +85,9 @@
       ],
       "controls": [
         "dist/types/src/controls/index.d.ts"
+      ],
+      "slate": [
+        "dist/types/src/slate/index.d.ts"
       ]
     }
   },

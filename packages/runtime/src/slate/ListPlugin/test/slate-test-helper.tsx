@@ -19,7 +19,7 @@ import {
   Typography,
   Unordered,
 } from './types'
-import { TextType, BlockType } from '../../../../../../controls'
+import { TextType, BlockType } from '../../../controls'
 import { withList } from '../ListPlugin'
 
 export const jsx = createHyperscript({
