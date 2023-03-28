@@ -13,7 +13,7 @@
     "@chakra-ui/react": "2.2.4",
     "@emotion/react": "11",
     "@emotion/styled": "11",
-    "@makeswift/runtime": "^0.7.6",
+    "@makeswift/runtime": "^0.7.12",
     "@thirdweb-dev/react": "3.6.0",
     "@thirdweb-dev/sdk": "3.6.0",
     "classnames": "2.3.1",
