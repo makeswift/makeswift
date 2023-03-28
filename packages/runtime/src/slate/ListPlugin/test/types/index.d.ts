@@ -19,7 +19,6 @@ import {
   Paragraph,
   Selection,
   Text,
-  Typography,
   Unordered,
 } from '../types'
 
@@ -39,11 +38,6 @@ declare global {
       [Fragment]: {}
 
       [Text]: { children?: Children; text?: string }
-      [Typography]: {
-        children?: Children
-        text?: string
-        typography: TypographyType
-      }
 
       [Paragraph]: BaseBlock
 

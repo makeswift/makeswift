@@ -1,6 +1,5 @@
 import { Node, Element, Text } from 'slate'
 import {
-  TextType,
   BlockType,
   Block,
   ParagraphElement,
@@ -16,15 +15,8 @@ export const ElementUtils = {
       !this.isList(node) &&
       !this.isListItem(node) &&
       !this.isListItemChild(node) &&
-      !this.isText(node) &&
-      !this.isTypography(node)
+      !Text.isText(node)
     )
-  },
-  isText(node: Node) {
-    return Element.isElementType(node, TextType.Text) || Text.isText(node)
-  },
-  isTypography(node: Node) {
-    return Element.isElementType(node, TextType.Typography)
   },
   isParagraph(node: Node): node is ParagraphElement {
     return Element.isElementType(node, BlockType.Paragraph)
@@ -42,7 +34,7 @@ export const ElementUtils = {
     return Element.isElementType(node, BlockType.ListItemChild)
   },
   createText() {
-    return { text: '', type: TextType.Text }
+    return { text: '' }
   },
   createParagraph() {
     return {

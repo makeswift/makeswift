@@ -6,7 +6,6 @@ export const Cursor = 'cursor'
 export const Selection = 'selection'
 
 export const Text = 'text'
-export const Typography = 'typography'
 
 export const Paragraph = 'paragraph'
 export const Heading1 = 'heading1'

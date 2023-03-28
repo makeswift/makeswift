@@ -15,18 +15,13 @@ import {
   ListItemChild,
   Ordered,
   Paragraph,
-  Text,
-  Typography,
   Unordered,
 } from './types'
-import { TextType, BlockType } from '../../../controls'
+import { BlockType } from '../../../controls'
 import { withList } from '../ListPlugin'
 
 export const jsx = createHyperscript({
   elements: {
-    [Text]: { type: TextType.Text },
-    [Typography]: { type: TextType.Typography },
-
     [Paragraph]: { type: BlockType.Paragraph },
 
     [Heading1]: { type: BlockType.Heading1 },

@@ -1,18 +1,14 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Editor } from 'slate'
-import {
-  compareRichTextDAO,
-  compareRichTextSelection,
-  richTextDTOtoDAO,
-  richTextDTOtoSelection,
-} from '../../../../controls'
+import { richTextDTOtoDAO, richTextDTOtoSelection } from '../../../../controls'
 import { RichTextValue } from '../../../../prop-controllers'
+import deepEqual from '../../../../utils/deepEqual'
 
 const COMMIT_DEBOUNCE_DELAY = 500
 
 /**
  * Compare new prop value with current editor and update editor
- * if the values are not equal. 
+ * if the values are not equal.
  */
 export function useSyncWithBuilder(editor: Editor, text?: RichTextValue) {
   const [shouldCommit, setShouldCommit] = useState(true)
@@ -21,10 +17,7 @@ export function useSyncWithBuilder(editor: Editor, text?: RichTextValue) {
     if (shouldCommit && text) {
       const nextValue = richTextDTOtoDAO(text)
       const nextSelection = richTextDTOtoSelection(text)
-      if (
-        !compareRichTextDAO(editor.children, nextValue) ||
-        !compareRichTextSelection(editor.selection, nextSelection)
-      ) {
+      if (!deepEqual(editor.children, nextValue) || !deepEqual(editor.selection, nextSelection)) {
         editor.children = nextValue
         editor.selection = nextSelection
         editor.onChange()

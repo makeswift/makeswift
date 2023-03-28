@@ -1,21 +1,13 @@
 import { cx } from '@emotion/css'
 import { ForwardedRef, forwardRef } from 'react'
-import { Descendant } from 'slate'
-import {
-  Block,
-  BlockType,
-  Inline,
-  InlineType,
-  richTextDTOtoDAO,
-  Text,
-  TextType,
-  TypographyText,
-} from '../../../controls'
+import { Descendant, Text } from 'slate'
+import { Block, BlockType, Inline, InlineType, richTextDTOtoDAO } from '../../../controls'
 import type { ElementIDValue, RichTextValue } from '../../../prop-controllers/descriptors'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { Link } from '../../shared/Link'
 import { responsiveStyle } from '../../utils/responsive-style'
-import useEnhancedTypography, { useTypographyClassName } from './components/Leaf/typography'
+import { useTypographyClassName } from './components'
+import useEnhancedTypography from './components/Leaf/leaf'
 
 type Props = {
   id?: ElementIDValue
@@ -60,14 +52,6 @@ export interface TextProps {
 }
 
 export function TextElement({ descendant }: TextProps) {
-  return <span>{descendant.text}</span>
-}
-
-export interface TypographyProps {
-  descendant: TypographyText
-}
-
-export function TypographyElement({ descendant }: TypographyProps) {
   const enhancedTypography = useEnhancedTypography(descendant.typography)
   const typographyClassName = useTypographyClassName(enhancedTypography)
 
@@ -212,11 +196,11 @@ function Descendants({ descendants }: { descendants: Descendant[] }) {
   return (
     <>
       {descendants.map(d => {
+        if (Text.isText(d)) {
+          return <TextElement descendant={d} />
+        }
+
         switch (d.type) {
-          case TextType.Typography:
-            return <TypographyElement descendant={d} />
-          case TextType.Text:
-            return <TextElement descendant={d} />
           case InlineType.Link:
           case InlineType.Code:
           case InlineType.SubScript:
