@@ -1,5 +1,5 @@
 import type { KeyboardEvent } from 'react'
-import { Editor, Transforms, Range, Node, PathRef } from 'slate'
+import { Editor, Transforms, Range, Node, PathRef, Text } from 'slate'
 import isHotkey from 'is-hotkey'
 import { ElementUtils } from './lib/utils/element'
 import { unwrapList, wrapList, indent, dedent, toggleList } from './lib'
@@ -121,7 +121,7 @@ export function withList(editor: Editor) {
     // Normalization for removing stray text elements from lists
     if (ElementUtils.isList(normalizationNode)) {
       Array.from(Node.children(editor, normalizationPath)).forEach(([node, path]) => {
-        if (ElementUtils.isText(node)) {
+        if (Text.isText(node)) {
           Transforms.removeNodes(editor, { at: path })
           return
         }
@@ -129,13 +129,14 @@ export function withList(editor: Editor) {
     }
 
     // Normalization for merging adjacent lists of the same type
-    if (!ElementUtils.isText(normalizationNode) && !ElementUtils.isTypography(normalizationNode)) {
+    if (!Text.isText(normalizationNode)) {
       const mergeableChildren = Array.from(Node.children(editor, normalizationPath))
         .map((child, index, children) => {
           const potentialNodeToBeMerged = children.at(index + 1)
           if (
             !potentialNodeToBeMerged ||
             !ElementUtils.isList(potentialNodeToBeMerged[0]) ||
+            !ElementUtils.isList(child[0]) ||
             potentialNodeToBeMerged[0].type !== child[0].type
           ) {
             return null

@@ -1,6 +1,6 @@
 import { Descendant, Text, Selection } from 'slate'
 import { LinkControlData } from '../link'
-import { BlockType, Inline, InlineType, RichTextDAO, TextType } from './types'
+import { BlockType, Inline, InlineType, RichTextDAO } from './types'
 import {
   BlockJSON,
   InlineJSON,
@@ -12,22 +12,12 @@ import {
 } from './dto-types'
 
 function toTextDAO(node: TextJSON): Text[] {
-  const typographyMark = node.marks?.find(mark => mark.type === TextType.Typography)
-
-  if (typographyMark) {
-    return [
-      {
-        text: node.text ?? '',
-        type: TextType.Typography,
-        typography: typographyMark.data?.value,
-      },
-    ]
-  }
+  const typographyMark = node.marks?.find(mark => mark.type === 'typography')
 
   return [
     {
-      type: TextType.Text,
       text: node.text ?? '',
+      typography: typographyMark?.data?.value ?? undefined,
     },
   ]
 }
@@ -111,31 +101,26 @@ export function richTextDTOtoDAO(data: RichTextDTO): RichTextDAO {
 }
 
 function toInlineOrTextDTO(node: Inline | Text): Array<InlineJSON | TextJSON> {
-  switch (node.type) {
-    case TextType.Typography:
-      return [
-        {
-          object: 'text',
-          text: node.text,
-          marks: [
-            {
-              data: {
-                value: node.typography,
+  if (Text.isText(node)) {
+    return [
+      {
+        text: node.text,
+        object: 'text',
+        marks: node.typography
+          ? [
+              {
+                data: {
+                  value: node.typography,
+                },
+                type: 'typography',
+                object: 'mark',
               },
-              type: 'typography',
-              object: 'mark',
-            },
-          ],
-        },
-      ]
-    case TextType.Text:
-      return [
-        {
-          text: node.text,
-          object: 'text',
-          marks: [],
-        },
-      ]
+            ]
+          : [],
+      },
+    ]
+  }
+  switch (node.type) {
     case InlineType.Link:
       return [
         {
@@ -160,9 +145,9 @@ function toInlineOrTextDTO(node: Inline | Text): Array<InlineJSON | TextJSON> {
 }
 
 function toNodeDTO(node: Descendant): Array<BlockJSON | InlineJSON | TextJSON> {
+  if (Text.isText(node)) return toInlineOrTextDTO(node)
+
   switch (node.type) {
-    case TextType.Typography:
-    case TextType.Text:
     case InlineType.Link:
     case InlineType.Code:
     case InlineType.SubScript:

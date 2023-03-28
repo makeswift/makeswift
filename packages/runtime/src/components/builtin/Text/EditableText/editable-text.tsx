@@ -18,7 +18,7 @@ import { DescriptorsPropControllers } from '../../../../prop-controllers/instanc
 import { Descriptors } from '../../../../runtimes/react/controls/rich-text'
 import { getBox } from '../../../../box-model'
 import { PropControllersHandle } from '../../../../state/modules/prop-controller-handles'
-import { BlockType, RichTextDAO, richTextDTOtoDAO, TextType } from '../../../../controls'
+import { BlockType, RichTextDAO, richTextDTOtoDAO } from '../../../../controls'
 import { Leaf } from '../components/Leaf'
 import { Element } from '../components/Element'
 import { useSyncWithBuilder } from './useSyncWithBuilder'
@@ -34,9 +34,7 @@ type Props = {
   margin?: string
 }
 
-const defaultText: RichTextDAO = [
-  { type: BlockType.Paragraph, children: [{ type: TextType.Text, text: '' }] },
-]
+const defaultText: RichTextDAO = [{ type: BlockType.Paragraph, children: [{ text: '' }] }]
 
 export const EditableText = forwardRef(function EditableText(
   { id, text, width, margin }: Props,

@@ -1,28 +1,32 @@
 import { BaseEditor, Descendant } from 'slate'
 import { ReactEditor } from 'slate-react'
-import { Typography } from '../../api'
 import { LinkControlData } from '../link'
 import { ResponsiveValue } from '../types'
 
-export const TextType = {
-  Typography: 'typography',
-  Text: 'text',
-} as const
-
-export type TextType = typeof TextType[keyof typeof TextType]
-
-export type TypographyText = {
-  type: typeof TextType.Typography
-  text: string
-  typography: Typography
+export type RichTextTypography = {
+  id?: string
+  style: Array<{
+    deviceId: string
+    value: {
+      fontFamily?: string
+      lineHeight?: number
+      letterSpacing?: number
+      fontWeight?: number
+      textAlign?: string
+      uppercase?: boolean
+      underline?: boolean
+      strikethrough?: boolean
+      italic?: boolean
+      fontSize?: { value: number | null; unit: string | null }
+      color?: { swatchId: string | null; alpha: number | null }
+    }
+  }>
 }
 
-type BaseText = {
-  type: typeof TextType.Text
+export type Text = {
   text: string
+  typography?: RichTextTypography
 }
-
-export type Text = BaseText | TypographyText
 
 export const BlockType = {
   Paragraph: 'paragraph',
