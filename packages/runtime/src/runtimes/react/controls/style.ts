@@ -6,6 +6,7 @@ import { responsiveStyle } from '../../../components/utils/responsive-style'
 
 import {
   FontSizePropertyData,
+  StyleControl,
   StyleControlData,
   StyleControlDefinition,
   StyleControlProperty,
@@ -16,6 +17,8 @@ import { BorderRadiusLonghandPropertyData } from '../../../css/border-radius'
 import { lengthPercentageDataToString } from '../../../css/length-percentage'
 import { marginPropertyDataToStyle } from '../../../css/margin'
 import { paddingPropertyDataToStyle } from '../../../css/padding'
+import { useEffect } from 'react'
+import { pollBoxModel } from '../poll-box-model'
 
 const defaultMargin = {
   marginTop: 0,
@@ -115,8 +118,22 @@ export type StyleControlFormattedValue = string
 export function useFormattedStyle(
   styleControlData: StyleControlData | undefined,
   controlDefinition: StyleControlDefinition,
+  control: StyleControl | null,
 ): StyleControlFormattedValue {
   const style = useStyleControlCssObject(styleControlData, controlDefinition)
+  const guid = control?.guid
+  const className = guid == null ? `${useStyle(style)}` : `${useStyle(style)}-${guid}`
+
+  useEffect(() => {
+    const element = document.querySelector(`.${className}`)
+
+    if (element == null || control == null) return
+
+    return pollBoxModel({
+      element,
+      onBoxModelChange: boxModel => control.changeItemBoxModel(boxModel),
+    })
+  }, [control, className])
 
   return useStyle(style)
 }

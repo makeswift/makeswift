@@ -1,3 +1,5 @@
+import { v4 as uuid } from 'uuid'
+
 import { BorderRadiusPropertyData } from '../css/border-radius'
 import type { LengthPercentageData } from '../css/length-percentage'
 import { MarginPropertyData } from '../css/margin'
@@ -5,6 +7,8 @@ import { PaddingPropertyData } from '../css/padding'
 import { ColorData, ResponsiveValue } from './types'
 import { CopyContext, ReplacementContext } from '../state/react-page'
 import { copyColorData } from './color'
+import { PropController, Send } from '../prop-controllers/instances'
+import { BoxModel } from '../state/modules/box-models'
 
 /** @see https://developer.mozilla.org/en-US/docs/Web/CSS/width */
 export type WidthPropertyData = LengthPercentageData
@@ -193,6 +197,33 @@ Style.Padding = StyleControlProperty.Padding
 Style.Border = StyleControlProperty.Border
 Style.BorderRadius = StyleControlProperty.BorderRadius
 Style.TextStyle = StyleControlProperty.TextStyle
+
+export const StyleControlMessageType = {
+  ITEM_BOX_MODEL_CHANGE: 'makeswift::controls::style::message::item-box-model-change',
+} as const
+
+type StyleControlItemBoxModelChangeMessage = {
+  type: typeof StyleControlMessageType.ITEM_BOX_MODEL_CHANGE
+  payload: { boxModel: BoxModel | null }
+}
+
+export type StyleControlMessage = StyleControlItemBoxModelChangeMessage
+
+export class StyleControl extends PropController<StyleControlMessage> {
+  guid: string
+
+  constructor(send: Send<StyleControlMessage>) {
+    super(send)
+
+    this.guid = uuid()
+  }
+
+  changeItemBoxModel(boxModel: BoxModel | null): void {
+    this.send({ type: StyleControlMessageType.ITEM_BOX_MODEL_CHANGE, payload: { boxModel } })
+  }
+
+  recv() {}
+}
 
 export function copyStyleData(
   value: StyleControlData | undefined,
