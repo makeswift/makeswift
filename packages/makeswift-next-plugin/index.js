@@ -6,7 +6,7 @@
 /** @typedef {ImageConfig['domains']} ImageConfigDomains */
 /** @typedef {ImageConfig['remotePatterns']} ImageConfigRemotePatterns */
 
-const withTmInitializer = require('next-transpile-modules')
+const withTmInitializer = require('./lib/next-transpile-modules')
 const { satisfies } = require('semver')
 
 const NEXT_TRANSPILE_MODULES_MODULES = ['@makeswift/runtime']

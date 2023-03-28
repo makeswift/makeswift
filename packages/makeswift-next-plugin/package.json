@@ -15,7 +15,6 @@
     "plugin"
   ],
   "dependencies": {
-    "next-transpile-modules": "^9.0.0",
     "semver": "^7.3.8"
   }
 }
