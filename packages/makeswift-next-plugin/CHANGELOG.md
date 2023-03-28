@@ -1,5 +1,11 @@
 # @makeswift/next-plugin
 
+## 0.2.5
+
+### Patch Changes
+
+- b25c046: Vendor `next-transpile-modules` because the package has a deprecation error, even though it's still needed for Next.js v12.
+
 ## 0.2.4
 
 ### Patch Changes

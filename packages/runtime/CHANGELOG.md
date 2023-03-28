@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.7.11
+
+### Patch Changes
+
+- 03d9e2f: Update `uuid` dependency from `v3.3.3` to `v9.0.0`.
+- 6156ba4: Upgrade `react-use-gesture` dependency to `@use-gesture/react`.
+- Updated dependencies [b25c046]
+  - @makeswift/next-plugin@0.2.5
+
 ## 0.7.10
 
 ### Patch Changes
