@@ -1,5 +1,11 @@
 # @makeswift/next-plugin
 
+## 0.2.6
+
+### Patch Changes
+
+- 07fd1de: Add missing dependencies on vendored `next-transpile-modules`.
+
 ## 0.2.5
 
 ### Patch Changes
