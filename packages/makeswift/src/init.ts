@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 import spawn from 'cross-spawn'
-import detect from 'detect-port'
+import detectPort from 'detect-port'
 import * as fs from 'fs'
 import * as http from 'http'
 import open from 'open'
@@ -11,6 +11,7 @@ import { checkForConflictingFiles } from './utils/check-for-conflicting-files'
 import { getProjectName } from './utils/get-name'
 import isNextApp from './utils/is-next-app'
 import { Socket } from 'node:net'
+import { detect as detectPackageManager, PM } from 'detect-package-manager'
 
 const MAKESWIFT_APP_ORIGIN = process.env.MAKESWIFT_APP_ORIGIN || 'https://app.makeswift.com'
 const MAKESWIFT_API_ORIGIN = process.env.MAKESWIFT_API_ORIGIN
@@ -54,8 +55,8 @@ async function init(
   }: {
     usingExistingNextApp: boolean
   }): Promise<{ nextAppPort: number; envLocal: string; example: string | null }> {
-    const handshakePort = await detect(5600)
-    const nextAppPort = await detect(3000)
+    const handshakePort = await detectPort(5600)
+    const nextAppPort = await detectPort(3000)
 
     const callbackUrl = `http://localhost:${handshakePort}/${siteSelectionPath}`
     // Handshake Step 1
@@ -119,7 +120,7 @@ async function init(
   const { nextAppPort, envLocal, example } = await performHandshake({ usingExistingNextApp })
 
   if (usingExistingNextApp) {
-    await integrateNextApp({ dir: nextAppDir })
+    await integrateNextApp({ dir: nextAppDir, useNpm, usePnpm })
   } else {
     createNextApp({
       dir: nextAppDir,
@@ -131,7 +132,24 @@ async function init(
 
   fs.writeFileSync(`${nextAppDir}/.env.local`, envLocal)
 
-  spawn.sync('yarn', ['dev', '--port', nextAppPort.toString()], {
+  let packageManager: PM
+  if (useNpm) packageManager = 'npm'
+  else if (usePnpm) packageManager = 'pnpm'
+  else packageManager = await detectPackageManager({ cwd: nextAppDir })
+
+  let spawnArgs
+  switch (packageManager) {
+    case 'npm':
+      spawnArgs = ['run', 'dev', '--', '--port', nextAppPort.toString()]
+      break
+
+    case 'yarn':
+    case 'pnpm':
+      spawnArgs = ['run', 'dev', '--port', nextAppPort.toString()]
+      break
+  }
+
+  spawn.sync(packageManager, spawnArgs, {
     stdio: 'inherit',
     cwd: nextAppDir,
   })
