@@ -1,5 +1,11 @@
 # makeswift
 
+## 0.1.8
+
+### Patch Changes
+
+- 49db913: Fix issue where handshake would hang forever if Yarn wasn't installed. We now detect package managers and use either npm, Yarn, or pnpm, depending on which one was detected.
+
 ## 0.1.7
 
 ### Patch Changes
