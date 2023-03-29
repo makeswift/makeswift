@@ -5,10 +5,10 @@ import * as fs from 'fs'
 import * as fse from 'fs-extra'
 import path from 'path'
 import { isAlreadyIntegrated, manipulateNextConfig } from './utils/manipulate-next-config'
-import { yarnOrNpm } from './utils/yarn-or-npm'
 import { createFolderIfNotExists } from './utils/create-folder-if-not-exists'
 import chalk from 'chalk'
 import MakeswiftError from './errors/MakeswiftError'
+import { detect as detectPackageManager, PM } from 'detect-package-manager'
 
 type PagesFolder = {
   absolute: string
@@ -60,7 +60,15 @@ function readAllFilesInDir(dir: string) {
   return files
 }
 
-export async function integrateNextApp({ dir }: { dir: string }): Promise<void> {
+export async function integrateNextApp({
+  dir,
+  useNpm,
+  usePnpm,
+}: {
+  dir: string
+  useNpm: boolean
+  usePnpm: boolean
+}): Promise<void> {
   console.log('Integrating Next.js app')
   const isTS = isTypeScript({ dir })
 
@@ -78,24 +86,47 @@ export async function integrateNextApp({ dir }: { dir: string }): Promise<void> 
   addMakeswiftNextjsPlugin({ dir, temporaryDir })
 
   // Step 4 - install the runtime
-  installMakeswiftRuntime({ dir })
+  await installMakeswiftRuntime({ dir, useNpm, usePnpm })
 
   // Overwrite pages and next.config.js with output from temporary directory
   overwriteIntegratedFiles({ dir, temporaryDir })
 }
 
-function installMakeswiftRuntime({ dir }: { dir: string }): void {
-  const packageManager = yarnOrNpm(dir)
-  if (packageManager === 'npm') {
-    spawn.sync('npm', ['install', '@makeswift/runtime'], {
-      stdio: 'inherit',
-      cwd: dir,
-    })
-  } else if (packageManager === 'yarn') {
-    spawn.sync('yarn', ['add', '@makeswift/runtime'], {
-      stdio: 'inherit',
-      cwd: dir,
-    })
+async function installMakeswiftRuntime({
+  dir,
+  useNpm,
+  usePnpm,
+}: {
+  dir: string
+  useNpm: boolean
+  usePnpm: boolean
+}): Promise<void> {
+  let packageManager: PM
+  if (useNpm) packageManager = 'npm'
+  else if (usePnpm) packageManager = 'pnpm'
+  else packageManager = await detectPackageManager({ cwd: dir })
+
+  switch (packageManager) {
+    case 'npm':
+      spawn.sync('npm', ['install', '@makeswift/runtime'], {
+        stdio: 'inherit',
+        cwd: dir,
+      })
+      break
+
+    case 'yarn':
+      spawn.sync('yarn', ['add', '@makeswift/runtime'], {
+        stdio: 'inherit',
+        cwd: dir,
+      })
+      break
+
+    case 'pnpm':
+      spawn.sync('pnpm', ['add', '@makeswift/runtime'], {
+        stdio: 'inherit',
+        cwd: dir,
+      })
+      break
   }
 }
 
