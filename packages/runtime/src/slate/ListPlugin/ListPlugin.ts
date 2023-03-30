@@ -90,6 +90,7 @@ export function onKeyDown(e: KeyboardEvent, editor: Editor) {
 }
 
 export function withList(editor: Editor) {
+  const { normalizeNode } = editor
   editor.normalizeNode = entry => {
     const [normalizationNode, normalizationPath] = entry
 
@@ -170,6 +171,8 @@ export function withList(editor: Editor) {
         return
       }
     }
+
+    normalizeNode(entry)
   }
 
   return editor
