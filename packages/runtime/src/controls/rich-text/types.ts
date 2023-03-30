@@ -46,61 +46,61 @@ export const BlockType = {
 export type BlockType = typeof BlockType[keyof typeof BlockType]
 
 export type ParagraphElement = {
-  textAlign?: BlockTextAlignment
+  textAlign?: ResponsiveBlockTextAlignment
   children: Array<Element | Text>
   type: typeof BlockType.Paragraph
 }
 
 export type Heading1Element = {
-  textAlign?: BlockTextAlignment
+  textAlign?: ResponsiveBlockTextAlignment
   children: Array<Element | Text>
   type: typeof BlockType.Heading1
 }
 
 export type Heading2Element = {
-  textAlign?: BlockTextAlignment
+  textAlign?: ResponsiveBlockTextAlignment
   children: Array<Element | Text>
   type: typeof BlockType.Heading2
 }
 
 export type Heading3Element = {
-  textAlign?: BlockTextAlignment
+  textAlign?: ResponsiveBlockTextAlignment
   children: Array<Element | Text>
   type: typeof BlockType.Heading3
 }
 
 export type Heading4Element = {
-  textAlign?: BlockTextAlignment
+  textAlign?: ResponsiveBlockTextAlignment
   children: Array<Element | Text>
   type: typeof BlockType.Heading4
 }
 
 export type Heading5Element = {
-  textAlign?: BlockTextAlignment
+  textAlign?: ResponsiveBlockTextAlignment
   children: Array<Element | Text>
   type: typeof BlockType.Heading5
 }
 
 export type Heading6Element = {
-  textAlign?: BlockTextAlignment
+  textAlign?: ResponsiveBlockTextAlignment
   children: Array<Element | Text>
   type: typeof BlockType.Heading6
 }
 
 export type BlockQuoteElement = {
-  textAlign?: BlockTextAlignment
+  textAlign?: ResponsiveBlockTextAlignment
   children: Array<Element | Text>
   type: typeof BlockType.BlockQuote
 }
 
 export type UnorderedListElement = {
-  textAlign?: BlockTextAlignment
+  textAlign?: ResponsiveBlockTextAlignment
   children: Array<Element | Text>
   type: typeof BlockType.UnorderedList
 }
 
 export type OrderedListElement = {
-  textAlign?: BlockTextAlignment
+  textAlign?: ResponsiveBlockTextAlignment
   children: Array<Element | Text>
   type: typeof BlockType.OrderedList
 }
@@ -108,13 +108,13 @@ export type OrderedListElement = {
 export type ListElement = OrderedListElement | UnorderedListElement
 
 export type ListItemElement = {
-  textAlign?: BlockTextAlignment
+  textAlign?: ResponsiveBlockTextAlignment
   children: Array<Element | Text>
   type: typeof BlockType.ListItem
 }
 
 export type ListItemChildElement = {
-  textAlign?: BlockTextAlignment
+  textAlign?: ResponsiveBlockTextAlignment
   children: Array<Element | Text>
   type: typeof BlockType.ListItemChild
 }
@@ -128,7 +128,16 @@ export const InlineType = {
 
 export type InlineType = typeof InlineType[keyof typeof InlineType]
 
-export type BlockTextAlignment = ResponsiveValue<'left' | 'center' | 'right' | 'justify'>
+export const BlockTextAlignment = {
+  Left: 'left',
+  Center: 'center',
+  Right: 'right',
+  Justify: 'justify',
+} as const
+
+export type BlockTextAlignment = typeof BlockTextAlignment[keyof typeof BlockTextAlignment]
+
+export type ResponsiveBlockTextAlignment = ResponsiveValue<BlockTextAlignment>
 
 type CodeElement = {
   children: Array<Text | Inline>
