@@ -14,14 +14,8 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "skipLibCheck": true,
-    "declaration": true,
-    "declarationMap": true,
     "rootDir": ".",
-    "declarationDir": "dist/types",
-    "emitDeclarationOnly": true,
-    "jsx": "react-jsx",
-    "types": ["vitest/importMeta"]
+    "jsx": "preserve",
   },
-  "include": ["./src", "./types"],
-  "exclude": ["./src/slate"]
+  "include": ["./"],
 }
