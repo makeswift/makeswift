@@ -3,9 +3,10 @@
 import { ComponentType } from 'react'
 import { Editor as SlateEditor, createEditor } from 'slate'
 import { createHyperscript, createEditor as createHyperscriptEditor } from 'slate-hyperscript'
+import { withReact } from 'slate-react'
 
 import { BlockType } from '../../controls'
-import { withList, withTypography } from '..'
+import { withList, withTypography, withBlock } from '..'
 
 export const jsx = createHyperscript({
   elements: {
@@ -26,7 +27,9 @@ export const jsx = createHyperscript({
     listitemchild: { type: BlockType.ListItemChild },
   },
   creators: {
-    editor: createHyperscriptEditor(() => withTypography(withList(createEditor()))),
+    editor: createHyperscriptEditor(() =>
+      withBlock(withTypography(withList(withReact(createEditor())))),
+    ),
   },
 })
 
