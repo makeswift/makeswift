@@ -7,17 +7,40 @@ import {
   UnorderedListElement,
   ListItemElement,
   ListItemChildElement,
+  Inline,
+  InlineType,
 } from '../../controls'
 
 export const ElementUtils = {
-  isConvertibleToListTextNode(node: Node) {
+  isBlock(node: Node): node is Block {
     return (
-      !this.isList(node) &&
-      !this.isListItem(node) &&
-      !this.isListItemChild(node) &&
-      !this.isText(node) &&
-      !this.isTypography(node)
+      Element.isElement(node) &&
+      (Element.isElementType(node, BlockType.Paragraph) ||
+        Element.isElementType(node, BlockType.Heading1) ||
+        Element.isElementType(node, BlockType.Heading2) ||
+        Element.isElementType(node, BlockType.Heading3) ||
+        Element.isElementType(node, BlockType.Heading3) ||
+        Element.isElementType(node, BlockType.Heading4) ||
+        Element.isElementType(node, BlockType.Heading5) ||
+        Element.isElementType(node, BlockType.Heading6) ||
+        Element.isElementType(node, BlockType.BlockQuote) ||
+        Element.isElementType(node, BlockType.UnorderedList) ||
+        Element.isElementType(node, BlockType.OrderedList) ||
+        Element.isElementType(node, BlockType.ListItem) ||
+        Element.isElementType(node, BlockType.ListItemChild))
     )
+  },
+  isInline(node: Node): node is Inline {
+    return (
+      Element.isElement(node) &&
+      (Element.isElementType(node, InlineType.Link) ||
+        Element.isElementType(node, InlineType.Link) ||
+        Element.isElementType(node, InlineType.SubScript) ||
+        Element.isElementType(node, InlineType.SuperScript))
+    )
+  },
+  isConvertibleToListTextNode(node: Node) {
+    return !this.isList(node) && !this.isListItem(node) && !this.isListItemChild(node)
   },
   isParagraph(node: Node): node is ParagraphElement {
     return Element.isElementType(node, BlockType.Paragraph)
