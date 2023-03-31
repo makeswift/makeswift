@@ -123,16 +123,6 @@ export function withList(editor: Editor) {
       }
     }
 
-    // Normalization for removing stray text elements from lists
-    if (ElementUtils.isList(normalizationNode)) {
-      Array.from(Node.children(editor, normalizationPath)).forEach(([node, path]) => {
-        if (Text.isText(node)) {
-          Transforms.removeNodes(editor, { at: path })
-          return
-        }
-      })
-    }
-
     // Normalization for merging adjacent lists of the same type
     if (!Text.isText(normalizationNode)) {
       const mergeableChildren = Array.from(Node.children(editor, normalizationPath))
