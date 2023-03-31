@@ -25,7 +25,7 @@ import { useSyncWithBuilder } from './useSyncWithBuilder'
 import isHotkey from 'is-hotkey'
 import { useBuilderEditMode } from '../../../../runtimes/react'
 import { BuilderEditMode } from '../../../../state/modules/builder-edit-mode'
-import { onKeyDown, withList } from '../../../../slate'
+import { onKeyDown, withBlock, withList, withTypography } from '../../../../slate'
 
 type Props = {
   id?: ElementIDValue
@@ -40,7 +40,7 @@ export const EditableText = forwardRef(function EditableText(
   { id, text, width, margin }: Props,
   ref: Ref<PropControllersHandle<Descriptors>>,
 ) {
-  const [editor] = useState(() => withList(withReact(createEditor())))
+  const [editor] = useState(() => withBlock(withTypography(withList(withReact(createEditor())))))
   const delaySync = useSyncWithBuilder(editor, text)
   const editMode = useBuilderEditMode()
 
