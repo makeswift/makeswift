@@ -1,6 +1,6 @@
 import { Editor, Element, Transforms } from 'slate'
-import { BlockType } from '../../../controls'
-import { ElementUtils } from './utils/element'
+import { BlockType } from '../../controls'
+import { ElementUtils } from '../utils/element'
 
 type WrapListOptions = {
   type: typeof BlockType.UnorderedList | typeof BlockType.OrderedList

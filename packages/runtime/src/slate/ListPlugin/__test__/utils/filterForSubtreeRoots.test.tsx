@@ -1,7 +1,7 @@
 import type { NodeEntry } from 'slate'
-import { filterForSubtreeRoots } from '../../lib/utils/filterForSubtreeRoots'
+import { filterForSubtreeRoots } from '../../utils/filterForSubtreeRoots'
 import { describe, it, expect } from 'vitest'
-import { ElementUtils } from '../../lib/utils/element'
+import { ElementUtils } from '../../../utils/element'
 
 describe('filterForSubtreeRoots', () => {
   it('should return nodes which include every other node', () => {
