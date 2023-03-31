@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.7.13
+
+### Patch Changes
+
+- 1578e04: Expose prop controller introspection utils.
+
 ## 0.7.12
 
 ### Patch Changes
