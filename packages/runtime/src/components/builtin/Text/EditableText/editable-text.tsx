@@ -92,6 +92,7 @@ export const EditableText = forwardRef(function EditableText(
         onFocus={handleFocus}
         className={cx(width, margin)}
         readOnly={editMode === BuilderEditMode.INTERACT}
+        placeholder="Write some text..."
       />
     </Slate>
   )
