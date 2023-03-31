@@ -26,6 +26,7 @@ import isHotkey from 'is-hotkey'
 import { useBuilderEditMode } from '../../../../runtimes/react'
 import { BuilderEditMode } from '../../../../state/modules/builder-edit-mode'
 import { onKeyDown, withBlock, withList, withTypography } from '../../../../slate'
+import { pollBoxModel } from '../../../../runtimes/react/poll-box-model'
 
 type Props = {
   id?: ElementIDValue
@@ -47,6 +48,17 @@ export const EditableText = forwardRef(function EditableText(
   const [propControllers, setPropControllers] =
     useState<DescriptorsPropControllers<Descriptors> | null>(null)
   const controller = propControllers?.text
+
+  useEffect(() => {
+    if (controller == null) return
+
+    const element = ReactEditor.toDOMNode(editor, editor)
+
+    return pollBoxModel({
+      element,
+      onBoxModelChange: boxModel => controller.changeBoxModel(boxModel),
+    })
+  }, [editor, controller])
 
   useImperativeHandle(
     ref,
