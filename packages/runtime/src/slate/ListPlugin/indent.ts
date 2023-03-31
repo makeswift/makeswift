@@ -1,14 +1,13 @@
 import { Editor, Node, Path, Transforms } from 'slate'
-import { LIST_ITEM_LIST_POSITION } from '../constants'
-import { ElementUtils } from './utils/element'
+import { ElementUtils } from '../utils/element'
+import { LIST_ITEM_LIST_POSITION } from './constants'
 import { filterForSubtreeRoots } from './utils/filterForSubtreeRoots'
 import { getSelectedListItems } from './utils/getSelectedListItems'
 
 export function indentPath(editor: Editor, path: Path) {
   const parent = Node.parent(editor, path)
-  if (!path || !Path.hasPrevious(path) || !ElementUtils.isList(parent) ) return
+  if (!path || !Path.hasPrevious(path) || !ElementUtils.isList(parent)) return
 
-    
   const previosPath = Path.previous(path)
 
   const previousChildListPath = [...previosPath, LIST_ITEM_LIST_POSITION]

@@ -1,7 +1,7 @@
 import type { Element, NodeEntry } from 'slate'
 import { Editor, Path } from 'slate'
-import { EditorUtils } from './editor'
-import { ElementUtils } from './element'
+import { EditorUtils } from '../../utils/editor'
+import { ElementUtils } from '../../utils/element'
 import { LocationUtils } from './location'
 
 export function getSelectedListItems(editor: Editor): NodeEntry<Element>[] {

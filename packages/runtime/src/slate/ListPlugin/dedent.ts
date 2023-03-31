@@ -2,7 +2,7 @@ import { Editor, Path, Transforms } from 'slate'
 import { indentPath } from './indent'
 import { getSelectedListItems } from './utils/getSelectedListItems'
 import { filterForSubtreeRoots } from './utils/filterForSubtreeRoots'
-import { EditorUtils } from './utils/editor'
+import { EditorUtils } from '../utils/editor'
 
 function dedentPath(editor: Editor, listItemPath: Path) {
   const parentList = EditorUtils.getFirstAncestorList(editor, listItemPath)
