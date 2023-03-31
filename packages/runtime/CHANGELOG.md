@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.7.14
+
+### Patch Changes
+
+- 527172c: Add placeholder to text component and rich text control. This was removed accidentally in 0.7.8
+- 51532d9: Add layout polling back to individual rich text controls. This enables more than one rich text control at a time. This functionality was accidentally removed in 0.7.8
+- e97a288: Fix react key prop warning for rich text component in dev mode
+
 ## 0.7.13
 
 ### Patch Changes
