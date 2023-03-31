@@ -195,17 +195,17 @@ export function BlockElement({ descendant }: BlockProps) {
 function Descendants({ descendants }: { descendants: Descendant[] }) {
   return (
     <>
-      {descendants.map(d => {
-        if (Text.isText(d)) {
-          return <TextElement descendant={d} />
+      {descendants.map((descendant, index) => {
+        if (Text.isText(descendant)) {
+          return <TextElement key={index} descendant={descendant} />
         }
 
-        switch (d.type) {
+        switch (descendant.type) {
           case InlineType.Link:
           case InlineType.Code:
           case InlineType.SubScript:
           case InlineType.SuperScript:
-            return <InlineElement descendant={d} />
+            return <InlineElement key={index} descendant={descendant} />
           case BlockType.Heading1:
           case BlockType.Heading2:
           case BlockType.Heading3:
@@ -215,7 +215,7 @@ function Descendants({ descendants }: { descendants: Descendant[] }) {
           case BlockType.UnorderedList:
           case BlockType.ListItem:
           case BlockType.ListItemChild:
-            return <BlockElement descendant={d} />
+            return <BlockElement key={index} descendant={descendant} />
           default:
             return null
         }
