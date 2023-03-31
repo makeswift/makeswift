@@ -61,3 +61,4 @@ export type {
   TableFormFieldsMessage,
 } from './instances'
 export { RichTextPropControllerMessageType, TableFormFieldsMessageType } from './instances'
+export * as Introspection from './introspection'
