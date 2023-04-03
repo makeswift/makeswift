@@ -3,17 +3,13 @@ import { memo, useMemo } from 'react'
 import { RuntimeProvider } from '../runtimes/react'
 import { Page as PageMeta } from '../components/page'
 import { MakeswiftClient } from '../api/react'
-import { MakeswiftPageData, MakeswiftPageSnapshot } from './client'
+import { MakeswiftPageSnapshot } from './client'
 
 export { MakeswiftClient }
 
 export type PageProps = {
   snapshot: MakeswiftPageSnapshot
 }
-export type unstable_PageProps = {
-  pageData: MakeswiftPageData
-}
-
 import {
   GetServerSidePropsContext,
   GetServerSidePropsResult,

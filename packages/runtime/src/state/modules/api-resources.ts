@@ -1,13 +1,4 @@
-import {
-  APIResource,
-  APIResourceType,
-  Swatch,
-  Typography,
-  PagePathnameSlice,
-  GlobalElement,
-  Table,
-} from '../../api'
-import { fileToFileSnapshot, IdSpecified, MakeswiftSnapshotResources } from '../../next/snapshots'
+import { APIResource, APIResourceType } from '../../api'
 import deepEqual from '../../utils/deepEqual'
 import { Action, ActionTypes } from '../actions'
 
@@ -16,38 +7,6 @@ type State = Map<APIResourceType, Map<string, APIResource | null>>
 export type SerializedState = {
   [key in APIResourceType]: { id: string; value: APIResource }[]
 }
-
-function isNonNullable<T>(value: T): value is NonNullable<T> {
-  return value != null
-}
-
-// If we change SerializedState, update this function as well
-export function getSnapshotResourcesFromSerializedState(
-  serializedState: SerializedState,
-): Partial<MakeswiftSnapshotResources> {
-  // @note: remember TS is structurally typed, so extra parameters will come into the
-  //        objects coming out of this function. That's fine.
-  const resources: Partial<MakeswiftSnapshotResources> = {
-    swatches: serializedState.Swatch.filter((_): _ is IdSpecified<Swatch> => true),
-    typographies: serializedState.Typography.filter((_): _ is IdSpecified<Typography> => true),
-    files: serializedState.File.map(({ id, value }) =>
-      value.__typename === APIResourceType.File ? { id, value: fileToFileSnapshot(value) } : null,
-    ).filter(isNonNullable),
-    tables: serializedState.Table.filter((_): _ is IdSpecified<Table> => true),
-    pagePathnameSlices: serializedState.PagePathnameSlice.filter(
-      (_): _ is IdSpecified<PagePathnameSlice> => true,
-    ),
-    globalElements: serializedState.GlobalElement.filter(
-      (_): _ is IdSpecified<GlobalElement> => true,
-    ),
-  }
-
-  return resources
-}
-
-// @todo: write the reverse function, going from `MakeswiftSnapshotResources` to `SerializedState`
-//        it is critical that the two are untied from each other, otherwise
-//        we can no longer change `SerializedState`
 
 export function getInitialState(
   serializedState: SerializedState = {
