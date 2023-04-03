@@ -1,7 +1,14 @@
 import { cx } from '@emotion/css'
 import { ForwardedRef, forwardRef } from 'react'
-import { Descendant, Text } from 'slate'
-import { Block, BlockType, Inline, InlineType, richTextDTOtoDAO } from '../../../controls'
+import {
+  Block,
+  BlockType,
+  Inline,
+  InlineType,
+  richTextDTOtoDAO,
+  Text,
+  Element,
+} from '../../../controls'
 import type { ElementIDValue, RichTextValue } from '../../../prop-controllers/descriptors'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { Link } from '../../shared/Link'
@@ -20,10 +27,12 @@ const ReadOnlyText = forwardRef(function ReadOnlyText(
   { id, text, width, margin }: Props,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
-  const descendants = text == null ? '' : richTextDTOtoDAO(text)
+  const descendants = text == null ? [] : richTextDTOtoDAO(text)
+  const descendantsAsString = getText(descendants)
+
   return (
     <div ref={ref} id={id} className={cx(width, margin)}>
-      {descendants === '' ? <Placeholder /> : <Descendants descendants={descendants} />}
+      {descendantsAsString === '' ? <Placeholder /> : <Descendants descendants={descendants} />}
     </div>
   )
 })
@@ -196,11 +205,11 @@ export function BlockElement({ descendant }: BlockProps) {
   }
 }
 
-function Descendants({ descendants }: { descendants: Descendant[] }) {
+function Descendants({ descendants }: { descendants: (Element | Text)[] }) {
   return (
     <>
       {descendants.map((descendant, index) => {
-        if (Text.isText(descendant)) {
+        if ('text' in descendant) {
           return <TextElement key={index} descendant={descendant} />
         }
 
@@ -226,4 +235,62 @@ function Descendants({ descendants }: { descendants: Descendant[] }) {
       })}
     </>
   )
+}
+
+function isBlock(descendant: Element | Text): descendant is Block {
+  if ('text' in descendant) return false
+
+  switch (descendant.type) {
+    case BlockType.Heading1:
+    case BlockType.Heading2:
+    case BlockType.Heading3:
+    case BlockType.BlockQuote:
+    case BlockType.Paragraph:
+    case BlockType.OrderedList:
+    case BlockType.UnorderedList:
+    case BlockType.ListItem:
+    case BlockType.ListItemChild:
+      return true
+
+    default:
+      return false
+  }
+}
+
+/**
+ * I am using `Element | Text` here to ensure that nothing from Slate 
+ * is imported so that the RichText maintains it's slim bundle size 
+ */
+function getTextByDescendant(descendant: Element | Text): string {
+  if ('text' in descendant) {
+    return descendant.text ?? ''
+  }
+
+  switch (descendant.type) {
+    case InlineType.Link:
+    case InlineType.Code:
+    case InlineType.SubScript:
+    case InlineType.SuperScript:
+      return descendant.children.map(descendant => getTextByDescendant(descendant)).join('') ?? ''
+    case BlockType.Heading1:
+    case BlockType.Heading2:
+    case BlockType.Heading3:
+    case BlockType.BlockQuote:
+    case BlockType.Paragraph:
+    case BlockType.OrderedList:
+    case BlockType.UnorderedList:
+    case BlockType.ListItem:
+    case BlockType.ListItemChild:
+      return (
+        descendant.children
+          .map(descendant => getTextByDescendant(descendant))
+          .join(descendant.children.every(isBlock) ? '\n' : '') ?? ''
+      )
+    default:
+      return ''
+  }
+}
+
+function getText(descendant: (Element | Text)[]): string {
+  return descendant.map(getTextByDescendant).join('\n')
 }
