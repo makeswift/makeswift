@@ -55,7 +55,11 @@ export function TextElement({ descendant }: TextProps) {
   const enhancedTypography = useEnhancedTypography(descendant.typography)
   const typographyClassName = useTypographyClassName(enhancedTypography)
 
-  return <span className={typographyClassName}>{descendant.text}</span>
+  return (
+    <span className={typographyClassName}>
+      {descendant.text === '' ? '\uFEFF' : descendant.text}
+    </span>
+  )
 }
 
 export interface InlineProps {
