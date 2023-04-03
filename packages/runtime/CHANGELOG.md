@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.7.15
+
+### Patch Changes
+
+- ef4bc78: Fix a bug in the deployed version of the text component that prevents empty lines from being displayed.
+
 ## 0.7.14
 
 ### Patch Changes
