@@ -77,7 +77,20 @@ export class ShapeControl<
     return this.controls
   }
 
-  recv() {}
+  recv = (message: ShapeControlMessage) => {
+    switch (message.type) {
+      case ShapeControlMessageType.SHAPE_CONTROL_CHILD_CONTROL_MESSAGE: {
+        const control = this.controls.get(message.payload.key)
+
+        if (control == null) return
+
+        // TODO: We're casting the type here as the arg0 type for control.recv is never
+        const recv = control.recv as (arg0: PropControllerMessage) => void
+
+        recv(message.payload.message)
+      }
+    }
+  }
 }
 
 export function copyShapeData(
