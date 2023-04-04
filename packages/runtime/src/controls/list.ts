@@ -98,7 +98,20 @@ export class ListControl<
     return this.controls
   }
 
-  recv() {}
+  recv = (message: ListControlMessage) => {
+    switch (message.type) {
+      case ListControlMessageType.LIST_CONTROL_ITEM_CONTROL_MESSAGE: {
+        const control = this.controls.get(message.payload.itemId)
+
+        if (control == null) return
+
+        // TODO: We're casting the type here as the arg0 type for control.recv is never
+        const recv = control.recv as (arg0: PropControllerMessage) => void
+
+        recv(message.payload.message)
+      }
+    }
+  }
 }
 
 export type ListControlData<T extends ListControlDefinition = ListControlDefinition> =
