@@ -40,7 +40,7 @@ export type SlotControlMessage =
   | SlotControlItemBoxModelChangeMessage
 
 export class SlotControl extends PropController<SlotControlMessage> {
-  recv(): void {}
+  recv = () => {}
 
   changeContainerBoxModel(boxModel: BoxModel | null): void {
     this.send({ type: SlotControlMessageType.CONTAINER_BOX_MODEL_CHANGE, payload: { boxModel } })
