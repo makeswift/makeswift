@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.7.16
+
+### Patch Changes
+
+- 72e5e4a: Make `RichTextControl` composable.
+
 ## 0.7.15
 
 ### Patch Changes
