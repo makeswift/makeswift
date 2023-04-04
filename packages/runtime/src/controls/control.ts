@@ -12,9 +12,10 @@ import { TextInputControlData, TextInputControlDefinition } from './text-input'
 import { copyStyleData, StyleControlType } from './style'
 import { copySlotData, SlotControlDefinition, SlotControlType } from './slot'
 
-import { Descriptor, Types } from '../prop-controllers/descriptors'
+import { Descriptor, IndexSignatureHack, Types } from '../prop-controllers/descriptors'
 import { copy as propControllerCopy } from '../prop-controllers/copy'
 import { CopyContext } from '../state/react-page'
+import { RichTextControlData, RichTextControlDefinition } from './rich-text'
 
 export type ControlDefinition =
   | CheckboxControlDefinition
@@ -30,6 +31,7 @@ export type ControlDefinition =
   | LinkControlDefinition
   | SlotControlDefinition
   | ShapeControlDefinition
+  | RichTextControlDefinition
 
 export type ControlDefinitionData<T extends ControlDefinition> = T extends CheckboxControlDefinition
   ? CheckboxControlData
@@ -53,6 +55,8 @@ export type ControlDefinitionData<T extends ControlDefinition> = T extends Check
   ? ListControlData<T>
   : T extends LinkControlDefinition
   ? LinkControlData
+  : T extends RichTextControlDefinition
+  ? IndexSignatureHack<RichTextControlData>
   : never
 
 export function copy(definition: Descriptor | ControlDefinition, value: any, context: CopyContext) {
