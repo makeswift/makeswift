@@ -102,8 +102,8 @@
   },
   "peerDependencies": {
     "next": ">=12.2.0 <13.0.0 || ^13.0.0",
-    "react": "^17.0.1 || ^18.0.0",
-    "react-dom": "^17.0.1 || ^18.0.0"
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   },
   "dependencies": {
     "@emotion/css": "^11.9.0",
