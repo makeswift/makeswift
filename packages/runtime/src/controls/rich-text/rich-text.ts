@@ -70,7 +70,7 @@ export type RichTextControlMessage =
 export class RichTextControl extends PropController<RichTextControlMessage> {
   private editor: Editor | null = null
 
-  recv(message: RichTextControlMessage): void {
+  recv = (message: RichTextControlMessage): void => {
     if (!this.editor) return
     switch (message.type) {
       case RichTextControlMessageType.CHANGE_BUILDER_EDIT_MODE: {

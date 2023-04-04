@@ -90,7 +90,7 @@ export abstract class PropController<T = PropControllerMessage> {
 }
 
 class DefaultPropController extends PropController {
-  recv(_message: PropControllerMessage): void {
+  recv = (_message: PropControllerMessage) => {
     // Do nothing.
   }
 }
@@ -98,7 +98,7 @@ class DefaultPropController extends PropController {
 class RichTextPropController extends PropController<RichTextPropControllerMessage> {
   private editor: Editor | null = null
 
-  recv(message: RichTextPropControllerMessage): void {
+  recv = (message: RichTextPropControllerMessage) => {
     if (!this.editor) return
     switch (message.type) {
       case RichTextPropControllerMessageType.CHANGE_BUILDER_EDIT_MODE: {
@@ -186,7 +186,7 @@ export type TableFormFieldsMessage =
   | TableFieldLayoutTableFormFieldsMessage
 
 export class TableFormFieldsPropController extends PropController<TableFormFieldsMessage> {
-  recv(): void {}
+  recv = () => {}
 
   tableFormLayoutChange(payload: { layout: BoxModel }) {
     this.send({ type: TableFormFieldsMessageType.TABLE_FORM_LAYOUT_CHANGE, payload })
