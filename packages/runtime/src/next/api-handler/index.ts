@@ -1,0 +1,82 @@
+import Cors from 'cors'
+import { NextApiHandler } from 'next'
+
+import elementTree, { ElementTreeResponse } from './handlers/element-tree'
+import fonts, { Font, FontsResponse, GetFonts } from './handlers/fonts'
+import manifest, { Manifest, ManifestResponse } from './handlers/manifest'
+import proxyPreviewMode, { ProxyPreviewModeResponse } from './handlers/proxy-preview-mode'
+import { revalidate, RevalidationResponse } from './handlers/revalidate'
+
+export type { Manifest, Font }
+
+type MakeswiftApiHandlerConfig = {
+  appOrigin?: string
+  apiOrigin?: string
+  getFonts?: GetFonts
+}
+
+type NotFoundError = { message: string }
+
+export type MakeswiftApiHandlerResponse =
+  | ManifestResponse
+  | RevalidationResponse
+  | ProxyPreviewModeResponse
+  | FontsResponse
+  | ElementTreeResponse
+  | NotFoundError
+
+export function MakeswiftApiHandler(
+  apiKey: string,
+  { appOrigin = 'https://app.makeswift.com', getFonts }: MakeswiftApiHandlerConfig = {},
+): NextApiHandler<MakeswiftApiHandlerResponse> {
+  const cors = Cors({ origin: appOrigin })
+
+  if (typeof apiKey !== 'string') {
+    throw new Error(
+      'The Makeswift Next.js API handler must be passed a valid Makeswift site API key: ' +
+        "`MakeswiftApiHandler('<makeswift_site_api_key>')`\n" +
+        `Received "${apiKey}" instead.`,
+    )
+  }
+
+  return async function makeswiftApiHandler(req, res) {
+    await new Promise<void>((resolve, reject) => {
+      cors(req, res, err => {
+        if (err instanceof Error) reject(err)
+        else resolve()
+      })
+    })
+
+    const { makeswift } = req.query
+
+    if (!Array.isArray(makeswift)) {
+      throw new Error(
+        'The Makeswift Next.js API handler must be used in a dynamic catch-all route named `[...makeswift]`.\n' +
+          `Received "${makeswift}" for the \`makeswift\` param instead.\n` +
+          'Read more about dynamic catch-all routes here: https://nextjs.org/docs/routing/dynamic-routes#catch-all-routes',
+      )
+    }
+
+    const action = makeswift.join('/')
+
+    switch (action) {
+      case 'manifest':
+        return manifest(req, res, { apiKey })
+
+      case 'revalidate':
+        return revalidate(req, res, { apiKey })
+
+      case 'proxy-preview-mode':
+        return proxyPreviewMode(req, res, { apiKey })
+
+      case 'fonts':
+        return fonts(req, res, { getFonts })
+
+      case 'element-tree':
+        return elementTree(req, res)
+
+      default:
+        return res.status(404).json({ message: 'Not Found' })
+    }
+  }
+}
