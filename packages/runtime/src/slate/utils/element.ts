@@ -71,7 +71,7 @@ export const ElementUtils = {
   },
   createListItem(): Block {
     return {
-      children: [this.createListItemChild()],
+      children: [this.createText()],
       type: BlockType.ListItem,
     }
   },

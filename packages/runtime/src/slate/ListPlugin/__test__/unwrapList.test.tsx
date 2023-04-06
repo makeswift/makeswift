@@ -15,6 +15,7 @@ import {
   jsx,
 } from '../../test-helpers'
 import { List } from '..'
+import { unwrapList } from '../unwrapList'
 
 describe('Unwrap List', () => {
   it('WHEN unwrapList on List THEN turns into a paragraph', () => {
@@ -142,5 +143,112 @@ describe('Unwrap List', () => {
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
+  })
+  it('WHEN unwrapList on single node THEN it is removed from list', () => {
+    const editor = Editor(
+      <Unordered>
+        <ListItem>
+          <ListItemChild>
+            <Text>
+              a<Cursor />
+            </Text>
+          </ListItemChild>
+        </ListItem>
+        <ListItem>
+          <ListItemChild>
+            <Text>b</Text>
+          </ListItemChild>
+        </ListItem>
+        <ListItem>
+          <ListItemChild>
+            <Text>c</Text>
+          </ListItemChild>
+        </ListItem>
+      </Unordered>,
+    )
+    const result = Editor(
+      <Fragment>
+        <Paragraph>
+          <Text>
+            a<Cursor />
+          </Text>
+        </Paragraph>
+        <Unordered>
+          <ListItem>
+            <ListItemChild>
+              <Text>b</Text>
+            </ListItemChild>
+          </ListItem>
+          <ListItem>
+            <ListItemChild>
+              <Text>c</Text>
+            </ListItemChild>
+          </ListItem>
+        </Unordered>
+      </Fragment>,
+    )
+
+    unwrapList(editor)
+
+    expect(editor.children).toEqual(result.children)
+    expect(editor.selection).toEqual(result.selection)
+  })
+
+  it('WHEN unwrapList on range of underorderlist items THEN they are removed from list', () => {
+    const editor = Editor(
+      <Unordered>
+        <ListItem>
+          <ListItemChild>
+            <Text>
+              <Anchor />a
+            </Text>
+          </ListItemChild>
+        </ListItem>
+        <ListItem>
+          <ListItemChild>
+            <Text>
+              b<Focus />
+            </Text>
+          </ListItemChild>
+        </ListItem>
+        <ListItem>
+          <ListItemChild>
+            <Text>c</Text>
+          </ListItemChild>
+        </ListItem>
+        <ListItem>
+          <ListItemChild>
+            <Text>d</Text>
+          </ListItemChild>
+        </ListItem>
+      </Unordered>,
+    )
+    const result = Editor(
+      <Fragment>
+        <Paragraph>
+          <Text>a</Text>
+        </Paragraph>
+        <Paragraph>
+          <Text>b</Text>
+        </Paragraph>
+        <Unordered>
+          <ListItem>
+            <ListItemChild>
+              <Text>c</Text>
+            </ListItemChild>
+          </ListItem>
+          <ListItem>
+            <ListItemChild>
+              <Text>d</Text>
+            </ListItemChild>
+          </ListItem>
+        </Unordered>
+      </Fragment>,
+    )
+
+    unwrapList(editor)
+
+    expect(editor.children).toEqual(result.children)
+    // expect(editor.selection).toEqual(result.selection)
   })
 })

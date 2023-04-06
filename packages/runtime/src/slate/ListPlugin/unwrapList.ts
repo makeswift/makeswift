@@ -1,14 +1,14 @@
-import { Editor, Transforms, Path, Node } from 'slate'
+import { Editor, Element, Transforms, Path, Node, Location, Span } from 'slate'
 import { BlockType } from '../../controls'
 import { EditorUtils } from '../utils/editor'
+import { ElementUtils } from '../utils/element'
 import { LIST_ITEM_CHILD_POSITION, LIST_ITEM_LIST_POSITION } from './constants'
 import { filterForSubtreeRoots } from './utils/filterForSubtreeRoots'
-import { getSelectedListItems } from './utils/getSelectedListItems'
 
 export function unwrapPath(editor: Editor, listItemPath: Path) {
   const parentList = EditorUtils.getFirstAncestorList(editor, listItemPath)
   const listItemContainingParentList = EditorUtils.getFirstAncestorListItem(editor, listItemPath)
-  //if this is a nested item we don't want to unwrap it
+  // if this is a nested item we don't want to unwrap it
   if (!parentList || listItemContainingParentList) return
 
   Editor.withoutNormalizing(editor, () => {
@@ -35,14 +35,26 @@ export function unwrapPath(editor: Editor, listItemPath: Path) {
   })
 }
 
-export function unwrapList(editor: Editor) {
-  if (!editor.selection) return
+type UnwrapListOptions = {
+  at?: Location | Span
+}
 
-  const listItems = getSelectedListItems(editor)
+export function unwrapList(editor: Editor, options?: UnwrapListOptions) {
+  const at = options?.at ?? editor.selection
+  if (!at) return
+
+  const listItems = Array.from(
+    Editor.nodes(editor, {
+      at,
+      match: node => {
+        return Element.isElement(node) && ElementUtils.isListItem(node)
+      },
+    }),
+  )
   const subRoots = filterForSubtreeRoots(listItems)
   const refs = subRoots.map(([_, path]) => Editor.pathRef(editor, path))
 
-  refs.forEach(ref => {
+  refs.reverse().forEach(ref => {
     if (ref.current) {
       unwrapPath(editor, ref.current)
     }

@@ -150,4 +150,53 @@ describe('toggleList', () => {
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
   })
+
+  it('test WHEN toggleList to Unordered on paragraph THEN turns to Unordered', () => {
+    const editor = Editor(
+      <Unordered>
+        <ListItem>
+          <ListItemChild>
+            <Text>
+              a <Anchor />
+            </Text>
+          </ListItemChild>
+        </ListItem>
+        <ListItem>
+          <ListItemChild>
+            <Text>b</Text>
+          </ListItemChild>
+        </ListItem>
+        <ListItem>
+          <ListItemChild>
+            <Text>
+              c <Focus />
+            </Text>
+          </ListItemChild>
+        </ListItem>
+      </Unordered>,
+    )
+
+    const result = Editor(
+      <Fragment>
+        <Paragraph>
+          <Text>
+            a <Anchor />
+          </Text>
+        </Paragraph>
+        <Paragraph>
+          <Text>b</Text>
+        </Paragraph>
+        <Paragraph>
+          <Text>
+            c <Focus />
+          </Text>
+        </Paragraph>
+      </Fragment>,
+    )
+
+    List.toggleList(editor, { type: BlockType.UnorderedList })
+
+    expect(editor.children).toEqual(result.children)
+    expect(editor.selection).toEqual(result.selection)
+  })
 })

@@ -115,11 +115,6 @@ export function withList(editor: Editor) {
           )
           return
         }
-      } else {
-        Transforms.insertNodes(editor, ElementUtils.createListItem(), {
-          at: pathToListItemText,
-        })
-        return
       }
     }
 
@@ -142,25 +137,24 @@ export function withList(editor: Editor) {
           ]
         })
         .filter((mergeableNodes): mergeableNodes is PathRef[] => Boolean(mergeableNodes))
-
       if (mergeableChildren.length !== 0) {
-        mergeableChildren.reverse().forEach(([nodePathRef, nodeToBeMergedPathRef]) => {
-          const nodePath = nodePathRef.current
-          const nodeToBeMergedPath = nodeToBeMergedPathRef.current
-          if (nodePath == null || nodeToBeMergedPath == null) return
-          const nodeChildren = Array.from(Node.children(editor, nodePath))
-          const childrenToBeMerged = Array.from(Node.children(editor, nodeToBeMergedPath))
-          Editor.withoutNormalizing(editor, () => {
-            childrenToBeMerged.forEach(([_, childPath], index) => {
+        Editor.withoutNormalizing(editor, () => {
+          mergeableChildren.reverse().forEach(([nodePathRef, nodeToBeMergedPathRef]) => {
+            const nodePath = nodePathRef.current
+            const nodeToBeMergedPath = nodeToBeMergedPathRef.current
+            if (nodePath == null || nodeToBeMergedPath == null) return
+            const nodeChildren = Array.from(Node.children(editor, nodePath))
+            const childrenToBeMerged = Array.from(Node.children(editor, nodeToBeMergedPath))
+            childrenToBeMerged.reverse().forEach(([_, childPath]) => {
               Transforms.moveNodes(editor, {
                 at: childPath,
-                to: [...nodePath, nodeChildren.length + index],
+                to: [...nodePath, nodeChildren.length],
               })
             })
             Transforms.removeNodes(editor, { at: nodeToBeMergedPath })
+            nodePathRef.unref()
+            nodeToBeMergedPathRef.unref()
           })
-          nodePathRef.unref()
-          nodeToBeMergedPathRef.unref()
         })
         return
       }
