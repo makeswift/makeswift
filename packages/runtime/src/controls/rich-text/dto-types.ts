@@ -18,7 +18,7 @@ export const ObjectType = {
 
 export type ObjectType = typeof ObjectType[keyof typeof ObjectType]
 
-interface ValueJSON {
+export interface ValueJSON {
   object?: typeof ObjectType.Value | undefined
   document?: DocumentJSON | undefined
   selection?: SelectionJSON | undefined

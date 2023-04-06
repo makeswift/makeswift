@@ -29,6 +29,7 @@ export default defineConfig({
         next: path.resolve(__dirname, 'src', 'next'),
         builder: path.resolve(__dirname, 'src', 'builder'),
         controls: path.resolve(__dirname, 'src', 'controls'),
+        slate: path.resolve(__dirname, 'src', 'slate'),
       },
       output: {
         entryFileNames: '[name].[format].js',
