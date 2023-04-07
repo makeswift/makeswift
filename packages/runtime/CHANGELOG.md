@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.0.0-20230407002818
+
+### Patch Changes
+
+- 9d8c764: Update peer dependencies to reflect current support for React and React DOM.
+- unify the versions of slate
+
 ## 0.7.16
 
 ### Patch Changes

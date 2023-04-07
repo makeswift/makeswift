@@ -9,10 +9,11 @@ import {
   ListItemChildElement,
   Inline,
   InlineType,
+  RootBlock,
 } from '../../controls'
 
 export const ElementUtils = {
-  isBlock(node: Node): node is Block {
+  isRootBlock(node: Node): node is RootBlock {
     return (
       Element.isElement(node) &&
       (Element.isElementType(node, BlockType.Paragraph) ||
@@ -25,7 +26,13 @@ export const ElementUtils = {
         Element.isElementType(node, BlockType.Heading6) ||
         Element.isElementType(node, BlockType.BlockQuote) ||
         Element.isElementType(node, BlockType.UnorderedList) ||
-        Element.isElementType(node, BlockType.OrderedList) ||
+        Element.isElementType(node, BlockType.OrderedList))
+    )
+  },
+  isBlock(node: Node): node is Block {
+    return (
+      Element.isElement(node) &&
+      (this.isRootBlock(node) ||
         Element.isElementType(node, BlockType.ListItem) ||
         Element.isElementType(node, BlockType.ListItemChild))
     )

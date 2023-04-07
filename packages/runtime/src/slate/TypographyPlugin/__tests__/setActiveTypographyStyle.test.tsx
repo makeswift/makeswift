@@ -154,8 +154,8 @@ describe('GIVEN setActiveTypographyStyle', () => {
     const editor = Editor(
       <Paragraph>
         <Text>
-          abc
           <Anchor />
+          abc
         </Text>
         <Text
           typography={{
@@ -188,8 +188,8 @@ describe('GIVEN setActiveTypographyStyle', () => {
             ],
           }}
         >
-          abc
           <Anchor />
+          abc
         </Text>
         <Text
           typography={{
@@ -206,6 +206,88 @@ describe('GIVEN setActiveTypographyStyle', () => {
         >
           xyz
           <Focus />
+        </Text>
+      </Paragraph>,
+    )
+
+    Typography.setActiveTypographyStyle(editor, 'mobile', 'italic', true)
+
+    expect(editor.children).toEqual(result.children)
+    expect(editor.selection).toEqual(result.selection)
+  })
+
+  it('asdf WHEN called on expanded cursor THEN all selected text are turned into a typography', () => {
+    const editor = Editor(
+      <Paragraph>
+        <Text>
+          abc
+          <Anchor />
+          xyz
+          <Focus />
+        </Text>
+      </Paragraph>,
+    )
+    const result = Editor(
+      <Paragraph>
+        <Text>abc</Text>
+        <Text
+          typography={{
+            style: [
+              {
+                deviceId: 'mobile',
+                value: {
+                  italic: true,
+                },
+              },
+            ],
+          }}
+        >
+          <Anchor />
+          xyz
+          <Focus />
+        </Text>
+      </Paragraph>,
+    )
+
+    Typography.setActiveTypographyStyle(editor, 'mobile', 'italic', true)
+
+    expect(editor.children).toEqual(result.children)
+    expect(editor.selection).toEqual(result.selection)
+  })
+
+  it('asdf WHEN called on expanded cursor THEN all selected text are turned into a typography', () => {
+    const editor = Editor(
+      <Paragraph>
+        <Text>
+          abc
+          <Anchor />
+          lmn
+          <Focus />
+          xyz
+        </Text>
+      </Paragraph>,
+    )
+    const result = Editor(
+      <Paragraph>
+        <Text>abc</Text>
+        <Text
+          typography={{
+            style: [
+              {
+                deviceId: 'mobile',
+                value: {
+                  italic: true,
+                },
+              },
+            ],
+          }}
+        >
+          <Anchor />
+          lmn
+        </Text>
+        <Text>
+          <Focus />
+          xyz
         </Text>
       </Paragraph>,
     )

@@ -16,14 +16,20 @@ export const Typography = {
 export function withTypography(editor: Editor) {
   const { normalizeNode } = editor
   editor.normalizeNode = entry => {
+    console.log('normalizeNode Typography')
     const [normalizationNode, normalizationPath] = entry
-    // Normalization typography with empty style and id to be text
+
     if (
       Text.isText(normalizationNode) &&
       normalizationNode?.typography?.id == null &&
       normalizationNode?.typography?.style.length === 0
     ) {
       Transforms.unsetNodes(editor, 'typography', { at: normalizationPath })
+      return
+    }
+
+    if (Text.isText(normalizationNode) && normalizationNode?.slice != null) {
+      Transforms.unsetNodes(editor, 'slice', { at: normalizationPath })
       return
     }
 
