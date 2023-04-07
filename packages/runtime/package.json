@@ -15,7 +15,8 @@
     "next.js",
     "next/plugin.js",
     "builder.js",
-    "controls.js"
+    "controls.js",
+    "slate.js"
   ],
   "exports": {
     ".": {
