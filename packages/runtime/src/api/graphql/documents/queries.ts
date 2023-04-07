@@ -1,9 +1,7 @@
 import {
   FileFragment,
   GlobalElementFragment,
-  PageFragment,
   PagePathnameSliceFragment,
-  SiteFragment,
   SwatchFragment,
   TableFragment,
   TypographyFragment,
@@ -123,24 +121,4 @@ export const CreateTableRecordMutation = /* GraphQL */ `
       }
     }
   }
-`
-
-export const SiteQuery = /* GraphQL */ `
-  query Site($siteId: ID!) {
-    site(id: $siteId) {
-      ...Site
-    }
-  }
-
-  ${SiteFragment}
-`
-
-export const PageQuery = /* GraphQL */ `
-  query Page($pageId: ID!) {
-    page(id: $pageId) {
-      ...Page
-    }
-  }
-
-  ${PageFragment}
 `
