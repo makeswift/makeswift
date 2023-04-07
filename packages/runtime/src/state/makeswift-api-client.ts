@@ -2,23 +2,15 @@ import { applyMiddleware, createStore, Store as ReduxStore } from 'redux'
 import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk'
 
 import * as APIResources from './modules/api-resources'
-import {
-  Action,
-  apiResourceFulfilled,
-  typographiesFulfilled,
-  introspectedResourcesFulfilled,
-} from './actions'
-import { APIResource, APIResourceType, Typography } from '../api'
+import { Action, apiResourceFulfilled } from './actions'
+import { APIResource, APIResourceType } from '../api'
 import { GraphQLClient } from '../api/graphql/client'
-import { IntrospectedResourceIds } from '../api/introspection'
 import {
   FileQuery,
   GlobalElementQuery,
-  IntrospectedResourcesQuery,
   PagePathnamesByIdQuery,
   SwatchQuery,
   TableQuery,
-  TypographiesQuery,
   TypographyQuery,
 } from '../api/graphql/documents'
 import {
@@ -26,16 +18,12 @@ import {
   FileQueryVariables,
   GlobalElementQueryResult,
   GlobalElementQueryVariables,
-  IntrospectedResourcesQueryResult,
-  IntrospectedResourcesQueryVariables,
   PagePathnamesByIdQueryResult,
   PagePathnamesByIdQueryVariables,
   SwatchQueryResult,
   SwatchQueryVariables,
   TableQueryResult,
   TableQueryVariables,
-  TypographiesQueryResult,
-  TypographiesQueryVariables,
   TypographyQueryResult,
   TypographyQueryVariables,
 } from '../api/graphql/generated/types'
@@ -140,44 +128,6 @@ export function fetchAPIResource<T extends APIResourceType>(
     dispatch(apiResourceFulfilled(resourceType, resourceId, resource))
 
     return resource as Extract<APIResource, { __typename: T }> | null
-  }
-}
-
-export function fetchIntrospectedResources(
-  introspectedResourceIds: IntrospectedResourceIds,
-): Thunk<Promise<void>> {
-  return async (dispatch, _getState, client) => {
-    const introspectedResources = await client.request<
-      IntrospectedResourcesQueryResult,
-      IntrospectedResourcesQueryVariables
-    >(IntrospectedResourcesQuery, introspectedResourceIds)
-
-    dispatch(introspectedResourcesFulfilled(introspectedResourceIds, introspectedResources))
-  }
-}
-
-export function fetchTypographies(typographyIds: string[]): Thunk<Promise<(Typography | null)[]>> {
-  return async (dispatch, getState, client) => {
-    const state = getState()
-
-    if (
-      typographyIds.every(typographyId =>
-        getHasAPIResource(state, APIResourceType.Typography, typographyId),
-      )
-    ) {
-      return typographyIds.map(typographyId =>
-        getAPIResource(state, APIResourceType.Typography, typographyId),
-      )
-    }
-
-    const { typographies } = await client.request<
-      TypographiesQueryResult,
-      TypographiesQueryVariables
-    >(TypographiesQuery, { typographyIds })
-
-    dispatch(typographiesFulfilled(typographyIds, typographies))
-
-    return typographies
   }
 }
 

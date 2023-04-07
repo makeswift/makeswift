@@ -146,7 +146,6 @@ export type SiteFragment = {
 export type IntrospectedResourcesQueryVariables = Exact<{
   swatchIds: Array<Scalars['ID']> | Scalars['ID']
   fileIds: Array<Scalars['ID']> | Scalars['ID']
-  typographyIds: Array<Scalars['ID']> | Scalars['ID']
   pageIds: Array<Scalars['ID']> | Scalars['ID']
   tableIds: Array<Scalars['ID']> | Scalars['ID']
 }>
@@ -166,27 +165,6 @@ export type IntrospectedResourcesQueryResult = {
     extension: string | null
     publicUrl: string
     dimensions: { width: number; height: number } | null
-  } | null>
-  typographies: Array<{
-    __typename: 'Typography'
-    id: string
-    name: string
-    style: Array<{
-      deviceId: string
-      value: {
-        fontFamily: string | null
-        lineHeight: number | null
-        letterSpacing: number | null
-        fontWeight: number | null
-        textAlign: string | null
-        uppercase: boolean | null
-        underline: boolean | null
-        strikethrough: boolean | null
-        italic: boolean | null
-        fontSize: { value: number | null; unit: string | null } | null
-        color: { swatchId: string | null; alpha: number | null } | null
-      }
-    }>
   } | null>
   pagePathnamesById: Array<{ __typename: 'PagePathnameSlice'; id: string; pathname: string } | null>
   tables: Array<{
