@@ -151,6 +151,13 @@ module.exports =
             ...NEXT_TRANSPILE_MODULES_MODULES,
           ],
         },
+        webpack(config, options) {
+          config = enhancedConfig.webpack?.(config, options) ?? config
+
+          if (resolveSymlinks != null) config.resolve.symlinks = resolveSymlinks
+
+          return config
+        },
       }
     }
 
@@ -160,5 +167,12 @@ module.exports =
         ...(nextConfig?.transpilePackages ?? []),
         ...NEXT_TRANSPILE_MODULES_MODULES,
       ],
+      webpack(config, options) {
+        config = enhancedConfig.webpack?.(config, options) ?? config
+
+        if (resolveSymlinks != null) config.resolve.symlinks = resolveSymlinks
+
+        return config
+      },
     }
   }
