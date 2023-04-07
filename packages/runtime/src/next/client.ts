@@ -1,11 +1,21 @@
-import { File, GlobalElement, PagePathnameSlice, Swatch, Table, Typography } from '../api'
+import {
+  APIResourceType,
+  File,
+  GlobalElement,
+  PagePathnameSlice,
+  Swatch,
+  Table,
+  Typography,
+} from '../api'
 import { GraphQLClient } from '../api/graphql/client'
 import {
   FileQuery,
   GlobalElementQuery,
+  IntrospectedResourcesQuery,
   PagePathnamesByIdQuery,
   SwatchQuery,
   TableQuery,
+  TypographiesQuery,
   TypographyQuery,
 } from '../api/graphql/documents'
 import {
@@ -13,17 +23,38 @@ import {
   FileQueryVariables,
   GlobalElementQueryResult,
   GlobalElementQueryVariables,
+  IntrospectedResourcesQueryResult,
+  IntrospectedResourcesQueryVariables,
   PagePathnamesByIdQueryResult,
   PagePathnamesByIdQueryVariables,
   SwatchQueryResult,
   SwatchQueryVariables,
   TableQueryResult,
   TableQueryVariables,
+  TypographiesQueryResult,
+  TypographiesQueryVariables,
   TypographyQueryResult,
   TypographyQueryVariables,
 } from '../api/graphql/generated/types'
-import { CacheData, MakeswiftClient } from '../api/react'
-import { Element } from '../state/react-page'
+import { CacheData } from '../api/react'
+import { ListControlData, ListControlType, ShapeControlData, ShapeControlType } from '../controls'
+import { PropControllerDescriptor } from '../prop-controllers'
+import { ListValue, ShapeValue, Types } from '../prop-controllers/descriptors'
+import {
+  getElementChildren,
+  getElementSwatchIds,
+  getFileIds,
+  getPageIds,
+  getTableIds,
+  getTypographyIds,
+} from '../prop-controllers/introspection'
+import { storeContextDefaultValue } from '../runtimes/react'
+import {
+  Element,
+  ElementData,
+  getPropControllerDescriptors,
+  isElementReference,
+} from '../state/react-page'
 
 export type MakeswiftPage = {
   id: string
@@ -130,12 +161,194 @@ export class Makeswift {
     return json
   }
 
+  private async getTypographies(typographyIds: string[]): Promise<(Typography | null)[]> {
+    const result = await this.graphqlClient.request<
+      TypographiesQueryResult,
+      TypographiesQueryVariables
+    >(TypographiesQuery, { typographyIds })
+
+    return result.typographies
+  }
+
+  private async getIntrospectedResources(
+    introspectedResourceIds: IntrospectedResourcesQueryVariables,
+  ): Promise<IntrospectedResourcesQueryResult> {
+    const result = await this.graphqlClient.request<
+      IntrospectedResourcesQueryResult,
+      IntrospectedResourcesQueryVariables
+    >(IntrospectedResourcesQuery, introspectedResourceIds)
+
+    return result
+  }
+
+  private async introspect(element: Element): Promise<CacheData> {
+    const descriptors = getPropControllerDescriptors(storeContextDefaultValue.getState())
+    const swatchIds = new Set<string>()
+    const fileIds = new Set<string>()
+    const typographyIds = new Set<string>()
+    const tableIds = new Set<string>()
+    const pageIds = new Set<string>()
+    const globalElements = new Map<string, GlobalElement | null>()
+
+    const remaining = [element]
+    const seen = new Set<string>()
+    let current: Element | undefined
+
+    while ((current = remaining.pop())) {
+      let element: ElementData
+
+      if (isElementReference(current)) {
+        const globalElement = await this.getGlobalElement(current.value)
+
+        globalElements.set(current.value, globalElement)
+
+        const elementData = globalElement?.data
+
+        if (elementData == null) continue
+
+        element = elementData as ElementData
+      } else {
+        element = current
+      }
+
+      const elementDescriptors = descriptors.get(element.type)
+
+      if (elementDescriptors == null) continue
+
+      getResourcesFromElementDescriptors(elementDescriptors, element.props)
+
+      function getResourcesFromElementDescriptors(
+        elementDescriptors: Record<string, PropControllerDescriptor>,
+        props: ElementData['props'],
+      ) {
+        Object.entries(elementDescriptors).forEach(([propName, descriptor]) => {
+          getElementSwatchIds(descriptor, props[propName]).forEach(swatchId => {
+            swatchIds.add(swatchId)
+          })
+
+          getFileIds(descriptor, props[propName]).forEach(fileId => fileIds.add(fileId))
+
+          getTypographyIds(descriptor, props[propName]).forEach(typographyId =>
+            typographyIds.add(typographyId),
+          )
+
+          getTableIds(descriptor, props[propName]).forEach(tableId => tableIds.add(tableId))
+
+          getPageIds(descriptor, props[propName]).forEach(pageId => pageIds.add(pageId))
+
+          getElementChildren(descriptor, props[propName]).forEach(child => {
+            if (!seen.has(child.key)) {
+              seen.add(child.key)
+
+              remaining.push(child)
+            }
+          })
+
+          if (descriptor.type === ShapeControlType) {
+            const prop = props[propName] as ShapeControlData
+
+            if (prop == null) return
+
+            getResourcesFromElementDescriptors(descriptor.config.type, prop)
+          }
+
+          if (descriptor.type === ListControlType) {
+            const prop = props[propName] as ListControlData
+
+            if (prop == null) return
+
+            prop.forEach(item => {
+              getResourcesFromElementDescriptors(
+                { propName: descriptor.config.type },
+                { propName: item.value },
+              )
+            })
+          }
+
+          if (descriptor.type === Types.Shape) {
+            const prop = props[propName] as ShapeValue
+
+            if (prop == null) return
+
+            getResourcesFromElementDescriptors(descriptor.options.type, prop)
+          }
+
+          if (descriptor.type === Types.List) {
+            const prop = props[propName] as ListValue
+
+            if (prop == null) return
+
+            prop.forEach(item => {
+              getResourcesFromElementDescriptors(
+                { propName: descriptor.options.type },
+                { propName: item.value },
+              )
+            })
+          }
+        })
+      }
+    }
+
+    const typographies = await this.getTypographies([...typographyIds])
+
+    typographies.forEach(typography => {
+      typography?.style.forEach(style => {
+        const swatchId = style.value.color?.swatchId
+
+        if (swatchId != null) swatchIds.add(swatchId)
+      })
+    })
+
+    const { swatches, files, tables, pagePathnamesById } = await this.getIntrospectedResources({
+      swatchIds: [...swatchIds],
+      fileIds: [...fileIds],
+      tableIds: [...tableIds],
+      pageIds: [...pageIds],
+    })
+
+    // We're doing this because the API return the id without turning it to nodeId:
+    // '87237bda-e775-48d8-92cc-399c65577bb7' vs 'UGFnZTo4NzIzN2JkYS1lNzc1LTQ4ZDgtOTJjYy0zOTljNjU1NzdiYjc='
+    const pagePathnameSlices = pagePathnamesById.map(
+      pagePathnameSlice =>
+        pagePathnameSlice && {
+          ...pagePathnameSlice,
+          id: Buffer.from(`Page:${pagePathnameSlice.id}`).toString('base64'),
+        },
+    )
+
+    return {
+      [APIResourceType.Swatch]: [...swatchIds].map(id => ({
+        id,
+        value: swatches.find(swatch => swatch?.id === id) ?? null,
+      })),
+      [APIResourceType.File]: [...fileIds].map(id => ({
+        id,
+        value: files.find(file => file?.id === id) ?? null,
+      })),
+      [APIResourceType.Typography]: [...typographyIds].map(id => ({
+        id,
+        value: typographies.find(typography => typography?.id === id) ?? null,
+      })),
+      [APIResourceType.Table]: [...tableIds].map(id => ({
+        id,
+        value: tables.find(table => table?.id === id) ?? null,
+      })),
+      [APIResourceType.PagePathnameSlice]: [...pageIds].map(id => ({
+        id,
+        value: pagePathnameSlices.find(pagePathnameSlice => pagePathnameSlice?.id === id) ?? null,
+      })),
+      [APIResourceType.GlobalElement]: [...globalElements.entries()].map(([id, value]) => ({
+        id,
+        value,
+      })),
+    }
+  }
+
   private async createSnapshot(
     document: MakeswiftPageDocument,
     preview: boolean,
   ): Promise<MakeswiftPageSnapshot> {
-    const client = new MakeswiftClient({ uri: new URL('graphql', this.apiOrigin).href })
-    const cacheData = await client.prefetch(document.data)
+    const cacheData = await this.introspect(document.data)
 
     return { document, apiOrigin: this.apiOrigin.href, cacheData, preview }
   }

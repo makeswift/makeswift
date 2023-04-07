@@ -11,7 +11,6 @@ export const IntrospectedResourcesQuery = /* GraphQL */ `
   query IntrospectedResources(
     $swatchIds: [ID!]!
     $fileIds: [ID!]!
-    $typographyIds: [ID!]!
     $pageIds: [ID!]!
     $tableIds: [ID!]!
   ) {
@@ -21,10 +20,6 @@ export const IntrospectedResourcesQuery = /* GraphQL */ `
 
     files(ids: $fileIds) {
       ...File
-    }
-
-    typographies(ids: $typographyIds) {
-      ...Typography
     }
 
     pagePathnamesById(ids: $pageIds) {
@@ -38,7 +33,6 @@ export const IntrospectedResourcesQuery = /* GraphQL */ `
 
   ${SwatchFragment}
   ${FileFragment}
-  ${TypographyFragment}
   ${PagePathnameSliceFragment}
   ${TableFragment}
 `

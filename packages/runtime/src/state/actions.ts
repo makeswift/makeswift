@@ -9,10 +9,8 @@ import { PropControllerDescriptor } from '../prop-controllers'
 import type { Size } from './react-builder-preview'
 import type { PropControllersHandle } from './modules/prop-controller-handles'
 import type { PropController, PropControllerMessage } from '../prop-controllers/instances'
-import type { APIResource, APIResourceType, Typography } from '../api/graphql/types'
+import type { APIResource, APIResourceType } from '../api/graphql/types'
 import type { SerializedControl } from '../builder'
-import { IntrospectedResourcesQueryResult } from '../api/graphql/generated/types'
-import { IntrospectedResourceIds } from '../api/introspection'
 import { ElementImperativeHandle } from '../runtimes/react/element-imperative-handle'
 import { BuilderEditMode } from './modules/builder-edit-mode'
 import type { Point } from './modules/pointer'
@@ -66,8 +64,6 @@ export const ActionTypes = {
   HANDLE_POINTER_MOVE: 'HANDLE_POINTER_MOVE',
 
   API_RESOURCE_FULFILLED: 'API_RESOURCE_FULFILLED',
-  INTROSPECTED_RESOURCES_FULFILLED: 'INTROSPECTED_RESOURCES_FULFILLED',
-  TYPOGRAPHIES_FULFILLED: 'TYPOGRAPHIES_FULFILLED',
 
   SET_BUILDER_EDIT_MODE: 'SET_BUILDER_EDIT_MODE',
   MAKESWIFT_CONNECTION_INIT: 'MAKESWIFT_CONNECTION_INIT',
@@ -252,19 +248,6 @@ type APIResourceFulfilledAction = {
   payload: { resourceType: APIResourceType; resourceId: string; resource: APIResource | null }
 }
 
-type IntrospectedResourcesFulfilled = {
-  type: typeof ActionTypes.INTROSPECTED_RESOURCES_FULFILLED
-  payload: {
-    introspectedResourceIds: IntrospectedResourceIds
-    introspectedResources: IntrospectedResourcesQueryResult
-  }
-}
-
-type TypographiesFulfilledAction = {
-  type: typeof ActionTypes.TYPOGRAPHIES_FULFILLED
-  payload: { typographyIds: string[]; typographies: (Typography | null)[] }
-}
-
 type SetBuilderEditModeAction = {
   type: typeof ActionTypes.SET_BUILDER_EDIT_MODE
   payload: { editMode: BuilderEditMode }
@@ -327,8 +310,6 @@ export type Action =
   | HandleWheelAction
   | HandlePointerMoveAction
   | APIResourceFulfilledAction
-  | IntrospectedResourcesFulfilled
-  | TypographiesFulfilledAction
   | SetBuilderEditModeAction
   | ChangePathnameAction
   | ChangePathnameStartAction
@@ -632,23 +613,6 @@ export function apiResourceFulfilled(
   return {
     type: ActionTypes.API_RESOURCE_FULFILLED,
     payload: { resourceType, resourceId, resource },
-  }
-}
-
-export function typographiesFulfilled(
-  typographyIds: string[],
-  typographies: (Typography | null)[],
-): TypographiesFulfilledAction {
-  return { type: ActionTypes.TYPOGRAPHIES_FULFILLED, payload: { typographyIds, typographies } }
-}
-
-export function introspectedResourcesFulfilled(
-  introspectedResourceIds: IntrospectedResourceIds,
-  introspectedResources: IntrospectedResourcesQueryResult,
-): IntrospectedResourcesFulfilled {
-  return {
-    type: ActionTypes.INTROSPECTED_RESOURCES_FULFILLED,
-    payload: { introspectedResourceIds, introspectedResources },
   }
 }
 

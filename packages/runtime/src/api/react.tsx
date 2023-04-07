@@ -1,8 +1,5 @@
 import { createContext, ReactNode, useContext } from 'react'
 
-import { Element } from '../state/react-page'
-import { storeContextDefaultValue } from '../runtimes/react'
-import { introspect } from './introspection'
 import * as MakeswiftApiClient from '../state/makeswift-api-client'
 import {
   APIResourceType,
@@ -63,16 +60,6 @@ export class MakeswiftClient {
     this.subscribe = this.makeswiftApiClient.subscribe
   }
 
-  async prefetch(element: Element): Promise<CacheData> {
-    const introspectionData = await introspect(element, this, storeContextDefaultValue)
-
-    await this.makeswiftApiClient.dispatch(
-      MakeswiftApiClient.fetchIntrospectedResources(introspectionData),
-    )
-
-    return MakeswiftApiClient.getSerializedState(this.makeswiftApiClient.getState())
-  }
-
   readSwatch(swatchId: string): Swatch | null {
     return MakeswiftApiClient.getAPIResource(
       this.makeswiftApiClient.getState(),
@@ -112,12 +99,6 @@ export class MakeswiftClient {
   async fetchTypography(typographyId: string): Promise<Typography | null> {
     return await this.makeswiftApiClient.dispatch(
       MakeswiftApiClient.fetchAPIResource(APIResourceType.Typography, typographyId),
-    )
-  }
-
-  async fetchTypographies(typographyIds: string[]): Promise<(Typography | null)[]> {
-    return await this.makeswiftApiClient.dispatch(
-      MakeswiftApiClient.fetchTypographies(typographyIds),
     )
   }
 
