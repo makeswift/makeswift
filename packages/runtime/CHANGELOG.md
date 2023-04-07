@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.7.17
+
+### Patch Changes
+
+- 9d8c764: Update peer dependencies to reflect current support for React and React DOM.
+- f382f82: Export types for slate rich text plugins.
+
 ## 0.7.16
 
 ### Patch Changes
