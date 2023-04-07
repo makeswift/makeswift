@@ -38,6 +38,10 @@ import {
   SlotControlData,
   SlotControlDefinition,
   SlotControlType,
+  StyleControl,
+  StyleControlData,
+  StyleControlDefinition,
+  StyleControlType,
   TextAreaControlData,
   TextAreaControlDefinition,
   TextAreaControlType,
@@ -58,6 +62,7 @@ import { RichTextControlValue, useRichText } from './rich-text'
 import { SelectControlValue, useSelectControlValue } from './select'
 import { ShapeControlValue } from './shape'
 import { SlotControlValue, useSlot } from './slot'
+import { StyleControlFormattedValue, useFormattedStyle } from './style'
 import { TextAreaControlValue, useTextAreaValue } from './text-area'
 import { TextInputControlValue, useTextInputValue } from './text-input'
 
@@ -88,6 +93,8 @@ export type ControlDefinitionValue<T extends ControlDefinition> =
     ? SlotControlValue
     : T extends RichTextControlDefinition
     ? RichTextControlValue
+    : T extends StyleControlDefinition
+    ? StyleControlFormattedValue
     : never
 
 type ControlValueProps<T extends ControlDefinition> = {
@@ -242,6 +249,17 @@ export function ControlValue<T extends ControlDefinition>({
           key={definition.type}
           hook={useRichText}
           parameters={[data as unknown as RichTextControlData, control as RichTextControl]}
+        >
+          {value => children(value as ControlDefinitionValue<T>)}
+        </RenderHook>
+      )
+
+    case StyleControlType:
+      return (
+        <RenderHook
+          key={definition.type}
+          hook={useFormattedStyle}
+          parameters={[data as unknown as StyleControlData, definition, control as StyleControl]}
         >
           {value => children(value as ControlDefinitionValue<T>)}
         </RenderHook>

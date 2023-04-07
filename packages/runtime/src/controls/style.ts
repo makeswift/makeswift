@@ -5,6 +5,8 @@ import { PaddingPropertyData } from '../css/padding'
 import { ColorData, ResponsiveValue } from './types'
 import { CopyContext, ReplacementContext } from '../state/react-page'
 import { copyColorData } from './color'
+import { PropController, Send } from '../prop-controllers/instances'
+import { BoxModel } from '../state/modules/box-models'
 
 /** @see https://developer.mozilla.org/en-US/docs/Web/CSS/width */
 export type WidthPropertyData = LengthPercentageData
@@ -193,6 +195,29 @@ Style.Padding = StyleControlProperty.Padding
 Style.Border = StyleControlProperty.Border
 Style.BorderRadius = StyleControlProperty.BorderRadius
 Style.TextStyle = StyleControlProperty.TextStyle
+
+export const StyleControlMessageType = {
+  CHANGE_BOX_MODEL: 'makeswift::controls::style::message::change-box-model',
+} as const
+
+type StyleControlItemBoxModelChangeMessage = {
+  type: typeof StyleControlMessageType.CHANGE_BOX_MODEL
+  payload: { boxModel: BoxModel | null }
+}
+
+export type StyleControlMessage = StyleControlItemBoxModelChangeMessage
+
+export class StyleControl extends PropController<StyleControlMessage> {
+  constructor(send: Send<StyleControlMessage>) {
+    super(send)
+  }
+
+  changeBoxModel(boxModel: BoxModel | null): void {
+    this.send({ type: StyleControlMessageType.CHANGE_BOX_MODEL, payload: { boxModel } })
+  }
+
+  recv() {}
+}
 
 export function copyStyleData(
   value: StyleControlData | undefined,

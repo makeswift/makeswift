@@ -17,6 +17,9 @@ import {
   SlotControl,
   SlotControlMessage,
   SlotControlType,
+  StyleControl,
+  StyleControlType,
+  StyleControlMessage,
 } from '../controls'
 import { ReactEditor } from 'slate-react'
 
@@ -76,6 +79,7 @@ export type PropControllerMessage =
   | RichTextControlMessage
   | ListControlMessage
   | ShapeControlMessage
+  | StyleControlMessage
 
 export type Send<T = PropControllerMessage> = (message: T) => void
 
@@ -219,6 +223,7 @@ export type AnyPropController =
   | RichTextControl
   | ListControl
   | ShapeControl
+  | StyleControl
 
 export function createPropController(
   descriptor: RichTextDescriptor,
@@ -251,6 +256,9 @@ export function createPropController<T extends PropControllerMessage>(
 
     case ShapeControlType:
       return new ShapeControl(send as Send<ShapeControlMessage>, descriptor)
+
+    case StyleControlType:
+      return new StyleControl(send as Send<StyleControlMessage>)
 
     default:
       return new DefaultPropController(send as Send)

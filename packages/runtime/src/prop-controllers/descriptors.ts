@@ -1,4 +1,3 @@
-import { StyleControlDefinition, StyleControlType } from '../controls/style'
 import {
   ResolveBorderControlValue,
   ResolveBorderRadiusControlValue,
@@ -24,6 +23,8 @@ import {
   SlotControlDefinition,
   TextAreaControlDefinition,
   TextInputControlDefinition,
+  StyleControlDefinition,
+  StyleControlType,
 } from '../controls'
 import { TextInputControlValue } from '../runtimes/react/controls/text-input'
 import { TextAreaControlValue } from '../runtimes/react/controls/text-area'

@@ -9,7 +9,7 @@ import { SelectControlData, SelectControlDefinition } from './select'
 import { ShapeControlData, ShapeControlDefinition, copyShapeData, ShapeControlType } from './shape'
 import { TextAreaControlData, TextAreaControlDefinition } from './text-area'
 import { TextInputControlData, TextInputControlDefinition } from './text-input'
-import { copyStyleData, StyleControlType } from './style'
+import { copyStyleData, StyleControlData, StyleControlDefinition, StyleControlType } from './style'
 import { copySlotData, SlotControlDefinition, SlotControlType } from './slot'
 
 import { Descriptor, IndexSignatureHack, Types } from '../prop-controllers/descriptors'
@@ -32,6 +32,7 @@ export type ControlDefinition =
   | SlotControlDefinition
   | ShapeControlDefinition
   | RichTextControlDefinition
+  | StyleControlDefinition
 
 export type ControlDefinitionData<T extends ControlDefinition> = T extends CheckboxControlDefinition
   ? CheckboxControlData
@@ -57,6 +58,8 @@ export type ControlDefinitionData<T extends ControlDefinition> = T extends Check
   ? LinkControlData
   : T extends RichTextControlDefinition
   ? IndexSignatureHack<RichTextControlData>
+  : T extends StyleControlDefinition
+  ? StyleControlData
   : never
 
 export function copy(definition: Descriptor | ControlDefinition, value: any, context: CopyContext) {
