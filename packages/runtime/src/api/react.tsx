@@ -53,10 +53,7 @@ export class MakeswiftClient {
 
   constructor({ uri, cacheData }: MakeswiftClientOptions) {
     this.graphqlClient = new GraphQLClient(uri)
-    this.makeswiftApiClient = MakeswiftApiClient.configureStore({
-      graphqlClient: this.graphqlClient,
-      serializedState: cacheData,
-    })
+    this.makeswiftApiClient = MakeswiftApiClient.configureStore({ serializedState: cacheData })
     this.subscribe = this.makeswiftApiClient.subscribe
   }
 
