@@ -57,6 +57,7 @@ import {
   TextInputControlType,
   RichTextControl,
   RichTextControlType,
+  StyleControl,
 } from '../../controls'
 import { useFormattedStyle } from './controls/style'
 import { ControlValue } from './controls/control'
@@ -214,18 +215,21 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
               </ControlValue>
             )
 
-          case StyleControlType:
+          case StyleControlType: {
+            const control = (propControllers?.[propName] ?? null) as StyleControl | null
+
             return (
               <RenderHook
                 key={descriptor.type}
                 hook={useFormattedStyle}
-                parameters={[props[propName], descriptor]}
+                parameters={[props[propName], descriptor, control]}
               >
                 {value => renderFn({ ...propsValue, [propName]: value })}
               </RenderHook>
             )
+          }
 
-          case RichTextControlType:
+          case RichTextControlType: {
             const control = (propControllers?.[propName] ?? null) as RichTextControl | null
 
             return (
@@ -237,6 +241,7 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                 {value => renderFn({ ...propsValue, [propName]: value })}
               </RenderHook>
             )
+          }
 
           case SlotControlType: {
             const control = (propControllers?.[propName] ?? null) as SlotControl | null
