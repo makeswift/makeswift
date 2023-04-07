@@ -3,30 +3,16 @@ import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk'
 
 import * as APIResources from './modules/api-resources'
 import { Action, apiResourceFulfilled } from './actions'
-import { APIResource, APIResourceType } from '../api'
-import { GraphQLClient } from '../api/graphql/client'
 import {
-  FileQuery,
-  GlobalElementQuery,
-  PagePathnamesByIdQuery,
-  SwatchQuery,
-  TableQuery,
-  TypographyQuery,
-} from '../api/graphql/documents'
-import {
-  FileQueryResult,
-  FileQueryVariables,
-  GlobalElementQueryResult,
-  GlobalElementQueryVariables,
-  PagePathnamesByIdQueryResult,
-  PagePathnamesByIdQueryVariables,
-  SwatchQueryResult,
-  SwatchQueryVariables,
-  TableQueryResult,
-  TableQueryVariables,
-  TypographyQueryResult,
-  TypographyQueryVariables,
-} from '../api/graphql/generated/types'
+  APIResource,
+  APIResourceType,
+  Swatch,
+  File,
+  Typography,
+  GlobalElement,
+  PagePathnameSlice,
+  Table,
+} from '../api'
 
 const reducer = APIResources.reducer
 
@@ -54,13 +40,31 @@ export function getAPIResource<T extends APIResourceType>(
   return APIResources.getAPIResource(state, resourceType, resourceId)
 }
 
-type Thunk<ReturnType> = ThunkAction<ReturnType, State, GraphQLClient, Action>
+type Thunk<ReturnType> = ThunkAction<ReturnType, State, unknown, Action>
+
+async function fetchJson<T>(url: string): Promise<T | null> {
+  const response = await fetch(url, {
+    headers: { 'Content-Type': 'application/json' },
+  })
+
+  if (response.status === 404) return null
+
+  if (!response.ok) throw new Error(response.statusText)
+
+  if (response.headers.get('content-type')?.includes('application/json') !== true) {
+    throw new Error(
+      `Expected JSON response from "${url}" but got "${response.headers.get('content-type')}"`,
+    )
+  }
+
+  return response.json()
+}
 
 export function fetchAPIResource<T extends APIResourceType>(
   resourceType: T,
   resourceId: string,
 ): Thunk<Promise<Extract<APIResource, { __typename: T }> | null>> {
-  return async (dispatch, getState, client) => {
+  return async (dispatch, getState) => {
     const state = getState()
 
     if (getHasAPIResource(state, resourceType, resourceId)) {
@@ -71,54 +75,29 @@ export function fetchAPIResource<T extends APIResourceType>(
 
     switch (resourceType) {
       case APIResourceType.Swatch:
-        resource = (
-          await client.request<SwatchQueryResult, SwatchQueryVariables>(SwatchQuery, {
-            swatchId: resourceId,
-          })
-        ).swatch
+        resource = await fetchJson<Swatch>(`/api/makeswift/swatches/${resourceId}`)
         break
 
       case APIResourceType.File:
-        resource = (
-          await client.request<FileQueryResult, FileQueryVariables>(FileQuery, {
-            fileId: resourceId,
-          })
-        ).file
+        resource = await fetchJson<File>(`/api/makeswift/files/${resourceId}`)
         break
 
       case APIResourceType.Typography:
-        resource = (
-          await client.request<TypographyQueryResult, TypographyQueryVariables>(TypographyQuery, {
-            typographyId: resourceId,
-          })
-        ).typography
+        resource = await fetchJson<Typography>(`/api/makeswift/typographies/${resourceId}`)
         break
 
       case APIResourceType.GlobalElement:
-        resource = (
-          await client.request<GlobalElementQueryResult, GlobalElementQueryVariables>(
-            GlobalElementQuery,
-            { globalElementId: resourceId },
-          )
-        ).globalElement
+        resource = await fetchJson<GlobalElement>(`/api/makeswift/global-elements/${resourceId}`)
         break
 
       case APIResourceType.PagePathnameSlice:
-        resource =
-          (
-            await client.request<PagePathnamesByIdQueryResult, PagePathnamesByIdQueryVariables>(
-              PagePathnamesByIdQuery,
-              { pageIds: [resourceId] },
-            )
-          ).pagePathnamesById[0] ?? null
+        resource = await fetchJson<PagePathnameSlice>(
+          `/api/makeswift/page-pathname-slices/${resourceId}`,
+        )
         break
 
       case APIResourceType.Table:
-        resource = (
-          await client.request<TableQueryResult, TableQueryVariables>(TableQuery, {
-            tableId: resourceId,
-          })
-        ).table
+        resource = await fetchJson<Table>(`/api/makeswift/tables/${resourceId}`)
         break
 
       default:
@@ -131,20 +110,10 @@ export function fetchAPIResource<T extends APIResourceType>(
   }
 }
 
-export type Dispatch = ThunkDispatch<State, GraphQLClient, Action>
+export type Dispatch = ThunkDispatch<State, unknown, Action>
 
 export type Store = ReduxStore<State, Action> & { dispatch: Dispatch }
 
-export function configureStore({
-  graphqlClient,
-  serializedState,
-}: {
-  graphqlClient: GraphQLClient
-  serializedState?: SerializedState
-}): Store {
-  return createStore(
-    reducer,
-    APIResources.getInitialState(serializedState),
-    applyMiddleware(thunk.withExtraArgument(graphqlClient)),
-  )
+export function configureStore({ serializedState }: { serializedState?: SerializedState }): Store {
+  return createStore(reducer, APIResources.getInitialState(serializedState), applyMiddleware(thunk))
 }
