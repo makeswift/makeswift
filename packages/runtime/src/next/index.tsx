@@ -5,8 +5,6 @@ import { Page as PageMeta } from '../components/page'
 import { MakeswiftClient } from '../api/react'
 import { MakeswiftPageSnapshot } from './client'
 
-export { MakeswiftClient }
-
 export type PageProps = {
   snapshot: MakeswiftPageSnapshot
 }
