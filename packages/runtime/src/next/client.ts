@@ -1,3 +1,27 @@
+import { File, GlobalElement, PagePathnameSlice, Swatch, Table, Typography } from '../api'
+import { GraphQLClient } from '../api/graphql/client'
+import {
+  FileQuery,
+  GlobalElementQuery,
+  PagePathnamesByIdQuery,
+  SwatchQuery,
+  TableQuery,
+  TypographyQuery,
+} from '../api/graphql/documents'
+import {
+  FileQueryResult,
+  FileQueryVariables,
+  GlobalElementQueryResult,
+  GlobalElementQueryVariables,
+  PagePathnamesByIdQueryResult,
+  PagePathnamesByIdQueryVariables,
+  SwatchQueryResult,
+  SwatchQueryVariables,
+  TableQueryResult,
+  TableQueryVariables,
+  TypographyQueryResult,
+  TypographyQueryVariables,
+} from '../api/graphql/generated/types'
 import { CacheData, MakeswiftClient } from '../api/react'
 import { Element } from '../state/react-page'
 
@@ -60,6 +84,7 @@ type MakeswiftConfig = {
 export class Makeswift {
   private apiKey: string
   private apiOrigin: URL
+  private graphqlClient: GraphQLClient
 
   constructor(apiKey: string, { apiOrigin = 'https://api.makeswift.com' }: MakeswiftConfig = {}) {
     if (typeof apiKey !== 'string') {
@@ -79,6 +104,8 @@ export class Makeswift {
         `The Makeswift client received an invalid \`apiOrigin\` parameter: "${apiOrigin}".`,
       )
     }
+
+    this.graphqlClient = new GraphQLClient(new URL('graphql', apiOrigin).href)
   }
 
   private async fetch(path: string, init?: RequestInit): Promise<Response> {
@@ -142,5 +169,59 @@ export class Makeswift {
     const snapshot = this.getPageSnapshotByPageId(page.id, { preview })
 
     return snapshot
+  }
+
+  async getSwatch(swatchId: string): Promise<Swatch | null> {
+    const result = await this.graphqlClient.request<SwatchQueryResult, SwatchQueryVariables>(
+      SwatchQuery,
+      { swatchId },
+    )
+
+    return result.swatch
+  }
+
+  async getFile(fileId: string): Promise<File | null> {
+    const result = await this.graphqlClient.request<FileQueryResult, FileQueryVariables>(
+      FileQuery,
+      { fileId },
+    )
+
+    return result.file
+  }
+
+  async getTypography(typographyId: string): Promise<Typography | null> {
+    const result = await this.graphqlClient.request<
+      TypographyQueryResult,
+      TypographyQueryVariables
+    >(TypographyQuery, { typographyId })
+
+    return result.typography
+  }
+
+  async getGlobalElement(globalElementId: string): Promise<GlobalElement | null> {
+    const result = await this.graphqlClient.request<
+      GlobalElementQueryResult,
+      GlobalElementQueryVariables
+    >(GlobalElementQuery, { globalElementId })
+
+    return result.globalElement
+  }
+
+  async getPagePathnameSlice(pageId: string): Promise<PagePathnameSlice | null> {
+    const result = await this.graphqlClient.request<
+      PagePathnamesByIdQueryResult,
+      PagePathnamesByIdQueryVariables
+    >(PagePathnamesByIdQuery, { pageIds: [pageId] })
+
+    return result.pagePathnamesById.at(0) ?? null
+  }
+
+  async getTable(tableId: string): Promise<Table | null> {
+    const result = await this.graphqlClient.request<TableQueryResult, TableQueryVariables>(
+      TableQuery,
+      { tableId },
+    )
+
+    return result.table
   }
 }
