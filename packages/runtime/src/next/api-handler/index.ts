@@ -1,5 +1,8 @@
 import Cors from 'cors'
 import { NextApiHandler } from 'next'
+import { Match, match as matchPattern } from 'path-to-regexp'
+import { APIResource } from '../../api'
+import { Makeswift } from '../client'
 
 import elementTree, { ElementTreeResponse } from './handlers/element-tree'
 import fonts, { Font, FontsResponse, GetFonts } from './handlers/fonts'
@@ -23,11 +26,16 @@ export type MakeswiftApiHandlerResponse =
   | ProxyPreviewModeResponse
   | FontsResponse
   | ElementTreeResponse
+  | APIResource
   | NotFoundError
 
 export function MakeswiftApiHandler(
   apiKey: string,
-  { appOrigin = 'https://app.makeswift.com', getFonts }: MakeswiftApiHandlerConfig = {},
+  {
+    appOrigin = 'https://app.makeswift.com',
+    apiOrigin = 'https://api.makeswift.com',
+    getFonts,
+  }: MakeswiftApiHandlerConfig = {},
 ): NextApiHandler<MakeswiftApiHandlerResponse> {
   const cors = Cors({ origin: appOrigin })
 
@@ -57,26 +65,50 @@ export function MakeswiftApiHandler(
       )
     }
 
-    const action = makeswift.join('/')
+    const client = new Makeswift(apiKey, { apiOrigin })
+    const action = '/' + makeswift.join('/')
+    const matches = <T extends object>(pattern: string): Match<T> =>
+      matchPattern<T>(pattern, { decode: decodeURIComponent })(action)
 
-    switch (action) {
-      case 'manifest':
-        return manifest(req, res, { apiKey })
+    let m
 
-      case 'revalidate':
-        return revalidate(req, res, { apiKey })
+    if (matches('/manifest')) return manifest(req, res, { apiKey })
 
-      case 'proxy-preview-mode':
-        return proxyPreviewMode(req, res, { apiKey })
+    if (matches('/revalidate')) return revalidate(req, res, { apiKey })
 
-      case 'fonts':
-        return fonts(req, res, { getFonts })
+    if (matches('/proxy-preview-mode')) return proxyPreviewMode(req, res, { apiKey })
 
-      case 'element-tree':
-        return elementTree(req, res)
+    if (matches('/fonts')) return fonts(req, res, { getFonts })
 
-      default:
-        return res.status(404).json({ message: 'Not Found' })
+    if (matches('/element-tree')) return elementTree(req, res)
+
+    const handleResource = <T extends APIResource>(resource: T | null): void =>
+      resource === null ? res.status(404).json({ message: 'Not Found' }) : res.json(resource)
+
+    if ((m = matches<{ id: string }>('/swatches/:id'))) {
+      return client.getSwatch(m.params.id).then(handleResource)
     }
+
+    if ((m = matches<{ id: string }>('/files/:id'))) {
+      return client.getFile(m.params.id).then(handleResource)
+    }
+
+    if ((m = matches<{ id: string }>('/typographies/:id'))) {
+      return client.getTypography(m.params.id).then(handleResource)
+    }
+
+    if ((m = matches<{ id: string }>('/global-elements/:id'))) {
+      return client.getGlobalElement(m.params.id).then(handleResource)
+    }
+
+    if ((m = matches<{ id: string }>('/page-pathname-slices/:id'))) {
+      return client.getPagePathnameSlice(m.params.id).then(handleResource)
+    }
+
+    if ((m = matches<{ id: string }>('/tables/:id'))) {
+      return client.getTable(m.params.id).then(handleResource)
+    }
+
+    return res.status(404).json({ message: 'Not Found' })
   }
 }
