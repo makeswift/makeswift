@@ -1,5 +1,5 @@
 import { CSSObject } from '@emotion/css'
-import { useEffect, useId, useRef } from 'react'
+import { useEffect, useId } from 'react'
 
 import { useBorder, BorderSide } from '../../../components/hooks'
 import { colorToString } from '../../../components/utils/colorToString'
@@ -18,7 +18,8 @@ import { BorderRadiusLonghandPropertyData } from '../../../css/border-radius'
 import { lengthPercentageDataToString } from '../../../css/length-percentage'
 import { marginPropertyDataToStyle } from '../../../css/margin'
 import { paddingPropertyDataToStyle } from '../../../css/padding'
-import { pollBoxModel } from '../poll-box-model'
+import { BoxModel, getBox } from '../../../box-model'
+import deepEqual from '../../../utils/deepEqual'
 
 const defaultMargin = {
   marginTop: 0,
@@ -121,27 +122,39 @@ export function useFormattedStyle(
   control: StyleControl | null,
 ): StyleControlFormattedValue {
   const style = useStyleControlCssObject(styleControlData, controlDefinition)
-  const elementRef = useRef<Element | null>(null)
+  // We're removing the colons because useId returns a string wrapped with colons, e.g. ":R3d5sm:",
+  // and we cannot use colons in a class name.
   const guid = useId().replaceAll(':', '')
   const styleClassName = useStyle(style)
   const classNames = `${styleClassName} ${guid}`
 
   useEffect(() => {
-    if (guid == null || elementRef.current != null) return
+    let currentBoxModel: BoxModel | null = null
 
-    const element = document.querySelector(`.${guid}`)
+    const handleAnimationFrameRequest = () => {
+      if (control == null) return
 
-    elementRef.current = element
-  }, [guid])
+      const element = document.querySelector(`.${guid}`)
 
-  useEffect(() => {
-    if (elementRef.current == null || control == null) return
+      const measuredBoxModel = element == null ? null : getBox(element)
 
-    return pollBoxModel({
-      element: elementRef.current,
-      onBoxModelChange: boxModel => control.changeBoxModel(boxModel),
-    })
-  }, [control])
+      if (!deepEqual(currentBoxModel, measuredBoxModel)) {
+        currentBoxModel = measuredBoxModel
+
+        control.changeBoxModel(currentBoxModel)
+      }
+
+      animationFrameHandle = requestAnimationFrame(handleAnimationFrameRequest)
+    }
+
+    let animationFrameHandle = requestAnimationFrame(handleAnimationFrameRequest)
+
+    return () => {
+      cancelAnimationFrame(animationFrameHandle)
+
+      control?.changeBoxModel(null)
+    }
+  }, [guid, control])
 
   return classNames
 }
