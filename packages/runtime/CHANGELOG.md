@@ -1,5 +1,35 @@
 # @makeswift/runtime
 
+## 0.8.0
+
+### Minor Changes
+
+- f35186d: BREAKING: The `MakeswiftClient.prefetch()` and `MakeswiftClient.fetchTypographies` methods have been removed. These were internal APIs so there shouldn't be any changes required to upgrade.
+
+  Refactor introspection so that it's internal to the Makeswift API client.
+
+- 8e39cdc: Use the new Makeswift API resource endpoints exposed by the host via the Makeswift Next.js API handler. While change is backwards-caomptible, it's a large enough refactor that it warans a minor version bump.
+
+### Patch Changes
+
+- f9b900a: Moved proxy server inside Preview Mode proxy handler.
+- 9d62088: BREAKING: Remove the `MakeswiftClient` export from `@makeswift/runtime/next`. This was an internal API that isn't documented and shouldn't be depended on by Makeswift hosts.
+- 8f00a2f: Removes invoke headers from Next.js server when proxying request in Preview Mode.
+- 025c8d9: Avoids using socket local port when proxying Preview Mode in development.
+- 6d468d1: Remove snapshotting code. We've re-architected versioning and won't be using snapshots anymore.
+- 78ff346: Remove unused GraphQL queries.
+- d08eb8d: Add API endpoints to the Makeswift Next.js API handler for Makeswift API resources. The following endpoints were added:
+
+  - /api/makeswift/swatches/:id
+  - /api/makeswift/files/:id
+  - /api/makeswift/typographies/:id
+  - /api/makeswift/global-elements/:id
+  - /api/makeswift/page-pathname-slices/:id
+  - /api/makeswift/tables/:id
+
+- Updated dependencies [f424011]
+  - @makeswift/next-plugin@0.2.7
+
 ## 0.7.18
 
 ### Patch Changes
