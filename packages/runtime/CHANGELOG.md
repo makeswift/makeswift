@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.7.18
+
+### Patch Changes
+
+- acd43a8: Make `StyleControl` composable.
+
 ## 0.7.17
 
 ### Patch Changes
