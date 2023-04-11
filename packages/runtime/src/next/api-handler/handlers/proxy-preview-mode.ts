@@ -3,8 +3,6 @@ import { createProxyServer } from 'http-proxy'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { parse } from 'set-cookie-parser'
 
-const previewModeProxy = createProxyServer()
-
 type ProxyPreviewModeError = string
 
 export type ProxyPreviewModeResponse = ProxyPreviewModeError
@@ -14,7 +12,9 @@ export default async function proxyPreviewMode(
   res: NextApiResponse<ProxyPreviewModeError>,
   { apiKey }: { apiKey: string },
 ): Promise<void> {
-  previewModeProxy.on('proxyReq', proxyReq => {
+  const previewModeProxy = createProxyServer()
+
+  previewModeProxy.once('proxyReq', proxyReq => {
     proxyReq.removeHeader('X-Makeswift-Preview-Mode')
 
     // The following headers are Next.js-specific and are removed to prevent Next.js from
