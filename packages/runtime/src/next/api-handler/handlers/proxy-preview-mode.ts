@@ -17,6 +17,11 @@ export default async function proxyPreviewMode(
   previewModeProxy.on('proxyReq', proxyReq => {
     proxyReq.removeHeader('X-Makeswift-Preview-Mode')
 
+    // The following headers are Next.js-specific and are removed to prevent Next.js from
+    // short-circuiting requests, breaking routing.
+    proxyReq.removeHeader('X-Invoke-Path')
+    proxyReq.removeHeader('X-Invoke-Query')
+
     const url = new URL(proxyReq.path, 'http://n')
 
     url.searchParams.delete('x-makeswift-preview-mode')
