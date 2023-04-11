@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.7.19
+
+### Patch Changes
+
+- ac3eebf: Removes invoke headers from Next.js server when proxying request in Preview Mode.
+
 ## 0.7.18
 
 ### Patch Changes
