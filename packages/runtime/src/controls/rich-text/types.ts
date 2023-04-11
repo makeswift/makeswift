@@ -26,7 +26,23 @@ export type RichTextTypography = {
 export type Text = {
   text: string
   typography?: RichTextTypography
+  slice?: boolean
 }
+
+export const RootBlockType = {
+  Paragraph: 'paragraph',
+  Heading1: 'heading-one',
+  Heading2: 'heading-two',
+  Heading3: 'heading-three',
+  Heading4: 'heading-four',
+  Heading5: 'heading-five',
+  Heading6: 'heading-six',
+  BlockQuote: 'blockquote',
+  UnorderedList: 'unordered-list',
+  OrderedList: 'ordered-list',
+} as const
+
+export type RootBlockType = typeof RootBlockType[keyof typeof RootBlockType]
 
 export const BlockType = {
   Paragraph: 'paragraph',
@@ -139,28 +155,28 @@ export type BlockTextAlignment = typeof BlockTextAlignment[keyof typeof BlockTex
 
 export type ResponsiveBlockTextAlignment = ResponsiveValue<BlockTextAlignment>
 
-type CodeElement = {
+export type CodeElement = {
   children: Array<Text | Inline>
   type: typeof InlineType.Code
 }
 
-type SuperElement = {
+export type SuperElement = {
   children: Array<Text | Inline>
   type: typeof InlineType.SuperScript
 }
 
-type SubElement = {
+export type SubElement = {
   children: Array<Text | Inline>
   type: typeof InlineType.SubScript
 }
 
-type LinkElement = {
+export type LinkElement = {
   children: Array<Text | Inline>
   type: typeof InlineType.Link
   link: LinkControlData
 }
 
-export type Block =
+export type RootBlock =
   | ParagraphElement
   | Heading1Element
   | Heading2Element
@@ -170,8 +186,8 @@ export type Block =
   | Heading6Element
   | BlockQuoteElement
   | ListElement
-  | ListItemElement
-  | ListItemChildElement
+
+export type Block = RootBlock | ListItemElement | ListItemChildElement
 
 export type Inline = CodeElement | SuperElement | SubElement | LinkElement
 
