@@ -35,8 +35,16 @@ export default async function proxyPreviewMode(
 
   if (host == null) return res.status(400).send('Bad Request')
 
-  const forwardedProto = req.headers['x-forwarded-proto']
-  const isForwardedProtoHttps = typeof forwardedProto === 'string' && forwardedProto === 'https'
+  const forwardedProtoHeader = req.headers['x-forwarded-proto']
+
+  let forwardedProto: string[] = []
+  if (Array.isArray(forwardedProtoHeader)) {
+    forwardedProto = forwardedProtoHeader
+  } else if (typeof forwardedProtoHeader === 'string') {
+    forwardedProto = forwardedProtoHeader.split(',')
+  }
+
+  const isForwardedProtoHttps = forwardedProto.includes('https')
 
   const forwardedSSL = req.headers['x-forwarded-ssl']
   const isForwardedSSL = typeof forwardedSSL === 'string' && forwardedSSL === 'on'
@@ -44,18 +52,12 @@ export default async function proxyPreviewMode(
   const proto = isForwardedProtoHttps || isForwardedSSL ? 'https' : 'http'
   let target = `${proto}://${host}`
 
-  // During local development we want to use the local Next.js address for proxying. The
-  // reason we want to do this is that the user might be using a local SSL proxy to deal with
-  // mixed content browser limitations. If the user generates a locally-trusted CA for their
-  // SSL cert, it's likely that Node.js won't trust this CA unless they used the
-  // `NODE_EXTRA_CA_CERTS` option (see https://stackoverflow.com/a/68135600). To provide a
-  // better developer experience, instead of requiring the user to provide the CA to Node.js,
-  // we just proxy directly to the running Next.js process.
-  if (process.env['NODE_ENV'] !== 'production') {
-    const port = req.socket.localPort
-
-    if (port != null) target = `http://localhost:${port}`
-  }
+  // If the user generates a locally-trusted CA for their SSL cert, it's likely that Node.js won't
+  // trust this CA unless they used the `NODE_EXTRA_CA_CERTS` option
+  // (see https://stackoverflow.com/a/68135600). To provide a better developer experience, instead
+  // of requiring the user to provide the CA to Node.js, we don't enforce SSL during local
+  // development.
+  const secure = process.env['NODE_ENV'] === 'production'
 
   const setCookie = res.setPreviewData({ makeswift: true }).getHeader('Set-Cookie')
   res.removeHeader('Set-Cookie')
@@ -67,7 +69,7 @@ export default async function proxyPreviewMode(
     .join(';')
 
   return await new Promise<void>((resolve, reject) =>
-    previewModeProxy.web(req, res, { target, headers: { cookie } }, err => {
+    previewModeProxy.web(req, res, { target, headers: { cookie }, secure }, err => {
       if (err) reject(err)
       else resolve()
     }),
