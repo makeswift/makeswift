@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.8.1
+
+### Patch Changes
+
+- a0e7079: Added missing exports for rich text plugins.
+
 ## 0.8.0
 
 ### Minor Changes
