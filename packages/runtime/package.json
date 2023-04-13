@@ -1,6 +1,6 @@
 {
   "name": "@makeswift/runtime",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "license": "MIT",
   "main": "dist/main.cjs",
   "module": "dist/main.es",
@@ -112,7 +112,7 @@
     "@emotion/server": "^11.4.0",
     "@emotion/sheet": "^1.0.3",
     "@emotion/utils": "^1.0.0",
-    "@makeswift/next-plugin": "0.2.7",
+    "@makeswift/next-plugin": "0.2.8",
     "@popmotion/popcorn": "^0.4.4",
     "@types/cookie": "^0.5.1",
     "@types/http-proxy": "^1.17.9",

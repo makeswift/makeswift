@@ -1,5 +1,11 @@
 # @makeswift/next-plugin
 
+## 0.2.8
+
+### Patch Changes
+
+- 49b0981: Add `previewMode` option to Next.js plugin.
+
 ## 0.2.7
 
 ### Patch Changes
