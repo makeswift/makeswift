@@ -1,7 +1,7 @@
 // @ts-check
 
 /** @typedef {import('next').NextConfig} NextConfig */
-/** @typedef {{ resolveSymlinks?: boolean; appOrigin?: string }} MakeswiftNextPluginOptions */
+/** @typedef {{ resolveSymlinks?: boolean; appOrigin?: string; previewMode?: boolean }} MakeswiftNextPluginOptions */
 /** @typedef {NonNullable<import('next').NextConfig['images']>} ImageConfig */
 /** @typedef {ImageConfig['domains']} ImageConfigDomains */
 /** @typedef {ImageConfig['remotePatterns']} ImageConfigRemotePatterns */
@@ -34,7 +34,11 @@ const NEXT_IMAGE_REVIEW_APP_REMOTE_PATTERNS = [
 
 /** @type {(options: MakeswiftNextPluginOptions) => (nextConfig: NextConfig) => NextConfig} */
 module.exports =
-  ({ resolveSymlinks, appOrigin = 'https://app.makeswift.com' } = {}) =>
+  ({
+    resolveSymlinks,
+    appOrigin = 'https://app.makeswift.com',
+    previewMode = true,
+  } = {}) =>
   (nextConfig = {}) => {
     /** @type {NextConfig} */
     let enhancedConfig = {
@@ -50,33 +54,36 @@ module.exports =
       },
       async rewrites() {
         const rewrites = await nextConfig.rewrites?.()
+        const previewModeRewrites = [
+          {
+            has: [
+              {
+                type: 'query',
+                key: 'x-makeswift-preview-mode',
+                value: '(?<secret>.+)',
+              },
+            ],
+            source: '/:path(.*)',
+            destination: '/api/makeswift/proxy-preview-mode',
+            locale: false,
+          },
+          {
+            has: [
+              {
+                type: 'header',
+                key: 'X-Makeswift-Preview-Mode',
+                value: '(?<secret>.+)',
+              },
+            ],
+            source: '/:path(.*)',
+            destination: '/api/makeswift/proxy-preview-mode',
+            locale: false,
+          },
+        ]
 
         return {
           beforeFiles: [
-            {
-              has: [
-                {
-                  type: 'query',
-                  key: 'x-makeswift-preview-mode',
-                  value: '(?<secret>.+)',
-                },
-              ],
-              source: '/:path(.*)',
-              destination: '/api/makeswift/proxy-preview-mode',
-              locale: false,
-            },
-            {
-              has: [
-                {
-                  type: 'header',
-                  key: 'X-Makeswift-Preview-Mode',
-                  value: '(?<secret>.+)',
-                },
-              ],
-              source: '/:path(.*)',
-              destination: '/api/makeswift/proxy-preview-mode',
-              locale: false,
-            },
+            ...(previewMode ? previewModeRewrites : []),
             ...(Array.isArray(rewrites) ? [] : rewrites?.beforeFiles ?? []),
           ],
           afterFiles: Array.isArray(rewrites)
