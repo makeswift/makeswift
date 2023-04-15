@@ -538,8 +538,8 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
             break
 
           case ActionTypes.CHANGE_PATHNAME: {
-            const pathname = action.payload.pathname.replace(/^\//, '')
-            const currentPathname = Router.asPath.replace(/^\//, '')
+            const pathname = action.payload.pathname.replace(/^\//, '/')
+            const currentPathname = Router.asPath.replace(/^\//, '/')
 
             if (pathname !== currentPathname) Router.push(pathname)
             break
