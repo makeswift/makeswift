@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic'
 import { forwardNextDynamicRef } from '../../../next'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
-import { findDeviceOverride } from '../../utils/devices'
+import { findBreakpointOverride } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 import { Alignments, Contrast, Contrasts, Shapes, Sizes } from './context/FormContext'
 
@@ -66,7 +66,11 @@ export function registerComponent(runtime: ReactRuntime) {
         labelTextColor: Props.ResponsiveColor((props, device) => {
           const hidden = props.tableId == null
           const responsiveContrast = props.contrast as ResponsiveValue<Contrast>
-          const contrast = findDeviceOverride<Contrast>(responsiveContrast, device)
+          const contrast = findBreakpointOverride<Contrast>(
+            runtime.getBreakpoints(),
+            responsiveContrast,
+            device,
+          )
 
           return {
             hidden,

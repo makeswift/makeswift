@@ -3,7 +3,7 @@ import { forwardNextDynamicRef } from '../../../next'
 import { Props } from '../../../prop-controllers'
 import { NavigationLinksValue, ResponsiveValue } from '../../../prop-controllers/descriptors'
 import { ReactRuntime } from '../../../runtimes/react'
-import { findDeviceOverride } from '../../utils/devices'
+import { findBreakpointOverride } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 
 export function registerComponent(runtime: ReactRuntime) {
@@ -72,7 +72,11 @@ export function registerComponent(runtime: ReactRuntime) {
         }),
         mobileMenuOpenIconColor: Props.ResponsiveColor((props, device) => {
           const mobileMenuAnimation = props.mobileMenuAnimation as ResponsiveValue<string>
-          const hidden = !findDeviceOverride(mobileMenuAnimation, device)
+          const hidden = !findBreakpointOverride(
+            runtime.getBreakpoints(),
+            mobileMenuAnimation,
+            device,
+          )
 
           return {
             label: 'Open icon color',
@@ -82,7 +86,11 @@ export function registerComponent(runtime: ReactRuntime) {
         }),
         mobileMenuCloseIconColor: Props.ResponsiveColor((props, device) => {
           const mobileMenuAnimation = props.mobileMenuAnimation as ResponsiveValue<string>
-          const hidden = !findDeviceOverride(mobileMenuAnimation, device)
+          const hidden = !findBreakpointOverride(
+            runtime.getBreakpoints(),
+            mobileMenuAnimation,
+            device,
+          )
 
           return {
             label: 'Close icon color',
@@ -92,7 +100,11 @@ export function registerComponent(runtime: ReactRuntime) {
         }),
         mobileMenuBackgroundColor: Props.ResponsiveColor((props, device) => {
           const mobileMenuAnimation = props.mobileMenuAnimation as ResponsiveValue<string>
-          const hidden = !findDeviceOverride(mobileMenuAnimation, device)
+          const hidden = !findBreakpointOverride(
+            runtime.getBreakpoints(),
+            mobileMenuAnimation,
+            device,
+          )
 
           return {
             label: 'Menu BG color',

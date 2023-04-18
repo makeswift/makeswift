@@ -5,11 +5,15 @@ import { DeviceOverride, ResponsiveValue } from '../../../../../prop-controllers
 import { useTypography, useSwatches } from '../../../../../runtimes/react/hooks/makeswift-api'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 import { colorToString } from '../../../../utils/colorToString'
-import { findDeviceOverride, shallowMergeFallbacks } from '../../../../utils/devices'
 import { isNonNullable } from '../../../../utils/isNonNullable'
 import { useResponsiveStyle } from '../../../../utils/responsive-style'
 import { ColorValue } from '../../../../utils/types'
 import { RichTextTypography } from '../../../../../controls'
+import {
+  findBreakpointOverride,
+  shallowMergeFallbacks,
+} from '../../../../../state/modules/breakpoints'
+import { useBreakpoints } from '../../../../../runtimes/react'
 
 export type RichTextTypographyValue = RichTextTypography['style'][number]['value']
 
@@ -99,6 +103,7 @@ export default function useEnhancedTypography(value?: RichTextTypography): Enhan
   const typography = typographyFragementToRichTextTypography(useTypography(value?.id ?? null))
   const source = typography?.style.filter(isDeviceOverride) ?? []
   const override = value?.style.filter(isDeviceOverride) ?? []
+  const breakpoints = useBreakpoints()
 
   const swatchIds = [
     ...getTypographyStyleSwatchIds(value?.style),
@@ -115,8 +120,8 @@ export default function useEnhancedTypography(value?: RichTextTypography): Enhan
 
   return devices
     .map(deviceId => {
-      const deviceSource = findDeviceOverride(enhancedSource, deviceId)?.value
-      const deviceOverride = findDeviceOverride(enhancedOverride, deviceId)?.value
+      const deviceSource = findBreakpointOverride(breakpoints, enhancedSource, deviceId)?.value
+      const deviceOverride = findBreakpointOverride(breakpoints, enhancedOverride, deviceId)?.value
 
       if (deviceSource && deviceOverride) {
         return {
