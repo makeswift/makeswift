@@ -1,23 +1,30 @@
 import { ReactNode, useMemo } from 'react'
 
-import { StoreContext, storeContextDefaultValue } from '..'
+import { StoreContext } from '..'
 import * as ReactPage from '../../../state/react-page'
 import { MakeswiftProvider, MakeswiftClient } from '../../../api/react'
+import { ReactRuntime } from '../../../react'
 
 type Props = {
   client: MakeswiftClient
   rootElements?: Map<string, ReactPage.Element>
   children?: ReactNode
+  runtime?: ReactRuntime
 }
 
-export default function LiveProvider({ client, children, rootElements }: Props): JSX.Element {
+export default function LiveProvider({
+  client,
+  children,
+  rootElements,
+  runtime,
+}: Props): JSX.Element {
   const store = useMemo(
     () =>
       ReactPage.configureStore({
-        preloadedState: storeContextDefaultValue.getState(),
+        preloadedState: runtime ? runtime.store.getState() : ReactRuntime.store.getState(),
         rootElements,
       }),
-    [rootElements],
+    [rootElements, runtime],
   )
 
   return (

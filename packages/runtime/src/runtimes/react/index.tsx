@@ -44,66 +44,110 @@ import {
   parseBreakpointsInput,
 } from '../../state/modules/breakpoints'
 
-export const storeContextDefaultValue = ReactPage.configureStore()
+export class ReactRuntime {
+  // TODO: the static methods here are deprecated and only keep here for backward-compatibility purpose.
+  // We will remove them when we release a new breaking change.
+  // ------------------ Deprecated API ------------------ //
+  static store = ReactPage.configureStore()
+  static registerComponent<
+    P extends Record<string, PropControllerDescriptor>,
+    C extends ReactPage.ComponentType<{ [K in keyof P]: PropControllerDescriptorValueType<P[K]> }>,
+  >(
+    component: C,
+    {
+      type,
+      label,
+      icon = 'Cube40',
+      hidden = false,
+      props,
+    }: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P },
+  ): () => void {
+    const unregisterComponent = this.store.dispatch(
+      registerComponentEffect(type, { label, icon, hidden }, props ?? {}),
+    )
 
-export interface ReactRuntime {
+    const unregisterReactComponent = this.store.dispatch(
+      registerReactComponentEffect(type, component as unknown as ReactPage.ComponentType),
+    )
+
+    return () => {
+      unregisterComponent()
+      unregisterReactComponent()
+    }
+  }
+  static copyElementTree(
+    elementTree: ReactPage.ElementData,
+    replacementContext: ReactPage.SerializableReplacementContext,
+  ): ReactPage.Element {
+    return ReactPage.copyElementTree(this.store.getState(), elementTree, replacementContext)
+  }
+  static getBreakpoints(): Breakpoints {
+    return ReactPage.getBreakpoints(this.store.getState())
+  }
+  static unstable_setBreakpoints(breakpoints: BreakpointsInput) {
+    return this.store.dispatch(setBreakpoints(parseBreakpointsInput(breakpoints)))
+  }
+  // ------------------ Deprecated API ends here ------------------ //
+
+  store: ReactPage.Store
+
   registerComponent<
     P extends Record<string, PropControllerDescriptor>,
     C extends ReactPage.ComponentType<{ [K in keyof P]: PropControllerDescriptorValueType<P[K]> }>,
   >(
     component: C,
-    meta: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P },
-  ): () => void
+    {
+      type,
+      label,
+      icon = 'Cube40',
+      hidden = false,
+      props,
+    }: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P },
+  ): () => void {
+    const unregisterComponent = this.store.dispatch(
+      registerComponentEffect(type, { label, icon, hidden }, props ?? {}),
+    )
+
+    const unregisterReactComponent = this.store.dispatch(
+      registerReactComponentEffect(type, component as unknown as ReactPage.ComponentType),
+    )
+
+    return () => {
+      unregisterComponent()
+      unregisterReactComponent()
+    }
+  }
   copyElementTree(
     elementTree: ReactPage.ElementData,
     replacementContext: ReactPage.SerializableReplacementContext,
-  ): ReactPage.Element
-  getBreakpoints(): Breakpoints
-  unstable_setBreakpoints(breakpoints: BreakpointsInput): void
-}
+  ): ReactPage.Element {
+    return ReactPage.copyElementTree(this.store.getState(), elementTree, replacementContext)
+  }
+  getBreakpoints(): Breakpoints {
+    return ReactPage.getBreakpoints(this.store.getState())
+  }
+  unstable_setBreakpoints(breakpoints: BreakpointsInput) {
+    return this.store.dispatch(setBreakpoints(parseBreakpointsInput(breakpoints)))
+  }
 
-function createReactRuntime(store: ReactPage.Store): ReactRuntime {
-  return {
-    registerComponent(component, { type, label, icon = 'Cube40', hidden = false, props }) {
-      const unregisterComponent = store.dispatch(
-        registerComponentEffect(type, { label, icon, hidden }, props ?? {}),
-      )
+  constructor() {
+    this.store = ReactPage.configureStore()
 
-      const unregisterReactComponent = store.dispatch(
-        registerReactComponentEffect(type, component as unknown as ReactPage.ComponentType),
-      )
-
-      return () => {
-        unregisterComponent()
-        unregisterReactComponent()
-      }
-    },
-    copyElementTree(
-      elementTree: ReactPage.ElementData,
-      replacementContext: ReactPage.SerializableReplacementContext,
-    ) {
-      return ReactPage.copyElementTree(store.getState(), elementTree, replacementContext)
-    },
-    getBreakpoints() {
-      return ReactPage.getBreakpoints(store.getState())
-    },
-    unstable_setBreakpoints(breakpoints: BreakpointsInput) {
-      return store.dispatch(setBreakpoints(parseBreakpointsInput(breakpoints)))
-    },
+    registerBuiltinComponents(this)
   }
 }
 
-export const ReactRuntime = createReactRuntime(storeContextDefaultValue)
-
+// TODO: We should delete this once we remove the static methods in ReactRuntime.
 registerBuiltinComponents(ReactRuntime)
 
-export const StoreContext = createContext(storeContextDefaultValue)
+export const StoreContext = createContext(ReactRuntime.store)
 
 type RuntimeProviderProps = {
   client: MakeswiftClient
   preview: boolean
   rootElements?: Map<string, ReactPage.Element>
   children?: ReactNode
+  runtime?: ReactRuntime
 }
 
 const PreviewProvider = dynamic(() => import('./components/PreviewProvider'))

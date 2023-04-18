@@ -1,12 +1,13 @@
 import { memo, useMemo } from 'react'
 
-import { RuntimeProvider } from '../runtimes/react'
+import { RuntimeProvider, ReactRuntime } from '../runtimes/react'
 import { Page as PageMeta } from '../components/page'
 import { MakeswiftClient } from '../api/react'
 import { MakeswiftPageSnapshot } from './client'
 
 export type PageProps = {
   snapshot: MakeswiftPageSnapshot
+  runtime?: ReactRuntime
 }
 import {
   GetServerSidePropsContext,
@@ -117,7 +118,7 @@ export async function getServerSideProps(
   return { props: { snapshot } }
 }
 
-export const Page = memo(({ snapshot }: PageProps) => {
+export const Page = memo(({ snapshot, runtime }: PageProps) => {
   const client = useMemo(
     () =>
       new MakeswiftClient({
@@ -132,6 +133,7 @@ export const Page = memo(({ snapshot }: PageProps) => {
       client={client}
       rootElements={new Map([[snapshot.document.id, snapshot.document.data]])}
       preview={snapshot.preview}
+      runtime={runtime}
     >
       {/* We use a key here to reset the Snippets state in the PageMeta component */}
       <PageMeta key={snapshot.document.data.key} document={snapshot.document} />
