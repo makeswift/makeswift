@@ -1,32 +1,49 @@
 import { useSyncExternalStore } from 'use-sync-external-store/shim'
+import { useCallback } from 'react'
+
 import { DeviceOverride } from '../../prop-controllers'
-import { DEVICES, findDeviceOverride, getDeviceMediaQuery } from '../utils/devices'
+import {
+  Breakpoints,
+  findBreakpointOverride,
+  getBaseBreakpoint,
+  getBreakpointMediaQuery,
+} from '../../state/modules/breakpoints'
+import { useBreakpoints } from '../../runtimes/react'
 
-const DEVICE_QUERIES = DEVICES.map(device => ({
-  id: device.id,
-  query: getDeviceMediaQuery(device).replace('@media', ''),
-}))
-
-function subscribe(notify: () => void) {
-  const cleanUpFns = DEVICE_QUERIES.map(q => {
-    const mediaQueryList = window.matchMedia(q.query)
-    mediaQueryList.addEventListener('change', notify)
-    return () => mediaQueryList.removeEventListener('change', notify)
-  })
-  return () => cleanUpFns.forEach(fn => fn())
-}
+const getDeviceQueries = (breakpoints: Breakpoints) =>
+  breakpoints.map(device => ({
+    id: device.id,
+    query: getBreakpointMediaQuery(device).replace('@media', ''),
+  }))
 
 export function useMediaQuery<S>(responsiveValue?: Array<DeviceOverride<S>>): S | undefined {
-  const getServerSnapshot = () => findDeviceOverride(responsiveValue, DEVICES[0].id)?.value
+  const breakpoints = useBreakpoints()
+  const baseBreakpointId = getBaseBreakpoint(breakpoints).id
+  const subscribe = useCallback(
+    (notify: () => void) => {
+      const cleanUpFns = getDeviceQueries(breakpoints).map(q => {
+        const mediaQueryList = window.matchMedia(q.query)
+        mediaQueryList.addEventListener('change', notify)
+        return () => mediaQueryList.removeEventListener('change', notify)
+      })
+      return () => cleanUpFns.forEach(fn => fn())
+    },
+    [breakpoints],
+  )
+  const getServerSnapshot = () =>
+    findBreakpointOverride(breakpoints, responsiveValue, baseBreakpointId)?.value
 
   function getSnapshot() {
-    const deviceId: string = DEVICE_QUERIES.reduce((matchedDevice, deviceQueries) => {
-      if (window.matchMedia(deviceQueries.query).matches) {
-        return deviceQueries.id
-      }
-      return matchedDevice
-    }, DEVICE_QUERIES[0].id)
-    return findDeviceOverride(responsiveValue, deviceId)?.value
+    const deviceId: string = getDeviceQueries(breakpoints).reduce(
+      (matchedDevice, deviceQueries) => {
+        if (window.matchMedia(deviceQueries.query).matches) {
+          return deviceQueries.id
+        }
+        return matchedDevice
+      },
+      baseBreakpointId,
+    )
+    return findBreakpointOverride(breakpoints, responsiveValue, deviceId)?.value
   }
 
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
