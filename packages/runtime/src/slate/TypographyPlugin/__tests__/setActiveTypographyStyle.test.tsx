@@ -2,6 +2,7 @@
 
 import { describe, it, expect } from 'vitest'
 import { Typography } from '../'
+import { DEFAULT_BREAKPOINTS } from '../../../state/modules/breakpoints'
 import { jsx, Editor, Paragraph, Text, Cursor, Focus, Anchor } from '../../test-helpers'
 
 describe('GIVEN setActiveTypographyStyle', () => {
@@ -34,7 +35,7 @@ describe('GIVEN setActiveTypographyStyle', () => {
       </Paragraph>,
     )
 
-    Typography.setActiveTypographyStyle(editor, 'mobile', 'fontWeight', 500)
+    Typography.setActiveTypographyStyle(editor, DEFAULT_BREAKPOINTS, 'mobile', 'fontWeight', 500)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -80,7 +81,7 @@ describe('GIVEN setActiveTypographyStyle', () => {
       </Paragraph>,
     )
 
-    Typography.setActiveTypographyStyle(editor, 'mobile', 'italic', true)
+    Typography.setActiveTypographyStyle(editor, DEFAULT_BREAKPOINTS, 'mobile', 'italic', true)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -145,7 +146,7 @@ describe('GIVEN setActiveTypographyStyle', () => {
       </Paragraph>,
     )
 
-    Typography.setActiveTypographyStyle(editor, 'mobile', 'italic', true)
+    Typography.setActiveTypographyStyle(editor, DEFAULT_BREAKPOINTS, 'mobile', 'italic', true)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -210,7 +211,7 @@ describe('GIVEN setActiveTypographyStyle', () => {
       </Paragraph>,
     )
 
-    Typography.setActiveTypographyStyle(editor, 'mobile', 'italic', true)
+    Typography.setActiveTypographyStyle(editor, DEFAULT_BREAKPOINTS, 'mobile', 'italic', true)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)

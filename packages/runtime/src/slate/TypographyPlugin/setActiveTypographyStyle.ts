@@ -1,10 +1,11 @@
 import { Editor, Transforms, Text } from 'slate'
 import { isDeviceOverride } from '../../components/builtin/Text/components/Leaf'
-import { findDeviceOverride } from '../../components/utils/devices'
 import { RichTextTypography } from '../../controls'
+import { Breakpoints, findBreakpointOverride } from '../../state/modules/breakpoints'
 
 export function setActiveTypographyStyle(
   editor: Editor,
+  breakpoints: Breakpoints,
   deviceId: string,
   prop: string,
   value?: unknown,
@@ -19,7 +20,12 @@ export function setActiveTypographyStyle(
   for (const [node, path] of textNodes) {
     if (Text.isText(node)) {
       const deviceOverrides = node?.typography?.style.filter(isDeviceOverride) ?? []
-      const deviceStyle = findDeviceOverride(deviceOverrides, deviceId, v => v) || { value: {} }
+      const deviceStyle = findBreakpointOverride(
+        breakpoints,
+        deviceOverrides,
+        deviceId,
+        v => v,
+      ) || { value: {} }
       const nextDeviceStyle = {
         deviceId,
         value: { ...deviceStyle.value, [prop]: value },
