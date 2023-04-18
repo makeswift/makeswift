@@ -48,7 +48,7 @@ import {
   getTableIds,
   getTypographyIds,
 } from '../prop-controllers/introspection'
-import { storeContextDefaultValue } from '../runtimes/react'
+import { ReactRuntime } from '../runtimes/react'
 import {
   Element,
   ElementData,
@@ -110,14 +110,19 @@ type Seo = {
 
 type MakeswiftConfig = {
   apiOrigin?: string
+  runtime?: ReactRuntime
 }
 
 export class Makeswift {
   private apiKey: string
   private apiOrigin: URL
   private graphqlClient: GraphQLClient
+  private runtime: ReactRuntime | undefined
 
-  constructor(apiKey: string, { apiOrigin = 'https://api.makeswift.com' }: MakeswiftConfig = {}) {
+  constructor(
+    apiKey: string,
+    { apiOrigin = 'https://api.makeswift.com', runtime }: MakeswiftConfig = {},
+  ) {
     if (typeof apiKey !== 'string') {
       throw new Error(
         'The Makeswift client must be passed a valid Makeswift site API key: ' +
@@ -137,6 +142,7 @@ export class Makeswift {
     }
 
     this.graphqlClient = new GraphQLClient(new URL('graphql', apiOrigin).href)
+    this.runtime = runtime
   }
 
   private async fetch(path: string, init?: RequestInit): Promise<Response> {
@@ -182,7 +188,8 @@ export class Makeswift {
   }
 
   private async introspect(element: Element): Promise<CacheData> {
-    const descriptors = getPropControllerDescriptors(storeContextDefaultValue.getState())
+    const runtime = this.runtime ?? ReactRuntime
+    const descriptors = getPropControllerDescriptors(runtime.store.getState())
     const swatchIds = new Set<string>()
     const fileIds = new Set<string>()
     const typographyIds = new Set<string>()
