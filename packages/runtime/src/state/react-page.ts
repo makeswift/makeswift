@@ -15,6 +15,7 @@ import * as PropControllerHandles from './modules/prop-controller-handles'
 import * as IsInBuilder from './modules/is-in-builder'
 import * as IsPreview from './modules/is-preview'
 import * as BuilderEditMode from './modules/builder-edit-mode'
+import * as Breakpoints from './modules/breakpoints'
 import * as Introspection from '../prop-controllers/introspection'
 import { Action } from './actions'
 import { copyElementReference } from '../prop-controllers/copy'
@@ -44,6 +45,7 @@ const reducer = combineReducers({
   isInBuilder: IsInBuilder.reducer,
   isPreview: IsPreview.reducer,
   builderEditMode: BuilderEditMode.reducer,
+  breakpoints: Breakpoints.reducer,
 })
 
 export type State = ReturnType<typeof reducer>
@@ -327,6 +329,10 @@ export function getIsPreview(state: State): boolean {
 
 export function getBuilderEditMode(state: State): BuilderEditMode.State {
   return state.builderEditMode
+}
+
+export function getBreakpoints(state: State): Breakpoints.State {
+  return state.breakpoints
 }
 
 export type Dispatch = ThunkDispatch<State, unknown, Action>
