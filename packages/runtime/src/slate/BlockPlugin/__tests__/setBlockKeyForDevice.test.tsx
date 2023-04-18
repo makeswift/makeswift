@@ -1,6 +1,7 @@
 /** @jsx jsx */
 
 import { describe, it, expect } from 'vitest'
+import { DEFAULT_BREAKPOINTS } from '../../../state/modules/breakpoints'
 import { Block } from '..'
 import { jsx, Paragraph, Text, Editor, Cursor, Anchor, Focus, Fragment } from '../../test-helpers'
 
@@ -23,7 +24,7 @@ describe('GIVEN setBlockKeyForDevice', () => {
       </Paragraph>,
     )
 
-    Block.setBlockKeyForDevice(editor, 'mobile', 'textAlign', 'right')
+    Block.setBlockKeyForDevice(editor, DEFAULT_BREAKPOINTS, 'mobile', 'textAlign', 'right')
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -68,7 +69,7 @@ describe('GIVEN setBlockKeyForDevice', () => {
       </Fragment>,
     )
 
-    Block.setBlockKeyForDevice(editor, 'mobile', 'textAlign', 'right')
+    Block.setBlockKeyForDevice(editor, DEFAULT_BREAKPOINTS, 'mobile', 'textAlign', 'right')
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
