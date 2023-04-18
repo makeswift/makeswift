@@ -14,6 +14,7 @@ import type { SerializedControl } from '../builder'
 import { ElementImperativeHandle } from '../runtimes/react/element-imperative-handle'
 import { BuilderEditMode } from './modules/builder-edit-mode'
 import type { Point } from './modules/pointer'
+import { Breakpoints } from './modules/breakpoints'
 
 export const ActionTypes = {
   INIT: 'INIT',
@@ -75,6 +76,8 @@ export const ActionTypes = {
 
   BUILDER_POINTER_MOVE: 'BUILDER_POINTER_MOVE',
   ELEMENT_FROM_POINT_CHANGE: 'ELEMENT_FROM_POINT_CHANGE',
+
+  SET_BREAKPOINTS: 'SET_BREAKPOINTS',
 } as const
 
 type InitAction = { type: typeof ActionTypes.INIT }
@@ -276,6 +279,11 @@ type ElementFromPointChangeAction = {
   payload: { keys: { documentKey: string; elementKey: string } | null }
 }
 
+type SetBreakpointsAction = {
+  type: typeof ActionTypes.SET_BREAKPOINTS
+  payload: { breakpoints: Breakpoints }
+}
+
 export type Action =
   | InitAction
   | CleanUpAction
@@ -316,6 +324,7 @@ export type Action =
   | ChangePathnameCompleteAction
   | BuilderPointerMoveAction
   | ElementFromPointChangeAction
+  | SetBreakpointsAction
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }
@@ -653,4 +662,8 @@ export function elementFromPointChange(
   } | null,
 ): ElementFromPointChangeAction {
   return { type: ActionTypes.ELEMENT_FROM_POINT_CHANGE, payload: { keys } }
+}
+
+export function setBreakpoints(breakpoints: Breakpoints): SetBreakpointsAction {
+  return { type: ActionTypes.SET_BREAKPOINTS, payload: { breakpoints } }
 }

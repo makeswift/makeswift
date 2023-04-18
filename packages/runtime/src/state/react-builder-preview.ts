@@ -24,6 +24,7 @@ import * as IsPreview from './modules/is-preview'
 import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Pointer from './modules/pointer'
 import * as ElementImperativeHandles from './modules/element-imperative-handles'
+import * as Breakpoints from './modules/breakpoints'
 import * as ReactPage from './react-page'
 import {
   Action,
@@ -45,6 +46,7 @@ import {
   changePathnameStart,
   changePathnameComplete,
   elementFromPointChange,
+  setBreakpoints,
 } from './actions'
 import { ActionTypes } from './actions'
 import { createPropController, PropController } from '../prop-controllers/instances'
@@ -68,6 +70,7 @@ const reducer = combineReducers({
   builderEditMode: BuilderEditMode.reducer,
   pointer: Pointer.reducer,
   elementImperativeHandles: ElementImperativeHandles.reducer,
+  breakpoints: Breakpoints.reducer,
 })
 
 export type State = ReturnType<typeof reducer>
@@ -487,6 +490,9 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
           )
         }
       })
+
+      const breakpoints = ReactPage.getBreakpoints(state)
+      messageChannel.port1.postMessage(setBreakpoints(breakpoints))
 
       Router.events.on('routeChangeStart', () => {
         messageChannel.port1.postMessage(changePathnameStart())
