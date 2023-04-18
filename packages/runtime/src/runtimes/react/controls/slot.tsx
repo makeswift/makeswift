@@ -3,7 +3,7 @@ import { SlotControl, SlotControlData } from '../../../controls'
 
 import { Element } from '../../../runtimes/react'
 import { getIndexes } from '../../../components/utils/columns'
-import { responsiveStyle } from '../../../components/utils/responsive-style'
+import { useResponsiveStyle } from '../../../components/utils/responsive-style'
 import { useStyle } from '../use-style'
 import { cx } from '@emotion/css'
 import { pollBoxModel } from '../poll-box-model'
@@ -92,7 +92,7 @@ function SlotItem<T extends ElementType = 'div'>({
   const [element, setElement] = useState<Element | null>(null)
   const baseClassName = useStyle({
     display: 'flex',
-    ...responsiveStyle([grid], ([{ count = 12, spans = [[12]] } = {}]) => {
+    ...useResponsiveStyle([grid], ([{ count = 12, spans = [[12]] } = {}]) => {
       const [rowIndex, columnIndex] = getIndexes(spans, index)
       const span = spans[rowIndex][columnIndex]
       const flexBasis = `calc(100% * ${(span / count).toFixed(5)})`

@@ -13,10 +13,11 @@ import {
 } from '../../prop-controllers/descriptors'
 import {
   FallbackStrategy,
-  getDevice,
-  getDeviceMediaQuery,
+  getBreakpoint,
+  getBreakpointMediaQuery,
   join as joinResponsiveValues,
-} from './devices'
+  Breakpoints,
+} from '../../state/modules/breakpoints'
 import { getIndexes } from './columns'
 import { PaddingPropertyData, paddingPropertyDataToStyle } from '../../css/padding'
 import { MarginPropertyData, marginPropertyDataToStyle } from '../../css/margin'
@@ -25,16 +26,19 @@ import { BorderPropertyData, borderPropertyDataToStyle } from '../../css/border'
 import { BorderPropControllerData } from '../hooks/useBorder'
 import { colorToString } from './colorToString'
 import { BoxShadowData, BoxShadowPropControllerData } from '../hooks'
+import { useBreakpoints } from '../../runtimes/react'
+import { DropFirst } from './drop-first'
 
 export function responsiveStyle<V, A extends ReadonlyArray<ResponsiveValue<V> | null | undefined>>(
+  breakpoints: Breakpoints,
   responsiveValues: A,
   join: (values: { [K in keyof A]: ExtractResponsiveValue<A[K]> | undefined }) => CSSObject,
   strategy?: FallbackStrategy<V>,
 ): CSSObject {
-  return joinResponsiveValues(responsiveValues, join, strategy).reduce(
+  return joinResponsiveValues(breakpoints, responsiveValues, join, strategy).reduce(
     (acc, { deviceId, value }) => {
-      const device = getDevice(deviceId)
-      const mediaQuery = getDeviceMediaQuery(device)
+      const breakpoint = getBreakpoint(breakpoints, deviceId)
+      const mediaQuery = getBreakpointMediaQuery(breakpoint)
 
       return {
         ...acc,
@@ -48,23 +52,42 @@ export function responsiveStyle<V, A extends ReadonlyArray<ResponsiveValue<V> | 
   )
 }
 
+export function useResponsiveStyle<
+  V,
+  A extends ReadonlyArray<ResponsiveValue<V> | null | undefined>,
+>(
+  responsiveValues: A,
+  join: (values: { [K in keyof A]: ExtractResponsiveValue<A[K]> | undefined }) => CSSObject,
+  strategy?: FallbackStrategy<V>,
+): CSSObject {
+  return responsiveStyle(useBreakpoints(), responsiveValues, join, strategy)
+}
+
 export function responsiveWidth(
+  breakpoints: Breakpoints,
   widthData: WidthValue | undefined,
   defaultValue: LengthValue | WidthProperty<string | number> = '100%',
 ): CSSObject {
   return {
     maxWidth: '100%',
-    ...responsiveStyle([widthData], ([width = defaultValue]) => ({
+    ...responsiveStyle(breakpoints, [widthData], ([width = defaultValue]) => ({
       width: typeof width === 'object' ? `${width.value}${width.unit}` : width,
     })),
   }
 }
 
+export function useResponsiveWidth(
+  ...args: DropFirst<Parameters<typeof responsiveWidth>>
+): CSSObject {
+  return responsiveWidth(useBreakpoints(), ...args)
+}
+
 export function responsivePadding(
+  breakpoints: Breakpoints,
   paddingData: PaddingValue | undefined,
   defaultValue: PaddingPropertyData = {} as PaddingPropertyData,
 ): CSSObject {
-  return responsiveStyle([paddingData], ([padding = {} as PaddingPropertyData]) =>
+  return responsiveStyle(breakpoints, [paddingData], ([padding = {} as PaddingPropertyData]) =>
     paddingPropertyDataToStyle(
       padding,
       Object.assign(
@@ -75,11 +98,18 @@ export function responsivePadding(
   )
 }
 
+export function useResponsivePadding(
+  ...args: DropFirst<Parameters<typeof responsivePadding>>
+): CSSObject {
+  return responsivePadding(useBreakpoints(), ...args)
+}
+
 export function responsiveMargin(
+  breakpoints: Breakpoints,
   marginData: MarginValue | undefined,
   defaultValue: MarginPropertyData = {} as MarginPropertyData,
 ): CSSObject {
-  return responsiveStyle([marginData], ([margin = {} as MarginPropertyData]) =>
+  return responsiveStyle(breakpoints, [marginData], ([margin = {} as MarginPropertyData]) =>
     marginPropertyDataToStyle(
       margin,
       Object.assign(
@@ -90,11 +120,18 @@ export function responsiveMargin(
   )
 }
 
+export function useResponsiveMargin(
+  ...args: DropFirst<Parameters<typeof responsiveMargin>>
+): CSSObject {
+  return responsiveMargin(useBreakpoints(), ...args)
+}
+
 export function responsiveBorderRadius(
+  breakpoints: Breakpoints,
   borderRadiusData: BorderRadiusValue | undefined,
   defaultValue: BorderRadiusPropertyData = {} as BorderRadiusPropertyData,
 ): CSSObject {
-  return responsiveStyle([borderRadiusData], ([borderRadius = {}]) =>
+  return responsiveStyle(breakpoints, [borderRadiusData], ([borderRadius = {}]) =>
     borderRadiusPropertyDataToStyle(
       borderRadius,
       Object.assign(
@@ -110,11 +147,17 @@ export function responsiveBorderRadius(
   )
 }
 
-export function responsiveBorder(
+export function useResponsiveBorderRadius(
+  ...args: DropFirst<Parameters<typeof responsiveBorderRadius>>
+): CSSObject {
+  return responsiveBorderRadius(useBreakpoints(), ...args)
+}
+
+export function useResponsiveBorder(
   borderData: BorderPropControllerData | undefined,
   defaultValue: BorderPropertyData = {},
 ): CSSObject {
-  return responsiveStyle([borderData], ([border = {}]) =>
+  return useResponsiveStyle([borderData], ([border = {}]) =>
     borderPropertyDataToStyle(
       border,
       Object.assign(
@@ -135,15 +178,19 @@ const floor =
   (v: number): number =>
     Math.floor(10 ** d * v) / 10 ** d
 
-export function responsiveGridItem(props: {
-  grid: ResponsiveValue<{ spans: number[][]; count: number }>
-  index: number
-  columnGap?: ResponsiveValue<LengthValue>
-  rowGap?: ResponsiveValue<LengthValue>
-}): CSSObject {
+export function responsiveGridItem(
+  breakpoints: Breakpoints,
+  props: {
+    grid: ResponsiveValue<{ spans: number[][]; count: number }>
+    index: number
+    columnGap?: ResponsiveValue<LengthValue>
+    rowGap?: ResponsiveValue<LengthValue>
+  },
+): CSSObject {
   return {
     display: 'flex',
     ...responsiveStyle(
+      breakpoints,
       [props.grid, props.columnGap, props.rowGap] as const,
       ([
         { spans, count } = { spans: [[12]], count: 12 },
@@ -182,6 +229,12 @@ export function responsiveGridItem(props: {
   }
 }
 
+export function useResponsiveGridItem(
+  ...args: DropFirst<Parameters<typeof responsiveGridItem>>
+): CSSObject {
+  return responsiveGridItem(useBreakpoints(), ...args)
+}
+
 const getBoxShadow = (shadows: BoxShadowData) =>
   shadows
     .map(
@@ -195,14 +248,27 @@ const getBoxShadow = (shadows: BoxShadowData) =>
     .filter(Boolean)
     .join()
 
-export function responsiveShadow(value: BoxShadowPropControllerData | undefined): CSSObject {
-  return responsiveStyle([value], ([shadow = []]) => ({
+export function responsiveShadow(
+  breakpoints: Breakpoints,
+  value: BoxShadowPropControllerData | undefined,
+): CSSObject {
+  return responsiveStyle(breakpoints, [value], ([shadow = []]) => ({
     boxShadow: getBoxShadow(shadow),
   }))
 }
 
-export function responsiveTextStyle(value: TextStyleValue | undefined): CSSObject {
+export function useResponsiveShadow(
+  ...args: DropFirst<Parameters<typeof responsiveShadow>>
+): CSSObject {
+  return responsiveShadow(useBreakpoints(), ...args)
+}
+
+export function responsiveTextStyle(
+  breakpoints: Breakpoints,
+  value: TextStyleValue | undefined,
+): CSSObject {
   return responsiveStyle(
+    breakpoints,
     [value],
     ([
       textStyle = {
@@ -233,4 +299,10 @@ export function responsiveTextStyle(value: TextStyleValue | undefined): CSSObjec
       }
     },
   )
+}
+
+export function useResponsiveTextStyle(
+  ...args: DropFirst<Parameters<typeof responsiveTextStyle>>
+): CSSObject {
+  return responsiveTextStyle(useBreakpoints(), ...args)
 }

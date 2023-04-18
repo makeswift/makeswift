@@ -17,7 +17,7 @@ import {
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { cx } from '@emotion/css'
 import { useStyle } from '../../../runtimes/react/use-style'
-import { responsiveStyle } from '../../utils/responsive-style'
+import { useResponsiveStyle } from '../../utils/responsive-style'
 
 type Props = {
   id?: ElementIDValue
@@ -58,7 +58,7 @@ const SocialLinks = forwardRef(function SocialLinks(
         width,
         margin,
         useStyle(
-          responsiveStyle([alignment] as const, ([alignment = 'center']) => ({
+          useResponsiveStyle([alignment] as const, ([alignment = 'center']) => ({
             justifyContent: alignment,
           })),
         ),
@@ -130,7 +130,7 @@ function StyledLink({
           svg: { display: 'block' },
         }),
         useStyle(
-          responsiveStyle(
+          useResponsiveStyle(
             [shape, size, hoverStyle, fill, backgroundColor] as const,
             ([shape = 'naked', size = 'medium', hoverStyle = 'none', fill, backgroundColor]) => ({
               padding: shape === 'naked' ? 0 : { small: 10, medium: 12, large: 14 }[size],

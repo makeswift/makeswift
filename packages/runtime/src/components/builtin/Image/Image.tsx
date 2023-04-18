@@ -15,7 +15,7 @@ import { placeholders } from '../../utils/placeholders'
 import { Link } from '../../shared/Link'
 import { cx } from '@emotion/css'
 import { useStyle } from '../../../runtimes/react/use-style'
-import { responsiveStyle, responsiveWidth } from '../../utils/responsive-style'
+import { useResponsiveStyle, useResponsiveWidth } from '../../utils/responsive-style'
 import { useFile } from '../../../runtimes/react/hooks/makeswift-api'
 import { major as nextMajorVersion } from '../../../next/next-version'
 
@@ -114,8 +114,8 @@ const ImageComponent = forwardRef(function Image(
   const Container = link ? Link : 'div'
   const containerClassName = cx(
     useStyle({ lineHeight: 0, overflow: 'hidden' }),
-    useStyle(responsiveWidth(width, dimensions?.width)),
-    useStyle(responsiveStyle([opacity] as const, ([opacity = 1]) => ({ opacity }))),
+    useStyle(useResponsiveWidth(width, dimensions?.width)),
+    useStyle(useResponsiveStyle([opacity] as const, ([opacity = 1]) => ({ opacity }))),
     margin,
     padding,
     border,

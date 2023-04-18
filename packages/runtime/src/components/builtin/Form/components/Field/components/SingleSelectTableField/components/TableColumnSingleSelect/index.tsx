@@ -2,7 +2,7 @@ import { cx } from '@emotion/css'
 import { ComponentPropsWithoutRef, ForwardedRef, forwardRef } from 'react'
 import { useStyle } from '../../../../../../../../../runtimes/react/use-style'
 
-import { responsiveStyle } from '../../../../../../../../utils/responsive-style'
+import { useResponsiveStyle } from '../../../../../../../../utils/responsive-style'
 import { useFormContext, Sizes, Contrasts, Value } from '../../../../../../context/FormContext'
 import responsiveField, {
   getSizeHeight,
@@ -41,7 +41,7 @@ function Container({
             borderColor: '#e54e7f',
           },
 
-          ...responsiveStyle(
+          ...useResponsiveStyle(
             [size, contrast] as const,
             ([size = Sizes.MEDIUM, contrast = Contrasts.LIGHT]) => ({
               minHeight: getSizeHeight(size),

@@ -24,7 +24,7 @@ import {
 } from '../../../prop-controllers/descriptors'
 import { BoxModelHandle, parse, createBox } from '../../../box-model'
 import BackgroundsContainer from '../../shared/BackgroundsContainer'
-import { responsiveStyle } from '../../utils/responsive-style'
+import { useResponsiveStyle } from '../../utils/responsive-style'
 import { GridItem } from '../../shared/grid-item'
 import { useStyle } from '../../../runtimes/react/use-style'
 
@@ -130,7 +130,7 @@ const Box = forwardRef(function Box(
   )
 
   const gridItemClassName = useStyle(
-    responsiveStyle([verticalAlign], ([alignItems = 'flex-start']) => ({ alignItems })),
+    useResponsiveStyle([verticalAlign], ([alignItems = 'flex-start']) => ({ alignItems })),
   )
 
   const [key, setKey] = useState(() => uuid())
@@ -163,7 +163,7 @@ const Box = forwardRef(function Box(
         margin,
         borderRadius,
         useStyle({ display: 'flex' }),
-        useStyle(responsiveStyle([height], ([alignSelf = 'auto']) => ({ alignSelf }))),
+        useStyle(useResponsiveStyle([height], ([alignSelf = 'auto']) => ({ alignSelf }))),
         animationClassName,
       )}
       backgrounds={backgrounds}
@@ -177,7 +177,9 @@ const Box = forwardRef(function Box(
           border,
           useStyle({ display: 'flex', flexWrap: 'wrap', width: '100%' }),
           useStyle(
-            responsiveStyle([verticalAlign], ([alignContent = 'flex-start']) => ({ alignContent })),
+            useResponsiveStyle([verticalAlign], ([alignContent = 'flex-start']) => ({
+              alignContent,
+            })),
           ),
         )}
       >

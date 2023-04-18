@@ -33,12 +33,12 @@ import {
 } from '../../components/hooks'
 import type { ColorValue } from '../../components/utils/types'
 import {
-  responsiveBorder,
-  responsiveBorderRadius,
-  responsiveMargin,
-  responsivePadding,
-  responsiveShadow,
-  responsiveWidth,
+  useResponsiveBorder,
+  useResponsiveBorderRadius,
+  useResponsiveMargin,
+  useResponsivePadding,
+  useResponsiveShadow,
+  useResponsiveWidth,
 } from '../../components/utils/responsive-style'
 import {
   CheckboxControlType,
@@ -69,7 +69,7 @@ import { useRichText } from './controls/rich-text'
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
 function useWidthStyle(value: WidthValue | undefined, descriptor: WidthDescriptor): string {
-  return useStyle(responsiveWidth(value, descriptor.options.defaultValue))
+  return useStyle(useResponsiveWidth(value, descriptor.options.defaultValue))
 }
 
 export type ResolveWidthControlValue<T extends Descriptor> = T extends WidthDescriptor
@@ -85,7 +85,7 @@ export type ResolveWidthControlValue<T extends Descriptor> = T extends WidthDesc
   : never
 
 function usePaddingStyle(value: PaddingValue | undefined): string {
-  return useStyle(responsivePadding(value))
+  return useStyle(useResponsivePadding(value))
 }
 
 export type ResolvePaddingControlValue<T extends Descriptor> = T extends PaddingDescriptor
@@ -101,7 +101,7 @@ export type ResolvePaddingControlValue<T extends Descriptor> = T extends Padding
   : never
 
 function useMarginStyle(value: MarginValue | undefined): string {
-  return useStyle(responsiveMargin(value))
+  return useStyle(useResponsiveMargin(value))
 }
 
 export type ResolveMarginControlValue<T extends Descriptor> = T extends MarginDescriptor
@@ -117,7 +117,7 @@ export type ResolveMarginControlValue<T extends Descriptor> = T extends MarginDe
   : never
 
 export function useBorderRadiusStyle(value: BorderRadiusValue | undefined): string {
-  return useStyle(responsiveBorderRadius(value))
+  return useStyle(useResponsiveBorderRadius(value))
 }
 
 export function useShadowsStyle(
@@ -125,7 +125,7 @@ export function useShadowsStyle(
 ): string | ShadowsValue | undefined {
   const shadowValue = useBoxShadow(value)
 
-  return useStyle(responsiveShadow(shadowValue ?? undefined))
+  return useStyle(useResponsiveShadow(shadowValue ?? undefined))
 }
 
 export type ResolveBorderRadiusControlValue<T extends Descriptor> = T extends BorderRadiusDescriptor
@@ -145,7 +145,7 @@ export type ResolveBorderRadiusControlValue<T extends Descriptor> = T extends Bo
 export function useBorderStyle(value: BorderValue | undefined): string | BorderValue | undefined {
   const borderData = useBorderData(value)
 
-  return useStyle(responsiveBorder(borderData ?? undefined))
+  return useStyle(useResponsiveBorder(borderData ?? undefined))
 }
 export type ResolveShadowsControlValue<T extends Descriptor> = T extends ShadowsDescriptor
   ? undefined extends ResolveOptions<T['options']>['format']

@@ -12,7 +12,7 @@ import {
 import type { ElementIDValue, RichTextValue } from '../../../prop-controllers/descriptors'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { Link } from '../../shared/Link'
-import { responsiveStyle } from '../../utils/responsive-style'
+import { useResponsiveStyle } from '../../utils/responsive-style'
 import { useTypographyClassName } from './components'
 import useEnhancedTypography from './components/Leaf/leaf'
 
@@ -116,7 +116,7 @@ export interface BlockProps {
 export function BlockElement({ descendant }: BlockProps) {
   const blockStyles = [
     useStyle({ margin: 0 }),
-    useStyle(responsiveStyle([descendant.textAlign], ([textAlign = 'left']) => ({ textAlign }))),
+    useStyle(useResponsiveStyle([descendant.textAlign], ([textAlign = 'left']) => ({ textAlign }))),
   ]
 
   switch (descendant.type) {
@@ -258,8 +258,8 @@ function isBlock(descendant: Element | Text): descendant is Block {
 }
 
 /**
- * I am using `Element | Text` here to ensure that nothing from Slate 
- * is imported so that the RichText maintains it's slim bundle size 
+ * I am using `Element | Text` here to ensure that nothing from Slate
+ * is imported so that the RichText maintains it's slim bundle size
  */
 function getTextByDescendant(descendant: Element | Text): string {
   if ('text' in descendant) {

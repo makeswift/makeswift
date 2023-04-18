@@ -51,7 +51,7 @@ import { useTableFormFieldRefs } from '../../hooks/useTableFormFieldRefs'
 import { useMakeswiftClient } from '../../../api/react'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { cx } from '@emotion/css'
-import { responsiveGridItem, responsiveStyle } from '../../utils/responsive-style'
+import { useResponsiveGridItem, useResponsiveStyle } from '../../utils/responsive-style'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { useTable } from '../../../runtimes/react/hooks/makeswift-api'
 
@@ -113,7 +113,7 @@ const GridForm = forwardRef(function GridFrom(
       className={cx(
         useStyle({ display: 'flex', flexWrap: 'wrap', width: '100%' }),
         useStyle(
-          responsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
+          useResponsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
             fontSize: getSizeFontSize(size),
           })),
         ),
@@ -143,7 +143,7 @@ const GridItem = forwardRef(function GridItem(
       ref={ref}
       className={cx(
         useStyle({ alignSelf: 'flex-end', flexDirection: 'column' }),
-        useStyle(responsiveGridItem({ grid, index, rowGap, columnGap })),
+        useStyle(useResponsiveGridItem({ grid, index, rowGap, columnGap })),
         className,
       )}
     />
@@ -174,7 +174,7 @@ function StyledButton({ className, size, alignment, ...restOfProps }: StyledButt
       className={cx(
         useStyle({ display: 'flex', alignItems: 'center', justifyContent: 'center' }),
         useStyle(
-          responsiveStyle(
+          useResponsiveStyle(
             [size, alignment] as const,
             ([size = Sizes.MEDIUM, alignment = Alignments.CENTER]) => ({
               minHeight: getInputSizeHeight(size),

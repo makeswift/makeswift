@@ -6,7 +6,7 @@ import Label from '../Label'
 import { getSizeHeight as getInputSizeHeight } from '../Input'
 import Checkbox from '../Checkbox'
 import { useStyle } from '../../../../../../../runtimes/react/use-style'
-import { responsiveStyle } from '../../../../../../utils/responsive-style'
+import { useResponsiveStyle } from '../../../../../../utils/responsive-style'
 import { cx } from '@emotion/css'
 import { TableColumn } from '../../../../types'
 
@@ -48,7 +48,7 @@ export default forwardRef(function CheckboxTableField(
       className={cx(
         useStyle({ display: 'flex', alignItems: 'center', margin: 0 }),
         useStyle(
-          responsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
+          useResponsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
             minHeight: getInputSizeHeight(size),
             maxHeight: getInputSizeHeight(size),
           })),

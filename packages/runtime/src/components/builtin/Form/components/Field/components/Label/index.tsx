@@ -4,7 +4,10 @@ import { colorToString } from '../../../../../../utils/colorToString'
 import { useFormContext, Size, Sizes, Contrast, Contrasts } from '../../../../context/FormContext'
 import { cx } from '@emotion/css'
 import { useStyle } from '../../../../../../../runtimes/react/use-style'
-import { responsiveStyle, responsiveTextStyle } from '../../../../../../utils/responsive-style'
+import {
+  useResponsiveStyle,
+  useResponsiveTextStyle,
+} from '../../../../../../utils/responsive-style'
 
 export function getSizeHeight(size: Size): number {
   switch (size) {
@@ -55,9 +58,9 @@ export default function Label<T extends ElementType = 'label'>({
       {...restOfProps}
       className={cx(
         useStyle({ display: 'block', margin: '0 0 0.25em 0' }),
-        useStyle(responsiveTextStyle(labelTextStyle)),
+        useStyle(useResponsiveTextStyle(labelTextStyle)),
         useStyle(
-          responsiveStyle(
+          useResponsiveStyle(
             [size, contrast, labelTextColor] as const,
             ([size = Sizes.MEDIUM, contrast = Contrasts.LIGHT, textColor]) => ({
               minHeight: getSizeHeight(size),

@@ -9,7 +9,7 @@ import { colorToString } from '../../utils/colorToString'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { cx } from '@emotion/css'
-import { responsiveStyle } from '../../utils/responsive-style'
+import { useResponsiveStyle } from '../../utils/responsive-style'
 
 type DividerVariant = 'solid' | 'dashed' | 'dotted' | 'blended'
 
@@ -46,7 +46,7 @@ const Divider = forwardRef(function Divider(
       >
         <div
           className={useStyle(
-            responsiveStyle(
+            useResponsiveStyle(
               [variant, thickness, color] as const,
               ([
                 variant = 'solid',

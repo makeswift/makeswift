@@ -2,7 +2,7 @@ import { cx } from '@emotion/css'
 import { ComponentPropsWithoutRef, ForwardedRef, forwardRef } from 'react'
 import { useStyle } from '../../../../../../../runtimes/react/use-style'
 
-import { responsiveStyle } from '../../../../../../utils/responsive-style'
+import { useResponsiveStyle } from '../../../../../../utils/responsive-style'
 import { Size, useFormContext, Sizes } from '../../../../context/FormContext'
 import responsiveField from '../../services/responsiveField'
 
@@ -39,7 +39,7 @@ export default forwardRef(function Input(
       className={cx(
         useStyle(responsiveField({ shape, size, contrast, brandColor, error })),
         useStyle(
-          responsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
+          useResponsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
             minHeight: getSizeHeight(size),
             maxHeight: getSizeHeight(size),
           })),

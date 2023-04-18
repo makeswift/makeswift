@@ -3,7 +3,7 @@ import { getSizeHeight as getLabelSizeHeight } from '../Label'
 import { getSizeHeight as getInputSizeHeight } from '../Input'
 import { getShapeBorderRadius } from '../../services/responsiveField'
 import { useStyle } from '../../../../../../../runtimes/react/use-style'
-import { responsiveStyle } from '../../../../../../utils/responsive-style'
+import { useResponsiveStyle } from '../../../../../../utils/responsive-style'
 import { cx } from '@emotion/css'
 
 function Label({ size }: Pick<Value, 'size'>) {
@@ -19,7 +19,7 @@ function Label({ size }: Pick<Value, 'size'>) {
           opacity: 0.4,
         }),
         useStyle(
-          responsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
+          useResponsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
             margin: `calc(0.25 * ${getLabelSizeHeight(size)}px + 2px) 0`,
             minHeight: 0.5 * getLabelSizeHeight(size),
             maxHeight: 0.5 * getLabelSizeHeight(size),
@@ -43,7 +43,7 @@ function Input({ shape, size }: Pick<Value, 'shape' | 'size'>) {
           opacity: 0.4,
         }),
         useStyle(
-          responsiveStyle(
+          useResponsiveStyle(
             [shape, size] as const,
             ([shape = Shapes.ROUNDED, size = Sizes.MEDIUM]) => ({
               minHeight: getInputSizeHeight(size),

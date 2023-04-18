@@ -17,7 +17,7 @@ import Button from '../../../Button'
 import { useIsomorphicLayoutEffect } from '../../../../hooks/useIsomorphicLayoutEffect'
 import { cx, keyframes } from '@emotion/css'
 import { useStyle } from '../../../../../runtimes/react/use-style'
-import { responsiveStyle, responsiveTextStyle } from '../../../../utils/responsive-style'
+import { useResponsiveStyle, useResponsiveTextStyle } from '../../../../utils/responsive-style'
 
 const DROP_DOWN_MENU_WIDTH = 200
 
@@ -123,9 +123,9 @@ function DropDownItem({ className, color, textStyle, ...restOfProps }: DropDownI
           backgroundColor: 'transparent',
           transition: 'background-color 0.2s',
         }),
-        useStyle(responsiveTextStyle(textStyle)),
+        useStyle(useResponsiveTextStyle(textStyle)),
         useStyle(
-          responsiveStyle([colorData, textStyle] as const, ([color, textStyle = {}]) => {
+          useResponsiveStyle([colorData, textStyle] as const, ([color, textStyle = {}]) => {
             const fontSize = textStyle.fontSize || { value: 14, unit: 'px' }
             const fontWeight = textStyle.fontWeight == null ? 'normal' : textStyle.fontWeight
             const fontStyle = textStyle.fontStyle || []

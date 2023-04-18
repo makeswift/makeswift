@@ -17,7 +17,10 @@ import { Link } from '../../../../../../shared/Link'
 import Button from '../../../../../Button'
 import { cx } from '@emotion/css'
 import { useStyle } from '../../../../../../../runtimes/react/use-style'
-import { responsiveStyle, responsiveTextStyle } from '../../../../../../utils/responsive-style'
+import {
+  useResponsiveStyle,
+  useResponsiveTextStyle,
+} from '../../../../../../utils/responsive-style'
 
 type DropDownMenuBaseProps = {
   className?: string
@@ -72,9 +75,9 @@ function DropDownItem({ color, className, textStyle, ...restOfProps }: DropDownI
           padding: '8px 16px',
           color: 'black',
         }),
-        useStyle(responsiveTextStyle(textStyle)),
+        useStyle(useResponsiveTextStyle(textStyle)),
         useStyle(
-          responsiveStyle([colorData] as const, ([color]) => ({
+          useResponsiveStyle([colorData] as const, ([color]) => ({
             color: color == null ? 'black' : colorToString(color),
           })),
         ),

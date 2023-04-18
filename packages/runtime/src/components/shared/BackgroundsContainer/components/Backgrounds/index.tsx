@@ -9,7 +9,7 @@ import Parallax from '../Parallax'
 import BackgroundVideo from '../BackgroundVideo'
 import { CSSObject } from '@emotion/css'
 import { useStyle } from '../../../../../runtimes/react/use-style'
-import { responsiveStyle } from '../../../../utils/responsive-style'
+import { useResponsiveStyle } from '../../../../utils/responsive-style'
 import { major as nextMajorVersion } from '../../../../../next/next-version'
 
 const NextLegacyImage = NextImage as typeof NextLegacyImageType
@@ -67,7 +67,7 @@ type BackgroundLayerProps = {
 }
 
 function BackgroundDeviceLayer({ layer, visibility }: BackgroundLayerProps) {
-  const visibilityStyle = responsiveStyle([visibility], ([v]) => ({
+  const visibilityStyle = useResponsiveStyle([visibility], ([v]) => ({
     display: v === true ? 'block' : 'none',
   }))
 
