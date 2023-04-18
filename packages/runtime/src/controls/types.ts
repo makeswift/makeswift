@@ -1,4 +1,4 @@
-export type Device = 'desktop' | 'tablet' | 'mobile'
+export type Device = string
 
 export type DeviceOverride<T> = { deviceId: Device; value: T }
 

@@ -47,7 +47,7 @@ export type IndexSignatureHack<T> = T extends Record<string, any>
   ? { [K in keyof T]: IndexSignatureHack<T[K]> }
   : T
 
-export type Device = 'desktop' | 'tablet' | 'mobile'
+export type Device = string
 
 export type DeviceOverride<T> = { deviceId: Device; value: T }
 
