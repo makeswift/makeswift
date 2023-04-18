@@ -65,6 +65,15 @@ export const getBreakpoint = (state: State, breakpointId: Breakpoint['id']): Bre
   return breakpoint
 }
 
+export const getBaseBreakpoint = (breakpoints: Breakpoints): Breakpoint => {
+  // Get the breakpoint with the biggest minimum width, which would be the 'desktop' for default breakpoints.
+  const breakpoint = breakpoints.sort((a, b) => (a?.minWidth ?? 0) - (b.minWidth ?? 0))[0]
+
+  if (breakpoint == null) throw new Error(`Cannot get base breakpoint.`)
+
+  return breakpoint
+}
+
 export function findBreakpointOverride<S>(
   breakpoints: Breakpoints,
   values: ResponsiveValue<S> = [],
