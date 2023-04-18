@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic'
 import { forwardNextDynamicRef } from '../../../next'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
-import { findDeviceOverride } from '../../utils/devices'
+import { findBreakpointOverride } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 import { ButtonVariant } from './contants'
 
@@ -58,7 +58,9 @@ export function registerComponent(runtime: ReactRuntime) {
         }),
         color: Props.ResponsiveColor((props, device) => {
           const variant = props.variant as ResponsiveValue<ButtonVariant>
-          const hidden = findDeviceOverride<ButtonVariant>(variant, device)?.value === 'clear'
+          const hidden =
+            findBreakpointOverride<ButtonVariant>(runtime.getBreakpoints(), variant, device)
+              ?.value === 'clear'
 
           return { placeholder: 'black', hidden }
         }),

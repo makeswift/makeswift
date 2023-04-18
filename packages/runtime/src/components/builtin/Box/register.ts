@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic'
 import { forwardNextDynamicRef } from '../../../next'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
-import { findDeviceOverride } from '../../utils/devices'
+import { findBreakpointOverride } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 import {
   BoxAnimateIn,
@@ -20,7 +20,10 @@ export function registerComponent(runtime: ReactRuntime) {
     property: 'boxAnimateType' | 'itemAnimateType',
   ): boolean {
     const animateIn = props[property] as ResponsiveValue<BoxAnimateIn>
-    return (findDeviceOverride<BoxAnimateIn>(animateIn, deviceId)?.value ?? 'none') === 'none'
+    return (
+      (findBreakpointOverride<BoxAnimateIn>(runtime.getBreakpoints(), animateIn, deviceId)?.value ??
+        'none') === 'none'
+    )
   }
   const isHiddenBasedOnBoxAnimation = (props: Record<string, unknown>, deviceId: string) =>
     isHiddenBasedOnAnimationType(props, deviceId, 'boxAnimateType')

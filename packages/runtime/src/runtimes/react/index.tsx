@@ -37,6 +37,7 @@ import { FindDomNode } from './find-dom-node'
 import { useGlobalElement } from './hooks/makeswift-api'
 import { ElementImperativeHandle } from './element-imperative-handle'
 import { BuilderEditMode } from '../../state/modules/builder-edit-mode'
+import { Breakpoints } from '../../state/modules/breakpoints'
 
 export const storeContextDefaultValue = ReactPage.configureStore()
 
@@ -52,6 +53,7 @@ export interface ReactRuntime {
     elementTree: ReactPage.ElementData,
     replacementContext: ReactPage.SerializableReplacementContext,
   ): ReactPage.Element
+  getBreakpoints(): Breakpoints
 }
 
 function createReactRuntime(store: ReactPage.Store): ReactRuntime {
@@ -75,6 +77,9 @@ function createReactRuntime(store: ReactPage.Store): ReactRuntime {
       replacementContext: ReactPage.SerializableReplacementContext,
     ) {
       return ReactPage.copyElementTree(store.getState(), elementTree, replacementContext)
+    },
+    getBreakpoints() {
+      return ReactPage.getBreakpoints(store.getState())
     },
   }
 }

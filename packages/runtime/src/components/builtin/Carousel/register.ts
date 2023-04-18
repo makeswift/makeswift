@@ -4,7 +4,8 @@ import { v4 as uuid } from 'uuid'
 import { forwardNextDynamicRef } from '../../../next'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
-import { findDeviceOverride } from '../../utils/devices'
+import { findBreakpointOverride } from '../../../state/modules/breakpoints'
+
 import { MakeswiftComponentType } from '../constants'
 
 export function registerComponent(runtime: ReactRuntime) {
@@ -42,7 +43,8 @@ export function registerComponent(runtime: ReactRuntime) {
         }),
         step: Props.ResponsiveNumber((props, device) => {
           const pageSize = props.pageSize as ResponsiveValue<number>
-          const pageSizeValue = findDeviceOverride(pageSize, device)?.value ?? 1
+          const pageSizeValue =
+            findBreakpointOverride(runtime.getBreakpoints(), pageSize, device)?.value ?? 1
 
           return {
             label: 'Step',
