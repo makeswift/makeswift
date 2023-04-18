@@ -180,6 +180,10 @@ export function useBuilderEditMode(): BuilderEditMode | null {
   return useSelector(state => ReactPage.getBuilderEditMode(state))
 }
 
+export function useBreakpoints(): Breakpoints {
+  return useSelector(state => ReactPage.getBreakpoints(state))
+}
+
 type Dispatch = ReactPage.Dispatch & ReactBuilderPreview.Dispatch
 
 function useDispatch(): Dispatch {

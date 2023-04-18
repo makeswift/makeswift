@@ -2,7 +2,7 @@ import { cx } from '@emotion/css'
 import { ComponentPropsWithoutRef } from 'react'
 import { ResponsiveValue, Length } from '../../../prop-controllers/descriptors'
 import { useStyle } from '../../../runtimes/react/use-style'
-import { responsiveStyle } from '../../utils/responsive-style'
+import { useResponsiveStyle } from '../../utils/responsive-style'
 
 type BaseProps = {
   className?: string
@@ -19,7 +19,7 @@ export default function GutterContainer({ className, gutter, first, last, ...res
       {...restOfProps}
       className={cx(
         useStyle(
-          responsiveStyle([gutter] as const, ([gutter = { value: 0, unit: 'px' }]) => ({
+          useResponsiveStyle([gutter] as const, ([gutter = { value: 0, unit: 'px' }]) => ({
             paddingLeft: first ? '0px' : `${gutter.value / 2}${gutter.unit}`,
             paddingRight: last ? '0px' : `${gutter.value / 2}${gutter.unit}`,
           })),

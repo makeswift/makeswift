@@ -13,7 +13,7 @@ import { colorToString } from '../../../../../../utils/colorToString'
 import { SwatchValue } from '../../../../../../utils/types'
 import { useStyle } from '../../../../../../../runtimes/react/use-style'
 import { cx } from '@emotion/css'
-import { responsiveStyle } from '../../../../../../utils/responsive-style'
+import { useResponsiveStyle } from '../../../../../../utils/responsive-style'
 
 function getCheckmarkColor({
   swatch: { hue: h, saturation: s, lightness: l },
@@ -50,7 +50,7 @@ function FakeCheckbox({ className, style, contrast, error }: FakeCheckboxProps) 
           borderWidth: 1,
         }),
         useStyle(
-          responsiveStyle([contrast] as const, ([contrast = Contrasts.LIGHT]) => ({
+          useResponsiveStyle([contrast] as const, ([contrast = Contrasts.LIGHT]) => ({
             borderColor: getContrastBorderColor(contrast, error),
             backgroundColor: getContrastBackgroundColor(contrast),
           })),
@@ -95,7 +95,7 @@ const HiddenCheckbox = forwardRef(function HiddenCheckbox(
           },
 
           [`&:checked ~ .${FAKE_CHECKBOX_CLASS_NAME}`]: {
-            ...responsiveStyle(
+            ...useResponsiveStyle(
               [brandColor] as const,
               ([{ swatch = { hue: 0, saturation: 0, lightness: 0 }, alpha = 1 } = {}]) => ({
                 backgroundColor: colorToString({ swatch, alpha }),
@@ -110,7 +110,7 @@ const HiddenCheckbox = forwardRef(function HiddenCheckbox(
               width: '25%',
               height: '50%',
               borderStyle: 'solid',
-              ...responsiveStyle(
+              ...useResponsiveStyle(
                 [size, brandColor] as const,
                 ([
                   size = Sizes.MEDIUM,
@@ -127,7 +127,7 @@ const HiddenCheckbox = forwardRef(function HiddenCheckbox(
           },
 
           '&:not(:disabled)': {
-            [`&:focus ~ .${FAKE_CHECKBOX_CLASS_NAME}`]: responsiveStyle(
+            [`&:focus ~ .${FAKE_CHECKBOX_CLASS_NAME}`]: useResponsiveStyle(
               [brandColor] as const,
               ([brandColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 }]) => ({
                 borderColor: colorToString(brandColor),
@@ -136,7 +136,7 @@ const HiddenCheckbox = forwardRef(function HiddenCheckbox(
           },
 
           '&:not(:disabled):checked': {
-            [`&:focus ~ .${FAKE_CHECKBOX_CLASS_NAME}`]: responsiveStyle(
+            [`&:focus ~ .${FAKE_CHECKBOX_CLASS_NAME}`]: useResponsiveStyle(
               [contrast] as const,
               ([contrast = Contrasts.LIGHT]) => ({
                 borderColor: getContrastBorderColor(contrast, error),
@@ -170,7 +170,7 @@ export default forwardRef<HTMLInputElement, Props>(function Checkbox(
       className={cx(
         useStyle({ position: 'relative' }),
         useStyle(
-          responsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
+          useResponsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
             height: getSize(size),
             width: getSize(size),
           })),

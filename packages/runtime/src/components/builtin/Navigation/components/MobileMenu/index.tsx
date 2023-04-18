@@ -15,7 +15,7 @@ import { ResponsiveColor } from '../../../../../runtimes/react/controls'
 import { useResponsiveColor } from '../../../../hooks'
 import { cx } from '@emotion/css'
 import { useStyle } from '../../../../../runtimes/react/use-style'
-import { responsiveStyle } from '../../../../utils/responsive-style'
+import { useResponsiveStyle } from '../../../../utils/responsive-style'
 
 type NavigationButtonProps = NavigationButtonValue['payload'] &
   Omit<ComponentPropsWithoutRef<typeof Button>, 'color' | 'textColor'>
@@ -68,21 +68,24 @@ function Container({
           maxWidth: 575,
         }),
         useStyle(
-          responsiveStyle([animation, backgroundColor] as const, ([animation, backgroundColor]) => {
-            if (animation == null) return { display: 'none' }
+          useResponsiveStyle(
+            [animation, backgroundColor] as const,
+            ([animation, backgroundColor]) => {
+              if (animation == null) return { display: 'none' }
 
-            return {
-              display: 'flex',
-              backgroundColor: backgroundColor == null ? 'black' : colorToString(backgroundColor),
-              transform: open
-                ? `translate3d(0,0,0)`
-                : `translate3d(${{ coverRight: '', coverLeft: '-' }[animation]}100%, 0, 0)`,
-              ...{
-                coverRight: { top: 0, bottom: 0, right: 0 },
-                coverLeft: { top: 0, bottom: 0, left: 0 },
-              }[animation],
-            }
-          }),
+              return {
+                display: 'flex',
+                backgroundColor: backgroundColor == null ? 'black' : colorToString(backgroundColor),
+                transform: open
+                  ? `translate3d(0,0,0)`
+                  : `translate3d(${{ coverRight: '', coverLeft: '-' }[animation]}100%, 0, 0)`,
+                ...{
+                  coverRight: { top: 0, bottom: 0, right: 0 },
+                  coverLeft: { top: 0, bottom: 0, left: 0 },
+                }[animation],
+              }
+            },
+          ),
         ),
         className,
       )}
@@ -114,7 +117,7 @@ function CloseIconContainer({ className, color, ...restOfProps }: CloseIconConta
           fill: 'currentcolor',
         }),
         useStyle(
-          responsiveStyle([color] as const, ([color]) => ({
+          useResponsiveStyle([color] as const, ([color]) => ({
             color: color == null ? 'rgba(161, 168, 194, 0.5)' : colorToString(color),
           })),
         ),

@@ -28,7 +28,7 @@ import { colorToString } from '../../utils/colorToString'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { useResponsiveColor } from '../../hooks'
 import { cx } from '@emotion/css'
-import { responsiveStyle, responsiveTextStyle } from '../../utils/responsive-style'
+import { useResponsiveStyle, useResponsiveTextStyle } from '../../utils/responsive-style'
 import { useStyle } from '../../../runtimes/react/use-style'
 
 type Props = {
@@ -72,9 +72,9 @@ const Container = forwardRef(function Container(
         useStyle({ display: 'flex', alignItems: 'center' }),
         width,
         margin,
-        useStyle(responsiveTextStyle(textStyle)),
+        useStyle(useResponsiveTextStyle(textStyle)),
         useStyle(
-          responsiveStyle([gutter] as const, ([gutter = { value: 0, unit: 'px' }]) => ({
+          useResponsiveStyle([gutter] as const, ([gutter = { value: 0, unit: 'px' }]) => ({
             gap: `${gutter.value}${gutter.unit}`,
           })),
         ),
@@ -108,7 +108,7 @@ function LinksContainer({
           flexGrow: 1,
         }),
         useStyle(
-          responsiveStyle(
+          useResponsiveStyle(
             [alignment, mobileMenuAnimation] as const,
             ([alignment = 'flex-end', mobileMenuAnimation]) => ({
               display: mobileMenuAnimation == null ? 'flex' : 'none',
@@ -153,7 +153,7 @@ function OpenIconContainer({
           fill: 'currentcolor',
         }),
         useStyle(
-          responsiveStyle(
+          useResponsiveStyle(
             [mobileMenuAnimation, alignment, color] as const,
             ([mobileMenuAnimation, alignment = 'flex-end', color]) => ({
               display: mobileMenuAnimation == null ? 'none' : 'flex',

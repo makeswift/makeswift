@@ -7,7 +7,7 @@ import {
 } from '../../prop-controllers'
 import { useStyle } from '../../runtimes/react/use-style'
 import { useItemAnimation } from '../builtin/Box/animations'
-import { responsiveGridItem } from '../utils/responsive-style'
+import { useResponsiveGridItem } from '../utils/responsive-style'
 
 type BaseProps = {
   className?: string
@@ -35,7 +35,7 @@ export function GridItem({
   itemStaggerDuration,
   ...restOfProps
 }: Props) {
-  const gridItemClassName = useStyle(responsiveGridItem({ grid, index, columnGap, rowGap }))
+  const gridItemClassName = useStyle(useResponsiveGridItem({ grid, index, columnGap, rowGap }))
   const animationClassName = useItemAnimation(
     itemAnimateDuration,
     itemAnimateDelay,

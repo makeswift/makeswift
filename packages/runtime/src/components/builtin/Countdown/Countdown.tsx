@@ -12,7 +12,7 @@ import {
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { colorToString } from '../../utils/colorToString'
-import { responsiveStyle } from '../../utils/responsive-style'
+import { useResponsiveStyle } from '../../utils/responsive-style'
 import { ColorValue as Color } from '../../utils/types'
 
 type Props = {
@@ -124,7 +124,7 @@ const Container = forwardRef(function Container(
         width,
         margin,
         useStyle(
-          responsiveStyle([size] as const, ([size = 'medium']) => {
+          useResponsiveStyle([size] as const, ([size = 'medium']) => {
             switch (size) {
               case 'small':
                 return { fontSize: 18, [`.${LABEL_CLASS_NAME}`]: { fontSize: 14 } }
@@ -138,7 +138,7 @@ const Container = forwardRef(function Container(
           }),
         ),
         useStyle({
-          [`.${SEGMENT_CLASS_NAME}`]: responsiveStyle([gap] as const, ([gap]) => ({
+          [`.${SEGMENT_CLASS_NAME}`]: useResponsiveStyle([gap] as const, ([gap]) => ({
             margin: `0 ${gap == null ? 0 : `${gap.value / 2}${gap.unit}`}`,
 
             '&:first-child': {
@@ -151,7 +151,7 @@ const Container = forwardRef(function Container(
           })),
         }),
         useStyle({
-          [`.${BLOCK_CLASS_NAME}`]: responsiveStyle([shape] as const, ([shape = 'rounded']) => {
+          [`.${BLOCK_CLASS_NAME}`]: useResponsiveStyle([shape] as const, ([shape = 'rounded']) => {
             switch (shape) {
               case 'pill':
                 return { borderRadius: 500 }
@@ -165,7 +165,7 @@ const Container = forwardRef(function Container(
           }),
         }),
         useStyle({
-          [`.${BLOCK_CLASS_NAME}`]: responsiveStyle(
+          [`.${BLOCK_CLASS_NAME}`]: useResponsiveStyle(
             [variant, blockColor, numberColor, numberFont] as const,
             ([
               variant = 'filled',
@@ -262,7 +262,7 @@ const Container = forwardRef(function Container(
           ),
         }),
         useStyle({
-          [`.${LABEL_CLASS_NAME}`]: responsiveStyle(
+          [`.${LABEL_CLASS_NAME}`]: useResponsiveStyle(
             [labelColor, labelFont] as const,
             ([
               labelColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 },

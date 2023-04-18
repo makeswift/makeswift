@@ -2,7 +2,7 @@ import { cx } from '@emotion/css'
 import { RenderElementProps } from 'slate-react'
 import { Block, BlockType } from '../../../../../controls'
 import { useStyle } from '../../../../../runtimes/react/use-style'
-import { responsiveStyle } from '../../../../utils/responsive-style'
+import { useResponsiveStyle } from '../../../../utils/responsive-style'
 
 export interface InlineRenderElementProps extends RenderElementProps {
   element: Block
@@ -11,7 +11,7 @@ export interface InlineRenderElementProps extends RenderElementProps {
 export function BlockElement({ element, attributes, children }: InlineRenderElementProps) {
   const blockStyles = [
     useStyle({ margin: 0 }),
-    useStyle(responsiveStyle([element.textAlign], ([textAlign = 'left']) => ({ textAlign }))),
+    useStyle(useResponsiveStyle([element.textAlign], ([textAlign = 'left']) => ({ textAlign }))),
   ]
 
   switch (element.type) {

@@ -9,7 +9,7 @@ import {
   Contrasts,
   Value,
 } from '../../../context/FormContext'
-import { responsiveStyle } from '../../../../../utils/responsive-style'
+import { useResponsiveStyle } from '../../../../../utils/responsive-style'
 import { CSSObject } from '@emotion/css'
 
 export function getSizeHeight(size: Size): number {
@@ -138,7 +138,7 @@ export default function responsiveField(
     borderWidth: 1,
     borderStyle: 'solid',
     transition: 'border-color 200ms',
-    ...responsiveStyle(
+    ...useResponsiveStyle(
       [props.shape, props.size, props.contrast, props.brandColor] as const,
       ([
         shape = Shapes.ROUNDED,

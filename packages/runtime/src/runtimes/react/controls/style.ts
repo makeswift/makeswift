@@ -3,7 +3,7 @@ import { useEffect, useId } from 'react'
 
 import { useBorder, BorderSide } from '../../../components/hooks'
 import { colorToString } from '../../../components/utils/colorToString'
-import { responsiveStyle } from '../../../components/utils/responsive-style'
+import { useResponsiveStyle } from '../../../components/utils/responsive-style'
 
 import {
   FontSizePropertyData,
@@ -45,7 +45,7 @@ function useStyleControlCssObject(
     ...(properties.includes(StyleControlProperty.Width) && {
       maxWidth: '100%',
     }),
-    ...responsiveStyle(
+    ...useResponsiveStyle(
       [
         style?.width,
         style?.margin,

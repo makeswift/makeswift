@@ -27,7 +27,7 @@ import {
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { cx } from '@emotion/css'
-import { responsiveStyle } from '../../utils/responsive-style'
+import { useResponsiveStyle } from '../../utils/responsive-style'
 
 const LeftChevron = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="10" height="14" viewBox="0 0 10 14">
@@ -162,20 +162,20 @@ const Carousel = forwardRef(function Carousel(
   const slideClassName = cx(
     useStyle({ display: 'flex' }),
     useStyle(
-      responsiveStyle([responsivePageSize] as const, ([pageSize = 1]) => ({
+      useResponsiveStyle([responsivePageSize] as const, ([pageSize = 1]) => ({
         flexBasis: `${100 / pageSize}%`,
         maxWidth: `${100 / pageSize}%`,
         minWidth: `${100 / pageSize}%`,
       })),
     ),
     useStyle(
-      responsiveStyle([slideAlignment] as const, ([alignItems = 'center']) => ({ alignItems })),
+      useResponsiveStyle([slideAlignment] as const, ([alignItems = 'center']) => ({ alignItems })),
     ),
   )
   const reelClassName = cx(
     useStyle({ display: 'flex', position: 'relative', flexWrap: 'nowrap' }),
     useStyle(
-      responsiveStyle([gap] as const, ([gap = { value: 0, unit: 'px' }]) => ({
+      useResponsiveStyle([gap] as const, ([gap = { value: 0, unit: 'px' }]) => ({
         margin: `0 ${`${-gap.value / 2}${gap.unit}`}`,
         [`& > .${slideClassName}`]: {
           padding: `0 ${`${gap.value / 2}${gap.unit}`}`,
@@ -198,7 +198,7 @@ const Carousel = forwardRef(function Carousel(
       userSelect: 'none',
     }),
     useStyle(
-      responsiveStyle(
+      useResponsiveStyle(
         [arrowBackground] as const,
         ([background = { swatch: { hue: 0, saturation: 0, lightness: 100 }, alpha: 1 }]) => ({
           background: colorToString(background),
@@ -223,7 +223,7 @@ const Carousel = forwardRef(function Carousel(
       zIndex: 2,
     }),
     useStyle(
-      responsiveStyle(
+      useResponsiveStyle(
         [arrowColor] as const,
         ([color = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 }]) => ({
           color: colorToString(color),
@@ -234,7 +234,7 @@ const Carousel = forwardRef(function Carousel(
   const leftSlopClassName = cx(
     slopClassName,
     useStyle(
-      responsiveStyle([arrowPosition] as const, ([position = 'inside']) => {
+      useResponsiveStyle([arrowPosition] as const, ([position = 'inside']) => {
         switch (position) {
           case 'inside':
             return { transform: 'translateX(8px)' }
@@ -260,7 +260,7 @@ const Carousel = forwardRef(function Carousel(
   const rightSlopClassName = cx(
     slopClassName,
     useStyle(
-      responsiveStyle([arrowPosition] as const, ([position = 'inside']) => {
+      useResponsiveStyle([arrowPosition] as const, ([position = 'inside']) => {
         switch (position) {
           case 'inside':
             return { transform: 'translateX(-8px)' }
@@ -286,7 +286,7 @@ const Carousel = forwardRef(function Carousel(
   const dotsClassName = cx(
     useStyle({ display: showDots ? 'flex' : 'none', justifyContent: 'center', marginTop: 20 }),
     useStyle(
-      responsiveStyle(
+      useResponsiveStyle(
         [dotColor] as const,
         ([color = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 }]) => ({
           color: colorToString(color),

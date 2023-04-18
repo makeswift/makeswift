@@ -21,7 +21,11 @@ import { Link } from '../../shared/Link'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { ButtonVariant } from './contants'
 import { useStyle } from '../../../runtimes/react/use-style'
-import { responsiveStyle, responsiveTextStyle, responsiveWidth } from '../../utils/responsive-style'
+import {
+  useResponsiveStyle,
+  useResponsiveTextStyle,
+  useResponsiveWidth,
+} from '../../utils/responsive-style'
 import { cx } from '@emotion/css'
 
 type BaseProps<T extends ElementType> = {
@@ -80,10 +84,10 @@ const Button = forwardRef(function Button<T extends ElementType = 'button'>(
           textDecoration: 'none',
           textAlign: 'center',
         }),
-        useStyle(responsiveWidth(width, 'auto')),
+        useStyle(useResponsiveWidth(width, 'auto')),
         margin,
         useStyle(
-          responsiveStyle(
+          useResponsiveStyle(
             [variant, shape, size, textColor, color] as const,
             ([
               variant = 'flat',
@@ -260,7 +264,7 @@ const Button = forwardRef(function Button<T extends ElementType = 'button'>(
             },
           ),
         ),
-        useStyle(responsiveTextStyle(textStyle)),
+        useStyle(useResponsiveTextStyle(textStyle)),
         className,
       )}
       link={link}

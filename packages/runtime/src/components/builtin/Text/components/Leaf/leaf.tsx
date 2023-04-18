@@ -7,7 +7,7 @@ import { useStyle } from '../../../../../runtimes/react/use-style'
 import { colorToString } from '../../../../utils/colorToString'
 import { findDeviceOverride, shallowMergeFallbacks } from '../../../../utils/devices'
 import { isNonNullable } from '../../../../utils/isNonNullable'
-import { responsiveStyle } from '../../../../utils/responsive-style'
+import { useResponsiveStyle } from '../../../../utils/responsive-style'
 import { ColorValue } from '../../../../utils/types'
 import { RichTextTypography } from '../../../../../controls'
 
@@ -141,7 +141,7 @@ export default function useEnhancedTypography(value?: RichTextTypography): Enhan
 
 export function useTypographyClassName(value: EnhancedTypography): string {
   return useStyle(
-    responsiveStyle<
+    useResponsiveStyle<
       EnhancedTypographyValue,
       [ResponsiveValue<EnhancedTypographyValue> | null | undefined]
     >(
