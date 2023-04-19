@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic'
 import { forwardNextDynamicRef } from '../../../next'
 import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
+import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 
 export function registerComponent(runtime: ReactRuntime) {
@@ -54,7 +55,12 @@ export function registerComponent(runtime: ReactRuntime) {
           defaultValue: 'medium',
         }),
         gap: Props.GapX({
-          preset: [{ deviceId: 'desktop', value: { value: 10, unit: 'px' } }],
+          preset: [
+            {
+              deviceId: getBaseBreakpoint(runtime.getBreakpoints()).id,
+              value: { value: 10, unit: 'px' },
+            },
+          ],
           label: 'Gap',
           step: 1,
           min: 0,
