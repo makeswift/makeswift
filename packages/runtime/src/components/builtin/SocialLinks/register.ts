@@ -4,6 +4,7 @@ import { forwardNextDynamicRef } from '../../../next'
 import { Props } from '../../../prop-controllers'
 import { SocialLinksValue } from '../../../prop-controllers/descriptors'
 import { ReactRuntime } from '../../../runtimes/react'
+import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 
 export function registerComponent(runtime: ReactRuntime) {
@@ -108,7 +109,12 @@ export function registerComponent(runtime: ReactRuntime) {
           defaultValue: 'center',
         }),
         gutter: Props.GapX({
-          preset: [{ deviceId: 'desktop', value: { value: 10, unit: 'px' } }],
+          preset: [
+            {
+              deviceId: getBaseBreakpoint(runtime.getBreakpoints()).id,
+              value: { value: 10, unit: 'px' },
+            },
+          ],
           label: 'Link gap',
           min: 0,
           max: 100,
@@ -123,7 +129,7 @@ export function registerComponent(runtime: ReactRuntime) {
           format: Props.Margin.Format.ClassName,
           preset: [
             {
-              deviceId: 'desktop',
+              deviceId: getBaseBreakpoint(runtime.getBreakpoints()).id,
               value: {
                 marginTop: { value: 10, unit: 'px' },
                 marginRight: 'auto',

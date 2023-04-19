@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic'
 import { forwardNextDynamicRef } from '../../../next'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
-import { findBreakpointOverride } from '../../../state/modules/breakpoints'
+import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 import { Alignments, Contrast, Contrasts, Shapes, Sizes } from './context/FormContext'
 
@@ -28,7 +28,12 @@ export function registerComponent(runtime: ReactRuntime) {
           hidden: props.tableId == null,
         })),
         gap: Props.GapY(props => ({
-          preset: [{ deviceId: 'desktop', value: { value: 10, unit: 'px' } }],
+          preset: [
+            {
+              deviceId: getBaseBreakpoint(runtime.getBreakpoints()).id,
+              value: { value: 10, unit: 'px' },
+            },
+          ],
           label: 'Gap',
           defaultValue: { value: 0, unit: 'px' },
           hidden: props.tableId == null,
@@ -126,7 +131,12 @@ export function registerComponent(runtime: ReactRuntime) {
           hidden: props.tableId == null,
         })),
         width: Props.Width({
-          preset: [{ deviceId: 'desktop', value: { value: 550, unit: 'px' } }],
+          preset: [
+            {
+              deviceId: getBaseBreakpoint(runtime.getBreakpoints()).id,
+              value: { value: 550, unit: 'px' },
+            },
+          ],
           defaultValue: { value: 100, unit: '%' },
           format: Props.Width.Format.ClassName,
         }),

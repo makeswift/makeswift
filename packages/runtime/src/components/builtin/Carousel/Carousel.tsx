@@ -28,6 +28,8 @@ import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { cx } from '@emotion/css'
 import { useResponsiveStyle } from '../../utils/responsive-style'
+import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
+import { useBreakpoints } from '../../../runtimes/react'
 
 const LeftChevron = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="10" height="14" viewBox="0 0 10 14">
@@ -99,6 +101,7 @@ const Carousel = forwardRef(function Carousel(
   }: Props,
   ref: Ref<HTMLDivElement>,
 ) {
+  const breakpoints = useBreakpoints()
   const [index, setIndex] = useState(0)
   const swipe = useRef(0)
   const startIndex = wrap(0, images.length, index)
@@ -345,7 +348,12 @@ const Carousel = forwardRef(function Carousel(
                   }}
                 >
                   <Image
-                    width={[{ deviceId: 'desktop', value: { value: 100, unit: '%' } }]}
+                    width={[
+                      {
+                        deviceId: getBaseBreakpoint(breakpoints).id,
+                        value: { value: 100, unit: '%' },
+                      },
+                    ]}
                     file={imageProps.file}
                     altText={imageProps.altText}
                     link={imageProps.link}

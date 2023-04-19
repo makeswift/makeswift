@@ -6,6 +6,7 @@ import { forwardNextDynamicRef } from '../../../next'
 import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
+import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -40,7 +41,7 @@ export function registerComponent(runtime: ReactRuntime) {
                                   value: { fontSize: { value: 16, unit: 'px' } },
                                 },
                                 {
-                                  deviceId: 'desktop',
+                                  deviceId: getBaseBreakpoint(runtime.getBreakpoints()).id,
                                   value: {
                                     fontWeight: 400,
                                     fontSize: { value: 18, unit: 'px' },
@@ -61,14 +62,19 @@ export function registerComponent(runtime: ReactRuntime) {
         })),
         width: Props.Width({
           format: Props.Width.Format.ClassName,
-          preset: [{ deviceId: 'desktop', value: { value: 700, unit: 'px' } }],
+          preset: [
+            {
+              deviceId: getBaseBreakpoint(runtime.getBreakpoints()).id,
+              value: { value: 700, unit: 'px' },
+            },
+          ],
           defaultValue: { value: 100, unit: '%' },
         }),
         margin: Props.Margin({
           format: Props.Margin.Format.ClassName,
           preset: [
             {
-              deviceId: 'desktop',
+              deviceId: getBaseBreakpoint(runtime.getBreakpoints()).id,
               value: {
                 marginTop: null,
                 marginRight: 'auto',

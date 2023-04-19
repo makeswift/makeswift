@@ -3,7 +3,7 @@ import { forwardNextDynamicRef } from '../../../next'
 import { Props } from '../../../prop-controllers'
 import { NavigationLinksValue, ResponsiveValue } from '../../../prop-controllers/descriptors'
 import { ReactRuntime } from '../../../runtimes/react'
-import { findBreakpointOverride } from '../../../state/modules/breakpoints'
+import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 
 export function registerComponent(runtime: ReactRuntime) {
@@ -30,7 +30,12 @@ export function registerComponent(runtime: ReactRuntime) {
           hidden: props.showLogo === false,
         })),
         logoWidth: Props.ResponsiveLength(props => ({
-          preset: [{ deviceId: 'desktop', value: { value: 100, unit: 'px' } }],
+          preset: [
+            {
+              deviceId: getBaseBreakpoint(runtime.getBreakpoints()).id,
+              value: { value: 100, unit: 'px' },
+            },
+          ],
           label: 'Logo width',
           min: 0,
           max: 1000,
@@ -56,7 +61,12 @@ export function registerComponent(runtime: ReactRuntime) {
           defaultValue: 'flex-end',
         }),
         gutter: Props.GapX({
-          preset: [{ deviceId: 'desktop', value: { value: 10, unit: 'px' } }],
+          preset: [
+            {
+              deviceId: getBaseBreakpoint(runtime.getBreakpoints()).id,
+              value: { value: 10, unit: 'px' },
+            },
+          ],
           label: 'Link gap',
           min: 0,
           max: 100,

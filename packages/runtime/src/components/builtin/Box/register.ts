@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic'
 import { forwardNextDynamicRef } from '../../../next'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
-import { findBreakpointOverride } from '../../../state/modules/breakpoints'
+import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 import {
   BoxAnimateIn,
@@ -69,7 +69,7 @@ export function registerComponent(runtime: ReactRuntime) {
           format: Props.Padding.Format.ClassName,
           preset: [
             {
-              deviceId: 'desktop',
+              deviceId: getBaseBreakpoint(runtime.getBreakpoints()).id,
               value: {
                 paddingTop: { value: 10, unit: 'px' },
                 paddingRight: { value: 10, unit: 'px' },
