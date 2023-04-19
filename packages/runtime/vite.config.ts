@@ -30,6 +30,7 @@ export default defineConfig({
         builder: path.resolve(__dirname, 'src', 'builder'),
         controls: path.resolve(__dirname, 'src', 'controls'),
         slate: path.resolve(__dirname, 'src', 'slate'),
+        ['state/breakpoints']: path.resolve(__dirname, 'src', 'state', 'modules', 'breakpoints'),
       },
       output: {
         entryFileNames: '[name].[format].js',
