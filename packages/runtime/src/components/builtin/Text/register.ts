@@ -6,7 +6,7 @@ import { forwardNextDynamicRef } from '../../../next'
 import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
-import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
+import { DefaultBreakpointID, getBaseBreakpoint } from '../../../state/modules/breakpoints'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -37,10 +37,6 @@ export function registerComponent(runtime: ReactRuntime) {
                               id: null,
                               style: [
                                 {
-                                  deviceId: 'mobile',
-                                  value: { fontSize: { value: 16, unit: 'px' } },
-                                },
-                                {
                                   deviceId: getBaseBreakpoint(runtime.getBreakpoints()).id,
                                   value: {
                                     fontWeight: 400,
@@ -48,6 +44,16 @@ export function registerComponent(runtime: ReactRuntime) {
                                     lineHeight: 1.5,
                                   },
                                 },
+                                ...(runtime
+                                  .getBreakpoints()
+                                  .some(({ id }) => id === DefaultBreakpointID.Mobile)
+                                  ? [
+                                      {
+                                        deviceId: DefaultBreakpointID.Mobile,
+                                        value: { fontSize: { value: 16, unit: 'px' } },
+                                      },
+                                    ]
+                                  : []),
                               ],
                             },
                           },
