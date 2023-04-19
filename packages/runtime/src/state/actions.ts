@@ -279,7 +279,7 @@ type ElementFromPointChangeAction = {
   payload: { keys: { documentKey: string; elementKey: string } | null }
 }
 
-type SetBreakpointsAction = {
+export type SetBreakpointsAction = {
   type: typeof ActionTypes.SET_BREAKPOINTS
   payload: { breakpoints: Breakpoints }
 }

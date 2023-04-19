@@ -1,6 +1,16 @@
-import { ResponsiveValue, DeviceOverride, Device as BreakpointId } from '../../prop-controllers'
+import { Viewport } from 'csstype'
+
+import {
+  ResponsiveValue as PropControllerResponsiveValue,
+  DeviceOverride as PropControllerDeviceOverride,
+  Device as DeviceId,
+} from '../../prop-controllers'
 import shallowMerge from '../../utils/shallowMerge'
 import { Action, ActionTypes } from '../actions'
+
+export type DeviceOverride<T> = PropControllerDeviceOverride<T>
+export type ResponsiveValue<T> = PropControllerResponsiveValue<T>
+export type BreakpointId = DeviceId
 
 export type Breakpoint = {
   id: BreakpointId
@@ -154,4 +164,55 @@ export const getBreakpointMediaQuery = (breakpoint: Breakpoint): string => {
   }
 
   return parts.join(' and ')
+}
+
+export const getViewportStyle = (
+  state: State,
+  deviceId: string,
+): Viewport<string | number> | null | undefined => {
+  const device = getBreakpoint(state, deviceId)
+
+  return (
+    device && {
+      width: device.viewportWidth != null ? device.viewportWidth : '100%',
+      minWidth: device.minWidth,
+    }
+  )
+}
+
+export function findNextFallback<V>(
+  breakpoints: Breakpoints,
+  value: ResponsiveValue<V>,
+  deviceId: BreakpointId,
+  activeDeviceId: BreakpointId,
+  fallbackStrategy?: FallbackStrategy<V>,
+): Breakpoint | null {
+  const deviceOverride = findBreakpointOverride(
+    breakpoints,
+    value.filter(v => v.deviceId !== activeDeviceId),
+    deviceId,
+    fallbackStrategy,
+  )
+
+  return (deviceOverride && getBreakpoint(breakpoints, deviceOverride.deviceId)) ?? null
+}
+
+export const mergeResponsiveValues = <A>(
+  breakpoints: Breakpoints,
+  source: DeviceOverride<A>[],
+  override: DeviceOverride<A>[],
+): DeviceOverride<A>[] => {
+  const devices = [
+    ...new Set(
+      source.map(({ deviceId }) => deviceId).concat(override.map(({ deviceId }) => deviceId)),
+    ),
+  ]
+
+  return devices.map(deviceId => ({
+    deviceId,
+    value: {
+      ...(findBreakpointOverride(breakpoints, source, deviceId) || { value: {} }).value,
+      ...(findBreakpointOverride(breakpoints, override, deviceId, v => v) || { value: {} }).value,
+    },
+  })) as DeviceOverride<A>[]
 }

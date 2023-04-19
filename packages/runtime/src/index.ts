@@ -1,4 +1,4 @@
-export type { Action } from './state/actions'
+export type { Action, SetBreakpointsAction } from './state/actions'
 export {
   ActionTypes,
   changeDocument,
@@ -14,6 +14,7 @@ export {
   setBuilderEditMode,
   changePathname,
   builderPointerMove,
+  setBreakpoints,
 } from './state/actions'
 export type { Operation } from './state/modules/read-write-documents'
 export type { ComponentMeta } from './state/modules/components-meta'
