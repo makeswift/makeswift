@@ -319,19 +319,25 @@ const NFTDropCard = forwardRef(function NFTDropCard(
                   <MenuList>
                     <MenuItem
                       icon={<MetamaskLogo />}
-                      onClick={connectWithMetamask}
+                      onClick={() => {
+                        connectWithMetamask()
+                      }}
                     >
                       Connect MetaMask
                     </MenuItem>
                     <MenuItem
                       icon={<WalletConnectLogo />}
-                      onClick={connectWithWalletConnect}
+                      onClick={() => {
+                        connectWithWalletConnect()
+                      }}
                     >
                       Connect with Wallet Connect
                     </MenuItem>
                     <MenuItem
                       icon={<CoinbaseLogo />}
-                      onClick={connectWithCoinbaseWallet}
+                      onClick={() => {
+                        connectWithCoinbaseWallet()
+                      }}
                     >
                       Connect with Coinbase Wallet
                     </MenuItem>
@@ -447,7 +453,7 @@ const NFTDropCardProvider = forwardRef(function NFTDropCardProvider(
   ref: Ref<HTMLDivElement>,
 ) {
   return (
-    <ThirdwebProvider desiredChainId={Number(chainId)}>
+    <ThirdwebProvider activeChain={Number(chainId)}>
       <ChakraProvider
         theme={extendTheme({
           fonts: {
