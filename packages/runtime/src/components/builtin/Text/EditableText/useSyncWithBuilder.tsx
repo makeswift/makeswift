@@ -3,6 +3,7 @@ import { Editor } from 'slate'
 import { richTextDTOtoDAO, richTextDTOtoSelection } from '../../../../controls'
 import { RichTextValue } from '../../../../prop-controllers'
 import deepEqual from '../../../../utils/deepEqual'
+import { useIsInBuilder } from '../../../../react'
 
 const COMMIT_DEBOUNCE_DELAY = 500
 
@@ -12,9 +13,10 @@ const COMMIT_DEBOUNCE_DELAY = 500
  */
 export function useSyncWithBuilder(editor: Editor, text?: RichTextValue) {
   const [shouldCommit, setShouldCommit] = useState(true)
+  const isInBuilder = useIsInBuilder()
 
   useEffect(() => {
-    if (shouldCommit && text) {
+    if (shouldCommit && text && isInBuilder) {
       const nextValue = richTextDTOtoDAO(text)
       const nextSelection = richTextDTOtoSelection(text)
       if (!deepEqual(editor.children, nextValue) || !deepEqual(editor.selection, nextSelection)) {
