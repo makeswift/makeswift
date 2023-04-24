@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.8.3
+
+### Patch Changes
+
+- dd5f7b6: Fix path normalization for client-side navigation.
+- f2389f9: Update Preview mode so that rich text is readonly.
+
 ## 0.8.2
 
 ### Patch Changes
