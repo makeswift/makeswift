@@ -50,13 +50,6 @@ type EnhancedTypographyValue = Omit<RichTextTypographyValue, keyof EnhancedColor
 
 export type EnhancedTypography = Array<DeviceOverride<EnhancedTypographyValue>>
 
-export function isDeviceOverride(value: {
-  deviceId: string
-  value: RichTextTypographyValue
-}): value is DeviceOverride<RichTextTypographyValue> {
-  return value.deviceId === 'desktop' || value.deviceId === 'tablet' || value.deviceId === 'mobile'
-}
-
 export function getTypographyStyleSwatchIds(
   style: RichTextTypography['style'] | Typography['style'] | null | undefined,
 ): string[] {
@@ -101,8 +94,8 @@ const getDeviceId = ({ deviceId }: DeviceOverride<unknown>) => deviceId
  */
 export default function useEnhancedTypography(value?: RichTextTypography): EnhancedTypography {
   const typography = typographyFragementToRichTextTypography(useTypography(value?.id ?? null))
-  const source = typography?.style.filter(isDeviceOverride) ?? []
-  const override = value?.style.filter(isDeviceOverride) ?? []
+  const source = typography?.style ?? []
+  const override = value?.style ?? []
   const breakpoints = useBreakpoints()
 
   const swatchIds = [
