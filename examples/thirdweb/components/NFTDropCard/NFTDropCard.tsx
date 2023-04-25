@@ -133,7 +133,8 @@ const NFTDropCard = forwardRef(function NFTDropCard(
     !!address &&
     !claimIneligibilityReasons.data?.length &&
     activeClaimCondition &&
-    parseInt(activeClaimCondition?.availableSupply) > 0
+    (activeClaimCondition?.availableSupply === 'unlimited' ||
+      parseInt(activeClaimCondition?.availableSupply) > 0)
 
   // Check price
   const price = parseUnits(
