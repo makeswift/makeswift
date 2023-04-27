@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.8.4
+
+### Patch Changes
+
+- 1e5836d: Fix rich text control to preserve DOM selection when you change things in the right sidebar.
+
 ## 0.8.3
 
 ### Patch Changes
