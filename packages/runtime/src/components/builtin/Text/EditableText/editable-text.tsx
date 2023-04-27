@@ -27,6 +27,7 @@ import { useBuilderEditMode } from '../../../../runtimes/react'
 import { BuilderEditMode } from '../../../../state/modules/builder-edit-mode'
 import { onKeyDown, withBlock, withList, withTypography } from '../../../../slate'
 import { pollBoxModel } from '../../../../runtimes/react/poll-box-model'
+import { useSyncDOMSelection } from './useSyncDOMSelection'
 
 type Props = {
   id?: ElementIDValue
@@ -42,6 +43,8 @@ export const EditableText = forwardRef(function EditableText(
   ref: Ref<PropControllersHandle<Descriptors>>,
 ) {
   const [editor] = useState(() => withBlock(withTypography(withList(withReact(createEditor())))))
+  const [hasBeenSelected, setHasBeenSelected] = useState(false)
+  useSyncDOMSelection(editor, hasBeenSelected)
   const delaySync = useSyncWithBuilder(editor, text)
   const editMode = useBuilderEditMode()
 
@@ -82,6 +85,7 @@ export const EditableText = forwardRef(function EditableText(
 
   const handleFocus = useCallback(() => {
     controller?.focus()
+    setHasBeenSelected(true)
   }, [controller])
 
   const handleKeyDown = useCallback(
