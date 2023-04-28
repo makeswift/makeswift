@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.8.5
+
+### Patch Changes
+
+- 56c8f1c: Update rich text control to preserve DOM selection only when rich text is selected.
+
 ## 0.8.4
 
 ### Patch Changes
