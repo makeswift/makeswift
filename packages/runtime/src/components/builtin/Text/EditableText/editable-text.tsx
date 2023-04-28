@@ -1,4 +1,5 @@
 import {
+  FocusEvent,
   forwardRef,
   KeyboardEvent,
   Ref,
@@ -43,8 +44,8 @@ export const EditableText = forwardRef(function EditableText(
   ref: Ref<PropControllersHandle<Descriptors>>,
 ) {
   const [editor] = useState(() => withBlock(withTypography(withList(withReact(createEditor())))))
-  const [hasBeenSelected, setHasBeenSelected] = useState(false)
-  useSyncDOMSelection(editor, hasBeenSelected)
+  const [isPreservingDOMSElection, setIsPreservingDOMSelection] = useState(false)
+  useSyncDOMSelection(editor, isPreservingDOMSElection)
   const delaySync = useSyncWithBuilder(editor, text)
   const editMode = useBuilderEditMode()
 
@@ -85,7 +86,7 @@ export const EditableText = forwardRef(function EditableText(
 
   const handleFocus = useCallback(() => {
     controller?.focus()
-    setHasBeenSelected(true)
+    setIsPreservingDOMSelection(true)
   }, [controller])
 
   const handleKeyDown = useCallback(
@@ -98,14 +99,23 @@ export const EditableText = forwardRef(function EditableText(
     [controller, editor],
   )
 
+  const handleBlur = useCallback((e: FocusEvent) => {
+    // When clicking outside of the iframe (`relatedTarget` is null) we want to preserve the DOM selection.
+    if (e.relatedTarget == null) return
+    // Otherwise we want to deselect on blur and stop preserving selection.
+    setIsPreservingDOMSelection(false)
+    ReactEditor.deselect(editor)
+  }, [])
+
   return (
     <Slate editor={editor} value={initialValue} onChange={delaySync}>
       <Editable
         id={id}
         renderLeaf={Leaf}
         renderElement={Element}
-        onKeyDown={handleKeyDown}
         onFocus={handleFocus}
+        onKeyDown={handleKeyDown}
+        onBlur={handleBlur}
         className={cx(width, margin)}
         readOnly={editMode !== BuilderEditMode.CONTENT}
         placeholder="Write some text..."

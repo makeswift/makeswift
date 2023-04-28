@@ -7,9 +7,9 @@ import { Editor, Range as SlateRange } from 'slate'
  * `<Editable />` only updates the DOM's selection to match slate when it is focused.
  * In the case of a panel being clicked this hook updates the DOM selection to match slate.
  */
-export function useSyncDOMSelection(editor: Editor, hasBeenSelected: boolean) {
+export function useSyncDOMSelection(editor: Editor, isEnabled: boolean) {
   useIsomorphicLayoutEffect(() => {
-    if (!hasBeenSelected || editor.selection == null || ReactEditor.isFocused(editor)) return
+    if (!isEnabled || editor.selection == null || ReactEditor.isFocused(editor)) return
     try {
       const root = ReactEditor.findDocumentOrShadowRoot(editor) as Document
       const domSelection = root.getSelection()
