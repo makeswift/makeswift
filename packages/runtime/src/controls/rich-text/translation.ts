@@ -65,7 +65,7 @@ function toNodeDAO(node: NodeJSON): Descendant[] {
     case ObjectType.Block:
       return [
         {
-          type: node.type,
+          type: node.type as any,
           textAlign: node?.data && 'textAlign' in node.data ? node?.data.textAlign : undefined,
           children: node.nodes?.flatMap(toNodeDAO) ?? [],
         },
@@ -162,18 +162,21 @@ function toNodeDTO(node: Descendant): Array<BlockJSON | InlineJSON | TextJSON> {
     case BlockType.UnorderedList:
     case BlockType.ListItem:
     case BlockType.ListItemChild:
+    case BlockType.Text:
       return [
         {
           type: node.type,
-          data: node.textAlign
-            ? {
-                textAlign: node.textAlign,
-              }
-            : {},
+          data:
+            'textAlign' in node && node.textAlign
+              ? {
+                  textAlign: node.textAlign,
+                }
+              : {},
           object: 'block',
           nodes: node.children?.flatMap(toNodeDTO) ?? [],
         },
       ]
+
     default:
       return []
   }

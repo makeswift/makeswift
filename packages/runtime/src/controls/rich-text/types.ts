@@ -57,6 +57,7 @@ export const BlockType = {
   OrderedList: 'ordered-list',
   ListItem: 'list-item',
   ListItemChild: 'list-item-child',
+  Text: 'text',
 } as const
 
 export type BlockType = typeof BlockType[keyof typeof BlockType]
@@ -135,6 +136,11 @@ export type ListItemChildElement = {
   type: typeof BlockType.ListItemChild
 }
 
+export type TextElement = {
+  children: Array<Inline | Text>
+  type: typeof BlockType.Text
+}
+
 export const InlineType = {
   Code: 'code',
   SuperScript: 'superscript',
@@ -186,6 +192,7 @@ export type RootBlock =
   | Heading6Element
   | BlockQuoteElement
   | ListElement
+  | TextElement
 
 export type Block = RootBlock | ListItemElement | ListItemChildElement
 

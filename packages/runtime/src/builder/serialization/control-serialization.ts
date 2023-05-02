@@ -3,6 +3,8 @@ import {
   ComboboxControlType,
   ListControlDefinition,
   ListControlType,
+  RichTextControlDefinitionV2,
+  RichTextControlTypeV2,
   ShapeControlDefinition,
   ShapeControlType,
 } from '../../controls'
@@ -866,6 +868,36 @@ function deserializeRichTextControl(
   return { ...serializedControl, options: deserializedOptions }
 }
 
+function serializeRichTextControlV2(control: RichTextControlDefinitionV2): [any, Transferable[]] {
+  const { plugins, ...remainingConfig } = control.config
+
+  return [
+    {
+      ...control,
+      config: {
+        ...remainingConfig,
+        plugins: plugins?.map(plugin => {
+          const { controls, editableProps, withPlugin, ...other } = plugin
+          return {
+            controls: controls
+              ? controls.map(control => {
+                  const { onChange, getValue, ...other } = control
+
+                  return { ...other }
+                })
+              : undefined,
+            ...other,
+          }
+        }),
+      },
+    },
+    [],
+  ]
+}
+function deserializeRichTextControlV2(control: any): any {
+  return control
+}
+
 export type SerializedControl<T extends Data = Data> =
   | Exclude<
       Control<T>,
@@ -1042,6 +1074,9 @@ export function serializeControl<T extends Data>(
     case Controls.Types.RichText:
       return serializeRichTextControl(control)
 
+    case RichTextControlTypeV2:
+      return serializeRichTextControlV2(control)
+
     case ComboboxControlType:
       return serializeComboboxControlDefinition(control)
 
@@ -1113,6 +1148,9 @@ export function deserializeControl<T extends Data>(
 
     case Controls.Types.RichText:
       return deserializeRichTextControl(serializedControl)
+
+    case RichTextControlTypeV2:
+      return deserializeRichTextControlV2(serializedControl)
 
     case ComboboxControlType:
       return deserializeComboboxControlDefinition(serializedControl)

@@ -58,6 +58,8 @@ import {
   RichTextControl,
   RichTextControlType,
   StyleControl,
+  RichTextControlTypeV2,
+  RichTextControlV2,
 } from '../../controls'
 import { useFormattedStyle } from './controls/style'
 import { ControlValue } from './controls/control'
@@ -65,6 +67,7 @@ import { RenderHook } from './components'
 import { useSlot } from './controls/slot'
 import { useStyle } from './use-style'
 import { useRichText } from './controls/rich-text'
+import { useRichTextV2 } from './controls/rich-text-v2'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -236,6 +239,20 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
               <RenderHook
                 key={descriptor.type}
                 hook={useRichText}
+                parameters={[props[propName], control]}
+              >
+                {value => renderFn({ ...propsValue, [propName]: value })}
+              </RenderHook>
+            )
+          }
+
+          case RichTextControlTypeV2: {
+            const control = (propControllers?.[propName] ?? null) as RichTextControlV2 | null
+
+            return (
+              <RenderHook
+                key={descriptor.type}
+                hook={useRichTextV2}
                 parameters={[props[propName], control]}
               >
                 {value => renderFn({ ...propsValue, [propName]: value })}

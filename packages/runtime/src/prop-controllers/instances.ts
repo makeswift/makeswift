@@ -9,6 +9,9 @@ import {
   RichTextControl,
   RichTextControlMessage,
   RichTextControlType,
+  RichTextControlV2,
+  RichTextControlMessageV2,
+  RichTextControlTypeV2,
   ShapeControl,
   ShapeControlMessage,
   ShapeControlType,
@@ -77,6 +80,7 @@ export type PropControllerMessage =
   | TableFormFieldsMessage
   | SlotControlMessage
   | RichTextControlMessage
+  | RichTextControlMessageV2
   | ListControlMessage
   | ShapeControlMessage
   | StyleControlMessage
@@ -205,6 +209,8 @@ type DescriptorPropController<T extends Descriptor> = T extends { type: typeof T
   ? RichTextPropController
   : T extends { type: typeof RichTextControlType }
   ? RichTextControl
+  : T extends { type: typeof RichTextControlTypeV2 }
+  ? RichTextControlV2
   : T extends { type: typeof Types.TableFormFields }
   ? TableFormFieldsPropController
   : DefaultPropController
@@ -221,6 +227,7 @@ export type AnyPropController =
   | TableFormFieldsPropController
   | SlotControl
   | RichTextControl
+  | RichTextControlV2
   | ListControl
   | ShapeControl
   | StyleControl
@@ -250,6 +257,9 @@ export function createPropController<T extends PropControllerMessage>(
 
     case RichTextControlType:
       return new RichTextControl(send as Send<RichTextControlMessage>)
+
+    case RichTextControlTypeV2:
+      return new RichTextControlV2(send as Send<RichTextControlMessageV2>, descriptor)
 
     case ListControlType:
       return new ListControl(send as Send<ListControlMessage>, descriptor)

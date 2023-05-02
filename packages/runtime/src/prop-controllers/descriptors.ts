@@ -37,7 +37,7 @@ import { ListControlValue } from '../runtimes/react/controls/list'
 import { ComboboxControlValue } from '../runtimes/react/controls/combobox'
 import { LinkControlValue } from '../runtimes/react/controls/link'
 import { SlotControlValue } from '../runtimes/react/controls/slot'
-import { RichTextControlDefinition, RichTextDTO } from '../controls/rich-text'
+import { RichTextControlDefinition, RichTextControlDefinitionV2, RichTextDTO } from '../controls/rich-text'
 import { RichTextControlValue } from '../runtimes/react/controls/rich-text'
 
 export type { Data }
@@ -1056,6 +1056,7 @@ export type Descriptor<T extends Data = Data> =
   | LinkControlDefinition
   | SlotControlDefinition
   | RichTextControlDefinition
+  | RichTextControlDefinitionV2
 
 export type PanelDescriptorType =
   | typeof Types.Backgrounds
