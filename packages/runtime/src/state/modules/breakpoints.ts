@@ -14,7 +14,7 @@ export type BreakpointId = DeviceId
 
 export type Breakpoint = {
   id: BreakpointId
-  label?: string
+  label: string
   viewportWidth?: number
   minWidth?: number
   maxWidth?: number
@@ -59,12 +59,39 @@ export function getInitialState(): State {
 
 export function reducer(state: State = getInitialState(), action: Action): State {
   switch (action.type) {
-    case ActionTypes.SET_BREAKPOINTS:
-      return action.payload.breakpoints
+    case ActionTypes.SET_BREAKPOINTS: {
+      const breakpoints = action.payload.breakpoints
+
+      if (breakpoints.length === 0) throw new Error('Breakpoints cannot be empty.')
+
+      return breakpoints
+    }
 
     default:
       return state
   }
+}
+
+export type BreakpointsInput = Record<
+  string,
+  { label?: string; min?: number; max?: number; viewport?: number }
+>
+
+export function parseBreakpointsInput(input: BreakpointsInput): Breakpoints {
+  const breakpoints = Object.entries(input).map(([id, { label, min, max, viewport }]) => ({
+    id,
+    label: label ?? id,
+    minWidth: min,
+    maxWidth: max,
+    viewportWidth: viewport,
+  }))
+
+  return sortBreakpoints(breakpoints)
+}
+
+// Sort breakpoints by minWidth in descending order
+function sortBreakpoints(breakpoints: Breakpoints): Breakpoints {
+  return breakpoints.sort((a, b) => (b?.minWidth ?? 0) - (a?.minWidth ?? 0))
 }
 
 export const getBreakpoint = (state: State, breakpointId: Breakpoint['id']): Breakpoint => {
@@ -76,8 +103,7 @@ export const getBreakpoint = (state: State, breakpointId: Breakpoint['id']): Bre
 }
 
 export const getBaseBreakpoint = (breakpoints: Breakpoints): Breakpoint => {
-  // Get the breakpoint with the biggest minimum width, which would be the 'desktop' for default breakpoints.
-  const breakpoint = breakpoints.sort((a, b) => (a?.minWidth ?? 0) - (b.minWidth ?? 0))[0]
+  const breakpoint = sortBreakpoints(breakpoints)[0]
 
   if (breakpoint == null) throw new Error(`Cannot get base breakpoint.`)
 
