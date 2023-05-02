@@ -11,6 +11,7 @@ export { default as Navigation } from './Navigation'
 export { default as Root } from './Root'
 export { default as SocialLinks } from './SocialLinks'
 export { default as Text } from './Text'
+export { default as TextV2 } from './TextV2'
 export { default as Video } from './Video'
 
 export { MakeswiftComponentType } from './constants'

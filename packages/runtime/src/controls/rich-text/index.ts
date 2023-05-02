@@ -1,4 +1,5 @@
 export * from './dto-types'
 export * from './rich-text'
+export * from './rich-text-v2'
 export * from './translation'
 export * from './types'

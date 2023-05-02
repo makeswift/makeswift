@@ -32,11 +32,10 @@ export const ElementUtils = {
   },
   isInline(node: Node): node is Inline {
     return (
-      Element.isElement(node) &&
-      (Element.isElementType(node, InlineType.Link) ||
-        Element.isElementType(node, InlineType.Link) ||
-        Element.isElementType(node, InlineType.SubScript) ||
-        Element.isElementType(node, InlineType.SuperScript))
+      Element.isElementType(node, InlineType.Code) ||
+      Element.isElementType(node, InlineType.Link) ||
+      Element.isElementType(node, InlineType.SubScript) ||
+      Element.isElementType(node, InlineType.SuperScript)
     )
   },
   isConvertibleToListTextNode(node: Node) {

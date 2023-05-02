@@ -13,7 +13,7 @@ export function clearBlockKeyForDevice(editor: Editor, deviceId: Device, key: Ed
 
   for (const [node, path] of rootElements) {
     if (ElementUtils.isBlock(node)) {
-      const deviceOverrides = node[key] ?? []
+      const deviceOverrides = node?.[key] ?? []
       Transforms.setNodes(
         editor,
         {
