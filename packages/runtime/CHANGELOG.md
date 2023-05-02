@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.8.6
+
+### Patch Changes
+
+- d5c6845: Add an unstable API for setting custom breakpoints: `ReactRuntime.unstable_setBreakpoints`.
+
 ## 0.8.5
 
 ### Patch Changes
