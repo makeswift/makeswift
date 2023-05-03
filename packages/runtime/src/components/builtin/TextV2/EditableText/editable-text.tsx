@@ -36,6 +36,7 @@ import { onKeyDown } from '../../../../slate'
 import { pollBoxModel } from '../../../../runtimes/react/poll-box-model'
 import { useSyncDOMSelection } from './useSyncDOMSelection'
 import { useStyle } from '../../../../runtimes/react/use-style'
+import { withHistory } from 'slate-history'
 
 type Props = {
   id?: ElementIDValue
@@ -43,6 +44,7 @@ type Props = {
   width?: string
   margin?: string
   definition?: RichTextControlDefinitionV2
+  control?:DescriptorsPropControllers<Descriptors> 
 }
 
 const defaultText: RichTextDAO = [{ type: BlockType.Text, children: [{ text: '' }] }]
@@ -52,7 +54,8 @@ export const EditableText = forwardRef(function EditableText(
   ref: Ref<PropControllersHandle<Descriptors>>,
 ) {
   const [editor] = useState(() => {
-    const baseEditor = withReact(createEditor())
+    const baseEditor = withReact(withHistory(createEditor()))
+    console.log({ definition })
     return (
       definition?.config.plugins?.reduce(
         (editor, plugin) => plugin?.withPlugin?.(editor) ?? editor,
@@ -133,7 +136,7 @@ export const EditableText = forwardRef(function EditableText(
     if (e.relatedTarget == null) return
     // Otherwise we want to deselect on blur and stop preserving selection.
     setIsPreservingDOMSelection(false)
-    ReactEditor.deselect(editor)
+    controller?.blur()
   }, [])
 
   const handleClick = useCallback(

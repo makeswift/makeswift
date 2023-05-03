@@ -7,6 +7,7 @@ import { richTextDAOToDTO } from './translation'
 import { ReactEditor, RenderElementProps, RenderLeafProps } from 'slate-react'
 import { Descriptor } from '../../prop-controllers/descriptors'
 import { MouseEvent, ReactNode, KeyboardEvent } from 'react'
+import { HistoryEditor } from 'slate-history'
 
 export type RichTextControlDataV2 = RichTextDTO
 
@@ -138,24 +139,10 @@ export class RichTextControlV2<
   recv = (message: RichTextControlMessageV2): void => {
     if (!this.editor) return
     switch (message.type) {
-      case RichTextControlMessageTypeV2.CHANGE_BUILDER_EDIT_MODE: {
-        switch (message.editMode) {
-          case BuilderEditMode.BUILD:
-          case BuilderEditMode.INTERACT:
-            ReactEditor.deselect(this.editor)
-            ReactEditor.blur(this.editor)
-        }
-        break
-      }
       case RichTextControlMessageTypeV2.FOCUS: {
-        ReactEditor.focus(this.editor)
-        Transforms.select(this.editor, {
-          anchor: Editor.start(this.editor, []),
-          focus: Editor.end(this.editor, []),
-        })
+        this.focus()
         break
       }
-
       case RichTextControlMessageTypeV2.RUN_ACTION: {
         this.descriptor.config.plugins
           ?.at(message.index)
@@ -199,19 +186,34 @@ export class RichTextControlV2<
   }
 
   focus() {
+    if (this.editor == null) return
+    ReactEditor.focus(this.editor)
+    if (this.editor.selection == null) {
+      Transforms.select(this.editor, {
+        anchor: Editor.start(this.editor, []),
+        focus: Editor.end(this.editor, []),
+      })
+    }
     this.send({ type: RichTextControlMessageTypeV2.FOCUS })
   }
 
   blur() {
+    if (this.editor == null) return
+    ReactEditor.deselect(this.editor)
+    console.log(this.editor.selection)
+
+    ReactEditor.blur(this.editor)
     this.send({ type: RichTextControlMessageTypeV2.BLUR })
   }
 
   undo() {
-    this.send({ type: RichTextControlMessageTypeV2.UNDO })
+    if (this.editor == null) return
+    HistoryEditor.undo(this.editor)
   }
 
   redo() {
-    this.send({ type: RichTextControlMessageTypeV2.REDO })
+    if (this.editor == null) return
+    HistoryEditor.redo(this.editor)
   }
 
   changeBoxModel(boxModel: BoxModel | null): void {

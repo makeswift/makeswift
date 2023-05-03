@@ -22,8 +22,14 @@ export function withInline(editor: Editor) {
       return
     }
 
+
+    // normalize position 1 to be "Text"
+
+    // normalize nest blocks to unwrap and just be inline or text
+
     normalizeNode(entry)
   }
 
   return editor
 }
+

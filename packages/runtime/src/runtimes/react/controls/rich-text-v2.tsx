@@ -22,6 +22,9 @@ export function useRichTextV2(data: RichTextControlDataV2, control: RichTextCont
     },
     [control],
   )
+  console.log({ control })
 
-  return <Text text={data} ref={textCallbackRef} definition={control?.descriptor} />
+  return (
+    <Text text={data} ref={textCallbackRef} control={control} definition={control?.descriptor} />
+  )
 }

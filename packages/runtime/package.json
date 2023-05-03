@@ -145,6 +145,7 @@
     "scroll-into-view-if-needed": "^2.2.20",
     "set-cookie-parser": "^2.5.1",
     "slate": "^0.91.4",
+    "slate-history": "^0.93.0",
     "slate-react": "^0.91.7",
     "use-sync-external-store": "^1.0.0-rc.0",
     "uuid": "^9.0.0"
