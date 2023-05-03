@@ -23,7 +23,6 @@ import {
   registerComponentEffect,
   registerComponentHandleEffect,
   registerReactComponentEffect,
-  setBreakpoints,
 } from '../../state/actions'
 import type {
   PropControllerDescriptor,
@@ -84,9 +83,6 @@ export class ReactRuntime {
   static getBreakpoints(): Breakpoints {
     return ReactPage.getBreakpoints(this.store.getState())
   }
-  static unstable_setBreakpoints(breakpoints: BreakpointsInput) {
-    return this.store.dispatch(setBreakpoints(parseBreakpointsInput(breakpoints)))
-  }
   // ------------------ Deprecated API ends here ------------------ //
 
   store: ReactPage.Store
@@ -126,12 +122,11 @@ export class ReactRuntime {
   getBreakpoints(): Breakpoints {
     return ReactPage.getBreakpoints(this.store.getState())
   }
-  unstable_setBreakpoints(breakpoints: BreakpointsInput) {
-    return this.store.dispatch(setBreakpoints(parseBreakpointsInput(breakpoints)))
-  }
 
-  constructor() {
-    this.store = ReactPage.configureStore()
+  constructor({ unstable_breakpoints }: { unstable_breakpoints?: BreakpointsInput }) {
+    this.store = ReactPage.configureStore({
+      breakpoints: unstable_breakpoints ? parseBreakpointsInput(unstable_breakpoints) : undefined,
+    })
 
     registerBuiltinComponents(this)
   }

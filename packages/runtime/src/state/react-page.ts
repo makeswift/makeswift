@@ -342,13 +342,19 @@ export type Store = ReduxStore<State, Action> & { dispatch: Dispatch }
 export function configureStore({
   rootElements,
   preloadedState,
+  breakpoints,
 }: {
   rootElements?: Map<string, Documents.Element>
   preloadedState?: PreloadedState<State>
+  breakpoints?: Breakpoints.State
 } = {}): Store {
   return createStore(
     reducer,
-    { ...preloadedState, documents: Documents.getInitialState({ rootElements }) },
+    {
+      ...preloadedState,
+      documents: Documents.getInitialState({ rootElements }),
+      breakpoints: Breakpoints.getInitialState(breakpoints ?? preloadedState?.breakpoints),
+    },
     applyMiddleware(thunk),
   )
 }
