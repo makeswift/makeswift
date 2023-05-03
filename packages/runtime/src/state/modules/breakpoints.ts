@@ -53,8 +53,8 @@ export const DEFAULT_BREAKPOINTS: Breakpoints = [
   },
 ]
 
-export function getInitialState(): State {
-  return DEFAULT_BREAKPOINTS
+export function getInitialState(breakpoints = DEFAULT_BREAKPOINTS): State {
+  return breakpoints
 }
 
 export function reducer(state: State = getInitialState(), action: Action): State {

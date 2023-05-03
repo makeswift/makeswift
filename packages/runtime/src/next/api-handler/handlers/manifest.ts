@@ -7,6 +7,7 @@ export type Manifest = {
   interactionMode: boolean
   clientSideNavigation: boolean
   elementFromPoint: boolean
+  customBreakpoints: boolean
 }
 
 type ManifestError = { message: string }
@@ -28,5 +29,6 @@ export default async function handler(
     interactionMode: true,
     clientSideNavigation: true,
     elementFromPoint: false,
+    customBreakpoints: true,
   })
 }
