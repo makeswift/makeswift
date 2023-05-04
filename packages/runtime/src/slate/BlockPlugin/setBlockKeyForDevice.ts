@@ -1,22 +1,25 @@
-import { Editor, Transforms } from 'slate'
-import { Device } from '../../controls/types'
-import { Breakpoints, findBreakpointOverride } from '../../state/modules/breakpoints'
+import { Editor, Transforms, Location } from 'slate'
+import { getBlocksInSelection } from '../selectors'
 import { ElementUtils } from '../utils/element'
 import { EditableBlockKey, EditableBlockValue } from './types'
+import { Breakpoints, BreakpointId, findBreakpointOverride } from '../../state/modules/breakpoints'
+
+type SetBlockKeyForDeviceOptions = {
+  at?: Location
+}
 
 export function setBlockKeyForDevice(
   editor: Editor,
   breakpoints: Breakpoints,
-  deviceId: Device,
+  deviceId: BreakpointId,
   key: EditableBlockKey,
-  value: EditableBlockValue,
+  value: EditableBlockValue[number]['value'],
+  options?: SetBlockKeyForDeviceOptions,
 ) {
-  if (!editor.selection) return
+  const at = options?.at ?? editor.selection
+  if (!at) return
 
-  const rootElements = Editor.nodes(editor, {
-    match: (_, path) => path.length === 1,
-    at: Editor.unhangRange(editor, editor.selection),
-  })
+  const rootElements = getBlocksInSelection(editor)
 
   for (const [node, path] of rootElements) {
     if (ElementUtils.isBlock(node)) {

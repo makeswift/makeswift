@@ -1,20 +1,22 @@
-import { Editor, Element, Transforms } from 'slate'
-import { BlockType } from '../../controls'
+import { Editor, Element, Location, Span, Transforms } from 'slate'
 import { ElementUtils } from '../utils/element'
+import { BlockType } from '../../controls'
 
 type WrapListOptions = {
   type: typeof BlockType.UnorderedList | typeof BlockType.OrderedList
+  at?: Location | Span
 }
 
 export function wrapList(
   editor: Editor,
   options: WrapListOptions = { type: BlockType.UnorderedList },
 ) {
-  if (!editor.selection) return
+  const at = options.at ?? editor.selection
+  if (!at) return
 
   const nonListEntries = Array.from(
     Editor.nodes(editor, {
-      at: editor.selection,
+      at,
       match: node => {
         return Element.isElement(node) && ElementUtils.isConvertibleToListTextNode(node)
       },
@@ -35,6 +37,7 @@ export function wrapList(
           },
         )
         Transforms.wrapNodes(editor, ElementUtils.createListItem(), {
+          match: node => ElementUtils.isListItemChild(node),
           at: path,
         })
         Transforms.wrapNodes(editor, ElementUtils.createList(options.type), {

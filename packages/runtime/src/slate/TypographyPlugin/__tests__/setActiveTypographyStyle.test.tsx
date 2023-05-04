@@ -1,8 +1,8 @@
+/** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { describe, it, expect } from 'vitest'
+import { DEFAULT_BREAKPOINTS } from '@makeswift/runtime/state/breakpoints'
 import { Typography } from '../'
-import { DEFAULT_BREAKPOINTS } from '../../../state/modules/breakpoints'
 import { jsx, Editor, Paragraph, Text, Cursor, Focus, Anchor } from '../../test-helpers'
 
 describe('GIVEN setActiveTypographyStyle', () => {
@@ -155,8 +155,8 @@ describe('GIVEN setActiveTypographyStyle', () => {
     const editor = Editor(
       <Paragraph>
         <Text>
-          abc
           <Anchor />
+          abc
         </Text>
         <Text
           typography={{
@@ -189,8 +189,8 @@ describe('GIVEN setActiveTypographyStyle', () => {
             ],
           }}
         >
-          abc
           <Anchor />
+          abc
         </Text>
         <Text
           typography={{
@@ -207,6 +207,88 @@ describe('GIVEN setActiveTypographyStyle', () => {
         >
           xyz
           <Focus />
+        </Text>
+      </Paragraph>,
+    )
+
+    Typography.setActiveTypographyStyle(editor, DEFAULT_BREAKPOINTS, 'mobile', 'italic', true)
+
+    expect(editor.children).toEqual(result.children)
+    expect(editor.selection).toEqual(result.selection)
+  })
+
+  it('WHEN called on ending range within text THEN only sub text is selected', () => {
+    const editor = Editor(
+      <Paragraph>
+        <Text>
+          abc
+          <Anchor />
+          xyz
+          <Focus />
+        </Text>
+      </Paragraph>,
+    )
+    const result = Editor(
+      <Paragraph>
+        <Text>abc</Text>
+        <Text
+          typography={{
+            style: [
+              {
+                deviceId: 'mobile',
+                value: {
+                  italic: true,
+                },
+              },
+            ],
+          }}
+        >
+          <Anchor />
+          xyz
+          <Focus />
+        </Text>
+      </Paragraph>,
+    )
+
+    Typography.setActiveTypographyStyle(editor, DEFAULT_BREAKPOINTS, 'mobile', 'italic', true)
+
+    expect(editor.children).toEqual(result.children)
+    expect(editor.selection).toEqual(result.selection)
+  })
+
+  it('WHEN called on middle range within text THEN only sub text is selected', () => {
+    const editor = Editor(
+      <Paragraph>
+        <Text>
+          abc
+          <Anchor />
+          lmn
+          <Focus />
+          xyz
+        </Text>
+      </Paragraph>,
+    )
+    const result = Editor(
+      <Paragraph>
+        <Text>abc</Text>
+        <Text
+          typography={{
+            style: [
+              {
+                deviceId: 'mobile',
+                value: {
+                  italic: true,
+                },
+              },
+            ],
+          }}
+        >
+          <Anchor />
+          lmn
+        </Text>
+        <Text>
+          <Focus />
+          xyz
         </Text>
       </Paragraph>,
     )

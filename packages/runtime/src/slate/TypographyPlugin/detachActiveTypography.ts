@@ -1,27 +1,57 @@
-import { Editor, Transforms, Text } from 'slate'
+import { Editor, Transforms, Text, Range } from 'slate'
 import { RichTextTypography } from '../../controls'
 
-export function detachActiveTypography(editor: Editor, value: RichTextTypography['style']) {
-  if (!editor.selection) return
+type SetActiveTypographyIdOptions = {
+  at?: Range
+}
 
-  const textNodes = Array.from(
-    Editor.nodes(editor, {
-      at: editor.selection,
-      match: node => Text.isText(node),
-    }),
-  )
+export function detachActiveTypography(
+  editor: Editor,
+  value: RichTextTypography['style'],
+  options?: SetActiveTypographyIdOptions,
+) {
+  Editor.withoutNormalizing(editor, () => {
+    const at = options?.at ?? editor.selection
+    if (!at) return
+    const atRef = Editor.rangeRef(editor, at)
 
-  textNodes.forEach(([node, path]) => {
-    if (Text.isText(node)) {
+    if (atRef.current) {
       Transforms.setNodes(
         editor,
         {
-          typography: {
-            style: value,
-          },
+          slice: true,
         },
-        { at: path },
+        {
+          at: atRef.current,
+          match: node => Text.isText(node),
+          split: Range.isExpanded(atRef.current),
+        },
       )
     }
+
+    if (atRef.current) {
+      const textNodes = Array.from(
+        Editor.nodes(editor, {
+          at: atRef.current,
+          match: node => Text.isText(node) && node.slice === true,
+        }),
+      )
+
+      for (const [node, path] of textNodes) {
+        if (Text.isText(node)) {
+          Transforms.setNodes(
+            editor,
+            {
+              typography: {
+                style: value,
+              },
+            },
+            { at: path },
+          )
+        }
+      }
+    }
+
+    atRef.unref()
   })
 }

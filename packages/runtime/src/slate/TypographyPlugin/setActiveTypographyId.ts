@@ -1,6 +1,16 @@
-import { Editor, Transforms, Text } from 'slate'
+import { Editor, Transforms, Text, Range } from 'slate'
 
-export function setActiveTypographyId(editor: Editor, id: string) {
+type SetActiveTypographyIdOptions = {
+  at?: Range
+}
+
+export function setActiveTypographyId(
+  editor: Editor,
+  id?: string,
+  options?: SetActiveTypographyIdOptions,
+) {
+  const at = options?.at ?? editor.selection
+  if (!at) return
   Transforms.setNodes(
     editor,
     {
@@ -10,7 +20,9 @@ export function setActiveTypographyId(editor: Editor, id: string) {
       },
     },
     {
+      at,
       match: node => Text.isText(node),
+      split: Range.isExpanded(at),
     },
   )
 }

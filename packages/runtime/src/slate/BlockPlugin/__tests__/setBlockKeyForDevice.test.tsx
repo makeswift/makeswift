@@ -1,7 +1,7 @@
+/** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { describe, it, expect } from 'vitest'
-import { DEFAULT_BREAKPOINTS } from '../../../state/modules/breakpoints'
+import { DEFAULT_BREAKPOINTS } from '@makeswift/runtime/state/breakpoints'
 import { Block } from '..'
 import { jsx, Paragraph, Text, Editor, Cursor, Anchor, Focus, Fragment } from '../../test-helpers'
 

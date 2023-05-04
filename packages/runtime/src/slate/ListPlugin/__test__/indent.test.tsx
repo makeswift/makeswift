@@ -1,7 +1,7 @@
+/** @jsxRuntime classic */
 /** @jsx jsx */
 
 import { List } from '..'
-import { describe, it, expect } from 'vitest'
 import {
   jsx,
   Editor,

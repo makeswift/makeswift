@@ -1,6 +1,5 @@
 import type { NodeEntry } from 'slate'
 import { filterForSubtreeRoots } from '../../utils/filterForSubtreeRoots'
-import { describe, it, expect } from 'vitest'
 import { ElementUtils } from '../../../utils/element'
 
 describe('filterForSubtreeRoots', () => {

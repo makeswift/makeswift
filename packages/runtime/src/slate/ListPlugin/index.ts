@@ -151,10 +151,10 @@ export function withList(editor: Editor) {
           const nodeChildren = Array.from(Node.children(editor, nodePath))
           const childrenToBeMerged = Array.from(Node.children(editor, nodeToBeMergedPath))
           Editor.withoutNormalizing(editor, () => {
-            childrenToBeMerged.forEach(([_, childPath], index) => {
+            childrenToBeMerged.reverse().forEach(([_, childPath]) => {
               Transforms.moveNodes(editor, {
                 at: childPath,
-                to: [...nodePath, nodeChildren.length + index],
+                to: [...nodePath, nodeChildren.length],
               })
             })
             Transforms.removeNodes(editor, { at: nodeToBeMergedPath })

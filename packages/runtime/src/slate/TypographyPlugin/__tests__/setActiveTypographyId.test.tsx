@@ -1,8 +1,8 @@
+/** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { describe, it, expect } from 'vitest'
 import { Typography } from '../'
-import { jsx, Editor, Paragraph, Text, Cursor } from '../../test-helpers'
+import { jsx, Editor, Paragraph, Text, Cursor, Anchor, Focus } from '../../test-helpers'
 
 describe('GIVEN setActiveTypographyId', () => {
   it('WHEN called on text THEN typography is added with empty style', () => {
@@ -43,6 +43,36 @@ describe('GIVEN setActiveTypographyId', () => {
         <Text typography={{ id: 'id2', style: [] }}>
           a<Cursor />
           bc
+        </Text>
+      </Paragraph>,
+    )
+
+    Typography.setActiveTypographyId(editor, 'id2')
+
+    expect(editor.children).toEqual(result.children)
+    expect(editor.selection).toEqual(result.selection)
+  })
+
+  it('WHEN called on subselection THEN id is only added to sub selection', () => {
+    const editor = Editor(
+      <Paragraph>
+        <Text typography={{ id: 'lmnop', style: [{ deviceId: 'mobile', value: {} }] }}>
+          <Anchor />
+          abc
+          <Focus />
+          lmnop
+        </Text>
+      </Paragraph>,
+    )
+    const result = Editor(
+      <Paragraph>
+        <Text typography={{ id: 'id2', style: [] }}>
+          <Anchor />
+          abc
+        </Text>
+        <Text typography={{ id: 'lmnop', style: [{ deviceId: 'mobile', value: {} }] }}>
+          <Focus />
+          lmnop
         </Text>
       </Paragraph>,
     )

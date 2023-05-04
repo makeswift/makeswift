@@ -1,4 +1,4 @@
-import { BlockTextAlignment } from '../../controls'
+import { ResponsiveBlockTextAlignment } from '../../controls'
 
 export type EditableBlockKey = 'textAlign'
-export type EditableBlockValue = BlockTextAlignment
+export type EditableBlockValue = ResponsiveBlockTextAlignment
