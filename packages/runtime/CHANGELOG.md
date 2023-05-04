@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.8.7
+
+### Patch Changes
+
+- 2784285: Update `unstable_breakpoints` API to be in `ReactRuntime` constructor.
+- aa771b5: Refactor `ReactRuntime` to be a class.
+- 8920a80: Fix rich text bug where inlines would disappear on text edit.
+
 ## 0.8.6
 
 ### Patch Changes
