@@ -20,6 +20,9 @@ import {
   StyleControl,
   StyleControlType,
   StyleControlMessage,
+  RichTextV2ControlMessage,
+  RichTextV2ControlType,
+  RichTextV2Control,
 } from '../controls'
 import { ReactEditor } from 'slate-react'
 
@@ -77,6 +80,7 @@ export type PropControllerMessage =
   | TableFormFieldsMessage
   | SlotControlMessage
   | RichTextControlMessage
+  | RichTextV2ControlMessage
   | ListControlMessage
   | ShapeControlMessage
   | StyleControlMessage
@@ -205,6 +209,8 @@ type DescriptorPropController<T extends Descriptor> = T extends { type: typeof T
   ? RichTextPropController
   : T extends { type: typeof RichTextControlType }
   ? RichTextControl
+  : T extends { type: typeof RichTextV2ControlType }
+  ? RichTextV2Control
   : T extends { type: typeof Types.TableFormFields }
   ? TableFormFieldsPropController
   : DefaultPropController
@@ -221,6 +227,7 @@ export type AnyPropController =
   | TableFormFieldsPropController
   | SlotControl
   | RichTextControl
+  | RichTextV2Control
   | ListControl
   | ShapeControl
   | StyleControl
@@ -250,6 +257,9 @@ export function createPropController<T extends PropControllerMessage>(
 
     case RichTextControlType:
       return new RichTextControl(send as Send<RichTextControlMessage>)
+
+    case RichTextV2ControlType:
+      return new RichTextV2Control(send as Send<RichTextV2ControlMessage>)
 
     case ListControlType:
       return new ListControl(send as Send<ListControlMessage>, descriptor)

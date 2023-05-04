@@ -15,6 +15,12 @@ export function BlockElement({ element, attributes, children }: InlineRenderElem
   ]
 
   switch (element.type) {
+    case BlockType.Text:
+      return (
+        <span {...attributes} className={cx(...blockStyles)}>
+          {children}
+        </span>
+      )
     case BlockType.Paragraph:
       return (
         <p {...attributes} className={cx(...blockStyles)}>

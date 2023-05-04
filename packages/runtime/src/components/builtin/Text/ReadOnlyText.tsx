@@ -120,6 +120,12 @@ export function BlockElement({ descendant }: BlockProps) {
   ]
 
   switch (descendant.type) {
+    case BlockType.Text:
+      return (
+        <span className={cx(...blockStyles)}>
+          <Descendants descendants={descendant.children} />
+        </span>
+      )
     case BlockType.Paragraph:
       return (
         <p className={cx(...blockStyles)}>
@@ -223,6 +229,7 @@ function Descendants({ descendants }: { descendants: (Element | Text)[] }) {
           case BlockType.Heading2:
           case BlockType.Heading3:
           case BlockType.BlockQuote:
+          case BlockType.Text:
           case BlockType.Paragraph:
           case BlockType.OrderedList:
           case BlockType.UnorderedList:
