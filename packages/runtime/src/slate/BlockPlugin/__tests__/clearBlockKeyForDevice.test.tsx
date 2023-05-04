@@ -1,6 +1,6 @@
+/** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { describe, it, expect } from 'vitest'
 import { Block } from '..'
 import { jsx, Paragraph, Text, Editor, Cursor } from '../../test-helpers'
 

@@ -1,3 +1,4 @@
+/** @jsxRuntime classic */
 /** @jsx jsx */
 
 import {
@@ -9,7 +10,6 @@ import {
   Unordered,
   Text,
 } from '../../test-helpers'
-import { describe, it, expect } from 'vitest'
 import { Editor as SlateEditor } from 'slate'
 
 describe('Normalization', () => {

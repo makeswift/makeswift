@@ -1,8 +1,8 @@
+/** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { describe, it, expect } from 'vitest'
 import { Typography } from '../'
-import { jsx, Paragraph, Text, Editor, Cursor } from '../../test-helpers'
+import { jsx, Paragraph, Text, Editor, Cursor, Anchor, Focus } from '../../test-helpers'
 
 describe('GIVEN clearActiveTypographyStyle', () => {
   it('WHEN called on an empty typography style THEN typography style is unchanged', () => {
@@ -65,6 +65,35 @@ describe('GIVEN clearActiveTypographyStyle', () => {
         <Text>
           <Cursor />
           abc
+        </Text>
+      </Paragraph>,
+    )
+
+    Typography.clearActiveTypographyStyle(editor)
+
+    expect(editor.children).toEqual(result.children)
+    expect(editor.selection).toEqual(result.selection)
+  })
+  it('123456 WHEN called on subselection THEN only subselection typography attribute is cleared', () => {
+    const editor = Editor(
+      <Paragraph>
+        <Text typography={{ style: [{ deviceId: 'mobile', value: {} }] }}>
+          <Anchor />
+          abc
+          <Focus />
+          lmnop
+        </Text>
+      </Paragraph>,
+    )
+    const result = Editor(
+      <Paragraph>
+        <Text>
+          <Anchor />
+          abc
+        </Text>
+        <Text typography={{ style: [{ deviceId: 'mobile', value: {} }] }}>
+          <Focus />
+          lmnop
         </Text>
       </Paragraph>,
     )

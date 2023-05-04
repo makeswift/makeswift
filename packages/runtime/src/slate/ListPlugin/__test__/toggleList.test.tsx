@@ -1,3 +1,4 @@
+/** @jsxRuntime classic */
 /** @jsx jsx */
 
 import {
@@ -14,9 +15,8 @@ import {
   Unordered,
   Text,
 } from '../../test-helpers'
+import { BlockType } from '@makeswift/runtime/controls'
 import { List } from '..'
-import { describe, it, expect } from 'vitest'
-import { BlockType } from '../../../controls'
 
 describe('toggleList', () => {
   it('WHEN toggleList to Unordered on paragraph THEN turns to Unordered', () => {
@@ -147,6 +147,54 @@ describe('toggleList', () => {
     )
 
     List.toggleList(editor, { type: 'ordered-list' })
+    expect(editor.children).toEqual(result.children)
+    expect(editor.selection).toEqual(result.selection)
+  })
+  it('WHEN toggleList to Unordered on paragraph THEN turns to Unordered', () => {
+    const editor = Editor(
+      <Unordered>
+        <ListItem>
+          <ListItemChild>
+            <Text>
+              a <Anchor />
+            </Text>
+          </ListItemChild>
+        </ListItem>
+        <ListItem>
+          <ListItemChild>
+            <Text>b</Text>
+          </ListItemChild>
+        </ListItem>
+        <ListItem>
+          <ListItemChild>
+            <Text>
+              c <Focus />
+            </Text>
+          </ListItemChild>
+        </ListItem>
+      </Unordered>,
+    )
+
+    const result = Editor(
+      <Fragment>
+        <Paragraph>
+          <Text>
+            a <Anchor />
+          </Text>
+        </Paragraph>
+        <Paragraph>
+          <Text>b</Text>
+        </Paragraph>
+        <Paragraph>
+          <Text>
+            c <Focus />
+          </Text>
+        </Paragraph>
+      </Fragment>,
+    )
+
+    List.toggleList(editor, { type: BlockType.UnorderedList })
+
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
   })

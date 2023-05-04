@@ -20,20 +20,3 @@ export function getSelectedListItems(editor: Editor): NodeEntry<Element>[] {
       : !Path.isAfter(start, node[1]),
   )
 }
-
-export function getSelectedLists(editor: Editor): NodeEntry<Element>[] {
-  if (!editor.selection) return []
-
-  const start = LocationUtils.getStartPath(editor.selection)
-  const lists = Editor.nodes(editor, {
-    at: editor.selection,
-    match: node => ElementUtils.isList(node),
-  })
-  const firstAncestorPath = EditorUtils.getFirstAncestorList(editor, start)?.[1] ?? []
-
-  return Array.from(lists).filter((node): node is NodeEntry<Element> =>
-    Path.isDescendant(start, node[1])
-      ? Path.equals(node[1], firstAncestorPath)
-      : !Path.isAfter(start, node[1]),
-  )
-}

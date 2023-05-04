@@ -1,29 +1,59 @@
-import { Editor, Transforms, Text } from 'slate'
+import { Editor, Transforms, Text, Range } from 'slate'
 import { RichTextTypography } from '../../controls'
 
-export function clearActiveTypographyStyle(editor: Editor) {
-  if (!editor.selection) return
+type ClearActiveTypographyStyleOptions = {
+  at?: Range
+}
 
-  // Due to the nested nature of `typography` I can't just call a single `Transforms.setNodes` on our selection
-  const textNodes = Editor.nodes(editor, {
-    at: editor.selection,
-    match: node => Text.isText(node),
-  })
+export function clearActiveTypographyStyle(
+  editor: Editor,
+  options?: ClearActiveTypographyStyleOptions,
+) {
+  Editor.withoutNormalizing(editor, () => {
+    const at = options?.at ?? editor.selection
+    if (!at) return
+    const atRef = Editor.rangeRef(editor, at)
 
-  for (const [node, path] of textNodes) {
-    if (Text.isText(node)) {
-      const typography: RichTextTypography = {
-        ...node.typography,
-        style: [],
-      }
-
+    if (atRef.current) {
       Transforms.setNodes(
         editor,
         {
-          typography,
+          slice: true,
         },
-        { at: path },
+        {
+          at: atRef.current,
+          match: node => Text.isText(node),
+          split: Range.isExpanded(atRef.current),
+        },
       )
     }
-  }
+
+    if (atRef.current) {
+      const textNodes = Array.from(
+        Editor.nodes(editor, {
+          at: atRef.current,
+          match: node => Text.isText(node) && node.slice === true,
+        }),
+      )
+
+      for (const [node, path] of textNodes) {
+        if (Text.isText(node)) {
+          const typography: RichTextTypography = {
+            ...node.typography,
+            style: [],
+          }
+
+          Transforms.setNodes(
+            editor,
+            {
+              typography,
+            },
+            { at: path },
+          )
+        }
+      }
+    }
+
+    atRef.unref()
+  })
 }
