@@ -1,9 +1,8 @@
 import { ReactNode, useMemo } from 'react'
 
-import { StoreContext } from '..'
+import { StoreContext, ReactRuntime } from '..'
 import * as ReactPage from '../../../state/react-page'
 import { MakeswiftProvider, MakeswiftClient } from '../../../api/react'
-import { ReactRuntime } from '../../../react'
 
 type Props = {
   client: MakeswiftClient
