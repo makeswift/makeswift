@@ -30,6 +30,7 @@ export type Text = {
 }
 
 export const RootBlockType = {
+  Text: 'text',
   Paragraph: 'paragraph',
   Heading1: 'heading-one',
   Heading2: 'heading-two',
@@ -45,21 +46,18 @@ export const RootBlockType = {
 export type RootBlockType = typeof RootBlockType[keyof typeof RootBlockType]
 
 export const BlockType = {
-  Paragraph: 'paragraph',
-  Heading1: 'heading-one',
-  Heading2: 'heading-two',
-  Heading3: 'heading-three',
-  Heading4: 'heading-four',
-  Heading5: 'heading-five',
-  Heading6: 'heading-six',
-  BlockQuote: 'blockquote',
-  UnorderedList: 'unordered-list',
-  OrderedList: 'ordered-list',
+  ...RootBlockType,
   ListItem: 'list-item',
   ListItemChild: 'list-item-child',
 } as const
 
 export type BlockType = typeof BlockType[keyof typeof BlockType]
+
+export type TextElement = {
+  textAlign?: ResponsiveBlockTextAlignment
+  children: Array<Element | Text>
+  type: typeof BlockType.Text
+}
 
 export type ParagraphElement = {
   textAlign?: ResponsiveBlockTextAlignment
@@ -177,6 +175,7 @@ export type LinkElement = {
 }
 
 export type RootBlock =
+  | TextElement
   | ParagraphElement
   | Heading1Element
   | Heading2Element

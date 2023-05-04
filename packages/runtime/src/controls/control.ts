@@ -16,6 +16,7 @@ import { Descriptor, IndexSignatureHack, Types } from '../prop-controllers/descr
 import { copy as propControllerCopy } from '../prop-controllers/copy'
 import { CopyContext } from '../state/react-page'
 import { RichTextControlData, RichTextControlDefinition } from './rich-text'
+import { RichTextV2ControlDefinition } from './rich-text-v2'
 
 export type ControlDefinition =
   | CheckboxControlDefinition
@@ -32,6 +33,7 @@ export type ControlDefinition =
   | SlotControlDefinition
   | ShapeControlDefinition
   | RichTextControlDefinition
+  | RichTextV2ControlDefinition
   | StyleControlDefinition
 
 export type ControlDefinitionData<T extends ControlDefinition> = T extends CheckboxControlDefinition

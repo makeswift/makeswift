@@ -25,6 +25,7 @@ import {
   TextInputControlDefinition,
   StyleControlDefinition,
   StyleControlType,
+  RichTextV2ControlDefinition,
 } from '../controls'
 import { TextInputControlValue } from '../runtimes/react/controls/text-input'
 import { TextAreaControlValue } from '../runtimes/react/controls/text-area'
@@ -39,6 +40,7 @@ import { LinkControlValue } from '../runtimes/react/controls/link'
 import { SlotControlValue } from '../runtimes/react/controls/slot'
 import { RichTextControlDefinition, RichTextDTO } from '../controls/rich-text'
 import { RichTextControlValue } from '../runtimes/react/controls/rich-text'
+import { RichTextV2ControlValue } from '../runtimes/react/controls/rich-text-v2'
 
 export type { Data }
 
@@ -1056,6 +1058,7 @@ export type Descriptor<T extends Data = Data> =
   | LinkControlDefinition
   | SlotControlDefinition
   | RichTextControlDefinition
+  | RichTextV2ControlDefinition
 
 export type PanelDescriptorType =
   | typeof Types.Backgrounds
@@ -1123,6 +1126,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? SlotControlValue
   : T extends RichTextControlDefinition
   ? RichTextControlValue
+  : T extends RichTextV2ControlDefinition
+  ? RichTextV2ControlValue
   : T['type'] extends typeof Types.ResponsiveColor
   ? ResponsiveColor | null | undefined
   : T['type'] extends typeof Types.Width

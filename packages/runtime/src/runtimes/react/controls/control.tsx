@@ -27,6 +27,10 @@ import {
   RichTextControlData,
   RichTextControlDefinition,
   RichTextControlType,
+  RichTextV2Control,
+  RichTextV2ControlData,
+  RichTextV2ControlDefinition,
+  RichTextV2ControlType,
   SelectControlData,
   SelectControlDefinition,
   SelectControlType,
@@ -59,6 +63,7 @@ import { LinkControlValue, useLinkControlValue } from './link'
 import { ListControlValue } from './list'
 import { NumberControlValue, useNumber } from './number'
 import { RichTextControlValue, useRichText } from './rich-text'
+import { RichTextV2ControlValue, useRichTextV2 } from './rich-text-v2'
 import { SelectControlValue, useSelectControlValue } from './select'
 import { ShapeControlValue } from './shape'
 import { SlotControlValue, useSlot } from './slot'
@@ -93,6 +98,8 @@ export type ControlDefinitionValue<T extends ControlDefinition> =
     ? SlotControlValue
     : T extends RichTextControlDefinition
     ? RichTextControlValue
+    : T extends RichTextV2ControlDefinition
+    ? RichTextV2ControlValue
     : T extends StyleControlDefinition
     ? StyleControlFormattedValue
     : never
@@ -249,6 +256,17 @@ export function ControlValue<T extends ControlDefinition>({
           key={definition.type}
           hook={useRichText}
           parameters={[data as unknown as RichTextControlData, control as RichTextControl]}
+        >
+          {value => children(value as ControlDefinitionValue<T>)}
+        </RenderHook>
+      )
+
+    case RichTextV2ControlType:
+      return (
+        <RenderHook
+          key={definition.type}
+          hook={useRichTextV2}
+          parameters={[data as unknown as RichTextV2ControlData, control as RichTextV2Control]}
         >
           {value => children(value as ControlDefinitionValue<T>)}
         </RenderHook>
