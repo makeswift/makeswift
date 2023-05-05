@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.8.9
+
+### Patch Changes
+
+- a79ae7a: Add an unstable API for a new version of the RichText control: `unstable_RichTextV2`.
+
 ## 0.8.8
 
 ### Patch Changes
