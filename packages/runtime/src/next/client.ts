@@ -404,7 +404,7 @@ export class Makeswift {
     const siteVersion =
       this.siteVersion ??
       (previewOverride ? MakeswiftSiteVersion.Working : MakeswiftSiteVersion.Live)
-    const response = await this.fetch(`/v2/pages/${pathname}/document`, {
+    const response = await this.fetch(`/v2/pages/${encodeURIComponent(pathname)}/document`, {
       headers: { 'Makeswift-Site-Version': siteVersion },
     })
 
