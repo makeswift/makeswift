@@ -148,7 +148,7 @@ export class Makeswift {
   private async fetch(path: string, init?: RequestInit): Promise<Response> {
     const response = await fetch(new URL(path, this.apiOrigin).toString(), {
       ...init,
-      headers: { ...init?.headers, ['X-API-Key']: this.apiKey },
+      headers: { ['X-API-Key']: this.apiKey, ...init?.headers },
     })
 
     return response
