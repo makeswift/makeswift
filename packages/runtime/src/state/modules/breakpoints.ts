@@ -14,7 +14,7 @@ export type BreakpointId = DeviceId
 
 export type Breakpoint = {
   id: BreakpointId
-  label: string
+  label?: string
   viewportWidth?: number
   minWidth?: number
   maxWidth?: number
