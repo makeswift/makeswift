@@ -165,11 +165,15 @@ export class Makeswift {
     return response
   }
 
-  async getPages(params: { path?: string } = {}): Promise<MakeswiftPage[]> {
-    const searchParams = new URLSearchParams(params)
-    const response = await this.fetch(`/v1/pages?${searchParams}`)
+  async getPages(): Promise<MakeswiftPage[]> {
+    const response = await this.fetch(`/v2/pages`, {
+      headers: {
+        'Makeswift-Site-Version': MakeswiftSiteVersion.Live,
+      },
+    })
 
     if (!response.ok) {
+      console.error('Failed to get pages', await response.json())
       throw new Error(`Failed to get pages with error: "${response.statusText}"`)
     }
 
@@ -393,44 +397,30 @@ export class Makeswift {
     }
   }
 
-  private async createSnapshot(
-    document: MakeswiftPageDocument,
-    preview: boolean,
-  ): Promise<MakeswiftPageSnapshot> {
-    const cacheData = await this.introspect(document.data, preview)
-
-    return { document, apiOrigin: this.apiOrigin.href, cacheData, preview }
-  }
-
-  private async getPageSnapshotByPageId(
-    pageId: string,
-    { preview = false }: { preview?: boolean } = {},
+  async getPageSnapshot(
+    pathname: string,
+    { preview: previewOverride = false }: { preview?: boolean } = {},
   ): Promise<MakeswiftPageSnapshot | null> {
-    const searchParams = new URLSearchParams({ preview: String(preview) })
-    const response = await this.fetch(`/v1/pages/${pageId}/document?${searchParams}`)
+    const siteVersion =
+      this.siteVersion ??
+      (previewOverride ? MakeswiftSiteVersion.Working : MakeswiftSiteVersion.Live)
+    const response = await this.fetch(`/v2/pages/${pathname}/document`, {
+      headers: { 'Makeswift-Site-Version': siteVersion },
+    })
 
     if (!response.ok) {
       if (response.status === 404) return null
 
-      throw new Error(`Failed to get snapshot with error: "${response.statusText}"`)
+      console.error('Failed to get page snapshot', await response.json())
+      throw new Error(`Failed to get page snapshot with error: "${response.statusText}"`)
     }
 
-    const document: MakeswiftPageDocument = await response.json()
+    const document = await response.json()
+    const cacheData = await this.introspect(document.data, previewOverride)
+    const apiOrigin = this.apiOrigin.href
+    const preview = siteVersion === MakeswiftSiteVersion.Working
 
-    return await this.createSnapshot(document, preview)
-  }
-
-  async getPageSnapshot(
-    path: string,
-    { preview }: { preview?: boolean } = {},
-  ): Promise<MakeswiftPageSnapshot | null> {
-    const [page] = await this.getPages({ path })
-
-    if (page == null) return null
-
-    const snapshot = this.getPageSnapshotByPageId(page.id, { preview })
-
-    return snapshot
+    return { document, cacheData, apiOrigin, preview }
   }
 
   async getSwatch(swatchId: string): Promise<Swatch | null> {
