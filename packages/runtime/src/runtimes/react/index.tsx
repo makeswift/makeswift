@@ -123,9 +123,9 @@ export class ReactRuntime {
     return ReactPage.getBreakpoints(this.store.getState())
   }
 
-  constructor({ unstable_breakpoints }: { unstable_breakpoints?: BreakpointsInput }) {
+  constructor({ breakpoints }: { breakpoints?: BreakpointsInput }) {
     this.store = ReactPage.configureStore({
-      breakpoints: unstable_breakpoints ? parseBreakpointsInput(unstable_breakpoints) : undefined,
+      breakpoints: breakpoints ? parseBreakpointsInput(breakpoints) : undefined,
     })
 
     registerBuiltinComponents(this)
