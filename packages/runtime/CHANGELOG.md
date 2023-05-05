@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.8.8
+
+### Patch Changes
+
+- 2416394: Custom breakpoints API is now stable. You can use this API to add more breakpoints or change the width of existing breakpoints. Visit [our documentation](https://www.makeswift.com/docs/runtime/custom-breakpoints) to learn more about custom breakpoints.
+
 ## 0.8.7
 
 ### Patch Changes
