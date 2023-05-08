@@ -1,4 +1,4 @@
-import { PropController } from '../prop-controllers/instances'
+import { PropController } from '../prop-controllers/base'
 import { BoxModel } from '../state/modules/box-models'
 import { CopyContext, Element } from '../state/react-page'
 import { ResponsiveValue } from './types'

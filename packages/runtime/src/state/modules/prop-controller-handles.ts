@@ -1,5 +1,6 @@
 import { Action, ActionTypes } from '../actions'
-import type { DescriptorsPropControllers, PropController } from '../../prop-controllers/instances'
+import type { DescriptorsPropControllers } from '../../prop-controllers/instances'
+import { PropController } from '../../prop-controllers/base'
 import type { Descriptor } from '../../prop-controllers/descriptors'
 
 export interface PropControllersHandle<

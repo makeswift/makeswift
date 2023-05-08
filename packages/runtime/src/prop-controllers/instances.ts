@@ -25,6 +25,7 @@ import {
   RichTextV2Control,
 } from '../controls'
 import { ReactEditor } from 'slate-react'
+import { PropController } from './base'
 
 export const RichTextPropControllerMessageType = {
   CHANGE_BUILDER_EDIT_MODE: 'CHANGE_BUILDER_EDIT_MODE',
@@ -86,16 +87,6 @@ export type PropControllerMessage =
   | StyleControlMessage
 
 export type Send<T = PropControllerMessage> = (message: T) => void
-
-export abstract class PropController<T = PropControllerMessage> {
-  protected send: Send<T>
-
-  constructor(send: Send<T>) {
-    this.send = send
-  }
-
-  abstract recv(message: T): void
-}
 
 class DefaultPropController extends PropController {
   recv = (_message: PropControllerMessage) => {
