@@ -1,5 +1,5 @@
 import { BuilderEditMode } from '../../state/modules/builder-edit-mode'
-import { PropController } from '../../prop-controllers/instances'
+import { PropController } from '../../prop-controllers/base'
 import { BoxModel } from '../../box-model'
 import { RichTextDTO } from './dto-types'
 import { Editor, Transforms } from 'slate'

@@ -1,10 +1,6 @@
 import { PropControllerMessage } from '../prop-controllers'
-import {
-  AnyPropController,
-  createPropController,
-  PropController,
-  Send,
-} from '../prop-controllers/instances'
+import { AnyPropController, createPropController, Send } from '../prop-controllers/instances'
+import { PropController } from '../prop-controllers/base'
 import { CopyContext } from '../state/react-page'
 import { ControlDefinition, ControlDefinitionData } from './control'
 

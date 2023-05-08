@@ -5,7 +5,8 @@ import { PaddingPropertyData } from '../css/padding'
 import { ColorData, ResponsiveValue } from './types'
 import { CopyContext, ReplacementContext } from '../state/react-page'
 import { copyColorData } from './color'
-import { PropController, Send } from '../prop-controllers/instances'
+import { Send } from '../prop-controllers/instances'
+import { PropController } from '../prop-controllers/base'
 import { BoxModel } from '../state/modules/box-models'
 
 /** @see https://developer.mozilla.org/en-US/docs/Web/CSS/width */

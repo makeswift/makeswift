@@ -49,7 +49,8 @@ import {
   setBreakpoints,
 } from './actions'
 import { ActionTypes } from './actions'
-import { createPropController, PropController } from '../prop-controllers/instances'
+import { createPropController } from '../prop-controllers/instances'
+import { PropController } from '../prop-controllers/base'
 import { serializeControls } from '../builder'
 import { MakeswiftClient } from '../api/react'
 import { ElementImperativeHandle } from '../runtimes/react/element-imperative-handle'

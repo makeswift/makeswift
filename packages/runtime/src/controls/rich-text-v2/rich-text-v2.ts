@@ -1,4 +1,4 @@
-import { PropController } from '../../prop-controllers/instances'
+import { PropController } from '../../prop-controllers/base'
 import { Descendant, Editor, Transforms } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { BoxModel } from '../../box-model'
