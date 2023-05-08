@@ -1,7 +1,7 @@
 import {
   FocusEvent,
   KeyboardEvent,
-  MutableRefObject,
+  MouseEvent,
   ReactNode,
   useCallback,
   useEffect,
@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { Descendant, Editor, createEditor, Range as SlateRange } from 'slate'
+import { Descendant, createEditor } from 'slate'
 import isHotkey from 'is-hotkey'
 import { withHistory, HistoryEditor } from 'slate-history'
 import {
@@ -23,14 +23,16 @@ import {
 
 import {
   BlockType,
+  RichTextV2Mode,
   RichTextV2Control,
   RichTextV2ControlData,
   RichTextV2ControlDefinition,
-} from '../../../controls'
-import { useBuilderEditMode } from '..'
-import { BuilderEditMode } from '../../../state/modules/builder-edit-mode'
-import { pollBoxModel } from '../poll-box-model'
-import { useIsomorphicLayoutEffect } from '../../../components/hooks/useIsomorphicLayoutEffect'
+  RichTextV2Plugin,
+} from '../../../../controls'
+import { useBuilderEditMode } from '../..'
+import { BuilderEditMode } from '../../../../state/modules/builder-edit-mode'
+import { pollBoxModel } from '../../poll-box-model'
+import { InlineMode } from '../../../../slate'
 
 export type RichTextV2ControlValue = ReactNode
 
@@ -38,46 +40,19 @@ export type Descriptors = { text?: RichTextV2ControlDefinition }
 
 const defaultText: Descendant[] = [{ type: BlockType.Text, children: [{ text: '' }] }]
 
-/**
- * Clicking outside of the host blurs our `<Editable />`.
- * `<Editable />` only updates the DOM's selection to match slate when it is focused.
- * In the case of a panel being clicked this hook updates the DOM selection to match slate.
- */
-export function useSyncDOMSelection(editor: Editor, isEnabled: MutableRefObject<boolean>) {
-  useIsomorphicLayoutEffect(() => {
-    if (!isEnabled.current || editor.selection == null || ReactEditor.isFocused(editor)) return
-    try {
-      const root = ReactEditor.findDocumentOrShadowRoot(editor) as Document
-      const domSelection = root.getSelection()
-      const newDomRange: Range | null = ReactEditor.toDOMRange(editor, editor.selection)
-
-      if (newDomRange) {
-        if (SlateRange.isBackward(editor.selection!)) {
-          domSelection?.setBaseAndExtent(
-            newDomRange.endContainer,
-            newDomRange.endOffset,
-            newDomRange.startContainer,
-            newDomRange.startOffset,
-          )
-        } else {
-          domSelection?.setBaseAndExtent(
-            newDomRange.startContainer,
-            newDomRange.startOffset,
-            newDomRange.endContainer,
-            newDomRange.endOffset,
-          )
-        }
-      } else {
-        domSelection?.removeAllRanges()
-      }
-    } catch (e) {
-      console.error(e)
-    }
-  })
+type Props = {
+  text: RichTextV2ControlData
+  control: RichTextV2Control | null
+  plugins: RichTextV2Plugin[]
 }
 
-export function useRichTextV2(data: RichTextV2ControlData, control: RichTextV2Control | null) {
-  const [editor] = useState(() => withHistory(withReact(createEditor())))
+export function TextComponent({ text, control, plugins }: Props) {
+  const [editor] = useState(() =>
+    plugins.reduceRight(
+      (editor, plugin) => plugin?.withPlugin?.(editor) ?? editor,
+      withHistory(withReact(createEditor())),
+    ),
+  )
   const isPreservingFocus = useRef(false)
   // useSyncDOMSelection(editor, isPreservingFocus)
 
@@ -104,7 +79,7 @@ export function useRichTextV2(data: RichTextV2ControlData, control: RichTextV2Co
     return <span {...attributes}>{children}</span>
   }, [])
 
-  const initialValue = useMemo(() => data ?? defaultText, [data])
+  const initialValue = useMemo(() => text ?? defaultText, [text])
 
   useEffect(() => {
     /**
@@ -130,6 +105,7 @@ export function useRichTextV2(data: RichTextV2ControlData, control: RichTextV2Co
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
+      if (editMode === BuilderEditMode.CONTENT) e.stopPropagation()
       if (isHotkey('mod+shift+z', e)) return HistoryEditor.redo(editor)
       if (isHotkey('mod+z', e)) return HistoryEditor.undo(editor)
       if (isHotkey('escape')(e)) {
@@ -137,8 +113,24 @@ export function useRichTextV2(data: RichTextV2ControlData, control: RichTextV2Co
         ReactEditor.blur(editor)
         control?.switchToBuildMode()
       }
+
+      plugins.forEach(plugin => plugin?.onKeyDown?.(e))
     },
     [control, editor],
+  )
+
+  const handleKeyUp = useCallback(
+    (e: KeyboardEvent) => {
+      if (editMode === BuilderEditMode.CONTENT) e.preventDefault()
+    },
+    [control, editor, editMode],
+  )
+
+  const handleClick = useCallback(
+    (e: MouseEvent) => {
+      if (editMode === BuilderEditMode.CONTENT) e.stopPropagation()
+    },
+    [editMode],
   )
 
   const handleBlur = useCallback((e: FocusEvent) => {
@@ -163,10 +155,21 @@ export function useRichTextV2(data: RichTextV2ControlData, control: RichTextV2Co
         renderElement={renderElement}
         onFocus={handleFocus}
         onKeyDown={handleKeyDown}
+        onKeyUp={handleKeyUp}
+        onClick={handleClick}
         onBlur={handleBlur}
         readOnly={editMode !== BuilderEditMode.CONTENT}
         placeholder="Write some text..."
       />
     </Slate>
   )
+}
+
+export function useRichTextV2(data: RichTextV2ControlData, control: RichTextV2Control | null) {
+  const plugins = [
+    ...(control?.descriptor?.config?.plugins ?? []),
+    ...(control?.descriptor?.config?.mode === RichTextV2Mode.Inline ? [InlineMode] : []),
+  ]
+
+  return <TextComponent text={data} control={control} plugins={plugins} />
 }

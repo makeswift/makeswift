@@ -1,18 +1,42 @@
 import { PropController } from '../../prop-controllers/base'
 import { Descendant, Editor, Transforms } from 'slate'
-import { ReactEditor } from 'slate-react'
+import { ReactEditor, RenderElementProps, RenderLeafProps } from 'slate-react'
 import { BoxModel } from '../../box-model'
+import { ReactNode, KeyboardEvent } from 'react'
+import { Send } from '../../prop-controllers/instances'
 
 export type RichTextV2ControlData = Descendant[]
 
 export const RichTextV2ControlType = 'makeswift::controls::rich-text-v2'
 
-export type RichTextV2ControlDefinition = {
-  type: typeof RichTextV2ControlType
+export const RichTextV2Mode = {
+  Inline: 'makeswift::controls::rich-text-v2::mode::inline',
+  Block: 'makeswift::controls::rich-text-v2::mode::block',
+} as const
+
+export type RichTextV2Mode = typeof RichTextV2Mode[keyof typeof RichTextV2Mode]
+
+export type RichTextV2Plugin = {
+  withPlugin?(editor: Editor): Editor
+  onKeyDown?(event: KeyboardEvent): void
+  renderLeaf?(props: RenderLeafProps): ReactNode
+  renderElement?(props: RenderElementProps): ReactNode
 }
 
-export function unstable_RichTextV2(): RichTextV2ControlDefinition {
-  return { type: RichTextV2ControlType }
+type RichTextV2Config = {
+  plugins?: RichTextV2Plugin[]
+  mode?: RichTextV2Mode
+}
+
+export type RichTextV2ControlDefinition<T extends RichTextV2Config = RichTextV2Config> = {
+  type: typeof RichTextV2ControlType
+  config: T
+}
+
+export function unstable_RichTextV2<T extends RichTextV2Config>(
+  config: T = {} as T,
+): RichTextV2ControlDefinition {
+  return { type: RichTextV2ControlType, config }
 }
 
 export const RichTextV2ControlMessageType = {
@@ -62,9 +86,19 @@ export type RichTextV2ControlMessage =
   | SwitchToBuildModeRichTextControlMessage
   | BoxModelChangeRichControlMessage
 
-export class RichTextV2Control extends PropController<RichTextV2ControlMessage> {
+export class RichTextV2Control<
+  T extends RichTextV2ControlDefinition = RichTextV2ControlDefinition,
+> extends PropController<RichTextV2ControlMessage> {
   private editor: Editor | null = null
   private defaultValue: RichTextV2ControlData | null = null
+  descriptor: RichTextV2ControlDefinition
+
+  constructor(send: Send<RichTextV2ControlMessage>, descriptor: T) {
+    super(send)
+
+    this.descriptor = descriptor
+    this.send = send
+  }
 
   recv = (message: RichTextV2ControlMessage): void => {
     if (!this.editor) return

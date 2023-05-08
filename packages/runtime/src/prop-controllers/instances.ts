@@ -250,7 +250,7 @@ export function createPropController<T extends PropControllerMessage>(
       return new RichTextControl(send as Send<RichTextControlMessage>)
 
     case RichTextV2ControlType:
-      return new RichTextV2Control(send as Send<RichTextV2ControlMessage>)
+      return new RichTextV2Control(send as Send<RichTextV2ControlMessage>, descriptor)
 
     case ListControlType:
       return new ListControl(send as Send<ListControlMessage>, descriptor)
