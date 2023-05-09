@@ -113,7 +113,6 @@ export function EditableTextV2({ text, control }: Props) {
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (editMode === BuilderEditMode.CONTENT) e.stopPropagation()
       if (isHotkey('mod+shift+z', e)) return HistoryEditor.redo(editor)
       if (isHotkey('mod+z', e)) return HistoryEditor.undo(editor)
       if (isHotkey('escape')(e)) {
