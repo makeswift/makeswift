@@ -22,7 +22,6 @@ import {
 } from 'slate-react'
 
 import {
-  BlockType,
   RichTextV2Control,
   RichTextV2ControlData,
   RichTextV2ControlDefinition,
@@ -33,6 +32,7 @@ import { BuilderEditMode } from '../../../../../state/modules/builder-edit-mode'
 import { pollBoxModel } from '../../../poll-box-model'
 import { InlineMode } from '../../../../../slate'
 import { useSyncDOMSelection } from './useSyncDOMSelection'
+import { BlockType } from '../../../../../../types/slate'
 
 export type RichTextV2ControlValue = ReactNode
 

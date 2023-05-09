@@ -1,20 +1,15 @@
 import { cx } from '@emotion/css'
 import { ForwardedRef, forwardRef } from 'react'
-import {
-  Block,
-  BlockType,
-  Inline,
-  InlineType,
-  richTextDTOtoDAO,
-  Text,
-  Element,
-} from '../../../controls'
+import { Descendant, Text } from 'slate'
+
 import type { ElementIDValue, RichTextValue } from '../../../prop-controllers/descriptors'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { Link } from '../../shared/Link'
 import { useResponsiveStyle } from '../../utils/responsive-style'
 import { useTypographyClassName } from './components'
 import useEnhancedTypography from './components/Leaf/leaf'
+import { Inline, InlineType, Block, BlockType } from '../../../../types/slate'
+import { richTextDTOtoDAO } from '../../../controls'
 
 type Props = {
   id?: ElementIDValue
@@ -211,11 +206,18 @@ export function BlockElement({ descendant }: BlockProps) {
   }
 }
 
-function Descendants({ descendants }: { descendants: (Element | Text)[] }) {
+// reimplemented from slate source for code splitting
+function isText(node: any): node is Text {
+  if (typeof node === 'object' && 'text' in node) return true
+
+  return false
+}
+
+function Descendants({ descendants }: { descendants: Descendant[] }) {
   return (
     <>
       {descendants.map((descendant, index) => {
-        if ('text' in descendant) {
+        if (isText(descendant)) {
           return <TextElement key={index} descendant={descendant} />
         }
 
@@ -244,7 +246,7 @@ function Descendants({ descendants }: { descendants: (Element | Text)[] }) {
   )
 }
 
-function isBlock(descendant: Element | Text): descendant is Block {
+function isBlock(descendant: Descendant): descendant is Block {
   if ('text' in descendant) return false
 
   switch (descendant.type) {
@@ -264,11 +266,7 @@ function isBlock(descendant: Element | Text): descendant is Block {
   }
 }
 
-/**
- * I am using `Element | Text` here to ensure that nothing from Slate
- * is imported so that the RichText maintains it's slim bundle size
- */
-function getTextByDescendant(descendant: Element | Text): string {
+function getTextByDescendant(descendant: Descendant): string {
   if ('text' in descendant) {
     return descendant.text ?? ''
   }
@@ -298,6 +296,6 @@ function getTextByDescendant(descendant: Element | Text): string {
   }
 }
 
-function getText(descendant: (Element | Text)[]): string {
+function getText(descendant: Descendant[]): string {
   return descendant.map(getTextByDescendant).join('\n')
 }

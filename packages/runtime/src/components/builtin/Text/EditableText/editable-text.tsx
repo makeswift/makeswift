@@ -19,7 +19,7 @@ import { DescriptorsPropControllers } from '../../../../prop-controllers/instanc
 import { Descriptors } from '../../../../runtimes/react/controls/rich-text'
 import { getBox } from '../../../../box-model'
 import { PropControllersHandle } from '../../../../state/modules/prop-controller-handles'
-import { BlockType, RichTextDAO, richTextDTOtoDAO } from '../../../../controls'
+import { richTextDTOtoDAO } from '../../../../controls'
 import { Leaf } from '../components/Leaf'
 import { Element } from '../components/Element'
 import { useSyncWithBuilder } from './useSyncWithBuilder'
@@ -29,6 +29,7 @@ import { BuilderEditMode } from '../../../../state/modules/builder-edit-mode'
 import { onKeyDown, withBlock, withList, withTypography, withBuilder } from '../../../../slate'
 import { pollBoxModel } from '../../../../runtimes/react/poll-box-model'
 import { useSyncDOMSelection } from './useSyncDOMSelection'
+import { RichTextDAO, BlockType } from '../../../../../types/slate'
 
 type Props = {
   id?: ElementIDValue

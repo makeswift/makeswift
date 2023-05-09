@@ -1,7 +1,7 @@
 import { Path, Editor, NodeEntry } from 'slate'
 
 import { ElementUtils } from './element'
-import { ListElement, ListItemElement } from '../../controls'
+import { ListElement, ListItemElement } from '../../../types/slate'
 
 export const EditorUtils = {
   getFirstAncestorList(editor: Editor, path: Path): NodeEntry<ListElement> | null {

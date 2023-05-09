@@ -1,26 +1,26 @@
 import { BaseEditor, Descendant } from 'slate'
 import { ReactEditor } from 'slate-react'
-import { LinkControlData } from '../link'
-import { ResponsiveValue } from '../types'
+import { LinkControlData } from '../src/controls'
 import { HistoryEditor } from 'slate-history'
-import { BuilderEditor } from '../../slate'
+import { BuilderEditor } from '../src/slate'
+import { ResponsiveValue } from '../src/prop-controllers'
 
 export type RichTextTypography = {
   id?: string
   style: Array<{
     deviceId: string
     value: {
-      fontFamily?: string
-      lineHeight?: number
-      letterSpacing?: number
-      fontWeight?: number
-      textAlign?: string
-      uppercase?: boolean
-      underline?: boolean
-      strikethrough?: boolean
-      italic?: boolean
-      fontSize?: { value: number | null; unit: string | null }
-      color?: { swatchId: string | null; alpha: number | null }
+      fontFamily?: string | null
+      lineHeight?: number | null
+      letterSpacing?: number | null
+      fontWeight?: number | null
+      textAlign?: string | null
+      uppercase?: boolean | null
+      underline?: boolean | null
+      strikethrough?: boolean | null
+      italic?: boolean | null
+      fontSize?: { value: number | null; unit: string | null } | null
+      color?: { swatchId: string | null; alpha: number | null } | null
     }
   }>
 }

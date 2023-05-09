@@ -3,7 +3,7 @@ import { KeyboardEvent } from 'react'
 import isHotkey from 'is-hotkey'
 import { RichTextV2Plugin } from '../../controls/rich-text-v2'
 import { ElementUtils } from '../utils/element'
-import { BlockType } from '../../controls'
+import { BlockType } from '../../../types/slate'
 
 const BLOCK_ONE_PATH = [0]
 const BLOCK_TWO_PATH = [1]

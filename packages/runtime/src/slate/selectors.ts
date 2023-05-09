@@ -6,6 +6,9 @@ import unhangRange from './utils/unhangRange'
 import shallowEqual from '../utils/shallowEqual'
 import { isNonNullable } from '../utils/isNonNullable'
 
+import { Breakpoints, BreakpointId, findBreakpointOverride } from '../state/modules/breakpoints'
+import deepEqual from '../utils/deepEqual'
+import keys from '../utils/keys'
 import {
   RootBlock,
   Inline,
@@ -13,10 +16,7 @@ import {
   ResponsiveBlockTextAlignment,
   BlockTextAlignment,
   RichTextTypography,
-} from '../controls'
-import { Breakpoints, BreakpointId, findBreakpointOverride } from '../state/modules/breakpoints'
-import deepEqual from '../utils/deepEqual'
-import keys from '../utils/keys'
+} from '../../types/slate'
 
 export function getSelection(editor: Editor): Range {
   if (editor.selection) return unhangRange(editor, editor.selection)
