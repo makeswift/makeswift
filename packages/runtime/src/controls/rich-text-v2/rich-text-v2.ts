@@ -1,6 +1,6 @@
 import { PropController } from '../../prop-controllers/base'
-import { Descendant, Editor, Transforms } from 'slate'
-import { ReactEditor, RenderElementProps, RenderLeafProps } from 'slate-react'
+import { Descendant, Editor } from 'slate'
+import { RenderElementProps, RenderLeafProps } from 'slate-react'
 import { BoxModel } from '../../box-model'
 import { ReactNode, KeyboardEvent } from 'react'
 import { Send } from '../../prop-controllers/instances'
@@ -104,11 +104,7 @@ export class RichTextV2Control<
     if (!this.editor) return
     switch (message.type) {
       case RichTextV2ControlMessageType.FOCUS: {
-        ReactEditor.focus(this.editor)
-        Transforms.select(this.editor, {
-          anchor: Editor.start(this.editor, []),
-          focus: Editor.end(this.editor, []),
-        })
+        this.editor.focusAndSelectAll()
         break
       }
       case RichTextV2ControlMessageType.RESET_VALUE: {

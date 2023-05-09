@@ -1,5 +1,5 @@
 import { Editor, Range as SlateRange } from 'slate'
-import { useIsomorphicLayoutEffect } from '../../../../components/hooks/useIsomorphicLayoutEffect'
+import { useIsomorphicLayoutEffect } from '../../../../../components/hooks/useIsomorphicLayoutEffect'
 import { MutableRefObject } from 'react'
 import { ReactEditor } from 'slate-react'
 
