@@ -3,6 +3,7 @@ import { ReactEditor } from 'slate-react'
 import { LinkControlData } from '../link'
 import { ResponsiveValue } from '../types'
 import { HistoryEditor } from 'slate-history'
+import { BuilderEditor } from '../../slate'
 
 export type RichTextTypography = {
   id?: string
@@ -195,9 +196,11 @@ export type Element = Block | Inline
 
 export type RichTextDAO = Descendant[]
 
+export type MakeswiftEditor = BaseEditor & ReactEditor & HistoryEditor & BuilderEditor
+
 declare module 'slate' {
   interface CustomTypes {
-    Editor: BaseEditor & ReactEditor & HistoryEditor
+    Editor: MakeswiftEditor
     Element: Element
     Text: Text
   }

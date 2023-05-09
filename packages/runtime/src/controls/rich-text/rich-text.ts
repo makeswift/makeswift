@@ -2,9 +2,8 @@ import { BuilderEditMode } from '../../state/modules/builder-edit-mode'
 import { PropController } from '../../prop-controllers/base'
 import { BoxModel } from '../../box-model'
 import { RichTextDTO } from './dto-types'
-import { Editor, Transforms } from 'slate'
+import { Editor } from 'slate'
 import { richTextDAOToDTO } from './translation'
-import { ReactEditor } from 'slate-react'
 
 export type RichTextControlData = RichTextDTO
 
@@ -77,17 +76,12 @@ export class RichTextControl extends PropController<RichTextControlMessage> {
         switch (message.editMode) {
           case BuilderEditMode.BUILD:
           case BuilderEditMode.INTERACT:
-            ReactEditor.deselect(this.editor)
-            ReactEditor.blur(this.editor)
+            this.editor.deselectAndBlur()
         }
         break
       }
       case RichTextControlMessageType.FOCUS: {
-        ReactEditor.focus(this.editor)
-        Transforms.select(this.editor, {
-          anchor: Editor.start(this.editor, []),
-          focus: Editor.end(this.editor, []),
-        })
+        this.editor.focusAndSelectAll()
         break
       }
     }

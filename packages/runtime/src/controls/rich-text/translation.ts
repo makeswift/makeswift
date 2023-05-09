@@ -11,6 +11,13 @@ import {
   ObjectType,
 } from './dto-types'
 
+// reimplemented from slate source for code splitting
+function isText(node: any): node is Text {
+  if (typeof node === 'object' && 'text' in node) return true
+
+  return false
+}
+
 function toTextDAO(node: TextJSON): Text[] {
   const typographyMark = node.marks?.find(mark => mark.type === 'typography')
 
@@ -101,7 +108,7 @@ export function richTextDTOtoDAO(data: RichTextDTO): RichTextDAO {
 }
 
 function toInlineOrTextDTO(node: Inline | Text): Array<InlineJSON | TextJSON> {
-  if (Text.isText(node)) {
+  if (isText(node)) {
     return [
       {
         text: node.text,
@@ -145,7 +152,7 @@ function toInlineOrTextDTO(node: Inline | Text): Array<InlineJSON | TextJSON> {
 }
 
 function toNodeDTO(node: Descendant): Array<BlockJSON | InlineJSON | TextJSON> {
-  if (Text.isText(node)) return toInlineOrTextDTO(node)
+  if (isText(node)) return toInlineOrTextDTO(node)
 
   switch (node.type) {
     case InlineType.Link:
