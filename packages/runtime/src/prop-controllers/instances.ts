@@ -1,4 +1,4 @@
-import { Editor, Transforms } from 'slate'
+import { Editor } from 'slate'
 import { Descriptor, RichTextDescriptor, TableFormFieldsDescriptor, Types } from './descriptors'
 import { BuilderEditMode } from '../state/modules/builder-edit-mode'
 import { BoxModel } from '../state/modules/box-models'
@@ -24,7 +24,6 @@ import {
   RichTextV2ControlType,
   RichTextV2Control,
 } from '../controls'
-import { ReactEditor } from 'slate-react'
 import { PropController } from './base'
 
 export const RichTextPropControllerMessageType = {
@@ -104,17 +103,12 @@ class RichTextPropController extends PropController<RichTextPropControllerMessag
         switch (message.editMode) {
           case BuilderEditMode.BUILD:
           case BuilderEditMode.INTERACT:
-            ReactEditor.deselect(this.editor)
-            ReactEditor.blur(this.editor)
+            this.editor.deselectAndBlur()
         }
         break
       }
       case RichTextPropControllerMessageType.FOCUS: {
-        ReactEditor.focus(this.editor)
-        Transforms.select(this.editor, {
-          anchor: Editor.start(this.editor, []),
-          focus: Editor.end(this.editor, []),
-        })
+        this.editor.focusAndSelectAll()
         break
       }
     }

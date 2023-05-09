@@ -26,7 +26,7 @@ import { useSyncWithBuilder } from './useSyncWithBuilder'
 import isHotkey from 'is-hotkey'
 import { useBuilderEditMode } from '../../../../runtimes/react'
 import { BuilderEditMode } from '../../../../state/modules/builder-edit-mode'
-import { onKeyDown, withBlock, withList, withTypography } from '../../../../slate'
+import { onKeyDown, withBlock, withList, withTypography, withBuilder } from '../../../../slate'
 import { pollBoxModel } from '../../../../runtimes/react/poll-box-model'
 import { useSyncDOMSelection } from './useSyncDOMSelection'
 
@@ -43,7 +43,9 @@ export const EditableText = forwardRef(function EditableText(
   { id, text, width, margin }: Props,
   ref: Ref<PropControllersHandle<Descriptors>>,
 ) {
-  const [editor] = useState(() => withBlock(withTypography(withList(withReact(createEditor())))))
+  const [editor] = useState(() =>
+    withBlock(withTypography(withList(withBuilder(withReact(createEditor()))))),
+  )
   const [isPreservingDOMSElection, setIsPreservingDOMSelection] = useState(false)
   useSyncDOMSelection(editor, isPreservingDOMSElection)
   const delaySync = useSyncWithBuilder(editor, text)
