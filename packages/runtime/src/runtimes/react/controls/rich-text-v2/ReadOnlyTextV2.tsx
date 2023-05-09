@@ -3,10 +3,11 @@ import { ForwardedRef, forwardRef } from 'react'
 import { useTypographyClassName } from '../../../../components/builtin/Text/components'
 import useEnhancedTypography from '../../../../components/builtin/Text/components/Leaf/leaf'
 import { useResponsiveStyle } from '../../../../components/utils/responsive-style'
-import { Inline, InlineType, Block, BlockType, RichTextV2ControlData } from '../../../../controls'
+import { RichTextV2ControlData } from '../../../../controls'
 import { useStyle } from '../../use-style'
 import { Descendant, Text } from 'slate'
 import { Link } from '../../../../components/shared/Link'
+import { Inline, InlineType, Block, BlockType } from '../../../../../types/slate'
 
 type Props = {
   text: RichTextV2ControlData

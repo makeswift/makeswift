@@ -1,4 +1,4 @@
-import { BlockType, InlineType } from './types'
+import { BlockType, InlineType } from '../../../types/slate'
 
 export const ObjectType = {
   Value: 'value',

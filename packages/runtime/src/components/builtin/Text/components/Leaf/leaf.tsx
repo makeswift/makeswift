@@ -8,12 +8,12 @@ import { colorToString } from '../../../../utils/colorToString'
 import { isNonNullable } from '../../../../utils/isNonNullable'
 import { useResponsiveStyle } from '../../../../utils/responsive-style'
 import { ColorValue } from '../../../../utils/types'
-import { RichTextTypography } from '../../../../../controls'
 import {
   findBreakpointOverride,
   shallowMergeFallbacks,
 } from '../../../../../state/modules/breakpoints'
 import { useBreakpoints } from '../../../../../runtimes/react'
+import { RichTextTypography } from '../../../../../../types/slate'
 
 export type RichTextTypographyValue = RichTextTypography['style'][number]['value']
 

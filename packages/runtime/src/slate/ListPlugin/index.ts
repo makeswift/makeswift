@@ -9,7 +9,7 @@ import { indent } from './indent'
 import { toggleList } from './toggleList'
 import { unwrapList } from './unwrapList'
 import { wrapList } from './wrapList'
-import { BlockType } from '../../controls'
+import { BlockType } from '../../../types/slate'
 
 export const List = {
   unwrapList,

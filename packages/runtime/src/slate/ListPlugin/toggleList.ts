@@ -3,7 +3,7 @@ import { ElementUtils } from '../utils/element'
 import { unwrapList } from './unwrapList'
 import { LocationUtils } from './utils/location'
 import { wrapList } from './wrapList'
-import { BlockType } from '../../controls'
+import { BlockType } from '../../../types/slate'
 
 type ToggleListOptions = {
   type: typeof BlockType.UnorderedList | typeof BlockType.OrderedList

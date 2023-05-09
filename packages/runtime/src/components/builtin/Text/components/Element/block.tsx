@@ -1,8 +1,8 @@
 import { cx } from '@emotion/css'
 import { RenderElementProps } from 'slate-react'
-import { Block, BlockType } from '../../../../../controls'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 import { useResponsiveStyle } from '../../../../utils/responsive-style'
+import { Block, BlockType } from '../../../../../../types/slate'
 
 export interface InlineRenderElementProps extends RenderElementProps {
   element: Block

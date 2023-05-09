@@ -10,7 +10,7 @@ import {
   UnorderedListElement,
   ListItemElement,
   ListItemChildElement,
-} from '../../controls'
+} from '../../../types/slate'
 
 export const ElementUtils = {
   isRootBlock(node: Node): node is RootBlock {
