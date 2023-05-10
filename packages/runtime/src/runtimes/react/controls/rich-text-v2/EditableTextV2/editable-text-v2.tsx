@@ -30,7 +30,7 @@ import {
 import { useBuilderEditMode } from '../../..'
 import { BuilderEditMode } from '../../../../../state/modules/builder-edit-mode'
 import { pollBoxModel } from '../../../poll-box-model'
-import { InlineMode } from '../../../../../slate'
+import { InlineMode, withBuilder } from '../../../../../slate'
 import { useSyncDOMSelection } from './useSyncDOMSelection'
 import { BlockType } from '../../../../../../types/slate'
 
@@ -57,7 +57,7 @@ export function EditableTextV2({ text, control }: Props) {
   const [editor] = useState(() =>
     plugins.reduceRight(
       (editor, plugin) => plugin?.withPlugin?.(editor) ?? editor,
-      withHistory(withReact(createEditor())),
+      withBuilder(withHistory(withReact(createEditor()))),
     ),
   )
 
