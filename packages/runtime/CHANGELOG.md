@@ -1,5 +1,16 @@
 # @makeswift/runtime
 
+## 0.8.10
+
+### Patch Changes
+
+- fa41f1b: Add code splitting to `unstable_RichTextV2`.
+- bf5b7ef: Add `mode` option to `unstable_RichTextV2` control.
+
+  Setting the mode of `RichTextV2` to `RichTextV2Mode.Inline` locks down output to only include inline HTML elements. This allows you to visually edit button and link text, while protecting you from hydration mismatch errors.
+
+- ac4202f: Fix code splitting regression for RichText control and Text component that was introduced in 0.6.6. This change ensures that Slate is not downloaded to your production site.
+
 ## 0.8.9
 
 ### Patch Changes
