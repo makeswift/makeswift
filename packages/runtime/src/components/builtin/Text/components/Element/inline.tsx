@@ -3,7 +3,7 @@ import { ComponentPropsWithoutRef } from 'react'
 import { RenderElementProps } from 'slate-react'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 import { Link } from '../../../../shared/Link'
-import { Inline, InlineType } from '../../../../../../types/slate'
+import { Inline, InlineType } from '../../../../../slate'
 
 function StyledLink({ className, ...restOfProps }: ComponentPropsWithoutRef<typeof Link>) {
   return <Link {...restOfProps} className={cx(useStyle({ textDecoration: 'none' }), className)} />

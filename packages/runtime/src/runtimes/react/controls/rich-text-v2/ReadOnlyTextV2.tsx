@@ -7,7 +7,7 @@ import { RichTextV2ControlData } from '../../../../controls'
 import { useStyle } from '../../use-style'
 import { Descendant, Text } from 'slate'
 import { Link } from '../../../../components/shared/Link'
-import { Inline, InlineType, Block, BlockType } from '../../../../../types/slate'
+import { Inline, InlineType, Block, BlockType } from '../../../../slate'
 
 type Props = {
   text: RichTextV2ControlData

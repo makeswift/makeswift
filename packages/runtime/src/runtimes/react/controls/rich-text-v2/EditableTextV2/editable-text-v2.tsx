@@ -30,9 +30,9 @@ import {
 import { useBuilderEditMode } from '../../..'
 import { BuilderEditMode } from '../../../../../state/modules/builder-edit-mode'
 import { pollBoxModel } from '../../../poll-box-model'
-import { InlineMode, withBuilder } from '../../../../../slate'
+import { InlineModePlugin, withBuilder } from '../../../../../slate'
 import { useSyncDOMSelection } from './useSyncDOMSelection'
-import { BlockType } from '../../../../../../types/slate'
+import { BlockType } from '../../../../../slate'
 
 export type RichTextV2ControlValue = ReactNode
 
@@ -49,7 +49,7 @@ export function EditableTextV2({ text, control }: Props) {
   const plugins = useMemo(() => {
     const plugins = [
       ...(control?.descriptor?.config?.plugins ?? []),
-      ...(control?.descriptor?.config?.mode === RichTextV2Mode.Inline ? [InlineMode] : []),
+      ...(control?.descriptor?.config?.mode === RichTextV2Mode.Inline ? [InlineModePlugin] : []),
     ]
     return plugins
   }, [control?.descriptor.config])

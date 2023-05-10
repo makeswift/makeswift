@@ -1,7 +1,7 @@
 import { RenderElementProps } from 'slate-react'
 import { BlockElement } from './block'
 import { InlineElement } from './inline'
-import { InlineType, BlockType } from '../../../../../../types/slate'
+import { InlineType, BlockType } from '../../../../../slate'
 
 export function Element({ element, ...props }: RenderElementProps) {
   switch (element.type) {

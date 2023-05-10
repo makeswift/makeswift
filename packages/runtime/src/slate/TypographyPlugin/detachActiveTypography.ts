@@ -1,5 +1,5 @@
 import { Editor, Transforms, Text, Range } from 'slate'
-import { RichTextTypography } from '../../../types/slate'
+import { RichTextTypography } from '../types'
 
 type SetActiveTypographyIdOptions = {
   at?: Range

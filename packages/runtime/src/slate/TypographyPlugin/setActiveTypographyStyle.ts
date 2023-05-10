@@ -1,6 +1,6 @@
 import { Editor, Transforms, Text, Range } from 'slate'
 import { Breakpoints, findBreakpointOverride, BreakpointId } from '../../state/modules/breakpoints'
-import { RichTextTypography } from '../../../types/slate'
+import { RichTextTypography } from '../types'
 
 type SetActiveTypographyStyleOptions = {
   at?: Range

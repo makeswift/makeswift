@@ -1,7 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { List } from '..'
+import { ListActions } from '..'
 import {
   jsx,
   Editor,
@@ -38,7 +38,7 @@ describe('Indent', () => {
       </Unordered>,
     )
 
-    List.indent(editor)
+    ListActions.indent(editor)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -83,7 +83,7 @@ describe('Indent', () => {
       </Unordered>,
     )
 
-    List.indent(editor)
+    ListActions.indent(editor)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -129,7 +129,7 @@ describe('Indent', () => {
       </Ordered>,
     )
 
-    List.indent(editor)
+    ListActions.indent(editor)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -183,7 +183,7 @@ describe('Indent', () => {
       </Unordered>,
     )
 
-    List.indent(editor)
+    ListActions.indent(editor)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)

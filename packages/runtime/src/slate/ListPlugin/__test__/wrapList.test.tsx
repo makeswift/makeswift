@@ -1,8 +1,8 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { List } from '..'
-import { BlockType } from '../../../../types/slate'
+import { ListActions } from '..'
+import { BlockType } from '../..'
 import {
   jsx,
   Editor,
@@ -40,7 +40,7 @@ describe('Wrap List', () => {
       </Unordered>,
     )
 
-    List.wrapList(editor)
+    ListActions.wrapList(editor)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -66,7 +66,7 @@ describe('Wrap List', () => {
       </Unordered>,
     )
 
-    List.wrapList(editor)
+    ListActions.wrapList(editor)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -108,7 +108,7 @@ describe('Wrap List', () => {
       </Fragment>,
     )
 
-    List.wrapList(editor)
+    ListActions.wrapList(editor)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -139,7 +139,7 @@ describe('Wrap List', () => {
       </Unordered>,
     )
 
-    List.wrapList(editor)
+    ListActions.wrapList(editor)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -165,7 +165,7 @@ describe('Wrap List', () => {
       </Ordered>,
     )
 
-    List.wrapList(editor, { type: BlockType.OrderedList })
+    ListActions.wrapList(editor, { type: BlockType.OrderedList })
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -215,7 +215,7 @@ describe('Wrap List', () => {
       </Unordered>,
     )
 
-    List.wrapList(editor, { type: BlockType.UnorderedList })
+    ListActions.wrapList(editor, { type: BlockType.UnorderedList })
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -277,7 +277,7 @@ describe('Wrap List', () => {
       </Unordered>,
     )
 
-    List.wrapList(editor, { type: BlockType.UnorderedList })
+    ListActions.wrapList(editor, { type: BlockType.UnorderedList })
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)

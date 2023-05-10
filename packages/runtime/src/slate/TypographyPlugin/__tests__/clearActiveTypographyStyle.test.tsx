@@ -1,7 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { Typography } from '../'
+import { TypographyActions } from '../'
 import { jsx, Paragraph, Text, Editor, Cursor, Anchor, Focus } from '../../test-helpers'
 
 describe('GIVEN clearActiveTypographyStyle', () => {
@@ -23,7 +23,7 @@ describe('GIVEN clearActiveTypographyStyle', () => {
       </Paragraph>,
     )
 
-    Typography.clearActiveTypographyStyle(editor)
+    TypographyActions.clearActiveTypographyStyle(editor)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -46,7 +46,7 @@ describe('GIVEN clearActiveTypographyStyle', () => {
       </Paragraph>,
     )
 
-    Typography.clearActiveTypographyStyle(editor)
+    TypographyActions.clearActiveTypographyStyle(editor)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -69,7 +69,7 @@ describe('GIVEN clearActiveTypographyStyle', () => {
       </Paragraph>,
     )
 
-    Typography.clearActiveTypographyStyle(editor)
+    TypographyActions.clearActiveTypographyStyle(editor)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -98,7 +98,7 @@ describe('GIVEN clearActiveTypographyStyle', () => {
       </Paragraph>,
     )
 
-    Typography.clearActiveTypographyStyle(editor)
+    TypographyActions.clearActiveTypographyStyle(editor)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)

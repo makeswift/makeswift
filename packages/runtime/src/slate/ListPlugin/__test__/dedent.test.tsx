@@ -1,7 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { List } from '..'
+import { ListActions } from '..'
 import { Editor, jsx, Cursor, ListItem, ListItemChild, Text, Unordered } from '../../test-helpers'
 
 describe('Dedent List', () => {
@@ -29,7 +29,7 @@ describe('Dedent List', () => {
       </Unordered>,
     )
 
-    List.dedent(editor)
+    ListActions.dedent(editor)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -71,7 +71,7 @@ describe('Dedent List', () => {
       </Unordered>,
     )
 
-    List.dedent(editor)
+    ListActions.dedent(editor)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -126,7 +126,7 @@ describe('Dedent List', () => {
       </Unordered>,
     )
 
-    List.dedent(editor)
+    ListActions.dedent(editor)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)

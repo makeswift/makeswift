@@ -16,7 +16,7 @@ import {
   ResponsiveBlockTextAlignment,
   BlockTextAlignment,
   RichTextTypography,
-} from '../../types/slate'
+} from './types'
 
 export function getSelection(editor: Editor): Range {
   if (editor.selection) return unhangRange(editor, editor.selection)

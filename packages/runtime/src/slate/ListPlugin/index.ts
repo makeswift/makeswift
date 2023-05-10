@@ -9,9 +9,9 @@ import { indent } from './indent'
 import { toggleList } from './toggleList'
 import { unwrapList } from './unwrapList'
 import { wrapList } from './wrapList'
-import { BlockType } from '../../../types/slate'
+import { BlockType } from '../types'
 
-export const List = {
+export const ListActions = {
   unwrapList,
   wrapList,
   indent,
@@ -28,12 +28,12 @@ export function onKeyDown(e: KeyboardEvent, editor: Editor) {
 
   if (isHotkey('shift+tab', e)) {
     e.preventDefault()
-    List.dedent(editor)
+    ListActions.dedent(editor)
   }
 
   if (isHotkey('tab', e)) {
     e.preventDefault()
-    List.indent(editor)
+    ListActions.indent(editor)
   }
 
   if (isHotkey('backspace', e)) {
@@ -46,9 +46,9 @@ export function onKeyDown(e: KeyboardEvent, editor: Editor) {
       const list = EditorUtils.getFirstAncestorList(editor, listItem[1])
 
       if (parentListItem) {
-        List.dedent(editor)
+        ListActions.dedent(editor)
       } else if (list) {
-        List.unwrapList(editor)
+        ListActions.unwrapList(editor)
       }
       return
     }
@@ -73,9 +73,9 @@ export function onKeyDown(e: KeyboardEvent, editor: Editor) {
       const parentListItem = EditorUtils.getFirstAncestorListItem(editor, listItem[1])
 
       if (parentListItem) {
-        List.dedent(editor)
+        ListActions.dedent(editor)
       } else {
-        List.unwrapList(editor)
+        ListActions.unwrapList(editor)
       }
       return
     }

@@ -13,7 +13,7 @@ import {
   shallowMergeFallbacks,
 } from '../../../../../state/modules/breakpoints'
 import { useBreakpoints } from '../../../../../runtimes/react'
-import { RichTextTypography } from '../../../../../../types/slate'
+import { RichTextTypography } from '../../../../../slate'
 
 export type RichTextTypographyValue = RichTextTypography['style'][number]['value']
 

@@ -15,8 +15,8 @@ import {
   Unordered,
   Text,
 } from '../../test-helpers'
-import { List } from '..'
-import { BlockType } from '../../../../types/slate'
+import { ListActions } from '..'
+import { BlockType } from '../..'
 
 describe('toggleList', () => {
   it('WHEN toggleList to Unordered on paragraph THEN turns to Unordered', () => {
@@ -40,7 +40,7 @@ describe('toggleList', () => {
       </Unordered>,
     )
 
-    List.toggleList(editor, { type: BlockType.UnorderedList })
+    ListActions.toggleList(editor, { type: BlockType.UnorderedList })
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -66,7 +66,7 @@ describe('toggleList', () => {
       </Paragraph>,
     )
 
-    List.toggleList(editor, { type: BlockType.UnorderedList })
+    ListActions.toggleList(editor, { type: BlockType.UnorderedList })
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -97,7 +97,7 @@ describe('toggleList', () => {
       </Ordered>,
     )
 
-    List.toggleList(editor, { type: BlockType.OrderedList })
+    ListActions.toggleList(editor, { type: BlockType.OrderedList })
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -146,7 +146,7 @@ describe('toggleList', () => {
       </Ordered>,
     )
 
-    List.toggleList(editor, { type: 'ordered-list' })
+    ListActions.toggleList(editor, { type: 'ordered-list' })
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
   })
@@ -193,7 +193,7 @@ describe('toggleList', () => {
       </Fragment>,
     )
 
-    List.toggleList(editor, { type: BlockType.UnorderedList })
+    ListActions.toggleList(editor, { type: BlockType.UnorderedList })
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)

@@ -5,7 +5,7 @@ import { detachActiveTypography } from './detachActiveTypography'
 import { setActiveTypographyId } from './setActiveTypographyId'
 import { setActiveTypographyStyle } from './setActiveTypographyStyle'
 
-export const Typography = {
+export const TypographyActions = {
   setActiveTypographyId,
   setActiveTypographyStyle,
   clearActiveTypographyStyle,

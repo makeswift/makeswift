@@ -14,7 +14,7 @@ import {
   Editor,
   jsx,
 } from '../../test-helpers'
-import { List } from '..'
+import { ListActions } from '..'
 
 describe('Unwrap List', () => {
   it('WHEN unwrapList on List THEN turns into a paragraph', () => {
@@ -37,7 +37,7 @@ describe('Unwrap List', () => {
       </Paragraph>,
     )
 
-    List.unwrapList(editor)
+    ListActions.unwrapList(editor)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -76,7 +76,7 @@ describe('Unwrap List', () => {
       </Fragment>,
     )
 
-    List.unwrapList(editor)
+    ListActions.unwrapList(editor)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -115,7 +115,7 @@ describe('Unwrap List', () => {
       </Fragment>,
     )
 
-    List.unwrapList(editor)
+    ListActions.unwrapList(editor)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -138,7 +138,7 @@ describe('Unwrap List', () => {
       </Paragraph>,
     )
 
-    List.unwrapList(editor)
+    ListActions.unwrapList(editor)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -188,7 +188,7 @@ describe('Unwrap List', () => {
       </Fragment>,
     )
 
-    List.unwrapList(editor)
+    ListActions.unwrapList(editor)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -246,7 +246,7 @@ describe('Unwrap List', () => {
       </Fragment>,
     )
 
-    List.unwrapList(editor)
+    ListActions.unwrapList(editor)
 
     expect(editor.children).toEqual(result.children)
   })

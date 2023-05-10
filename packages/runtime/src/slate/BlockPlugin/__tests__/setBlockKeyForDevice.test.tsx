@@ -1,8 +1,8 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
+import { BlockActions } from '..'
 import { DEFAULT_BREAKPOINTS } from '../../../state/modules/breakpoints'
-import { Block } from '..'
 import { jsx, Paragraph, Text, Editor, Cursor, Anchor, Focus, Fragment } from '../../test-helpers'
 
 describe('GIVEN setBlockKeyForDevice', () => {
@@ -24,7 +24,7 @@ describe('GIVEN setBlockKeyForDevice', () => {
       </Paragraph>,
     )
 
-    Block.setBlockKeyForDevice(editor, DEFAULT_BREAKPOINTS, 'mobile', 'textAlign', 'right')
+    BlockActions.setBlockKeyForDevice(editor, DEFAULT_BREAKPOINTS, 'mobile', 'textAlign', 'right')
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -69,7 +69,7 @@ describe('GIVEN setBlockKeyForDevice', () => {
       </Fragment>,
     )
 
-    Block.setBlockKeyForDevice(editor, DEFAULT_BREAKPOINTS, 'mobile', 'textAlign', 'right')
+    BlockActions.setBlockKeyForDevice(editor, DEFAULT_BREAKPOINTS, 'mobile', 'textAlign', 'right')
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)

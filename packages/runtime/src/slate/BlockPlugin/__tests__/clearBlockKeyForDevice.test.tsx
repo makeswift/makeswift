@@ -1,7 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { Block } from '..'
+import { BlockActions } from '../'
 import { jsx, Paragraph, Text, Editor, Cursor } from '../../test-helpers'
 
 describe('GIVEN clearBlockKeyForDevice', () => {
@@ -23,7 +23,7 @@ describe('GIVEN clearBlockKeyForDevice', () => {
       </Paragraph>,
     )
 
-    Block.clearBlockKeyForDevice(editor, 'mobile', 'textAlign')
+    BlockActions.clearBlockKeyForDevice(editor, 'mobile', 'textAlign')
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)

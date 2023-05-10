@@ -8,7 +8,7 @@ import { Link } from '../../shared/Link'
 import { useResponsiveStyle } from '../../utils/responsive-style'
 import { useTypographyClassName } from './components'
 import useEnhancedTypography from './components/Leaf/leaf'
-import { Inline, InlineType, Block, BlockType } from '../../../../types/slate'
+import { Inline, InlineType, Block, BlockType } from '../../../slate'
 import { richTextDTOtoDAO } from '../../../controls'
 
 type Props = {

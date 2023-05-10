@@ -1,11 +1,6 @@
 import { ComponentType } from 'react'
 import { LinkControlData } from '../../controls'
-import {
-  ResponsiveBlockTextAlignment,
-  RichTextTypography,
-  BlockType,
-  InlineType,
-} from '../../../types/slate'
+import { BlockType, InlineType, ResponsiveBlockTextAlignment, RichTextTypography } from '..'
 
 type Children = string | JSX.Element | (string | JSX.Element)[]
 
