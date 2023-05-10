@@ -29,7 +29,7 @@ import { BuilderEditMode } from '../../../../state/modules/builder-edit-mode'
 import { onKeyDown, withBlock, withList, withTypography, withBuilder } from '../../../../slate'
 import { pollBoxModel } from '../../../../runtimes/react/poll-box-model'
 import { useSyncDOMSelection } from './useSyncDOMSelection'
-import { RichTextDAO, BlockType } from '../../../../../types/slate'
+import { RichTextDAO, BlockType } from '../../../../slate'
 
 type Props = {
   id?: ElementIDValue

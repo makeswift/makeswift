@@ -1,9 +1,9 @@
 import { BaseEditor, Descendant } from 'slate'
 import { ReactEditor } from 'slate-react'
-import { LinkControlData } from '../src/controls'
+import { LinkControlData } from '../controls'
 import { HistoryEditor } from 'slate-history'
-import { BuilderEditor } from '../src/slate'
-import { ResponsiveValue } from '../src/prop-controllers'
+import { BuilderEditor } from '.'
+import { ResponsiveValue } from '../prop-controllers'
 
 export type RichTextTypography = {
   id?: string

@@ -1,7 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { Typography } from '../'
+import { TypographyActions } from '../'
 import { jsx, Editor, Paragraph, Text, Cursor, Anchor, Focus } from '../../test-helpers'
 
 describe('GIVEN setActiveTypographyId', () => {
@@ -23,7 +23,7 @@ describe('GIVEN setActiveTypographyId', () => {
       </Paragraph>,
     )
 
-    Typography.setActiveTypographyId(editor, 'lmnop')
+    TypographyActions.setActiveTypographyId(editor, 'lmnop')
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -47,7 +47,7 @@ describe('GIVEN setActiveTypographyId', () => {
       </Paragraph>,
     )
 
-    Typography.setActiveTypographyId(editor, 'id2')
+    TypographyActions.setActiveTypographyId(editor, 'id2')
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -77,7 +77,7 @@ describe('GIVEN setActiveTypographyId', () => {
       </Paragraph>,
     )
 
-    Typography.setActiveTypographyId(editor, 'id2')
+    TypographyActions.setActiveTypographyId(editor, 'id2')
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)

@@ -2,7 +2,7 @@
 /** @jsx jsx */
 
 import { Editor, Paragraph, jsx, Text, Cursor, Anchor, Focus } from '../../test-helpers'
-import { Typography } from '../'
+import { TypographyActions } from '../'
 
 describe('GIVEN detachActiveTypography', () => {
   it('WHEN called THEN typography is detached', () => {
@@ -23,7 +23,7 @@ describe('GIVEN detachActiveTypography', () => {
       </Paragraph>,
     )
 
-    Typography.detachActiveTypography(editor, [{ deviceId: 'mobile', value: {} }])
+    TypographyActions.detachActiveTypography(editor, [{ deviceId: 'mobile', value: {} }])
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -46,7 +46,7 @@ describe('GIVEN detachActiveTypography', () => {
       </Paragraph>,
     )
 
-    Typography.detachActiveTypography(editor, [{ deviceId: 'mobile', value: {} }])
+    TypographyActions.detachActiveTypography(editor, [{ deviceId: 'mobile', value: {} }])
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -78,7 +78,7 @@ describe('GIVEN detachActiveTypography', () => {
       </Paragraph>,
     )
 
-    Typography.detachActiveTypography(editor, [{ deviceId: 'mobile', value: {} }])
+    TypographyActions.detachActiveTypography(editor, [{ deviceId: 'mobile', value: {} }])
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)

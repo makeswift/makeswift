@@ -1,8 +1,8 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { Block } from '..'
-import { InlineType } from '../../../../types/slate'
+import { BlockActions } from '..'
+import { InlineType } from '../..'
 import { jsx, Paragraph, Code, Text, Editor, Sub, Super } from '../../test-helpers'
 
 describe('GIVEN unwrapInline', () => {
@@ -20,7 +20,7 @@ describe('GIVEN unwrapInline', () => {
       </Paragraph>,
     )
 
-    Block.unwrapInline(editor, InlineType.Code)
+    BlockActions.unwrapInline(editor, InlineType.Code)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -53,7 +53,7 @@ describe('GIVEN unwrapInline', () => {
         <Text />
       </Paragraph>,
     )
-    Block.unwrapInline(editor, InlineType.SubScript)
+    BlockActions.unwrapInline(editor, InlineType.SubScript)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -82,7 +82,7 @@ describe('GIVEN unwrapInline', () => {
         <Text>lmnopxyz</Text>
       </Paragraph>,
     )
-    Block.unwrapInline(editor, InlineType.SuperScript)
+    BlockActions.unwrapInline(editor, InlineType.SuperScript)
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)

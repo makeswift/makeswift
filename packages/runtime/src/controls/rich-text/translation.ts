@@ -9,7 +9,7 @@ import {
   RichTextDTO,
   ObjectType,
 } from './dto-types'
-import { Inline, InlineType, RichTextDAO, BlockType } from '../../../types/slate'
+import { Inline, InlineType, RichTextDAO, BlockType } from '../../slate'
 
 // reimplemented from slate source for code splitting
 function isText(node: any): node is Text {

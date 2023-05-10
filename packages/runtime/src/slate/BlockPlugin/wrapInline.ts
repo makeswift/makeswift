@@ -1,6 +1,6 @@
 import { Editor, Transforms } from 'slate'
 import { getSelection } from '../selectors'
-import { Inline } from '../../../types/slate'
+import { Inline } from '../types'
 
 export function wrapInline(editor: Editor, inline: Inline) {
   Transforms.wrapNodes(editor, inline, {

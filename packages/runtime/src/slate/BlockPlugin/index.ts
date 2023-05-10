@@ -5,7 +5,7 @@ import { wrapInline } from './wrapInline'
 import { unwrapInline } from './unwrapInline'
 import { ElementUtils } from '../utils/element'
 
-export const Block = {
+export const BlockActions = {
   setBlockKeyForDevice,
   clearBlockKeyForDevice,
   wrapInline,

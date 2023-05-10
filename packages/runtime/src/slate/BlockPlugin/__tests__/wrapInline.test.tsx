@@ -1,8 +1,8 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { Block } from '..'
-import { InlineType } from '../../../../types/slate'
+import { BlockActions } from '..'
+import { InlineType } from '../..'
 import { jsx, Paragraph, Code, Text, Editor, Focus, Anchor } from '../../test-helpers'
 
 describe('GIVEN wrapInline', () => {
@@ -22,7 +22,7 @@ describe('GIVEN wrapInline', () => {
       </Paragraph>,
     )
 
-    Block.wrapInline(editor, { type: InlineType.Code, children: [] })
+    BlockActions.wrapInline(editor, { type: InlineType.Code, children: [] })
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -51,7 +51,7 @@ describe('GIVEN wrapInline', () => {
       </Paragraph>,
     )
 
-    Block.wrapInline(editor, { type: InlineType.Code, children: [] })
+    BlockActions.wrapInline(editor, { type: InlineType.Code, children: [] })
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -85,7 +85,7 @@ describe('GIVEN wrapInline', () => {
       </Paragraph>,
     )
 
-    Block.wrapInline(editor, { type: InlineType.Code, children: [] })
+    BlockActions.wrapInline(editor, { type: InlineType.Code, children: [] })
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)

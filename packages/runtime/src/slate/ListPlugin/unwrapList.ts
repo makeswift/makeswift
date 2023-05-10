@@ -3,7 +3,7 @@ import { EditorUtils } from '../utils/editor'
 import { LIST_ITEM_CHILD_POSITION, LIST_ITEM_LIST_POSITION } from './constants'
 import { filterForSubtreeRoots } from './utils/filterForSubtreeRoots'
 import { ElementUtils } from '../utils/element'
-import { BlockType } from '../../../types/slate'
+import { BlockType } from '../types'
 
 export function unwrapPath(editor: Editor, listItemPath: Path) {
   const parentList = EditorUtils.getFirstAncestorList(editor, listItemPath)

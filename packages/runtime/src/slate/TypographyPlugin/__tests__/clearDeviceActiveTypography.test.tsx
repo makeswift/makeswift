@@ -1,7 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { Typography } from '../'
+import { TypographyActions } from '../'
 import { jsx, Cursor, Editor, Paragraph, Text, Anchor, Focus } from '../../test-helpers'
 
 describe('GIVEN clearDeviceActiveTypography', () => {
@@ -33,7 +33,7 @@ describe('GIVEN clearDeviceActiveTypography', () => {
       </Paragraph>,
     )
 
-    Typography.clearDeviceActiveTypography(editor, 'desktop')
+    TypographyActions.clearDeviceActiveTypography(editor, 'desktop')
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -64,7 +64,7 @@ describe('GIVEN clearDeviceActiveTypography', () => {
       </Paragraph>,
     )
 
-    Typography.clearDeviceActiveTypography(editor, 'desktop')
+    TypographyActions.clearDeviceActiveTypography(editor, 'desktop')
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
@@ -124,7 +124,7 @@ describe('GIVEN clearDeviceActiveTypography', () => {
       </Paragraph>,
     )
 
-    Typography.clearDeviceActiveTypography(editor, 'desktop')
+    TypographyActions.clearDeviceActiveTypography(editor, 'desktop')
 
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
