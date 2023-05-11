@@ -22,8 +22,8 @@ import { Descriptor, IndexSignatureHack, Types } from '../prop-controllers/descr
 import { copy as propControllerCopy } from '../prop-controllers/copy'
 import { CopyContext, Data, MergeContext } from '../state/react-page'
 import { RichTextControlData, RichTextControlDefinition } from './rich-text'
-import { RichTextV2ControlDefinition } from './rich-text-v2'
 import { PropControllerDescriptor } from '../prop-controllers'
+import { RichTextV2ControlData, RichTextV2ControlDefinition } from './rich-text-v2'
 
 export type ControlDefinition =
   | CheckboxControlDefinition
@@ -67,6 +67,8 @@ export type ControlDefinitionData<T extends ControlDefinition> = T extends Check
   ? LinkControlData
   : T extends RichTextControlDefinition
   ? IndexSignatureHack<RichTextControlData>
+  : T extends RichTextV2ControlDefinition
+  ? RichTextV2ControlData
   : T extends StyleControlDefinition
   ? StyleControlData
   : never

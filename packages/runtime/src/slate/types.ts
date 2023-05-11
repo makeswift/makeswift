@@ -32,6 +32,7 @@ export type Text = {
 }
 
 export const RootBlockType = {
+  Default: 'default',
   Text: 'text-block',
   Paragraph: 'paragraph',
   Heading1: 'heading-one',
@@ -54,6 +55,12 @@ export const BlockType = {
 } as const
 
 export type BlockType = typeof BlockType[keyof typeof BlockType]
+
+export type DefaultElement = {
+  textAlign?: ResponsiveBlockTextAlignment
+  children: Array<Element | Text>
+  type: typeof BlockType.Default
+}
 
 export type TextElement = {
   textAlign?: ResponsiveBlockTextAlignment
@@ -177,6 +184,7 @@ export type LinkElement = {
 }
 
 export type RootBlock =
+  | DefaultElement
   | TextElement
   | ParagraphElement
   | Heading1Element

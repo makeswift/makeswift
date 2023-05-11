@@ -203,6 +203,8 @@ export function BlockElement({ descendant }: BlockProps) {
           <Descendants descendants={descendant.children} />
         </span>
       )
+    default:
+      return null
   }
 }
 

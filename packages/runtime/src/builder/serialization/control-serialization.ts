@@ -3,6 +3,8 @@ import {
   ComboboxControlType,
   ListControlDefinition,
   ListControlType,
+  RichTextV2ControlDefinition,
+  RichTextV2ControlType,
   ShapeControlDefinition,
   ShapeControlType,
 } from '../../controls'
@@ -66,6 +68,7 @@ import {
   serializeComboboxControlDefinition,
 } from './controls/combobox'
 import { deserializeListControlDefinition, serializeListControlDefinition } from './controls/list'
+import { deserializeRichTextControlV2, serializeRichTextControlV2 } from './controls/rich-text-v2'
 import {
   deserializeShapeControlDefinition,
   serializeShapeControlDefinition,
@@ -891,6 +894,7 @@ export type SerializedControl<T extends Data = Data> =
       | TextStyleControl<T>
       | ImageControl<T>
       | RichTextControl<T>
+      | RichTextV2ControlDefinition
       | ComboboxControlDefinition
       | ShapeControlDefinition
       | ListControlDefinition
@@ -913,6 +917,7 @@ export type SerializedControl<T extends Data = Data> =
   | SerializedTextStyleControl<T>
   | SerializedImageControl<T>
   | SerializedRichTextControl<T>
+  | Serialize<RichTextV2ControlDefinition>
   | Serialize<ComboboxControlDefinition>
   | Serialize<ShapeControlDefinition>
   | Serialize<ListControlDefinition>
@@ -950,6 +955,7 @@ export type DeserializedControl<T extends Data = Data> =
       | TextStyleControl<T>
       | ImageControl<T>
       | RichTextControl<T>
+      | RichTextV2ControlDefinition
       | ComboboxControlDefinition
       | ShapeControlDefinition
       | ListControlDefinition
@@ -972,6 +978,7 @@ export type DeserializedControl<T extends Data = Data> =
   | DeserializedTextStyleControl<T>
   | DeserializedImageControl<T>
   | DeserializedRichTextControl<T>
+  | Deserialize<Serialize<RichTextV2ControlDefinition>>
   | Deserialize<Serialize<ComboboxControlDefinition>>
   | Deserialize<Serialize<ShapeControlDefinition>>
   | Deserialize<Serialize<ListControlDefinition>>
@@ -1041,6 +1048,9 @@ export function serializeControl<T extends Data>(
 
     case Controls.Types.RichText:
       return serializeRichTextControl(control)
+
+    case RichTextV2ControlType:
+      return serializeRichTextControlV2(control)
 
     case ComboboxControlType:
       return serializeComboboxControlDefinition(control)
@@ -1113,6 +1123,9 @@ export function deserializeControl<T extends Data>(
 
     case Controls.Types.RichText:
       return deserializeRichTextControl(serializedControl)
+
+    case RichTextV2ControlType:
+      return deserializeRichTextControlV2(serializedControl)
 
     case ComboboxControlType:
       return deserializeComboboxControlDefinition(serializedControl)

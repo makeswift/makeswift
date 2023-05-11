@@ -104,5 +104,8 @@ export function BlockElement({ element, attributes, children }: InlineRenderElem
           {children}
         </span>
       )
+
+    default:
+      return null
   }
 }
