@@ -26,7 +26,9 @@ export const ElementUtils = {
         Element.isElementType(node, BlockType.Heading6) ||
         Element.isElementType(node, BlockType.BlockQuote) ||
         Element.isElementType(node, BlockType.UnorderedList) ||
-        Element.isElementType(node, BlockType.OrderedList))
+        Element.isElementType(node, BlockType.OrderedList) ||
+        Element.isElementType(node, BlockType.Text) ||
+        Element.isElementType(node, BlockType.Default))
     )
   },
   isBlock(node: Node): node is Block {

@@ -23,5 +23,9 @@ const ReadOnlyText = forwardNextDynamicRef(patch =>
 export function useRichTextV2(data: RichTextV2ControlData, control: RichTextV2Control | null) {
   const isPreview = useIsPreview()
 
-  return isPreview ? <EditableText text={data} control={control} /> : <ReadOnlyText text={data} />
+  return isPreview ? (
+    <EditableText text={data} control={control} />
+  ) : (
+    <ReadOnlyText text={data} control={control} />
+  )
 }

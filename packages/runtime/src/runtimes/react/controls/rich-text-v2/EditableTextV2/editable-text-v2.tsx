@@ -33,6 +33,8 @@ import { pollBoxModel } from '../../../poll-box-model'
 import { InlineModePlugin, withBuilder } from '../../../../../slate'
 import { useSyncDOMSelection } from './useSyncDOMSelection'
 import { BlockType } from '../../../../../slate'
+import { useStyle } from '../../../use-style'
+import { cx } from '@emotion/css'
 
 export type RichTextV2ControlValue = ReactNode
 
@@ -77,8 +79,64 @@ export function EditableTextV2({ text, control }: Props) {
   }, [editor, control])
 
   const renderElement = useCallback(({ attributes, children, element }: RenderElementProps) => {
+    // TODO: move this markup into the block plugin once we have a way of composing render functionality.
+    const blockStyles = [useStyle({ margin: 0 })]
+
     switch (element.type) {
+      case BlockType.Text:
+        return (
+          <span {...attributes} className={cx(...blockStyles)}>
+            {children}
+          </span>
+        )
+      case BlockType.Paragraph:
+        return (
+          <p {...attributes} className={cx(...blockStyles)}>
+            {children}
+          </p>
+        )
+      case BlockType.Heading1:
+        return (
+          <h1 {...attributes} className={cx(...blockStyles)}>
+            {children}
+          </h1>
+        )
+      case BlockType.Heading2:
+        return (
+          <h2 {...attributes} className={cx(...blockStyles)}>
+            {children}
+          </h2>
+        )
+      case BlockType.Heading3:
+        return (
+          <h3 {...attributes} className={cx(...blockStyles)}>
+            {children}
+          </h3>
+        )
+      case BlockType.Heading4:
+        return (
+          <h4 {...attributes} className={cx(...blockStyles)}>
+            {children}
+          </h4>
+        )
+      case BlockType.Heading5:
+        return (
+          <h5 {...attributes} className={cx(...blockStyles)}>
+            {children}
+          </h5>
+        )
+      case BlockType.Heading6:
+        return (
+          <h6 {...attributes} className={cx(...blockStyles)}>
+            {children}
+          </h6>
+        )
+      case BlockType.Default:
       default:
+        if (control?.descriptor.config.mode === RichTextV2Mode.Inline) {
+          return <span {...attributes}>{children}</span>
+        }
+
         return <p {...attributes}>{children}</p>
     }
   }, [])
