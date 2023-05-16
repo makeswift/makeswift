@@ -35,7 +35,6 @@ module.exports = withMakeswift(nextConfig);`
   const output = manipulateNextConfig(input)
 
   // Assert
-  console.log(output)
   expect(output).toBe(expected)
 })
 
@@ -54,7 +53,6 @@ module.exports = withMakeswift({});`
   const output = manipulateNextConfig(input)
 
   // Assert
-  console.log(output)
   expect(output).toBe(expected)
 })
 
@@ -74,7 +72,6 @@ module.exports = withMakeswift(withFoo({}));`
   const output = manipulateNextConfig(input)
 
   // Assert
-  console.log(output)
   expect(output).toBe(expected)
 })
 
@@ -99,7 +96,6 @@ module.exports = withMakeswift(withFoo(withCSS({
   const output = manipulateNextConfig(input)
 
   // Assert
-  console.log(output)
   expect(output).toBe(expected)
 })
 
