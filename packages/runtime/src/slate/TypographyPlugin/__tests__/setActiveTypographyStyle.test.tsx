@@ -1,7 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { DEFAULT_BREAKPOINTS } from '@makeswift/runtime/state/breakpoints'
+import { DEFAULT_BREAKPOINTS } from '../../../state/modules/breakpoints'
 import { Typography } from '../'
 import { jsx, Editor, Paragraph, Text, Cursor, Focus, Anchor } from '../../test-helpers'
 
