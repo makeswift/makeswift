@@ -1,12 +1,12 @@
 import { PropController } from '../prop-controllers/base'
 import { BoxModel } from '../state/modules/box-models'
-import { CopyContext, Element } from '../state/react-page'
+import { CopyContext, Element, isElementReference, MergeContext } from '../state/react-page'
 import { ResponsiveValue } from './types'
 
 type SlotControlColumnData = { count: number; spans: number[][] }
 
 export type SlotControlData = {
-  elements: Element[]
+  elements: (Element & { deleted?: boolean })[]
   columns: ResponsiveValue<SlotControlColumnData>
 }
 
@@ -61,4 +61,35 @@ export function copySlotData(
     ...value,
     elements: value.elements.map(element => context.copyElement(element)),
   }
+}
+
+/**
+ * @todo
+ * - Inserting elements
+ * - Moving elements
+ * - Merging column data
+ */
+export function mergeSlotData(
+  base: SlotControlData | undefined = { columns: [], elements: [] },
+  override: SlotControlData | undefined = { columns: [], elements: [] },
+  context: MergeContext,
+): SlotControlData {
+  const mergedColumns = base.columns
+  const mergedElements = base.elements.flatMap(baseElement => {
+    const overrideElement = override.elements.find(
+      e => baseElement.type === e.type && baseElement.key === e.key,
+    )
+
+    if (overrideElement == null) return [baseElement]
+
+    if (overrideElement.deleted) return []
+
+    if (isElementReference(overrideElement)) return [overrideElement]
+
+    if (isElementReference(baseElement)) return [baseElement]
+
+    return context.mergeElement(baseElement, overrideElement)
+  })
+
+  return { columns: mergedColumns, elements: mergedElements }
 }
