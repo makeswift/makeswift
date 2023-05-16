@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.8.11
+
+### Patch Changes
+
+- f125648: Add initial implementation of Block plugin for `unstable_RichTextV2`.
+- 662aace: Add initial implementation of `mergeElement`.
+
 ## 0.8.10
 
 ### Patch Changes
