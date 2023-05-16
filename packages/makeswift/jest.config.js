@@ -1,3 +1,6 @@
+/** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
-  testPathIgnorePatterns: ['<rootDir>/src', 'dist/src/utils/__tests__/makeswift-plugin.test.d.ts'],
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/dist'],
 }
