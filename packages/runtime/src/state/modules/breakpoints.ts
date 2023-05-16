@@ -231,7 +231,7 @@ export function join<V, A extends ReadonlyArray<ResponsiveValue<V> | null | unde
 
       return { deviceId, value }
     })
-    .filter((override): override is DeviceOverride<R> => Boolean(override))
+    .filter((override): override is NonNullable<typeof override> => Boolean(override))
 }
 
 export const getBreakpointMediaQuery = (breakpoint: Breakpoint): string => {
