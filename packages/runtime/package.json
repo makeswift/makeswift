@@ -107,7 +107,8 @@
     "preview": "vite preview",
     "prepare": "yarn build",
     "generate": "graphql-codegen --config codegen.yml",
-    "test": "vitest --config vite.test.config.ts"
+    "test": "vitest run --config vite.test.config.ts",
+    "test:watch": "vitest watch --config vite.test.config.ts"
   },
   "peerDependencies": {
     "next": ">=12.2.0 <13.0.0 || ^13.0.0",
