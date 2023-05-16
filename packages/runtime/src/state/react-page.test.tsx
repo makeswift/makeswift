@@ -177,6 +177,7 @@ describe('ReactPage', () => {
   })
 })
 
+// @ts-ignore Used by JSX pragma
 function jsx(type: Function, props: Record<string, unknown> = {}, ...children: JSX.Element[]) {
   return type({
     ...props,
