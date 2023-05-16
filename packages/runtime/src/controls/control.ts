@@ -10,13 +10,20 @@ import { ShapeControlData, ShapeControlDefinition, copyShapeData, ShapeControlTy
 import { TextAreaControlData, TextAreaControlDefinition } from './text-area'
 import { TextInputControlData, TextInputControlDefinition } from './text-input'
 import { copyStyleData, StyleControlData, StyleControlDefinition, StyleControlType } from './style'
-import { copySlotData, SlotControlDefinition, SlotControlType } from './slot'
+import {
+  copySlotData,
+  mergeSlotData,
+  SlotControlData,
+  SlotControlDefinition,
+  SlotControlType,
+} from './slot'
 
 import { Descriptor, IndexSignatureHack, Types } from '../prop-controllers/descriptors'
 import { copy as propControllerCopy } from '../prop-controllers/copy'
-import { CopyContext } from '../state/react-page'
+import { CopyContext, Data, MergeContext } from '../state/react-page'
 import { RichTextControlData, RichTextControlDefinition } from './rich-text'
 import { RichTextV2ControlDefinition } from './rich-text-v2'
+import { PropControllerDescriptor } from '../prop-controllers'
 
 export type ControlDefinition =
   | CheckboxControlDefinition
@@ -96,5 +103,20 @@ export function copy(definition: Descriptor | ControlDefinition, value: any, con
       return copySlotData(value, context)
     default:
       return value
+  }
+}
+
+export function merge(
+  definition: PropControllerDescriptor,
+  a: Data,
+  b: Data = a,
+  context: MergeContext,
+): Data {
+  switch (definition.type) {
+    case SlotControlType:
+      return mergeSlotData(a as SlotControlData, b as SlotControlData, context)
+
+    default:
+      return b
   }
 }
