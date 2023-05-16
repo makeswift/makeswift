@@ -15,8 +15,8 @@ import {
   Unordered,
   Text,
 } from '../../test-helpers'
-import { BlockType } from '@makeswift/runtime/slate'
 import { List } from '..'
+import { BlockType } from '../../../../types/slate'
 
 describe('toggleList', () => {
   it('WHEN toggleList to Unordered on paragraph THEN turns to Unordered', () => {

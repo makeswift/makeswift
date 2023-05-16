@@ -1,8 +1,8 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { InlineType } from '@makeswift/runtime/slate'
 import { Block } from '..'
+import { InlineType } from '../../../../types/slate'
 import { jsx, Paragraph, Code, Text, Editor, Focus, Anchor } from '../../test-helpers'
 
 describe('GIVEN wrapInline', () => {

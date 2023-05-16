@@ -2,7 +2,7 @@
 /** @jsx jsx */
 
 import { List } from '..'
-import { BlockType } from '@makeswift/runtime/slate'
+import { BlockType } from '../../../../types/slate'
 import {
   jsx,
   Editor,
