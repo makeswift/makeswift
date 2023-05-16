@@ -2,8 +2,8 @@ import { Editor, createEditor } from 'slate'
 import { createHyperscript, createEditor as createHyperscriptEditor } from 'slate-hyperscript'
 import { withReact } from 'slate-react'
 
-import { BlockType, InlineType } from '../../controls'
 import { withList, withTypography, withBlock, withInlineMode } from '..'
+import { BlockType, InlineType } from '../../../types/slate'
 
 export const createJsx = (editor: Editor) =>
   createHyperscript({
