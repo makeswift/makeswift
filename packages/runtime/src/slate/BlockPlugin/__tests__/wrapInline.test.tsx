@@ -1,7 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { InlineType } from '@makeswift/runtime/controls'
+import { InlineType } from '@makeswift/runtime/slate'
 import { Block } from '..'
 import { jsx, Paragraph, Code, Text, Editor, Focus, Anchor } from '../../test-helpers'
 

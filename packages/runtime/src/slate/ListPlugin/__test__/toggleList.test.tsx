@@ -15,7 +15,7 @@ import {
   Unordered,
   Text,
 } from '../../test-helpers'
-import { BlockType } from '@makeswift/runtime/controls'
+import { BlockType } from '@makeswift/runtime/slate'
 import { List } from '..'
 
 describe('toggleList', () => {
