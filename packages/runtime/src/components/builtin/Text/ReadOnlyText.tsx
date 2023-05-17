@@ -113,6 +113,12 @@ export function BlockElement({ descendant }: BlockProps) {
     useStyle({ margin: 0 }),
     useStyle(useResponsiveStyle([descendant.textAlign], ([textAlign = 'left']) => ({ textAlign }))),
   ]
+  const quoteStyle = useStyle({
+    padding: '0.5em 10px',
+    fontSize: '1.25em',
+    fontWeight: '300',
+    borderLeft: '5px solid rgba(0, 0, 0, 0.1)',
+  })
 
   switch (descendant.type) {
     case BlockType.Text:
@@ -165,17 +171,7 @@ export function BlockElement({ descendant }: BlockProps) {
       )
     case BlockType.BlockQuote:
       return (
-        <blockquote
-          className={cx(
-            ...blockStyles,
-            useStyle({
-              padding: '0.5em 10px',
-              fontSize: '1.25em',
-              fontWeight: '300',
-              borderLeft: '5px solid rgba(0, 0, 0, 0.1)',
-            }),
-          )}
-        >
+        <blockquote className={cx(...blockStyles, quoteStyle)}>
           <Descendants descendants={descendant.children} />
         </blockquote>
       )
