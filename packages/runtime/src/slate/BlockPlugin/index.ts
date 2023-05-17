@@ -131,7 +131,7 @@ export function withBlock(editor: Editor) {
 
       if (Node.has(editor, pathToListItemText)) {
         const nodeInListItemTextPosition = Node.get(editor, pathToListItemText)
-        if (ElementUtils.isParagraph(nodeInListItemTextPosition)) {
+        if (ElementUtils.isRootBlock(nodeInListItemTextPosition)) {
           Transforms.setNodes(
             editor,
             { type: BlockType.ListItemChild },

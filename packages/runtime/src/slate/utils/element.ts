@@ -5,7 +5,6 @@ import {
   Block,
   Inline,
   InlineType,
-  ParagraphElement,
   OrderedListElement,
   UnorderedListElement,
   ListItemElement,
@@ -49,9 +48,6 @@ export const ElementUtils = {
   },
   isConvertibleToListTextNode(node: Node) {
     return !this.isList(node) && !this.isListItem(node) && !this.isListItemChild(node)
-  },
-  isParagraph(node: Node): node is ParagraphElement {
-    return Element.isElementType(node, BlockType.Paragraph)
   },
   isList(node: Node): node is OrderedListElement | UnorderedListElement {
     return (

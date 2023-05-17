@@ -40,7 +40,7 @@ export type RichTextV2ControlValue = ReactNode
 
 export type Descriptors = { text?: RichTextV2ControlDefinition }
 
-const defaultText: Descendant[] = [{ type: BlockType.Text, children: [{ text: '' }] }]
+const defaultText: Descendant[] = [{ type: BlockType.Default, children: [{ text: '' }] }]
 
 type Props = {
   text: RichTextV2ControlData
