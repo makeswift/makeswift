@@ -19,7 +19,6 @@ export type RichTextV2Mode = typeof RichTextV2Mode[keyof typeof RichTextV2Mode]
 export type RichTextV2PluginControlValue<T extends ControlDefinition> =
   | ControlDefinitionData<T>
   | undefined
-  | null
 
 export type RichTextV2PluginControlDefinition<T extends ControlDefinition> = {
   definition: T

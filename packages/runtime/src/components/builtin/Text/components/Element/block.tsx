@@ -14,6 +14,13 @@ export function BlockElement({ element, attributes, children }: InlineRenderElem
     useStyle(useResponsiveStyle([element.textAlign], ([textAlign = 'left']) => ({ textAlign }))),
   ]
 
+  const quoteStyles = useStyle({
+    padding: '0.5em 10px',
+    fontSize: '1.25em',
+    fontWeight: '300',
+    borderLeft: '5px solid rgba(0, 0, 0, 0.1)',
+  })
+
   switch (element.type) {
     case BlockType.Text:
       return (
@@ -65,18 +72,7 @@ export function BlockElement({ element, attributes, children }: InlineRenderElem
       )
     case BlockType.BlockQuote:
       return (
-        <blockquote
-          {...attributes}
-          className={cx(
-            ...blockStyles,
-            useStyle({
-              padding: '0.5em 10px',
-              fontSize: '1.25em',
-              fontWeight: '300',
-              borderLeft: '5px solid rgba(0, 0, 0, 0.1)',
-            }),
-          )}
-        >
+        <blockquote {...attributes} className={cx(...blockStyles, quoteStyles)}>
           {children}
         </blockquote>
       )

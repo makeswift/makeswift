@@ -81,6 +81,12 @@ export function EditableTextV2({ text, control }: Props) {
   const renderElement = useCallback(({ attributes, children, element }: RenderElementProps) => {
     // TODO: move this markup into the block plugin once we have a way of composing render functionality.
     const blockStyles = [useStyle({ margin: 0 })]
+    const quoteStyles = useStyle({
+      padding: '0.5em 10px',
+      fontSize: '1.25em',
+      fontWeight: '300',
+      borderLeft: '5px solid rgba(0, 0, 0, 0.1)',
+    })
 
     switch (element.type) {
       case BlockType.Text:
@@ -131,13 +137,59 @@ export function EditableTextV2({ text, control }: Props) {
             {children}
           </h6>
         )
+      case BlockType.BlockQuote:
+        return (
+          <blockquote {...attributes} className={cx(...blockStyles, quoteStyles)}>
+            {children}
+          </blockquote>
+        )
+      case BlockType.OrderedList:
+        return (
+          <ol
+            {...attributes}
+            className={cx(...blockStyles)}
+            style={{ listStylePosition: 'inside' }}
+          >
+            {children}
+          </ol>
+        )
+      case BlockType.UnorderedList:
+        return (
+          <ul
+            {...attributes}
+            className={cx(...blockStyles)}
+            style={{ listStylePosition: 'inside' }}
+          >
+            {children}
+          </ul>
+        )
+      case BlockType.ListItem:
+        return (
+          <li {...attributes} className={cx(...blockStyles)}>
+            {children}
+          </li>
+        )
+      case BlockType.ListItemChild:
+        return (
+          <span {...attributes} className={cx(...blockStyles)}>
+            {children}
+          </span>
+        )
       case BlockType.Default:
       default:
         if (control?.descriptor.config.mode === RichTextV2Mode.Inline) {
-          return <span {...attributes}>{children}</span>
+          return (
+            <span {...attributes} className={cx(...blockStyles)}>
+              {children}
+            </span>
+          )
         }
 
-        return <p {...attributes}>{children}</p>
+        return (
+          <p {...attributes} className={cx(...blockStyles)}>
+            {children}
+          </p>
+        )
     }
   }, [])
 

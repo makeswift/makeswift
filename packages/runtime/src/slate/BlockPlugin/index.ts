@@ -25,7 +25,6 @@ export const BlockActions = {
   unwrapInline,
 }
 
-
 // TODO: This API is still litered with artifacts from the list plugin being seperated out.
 // This plugin needs to be rewritten to be assumptionless.
 export const ListActions = {
@@ -199,68 +198,100 @@ export function withBlock(editor: Editor) {
   return editor
 }
 
+const definition = Select({
+  label: 'Block',
+  labelOrientation: 'horizontal',
+  options: [
+    {
+      value: BlockType.Paragraph,
+      label: 'Paragraph',
+    },
+    {
+      value: BlockType.Heading1,
+      label: 'Heading 1',
+    },
+    {
+      value: BlockType.Heading2,
+      label: 'Heading 2',
+    },
+    {
+      value: BlockType.Heading3,
+      label: 'Heading 3',
+    },
+    {
+      value: BlockType.Heading4,
+      label: 'Heading 4',
+    },
+    {
+      value: BlockType.Heading5,
+      label: 'Heading 5',
+    },
+    {
+      value: BlockType.Heading6,
+      label: 'Heading 6',
+    },
+    {
+      value: BlockType.UnorderedList,
+      label: 'Bulleted list',
+    },
+    {
+      value: BlockType.OrderedList,
+      label: 'Numbered list',
+    },
+    {
+      value: BlockType.BlockQuote,
+      label: 'Quote',
+    },
+  ],
+  defaultValue: BlockType.Paragraph,
+})
+
 export function BlockPlugin() {
   return createRichTextV2Plugin({
     withPlugin: withBlock,
     onKeyDown: onKeyDown,
     control: {
-      definition: Select({
-        label: 'Block',
-        options: [
-          {
-            value: BlockType.Heading1,
-            label: 'Heading1',
-          },
-          {
-            value: BlockType.Heading2,
-            label: 'Heading2',
-          },
-          {
-            value: BlockType.Heading3,
-            label: 'Heading3',
-          },
-          {
-            value: BlockType.Heading4,
-            label: 'Heading4',
-          },
-          {
-            value: BlockType.Heading5,
-            label: 'Heading5',
-          },
-          {
-            value: BlockType.Heading6,
-            label: 'Heading6',
-          },
-          {
-            value: BlockType.Paragraph,
-            label: 'Paragraph',
-          },
-        ],
-        defaultValue: BlockType.Paragraph,
-      }),
+      definition,
       onChange: (editor, value) => {
-        Transforms.setNodes(
-          editor,
-          {
-            type: value ?? BlockType.Default,
-          },
-          { at: getSelection(editor) },
-        )
+        // TODO: This onChange being so complex is an artifact of how the List plugin used to be seperated out from the block plugin.
+        // Would be great to refactor and simplify here.
+
+        const activeBlockType = getActiveBlockType(editor)
+        if (value === BlockType.UnorderedList || value === BlockType.OrderedList) {
+          ListActions.toggleList(editor, {
+            type: value,
+            at: getSelection(editor),
+          })
+        } else if (activeBlockType === value) {
+          Transforms.setNodes(
+            editor,
+            {
+              type: BlockType.Default,
+            },
+            { at: getSelection(editor) },
+          )
+        } else {
+          ListActions.unwrapList(editor, {
+            at: getSelection(editor),
+          })
+          Transforms.setNodes(
+            editor,
+            {
+              type: value ?? BlockType.Default,
+            },
+            { at: getSelection(editor) },
+          )
+        }
       },
       getValue: editor => {
         const activeBlock = getActiveBlockType(editor)
 
-        // todo: these types are unhandled in for this mid milestone checkin
-        if (
-          activeBlock === RootBlockType.BlockQuote ||
-          activeBlock === RootBlockType.OrderedList ||
-          activeBlock === RootBlockType.UnorderedList ||
-          activeBlock === RootBlockType.Text ||
-          activeBlock === RootBlockType.Default
-        )
+        if (activeBlock === RootBlockType.Text || activeBlock === RootBlockType.Default)
           return undefined
 
-        return activeBlock
+        // Casting here because `getActiveBlockType` can return `null` when multiple blocks of different types are selected.
+        // This is an edgecase of our block plugin, that didn't warrant expanding the type of `RichTextV2PluginControlValue`.
+        return activeBlock as typeof definition['config']['options'][number]['value'] | undefined
       },
     },
   })
