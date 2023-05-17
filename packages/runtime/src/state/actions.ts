@@ -16,6 +16,7 @@ import { ElementImperativeHandle } from '../runtimes/react/element-imperative-ha
 import { BuilderEditMode } from './modules/builder-edit-mode'
 import type { Point } from './modules/pointer'
 import { Breakpoints } from './modules/breakpoints'
+import { LocaleId, Locales } from './modules/locales'
 
 export const ActionTypes = {
   INIT: 'INIT',
@@ -79,6 +80,9 @@ export const ActionTypes = {
   ELEMENT_FROM_POINT_CHANGE: 'ELEMENT_FROM_POINT_CHANGE',
 
   SET_BREAKPOINTS: 'SET_BREAKPOINTS',
+
+  SET_LOCALES: 'SET_LOCALES',
+  SET_ACTIVE_LOCALE_ID: 'SET_ACTIVE_LOCALE_ID',
 } as const
 
 type InitAction = { type: typeof ActionTypes.INIT }
@@ -285,6 +289,16 @@ export type SetBreakpointsAction = {
   payload: { breakpoints: Breakpoints }
 }
 
+export type SetLocalesAction = {
+  type: typeof ActionTypes.SET_LOCALES
+  payload: { locales: Locales }
+}
+
+export type SetActiveLocaleIdAction = {
+  type: typeof ActionTypes.SET_ACTIVE_LOCALE_ID
+  payload: LocaleId
+}
+
 export type Action =
   | InitAction
   | CleanUpAction
@@ -326,6 +340,8 @@ export type Action =
   | BuilderPointerMoveAction
   | ElementFromPointChangeAction
   | SetBreakpointsAction
+  | SetLocalesAction
+  | SetActiveLocaleIdAction
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }
@@ -667,4 +683,12 @@ export function elementFromPointChange(
 
 export function setBreakpoints(breakpoints: Breakpoints): SetBreakpointsAction {
   return { type: ActionTypes.SET_BREAKPOINTS, payload: { breakpoints } }
+}
+
+export function setLocales(locales: Locales): SetLocalesAction {
+  return { type: ActionTypes.SET_LOCALES, payload: { locales } }
+}
+
+export function setActiveLocaleId(localeId: LocaleId): SetActiveLocaleIdAction {
+  return { type: ActionTypes.SET_ACTIVE_LOCALE_ID, payload: localeId }
 }

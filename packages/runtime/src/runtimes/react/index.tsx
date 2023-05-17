@@ -42,6 +42,7 @@ import {
   BreakpointsInput,
   parseBreakpointsInput,
 } from '../../state/modules/breakpoints'
+import { LocalesInput, parseLocalesInput } from '../../state/modules/locales'
 
 export class ReactRuntime {
   // TODO: the static methods here are deprecated and only keep here for backward-compatibility purpose.
@@ -123,9 +124,13 @@ export class ReactRuntime {
     return ReactPage.getBreakpoints(this.store.getState())
   }
 
-  constructor({ breakpoints }: { breakpoints?: BreakpointsInput }) {
+  constructor({
+    breakpoints,
+    unstable_locales,
+  }: { breakpoints?: BreakpointsInput; unstable_locales?: LocalesInput } = {}) {
     this.store = ReactPage.configureStore({
       breakpoints: breakpoints ? parseBreakpointsInput(breakpoints) : undefined,
+      locales: unstable_locales ? parseLocalesInput(unstable_locales) : undefined,
     })
 
     registerBuiltinComponents(this)

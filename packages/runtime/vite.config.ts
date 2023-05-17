@@ -31,6 +31,7 @@ export default defineConfig({
         controls: path.resolve(__dirname, 'src', 'controls'),
         slate: path.resolve(__dirname, 'src', 'slate'),
         ['state/breakpoints']: path.resolve(__dirname, 'src', 'state', 'modules', 'breakpoints'),
+        ['state/locales']: path.resolve(__dirname, 'src', 'state', 'modules', 'locales'),
       },
       output: {
         entryFileNames: '[name].[format].js',

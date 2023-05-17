@@ -17,7 +17,8 @@
     "builder.js",
     "controls.js",
     "slate.js",
-    "state/breakpoints.js"
+    "state/breakpoints.js",
+    "state/locales.js"
   ],
   "exports": {
     ".": {
@@ -64,6 +65,10 @@
     "./state/breakpoints": {
       "import": "./dist/state/breakpoints.es.js",
       "require": "./dist/state/breakpoints.cjs.js"
+    },
+    "./state/locales": {
+      "import": "./dist/state/locales.es.js",
+      "require": "./dist/state/locales.cjs.js"
     }
   },
   "typesVersions": {
@@ -97,6 +102,9 @@
       ],
       "state/breakpoints": [
         "dist/types/src/state/modules/breakpoints.d.ts"
+      ],
+      "state/locales": [
+        "dist/types/src/state/modules/locales.d.ts"
       ]
     }
   },

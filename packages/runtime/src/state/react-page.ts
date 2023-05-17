@@ -16,6 +16,7 @@ import * as IsInBuilder from './modules/is-in-builder'
 import * as IsPreview from './modules/is-preview'
 import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Breakpoints from './modules/breakpoints'
+import * as Locales from './modules/locales'
 import * as Introspection from '../prop-controllers/introspection'
 import { Action } from './actions'
 import { copyElementReference } from '../prop-controllers/copy'
@@ -46,6 +47,7 @@ const reducer = combineReducers({
   isPreview: IsPreview.reducer,
   builderEditMode: BuilderEditMode.reducer,
   breakpoints: Breakpoints.reducer,
+  locales: Locales.reducer,
 })
 
 export type State = ReturnType<typeof reducer>
@@ -382,6 +384,10 @@ export function getBreakpoints(state: State): Breakpoints.State {
   return state.breakpoints
 }
 
+export function getLocales(state: State): Locales.Locales {
+  return state.locales.locales
+}
+
 export type Dispatch = ThunkDispatch<State, unknown, Action>
 
 export type Store = ReduxStore<State, Action> & { dispatch: Dispatch }
@@ -390,10 +396,12 @@ export function configureStore({
   rootElements,
   preloadedState,
   breakpoints,
+  locales,
 }: {
   rootElements?: Map<string, Documents.Element>
   preloadedState?: PreloadedState<State>
   breakpoints?: Breakpoints.State
+  locales?: Locales.Locales
 } = {}): Store {
   return createStore(
     reducer,
@@ -401,6 +409,7 @@ export function configureStore({
       ...preloadedState,
       documents: Documents.getInitialState({ rootElements }),
       breakpoints: Breakpoints.getInitialState(breakpoints ?? preloadedState?.breakpoints),
+      locales: Locales.getInitialState(locales ?? preloadedState?.locales?.locales),
     },
     applyMiddleware(thunk),
   )
