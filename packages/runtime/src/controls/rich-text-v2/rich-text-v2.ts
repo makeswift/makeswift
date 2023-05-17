@@ -30,7 +30,7 @@ export type RichTextV2PluginControlDefinition<T extends ControlDefinition> = {
 export type RichTextV2Plugin<T extends ControlDefinition = ControlDefinition> = {
   control?: RichTextV2PluginControlDefinition<T>
   withPlugin?(editor: Editor): Editor
-  onKeyDown?(event: KeyboardEvent): void
+  onKeyDown?(event: KeyboardEvent, editor: Editor): void
 }
 
 export function createRichTextV2Plugin<T extends ControlDefinition>({

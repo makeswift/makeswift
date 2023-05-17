@@ -2,7 +2,7 @@ import { Editor, createEditor } from 'slate'
 import { createHyperscript, createEditor as createHyperscriptEditor } from 'slate-hyperscript'
 import { withReact } from 'slate-react'
 
-import { withList, withTypography, withInlineMode, BlockType, InlineType } from '..'
+import { withTypography, withInlineMode, BlockType, InlineType } from '..'
 import { withBlock } from '../BlockPlugin'
 
 export const createJsx = (editor: Editor) =>
@@ -35,9 +35,7 @@ export const createJsx = (editor: Editor) =>
     },
   })
 
-export const testEditorWithAllPlugins = withList(
-  withBlock(withTypography(withReact(createEditor()))),
-)
+export const testEditorWithAllPlugins = withBlock(withTypography(withReact(createEditor())))
 
 export const jsx = createJsx(testEditorWithAllPlugins)
 
