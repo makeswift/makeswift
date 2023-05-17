@@ -179,7 +179,7 @@ export function EditableTextV2({ text, control }: Props) {
         control?.switchToBuildMode()
       }
 
-      plugins.forEach(plugin => plugin?.onKeyDown?.(e))
+      plugins.forEach(plugin => plugin?.onKeyDown?.(e, editor))
     },
     [control, plugins, editor],
   )
