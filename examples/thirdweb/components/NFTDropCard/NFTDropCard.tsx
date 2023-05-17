@@ -219,19 +219,24 @@ const NFTDropCard = forwardRef(function NFTDropCard(
             <>
               <Divider />
               <Flex justify="center">
-                {claimedSupply && unclaimedSupply ? (
+                {claimedSupply && unclaimedSupply && totalClaimed == "total" || totalClaimed =="max" ? (
                   <Text as="p" fontSize="md">
                     {/* Claimed supply so far */}
                     <Text fontWeight="bold" as="span">
                       {claimedSupply?.toNumber()}
                     </Text>
                     {/* Add unclaimed and claimed supply to get the total supply */}
-                    {` / ${
-                      totalClaimed === "total" ? claimedSupply?.toNumber() + unclaimedSupply?.toNumber() 
-                        : totalClaimed === "max" ? activeClaimCondition?.maxClaimableSupply
-                        : totalClaimed === "available" ? activeClaimCondition?.availableSupply
-                        : "(error, supply basis not set!)" // make sure that the totalClaimed makeswift option has value
-                    } claimed`}
+                    {` / ${ totalClaimed == "total" ?
+                          claimedSupply?.toNumber() + unclaimedSupply?.toNumber() + "claimed"
+                        : totalClaimed == "max" ?
+                          activeClaimCondition?.maxClaimableSupply + "claimed"
+                        : "(error: supply basis undefined)"
+                        }`}
+                  </Text>
+                ) : totalClaimed =="available" ? (
+                  <Text as="p" fontSize="md">
+                    {/* Available supply left so far */}
+                    {`${activeClaimCondition?.availableSupply} left`}
                   </Text>
                 ) : (
                   // Show loading state if we're still loading the supply
