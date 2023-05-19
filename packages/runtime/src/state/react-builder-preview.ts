@@ -50,6 +50,7 @@ import {
   setBreakpoints,
   setLocales,
   setActiveLocaleId,
+  subscribeToDocs,
 } from './actions'
 import { ActionTypes } from './actions'
 import { createPropController } from '../prop-controllers/instances'
@@ -500,7 +501,12 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
       const locales = ReactPage.getLocales(state)
       messageChannel.port1.postMessage(setBreakpoints(breakpoints))
       messageChannel.port1.postMessage(setLocales(locales))
-      messageChannel.port1.postMessage(setActiveLocaleId(Locales.BaseLocaleId))
+      messageChannel.port1.postMessage(setActiveLocaleId(Router.locale ?? Locales.BaseLocaleId))
+
+      const documentIds = Array.from(state.documents.keys())
+
+      console.log({ documentIds })
+      messageChannel.port1.postMessage(subscribeToDocs(documentIds))
 
       Router.events.on('routeChangeStart', () => {
         messageChannel.port1.postMessage(changePathnameStart())
@@ -550,6 +556,15 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
             messageChannel.port1.postMessage(action)
             window.getSelection()?.removeAllRanges()
             break
+
+          case ActionTypes.SET_ACTIVE_LOCALE_ID: {
+            const currentPathname = Router.asPath.replace(/^\//, '/')
+
+            console.log({ action, currentPathname })
+
+            Router.replace(currentPathname, currentPathname, { locale: action.payload })
+            break
+          }
 
           case ActionTypes.CHANGE_PATHNAME: {
             const pathname = action.payload.pathname.replace(/^\//, '/')

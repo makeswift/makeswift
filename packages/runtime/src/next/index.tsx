@@ -18,6 +18,7 @@ import {
 } from 'next'
 import { Makeswift } from './client'
 import { MakeswiftPreviewData } from './preview-mode'
+import { Element } from '../state/react-page'
 
 function getApiOrigin(): string {
   const apiOriginString = process['env'].MAKESWIFT_API_HOST ?? 'https://api.makeswift.com'
@@ -128,12 +129,26 @@ export const Page = memo(({ snapshot, runtime }: PageProps) => {
     [snapshot],
   )
 
+  const rootElements: Array<readonly [string, Element]> = [
+    [snapshot.document.id, snapshot.document.data],
+  ]
+
+  if (snapshot.document.localizedDocument) {
+    rootElements.push([
+      snapshot.document.localizedDocument.id,
+      snapshot.document.localizedDocument.data,
+    ])
+  }
+
+  console.log({ rootElements, snapshot })
+
   return (
     <RuntimeProvider
       client={client}
-      rootElements={new Map([[snapshot.document.id, snapshot.document.data]])}
+      rootElements={new Map(rootElements)}
       preview={snapshot.preview}
       runtime={runtime}
+      localizedDocument={snapshot.document.localizedDocument}
     >
       {/* We use a key here to reset the Snippets state in the PageMeta component */}
       <PageMeta key={snapshot.document.data.key} document={snapshot.document} />

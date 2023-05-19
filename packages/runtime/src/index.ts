@@ -30,5 +30,5 @@ export type {
   PropControllerDescriptorValueType,
 } from './prop-controllers'
 export type { Element } from './state/react-page'
-export { createDocument } from './state/react-page'
+export { createDocument, mergeElement } from './state/react-page'
 export { MakeswiftComponentType } from './components/builtin/constants'

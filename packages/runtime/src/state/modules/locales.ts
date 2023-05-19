@@ -41,6 +41,8 @@ export function reducer(state: State = getInitialState(), action: Action): State
     }
 
     case ActionTypes.SET_ACTIVE_LOCALE_ID: {
+      if (action.payload === state.activeLocaleId) return state
+
       return { ...state, activeLocaleId: action.payload }
     }
 

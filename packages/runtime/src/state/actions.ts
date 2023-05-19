@@ -83,6 +83,8 @@ export const ActionTypes = {
 
   SET_LOCALES: 'SET_LOCALES',
   SET_ACTIVE_LOCALE_ID: 'SET_ACTIVE_LOCALE_ID',
+
+  SUBSCRIBE_TO_DOCS: 'SUBSCRIBE_TO_DOCS',
 } as const
 
 type InitAction = { type: typeof ActionTypes.INIT }
@@ -299,6 +301,13 @@ export type SetActiveLocaleIdAction = {
   payload: LocaleId
 }
 
+export type SubscribeToDocsAction = {
+  type: typeof ActionTypes.SUBSCRIBE_TO_DOCS
+  payload: {
+    docs: string[]
+  }
+}
+
 export type Action =
   | InitAction
   | CleanUpAction
@@ -342,6 +351,7 @@ export type Action =
   | SetBreakpointsAction
   | SetLocalesAction
   | SetActiveLocaleIdAction
+  | SubscribeToDocsAction
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }
@@ -691,4 +701,8 @@ export function setLocales(locales: Locales): SetLocalesAction {
 
 export function setActiveLocaleId(localeId: LocaleId): SetActiveLocaleIdAction {
   return { type: ActionTypes.SET_ACTIVE_LOCALE_ID, payload: localeId }
+}
+
+export function subscribeToDocs(docs: string[]): SubscribeToDocsAction {
+  return { type: ActionTypes.SUBSCRIBE_TO_DOCS, payload: { docs } }
 }

@@ -43,6 +43,7 @@ import {
   parseBreakpointsInput,
 } from '../../state/modules/breakpoints'
 import { LocalesInput, parseLocalesInput } from '../../state/modules/locales'
+import { useRouter } from 'next/router'
 
 export class ReactRuntime {
   // TODO: the static methods here are deprecated and only keep here for backward-compatibility purpose.
@@ -148,6 +149,10 @@ type RuntimeProviderProps = {
   rootElements?: Map<string, ReactPage.Element>
   children?: ReactNode
   runtime?: ReactRuntime
+  localizedDocument?: {
+    id: string
+    data: ReactPage.ElementData
+  }
 }
 
 const PreviewProvider = dynamic(() => import('./components/PreviewProvider'))
@@ -240,6 +245,10 @@ export function useBuilderEditMode(): BuilderEditMode | null {
 
 export function useBreakpoints(): Breakpoints {
   return useSelector(state => ReactPage.getBreakpoints(state))
+}
+
+export function useActiveLocaleId(): string | null {
+  return useSelector(state => state.locales.activeLocaleId)
 }
 
 type Dispatch = ReactPage.Dispatch & ReactBuilderPreview.Dispatch
@@ -434,7 +443,29 @@ export const DocumentReference = memo(
     { documentReference }: DocumentReferenceProps,
     ref: Ref<ElementImperativeHandle>,
   ): JSX.Element {
-    const document = useDocument(documentReference.key)
+    const router = useRouter()
+    const store = useStore()
+    const locale = useActiveLocaleId() ?? router.locale
+    const baseDocument = useDocument(documentReference.key)
+    const localeDocument = useDocument('00000000-0000-0000-0000-000000000000')
+    let document: ReactPage.Document | undefined | null
+
+    console.log({ state: store.getState() })
+
+    if (locale === 'es') {
+      document = {
+        key: '00000000-0000-0000-0000-000000000000',
+        rootElement: ReactPage.mergeElement(
+          store.getState(),
+          baseDocument!.rootElement,
+          localeDocument!.rootElement,
+        ),
+      }
+    } else {
+      document = baseDocument
+    }
+
+    console.log({ baseDocument: baseDocument?.rootElement, document })
 
     if (document == null) {
       return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Document not found" />

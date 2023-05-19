@@ -69,6 +69,10 @@ export type MakeswiftPageDocument = {
   fonts: Font[]
   meta: Meta
   seo: Seo
+  localizedDocument?: {
+    id: string
+    data: ElementData
+  }
 }
 
 export type MakeswiftPageSnapshot = {
@@ -362,9 +366,9 @@ export class Makeswift {
 
   private async getPageSnapshotByPageId(
     pageId: string,
-    { preview = false }: { preview?: boolean } = {},
+    { preview = false, locale = '' }: { preview?: boolean; locale?: string } = {},
   ): Promise<MakeswiftPageSnapshot | null> {
-    const searchParams = new URLSearchParams({ preview: String(preview) })
+    const searchParams = new URLSearchParams({ preview: String(preview), locale })
     const response = await this.fetch(`/v1/pages/${pageId}/document?${searchParams}`)
 
     if (!response.ok) {
@@ -380,13 +384,13 @@ export class Makeswift {
 
   async getPageSnapshot(
     path: string,
-    { preview }: { preview?: boolean } = {},
+    { preview, locale }: { preview?: boolean; locale?: string } = {},
   ): Promise<MakeswiftPageSnapshot | null> {
     const [page] = await this.getPages({ path })
 
     if (page == null) return null
 
-    const snapshot = this.getPageSnapshotByPageId(page.id, { preview })
+    const snapshot = this.getPageSnapshotByPageId(page.id, { preview, locale })
 
     return snapshot
   }

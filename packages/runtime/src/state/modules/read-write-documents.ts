@@ -53,9 +53,13 @@ export function reducer(state: State = getInitialState(), action: Action): State
     case ActionTypes.CHANGE_DOCUMENT: {
       const currentRootElement = getDocument(nextState, action.payload.documentKey)?.rootElement
 
+      console.log({ currentRootElement, nextState })
+
       if (currentRootElement == null) return nextState
 
       const nextRootElement = apply(currentRootElement, action.payload.operation)
+
+      console.log({ currentRootElement, nextRootElement })
 
       return currentRootElement === nextRootElement
         ? nextState

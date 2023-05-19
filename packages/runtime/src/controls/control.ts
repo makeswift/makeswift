@@ -114,7 +114,9 @@ export function merge(
   b: Data = a,
   context: MergeContext,
 ): Data {
+  console.log({ definition })
   switch (definition.type) {
+    case 'Grid':
     case SlotControlType:
       return mergeSlotData(a as SlotControlData, b as SlotControlData, context)
 
