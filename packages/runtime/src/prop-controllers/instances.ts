@@ -23,6 +23,9 @@ import {
   RichTextV2ControlMessage,
   RichTextV2ControlType,
   RichTextV2Control,
+  StyleV2Control,
+  StyleV2ControlType,
+  StyleV2ControlMessage,
 } from '../controls'
 import { PropController } from './base'
 
@@ -216,6 +219,7 @@ export type AnyPropController =
   | ListControl
   | ShapeControl
   | StyleControl
+  | StyleV2Control
 
 export function createPropController(
   descriptor: RichTextDescriptor,
@@ -254,6 +258,9 @@ export function createPropController<T extends PropControllerMessage>(
 
     case StyleControlType:
       return new StyleControl(send as Send<StyleControlMessage>)
+
+    case StyleV2ControlType:
+      return new StyleV2Control(send as Send<StyleV2ControlMessage>)
 
     default:
       return new DefaultPropController(send as Send)
