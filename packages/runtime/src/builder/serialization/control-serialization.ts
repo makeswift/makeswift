@@ -7,6 +7,8 @@ import {
   RichTextV2ControlType,
   ShapeControlDefinition,
   ShapeControlType,
+  StyleV2ControlDefinition,
+  StyleV2ControlType,
 } from '../../controls'
 import {
   CheckboxDescriptor as CheckboxControl,
@@ -73,6 +75,7 @@ import {
   deserializeShapeControlDefinition,
   serializeShapeControlDefinition,
 } from './controls/shape'
+import { deserializeStyleV2Control, serializeStyleV2Control } from './controls/style-v2'
 import { Deserialize, Serialize } from './controls/types'
 import {
   DeserializedFunction,
@@ -898,6 +901,7 @@ export type SerializedControl<T extends Data = Data> =
       | ComboboxControlDefinition
       | ShapeControlDefinition
       | ListControlDefinition
+      | StyleV2ControlDefinition
     >
   | SerializedListControl<T extends ListControlValue ? T : ListControlValue>
   | SerializedShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
@@ -921,6 +925,7 @@ export type SerializedControl<T extends Data = Data> =
   | Serialize<ComboboxControlDefinition>
   | Serialize<ShapeControlDefinition>
   | Serialize<ListControlDefinition>
+  | Serialize<StyleV2ControlDefinition>
 
 type SerializedPanelControl<T extends Data = Data> = Extract<
   SerializedControl<T>,
@@ -959,6 +964,7 @@ export type DeserializedControl<T extends Data = Data> =
       | ComboboxControlDefinition
       | ShapeControlDefinition
       | ListControlDefinition
+      | StyleV2ControlDefinition
     >
   | DeserializedListControl<T extends ListControlValue ? T : ListControlValue>
   | DeserializedShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
@@ -982,6 +988,7 @@ export type DeserializedControl<T extends Data = Data> =
   | Deserialize<Serialize<ComboboxControlDefinition>>
   | Deserialize<Serialize<ShapeControlDefinition>>
   | Deserialize<Serialize<ListControlDefinition>>
+  | Deserialize<Serialize<StyleV2ControlDefinition>>
 
 export type DeserializedPanelControl<T extends Data = Data> = Extract<
   DeserializedControl<T>,
@@ -1051,6 +1058,9 @@ export function serializeControl<T extends Data>(
 
     case RichTextV2ControlType:
       return serializeRichTextControlV2(control)
+
+    case StyleV2ControlType:
+      return serializeStyleV2Control(control)
 
     case ComboboxControlType:
       return serializeComboboxControlDefinition(control)
@@ -1126,6 +1136,9 @@ export function deserializeControl<T extends Data>(
 
     case RichTextV2ControlType:
       return deserializeRichTextControlV2(serializedControl)
+
+    case StyleV2ControlType:
+      return deserializeStyleV2Control(serializedControl)
 
     case ComboboxControlType:
       return deserializeComboboxControlDefinition(serializedControl)
