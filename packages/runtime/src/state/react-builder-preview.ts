@@ -500,6 +500,13 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
       const breakpoints = ReactPage.getBreakpoints(state)
       messageChannel.port1.postMessage(setBreakpoints(breakpoints))
 
+      const locales = ReactPage.getLocales(state).locales
+      const defaultLocale = ReactPage.getLocales(state).defaultLocale
+      const routerLocale = Router.locale
+      if (locales.length > 0) messageChannel.port1.postMessage(setLocales(locales))
+      if (defaultLocale != null) messageChannel.port1.postMessage(setDefaultLocale(defaultLocale))
+      if (routerLocale != null) messageChannel.port1.postMessage(setLocale(routerLocale))
+
       Router.events.on('routeChangeStart', () => {
         messageChannel.port1.postMessage(changePathnameStart())
       })
@@ -548,6 +555,13 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
             messageChannel.port1.postMessage(action)
             window.getSelection()?.removeAllRanges()
             break
+
+          case ActionTypes.SET_LOCALE: {
+            const { pathname, asPath, query } = Router
+
+            Router.replace({ pathname, query }, asPath, { locale: action.payload.locale })
+            break
+          }
 
           case ActionTypes.CHANGE_PATHNAME: {
             const pathname = action.payload.pathname.replace(/^\//, '/')
