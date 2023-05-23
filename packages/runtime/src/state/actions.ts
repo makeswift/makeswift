@@ -16,6 +16,7 @@ import { ElementImperativeHandle } from '../runtimes/react/element-imperative-ha
 import { BuilderEditMode } from './modules/builder-edit-mode'
 import type { Point } from './modules/pointer'
 import { Breakpoints } from './modules/breakpoints'
+import { Locale, Locales } from './modules/locales'
 
 export const ActionTypes = {
   INIT: 'INIT',
@@ -79,6 +80,10 @@ export const ActionTypes = {
   ELEMENT_FROM_POINT_CHANGE: 'ELEMENT_FROM_POINT_CHANGE',
 
   SET_BREAKPOINTS: 'SET_BREAKPOINTS',
+
+  SET_LOCALES: 'SET_LOCALES',
+  SET_LOCALE: 'SET_LOCALE',
+  SET_DEFAULT_LOCALE: 'SET_DEFAULT_LOCALE',
 } as const
 
 type InitAction = { type: typeof ActionTypes.INIT }
@@ -285,6 +290,21 @@ export type SetBreakpointsAction = {
   payload: { breakpoints: Breakpoints }
 }
 
+type SetLocalesAction = {
+  type: typeof ActionTypes.SET_LOCALES
+  payload: { locales: Locales }
+}
+
+type SetLocaleAction = {
+  type: typeof ActionTypes.SET_LOCALE
+  payload: { locale: Locale }
+}
+
+type SetDefaultLocaleAction = {
+  type: typeof ActionTypes.SET_DEFAULT_LOCALE
+  payload: { defaultLocale: Locale }
+}
+
 export type Action =
   | InitAction
   | CleanUpAction
@@ -326,6 +346,9 @@ export type Action =
   | BuilderPointerMoveAction
   | ElementFromPointChangeAction
   | SetBreakpointsAction
+  | SetLocalesAction
+  | SetLocaleAction
+  | SetDefaultLocaleAction
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }
@@ -667,4 +690,16 @@ export function elementFromPointChange(
 
 export function setBreakpoints(breakpoints: Breakpoints): SetBreakpointsAction {
   return { type: ActionTypes.SET_BREAKPOINTS, payload: { breakpoints } }
+}
+
+export function setLocales(locales: Locales): SetLocalesAction {
+  return { type: ActionTypes.SET_LOCALES, payload: { locales } }
+}
+
+export function setLocale(locale: Locale): SetLocaleAction {
+  return { type: ActionTypes.SET_LOCALE, payload: { locale } }
+}
+
+export function setDefaultLocale(defaultLocale: Locale): SetDefaultLocaleAction {
+  return { type: ActionTypes.SET_DEFAULT_LOCALE, payload: { defaultLocale } }
 }

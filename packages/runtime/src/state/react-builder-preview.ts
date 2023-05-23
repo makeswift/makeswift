@@ -25,6 +25,7 @@ import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Pointer from './modules/pointer'
 import * as ElementImperativeHandles from './modules/element-imperative-handles'
 import * as Breakpoints from './modules/breakpoints'
+import * as Locales from './modules/locales'
 import * as ReactPage from './react-page'
 import {
   Action,
@@ -47,6 +48,9 @@ import {
   changePathnameComplete,
   elementFromPointChange,
   setBreakpoints,
+  setLocales,
+  setLocale,
+  setDefaultLocale,
 } from './actions'
 import { ActionTypes } from './actions'
 import { createPropController } from '../prop-controllers/instances'
@@ -72,6 +76,7 @@ const reducer = combineReducers({
   pointer: Pointer.reducer,
   elementImperativeHandles: ElementImperativeHandles.reducer,
   breakpoints: Breakpoints.reducer,
+  locales: Locales.reducer,
 })
 
 export type State = ReturnType<typeof reducer>
