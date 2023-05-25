@@ -8,6 +8,7 @@ export type Manifest = {
   clientSideNavigation: boolean
   elementFromPoint: boolean
   customBreakpoints: boolean
+  unstable_siteVersions: boolean
 }
 
 type ManifestError = { message: string }
@@ -17,7 +18,7 @@ export type ManifestResponse = Manifest | ManifestError
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ManifestResponse>,
-  { apiKey }: { apiKey: string },
+  { apiKey, unstable_siteVersions }: { apiKey: string; unstable_siteVersions: boolean },
 ): Promise<void> {
   if (req.query.secret !== apiKey) {
     return res.status(401).json({ message: 'Unauthorized' })
@@ -30,5 +31,6 @@ export default async function handler(
     clientSideNavigation: true,
     elementFromPoint: false,
     customBreakpoints: true,
+    unstable_siteVersions,
   })
 }
