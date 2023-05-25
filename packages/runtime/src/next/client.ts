@@ -14,7 +14,6 @@ import {
   GlobalElementQuery,
   IntrospectedResourcesQuery,
   PagePathnamesByIdQuery,
-  SwatchQuery,
   TableQuery,
   TypographiesQuery,
   TypographyQuery,
@@ -28,8 +27,6 @@ import {
   IntrospectedResourcesQueryVariables,
   PagePathnamesByIdQueryResult,
   PagePathnamesByIdQueryVariables,
-  SwatchQueryResult,
-  SwatchQueryVariables,
   TableQueryResult,
   TableQueryVariables,
   TypographiesQueryResult,
@@ -190,18 +187,46 @@ export class Makeswift {
     return result.typographies
   }
 
+  private async getSwatches(ids: string[], preview: boolean): Promise<(Swatch | null)[]> {
+    const url = new URL(`v1/swatches/bulk`, this.apiOrigin)
+
+    ids.forEach(id => {
+      url.searchParams.append('ids', id)
+    })
+
+    const response = await this.fetch(url.pathname + url.search, {
+      headers: {
+        'Makeswift-Site-Version':
+          this.siteVersion ?? (preview ? MakeswiftSiteVersion.Working : MakeswiftSiteVersion.Live),
+      },
+    })
+
+    if (!response.ok) {
+      console.error('Failed to get swatches', await response.json())
+
+      return []
+    }
+
+    return await response.json()
+  }
+
   private async getIntrospectedResources(
-    introspectedResourceIds: IntrospectedResourcesQueryVariables,
-  ): Promise<IntrospectedResourcesQueryResult> {
+    {
+      swatchIds,
+      ...introspectedResourceIds
+    }: IntrospectedResourcesQueryVariables & { swatchIds: string[] },
+    preview: boolean,
+  ): Promise<IntrospectedResourcesQueryResult & { swatches: (Swatch | null)[] }> {
     const result = await this.graphqlClient.request<
       IntrospectedResourcesQueryResult,
       IntrospectedResourcesQueryVariables
     >(IntrospectedResourcesQuery, introspectedResourceIds)
+    const swatches = await this.getSwatches(swatchIds, preview)
 
-    return result
+    return { ...result, swatches }
   }
 
-  private async introspect(element: Element): Promise<CacheData> {
+  private async introspect(element: Element, preview: boolean): Promise<CacheData> {
     const runtime = this.runtime
     const descriptors = getPropControllerDescriptors(runtime.store.getState())
     const swatchIds = new Set<string>()
@@ -320,12 +345,15 @@ export class Makeswift {
       })
     })
 
-    const { swatches, files, tables, pagePathnamesById } = await this.getIntrospectedResources({
-      swatchIds: [...swatchIds],
-      fileIds: [...fileIds],
-      tableIds: [...tableIds],
-      pageIds: [...pageIds],
-    })
+    const { swatches, files, tables, pagePathnamesById } = await this.getIntrospectedResources(
+      {
+        swatchIds: [...swatchIds],
+        fileIds: [...fileIds],
+        tableIds: [...tableIds],
+        pageIds: [...pageIds],
+      },
+      preview,
+    )
 
     // We're doing this because the API return the id without turning it to nodeId:
     // '87237bda-e775-48d8-92cc-399c65577bb7' vs 'UGFnZTo4NzIzN2JkYS1lNzc1LTQ4ZDgtOTJjYy0zOTljNjU1NzdiYjc='
@@ -369,7 +397,7 @@ export class Makeswift {
     document: MakeswiftPageDocument,
     preview: boolean,
   ): Promise<MakeswiftPageSnapshot> {
-    const cacheData = await this.introspect(document.data)
+    const cacheData = await this.introspect(document.data, preview)
 
     return { document, apiOrigin: this.apiOrigin.href, cacheData, preview }
   }
@@ -406,12 +434,17 @@ export class Makeswift {
   }
 
   async getSwatch(swatchId: string): Promise<Swatch | null> {
-    const result = await this.graphqlClient.request<SwatchQueryResult, SwatchQueryVariables>(
-      SwatchQuery,
-      { swatchId },
-    )
+    const response = await this.fetch(`v1/swatches/${swatchId}`)
 
-    return result.swatch
+    if (!response.ok) {
+      if (response.status !== 404) console.error('Failed to get swatch', await response.json())
+
+      return null
+    }
+
+    const swatch = await response.json()
+
+    return swatch
   }
 
   async getFile(fileId: string): Promise<File | null> {

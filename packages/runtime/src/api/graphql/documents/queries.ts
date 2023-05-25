@@ -8,16 +8,7 @@ import {
 } from './fragments'
 
 export const IntrospectedResourcesQuery = /* GraphQL */ `
-  query IntrospectedResources(
-    $swatchIds: [ID!]!
-    $fileIds: [ID!]!
-    $pageIds: [ID!]!
-    $tableIds: [ID!]!
-  ) {
-    swatches(ids: $swatchIds) {
-      ...Swatch
-    }
-
+  query IntrospectedResources($fileIds: [ID!]!, $pageIds: [ID!]!, $tableIds: [ID!]!) {
     files(ids: $fileIds) {
       ...File
     }
@@ -31,7 +22,6 @@ export const IntrospectedResourcesQuery = /* GraphQL */ `
     }
   }
 
-  ${SwatchFragment}
   ${FileFragment}
   ${PagePathnameSliceFragment}
   ${TableFragment}
