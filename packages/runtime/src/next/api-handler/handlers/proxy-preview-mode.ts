@@ -2,6 +2,7 @@ import { CookieSerializeOptions, serialize } from 'cookie'
 import { createProxyServer } from 'http-proxy'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { parse } from 'set-cookie-parser'
+import { MakeswiftPreviewData, MakeswiftSiteVersion } from '../../preview-mode'
 
 type ProxyPreviewModeError = string
 
@@ -59,7 +60,11 @@ export default async function proxyPreviewMode(
   // development.
   const secure = process.env['NODE_ENV'] === 'production'
 
-  const setCookie = res.setPreviewData({ makeswift: true }).getHeader('Set-Cookie')
+  const previewData: MakeswiftPreviewData = {
+    makeswift: true,
+    unstable_siteVersion: MakeswiftSiteVersion.Working,
+  }
+  const setCookie = res.setPreviewData(previewData).getHeader('Set-Cookie')
   res.removeHeader('Set-Cookie')
 
   if (!Array.isArray(setCookie)) return res.status(500).send('Internal Server Error')

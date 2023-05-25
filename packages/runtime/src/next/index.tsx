@@ -93,7 +93,10 @@ export async function getStaticProps(
 ): Promise<GetStaticPropsResult<PageProps>> {
   deprecationWarning('getStaticProps')
 
-  const makeswift = new Makeswift(getApiKey(), { apiOrigin: getApiOrigin() })
+  const makeswift = new Makeswift(getApiKey(), {
+    apiOrigin: getApiOrigin(),
+    unstable_previewData: ctx.previewData,
+  })
   const path = '/' + (ctx.params?.path ?? []).join('/')
   const snapshot = await makeswift.getPageSnapshot(path, {
     preview: ctx.previewData?.makeswift === true,
@@ -109,7 +112,10 @@ export async function getServerSideProps(
 ): Promise<GetServerSidePropsResult<PageProps>> {
   deprecationWarning('getServerSideProps')
 
-  const makeswift = new Makeswift(getApiKey(), { apiOrigin: getApiOrigin() })
+  const makeswift = new Makeswift(getApiKey(), {
+    apiOrigin: getApiOrigin(),
+    unstable_previewData: ctx.previewData,
+  })
   const path = '/' + (ctx.params?.path ?? []).join('/')
   const snapshot = await makeswift.getPageSnapshot(path, { preview: true })
 

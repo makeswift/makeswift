@@ -1,3 +1,4 @@
+import { PreviewData } from 'next'
 import {
   APIResourceType,
   File,
@@ -55,6 +56,7 @@ import {
   getPropControllerDescriptors,
   isElementReference,
 } from '../state/react-page'
+import { getMakeswiftSiteVersion, MakeswiftSiteVersion } from './preview-mode'
 
 export type MakeswiftPage = {
   id: string
@@ -111,17 +113,23 @@ type Seo = {
 type MakeswiftConfig = {
   apiOrigin?: string
   runtime?: ReactRuntime
+  unstable_previewData?: PreviewData
 }
 
 export class Makeswift {
   private apiKey: string
   private apiOrigin: URL
   private graphqlClient: GraphQLClient
-  private runtime: ReactRuntime | undefined
+  private runtime: ReactRuntime
+  private siteVersion: MakeswiftSiteVersion | null
 
   constructor(
     apiKey: string,
-    { apiOrigin = 'https://api.makeswift.com', runtime }: MakeswiftConfig = {},
+    {
+      apiOrigin = 'https://api.makeswift.com',
+      runtime = ReactRuntime,
+      unstable_previewData,
+    }: MakeswiftConfig = {},
   ) {
     if (typeof apiKey !== 'string') {
       throw new Error(
@@ -143,12 +151,18 @@ export class Makeswift {
 
     this.graphqlClient = new GraphQLClient(new URL('graphql', apiOrigin).href)
     this.runtime = runtime
+    this.siteVersion = getMakeswiftSiteVersion(unstable_previewData)
   }
 
   private async fetch(path: string, init?: RequestInit): Promise<Response> {
     const response = await fetch(new URL(path, this.apiOrigin).toString(), {
       ...init,
-      headers: { ['X-API-Key']: this.apiKey, ...init?.headers },
+      headers: {
+        ['X-API-Key']: this.apiKey,
+        'Makeswift-Site-API-Key': this.apiKey,
+        'Makeswift-Site-Version': this.siteVersion ?? MakeswiftSiteVersion.Live,
+        ...init?.headers,
+      },
     })
 
     return response
@@ -188,7 +202,7 @@ export class Makeswift {
   }
 
   private async introspect(element: Element): Promise<CacheData> {
-    const runtime = this.runtime ?? ReactRuntime
+    const runtime = this.runtime
     const descriptors = getPropControllerDescriptors(runtime.store.getState())
     const swatchIds = new Set<string>()
     const fileIds = new Set<string>()

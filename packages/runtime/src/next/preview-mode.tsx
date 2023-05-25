@@ -1,4 +1,24 @@
+import { PreviewData } from 'next'
+import { z } from 'zod'
 import { ActionTypes } from '../react'
+
+const makeswiftSiteVersionSchema = z.enum(['Live', 'Working'])
+export const MakeswiftSiteVersion = makeswiftSiteVersionSchema.Enum
+export type MakeswiftSiteVersion = z.infer<typeof makeswiftSiteVersionSchema>
+
+const makeswiftPreviewDataSchema = z.object({
+  makeswift: z.literal(true),
+  unstable_siteVersion: makeswiftSiteVersionSchema,
+})
+export type MakeswiftPreviewData = z.infer<typeof makeswiftPreviewDataSchema>
+
+export function getMakeswiftSiteVersion(previewData: PreviewData): MakeswiftSiteVersion | null {
+  const result = makeswiftPreviewDataSchema.safeParse(previewData)
+
+  if (result.success) return result.data.unstable_siteVersion
+
+  return null
+}
 
 type Props = {
   isPreview?: boolean
@@ -97,5 +117,3 @@ if (window.parent !== window) {
     </>
   )
 }
-
-export type MakeswiftPreviewData = { makeswift: true }
