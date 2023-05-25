@@ -141,8 +141,11 @@ export const Page = memo(({ snapshot, runtime }: PageProps) => {
   )
 })
 
-export * from './client'
-export * from './preview-mode'
-export * from './document'
-export * from './api-handler'
-export * from './dynamic'
+export type { MakeswiftPage, MakeswiftPageDocument, MakeswiftPageSnapshot } from './client'
+export { Makeswift } from './client'
+export type { MakeswiftPreviewData } from './preview-mode'
+export { PreviewModeScript } from './preview-mode'
+export { Document } from './document'
+export type { Manifest, Font, MakeswiftApiHandlerResponse } from './api-handler'
+export { MakeswiftApiHandler } from './api-handler'
+export { forwardNextDynamicRef } from './dynamic'
