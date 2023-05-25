@@ -144,20 +144,12 @@ export type SiteFragment = {
 }
 
 export type IntrospectedResourcesQueryVariables = Exact<{
-  swatchIds: Array<Scalars['ID']> | Scalars['ID']
   fileIds: Array<Scalars['ID']> | Scalars['ID']
   pageIds: Array<Scalars['ID']> | Scalars['ID']
   tableIds: Array<Scalars['ID']> | Scalars['ID']
 }>
 
 export type IntrospectedResourcesQueryResult = {
-  swatches: Array<{
-    __typename: 'Swatch'
-    id: string
-    hue: number
-    saturation: number
-    lightness: number
-  } | null>
   files: Array<{
     __typename: 'File'
     id: string
