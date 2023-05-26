@@ -4,6 +4,7 @@ import { forwardNextDynamicRef } from '../../../next'
 import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
+import { ComponentIcon } from '../../../state/modules/components-meta'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -11,7 +12,7 @@ export function registerComponent(runtime: ReactRuntime) {
     {
       type: MakeswiftComponentType.Embed,
       label: 'Embed',
-      icon: 'Code40',
+      icon: ComponentIcon.Code,
       props: {
         id: Props.ElementID(),
         html: Props.TextArea({ label: 'Code', rows: 20 }),

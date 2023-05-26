@@ -3,6 +3,7 @@ import { forwardNextDynamicRef } from '../../../next'
 import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
+import { ComponentIcon } from '../../../state/modules/components-meta'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -10,7 +11,7 @@ export function registerComponent(runtime: ReactRuntime) {
     {
       type: MakeswiftComponentType.Divider,
       label: 'Divider',
-      icon: 'Divider40',
+      icon: ComponentIcon.Divider,
       props: {
         id: Props.ElementID(),
         variant: Props.ResponsiveSelect({
