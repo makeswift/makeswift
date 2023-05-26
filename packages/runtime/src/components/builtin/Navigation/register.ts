@@ -5,6 +5,7 @@ import { NavigationLinksValue, ResponsiveValue } from '../../../prop-controllers
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
+import { ComponentIcon } from '../../../state/modules/components-meta'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -12,7 +13,7 @@ export function registerComponent(runtime: ReactRuntime) {
     {
       type: MakeswiftComponentType.Navigation,
       label: 'Navigation',
-      icon: 'Navigation40',
+      icon: ComponentIcon.Navigation,
       props: {
         id: Props.ElementID(),
         links: Props.NavigationLinks(),

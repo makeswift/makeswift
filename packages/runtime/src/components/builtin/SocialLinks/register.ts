@@ -6,6 +6,7 @@ import { SocialLinksValue } from '../../../prop-controllers/descriptors'
 import { ReactRuntime } from '../../../runtimes/react'
 import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
+import { ComponentIcon } from '../../../state/modules/components-meta'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -13,7 +14,7 @@ export function registerComponent(runtime: ReactRuntime) {
     {
       type: MakeswiftComponentType.SocialLinks,
       label: 'Social Links',
-      icon: 'SocialLinks40',
+      icon: ComponentIcon.SocialLinks,
       props: {
         id: Props.ElementID(),
         links: Props.SocialLinks({

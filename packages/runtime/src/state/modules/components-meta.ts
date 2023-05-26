@@ -1,15 +1,18 @@
 import { Action, ActionTypes } from '../actions'
 
-export type ComponentIcon =
-  | 'Carousel40'
-  | 'Code40'
-  | 'Countdown40'
-  | 'Cube40'
-  | 'Divider40'
-  | 'Form40'
-  | 'Navigation40'
-  | 'SocialLinks40'
-  | 'Video40'
+export const ComponentIcon = {
+  Carousel: 'carousel',
+  Code: 'code',
+  Countdown: 'countdown',
+  Cube: 'cube',
+  Divider: 'divider',
+  Form: 'form',
+  Navigation: 'navigation',
+  SocialLinks: 'social-links',
+  Video: 'video',
+} as const
+
+export type ComponentIcon = typeof ComponentIcon[keyof typeof ComponentIcon]
 
 export type ComponentMeta = { label: string; icon: ComponentIcon; hidden: boolean }
 

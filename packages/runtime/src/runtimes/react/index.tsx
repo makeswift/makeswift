@@ -56,7 +56,7 @@ export class ReactRuntime {
     {
       type,
       label,
-      icon = 'Cube40',
+      icon = ComponentIcon.Code,
       hidden = false,
       props,
     }: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P },
@@ -95,7 +95,7 @@ export class ReactRuntime {
     {
       type,
       label,
-      icon = 'Cube40',
+      icon = ComponentIcon.Cube,
       hidden = false,
       props,
     }: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P },

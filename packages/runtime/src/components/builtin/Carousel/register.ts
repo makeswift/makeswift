@@ -7,6 +7,7 @@ import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride } from '../../../state/modules/breakpoints'
 
 import { MakeswiftComponentType } from '../constants'
+import { ComponentIcon } from '../../../state/modules/components-meta'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -14,7 +15,7 @@ export function registerComponent(runtime: ReactRuntime) {
     {
       type: MakeswiftComponentType.Carousel,
       label: 'Carousel',
-      icon: 'Carousel40',
+      icon: ComponentIcon.Carousel,
       props: {
         id: Props.ElementID(),
         images: Props.Images({

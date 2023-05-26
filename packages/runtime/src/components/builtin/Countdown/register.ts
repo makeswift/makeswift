@@ -4,6 +4,7 @@ import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
+import { ComponentIcon } from '../../../state/modules/components-meta'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -11,7 +12,7 @@ export function registerComponent(runtime: ReactRuntime) {
     {
       type: MakeswiftComponentType.Countdown,
       label: 'Countdown',
-      icon: 'Countdown40',
+      icon: ComponentIcon.Countdown,
       props: {
         id: Props.ElementID(),
         date: Props.Date(() => ({

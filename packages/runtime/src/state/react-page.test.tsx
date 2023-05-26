@@ -4,6 +4,7 @@ import { describe, expect, test } from 'vitest'
 import { Slot, TextInput } from '../controls'
 import { registerComponent } from './actions'
 import * as ReactPage from './react-page'
+import { ComponentIcon } from './modules/components-meta'
 
 describe('ReactPage', () => {
   const store = createTestStore()
@@ -221,7 +222,7 @@ function createTestStore(): ReactPage.Store {
   store.dispatch(
     registerComponent(
       ElementType.Box,
-      { label: 'Box', icon: 'Cube40', hidden: false },
+      { label: 'Box', icon: ComponentIcon.Cube, hidden: false },
       { children: Slot() },
     ),
   )
@@ -229,7 +230,7 @@ function createTestStore(): ReactPage.Store {
   store.dispatch(
     registerComponent(
       ElementType.Button,
-      { label: 'Button', icon: 'Code40', hidden: false },
+      { label: 'Button', icon: ComponentIcon.Cube, hidden: false },
       { children: TextInput() },
     ),
   )
