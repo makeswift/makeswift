@@ -37,3 +37,7 @@ jobs:
 
       - name: Test packages
         run: yarn run test
+
+      - name: Circular dependency check
+        continue-on-error: true
+        run: yarn run madge

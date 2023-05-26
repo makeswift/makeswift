@@ -6,7 +6,8 @@
   "scripts": {
     "format": "prettier --write .",
     "build": "turbo run build",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "madge": "turbo run madge"
   },
   "devDependencies": {
     "@changesets/cli": "^2.22.0",
