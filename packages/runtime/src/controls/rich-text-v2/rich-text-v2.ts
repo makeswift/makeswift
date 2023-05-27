@@ -1,9 +1,10 @@
 import { PropController } from '../../prop-controllers/base'
-import { Descendant, Editor } from 'slate'
+import { Descendant, Editor, Element } from 'slate'
 import { BoxModel } from '../../box-model'
 import { KeyboardEvent } from 'react'
 import { Send } from '../../prop-controllers/instances'
 import { ControlDefinition, ControlDefinitionData } from '../control'
+import { RenderElementProps } from 'slate-react'
 
 export type RichTextV2ControlData = Descendant[]
 
@@ -24,20 +25,28 @@ export type RichTextV2PluginControlDefinition<T extends ControlDefinition> = {
   definition: T
   getValue(editor: Editor): RichTextV2PluginControlValue<T>
   onChange(editor: Editor, value: RichTextV2PluginControlValue<T>): void
+  getElementValue?(element: Element): any
 }
+
+export type RenderElement = (props: RenderElementProps) => JSX.Element
 
 export type RichTextV2Plugin<T extends ControlDefinition = ControlDefinition> = {
   control?: RichTextV2PluginControlDefinition<T>
   withPlugin?(editor: Editor): Editor
   onKeyDown?(event: KeyboardEvent, editor: Editor): void
+  renderElement?: (
+    renderElement: RenderElement,
+    value: any,
+  ) => (props: RenderElementProps) => JSX.Element
 }
 
 export function createRichTextV2Plugin<T extends ControlDefinition>({
   control,
   withPlugin,
   onKeyDown,
+  renderElement,
 }: RichTextV2Plugin<T>) {
-  return { control, withPlugin, onKeyDown }
+  return { control, withPlugin, onKeyDown, renderElement }
 }
 
 type RichTextV2Config = {

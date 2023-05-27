@@ -255,7 +255,7 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
               <RenderHook
                 key={descriptor.type}
                 hook={useRichTextV2}
-                parameters={[props[propName], control]}
+                parameters={[props[propName], descriptor, control]}
               >
                 {value => renderFn({ ...propsValue, [propName]: value })}
               </RenderHook>
