@@ -6,7 +6,7 @@ import { wrapInline } from './wrapInline'
 import { unwrapInline } from './unwrapInline'
 import { getSelection } from '../selectors'
 import { ElementUtils } from '../utils/element'
-import { Select, createRichTextV2Plugin } from '../../controls'
+import { RenderElement, Select, createRichTextV2Plugin } from '../../controls'
 import { getActiveBlockType } from '../selectors'
 import { BlockType, RootBlockType } from '../types'
 import { unwrapList } from './unwrapList'
@@ -17,6 +17,9 @@ import { toggleList } from './toggleList'
 import { EditorUtils } from '../utils/editor'
 import isHotkey from 'is-hotkey'
 import { LIST_ITEM_CHILD_POSITION } from './constants'
+import { useStyle } from '../../runtimes/react/use-style'
+import { cx } from '@emotion/css'
+import { RenderElementProps } from 'slate-react'
 
 export const BlockActions = {
   setBlockKeyForDevice,
@@ -294,5 +297,112 @@ export function BlockPlugin() {
         return activeBlock as typeof definition['config']['options'][number]['value'] | undefined
       },
     },
+    renderElement: renderElement => props =>
+      <BlockPluginComponent {...props} renderElement={renderElement} />,
   })
+}
+
+function BlockPluginComponent({
+  element,
+  attributes,
+  children,
+  renderElement,
+}: RenderElementProps & { renderElement: RenderElement }) {
+  const blockStyles = [useStyle({ margin: 0 }), element.className]
+  const quoteStyles = useStyle({
+    padding: '0.5em 10px',
+    fontSize: '1.25em',
+    fontWeight: '300',
+    borderLeft: '5px solid rgba(0, 0, 0, 0.1)',
+  })
+
+  switch (element.type) {
+    case BlockType.Text:
+      return (
+        <span {...attributes} className={cx(...blockStyles)}>
+          {children}
+        </span>
+      )
+    case BlockType.Paragraph:
+      return (
+        <p {...attributes} className={cx(...blockStyles)}>
+          {children}
+        </p>
+      )
+    case BlockType.Heading1:
+      return (
+        <h1 {...attributes} className={cx(...blockStyles)}>
+          {children}
+        </h1>
+      )
+    case BlockType.Heading2:
+      return (
+        <h2 {...attributes} className={cx(...blockStyles)}>
+          {children}
+        </h2>
+      )
+    case BlockType.Heading3:
+      return (
+        <h3 {...attributes} className={cx(...blockStyles)}>
+          {children}
+        </h3>
+      )
+    case BlockType.Heading4:
+      return (
+        <h4 {...attributes} className={cx(...blockStyles)}>
+          {children}
+        </h4>
+      )
+    case BlockType.Heading5:
+      return (
+        <h5 {...attributes} className={cx(...blockStyles)}>
+          {children}
+        </h5>
+      )
+    case BlockType.Heading6:
+      return (
+        <h6 {...attributes} className={cx(...blockStyles)}>
+          {children}
+        </h6>
+      )
+    case BlockType.BlockQuote:
+      return (
+        <blockquote {...attributes} className={cx(...blockStyles, quoteStyles)}>
+          {children}
+        </blockquote>
+      )
+    case BlockType.OrderedList:
+      return (
+        <ol {...attributes} className={cx(...blockStyles)} style={{ listStylePosition: 'inside' }}>
+          {children}
+        </ol>
+      )
+    case BlockType.UnorderedList:
+      return (
+        <ul {...attributes} className={cx(...blockStyles)} style={{ listStylePosition: 'inside' }}>
+          {children}
+        </ul>
+      )
+    case BlockType.ListItem:
+      return (
+        <li {...attributes} className={cx(...blockStyles)}>
+          {children}
+        </li>
+      )
+    case BlockType.ListItemChild:
+      return (
+        <span {...attributes} className={cx(...blockStyles)}>
+          {children}
+        </span>
+      )
+    case BlockType.Default:
+      return (
+        <p {...attributes} className={cx(...blockStyles)}>
+          {children}
+        </p>
+      )
+
+    default:
+      return <>{renderElement({ element, attributes, children })}</>
+  }
 }
