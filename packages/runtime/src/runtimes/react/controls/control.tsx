@@ -272,7 +272,11 @@ export function ControlValue<T extends ControlDefinition>({
         <RenderHook
           key={definition.type}
           hook={useRichTextV2}
-          parameters={[data as unknown as RichTextV2ControlData, control as RichTextV2Control]}
+          parameters={[
+            data as unknown as RichTextV2ControlData,
+            definition,
+            control as RichTextV2Control,
+          ]}
         >
           {value => children(value as ControlDefinitionValue<T>)}
         </RenderHook>

@@ -26,6 +26,7 @@ import {
   RichTextV2ControlData,
   RichTextV2ControlDefinition,
   RichTextV2Mode,
+  RichTextV2Plugin,
 } from '../../../../../controls'
 import { useBuilderEditMode } from '../../..'
 import { BuilderEditMode } from '../../../../../state/modules/builder-edit-mode'
@@ -35,6 +36,55 @@ import { useSyncDOMSelection } from './useSyncDOMSelection'
 import { BlockType } from '../../../../../slate'
 import { useStyle } from '../../../use-style'
 import { cx } from '@emotion/css'
+import { ControlValue } from '../../control'
+
+type RichTextV2ElementProps = RenderElementProps & {
+  definition: RichTextV2ControlDefinition
+  plugins: RichTextV2Plugin[]
+}
+
+function RichTextV2Element({ definition, plugins, ...props }: RichTextV2ElementProps) {
+  const blockStyles = [useStyle({ margin: 0 })]
+
+  function initialRenderElement(props: RenderElementProps) {
+    switch (props.element.type) {
+      case BlockType.Default:
+      default:
+        if (definition.config.mode === RichTextV2Mode.Inline) {
+          return (
+            <span {...props.attributes} className={cx(...blockStyles)}>
+              {props.children}
+            </span>
+          )
+        }
+
+        return (
+          <p {...props.attributes} className={cx(...blockStyles)}>
+            {props.children}
+          </p>
+        )
+    }
+  }
+
+  const renderElement = plugins.reduce(
+    (renderFn, plugin) => (props: RenderElementProps) => {
+      const { control, renderElement } = plugin
+
+      if (control?.definition == null || renderElement == null) return renderFn(props)
+
+      if (control.getElementValue == null) return renderElement(renderFn, undefined)(props)
+
+      return (
+        <ControlValue definition={control.definition} data={control.getElementValue(props.element)}>
+          {value => renderElement(renderFn, value)(props)}
+        </ControlValue>
+      )
+    },
+    initialRenderElement,
+  )
+
+  return renderElement(props)
+}
 
 export type RichTextV2ControlValue = ReactNode
 
@@ -44,17 +94,18 @@ const defaultText: Descendant[] = [{ type: BlockType.Default, children: [{ text:
 
 type Props = {
   text: RichTextV2ControlData
+  definition: RichTextV2ControlDefinition
   control: RichTextV2Control | null
 }
 
-export function EditableTextV2({ text, control }: Props) {
+export function EditableTextV2({ text, definition, control }: Props) {
   const plugins = useMemo(() => {
     const plugins = [
-      ...(control?.descriptor?.config?.plugins ?? []),
-      ...(control?.descriptor?.config?.mode === RichTextV2Mode.Inline ? [InlineModePlugin] : []),
+      ...(definition?.config?.plugins ?? []),
+      ...(definition?.config?.mode === RichTextV2Mode.Inline ? [InlineModePlugin] : []),
     ]
     return plugins
-  }, [control?.descriptor.config])
+  }, [definition])
 
   const [editor] = useState(() =>
     plugins.reduceRight(
@@ -78,120 +129,12 @@ export function EditableTextV2({ text, control }: Props) {
     })
   }, [editor, control])
 
-  const renderElement = useCallback(({ attributes, children, element }: RenderElementProps) => {
-    // TODO: move this markup into the block plugin once we have a way of composing render functionality.
-    const blockStyles = [useStyle({ margin: 0 })]
-    const quoteStyles = useStyle({
-      padding: '0.5em 10px',
-      fontSize: '1.25em',
-      fontWeight: '300',
-      borderLeft: '5px solid rgba(0, 0, 0, 0.1)',
-    })
-
-    switch (element.type) {
-      case BlockType.Text:
-        return (
-          <span {...attributes} className={cx(...blockStyles)}>
-            {children}
-          </span>
-        )
-      case BlockType.Paragraph:
-        return (
-          <p {...attributes} className={cx(...blockStyles)}>
-            {children}
-          </p>
-        )
-      case BlockType.Heading1:
-        return (
-          <h1 {...attributes} className={cx(...blockStyles)}>
-            {children}
-          </h1>
-        )
-      case BlockType.Heading2:
-        return (
-          <h2 {...attributes} className={cx(...blockStyles)}>
-            {children}
-          </h2>
-        )
-      case BlockType.Heading3:
-        return (
-          <h3 {...attributes} className={cx(...blockStyles)}>
-            {children}
-          </h3>
-        )
-      case BlockType.Heading4:
-        return (
-          <h4 {...attributes} className={cx(...blockStyles)}>
-            {children}
-          </h4>
-        )
-      case BlockType.Heading5:
-        return (
-          <h5 {...attributes} className={cx(...blockStyles)}>
-            {children}
-          </h5>
-        )
-      case BlockType.Heading6:
-        return (
-          <h6 {...attributes} className={cx(...blockStyles)}>
-            {children}
-          </h6>
-        )
-      case BlockType.BlockQuote:
-        return (
-          <blockquote {...attributes} className={cx(...blockStyles, quoteStyles)}>
-            {children}
-          </blockquote>
-        )
-      case BlockType.OrderedList:
-        return (
-          <ol
-            {...attributes}
-            className={cx(...blockStyles)}
-            style={{ listStylePosition: 'inside' }}
-          >
-            {children}
-          </ol>
-        )
-      case BlockType.UnorderedList:
-        return (
-          <ul
-            {...attributes}
-            className={cx(...blockStyles)}
-            style={{ listStylePosition: 'inside' }}
-          >
-            {children}
-          </ul>
-        )
-      case BlockType.ListItem:
-        return (
-          <li {...attributes} className={cx(...blockStyles)}>
-            {children}
-          </li>
-        )
-      case BlockType.ListItemChild:
-        return (
-          <span {...attributes} className={cx(...blockStyles)}>
-            {children}
-          </span>
-        )
-      case BlockType.Default:
-      default:
-        if (control?.descriptor.config.mode === RichTextV2Mode.Inline) {
-          return (
-            <span {...attributes} className={cx(...blockStyles)}>
-              {children}
-            </span>
-          )
-        }
-
-        return (
-          <p {...attributes} className={cx(...blockStyles)}>
-            {children}
-          </p>
-        )
-    }
-  }, [])
+  const renderElement = useCallback(
+    (props: RenderElementProps) => {
+      return <RichTextV2Element {...props} definition={definition} plugins={plugins} />
+    },
+    [plugins, definition],
+  )
 
   const renderLeaf = useCallback(({ attributes, children }: RenderLeafProps) => {
     return <span {...attributes}>{children}</span>
