@@ -1,14 +1,27 @@
 import { Action, ActionTypes } from '../actions'
 
 export const ComponentIcon = {
+  Billing: 'billing',
+  Bolt: 'bolt',
+  Button: 'button',
   Carousel: 'carousel',
+  Chats: 'chats',
   Code: 'code',
   Countdown: 'countdown',
   Cube: 'cube',
+  Database: 'database',
   Divider: 'divider',
   Form: 'form',
+  Gallery: 'gallery',
+  Help: 'help',
+  Image: 'image',
+  Layout: 'layout',
+  Lock: 'lock',
   Navigation: 'navigation',
   SocialLinks: 'social-links',
+  Star: 'star',
+  Text: 'text',
+  Users: 'users',
   Video: 'video',
 } as const
 
