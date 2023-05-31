@@ -1,6 +1,6 @@
 {
   "name": "@makeswift/runtime",
-  "version": "0.8.11",
+  "version": "0.9.0",
   "license": "MIT",
   "main": "dist/main.cjs",
   "module": "dist/main.es",
@@ -109,7 +109,7 @@
     "generate": "graphql-codegen --config codegen.yml",
     "test": "vitest run --config vite.test.config.ts",
     "test:watch": "vitest watch --config vite.test.config.ts",
-    "madge": "madge --circular --warning --extensions ts,tsx src/ --exclude \"dist\/.+\""
+    "madge": "madge --circular --warning --extensions ts,tsx src/ --exclude \"dist/.+\""
   },
   "peerDependencies": {
     "next": ">=12.2.0 <13.0.0 || ^13.0.0",
