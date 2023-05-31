@@ -1,5 +1,36 @@
 # @makeswift/runtime
 
+## 0.9.0
+
+### Minor Changes
+
+- c65ebdf: BREAKING: When registering component icons, use the `ComponentIcon` enum (available under `@makeswift/runtime`) instead of the original string values. Below is a table of the deprecated string values and their new enum equivalent:
+
+  | Removed           | Use Instead (enum)          |
+  | ----------------- | --------------------------- |
+  | `'Carousel40'`    | `ComponentIcon.Carousel`    |
+  | `'Code40'`        | `ComponentIcon.Code`        |
+  | `'Countdown40'`   | `ComponentIcon.Countdown`   |
+  | `'Cube40'`        | `ComponentIcon.Cube`        |
+  | `'Divider40'`     | `ComponentIcon.Divider`     |
+  | `'Form40'`        | `ComponentIcon.Form`        |
+  | `'Navigation40'`  | `ComponentIcon.Navigation`  |
+  | `'SocialLinks40'` | `ComponentIcon.SocialLinks` |
+  | `'Video40'`       | `ComponentIcon.Video`       |
+
+- 976b9d6: Use new versioning endpoints for swatches.
+- 144f270: Always fetch live pages for `Makeswift.getPages()`.
+- 144f270: Use new versioning endpoints for pages and page documents.
+
+### Patch Changes
+
+- fa04429: Update Block plugin for `unstable_RichTextV2` to include remaining block types (`ul`, `ol`, and `blockquote`)
+- 7075388: Add `unstable_previewData` to `Makeswift` client.
+- f295972: Add `unstable_i18n` to `ReactRuntime` constructor.
+- 7075388: Add `unstable_siteVersions` flag to `MakeswiftApiHandler`.
+- 0be3bc2: Adds 13 new icon options to the runtime that can be used when registering components.
+- bbf2d30: Encode page pathname when fetching page data.
+
 ## 0.8.11
 
 ### Patch Changes
