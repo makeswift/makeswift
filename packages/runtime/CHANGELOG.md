@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.9.1
+
+### Patch Changes
+
+- a21ad28: Add initial implementation of TextAlign plugin for `unstable_RichTextV2`.
+- e865548: Add an unstable API fro new version of the `Style` control: `unstable_StyleV2`.
+
 ## 0.9.0
 
 ### Minor Changes
