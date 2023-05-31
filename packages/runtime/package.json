@@ -2,103 +2,20 @@
   "name": "@makeswift/runtime",
   "version": "0.9.1",
   "license": "MIT",
-  "main": "dist/main.cjs",
-  "module": "dist/main.es",
-  "types": "dist/types/src",
-  "files": [
-    "dist",
-    "prop-controllers.js",
-    "react.js",
-    "box-model.js",
-    "components.js",
-    "api.js",
-    "next.js",
-    "next/plugin.js",
-    "builder.js",
-    "controls.js",
-    "slate.js",
-    "state/breakpoints.js"
-  ],
+  "main": "./src/index.ts",
   "exports": {
-    ".": {
-      "import": "./dist/main.es.js",
-      "require": "./dist/main.cjs.js"
-    },
-    "./prop-controllers": {
-      "import": "./dist/prop-controllers.es.js",
-      "require": "./dist/prop-controllers.cjs.js"
-    },
-    "./react": {
-      "import": "./dist/react.es.js",
-      "require": "./dist/react.cjs.js"
-    },
-    "./box-model": {
-      "import": "./dist/box-model.es.js",
-      "require": "./dist/box-model.cjs.js"
-    },
-    "./components": {
-      "import": "./dist/components.es.js",
-      "require": "./dist/components.cjs.js"
-    },
-    "./api": {
-      "import": "./dist/api.es.js",
-      "require": "./dist/api.cjs.js"
-    },
-    "./next": {
-      "import": "./dist/next.es.js",
-      "require": "./dist/next.cjs.js"
-    },
+    ".": "./src/index.ts",
+    "./prop-controllers": "./src/prop-controllers/index.ts",
+    "./react": "./src/runtimes/react/index.tsx",
+    "./box-model": "./src/box-model.ts",
+    "./components": "./src/components/index.ts",
+    "./api": "./src/api/index.ts",
+    "./next": "./src/next/index.tsx",
     "./next/plugin": "./next/plugin.js",
-    "./builder": {
-      "import": "./dist/builder.es.js",
-      "require": "./dist/builder.cjs.js"
-    },
-    "./controls": {
-      "import": "./dist/controls.es.js",
-      "require": "./dist/controls.cjs.js"
-    },
-    "./slate": {
-      "import": "./dist/slate.es.js",
-      "require": "./dist/slate.cjs.js"
-    },
-    "./state/breakpoints": {
-      "import": "./dist/state/breakpoints.es.js",
-      "require": "./dist/state/breakpoints.cjs.js"
-    }
-  },
-  "typesVersions": {
-    "*": {
-      "prop-controllers": [
-        "dist/types/src/prop-controllers/index.d.ts"
-      ],
-      "react": [
-        "dist/types/src/react.d.ts"
-      ],
-      "box-model": [
-        "dist/types/src/box-model.d.ts"
-      ],
-      "components": [
-        "dist/types/src/components/index.d.ts"
-      ],
-      "api": [
-        "dist/types/src/api/index.d.ts"
-      ],
-      "next": [
-        "dist/types/src/next/index.d.ts"
-      ],
-      "builder": [
-        "dist/types/src/builder/index.d.ts"
-      ],
-      "controls": [
-        "dist/types/src/controls/index.d.ts"
-      ],
-      "slate": [
-        "dist/types/src/slate/index.d.ts"
-      ],
-      "state/breakpoints": [
-        "dist/types/src/state/modules/breakpoints.d.ts"
-      ]
-    }
+    "./builder": "./src/builder/index.ts",
+    "./controls": "./src/controls/index.ts",
+    "./slate": "./src/slate/index.ts",
+    "./state/breakpoints": "./src/state/modules/breakpoints.ts"
   },
   "scripts": {
     "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'vite build --watch'",

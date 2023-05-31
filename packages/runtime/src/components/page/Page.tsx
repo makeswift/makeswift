@@ -1,3 +1,5 @@
+'use client';
+
 import { ReactElement, Children, createElement, useMemo, useEffect, useRef, useState } from 'react'
 import { useSyncExternalStore } from 'use-sync-external-store/shim'
 import parse from 'html-react-parser'
