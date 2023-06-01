@@ -1,10 +1,16 @@
 import { BoxModel } from 'css-box-model'
-import { ControlDefinition, ControlDefinitionData } from './control'
+import { ControlDefinition } from './control'
 import { PropController } from '../prop-controllers/base'
-import { Send } from '../prop-controllers/instances'
+import {
+  AnyPropController,
+  PropControllerMessage,
+  Send,
+  createPropController,
+} from '../prop-controllers/instances'
 import { ResponsiveValue } from './types'
 import { CSSObject } from '@emotion/serialize'
 import { useStyle } from '../runtimes/react/use-style'
+import { ControlDefinitionValue } from '../runtimes/react/controls/control'
 
 export const StyleV2ControlType = 'makeswift::controls::style-v2'
 
@@ -13,7 +19,7 @@ export const unstable_useStyleV2ClassName = useStyle
 
 type StyleV2ControlConfig<T extends ControlDefinition = ControlDefinition> = {
   type: T
-  getStyle(item: ControlDefinitionData<T> | undefined): CSSObject
+  getStyle(item: ControlDefinitionValue<T> | undefined): CSSObject
 }
 
 export type StyleV2ControlDefinition = {
@@ -49,23 +55,53 @@ export type StyleV2ControlData = ResponsiveValue<any>
 
 export const StyleV2ControlMessageType = {
   CHANGE_BOX_MODEL: 'makeswift::controls::style::message::change-box-model',
+  STYLE_V2_CONTROL_CHILD_CONTROL_MESSAGE:
+    'makeswift::controls::style-v2::message::child-control-message',
 } as const
 
 type StyleV2ControlItemBoxModelChangeMessage = {
   type: typeof StyleV2ControlMessageType.CHANGE_BOX_MODEL
   payload: { boxModel: BoxModel | null }
 }
+type StyleV2ControlChildControlMessage = {
+  type: typeof StyleV2ControlMessageType.STYLE_V2_CONTROL_CHILD_CONTROL_MESSAGE
+  payload: { message: PropControllerMessage }
+}
 
-export type StyleV2ControlMessage = StyleV2ControlItemBoxModelChangeMessage
+export type StyleV2ControlMessage =
+  | StyleV2ControlItemBoxModelChangeMessage
+  | StyleV2ControlChildControlMessage
 
-export class StyleV2Control extends PropController<StyleV2ControlMessage> {
-  constructor(send: Send<StyleV2ControlMessage>) {
+export class StyleV2Control<
+  T extends StyleV2ControlDefinition = StyleV2ControlDefinition,
+> extends PropController<StyleV2ControlMessage> {
+  control?: AnyPropController
+  constructor(send: Send<StyleV2ControlMessage>, descriptor: T) {
     super(send)
+    this.control = createPropController(descriptor.config.type, message => {
+      console.log('message you are supposed to be sending in styleV2 control', { message })
+      this.send({
+        type: StyleV2ControlMessageType.STYLE_V2_CONTROL_CHILD_CONTROL_MESSAGE,
+        payload: { message },
+      })
+    })
   }
 
   changeBoxModel(boxModel: BoxModel | null): void {
     this.send({ type: StyleV2ControlMessageType.CHANGE_BOX_MODEL, payload: { boxModel } })
   }
 
-  recv() {}
+  recv(message: StyleV2ControlMessage) {
+    switch (message.type) {
+      case StyleV2ControlMessageType.STYLE_V2_CONTROL_CHILD_CONTROL_MESSAGE: {
+        const control = this.control
+
+        if (control == null) return
+
+        const recv = control.recv as (arg0: PropControllerMessage) => void
+
+        recv(message.payload.message)
+      }
+    }
+  }
 }
