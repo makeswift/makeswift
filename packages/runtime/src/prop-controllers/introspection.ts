@@ -25,13 +25,18 @@ import {
   ListControlType,
   MarkJSON,
   NodeJSON,
+  RichTextV2ControlData,
+  RichTextV2ControlType,
   ShapeControlData,
   ShapeControlType,
   SlotControlData,
   SlotControlType,
+  StyleV2ControlData,
+  StyleV2ControlType,
 } from '../controls'
 import { Typography } from '../api'
 import { isNonNullable } from '../components/utils/isNonNullable'
+import { Descendant, Element as SlateElement, Text } from 'slate'
 
 export function getElementChildren<T extends Data>(
   descriptor: Descriptor<T>,
@@ -210,6 +215,57 @@ export function getElementSwatchIds<T extends Data>(
     case ColorControlType: {
       const value = prop as ColorControlData
       return value?.swatchId == null ? [] : [value.swatchId]
+    }
+
+    case StyleV2ControlType: {
+      const value = prop as StyleV2ControlData
+
+      return value.flatMap(value => getElementSwatchIds(descriptor.config.type, value.value))
+    }
+
+    case RichTextV2ControlType: {
+      const descendants = prop as RichTextV2ControlData
+      const plugins = descriptor.config.plugins
+
+      return descendants.flatMap(d => getDescendantSwatchIds(d))
+
+      function getDescendantSwatchIds(descendant: Descendant): string[] {
+        if (SlateElement.isElement(descendant)) {
+          return [
+            ...getSlateElementSwatchIds(descendant),
+            ...descendant.children.flatMap(d => getDescendantSwatchIds(d)),
+          ]
+        }
+
+        if (Text.isText(descendant)) {
+          return getTextSwatchIds(descendant)
+        }
+
+        return []
+      }
+
+      function getSlateElementSwatchIds(descendant: SlateElement) {
+        return (
+          plugins?.flatMap(plugin =>
+            plugin.control?.definition && plugin.control.getElementValue
+              ? getElementSwatchIds(
+                  plugin.control.definition,
+                  plugin.control.getElementValue(descendant),
+                )
+              : [],
+          ) ?? []
+        )
+      }
+
+      function getTextSwatchIds(text: Text) {
+        return (
+          plugins?.flatMap(plugin =>
+            plugin.control?.definition && plugin.control.getLeafValue
+              ? getElementSwatchIds(plugin.control.definition, plugin.control.getLeafValue(text))
+              : [],
+          ) ?? []
+        )
+      }
     }
 
     default:
