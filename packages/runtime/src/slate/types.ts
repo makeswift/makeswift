@@ -4,6 +4,7 @@ import { LinkControlData } from '../controls'
 import { HistoryEditor } from 'slate-history'
 import { BuilderEditor } from '.'
 import { ResponsiveValue } from '../prop-controllers'
+import { ResponsiveColor } from '../runtimes/react/controls'
 
 export type RichTextTypography = {
   id?: string
@@ -28,6 +29,7 @@ export type RichTextTypography = {
 export type Text = {
   text: string
   typography?: RichTextTypography
+  color?: ResponsiveColor
   slice?: boolean
   className?: string
 }
