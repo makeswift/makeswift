@@ -35,9 +35,14 @@ import {
   TypographyQueryVariables,
 } from '../api/graphql/generated/types'
 import { CacheData } from '../api/react'
-import { ListControlData, ListControlType, ShapeControlData, ShapeControlType } from '../controls'
-import { PropControllerDescriptor } from '../prop-controllers'
-import { ListValue, ShapeValue, Types } from '../prop-controllers/descriptors'
+import { ShapeControlData, ShapeControlType } from '../controls/shape'
+import { ListControlData, ListControlType } from '../controls/list'
+import {
+  ListValue,
+  ShapeValue,
+  Types,
+  Descriptor as PropControllerDescriptor,
+} from '../prop-controllers/descriptors'
 import {
   getElementChildren,
   getElementSwatchIds,
