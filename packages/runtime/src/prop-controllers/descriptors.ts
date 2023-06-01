@@ -11,6 +11,7 @@ import type { Element, Data } from '../state/react-page'
 import type { ResponsiveColor } from '../runtimes/react/controls'
 import { NumberControlDefinition } from '../controls/number'
 import { NumberControlValue } from '../runtimes/react/controls/number'
+import { StyleControlType } from '../controls/style'
 import {
   CheckboxControlDefinition,
   ColorControlDefinition,
@@ -24,7 +25,6 @@ import {
   TextAreaControlDefinition,
   TextInputControlDefinition,
   StyleControlDefinition,
-  StyleControlType,
   RichTextV2ControlDefinition,
   StyleV2ControlDefinition,
 } from '../controls'
