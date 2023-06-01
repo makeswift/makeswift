@@ -46,6 +46,7 @@ import {
   StyleControlData,
   StyleControlDefinition,
   StyleControlType,
+  StyleV2Control,
   StyleV2ControlData,
   StyleV2ControlDefinition,
   StyleV2ControlType,
@@ -71,7 +72,7 @@ import { SelectControlValue, useSelectControlValue } from './select'
 import { ShapeControlValue } from './shape'
 import { SlotControlValue, useSlot } from './slot'
 import { StyleControlFormattedValue, useFormattedStyle } from './style'
-import { StyleV2ControlFormattedValue, useFormattedStyleV2 } from './style-v2'
+import { StyleV2ControlFormattedValue, StyleV2ControlValue } from './style-v2'
 import { TextAreaControlValue, useTextAreaValue } from './text-area'
 import { TextInputControlValue, useTextInputValue } from './text-input'
 
@@ -245,6 +246,18 @@ export function ControlValue<T extends ControlDefinition>({
         </ListControlValue>
       )
 
+    case StyleV2ControlType:
+      return (
+        <StyleV2ControlValue
+          key={definition.type}
+          data={data as StyleV2ControlData}
+          definition={definition}
+          control={control as StyleV2Control}
+        >
+          {value => children(value as ControlDefinitionValue<T>)}
+        </StyleV2ControlValue>
+      )
+
     case SlotControlType:
       return (
         <RenderHook
@@ -288,17 +301,6 @@ export function ControlValue<T extends ControlDefinition>({
           key={definition.type}
           hook={useFormattedStyle}
           parameters={[data as unknown as StyleControlData, definition, control as StyleControl]}
-        >
-          {value => children(value as ControlDefinitionValue<T>)}
-        </RenderHook>
-      )
-
-    case StyleV2ControlType:
-      return (
-        <RenderHook
-          key={definition.type}
-          hook={useFormattedStyleV2}
-          parameters={[data as unknown as StyleV2ControlData, definition]}
         >
           {value => children(value as ControlDefinitionValue<T>)}
         </RenderHook>

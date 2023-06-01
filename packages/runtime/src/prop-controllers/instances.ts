@@ -260,7 +260,7 @@ export function createPropController<T extends PropControllerMessage>(
       return new StyleControl(send as Send<StyleControlMessage>)
 
     case StyleV2ControlType:
-      return new StyleV2Control(send as Send<StyleV2ControlMessage>)
+      return new StyleV2Control(send as Send<StyleV2ControlMessage>, descriptor)
 
     default:
       return new DefaultPropController(send as Send)
