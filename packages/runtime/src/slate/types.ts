@@ -29,6 +29,7 @@ export type Text = {
   text: string
   typography?: RichTextTypography
   slice?: boolean
+  className?: string
 }
 
 export const RootBlockType = {

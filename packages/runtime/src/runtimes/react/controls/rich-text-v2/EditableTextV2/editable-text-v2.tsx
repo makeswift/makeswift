@@ -26,7 +26,6 @@ import {
   RichTextV2ControlData,
   RichTextV2ControlDefinition,
   RichTextV2Mode,
-  RichTextV2Plugin,
 } from '../../../../../controls'
 import { useBuilderEditMode } from '../../..'
 import { BuilderEditMode } from '../../../../../state/modules/builder-edit-mode'
@@ -34,57 +33,8 @@ import { pollBoxModel } from '../../../poll-box-model'
 import { InlineModePlugin, withBuilder } from '../../../../../slate'
 import { useSyncDOMSelection } from './useSyncDOMSelection'
 import { BlockType } from '../../../../../slate'
-import { useStyle } from '../../../use-style'
-import { cx } from '@emotion/css'
-import { ControlValue } from '../../control'
-
-type RichTextV2ElementProps = RenderElementProps & {
-  definition: RichTextV2ControlDefinition
-  plugins: RichTextV2Plugin[]
-}
-
-function RichTextV2Element({ definition, plugins, ...props }: RichTextV2ElementProps) {
-  const blockStyles = [useStyle({ margin: 0 })]
-
-  function initialRenderElement(props: RenderElementProps) {
-    switch (props.element.type) {
-      case BlockType.Default:
-      default:
-        if (definition.config.mode === RichTextV2Mode.Inline) {
-          return (
-            <span {...props.attributes} className={cx(...blockStyles)}>
-              {props.children}
-            </span>
-          )
-        }
-
-        return (
-          <p {...props.attributes} className={cx(...blockStyles)}>
-            {props.children}
-          </p>
-        )
-    }
-  }
-
-  const renderElement = plugins.reduce(
-    (renderFn, plugin) => (props: RenderElementProps) => {
-      const { control, renderElement } = plugin
-
-      if (control?.definition == null || renderElement == null) return renderFn(props)
-
-      if (control.getElementValue == null) return renderElement(renderFn, undefined)(props)
-
-      return (
-        <ControlValue definition={control.definition} data={control.getElementValue(props.element)}>
-          {value => renderElement(renderFn, value)(props)}
-        </ControlValue>
-      )
-    },
-    initialRenderElement,
-  )
-
-  return renderElement(props)
-}
+import { RichTextV2Element } from './render-element'
+import { RichTextV2Leaf } from './render-leaf'
 
 export type RichTextV2ControlValue = ReactNode
 
@@ -136,9 +86,12 @@ export function EditableTextV2({ text, definition, control }: Props) {
     [plugins, definition],
   )
 
-  const renderLeaf = useCallback(({ attributes, children }: RenderLeafProps) => {
-    return <span {...attributes}>{children}</span>
-  }, [])
+  const renderLeaf = useCallback(
+    (props: RenderLeafProps) => {
+      return <RichTextV2Leaf {...props} definition={definition} plugins={plugins} />
+    },
+    [plugins, definition],
+  )
 
   const initialValue = useMemo(() => text ?? defaultText, [text])
 
