@@ -61,6 +61,7 @@ export type DefaultElement = {
   textAlign?: ResponsiveBlockTextAlignment
   className?: string
   children: Array<Element | Text>
+  slice?: boolean
   type: typeof BlockType.Default
 }
 
@@ -68,6 +69,7 @@ export type TextElement = {
   textAlign?: ResponsiveBlockTextAlignment
   className?: string
   children: Array<Element | Text>
+  slice?: boolean
   type: typeof BlockType.Text
 }
 
@@ -75,6 +77,7 @@ export type ParagraphElement = {
   textAlign?: ResponsiveBlockTextAlignment
   className?: string
   children: Array<Element | Text>
+  slice?: boolean
   type: typeof BlockType.Paragraph
 }
 
@@ -82,6 +85,7 @@ export type Heading1Element = {
   textAlign?: ResponsiveBlockTextAlignment
   className?: string
   children: Array<Element | Text>
+  slice?: boolean
   type: typeof BlockType.Heading1
 }
 
@@ -89,6 +93,7 @@ export type Heading2Element = {
   textAlign?: ResponsiveBlockTextAlignment
   className?: string
   children: Array<Element | Text>
+  slice?: boolean
   type: typeof BlockType.Heading2
 }
 
@@ -96,6 +101,7 @@ export type Heading3Element = {
   textAlign?: ResponsiveBlockTextAlignment
   className?: string
   children: Array<Element | Text>
+  slice?: boolean
   type: typeof BlockType.Heading3
 }
 
@@ -103,6 +109,7 @@ export type Heading4Element = {
   textAlign?: ResponsiveBlockTextAlignment
   className?: string
   children: Array<Element | Text>
+  slice?: boolean
   type: typeof BlockType.Heading4
 }
 
@@ -110,6 +117,7 @@ export type Heading5Element = {
   textAlign?: ResponsiveBlockTextAlignment
   className?: string
   children: Array<Element | Text>
+  slice?: boolean
   type: typeof BlockType.Heading5
 }
 
@@ -117,6 +125,7 @@ export type Heading6Element = {
   textAlign?: ResponsiveBlockTextAlignment
   className?: string
   children: Array<Element | Text>
+  slice?: boolean
   type: typeof BlockType.Heading6
 }
 
@@ -124,6 +133,7 @@ export type BlockQuoteElement = {
   textAlign?: ResponsiveBlockTextAlignment
   className?: string
   children: Array<Element | Text>
+  slice?: boolean
   type: typeof BlockType.BlockQuote
 }
 
@@ -131,6 +141,7 @@ export type UnorderedListElement = {
   textAlign?: ResponsiveBlockTextAlignment
   className?: string
   children: Array<Element | Text>
+  slice?: boolean
   type: typeof BlockType.UnorderedList
 }
 
@@ -138,6 +149,7 @@ export type OrderedListElement = {
   textAlign?: ResponsiveBlockTextAlignment
   className?: string
   children: Array<Element | Text>
+  slice?: boolean
   type: typeof BlockType.OrderedList
 }
 
@@ -147,6 +159,7 @@ export type ListItemElement = {
   textAlign?: ResponsiveBlockTextAlignment
   className?: string
   children: Array<Element | Text>
+  slice?: boolean
   type: typeof BlockType.ListItem
 }
 
@@ -154,6 +167,7 @@ export type ListItemChildElement = {
   textAlign?: ResponsiveBlockTextAlignment
   className?: string
   children: Array<Element | Text>
+  slice?: boolean
   type: typeof BlockType.ListItemChild
 }
 
@@ -181,18 +195,21 @@ export type CodeElement = {
   children: Array<Text | Inline>
   type: typeof InlineType.Code
   className?: string
+  slice?: boolean
 }
 
 export type SuperElement = {
   children: Array<Text | Inline>
   type: typeof InlineType.SuperScript
   className?: string
+  slice?: boolean
 }
 
 export type SubElement = {
   children: Array<Text | Inline>
   type: typeof InlineType.SubScript
   className?: string
+  slice?: boolean
 }
 
 export type LinkElement = {
@@ -200,6 +217,7 @@ export type LinkElement = {
   type: typeof InlineType.Link
   link: LinkControlData
   className?: string
+  slice?: boolean
 }
 
 export type RootBlock =
