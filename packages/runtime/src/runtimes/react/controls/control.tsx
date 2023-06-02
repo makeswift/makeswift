@@ -57,11 +57,17 @@ import {
   TextInputControlDefinition,
   TextInputControlType,
 } from '../../../controls'
+import {
+  IconRadioGroupControlData,
+  IconRadioGroupControlDefinition,
+  IconRadioGroupControlType,
+} from '../../../controls/icon-radio-group'
 import { AnyPropController } from '../../../prop-controllers/instances'
 import { RenderHook } from '../components'
 import { CheckboxControlValue, useCheckboxControlValue } from './checkbox'
 import { ColorControlValue, useColorValue } from './color'
 import { ComboboxControlValue, useComboboxControlValue } from './combobox'
+import { IconRadioGroupControlValue, useIconRadioGroupValue } from './icon-radio-group'
 import { ResolveImageControlValue, useImageControlValue } from './image'
 import { LinkControlValue, useLinkControlValue } from './link'
 import { ListControlValue } from './list'
@@ -91,6 +97,8 @@ export type ControlDefinitionValue<T extends ControlDefinition> =
     ? ColorControlValue<T>
     : T extends ImageControlDefinition
     ? ResolveImageControlValue<T>
+    : T extends IconRadioGroupControlDefinition
+    ? IconRadioGroupControlValue<T>
     : T extends LinkControlDefinition
     ? LinkControlValue<T>
     : T extends ComboboxControlDefinition
@@ -186,6 +194,17 @@ export function ControlValue<T extends ControlDefinition>({
           key={definition.type}
           hook={useColorValue}
           parameters={[data as ColorControlData, definition]}
+        >
+          {value => children(value as ControlDefinitionValue<T>)}
+        </RenderHook>
+      )
+
+    case IconRadioGroupControlType:
+      return (
+        <RenderHook
+          key={definition.type}
+          hook={useIconRadioGroupValue}
+          parameters={[data as IconRadioGroupControlData, definition]}
         >
           {value => children(value as ControlDefinitionValue<T>)}
         </RenderHook>

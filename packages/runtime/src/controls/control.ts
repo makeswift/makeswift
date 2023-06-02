@@ -25,6 +25,7 @@ import { RichTextControlData, RichTextControlDefinition } from './rich-text'
 import { PropControllerDescriptor } from '../prop-controllers'
 import { RichTextV2ControlData, RichTextV2ControlDefinition } from './rich-text-v2'
 import { StyleV2ControlData, StyleV2ControlDefinition } from './style-v2'
+import { IconRadioGroupControlData, IconRadioGroupControlDefinition } from './icon-radio-group'
 
 export type ControlDefinition =
   | CheckboxControlDefinition
@@ -33,6 +34,7 @@ export type ControlDefinition =
   | TextAreaControlDefinition
   | SelectControlDefinition
   | ColorControlDefinition
+  | IconRadioGroupControlDefinition
   | ImageControlDefinition
   | ComboboxControlDefinition
   | ShapeControlDefinition
@@ -57,6 +59,8 @@ export type ControlDefinitionData<T extends ControlDefinition> = T extends Check
   ? SelectControlData<T>
   : T extends ColorControlDefinition
   ? ColorControlData
+  : T extends IconRadioGroupControlDefinition
+  ? IconRadioGroupControlData<T>
   : T extends ImageControlDefinition
   ? ImageControlData
   : T extends ComboboxControlDefinition

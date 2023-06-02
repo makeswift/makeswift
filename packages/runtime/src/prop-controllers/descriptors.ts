@@ -43,6 +43,8 @@ import { RichTextControlDefinition, RichTextDTO } from '../controls/rich-text'
 import { RichTextControlValue } from '../runtimes/react/controls/rich-text'
 import { RichTextV2ControlValue } from '../runtimes/react/controls/rich-text-v2'
 import { StyleV2ControlFormattedValue } from '../runtimes/react/controls/style-v2'
+import { IconRadioGroupControlDefinition } from '../controls/icon-radio-group'
+import { IconRadioGroupControlValue } from '../runtimes/react/controls/icon-radio-group'
 
 export type { Data }
 
@@ -1054,6 +1056,7 @@ export type Descriptor<T extends Data = Data> =
   | TextAreaControlDefinition
   | SelectControlDefinition
   | ColorControlDefinition
+  | IconRadioGroupControlDefinition
   | ImageControlDefinition
   | ComboboxControlDefinition
   | ShapeControlDefinition
@@ -1117,6 +1120,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? StyleControlFormattedValue
   : T extends StyleV2ControlDefinition
   ? StyleV2ControlFormattedValue
+  : T extends IconRadioGroupControlDefinition
+  ? IconRadioGroupControlValue<T>
   : T extends ImageControlDefinition
   ? ResolveImageControlValue<T>
   : T extends ComboboxControlDefinition
