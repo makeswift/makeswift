@@ -69,6 +69,7 @@ import { useSlot } from './controls/slot'
 import { useStyle } from './use-style'
 import { useRichText } from './controls/rich-text'
 import { useRichTextV2 } from './controls/rich-text-v2'
+import { IconRadioGroupControlType } from '../../controls/icon-radio-group'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -204,6 +205,7 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
           case TextAreaControlType:
           case SelectControlType:
           case ColorControlType:
+          case IconRadioGroupControlType:
           case ImageControlType:
           case ComboboxControlType:
           case ShapeControlType:
