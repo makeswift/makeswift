@@ -1,73 +1,79 @@
-import { Element, Transforms } from 'slate'
+import { Editor, Element } from 'slate'
 import {
-  ControlDefinitionData,
-  Select,
   createRichTextV2Plugin,
+  unstable_IconRadioGroup,
+  unstable_IconRadioGroupIcon,
   unstable_StyleV2,
 } from '../../controls'
-import { getBlocksInSelection } from '../selectors'
-import deepEqual from '../../utils/deepEqual'
 import { ElementUtils } from '../utils/element'
+import { TextAlignProperty } from 'csstype'
+import {
+  getResponsiveValue,
+  normalizeResponsiveValue,
+  setResponsiveValue,
+} from '../utils/responsive'
 
-const textAlignDefinition = Select({
-  options: [
-    {
-      label: 'Left',
-      value: 'left',
-    },
-    {
-      label: 'Center',
-      value: 'center',
-    },
-    {
-      label: 'Right',
-      value: 'right',
-    },
-  ],
-  defaultValue: 'left',
-})
-
-export const definitionWithObject = unstable_StyleV2({
-  type: textAlignDefinition,
-  getStyle(textAlign: ControlDefinitionData<typeof textAlignDefinition>) {
-    return { textAlign }
-  },
-})
+const TEXT_ALIGN_KEY = 'textAlign'
 
 export function TextAlignPlugin() {
   return createRichTextV2Plugin({
     control: {
-      definition: definitionWithObject,
-      onChange: (editor, value) => {
-        const rootElements = getBlocksInSelection(editor)
-
-        for (const [node, path] of rootElements) {
-          if (ElementUtils.isBlock(node)) {
-            Transforms.setNodes(
-              editor,
-              {
-                ['textAlign']: value,
-              },
-              { at: path },
-            )
-          }
-        }
-      },
-      getValue: editor => {
-        const blocks = getBlocksInSelection(editor).map(([block]) => {
-          return block.textAlign
-        })
-
-        const value =
-          blocks.length === 0
-            ? undefined
-            : blocks.reduce((a, b) => (deepEqual(a, b) ? b : undefined))
-
-        return value
-      },
+      definition: unstable_StyleV2({
+        type: unstable_IconRadioGroup({
+          label: 'Alignment',
+          options: [
+            {
+              icon: unstable_IconRadioGroupIcon.TextAlignLeft,
+              label: 'Left Align',
+              value: 'left',
+            },
+            {
+              icon: unstable_IconRadioGroupIcon.TextAlignCenter,
+              label: 'Center Align',
+              value: 'center',
+            },
+            {
+              icon: unstable_IconRadioGroupIcon.TextAlignRight,
+              label: 'Right Align',
+              value: 'right',
+            },
+            {
+              icon: unstable_IconRadioGroupIcon.TextAlignJustify,
+              label: 'Justify',
+              value: 'justify',
+            },
+          ],
+          defaultValue: 'left',
+        }),
+        getStyle(textAlign: TextAlignProperty) {
+          return { textAlign }
+        },
+      }),
+      onChange: (editor, value) =>
+        setResponsiveValue(editor, TEXT_ALIGN_KEY, value, {
+          match: ElementUtils.isRootBlock,
+          split: false,
+        }),
+      getValue: editor =>
+        getResponsiveValue(editor, TEXT_ALIGN_KEY, { match: ElementUtils.isRootBlock }),
       getElementValue: (element: Element) => {
         return ElementUtils.isRootBlock(element) ? element.textAlign : undefined
       },
+    },
+    withPlugin: (editor: Editor) => {
+      const { normalizeNode } = editor
+      editor.normalizeNode = entry => {
+        if (
+          normalizeResponsiveValue(editor, TEXT_ALIGN_KEY, { match: ElementUtils.isRootBlock })(
+            entry,
+          )
+        ) {
+          return
+        }
+        normalizeNode(entry)
+      }
+
+      return editor
     },
     renderElement: (renderElement, className) => props => {
       return renderElement({
