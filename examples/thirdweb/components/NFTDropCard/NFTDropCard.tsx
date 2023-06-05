@@ -61,7 +61,7 @@ type Props = {
   chainId?: string
   showMedia?: boolean
   showDescription?: boolean
-  totalClaimed?: string
+  totalClaimed?: 'nototal' | 'total' | 'max' | 'available'
 }
 
 const NFTDropCard = forwardRef(function NFTDropCard(

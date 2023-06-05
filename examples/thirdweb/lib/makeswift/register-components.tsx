@@ -34,7 +34,6 @@ ReactRuntime.registerComponent(NFTDropCard, {
       label: 'Show description',
       defaultValue: true,
     }),
-    // showClaimed: Checkbox({ label: 'Show claimed', defaultValue: true }),
     totalClaimed: Select({
       label: 'Total Supply Basis',
       options: [
