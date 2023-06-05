@@ -154,6 +154,11 @@ const NFTDropCard = forwardRef(function NFTDropCard(
     )
   }
 
+  // Add claimed and unclaimed supply
+  const claimedSubTotal = claimedSupply?.toNumber() || 0
+  const unclaimedSubTotal = unclaimedSupply?.toNumber() || 0
+  const totalSupply = claimedSubTotal + unclaimedSubTotal;
+
   // Function to mint/claim an NFT
   const mint = async () => {
     if (isOnWrongNetwork && chainId) {
@@ -227,7 +232,7 @@ const NFTDropCard = forwardRef(function NFTDropCard(
                     </Text>
                     {/* Add unclaimed and claimed supply to get the total supply */}
                     {` / ${ totalClaimed == "total" ?
-                          claimedSupply?.toNumber() + unclaimedSupply?.toNumber() + "claimed"
+                          totalSupply + "claimed"
                         : totalClaimed == "max" ?
                           activeClaimCondition?.maxClaimableSupply + "claimed"
                         : "(error: supply basis undefined)"
