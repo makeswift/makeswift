@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.9.2
+
+### Patch Changes
+
+- bc4a9bd: Add an unstable control API: `unstable_IconRadioGroup`.
+- 2503ca5: Add initial `Color` plugin for `unstable_RichTextV2`.
+
 ## 0.9.1
 
 ### Patch Changes
