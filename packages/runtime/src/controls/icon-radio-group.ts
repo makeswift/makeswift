@@ -3,14 +3,17 @@ export const unstable_IconRadioGroupIcon = {
   TextAlignJustify: 'TextAlignJustify',
   TextAlignLeft: 'TextAlignLeft',
   TextAlignRight: 'TextAlignRight',
+  Superscript: 'Superscript16',
+  Subscript: 'Subscript16',
+  Code: 'Code16',
 } as const
 
 export type IconRadioGroupIcon =
-  (typeof unstable_IconRadioGroupIcon)[keyof typeof unstable_IconRadioGroupIcon]
+  typeof unstable_IconRadioGroupIcon[keyof typeof unstable_IconRadioGroupIcon]
 
 export const IconRadioGroupControlType = 'makeswift::controls::icon-radio-group'
 
-type IconRadioGroupOption<T extends string> = {
+export type IconRadioGroupOption<T extends string> = {
   value: T
   icon: IconRadioGroupIcon
   label: string
