@@ -1,9 +1,9 @@
 /** @jsxRuntime classic */
-/** @jsx jsxWithInlineEditor */
+/** @jsx jsxWithV2InlineEditor */
 
 import { Editor as SlateEditor } from 'slate'
 import {
-  jsxWithInlineEditor,
+  jsxWithV2InlineEditor,
   TextBlock,
   Ordered,
   Paragraph,

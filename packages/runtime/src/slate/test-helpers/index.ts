@@ -1,4 +1,5 @@
 export * from './test-elements'
 export * from './slate-test-helper'
-export * from './block-editor'
-export * from './inline-editor'
+export * from './editor-v1'
+export * from './editor-v2-inline'
+export * from './editor-v2'
