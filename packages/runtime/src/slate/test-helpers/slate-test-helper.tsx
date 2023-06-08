@@ -2,10 +2,18 @@ import { Editor, createEditor } from 'slate'
 import { createHyperscript, createEditor as createHyperscriptEditor } from 'slate-hyperscript'
 import { withReact } from 'slate-react'
 
-import { withTypography, withInlineMode, BlockType, InlineType } from '..'
-import { withBlock } from '../BlockPlugin'
+import {
+  withTypography,
+  withInlineMode,
+  BlockType,
+  InlineType,
+  withInline,
+  withLink,
+  withBlock,
+  withTextAlign,
+} from '..'
 
-export const createJsx = (editor: Editor) =>
+export const createJsx = (createEditor: () => Editor) =>
   createHyperscript({
     elements: {
       [BlockType.Text]: { type: BlockType.Text },
@@ -31,12 +39,18 @@ export const createJsx = (editor: Editor) =>
       [InlineType.Link]: { type: InlineType.Link },
     },
     creators: {
-      editor: createHyperscriptEditor(() => editor),
+      editor: createHyperscriptEditor(() => createEditor()),
     },
   })
 
-export const testEditorWithAllPlugins = withBlock(withTypography(withReact(createEditor())))
+export const testEditorWithAllPlugins = () => withBlock(withTypography(withReact(createEditor())))
 
 export const jsx = createJsx(testEditorWithAllPlugins)
 
-export const jsxWithInlineEditor = createJsx(withInlineMode(testEditorWithAllPlugins))
+export const jsxWithV2Editor = createJsx(() =>
+  withBlock(withTextAlign(withInline(withLink(withReact(createEditor()))))),
+)
+
+export const jsxWithV2InlineEditor = createJsx(() =>
+  withInlineMode(withBlock(withTextAlign(withInline(withLink(withReact(createEditor())))))),
+)

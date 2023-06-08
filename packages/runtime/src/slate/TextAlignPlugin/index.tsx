@@ -15,6 +15,20 @@ import {
 
 const TEXT_ALIGN_KEY = 'textAlign'
 
+export const withTextAlign = (editor: Editor) => {
+  const { normalizeNode } = editor
+  editor.normalizeNode = entry => {
+    if (
+      normalizeResponsiveValue(editor, TEXT_ALIGN_KEY, { match: ElementUtils.isRootBlock })(entry)
+    ) {
+      return
+    }
+    normalizeNode(entry)
+  }
+
+  return editor
+}
+
 export function TextAlignPlugin() {
   return createRichTextV2Plugin({
     control: {
@@ -60,21 +74,7 @@ export function TextAlignPlugin() {
         return ElementUtils.isRootBlock(element) ? element.textAlign : undefined
       },
     },
-    withPlugin: (editor: Editor) => {
-      const { normalizeNode } = editor
-      editor.normalizeNode = entry => {
-        if (
-          normalizeResponsiveValue(editor, TEXT_ALIGN_KEY, { match: ElementUtils.isRootBlock })(
-            entry,
-          )
-        ) {
-          return
-        }
-        normalizeNode(entry)
-      }
-
-      return editor
-    },
+    withPlugin: withTextAlign,
     renderElement: (renderElement, className) => props => {
       return renderElement({
         ...props,
