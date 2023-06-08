@@ -79,7 +79,6 @@ export class StyleV2Control<
   constructor(send: Send<StyleV2ControlMessage>, descriptor: T) {
     super(send)
     this.control = createPropController(descriptor.config.type, message => {
-      console.log('message you are supposed to be sending in styleV2 control', { message })
       this.send({
         type: StyleV2ControlMessageType.STYLE_V2_CONTROL_CHILD_CONTROL_MESSAGE,
         payload: { message },
