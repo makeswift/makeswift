@@ -35,17 +35,10 @@ import {
   TypographyQueryVariables,
 } from '../api/graphql/generated/types'
 import { CacheData } from '../api/react'
-import { ShapeControlData, ShapeControlType } from '../controls/shape'
-import { ListControlData, ListControlType } from '../controls/list'
-import {
-  ListValue,
-  ShapeValue,
-  Types,
-  Descriptor as PropControllerDescriptor,
-} from '../prop-controllers/descriptors'
+import { Descriptor as PropControllerDescriptor } from '../prop-controllers/descriptors'
 import {
   getElementChildren,
-  getElementSwatchIds,
+  getSwatchIds,
   getFileIds,
   getPageIds,
   getTableIds,
@@ -277,7 +270,7 @@ export class Makeswift {
         props: ElementData['props'],
       ) {
         Object.entries(elementDescriptors).forEach(([propName, descriptor]) => {
-          getElementSwatchIds(descriptor, props[propName]).forEach(swatchId => {
+          getSwatchIds(descriptor, props[propName]).forEach(swatchId => {
             swatchIds.add(swatchId)
           })
 
@@ -298,48 +291,6 @@ export class Makeswift {
               remaining.push(child)
             }
           })
-
-          if (descriptor.type === ShapeControlType) {
-            const prop = props[propName] as ShapeControlData
-
-            if (prop == null) return
-
-            getResourcesFromElementDescriptors(descriptor.config.type, prop)
-          }
-
-          if (descriptor.type === ListControlType) {
-            const prop = props[propName] as ListControlData
-
-            if (prop == null) return
-
-            prop.forEach(item => {
-              getResourcesFromElementDescriptors(
-                { propName: descriptor.config.type },
-                { propName: item.value },
-              )
-            })
-          }
-
-          if (descriptor.type === Types.Shape) {
-            const prop = props[propName] as ShapeValue
-
-            if (prop == null) return
-
-            getResourcesFromElementDescriptors(descriptor.options.type, prop)
-          }
-
-          if (descriptor.type === Types.List) {
-            const prop = props[propName] as ListValue
-
-            if (prop == null) return
-
-            prop.forEach(item => {
-              getResourcesFromElementDescriptors(
-                { propName: descriptor.options.type },
-                { propName: item.value },
-              )
-            })
-          }
         })
       }
     }
