@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.9.3
+
+### Patch Changes
+
+- f3b8fc8: Add initial `Link` plugin for `unstable_RichTextV2`.
+- 1c3d592: Add initial `Inline` plugin for `unstable_RichTextV2`.
+
 ## 0.9.2
 
 ### Patch Changes
