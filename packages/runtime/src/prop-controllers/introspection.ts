@@ -21,6 +21,8 @@ import {
   ImageControlData,
   ImageControlType,
   InlineJSON,
+  LinkControlData,
+  LinkControlType,
   ListControlData,
   ListControlType,
   MarkJSON,
@@ -391,6 +393,20 @@ export function getPageIds<T extends Data>(
 
         default:
           return []
+      }
+    }
+
+    case LinkControlType: {
+      const value = prop as LinkControlData
+
+      if (value == null) return []
+
+      switch (value.type) {
+        case 'OPEN_PAGE':
+          return value.payload.pageId == null ? [] : [value.payload.pageId]
+
+        default:
+          break
       }
     }
 
