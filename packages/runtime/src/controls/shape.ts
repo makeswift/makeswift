@@ -9,6 +9,7 @@ import { CopyContext } from '../state/react-page'
 import { ControlDefinition, ControlDefinitionData } from './control'
 
 import { copy as controlCopy } from './control'
+import { Data } from './types'
 
 export const ShapeControlType = 'makeswift::controls::shape'
 
@@ -109,4 +110,16 @@ export function copyShapeData(
   }
 
   return newValue
+}
+
+export function introspectShapeData<T>(
+  definition: ShapeControlDefinition,
+  value: ShapeControlData | undefined,
+  func: (definition: ControlDefinition, data: Data) => T[],
+): T[] {
+  if (value == null) return []
+
+  return Object.entries(definition.config.type).flatMap(([key, definition]) =>
+    func(definition, value[key]),
+  )
 }

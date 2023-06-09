@@ -6,11 +6,15 @@ import {
   GridValue,
   ImagesValue,
   ImageValue,
+  introspectListPropControllerData,
+  introspectShapePropControllerData,
   LinkValue,
+  ListValue,
   NavigationLinksValue,
   ResponsiveColorValue,
   RichTextValue,
   ShadowsValue,
+  ShapeValue,
   TableValue,
   Types,
 } from './descriptors'
@@ -21,6 +25,8 @@ import {
   ImageControlData,
   ImageControlType,
   InlineJSON,
+  introspectListData,
+  introspectShapeData,
   LinkControlData,
   LinkControlType,
   ListControlData,
@@ -59,11 +65,19 @@ export function getElementChildren<T extends Data>(
       )
 
     case ShapeControlType: {
-      const shapeControlData = prop as ShapeControlData
+      return introspectShapeData(descriptor, prop as ShapeControlData, getElementChildren)
+    }
 
-      return Object.keys(shapeControlData).flatMap(key =>
-        getElementChildren(descriptor.config.type[key], shapeControlData[key]),
-      )
+    case ListControlType: {
+      return introspectListData(descriptor, prop as ListControlData, getElementChildren)
+    }
+
+    case Types.Shape: {
+      return introspectShapePropControllerData(descriptor, prop as ShapeValue, getElementChildren)
+    }
+
+    case Types.List: {
+      return introspectListPropControllerData(descriptor, prop as ListValue, getElementChildren)
     }
 
     default:
@@ -148,7 +162,7 @@ export function getTypographyStyleSwatchIds(
   )
 }
 
-export function getElementSwatchIds<T extends Data>(
+export function getSwatchIds<T extends Data>(
   descriptor: Descriptor<T>,
   prop: T | undefined,
 ): string[] {
@@ -222,7 +236,7 @@ export function getElementSwatchIds<T extends Data>(
     case StyleV2ControlType: {
       const value = prop as StyleV2ControlData
 
-      return value.flatMap(value => getElementSwatchIds(descriptor.config.type, value.value))
+      return value.flatMap(value => getSwatchIds(descriptor.config.type, value.value))
     }
 
     case RichTextV2ControlType: {
@@ -250,10 +264,7 @@ export function getElementSwatchIds<T extends Data>(
         return (
           plugins?.flatMap(plugin =>
             plugin.control?.definition && plugin.control.getElementValue
-              ? getElementSwatchIds(
-                  plugin.control.definition,
-                  plugin.control.getElementValue(descendant),
-                )
+              ? getSwatchIds(plugin.control.definition, plugin.control.getElementValue(descendant))
               : [],
           ) ?? []
         )
@@ -263,11 +274,27 @@ export function getElementSwatchIds<T extends Data>(
         return (
           plugins?.flatMap(plugin =>
             plugin.control?.definition && plugin.control.getLeafValue
-              ? getElementSwatchIds(plugin.control.definition, plugin.control.getLeafValue(text))
+              ? getSwatchIds(plugin.control.definition, plugin.control.getLeafValue(text))
               : [],
           ) ?? []
         )
       }
+    }
+
+    case ShapeControlType: {
+      return introspectShapeData(descriptor, prop as ShapeControlData, getSwatchIds)
+    }
+
+    case ListControlType: {
+      return introspectListData(descriptor, prop as ListControlData, getSwatchIds)
+    }
+
+    case Types.Shape: {
+      return introspectShapePropControllerData(descriptor, prop as ShapeValue, getSwatchIds)
+    }
+
+    case Types.List: {
+      return introspectListPropControllerData(descriptor, prop as ListValue, getSwatchIds)
     }
 
     default:
@@ -315,7 +342,21 @@ export function getFileIds<T extends Data>(
       const value = prop as ImageControlData
       return value == null ? [] : [value]
     }
+    case ShapeControlType: {
+      return introspectShapeData(descriptor, prop as ShapeControlData, getFileIds)
+    }
 
+    case ListControlType: {
+      return introspectListData(descriptor, prop as ListControlData, getFileIds)
+    }
+
+    case Types.Shape: {
+      return introspectShapePropControllerData(descriptor, prop as ShapeValue, getFileIds)
+    }
+
+    case Types.List: {
+      return introspectListPropControllerData(descriptor, prop as ListValue, getFileIds)
+    }
     default:
       return []
   }
@@ -352,6 +393,21 @@ export function getTypographyIds<T extends Data>(
       function getMarkTypographyIds(mark: MarkJSON): string[] {
         return [mark.data?.value?.id].filter(id => id != null)
       }
+    }
+    case ShapeControlType: {
+      return introspectShapeData(descriptor, prop as ShapeControlData, getTypographyIds)
+    }
+
+    case ListControlType: {
+      return introspectListData(descriptor, prop as ListControlData, getTypographyIds)
+    }
+
+    case Types.Shape: {
+      return introspectShapePropControllerData(descriptor, prop as ShapeValue, getTypographyIds)
+    }
+
+    case Types.List: {
+      return introspectListPropControllerData(descriptor, prop as ListValue, getTypographyIds)
     }
 
     default:
@@ -498,6 +554,21 @@ export function getPageIds<T extends Data>(
       }
     }
 
+    case ShapeControlType: {
+      return introspectShapeData(descriptor, prop as ShapeControlData, getPageIds)
+    }
+
+    case ListControlType: {
+      return introspectListData(descriptor, prop as ListControlData, getPageIds)
+    }
+
+    case Types.Shape: {
+      return introspectShapePropControllerData(descriptor, prop as ShapeValue, getPageIds)
+    }
+
+    case Types.List: {
+      return introspectListPropControllerData(descriptor, prop as ListValue, getPageIds)
+    }
     default:
       return []
   }

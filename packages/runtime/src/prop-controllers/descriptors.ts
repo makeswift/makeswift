@@ -458,6 +458,16 @@ export function List<T extends Data>(options: ListOptions<T>): ListDescriptor<Li
   return { type: Types.List, options }
 }
 
+export function introspectListPropControllerData<T>(
+  descriptor: ListDescriptor,
+  value: ListValue | undefined,
+  func: (definition: Descriptor, data: Data) => T[],
+): T[] {
+  if (value == null) return []
+
+  return value.flatMap(item => (item.value ? func(descriptor.options.type, item.value) : []))
+}
+
 type MarginSide = { value: number; unit: 'px' } | 'auto'
 
 type Margin = {
@@ -812,6 +822,18 @@ export function Shape<T extends Record<string, PanelDescriptor>>(
   options: ShapeOptions<T>,
 ): ShapeDescriptor<{ [K in keyof T]?: DescriptorValueType<T[K]> }, T> {
   return { type: Types.Shape, options }
+}
+
+export function introspectShapePropControllerData<T>(
+  descriptor: ShapeDescriptor<Record<string, Data>, Record<string, PanelDescriptor>>,
+  value: ShapeValue | undefined,
+  func: (definition: Descriptor, data: Data) => T[],
+): T[] {
+  if (value == null) return []
+
+  return Object.entries(descriptor.options.type).flatMap(([key, definition]) =>
+    func(definition, value[key]),
+  )
 }
 
 type SocialLinkType =

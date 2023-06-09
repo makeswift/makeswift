@@ -7,6 +7,7 @@ import {
 import { PropController } from '../prop-controllers/base'
 import { CopyContext } from '../state/react-page'
 import { ControlDefinition, ControlDefinitionData } from './control'
+import { Data } from './types'
 
 import { copy as controlCopy } from './control'
 
@@ -131,4 +132,14 @@ export function copyListData(
       value: controlCopy(definition.config.type, item.value, context),
     }))
   )
+}
+
+export function introspectListData<T>(
+  definition: ListControlDefinition,
+  value: ListControlData | undefined,
+  func: (definition: ControlDefinition, data: Data) => T[],
+): T[] {
+  if (value == null) return []
+
+  return value.flatMap(item => func(definition.config.type, item.value))
 }
