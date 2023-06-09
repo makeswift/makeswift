@@ -355,14 +355,23 @@ export class Makeswift {
 
   async getPageSnapshot(
     pathname: string,
-    { preview: previewOverride = false }: { preview?: boolean } = {},
+    {
+      preview: previewOverride = false,
+      unstable_locale,
+    }: { preview?: boolean; unstable_locale?: string } = {},
   ): Promise<MakeswiftPageSnapshot | null> {
     const siteVersion =
       this.siteVersion ??
       (previewOverride ? MakeswiftSiteVersion.Working : MakeswiftSiteVersion.Live)
-    const response = await this.fetch(`/v2/pages/${encodeURIComponent(pathname)}/document`, {
-      headers: { 'Makeswift-Site-Version': siteVersion },
-    })
+    const searchParams = new URLSearchParams()
+    if (unstable_locale) searchParams.set('locale', unstable_locale)
+
+    const response = await this.fetch(
+      `/v2/pages/${encodeURIComponent(pathname)}/document?${searchParams.toString()}`,
+      {
+        headers: { 'Makeswift-Site-Version': siteVersion },
+      },
+    )
 
     if (!response.ok) {
       if (response.status === 404) return null
