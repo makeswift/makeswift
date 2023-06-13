@@ -114,7 +114,12 @@ export default function useEnhancedTypography(value?: RichTextTypography): Enhan
   return devices
     .map(deviceId => {
       const deviceSource = findBreakpointOverride(breakpoints, enhancedSource, deviceId)?.value
-      const deviceOverride = findBreakpointOverride(breakpoints, enhancedOverride, deviceId)?.value
+      const deviceOverride = findBreakpointOverride(
+        breakpoints,
+        enhancedOverride,
+        deviceId,
+        v => v,
+      )?.value
 
       if (deviceSource && deviceOverride) {
         return {
@@ -174,7 +179,10 @@ export function useTypographyClassName(value: EnhancedTypography): string {
 }
 
 export function Leaf({ leaf, ...props }: RenderLeafProps) {
+  // for each breakpoint fetch related resources and merge its value with its override
   const enhancedTypography = useEnhancedTypography(leaf.typography)
+
+  // for each breakpoint shallow merge back up through the breakpoints and create a className
   const typographyClassName = useTypographyClassName(enhancedTypography)
 
   return (
