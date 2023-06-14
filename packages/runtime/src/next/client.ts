@@ -66,6 +66,7 @@ export type MakeswiftPageDocument = {
   fonts: Font[]
   meta: Meta
   seo: Seo
+  localizedPages: LocalizedPage[]
 }
 
 export type MakeswiftPageSnapshot = {
@@ -103,6 +104,13 @@ type Meta = {
 type Seo = {
   canonicalUrl?: string | null
   isIndexingBlocked?: boolean | null
+}
+
+type LocalizedPage = {
+  id: string
+  data: Element
+  elementTreeId: string
+  parentId: string | null
 }
 
 type MakeswiftConfig = {

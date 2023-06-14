@@ -133,11 +133,16 @@ export const Page = memo(({ snapshot, runtime }: PageProps) => {
       }),
     [snapshot],
   )
+  const rootElements = new Map([[snapshot.document.id, snapshot.document.data]])
+
+  snapshot.document.localizedPages.forEach(localizedPage => {
+    rootElements.set(localizedPage.elementTreeId, localizedPage.data)
+  })
 
   return (
     <RuntimeProvider
       client={client}
-      rootElements={new Map([[snapshot.document.id, snapshot.document.data]])}
+      rootElements={rootElements}
       preview={snapshot.preview}
       runtime={runtime}
     >

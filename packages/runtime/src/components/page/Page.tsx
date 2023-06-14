@@ -158,6 +158,9 @@ export function Page({ document: page }: Props): JSX.Element {
     previousHeadSnippets.current = headSnippets
   }, [headSnippets])
 
+  const baseLocalizedPage = page.localizedPages.find(({ parentId }) => parentId == null)
+  const documentId = baseLocalizedPage?.elementTreeId ?? page.id
+
   return (
     <>
       <Head>
@@ -228,7 +231,7 @@ export function Page({ document: page }: Props): JSX.Element {
         )}
       </Head>
 
-      <DocumentReference documentReference={createDocumentReference(page.id)} />
+      <DocumentReference documentReference={createDocumentReference(documentId)} />
 
       {filteredSnippets
         .filter(snippet => snippet.location === SnippetLocation.Body)
