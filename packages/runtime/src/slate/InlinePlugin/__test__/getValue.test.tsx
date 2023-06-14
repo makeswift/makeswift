@@ -3,7 +3,17 @@
 
 import { getValue } from '../getValue'
 import { InlineType } from '../..'
-import { jsx, Paragraph, Code, Text, EditorV2, Focus, Anchor, Super, Link } from '../../test-helpers'
+import {
+  jsx,
+  Paragraph,
+  Code,
+  Text,
+  EditorV2,
+  Focus,
+  Anchor,
+  Super,
+  Link,
+} from '../../test-helpers'
 
 describe('GIVEN InlinePlugin.getValue', () => {
   it('WHEN run on single type THEN return the correct value', () => {

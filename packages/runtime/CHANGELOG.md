@@ -741,9 +741,9 @@ This version is a BREAKING change. No public APIs have changed but there was a m
     const pages = await makeswift.getPages()
 
     return {
-      paths: pages.map((page) => ({
+      paths: pages.map(page => ({
         params: {
-          path: page.path.split('/').filter((segment) => segment !== ''),
+          path: page.path.split('/').filter(segment => segment !== ''),
         },
       })),
       fallback: 'blocking',
