@@ -21,11 +21,13 @@
     "build": "tsup"
   },
   "peerDependencies": {
+    "@makeswift/runtime": "^0.9.4",
     "next": "^13.4.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@makeswift/runtime": "^0.9.4",
     "@types/react": "^18.2.12",
     "@types/react-dom": "^18.2.5",
     "next": "^13.4.5",

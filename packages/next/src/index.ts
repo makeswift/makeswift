@@ -1,3 +1,1 @@
-export function helloWorld() {
-  console.log('Hello World!')
-}
+export { unstable_MakeswiftRouteHandler } from './route-handlers'
