@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { version } from '../../../../package.json'
+import pkg from '../../../../package.json'
 
 export type Manifest = {
   version: string
@@ -25,7 +25,7 @@ export default async function handler(
   }
 
   return res.json({
-    version,
+    version: pkg.version,
     previewMode: true,
     interactionMode: true,
     clientSideNavigation: true,
