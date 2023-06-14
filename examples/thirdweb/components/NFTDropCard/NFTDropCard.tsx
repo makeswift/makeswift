@@ -157,7 +157,7 @@ const NFTDropCard = forwardRef(function NFTDropCard(
   // Add claimed and unclaimed supply
   const claimedSubTotal = claimedSupply?.toNumber() || 0
   const unclaimedSubTotal = unclaimedSupply?.toNumber() || 0
-  const totalSupply = claimedSubTotal + unclaimedSubTotal;
+  const totalSupply = claimedSubTotal + unclaimedSubTotal
 
   // Function to mint/claim an NFT
   const mint = async () => {
@@ -220,25 +220,29 @@ const NFTDropCard = forwardRef(function NFTDropCard(
               </Text>
             )}
           </Grid>
-          {totalClaimed !== "nototal" && (
+          {totalClaimed !== 'nototal' && (
             <>
               <Divider />
               <Flex justify="center">
-                {claimedSupply && unclaimedSupply && totalClaimed == "total" || totalClaimed =="max" ? (
+                {(claimedSupply &&
+                  unclaimedSupply &&
+                  totalClaimed == 'total') ||
+                totalClaimed == 'max' ? (
                   <Text as="p" fontSize="md">
                     {/* Claimed supply so far */}
                     <Text fontWeight="bold" as="span">
                       {claimedSupply?.toNumber()}
                     </Text>
                     {/* Add unclaimed and claimed supply to get the total supply */}
-                    {` / ${ totalClaimed == "total" ?
-                          totalSupply + "claimed"
-                        : totalClaimed == "max" ?
-                          activeClaimCondition?.maxClaimableSupply + "claimed"
-                        : "(error: supply basis undefined)"
-                        }`}
+                    {` / ${
+                      totalClaimed == 'total'
+                        ? totalSupply + 'claimed'
+                        : totalClaimed == 'max'
+                        ? activeClaimCondition?.maxClaimableSupply + 'claimed'
+                        : '(error: supply basis undefined)'
+                    }`}
                   </Text>
-                ) : totalClaimed =="available" ? (
+                ) : totalClaimed == 'available' ? (
                   <Text as="p" fontSize="md">
                     {/* Available supply left so far */}
                     {`${activeClaimCondition?.availableSupply} left`}

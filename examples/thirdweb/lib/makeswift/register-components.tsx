@@ -40,7 +40,7 @@ ReactRuntime.registerComponent(NFTDropCard, {
         { label: 'No Total', value: 'nototal' },
         { label: 'Total Supply', value: 'total' },
         { label: 'Max Supply', value: 'max' },
-        { label: 'Available Supply', value: 'available' }
+        { label: 'Available Supply', value: 'available' },
       ],
       defaultValue: 'total',
     }),
