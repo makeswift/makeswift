@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { cache, CSSObject } from '@emotion/css'
 import { serializeStyles } from '@emotion/serialize'
 import { registerStyles, insertStyles } from '@emotion/utils'
