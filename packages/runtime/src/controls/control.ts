@@ -26,6 +26,7 @@ import { PropControllerDescriptor } from '../prop-controllers'
 import { RichTextV2ControlData, RichTextV2ControlDefinition } from './rich-text-v2'
 import { StyleV2ControlData, StyleV2ControlDefinition } from './style-v2'
 import { IconRadioGroupControlData, IconRadioGroupControlDefinition } from './icon-radio-group'
+import { TypographyControlData, TypographyControlDefinition } from './typography'
 
 export type ControlDefinition =
   | CheckboxControlDefinition
@@ -46,6 +47,7 @@ export type ControlDefinition =
   | RichTextV2ControlDefinition
   | StyleControlDefinition
   | StyleV2ControlDefinition
+  | TypographyControlDefinition
 
 export type ControlDefinitionData<T extends ControlDefinition> = T extends CheckboxControlDefinition
   ? CheckboxControlData
@@ -79,6 +81,8 @@ export type ControlDefinitionData<T extends ControlDefinition> = T extends Check
   ? StyleControlData
   : T extends StyleV2ControlDefinition
   ? StyleV2ControlData
+  : T extends TypographyControlDefinition
+  ? TypographyControlData
   : never
 
 export function copy(definition: Descriptor | ControlDefinition, value: any, context: CopyContext) {
