@@ -1,0 +1,36 @@
+{
+  "name": "@makeswift/next",
+  "version": "0.0.0",
+  "license": "MIT",
+  "repository": {
+    "url": "makeswift/makeswift",
+    "directory": "packages/next"
+  },
+  "sideEffects": false,
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "typings": "dist/index.d.ts"
+  },
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "next": "^13.4.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.12",
+    "@types/react-dom": "^18.2.5",
+    "next": "^13.4.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tsup": "^6.7.0"
+  }
+}
