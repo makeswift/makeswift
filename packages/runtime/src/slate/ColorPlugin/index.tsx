@@ -53,7 +53,7 @@ export function ColorPlugin() {
         ...props,
         leaf: {
           ...props.leaf,
-          className,
+          className: `${props.leaf.className} ${className}`,
         },
       })
     },
