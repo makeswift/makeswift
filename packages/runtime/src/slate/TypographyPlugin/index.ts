@@ -4,6 +4,8 @@ import { clearDeviceActiveTypography } from './clearDeviceActiveTypography'
 import { detachActiveTypography } from './detachActiveTypography'
 import { setActiveTypographyId } from './setActiveTypographyId'
 import { setActiveTypographyStyle } from './setActiveTypographyStyle'
+import { createRichTextV2Plugin, unstable_Typography } from '../../controls'
+import { getResponsiveValue, setResponsiveValue } from '../utils/responsive'
 
 export const TypographyActions = {
   setActiveTypographyId,
@@ -12,6 +14,8 @@ export const TypographyActions = {
   clearDeviceActiveTypography,
   detachActiveTypography,
 }
+
+export const TYPOGRAPHY_KEY = 'typography'
 
 export function withTypography(editor: Editor) {
   const { normalizeNode } = editor
@@ -22,7 +26,7 @@ export function withTypography(editor: Editor) {
       normalizationNode?.typography?.id == null &&
       normalizationNode?.typography?.style.length === 0
     ) {
-      Transforms.unsetNodes(editor, 'typography', { at: normalizationPath })
+      Transforms.unsetNodes(editor, TYPOGRAPHY_KEY, { at: normalizationPath })
       return
     }
 
@@ -35,4 +39,32 @@ export function withTypography(editor: Editor) {
   }
 
   return editor
+}
+
+export function TypographyPlugin() {
+  return createRichTextV2Plugin({
+    withPlugin: withTypography,
+    control: {
+      definition: unstable_Typography(),
+      onChange: (editor, value) => {
+        setResponsiveValue(editor, TYPOGRAPHY_KEY, value, {
+          match: Text.isText,
+          split: true,
+        })
+      },
+      getValue: editor => getResponsiveValue(editor, TYPOGRAPHY_KEY, { match: Text.isText }),
+      getLeafValue: (text: Text) => {
+        return Text.isText(text) ? text.typography : undefined
+      },
+    },
+    renderLeaf: (renderLeaf, className) => props => {
+      return renderLeaf({
+        ...props,
+        leaf: {
+          ...props.leaf,
+          className: `${props.leaf.className} ${className}`,
+        },
+      })
+    },
+  })
 }
