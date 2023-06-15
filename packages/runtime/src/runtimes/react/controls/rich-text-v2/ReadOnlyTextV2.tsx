@@ -1,13 +1,12 @@
 import { cx } from '@emotion/css'
 import { ForwardedRef, forwardRef } from 'react'
-import { useTypographyClassName } from '../../../../components/builtin/Text/components'
-import useEnhancedTypography from '../../../../components/builtin/Text/components/Leaf/leaf'
 import { useResponsiveStyle } from '../../../../components/utils/responsive-style'
 import { RichTextV2Control, RichTextV2ControlData, RichTextV2Mode } from '../../../../controls'
 import { useStyle } from '../../use-style'
 import { Descendant, Text } from 'slate'
 import { Link } from '../../../../components/shared/Link'
 import { Inline, InlineType, Block, BlockType } from '../../../../slate'
+import useEnhancedTypography, { useTypographyClassName } from '../typography'
 
 type Props = {
   text: RichTextV2ControlData

@@ -56,6 +56,9 @@ import {
   TextInputControlData,
   TextInputControlDefinition,
   TextInputControlType,
+  TypographyControlData,
+  TypographyControlDefinition,
+  TypographyControlType,
 } from '../../../controls'
 import {
   IconRadioGroupControlData,
@@ -81,6 +84,7 @@ import { StyleControlFormattedValue, useFormattedStyle } from './style'
 import { StyleV2ControlFormattedValue, StyleV2ControlValue } from './style-v2'
 import { TextAreaControlValue, useTextAreaValue } from './text-area'
 import { TextInputControlValue, useTextInputValue } from './text-input'
+import { TypographyControlValue, useTypographyValue } from './typography'
 
 export type ControlDefinitionValue<T extends ControlDefinition> =
   T extends CheckboxControlDefinition
@@ -117,6 +121,8 @@ export type ControlDefinitionValue<T extends ControlDefinition> =
     ? StyleControlFormattedValue
     : T extends StyleV2ControlDefinition
     ? StyleV2ControlFormattedValue
+    : T extends TypographyControlDefinition
+    ? TypographyControlValue
     : never
 
 type ControlValueProps<T extends ControlDefinition> = {
@@ -320,6 +326,17 @@ export function ControlValue<T extends ControlDefinition>({
           key={definition.type}
           hook={useFormattedStyle}
           parameters={[data as unknown as StyleControlData, definition, control as StyleControl]}
+        >
+          {value => children(value as ControlDefinitionValue<T>)}
+        </RenderHook>
+      )
+
+    case TypographyControlType:
+      return (
+        <RenderHook
+          key={definition.type}
+          hook={useTypographyValue}
+          parameters={[data as unknown as TypographyControlData]}
         >
           {value => children(value as ControlDefinitionValue<T>)}
         </RenderHook>

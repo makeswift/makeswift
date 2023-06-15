@@ -6,10 +6,11 @@ import type { ElementIDValue, RichTextValue } from '../../../prop-controllers/de
 import { useStyle } from '../../../runtimes/react/use-style'
 import { Link } from '../../shared/Link'
 import { useResponsiveStyle } from '../../utils/responsive-style'
-import { useTypographyClassName } from './components'
-import useEnhancedTypography from './components/Leaf/leaf'
 import { Inline, InlineType, Block, BlockType } from '../../../slate'
 import { richTextDTOtoDAO } from '../../../controls'
+import useEnhancedTypography, {
+  useTypographyClassName,
+} from '../../../runtimes/react/controls/typography'
 
 type Props = {
   id?: ElementIDValue

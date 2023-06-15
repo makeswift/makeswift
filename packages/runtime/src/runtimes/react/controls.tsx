@@ -61,6 +61,7 @@ import {
   RichTextV2Control,
   RichTextV2ControlType,
   StyleV2ControlType,
+  TypographyControlType,
 } from '../../controls'
 import { useFormattedStyle } from './controls/style'
 import { ControlValue } from './controls/control'
@@ -212,6 +213,7 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
           case ListControlType:
           case LinkControlType:
           case StyleV2ControlType:
+          case TypographyControlType:
             return (
               <ControlValue
                 definition={descriptor}
