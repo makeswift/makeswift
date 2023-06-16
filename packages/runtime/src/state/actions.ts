@@ -16,7 +16,7 @@ import { ElementImperativeHandle } from '../runtimes/react/element-imperative-ha
 import { BuilderEditMode } from './modules/builder-edit-mode'
 import type { Point } from './modules/pointer'
 import { Breakpoints } from './modules/breakpoints'
-import { Locale, Locales } from './modules/locales'
+import { LocaleString, localeStringSchema } from '../../types/locale'
 
 export const ActionTypes = {
   INIT: 'INIT',
@@ -292,17 +292,17 @@ export type SetBreakpointsAction = {
 
 type SetLocalesAction = {
   type: typeof ActionTypes.SET_LOCALES
-  payload: { locales: Locales }
+  payload: { locales: LocaleString[] }
 }
 
 type SetLocaleAction = {
   type: typeof ActionTypes.SET_LOCALE
-  payload: { locale: Locale }
+  payload: { locale: LocaleString }
 }
 
 type SetDefaultLocaleAction = {
   type: typeof ActionTypes.SET_DEFAULT_LOCALE
-  payload: { defaultLocale: Locale }
+  payload: { defaultLocale: LocaleString }
 }
 
 export type Action =
@@ -692,14 +692,23 @@ export function setBreakpoints(breakpoints: Breakpoints): SetBreakpointsAction {
   return { type: ActionTypes.SET_BREAKPOINTS, payload: { breakpoints } }
 }
 
-export function setLocales(locales: Locales): SetLocalesAction {
-  return { type: ActionTypes.SET_LOCALES, payload: { locales } }
+export function setLocales(locales: Intl.Locale[]): SetLocalesAction {
+  return {
+    type: ActionTypes.SET_LOCALES,
+    payload: { locales: locales.map(locale => localeStringSchema.parse(locale.toString())) },
+  }
 }
 
-export function setLocale(locale: Locale): SetLocaleAction {
-  return { type: ActionTypes.SET_LOCALE, payload: { locale } }
+export function setLocale(locale: Intl.Locale): SetLocaleAction {
+  return {
+    type: ActionTypes.SET_LOCALE,
+    payload: { locale: localeStringSchema.parse(locale.toString()) },
+  }
 }
 
-export function setDefaultLocale(defaultLocale: Locale): SetDefaultLocaleAction {
-  return { type: ActionTypes.SET_DEFAULT_LOCALE, payload: { defaultLocale } }
+export function setDefaultLocale(defaultLocale: Intl.Locale): SetDefaultLocaleAction {
+  return {
+    type: ActionTypes.SET_DEFAULT_LOCALE,
+    payload: { defaultLocale: localeStringSchema.parse(defaultLocale.toString()) },
+  }
 }

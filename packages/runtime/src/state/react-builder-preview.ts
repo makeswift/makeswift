@@ -500,12 +500,14 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
       const breakpoints = ReactPage.getBreakpoints(state)
       messageChannel.port1.postMessage(setBreakpoints(breakpoints))
 
-      const locales = ReactPage.getLocales(state).locales
-      const defaultLocale = ReactPage.getLocales(state).defaultLocale
+      const locales = ReactPage.getLocales(state)
+      const defaultLocale = ReactPage.getDefaultLocale(state)
       const routerLocale = Router.locale
       if (locales.length > 0) messageChannel.port1.postMessage(setLocales(locales))
       if (defaultLocale != null) messageChannel.port1.postMessage(setDefaultLocale(defaultLocale))
-      if (routerLocale != null) messageChannel.port1.postMessage(setLocale(routerLocale))
+      if (routerLocale != null && locales.some(locale => locale.toString() === routerLocale)) {
+        messageChannel.port1.postMessage(setLocale(new Intl.Locale(routerLocale)))
+      }
 
       Router.events.on('routeChangeStart', () => {
         messageChannel.port1.postMessage(changePathnameStart())

@@ -384,8 +384,16 @@ export function getBreakpoints(state: State): Breakpoints.State {
   return state.breakpoints
 }
 
-export function getLocales(state: State): Locales.State {
-  return state.locales
+export function getLocale(state: State): Intl.Locale | null {
+  return state.locales.locale ? new Intl.Locale(state.locales.locale) : null
+}
+
+export function getLocales(state: State): Intl.Locale[] {
+  return state.locales.locales.map(locale => new Intl.Locale(locale))
+}
+
+export function getDefaultLocale(state: State): Intl.Locale | null {
+  return state.locales.defaultLocale ? new Intl.Locale(state.locales.defaultLocale) : null
 }
 
 export type Dispatch = ThunkDispatch<State, unknown, Action>
