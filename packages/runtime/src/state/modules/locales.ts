@@ -1,13 +1,11 @@
 import { Action, ActionTypes } from '../actions'
 
-export type Locale = string
-
-export type Locales = Locale[]
+import { LocaleString, localeStringSchema } from '../../../types/locale'
 
 export type State = {
-  locales: Locales
-  locale: Locale | null
-  defaultLocale: Locale | null
+  locales: LocaleString[]
+  locale: LocaleString | null
+  defaultLocale: LocaleString | null
 }
 
 export function getInitialState(initialState?: State): State {
@@ -44,13 +42,14 @@ export function reducer(state: State = getInitialState(), action: Action): State
 }
 
 export type LocalesInput = {
-  locales: string[]
-  defaultLocale: string
+  locales: LocaleString[]
+  defaultLocale: LocaleString
 }
 
 export function parseLocalesInput(input: LocalesInput): State {
   return {
-    ...input,
+    locales: input.locales.map(locale => localeStringSchema.parse(locale)),
+    defaultLocale: localeStringSchema.parse(input.defaultLocale),
     locale: null,
   }
 }
