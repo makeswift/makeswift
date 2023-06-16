@@ -122,6 +122,12 @@ export function BlockElement({ descendant, mode }: BlockProps) {
     borderLeft: '5px solid rgba(0, 0, 0, 0.1)',
   })
 
+  const listStyles = useStyle({
+    listStylePosition: 'inside',
+    paddingInlineStart: '20px',
+    listStyleType: 'disc',
+  })
+
   switch (descendant.type) {
     case BlockType.Text:
       return (
@@ -179,13 +185,13 @@ export function BlockElement({ descendant, mode }: BlockProps) {
       )
     case BlockType.OrderedList:
       return (
-        <ol className={cx(...blockStyles)} style={{ listStylePosition: 'inside' }}>
+        <ol className={cx(...blockStyles, listStyles)}>
           <Descendants descendants={descendant.children} mode={mode} />
         </ol>
       )
     case BlockType.UnorderedList:
       return (
-        <ul className={cx(...blockStyles)} style={{ listStylePosition: 'inside' }}>
+        <ul className={cx(...blockStyles, listStyles)}>
           <Descendants descendants={descendant.children} mode={mode} />
         </ul>
       )

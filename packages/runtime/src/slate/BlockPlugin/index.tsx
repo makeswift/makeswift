@@ -316,6 +316,12 @@ function BlockPluginComponent({
     borderLeft: '5px solid rgba(0, 0, 0, 0.1)',
   })
 
+  const listStyles = useStyle({
+    listStylePosition: 'inside',
+    paddingInlineStart: '20px',
+    listStyleType: 'disc',
+  })
+
   switch (element.type) {
     case BlockType.Text:
       return (
@@ -373,13 +379,13 @@ function BlockPluginComponent({
       )
     case BlockType.OrderedList:
       return (
-        <ol {...attributes} className={cx(...blockStyles)} style={{ listStylePosition: 'inside' }}>
+        <ol {...attributes} className={cx(...blockStyles, listStyles)}>
           {children}
         </ol>
       )
     case BlockType.UnorderedList:
       return (
-        <ul {...attributes} className={cx(...blockStyles)} style={{ listStylePosition: 'inside' }}>
+        <ul {...attributes} className={cx(...blockStyles, listStyles)}>
           {children}
         </ul>
       )
