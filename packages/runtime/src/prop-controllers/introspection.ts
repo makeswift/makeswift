@@ -462,7 +462,7 @@ export function getPageIds<T extends Data>(
           return value.payload.pageId == null ? [] : [value.payload.pageId]
 
         default:
-          break
+          return []
       }
     }
 
