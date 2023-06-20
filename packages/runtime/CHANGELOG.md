@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.9.5
+
+### Patch Changes
+
+- 2f9183c: Add type and runtime-check to unstable_locale.
+- b0da14b: Fix a runtime error introduced in `0.9.2` that throws when a `Link` control is used within a `Shape` or `List` control.
+- d1989e5: Add `unstable_locale` option to getPageSnapshot.
+
 ## 0.9.4
 
 ### Patch Changes
@@ -751,9 +759,9 @@ This version is a BREAKING change. No public APIs have changed but there was a m
     const pages = await makeswift.getPages()
 
     return {
-      paths: pages.map(page => ({
+      paths: pages.map((page) => ({
         params: {
-          path: page.path.split('/').filter(segment => segment !== ''),
+          path: page.path.split('/').filter((segment) => segment !== ''),
         },
       })),
       fallback: 'blocking',
