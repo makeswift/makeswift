@@ -1,6 +1,6 @@
 import { keyframes } from '@emotion/css'
 import { useStyle } from '../../../../../runtimes/react/use-style'
-import { ReactComponent as Spinner20 } from '../../../../icons/spinner-20.svg'
+import Spinner20 from '../../../../icons/spinner-20.svg'
 
 const spin = keyframes`
   from {

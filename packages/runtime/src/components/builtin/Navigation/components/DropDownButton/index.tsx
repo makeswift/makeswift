@@ -1,9 +1,9 @@
 import { ComponentPropsWithoutRef, ForwardedRef, forwardRef, useRef, useState } from 'react'
 
-import { ReactComponent as CaretDown8 } from '../../../../icons/caret-down-8.svg'
-import { ReactComponent as Plus8 } from '../../../../icons/plus-8.svg'
-import { ReactComponent as ArrowDown8 } from '../../../../icons/arrow-down-8.svg'
-import { ReactComponent as ChevronDown8 } from '../../../../icons/chevron-down-8.svg'
+import CaretDown8 from '../../../../icons/caret-down-8.svg'
+import Plus8 from '../../../../icons/plus-8.svg'
+import ArrowDown8 from '../../../../icons/arrow-down-8.svg'
+import ChevronDown8 from '../../../../icons/chevron-down-8.svg'
 import {
   ResponsiveColorValue,
   TextStyleValue,

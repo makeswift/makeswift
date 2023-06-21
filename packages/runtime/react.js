@@ -1,1 +1,1 @@
-module.exports = require('./dist/react.cjs')
+module.exports = require('./dist/react.js')

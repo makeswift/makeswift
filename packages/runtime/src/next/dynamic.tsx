@@ -32,7 +32,7 @@ function loadForwardedRef<P, T>({
 type LoaderComponent<P> = Promise<ComponentType<P> | { default: ComponentType<P> }>
 
 function resolve(obj: any) {
-  return obj && obj.__esModule ? obj.default : obj
+  return obj && ('default' in obj) ? obj.default : obj
 }
 
 type PatchedLoaderComponent<P, T> = LoaderComponent<WithSavedForwardedRef<P, T>>
@@ -46,7 +46,6 @@ export function forwardNextDynamicRef<T, P>(
 ): ForwardRefExoticComponent<PropsWithoutRef<P> & RefAttributes<T>> {
   const Dynamic = nextDynamicThunk(loaderComponent =>
     loaderComponent.then(moduleOrComponent => ({
-      __esModule: true,
       default: props => createElement(resolve(moduleOrComponent), loadForwardedRef(props)),
     })),
   )

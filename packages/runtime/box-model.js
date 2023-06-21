@@ -1,1 +1,1 @@
-module.exports = require('./dist/box-model.cjs')
+module.exports = require('./dist/box-model.js')

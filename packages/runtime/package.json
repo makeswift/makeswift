@@ -2,8 +2,8 @@
   "name": "@makeswift/runtime",
   "version": "0.9.7",
   "license": "MIT",
-  "main": "dist/main.cjs",
-  "module": "dist/main.es",
+  "main": "dist/index.js",
+  "module": "dist/esm/index.js",
   "types": "dist/types/src",
   "files": [
     "dist",
@@ -21,49 +21,49 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/main.es.js",
-      "require": "./dist/main.cjs.js"
+      "import": "./dist/esm/index.js",
+      "require": "./dist/index.js"
     },
     "./prop-controllers": {
-      "import": "./dist/prop-controllers.es.js",
-      "require": "./dist/prop-controllers.cjs.js"
+      "import": "./dist/esm/prop-controllers/index.js",
+      "require": "./dist/prop-controllers/index.js"
     },
     "./react": {
-      "import": "./dist/react.es.js",
-      "require": "./dist/react.cjs.js"
+      "import": "./dist/esm/react.js",
+      "require": "./dist/react.js"
     },
     "./box-model": {
-      "import": "./dist/box-model.es.js",
-      "require": "./dist/box-model.cjs.js"
+      "import": "./dist/esm/box-model.js",
+      "require": "./dist/box-model.js"
     },
     "./components": {
-      "import": "./dist/components.es.js",
-      "require": "./dist/components.cjs.js"
+      "import": "./dist/esm/components/index.js",
+      "require": "./dist/components/index.js"
     },
     "./api": {
-      "import": "./dist/api.es.js",
-      "require": "./dist/api.cjs.js"
+      "import": "./dist/esm/api/index.js",
+      "require": "./dist/api/index.js"
     },
     "./next": {
-      "import": "./dist/next.es.js",
-      "require": "./dist/next.cjs.js"
+      "import": "./dist/esm/next/index.js",
+      "require": "./dist/next/index.js"
     },
     "./next/plugin": "./next/plugin.js",
     "./builder": {
-      "import": "./dist/builder.es.js",
-      "require": "./dist/builder.cjs.js"
+      "import": "./dist/esm/builder/index.js",
+      "require": "./dist/builder/index.js"
     },
     "./controls": {
-      "import": "./dist/controls.es.js",
-      "require": "./dist/controls.cjs.js"
+      "import": "./dist/esm/controls/index.js",
+      "require": "./dist/controls/index.js"
     },
     "./slate": {
-      "import": "./dist/slate.es.js",
-      "require": "./dist/slate.cjs.js"
+      "import": "./dist/esm/slate/index.js",
+      "require": "./dist/slate/index.js"
     },
     "./state/breakpoints": {
-      "import": "./dist/state/breakpoints.es.js",
-      "require": "./dist/state/breakpoints.cjs.js"
+      "import": "./dist/esm/state/breakpoints.js",
+      "require": "./dist/state/breakpoints.js"
     }
   },
   "typesVersions": {
@@ -101,10 +101,9 @@
     }
   },
   "scripts": {
-    "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'vite build --watch'",
+    "build": "yarn clean && tsc --emitDeclarationOnly && tsup",
     "clean": "rm -rf dist",
-    "build": "yarn clean && tsc && vite build",
-    "preview": "vite preview",
+    "dev": "conc -k 'tsc --emitDeclarationOnly --watch --preserveWatchOutput' 'tsup --watch'",
     "prepare": "yarn build",
     "generate": "graphql-codegen --config codegen.yml",
     "test": "vitest run --config vite.test.config.ts",
@@ -166,12 +165,12 @@
     "@graphql-codegen/cli": "2.6.2",
     "@graphql-codegen/typescript-document-nodes": "^2.3.12",
     "@graphql-codegen/typescript-operations": "2.3.4",
-    "@svgr/rollup": "^6.2.1",
+    "@svgr/plugin-jsx": "^8.0.1",
     "@types/color": "^3.0.2",
     "@types/cors": "^2.8.12",
     "@types/node": "^17.0.21",
-    "@vitejs/plugin-react": "^1.1.4",
-    "concurrently": "^5.3.0",
+    "concurrently": "^8.2.0",
+    "esbuild-plugin-svgr": "^2.0.0",
     "madge": "^6.0.0",
     "next": "13.1.1",
     "prettier": "^2.5.1",
@@ -180,6 +179,7 @@
     "slate": "^0.91.4",
     "slate-hyperscript": "^0.77.0",
     "slate-react": "^0.91.7",
+    "tsup": "^7.0.0",
     "typescript": "^5.0.4",
     "vite": "^2.8.6",
     "vitest": "^0.7.4"

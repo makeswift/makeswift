@@ -1,1 +1,1 @@
-module.exports = require('./dist/slate.cjs')
+module.exports = require('./dist/slate/index.js')
