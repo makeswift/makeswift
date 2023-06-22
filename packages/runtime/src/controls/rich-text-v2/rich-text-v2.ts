@@ -5,6 +5,7 @@ import { KeyboardEvent } from 'react'
 import { Send } from '../../prop-controllers/instances'
 import { ControlDefinition, ControlDefinitionData } from '../control'
 import { RenderElementProps, RenderLeafProps } from 'slate-react'
+import { RichTextControlData } from '../rich-text/rich-text'
 
 export type RichTextV2ControlData = Descendant[]
 
@@ -210,4 +211,10 @@ export class RichTextV2Control<
   changeBoxModel(boxModel: BoxModel | null): void {
     this.send({ type: RichTextV2ControlMessageType.CHANGE_BOX_MODEL, payload: { boxModel } })
   }
+}
+
+export function isRichTextV1Data(
+  value: RichTextControlData | RichTextV2ControlData | undefined,
+): value is RichTextControlData {
+  return value !== undefined && typeof value === 'object' && !Array.isArray(value)
 }
