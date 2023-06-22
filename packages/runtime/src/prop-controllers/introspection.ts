@@ -27,6 +27,7 @@ import {
   InlineJSON,
   introspectListData,
   introspectShapeData,
+  isRichTextV1Data,
   LinkControlData,
   LinkControlType,
   ListControlData,
@@ -242,6 +243,9 @@ export function getSwatchIds<T extends Data>(
     case RichTextV2ControlType: {
       const descendants = prop as RichTextV2ControlData
       const plugins = descriptor.config.plugins
+
+      // TODO:josh update RichTextV2 to introspect RichText data when it encounters it.
+      if (isRichTextV1Data(descendants)) return []
 
       return descendants.flatMap(d => getDescendantSwatchIds(d))
 

@@ -1,9 +1,11 @@
 import { ReactNode } from 'react'
 
 import {
+  RichTextControlData,
   RichTextV2Control,
   RichTextV2ControlData,
   RichTextV2ControlDefinition,
+  isRichTextV1Data,
 } from '../../../../controls'
 import { useIsPreview } from '../../../react'
 import { forwardNextDynamicRef } from '../../../../next'
@@ -20,12 +22,20 @@ const ReadOnlyText = forwardNextDynamicRef(patch =>
   dynamic(() => patch(import('./ReadOnlyTextV2'))),
 )
 
+const ReadOnlyTextV1 = forwardNextDynamicRef(patch =>
+  dynamic(() => patch(import('../../../../components/builtin/Text/ReadOnlyText'))),
+)
+
 export function useRichTextV2(
-  data: RichTextV2ControlData,
+  data: RichTextV2ControlData | RichTextControlData,
   definition: RichTextV2ControlDefinition,
   control: RichTextV2Control | null,
 ) {
   const isPreview = useIsPreview()
+
+  if (isRichTextV1Data(data)) {
+    return <ReadOnlyTextV1 text={data} />
+  }
 
   return isPreview ? (
     <EditableText text={data} definition={definition} control={control} />
