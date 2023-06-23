@@ -16,6 +16,7 @@ import * as IsInBuilder from './modules/is-in-builder'
 import * as IsPreview from './modules/is-preview'
 import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Breakpoints from './modules/breakpoints'
+import * as Fonts from './modules/fonts'
 import * as Locales from './modules/locales'
 import * as Introspection from '../prop-controllers/introspection'
 import { Action } from './actions'
@@ -47,6 +48,7 @@ const reducer = combineReducers({
   isPreview: IsPreview.reducer,
   builderEditMode: BuilderEditMode.reducer,
   breakpoints: Breakpoints.reducer,
+  fonts: Fonts.reducer,
   locales: Locales.reducer,
 })
 
@@ -380,6 +382,10 @@ export function getBuilderEditMode(state: State): BuilderEditMode.State {
   return state.builderEditMode
 }
 
+export function getFonts(state: State): Fonts.State {
+  return state.fonts
+}
+
 export function getBreakpoints(state: State): Breakpoints.State {
   return state.breakpoints
 }
@@ -404,11 +410,13 @@ export function configureStore({
   rootElements,
   preloadedState,
   breakpoints,
+  fonts,
   locales,
 }: {
   rootElements?: Map<string, Documents.Element>
   preloadedState?: PreloadedState<State>
   breakpoints?: Breakpoints.State
+  fonts?: Fonts.State
   locales?: Locales.State
 } = {}): Store {
   return createStore(
@@ -417,6 +425,7 @@ export function configureStore({
       ...preloadedState,
       documents: Documents.getInitialState({ rootElements }),
       breakpoints: Breakpoints.getInitialState(breakpoints ?? preloadedState?.breakpoints),
+      fonts: Fonts.getInitialState(fonts ?? preloadedState?.fonts),
       locales: Locales.getInitialState(locales ?? preloadedState?.locales),
     },
     applyMiddleware(thunk),

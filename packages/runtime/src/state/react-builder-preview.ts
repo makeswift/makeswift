@@ -25,6 +25,7 @@ import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Pointer from './modules/pointer'
 import * as ElementImperativeHandles from './modules/element-imperative-handles'
 import * as Breakpoints from './modules/breakpoints'
+import * as Fonts from './modules/fonts'
 import * as Locales from './modules/locales'
 import * as ReactPage from './react-page'
 import {
@@ -51,6 +52,7 @@ import {
   setLocales,
   setLocale,
   setDefaultLocale,
+  setFonts,
 } from './actions'
 import { ActionTypes } from './actions'
 import { createPropController } from '../prop-controllers/instances'
@@ -76,6 +78,7 @@ const reducer = combineReducers({
   pointer: Pointer.reducer,
   elementImperativeHandles: ElementImperativeHandles.reducer,
   breakpoints: Breakpoints.reducer,
+  fonts: Fonts.reducer,
   locales: Locales.reducer,
 })
 
@@ -499,6 +502,9 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
 
       const breakpoints = ReactPage.getBreakpoints(state)
       messageChannel.port1.postMessage(setBreakpoints(breakpoints))
+
+      const fonts = ReactPage.getFonts(state)
+      messageChannel.port1.postMessage(setFonts(fonts))
 
       const locales = ReactPage.getLocales(state)
       const defaultLocale = ReactPage.getDefaultLocale(state)

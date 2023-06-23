@@ -17,6 +17,7 @@ import { BuilderEditMode } from './modules/builder-edit-mode'
 import type { Point } from './modules/pointer'
 import { Breakpoints } from './modules/breakpoints'
 import { LocaleString, localeStringSchema } from '../../types/locale'
+import { Fonts } from './modules/fonts'
 
 export const ActionTypes = {
   INIT: 'INIT',
@@ -80,6 +81,8 @@ export const ActionTypes = {
   ELEMENT_FROM_POINT_CHANGE: 'ELEMENT_FROM_POINT_CHANGE',
 
   SET_BREAKPOINTS: 'SET_BREAKPOINTS',
+
+  SET_FONTS: 'SET_FONTS',
 
   SET_LOCALES: 'SET_LOCALES',
   SET_LOCALE: 'SET_LOCALE',
@@ -290,6 +293,11 @@ export type SetBreakpointsAction = {
   payload: { breakpoints: Breakpoints }
 }
 
+export type SetFontsAction = {
+  type: typeof ActionTypes.SET_FONTS
+  payload: { fonts: Fonts }
+}
+
 type SetLocalesAction = {
   type: typeof ActionTypes.SET_LOCALES
   payload: { locales: LocaleString[] }
@@ -346,6 +354,7 @@ export type Action =
   | BuilderPointerMoveAction
   | ElementFromPointChangeAction
   | SetBreakpointsAction
+  | SetFontsAction
   | SetLocalesAction
   | SetLocaleAction
   | SetDefaultLocaleAction
@@ -690,6 +699,10 @@ export function elementFromPointChange(
 
 export function setBreakpoints(breakpoints: Breakpoints): SetBreakpointsAction {
   return { type: ActionTypes.SET_BREAKPOINTS, payload: { breakpoints } }
+}
+
+export function setFonts(fonts: Fonts): SetFontsAction {
+  return { type: ActionTypes.SET_FONTS, payload: { fonts } }
 }
 
 export function setLocales(locales: Intl.Locale[]): SetLocalesAction {

@@ -15,6 +15,7 @@ export type { Manifest, Font }
 type MakeswiftApiHandlerConfig = {
   appOrigin?: string
   apiOrigin?: string
+  /** @deprecated Use the `fonts` option in the `ReactRuntime` constructor instead. */
   getFonts?: GetFonts
   unstable_siteVersions?: boolean
 }

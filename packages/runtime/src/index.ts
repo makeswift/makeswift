@@ -15,6 +15,7 @@ export {
   changePathname,
   builderPointerMove,
   setBreakpoints,
+  setFonts,
   setLocale,
   setLocales,
 } from './state/actions'
