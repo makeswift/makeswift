@@ -88,9 +88,15 @@ export const TypographiesQuery = /* GraphQL */ `
 `
 
 export const GlobalElementQuery = /* GraphQL */ `
-  query GlobalElement($globalElementId: ID!) {
+  query GlobalElement($globalElementId: ID!, $locale: Locale) {
     globalElement(id: $globalElementId) {
       ...GlobalElement
+
+      localized(locale: $locale) {
+        __typename
+        id
+        data
+      }
     }
   }
 
