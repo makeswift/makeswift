@@ -18,6 +18,7 @@ generates:
             URL: string
             URLPathname: string
             JSON: Json
+            Locale: string
 
       - add:
           content: |
@@ -30,6 +31,7 @@ generates:
             type Scalars = {
               ID: string
               JSON: Json
+              Locale: string
             }
 
             export type CreateTableRecordInput = {

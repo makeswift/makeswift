@@ -27,6 +27,7 @@ export type CacheData = MakeswiftApiClient.SerializedState
 export type MakeswiftClientOptions = {
   uri: string
   cacheData?: CacheData
+  locale?: Intl.Locale
 }
 
 /**
@@ -52,11 +53,13 @@ export class MakeswiftClient {
   graphqlClient: GraphQLClient
   makeswiftApiClient: MakeswiftApiClient.Store
   subscribe: MakeswiftApiClient.Store['subscribe']
+  locale: Intl.Locale | undefined
 
-  constructor({ uri, cacheData }: MakeswiftClientOptions) {
+  constructor({ uri, cacheData, locale }: MakeswiftClientOptions) {
     this.graphqlClient = new GraphQLClient(uri)
     this.makeswiftApiClient = MakeswiftApiClient.configureStore({ serializedState: cacheData })
     this.subscribe = this.makeswiftApiClient.subscribe
+    this.locale = locale
   }
 
   readSwatch(swatchId: string): Swatch | null {
@@ -111,7 +114,11 @@ export class MakeswiftClient {
 
   async fetchGlobalElement(globalElementId: string): Promise<GlobalElement | null> {
     return await this.makeswiftApiClient.dispatch(
-      MakeswiftApiClient.fetchAPIResource(APIResourceType.GlobalElement, globalElementId),
+      MakeswiftApiClient.fetchAPIResource(
+        APIResourceType.GlobalElement,
+        globalElementId,
+        this.locale,
+      ),
     )
   }
 

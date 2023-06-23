@@ -7,6 +7,7 @@ type Json = null | boolean | number | string | Json[] | { [key: string]: Json }
 type Scalars = {
   ID: string
   JSON: Json
+  Locale: string
 }
 
 export type CreateTableRecordInput = {
@@ -75,7 +76,12 @@ export type PagePathnameSliceFragment = {
   pathname: string
 }
 
-export type GlobalElementFragment = { __typename: 'GlobalElement'; id: string; data: Json }
+export type GlobalElementFragment = {
+  __typename: 'GlobalElement'
+  id: string
+  data: Json
+  localized: { __typename: 'LocalizedGlobalElement'; id: string; data: Json } | null
+}
 
 export type TableFragment = {
   __typename: 'Table'
@@ -315,10 +321,16 @@ export type TypographiesQueryResult = {
 
 export type GlobalElementQueryVariables = Exact<{
   globalElementId: Scalars['ID']
+  locale: InputMaybe<Scalars['Locale']>
 }>
 
 export type GlobalElementQueryResult = {
-  globalElement: { __typename: 'GlobalElement'; id: string; data: Json } | null
+  globalElement: {
+    __typename: 'GlobalElement'
+    id: string
+    data: Json
+    localized: { __typename: 'LocalizedGlobalElement'; id: string; data: Json } | null
+  } | null
 }
 
 export type CreateTableRecordMutationVariables = Exact<{

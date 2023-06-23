@@ -74,6 +74,7 @@ export type MakeswiftPageSnapshot = {
   apiOrigin: string
   cacheData: CacheData
   preview: boolean
+  locale: string | null
 }
 
 type Snippet = {
@@ -236,7 +237,11 @@ export class Makeswift {
     return { ...result, swatches }
   }
 
-  private async introspect(element: Element, preview: boolean): Promise<CacheData> {
+  private async introspect(
+    element: Element,
+    preview: boolean,
+    locale?: string,
+  ): Promise<CacheData> {
     const runtime = this.runtime
     const descriptors = getPropControllerDescriptors(runtime.store.getState())
     const swatchIds = new Set<string>()
@@ -254,11 +259,12 @@ export class Makeswift {
       let element: ElementData
 
       if (isElementReference(current)) {
-        const globalElement = await this.getGlobalElement(current.value)
+        const globalElement = await this.getGlobalElement(current.value, locale)
 
         globalElements.set(current.value, globalElement)
 
-        const elementData = globalElement?.data
+        // Update the logic here when we can merge element trees
+        const elementData = globalElement?.localized?.data ?? globalElement?.data
 
         if (elementData == null) continue
 
@@ -389,11 +395,11 @@ export class Makeswift {
     }
 
     const document = await response.json()
-    const cacheData = await this.introspect(document.data, previewOverride)
+    const cacheData = await this.introspect(document.data, previewOverride, unstable_locale)
     const apiOrigin = this.apiOrigin.href
     const preview = siteVersion === MakeswiftSiteVersion.Working
 
-    return { document, cacheData, apiOrigin, preview }
+    return { document, cacheData, apiOrigin, preview, locale: unstable_locale ?? null }
   }
 
   async getSwatch(swatchId: string): Promise<Swatch | null> {
@@ -428,11 +434,11 @@ export class Makeswift {
     return result.typography
   }
 
-  async getGlobalElement(globalElementId: string): Promise<GlobalElement | null> {
+  async getGlobalElement(globalElementId: string, locale?: string): Promise<GlobalElement | null> {
     const result = await this.graphqlClient.request<
       GlobalElementQueryResult,
       GlobalElementQueryVariables
-    >(GlobalElementQuery, { globalElementId })
+    >(GlobalElementQuery, { globalElementId, locale: locale ?? null })
 
     return result.globalElement
   }
