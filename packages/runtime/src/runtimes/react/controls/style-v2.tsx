@@ -4,6 +4,7 @@ import {
   findBreakpointOverride,
   getBaseBreakpoint,
   getBreakpointMediaQuery,
+  mergeOrCoalesceFallbacks,
 } from '../../../state/modules/breakpoints'
 import { useBreakpoints } from '..'
 import { CSSObject } from '@emotion/css'
@@ -20,14 +21,23 @@ function useStyleControlCssObject(
 
   return {
     ...controlDefinition.config.getStyle(
-      findBreakpointOverride(breakpoints, styleControlData, getBaseBreakpoint(breakpoints).id)
-        ?.value,
+      findBreakpointOverride(
+        breakpoints,
+        styleControlData,
+        getBaseBreakpoint(breakpoints).id,
+        mergeOrCoalesceFallbacks,
+      )?.value,
     ),
     ...breakpoints.reduce((styles, breakpoint) => {
       return {
         ...styles,
         [getBreakpointMediaQuery(breakpoint)]: controlDefinition.config.getStyle(
-          findBreakpointOverride(breakpoints, styleControlData, breakpoint.id)?.value,
+          findBreakpointOverride(
+            breakpoints,
+            styleControlData,
+            breakpoint.id,
+            mergeOrCoalesceFallbacks,
+          )?.value,
         ),
       }
     }, {}),

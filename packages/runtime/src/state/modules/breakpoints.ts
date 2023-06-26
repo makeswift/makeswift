@@ -7,6 +7,8 @@ import {
 } from '../../prop-controllers'
 import shallowMerge from '../../utils/shallowMerge'
 import { Action, ActionTypes } from '../actions'
+import coalesce from '../../utils/coalesce'
+import { Data } from '../../controls/types'
 
 export type DeviceOverride<T> = PropControllerDeviceOverride<T>
 export type ResponsiveValue<T> = PropControllerResponsiveValue<T>
@@ -203,6 +205,32 @@ export function shallowMergeFallbacks<V extends Record<string, unknown>>(
     .reduce((a, b) => ({
       deviceId: a.deviceId || b.deviceId,
       value: shallowMerge(a.value, b.value),
+    }))
+}
+
+function mergeOrCoalesce<A extends Data>(a: A, b: A): A {
+  if (
+    typeof a === 'object' &&
+    a !== null &&
+    !Array.isArray(a) &&
+    typeof b === 'object' &&
+    b !== null &&
+    !Array.isArray(b)
+  ) {
+    return shallowMerge(a, b) as A
+  }
+  return coalesce(a, b)
+}
+
+export function mergeOrCoalesceFallbacks<V extends Data>(
+  value: DeviceOverride<V> | undefined,
+  fallbacks: ResponsiveValue<V>,
+): DeviceOverride<V> | undefined {
+  return [value, ...fallbacks]
+    .filter((override): override is DeviceOverride<V> => Boolean(override))
+    .reduce((a, b) => ({
+      deviceId: a.deviceId || b.deviceId,
+      value: mergeOrCoalesce(a.value, b.value),
     }))
 }
 
