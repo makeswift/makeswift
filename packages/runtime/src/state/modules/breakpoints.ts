@@ -7,6 +7,7 @@ import {
 } from '../../prop-controllers'
 import shallowMerge from '../../utils/shallowMerge'
 import { Action, ActionTypes } from '../actions'
+import coalesce from '../../utils/coalesce'
 
 export type DeviceOverride<T> = PropControllerDeviceOverride<T>
 export type ResponsiveValue<T> = PropControllerResponsiveValue<T>
@@ -203,6 +204,44 @@ export function shallowMergeFallbacks<V extends Record<string, unknown>>(
     .reduce((a, b) => ({
       deviceId: a.deviceId || b.deviceId,
       value: shallowMerge(a.value, b.value),
+    }))
+}
+
+/**
+ * This merge is lossy for arrays and needs tombstones to preserve order after deletions
+ */
+function mergeOrCoalesce<A extends unknown[] | Record<string, unknown> | number | string>(a: A, b: A): A {
+  if (typeof a === 'object' && a !== null && typeof b === 'object' && b !== null) {
+    if (Array.isArray(a) && Array.isArray(b)) {
+      const length = b.length - a.length
+
+      const nextA = length > 0 ? [...a, ...b.slice(-length)] : a
+
+      return nextA.map((aPrime, i) => {
+        const bPrime = b.at(i)
+        return bPrime ? coalesce(aPrime, bPrime) : aPrime
+      }) as A
+    }
+
+    return shallowMerge(a as any, b as any) as A
+  }
+  return coalesce(a, b)
+}
+
+/**
+ * This mergeFallbacks is lossy for arrays and needs tombstones to preserve order after deletions
+ */
+export function mergeOrCoalesceFallbacks<
+  V extends Record<string, unknown> | Array<Record<string, unknown>>,
+>(
+  value: DeviceOverride<V> | undefined,
+  fallbacks: ResponsiveValue<V>,
+): DeviceOverride<V> | undefined {
+  return [value, ...fallbacks]
+    .filter((override): override is DeviceOverride<V> => Boolean(override))
+    .reduce((a, b) => ({
+      deviceId: a.deviceId || b.deviceId,
+      value: mergeOrCoalesce(a.value, b.value),
     }))
 }
 
