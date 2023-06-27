@@ -16,7 +16,7 @@ export type TypographyControlData = {
       color?: { swatchId: string | null; alpha: number | null } | null
     }
   }>
-}
+} | null
 
 export const TypographyControlType = 'makeswift::controls::typography'
 

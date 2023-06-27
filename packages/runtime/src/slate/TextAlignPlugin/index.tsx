@@ -7,11 +7,8 @@ import {
 } from '../../controls'
 import { ElementUtils } from '../utils/element'
 import { TextAlignProperty } from 'csstype'
-import {
-  getResponsiveValue,
-  normalizeResponsiveValue,
-  setResponsiveValue,
-} from '../utils/responsive'
+import { normalizeResponsiveValue, setResponsiveValue } from '../utils/responsive'
+import { getValue } from './getValue'
 
 const TEXT_ALIGN_KEY = 'textAlign'
 
@@ -68,8 +65,7 @@ export function TextAlignPlugin() {
           match: ElementUtils.isRootBlock,
           split: false,
         }),
-      getValue: editor =>
-        getResponsiveValue(editor, TEXT_ALIGN_KEY, { match: ElementUtils.isRootBlock }),
+      getValue: editor => getValue(editor),
       getElementValue: (element: Element) => {
         return ElementUtils.isRootBlock(element) ? element.textAlign : undefined
       },

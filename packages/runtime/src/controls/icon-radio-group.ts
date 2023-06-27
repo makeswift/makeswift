@@ -38,7 +38,7 @@ export type IconRadioGroupControlDefinitionOption<
 
 export type IconRadioGroupControlData<
   T extends IconRadioGroupControlDefinition = IconRadioGroupControlDefinition,
-> = IconRadioGroupControlDefinitionOption<T>
+> = IconRadioGroupControlDefinitionOption<T> | null
 
 export function unstable_IconRadioGroup<T extends string, C extends IconRadioGroupControlConfig<T>>(
   config: C & { options: IconRadioGroupOption<T>[] },

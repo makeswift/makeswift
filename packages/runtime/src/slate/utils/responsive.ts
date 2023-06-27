@@ -1,6 +1,8 @@
 import { Editor, Transforms, NodeMatch, Descendant, NodeEntry } from 'slate'
 import { getSelection } from '../selectors'
-import deepEqual from '../../utils/deepEqual'
+import { ResponsiveValue } from '../../prop-controllers'
+import shallowEqual from '../../utils/shallowEqual'
+import { BlockTextAlignment } from '../types'
 
 type SetResponsiveValueOptions<T extends Descendant> = {
   match: NodeMatch<T>
@@ -10,7 +12,7 @@ type SetResponsiveValueOptions<T extends Descendant> = {
 export function setResponsiveValue<T extends Descendant, K extends keyof T>(
   editor: Editor,
   key: K,
-  value: T[K] | undefined,
+  value: T[K] | undefined | null,
   options: SetResponsiveValueOptions<T>,
 ) {
   Editor.withoutNormalizing(editor, () => {
@@ -55,32 +57,6 @@ export function setResponsiveValue<T extends Descendant, K extends keyof T>(
   })
 }
 
-type GetResponsiveValueOptions<T extends Descendant> = {
-  match: NodeMatch<T>
-}
-
-export function getResponsiveValue<T extends Descendant, K extends keyof T>(
-  editor: Editor,
-  key: K,
-  options: GetResponsiveValueOptions<T>,
-): T[K] | undefined {
-  const matchingValues = Array.from(
-    Editor.nodes(editor, {
-      at: getSelection(editor),
-      match: options?.match,
-    }),
-  )
-    .filter(([node, path]) => options.match(node, path))
-    .map(([node]) => node[key]) as (T[K] | undefined)[]
-
-  const value =
-    matchingValues.length === 0
-      ? undefined
-      : matchingValues.reduce((a, b) => (deepEqual(a, b) ? b : undefined))
-
-  return value
-}
-
 type NormalizeResponsiveValueOptions<T extends Descendant> = {
   match: NodeMatch<T>
 }
@@ -111,4 +87,35 @@ export function normalizeResponsiveValue<T extends Descendant, K extends keyof T
 
     return false
   }
+}
+
+export function responsiveShallowEqual<T>(
+  a: ResponsiveValue<T> = [],
+  b: ResponsiveValue<T> = [],
+): ResponsiveValue<T> {
+  const aObject: Record<string, BlockTextAlignment> = a.reduce(
+    (acc, curr) => ({
+      ...acc,
+      [curr.deviceId]: curr.value,
+    }),
+    {},
+  )
+  const bObject: Record<string, BlockTextAlignment> = b.reduce(
+    (acc, curr) => ({
+      ...acc,
+      [curr.deviceId]: curr.value,
+    }),
+    {},
+  )
+
+  const definedDevices = new Set([...a.map(a => a.deviceId), ...b.map(b => b.deviceId)])
+
+  return Array.from(definedDevices).map(deviceId => {
+    const aVal = aObject[deviceId]
+    const bVal = bObject[deviceId]
+
+    if (aVal === undefined && bVal === undefined) return { deviceId, value: undefined }
+
+    return shallowEqual(aVal, bVal) ? { deviceId, value: aVal } : { deviceId, value: null }
+  }) as ResponsiveValue<T>
 }

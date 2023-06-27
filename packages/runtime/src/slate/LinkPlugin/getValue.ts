@@ -1,10 +1,10 @@
 import { Editor, NodeEntry, Text } from 'slate'
 import { ElementUtils } from '../utils/element'
 import { LinkElement } from '../types'
-import deepEqual from '../../utils/deepEqual'
 import { getSelection } from '../selectors'
 import { filterForSubtreeRoots } from '../BlockPlugin/utils/filterForSubtreeRoots'
 import { isLinkElement } from './types'
+import deepEqual from '../../utils/deepEqual'
 
 export function getLinksAndTextInSelection(editor: Editor): NodeEntry<LinkElement | Text>[] {
   return Array.from(
@@ -22,8 +22,16 @@ export const getValue = (editor: Editor) => {
 
   if (!areAllRootsLinks) return undefined
 
-  const matchingValues = roots.map(([node]) => node).filter(isLinkElement)
+  const matchingValues = roots.map(([node]) => node).filter(isLinkElement) as (
+    | LinkElement
+    | null
+    | undefined
+  )[]
 
-  return matchingValues.reduce((a, b) => (deepEqual(a, b) ? b : undefined), matchingValues.at(0))
-    ?.link
+  const match = matchingValues.reduce(
+    (a, b) => (deepEqual(a?.link, b?.link) ? b : null),
+    matchingValues.at(0) ?? undefined,
+  )
+
+  return match == null ? match : match.link
 }

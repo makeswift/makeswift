@@ -23,7 +23,7 @@ export function InlineElement({ element, attributes, children }: InlineRenderEle
       return <sub {...attributes}>{children}</sub>
     case InlineType.Link:
       return (
-        <StyledLink {...attributes} link={element.link}>
+        <StyledLink {...attributes} link={element.link ?? undefined}>
           {children}
         </StyledLink>
       )

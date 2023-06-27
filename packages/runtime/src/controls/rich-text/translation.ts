@@ -134,7 +134,7 @@ function toInlineOrTextDTO(node: Inline | Text): Array<InlineJSON | TextJSON> {
           object: ObjectType.Inline,
           nodes: node.children.flatMap(toInlineOrTextDTO),
           type: node.type,
-          data: node.link,
+          data: node.link ?? undefined,
         },
       ]
     case InlineType.Code:

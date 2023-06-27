@@ -292,9 +292,7 @@ export function BlockPlugin() {
         if (activeBlock === RootBlockType.Text || activeBlock === RootBlockType.Default)
           return undefined
 
-        // Casting here because `getActiveBlockType` can return `null` when multiple blocks of different types are selected.
-        // This is an edgecase of our block plugin, that didn't warrant expanding the type of `RichTextV2PluginControlValue`.
-        return activeBlock as typeof definition['config']['options'][number]['value'] | undefined
+        return activeBlock
       },
     },
     renderElement: renderElement => props =>

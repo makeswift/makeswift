@@ -18,7 +18,7 @@ export type SelectControlDefinitionOption<T extends SelectControlDefinition> =
   T['config'] extends SelectControlConfig<infer U> ? U : never
 
 export type SelectControlData<T extends SelectControlDefinition = SelectControlDefinition> =
-  SelectControlDefinitionOption<T>
+  SelectControlDefinitionOption<T> | null
 
 export function Select<T extends string, C extends SelectControlConfig<T>>(
   config: C & { options: SelectControlOption<T>[] },
