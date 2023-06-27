@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.9.6
+
+### Patch Changes
+
+- b151889: Add support for localized global element.
+
 ## 0.9.5
 
 ### Patch Changes
