@@ -2,7 +2,6 @@ import { Editor, NodeEntry, Text } from 'slate'
 import { ElementUtils } from '../utils/element'
 import { getSelection } from '../selectors'
 import { filterForSubtreeRoots } from '../BlockPlugin/utils/filterForSubtreeRoots'
-import deepEqual from '../../utils/deepEqual'
 import { SupportedInline, isSupportedInlineType, isSupportedInlineEntry } from './types'
 
 export function getSupportedInlinesAndTextInSelection(
@@ -26,8 +25,16 @@ export const getValue = (editor: Editor) => {
 
   if (!areAllRootsSupportedInlineTypesOrText) return undefined
 
-  const matchingValues = roots.filter(isSupportedInlineEntry).map(([node]) => node)
+  const matchingValues = roots.filter(isSupportedInlineEntry).map(([node]) => node) as (
+    | SupportedInline
+    | null
+    | undefined
+  )[]
 
-  return matchingValues.reduce((a, b) => (deepEqual(a, b) ? b : undefined), matchingValues.at(0))
-    ?.type
+  const match = matchingValues.reduce(
+    (a, b) => (a?.type === b?.type ? b : null),
+    matchingValues.at(0) ?? undefined,
+  )
+
+  return match == null ? match : match.type
 }

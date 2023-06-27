@@ -28,6 +28,7 @@ export type LinkControlData =
   | SendEmailLink
   | CallPhoneLink
   | ScrollToElementLink
+  | null
 
 export const LinkControlType = 'makeswift::controls::link'
 

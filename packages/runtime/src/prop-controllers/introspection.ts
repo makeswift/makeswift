@@ -236,7 +236,7 @@ export function getSwatchIds<T extends Data>(
     case StyleV2ControlType: {
       const value = prop as StyleV2ControlData
 
-      return value.flatMap(value => getSwatchIds(descriptor.config.type, value.value))
+      return value?.flatMap(value => getSwatchIds(descriptor.config.type, value.value)) ?? []
     }
 
     case RichTextV2ControlType: {

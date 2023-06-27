@@ -40,14 +40,15 @@ type EnhancedColor = {
   color?: ColorValue
 }
 
-export type TypographyControlDataValue = TypographyControlData['style'][number]['value']
+export type TypographyControlDataValue =
+  NonNullable<TypographyControlData>['style'][number]['value']
 
 type EnhancedTypographyValue = Omit<TypographyControlDataValue, keyof EnhancedColor> & EnhancedColor
 
 export type EnhancedTypography = Array<DeviceOverride<EnhancedTypographyValue>>
 
 export function getTypographyStyleSwatchIds(
-  style: TypographyControlData['style'] | Typography['style'] | null | undefined,
+  style: NonNullable<TypographyControlData>['style'] | Typography['style'] | null | undefined,
 ): string[] {
   return (
     style

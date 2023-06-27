@@ -32,7 +32,7 @@ function InlinePluginComponent({
       return (
         <LinkComponent
           {...attributes}
-          link={element.link}
+          link={element.link ?? undefined}
           className={cx(linkStyle, element.className)}
         >
           {children}

@@ -98,7 +98,7 @@ function InlineElement({ descendant, mode }: InlineProps) {
 
     case InlineType.Link:
       return (
-        <Link className={linkClassName} link={descendant.link}>
+        <Link className={linkClassName} link={descendant.link ?? undefined}>
           <Descendants descendants={descendant.children} mode={mode} />
         </Link>
       )

@@ -67,7 +67,7 @@ describe('GIVEN InlinePlugin.getValue', () => {
 
     const value = getValue(editor)
 
-    expect(value).toEqual(undefined)
+    expect(value).toEqual(null)
   })
   it('WHEN run on on single type including a link THEN return the correct value', () => {
     const editor = EditorV2(

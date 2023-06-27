@@ -5,7 +5,8 @@ import { detachActiveTypography } from './detachActiveTypography'
 import { setActiveTypographyId } from './setActiveTypographyId'
 import { setActiveTypographyStyle } from './setActiveTypographyStyle'
 import { createRichTextV2Plugin, unstable_Typography } from '../../controls'
-import { getResponsiveValue, setResponsiveValue } from '../utils/responsive'
+import { setResponsiveValue } from '../utils/responsive'
+import { getValue } from './getValue'
 
 export const TypographyActions = {
   setActiveTypographyId,
@@ -52,7 +53,7 @@ export function TypographyPlugin() {
           split: true,
         })
       },
-      getValue: editor => getResponsiveValue(editor, TYPOGRAPHY_KEY, { match: Text.isText }),
+      getValue: editor => getValue(editor),
       getLeafValue: (text: Text) => {
         return Text.isText(text) ? text.typography : undefined
       },
