@@ -315,10 +315,7 @@ const ElementReference = memo(
     ref: Ref<ElementImperativeHandle>,
   ): JSX.Element {
     const globalElement = useGlobalElement(elementReference.value)
-    // Update the logic here when we can merge element trees
-    const globalElementData = (globalElement?.localized?.data ?? globalElement?.data) as
-      | ReactPage.ElementData
-      | undefined
+    const globalElementData = globalElement?.data as ReactPage.ElementData | undefined
     const elementReferenceDocument = useDocument(elementReference.key)
     const documentKey = elementReference.key
     const documentKeys = useContext(DocumentCyclesContext)
