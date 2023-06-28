@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.8.13
+
+### Patch Changes
+
+- a90a3b8: Fix runtime error in `RichText` that can occur when you have data that very old. The previous version 0.8.12 didn't work as expected.
+
 ## 0.8.12
 
 ### Patch Changes
