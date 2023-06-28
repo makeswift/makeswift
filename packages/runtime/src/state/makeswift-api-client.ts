@@ -63,7 +63,6 @@ async function fetchJson<T>(url: string): Promise<T | null> {
 export function fetchAPIResource<T extends APIResourceType>(
   resourceType: T,
   resourceId: string,
-  locale?: Intl.Locale,
 ): Thunk<Promise<Extract<APIResource, { __typename: T }> | null>> {
   return async (dispatch, getState) => {
     const state = getState()
@@ -88,9 +87,7 @@ export function fetchAPIResource<T extends APIResourceType>(
         break
 
       case APIResourceType.GlobalElement:
-        resource = await fetchJson<GlobalElement>(
-          `/api/makeswift/global-elements/${resourceId}?locale=${locale?.toString()}`,
-        )
+        resource = await fetchJson<GlobalElement>(`/api/makeswift/global-elements/${resourceId}`)
         break
 
       case APIResourceType.PagePathnameSlice:

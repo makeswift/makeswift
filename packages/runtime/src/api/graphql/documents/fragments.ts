@@ -72,12 +72,6 @@ export const GlobalElementFragment = /* GraphQL */ `
     __typename
     id
     data
-
-    localized(locale: $locale) {
-      __typename
-      id
-      data
-    }
   }
 `
 

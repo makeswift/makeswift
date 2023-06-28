@@ -100,9 +100,7 @@ export function MakeswiftApiHandler(
     }
 
     if ((m = matches<{ id: string }>('/global-elements/:id'))) {
-      const locale = typeof req.query.locale === 'string' ? req.query.locale : undefined
-
-      return client.getGlobalElement(m.params.id, locale).then(handleResource)
+      return client.getGlobalElement(m.params.id).then(handleResource)
     }
 
     if ((m = matches<{ id: string }>('/page-pathname-slices/:id'))) {

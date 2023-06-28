@@ -130,13 +130,11 @@ export const Page = memo(({ snapshot, runtime }: PageProps) => {
       new MakeswiftClient({
         uri: new URL('graphql', snapshot.apiOrigin).href,
         cacheData: snapshot.cacheData,
-        locale: snapshot.locale == null ? undefined : new Intl.Locale(snapshot.locale),
       }),
     [snapshot],
   )
   const rootElements = new Map([[snapshot.document.id, snapshot.document.data]])
 
-  // Update the logic here when we can merge element trees.
   snapshot.document.localizedPages.forEach(localizedPage => {
     rootElements.set(localizedPage.elementTreeId, localizedPage.data)
   })
