@@ -1,5 +1,4 @@
-import { applyMiddleware, createStore, Store as ReduxStore } from 'redux'
-import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk'
+import { configureStore as configureReduxStore, ThunkAction } from '@reduxjs/toolkit'
 
 import * as APIResources from './modules/api-resources'
 import { Action, apiResourceFulfilled } from './actions'
@@ -110,10 +109,13 @@ export function fetchAPIResource<T extends APIResourceType>(
   }
 }
 
-export type Dispatch = ThunkDispatch<State, unknown, Action>
-
-export type Store = ReduxStore<State, Action> & { dispatch: Dispatch }
-
-export function configureStore({ serializedState }: { serializedState?: SerializedState }): Store {
-  return createStore(reducer, APIResources.getInitialState(serializedState), applyMiddleware(thunk))
+export function configureStore({ serializedState }: { serializedState?: SerializedState }) {
+  return configureReduxStore({
+    reducer,
+    preloadedState: APIResources.getInitialState(serializedState),
+  })
 }
+
+export type Store = ReturnType<typeof configureStore>
+
+export type Dispatch = Store['dispatch']

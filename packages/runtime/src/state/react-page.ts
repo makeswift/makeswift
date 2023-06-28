@@ -1,11 +1,8 @@
 import {
-  applyMiddleware,
   combineReducers,
-  createStore,
+  configureStore as configureReduxStore,
   PreloadedState,
-  Store as ReduxStore,
-} from 'redux'
-import thunk, { ThunkDispatch } from 'redux-thunk'
+} from '@reduxjs/toolkit'
 
 import * as Documents from './modules/read-only-documents'
 import * as ReactComponents from './modules/react-components'
@@ -18,7 +15,6 @@ import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Breakpoints from './modules/breakpoints'
 import * as Locales from './modules/locales'
 import * as Introspection from '../prop-controllers/introspection'
-import { Action } from './actions'
 import { copyElementReference } from '../prop-controllers/copy'
 import { copy as copyFromControl, merge } from '../controls/control'
 
@@ -396,10 +392,6 @@ export function getDefaultLocale(state: State): Intl.Locale | null {
   return state.locales.defaultLocale ? new Intl.Locale(state.locales.defaultLocale) : null
 }
 
-export type Dispatch = ThunkDispatch<State, unknown, Action>
-
-export type Store = ReduxStore<State, Action> & { dispatch: Dispatch }
-
 export function configureStore({
   rootElements,
   preloadedState,
@@ -410,15 +402,21 @@ export function configureStore({
   preloadedState?: PreloadedState<State>
   breakpoints?: Breakpoints.State
   locales?: Locales.State
-} = {}): Store {
-  return createStore(
+} = {}) {
+  return configureReduxStore({
     reducer,
-    {
+    preloadedState: {
       ...preloadedState,
       documents: Documents.getInitialState({ rootElements }),
       breakpoints: Breakpoints.getInitialState(breakpoints ?? preloadedState?.breakpoints),
       locales: Locales.getInitialState(locales ?? preloadedState?.locales),
     },
-    applyMiddleware(thunk),
-  )
+    middleware(getDefaultMiddleware) {
+      return getDefaultMiddleware()
+    },
+  })
 }
+
+export type Store = ReturnType<typeof configureStore>
+
+export type Dispatch = Store['dispatch']
