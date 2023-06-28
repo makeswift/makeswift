@@ -2,6 +2,7 @@ import { describe, expect, test } from 'vitest'
 import { blockquoteFixture, listFixture, typographyFixture } from './fixtures'
 import { richTextDAOToDTO, richTextDTOtoDAO, richTextDTOtoSelection } from './translation'
 import { RichTextDTO } from './dto-types'
+import { emptyBlockFixture, fixedEmptyBlockFixture } from './fixtures/empty-blocks'
 
 describe('GIVEN I am using RichText data translation', () => {
   test('WHEN I translate simple data THEN nothing is lost', () => {
@@ -39,6 +40,14 @@ describe('GIVEN I am using RichText data translation', () => {
       richTextDAOToDTO(
         richTextDTOtoDAO(blockquoteFixture),
         richTextDTOtoSelection(blockquoteFixture),
+      ),
+    )
+  })
+  test('WHEN translate data with empty blocks THEN empty blocks are removed', () => {
+    expect(fixedEmptyBlockFixture).toStrictEqual(
+      richTextDAOToDTO(
+        richTextDTOtoDAO(emptyBlockFixture),
+        richTextDTOtoSelection(emptyBlockFixture),
       ),
     )
   })
