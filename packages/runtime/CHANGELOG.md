@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.9.8
+
+### Patch Changes
+
+- 18ae379: Revert localized global element support.
+- ef73900: Fix runtime error in `RichText` that can occur when you have data that very old.
+- 18ae379: Fix suspense boundary error that was introduced on version `0.9.6` when you have a global element in a page.
+
 ## 0.9.7
 
 ### Patch Changes
