@@ -70,28 +70,18 @@ function toNodeDAO(node: NodeJSON): Descendant[] {
     case ObjectType.Text:
       return toInlineOrTextDAO(node)
     case ObjectType.Block:
-
       /**
        * Prior to 0.50.0 of slate `node.nodes` could be `undefined` or empty. In that situation nothing was rendered.
        * With 0.50.0 slate introduced an normalization that requires all blocks to contain a text node.
-       * 
-       * One solution would be defaulting children to an empty text string:
-       * ```
-       * children: node.nodes.flatMap(toNodeDAO) ?? [{text: ""}]
-       * ```
-       * But this would add a bunch of empty lines were nothing is being rendered currently
-       * 
-       * For that reason, I am returning early / technically "losing" data in this translation.
-       */ 
-      if (node.nodes == null || (node.nodes && node.nodes.length === 0)) {
-        return []
-      }
-
+       */
       return [
         {
           type: node.type,
           textAlign: node?.data && 'textAlign' in node.data ? node?.data.textAlign : undefined,
-          children: node.nodes.flatMap(toNodeDAO),
+          children:
+            node.nodes == null || (node.nodes && node.nodes.length === 0)
+              ? [{ text: '' }]
+              : node.nodes.flatMap(toNodeDAO),
         },
       ]
     default:

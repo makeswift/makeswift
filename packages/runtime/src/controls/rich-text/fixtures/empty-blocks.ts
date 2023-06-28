@@ -84,6 +84,18 @@ export const fixedEmptyBlockFixture: RichTextDTO = {
       {
         data: {},
         type: 'blockquote',
+        nodes: [{ marks: [], object: 'text', text: '' }],
+        object: 'block',
+      },
+      {
+        data: {},
+        type: 'blockquote',
+        nodes: [{ marks: [], object: 'text', text: '' }],
+        object: 'block',
+      },
+      {
+        data: {},
+        type: 'blockquote',
         nodes: [
           {
             text: 'Credibly implement global synergy, then collaboratively implement goal-oriented sprints. Rapidiously initiate standards compliant clouds. ',
@@ -102,6 +114,18 @@ export const fixedEmptyBlockFixture: RichTextDTO = {
             object: 'text',
           },
         ],
+        object: 'block',
+      },
+      {
+        data: {},
+        type: 'blockquote',
+        nodes: [{ marks: [], object: 'text', text: '' }],
+        object: 'block',
+      },
+      {
+        data: {},
+        type: 'blockquote',
+        nodes: [{ marks: [], object: 'text', text: '' }],
         object: 'block',
       },
     ],
