@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.9.9
+
+### Patch Changes
+
+- a24bcba: In ef73900, we fixed runtime errors that were happening in the `RichText` control when there were invalid empty lines. This is an update to that fix that cleans the richtext data rather than removing it.
+
 ## 0.9.8
 
 ### Patch Changes
