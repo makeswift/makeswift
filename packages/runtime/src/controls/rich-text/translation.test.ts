@@ -2,9 +2,10 @@ import { describe, expect, test } from 'vitest'
 import { blockquoteFixture, listFixture, typographyFixture } from './fixtures'
 import { richTextDAOToDTO, richTextDTOtoDAO, richTextDTOtoSelection } from './translation'
 import { RichTextDTO } from './dto-types'
+import { emptyBlockFixture, fixedEmptyBlockFixture } from './fixtures/empty-blocks'
 
 describe('GIVEN I am using RichText data translation', () => {
-  test('WHEN I translate simple data THEN nothing is lost', () => {
+  test('WHEN translating simple data THEN nothing is lost', () => {
     const value: RichTextDTO = {
       document: {
         object: 'document',
@@ -21,12 +22,12 @@ describe('GIVEN I am using RichText data translation', () => {
       richTextDAOToDTO(richTextDTOtoDAO(value), richTextDTOtoSelection(value)),
     )
   })
-  test('WHEN I translate list data THEN nothing is lost', () => {
+  test('WHEN translating list data THEN nothing is lost', () => {
     expect(listFixture).toStrictEqual(
       richTextDAOToDTO(richTextDTOtoDAO(listFixture), richTextDTOtoSelection(listFixture)),
     )
   })
-  test('WHEN I translate typography data THEN nothing is lost', () => {
+  test('WHEN translating typography data THEN nothing is lost', () => {
     expect(typographyFixture).toStrictEqual(
       richTextDAOToDTO(
         richTextDTOtoDAO(typographyFixture),
@@ -34,11 +35,19 @@ describe('GIVEN I am using RichText data translation', () => {
       ),
     )
   })
-  test('WHEN I translate blockquote data THEN nothing is lost', () => {
+  test('WHEN translating blockquote data THEN nothing is lost', () => {
     expect(blockquoteFixture).toStrictEqual(
       richTextDAOToDTO(
         richTextDTOtoDAO(blockquoteFixture),
         richTextDTOtoSelection(blockquoteFixture),
+      ),
+    )
+  })
+  test('WHEN translating data with empty blocks THEN empty blocks are removed', () => {
+    expect(fixedEmptyBlockFixture).toStrictEqual(
+      richTextDAOToDTO(
+        richTextDTOtoDAO(emptyBlockFixture),
+        richTextDTOtoSelection(emptyBlockFixture),
       ),
     )
   })
