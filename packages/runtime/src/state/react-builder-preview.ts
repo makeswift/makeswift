@@ -1,15 +1,13 @@
+import Router from 'next/router'
 import {
-  applyMiddleware,
   combineReducers,
-  createStore,
-  Dispatch as ReduxDispatch,
+  configureStore as configureReduxStore,
   Middleware,
   MiddlewareAPI,
   PreloadedState,
-  Store as ReduxStore,
-} from 'redux'
-import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk'
-import Router from 'next/router'
+  ThunkAction,
+  Dispatch as ReduxDispatch,
+} from '@reduxjs/toolkit'
 
 import deepEqual from '../utils/deepEqual'
 
@@ -434,10 +432,12 @@ export function initialize(): ThunkAction<() => void, State, unknown, Action> {
   }
 }
 
-export type Dispatch = ThunkDispatch<State, unknown, Action>
-
-function measureBoxModelsMiddleware(): Middleware<Dispatch, State, Dispatch> {
-  return ({ dispatch }: MiddlewareAPI<Dispatch>) =>
+function measureBoxModelsMiddleware(): Middleware<
+  ReduxDispatch<Action>,
+  State,
+  ReduxDispatch<Action>
+> {
+  return ({ dispatch }: MiddlewareAPI<ReduxDispatch<Action>>) =>
     (next: ReduxDispatch<Action>) => {
       return (action: Action): Action => {
         switch (action.type) {
@@ -465,7 +465,11 @@ function measureBoxModelsMiddleware(): Middleware<Dispatch, State, Dispatch> {
     }
 }
 
-export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch> {
+export function messageChannelMiddleware(): Middleware<
+  ReduxDispatch<Action>,
+  State,
+  ReduxDispatch<Action>
+> {
   return ({ dispatch, getState }: MiddlewareAPI<Dispatch, State>) =>
     (next: ReduxDispatch<Action>) => {
       let cleanUp = () => {}
@@ -614,7 +618,11 @@ function createAndRegisterPropControllers(
   }
 }
 
-function propControllerHandlesMiddleware(): Middleware<Dispatch, State, Dispatch> {
+function propControllerHandlesMiddleware(): Middleware<
+  ReduxDispatch<Action>,
+  State,
+  ReduxDispatch<Action>
+> {
   return ({ dispatch, getState }: MiddlewareAPI<Dispatch, State>) =>
     (next: ReduxDispatch<Action>) => {
       return (action: Action): Action => {
@@ -678,7 +686,12 @@ if (import.meta.vitest) {
       // Arrange
       const documentKey = 'documentKey'
       const element: ReactPage.Element = { key: 'elementKey', type: 'type', props: {} }
-      const store = createStore(reducer, applyMiddleware(thunk, propControllerHandlesMiddleware()))
+      const store = configureReduxStore({
+        reducer,
+        middleware(getDefaultMiddleware) {
+          return getDefaultMiddleware().concat(propControllerHandlesMiddleware())
+        },
+      })
       const setPropControllers = fn()
       const handle = new ElementImperativeHandle()
 
@@ -697,7 +710,12 @@ if (import.meta.vitest) {
       // Arrange
       const documentKey = 'documentKey'
       const element: ReactPage.Element = { type: 'reference', key: 'elementKey', value: 'value' }
-      const store = createStore(reducer, applyMiddleware(thunk, propControllerHandlesMiddleware()))
+      const store = configureReduxStore({
+        reducer,
+        middleware(getDefaultMiddleware) {
+          return getDefaultMiddleware().concat(propControllerHandlesMiddleware())
+        },
+      })
       const setPropControllers = fn()
       const handle = new ElementImperativeHandle()
 
@@ -716,7 +734,7 @@ if (import.meta.vitest) {
 
 function makeswiftApiClientSyncMiddleware(
   client: MakeswiftClient,
-): Middleware<Dispatch, State, Dispatch> {
+): Middleware<ReduxDispatch<Action>, State, ReduxDispatch<Action>> {
   return () => (next: ReduxDispatch<Action>) => {
     return (action: Action): Action => {
       client.makeswiftApiClient.dispatch(action)
@@ -726,8 +744,6 @@ function makeswiftApiClientSyncMiddleware(
   }
 }
 
-export type Store = ReduxStore<State, Action> & { dispatch: Dispatch }
-
 export function configureStore({
   rootElements,
   preloadedState,
@@ -736,22 +752,27 @@ export function configureStore({
   rootElements?: Map<string, Documents.Element>
   preloadedState?: PreloadedState<State>
   client: MakeswiftClient
-}): Store {
+}) {
   const initialState: PreloadedState<State> = {
     ...preloadedState,
     documents: Documents.getInitialState({ rootElements }),
     isPreview: IsPreview.getInitialState(true),
   }
 
-  return createStore(
+  return configureReduxStore({
     reducer,
-    initialState,
-    applyMiddleware(
-      thunk,
-      measureBoxModelsMiddleware(),
-      messageChannelMiddleware(),
-      propControllerHandlesMiddleware(),
-      makeswiftApiClientSyncMiddleware(client),
-    ),
-  )
+    preloadedState: initialState,
+    middleware(getDefaultMiddleware) {
+      return getDefaultMiddleware().concat([
+        measureBoxModelsMiddleware(),
+        messageChannelMiddleware(),
+        propControllerHandlesMiddleware(),
+        makeswiftApiClientSyncMiddleware(client),
+      ])
+    },
+  })
 }
+
+export type Store = ReturnType<typeof configureStore>
+
+export type Dispatch = Store['dispatch']
