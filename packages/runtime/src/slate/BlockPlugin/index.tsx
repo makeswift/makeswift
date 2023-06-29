@@ -327,6 +327,7 @@ function BlockPluginComponent({
           {children}
         </span>
       )
+    case BlockType.Default:
     case BlockType.Paragraph:
       return (
         <p {...attributes} className={cx(...blockStyles)}>
@@ -399,13 +400,6 @@ function BlockPluginComponent({
           {children}
         </span>
       )
-    case BlockType.Default:
-      return (
-        <p {...attributes} className={cx(...blockStyles)}>
-          {children}
-        </p>
-      )
-
     default:
       return <>{renderElement({ element, attributes, children })}</>
   }

@@ -28,6 +28,7 @@ export function BlockElement({ element, attributes, children }: InlineRenderElem
           {children}
         </span>
       )
+    case BlockType.Default:
     case BlockType.Paragraph:
       return (
         <p {...attributes} className={cx(...blockStyles)}>
@@ -100,8 +101,5 @@ export function BlockElement({ element, attributes, children }: InlineRenderElem
           {children}
         </span>
       )
-
-    default:
-      return null
   }
 }
