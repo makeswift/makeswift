@@ -13,7 +13,7 @@ import { useStyle } from '../use-style'
 
 export function typographyFragementToTypographyControlData(
   typography: Typography | null,
-): TypographyControlData | undefined {
+): TypographyControlData[number] | undefined {
   if (typography == null) return undefined
   return {
     id: typography.id,
@@ -40,15 +40,21 @@ type EnhancedColor = {
   color?: ColorValue
 }
 
-export type TypographyControlDataValue =
-  NonNullable<TypographyControlData>['style'][number]['value']
+export type TypographyControlDataValue = Exclude<
+  TypographyControlData[number],
+  undefined
+>['style'][number]['value']
 
 type EnhancedTypographyValue = Omit<TypographyControlDataValue, keyof EnhancedColor> & EnhancedColor
 
 export type EnhancedTypography = Array<DeviceOverride<EnhancedTypographyValue>>
 
 export function getTypographyStyleSwatchIds(
-  style: NonNullable<TypographyControlData>['style'] | Typography['style'] | null | undefined,
+  style:
+    | Exclude<TypographyControlData[number], undefined>['style']
+    | Typography['style']
+    | null
+    | undefined,
 ): string[] {
   return (
     style
@@ -90,7 +96,7 @@ const getDeviceId = ({ deviceId }: DeviceOverride<unknown>) => deviceId
  * `enhanced` here just means typography ids have been replaced with the related entity.
  */
 export default function useEnhancedTypography(
-  value?: TypographyControlData | null,
+  value?: TypographyControlData[number] | null,
 ): EnhancedTypography {
   const typography = typographyFragementToTypographyControlData(useTypography(value?.id ?? null))
   const source = typography?.style ?? []
@@ -180,7 +186,7 @@ export function useTypographyClassName(value: EnhancedTypography): string {
 export type TypographyControlValue = string
 
 export function useTypographyValue(
-  data: TypographyControlData | undefined,
+  data: TypographyControlData[number] | undefined,
 ): TypographyControlValue {
   // for each breakpoint fetch related resources and merge its value with its override
   const enhancedTypography = useEnhancedTypography(data)

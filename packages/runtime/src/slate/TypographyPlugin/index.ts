@@ -1,12 +1,12 @@
-import { Editor, Text, Transforms } from 'slate'
+import { Descendant, Editor, NodeEntry, Text, Transforms } from 'slate'
 import { clearActiveTypographyStyle } from './clearActiveTypographyStyle'
 import { clearDeviceActiveTypography } from './clearDeviceActiveTypography'
 import { detachActiveTypography } from './detachActiveTypography'
 import { setActiveTypographyId } from './setActiveTypographyId'
 import { setActiveTypographyStyle } from './setActiveTypographyStyle'
 import { createRichTextV2Plugin, unstable_Typography } from '../../controls'
-import { setResponsiveValue } from '../utils/responsive'
 import { getValue } from './getValue'
+import { getSelection } from '../selectors'
 
 export const TypographyActions = {
   setActiveTypographyId,
@@ -48,9 +48,50 @@ export function TypographyPlugin() {
     control: {
       definition: unstable_Typography(),
       onChange: (editor, value) => {
-        setResponsiveValue(editor, TYPOGRAPHY_KEY, value, {
-          match: Text.isText,
-          split: true,
+        Editor.withoutNormalizing(editor, () => {
+          const at = getSelection(editor)
+          if (!at) return
+          const atRef = Editor.rangeRef(editor, at)
+          if (atRef.current) {
+            Transforms.setNodes<Descendant>(
+              editor,
+              {
+                slice: true,
+              },
+              {
+                at: atRef.current,
+                match: Text.isText,
+                split: true,
+              },
+            )
+          }
+
+          if (atRef.current) {
+            const nodesToUpdate = Array.from(
+              Editor.nodes(editor, {
+                at: atRef.current,
+                match: node => Text.isText(node) && node.slice === true,
+              }),
+            ) as NodeEntry<Text>[]
+
+            if (nodesToUpdate.length !== value?.length)
+              return console.error(
+                `TypographyControl.onChange received the wrong number of arguments.
+Called with ${value?.length} values mapping to ${nodesToUpdate.length} nodes.`,
+              )
+
+            for (const [index, [, path]] of nodesToUpdate.entries()) {
+              Transforms.setNodes(
+                editor,
+                {
+                  typography: value?.at(index),
+                },
+                { at: path, match: Text.isText },
+              )
+            }
+          }
+
+          atRef.unref()
         })
       },
       getValue: editor => getValue(editor),
