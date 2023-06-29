@@ -7,6 +7,7 @@ import {
   APIResourceType,
   File,
   GlobalElement,
+  LocalizedGlobalElement,
   Page,
   PagePathnameSlice,
   Site,
@@ -22,11 +23,19 @@ import {
   CreateTableRecordMutationVariables,
 } from './graphql/generated/types'
 
+export type SerializedLocalizedResourcesMap = {
+  [resourceId: string]: string
+}
+
+type LocalizedResourcesMap = Map<string, string>
+
 export type CacheData = MakeswiftApiClient.SerializedState
 
 export type MakeswiftClientOptions = {
   uri: string
   cacheData?: CacheData
+  localizedResourcesMap?: SerializedLocalizedResourcesMap
+  locale?: Intl.Locale
 }
 
 /**
@@ -52,11 +61,15 @@ export class MakeswiftClient {
   graphqlClient: GraphQLClient
   makeswiftApiClient: MakeswiftApiClient.Store
   subscribe: MakeswiftApiClient.Store['subscribe']
+  private localizedResourcesMap: LocalizedResourcesMap
+  private locale: Intl.Locale | undefined
 
-  constructor({ uri, cacheData }: MakeswiftClientOptions) {
+  constructor({ uri, cacheData, localizedResourcesMap = {}, locale }: MakeswiftClientOptions) {
     this.graphqlClient = new GraphQLClient(uri)
     this.makeswiftApiClient = MakeswiftApiClient.configureStore({ serializedState: cacheData })
     this.subscribe = this.makeswiftApiClient.subscribe
+    this.localizedResourcesMap = new Map(Object.entries(localizedResourcesMap))
+    this.locale = locale
   }
 
   readSwatch(swatchId: string): Swatch | null {
@@ -113,6 +126,38 @@ export class MakeswiftClient {
     return await this.makeswiftApiClient.dispatch(
       MakeswiftApiClient.fetchAPIResource(APIResourceType.GlobalElement, globalElementId),
     )
+  }
+
+  readLocalizedGlobalElement(globalElementId: string): LocalizedGlobalElement | null {
+    const localizedGlobalElementId = this.getLocalizedResourceId(globalElementId)
+
+    if (localizedGlobalElementId == null) return null
+
+    return MakeswiftApiClient.getAPIResource(
+      this.makeswiftApiClient.getState(),
+      APIResourceType.LocalizedGlobalElement,
+      localizedGlobalElementId,
+    )
+  }
+
+  async fetchLocalizedGlobalElement(
+    globalElementId: string,
+  ): Promise<LocalizedGlobalElement | null> {
+    const locale = this.locale
+
+    if (locale == null) return null
+
+    const result = await this.makeswiftApiClient.dispatch(
+      MakeswiftApiClient.fetchAPIResource(
+        APIResourceType.LocalizedGlobalElement,
+        globalElementId,
+        locale,
+      ),
+    )
+
+    if (result != null) this.setLocalizedResourceId(globalElementId, result.id)
+
+    return result
   }
 
   readPagePathnameSlice(pageId: string): PagePathnameSlice | null {
@@ -172,6 +217,14 @@ export class MakeswiftClient {
       APIResourceType.Snippet,
       snippetId,
     )
+  }
+
+  private getLocalizedResourceId(resourceId: string): string | null {
+    return this.localizedResourcesMap?.get(resourceId) ?? null
+  }
+
+  private setLocalizedResourceId(resourceId: string, localizedResourceId: string): void {
+    this.localizedResourcesMap.set(resourceId, localizedResourceId)
   }
 }
 

@@ -1,6 +1,14 @@
 import { useEffect, useRef } from 'react'
 import { useSyncExternalStore } from 'use-sync-external-store/shim'
-import { File, GlobalElement, PagePathnameSlice, Swatch, Table, Typography } from '../../../api'
+import {
+  File,
+  GlobalElement,
+  LocalizedGlobalElement,
+  PagePathnameSlice,
+  Swatch,
+  Table,
+  Typography,
+} from '../../../api'
 import { useMakeswiftClient } from '../../../api/react'
 
 export function useSwatch(swatchId: string | null): Swatch | null {
@@ -104,6 +112,27 @@ export function useGlobalElement(globalElementId: string | null): GlobalElement 
   }, [client, globalElementId])
 
   return globalElement
+}
+
+export function useLocalizedGlobalElement(
+  globalElementId: string | null,
+): LocalizedGlobalElement | null {
+  const client = useMakeswiftClient()
+  const readLocalizedGlobalElement = () =>
+    globalElementId == null ? null : client.readLocalizedGlobalElement(globalElementId)
+  const localizedGlobalElement = useSyncExternalStore(
+    client.subscribe,
+    readLocalizedGlobalElement,
+    readLocalizedGlobalElement,
+  )
+
+  useEffect(() => {
+    if (globalElementId != null) {
+      client.fetchLocalizedGlobalElement(globalElementId).catch(console.error)
+    }
+  }, [client, globalElementId])
+
+  return localizedGlobalElement
 }
 
 export function usePagePathnameSlice(pageId: string | null): PagePathnameSlice | null {

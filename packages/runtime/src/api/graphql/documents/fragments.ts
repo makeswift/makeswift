@@ -75,6 +75,14 @@ export const GlobalElementFragment = /* GraphQL */ `
   }
 `
 
+export const LocalizedGlobalElementFragment = /* GraphQL */ `
+  fragment LocalizedGlobalElement on LocalizedGlobalElement {
+    __typename
+    id
+    data
+  }
+`
+
 export const TableFragment = /* GraphQL */ `
   fragment Table on Table {
     __typename

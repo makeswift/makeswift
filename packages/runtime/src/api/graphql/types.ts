@@ -4,6 +4,7 @@ import {
   TypographyFragment as Typography,
   PagePathnameSliceFragment as PagePathnameSlice,
   GlobalElementFragment as GlobalElement,
+  LocalizedGlobalElementFragment as LocalizedGlobalElement,
   TableFragment as Table,
   SnippetFragment as Snippet,
   PageFragment as Page,
@@ -16,6 +17,7 @@ export type {
   Typography,
   PagePathnameSlice,
   GlobalElement,
+  LocalizedGlobalElement,
   Table,
   Snippet,
   Page,
@@ -28,6 +30,7 @@ export type APIResource =
   | Typography
   | PagePathnameSlice
   | GlobalElement
+  | LocalizedGlobalElement
   | Table
   | Snippet
   | Page
@@ -39,6 +42,7 @@ export const APIResourceType: { [R in APIResource as R['__typename']]: R['__type
   Typography: 'Typography',
   PagePathnameSlice: 'PagePathnameSlice',
   GlobalElement: 'GlobalElement',
+  LocalizedGlobalElement: 'LocalizedGlobalElement',
   Table: 'Table',
   Snippet: 'Snippet',
   Page: 'Page',
