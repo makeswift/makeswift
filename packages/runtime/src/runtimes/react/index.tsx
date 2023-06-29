@@ -36,7 +36,7 @@ import { MakeswiftClient } from '../../api/react'
 import { FallbackComponent } from '../../components/shared/FallbackComponent'
 import { PropsValue } from './controls'
 import { FindDomNode } from './find-dom-node'
-import { useGlobalElement } from './hooks/makeswift-api'
+import { useGlobalElement, useLocalizedGlobalElement } from './hooks/makeswift-api'
 import { ElementImperativeHandle } from './element-imperative-handle'
 import { BuilderEditMode } from '../../state/modules/builder-edit-mode'
 import {
@@ -315,7 +315,11 @@ const ElementReference = memo(
     ref: Ref<ElementImperativeHandle>,
   ): JSX.Element {
     const globalElement = useGlobalElement(elementReference.value)
-    const globalElementData = globalElement?.data as ReactPage.ElementData | undefined
+    // Update the logic here when we can merge element trees
+    const localizedGlobalElement = useLocalizedGlobalElement(elementReference.value)
+    const globalElementData = (localizedGlobalElement?.data ?? globalElement?.data) as
+      | ReactPage.ElementData
+      | undefined
     const elementReferenceDocument = useDocument(elementReference.key)
     const documentKey = elementReference.key
     const documentKeys = useContext(DocumentCyclesContext)

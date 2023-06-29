@@ -22,6 +22,7 @@ export function getInitialState(
     Snippet: [],
     Page: [],
     Site: [],
+    LocalizedGlobalElement: [],
   },
 ): State {
   return new Map(
@@ -43,6 +44,7 @@ export function getSerializedState(state: State): SerializedState {
     Snippet: [],
     Page: [],
     Site: [],
+    LocalizedGlobalElement: [],
   }
 
   Array.from(state.entries()).forEach(([resourceType, resources]) => {

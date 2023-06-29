@@ -158,6 +158,24 @@ export const GlobalElement = {
     },
   ],
 } as unknown as DocumentNode
+export const LocalizedGlobalElement = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LocalizedGlobalElement' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'LocalizedGlobalElement' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'data' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
 export const Table = {
   kind: 'Document',
   definitions: [

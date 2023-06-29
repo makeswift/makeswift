@@ -3,6 +3,7 @@ import {
   APIResourceType,
   File,
   GlobalElement,
+  LocalizedGlobalElement,
   PagePathnameSlice,
   Swatch,
   Table,
@@ -13,6 +14,7 @@ import {
   FileQuery,
   GlobalElementQuery,
   IntrospectedResourcesQuery,
+  LocalizedGlobalElementQuery,
   PagePathnamesByIdQuery,
   TableQuery,
   TypographiesQuery,
@@ -25,6 +27,8 @@ import {
   GlobalElementQueryVariables,
   IntrospectedResourcesQueryResult,
   IntrospectedResourcesQueryVariables,
+  LocalizedGlobalElementQueryResult,
+  LocalizedGlobalElementQueryVariables,
   PagePathnamesByIdQueryResult,
   PagePathnamesByIdQueryVariables,
   TableQueryResult,
@@ -34,7 +38,7 @@ import {
   TypographyQueryResult,
   TypographyQueryVariables,
 } from '../api/graphql/generated/types'
-import { CacheData } from '../api/react'
+import { CacheData, SerializedLocalizedResourcesMap } from '../api/react'
 import { Descriptor as PropControllerDescriptor } from '../prop-controllers/descriptors'
 import {
   getElementChildren,
@@ -74,6 +78,8 @@ export type MakeswiftPageSnapshot = {
   apiOrigin: string
   cacheData: CacheData
   preview: boolean
+  localizedResourcesMap: SerializedLocalizedResourcesMap
+  locale: string | null
 }
 
 type Snippet = {
@@ -236,7 +242,11 @@ export class Makeswift {
     return { ...result, swatches }
   }
 
-  private async introspect(element: Element, preview: boolean): Promise<CacheData> {
+  private async introspect(
+    element: Element,
+    preview: boolean,
+    locale?: string,
+  ): Promise<{ cacheData: CacheData; localizedResourcesMap: SerializedLocalizedResourcesMap }> {
     const runtime = this.runtime
     const descriptors = getPropControllerDescriptors(runtime.store.getState())
     const swatchIds = new Set<string>()
@@ -245,6 +255,8 @@ export class Makeswift {
     const tableIds = new Set<string>()
     const pageIds = new Set<string>()
     const globalElements = new Map<string, GlobalElement | null>()
+    const localizedGlobalElements = new Map<string, LocalizedGlobalElement | null>()
+    const localizedResourcesMap = new Map<string, string>()
 
     const remaining = [element]
     const seen = new Set<string>()
@@ -254,11 +266,26 @@ export class Makeswift {
       let element: ElementData
 
       if (isElementReference(current)) {
-        const globalElement = await this.getGlobalElement(current.value)
+        const globalElementId = current.value
+        const globalElement = await this.getGlobalElement(globalElementId)
+        let elementData = globalElement?.data
 
-        globalElements.set(current.value, globalElement)
+        if (locale) {
+          const localizedGlobalElement = await this.getLocalizedGlobalElement(
+            globalElementId,
+            locale,
+          )
 
-        const elementData = globalElement?.data
+          if (localizedGlobalElement) {
+            // Update the logic here when we can merge element trees
+            elementData = localizedGlobalElement.data
+
+            localizedResourcesMap.set(globalElementId, localizedGlobalElement.id)
+            localizedGlobalElements.set(localizedGlobalElement.id, localizedGlobalElement)
+          }
+        }
+
+        globalElements.set(globalElementId, globalElement)
 
         if (elementData == null) continue
 
@@ -333,7 +360,7 @@ export class Makeswift {
         },
     )
 
-    return {
+    const cacheData = {
       [APIResourceType.Swatch]: [...swatchIds].map(id => ({
         id,
         value: swatches.find(swatch => swatch?.id === id) ?? null,
@@ -358,7 +385,15 @@ export class Makeswift {
         id,
         value,
       })),
+      [APIResourceType.LocalizedGlobalElement]: [...localizedGlobalElements.entries()].map(
+        ([id, value]) => ({
+          id,
+          value,
+        }),
+      ),
     }
+
+    return { cacheData, localizedResourcesMap: Object.fromEntries(localizedResourcesMap.entries()) }
   }
 
   async getPageSnapshot(
@@ -389,11 +424,22 @@ export class Makeswift {
     }
 
     const document = await response.json()
-    const cacheData = await this.introspect(document.data, previewOverride)
+    const { cacheData, localizedResourcesMap } = await this.introspect(
+      document.data,
+      previewOverride,
+      unstable_locale,
+    )
     const apiOrigin = this.apiOrigin.href
     const preview = siteVersion === MakeswiftSiteVersion.Working
 
-    return { document, cacheData, apiOrigin, preview }
+    return {
+      document,
+      cacheData,
+      apiOrigin,
+      preview,
+      localizedResourcesMap,
+      locale: unstable_locale ?? null,
+    }
   }
 
   async getSwatch(swatchId: string): Promise<Swatch | null> {
@@ -435,6 +481,18 @@ export class Makeswift {
     >(GlobalElementQuery, { globalElementId })
 
     return result.globalElement
+  }
+
+  async getLocalizedGlobalElement(
+    globalElementId: string,
+    locale: string,
+  ): Promise<LocalizedGlobalElement | null> {
+    const result = await this.graphqlClient.request<
+      LocalizedGlobalElementQueryResult,
+      LocalizedGlobalElementQueryVariables
+    >(LocalizedGlobalElementQuery, { globalElementId, locale })
+
+    return result.localizedGlobalElement
   }
 
   async getPagePathnameSlice(pageId: string): Promise<PagePathnameSlice | null> {

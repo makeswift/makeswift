@@ -12,6 +12,7 @@ import {
   GlobalElement,
   PagePathnameSlice,
   Table,
+  LocalizedGlobalElement,
 } from '../api'
 
 const reducer = APIResources.reducer
@@ -63,6 +64,7 @@ async function fetchJson<T>(url: string): Promise<T | null> {
 export function fetchAPIResource<T extends APIResourceType>(
   resourceType: T,
   resourceId: string,
+  locale?: Intl.Locale,
 ): Thunk<Promise<Extract<APIResource, { __typename: T }> | null>> {
   return async (dispatch, getState) => {
     const state = getState()
@@ -89,6 +91,15 @@ export function fetchAPIResource<T extends APIResourceType>(
       case APIResourceType.GlobalElement:
         resource = await fetchJson<GlobalElement>(`/api/makeswift/global-elements/${resourceId}`)
         break
+
+      case APIResourceType.LocalizedGlobalElement: {
+        if (locale == null) throw new Error('Locale is required to fetch LocalizedGlobalElement')
+
+        resource = await fetchJson<LocalizedGlobalElement>(
+          `/api/makeswift/localized-global-elements/${resourceId}/${locale}`,
+        )
+        break
+      }
 
       case APIResourceType.PagePathnameSlice:
         resource = await fetchJson<PagePathnameSlice>(

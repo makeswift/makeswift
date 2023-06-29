@@ -130,6 +130,7 @@ export const Page = memo(({ snapshot, runtime }: PageProps) => {
       new MakeswiftClient({
         uri: new URL('graphql', snapshot.apiOrigin).href,
         cacheData: snapshot.cacheData,
+        localizedResourcesMap: snapshot.localizedResourcesMap,
       }),
     [snapshot],
   )

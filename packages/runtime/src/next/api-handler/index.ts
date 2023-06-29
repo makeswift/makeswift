@@ -103,6 +103,16 @@ export function MakeswiftApiHandler(
       return client.getGlobalElement(m.params.id).then(handleResource)
     }
 
+    if (
+      (m = matches<{ globalElementId: string; locale: string }>(
+        '/localized-global-elements/:globalElementId/:locale',
+      ))
+    ) {
+      return client
+        .getLocalizedGlobalElement(m.params.globalElementId, m.params.locale)
+        .then(handleResource)
+    }
+
     if ((m = matches<{ id: string }>('/page-pathname-slices/:id'))) {
       return client.getPagePathnameSlice(m.params.id).then(handleResource)
     }
