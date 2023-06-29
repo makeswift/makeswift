@@ -336,7 +336,7 @@ export function ControlValue<T extends ControlDefinition>({
         <RenderHook
           key={definition.type}
           hook={useTypographyValue}
-          parameters={[data as unknown as TypographyControlData]}
+          parameters={[data as unknown as TypographyControlData[number]]}
         >
           {value => children(value as ControlDefinitionValue<T>)}
         </RenderHook>
