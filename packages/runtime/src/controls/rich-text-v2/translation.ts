@@ -1,0 +1,14 @@
+import { Descendant } from 'slate'
+import { RichTextV2ControlData, RichTextV2ControlType } from './rich-text-v2'
+
+export function richTextV2DataToDescendents(data: RichTextV2ControlData): Descendant[] {
+  return data.descendants
+}
+
+export function richTextV2DescendentsToData(descendants: Descendant[]): RichTextV2ControlData {
+  return {
+    type: RichTextV2ControlType,
+    version: 2,
+    descendants,
+  }
+}

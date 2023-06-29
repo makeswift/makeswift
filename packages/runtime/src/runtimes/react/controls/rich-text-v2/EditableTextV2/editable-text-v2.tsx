@@ -35,6 +35,7 @@ import { useSyncDOMSelection } from './useSyncDOMSelection'
 import { BlockType } from '../../../../../slate'
 import { RichTextV2Element } from './render-element'
 import { RichTextV2Leaf } from './render-leaf'
+import { richTextV2DataToDescendents } from '../../../../../controls/rich-text-v2/translation'
 
 export type RichTextV2ControlValue = ReactNode
 
@@ -43,7 +44,7 @@ export type Descriptors = { text?: RichTextV2ControlDefinition }
 const defaultText: Descendant[] = [{ type: BlockType.Default, children: [{ text: '' }] }]
 
 type Props = {
-  text: RichTextV2ControlData
+  text?: RichTextV2ControlData
   definition: RichTextV2ControlDefinition
   control: RichTextV2Control | null
 }
@@ -93,7 +94,10 @@ export function EditableTextV2({ text, definition, control }: Props) {
     [plugins, definition],
   )
 
-  const initialValue = useMemo(() => text ?? defaultText, [text])
+  const initialValue = useMemo(
+    () => (text && richTextV2DataToDescendents(text)) ?? defaultText,
+    [text],
+  )
 
   useEffect(() => {
     /**
