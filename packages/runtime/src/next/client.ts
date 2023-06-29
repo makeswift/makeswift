@@ -117,6 +117,8 @@ type LocalizedPage = {
   data: Element
   elementTreeId: string
   parentId: string | null
+  meta: Omit<Meta, 'favicon'>
+  seo: Seo
 }
 
 type MakeswiftConfig = {
