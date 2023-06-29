@@ -6,10 +6,15 @@ import { Send } from '../../prop-controllers/instances'
 import { ControlDefinition, ControlDefinitionData } from '../control'
 import { RenderElementProps, RenderLeafProps } from 'slate-react'
 import { RichTextControlData } from '../rich-text/rich-text'
-
-export type RichTextV2ControlData = Descendant[]
+import { richTextV2DescendentsToData } from './translation'
 
 export const RichTextV2ControlType = 'makeswift::controls::rich-text-v2'
+
+export type RichTextV2ControlData = {
+  version: 2
+  type: typeof RichTextV2ControlType
+  descendants: Descendant[]
+}
 
 export const RichTextV2Mode = {
   Inline: 'makeswift::controls::rich-text-v2::mode::inline',
@@ -72,17 +77,19 @@ export function unstable_RichTextV2<T extends RichTextV2Config>(
 
 export const RichTextV2ControlMessageType = {
   // COSMOS -> HOST
-  RESET_VALUE: 'RESET_VALUE',
-  FOCUS: 'FOCUS',
-  RUN_PLUGIN_CONTROL_ACTION: 'RUN_PLUGIN_CONTROL_ACTION',
+  RESET_VALUE: 'makeswift::controls::rich-text-v2::control-message::reset-value',
+  FOCUS: 'makeswift::controls::rich-text-v2::control-message::focus',
+  RUN_PLUGIN_CONTROL_ACTION:
+    'makeswift::controls::rich-text-v2::control-message::run-plugin-control-action',
 
   // HOST -> COSMOS
-  SET_DEFAULT_VALUE: 'SET_DEFAULT_VALUE',
-  SET_PLUGIN_CONTROL_VALUE: 'SET_PLUGIN_CONTROL_VALUE',
-  ON_CHANGE: 'ON_CHANGE',
-  SELECT: 'SELECT',
-  SWITCH_TO_BUILD_MODE: 'SWITCH_TO_BUILD_MODE',
-  CHANGE_BOX_MODEL: 'CHANGE_BOX_MODEL',
+  SET_DEFAULT_VALUE: 'makeswift::controls::rich-text-v2::control-message::set-default-value',
+  SET_PLUGIN_CONTROL_VALUE:
+    'makeswift::controls::rich-text-v2::control-message::set-plugin-control-value',
+  ON_CHANGE: 'makeswift::controls::rich-text-v2::control-message::on-change',
+  SELECT: 'makeswift::controls::rich-text-v2::control-message::select',
+  SWITCH_TO_BUILD_MODE: 'makeswift::controls::rich-text-v2::control-message::switch-to-build-mode',
+  CHANGE_BOX_MODEL: 'makeswift::controls::rich-text-v2::control-message::change-box-model',
 } as const
 
 type OnChangeRichTextControlMessage = {
@@ -156,7 +163,7 @@ export class RichTextV2Control<
       case RichTextV2ControlMessageType.RESET_VALUE: {
         if (this.defaultValue) {
           this.editor.selection = null
-          this.editor.children = this.defaultValue
+          this.editor.children = this.defaultValue.descendants
           this.editor.onChange()
         }
         break
@@ -179,9 +186,12 @@ export class RichTextV2Control<
     })
   }
 
-  setDefaultValue(defaultValue: RichTextV2ControlData) {
-    this.defaultValue = defaultValue
-    this.send({ type: RichTextV2ControlMessageType.SET_DEFAULT_VALUE, value: defaultValue })
+  setDefaultValue(defaultValue: Descendant[]) {
+    this.defaultValue = richTextV2DescendentsToData(defaultValue)
+    this.send({
+      type: RichTextV2ControlMessageType.SET_DEFAULT_VALUE,
+      value: richTextV2DescendentsToData(defaultValue),
+    })
   }
 
   select() {
@@ -198,7 +208,7 @@ export class RichTextV2Control<
 
     this.send({
       type: RichTextV2ControlMessageType.ON_CHANGE,
-      value,
+      value: richTextV2DescendentsToData(value),
     })
 
     this.send({
@@ -216,5 +226,7 @@ export class RichTextV2Control<
 export function isRichTextV1Data(
   value: RichTextControlData | RichTextV2ControlData | undefined,
 ): value is RichTextControlData {
-  return value !== undefined && typeof value === 'object' && !Array.isArray(value)
+  return (
+    value !== undefined && typeof value === 'object' && !Array.isArray(value) && 'object' in value
+  )
 }

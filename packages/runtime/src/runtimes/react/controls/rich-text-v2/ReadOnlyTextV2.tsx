@@ -14,7 +14,7 @@ type Props = {
 }
 
 const ReadOnlyTextV2 = forwardRef(function ReadOnlyText(
-  { text: descendants, control }: Props,
+  { text: { descendants }, control }: Props,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
   const descendantsAsString = getText(descendants)

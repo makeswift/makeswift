@@ -34,6 +34,7 @@ import {
   ListControlType,
   MarkJSON,
   NodeJSON,
+  RichTextControlData,
   RichTextV2ControlData,
   RichTextV2ControlType,
   ShapeControlData,
@@ -241,13 +242,13 @@ export function getSwatchIds<T extends Data>(
     }
 
     case RichTextV2ControlType: {
-      const descendants = prop as RichTextV2ControlData
+      const data = prop as RichTextV2ControlData | RichTextControlData
       const plugins = descriptor.config.plugins
 
       // TODO:josh update RichTextV2 to introspect RichText data when it encounters it.
-      if (isRichTextV1Data(descendants)) return []
+      if (isRichTextV1Data(data)) return []
 
-      return descendants.flatMap(d => getDescendantSwatchIds(d))
+      return data.descendants.flatMap(d => getDescendantSwatchIds(d))
 
       function getDescendantSwatchIds(descendant: Descendant): string[] {
         if (SlateElement.isElement(descendant)) {
