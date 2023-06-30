@@ -10,6 +10,13 @@ import { ControlDefinition, ControlDefinitionData } from './control'
 import { Data } from './types'
 
 import { copy as controlCopy } from './control'
+import {
+  getElementChildren,
+  getFileIds,
+  getPageIds,
+  getSwatchIds,
+  getTypographyIds,
+} from '../prop-controllers/introspection'
 
 export const ListControlType = 'makeswift::controls::list'
 
@@ -134,7 +141,7 @@ export function copyListData(
   )
 }
 
-export function introspectListData<T>(
+function introspectListData<T>(
   definition: ListControlDefinition,
   value: ListControlData | undefined,
   func: (definition: ControlDefinition, data: Data) => T[],
@@ -142,4 +149,24 @@ export function introspectListData<T>(
   if (value == null) return []
 
   return value.flatMap(item => func(definition.config.type, item.value))
+}
+
+export function getListElementChildren(definition: ListControlDefinition, value: ListControlData) {
+  return introspectListData(definition, value, getElementChildren)
+}
+
+export function getListSwatchIds(definition: ListControlDefinition, value: ListControlData) {
+  return introspectListData(definition, value, getSwatchIds)
+}
+
+export function getListFileIds(definition: ListControlDefinition, value: ListControlData) {
+  return introspectListData(definition, value, getFileIds)
+}
+
+export function getListTypographyIds(definition: ListControlDefinition, value: ListControlData) {
+  return introspectListData(definition, value, getTypographyIds)
+}
+
+export function getListPageIds(definition: ListControlDefinition, value: ListControlData) {
+  return introspectListData(definition, value, getPageIds)
 }
