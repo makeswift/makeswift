@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.9.10
+
+### Patch Changes
+
+- 3a714a0: Add localized global element support.
+- bd620d0: Add support for localized page meta and page SEO.
+
 ## 0.9.9
 
 ### Patch Changes
