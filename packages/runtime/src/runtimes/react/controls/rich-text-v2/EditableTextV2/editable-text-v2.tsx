@@ -11,7 +11,6 @@ import {
 } from 'react'
 import { Descendant, createEditor } from 'slate'
 import isHotkey from 'is-hotkey'
-import { withHistory, HistoryEditor } from 'slate-history'
 import {
   withReact,
   ReactEditor,
@@ -61,7 +60,7 @@ export function EditableTextV2({ text, definition, control }: Props) {
   const [editor] = useState(() =>
     plugins.reduceRight(
       (editor, plugin) => plugin?.withPlugin?.(editor) ?? editor,
-      withBuilder(withHistory(withReact(createEditor()))),
+      withBuilder(withReact(createEditor())),
     ),
   )
 
@@ -123,8 +122,8 @@ export function EditableTextV2({ text, definition, control }: Props) {
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (isHotkey('mod+shift+z', e)) return HistoryEditor.redo(editor)
-      if (isHotkey('mod+z', e)) return HistoryEditor.undo(editor)
+      if (isHotkey('mod+shift+z', e)) return control?.redo()
+      if (isHotkey('mod+z', e)) return control?.undo()
       if (isHotkey('escape')(e)) {
         isPreservingFocus.current = false
         ReactEditor.blur(editor)
