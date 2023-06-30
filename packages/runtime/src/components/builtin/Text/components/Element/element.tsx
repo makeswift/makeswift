@@ -10,10 +10,15 @@ export function Element({ element, ...props }: RenderElementProps) {
     case InlineType.SubScript:
     case InlineType.Link:
       return <InlineElement element={element} {...props} />
+    case BlockType.Text:
+    case BlockType.Default:
     case BlockType.Paragraph:
     case BlockType.Heading1:
     case BlockType.Heading2:
     case BlockType.Heading3:
+    case BlockType.Heading4:
+    case BlockType.Heading5:
+    case BlockType.Heading6:
     case BlockType.BlockQuote:
     case BlockType.OrderedList:
     case BlockType.UnorderedList:

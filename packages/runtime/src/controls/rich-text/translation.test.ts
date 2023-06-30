@@ -3,6 +3,7 @@ import { blockquoteFixture, listFixture, typographyFixture } from './fixtures'
 import { richTextDAOToDTO, richTextDTOtoDAO, richTextDTOtoSelection } from './translation'
 import { RichTextDTO } from './dto-types'
 import { emptyBlockFixture, fixedEmptyBlockFixture } from './fixtures/empty-blocks'
+import { v2DataFixture } from './fixtures/v2-data-types'
 
 describe('GIVEN I am using RichText data translation', () => {
   test('WHEN translating simple data THEN nothing is lost', () => {
@@ -49,6 +50,12 @@ describe('GIVEN I am using RichText data translation', () => {
         richTextDTOtoDAO(emptyBlockFixture),
         richTextDTOtoSelection(emptyBlockFixture),
       ),
+    )
+  })
+
+  test('WHEN translating with V2 type THEN the translation is lossless', () => {
+    expect(v2DataFixture).toStrictEqual(
+      richTextDAOToDTO(richTextDTOtoDAO(v2DataFixture), richTextDTOtoSelection(v2DataFixture)),
     )
   })
 })
