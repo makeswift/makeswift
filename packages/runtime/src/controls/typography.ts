@@ -1,3 +1,5 @@
+import { isNonNullable } from '../utils/isNonNullable'
+
 export type TypographyControlData = (
   | {
       id?: string
@@ -31,4 +33,14 @@ export function unstable_Typography(): TypographyControlDefinition {
   return {
     type: TypographyControlType,
   }
+}
+
+export function getTypographySwatchIds(value: TypographyControlData[number]) {
+  return (
+    value?.style.flatMap(style => style.value.color?.swatchId ?? []).filter(isNonNullable) ?? []
+  )
+}
+
+export function getTypographyTypographyIds(value: TypographyControlData[number]) {
+  return [value?.id].filter(isNonNullable)
 }

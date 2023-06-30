@@ -10,6 +10,13 @@ import { ControlDefinition, ControlDefinitionData } from './control'
 
 import { copy as controlCopy } from './control'
 import { Data } from './types'
+import {
+  getElementChildren,
+  getFileIds,
+  getPageIds,
+  getSwatchIds,
+  getTypographyIds,
+} from '../prop-controllers/introspection'
 
 export const ShapeControlType = 'makeswift::controls::shape'
 
@@ -112,7 +119,7 @@ export function copyShapeData(
   return newValue
 }
 
-export function introspectShapeData<T>(
+function introspectShapeData<T>(
   definition: ShapeControlDefinition,
   value: ShapeControlData | undefined,
   func: (definition: ControlDefinition, data: Data) => T[],
@@ -122,4 +129,27 @@ export function introspectShapeData<T>(
   return Object.entries(definition.config.type).flatMap(([key, definition]) =>
     func(definition, value[key]),
   )
+}
+
+export function getShapeElementChildren(
+  definition: ShapeControlDefinition,
+  data: ShapeControlData,
+) {
+  return introspectShapeData(definition, data, getElementChildren)
+}
+
+export function getShapeSwatchIds(definition: ShapeControlDefinition, data: ShapeControlData) {
+  return introspectShapeData(definition, data, getSwatchIds)
+}
+
+export function getShapeTypographyIds(definition: ShapeControlDefinition, data: ShapeControlData) {
+  return introspectShapeData(definition, data, getTypographyIds)
+}
+
+export function getShapePageIds(definition: ShapeControlDefinition, data: ShapeControlData) {
+  return introspectShapeData(definition, data, getPageIds)
+}
+
+export function getShapeFileIds(definition: ShapeControlDefinition, data: ShapeControlData) {
+  return introspectShapeData(definition, data, getFileIds)
 }

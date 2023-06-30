@@ -47,6 +47,13 @@ import { StyleV2ControlFormattedValue } from '../runtimes/react/controls/style-v
 import { IconRadioGroupControlDefinition } from '../controls/icon-radio-group'
 import { IconRadioGroupControlValue } from '../runtimes/react/controls/icon-radio-group'
 import { TypographyControlValue } from '../runtimes/react/controls/typography'
+import {
+  getElementChildren,
+  getFileIds,
+  getPageIds,
+  getSwatchIds,
+  getTypographyIds,
+} from './introspection'
 
 export type { Data }
 
@@ -470,6 +477,41 @@ export function introspectListPropControllerData<T>(
   return value.flatMap(item => (item.value ? func(descriptor.options.type, item.value) : []))
 }
 
+export function getListPropControllerElementChildren<T>(
+  descriptor: ListDescriptor<T extends ListValue<Data> ? T : ListValue<Data>>,
+  value: ListValue | undefined,
+) {
+  return introspectListPropControllerData(descriptor, value, getElementChildren)
+}
+
+export function getListPropControllerSwatchIds<T>(
+  descriptor: ListDescriptor<T extends ListValue<Data> ? T : ListValue<Data>>,
+  value: ListValue | undefined,
+) {
+  return introspectListPropControllerData(descriptor, value, getSwatchIds)
+}
+
+export function getListPropControllerFileIds<T>(
+  descriptor: ListDescriptor<T extends ListValue<Data> ? T : ListValue<Data>>,
+  value: ListValue | undefined,
+) {
+  return introspectListPropControllerData(descriptor, value, getFileIds)
+}
+
+export function getListPropControllerTypographyIds<T>(
+  descriptor: ListDescriptor<T extends ListValue<Data> ? T : ListValue<Data>>,
+  value: ListValue | undefined,
+) {
+  return introspectListPropControllerData(descriptor, value, getTypographyIds)
+}
+
+export function getListPropControllerPageIds<T>(
+  descriptor: ListDescriptor<T extends ListValue<Data> ? T : ListValue<Data>>,
+  value: ListValue | undefined,
+) {
+  return introspectListPropControllerData(descriptor, value, getPageIds)
+}
+
 type MarginSide = { value: number; unit: 'px' } | 'auto'
 
 type Margin = {
@@ -836,6 +878,41 @@ export function introspectShapePropControllerData<T>(
   return Object.entries(descriptor.options.type).flatMap(([key, definition]) =>
     func(definition, value[key]),
   )
+}
+
+export function getShapePropControllerElementChildren(
+  descriptor: ShapeDescriptor<Record<string, Data>, Record<string, PanelDescriptor>>,
+  value: ShapeValue | undefined,
+): Element[] {
+  return introspectShapePropControllerData(descriptor, value, getElementChildren)
+}
+
+export function getShapePropControllerFileIds(
+  descriptor: ShapeDescriptor<Record<string, Data>, Record<string, PanelDescriptor>>,
+  value: ShapeValue | undefined,
+): string[] {
+  return introspectShapePropControllerData(descriptor, value, getFileIds)
+}
+
+export function getShapePropControllerTypographyIds(
+  descriptor: ShapeDescriptor<Record<string, Data>, Record<string, PanelDescriptor>>,
+  value: ShapeValue | undefined,
+): string[] {
+  return introspectShapePropControllerData(descriptor, value, getTypographyIds)
+}
+
+export function getShapePropControllerPageIds(
+  descriptor: ShapeDescriptor<Record<string, Data>, Record<string, PanelDescriptor>>,
+  value: ShapeValue | undefined,
+): string[] {
+  return introspectShapePropControllerData(descriptor, value, getPageIds)
+}
+
+export function getShapePropControllerSwatchIds(
+  descriptor: ShapeDescriptor<Record<string, Data>, Record<string, PanelDescriptor>>,
+  value: ShapeValue | undefined,
+): string[] {
+  return introspectShapePropControllerData(descriptor, value, getSwatchIds)
 }
 
 type SocialLinkType =
