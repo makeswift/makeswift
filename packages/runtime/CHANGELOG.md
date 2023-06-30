@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.8.14
+
+### Patch Changes
+
+- bf6add4: Fix runtime error when pasting RichTextV2 data into Text component.
+
 ## 0.8.13
 
 ### Patch Changes
