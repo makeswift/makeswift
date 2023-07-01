@@ -1,4 +1,4 @@
-import { Editor, Element } from 'slate'
+import { Editor, Element, NodeEntry } from 'slate'
 import {
   createRichTextV2Plugin,
   unstable_IconRadioGroup,
@@ -9,6 +9,7 @@ import { ElementUtils } from '../utils/element'
 import { TextAlignProperty } from 'csstype'
 import { normalizeResponsiveValue, setResponsiveValue } from '../utils/responsive'
 import { getValue } from './getValue'
+import { RootBlock } from '../types'
 
 const TEXT_ALIGN_KEY = 'textAlign'
 
@@ -16,7 +17,9 @@ export const withTextAlign = (editor: Editor) => {
   const { normalizeNode } = editor
   editor.normalizeNode = entry => {
     if (
-      normalizeResponsiveValue(editor, TEXT_ALIGN_KEY, { match: ElementUtils.isRootBlock })(entry)
+      normalizeResponsiveValue(editor, TEXT_ALIGN_KEY, { match: ElementUtils.isRootBlock })(
+        entry as NodeEntry<RootBlock>,
+      )
     ) {
       return
     }
