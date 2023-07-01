@@ -38,7 +38,7 @@ export function setResponsiveValue<T extends Descendant, K extends keyof T>(
       const nodesToUpdate = Array.from(
         Editor.nodes(editor, {
           at: atRef.current,
-          match: (node, path) => options.match(node, path) && node.slice === true,
+          match: (node, path) => options.match(node, path) && (node as T).slice === true,
         }),
       )
 
@@ -66,7 +66,7 @@ export function normalizeResponsiveValue<T extends Descendant, K extends keyof T
   key: K,
   options: NormalizeResponsiveValueOptions<T>,
 ) {
-  return (entry: NodeEntry) => {
+  return (entry: NodeEntry<T>) => {
     const [node, path] = entry
 
     if (!options.match(node, path)) {

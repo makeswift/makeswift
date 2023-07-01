@@ -127,8 +127,8 @@
     "@types/cookie": "^0.5.1",
     "@types/http-proxy": "^1.17.9",
     "@types/is-hotkey": "^0.1.7",
-    "@types/react": "^18.0.21",
-    "@types/react-dom": "^18.0.6",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6",
     "@types/set-cookie-parser": "^2.4.2",
     "@types/use-sync-external-store": "^0.0.3",
     "@types/uuid": "^9.0.1",
@@ -180,7 +180,7 @@
     "slate": "^0.91.4",
     "slate-hyperscript": "^0.77.0",
     "slate-react": "^0.91.7",
-    "typescript": "^5.0.4",
+    "typescript": "^5.1.6",
     "vite": "^2.8.6",
     "vitest": "^0.7.4"
   }

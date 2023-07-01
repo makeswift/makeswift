@@ -1,7 +1,12 @@
-import { MutableRefObject, useImperativeHandle, useRef } from 'react'
-import { ReactInstance } from 'react'
-import { forwardRef } from 'react'
-import { Component, ReactNode } from 'react'
+import {
+  Component,
+  MutableRefObject,
+  ReactInstance,
+  ReactNode,
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+} from 'react'
 import { findDOMNode } from 'react-dom'
 
 /**
@@ -18,6 +23,7 @@ function suppressWarningAndFindDomNode(
     return error.apply(console, args)
   }
 
+  // @ts-expect-error @types/react-dom has a different @types/react than the one installed.
   const foundDomNode = findDOMNode(instance)
 
   console.error = error
