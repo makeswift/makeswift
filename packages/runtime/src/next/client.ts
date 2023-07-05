@@ -180,7 +180,8 @@ export class Makeswift {
   }
 
   async getPages(): Promise<MakeswiftPage[]> {
-    const response = await this.fetch(`/v2/pages`, {
+    const isUsingVersioning = this.siteVersion != null
+    const response = await this.fetch(`/${isUsingVersioning ? 'v3' : 'v2'}/pages`, {
       headers: {
         'Makeswift-Site-Version': MakeswiftSiteVersion.Live,
       },
@@ -206,7 +207,8 @@ export class Makeswift {
   }
 
   private async getSwatches(ids: string[], preview: boolean): Promise<(Swatch | null)[]> {
-    const url = new URL(`v1/swatches/bulk`, this.apiOrigin)
+    const isUsingVersioning = this.siteVersion != null
+    const url = new URL(`${isUsingVersioning ? 'v2' : 'v1'}/swatches/bulk`, this.apiOrigin)
 
     ids.forEach(id => {
       url.searchParams.append('ids', id)
@@ -405,6 +407,7 @@ export class Makeswift {
       unstable_locale,
     }: { preview?: boolean; unstable_locale?: string } = {},
   ): Promise<MakeswiftPageSnapshot | null> {
+    const isUsingVersioning = this.siteVersion != null
     const siteVersion =
       this.siteVersion ??
       (previewOverride ? MakeswiftSiteVersion.Working : MakeswiftSiteVersion.Live)
@@ -412,7 +415,9 @@ export class Makeswift {
     if (unstable_locale) searchParams.set('locale', unstable_locale)
 
     const response = await this.fetch(
-      `/v2/pages/${encodeURIComponent(pathname)}/document?${searchParams.toString()}`,
+      `/${isUsingVersioning ? 'v3' : 'v2'}/pages/${encodeURIComponent(
+        pathname,
+      )}/document?${searchParams.toString()}`,
       {
         headers: { 'Makeswift-Site-Version': siteVersion },
       },
@@ -445,7 +450,8 @@ export class Makeswift {
   }
 
   async getSwatch(swatchId: string): Promise<Swatch | null> {
-    const response = await this.fetch(`v1/swatches/${swatchId}`)
+    const isUsingVersioning = this.siteVersion != null
+    const response = await this.fetch(`${isUsingVersioning ? 'v2' : 'v1'}/swatches/${swatchId}`)
 
     if (!response.ok) {
       if (response.status !== 404) console.error('Failed to get swatch', await response.json())
