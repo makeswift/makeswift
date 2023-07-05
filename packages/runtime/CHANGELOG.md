@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.9.11
+
+### Patch Changes
+
+- 0543105: Upgrade `typescript`, `@types/react` and `@types/react-dom` to fix issues when using typescript > 5.1.x.
+- 9536667: Call versioned endpoints only if using versioning
+
 ## 0.9.10
 
 ### Patch Changes
