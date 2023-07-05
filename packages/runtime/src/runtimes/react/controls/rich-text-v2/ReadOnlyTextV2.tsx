@@ -1,32 +1,32 @@
-import { cx } from '@emotion/css'
 import { ForwardedRef, forwardRef } from 'react'
-import { useResponsiveStyle } from '../../../../components/utils/responsive-style'
-import { RichTextV2Control, RichTextV2ControlData, RichTextV2Mode } from '../../../../controls'
+import {
+  RichTextV2ControlData,
+  RichTextV2ControlDefinition,
+  RichTextV2Plugin,
+} from '../../../../controls'
 import { useStyle } from '../../use-style'
-import { Descendant, Text } from 'slate'
-import { Link } from '../../../../components/shared/Link'
-import { Inline, InlineType, Block, BlockType } from '../../../../slate'
-import useEnhancedTypography, { useTypographyClassName } from '../typography'
+import { Descendant, Element, Text } from 'slate'
+import { InlineType, Block, BlockType } from '../../../../slate'
+import { ControlValue } from '../control'
+import { RenderElementProps, RenderLeafProps } from 'slate-react'
 
 type Props = {
   text: RichTextV2ControlData
-  control: RichTextV2Control | null
+  definition: RichTextV2ControlDefinition | null
 }
 
 const ReadOnlyTextV2 = forwardRef(function ReadOnlyText(
-  { text: { descendants }, control }: Props,
+  { text: { descendants }, definition }: Props,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
   const descendantsAsString = getText(descendants)
-
-  const mode = control?.descriptor.config.mode ?? RichTextV2Mode.Block
 
   return (
     <div ref={ref}>
       {descendantsAsString === '' ? (
         <Placeholder />
       ) : (
-        <Descendants descendants={descendants} mode={mode} />
+        <Descendants plugins={definition?.config.plugins ?? []} descendants={descendants} />
       )}
     </div>
   )
@@ -51,212 +51,90 @@ function Placeholder({ text = 'Write some text...' }: { text?: string }) {
   )
 }
 
-export interface TextProps {
-  descendant: Text
+type LeafProps = {
+  leaf: Text
+  plugins: RichTextV2Plugin[]
 }
 
-export function TextElement({ descendant }: TextProps) {
-  const enhancedTypography = useEnhancedTypography(descendant.typography)
-  const typographyClassName = useTypographyClassName(enhancedTypography)
+export function LeafComponent({ plugins, ...props }: LeafProps) {
+  function initialRenderLeaf({ leaf }: RenderLeafProps) {
+    return <span className={leaf.className}>{leaf.text === '' ? '\uFEFF' : leaf.text}</span>
+  }
 
-  return (
-    <span className={typographyClassName}>
-      {descendant.text === '' ? '\uFEFF' : descendant.text}
-    </span>
+  const renderLeaf = plugins.reduce(
+    (renderFn, plugin) => (props: RenderLeafProps) => {
+      const { control, renderLeaf } = plugin
+
+      if (control?.definition == null || renderLeaf == null) return renderFn(props)
+
+      if (control.getLeafValue == null) return renderLeaf(renderFn, undefined)(props)
+
+      return (
+        <ControlValue definition={control.definition} data={control.getLeafValue(props.leaf)}>
+          {value => renderLeaf(renderFn, value)(props)}
+        </ControlValue>
+      )
+    },
+    initialRenderLeaf,
   )
+
+  return renderLeaf({ attributes: {} as any, leaf: props.leaf, children: null, text: props.leaf })
 }
 
-export interface InlineProps {
-  descendant: Inline
-  mode: RichTextV2Mode
+type ElementProps = {
+  descendant: Element
+  plugins: RichTextV2Plugin[]
 }
 
-function InlineElement({ descendant, mode }: InlineProps) {
-  const linkClassName = useStyle({ textDecoration: 'none' })
-
-  switch (descendant.type) {
-    case InlineType.Code:
-      return (
-        <code>
-          <Descendants descendants={descendant.children} mode={mode} />
-        </code>
-      )
-
-    case InlineType.SuperScript:
-      return (
-        <sup>
-          <Descendants descendants={descendant.children} mode={mode} />
-        </sup>
-      )
-
-    case InlineType.SubScript:
-      return (
-        <sub>
-          <Descendants descendants={descendant.children} mode={mode} />
-        </sub>
-      )
-
-    case InlineType.Link:
-      return (
-        <Link className={linkClassName} link={descendant.link ?? undefined}>
-          <Descendants descendants={descendant.children} mode={mode} />
-        </Link>
-      )
+function ElementComponent({ plugins, ...props }: ElementProps) {
+  function initialRenderElement(props: RenderElementProps) {
+    return <Descendants descendants={props.element.children} plugins={plugins} />
   }
-}
 
-export interface BlockProps {
-  descendant: Block
-  mode: RichTextV2Mode
-}
+  const renderElement = plugins.reduce(
+    (renderFn, plugin) => (props: RenderElementProps) => {
+      const { control, renderElement } = plugin
 
-export function BlockElement({ descendant, mode }: BlockProps) {
-  const blockStyles = [
-    useStyle({ margin: 0 }),
-    useStyle(useResponsiveStyle([descendant.textAlign], ([textAlign = 'left']) => ({ textAlign }))),
-  ]
-  const quoteStyle = useStyle({
-    padding: '0.5em 10px',
-    fontSize: '1.25em',
-    fontWeight: '300',
-    borderLeft: '5px solid rgba(0, 0, 0, 0.1)',
-  })
+      console.log({ props })
+      if (control?.definition == null || renderElement == null) return renderFn(props)
 
-  const listStyles = useStyle({
-    listStylePosition: 'inside',
-    paddingInlineStart: '20px',
-    listStyleType: 'disc',
-  })
+      if (control.getElementValue == null) return renderElement(renderFn, undefined)(props)
 
-  switch (descendant.type) {
-    case BlockType.Text:
       return (
-        <span className={cx(...blockStyles)}>
-          <Descendants descendants={descendant.children} mode={mode} />
-        </span>
+        <ControlValue definition={control.definition} data={control.getElementValue(props.element)}>
+          {value => renderElement(renderFn, value)(props)}
+        </ControlValue>
       )
-    case BlockType.Paragraph:
-      return (
-        <p className={cx(...blockStyles)}>
-          <Descendants descendants={descendant.children} mode={mode} />
-        </p>
-      )
-    case BlockType.Heading1:
-      return (
-        <h1 className={cx(...blockStyles)}>
-          <Descendants descendants={descendant.children} mode={mode} />
-        </h1>
-      )
-    case BlockType.Heading2:
-      return (
-        <h2 className={cx(...blockStyles)}>
-          <Descendants descendants={descendant.children} mode={mode} />
-        </h2>
-      )
-    case BlockType.Heading3:
-      return (
-        <h3 className={cx(...blockStyles)}>
-          <Descendants descendants={descendant.children} mode={mode} />
-        </h3>
-      )
-    case BlockType.Heading4:
-      return (
-        <h4 className={cx(...blockStyles)}>
-          <Descendants descendants={descendant.children} mode={mode} />
-        </h4>
-      )
-    case BlockType.Heading5:
-      return (
-        <h5 className={cx(...blockStyles)}>
-          <Descendants descendants={descendant.children} mode={mode} />
-        </h5>
-      )
-    case BlockType.Heading6:
-      return (
-        <h6 className={cx(...blockStyles)}>
-          <Descendants descendants={descendant.children} mode={mode} />
-        </h6>
-      )
-    case BlockType.BlockQuote:
-      return (
-        <blockquote className={cx(...blockStyles, quoteStyle)}>
-          <Descendants descendants={descendant.children} mode={mode} />
-        </blockquote>
-      )
-    case BlockType.OrderedList:
-      return (
-        <ol className={cx(...blockStyles, listStyles)}>
-          <Descendants descendants={descendant.children} mode={mode} />
-        </ol>
-      )
-    case BlockType.UnorderedList:
-      return (
-        <ul className={cx(...blockStyles, listStyles)}>
-          <Descendants descendants={descendant.children} mode={mode} />
-        </ul>
-      )
-    case BlockType.ListItem:
-      return (
-        <li className={cx(...blockStyles)}>
-          <Descendants descendants={descendant.children} mode={mode} />
-        </li>
-      )
-    case BlockType.ListItemChild:
-      return (
-        <span className={cx(...blockStyles)}>
-          <Descendants descendants={descendant.children} mode={mode} />
-        </span>
-      )
-    default:
-      if (mode === RichTextV2Mode.Inline)
-        return (
-          <span className={cx(...blockStyles)}>
-            <Descendants descendants={descendant.children} mode={mode} />
-          </span>
-        )
-      return (
-        <p className={cx(...blockStyles)}>
-          <Descendants descendants={descendant.children} mode={mode} />
-        </p>
-      )
-  }
+    },
+    initialRenderElement,
+  )
+
+  return renderElement({ attributes: {} as any, children: null, element: props.descendant })
 }
 
 // reimplemented from slate source for code splitting
-function isText(node: any): node is Text {
+function isText(node: Descendant): node is Text {
   if (typeof node === 'object' && 'text' in node) return true
 
   return false
 }
 
-function Descendants({ descendants, mode }: { descendants: Descendant[]; mode: RichTextV2Mode }) {
+function Descendants({
+  descendants,
+  plugins,
+}: {
+  plugins: RichTextV2Plugin[]
+  descendants: Descendant[]
+}) {
   return (
     <>
       {descendants.map((descendant, index) => {
+        console.log({ descendant })
         if (isText(descendant)) {
-          return <TextElement key={index} descendant={descendant} />
+          return <LeafComponent key={index} plugins={plugins} leaf={descendant} />
         }
 
-        switch (descendant.type) {
-          case InlineType.Link:
-          case InlineType.Code:
-          case InlineType.SubScript:
-          case InlineType.SuperScript:
-            return <InlineElement key={index} descendant={descendant} mode={mode} />
-          case BlockType.Heading1:
-          case BlockType.Heading2:
-          case BlockType.Heading3:
-          case BlockType.BlockQuote:
-          case BlockType.Text:
-          case BlockType.Paragraph:
-          case BlockType.OrderedList:
-          case BlockType.UnorderedList:
-          case BlockType.ListItem:
-          case BlockType.ListItemChild:
-            return <BlockElement key={index} descendant={descendant} mode={mode} />
-          default:
-            return null
-        }
+        return <ElementComponent key={index} descendant={descendant} plugins={plugins} />
       })}
     </>
   )
@@ -269,13 +147,17 @@ function isBlock(descendant: Descendant): descendant is Block {
     case BlockType.Heading1:
     case BlockType.Heading2:
     case BlockType.Heading3:
+    case BlockType.Heading4:
+    case BlockType.Heading5:
+    case BlockType.Heading6:
     case BlockType.BlockQuote:
     case BlockType.Paragraph:
+    case BlockType.Default:
+    case BlockType.Text:
     case BlockType.OrderedList:
     case BlockType.UnorderedList:
     case BlockType.ListItem:
     case BlockType.ListItemChild:
-    case BlockType.Text:
       return true
 
     default:
@@ -297,8 +179,13 @@ function getTextByDescendant(descendant: Descendant): string {
     case BlockType.Heading1:
     case BlockType.Heading2:
     case BlockType.Heading3:
+    case BlockType.Heading4:
+    case BlockType.Heading5:
+    case BlockType.Heading6:
     case BlockType.BlockQuote:
     case BlockType.Paragraph:
+    case BlockType.Default:
+    case BlockType.Text:
     case BlockType.OrderedList:
     case BlockType.UnorderedList:
     case BlockType.ListItem:

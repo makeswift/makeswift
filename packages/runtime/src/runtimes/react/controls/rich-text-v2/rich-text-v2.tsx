@@ -40,6 +40,6 @@ export function useRichTextV2(
   return isPreview ? (
     <EditableText text={data} definition={definition} control={control} />
   ) : (
-    <ReadOnlyText text={data} control={control} />
+    <ReadOnlyText text={data} definition={definition} />
   )
 }

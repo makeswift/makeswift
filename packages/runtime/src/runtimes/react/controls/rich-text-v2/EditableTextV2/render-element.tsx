@@ -1,12 +1,5 @@
-import { cx } from '@emotion/css'
 import { RenderElementProps } from 'slate-react'
-import {
-  RichTextV2ControlDefinition,
-  RichTextV2Plugin,
-  RichTextV2Mode,
-} from '../../../../../controls'
-import { BlockType } from '../../../../../slate'
-import { useStyle } from '../../../use-style'
+import { RichTextV2ControlDefinition, RichTextV2Plugin } from '../../../../../controls'
 import { ControlValue } from '../../control'
 
 type RichTextV2ElementProps = RenderElementProps & {
@@ -15,26 +8,8 @@ type RichTextV2ElementProps = RenderElementProps & {
 }
 
 export function RichTextV2Element({ definition, plugins, ...props }: RichTextV2ElementProps) {
-  const blockStyles = [useStyle({ margin: 0 })]
-
   function initialRenderElement(props: RenderElementProps) {
-    switch (props.element.type) {
-      case BlockType.Default:
-      default:
-        if (definition.config.mode === RichTextV2Mode.Inline) {
-          return (
-            <span {...props.attributes} className={cx(...blockStyles)}>
-              {props.children}
-            </span>
-          )
-        }
-
-        return (
-          <p {...props.attributes} className={cx(...blockStyles)}>
-            {props.children}
-          </p>
-        )
-    }
+    return props.children
   }
 
   const renderElement = plugins.reduce(
