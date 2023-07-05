@@ -128,6 +128,7 @@ export function BlockElement({ descendant }: BlockProps) {
           <Descendants descendants={descendant.children} />
         </span>
       )
+    case BlockType.Default:
     case BlockType.Paragraph:
       return (
         <p className={cx(...blockStyles)}>
@@ -229,9 +230,13 @@ function Descendants({ descendants }: { descendants: Descendant[] }) {
           case BlockType.Heading1:
           case BlockType.Heading2:
           case BlockType.Heading3:
+          case BlockType.Heading4:
+          case BlockType.Heading5:
+          case BlockType.Heading6:
           case BlockType.BlockQuote:
-          case BlockType.Text:
           case BlockType.Paragraph:
+          case BlockType.Default:
+          case BlockType.Text:
           case BlockType.OrderedList:
           case BlockType.UnorderedList:
           case BlockType.ListItem:
@@ -252,8 +257,13 @@ function isBlock(descendant: Descendant): descendant is Block {
     case BlockType.Heading1:
     case BlockType.Heading2:
     case BlockType.Heading3:
+    case BlockType.Heading4:
+    case BlockType.Heading5:
+    case BlockType.Heading6:
     case BlockType.BlockQuote:
     case BlockType.Paragraph:
+    case BlockType.Default:
+    case BlockType.Text:
     case BlockType.OrderedList:
     case BlockType.UnorderedList:
     case BlockType.ListItem:
@@ -279,8 +289,13 @@ function getTextByDescendant(descendant: Descendant): string {
     case BlockType.Heading1:
     case BlockType.Heading2:
     case BlockType.Heading3:
+    case BlockType.Heading4:
+    case BlockType.Heading5:
+    case BlockType.Heading6:
     case BlockType.BlockQuote:
     case BlockType.Paragraph:
+    case BlockType.Default:
+    case BlockType.Text:
     case BlockType.OrderedList:
     case BlockType.UnorderedList:
     case BlockType.ListItem:
