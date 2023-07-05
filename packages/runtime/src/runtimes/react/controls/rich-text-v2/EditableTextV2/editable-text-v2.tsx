@@ -131,14 +131,21 @@ export function EditableTextV2({ text, definition, control }: Props) {
         control?.switchToBuildMode()
       }
 
+      if (editMode === BuilderEditMode.CONTENT) {
+        e.stopPropagation()
+      }
+
       plugins.forEach(plugin => plugin?.onKeyDown?.(e, editor))
     },
-    [control, plugins, editor],
+    [control, plugins, editor, editMode],
   )
 
   const handleKeyUp = useCallback(
     (e: KeyboardEvent) => {
-      if (editMode === BuilderEditMode.CONTENT) e.preventDefault()
+      if (editMode === BuilderEditMode.CONTENT) {
+        e.stopPropagation()
+        e.preventDefault()
+      }
     },
     [control, editor, editMode],
   )
