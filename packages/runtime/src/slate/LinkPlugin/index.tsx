@@ -35,7 +35,11 @@ function InlinePluginComponent({
           link={element.link ?? undefined}
           className={cx(linkStyle, element.className)}
         >
-          {children}
+          {renderElement({
+            element,
+            attributes,
+            children,
+          })}
         </LinkComponent>
       )
 

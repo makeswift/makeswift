@@ -38,28 +38,18 @@ export function InlinePlugin() {
 }
 
 function InlinePluginComponent({
-  element,
-  attributes,
-  children,
   renderElement,
+  ...props
 }: RenderElementProps & { renderElement: RenderElement }) {
-  switch (element.type) {
+  switch (props.element.type) {
     case InlineType.Code:
-      return <code {...attributes}>{children}</code>
+      return <code {...props.attributes}>{renderElement(props)}</code>
     case InlineType.SuperScript:
-      return <sup {...attributes}>{children}</sup>
+      return <sup {...props.attributes}>{renderElement(props)}</sup>
     case InlineType.SubScript:
-      return <sub {...attributes}>{children}</sub>
+      return <sub {...props.attributes}>{renderElement(props)}</sub>
 
     default:
-      return (
-        <>
-          {renderElement({
-            element,
-            attributes,
-            children,
-          })}
-        </>
-      )
+      return <>{renderElement(props)}</>
   }
 }

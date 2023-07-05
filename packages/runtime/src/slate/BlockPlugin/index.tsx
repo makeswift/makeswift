@@ -301,12 +301,10 @@ export function BlockPlugin() {
 }
 
 function BlockPluginComponent({
-  element,
-  attributes,
-  children,
   renderElement,
+  ...props
 }: RenderElementProps & { renderElement: RenderElement }) {
-  const blockStyles = [useStyle({ margin: 0 }), element.className]
+  const blockStyles = [useStyle({ margin: 0 }), props.element.className]
   const quoteStyles = useStyle({
     padding: '0.5em 10px',
     fontSize: '1.25em',
@@ -314,93 +312,105 @@ function BlockPluginComponent({
     borderLeft: '5px solid rgba(0, 0, 0, 0.1)',
   })
 
-  const listStyles = useStyle({
+  const unorderedListStyles = useStyle({
     listStylePosition: 'inside',
     paddingInlineStart: '20px',
     listStyleType: 'disc',
+    ul: {
+      listStyleType: 'circle',
+    },
+    'ul ul': {
+      listStyleType: 'square',
+    },
   })
 
-  switch (element.type) {
+  const orderedListStyles = useStyle({
+    listStylePosition: 'inside',
+    paddingInlineStart: '20px',
+    listStyleType: 'decimal',
+  })
+
+  switch (props.element.type) {
     case BlockType.Text:
       return (
-        <span {...attributes} className={cx(...blockStyles)}>
-          {children}
+        <span {...props.attributes} className={cx(...blockStyles)}>
+          {renderElement(props)}
         </span>
       )
     case BlockType.Default:
     case BlockType.Paragraph:
       return (
-        <p {...attributes} className={cx(...blockStyles)}>
-          {children}
+        <p {...props.attributes} className={cx(...blockStyles)}>
+          {renderElement(props)}
         </p>
       )
     case BlockType.Heading1:
       return (
-        <h1 {...attributes} className={cx(...blockStyles)}>
-          {children}
+        <h1 {...props.attributes} className={cx(...blockStyles)}>
+          {renderElement(props)}
         </h1>
       )
     case BlockType.Heading2:
       return (
-        <h2 {...attributes} className={cx(...blockStyles)}>
-          {children}
+        <h2 {...props.attributes} className={cx(...blockStyles)}>
+          {renderElement(props)}
         </h2>
       )
     case BlockType.Heading3:
       return (
-        <h3 {...attributes} className={cx(...blockStyles)}>
-          {children}
+        <h3 {...props.attributes} className={cx(...blockStyles)}>
+          {renderElement(props)}
         </h3>
       )
     case BlockType.Heading4:
       return (
-        <h4 {...attributes} className={cx(...blockStyles)}>
-          {children}
+        <h4 {...props.attributes} className={cx(...blockStyles)}>
+          {renderElement(props)}
         </h4>
       )
     case BlockType.Heading5:
       return (
-        <h5 {...attributes} className={cx(...blockStyles)}>
-          {children}
+        <h5 {...props.attributes} className={cx(...blockStyles)}>
+          {renderElement(props)}
         </h5>
       )
     case BlockType.Heading6:
       return (
-        <h6 {...attributes} className={cx(...blockStyles)}>
-          {children}
+        <h6 {...props.attributes} className={cx(...blockStyles)}>
+          {renderElement(props)}
         </h6>
       )
     case BlockType.BlockQuote:
       return (
-        <blockquote {...attributes} className={cx(...blockStyles, quoteStyles)}>
-          {children}
+        <blockquote {...props.attributes} className={cx(...blockStyles, quoteStyles)}>
+          {renderElement(props)}
         </blockquote>
       )
     case BlockType.OrderedList:
       return (
-        <ol {...attributes} className={cx(...blockStyles, listStyles)}>
-          {children}
+        <ol {...props.attributes} className={cx(...blockStyles, orderedListStyles)}>
+          {renderElement(props)}
         </ol>
       )
     case BlockType.UnorderedList:
       return (
-        <ul {...attributes} className={cx(...blockStyles, listStyles)}>
-          {children}
+        <ul {...props.attributes} className={cx(...blockStyles, unorderedListStyles)}>
+          {renderElement(props)}
         </ul>
       )
     case BlockType.ListItem:
       return (
-        <li {...attributes} className={cx(...blockStyles)}>
-          {children}
+        <li {...props.attributes} className={cx(...blockStyles)}>
+          {renderElement(props)}
         </li>
       )
     case BlockType.ListItemChild:
       return (
-        <span {...attributes} className={cx(...blockStyles)}>
-          {children}
+        <span {...props.attributes} className={cx(...blockStyles)}>
+          {renderElement(props)}
         </span>
       )
     default:
-      return <>{renderElement({ element, attributes, children })}</>
+      return <>{renderElement(props)}</>
   }
 }
