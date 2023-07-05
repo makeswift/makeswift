@@ -6,7 +6,6 @@ import {
   unstable_StyleV2,
 } from '../../controls'
 import { ElementUtils } from '../utils/element'
-import { TextAlignProperty } from 'csstype'
 import { normalizeResponsiveValue, setResponsiveValue } from '../utils/responsive'
 import { getValue } from './getValue'
 
@@ -56,7 +55,7 @@ export function TextAlignPlugin() {
           ],
           defaultValue: 'left',
         }),
-        getStyle(textAlign: TextAlignProperty) {
+        getStyle(textAlign: 'left' | 'center' | 'right' | 'justify' | undefined) {
           return { textAlign }
         },
       }),
