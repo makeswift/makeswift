@@ -24,6 +24,7 @@ import {
   RichTextV2Control,
   RichTextV2ControlData,
   RichTextV2ControlDefinition,
+  RichTextV2ControlMessageType,
   RichTextV2Mode,
 } from '../../../../../controls'
 import { useBuilderEditMode } from '../../..'
@@ -110,6 +111,22 @@ export function EditableTextV2({ text, definition, control }: Props) {
     }
   }, [editMode])
 
+  console.log({ text: text?.descendants.at(0).children.at(0).text })
+
+  useEffect(() => {
+    control?.emitter.on(RichTextV2ControlMessageType.SET_VALUE_FROM_PROP, setValueFromProp)
+
+    return () => {
+      control?.emitter.off(RichTextV2ControlMessageType.SET_VALUE_FROM_PROP, setValueFromProp)
+    }
+
+    function setValueFromProp() {
+      editor.selection = null
+      editor.children = (text && richTextV2DataToDescendents(text)) ?? defaultText
+      editor.onChange()
+    }
+  }, [control, text])
+
   useEffect(() => {
     control?.setEditor(editor)
     control?.setDefaultValue(defaultText)
@@ -159,6 +176,8 @@ export function EditableTextV2({ text, definition, control }: Props) {
 
   const handleOnChange = useCallback(
     (value: Descendant[]) => {
+      console.log('handleOnChange', value)
+
       control?.onChange(value)
     },
     [control],

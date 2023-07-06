@@ -7,6 +7,7 @@ import { ControlDefinition, ControlDefinitionData } from '../control'
 import { RenderElementProps, RenderLeafProps } from 'slate-react'
 import { RichTextControlData } from '../rich-text/rich-text'
 import { richTextV2DescendentsToData } from './translation'
+import mitt from 'mitt'
 
 export const RichTextV2ControlType = 'makeswift::controls::rich-text-v2'
 
@@ -84,6 +85,7 @@ export const RichTextV2ControlMessageType = {
 
   // HOST -> COSMOS
   SET_DEFAULT_VALUE: 'makeswift::controls::rich-text-v2::control-message::set-default-value',
+  SET_VALUE_FROM_PROP: 'makeswift::controls::rich-text-v2::control-message::set-value-from-prop',
   SET_PLUGIN_CONTROL_VALUE:
     'makeswift::controls::rich-text-v2::control-message::set-plugin-control-value',
   ON_CHANGE: 'makeswift::controls::rich-text-v2::control-message::on-change',
@@ -110,6 +112,9 @@ type SetPluginControlValueRichTextControlMessage = {
 }
 
 type ResetValueRichTextControlMessage = { type: typeof RichTextV2ControlMessageType.RESET_VALUE }
+type SetValueFromPropRichTextControlMessage = {
+  type: typeof RichTextV2ControlMessageType.SET_VALUE_FROM_PROP
+}
 
 type SelectRichTextControlMessage = { type: typeof RichTextV2ControlMessageType.SELECT }
 
@@ -139,6 +144,7 @@ export type RichTextV2ControlMessage =
   | SetDefaultValueRichTextControlMessage
   | SetPluginControlValueRichTextControlMessage
   | ResetValueRichTextControlMessage
+  | SetValueFromPropRichTextControlMessage
   | FocusRichTextControlMessage
   | RunPluginControlActionRichTextControlMessage
   | SelectRichTextControlMessage
@@ -153,6 +159,7 @@ export class RichTextV2Control<
   private editor: Editor | null = null
   private defaultValue: RichTextV2ControlData | null = null
   descriptor: RichTextV2ControlDefinition
+  emitter = mitt()
 
   constructor(send: Send<RichTextV2ControlMessage>, descriptor: T) {
     super(send)
@@ -174,6 +181,12 @@ export class RichTextV2Control<
           this.editor.children = this.defaultValue.descendants
           this.editor.onChange()
         }
+        break
+      }
+      case RichTextV2ControlMessageType.SET_VALUE_FROM_PROP: {
+        console.log('SET_VALUE_FROM_PROP')
+
+        this.emitter.emit(RichTextV2ControlMessageType.SET_VALUE_FROM_PROP)
         break
       }
       case RichTextV2ControlMessageType.RUN_PLUGIN_CONTROL_ACTION: {

@@ -146,6 +146,7 @@
     "http-proxy": "^1.18.1",
     "immutable": "^4.0.0-rc.12",
     "is-hotkey": "^0.1.4",
+    "mitt": "^3.0.1",
     "ot-json0": "^1.1.0",
     "path-to-regexp": "^6.2.1",
     "polished": "3.0.3",
