@@ -41,11 +41,6 @@ function introspectRichTextV2Data<T>(
   function getTextTypographyIds(text: Text) {
     return (
       plugins?.flatMap(plugin => {
-        console.log(
-          plugin.control?.definition,
-          plugin.control?.definition && plugin.control.getLeafValue,
-        )
-
         return plugin.control?.definition && plugin.control.getLeafValue
           ? func(plugin.control.definition, plugin.control.getLeafValue(text))
           : []
