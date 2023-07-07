@@ -95,7 +95,6 @@ function ElementComponent({ plugins, ...props }: ElementProps) {
     (renderFn, plugin) => (props: RenderElementProps) => {
       const { control, renderElement } = plugin
 
-      console.log({ props })
       if (control?.definition == null || renderElement == null) return renderFn(props)
 
       if (control.getElementValue == null) return renderElement(renderFn, undefined)(props)
@@ -129,7 +128,6 @@ function Descendants({
   return (
     <>
       {descendants.map((descendant, index) => {
-        console.log({ descendant })
         if (isText(descendant)) {
           return <LeafComponent key={index} plugins={plugins} leaf={descendant} />
         }
