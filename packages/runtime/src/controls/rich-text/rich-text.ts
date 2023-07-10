@@ -13,10 +13,6 @@ export type RichTextControlDefinition = {
   type: typeof RichTextControlType
 }
 
-export function RichText(): RichTextControlDefinition {
-  return { type: RichTextControlType }
-}
-
 export const RichTextControlMessageType = {
   CHANGE_BUILDER_EDIT_MODE: 'CHANGE_BUILDER_EDIT_MODE',
   INITIALIZE_EDITOR: 'INITIALIZE_EDITOR',

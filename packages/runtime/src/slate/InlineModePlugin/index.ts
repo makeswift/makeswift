@@ -46,9 +46,11 @@ export function withInlineMode(editor: Editor): Editor {
   return editor
 }
 
-export const InlineModePlugin = createRichTextV2Plugin({
-  onKeyDown: (e: KeyboardEvent) => {
-    if (isHotkey('enter', e)) e.preventDefault()
-  },
-  withPlugin: withInlineMode,
-})
+export function InlineModePlugin() {
+  return createRichTextV2Plugin({
+    onKeyDown: (e: KeyboardEvent) => {
+      if (isHotkey('enter', e)) e.preventDefault()
+    },
+    withPlugin: withInlineMode,
+  })
+}
