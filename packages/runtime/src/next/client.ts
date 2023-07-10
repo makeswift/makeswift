@@ -54,6 +54,7 @@ import {
   ElementData,
   getPropControllerDescriptors,
   isElementReference,
+  getDefaultLocale,
 } from '../state/react-page'
 import { getMakeswiftSiteVersion, MakeswiftSiteVersion } from './preview-mode'
 
@@ -411,8 +412,11 @@ export class Makeswift {
     const siteVersion =
       this.siteVersion ??
       (previewOverride ? MakeswiftSiteVersion.Working : MakeswiftSiteVersion.Live)
+
+    const defaultLocale = getDefaultLocale(this.runtime.store.getState())?.toString()
+    const locale = unstable_locale === defaultLocale ? null : unstable_locale
     const searchParams = new URLSearchParams()
-    if (unstable_locale) searchParams.set('locale', unstable_locale)
+    if (locale) searchParams.set('locale', locale)
 
     const response = await this.fetch(
       `/${isUsingVersioning ? 'v3' : 'v2'}/pages/${encodeURIComponent(
@@ -445,7 +449,7 @@ export class Makeswift {
       apiOrigin,
       preview,
       localizedResourcesMap,
-      locale: unstable_locale ?? null,
+      locale: locale ?? null,
     }
   }
 
