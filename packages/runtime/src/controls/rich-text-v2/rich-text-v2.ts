@@ -175,6 +175,7 @@ export class RichTextV2Control<
           this.editor.selection = null
           this.editor.children = this.defaultValue
           this.editor.onChange()
+          this.onLocalUserChange()
         }
         break
       }
