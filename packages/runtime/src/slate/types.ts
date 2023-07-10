@@ -1,7 +1,6 @@
 import { BaseEditor, Descendant } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { LinkControlData } from '../controls'
-import { HistoryEditor } from 'slate-history'
 import { BuilderEditor } from '.'
 import { ResponsiveValue } from '../prop-controllers'
 import { ResponsiveColor } from '../runtimes/react/controls'
@@ -243,7 +242,7 @@ export type Element = Block | Inline
 
 export type RichTextDAO = Descendant[]
 
-export type MakeswiftEditor = BaseEditor & ReactEditor & HistoryEditor & BuilderEditor
+export type MakeswiftEditor = BaseEditor & ReactEditor & BuilderEditor & LocalChangesEditor
 
 declare module 'slate' {
   interface CustomTypes {
