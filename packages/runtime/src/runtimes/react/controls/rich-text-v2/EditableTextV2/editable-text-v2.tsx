@@ -29,12 +29,13 @@ import {
 import { useBuilderEditMode } from '../../..'
 import { BuilderEditMode } from '../../../../../state/modules/builder-edit-mode'
 import { pollBoxModel } from '../../../poll-box-model'
-import { InlineModePlugin, withBuilder } from '../../../../../slate'
+import { InlineModePlugin, withBuilder, withLocalChanges } from '../../../../../slate'
 import { useSyncDOMSelection } from './useSyncDOMSelection'
 import { BlockType } from '../../../../../slate'
 import { RichTextV2Element } from './render-element'
 import { RichTextV2Leaf } from './render-leaf'
 import { richTextV2DataToDescendents } from '../../../../../controls/rich-text-v2/translation'
+import { useSyncRemoteChanges } from './useRemoteChanges'
 
 export type RichTextV2ControlValue = ReactNode
 
@@ -60,7 +61,7 @@ export function EditableTextV2({ text, definition, control }: Props) {
   const [editor] = useState(() =>
     plugins.reduceRight(
       (editor, plugin) => plugin?.withPlugin?.(editor) ?? editor,
-      withBuilder(withHistory(withReact(createEditor()))),
+      withLocalChanges(withBuilder(withReact(createEditor()))),
     ),
   )
 
@@ -68,6 +69,8 @@ export function EditableTextV2({ text, definition, control }: Props) {
   useSyncDOMSelection(editor, isPreservingFocus)
 
   const editMode = useBuilderEditMode()
+
+  useSyncRemoteChanges(editor, text)
 
   useEffect(() => {
     if (control == null) return
@@ -112,7 +115,6 @@ export function EditableTextV2({ text, definition, control }: Props) {
 
   useEffect(() => {
     control?.setEditor(editor)
-    control?.setDefaultValue(defaultText)
   }, [control, editor, defaultText])
 
   const handleFocus = useCallback(() => {
@@ -162,15 +164,8 @@ export function EditableTextV2({ text, definition, control }: Props) {
       isPreservingFocus.current = false
   }, [])
 
-  const handleOnChange = useCallback(
-    (value: Descendant[]) => {
-      control?.onChange(value)
-    },
-    [control],
-  )
-
   return (
-    <Slate editor={editor} onChange={handleOnChange} value={initialValue}>
+    <Slate editor={editor} value={initialValue}>
       <Editable
         renderLeaf={renderLeaf}
         renderElement={renderElement}
