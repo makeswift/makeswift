@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.9.12
+
+### Patch Changes
+
+- ddb31a8: Update `unstable_RichTextV2` to sync editing history with app.makeswift.com.
+
 ## 0.9.11
 
 ### Patch Changes
