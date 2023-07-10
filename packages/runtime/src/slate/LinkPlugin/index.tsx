@@ -1,5 +1,6 @@
 import { Editor, Element } from 'slate'
-import { Link, RenderElement, createRichTextV2Plugin } from '../../controls'
+import { RenderElement, createRichTextV2Plugin } from '../../controls/rich-text-v2'
+import { Link } from '../../controls/link'
 import { ElementUtils } from '../utils/element'
 import { InlineType } from '../types'
 import { RenderElementProps } from 'slate-react'
@@ -44,11 +45,15 @@ function InlinePluginComponent({
       )
 
     default:
-      return renderElement({
-        element,
-        attributes,
-        children,
-      })
+      return (
+        <>
+          {renderElement({
+            element,
+            attributes,
+            children,
+          })}
+        </>
+      )
   }
 }
 

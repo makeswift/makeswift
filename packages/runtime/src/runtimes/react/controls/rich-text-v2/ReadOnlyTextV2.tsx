@@ -6,7 +6,17 @@ import {
 } from '../../../../controls'
 import { useStyle } from '../../use-style'
 import { Descendant, Element, Text } from 'slate'
-import { InlineType, Block, BlockType } from '../../../../slate'
+import {
+  InlineType,
+  Block,
+  BlockType,
+  BlockPlugin,
+  InlineModePlugin,
+  InlinePlugin,
+  LinkPlugin,
+  TextAlignPlugin,
+  TypographyPlugin,
+} from '../../../../slate'
 import { ControlValue } from '../control'
 import { RenderElementProps, RenderLeafProps } from 'slate-react'
 
@@ -26,7 +36,21 @@ const ReadOnlyTextV2 = forwardRef(function ReadOnlyText(
       {descendantsAsString === '' ? (
         <Placeholder />
       ) : (
-        <Descendants plugins={definition?.config.plugins ?? []} descendants={descendants} />
+        <Descendants
+          plugins={
+            /**
+             * TODO: we are manually referencing our default plugins for each mode here because
+             * Referencing the real LinkPlugin causes a circular dependency.
+             * When circular dependencies calm down we should update the plugin definition to use real plugins,
+             * and just use the plugins that are defined by our config.
+             */
+            // definition?.config?.plugins ,
+            definition?.config?.mode === RichTextV2Mode.Inline
+              ? [InlineModePlugin()]
+              : [BlockPlugin(), TypographyPlugin(), TextAlignPlugin(), InlinePlugin(), LinkPlugin()]
+          }
+          descendants={descendants}
+        />
       )}
     </div>
   )

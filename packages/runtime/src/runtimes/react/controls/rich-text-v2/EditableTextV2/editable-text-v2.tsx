@@ -29,7 +29,16 @@ import {
 import { useBuilderEditMode } from '../../..'
 import { BuilderEditMode } from '../../../../../state/modules/builder-edit-mode'
 import { pollBoxModel } from '../../../poll-box-model'
-import { InlineModePlugin, withBuilder, withLocalChanges } from '../../../../../slate'
+import {
+  BlockPlugin,
+  InlineModePlugin,
+  InlinePlugin,
+  LinkPlugin,
+  TextAlignPlugin,
+  TypographyPlugin,
+  withBuilder,
+  withLocalChanges,
+} from '../../../../../slate'
 import { useSyncDOMSelection } from './useSyncDOMSelection'
 import { BlockType } from '../../../../../slate'
 import { RichTextV2Element } from './render-element'
@@ -52,8 +61,16 @@ type Props = {
 export function EditableTextV2({ text, definition, control }: Props) {
   const plugins = useMemo(() => {
     const plugins = [
-      ...(definition?.config?.plugins ?? []),
-      ...(definition?.config?.mode === RichTextV2Mode.Inline ? [InlineModePlugin] : []),
+      /**
+       * TODO: we are manually referencing our default plugins for each mode here because
+       * Referencing the real LinkPlugin causes a circular dependency.
+       * When circular dependencies calm down we should update the plugin definition to use real plugins,
+       * and just use the plugins that are defined by our config.
+       */
+      // ...(definition?.config?.plugins ?? []),
+      ...(definition?.config?.mode === RichTextV2Mode.Inline
+        ? [InlineModePlugin()]
+        : [BlockPlugin(), TypographyPlugin(), TextAlignPlugin(), InlinePlugin(), LinkPlugin()]),
     ]
     return plugins
   }, [definition])

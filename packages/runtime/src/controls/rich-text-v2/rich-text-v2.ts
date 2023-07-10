@@ -7,6 +7,12 @@ import { ControlDefinition, ControlDefinitionData } from '../control'
 import { RenderElementProps, RenderLeafProps } from 'slate-react'
 import { RichTextControlData } from '../rich-text/rich-text'
 import { richTextV2DescendentsToData } from './translation'
+import { LinkPlugin } from '../../slate/LinkPlugin/linkPluginWithoutRenderElement'
+import { InlinePlugin } from '../../slate/InlinePlugin'
+import { TextAlignPlugin } from '../../slate/TextAlignPlugin'
+import { BlockPlugin } from '../../slate/BlockPlugin'
+import { TypographyPlugin } from '../../slate/TypographyPlugin'
+import { InlineModePlugin } from '../../slate/InlineModePlugin'
 
 export const RichTextV2ControlType = 'makeswift::controls::rich-text-v2'
 
@@ -23,6 +29,8 @@ export const RichTextV2Mode = {
 } as const
 
 export type RichTextV2Mode = typeof RichTextV2Mode[keyof typeof RichTextV2Mode]
+
+export type RichTextMode = RichTextV2Mode
 
 export type RichTextV2PluginControlValue<T extends ControlDefinition> =
   | ControlDefinitionData<T>
@@ -65,16 +73,30 @@ type RichTextV2Config = {
   mode?: RichTextV2Mode
 }
 
+type ExternalRichTextV2Config = Omit<RichTextV2Config, 'plugins'>
+
 export type RichTextV2ControlDefinition<T extends RichTextV2Config = RichTextV2Config> = {
   type: typeof RichTextV2ControlType
   config: T
 }
 
-export function unstable_RichTextV2<T extends RichTextV2Config>(
+export function RichText<T extends ExternalRichTextV2Config>(
   config: T = {} as T,
 ): RichTextV2ControlDefinition {
-  return { type: RichTextV2ControlType, config }
+  return {
+    type: RichTextV2ControlType,
+    config: {
+      mode: config.mode,
+      plugins:
+        config?.mode === RichTextV2Mode.Inline
+          ? [InlineModePlugin()]
+          : // Note: this plugin references a `renderElement`-less LinkPlugin to prevent a circular dependency
+            [BlockPlugin(), TypographyPlugin(), TextAlignPlugin(), InlinePlugin(), LinkPlugin()],
+    },
+  }
 }
+
+RichText.Mode = RichTextV2Mode
 
 export const RichTextV2ControlMessageType = {
   // COSMOS -> HOST
