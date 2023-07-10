@@ -10,6 +10,7 @@ const PAGE_ID = 'PAGE_ID='
 const introspectionFixture: RichTextV2ControlData = {
   type: RichTextV2ControlType,
   version: 2,
+  key: 'uuid',
   descendants: [
     {
       type: 'blockquote',

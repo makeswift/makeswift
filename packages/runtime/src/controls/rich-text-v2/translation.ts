@@ -5,10 +5,14 @@ export function richTextV2DataToDescendents(data: RichTextV2ControlData): Descen
   return data.descendants
 }
 
-export function richTextV2DescendentsToData(descendants: Descendant[]): RichTextV2ControlData {
+export function richTextV2DescendentsToData(
+  descendants: Descendant[],
+  key: string,
+): RichTextV2ControlData {
   return {
     type: RichTextV2ControlType,
     version: 2,
     descendants,
+    key,
   }
 }

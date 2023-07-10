@@ -14,6 +14,7 @@ export type RichTextV2ControlData = {
   version: 2
   type: typeof RichTextV2ControlType
   descendants: Descendant[]
+  key: string
 }
 
 export const RichTextV2Mode = {
@@ -90,6 +91,9 @@ export const RichTextV2ControlMessageType = {
   SELECT: 'makeswift::controls::rich-text-v2::control-message::select',
   SWITCH_TO_BUILD_MODE: 'makeswift::controls::rich-text-v2::control-message::switch-to-build-mode',
   CHANGE_BOX_MODEL: 'makeswift::controls::rich-text-v2::control-message::change-box-model',
+
+  REDO: 'makeswift::controls::rich-text-v2::control-message::redo',
+  UNDO: 'makeswift::controls::rich-text-v2::control-message::undo',
 } as const
 
 type OnChangeRichTextControlMessage = {
@@ -128,6 +132,10 @@ type BoxModelChangeRichControlMessage = {
   payload: { boxModel: BoxModel | null }
 }
 
+type UndoRichTextControlMessage = { type: typeof RichTextV2ControlMessageType.UNDO }
+
+type RedoRichTextControlMessage = { type: typeof RichTextV2ControlMessageType.REDO }
+
 export type RichTextV2ControlMessage =
   | OnChangeRichTextControlMessage
   | SetDefaultValueRichTextControlMessage
@@ -138,6 +146,8 @@ export type RichTextV2ControlMessage =
   | SelectRichTextControlMessage
   | SwitchToBuildModeRichTextControlMessage
   | BoxModelChangeRichControlMessage
+  | UndoRichTextControlMessage
+  | RedoRichTextControlMessage
 
 export class RichTextV2Control<
   T extends RichTextV2ControlDefinition = RichTextV2ControlDefinition,
@@ -184,13 +194,31 @@ export class RichTextV2Control<
       value:
         this.descriptor.config?.plugins?.map(plugin => plugin?.control?.getValue(editor)) ?? [],
     })
+
+    const _onChange = editor.onChange
+    this.editor.onChange = options => {
+      _onChange(options)
+      this.updatePluginValues()
+      if (this.editor == null || options?.operation == null) return
+      this.onLocalUserChange()
+    }
   }
 
-  setDefaultValue(defaultValue: Descendant[]) {
-    this.defaultValue = richTextV2DescendentsToData(defaultValue)
+  onLocalUserChange() {
+    if (this.editor == null) return
     this.send({
-      type: RichTextV2ControlMessageType.SET_DEFAULT_VALUE,
-      value: richTextV2DescendentsToData(defaultValue),
+      type: RichTextV2ControlMessageType.ON_CHANGE,
+      value: richTextV2DescendentsToData(this.editor.children, this.editor.currentKey),
+    })
+  }
+
+  updatePluginValues() {
+    const editor = this.editor
+    if (editor == null) return
+    this.send({
+      type: RichTextV2ControlMessageType.SET_PLUGIN_CONTROL_VALUE,
+      value:
+        this.descriptor.config?.plugins?.map(plugin => plugin?.control?.getValue(editor)) ?? [],
     })
   }
 
@@ -202,20 +230,12 @@ export class RichTextV2Control<
     this.send({ type: RichTextV2ControlMessageType.SWITCH_TO_BUILD_MODE })
   }
 
-  onChange(value: Descendant[]) {
-    const editor = this.editor
-    if (editor == null) return
+  undo() {
+    this.send({ type: RichTextV2ControlMessageType.UNDO })
+  }
 
-    this.send({
-      type: RichTextV2ControlMessageType.ON_CHANGE,
-      value: richTextV2DescendentsToData(value),
-    })
-
-    this.send({
-      type: RichTextV2ControlMessageType.SET_PLUGIN_CONTROL_VALUE,
-      value:
-        this.descriptor.config?.plugins?.map(plugin => plugin?.control?.getValue(editor)) ?? [],
-    })
+  redo() {
+    this.send({ type: RichTextV2ControlMessageType.REDO })
   }
 
   changeBoxModel(boxModel: BoxModel | null): void {

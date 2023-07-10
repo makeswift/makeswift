@@ -4,6 +4,7 @@ import { LinkControlData } from '../controls'
 import { BuilderEditor } from '.'
 import { ResponsiveValue } from '../prop-controllers'
 import { ResponsiveColor } from '../runtimes/react/controls'
+import { LocalChangesEditor } from './LocalChangesPlugin'
 
 export type RichTextTypography = {
   id?: string
