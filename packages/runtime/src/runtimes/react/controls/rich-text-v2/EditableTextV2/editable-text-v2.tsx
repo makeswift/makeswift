@@ -115,6 +115,7 @@ export function EditableTextV2({ text, definition, control }: Props) {
 
   useEffect(() => {
     control?.setEditor(editor)
+    control?.setDefaultValue(defaultText)
   }, [control, editor, defaultText])
 
   const handleFocus = useCallback(() => {

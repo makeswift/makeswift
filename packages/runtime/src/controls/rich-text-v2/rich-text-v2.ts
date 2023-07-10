@@ -103,7 +103,7 @@ type OnChangeRichTextControlMessage = {
 
 type SetDefaultValueRichTextControlMessage = {
   type: typeof RichTextV2ControlMessageType.SET_DEFAULT_VALUE
-  value: RichTextV2ControlData
+  value: Descendant[]
 }
 
 type SetPluginControlValueRichTextControlMessage = {
@@ -153,7 +153,7 @@ export class RichTextV2Control<
   T extends RichTextV2ControlDefinition = RichTextV2ControlDefinition,
 > extends PropController<RichTextV2ControlMessage> {
   private editor: Editor | null = null
-  private defaultValue: RichTextV2ControlData | null = null
+  private defaultValue: Descendant[] | null = null
   descriptor: RichTextV2ControlDefinition
 
   constructor(send: Send<RichTextV2ControlMessage>, descriptor: T) {
@@ -173,7 +173,7 @@ export class RichTextV2Control<
       case RichTextV2ControlMessageType.RESET_VALUE: {
         if (this.defaultValue) {
           this.editor.selection = null
-          this.editor.children = this.defaultValue.descendants
+          this.editor.children = this.defaultValue
           this.editor.onChange()
         }
         break
@@ -202,6 +202,14 @@ export class RichTextV2Control<
       if (this.editor == null || options?.operation == null) return
       this.onLocalUserChange()
     }
+  }
+
+  setDefaultValue(defaultValue: Descendant[]) {
+    this.defaultValue = defaultValue
+    this.send({
+      type: RichTextV2ControlMessageType.SET_DEFAULT_VALUE,
+      value: defaultValue,
+    })
   }
 
   onLocalUserChange() {
