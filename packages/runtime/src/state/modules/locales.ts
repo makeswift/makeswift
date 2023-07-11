@@ -47,6 +47,16 @@ export type LocalesInput = {
 }
 
 export function parseLocalesInput(input: LocalesInput): State {
+  if (input.locales == null) {
+    throw new Error(`Locales cannot be null or undefined. Please provide the locales array.`)
+  }
+
+  if (input.locales.includes(input.defaultLocale) === false) {
+    throw new Error(
+      `Default locale "${input.defaultLocale}" is not included in locales: ${input.locales}. Please add the default locale to the locales array.`,
+    )
+  }
+
   return {
     locales: input.locales.map(locale => localeStringSchema.parse(locale)),
     defaultLocale: localeStringSchema.parse(input.defaultLocale),

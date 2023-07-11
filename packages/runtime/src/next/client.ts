@@ -55,6 +55,7 @@ import {
   getPropControllerDescriptors,
   isElementReference,
   getDefaultLocale,
+  getLocales,
 } from '../state/react-page'
 import { getMakeswiftSiteVersion, MakeswiftSiteVersion } from './preview-mode'
 
@@ -416,7 +417,17 @@ export class Makeswift {
     const defaultLocale = getDefaultLocale(this.runtime.store.getState())?.toString()
     const locale = unstable_locale === defaultLocale ? null : unstable_locale
     const searchParams = new URLSearchParams()
-    if (locale) searchParams.set('locale', locale)
+    if (locale) {
+      const locales = getLocales(this.runtime.store.getState()).map(locale => locale.toString())
+
+      if (!locales.includes(locale)) {
+        throw new Error(
+          `Locale "${locale}" is not included in the locales: ${locales}. Please add the locale to the locales on the ReactRuntime.`,
+        )
+      }
+
+      searchParams.set('locale', locale)
+    }
 
     const response = await this.fetch(
       `/${isUsingVersioning ? 'v3' : 'v2'}/pages/${encodeURIComponent(
