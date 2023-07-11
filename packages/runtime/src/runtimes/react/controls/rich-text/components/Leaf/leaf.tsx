@@ -1,7 +1,5 @@
 import { RenderLeafProps } from 'slate-react'
-import useEnhancedTypography, {
-  useTypographyClassName,
-} from '../../../../../runtimes/react/controls/typography'
+import useEnhancedTypography, { useTypographyClassName } from '../../../typography'
 
 export function Leaf({ leaf, ...props }: RenderLeafProps) {
   // for each breakpoint fetch related resources and merge its value with its override

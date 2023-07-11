@@ -1,12 +1,14 @@
-import dynamic from 'next/dynamic'
 // @ts-expect-error: there are no types for 'corporate-ipsum'
 import ipsum from 'corporate-ipsum'
 
-import { forwardNextDynamicRef } from '../../../next'
 import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 import { DefaultBreakpointID, getBaseBreakpoint } from '../../../state/modules/breakpoints'
+import { RichText } from '../../../controls'
+import { BlockType } from '../../../slate'
+import { forwardNextDynamicRef } from '../../../next/dynamic'
+import dynamic from 'next/dynamic'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -16,56 +18,40 @@ export function registerComponent(runtime: ReactRuntime) {
       label: 'Text',
       props: {
         id: Props.ElementID(),
-        text: Props.RichText(() => ({
-          preset: {
-            document: {
-              object: 'document',
-              nodes: [
+        text: RichText({
+          unstable_defaultValue: [
+            {
+              type: BlockType.Default,
+              children: [
                 {
-                  object: 'block',
-                  type: 'paragraph',
-                  nodes: [
-                    {
-                      object: 'text',
-                      text: ipsum(3),
-                      marks: [
-                        {
-                          object: 'mark',
-                          type: 'typography',
-                          data: {
-                            value: {
-                              id: null,
-                              style: [
-                                {
-                                  deviceId: getBaseBreakpoint(runtime.getBreakpoints()).id,
-                                  value: {
-                                    fontWeight: 400,
-                                    fontSize: { value: 18, unit: 'px' },
-                                    lineHeight: 1.5,
-                                  },
-                                },
-                                ...(runtime
-                                  .getBreakpoints()
-                                  .some(({ id }) => id === DefaultBreakpointID.Mobile)
-                                  ? [
-                                      {
-                                        deviceId: DefaultBreakpointID.Mobile,
-                                        value: { fontSize: { value: 16, unit: 'px' } },
-                                      },
-                                    ]
-                                  : []),
-                              ],
-                            },
-                          },
+                  text: ipsum(3),
+                  typography: {
+                    style: [
+                      {
+                        deviceId: getBaseBreakpoint(runtime.getBreakpoints()).id,
+                        value: {
+                          fontWeight: 400,
+                          fontSize: { value: 18, unit: 'px' },
+                          lineHeight: 1.5,
                         },
-                      ],
-                    },
-                  ],
+                      },
+                      ...(runtime
+                        .getBreakpoints()
+                        .some(({ id }) => id === DefaultBreakpointID.Mobile)
+                        ? [
+                            {
+                              deviceId: DefaultBreakpointID.Mobile,
+                              value: { fontSize: { value: 16, unit: 'px' } },
+                            },
+                          ]
+                        : []),
+                    ],
+                  },
                 },
               ],
             },
-          },
-        })),
+          ],
+        }),
         width: Props.Width({
           format: Props.Width.Format.ClassName,
           preset: [
