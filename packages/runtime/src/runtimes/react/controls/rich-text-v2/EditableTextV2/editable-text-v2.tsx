@@ -114,8 +114,9 @@ export function EditableTextV2({ text, definition, control }: Props) {
   )
 
   const initialValue = useMemo(
-    () => (text && richTextV2DataToDescendents(text)) ?? defaultText,
-    [text],
+    () =>
+      (text && richTextV2DataToDescendents(text)) ?? definition.config.defaultValue ?? defaultText,
+    [text, definition],
   )
 
   useEffect(() => {
@@ -131,9 +132,18 @@ export function EditableTextV2({ text, definition, control }: Props) {
   }, [editMode])
 
   useEffect(() => {
+    const defaultValue = definition.config.defaultValue ?? defaultText
+
     control?.setEditor(editor)
-    control?.setDefaultValue(defaultText)
-  }, [control, editor, defaultText])
+    control?.setDefaultValue(defaultValue)
+
+    /**
+     * When initialValue is set to the default value we need to trigger an local change so that the sidebar updates and so the data is saved
+     */
+    if (initialValue === defaultValue) {
+      control?.onLocalUserChange()
+    }
+  }, [control, definition, editor])
 
   const handleFocus = useCallback(() => {
     isPreservingFocus.current = true
