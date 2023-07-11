@@ -282,6 +282,6 @@ export function isRichTextV1Data(
   value: RichTextControlData | RichTextV2ControlData | undefined,
 ): value is RichTextControlData {
   return (
-    value !== undefined && typeof value === 'object' && !Array.isArray(value) && 'object' in value
+    value !== undefined && typeof value === 'object' && !Array.isArray(value) && 'document' in value
   )
 }
