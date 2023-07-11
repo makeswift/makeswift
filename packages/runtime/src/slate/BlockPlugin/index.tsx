@@ -289,8 +289,7 @@ export function BlockPlugin() {
       getValue: editor => {
         const activeBlock = getActiveBlockType(editor)
 
-        if (activeBlock === RootBlockType.Text || activeBlock === RootBlockType.Default)
-          return undefined
+        if (activeBlock === RootBlockType.Default) return undefined
 
         return activeBlock
       },
@@ -331,12 +330,6 @@ function BlockPluginComponent({
   })
 
   switch (props.element.type) {
-    case BlockType.Text:
-      return (
-        <span {...props.attributes} className={cx(...blockStyles)}>
-          {renderElement(props)}
-        </span>
-      )
     case BlockType.Default:
     case BlockType.Paragraph:
       return (

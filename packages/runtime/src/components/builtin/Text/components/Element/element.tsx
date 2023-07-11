@@ -10,7 +10,6 @@ export function Element({ element, ...props }: RenderElementProps) {
     case InlineType.SubScript:
     case InlineType.Link:
       return <InlineElement element={element} {...props} />
-    case BlockType.Text:
     case BlockType.Default:
     case BlockType.Paragraph:
     case BlockType.Heading1:

@@ -4,7 +4,6 @@
 import { Editor as SlateEditor } from 'slate'
 import {
   jsxWithV2InlineEditor,
-  TextBlock,
   Ordered,
   Paragraph,
   Text,
@@ -12,6 +11,7 @@ import {
   Fragment,
   ListItem,
   ListItemChild,
+  DefaultBlock,
 } from '../../test-helpers'
 
 describe('GIVEN inline mode', () => {
@@ -27,10 +27,10 @@ describe('GIVEN inline mode', () => {
       </Fragment>,
     )
     const result = InlineEditor(
-      <TextBlock>
+      <DefaultBlock>
         <Text>abc</Text>
         <Text>def</Text>
-      </TextBlock>,
+      </DefaultBlock>,
     )
 
     SlateEditor.normalize(editor, { force: true })
@@ -52,10 +52,10 @@ describe('GIVEN inline mode', () => {
       </Fragment>,
     )
     const result = InlineEditor(
-      <TextBlock>
+      <DefaultBlock>
         <Text>abc</Text>
         <Text>def</Text>
-      </TextBlock>,
+      </DefaultBlock>,
     )
 
     SlateEditor.normalize(editor, { force: true })

@@ -174,7 +174,6 @@ function toNodeDTO(node: Descendant): Array<BlockJSON | InlineJSON | TextJSON> {
     case BlockType.Heading5:
     case BlockType.Heading6:
     case BlockType.Default:
-    case BlockType.Text:
     case BlockType.BlockQuote:
     case BlockType.Paragraph:
     case BlockType.OrderedList:

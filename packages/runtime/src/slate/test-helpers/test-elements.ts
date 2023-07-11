@@ -18,7 +18,7 @@ export const Text = 'text' as unknown as ComponentType<{
   typography?: RichTextTypography
 }>
 
-export const TextBlock = BlockType.Text as unknown as ComponentType<BaseBlock>
+export const DefaultBlock = BlockType.Default as unknown as ComponentType<BaseBlock>
 export const Paragraph = BlockType.Paragraph as unknown as ComponentType<BaseBlock>
 export const Heading1 = BlockType.Heading1 as unknown as ComponentType<BaseBlock>
 export const Heading2 = BlockType.Heading2 as unknown as ComponentType<BaseBlock>

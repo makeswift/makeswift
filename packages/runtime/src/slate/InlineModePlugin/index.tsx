@@ -1,9 +1,10 @@
 import { Editor, Path, Transforms } from 'slate'
 import { KeyboardEvent } from 'react'
 import isHotkey from 'is-hotkey'
-import { createRichTextV2Plugin } from '../../controls/rich-text-v2'
+import { RenderElement, createRichTextV2Plugin } from '../../controls/rich-text-v2'
 import { ElementUtils } from '../utils/element'
 import { BlockType } from '../types'
+import { RenderElementProps } from 'slate-react'
 
 const BLOCK_ONE_PATH = [0]
 const BLOCK_TWO_PATH = [1]
@@ -36,7 +37,7 @@ export function withInlineMode(editor: Editor): Editor {
      * Update type of root nodes to be `text-block`
      */
     if (Path.equals(BLOCK_ONE_PATH, normalizationPath)) {
-      Transforms.setNodes(editor, { type: BlockType.Text }, { at: normalizationPath })
+      Transforms.setNodes(editor, { type: BlockType.Default }, { at: normalizationPath })
       return
     }
 
@@ -52,5 +53,14 @@ export function InlineModePlugin() {
       if (isHotkey('enter', e)) e.preventDefault()
     },
     withPlugin: withInlineMode,
+    renderElement: renderElement => props =>
+      <InlineModePluginComponent {...props} renderElement={renderElement} />,
   })
+}
+
+function InlineModePluginComponent({
+  renderElement,
+  ...props
+}: RenderElementProps & { renderElement: RenderElement }) {
+  return <span {...props.attributes}>{renderElement(props)}</span>
 }

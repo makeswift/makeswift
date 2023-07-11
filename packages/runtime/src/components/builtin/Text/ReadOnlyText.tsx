@@ -122,12 +122,6 @@ export function BlockElement({ descendant }: BlockProps) {
   })
 
   switch (descendant.type) {
-    case BlockType.Text:
-      return (
-        <span className={cx(...blockStyles)}>
-          <Descendants descendants={descendant.children} />
-        </span>
-      )
     case BlockType.Default:
     case BlockType.Paragraph:
       return (
@@ -236,7 +230,6 @@ function Descendants({ descendants }: { descendants: Descendant[] }) {
           case BlockType.BlockQuote:
           case BlockType.Paragraph:
           case BlockType.Default:
-          case BlockType.Text:
           case BlockType.OrderedList:
           case BlockType.UnorderedList:
           case BlockType.ListItem:
@@ -263,7 +256,6 @@ function isBlock(descendant: Descendant): descendant is Block {
     case BlockType.BlockQuote:
     case BlockType.Paragraph:
     case BlockType.Default:
-    case BlockType.Text:
     case BlockType.OrderedList:
     case BlockType.UnorderedList:
     case BlockType.ListItem:
@@ -295,7 +287,6 @@ function getTextByDescendant(descendant: Descendant): string {
     case BlockType.BlockQuote:
     case BlockType.Paragraph:
     case BlockType.Default:
-    case BlockType.Text:
     case BlockType.OrderedList:
     case BlockType.UnorderedList:
     case BlockType.ListItem:
