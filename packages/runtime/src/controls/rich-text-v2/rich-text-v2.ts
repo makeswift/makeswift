@@ -68,12 +68,15 @@ export function createRichTextV2Plugin<T extends ControlDefinition>({
   return { control, withPlugin, onKeyDown, renderElement, renderLeaf }
 }
 
-type RichTextV2Config = {
-  plugins?: RichTextV2Plugin[]
+export type RichTextV2Config = {
   mode?: RichTextV2Mode
+  plugins?: RichTextV2Plugin[]
+  defaultValue?: Descendant[]
 }
 
-type ExternalRichTextV2Config = Omit<RichTextV2Config, 'plugins'>
+type ExternalRichTextV2Config = Omit<RichTextV2Config, 'plugins' | 'defaultValue'> & {
+  unstable_defaultValue?: Descendant[]
+}
 
 export type RichTextV2ControlDefinition<T extends RichTextV2Config = RichTextV2Config> = {
   type: typeof RichTextV2ControlType
@@ -87,6 +90,7 @@ export function RichText<T extends ExternalRichTextV2Config>(
     type: RichTextV2ControlType,
     config: {
       mode: config.mode,
+      defaultValue: config?.unstable_defaultValue,
       plugins:
         config?.mode === RichTextV2Mode.Inline
           ? [InlineModePlugin()]
