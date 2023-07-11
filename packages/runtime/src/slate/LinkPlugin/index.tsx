@@ -1,5 +1,5 @@
 import { Editor, Element } from 'slate'
-import { RenderElement, createRichTextV2Plugin } from '../../controls/rich-text-v2'
+import { RenderElement, createRichTextV2Plugin } from '../../controls/rich-text-v2/plugin'
 import { Link } from '../../controls/link'
 import { ElementUtils } from '../utils/element'
 import { InlineType } from '../types'

@@ -4,9 +4,10 @@ import { clearDeviceActiveTypography } from './clearDeviceActiveTypography'
 import { detachActiveTypography } from './detachActiveTypography'
 import { setActiveTypographyId } from './setActiveTypographyId'
 import { setActiveTypographyStyle } from './setActiveTypographyStyle'
-import { createRichTextV2Plugin, unstable_Typography } from '../../controls'
+import { unstable_Typography } from '../../controls'
 import { getValue } from './getValue'
 import { getSelection } from '../selectors'
+import { createRichTextV2Plugin } from '../../controls/rich-text-v2/plugin'
 
 export const TypographyActions = {
   setActiveTypographyId,

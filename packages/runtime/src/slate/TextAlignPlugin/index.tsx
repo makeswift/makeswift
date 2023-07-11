@@ -1,6 +1,5 @@
 import { Editor, Element, NodeEntry } from 'slate'
 import {
-  createRichTextV2Plugin,
   unstable_IconRadioGroup,
   unstable_IconRadioGroupIcon,
   unstable_StyleV2,
@@ -9,6 +8,7 @@ import { ElementUtils } from '../utils/element'
 import { normalizeResponsiveValue, setResponsiveValue } from '../utils/responsive'
 import { getValue } from './getValue'
 import { RootBlock } from '../types'
+import { createRichTextV2Plugin } from '../../controls/rich-text-v2/plugin'
 
 const TEXT_ALIGN_KEY = 'textAlign'
 

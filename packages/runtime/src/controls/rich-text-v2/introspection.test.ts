@@ -1,6 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { RichTextV2ControlData, RichTextV2ControlType } from './rich-text-v2'
-import { LinkPlugin, TypographyPlugin } from '../../slate'
+import { RichText, RichTextV2ControlData, RichTextV2ControlType } from './rich-text-v2'
 import { getPageIds, getSwatchIds, getTypographyIds } from '../../prop-controllers/introspection'
 
 const SWATCH_ID = 'SWATCH_ID='
@@ -59,42 +58,12 @@ const introspectionFixture: RichTextV2ControlData = {
 
 describe('GIVEN introspecting RichTextV2', () => {
   test('WHEN getSwatchIds THEN correct swatches are returned', () => {
-    expect(
-      getSwatchIds(
-        {
-          type: RichTextV2ControlType,
-          config: {
-            plugins: [TypographyPlugin()],
-          },
-        },
-        introspectionFixture,
-      ),
-    ).toStrictEqual([SWATCH_ID])
+    expect(getSwatchIds(RichText(), introspectionFixture)).toStrictEqual([SWATCH_ID])
   })
   test('WHEN getTypographyIds THEN correct typographies are returned', () => {
-    expect(
-      getTypographyIds(
-        {
-          type: RichTextV2ControlType,
-          config: {
-            plugins: [TypographyPlugin()],
-          },
-        },
-        introspectionFixture,
-      ),
-    ).toStrictEqual([TYPOGRAPHY_ID])
+    expect(getTypographyIds(RichText(), introspectionFixture)).toStrictEqual([TYPOGRAPHY_ID])
   })
   test('WHEN getPageIds THEN correct pageIds are returned', () => {
-    expect(
-      getPageIds(
-        {
-          type: RichTextV2ControlType,
-          config: {
-            plugins: [LinkPlugin()],
-          },
-        },
-        introspectionFixture,
-      ),
-    ).toStrictEqual([PAGE_ID])
+    expect(getPageIds(RichText(), introspectionFixture)).toStrictEqual([PAGE_ID])
   })
 })

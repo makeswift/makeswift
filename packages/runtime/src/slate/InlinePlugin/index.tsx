@@ -1,11 +1,12 @@
 import { Editor, Element } from 'slate'
-import { RenderElement, createRichTextV2Plugin, unstable_IconRadioGroup } from '../../controls'
+import { unstable_IconRadioGroup } from '../../controls'
 import { ElementUtils } from '../utils/element'
 import { InlineType } from '../types'
 import { RenderElementProps } from 'slate-react'
 import { supportedInlineOptions } from './types'
 import { onChange } from './onChange'
 import { getValue } from './getValue'
+import { RenderElement, createRichTextV2Plugin } from '../../controls/rich-text-v2/plugin'
 
 export const withInline = (editor: Editor) => {
   const { isInline } = editor

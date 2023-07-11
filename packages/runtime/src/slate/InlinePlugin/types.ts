@@ -1,7 +1,7 @@
 import { Node, NodeEntry } from 'slate'
 import { ElementUtils } from '../utils/element'
 import { Inline, InlineType, LinkElement } from '../types'
-import { IconRadioGroupOption, unstable_IconRadioGroupIcon } from '../../controls'
+import { IconRadioGroupOption, unstable_IconRadioGroupIcon } from '../../controls/icon-radio-group'
 
 export type SupportedInlineType = Exclude<InlineType, 'link'>
 export type SupportedInline = Exclude<Inline, LinkElement>

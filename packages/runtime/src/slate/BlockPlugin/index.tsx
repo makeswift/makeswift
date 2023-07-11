@@ -6,7 +6,7 @@ import { wrapInline } from './wrapInline'
 import { unwrapInline } from './unwrapInline'
 import { getSelection } from '../selectors'
 import { ElementUtils } from '../utils/element'
-import { RenderElement, Select, createRichTextV2Plugin } from '../../controls'
+import { Select } from '../../controls/select'
 import { getActiveBlockType } from '../selectors'
 import { BlockType, RootBlockType } from '../types'
 import { unwrapList } from './unwrapList'
@@ -20,6 +20,7 @@ import { LIST_ITEM_CHILD_POSITION } from './constants'
 import { useStyle } from '../../runtimes/react/use-style'
 import { cx } from '@emotion/css'
 import { RenderElementProps } from 'slate-react'
+import { RenderElement, createRichTextV2Plugin } from '../../controls/rich-text-v2/plugin'
 
 export const BlockActions = {
   setBlockKeyForDevice,
