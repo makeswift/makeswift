@@ -1,7 +1,7 @@
 import { Editor, Path, Transforms } from 'slate'
 import { KeyboardEvent } from 'react'
 import isHotkey from 'is-hotkey'
-import { RenderElement, createRichTextV2Plugin } from '../../controls/rich-text-v2'
+import { RenderElement, createRichTextV2Plugin } from '../../controls/rich-text-v2/plugin'
 import { ElementUtils } from '../utils/element'
 import { BlockType } from '../types'
 import { RenderElementProps } from 'slate-react'

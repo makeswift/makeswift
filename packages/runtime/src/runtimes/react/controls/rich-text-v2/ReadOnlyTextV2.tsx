@@ -3,7 +3,6 @@ import {
   RichTextV2ControlData,
   RichTextV2ControlDefinition,
   RichTextV2Mode,
-  RichTextV2Plugin,
 } from '../../../../controls'
 import { useStyle } from '../../use-style'
 import { Descendant, Element, Text } from 'slate'
@@ -20,6 +19,7 @@ import {
 } from '../../../../slate'
 import { ControlValue } from '../control'
 import { RenderElementProps, RenderLeafProps } from 'slate-react'
+import { RichTextV2Plugin } from '../../../../controls/rich-text-v2/plugin'
 
 type Props = {
   text: RichTextV2ControlData

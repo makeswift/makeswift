@@ -44,15 +44,12 @@ import {
   getTypographyTypographyIds,
   ImageControlData,
   ImageControlType,
-  isRichTextV1Data,
   LinkControlData,
   LinkControlType,
   ListControlData,
   ListControlType,
   RichTextControlData,
   RichTextControlType,
-  RichTextV2ControlData,
-  RichTextV2ControlType,
   ShapeControlData,
   ShapeControlType,
   SlotControlData,
@@ -72,6 +69,11 @@ import {
   getRichTextV2SwatchIds,
   getRichTextV2TypographyIds,
 } from '../controls/rich-text-v2/introspection'
+import {
+  RichTextV2ControlType,
+  RichTextV2ControlData,
+  isRichTextV1Data,
+} from '../controls/rich-text-v2/rich-text-v2'
 
 export function getElementChildren<T extends Data>(
   descriptor: Descriptor<T>,
@@ -183,7 +185,6 @@ export function getSwatchIds<T extends Data>(
   prop: T | undefined,
 ): string[] {
   if (prop == null) return []
-
   switch (descriptor.type) {
     case Types.Backgrounds:
       return getBackgroundsSwatchIds(prop as BackgroundsValue)
@@ -210,7 +211,6 @@ export function getSwatchIds<T extends Data>(
         }) ?? []
       )
     }
-
     case Types.ResponsiveColor:
       return getResponsiveColorSwatchIds(prop as ResponsiveColorValue)
 
