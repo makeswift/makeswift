@@ -152,6 +152,8 @@ export function EditableTextV2({ text, definition, control }: Props) {
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
+      if (isHotkey('mod+shift+z', e)) return control?.redo()
+      if (isHotkey('mod+z', e)) return control?.undo()
       if (isHotkey('escape')(e)) {
         isPreservingFocus.current = false
         ReactEditor.blur(editor)
