@@ -67,18 +67,6 @@ export const v2DataFixture: RichTextDTO = {
         ],
         object: 'block',
       },
-      {
-        data: {},
-        type: 'text-block',
-        nodes: [
-          {
-            marks: [],
-            text: 'text',
-            object: 'text',
-          },
-        ],
-        object: 'block',
-      },
     ],
     object: 'document',
   },

@@ -2,6 +2,7 @@ import { ForwardedRef, forwardRef } from 'react'
 import {
   RichTextV2ControlData,
   RichTextV2ControlDefinition,
+  RichTextV2Mode,
   RichTextV2Plugin,
 } from '../../../../controls'
 import { useStyle } from '../../use-style'
@@ -29,7 +30,7 @@ const ReadOnlyTextV2 = forwardRef(function ReadOnlyText(
   { text: { descendants }, definition }: Props,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
-  const descendantsAsString = getText(descendants)
+  const descendantsAsString = getText(descendants, definition?.config.mode ?? RichTextV2Mode.Block)
 
   return (
     <div ref={ref}>
@@ -175,7 +176,6 @@ function isBlock(descendant: Descendant): descendant is Block {
     case BlockType.BlockQuote:
     case BlockType.Paragraph:
     case BlockType.Default:
-    case BlockType.Text:
     case BlockType.OrderedList:
     case BlockType.UnorderedList:
     case BlockType.ListItem:
@@ -187,17 +187,27 @@ function isBlock(descendant: Descendant): descendant is Block {
   }
 }
 
-function getTextByDescendant(descendant: Descendant): string {
+function getTextByDescendant(descendant: Descendant, mode: RichTextV2Mode): string {
   if (isText(descendant)) {
     return descendant.text ?? ''
   }
 
   switch (descendant.type) {
+    case BlockType.Default:
+      return mode === RichTextV2Mode.Inline
+        ? descendant.children.map(descendant => getTextByDescendant(descendant, mode)).join('') ??
+            ''
+        : descendant.children
+            .map(descendant => getTextByDescendant(descendant, mode))
+            .join(descendant.children.every(isBlock) ? '\n' : '') ?? ''
+
     case InlineType.Link:
     case InlineType.Code:
     case InlineType.SubScript:
     case InlineType.SuperScript:
-      return descendant.children.map(descendant => getTextByDescendant(descendant)).join('') ?? ''
+      return (
+        descendant.children.map(descendant => getTextByDescendant(descendant, mode)).join('') ?? ''
+      )
     case BlockType.Heading1:
     case BlockType.Heading2:
     case BlockType.Heading3:
@@ -206,15 +216,13 @@ function getTextByDescendant(descendant: Descendant): string {
     case BlockType.Heading6:
     case BlockType.BlockQuote:
     case BlockType.Paragraph:
-    case BlockType.Default:
-    case BlockType.Text:
     case BlockType.OrderedList:
     case BlockType.UnorderedList:
     case BlockType.ListItem:
     case BlockType.ListItemChild:
       return (
         descendant.children
-          .map(descendant => getTextByDescendant(descendant))
+          .map(descendant => getTextByDescendant(descendant, mode))
           .join(descendant.children.every(isBlock) ? '\n' : '') ?? ''
       )
     default:
@@ -222,6 +230,6 @@ function getTextByDescendant(descendant: Descendant): string {
   }
 }
 
-function getText(descendant: Descendant[]): string {
-  return descendant.map(getTextByDescendant).join('\n')
+function getText(descendant: Descendant[], mode: RichTextV2Mode): string {
+  return descendant.map(node => getTextByDescendant(node, mode)).join('\n')
 }

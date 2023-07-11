@@ -16,7 +16,7 @@ import {
 export const createJsx = (createEditor: () => Editor) =>
   createHyperscript({
     elements: {
-      [BlockType.Text]: { type: BlockType.Text },
+      [BlockType.Default]: { type: BlockType.Default },
       [BlockType.Paragraph]: { type: BlockType.Paragraph },
 
       [BlockType.Heading1]: { type: BlockType.Heading1 },
