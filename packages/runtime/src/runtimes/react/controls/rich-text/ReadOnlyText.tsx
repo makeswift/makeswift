@@ -1,16 +1,13 @@
 import { cx } from '@emotion/css'
 import { ForwardedRef, forwardRef } from 'react'
 import { Descendant, Text } from 'slate'
-
-import type { ElementIDValue, RichTextValue } from '../../../prop-controllers/descriptors'
-import { useStyle } from '../../../runtimes/react/use-style'
-import { Link } from '../../shared/Link'
-import { useResponsiveStyle } from '../../utils/responsive-style'
-import { Inline, InlineType, Block, BlockType } from '../../../slate'
-import { richTextDTOtoDAO } from '../../../controls'
-import useEnhancedTypography, {
-  useTypographyClassName,
-} from '../../../runtimes/react/controls/typography'
+import { useResponsiveStyle } from '../../../../components/utils/responsive-style'
+import { richTextDTOtoDAO } from '../../../../controls'
+import type { ElementIDValue, RichTextValue } from '../../../../prop-controllers/descriptors'
+import { Inline, InlineType, Block, BlockType } from '../../../../slate'
+import { useStyle } from '../../use-style'
+import useEnhancedTypography, { useTypographyClassName } from '../typography'
+import { Link } from '../../../../components/shared/Link'
 
 type Props = {
   id?: ElementIDValue

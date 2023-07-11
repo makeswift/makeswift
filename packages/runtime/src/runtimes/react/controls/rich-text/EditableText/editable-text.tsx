@@ -1,3 +1,6 @@
+import { cx } from '@emotion/css'
+import { getBox } from 'css-box-model'
+import isHotkey from 'is-hotkey'
 import {
   FocusEvent,
   forwardRef,
@@ -12,24 +15,26 @@ import {
 
 import { createEditor } from 'slate'
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
-
-import { ElementIDValue, RichTextValue } from '../../../../prop-controllers/descriptors'
-import { cx } from '@emotion/css'
-import { DescriptorsPropControllers } from '../../../../prop-controllers/instances'
-import { Descriptors } from '../../../../runtimes/react/controls/rich-text'
-import { getBox } from '../../../../box-model'
-import { PropControllersHandle } from '../../../../state/modules/prop-controller-handles'
-import { richTextDTOtoDAO } from '../../../../controls'
-import { Leaf } from '../components/Leaf'
-import { Element } from '../components/Element'
-import { useSyncWithBuilder } from './useSyncWithBuilder'
-import isHotkey from 'is-hotkey'
-import { useBuilderEditMode } from '../../../../runtimes/react'
-import { BuilderEditMode } from '../../../../state/modules/builder-edit-mode'
-import { onKeyDown, withBlock, withTypography, withBuilder } from '../../../../slate'
-import { pollBoxModel } from '../../../../runtimes/react/poll-box-model'
+import { useBuilderEditMode } from '../../..'
+import { richTextDTOtoDAO } from '../../../../../controls'
+import { RichTextValue } from '../../../../../prop-controllers'
+import { ElementIDValue } from '../../../../../prop-controllers/descriptors'
+import { DescriptorsPropControllers } from '../../../../../prop-controllers/instances'
+import {
+  RichTextDAO,
+  BlockType,
+  withBlock,
+  withTypography,
+  withBuilder,
+  onKeyDown,
+} from '../../../../../slate'
+import { BuilderEditMode } from '../../../../../state/modules/builder-edit-mode'
+import { PropControllersHandle } from '../../../../../state/modules/prop-controller-handles'
+import { pollBoxModel } from '../../../poll-box-model'
+import { Element, Leaf } from '../components'
+import { Descriptors } from '../rich-text'
 import { useSyncDOMSelection } from './useSyncDOMSelection'
-import { RichTextDAO, BlockType } from '../../../../slate'
+import { useSyncWithBuilder } from './useSyncWithBuilder'
 
 type Props = {
   id?: ElementIDValue

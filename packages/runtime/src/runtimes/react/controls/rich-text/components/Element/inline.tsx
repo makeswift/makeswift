@@ -1,9 +1,9 @@
 import { cx } from '@emotion/css'
 import { ComponentPropsWithoutRef } from 'react'
 import { RenderElementProps } from 'slate-react'
-import { useStyle } from '../../../../../runtimes/react/use-style'
-import { Link } from '../../../../shared/Link'
-import { Inline, InlineType } from '../../../../../slate'
+import { Inline, InlineType } from '../../../../../../slate/types'
+import { useStyle } from '../../../../use-style'
+import { Link } from '../../../../../../components/shared/Link'
 
 function StyledLink({ className, ...restOfProps }: ComponentPropsWithoutRef<typeof Link>) {
   return <Link {...restOfProps} className={cx(useStyle({ textDecoration: 'none' }), className)} />

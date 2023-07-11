@@ -4,16 +4,16 @@ import {
   RichTextControl,
   RichTextControlData,
   RichTextControlDefinition,
-} from '../../../controls/rich-text'
-import { forwardNextDynamicRef } from '../../../next'
+} from '../../../../controls/rich-text'
+import { forwardNextDynamicRef } from '../../../../next'
 import {
   isPropControllersHandle,
   PropControllersHandle,
-} from '../../../state/modules/prop-controller-handles'
+} from '../../../../state/modules/prop-controller-handles'
+import { useIsPreview } from '../..'
 
-const Text = forwardNextDynamicRef(patch =>
-  dynamic(() => patch(import('../../../components/builtin/Text'))),
-)
+const EditableText = forwardNextDynamicRef(patch => dynamic(() => patch(import('./EditableText'))))
+const ReadOnlyText = forwardNextDynamicRef(patch => dynamic(() => patch(import('./ReadOnlyText'))))
 
 export type RichTextControlValue = ReactNode
 
@@ -28,5 +28,11 @@ export function useRichText(data: RichTextControlData, control: RichTextControl 
     [control],
   )
 
-  return <Text text={data} ref={textCallbackRef} />
+  const isPreview = useIsPreview()
+
+  return isPreview ? (
+    <EditableText text={data} ref={textCallbackRef} />
+  ) : (
+    <ReadOnlyText text={data} ref={textCallbackRef} />
+  )
 }

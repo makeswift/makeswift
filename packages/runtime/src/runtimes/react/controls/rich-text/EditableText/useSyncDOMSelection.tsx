@@ -1,6 +1,6 @@
 import { ReactEditor } from 'slate-react'
-import { useIsomorphicLayoutEffect } from '../../../hooks/useIsomorphicLayoutEffect'
 import { Editor, Range as SlateRange } from 'slate'
+import { useIsomorphicLayoutEffect } from '../../../../../components/hooks/useIsomorphicLayoutEffect'
 
 /**
  * Clicking outside of the host blurs our `<Editable />`.

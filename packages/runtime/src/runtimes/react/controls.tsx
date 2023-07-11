@@ -68,7 +68,7 @@ import { ControlValue } from './controls/control'
 import { RenderHook } from './components'
 import { useSlot } from './controls/slot'
 import { useStyle } from './use-style'
-import { useRichText } from './controls/rich-text'
+import { useRichText } from './controls/rich-text/rich-text'
 import { useRichTextV2 } from './controls/rich-text-v2'
 import { IconRadioGroupControlType } from '../../controls/icon-radio-group'
 

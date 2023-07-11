@@ -23,7 +23,7 @@ const ReadOnlyText = forwardNextDynamicRef(patch =>
 )
 
 const ReadOnlyTextV1 = forwardNextDynamicRef(patch =>
-  dynamic(() => patch(import('../../../../components/builtin/Text/ReadOnlyText'))),
+  dynamic(() => patch(import('../rich-text/ReadOnlyText'))),
 )
 
 export function useRichTextV2(
