@@ -24,7 +24,21 @@ const ReadOnlyText = forwardRef(function ReadOnlyText(
   const descendantsAsString = getText(descendants)
 
   return (
-    <div ref={ref} id={id} className={cx(width, margin)}>
+    <div
+      ref={ref}
+      id={id}
+      style={{
+        /**
+         * These are the default styles that Slate uses for its editable div.
+         * https://github.com/ianstormtaylor/slate/blob/4bd15ed3950e3a0871f5d0ecb391bb637c05e59d/packages/slate-react/src/components/editable.tsx
+         * Search for `disableDefaultStyles`
+         */
+        position: 'relative',
+        whiteSpace: 'pre-wrap',
+        wordWrap: 'break-word',
+      }}
+      className={cx(width, margin)}
+    >
       {descendantsAsString === '' ? <Placeholder /> : <Descendants descendants={descendants} />}
     </div>
   )

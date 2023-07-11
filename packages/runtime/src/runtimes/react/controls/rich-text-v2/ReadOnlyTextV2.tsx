@@ -33,7 +33,19 @@ const ReadOnlyTextV2 = forwardRef(function ReadOnlyText(
   const descendantsAsString = getText(descendants, definition?.config.mode ?? RichTextV2Mode.Block)
 
   return (
-    <div ref={ref}>
+    <div
+      ref={ref}
+      style={{
+        /**
+         * These are the default styles that Slate uses for its editable div.
+         * https://github.com/ianstormtaylor/slate/blob/4bd15ed3950e3a0871f5d0ecb391bb637c05e59d/packages/slate-react/src/components/editable.tsx
+         * Search for `disableDefaultStyles`
+         */
+        position: 'relative',
+        whiteSpace: 'pre-wrap',
+        wordWrap: 'break-word',
+      }}
+    >
       {descendantsAsString === '' ? (
         <Placeholder />
       ) : (
