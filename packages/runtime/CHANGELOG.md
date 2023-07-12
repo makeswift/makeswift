@@ -1,5 +1,27 @@
 # @makeswift/runtime
 
+## 0.10.0
+
+### Minor Changes
+
+- c066219: BREAKING: Prior to this version the `Text` component and `RichText` control used `white-space-collapse: preserve` within app.makeswift.com and `white-space-collapse: collapse` within the live page.
+  Our goal is to exactly match what you see in Makeswift with what you see in the live page.
+  This updates the live version to also `preserve` white space.
+- 638ae58: BREAKING: Upgrade `Richtext` control with a new architecture that enables `Inline` mode and future rich text upgrades.
+
+  This is the first time we have altered the data structure of a component, and we want you to be able to migrate the data and see the diff yourself incase the migration doesn't work.
+
+  When you select a `Text` component or component with the `RichText` control, you will be prompted in the sidebar to upgrade. If the migration doesn't work, simple `cmd/ctrl + z`.
+
+  Details on `Inline` mode are in the [documentation for `RichText`](https://www.makeswift.com/docs/controls/rich-text).
+
+- 950e256: BREAKING: Change the `Text` component to use the new `RichText` control.
+
+### Patch Changes
+
+- fb45a4e: Add error handling when the default locale or the locale is not included in the locales list.
+- 63d0ad3: Compare `unstable_locale` on `getPageSnapshot` to the default locale defined on `ReactRuntime`.
+
 ## 0.9.12
 
 ### Patch Changes
