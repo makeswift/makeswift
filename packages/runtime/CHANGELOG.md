@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.10.2
+
+### Patch Changes
+
+- ebf9d66: Call versioned endpoints only if using versioning
+
 ## 0.10.1
 
 ### Patch Changes
