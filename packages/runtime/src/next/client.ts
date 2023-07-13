@@ -449,7 +449,7 @@ export class Makeswift {
     const { cacheData, localizedResourcesMap } = await this.introspect(
       document.data,
       previewOverride,
-      unstable_locale,
+      locale ?? undefined,
     )
     const apiOrigin = this.apiOrigin.href
     const preview = siteVersion === MakeswiftSiteVersion.Working
