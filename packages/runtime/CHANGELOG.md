@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.10.1
+
+### Patch Changes
+
+- 02d3608: Fix `locale` not passed to `introspect` and `MakeswiftClient`.
+
 ## 0.10.0
 
 ### Minor Changes
