@@ -559,9 +559,10 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
             break
 
           case ActionTypes.SET_LOCALE: {
-            const { pathname, asPath, query } = Router
+            const { pathname: currentPathname, query } = Router
+            const pathname = (action.payload.pathname ?? currentPathname).replace(/^\//, '/')
 
-            Router.replace({ pathname, query }, asPath, { locale: action.payload.locale })
+            Router.replace({ pathname, query }, undefined, { locale: action.payload.locale })
             break
           }
 

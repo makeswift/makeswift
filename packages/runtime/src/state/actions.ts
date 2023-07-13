@@ -297,7 +297,7 @@ type SetLocalesAction = {
 
 type SetLocaleAction = {
   type: typeof ActionTypes.SET_LOCALE
-  payload: { locale: LocaleString }
+  payload: { locale: LocaleString; pathname?: string }
 }
 
 type SetDefaultLocaleAction = {
@@ -699,10 +699,10 @@ export function setLocales(locales: Intl.Locale[]): SetLocalesAction {
   }
 }
 
-export function setLocale(locale: Intl.Locale): SetLocaleAction {
+export function setLocale(locale: Intl.Locale, pathname?: string): SetLocaleAction {
   return {
     type: ActionTypes.SET_LOCALE,
-    payload: { locale: localeStringSchema.parse(locale.toString()) },
+    payload: { locale: localeStringSchema.parse(locale.toString()), pathname },
   }
 }
 
