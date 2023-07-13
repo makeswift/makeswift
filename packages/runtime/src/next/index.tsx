@@ -131,6 +131,7 @@ export const Page = memo(({ snapshot, runtime }: PageProps) => {
         uri: new URL('graphql', snapshot.apiOrigin).href,
         cacheData: snapshot.cacheData,
         localizedResourcesMap: snapshot.localizedResourcesMap,
+        locale: snapshot.locale ? new Intl.Locale(snapshot.locale) : undefined,
       }),
     [snapshot],
   )
