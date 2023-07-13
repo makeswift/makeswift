@@ -110,7 +110,10 @@ export function MakeswiftApiHandler(
     ) {
       return client
         .getLocalizedGlobalElement(m.params.globalElementId, m.params.locale)
-        .then(handleResource)
+        .then(resource =>
+          // We're not returning 404 if it's null because localized global element is nullable.
+          resource === null ? res.json({ message: 'Not Found' }) : res.json(resource),
+        )
     }
 
     if ((m = matches<{ id: string }>('/page-pathname-slices/:id'))) {
