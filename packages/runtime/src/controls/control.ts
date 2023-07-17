@@ -26,9 +26,19 @@ import {
   RichTextControlDefinition,
   RichTextControlType,
   copyRichTextData,
+  richTextDTOtoDAO,
 } from './rich-text'
 import { PropControllerDescriptor } from '../prop-controllers'
-import { RichTextV2ControlData, RichTextV2ControlDefinition } from './rich-text-v2'
+
+import { richTextV2DescendentsToData } from './rich-text-v2/translation'
+import { copyRichTextV2Data } from './rich-text-v2/copy'
+import {
+  RichTextV2ControlData,
+  RichTextV2ControlDefinition,
+  RichTextV2ControlType,
+  isRichTextV1Data,
+} from './rich-text-v2/rich-text-v2'
+
 import { StyleV2ControlData, StyleV2ControlDefinition } from './style-v2'
 import { IconRadioGroupControlData, IconRadioGroupControlDefinition } from './icon-radio-group'
 import { TypographyControlData, TypographyControlDefinition } from './typography'
@@ -108,6 +118,11 @@ export function copy(definition: Descriptor | ControlDefinition, value: any, con
       return propControllerCopy(definition, value, context)
     case RichTextControlType:
       return copyRichTextData(value, context)
+    case RichTextV2ControlType:
+      return copyRichTextV2Data(
+        isRichTextV1Data(value) ? richTextV2DescendentsToData(richTextDTOtoDAO(value)) : value,
+        context,
+      )
     case ColorControlType:
       return copyColorData(value, context)
     case ImageControlType:

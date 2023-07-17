@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { RichText, RichTextV2ControlData, RichTextV2ControlType } from './rich-text-v2'
-import { getPageIds, getSwatchIds, getTypographyIds } from '../../prop-controllers/introspection'
+import { RichText, RichTextV2ControlData, RichTextV2ControlType } from '../rich-text-v2'
+import { getPageIds, getSwatchIds, getTypographyIds } from '../../../prop-controllers/introspection'
 
 const SWATCH_ID = 'SWATCH_ID='
 const TYPOGRAPHY_ID = 'TYPOGRAPHY_ID='
