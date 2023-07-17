@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.10.3
+
+### Patch Changes
+
+- d9e0009: Add copy function to new `RichText` so that creating a site from a template automatically copies all colors and typographies.
+
 ## 0.10.2
 
 ### Patch Changes
