@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest'
-import { blockquoteFixture, listFixture, typographyFixture } from './fixtures'
-import { richTextDAOToDTO, richTextDTOtoDAO, richTextDTOtoSelection } from './translation'
-import { RichTextDTO } from './dto-types'
-import { emptyBlockFixture, fixedEmptyBlockFixture } from './fixtures/empty-blocks'
-import { v2DataFixture } from './fixtures/v2-data-types'
+import { blockquoteFixture, listFixture, typographyFixture } from '../fixtures'
+import { richTextDAOToDTO, richTextDTOtoDAO, richTextDTOtoSelection } from '../translation'
+import { RichTextDTO } from '../dto-types'
+import { emptyBlockFixture, fixedEmptyBlockFixture } from '../fixtures/empty-blocks'
+import { v2DataFixture } from '../fixtures/v2-data-types'
 
 describe('GIVEN I am using RichText data translation', () => {
   test('WHEN translating simple data THEN nothing is lost', () => {

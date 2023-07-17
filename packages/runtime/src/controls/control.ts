@@ -21,7 +21,12 @@ import {
 import { Descriptor, IndexSignatureHack, Types } from '../prop-controllers/descriptors'
 import { copy as propControllerCopy } from '../prop-controllers/copy'
 import { CopyContext, Data, MergeContext } from '../state/react-page'
-import { RichTextControlData, RichTextControlDefinition } from './rich-text'
+import {
+  RichTextControlData,
+  RichTextControlDefinition,
+  RichTextControlType,
+  copyRichTextData,
+} from './rich-text'
 import { PropControllerDescriptor } from '../prop-controllers'
 import { RichTextV2ControlData, RichTextV2ControlDefinition } from './rich-text-v2'
 import { StyleV2ControlData, StyleV2ControlDefinition } from './style-v2'
@@ -101,6 +106,8 @@ export function copy(definition: Descriptor | ControlDefinition, value: any, con
     case Types.RichText:
     case Types.ElementID:
       return propControllerCopy(definition, value, context)
+    case RichTextControlType:
+      return copyRichTextData(value, context)
     case ColorControlType:
       return copyColorData(value, context)
     case ImageControlType:
