@@ -1,4 +1,4 @@
-import { Editor, Path, Transforms } from 'slate'
+import { Editor, Path, Text, Transforms } from 'slate'
 import { KeyboardEvent } from 'react'
 import isHotkey from 'is-hotkey'
 import { RenderElement, createRichTextV2Plugin } from '../../controls/rich-text-v2/plugin'
@@ -62,5 +62,21 @@ function InlineModePluginComponent({
   renderElement,
   ...props
 }: RenderElementProps & { renderElement: RenderElement }) {
-  return <span {...props.attributes}>{renderElement(props)}</span>
+  if (props.element.children.length === 1) {
+    const text = props.element.children[0]
+
+    if (Text.isText(text) && text.text === '') {
+      return (
+        <span style={{ display: 'inline-block', minWidth: '140px' }} {...props.attributes}>
+          {renderElement(props)}
+        </span>
+      )
+    }
+  }
+
+  return (
+    <span style={{ minWidth: '140px' }} {...props.attributes}>
+      {renderElement(props)}
+    </span>
+  )
 }
