@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.10.4
+
+### Patch Changes
+
+- 189a27d: Add initial value to `RichText` control.
+- 4cf9845: Update the `RichText` "Content" panel reset to preserves `text-align` and text styles.
+- bdacab6: Fix a runtime error in the `RichText` "Content" panel reset that could happen if text was selected.
+- 15a8521: Add `min-width` CSS value to `RichText` control in `Inline` mode.
+
 ## 0.10.3
 
 ### Patch Changes
