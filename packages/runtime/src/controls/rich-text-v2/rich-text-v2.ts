@@ -161,9 +161,7 @@ export class RichTextV2Control<
       }
       case RichTextV2ControlMessageType.RESET_VALUE: {
         if (this.defaultValue) {
-          this.editor.selection = null
-          this.editor.children = this.defaultValue
-          this.editor.onChange()
+          this.editor.resetValue(this.defaultValue)
           this.onLocalUserChange()
         }
         break
