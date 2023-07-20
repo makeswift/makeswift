@@ -7,15 +7,13 @@ import {
 import { useStyle } from '../../use-style'
 import { Descendant, Element, Text } from 'slate'
 import {
-  InlineType,
-  Block,
-  BlockType,
   BlockPlugin,
   InlineModePlugin,
   InlinePlugin,
   LinkPlugin,
   TextAlignPlugin,
   TypographyPlugin,
+  toText,
 } from '../../../../slate'
 import { ControlValue } from '../control'
 import { RenderElementProps, RenderLeafProps } from 'slate-react'
@@ -30,7 +28,7 @@ const ReadOnlyTextV2 = forwardRef(function ReadOnlyText(
   { text: { descendants }, definition }: Props,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
-  const descendantsAsString = getText(descendants, definition?.config.mode ?? RichTextV2Mode.Block)
+  const descendantsAsString = toText(descendants, definition?.config.mode ?? RichTextV2Mode.Block)
 
   return (
     <div
@@ -173,75 +171,4 @@ function Descendants({
       })}
     </>
   )
-}
-
-function isBlock(descendant: Descendant): descendant is Block {
-  if (isText(descendant)) return false
-
-  switch (descendant.type) {
-    case BlockType.Heading1:
-    case BlockType.Heading2:
-    case BlockType.Heading3:
-    case BlockType.Heading4:
-    case BlockType.Heading5:
-    case BlockType.Heading6:
-    case BlockType.BlockQuote:
-    case BlockType.Paragraph:
-    case BlockType.Default:
-    case BlockType.OrderedList:
-    case BlockType.UnorderedList:
-    case BlockType.ListItem:
-    case BlockType.ListItemChild:
-      return true
-
-    default:
-      return false
-  }
-}
-
-function getTextByDescendant(descendant: Descendant, mode: RichTextV2Mode): string {
-  if (isText(descendant)) {
-    return descendant.text ?? ''
-  }
-
-  switch (descendant.type) {
-    case BlockType.Default:
-      return mode === RichTextV2Mode.Inline
-        ? descendant.children.map(descendant => getTextByDescendant(descendant, mode)).join('') ??
-            ''
-        : descendant.children
-            .map(descendant => getTextByDescendant(descendant, mode))
-            .join(descendant.children.every(isBlock) ? '\n' : '') ?? ''
-
-    case InlineType.Link:
-    case InlineType.Code:
-    case InlineType.SubScript:
-    case InlineType.SuperScript:
-      return (
-        descendant.children.map(descendant => getTextByDescendant(descendant, mode)).join('') ?? ''
-      )
-    case BlockType.Heading1:
-    case BlockType.Heading2:
-    case BlockType.Heading3:
-    case BlockType.Heading4:
-    case BlockType.Heading5:
-    case BlockType.Heading6:
-    case BlockType.BlockQuote:
-    case BlockType.Paragraph:
-    case BlockType.OrderedList:
-    case BlockType.UnorderedList:
-    case BlockType.ListItem:
-    case BlockType.ListItemChild:
-      return (
-        descendant.children
-          .map(descendant => getTextByDescendant(descendant, mode))
-          .join(descendant.children.every(isBlock) ? '\n' : '') ?? ''
-      )
-    default:
-      return ''
-  }
-}
-
-function getText(descendant: Descendant[], mode: RichTextV2Mode): string {
-  return descendant.map(node => getTextByDescendant(node, mode)).join('\n')
 }
