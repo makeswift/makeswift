@@ -162,7 +162,9 @@ export class RichTextV2Control<
       case RichTextV2ControlMessageType.RESET_VALUE: {
         if (this.defaultValue) {
           this.editor.resetValue(this.defaultValue)
-          this.onLocalUserChange()
+          setTimeout(() => {
+            this.onLocalUserChange()
+          })
         }
         break
       }
