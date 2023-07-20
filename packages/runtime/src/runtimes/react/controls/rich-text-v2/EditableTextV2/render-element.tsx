@@ -17,9 +17,10 @@ export function RichTextV2Element({ definition, plugins, ...props }: RichTextV2E
     (renderFn, plugin) => (props: RenderElementProps) => {
       const { control, renderElement } = plugin
 
-      if (control?.definition == null || renderElement == null) return renderFn(props)
+      if (renderElement == null) return renderFn(props)
 
-      if (control.getElementValue == null) return renderElement(renderFn, undefined)(props)
+      if (control == null || control.getElementValue == null)
+        return renderElement(renderFn, undefined)(props)
 
       return (
         <ControlValue definition={control.definition} data={control.getElementValue(props.element)}>
