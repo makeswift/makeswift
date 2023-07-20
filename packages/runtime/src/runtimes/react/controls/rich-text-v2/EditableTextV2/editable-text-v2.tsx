@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { Descendant, createEditor } from 'slate'
+import { createEditor } from 'slate'
 import isHotkey from 'is-hotkey'
 import {
   withReact,
@@ -40,17 +40,15 @@ import {
   withLocalChanges,
 } from '../../../../../slate'
 import { useSyncDOMSelection } from './useSyncDOMSelection'
-import { BlockType } from '../../../../../slate'
 import { RichTextV2Element } from './render-element'
 import { RichTextV2Leaf } from './render-leaf'
 import { richTextV2DataToDescendents } from '../../../../../controls/rich-text-v2/translation'
 import { useSyncRemoteChanges } from './useRemoteChanges'
+import { defaultValue, usePresetValue } from './usePresetValue'
 
 export type RichTextV2ControlValue = ReactNode
 
 export type Descriptors = { text?: RichTextV2ControlDefinition }
-
-const defaultText: Descendant[] = [{ type: BlockType.Default, children: [{ text: '' }] }]
 
 type Props = {
   text?: RichTextV2ControlData
@@ -82,13 +80,6 @@ export function EditableTextV2({ text, definition, control }: Props) {
     ),
   )
 
-  const isPreservingFocus = useRef(false)
-  useSyncDOMSelection(editor, isPreservingFocus)
-
-  const editMode = useBuilderEditMode()
-
-  useSyncRemoteChanges(editor, text)
-
   useEffect(() => {
     if (control == null) return
 
@@ -98,6 +89,53 @@ export function EditableTextV2({ text, definition, control }: Props) {
       onBoxModelChange: boxModel => control.changeBoxModel(boxModel),
     })
   }, [editor, control])
+
+  // ------ Preserving selection ------
+
+  const isPreservingFocus = useRef(false)
+  useSyncDOMSelection(editor, isPreservingFocus)
+  const editMode = useBuilderEditMode()
+
+  useEffect(() => {
+    /**
+     * This is required because clicking on the overlay has `relatedTarget` null just like the sidebar, but
+     * - in the case of the overlay we switch to BUILD mode
+     * - in the case of the sidebar we preserve the selection
+     */
+    if (editMode !== BuilderEditMode.CONTENT) {
+      isPreservingFocus.current = false
+      ReactEditor.deselect(editor)
+    }
+  }, [editMode])
+
+  // ------ Syncing remote changes ------
+
+  useSyncRemoteChanges(editor, text)
+
+  // ------ Default value ------
+
+  const presetValue = usePresetValue(definition)
+
+  const initialValue = useMemo(
+    () => (text && richTextV2DataToDescendents(text)) ?? presetValue,
+    [text, presetValue],
+  )
+
+  useEffect(() => {
+    control?.setEditor(editor)
+    control?.setDefaultValue(defaultValue)
+  }, [control, editor])
+
+  /**
+   * When initialValue is set to the default value we need to trigger an local change so that the sidebar updates and so the data is saved
+   */
+  useEffect(() => {
+    if (initialValue === presetValue) {
+      control?.onLocalUserChange()
+    }
+  }, [control, initialValue, presetValue])
+
+  // ------ Rendering ------
 
   const renderElement = useCallback(
     (props: RenderElementProps) => {
@@ -113,37 +151,7 @@ export function EditableTextV2({ text, definition, control }: Props) {
     [plugins, definition],
   )
 
-  const initialValue = useMemo(
-    () =>
-      (text && richTextV2DataToDescendents(text)) ?? definition.config.defaultValue ?? defaultText,
-    [text, definition],
-  )
-
-  useEffect(() => {
-    /**
-     * This is required because clicking on the overlay has `relatedTarget` null just like the sidebar, but
-     * - in the case of the overlay we switch to BUILD mode
-     * - in the case of the sidebar we preserve the selection
-     */
-    if (editMode !== BuilderEditMode.CONTENT) {
-      isPreservingFocus.current = false
-      ReactEditor.deselect(editor)
-    }
-  }, [editMode])
-
-  useEffect(() => {
-    const defaultValue = definition.config.defaultValue ?? defaultText
-
-    control?.setEditor(editor)
-    control?.setDefaultValue(defaultValue)
-
-    /**
-     * When initialValue is set to the default value we need to trigger an local change so that the sidebar updates and so the data is saved
-     */
-    if (initialValue === defaultValue) {
-      control?.onLocalUserChange()
-    }
-  }, [control, definition, editor])
+  // ------ Event handlers ------
 
   const handleFocus = useCallback(() => {
     isPreservingFocus.current = true
