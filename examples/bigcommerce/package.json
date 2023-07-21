@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@headlessui/react": "1.6.6",
-    "@makeswift/runtime": "^0.8.1",
+    "@makeswift/runtime": "^0.10.5",
     "i18next": "22.1.4",
     "next": "^13.2.1",
     "next-i18next": "13.0.0",
@@ -22,7 +22,8 @@
   },
   "devDependencies": {
     "@types/node": "17.0.37",
-    "@types/react": "18.0.9",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
     "autoprefixer": "10.4.8",
     "eslint": "8.22.0",
     "eslint-config-next": "12.2.3",
