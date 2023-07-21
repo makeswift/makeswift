@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.10.5
+
+### Patch Changes
+
+- f631cbb: Add a `label` option for registering fonts. This can be used to show a custom label in the font family dropdown in the builder.
+
 ## 0.10.4
 
 ### Patch Changes
