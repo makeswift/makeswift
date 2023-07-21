@@ -4,6 +4,7 @@ type FontVariant = { weight: string; style: 'italic' | 'normal'; src?: string }
 
 export type Font = {
   family: string
+  label?: string
   variants: FontVariant[]
 }
 
