@@ -45,6 +45,7 @@ import {
   parseBreakpointsInput,
 } from '../../state/modules/breakpoints'
 import { LocalesInput, parseLocalesInput } from '../../state/modules/locales'
+import { TranslationContextType } from './translation-context'
 
 export class ReactRuntime {
   // TODO: the static methods here are deprecated and only keep here for backward-compatibility purpose.
@@ -150,6 +151,7 @@ type RuntimeProviderProps = {
   rootElements?: Map<string, ReactPage.Element>
   children?: ReactNode
   runtime?: ReactRuntime
+  translations?: TranslationContextType
 }
 
 const PreviewProvider = dynamic(() => import('./components/PreviewProvider'))

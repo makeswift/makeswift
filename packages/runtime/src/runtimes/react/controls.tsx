@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useContext, useRef } from 'react'
 
 import { useDocumentKey, useSelector, useStore } from '.'
 import * as ReactPage from '../../state/react-page'
@@ -71,6 +71,8 @@ import { useStyle } from './use-style'
 import { useRichText } from './controls/rich-text/rich-text'
 import { useRichTextV2 } from './controls/rich-text-v2'
 import { IconRadioGroupControlType } from '../../controls/icon-radio-group'
+import { TranslationContext } from './translation-context'
+import deepEqual from '../../utils/deepEqual'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -184,10 +186,10 @@ type PropsValueProps = {
 
 export function PropsValue({ element, children }: PropsValueProps): JSX.Element {
   const store = useStore()
+  const translations = useContext(TranslationContext)
   const propControllerDescriptorsRef = useRef(
     ReactPage.getComponentPropControllerDescriptors(store.getState(), element.type) ?? {},
   )
-  const props = element.props as Record<string, any>
   const documentKey = useDocumentKey()
 
   const propControllers = useSelector(state => {
@@ -195,6 +197,35 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
 
     return ReactPage.getPropControllers(state, documentKey, element.key)
   })
+
+  const props = translations
+    ? Object.entries(propControllerDescriptorsRef.current).reduceRight(
+        (acc, [propName, descriptor]) => {
+          switch (descriptor.type) {
+            case TextInputControlType:
+            case ListControlType:
+              const translatedProp = translations?.[`${element.key}::${propName}`]
+
+              // this is where we would run `mergeTranslationData` based on control type
+              return {
+                ...acc,
+                [propName]:
+                  translatedProp && deepEqual(element.props[propName], translatedProp.source)
+                    ? translatedProp.target
+                    : element.props[propName],
+              }
+            default:
+              return {
+                ...acc,
+                [propName]: element.props[propName],
+              }
+          }
+        },
+        {} as Record<string, any>,
+      )
+    : element.props
+
+ 
 
   return Object.entries(propControllerDescriptorsRef.current).reduceRight(
     (renderFn, [propName, descriptor]) =>

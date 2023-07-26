@@ -141,12 +141,30 @@ export const Page = memo(({ snapshot, runtime }: PageProps) => {
     rootElements.set(localizedPage.elementTreeId, localizedPage.data)
   })
 
+  const translations = {
+    '2d235c2b-fe09-4872-962c-adc42e49c7e8::text': {
+      source: 'hello world',
+      target: 'hola mundo',
+    },
+    '141b396b-5790-4c22-9fe9-e0c3f0baa0ee::text': {
+      source: [
+        { value: 'hello', id: 'f2d36e9e-74a7-4a0d-a15c-fc402b36e85b' },
+        { value: 'world', id: 'cedbe3dd-cc1d-4fc1-b614-353c4d480d42' },
+      ],
+      target: [
+        { value: 'hola', id: 'f2d36e9e-74a7-4a0d-a15c-fc402b36e85b' },
+        { value: 'mundo', id: 'cedbe3dd-cc1d-4fc1-b614-353c4d480d42' },
+      ],
+    },
+  }
+
   return (
     <RuntimeProvider
       client={client}
       rootElements={rootElements}
       preview={snapshot.preview}
       runtime={runtime}
+      translations={translations}
     >
       {/* We use a key here to reset the Snippets state in the PageMeta component */}
       <PageMeta key={snapshot.document.data.key} document={snapshot.document} />
