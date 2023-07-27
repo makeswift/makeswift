@@ -51,6 +51,7 @@ import {
   setLocales,
   setLocale,
   setDefaultLocale,
+  sendTranslatableData,
 } from './actions'
 import { ActionTypes } from './actions'
 import { createPropController } from '../prop-controllers/instances'
@@ -509,6 +510,8 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
         messageChannel.port1.postMessage(setLocale(new Intl.Locale(routerLocale)))
       }
 
+      // messageChannel.port1.postMessage()
+
       Router.events.on('routeChangeStart', () => {
         messageChannel.port1.postMessage(changePathnameStart())
       })
@@ -519,6 +522,11 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
 
       return (action: Action): Action => {
         switch (action.type) {
+          case ActionTypes.GET_TRANSLATABLE_DATA:
+            console.log(getState().documents)
+
+            dispatch(sendTranslatableData(getState().documents))
+
           case ActionTypes.CHANGE_ELEMENT_BOX_MODELS:
           case ActionTypes.MOUNT_COMPONENT:
           case ActionTypes.UNMOUNT_COMPONENT:

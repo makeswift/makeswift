@@ -84,6 +84,9 @@ export const ActionTypes = {
   SET_LOCALES: 'SET_LOCALES',
   SET_LOCALE: 'SET_LOCALE',
   SET_DEFAULT_LOCALE: 'SET_DEFAULT_LOCALE',
+
+  GET_TRANSLATABLE_DATA: 'GET_TRANSLATABLE_DATA',
+  SEND_TRANSLATABLE_DATA: 'SEND_TRANSLATABLE_DATA',
 } as const
 
 type InitAction = { type: typeof ActionTypes.INIT }
@@ -305,6 +308,14 @@ type SetDefaultLocaleAction = {
   payload: { defaultLocale: LocaleString }
 }
 
+type GetTranslatableData = {
+  type: typeof ActionTypes.GET_TRANSLATABLE_DATA
+}
+
+type SendTranslatableData = {
+  type: typeof ActionTypes.SEND_TRANSLATABLE_DATA
+}
+
 export type Action =
   | InitAction
   | CleanUpAction
@@ -349,6 +360,8 @@ export type Action =
   | SetLocalesAction
   | SetLocaleAction
   | SetDefaultLocaleAction
+  | GetTranslatableData
+  | SendTranslatableData
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }
@@ -711,4 +724,12 @@ export function setDefaultLocale(defaultLocale: Intl.Locale): SetDefaultLocaleAc
     type: ActionTypes.SET_DEFAULT_LOCALE,
     payload: { defaultLocale: localeStringSchema.parse(defaultLocale.toString()) },
   }
+}
+
+export function getTranslatableData(): GetTranslatableData {
+  return { type: ActionTypes.GET_TRANSLATABLE_DATA }
+}
+
+export function sendTranslatableData(data: any): SendTranslatableData {
+  return { type: ActionTypes.SEND_TRANSLATABLE_DATA, data }
 }
