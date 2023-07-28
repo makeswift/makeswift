@@ -211,13 +211,34 @@ export class Makeswift {
     return json
   }
 
-  private async getTypographies(typographyIds: string[]): Promise<(Typography | null)[]> {
-    const result = await this.graphqlClient.request<
-      TypographiesQueryResult,
-      TypographiesQueryVariables
-    >(TypographiesQuery, { typographyIds })
+  private async getTypographies(
+    typographyIds: string[],
+    preview: boolean,
+  ): Promise<(Typography | null)[]> {
+    const isUsingVersioning = this.siteVersion != null
 
-    return result.typographies
+    const url = new URL(`${isUsingVersioning ? 'v2' : 'v1'}/typographies/bulk`, this.apiOrigin)
+
+    typographyIds.forEach(id => {
+      url.searchParams.append('ids', id)
+    })
+
+    const response = await this.fetch(url.pathname + url.search, {
+      headers: {
+        'Makeswift-Site-Version':
+          this.siteVersion ?? (preview ? MakeswiftSiteVersion.Working : MakeswiftSiteVersion.Live),
+      },
+    })
+
+    if (!response.ok) {
+      console.error('Failed to get typographies', await response.json())
+
+      return []
+    }
+
+    const body = await response.json()
+
+    return body
   }
 
   private async getSwatches(ids: string[], preview: boolean): Promise<(Swatch | null)[]> {
@@ -348,7 +369,7 @@ export class Makeswift {
       }
     }
 
-    const typographies = await this.getTypographies([...typographyIds])
+    const typographies = await this.getTypographies([...typographyIds], preview)
 
     typographies.forEach(typography => {
       typography?.style.forEach(style => {
@@ -501,12 +522,20 @@ export class Makeswift {
   }
 
   async getTypography(typographyId: string): Promise<Typography | null> {
-    const result = await this.graphqlClient.request<
-      TypographyQueryResult,
-      TypographyQueryVariables
-    >(TypographyQuery, { typographyId })
+    const isUsingVersioning = this.siteVersion != null
+    const response = await this.fetch(
+      `${isUsingVersioning ? 'v2' : 'v1'}/typographies/${typographyId}`,
+    )
 
-    return result.typography
+    if (!response.ok) {
+      if (response.status !== 404) console.error('Failed to get typography', await response.json())
+
+      return null
+    }
+
+    const typography = await response.json()
+
+    return typography
   }
 
   async getGlobalElement(globalElementId: string): Promise<GlobalElement | null> {
