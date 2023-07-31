@@ -9,6 +9,7 @@ export type Manifest = {
   elementFromPoint: boolean
   customBreakpoints: boolean
   unstable_siteVersions: boolean
+  localizedPageSSR: boolean
 }
 
 type ManifestError = { message: string }
@@ -32,5 +33,6 @@ export default async function handler(
     elementFromPoint: false,
     customBreakpoints: true,
     unstable_siteVersions,
+    localizedPageSSR: true,
   })
 }
