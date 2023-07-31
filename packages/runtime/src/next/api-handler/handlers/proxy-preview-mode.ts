@@ -15,6 +15,26 @@ export default async function proxyPreviewMode(
 ): Promise<void> {
   const previewModeProxy = createProxyServer()
 
+  // TODO: This is a hack to get the locale from the request.
+  // Next.js strips the locale from the req.url, and there's no official way to get the locale
+  // from an API route: https://github.com/vercel/next.js/discussions/21798.
+  // The current workaround is to get the locale from an internal object: RequestMeta,
+  // https://github.com/vercel/next.js/blob/a0d1d728b9003f12c9df6c5e9a33bc4c33cef0ab/packages/next/src/server/request-meta.ts
+  // One possible way to properly fix this is by updating how we do preview mode. For example,
+  // by using partitioned cookies instead of a proxy.
+  const NextRequestMetaSymbol = Reflect.ownKeys(req).find(
+    key => key.toString() === 'Symbol(NextRequestMeta)',
+  ) as keyof NextApiRequest | undefined
+  if (NextRequestMetaSymbol) {
+    const nextRequestMeta = req[NextRequestMetaSymbol]
+    const initUrl = nextRequestMeta?.__NEXT_INIT_URL
+    const isLocaleStripped = nextRequestMeta?.__nextStrippedLocale
+
+    try {
+      if (isLocaleStripped && initUrl) req.url = new URL(initUrl).pathname
+    } catch {}
+  }
+
   previewModeProxy.once('proxyReq', proxyReq => {
     proxyReq.removeHeader('X-Makeswift-Preview-Mode')
 
