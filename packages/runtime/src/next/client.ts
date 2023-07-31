@@ -17,8 +17,6 @@ import {
   LocalizedGlobalElementQuery,
   PagePathnamesByIdQuery,
   TableQuery,
-  TypographiesQuery,
-  TypographyQuery,
 } from '../api/graphql/documents'
 import {
   FileQueryResult,
@@ -33,10 +31,6 @@ import {
   PagePathnamesByIdQueryVariables,
   TableQueryResult,
   TableQueryVariables,
-  TypographiesQueryResult,
-  TypographiesQueryVariables,
-  TypographyQueryResult,
-  TypographyQueryVariables,
 } from '../api/graphql/generated/types'
 import { CacheData, SerializedLocalizedResourcesMap } from '../api/react'
 import { Descriptor as PropControllerDescriptor } from '../prop-controllers/descriptors'
