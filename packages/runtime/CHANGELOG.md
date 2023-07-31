@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.10.6
+
+### Patch Changes
+
+- b18aae3: Fix preview mode for localized pages.
+
 ## 0.10.5
 
 ### Patch Changes
