@@ -154,7 +154,7 @@ export const Page = memo(({ snapshot, runtime }: PageProps) => {
   )
 })
 
-export type { MakeswiftPage, MakeswiftPageDocument, MakeswiftPageSnapshot } from './client'
+export type { MakeswiftPage, MakeswiftPageDocument, MakeswiftPageSnapshot, Sitemap } from './client'
 export { Makeswift } from './client'
 export type { MakeswiftPreviewData } from './preview-mode'
 export { PreviewModeScript } from './preview-mode'
