@@ -549,14 +549,14 @@ export class Makeswift {
   }
 
   async getSitemap({
-    limit,
+    limit = 50,
     after,
     pathnamePrefix,
   }: {
-    limit: number
+    limit?: number
     after?: string
     pathnamePrefix?: string
-  }): Promise<Sitemap> {
+  } = {}): Promise<Sitemap> {
     const url = new URL('v1/sitemap', this.apiOrigin)
 
     url.searchParams.set('limit', limit.toString())
