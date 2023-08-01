@@ -129,6 +129,18 @@ type MakeswiftConfig = {
   unstable_previewData?: PreviewData
 }
 
+export type Sitemap = {
+  id: string
+  loc: string
+  lastmod?: string
+  changefreq?: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never'
+  priority?: number
+  alternateRefs?: {
+    hreflang: string
+    href: string
+  }[]
+}[]
+
 export class Makeswift {
   private apiKey: string
   private apiOrigin: URL
@@ -534,5 +546,32 @@ export class Makeswift {
     )
 
     return result.table
+  }
+
+  async getSitemap({
+    limit,
+    after,
+    pathnamePrefix,
+  }: {
+    limit: number
+    after?: string
+    pathnamePrefix?: string
+  }): Promise<Sitemap> {
+    const url = new URL('v1/sitemap', this.apiOrigin)
+
+    url.searchParams.set('limit', limit.toString())
+    if (after != null) url.searchParams.set('after', after)
+    if (pathnamePrefix != null) url.searchParams.set('pathnamePrefix', pathnamePrefix)
+
+    const response = await this.fetch(url.pathname + url.search)
+
+    if (!response.ok) {
+      console.error('Failed to get sitemap', await response.json())
+      throw new Error(`Failed to get sitemap with error: "${response.statusText}"`)
+    }
+
+    const sitemap = await response.json()
+
+    return sitemap
   }
 }
