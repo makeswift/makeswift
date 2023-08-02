@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.10.8
+
+### Patch Changes
+
+- 992b0cb: Remove the `unstable_` prefix for `unstable_i18n` and `unstable_locale`.
+
 ## 0.10.7
 
 ### Patch Changes
