@@ -126,13 +126,10 @@ export class ReactRuntime {
     return ReactPage.getBreakpoints(this.store.getState())
   }
 
-  constructor({
-    breakpoints,
-    unstable_i18n,
-  }: { breakpoints?: BreakpointsInput; unstable_i18n?: LocalesInput } = {}) {
+  constructor({ breakpoints, i18n }: { breakpoints?: BreakpointsInput; i18n?: LocalesInput } = {}) {
     this.store = ReactPage.configureStore({
       breakpoints: breakpoints ? parseBreakpointsInput(breakpoints) : undefined,
-      locales: unstable_i18n ? parseLocalesInput(unstable_i18n) : undefined,
+      locales: i18n ? parseLocalesInput(i18n) : undefined,
     })
 
     registerBuiltinComponents(this)

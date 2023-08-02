@@ -418,8 +418,8 @@ export class Makeswift {
     pathname: string,
     {
       preview: previewOverride = false,
-      unstable_locale,
-    }: { preview?: boolean; unstable_locale?: string } = {},
+      locale: localeInput,
+    }: { preview?: boolean; locale?: string } = {},
   ): Promise<MakeswiftPageSnapshot | null> {
     const isUsingVersioning = this.siteVersion != null
     const siteVersion =
@@ -427,7 +427,7 @@ export class Makeswift {
       (previewOverride ? MakeswiftSiteVersion.Working : MakeswiftSiteVersion.Live)
 
     const defaultLocale = getDefaultLocale(this.runtime.store.getState())?.toString()
-    const locale = unstable_locale === defaultLocale ? null : unstable_locale
+    const locale = localeInput === defaultLocale ? null : localeInput
     const searchParams = new URLSearchParams()
     if (locale) {
       const locales = getLocales(this.runtime.store.getState()).map(locale => locale.toString())
