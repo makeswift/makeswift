@@ -13,7 +13,6 @@ import { GraphQLClient } from '../api/graphql/client'
 import {
   FileQuery,
   IntrospectedResourcesQuery,
-  LocalizedGlobalElementQuery,
   PagePathnamesByIdQuery,
   TableQuery,
 } from '../api/graphql/documents'
@@ -22,8 +21,6 @@ import {
   FileQueryVariables,
   IntrospectedResourcesQueryResult,
   IntrospectedResourcesQueryVariables,
-  LocalizedGlobalElementQueryResult,
-  LocalizedGlobalElementQueryVariables,
   PagePathnamesByIdQueryResult,
   PagePathnamesByIdQueryVariables,
   TableQueryResult,
@@ -554,12 +551,23 @@ export class Makeswift {
     globalElementId: string,
     locale: string,
   ): Promise<LocalizedGlobalElement | null> {
-    const result = await this.graphqlClient.request<
-      LocalizedGlobalElementQueryResult,
-      LocalizedGlobalElementQueryVariables
-    >(LocalizedGlobalElementQuery, { globalElementId, locale })
+    const isUsingVersioning = this.siteVersion != null
+    const response = await this.fetch(
+      `${
+        isUsingVersioning ? 'v2' : 'v1'
+      }/localized-global-elements/${globalElementId}?locale=${locale}`,
+    )
 
-    return result.localizedGlobalElement
+    if (!response.ok) {
+      if (response.status !== 404)
+        console.error('Failed to get localized global element', await response.json())
+
+      return null
+    }
+
+    const localizedGlobalElement = await response.json()
+
+    return localizedGlobalElement
   }
 
   async getPagePathnameSlice(pageId: string): Promise<PagePathnameSlice | null> {
