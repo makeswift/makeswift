@@ -12,7 +12,6 @@ import {
 import { GraphQLClient } from '../api/graphql/client'
 import {
   FileQuery,
-  GlobalElementQuery,
   IntrospectedResourcesQuery,
   LocalizedGlobalElementQuery,
   PagePathnamesByIdQuery,
@@ -21,8 +20,6 @@ import {
 import {
   FileQueryResult,
   FileQueryVariables,
-  GlobalElementQueryResult,
-  GlobalElementQueryVariables,
   IntrospectedResourcesQueryResult,
   IntrospectedResourcesQueryVariables,
   LocalizedGlobalElementQueryResult,
@@ -533,12 +530,21 @@ export class Makeswift {
   }
 
   async getGlobalElement(globalElementId: string): Promise<GlobalElement | null> {
-    const result = await this.graphqlClient.request<
-      GlobalElementQueryResult,
-      GlobalElementQueryVariables
-    >(GlobalElementQuery, { globalElementId })
+    const isUsingVersioning = this.siteVersion != null
+    const response = await this.fetch(
+      `${isUsingVersioning ? 'v2' : 'v1'}/global-elements/${globalElementId}`,
+    )
 
-    return result.globalElement
+    if (!response.ok) {
+      if (response.status !== 404)
+        console.error('Failed to get global element', await response.json())
+
+      return null
+    }
+
+    const globalElement = await response.json()
+
+    return globalElement
   }
 
   async getLocalizedGlobalElement(
