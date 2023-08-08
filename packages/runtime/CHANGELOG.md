@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.10.10
+
+### Patch Changes
+
+- 7e21729: Call new typography endpoints that can use versioning.
+- 155014d: Add calls to new global element endpoints
+
 ## 0.10.9
 
 ### Patch Changes
