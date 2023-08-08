@@ -24,10 +24,10 @@ import {
 } from './graphql/generated/types'
 
 export type SerializedLocalizedResourcesMap = {
-  [resourceId: string]: string
+  [resourceId: string]: string | null
 }
 
-type LocalizedResourcesMap = Map<string, string>
+type LocalizedResourcesMap = Map<string, string | null>
 
 export type CacheData = MakeswiftApiClient.SerializedState
 
@@ -147,6 +147,12 @@ export class MakeswiftClient {
 
     if (locale == null) return null
 
+    // If getLocalizedResourceId returns null, it means we have tried to fetch the resource,
+    // but the resource is not available. If we haven't fetched it yet, it'll return undefined.
+    const noLocalizedResource = this.getLocalizedResourceId(globalElementId) === null
+
+    if (noLocalizedResource) return null
+
     // TODO(fikri): We're checking the cache here because the cache hit will fail on fetchAPIResource.
     // This is because in the cache we're saving the ID of the localizedGlobalElementId,
     // but we're reading the cache using the globalElementId.
@@ -164,7 +170,7 @@ export class MakeswiftClient {
       ),
     )
 
-    if (result != null) this.setLocalizedResourceId(globalElementId, result.id)
+    this.setLocalizedResourceId(globalElementId, result?.id ?? null)
 
     return result
   }
@@ -228,11 +234,11 @@ export class MakeswiftClient {
     )
   }
 
-  private getLocalizedResourceId(resourceId: string): string | null {
-    return this.localizedResourcesMap?.get(resourceId) ?? null
+  private getLocalizedResourceId(resourceId: string): string | undefined | null {
+    return this.localizedResourcesMap?.get(resourceId)
   }
 
-  private setLocalizedResourceId(resourceId: string, localizedResourceId: string): void {
+  private setLocalizedResourceId(resourceId: string, localizedResourceId: string | null): void {
     this.localizedResourcesMap.set(resourceId, localizedResourceId)
   }
 }
