@@ -23,7 +23,9 @@ export default async function proxyPreviewMode(
   // One possible way to properly fix this is by updating how we do preview mode. For example,
   // by using partitioned cookies instead of a proxy.
   const NextRequestMetaSymbol = Reflect.ownKeys(req).find(
-    key => key.toString() === 'Symbol(NextRequestMeta)',
+    key =>
+      key.toString() === 'Symbol(NextRequestMeta)' ||
+      key.toString() === 'Symbol(NextInternalRequestMeta)',
   ) as keyof NextApiRequest | undefined
   if (NextRequestMetaSymbol) {
     const nextRequestMeta = req[NextRequestMetaSymbol]
