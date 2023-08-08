@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.10.8
+
+### Patch Changes
+
+- 60a252d: Fix localized global element being fetched on the client instead of during SSR.
+
 ## 0.10.7
 
 ### Patch Changes
