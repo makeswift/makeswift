@@ -457,9 +457,11 @@ export class Makeswift {
       throw new Error(`Failed to get page snapshot with error: "${response.statusText}"`)
     }
 
-    const document = await response.json()
+    const document: MakeswiftPageDocument = await response.json()
+    const baseLocalizedPage = document.localizedPages.find(({ parentId }) => parentId == null)
+
     const { cacheData, localizedResourcesMap } = await this.introspect(
-      document.data,
+      baseLocalizedPage?.data ?? document.data,
       previewOverride,
       locale ?? undefined,
     )
