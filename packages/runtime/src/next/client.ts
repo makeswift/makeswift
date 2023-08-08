@@ -274,7 +274,7 @@ export class Makeswift {
     const pageIds = new Set<string>()
     const globalElements = new Map<string, GlobalElement | null>()
     const localizedGlobalElements = new Map<string, LocalizedGlobalElement | null>()
-    const localizedResourcesMap = new Map<string, string>()
+    const localizedResourcesMap = new Map<string, string | null>()
 
     const remaining = [element]
     const seen = new Set<string>()
@@ -294,11 +294,12 @@ export class Makeswift {
             locale,
           )
 
+          localizedResourcesMap.set(globalElementId, localizedGlobalElement?.id ?? null)
+
           if (localizedGlobalElement) {
             // Update the logic here when we can merge element trees
             elementData = localizedGlobalElement.data
 
-            localizedResourcesMap.set(globalElementId, localizedGlobalElement.id)
             localizedGlobalElements.set(localizedGlobalElement.id, localizedGlobalElement)
           }
         }
