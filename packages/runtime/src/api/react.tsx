@@ -147,6 +147,15 @@ export class MakeswiftClient {
 
     if (locale == null) return null
 
+    // TODO(fikri): We're checking the cache here because the cache hit will fail on fetchAPIResource.
+    // This is because in the cache we're saving the ID of the localizedGlobalElementId,
+    // but we're reading the cache using the globalElementId.
+    // This is very confusing and it can lead to more bugs. We need to refactor how we handle
+    // localized global element.
+    const cacheResult = this.readLocalizedGlobalElement(globalElementId)
+
+    if (cacheResult) return cacheResult
+
     const result = await this.makeswiftApiClient.dispatch(
       MakeswiftApiClient.fetchAPIResource(
         APIResourceType.LocalizedGlobalElement,
