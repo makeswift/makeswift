@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.10.9
+
+### Patch Changes
+
+- 6a2c502: Fix localization not working on recent versions of Next.js.
+
 ## 0.10.8
 
 ### Patch Changes
