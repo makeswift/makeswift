@@ -84,7 +84,7 @@ export default async function proxyPreviewMode(
 
   const previewData: MakeswiftPreviewData = {
     makeswift: true,
-    unstable_siteVersion: MakeswiftSiteVersion.Working,
+    siteVersion: MakeswiftSiteVersion.Working,
   }
   const setCookie = res.setPreviewData(previewData).getHeader('Set-Cookie')
   res.removeHeader('Set-Cookie')

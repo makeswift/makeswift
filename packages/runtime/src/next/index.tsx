@@ -95,7 +95,6 @@ export async function getStaticProps(
 
   const makeswift = new Makeswift(getApiKey(), {
     apiOrigin: getApiOrigin(),
-    unstable_previewData: ctx.previewData,
   })
   const path = '/' + (ctx.params?.path ?? []).join('/')
   const snapshot = await makeswift.getPageSnapshot(path, {
@@ -114,7 +113,6 @@ export async function getServerSideProps(
 
   const makeswift = new Makeswift(getApiKey(), {
     apiOrigin: getApiOrigin(),
-    unstable_previewData: ctx.previewData,
   })
   const path = '/' + (ctx.params?.path ?? []).join('/')
   const snapshot = await makeswift.getPageSnapshot(path, { preview: true })

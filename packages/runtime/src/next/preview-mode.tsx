@@ -8,14 +8,14 @@ export type MakeswiftSiteVersion = z.infer<typeof makeswiftSiteVersionSchema>
 
 const makeswiftPreviewDataSchema = z.object({
   makeswift: z.literal(true),
-  unstable_siteVersion: makeswiftSiteVersionSchema,
+  siteVersion: makeswiftSiteVersionSchema,
 })
 export type MakeswiftPreviewData = z.infer<typeof makeswiftPreviewDataSchema>
 
 export function getMakeswiftSiteVersion(previewData: PreviewData): MakeswiftSiteVersion | null {
   const result = makeswiftPreviewDataSchema.safeParse(previewData)
 
-  if (result.success) return result.data.unstable_siteVersion
+  if (result.success) return result.data.siteVersion
 
   return null
 }
