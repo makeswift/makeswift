@@ -114,7 +114,7 @@ type LocalizedPage = {
 type MakeswiftConfig = {
   apiOrigin?: string
   runtime?: ReactRuntime
-  unstable_previewData?: PreviewData
+  siteVersion?: MakeswiftSiteVersion
 }
 
 export type Sitemap = {
@@ -136,12 +136,16 @@ export class Makeswift {
   private runtime: ReactRuntime
   private siteVersion: MakeswiftSiteVersion | null
 
+  static getSiteVersion(previewData: PreviewData): MakeswiftSiteVersion {
+    return getMakeswiftSiteVersion(previewData) ?? MakeswiftSiteVersion.Live
+  }
+
   constructor(
     apiKey: string,
     {
       apiOrigin = 'https://api.makeswift.com',
       runtime = ReactRuntime,
-      unstable_previewData,
+      siteVersion,
     }: MakeswiftConfig = {},
   ) {
     if (typeof apiKey !== 'string') {
@@ -164,7 +168,7 @@ export class Makeswift {
 
     this.graphqlClient = new GraphQLClient(new URL('graphql', apiOrigin).href)
     this.runtime = runtime
-    this.siteVersion = getMakeswiftSiteVersion(unstable_previewData)
+    this.siteVersion = siteVersion ?? null
   }
 
   private async fetch(path: string, init?: RequestInit): Promise<Response> {
@@ -182,8 +186,7 @@ export class Makeswift {
   }
 
   async getPages(): Promise<MakeswiftPage[]> {
-    const isUsingVersioning = this.siteVersion != null
-    const response = await this.fetch(`/${isUsingVersioning ? 'v3' : 'v2'}/pages`, {
+    const response = await this.fetch(`/${this.siteVersion == null ? 'v2' : 'v3'}/pages`, {
       headers: {
         'Makeswift-Site-Version': MakeswiftSiteVersion.Live,
       },
@@ -203,9 +206,10 @@ export class Makeswift {
     typographyIds: string[],
     preview: boolean,
   ): Promise<(Typography | null)[]> {
-    const isUsingVersioning = this.siteVersion != null
-
-    const url = new URL(`${isUsingVersioning ? 'v2' : 'v1'}/typographies/bulk`, this.apiOrigin)
+    const url = new URL(
+      `${this.siteVersion == null ? 'v1' : 'v2'}/typographies/bulk`,
+      this.apiOrigin,
+    )
 
     typographyIds.forEach(id => {
       url.searchParams.append('ids', id)
@@ -230,8 +234,7 @@ export class Makeswift {
   }
 
   private async getSwatches(ids: string[], preview: boolean): Promise<(Swatch | null)[]> {
-    const isUsingVersioning = this.siteVersion != null
-    const url = new URL(`${isUsingVersioning ? 'v2' : 'v1'}/swatches/bulk`, this.apiOrigin)
+    const url = new URL(`${this.siteVersion == null ? 'v1' : 'v2'}/swatches/bulk`, this.apiOrigin)
 
     ids.forEach(id => {
       url.searchParams.append('ids', id)
@@ -431,7 +434,6 @@ export class Makeswift {
       unstable_locale,
     }: { preview?: boolean; unstable_locale?: string } = {},
   ): Promise<MakeswiftPageSnapshot | null> {
-    const isUsingVersioning = this.siteVersion != null
     const siteVersion =
       this.siteVersion ??
       (previewOverride ? MakeswiftSiteVersion.Working : MakeswiftSiteVersion.Live)
@@ -452,7 +454,7 @@ export class Makeswift {
     }
 
     const response = await this.fetch(
-      `/${isUsingVersioning ? 'v3' : 'v2'}/pages/${encodeURIComponent(
+      `/${this.siteVersion == null ? 'v2' : 'v3'}/pages/${encodeURIComponent(
         pathname,
       )}/document?${searchParams.toString()}`,
       {
@@ -489,8 +491,9 @@ export class Makeswift {
   }
 
   async getSwatch(swatchId: string): Promise<Swatch | null> {
-    const isUsingVersioning = this.siteVersion != null
-    const response = await this.fetch(`${isUsingVersioning ? 'v2' : 'v1'}/swatches/${swatchId}`)
+    const response = await this.fetch(
+      `${this.siteVersion == null ? 'v1' : 'v2'}/swatches/${swatchId}`,
+    )
 
     if (!response.ok) {
       if (response.status !== 404) console.error('Failed to get swatch', await response.json())
@@ -513,9 +516,8 @@ export class Makeswift {
   }
 
   async getTypography(typographyId: string): Promise<Typography | null> {
-    const isUsingVersioning = this.siteVersion != null
     const response = await this.fetch(
-      `${isUsingVersioning ? 'v2' : 'v1'}/typographies/${typographyId}`,
+      `${this.siteVersion == null ? 'v1' : 'v2'}/typographies/${typographyId}`,
     )
 
     if (!response.ok) {
@@ -530,9 +532,8 @@ export class Makeswift {
   }
 
   async getGlobalElement(globalElementId: string): Promise<GlobalElement | null> {
-    const isUsingVersioning = this.siteVersion != null
     const response = await this.fetch(
-      `${isUsingVersioning ? 'v2' : 'v1'}/global-elements/${globalElementId}`,
+      `${this.siteVersion == null ? 'v1' : 'v2'}/global-elements/${globalElementId}`,
     )
 
     if (!response.ok) {
@@ -551,10 +552,9 @@ export class Makeswift {
     globalElementId: string,
     locale: string,
   ): Promise<LocalizedGlobalElement | null> {
-    const isUsingVersioning = this.siteVersion != null
     const response = await this.fetch(
       `${
-        isUsingVersioning ? 'v2' : 'v1'
+        this.siteVersion == null ? 'v1' : 'v2'
       }/localized-global-elements/${globalElementId}?locale=${locale}`,
     )
 

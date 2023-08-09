@@ -8,6 +8,7 @@ export type Manifest = {
   clientSideNavigation: boolean
   elementFromPoint: boolean
   customBreakpoints: boolean
+  siteVersions: boolean
   unstable_siteVersions: boolean
   localizedPageSSR: boolean
 }
@@ -19,7 +20,7 @@ export type ManifestResponse = Manifest | ManifestError
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ManifestResponse>,
-  { apiKey, unstable_siteVersions }: { apiKey: string; unstable_siteVersions: boolean },
+  { apiKey, siteVersions }: { apiKey: string; siteVersions: boolean },
 ): Promise<void> {
   if (req.query.secret !== apiKey) {
     return res.status(401).json({ message: 'Unauthorized' })
@@ -32,7 +33,8 @@ export default async function handler(
     clientSideNavigation: true,
     elementFromPoint: false,
     customBreakpoints: true,
-    unstable_siteVersions,
+    siteVersions,
+    unstable_siteVersions: siteVersions,
     localizedPageSSR: true,
   })
 }

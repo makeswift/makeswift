@@ -16,7 +16,7 @@ type MakeswiftApiHandlerConfig = {
   appOrigin?: string
   apiOrigin?: string
   getFonts?: GetFonts
-  unstable_siteVersions?: boolean
+  siteVersions?: boolean
 }
 
 type NotFoundError = { message: string }
@@ -36,7 +36,7 @@ export function MakeswiftApiHandler(
     appOrigin = 'https://app.makeswift.com',
     apiOrigin = 'https://api.makeswift.com',
     getFonts,
-    unstable_siteVersions = false,
+    siteVersions = false,
   }: MakeswiftApiHandlerConfig = {},
 ): NextApiHandler<MakeswiftApiHandlerResponse> {
   const cors = Cors({ origin: appOrigin })
@@ -67,14 +67,17 @@ export function MakeswiftApiHandler(
       )
     }
 
-    const client = new Makeswift(apiKey, { apiOrigin, unstable_previewData: req.previewData })
+    const client = new Makeswift(apiKey, {
+      apiOrigin,
+      siteVersion: siteVersions ? Makeswift.getSiteVersion(req.previewData) : undefined,
+    })
     const action = '/' + makeswift.join('/')
     const matches = <T extends object>(pattern: string): Match<T> =>
       matchPattern<T>(pattern, { decode: decodeURIComponent })(action)
 
     let m
 
-    if (matches('/manifest')) return manifest(req, res, { apiKey, unstable_siteVersions })
+    if (matches('/manifest')) return manifest(req, res, { apiKey, siteVersions })
 
     if (matches('/revalidate')) return revalidate(req, res, { apiKey })
 
