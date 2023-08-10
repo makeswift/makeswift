@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.10.11
+
+### Patch Changes
+
+- fb0b370: Change versioning from unstable to stable.
+
 ## 0.10.10
 
 ### Patch Changes
