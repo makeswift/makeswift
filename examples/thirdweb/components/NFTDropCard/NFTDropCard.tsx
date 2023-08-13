@@ -59,6 +59,7 @@ type Props = {
   className?: string
   contractAddress?: string
   chainId?: string
+  clientId?: string
   showMedia?: boolean
   showDescription?: boolean
   totalClaimed?: 'nototal' | 'total' | 'max' | 'available'
@@ -69,6 +70,7 @@ const NFTDropCard = forwardRef(function NFTDropCard(
     className,
     contractAddress,
     chainId,
+    clientId,
     showMedia,
     showDescription,
     totalClaimed,
@@ -455,11 +457,13 @@ type ProviderProps = Props & {
   buttonBgColor?: string
   buttonTextColor?: string
   chainId?: string
+  clientId?: string
 }
 
 const NFTDropCardProvider = forwardRef(function NFTDropCardProvider(
   {
     chainId,
+    clientId,
     className,
     contractAddress,
     buttonBgColor,
@@ -471,7 +475,7 @@ const NFTDropCardProvider = forwardRef(function NFTDropCardProvider(
   ref: Ref<HTMLDivElement>,
 ) {
   return (
-    <ThirdwebProvider activeChain={Number(chainId)}>
+    <ThirdwebProvider activeChain={Number(chainId)} clientId={clientId}>
       <ChakraProvider
         theme={extendTheme({
           fonts: {
@@ -540,6 +544,7 @@ const NFTDropCardProvider = forwardRef(function NFTDropCardProvider(
           className={className}
           contractAddress={contractAddress}
           chainId={chainId}
+          clientId={clientId}
           showMedia={showMedia}
           showDescription={showDescription}
           totalClaimed={totalClaimed}
