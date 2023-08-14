@@ -1,17 +1,19 @@
 import { CopyContext, ReplacementContext } from '../../state/react-page'
-import { ImageValue } from '../descriptors'
+import { Image, ImageDescriptor, ImageValue } from '../descriptors'
 import { match, P } from 'ts-pattern'
 
-export function copy(value: ImageValue | undefined, context: CopyContext): ImageValue | undefined {
-  return match(value)
-    .with(P.nullish, v => v)
-    .with(P.string, v => context.replacementContext.fileIds.get(v) ?? v)
+export function copy(
+  descriptor: ImageDescriptor,
+  value: ImageValue | undefined,
+  context: Pick<CopyContext, 'replacementContext'>,
+): ImageValue | undefined {
+  return match([descriptor, value])
+    .with([P.any, P.string], ([, v]) => context.replacementContext.fileIds.get(v) ?? v)
     .with(
-      { type: 'makeswift-file', version: 1 },
-      v => context.replacementContext.fileIds.get(v.id) ?? v.id,
+      [{ version: 1 }, { type: 'makeswift-file', version: 1 }],
+      ([, v]) => context.replacementContext.fileIds.get(v.id) ?? v.id,
     )
-    .with({ type: 'external-file', version: 1 }, v => v)
-    .exhaustive()
+    .otherwise(([, v]) => v)
 }
 
 if (import.meta.vitest) {
@@ -37,9 +39,8 @@ if (import.meta.vitest) {
       }
 
       // Act
-      const result = copy(data, {
+      const result = copy(Image(), data, {
         replacementContext: replacementContext as ReplacementContext,
-        copyElement: node => node,
       })
 
       // Assert

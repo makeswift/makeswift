@@ -64,3 +64,4 @@ export type {
 } from './instances'
 export { RichTextPropControllerMessageType, TableFormFieldsMessageType } from './instances'
 export * as Introspection from './introspection'
+export { copy as imageCopy } from './copy/image'
