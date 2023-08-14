@@ -28,7 +28,7 @@ export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
     case 'Shadows':
       return shadowsCopy(value, context)
     case 'Image':
-      return imageCopy(value, context)
+      return imageCopy(descriptor, value, context)
     case 'Images':
       return imagesCopy(value, context)
     case 'ResponsiveColor':
