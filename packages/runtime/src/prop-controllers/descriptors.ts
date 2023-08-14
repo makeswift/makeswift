@@ -410,14 +410,36 @@ export function Grid(options: GridOptions = {}): GridDescriptor {
   return { type: Types.Grid, options }
 }
 
-export type ImageValue = string
+export type ImageValueV0 = string
+
+type ImageValueV1MakeswiftFile = {
+  version: 1
+  type: 'makeswift-file'
+  id: string
+}
+
+type ImageValueV1ExternalFile = {
+  version: 1
+  type: 'external-file'
+  url: string
+  width?: number | null
+  height?: number | null
+}
+
+export type ImageValueV1 = ImageValueV1MakeswiftFile | ImageValueV1ExternalFile
+
+export type ImageValue = ImageValueV0 | ImageValueV1
 
 export type ImageOptions = Options<{ label?: string; hidden?: boolean }>
 
-export type ImageDescriptor<_T = ImageValue> = { type: typeof Types.Image; options: ImageOptions }
+export type ImageDescriptor<_T = ImageValue> = {
+  type: typeof Types.Image
+  version?: 1
+  options: ImageOptions
+}
 
 export function Image(options: ImageOptions = {}): ImageDescriptor {
-  return { type: Types.Image, options }
+  return { type: Types.Image, version: 1, options }
 }
 
 export type ImagesValue = { key: string; props: { link?: Link; file?: string; altText?: string } }[]
