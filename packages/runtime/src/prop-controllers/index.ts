@@ -32,6 +32,8 @@ export type {
   Length,
   ImageDescriptor,
   ImageValue,
+  ImageValueV0,
+  ImageValueV1,
   LinkDescriptor,
   LinkValue,
   ListDescriptor,

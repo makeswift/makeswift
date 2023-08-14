@@ -19,6 +19,7 @@ import { useResponsiveStyle, useResponsiveWidth } from '../../utils/responsive-s
 import { useFile } from '../../../runtimes/react/hooks/makeswift-api'
 import { major as nextMajorVersion } from '../../../next/next-version'
 import { useBreakpoints } from '../../../runtimes/react'
+import { match, P } from 'ts-pattern'
 
 const NextLegacyImage = NextImage as typeof NextLegacyImageType
 
@@ -94,9 +95,23 @@ const ImageComponent = forwardRef(function Image(
   }: Props,
   ref: Ref<HTMLAnchorElement & HTMLDivElement>,
 ) {
-  const fileData = useFile(file ?? null)
-  const imageSrc = fileData?.publicUrl ? fileData.publicUrl : placeholder.src
-  const dataDimensions = fileData?.publicUrl ? fileData?.dimensions : placeholder.dimensions
+  const fileId = match(file)
+    .with(P.string, v => v)
+    .with({ type: 'makeswift-file', version: 1 }, v => v.id)
+    .otherwise(() => null)
+  const fileData = useFile(fileId)
+  const imageSrc = match([file, fileData])
+    .with([P.any, P.not(P.nullish)], ([, fileData]) => fileData.publicUrl)
+    .with([{ type: 'external-file', version: 1 }, P.any], ([file]) => file.url)
+    .otherwise(() => placeholder.src)
+  const dataDimensions = match([file, fileData, imageSrc])
+    .with(
+      [{ type: 'external-file', version: 1, width: P.number, height: P.number }, P.any, P.any],
+      ([externalFile]) => ({ width: externalFile.width, height: externalFile.height }),
+    )
+    .with([P.any, P.not(P.nullish), P.any], ([, data]) => data.dimensions)
+    .with([P.any, P.any, placeholder.src], () => placeholder.dimensions)
+    .otherwise(() => null)
   const [measuredDimensions, setMeasuredDimensions] = useState<Dimensions | null>(null)
   const breakpoints = useBreakpoints()
 

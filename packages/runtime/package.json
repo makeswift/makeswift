@@ -156,6 +156,7 @@
     "set-cookie-parser": "^2.5.1",
     "slate": "^0.91.4",
     "slate-react": "^0.91.7",
+    "ts-pattern": "^5.0.5",
     "use-sync-external-store": "^1.0.0-rc.0",
     "uuid": "^9.0.0",
     "zod": "^3.21.4"

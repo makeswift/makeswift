@@ -74,6 +74,7 @@ import {
   RichTextV2ControlData,
   isRichTextV1Data,
 } from '../controls/rich-text-v2/rich-text-v2'
+import { match, P } from 'ts-pattern'
 
 export function getElementChildren<T extends Data>(
   descriptor: Descriptor<T>,
@@ -293,8 +294,11 @@ export function getFileIds<T extends Data>(
       return getBackgroundsFileIds(prop as BackgroundsValue)
 
     case Types.Image: {
-      const value = prop as ImageValue
-      return value == null ? [] : [value]
+      return match(prop as ImageValue)
+        .with(P.string, v => [v])
+        .with({ type: 'makeswift-file', version: 1 }, v => [v.id])
+        .with({ type: 'external-file', version: 1 }, () => [])
+        .exhaustive()
     }
 
     case Types.Images: {

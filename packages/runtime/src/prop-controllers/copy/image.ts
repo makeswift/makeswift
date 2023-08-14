@@ -1,10 +1,17 @@
 import { CopyContext, ReplacementContext } from '../../state/react-page'
 import { ImageValue } from '../descriptors'
+import { match, P } from 'ts-pattern'
 
 export function copy(value: ImageValue | undefined, context: CopyContext): ImageValue | undefined {
-  if (value == null) return value
-
-  return context.replacementContext.fileIds.get(value) ?? value
+  return match(value)
+    .with(P.nullish, v => v)
+    .with(P.string, v => context.replacementContext.fileIds.get(v) ?? v)
+    .with(
+      { type: 'makeswift-file', version: 1 },
+      v => context.replacementContext.fileIds.get(v.id) ?? v.id,
+    )
+    .with({ type: 'external-file', version: 1 }, v => v)
+    .exhaustive()
 }
 
 if (import.meta.vitest) {
