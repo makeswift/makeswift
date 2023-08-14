@@ -70,7 +70,6 @@ const NFTDropCard = forwardRef(function NFTDropCard(
     className,
     contractAddress,
     chainId,
-    clientId,
     showMedia,
     showDescription,
     totalClaimed,
