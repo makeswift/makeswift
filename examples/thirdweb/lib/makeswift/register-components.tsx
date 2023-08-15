@@ -24,7 +24,7 @@ ReactRuntime.registerComponent(NFTDropCard, {
     }),
     clientId: TextInput({
       label: 'Client ID',
-      defaultValue: 'provide-your-client-id',
+      defaultValue: 'eb5805620393db7f6b9566a4ceda380d',
     }),
     contractAddress: TextInput({
       label: 'Contract Address',
