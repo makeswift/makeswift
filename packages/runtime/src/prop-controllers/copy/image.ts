@@ -1,5 +1,5 @@
 import { CopyContext, ReplacementContext } from '../../state/react-page'
-import { Image, ImageDescriptor, ImageValue } from '../descriptors'
+import { ImageDescriptor, ImageValue } from '../descriptors'
 import { match, P } from 'ts-pattern'
 
 export function copy(
@@ -39,7 +39,7 @@ if (import.meta.vitest) {
       }
 
       // Act
-      const result = copy(Image(), data, {
+      const result = copy({ type: 'Image', options: {} }, data, {
         replacementContext: replacementContext as ReplacementContext,
       })
 
