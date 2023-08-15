@@ -59,7 +59,6 @@ type Props = {
   className?: string
   contractAddress?: string
   chainId?: string
-  clientId?: string
   showMedia?: boolean
   showDescription?: boolean
   totalClaimed?: 'nototal' | 'total' | 'max' | 'available'
@@ -543,7 +542,6 @@ const NFTDropCardProvider = forwardRef(function NFTDropCardProvider(
           className={className}
           contractAddress={contractAddress}
           chainId={chainId}
-          clientId={clientId}
           showMedia={showMedia}
           showDescription={showDescription}
           totalClaimed={totalClaimed}
