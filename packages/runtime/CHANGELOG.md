@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.10.12
+
+### Patch Changes
+
+- cb87c42: Add support for external files in legacy Image prop controller.
+- 838d1bb: Use descriptor in legacy Image prop controller copy function.
+
 ## 0.10.11
 
 ### Patch Changes
