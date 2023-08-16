@@ -20,7 +20,7 @@ import * as Locales from './modules/locales'
 import * as Introspection from '../prop-controllers/introspection'
 import { Action } from './actions'
 import { copyElementReference } from '../prop-controllers/copy'
-import { copy as copyFromControl, merge } from '../controls/control'
+import { copy as copyFromControl, getTranslatableData, merge } from '../controls/control'
 
 export type {
   Data,
@@ -319,6 +319,54 @@ export function copyElementTree(
   const copy = JSON.parse(JSON.stringify(elementTree)) as Documents.ElementData
 
   return copyElementTreeNode(state, createReplacementContext(replacementContext))(copy)
+}
+
+function* traverseElementTree(
+  state: State,
+  elementTree: Documents.ElementData,
+): Generator<Documents.Element> {
+  yield elementTree
+
+  if (Documents.isElementReference(elementTree)) return
+
+  const descriptors = getComponentPropControllerDescriptors(state, elementTree.type)
+
+  if (descriptors == null) return
+
+  for (const [propKey, descriptor] of Object.entries(descriptors)) {
+    const children = Introspection.getElementChildren(descriptor, elementTree.props[propKey])
+
+    for (const child of children) {
+      if (!Documents.isElementReference(child)) yield* traverseElementTree(state, child)
+
+      yield child
+    }
+  }
+}
+
+export function getElementTreeTranslatableData(
+  state: State,
+  elementTree: Documents.ElementData,
+): Record<string, Documents.Data> {
+  const translatableData: Record<string, Documents.Data> = {}
+
+  for (const element of traverseElementTree(state, elementTree)) {
+    if (Documents.isElementReference(element)) continue
+
+    const descriptors = getComponentPropControllerDescriptors(state, element.type)
+
+    if (descriptors == null) continue
+
+    Object.entries(descriptors).forEach(([propName, descriptor]) => {
+      const translatablePropData = getTranslatableData(descriptor, element.props[propName])
+
+      if (translatablePropData != null) {
+        translatableData[`${element.key}:${propName}`] = translatablePropData
+      }
+    })
+  }
+
+  return translatableData
 }
 
 export type MergeContext = {

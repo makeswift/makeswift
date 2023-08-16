@@ -86,6 +86,10 @@ export class ReactRuntime {
   static getBreakpoints(): Breakpoints {
     return ReactPage.getBreakpoints(this.store.getState())
   }
+
+  static getTranslatableData(elementTree: ReactPage.ElementData): Record<string, ReactPage.Data> {
+    return ReactPage.getElementTreeTranslatableData(this.store.getState(), elementTree)
+  }
   // ------------------ Deprecated API ends here ------------------ //
 
   store: ReactPage.Store
@@ -136,6 +140,10 @@ export class ReactRuntime {
     })
 
     registerBuiltinComponents(this)
+  }
+
+  getTranslatableData(elementTree: ReactPage.ElementData): Record<string, ReactPage.Data> {
+    return ReactPage.getElementTreeTranslatableData(this.store.getState(), elementTree)
   }
 }
 

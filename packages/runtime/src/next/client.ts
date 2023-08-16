@@ -44,6 +44,7 @@ import {
   isElementReference,
   getDefaultLocale,
   getLocales,
+  Data,
 } from '../state/react-page'
 import { getMakeswiftSiteVersion, MakeswiftSiteVersion } from './preview-mode'
 
@@ -613,5 +614,9 @@ export class Makeswift {
     const sitemap = await response.json()
 
     return sitemap
+  }
+
+  getTranslatableData(elementTree: ElementData): Record<string, Data> {
+    return this.runtime.getTranslatableData(elementTree)
   }
 }

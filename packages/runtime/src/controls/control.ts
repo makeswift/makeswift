@@ -7,8 +7,12 @@ import { ListControlData, ListControlDefinition, copyListData, ListControlType }
 import { NumberControlData, NumberControlDefinition } from './number'
 import { SelectControlData, SelectControlDefinition } from './select'
 import { ShapeControlData, ShapeControlDefinition, copyShapeData, ShapeControlType } from './shape'
-import { TextAreaControlData, TextAreaControlDefinition } from './text-area'
-import { TextInputControlData, TextInputControlDefinition } from './text-input'
+import { TextAreaControlData, TextAreaControlDefinition, TextAreaControlType } from './text-area'
+import {
+  TextInputControlData,
+  TextInputControlDefinition,
+  TextInputControlType,
+} from './text-input'
 import { copyStyleData, StyleControlData, StyleControlDefinition, StyleControlType } from './style'
 import {
   copySlotData,
@@ -154,5 +158,18 @@ export function merge(
 
     default:
       return b
+  }
+}
+
+export function getTranslatableData(definition: Descriptor | ControlDefinition, data: Data): Data {
+  switch (definition.type) {
+    case Types.TextInput:
+    case Types.TextArea:
+    case TextInputControlType:
+    case TextAreaControlType:
+      return data
+
+    default:
+      return null
   }
 }
