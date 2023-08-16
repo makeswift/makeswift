@@ -442,14 +442,39 @@ export function Image(options: ImageOptions = {}): ImageDescriptor {
   return { type: Types.Image, version: 1, options }
 }
 
-export type ImagesValue = { key: string; props: { link?: Link; file?: string; altText?: string } }[]
+export type ImagesValueV0Item = {
+  key: string;
+  props: {
+    link?: Link;
+    file?: ImageValueV0;
+    altText?: string
+  }
+}
+
+export type ImagesValueV1Item = {
+  key: string;
+  version: 1,
+  props: {
+    link?: Link;
+    file?: ImageValueV1;
+    altText?: string
+  }
+}
+
+export type ImagesValueItem = ImagesValueV0Item | ImagesValueV1Item
+
+export type ImagesValue = ImagesValueItem[]
 
 type ImagesOptions = Options<{ preset?: ImagesValue }>
 
-type ImagesDescriptor<_T = ImagesValue> = { type: typeof Types.Images; options: ImagesOptions }
+export type ImagesDescriptor<_T = ImagesValue> = {
+  type: typeof Types.Images;
+  version?: 1,
+  options: ImagesOptions
+}
 
 export function Images(options: ImagesOptions = {}): ImagesDescriptor {
-  return { type: Types.Images, options }
+  return { type: Types.Images, version: 1, options }
 }
 
 export type LinkValue = Link

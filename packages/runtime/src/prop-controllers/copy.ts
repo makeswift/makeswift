@@ -30,7 +30,7 @@ export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
     case 'Image':
       return imageCopy(descriptor, value, context)
     case 'Images':
-      return imagesCopy(value, context)
+      return imagesCopy(descriptor, value, context)
     case 'ResponsiveColor':
       return responsiveColorCopy(value, context)
     case 'TableFormFields':
