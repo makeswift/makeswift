@@ -6,7 +6,7 @@ import {
 } from '../prop-controllers/instances'
 import { PropController } from '../prop-controllers/base'
 import { CopyContext } from '../state/react-page'
-import { ControlDefinition, ControlDefinitionData } from './control'
+import { ControlDefinition, ControlDefinitionData, getTranslatableData } from './control'
 
 import { copy as controlCopy } from './control'
 import { Data } from './types'
@@ -152,4 +152,16 @@ export function getShapePageIds(definition: ShapeControlDefinition, data: ShapeC
 
 export function getShapeFileIds(definition: ShapeControlDefinition, data: ShapeControlData) {
   return introspectShapeData(definition, data, getFileIds)
+}
+
+export function getShapeTranslatableData(
+  definition: ShapeControlDefinition,
+  data: ShapeControlData,
+) {
+  return Object.fromEntries(
+    Object.entries(definition.config.type).map(([key, definition]) => [
+      key,
+      getTranslatableData(definition, data[key]),
+    ]),
+  )
 }
