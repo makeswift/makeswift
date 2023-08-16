@@ -303,7 +303,14 @@ export function getFileIds<T extends Data>(
 
     case Types.Images: {
       const value = prop as ImagesValue
-      return value?.flatMap(item => (item.props.file == null ? [] : [item.props.file])) ?? []
+      return value?.flatMap(
+        item => match(item.props.file)
+          .with(P.string, f => [f])
+          .with({type: 'makeswift-file', version: 1}, f => [f.id])
+          .with({type: 'external-file', version: 1}, () => [])
+          .with(P.nullish, () => [])
+          .otherwise(() => [])
+      ) ?? []
     }
 
     case ImageControlType: {

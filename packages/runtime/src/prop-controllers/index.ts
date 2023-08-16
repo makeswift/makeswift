@@ -34,6 +34,11 @@ export type {
   ImageValue,
   ImageValueV0,
   ImageValueV1,
+  ImagesDescriptor,
+  ImagesValueV0Item,
+  ImagesValueV1Item,
+  ImagesValueItem,
+  ImagesValue,
   LinkDescriptor,
   LinkValue,
   ListDescriptor,
@@ -65,3 +70,4 @@ export type {
 export { RichTextPropControllerMessageType, TableFormFieldsMessageType } from './instances'
 export * as Introspection from './introspection'
 export { copy as imageCopy } from './copy/image'
+export { copy as imagesCopy } from './copy/images'
