@@ -6,7 +6,7 @@ import {
 } from '../prop-controllers/instances'
 import { PropController } from '../prop-controllers/base'
 import { CopyContext } from '../state/react-page'
-import { ControlDefinition, ControlDefinitionData } from './control'
+import { ControlDefinition, ControlDefinitionData, getTranslatableData } from './control'
 import { Data } from './types'
 
 import { copy as controlCopy } from './control'
@@ -169,4 +169,10 @@ export function getListTypographyIds(definition: ListControlDefinition, value: L
 
 export function getListPageIds(definition: ListControlDefinition, value: ListControlData) {
   return introspectListData(definition, value, getPageIds)
+}
+
+export function getListTranslatableData(definition: ListControlDefinition, data: ListControlData) {
+  return Object.fromEntries(
+    data.map(item => [item.id, getTranslatableData(definition.config.type, item.value)]),
+  )
 }

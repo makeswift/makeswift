@@ -3,10 +3,22 @@ import { ColorControlData, ColorControlDefinition, ColorControlType, copyColorDa
 import { ComboboxControlData, ComboboxControlDefinition } from './combobox'
 import { ImageControlData, ImageControlDefinition, copyImageData, ImageControlType } from './image'
 import { LinkControlData, LinkControlDefinition, copyLinkData, LinkControlType } from './link'
-import { ListControlData, ListControlDefinition, copyListData, ListControlType } from './list'
+import {
+  ListControlData,
+  ListControlDefinition,
+  copyListData,
+  ListControlType,
+  getListTranslatableData,
+} from './list'
 import { NumberControlData, NumberControlDefinition } from './number'
 import { SelectControlData, SelectControlDefinition } from './select'
-import { ShapeControlData, ShapeControlDefinition, copyShapeData, ShapeControlType } from './shape'
+import {
+  ShapeControlData,
+  ShapeControlDefinition,
+  copyShapeData,
+  ShapeControlType,
+  getShapeTranslatableData,
+} from './shape'
 import { TextAreaControlData, TextAreaControlDefinition, TextAreaControlType } from './text-area'
 import {
   TextInputControlData,
@@ -168,6 +180,12 @@ export function getTranslatableData(definition: Descriptor | ControlDefinition, 
     case TextInputControlType:
     case TextAreaControlType:
       return data
+
+    case ListControlType:
+      return getListTranslatableData(definition, data as ListControlData)
+
+    case ShapeControlType:
+      return getShapeTranslatableData(definition, data as ShapeControlData)
 
     default:
       return null
