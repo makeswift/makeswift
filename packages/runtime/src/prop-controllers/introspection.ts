@@ -272,13 +272,12 @@ export function getBackgroundsFileIds(value: BackgroundsValue | null | undefined
     value
       ?.flatMap(override => override.value)
       .flatMap(backgroundItem => {
-        switch (backgroundItem.type) {
-          case 'image':
-            return [backgroundItem.payload.imageId]
-
-          default:
-            return []
-        }
+        return match(backgroundItem)
+          .with({ type: 'image-v1', payload: { image: { type: 'makeswift-file' } } }, item => [
+            item.payload.image.id,
+          ])
+          .with({ type: 'image', payload: { imageId: P.string } }, item => [item.payload.imageId])
+          .otherwise(() => [])
       }) ?? []
   )
 }
@@ -303,14 +302,16 @@ export function getFileIds<T extends Data>(
 
     case Types.Images: {
       const value = prop as ImagesValue
-      return value?.flatMap(
-        item => match(item.props.file)
-          .with(P.string, f => [f])
-          .with({type: 'makeswift-file', version: 1}, f => [f.id])
-          .with({type: 'external-file', version: 1}, () => [])
-          .with(P.nullish, () => [])
-          .otherwise(() => [])
-      ) ?? []
+      return (
+        value?.flatMap(item =>
+          match(item.props.file)
+            .with(P.string, f => [f])
+            .with({ type: 'makeswift-file', version: 1 }, f => [f.id])
+            .with({ type: 'external-file', version: 1 }, () => [])
+            .with(P.nullish, () => [])
+            .otherwise(() => []),
+        ) ?? []
+      )
     }
 
     case ImageControlType: {

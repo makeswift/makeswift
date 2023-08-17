@@ -1,36 +1,38 @@
+import { P, match } from 'ts-pattern'
 import { CopyContext } from '../../state/react-page'
-import { BackgroundsValue } from '../descriptors'
+import { BackgroundsDescriptor, BackgroundsValue } from '../descriptors'
 
 export function copy(
+  descriptor: BackgroundsDescriptor,
   value: BackgroundsValue | undefined,
-  context: CopyContext,
+  context: Pick<CopyContext, 'replacementContext'>,
 ): BackgroundsValue | undefined {
   if (value == null) return value
 
   return value.map(override => ({
     ...override,
     value: override.value.map(backgroundItem => {
-      switch (backgroundItem.type) {
-        case 'color':
+      return match([descriptor, backgroundItem])
+        .with([P.any, { type: 'color' }], ([, item]) => {
           return {
-            ...backgroundItem,
+            ...item,
             payload:
-              backgroundItem.payload === null
+              item.payload === null
                 ? null
                 : {
-                    ...backgroundItem.payload,
+                    ...item.payload,
                     swatchId:
-                      context.replacementContext.swatchIds.get(backgroundItem.payload.swatchId) ??
-                      backgroundItem.payload.swatchId,
+                      context.replacementContext.swatchIds.get(item.payload.swatchId) ??
+                      item.payload.swatchId,
                   },
           }
-
-        case 'gradient':
+        })
+        .with([P.any, { type: 'gradient' }], ([, item]) => {
           return {
-            ...backgroundItem,
+            ...item,
             payload: {
-              ...backgroundItem.payload,
-              stops: backgroundItem.payload.stops.map(stop => ({
+              ...item.payload,
+              stops: item.payload.stops.map(stop => ({
                 ...stop,
                 color:
                   stop.color == null
@@ -44,21 +46,39 @@ export function copy(
               })),
             },
           }
-
-        case 'image':
+        })
+        .with(
+          [
+            { version: 1 },
+            { type: 'image-v1', version: 1, payload: { image: { type: 'makeswift-file' } } },
+          ],
+          ([, item]) => {
+            return {
+              ...item,
+              payload: {
+                ...item.payload,
+                image: {
+                  ...item.payload.image,
+                  id:
+                    context.replacementContext.fileIds.get(item.payload.image.id) ??
+                    item.payload.image.id,
+                },
+              },
+            }
+          },
+        )
+        .with([P.any, { type: 'image', payload: { imageId: P.string } }], ([, item]) => {
           return {
-            ...backgroundItem,
+            ...item,
             payload: {
-              ...backgroundItem.payload,
+              ...item.payload,
               imageId:
-                context.replacementContext.fileIds.get(backgroundItem.payload.imageId) ??
-                backgroundItem.payload.imageId,
+                context.replacementContext.fileIds.get(item.payload.imageId) ??
+                item.payload.imageId,
             },
           }
-
-        default:
-          return backgroundItem
-      }
+        })
+        .otherwise(() => backgroundItem)
     }),
   }))
 }

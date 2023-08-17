@@ -18,7 +18,7 @@ import { CopyContext } from '../state/react-page'
 export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
   switch (descriptor.type) {
     case 'Backgrounds':
-      return backgroundsCopy(value, context)
+      return backgroundsCopy(descriptor, value, context)
     case 'Grid':
       return gridCopy(value, context)
     case 'NavigationLinks':
