@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.10.13
+
+### Patch Changes
+
+- 47ebca4: Add API handler for getting translatable data for an element tree. Not yet fully implemented—only returns translatable data for text input and text area controls and prop controllers.
+- 4dc09fb: - Add support for external files in legacy Image prop controller.
+  - Use descriptor in legacy Images prop controller copy function.
+
 ## 0.10.12
 
 ### Patch Changes
