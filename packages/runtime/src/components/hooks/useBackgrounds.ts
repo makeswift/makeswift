@@ -9,6 +9,7 @@ import {
   getBackgroundsFileIds,
   getBackgroundsSwatchIds,
 } from '../../prop-controllers/introspection'
+import { match, P } from 'ts-pattern'
 
 type BackgroundColorData = Color
 
@@ -71,14 +72,12 @@ export function useBackgrounds(
       ...restOfValue,
       value: backgrounds
         .map((bg): BackgroundData | null | undefined => {
-          if (bg.type === 'image' && bg.payload != null && bg.payload.imageId != null) {
+          if (bg.type === 'image' && bg.payload != null) {
             const { imageId, ...restOfPayload } = bg.payload
             const file = files.find(f => f && f.id === imageId)
-
             return (
               file && {
-                id: bg.id,
-                type: 'image',
+                ...bg,
                 payload: {
                   ...restOfPayload,
                   publicUrl: file.publicUrl,
@@ -86,6 +85,55 @@ export function useBackgrounds(
                 },
               }
             )
+          }
+          
+          if (bg.type === 'image-v1' && bg.payload != null) {
+            return match(bg)
+              .with(
+                {
+                  payload: { image: { type: 'external-file', width: P.number, height: P.number } },
+                },
+                val => {
+                  const { image, version, ...restOfPayload } = val.payload
+                  return {
+                    ...val,
+                    type: 'image' as const,
+                    payload: {
+                      ...restOfPayload,
+                      publicUrl: image.url,
+                      dimensions: { width: image.width, height: image.height },
+                    },
+                  }
+                },
+              )
+              .with({ payload: { image: { type: 'external-file' } } }, val => {
+                const { image, version, ...restOfPayload } = val.payload
+                return {
+                  ...val,
+                  type: 'image' as const,
+                  payload: {
+                    ...restOfPayload,
+                    publicUrl: image.url,
+                    dimensions: null,
+                  },
+                }
+              })
+              .with({ payload: { image: { type: 'makeswift-file' } } }, val => {
+                const { image, version, ...restOfPayload } = val.payload
+                const file = files.find(f => f && f.id === image.id)
+                return (
+                  file && {
+                    ...val,
+                    type: 'image' as const,
+                    payload: {
+                      ...restOfPayload,
+                      publicUrl: file.publicUrl,
+                      dimensions: file.dimensions,
+                    },
+                  }
+                )
+              })
+              .otherwise(() => null)
           }
 
           if (bg.type === 'color' && bg.payload != null) {

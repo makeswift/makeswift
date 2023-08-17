@@ -39,6 +39,9 @@ export type {
   ImagesValueV1Item,
   ImagesValueItem,
   ImagesValue,
+  ImageBackground,
+  BackgroundsDescriptor,
+  BackgroundImage,
   LinkDescriptor,
   LinkValue,
   ListDescriptor,
@@ -71,3 +74,4 @@ export { RichTextPropControllerMessageType, TableFormFieldsMessageType } from '.
 export * as Introspection from './introspection'
 export { copy as imageCopy } from './copy/image'
 export { copy as imagesCopy } from './copy/images'
+export { copy as backgroundsCopy } from './copy/backgrounds'

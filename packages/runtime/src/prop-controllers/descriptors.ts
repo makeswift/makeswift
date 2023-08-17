@@ -198,8 +198,8 @@ type BackgroundImageSize = 'cover' | 'contain' | 'auto'
 
 type BackgroundImageRepeat = 'no-repeat' | 'repeat-x' | 'repeat-y' | 'repeat'
 
-type BackgroundImage = {
-  imageId: string
+type BackgroundImageV0 = {
+  imageId: ImageValueV0
   position: BackgroundImagePosition
   size?: BackgroundImageSize
   repeat?: BackgroundImageRepeat
@@ -207,7 +207,23 @@ type BackgroundImage = {
   parallax?: number
 }
 
-type ImageBackground = { type: 'image'; id: string; payload: BackgroundImage }
+type BackgroundImageV1 = {
+  version: 1,
+  image: ImageValueV1
+  position: BackgroundImagePosition
+  size?: BackgroundImageSize
+  repeat?: BackgroundImageRepeat
+  opacity?: number
+  parallax?: number
+}
+
+export type BackgroundImage = BackgroundImageV0 | BackgroundImageV1
+
+type ImageBackgroundV0 = { type: 'image'; id: string; payload: BackgroundImageV0 }
+
+type ImageBackgroundV1 = { type: 'image-v1', id: string; payload: BackgroundImageV1 }
+
+export type ImageBackground = ImageBackgroundV0 | ImageBackgroundV1
 
 type BackgroundVideoAspectRatio = 'wide' | 'standard'
 
@@ -228,13 +244,14 @@ export type BackgroundsValue = ResponsiveValue<Background[]>
 
 type BackgroundsOptions = Options<Record<string, never>>
 
-type BackgroundsDescriptor<_T = BackgroundsValue> = {
+export type BackgroundsDescriptor<_T = BackgroundsValue> = {
   type: typeof Types.Backgrounds
+  version?: 1,
   options: BackgroundsOptions
 }
 
 export function Backgrounds(options: BackgroundsOptions = {}): BackgroundsDescriptor {
-  return { type: Types.Backgrounds, options }
+  return { type: Types.Backgrounds, version: 1, options }
 }
 
 type BorderSideStyle = 'dashed' | 'dotted' | 'solid'
