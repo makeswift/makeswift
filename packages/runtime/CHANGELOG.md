@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.10.14
+
+### Patch Changes
+
+- 44bf879: Add support for external files in legacy Backgrounds prop controller. Use descriptor in Backgrounds prop controller copy function.
+
 ## 0.10.13
 
 ### Patch Changes
