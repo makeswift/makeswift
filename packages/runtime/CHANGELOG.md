@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.10.15
+
+### Patch Changes
+
+- a0e5b8f: Add support for external files in Image control
+
 ## 0.10.14
 
 ### Patch Changes
