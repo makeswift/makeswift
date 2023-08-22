@@ -316,7 +316,11 @@ export function getFileIds<T extends Data>(
 
     case ImageControlType: {
       const value = prop as ImageControlData
-      return value == null ? [] : [value]
+      return match(value)
+        .with(P.string, f => [f])
+        .with({ type: 'makeswift-file' }, f => [f.id])
+        .with({ type: 'external-file' }, () => [])
+        .otherwise(() => [])
     }
 
     case ShapeControlType: {
