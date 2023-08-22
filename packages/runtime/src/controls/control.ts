@@ -58,6 +58,7 @@ import {
 import { StyleV2ControlData, StyleV2ControlDefinition } from './style-v2'
 import { IconRadioGroupControlData, IconRadioGroupControlDefinition } from './icon-radio-group'
 import { TypographyControlData, TypographyControlDefinition } from './typography'
+import { getRichTextV2TranslatableData } from './rich-text-v2/translatableData'
 
 export type ControlDefinition =
   | CheckboxControlDefinition
@@ -180,6 +181,9 @@ export function getTranslatableData(definition: Descriptor | ControlDefinition, 
     case TextInputControlType:
     case TextAreaControlType:
       return data
+
+    case RichTextV2ControlType:
+      return getRichTextV2TranslatableData(definition, data as RichTextV2ControlData)
 
     case ListControlType:
       return getListTranslatableData(definition, data as ListControlData)
