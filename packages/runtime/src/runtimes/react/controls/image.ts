@@ -1,3 +1,4 @@
+import { P, match } from 'ts-pattern'
 import {
   ControlDefinition,
   ImageControlData,
@@ -18,19 +19,40 @@ export function useImageControlValue(
   definition: ImageControlDefinition,
 ): ImageControlValue {
   const format = definition.config.format ?? ImageControlValueFormat.URL
-  const fileId = data ?? null
+
+  const fileId = match(data)
+    .with(P.string, id => id)
+    .with({ type: 'makeswift-file' }, ({ id }) => id)
+    .otherwise(() => null)
+
   const file = useFile(fileId)
 
-  if (format === ImageControlValueFormat.URL) {
-    return file?.publicUrl
-  }
-
-  if (file == null || file.dimensions == null) return undefined
-
-  return {
-    url: file.publicUrl,
-    dimensions: { width: file.dimensions.width, height: file.dimensions.height },
-  }
+  return match([file, data, format])
+    .with([{ __typename: 'File' }, P.any, ImageControlValueFormat.URL], ([file]) => file.publicUrl)
+    .with(
+      [
+        { __typename: 'File', dimensions: P.not(P.nullish) },
+        P.any,
+        ImageControlValueFormat.WithDimensions,
+      ],
+      ([file]) => ({
+        url: file.publicUrl,
+        dimensions: file.dimensions,
+      }),
+    )
+    .with([P.any, { type: 'external-file' }, ImageControlValueFormat.URL], ([, d]) => d.url)
+    .with(
+      [
+        P.any,
+        { type: 'external-file', width: P.number, height: P.number },
+        ImageControlValueFormat.WithDimensions,
+      ],
+      ([, d]) => ({
+        url: d.url,
+        dimensions: { width: d.width, height: d.height },
+      }),
+    )
+    .otherwise(() => undefined)
 }
 
 export type ResolveImageControlValue<T extends ControlDefinition> = T extends ImageControlDefinition
