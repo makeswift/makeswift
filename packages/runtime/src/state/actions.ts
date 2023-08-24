@@ -290,19 +290,9 @@ export type SetBreakpointsAction = {
   payload: { breakpoints: Breakpoints }
 }
 
-type SetLocalesAction = {
-  type: typeof ActionTypes.SET_LOCALES
-  payload: { locales: LocaleString[] }
-}
-
 type SetLocaleAction = {
   type: typeof ActionTypes.SET_LOCALE
   payload: { locale: LocaleString; pathname?: string }
-}
-
-type SetDefaultLocaleAction = {
-  type: typeof ActionTypes.SET_DEFAULT_LOCALE
-  payload: { defaultLocale: LocaleString }
 }
 
 export type Action =
@@ -346,9 +336,7 @@ export type Action =
   | BuilderPointerMoveAction
   | ElementFromPointChangeAction
   | SetBreakpointsAction
-  | SetLocalesAction
   | SetLocaleAction
-  | SetDefaultLocaleAction
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }
@@ -692,23 +680,9 @@ export function setBreakpoints(breakpoints: Breakpoints): SetBreakpointsAction {
   return { type: ActionTypes.SET_BREAKPOINTS, payload: { breakpoints } }
 }
 
-export function setLocales(locales: Intl.Locale[]): SetLocalesAction {
-  return {
-    type: ActionTypes.SET_LOCALES,
-    payload: { locales: locales.map(locale => localeStringSchema.parse(locale.toString())) },
-  }
-}
-
 export function setLocale(locale: Intl.Locale, pathname?: string): SetLocaleAction {
   return {
     type: ActionTypes.SET_LOCALE,
     payload: { locale: localeStringSchema.parse(locale.toString()), pathname },
-  }
-}
-
-export function setDefaultLocale(defaultLocale: Intl.Locale): SetDefaultLocaleAction {
-  return {
-    type: ActionTypes.SET_DEFAULT_LOCALE,
-    payload: { defaultLocale: localeStringSchema.parse(defaultLocale.toString()) },
   }
 }
