@@ -25,7 +25,6 @@ import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Pointer from './modules/pointer'
 import * as ElementImperativeHandles from './modules/element-imperative-handles'
 import * as Breakpoints from './modules/breakpoints'
-import * as Locales from './modules/locales'
 import * as ReactPage from './react-page'
 import {
   Action,
@@ -48,9 +47,7 @@ import {
   changePathnameComplete,
   elementFromPointChange,
   setBreakpoints,
-  setLocales,
   setLocale,
-  setDefaultLocale,
 } from './actions'
 import { ActionTypes } from './actions'
 import { createPropController } from '../prop-controllers/instances'
@@ -76,7 +73,6 @@ const reducer = combineReducers({
   pointer: Pointer.reducer,
   elementImperativeHandles: ElementImperativeHandles.reducer,
   breakpoints: Breakpoints.reducer,
-  locales: Locales.reducer,
 })
 
 export type State = ReturnType<typeof reducer>
@@ -500,12 +496,8 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
       const breakpoints = ReactPage.getBreakpoints(state)
       messageChannel.port1.postMessage(setBreakpoints(breakpoints))
 
-      const locales = ReactPage.getLocales(state)
-      const defaultLocale = ReactPage.getDefaultLocale(state)
       const routerLocale = Router.locale
-      if (locales.length > 0) messageChannel.port1.postMessage(setLocales(locales))
-      if (defaultLocale != null) messageChannel.port1.postMessage(setDefaultLocale(defaultLocale))
-      if (routerLocale != null && locales.some(locale => locale.toString() === routerLocale)) {
+      if (routerLocale != null) {
         messageChannel.port1.postMessage(setLocale(new Intl.Locale(routerLocale)))
       }
 

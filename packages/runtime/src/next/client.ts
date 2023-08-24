@@ -42,8 +42,6 @@ import {
   ElementData,
   getPropControllerDescriptors,
   isElementReference,
-  getDefaultLocale,
-  getLocales,
   Data,
 } from '../state/react-page'
 import { getMakeswiftSiteVersion, MakeswiftSiteVersion } from './preview-mode'
@@ -62,6 +60,7 @@ export type MakeswiftPageDocument = {
   meta: Meta
   seo: Seo
   localizedPages: LocalizedPage[]
+  locale: string | null
 }
 
 export type MakeswiftPageSnapshot = {
@@ -432,26 +431,16 @@ export class Makeswift {
     pathname: string,
     {
       preview: previewOverride = false,
-      unstable_locale,
-    }: { preview?: boolean; unstable_locale?: string } = {},
+      locale: localeInput,
+    }: { preview?: boolean; locale?: string } = {},
   ): Promise<MakeswiftPageSnapshot | null> {
     const siteVersion =
       this.siteVersion ??
       (previewOverride ? MakeswiftSiteVersion.Working : MakeswiftSiteVersion.Live)
 
-    const defaultLocale = getDefaultLocale(this.runtime.store.getState())?.toString()
-    const locale = unstable_locale === defaultLocale ? null : unstable_locale
     const searchParams = new URLSearchParams()
-    if (locale) {
-      const locales = getLocales(this.runtime.store.getState()).map(locale => locale.toString())
-
-      if (!locales.includes(locale)) {
-        throw new Error(
-          `Locale "${locale}" is not included in the locales: ${locales}. Please add the locale to the locales on the ReactRuntime.`,
-        )
-      }
-
-      searchParams.set('locale', locale)
+    if (localeInput) {
+      searchParams.set('locale', localeInput)
     }
 
     const response = await this.fetch(
@@ -472,6 +461,9 @@ export class Makeswift {
 
     const document: MakeswiftPageDocument = await response.json()
     const baseLocalizedPage = document.localizedPages.find(({ parentId }) => parentId == null)
+    // We're using the locale from the response instead from the arg because in the server
+    // we make the locale null if the locale === defaultLocale.
+    const locale = document.locale
 
     const { cacheData, localizedResourcesMap } = await this.introspect(
       baseLocalizedPage?.data ?? document.data,
@@ -487,7 +479,7 @@ export class Makeswift {
       apiOrigin,
       preview,
       localizedResourcesMap,
-      locale: locale ?? null,
+      locale,
     }
   }
 

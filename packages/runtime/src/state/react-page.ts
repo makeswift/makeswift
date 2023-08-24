@@ -16,7 +16,6 @@ import * as IsInBuilder from './modules/is-in-builder'
 import * as IsPreview from './modules/is-preview'
 import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Breakpoints from './modules/breakpoints'
-import * as Locales from './modules/locales'
 import * as Introspection from '../prop-controllers/introspection'
 import { Action } from './actions'
 import { copyElementReference } from '../prop-controllers/copy'
@@ -47,7 +46,6 @@ const reducer = combineReducers({
   isPreview: IsPreview.reducer,
   builderEditMode: BuilderEditMode.reducer,
   breakpoints: Breakpoints.reducer,
-  locales: Locales.reducer,
 })
 
 export type State = ReturnType<typeof reducer>
@@ -432,18 +430,6 @@ export function getBreakpoints(state: State): Breakpoints.State {
   return state.breakpoints
 }
 
-export function getLocale(state: State): Intl.Locale | null {
-  return state.locales.locale ? new Intl.Locale(state.locales.locale) : null
-}
-
-export function getLocales(state: State): Intl.Locale[] {
-  return state.locales.locales.map(locale => new Intl.Locale(locale))
-}
-
-export function getDefaultLocale(state: State): Intl.Locale | null {
-  return state.locales.defaultLocale ? new Intl.Locale(state.locales.defaultLocale) : null
-}
-
 export type Dispatch = ThunkDispatch<State, unknown, Action>
 
 export type Store = ReduxStore<State, Action> & { dispatch: Dispatch }
@@ -452,12 +438,10 @@ export function configureStore({
   rootElements,
   preloadedState,
   breakpoints,
-  locales,
 }: {
   rootElements?: Map<string, Documents.Element>
   preloadedState?: PreloadedState<State>
   breakpoints?: Breakpoints.State
-  locales?: Locales.State
 } = {}): Store {
   return createStore(
     reducer,
@@ -465,7 +449,6 @@ export function configureStore({
       ...preloadedState,
       documents: Documents.getInitialState({ rootElements }),
       breakpoints: Breakpoints.getInitialState(breakpoints ?? preloadedState?.breakpoints),
-      locales: Locales.getInitialState(locales ?? preloadedState?.locales),
     },
     applyMiddleware(thunk),
   )
