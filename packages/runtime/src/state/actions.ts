@@ -81,9 +81,9 @@ export const ActionTypes = {
 
   SET_BREAKPOINTS: 'SET_BREAKPOINTS',
 
-  SET_LOCALES: 'SET_LOCALES',
   SET_LOCALE: 'SET_LOCALE',
-  SET_DEFAULT_LOCALE: 'SET_DEFAULT_LOCALE',
+
+  SET_LOCALIZED_RESOURCE_ID: 'SET_LOCALIZED_RESOURCE_ID',
 } as const
 
 type InitAction = { type: typeof ActionTypes.INIT }
@@ -295,6 +295,11 @@ type SetLocaleAction = {
   payload: { locale: LocaleString; pathname?: string }
 }
 
+type SetLocalizedResourceIdAction = {
+  type: typeof ActionTypes.SET_LOCALIZED_RESOURCE_ID
+  payload: { resourceId: string; localizedResourceId: string | null }
+}
+
 export type Action =
   | InitAction
   | CleanUpAction
@@ -337,6 +342,7 @@ export type Action =
   | ElementFromPointChangeAction
   | SetBreakpointsAction
   | SetLocaleAction
+  | SetLocalizedResourceIdAction
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }
@@ -684,5 +690,18 @@ export function setLocale(locale: Intl.Locale, pathname?: string): SetLocaleActi
   return {
     type: ActionTypes.SET_LOCALE,
     payload: { locale: localeStringSchema.parse(locale.toString()), pathname },
+  }
+}
+
+export function setLocalizedResourceId({
+  resourceId,
+  localizedResourceId,
+}: {
+  resourceId: string
+  localizedResourceId: string | null
+}): SetLocalizedResourceIdAction {
+  return {
+    type: ActionTypes.SET_LOCALIZED_RESOURCE_ID,
+    payload: { resourceId, localizedResourceId },
   }
 }

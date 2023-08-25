@@ -170,7 +170,10 @@ export class MakeswiftClient {
       ),
     )
 
-    this.setLocalizedResourceId(globalElementId, result?.id ?? null)
+    this.setLocalizedResourceId({
+      resourceId: globalElementId,
+      localizedResourceId: result?.id ?? null,
+    })
 
     return result
   }
@@ -238,7 +241,13 @@ export class MakeswiftClient {
     return this.localizedResourcesMap?.get(resourceId)
   }
 
-  private setLocalizedResourceId(resourceId: string, localizedResourceId: string | null): void {
+  setLocalizedResourceId({
+    resourceId,
+    localizedResourceId,
+  }: {
+    resourceId: string
+    localizedResourceId: string | null
+  }): void {
     this.localizedResourcesMap.set(resourceId, localizedResourceId)
   }
 }

@@ -461,7 +461,9 @@ function measureBoxModelsMiddleware(): Middleware<Dispatch, State, Dispatch> {
     }
 }
 
-export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch> {
+export function messageChannelMiddleware(
+  client: MakeswiftClient,
+): Middleware<Dispatch, State, Dispatch> {
   return ({ dispatch, getState }: MiddlewareAPI<Dispatch, State>) =>
     (next: ReduxDispatch<Action>) => {
       let cleanUp = () => {}
@@ -563,6 +565,11 @@ export function messageChannelMiddleware(): Middleware<Dispatch, State, Dispatch
             const currentPathname = Router.asPath.replace(/^\//, '/')
 
             if (pathname !== currentPathname) Router.push(pathname)
+            break
+          }
+
+          case ActionTypes.SET_LOCALIZED_RESOURCE_ID: {
+            client.setLocalizedResourceId(action.payload)
             break
           }
 
@@ -742,7 +749,7 @@ export function configureStore({
     applyMiddleware(
       thunk,
       measureBoxModelsMiddleware(),
-      messageChannelMiddleware(),
+      messageChannelMiddleware(client),
       propControllerHandlesMiddleware(),
       makeswiftApiClientSyncMiddleware(client),
     ),
