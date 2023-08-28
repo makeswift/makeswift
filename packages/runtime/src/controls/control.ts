@@ -183,7 +183,11 @@ export function getTranslatableData(definition: Descriptor | ControlDefinition, 
       return data
 
     case RichTextV2ControlType:
-      return getRichTextV2TranslatableData(definition, data as RichTextV2ControlData)
+      const richTextData = data as RichTextV2ControlData | RichTextControlData
+
+      if (isRichTextV1Data(richTextData)) return null
+
+      return getRichTextV2TranslatableData(definition, richTextData as RichTextV2ControlData)
 
     case ListControlType:
       return getListTranslatableData(definition, data as ListControlData)
