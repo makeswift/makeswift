@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.11.1
+
+### Patch Changes
+
+- f434abe: Update the translation fallback value to prevent client side errors that can occur when upgrading `RichText`.
+
 ## 0.11.0
 
 ### Minor Changes
