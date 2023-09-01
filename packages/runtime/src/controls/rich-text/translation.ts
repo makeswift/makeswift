@@ -111,7 +111,11 @@ export function richTextDTOtoSelection(data: RichTextDTO): Selection {
 }
 
 export function richTextDTOtoDAO(data: RichTextDTO): RichTextDAO {
-  return data.document?.nodes?.flatMap(toNodeDAO) ?? []
+  return (
+    data.document?.nodes?.flatMap(toNodeDAO) ?? [
+      { type: BlockType.Default, children: [{ text: '' }] },
+    ]
+  )
 }
 
 function toInlineOrTextDTO(node: Inline | Text): Array<InlineJSON | TextJSON> {
