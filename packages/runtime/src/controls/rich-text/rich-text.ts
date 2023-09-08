@@ -3,7 +3,7 @@ import { PropController } from '../../prop-controllers/base'
 import { BoxModel } from '../../box-model'
 import { RichTextDTO } from './dto-types'
 import { Editor } from 'slate'
-import { richTextDAOToDTO } from './translation'
+import { richTextDAOToDTO } from './dto'
 
 export type RichTextControlData = RichTextDTO
 

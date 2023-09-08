@@ -42,7 +42,7 @@ import {
 import { useSyncDOMSelection } from './useSyncDOMSelection'
 import { RichTextV2Element } from './render-element'
 import { RichTextV2Leaf } from './render-leaf'
-import { richTextV2DataToDescendents } from '../../../../../controls/rich-text-v2/translation'
+import { richTextV2DataToDescendents } from '../../../../../controls/rich-text-v2/dto'
 import { useSyncRemoteChanges } from './useRemoteChanges'
 import { defaultValue, usePresetValue } from './usePresetValue'
 

@@ -46,7 +46,7 @@ import {
 } from './rich-text'
 import { PropControllerDescriptor } from '../prop-controllers'
 
-import { richTextV2DescendentsToData } from './rich-text-v2/translation'
+import { richTextV2DescendentsToData } from './rich-text-v2/dto'
 import { copyRichTextV2Data } from './rich-text-v2/copy'
 import {
   RichTextV2ControlData,
