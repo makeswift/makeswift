@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- feae6ba: Add a new `merge-translated-data` API handler to merge translated data back into Makeswift pages.
+- feae6ba: Added `merge-translated-data` API handler to merge translated data back into a Makeswift page.
 
   To use this translation merging functionality, make sure to pass an instance of `ReactRuntime` to the Makeswift API handler like so:
 
