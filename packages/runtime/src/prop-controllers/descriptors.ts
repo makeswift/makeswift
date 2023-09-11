@@ -208,7 +208,7 @@ type BackgroundImageV0 = {
 }
 
 type BackgroundImageV1 = {
-  version: 1,
+  version: 1
   image: ImageValueV1
   position: BackgroundImagePosition
   size?: BackgroundImageSize
@@ -221,7 +221,7 @@ export type BackgroundImage = BackgroundImageV0 | BackgroundImageV1
 
 type ImageBackgroundV0 = { type: 'image'; id: string; payload: BackgroundImageV0 }
 
-type ImageBackgroundV1 = { type: 'image-v1', id: string; payload: BackgroundImageV1 }
+type ImageBackgroundV1 = { type: 'image-v1'; id: string; payload: BackgroundImageV1 }
 
 export type ImageBackground = ImageBackgroundV0 | ImageBackgroundV1
 
@@ -246,7 +246,7 @@ type BackgroundsOptions = Options<Record<string, never>>
 
 export type BackgroundsDescriptor<_T = BackgroundsValue> = {
   type: typeof Types.Backgrounds
-  version?: 1,
+  version?: 1
   options: BackgroundsOptions
 }
 
@@ -427,6 +427,13 @@ export function Grid(options: GridOptions = {}): GridDescriptor {
   return { type: Types.Grid, options }
 }
 
+export function mergeGridTranslatedData(data: GridValue, context: MergeTranslatableDataContext) {
+  return {
+    ...data,
+    elements: data.elements.map(element => context.mergeTranslatedData(element)),
+  }
+}
+
 export type ImageValueV0 = string
 
 type ImageValueV1MakeswiftFile = {
@@ -460,20 +467,20 @@ export function Image(options: ImageOptions = {}): ImageDescriptor {
 }
 
 export type ImagesValueV0Item = {
-  key: string;
+  key: string
   props: {
-    link?: Link;
-    file?: ImageValueV0;
+    link?: Link
+    file?: ImageValueV0
     altText?: string
   }
 }
 
 export type ImagesValueV1Item = {
-  key: string;
-  version: 1,
+  key: string
+  version: 1
   props: {
-    link?: Link;
-    file?: ImageValueV1;
+    link?: Link
+    file?: ImageValueV1
     altText?: string
   }
 }
@@ -485,8 +492,8 @@ export type ImagesValue = ImagesValueItem[]
 type ImagesOptions = Options<{ preset?: ImagesValue }>
 
 export type ImagesDescriptor<_T = ImagesValue> = {
-  type: typeof Types.Images;
-  version?: 1,
+  type: typeof Types.Images
+  version?: 1
   options: ImagesOptions
 }
 
