@@ -5,8 +5,13 @@ import {
   PropControllerMessage,
 } from '../prop-controllers/instances'
 import { PropController } from '../prop-controllers/base'
-import { CopyContext } from '../state/react-page'
-import { ControlDefinition, ControlDefinitionData, getTranslatableData } from './control'
+import { CopyContext, MergeTranslatableDataContext } from '../state/react-page'
+import {
+  ControlDefinition,
+  ControlDefinitionData,
+  getTranslatableData,
+  mergeTranslatedData,
+} from './control'
 
 import { copy as controlCopy } from './control'
 import { Data } from './types'
@@ -162,6 +167,22 @@ export function getShapeTranslatableData(
     Object.entries(definition.config.type).map(([key, definition]) => [
       key,
       getTranslatableData(definition, data[key]),
+    ]),
+  )
+}
+
+export type ShapeControlTranslationDto = Record<string, ShapeControlData>
+
+export function mergeShapeTranslatedData(
+  definition: ShapeControlDefinition,
+  data: ShapeControlData,
+  translatedData: ShapeControlTranslationDto,
+  context: MergeTranslatableDataContext,
+) {
+  return Object.fromEntries(
+    Object.entries(definition.config.type).map(([key, definition]) => [
+      key,
+      mergeTranslatedData(definition, data.key, translatedData[key], context),
     ]),
   )
 }

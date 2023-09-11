@@ -89,6 +89,17 @@ export class ReactRuntime {
   static getTranslatableData(elementTree: ReactPage.ElementData): Record<string, ReactPage.Data> {
     return ReactPage.getElementTreeTranslatableData(this.store.getState(), elementTree)
   }
+
+  static mergeTranslatedData(
+    elementTree: ReactPage.ElementData,
+    translatedData: Record<string, ReactPage.Data>,
+  ): ReactPage.Element {
+    return ReactPage.mergeElementTreeTranslatedData(
+      this.store.getState(),
+      elementTree,
+      translatedData,
+    )
+  }
   // ------------------ Deprecated API ends here ------------------ //
 
   store: ReactPage.Store
@@ -139,6 +150,17 @@ export class ReactRuntime {
 
   getTranslatableData(elementTree: ReactPage.ElementData): Record<string, ReactPage.Data> {
     return ReactPage.getElementTreeTranslatableData(this.store.getState(), elementTree)
+  }
+
+  mergeTranslatedData(
+    elementTree: ReactPage.ElementData,
+    translatedData: Record<string, ReactPage.Data>,
+  ): ReactPage.Element {
+    return ReactPage.mergeElementTreeTranslatedData(
+      this.store.getState(),
+      elementTree,
+      translatedData,
+    )
   }
 }
 

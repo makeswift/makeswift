@@ -19,7 +19,12 @@ import * as Breakpoints from './modules/breakpoints'
 import * as Introspection from '../prop-controllers/introspection'
 import { Action } from './actions'
 import { copyElementReference } from '../prop-controllers/copy'
-import { copy as copyFromControl, getTranslatableData, merge } from '../controls/control'
+import {
+  copy as copyFromControl,
+  getTranslatableData,
+  merge,
+  mergeTranslatedData,
+} from '../controls/control'
 
 export type {
   Data,
@@ -365,6 +370,52 @@ export function getElementTreeTranslatableData(
   }
 
   return translatableData
+}
+
+export type TranslationDto = Record<string, Documents.Data>
+
+export type MergeTranslatableDataContext = {
+  translatedData: TranslationDto
+  mergeTranslatedData: (node: Documents.Element) => Documents.Element
+}
+
+export function mergeElementTreeTranslatedData(
+  state: State,
+  elementTree: Documents.ElementData,
+  translatedData: TranslationDto,
+): Documents.Element {
+  function merge(state: State, translatedData: TranslationDto) {
+    return function (node: Documents.Element): Documents.Element {
+      if (Documents.isElementReference(node)) return node
+
+      const elementDescriptors = getPropControllerDescriptors(state)
+      const descriptors = elementDescriptors.get(node.type)
+
+      if (descriptors == null) {
+        throw new Error(`Can't merge element of type "${node.type}" because it has no descriptors`)
+      }
+
+      const context: MergeTranslatableDataContext = {
+        translatedData,
+        mergeTranslatedData: merge(state, translatedData),
+      }
+      const props = {} as Record<string, Documents.Data>
+
+      for (const propName of Object.keys(descriptors)) {
+        const descriptor = descriptors[propName]
+
+        props[propName] = mergeTranslatedData(
+          descriptor,
+          node.props[propName],
+          translatedData[`${node.key}:${propName}`],
+          context,
+        )
+      }
+
+      return { ...node, props }
+    }
+  }
+  return merge(state, translatedData)(elementTree)
 }
 
 export type MergeContext = {

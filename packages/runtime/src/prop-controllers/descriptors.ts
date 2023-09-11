@@ -7,7 +7,7 @@ import {
   ResolveWidthControlValue,
 } from '../runtimes/react/controls'
 import { StyleControlFormattedValue } from '../runtimes/react/controls/style'
-import type { Element, Data } from '../state/react-page'
+import type { Element, Data, MergeTranslatableDataContext } from '../state/react-page'
 import type { ResponsiveColor } from '../runtimes/react/controls'
 import { NumberControlDefinition } from '../controls/number'
 import { NumberControlValue } from '../runtimes/react/controls/number'
@@ -427,7 +427,10 @@ export function Grid(options: GridOptions = {}): GridDescriptor {
   return { type: Types.Grid, options }
 }
 
-export function mergeGridTranslatedData(data: GridValue, context: MergeTranslatableDataContext) {
+export function mergeGridPropControllerTranslatedData(
+  data: GridValue,
+  context: MergeTranslatableDataContext,
+) {
   return {
     ...data,
     elements: data.elements.map(element => context.mergeTranslatedData(element)),

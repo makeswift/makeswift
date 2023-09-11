@@ -1,6 +1,12 @@
 import { PropController } from '../prop-controllers/base'
 import { BoxModel } from '../state/modules/box-models'
-import { CopyContext, Element, isElementReference, MergeContext } from '../state/react-page'
+import {
+  CopyContext,
+  Element,
+  isElementReference,
+  MergeContext,
+  MergeTranslatableDataContext,
+} from '../state/react-page'
 import { ResponsiveValue } from './types'
 
 type SlotControlColumnData = { count: number; spans: number[][] }
@@ -92,4 +98,14 @@ export function mergeSlotData(
   })
 
   return { columns: mergedColumns, elements: mergedElements }
+}
+
+export function mergeSlotControlTranslatedData(
+  data: SlotControlData,
+  context: MergeTranslatableDataContext,
+) {
+  return {
+    ...data,
+    elements: data.elements.map(element => context.mergeTranslatedData(element)),
+  }
 }

@@ -5,8 +5,13 @@ import {
   Send,
 } from '../prop-controllers/instances'
 import { PropController } from '../prop-controllers/base'
-import { CopyContext } from '../state/react-page'
-import { ControlDefinition, ControlDefinitionData, getTranslatableData } from './control'
+import { CopyContext, MergeTranslatableDataContext } from '../state/react-page'
+import {
+  ControlDefinition,
+  ControlDefinitionData,
+  getTranslatableData,
+  mergeTranslatedData,
+} from './control'
 import { Data } from './types'
 
 import { copy as controlCopy } from './control'
@@ -175,4 +180,25 @@ export function getListTranslatableData(definition: ListControlDefinition, data:
   return Object.fromEntries(
     data.map(item => [item.id, getTranslatableData(definition.config.type, item.value)]),
   )
+}
+
+export type ListControlTranslationDto = Record<string, ListControlData>
+
+export function mergeListTranslatedData(
+  definition: ListControlDefinition,
+  data: ListControlData,
+  translatedData: ListControlTranslationDto,
+  context: MergeTranslatableDataContext,
+) {
+  return data.map(item => {
+    return {
+      ...item,
+      value: mergeTranslatedData(
+        definition.config.type,
+        item.value,
+        translatedData[item.id],
+        context,
+      ),
+    }
+  })
 }

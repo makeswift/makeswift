@@ -32,6 +32,7 @@ export type Text = {
   color?: ResponsiveColor
   slice?: boolean
   className?: string
+  translationKey?: string
 }
 
 export const RootBlockType = {
@@ -189,6 +190,7 @@ export type CodeElement = {
   type: typeof InlineType.Code
   className?: string
   slice?: boolean
+  translationKey?: string
 }
 
 export type SuperElement = {
@@ -196,6 +198,7 @@ export type SuperElement = {
   type: typeof InlineType.SuperScript
   className?: string
   slice?: boolean
+  translationKey?: string
 }
 
 export type SubElement = {
@@ -203,6 +206,7 @@ export type SubElement = {
   type: typeof InlineType.SubScript
   className?: string
   slice?: boolean
+  translationKey?: string
 }
 
 export type LinkElement = {
@@ -211,6 +215,7 @@ export type LinkElement = {
   link: LinkControlData
   className?: string
   slice?: boolean
+  translationKey?: string
 }
 
 export type RootBlock =
