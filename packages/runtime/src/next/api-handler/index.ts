@@ -10,6 +10,7 @@ import manifest, { Manifest, ManifestResponse } from './handlers/manifest'
 import proxyPreviewMode, { ProxyPreviewModeResponse } from './handlers/proxy-preview-mode'
 import { revalidate, RevalidationResponse } from './handlers/revalidate'
 import translatableData, { TranslatableDataResponse } from './handlers/translatable-data'
+import { ReactRuntime } from '../../react'
 
 export type { Manifest, Font }
 
@@ -18,6 +19,7 @@ type MakeswiftApiHandlerConfig = {
   apiOrigin?: string
   getFonts?: GetFonts
   siteVersions?: boolean
+  runtime?: ReactRuntime
 }
 
 type NotFoundError = { message: string }
@@ -39,6 +41,7 @@ export function MakeswiftApiHandler(
     apiOrigin = 'https://api.makeswift.com',
     getFonts,
     siteVersions = false,
+    runtime = ReactRuntime,
   }: MakeswiftApiHandlerConfig = {},
 ): NextApiHandler<MakeswiftApiHandlerResponse> {
   const cors = Cors({ origin: appOrigin })
@@ -72,6 +75,7 @@ export function MakeswiftApiHandler(
     const client = new Makeswift(apiKey, {
       apiOrigin,
       siteVersion: siteVersions ? Makeswift.getSiteVersion(req.previewData) : undefined,
+      runtime,
     })
     const action = '/' + makeswift.join('/')
     const matches = <T extends object>(pattern: string): Match<T> =>
