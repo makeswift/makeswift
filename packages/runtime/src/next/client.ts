@@ -614,4 +614,8 @@ export class Makeswift {
   getTranslatableData(elementTree: ElementData): Record<string, Data> {
     return this.runtime.getTranslatableData(elementTree)
   }
+
+  mergeTranslatedData(elementTree: ElementData, translatedData: Record<string, Data>): Element {
+    return this.runtime.mergeTranslatedData(elementTree, translatedData)
+  }
 }

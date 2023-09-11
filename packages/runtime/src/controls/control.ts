@@ -9,6 +9,8 @@ import {
   copyListData,
   ListControlType,
   getListTranslatableData,
+  mergeListTranslatedData,
+  ListControlTranslationDto,
 } from './list'
 import { NumberControlData, NumberControlDefinition } from './number'
 import { SelectControlData, SelectControlDefinition } from './select'
@@ -18,6 +20,8 @@ import {
   copyShapeData,
   ShapeControlType,
   getShapeTranslatableData,
+  mergeShapeTranslatedData,
+  ShapeControlTranslationDto,
 } from './shape'
 import { TextAreaControlData, TextAreaControlDefinition, TextAreaControlType } from './text-area'
 import {
@@ -28,15 +32,22 @@ import {
 import { copyStyleData, StyleControlData, StyleControlDefinition, StyleControlType } from './style'
 import {
   copySlotData,
+  mergeSlotControlTranslatedData,
   mergeSlotData,
   SlotControlData,
   SlotControlDefinition,
   SlotControlType,
 } from './slot'
 
-import { Descriptor, IndexSignatureHack, Types } from '../prop-controllers/descriptors'
+import {
+  Descriptor,
+  GridValue,
+  IndexSignatureHack,
+  Types,
+  mergeGridPropControllerTranslatedData,
+} from '../prop-controllers/descriptors'
 import { copy as propControllerCopy } from '../prop-controllers/copy'
-import { CopyContext, Data, MergeContext } from '../state/react-page'
+import { CopyContext, Data, MergeContext, MergeTranslatableDataContext } from '../state/react-page'
 import {
   RichTextControlData,
   RichTextControlDefinition,
@@ -58,7 +69,11 @@ import {
 import { StyleV2ControlData, StyleV2ControlDefinition } from './style-v2'
 import { IconRadioGroupControlData, IconRadioGroupControlDefinition } from './icon-radio-group'
 import { TypographyControlData, TypographyControlDefinition } from './typography'
-import { getRichTextV2TranslatableData } from './rich-text-v2/translatableData'
+import {
+  RichTextV2ControlTranslationDto,
+  getRichTextV2TranslatableData,
+  mergeRichTextV2TranslatedData,
+} from './rich-text-v2/translation'
 
 export type ControlDefinition =
   | CheckboxControlDefinition
@@ -187,7 +202,7 @@ export function getTranslatableData(definition: Descriptor | ControlDefinition, 
 
       if (isRichTextV1Data(richTextData)) return null
 
-      return getRichTextV2TranslatableData(definition, richTextData as RichTextV2ControlData)
+      return getRichTextV2TranslatableData(richTextData as RichTextV2ControlData)
 
     case ListControlType:
       return getListTranslatableData(definition, data as ListControlData)
@@ -197,5 +212,60 @@ export function getTranslatableData(definition: Descriptor | ControlDefinition, 
 
     default:
       return null
+  }
+}
+
+export function mergeTranslatedData(
+  definition: PropControllerDescriptor,
+  data: Data,
+  translatedData: Data,
+  context: MergeTranslatableDataContext,
+): Data {
+  switch (definition.type) {
+    case Types.TextInput:
+    case Types.TextArea:
+    case TextInputControlType:
+    case TextAreaControlType:
+      if (translatedData == null) return data
+
+      return translatedData
+
+    case Types.Grid:
+      return mergeGridPropControllerTranslatedData(data as GridValue, context)
+
+    case SlotControlType:
+      return mergeSlotControlTranslatedData(data as SlotControlData, context)
+
+    case RichTextV2ControlType:
+      if (translatedData == null) return data
+
+      return mergeRichTextV2TranslatedData(
+        definition,
+        data as RichTextV2ControlData,
+        translatedData as RichTextV2ControlTranslationDto,
+      )
+
+    case ListControlType:
+      if (translatedData == null) return data
+
+      return mergeListTranslatedData(
+        definition,
+        data as ListControlData,
+        translatedData as ListControlTranslationDto,
+        context,
+      )
+
+    case ShapeControlType:
+      if (translatedData == null) return data
+
+      return mergeShapeTranslatedData(
+        definition,
+        data as ShapeControlData,
+        translatedData as ShapeControlTranslationDto,
+        context,
+      )
+
+    default:
+      return data
   }
 }

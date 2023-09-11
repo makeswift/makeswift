@@ -10,6 +10,7 @@ import manifest, { Manifest, ManifestResponse } from './handlers/manifest'
 import proxyPreviewMode, { ProxyPreviewModeResponse } from './handlers/proxy-preview-mode'
 import { revalidate, RevalidationResponse } from './handlers/revalidate'
 import translatableData, { TranslatableDataResponse } from './handlers/translatable-data'
+import mergeTranslatedData, { TranslatedDataResponse } from './handlers/merge-translated-data'
 import { ReactRuntime } from '../../react'
 
 export type { Manifest, Font }
@@ -31,6 +32,7 @@ export type MakeswiftApiHandlerResponse =
   | FontsResponse
   | ElementTreeResponse
   | TranslatableDataResponse
+  | TranslatedDataResponse
   | APIResource
   | NotFoundError
 
@@ -94,6 +96,8 @@ export function MakeswiftApiHandler(
     if (matches('/element-tree')) return elementTree(req, res)
 
     if (matches('/translatable-data')) return translatableData(req, res, client)
+
+    if (matches('/merge-translated-data')) return mergeTranslatedData(req, res, client)
 
     const handleResource = <T extends APIResource>(resource: T | null): void =>
       resource === null ? res.status(404).json({ message: 'Not Found' }) : res.json(resource)
