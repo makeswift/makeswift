@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.11.4
+
+### Patch Changes
+
+- b9bc710: Fix "Module not found: Can't resolve 'slate-hyperscript'" error created in `0.11.3`.
+
 ## 0.11.3
 
 ### Patch Changes
