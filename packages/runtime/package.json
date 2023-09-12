@@ -157,6 +157,7 @@
     "scroll-into-view-if-needed": "^2.2.20",
     "set-cookie-parser": "^2.5.1",
     "slate": "^0.91.4",
+    "slate-hyperscript": "^0.77.0",
     "slate-react": "^0.91.7",
     "ts-pattern": "^5.0.5",
     "use-sync-external-store": "^1.0.0-rc.0",
