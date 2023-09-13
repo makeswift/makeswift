@@ -1,29 +1,20 @@
-import '../lib/makeswift/register-components'
+import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from 'next'
 
-import { Makeswift } from '@makeswift/runtime/next'
-import {
-  GetStaticPathsResult,
-  GetStaticPropsContext,
-  GetStaticPropsResult,
-} from 'next'
+import { Page as MakeswiftPage, PageProps as MakeswiftPageProps } from '@makeswift/runtime/next'
 
-import {
-  Page as MakeswiftPage,
-  PageProps as MakeswiftPageProps,
-} from '@makeswift/runtime/next'
+import { client } from '@/lib/makeswift/client'
+import '@/lib/makeswift/components'
+import { runtime } from '@/lib/makeswift/runtime'
 
 type ParsedUrlQuery = { path?: string[] }
 
-export async function getStaticPaths(): Promise<
-  GetStaticPathsResult<ParsedUrlQuery>
-> {
-  const makeswift = new Makeswift(process.env.MAKESWIFT_SITE_API_KEY!)
-  const pages = await makeswift.getPages()
+export async function getStaticPaths(): Promise<GetStaticPathsResult<ParsedUrlQuery>> {
+  const pages = await client.getPages()
 
   return {
-    paths: pages.map((page) => ({
+    paths: pages.map(page => ({
       params: {
-        path: page.path.split('/').filter((segment) => segment !== ''),
+        path: page.path.split('/').filter(segment => segment !== ''),
       },
     })),
     fallback: 'blocking',
@@ -33,13 +24,10 @@ export async function getStaticPaths(): Promise<
 type Props = MakeswiftPageProps
 
 export async function getStaticProps(
-  ctx: GetStaticPropsContext<ParsedUrlQuery>,
+  ctx: GetStaticPropsContext<ParsedUrlQuery>
 ): Promise<GetStaticPropsResult<Props>> {
-  const makeswift = new Makeswift(process.env.MAKESWIFT_SITE_API_KEY!)
   const path = '/' + (ctx.params?.path ?? []).join('/')
-  const snapshot = await makeswift.getPageSnapshot(path, {
-    preview: ctx.preview,
-  })
+  const snapshot = await client.getPageSnapshot(path, { preview: ctx.preview })
 
   if (snapshot == null) return { notFound: true }
 
@@ -47,5 +35,5 @@ export async function getStaticProps(
 }
 
 export default function Page({ snapshot }: Props) {
-  return <MakeswiftPage snapshot={snapshot} />
+  return <MakeswiftPage snapshot={snapshot} runtime={runtime} />
 }
