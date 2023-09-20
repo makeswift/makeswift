@@ -59,6 +59,7 @@ export type MakeswiftPageDocument = {
   fonts: Font[]
   meta: Meta
   seo: Seo
+  hreflangs: Hreflang[]
   localizedPages: LocalizedPage[]
   locale: string | null
 }
@@ -101,6 +102,8 @@ type Seo = {
   canonicalUrl?: string | null
   isIndexingBlocked?: boolean | null
 }
+
+type Hreflang = { hreflang: string; href: string }
 
 type LocalizedPage = {
   id: string
