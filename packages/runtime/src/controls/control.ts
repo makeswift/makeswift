@@ -205,9 +205,13 @@ export function getTranslatableData(definition: Descriptor | ControlDefinition, 
       return getRichTextV2TranslatableData(richTextData as RichTextV2ControlData)
 
     case ListControlType:
+      if (data == null) return null
+
       return getListTranslatableData(definition, data as ListControlData)
 
     case ShapeControlType:
+      if (data == null) return null
+
       return getShapeTranslatableData(definition, data as ShapeControlData)
 
     default:
