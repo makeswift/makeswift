@@ -16,10 +16,14 @@ export default async function translatableData(
   const elementTree = req.body.elementTree
 
   if (elementTree == null) {
-    return res.status(400).json({ message: 'elementTree must be defined' })
+    return res.status(400).json({ message: 'elementTree must be defined.' })
   }
 
-  const translatableData = client.getTranslatableData(elementTree)
+  try {
+    let translatableData = client.getTranslatableData(elementTree)
 
-  return res.json({ translatableData })
+    return res.json({ translatableData })
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to get traslatable data.' })
+  }
 }
