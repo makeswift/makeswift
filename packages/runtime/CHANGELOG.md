@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.11.6
+
+### Patch Changes
+
+- 079297d: Update `translatable-data` API handler to handle opional values for composable controls.
+
 ## 0.11.5
 
 ### Patch Changes
