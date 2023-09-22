@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.11.7
+
+### Patch Changes
+
+- 2333764: Revert automatically adding hreflang tags to pages that have localized versions.
+
 ## 0.11.6
 
 ### Patch Changes
