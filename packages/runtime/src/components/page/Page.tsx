@@ -108,7 +108,6 @@ export function Page({ document: page }: Props): JSX.Element {
   const socialImage = baseLocalizedPage?.meta.socialImage ?? page.meta.socialImage
   const canonicalUrl = baseLocalizedPage?.seo.canonicalUrl ?? page.seo.canonicalUrl
   const isIndexingBlocked = baseLocalizedPage?.seo.isIndexingBlocked ?? page.seo.isIndexingBlocked
-  const hreflangs = page.hreflangs
 
   const fontFamilyParamValue = useMemo(() => {
     if (site == null) {
@@ -224,10 +223,6 @@ export function Page({ document: page }: Props): JSX.Element {
             />
           </>
         )}
-
-        {hreflangs.map(({ hreflang, href }) => (
-          <link key={hreflang} rel="alternate" hrefLang={hreflang} href={href} />
-        ))}
 
         {headSnippets.map(snippetToElement).map(children =>
           Children.map(children, child => {
