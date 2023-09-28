@@ -328,15 +328,6 @@ export type GlobalElementQueryResult = {
   globalElement: { __typename: 'GlobalElement'; id: string; data: Json } | null
 }
 
-export type LocalizedGlobalElementQueryVariables = Exact<{
-  globalElementId: Scalars['ID']
-  locale: Scalars['Locale']
-}>
-
-export type LocalizedGlobalElementQueryResult = {
-  localizedGlobalElement: { __typename: 'LocalizedGlobalElement'; id: string; data: Json }
-}
-
 export type CreateTableRecordMutationVariables = Exact<{
   input: CreateTableRecordInput
 }>
