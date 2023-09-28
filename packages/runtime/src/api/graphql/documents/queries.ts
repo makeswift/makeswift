@@ -1,7 +1,6 @@
 import {
   FileFragment,
   GlobalElementFragment,
-  LocalizedGlobalElementFragment,
   PagePathnameSliceFragment,
   SwatchFragment,
   TableFragment,
@@ -96,16 +95,6 @@ export const GlobalElementQuery = /* GraphQL */ `
   }
 
   ${GlobalElementFragment}
-`
-
-export const LocalizedGlobalElementQuery = /* GraphQL */ `
-  query LocalizedGlobalElement($globalElementId: ID!, $locale: Locale!) {
-    localizedGlobalElement(globalElementId: $globalElementId, locale: $locale) {
-      ...LocalizedGlobalElement
-    }
-  }
-
-  ${LocalizedGlobalElementFragment}
 `
 
 export const CreateTableRecordMutation = /* GraphQL */ `
