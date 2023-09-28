@@ -134,6 +134,19 @@ const pagePathnameSlicesAPISchema = z.array(
     .nullable(),
 )
 
+const getPageAPISchema = z.object({
+  pathname: z.string(),
+  locale: z.string(),
+  alternate: z.array(
+    z.object({
+      pathname: z.string(),
+      locale: z.string(),
+    }),
+  ),
+})
+
+type GetPageAPI = z.infer<typeof getPageAPISchema>
+
 export class Makeswift {
   private apiKey: string
   private apiOrigin: URL
@@ -205,6 +218,37 @@ export class Makeswift {
     const json = await response.json()
 
     return json
+  }
+
+  async getPage(
+    pathname: string,
+    {
+      preview: previewOverride = false,
+      locale: localeInput,
+    }: { preview?: boolean; locale?: string } = {},
+  ): Promise<GetPageAPI | null> {
+    const siteVersion =
+      this.siteVersion ??
+      (previewOverride ? MakeswiftSiteVersion.Working : MakeswiftSiteVersion.Live)
+
+    const searchParams = new URLSearchParams()
+    if (localeInput) searchParams.set('locale', localeInput)
+
+    const response = await this.fetch(
+      `v1/pages/${encodeURIComponent(pathname)}?${searchParams.toString()}`,
+      { headers: { 'Makeswift-Site-Version': siteVersion } },
+    )
+
+    if (!response.ok) {
+      if (response.status === 404) return null
+
+      console.error('Failed to get page snapshot', await response.json())
+      throw new Error(`Failed to get page snapshot with error: "${response.statusText}"`)
+    }
+
+    const json = await response.json()
+
+    return getPageAPISchema.parse(json)
   }
 
   private async getTypographies(
