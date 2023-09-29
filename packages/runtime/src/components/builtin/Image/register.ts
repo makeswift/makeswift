@@ -22,6 +22,7 @@ export function registerComponent(runtime: ReactRuntime) {
         borderRadius: Props.BorderRadius({ format: Props.BorderRadius.Format.ClassName }),
         boxShadow: Props.Shadows({ format: Props.Shadows.Format.ClassName }),
         opacity: Props.ResponsiveOpacity(),
+        priority: Props.Checkbox({ label: 'Priority' }),
       },
     },
   )

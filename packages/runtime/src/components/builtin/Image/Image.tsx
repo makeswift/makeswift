@@ -37,6 +37,7 @@ type Props = {
   opacity?: ResponsiveOpacityValue
   placeholder?: { src: string; dimensions: { width: number; height: number } }
   className?: string
+  priority?: boolean
 }
 
 function loadImage(src: string): Promise<HTMLImageElement> {
@@ -92,6 +93,7 @@ const ImageComponent = forwardRef(function Image(
     boxShadow,
     placeholder = placeholders.image,
     className,
+    priority,
   }: Props,
   ref: Ref<HTMLAnchorElement & HTMLDivElement>,
 ) {
@@ -159,10 +161,12 @@ const ImageComponent = forwardRef(function Image(
           alt={altText}
           width={dimensions.width}
           height={dimensions.height}
+          priority={priority}
         />
       ) : (
         <NextImage
           src={imageSrc}
+          priority={priority}
           sizes={imageSizes(breakpoints, width)}
           alt={altText ?? ''}
           width={dimensions.width}
