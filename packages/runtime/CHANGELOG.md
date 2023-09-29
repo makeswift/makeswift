@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.11.8
+
+### Patch Changes
+
+- d08bf7d: Add `getPage` method to Makeswift client.
+- fcd32d2: Use localized pathname on `LinkControl` and `Button` component if available.
+- fcd32d2: Use the new REST API endpoint for `page-pathname-slices`.
+
 ## 0.11.7
 
 ### Patch Changes
