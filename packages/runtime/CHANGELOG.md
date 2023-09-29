@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.11.9
+
+### Patch Changes
+
+- b8dd8fd: Added priority to Image and BackgroundImage
+
 ## 0.11.8
 
 ### Patch Changes
