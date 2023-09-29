@@ -103,7 +103,7 @@ export function fetchAPIResource<T extends APIResourceType>(
 
       case APIResourceType.PagePathnameSlice:
         resource = await fetchJson<PagePathnameSlice>(
-          `/api/makeswift/page-pathname-slices/${resourceId}`,
+          `/api/makeswift/page-pathname-slices/${resourceId}?locale=${locale}`,
         )
         break
 

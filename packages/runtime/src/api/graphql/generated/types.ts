@@ -152,7 +152,6 @@ export type SiteFragment = {
 
 export type IntrospectedResourcesQueryVariables = Exact<{
   fileIds: Array<Scalars['ID']> | Scalars['ID']
-  pageIds: Array<Scalars['ID']> | Scalars['ID']
   tableIds: Array<Scalars['ID']> | Scalars['ID']
 }>
 
@@ -165,7 +164,6 @@ export type IntrospectedResourcesQueryResult = {
     publicUrl: string
     dimensions: { width: number; height: number } | null
   } | null>
-  pagePathnamesById: Array<{ __typename: 'PagePathnameSlice'; id: string; pathname: string } | null>
   tables: Array<{
     __typename: 'Table'
     id: string
@@ -249,14 +247,6 @@ export type TypographyQueryResult = {
       }
     }>
   } | null
-}
-
-export type PagePathnamesByIdQueryVariables = Exact<{
-  pageIds: Array<Scalars['ID']> | Scalars['ID']
-}>
-
-export type PagePathnamesByIdQueryResult = {
-  pagePathnamesById: Array<{ __typename: 'PagePathnameSlice'; id: string; pathname: string } | null>
 }
 
 export type TableQueryVariables = Exact<{

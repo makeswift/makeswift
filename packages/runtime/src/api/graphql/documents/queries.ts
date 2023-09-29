@@ -1,20 +1,15 @@
 import {
   FileFragment,
   GlobalElementFragment,
-  PagePathnameSliceFragment,
   SwatchFragment,
   TableFragment,
   TypographyFragment,
 } from './fragments'
 
 export const IntrospectedResourcesQuery = /* GraphQL */ `
-  query IntrospectedResources($fileIds: [ID!]!, $pageIds: [ID!]!, $tableIds: [ID!]!) {
+  query IntrospectedResources($fileIds: [ID!]!, $tableIds: [ID!]!) {
     files(ids: $fileIds) {
       ...File
-    }
-
-    pagePathnamesById(ids: $pageIds) {
-      ...PagePathnameSlice
     }
 
     tables(ids: $tableIds) {
@@ -23,7 +18,6 @@ export const IntrospectedResourcesQuery = /* GraphQL */ `
   }
 
   ${FileFragment}
-  ${PagePathnameSliceFragment}
   ${TableFragment}
 `
 
@@ -55,16 +49,6 @@ export const TypographyQuery = /* GraphQL */ `
   }
 
   ${TypographyFragment}
-`
-
-export const PagePathnamesByIdQuery = /* GraphQL */ `
-  query PagePathnamesById($pageIds: [ID!]!) {
-    pagePathnamesById(ids: $pageIds) {
-      ...PagePathnameSlice
-    }
-  }
-
-  ${PagePathnameSliceFragment}
 `
 
 export const TableQuery = /* GraphQL */ `

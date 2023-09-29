@@ -1,4 +1,5 @@
 import { PreviewData } from 'next'
+import { z } from 'zod'
 import {
   APIResourceType,
   File,
@@ -10,19 +11,12 @@ import {
   Typography,
 } from '../api'
 import { GraphQLClient } from '../api/graphql/client'
-import {
-  FileQuery,
-  IntrospectedResourcesQuery,
-  PagePathnamesByIdQuery,
-  TableQuery,
-} from '../api/graphql/documents'
+import { FileQuery, IntrospectedResourcesQuery, TableQuery } from '../api/graphql/documents'
 import {
   FileQueryResult,
   FileQueryVariables,
   IntrospectedResourcesQueryResult,
   IntrospectedResourcesQueryVariables,
-  PagePathnamesByIdQueryResult,
-  PagePathnamesByIdQueryVariables,
   TableQueryResult,
   TableQueryVariables,
 } from '../api/graphql/generated/types'
@@ -128,6 +122,17 @@ export type Sitemap = {
     href: string
   }[]
 }[]
+
+const pagePathnameSlicesAPISchema = z.array(
+  z
+    .object({
+      id: z.string(),
+      basePageId: z.string(),
+      pathname: z.string(),
+      __typename: z.literal('PagePathnameSlice'),
+    })
+    .nullable(),
+)
 
 export class Makeswift {
   private apiKey: string
@@ -371,24 +376,15 @@ export class Makeswift {
       })
     })
 
-    const { swatches, files, tables, pagePathnamesById } = await this.getIntrospectedResources(
+    const pagePathnames = await this.getPagePathnameSlices([...pageIds], { preview, locale })
+
+    const { swatches, files, tables } = await this.getIntrospectedResources(
       {
         swatchIds: [...swatchIds],
         fileIds: [...fileIds],
         tableIds: [...tableIds],
-        pageIds: [...pageIds],
       },
       preview,
-    )
-
-    // We're doing this because the API return the id without turning it to nodeId:
-    // '87237bda-e775-48d8-92cc-399c65577bb7' vs 'UGFnZTo4NzIzN2JkYS1lNzc1LTQ4ZDgtOTJjYy0zOTljNjU1NzdiYjc='
-    const pagePathnameSlices = pagePathnamesById.map(
-      pagePathnameSlice =>
-        pagePathnameSlice && {
-          ...pagePathnameSlice,
-          id: Buffer.from(`Page:${pagePathnameSlice.id}`).toString('base64'),
-        },
     )
 
     const cacheData = {
@@ -410,7 +406,7 @@ export class Makeswift {
       })),
       [APIResourceType.PagePathnameSlice]: [...pageIds].map(id => ({
         id,
-        value: pagePathnameSlices.find(pagePathnameSlice => pagePathnameSlice?.id === id) ?? null,
+        value: pagePathnames.find(pagePathnameSlice => pagePathnameSlice?.id === id) ?? null,
       })),
       [APIResourceType.GlobalElement]: [...globalElements.entries()].map(([id, value]) => ({
         id,
@@ -563,13 +559,58 @@ export class Makeswift {
     return localizedGlobalElement
   }
 
-  async getPagePathnameSlice(pageId: string): Promise<PagePathnameSlice | null> {
-    const result = await this.graphqlClient.request<
-      PagePathnamesByIdQueryResult,
-      PagePathnamesByIdQueryVariables
-    >(PagePathnamesByIdQuery, { pageIds: [pageId] })
+  async getPagePathnameSlices(
+    pageIds: string[],
+    { preview: previewOverride = false, locale }: { preview?: boolean; locale?: string } = {},
+  ): Promise<(PagePathnameSlice | null)[]> {
+    const url = new URL(
+      `${this.siteVersion == null ? 'v1' : 'v2'}/page-pathname-slices/bulk`,
+      this.apiOrigin,
+    )
 
-    return result.pagePathnamesById.at(0) ?? null
+    pageIds.forEach(id => url.searchParams.append('ids', id))
+    if (locale != null) url.searchParams.set('locale', locale)
+
+    const response = await this.fetch(url.pathname + url.search, {
+      headers: {
+        'Makeswift-Site-Version':
+          this.siteVersion ??
+          (previewOverride ? MakeswiftSiteVersion.Working : MakeswiftSiteVersion.Live),
+      },
+    })
+
+    if (!response.ok) {
+      console.error('Failed to get page pathname slices', await response.json())
+
+      return []
+    }
+
+    const json = await response.json()
+
+    const pagePathnameSlices = pagePathnameSlicesAPISchema.parse(json)
+
+    // We're mapping the basePageId to be the id, because we're still using the GraphQL
+    // fragment as our APIResource. The id on the APIResource needs to match the pageId
+    // so that we can find the corresponding page pathname slice when we call getPagePathnameSlice(pageId).
+    // TODO: Update this once we move away from the GraphQL fragments.
+    return pagePathnameSlices.map(pagePathnameSlice => {
+      if (pagePathnameSlice == null) return null
+
+      return {
+        id: pagePathnameSlice.basePageId,
+        pathname: pagePathnameSlice.pathname,
+        __typename: pagePathnameSlice.__typename,
+      }
+    })
+  }
+
+  async getPagePathnameSlice(
+    pageId: string,
+    { preview = false, locale }: { preview?: boolean; locale?: string } = {},
+  ): Promise<PagePathnameSlice | null> {
+    const pagePathnameSlices = await this.getPagePathnameSlices([pageId], { preview, locale })
+
+    return pagePathnameSlices.at(0) ?? null
   }
 
   async getTable(tableId: string): Promise<Table | null> {
