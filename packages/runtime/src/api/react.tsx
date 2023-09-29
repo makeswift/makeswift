@@ -188,7 +188,7 @@ export class MakeswiftClient {
 
   async fetchPagePathnameSlice(pageId: string): Promise<PagePathnameSlice | null> {
     return await this.makeswiftApiClient.dispatch(
-      MakeswiftApiClient.fetchAPIResource(APIResourceType.PagePathnameSlice, pageId),
+      MakeswiftApiClient.fetchAPIResource(APIResourceType.PagePathnameSlice, pageId, this.locale),
     )
   }
 

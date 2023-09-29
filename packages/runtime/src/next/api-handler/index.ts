@@ -132,7 +132,9 @@ export function MakeswiftApiHandler(
     }
 
     if ((m = matches<{ id: string }>('/page-pathname-slices/:id'))) {
-      return client.getPagePathnameSlice(m.params.id).then(handleResource)
+      const locale = typeof req.query.locale === 'string' ? req.query.locale : undefined
+
+      return client.getPagePathnameSlice(m.params.id, { locale }).then(handleResource)
     }
 
     if ((m = matches<{ id: string }>('/tables/:id'))) {
