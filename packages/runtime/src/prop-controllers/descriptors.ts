@@ -205,6 +205,7 @@ type BackgroundImageV0 = {
   repeat?: BackgroundImageRepeat
   opacity?: number
   parallax?: number
+  priority?: boolean
 }
 
 type BackgroundImageV1 = {
@@ -215,6 +216,7 @@ type BackgroundImageV1 = {
   repeat?: BackgroundImageRepeat
   opacity?: number
   parallax?: number
+  priority?: boolean
 }
 
 export type BackgroundImage = BackgroundImageV0 | BackgroundImageV1

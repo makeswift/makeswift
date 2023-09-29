@@ -138,6 +138,7 @@ type ImageBackgroundProps = {
   size?: ImageBackgroundSize
   opacity?: number
   parallax?: number
+  priority?: boolean
 }
 
 function ImageBackground({
@@ -147,6 +148,7 @@ function ImageBackground({
   size = ImageBackgroundSize.Cover,
   opacity,
   parallax,
+  priority,
 }: ImageBackgroundProps) {
   const backgroundPosition = `${position.x}% ${position.y}%`
   const containerClassName = useStyle(containerStyle)
@@ -162,6 +164,7 @@ function ImageBackground({
                 layout="fill"
                 objectPosition={backgroundPosition}
                 objectFit={size}
+                priority={priority}
               />
             ) : (
               <NextImage
@@ -173,6 +176,7 @@ function ImageBackground({
                   objectPosition: backgroundPosition,
                   objectFit: size,
                 }}
+                priority={priority}
               />
             )}
           </div>
