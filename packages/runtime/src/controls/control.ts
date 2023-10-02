@@ -225,6 +225,8 @@ export function mergeTranslatedData(
   translatedData: Data,
   context: MergeTranslatableDataContext,
 ): Data {
+  if (data == null) return data
+
   switch (definition.type) {
     case Types.TextInput:
     case Types.TextArea:
