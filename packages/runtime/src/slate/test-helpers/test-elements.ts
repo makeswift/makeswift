@@ -4,8 +4,12 @@ import { BlockType, InlineType, ResponsiveBlockTextAlignment, RichTextTypography
 
 type Children = string | JSX.Element | (string | JSX.Element)[]
 
-export type BaseBlock = { children?: Children; textAlign?: ResponsiveBlockTextAlignment }
-export type BaseInline = { children?: Children }
+export type BaseBlock = {
+  children?: Children
+  textAlign?: ResponsiveBlockTextAlignment
+  typography?: RichTextTypography
+}
+export type BaseInline = { children?: Children; typography?: RichTextTypography }
 
 export const Fragment = 'fragment' as unknown as ComponentType<{ children?: Children }>
 export const Anchor = 'anchor' as unknown as ComponentType
