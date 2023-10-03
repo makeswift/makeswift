@@ -25,7 +25,7 @@ If you have already created a Shopify store and know you want to use this exampl
 
 Deploy your own with Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify&env=NEXT_PUBLIC_SHOPIFY_STORE_NAME,NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN&envDescription=Check%20the%20example%20README.md%20for%20details%20on%20where%20to%20find%20these%20values.&envLink=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify%23using-your-own-shopify-store&project-name=makeswift-shopify-example&repo-name=makeswift-shopify-example&redirect-url=https%3A%2F%2Fapp.makeswift.com&integration-ids=oac_51ryd7Pob5ZsyTFzNzVvpsGq&external-id=ecommerce-shopify)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify&env=NEXT_PUBLIC_SHOPIFY_STORE_NAME,NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN&envDescription=Check%20the%20example%20README.md%20for%20details%20on%20where%20to%20find%20these%20values.&envLink=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify%23using-your-own-shopify-store&project-name=makeswift-shopify-example&repository-name=makeswift-shopify-example&redirect-url=https%3A%2F%2Fapp.makeswift.com&integration-ids=oac_51ryd7Pob5ZsyTFzNzVvpsGq&external-id=ecommerce-shopify)
 
 Note: We have created an example store, so no Shopify account is required.
 
