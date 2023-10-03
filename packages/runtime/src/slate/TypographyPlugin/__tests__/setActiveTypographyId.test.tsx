@@ -3,6 +3,7 @@
 
 import { TypographyActions } from '../'
 import { jsx, Editor, Paragraph, Text, Cursor, Anchor, Focus } from '../../test-helpers'
+import { Editor as SlateEditor } from 'slate'
 
 describe('GIVEN setActiveTypographyId', () => {
   it('WHEN called on text THEN typography is added with empty style', () => {
@@ -15,8 +16,8 @@ describe('GIVEN setActiveTypographyId', () => {
       </Paragraph>,
     )
     const result = Editor(
-      <Paragraph>
-        <Text typography={{ id: 'lmnop', style: [] }}>
+      <Paragraph typography={{ id: 'lmnop', style: [] }}>
+        <Text>
           a<Cursor />
           bc
         </Text>
@@ -39,8 +40,8 @@ describe('GIVEN setActiveTypographyId', () => {
       </Paragraph>,
     )
     const result = Editor(
-      <Paragraph>
-        <Text typography={{ id: 'id2', style: [] }}>
+      <Paragraph typography={{ id: 'id2', style: [] }}>
+        <Text>
           a<Cursor />
           bc
         </Text>
@@ -53,10 +54,10 @@ describe('GIVEN setActiveTypographyId', () => {
     expect(editor.selection).toEqual(result.selection)
   })
 
-  it('WHEN called on subselection THEN id is only added to sub selection', () => {
+  it('WHEN called on subselection THEN  idis only added to sub selection', () => {
     const editor = Editor(
-      <Paragraph>
-        <Text typography={{ id: 'lmnop', style: [{ deviceId: 'mobile', value: {} }] }}>
+      <Paragraph typography={{ id: 'lmnop', style: [{ deviceId: 'mobile', value: {} }] }}>
+        <Text>
           <Anchor />
           abc
           <Focus />
@@ -65,12 +66,12 @@ describe('GIVEN setActiveTypographyId', () => {
       </Paragraph>,
     )
     const result = Editor(
-      <Paragraph>
+      <Paragraph typography={{ id: 'lmnop', style: [{ deviceId: 'mobile', value: {} }] }}>
         <Text typography={{ id: 'id2', style: [] }}>
           <Anchor />
           abc
         </Text>
-        <Text typography={{ id: 'lmnop', style: [{ deviceId: 'mobile', value: {} }] }}>
+        <Text>
           <Focus />
           lmnop
         </Text>

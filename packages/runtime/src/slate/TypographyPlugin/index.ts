@@ -1,4 +1,4 @@
-import { Descendant, Editor, Element, NodeEntry, Text, Transforms, Node } from 'slate'
+import { Descendant, Editor, Element, NodeEntry, Text, Transforms } from 'slate'
 import { clearActiveTypographyStyle } from './clearActiveTypographyStyle'
 import { clearDeviceActiveTypography } from './clearDeviceActiveTypography'
 import { detachActiveTypography } from './detachActiveTypography'
@@ -8,9 +8,9 @@ import { unstable_Typography } from '../../controls'
 import { getValue } from './getValue'
 import { getSelection } from '../selectors'
 import { createRichTextV2Plugin } from '../../controls/rich-text-v2/plugin'
-import deepEqual from '../../utils/deepEqual'
 import { RichTextTypography } from '../types'
 import keys from '../../utils/keys'
+import shallowMerge from '../../utils/shallowMerge'
 
 export const TypographyActions = {
   setActiveTypographyId,
@@ -63,12 +63,12 @@ export function withTypography(editor: Editor) {
         a: A,
         common: B,
       ): A & B {
-        const bKeys = keys(common)
+        const bKeys = Array.from(new Set([...keys(common), ...keys(a)]))
         const aPrime = { ...a } as A & B
         const xor = {} as A & B
 
         bKeys.forEach(key => {
-          if (aPrime[key] !== common[key]) xor[key] = aPrime[key]
+          if (aPrime[key] !== common[key as any]) xor[key] = aPrime[key]
         })
 
         return xor
@@ -99,60 +99,93 @@ export function withTypography(editor: Editor) {
               )
 
             if (deviceTypographyStyles.length === copiedChildren.length) {
-              const commonDevice: RichTextTypography['style'][number]['value'] =
+              const commonDeviceStyle: RichTextTypography['style'][number]['value'] =
                 deviceTypographyStyles.reduce((acc, curr) => {
                   return shallowAnd(acc, curr)
                 }, deviceTypographyStyles.at(0) as RichTextTypography['style'][number]['value'])
 
-              styles.push({
-                deviceId: style.deviceId,
-                value: commonDevice,
-              })
+              if (commonDeviceStyle != null && Object.keys(commonDeviceStyle).length > 0) {
+                styles.push({
+                  deviceId: style.deviceId,
+                  value: commonDeviceStyle,
+                })
+              }
             }
           })
           commonTypography.style = styles
         }
+        if (commonTypography.style.length > 0 || commonTypography.id != null) {
+          const result = copiedChildren.map(child => {
+            const typography: RichTextTypography = { style: [] }
+            if (child.typography?.id !== commonTypography.id) {
+              typography.id = child.typography?.id
+            }
 
-        const result = copiedChildren.map(child => {
-          const typography: RichTextTypography = { style: [] }
-          if (child.typography?.id !== commonTypography.id) {
-            typography.id = child.typography?.id
-          }
+            if (child.typography && child.typography.style.length > 0) {
+              const styles: RichTextTypography['style'] = []
+              child.typography.style.forEach(style => {
+                const commonDevice = commonTypography.style.find(s => s.deviceId === style.deviceId)
+                if (commonDevice == null) {
+                  styles.push(style)
+                  return
+                }
 
-          if (child.typography && child.typography.style.length > 0) {
-            const styles: RichTextTypography['style'] = []
-            child.typography.style.forEach(style => {
-              const commonDevice = commonTypography.style.find(s => s.deviceId === style.deviceId)
-              if (commonDevice == null) {
-                styles.push(style)
-                return
+                const xor = shallowXor(style.value, commonDevice.value)
+                console.log({ xor, style, commonDevice })
+
+                if (Object.keys(xor).length > 0) {
+                  styles.push({
+                    deviceId: style.deviceId,
+                    value: xor,
+                  })
+                }
+              })
+              typography.style = styles
+            }
+            return { ...child, typography }
+          })
+
+          const devices = [
+            ...new Set(
+              commonTypography.style
+                .map(node => node.deviceId)
+                .concat(normalizationNode.typography?.style.map(node => node.deviceId) ?? []),
+            ),
+          ]
+
+          const rootTypography: RichTextTypography = {
+            id: commonTypography.id ?? normalizationNode?.typography?.id,
+            style: devices.map(deviceId => {
+              const commonDevice = commonTypography.style.find(s => s.deviceId === deviceId)
+              const existingDeviceStyle = normalizationNode.typography?.style.find(
+                s => s.deviceId === deviceId,
+              )
+
+              return {
+                deviceId,
+                value: shallowMerge(commonDevice?.value ?? {}, existingDeviceStyle?.value ?? {}),
               }
-
-              const xor = shallowXor(style.value, commonDevice.value)
-
-              if (Object.keys(xor).length > 0) {
-                styles.push({
-                  deviceId: style.deviceId,
-                  value: xor,
-                })
-              }
-            })
-            typography.style = styles
+            }),
           }
-          return { ...child, typography }
-        })
+          console.log({
+            normalizationNode,
+            commonTypography: JSON.stringify(commonTypography),
+            result: JSON.stringify(result),
+            rootTypography: JSON.stringify(rootTypography),
+          })
 
-        Editor.withoutNormalizing(editor, () => {
-          Transforms.setNodes(editor, { typography: commonTypography }, { at: normalizationPath })
-          for (let i = 0; i < normalizationNode.children.length; i++) {
-            Transforms.setNodes(
-              editor,
-              { typography: result.at(i)?.typography ?? { style: [] } },
-              { at: [...normalizationPath, i] },
-            )
-          }
-        })
-        return
+          Editor.withoutNormalizing(editor, () => {
+            Transforms.setNodes(editor, { typography: rootTypography }, { at: normalizationPath })
+            for (let i = 0; i < normalizationNode.children.length; i++) {
+              Transforms.setNodes(
+                editor,
+                { typography: result.at(i)?.typography ?? { style: [] } },
+                { at: [...normalizationPath, i] },
+              )
+            }
+          })
+          return
+        }
       }
     }
 

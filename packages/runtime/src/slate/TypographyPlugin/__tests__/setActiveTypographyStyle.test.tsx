@@ -16,19 +16,19 @@ describe('GIVEN setActiveTypographyStyle', () => {
       </Paragraph>,
     )
     const result = Editor(
-      <Paragraph>
-        <Text
-          typography={{
-            style: [
-              {
-                deviceId: 'mobile',
-                value: {
-                  fontWeight: 500,
-                },
+      <Paragraph
+        typography={{
+          style: [
+            {
+              deviceId: 'mobile',
+              value: {
+                fontWeight: 500,
               },
-            ],
-          }}
-        >
+            },
+          ],
+        }}
+      >
+        <Text>
           abc
           <Cursor />
         </Text>
@@ -48,39 +48,39 @@ describe('GIVEN setActiveTypographyStyle', () => {
   })
   it('WHEN called on typography THEN typography style is updated', () => {
     const editor = Editor(
-      <Paragraph>
-        <Text
-          typography={{
-            style: [
-              {
-                deviceId: 'mobile',
-                value: {
-                  fontWeight: 500,
-                },
+      <Paragraph
+        typography={{
+          style: [
+            {
+              deviceId: 'mobile',
+              value: {
+                fontWeight: 500,
               },
-            ],
-          }}
-        >
+            },
+          ],
+        }}
+      >
+        <Text>
           abc
           <Cursor />
         </Text>
       </Paragraph>,
     )
     const result = Editor(
-      <Paragraph>
-        <Text
-          typography={{
-            style: [
-              {
-                deviceId: 'mobile',
-                value: {
-                  fontWeight: 500,
-                  italic: true,
-                },
+      <Paragraph
+        typography={{
+          style: [
+            {
+              deviceId: 'mobile',
+              value: {
+                fontWeight: 500,
+                italic: true,
               },
-            ],
-          }}
-        >
+            },
+          ],
+        }}
+      >
+        <Text>
           abc
           <Cursor />
         </Text>
@@ -194,19 +194,19 @@ describe('GIVEN setActiveTypographyStyle', () => {
       </Paragraph>,
     )
     const result = Editor(
-      <Paragraph>
-        <Text
-          typography={{
-            style: [
-              {
-                deviceId: 'mobile',
-                value: {
-                  italic: true,
-                },
+      <Paragraph
+        typography={{
+          style: [
+            {
+              deviceId: 'mobile',
+              value: {
+                italic: true,
               },
-            ],
-          }}
-        >
+            },
+          ],
+        }}
+      >
+        <Text>
           <Anchor />
           abc
         </Text>
@@ -217,7 +217,6 @@ describe('GIVEN setActiveTypographyStyle', () => {
                 deviceId: 'mobile',
                 value: {
                   fontWeight: 500,
-                  italic: true,
                 },
               },
             ],
