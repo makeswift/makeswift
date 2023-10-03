@@ -64,6 +64,7 @@ export type DefaultElement = {
   className?: string
   children: Array<Element | Text>
   slice?: boolean
+  typography?: RichTextTypography
   type: typeof BlockType.Default
 }
 
@@ -72,6 +73,7 @@ export type ParagraphElement = {
   className?: string
   children: Array<Element | Text>
   slice?: boolean
+  typography?: RichTextTypography
   type: typeof BlockType.Paragraph
 }
 
@@ -80,6 +82,7 @@ export type Heading1Element = {
   className?: string
   children: Array<Element | Text>
   slice?: boolean
+  typography?: RichTextTypography
   type: typeof BlockType.Heading1
 }
 
@@ -88,6 +91,7 @@ export type Heading2Element = {
   className?: string
   children: Array<Element | Text>
   slice?: boolean
+  typography?: RichTextTypography
   type: typeof BlockType.Heading2
 }
 
@@ -96,6 +100,7 @@ export type Heading3Element = {
   className?: string
   children: Array<Element | Text>
   slice?: boolean
+  typography?: RichTextTypography
   type: typeof BlockType.Heading3
 }
 
@@ -104,6 +109,7 @@ export type Heading4Element = {
   className?: string
   children: Array<Element | Text>
   slice?: boolean
+  typography?: RichTextTypography
   type: typeof BlockType.Heading4
 }
 
@@ -112,6 +118,7 @@ export type Heading5Element = {
   className?: string
   children: Array<Element | Text>
   slice?: boolean
+  typography?: RichTextTypography
   type: typeof BlockType.Heading5
 }
 
@@ -120,6 +127,7 @@ export type Heading6Element = {
   className?: string
   children: Array<Element | Text>
   slice?: boolean
+  typography?: RichTextTypography
   type: typeof BlockType.Heading6
 }
 
@@ -128,6 +136,7 @@ export type BlockQuoteElement = {
   className?: string
   children: Array<Element | Text>
   slice?: boolean
+  typography?: RichTextTypography
   type: typeof BlockType.BlockQuote
 }
 
@@ -136,6 +145,7 @@ export type UnorderedListElement = {
   className?: string
   children: Array<Element | Text>
   slice?: boolean
+  typography?: RichTextTypography
   type: typeof BlockType.UnorderedList
 }
 
@@ -144,6 +154,7 @@ export type OrderedListElement = {
   className?: string
   children: Array<Element | Text>
   slice?: boolean
+  typography?: RichTextTypography
   type: typeof BlockType.OrderedList
 }
 
@@ -154,6 +165,7 @@ export type ListItemElement = {
   className?: string
   children: Array<Element | Text>
   slice?: boolean
+  typography?: RichTextTypography
   type: typeof BlockType.ListItem
 }
 
@@ -162,6 +174,7 @@ export type ListItemChildElement = {
   className?: string
   children: Array<Element | Text>
   slice?: boolean
+  typography?: RichTextTypography
   type: typeof BlockType.ListItemChild
 }
 
@@ -190,6 +203,7 @@ export type CodeElement = {
   type: typeof InlineType.Code
   className?: string
   slice?: boolean
+  typography?: RichTextTypography
   translationKey?: string
 }
 
@@ -198,6 +212,7 @@ export type SuperElement = {
   type: typeof InlineType.SuperScript
   className?: string
   slice?: boolean
+  typography?: RichTextTypography
   translationKey?: string
 }
 
@@ -206,6 +221,7 @@ export type SubElement = {
   type: typeof InlineType.SubScript
   className?: string
   slice?: boolean
+  typography?: RichTextTypography
   translationKey?: string
 }
 
@@ -215,6 +231,7 @@ export type LinkElement = {
   link: LinkControlData
   className?: string
   slice?: boolean
+  typography?: RichTextTypography
   translationKey?: string
 }
 

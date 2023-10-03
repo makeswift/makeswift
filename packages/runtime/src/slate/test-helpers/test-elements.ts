@@ -4,7 +4,11 @@ import { BlockType, InlineType, ResponsiveBlockTextAlignment, RichTextTypography
 
 type Children = string | JSX.Element | (string | JSX.Element)[]
 
-export type BaseBlock = { children?: Children; textAlign?: ResponsiveBlockTextAlignment }
+export type BaseBlock = {
+  children?: Children
+  textAlign?: ResponsiveBlockTextAlignment
+  typography?: RichTextTypography
+}
 export type BaseInline = { children?: Children }
 
 export const Fragment = 'fragment' as unknown as ComponentType<{ children?: Children }>
