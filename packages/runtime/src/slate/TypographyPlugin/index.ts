@@ -25,6 +25,8 @@ export const TYPOGRAPHY_KEY = 'typography'
 export function withTypography(editor: Editor) {
   const { normalizeNode } = editor
   editor.normalizeNode = entry => {
+    console.log('normalizing')
+
     const [normalizationNode, normalizationPath] = entry
     if (
       'typography' in normalizationNode &&
@@ -201,6 +203,8 @@ export function TypographyPlugin() {
     control: {
       definition: unstable_Typography(),
       onChange: (editor, value) => {
+        console.log('onChange', value)
+
         Editor.withoutNormalizing(editor, () => {
           const at = getSelection(editor)
           if (!at) return
