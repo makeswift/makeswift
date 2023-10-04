@@ -27,7 +27,7 @@ export function withTypography(editor: Editor) {
   editor.normalizeNode = entry => {
     const [normalizationNode, normalizationPath] = entry
     if (
-      Text.isText(normalizationNode) &&
+      'typography' in normalizationNode &&
       normalizationNode?.typography?.id == null &&
       normalizationNode?.typography?.style.length === 0
     ) {
