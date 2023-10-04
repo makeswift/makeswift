@@ -35,7 +35,7 @@ export function withTypography(editor: Editor) {
       return
     }
 
-    if (Text.isText(normalizationNode) && normalizationNode?.slice != null) {
+    if ('slice' in normalizationNode && normalizationNode?.slice != null) {
       Transforms.unsetNodes(editor, 'slice', { at: normalizationPath })
       return
     }

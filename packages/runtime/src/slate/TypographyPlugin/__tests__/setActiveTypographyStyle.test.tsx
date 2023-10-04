@@ -333,4 +333,82 @@ describe('GIVEN setActiveTypographyStyle', () => {
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
   })
+
+  it('WHEN called on a range that intersects a typography THEN the typography is edited and extra text is styled', () => {
+    const editor = Editor(
+      <Paragraph>
+        <Text>
+          <Anchor />
+          abc
+        </Text>
+        <Text
+          typography={{
+            style: [
+              {
+                deviceId: 'mobile',
+                value: {
+                  italic: true,
+                },
+              },
+            ],
+          }}
+        >
+          lmn
+        </Text>
+        <Text>
+          <Focus />
+          xyz
+        </Text>
+      </Paragraph>,
+    )
+    const result = Editor(
+      <Paragraph>
+        <Text
+          typography={{
+            style: [
+              {
+                deviceId: 'mobile',
+                value: {
+                  fontWeight: 500,
+                },
+              },
+            ],
+          }}
+        >
+          <Anchor />
+          abc
+        </Text>
+        <Text
+          typography={{
+            style: [
+              {
+                deviceId: 'mobile',
+                value: {
+                  italic: true,
+                  fontWeight: 500,
+                },
+              },
+            ],
+          }}
+        >
+          lmn
+        </Text>
+        <Text>
+          <Focus />
+          xyz
+        </Text>
+      </Paragraph>,
+    )
+
+    TypographyActions.setActiveTypographyStyle(
+      editor,
+      DEFAULT_BREAKPOINTS,
+      'mobile',
+      'fontWeight',
+      500,
+    )
+
+    expect(editor.children).toEqual(result.children)
+    expect(editor.selection).toEqual(result.selection)
+  })
 })
