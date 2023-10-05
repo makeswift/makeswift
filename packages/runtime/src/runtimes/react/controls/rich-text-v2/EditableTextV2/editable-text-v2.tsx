@@ -68,7 +68,7 @@ export function EditableTextV2({ text, definition, control }: Props) {
       // ...(definition?.config?.plugins ?? []),
       ...(definition?.config?.mode === RichTextV2Mode.Inline
         ? [InlineModePlugin()]
-        : [BlockPlugin(), TypographyPlugin(), TextAlignPlugin(), InlinePlugin(), LinkPlugin()]),
+        : [BlockPlugin(), TextAlignPlugin(), InlinePlugin(), LinkPlugin(), TypographyPlugin()]),
     ]
     return plugins
   }, [definition])

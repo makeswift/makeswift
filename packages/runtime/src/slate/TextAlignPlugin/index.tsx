@@ -78,7 +78,7 @@ export function TextAlignPlugin() {
         ...props,
         element: {
           ...props.element,
-          className,
+          className: `${className} ${props.element.className}`,
         },
       })
     },

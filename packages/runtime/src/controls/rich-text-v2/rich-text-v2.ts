@@ -188,6 +188,8 @@ export class RichTextV2Control<
 
     const _onChange = editor.onChange
     this.editor.onChange = options => {
+      console.log('onChange', this.editor?.children)
+
       _onChange(options)
       this.updatePluginValues()
       if (this.editor == null || options?.operation == null) return

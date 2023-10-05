@@ -160,4 +160,71 @@ describe('testing typography normalization ', () => {
     expect(editor.children).toEqual(result.children)
     expect(editor.selection).toEqual(result.selection)
   })
+  it.only('3', () => {
+    const editor = Editor(
+      <Paragraph>
+        <Text
+          typography={{
+            style: [
+              {
+                deviceId: 'mobile',
+                value: {
+                  // fontWeight: 500,
+                  fontSize: {
+                    value: 20,
+                    unit: 'px',
+                  },
+                },
+              },
+            ],
+          }}
+        >
+          abc
+        </Text>
+        <Text
+          typography={{
+            style: [
+              {
+                deviceId: 'mobile',
+                value: {
+                  // fontWeight: 500,
+                  fontSize: {
+                    value: 20,
+                    unit: 'px',
+                  },
+                },
+              },
+            ],
+          }}
+        >
+          lmnop
+        </Text>
+      </Paragraph>,
+    )
+    const result = Editor(
+      <Paragraph
+        typography={{
+          style: [
+            {
+              deviceId: 'mobile',
+              value: {
+                // fontWeight: 500,
+                fontSize: {
+                  value: 20,
+                  unit: 'px',
+                },
+              },
+            },
+          ],
+        }}
+      >
+        <Text>abclmnop</Text>
+      </Paragraph>,
+    )
+
+    SlateEditor.normalize(editor, { force: true })
+
+    expect(editor.children).toEqual(result.children)
+    expect(editor.selection).toEqual(result.selection)
+  })
 })

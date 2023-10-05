@@ -14,30 +14,30 @@ export function usePresetValue(definition: RichTextV2ControlDefinition): Descend
         children: [
           {
             text: definition.config.defaultValue ?? '',
-            // ...(definition.config.mode === RichTextV2Mode.Inline
-            //   ? {}
-            //   : {
-            //       typography: {
-            //         style: [
-            //           {
-            //             deviceId: getBaseBreakpoint(breakpoints).id,
-            //             value: {
-            //               fontWeight: 400,
-            //               fontSize: { value: 18, unit: 'px' },
-            //               lineHeight: 1.5,
-            //             },
-            //           },
-            //           ...(breakpoints.some(({ id }) => id === DefaultBreakpointID.Mobile)
-            //             ? [
-            //                 {
-            //                   deviceId: DefaultBreakpointID.Mobile,
-            //                   value: { fontSize: { value: 16, unit: 'px' } },
-            //                 },
-            //               ]
-            //             : []),
-            //         ],
-            //       },
-            //     }),
+            ...(definition.config.mode === RichTextV2Mode.Inline
+              ? {}
+              : {
+                  typography: {
+                    style: [
+                      {
+                        deviceId: getBaseBreakpoint(breakpoints).id,
+                        value: {
+                          fontWeight: 400,
+                          fontSize: { value: 18, unit: 'px' },
+                          lineHeight: 1.5,
+                        },
+                      },
+                      ...(breakpoints.some(({ id }) => id === DefaultBreakpointID.Mobile)
+                        ? [
+                            {
+                              deviceId: DefaultBreakpointID.Mobile,
+                              value: { fontSize: { value: 16, unit: 'px' } },
+                            },
+                          ]
+                        : []),
+                    ],
+                  },
+                }),
           },
         ],
       },

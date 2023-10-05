@@ -1,16 +1,17 @@
-import { Descendant, Editor, Element, NodeEntry, Text, Transforms } from 'slate'
+import { Descendant, Editor, Element, NodeEntry, Text, Transforms, Node, Range } from 'slate'
 import { clearActiveTypographyStyle } from './clearActiveTypographyStyle'
 import { clearDeviceActiveTypography } from './clearDeviceActiveTypography'
 import { detachActiveTypography } from './detachActiveTypography'
 import { setActiveTypographyId } from './setActiveTypographyId'
 import { setActiveTypographyStyle } from './setActiveTypographyStyle'
 import { unstable_Typography } from '../../controls'
-import { getValue } from './getValue'
+import { getValue, mergeTypographies } from './getValue'
 import { getSelection } from '../selectors'
 import { createRichTextV2Plugin } from '../../controls/rich-text-v2/plugin'
 import { RichTextTypography } from '../types'
 import keys from '../../utils/keys'
 import shallowMerge from '../../utils/shallowMerge'
+import deepEqual from '../../utils/deepEqual'
 
 export const TypographyActions = {
   setActiveTypographyId,
@@ -56,7 +57,7 @@ export function withTypography(editor: Editor) {
         const and = {} as A & B
 
         bKeys.forEach(key => {
-          if (aPrime[key] === b[key]) and[key] = aPrime[key]
+          if (deepEqual(aPrime[key], b[key])) and[key] = aPrime[key]
         })
 
         return and
@@ -70,7 +71,7 @@ export function withTypography(editor: Editor) {
         const xor = {} as A & B
 
         bKeys.forEach(key => {
-          if (aPrime[key] !== common[key as any]) xor[key] = aPrime[key]
+          if (!deepEqual(aPrime[key], common[key as any])) xor[key] = aPrime[key]
         })
 
         return xor
@@ -209,6 +210,58 @@ export function TypographyPlugin() {
           const at = getSelection(editor)
           if (!at) return
           const atRef = Editor.rangeRef(editor, at)
+
+          const affectedRoots = Array.from(
+            new Set(
+              Array.from(
+                Editor.nodes(editor, {
+                  at: getSelection(editor),
+                  match: Text.isText,
+                }),
+              ).map(([, path]) => path.at(0)),
+            ),
+          )
+
+          const affectedRange: Range = {
+            anchor: Editor.start(editor, affectedRoots.slice(0, 1) as any),
+            focus: Editor.end(editor, affectedRoots.slice(-1) as any),
+          }
+
+          Array.from(
+            Editor.nodes(editor, {
+              at: affectedRange,
+              match: Text.isText,
+            }),
+          ).map(([node, path]) => {
+            const pathCopy = [...path]
+
+            const typographies: RichTextTypography[] = node.typography ? [node.typography] : []
+            while (pathCopy.length > 0) {
+              pathCopy.pop()
+
+              const parent = Node.get(editor, pathCopy)
+              if ('typography' in parent && parent.typography != null) {
+                typographies.push(parent.typography)
+              }
+            }
+
+            const firstTypography = typographies.at(0)
+
+            if (firstTypography == null) return undefined
+
+            const a = typographies.reduce(
+              (acc, curr) => mergeTypographies(acc, curr),
+              firstTypography,
+            )
+
+            Transforms.setNodes(editor, { typography: a }, { at: path, match: Text.isText })
+          })
+
+          Transforms.unsetNodes(editor, 'typography', {
+            at: affectedRange,
+            match: Element.isElement,
+          })
+
           if (atRef.current) {
             Transforms.setNodes<Descendant>(
               editor,
@@ -255,6 +308,9 @@ Called with ${value?.length} values mapping to ${nodesToUpdate.length} nodes.`,
       getLeafValue: (text: Text) => {
         return Text.isText(text) ? text.typography : undefined
       },
+      getElementValue: (element: Element) => {
+        return Element.isElement(element) ? element.typography : undefined
+      },
     },
     renderLeaf: (renderLeaf, className) => props => {
       return renderLeaf({
@@ -262,6 +318,15 @@ Called with ${value?.length} values mapping to ${nodesToUpdate.length} nodes.`,
         leaf: {
           ...props.leaf,
           className: `${props.leaf.className} ${className}`,
+        },
+      })
+    },
+    renderElement: (renderElement, className) => props => {
+      return renderElement({
+        ...props,
+        element: {
+          ...props.element,
+          className: `${props.element.className} ${className}`,
         },
       })
     },

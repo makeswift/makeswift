@@ -44,11 +44,23 @@ function InlinePluginComponent({
 }: RenderElementProps & { renderElement: RenderElement }) {
   switch (props.element.type) {
     case InlineType.Code:
-      return <code {...props.attributes}>{renderElement(props)}</code>
+      return (
+        <code className={props.element.className ?? ''} {...props.attributes}>
+          {renderElement(props)}
+        </code>
+      )
     case InlineType.SuperScript:
-      return <sup {...props.attributes}>{renderElement(props)}</sup>
+      return (
+        <sup className={props.element.className ?? ''} {...props.attributes}>
+          {renderElement(props)}
+        </sup>
+      )
     case InlineType.SubScript:
-      return <sub {...props.attributes}>{renderElement(props)}</sub>
+      return (
+        <sub className={props.element.className ?? ''} {...props.attributes}>
+          {renderElement(props)}
+        </sub>
+      )
 
     default:
       return <>{renderElement(props)}</>
