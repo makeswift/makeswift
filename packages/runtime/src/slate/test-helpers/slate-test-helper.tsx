@@ -48,7 +48,7 @@ export const testEditorWithAllPlugins = () => withBlock(withTypography(withReact
 export const jsx = createJsx(testEditorWithAllPlugins)
 
 export const jsxWithV2Editor = createJsx(() =>
-  withBlock(withTextAlign(withInline(withLink(withReact(createEditor()))))),
+  withBlock(withTypography(withTextAlign(withInline(withLink(withReact(createEditor())))))),
 )
 
 export const jsxWithV2InlineEditor = createJsx(() =>

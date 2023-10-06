@@ -56,6 +56,8 @@ function getInlineOrTextTranslatableData(
 
     if (string === '') return null
 
+    if (descendant.typography === undefined) return string
+
     return `<span key="${pathToString(path)}">${string}</span>`
   }
 
@@ -79,8 +81,25 @@ function getInlineOrTextTranslatableData(
   }
 }
 
-export function getRichTextV2TranslatableData(data: RichTextV2ControlData): Record<string, string> {
-  return data.descendants.reduce(
+export function getRichTextV2TranslatableData(
+  definition: RichTextV2ControlDefinition,
+  data: RichTextV2ControlData,
+): Record<string, string> {
+  const plugins: RichTextV2Plugin[] =
+    definition?.config?.mode === RichTextV2Mode.Inline
+      ? [InlineModePlugin()]
+      : [BlockPlugin(), TypographyPlugin(), TextAlignPlugin(), InlinePlugin()]
+
+  const editor: MakeswiftEditor = plugins.reduceRight(
+    (editor, plugin) => plugin?.withPlugin?.(editor) ?? editor,
+    createEditor(),
+  )
+
+  editor.children = data.descendants
+  editor.typographyNormalizationDirection = 'up'
+  Editor.normalize(editor, { force: true })
+
+  return editor.children.reduce(
     (acc, descendant: Descendant, i) => ({
       ...acc,
       ...getDescendantTranslatableData(descendant, [i]),
@@ -154,6 +173,8 @@ export function mergeRichTextV2TranslatedData(
   )
 
   sourceEditor.children = data.descendants
+  sourceEditor.typographyNormalizationDirection = 'up'
+  Editor.normalize(sourceEditor, { force: true })
 
   Object.entries(translatedData)
     .reverse()
@@ -166,6 +187,7 @@ export function mergeRichTextV2TranslatedData(
 
       targetEditor.children = [{ type: BlockType.Default, children: inlineDescendants }]
 
+      targetEditor.typographyNormalizationDirection = 'neutral'
       Editor.normalize(targetEditor, { force: true })
 
       for (const [descendant, absolutePathToTargetNode] of Node.descendants(targetEditor)) {
@@ -205,6 +227,9 @@ export function mergeRichTextV2TranslatedData(
         Transforms.insertNodes(sourceEditor, translatedChildren, { at: [...blockPath, 0] })
       })
     })
+
+  sourceEditor.typographyNormalizationDirection = 'down'
+  Editor.normalize(sourceEditor, { force: true })
 
   return { ...data, descendants: sourceEditor.children }
 }
