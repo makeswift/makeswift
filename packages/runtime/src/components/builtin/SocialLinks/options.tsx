@@ -10,6 +10,7 @@ import { ReactComponent as LogoMedium20 } from '../../icons/logo-medium-20.svg'
 import { ReactComponent as LogoPinterest20 } from '../../icons/logo-pinterest-20.svg'
 import { ReactComponent as LogoReddit20 } from '../../icons/logo-reddit-20.svg'
 import { ReactComponent as LogoRss20 } from '../../icons/logo-rss-20.svg'
+import { ReactComponent as LogoSlack20 } from '../../icons/logo-slack-20.svg'
 import { ReactComponent as LogoSnapchat20 } from '../../icons/logo-snapchat-20.svg'
 import { ReactComponent as LogoSoundcloud20 } from '../../icons/logo-soundcloud-20.svg'
 import { ReactComponent as LogoSpotify20 } from '../../icons/logo-spotify-20.svg'
@@ -19,6 +20,7 @@ import { ReactComponent as LogoTwitch20 } from '../../icons/logo-twitch-20.svg'
 import { ReactComponent as LogoTwitter20 } from '../../icons/logo-twitter-20.svg'
 import { ReactComponent as LogoWhatsapp20 } from '../../icons/logo-whatsapp-20.svg'
 import { ReactComponent as LogoVimeo20 } from '../../icons/logo-vimeo-20.svg'
+import { ReactComponent as LogoX20 } from '../../icons/logo-x-20.svg'
 import { ReactComponent as LogoYelp20 } from '../../icons/logo-yelp-20.svg'
 import { ReactComponent as LogoYoutube20 } from '../../icons/logo-youtube-20.svg'
 
@@ -35,6 +37,7 @@ export const SocialLinksOptions = [
   { type: 'pinterest', label: 'Pinterest', icon: <LogoPinterest20 />, brandColor: '#bd081c' },
   { type: 'reddit', label: 'Reddit', icon: <LogoReddit20 />, brandColor: '#ff4500' },
   { type: 'rss', label: 'RSS', icon: <LogoRss20 />, brandColor: 'black' },
+  { type: 'slack', label: 'Slack', icon: <LogoSlack20 />, brandColor: '#fffc00' },
   { type: 'snapchat', label: 'Snapchat', icon: <LogoSnapchat20 />, brandColor: '#fffc00' },
   { type: 'soundcloud', label: 'SoundCloud', icon: <LogoSoundcloud20 />, brandColor: '#ff3300' },
   { type: 'spotify', label: 'Spotify', icon: <LogoSpotify20 />, brandColor: '#1db954' },
@@ -44,6 +47,7 @@ export const SocialLinksOptions = [
   { type: 'twitter', label: 'Twitter', icon: <LogoTwitter20 />, brandColor: '#1da1f2' },
   { type: 'whatsapp', label: 'WhatsApp', icon: <LogoWhatsapp20 />, brandColor: '#25d366' },
   { type: 'vimeo', label: 'Vimeo', icon: <LogoVimeo20 />, brandColor: '#1ab7ea' },
+  { type: 'X', label: 'X', icon: <LogoX20 />, brandColor: 'black' },
   { type: 'yelp', label: 'Yelp', icon: <LogoYelp20 />, brandColor: '#af0606' },
   { type: 'youtube', label: 'YouTube', icon: <LogoYoutube20 />, brandColor: '#ff0000' },
 ] as const
