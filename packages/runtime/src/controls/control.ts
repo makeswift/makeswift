@@ -202,7 +202,7 @@ export function getTranslatableData(definition: Descriptor | ControlDefinition, 
 
       if (isRichTextV1Data(richTextData)) return null
 
-      return getRichTextV2TranslatableData(richTextData as RichTextV2ControlData)
+      return getRichTextV2TranslatableData(definition, richTextData as RichTextV2ControlData)
 
     case ListControlType:
       if (data == null) return null

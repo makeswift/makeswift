@@ -1,4 +1,4 @@
-import { Descendant, Editor, NodeEntry, Text, Transforms } from 'slate'
+import { BaseEditor, Descendant, Editor, NodeEntry, Text, Transforms } from 'slate'
 import { clearActiveTypographyStyle } from './clearActiveTypographyStyle'
 import { clearDeviceActiveTypography } from './clearDeviceActiveTypography'
 import { detachActiveTypography } from './detachActiveTypography'
@@ -8,6 +8,9 @@ import { unstable_Typography } from '../../controls'
 import { getValue } from './getValue'
 import { getSelection } from '../selectors'
 import { createRichTextV2Plugin } from '../../controls/rich-text-v2/plugin'
+import { normalizeTypographyUp } from './normalizeTypographyUp'
+import { normalizeTypographyDown } from './normalizeTypographyDown'
+import { normalizeSimilarText } from './normalizeSimilarText'
 
 export const TypographyActions = {
   setActiveTypographyId,
@@ -19,12 +22,17 @@ export const TypographyActions = {
 
 export const TYPOGRAPHY_KEY = 'typography'
 
+export interface TypographyEditor extends BaseEditor {
+  typographyNormalizationDirection?: 'up' | 'neutral' | 'down'
+}
+
 export function withTypography(editor: Editor) {
   const { normalizeNode } = editor
   editor.normalizeNode = entry => {
     const [normalizationNode, normalizationPath] = entry
+
     if (
-      Text.isText(normalizationNode) &&
+      'typography' in normalizationNode &&
       normalizationNode?.typography?.id == null &&
       normalizationNode?.typography?.style.length === 0
     ) {
@@ -32,10 +40,22 @@ export function withTypography(editor: Editor) {
       return
     }
 
-    if (Text.isText(normalizationNode) && normalizationNode?.slice != null) {
+    if ('slice' in normalizationNode && normalizationNode?.slice != null) {
       Transforms.unsetNodes(editor, 'slice', { at: normalizationPath })
       return
     }
+
+    if (normalizeSimilarText(editor, entry)) return
+
+    if (editor.typographyNormalizationDirection === 'up' && normalizeTypographyUp(editor, entry))
+      return
+
+    if (
+      (editor.typographyNormalizationDirection === 'down' ||
+        editor.typographyNormalizationDirection == null) &&
+      normalizeTypographyDown(editor, entry)
+    )
+      return
 
     normalizeNode(entry)
   }
