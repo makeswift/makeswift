@@ -1001,6 +1001,7 @@ type SocialLinkType =
   | 'pinterest'
   | 'reddit'
   | 'rss'
+  | 'slack'
   | 'snapchat'
   | 'soundcloud'
   | 'spotify'
@@ -1010,6 +1011,7 @@ type SocialLinkType =
   | 'twitter'
   | 'vimeo'
   | 'whatsapp'
+  | 'x'
   | 'yelp'
   | 'youtube'
 
