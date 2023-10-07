@@ -1,5 +1,16 @@
 # @makeswift/runtime
 
+## 0.11.10
+
+### Patch Changes
+
+- e143b02: Update `/merge-translatable-data` to handle partially undefined composable controls.
+- 998b924: Optimize richtext used in `/translatable-data` and `/merge-translatable-data` for a simpler html output.
+
+  This will make our Smartling integration Smartmatch for more situations.
+
+- 4bfb4ca: Add Slack & X icons to Social Links
+
 ## 0.11.9
 
 ### Patch Changes
