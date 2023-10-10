@@ -40,7 +40,7 @@ export type RichTextV2Config = {
   defaultValue?: string
 }
 
-type ExternalRichTextV2Config = Omit<RichTextV2Config, 'plugins' | 'defaultValue'>
+type ExternalRichTextV2Config = Omit<RichTextV2Config, 'plugins'>
 
 export type RichTextV2ControlDefinition<T extends RichTextV2Config = RichTextV2Config> = {
   type: typeof RichTextV2ControlType
@@ -54,7 +54,9 @@ export function RichText<T extends ExternalRichTextV2Config>(
     type: RichTextV2ControlType,
     config: {
       mode: config.mode,
-      defaultValue: config?.mode === RichTextV2Mode.Inline ? 'Edit this text' : ipsum(3),
+      defaultValue:
+        config.defaultValue ??
+        (config?.mode === RichTextV2Mode.Inline ? 'Edit this text' : ipsum(3)),
       plugins:
         config?.mode === RichTextV2Mode.Inline
           ? [InlineModePlugin()]
