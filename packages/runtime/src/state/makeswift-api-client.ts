@@ -101,11 +101,14 @@ export function fetchAPIResource<T extends APIResourceType>(
         break
       }
 
-      case APIResourceType.PagePathnameSlice:
-        resource = await fetchJson<PagePathnameSlice>(
-          `/api/makeswift/page-pathname-slices/${resourceId}?locale=${locale}`,
-        )
+      case APIResourceType.PagePathnameSlice: {
+        const url = new URL(`/api/makeswift/page-pathname-slices/${resourceId}`, 'http://n')
+
+        if (locale != null) url.searchParams.set('locale', locale.toString())
+
+        resource = await fetchJson<PagePathnameSlice>(url.pathname + url.search)
         break
+      }
 
       case APIResourceType.Table:
         resource = await fetchJson<Table>(`/api/makeswift/tables/${resourceId}`)
