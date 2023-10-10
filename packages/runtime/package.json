@@ -103,9 +103,9 @@
   "scripts": {
     "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'vite build --watch'",
     "clean": "rm -rf dist",
-    "build": "yarn clean && tsc && vite build",
+    "build": "pnpm run clean && tsc && vite build",
     "preview": "vite preview",
-    "prepare": "yarn build",
+    "prepare": "pnpm build",
     "generate": "graphql-codegen --config codegen.yml",
     "test": "vitest run --config vite.test.config.ts",
     "test:watch": "vitest watch --config vite.test.config.ts",

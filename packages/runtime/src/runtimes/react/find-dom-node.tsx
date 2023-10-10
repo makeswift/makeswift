@@ -23,7 +23,6 @@ function suppressWarningAndFindDomNode(
     return error.apply(console, args)
   }
 
-  // @ts-expect-error @types/react-dom has a different @types/react than the one installed.
   const foundDomNode = findDOMNode(instance)
 
   console.error = error
