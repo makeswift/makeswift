@@ -16,20 +16,23 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
+      - name: Set up pnpm 8.x
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - name: Set up Node.js 18.x
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          cache: yarn
+          cache: pnpm
 
       - name: Install dependencies
-        run: yarn
+        run: pnpm install --ignore-scripts
 
       - name: Create release pull request or publish to NPM
         uses: changesets/action@v1
         with:
-          publish: yarn changeset publish
+          publish: pnpm run changeset publish
           commit: 'chore: version packages'
           title: 'Version and publish packages'
         env:

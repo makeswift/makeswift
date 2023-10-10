@@ -24,7 +24,7 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "test": "jest",
-    "prepare": "yarn build"
+    "prepare": "pnpm build"
   },
   "dependencies": {
     "@babel/core": "^7.18.13",
@@ -43,6 +43,7 @@
     "open": "^8.4.0"
   },
   "devDependencies": {
+    "@babel/types": "^7.23.0",
     "@types/babel__core": "^7.1.19",
     "@types/babel__generator": "^7.6.4",
     "@types/babel__template": "^7.4.1",
