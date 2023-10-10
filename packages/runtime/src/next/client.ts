@@ -255,6 +255,8 @@ export class Makeswift {
     typographyIds: string[],
     preview: boolean,
   ): Promise<(Typography | null)[]> {
+    if (typographyIds.length === 0) return []
+
     const url = new URL(
       `${this.siteVersion == null ? 'v1' : 'v2'}/typographies/bulk`,
       this.apiOrigin,
@@ -283,6 +285,8 @@ export class Makeswift {
   }
 
   private async getSwatches(ids: string[], preview: boolean): Promise<(Swatch | null)[]> {
+    if (ids.length === 0) return []
+
     const url = new URL(`${this.siteVersion == null ? 'v1' : 'v2'}/swatches/bulk`, this.apiOrigin)
 
     ids.forEach(id => {
@@ -607,6 +611,8 @@ export class Makeswift {
     pageIds: string[],
     { preview: previewOverride = false, locale }: { preview?: boolean; locale?: string } = {},
   ): Promise<(PagePathnameSlice | null)[]> {
+    if (pageIds.length === 0) return []
+
     const url = new URL(
       `${this.siteVersion == null ? 'v1' : 'v2'}/page-pathname-slices/bulk`,
       this.apiOrigin,
