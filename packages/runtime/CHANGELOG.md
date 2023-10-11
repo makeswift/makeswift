@@ -1,11 +1,5 @@
 # @makeswift/runtime
 
-## 0.11.12
-
-### Patch Changes
-
-- 28a1336: Add `defaultValue` to `RichText` control.
-
 ## 0.11.11
 
 ### Patch Changes
