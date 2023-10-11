@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.11.11
+
+### Patch Changes
+
+- f1774ff: Fix the "Failed to get page pathname slices" error when adding a new link to a page on the builder.
+
 ## 0.11.10
 
 ### Patch Changes
