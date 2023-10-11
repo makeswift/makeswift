@@ -32,7 +32,7 @@ jobs:
       - name: Create release pull request or publish to NPM
         uses: changesets/action@v1
         with:
-          publish: pnpm run changeset publish
+          publish: pnpm publish -r
           commit: 'chore: version packages'
           title: 'Version and publish packages'
         env:
