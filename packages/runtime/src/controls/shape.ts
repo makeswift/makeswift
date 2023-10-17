@@ -182,7 +182,7 @@ export function mergeShapeTranslatedData(
   return Object.fromEntries(
     Object.entries(definition.config.type).map(([key, definition]) => [
       key,
-      mergeTranslatedData(definition, data.key, translatedData[key], context),
+      mergeTranslatedData(definition, data[key], translatedData[key], context),
     ]),
   )
 }
