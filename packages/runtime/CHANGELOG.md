@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.11.13
+
+### Patch Changes
+
+- a5719a1: Fix a bug `/merge-translated-data`. This bug deleted all data within the a `Shape` control rather than merging it.
+
 ## 0.11.12
 
 ### Patch Changes
