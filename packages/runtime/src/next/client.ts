@@ -231,13 +231,15 @@ export class Makeswift {
       this.siteVersion ??
       (previewOverride ? MakeswiftSiteVersion.Working : MakeswiftSiteVersion.Live)
 
-    const searchParams = new URLSearchParams()
-    if (localeInput) searchParams.set('locale', localeInput)
-
-    const response = await this.fetch(
-      `v1/pages/${encodeURIComponent(pathname)}?${searchParams.toString()}`,
-      { headers: { 'Makeswift-Site-Version': siteVersion } },
+    const url = new URL(
+      `${this.siteVersion == null ? 'v1' : 'v2'}/pages/${encodeURIComponent(pathname)}`,
+      this.apiOrigin,
     )
+    if (localeInput) url.searchParams.set('locale', localeInput)
+
+    const response = await this.fetch(url.pathname + url.search, {
+      headers: { 'Makeswift-Site-Version': siteVersion },
+    })
 
     if (!response.ok) {
       if (response.status === 404) return null
