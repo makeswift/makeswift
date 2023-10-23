@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.11.14
+
+### Patch Changes
+
+- cda6b51: Fix `getPage` method for site with versioning.
+
 ## 0.11.13
 
 ### Patch Changes
