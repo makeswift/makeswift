@@ -48,7 +48,7 @@ export function List<T extends ControlDefinition, C extends ListControlConfig<T>
 
 export type ListControlItemData<T extends ListControlDefinition> = {
   id: string
-  type: T['config']['type']['type']
+  type?: T['config']['type']['type']
   value: ControlDefinitionData<T['config']['type']>
 }
 
