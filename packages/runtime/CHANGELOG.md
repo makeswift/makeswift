@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.11.15
+
+### Patch Changes
+
+- 3f107f7: Correct the `List` control data's `type` field to be optional.
+
 ## 0.11.14
 
 ### Patch Changes
