@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.11.16
+
+### Patch Changes
+
+- 8fed463: Prevent default click behavior in `RichText` when content is being edited.
+
+  This enables you to edit Inline `RichText` embedded within links without triggering navigation.
+
 ## 0.11.15
 
 ### Patch Changes
