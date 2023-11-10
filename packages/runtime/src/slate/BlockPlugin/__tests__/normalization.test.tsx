@@ -9,6 +9,7 @@ import {
   Paragraph,
   Unordered,
   Text,
+  Fragment,
 } from '../../test-helpers'
 import { Editor as SlateEditor } from 'slate'
 
@@ -58,6 +59,40 @@ describe('Normalization', () => {
           </ListItemChild>
         </ListItem>
       </Unordered>,
+    )
+
+    SlateEditor.normalize(editor, { force: true })
+
+    expect(editor.children).toEqual(result.children)
+    expect(editor.selection).toEqual(result.selection)
+  })
+
+  it('WHEN non list root blocks contain other root block THEN normalization unwraps them', () => {
+    const editor = Editor(
+      <Paragraph>
+        <Paragraph>
+          <Text>abc</Text>
+        </Paragraph>
+        <Paragraph>
+          <Text>xyz</Text>
+        </Paragraph>
+        <Paragraph>
+          <Text>lmnop</Text>
+        </Paragraph>
+      </Paragraph>,
+    )
+    const result = Editor(
+      <Fragment>
+        <Paragraph>
+          <Text>abc</Text>
+        </Paragraph>
+        <Paragraph>
+          <Text>xyz</Text>
+        </Paragraph>
+        <Paragraph>
+          <Text>lmnop</Text>
+        </Paragraph>
+      </Fragment>,
     )
 
     SlateEditor.normalize(editor, { force: true })
