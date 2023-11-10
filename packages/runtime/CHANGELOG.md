@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.11.17
+
+### Patch Changes
+
+- 15fcc61: Add `RichText` normalization that prevents nested paragraph elements from being possible.
+
 ## 0.11.16
 
 ### Patch Changes
