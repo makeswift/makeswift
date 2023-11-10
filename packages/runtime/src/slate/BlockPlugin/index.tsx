@@ -128,6 +128,19 @@ export function withBlock(editor: Editor) {
       return
     }
 
+    // Normalization for preventing non-list root blocks from being nested.
+    if (
+      normalizationPath.length === 1 &&
+      ElementUtils.isRootBlock(normalizationNode) &&
+      !ElementUtils.isList(normalizationNode)
+    ) {
+      const children = Array.from(Node.children(editor, normalizationPath))
+      if (children.findIndex(([child]) => ElementUtils.isRootBlock(child)) !== -1) {
+        Transforms.unwrapNodes(editor, { at: normalizationPath })
+        return
+      }
+    }
+
     // Normalization for converting children of list items to list item children
     // In the case of backspace from position 0 of node into a list this converts the node into a list item.
     if (ElementUtils.isListItem(normalizationNode)) {
