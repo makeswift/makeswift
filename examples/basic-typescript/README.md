@@ -6,7 +6,7 @@ https://makeswift-examples-basic-typescript.vercel.app/
 
 ## Getting Started
 
-This template contains simple Next.js app integrated with [Makeswift](https://www.makeswift.com) so you can visually edit your Next.js pages.
+This template contains a simple Next.js app integrated with [Makeswift](https://www.makeswift.com) so you can visually edit your Next.js pages.
 
 ### Automatic Setup
 
@@ -26,7 +26,7 @@ Once you've cloned the repository, install the dependencies:
 yarn install
 ```
 
-Then, find your Makeswift's site API key and add it to your `.env.local` file:
+Then, find your Makeswift's site API key in our site's setting and add it to your `.env.local` file:
 
 ```
 MAKESWIFT_SITE_API_KEY=<your_makeswift_site_api_key>
@@ -38,7 +38,7 @@ Next, start your Next.js development server:
 yarn dev
 ```
 
-Finally, update your Makeswift site's host URL to your local development server (e.g., http://localhost:3000).
+Finally, update your Makeswift site's host URL in to your local development server (e.g., http://localhost:3000). Your site's host URL is found in your Makeswift site's settings.
 
 ## Learn More
 
