@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.11.18
+
+### Patch Changes
+
+- e73bb49: In preview mode, pass any original cookies through.
+
 ## 0.11.17
 
 ### Patch Changes
