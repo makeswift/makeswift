@@ -55,6 +55,7 @@ export default async function proxyPreviewMode(
   if (req.query.secret !== apiKey) return res.status(401).send('Unauthorized')
 
   const host = req.headers.host
+  const originalCookies = req.headers.cookie
 
   if (host == null) return res.status(400).send('Bad Request')
 
@@ -91,9 +92,11 @@ export default async function proxyPreviewMode(
 
   if (!Array.isArray(setCookie)) return res.status(500).send('Internal Server Error')
 
-  const cookie = parse(setCookie)
+  const additionalCookies = parse(setCookie)
     .map(cookie => serialize(cookie.name, cookie.value, cookie as CookieSerializeOptions))
     .join(';')
+
+  const cookie = originalCookies ? `${originalCookies}; ${additionalCookies}` : additionalCookies
 
   return await new Promise<void>((resolve, reject) =>
     previewModeProxy.web(req, res, { target, headers: { cookie }, secure }, err => {
