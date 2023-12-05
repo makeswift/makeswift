@@ -112,7 +112,7 @@
     "madge": "madge --circular --warning --extensions ts,tsx src/ --exclude \"dist/.+\""
   },
   "peerDependencies": {
-    "next": ">=12.2.0 <13.0.0 || ^13.0.0",
+    "next": ">=12.2.0 <13.0.0 || ^13.0.0 || ^14.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },
