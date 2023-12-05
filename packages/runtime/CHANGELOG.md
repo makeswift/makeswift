@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.11.19
+
+### Patch Changes
+
+- 603ebd1: Add Next.js v14 to peer dependencies.
+
 ## 0.11.18
 
 ### Patch Changes
