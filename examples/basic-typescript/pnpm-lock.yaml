@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@makeswift/runtime':
-    specifier: 0.11.4
-    version: 0.11.4(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
+    specifier: 0.11.19
+    version: 0.11.19(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
   '@radix-ui/react-accordion':
     specifier: ^1.1.2
     version: 1.1.2(@types/react-dom@18.2.7)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)
@@ -250,6 +250,7 @@ packages:
 
   /@emotion/memoize@0.7.4:
     resolution: {integrity: sha512-Ja/Vfqe3HpuzRsG1oBtWTHk2PGZ7GR+2Vz5iYGelAw8dx32K0y7PjVuxK6z1nMpZOqAFsRUPCkK1YjJ56qJlgw==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -372,10 +373,10 @@ packages:
       semver: 7.5.4
     dev: false
 
-  /@makeswift/runtime@0.11.4(next@13.2.1)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-Vpes4EFUtwE3Va/oG9ax57k5YAA3Nna6Zs6Y5uidI1QWp+AuCjANHD1CDuMioMYb3EzUOdI+Nqy4FfBJ+u2Wcg==}
+  /@makeswift/runtime@0.11.19(next@13.2.1)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-k9vIT6EM24+9Wwc4xHEwV7OxEdUI4os9/gIR/fMWiyHnNSiBUg8mMl7IXuDmdDvpHYusZcxYgpJfvNK1WJM0RQ==}
     peerDependencies:
-      next: '>=12.2.0 <13.0.0 || ^13.0.0'
+      next: '>=12.2.0 <13.0.0 || ^13.0.0 || ^14.0.0'
       react: ^18.0.0
       react-dom: ^18.0.0
     dependencies:
