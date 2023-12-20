@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.12.1
+
+### Patch Changes
+
+- 61f8896: Fix Preview Mode proxy for localized pages in Next.js v14.
+
 ## 0.12.0
 
 ### Minor Changes
