@@ -149,7 +149,7 @@
     "csstype": "^2.6.5",
     "escape-html": "^1.0.3",
     "formik": "^2.2.9",
-    "framer-motion": "^6.0.0",
+    "framer-motion": "^10.16.16",
     "graphql": "^16.3.0",
     "html-react-parser": "^5.0.10",
     "http-proxy": "^1.18.1",
