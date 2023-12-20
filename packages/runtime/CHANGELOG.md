@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.12.0
+
+### Minor Changes
+
+- cbcb4d6: Upgrade `html-react-parser` to v5.0.10.
+- e657aa9: Upgrade Framer Motion to v10.16.16.
+- 8f87717: Move `@types/react` and `@types/react-dom` to peer dependencies.
+
 ## 0.11.19
 
 ### Patch Changes
