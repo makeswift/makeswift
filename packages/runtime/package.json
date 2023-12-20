@@ -151,7 +151,7 @@
     "formik": "^2.2.9",
     "framer-motion": "^6.0.0",
     "graphql": "^16.3.0",
-    "html-react-parser": "^1.2.4",
+    "html-react-parser": "^5.0.10",
     "http-proxy": "^1.18.1",
     "immutable": "^4.0.0-rc.12",
     "is-hotkey": "^0.1.4",
