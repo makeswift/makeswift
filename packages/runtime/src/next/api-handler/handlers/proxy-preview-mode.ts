@@ -29,8 +29,9 @@ export default async function proxyPreviewMode(
   ) as keyof NextApiRequest | undefined
   if (NextRequestMetaSymbol) {
     const nextRequestMeta = req[NextRequestMetaSymbol]
-    const initUrl = nextRequestMeta?.__NEXT_INIT_URL
-    const isLocaleStripped = nextRequestMeta?.__nextStrippedLocale
+    const initUrl = nextRequestMeta?.__NEXT_INIT_URL ?? nextRequestMeta?.initURL
+    const isLocaleStripped =
+      nextRequestMeta?.__nextStrippedLocale ?? nextRequestMeta?.didStripLocale
 
     try {
       if (isLocaleStripped && initUrl) req.url = new URL(initUrl).pathname
