@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.12.2
+
+### Patch Changes
+
+- 2deee74: Add type and version to the Color control
+
 ## 0.12.1
 
 ### Patch Changes
