@@ -3,13 +3,12 @@ import { ComponentPropsWithoutRef, forwardRef, Ref } from 'react'
 import { Link } from '../../shared/Link'
 import { colorToString } from '../../utils/colorToString'
 import { ColorValue as Color } from '../../utils/types'
-import { SocialLinksOptions } from './options'
+import { SocialLinksOptions, SocialLinksOptionType } from './options'
 import GutterContainer from '../../shared/GutterContainer'
 import SocialLinksPlaceholder from './components/SocialLinksPlaceholder'
 import {
   ResponsiveValue,
   ElementIDValue,
-  SocialLinksValue,
   ResponsiveIconRadioGroupValue,
   ResponsiveSelectValue,
   GapXValue,
@@ -21,7 +20,10 @@ import { useResponsiveStyle } from '../../utils/responsive-style'
 
 type Props = {
   id?: ElementIDValue
-  links?: SocialLinksValue
+  links?: {
+    links: { id: string; payload: { type: SocialLinksOptionType; url: string } }[]
+    openInNewTab: boolean
+  }
   shape?: ResponsiveIconRadioGroupValue<'naked' | 'circle' | 'rounded' | 'square'>
   size?: ResponsiveIconRadioGroupValue<'small' | 'medium' | 'large'>
   hoverStyle?: ResponsiveSelectValue<'none' | 'grow' | 'shrink' | 'fade'>

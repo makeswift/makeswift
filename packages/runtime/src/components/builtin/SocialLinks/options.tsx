@@ -47,7 +47,9 @@ export const SocialLinksOptions = [
   { type: 'twitter', label: 'Twitter', icon: <LogoTwitter20 />, brandColor: '#1da1f2' },
   { type: 'whatsapp', label: 'WhatsApp', icon: <LogoWhatsapp20 />, brandColor: '#25d366' },
   { type: 'vimeo', label: 'Vimeo', icon: <LogoVimeo20 />, brandColor: '#1ab7ea' },
-  { type: 'X', label: 'X', icon: <LogoX20 />, brandColor: 'black' },
+  { type: 'x', label: 'X', icon: <LogoX20 />, brandColor: 'black' },
   { type: 'yelp', label: 'Yelp', icon: <LogoYelp20 />, brandColor: '#af0606' },
   { type: 'youtube', label: 'YouTube', icon: <LogoYoutube20 />, brandColor: '#ff0000' },
 ] as const
+
+export type SocialLinksOptionType = typeof SocialLinksOptions[number]['type']
