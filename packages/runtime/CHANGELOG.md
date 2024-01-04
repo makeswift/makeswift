@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.12.3
+
+### Patch Changes
+
+- 6b9de46: Fix SocialLinks component options.
+- 583679b: Remove X and Slack from `SocialLinkType`.
+- 690d001: Add `'discord'` to `SocialLinkType`.
+
 ## 0.12.2
 
 ### Patch Changes
