@@ -994,6 +994,7 @@ export function getShapePropControllerSwatchIds(
 type SocialLinkType =
   | 'angellist'
   | 'codepen'
+  | 'discord'
   | 'dribbble'
   | 'facebook'
   | 'github'
