@@ -1,10 +1,7 @@
 import { match } from 'ts-pattern'
 import type { CopyContext } from '../state/react-page'
 import type { ColorData } from './types'
-
-// TODO: We don't know where this is going to live yet, so exporting it
-// globally for now and reexporting it as a namespaced export below.
-export const ControlDataTypeKey = '@@makeswift/type'
+import { ControlDataTypeKey } from './control-data-type-key'
 
 export const ColorControlDataTypeKey = ControlDataTypeKey
 
@@ -44,7 +41,7 @@ export function copyColorData(
   if (value == null) return value
 
   return match(value)
-    .with({ [ControlDataTypeKey]: ColorControlDataTypeValueV1 }, val => ({
+    .with({ [ColorControlDataTypeKey]: ColorControlDataTypeValueV1 }, val => ({
       ...val,
       swatchId: context.replacementContext.swatchIds.get(val.swatchId) ?? val.swatchId,
     }))
