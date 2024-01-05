@@ -54,6 +54,13 @@ export const DEFAULT_PRODUCT: ProductFragment = {
           value: 'Monstera',
         },
       },
+      {
+        node: {
+          key: 'description',
+          value:
+            '<p>Es importante tener un buen servicio al cliente, un proveedor de servicio al cliente. Hasta que lo odio. La vida de todos se gasta en bienes raíces. Nadie esperaba que fuera feo. Nibh de urna suspendida, no tirada, siempre toma, pone un. \\n Hasta que no solo necesita desencadenar una fácil fermentación. Algunas de las aerolíneas más importantes son médicas. Aenean dignissim pellentesque felis.</p>',
+        },
+      },
     ],
   },
 }
