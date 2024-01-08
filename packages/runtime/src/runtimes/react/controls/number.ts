@@ -1,11 +1,16 @@
-import { NumberControlData, NumberControlDefinition } from '../../../controls'
+import { match } from 'ts-pattern'
+import { NumberControlData, NumberControlDataTypeKey, NumberControlDataTypeValueV1, NumberControlDefinition } from '../../../controls'
 
 export type NumberControlValue<T extends NumberControlDefinition> =
-  undefined extends T['config']['defaultValue'] ? NumberControlData | undefined : NumberControlData
+  undefined extends T['config']['defaultValue'] ? number | undefined : number
 
 export function useNumber<T extends NumberControlDefinition>(
-  numberControlData: number | undefined,
-  controlDefinition: T,
+  data: NumberControlData | undefined,
+  definition: T,
 ): NumberControlValue<T> {
-  return (numberControlData ?? controlDefinition.config.defaultValue) as NumberControlValue<T>
+  const value: number | undefined = match(data)
+    .with({ [NumberControlDataTypeKey]: NumberControlDataTypeValueV1 }, (val) => val.value)
+    .otherwise(val => val) ?? definition.config.defaultValue
+
+  return value as NumberControlValue<T>
 }
