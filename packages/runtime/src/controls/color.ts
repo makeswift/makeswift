@@ -10,7 +10,7 @@ export const ColorControlDataTypeValueV1 = 'color::v1'
 export type ColorControlDataV0 = ColorData
 
 export type ColorControlDataV1 = ColorControlDataV0 & {
-  [ControlDataTypeKey]: typeof ColorControlDataTypeValueV1
+  [ColorControlDataTypeKey]: typeof ColorControlDataTypeValueV1
 }
 
 export type ColorControlData = ColorControlDataV0 | ColorControlDataV1
