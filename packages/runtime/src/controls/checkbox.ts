@@ -7,7 +7,7 @@ export const CheckboxControlDataTypeValueV1 = 'checkbox::v1'
 export type CheckboxControlDataV0 = boolean
 
 export type CheckboxControlDataV1 = {
-  [ControlDataTypeKey]: typeof CheckboxControlDataTypeValueV1
+  [CheckboxControlDataTypeKey]: typeof CheckboxControlDataTypeValueV1
   value: boolean,
 }
 
