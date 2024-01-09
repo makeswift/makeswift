@@ -1,5 +1,15 @@
 # @makeswift/runtime
 
+## 0.12.4
+
+### Patch Changes
+
+- 9c1941f: Added `type` field to the `TextArea` control
+- 37f16af: Added `type` field to the `Number` control
+- 8896a9b: Add `type` to Checkbox control
+- 8da8717: Refeactored the `Checkbox` and `Color` control to use the locally scoped key variable
+- dd7c1d1: Added `type` field to the `TextInput` control
+
 ## 0.12.3
 
 ### Patch Changes
