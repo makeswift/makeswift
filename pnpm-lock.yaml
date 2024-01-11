@@ -118,6 +118,16 @@ importers:
         specifier: ^7.3.8
         version: 7.5.1
 
+  packages/next:
+    dependencies:
+      zod:
+        specifier: ^3.21.4
+        version: 3.21.4
+    devDependencies:
+      '@types/node':
+        specifier: ^17.0.21
+        version: 17.0.21
+
   packages/runtime:
     dependencies:
       '@emotion/css':
