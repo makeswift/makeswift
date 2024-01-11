@@ -108,7 +108,6 @@ type LocalizedPage = {
 type MakeswiftConfig = {
   apiOrigin?: string
   runtime?: ReactRuntime
-  siteVersion?: MakeswiftSiteVersion
 }
 
 export type Sitemap = {
@@ -152,7 +151,6 @@ export class Makeswift {
   private apiOrigin: URL
   private graphqlClient: GraphQLClient
   private runtime: ReactRuntime
-  private siteVersion: MakeswiftSiteVersion | null
 
   static getSiteVersion(previewData: PreviewData): MakeswiftSiteVersion {
     return getMakeswiftSiteVersion(previewData) ?? MakeswiftSiteVersion.Live
@@ -160,11 +158,7 @@ export class Makeswift {
 
   constructor(
     apiKey: string,
-    {
-      apiOrigin = 'https://api.makeswift.com',
-      runtime = ReactRuntime,
-      siteVersion,
-    }: MakeswiftConfig = {},
+    { apiOrigin = 'https://api.makeswift.com', runtime = ReactRuntime }: MakeswiftConfig = {},
   ) {
     if (typeof apiKey !== 'string') {
       throw new Error(
@@ -186,16 +180,19 @@ export class Makeswift {
 
     this.graphqlClient = new GraphQLClient(new URL('graphql', apiOrigin).href)
     this.runtime = runtime
-    this.siteVersion = siteVersion ?? null
   }
 
-  private async fetch(path: string, init?: RequestInit): Promise<Response> {
+  private async fetch(
+    path: string,
+    siteVersion: MakeswiftSiteVersion = MakeswiftSiteVersion.Live,
+    init?: RequestInit,
+  ): Promise<Response> {
     const response = await fetch(new URL(path, this.apiOrigin).toString(), {
       ...init,
       headers: {
         ['X-API-Key']: this.apiKey,
         'Makeswift-Site-API-Key': this.apiKey,
-        'Makeswift-Site-Version': this.siteVersion ?? MakeswiftSiteVersion.Live,
+        'Makeswift-Site-Version': siteVersion,
         ...init?.headers,
       },
     })
@@ -203,12 +200,12 @@ export class Makeswift {
     return response
   }
 
-  async getPages(): Promise<MakeswiftPage[]> {
-    const response = await this.fetch(`/${this.siteVersion == null ? 'v2' : 'v3'}/pages`, {
-      headers: {
-        'Makeswift-Site-Version': MakeswiftSiteVersion.Live,
-      },
-    })
+  async getPages({
+    siteVersion = MakeswiftSiteVersion.Live,
+  }: {
+    siteVersion?: MakeswiftSiteVersion
+  } = {}): Promise<MakeswiftPage[]> {
+    const response = await this.fetch(`v3/pages`, siteVersion)
 
     if (!response.ok) {
       console.error('Failed to get pages', await response.json())
@@ -223,23 +220,14 @@ export class Makeswift {
   async getPage(
     pathname: string,
     {
-      preview: previewOverride = false,
+      siteVersion = MakeswiftSiteVersion.Live,
       locale: localeInput,
-    }: { preview?: boolean; locale?: string } = {},
+    }: { siteVersion?: MakeswiftSiteVersion; locale?: string } = {},
   ): Promise<GetPageAPI | null> {
-    const siteVersion =
-      this.siteVersion ??
-      (previewOverride ? MakeswiftSiteVersion.Working : MakeswiftSiteVersion.Live)
-
-    const url = new URL(
-      `${this.siteVersion == null ? 'v1' : 'v2'}/pages/${encodeURIComponent(pathname)}`,
-      this.apiOrigin,
-    )
+    const url = new URL(`v2/pages/${encodeURIComponent(pathname)}`, this.apiOrigin)
     if (localeInput) url.searchParams.set('locale', localeInput)
 
-    const response = await this.fetch(url.pathname + url.search, {
-      headers: { 'Makeswift-Site-Version': siteVersion },
-    })
+    const response = await this.fetch(url.pathname + url.search, siteVersion)
 
     if (!response.ok) {
       if (response.status === 404) return null
@@ -255,25 +243,17 @@ export class Makeswift {
 
   private async getTypographies(
     typographyIds: string[],
-    preview: boolean,
+    siteVersion: MakeswiftSiteVersion,
   ): Promise<(Typography | null)[]> {
     if (typographyIds.length === 0) return []
 
-    const url = new URL(
-      `${this.siteVersion == null ? 'v1' : 'v2'}/typographies/bulk`,
-      this.apiOrigin,
-    )
+    const url = new URL(`v2/typographies/bulk`, this.apiOrigin)
 
     typographyIds.forEach(id => {
       url.searchParams.append('ids', id)
     })
 
-    const response = await this.fetch(url.pathname + url.search, {
-      headers: {
-        'Makeswift-Site-Version':
-          this.siteVersion ?? (preview ? MakeswiftSiteVersion.Working : MakeswiftSiteVersion.Live),
-      },
-    })
+    const response = await this.fetch(url.pathname + url.search, siteVersion)
 
     if (!response.ok) {
       console.error('Failed to get typographies', await response.json())
@@ -286,21 +266,19 @@ export class Makeswift {
     return body
   }
 
-  private async getSwatches(ids: string[], preview: boolean): Promise<(Swatch | null)[]> {
+  private async getSwatches(
+    ids: string[],
+    siteVersion: MakeswiftSiteVersion,
+  ): Promise<(Swatch | null)[]> {
     if (ids.length === 0) return []
 
-    const url = new URL(`${this.siteVersion == null ? 'v1' : 'v2'}/swatches/bulk`, this.apiOrigin)
+    const url = new URL(`v2/swatches/bulk`, this.apiOrigin)
 
     ids.forEach(id => {
       url.searchParams.append('ids', id)
     })
 
-    const response = await this.fetch(url.pathname + url.search, {
-      headers: {
-        'Makeswift-Site-Version':
-          this.siteVersion ?? (preview ? MakeswiftSiteVersion.Working : MakeswiftSiteVersion.Live),
-      },
-    })
+    const response = await this.fetch(url.pathname + url.search, siteVersion)
 
     if (!response.ok) {
       console.error('Failed to get swatches', await response.json())
@@ -316,20 +294,20 @@ export class Makeswift {
       swatchIds,
       ...introspectedResourceIds
     }: IntrospectedResourcesQueryVariables & { swatchIds: string[] },
-    preview: boolean,
+    siteVersion: MakeswiftSiteVersion,
   ): Promise<IntrospectedResourcesQueryResult & { swatches: (Swatch | null)[] }> {
     const result = await this.graphqlClient.request<
       IntrospectedResourcesQueryResult,
       IntrospectedResourcesQueryVariables
     >(IntrospectedResourcesQuery, introspectedResourceIds)
-    const swatches = await this.getSwatches(swatchIds, preview)
+    const swatches = await this.getSwatches(swatchIds, siteVersion)
 
     return { ...result, swatches }
   }
 
   private async introspect(
     element: Element,
-    preview: boolean,
+    siteVersion: MakeswiftSiteVersion,
     locale?: string,
   ): Promise<{ cacheData: CacheData; localizedResourcesMap: SerializedLocalizedResourcesMap }> {
     const runtime = this.runtime
@@ -352,13 +330,14 @@ export class Makeswift {
 
       if (isElementReference(current)) {
         const globalElementId = current.value
-        const globalElement = await this.getGlobalElement(globalElementId)
+        const globalElement = await this.getGlobalElement(globalElementId, siteVersion)
         let elementData = globalElement?.data
 
         if (locale) {
           const localizedGlobalElement = await this.getLocalizedGlobalElement(
             globalElementId,
             locale,
+            siteVersion,
           )
 
           localizedResourcesMap.set(globalElementId, localizedGlobalElement?.id ?? null)
@@ -416,7 +395,7 @@ export class Makeswift {
       }
     }
 
-    const typographies = await this.getTypographies([...typographyIds], preview)
+    const typographies = await this.getTypographies([...typographyIds], siteVersion)
 
     typographies.forEach(typography => {
       typography?.style.forEach(style => {
@@ -426,7 +405,7 @@ export class Makeswift {
       })
     })
 
-    const pagePathnames = await this.getPagePathnameSlices([...pageIds], { preview, locale })
+    const pagePathnames = await this.getPagePathnameSlices([...pageIds], siteVersion, { locale })
 
     const { swatches, files, tables } = await this.getIntrospectedResources(
       {
@@ -434,7 +413,7 @@ export class Makeswift {
         fileIds: [...fileIds],
         tableIds: [...tableIds],
       },
-      preview,
+      siteVersion,
     )
 
     const cacheData = {
@@ -475,27 +454,16 @@ export class Makeswift {
 
   async getPageSnapshot(
     pathname: string,
-    {
-      preview: previewOverride = false,
-      locale: localeInput,
-    }: { preview?: boolean; locale?: string } = {},
+    { siteVersion, locale: localeInput }: { siteVersion: MakeswiftSiteVersion; locale?: string },
   ): Promise<MakeswiftPageSnapshot | null> {
-    const siteVersion =
-      this.siteVersion ??
-      (previewOverride ? MakeswiftSiteVersion.Working : MakeswiftSiteVersion.Live)
-
     const searchParams = new URLSearchParams()
     if (localeInput) {
       searchParams.set('locale', localeInput)
     }
 
     const response = await this.fetch(
-      `/${this.siteVersion == null ? 'v2' : 'v3'}/pages/${encodeURIComponent(
-        pathname,
-      )}/document?${searchParams.toString()}`,
-      {
-        headers: { 'Makeswift-Site-Version': siteVersion },
-      },
+      `v3/pages/${encodeURIComponent(pathname)}/document?${searchParams.toString()}`,
+      siteVersion,
     )
 
     if (!response.ok) {
@@ -513,7 +481,7 @@ export class Makeswift {
 
     const { cacheData, localizedResourcesMap } = await this.introspect(
       baseLocalizedPage?.data ?? document.data,
-      previewOverride,
+      siteVersion,
       locale ?? undefined,
     )
     const apiOrigin = this.apiOrigin.href
@@ -529,10 +497,8 @@ export class Makeswift {
     }
   }
 
-  async getSwatch(swatchId: string): Promise<Swatch | null> {
-    const response = await this.fetch(
-      `${this.siteVersion == null ? 'v1' : 'v2'}/swatches/${swatchId}`,
-    )
+  async getSwatch(swatchId: string, siteVersion: MakeswiftSiteVersion): Promise<Swatch | null> {
+    const response = await this.fetch(`v2/swatches/${swatchId}`, siteVersion)
 
     if (!response.ok) {
       if (response.status !== 404) console.error('Failed to get swatch', await response.json())
@@ -554,10 +520,11 @@ export class Makeswift {
     return result.file
   }
 
-  async getTypography(typographyId: string): Promise<Typography | null> {
-    const response = await this.fetch(
-      `${this.siteVersion == null ? 'v1' : 'v2'}/typographies/${typographyId}`,
-    )
+  async getTypography(
+    typographyId: string,
+    siteVersion: MakeswiftSiteVersion,
+  ): Promise<Typography | null> {
+    const response = await this.fetch(`v2/typographies/${typographyId}`, siteVersion)
 
     if (!response.ok) {
       if (response.status !== 404) console.error('Failed to get typography', await response.json())
@@ -570,10 +537,11 @@ export class Makeswift {
     return typography
   }
 
-  async getGlobalElement(globalElementId: string): Promise<GlobalElement | null> {
-    const response = await this.fetch(
-      `${this.siteVersion == null ? 'v1' : 'v2'}/global-elements/${globalElementId}`,
-    )
+  async getGlobalElement(
+    globalElementId: string,
+    siteVersion: MakeswiftSiteVersion,
+  ): Promise<GlobalElement | null> {
+    const response = await this.fetch(`v2/global-elements/${globalElementId}`, siteVersion)
 
     if (!response.ok) {
       if (response.status !== 404)
@@ -590,11 +558,11 @@ export class Makeswift {
   async getLocalizedGlobalElement(
     globalElementId: string,
     locale: string,
+    siteVersion: MakeswiftSiteVersion,
   ): Promise<LocalizedGlobalElement | null> {
     const response = await this.fetch(
-      `${
-        this.siteVersion == null ? 'v1' : 'v2'
-      }/localized-global-elements/${globalElementId}?locale=${locale}`,
+      `v2/localized-global-elements/${globalElementId}?locale=${locale}`,
+      siteVersion,
     )
 
     if (!response.ok) {
@@ -611,25 +579,17 @@ export class Makeswift {
 
   async getPagePathnameSlices(
     pageIds: string[],
-    { preview: previewOverride = false, locale }: { preview?: boolean; locale?: string } = {},
+    siteVersion: MakeswiftSiteVersion,
+    { locale }: { locale?: string },
   ): Promise<(PagePathnameSlice | null)[]> {
     if (pageIds.length === 0) return []
 
-    const url = new URL(
-      `${this.siteVersion == null ? 'v1' : 'v2'}/page-pathname-slices/bulk`,
-      this.apiOrigin,
-    )
+    const url = new URL(`v2/page-pathname-slices/bulk`, this.apiOrigin)
 
     pageIds.forEach(id => url.searchParams.append('ids', id))
     if (locale != null) url.searchParams.set('locale', locale)
 
-    const response = await this.fetch(url.pathname + url.search, {
-      headers: {
-        'Makeswift-Site-Version':
-          this.siteVersion ??
-          (previewOverride ? MakeswiftSiteVersion.Working : MakeswiftSiteVersion.Live),
-      },
-    })
+    const response = await this.fetch(url.pathname + url.search, siteVersion)
 
     if (!response.ok) {
       console.error('Failed to get page pathname slices', await response.json())
@@ -658,9 +618,10 @@ export class Makeswift {
 
   async getPagePathnameSlice(
     pageId: string,
-    { preview = false, locale }: { preview?: boolean; locale?: string } = {},
+    siteVersion: MakeswiftSiteVersion,
+    { locale }: { locale?: string } = {},
   ): Promise<PagePathnameSlice | null> {
-    const pagePathnameSlices = await this.getPagePathnameSlices([pageId], { preview, locale })
+    const pagePathnameSlices = await this.getPagePathnameSlices([pageId], siteVersion, { locale })
 
     return pagePathnameSlices.at(0) ?? null
   }

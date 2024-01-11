@@ -98,7 +98,7 @@ export async function getStaticProps(
   })
   const path = '/' + (ctx.params?.path ?? []).join('/')
   const snapshot = await makeswift.getPageSnapshot(path, {
-    preview: ctx.previewData?.makeswift === true,
+    siteVersion: Makeswift.getSiteVersion(ctx.previewData),
   })
 
   if (snapshot == null) return { notFound: true, revalidate: REVALIDATE_SECONDS }
@@ -115,7 +115,9 @@ export async function getServerSideProps(
     apiOrigin: getApiOrigin(),
   })
   const path = '/' + (ctx.params?.path ?? []).join('/')
-  const snapshot = await makeswift.getPageSnapshot(path, { preview: true })
+  const snapshot = await makeswift.getPageSnapshot(path, {
+    siteVersion: Makeswift.getSiteVersion(ctx.previewData),
+  })
 
   if (snapshot == null) return { notFound: true }
 

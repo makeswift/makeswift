@@ -19,7 +19,6 @@ type MakeswiftApiHandlerConfig = {
   appOrigin?: string
   apiOrigin?: string
   getFonts?: GetFonts
-  siteVersions?: boolean
   runtime?: ReactRuntime
 }
 
@@ -42,7 +41,6 @@ export function MakeswiftApiHandler(
     appOrigin = 'https://app.makeswift.com',
     apiOrigin = 'https://api.makeswift.com',
     getFonts,
-    siteVersions = false,
     runtime = ReactRuntime,
   }: MakeswiftApiHandlerConfig = {},
 ): NextApiHandler<MakeswiftApiHandlerResponse> {
@@ -74,18 +72,15 @@ export function MakeswiftApiHandler(
       )
     }
 
-    const client = new Makeswift(apiKey, {
-      apiOrigin,
-      siteVersion: siteVersions ? Makeswift.getSiteVersion(req.previewData) : undefined,
-      runtime,
-    })
+    const client = new Makeswift(apiKey, { apiOrigin, runtime })
+    const siteVersion = Makeswift.getSiteVersion(req.previewData)
     const action = '/' + makeswift.join('/')
     const matches = <T extends object>(pattern: string): Match<T> =>
       matchPattern<T>(pattern, { decode: decodeURIComponent })(action)
 
     let m
 
-    if (matches('/manifest')) return manifest(req, res, { apiKey, siteVersions })
+    if (matches('/manifest')) return manifest(req, res, { apiKey })
 
     if (matches('/revalidate')) return revalidate(req, res, { apiKey })
 
@@ -103,7 +98,7 @@ export function MakeswiftApiHandler(
       resource === null ? res.status(404).json({ message: 'Not Found' }) : res.json(resource)
 
     if ((m = matches<{ id: string }>('/swatches/:id'))) {
-      return client.getSwatch(m.params.id).then(handleResource)
+      return client.getSwatch(m.params.id, siteVersion).then(handleResource)
     }
 
     if ((m = matches<{ id: string }>('/files/:id'))) {
@@ -111,11 +106,11 @@ export function MakeswiftApiHandler(
     }
 
     if ((m = matches<{ id: string }>('/typographies/:id'))) {
-      return client.getTypography(m.params.id).then(handleResource)
+      return client.getTypography(m.params.id, siteVersion).then(handleResource)
     }
 
     if ((m = matches<{ id: string }>('/global-elements/:id'))) {
-      return client.getGlobalElement(m.params.id).then(handleResource)
+      return client.getGlobalElement(m.params.id, siteVersion).then(handleResource)
     }
 
     if (
@@ -124,7 +119,7 @@ export function MakeswiftApiHandler(
       ))
     ) {
       return client
-        .getLocalizedGlobalElement(m.params.globalElementId, m.params.locale)
+        .getLocalizedGlobalElement(m.params.globalElementId, m.params.locale, siteVersion)
         .then(resource =>
           // We're not returning 404 if it's null because localized global element is nullable.
           resource === null ? res.json({ message: 'Not Found' }) : res.json(resource),
@@ -134,7 +129,7 @@ export function MakeswiftApiHandler(
     if ((m = matches<{ id: string }>('/page-pathname-slices/:id'))) {
       const locale = typeof req.query.locale === 'string' ? req.query.locale : undefined
 
-      return client.getPagePathnameSlice(m.params.id, { locale }).then(handleResource)
+      return client.getPagePathnameSlice(m.params.id, siteVersion, { locale }).then(handleResource)
     }
 
     if ((m = matches<{ id: string }>('/tables/:id'))) {
