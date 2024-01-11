@@ -13,7 +13,7 @@ Upgrade guide from version `0.12.x` to `0.13.x`:
    b. Add the new `siteVersion` parameter.
 
    ```diff
-     export async function getStaticProps(ctx){
+     export async function getStaticProps(ctx) {
       const makeswift = new Makeswift(process.env.MAKESWIFT_SITE_API_KEY, { runtime })
 
       const snapshot = await makeswift.getPageSnapshot(path, {
