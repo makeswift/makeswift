@@ -17,7 +17,7 @@ import {
   GetStaticPropsResult,
 } from 'next'
 import { Makeswift } from './client'
-import { MakeswiftPreviewData } from './preview-mode'
+import { MakeswiftPreviewData, MakeswiftSiteVersion } from './preview-mode'
 
 function getApiOrigin(): string {
   const apiOriginString = process['env'].MAKESWIFT_API_HOST ?? 'https://api.makeswift.com'
@@ -116,7 +116,7 @@ export async function getServerSideProps(
   })
   const path = '/' + (ctx.params?.path ?? []).join('/')
   const snapshot = await makeswift.getPageSnapshot(path, {
-    siteVersion: Makeswift.getSiteVersion(ctx.previewData),
+    siteVersion: MakeswiftSiteVersion.Working,
   })
 
   if (snapshot == null) return { notFound: true }
