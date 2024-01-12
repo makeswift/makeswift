@@ -200,7 +200,7 @@ The "optional catch all route" uses Next.js' `getStaticProps` to get a page snap
 const makeswift = new Makeswift(config.makeswift.siteApiKey)
 const path = '/' + (ctx.params?.path ?? []).join('/')
 const snapshot = await makeswift.getPageSnapshot(path, {
-  preview: ctx.preview,
+  siteVersion: Makeswift.getSiteVersion(ctx.previewData),
 })
 ```
 
@@ -248,7 +248,7 @@ The resulting pages use the same makeswift data from the template (`/__product__
 ```tsx
 const makeswift = new Makeswift(config.makeswift.siteApiKey)
 const snapshot = await makeswift.getPageSnapshot(config.makeswift.productTemplatePathname, {
-  preview: ctx.preview,
+  siteVersion: Makeswift.getSiteVersion(ctx.previewData),
 })
 ```
 

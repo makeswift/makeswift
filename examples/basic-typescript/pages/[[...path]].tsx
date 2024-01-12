@@ -1,6 +1,6 @@
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from 'next'
 
-import { Page as MakeswiftPage, PageProps as MakeswiftPageProps } from '@makeswift/runtime/next'
+import { Page as MakeswiftPage, PageProps as MakeswiftPageProps, Makeswift } from '@makeswift/runtime/next'
 
 import { client } from '@/lib/makeswift/client'
 import '@/lib/makeswift/components'
@@ -27,7 +27,9 @@ export async function getStaticProps(
   ctx: GetStaticPropsContext<ParsedUrlQuery>
 ): Promise<GetStaticPropsResult<Props>> {
   const path = '/' + (ctx.params?.path ?? []).join('/')
-  const snapshot = await client.getPageSnapshot(path, { preview: ctx.preview })
+  const snapshot = await client.getPageSnapshot(path, { 
+    siteVersion: Makeswift.getSiteVersion(ctx.previewData),
+  })
 
   if (snapshot == null) return { notFound: true }
 
