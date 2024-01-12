@@ -47,7 +47,7 @@ export async function getStaticProps(
   const makeswift = new Makeswift(config.makeswift.siteApiKey)
 
   const snapshot = await makeswift.getPageSnapshot(config.makeswift.productTemplatePathname, {
-    preview: ctx.preview,
+    siteVersion: Makeswift.getSiteVersion(ctx.previewData),
   })
 
   if (snapshot == null) return { notFound: true, revalidate: 1 }
