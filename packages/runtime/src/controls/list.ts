@@ -12,7 +12,7 @@ import {
   getTranslatableData,
   mergeTranslatedData,
 } from './control'
-import { Data } from './types'
+import { ColorData, Data } from './types'
 
 import { copy as controlCopy } from './control'
 import {
@@ -22,17 +22,79 @@ import {
   getSwatchIds,
   getTypographyIds,
 } from '../prop-controllers/introspection'
+import { CheckboxControlDefinition } from './checkbox'
+import { NumberControlDefinition } from './number'
+import { TextInputControlDefinition } from './text-input'
+import { TextAreaControlDefinition } from './text-area'
+import { SelectControlData, SelectControlDefinition } from './select'
+import { ColorControlDefinition } from './color'
+import { IconRadioGroupControlData, IconRadioGroupControlDefinition } from './icon-radio-group'
+import { ImageControlData, ImageControlDefinition } from './image'
+import { ComboboxControlData, ComboboxControlDefinition } from './combobox'
+import { ShapeControlDefinition } from './shape'
+import { LinkControlData, LinkControlDefinition } from './link'
+import { RichTextControlData, RichTextControlDefinition } from './rich-text'
+import { IndexSignatureHack } from '../prop-controllers/descriptors'
+import { RichTextV2ControlData, RichTextV2ControlDefinition } from './rich-text-v2'
+import { StyleControlData, StyleControlDefinition } from './style'
+import { StyleV2ControlData, StyleV2ControlDefinition } from './style-v2'
+import { TypographyControlData, TypographyControlDefinition } from './typography'
+
+export type GetItemLabelControlData<T extends ControlDefinition> = T extends CheckboxControlDefinition
+  ? boolean
+  : T extends NumberControlDefinition
+  ? number
+  : T extends TextInputControlDefinition
+  ? string
+  : T extends TextAreaControlDefinition
+  ? string
+  : T extends SelectControlDefinition
+  ? SelectControlData<T>
+  : T extends ColorControlDefinition
+  ? ColorData
+  : T extends IconRadioGroupControlDefinition
+  ? IconRadioGroupControlData<T>
+  : T extends ImageControlDefinition
+  ? ImageControlData
+  : T extends ComboboxControlDefinition
+  ? ComboboxControlData<T>
+  : T extends ShapeControlDefinition
+  ? GetItemLabelShapeControlData<T>
+  : T extends ListControlDefinition
+  ? GetItemListControlData<T>
+  : T extends LinkControlDefinition
+  ? LinkControlData
+  : T extends RichTextControlDefinition
+  ? IndexSignatureHack<RichTextControlData>
+  : T extends RichTextV2ControlDefinition
+  ? RichTextV2ControlData
+  : T extends StyleControlDefinition
+  ? StyleControlData
+  : T extends StyleV2ControlDefinition
+  ? StyleV2ControlData
+  : T extends TypographyControlDefinition
+  ? TypographyControlData
+  : never
+
+export type GetItemLabelListControlItemData<T extends ListControlDefinition> = {
+  id: string
+  type?: T['config']['type']['type']
+  value: GetItemLabelControlData<T['config']['type']>
+}
+
+export type GetItemLabelShapeControlData<T extends ShapeControlDefinition = ShapeControlDefinition> = {
+  [K in keyof T['config']['type']]?: GetItemLabelControlData<T['config']['type'][K]>
+}
+
+export type GetItemListControlData<T extends ListControlDefinition = ListControlDefinition> =
+  GetItemLabelListControlItemData<T>[]
 
 export const ListControlType = 'makeswift::controls::list'
 
 type ListControlConfig<T extends ControlDefinition = ControlDefinition> = {
   type: T
   label?: string
-  /**
-   * @todos
-   * - Make `item` the control's transformed "value" instead of "data."
-   */
-  getItemLabel?(item: ControlDefinitionData<T> | undefined): string
+  getItemLabel?(item: GetItemLabelControlData<T> | undefined): string
 }
 
 export type ListControlDefinition<C extends ListControlConfig = ListControlConfig> = {
@@ -51,6 +113,9 @@ export type ListControlItemData<T extends ListControlDefinition> = {
   type?: T['config']['type']['type']
   value: ControlDefinitionData<T['config']['type']>
 }
+
+export type ListControlData<T extends ListControlDefinition = ListControlDefinition> =
+  ListControlItemData<T>[]
 
 export const ListControlMessageType = {
   LIST_CONTROL_ITEM_CONTROL_MESSAGE: 'makeswift::controls::list::message::item-control-message',
@@ -126,9 +191,6 @@ export class ListControl<
     }
   }
 }
-
-export type ListControlData<T extends ListControlDefinition = ListControlDefinition> =
-  ListControlItemData<T>[]
 
 export function copyListData(
   definition: ListControlDefinition,
