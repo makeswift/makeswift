@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@makeswift/runtime':
-    specifier: 0.13.0
-    version: 0.13.0(@types/react-dom@18.2.7)(@types/react@18.2.21)(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
+    specifier: 0.13.1
+    version: 0.13.1(@types/react-dom@18.2.7)(@types/react@18.2.21)(next@13.2.1)(react-dom@18.2.0)(react@18.2.0)
   '@radix-ui/react-accordion':
     specifier: ^1.1.2
     version: 1.1.2(@types/react-dom@18.2.7)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)
@@ -373,8 +373,8 @@ packages:
       semver: 7.5.4
     dev: false
 
-  /@makeswift/runtime@0.13.0(@types/react-dom@18.2.7)(@types/react@18.2.21)(next@13.2.1)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-eDDT4NhDPpucyHR008PEM4WK1cg78h/B/oPMYb0wjXKDR9vW+vsh5jvQrGDeloq2oKjtpv4kL2hDNVoaveqzZA==}
+  /@makeswift/runtime@0.13.1(@types/react-dom@18.2.7)(@types/react@18.2.21)(next@13.2.1)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-nW61kpwgDtIgfTXsnol+daeTFbHaLXFKf01+AAz4cnvxbhW2e1vP9HY/THo0juXmGZZpngyQdE33p97NdOjD+g==}
     peerDependencies:
       '@types/react': ^18.0.0
       '@types/react-dom': ^18.0.0
