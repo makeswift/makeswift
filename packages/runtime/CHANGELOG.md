@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.13.1
+
+### Patch Changes
+
+- 87717fe: Change the `getItemLabel` type to a valid definition.
+
 ## 0.13.0
 
 ### Minor Changes
