@@ -37,7 +37,7 @@ export async function getStaticProps(
   const path = '/' + (ctx.params?.path ?? []).join('/')
 
   const snapshot = await makeswift.getPageSnapshot(path, {
-    preview: ctx.preview,
+    siteVersion: Makeswift.getSiteVersion(ctx.previewData),
   })
 
   if (snapshot == null) return { notFound: true }
