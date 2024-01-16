@@ -1,6 +1,6 @@
 export type Config = {
   bigcommerce: {
-    storeToken: string
+    accessToken: string
     storeURL: string
     storefrontURL: string
     storefrontToken: string
@@ -24,7 +24,7 @@ function getEnvVarOrThrow(key: string): string {
 export function getConfig(): Config {
   return {
     bigcommerce: {
-      storeToken: getEnvVarOrThrow('BIGCOMMERCE_STORE_API_TOKEN'),
+      accessToken: getEnvVarOrThrow('BIGCOMMERCE_ACCESS_TOKEN'),
       storeURL: getEnvVarOrThrow('BIGCOMMERCE_STORE_API_URL'),
       storefrontURL: getEnvVarOrThrow('BIGCOMMERCE_STOREFRONT_API_URL'),
       storefrontToken: getEnvVarOrThrow('BIGCOMMERCE_STOREFRONT_API_TOKEN'),
