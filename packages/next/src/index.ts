@@ -25,7 +25,7 @@ const swatchSchema = z.object({
 })
 type Swatch = z.infer<typeof swatchSchema>
 
-type Button = z.infer<typeof buttonSchema>
+export type Button = z.infer<typeof buttonSchema>
 
 const childrenSchema = z.object({
   elements: z.array(buttonSchema),
@@ -39,7 +39,7 @@ const rootSchema = z.object({
   }),
 })
 
-type Root = z.infer<typeof rootSchema>
+export type Root = z.infer<typeof rootSchema>
 
 const hydratedButtonSchema = z.object({
   type: z.literal('./components/Button/index.js'),
@@ -73,9 +73,9 @@ const hydratedRootSchema = z.object({
 
 type HydratedRoot = z.infer<typeof hydratedRootSchema>
 
-type HydratedElement = HydratedButton | HydratedRoot
+export type HydratedElement = HydratedButton | HydratedRoot
 
-type Element = Button | Root
+export type Element = Button | Root
 
 export function introspection(element: Element): {
   swatchIds: string[]
@@ -150,7 +150,27 @@ export function hydrate(element: Element, swatches: Swatch[]): HydratedElement {
   }
 }
 
-export async function getHydratedSnapshot({ pathName}: any) {
+export class Makeswift {
+  serverCompoonents = {}
+  clientComponents = {}
+
+  constructor() {}
+
+  registerServerComponent(key: string, component: unknown) {
+    this.serverCompoonents[key] = component
+  }
+  registerClientComponent(key: string, component: unknown) {
+    this.clientComponents[key] = component
+  }
+}
+
+export async function getHydratedSnapshot({
+  pathName,
+  client,
+}: {
+  pathName: string
+  client: Makeswift
+}) {
   console.log(process.env.MAKESWIFT_SITE_API_KEY)
   const response = await fetch(
     `https://api.makeswift.com/v3/pages/${encodeURIComponent(
@@ -159,7 +179,7 @@ export async function getHydratedSnapshot({ pathName}: any) {
     {
       headers: {
         ['X-API-Key']: process.env.MAKESWIFT_SITE_API_KEY,
-        'Makeswift-Site-API-Key':process.env.MAKESWIFT_SITE_API_KEY ,
+        'Makeswift-Site-API-Key': process.env.MAKESWIFT_SITE_API_KEY,
         'Makeswift-Site-Version': 'Working',
       },
     },
