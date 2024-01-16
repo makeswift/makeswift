@@ -25,7 +25,7 @@ If you have already created a BigCommerce store and know you want to use this ex
 
 The deploy link below includes integrations with BigCommerce and Makeswift.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fbigcommerce&project-name=bigcommerce-makeswift-example&repository-name=bigcommerce-makeswift-example&redirect-url=https%3A%2F%2Fapp.makeswift.com&integration-ids=oac_51ryd7Pob5ZsyTFzNzVvpsGq,oac_MuWZiE4jtmQ2ejZQaQ7ncuDT&external-id=ecommerce-bigcommerce)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fbigcommerce&project-name=bigcommerce-makeswift-example&repository-name=bigcommerce-makeswift-example&redirect-url=https%3A%2F%2Fapp.makeswift.com&integration-ids=oac_51ryd7Pob5ZsyTFzNzVvpsGq,oac_nsrwzogJLEFglVwt2060kB0y&external-id=ecommerce-bigcommerce)
 
 > **Note**
 > During the Makeswift integration we recommend using the the "Ecommerce - BigCommerce" template. It comes prefilled with ecommerce components.
@@ -71,10 +71,10 @@ Note: the env for this example corresponds to the [Vercel Commerce BigCommerce e
 
 ### How to get the environment variables from your store:
 
-- `BIGCOMMERCE_STORE_API_TOKEN` requires an [API account](https://support.bigcommerce.com/s/article/Store-API-Accounts?language=en_US)
+- `BIGCOMMERCE_ACCESS_TOKEN` requires an [API account](https://support.bigcommerce.com/s/article/Store-API-Accounts?language=en_US)
 
   - This token needs modify rights on Cart, Checkout, and storefront API Tokens, and read rights on Products and Content.
-  - The "Access Token" created is the value that is used as `BIGCOMMERCE_STORE_API_TOKEN`
+  - The "Access Token" created is the value that is used as `BIGCOMMERCE_ACCESS_TOKEN`
 
 - `BIGCOMMERCE_STORE_API_URL`
 
@@ -107,7 +107,10 @@ Note: the env for this example corresponds to the [Vercel Commerce BigCommerce e
 
 ### How to add localization information to your store:
 
-BigCommerce doesn't support localization as a first-class feature. This example uses the `metafields` [api](https://developer.bigcommerce.com/api-reference/1fc3689311c97-create-metafields) to store translations for each locale. `Metafields` are only accessible via API. This section will show you how to use the management API to add product translations.
+BigCommerce doesn't support localization as a first-class feature. 
+This example uses the `metafields` [api](https://developer.bigcommerce.com/api-reference/1fc3689311c97-create-metafields) to store translations for each locale. 
+`Metafields` are only accessible via API. 
+This section will show you how to use the management API to add product translations.
 
 Managing `metafields` with the Management API requires an [API account](https://support.bigcommerce.com/s/article/Store-API-Accounts?language=en_US) with product "modify" permissions. This API account should be different than the one used to deploy your site.
 
@@ -119,7 +122,7 @@ Managing `metafields` with the Management API requires an [API account](https://
 Once you have created the new API account you can use it with the curl commands below.
 
 > **Note**
-> Don't forget to replace the PRODUCT_MODIFY_BIGCOMMERCE_STORE_API_TOKEN with the "Access Token" from creating your API account above.
+> Don't forget to replace the PRODUCT_MODIFY_BIGCOMMERCE_ACCESS_TOKEN with the "Access Token" from creating your API account above. This token must have product "modify" permissions.
 
 #### Creating locale `metafields` for a product
 
@@ -141,7 +144,7 @@ To add the `metafield` for this translation I used the `namespace` of "es", the 
 ```bash
 curl -X POST https://api.bigcommerce.com/stores/uvhswop3wh/v3/catalog/products/114/metafields \
    -H 'Content-Type: application/json' \
-   -H 'X-Auth-Token: PRODUCT_MODIFY_BIGCOMMERCE_STORE_API_TOKEN'\
+   -H 'X-Auth-Token: PRODUCT_MODIFY_BIGCOMMERCE_ACCESS_TOKEN'\
    -d '{"permission_set":"read_and_sf_access","namespace":"es","key":"name","value":"Lirio Azul"}'
 ```
 
@@ -151,7 +154,7 @@ If you make a mistake when adding a `metafield`, this curl command can be used t
 
 ```bash
 curl -X DELETE https://api.bigcommerce.com/stores/uvhswop3wh/v3/catalog/products/114/metafields/24 \
-   -H 'X-Auth-Token: PRODUCT_MODIFY_BIGCOMMERCE_STORE_API_TOKEN'
+   -H 'X-Auth-Token: PRODUCT_MODIFY_BIGCOMMERCE_ACCESS_TOKEN'
 ```
 
 ### Updating the deployed host on Vercel
@@ -169,7 +172,7 @@ The example store `.env.local` looks like:
 ```
 MAKESWIFT_SITE_API_KEY=XXX-XXX-XXX
 
-BIGCOMMERCE_STORE_API_TOKEN=5lw9ulikcp186tjgg3rs39kh4fg3vci
+BIGCOMMERCE_ACCESS_TOKEN=5lw9ulikcp186tjgg3rs39kh4fg3vci
 BIGCOMMERCE_STORE_API_URL=https://api.bigcommerce.com/stores/uvhswop3wh
 BIGCOMMERCE_STOREFRONT_API_URL=https://store-uvhswop3wh.mybigcommerce.com/graphql
 BIGCOMMERCE_STOREFRONT_API_TOKEN="eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJjaWQiOjEsImNvcnMiOlsiaHR0cHM6Ly9tYWtlc3dpZnQtZXhhbXBsZS5teWJpZ2NvbW1lcmNlLmNvbSJdLCJlYXQiOjE2Njc5MzI1MTUsImlhdCI6MTY2NzMyNzcxNSwiaXNzIjoiQkMiLCJzaWQiOjEwMDI1OTU3MTAsInN1YiI6Ijlzem1mc2txeWRmdXc5MnkwajYyZjkxYXQ1bnAzdHciLCJzdWJfdHlwZSI6MiwidG9rZW5fdHlwZSI6MX0.X4A2EWh05-baaG5do_or3mEJgQbmg2pMNg4kLLadWp0ywmzqYI3piExNxSbVgOnvzG5U9gxOKCZsOVPeh0mzfA"
