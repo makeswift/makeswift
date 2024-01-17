@@ -30,7 +30,7 @@ import {
   getTableIds,
   getTypographyIds,
 } from '../prop-controllers/introspection'
-import { ReactRuntime } from '../runtimes/react'
+import { ReactRuntime } from '../runtimes/react/react-runtime'
 import {
   Element,
   ElementData,

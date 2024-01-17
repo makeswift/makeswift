@@ -1,3 +1,5 @@
+'use client'
+
 /* eslint-env browser */
 
 import { useState, useEffect, forwardRef, Ref, useImperativeHandle } from 'react'

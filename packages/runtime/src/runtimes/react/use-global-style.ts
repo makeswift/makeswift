@@ -1,3 +1,5 @@
+'use client'
+
 import * as React from 'react'
 import { useRef } from 'react'
 import { cache, injectGlobal } from '@emotion/css'

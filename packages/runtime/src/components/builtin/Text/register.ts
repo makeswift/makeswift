@@ -3,12 +3,11 @@ import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { RichText } from '../../../controls/rich-text-v2/rich-text-v2'
-import { forwardNextDynamicRef } from '../../../next/dynamic'
-import dynamic from 'next/dynamic'
+import { lazy } from 'react'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
-    forwardNextDynamicRef(patch => dynamic(() => patch(import('./Text')))),
+    lazy(() => import('./Text')),
     {
       type: MakeswiftComponentType.Text,
       label: 'Text',

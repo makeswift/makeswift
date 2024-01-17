@@ -1,14 +1,13 @@
-import dynamic from 'next/dynamic'
-import { forwardNextDynamicRef } from '../../../next'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 import { ButtonVariant } from './contants'
+import { lazy } from 'react'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
-    forwardNextDynamicRef(patch => dynamic(() => patch(import('./Button')))),
+    lazy(() => import('./Button')),
     {
       type: MakeswiftComponentType.Button,
       label: 'Button',

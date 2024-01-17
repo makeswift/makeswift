@@ -1,6 +1,3 @@
-import dynamic from 'next/dynamic'
-
-import { forwardNextDynamicRef } from '../../../next'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
@@ -12,6 +9,7 @@ import {
   DEFAULT_ITEM_ANIMATE_DELAY,
   DEFAULT_ITEM_STAGGER_DURATION,
 } from './constants'
+import { lazy } from 'react'
 
 export function registerComponent(runtime: ReactRuntime) {
   function isHiddenBasedOnAnimationType(
@@ -31,7 +29,7 @@ export function registerComponent(runtime: ReactRuntime) {
     isHiddenBasedOnAnimationType(props, deviceId, 'itemAnimateType')
 
   return runtime.registerComponent(
-    forwardNextDynamicRef(patch => dynamic(() => patch(import('./Box')))),
+    lazy(() => import('./Box')),
     {
       type: MakeswiftComponentType.Box,
       label: 'Box',

@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, lazy } from 'react'
 
 import {
   RichTextControlData,
@@ -8,23 +8,15 @@ import {
   isRichTextV1Data,
 } from '../../../../controls'
 import { useIsPreview } from '../../../react'
-import { forwardNextDynamicRef } from '../../../../next'
-import dynamic from 'next/dynamic'
 
 export type RichTextV2ControlValue = ReactNode
 
 export type Descriptors = { text?: RichTextV2ControlDefinition }
 
-const EditableText = forwardNextDynamicRef(patch =>
-  dynamic(() => patch(import('./EditableTextV2'))),
-)
-const ReadOnlyText = forwardNextDynamicRef(patch =>
-  dynamic(() => patch(import('./ReadOnlyTextV2'))),
-)
+const EditableText = lazy(() => import('./EditableTextV2'))
+const ReadOnlyText = lazy(() => import('./ReadOnlyTextV2'))
 
-const ReadOnlyTextV1 = forwardNextDynamicRef(patch =>
-  dynamic(() => patch(import('../rich-text/ReadOnlyText'))),
-)
+const ReadOnlyTextV1 = lazy(() => import('../rich-text/ReadOnlyText'))
 
 export function useRichTextV2(
   data: RichTextV2ControlData | RichTextControlData,

@@ -2,9 +2,8 @@
   "name": "@makeswift/runtime",
   "version": "0.13.1",
   "license": "MIT",
-  "main": "dist/main.cjs",
-  "module": "dist/main.es",
-  "types": "dist/types/src",
+  "main": "src/index.tsx",
+  "module": "src/index.tsx",
   "files": [
     "dist",
     "prop-controllers.js",
@@ -20,18 +19,12 @@
     "state/breakpoints.js"
   ],
   "exports": {
-    ".": {
-      "import": "./dist/main.es.js",
-      "require": "./dist/main.cjs.js"
-    },
+    ".": "./src/index.ts",
     "./prop-controllers": {
       "import": "./dist/prop-controllers.es.js",
       "require": "./dist/prop-controllers.cjs.js"
     },
-    "./react": {
-      "import": "./dist/react.es.js",
-      "require": "./dist/react.cjs.js"
-    },
+    "./react": "./src/runtimes/react/index.tsx",
     "./box-model": {
       "import": "./dist/box-model.es.js",
       "require": "./dist/box-model.cjs.js"
@@ -44,10 +37,7 @@
       "import": "./dist/api.es.js",
       "require": "./dist/api.cjs.js"
     },
-    "./next": {
-      "import": "./dist/next.es.js",
-      "require": "./dist/next.cjs.js"
-    },
+    "./next": "./src/next/index.tsx",
     "./next/plugin": "./next/plugin.js",
     "./builder": {
       "import": "./dist/builder.es.js",
@@ -72,7 +62,7 @@
         "dist/types/src/prop-controllers/index.d.ts"
       ],
       "react": [
-        "dist/types/src/react.d.ts"
+        "./src/runtimes/react/index.tsx"
       ],
       "box-model": [
         "dist/types/src/box-model.d.ts"
@@ -84,7 +74,7 @@
         "dist/types/src/api/index.d.ts"
       ],
       "next": [
-        "dist/types/src/next/index.d.ts"
+        "src/next/index.tsx"
       ],
       "builder": [
         "dist/types/src/builder/index.d.ts"
@@ -127,7 +117,9 @@
     }
   },
   "dependencies": {
+    "@emotion/cache": "^11.11.0",
     "@emotion/css": "^11.9.0",
+    "@emotion/react": "^11.11.3",
     "@emotion/serialize": "^1.0.3",
     "@emotion/server": "^11.4.0",
     "@emotion/sheet": "^1.0.3",

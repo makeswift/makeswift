@@ -18,6 +18,7 @@ import {
 } from 'next'
 import { Makeswift } from './client'
 import { MakeswiftPreviewData, MakeswiftSiteVersion } from './preview-mode'
+export { ReactRuntime } from '../runtimes/react/react-runtime'
 
 function getApiOrigin(): string {
   const apiOriginString = process['env'].MAKESWIFT_API_HOST ?? 'https://api.makeswift.com'
@@ -162,3 +163,4 @@ export { Document } from './document'
 export type { Manifest, Font, MakeswiftApiHandlerResponse } from './api-handler'
 export { MakeswiftApiHandler } from './api-handler'
 export { forwardNextDynamicRef } from './dynamic'
+export { RootStyleRegistry } from './root-style-registry'
