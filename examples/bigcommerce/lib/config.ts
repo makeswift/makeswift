@@ -1,6 +1,6 @@
 export type Config = {
   bigcommerce: {
-    accessToken: string
+    storeToken: string
     storeURL: string
     storefrontURL: string
     storefrontToken: string
@@ -22,13 +22,12 @@ function getEnvVarOrThrow(key: string): string {
 }
 
 export function getConfig(): Config {
-  const storeHash = getEnvVarOrThrow('BIGCOMMERCE_STORE_HASH')
   return {
     bigcommerce: {
-      accessToken: getEnvVarOrThrow('BIGCOMMERCE_ACCESS_TOKEN'),
-      storeURL:  `https://api.bigcommerce.com/stores/${storeHash}`,
-      storefrontURL: `https://store-${storeHash}.mybigcommerce.com/graphql`,
-      storefrontToken: getEnvVarOrThrow('BIGCOMMERCE_CUSTOMER_IMPERSONATION_TOKEN'),
+      storeToken: getEnvVarOrThrow('BIGCOMMERCE_STORE_API_TOKEN'),
+      storeURL: getEnvVarOrThrow('BIGCOMMERCE_STORE_API_URL'),
+      storefrontURL: getEnvVarOrThrow('BIGCOMMERCE_STOREFRONT_API_URL'),
+      storefrontToken: getEnvVarOrThrow('BIGCOMMERCE_STOREFRONT_API_TOKEN'),
       channelId: getEnvVarOrThrow('BIGCOMMERCE_CHANNEL_ID'),
       allowedCorsOrigins:
         process.env.NODE_ENV === 'production' && process.env.VERCEL === '1'

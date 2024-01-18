@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'X-Auth-Token': config.bigcommerce.accessToken,
+          'X-Auth-Token': config.bigcommerce.storeToken,
         },
       },
     )
@@ -39,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Auth-Token': config.bigcommerce.accessToken,
+          'X-Auth-Token': config.bigcommerce.storeToken,
         },
         body: JSON.stringify({
           line_items: lineItem ? [lineItem] : [],
@@ -61,7 +61,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Auth-Token': config.bigcommerce.accessToken,
+          'X-Auth-Token': config.bigcommerce.storeToken,
         },
         body: JSON.stringify({
           line_items: lineItem ? [lineItem] : [],
@@ -99,7 +99,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'X-Auth-Token': config.bigcommerce.accessToken,
+          'X-Auth-Token': config.bigcommerce.storeToken,
         },
         body: req.body,
       },
@@ -134,7 +134,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          'X-Auth-Token': config.bigcommerce.accessToken,
+          'X-Auth-Token': config.bigcommerce.storeToken,
         },
       },
     )
@@ -147,7 +147,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Auth-Token': config.bigcommerce.accessToken,
+          'X-Auth-Token': config.bigcommerce.storeToken,
         },
         body: JSON.stringify({
           line_items: [],
