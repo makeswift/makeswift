@@ -23,13 +23,14 @@ function getEnvVarOrThrow(key: string): string {
 
 export function getConfig(): Config {
   const storeHash = getEnvVarOrThrow('BIGCOMMERCE_STORE_HASH')
+  const channelId = getEnvVarOrThrow('BIGCOMMERCE_CHANNEL_ID')
   return {
     bigcommerce: {
       accessToken: getEnvVarOrThrow('BIGCOMMERCE_ACCESS_TOKEN'),
       storeURL:  `https://api.bigcommerce.com/stores/${storeHash}`,
-      storefrontURL: `https://store-${storeHash}.mybigcommerce.com/graphql`,
+      storefrontURL: `https://store-${storeHash}-${channelId}.mybigcommerce.com/graphql`,
       storefrontToken: getEnvVarOrThrow('BIGCOMMERCE_CUSTOMER_IMPERSONATION_TOKEN'),
-      channelId: getEnvVarOrThrow('BIGCOMMERCE_CHANNEL_ID'),
+      channelId: channelId,
       allowedCorsOrigins:
         process.env.NODE_ENV === 'production' && process.env.VERCEL === '1'
           ? [new URL(`https://${getEnvVarOrThrow('VERCEL_URL')}`).origin]
