@@ -94,7 +94,7 @@ export async function getProduct(id: number): Promise<ProductFragment | null> {
 
   const [productEdge] = result.data.site.products.edges
 
-  return productEdge.node
+  return productEdge?.node
 }
 
 export async function attemptGetCart(cartId: string): Promise<CartResponse | null> {
