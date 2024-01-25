@@ -1,4 +1,5 @@
 import { Poppins } from 'next/font/google'
+import { AppProps } from 'next/app'
 import '../lib/globals.css'
 
 const poppins = Poppins({
@@ -8,14 +9,10 @@ const poppins = Poppins({
   variable: '--font-poppins',
 })
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <html lang="en">
-      <body className={`${poppins.variable} font-sans`}>{children}</body>
-    </html>
+    <main className={`${poppins.variable} font-sans`}>
+      <Component {...pageProps} />
+    </main>
   )
 }
