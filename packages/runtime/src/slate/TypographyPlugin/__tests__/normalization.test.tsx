@@ -7,8 +7,8 @@ import {
   Text,
   Cursor,
   EditorV2,
-  Editor,
   Paragraph,
+  // @ts-expect-error: 'jsx' is declared but its value is never read.
   jsx,
   Code,
   Super,

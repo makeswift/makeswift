@@ -16,7 +16,7 @@ import { ElementImperativeHandle } from '../runtimes/react/element-imperative-ha
 import { BuilderEditMode } from './modules/builder-edit-mode'
 import type { Point } from './modules/pointer'
 import { Breakpoints } from './modules/breakpoints'
-import { LocaleString, localeStringSchema } from '../../types/locale'
+import { LocaleString, localeStringSchema } from '../locale'
 
 export const ActionTypes = {
   INIT: 'INIT',

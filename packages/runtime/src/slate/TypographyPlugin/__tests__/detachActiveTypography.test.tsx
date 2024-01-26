@@ -2,6 +2,7 @@
 /** @jsx jsx */
 
 import { describe, it, expect } from 'vitest'
+// @ts-expect-error: 'jsx' is declared but its value is never read.
 import { Editor, Paragraph, jsx, Text, Cursor, Anchor, Focus } from '../../test-helpers'
 import { TypographyActions } from '../'
 

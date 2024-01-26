@@ -5,6 +5,7 @@ import { describe, it, expect } from 'vitest'
 import { getValue } from '../getValue'
 import { InlineType } from '../..'
 import {
+  // @ts-expect-error: 'jsx' is declared but its value is never read.
   jsx,
   Paragraph,
   Code,

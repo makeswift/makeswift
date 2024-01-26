@@ -13,6 +13,7 @@ import {
   Focus,
   Fragment,
   Editor,
+  // @ts-expect-error: 'jsx' is declared but its value is never read.
   jsx,
 } from '../../test-helpers'
 import { ListActions } from '..'

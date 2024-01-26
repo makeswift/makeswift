@@ -3,6 +3,7 @@
 
 import { describe, it, expect } from 'vitest'
 import {
+  // @ts-expect-error: 'jsx' is declared but its value is never read.
   jsx,
   Editor,
   ListItem,

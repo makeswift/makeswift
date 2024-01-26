@@ -4,6 +4,7 @@
 import { describe, it, expect } from 'vitest'
 import { onChange } from '../onChange'
 import { InlineType } from '../..'
+// @ts-expect-error: 'jsx' is declared but its value is never read.
 import { jsx, Paragraph, Code, EditorV2, Text, Focus, Anchor, Link } from '../../test-helpers'
 
 describe('GIVEN InlinePlugin.onChange', () => {
