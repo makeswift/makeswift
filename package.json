@@ -4,7 +4,8 @@
     "format": "prettier --write .",
     "build": "turbo run build",
     "test": "turbo run test",
-    "madge": "turbo run madge"
+    "madge": "turbo run madge",
+    "test:e2e": "turbo run test:e2e"
   },
   "devDependencies": {
     "@changesets/cli": "^2.22.0",
