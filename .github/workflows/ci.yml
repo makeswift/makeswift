@@ -44,3 +44,22 @@ jobs:
       - name: Circular dependency check
         continue-on-error: true
         run: pnpm run madge
+
+      - name: Install /test dependencies
+        run: pnpm install --ignore-workspace
+        working-directory: ./test
+
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps
+        working-directory: ./test
+
+      - name: Run Playwright tests
+        run: pnpm exec playwright test
+        working-directory: ./test
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: test/playwright-report/
+          retention-days: 30
