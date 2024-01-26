@@ -1,6 +1,6 @@
 import { ComponentPropsWithoutRef, ForwardedRef, forwardRef, useState } from 'react'
 
-import { ReactComponent as MobileMenu28 } from '../../icons/mobile-menu-28.svg'
+import { MobileMenu28 } from '../../icons/MobileMenu28'
 
 import GutterContainer from '../../shared/GutterContainer'
 import Image from '../Image'

@@ -11,7 +11,7 @@ import {
 } from 'react'
 import { Formik, getIn } from 'formik'
 
-import { ReactComponent as Check12 } from '../../icons/check-12.svg'
+import { Check12 } from '../../icons/Check12'
 
 import { getSizeHeight as getInputSizeHeight } from './components/Field/components/Input'
 
