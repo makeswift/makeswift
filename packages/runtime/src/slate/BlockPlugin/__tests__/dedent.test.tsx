@@ -1,6 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
+import { describe, it, expect } from 'vitest'
 import { ListActions } from '..'
 import { Editor, jsx, Cursor, ListItem, ListItemChild, Text, Unordered } from '../../test-helpers'
 

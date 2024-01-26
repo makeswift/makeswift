@@ -1,6 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
+import { describe, it, expect } from 'vitest'
 import { TypographyActions } from '../'
 import { jsx, Paragraph, Text, Editor, Cursor, Anchor, Focus } from '../../test-helpers'
 

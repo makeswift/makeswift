@@ -1,6 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
+import { describe, it, expect } from 'vitest'
 import { onChange } from '../onChange'
 import { InlineType } from '../..'
 import { jsx, Paragraph, Code, EditorV2, Text, Focus, Anchor, Link } from '../../test-helpers'

@@ -1,6 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
+import { describe, it, expect } from 'vitest'
 import { getValue } from '../getValue'
 import { LinkControlData } from '../../../controls'
 import { jsx, Paragraph, Text, EditorV2, Focus, Anchor, Link, Code } from '../../test-helpers'

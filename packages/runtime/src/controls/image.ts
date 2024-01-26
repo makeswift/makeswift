@@ -1,17 +1,17 @@
 import { P, match } from 'ts-pattern'
-import { CopyContext, ReplacementContext } from '../state/react-page'
+import { CopyContext } from '../state/react-page'
 
 type ImageControlDataV0 = string
 
 type MakeswiftFileImageData = {
   type: 'makeswift-file'
-  version: 1,
+  version: 1
   id: string
 }
 
 type ExternalFileImageData = {
   type: 'external-file'
-  version: 1,
+  version: 1
   url: string
   width?: number | null
   height?: number | null
@@ -56,38 +56,4 @@ export function copyImageData(
     .with(P.string, id => context.replacementContext.fileIds.get(id) ?? id)
     .with({ type: 'makeswift-file' }, ({ id }) => context.replacementContext.fileIds.get(id) ?? id)
     .otherwise(val => val)
-}
-
-if (import.meta.vitest) {
-  const { describe, test, expect } = import.meta.vitest
-
-  describe.concurrent('image copy', () => {
-    test('image is replaced by a one in replacement context', () => {
-      // Arrange
-      const data: ImageControlData = 'file-id'
-      const expected = 'testing'
-
-      const replacementContext = {
-        elementHtmlIds: new Set(),
-        elementKeys: new Map(),
-        swatchIds: new Map(),
-        fileIds: new Map([['file-id', 'testing']]),
-        typographyIds: new Map(),
-        tableIds: new Map(),
-        tableColumnIds: new Map(),
-        pageIds: new Map(),
-        globalElementIds: new Map(),
-        globalElementData: new Map(),
-      }
-
-      // Act
-      const result = copyImageData(data, {
-        replacementContext: replacementContext as ReplacementContext,
-        copyElement: node => node,
-      })
-
-      // Assert
-      expect(result).toMatchObject(expected)
-    })
-  })
 }

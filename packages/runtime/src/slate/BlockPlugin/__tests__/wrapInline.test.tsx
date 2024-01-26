@@ -1,6 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
+import { describe, it, expect } from 'vitest'
 import { BlockActions } from '..'
 import { InlineType } from '../..'
 import { jsx, Paragraph, Code, Text, Editor, Focus, Anchor } from '../../test-helpers'
