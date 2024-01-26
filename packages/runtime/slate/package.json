@@ -1,0 +1,5 @@
+{
+  "main": "../dist/cjs/slate/index.js",
+  "module": "../dist/es/slate/index.js",
+  "types": "../dist/src/types/slate/index.d.ts"
+}

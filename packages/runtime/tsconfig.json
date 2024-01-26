@@ -16,12 +16,10 @@
     "skipLibCheck": true,
     "declaration": true,
     "declarationMap": true,
-    "rootDir": ".",
+    "rootDir": "src",
     "declarationDir": "dist/types",
     "emitDeclarationOnly": true,
-    "jsx": "react-jsx",
-    "types": ["vitest/importMeta"]
+    "jsx": "react-jsx"
   },
-  "include": ["./src", "./types"],
-  "exclude": ["./src/slate"]
+  "include": ["src"]
 }

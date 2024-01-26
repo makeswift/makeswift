@@ -2,113 +2,91 @@
   "name": "@makeswift/runtime",
   "version": "0.13.1",
   "license": "MIT",
-  "main": "dist/main.cjs",
-  "module": "dist/main.es",
-  "types": "dist/types/src",
   "files": [
     "dist",
-    "prop-controllers.js",
-    "react.js",
-    "box-model.js",
-    "components.js",
-    "api.js",
-    "next.js",
-    "next/plugin.js",
-    "builder.js",
-    "controls.js",
-    "slate.js",
-    "state/breakpoints.js"
+    "prop-controllers",
+    "react",
+    "box-model",
+    "components",
+    "api",
+    "next",
+    "builder",
+    "controls",
+    "slate",
+    "state"
   ],
+  "sideEffects": false,
   "exports": {
     ".": {
-      "import": "./dist/main.es.js",
-      "require": "./dist/main.cjs.js"
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./prop-controllers": {
-      "import": "./dist/prop-controllers.es.js",
-      "require": "./dist/prop-controllers.cjs.js"
+      "require": "./dist/cjs/prop-controllers/index.js",
+      "import": "./dist/esm/prop-controllers/index.js",
+      "types": "./dist/types/prop-controllers/index.d.ts"
     },
     "./react": {
-      "import": "./dist/react.es.js",
-      "require": "./dist/react.cjs.js"
+      "require": "./dist/cjs/react.js",
+      "import": "./dist/esm/react.js",
+      "types": "./dist/types/react.d.ts"
     },
     "./box-model": {
-      "import": "./dist/box-model.es.js",
-      "require": "./dist/box-model.cjs.js"
+      "require": "./dist/cjs/box-model.js",
+      "import": "./dist/esm/box-model.js",
+      "types": "./dist/types/box-model.d.ts"
     },
     "./components": {
-      "import": "./dist/components.es.js",
-      "require": "./dist/components.cjs.js"
+      "require": "./dist/cjs/components/index.js",
+      "import": "./dist/esm/components/index.js",
+      "types": "./dist/types/components/index.d.ts"
     },
     "./api": {
-      "import": "./dist/api.es.js",
-      "require": "./dist/api.cjs.js"
+      "require": "./dist/cjs/api/index.js",
+      "import": "./dist/esm/api/index.js",
+      "types": "./dist/types/api/index.d.ts"
     },
     "./next": {
-      "import": "./dist/next.es.js",
-      "require": "./dist/next.cjs.js"
+      "require": "./dist/cjs/next/index.js",
+      "import": "./dist/esm/next/index.js",
+      "types": "./dist/types/next/index.d.ts"
     },
-    "./next/plugin": "./next/plugin.js",
+    "./next/plugin": {
+      "require": "./node_modules/@makeswift/next-plugin/index.js",
+      "import": "./node_modules/@makeswift/next-plugin/index.js",
+      "types": "./node_modules/@makeswift/next-plugin/index.d.ts"
+    },
     "./builder": {
-      "import": "./dist/builder.es.js",
-      "require": "./dist/builder.cjs.js"
+      "require": "./dist/cjs/builder/index.js",
+      "import": "./dist/esm/builder/index.js",
+      "types": "./dist/types/builder/index.d.ts"
     },
     "./controls": {
-      "import": "./dist/controls.es.js",
-      "require": "./dist/controls.cjs.js"
+      "require": "./dist/cjs/controls/index.js",
+      "import": "./dist/esm/controls/index.js",
+      "types": "./dist/types/controls/index.d.ts"
     },
     "./slate": {
-      "import": "./dist/slate.es.js",
-      "require": "./dist/slate.cjs.js"
+      "require": "./dist/cjs/slate/index.js",
+      "import": "./dist/esm/slate/index.js",
+      "types": "./dist/types/slate/index.d.ts"
     },
     "./state/breakpoints": {
-      "import": "./dist/state/breakpoints.es.js",
-      "require": "./dist/state/breakpoints.cjs.js"
+      "require": "./dist/cjs/state/module/breakpoints.js",
+      "import": "./dist/esm/state/module/breakpoints.js",
+      "types": "./dist/types/state/module/breakpoints.d.ts"
     }
   },
-  "typesVersions": {
-    "*": {
-      "prop-controllers": [
-        "dist/types/src/prop-controllers/index.d.ts"
-      ],
-      "react": [
-        "dist/types/src/react.d.ts"
-      ],
-      "box-model": [
-        "dist/types/src/box-model.d.ts"
-      ],
-      "components": [
-        "dist/types/src/components/index.d.ts"
-      ],
-      "api": [
-        "dist/types/src/api/index.d.ts"
-      ],
-      "next": [
-        "dist/types/src/next/index.d.ts"
-      ],
-      "builder": [
-        "dist/types/src/builder/index.d.ts"
-      ],
-      "controls": [
-        "dist/types/src/controls/index.d.ts"
-      ],
-      "slate": [
-        "dist/types/src/slate/index.d.ts"
-      ],
-      "state/breakpoints": [
-        "dist/types/src/state/modules/breakpoints.d.ts"
-      ]
-    }
-  },
+  "types": "./dist/types/index.d.ts",
   "scripts": {
-    "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'vite build --watch'",
+    "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'tsup --watch'",
     "clean": "rm -rf dist",
-    "build": "pnpm run clean && tsc && vite build",
-    "preview": "vite preview",
+    "build": "pnpm run clean && tsc && tsup",
     "prepare": "pnpm build",
     "generate": "graphql-codegen --config codegen.yml",
-    "test": "vitest run --config vite.test.config.ts",
-    "test:watch": "vitest watch --config vite.test.config.ts",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
     "madge": "madge --circular --warning --extensions ts,tsx src/ --exclude \"dist/.+\""
   },
   "peerDependencies": {
@@ -183,7 +161,6 @@
     "@types/node": "^17.0.21",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
-    "@vitejs/plugin-react": "^1.1.4",
     "concurrently": "^5.3.0",
     "madge": "^6.0.0",
     "next": "14.0.4",
@@ -193,8 +170,8 @@
     "slate": "^0.91.4",
     "slate-hyperscript": "^0.77.0",
     "slate-react": "^0.91.7",
+    "tsup": "^8.0.1",
     "typescript": "^5.1.6",
-    "vite": "^2.8.6",
     "vitest": "^0.7.4"
   }
 }

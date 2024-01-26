@@ -4,6 +4,7 @@
 import { describe, it, expect } from 'vitest'
 import { Editor as SlateEditor } from 'slate'
 import {
+  // @ts-expect-error: 'jsxWithV2InlineEditor' is declared but its value is never read.
   jsxWithV2InlineEditor,
   Ordered,
   Paragraph,

@@ -3,6 +3,7 @@
 
 import { describe, it, expect } from 'vitest'
 import { getValue } from '../getValue'
+// @ts-expect-error: 'jsx' is declared but its value is never read.
 import { jsx, Paragraph, Text, EditorV2, Focus, Anchor, Fragment } from '../../test-helpers'
 import { BlockTextAlignment } from '../..'
 
