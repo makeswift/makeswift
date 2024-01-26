@@ -50,3 +50,6 @@ storybook-static
 
 # Turbo
 .turbo
+
+# TypeScript
+*.tsbuildinfo
