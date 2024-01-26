@@ -8,10 +8,10 @@ import {
 import { colorToString } from '../../../../../../utils/colorToString'
 import { useResponsiveColor } from '../../../../../../hooks'
 
-import { ReactComponent as CaretDown8 } from '../../../../../../icons/caret-down-8.svg'
-import { ReactComponent as Plus8 } from '../../../../../../icons/plus-8.svg'
-import { ReactComponent as ArrowDown8 } from '../../../../../../icons/arrow-down-8.svg'
-import { ReactComponent as ChevronDown8 } from '../../../../../../icons/chevron-down-8.svg'
+import { CaretDown8 } from '../../../../../../icons/CaretDown8'
+import { Plus8 } from '../../../../../../icons/Plus8'
+import { ArrowDown8 } from '../../../../../../icons/ArrowDown8'
+import { ChevronDown8 } from '../../../../../../icons/ChevronDown8'
 
 import { Link } from '../../../../../../shared/Link'
 import Button from '../../../../../Button'

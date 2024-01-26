@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import svgr from '@svgr/rollup'
 import * as path from 'path'
 import pkg from './package.json'
 
@@ -11,7 +10,7 @@ const deps = Object.keys({
 })
 
 export default defineConfig({
-  plugins: [svgr({ svgo: false }), react()],
+  plugins: [react()],
   build: {
     emptyOutDir: false,
     sourcemap: true,

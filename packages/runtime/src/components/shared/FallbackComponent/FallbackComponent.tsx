@@ -1,6 +1,6 @@
 import { forwardRef, Ref } from 'react'
 import { useStyle } from '../../../runtimes/react/use-style'
-import { ReactComponent as Warning20 } from '../../icons/warning-20.svg'
+import { Warning20 } from '../../icons/Warning20'
 
 type Props = {
   text: string
