@@ -19,7 +19,8 @@
     "rootDir": "src",
     "declarationDir": "dist/types",
     "emitDeclarationOnly": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "incremental": true
   },
   "include": ["src"]
 }
