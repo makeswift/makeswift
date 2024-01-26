@@ -1,5 +1,5 @@
 {
-  "name": "test",
+  "name": "@makeswift/e2e-next-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "pnpm exec playwright test"
+    "test:e2e": "pnpm exec playwright test"
   },
   "dependencies": {
     "next": "14.1.0",
