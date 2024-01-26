@@ -1,6 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
+import { describe, it, expect } from 'vitest'
 import { getValue } from '../getValue'
 import { jsx, Paragraph, Text, EditorV2, Focus, Anchor, Fragment } from '../../test-helpers'
 import { BlockTextAlignment } from '../..'

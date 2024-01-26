@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest'
 import type { NodeEntry } from 'slate'
 import { filterForSubtreeRoots } from '../../utils/filterForSubtreeRoots'
 import { ElementUtils } from '../../../utils/element'
