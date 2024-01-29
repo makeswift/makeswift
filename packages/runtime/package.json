@@ -52,6 +52,11 @@
       "import": "./dist/esm/next/index.js",
       "types": "./dist/types/next/index.d.ts"
     },
+    "./next/server": {
+      "require": "./dist/cjs/next/server.js",
+      "module": "./dist/esm/next/server.js",
+      "types": "./dist/types/next/server.d.ts"
+    },
     "./next/plugin": {
       "require": "./dist/cjs/next/plugin.js",
       "types": "./next/plugin/index.d.ts"
