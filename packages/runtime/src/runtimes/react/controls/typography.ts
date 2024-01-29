@@ -1,7 +1,6 @@
 import { CSSObject } from '@emotion/serialize'
 import { TypographyControlData } from '../../../controls/typography'
 import { useSwatches, useTypography } from '../hooks/makeswift-api'
-import { useBreakpoints } from '..'
 import { Typography, Swatch } from '../../../api'
 import { colorToString } from '../../../components/utils/colorToString'
 import { useResponsiveStyle } from '../../../components/utils/responsive-style'
@@ -10,6 +9,7 @@ import { DeviceOverride, ResponsiveValue } from '../../../prop-controllers'
 import { findBreakpointOverride, shallowMergeFallbacks } from '../../../state/modules/breakpoints'
 import { isNonNullable } from '../../../utils/isNonNullable'
 import { useStyle } from '../use-style'
+import { useBreakpoints } from '../hooks/use-breakpoints'
 
 export function typographyFragementToTypographyControlData(
   typography: Typography | null,

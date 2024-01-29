@@ -1,6 +1,5 @@
 import { useRef } from 'react'
 
-import { useDocumentKey, useSelector, useStore } from '.'
 import * as ReactPage from '../../state/react-page'
 import { Props } from '../../prop-controllers'
 import {
@@ -71,6 +70,9 @@ import { useStyle } from './use-style'
 import { useRichText } from './controls/rich-text/rich-text'
 import { useRichTextV2 } from './controls/rich-text-v2'
 import { IconRadioGroupControlType } from '../../controls/icon-radio-group'
+import { useStore } from './hooks/use-store'
+import { useDocumentKey } from './hooks/use-document-key'
+import { useSelector } from './hooks/use-selector'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 

@@ -10,7 +10,7 @@ import {
   isPropControllersHandle,
   PropControllersHandle,
 } from '../../../../state/modules/prop-controller-handles'
-import { useIsPreview } from '../..'
+import { useIsPreview } from '../../hooks/use-is-preview'
 
 const EditableText = forwardNextDynamicRef(patch => dynamic(() => patch(import('./EditableText'))))
 const ReadOnlyText = forwardNextDynamicRef(patch => dynamic(() => patch(import('./ReadOnlyText'))))

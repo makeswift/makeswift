@@ -1,7 +1,7 @@
 import { ComponentPropsWithoutRef, ElementType, ReactNode, useEffect, useState } from 'react'
 import { SlotControl, SlotControlData } from '../../../controls'
 
-import { Element } from '../../../runtimes/react'
+import { Element } from '../components/Element'
 import { getIndexes } from '../../../components/utils/columns'
 import { useResponsiveStyle } from '../../../components/utils/responsive-style'
 import { useStyle } from '../use-style'

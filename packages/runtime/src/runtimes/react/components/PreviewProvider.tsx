@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useMemo } from 'react'
 
-import { StoreContext, ReactRuntime } from '..'
+import { ReactRuntime } from '../react-runtime'
+import { StoreContext } from '../hooks/use-store'
 import * as ReactBuilderPreview from '../../../state/react-builder-preview'
 import * as ReactPage from '../../../state/react-page'
 import { MakeswiftProvider, MakeswiftClient } from '../../../api/react'

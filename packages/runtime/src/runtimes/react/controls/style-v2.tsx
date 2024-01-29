@@ -6,12 +6,12 @@ import {
   getBreakpointMediaQuery,
   mergeOrCoalesceFallbacks,
 } from '../../../state/modules/breakpoints'
-import { useBreakpoints } from '..'
 import { CSSObject } from '@emotion/css'
 
 import { ControlDefinitionValue, ControlValue } from './control'
 import { RenderHook } from '../components'
 import { DeviceOverride } from '../../../controls/types'
+import { useBreakpoints } from '../hooks/use-breakpoints'
 
 function useStyleControlCssObject(
   styleControlData: StyleV2ControlData,
