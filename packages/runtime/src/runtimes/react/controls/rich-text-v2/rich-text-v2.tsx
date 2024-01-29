@@ -8,7 +8,7 @@ import {
   isRichTextV1Data,
 } from '../../../../controls'
 import { useIsPreview } from '../../../react'
-import { forwardNextDynamicRef } from '../../../../next'
+import { forwardNextDynamicRef } from '../../../../next/dynamic'
 import dynamic from 'next/dynamic'
 
 export type RichTextV2ControlValue = ReactNode

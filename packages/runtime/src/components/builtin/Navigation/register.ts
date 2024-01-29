@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic'
-import { forwardNextDynamicRef } from '../../../next'
+import { forwardNextDynamicRef } from '../../../next/dynamic'
 import { Props } from '../../../prop-controllers'
 import { NavigationLinksValue, ResponsiveValue } from '../../../prop-controllers/descriptors'
 import { ReactRuntime } from '../../../runtimes/react'
