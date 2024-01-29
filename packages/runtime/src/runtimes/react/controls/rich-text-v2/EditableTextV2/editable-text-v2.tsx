@@ -189,7 +189,7 @@ export function EditableTextV2({ text, definition, control }: Props) {
 
   const handleClick = useCallback(
     (e: MouseEvent) => {
-      if (editMode === BuilderEditMode.CONTENT){
+      if (editMode === BuilderEditMode.CONTENT) {
         e.stopPropagation()
         e.preventDefault()
       }

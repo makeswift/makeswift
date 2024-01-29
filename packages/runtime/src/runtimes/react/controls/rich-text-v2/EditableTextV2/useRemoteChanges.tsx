@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Editor } from 'slate'
 import { RichTextV2ControlData, richTextV2DataToDescendents } from '../../../../../controls'
 import { LocalChange } from '../../../../../slate'
-import { useIsInBuilder } from '../../..'
+import { useIsInBuilder } from '../../../hooks/use-is-in-builder'
 
 // From the component point of view we can't know if the change came from an action or a undo/redo
 // So we diff the time and force updates on actions that occured over a second ago.
