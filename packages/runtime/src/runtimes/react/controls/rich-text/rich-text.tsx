@@ -5,7 +5,7 @@ import {
   RichTextControlData,
   RichTextControlDefinition,
 } from '../../../../controls/rich-text'
-import { forwardNextDynamicRef } from '../../../../next'
+import { forwardNextDynamicRef } from '../../../../next/dynamic'
 import {
   isPropControllersHandle,
   PropControllersHandle,

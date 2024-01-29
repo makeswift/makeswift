@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic'
-import { forwardNextDynamicRef } from '../../../next'
+import { forwardNextDynamicRef } from '../../../next/dynamic'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride } from '../../../state/modules/breakpoints'
