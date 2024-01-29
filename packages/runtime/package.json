@@ -53,9 +53,8 @@
       "types": "./dist/types/next/index.d.ts"
     },
     "./next/plugin": {
-      "require": "./node_modules/@makeswift/next-plugin/index.js",
-      "import": "./node_modules/@makeswift/next-plugin/index.js",
-      "types": "./node_modules/@makeswift/next-plugin/index.d.ts"
+      "require": "./dist/cjs/next/plugin.js",
+      "types": "./next/plugin/index.d.ts"
     },
     "./builder": {
       "require": "./dist/cjs/builder/index.js",

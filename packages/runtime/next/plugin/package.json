@@ -1,5 +1,4 @@
 {
-  "main": "../../node_modules/@makeswift/next-plugin/index.js",
-  "module": "../../node_modules/@makeswift/next-plugin/index.js",
-  "types": "../../node_modules/@makeswift/next-plugin/index.d.ts"
+  "main": "../../dist/cjs/next/plugin.js",
+  "types": "./index.d.ts"
 }
