@@ -2,7 +2,7 @@ import { defineConfig, Options } from 'tsup'
 import { version } from './package.json'
 
 export default defineConfig(() => {
-  const commonOptions: Options = {
+  const commonOptions = {
     entry: [
       'src/**/*.{ts,tsx}',
       '!src/**/*.test.{ts,tsx}',
@@ -16,10 +16,11 @@ export default defineConfig(() => {
     define: {
       PACKAGE_VERSION: JSON.stringify(version),
     },
-  }
+  } satisfies Options
 
   const esmOptions: Options = {
     ...commonOptions,
+    entry: [...commonOptions.entry, '!src/next/plugin.ts'],
     format: 'esm',
   }
 
