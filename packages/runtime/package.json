@@ -59,6 +59,7 @@
     },
     "./next/plugin": {
       "require": "./dist/cjs/next/plugin.js",
+      "import": "./dist/cjs/next/plugin.js",
       "types": "./next/plugin/index.d.ts"
     },
     "./builder": {
