@@ -1,17 +1,16 @@
-import dynamic from 'next/dynamic'
 import { v4 as uuid } from 'uuid'
 
-import { forwardNextDynamicRef } from '../../../next/dynamic'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride } from '../../../state/modules/breakpoints'
 
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
+import { lazy } from 'react'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
-    forwardNextDynamicRef(patch => dynamic(() => patch(import('./Carousel')))),
+    lazy(() => import('./Carousel')),
     {
       type: MakeswiftComponentType.Carousel,
       label: 'Carousel',
