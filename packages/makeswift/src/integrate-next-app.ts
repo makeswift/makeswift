@@ -142,7 +142,7 @@ function addMakeswiftApiRoute({
   fs.mkdirSync(path.join(pagesFolder.temporary, 'api', 'makeswift'), { recursive: true })
 
   const apiRoute = isTypeScript
-    ? `import { MakeswiftApiHandler } from '@makeswift/runtime/next'
+    ? `import { MakeswiftApiHandler } from '@makeswift/runtime/next/server'
 
 export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY!)
 `
@@ -190,7 +190,7 @@ export async function getStaticProps(ctx) {
   const makeswift = new Makeswift(process.env.MAKESWIFT_SITE_API_KEY)
   const path = '/' + (ctx.params?.path ?? []).join('/')
   const snapshot = await makeswift.getPageSnapshot(path, {
-    preview: ctx.preview,
+    siteVersion: Makeswift.getSiteVersion(ctx.previewData)
   })
 
   if (snapshot == null) return { notFound: true }
@@ -230,7 +230,9 @@ export async function getStaticProps(
 ): Promise<GetStaticPropsResult<Props>> {
   const makeswift = new Makeswift(process.env.MAKESWIFT_SITE_API_KEY!)
   const path = '/' + (ctx.params?.path ?? []).join('/')
-  const snapshot = await makeswift.getPageSnapshot(path, { preview: ctx.preview })
+  const snapshot = await makeswift.getPageSnapshot(path, {
+    siteVersion: Makeswift.getSiteVersion(ctx.previewData),
+  })
 
   if (snapshot == null) return { notFound: true }
 
