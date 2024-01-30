@@ -1,12 +1,11 @@
-import dynamic from 'next/dynamic'
-import { forwardNextDynamicRef } from '../../../next/dynamic'
+import { lazy } from 'react'
 import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
-    forwardNextDynamicRef(patch => dynamic(() => patch(import('./Image')))),
+    lazy(() => import('./Image')),
     {
       type: MakeswiftComponentType.Image,
       label: 'Image',

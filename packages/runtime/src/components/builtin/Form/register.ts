@@ -1,16 +1,14 @@
-import dynamic from 'next/dynamic'
-
-import { forwardNextDynamicRef } from '../../../next/dynamic'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 import { Alignments, Contrast, Contrasts, Shapes, Sizes } from './context/FormContext'
 import { ComponentIcon } from '../../../state/modules/components-meta'
+import { lazy } from 'react'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
-    forwardNextDynamicRef(patch => dynamic(() => patch(import('./Form')))),
+    lazy(() => import('./Form')),
     {
       type: MakeswiftComponentType.Form,
       label: 'Form',
