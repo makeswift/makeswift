@@ -1,4 +1,5 @@
 {
   "main": "../../dist/cjs/next/plugin.js",
+  "import": "../../dist/cjs/next/plugin.js",
   "types": "./index.d.ts"
 }
