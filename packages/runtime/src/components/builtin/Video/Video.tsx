@@ -1,3 +1,5 @@
+'use client'
+
 import { cx } from '@emotion/css'
 import { forwardRef, Ref, useEffect, useState } from 'react'
 import ReactPlayer from 'react-player'

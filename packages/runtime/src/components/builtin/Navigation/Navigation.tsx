@@ -1,3 +1,5 @@
+'use client'
+
 import { ComponentPropsWithoutRef, ForwardedRef, forwardRef, useState } from 'react'
 
 import { MobileMenu28 } from '../../icons/MobileMenu28'

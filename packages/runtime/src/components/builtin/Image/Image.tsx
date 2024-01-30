@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect, Ref, forwardRef } from 'react'
 import NextImage from 'next/image'
 import type NextLegacyImageType from 'next/legacy/image'

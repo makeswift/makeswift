@@ -1,3 +1,5 @@
+'use client'
+
 import { CSSObject } from '@emotion/css'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import {

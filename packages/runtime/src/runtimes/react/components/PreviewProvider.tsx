@@ -1,3 +1,5 @@
+'use client'
+
 import { ReactNode, useEffect, useMemo } from 'react'
 
 import { ReactRuntime } from '../react-runtime'
