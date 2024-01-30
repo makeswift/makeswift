@@ -1,4 +1,4 @@
-import { MakeswiftApiHandler } from '@makeswift/runtime/next'
+import { MakeswiftApiHandler } from '@makeswift/runtime/next/server'
 import { strict } from 'assert'
 
 strict(process.env.MAKESWIFT_SITE_API_KEY)
