@@ -1,5 +1,34 @@
 # @makeswift/runtime
 
+## 0.14.0
+
+### Minor Changes
+
+- 1d58edb: BREAKING: Replace Vite with tsup. The build script now transpiles source files instead of bundling them to preserve `'use client'` directives for Next.js App Router support.
+- 32f9a1f: BREAKING: Move `MakeswiftApiHandler` from `@makeswift/runtime/next` to `@makeswift/runtime/next/server`.
+
+  This change was necessary because there are server-only dependencies for the API handler and if these dependencies are bundled and run in the browser it can cause various issues. In our case, a transitive dependency of `http-proxy` (`follow-redirects`) was being included in browser bundles resulting in client-side exceptions in Safari and Firefox due to an `Error.captureStackTrace` call that was intended to run only on Node.js.
+
+  To migrate change your `pages/api/makeswift/[...makeswift].ts` file:
+
+  ```diff
+  -import { MakeswiftApiHandler } from '@makeswift/runtime/next'
+  +import { MakeswiftApiHandler } from '@makeswift/runtime/next/server'
+
+  export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY)
+  ```
+
+- 9021859: Fix circular dependency with `nextDynamicForwardRef`.
+- f7968da: BREAKING: Remove deprecated functions from v0.2.0.
+
+  See more info on the [GitHub release](https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.2.0).
+
+### Patch Changes
+
+- 7e3fa8d: Reaaranged files inside the react runtime folder.
+- 662985c: Remove Vitest in-source tests.
+- 73fecda: Replace SVG files with React components and remove SVGR development dependency.
+
 ## 0.13.1
 
 ### Patch Changes
