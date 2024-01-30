@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useRef } from 'react'
 import { useSyncExternalStore } from 'use-sync-external-store/shim'
 import {

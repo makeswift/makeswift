@@ -1,3 +1,5 @@
+'use client'
+
 import { Ref, forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
 import { Element as ReactPageElement, isElementReference } from '../../../state/react-page'
 import { ElementImperativeHandle } from '../element-imperative-handle'
