@@ -88,7 +88,7 @@ export function MakeswiftApiHandler(
 
     if (matches('/fonts')) return fonts(req, res, { getFonts })
 
-    if (matches('/element-tree')) return elementTree(req, res)
+    if (matches('/element-tree')) return elementTree(req, res, runtime)
 
     if (matches('/translatable-data')) return translatableData(req, res, client)
 
