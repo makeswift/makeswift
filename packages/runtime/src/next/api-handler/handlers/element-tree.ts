@@ -11,6 +11,7 @@ export type ElementTreeResponse = ElementTreeResult | ElementTreeError
 export default async function elementTree(
   req: NextApiRequest,
   res: NextApiResponse<ElementTreeResponse>,
+  runtime: ReactRuntime,
 ): Promise<void> {
   const elementTree = req.body.elementTree
   const replacementContext = req.body.replacementContext
@@ -23,7 +24,7 @@ export default async function elementTree(
     return res.status(400).json({ message: 'replacementContext must be defined' })
   }
 
-  const generatedElementTree = ReactRuntime.copyElementTree(elementTree, replacementContext)
+  const generatedElementTree = runtime.copyElementTree(elementTree, replacementContext)
 
   const response = { elementTree: generatedElementTree }
   return res.json(response)
