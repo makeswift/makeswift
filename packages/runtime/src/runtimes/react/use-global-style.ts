@@ -2,19 +2,25 @@
 
 import * as React from 'react'
 import { useRef } from 'react'
-import { cache, injectGlobal } from '@emotion/css'
 import { CSSInterpolation, serializeStyles } from '@emotion/serialize'
 import { StyleSheet } from '@emotion/sheet'
 import { insertStyles } from '@emotion/utils'
+import { useCache } from '../../next/root-style-registry'
 
 const isServer = typeof window === 'undefined'
 const useInsertionEffectSpecifier = 'useInsertionEffect'
 const useInsertionEffect = React[useInsertionEffectSpecifier] ?? React.useLayoutEffect
 
 export function useGlobalStyle(...args: CSSInterpolation[]): void {
-  if (isServer) return injectGlobal(args)
-
+  const cache = useCache()
   const serialized = serializeStyles(args, cache.registered)
+
+  if (isServer) {
+    if (cache.inserted[serialized.name] === undefined) {
+      cache.insert('', serialized, cache.sheet, true)
+    }
+  }
+
   const sheetRef = useRef<[StyleSheet, boolean]>()
 
   // Hydration

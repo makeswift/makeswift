@@ -110,6 +110,7 @@
     }
   },
   "dependencies": {
+    "@emotion/cache": "^11.11.0",
     "@emotion/css": "^11.9.0",
     "@emotion/serialize": "^1.0.3",
     "@emotion/server": "^11.4.0",
