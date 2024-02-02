@@ -1,4 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { NextRequest, NextResponse } from 'next/server'
+import { P, match } from 'ts-pattern'
+
+type Context = { params: { [key: string]: string | string[] } }
 
 export type Manifest = {
   version: string
@@ -16,16 +20,43 @@ type ManifestError = { message: string }
 
 export type ManifestResponse = Manifest | ManifestError
 
+type ManifestHandlerArgs =
+  | [request: NextRequest, context: Context, params: { apiKey: string }]
+  | [req: NextApiRequest, res: NextApiResponse<ManifestResponse>, params: { apiKey: string }]
+
+export default async function handler(
+  request: NextRequest,
+  context: Context,
+  { apiKey }: { apiKey: string },
+): Promise<NextResponse<ManifestResponse>>
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ManifestResponse>,
   { apiKey }: { apiKey: string },
-): Promise<void> {
-  if (req.query.secret !== apiKey) {
-    return res.status(401).json({ message: 'Unauthorized' })
+): Promise<void>
+export default async function handler(
+  ...args: ManifestHandlerArgs
+): Promise<NextResponse<ManifestResponse> | void> {
+  const routeHandlerPattern = [P.instanceOf(Request), P.any, P.any] as const
+  const apiRoutePattern = [P.any, P.any, P.any] as const
+  const [, , { apiKey }] = args
+
+  const secret = match(args)
+    .with(routeHandlerPattern, ([request]) => request.nextUrl.searchParams.get('secret'))
+    .with(apiRoutePattern, ([req]) => req.query.secret)
+    .exhaustive()
+
+  if (secret !== apiKey) {
+    const status = 401
+    const body = { message: 'Unauthorized' }
+
+    return match(args)
+      .with(routeHandlerPattern, () => NextResponse.json(body, { status }))
+      .with(apiRoutePattern, ([, res]) => res.status(status).json(body))
+      .exhaustive()
   }
 
-  return res.json({
+  const body = {
     version: PACKAGE_VERSION,
     previewMode: true,
     interactionMode: true,
@@ -35,5 +66,10 @@ export default async function handler(
     siteVersions: true,
     unstable_siteVersions: true,
     localizedPageSSR: true,
-  })
+  }
+
+  return match(args)
+    .with(routeHandlerPattern, () => NextResponse.json(body))
+    .with(apiRoutePattern, ([, res]) => res.json(body))
+    .exhaustive()
 }

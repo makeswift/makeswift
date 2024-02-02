@@ -6,6 +6,8 @@ import ClientMakeswiftPage from './page.client'
 
 type ParsedUrlQuery = { path?: string[] }
 
+type SearchParams = { [key: string]: string | string[] | undefined }
+
 export async function generateStaticParams() {
   const pages = await client.getPages()
 
@@ -14,13 +16,17 @@ export async function generateStaticParams() {
   }))
 }
 
-export default async function Page({ params }: { params: ParsedUrlQuery }) {
-  // const { isEnabled: isDraftModeEnabled } = draftMode()
-  const isDraftModeEnabled = true
-  const path = '/' + (params?.path ?? []).join('/')
+export default async function Page(props: {
+  params: ParsedUrlQuery
+  searchParams: SearchParams
+}) {
+  const { isEnabled: isDraftModeEnabled } = draftMode()
+  const path = '/' + (props.params?.path ?? []).join('/')
+  const siteVersion = isDraftModeEnabled
+    ? props.searchParams['x-makeswift-site-version'] ?? 'Live'
+    : 'Live'
   const snapshot = await client.getPageSnapshot(path, {
-    siteVersion: isDraftModeEnabled ? 'Working' : 'Live',
-    // siteVersion: Makeswift.getSiteVersion(ctx.previewData),
+    siteVersion: siteVersion as 'Live' | 'Working',
   })
 
   if (snapshot == null) return notFound()
