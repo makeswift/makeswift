@@ -23,6 +23,7 @@ type InitArgs = {
   useNpm: boolean
   useYarn: boolean
   usePnpm: boolean
+  useBun: boolean
   env: string[]
 }
 
@@ -41,10 +42,10 @@ export default async function wrappedInit(name: string | undefined, args: InitAr
 
 async function init(
   name: string | undefined,
-  { example: passedInExample, template, useNpm, useYarn, usePnpm, env = [] }: InitArgs,
+  { example: passedInExample, template, useNpm, useYarn, usePnpm, useBun, env = [] }: InitArgs,
 ): Promise<void> {
   function validate() {
-    if (useNpm && useYarn && usePnpm) {
+    if (useNpm && useYarn && usePnpm && useBun) {
       throw new MakeswiftError(
         'Cannot specify multiple --use-*** commands. Choose 1 package manager.',
       )
@@ -121,7 +122,7 @@ async function init(
   const { nextAppPort, envLocal, example } = await performHandshake({ usingExistingNextApp })
 
   if (usingExistingNextApp) {
-    await integrateNextApp({ dir: nextAppDir, useNpm, useYarn, usePnpm })
+    await integrateNextApp({ dir: nextAppDir, useNpm, useYarn, usePnpm, useBun })
   } else {
     createNextApp({
       dir: nextAppDir,
@@ -129,6 +130,7 @@ async function init(
       useNpm,
       useYarn,
       usePnpm,
+      useBun,
     })
   }
 
