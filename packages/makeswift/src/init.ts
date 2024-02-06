@@ -11,7 +11,7 @@ import { checkForConflictingFiles } from './utils/check-for-conflicting-files'
 import { getProjectName } from './utils/get-name'
 import isNextApp from './utils/is-next-app'
 import { Socket } from 'node:net'
-import { detect as detectPackageManager, PM } from 'detect-package-manager'
+import { detectPackageManager, PM } from './utils/detect-package-manager'
 
 const MAKESWIFT_APP_ORIGIN = process.env.MAKESWIFT_APP_ORIGIN || 'https://app.makeswift.com'
 const MAKESWIFT_API_ORIGIN = process.env.MAKESWIFT_API_ORIGIN
@@ -135,7 +135,7 @@ async function init(
   let packageManager: PM
   if (useNpm) packageManager = 'npm'
   else if (usePnpm) packageManager = 'pnpm'
-  else packageManager = await detectPackageManager({ cwd: nextAppDir })
+  else packageManager = detectPackageManager()
 
   let spawnArgs
   switch (packageManager) {
