@@ -14,7 +14,7 @@ export function createNextApp({
   usePnpm: boolean
 }): void {
   const url = coerceExampleToUrl(example)
-  const npxArgs = ['--yes', 'create-next-app', '--example', url, dir]
+  const npxArgs = ['--yes', 'create-next-app@latest', '--example', url, dir]
 
   if (useNpm) {
     npxArgs.push('--use-npm')
