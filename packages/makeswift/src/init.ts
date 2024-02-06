@@ -21,6 +21,7 @@ type InitArgs = {
   example: string | undefined
   template: string | undefined
   useNpm: boolean
+  useYarn: boolean
   usePnpm: boolean
   env: string[]
 }
@@ -40,12 +41,12 @@ export default async function wrappedInit(name: string | undefined, args: InitAr
 
 async function init(
   name: string | undefined,
-  { example: passedInExample, template, useNpm, usePnpm, env = [] }: InitArgs,
+  { example: passedInExample, template, useNpm, useYarn, usePnpm, env = [] }: InitArgs,
 ): Promise<void> {
   function validate() {
-    if (useNpm && usePnpm) {
+    if (useNpm && useYarn && usePnpm) {
       throw new MakeswiftError(
-        'Cannot use both --use-npm and --use-pnpm args. Choose 1 package manager.',
+        'Cannot specify multiple --use-*** commands. Choose 1 package manager.',
       )
     }
   }
@@ -120,12 +121,13 @@ async function init(
   const { nextAppPort, envLocal, example } = await performHandshake({ usingExistingNextApp })
 
   if (usingExistingNextApp) {
-    await integrateNextApp({ dir: nextAppDir, useNpm, usePnpm })
+    await integrateNextApp({ dir: nextAppDir, useNpm, useYarn, usePnpm })
   } else {
     createNextApp({
       dir: nextAppDir,
       example: example || 'basic-typescript',
       useNpm,
+      useYarn,
       usePnpm,
     })
   }
@@ -134,6 +136,7 @@ async function init(
 
   let packageManager: PM
   if (useNpm) packageManager = 'npm'
+  else if (useYarn) packageManager = 'yarn'
   else if (usePnpm) packageManager = 'pnpm'
   else packageManager = detectPackageManager()
 

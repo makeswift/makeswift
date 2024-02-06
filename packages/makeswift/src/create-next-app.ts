@@ -6,11 +6,13 @@ export function createNextApp({
   dir,
   example,
   useNpm,
+  useYarn,
   usePnpm,
 }: {
   dir: string
   example: string
   useNpm: boolean
+  useYarn: boolean
   usePnpm: boolean
 }): void {
   const url = coerceExampleToUrl(example)
@@ -18,6 +20,9 @@ export function createNextApp({
 
   if (useNpm) {
     npxArgs.push('--use-npm')
+  }
+  if (useYarn) {
+    npxArgs.push('--use-yarn')
   }
   if (usePnpm) {
     npxArgs.push('--use-pnpm')

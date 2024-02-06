@@ -62,10 +62,12 @@ function readAllFilesInDir(dir: string) {
 export async function integrateNextApp({
   dir,
   useNpm,
+  useYarn,
   usePnpm,
 }: {
   dir: string
   useNpm: boolean
+  useYarn: boolean
   usePnpm: boolean
 }): Promise<void> {
   console.log('Integrating Next.js app')
@@ -85,7 +87,7 @@ export async function integrateNextApp({
   addMakeswiftNextjsPlugin({ dir, temporaryDir })
 
   // Step 4 - install the runtime
-  await installMakeswiftRuntime({ dir, useNpm, usePnpm })
+  await installMakeswiftRuntime({ dir, useNpm, useYarn, usePnpm })
 
   // Overwrite pages and next.config.js with output from temporary directory
   overwriteIntegratedFiles({ dir, temporaryDir })
@@ -94,14 +96,17 @@ export async function integrateNextApp({
 async function installMakeswiftRuntime({
   dir,
   useNpm,
+  useYarn,
   usePnpm,
 }: {
   dir: string
   useNpm: boolean
+  useYarn: boolean
   usePnpm: boolean
 }): Promise<void> {
   let packageManager: PM
   if (useNpm) packageManager = 'npm'
+  else if (useYarn) packageManager = 'yarn'
   else if (usePnpm) packageManager = 'pnpm'
   else packageManager = detectPackageManager()
 
