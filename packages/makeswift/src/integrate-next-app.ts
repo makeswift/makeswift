@@ -2,13 +2,12 @@ import * as os from 'os'
 import spawn from 'cross-spawn'
 import glob from 'glob'
 import * as fs from 'fs'
-import * as fse from 'fs-extra'
 import path from 'path'
 import { isAlreadyIntegrated, manipulateNextConfig } from './utils/manipulate-next-config'
 import { createFolderIfNotExists } from './utils/create-folder-if-not-exists'
 import chalk from 'chalk'
 import MakeswiftError from './errors/MakeswiftError'
-import { detect as detectPackageManager, PM } from 'detect-package-manager'
+import { detectPackageManager, PM } from './utils/detect-package-manager'
 
 type PagesFolder = {
   absolute: string
@@ -104,7 +103,7 @@ async function installMakeswiftRuntime({
   let packageManager: PM
   if (useNpm) packageManager = 'npm'
   else if (usePnpm) packageManager = 'pnpm'
-  else packageManager = await detectPackageManager({ cwd: dir })
+  else packageManager = detectPackageManager()
 
   switch (packageManager) {
     case 'npm':
