@@ -18,6 +18,7 @@ program
   .option('--example <example>', 'The Github URL, or name of the Makeswift example to clone.')
   .option('--template <template>', 'The template slug of the Makeswift template to use.')
   .option('--use-npm', 'Explicitly tell the CLI to bootstrap the app using npm')
+  .option('--use-yarn', 'Explicitly tell the CLI to bootstrap the app using yarn')
   .option('--use-pnpm', 'Explicitly tell the CLI to bootstrap the app using pnpm')
   .option(
     '--env <items...>',
