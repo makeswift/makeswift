@@ -64,11 +64,13 @@ export async function integrateNextApp({
   useNpm,
   useYarn,
   usePnpm,
+  useBun,
 }: {
   dir: string
   useNpm: boolean
   useYarn: boolean
   usePnpm: boolean
+  useBun: boolean
 }): Promise<void> {
   console.log('Integrating Next.js app')
   const isTS = isTypeScript({ dir })
@@ -87,7 +89,7 @@ export async function integrateNextApp({
   addMakeswiftNextjsPlugin({ dir, temporaryDir })
 
   // Step 4 - install the runtime
-  await installMakeswiftRuntime({ dir, useNpm, useYarn, usePnpm })
+  await installMakeswiftRuntime({ dir, useNpm, useYarn, usePnpm, useBun })
 
   // Overwrite pages and next.config.js with output from temporary directory
   overwriteIntegratedFiles({ dir, temporaryDir })
@@ -98,16 +100,19 @@ async function installMakeswiftRuntime({
   useNpm,
   useYarn,
   usePnpm,
+  useBun,
 }: {
   dir: string
   useNpm: boolean
   useYarn: boolean
   usePnpm: boolean
+  useBun: boolean
 }): Promise<void> {
   let packageManager: PM
   if (useNpm) packageManager = 'npm'
   else if (useYarn) packageManager = 'yarn'
   else if (usePnpm) packageManager = 'pnpm'
+  else if (useBun) packageManager = 'bun'
   else packageManager = detectPackageManager()
 
   switch (packageManager) {
@@ -127,6 +132,12 @@ async function installMakeswiftRuntime({
 
     case 'pnpm':
       spawn.sync('pnpm', ['add', '@makeswift/runtime'], {
+        stdio: 'inherit',
+        cwd: dir,
+      })
+      break
+    case 'bun':
+      spawn.sync('bun', ['add', '@makeswift/runtime'], {
         stdio: 'inherit',
         cwd: dir,
       })
