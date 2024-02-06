@@ -1,4 +1,4 @@
-export type PM = 'npm' | 'pnpm' | 'yarn'
+export type PM = 'npm' | 'pnpm' | 'yarn' | 'bun'
 
 export function detectPackageManager(): PM {
   const userAgent = process.env.npm_config_user_agent || ''
@@ -9,6 +9,10 @@ export function detectPackageManager(): PM {
 
   if (userAgent.startsWith('pnpm')) {
     return 'pnpm'
+  }
+
+  if (userAgent.startsWith('bun')) {
+    return 'bun'
   }
 
   return 'npm'
