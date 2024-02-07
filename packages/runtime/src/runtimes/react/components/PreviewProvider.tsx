@@ -8,20 +8,16 @@ import * as ReactBuilderPreview from '../../../state/react-builder-preview'
 import * as ReactPage from '../../../state/react-page'
 import { MakeswiftProvider, MakeswiftClient } from '../../../api/react'
 import { registerDocumentEffect } from '../../../state/actions'
+import { useReactRuntime } from '../../../next/context/react-runtime'
 
 type Props = {
   client: MakeswiftClient
   rootElements?: Map<string, ReactPage.Element>
   children?: ReactNode
-  runtime?: ReactRuntime
 }
 
-export default function PreviewProvider({
-  client,
-  children,
-  rootElements,
-  runtime,
-}: Props): JSX.Element {
+export default function PreviewProvider({ client, children, rootElements }: Props): JSX.Element {
+  const runtime = useReactRuntime()
   const store = useMemo(
     () =>
       ReactBuilderPreview.configureStore({
