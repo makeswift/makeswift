@@ -1,8 +1,7 @@
-import { ReactNode } from 'react'
+import { ReactNode, lazy } from 'react'
 import { MakeswiftClient } from '../../../api/react'
 import { Element as ReactPageElement } from '../../../state/react-page'
 import { ReactRuntime } from '../react-runtime'
-import dynamic from 'next/dynamic'
 
 type RuntimeProviderProps = {
   client: MakeswiftClient
@@ -12,8 +11,8 @@ type RuntimeProviderProps = {
   runtime?: ReactRuntime
 }
 
-const PreviewProvider = dynamic(() => import('./PreviewProvider'))
-const LiveProvider = dynamic(() => import('./LiveProvider'))
+const PreviewProvider = lazy(() => import('./PreviewProvider'))
+const LiveProvider = lazy(() => import('./LiveProvider'))
 
 export function RuntimeProvider({ preview, ...props }: RuntimeProviderProps): JSX.Element {
   return preview ? <PreviewProvider {...props} /> : <LiveProvider {...props} />
