@@ -11,7 +11,7 @@ import {
   Table,
   Typography,
 } from '../../../api'
-import { useMakeswiftHostApiClient } from '../../../api/react'
+import { useMakeswiftHostApiClient } from '../../../next/context/makeswift-host-api-client'
 
 export function useSwatch(swatchId: string | null): Swatch | null {
   const client = useMakeswiftHostApiClient()
