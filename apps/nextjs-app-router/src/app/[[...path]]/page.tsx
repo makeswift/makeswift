@@ -2,7 +2,7 @@ import { client } from '@/makeswift/client'
 import '@/makeswift/components'
 import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
-import ClientMakeswiftPage from './page.client'
+import { Page as MakeswiftPage } from '@makeswift/runtime/next'
 
 type ParsedUrlQuery = { path?: string[] }
 
@@ -25,5 +25,5 @@ export default async function Page({ params }: { params: ParsedUrlQuery }) {
 
   if (snapshot == null) return notFound()
 
-  return <ClientMakeswiftPage snapshot={snapshot} />
+  return <MakeswiftPage snapshot={snapshot} />
 }
