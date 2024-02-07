@@ -2,11 +2,11 @@ import { ReactNode, useMemo } from 'react'
 
 import { StoreContext } from '../hooks/use-store'
 import * as ReactPage from '../../../state/react-page'
-import { MakeswiftProvider, MakeswiftClient } from '../../../api/react'
+import { MakeswiftHostApiClientProvider, MakeswiftHostApiClient } from '../../../api/react'
 import { useReactRuntime } from '../../../next/context/react-runtime'
 
 type Props = {
-  client: MakeswiftClient
+  client: MakeswiftHostApiClient
   rootElements?: Map<string, ReactPage.Element>
   children?: ReactNode
 }
@@ -20,7 +20,7 @@ export default function LiveProvider({ client, children, rootElements }: Props):
 
   return (
     <StoreContext.Provider value={store}>
-      <MakeswiftProvider client={client}>{children}</MakeswiftProvider>
+      <MakeswiftHostApiClientProvider client={client}>{children}</MakeswiftHostApiClientProvider>
     </StoreContext.Provider>
   )
 }

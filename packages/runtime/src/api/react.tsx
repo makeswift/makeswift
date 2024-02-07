@@ -57,7 +57,7 @@ export type MakeswiftClientOptions = {
  * client of the host's API, not Makeswift's, intended to build and continuously maintain a realtime
  * snapshot for use in the builder, not the lives pages.
  */
-export class MakeswiftClient {
+export class MakeswiftHostApiClient {
   graphqlClient: GraphQLClient
   makeswiftApiClient: MakeswiftApiClient.Store
   subscribe: MakeswiftApiClient.Store['subscribe']
@@ -252,17 +252,22 @@ export class MakeswiftClient {
   }
 }
 
-const Context = createContext(new MakeswiftClient({ uri: 'https://api.makeswift.com/graphql' }))
+const Context = createContext(
+  new MakeswiftHostApiClient({ uri: 'https://api.makeswift.com/graphql' }),
+)
 
-export function useMakeswiftClient(): MakeswiftClient {
+export function useMakeswiftHostApiClient(): MakeswiftHostApiClient {
   return useContext(Context)
 }
 
-type MakeswiftProviderProps = {
-  client: MakeswiftClient
+type MakeswiftHostApiClientProviderProps = {
+  client: MakeswiftHostApiClient
   children: ReactNode
 }
 
-export function MakeswiftProvider({ client, children }: MakeswiftProviderProps) {
+export function MakeswiftHostApiClientProvider({
+  client,
+  children,
+}: MakeswiftHostApiClientProviderProps) {
   return <Context.Provider value={client}>{children}</Context.Provider>
 }

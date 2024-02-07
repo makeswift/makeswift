@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react'
 
 import { RuntimeProvider } from '../../runtimes/react'
 import { Page as PageMeta } from '../../components/page'
-import { MakeswiftClient } from '../../api/react'
+import { MakeswiftHostApiClient } from '../../api/react'
 import { MakeswiftPageSnapshot } from '../client'
 
 export type PageProps = {
@@ -12,7 +12,7 @@ export type PageProps = {
 export const Page = memo(({ snapshot }: PageProps) => {
   const client = useMemo(
     () =>
-      new MakeswiftClient({
+      new MakeswiftHostApiClient({
         uri: new URL('graphql', snapshot.apiOrigin).href,
         cacheData: snapshot.cacheData,
         localizedResourcesMap: snapshot.localizedResourcesMap,

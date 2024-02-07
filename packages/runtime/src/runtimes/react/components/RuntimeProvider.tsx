@@ -1,10 +1,10 @@
 import { ReactNode, lazy } from 'react'
-import { MakeswiftClient } from '../../../api/react'
+import { MakeswiftHostApiClient } from '../../../api/react'
 import { Element as ReactPageElement } from '../../../state/react-page'
 import { ReactRuntime } from '../react-runtime'
 
 type RuntimeProviderProps = {
-  client: MakeswiftClient
+  client: MakeswiftHostApiClient
   preview: boolean
   rootElements?: Map<string, ReactPageElement>
   children?: ReactNode
