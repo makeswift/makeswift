@@ -1,3 +1,5 @@
+'use client'
+
 import { memo, useMemo } from 'react'
 
 import { RuntimeProvider } from '../../runtimes/react'
