@@ -1,16 +1,15 @@
 import { memo, useMemo } from 'react'
 
-import { RuntimeProvider, ReactRuntime } from '../runtimes/react'
+import { RuntimeProvider } from '../runtimes/react'
 import { Page as PageMeta } from '../components/page'
 import { MakeswiftClient } from '../api/react'
 import { MakeswiftPageSnapshot } from './client'
 
 export type PageProps = {
   snapshot: MakeswiftPageSnapshot
-  runtime?: ReactRuntime
 }
 
-export const Page = memo(({ snapshot, runtime }: PageProps) => {
+export const Page = memo(({ snapshot }: PageProps) => {
   const client = useMemo(
     () =>
       new MakeswiftClient({
@@ -28,12 +27,7 @@ export const Page = memo(({ snapshot, runtime }: PageProps) => {
   })
 
   return (
-    <RuntimeProvider
-      client={client}
-      rootElements={rootElements}
-      preview={snapshot.preview}
-      runtime={runtime}
-    >
+    <RuntimeProvider client={client} rootElements={rootElements} preview={snapshot.preview}>
       {/* We use a key here to reset the Snippets state in the PageMeta component */}
       <PageMeta key={snapshot.document.data.key} document={snapshot.document} />
     </RuntimeProvider>
@@ -46,3 +40,4 @@ export type { MakeswiftPreviewData } from './preview-mode'
 export { PreviewModeScript } from './preview-mode'
 export { Document } from './document'
 export { RootStyleRegistry } from './root-style-registry'
+export { ReactRuntimeProvider } from './context/react-runtime'
