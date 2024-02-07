@@ -1,5 +1,21 @@
 # makeswift
 
+## 0.2.1
+
+### Patch Changes
+
+- e30675e: Update the CLI to support Bun.
+
+  Opening the CLI with `bunx makeswift init` now uses Bun for all commands.
+  The `--use-bun` flag was also added to force the CLI to use Bun regardless of which package manager it was opened with.
+
+- 461698e: Update the CLI to support the `--use-yarn` flag. This flag makes the CLI use yarn regardless of which package manager it was opened with.
+- 0edd60e: Update the CLI to use the package manager it was opened with.
+
+  For `npx makeswift init`, the CLI will use `pnpm`.
+  For `pnpm dlx makeswift init`, the CLI will use `pnpm`.
+  For `yarn exec makeswift init`, the CLI will use `yarn`.
+
 ## 0.2.0
 
 ### Minor Changes
