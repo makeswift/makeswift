@@ -50,7 +50,7 @@ import { BoxModelHandle, getBox } from '../../../box-model'
 import { PropControllersHandle } from '../../../state/modules/prop-controller-handles'
 import { DescriptorsPropControllers } from '../../../prop-controllers/instances'
 import { useTableFormFieldRefs } from '../../hooks/useTableFormFieldRefs'
-import { useMakeswiftClient } from '../../../api/react'
+import { useMakeswiftHostApiClient } from '../../../api/react'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { cx } from '@emotion/css'
 import { useResponsiveGridItem, useResponsiveStyle } from '../../utils/responsive-style'
@@ -278,7 +278,7 @@ const Form = forwardRef(function Form(
   const fields = useMemo(() => fieldsProp?.fields ?? [], [fieldsProp])
   const grid = useMemo(() => fieldsProp?.grid ?? [], [fieldsProp])
   const table = useTable(tableId ?? null)
-  const client = useMakeswiftClient()
+  const client = useMakeswiftHostApiClient()
   const [refEl, setRefEl] = useState<HTMLElement | null>(null)
   const [propControllers, setPropControllers] =
     useState<DescriptorsPropControllers<Descriptors> | null>(null)

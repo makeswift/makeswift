@@ -48,7 +48,7 @@ import { ActionTypes } from './actions'
 import { createPropController } from '../prop-controllers/instances'
 import { PropController } from '../prop-controllers/base'
 import { serializeControls } from '../builder'
-import { MakeswiftClient } from '../api/react'
+import { MakeswiftHostApiClient } from '../api/react'
 import { ElementImperativeHandle } from '../runtimes/react/element-imperative-handle'
 
 export type { Operation } from './modules/read-write-documents'
@@ -457,7 +457,7 @@ function measureBoxModelsMiddleware(): Middleware<Dispatch, State, Dispatch> {
 }
 
 export function messageChannelMiddleware(
-  client: MakeswiftClient,
+  client: MakeswiftHostApiClient,
 ): Middleware<Dispatch, State, Dispatch> {
   return ({ dispatch, getState }: MiddlewareAPI<Dispatch, State>) =>
     (next: ReduxDispatch<Action>) => {
@@ -666,7 +666,7 @@ export function propControllerHandlesMiddleware(): Middleware<Dispatch, State, D
 }
 
 function makeswiftApiClientSyncMiddleware(
-  client: MakeswiftClient,
+  client: MakeswiftHostApiClient,
 ): Middleware<Dispatch, State, Dispatch> {
   return () => (next: ReduxDispatch<Action>) => {
     return (action: Action): Action => {
@@ -686,7 +686,7 @@ export function configureStore({
 }: {
   rootElements?: Map<string, Documents.Element>
   preloadedState?: PreloadedState<State>
-  client: MakeswiftClient
+  client: MakeswiftHostApiClient
 }): Store {
   const initialState: PreloadedState<State> = {
     ...preloadedState,

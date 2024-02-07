@@ -6,12 +6,12 @@ import { ReactRuntime } from '../react-runtime'
 import { StoreContext } from '../hooks/use-store'
 import * as ReactBuilderPreview from '../../../state/react-builder-preview'
 import * as ReactPage from '../../../state/react-page'
-import { MakeswiftProvider, MakeswiftClient } from '../../../api/react'
+import { MakeswiftHostApiClientProvider, MakeswiftHostApiClient } from '../../../api/react'
 import { registerDocumentEffect } from '../../../state/actions'
 import { useReactRuntime } from '../../../next/context/react-runtime'
 
 type Props = {
-  client: MakeswiftClient
+  client: MakeswiftHostApiClient
   rootElements?: Map<string, ReactPage.Element>
   children?: ReactNode
 }
@@ -43,7 +43,7 @@ export default function PreviewProvider({ client, children, rootElements }: Prop
 
   return (
     <StoreContext.Provider value={store}>
-      <MakeswiftProvider client={client}>{children}</MakeswiftProvider>
+      <MakeswiftHostApiClientProvider client={client}>{children}</MakeswiftHostApiClientProvider>
     </StoreContext.Provider>
   )
 }
