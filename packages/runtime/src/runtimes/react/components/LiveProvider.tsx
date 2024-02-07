@@ -2,8 +2,9 @@ import { ReactNode, useMemo } from 'react'
 
 import { StoreContext } from '../hooks/use-store'
 import * as ReactPage from '../../../state/react-page'
-import { MakeswiftHostApiClientProvider, MakeswiftHostApiClient } from '../../../api/react'
+import { MakeswiftHostApiClient } from '../../../api/react'
 import { useReactRuntime } from '../../../next/context/react-runtime'
+import { MakeswiftHostApiClientProvider } from '../../../next/context/makeswift-host-api-client'
 
 type Props = {
   client: MakeswiftHostApiClient

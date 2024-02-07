@@ -6,9 +6,10 @@ import { ReactRuntime } from '../react-runtime'
 import { StoreContext } from '../hooks/use-store'
 import * as ReactBuilderPreview from '../../../state/react-builder-preview'
 import * as ReactPage from '../../../state/react-page'
-import { MakeswiftHostApiClientProvider, MakeswiftHostApiClient } from '../../../api/react'
+import { MakeswiftHostApiClient } from '../../../api/react'
 import { registerDocumentEffect } from '../../../state/actions'
 import { useReactRuntime } from '../../../next/context/react-runtime'
+import { MakeswiftHostApiClientProvider } from '../../../next/context/makeswift-host-api-client'
 
 type Props = {
   client: MakeswiftHostApiClient
