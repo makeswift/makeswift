@@ -148,6 +148,7 @@ async function init(
       spawnArgs = ['run', 'dev', '--', '--port', nextAppPort.toString()]
       break
 
+    case 'bun':
     case 'yarn':
     case 'pnpm':
       spawnArgs = ['run', 'dev', '--port', nextAppPort.toString()]
