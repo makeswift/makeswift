@@ -1,7 +1,3 @@
-'use client'
-
-import { createContext, ReactNode, useContext } from 'react'
-
 import * as MakeswiftApiClient from '../state/makeswift-api-client'
 import {
   APIResourceType,
@@ -250,24 +246,4 @@ export class MakeswiftHostApiClient {
   }): void {
     this.localizedResourcesMap.set(resourceId, localizedResourceId)
   }
-}
-
-const Context = createContext(
-  new MakeswiftHostApiClient({ uri: 'https://api.makeswift.com/graphql' }),
-)
-
-export function useMakeswiftHostApiClient(): MakeswiftHostApiClient {
-  return useContext(Context)
-}
-
-type MakeswiftHostApiClientProviderProps = {
-  client: MakeswiftHostApiClient
-  children: ReactNode
-}
-
-export function MakeswiftHostApiClientProvider({
-  client,
-  children,
-}: MakeswiftHostApiClientProviderProps) {
-  return <Context.Provider value={client}>{children}</Context.Provider>
 }
