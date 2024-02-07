@@ -8,7 +8,7 @@ import Head from 'next/head'
 import { BodySnippet } from './BodySnippet'
 import { DocumentReference } from '../../runtimes/react'
 import { createDocumentReference } from '../../state/react-page'
-import { useMakeswiftClient } from '../../api/react'
+import { useMakeswiftHostApiClient } from '../../api/react'
 import { useIsInBuilder } from '../../react'
 import deepEqual from '../../utils/deepEqual'
 import { MakeswiftPageDocument } from '../../next'
@@ -247,7 +247,7 @@ export function Page({ document: page }: Props): JSX.Element {
 }
 
 function useCachedPage(pageId: string | null): PageType | null {
-  const client = useMakeswiftClient()
+  const client = useMakeswiftHostApiClient()
   const getSnapshot = () => (pageId == null ? null : client.readPage(pageId))
 
   const page = useSyncExternalStore(client.subscribe, getSnapshot, getSnapshot)
@@ -256,7 +256,7 @@ function useCachedPage(pageId: string | null): PageType | null {
 }
 
 function useCachedSite(siteId: string | null): Site | null {
-  const client = useMakeswiftClient()
+  const client = useMakeswiftHostApiClient()
   const getSnapshot = () => (siteId == null ? null : client.readSite(siteId))
 
   const site = useSyncExternalStore(client.subscribe, getSnapshot, getSnapshot)

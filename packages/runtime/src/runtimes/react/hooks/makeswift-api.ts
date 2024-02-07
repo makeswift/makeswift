@@ -11,10 +11,10 @@ import {
   Table,
   Typography,
 } from '../../../api'
-import { useMakeswiftClient } from '../../../api/react'
+import { useMakeswiftHostApiClient } from '../../../api/react'
 
 export function useSwatch(swatchId: string | null): Swatch | null {
-  const client = useMakeswiftClient()
+  const client = useMakeswiftHostApiClient()
   const readSwatch = () => (swatchId == null ? null : client.readSwatch(swatchId))
   const swatch = useSyncExternalStore(client.subscribe, readSwatch, readSwatch)
 
@@ -26,7 +26,7 @@ export function useSwatch(swatchId: string | null): Swatch | null {
 }
 
 export function useSwatches(swatchIds: string[]): (Swatch | null)[] {
-  const client = useMakeswiftClient()
+  const client = useMakeswiftHostApiClient()
   const lastSnapshot = useRef<(Swatch | null)[]>()
 
   function getSnapshot() {
@@ -53,7 +53,7 @@ export function useSwatches(swatchIds: string[]): (Swatch | null)[] {
 }
 
 export function useFile(fileId: string | null): File | null {
-  const client = useMakeswiftClient()
+  const client = useMakeswiftHostApiClient()
   const readFile = () => (fileId == null ? null : client.readFile(fileId))
   const file = useSyncExternalStore(client.subscribe, readFile, readFile)
 
@@ -65,7 +65,7 @@ export function useFile(fileId: string | null): File | null {
 }
 
 export function useFiles(fileIds: string[]): (File | null)[] {
-  const client = useMakeswiftClient()
+  const client = useMakeswiftHostApiClient()
   const lastSnapshot = useRef<(File | null)[]>()
 
   function getSnapshot() {
@@ -92,7 +92,7 @@ export function useFiles(fileIds: string[]): (File | null)[] {
 }
 
 export function useTypography(typographyId: string | null): Typography | null {
-  const client = useMakeswiftClient()
+  const client = useMakeswiftHostApiClient()
   const readTypography = () => (typographyId == null ? null : client.readTypography(typographyId))
   const typography = useSyncExternalStore(client.subscribe, readTypography, readTypography)
 
@@ -104,7 +104,7 @@ export function useTypography(typographyId: string | null): Typography | null {
 }
 
 export function useGlobalElement(globalElementId: string | null): GlobalElement | null {
-  const client = useMakeswiftClient()
+  const client = useMakeswiftHostApiClient()
   const readGlobalElement = () =>
     globalElementId == null ? null : client.readGlobalElement(globalElementId)
   const globalElement = useSyncExternalStore(client.subscribe, readGlobalElement, readGlobalElement)
@@ -119,7 +119,7 @@ export function useGlobalElement(globalElementId: string | null): GlobalElement 
 export function useLocalizedGlobalElement(
   globalElementId: string | null,
 ): LocalizedGlobalElement | null {
-  const client = useMakeswiftClient()
+  const client = useMakeswiftHostApiClient()
   const readLocalizedGlobalElement = () =>
     globalElementId == null ? null : client.readLocalizedGlobalElement(globalElementId)
   const localizedGlobalElement = useSyncExternalStore(
@@ -138,7 +138,7 @@ export function useLocalizedGlobalElement(
 }
 
 export function usePagePathnameSlice(pageId: string | null): PagePathnameSlice | null {
-  const client = useMakeswiftClient()
+  const client = useMakeswiftHostApiClient()
   const readPagePathnameSlice = () => (pageId == null ? null : client.readPagePathnameSlice(pageId))
   const pagePathnameSlice = useSyncExternalStore(
     client.subscribe,
@@ -154,7 +154,7 @@ export function usePagePathnameSlice(pageId: string | null): PagePathnameSlice |
 }
 
 export function useTable(tableId: string | null): Table | null {
-  const client = useMakeswiftClient()
+  const client = useMakeswiftHostApiClient()
   const readTable = () => (tableId == null ? null : client.readTable(tableId))
   const table = useSyncExternalStore(client.subscribe, readTable, readTable)
 
