@@ -38,6 +38,7 @@ export async function getStaticProps(
   const path = '/' + (ctx.params?.path ?? []).join('/')
   const snapshot = await client.getPageSnapshot(path, {
     siteVersion: Makeswift.getSiteVersion(ctx.previewData),
+    locale: ctx.locale,
   })
 
   if (snapshot == null) return { notFound: true }
