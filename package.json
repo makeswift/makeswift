@@ -7,7 +7,7 @@
     "madge": "turbo run madge"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.22.0",
+    "@changesets/cli": "^2.27.1",
     "@playwright/test": "^1.41.1",
     "@types/node": "^20.11.11",
     "prettier": "^2.7.1",
