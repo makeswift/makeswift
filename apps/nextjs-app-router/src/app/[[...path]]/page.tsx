@@ -1,8 +1,11 @@
 import { client } from '@/makeswift/client'
 import '@/makeswift/components'
-import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
-import { Page as MakeswiftPage } from '@makeswift/runtime/next'
+import {
+  Page as MakeswiftPage,
+  MakeswiftSiteVersion,
+  getDraftData,
+} from '@makeswift/runtime/next'
 
 type ParsedUrlQuery = { path?: string[] }
 
@@ -20,13 +23,13 @@ export default async function Page(props: {
   params: ParsedUrlQuery
   searchParams: SearchParams
 }) {
-  const { isEnabled: isDraftModeEnabled } = draftMode()
   const path = '/' + (props.params?.path ?? []).join('/')
-  const siteVersion = isDraftModeEnabled
-    ? props.searchParams['x-makeswift-site-version'] ?? 'Live'
-    : 'Live'
+
+  const siteVersion =
+    (await getDraftData())?.siteVersion ?? MakeswiftSiteVersion.Live
+
   const snapshot = await client.getPageSnapshot(path, {
-    siteVersion: siteVersion as 'Live' | 'Working',
+    siteVersion,
   })
 
   if (snapshot == null) return notFound()

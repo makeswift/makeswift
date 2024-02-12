@@ -2,10 +2,11 @@ import { CookieSerializeOptions, serialize } from 'cookie'
 import { createProxyServer } from 'http-proxy'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { parse } from 'set-cookie-parser'
-import { MakeswiftPreviewData, MakeswiftSiteVersion } from '../../preview-mode'
+import { MakeswiftDraftData, MakeswiftSiteVersion } from '../../draft-mode'
 import { NextRequest, NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
 import { cookies, draftMode } from 'next/headers'
+import { MAKESWIFT_DRAFT_MODE_DATA_COOKIE } from '../../draft-mode'
 
 type Context = { params: { [key: string]: string | string[] } }
 
@@ -50,21 +51,31 @@ async function proxyPreviewModeRouteHandler(
   _context: Context,
   { apiKey }: { apiKey: string },
 ): Promise<NextResponse<ProxyPreviewModeResponse>> {
-  const secret = request.nextUrl.searchParams.get('x-makeswift-preview-mode')
+  const secret = request.nextUrl.searchParams.get('x-makeswift-draft-mode')
 
   if (secret !== apiKey) return new NextResponse('Unauthorized', { status: 401 })
+
+  const draftModeData: MakeswiftDraftData = {
+    makeswift: true,
+    siteVersion: MakeswiftSiteVersion.Working,
+  }
 
   draftMode().enable()
 
   const proxyUrl = request.nextUrl.clone()
-  proxyUrl.searchParams.delete('x-makeswift-preview-mode')
-  proxyUrl.searchParams.set('x-makeswift-site-version', MakeswiftSiteVersion.Working)
+  proxyUrl.searchParams.delete('x-makeswift-draft-mode')
 
   const proxyRequest = new NextRequest(proxyUrl, { headers: request.headers })
-  proxyRequest.headers.delete('x-makeswift-preview-mode')
+  proxyRequest.headers.delete('x-makeswift-draft-mode')
+
   const draftModeCookie = cookies().get('__prerender_bypass')
-  if (draftModeCookie) proxyRequest.cookies.set(draftModeCookie)
+  if (draftModeCookie) {
+    proxyRequest.cookies.set(draftModeCookie)
+    proxyRequest.cookies.set(MAKESWIFT_DRAFT_MODE_DATA_COOKIE, JSON.stringify(draftModeData))
+  }
+
   // TODO: Delete Draft Mode cookie.
+  cookies().delete('__prerender_bypass')
 
   const proxyResponse = await fetch(proxyRequest)
 
@@ -162,7 +173,7 @@ async function proxyPreviewModeApiRouteHandler(
   // development.
   const secure = process.env['NODE_ENV'] === 'production'
 
-  const previewData: MakeswiftPreviewData = {
+  const previewData: MakeswiftDraftData = {
     makeswift: true,
     siteVersion: MakeswiftSiteVersion.Working,
   }

@@ -1,4 +1,5 @@
 import { MakeswiftProvider } from './makeswift-provider'
+import { DraftModeScript } from '@makeswift/runtime/next'
 
 export default function RootLayout({
   children,
@@ -7,6 +8,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <DraftModeScript />
+      </head>
       <body>
         <MakeswiftProvider>{children}</MakeswiftProvider>
       </body>

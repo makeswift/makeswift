@@ -58,7 +58,8 @@ export default async function handler(
 
   const body = {
     version: PACKAGE_VERSION,
-    previewMode: true,
+    previewMode: false,
+    draftMode: true,
     interactionMode: true,
     clientSideNavigation: true,
     elementFromPoint: false,

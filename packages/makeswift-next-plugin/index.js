@@ -59,7 +59,7 @@ module.exports =
             has: [
               {
                 type: 'query',
-                key: 'x-makeswift-preview-mode',
+                key: 'x-makeswift-draft-mode',
                 value: '(?<secret>.+)',
               },
             ],
@@ -71,7 +71,7 @@ module.exports =
             has: [
               {
                 type: 'header',
-                key: 'X-Makeswift-Preview-Mode',
+                key: 'X-Makeswift-Draft-Mode',
                 value: '(?<secret>.+)',
               },
             ],

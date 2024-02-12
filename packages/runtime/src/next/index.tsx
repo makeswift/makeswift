@@ -4,6 +4,8 @@ export type { MakeswiftPage, MakeswiftPageDocument, MakeswiftPageSnapshot, Sitem
 export { Makeswift } from './client'
 export type { MakeswiftPreviewData } from './preview-mode'
 export { PreviewModeScript } from './preview-mode'
+export { MAKESWIFT_DRAFT_MODE_DATA_COOKIE, MakeswiftSiteVersion } from './draft-mode'
+export { DraftModeScript, getDraftData } from './draft-mode/server'
 export { Document } from './document'
 export { RootStyleRegistry } from './root-style-registry'
 export { ReactRuntimeProvider } from './context/react-runtime'
