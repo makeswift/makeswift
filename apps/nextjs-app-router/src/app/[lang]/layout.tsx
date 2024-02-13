@@ -1,12 +1,16 @@
-import { MakeswiftProvider } from './makeswift-provider'
+import { MakeswiftProvider } from '@/app/makeswift-provider'
+
+type Params = { lang: string; path?: string[] }
 
 export default function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode
+  params: Params
 }>) {
   return (
-    <html lang="en">
+    <html lang={params.lang}>
       <body>
         <MakeswiftProvider>{children}</MakeswiftProvider>
       </body>
