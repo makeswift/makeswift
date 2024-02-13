@@ -9,6 +9,7 @@ import elementTree, { ElementTreeResponse } from './handlers/element-tree'
 import fonts, { Font, FontsResponse, GetFonts } from './handlers/fonts'
 import manifest, { Manifest, ManifestResponse } from './handlers/manifest'
 import proxyPreviewMode, { ProxyPreviewModeResponse } from './handlers/proxy-preview-mode'
+import getDraftMode, { GetDraftModeResponse } from './handlers/get-draft-mode'
 import { revalidate, RevalidationResponse } from './handlers/revalidate'
 import translatableData, { TranslatableDataResponse } from './handlers/translatable-data'
 import mergeTranslatedData, { TranslatedDataResponse } from './handlers/merge-translated-data'
@@ -31,6 +32,7 @@ export type MakeswiftApiHandlerResponse =
   | ManifestResponse
   | RevalidationResponse
   | ProxyPreviewModeResponse
+  | GetDraftModeResponse
   | FontsResponse
   | ElementTreeResponse
   | TranslatableDataResponse
@@ -129,6 +131,13 @@ export function MakeswiftApiHandler(
       return match(args)
         .with(routeHandlerPattern, args => proxyPreviewMode(...args, { apiKey }))
         .with(apiRoutePattern, args => proxyPreviewMode(...args, { apiKey }))
+        .exhaustive()
+    }
+
+    if (matches('/get-draft-mode')) {
+      return match(args)
+        .with(routeHandlerPattern, args => getDraftMode(...args, { apiKey }))
+        .with(apiRoutePattern, args => getDraftMode(...args, { apiKey }))
         .exhaustive()
     }
 
