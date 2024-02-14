@@ -6,10 +6,8 @@
 /** @typedef {ImageConfig['domains']} ImageConfigDomains */
 /** @typedef {ImageConfig['remotePatterns']} ImageConfigRemotePatterns */
 
-const withTmInitializer = require('./lib/next-transpile-modules')
 const { satisfies } = require('semver')
 
-const NEXT_TRANSPILE_MODULES_MODULES = ['@makeswift/runtime']
 const GOOGLE_STORAGE_BUCKETS = [
   's.mkswft.com',
   's.staging.mkswft.com',
@@ -143,37 +141,11 @@ module.exports =
     }
 
     if (satisfies(nextVersion, '<13.0.0')) {
-      return withTmInitializer(NEXT_TRANSPILE_MODULES_MODULES, {
-        resolveSymlinks,
-      })(enhancedConfig)
-    }
-
-    if (satisfies(nextVersion, '<13.1.0')) {
-      return {
-        ...enhancedConfig,
-        experimental: {
-          ...enhancedConfig.experimental,
-          transpilePackages: [
-            ...(enhancedConfig.experimental?.transpilePackages ?? []),
-            ...NEXT_TRANSPILE_MODULES_MODULES,
-          ],
-        },
-        webpack(config, options) {
-          config = enhancedConfig.webpack?.(config, options) ?? config
-
-          if (resolveSymlinks != null) config.resolve.symlinks = resolveSymlinks
-
-          return config
-        },
-      }
+      return enhancedConfig
     }
 
     return {
       ...enhancedConfig,
-      transpilePackages: [
-        ...(nextConfig?.transpilePackages ?? []),
-        ...NEXT_TRANSPILE_MODULES_MODULES,
-      ],
       webpack(config, options) {
         config = enhancedConfig.webpack?.(config, options) ?? config
 
