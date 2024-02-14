@@ -1,5 +1,6 @@
 import Cors from 'cors'
-import { NextApiHandler } from 'next'
+import { NextApiRequest, NextApiResponse } from 'next'
+import { NextRequest, NextResponse } from 'next/server'
 import { Match, match as matchPattern } from 'path-to-regexp'
 import { APIResource } from '../../api'
 import { Makeswift } from '../client'
@@ -12,8 +13,12 @@ import { revalidate, RevalidationResponse } from './handlers/revalidate'
 import translatableData, { TranslatableDataResponse } from './handlers/translatable-data'
 import mergeTranslatedData, { TranslatedDataResponse } from './handlers/merge-translated-data'
 import { ReactRuntime } from '../../react'
+import { P, match } from 'ts-pattern'
+import { getSiteVersion } from '../get-site-version'
 
 export type { Manifest, Font }
+
+type Context = { params: { [key: string]: string | string[] } }
 
 type MakeswiftApiHandlerConfig = {
   appOrigin?: string
@@ -35,6 +40,10 @@ export type MakeswiftApiHandlerResponse =
   | APIResource
   | NotFoundError
 
+type MakeswiftApiHandlerArgs =
+  | [NextRequest, Context]
+  | [NextApiRequest, NextApiResponse<MakeswiftApiHandlerResponse>]
+
 export function MakeswiftApiHandler(
   apiKey: string,
   {
@@ -43,7 +52,7 @@ export function MakeswiftApiHandler(
     getFonts,
     runtime = ReactRuntime,
   }: MakeswiftApiHandlerConfig = {},
-): NextApiHandler<MakeswiftApiHandlerResponse> {
+): (...args: MakeswiftApiHandlerArgs) => Promise<NextResponse<MakeswiftApiHandlerResponse> | void> {
   const cors = Cors({ origin: appOrigin })
 
   if (typeof apiKey !== 'string') {
@@ -54,15 +63,54 @@ export function MakeswiftApiHandler(
     )
   }
 
-  return async function makeswiftApiHandler(req, res) {
-    await new Promise<void>((resolve, reject) => {
-      cors(req, res, err => {
-        if (err instanceof Error) reject(err)
-        else resolve()
-      })
-    })
+  const routeHandlerPattern = [P.instanceOf(Request), P.any] as const
+  const apiRoutePattern = [P.any, P.any] as const
 
-    const { makeswift } = req.query
+  return function handler(
+    ...args: MakeswiftApiHandlerArgs
+  ): Promise<NextResponse<MakeswiftApiHandlerResponse> | void> {
+    return match(args)
+      .with(routeHandlerPattern, async args => {
+        const response = await makeswiftApiHandler(...args)
+
+        response.headers.append('Access-Control-Allow-Origin', appOrigin)
+        response.headers.append('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+        response.headers.append('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+
+        return response
+      })
+      .with(apiRoutePattern, async args => {
+        const [req, res] = args
+
+        await new Promise<void>((resolve, reject) => {
+          cors(req, res, err => {
+            if (err instanceof Error) reject(err)
+            else resolve()
+          })
+        })
+
+        return await makeswiftApiHandler(...args)
+      })
+      .exhaustive()
+  }
+
+  async function makeswiftApiHandler(
+    request: NextRequest,
+    context: Context,
+  ): Promise<NextResponse<MakeswiftApiHandlerResponse>>
+  async function makeswiftApiHandler(
+    req: NextApiRequest,
+    res: NextApiResponse<MakeswiftApiHandlerResponse>,
+  ): Promise<void>
+  async function makeswiftApiHandler(
+    ...args: MakeswiftApiHandlerArgs
+  ): Promise<NextResponse<MakeswiftApiHandlerResponse> | void> {
+    const params = match(args)
+      .with(routeHandlerPattern, ([, context]) => context.params)
+      .with(apiRoutePattern, ([req]) => req.query)
+      .exhaustive()
+
+    const { makeswift } = params
 
     if (!Array.isArray(makeswift)) {
       throw new Error(
@@ -73,29 +121,76 @@ export function MakeswiftApiHandler(
     }
 
     const client = new Makeswift(apiKey, { apiOrigin, runtime })
-    const siteVersion = Makeswift.getSiteVersion(req.previewData)
+    const siteVersion = match(args)
+      .with(routeHandlerPattern, () => getSiteVersion())
+      .with(apiRoutePattern, ([req]) => Makeswift.getSiteVersion(req.previewData))
+      .exhaustive()
     const action = '/' + makeswift.join('/')
     const matches = <T extends object>(pattern: string): Match<T> =>
       matchPattern<T>(pattern, { decode: decodeURIComponent })(action)
 
     let m
 
-    if (matches('/manifest')) return manifest(req, res, { apiKey })
+    if (matches('/manifest')) {
+      return match(args)
+        .with(routeHandlerPattern, args => manifest(...args, { apiKey }))
+        .with(apiRoutePattern, args => manifest(...args, { apiKey }))
+        .exhaustive()
+    }
 
-    if (matches('/revalidate')) return revalidate(req, res, { apiKey })
+    if (matches('/revalidate')) {
+      return match(args)
+        .with(routeHandlerPattern, args => revalidate(...args, { apiKey }))
+        .with(apiRoutePattern, args => revalidate(...args, { apiKey }))
+        .exhaustive()
+    }
 
-    if (matches('/proxy-preview-mode')) return proxyPreviewMode(req, res, { apiKey })
+    if (matches('/proxy-preview-mode')) {
+      return match(args)
+        .with(routeHandlerPattern, args => proxyPreviewMode(...args, { apiKey }))
+        .with(apiRoutePattern, args => proxyPreviewMode(...args, { apiKey }))
+        .exhaustive()
+    }
 
-    if (matches('/fonts')) return fonts(req, res, { getFonts })
+    if (matches('/fonts')) {
+      return match(args)
+        .with(routeHandlerPattern, args => fonts(...args, { getFonts }))
+        .with(apiRoutePattern, args => fonts(...args, { getFonts }))
+        .exhaustive()
+    }
 
-    if (matches('/element-tree')) return elementTree(req, res, runtime)
+    if (matches('/element-tree')) {
+      return match(args)
+        .with(routeHandlerPattern, args => elementTree(...args, runtime))
+        .with(apiRoutePattern, args => elementTree(...args, runtime))
+        .exhaustive()
+    }
 
-    if (matches('/translatable-data')) return translatableData(req, res, client)
+    if (matches('/translatable-data')) {
+      return match(args)
+        .with(routeHandlerPattern, args => translatableData(...args, client))
+        .with(apiRoutePattern, args => translatableData(...args, client))
+        .exhaustive()
+    }
 
-    if (matches('/merge-translated-data')) return mergeTranslatedData(req, res, client)
+    if (matches('/merge-translated-data')) {
+      return match(args)
+        .with(routeHandlerPattern, args => mergeTranslatedData(...args, client))
+        .with(apiRoutePattern, args => mergeTranslatedData(...args, client))
+        .exhaustive()
+    }
 
-    const handleResource = <T extends APIResource>(resource: T | null): void =>
-      resource === null ? res.status(404).json({ message: 'Not Found' }) : res.json(resource)
+    const handleResource = <T extends APIResource>(
+      resource: T | null,
+    ): NextResponse<MakeswiftApiHandlerResponse> | void => {
+      const status = resource === null ? 404 : 200
+      const body = resource === null ? { message: 'Not Found' } : resource
+
+      return match(args)
+        .with(routeHandlerPattern, () => NextResponse.json(body, { status }))
+        .with(apiRoutePattern, ([, res]) => res.status(status).json(body))
+        .exhaustive()
+    }
 
     if ((m = matches<{ id: string }>('/swatches/:id'))) {
       return client.getSwatch(m.params.id, siteVersion).then(handleResource)
@@ -120,14 +215,23 @@ export function MakeswiftApiHandler(
     ) {
       return client
         .getLocalizedGlobalElement(m.params.globalElementId, m.params.locale, siteVersion)
-        .then(resource =>
+        .then(resource => {
+          const body = resource === null ? { message: 'Not Found' } : resource
+
           // We're not returning 404 if it's null because localized global element is nullable.
-          resource === null ? res.json({ message: 'Not Found' }) : res.json(resource),
-        )
+          return match(args)
+            .with(routeHandlerPattern, () => NextResponse.json(body))
+            .with(apiRoutePattern, ([, res]) => res.json(body))
+            .exhaustive()
+        })
     }
 
     if ((m = matches<{ id: string }>('/page-pathname-slices/:id'))) {
-      const locale = typeof req.query.locale === 'string' ? req.query.locale : undefined
+      const localeParam = match(args)
+        .with(routeHandlerPattern, ([request]) => request.nextUrl.searchParams.get('locale'))
+        .with(apiRoutePattern, ([req]) => req.query.locale)
+        .exhaustive()
+      const locale = typeof localeParam === 'string' ? localeParam : undefined
 
       return client.getPagePathnameSlice(m.params.id, siteVersion, { locale }).then(handleResource)
     }
@@ -136,6 +240,12 @@ export function MakeswiftApiHandler(
       return client.getTable(m.params.id).then(handleResource)
     }
 
-    return res.status(404).json({ message: 'Not Found' })
+    const status = 404
+    const body = { message: 'Not Found' }
+
+    return match(args)
+      .with(routeHandlerPattern, () => NextResponse.json(body, { status }))
+      .with(apiRoutePattern, ([, res]) => res.status(status).json(body))
+      .exhaustive()
   }
 }
