@@ -1,6 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { Data } from '../../../state/react-page'
 import { Makeswift } from '../../client'
+import { NextRequest, NextResponse } from 'next/server'
+import { P, match } from 'ts-pattern'
+
+type Context = { params: { [key: string]: string | string[] } }
 
 type TranslatableDataResult = { translatableData: Record<string, Data> }
 
@@ -8,22 +12,60 @@ type TranslatableDataError = { message: string }
 
 export type TranslatableDataResponse = TranslatableDataResult | TranslatableDataError
 
+type TranslatableDataHandlerArgs =
+  | [request: NextRequest, context: Context, client: Makeswift]
+  | [req: NextApiRequest, res: NextApiResponse<TranslatableDataResponse>, client: Makeswift]
+
+const routeHandlerPattern = [P.instanceOf(Request), P.any, P.any] as const
+const apiRoutePattern = [P.any, P.any, P.any] as const
+
+export default async function translatableData(
+  request: NextRequest,
+  context: Context,
+  client: Makeswift,
+): Promise<NextResponse<TranslatableDataResponse>>
 export default async function translatableData(
   req: NextApiRequest,
   res: NextApiResponse<TranslatableDataResponse>,
   client: Makeswift,
-): Promise<void> {
-  const elementTree = req.body.elementTree
+): Promise<void>
+export default async function translatableData(
+  ...args: TranslatableDataHandlerArgs
+): Promise<NextResponse<TranslatableDataResponse> | void> {
+  const [, , client] = args
+
+  const body = await match(args)
+    .with(routeHandlerPattern, ([request]) => request.json())
+    .with(apiRoutePattern, ([req]) => req.body)
+    .exhaustive()
+  const elementTree = body.elementTree
 
   if (elementTree == null) {
-    return res.status(400).json({ message: 'elementTree must be defined.' })
+    const status = 400
+    const body = { message: 'elementTree must be defined.' }
+
+    return match(args)
+      .with(routeHandlerPattern, () => NextResponse.json(body, { status }))
+      .with(apiRoutePattern, ([, res]) => res.status(status).json(body))
+      .exhaustive()
   }
 
   try {
     let translatableData = client.getTranslatableData(elementTree)
 
-    return res.json({ translatableData })
+    const body = { translatableData }
+
+    return match(args)
+      .with(routeHandlerPattern, () => NextResponse.json(body))
+      .with(apiRoutePattern, ([, res]) => res.json(body))
+      .exhaustive()
   } catch (error) {
-    res.status(500).json({ message: 'Failed to get traslatable data.' })
+    const status = 500
+    const body = { message: 'Failed to get traslatable data.' }
+
+    return match(args)
+      .with(routeHandlerPattern, () => NextResponse.json(body, { status }))
+      .with(apiRoutePattern, ([, res]) => res.status(status).json(body))
+      .exhaustive()
   }
 }
