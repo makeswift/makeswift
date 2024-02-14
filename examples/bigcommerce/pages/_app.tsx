@@ -1,23 +1,54 @@
-import '../styles/globals.css'
+/* eslint-disable check-file/filename-naming-convention */
+import '../app/globals.css';
 
-import { AppProps } from 'next/app'
-import { appWithTranslation } from 'next-i18next'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AppProps } from 'next/app';
+import { Inter } from 'next/font/google';
+import { SessionProvider } from 'next-auth/react';
+import { useState } from 'react';
 
-import { CartProvider } from 'lib/cart-context'
-import { PreviewableLocaleProvider } from 'components/locale/locale-context'
+import { getInitialData } from '~/client/queries/get-initial-data';
 
-function App({ Component, pageProps }: AppProps) {
+import { BcDataProvider } from '~/providers/bc-data-provider';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
+
+type InitialProps = Awaited<ReturnType<typeof App.getInitialProps>>;
+type Props = AppProps & InitialProps;
+
+export default function App({ Component, pageProps, bcData }: Props) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+          },
+        },
+      }),
+  );
+
   return (
-    <PreviewableLocaleProvider>
-      <CartProvider>
-        <meta
-          name="viewport"
-          content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
-        />
-        <Component {...pageProps} />
-      </CartProvider>
-    </PreviewableLocaleProvider>
-  )
+    <main className={`${inter.variable} font-sans`}>
+      <SessionProvider>
+        <QueryClientProvider client={queryClient}>
+          <BcDataProvider value={bcData}>
+            <Component {...pageProps} />
+          </BcDataProvider>
+        </QueryClientProvider>
+      </SessionProvider>
+    </main>
+  );
 }
 
-export default appWithTranslation(App)
+App.getInitialProps = async () => {
+  const bcData = await getInitialData();
+
+  return {
+    bcData,
+  };
+};
