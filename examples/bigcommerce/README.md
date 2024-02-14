@@ -1,284 +1,59 @@
-# Demo
+<a href="https://catalyst.dev" target="_blank" rel="noopener norerrer">
+  <img src="https://storage.googleapis.com/bigcommerce-developers/images/catalyst_readme_banner.png" alt="Catalyst for Composable Commerce Image Banner" title="Catalyst">
+</a>
 
-[https://makeswift-examples-bigcommerce.vercel.app](https://makeswift-examples-bigcommerce.vercel.app)
+<br />
 
-# Visually build with BigCommerce components
+**Catalyst** is the composable, fully customizable headless ecommerce storefront framework for
+[BigCommerce](https://www.bigcommerce.com/). Catalyst is built with [Next.js](https://nextjs.org/), uses
+our [React](https://react.dev/) storefront components, and is backed by the
+[GraphQL Storefront API](https://developer.bigcommerce.com/docs/storefront/graphql).
 
-In this example, you will learn how to integrate [BigCommerce](https://www.bigcommerce.com/) with [Makeswift](https://www.makeswift.com) to create a visually editable ecommerce store.
+By choosing Catalyst, you'll have a fully-functional storefront within a few seconds, and spend zero time on wiring
+up APIs or building SEO, Accessibility, and Performance-optimized ecommerce components you've probably written many
+times before. You can instead go straight to work building your brand and making this your own.
 
-This example includes a home page for listing products by category and a product template page for showing product details.
+<div align="center">
 
-## Tools
+![-----------------------------------------------------](https://storage.googleapis.com/bigcommerce-developers/images/catalyst_readme_hr.png)
 
-- [**BigCommerce StoreFrontAPI**](https://developer.bigcommerce.com/docs/8138e27e79662-graph-ql-storefront-api-overview): to pull data related to a store in BigCommerce and provide it via React context.
-- [**Makeswift SDK**](https://www.makeswift.com/docs): to register components into Makeswift's visual builder.
+</div>
 
----
+<p align="center">
+ <a href="https://www.catalyst.dev">🚀 catalyst.dev</a> •
+ <a href="https://developer.bigcommerce.com/community">🤗 BigCommerce Developer Community</a> •
+ <a href="https://github.com/bigcommerce/catalyst/discussions">💬 GitHub Discussions</a>
+</p>
 
-## Using this example
+<div align="center">
 
-To quickly try this example either [deploy to Vercel](#deploy-this-example-to-vercel) or [use our CLI](#use-this-example-locally-with-the-makeswift-cli).
+![-----------------------------------------------------](https://storage.googleapis.com/bigcommerce-developers/images/catalyst_readme_hr.png)
 
-If you have already created a BigCommerce store and know you want to use this example, scroll down to ["Using your own BigCommerce store."](#using-your-own-bigcommerce-store)
+</div>
 
-### Deploy this example to Vercel
+## Requirements
 
-The deploy link below includes integrations with BigCommerce and Makeswift.
+- Node.js 18+
+- `npm` (or `pnpm`/`yarn`)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fbigcommerce&project-name=bigcommerce-makeswift-example&repository-name=bigcommerce-makeswift-example&redirect-url=https%3A%2F%2Fapp.makeswift.com&integration-ids=oac_51ryd7Pob5ZsyTFzNzVvpsGq,oac_nsrwzogJLEFglVwt2060kB0y&external-id=ecommerce-bigcommerce)
+## Getting started
 
-> **Note**
-> During the Makeswift integration we recommend using the the "Ecommerce - BigCommerce" template. It comes prefilled with ecommerce components.
+If this installation of Catalyst was created using the `catalyst-storefront` CLI, you should already be connected to a store and can get started immediately by running:
 
-With your deployment completed, [take a tour of your ecommerce store](#take-a-tour-of-your-ecommerce-store)
-
-### Use this example locally with the Makeswift CLI
-
-1. Run the Makeswift CLI command
-
-   ```bash
-   npx makeswift@latest init --template=ecommerce-bigcommerce
-   ```
-
-   Note: the `--template=ecommerce-bigcommerce` above will auto-select the "Ecommerce - Bigcommerce" template in Makeswift and download this example Next.js store to your local machine.
-
-2. Log in or sign up for Makeswift
-
-3. Confirm the default env vars provided
-
-Once completed, the CLI runs `yarn dev` and opens Makeswift for you. From there you can use provided custom ecommerce components.
-
-### Take a tour of your ecommerce store
-
-After integration, you will be redirected to app.makeswift.com.
-
-- Navigate to the "Home" page on the left to test out the custom "Header" and "Product list" components
-
-  - The "Header" is a functional cart integrated with the BigCommerce API
-  - The "Product list" is a list of products from BigCommerce. To customize the category or number of visible products, select the "Product list" and update the panels to the right labeled 'Category' and 'Count' respectively.
-
-- Then, go to the "\_\_product\_\_" page and test out the product-specific components
-
-  - This page is also called the product template page because it is the template structure for all product pages.
-  - The "Add to cart" is a functional button integrated with the BigCommerce API
-  - All the other components — Product price, Product name, Product images, Product description, and Product breadcrumbs — are composable for creating a custom product page.
-
-## Using your own BigCommerce store
-
-Once you have given the example a try it's time to use your own BigCommerce store. Here is [a guide](https://support.bigcommerce.com/s/article/Starting-a-BigCommerce-Trial) on how to set one up.
-
-Note: the env for this example corresponds to the [Vercel Commerce BigCommerce example](https://github.com/vercel/commerce/tree/main/packages/bigcommerce).
-
-### How to get the environment variables from your store:
-
-- `BIGCOMMERCE_ACCESS_TOKEN` requires an [API account](https://support.bigcommerce.com/s/article/Store-API-Accounts?language=en_US)
-
-  - This token needs modify rights on Cart, Checkout, and storefront API Tokens, and read rights on Products and Content.
-  - The "Access Token" created is the value that is used as `BIGCOMMERCE_ACCESS_TOKEN`
-
-- `BIGCOMMERCE_CHANNEL_ID`
-
-  - The channel ID can be found by going to "Channel Manager" and clicking "Edit settings" on the channel you want to use. It's the number in the URL after `channel/`.
-    ![BigCommerce Channel ID](https://user-images.githubusercontent.com/20950876/199548296-92746bb6-17fc-4caa-b24a-a3c25ab89389.png)
-  - Channel ID of `1` is autogenerated for all stores.
-
-- `BIGCOMMERCE_STORE_HASH`
-
-  - The identifier for your store. It can be found in the URL of your BigCommerce dashboard
-    ![BigCommerce Store Hash](https://user-images.githubusercontent.com/20950876/199331796-06b8b86f-5891-4344-9589-b02e78fd34f1.png)
-
-- `BIGCOMMERCE_CUSTOMER_IMPERSONATION_TOKEN`
-
-  - This is a JWT. It gives your app access to the storefront API. Use [this endpoint](https://developer.bigcommerce.com/api-reference/044bc7b21e5b4-create-a-token) to create it. More details can be found [here](https://developer.bigcommerce.com/api-reference/35bac0e4eda61-graph-ql-storefront-api#request-tokens-with-rest-api)
-
-  The example store token was created like so:
-
-  ```bash
-  curl -H "X-Auth-Token: ipupahkny78rhnuodygnrpvtl8tv0qz" -H "Content-Type: application/json" -X POST -d '{"channel_id":1,"expires_at":1982692202}' https://api.bigcommerce.com/stores/5yjdhtv55p/v3/storefront/api-token
-  ```
-
-### How to add localization information to your store:
-
-BigCommerce doesn't support localization as a first-class feature.
-This example uses the `metafields` [api](https://developer.bigcommerce.com/api-reference/1fc3689311c97-create-metafields) to store translations for each locale.
-`Metafields` are only accessible via API.
-This section will show you how to use the management API to add product translations.
-
-Managing `metafields` with the Management API requires an [API account](https://support.bigcommerce.com/s/article/Store-API-Accounts?language=en_US) with product "modify" permissions. This API account should be different than the one used to deploy your site.
-
-<figure style="margin-bottom:20px">
-    <img width="286" alt="CleanShot 2022-12-06 at 16 28 49@2x" src="https://user-images.githubusercontent.com/20950876/206038013-62e02a0d-ae50-404b-be18-80c895128b82.png">
-    <figcaption>the permission required to modify `metafields`</figcaption>
-</figure>
-
-Once you have created the new API account you can use it with the curl commands below.
-
-> **Note**
-> Don't forget to replace the PRODUCT_MODIFY_BIGCOMMERCE_ACCESS_TOKEN with the "Access Token" from creating your API account above. This token must have product "modify" permissions.
-
-#### Creating locale `metafields` for a product
-
-To create a `metafield` you will need a `permission_set`, a `namespace`, a `key`, and a `value`.
-
-- `permission_set`
-  - This determines what APIs have access to this `metafield`. Since we query product data from the storefront API, we will need the `read_and_sf_access` `permission_set`.
-- `namespace`
-  - This indicates the locale that this `metafield` belongs to. In our situation, it should match the identifier this translation belongs to.
-  - A translation to Spanish would go under the `es` namespace.
-- `key`
-  - The property in our product that this translation corresponds to.
-- `value`
-  - The translated text itself.
-
-Here is an example of how we translated the values in our plant store. Blue Lily is Lirio Azul in Spanish.
-To add the `metafield` for this translation I used the `namespace` of "es", the `key` of "name", and the `value` of "Lirio Azul".
-
-```bash
-curl -X POST https://api.bigcommerce.com/stores/5yjdhtv55p/v3/catalog/products/114/metafields \
-   -H 'Content-Type: application/json' \
-   -H 'X-Auth-Token: PRODUCT_MODIFY_BIGCOMMERCE_ACCESS_TOKEN'\
-   -d '{"permission_set":"read_and_sf_access","namespace":"es","key":"name","value":"Lirio Azul"}'
+```shell
+npm run dev
 ```
 
-#### Deleting locale `metafields`
+If you want to connect to another store or channel, you can run the setup process again by running:
 
-If you make a mistake when adding a `metafield`, this curl command can be used to delete the mistaken `metafield`. Note the different HTTP method and `metafield` id at the end of the URL.
-
-```bash
-curl -X DELETE https://api.bigcommerce.com/stores/5yjdhtv55p/v3/catalog/products/114/metafields/24 \
-   -H 'X-Auth-Token: PRODUCT_MODIFY_BIGCOMMERCE_ACCESS_TOKEN'
+```shell
+npx create-catalyst-storefront@latest init
 ```
 
-### Updating the deployed host on Vercel
+Learn more about Catalyst at [catalyst.dev](https://catalyst.dev).
 
-If you clicked the "Deploy" button earlier you can change the environment variable in vercel.com
+## Resources
 
-   <img src="https://user-images.githubusercontent.com/20950876/201372509-5e48b4ed-df3b-423e-98ef-cf41cd1ee5a6.png" width="600" />
-
-### Updating the locally running host
-
-If you started out with the CLI you can update the generated `.env.local` with any new values from your BigCommerce store.
-
-The example store `.env.local` looks like:
-
-```
-MAKESWIFT_SITE_API_KEY=XXX-XXX-XXX
-
-BIGCOMMERCE_ACCESS_TOKEN=ipupahkny78rhnuodygnrpvtl8tv0qz
-BIGCOMMERCE_STORE_HASH="5yjdhtv55p"
-BIGCOMMERCE_CUSTOMER_IMPERSONATION_TOKEN="eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJjaWQiOjEsImNvcnMiOltdLCJlYXQiOjE5ODI2OTIyMDIsImlhdCI6MTcwNTQzMTAwNSwiaXNzIjoiQkMiLCJzaWQiOjEwMDMwMzgxMzQsInN1YiI6ImVqYnR2d3c3ZzhlejB4MXVuMXhzN2tpaGNnaTRjaTUiLCJzdWJfdHlwZSI6MiwidG9rZW5fdHlwZSI6MX0.uGUbU9ccUlKin4zKYEMkBfqXhRwXbrY6qB8wxCj95Ct0YjUfhcQYO-ppnjc_PW4i00nX4hfu0onQqO2vXTfHTQ"
-BIGCOMMERCE_CHANNEL_ID=1536289
-```
-
-If you are struggling to configure these env vars feel free to reach out in our [Discord](https://discord.com/invite/7dDpz6y) and we will be happy to help!
-
----
-
-## Putting it all together
-
-It's probably a good time to explain what's going on. Here is a point of reference for the technical terms below:
-
-- "dynamic product route"
-  - This is the Next.js page that creates product pages based on BigCommerce products and our Makeswift template layout
-  - It can be found here: `/pages/product/[slug].tsx`
-  - Here is [more info on dynamic routes](https://nextjs.org/docs/routing/dynamic-routes)
-- "optional catch all route"
-  - This is the Next.js page that creates pages based on pages in your Makeswift site
-  - It can be found here : `/pages/[[...path]].tsx`
-  - Here is [more info on optional catch all routes](https://nextjs.org/docs/routing/dynamic-routes#optional-catch-all-routes)
-
-### How is BigCommerce product data getting to components?
-
-The "optional catch all route" uses Next.js' `getStaticProps` to get a page snapshot from Makeswift.
-
-```tsx
-const makeswift = new Makeswift(config.makeswift.siteApiKey)
-const path = '/' + (ctx.params?.path ?? []).join('/')
-const snapshot = await makeswift.getPageSnapshot(path, {
-  siteVersion: Makeswift.getSiteVersion(ctx.previewData),
-})
-```
-
-It also uses `getStaticProps` to get product data from BigCommerce.
-
-```tsx
-const products = await getProducts()
-```
-
-Both Makeswift and BigCommerce data is then passed into the Page component via props.
-
-```tsx
-return { props: { snapshot, products } }
-```
-
-And we wrap the `MakeswiftPage` with a context provider for our BigCommerce data
-
-```tsx
-export default function Page({ products, snapshot }: Props) {
-  return (
-    <ProductsContext.Provider value={products}>
-      <MakeswiftPage snapshot={snapshot} />
-    </ProductsContext.Provider>
-  )
-}
-```
-
-### How are product pages being generated from the template (`/__product__`) route?
-
-The "dynamic product route" uses Next.js' `getStaticPaths` API to generate page slugs from BigCommerce products.
-
-```tsx
-export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-  const products = await getProducts()
-
-  return {
-    paths: products.map(product => ({ params: { slug: product.entityId.toString() } })),
-    fallback: 'blocking',
-  }
-}
-```
-
-The resulting pages use the same makeswift data from the template (`/__product__`) makeswift page.
-
-```tsx
-const makeswift = new Makeswift(config.makeswift.siteApiKey)
-const snapshot = await makeswift.getPageSnapshot(config.makeswift.productTemplatePathname, {
-  siteVersion: Makeswift.getSiteVersion(ctx.previewData),
-})
-```
-
-While dynamically pulling different products from BigCommerce based on the slug.
-
-```tsx
-const slug = ctx.params?.slug
-
-/* ... */
-
-const product = await getProduct(Number.parseInt(slug.toString(), 10))
-```
-
-### Why is the "dynamic product route" using a low revalidation period when the "optional catch all route" is using on-demand revalidation?
-
-Pages are created in the "optional catch all route" based on pages in a Makeswift site. Since Makeswift is aware of what pages are published it can use [on-demand revalidation](https://nextjs.org/docs/basic-features/data-fetching/incremental-static-regeneration#using-on-demand-revalidation) with an api route in `/pages/api/makeswift/[...makeswift].ts` to rebuild pages on publish
-
-Unlike the "optional catch all route", the "dynamic product route" creates pages based on BigCommerce products. These routes are unknown to Makeswift and thus it doesn't revalidate them on-demand. Instead, we use a low revalidation period to update them.
-
-### Why are cart API requests routed through `/page/api/[checkout|cart]`?
-
-At the time of making this example the BigCommerce Storefront API is readonly and doesn't include cart mutations. In order to keep the `BIGCOMMERCE_ACCESS_TOKEN` private we are proxying all BigCommerce Management requests through `/page/api/[checkout|cart]`
-
-More details on managing carts on a custom storefront can be found [here](https://developer.bigcommerce.com/docs/ZG9jOjE4MjIyNjUx-managing-carts).
-
----
-
-## Next steps
-
-With Makeswift, you can give your marketing team hand-crafted, ecommerce building blocks to create a custom store.
-
-To learn more about Makeswift, take a look at the following resources:
-
-- [Makeswift Website](https://www.makeswift.com/)
-- [Makeswift Documentation](https://www.makeswift.com/docs/)
-- [Makeswift Discord Community](https://discord.gg/dGNdF3Uzfz)
-
-You can check out [the Makeswift GitHub repository](https://github.com/makeswift/makeswift) - your feedback and contributions are welcome!
+- [GraphQL Storefront API Playground](https://developer.bigcommerce.com/graphql-storefront/playground)
+- [GraphQL Storefront API Explorer](https://developer.bigcommerce.com/graphql-storefront/explorer)
+- [BigCommerce DevDocs](https://developer.bigcommerce.com/docs/build)
