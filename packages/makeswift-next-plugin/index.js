@@ -3,7 +3,6 @@
 /** @typedef {import('next').NextConfig} NextConfig */
 /** @typedef {{ resolveSymlinks?: boolean; appOrigin?: string; previewMode?: boolean }} MakeswiftNextPluginOptions */
 /** @typedef {NonNullable<import('next').NextConfig['images']>} ImageConfig */
-/** @typedef {ImageConfig['domains']} ImageConfigDomains */
 /** @typedef {ImageConfig['remotePatterns']} ImageConfigRemotePatterns */
 
 const { satisfies } = require('semver')
@@ -13,8 +12,6 @@ const GOOGLE_STORAGE_BUCKETS = [
   's.staging.mkswft.com',
   's-development.cd.mkswft.com',
 ]
-/** @type ImageConfigDomains */
-const NEXT_IMAGE_DOMAINS = GOOGLE_STORAGE_BUCKETS
 /** @type ImageConfigRemotePatterns */
 const NEXT_IMAGE_REMOTE_PATTERNS = GOOGLE_STORAGE_BUCKETS.map((bucket) => ({
   protocol: 'https',
@@ -43,7 +40,6 @@ module.exports =
       ...nextConfig,
       images: {
         ...nextConfig.images,
-        domains: [...(nextConfig.images?.domains ?? []), ...NEXT_IMAGE_DOMAINS],
         remotePatterns: [
           ...(nextConfig.images?.remotePatterns ?? []),
           ...NEXT_IMAGE_REMOTE_PATTERNS,
@@ -117,31 +113,8 @@ module.exports =
 
     const nextVersion = require('next/package.json').version
 
-    if (satisfies(nextVersion, '<12.2.0')) {
-      throw new Error(
-        'Makeswift requires a minimum Next.js version of 12.2.0. Please upgrade to Next.js version ^12.2.0 if you want to use Next.js v12, or version ^13.0.0 if you want to use Next.js v13.',
-      )
-    }
-
-    if (satisfies(nextVersion, '<12.3.0')) {
-      enhancedConfig = {
-        ...enhancedConfig,
-        experimental: {
-          ...enhancedConfig.experimental,
-          images: {
-            ...enhancedConfig.experimental?.images,
-            remotePatterns: [
-              ...(enhancedConfig.experimental?.images?.remotePatterns ?? []),
-              ...NEXT_IMAGE_REMOTE_PATTERNS,
-              ...NEXT_IMAGE_REVIEW_APP_REMOTE_PATTERNS,
-            ],
-          },
-        },
-      }
-    }
-
-    if (satisfies(nextVersion, '<13.0.0')) {
-      return enhancedConfig
+    if (satisfies(nextVersion, '<13.4.0')) {
+      throw new Error('Makeswift requires a minimum Next.js version of 13.4.0.')
     }
 
     return {
