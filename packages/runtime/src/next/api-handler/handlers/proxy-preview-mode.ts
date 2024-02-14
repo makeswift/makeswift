@@ -73,6 +73,17 @@ async function proxyPreviewModeRouteHandler(
     status: proxyResponse.status,
   })
 
+  // `NextResponse.rewrite` isn't supported in App router.
+  // When an app is in the builder, the request is proxied through an api route. This proxied request will hit any middleware.
+  // If this middleware rewrites the resulting response will include the `x-middleware-rewrite` header.
+  // When this page finally resolves the app router checks that header and will throw since it appears that we have rewritten within app router.
+  // We want to prevent this false positive, so we remove the `x-middleware-rewrite` header from the response.
+  //
+  // https://github.com/vercel/next.js/blob/ea65cb6541fa5c675e50f56561c093dfe095fbcb/packages/next/src/server/future/route-modules/app-route/module.ts#L444
+  if (response.headers.has('x-middleware-rewrite')) {
+    response.headers.delete('x-middleware-rewrite')
+  }
+
   // `fetch` automatically decompresses the response, but the response headers will keep the
   // `content-encoding` and `content-length` headers. This will cause decoding issues if the client
   // attempts to decompress the response again. To prevent this, we remove these headers.
