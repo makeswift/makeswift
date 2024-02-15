@@ -16,6 +16,7 @@ import * as IsInBuilder from './modules/is-in-builder'
 import * as IsPreview from './modules/is-preview'
 import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Breakpoints from './modules/breakpoints'
+import * as Locale from './modules/locale'
 import * as Introspection from '../prop-controllers/introspection'
 import { Action } from './actions'
 import { copyElementReference } from '../prop-controllers/copy'
@@ -51,6 +52,7 @@ const reducer = combineReducers({
   isPreview: IsPreview.reducer,
   builderEditMode: BuilderEditMode.reducer,
   breakpoints: Breakpoints.reducer,
+  locale: Locale.reducer,
 })
 
 export type State = ReturnType<typeof reducer>
@@ -479,6 +481,10 @@ export function getBuilderEditMode(state: State): BuilderEditMode.State {
 
 export function getBreakpoints(state: State): Breakpoints.State {
   return state.breakpoints
+}
+
+export function getLocale(state: State): Locale.State {
+  return state.locale
 }
 
 export type Dispatch = ThunkDispatch<State, unknown, Action>

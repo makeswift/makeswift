@@ -1,17 +1,23 @@
 'use client'
 
-import { memo, useMemo } from 'react'
+import { memo, useMemo, useEffect } from 'react'
+import { useRouter } from 'next/router'
 
-import { RuntimeProvider } from '../../runtimes/react'
+import { RuntimeProvider, useSelector } from '../../runtimes/react'
 import { Page as PageMeta } from '../../components/page'
 import { MakeswiftHostApiClient } from '../../api/react'
 import { MakeswiftPageSnapshot } from '../client'
+import { useReactRuntime } from '../context/react-runtime'
+import { getLocale } from '../../state/react-page'
 
 export type PageProps = {
   snapshot: MakeswiftPageSnapshot
 }
 
 export const Page = memo(({ snapshot }: PageProps) => {
+  const router = useRouter()
+  const runtime = useReactRuntime()
+  const locale = useSelector(state => getLocale(state))
   const client = useMemo(
     () =>
       new MakeswiftHostApiClient({
@@ -27,6 +33,19 @@ export const Page = memo(({ snapshot }: PageProps) => {
   snapshot.document.localizedPages.forEach(localizedPage => {
     rootElements.set(localizedPage.elementTreeId, localizedPage.data)
   })
+
+  useEffect(() => {
+    if (router.locale) {
+      runtime.setLocale(router.locale)
+    }
+  }, [router.locale])
+
+  useEffect(() => {
+    const { pathname: currentPathname, query } = router
+    const pathname = currentPathname.replace(/^\//, '/')
+
+    router.replace({ pathname, query }, undefined, { locale })
+  }, [locale])
 
   return (
     <RuntimeProvider client={client} rootElements={rootElements} preview={snapshot.preview}>

@@ -26,6 +26,7 @@ import * as Pointer from './modules/pointer'
 import * as ElementImperativeHandles from './modules/element-imperative-handles'
 import * as Breakpoints from './modules/breakpoints'
 import * as ReactPage from './react-page'
+import * as Locale from './modules/locale'
 import {
   Action,
   changeDocumentElementSize,
@@ -69,6 +70,7 @@ export const reducer = combineReducers({
   pointer: Pointer.reducer,
   elementImperativeHandles: ElementImperativeHandles.reducer,
   breakpoints: Breakpoints.reducer,
+  locale: Locale.reducer,
 })
 
 export type State = ReturnType<typeof reducer>
@@ -509,6 +511,7 @@ export function messageChannelMiddleware(
           case ActionTypes.HANDLE_WHEEL:
           case ActionTypes.HANDLE_POINTER_MOVE:
           case ActionTypes.ELEMENT_FROM_POINT_CHANGE:
+          case ActionTypes.SET_LOCALE:
             messageChannel.port1.postMessage(action)
             break
 
@@ -539,14 +542,6 @@ export function messageChannelMiddleware(
             messageChannel.port1.postMessage(action)
             window.getSelection()?.removeAllRanges()
             break
-
-          case ActionTypes.SET_LOCALE: {
-            const { pathname: currentPathname, query } = Router
-            const pathname = (action.payload.pathname ?? currentPathname).replace(/^\//, '/')
-
-            Router.replace({ pathname, query }, undefined, { locale: action.payload.locale })
-            break
-          }
 
           case ActionTypes.SET_LOCALIZED_RESOURCE_ID: {
             client.setLocalizedResourceId(action.payload)

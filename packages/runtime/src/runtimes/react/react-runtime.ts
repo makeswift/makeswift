@@ -1,6 +1,6 @@
 import { registerBuiltinComponents } from '../../components/builtin/register'
 import { PropControllerDescriptor, PropControllerDescriptorValueType } from '../../prop-controllers'
-import { registerComponentEffect, registerReactComponentEffect } from '../../state/actions'
+import { registerComponentEffect, registerReactComponentEffect, setLocale } from '../../state/actions'
 import {
   Breakpoints,
   BreakpointsInput,
@@ -74,6 +74,10 @@ export class ReactRuntime {
   ): Element {
     return mergeElementTreeTranslatedData(this.store.getState(), elementTree, translatedData)
   }
+
+  static setLocale(locale: string): void {
+    this.store.dispatch(setLocale(new Intl.Locale(locale)))
+  }
   // ------------------ Deprecated API ends here ------------------ //
 
   store: Store
@@ -128,6 +132,10 @@ export class ReactRuntime {
 
   mergeTranslatedData(elementTree: ElementData, translatedData: Record<string, Data>): Element {
     return mergeElementTreeTranslatedData(this.store.getState(), elementTree, translatedData)
+  }
+
+  setLocale(locale: string): void {
+    this.store.dispatch(setLocale(new Intl.Locale(locale)))
   }
 }
 
