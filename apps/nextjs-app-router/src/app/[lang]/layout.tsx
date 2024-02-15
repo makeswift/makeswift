@@ -1,4 +1,4 @@
-import { MakeswiftProvider } from '@/app/makeswift-provider'
+import { MakeswiftProvider } from '@/makeswift/provider'
 
 type Params = { lang: string; path?: string[] }
 
