@@ -9,7 +9,6 @@ import {
   Store as ReduxStore,
 } from 'redux'
 import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk'
-import Router from 'next/router'
 
 import deepEqual from '../utils/deepEqual'
 
@@ -41,8 +40,6 @@ import {
   setIsInBuilder,
   handleWheel,
   handlePointerMove,
-  changePathnameStart,
-  changePathnameComplete,
   elementFromPointChange,
   setBreakpoints,
 } from './actions'
@@ -495,14 +492,6 @@ export function messageChannelMiddleware(
       const breakpoints = ReactPage.getBreakpoints(state)
       messageChannel.port1.postMessage(setBreakpoints(breakpoints))
 
-      Router.events.on('routeChangeStart', () => {
-        messageChannel.port1.postMessage(changePathnameStart())
-      })
-
-      Router.events.on('routeChangeComplete', () => {
-        messageChannel.port1.postMessage(changePathnameComplete())
-      })
-
       return (action: Action): Action => {
         switch (action.type) {
           case ActionTypes.CHANGE_ELEMENT_BOX_MODELS:
@@ -544,14 +533,6 @@ export function messageChannelMiddleware(
             messageChannel.port1.postMessage(action)
             window.getSelection()?.removeAllRanges()
             break
-
-          case ActionTypes.CHANGE_PATHNAME: {
-            const pathname = action.payload.pathname.replace(/^\//, '/')
-            const currentPathname = Router.asPath.replace(/^\//, '/')
-
-            if (pathname !== currentPathname) Router.push(pathname)
-            break
-          }
 
           case ActionTypes.SET_LOCALIZED_RESOURCE_ID: {
             client.setLocalizedResourceId(action.payload)

@@ -12,7 +12,6 @@ export {
   scrollDocumentElement,
   unregisterDocument,
   setBuilderEditMode,
-  changePathname,
   builderPointerMove,
   setBreakpoints,
   setLocale,

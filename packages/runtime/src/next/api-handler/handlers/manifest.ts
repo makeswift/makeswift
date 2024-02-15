@@ -72,7 +72,7 @@ export default async function handler(
     previewMode: supportsPreviewMode,
     draftMode: supportsDraftMode,
     interactionMode: true,
-    clientSideNavigation: true,
+    clientSideNavigation: false,
     elementFromPoint: false,
     customBreakpoints: true,
     siteVersions: true,
