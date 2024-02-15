@@ -61,7 +61,7 @@ export default async function handler(
     version: PACKAGE_VERSION,
     previewMode: true,
     interactionMode: true,
-    clientSideNavigation: true,
+    clientSideNavigation: false,
     elementFromPoint: false,
     customBreakpoints: true,
     siteVersions: true,

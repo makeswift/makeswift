@@ -41,8 +41,6 @@ import {
   setIsInBuilder,
   handleWheel,
   handlePointerMove,
-  changePathnameStart,
-  changePathnameComplete,
   elementFromPointChange,
   setBreakpoints,
   setLocale,
@@ -501,14 +499,6 @@ export function messageChannelMiddleware(
         messageChannel.port1.postMessage(setLocale(new Intl.Locale(routerLocale)))
       }
 
-      Router.events.on('routeChangeStart', () => {
-        messageChannel.port1.postMessage(changePathnameStart())
-      })
-
-      Router.events.on('routeChangeComplete', () => {
-        messageChannel.port1.postMessage(changePathnameComplete())
-      })
-
       return (action: Action): Action => {
         switch (action.type) {
           case ActionTypes.CHANGE_ELEMENT_BOX_MODELS:
@@ -555,14 +545,6 @@ export function messageChannelMiddleware(
             const pathname = (action.payload.pathname ?? currentPathname).replace(/^\//, '/')
 
             Router.replace({ pathname, query }, undefined, { locale: action.payload.locale })
-            break
-          }
-
-          case ActionTypes.CHANGE_PATHNAME: {
-            const pathname = action.payload.pathname.replace(/^\//, '/')
-            const currentPathname = Router.asPath.replace(/^\//, '/')
-
-            if (pathname !== currentPathname) Router.push(pathname)
             break
           }
 
