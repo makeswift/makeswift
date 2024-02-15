@@ -41,11 +41,8 @@ import {
   setIsInBuilder,
   handleWheel,
   handlePointerMove,
-  changePathnameStart,
-  changePathnameComplete,
   elementFromPointChange,
   setBreakpoints,
-  setLocale,
 } from './actions'
 import { ActionTypes } from './actions'
 import { createPropController } from '../prop-controllers/instances'
@@ -496,18 +493,18 @@ export function messageChannelMiddleware(
       const breakpoints = ReactPage.getBreakpoints(state)
       messageChannel.port1.postMessage(setBreakpoints(breakpoints))
 
-      const routerLocale = Router.locale
-      if (routerLocale != null) {
-        messageChannel.port1.postMessage(setLocale(new Intl.Locale(routerLocale)))
-      }
-
-      Router.events.on('routeChangeStart', () => {
-        messageChannel.port1.postMessage(changePathnameStart())
-      })
-
-      Router.events.on('routeChangeComplete', () => {
-        messageChannel.port1.postMessage(changePathnameComplete())
-      })
+      // const routerLocale = Router.locale
+      // if (routerLocale != null) {
+      //   messageChannel.port1.postMessage(setLocale(new Intl.Locale(routerLocale)))
+      // }
+      //
+      // Router.events.on('routeChangeStart', () => {
+      //   messageChannel.port1.postMessage(changePathnameStart())
+      // })
+      //
+      // Router.events.on('routeChangeComplete', () => {
+      //   messageChannel.port1.postMessage(changePathnameComplete())
+      // })
 
       return (action: Action): Action => {
         switch (action.type) {
