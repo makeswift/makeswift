@@ -22,7 +22,7 @@ export default async function Page({ params }: { params: ParsedUrlQuery }) {
   const path = '/' + (params?.path ?? []).join('/')
   const snapshot = await client.getPageSnapshot(path, {
     siteVersion: getSiteVersion(),
-    locale: params.lang
+    locale: params.lang,
   })
 
   if (snapshot == null) return notFound()
