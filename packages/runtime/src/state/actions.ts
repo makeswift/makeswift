@@ -72,10 +72,6 @@ export const ActionTypes = {
   MAKESWIFT_CONNECTION_INIT: 'MAKESWIFT_CONNECTION_INIT',
   MAKESWIFT_CONNECTION_CHECK: 'MAKESWIFT_CONNECTION_CHECK',
 
-  CHANGE_PATHNAME: 'CHANGE_PATHNAME',
-  CHANGE_PATHNAME_START: 'CHANGE_PATHNAME_START',
-  CHANGE_PATHNAME_COMPLETE: 'CHANGE_PATHNAME_COMPLETE',
-
   BUILDER_POINTER_MOVE: 'BUILDER_POINTER_MOVE',
   ELEMENT_FROM_POINT_CHANGE: 'ELEMENT_FROM_POINT_CHANGE',
 
@@ -262,19 +258,6 @@ type SetBuilderEditModeAction = {
   payload: { editMode: BuilderEditMode }
 }
 
-type ChangePathnameAction = {
-  type: typeof ActionTypes.CHANGE_PATHNAME
-  payload: { pathname: string }
-}
-
-type ChangePathnameStartAction = {
-  type: typeof ActionTypes.CHANGE_PATHNAME_START
-}
-
-type ChangePathnameCompleteAction = {
-  type: typeof ActionTypes.CHANGE_PATHNAME_COMPLETE
-}
-
 type BuilderPointerMoveAction = {
   type: typeof ActionTypes.BUILDER_POINTER_MOVE
   payload: { pointer: Point | null }
@@ -335,9 +318,6 @@ export type Action =
   | HandlePointerMoveAction
   | APIResourceFulfilledAction
   | SetBuilderEditModeAction
-  | ChangePathnameAction
-  | ChangePathnameStartAction
-  | ChangePathnameCompleteAction
   | BuilderPointerMoveAction
   | ElementFromPointChangeAction
   | SetBreakpointsAction
@@ -647,25 +627,6 @@ export function setBuilderEditMode(editMode: BuilderEditMode): SetBuilderEditMod
   return {
     type: ActionTypes.SET_BUILDER_EDIT_MODE,
     payload: { editMode },
-  }
-}
-
-export function changePathname(pathname: string): ChangePathnameAction {
-  return {
-    type: ActionTypes.CHANGE_PATHNAME,
-    payload: { pathname },
-  }
-}
-
-export function changePathnameStart(): ChangePathnameStartAction {
-  return {
-    type: ActionTypes.CHANGE_PATHNAME_START,
-  }
-}
-
-export function changePathnameComplete(): ChangePathnameCompleteAction {
-  return {
-    type: ActionTypes.CHANGE_PATHNAME_COMPLETE,
   }
 }
 
