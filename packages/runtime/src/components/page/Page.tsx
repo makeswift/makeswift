@@ -13,6 +13,7 @@ import { useIsInBuilder } from '../../react'
 import deepEqual from '../../utils/deepEqual'
 import { MakeswiftPageDocument } from '../../next'
 import { Page as PageType, Site } from '../../api'
+import { useRouterLocaleSync } from '../hooks/useRouterLocaleSync'
 
 const SnippetLocation = {
   Body: 'BODY',
@@ -164,6 +165,8 @@ export function Page({ document: page }: Props): JSX.Element {
   }, [headSnippets])
 
   const documentId = baseLocalizedPage?.elementTreeId ?? page.id
+
+  useRouterLocaleSync()
 
   return (
     <>
