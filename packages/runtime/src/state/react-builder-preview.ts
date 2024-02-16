@@ -45,7 +45,6 @@ import {
   changePathnameComplete,
   elementFromPointChange,
   setBreakpoints,
-  setLocale,
 } from './actions'
 import { ActionTypes } from './actions'
 import { createPropController } from '../prop-controllers/instances'
@@ -496,11 +495,6 @@ export function messageChannelMiddleware(
       const breakpoints = ReactPage.getBreakpoints(state)
       messageChannel.port1.postMessage(setBreakpoints(breakpoints))
 
-      const routerLocale = Router.locale
-      if (routerLocale != null) {
-        messageChannel.port1.postMessage(setLocale(new Intl.Locale(routerLocale)))
-      }
-
       Router.events.on('routeChangeStart', () => {
         messageChannel.port1.postMessage(changePathnameStart())
       })
@@ -519,6 +513,7 @@ export function messageChannelMiddleware(
           case ActionTypes.HANDLE_WHEEL:
           case ActionTypes.HANDLE_POINTER_MOVE:
           case ActionTypes.ELEMENT_FROM_POINT_CHANGE:
+          case ActionTypes.SET_LOCALE:
             messageChannel.port1.postMessage(action)
             break
 
@@ -549,14 +544,6 @@ export function messageChannelMiddleware(
             messageChannel.port1.postMessage(action)
             window.getSelection()?.removeAllRanges()
             break
-
-          case ActionTypes.SET_LOCALE: {
-            const { pathname: currentPathname, query } = Router
-            const pathname = (action.payload.pathname ?? currentPathname).replace(/^\//, '/')
-
-            Router.replace({ pathname, query }, undefined, { locale: action.payload.locale })
-            break
-          }
 
           case ActionTypes.CHANGE_PATHNAME: {
             const pathname = action.payload.pathname.replace(/^\//, '/')
