@@ -53,6 +53,28 @@ module.exports =
             has: [
               {
                 type: 'query',
+                key: 'x-makeswift-draft-mode',
+                value: '(?<secret>.+)',
+              },
+            ],
+            source: '/:path(.*)',
+            destination: '/api/makeswift/proxy-draft-mode',
+          },
+          {
+            has: [
+              {
+                type: 'header',
+                key: 'X-Makeswift-Draft-Mode',
+                value: '(?<secret>.+)',
+              },
+            ],
+            source: '/:path(.*)',
+            destination: '/api/makeswift/proxy-draft-mode',
+          },
+          {
+            has: [
+              {
+                type: 'query',
                 key: 'x-makeswift-preview-mode',
                 value: '(?<secret>.+)',
               },

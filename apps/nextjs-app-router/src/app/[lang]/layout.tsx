@@ -1,4 +1,5 @@
 import { MakeswiftProvider } from '@/makeswift/provider'
+import { DraftModeScript } from '@makeswift/runtime/next/server'
 
 type Params = { lang: string; path?: string[] }
 
@@ -11,6 +12,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang={params.lang}>
+      <head>
+        <DraftModeScript />
+      </head>
       <body>
         <MakeswiftProvider>{children}</MakeswiftProvider>
       </body>
