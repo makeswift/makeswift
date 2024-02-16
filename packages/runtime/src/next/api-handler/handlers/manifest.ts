@@ -57,9 +57,20 @@ export default async function handler(
       .exhaustive()
   }
 
+  const supportsPreviewMode = match(args)
+    .with(routeHandlerPattern, () => false)
+    .with(apiRoutePattern, () => true)
+    .exhaustive()
+
+  const supportsDraftMode = match(args)
+    .with(routeHandlerPattern, () => true)
+    .with(apiRoutePattern, () => false)
+    .exhaustive()
+
   const body = {
     version: PACKAGE_VERSION,
-    previewMode: true,
+    previewMode: supportsPreviewMode,
+    draftMode: supportsDraftMode,
     interactionMode: true,
     clientSideNavigation: true,
     elementFromPoint: false,

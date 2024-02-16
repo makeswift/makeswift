@@ -5,7 +5,6 @@ import { parse } from 'set-cookie-parser'
 import { MakeswiftPreviewData, MakeswiftSiteVersion } from '../../preview-mode'
 import { NextRequest, NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
-import { cookies, draftMode } from 'next/headers'
 
 type Context = { params: { [key: string]: string | string[] } }
 
@@ -46,52 +45,14 @@ export default async function proxyPreviewMode(
 }
 
 async function proxyPreviewModeRouteHandler(
-  request: NextRequest,
+  _request: NextRequest,
   _context: Context,
-  { apiKey }: { apiKey: string },
+  {}: { apiKey: string },
 ): Promise<NextResponse<ProxyPreviewModeResponse>> {
-  const secret = request.nextUrl.searchParams.get('x-makeswift-preview-mode')
-
-  if (secret !== apiKey) return new NextResponse('Unauthorized', { status: 401 })
-
-  const proxyUrl = request.nextUrl.clone()
-  proxyUrl.searchParams.delete('x-makeswift-preview-mode')
-
-  const proxyRequest = new NextRequest(proxyUrl, { headers: request.headers })
-  proxyRequest.headers.delete('x-makeswift-preview-mode')
-
-  draftMode().enable()
-  const draftModeCookie = cookies().get('__prerender_bypass')
-  if (draftModeCookie) {
-    proxyRequest.cookies.set(draftModeCookie)
-
-    const previewData: MakeswiftPreviewData = {
-      makeswift: true,
-      siteVersion: MakeswiftSiteVersion.Working,
-    }
-
-    proxyRequest.cookies.set('x-makeswift-draft-mode-data', JSON.stringify(previewData))
-  }
-  draftMode().disable()
-
-  const proxyResponse = await fetch(proxyRequest)
-
-  const response = new NextResponse<ProxyResponse>(proxyResponse.body, {
-    headers: proxyResponse.headers,
-    status: proxyResponse.status,
-  })
-
-  // `fetch` automatically decompresses the response, but the response headers will keep the
-  // `content-encoding` and `content-length` headers. This will cause decoding issues if the client
-  // attempts to decompress the response again. To prevent this, we remove these headers.
-  //
-  // See https://github.com/nodejs/undici/issues/2514.
-  if (response.headers.has('content-encoding')) {
-    response.headers.delete('content-encoding')
-    response.headers.delete('content-length')
-  }
-
-  return response
+  const message =
+    'Cannot request preview endpoint from an API handler registered in `app`. Move your Makeswift API handler to the `pages/api` directory'
+  console.error(message)
+  return NextResponse.json(message, { status: 500 })
 }
 
 async function proxyPreviewModeApiRouteHandler(

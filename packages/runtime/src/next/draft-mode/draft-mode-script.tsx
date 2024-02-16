@@ -1,47 +1,25 @@
-import { PreviewData } from 'next'
-import { z } from 'zod'
-import { ActionTypes } from '../react'
-
-export const makeswiftSiteVersionSchema = z.enum(['Live', 'Working'])
-export const MakeswiftSiteVersion = makeswiftSiteVersionSchema.Enum
-export type MakeswiftSiteVersion = z.infer<typeof makeswiftSiteVersionSchema>
-
-const makeswiftPreviewDataSchema = z.object({
-  makeswift: z.literal(true),
-  siteVersion: makeswiftSiteVersionSchema,
-})
-export type MakeswiftPreviewData = z.infer<typeof makeswiftPreviewDataSchema>
-
-export function getMakeswiftSiteVersion(previewData: PreviewData): MakeswiftSiteVersion | null {
-  const result = makeswiftPreviewDataSchema.safeParse(previewData)
-
-  if (result.success) return result.data.siteVersion
-
-  return null
-}
+import { draftMode } from 'next/headers'
+import { ActionTypes } from '../../react'
 
 type Props = {
-  isPreview?: boolean
   appOrigin?: string
 }
 
-export function PreviewModeScript({
-  isPreview = false,
-  appOrigin = 'https://app.makeswift.com',
-}: Props) {
-  const previewModeScript = `
-const isPreview = ${isPreview}
+export function DraftModeScript({ appOrigin = 'https://app.makeswift.com' }: Props) {
+  const { isEnabled: isDraftModeEnabled } = draftMode()
+  const draftModeScript = `
+const isDraft = ${isDraftModeEnabled}
 const appOrigin = '${appOrigin.replace("'", "\\'")}'
-const searchParamName = 'x-makeswift-preview-mode'
-const headerName = 'X-Makeswift-Preview-Mode'
+const searchParamName = 'x-makeswift-draft-mode'
+const headerName = 'X-Makeswift-Draft-Mode'
 const originalUrl = new URL(window.location.href)
 
 if (window.parent !== window) {
   window.addEventListener('message', event => {
-    if (event.origin === appOrigin && event.data.type === 'makeswift_preview_mode') {
+    if (event.origin === appOrigin && event.data.type === 'makeswift_draft_mode') {
       const { secret } = event.data
 
-      if (!isPreview && !originalUrl.searchParams.has(searchParamName)) {
+      if (!isDraft && !originalUrl.searchParams.has(searchParamName)) {
         const url = new URL(originalUrl)
 
         url.searchParams.set(searchParamName, secret)
@@ -66,7 +44,7 @@ if (window.parent !== window) {
     }
   })
 
-  window.parent.postMessage({ type: 'makeswift_preview_mode' }, appOrigin)
+  window.parent.postMessage({ type: 'makeswift_draft_mode' }, appOrigin)
 }
 
 if (originalUrl.searchParams.has(searchParamName)) {
@@ -105,9 +83,9 @@ if (window.parent !== window) {
   return (
     <>
       <script
-        id="makeswift-preview-mode"
+        id="makeswift-draft-mode"
         type="module"
-        dangerouslySetInnerHTML={{ __html: previewModeScript }}
+        dangerouslySetInnerHTML={{ __html: draftModeScript }}
       />
       <script
         id="makeswift-connection-check"
