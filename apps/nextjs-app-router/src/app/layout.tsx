@@ -11,7 +11,7 @@ export default function RootLayout({
   params: Params
 }>) {
   return (
-    <html lang={params.lang}>
+    <html lang={'en-US'}>
       <head>
         <DraftModeScript />
       </head>
