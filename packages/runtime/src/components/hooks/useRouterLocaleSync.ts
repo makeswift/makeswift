@@ -1,16 +1,27 @@
-import { useRouter } from 'next/router'
-
+import { useRouter as usePagesRouter } from 'next/router'
+import { P, match } from 'ts-pattern'
 import { useEffect } from 'react'
+
 import { setLocale } from '../../state/actions'
 import { useDispatch } from '../../runtimes/react/hooks/use-dispatch'
+
+function useRouter() {
+  try {
+    const router = usePagesRouter()
+
+    return router
+  } catch (e) {
+    return;
+  }
+}
 
 export const useRouterLocaleSync = () => {
   const router = useRouter()
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (!router.locale) return
-
-    dispatch(setLocale(new Intl.Locale(router.locale)))
-  }, [router.locale])
+    match(router)
+      .with({ locale: P.string }, ({ locale }) => dispatch(setLocale(new Intl.Locale(locale))))
+      .otherwise(() => {})
+  }, [router])
 }
