@@ -60,7 +60,7 @@ async function proxyPreviewModeApiRouteHandler(
   res: NextApiResponse<ProxyPreviewModeResponse>,
   { apiKey }: { apiKey: string },
 ): Promise<void> {
-  const previewModeProxy = createProxyServer()
+  const previewModeProxy = createProxyServer({ xfwd: true })
 
   // TODO: This is a hack to get the locale from the request.
   // Next.js strips the locale from the req.url, and there's no official way to get the locale
