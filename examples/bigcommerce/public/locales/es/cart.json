@@ -1,0 +1,14 @@
+{
+  "my-cart": "Mi carrito",
+  "cart-is-empty": "Tu carrito esta vacío",
+  "image-for": "Imagen para",
+  "add-to-cart": "Agregar al carrito",
+  "add-to-cart-confirming": "Agregado",
+  "decrease-quantity": "Disminuir cantidad",
+  "remove-from-cart": "Eliminar",
+  "increase-quantity": "Aumentar cantidad",
+  "proceed-to-checkout": "Proceder al pago",
+  "proceed-to-checkout-offline": "Debes estar en línea para pagar",
+  "error-in-checkout": "Algo salió mal",
+  "redirecting-to-checkout": "Redirigir al pago"
+}

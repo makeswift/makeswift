@@ -1,57 +1,21 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Default",
   "compilerOptions": {
-    "target": "esnext",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "jsx": "preserve",
-    "module": "esnext",
-    "composite": false,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "inlineSources": false,
-    "incremental": true,
-    "isolatedModules": true,
-    "moduleResolution": "bundler",
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "preserveWatchOutput": true,
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
-    "paths": {
-      "~/*": [
-        "./*"
-      ],
-      "@bigcommerce/components/*": [
-        "./components/ui/*"
-      ]
-    },
-    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
-    "allowJs": true,
-    "noUncheckedIndexedAccess": true,
+    "forceConsistentCasingInFileNames": true,
     "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
     "baseUrl": "."
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.cjs",
-    "**/*.mjs",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    ".next"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }

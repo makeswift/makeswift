@@ -1,26 +1,22 @@
-// @ts-check
-const withMakeswift = require('@makeswift/runtime/next/plugin')();
+const withMakeswift = require('@makeswift/runtime/next/plugin')()
+const { i18n } = require('./next-i18next.config')
+
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  cacheOnFrontEndNav: true,
+  fallbacks: {
+    image: '/fallback/image.png',
+  },
+  disable: process.env.NODE_ENV !== 'production',
+})
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    remotePatterns: [
-      {
-        hostname: process.env.BIGCOMMERCE_CDN_HOSTNAME ?? '*.bigcommerce.com',
-      },
-    ],
+    domains: ['cdn11.bigcommerce.com'],
   },
-  transpilePackages: ['@bigcommerce/components'],
-  typescript: {
-    ignoreBuildErrors: !!process.env.CI,
-  },
-  eslint: {
-    ignoreDuringBuilds: !!process.env.CI,
-    dirs: ['app', 'client', 'components', 'lib', 'middlewares'],
-  },
-  // default URL generation in BigCommerce uses trailing slash
-  trailingSlash: process.env.TRAILING_SLASH !== 'false',
-};
+  i18n,
+}
 
-module.exports = withMakeswift(nextConfig);
+module.exports = withMakeswift(withPWA(nextConfig))

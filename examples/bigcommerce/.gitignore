@@ -33,8 +33,6 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
 
-# generated
-client/generated
-schema.graphql
+# next-pwa
+/public/*.js
