@@ -128,7 +128,6 @@ describe('GIVEN normalizing typography', () => {
 
       expect(editor.children).toEqual(result.children)
     })
-
     it('WHEN the only non matching node is an empty text THEN it is ignored', () => {
       const editor = EditorV2(
         <Paragraph>
@@ -271,6 +270,47 @@ describe('GIVEN normalizing typography', () => {
             <Text>f</Text>
           </Sub>
           <Text typography={resultingTypography}>g</Text>
+        </Paragraph>,
+      )
+
+      editor.typographyNormalizationDirection = 'up'
+      SlateEditor.normalize(editor, { force: true })
+
+      expect(editor.children).toEqual(result.children)
+    })
+    it('WHEN normalizing detached typography THEN the correct styles bubble up', () => {
+      const typography = {
+        style: [
+          {
+            deviceId: 'desktop',
+            value: {
+              fontSize: { value: 18, unit: 'px' },
+            },
+          },
+          {
+            deviceId: 'mobile',
+            value: { fontSize: { value: 16, unit: 'px' }, lineHeight: null, fontWeight: null },
+          },
+        ],
+      }
+
+      const editor = EditorV2(
+        <Paragraph>
+          <Text typography={typography}>a</Text>
+          <Code>
+            <Text typography={typography}>b</Text>
+          </Code>
+          <Text />
+        </Paragraph>,
+      )
+
+      const result = EditorV2(
+        <Paragraph typography={typography}>
+          <Text>a</Text>
+          <Code>
+            <Text>b</Text>
+          </Code>
+          <Text />
         </Paragraph>,
       )
 
