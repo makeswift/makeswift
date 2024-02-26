@@ -66,8 +66,7 @@ function shallowInverseAnd<A extends Record<string, unknown>, B extends Record<s
   const xor = {} as A & B
 
   bKeys.forEach(key => {
-    if ((aPrime[key] == null && bPrime[key] == null) || !deepEqual(aPrime[key], bPrime[key as any]))
-      xor[key] = aPrime[key]
+    if (!deepEqual(aPrime[key], bPrime[key as any])) xor[key] = aPrime[key]
   })
 
   return xor
