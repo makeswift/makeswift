@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.14.1
+
+### Patch Changes
+
+- b19d110: Fix a bug in translating `Text` components containing detached typography.
+
 ## 0.14.0
 
 ### Minor Changes
