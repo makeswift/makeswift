@@ -36,6 +36,6 @@ function formatErrorMessage({ dir, files }: { dir: string; files: string[] }): s
   return `The directory ${chalk.green(
     directoryName,
   )} contains files that could conflict:\n\n${prettyFiles}\n\nYou will need to use a different directory or integrate manually. Read our docs for more info: ${chalk.blue(
-    'https://www.makeswift.com/docs/guides/manual-setup',
+    'https://docs.makeswift.com/guides/manual-installation',
   )}`
 }

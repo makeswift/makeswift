@@ -69,7 +69,7 @@ export function manipulateNextConfig(code: string): string {
   // @todo: make this more robust in the future
   if (changedCode == null || !changedCode.includes('withMakeswift(')) {
     throw new MakeswiftError(
-      'Cannot automatically edit your next.config.js.\n\nSee this link on how to do so: https://www.makeswift.com/docs/guides/manual-setup#adding-the-makeswift-nextjs-plugin',
+      'Cannot automatically edit your next.config.js.\n\nSee this link on how to do so: https://docs.makeswift.com/guides/manual-installation',
     )
   }
 

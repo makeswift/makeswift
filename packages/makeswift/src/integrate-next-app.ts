@@ -288,7 +288,7 @@ export default function Page({ snapshot }: Props) {
     fs.writeFileSync(path.join(pagesFolder.temporary, catchAllRouteFilename), catchAllRoute)
   } else {
     throw new MakeswiftError(
-      'A dynamic route already exists, you will have to manually integrate: https://www.makeswift.com/docs/guides/advanced-setup#custom-live-route',
+      'A dynamic route already exists, you will have to manually integrate: https://docs.makeswift.com/guides/manual-installation',
     )
   }
 
@@ -299,7 +299,7 @@ export default function Page({ snapshot }: Props) {
   ) {
     throw new MakeswiftError(
       `A custom document already exists, you will have to manually integrate: ${chalk.blue(
-        'https://www.makeswift.com/docs/guides/advanced-setup#extending-the-custom-document',
+        'https://docs.makeswift.com/guides/extending-the-document',
       )}`,
     )
   }
