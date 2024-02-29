@@ -42,9 +42,8 @@ export function BodySnippet({ code, cleanup }: Props): null {
 
       if (cleanup == null) return
 
-      const cleanUp = new Function(cleanup)
-
       try {
+        const cleanUp = new Function(cleanup)
         cleanUp()
       } catch {
         // Ignore errors from user input.
