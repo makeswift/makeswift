@@ -70,7 +70,7 @@ const SocialLinks = forwardRef(function SocialLinks(
         links.map((link, i) => {
           const option = SocialLinksOptions.find(o => o.type === link.payload.type)
 
-          if (!option) throw new Error(`Invalid link payload type ${link.payload.type}`)
+          if (option == null) return null
 
           return (
             <GutterContainer
@@ -88,7 +88,7 @@ const SocialLinks = forwardRef(function SocialLinks(
                 shape={shape}
                 size={size}
               >
-                {option == null ? null : option.icon}
+                {option.icon}
               </StyledLink>
             </GutterContainer>
           )
