@@ -252,6 +252,10 @@ export type BackgroundsDescriptor<_T = BackgroundsValue> = {
   options: BackgroundsOptions
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function Backgrounds(options: BackgroundsOptions = {}): BackgroundsDescriptor {
   return { type: Types.Backgrounds, version: 1, options }
 }
@@ -288,6 +292,10 @@ export type BorderDescriptor<_T = BorderValue, U extends BorderOptions = BorderO
   options: U
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function Border<T extends BorderOptions>(
   options: T & BorderOptions = {} as T,
 ): BorderDescriptor<BorderValue, T> {
@@ -323,6 +331,10 @@ export type BorderRadiusDescriptor<
   options: U
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function BorderRadius<T extends BorderRadiusOptions>(
   options: T & BorderRadiusOptions = {} as T,
 ): BorderRadiusDescriptor<BorderRadiusValue, T> {
@@ -344,6 +356,10 @@ export type CheckboxDescriptor<_T = CheckboxValue> = {
   options: CheckboxOptions
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function Checkbox(options: CheckboxOptions): CheckboxDescriptor {
   return { type: Types.Checkbox, options }
 }
@@ -354,6 +370,10 @@ export type DateOptions = Options<{ preset?: DateValue }>
 
 export type DateDescriptor<_T = DateValue> = { type: typeof Types.Date; options: DateOptions }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function Date(options: DateOptions = {}): DateDescriptor {
   return { type: Types.Date, options }
 }
@@ -367,6 +387,10 @@ type ElementIDDescriptor<_T = ElementIDValue> = {
   options: ElementIDOptions
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function ElementID(options: ElementIDOptions = {}): ElementIDDescriptor {
   return { type: Types.ElementID, options }
 }
@@ -377,6 +401,10 @@ type FontOptions = Options<{ preset?: FontValue; label?: string }>
 
 type FontDescriptor<_T = FontValue> = { type: typeof Types.Font; options: FontOptions }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function Font(options: FontOptions = {}): FontDescriptor {
   return { type: Types.Font, options }
 }
@@ -395,6 +423,10 @@ export type GapXOptions = Options<{
 
 export type GapXDescriptor<_T = GapXValue> = { type: typeof Types.GapX; options: GapXOptions }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function GapX(options: GapXOptions = {}): GapXDescriptor {
   return { type: Types.GapX, options }
 }
@@ -413,6 +445,10 @@ export type GapYOptions = Options<{
 
 export type GapYDescriptor<_T = GapYValue> = { type: typeof Types.GapY; options: GapYOptions }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function GapY(options: GapYOptions = {}): GapYDescriptor {
   return { type: Types.GapY, options }
 }
@@ -425,6 +461,10 @@ type GridOptions = Options<Record<string, never>>
 
 type GridDescriptor<_T = GridValue> = { type: typeof Types.Grid; options: GridOptions }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function Grid(options: GridOptions = {}): GridDescriptor {
   return { type: Types.Grid, options }
 }
@@ -467,6 +507,10 @@ export type ImageDescriptor<_T = ImageValue> = {
   options: ImageOptions
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function Image(options: ImageOptions = {}): ImageDescriptor {
   return { type: Types.Image, version: 1, options }
 }
@@ -502,6 +546,10 @@ export type ImagesDescriptor<_T = ImagesValue> = {
   options: ImagesOptions
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function Images(options: ImagesOptions = {}): ImagesDescriptor {
   return { type: Types.Images, version: 1, options }
 }
@@ -518,6 +566,10 @@ export type LinkOptions = Options<{
 
 export type LinkDescriptor<_T = LinkValue> = { type: typeof Types.Link; options: LinkOptions }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function Link(options: LinkOptions = {}): LinkDescriptor {
   return { type: Types.Link, options }
 }
@@ -539,6 +591,10 @@ export type ListDescriptor<T extends ListValue = ListValue> = {
   options: ListOptions<T extends ListValue<infer U> ? U : never>
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function List<T extends Data>(options: ListOptions<T>): ListDescriptor<ListValue<T>> {
   return { type: Types.List, options }
 }
@@ -614,6 +670,10 @@ export type MarginDescriptor<_T = MarginValue, U extends MarginOptions = MarginO
   options: U
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function Margin<T extends MarginOptions>(
   options: T & MarginOptions = {} as T,
 ): MarginDescriptor<MarginValue, T> {
@@ -680,6 +740,10 @@ type NavigationLinksDescriptor<_T = NavigationLinksValue> = {
   options: NavigationLinksOptions
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function NavigationLinks(options: NavigationLinksOptions = {}): NavigationLinksDescriptor {
   return { type: Types.NavigationLinks, options }
 }
@@ -702,6 +766,10 @@ export type NumberDescriptor<_T = NumberValue> = {
   options: NumberOptions
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function Number(options: NumberOptions = {}): NumberDescriptor {
   return { type: Types.Number, options }
 }
@@ -732,6 +800,10 @@ export type PaddingDescriptor<_T = PaddingValue, U extends PaddingOptions = Padd
   options: U
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function Padding<T extends PaddingOptions>(
   options: T & PaddingOptions = {} as T,
 ): PaddingDescriptor<PaddingValue, T> {
@@ -749,6 +821,10 @@ export type ResponsiveColorDescriptor<_T = ResponsiveColorValue> = {
   options: ResponsiveColorOptions
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function ResponsiveColor(options: ResponsiveColorOptions = {}): ResponsiveColorDescriptor {
   return { type: Types.ResponsiveColor, options }
 }
@@ -775,6 +851,10 @@ export type ResponsiveIconRadioGroupDescriptor<
 // values provided would undergo type widening. For some reason, the extra layer of indirection
 // reuslts in TypeScript not widening types. Note, this only happens when the returned value of this
 // function is passed to another as an argument, which is common with the `registerComponent` API.
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function ResponsiveIconRadioGroup<_T extends string, T extends _T, U extends T>(
   options: ResponsiveIconRadioGroupOptions<T, U>,
 ): ResponsiveIconRadioGroupDescriptor<ResponsiveIconRadioGroupValue<T>> {
@@ -799,6 +879,10 @@ export type ResponsiveLengthDescriptor<_T = ResponsiveLengthValue> = {
   options: ResponsiveLengthOptions
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function ResponsiveLength(
   options: ResponsiveLengthOptions = {},
 ): ResponsiveLengthDescriptor {
@@ -822,6 +906,10 @@ export type ResponsiveNumberDescriptor<_T = ResponsiveNumberValue> = {
   options: ResponsiveNumberOptions
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function ResponsiveNumber(
   options: ResponsiveNumberOptions = {},
 ): ResponsiveNumberDescriptor {
@@ -837,6 +925,10 @@ type ResponsiveOpacityDescriptor<_T = ResponsiveOpacityValue> = {
   options: ResponsiveOpacityOptions
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function ResponsiveOpacity(
   options: ResponsiveOpacityOptions = {},
 ): ResponsiveOpacityDescriptor {
@@ -868,6 +960,10 @@ export type ResponsiveSelectDescriptor<
 // values provided would undergo type widening. For some reason, the extra layer of indirection
 // reuslts in TypeScript not widening types. Note, this only happens when the returned value of this
 // function is passed to another as an argument, which is common with the `registerComponent` API.
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function ResponsiveSelect<_T extends string, T extends _T, U extends T>(
   options: ResponsiveSelectOptions<T, U>,
 ): ResponsiveSelectDescriptor<ResponsiveSelectValue<T>> {
@@ -883,6 +979,10 @@ export type RichTextDescriptor<_T extends Data = RichTextValue> = {
   options: RichTextOptions
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function RichText(options: RichTextOptions = {}): RichTextDescriptor {
   return { type: Types.RichText, options }
 }
@@ -915,6 +1015,10 @@ export type ShadowsDescriptor<_T = ShadowsValue, U extends ShadowsOptions = Shad
   options: U
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function Shadows<T extends ShadowsOptions>(
   options: T & ShadowsOptions = {} as T,
 ): ShadowsDescriptor<ShadowsValue, T> {
@@ -938,6 +1042,10 @@ export type ShapeDescriptor<
   options: ShapeOptions<U>
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function Shape<T extends Record<string, PanelDescriptor>>(
   options: ShapeOptions<T>,
 ): ShapeDescriptor<{ [K in keyof T]?: DescriptorValueType<T[K]> }, T> {
@@ -1045,6 +1153,10 @@ export type SocialLinksDescriptor<_T = SocialLinksValueV1> = {
   version?: 1
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function SocialLinks(options: SocialLinksOptions = {}): SocialLinksDescriptor {
   return { type: Types.SocialLinks, options, version: 1 }
 }
@@ -1055,6 +1167,10 @@ type TableOptions = Options<{ preset?: TableValue }>
 
 type TableDescriptor<_T = TableValue> = { type: typeof Types.Table; options: TableOptions }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function Table(options: TableOptions = {}): TableDescriptor {
   return { type: Types.Table, options }
 }
@@ -1083,6 +1199,10 @@ export type TableFormFieldsDescriptor<_T = TableFormFieldsValue> = {
   options: TableFormFieldsOptions
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function TableFormFields(options: TableFormFieldsOptions = {}): TableFormFieldsDescriptor {
   return { type: Types.TableFormFields, options }
 }
@@ -1105,6 +1225,10 @@ export type TypeaheadDescriptor<T extends TypeaheadValue = TypeaheadValue> = {
   options: TypeaheadOptions<T extends TypeaheadValue<infer U> ? U : never>
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function Typeahead<T extends Data>(
   options: TypeaheadOptions<T>,
 ): TypeaheadDescriptor<TypeaheadValue<T>> {
@@ -1120,6 +1244,10 @@ type TextAreaDescriptor<_T = TextAreaValue> = {
   options: TextAreaOptions
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function TextArea(options: TextAreaOptions = {}): TextAreaDescriptor {
   return { type: Types.TextArea, options }
 }
@@ -1133,6 +1261,10 @@ export type TextInputDescriptor<_T = TextInputValue> = {
   options: TextInputOptions
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function TextInput(options: TextInputOptions = {}): TextInputDescriptor {
   return { type: Types.TextInput, options }
 }
@@ -1150,6 +1282,10 @@ export type TextStyleDescriptor<_T = TextStyleValue> = {
   options: TextStyleOptions
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function TextStyle(options: TextStyleOptions = {}): TextStyleDescriptor {
   return { type: Types.TextStyle, options }
 }
@@ -1168,6 +1304,10 @@ type VideoOptions = Options<{ preset?: VideoValue }>
 
 type VideoDescriptor<_T = VideoValue> = { type: typeof Types.Video; options: VideoOptions }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function Video(options: VideoOptions = {}): VideoDescriptor {
   return { type: Types.Video, options }
 }
@@ -1193,6 +1333,10 @@ export type WidthDescriptor<_T = WidthValue, U extends WidthOptions = WidthOptio
   options: U
 }
 
+/**
+ * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
 export function Width<T extends WidthOptions>(
   options: T & WidthOptions = {} as T,
 ): WidthDescriptor<WidthValue, T> {
