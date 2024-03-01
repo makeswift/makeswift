@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.14.2
+
+### Patch Changes
+
+- 665f6e1: Avoid throwing an error in `SocialLinks` builtin component if an option is not found.
+- 3587117: Update Facebook logo for `SocialLinks` builtin component.
+- 88fb167: Add X and Slack icons to legacy `SocialLinks` prop controller.
+- 8717b5a: Add deprecation JSDoc to undocumented, legacy prop controllers.
+
 ## 0.14.1
 
 ### Patch Changes
