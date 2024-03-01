@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.14.3
+
+### Patch Changes
+
+- f146a6c: Fix exports for internal `@makeswift/runtime/state/breakpoints`.
+
 ## 0.14.2
 
 ### Patch Changes
