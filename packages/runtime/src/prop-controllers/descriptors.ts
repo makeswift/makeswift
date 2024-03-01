@@ -991,46 +991,62 @@ export function getShapePropControllerSwatchIds(
   return introspectShapePropControllerData(descriptor, value, getSwatchIds)
 }
 
-type SocialLinkType =
-  | 'angellist'
-  | 'codepen'
-  | 'discord'
-  | 'dribbble'
-  | 'facebook'
-  | 'github'
-  | 'instagram'
-  | 'linkedin'
-  | 'medium'
-  | 'pinterest'
-  | 'reddit'
-  | 'rss'
-  | 'snapchat'
-  | 'soundcloud'
-  | 'spotify'
-  | 'telegram'
-  | 'tumblr'
-  | 'twitch'
-  | 'twitter'
-  | 'vimeo'
-  | 'whatsapp'
-  | 'yelp'
-  | 'youtube'
+export const socialLinkTypesV0 = [
+  'angellist',
+  'codepen',
+  'discord',
+  'dribbble',
+  'facebook',
+  'github',
+  'instagram',
+  'linkedin',
+  'medium',
+  'pinterest',
+  'reddit',
+  'rss',
+  'snapchat',
+  'soundcloud',
+  'spotify',
+  'telegram',
+  'tumblr',
+  'twitch',
+  'twitter',
+  'vimeo',
+  'whatsapp',
+  'yelp',
+  'youtube',
+] as const
 
-type SocialLink = { type: SocialLinkType; url: string }
+type SocialLinkTypeV0 = typeof socialLinkTypesV0[number]
 
-type SocialLinksLink = { id: string; payload: SocialLink }
+export const socialLinkTypesV1 = [...socialLinkTypesV0, 'x', 'slack'] as const
 
-export type SocialLinksValue = { links: SocialLinksLink[]; openInNewTab: boolean }
+type SocialLinkTypeV1 = typeof socialLinkTypesV1[number]
 
-type SocialLinksOptions = Options<{ preset?: SocialLinksValue }>
+type SocialLinkV0 = { type: SocialLinkTypeV0; url: string }
 
-type SocialLinksDescriptor<_T = SocialLinksValue> = {
+type SocialLinkV1 = { type: SocialLinkTypeV1; url: string }
+
+type SocialLinksLinkV0 = { id: string; payload: SocialLinkV0 }
+
+type SocialLinksLinkV1 = { id: string; payload: SocialLinkV1 }
+
+type SocialLinksValueV0 = { links: SocialLinksLinkV0[]; openInNewTab: boolean }
+
+type SocialLinksValueV1 = { links: SocialLinksLinkV1[]; openInNewTab: boolean }
+
+export type SocialLinksValue = SocialLinksValueV0 | SocialLinksValueV1
+
+type SocialLinksOptions = Options<{ preset?: SocialLinksValueV1 }>
+
+export type SocialLinksDescriptor<_T = SocialLinksValueV1> = {
   type: typeof Types.SocialLinks
   options: SocialLinksOptions
+  version?: 1
 }
 
 export function SocialLinks(options: SocialLinksOptions = {}): SocialLinksDescriptor {
-  return { type: Types.SocialLinks, options }
+  return { type: Types.SocialLinks, options, version: 1 }
 }
 
 export type TableValue = string
