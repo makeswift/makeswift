@@ -63,7 +63,10 @@ export type {
   PanelDescriptorValueType,
   ResponsiveValue,
   ResponsiveValueType,
+  SocialLinksDescriptor,
+  SocialLinksValue,
 } from './descriptors'
+export { socialLinkTypesV0, socialLinkTypesV1 } from './descriptors'
 export * as Props from './descriptors'
 export type {
   PropControllerMessage,
