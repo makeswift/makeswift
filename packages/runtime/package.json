@@ -78,9 +78,9 @@
       "types": "./dist/types/slate/index.d.ts"
     },
     "./state/breakpoints": {
-      "require": "./dist/cjs/state/module/breakpoints.js",
-      "import": "./dist/esm/state/module/breakpoints.js",
-      "types": "./dist/types/state/module/breakpoints.d.ts"
+      "require": "./dist/cjs/state/modules/breakpoints.js",
+      "import": "./dist/esm/state/modules/breakpoints.js",
+      "types": "./dist/types/state/modules/breakpoints.d.ts"
     }
   },
   "types": "./dist/types/index.d.ts",
