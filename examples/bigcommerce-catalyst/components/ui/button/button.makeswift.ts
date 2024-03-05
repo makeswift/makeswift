@@ -27,9 +27,3 @@ runtime.registerComponent(
   ),
   { type: MakeswiftComponentType.Button, label: 'Button', props },
 );
-
-runtime.registerComponent(Button, {
-  type: MakeswiftComponentType.Button,
-  label: 'Button',
-  props,
-});
