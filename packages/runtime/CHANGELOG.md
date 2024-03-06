@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.14.4
+
+### Patch Changes
+
+- cfd1039: Transpile dynamic imports when building CommonJS format.
+
 ## 0.14.3
 
 ### Patch Changes
