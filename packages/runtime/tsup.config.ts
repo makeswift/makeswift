@@ -16,6 +16,9 @@ export default defineConfig(() => {
     define: {
       PACKAGE_VERSION: JSON.stringify(version),
     },
+    esbuildOptions(options, { format }) {
+      if (format === 'cjs') options.supported = { ...options.supported, 'dynamic-import': false }
+    }
   } satisfies Options
 
   const esmOptions: Options = {
