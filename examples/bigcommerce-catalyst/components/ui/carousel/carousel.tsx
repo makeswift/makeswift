@@ -19,13 +19,13 @@ const CarouselContext = createContext<UseEmblaCarouselType>([() => null, undefin
 
 const Carousel = forwardRef<ElementRef<'section'>, ComponentPropsWithRef<'section'>>(
   ({ children, className, ...props }, ref) => {
-    const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
+    const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, slidesToScroll: 4 });
 
     return (
       <CarouselContext.Provider value={[emblaRef, emblaApi]}>
         <section
           aria-roledescription="carousel"
-          className={cn('relative -m-2 overflow-hidden p-2', className)}
+          className={cn('relative overflow-x-hidden', className)}
           ref={ref}
           {...props}
         >
@@ -57,7 +57,7 @@ const CarouselContent = forwardRef<ForwardedRef, ComponentPropsWithRef<'ul'>>(
 
     return (
       <div ref={refCallback}>
-        <ul aria-live="polite" className={cn('mb-16 mt-8 flex lg:mt-10', className)} {...props}>
+        <ul aria-live="polite" className={cn('-ml-5 mt-5 flex lg:mt-6', className)} {...props}>
           {children}
         </ul>
       </div>
@@ -88,7 +88,7 @@ const CarouselSlide = forwardRef<ElementRef<'li'>, CarouselSlideProps>(
       <li
         aria-roledescription="slide"
         className={cn(
-          'mx-6 grid min-w-0 flex-shrink-0 flex-grow-0 basis-full grid-cols-2 gap-6 md:grid-cols-4 lg:gap-8',
+          'min-w-0 shrink-0 grow-0 basis-1/4 pl-5',
           !slidesInView.includes(index) && 'invisible',
           className,
         )}
@@ -230,7 +230,7 @@ const CarouselPagination = forwardRef<ElementRef<'div'>, CarouselPaginationProps
       return (
         <div
           aria-label="Slides"
-          className={cn('no-wrap absolute bottom-1 flex w-full items-center justify-center gap-2')}
+          className={cn('no-wrap mt-10 flex w-full items-center justify-center gap-2')}
           ref={ref}
           role="tablist"
           {...props}

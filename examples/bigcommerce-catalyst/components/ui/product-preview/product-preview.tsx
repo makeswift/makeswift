@@ -14,18 +14,18 @@ export type Props = {
   };
   image?: { url: string; dimensions: { width: number; height: number } };
   imageAlt: string;
-  children?: string;
+  buttonText?: string;
 };
 
 export const ProductPreview = forwardRef(function ProductPreview(
-  { className, link, image, imageAlt, children }: Props,
+  { className, link, image, imageAlt, buttonText }: Props,
   ref: Ref<HTMLAnchorElement>,
 ) {
   return (
     <Link
       ref={ref}
       href={link?.href ?? '#'}
-      className="group relative aspect-[3/4] w-full overflow-hidden"
+      className="group relative block aspect-[3/4] w-full overflow-hidden"
     >
       {image ? (
         <Image
@@ -39,7 +39,7 @@ export const ProductPreview = forwardRef(function ProductPreview(
       )}
 
       <div className="absolute inset-x-0 bottom-0 flex translate-y-0 justify-center p-4 transition-transform duration-300 group-hover:translate-y-0 sm:translate-y-full">
-        <Button variant="primary">{children}</Button>
+        <Button variant="primary">{buttonText}</Button>
       </div>
     </Link>
   );

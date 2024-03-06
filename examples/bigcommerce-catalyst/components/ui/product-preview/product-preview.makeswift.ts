@@ -16,7 +16,7 @@ export const props = {
     selectAll: true,
   }),
   link: Link(),
-  children: TextInput({ label: 'Button text', defaultValue: 'Button text', selectAll: true }),
+  buttonText: TextInput({ label: 'Button text', defaultValue: 'Button text', selectAll: true }),
 };
 
 runtime.registerComponent(
