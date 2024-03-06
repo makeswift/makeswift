@@ -25,7 +25,7 @@ const Carousel = forwardRef<ElementRef<'section'>, ComponentPropsWithRef<'sectio
       <CarouselContext.Provider value={[emblaRef, emblaApi]}>
         <section
           aria-roledescription="carousel"
-          className={cn('relative overflow-x-hidden', className)}
+          className={cn('relative overflow-x-hidden pb-16', className)}
           ref={ref}
           {...props}
         >
@@ -57,7 +57,7 @@ const CarouselContent = forwardRef<ForwardedRef, ComponentPropsWithRef<'ul'>>(
 
     return (
       <div ref={refCallback}>
-        <ul aria-live="polite" className={cn('-ml-5 mt-5 flex lg:mt-6', className)} {...props}>
+        <ul aria-live="polite" className={cn('-ml-8 mt-5 flex lg:mt-6', className)} {...props}>
           {children}
         </ul>
       </div>
@@ -87,11 +87,7 @@ const CarouselSlide = forwardRef<ElementRef<'li'>, CarouselSlideProps>(
     return (
       <li
         aria-roledescription="slide"
-        className={cn(
-          'min-w-0 shrink-0 grow-0 basis-1/4 pl-5',
-          !slidesInView.includes(index) && 'invisible',
-          className,
-        )}
+        className={cn('min-w-0 shrink-0 grow-0 basis-1/4 pl-8', className)}
         ref={ref}
         role="tabpanel"
         {...props}
@@ -230,7 +226,7 @@ const CarouselPagination = forwardRef<ElementRef<'div'>, CarouselPaginationProps
       return (
         <div
           aria-label="Slides"
-          className={cn('no-wrap mt-10 flex w-full items-center justify-center gap-2')}
+          className={cn('no-wrap absolute bottom-0 flex w-full items-center justify-center gap-2')}
           ref={ref}
           role="tablist"
           {...props}
