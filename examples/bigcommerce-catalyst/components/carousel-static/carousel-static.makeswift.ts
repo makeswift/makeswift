@@ -11,6 +11,7 @@ export const props = {
   products: List({
     type: Shape({
       type: {
+        label: TextInput({ label: 'Label', defaultValue: 'Label', selectAll: true }),
         image: Image({
           label: 'Image',
           format: Image.Format.WithDimensions,
@@ -28,8 +29,8 @@ export const props = {
         }),
       },
     }),
-    getItemLabel() {
-      return 'Product';
+    getItemLabel(product) {
+      return product?.label || 'Product';
     },
   }),
 };
