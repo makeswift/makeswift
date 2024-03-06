@@ -55,22 +55,20 @@ export const ProductCardCarousel = ({
         </span>
       </div>
       <CarouselContent>
-        {groupedProducts.map((group, index) => (
+        {products.map((product, index) => (
           <CarouselSlide
             aria-label={`${index + 1} of ${groupedProducts.length}`}
             id={`${id}-slide-${index + 1}`}
             index={index}
             key={index}
           >
-            {group.map((product) => (
-              <ProductCard
-                imageSize="tall"
-                key={product.entityId}
-                product={product}
-                showCart={showCart}
-                showCompare={showCompare}
-              />
-            ))}
+            <ProductCard
+              imageSize="tall"
+              key={product.entityId}
+              product={product}
+              showCart={showCart}
+              showCompare={showCompare}
+            />
           </CarouselSlide>
         ))}
       </CarouselContent>
