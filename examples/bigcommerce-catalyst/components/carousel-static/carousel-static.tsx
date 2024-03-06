@@ -10,8 +10,6 @@ import {
 
 import { ProductPreview, type Props as ProductPreviewProps } from '../ui/product-preview';
 
-// import { Pagination } from './pagination';
-
 type Props = {
   className: string;
   title?: string;
@@ -27,20 +25,6 @@ export const CarouselStatic = forwardRef(function CarouselStatic(
   if (products.length === 0) {
     return <div className="bg-gray-100 p-4 text-center text-lg">No products have been added</div>;
   }
-
-  // const groupedProducts = products.reduce<Array<Array<Partial<Product>>>>((batches, _, index) => {
-  //   if (index % 4 === 0) {
-  //     batches.push([]);
-  //   }
-
-  //   const product = products[index];
-
-  //   if (batches[batches.length - 1] && product) {
-  //     batches[batches.length - 1]?.push(product);
-  //   }
-
-  //   return batches;
-  // }, []);
 
   return (
     <Carousel aria-labelledby="Carousel" className={className} ref={ref}>
@@ -71,7 +55,6 @@ export const CarouselStatic = forwardRef(function CarouselStatic(
           </CarouselSlide>
         ))}
       </CarouselContent>
-      {/* <Pagination groupedProducts={groupedProducts} id={id} /> */}
     </Carousel>
   );
 });
