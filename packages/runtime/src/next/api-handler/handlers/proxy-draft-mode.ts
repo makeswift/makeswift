@@ -44,7 +44,9 @@ async function proxyDraftModeRouteHandler(
   _context: Context,
   { apiKey }: { apiKey: string },
 ): Promise<NextResponse<ProxyDraftModeResponse>> {
-  const secret = request.nextUrl.searchParams.get('x-makeswift-draft-mode')
+  const secret =
+    request.nextUrl.searchParams.get('x-makeswift-draft-mode') ??
+    request.headers.get('X-Makeswift-Draft-Mode')
 
   if (secret !== apiKey) return new NextResponse('Unauthorized', { status: 401 })
 
