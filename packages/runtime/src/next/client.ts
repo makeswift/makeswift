@@ -128,6 +128,7 @@ const pagePathnameSlicesAPISchema = z.array(
       id: z.string(),
       basePageId: z.string(),
       pathname: z.string(),
+      localizedPathname: z.string().optional(),
       __typename: z.literal('PagePathnameSlice'),
     })
     .nullable(),
@@ -609,9 +610,9 @@ export class Makeswift {
       if (pagePathnameSlice == null) return null
 
       return {
+        ...pagePathnameSlice,
         id: pagePathnameSlice.basePageId,
-        pathname: pagePathnameSlice.pathname,
-        __typename: pagePathnameSlice.__typename,
+        localizedPathname: pagePathnameSlice.localizedPathname ?? null,
       }
     })
   }
