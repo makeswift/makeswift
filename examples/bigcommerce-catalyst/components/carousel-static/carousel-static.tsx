@@ -9,6 +9,7 @@ import {
 } from '@bigcommerce/components/carousel';
 
 import { ProductPreview, type Props as ProductPreviewProps } from '../ui/product-preview';
+import { cn } from '~/lib/utils';
 
 type Props = {
   className: string;
@@ -23,11 +24,15 @@ export const CarouselStatic = forwardRef(function CarouselStatic(
   const id = useId();
 
   if (products.length === 0) {
-    return <div className="bg-gray-100 p-4 text-center text-lg">No products have been added</div>;
+    return (
+      <div className={cn(className, 'w-full bg-gray-100 p-6 text-center')}>
+        No products have been added
+      </div>
+    );
   }
 
   return (
-    <Carousel aria-labelledby="Carousel" className={className} ref={ref}>
+    <Carousel aria-labelledby="Carousel" className={cn(className, 'pb-0')} ref={ref}>
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-black lg:text-4xl" id="title">
           {title}

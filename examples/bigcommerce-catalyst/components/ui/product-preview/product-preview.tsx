@@ -25,7 +25,7 @@ export const ProductPreview = forwardRef(function ProductPreview(
     <Link
       ref={ref}
       href={link?.href ?? '#'}
-      className="group relative block aspect-[3/4] w-full overflow-hidden"
+      className={cn(className, 'group relative block aspect-[3/4] w-full overflow-hidden')}
     >
       {image ? (
         <Image

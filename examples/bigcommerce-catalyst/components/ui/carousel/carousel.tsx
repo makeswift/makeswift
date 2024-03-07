@@ -19,7 +19,7 @@ const CarouselContext = createContext<UseEmblaCarouselType>([() => null, undefin
 
 const Carousel = forwardRef<ElementRef<'section'>, ComponentPropsWithRef<'section'>>(
   ({ children, className, ...props }, ref) => {
-    const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, slidesToScroll: 4 });
+    const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, slidesToScroll: 'auto' });
 
     return (
       <CarouselContext.Provider value={[emblaRef, emblaApi]}>
@@ -87,7 +87,10 @@ const CarouselSlide = forwardRef<ElementRef<'li'>, CarouselSlideProps>(
     return (
       <li
         aria-roledescription="slide"
-        className={cn('min-w-0 shrink-0 grow-0 basis-1/4 pl-8', className)}
+        className={cn(
+          'min-w-0 shrink-0 grow-0 basis-full pl-8 sm:basis-1/2 md:basis-1/3 lg:basis-1/4',
+          className,
+        )}
         ref={ref}
         role="tabpanel"
         {...props}
