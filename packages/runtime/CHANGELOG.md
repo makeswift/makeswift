@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.14.5
+
+### Patch Changes
+
+- 9bf0537: Fix types export for `@makeswift/runtime/slate`
+
 ## 0.14.4
 
 ### Patch Changes
