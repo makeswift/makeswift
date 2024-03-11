@@ -1,5 +1,22 @@
 # @makeswift/next-plugin
 
+## 0.0.0-app-router-support-20240311140950
+
+### Minor Changes
+
+- 39e160a: BREAKING: Drop support for Next.js versions lower than 13.4.0.
+
+  We're moving our Preview Mode implementation to Draft Mode, which was added on Next.js v13.4.0.
+
+- 9cb2f76: BREAKING: Stop transpiling `@makeswift/runtime`.
+
+  This was needed because of `next/dynamic` which we're now using `React.lazy`.
+
+### Patch Changes
+
+- 2719416: Introduces draft mode for Next.js app router applications. Existing pages router applications are still supported via preview mode.
+- a220ecb: Add Next.js as a peer dependency of `@makeswift/next-plugin`.
+
 ## 0.2.8
 
 ### Patch Changes

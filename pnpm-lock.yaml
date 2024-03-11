@@ -30,7 +30,7 @@ importers:
         specifier: ^0.5.4
         version: 0.5.4
       '@makeswift/runtime':
-        specifier: workspace:^
+        specifier: 0.0.0-app-router-support-20240311140950
         version: link:../../packages/runtime
       negotiator:
         specifier: ^0.6.3
@@ -79,7 +79,7 @@ importers:
   apps/nextjs-pages-router:
     dependencies:
       '@makeswift/runtime':
-        specifier: workspace:^
+        specifier: 0.0.0-app-router-support-20240311140950
         version: link:../../packages/runtime
       next:
         specifier: 14.1.0
@@ -241,7 +241,7 @@ importers:
         specifier: ^1.0.0
         version: 1.1.0
       '@makeswift/next-plugin':
-        specifier: 0.2.8
+        specifier: 0.0.0-app-router-support-20240311140950
         version: link:../makeswift-next-plugin
       '@popmotion/popcorn':
         specifier: ^0.4.4

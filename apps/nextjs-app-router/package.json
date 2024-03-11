@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.5.4",
-    "@makeswift/runtime": "workspace:^",
+    "@makeswift/runtime": "0.0.0-app-router-support-20240311140950",
     "negotiator": "^0.6.3",
     "next": "14.1.0",
     "react": "^18",
