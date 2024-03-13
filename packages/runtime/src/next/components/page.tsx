@@ -1,6 +1,6 @@
 'use client'
 
-import { memo, useMemo } from 'react'
+import { Suspense, memo, useMemo } from 'react'
 
 import { RuntimeProvider } from '../../runtimes/react'
 import { Page as PageMeta } from '../../components/page'
@@ -29,9 +29,11 @@ export const Page = memo(({ snapshot }: PageProps) => {
   })
 
   return (
-    <RuntimeProvider client={client} rootElements={rootElements} preview={snapshot.preview}>
-      {/* We use a key here to reset the Snippets state in the PageMeta component */}
-      <PageMeta key={snapshot.document.data.key} document={snapshot.document} />
-    </RuntimeProvider>
+    <Suspense>
+      <RuntimeProvider client={client} rootElements={rootElements} preview={snapshot.preview}>
+        {/* We use a key here to reset the Snippets state in the PageMeta component */}
+        <PageMeta key={snapshot.document.data.key} document={snapshot.document} />
+      </RuntimeProvider>
+    </Suspense>
   )
 })
