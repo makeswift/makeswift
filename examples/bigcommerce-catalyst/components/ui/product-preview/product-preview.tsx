@@ -44,3 +44,5 @@ export const ProductPreview = forwardRef(function ProductPreview(
     </Link>
   );
 });
+
+export default ProductPreview

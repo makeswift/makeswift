@@ -3,7 +3,7 @@ import { createContext, useContext } from 'react';
 import { getInitialData } from '~/client/queries/get-initial-data';
 import { ExistingResultType } from '~/client/util';
 
-type BcDataContext = ExistingResultType<typeof getInitialData>;
+export type BcDataContext = ExistingResultType<typeof getInitialData>;
 
 const BcDataContext = createContext<BcDataContext | null>(null);
 

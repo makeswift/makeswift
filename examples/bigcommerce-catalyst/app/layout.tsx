@@ -3,6 +3,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { PropsWithChildren } from 'react';
+import { DraftModeScript } from '@makeswift/runtime/next/server';
 
 import './globals.css';
 
@@ -39,6 +40,9 @@ export const fetchCache = 'default-cache';
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html className={`${inter.variable} font-sans`} lang="en">
+      <head>
+        <DraftModeScript />
+      </head>
       <body className="flex h-screen flex-col">
         <Notifications />
         <Providers>{children}</Providers>
@@ -48,3 +52,5 @@ export default function RootLayout({ children }: PropsWithChildren) {
     </html>
   );
 }
+
+export const runtime = 'nodejs';
