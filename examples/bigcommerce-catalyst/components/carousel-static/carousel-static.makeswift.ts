@@ -1,7 +1,5 @@
-import dynamic from 'next/dynamic';
-
 import { List, Image, Shape, Style, TextInput, Link } from '@makeswift/runtime/controls';
-import { forwardNextDynamicRef } from '@makeswift/runtime/next';
+import { lazy } from 'react';
 
 import { runtime } from '~/lib/makeswift/runtime';
 
@@ -36,8 +34,6 @@ export const props = {
 };
 
 runtime.registerComponent(
-  forwardNextDynamicRef((patch) =>
-    dynamic(() => patch(import('./carousel-static').then(({ CarouselStatic }) => CarouselStatic))),
-  ),
+  lazy(() => import('./carousel-static')),
   { type: 'CarouselStatic', label: 'Carousel Static', icon: 'carousel', props },
 );
