@@ -63,3 +63,5 @@ export const CarouselStatic = forwardRef(function CarouselStatic(
     </Carousel>
   );
 });
+
+export default CarouselStatic;

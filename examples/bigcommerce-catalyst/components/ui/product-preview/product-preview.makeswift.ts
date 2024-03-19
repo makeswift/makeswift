@@ -1,8 +1,6 @@
 import { runtime } from '~/lib/makeswift/runtime';
 import { Image, Link, Style, TextInput } from '@makeswift/runtime/controls';
-
-import { forwardNextDynamicRef } from '@makeswift/runtime/next';
-import dynamic from 'next/dynamic';
+import { lazy } from 'react';
 
 export const props = {
   className: Style(),
@@ -20,8 +18,6 @@ export const props = {
 };
 
 runtime.registerComponent(
-  forwardNextDynamicRef((patch) =>
-    dynamic(() => patch(import('./product-preview').then(({ ProductPreview }) => ProductPreview))),
-  ),
+  lazy(() => import('./product-preview')),
   { type: 'product-preview', label: 'Product Preview', props },
 );

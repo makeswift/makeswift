@@ -1,3 +1,5 @@
+'use client';
+
 import { forwardRef, useDeferredValue, useId } from 'react';
 import { removeEdgesAndNodes } from '@bigcommerce/catalyst-client';
 import {
@@ -117,3 +119,5 @@ export const ProductCardCarousel = forwardRef<HTMLElement, Props>(({
     </Carousel>
   );
 });
+
+export default ProductCardCarousel;

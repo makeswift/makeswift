@@ -1,7 +1,5 @@
-import dynamic from 'next/dynamic';
-
 import { Combobox, TextInput } from '@makeswift/runtime/controls';
-import { forwardNextDynamicRef } from '@makeswift/runtime/next';
+import { lazy } from 'react';
 
 import { runtime } from '~/lib/makeswift/runtime';
 
@@ -42,8 +40,6 @@ export const props = {
 };
 
 runtime.registerComponent(
-  forwardNextDynamicRef((patch) =>
-    dynamic(() => patch(import('./product-carousel').then(({ ProductCardCarousel }) => ProductCardCarousel))),
-  ),
+  lazy(() => import('./product-carousel')),
   { type: 'ProductCarousel', label: 'Product Carousel', icon: 'carousel', props },
 );
