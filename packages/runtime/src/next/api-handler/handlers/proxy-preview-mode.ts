@@ -1,5 +1,4 @@
 import { CookieSerializeOptions, serialize } from 'cookie'
-import { createProxyServer } from 'http-proxy'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { parse } from 'set-cookie-parser'
 import { MakeswiftPreviewData, MakeswiftSiteVersion } from '../../preview-mode'
@@ -24,6 +23,11 @@ type ProxyPreviewModeHandlerArgs =
 
 const routeHandlerPattern = [P.instanceOf(Request), P.any, P.any] as const
 const apiRoutePattern = [P.any, P.any, P.any] as const
+
+const previewData: MakeswiftPreviewData = {
+  makeswift: true,
+  siteVersion: MakeswiftSiteVersion.Working,
+}
 
 export default async function proxyPreviewMode(
   request: NextRequest,
@@ -60,7 +64,8 @@ async function proxyPreviewModeApiRouteHandler(
   res: NextApiResponse<ProxyPreviewModeResponse>,
   { apiKey }: { apiKey: string },
 ): Promise<void> {
-  const previewModeProxy = createProxyServer({ xfwd: true })
+  if (req.query.secret !== apiKey) return res.status(401).send('Unauthorized')
+  if (req.headers.host == null) return res.status(400).send('Bad Request')
 
   // TODO: This is a hack to get the locale from the request.
   // Next.js strips the locale from the req.url, and there's no official way to get the locale
@@ -74,6 +79,7 @@ async function proxyPreviewModeApiRouteHandler(
       key.toString() === 'Symbol(NextRequestMeta)' ||
       key.toString() === 'Symbol(NextInternalRequestMeta)',
   ) as keyof NextApiRequest | undefined
+
   if (NextRequestMetaSymbol) {
     const nextRequestMeta = req[NextRequestMetaSymbol]
     const initUrl = nextRequestMeta?.__NEXT_INIT_URL ?? nextRequestMeta?.initURL
@@ -85,58 +91,29 @@ async function proxyPreviewModeApiRouteHandler(
     } catch {}
   }
 
-  previewModeProxy.once('proxyReq', proxyReq => {
-    proxyReq.removeHeader('X-Makeswift-Preview-Mode')
+  const {
+    'X-Makeswift-Preview-Mode': xMakeswiftPreviewMode,
+    'X-Invoke-Path': xInvokePath,
+    'X-Invoke-Query': xInvokeQuery,
+     ...headers
+  } = req.headers
 
-    // The following headers are Next.js-specific and are removed to prevent Next.js from
-    // short-circuiting requests, breaking routing.
-    proxyReq.removeHeader('X-Invoke-Path')
-    proxyReq.removeHeader('X-Invoke-Query')
+  const isForwardedProtoHttps = match(req.headers['X-Forwarded-Proto'])
+    .with(P.string, x => x.split(','))
+    .with(P.array(P.string), x => x)
+    .otherwise(() => [])
+    .includes('https')
 
-    const url = new URL(proxyReq.path, 'http://n')
-
-    url.searchParams.delete('x-makeswift-preview-mode')
-
-    proxyReq.path = url.pathname + url.search
-  })
-
-  if (req.query.secret !== apiKey) return res.status(401).send('Unauthorized')
-
-  const host = req.headers.host
-  const originalCookies = req.headers.cookie
-
-  if (host == null) return res.status(400).send('Bad Request')
-
-  const forwardedProtoHeader = req.headers['x-forwarded-proto']
-
-  let forwardedProto: string[] = []
-  if (Array.isArray(forwardedProtoHeader)) {
-    forwardedProto = forwardedProtoHeader
-  } else if (typeof forwardedProtoHeader === 'string') {
-    forwardedProto = forwardedProtoHeader.split(',')
-  }
-
-  const isForwardedProtoHttps = forwardedProto.includes('https')
-
-  const forwardedSSL = req.headers['x-forwarded-ssl']
-  const isForwardedSSL = typeof forwardedSSL === 'string' && forwardedSSL === 'on'
+  const isForwardedSSL = match(req.headers['X-Forwarded-SSL'])
+    .with('on', () => true)
+    .otherwise(() => false)
 
   const proto = isForwardedProtoHttps || isForwardedSSL ? 'https' : 'http'
-  let target = `${proto}://${host}`
+  const url = new URL(`${proto}://${req.headers.host}${req.url}`)
 
-  // If the user generates a locally-trusted CA for their SSL cert, it's likely that Node.js won't
-  // trust this CA unless they used the `NODE_EXTRA_CA_CERTS` option
-  // (see https://stackoverflow.com/a/68135600). To provide a better developer experience, instead
-  // of requiring the user to provide the CA to Node.js, we don't enforce SSL during local
-  // development.
-  const secure = process.env['NODE_ENV'] === 'production'
+  url.searchParams.delete('x-makeswift-preview-mode')
 
-  const previewData: MakeswiftPreviewData = {
-    makeswift: true,
-    siteVersion: MakeswiftSiteVersion.Working,
-  }
   const setCookie = res.setPreviewData(previewData).getHeader('Set-Cookie')
-  res.removeHeader('Set-Cookie')
 
   if (!Array.isArray(setCookie)) return res.status(500).send('Internal Server Error')
 
@@ -144,12 +121,28 @@ async function proxyPreviewModeApiRouteHandler(
     .map(cookie => serialize(cookie.name, cookie.value, cookie as CookieSerializeOptions))
     .join(';')
 
+  const originalCookies = req.headers.cookie
   const cookie = originalCookies ? `${originalCookies}; ${additionalCookies}` : additionalCookies
 
-  return await new Promise<void>((resolve, reject) =>
-    previewModeProxy.web(req, res, { target, headers: { cookie }, secure }, err => {
-      if (err) reject(err)
-      else resolve()
-    }),
-  )
+  const response = await fetch(url, {
+    headers: {
+      ...headers as Record<string, string>,
+      'Set-Cookie': cookie,
+    },
+    referrer: req.headers.referer,
+  });
+
+  res.removeHeader('Set-Cookie')
+
+  response.headers.forEach((value, name) => {
+    res.setHeader(name, value);
+  })
+
+  if (res.hasHeader('content-encoding')) {
+    res.removeHeader('content-encoding')
+    res.removeHeader('content-length')
+  }
+
+  res.write(response.body)
+  res.end()
 }
