@@ -1,7 +1,4 @@
-import { CookieSerializeOptions, serialize } from 'cookie'
-import { createProxyServer } from 'http-proxy'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { parse } from 'set-cookie-parser'
 import { MakeswiftPreviewData, MakeswiftSiteVersion } from '../../preview-mode'
 import { NextRequest, NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
@@ -24,6 +21,34 @@ type ProxyPreviewModeHandlerArgs =
 
 const routeHandlerPattern = [P.instanceOf(Request), P.any, P.any] as const
 const apiRoutePattern = [P.any, P.any, P.any] as const
+
+function mapRequestHeadersToHeaders(requestHeaders: NextApiRequest['headers']): Headers {
+  const headers = new Headers()
+
+  Object.entries(requestHeaders).forEach(([key, value]) => {
+    match(value)
+      .with(P.array(P.string), value => value.map(val => headers.append(key, val)))
+      .with(P.string, value => headers.set(key, value))
+  })
+
+  return headers
+}
+
+function mapRequestToProxyUrl(req: NextApiRequest): URL {
+  const isForwardedProtoHttps = match(req.headers['X-Forwarded-Proto'])
+    .with(P.string, x => x.split(','))
+    .with(P.array(P.string), x => x)
+    .otherwise(() => [])
+    .includes('https')
+
+  const isForwardedSSL = match(req.headers['X-Forwarded-SSL'])
+    .with('on', () => true)
+    .otherwise(() => false)
+
+  const proto = isForwardedProtoHttps || isForwardedSSL ? 'https' : 'http'
+
+  return new URL(`${proto}://${req.headers.host}${req.url}`)
+}
 
 export default async function proxyPreviewMode(
   request: NextRequest,
@@ -60,7 +85,8 @@ async function proxyPreviewModeApiRouteHandler(
   res: NextApiResponse<ProxyPreviewModeResponse>,
   { apiKey }: { apiKey: string },
 ): Promise<void> {
-  const previewModeProxy = createProxyServer({ xfwd: true })
+  if (req.query.secret !== apiKey) return res.status(401).send('Unauthorized')
+  if (req.headers.host == null) return res.status(400).send('Bad Request')
 
   // TODO: This is a hack to get the locale from the request.
   // Next.js strips the locale from the req.url, and there's no official way to get the locale
@@ -74,6 +100,7 @@ async function proxyPreviewModeApiRouteHandler(
       key.toString() === 'Symbol(NextRequestMeta)' ||
       key.toString() === 'Symbol(NextInternalRequestMeta)',
   ) as keyof NextApiRequest | undefined
+
   if (NextRequestMetaSymbol) {
     const nextRequestMeta = req[NextRequestMetaSymbol]
     const initUrl = nextRequestMeta?.__NEXT_INIT_URL ?? nextRequestMeta?.initURL
@@ -85,71 +112,52 @@ async function proxyPreviewModeApiRouteHandler(
     } catch {}
   }
 
-  previewModeProxy.once('proxyReq', proxyReq => {
-    proxyReq.removeHeader('X-Makeswift-Preview-Mode')
+  const proxyHeaders = mapRequestHeadersToHeaders(req.headers)
+  const proxyUrl = mapRequestToProxyUrl(req)
 
-    // The following headers are Next.js-specific and are removed to prevent Next.js from
-    // short-circuiting requests, breaking routing.
-    proxyReq.removeHeader('X-Invoke-Path')
-    proxyReq.removeHeader('X-Invoke-Query')
-
-    const url = new URL(proxyReq.path, 'http://n')
-
-    url.searchParams.delete('x-makeswift-preview-mode')
-
-    proxyReq.path = url.pathname + url.search
-  })
-
-  if (req.query.secret !== apiKey) return res.status(401).send('Unauthorized')
-
-  const host = req.headers.host
-  const originalCookies = req.headers.cookie
-
-  if (host == null) return res.status(400).send('Bad Request')
-
-  const forwardedProtoHeader = req.headers['x-forwarded-proto']
-
-  let forwardedProto: string[] = []
-  if (Array.isArray(forwardedProtoHeader)) {
-    forwardedProto = forwardedProtoHeader
-  } else if (typeof forwardedProtoHeader === 'string') {
-    forwardedProto = forwardedProtoHeader.split(',')
-  }
-
-  const isForwardedProtoHttps = forwardedProto.includes('https')
-
-  const forwardedSSL = req.headers['x-forwarded-ssl']
-  const isForwardedSSL = typeof forwardedSSL === 'string' && forwardedSSL === 'on'
-
-  const proto = isForwardedProtoHttps || isForwardedSSL ? 'https' : 'http'
-  let target = `${proto}://${host}`
-
-  // If the user generates a locally-trusted CA for their SSL cert, it's likely that Node.js won't
-  // trust this CA unless they used the `NODE_EXTRA_CA_CERTS` option
-  // (see https://stackoverflow.com/a/68135600). To provide a better developer experience, instead
-  // of requiring the user to provide the CA to Node.js, we don't enforce SSL during local
-  // development.
-  const secure = process.env['NODE_ENV'] === 'production'
+  proxyUrl.searchParams.delete('x-makeswift-preview-mode')
+  proxyHeaders.delete('x-makeswift-preview-mode')
+  // The following headers are Next.js-specific and are removed to prevent Next.js from
+  // short-circuiting requests, breaking routing.
+  proxyHeaders.delete('x-invoke-path')
+  proxyHeaders.delete('x-invoke-query')
 
   const previewData: MakeswiftPreviewData = {
     makeswift: true,
+    // This will eventually be dynamic
     siteVersion: MakeswiftSiteVersion.Working,
   }
-  const setCookie = res.setPreviewData(previewData).getHeader('Set-Cookie')
-  res.removeHeader('Set-Cookie')
+
+  const setCookie = res.setPreviewData(previewData).getHeader('set-cookie')
+  res.removeHeader('set-cookie')
 
   if (!Array.isArray(setCookie)) return res.status(500).send('Internal Server Error')
 
-  const additionalCookies = parse(setCookie)
-    .map(cookie => serialize(cookie.name, cookie.value, cookie as CookieSerializeOptions))
-    .join(';')
+  setCookie.forEach((cookie) => proxyHeaders.append('cookie', cookie))
 
-  const cookie = originalCookies ? `${originalCookies}; ${additionalCookies}` : additionalCookies
+  const response = await fetch(proxyUrl, {
+    headers: proxyHeaders,
+  });
 
-  return await new Promise<void>((resolve, reject) =>
-    previewModeProxy.web(req, res, { target, headers: { cookie }, secure }, err => {
-      if (err) reject(err)
-      else resolve()
-    }),
-  )
+  response.headers.forEach((value, name) => {
+    res.setHeader(name, value);
+  })
+
+  res.statusCode = response.status;
+  res.statusMessage = response.statusText
+
+  // `fetch` automatically decompresses the response, but the response headers will keep the
+  // `content-encoding` and `content-length` headers. This will cause decoding issues if the client
+  // attempts to decompress the response again. To prevent this, we remove these headers.
+  //
+  // See https://github.com/nodejs/undici/issues/2514.
+  if (res.hasHeader('content-encoding')) {
+    res.removeHeader('content-encoding')
+    res.removeHeader('content-length')
+  }
+
+  const arrayBuffer = await response.arrayBuffer()
+
+  res.write(arrayBuffer)
+  res.end()
 }
