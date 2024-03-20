@@ -11,7 +11,13 @@ export type PageProps = {
   snapshot: MakeswiftPageSnapshot
 }
 
-export const Page = memo(({ snapshot }: PageProps) => {
+export const Page = memo(({ snapshot, ...props }: PageProps) => {
+  if ('runtime' in props) {
+    throw new Error(
+      `The \`runtime\` prop is no longer supported in the \`@makeswift/runtime\` \`Page\` component as of \`0.15.0\`.
+See our docs for more information on what's changed and instructions to migrate: https://docs.makeswift.com/migrations/0.15.0`,
+    )
+  }
   const client = useMemo(
     () =>
       new MakeswiftHostApiClient({
