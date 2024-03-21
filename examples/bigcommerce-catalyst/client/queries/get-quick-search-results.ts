@@ -7,9 +7,11 @@ import { client } from '..';
 import { graphql } from '../generated';
 
 interface QuickSearch {
-  searchTerm: string;
+  searchTerm?: string;
+  categoryEntityId?: number;
   imageWidth?: number;
   imageHeight?: number;
+  first?: number;
 }
 
 const GET_QUICK_SEARCH_RESULTS_QUERY = /* GraphQL */ `
@@ -17,11 +19,12 @@ const GET_QUICK_SEARCH_RESULTS_QUERY = /* GraphQL */ `
     $filters: SearchProductsFiltersInput!
     $imageHeight: Int!
     $imageWidth: Int!
+    $first: Int
   ) {
     site {
       search {
         searchProducts(filters: $filters) {
-          products(first: 5) {
+          products(first: $first) {
             edges {
               node {
                 ...ProductDetails
@@ -35,13 +38,13 @@ const GET_QUICK_SEARCH_RESULTS_QUERY = /* GraphQL */ `
 `;
 
 export const getQuickSearchResults = cache(
-  async ({ searchTerm, imageHeight = 300, imageWidth = 300 }: QuickSearch) => {
+  async ({ searchTerm, imageHeight = 300, imageWidth = 300, categoryEntityId, first = 5 }: QuickSearch) => {
     const query = graphql(GET_QUICK_SEARCH_RESULTS_QUERY);
     const customerId = await getSessionCustomerId();
 
     const response = await client.fetch({
       document: query,
-      variables: { filters: { searchTerm }, imageHeight, imageWidth },
+      variables: { filters: { searchTerm, categoryEntityId }, imageHeight, imageWidth, first },
       customerId,
       fetchOptions: {
         cache: customerId ? 'no-store' : 'force-cache',
