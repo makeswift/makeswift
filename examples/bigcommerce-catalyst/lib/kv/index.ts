@@ -83,7 +83,7 @@ async function createKVAdapter() {
 }
 
 const adapterInstance = new KV(createKVAdapter, {
-  logger: process.env.NODE_ENV !== 'production' || process.env.KV_LOGGER === 'true',
+  logger: false,
 });
 
 export { adapterInstance as kv };

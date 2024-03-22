@@ -4,6 +4,7 @@ import { parse } from 'set-cookie-parser'
 import { MakeswiftPreviewData, MakeswiftSiteVersion } from '../../preview-mode'
 import { NextRequest, NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
+import { Readable } from 'stream'
 
 type Context = { params: { [key: string]: string | string[] } }
 
@@ -27,6 +28,34 @@ const apiRoutePattern = [P.any, P.any, P.any] as const
 const previewData: MakeswiftPreviewData = {
   makeswift: true,
   siteVersion: MakeswiftSiteVersion.Working,
+}
+
+const mapRequestHeadersToHeaders = (requestHeaders: NextApiRequest['headers']) => {
+  const headers = new Headers()
+
+  Object.entries(requestHeaders).forEach(([key, value]) => {
+    match(value)
+      .with(P.array(P.string), value => headers.set(key, value.join(',')))
+      .with(P.string, value => headers.set(key, value))
+  })
+
+  return headers
+}
+
+const mapRequestToProxyUrl = (req: NextApiRequest) => {
+  const isForwardedProtoHttps = match(req.headers['X-Forwarded-Proto'])
+  .with(P.string, x => x.split(','))
+  .with(P.array(P.string), x => x)
+  .otherwise(() => [])
+  .includes('https')
+
+  const isForwardedSSL = match(req.headers['X-Forwarded-SSL'])
+    .with('on', () => true)
+    .otherwise(() => false)
+
+  const proto = isForwardedProtoHttps || isForwardedSSL ? 'https' : 'http'
+
+  return new URL(`${proto}://${req.headers.host}${req.url}`)
 }
 
 export default async function proxyPreviewMode(
@@ -91,29 +120,17 @@ async function proxyPreviewModeApiRouteHandler(
     } catch {}
   }
 
-  const {
-    'X-Makeswift-Preview-Mode': xMakeswiftPreviewMode,
-    'X-Invoke-Path': xInvokePath,
-    'X-Invoke-Query': xInvokeQuery,
-     ...headers
-  } = req.headers
+  const proxyHeaders = mapRequestHeadersToHeaders(req.headers)
+  const proxyUrl = mapRequestToProxyUrl(req)
 
-  const isForwardedProtoHttps = match(req.headers['X-Forwarded-Proto'])
-    .with(P.string, x => x.split(','))
-    .with(P.array(P.string), x => x)
-    .otherwise(() => [])
-    .includes('https')
+  proxyHeaders.delete('x-makeswift-preview-mode')
+  proxyHeaders.delete('x-invoke-path')
+  proxyHeaders.delete('x-invoke-query')
 
-  const isForwardedSSL = match(req.headers['X-Forwarded-SSL'])
-    .with('on', () => true)
-    .otherwise(() => false)
-
-  const proto = isForwardedProtoHttps || isForwardedSSL ? 'https' : 'http'
-  const url = new URL(`${proto}://${req.headers.host}${req.url}`)
-
-  url.searchParams.delete('x-makeswift-preview-mode')
+  proxyUrl.searchParams.delete('x-makeswift-preview-mode')
 
   const setCookie = res.setPreviewData(previewData).getHeader('Set-Cookie')
+  res.removeHeader('Set-Cookie')
 
   if (!Array.isArray(setCookie)) return res.status(500).send('Internal Server Error')
 
@@ -124,25 +141,33 @@ async function proxyPreviewModeApiRouteHandler(
   const originalCookies = req.headers.cookie
   const cookie = originalCookies ? `${originalCookies}; ${additionalCookies}` : additionalCookies
 
-  const response = await fetch(url, {
-    headers: {
-      ...headers as Record<string, string>,
-      'Set-Cookie': cookie,
-    },
+  const response = await fetch(proxyUrl, {
     referrer: req.headers.referer,
+    headers: {
+      ...proxyHeaders,
+      cookie,
+    },
   });
-
-  res.removeHeader('Set-Cookie')
 
   response.headers.forEach((value, name) => {
     res.setHeader(name, value);
   })
 
+  res.statusCode = response.status;
+  res.statusMessage = response.statusText
+
+  // `fetch` automatically decompresses the response, but the response headers will keep the
+  // `content-encoding` and `content-length` headers. This will cause decoding issues if the client
+  // attempts to decompress the response again. To prevent this, we remove these headers.
+  //
+  // See https://github.com/nodejs/undici/issues/2514.
   if (res.hasHeader('content-encoding')) {
     res.removeHeader('content-encoding')
     res.removeHeader('content-length')
   }
 
-  res.write(response.body)
+  const arrayBuffer = await response.arrayBuffer();
+
+  res.write(arrayBuffer)
   res.end()
 }

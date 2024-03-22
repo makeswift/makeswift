@@ -6,6 +6,4 @@ import { runtime } from '~/lib/makeswift/runtime';
 
 const config = getConfig();
 
-const handler = MakeswiftApiHandler(config.makeswift.siteApiKey, { runtime });
-
-export { handler as GET, handler as POST }
+export default MakeswiftApiHandler(config.makeswift.siteApiKey, { runtime });
