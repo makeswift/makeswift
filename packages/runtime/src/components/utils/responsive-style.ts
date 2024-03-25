@@ -10,6 +10,7 @@ import {
   MarginValue,
   BorderRadiusValue,
   TextStyleValue,
+  getBorderRadiusValue,
 } from '../../prop-controllers/descriptors'
 import {
   FallbackStrategy,
@@ -128,9 +129,11 @@ export function useResponsiveMargin(
 
 export function responsiveBorderRadius(
   breakpoints: Breakpoints,
-  borderRadiusData: BorderRadiusValue | undefined,
+  borderRadiusValue: BorderRadiusValue | undefined,
   defaultValue: BorderRadiusPropertyData = {} as BorderRadiusPropertyData,
 ): CSSObject {
+  const borderRadiusData = getBorderRadiusValue(borderRadiusValue)
+
   return responsiveStyle(breakpoints, [borderRadiusData], ([borderRadius = {}]) =>
     borderRadiusPropertyDataToStyle(
       borderRadius,

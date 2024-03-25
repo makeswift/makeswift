@@ -351,7 +351,26 @@ type BorderRadius = {
     | undefined
 }
 
-export type BorderRadiusValue = ResponsiveValue<BorderRadius>
+const BorderRadiusPropDataTypeKey = ControlDataTypeKey
+
+const BorderRadiusPropDataTypeValueV1 = 'prop-controller::border-radius::v1'
+
+type BorderRadiusValueV0 = ResponsiveValue<BorderRadius>
+
+type BorderRadiusValueV1 = {
+  [BorderRadiusPropDataTypeKey]: typeof BorderRadiusPropDataTypeValueV1
+  value: ResponsiveValue<BorderRadius>
+}
+
+export type BorderRadiusValue = BorderRadiusValueV0 | BorderRadiusValueV1
+
+export function getBorderRadiusValue(
+  borderRadiusValue: BorderRadiusValue | null | undefined,
+): ResponsiveValue<BorderRadius> | null | undefined {
+  return match(borderRadiusValue)
+    .with({ [BorderRadiusPropDataTypeKey]: BorderRadiusPropDataTypeValueV1 }, val => val.value)
+    .otherwise(val => val)
+}
 
 export const BorderRadiusPropControllerFormat = {
   ClassName: 'makeswift::prop-controllers::border-radius::format::class-name',
