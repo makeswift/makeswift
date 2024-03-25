@@ -23,6 +23,7 @@ import {
   GapXValue,
   CheckboxValue,
   BackgroundsValue,
+  getCheckboxValue,
 } from '../../../prop-controllers/descriptors'
 import { BoxModelHandle, parse, createBox } from '../../../box-model'
 import BackgroundsContainer from '../../shared/BackgroundsContainer'
@@ -202,7 +203,7 @@ const Box = forwardRef(function Box(
             </GridItem>
           ))
         ) : (
-          <Placeholder hide={hidePlaceholder} />
+          <Placeholder hide={getCheckboxValue(hidePlaceholder) ?? undefined} />
         )}
       </div>
     </BackgroundsContainer>

@@ -402,7 +402,26 @@ export function BorderRadius<T extends BorderRadiusOptions>(
 
 BorderRadius.Format = BorderRadiusPropControllerFormat
 
-export type CheckboxValue = boolean
+const CheckboxPropDataTypeKey = ControlDataTypeKey
+
+const CheckboxPropDataTypeValueV1 = 'prop-controller::checkbox::v1'
+
+type CheckboxValueV0 = boolean
+
+type CheckboxValueV1 = {
+  [CheckboxPropDataTypeKey]: typeof CheckboxPropDataTypeValueV1
+  value: boolean
+}
+
+export type CheckboxValue = CheckboxValueV0 | CheckboxValueV1
+
+export function getCheckboxValue(
+  checkboxValue: CheckboxValue | null | undefined,
+): boolean | null | undefined {
+  return match(checkboxValue)
+    .with({ [CheckboxPropDataTypeKey]: CheckboxPropDataTypeValueV1 }, val => val.value)
+    .otherwise(val => val)
+}
 
 export type CheckboxOptions = Options<{
   preset?: CheckboxValue

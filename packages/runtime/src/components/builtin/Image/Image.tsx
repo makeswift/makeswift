@@ -5,12 +5,14 @@ import NextImage from 'next/image'
 import type NextLegacyImageType from 'next/legacy/image'
 
 import {
+  CheckboxValue,
   ElementIDValue,
   ImageValue,
   LinkValue,
   ResponsiveOpacityValue,
   TextInputValue,
   WidthValue,
+  getCheckboxValue,
 } from '../../../prop-controllers/descriptors'
 import { Breakpoints, findBreakpointOverride } from '../../../state/modules/breakpoints'
 import { placeholders } from '../../utils/placeholders'
@@ -39,7 +41,7 @@ type Props = {
   opacity?: ResponsiveOpacityValue
   placeholder?: { src: string; dimensions: { width: number; height: number } }
   className?: string
-  priority?: boolean
+  priority?: CheckboxValue
 }
 
 function loadImage(src: string): Promise<HTMLImageElement> {
@@ -163,12 +165,12 @@ const ImageComponent = forwardRef(function Image(
           alt={altText}
           width={dimensions.width}
           height={dimensions.height}
-          priority={priority}
+          priority={getCheckboxValue(priority) ?? undefined}
         />
       ) : (
         <NextImage
           src={imageSrc}
-          priority={priority}
+          priority={getCheckboxValue(priority) ?? undefined}
           sizes={imageSizes(breakpoints, width)}
           alt={altText ?? ''}
           width={dimensions.width}
