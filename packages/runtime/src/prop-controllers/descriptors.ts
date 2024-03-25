@@ -54,6 +54,8 @@ import {
   getSwatchIds,
   getTypographyIds,
 } from './introspection'
+import { ControlDataTypeKey } from '../controls/control-data-type-key'
+import { match } from 'ts-pattern'
 
 export type { Data }
 
@@ -242,7 +244,26 @@ type VideoBackground = { type: 'video'; id: string; payload: BackgroundVideo }
 
 type Background = ColorBackground | GradientBackground | ImageBackground | VideoBackground
 
-export type BackgroundsValue = ResponsiveValue<Background[]>
+const BackgroundPropDataTypeKey = ControlDataTypeKey
+
+const BackgroundPropDataTypeValueV1 = 'prop-controller::backgrounds::v1'
+
+type BackgroundValueV0 = ResponsiveValue<Background[]>
+
+type BackgroundValueV1 = {
+  [BackgroundPropDataTypeKey]: typeof BackgroundPropDataTypeValueV1
+  value: ResponsiveValue<Background[]>
+}
+
+export type BackgroundsValue = BackgroundValueV0 | BackgroundValueV1
+
+export function getBackgroundsValue(
+  backgroundsValue: BackgroundsValue | null | undefined,
+): ResponsiveValue<Background[]> | null | undefined {
+  return match(backgroundsValue)
+    .with({ [BackgroundPropDataTypeKey]: BackgroundPropDataTypeValueV1 }, val => val.value)
+    .otherwise(val => val)
+}
 
 type BackgroundsOptions = Options<Record<string, never>>
 

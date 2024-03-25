@@ -3,7 +3,10 @@ import { useMemo } from 'react'
 import { ColorValue as Color } from '../utils/types'
 import { ResponsiveValue } from '../../prop-controllers'
 import { isNonNullable } from '../utils/isNonNullable'
-import { BackgroundsValue as ResponsiveBackgroundsValue } from '../../prop-controllers/descriptors'
+import {
+  BackgroundsValue as ResponsiveBackgroundsValue,
+  getBackgroundsValue,
+} from '../../prop-controllers/descriptors'
 import { useFiles, useSwatches } from '../../runtimes/react/hooks/makeswift-api'
 import {
   getBackgroundsFileIds,
@@ -58,12 +61,13 @@ export type BackgroundsData = Array<BackgroundData>
 export type BackgroundsPropControllerData = ResponsiveValue<BackgroundsData>
 
 export function useBackgrounds(
-  value: ResponsiveBackgroundsValue | null | undefined,
+  backgroundsValue: ResponsiveBackgroundsValue | null | undefined,
 ): BackgroundsPropControllerData | null | undefined {
-  const fileIds = getBackgroundsFileIds(value)
+  const fileIds = getBackgroundsFileIds(backgroundsValue)
   const files = useFiles(fileIds)
-  const swatchIds = getBackgroundsSwatchIds(value)
+  const swatchIds = getBackgroundsSwatchIds(backgroundsValue)
   const swatches = useSwatches(swatchIds)
+  const value = getBackgroundsValue(backgroundsValue)
 
   return useMemo(() => {
     if (value == null) return null
@@ -86,7 +90,7 @@ export function useBackgrounds(
               }
             )
           }
-          
+
           if (bg.type === 'image-v1' && bg.payload != null) {
             return match(bg)
               .with(

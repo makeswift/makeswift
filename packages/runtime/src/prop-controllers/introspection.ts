@@ -3,6 +3,7 @@ import {
   BorderValue,
   Descriptor,
   ElementIDValue,
+  getBackgroundsValue,
   getListPropControllerElementChildren,
   getListPropControllerFileIds,
   getListPropControllerPageIds,
@@ -130,7 +131,11 @@ export function getElementId<T extends Data>(
   }
 }
 
-export function getBackgroundsSwatchIds(value: BackgroundsValue | null | undefined): string[] {
+export function getBackgroundsSwatchIds(
+  backgroundsValue: BackgroundsValue | null | undefined,
+): string[] {
+  const value = getBackgroundsValue(backgroundsValue)
+
   return (
     value
       ?.flatMap(override => override.value)
@@ -267,7 +272,11 @@ export function getSwatchIds<T extends Data>(
   }
 }
 
-export function getBackgroundsFileIds(value: BackgroundsValue | null | undefined): string[] {
+export function getBackgroundsFileIds(
+  backgroundsValue: BackgroundsValue | null | undefined,
+): string[] {
+  const value = getBackgroundsValue(backgroundsValue)
+
   return (
     value
       ?.flatMap(override => override.value)

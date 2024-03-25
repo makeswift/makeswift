@@ -1,13 +1,15 @@
 import { P, match } from 'ts-pattern'
 import { CopyContext } from '../../state/react-page'
-import { BackgroundsDescriptor, BackgroundsValue } from '../descriptors'
+import { BackgroundsDescriptor, BackgroundsValue, getBackgroundsValue } from '../descriptors'
 
 export function copy(
   descriptor: BackgroundsDescriptor,
-  value: BackgroundsValue | undefined,
+  backgroundsValue: BackgroundsValue | undefined,
   context: Pick<CopyContext, 'replacementContext'>,
 ): BackgroundsValue | undefined {
-  if (value == null) return value
+  const value = getBackgroundsValue(backgroundsValue)
+
+  if (value == null) return undefined
 
   return value.map(override => ({
     ...override,
