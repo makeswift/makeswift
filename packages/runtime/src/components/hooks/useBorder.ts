@@ -5,6 +5,7 @@ import { ResponsiveValue } from '../../prop-controllers'
 import {
   BorderValue as ResponsiveBorderValue,
   BorderSide as BorderValueSide,
+  getBorderValue,
 } from '../../prop-controllers/descriptors'
 import { getBorderSwatchIds } from '../../prop-controllers/introspection'
 import { useSwatches } from '../../runtimes/react/hooks/makeswift-api'
@@ -37,10 +38,11 @@ type BorderData = {
 export type BorderPropControllerData = ResponsiveValue<BorderData>
 
 export function useBorder(
-  value: ResponsiveBorderValue | null | undefined,
+  borderValue: ResponsiveBorderValue | null | undefined,
 ): BorderPropControllerData | null | undefined {
-  const swatchIds = getBorderSwatchIds(value)
+  const swatchIds = getBorderSwatchIds(borderValue)
   const swatches = useSwatches(swatchIds)
+  const value = getBorderValue(borderValue)
 
   if (value == null) return null
 

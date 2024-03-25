@@ -1,11 +1,13 @@
 import { CopyContext } from '../../state/react-page'
-import { BorderValue } from '../descriptors'
+import { BorderValue, getBorderValue } from '../descriptors'
 
 export function copy(
-  value: BorderValue | undefined,
+  borderValue: BorderValue | undefined,
   context: CopyContext,
 ): BorderValue | undefined {
-  if (value == null) return value
+  const value = getBorderValue(borderValue)
+
+  if (value == null) return undefined
 
   return value.map(override => ({ ...override, value: copyBorderValue(override.value) }))
 

@@ -4,6 +4,7 @@ import {
   Descriptor,
   ElementIDValue,
   getBackgroundsValue,
+  getBorderValue,
   getListPropControllerElementChildren,
   getListPropControllerFileIds,
   getListPropControllerPageIds,
@@ -156,7 +157,9 @@ export function getBackgroundsSwatchIds(
   )
 }
 
-export function getBorderSwatchIds(value: BorderValue | null | undefined): string[] {
+export function getBorderSwatchIds(borderValue: BorderValue | null | undefined): string[] {
+  const value = getBorderValue(borderValue)
+
   return (
     value
       ?.flatMap(override => override.value)

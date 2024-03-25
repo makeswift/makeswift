@@ -296,7 +296,26 @@ type Border = {
     | undefined
 }
 
-export type BorderValue = ResponsiveValue<Border>
+const BorderPropDataTypeKey = ControlDataTypeKey
+
+const BorderPropDataTypeValueV1 = 'prop-controller::border::v1'
+
+type BorderValueV0 = ResponsiveValue<Border>
+
+type BorderValueV1 = {
+  [BorderPropDataTypeKey]: typeof BorderPropDataTypeValueV1
+  value: ResponsiveValue<Border>
+}
+
+export type BorderValue = BorderValueV0 | BorderValueV1
+
+export function getBorderValue(
+  backgroundsValue: BorderValue | null | undefined,
+): ResponsiveValue<Border> | null | undefined {
+  return match(backgroundsValue)
+    .with({ [BorderPropDataTypeKey]: BorderPropDataTypeValueV1 }, val => val.value)
+    .otherwise(val => val)
+}
 
 export const BorderPropControllerFormat = {
   ClassName: 'makeswift::prop-controllers::border::format::class-name',
