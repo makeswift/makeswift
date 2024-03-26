@@ -1,5 +1,11 @@
 # makeswift
 
+## 0.2.3
+
+### Patch Changes
+
+- 7afc198: Change all CLI documentation references to point to the new documentation site (docs.makeswift.com)
+
 ## 0.2.2
 
 ### Patch Changes
