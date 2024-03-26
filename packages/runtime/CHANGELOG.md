@@ -1,5 +1,146 @@
 # @makeswift/runtime
 
+## 0.15.0
+
+### Minor Changes
+
+- 1b08b60: BREAKING: Remove `runtime` prop from `Page` component and introduce new `ReactRuntimeProvider` component.
+
+  This change is an incremental step in adding App Router support to `@makeswift/runtime`.
+
+  Remove the `runtime` prop from any occurrence of the `Page` component:
+
+  ```diff tsx
+  import { Page as MakeswiftPage } from '@makeswift/runtime/next'
+  import { runtime } from '@/makeswift/runtime'
+
+  export default function Page({ snapshot }: Props) {
+  -  return <MakeswiftPage snapshot={snapshot} runtime={runtime} />
+  +  return <MakeswiftPage snapshot={snapshot} />
+  }
+  ```
+
+  Add `ReactRuntimeProvider` to your Next.js [Custom App](https://nextjs.org/docs/pages/building-your-application/routing/custom-app). If you don't have a Custom App, you'll need to add one.
+
+  ```tsx
+  import { runtime } from '@/makeswift/runtime'
+  import { ReactRuntimeProvider } from '@makeswift/runtime/next'
+  import type { AppProps } from 'next/app'
+
+  export default function App({ Component, pageProps }: AppProps) {
+    return (
+      <ReactRuntimeProvider runtime={runtime}>
+        <Component {...pageProps} />
+      </ReactRuntimeProvider>
+    )
+  }
+  ```
+
+- 39e160a: BREAKING: Drop support for Next.js versions lower than 13.4.0.
+
+  We're moving our Preview Mode implementation to Draft Mode, which was added on Next.js v13.4.0.
+
+- e5fbb9c: BREAKING: Remove client-side routing code.
+
+  There should be no changes to consumers of the runtime as the builder should be the only consumer of this API. Because we are removing functionality, this warrants a breaking change.
+
+- 3226974: BREAKING: Refactor `MakeswiftApiHandler` to support Next.js App Router Route Handlers.
+
+  This change introduces function overloads for the `MakeswiftApiHandler` so that it can be used with the new signature of App Router Route Handlers. It currently implements compatibility for Preview Mode by using the new Draft Mode and storing data in a `x-makeswift-draft-mode-data` cookie. This can be read from App Router using the `getSiteVersion` function exported from `@makesiwft/runtime/next/server`.
+
+  There shouldn't be any breaking API changes for Pages Router so there's no changes to upgrade.
+
+  This is what a Makeswift page in App Router should now look like:
+
+  ```ts
+  import { client } from '@/makeswift/client'
+  import '@/makeswift/components'
+  import { getSiteVersion } from '@makeswift/runtime/next/server'
+  import { notFound } from 'next/navigation'
+  import { Page as MakeswiftPage } from '@makeswift/runtime/next'
+
+  type ParsedUrlQuery = { path?: string[] }
+
+  export async function generateStaticParams() {
+    const pages = await client.getPages()
+
+    return pages.map((page) => ({
+      path: page.path.split('/').filter((segment) => segment !== ''),
+    }))
+  }
+
+  export default async function Page({ params }: { params: ParsedUrlQuery }) {
+    const path = '/' + (params?.path ?? []).join('/')
+    const snapshot = await client.getPageSnapshot(path, {
+      siteVersion: getSiteVersion(),
+    })
+
+    if (snapshot == null) return notFound()
+
+    return <MakeswiftPage snapshot={snapshot} />
+  }
+  ```
+
+- 7d314f3: BREAKING: Use `React.lazy` instead of `next/dynamic` for code-splitting.
+
+  There's no API changes but this change is significant enough to warrant a minor version bump.
+
+### Patch Changes
+
+- 9e4113f: Upgrade Next.js (dev dependency) in `@makeswift/runtime`.
+- 0ffe2be: Add support for snippets (including cleanup) for App Router.
+- 96d5e9a: Introduces PageHead component to the base Makeswift Page. This component renders head tag data (link/title/meta) for pages in both app router and pages router. Currently does not support snippets for app router.
+- 49bdf15: Removes the `http-proxy` dependency and uses native API's to proxy preview mode.
+- 2bbe16a: Update the `http-proxy` within `/api/[...makeswift].tsx` to use `xfwd: true`. This enables forwarding of `x-` headers.
+- e0f7e0e: Add console warning when `runtime` prop is passed to the `Page` component.
+  `runtime` should now be passed to the `ReactRuntimeProvider` instead of to `Page`.
+- 056aac1: Resolves issue where rewritten host API requests are unauthorized due to not checking the request header for the secret.
+- fcf2a68: Avoid throwing an error in `SocialLinks` builtin component if an option is not found.
+- 7d9d9b0: Update Facebook logo for `SocialLinks` builtin component.
+- 266f246: Add `RootStyleRegistry` component. This component provides support for Makeswift's CSS-in-JS runtime in Next.js' App Router.
+
+  For example, in `app/layout.tsx`:
+
+  ```tsx
+  import { RootStyleRegistry } from '@makeswift/runtime/next'
+
+  export default function RootLayout({
+    children,
+  }: Readonly<{
+    children: React.ReactNode
+  }>) {
+    return (
+      <html lang="en">
+        <body>
+          <RootStyleRegistry>{children}</RootStyleRegistry>
+        </body>
+      </html>
+    )
+  }
+  ```
+
+- e5c6f8d: Add `'use client'` directive to `Page` component module.
+- 3b25c9a: Moves locale switching logic out of the redux middleware state and closer to Next.js logic.
+- 2b25571: If `useRouter` is used within the App Router it'll throw an error as it can't be used there. This wraps the `useRouter` usage in a try/catch to conditional return `undefined` if we can't use it. We will probably use a different method of syncing the current locale in the App Router, so for now, noop this effect.
+- e7c330f: Fix exports for internal `@makeswift/runtime/state/breakpoints`.
+- 547b87f: Add X and Slack icons to legacy `SocialLinks` prop controller.
+- 67df869: Fix types export for `@makeswift/runtime/slate`
+- 0d78c22: Fix a bug in translating `Text` components containing detached typography.
+- 79a91e0: Transpile dynamic imports when building CommonJS format.
+- 2719416: Introduces draft mode for Next.js app router applications. Existing pages router applications are still supported via preview mode.
+- 9d4ac99: Rename internal `MakeswiftClient` to `MakeswiftHostApiClient`.
+- b953798: Button component and Link control now hydrate page links with the locale, if present. Brings automatic link localization to App Router, while still supporting Pages Router.
+- cc8e615: Add deprecation JSDoc to undocumented, legacy prop controllers.
+- 63b3a42: Move `Page` component into its own file.
+- 805f9f0: Use the provided runtime in the `/api/makeswift/element-tree` handler.
+- 0d706f7: Extract context from `src/api/react.ts` so that it can be imported in RSC.
+- 8a6e453: Wraps the `RuntimeProvider` component in a `Suspense` boundary as it uses `React.lazy`. Not wrapping the component would cause a hydration mismatch between the server and client.
+- Updated dependencies [39e160a]
+- Updated dependencies [9cb2f76]
+- Updated dependencies [2719416]
+- Updated dependencies [a220ecb]
+  - @makeswift/next-plugin@0.3.0
+
 ## 0.14.0
 
 ### Minor Changes
