@@ -117,6 +117,7 @@
     "@emotion/sheet": "^1.0.3",
     "@emotion/utils": "^1.0.0",
     "@makeswift/next-plugin": "0.2.8",
+    "@makeswift/prop-controllers": "^0.0.1",
     "@popmotion/popcorn": "^0.4.4",
     "@types/cookie": "^0.5.1",
     "@types/http-proxy": "^1.17.9",

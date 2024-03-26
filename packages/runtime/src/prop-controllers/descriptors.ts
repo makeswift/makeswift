@@ -54,6 +54,14 @@ import {
   getSwatchIds,
   getTypographyIds,
 } from './introspection'
+import {
+  BackgroundsDescriptor,
+  ImageDescriptor,
+  ImagesDescriptor,
+  Link,
+  LinkDescriptor,
+  Types as PropControllerTypes,
+} from '@makeswift/prop-controllers'
 
 export type { Data }
 
@@ -107,30 +115,6 @@ export type Gap = { value: number; unit: 'px' }
 
 export type Length = { value: number; unit: 'px' | '%' }
 
-type OpenPageLink = {
-  type: 'OPEN_PAGE'
-  payload: { pageId: string | null | undefined; openInNewTab: boolean }
-}
-
-type OpenURLLink = { type: 'OPEN_URL'; payload: { url: string; openInNewTab: boolean } }
-
-type SendEmailLink = {
-  type: 'SEND_EMAIL'
-  payload: { to: string; subject?: string; body?: string }
-}
-
-type CallPhoneLink = { type: 'CALL_PHONE'; payload: { phoneNumber: string } }
-
-type ScrollToElementLink = {
-  type: 'SCROLL_TO_ELEMENT'
-  payload: {
-    elementIdConfig: { elementKey: string; propName: string } | null | undefined
-    block: 'start' | 'center' | 'end'
-  }
-}
-
-type Link = OpenPageLink | OpenURLLink | SendEmailLink | CallPhoneLink | ScrollToElementLink
-
 type TextStyle = {
   fontFamily?: string | null | undefined
   letterSpacing: number | null | undefined
@@ -141,7 +125,6 @@ type TextStyle = {
 }
 
 export const Types = {
-  Backgrounds: 'Backgrounds',
   Border: 'Border',
   BorderRadius: 'BorderRadius',
   Checkbox: 'Checkbox',
@@ -151,9 +134,7 @@ export const Types = {
   GapX: 'GapX',
   GapY: 'GapY',
   Grid: 'Grid',
-  Image: 'Image',
   Images: 'Images',
-  Link: 'Link',
   List: 'List',
   Margin: 'Margin',
   NavigationLinks: 'NavigationLinks',
@@ -183,82 +164,6 @@ export const Types = {
 type Options<T> = T | ((props: Record<string, unknown>, deviceMode: Device) => T)
 
 export type ResolveOptions<T extends Options<unknown>> = T extends Options<infer U> ? U : never
-
-type ColorBackground = { type: 'color'; id: string; payload: Color | null }
-
-type GradientStop = { id: string; location: number; color: Color | null }
-
-type Gradient = { angle?: number; isRadial?: boolean; stops: GradientStop[] }
-
-type GradientBackground = { type: 'gradient'; id: string; payload: Gradient }
-
-type BackgroundImagePosition = { x: number; y: number }
-
-type BackgroundImageSize = 'cover' | 'contain' | 'auto'
-
-type BackgroundImageRepeat = 'no-repeat' | 'repeat-x' | 'repeat-y' | 'repeat'
-
-type BackgroundImageV0 = {
-  imageId: ImageValueV0
-  position: BackgroundImagePosition
-  size?: BackgroundImageSize
-  repeat?: BackgroundImageRepeat
-  opacity?: number
-  parallax?: number
-  priority?: boolean
-}
-
-type BackgroundImageV1 = {
-  version: 1
-  image: ImageValueV1
-  position: BackgroundImagePosition
-  size?: BackgroundImageSize
-  repeat?: BackgroundImageRepeat
-  opacity?: number
-  parallax?: number
-  priority?: boolean
-}
-
-export type BackgroundImage = BackgroundImageV0 | BackgroundImageV1
-
-type ImageBackgroundV0 = { type: 'image'; id: string; payload: BackgroundImageV0 }
-
-type ImageBackgroundV1 = { type: 'image-v1'; id: string; payload: BackgroundImageV1 }
-
-export type ImageBackground = ImageBackgroundV0 | ImageBackgroundV1
-
-type BackgroundVideoAspectRatio = 'wide' | 'standard'
-
-type BackgroundVideo = {
-  url?: string
-  maskColor?: Color | null
-  opacity?: number
-  zoom?: number
-  aspectRatio?: BackgroundVideoAspectRatio
-  parallax?: number
-}
-
-type VideoBackground = { type: 'video'; id: string; payload: BackgroundVideo }
-
-type Background = ColorBackground | GradientBackground | ImageBackground | VideoBackground
-
-export type BackgroundsValue = ResponsiveValue<Background[]>
-
-type BackgroundsOptions = Options<Record<string, never>>
-
-export type BackgroundsDescriptor<_T = BackgroundsValue> = {
-  type: typeof Types.Backgrounds
-  version?: 1
-  options: BackgroundsOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Backgrounds(options: BackgroundsOptions = {}): BackgroundsDescriptor {
-  return { type: Types.Backgrounds, version: 1, options }
-}
 
 type BorderSideStyle = 'dashed' | 'dotted' | 'solid'
 
@@ -477,101 +382,6 @@ export function mergeGridPropControllerTranslatedData(
     ...data,
     elements: data.elements.map(element => context.mergeTranslatedData(element)),
   }
-}
-
-export type ImageValueV0 = string
-
-type ImageValueV1MakeswiftFile = {
-  version: 1
-  type: 'makeswift-file'
-  id: string
-}
-
-type ImageValueV1ExternalFile = {
-  version: 1
-  type: 'external-file'
-  url: string
-  width?: number | null
-  height?: number | null
-}
-
-export type ImageValueV1 = ImageValueV1MakeswiftFile | ImageValueV1ExternalFile
-
-export type ImageValue = ImageValueV0 | ImageValueV1
-
-export type ImageOptions = Options<{ label?: string; hidden?: boolean }>
-
-export type ImageDescriptor<_T = ImageValue> = {
-  type: typeof Types.Image
-  version?: 1
-  options: ImageOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Image(options: ImageOptions = {}): ImageDescriptor {
-  return { type: Types.Image, version: 1, options }
-}
-
-export type ImagesValueV0Item = {
-  key: string
-  props: {
-    link?: Link
-    file?: ImageValueV0
-    altText?: string
-  }
-}
-
-export type ImagesValueV1Item = {
-  key: string
-  version: 1
-  props: {
-    link?: Link
-    file?: ImageValueV1
-    altText?: string
-  }
-}
-
-export type ImagesValueItem = ImagesValueV0Item | ImagesValueV1Item
-
-export type ImagesValue = ImagesValueItem[]
-
-type ImagesOptions = Options<{ preset?: ImagesValue }>
-
-export type ImagesDescriptor<_T = ImagesValue> = {
-  type: typeof Types.Images
-  version?: 1
-  options: ImagesOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Images(options: ImagesOptions = {}): ImagesDescriptor {
-  return { type: Types.Images, version: 1, options }
-}
-
-export type LinkValue = Link
-
-export type LinkOptions = Options<{
-  preset?: LinkValue
-  label?: string
-  defaultValue?: Link
-  options?: { value: Link['type']; label: string }[]
-  hidden?: boolean
-}>
-
-export type LinkDescriptor<_T = LinkValue> = { type: typeof Types.Link; options: LinkOptions }
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Link(options: LinkOptions = {}): LinkDescriptor {
-  return { type: Types.Link, options }
 }
 
 type ListValueItem<T extends Data> = { id: string; value?: T }
@@ -1406,7 +1216,7 @@ export type Descriptor<T extends Data = Data> =
   | TypographyControlDefinition
 
 export type PanelDescriptorType =
-  | typeof Types.Backgrounds
+  | typeof PropControllerTypes.Backgrounds
   | typeof Types.ResponsiveIconRadioGroup
   | typeof Types.Margin
   | typeof Types.Padding
@@ -1417,7 +1227,7 @@ export type PanelDescriptorType =
   | typeof Types.BorderRadius
   | typeof Types.Checkbox
   | typeof Types.TextInput
-  | typeof Types.Link
+  | typeof PropControllerTypes.Link
   | typeof Types.List
   | typeof Types.Shape
   | typeof Types.ResponsiveSelect
@@ -1432,7 +1242,7 @@ export type PanelDescriptorType =
   | typeof Types.Table
   | typeof Types.Typeahead
   | typeof Types.RichText
-  | typeof Types.Image
+  | typeof PropControllerTypes.Image
   | typeof Types.ResponsiveOpacity
   | typeof Types.SocialLinks
   | typeof Types.Video

@@ -1,3 +1,4 @@
+import { Backgrounds } from '@makeswift/prop-controllers'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
@@ -35,7 +36,7 @@ export function registerComponent(runtime: ReactRuntime) {
       label: 'Box',
       props: {
         id: Props.ElementID(),
-        backgrounds: Props.Backgrounds(),
+        backgrounds: Backgrounds(),
         width: Props.Width({
           format: Props.Width.Format.ClassName,
           defaultValue: { value: 100, unit: '%' },

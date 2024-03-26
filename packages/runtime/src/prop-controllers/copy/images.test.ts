@@ -1,7 +1,7 @@
 import { describe, test, expect } from 'vitest'
-import { ImagesValue } from '../descriptors'
 import { copy } from './images'
 import { ReplacementContext } from '../../state/react-page'
+import { ImagesValue } from '@makeswift/prop-controllers'
 
 describe.concurrent('images copy', () => {
   test('images are replaced by ones in replacement context', () => {

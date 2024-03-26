@@ -1,7 +1,6 @@
 import NextImage from 'next/image'
 import type NextLegacyImageType from 'next/legacy/image'
 
-import { BackgroundsPropControllerData, BackgroundsData } from '../../../../hooks'
 import { ResponsiveValue } from '../../../../../prop-controllers'
 import { ColorValue as Color } from '../../../../utils/types'
 import { colorToString } from '../../../../utils/colorToString'
@@ -11,6 +10,7 @@ import { CSSObject } from '@emotion/css'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 import { useResponsiveStyle } from '../../../../utils/responsive-style'
 import { major as nextMajorVersion } from '../../../../../next/next-version'
+import { BackgroundsPropControllerValue, BackgroundsValue } from '../../../../hooks'
 
 const NextLegacyImage = NextImage as typeof NextLegacyImageType
 
@@ -42,7 +42,7 @@ const containerStyle: CSSObject = {
   borderRadius: 'inherit',
 }
 
-type Props = { backgrounds: BackgroundsPropControllerData | null | undefined }
+type Props = { backgrounds: BackgroundsPropControllerValue | null | undefined }
 
 export default function Backgrounds({ backgrounds }: Props): JSX.Element {
   if (backgrounds == null) return <></>
@@ -62,7 +62,7 @@ export default function Backgrounds({ backgrounds }: Props): JSX.Element {
 }
 
 type BackgroundLayerProps = {
-  layer: BackgroundsData
+  layer: BackgroundsValue
   visibility: ResponsiveValue<boolean>
 }
 

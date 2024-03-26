@@ -1,0 +1,22 @@
+{
+  "name": "@makeswift/prop-controllers",
+  "version": "0.0.1",
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.cjs",
+  "types": "./dist/types/index.d.ts",
+  "scripts": {
+    "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'tsup src/index.ts --watch'",
+    "build": "tsc && tsup src/index.ts"
+  },
+  "dependencies": {
+    "ts-pattern": "^5.0.8"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "tsup": "^8.0.2"
+  }
+}

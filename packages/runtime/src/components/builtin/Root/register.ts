@@ -1,3 +1,4 @@
+import { Backgrounds } from '@makeswift/prop-controllers'
 import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../react'
 import { MakeswiftComponentType } from '../constants'
@@ -12,7 +13,7 @@ export function registerComponent(runtime: ReactRuntime) {
       hidden: true,
       props: {
         children: Props.Grid(),
-        backgrounds: Props.Backgrounds(),
+        backgrounds: Backgrounds(),
         rowGap: Props.GapY(),
         columnGap: Props.GapX(),
       },

@@ -4,11 +4,7 @@ import { CaretDown8 } from '../../../../icons/CaretDown8'
 import { Plus8 } from '../../../../icons/Plus8'
 import { ArrowDown8 } from '../../../../icons/ArrowDown8'
 import { ChevronDown8 } from '../../../../icons/ChevronDown8'
-import {
-  ResponsiveColorValue,
-  TextStyleValue,
-  LinkValue,
-} from '../../../../../prop-controllers/descriptors'
+import { ResponsiveColorValue, TextStyleValue } from '../../../../../prop-controllers/descriptors'
 import { colorToString } from '../../../../utils/colorToString'
 import { useResponsiveColor } from '../../../../hooks'
 
@@ -18,6 +14,7 @@ import { useIsomorphicLayoutEffect } from '../../../../hooks/useIsomorphicLayout
 import { cx, keyframes } from '@emotion/css'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 import { useResponsiveStyle, useResponsiveTextStyle } from '../../../../utils/responsive-style'
+import { LinkValue } from '@makeswift/prop-controllers'
 
 const DROP_DOWN_MENU_WIDTH = 200
 

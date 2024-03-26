@@ -13,7 +13,6 @@ import {
   ResponsiveSelectValue,
   ResponsiveIconRadioGroupValue,
   TextStyleValue,
-  LinkValue,
   WidthValue,
 } from '../../../prop-controllers/descriptors'
 import { colorToString } from '../../utils/colorToString'
@@ -27,6 +26,7 @@ import {
   useResponsiveWidth,
 } from '../../utils/responsive-style'
 import { cx } from '@emotion/css'
+import { LinkValue } from '@makeswift/prop-controllers'
 
 type BaseProps<T extends ElementType> = {
   as?: T

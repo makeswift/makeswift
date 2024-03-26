@@ -19,7 +19,6 @@ import { useMediaQuery } from '../../hooks'
 import Image from '../Image'
 import {
   ElementIDValue,
-  ImagesValue,
   ResponsiveNumberValue,
   ResponsiveIconRadioGroupValue,
   GapXValue,
@@ -32,6 +31,7 @@ import { cx } from '@emotion/css'
 import { useResponsiveStyle } from '../../utils/responsive-style'
 import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { useBreakpoints } from '../../../runtimes/react'
+import { ImagesValue } from '@makeswift/prop-controllers'
 
 const LeftChevron = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="10" height="14" viewBox="0 0 10 14">

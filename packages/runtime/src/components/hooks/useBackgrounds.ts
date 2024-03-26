@@ -3,7 +3,10 @@ import { useMemo } from 'react'
 import { ColorValue as Color } from '../utils/types'
 import { ResponsiveValue } from '../../prop-controllers'
 import { isNonNullable } from '../utils/isNonNullable'
-import { BackgroundsValue as ResponsiveBackgroundsValue } from '../../prop-controllers/descriptors'
+import {
+  BackgroundsPropControllerData,
+  getResponsiveBackgrounds,
+} from '@makeswift/prop-controllers'
 import { useFiles, useSwatches } from '../../runtimes/react/hooks/makeswift-api'
 import {
   getBackgroundsFileIds,
@@ -53,17 +56,18 @@ type BackgroundData =
   | { id: string; type: 'gradient'; payload: BackgroundGradientData | null | undefined }
   | { id: string; type: 'video'; payload: BackgroundVideoData | null | undefined }
 
-export type BackgroundsData = Array<BackgroundData>
+export type BackgroundsValue = Array<BackgroundData>
 
-export type BackgroundsPropControllerData = ResponsiveValue<BackgroundsData>
+export type BackgroundsPropControllerValue = ResponsiveValue<BackgroundsValue>
 
 export function useBackgrounds(
-  value: ResponsiveBackgroundsValue | null | undefined,
-): BackgroundsPropControllerData | null | undefined {
-  const fileIds = getBackgroundsFileIds(value)
+  backgroundsValue: BackgroundsPropControllerData | null | undefined,
+): BackgroundsPropControllerValue | null | undefined {
+  const fileIds = getBackgroundsFileIds(backgroundsValue)
   const files = useFiles(fileIds)
-  const swatchIds = getBackgroundsSwatchIds(value)
+  const swatchIds = getBackgroundsSwatchIds(backgroundsValue)
   const swatches = useSwatches(swatchIds)
+  const value = getResponsiveBackgrounds(backgroundsValue)
 
   return useMemo(() => {
     if (value == null) return null
@@ -86,7 +90,7 @@ export function useBackgrounds(
               }
             )
           }
-          
+
           if (bg.type === 'image-v1' && bg.payload != null) {
             return match(bg)
               .with(

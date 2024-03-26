@@ -2,7 +2,7 @@ import { RichTextControlData } from './rich-text'
 import { InlineJSON, MarkJSON, NodeJSON } from './dto-types'
 import { Typography } from '../../api'
 import { isNonNullable } from '../../utils/isNonNullable'
-import { LinkValue } from '../../prop-controllers'
+import { LinkValue } from '@makeswift/prop-controllers'
 
 export function getRichTextSwatchIds(value: RichTextControlData) {
   if (value == null || value.document == null) return []
