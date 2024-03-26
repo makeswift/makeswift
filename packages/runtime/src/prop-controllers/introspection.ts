@@ -8,6 +8,7 @@ import {
   getListPropControllerPageIds,
   getListPropControllerSwatchIds,
   getListPropControllerTypographyIds,
+  getResponsiveShadows,
   getShapePropControllerElementChildren,
   getShapePropControllerFileIds,
   getShapePropControllerPageIds,
@@ -21,7 +22,7 @@ import {
   NavigationLinksValue,
   ResponsiveColorValue,
   RichTextValue,
-  ShadowsValue,
+  ShadowsPropControllerData,
   ShapeValue,
   TableValue,
   Types,
@@ -166,9 +167,11 @@ export function getBorderSwatchIds(value: BorderValue | null | undefined): strin
   )
 }
 
-export function getBoxShadowsSwatchIds(value: ShadowsValue | null | undefined): string[] {
+export function getBoxShadowsSwatchIds(
+  data: ShadowsPropControllerData | null | undefined,
+): string[] {
   return (
-    value
+    getResponsiveShadows(data)
       ?.flatMap(override => override.value)
       .map(item => item.payload.color?.swatchId)
       .filter((swatchId): swatchId is NonNullable<typeof swatchId> => swatchId != null) ?? []
@@ -216,7 +219,7 @@ export function getSwatchIds<T extends Data>(
       return getResponsiveColorSwatchIds(prop as ResponsiveColorValue)
 
     case Types.Shadows:
-      return getBoxShadowsSwatchIds(prop as ShadowsValue)
+      return getBoxShadowsSwatchIds(prop as ShadowsPropControllerData)
 
     case RichTextControlType:
     case Types.RichText: {

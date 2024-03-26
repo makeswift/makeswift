@@ -1,13 +1,22 @@
 import { CopyContext } from '../../state/react-page'
-import { ShadowsValue } from '../descriptors'
+import {
+  ResponsiveShadowsData,
+  ShadowsPropControllerData,
+  getResponsiveShadows,
+} from '../descriptors'
 
 export function copy(
-  value: ShadowsValue | undefined,
+  data: ShadowsPropControllerData | undefined,
   context: CopyContext,
-): ShadowsValue | undefined {
-  if (value == null) return value
+): ResponsiveShadowsData | undefined {
+  const responsiveShadows = getResponsiveShadows(data)
 
-  return value.map(override => ({ ...override, value: override.value.map(copyShadowItem) }))
+  if (responsiveShadows == null) return responsiveShadows ?? undefined
+
+  return responsiveShadows.map(override => ({
+    ...override,
+    value: override.value.map(copyShadowItem),
+  }))
 
   function copyShadowItem(item: any): any {
     const { color } = item.payload

@@ -1,12 +1,12 @@
 import { describe, test, expect } from 'vitest'
-import { ShadowsValue } from '../descriptors'
+import { ShadowsPropControllerData } from '../descriptors'
 import { copy } from './shadows'
 import { ReplacementContext } from '../../state/react-page'
 
 describe.concurrent('shadow copy', () => {
   test('replaces the swatch id', () => {
     // Arrange
-    const data: ShadowsValue = [
+    const data: ShadowsPropControllerData = [
       {
         value: [
           {

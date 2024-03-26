@@ -20,10 +20,12 @@ import {
   ResponsiveValue,
   ShadowsDescriptor,
   ShadowsPropControllerFormat,
-  ShadowsValue,
+  ShadowsPropControllerData,
   WidthPropControllerFormat,
   WidthDescriptor,
   WidthValue,
+  ResponsiveShadowsData,
+  getResponsiveShadows,
 } from '../../prop-controllers/descriptors'
 import {
   useBoxShadow,
@@ -128,12 +130,8 @@ export function useBorderRadiusStyle(value: BorderRadiusValue | undefined): stri
   return useStyle(useResponsiveBorderRadius(value))
 }
 
-export function useShadowsStyle(
-  value: ShadowsValue | undefined,
-): string | ShadowsValue | undefined {
-  const shadowValue = useBoxShadow(value)
-
-  return useStyle(useResponsiveShadow(shadowValue ?? undefined))
+export function useShadowsStyle(data: ShadowsPropControllerData | undefined): string {
+  return useStyle(useResponsiveShadow(useBoxShadow(data) ?? undefined))
 }
 
 export type ResolveBorderRadiusControlValue<T extends Descriptor> = T extends BorderRadiusDescriptor
@@ -157,13 +155,13 @@ export function useBorderStyle(value: BorderValue | undefined): string | BorderV
 }
 export type ResolveShadowsControlValue<T extends Descriptor> = T extends ShadowsDescriptor
   ? undefined extends ResolveOptions<T['options']>['format']
-    ? ShadowsValue | undefined
+    ? ResponsiveShadowsData | undefined
     : ResolveOptions<T['options']>['format'] extends typeof ShadowsPropControllerFormat.ClassName
     ? string
     : ResolveOptions<
         T['options']
       >['format'] extends typeof ShadowsPropControllerFormat.ResponsiveValue
-    ? ShadowsValue | undefined
+    ? ResponsiveShadowsData | undefined
     : never
   : never
 
@@ -363,8 +361,12 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                   </RenderHook>
                 )
 
+              case ShadowsPropControllerFormat.ResponsiveValue:
               default:
-                return renderFn({ ...propsValue, [propName]: props[propName] })
+                return renderFn({
+                  ...propsValue,
+                  [propName]: getResponsiveShadows(props[propName]),
+                })
             }
 
           case Props.Types.Border:
