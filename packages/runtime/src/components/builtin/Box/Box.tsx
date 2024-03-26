@@ -22,17 +22,17 @@ import {
   GapYValue,
   GapXValue,
   CheckboxValue,
-  BackgroundsValue,
 } from '../../../prop-controllers/descriptors'
 import { BoxModelHandle, parse, createBox } from '../../../box-model'
 import BackgroundsContainer from '../../shared/BackgroundsContainer'
 import { useResponsiveStyle } from '../../utils/responsive-style'
 import { GridItem } from '../../shared/grid-item'
 import { useStyle } from '../../../runtimes/react/use-style'
+import { BackgroundsPropControllerData } from '@makeswift/prop-controllers'
 
 type Props = {
   id?: ElementIDValue
-  backgrounds?: BackgroundsValue
+  backgrounds?: BackgroundsPropControllerData
   width?: string
   height?: ResponsiveIconRadioGroupValue<'auto' | 'stretch'>
   verticalAlign?: ResponsiveIconRadioGroupValue<

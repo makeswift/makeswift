@@ -1,5 +1,5 @@
+import { ImageDescriptor, ImageValue } from '@makeswift/prop-controllers'
 import { CopyContext } from '../../state/react-page'
-import { ImageDescriptor, ImageValue } from '../descriptors'
 import { match, P } from 'ts-pattern'
 
 export function copy(

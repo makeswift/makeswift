@@ -1,6 +1,6 @@
 import { match, P } from 'ts-pattern'
 import { CopyContext } from '../../state/react-page'
-import { ImagesDescriptor, ImagesValue, ImagesValueItem } from '../descriptors'
+import { ImagesDescriptor, ImagesValue, ImagesValueItem } from '@makeswift/prop-controllers'
 
 export function copy(
   descriptor: ImagesDescriptor,

@@ -22,10 +22,6 @@ import {
   GapXValue as GapXControlValue,
   GapYDescriptor as GapYControl,
   GapYValue as GapYControlValue,
-  ImageDescriptor as ImageControl,
-  ImageValue as ImageControlValue,
-  LinkDescriptor as LinkControl,
-  LinkValue as LinkControlValue,
   ListDescriptor as ListControl,
   ListOptions as ListControlConfig,
   ListValue as ListControlValue,
@@ -59,6 +55,12 @@ import {
   Props as Controls,
 } from '../../prop-controllers'
 import {
+  ImageDescriptor as ImageControl,
+  ImageValue as ImageControlValue,
+  LinkDescriptor as LinkControl,
+  LinkValue as LinkControlValue,
+} from '@makeswift/prop-controllers'
+import {
   IconRadioGroupOption,
   LengthOption,
   SelectLabelOrientation,
@@ -84,6 +86,7 @@ import {
   SerializedFunction,
   serializeFunction,
 } from './function-serialization'
+import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
 
 type SerializedShapeControlConfig<T extends Record<string, SerializedPanelControl>> = {
   type: T
@@ -614,7 +617,7 @@ type LinkControlConfig = {
 }
 
 type SerializedLinkControl<_T = LinkControlValue> = {
-  type: typeof Controls.Types.Link
+  type: typeof PropControllerTypes.Link
   options: SerializedConfig<LinkControlConfig>
 }
 
@@ -629,7 +632,7 @@ function serializeLinkControl(control: LinkControl): [SerializedLinkControl, Tra
 }
 
 type DeserializedLinkControl<_T = LinkControlValue> = {
-  type: typeof Controls.Types.Link
+  type: typeof PropControllerTypes.Link
   options: DeserializedConfig<LinkControlConfig>
 }
 
@@ -805,7 +808,7 @@ function deserializeTextStyleControl(
 type ImageControlConfig = { label?: string; hidden?: boolean }
 
 type SerializedImageControl<_T = ImageControlValue> = {
-  type: typeof Controls.Types.Image
+  type: typeof PropControllerTypes.Image
   options: SerializedConfig<ImageControlConfig>
 }
 
@@ -820,7 +823,7 @@ function serializeImageControl(control: ImageControl): [SerializedImageControl, 
 }
 
 type DeserializedImageControl<_T = ImageControlValue> = {
-  type: typeof Controls.Types.Image
+  type: typeof PropControllerTypes.Image
   options: DeserializedConfig<ImageControlConfig>
 }
 
@@ -1041,7 +1044,7 @@ export function serializeControl<T extends Data>(
     case Controls.Types.Date:
       return serializeDateControl(control)
 
-    case Controls.Types.Link:
+    case PropControllerTypes.Link:
       return serializeLinkControl(control)
 
     case Controls.Types.TextInput:
@@ -1050,7 +1053,7 @@ export function serializeControl<T extends Data>(
     case Controls.Types.TextStyle:
       return serializeTextStyleControl(control)
 
-    case Controls.Types.Image:
+    case PropControllerTypes.Image:
       return serializeImageControl(control)
 
     case Controls.Types.RichText:
@@ -1119,7 +1122,7 @@ export function deserializeControl<T extends Data>(
     case Controls.Types.Date:
       return deserializeDateControl(serializedControl)
 
-    case Controls.Types.Link:
+    case PropControllerTypes.Link:
       return deserializeLinkControl(serializedControl)
 
     case Controls.Types.TextInput:
@@ -1128,7 +1131,7 @@ export function deserializeControl<T extends Data>(
     case Controls.Types.TextStyle:
       return deserializeTextStyleControl(serializedControl)
 
-    case Controls.Types.Image:
+    case PropControllerTypes.Image:
       return deserializeImageControl(serializedControl)
 
     case Controls.Types.RichText:

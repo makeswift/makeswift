@@ -1,13 +1,19 @@
 import { P, match } from 'ts-pattern'
 import { CopyContext } from '../../state/react-page'
-import { BackgroundsDescriptor, BackgroundsValue } from '../descriptors'
+import {
+  BackgroundsDescriptor,
+  BackgroundsPropControllerData,
+  getResponsiveBackgrounds,
+} from '@makeswift/prop-controllers'
 
 export function copy(
   descriptor: BackgroundsDescriptor,
-  value: BackgroundsValue | undefined,
+  backgroundsValue: BackgroundsPropControllerData | undefined,
   context: Pick<CopyContext, 'replacementContext'>,
-): BackgroundsValue | undefined {
-  if (value == null) return value
+): BackgroundsPropControllerData | undefined {
+  const value = getResponsiveBackgrounds(backgroundsValue)
+
+  if (value == null) return undefined
 
   return value.map(override => ({
     ...override,

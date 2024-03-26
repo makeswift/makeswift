@@ -3,8 +3,9 @@ import { ComponentPropsWithoutRef, useState } from 'react'
 import {
   ResponsiveColorValue,
   TextStyleValue,
-  LinkValue,
 } from '../../../../../../../prop-controllers/descriptors'
+import { LinkValue } from '@makeswift/prop-controllers'
+
 import { colorToString } from '../../../../../../utils/colorToString'
 import { useResponsiveColor } from '../../../../../../hooks'
 

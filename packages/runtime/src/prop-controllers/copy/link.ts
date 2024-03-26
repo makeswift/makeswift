@@ -1,5 +1,5 @@
+import { LinkValue } from '@makeswift/prop-controllers'
 import { CopyContext } from '../../state/react-page'
-import { LinkValue } from '../descriptors'
 
 export function copy(value: LinkValue | undefined, context: CopyContext): LinkValue | undefined {
   if (value == null) return value

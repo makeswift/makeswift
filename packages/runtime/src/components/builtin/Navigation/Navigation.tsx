@@ -15,8 +15,6 @@ import {
   CheckboxValue,
   ElementIDValue,
   GapXValue,
-  ImageValue,
-  LinkValue,
   NavigationLinksValue,
   ResponsiveIconRadioGroupValue,
   ResponsiveLengthValue,
@@ -25,6 +23,8 @@ import {
   TextStyleValue,
   NavigationButton as NavigationButtonValue,
 } from '../../../prop-controllers/descriptors'
+import { ImageValue, LinkValue } from '@makeswift/prop-controllers'
+
 import { ColorValue as Color } from '../../utils/types'
 import { colorToString } from '../../utils/colorToString'
 import { ResponsiveColor } from '../../../runtimes/react/controls'

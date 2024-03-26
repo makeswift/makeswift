@@ -1,5 +1,5 @@
+import { match, P } from 'ts-pattern'
 import {
-  BackgroundsValue,
   BorderValue,
   Descriptor,
   ElementIDValue,
@@ -14,9 +14,6 @@ import {
   getShapePropControllerSwatchIds,
   getShapePropControllerTypographyIds,
   GridValue,
-  ImagesValue,
-  ImageValue,
-  LinkValue,
   ListValue,
   NavigationLinksValue,
   ResponsiveColorValue,
@@ -26,6 +23,14 @@ import {
   TableValue,
   Types,
 } from './descriptors'
+
+import {
+  BackgroundsPropControllerData,
+  getResponsiveBackgrounds,
+  ImagesValue,
+  ImageValue,
+  LinkValue,
+} from '@makeswift/prop-controllers'
 import { Data, Element } from '../state/react-page'
 import {
   ColorControlData,
@@ -74,7 +79,7 @@ import {
   RichTextV2ControlData,
   isRichTextV1Data,
 } from '../controls/rich-text-v2/rich-text-v2'
-import { match, P } from 'ts-pattern'
+import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
 
 export function getElementChildren<T extends Data>(
   descriptor: Descriptor<T>,
@@ -130,7 +135,11 @@ export function getElementId<T extends Data>(
   }
 }
 
-export function getBackgroundsSwatchIds(value: BackgroundsValue | null | undefined): string[] {
+export function getBackgroundsSwatchIds(
+  backgroundsValue: BackgroundsPropControllerData | null | undefined,
+): string[] {
+  const value = getResponsiveBackgrounds(backgroundsValue)
+
   return (
     value
       ?.flatMap(override => override.value)
@@ -187,8 +196,8 @@ export function getSwatchIds<T extends Data>(
 ): string[] {
   if (prop == null) return []
   switch (descriptor.type) {
-    case Types.Backgrounds:
-      return getBackgroundsSwatchIds(prop as BackgroundsValue)
+    case PropControllerTypes.Backgrounds:
+      return getBackgroundsSwatchIds(prop as BackgroundsPropControllerData)
 
     case Types.Border:
       return getBorderSwatchIds(prop as BorderValue)
@@ -267,7 +276,11 @@ export function getSwatchIds<T extends Data>(
   }
 }
 
-export function getBackgroundsFileIds(value: BackgroundsValue | null | undefined): string[] {
+export function getBackgroundsFileIds(
+  backgroundsValue: BackgroundsPropControllerData | null | undefined,
+): string[] {
+  const value = getResponsiveBackgrounds(backgroundsValue)
+
   return (
     value
       ?.flatMap(override => override.value)
@@ -289,10 +302,10 @@ export function getFileIds<T extends Data>(
   if (prop == null) return []
 
   switch (descriptor.type) {
-    case Types.Backgrounds:
-      return getBackgroundsFileIds(prop as BackgroundsValue)
+    case PropControllerTypes.Backgrounds:
+      return getBackgroundsFileIds(prop as BackgroundsPropControllerData)
 
-    case Types.Image: {
+    case PropControllerTypes.Image: {
       return match(prop as ImageValue)
         .with(P.string, v => [v])
         .with({ type: 'makeswift-file', version: 1 }, v => [v.id])
@@ -412,7 +425,7 @@ export function getPageIds<T extends Data>(
   if (prop == null) return []
 
   switch (descriptor.type) {
-    case Types.Link: {
+    case PropControllerTypes.Link: {
       const value = prop as LinkValue
       if (value == null) return []
 

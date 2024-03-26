@@ -7,6 +7,7 @@ import { findBreakpointOverride } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
+import { Images } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -17,7 +18,7 @@ export function registerComponent(runtime: ReactRuntime) {
       icon: ComponentIcon.Carousel,
       props: {
         id: Props.ElementID(),
-        images: Props.Images({
+        images: Images({
           preset: [
             { key: uuid(), props: {} },
             { key: uuid(), props: {} },

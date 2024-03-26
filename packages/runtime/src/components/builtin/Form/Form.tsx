@@ -34,7 +34,6 @@ import type { TableColumn } from './types'
 import {
   ElementIDValue,
   GapYValue,
-  LinkValue,
   ResponsiveIconRadioGroupValue,
   ResponsiveLengthValue,
   ResponsiveSelectValue,
@@ -56,6 +55,7 @@ import { cx } from '@emotion/css'
 import { useResponsiveGridItem, useResponsiveStyle } from '../../utils/responsive-style'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { useTable } from '../../../runtimes/react/hooks/makeswift-api'
+import { LinkValue } from '@makeswift/prop-controllers'
 
 const LOCAL_STORAGE_NAMESPACE = '@@makeswift/components/form'
 

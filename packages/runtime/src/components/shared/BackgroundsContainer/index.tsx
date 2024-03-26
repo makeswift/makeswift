@@ -9,7 +9,7 @@ import {
   ReactElement,
   Ref,
 } from 'react'
-import { BackgroundsValue as BackgroundsPropControllerValue } from '../../../prop-controllers/descriptors'
+import { BackgroundsPropControllerData as BackgroundsPropControllerValue } from '@makeswift/prop-controllers'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { useBackgrounds } from '../../hooks'
 import Backgrounds from './components/Backgrounds'
