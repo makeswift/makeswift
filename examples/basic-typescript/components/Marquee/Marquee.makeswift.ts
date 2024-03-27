@@ -1,11 +1,14 @@
-import { lazy } from 'react'
+import dynamic from 'next/dynamic'
 
 import { Checkbox, Image, List, Number, Shape, Style, TextInput } from '@makeswift/runtime/controls'
+import { forwardNextDynamicRef } from '@makeswift/runtime/next'
 
 import { runtime } from '@/lib/makeswift/runtime'
 
 runtime.registerComponent(
-  lazy(() => import('./Marquee')),
+  forwardNextDynamicRef(patch =>
+    dynamic(() => patch(import('./Marquee').then(({ Marquee }) => Marquee)))
+  ),
   {
     type: 'Marquee',
     label: 'Custom / Marquee',

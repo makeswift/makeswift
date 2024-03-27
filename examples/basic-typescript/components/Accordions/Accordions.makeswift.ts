@@ -1,11 +1,14 @@
-import { lazy } from 'react'
+import dynamic from 'next/dynamic'
 
 import { List, Select, Shape, Slot, Style } from '@makeswift/runtime/controls'
+import { forwardNextDynamicRef } from '@makeswift/runtime/next'
 
 import { runtime } from '@/lib/makeswift/runtime'
 
 runtime.registerComponent(
-  lazy(() => import('./Accordions')),
+  forwardNextDynamicRef(patch =>
+    dynamic(() => patch(import('./Accordions').then(({ Accordions }) => Accordions)))
+  ),
   {
     type: 'accordions',
     label: 'Custom / Accordions',

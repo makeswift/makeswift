@@ -1,5 +1,3 @@
-'use client'
-
 import { Ref, forwardRef } from 'react'
 
 import * as RadixTabs from '@radix-ui/react-tabs'
@@ -50,5 +48,3 @@ export const Tabs = forwardRef(function Tabs(
     </RadixTabs.Root>
   )
 })
-
-export default Tabs
