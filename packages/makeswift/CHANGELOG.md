@@ -1,5 +1,11 @@
 # makeswift
 
+## 0.2.4
+
+### Patch Changes
+
+- 6e001e7: Fix an issue with the CLI's HTTP connection that would break usage in the Arc web browser.
+
 ## 0.2.3
 
 ### Patch Changes
