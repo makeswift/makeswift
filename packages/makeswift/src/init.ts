@@ -223,13 +223,6 @@ async function getSiteMetadata({
               envVars,
             })
           })
-
-          // Google Chrome very aggressively holds on to the socket
-          for (const socket of sockets) {
-            if (!socket.destroyed) {
-              socket.destroy()
-            }
-          }
         })
       })
       .listen(port)
