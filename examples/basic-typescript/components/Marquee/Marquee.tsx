@@ -21,7 +21,7 @@ export const Marquee = forwardRef(function Marquee(
   ref: Ref<HTMLDivElement>
 ) {
   const scrollingImages = (
-    <div className="animate-scrollLeft flex min-w-full shrink-0 grow-0 items-center gap-x-12 px-6 md:gap-x-24 md:px-12">
+    <div className="flex min-w-full shrink-0 grow-0 animate-scrollLeft items-center gap-x-12 px-6 md:gap-x-24 md:px-12">
       {logos.map(({ logoImage, logoAlt, logoWidth = 120 }, index) => {
         if (logoImage == null) {
           return <div key={index} className="h-[60px] w-[120px] rounded-lg bg-black/10" />
@@ -63,3 +63,5 @@ export const Marquee = forwardRef(function Marquee(
     </div>
   )
 })
+
+export default Marquee
