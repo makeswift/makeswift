@@ -1,11 +1,12 @@
-import { lazy } from 'react'
+import dynamic from 'next/dynamic'
 
 import { List, Shape, Slot, Style, TextInput } from '@makeswift/runtime/controls'
+import { forwardNextDynamicRef } from '@makeswift/runtime/next'
 
 import { runtime } from '@/lib/makeswift/runtime'
 
 runtime.registerComponent(
-  lazy(() => import('./Tabs')),
+  forwardNextDynamicRef(patch => dynamic(() => patch(import('./Tabs').then(({ Tabs }) => Tabs)))),
   {
     type: 'Tabs',
     label: 'Custom / Tabs',

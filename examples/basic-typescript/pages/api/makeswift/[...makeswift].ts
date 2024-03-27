@@ -1,12 +1,9 @@
-import { runtime } from "@/lib/makeswift/runtime"
-import { MakeswiftApiHandler } from "@makeswift/runtime/next/server"
-import { strict } from "assert"
+import { MakeswiftApiHandler } from '@makeswift/runtime/next/server'
+import { strict } from 'assert'
 
+strict(process.env.MAKESWIFT_SITE_API_KEY)
 
-strict(process.env.MAKESWIFT_SITE_API_KEY, "MAKESWIFT_SITE_API_KEY is required")
-
-const handler = MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY, {
-  runtime,
+export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY, {
   getFonts() {
     return [
       {
@@ -24,5 +21,3 @@ const handler = MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY, {
     ]
   },
 })
-
-export { handler as GET, handler as POST }

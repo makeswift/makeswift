@@ -1,5 +1,3 @@
-'use client'
-
 import React, { ReactNode, Ref, forwardRef } from 'react'
 
 import * as Accordion from '@radix-ui/react-accordion'
@@ -52,7 +50,7 @@ export const Accordions = forwardRef(function Accordions(
                   </Accordion.Trigger>
                 </Accordion.Header>
 
-                <Accordion.Content className="w-full overflow-hidden data-[state=closed]:animate-collapse data-[state=open]:animate-expand">
+                <Accordion.Content className="data-[state=closed]:animate-collapse data-[state=open]:animate-expand w-full overflow-hidden">
                   <div className="text-md px-5 pb-1 leading-relaxed text-gray-900 md:px-10 md:pb-3">
                     {accordion.body}
                   </div>
@@ -65,5 +63,3 @@ export const Accordions = forwardRef(function Accordions(
     </Accordion.Root>
   )
 })
-
-export default Accordions
