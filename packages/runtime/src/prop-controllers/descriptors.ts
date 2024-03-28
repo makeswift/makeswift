@@ -54,6 +54,8 @@ import {
   getSwatchIds,
   getTypographyIds,
 } from './introspection'
+import { ControlDataTypeKey } from '../controls/control-data-type-key'
+import { match } from 'ts-pattern'
 
 export type { Data }
 
@@ -987,7 +989,7 @@ export function RichText(options: RichTextOptions = {}): RichTextDescriptor {
   return { type: Types.RichText, options }
 }
 
-type Shadow = {
+type ShadowData = {
   color?: Color | null
   blurRadius?: number
   spreadRadius?: number
@@ -996,9 +998,28 @@ type Shadow = {
   inset?: boolean
 }
 
-type Shadows = { id: string; payload: Shadow }[]
+type ShadowsData = { id: string; payload: ShadowData }[]
 
-export type ShadowsValue = ResponsiveValue<Shadows>
+export type ResponsiveShadowsData = ResponsiveValue<ShadowsData>
+
+type ShadowsPropControllerDataV0 = ResponsiveShadowsData
+
+const ShadowsPropControllerDataV1Type = 'prop-controllers::shadows::v1'
+
+type ShadowsPropControllerDataV1 = {
+  [ControlDataTypeKey]: typeof ShadowsPropControllerDataV1Type
+  value: ResponsiveShadowsData
+}
+
+export type ShadowsPropControllerData = ShadowsPropControllerDataV0 | ShadowsPropControllerDataV1
+
+export function getResponsiveShadows(
+  data: ShadowsPropControllerData | null | undefined,
+): ResponsiveShadowsData | null | undefined {
+  return match(data)
+    .with({ [ControlDataTypeKey]: ShadowsPropControllerDataV1Type }, v1 => v1.value)
+    .otherwise(v0 => v0)
+}
 
 export const ShadowsPropControllerFormat = {
   ClassName: 'makeswift::prop-controllers::shadows::format::class-name',
@@ -1010,10 +1031,27 @@ export type ShadowsPropControllerFormat =
 
 type ShadowsOptions = { format?: ShadowsPropControllerFormat }
 
-export type ShadowsDescriptor<_T = ShadowsValue, U extends ShadowsOptions = ShadowsOptions> = {
+type ShadowsDescriptorV0<
+  _T = ShadowsPropControllerDataV0,
+  U extends ShadowsOptions = ShadowsOptions,
+> = {
   type: typeof Types.Shadows
   options: U
 }
+
+type ShadowsDescriptorV1<
+  _T = ShadowsPropControllerData,
+  U extends ShadowsOptions = ShadowsOptions,
+> = {
+  type: typeof Types.Shadows
+  version: 1
+  options: U
+}
+
+export type ShadowsDescriptor<
+  _T = ShadowsPropControllerData,
+  U extends ShadowsOptions = ShadowsOptions,
+> = ShadowsDescriptorV0<_T, U> | ShadowsDescriptorV1<_T, U>
 
 /**
  * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
@@ -1021,8 +1059,8 @@ export type ShadowsDescriptor<_T = ShadowsValue, U extends ShadowsOptions = Shad
  */
 export function Shadows<T extends ShadowsOptions>(
   options: T & ShadowsOptions = {} as T,
-): ShadowsDescriptor<ShadowsValue, T> {
-  return { type: Types.Shadows, options }
+): ShadowsDescriptor<ShadowsPropControllerData, T> {
+  return { type: Types.Shadows, version: 1, options }
 }
 
 Shadows.Format = ShadowsPropControllerFormat

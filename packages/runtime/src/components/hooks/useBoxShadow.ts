@@ -1,7 +1,10 @@
 import { isNonNullable } from '../utils/isNonNullable'
 import type { ColorValue as Color } from '../utils/types'
 import type { ResponsiveValue } from '../../prop-controllers'
-import type { ShadowsValue as ResponsiveShadowsValue } from '../../prop-controllers/descriptors'
+import {
+  getResponsiveShadows,
+  type ShadowsPropControllerData,
+} from '../../prop-controllers/descriptors'
 import { getBoxShadowsSwatchIds } from '../../prop-controllers/introspection'
 import { useSwatches } from '../../runtimes/react/hooks/makeswift-api'
 
@@ -31,14 +34,15 @@ export type BoxShadowData = Array<ShadowData>
 export type BoxShadowPropControllerData = ResponsiveValue<BoxShadowData>
 
 export function useBoxShadow(
-  value: ResponsiveShadowsValue | null | undefined,
+  data: ShadowsPropControllerData | null | undefined,
 ): BoxShadowPropControllerData | null | undefined {
-  const swatchIds = getBoxShadowsSwatchIds(value)
+  const swatchIds = getBoxShadowsSwatchIds(data)
   const swatches = useSwatches(swatchIds)
+  const responsiveShadows = getResponsiveShadows(data)
 
-  if (value == null) return null
+  if (responsiveShadows == null) return null
 
-  return value.map(({ value: shadows, ...restOfValue }) => ({
+  return responsiveShadows.map(({ value: shadows, ...restOfValue }) => ({
     ...restOfValue,
     value: shadows.map(
       ({
