@@ -54,7 +54,12 @@ import {
   getSwatchIds,
   getTypographyIds,
 } from './introspection'
-import { Link, LinkDescriptor, Types as PropControllerTypes } from '@makeswift/prop-controllers'
+import {
+  Link,
+  LinkDescriptor,
+  LinkPropControllerValue,
+  Types as PropControllerTypes,
+} from '@makeswift/prop-controllers'
 
 export type { Data }
 
@@ -1439,6 +1444,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? TypographyControlValue
   : T['type'] extends typeof Types.ResponsiveColor
   ? ResponsiveColor | null | undefined
+  : T['type'] extends typeof PropControllerTypes.Link
+  ? LinkPropControllerValue
   : T['type'] extends typeof Types.Width
   ? ResolveWidthControlValue<T>
   : T['type'] extends typeof Types.Padding

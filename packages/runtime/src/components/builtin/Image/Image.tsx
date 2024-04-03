@@ -11,7 +11,7 @@ import {
   TextInputValue,
   WidthValue,
 } from '../../../prop-controllers/descriptors'
-import { LinkValue } from '@makeswift/prop-controllers'
+import { LinkPropControllerValue } from '@makeswift/prop-controllers'
 import { Breakpoints, findBreakpointOverride } from '../../../state/modules/breakpoints'
 import { placeholders } from '../../utils/placeholders'
 import { Link } from '../../shared/Link'
@@ -29,7 +29,7 @@ type Props = {
   id?: ElementIDValue
   file?: ImageValue
   altText?: TextInputValue
-  link?: LinkValue
+  link?: LinkPropControllerValue
   width?: WidthValue
   margin?: string
   padding?: string

@@ -1,6 +1,6 @@
 import { CopyContext } from '../../state/react-page'
-import { copy as linkCopy } from './link'
 import { NavigationLinksValue } from '../descriptors'
+import { copyLinkPropControllerData } from '@makeswift/prop-controllers'
 
 export function copy(
   value: NavigationLinksValue | undefined,
@@ -20,7 +20,7 @@ export function copy(
           ...item,
           payload: {
             ...item.payload,
-            link: link != null ? linkCopy(link, context) : undefined,
+            link: link != null ? copyLinkPropControllerData(link, context) : undefined,
             color:
               color != null
                 ? color.map((override: { value: { swatchId: string } }) => ({

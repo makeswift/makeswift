@@ -24,7 +24,7 @@ import {
   TextStyleValue,
   NavigationButton as NavigationButtonValue,
 } from '../../../prop-controllers/descriptors'
-import { LinkValue } from '@makeswift/prop-controllers'
+import { LinkPropControllerValue } from '@makeswift/prop-controllers'
 
 import { ColorValue as Color } from '../../utils/types'
 import { colorToString } from '../../utils/colorToString'
@@ -42,7 +42,7 @@ type Props = {
   logoFile?: ImageValue
   logoWidth?: ResponsiveLengthValue
   logoAltText?: TextInputValue
-  logoLink?: LinkValue
+  logoLink?: LinkPropControllerValue
   alignment?: ResponsiveIconRadioGroupValue<'flex-start' | 'center' | 'flex-end'>
   gutter?: GapXValue
   mobileMenuAnimation?: ResponsiveSelectValue<'coverRight' | 'coverLeft'>
