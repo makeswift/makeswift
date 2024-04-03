@@ -42,8 +42,6 @@ export type {
   ImageBackground,
   BackgroundsDescriptor,
   BackgroundImage,
-  LinkDescriptor,
-  LinkValue,
   ListDescriptor,
   ListValue,
   ListOptions,
@@ -66,6 +64,7 @@ export type {
   SocialLinksDescriptor,
   SocialLinksValue,
 } from './descriptors'
+export type { LinkDescriptor, LinkValue } from '@makeswift/prop-controllers'
 export { socialLinkTypesV0, socialLinkTypesV1 } from './descriptors'
 export * as Props from './descriptors'
 export type {

@@ -46,6 +46,7 @@ import {
   Types,
   mergeGridPropControllerTranslatedData,
 } from '../prop-controllers/descriptors'
+import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
 import { copy as propControllerCopy } from '../prop-controllers/copy'
 import { CopyContext, Data, MergeContext, MergeTranslatableDataContext } from '../state/react-page'
 import {
@@ -137,7 +138,7 @@ export function copy(definition: Descriptor | ControlDefinition, value: any, con
     case Types.Backgrounds:
     case Types.Grid:
     case Types.NavigationLinks:
-    case Types.Link:
+    case PropControllerTypes.Link:
     case Types.Shadows:
     case Types.Image:
     case Types.Images:

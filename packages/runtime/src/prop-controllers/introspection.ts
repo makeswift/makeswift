@@ -16,7 +16,6 @@ import {
   GridValue,
   ImagesValue,
   ImageValue,
-  LinkValue,
   ListValue,
   NavigationLinksValue,
   ResponsiveColorValue,
@@ -75,6 +74,7 @@ import {
   isRichTextV1Data,
 } from '../controls/rich-text-v2/rich-text-v2'
 import { match, P } from 'ts-pattern'
+import { LinkValue, Types as PropControllerTypes } from '@makeswift/prop-controllers'
 
 export function getElementChildren<T extends Data>(
   descriptor: Descriptor<T>,
@@ -412,7 +412,7 @@ export function getPageIds<T extends Data>(
   if (prop == null) return []
 
   switch (descriptor.type) {
-    case Types.Link: {
+    case PropControllerTypes.Link: {
       const value = prop as LinkValue
       if (value == null) return []
 

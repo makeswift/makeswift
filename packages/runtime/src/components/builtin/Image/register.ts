@@ -2,6 +2,7 @@ import { lazy } from 'react'
 import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
+import { Link } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -13,7 +14,7 @@ export function registerComponent(runtime: ReactRuntime) {
         id: Props.ElementID(),
         file: Props.Image(),
         altText: Props.TextInput({ label: 'Alt text' }),
-        link: Props.Link({ label: 'On click' }),
+        link: Link({ label: 'On click' }),
         width: Props.Width(),
         margin: Props.Margin({ format: Props.Margin.Format.ClassName }),
         padding: Props.Padding({ format: Props.Padding.Format.ClassName }),

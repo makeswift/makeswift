@@ -54,6 +54,7 @@ import {
   getSwatchIds,
   getTypographyIds,
 } from './introspection'
+import { Link, LinkDescriptor, Types as PropControllerTypes } from '@makeswift/prop-controllers'
 
 export type { Data }
 
@@ -107,30 +108,6 @@ export type Gap = { value: number; unit: 'px' }
 
 export type Length = { value: number; unit: 'px' | '%' }
 
-type OpenPageLink = {
-  type: 'OPEN_PAGE'
-  payload: { pageId: string | null | undefined; openInNewTab: boolean }
-}
-
-type OpenURLLink = { type: 'OPEN_URL'; payload: { url: string; openInNewTab: boolean } }
-
-type SendEmailLink = {
-  type: 'SEND_EMAIL'
-  payload: { to: string; subject?: string; body?: string }
-}
-
-type CallPhoneLink = { type: 'CALL_PHONE'; payload: { phoneNumber: string } }
-
-type ScrollToElementLink = {
-  type: 'SCROLL_TO_ELEMENT'
-  payload: {
-    elementIdConfig: { elementKey: string; propName: string } | null | undefined
-    block: 'start' | 'center' | 'end'
-  }
-}
-
-type Link = OpenPageLink | OpenURLLink | SendEmailLink | CallPhoneLink | ScrollToElementLink
-
 type TextStyle = {
   fontFamily?: string | null | undefined
   letterSpacing: number | null | undefined
@@ -153,7 +130,6 @@ export const Types = {
   Grid: 'Grid',
   Image: 'Image',
   Images: 'Images',
-  Link: 'Link',
   List: 'List',
   Margin: 'Margin',
   NavigationLinks: 'NavigationLinks',
@@ -552,26 +528,6 @@ export type ImagesDescriptor<_T = ImagesValue> = {
  */
 export function Images(options: ImagesOptions = {}): ImagesDescriptor {
   return { type: Types.Images, version: 1, options }
-}
-
-export type LinkValue = Link
-
-export type LinkOptions = Options<{
-  preset?: LinkValue
-  label?: string
-  defaultValue?: Link
-  options?: { value: Link['type']; label: string }[]
-  hidden?: boolean
-}>
-
-export type LinkDescriptor<_T = LinkValue> = { type: typeof Types.Link; options: LinkOptions }
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Link(options: LinkOptions = {}): LinkDescriptor {
-  return { type: Types.Link, options }
 }
 
 type ListValueItem<T extends Data> = { id: string; value?: T }
@@ -1417,7 +1373,7 @@ export type PanelDescriptorType =
   | typeof Types.BorderRadius
   | typeof Types.Checkbox
   | typeof Types.TextInput
-  | typeof Types.Link
+  | typeof PropControllerTypes.Link
   | typeof Types.List
   | typeof Types.Shape
   | typeof Types.ResponsiveSelect
