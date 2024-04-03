@@ -83,9 +83,10 @@ import {
   serializeFunction,
 } from './function-serialization'
 import {
+  Link,
   Types as PropControllerTypes,
   LinkDescriptor as LinkControl,
-  LinkValue as LinkControlValue,
+  LinkPropControllerData,
 } from '@makeswift/prop-controllers'
 
 type SerializedShapeControlConfig<T extends Record<string, SerializedPanelControl>> = {
@@ -609,14 +610,14 @@ function deserializeDateControl(serializedControl: SerializedDateControl): Deser
 }
 
 type LinkControlConfig = {
-  preset?: LinkControlValue
+  preset?: LinkPropControllerData
   label?: string
-  defaultValue?: LinkControlValue
-  options?: { value: LinkControlValue['type']; label: string }[]
+  defaultValue?: LinkPropControllerData
+  options?: { value: Link['type']; label: string }[]
   hidden?: boolean
 }
 
-type SerializedLinkControl<_T = LinkControlValue> = {
+type SerializedLinkControl<_T = LinkPropControllerData> = {
   type: typeof PropControllerTypes.Link
   options: SerializedConfig<LinkControlConfig>
 }
@@ -631,7 +632,7 @@ function serializeLinkControl(control: LinkControl): [SerializedLinkControl, Tra
   return [{ ...control, options: serializedOptions }, [serializedOptions]]
 }
 
-type DeserializedLinkControl<_T = LinkControlValue> = {
+type DeserializedLinkControl<_T = LinkPropControllerData> = {
   type: typeof PropControllerTypes.Link
   options: DeserializedConfig<LinkControlConfig>
 }

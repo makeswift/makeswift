@@ -26,13 +26,13 @@ import {
   useResponsiveWidth,
 } from '../../utils/responsive-style'
 import { cx } from '@emotion/css'
-import { LinkValue } from '@makeswift/prop-controllers'
+import { LinkPropControllerValue } from '@makeswift/prop-controllers'
 
 type BaseProps<T extends ElementType> = {
   as?: T
   id?: ElementIDValue
   children?: ReactNode
-  link?: LinkValue
+  link?: LinkPropControllerValue
   variant?: ResponsiveSelectValue<ButtonVariant>
   shape?: ResponsiveIconRadioGroupValue<'pill' | 'rounded' | 'square'>
   size?: ResponsiveIconRadioGroupValue<'small' | 'medium' | 'large'>

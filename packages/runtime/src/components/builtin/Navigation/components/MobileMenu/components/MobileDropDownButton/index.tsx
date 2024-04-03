@@ -4,7 +4,7 @@ import {
   ResponsiveColorValue,
   TextStyleValue,
 } from '../../../../../../../prop-controllers/descriptors'
-import { LinkValue } from '@makeswift/prop-controllers'
+import { Link as LinkValue } from '@makeswift/prop-controllers'
 
 import { colorToString } from '../../../../../../utils/colorToString'
 import { useResponsiveColor } from '../../../../../../hooks'

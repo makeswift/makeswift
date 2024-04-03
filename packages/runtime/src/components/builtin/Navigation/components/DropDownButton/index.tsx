@@ -14,7 +14,7 @@ import { useIsomorphicLayoutEffect } from '../../../../hooks/useIsomorphicLayout
 import { cx, keyframes } from '@emotion/css'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 import { useResponsiveStyle, useResponsiveTextStyle } from '../../../../utils/responsive-style'
-import { LinkValue } from '@makeswift/prop-controllers'
+import { Link as LinkValue } from '@makeswift/prop-controllers'
 
 const DROP_DOWN_MENU_WIDTH = 200
 

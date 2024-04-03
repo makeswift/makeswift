@@ -29,6 +29,7 @@ import {
   useBoxShadow,
   useResponsiveColor,
   useBorder as useBorderData,
+  usePropControllerLinkData,
 } from '../../components/hooks'
 import type { ColorValue } from '../../components/utils/types'
 import {
@@ -73,6 +74,7 @@ import { IconRadioGroupControlType } from '../../controls/icon-radio-group'
 import { useStore } from './hooks/use-store'
 import { useDocumentKey } from './hooks/use-document-key'
 import { useSelector } from './hooks/use-selector'
+import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -389,6 +391,17 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
               <RenderHook
                 key={descriptor.type}
                 hook={useResponsiveColor}
+                parameters={[props[propName]]}
+              >
+                {value => renderFn({ ...propsValue, [propName]: value })}
+              </RenderHook>
+            )
+
+          case PropControllerTypes.Link:
+            return (
+              <RenderHook
+                key={descriptor.type}
+                hook={usePropControllerLinkData}
                 parameters={[props[propName]]}
               >
                 {value => renderFn({ ...propsValue, [propName]: value })}

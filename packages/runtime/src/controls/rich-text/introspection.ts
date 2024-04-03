@@ -2,7 +2,7 @@ import { RichTextControlData } from './rich-text'
 import { InlineJSON, MarkJSON, NodeJSON } from './dto-types'
 import { Typography } from '../../api'
 import { isNonNullable } from '../../utils/isNonNullable'
-import { LinkValue } from '@makeswift/prop-controllers'
+import { LinkPropControllerData, getLinkPropControllerPageIds } from '@makeswift/prop-controllers'
 
 export function getRichTextSwatchIds(value: RichTextControlData) {
   if (value == null || value.document == null) return []
@@ -84,23 +84,15 @@ export function getRichTextPageIds(value: RichTextControlData) {
     switch (inline.type) {
       case 'link': {
         const nodePageIds = inline.nodes?.flatMap(getNodePageIds) ?? []
-        const dataPageIds = inline.data ? getLinkDataPageIds(inline.data as LinkValue) : []
+        const dataPageIds = inline.data
+          ? getLinkPropControllerPageIds(inline.data as LinkPropControllerData)
+          : []
 
         return [...nodePageIds, ...dataPageIds]
       }
 
       default:
         return inline.nodes?.flatMap(getNodePageIds) ?? []
-    }
-  }
-
-  function getLinkDataPageIds(link: LinkValue): string[] {
-    switch (link.type) {
-      case 'OPEN_PAGE':
-        return link.payload.pageId == null ? [] : [link.payload.pageId]
-
-      default:
-        return []
     }
   }
 }
