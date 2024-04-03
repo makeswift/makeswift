@@ -1,3 +1,4 @@
+import { Link } from '@makeswift/prop-controllers'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride } from '../../../state/modules/breakpoints'
@@ -14,7 +15,7 @@ export function registerComponent(runtime: ReactRuntime) {
       props: {
         id: Props.ElementID(),
         children: Props.TextInput({ placeholder: 'Button text' }),
-        link: Props.Link({
+        link: Link({
           defaultValue: {
             type: 'OPEN_PAGE',
             payload: {

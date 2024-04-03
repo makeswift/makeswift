@@ -24,8 +24,6 @@ import {
   GapYValue as GapYControlValue,
   ImageDescriptor as ImageControl,
   ImageValue as ImageControlValue,
-  LinkDescriptor as LinkControl,
-  LinkValue as LinkControlValue,
   ListDescriptor as ListControl,
   ListOptions as ListControlConfig,
   ListValue as ListControlValue,
@@ -84,6 +82,11 @@ import {
   SerializedFunction,
   serializeFunction,
 } from './function-serialization'
+import {
+  Types as PropControllerTypes,
+  LinkDescriptor as LinkControl,
+  LinkValue as LinkControlValue,
+} from '@makeswift/prop-controllers'
 
 type SerializedShapeControlConfig<T extends Record<string, SerializedPanelControl>> = {
   type: T
@@ -614,7 +617,7 @@ type LinkControlConfig = {
 }
 
 type SerializedLinkControl<_T = LinkControlValue> = {
-  type: typeof Controls.Types.Link
+  type: typeof PropControllerTypes.Link
   options: SerializedConfig<LinkControlConfig>
 }
 
@@ -629,7 +632,7 @@ function serializeLinkControl(control: LinkControl): [SerializedLinkControl, Tra
 }
 
 type DeserializedLinkControl<_T = LinkControlValue> = {
-  type: typeof Controls.Types.Link
+  type: typeof PropControllerTypes.Link
   options: DeserializedConfig<LinkControlConfig>
 }
 
@@ -1041,7 +1044,7 @@ export function serializeControl<T extends Data>(
     case Controls.Types.Date:
       return serializeDateControl(control)
 
-    case Controls.Types.Link:
+    case PropControllerTypes.Link:
       return serializeLinkControl(control)
 
     case Controls.Types.TextInput:
@@ -1119,7 +1122,7 @@ export function deserializeControl<T extends Data>(
     case Controls.Types.Date:
       return deserializeDateControl(serializedControl)
 
-    case Controls.Types.Link:
+    case PropControllerTypes.Link:
       return deserializeLinkControl(serializedControl)
 
     case Controls.Types.TextInput:

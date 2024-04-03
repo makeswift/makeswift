@@ -5,6 +5,7 @@ import { MakeswiftComponentType } from '../constants'
 import { Alignments, Contrast, Contrasts, Shapes, Sizes } from './context/FormContext'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
+import { Link } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -17,7 +18,7 @@ export function registerComponent(runtime: ReactRuntime) {
         id: Props.ElementID(),
         tableId: Props.Table(),
         fields: Props.TableFormFields(),
-        submitLink: Props.Link(props => ({
+        submitLink: Link(props => ({
           label: 'Redirect to',
           // TODO: This option is hardcoded. We should import it from LinkPanelOptions
           options: [

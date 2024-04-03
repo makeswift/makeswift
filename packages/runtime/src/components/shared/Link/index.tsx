@@ -2,7 +2,7 @@ import { ComponentPropsWithoutRef, forwardRef, MouseEvent } from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import NextLink from 'next/link'
 
-import { LinkValue as LinkPropControllerValue } from '../../../prop-controllers/descriptors'
+import { LinkValue as LinkPropControllerValue } from '@makeswift/prop-controllers'
 import { useElementId } from '../../../runtimes/react'
 import { usePagePathnameSlice } from '../../../runtimes/react/hooks/makeswift-api'
 

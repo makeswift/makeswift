@@ -5,6 +5,7 @@ import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/module
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
+import { Link } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -47,7 +48,7 @@ export function registerComponent(runtime: ReactRuntime) {
           label: 'Logo alt text',
           hidden: props.showLogo === false,
         })),
-        logoLink: Props.Link(props => ({
+        logoLink: Link(props => ({
           label: 'Logo on click',
           hidden: props.showLogo === false,
         })),

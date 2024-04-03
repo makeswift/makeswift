@@ -7,11 +7,11 @@ import type NextLegacyImageType from 'next/legacy/image'
 import {
   ElementIDValue,
   ImageValue,
-  LinkValue,
   ResponsiveOpacityValue,
   TextInputValue,
   WidthValue,
 } from '../../../prop-controllers/descriptors'
+import { LinkValue } from '@makeswift/prop-controllers'
 import { Breakpoints, findBreakpointOverride } from '../../../state/modules/breakpoints'
 import { placeholders } from '../../utils/placeholders'
 import { Link } from '../../shared/Link'

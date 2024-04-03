@@ -117,6 +117,7 @@
     "@emotion/sheet": "^1.0.3",
     "@emotion/utils": "^1.0.0",
     "@makeswift/next-plugin": "0.3.0",
+    "@makeswift/prop-controllers": "^0.0.1",
     "@popmotion/popcorn": "^0.4.4",
     "@types/is-hotkey": "^0.1.7",
     "@types/use-sync-external-store": "^0.0.3",
