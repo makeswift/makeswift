@@ -14,7 +14,7 @@ import { useIsomorphicLayoutEffect } from '../../../../hooks/useIsomorphicLayout
 import { cx, keyframes } from '@emotion/css'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 import { useResponsiveStyle, useResponsiveTextStyle } from '../../../../utils/responsive-style'
-import { Link as LinkValue } from '@makeswift/prop-controllers'
+import { LinkData } from '@makeswift/prop-controllers'
 
 const DROP_DOWN_MENU_WIDTH = 200
 
@@ -156,7 +156,7 @@ type Props = Omit<ComponentPropsWithoutRef<typeof Button>, 'textColor' | 'color'
   links?: Array<{
     id: string
     payload: ComponentPropsWithoutRef<typeof DropDownItem> & {
-      link?: LinkValue
+      link?: LinkData
       label: string
     }
   }>
