@@ -13,6 +13,7 @@ import { copy as borderCopy } from './copy/border'
 import { copy as richTextCopy } from './copy/rich-text'
 import { copy as elementIdCopy } from './copy/element-id'
 import { CopyContext } from '../state/react-page'
+import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
 
 // @note: note typing value, because would then have to type narrow `Data` per case
 export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
@@ -23,7 +24,7 @@ export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
       return gridCopy(value, context)
     case 'NavigationLinks':
       return navigationLinksCopy(value, context)
-    case 'Link':
+    case PropControllerTypes.Link:
       return copyLinkPropControllerData(value, context)
     case 'Shadows':
       return shadowsCopy(value, context)
