@@ -1,5 +1,18 @@
 # @makeswift/runtime
 
+## 0.16.0-canary.0
+
+### Minor Changes
+
+- a909fa1: Use the `@makeswift/prop-controllers` package, and migrate `LinkPropController`.
+
+### Patch Changes
+
+- 2602000: Handle the new data type for `LinkPropController`.
+- Updated dependencies [2602000]
+- Updated dependencies [a909fa1]
+  - @makeswift/prop-controllers@0.0.2-canary.0
+
 ## 0.15.0
 
 ### Minor Changes

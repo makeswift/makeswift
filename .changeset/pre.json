@@ -1,0 +1,19 @@
+{
+  "mode": "pre",
+  "tag": "canary",
+  "initialVersions": {
+    "nextjs-app-router": "0.1.0",
+    "nextjs-pages-router": "0.1.0",
+    "makeswift": "0.2.4",
+    "@makeswift/next-plugin": "0.3.0",
+    "@makeswift/prop-controllers": "0.0.1",
+    "@makeswift/runtime": "0.15.0",
+    "tsconfig": "0.0.0"
+  },
+  "changesets": [
+    "flat-cows-tan",
+    "pretty-lobsters-admire",
+    "strange-countries-fail",
+    "wet-turkeys-attend"
+  ]
+}
