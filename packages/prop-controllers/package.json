@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'tsup src/index.ts --watch'",
     "build": "tsc && tsup src/index.ts",
+    "prepare": "pnpm build",
     "test": "jest"
   },
   "dependencies": {
