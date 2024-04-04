@@ -240,7 +240,10 @@ importers:
         version: 29.0.1(@types/node@20.11.11)
       tsup:
         specifier: ^8.0.2
-        version: 8.0.2(@swc/core@1.4.11)
+        version: 8.0.2(@swc/core@1.4.11)(typescript@5.1.6)
+      typescript:
+        specifier: ^5.1.6
+        version: 5.1.6
 
   packages/runtime:
     dependencies:
@@ -11200,7 +11203,7 @@ packages:
       - ts-node
     dev: true
 
-  /tsup@8.0.2(@swc/core@1.4.11):
+  /tsup@8.0.2(@swc/core@1.4.11)(typescript@5.1.6):
     resolution: {integrity: sha512-NY8xtQXdH7hDUAZwcQdY/Vzlw9johQsaqf7iwZ6g1DOUlFYQ5/AtVAjTvihhEyeRlGo4dLRVHtrRaL35M1daqQ==}
     engines: {node: '>=18'}
     hasBin: true
@@ -11234,6 +11237,7 @@ packages:
       source-map: 0.8.0-beta.0
       sucrase: 3.35.0
       tree-kill: 1.2.2
+      typescript: 5.1.6
     transitivePeerDependencies:
       - supports-color
       - ts-node
