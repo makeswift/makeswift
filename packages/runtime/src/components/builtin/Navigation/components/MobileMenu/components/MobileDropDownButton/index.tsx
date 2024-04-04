@@ -4,7 +4,7 @@ import {
   ResponsiveColorValue,
   TextStyleValue,
 } from '../../../../../../../prop-controllers/descriptors'
-import { Link as LinkValue } from '@makeswift/prop-controllers'
+import { LinkData } from '@makeswift/prop-controllers'
 
 import { colorToString } from '../../../../../../utils/colorToString'
 import { useResponsiveColor } from '../../../../../../hooks'
@@ -93,7 +93,7 @@ type Props = Omit<ComponentPropsWithoutRef<typeof Button>, 'textColor' | 'color'
   links?: Array<{
     id: string
     payload: ComponentPropsWithoutRef<typeof DropDownItem> & {
-      link?: LinkValue
+      link?: LinkData
       label: string
     }
   }>

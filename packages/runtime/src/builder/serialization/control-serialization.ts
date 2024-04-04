@@ -83,7 +83,7 @@ import {
   serializeFunction,
 } from './function-serialization'
 import {
-  Link,
+  LinkData,
   Types as PropControllerTypes,
   LinkDescriptor as LinkControl,
   LinkPropControllerData,
@@ -613,7 +613,7 @@ type LinkControlConfig = {
   preset?: LinkPropControllerData
   label?: string
   defaultValue?: LinkPropControllerData
-  options?: { value: Link['type']; label: string }[]
+  options?: { value: LinkData['type']; label: string }[]
   hidden?: boolean
 }
 

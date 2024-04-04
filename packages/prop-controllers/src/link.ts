@@ -31,12 +31,14 @@ type ScrollToElementLink = {
   }
 }
 
-export type Link =
+type Link =
   | OpenPageLink
   | OpenURLLink
   | SendEmailLink
   | CallPhoneLink
   | ScrollToElementLink
+
+export type LinkData = Link
 
 export type LinkPropControllerDataV0 = Link
 

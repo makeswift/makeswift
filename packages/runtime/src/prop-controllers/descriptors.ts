@@ -55,7 +55,7 @@ import {
   getTypographyIds,
 } from './introspection'
 import {
-  Link,
+  LinkData,
   LinkDescriptor,
   LinkPropControllerValue,
   Types as PropControllerTypes,
@@ -499,7 +499,7 @@ export function Image(options: ImageOptions = {}): ImageDescriptor {
 export type ImagesValueV0Item = {
   key: string
   props: {
-    link?: Link
+    link?: LinkData
     file?: ImageValueV0
     altText?: string
   }
@@ -509,7 +509,7 @@ export type ImagesValueV1Item = {
   key: string
   version: 1
   props: {
-    link?: Link
+    link?: LinkData
     file?: ImageValueV1
     altText?: string
   }
@@ -654,7 +654,7 @@ export type NavigationButton = {
   type: 'button'
   payload: {
     label: string
-    link?: Link
+    link?: LinkData
     variant?: ResponsiveValue<ButtonVariant>
     shape?: ResponsiveValue<ButtonShape>
     size?: ResponsiveValue<ButtonSize>
@@ -670,7 +670,7 @@ type NavigationDropdownLink = {
   id: string
   payload: {
     label: string
-    link?: Link
+    link?: LinkData
     color?: ResponsiveValue<Color>
     textStyle?: ResponsiveValue<TextStyle>
   }
