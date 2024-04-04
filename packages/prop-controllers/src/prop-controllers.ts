@@ -33,13 +33,17 @@ type Data =
   | Data[]
   | { [key: string]: Data }
 
-type ElementData = { type: string; key: string; props: Record<string, Data> }
+export type ElementData = {
+  type: string
+  key: string
+  props: Record<string, Data>
+}
 
 type ElementReference = { type: 'reference'; key: string; value: string }
 
 type Element = ElementData | ElementReference
 
-type ReplacementContext = {
+export type ReplacementContext = {
   elementHtmlIds: Set<string>
   elementKeys: Map<string, string>
   swatchIds: Map<string, string>

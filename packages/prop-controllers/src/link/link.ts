@@ -4,7 +4,7 @@ import {
   CopyContext,
   Options,
   Types,
-} from './prop-controllers'
+} from '../prop-controllers'
 
 type OpenPageLink = {
   type: 'OPEN_PAGE'
