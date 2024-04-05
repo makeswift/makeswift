@@ -4,7 +4,7 @@ import {
   getLinkPropControllerValue,
 } from '@makeswift/prop-controllers'
 
-export function usePropControllerLinkData(
+export function useLinkPropControllerData(
   data: LinkPropControllerData | undefined | null,
 ): LinkPropControllerValue | undefined | null {
   if (data == null) return data

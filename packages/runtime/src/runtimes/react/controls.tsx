@@ -23,7 +23,8 @@ import {
 import {
   useBoxShadow,
   useBorder as useBorderData,
-  usePropControllerLinkData,
+  useLinkPropControllerData,
+  useCheckboxPropControllerData,
 } from '../../components/hooks'
 import type { ColorValue } from '../../components/utils/types'
 import {
@@ -416,7 +417,18 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
             return (
               <RenderHook
                 key={descriptor.type}
-                hook={usePropControllerLinkData}
+                hook={useLinkPropControllerData}
+                parameters={[props[propName]]}
+              >
+                {value => renderFn({ ...propsValue, [propName]: value })}
+              </RenderHook>
+            )
+
+          case PropControllerTypes.Checkbox:
+            return (
+              <RenderHook
+                key={descriptor.type}
+                hook={useCheckboxPropControllerData}
                 parameters={[props[propName]]}
               >
                 {value => renderFn({ ...propsValue, [propName]: value })}

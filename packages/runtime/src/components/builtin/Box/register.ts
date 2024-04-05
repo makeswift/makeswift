@@ -1,4 +1,4 @@
-import { Shadows } from '@makeswift/prop-controllers'
+import { Shadows, Checkbox } from '@makeswift/prop-controllers'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
@@ -159,7 +159,7 @@ export function registerComponent(runtime: ReactRuntime) {
           defaultValue: DEFAULT_ITEM_STAGGER_DURATION,
           hidden: isHiddenBasedOnItemAnimation(props, device),
         })),
-        hidePlaceholder: Props.Checkbox(props => ({
+        hidePlaceholder: Checkbox(props => ({
           label: 'Hide placeholder',
           hidden: props.children != null,
         })),
