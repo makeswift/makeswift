@@ -54,6 +54,7 @@ import {
   getTypographyIds,
 } from './introspection'
 import {
+  CheckboxDescriptor,
   LinkData,
   LinkDescriptor,
   LinkPropControllerValue,
@@ -70,6 +71,7 @@ import {
   NumberDescriptor,
   ResolveNumberPropControllerValue,
   ResponsiveColorDescriptor,
+  ResolveCheckboxPropControllerValue,
 } from '@makeswift/prop-controllers'
 
 export type { Data }
@@ -125,7 +127,6 @@ export const Types = {
   Backgrounds: 'Backgrounds',
   Border: 'Border',
   BorderRadius: 'BorderRadius',
-  Checkbox: 'Checkbox',
   Date: 'Date',
   ElementID: 'ElementID',
   Font: 'Font',
@@ -314,27 +315,6 @@ export function BorderRadius<T extends BorderRadiusOptions>(
 }
 
 BorderRadius.Format = BorderRadiusPropControllerFormat
-
-export type CheckboxValue = boolean
-
-export type CheckboxOptions = Options<{
-  preset?: CheckboxValue
-  label: string
-  hidden?: boolean
-}>
-
-export type CheckboxDescriptor<_T = CheckboxValue> = {
-  type: typeof Types.Checkbox
-  options: CheckboxOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Checkbox(options: CheckboxOptions): CheckboxDescriptor {
-  return { type: Types.Checkbox, options }
-}
 
 export type DateValue = string
 
@@ -1256,7 +1236,7 @@ export type PanelDescriptorType =
   | typeof Types.GapY
   | typeof Types.GapX
   | typeof Types.BorderRadius
-  | typeof Types.Checkbox
+  | typeof PropControllerTypes.Checkbox
   | typeof Types.TextInput
   | typeof PropControllerTypes.Link
   | typeof Types.List
@@ -1327,6 +1307,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
     // the resolved type is tightly coupled with the runtime (i.e., it's the result of an API call).
     // This means that we probably want to rethink how types are resolved and where that lives.
     ResponsiveColor | null | undefined
+  : T['type'] extends typeof PropControllerTypes.Checkbox
+  ? ResolveCheckboxPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Checkbox }>>
   : T['type'] extends typeof PropControllerTypes.Link
   ? LinkPropControllerValue
   : T['type'] extends typeof Types.Width

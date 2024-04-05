@@ -7,6 +7,7 @@ import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
 import {
   ControlDataTypeKey,
+  Checkbox,
   Link,
   ResponsiveColor,
   ResponsiveLength,
@@ -32,7 +33,7 @@ export function registerComponent(runtime: ReactRuntime) {
             hidden: links == null || links.length === 0,
           }
         }),
-        showLogo: Props.Checkbox({ preset: true, label: 'Show logo' }),
+        showLogo: Checkbox({ preset: true, label: 'Show logo' }),
         logoFile: Props.Image(props => ({
           label: 'Logo',
           hidden: props.showLogo === false,

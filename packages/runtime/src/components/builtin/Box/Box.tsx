@@ -21,7 +21,6 @@ import {
   GridValue,
   GapYValue,
   GapXValue,
-  CheckboxValue,
   BackgroundsValue,
 } from '../../../prop-controllers/descriptors'
 import { BoxModelHandle, parse, createBox } from '../../../box-model'
@@ -45,7 +44,7 @@ type Props = {
   boxShadow?: string
   rowGap?: GapYValue
   columnGap?: GapXValue
-  hidePlaceholder?: CheckboxValue
+  hidePlaceholder?: boolean
   children?: GridValue
 } & BoxAnimationProps
 

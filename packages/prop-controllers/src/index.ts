@@ -1,4 +1,15 @@
 export type { ColorData, LengthData } from './data'
+export {
+  Checkbox,
+  checkboxPropControllerDataSchema,
+  getCheckboxPropControllerDataBoolean,
+} from './checkbox'
+export type {
+  CheckboxDescriptor,
+  CheckboxOptions,
+  CheckboxPropControllerData,
+  ResolveCheckboxPropControllerValue,
+} from './checkbox'
 export * from './link'
 export {
   Number,

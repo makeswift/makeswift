@@ -15,8 +15,6 @@ import {
   StyleV2ControlType,
 } from '../../controls'
 import {
-  CheckboxDescriptor as CheckboxControl,
-  CheckboxValue as CheckboxControlValue,
   Data,
   Device,
   DateDescriptor as DateControl,
@@ -89,6 +87,8 @@ import {
   NumberDescriptor,
   ResponsiveColorPropControllerData,
   ResponsiveColorDescriptor,
+  CheckboxPropControllerData,
+  CheckboxDescriptor as CheckboxControl,
 } from '@makeswift/prop-controllers'
 
 type SerializedShapeControlConfig<T extends Record<string, SerializedPanelControl>> = {
@@ -422,13 +422,13 @@ function deserializeResponsiveNumberControl(
 }
 
 type CheckboxControlConfig = {
-  preset?: CheckboxControlValue
+  preset?: CheckboxPropControllerData
   label: string
   hidden?: boolean
 }
 
-type SerializedCheckboxControl<_T = CheckboxControlValue> = {
-  type: typeof Controls.Types.Checkbox
+type SerializedCheckboxControl<_T = CheckboxPropControllerData> = {
+  type: typeof PropControllerTypes.Checkbox
   options: SerializedConfig<CheckboxControlConfig>
 }
 
@@ -444,8 +444,8 @@ function serializeCheckboxControl(
   return [{ ...control, options: serializedOptions }, [serializedOptions]]
 }
 
-type DeserializedCheckboxControl<_T = CheckboxControlValue> = {
-  type: typeof Controls.Types.Checkbox
+type DeserializedCheckboxControl<_T = CheckboxPropControllerData> = {
+  type: typeof PropControllerTypes.Checkbox
   options: DeserializedConfig<CheckboxControlConfig>
 }
 
@@ -992,7 +992,7 @@ export function serializeControl<T extends Data>(
   control: Control<T>,
 ): [SerializedControl<T>, Transferable[]] {
   switch (control.type) {
-    case Controls.Types.Checkbox:
+    case PropControllerTypes.Checkbox:
       return serializeCheckboxControl(control)
 
     case Controls.Types.List:
@@ -1070,7 +1070,7 @@ export function deserializeControl<T extends Data>(
   serializedControl: SerializedControl<T>,
 ): DeserializedControl<T> {
   switch (serializedControl.type) {
-    case Controls.Types.Checkbox:
+    case PropControllerTypes.Checkbox:
       return deserializeCheckboxControl(serializedControl)
 
     case Controls.Types.List:

@@ -11,7 +11,6 @@ import LinksPlaceholder from './components/LinksPlaceholder'
 import DropDownButton from './components/DropDownButton'
 import MobileMenu from './components/MobileMenu'
 import {
-  CheckboxValue,
   ElementIDValue,
   GapXValue,
   ImageValue,
@@ -40,7 +39,7 @@ type Props = {
   id?: ElementIDValue
   links?: NavigationLinksValue
   linkTextStyle?: TextStyleValue
-  showLogo?: CheckboxValue
+  showLogo?: boolean
   logoFile?: ImageValue
   logoWidth?: ResponsiveLengthData
   logoAltText?: TextInputValue

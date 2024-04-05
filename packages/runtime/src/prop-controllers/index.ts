@@ -1,7 +1,4 @@
 export type {
-  CheckboxDescriptor,
-  CheckboxOptions,
-  CheckboxValue,
   Data,
   Descriptor as PropControllerDescriptor,
   DescriptorValueType as PropControllerDescriptorValueType,
@@ -54,8 +51,6 @@ export type {
   SocialLinksValue,
 } from './descriptors'
 export type {
-  LinkDescriptor,
-  LinkPropControllerValue as LinkValue,
   ResponsiveValueType,
   Device,
   DeviceOverride,

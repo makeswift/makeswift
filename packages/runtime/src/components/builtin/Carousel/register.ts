@@ -8,6 +8,7 @@ import { Number, ResponsiveColor } from '@makeswift/prop-controllers'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
+import { Checkbox } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -69,7 +70,7 @@ export function registerComponent(runtime: ReactRuntime) {
           step: 5,
           defaultValue: { value: 0, unit: 'px' },
         }),
-        autoplay: Props.Checkbox({ label: 'Autoplay' }),
+        autoplay: Checkbox({ label: 'Autoplay' }),
         delay: Number(props => ({
           label: 'Delay',
           preset: 5,
@@ -78,7 +79,7 @@ export function registerComponent(runtime: ReactRuntime) {
           suffix: 'seconds',
           hidden: !props.autoplay,
         })),
-        showArrows: Props.Checkbox({ preset: true, label: 'Show arrows' }),
+        showArrows: Checkbox({ preset: true, label: 'Show arrows' }),
         arrowPosition: Props.ResponsiveIconRadioGroup(props => ({
           label: 'Arrow position',
           options: [
@@ -99,7 +100,7 @@ export function registerComponent(runtime: ReactRuntime) {
           placeholder: 'white',
           hidden: props.showArrows === false,
         })),
-        showDots: Props.Checkbox({ preset: true, label: 'Show dots' }),
+        showDots: Checkbox({ preset: true, label: 'Show dots' }),
         dotColor: ResponsiveColor(props => ({
           label: 'Dot color',
           placeholder: 'black',

@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 export const Types = {
+  Checkbox: 'Checkbox',
   Link: 'Link',
   Number: 'Number',
   Shadows: 'Shadows',
