@@ -6,3 +6,10 @@ export const colorDataSchema = z.object({
 })
 
 export type ColorData = z.infer<typeof colorDataSchema>
+
+export const lengthDataSchema = z.object({
+  value: z.number(),
+  unit: z.union([z.literal('px'), z.literal('%')]),
+})
+
+export type LengthData = z.infer<typeof lengthDataSchema>

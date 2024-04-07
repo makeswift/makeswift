@@ -1,20 +1,17 @@
 import { cx } from '@emotion/css'
 import { ComponentPropsWithoutRef } from 'react'
-import {
-  ResponsiveValue,
-  Length as LengthValue,
-  ResponsiveNumberValue,
-} from '../../prop-controllers'
+import { ResponsiveValue, ResponsiveNumberValue } from '../../prop-controllers'
 import { useStyle } from '../../runtimes/react/use-style'
 import { useItemAnimation } from '../builtin/Box/animations'
 import { useResponsiveGridItem } from '../utils/responsive-style'
+import { LengthData } from '@makeswift/prop-controllers'
 
 type BaseProps = {
   className?: string
   grid: ResponsiveValue<{ spans: Array<Array<number>>; count: number }>
   index: number
-  columnGap?: ResponsiveValue<LengthValue>
-  rowGap?: ResponsiveValue<LengthValue>
+  columnGap?: ResponsiveValue<LengthData>
+  rowGap?: ResponsiveValue<LengthData>
   itemAnimateDuration?: ResponsiveNumberValue
   itemAnimateDelay?: ResponsiveNumberValue
   itemStaggerDuration?: ResponsiveNumberValue

@@ -1,12 +1,11 @@
-import { ResponsiveValue } from '@makeswift/prop-controllers'
-import { Length } from '../../../../../prop-controllers/descriptors'
+import { LengthData, ResponsiveValue } from '@makeswift/prop-controllers'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 
 import GutterContainer from '../../../../shared/GutterContainer'
 
 const links = [{ id: '1' }, { id: '2' }, { id: '3' }]
 
-type Props = { gutter?: ResponsiveValue<Length> }
+type Props = { gutter?: ResponsiveValue<LengthData> }
 
 export default function SocialLinksPlaceholder({ gutter }: Props): JSX.Element {
   return (

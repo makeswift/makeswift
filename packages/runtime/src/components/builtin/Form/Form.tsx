@@ -35,7 +35,6 @@ import {
   ElementIDValue,
   GapYValue,
   ResponsiveIconRadioGroupValue,
-  ResponsiveLengthValue,
   ResponsiveSelectValue,
   TableFormFieldsDescriptor,
   TableFormFieldsValue,
@@ -54,7 +53,11 @@ import { cx } from '@emotion/css'
 import { useResponsiveGridItem, useResponsiveStyle } from '../../utils/responsive-style'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { useTable } from '../../../runtimes/react/hooks/makeswift-api'
-import { LinkPropControllerValue, ResponsiveValue } from '@makeswift/prop-controllers'
+import {
+  LinkPropControllerValue,
+  ResponsiveLengthData,
+  ResponsiveValue,
+} from '@makeswift/prop-controllers'
 
 const LOCAL_STORAGE_NAMESPACE = '@@makeswift/components/form'
 
@@ -92,7 +95,7 @@ type Props = {
   submitVariant?: ResponsiveSelectValue<
     'flat' | 'outline' | 'shadow' | 'clear' | 'blocky' | 'bubbly' | 'skewed'
   >
-  submitWidth?: ResponsiveLengthValue
+  submitWidth?: ResponsiveLengthData
   submitAlignment?: ResponsiveIconRadioGroupValue<Alignment>
   width?: string
   margin?: string

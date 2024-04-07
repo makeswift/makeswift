@@ -1,6 +1,20 @@
-export type { ColorData } from './data'
+export type { ColorData, LengthData } from './data'
 export * from './link'
 export * from './prop-controllers'
+export {
+  ResponsiveLength,
+  ResponsiveLengthPropControllerDataV1Type,
+  createResponsiveLengthPropControllerDataFromResponsiveLengthData,
+  getResponsiveLengthPropControllerDataResponsiveLengthData,
+  responsiveLengthPropControllerDataSchema,
+} from './responsive-length'
+export type {
+  ResolveResponsiveLengthPropControllerValue,
+  ResponsiveLengthData,
+  ResponsiveLengthDescriptor,
+  ResponsiveLengthOptions,
+  ResponsiveLengthPropControllerData,
+} from './responsive-length'
 export {
   Shadows,
   copyShadowsPropControllerData,

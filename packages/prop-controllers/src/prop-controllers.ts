@@ -3,6 +3,7 @@ import { z } from 'zod'
 export const Types = {
   Link: 'Link',
   Shadows: 'Shadows',
+  ResponsiveLength: 'ResponsiveLength',
 } as const
 
 export const ControlDataTypeKey = '@@makeswift/type'

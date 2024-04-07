@@ -1,13 +1,12 @@
 import { cx } from '@emotion/css'
 import { ComponentPropsWithoutRef } from 'react'
-import { Length } from '../../../prop-controllers/descriptors'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { useResponsiveStyle } from '../../utils/responsive-style'
-import { ResponsiveValue } from '@makeswift/prop-controllers'
+import { LengthData, ResponsiveValue } from '@makeswift/prop-controllers'
 
 type BaseProps = {
   className?: string
-  gutter?: ResponsiveValue<Length>
+  gutter?: ResponsiveValue<LengthData>
   first: boolean
   last: boolean
 }

@@ -2,11 +2,11 @@ import { WidthProperty } from 'csstype'
 import { CSSObject } from '@emotion/css'
 import type {
   ResponsiveValueType as ExtractResponsiveValue,
+  LengthData,
   ResponsiveValue,
 } from '@makeswift/prop-controllers'
 
 import {
-  Length as LengthValue,
   WidthValue,
   PaddingValue,
   MarginValue,
@@ -68,7 +68,7 @@ export function useResponsiveStyle<
 export function responsiveWidth(
   breakpoints: Breakpoints,
   widthData: WidthValue | undefined,
-  defaultValue: LengthValue | WidthProperty<string | number> = '100%',
+  defaultValue: LengthData | WidthProperty<string | number> = '100%',
 ): CSSObject {
   return {
     maxWidth: '100%',
@@ -185,8 +185,8 @@ export function responsiveGridItem(
   props: {
     grid: ResponsiveValue<{ spans: number[][]; count: number }>
     index: number
-    columnGap?: ResponsiveValue<LengthValue>
-    rowGap?: ResponsiveValue<LengthValue>
+    columnGap?: ResponsiveValue<LengthData>
+    rowGap?: ResponsiveValue<LengthData>
   },
 ): CSSObject {
   return {
