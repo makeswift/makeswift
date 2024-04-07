@@ -225,6 +225,9 @@ importers:
       ts-pattern:
         specifier: ^5.0.8
         version: 5.0.8
+      zod:
+        specifier: ^3.21.4
+        version: 3.21.4
     devDependencies:
       '@jest/globals':
         specifier: ^29.7.0

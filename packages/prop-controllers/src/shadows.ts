@@ -1,38 +1,60 @@
 import { match } from 'ts-pattern'
-import { ColorData } from './data'
+import { colorDataSchema } from './data'
 import {
   ControlDataTypeKey,
   CopyContext,
   ResolveOptions,
-  ResponsiveValue,
   Types,
+  createResponsiveValueSchema,
 } from './prop-controllers'
+import { z } from 'zod'
 
-type ShadowData = {
-  color?: ColorData | null
-  blurRadius?: number
-  spreadRadius?: number
-  offsetX?: number
-  offsetY?: number
-  inset?: boolean
-}
+const shadowDataSchema = z.object({
+  color: colorDataSchema.nullable().optional(),
+  blurRadius: z.number().optional(),
+  spreadRadius: z.number().optional(),
+  offsetX: z.number().optional(),
+  offsetY: z.number().optional(),
+  inset: z.boolean().optional(),
+})
 
-type ShadowsData = { id: string; payload: ShadowData }[]
+export type ShadowData = z.infer<typeof shadowDataSchema>
 
-type ResponsiveShadowsData = ResponsiveValue<ShadowsData>
+const shadowsDataSchema = z.array(
+  z.object({
+    id: z.string(),
+    payload: shadowDataSchema,
+  }),
+)
 
-type ShadowsPropControllerDataV0 = ResponsiveShadowsData
+export type ShadowsData = z.infer<typeof shadowsDataSchema>
+
+const responsiveShadowsDataSchema =
+  createResponsiveValueSchema(shadowsDataSchema)
+
+type ResponsiveShadowsData = z.infer<typeof responsiveShadowsDataSchema>
+
+const shadowsPropControllerDataV0Schema = responsiveShadowsDataSchema
+
+type ShadowsPropControllerDataV0 = z.infer<
+  typeof shadowsPropControllerDataV0Schema
+>
 
 const ShadowsPropControllerDataV1Type = 'prop-controllers::shadows::v1'
 
-type ShadowsPropControllerDataV1 = {
-  [ControlDataTypeKey]: typeof ShadowsPropControllerDataV1Type
-  value: ResponsiveShadowsData
-}
+const shadowsPropControllerDataV1Schema = z.object({
+  [ControlDataTypeKey]: z.literal(ShadowsPropControllerDataV1Type),
+  value: responsiveShadowsDataSchema,
+})
 
-export type ShadowsPropControllerData =
-  | ShadowsPropControllerDataV0
-  | ShadowsPropControllerDataV1
+export const shadowsPropControllerDataSchema = z.union([
+  shadowsPropControllerDataV0Schema,
+  shadowsPropControllerDataV1Schema,
+])
+
+export type ShadowsPropControllerData = z.infer<
+  typeof shadowsPropControllerDataSchema
+>
 
 export const ShadowsPropControllerFormat = {
   ClassName: 'makeswift::prop-controllers::shadows::format::class-name',
@@ -103,6 +125,22 @@ export function getShadowsPropControllerDataResponsiveShadowsData(
       (v1) => v1.value,
     )
     .otherwise((v0) => v0)
+}
+
+export function createShadowsPropControllerDataFromResponsiveShadowsData(
+  definition: ShadowsDescriptor,
+  responsiveShadowsData: ResponsiveShadowsData,
+): ShadowsPropControllerData {
+  return match(definition)
+    .with(
+      { version: 1 },
+      () =>
+        ({
+          [ControlDataTypeKey]: ShadowsPropControllerDataV1Type,
+          value: responsiveShadowsData,
+        } as const),
+    )
+    .otherwise(() => responsiveShadowsData)
 }
 
 export function getShadowsPropControllerDataSwatchIds(
