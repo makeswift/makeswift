@@ -3,12 +3,16 @@ export * from './link'
 export * from './prop-controllers'
 export {
   Shadows,
+  copyShadowsPropControllerData,
+  createShadowsPropControllerDataFromResponsiveShadowsData,
   getShadowsPropControllerDataResponsiveShadowsData,
   getShadowsPropControllerDataSwatchIds,
-  copyShadowsPropControllerData,
+  shadowsPropControllerDataSchema,
 } from './shadows'
 export type {
   ResolveShadowsPropControllerValue,
+  ShadowData,
+  ShadowsData,
   ShadowsDescriptor,
   ShadowsPropControllerData,
 } from './shadows'

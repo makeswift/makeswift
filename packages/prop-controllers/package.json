@@ -15,7 +15,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "ts-pattern": "^5.0.8"
+    "ts-pattern": "^5.0.8",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",

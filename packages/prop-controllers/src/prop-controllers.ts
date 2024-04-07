@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 export const Types = {
   Link: 'Link',
   Shadows: 'Shadows',
@@ -15,9 +17,26 @@ export type ResolveOptions<T extends Options<unknown>> = T extends Options<
   ? U
   : never
 
-export type Device = string
+const deviceSchema = z.string()
+
+export type Device = z.infer<typeof deviceSchema>
+
+function createDeviceOverrideSchema<T extends z.ZodTypeAny>(
+  schema: T,
+): z.ZodObject<{ deviceId: typeof deviceSchema; value: T }> {
+  return z.object({
+    deviceId: deviceSchema,
+    value: schema,
+  })
+}
 
 export type DeviceOverride<T> = { deviceId: Device; value: T }
+
+export function createResponsiveValueSchema<T extends z.ZodTypeAny>(
+  schema: T,
+): z.ZodArray<ReturnType<typeof createDeviceOverrideSchema<T>>> {
+  return z.array(createDeviceOverrideSchema(schema))
+}
 
 export type ResponsiveValue<T> = DeviceOverride<T>[]
 
