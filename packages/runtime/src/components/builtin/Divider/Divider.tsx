@@ -1,22 +1,19 @@
 import { forwardRef, Ref } from 'react'
 
-import {
-  ElementIDValue,
-  ResponsiveLengthValue,
-  ResponsiveSelectValue,
-} from '../../../prop-controllers/descriptors'
+import { ElementIDValue, ResponsiveSelectValue } from '../../../prop-controllers/descriptors'
 import { colorToString } from '../../utils/colorToString'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { cx } from '@emotion/css'
 import { useResponsiveStyle } from '../../utils/responsive-style'
+import { ResponsiveLengthData } from '@makeswift/prop-controllers'
 
 type DividerVariant = 'solid' | 'dashed' | 'dotted' | 'blended'
 
 type Props = {
   id?: ElementIDValue
   variant?: ResponsiveSelectValue<DividerVariant>
-  thickness?: ResponsiveLengthValue
+  thickness?: ResponsiveLengthData
   color?: ResponsiveColor | null
   width?: string
   margin?: string

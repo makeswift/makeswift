@@ -77,6 +77,7 @@ import {
   ResponsiveValue,
   ResolveOptions,
 } from '@makeswift/prop-controllers'
+import { useResponsiveLengthPropControllerData } from '../../components/hooks/useResponsiveLengthPropControllerData'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -338,6 +339,17 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
               default:
                 return renderFn({ ...propsValue, [propName]: props[propName] })
             }
+
+          case PropControllerTypes.ResponsiveLength:
+            return (
+              <RenderHook
+                key={descriptor.type}
+                hook={useResponsiveLengthPropControllerData}
+                parameters={[props[propName]]}
+              >
+                {value => renderFn({ ...propsValue, [propName]: value })}
+              </RenderHook>
+            )
 
           case PropControllerTypes.Shadows:
             switch (descriptor.options.format) {

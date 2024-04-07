@@ -59,11 +59,14 @@ import {
   LinkPropControllerValue,
   Types as PropControllerTypes,
   ColorData as Color,
+  LengthData as Length,
   ResponsiveValueType,
   ShadowsDescriptor,
   ResolveShadowsPropControllerValue,
   ResponsiveValue,
   Options,
+  ResponsiveLengthDescriptor,
+  ResolveResponsiveLengthPropControllerValue,
 } from '@makeswift/prop-controllers'
 
 export type { Data }
@@ -106,8 +109,6 @@ type IconName =
 
 export type Gap = { value: number; unit: 'px' }
 
-export type Length = { value: number; unit: 'px' | '%' }
-
 type TextStyle = {
   fontFamily?: string | null | undefined
   letterSpacing: number | null | undefined
@@ -137,7 +138,6 @@ export const Types = {
   Padding: 'Padding',
   ResponsiveColor: 'ResponsiveColor',
   ResponsiveIconRadioGroup: 'ResponsiveIconRadioGroup',
-  ResponsiveLength: 'ResponsiveLength',
   ResponsiveNumber: 'ResponsiveNumber',
   ResponsiveOpacity: 'ResponsiveOpacity',
   ResponsiveSelect: 'ResponsiveSelect',
@@ -812,34 +812,6 @@ export function ResponsiveIconRadioGroup<_T extends string, T extends _T, U exte
   return { type: Types.ResponsiveIconRadioGroup, options }
 }
 
-export type ResponsiveLengthValue = ResponsiveValue<Length>
-
-export type LengthOption =
-  | { value: 'px'; label: 'Pixels'; icon: 'Px16' }
-  | { value: '%'; label: 'Percentage'; icon: 'Percent16' }
-
-export type ResponsiveLengthOptions = Options<{
-  label?: string
-  options?: LengthOption[]
-  defaultValue?: Length
-  hidden?: boolean
-}>
-
-export type ResponsiveLengthDescriptor<_T = ResponsiveLengthValue> = {
-  type: typeof Types.ResponsiveLength
-  options: ResponsiveLengthOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function ResponsiveLength(
-  options: ResponsiveLengthOptions = {},
-): ResponsiveLengthDescriptor {
-  return { type: Types.ResponsiveLength, options }
-}
-
 export type ResponsiveNumberValue = ResponsiveValue<number>
 
 export type ResponsiveNumberOptions = Options<{
@@ -1406,6 +1378,10 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveBorderRadiusControlValue<T>
   : T['type'] extends typeof PropControllerTypes.Shadows
   ? ResolveShadowsPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Shadows }>>
+  : T['type'] extends typeof PropControllerTypes.ResponsiveLength
+  ? ResolveResponsiveLengthPropControllerValue<
+      Extract<T, { type: typeof PropControllerTypes.ResponsiveLength }>
+    >
   : T['type'] extends typeof Types.Border
   ? ResolveBorderControlValue<T>
   : T extends Descriptor<infer U>

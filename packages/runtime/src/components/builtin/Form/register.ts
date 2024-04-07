@@ -5,7 +5,7 @@ import { MakeswiftComponentType } from '../constants'
 import { Alignments, Contrast, Contrasts, Shapes, Sizes } from './context/FormContext'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
-import { Link } from '@makeswift/prop-controllers'
+import { Link, ResponsiveLength } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -115,7 +115,7 @@ export function registerComponent(runtime: ReactRuntime) {
           defaultValue: 'flat',
           hidden: props.tableId == null,
         })),
-        submitWidth: Props.ResponsiveLength(props => ({
+        submitWidth: ResponsiveLength(props => ({
           label: 'Button width',
           hidden: props.tableId == null,
           // TODO: Add placeholder: { value: 'auto' }

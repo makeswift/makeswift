@@ -1,4 +1,4 @@
-import { ResponsiveLengthValue } from '../../../../../prop-controllers/descriptors'
+import { ResponsiveLengthData } from '@makeswift/prop-controllers'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 import GutterContainer from '../../../../shared/GutterContainer'
 
@@ -21,7 +21,7 @@ function PlaceholderLink({ width, button }: PlaceholderLinkProps) {
   )
 }
 
-type Props = { gutter?: ResponsiveLengthValue }
+type Props = { gutter?: ResponsiveLengthData }
 
 const links = [{ width: 50 }, { width: 70 }, { width: 60 }, { width: 80, button: true }]
 

@@ -1,4 +1,8 @@
 import {
+  ResponsiveLengthOptions,
+  ResponsiveLengthPropControllerData,
+} from '@makeswift/prop-controllers'
+import {
   ComboboxControlDefinition,
   ComboboxControlType,
   ListControlDefinition,
@@ -37,8 +41,6 @@ import {
   ResponsiveIconRadioGroupValue as ResponsiveIconRadioGroupControlValue,
   ResponsiveSelectDescriptor as ResponsiveSelectControl,
   ResponsiveSelectValue as ResponsiveSelectControlValue,
-  ResponsiveLengthDescriptor as ResponsiveLengthControl,
-  ResponsiveLengthValue as ResponsiveLengthControlValue,
   RichTextDescriptor as RichTextControl,
   RichTextValue as RichTextControlValue,
   ShapeDescriptor as ShapeControl,
@@ -58,10 +60,8 @@ import {
 } from '../../prop-controllers'
 import {
   IconRadioGroupOption,
-  LengthOption,
   SelectLabelOrientation,
   SelectOption,
-  Length,
 } from '../../prop-controllers/descriptors'
 import {
   deserializeComboboxControlDefinition,
@@ -87,6 +87,7 @@ import {
   Types as PropControllerTypes,
   LinkDescriptor as LinkControl,
   LinkPropControllerData,
+  ResponsiveLengthDescriptor,
 } from '@makeswift/prop-controllers'
 
 type SerializedShapeControlConfig<T extends Record<string, SerializedPanelControl>> = {
@@ -725,20 +726,13 @@ function deserializeResponsiveSelectControl(
   return { ...serializedControl, options: deserializedOptions }
 }
 
-type ResponsiveLengthControlConfig = {
-  label?: string
-  options?: LengthOption[]
-  defaultValue?: Length
-  hidden?: boolean
-}
-
-type SerializedResponsiveLengthControl<_T = ResponsiveLengthControlValue> = {
-  type: typeof Controls.Types.ResponsiveLength
-  options: SerializedConfig<ResponsiveLengthControlConfig>
+type SerializedResponsiveLengthControl<_T = ResponsiveLengthPropControllerData> = {
+  type: typeof PropControllerTypes.ResponsiveLength
+  options: SerializedConfig<ResponsiveLengthOptions>
 }
 
 function serializeResponsiveLengthControl(
-  control: ResponsiveLengthControl,
+  control: ResponsiveLengthDescriptor,
 ): [SerializedResponsiveLengthControl, Transferable[]] {
   const { options } = control
 
@@ -749,9 +743,9 @@ function serializeResponsiveLengthControl(
   return [{ ...control, options: serializedOptions }, [serializedOptions]]
 }
 
-type DeserializedResponsiveLengthControl<_T = ResponsiveLengthControlValue> = {
-  type: typeof Controls.Types.ResponsiveLength
-  options: DeserializedConfig<ResponsiveLengthControlConfig>
+type DeserializedResponsiveLengthControl<_T = ResponsiveLengthPropControllerData> = {
+  type: typeof PropControllerTypes.ResponsiveLength
+  options: DeserializedConfig<ResponsiveLengthOptions>
 }
 
 function deserializeResponsiveLengthControl(
@@ -894,7 +888,7 @@ export type SerializedControl<T extends Data = Data> =
       | ResponsiveSelectControl<
           T extends ResponsiveSelectControlValue ? T : ResponsiveSelectControlValue
         >
-      | ResponsiveLengthControl<T>
+      | ResponsiveLengthDescriptor<T>
       | DateControl<T>
       | LinkControl<T>
       | TextInputControl<T>
@@ -957,7 +951,7 @@ export type DeserializedControl<T extends Data = Data> =
       | ResponsiveSelectControl<
           T extends ResponsiveSelectControlValue ? T : ResponsiveSelectControlValue
         >
-      | ResponsiveLengthControl<T>
+      | ResponsiveLengthDescriptor<T>
       | DateControl<T>
       | LinkControl<T>
       | TextInputControl<T>
@@ -1039,7 +1033,7 @@ export function serializeControl<T extends Data>(
     case Controls.Types.ResponsiveSelect:
       return serializeResponsiveSelectControl(control)
 
-    case Controls.Types.ResponsiveLength:
+    case PropControllerTypes.ResponsiveLength:
       return serializeResponsiveLengthControl(control)
 
     case Controls.Types.Date:
@@ -1117,7 +1111,7 @@ export function deserializeControl<T extends Data>(
     case Controls.Types.ResponsiveSelect:
       return deserializeResponsiveSelectControl(serializedControl)
 
-    case Controls.Types.ResponsiveLength:
+    case PropControllerTypes.ResponsiveLength:
       return deserializeResponsiveLengthControl(serializedControl)
 
     case Controls.Types.Date:

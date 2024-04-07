@@ -5,7 +5,13 @@ import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/module
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
-import { Link, ResponsiveValue } from '@makeswift/prop-controllers'
+import {
+  ControlDataTypeKey,
+  Link,
+  ResponsiveLength,
+  ResponsiveLengthPropControllerDataV1Type,
+  ResponsiveValue,
+} from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -30,13 +36,20 @@ export function registerComponent(runtime: ReactRuntime) {
           label: 'Logo',
           hidden: props.showLogo === false,
         })),
-        logoWidth: Props.ResponsiveLength(props => ({
-          preset: [
-            {
-              deviceId: getBaseBreakpoint(runtime.getBreakpoints()).id,
-              value: { value: 100, unit: 'px' },
-            },
-          ],
+        logoWidth: ResponsiveLength(props => ({
+          // TODO(miguel): We're manually constructing the data here but should be using a factory
+          // function instead. This is because the factory function currently expects a definition
+          // but we don't have one to pass here. Perhaps we should make the factory function not
+          // require the definition and use the latest version when a definition isn't provided.
+          preset: {
+            [ControlDataTypeKey]: ResponsiveLengthPropControllerDataV1Type,
+            value: [
+              {
+                deviceId: getBaseBreakpoint(runtime.getBreakpoints()).id,
+                value: { value: 100, unit: 'px' },
+              },
+            ],
+          },
           label: 'Logo width',
           min: 0,
           max: 1000,
