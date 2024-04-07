@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "format": "prettier --write .",
-    "build": "turbo run build",
+    "build": "turbo run build --filter=!./apps/*",
     "test": "turbo run test",
     "madge": "turbo run madge"
   },
