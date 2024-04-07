@@ -3,7 +3,6 @@ import {
   ResolveBorderRadiusControlValue,
   ResolveMarginControlValue,
   ResolvePaddingControlValue,
-  ResolveShadowsControlValue,
   ResolveWidthControlValue,
 } from '../runtimes/react/controls'
 import { StyleControlFormattedValue } from '../runtimes/react/controls/style'
@@ -59,6 +58,12 @@ import {
   LinkDescriptor,
   LinkPropControllerValue,
   Types as PropControllerTypes,
+  ColorData as Color,
+  ResponsiveValueType,
+  ShadowsDescriptor,
+  ResolveShadowsPropControllerValue,
+  ResponsiveValue,
+  Options,
 } from '@makeswift/prop-controllers'
 
 export type { Data }
@@ -67,16 +72,6 @@ export type { Data }
 export type IndexSignatureHack<T> = T extends Record<string, any>
   ? { [K in keyof T]: IndexSignatureHack<T[K]> }
   : T
-
-export type Device = string
-
-export type DeviceOverride<T> = { deviceId: Device; value: T }
-
-export type ResponsiveValue<T> = DeviceOverride<T>[]
-
-export type ResponsiveValueType<T> = T extends ResponsiveValue<infer U> ? U : never
-
-type Color = { swatchId: string; alpha: number }
 
 type IconName =
   | 'HeightAuto16'
@@ -147,7 +142,6 @@ export const Types = {
   ResponsiveOpacity: 'ResponsiveOpacity',
   ResponsiveSelect: 'ResponsiveSelect',
   RichText: 'RichText',
-  Shadows: 'Shadows',
   Shape: 'Shape',
   SocialLinks: 'SocialLinks',
   Table: 'Table',
@@ -160,10 +154,6 @@ export const Types = {
   Width: 'Width',
   Style: StyleControlType,
 } as const
-
-type Options<T> = T | ((props: Record<string, unknown>, deviceMode: Device) => T)
-
-export type ResolveOptions<T extends Options<unknown>> = T extends Options<infer U> ? U : never
 
 type ColorBackground = { type: 'color'; id: string; payload: Color | null }
 
@@ -948,46 +938,6 @@ export function RichText(options: RichTextOptions = {}): RichTextDescriptor {
   return { type: Types.RichText, options }
 }
 
-type Shadow = {
-  color?: Color | null
-  blurRadius?: number
-  spreadRadius?: number
-  offsetX?: number
-  offsetY?: number
-  inset?: boolean
-}
-
-type Shadows = { id: string; payload: Shadow }[]
-
-export type ShadowsValue = ResponsiveValue<Shadows>
-
-export const ShadowsPropControllerFormat = {
-  ClassName: 'makeswift::prop-controllers::shadows::format::class-name',
-  ResponsiveValue: 'makeswift::prop-controllers::shadows::format::responsive-value',
-} as const
-
-export type ShadowsPropControllerFormat =
-  typeof ShadowsPropControllerFormat[keyof typeof ShadowsPropControllerFormat]
-
-type ShadowsOptions = { format?: ShadowsPropControllerFormat }
-
-export type ShadowsDescriptor<_T = ShadowsValue, U extends ShadowsOptions = ShadowsOptions> = {
-  type: typeof Types.Shadows
-  options: U
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Shadows<T extends ShadowsOptions>(
-  options: T & ShadowsOptions = {} as T,
-): ShadowsDescriptor<ShadowsValue, T> {
-  return { type: Types.Shadows, options }
-}
-
-Shadows.Format = ShadowsPropControllerFormat
-
 export type ShapeValue<T extends Data = Data> = Record<string, T>
 
 type ShapeOptions<T extends Record<string, PanelDescriptor>> = {
@@ -1372,7 +1322,7 @@ export type PanelDescriptorType =
   | typeof Types.Margin
   | typeof Types.Padding
   | typeof Types.Border
-  | typeof Types.Shadows
+  | typeof PropControllerTypes.Shadows
   | typeof Types.GapY
   | typeof Types.GapX
   | typeof Types.BorderRadius
@@ -1454,8 +1404,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveMarginControlValue<T>
   : T['type'] extends typeof Types.BorderRadius
   ? ResolveBorderRadiusControlValue<T>
-  : T['type'] extends typeof Types.Shadows
-  ? ResolveShadowsControlValue<T>
+  : T['type'] extends typeof PropControllerTypes.Shadows
+  ? ResolveShadowsPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Shadows }>>
   : T['type'] extends typeof Types.Border
   ? ResolveBorderControlValue<T>
   : T extends Descriptor<infer U>

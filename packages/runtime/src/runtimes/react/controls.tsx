@@ -16,11 +16,6 @@ import {
   PaddingDescriptor,
   PaddingPropControllerFormat,
   PaddingValue,
-  ResolveOptions,
-  ResponsiveValue,
-  ShadowsDescriptor,
-  ShadowsPropControllerFormat,
-  ShadowsValue,
   WidthPropControllerFormat,
   WidthDescriptor,
   WidthValue,
@@ -74,7 +69,14 @@ import { IconRadioGroupControlType } from '../../controls/icon-radio-group'
 import { useStore } from './hooks/use-store'
 import { useDocumentKey } from './hooks/use-document-key'
 import { useSelector } from './hooks/use-selector'
-import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
+import {
+  Types as PropControllerTypes,
+  getShadowsPropControllerDataResponsiveShadowsData,
+  ShadowsPropControllerData,
+  Shadows,
+  ResponsiveValue,
+  ResolveOptions,
+} from '@makeswift/prop-controllers'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -130,12 +132,8 @@ export function useBorderRadiusStyle(value: BorderRadiusValue | undefined): stri
   return useStyle(useResponsiveBorderRadius(value))
 }
 
-export function useShadowsStyle(
-  value: ShadowsValue | undefined,
-): string | ShadowsValue | undefined {
-  const shadowValue = useBoxShadow(value)
-
-  return useStyle(useResponsiveShadow(shadowValue ?? undefined))
+export function useShadowsStyle(data: ShadowsPropControllerData | undefined): string {
+  return useStyle(useResponsiveShadow(useBoxShadow(data) ?? undefined))
 }
 
 export type ResolveBorderRadiusControlValue<T extends Descriptor> = T extends BorderRadiusDescriptor
@@ -157,17 +155,6 @@ export function useBorderStyle(value: BorderValue | undefined): string | BorderV
 
   return useStyle(useResponsiveBorder(borderData ?? undefined))
 }
-export type ResolveShadowsControlValue<T extends Descriptor> = T extends ShadowsDescriptor
-  ? undefined extends ResolveOptions<T['options']>['format']
-    ? ShadowsValue | undefined
-    : ResolveOptions<T['options']>['format'] extends typeof ShadowsPropControllerFormat.ClassName
-    ? string
-    : ResolveOptions<
-        T['options']
-      >['format'] extends typeof ShadowsPropControllerFormat.ResponsiveValue
-    ? ShadowsValue | undefined
-    : never
-  : never
 
 export type ResolveBorderControlValue<T extends Descriptor> = T extends BorderDescriptor
   ? undefined extends ResolveOptions<T['options']>['format']
@@ -352,9 +339,9 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                 return renderFn({ ...propsValue, [propName]: props[propName] })
             }
 
-          case Props.Types.Shadows:
+          case PropControllerTypes.Shadows:
             switch (descriptor.options.format) {
-              case ShadowsPropControllerFormat.ClassName:
+              case Shadows.Format.ClassName:
                 return (
                   <RenderHook
                     key={descriptor.type}
@@ -365,8 +352,12 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                   </RenderHook>
                 )
 
+              case Shadows.Format.ResponsiveValue:
               default:
-                return renderFn({ ...propsValue, [propName]: props[propName] })
+                return renderFn({
+                  ...propsValue,
+                  [propName]: getShadowsPropControllerDataResponsiveShadowsData(props[propName]),
+                })
             }
 
           case Props.Types.Border:

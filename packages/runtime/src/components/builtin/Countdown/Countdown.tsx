@@ -8,7 +8,6 @@ import {
   FontValue,
   GapXValue,
   ResponsiveIconRadioGroupValue,
-  ResponsiveValue,
   TextInputValue,
 } from '../../../prop-controllers/descriptors'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
@@ -16,6 +15,7 @@ import { useStyle } from '../../../runtimes/react/use-style'
 import { colorToString } from '../../utils/colorToString'
 import { useResponsiveStyle } from '../../utils/responsive-style'
 import { ColorValue as Color } from '../../utils/types'
+import { ResponsiveValue } from '@makeswift/prop-controllers'
 
 type Props = {
   id?: ElementIDValue

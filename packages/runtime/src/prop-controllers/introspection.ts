@@ -20,7 +20,6 @@ import {
   NavigationLinksValue,
   ResponsiveColorValue,
   RichTextValue,
-  ShadowsValue,
   ShapeValue,
   TableValue,
   Types,
@@ -76,8 +75,10 @@ import {
 import { match, P } from 'ts-pattern'
 import {
   getLinkPropControllerPageIds,
+  getShadowsPropControllerDataSwatchIds,
   LinkPropControllerData,
   Types as PropControllerTypes,
+  ShadowsPropControllerData,
 } from '@makeswift/prop-controllers'
 
 export function getElementChildren<T extends Data>(
@@ -170,15 +171,6 @@ export function getBorderSwatchIds(value: BorderValue | null | undefined): strin
   )
 }
 
-export function getBoxShadowsSwatchIds(value: ShadowsValue | null | undefined): string[] {
-  return (
-    value
-      ?.flatMap(override => override.value)
-      .map(item => item.payload.color?.swatchId)
-      .filter((swatchId): swatchId is NonNullable<typeof swatchId> => swatchId != null) ?? []
-  )
-}
-
 export function getResponsiveColorSwatchIds(
   value: ResponsiveColorValue | null | undefined,
 ): string[] {
@@ -219,8 +211,8 @@ export function getSwatchIds<T extends Data>(
     case Types.ResponsiveColor:
       return getResponsiveColorSwatchIds(prop as ResponsiveColorValue)
 
-    case Types.Shadows:
-      return getBoxShadowsSwatchIds(prop as ShadowsValue)
+    case PropControllerTypes.Shadows:
+      return getShadowsPropControllerDataSwatchIds(prop as ShadowsPropControllerData)
 
     case RichTextControlType:
     case Types.RichText: {

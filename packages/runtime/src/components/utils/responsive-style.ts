@@ -1,9 +1,11 @@
 import { WidthProperty } from 'csstype'
 import { CSSObject } from '@emotion/css'
+import type {
+  ResponsiveValueType as ExtractResponsiveValue,
+  ResponsiveValue,
+} from '@makeswift/prop-controllers'
 
 import {
-  ResponsiveValue,
-  ResponsiveValueType as ExtractResponsiveValue,
   Length as LengthValue,
   WidthValue,
   PaddingValue,
@@ -25,7 +27,7 @@ import { BorderRadiusPropertyData, borderRadiusPropertyDataToStyle } from '../..
 import { BorderPropertyData, borderPropertyDataToStyle } from '../../css/border'
 import { BorderPropControllerData } from '../hooks/useBorder'
 import { colorToString } from './colorToString'
-import { BoxShadowData, BoxShadowPropControllerData } from '../hooks'
+import { BoxShadow, ResponsiveBoxShadow } from '../hooks'
 import { useBreakpoints } from '../../runtimes/react'
 import { DropFirst } from './drop-first'
 
@@ -235,7 +237,7 @@ export function useResponsiveGridItem(
   return responsiveGridItem(useBreakpoints(), ...args)
 }
 
-const getBoxShadow = (shadows: BoxShadowData) =>
+const getBoxShadow = (shadows: BoxShadow) =>
   shadows
     .map(
       ({ payload: { inset, offsetX, offsetY, blurRadius, spreadRadius, color } }) =>
@@ -250,7 +252,7 @@ const getBoxShadow = (shadows: BoxShadowData) =>
 
 export function responsiveShadow(
   breakpoints: Breakpoints,
-  value: BoxShadowPropControllerData | undefined,
+  value: ResponsiveBoxShadow | undefined,
 ): CSSObject {
   return responsiveStyle(breakpoints, [value], ([shadow = []]) => ({
     boxShadow: getBoxShadow(shadow),

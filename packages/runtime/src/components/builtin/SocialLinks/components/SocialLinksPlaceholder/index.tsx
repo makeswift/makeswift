@@ -1,4 +1,5 @@
-import { ResponsiveValue, Length } from '../../../../../prop-controllers/descriptors'
+import { ResponsiveValue } from '@makeswift/prop-controllers'
+import { Length } from '../../../../../prop-controllers/descriptors'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 
 import GutterContainer from '../../../../shared/GutterContainer'

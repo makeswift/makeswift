@@ -1,5 +1,6 @@
 export const Types = {
   Link: 'Link',
+  Shadows: 'Shadows',
 } as const
 
 export const ControlDataTypeKey = '@@makeswift/type'

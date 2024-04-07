@@ -37,7 +37,6 @@ import {
   ResponsiveIconRadioGroupValue,
   ResponsiveLengthValue,
   ResponsiveSelectValue,
-  ResponsiveValue,
   TableFormFieldsDescriptor,
   TableFormFieldsValue,
   TableValue,
@@ -55,7 +54,7 @@ import { cx } from '@emotion/css'
 import { useResponsiveGridItem, useResponsiveStyle } from '../../utils/responsive-style'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { useTable } from '../../../runtimes/react/hooks/makeswift-api'
-import { LinkPropControllerValue } from '@makeswift/prop-controllers'
+import { LinkPropControllerValue, ResponsiveValue } from '@makeswift/prop-controllers'
 
 const LOCAL_STORAGE_NAMESPACE = '@@makeswift/components/form'
 

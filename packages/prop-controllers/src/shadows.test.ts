@@ -1,12 +1,14 @@
-import { describe, test, expect } from 'vitest'
-import { ShadowsValue } from '../descriptors'
-import { copy } from './shadows'
-import { ReplacementContext } from '../../state/react-page'
+import { describe, expect, test } from '@jest/globals'
+import { ReplacementContext } from './prop-controllers'
+import {
+  ShadowsPropControllerData,
+  copyShadowsPropControllerData,
+} from './shadows'
 
-describe.concurrent('shadow copy', () => {
+describe('shadow copy', () => {
   test('replaces the swatch id', () => {
     // Arrange
-    const data: ShadowsValue = [
+    const data: ShadowsPropControllerData = [
       {
         value: [
           {
@@ -14,7 +16,8 @@ describe.concurrent('shadow copy', () => {
             payload: {
               color: {
                 alpha: 1,
-                swatchId: 'U3dhdGNoOjgwMmNmZGMyLTc5ZDgtNDkyNy1hMDUwLWE1NmM1M2EzYzE0Mg==',
+                swatchId:
+                  'U3dhdGNoOjgwMmNmZGMyLTc5ZDgtNDkyNy1hMDUwLWE1NmM1M2EzYzE0Mg==',
               },
               offsetX: -5,
               offsetY: 8.7,
@@ -37,7 +40,10 @@ describe.concurrent('shadow copy', () => {
       elementHtmlIds: new Set(),
       elementKeys: new Map(),
       swatchIds: new Map([
-        ['U3dhdGNoOjgwMmNmZGMyLTc5ZDgtNDkyNy1hMDUwLWE1NmM1M2EzYzE0Mg==', 'testing'],
+        [
+          'U3dhdGNoOjgwMmNmZGMyLTc5ZDgtNDkyNy1hMDUwLWE1NmM1M2EzYzE0Mg==',
+          'testing',
+        ],
       ]),
       fileIds: new Map(),
       typographyIds: new Map(),
@@ -49,9 +55,9 @@ describe.concurrent('shadow copy', () => {
     }
 
     // Act
-    const result = copy(data, {
+    const result = copyShadowsPropControllerData(data, {
       replacementContext: replacementContext as ReplacementContext,
-      copyElement: node => node,
+      copyElement: (node) => node,
     })
 
     // // Assert

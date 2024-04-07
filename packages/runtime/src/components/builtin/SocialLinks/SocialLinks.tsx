@@ -7,7 +7,6 @@ import { SocialLinksOptions, SocialLinksOptionType } from './options'
 import GutterContainer from '../../shared/GutterContainer'
 import SocialLinksPlaceholder from './components/SocialLinksPlaceholder'
 import {
-  ResponsiveValue,
   ElementIDValue,
   ResponsiveIconRadioGroupValue,
   ResponsiveSelectValue,
@@ -17,6 +16,7 @@ import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { cx } from '@emotion/css'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { useResponsiveStyle } from '../../utils/responsive-style'
+import { ResponsiveValue } from '@makeswift/prop-controllers'
 
 type Props = {
   id?: ElementIDValue

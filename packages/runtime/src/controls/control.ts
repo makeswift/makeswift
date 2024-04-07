@@ -139,7 +139,7 @@ export function copy(definition: Descriptor | ControlDefinition, value: any, con
     case Types.Grid:
     case Types.NavigationLinks:
     case PropControllerTypes.Link:
-    case Types.Shadows:
+    case PropControllerTypes.Shadows:
     case Types.Image:
     case Types.Images:
     case Types.ResponsiveColor:
