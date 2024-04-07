@@ -1,23 +1,23 @@
 import { isNonNullable } from '../utils/isNonNullable'
 import type { ColorValue as Color } from '../utils/types'
 import type { ResponsiveValue } from '../../prop-controllers'
-import type { ShadowsValue as ResponsiveShadowsValue } from '../../prop-controllers/descriptors'
-import { getBoxShadowsSwatchIds } from '../../prop-controllers/introspection'
 import { useSwatches } from '../../runtimes/react/hooks/makeswift-api'
+import {
+  ShadowsPropControllerData,
+  getShadowsPropControllerDataResponsiveShadowsData,
+  getShadowsPropControllerDataSwatchIds,
+} from '@makeswift/prop-controllers'
 
-type ShadowData = {
-  id: string
-  payload: {
-    inset: boolean
-    offsetX: number
-    offsetY: number
-    blurRadius: number
-    spreadRadius: number
-    color: Color | null | undefined
-  }
+type ShadowValue = {
+  inset: boolean
+  offsetX: number
+  offsetY: number
+  blurRadius: number
+  spreadRadius: number
+  color: Color | null | undefined
 }
 
-const ShadowDefaultValue = {
+const ShadowDefaultValue: ShadowValue = {
   inset: false,
   offsetX: 0,
   offsetY: 2,
@@ -26,19 +26,20 @@ const ShadowDefaultValue = {
   color: null,
 } as const
 
-export type BoxShadowData = Array<ShadowData>
+export type BoxShadow = { id: string; payload: ShadowValue }[]
 
-export type BoxShadowPropControllerData = ResponsiveValue<BoxShadowData>
+export type ResponsiveBoxShadow = ResponsiveValue<BoxShadow>
 
 export function useBoxShadow(
-  value: ResponsiveShadowsValue | null | undefined,
-): BoxShadowPropControllerData | null | undefined {
-  const swatchIds = getBoxShadowsSwatchIds(value)
+  data: ShadowsPropControllerData | null | undefined,
+): ResponsiveBoxShadow | null | undefined {
+  const swatchIds = getShadowsPropControllerDataSwatchIds(data)
   const swatches = useSwatches(swatchIds)
+  const responsiveShadowsData = getShadowsPropControllerDataResponsiveShadowsData(data)
 
-  if (value == null) return null
+  if (responsiveShadowsData == null) return null
 
-  return value.map(({ value: shadows, ...restOfValue }) => ({
+  return responsiveShadowsData.map(({ value: shadows, ...restOfValue }) => ({
     ...restOfValue,
     value: shadows.map(
       ({

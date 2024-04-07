@@ -5,8 +5,6 @@ export type {
   Data,
   Descriptor as PropControllerDescriptor,
   DescriptorValueType as PropControllerDescriptorValueType,
-  Device,
-  DeviceOverride,
   Gap,
   DateDescriptor,
   DateValue,
@@ -59,14 +57,16 @@ export type {
   PanelDescriptor,
   PanelDescriptorType,
   PanelDescriptorValueType,
-  ResponsiveValue,
-  ResponsiveValueType,
   SocialLinksDescriptor,
   SocialLinksValue,
 } from './descriptors'
 export type {
   LinkDescriptor,
   LinkPropControllerValue as LinkValue,
+  ResponsiveValueType,
+  Device,
+  DeviceOverride,
+  ResponsiveValue,
 } from '@makeswift/prop-controllers'
 export { socialLinkTypesV0, socialLinkTypesV1 } from './descriptors'
 export * as Props from './descriptors'

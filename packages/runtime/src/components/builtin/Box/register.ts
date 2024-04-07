@@ -1,3 +1,4 @@
+import { Shadows } from '@makeswift/prop-controllers'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
@@ -79,7 +80,7 @@ export function registerComponent(runtime: ReactRuntime) {
         }),
         border: Props.Border({ format: Props.Border.Format.ClassName }),
         borderRadius: Props.BorderRadius({ format: Props.BorderRadius.Format.ClassName }),
-        boxShadow: Props.Shadows({ format: Props.Shadows.Format.ClassName }),
+        boxShadow: Shadows({ format: Shadows.Format.ClassName }),
         rowGap: Props.GapY(props => ({
           hidden: props.children == null,
         })),

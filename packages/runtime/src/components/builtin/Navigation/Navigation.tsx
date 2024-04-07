@@ -11,7 +11,6 @@ import LinksPlaceholder from './components/LinksPlaceholder'
 import DropDownButton from './components/DropDownButton'
 import MobileMenu from './components/MobileMenu'
 import {
-  ResponsiveValue,
   CheckboxValue,
   ElementIDValue,
   GapXValue,
@@ -24,7 +23,7 @@ import {
   TextStyleValue,
   NavigationButton as NavigationButtonValue,
 } from '../../../prop-controllers/descriptors'
-import { LinkPropControllerValue } from '@makeswift/prop-controllers'
+import { LinkPropControllerValue, ResponsiveValue } from '@makeswift/prop-controllers'
 
 import { ColorValue as Color } from '../../utils/types'
 import { colorToString } from '../../utils/colorToString'

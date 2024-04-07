@@ -1,7 +1,6 @@
 import { ComponentPropsWithoutRef, Fragment } from 'react'
 
 import {
-  ResponsiveValue,
   NavigationLinksValue,
   NavigationButton as NavigationButtonValue,
 } from '../../../../../prop-controllers/descriptors'
@@ -16,6 +15,7 @@ import { useResponsiveColor } from '../../../../hooks'
 import { cx } from '@emotion/css'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 import { useResponsiveStyle } from '../../../../utils/responsive-style'
+import { ResponsiveValue } from '@makeswift/prop-controllers'
 
 type NavigationButtonProps = NavigationButtonValue['payload'] &
   Omit<ComponentPropsWithoutRef<typeof Button>, 'color' | 'textColor'>

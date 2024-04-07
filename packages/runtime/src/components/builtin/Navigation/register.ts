@@ -1,11 +1,11 @@
 import { Props } from '../../../prop-controllers'
-import { NavigationLinksValue, ResponsiveValue } from '../../../prop-controllers/descriptors'
+import { NavigationLinksValue } from '../../../prop-controllers/descriptors'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
-import { Link } from '@makeswift/prop-controllers'
+import { Link, ResponsiveValue } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(

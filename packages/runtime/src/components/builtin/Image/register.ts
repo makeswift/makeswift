@@ -2,7 +2,7 @@ import { lazy } from 'react'
 import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
-import { Link } from '@makeswift/prop-controllers'
+import { Link, Shadows } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -20,7 +20,7 @@ export function registerComponent(runtime: ReactRuntime) {
         padding: Props.Padding({ format: Props.Padding.Format.ClassName }),
         border: Props.Border({ format: Props.Border.Format.ClassName }),
         borderRadius: Props.BorderRadius({ format: Props.BorderRadius.Format.ClassName }),
-        boxShadow: Props.Shadows({ format: Props.Shadows.Format.ClassName }),
+        boxShadow: Shadows({ format: Shadows.Format.ClassName }),
         opacity: Props.ResponsiveOpacity(),
         priority: Props.Checkbox({ label: 'Priority' }),
       },

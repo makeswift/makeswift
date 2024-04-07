@@ -1,8 +1,9 @@
 import { cx } from '@emotion/css'
 import { ComponentPropsWithoutRef } from 'react'
-import { ResponsiveValue, Length } from '../../../prop-controllers/descriptors'
+import { Length } from '../../../prop-controllers/descriptors'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { useResponsiveStyle } from '../../utils/responsive-style'
+import { ResponsiveValue } from '@makeswift/prop-controllers'
 
 type BaseProps = {
   className?: string
