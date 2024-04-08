@@ -67,6 +67,8 @@ import {
   Options,
   ResponsiveLengthDescriptor,
   ResolveResponsiveLengthPropControllerValue,
+  NumberDescriptor,
+  ResolveNumberPropControllerValue,
 } from '@makeswift/prop-controllers'
 
 export type { Data }
@@ -134,7 +136,6 @@ export const Types = {
   List: 'List',
   Margin: 'Margin',
   NavigationLinks: 'NavigationLinks',
-  Number: 'Number',
   Padding: 'Padding',
   ResponsiveColor: 'ResponsiveColor',
   ResponsiveIconRadioGroup: 'ResponsiveIconRadioGroup',
@@ -697,32 +698,6 @@ type NavigationLinksDescriptor<_T = NavigationLinksValue> = {
  */
 export function NavigationLinks(options: NavigationLinksOptions = {}): NavigationLinksDescriptor {
   return { type: Types.NavigationLinks, options }
-}
-
-export type NumberValue = number
-
-export type NumberOptions = Options<{
-  preset?: NumberValue
-  label?: string
-  defaultValue?: number
-  min?: number
-  max?: number
-  step?: number
-  suffix?: string
-  hidden?: boolean
-}>
-
-export type NumberDescriptor<_T = NumberValue> = {
-  type: typeof Types.Number
-  options: NumberOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Number(options: NumberOptions = {}): NumberDescriptor {
-  return { type: Types.Number, options }
 }
 
 type PaddingSide = { value: number; unit: 'px' }
@@ -1308,7 +1283,7 @@ export type PanelDescriptorType =
   | typeof Types.TextStyle
   | typeof Types.Images
   | typeof Types.ResponsiveNumber
-  | typeof Types.Number
+  | typeof PropControllerTypes.Number
   | typeof Types.Date
   | typeof Types.Font
   | typeof Types.TextArea
@@ -1384,6 +1359,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
     >
   : T['type'] extends typeof Types.Border
   ? ResolveBorderControlValue<T>
+  : T['type'] extends typeof PropControllerTypes.Number
+  ? ResolveNumberPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Number }>>
   : T extends Descriptor<infer U>
   ? U | undefined
   : never

@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 export const Types = {
   Link: 'Link',
+  Number: 'Number',
   Shadows: 'Shadows',
   ResponsiveLength: 'ResponsiveLength',
 } as const

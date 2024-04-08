@@ -31,8 +31,6 @@ import {
   ListDescriptor as ListControl,
   ListOptions as ListControlConfig,
   ListValue as ListControlValue,
-  NumberDescriptor as NumberControl,
-  NumberValue as NumberControlValue,
   ResponsiveColorDescriptor as ResponsiveColorControl,
   ResponsiveColorValue as ResponsiveColorControlValue,
   ResponsiveNumberDescriptor as ResponsiveNumberControl,
@@ -88,6 +86,9 @@ import {
   LinkDescriptor as LinkControl,
   LinkPropControllerData,
   ResponsiveLengthDescriptor,
+  NumberOptions,
+  NumberPropControllerData,
+  NumberDescriptor,
 } from '@makeswift/prop-controllers'
 
 type SerializedShapeControlConfig<T extends Record<string, SerializedPanelControl>> = {
@@ -495,23 +496,14 @@ function deserializeResponsiveColorControl(
 
   return { ...serializedControl, options: deserializedOptions }
 }
-type NumberControlConfig = {
-  preset?: NumberControlValue
-  label?: string
-  defaultValue?: number
-  min?: number
-  max?: number
-  step?: number
-  suffix?: string
-  hidden?: boolean
+type SerializedNumberControl<_T = NumberPropControllerData> = {
+  type: typeof PropControllerTypes.Number
+  options: SerializedConfig<NumberOptions>
 }
 
-type SerializedNumberControl<_T = NumberControlValue> = {
-  type: typeof Controls.Types.Number
-  options: SerializedConfig<NumberControlConfig>
-}
-
-function serializeNumberControl(control: NumberControl): [SerializedNumberControl, Transferable[]] {
+function serializeNumberControl(
+  control: NumberDescriptor,
+): [SerializedNumberControl, Transferable[]] {
   const { options } = control
 
   if (typeof options !== 'function') return [{ ...control, options }, []]
@@ -521,9 +513,9 @@ function serializeNumberControl(control: NumberControl): [SerializedNumberContro
   return [{ ...control, options: serializedOptions }, [serializedOptions]]
 }
 
-type DeserializedNumberControl<_T = NumberControlValue> = {
-  type: typeof Controls.Types.Number
-  options: DeserializedConfig<NumberControlConfig>
+type DeserializedNumberControl<_T = NumberPropControllerData> = {
+  type: typeof PropControllerTypes.Number
+  options: DeserializedConfig<NumberOptions>
 }
 
 function deserializeNumberControl(
@@ -881,7 +873,7 @@ export type SerializedControl<T extends Data = Data> =
       | ResponsiveNumberControl<T>
       | CheckboxControl<T>
       | ResponsiveColorControl<T>
-      | NumberControl<T>
+      | NumberDescriptor<T>
       | ResponsiveIconRadioGroupControl<
           T extends ResponsiveIconRadioGroupControlValue ? T : ResponsiveIconRadioGroupControlValue
         >
@@ -944,7 +936,7 @@ export type DeserializedControl<T extends Data = Data> =
       | ResponsiveNumberControl<T>
       | CheckboxControl<T>
       | ResponsiveColorControl<T>
-      | NumberControl<T>
+      | NumberDescriptor<T>
       | ResponsiveIconRadioGroupControl<
           T extends ResponsiveIconRadioGroupControlValue ? T : ResponsiveIconRadioGroupControlValue
         >
@@ -1024,7 +1016,7 @@ export function serializeControl<T extends Data>(
     case Controls.Types.ResponsiveNumber:
       return serializeResponsiveNumberControl(control)
 
-    case Controls.Types.Number:
+    case PropControllerTypes.Number:
       return serializeNumberControl(control)
 
     case Controls.Types.ResponsiveIconRadioGroup:
@@ -1102,7 +1094,7 @@ export function deserializeControl<T extends Data>(
     case Controls.Types.ResponsiveNumber:
       return deserializeResponsiveNumberControl(serializedControl)
 
-    case Controls.Types.Number:
+    case PropControllerTypes.Number:
       return deserializeNumberControl(serializedControl)
 
     case Controls.Types.ResponsiveIconRadioGroup:
