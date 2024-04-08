@@ -1,19 +1,13 @@
 import type { ResponsiveValue } from '../../prop-controllers'
 import { isNonNullable } from '../utils/isNonNullable'
 import type { ColorValue as Color } from '../utils/types'
-import { getResponsiveColorSwatchIds } from '../../prop-controllers/introspection'
 import { useSwatches } from '../../runtimes/react/hooks/makeswift-api'
+import { ResponsiveColorData, getResponsiveColorDataSwatchIds } from '@makeswift/prop-controllers'
 
 export function useResponsiveColor(
-  color:
-    | ResponsiveValue<{
-        swatchId: string
-        alpha: number
-      }>
-    | null
-    | undefined,
+  color: ResponsiveColorData | null | undefined,
 ): ResponsiveValue<Color> | null | undefined {
-  const swatchIds = getResponsiveColorSwatchIds(color)
+  const swatchIds = color == null ? [] : getResponsiveColorDataSwatchIds(color)
   const swatches = useSwatches(swatchIds)
 
   if (color == null) return null

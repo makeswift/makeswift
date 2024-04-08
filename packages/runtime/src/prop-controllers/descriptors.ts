@@ -4,10 +4,10 @@ import {
   ResolveMarginControlValue,
   ResolvePaddingControlValue,
   ResolveWidthControlValue,
+  ResponsiveColor,
 } from '../runtimes/react/controls'
 import { StyleControlFormattedValue } from '../runtimes/react/controls/style'
 import type { Element, Data, MergeTranslatableDataContext } from '../state/react-page'
-import type { ResponsiveColor } from '../runtimes/react/controls'
 import { NumberControlDefinition } from '../controls/number'
 import { NumberControlValue } from '../runtimes/react/controls/number'
 import { StyleControlType } from '../controls/style'
@@ -69,6 +69,7 @@ import {
   ResolveResponsiveLengthPropControllerValue,
   NumberDescriptor,
   ResolveNumberPropControllerValue,
+  ResponsiveColorDescriptor,
 } from '@makeswift/prop-controllers'
 
 export type { Data }
@@ -137,7 +138,6 @@ export const Types = {
   Margin: 'Margin',
   NavigationLinks: 'NavigationLinks',
   Padding: 'Padding',
-  ResponsiveColor: 'ResponsiveColor',
   ResponsiveIconRadioGroup: 'ResponsiveIconRadioGroup',
   ResponsiveNumber: 'ResponsiveNumber',
   ResponsiveOpacity: 'ResponsiveOpacity',
@@ -738,23 +738,6 @@ export function Padding<T extends PaddingOptions>(
 
 Padding.Format = PaddingPropControllerFormat
 
-export type ResponsiveColorValue = ResponsiveValue<Color>
-
-type ResponsiveColorOptions = Options<{ label?: string; placeholder?: string; hidden?: boolean }>
-
-export type ResponsiveColorDescriptor<_T = ResponsiveColorValue> = {
-  type: typeof Types.ResponsiveColor
-  options: ResponsiveColorOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function ResponsiveColor(options: ResponsiveColorOptions = {}): ResponsiveColorDescriptor {
-  return { type: Types.ResponsiveColor, options }
-}
-
 export type IconRadioGroupOption<T extends string> = { value: T; label: string; icon: IconName }
 
 export type ResponsiveIconRadioGroupValue<T extends string = string> = ResponsiveValue<T>
@@ -1279,7 +1262,7 @@ export type PanelDescriptorType =
   | typeof Types.List
   | typeof Types.Shape
   | typeof Types.ResponsiveSelect
-  | typeof Types.ResponsiveColor
+  | typeof PropControllerTypes.ResponsiveColor
   | typeof Types.TextStyle
   | typeof Types.Images
   | typeof Types.ResponsiveNumber
@@ -1339,8 +1322,11 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? StyleV2ControlFormattedValue
   : T extends TypographyControlDefinition
   ? TypographyControlValue
-  : T['type'] extends typeof Types.ResponsiveColor
-  ? ResponsiveColor | null | undefined
+  : T['type'] extends typeof PropControllerTypes.ResponsiveColor
+  ? // TODO(miguel): We're not importing a resolver type from `@makeswift/prop-controllers` because
+    // the resolved type is tightly coupled with the runtime (i.e., it's the result of an API call).
+    // This means that we probably want to rethink how types are resolved and where that lives.
+    ResponsiveColor | null | undefined
   : T['type'] extends typeof PropControllerTypes.Link
   ? LinkPropControllerValue
   : T['type'] extends typeof Types.Width

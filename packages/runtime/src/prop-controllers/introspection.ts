@@ -18,7 +18,6 @@ import {
   ImageValue,
   ListValue,
   NavigationLinksValue,
-  ResponsiveColorValue,
   RichTextValue,
   ShapeValue,
   TableValue,
@@ -75,9 +74,11 @@ import {
 import { match, P } from 'ts-pattern'
 import {
   getLinkPropControllerPageIds,
+  getResponsiveColorPropControllerDataSawtchIds,
   getShadowsPropControllerDataSwatchIds,
   LinkPropControllerData,
   Types as PropControllerTypes,
+  ResponsiveColorData,
   ShadowsPropControllerData,
 } from '@makeswift/prop-controllers'
 
@@ -171,12 +172,6 @@ export function getBorderSwatchIds(value: BorderValue | null | undefined): strin
   )
 }
 
-export function getResponsiveColorSwatchIds(
-  value: ResponsiveColorValue | null | undefined,
-): string[] {
-  return value?.map(override => override.value).map(color => color.swatchId) ?? []
-}
-
 export function getSwatchIds<T extends Data>(
   descriptor: Descriptor<T>,
   prop: T | undefined,
@@ -208,8 +203,8 @@ export function getSwatchIds<T extends Data>(
         }) ?? []
       )
     }
-    case Types.ResponsiveColor:
-      return getResponsiveColorSwatchIds(prop as ResponsiveColorValue)
+    case PropControllerTypes.ResponsiveColor:
+      return getResponsiveColorPropControllerDataSawtchIds(prop as ResponsiveColorData)
 
     case PropControllerTypes.Shadows:
       return getShadowsPropControllerDataSwatchIds(prop as ShadowsPropControllerData)

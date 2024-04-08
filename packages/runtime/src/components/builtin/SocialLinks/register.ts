@@ -5,6 +5,7 @@ import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
+import { ResponsiveColor } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -80,7 +81,7 @@ export function registerComponent(runtime: ReactRuntime) {
             hidden,
           }
         }),
-        fill: Props.ResponsiveColor(props => {
+        fill: ResponsiveColor(props => {
           const links = props.links as SocialLinksValue
           const hidden = links == null || links.links.length === 0
 
@@ -89,7 +90,7 @@ export function registerComponent(runtime: ReactRuntime) {
             hidden,
           }
         }),
-        backgroundColor: Props.ResponsiveColor(props => {
+        backgroundColor: ResponsiveColor(props => {
           const links = props.links as SocialLinksValue
           const hidden = links == null || links.links.length === 0
 

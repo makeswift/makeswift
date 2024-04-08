@@ -4,7 +4,7 @@ import { CaretDown8 } from '../../../../icons/CaretDown8'
 import { Plus8 } from '../../../../icons/Plus8'
 import { ArrowDown8 } from '../../../../icons/ArrowDown8'
 import { ChevronDown8 } from '../../../../icons/ChevronDown8'
-import { ResponsiveColorValue, TextStyleValue } from '../../../../../prop-controllers/descriptors'
+import { TextStyleValue } from '../../../../../prop-controllers/descriptors'
 import { colorToString } from '../../../../utils/colorToString'
 import { useResponsiveColor } from '../../../../hooks'
 
@@ -14,7 +14,7 @@ import { useIsomorphicLayoutEffect } from '../../../../hooks/useIsomorphicLayout
 import { cx, keyframes } from '@emotion/css'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 import { useResponsiveStyle, useResponsiveTextStyle } from '../../../../utils/responsive-style'
-import { LinkData } from '@makeswift/prop-controllers'
+import { LinkData, ResponsiveColorData } from '@makeswift/prop-controllers'
 
 const DROP_DOWN_MENU_WIDTH = 200
 
@@ -97,7 +97,7 @@ const DropDownContainer = forwardRef(function DropDownContainer(
 
 type BaseDropDownItemProps = {
   className?: string
-  color?: ResponsiveColorValue
+  color?: ResponsiveColorData
   textStyle?: TextStyleValue
 }
 
@@ -160,8 +160,8 @@ type Props = Omit<ComponentPropsWithoutRef<typeof Button>, 'textColor' | 'color'
       label: string
     }
   }>
-  textColor?: ResponsiveColorValue
-  color?: ResponsiveColorValue
+  textColor?: ResponsiveColorData
+  color?: ResponsiveColorData
 }
 
 export default function DropDownButton({

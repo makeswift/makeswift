@@ -1,4 +1,4 @@
-import { Link } from '@makeswift/prop-controllers'
+import { Link, ResponsiveColor } from '@makeswift/prop-controllers'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride } from '../../../state/modules/breakpoints'
@@ -56,7 +56,7 @@ export function registerComponent(runtime: ReactRuntime) {
           ],
           defaultValue: 'medium',
         }),
-        color: Props.ResponsiveColor((props, device) => {
+        color: ResponsiveColor((props, device) => {
           const variant = props.variant as ResponsiveValue<ButtonVariant>
           const hidden =
             findBreakpointOverride<ButtonVariant>(runtime.getBreakpoints(), variant, device)
@@ -64,7 +64,7 @@ export function registerComponent(runtime: ReactRuntime) {
 
           return { placeholder: 'black', hidden }
         }),
-        textColor: Props.ResponsiveColor({
+        textColor: ResponsiveColor({
           label: 'Text color',
           placeholder: 'white',
         }),

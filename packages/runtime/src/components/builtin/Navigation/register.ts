@@ -8,6 +8,7 @@ import { lazy } from 'react'
 import {
   ControlDataTypeKey,
   Link,
+  ResponsiveColor,
   ResponsiveLength,
   ResponsiveLengthPropControllerDataV1Type,
   ResponsiveValue,
@@ -94,7 +95,7 @@ export function registerComponent(runtime: ReactRuntime) {
             { value: 'coverLeft', label: 'Cover from left' },
           ],
         }),
-        mobileMenuOpenIconColor: Props.ResponsiveColor((props, device) => {
+        mobileMenuOpenIconColor: ResponsiveColor((props, device) => {
           const mobileMenuAnimation = props.mobileMenuAnimation as ResponsiveValue<string>
           const hidden = !findBreakpointOverride(
             runtime.getBreakpoints(),
@@ -108,7 +109,7 @@ export function registerComponent(runtime: ReactRuntime) {
             hidden,
           }
         }),
-        mobileMenuCloseIconColor: Props.ResponsiveColor((props, device) => {
+        mobileMenuCloseIconColor: ResponsiveColor((props, device) => {
           const mobileMenuAnimation = props.mobileMenuAnimation as ResponsiveValue<string>
           const hidden = !findBreakpointOverride(
             runtime.getBreakpoints(),
@@ -122,7 +123,7 @@ export function registerComponent(runtime: ReactRuntime) {
             hidden,
           }
         }),
-        mobileMenuBackgroundColor: Props.ResponsiveColor((props, device) => {
+        mobileMenuBackgroundColor: ResponsiveColor((props, device) => {
           const mobileMenuAnimation = props.mobileMenuAnimation as ResponsiveValue<string>
           const hidden = !findBreakpointOverride(
             runtime.getBreakpoints(),
