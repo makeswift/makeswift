@@ -8,7 +8,11 @@ import { Number, ResponsiveColor } from '@makeswift/prop-controllers'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
-import { Checkbox } from '@makeswift/prop-controllers'
+import {
+  Checkbox,
+  checkboxPropControllerDataSchema,
+  getCheckboxPropControllerDataBoolean,
+} from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -77,7 +81,9 @@ export function registerComponent(runtime: ReactRuntime) {
           min: 1,
           step: 0.1,
           suffix: 'seconds',
-          hidden: !props.autoplay,
+          hidden: !getCheckboxPropControllerDataBoolean(
+            checkboxPropControllerDataSchema.optional().catch(undefined).parse(props.autoplay),
+          ),
         })),
         showArrows: Checkbox({ preset: true, label: 'Show arrows' }),
         arrowPosition: Props.ResponsiveIconRadioGroup(props => ({
@@ -88,23 +94,35 @@ export function registerComponent(runtime: ReactRuntime) {
             { label: 'Outside', value: 'outside', icon: 'ArrowOutside16' },
           ],
           defaultValue: 'inside',
-          hidden: props.showArrows === false,
+          hidden:
+            getCheckboxPropControllerDataBoolean(
+              checkboxPropControllerDataSchema.optional().catch(undefined).parse(props.showArrows),
+            ) === false,
         })),
         arrowColor: ResponsiveColor(props => ({
           label: 'Arrow color',
           placeholder: 'black',
-          hidden: props.showArrows === false,
+          hidden:
+            getCheckboxPropControllerDataBoolean(
+              checkboxPropControllerDataSchema.optional().catch(undefined).parse(props.showArrows),
+            ) === false,
         })),
         arrowBackground: ResponsiveColor(props => ({
           label: 'Arrow background',
           placeholder: 'white',
-          hidden: props.showArrows === false,
+          hidden:
+            getCheckboxPropControllerDataBoolean(
+              checkboxPropControllerDataSchema.optional().catch(undefined).parse(props.showArrows),
+            ) === false,
         })),
         showDots: Checkbox({ preset: true, label: 'Show dots' }),
         dotColor: ResponsiveColor(props => ({
           label: 'Dot color',
           placeholder: 'black',
-          hidden: props.showDots === false,
+          hidden:
+            getCheckboxPropControllerDataBoolean(
+              checkboxPropControllerDataSchema.optional().catch(undefined).parse(props.showDots),
+            ) === false,
         })),
         slideBorder: Props.Border({ format: Props.Border.Format.ClassName }),
         slideBorderRadius: Props.BorderRadius({ format: Props.BorderRadius.Format.ClassName }),
