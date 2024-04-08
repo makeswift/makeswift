@@ -3,12 +3,9 @@ import { useRef } from 'react'
 import * as ReactPage from '../../state/react-page'
 import { Props } from '../../prop-controllers'
 import {
-  BorderDescriptor,
-  BorderPropControllerFormat,
   BorderRadiusDescriptor,
   BorderRadiusPropControllerFormat,
   BorderRadiusValue,
-  BorderValue,
   Descriptor,
   MarginDescriptor,
   MarginPropControllerFormat,
@@ -76,6 +73,10 @@ import {
   Shadows,
   ResponsiveValue,
   ResolveOptions,
+  BorderPropControllerFormat,
+  ResponsiveBorderData,
+  BorderPropControllerData,
+  getBorderPropControllerDataResponsiveBorderData,
 } from '@makeswift/prop-controllers'
 import { useResponsiveLengthPropControllerData } from '../../components/hooks/useResponsiveLengthPropControllerData'
 import { useNumberPropControllerData } from '../../components/hooks/useNumberPropControllerData'
@@ -153,23 +154,14 @@ export type ResolveBorderRadiusControlValue<T extends Descriptor> = T extends Bo
     : never
   : never
 
-export function useBorderStyle(value: BorderValue | undefined): string | BorderValue | undefined {
+export function useBorderStyle(
+  data: BorderPropControllerData | undefined,
+): string | ResponsiveBorderData | undefined {
+  const value = getBorderPropControllerDataResponsiveBorderData(data)
   const borderData = useBorderData(value)
 
   return useStyle(useResponsiveBorder(borderData ?? undefined))
 }
-
-export type ResolveBorderControlValue<T extends Descriptor> = T extends BorderDescriptor
-  ? undefined extends ResolveOptions<T['options']>['format']
-    ? BorderValue | undefined
-    : ResolveOptions<T['options']>['format'] extends typeof BorderPropControllerFormat.ClassName
-    ? string
-    : ResolveOptions<
-        T['options']
-      >['format'] extends typeof BorderPropControllerFormat.ResponsiveValue
-    ? BorderValue | undefined
-    : never
-  : never
 
 type PropsValueProps = {
   element: ReactPage.ElementData
@@ -385,7 +377,7 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                 })
             }
 
-          case Props.Types.Border:
+          case PropControllerTypes.Border:
             switch (descriptor.options.format) {
               case BorderPropControllerFormat.ClassName:
                 return (

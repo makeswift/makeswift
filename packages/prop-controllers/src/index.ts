@@ -1,8 +1,24 @@
 export type { ColorData, LengthData } from './data'
 export {
+  Border,
+  BorderPropControllerFormat,
+  borderPropControllerDataSchema,
+  getBorderPropControllerDataResponsiveBorderData,
+  getBorderPropControllerDataSwatchIds,
+  createBorderPropControllerDataFromResponsiveBorderData,
+  copyBorderPropControllerData,
+} from './border'
+export type {
+  ResponsiveBorderData,
+  BorderSideData,
+  BorderDescriptor,
+  BorderPropControllerData,
+} from './border'
+export {
   Checkbox,
   checkboxPropControllerDataSchema,
   getCheckboxPropControllerDataBoolean,
+  createCheckboxPropControllerDataFromBoolean,
 } from './checkbox'
 export type {
   CheckboxDescriptor,

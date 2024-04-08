@@ -19,7 +19,7 @@ import { ColorValue } from '../components/utils/types'
  * - Remove `undefined` from possible values and make fields optional
  */
 export type BorderSideShorthandPropertyData = {
-  width: number | null | undefined
+  width?: number | null | undefined
   style: BorderStyleProperty
   color?: ColorValue | null
 }
