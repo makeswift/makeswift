@@ -13,6 +13,8 @@ import {
   ResponsiveLength,
   ResponsiveLengthPropControllerDataV1Type,
   ResponsiveValue,
+  checkboxPropControllerDataSchema,
+  getCheckboxPropControllerDataBoolean,
 } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
@@ -36,7 +38,10 @@ export function registerComponent(runtime: ReactRuntime) {
         showLogo: Checkbox({ preset: true, label: 'Show logo' }),
         logoFile: Props.Image(props => ({
           label: 'Logo',
-          hidden: props.showLogo === false,
+          hidden:
+            getCheckboxPropControllerDataBoolean(
+              checkboxPropControllerDataSchema.optional().catch(undefined).parse(props.showLogo),
+            ) === false,
         })),
         logoWidth: ResponsiveLength(props => ({
           // TODO(miguel): We're manually constructing the data here but should be using a factory
@@ -57,15 +62,24 @@ export function registerComponent(runtime: ReactRuntime) {
           max: 1000,
           // TODO: This is hardcoded value, import it from LengthInputOptions
           options: [{ value: 'px', label: 'Pixels', icon: 'Px16' }],
-          hidden: props.showLogo === false,
+          hidden:
+            getCheckboxPropControllerDataBoolean(
+              checkboxPropControllerDataSchema.optional().catch(undefined).parse(props.showLogo),
+            ) === false,
         })),
         logoAltText: Props.TextInput(props => ({
           label: 'Logo alt text',
-          hidden: props.showLogo === false,
+          hidden:
+            getCheckboxPropControllerDataBoolean(
+              checkboxPropControllerDataSchema.optional().catch(undefined).parse(props.showLogo),
+            ) === false,
         })),
         logoLink: Link(props => ({
           label: 'Logo on click',
-          hidden: props.showLogo === false,
+          hidden:
+            getCheckboxPropControllerDataBoolean(
+              checkboxPropControllerDataSchema.optional().catch(undefined).parse(props.showLogo),
+            ) === false,
         })),
         alignment: Props.ResponsiveIconRadioGroup({
           label: 'Alignment',
