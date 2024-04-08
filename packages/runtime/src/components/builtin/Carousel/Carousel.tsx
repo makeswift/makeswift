@@ -24,7 +24,6 @@ import {
   ResponsiveIconRadioGroupValue,
   GapXValue,
   CheckboxValue,
-  NumberValue,
 } from '../../../prop-controllers/descriptors'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { useStyle } from '../../../runtimes/react/use-style'
@@ -67,7 +66,7 @@ type Props = {
   slideAlignment?: ResponsiveIconRadioGroupValue<'flex-start' | 'center' | 'flex-end'>
   gap?: GapXValue
   autoplay?: CheckboxValue
-  delay?: NumberValue
+  delay?: number
   showArrows?: CheckboxValue
   arrowPosition?: ResponsiveIconRadioGroupValue<'inside' | 'center' | 'outside'>
   arrowColor?: ResponsiveColor | null

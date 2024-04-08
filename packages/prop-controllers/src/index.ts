@@ -1,5 +1,17 @@
 export type { ColorData, LengthData } from './data'
 export * from './link'
+export {
+  Number,
+  createNumberPropControllerDataFromNumber,
+  getNumberPropControllerDataNumber,
+  numberPropControllerDataSchema,
+} from './number'
+export type {
+  NumberDescriptor,
+  NumberOptions,
+  NumberPropControllerData,
+  ResolveNumberPropControllerValue,
+} from './number'
 export * from './prop-controllers'
 export {
   ResponsiveLength,
