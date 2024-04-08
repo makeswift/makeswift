@@ -9,11 +9,25 @@ export {
   copyBorderPropControllerData,
 } from './border'
 export type {
+  ResolveBorderPropControllerValue,
   ResponsiveBorderData,
   BorderSideData,
   BorderDescriptor,
   BorderPropControllerData,
 } from './border'
+export {
+  BorderRadius,
+  BorderRadiusPropControllerFormat,
+  borderRadiusPropControllerDataSchema,
+  getBorderRadiusPropControllerDataResponsiveBorderRadiusData,
+  createBorderRadiusPropControllerDataFromResponsiveBorderRadiusData,
+} from './border-radius'
+export type {
+  BorderRadiusPropControllerData,
+  ResponsiveBorderRadiusData,
+  ResolveBorderRadiusPropControllerValue,
+  BorderRadiusDescriptor,
+} from './border-radius'
 export {
   Checkbox,
   checkboxPropControllerDataSchema,

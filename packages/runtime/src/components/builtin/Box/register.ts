@@ -1,4 +1,4 @@
-import { Border, Checkbox, Shadows } from '@makeswift/prop-controllers'
+import { Border, BorderRadius, Checkbox, Shadows } from '@makeswift/prop-controllers'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
@@ -79,7 +79,7 @@ export function registerComponent(runtime: ReactRuntime) {
           ],
         }),
         border: Border({ format: Border.Format.ClassName }),
-        borderRadius: Props.BorderRadius({ format: Props.BorderRadius.Format.ClassName }),
+        borderRadius: BorderRadius({ format: BorderRadius.Format.ClassName }),
         boxShadow: Shadows({ format: Shadows.Format.ClassName }),
         rowGap: Props.GapY(props => ({
           hidden: props.children == null,

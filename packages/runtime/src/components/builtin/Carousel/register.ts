@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride } from '../../../state/modules/breakpoints'
-import { Number, ResponsiveColor } from '@makeswift/prop-controllers'
+import { BorderRadius, Number, ResponsiveColor } from '@makeswift/prop-controllers'
 
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
@@ -126,7 +126,7 @@ export function registerComponent(runtime: ReactRuntime) {
             ) === false,
         })),
         slideBorder: Border({ format: Border.Format.ClassName }),
-        slideBorderRadius: Props.BorderRadius({ format: Props.BorderRadius.Format.ClassName }),
+        slideBorderRadius: BorderRadius({ format: BorderRadius.Format.ClassName }),
       },
     },
   )
