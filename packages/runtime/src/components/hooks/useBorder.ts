@@ -3,15 +3,15 @@ import { BorderStyleProperty } from 'csstype'
 import type { ColorValue as Color } from '../utils/types'
 import { ResponsiveValue } from '../../prop-controllers'
 import {
-  BorderValue as ResponsiveBorderValue,
-  BorderSide as BorderValueSide,
-} from '../../prop-controllers/descriptors'
-import { getBorderSwatchIds } from '../../prop-controllers/introspection'
+  ResponsiveBorderData,
+  BorderSideData,
+  getBorderPropControllerDataSwatchIds,
+} from '@makeswift/prop-controllers'
 import { useSwatches } from '../../runtimes/react/hooks/makeswift-api'
 import { Swatch } from '../../api'
 import { isNonNullable } from '../utils/isNonNullable'
 
-function mapSideColor(swatches: (Swatch | null)[], { color, ...restOfSide }: BorderValueSide) {
+function mapSideColor(swatches: (Swatch | null)[], { color, ...restOfSide }: BorderSideData) {
   return {
     ...restOfSide,
     color: color && {
@@ -37,12 +37,12 @@ type BorderData = {
 export type BorderPropControllerData = ResponsiveValue<BorderData>
 
 export function useBorder(
-  value: ResponsiveBorderValue | null | undefined,
-): BorderPropControllerData | null | undefined {
-  const swatchIds = getBorderSwatchIds(value)
+  value: ResponsiveBorderData | undefined,
+): BorderPropControllerData | undefined {
+  const swatchIds = getBorderPropControllerDataSwatchIds(value)
   const swatches = useSwatches(swatchIds)
 
-  if (value == null) return null
+  if (value == null) return undefined
 
   return value.map(({ value: { borderTop, borderBottom, borderLeft, borderRight }, ...rest }) => ({
     ...rest,

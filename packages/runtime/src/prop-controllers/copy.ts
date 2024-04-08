@@ -5,12 +5,12 @@ import { copy as navigationLinksCopy } from './copy/navigation-links'
 import {
   copyLinkPropControllerData,
   copyShadowsPropControllerData,
+  copyBorderPropControllerData,
 } from '@makeswift/prop-controllers'
 import { copy as imageCopy } from './copy/image'
 import { copy as imagesCopy } from './copy/images'
 import { copy as tableFormFieldsCopy } from './copy/table-form-fields'
 import { copy as tableCopy } from './copy/table'
-import { copy as borderCopy } from './copy/border'
 import { copy as richTextCopy } from './copy/rich-text'
 import { copy as elementIdCopy } from './copy/element-id'
 import { CopyContext } from '../state/react-page'
@@ -40,8 +40,8 @@ export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
       return tableFormFieldsCopy(value, context)
     case 'Table':
       return tableCopy(value, context)
-    case 'Border':
-      return borderCopy(value, context)
+    case PropControllerTypes.Border:
+      return copyBorderPropControllerData(value, context)
     case 'RichText':
       return richTextCopy(value, context)
     case 'ElementID':

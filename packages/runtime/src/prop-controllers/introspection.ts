@@ -1,6 +1,5 @@
 import {
   BackgroundsValue,
-  BorderValue,
   Descriptor,
   ElementIDValue,
   getListPropControllerElementChildren,
@@ -73,6 +72,7 @@ import {
 } from '../controls/rich-text-v2/rich-text-v2'
 import { match, P } from 'ts-pattern'
 import {
+  ResponsiveBorderData,
   getLinkPropControllerPageIds,
   getResponsiveColorPropControllerDataSawtchIds,
   getShadowsPropControllerDataSwatchIds,
@@ -80,6 +80,7 @@ import {
   Types as PropControllerTypes,
   ResponsiveColorData,
   ShadowsPropControllerData,
+  getBorderPropControllerDataSwatchIds,
 } from '@makeswift/prop-controllers'
 
 export function getElementChildren<T extends Data>(
@@ -157,21 +158,6 @@ export function getBackgroundsSwatchIds(value: BackgroundsValue | null | undefin
   )
 }
 
-export function getBorderSwatchIds(value: BorderValue | null | undefined): string[] {
-  return (
-    value
-      ?.flatMap(override => override.value)
-      .flatMap(borderValue => {
-        return [
-          borderValue.borderTop?.color?.swatchId,
-          borderValue.borderRight?.color?.swatchId,
-          borderValue.borderBottom?.color?.swatchId,
-          borderValue.borderLeft?.color?.swatchId,
-        ].filter((swatchId): swatchId is NonNullable<typeof swatchId> => swatchId != null)
-      }) ?? []
-  )
-}
-
 export function getSwatchIds<T extends Data>(
   descriptor: Descriptor<T>,
   prop: T | undefined,
@@ -181,8 +167,8 @@ export function getSwatchIds<T extends Data>(
     case Types.Backgrounds:
       return getBackgroundsSwatchIds(prop as BackgroundsValue)
 
-    case Types.Border:
-      return getBorderSwatchIds(prop as BorderValue)
+    case PropControllerTypes.Border:
+      return getBorderPropControllerDataSwatchIds(prop as ResponsiveBorderData)
 
     case Types.NavigationLinks: {
       const value = prop as NavigationLinksValue

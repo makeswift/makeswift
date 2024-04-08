@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 export const Types = {
+  Border: 'Border',
   Checkbox: 'Checkbox',
   Link: 'Link',
   Number: 'Number',
@@ -47,6 +48,8 @@ export type ResponsiveValue<T> = DeviceOverride<T>[]
 export type ResponsiveValueType<T> = T extends ResponsiveValue<infer U>
   ? U
   : never
+
+export type Color = { swatchId: string; alpha: number }
 
 type Data =
   | undefined

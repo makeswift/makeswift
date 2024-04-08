@@ -9,6 +9,7 @@ import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
 import {
+  Border,
   Checkbox,
   checkboxPropControllerDataSchema,
   getCheckboxPropControllerDataBoolean,
@@ -124,7 +125,7 @@ export function registerComponent(runtime: ReactRuntime) {
               checkboxPropControllerDataSchema.optional().catch(undefined).parse(props.showDots),
             ) === false,
         })),
-        slideBorder: Props.Border({ format: Props.Border.Format.ClassName }),
+        slideBorder: Border({ format: Border.Format.ClassName }),
         slideBorderRadius: Props.BorderRadius({ format: Props.BorderRadius.Format.ClassName }),
       },
     },

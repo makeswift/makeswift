@@ -145,7 +145,7 @@ export function copy(definition: Descriptor | ControlDefinition, value: any, con
     case PropControllerTypes.ResponsiveColor:
     case Types.TableFormFields:
     case Types.Table:
-    case Types.Border:
+    case PropControllerTypes.Border:
     case Types.RichText:
     case Types.ElementID:
       return propControllerCopy(definition, value, context)

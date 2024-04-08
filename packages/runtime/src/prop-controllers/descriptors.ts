@@ -1,5 +1,4 @@
 import {
-  ResolveBorderControlValue,
   ResolveBorderRadiusControlValue,
   ResolveMarginControlValue,
   ResolvePaddingControlValue,
@@ -54,6 +53,7 @@ import {
   getTypographyIds,
 } from './introspection'
 import {
+  BorderDescriptor,
   CheckboxDescriptor,
   LinkData,
   LinkDescriptor,
@@ -73,6 +73,7 @@ import {
   ResponsiveColorDescriptor,
   ResolveCheckboxPropControllerValue,
 } from '@makeswift/prop-controllers'
+import { ResolveBorderPropControllerValue } from '@makeswift/prop-controllers/dist/types/border'
 
 export type { Data }
 
@@ -125,7 +126,6 @@ type TextStyle = {
 
 export const Types = {
   Backgrounds: 'Backgrounds',
-  Border: 'Border',
   BorderRadius: 'BorderRadius',
   Date: 'Date',
   ElementID: 'ElementID',
@@ -232,50 +232,6 @@ export type BackgroundsDescriptor<_T = BackgroundsValue> = {
 export function Backgrounds(options: BackgroundsOptions = {}): BackgroundsDescriptor {
   return { type: Types.Backgrounds, version: 1, options }
 }
-
-type BorderSideStyle = 'dashed' | 'dotted' | 'solid'
-
-export type BorderSide = {
-  width: number | null | undefined
-  style: BorderSideStyle
-  color?: Color | null
-}
-
-type Border = {
-  [K in 'top' | 'right' | 'bottom' | 'left' as `border${Capitalize<K>}`]:
-    | BorderSide
-    | null
-    | undefined
-}
-
-export type BorderValue = ResponsiveValue<Border>
-
-export const BorderPropControllerFormat = {
-  ClassName: 'makeswift::prop-controllers::border::format::class-name',
-  ResponsiveValue: 'makeswift::prop-controllers:border::format::responsive-value',
-} as const
-
-export type BorderPropControllerFormat =
-  typeof BorderPropControllerFormat[keyof typeof BorderPropControllerFormat]
-
-type BorderOptions = { format?: BorderPropControllerFormat }
-
-export type BorderDescriptor<_T = BorderValue, U extends BorderOptions = BorderOptions> = {
-  type: typeof Types.Border
-  options: U
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Border<T extends BorderOptions>(
-  options: T & BorderOptions = {} as T,
-): BorderDescriptor<BorderValue, T> {
-  return { type: Types.Border, options }
-}
-
-Border.Format = BorderPropControllerFormat
 
 type BorderRadius = {
   [K in 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' as `border${Capitalize<K>}Radius`]:
@@ -1231,8 +1187,8 @@ export type PanelDescriptorType =
   | typeof Types.ResponsiveIconRadioGroup
   | typeof Types.Margin
   | typeof Types.Padding
-  | typeof Types.Border
   | typeof PropControllerTypes.Shadows
+  | typeof PropControllerTypes.Border
   | typeof Types.GapY
   | typeof Types.GapX
   | typeof Types.BorderRadius
@@ -1325,8 +1281,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveResponsiveLengthPropControllerValue<
       Extract<T, { type: typeof PropControllerTypes.ResponsiveLength }>
     >
-  : T['type'] extends typeof Types.Border
-  ? ResolveBorderControlValue<T>
+  : T['type'] extends typeof PropControllerTypes.Border
+  ? ResolveBorderPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Border }>>
   : T['type'] extends typeof PropControllerTypes.Number
   ? ResolveNumberPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Number }>>
   : T extends Descriptor<infer U>
