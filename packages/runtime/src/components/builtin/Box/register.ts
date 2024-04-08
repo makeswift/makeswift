@@ -1,5 +1,5 @@
 import { Border, BorderRadius, Checkbox, Shadows } from '@makeswift/prop-controllers'
-import { Props, ResponsiveValue } from '../../../prop-controllers'
+import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
@@ -11,6 +11,7 @@ import {
   DEFAULT_ITEM_STAGGER_DURATION,
 } from './constants'
 import { lazy } from 'react'
+import { ResponsiveSelectValue } from '../../../prop-controllers/descriptors'
 
 export function registerComponent(runtime: ReactRuntime) {
   function isHiddenBasedOnAnimationType(
@@ -18,7 +19,7 @@ export function registerComponent(runtime: ReactRuntime) {
     deviceId: string,
     property: 'boxAnimateType' | 'itemAnimateType',
   ): boolean {
-    const animateIn = props[property] as ResponsiveValue<BoxAnimateIn>
+    const animateIn = props[property] as ResponsiveSelectValue<BoxAnimateIn> | undefined
     return (
       (findBreakpointOverride<BoxAnimateIn>(runtime.getBreakpoints(), animateIn, deviceId)?.value ??
         'none') === 'none'

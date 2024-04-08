@@ -1,4 +1,4 @@
-import { Props, ResponsiveValue } from '../../../prop-controllers'
+import { Props, ResponsiveSelectValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
@@ -70,7 +70,7 @@ export function registerComponent(runtime: ReactRuntime) {
         labelTextStyle: Props.TextStyle({ label: 'Label text style' }),
         labelTextColor: ResponsiveColor((props, device) => {
           const hidden = props.tableId == null
-          const responsiveContrast = props.contrast as ResponsiveValue<Contrast>
+          const responsiveContrast = props.contrast as ResponsiveSelectValue<Contrast> | undefined
           const contrast = findBreakpointOverride<Contrast>(
             runtime.getBreakpoints(),
             responsiveContrast,

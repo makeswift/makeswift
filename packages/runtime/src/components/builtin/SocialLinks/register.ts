@@ -36,7 +36,7 @@ export function registerComponent(runtime: ReactRuntime) {
           },
         }),
         shape: Props.ResponsiveIconRadioGroup(props => {
-          const links = props.links as SocialLinksValue
+          const links = props.links as SocialLinksValue | undefined
 
           return {
             label: 'Shape',
@@ -51,7 +51,7 @@ export function registerComponent(runtime: ReactRuntime) {
           }
         }),
         size: Props.ResponsiveIconRadioGroup(props => {
-          const links = props.links as SocialLinksValue
+          const links = props.links as SocialLinksValue | undefined
 
           return {
             label: 'Size',
@@ -65,7 +65,7 @@ export function registerComponent(runtime: ReactRuntime) {
           }
         }),
         hoverStyle: Props.ResponsiveSelect(props => {
-          const links = props.links as SocialLinksValue
+          const links = props.links as SocialLinksValue | undefined
           const hidden = links == null || links.links.length === 0
 
           return {
@@ -82,7 +82,7 @@ export function registerComponent(runtime: ReactRuntime) {
           }
         }),
         fill: ResponsiveColor(props => {
-          const links = props.links as SocialLinksValue
+          const links = props.links as SocialLinksValue | undefined
           const hidden = links == null || links.links.length === 0
 
           return {
@@ -91,7 +91,7 @@ export function registerComponent(runtime: ReactRuntime) {
           }
         }),
         backgroundColor: ResponsiveColor(props => {
-          const links = props.links as SocialLinksValue
+          const links = props.links as SocialLinksValue | undefined
           const hidden = links == null || links.links.length === 0
 
           return {
