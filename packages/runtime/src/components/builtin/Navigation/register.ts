@@ -1,5 +1,5 @@
 import { Props } from '../../../prop-controllers'
-import { NavigationLinksValue } from '../../../prop-controllers/descriptors'
+import { NavigationLinksValue, ResponsiveSelectValue } from '../../../prop-controllers/descriptors'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
@@ -12,7 +12,6 @@ import {
   ResponsiveColor,
   ResponsiveLength,
   ResponsiveLengthPropControllerDataV1Type,
-  ResponsiveValue,
   checkboxPropControllerDataSchema,
   getCheckboxPropControllerDataBoolean,
 } from '@makeswift/prop-controllers'
@@ -28,7 +27,7 @@ export function registerComponent(runtime: ReactRuntime) {
         id: Props.ElementID(),
         links: Props.NavigationLinks(),
         linkTextStyle: Props.TextStyle(props => {
-          const links = props.links as NavigationLinksValue
+          const links = props.links as NavigationLinksValue | undefined
 
           return {
             label: 'Link text style',
@@ -111,7 +110,9 @@ export function registerComponent(runtime: ReactRuntime) {
           ],
         }),
         mobileMenuOpenIconColor: ResponsiveColor((props, device) => {
-          const mobileMenuAnimation = props.mobileMenuAnimation as ResponsiveValue<string>
+          const mobileMenuAnimation = props.mobileMenuAnimation as
+            | ResponsiveSelectValue<string>
+            | undefined
           const hidden = !findBreakpointOverride(
             runtime.getBreakpoints(),
             mobileMenuAnimation,
@@ -125,7 +126,9 @@ export function registerComponent(runtime: ReactRuntime) {
           }
         }),
         mobileMenuCloseIconColor: ResponsiveColor((props, device) => {
-          const mobileMenuAnimation = props.mobileMenuAnimation as ResponsiveValue<string>
+          const mobileMenuAnimation = props.mobileMenuAnimation as
+            | ResponsiveSelectValue<string>
+            | undefined
           const hidden = !findBreakpointOverride(
             runtime.getBreakpoints(),
             mobileMenuAnimation,
@@ -139,7 +142,9 @@ export function registerComponent(runtime: ReactRuntime) {
           }
         }),
         mobileMenuBackgroundColor: ResponsiveColor((props, device) => {
-          const mobileMenuAnimation = props.mobileMenuAnimation as ResponsiveValue<string>
+          const mobileMenuAnimation = props.mobileMenuAnimation as
+            | ResponsiveSelectValue<string>
+            | undefined
           const hidden = !findBreakpointOverride(
             runtime.getBreakpoints(),
             mobileMenuAnimation,

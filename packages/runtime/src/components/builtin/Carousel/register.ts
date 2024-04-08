@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid'
 
-import { Props, ResponsiveValue } from '../../../prop-controllers'
+import { ImagesValue, Props, ResponsiveNumberValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride } from '../../../state/modules/breakpoints'
 import { BorderRadius, Number, ResponsiveColor } from '@makeswift/prop-controllers'
@@ -37,7 +37,7 @@ export function registerComponent(runtime: ReactRuntime) {
         }),
         margin: Props.Margin({ format: Props.Margin.Format.ClassName }),
         pageSize: Props.ResponsiveNumber(props => {
-          const images = props.images as unknown[]
+          const images = props.images as ImagesValue | undefined
           const imagesLength = images?.length ?? 0
 
           return {
@@ -49,7 +49,7 @@ export function registerComponent(runtime: ReactRuntime) {
           }
         }),
         step: Props.ResponsiveNumber((props, device) => {
-          const pageSize = props.pageSize as ResponsiveValue<number>
+          const pageSize = props.pageSize as ResponsiveNumberValue | undefined
           const pageSizeValue =
             findBreakpointOverride(runtime.getBreakpoints(), pageSize, device)?.value ?? 1
 
