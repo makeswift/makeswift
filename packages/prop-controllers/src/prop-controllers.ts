@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 export const Types = {
   Border: 'Border',
+  BorderRadius: 'BorderRadius',
   Checkbox: 'Checkbox',
   Link: 'Link',
   Number: 'Number',

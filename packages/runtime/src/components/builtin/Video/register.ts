@@ -3,6 +3,7 @@ import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
+import { BorderRadius } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -19,7 +20,7 @@ export function registerComponent(runtime: ReactRuntime) {
           defaultValue: { value: 560, unit: 'px' },
         }),
         margin: Props.Margin({ format: Props.Margin.Format.ClassName }),
-        borderRadius: Props.BorderRadius({ format: Props.BorderRadius.Format.ClassName }),
+        borderRadius: BorderRadius({ format: BorderRadius.Format.ClassName }),
       },
     },
   )

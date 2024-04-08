@@ -3,9 +3,6 @@ import { useRef } from 'react'
 import * as ReactPage from '../../state/react-page'
 import { Props } from '../../prop-controllers'
 import {
-  BorderRadiusDescriptor,
-  BorderRadiusPropControllerFormat,
-  BorderRadiusValue,
   Descriptor,
   MarginDescriptor,
   MarginPropControllerFormat,
@@ -77,6 +74,9 @@ import {
   ResponsiveBorderData,
   BorderPropControllerData,
   getBorderPropControllerDataResponsiveBorderData,
+  getBorderRadiusPropControllerDataResponsiveBorderRadiusData,
+  BorderRadiusPropControllerData,
+  BorderRadiusPropControllerFormat,
 } from '@makeswift/prop-controllers'
 import { useResponsiveLengthPropControllerData } from '../../components/hooks/useResponsiveLengthPropControllerData'
 import { useNumberPropControllerData } from '../../components/hooks/useNumberPropControllerData'
@@ -132,27 +132,15 @@ export type ResolveMarginControlValue<T extends Descriptor> = T extends MarginDe
     : never
   : never
 
-export function useBorderRadiusStyle(value: BorderRadiusValue | undefined): string {
+export function useBorderRadiusStyle(data: BorderRadiusPropControllerData | undefined): string {
+  const value = getBorderRadiusPropControllerDataResponsiveBorderRadiusData(data)
+
   return useStyle(useResponsiveBorderRadius(value))
 }
 
 export function useShadowsStyle(data: ShadowsPropControllerData | undefined): string {
   return useStyle(useResponsiveShadow(useBoxShadow(data) ?? undefined))
 }
-
-export type ResolveBorderRadiusControlValue<T extends Descriptor> = T extends BorderRadiusDescriptor
-  ? undefined extends ResolveOptions<T['options']>['format']
-    ? BorderRadiusValue | undefined
-    : ResolveOptions<
-        T['options']
-      >['format'] extends typeof BorderRadiusPropControllerFormat.ClassName
-    ? string
-    : ResolveOptions<
-        T['options']
-      >['format'] extends typeof BorderRadiusPropControllerFormat.ResponsiveValue
-    ? BorderRadiusValue | undefined
-    : never
-  : never
 
 export function useBorderStyle(
   data: BorderPropControllerData | undefined,
@@ -317,7 +305,7 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                 return renderFn({ ...propsValue, [propName]: props[propName] })
             }
 
-          case Props.Types.BorderRadius:
+          case PropControllerTypes.BorderRadius:
             switch (descriptor.options.format) {
               case BorderRadiusPropControllerFormat.ClassName:
                 return (

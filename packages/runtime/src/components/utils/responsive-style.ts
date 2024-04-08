@@ -3,6 +3,7 @@ import { CSSObject } from '@emotion/css'
 import type {
   ResponsiveValueType as ExtractResponsiveValue,
   LengthData,
+  ResponsiveBorderRadiusData,
   ResponsiveValue,
 } from '@makeswift/prop-controllers'
 
@@ -10,7 +11,6 @@ import {
   WidthValue,
   PaddingValue,
   MarginValue,
-  BorderRadiusValue,
   TextStyleValue,
 } from '../../prop-controllers/descriptors'
 import {
@@ -130,7 +130,7 @@ export function useResponsiveMargin(
 
 export function responsiveBorderRadius(
   breakpoints: Breakpoints,
-  borderRadiusData: BorderRadiusValue | undefined,
+  borderRadiusData: ResponsiveBorderRadiusData | undefined,
   defaultValue: BorderRadiusPropertyData = {} as BorderRadiusPropertyData,
 ): CSSObject {
   return responsiveStyle(breakpoints, [borderRadiusData], ([borderRadius = {}]) =>
