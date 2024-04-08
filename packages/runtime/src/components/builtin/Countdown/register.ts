@@ -4,6 +4,7 @@ import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
+import { ResponsiveColor } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -68,16 +69,16 @@ export function registerComponent(runtime: ReactRuntime) {
           defaultValue: { value: 0, unit: 'px' },
         }),
         numberFont: Props.Font({ label: 'Number font' }),
-        numberColor: Props.ResponsiveColor({
+        numberColor: ResponsiveColor({
           label: 'Number color',
           placeholder: 'white',
         }),
-        blockColor: Props.ResponsiveColor({
+        blockColor: ResponsiveColor({
           label: 'Block color',
           placeholder: 'black',
         }),
         labelFont: Props.Font({ label: 'Label font' }),
-        labelColor: Props.ResponsiveColor({
+        labelColor: ResponsiveColor({
           label: 'Label color',
           placeholder: 'black',
         }),

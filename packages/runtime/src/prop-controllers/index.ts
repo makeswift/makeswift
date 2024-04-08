@@ -14,8 +14,6 @@ export type {
   GapYDescriptor,
   GapYOptions,
   GapYValue,
-  ResponsiveColorDescriptor,
-  ResponsiveColorValue,
   ResponsiveNumberDescriptor,
   ResponsiveNumberOptions,
   ResponsiveNumberValue,

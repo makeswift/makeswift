@@ -8,7 +8,6 @@ import {
 } from '@makeswift/prop-controllers'
 import { copy as imageCopy } from './copy/image'
 import { copy as imagesCopy } from './copy/images'
-import { copy as responsiveColorCopy } from './copy/responsive-color'
 import { copy as tableFormFieldsCopy } from './copy/table-form-fields'
 import { copy as tableCopy } from './copy/table'
 import { copy as borderCopy } from './copy/border'
@@ -16,6 +15,7 @@ import { copy as richTextCopy } from './copy/rich-text'
 import { copy as elementIdCopy } from './copy/element-id'
 import { CopyContext } from '../state/react-page'
 import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
+import { copyResponsiveColorPropControllerData } from '@makeswift/prop-controllers'
 
 // @note: note typing value, because would then have to type narrow `Data` per case
 export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
@@ -35,7 +35,7 @@ export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
     case 'Images':
       return imagesCopy(descriptor, value, context)
     case 'ResponsiveColor':
-      return responsiveColorCopy(value, context)
+      return copyResponsiveColorPropControllerData(value, context)
     case 'TableFormFields':
       return tableFormFieldsCopy(value, context)
     case 'Table':

@@ -4,6 +4,7 @@ export const Types = {
   Link: 'Link',
   Number: 'Number',
   Shadows: 'Shadows',
+  ResponsiveColor: 'ResponsiveColor',
   ResponsiveLength: 'ResponsiveLength',
 } as const
 

@@ -5,7 +5,7 @@ import { MakeswiftComponentType } from '../constants'
 import { Alignments, Contrast, Contrasts, Shapes, Sizes } from './context/FormContext'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
-import { Link, ResponsiveLength } from '@makeswift/prop-controllers'
+import { Link, ResponsiveColor, ResponsiveLength } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -68,7 +68,7 @@ export function registerComponent(runtime: ReactRuntime) {
           hidden: props.tableId == null,
         })),
         labelTextStyle: Props.TextStyle({ label: 'Label text style' }),
-        labelTextColor: Props.ResponsiveColor((props, device) => {
+        labelTextColor: ResponsiveColor((props, device) => {
           const hidden = props.tableId == null
           const responsiveContrast = props.contrast as ResponsiveValue<Contrast>
           const contrast = findBreakpointOverride<Contrast>(
@@ -85,13 +85,13 @@ export function registerComponent(runtime: ReactRuntime) {
           }
         }),
         submitTextStyle: Props.TextStyle({ label: 'Button text style' }),
-        brandColor: Props.ResponsiveColor(props => ({
+        brandColor: ResponsiveColor(props => ({
           label: 'Button color',
           placeholder: 'black',
           hidden: props.tableId == null,
           // TODO: Add hideAlphaSlider
         })),
-        submitTextColor: Props.ResponsiveColor(props => ({
+        submitTextColor: ResponsiveColor(props => ({
           label: 'Button text color',
           placeholder: 'white',
           hidden: props.tableId == null,

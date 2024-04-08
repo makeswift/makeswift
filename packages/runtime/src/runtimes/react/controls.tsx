@@ -22,7 +22,6 @@ import {
 } from '../../prop-controllers/descriptors'
 import {
   useBoxShadow,
-  useResponsiveColor,
   useBorder as useBorderData,
   usePropControllerLinkData,
 } from '../../components/hooks'
@@ -79,6 +78,7 @@ import {
 } from '@makeswift/prop-controllers'
 import { useResponsiveLengthPropControllerData } from '../../components/hooks/useResponsiveLengthPropControllerData'
 import { useNumberPropControllerData } from '../../components/hooks/useNumberPropControllerData'
+import { useResponsiveColorPropControllerData } from '../../components/hooks/useResponsiveColorPropControllerData'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -401,11 +401,11 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                 return renderFn({ ...propsValue, [propName]: props[propName] })
             }
 
-          case Props.Types.ResponsiveColor:
+          case PropControllerTypes.ResponsiveColor:
             return (
               <RenderHook
                 key={descriptor.type}
-                hook={useResponsiveColor}
+                hook={useResponsiveColorPropControllerData}
                 parameters={[props[propName]]}
               >
                 {value => renderFn({ ...propsValue, [propName]: value })}

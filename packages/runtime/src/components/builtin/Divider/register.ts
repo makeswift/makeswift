@@ -3,7 +3,7 @@ import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
-import { ResponsiveLength } from '@makeswift/prop-controllers'
+import { ResponsiveColor, ResponsiveLength } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -30,7 +30,7 @@ export function registerComponent(runtime: ReactRuntime) {
           defaultValue: { value: 1, unit: 'px' },
           options: [{ value: 'px', label: 'Pixels', icon: 'Px16' }],
         }),
-        color: Props.ResponsiveColor({ placeholder: 'black' }),
+        color: ResponsiveColor({ placeholder: 'black' }),
         width: Props.Width({
           format: Props.Width.Format.ClassName,
           defaultValue: { value: 100, unit: '%' },

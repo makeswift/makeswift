@@ -142,7 +142,7 @@ export function copy(definition: Descriptor | ControlDefinition, value: any, con
     case PropControllerTypes.Shadows:
     case Types.Image:
     case Types.Images:
-    case Types.ResponsiveColor:
+    case PropControllerTypes.ResponsiveColor:
     case Types.TableFormFields:
     case Types.Table:
     case Types.Border:

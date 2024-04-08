@@ -14,6 +14,21 @@ export type {
 } from './number'
 export * from './prop-controllers'
 export {
+  ResponsiveColor,
+  copyResponsiveColorPropControllerData,
+  createResponsiveColorPropControllerDataFromResponsiveColorData,
+  getResponsiveColorDataSwatchIds,
+  getResponsiveColorPropControllerDataResponsiveColorData,
+  getResponsiveColorPropControllerDataSawtchIds,
+  responsiveColorPropControllerDataSchema,
+} from './responsive-color'
+export type {
+  ResponsiveColorData,
+  ResponsiveColorDescriptor,
+  ResponsiveColorOptions,
+  ResponsiveColorPropControllerData,
+} from './responsive-color'
+export {
   ResponsiveLength,
   ResponsiveLengthPropControllerDataV1Type,
   createResponsiveLengthPropControllerDataFromResponsiveLengthData,

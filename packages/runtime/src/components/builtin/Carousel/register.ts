@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid'
 import { Props, ResponsiveValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride } from '../../../state/modules/breakpoints'
-import { Number } from '@makeswift/prop-controllers'
+import { Number, ResponsiveColor } from '@makeswift/prop-controllers'
 
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
@@ -89,18 +89,18 @@ export function registerComponent(runtime: ReactRuntime) {
           defaultValue: 'inside',
           hidden: props.showArrows === false,
         })),
-        arrowColor: Props.ResponsiveColor(props => ({
+        arrowColor: ResponsiveColor(props => ({
           label: 'Arrow color',
           placeholder: 'black',
           hidden: props.showArrows === false,
         })),
-        arrowBackground: Props.ResponsiveColor(props => ({
+        arrowBackground: ResponsiveColor(props => ({
           label: 'Arrow background',
           placeholder: 'white',
           hidden: props.showArrows === false,
         })),
         showDots: Props.Checkbox({ preset: true, label: 'Show dots' }),
-        dotColor: Props.ResponsiveColor(props => ({
+        dotColor: ResponsiveColor(props => ({
           label: 'Dot color',
           placeholder: 'black',
           hidden: props.showDots === false,

@@ -31,8 +31,6 @@ import {
   ListDescriptor as ListControl,
   ListOptions as ListControlConfig,
   ListValue as ListControlValue,
-  ResponsiveColorDescriptor as ResponsiveColorControl,
-  ResponsiveColorValue as ResponsiveColorControlValue,
   ResponsiveNumberDescriptor as ResponsiveNumberControl,
   ResponsiveNumberValue as ResponsiveNumberControlValue,
   ResponsiveIconRadioGroupDescriptor as ResponsiveIconRadioGroupControl,
@@ -89,6 +87,8 @@ import {
   NumberOptions,
   NumberPropControllerData,
   NumberDescriptor,
+  ResponsiveColorPropControllerData,
+  ResponsiveColorDescriptor,
 } from '@makeswift/prop-controllers'
 
 type SerializedShapeControlConfig<T extends Record<string, SerializedPanelControl>> = {
@@ -463,13 +463,13 @@ function deserializeCheckboxControl(
 
 type ResponsiveColorControlConfig = { label?: string; placeholder?: string; hidden?: boolean }
 
-type SerializedResponsiveColorControl<_T = ResponsiveColorControlValue> = {
-  type: typeof Controls.Types.ResponsiveColor
+type SerializedResponsiveColorControl<_T = ResponsiveColorPropControllerData> = {
+  type: typeof PropControllerTypes.ResponsiveColor
   options: SerializedConfig<ResponsiveColorControlConfig>
 }
 
 function serializeResponsiveColorControl(
-  control: ResponsiveColorControl,
+  control: ResponsiveColorDescriptor,
 ): [SerializedResponsiveColorControl, Transferable[]] {
   const { options } = control
 
@@ -480,8 +480,8 @@ function serializeResponsiveColorControl(
   return [{ ...control, options: serializedOptions }, [serializedOptions]]
 }
 
-type DeserializedResponsiveColorControl<_T = ResponsiveColorControlValue> = {
-  type: typeof Controls.Types.ResponsiveColor
+type DeserializedResponsiveColorControl<_T = ResponsiveColorPropControllerData> = {
+  type: typeof PropControllerTypes.ResponsiveColor
   options: DeserializedConfig<ResponsiveColorControlConfig>
 }
 
@@ -872,7 +872,7 @@ export type SerializedControl<T extends Data = Data> =
       | GapYControl<T>
       | ResponsiveNumberControl<T>
       | CheckboxControl<T>
-      | ResponsiveColorControl<T>
+      | ResponsiveColorDescriptor<T>
       | NumberDescriptor<T>
       | ResponsiveIconRadioGroupControl<
           T extends ResponsiveIconRadioGroupControlValue ? T : ResponsiveIconRadioGroupControlValue
@@ -935,7 +935,7 @@ export type DeserializedControl<T extends Data = Data> =
       | GapYControl<T>
       | ResponsiveNumberControl<T>
       | CheckboxControl<T>
-      | ResponsiveColorControl<T>
+      | ResponsiveColorDescriptor<T>
       | NumberDescriptor<T>
       | ResponsiveIconRadioGroupControl<
           T extends ResponsiveIconRadioGroupControlValue ? T : ResponsiveIconRadioGroupControlValue
@@ -1010,7 +1010,7 @@ export function serializeControl<T extends Data>(
     case Controls.Types.GapY:
       return serializeGapYControl(control)
 
-    case Controls.Types.ResponsiveColor:
+    case PropControllerTypes.ResponsiveColor:
       return serializeResponsiveColorControl(control)
 
     case Controls.Types.ResponsiveNumber:
@@ -1088,7 +1088,7 @@ export function deserializeControl<T extends Data>(
     case Controls.Types.GapY:
       return deserializeGapYControl(serializedControl)
 
-    case Controls.Types.ResponsiveColor:
+    case PropControllerTypes.ResponsiveColor:
       return deserializeResponsiveColorControl(serializedControl)
 
     case Controls.Types.ResponsiveNumber:
