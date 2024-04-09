@@ -1,5 +1,42 @@
 # @makeswift/runtime
 
+## 0.16.0-canary.1
+
+### Minor Changes
+
+- cf79dcb: Add data type to legacy `ResponsiveLength` prop controller and move it to `@makeswift/prop-controllers`.
+- 89a6d77: Add data type to legacy `BorderRadius` prop controller and move it to `@makeswift/prop-controllers`.
+- 5bd9b5f: Add data type to legacy `Shadows` prop controller and move it to `@makeswift/prop-controllers`.
+- 0a9a89c: Add data type to legacy `ResponsiveColor` prop controller and move it to `@makeswift/prop-controllers`.
+- 4847f1b: Add data type to legacy `Checkbox` prop controller and move it to `@makeswift/prop-controllers`.
+- 38f8798: Add data type to legacy `Border` prop controller and move it to `@makeswift/prop-controllers`.
+- c37a850: Add data type to legacy `Number` prop controller and move it to `@makeswift/prop-controllers`.
+
+### Patch Changes
+
+- Updated dependencies [cf79dcb]
+- Updated dependencies [89a6d77]
+- Updated dependencies [5bd9b5f]
+- Updated dependencies [0a9a89c]
+- Updated dependencies [4847f1b]
+- Updated dependencies [38f8798]
+- Updated dependencies [c37a850]
+- Updated dependencies [6b62ab6]
+  - @makeswift/prop-controllers@0.1.0-canary.1
+
+## 0.16.0-canary.0
+
+### Minor Changes
+
+- a909fa1: Use the `@makeswift/prop-controllers` package, and migrate `LinkPropController`.
+
+### Patch Changes
+
+- 2602000: Handle the new data type for `LinkPropController`.
+- Updated dependencies [2602000]
+- Updated dependencies [a909fa1]
+  - @makeswift/prop-controllers@0.0.2-canary.0
+
 ## 0.15.0
 
 ### Minor Changes
