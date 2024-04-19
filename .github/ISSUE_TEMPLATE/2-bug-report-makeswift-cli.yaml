@@ -1,0 +1,47 @@
+name: "Bug Report: Makeswift CLI"
+description: Having trouble with the Makeswift CLI? File an issue with this template.
+labels: ["bug", "cli"]
+body:
+  - type: textarea
+    attributes:
+      label: "Describe the bug"
+      description: "A clear and concise description of what the bug is."
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Steps to reproduce"
+      description: "An ordered list of steps we can follow to reproduce your issue."
+      value: |
+        **Steps:**
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+
+        **Expected Behavior:**
+
+        **Actual Behavior:**
+
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Screenshots/Videos"
+      description: "If applicable, add screenshots and/or videos to help explain your problem."
+  - type: textarea
+    attributes:
+      label: "Environment"
+      description: "Please provide information about your environment."
+      value: |
+        - **Binaries**
+          - Node.js version: `18.19.1`
+          - Package Manager version: `pnpm@8.6.5`
+          - Makeswift Runtime version: `0.15.0`
+        - **Operating system**
+          - Name: `macOS (M2 chip)`
+          - Version: `Sonoma 14.4.1`
+        - **Browser**
+          - Name: `chrome` 
+          - Version: `91.0.4472.124`
+    validations:
+      required: true
