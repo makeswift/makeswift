@@ -1,3 +1,4 @@
+/** @jsxRuntime classic */
 /** @jsx jsxWithV2Editor */
 
 import { ComponentType } from 'react'

@@ -1,11 +1,10 @@
-import { describe, test, expect } from 'vitest'
 import {
   deserializeFunction,
   isSerializedFunction,
   serializeFunction,
 } from './function-serialization'
 
-describe.concurrent('serializeFunction & deserializeFunction', () => {
+describe('serializeFunction & deserializeFunction', () => {
   test('simple call', async () => {
     // Arrange
     const add = deserializeFunction(serializeFunction((a, b) => a + b))
@@ -29,7 +28,7 @@ describe.concurrent('serializeFunction & deserializeFunction', () => {
   })
 })
 
-describe.concurrent('isSerializedFunction', () => {
+describe('isSerializedFunction', () => {
   test('trivial case', () => {
     // Arrange
     const add = serializeFunction((a, b) => a + b)

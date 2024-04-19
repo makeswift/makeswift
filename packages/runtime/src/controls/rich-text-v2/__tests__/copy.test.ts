@@ -1,4 +1,3 @@
-import { describe, expect, test } from 'vitest'
 import { RichTextV2ControlData, RichTextV2ControlType } from '../rich-text-v2'
 import { copy } from '../../control'
 import { ReplacementContext } from '../../../state/react-page'

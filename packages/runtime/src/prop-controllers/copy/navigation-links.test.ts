@@ -1,9 +1,8 @@
-import { describe, test, expect } from 'vitest'
 import { NavigationLinksValue } from '../descriptors'
 import { copy } from './navigation-links'
 import { ReplacementContext } from '../../state/react-page'
 
-describe.concurrent('navigation-links copy', () => {
+describe('navigation-links copy', () => {
   test('replace page id from replacement context', () => {
     // Arrange
     const data: NavigationLinksValue = [

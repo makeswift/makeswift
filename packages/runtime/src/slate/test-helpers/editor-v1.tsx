@@ -1,3 +1,4 @@
+/** @jsxRuntime classic */
 /** @jsx jsx */
 
 import { ComponentType } from 'react'
@@ -10,7 +11,7 @@ const EditorElement = 'editor' as any as ComponentType<{
 }>
 
 /**
- * Note: If you tried to add the react plugin to the vitest config
+ * Note: If you tried to add the react plugin to the @jest/globals config
  * 1. You have to use {jsxRuntime: "classic"} since we are using pragmas in these tests
  * 2. You will get a circular dependency error in slate because the plugin uses these
  *    two plugins to get better stack traces in react.

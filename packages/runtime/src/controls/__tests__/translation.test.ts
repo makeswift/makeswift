@@ -1,4 +1,3 @@
-import { describe, expect, test } from 'vitest'
 import { mergeTranslatedData } from '../control'
 import * as ShapeFixture from './fixtures/shape'
 import { Element } from '../../state/modules/read-only-documents'

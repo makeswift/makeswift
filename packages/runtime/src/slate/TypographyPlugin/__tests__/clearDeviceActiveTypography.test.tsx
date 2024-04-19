@@ -1,7 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { describe, it, expect } from 'vitest'
 import { TypographyActions } from '../'
 // @ts-expect-error: 'jsx' is declared but its value is never read.
 import { jsx, Cursor, Editor, Paragraph, Text, Anchor, Focus } from '../../test-helpers'

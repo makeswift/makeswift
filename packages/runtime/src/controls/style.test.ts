@@ -1,8 +1,7 @@
-import { describe, test, expect } from 'vitest'
 import { StyleControlData, copyStyleData } from './style'
 import { ReplacementContext } from '../state/react-page'
 
-describe.concurrent('style copy', () => {
+describe('style copy', () => {
   test('colors are replaced', () => {
     // Arrange
     const value: StyleControlData = {

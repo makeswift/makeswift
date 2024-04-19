@@ -1,4 +1,3 @@
-import { describe, expect, test } from 'vitest'
 import { getRichTextV2TranslatableData, mergeRichTextV2TranslatedData } from '../translation'
 import { RichText } from '../rich-text-v2'
 import * as Simple from './fixtures/simple'

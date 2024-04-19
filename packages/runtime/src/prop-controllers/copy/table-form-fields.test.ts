@@ -1,9 +1,8 @@
-import { describe, test, expect } from 'vitest'
 import { TableFormFieldsValue } from '../descriptors'
 import { copy } from './table-form-fields'
 import { ReplacementContext } from '../../state/react-page'
 
-describe.concurrent('table form fields copy', () => {
+describe('table form fields copy', () => {
   test('replaces the table column id', () => {
     // Arrange
     const data: TableFormFieldsValue = {
