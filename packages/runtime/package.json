@@ -152,12 +152,15 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@emotion/jest": "^11.11.0",
     "@graphql-codegen/add": "^3.1.0",
     "@graphql-codegen/cli": "2.6.2",
     "@graphql-codegen/typescript-document-nodes": "^2.3.12",
     "@graphql-codegen/typescript-operations": "2.3.4",
     "@swc/core": "^1.4.15",
     "@swc/jest": "^0.2.36",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^15.0.2",
     "@types/color": "^3.0.2",
     "@types/cors": "^2.8.12",
     "@types/escape-html": "^1.0.2",
