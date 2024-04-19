@@ -1,9 +1,8 @@
-import { describe, test, expect } from 'vitest'
 import { TableValue } from '../descriptors'
 import { ReplacementContext } from '../../state/react-page'
 import { copy } from './table'
 
-describe.concurrent('table copy', () => {
+describe('table copy', () => {
   test('replaces the table id', () => {
     // Arrange
     const data: TableValue = 'VGFibGU6MTM5NDhlYzMtMjgwNS00Nzk0LTliNzctNDJkN2RhNmQxZWEy'

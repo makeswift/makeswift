@@ -1,7 +1,6 @@
 import { parseBreakpointsInput } from './breakpoints'
-import { describe, test, expect } from 'vitest'
 
-describe.concurrent('parseBreakpointsInput', () => {
+describe('parseBreakpointsInput', () => {
   test('adds the base breakpoint', async () => {
     // Arrange
     const input = {

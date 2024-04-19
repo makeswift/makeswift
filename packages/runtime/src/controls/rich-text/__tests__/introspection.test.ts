@@ -1,4 +1,3 @@
-import { describe, expect, test } from 'vitest'
 import { RichTextControlData, RichTextControlType } from '../rich-text'
 import { getPageIds, getSwatchIds, getTypographyIds } from '../../../prop-controllers/introspection'
 import { IndexSignatureHack } from '../../../prop-controllers/descriptors'

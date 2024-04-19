@@ -1,4 +1,3 @@
-import { describe, it, fn, expect } from 'vitest'
 import { registerComponentHandle, registerDocument } from './actions'
 import { ElementImperativeHandle } from '../runtimes/react/element-imperative-handle'
 import { applyMiddleware, createStore } from 'redux'
@@ -12,7 +11,7 @@ describe('propControllerHandlesMiddleware', () => {
     const documentKey = 'documentKey'
     const element: ReactPage.Element = { key: 'elementKey', type: 'type', props: {} }
     const store = createStore(reducer, applyMiddleware(thunk, propControllerHandlesMiddleware()))
-    const setPropControllers = fn()
+    const setPropControllers = jest.fn()
     const handle = new ElementImperativeHandle()
 
     handle.callback(() => ({ setPropControllers }))
@@ -31,7 +30,7 @@ describe('propControllerHandlesMiddleware', () => {
     const documentKey = 'documentKey'
     const element: ReactPage.Element = { type: 'reference', key: 'elementKey', value: 'value' }
     const store = createStore(reducer, applyMiddleware(thunk, propControllerHandlesMiddleware()))
-    const setPropControllers = fn()
+    const setPropControllers = jest.fn()
     const handle = new ElementImperativeHandle()
 
     handle.callback(() => ({ setPropControllers }))

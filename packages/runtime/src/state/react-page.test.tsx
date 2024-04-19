@@ -1,10 +1,70 @@
+/** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { describe, expect, test } from 'vitest'
 import { Slot, TextInput } from '../controls'
 import { registerComponent } from './actions'
 import * as ReactPage from './react-page'
 import { ComponentIcon } from './modules/components-meta'
+
+// @ts-ignore Used by JSX pragma
+function jsx(type: Function, props: Record<string, unknown> = {}, ...children: JSX.Element[]) {
+  return type({
+    ...props,
+    children:
+      children.length === 0
+        ? props.children ?? []
+        : children.length === 1
+        ? children.at(0)
+        : children,
+  })
+}
+
+const ElementType = {
+  Box: 'box',
+  Button: 'button',
+} as const
+
+type ElementType = typeof ElementType[keyof typeof ElementType]
+
+function Box({ key, children }: { key: string; children?: JSX.Element | JSX.Element[] }) {
+  const elements = children == null ? [] : [children].flat()
+
+  return { type: ElementType.Box, key, props: { children: { elements } } }
+}
+
+function Button({ key, children }: { key: string; children?: string }) {
+  return { type: ElementType.Button, key, props: { children } }
+}
+
+function SlotTombstone({ type, key }: { type: ElementType; key: string }) {
+  return { type, key, props: {}, deleted: true }
+}
+
+function render(element: JSX.Element): ReactPage.ElementData {
+  return element as ReactPage.ElementData
+}
+
+function createTestStore(): ReactPage.Store {
+  const store = ReactPage.configureStore()
+
+  store.dispatch(
+    registerComponent(
+      ElementType.Box,
+      { label: 'Box', icon: ComponentIcon.Cube, hidden: false },
+      { children: Slot() },
+    ),
+  )
+
+  store.dispatch(
+    registerComponent(
+      ElementType.Button,
+      { label: 'Button', icon: ComponentIcon.Cube, hidden: false },
+      { children: TextInput() },
+    ),
+  )
+
+  return store
+}
 
 describe('ReactPage', () => {
   const store = createTestStore()
@@ -54,7 +114,7 @@ describe('ReactPage', () => {
     })
 
     // TODO: At what index is the element inserted?
-    test.todo('adding an element', () => {
+    test.skip('adding an element', () => {
       // Arrange
       const base = render(
         <Box key="root">
@@ -133,7 +193,7 @@ describe('ReactPage', () => {
     })
 
     // TODO: Into what index is the element sorted?
-    test.todo('elements sorted in Slot', () => {
+    test.skip('elements sorted in Slot', () => {
       // Arrange
       const base = render(
         <Box key="root">
@@ -177,63 +237,3 @@ describe('ReactPage', () => {
     })
   })
 })
-
-// @ts-ignore Used by JSX pragma
-function jsx(type: Function, props: Record<string, unknown> = {}, ...children: JSX.Element[]) {
-  return type({
-    ...props,
-    children:
-      children.length === 0
-        ? props.children ?? []
-        : children.length === 1
-        ? children.at(0)
-        : children,
-  })
-}
-
-const ElementType = {
-  Box: 'box',
-  Button: 'button',
-} as const
-
-type ElementType = typeof ElementType[keyof typeof ElementType]
-
-function Box({ key, children }: { key: string; children?: JSX.Element | JSX.Element[] }) {
-  const elements = children == null ? [] : [children].flat()
-
-  return { type: ElementType.Box, key, props: { children: { elements } } }
-}
-
-function Button({ key, children }: { key: string; children?: string }) {
-  return { type: ElementType.Button, key, props: { children } }
-}
-
-function SlotTombstone({ type, key }: { type: ElementType; key: string }) {
-  return { type, key, props: {}, deleted: true }
-}
-
-function render(element: JSX.Element): ReactPage.ElementData {
-  return element as ReactPage.ElementData
-}
-
-function createTestStore(): ReactPage.Store {
-  const store = ReactPage.configureStore()
-
-  store.dispatch(
-    registerComponent(
-      ElementType.Box,
-      { label: 'Box', icon: ComponentIcon.Cube, hidden: false },
-      { children: Slot() },
-    ),
-  )
-
-  store.dispatch(
-    registerComponent(
-      ElementType.Button,
-      { label: 'Button', icon: ComponentIcon.Cube, hidden: false },
-      { children: TextInput() },
-    ),
-  )
-
-  return store
-}

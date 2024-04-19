@@ -1,7 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { describe, it, expect } from 'vitest'
 import { BlockActions } from '..'
 import { InlineType } from '../..'
 // @ts-expect-error: 'jsx' is declared but its value is never read.

@@ -1,7 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { describe, it, expect } from 'vitest'
 import { TypographyActions } from '../'
 import { DEFAULT_BREAKPOINTS } from '../../../state/modules/breakpoints'
 // @ts-expect-error: 'jsx' is declared but its value is never read.

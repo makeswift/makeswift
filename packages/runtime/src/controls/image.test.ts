@@ -1,8 +1,7 @@
-import { describe, test, expect } from 'vitest'
 import { ImageControlData, copyImageData } from './image'
 import { ReplacementContext } from '../state/react-page'
 
-describe.concurrent('image copy', () => {
+describe('image copy', () => {
   test('image is replaced by a one in replacement context', () => {
     // Arrange
     const data: ImageControlData = 'file-id'
@@ -28,6 +27,6 @@ describe.concurrent('image copy', () => {
     })
 
     // Assert
-    expect(result).toMatchObject(expected)
+    expect(result).toEqual(expected)
   })
 })

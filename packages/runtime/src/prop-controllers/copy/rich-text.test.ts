@@ -1,9 +1,8 @@
-import { describe, test, expect } from 'vitest'
 import { RichTextValue } from '../descriptors'
 import { copy } from './rich-text'
 import { ReplacementContext } from '../../state/react-page'
 
-describe.concurrent('rich text copy', () => {
+describe('rich text copy', () => {
   test('replaces the swatch id', () => {
     // Arrange
     const data: RichTextValue = {

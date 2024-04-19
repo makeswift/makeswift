@@ -1,7 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { describe, it, expect } from 'vitest'
 import { getSelectedListItems } from '../../utils/getSelectedListItems'
 import {
   Editor,

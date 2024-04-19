@@ -1,4 +1,3 @@
-import { describe, expect, test } from 'vitest'
 import { RichText, RichTextV2ControlData, RichTextV2ControlType } from '../rich-text-v2'
 import { getPageIds, getSwatchIds, getTypographyIds } from '../../../prop-controllers/introspection'
 

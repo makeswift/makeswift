@@ -1,9 +1,8 @@
-import { describe, test, expect } from 'vitest'
 import { ImagesValue } from '../descriptors'
 import { copy } from './images'
 import { ReplacementContext } from '../../state/react-page'
 
-describe.concurrent('images copy', () => {
+describe('images copy', () => {
   test('images are replaced by ones in replacement context', () => {
     // Arrange
     const data: ImagesValue = [

@@ -1,8 +1,7 @@
-import { describe, test, expect } from 'vitest'
 import { LinkControlData, copyLinkData } from './link'
 import { ReplacementContext } from '../state/react-page'
 
-describe.concurrent('link', () => {
+describe('link', () => {
   test('page id is replaced by one in replacement context', () => {
     // Arrange
     const data: LinkControlData = {
