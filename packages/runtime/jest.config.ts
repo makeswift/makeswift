@@ -7,6 +7,7 @@ const config: Config = {
     // "**/__tests__/**/*.[jt]s?(x)",
     '**/?(*.)+(spec|test).[tj]s?(x)',
   ],
+  setupFilesAfterEnv: ['<rootDir>/src/jest-setup.ts'],
   transform: {
     '^.+\\.(t|j)sx?$': [
       '@swc/jest',
@@ -21,6 +22,7 @@ const config: Config = {
       },
     ],
   },
+  snapshotSerializers: ['@emotion/jest/serializer'],
 }
 
 export default config
