@@ -1,0 +1,90 @@
+// Vitest Snapshot v1
+
+exports[`GIVEN enhancedTypography > WHEN hierarchical typography data is passed THEN style overrides are correctly flattened 1`] = `
+[
+  {
+    "deviceId": "desktop",
+    "value": {
+      "color": {
+        "alpha": 1,
+        "swatch": {
+          "__typename": "Swatch",
+          "hue": 56,
+          "id": "U3dhdGNoOmNlZmExY2E1LTM1NzktNDBiYi1iZjY0LWFkNzY0ZTJkOGY2MQ==",
+          "lightness": 53.5,
+          "saturation": 100,
+        },
+      },
+      "fontFamily": "Oswald",
+      "fontSize": {
+        "unit": "px",
+        "value": 72,
+      },
+      "fontWeight": 700,
+      "italic": false,
+      "letterSpacing": undefined,
+      "lineHeight": undefined,
+      "strikethrough": undefined,
+      "textAlign": undefined,
+      "underline": undefined,
+      "uppercase": undefined,
+    },
+  },
+  {
+    "deviceId": "tablet",
+    "value": {
+      "color": {
+        "alpha": 1,
+        "swatch": {
+          "__typename": "Swatch",
+          "hue": 204,
+          "id": "U3dhdGNoOmE0Mzg5YjA5LWQwMWUtNDY5OS1iMGJkLWM2ZDY2NmM1MDVkZQ==",
+          "lightness": 50,
+          "saturation": 100,
+        },
+      },
+      "fontFamily": "Oswald",
+      "fontSize": {
+        "unit": "px",
+        "value": 72,
+      },
+      "fontWeight": 700,
+      "italic": false,
+      "letterSpacing": undefined,
+      "lineHeight": undefined,
+      "strikethrough": undefined,
+      "textAlign": undefined,
+      "underline": undefined,
+      "uppercase": undefined,
+    },
+  },
+  {
+    "deviceId": "mobile",
+    "value": {
+      "color": {
+        "alpha": 1,
+        "swatch": {
+          "__typename": "Swatch",
+          "hue": 204,
+          "id": "U3dhdGNoOmE0Mzg5YjA5LWQwMWUtNDY5OS1iMGJkLWM2ZDY2NmM1MDVkZQ==",
+          "lightness": 50,
+          "saturation": 100,
+        },
+      },
+      "fontFamily": "Oswald",
+      "fontSize": {
+        "unit": "px",
+        "value": 96,
+      },
+      "fontWeight": 700,
+      "italic": false,
+      "letterSpacing": undefined,
+      "lineHeight": undefined,
+      "strikethrough": undefined,
+      "textAlign": undefined,
+      "underline": undefined,
+      "uppercase": undefined,
+    },
+  },
+]
+`;

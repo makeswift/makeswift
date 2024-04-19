@@ -6,7 +6,11 @@ import { colorToString } from '../../../components/utils/colorToString'
 import { useResponsiveStyle } from '../../../components/utils/responsive-style'
 import { ColorValue } from '../../../components/utils/types'
 import { DeviceOverride, ResponsiveValue } from '../../../prop-controllers'
-import { findBreakpointOverride, shallowMergeFallbacks } from '../../../state/modules/breakpoints'
+import {
+  findBreakpointOverride,
+  shallowMergeFallbacks,
+  Breakpoints,
+} from '../../../state/modules/breakpoints'
 import { isNonNullable } from '../../../utils/isNonNullable'
 import { useStyle } from '../use-style'
 import { useBreakpoints } from '../hooks/use-breakpoints'
@@ -93,21 +97,39 @@ const withColor =
 const getDeviceId = ({ deviceId }: DeviceOverride<unknown>) => deviceId
 
 /**
- * `enhanced` here just means typography ids have been replaced with the related entity.
+ * `enhanced` here means:
+ *  - typography ids have been replaced with the related entity
+ *  - hierarhical style overrides have been flattened
  */
 export default function useEnhancedTypography(
   value?: TypographyControlData[number] | null,
+  traceId?: string | undefined,
 ): EnhancedTypography {
-  const typography = typographyFragementToTypographyControlData(useTypography(value?.id ?? null))
-  const source = typography?.style ?? []
-  const override = value?.style ?? []
-  const breakpoints = useBreakpoints()
-
+  const baseTypography = useTypography(value?.id ?? null)
   const swatchIds = [
     ...getTypographyStyleSwatchIds(value?.style),
-    ...getTypographyStyleSwatchIds(typography?.style),
+    ...getTypographyStyleSwatchIds(baseTypography?.style),
   ]
-  const swatches = useSwatches(swatchIds).filter(isNonNullable)
+
+  return enhancedTypography(
+    value,
+    baseTypography,
+    useBreakpoints(),
+    useSwatches(swatchIds).filter(isNonNullable),
+    traceId,
+  )
+}
+
+export function enhancedTypography(
+  value: TypographyControlData[number] | null,
+  baseTypography: Typography | null,
+  breakpoints: Breakpoints,
+  swatches: Swatch[],
+  traceId?: string | undefined,
+): EnhancedTypography {
+  const typography = typographyFragementToTypographyControlData(baseTypography)
+  const source = typography?.style ?? []
+  const override = value?.style ?? []
 
   const enhancedSource = source.map(withColor(swatches))
   const enhancedOverride = override.map(withColor(swatches))
@@ -123,7 +145,7 @@ export default function useEnhancedTypography(
         breakpoints,
         enhancedOverride,
         deviceId,
-        v => v,
+        shallowMergeFallbacks,
       )?.value
 
       if (deviceSource && deviceOverride) {
