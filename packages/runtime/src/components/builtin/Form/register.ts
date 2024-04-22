@@ -5,7 +5,7 @@ import { MakeswiftComponentType } from '../constants'
 import { Alignments, Contrast, Contrasts, Shapes, Sizes } from './context/FormContext'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
-import { Link, ResponsiveColor, ResponsiveLength } from '@makeswift/prop-controllers'
+import { Link, ResponsiveColor, ResponsiveLength, Table } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -16,7 +16,7 @@ export function registerComponent(runtime: ReactRuntime) {
       icon: ComponentIcon.Form,
       props: {
         id: Props.ElementID(),
-        tableId: Props.Table(),
+        tableId: Table(),
         fields: Props.TableFormFields(),
         submitLink: Link(props => ({
           label: 'Redirect to',

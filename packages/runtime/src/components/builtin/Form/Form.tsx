@@ -38,7 +38,6 @@ import {
   ResponsiveSelectValue,
   TableFormFieldsDescriptor,
   TableFormFieldsValue,
-  TableValue,
   TextInputValue,
   TextStyleValue,
 } from '../../../prop-controllers/descriptors'
@@ -79,7 +78,7 @@ function getSizeFontSize(size: Size): number {
 
 type Props = {
   id?: ElementIDValue
-  tableId?: TableValue
+  tableId?: string
   fields?: TableFormFieldsValue
   submitLink?: LinkPropControllerValue
   gap?: GapYValue

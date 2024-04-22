@@ -19,7 +19,6 @@ import {
   NavigationLinksValue,
   RichTextValue,
   ShapeValue,
-  TableValue,
   Types,
 } from './descriptors'
 import { Data, Element } from '../state/react-page'
@@ -81,6 +80,8 @@ import {
   ResponsiveColorData,
   ShadowsPropControllerData,
   getBorderPropControllerDataSwatchIds,
+  TablePropControllerData,
+  getTablePropControllerDataTableIds,
 } from '@makeswift/prop-controllers'
 
 export function getElementChildren<T extends Data>(
@@ -372,9 +373,8 @@ export function getTableIds<T extends Data>(
   if (prop == null) return []
 
   switch (descriptor.type) {
-    case Types.Table: {
-      const value = prop as TableValue
-      return value == null ? [] : [value]
+    case PropControllerTypes.Table: {
+      return getTablePropControllerDataTableIds(prop as TablePropControllerData)
     }
 
     default:

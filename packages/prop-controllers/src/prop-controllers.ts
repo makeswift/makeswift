@@ -11,6 +11,7 @@ export const Types = {
   Shadows: 'Shadows',
   ResponsiveColor: 'ResponsiveColor',
   ResponsiveLength: 'ResponsiveLength',
+  Table: 'Table',
   Video: 'Video',
 } as const
 
