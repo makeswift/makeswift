@@ -1,8 +1,4 @@
-import {
-  ResolvePaddingControlValue,
-  ResolveWidthControlValue,
-  ResponsiveColor,
-} from '../runtimes/react/controls'
+import { ResolveWidthControlValue, ResponsiveColor } from '../runtimes/react/controls'
 import { StyleControlFormattedValue } from '../runtimes/react/controls/style'
 import type { Element, Data, MergeTranslatableDataContext } from '../state/react-page'
 import { NumberControlDefinition } from '../controls/number'
@@ -83,6 +79,8 @@ import {
   ResolveTablePropControllerValue,
   MarginDescriptor,
   ResolveMarginPropControllerValue,
+  PaddingDescriptor,
+  ResolvePaddingPropControllerValue,
 } from '@makeswift/prop-controllers'
 
 export type { Data }
@@ -144,7 +142,6 @@ export const Types = {
   Images: 'Images',
   List: 'List',
   NavigationLinks: 'NavigationLinks',
-  Padding: 'Padding',
   ResponsiveIconRadioGroup: 'ResponsiveIconRadioGroup',
   ResponsiveNumber: 'ResponsiveNumber',
   ResponsiveOpacity: 'ResponsiveOpacity',
@@ -534,44 +531,6 @@ type NavigationLinksDescriptor<_T = NavigationLinksValue> = {
 export function NavigationLinks(options: NavigationLinksOptions = {}): NavigationLinksDescriptor {
   return { type: Types.NavigationLinks, options }
 }
-
-type PaddingSide = { value: number; unit: 'px' }
-
-type Padding = {
-  [K in 'top' | 'right' | 'bottom' | 'left' as `padding${Capitalize<K>}`]:
-    | PaddingSide
-    | null
-    | undefined
-}
-
-export type PaddingValue = ResponsiveValue<Padding>
-
-export const PaddingPropControllerFormat = {
-  ClassName: 'makeswift::prop-controllers::padding::format::class-name',
-  ResponsiveValue: 'makeswift::prop-controllers::padding::format::responsive-value',
-} as const
-
-export type PaddingPropControllerFormat =
-  typeof PaddingPropControllerFormat[keyof typeof PaddingPropControllerFormat]
-
-type PaddingOptions = { preset?: PaddingValue; format?: PaddingPropControllerFormat }
-
-export type PaddingDescriptor<_T = PaddingValue, U extends PaddingOptions = PaddingOptions> = {
-  type: typeof Types.Padding
-  options: U
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Padding<T extends PaddingOptions>(
-  options: T & PaddingOptions = {} as T,
-): PaddingDescriptor<PaddingValue, T> {
-  return { type: Types.Padding, options }
-}
-
-Padding.Format = PaddingPropControllerFormat
 
 export type IconRadioGroupOption<T extends string> = { value: T; label: string; icon: IconName }
 
@@ -1049,7 +1008,7 @@ export type PanelDescriptorType =
   | typeof Types.Backgrounds
   | typeof Types.ResponsiveIconRadioGroup
   | typeof PropControllerTypes.Margin
-  | typeof Types.Padding
+  | typeof PropControllerTypes.Padding
   | typeof PropControllerTypes.Shadows
   | typeof PropControllerTypes.Border
   | typeof Types.GapY
@@ -1136,8 +1095,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? LinkPropControllerValue
   : T['type'] extends typeof Types.Width
   ? ResolveWidthControlValue<T>
-  : T['type'] extends typeof Types.Padding
-  ? ResolvePaddingControlValue<T>
+  : T['type'] extends typeof PropControllerTypes.Padding
+  ? ResolvePaddingPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Padding }>>
   : T['type'] extends typeof PropControllerTypes.Margin
   ? ResolveMarginPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Margin }>>
   : T['type'] extends typeof PropControllerTypes.BorderRadius

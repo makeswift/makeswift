@@ -79,6 +79,7 @@ export type {
   MarginDescriptor,
   MarginPropControllerData,
 } from './margin'
+
 export {
   Number,
   createNumberPropControllerDataFromNumber,
@@ -91,6 +92,20 @@ export type {
   NumberPropControllerData,
   ResolveNumberPropControllerValue,
 } from './number'
+export {
+  Padding,
+  PaddingPropControllerFormat,
+  paddingPropControllerDataSchema,
+  getPaddingPropControllerDataResponsivePaddingData,
+  createPaddingPropControllerDataFromResponsivePaddingData,
+} from './padding'
+export type {
+  ResolvePaddingPropControllerValue,
+  ResponsivePaddingData,
+  PaddingSideData,
+  PaddingDescriptor,
+  PaddingPropControllerData,
+} from './padding'
 export * from './prop-controllers'
 export {
   ResponsiveColor,

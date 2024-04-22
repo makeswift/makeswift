@@ -2,7 +2,15 @@ import { lazy } from 'react'
 import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
-import { Border, Link, Shadows, Checkbox, BorderRadius, Margin } from '@makeswift/prop-controllers'
+import {
+  Border,
+  Link,
+  Shadows,
+  Checkbox,
+  BorderRadius,
+  Margin,
+  Padding,
+} from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -17,7 +25,7 @@ export function registerComponent(runtime: ReactRuntime) {
         link: Link({ label: 'On click' }),
         width: Props.Width(),
         margin: Margin({ format: Margin.Format.ClassName }),
-        padding: Props.Padding({ format: Props.Padding.Format.ClassName }),
+        padding: Padding({ format: Padding.Format.ClassName }),
         border: Border({ format: Border.Format.ClassName }),
         borderRadius: BorderRadius({ format: BorderRadius.Format.ClassName }),
         boxShadow: Shadows({ format: Shadows.Format.ClassName }),

@@ -4,9 +4,6 @@ import * as ReactPage from '../../state/react-page'
 import { Props } from '../../prop-controllers'
 import {
   Descriptor,
-  PaddingDescriptor,
-  PaddingPropControllerFormat,
-  PaddingValue,
   WidthPropControllerFormat,
   WidthDescriptor,
   WidthValue,
@@ -81,6 +78,9 @@ import {
   MarginPropControllerFormat,
   MarginPropControllerData,
   getMarginPropControllerDataResponsiveMarginData,
+  PaddingPropControllerData,
+  getPaddingPropControllerDataResponsivePaddingData,
+  PaddingPropControllerFormat,
 } from '@makeswift/prop-controllers'
 import { useResponsiveLengthPropControllerData } from '../../components/hooks/useResponsiveLengthPropControllerData'
 import { useNumberPropControllerData } from '../../components/hooks/useNumberPropControllerData'
@@ -104,21 +104,11 @@ export type ResolveWidthControlValue<T extends Descriptor> = T extends WidthDesc
     : never
   : never
 
-function usePaddingStyle(value: PaddingValue | undefined): string {
+function usePaddingStyle(data: PaddingPropControllerData | undefined): string {
+  const value = getPaddingPropControllerDataResponsivePaddingData(data)
+
   return useStyle(useResponsivePadding(value))
 }
-
-export type ResolvePaddingControlValue<T extends Descriptor> = T extends PaddingDescriptor
-  ? undefined extends ResolveOptions<T['options']>['format']
-    ? PaddingValue | undefined
-    : ResolveOptions<T['options']>['format'] extends typeof PaddingPropControllerFormat.ClassName
-    ? string
-    : ResolveOptions<
-        T['options']
-      >['format'] extends typeof PaddingPropControllerFormat.ResponsiveValue
-    ? PaddingValue | undefined
-    : never
-  : never
 
 function useMarginStyle(data: MarginPropControllerData | undefined): string {
   const value = getMarginPropControllerDataResponsiveMarginData(data)
@@ -265,7 +255,7 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                 return renderFn({ ...propsValue, [propName]: props[propName] })
             }
 
-          case Props.Types.Padding:
+          case PropControllerTypes.Padding:
             switch (descriptor.options.format) {
               case PaddingPropControllerFormat.ClassName:
                 return (
