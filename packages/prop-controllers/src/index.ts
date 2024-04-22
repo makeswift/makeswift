@@ -123,6 +123,20 @@ export type {
   ShadowsPropControllerData,
 } from './shadows'
 export {
+  Table,
+  tablePropControllerDataSchema,
+  getTablePropControllerDataTableId,
+  createTablePropControllerDataFromTableId,
+  copyTablePropControllerData,
+  getTablePropControllerDataTableIds,
+} from './table'
+export type {
+  TableDescriptor,
+  TableOptions,
+  TablePropControllerData,
+  ResolveTablePropControllerValue,
+} from './table'
+export {
   Video,
   videoPropControllerDataSchema,
   getVideoPropControllerDataVideoData,

@@ -80,6 +80,8 @@ import {
   ResolveFontPropControllerValue,
   VideoDescriptor,
   ResolveVideoPropControllerValue,
+  TableDescriptor,
+  ResolveTablePropControllerValue,
 } from '@makeswift/prop-controllers'
 
 export type { Data }
@@ -150,7 +152,6 @@ export const Types = {
   RichText: 'RichText',
   Shape: 'Shape',
   SocialLinks: 'SocialLinks',
-  Table: 'Table',
   TableFormFields: 'TableFormFields',
   Typeahead: 'Typeahead',
   TextArea: 'TextArea',
@@ -874,20 +875,6 @@ export function SocialLinks(options: SocialLinksOptions = {}): SocialLinksDescri
   return { type: Types.SocialLinks, options, version: 1 }
 }
 
-export type TableValue = string
-
-type TableOptions = Options<{ preset?: TableValue }>
-
-type TableDescriptor<_T = TableValue> = { type: typeof Types.Table; options: TableOptions }
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Table(options: TableOptions = {}): TableDescriptor {
-  return { type: Types.Table, options }
-}
-
 type TableFormField = {
   id: string
   tableColumnId: string
@@ -1120,7 +1107,7 @@ export type PanelDescriptorType =
   | typeof PropControllerTypes.Date
   | typeof PropControllerTypes.Font
   | typeof Types.TextArea
-  | typeof Types.Table
+  | typeof PropControllerTypes.Table
   | typeof Types.Typeahead
   | typeof Types.RichText
   | typeof Types.Image
@@ -1205,6 +1192,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveBorderPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Border }>>
   : T['type'] extends typeof PropControllerTypes.Number
   ? ResolveNumberPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Number }>>
+  : T['type'] extends typeof PropControllerTypes.Table
+  ? ResolveTablePropControllerValue<Extract<T, { type: typeof PropControllerTypes.Table }>>
   : T['type'] extends typeof PropControllerTypes.Video
   ? ResolveVideoPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Video }>>
   : T extends Descriptor<infer U>
