@@ -76,6 +76,8 @@ import {
   ResolveBorderRadiusPropControllerValue,
   DateDescriptor,
   ResolveDatePropControllerValue,
+  FontDescriptor,
+  ResolveFontPropControllerValue,
 } from '@makeswift/prop-controllers'
 
 export type { Data }
@@ -130,7 +132,6 @@ type TextStyle = {
 export const Types = {
   Backgrounds: 'Backgrounds',
   ElementID: 'ElementID',
-  Font: 'Font',
   GapX: 'GapX',
   GapY: 'GapY',
   Grid: 'Grid',
@@ -249,20 +250,6 @@ type ElementIDDescriptor<_T = ElementIDValue> = {
  */
 export function ElementID(options: ElementIDOptions = {}): ElementIDDescriptor {
   return { type: Types.ElementID, options }
-}
-
-export type FontValue = ResponsiveValue<string>
-
-type FontOptions = Options<{ preset?: FontValue; label?: string }>
-
-type FontDescriptor<_T = FontValue> = { type: typeof Types.Font; options: FontOptions }
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Font(options: FontOptions = {}): FontDescriptor {
-  return { type: Types.Font, options }
 }
 
 export type GapXValue = ResponsiveValue<Gap>
@@ -1152,7 +1139,7 @@ export type PanelDescriptorType =
   | typeof Types.ResponsiveNumber
   | typeof PropControllerTypes.Number
   | typeof PropControllerTypes.Date
-  | typeof Types.Font
+  | typeof PropControllerTypes.Font
   | typeof Types.TextArea
   | typeof Types.Table
   | typeof Types.Typeahead
@@ -1215,6 +1202,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveCheckboxPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Checkbox }>>
   : T['type'] extends typeof PropControllerTypes.Date
   ? ResolveDatePropControllerValue<Extract<T, { type: typeof PropControllerTypes.Date }>>
+  : T['type'] extends typeof PropControllerTypes.Font
+  ? ResolveFontPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Font }>>
   : T['type'] extends typeof PropControllerTypes.Link
   ? LinkPropControllerValue
   : T['type'] extends typeof Types.Width

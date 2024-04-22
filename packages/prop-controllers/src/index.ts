@@ -52,6 +52,18 @@ export type {
   DatePropControllerData,
   ResolveDatePropControllerValue,
 } from './date'
+export {
+  Font,
+  fontPropControllerDataSchema,
+  getFontPropControllerDataResponsiveFontData,
+  createFontPropControllerDataFromResponsiveFontData,
+} from './font'
+export type {
+  ResolveFontPropControllerValue,
+  ResponsiveFontData,
+  FontDescriptor,
+  FontPropControllerData,
+} from './font'
 export * from './link'
 export {
   Number,

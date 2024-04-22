@@ -5,6 +5,7 @@ export const Types = {
   BorderRadius: 'BorderRadius',
   Checkbox: 'Checkbox',
   Date: 'Date',
+  Font: 'Font',
   Link: 'Link',
   Number: 'Number',
   Shadows: 'Shadows',
