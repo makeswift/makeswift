@@ -78,6 +78,8 @@ import {
   ResolveDatePropControllerValue,
   FontDescriptor,
   ResolveFontPropControllerValue,
+  VideoDescriptor,
+  ResolveVideoPropControllerValue,
 } from '@makeswift/prop-controllers'
 
 export type { Data }
@@ -154,7 +156,6 @@ export const Types = {
   TextArea: 'TextArea',
   TextInput: 'TextInput',
   TextStyle: 'TextStyle',
-  Video: 'Video',
   Width: 'Width',
   Style: StyleControlType,
 } as const
@@ -1002,28 +1003,6 @@ export function TextStyle(options: TextStyleOptions = {}): TextStyleDescriptor {
   return { type: Types.TextStyle, options }
 }
 
-type Video = {
-  url?: string
-  muted?: boolean
-  playing?: boolean
-  loop?: boolean
-  controls?: boolean
-}
-
-export type VideoValue = Video
-
-type VideoOptions = Options<{ preset?: VideoValue }>
-
-type VideoDescriptor<_T = VideoValue> = { type: typeof Types.Video; options: VideoOptions }
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Video(options: VideoOptions = {}): VideoDescriptor {
-  return { type: Types.Video, options }
-}
-
 export type WidthValue = ResponsiveValue<Length>
 
 export const WidthPropControllerFormat = {
@@ -1147,7 +1126,7 @@ export type PanelDescriptorType =
   | typeof Types.Image
   | typeof Types.ResponsiveOpacity
   | typeof Types.SocialLinks
-  | typeof Types.Video
+  | typeof PropControllerTypes.Video
   | typeof Types.NavigationLinks
 
 export type PanelDescriptor<T extends Data = Data> = Extract<
@@ -1226,6 +1205,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveBorderPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Border }>>
   : T['type'] extends typeof PropControllerTypes.Number
   ? ResolveNumberPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Number }>>
+  : T['type'] extends typeof PropControllerTypes.Video
+  ? ResolveVideoPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Video }>>
   : T extends Descriptor<infer U>
   ? U | undefined
   : never

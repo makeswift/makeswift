@@ -11,6 +11,7 @@ export const Types = {
   Shadows: 'Shadows',
   ResponsiveColor: 'ResponsiveColor',
   ResponsiveLength: 'ResponsiveLength',
+  Video: 'Video',
 } as const
 
 export const ControlDataTypeKey = '@@makeswift/type'

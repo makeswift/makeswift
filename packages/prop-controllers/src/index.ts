@@ -122,3 +122,15 @@ export type {
   ShadowsDescriptor,
   ShadowsPropControllerData,
 } from './shadows'
+export {
+  Video,
+  videoPropControllerDataSchema,
+  getVideoPropControllerDataVideoData,
+  createVideoPropControllerDataFromVideoData,
+} from './video'
+export type {
+  ResolveVideoPropControllerValue,
+  VideoData,
+  VideoDescriptor,
+  VideoPropControllerData,
+} from './video'
