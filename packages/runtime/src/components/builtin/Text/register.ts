@@ -4,7 +4,7 @@ import { MakeswiftComponentType } from '../constants'
 import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { RichText } from '../../../controls/rich-text-v2/rich-text-v2'
 import { lazy } from 'react'
-import { Margin } from '@makeswift/prop-controllers'
+import { Margin, Width } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -15,8 +15,8 @@ export function registerComponent(runtime: ReactRuntime) {
       props: {
         id: Props.ElementID(),
         text: RichText(),
-        width: Props.Width({
-          format: Props.Width.Format.ClassName,
+        width: Width({
+          format: Width.Format.ClassName,
           preset: [
             {
               deviceId: getBaseBreakpoint(runtime.getBreakpoints()).id,

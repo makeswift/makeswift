@@ -166,6 +166,18 @@ export type {
   ResolveTablePropControllerValue,
 } from './table'
 export {
+  Width,
+  WidthPropControllerFormat,
+  widthPropControllerDataSchema,
+  getWidthPropControllerDataResponsiveLengthData,
+  createWidthPropControllerDataFromResponsiveLengthData,
+} from './width'
+export type {
+  ResolveWidthPropControllerValue,
+  WidthDescriptor,
+  WidthPropControllerData,
+} from './width'
+export {
   Video,
   videoPropControllerDataSchema,
   getVideoPropControllerDataVideoData,

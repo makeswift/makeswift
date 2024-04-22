@@ -5,6 +5,7 @@ import {
   Margin,
   Padding,
   Shadows,
+  Width,
 } from '@makeswift/prop-controllers'
 import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
@@ -45,8 +46,8 @@ export function registerComponent(runtime: ReactRuntime) {
       props: {
         id: Props.ElementID(),
         backgrounds: Props.Backgrounds(),
-        width: Props.Width({
-          format: Props.Width.Format.ClassName,
+        width: Width({
+          format: Width.Format.ClassName,
           defaultValue: { value: 100, unit: '%' },
         }),
         height: Props.ResponsiveIconRadioGroup({

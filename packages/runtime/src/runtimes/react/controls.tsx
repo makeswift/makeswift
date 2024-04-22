@@ -1,13 +1,7 @@
 import { useRef } from 'react'
 
 import * as ReactPage from '../../state/react-page'
-import { Props } from '../../prop-controllers'
-import {
-  Descriptor,
-  WidthPropControllerFormat,
-  WidthDescriptor,
-  WidthValue,
-} from '../../prop-controllers/descriptors'
+
 import {
   useBoxShadow,
   useBorder as useBorderData,
@@ -67,7 +61,6 @@ import {
   ShadowsPropControllerData,
   Shadows,
   ResponsiveValue,
-  ResolveOptions,
   BorderPropControllerFormat,
   ResponsiveBorderData,
   BorderPropControllerData,
@@ -81,6 +74,10 @@ import {
   PaddingPropControllerData,
   getPaddingPropControllerDataResponsivePaddingData,
   PaddingPropControllerFormat,
+  WidthPropControllerData,
+  getWidthPropControllerDataResponsiveLengthData,
+  WidthPropControllerFormat,
+  WidthDescriptor,
 } from '@makeswift/prop-controllers'
 import { useResponsiveLengthPropControllerData } from '../../components/hooks/useResponsiveLengthPropControllerData'
 import { useNumberPropControllerData } from '../../components/hooks/useNumberPropControllerData'
@@ -88,21 +85,14 @@ import { useResponsiveColorPropControllerData } from '../../components/hooks/use
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
-function useWidthStyle(value: WidthValue | undefined, descriptor: WidthDescriptor): string {
+function useWidthStyle(
+  data: WidthPropControllerData | undefined,
+  descriptor: WidthDescriptor,
+): string {
+  const value = getWidthPropControllerDataResponsiveLengthData(data)
+
   return useStyle(useResponsiveWidth(value, descriptor.options.defaultValue))
 }
-
-export type ResolveWidthControlValue<T extends Descriptor> = T extends WidthDescriptor
-  ? undefined extends ResolveOptions<T['options']>['format']
-    ? WidthValue | undefined
-    : ResolveOptions<T['options']>['format'] extends typeof WidthPropControllerFormat.ClassName
-    ? string
-    : ResolveOptions<
-        T['options']
-      >['format'] extends typeof WidthPropControllerFormat.ResponsiveValue
-    ? WidthValue | undefined
-    : never
-  : never
 
 function usePaddingStyle(data: PaddingPropControllerData | undefined): string {
   const value = getPaddingPropControllerDataResponsivePaddingData(data)
@@ -238,7 +228,7 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
             )
           }
 
-          case Props.Types.Width:
+          case PropControllerTypes.Width:
             switch (descriptor.options.format) {
               case WidthPropControllerFormat.ClassName:
                 return (

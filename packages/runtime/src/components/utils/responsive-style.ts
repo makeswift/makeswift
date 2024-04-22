@@ -7,9 +7,10 @@ import type {
   ResponsiveMarginData,
   ResponsivePaddingData,
   ResponsiveValue,
+  ResponsiveLengthData,
 } from '@makeswift/prop-controllers'
 
-import { WidthValue, TextStyleValue } from '../../prop-controllers/descriptors'
+import { TextStyleValue } from '../../prop-controllers/descriptors'
 import {
   FallbackStrategy,
   getBreakpoint,
@@ -64,7 +65,7 @@ export function useResponsiveStyle<
 
 export function responsiveWidth(
   breakpoints: Breakpoints,
-  widthData: WidthValue | undefined,
+  widthData: ResponsiveLengthData | undefined,
   defaultValue: LengthData | WidthProperty<string | number> = '100%',
 ): CSSObject {
   return {
