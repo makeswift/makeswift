@@ -74,6 +74,8 @@ import {
   BorderRadiusDescriptor,
   ResolveBorderPropControllerValue,
   ResolveBorderRadiusPropControllerValue,
+  DateDescriptor,
+  ResolveDatePropControllerValue,
 } from '@makeswift/prop-controllers'
 
 export type { Data }
@@ -127,7 +129,6 @@ type TextStyle = {
 
 export const Types = {
   Backgrounds: 'Backgrounds',
-  Date: 'Date',
   ElementID: 'ElementID',
   Font: 'Font',
   GapX: 'GapX',
@@ -231,20 +232,6 @@ export type BackgroundsDescriptor<_T = BackgroundsValue> = {
  */
 export function Backgrounds(options: BackgroundsOptions = {}): BackgroundsDescriptor {
   return { type: Types.Backgrounds, version: 1, options }
-}
-
-export type DateValue = string
-
-export type DateOptions = Options<{ preset?: DateValue }>
-
-export type DateDescriptor<_T = DateValue> = { type: typeof Types.Date; options: DateOptions }
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Date(options: DateOptions = {}): DateDescriptor {
-  return { type: Types.Date, options }
 }
 
 export type ElementIDValue = string
@@ -1164,7 +1151,7 @@ export type PanelDescriptorType =
   | typeof Types.Images
   | typeof Types.ResponsiveNumber
   | typeof PropControllerTypes.Number
-  | typeof Types.Date
+  | typeof PropControllerTypes.Date
   | typeof Types.Font
   | typeof Types.TextArea
   | typeof Types.Table
@@ -1226,6 +1213,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
     ResponsiveColor | null | undefined
   : T['type'] extends typeof PropControllerTypes.Checkbox
   ? ResolveCheckboxPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Checkbox }>>
+  : T['type'] extends typeof PropControllerTypes.Date
+  ? ResolveDatePropControllerValue<Extract<T, { type: typeof PropControllerTypes.Date }>>
   : T['type'] extends typeof PropControllerTypes.Link
   ? LinkPropControllerValue
   : T['type'] extends typeof Types.Width

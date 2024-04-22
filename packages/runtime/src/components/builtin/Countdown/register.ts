@@ -4,7 +4,7 @@ import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
-import { ResponsiveColor } from '@makeswift/prop-controllers'
+import { Date as DatePropController, ResponsiveColor } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -15,7 +15,7 @@ export function registerComponent(runtime: ReactRuntime) {
       icon: ComponentIcon.Countdown,
       props: {
         id: Props.ElementID(),
-        date: Props.Date(() => ({
+        date: DatePropController(() => ({
           preset: new Date(Date.now() + 1000 * 60 * 60 * 24 * 2).toISOString(),
         })),
         variant: Props.ResponsiveIconRadioGroup({
