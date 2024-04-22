@@ -30,6 +30,11 @@ export default function PreviewProvider({ client, children, rootElements }: Prop
   )
 
   useEffect(() => {
+    store.setup()
+    return () => store.teardown()
+  }, [store])
+
+  useEffect(() => {
     const unregisterDocuments = Array.from(rootElements?.entries() ?? []).map(
       ([documentKey, rootElement]) =>
         store.dispatch(registerDocumentEffect(ReactPage.createDocument(documentKey, rootElement))),

@@ -2,11 +2,13 @@ import {
   applyMiddleware,
   combineReducers,
   createStore,
+  compose,
   Dispatch as ReduxDispatch,
   Middleware,
   MiddlewareAPI,
   PreloadedState,
   Store as ReduxStore,
+  StoreEnhancer,
 } from 'redux'
 import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk'
 
@@ -29,19 +31,21 @@ import {
   Action,
   changeDocumentElementSize,
   changeElementBoxModels,
+  elementFromPointChange,
+  handleWheel,
+  handlePointerMove,
   messageBuilderPropController,
   registerBuilderComponent,
+  registerComponent,
   registerMeasurable,
   registerPropControllers,
   registerPropControllersHandle,
+  setBreakpoints,
+  setIsInBuilder,
   unregisterBuilderComponent,
+  unregisterComponent,
   unregisterMeasurable,
   unregisterPropControllers,
-  setIsInBuilder,
-  handleWheel,
-  handlePointerMove,
-  elementFromPointChange,
-  setBreakpoints,
 } from './actions'
 import { ActionTypes } from './actions'
 import { createPropController } from '../prop-controllers/instances'
@@ -402,15 +406,47 @@ function startPollingElementFromPoint(): ThunkAction<() => void, State, unknown,
   }
 }
 
-export function initialize(): ThunkAction<() => void, State, unknown, Action> {
-  return dispatch => {
+function registerBuilderComponents(): ThunkAction<() => void, State, unknown, Action> {
+  return (dispatch, getState) => {
+    const state = getState()
+    const componentsMeta = getComponentsMeta(state)
+
+    componentsMeta.forEach((meta, type) => {
+      const propControllerDescriptors = getComponentPropControllerDescriptors(state, type)
+      if (propControllerDescriptors != null) {
+        dispatch(registerComponent(type, meta, propControllerDescriptors))
+      }
+    })
+
+    return () => {
+      componentsMeta.forEach((_, componentType) => {
+        dispatch(unregisterComponent(componentType))
+      })
+    }
+  }
+}
+
+export interface IMessageChannel {
+  postMessage(message: any, transferables?: Transferable[]): void
+  dispatchBuffered(): void
+}
+
+export function initialize(
+  channel: IMessageChannel,
+): ThunkAction<() => void, State, unknown, Action> {
+  return (dispatch, getState) => {
     const stopMeasuringElements = dispatch(startMeasuringElements())
     const stopMeasuringDocumentElement = dispatch(startMeasuringDocumentElement())
     const stopHandlingFocusEvent = dispatch(startHandlingFocusEvents())
     const unlockDocumentScroll = dispatch(lockDocumentScroll())
     const stopHandlingPointerMoveEvent = dispatch(startHandlingPointerMoveEvent())
     const stopPollingElementFromPoint = dispatch(startPollingElementFromPoint())
+    const unregisterBuilderComponents = dispatch(registerBuilderComponents())
+
+    const breakpoints = ReactPage.getBreakpoints(getState())
+    dispatch(setBreakpoints(breakpoints))
     dispatch(setIsInBuilder(true))
+    channel.dispatchBuffered()
 
     return () => {
       stopMeasuringElements()
@@ -419,6 +455,7 @@ export function initialize(): ThunkAction<() => void, State, unknown, Action> {
       unlockDocumentScroll()
       stopHandlingPointerMoveEvent()
       stopPollingElementFromPoint()
+      unregisterBuilderComponents()
       dispatch(setIsInBuilder(false))
     }
   }
@@ -457,41 +494,13 @@ function measureBoxModelsMiddleware(): Middleware<Dispatch, State, Dispatch> {
 
 export function messageChannelMiddleware(
   client: MakeswiftHostApiClient,
+  channel: IMessageChannel,
 ): Middleware<Dispatch, State, Dispatch> {
-  return ({ dispatch, getState }: MiddlewareAPI<Dispatch, State>) =>
+  return ({ dispatch }: MiddlewareAPI<Dispatch, State>) =>
     (next: ReduxDispatch<Action>) => {
+      if (typeof window === 'undefined') return () => {}
+
       let cleanUp = () => {}
-
-      if (typeof window === 'undefined') return cleanUp
-
-      const messageChannel = new window.MessageChannel()
-
-      window.parent.postMessage(messageChannel.port2, '*', [messageChannel.port2])
-
-      messageChannel.port1.onmessage = (event: MessageEvent<Action>) => dispatch(event.data)
-
-      const state = getState()
-      const registeredComponentsMeta = getComponentsMeta(state)
-
-      registeredComponentsMeta.forEach((componentMeta, componentType) => {
-        const propControllerDescriptors = getComponentPropControllerDescriptors(
-          state,
-          componentType,
-        )
-
-        if (propControllerDescriptors != null) {
-          const [serializedControls, transferables] = serializeControls(propControllerDescriptors)
-
-          messageChannel.port1.postMessage(
-            registerBuilderComponent(componentType, componentMeta, serializedControls),
-            transferables,
-          )
-        }
-      })
-
-      const breakpoints = ReactPage.getBreakpoints(state)
-      messageChannel.port1.postMessage(setBreakpoints(breakpoints))
-
       return (action: Action): Action => {
         switch (action.type) {
           case ActionTypes.CHANGE_ELEMENT_BOX_MODELS:
@@ -503,14 +512,15 @@ export function messageChannelMiddleware(
           case ActionTypes.HANDLE_POINTER_MOVE:
           case ActionTypes.ELEMENT_FROM_POINT_CHANGE:
           case ActionTypes.SET_LOCALE:
-            messageChannel.port1.postMessage(action)
+          case ActionTypes.SET_BREAKPOINTS:
+            channel.postMessage(action)
             break
 
           case ActionTypes.REGISTER_COMPONENT: {
             const { type, meta, propControllerDescriptors } = action.payload
             const [serializedControls, transferables] = serializeControls(propControllerDescriptors)
 
-            messageChannel.port1.postMessage(
+            channel.postMessage(
               registerBuilderComponent(type, meta, serializedControls),
               transferables,
             )
@@ -518,7 +528,7 @@ export function messageChannelMiddleware(
           }
 
           case ActionTypes.UNREGISTER_COMPONENT:
-            messageChannel.port1.postMessage(unregisterBuilderComponent(action.payload.type))
+            channel.postMessage(unregisterBuilderComponent(action.payload.type))
             break
 
           case ActionTypes.CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP:
@@ -530,7 +540,7 @@ export function messageChannelMiddleware(
             break
 
           case ActionTypes.SET_BUILDER_EDIT_MODE:
-            messageChannel.port1.postMessage(action)
+            channel.postMessage(action)
             window.getSelection()?.removeAllRanges()
             break
 
@@ -540,10 +550,12 @@ export function messageChannelMiddleware(
           }
 
           case ActionTypes.INIT:
-            cleanUp = dispatch(initialize())
+            // dispatched by the parent window after establishing the connection
+            cleanUp = dispatch(initialize(channel))
             break
 
           case ActionTypes.CLEAN_UP:
+            // dispatched by the parent window on disconnect
             cleanUp()
             break
         }
@@ -648,7 +660,70 @@ function makeswiftApiClientSyncMiddleware(
   }
 }
 
-export type Store = ReduxStore<State, Action> & { dispatch: Dispatch }
+class MessageChannel {
+  private channel: MessagePort | null = null
+  private bufferedMessages: [Action, Transferable[]?][] = []
+
+  public postMessage(message: any, transferables?: Transferable[]) {
+    if (this.channel) {
+      this.channel.postMessage(message, transferables ?? [])
+    } else {
+      this.bufferedMessages.push([message, transferables])
+    }
+  }
+
+  public setup(onMessage: (event: MessageEvent<Action>) => void) {
+    const channel = new window.MessageChannel()
+    channel.port1.onmessage = onMessage
+
+    // connect channel to the parent window, see
+    // https://developer.mozilla.org/en-US/docs/Web/API/Channel_Messaging_API
+    window.parent.postMessage(channel.port2, '*', [channel.port2])
+
+    this.channel = channel.port1
+  }
+
+  public dispatchBuffered() {
+    console.assert(this.channel != null, 'channel is not setup')
+
+    this.bufferedMessages.forEach(([message, transferables]) => {
+      this.channel?.postMessage(message, transferables ?? [])
+    })
+
+    this.bufferedMessages = []
+  }
+
+  public teardown() {
+    if (this.channel) {
+      this.channel.onmessage = null
+      this.channel.close()
+    }
+  }
+}
+
+function setupMessageChannel(channel: MessageChannel): ThunkAction<void, State, unknown, Action> {
+  return dispatch => {
+    channel.setup((event: MessageEvent<Action>) => dispatch(event.data))
+  }
+}
+
+interface SetupTeardownMixin {
+  setup: () => void
+  teardown: () => void
+}
+
+export type Store = ReduxStore<State, Action> & { dispatch: Dispatch } & SetupTeardownMixin
+
+function withSetupTeardown(
+  setup: () => void,
+  teardown: () => void,
+): StoreEnhancer<SetupTeardownMixin> {
+  return next => (reducer, preloadedState?) => ({
+    ...next(reducer, preloadedState),
+    setup,
+    teardown,
+  })
+}
 
 export function configureStore({
   rootElements,
@@ -665,15 +740,27 @@ export function configureStore({
     isPreview: IsPreview.getInitialState(true),
   }
 
-  return createStore(
+  const channel = new MessageChannel()
+  const store = createStore(
     reducer,
     initialState,
-    applyMiddleware(
-      thunk,
-      measureBoxModelsMiddleware(),
-      messageChannelMiddleware(client),
-      propControllerHandlesMiddleware(),
-      makeswiftApiClientSyncMiddleware(client),
+    compose(
+      withSetupTeardown(
+        () => {
+          const dispatch = store.dispatch as Dispatch
+          dispatch(setupMessageChannel(channel))
+        },
+        () => channel.teardown(),
+      ),
+      applyMiddleware(
+        thunk,
+        measureBoxModelsMiddleware(),
+        messageChannelMiddleware(client, channel),
+        propControllerHandlesMiddleware(),
+        makeswiftApiClientSyncMiddleware(client),
+      ),
     ),
   )
+
+  return store
 }
