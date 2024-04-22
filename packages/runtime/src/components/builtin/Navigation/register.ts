@@ -14,6 +14,7 @@ import {
   ResponsiveLengthPropControllerDataV1Type,
   checkboxPropControllerDataSchema,
   getCheckboxPropControllerDataBoolean,
+  Margin,
 } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
@@ -161,7 +162,7 @@ export function registerComponent(runtime: ReactRuntime) {
           format: Props.Width.Format.ClassName,
           defaultValue: { value: 100, unit: '%' },
         }),
-        margin: Props.Margin({ format: Props.Margin.Format.ClassName }),
+        margin: Margin({ format: Margin.Format.ClassName }),
       },
     },
   )

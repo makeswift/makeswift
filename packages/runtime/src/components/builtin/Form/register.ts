@@ -5,7 +5,7 @@ import { MakeswiftComponentType } from '../constants'
 import { Alignments, Contrast, Contrasts, Shapes, Sizes } from './context/FormContext'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
-import { Link, ResponsiveColor, ResponsiveLength, Table } from '@makeswift/prop-controllers'
+import { Link, Margin, ResponsiveColor, ResponsiveLength, Table } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -140,7 +140,7 @@ export function registerComponent(runtime: ReactRuntime) {
           defaultValue: { value: 100, unit: '%' },
           format: Props.Width.Format.ClassName,
         }),
-        margin: Props.Margin({ format: Props.Margin.Format.ClassName }),
+        margin: Margin({ format: Margin.Format.ClassName }),
       },
     },
   )

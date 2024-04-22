@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid'
 import { ImagesValue, Props, ResponsiveNumberValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride } from '../../../state/modules/breakpoints'
-import { BorderRadius, Number, ResponsiveColor } from '@makeswift/prop-controllers'
+import { BorderRadius, Margin, Number, ResponsiveColor } from '@makeswift/prop-controllers'
 
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
@@ -35,7 +35,7 @@ export function registerComponent(runtime: ReactRuntime) {
           format: Props.Width.Format.ClassName,
           defaultValue: { value: 400, unit: 'px' },
         }),
-        margin: Props.Margin({ format: Props.Margin.Format.ClassName }),
+        margin: Margin({ format: Margin.Format.ClassName }),
         pageSize: Props.ResponsiveNumber(props => {
           const images = props.images as ImagesValue | undefined
           const imagesLength = images?.length ?? 0

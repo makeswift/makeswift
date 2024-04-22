@@ -1,4 +1,4 @@
-import { Border, BorderRadius, Checkbox, Shadows } from '@makeswift/prop-controllers'
+import { Border, BorderRadius, Checkbox, Margin, Shadows } from '@makeswift/prop-controllers'
 import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
@@ -64,7 +64,7 @@ export function registerComponent(runtime: ReactRuntime) {
           ],
           defaultValue: 'flex-start',
         }),
-        margin: Props.Margin({ format: Props.Margin.Format.ClassName }),
+        margin: Margin({ format: Margin.Format.ClassName }),
         padding: Props.Padding({
           format: Props.Padding.Format.ClassName,
           preset: [

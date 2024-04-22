@@ -1,5 +1,4 @@
 import {
-  ResolveMarginControlValue,
   ResolvePaddingControlValue,
   ResolveWidthControlValue,
   ResponsiveColor,
@@ -82,6 +81,8 @@ import {
   ResolveVideoPropControllerValue,
   TableDescriptor,
   ResolveTablePropControllerValue,
+  MarginDescriptor,
+  ResolveMarginPropControllerValue,
 } from '@makeswift/prop-controllers'
 
 export type { Data }
@@ -142,7 +143,6 @@ export const Types = {
   Image: 'Image',
   Images: 'Images',
   List: 'List',
-  Margin: 'Margin',
   NavigationLinks: 'NavigationLinks',
   Padding: 'Padding',
   ResponsiveIconRadioGroup: 'ResponsiveIconRadioGroup',
@@ -468,44 +468,6 @@ export function getListPropControllerPageIds<T>(
 ) {
   return introspectListPropControllerData(descriptor, value, getPageIds)
 }
-
-type MarginSide = { value: number; unit: 'px' } | 'auto'
-
-type Margin = {
-  [K in 'top' | 'right' | 'bottom' | 'left' as `margin${Capitalize<K>}`]:
-    | MarginSide
-    | null
-    | undefined
-}
-
-export type MarginValue = ResponsiveValue<Margin>
-
-export const MarginPropControllerFormat = {
-  ClassName: 'makeswift::prop-controllers::margin::format::class-name',
-  ResponsiveValue: 'makeswift::prop-controllers::margin::format::responsive-value',
-} as const
-
-export type MarginPropControllerFormat =
-  typeof MarginPropControllerFormat[keyof typeof MarginPropControllerFormat]
-
-type MarginOptions = { preset?: MarginValue; format?: MarginPropControllerFormat }
-
-export type MarginDescriptor<_T = MarginValue, U extends MarginOptions = MarginOptions> = {
-  type: typeof Types.Margin
-  options: U
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Margin<T extends MarginOptions>(
-  options: T & MarginOptions = {} as T,
-): MarginDescriptor<MarginValue, T> {
-  return { type: Types.Margin, options }
-}
-
-Margin.Format = MarginPropControllerFormat
 
 type ButtonVariant = 'flat' | 'outline' | 'shadow' | 'clear' | 'blocky' | 'bubbly' | 'skewed'
 
@@ -1086,7 +1048,7 @@ export type Descriptor<T extends Data = Data> =
 export type PanelDescriptorType =
   | typeof Types.Backgrounds
   | typeof Types.ResponsiveIconRadioGroup
-  | typeof Types.Margin
+  | typeof PropControllerTypes.Margin
   | typeof Types.Padding
   | typeof PropControllerTypes.Shadows
   | typeof PropControllerTypes.Border
@@ -1176,8 +1138,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveWidthControlValue<T>
   : T['type'] extends typeof Types.Padding
   ? ResolvePaddingControlValue<T>
-  : T['type'] extends typeof Types.Margin
-  ? ResolveMarginControlValue<T>
+  : T['type'] extends typeof PropControllerTypes.Margin
+  ? ResolveMarginPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Margin }>>
   : T['type'] extends typeof PropControllerTypes.BorderRadius
   ? ResolveBorderRadiusPropControllerValue<
       Extract<T, { type: typeof PropControllerTypes.BorderRadius }>

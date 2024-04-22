@@ -66,6 +66,20 @@ export type {
 } from './font'
 export * from './link'
 export {
+  Margin,
+  MarginPropControllerFormat,
+  marginPropControllerDataSchema,
+  getMarginPropControllerDataResponsiveMarginData,
+  createMarginPropControllerDataFromResponsiveMarginData,
+} from './margin'
+export type {
+  ResolveMarginPropControllerValue,
+  ResponsiveMarginData,
+  MarginSideData,
+  MarginDescriptor,
+  MarginPropControllerData,
+} from './margin'
+export {
   Number,
   createNumberPropControllerDataFromNumber,
   getNumberPropControllerDataNumber,

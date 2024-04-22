@@ -3,7 +3,7 @@ import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
-import { ResponsiveColor, ResponsiveLength } from '@makeswift/prop-controllers'
+import { Margin, ResponsiveColor, ResponsiveLength } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -35,7 +35,7 @@ export function registerComponent(runtime: ReactRuntime) {
           format: Props.Width.Format.ClassName,
           defaultValue: { value: 100, unit: '%' },
         }),
-        margin: Props.Margin({ format: Props.Margin.Format.ClassName }),
+        margin: Margin({ format: Margin.Format.ClassName }),
       },
     },
   )
