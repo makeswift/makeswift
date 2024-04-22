@@ -5,7 +5,14 @@ import { MakeswiftComponentType } from '../constants'
 import { Alignments, Contrast, Contrasts, Shapes, Sizes } from './context/FormContext'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
-import { Link, Margin, ResponsiveColor, ResponsiveLength, Table } from '@makeswift/prop-controllers'
+import {
+  Link,
+  Margin,
+  ResponsiveColor,
+  ResponsiveLength,
+  Table,
+  Width,
+} from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -130,7 +137,7 @@ export function registerComponent(runtime: ReactRuntime) {
           defaultValue: Alignments.CENTER,
           hidden: props.tableId == null,
         })),
-        width: Props.Width({
+        width: Width({
           preset: [
             {
               deviceId: getBaseBreakpoint(runtime.getBreakpoints()).id,
@@ -138,7 +145,7 @@ export function registerComponent(runtime: ReactRuntime) {
             },
           ],
           defaultValue: { value: 100, unit: '%' },
-          format: Props.Width.Format.ClassName,
+          format: Width.Format.ClassName,
         }),
         margin: Margin({ format: Margin.Format.ClassName }),
       },

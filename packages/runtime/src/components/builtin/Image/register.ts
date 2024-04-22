@@ -10,6 +10,7 @@ import {
   BorderRadius,
   Margin,
   Padding,
+  Width,
 } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
@@ -23,7 +24,7 @@ export function registerComponent(runtime: ReactRuntime) {
         file: Props.Image(),
         altText: Props.TextInput({ label: 'Alt text' }),
         link: Link({ label: 'On click' }),
-        width: Props.Width(),
+        width: Width(),
         margin: Margin({ format: Margin.Format.ClassName }),
         padding: Padding({ format: Padding.Format.ClassName }),
         border: Border({ format: Border.Format.ClassName }),

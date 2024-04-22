@@ -9,6 +9,7 @@ import {
   Font,
   Margin,
   ResponsiveColor,
+  Width,
 } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
@@ -87,8 +88,8 @@ export function registerComponent(runtime: ReactRuntime) {
           label: 'Label color',
           placeholder: 'black',
         }),
-        width: Props.Width({
-          format: Props.Width.Format.ClassName,
+        width: Width({
+          format: Width.Format.ClassName,
           defaultValue: { value: 560, unit: 'px' },
         }),
         margin: Margin({ format: Margin.Format.ClassName }),

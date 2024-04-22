@@ -5,7 +5,7 @@ import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
-import { Margin, ResponsiveColor } from '@makeswift/prop-controllers'
+import { Margin, ResponsiveColor, Width } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -121,8 +121,8 @@ export function registerComponent(runtime: ReactRuntime) {
           step: 1,
           defaultValue: { value: 0, unit: 'px' },
         }),
-        width: Props.Width({
-          format: Props.Width.Format.ClassName,
+        width: Width({
+          format: Width.Format.ClassName,
           defaultValue: { value: 100, unit: '%' },
         }),
         margin: Margin({

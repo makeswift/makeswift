@@ -1,4 +1,4 @@
-import { ResolveWidthControlValue, ResponsiveColor } from '../runtimes/react/controls'
+import { ResponsiveColor } from '../runtimes/react/controls'
 import { StyleControlFormattedValue } from '../runtimes/react/controls/style'
 import type { Element, Data, MergeTranslatableDataContext } from '../state/react-page'
 import { NumberControlDefinition } from '../controls/number'
@@ -54,7 +54,6 @@ import {
   LinkPropControllerValue,
   Types as PropControllerTypes,
   ColorData as Color,
-  LengthData as Length,
   ResponsiveValueType,
   ShadowsDescriptor,
   ResolveShadowsPropControllerValue,
@@ -81,6 +80,8 @@ import {
   ResolveMarginPropControllerValue,
   PaddingDescriptor,
   ResolvePaddingPropControllerValue,
+  WidthDescriptor,
+  ResolveWidthPropControllerValue,
 } from '@makeswift/prop-controllers'
 
 export type { Data }
@@ -154,7 +155,6 @@ export const Types = {
   TextArea: 'TextArea',
   TextInput: 'TextInput',
   TextStyle: 'TextStyle',
-  Width: 'Width',
   Style: StyleControlType,
 } as const
 
@@ -911,39 +911,6 @@ export function TextStyle(options: TextStyleOptions = {}): TextStyleDescriptor {
   return { type: Types.TextStyle, options }
 }
 
-export type WidthValue = ResponsiveValue<Length>
-
-export const WidthPropControllerFormat = {
-  ClassName: 'makeswift::prop-controllers::width::format::class-name',
-  ResponsiveValue: 'makeswift::prop-controllers::width::format::responsive-value',
-} as const
-
-type WidthControlValueFormat =
-  typeof WidthPropControllerFormat[keyof typeof WidthPropControllerFormat]
-
-type WidthOptions = {
-  preset?: WidthValue
-  defaultValue?: Length
-  format?: WidthControlValueFormat
-}
-
-export type WidthDescriptor<_T = WidthValue, U extends WidthOptions = WidthOptions> = {
-  type: typeof Types.Width
-  options: U
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Width<T extends WidthOptions>(
-  options: T & WidthOptions = {} as T,
-): WidthDescriptor<WidthValue, T> {
-  return { type: Types.Width, options }
-}
-
-Width.Format = WidthPropControllerFormat
-
 export type Descriptor<T extends Data = Data> =
   | BackgroundsDescriptor<T>
   | BorderDescriptor<T>
@@ -1093,8 +1060,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveFontPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Font }>>
   : T['type'] extends typeof PropControllerTypes.Link
   ? LinkPropControllerValue
-  : T['type'] extends typeof Types.Width
-  ? ResolveWidthControlValue<T>
+  : T['type'] extends typeof PropControllerTypes.Width
+  ? ResolveWidthPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Width }>>
   : T['type'] extends typeof PropControllerTypes.Padding
   ? ResolvePaddingPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Padding }>>
   : T['type'] extends typeof PropControllerTypes.Margin

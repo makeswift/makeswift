@@ -8,7 +8,8 @@ import {
 } from './prop-controllers'
 import { match } from 'ts-pattern'
 
-const responsiveLengthDataSchema = createResponsiveValueSchema(lengthDataSchema)
+export const responsiveLengthDataSchema =
+  createResponsiveValueSchema(lengthDataSchema)
 
 export type ResponsiveLengthData = z.infer<typeof responsiveLengthDataSchema>
 
