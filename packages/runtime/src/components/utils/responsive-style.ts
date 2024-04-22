@@ -5,10 +5,11 @@ import type {
   LengthData,
   ResponsiveBorderRadiusData,
   ResponsiveMarginData,
+  ResponsivePaddingData,
   ResponsiveValue,
 } from '@makeswift/prop-controllers'
 
-import { WidthValue, PaddingValue, TextStyleValue } from '../../prop-controllers/descriptors'
+import { WidthValue, TextStyleValue } from '../../prop-controllers/descriptors'
 import {
   FallbackStrategy,
   getBreakpoint,
@@ -82,7 +83,7 @@ export function useResponsiveWidth(
 
 export function responsivePadding(
   breakpoints: Breakpoints,
-  paddingData: PaddingValue | undefined,
+  paddingData: ResponsivePaddingData | undefined,
   defaultValue: PaddingPropertyData = {} as PaddingPropertyData,
 ): CSSObject {
   return responsiveStyle(breakpoints, [paddingData], ([padding = {} as PaddingPropertyData]) =>

@@ -8,6 +8,7 @@ export const Types = {
   Font: 'Font',
   Link: 'Link',
   Margin: 'Margin',
+  Padding: 'Padding',
   Number: 'Number',
   Shadows: 'Shadows',
   ResponsiveColor: 'ResponsiveColor',
