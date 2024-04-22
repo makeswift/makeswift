@@ -3,7 +3,6 @@
 import { cx } from '@emotion/css'
 import { ComponentPropsWithoutRef, ForwardedRef, forwardRef, Ref, useEffect, useState } from 'react'
 import {
-  DateValue,
   ElementIDValue,
   FontValue,
   GapXValue,
@@ -19,7 +18,7 @@ import { ResponsiveValue } from '@makeswift/prop-controllers'
 
 type Props = {
   id?: ElementIDValue
-  date?: DateValue
+  date?: string
   variant?: ResponsiveIconRadioGroupValue<
     'filled' | 'filled-split' | 'outline' | 'outline-split' | 'clear'
   >

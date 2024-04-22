@@ -17,8 +17,6 @@ import {
 import {
   Data,
   Device,
-  DateDescriptor as DateControl,
-  DateValue as DateControlValue,
   Gap,
   GapXDescriptor as GapXControl,
   GapXValue as GapXControlValue,
@@ -78,6 +76,8 @@ import {
 } from './function-serialization'
 import {
   LinkData,
+  DateDescriptor as DateControl,
+  DatePropControllerData,
   Types as PropControllerTypes,
   LinkDescriptor as LinkControl,
   LinkPropControllerData,
@@ -570,10 +570,10 @@ function deserializeResponsiveIconRadioGroupControl(
   return { ...serializedControl, options: deserializedOptions }
 }
 
-type DateControlConfig = { preset?: DateControlValue }
+type DateControlConfig = { preset?: DatePropControllerData }
 
-type SerializedDateControl<_T = DateControlValue> = {
-  type: typeof Controls.Types.Date
+type SerializedDateControl<_T = DatePropControllerData> = {
+  type: typeof PropControllerTypes.Date
   options: SerializedConfig<DateControlConfig>
 }
 
@@ -587,8 +587,8 @@ function serializeDateControl(control: DateControl): [SerializedDateControl, Tra
   return [{ ...control, options: serializedOptions }, [serializedOptions]]
 }
 
-type DeserializedDateControl<_T = DateControlValue> = {
-  type: typeof Controls.Types.Date
+type DeserializedDateControl<_T = DatePropControllerData> = {
+  type: typeof PropControllerTypes.Date
   options: DeserializedConfig<DateControlConfig>
 }
 
@@ -1028,7 +1028,7 @@ export function serializeControl<T extends Data>(
     case PropControllerTypes.ResponsiveLength:
       return serializeResponsiveLengthControl(control)
 
-    case Controls.Types.Date:
+    case PropControllerTypes.Date:
       return serializeDateControl(control)
 
     case PropControllerTypes.Link:
@@ -1106,7 +1106,7 @@ export function deserializeControl<T extends Data>(
     case PropControllerTypes.ResponsiveLength:
       return deserializeResponsiveLengthControl(serializedControl)
 
-    case Controls.Types.Date:
+    case PropControllerTypes.Date:
       return deserializeDateControl(serializedControl)
 
     case PropControllerTypes.Link:

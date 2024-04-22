@@ -40,6 +40,18 @@ export type {
   CheckboxPropControllerData,
   ResolveCheckboxPropControllerValue,
 } from './checkbox'
+export {
+  Date,
+  datePropControllerDataSchema,
+  getDatePropControllerDataString,
+  createDatePropControllerDataFromString,
+} from './date'
+export type {
+  DateDescriptor,
+  DateOptions,
+  DatePropControllerData,
+  ResolveDatePropControllerValue,
+} from './date'
 export * from './link'
 export {
   Number,

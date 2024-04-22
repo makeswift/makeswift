@@ -3,8 +3,6 @@ export type {
   Descriptor as PropControllerDescriptor,
   DescriptorValueType as PropControllerDescriptorValueType,
   Gap,
-  DateDescriptor,
-  DateValue,
   GapXDescriptor,
   GapXOptions,
   GapXValue,

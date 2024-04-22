@@ -4,6 +4,7 @@ export const Types = {
   Border: 'Border',
   BorderRadius: 'BorderRadius',
   Checkbox: 'Checkbox',
+  Date: 'Date',
   Link: 'Link',
   Number: 'Number',
   Shadows: 'Shadows',
