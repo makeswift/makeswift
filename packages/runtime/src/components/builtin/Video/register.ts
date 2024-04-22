@@ -3,7 +3,7 @@ import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
-import { BorderRadius } from '@makeswift/prop-controllers'
+import { BorderRadius, Video } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -14,7 +14,7 @@ export function registerComponent(runtime: ReactRuntime) {
       icon: ComponentIcon.Video,
       props: {
         id: Props.ElementID(),
-        video: Props.Video({ preset: { controls: true } }),
+        video: Video({ preset: { controls: true } }),
         width: Props.Width({
           format: Props.Width.Format.ClassName,
           defaultValue: { value: 560, unit: 'px' },
