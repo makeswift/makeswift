@@ -4,7 +4,6 @@ import { cx } from '@emotion/css'
 import { ComponentPropsWithoutRef, ForwardedRef, forwardRef, Ref, useEffect, useState } from 'react'
 import {
   ElementIDValue,
-  FontValue,
   GapXValue,
   ResponsiveIconRadioGroupValue,
   TextInputValue,
@@ -14,7 +13,7 @@ import { useStyle } from '../../../runtimes/react/use-style'
 import { colorToString } from '../../utils/colorToString'
 import { useResponsiveStyle } from '../../utils/responsive-style'
 import { ColorValue as Color } from '../../utils/types'
-import { ResponsiveValue } from '@makeswift/prop-controllers'
+import { ResponsiveFontData, ResponsiveValue } from '@makeswift/prop-controllers'
 
 type Props = {
   id?: ElementIDValue
@@ -25,10 +24,10 @@ type Props = {
   shape?: ResponsiveIconRadioGroupValue<'pill' | 'rounded' | 'square'>
   size?: ResponsiveIconRadioGroupValue<'small' | 'medium' | 'large'>
   gap?: GapXValue
-  numberFont?: FontValue
+  numberFont?: ResponsiveFontData
   numberColor?: ResponsiveColor | null
   blockColor?: ResponsiveColor | null
-  labelFont?: FontValue
+  labelFont?: ResponsiveFontData
   labelColor?: ResponsiveColor | null
   width?: string
   margin?: string

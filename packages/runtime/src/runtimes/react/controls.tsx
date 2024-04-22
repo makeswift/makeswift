@@ -20,6 +20,7 @@ import {
   useLinkPropControllerData,
   useCheckboxPropControllerData,
   useDatePropControllerData,
+  useFontPropControllerData,
 } from '../../components/hooks'
 import type { ColorValue } from '../../components/utils/types'
 import {
@@ -421,6 +422,17 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
               <RenderHook
                 key={descriptor.type}
                 hook={useDatePropControllerData}
+                parameters={[props[propName]]}
+              >
+                {value => renderFn({ ...propsValue, [propName]: value })}
+              </RenderHook>
+            )
+
+          case PropControllerTypes.Font:
+            return (
+              <RenderHook
+                key={descriptor.type}
+                hook={useFontPropControllerData}
                 parameters={[props[propName]]}
               >
                 {value => renderFn({ ...propsValue, [propName]: value })}
