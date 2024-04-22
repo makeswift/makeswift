@@ -4,15 +4,11 @@ import type {
   ResponsiveValueType as ExtractResponsiveValue,
   LengthData,
   ResponsiveBorderRadiusData,
+  ResponsiveMarginData,
   ResponsiveValue,
 } from '@makeswift/prop-controllers'
 
-import {
-  WidthValue,
-  PaddingValue,
-  MarginValue,
-  TextStyleValue,
-} from '../../prop-controllers/descriptors'
+import { WidthValue, PaddingValue, TextStyleValue } from '../../prop-controllers/descriptors'
 import {
   FallbackStrategy,
   getBreakpoint,
@@ -108,7 +104,7 @@ export function useResponsivePadding(
 
 export function responsiveMargin(
   breakpoints: Breakpoints,
-  marginData: MarginValue | undefined,
+  marginData: ResponsiveMarginData | undefined,
   defaultValue: MarginPropertyData = {} as MarginPropertyData,
 ): CSSObject {
   return responsiveStyle(breakpoints, [marginData], ([margin = {} as MarginPropertyData]) =>

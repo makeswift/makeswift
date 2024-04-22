@@ -7,6 +7,7 @@ export const Types = {
   Date: 'Date',
   Font: 'Font',
   Link: 'Link',
+  Margin: 'Margin',
   Number: 'Number',
   Shadows: 'Shadows',
   ResponsiveColor: 'ResponsiveColor',

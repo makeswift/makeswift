@@ -4,7 +4,12 @@ import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
-import { Date as DatePropController, Font, ResponsiveColor } from '@makeswift/prop-controllers'
+import {
+  Date as DatePropController,
+  Font,
+  Margin,
+  ResponsiveColor,
+} from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -86,7 +91,7 @@ export function registerComponent(runtime: ReactRuntime) {
           format: Props.Width.Format.ClassName,
           defaultValue: { value: 560, unit: 'px' },
         }),
-        margin: Props.Margin({ format: Props.Margin.Format.ClassName }),
+        margin: Margin({ format: Margin.Format.ClassName }),
         daysLabel: Props.TextInput({ label: 'Days label', placeholder: 'Days' }),
         hoursLabel: Props.TextInput({ label: 'Hours label', placeholder: 'Hours' }),
         minutesLabel: Props.TextInput({

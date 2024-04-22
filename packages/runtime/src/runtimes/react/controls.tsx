@@ -4,9 +4,6 @@ import * as ReactPage from '../../state/react-page'
 import { Props } from '../../prop-controllers'
 import {
   Descriptor,
-  MarginDescriptor,
-  MarginPropControllerFormat,
-  MarginValue,
   PaddingDescriptor,
   PaddingPropControllerFormat,
   PaddingValue,
@@ -81,6 +78,9 @@ import {
   getBorderRadiusPropControllerDataResponsiveBorderRadiusData,
   BorderRadiusPropControllerData,
   BorderRadiusPropControllerFormat,
+  MarginPropControllerFormat,
+  MarginPropControllerData,
+  getMarginPropControllerDataResponsiveMarginData,
 } from '@makeswift/prop-controllers'
 import { useResponsiveLengthPropControllerData } from '../../components/hooks/useResponsiveLengthPropControllerData'
 import { useNumberPropControllerData } from '../../components/hooks/useNumberPropControllerData'
@@ -120,21 +120,11 @@ export type ResolvePaddingControlValue<T extends Descriptor> = T extends Padding
     : never
   : never
 
-function useMarginStyle(value: MarginValue | undefined): string {
+function useMarginStyle(data: MarginPropControllerData | undefined): string {
+  const value = getMarginPropControllerDataResponsiveMarginData(data)
+
   return useStyle(useResponsiveMargin(value))
 }
-
-export type ResolveMarginControlValue<T extends Descriptor> = T extends MarginDescriptor
-  ? undefined extends ResolveOptions<T['options']>['format']
-    ? MarginValue | undefined
-    : ResolveOptions<T['options']>['format'] extends typeof MarginPropControllerFormat.ClassName
-    ? string
-    : ResolveOptions<
-        T['options']
-      >['format'] extends typeof MarginPropControllerFormat.ResponsiveValue
-    ? MarginValue | undefined
-    : never
-  : never
 
 export function useBorderRadiusStyle(data: BorderRadiusPropControllerData | undefined): string {
   const value = getBorderRadiusPropControllerDataResponsiveBorderRadiusData(data)
@@ -292,7 +282,7 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                 return renderFn({ ...propsValue, [propName]: props[propName] })
             }
 
-          case Props.Types.Margin:
+          case PropControllerTypes.Margin:
             switch (descriptor.options.format) {
               case MarginPropControllerFormat.ClassName:
                 return (
