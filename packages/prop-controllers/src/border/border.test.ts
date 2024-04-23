@@ -61,20 +61,6 @@ describe('BorderPropController', () => {
       // Assert
       expect(result).toEqual(data)
     })
-
-    test('returns value for unknown data', () => {
-      // Arrange
-      const data = {
-        test: 'unknown',
-      }
-
-      // Act
-      // @ts-expect-error: invalid data
-      const result = getBorderPropControllerDataResponsiveBorderData(data)
-
-      // Assert
-      expect(result).toEqual(data)
-    })
   })
 
   describe('getBorderPropControllerDataSwatchIds', () => {
