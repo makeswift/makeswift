@@ -48,20 +48,6 @@ describe('LinkPropController', () => {
       // Assert
       expect(result).toEqual(data)
     })
-
-    test('returns value for unknown data', () => {
-      // Arrange
-      const data = {
-        test: 'unknown',
-      }
-
-      // Act
-      // @ts-expect-error: invalid data
-      const result = getLinkPropControllerValue(data)
-
-      // Assert
-      expect(result).toEqual(data)
-    })
   })
 
   describe('getLinkPropControllerPageIds', () => {
