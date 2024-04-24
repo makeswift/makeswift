@@ -12,7 +12,6 @@ import {
   ElementIDValue,
   ResponsiveSelectValue,
   ResponsiveIconRadioGroupValue,
-  TextStyleValue,
 } from '../../../prop-controllers/descriptors'
 import { colorToString } from '../../utils/colorToString'
 import { Link } from '../../shared/Link'
@@ -25,7 +24,11 @@ import {
   useResponsiveWidth,
 } from '../../utils/responsive-style'
 import { cx } from '@emotion/css'
-import { LinkPropControllerValue, ResponsiveLengthData } from '@makeswift/prop-controllers'
+import {
+  LinkPropControllerValue,
+  ResponsiveLengthData,
+  ResponsiveTextStyleData,
+} from '@makeswift/prop-controllers'
 
 type BaseProps<T extends ElementType> = {
   as?: T
@@ -37,7 +40,7 @@ type BaseProps<T extends ElementType> = {
   size?: ResponsiveIconRadioGroupValue<'small' | 'medium' | 'large'>
   color?: ResponsiveColor | null
   textColor?: ResponsiveColor | null
-  textStyle?: TextStyleValue
+  textStyle?: ResponsiveTextStyleData
   width?: ResponsiveLengthData
   margin?: string
 }

@@ -39,7 +39,6 @@ import {
   TableFormFieldsDescriptor,
   TableFormFieldsValue,
   TextInputValue,
-  TextStyleValue,
 } from '../../../prop-controllers/descriptors'
 import { Link } from '../../shared/Link'
 import { BoxModelHandle, getBox } from '../../../box-model'
@@ -55,6 +54,7 @@ import { useTable } from '../../../runtimes/react/hooks/makeswift-api'
 import {
   LinkPropControllerValue,
   ResponsiveLengthData,
+  ResponsiveTextStyleData,
   ResponsiveValue,
 } from '@makeswift/prop-controllers'
 
@@ -85,9 +85,9 @@ type Props = {
   shape?: ResponsiveIconRadioGroupValue<Shape>
   size?: ResponsiveIconRadioGroupValue<Size>
   contrast?: ResponsiveIconRadioGroupValue<Contrast>
-  labelTextStyle?: TextStyleValue
+  labelTextStyle?: ResponsiveTextStyleData
   labelTextColor?: ResponsiveColor | null
-  submitTextStyle?: TextStyleValue
+  submitTextStyle?: ResponsiveTextStyleData
   brandColor?: ResponsiveColor | null
   submitTextColor?: ResponsiveColor | null
   submitLabel?: TextInputValue

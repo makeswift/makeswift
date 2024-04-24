@@ -166,6 +166,19 @@ export type {
   ResolveTablePropControllerValue,
 } from './table'
 export {
+  TextStyle,
+  textStylePropControllerDataSchema,
+  getTextStylePropControllerDataResponsiveTextStyleData,
+  createTextStylePropControllerDataFromResponsiveTextStyleData,
+} from './text-style'
+export type {
+  TextStyleData,
+  ResolveTextStylePropControllerValue,
+  ResponsiveTextStyleData,
+  TextStyleDescriptor,
+  TextStylePropControllerData,
+} from './text-style'
+export {
   Width,
   WidthPropControllerFormat,
   widthPropControllerDataSchema,

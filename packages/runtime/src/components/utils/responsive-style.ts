@@ -8,9 +8,9 @@ import type {
   ResponsivePaddingData,
   ResponsiveValue,
   ResponsiveLengthData,
+  ResponsiveTextStyleData,
 } from '@makeswift/prop-controllers'
 
-import { TextStyleValue } from '../../prop-controllers/descriptors'
 import {
   FallbackStrategy,
   getBreakpoint,
@@ -265,7 +265,7 @@ export function useResponsiveShadow(
 
 export function responsiveTextStyle(
   breakpoints: Breakpoints,
-  value: TextStyleValue | undefined,
+  value: ResponsiveTextStyleData | undefined,
 ): CSSObject {
   return responsiveStyle(
     breakpoints,

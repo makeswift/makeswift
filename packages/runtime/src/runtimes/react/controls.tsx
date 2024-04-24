@@ -82,6 +82,7 @@ import {
 import { useResponsiveLengthPropControllerData } from '../../components/hooks/useResponsiveLengthPropControllerData'
 import { useNumberPropControllerData } from '../../components/hooks/useNumberPropControllerData'
 import { useResponsiveColorPropControllerData } from '../../components/hooks/useResponsiveColorPropControllerData'
+import { useTextStylePropControllerData } from '../../components/hooks/useTextStylePropControllerData'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -427,6 +428,17 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
               <RenderHook
                 key={descriptor.type}
                 hook={useTablePropControllerData}
+                parameters={[props[propName]]}
+              >
+                {value => renderFn({ ...propsValue, [propName]: value })}
+              </RenderHook>
+            )
+
+          case PropControllerTypes.TextStyle:
+            return (
+              <RenderHook
+                key={descriptor.type}
+                hook={useTextStylePropControllerData}
                 parameters={[props[propName]]}
               >
                 {value => renderFn({ ...propsValue, [propName]: value })}

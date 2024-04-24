@@ -18,12 +18,12 @@ import {
   ResponsiveIconRadioGroupValue,
   ResponsiveSelectValue,
   TextInputValue,
-  TextStyleValue,
   NavigationButton as NavigationButtonValue,
 } from '../../../prop-controllers/descriptors'
 import {
   LinkPropControllerValue,
   ResponsiveLengthData,
+  ResponsiveTextStyleData,
   ResponsiveValue,
 } from '@makeswift/prop-controllers'
 
@@ -38,7 +38,7 @@ import { useStyle } from '../../../runtimes/react/use-style'
 type Props = {
   id?: ElementIDValue
   links?: NavigationLinksValue
-  linkTextStyle?: TextStyleValue
+  linkTextStyle?: ResponsiveTextStyleData
   showLogo?: boolean
   logoFile?: ImageValue
   logoWidth?: ResponsiveLengthData

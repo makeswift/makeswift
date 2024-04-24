@@ -1,7 +1,6 @@
 import { ComponentPropsWithoutRef, useState } from 'react'
 
-import { TextStyleValue } from '../../../../../../../prop-controllers/descriptors'
-import { LinkData, ResponsiveColorData } from '@makeswift/prop-controllers'
+import { LinkData, ResponsiveColorData, ResponsiveTextStyleData } from '@makeswift/prop-controllers'
 
 import { colorToString } from '../../../../../../utils/colorToString'
 import { useResponsiveColor } from '../../../../../../hooks'
@@ -54,7 +53,7 @@ function ButtonLink({ className, ...restOfProps }: ButtonLinkProps) {
 type BaseDropDownItemProps = {
   className?: string
   color?: ResponsiveColorData
-  textStyle?: TextStyleValue
+  textStyle?: ResponsiveTextStyleData
 }
 
 type DropDownItemProps = BaseDropDownItemProps &

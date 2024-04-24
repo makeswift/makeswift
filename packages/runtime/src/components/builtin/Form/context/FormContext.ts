@@ -2,10 +2,9 @@
 
 import { createContext, useContext } from 'react'
 
-import { TextStyleValue } from '../../../../prop-controllers/descriptors'
 import { ResponsiveColor } from '../../../../runtimes/react/controls'
 import { ColorValue } from '../../../utils/types'
-import { ResponsiveValue } from '@makeswift/prop-controllers'
+import { ResponsiveTextStyleData, ResponsiveValue } from '@makeswift/prop-controllers'
 
 export const Alignments = {
   LEFT: 'left',
@@ -43,7 +42,7 @@ export type Value = {
   size: ResponsiveValue<Size> | null | undefined
   contrast: ResponsiveValue<Contrast> | null | undefined
   brandColor: ResponsiveValue<ColorValue> | null | undefined
-  labelTextStyle?: TextStyleValue
+  labelTextStyle?: ResponsiveTextStyleData
   labelTextColor?: ResponsiveColor | null
 }
 

@@ -11,6 +11,7 @@ import {
   ResponsiveColor,
   ResponsiveLength,
   Table,
+  TextStyle,
   Width,
 } from '@makeswift/prop-controllers'
 
@@ -74,7 +75,7 @@ export function registerComponent(runtime: ReactRuntime) {
           defaultValue: Contrasts.LIGHT,
           hidden: props.tableId == null,
         })),
-        labelTextStyle: Props.TextStyle({ label: 'Label text style' }),
+        labelTextStyle: TextStyle({ label: 'Label text style' }),
         labelTextColor: ResponsiveColor((props, device) => {
           const hidden = props.tableId == null
           const responsiveContrast = props.contrast as ResponsiveSelectValue<Contrast> | undefined
@@ -91,7 +92,7 @@ export function registerComponent(runtime: ReactRuntime) {
               contrast?.value === Contrasts.DARK ? 'rgba(255,255,255,0.95)' : 'rgba(0,0,0,0.8)',
           }
         }),
-        submitTextStyle: Props.TextStyle({ label: 'Button text style' }),
+        submitTextStyle: TextStyle({ label: 'Button text style' }),
         brandColor: ResponsiveColor(props => ({
           label: 'Button color',
           placeholder: 'black',

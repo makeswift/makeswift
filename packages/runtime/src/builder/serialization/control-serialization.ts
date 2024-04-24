@@ -39,8 +39,6 @@ import {
   ShapeValue as ShapeControlValue,
   TextInputDescriptor as TextInputControl,
   TextInputValue as TextInputControlValue,
-  TextStyleDescriptor as TextStyleControl,
-  TextStyleValue as TextStyleControlValue,
   TypeaheadDescriptor as TypeaheadControl,
   TypeaheadOptions as TypeaheadControlConfig,
   TypeaheadValue as TypeaheadControlValue,
@@ -89,6 +87,8 @@ import {
   ResponsiveColorDescriptor,
   CheckboxPropControllerData,
   CheckboxDescriptor as CheckboxControl,
+  TextStyleDescriptor as TextStyleControl,
+  TextStylePropControllerData,
 } from '@makeswift/prop-controllers'
 
 type SerializedShapeControlConfig<T extends Record<string, SerializedPanelControl>> = {
@@ -752,8 +752,8 @@ function deserializeResponsiveLengthControl(
   return { ...serializedControl, options: deserializedOptions }
 }
 
-type SerializedTextStyleControl<_T = TextStyleControlValue> = {
-  type: typeof Controls.Types.TextStyle
+type SerializedTextStyleControl<_T = TextStylePropControllerData> = {
+  type: typeof PropControllerTypes.TextStyle
   options: SerializedConfig<TextStyleControlConfig>
 }
 
@@ -770,13 +770,13 @@ function serializeTextStyleControl(
 }
 
 type TextStyleControlConfig = {
-  preset?: TextStyleControlValue
+  preset?: TextStylePropControllerData
   label?: string
   hidden?: boolean
 }
 
-type DeserializedTextStyleControl<_T = TextStyleControlValue> = {
-  type: typeof Controls.Types.TextStyle
+type DeserializedTextStyleControl<_T = TextStylePropControllerData> = {
+  type: typeof PropControllerTypes.TextStyle
   options: DeserializedConfig<TextStyleControlConfig>
 }
 
@@ -1037,7 +1037,7 @@ export function serializeControl<T extends Data>(
     case Controls.Types.TextInput:
       return serializeTextInputControl(control)
 
-    case Controls.Types.TextStyle:
+    case PropControllerTypes.TextStyle:
       return serializeTextStyleControl(control)
 
     case Controls.Types.Image:
@@ -1115,7 +1115,7 @@ export function deserializeControl<T extends Data>(
     case Controls.Types.TextInput:
       return deserializeTextInputControl(serializedControl)
 
-    case Controls.Types.TextStyle:
+    case PropControllerTypes.TextStyle:
       return deserializeTextStyleControl(serializedControl)
 
     case Controls.Types.Image:
