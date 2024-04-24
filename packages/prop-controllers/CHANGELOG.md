@@ -1,5 +1,20 @@
 # @makeswift/prop-controllers
 
+## 0.1.0-canary.2
+
+### Minor Changes
+
+- b5fe83a: Add data type to legacy `Date` prop controller and move it to `@makeswift/prop-controllers`.
+
+### Patch Changes
+
+- 045799d: Add data type to legacy `Width` prop controller and move it to `@makeswift/prop-controllers`.
+- abf95d6: Add data type to legacy `Margin` prop controller and move it to `@makeswift/prop-controllers`.
+- bc036af: Add data type to legacy `Font` prop controller and move it to `@makeswift/prop-controllers`.
+- f377f89: Add data type to legacy `Table` prop controller and move it to `@makeswift/prop-controllers`.
+- 6e48054: Add data type to legacy `Video` prop controller and move it to `@makeswift/prop-controllers`.
+- f7fc53e: Add data type to legacy `Padding` prop controller and move it to `@makeswift/prop-controllers`.
+
 ## 0.1.0-canary.1
 
 ### Minor Changes
