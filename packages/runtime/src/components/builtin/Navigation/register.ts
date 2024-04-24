@@ -16,6 +16,7 @@ import {
   getCheckboxPropControllerDataBoolean,
   Margin,
   Width,
+  TextStyle,
 } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
@@ -28,7 +29,7 @@ export function registerComponent(runtime: ReactRuntime) {
       props: {
         id: Props.ElementID(),
         links: Props.NavigationLinks(),
-        linkTextStyle: Props.TextStyle(props => {
+        linkTextStyle: TextStyle(props => {
           const links = props.links as NavigationLinksValue | undefined
 
           return {

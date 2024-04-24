@@ -82,6 +82,9 @@ import {
   ResolvePaddingPropControllerValue,
   WidthDescriptor,
   ResolveWidthPropControllerValue,
+  TextStyleData,
+  TextStyleDescriptor,
+  ResolveTextStylePropControllerValue,
 } from '@makeswift/prop-controllers'
 
 export type { Data }
@@ -124,15 +127,6 @@ type IconName =
 
 export type Gap = { value: number; unit: 'px' }
 
-type TextStyle = {
-  fontFamily?: string | null | undefined
-  letterSpacing: number | null | undefined
-  fontSize: { value: number; unit: 'px' } | null | undefined
-  fontWeight: number | null | undefined
-  textTransform: 'uppercase'[]
-  fontStyle: 'italic'[]
-}
-
 export const Types = {
   Backgrounds: 'Backgrounds',
   ElementID: 'ElementID',
@@ -154,7 +148,6 @@ export const Types = {
   Typeahead: 'Typeahead',
   TextArea: 'TextArea',
   TextInput: 'TextInput',
-  TextStyle: 'TextStyle',
   Style: StyleControlType,
 } as const
 
@@ -483,7 +476,7 @@ export type NavigationButton = {
     size?: ResponsiveValue<ButtonSize>
     textColor?: ResponsiveValue<Color>
     color?: ResponsiveValue<Color>
-    textStyle?: ResponsiveValue<TextStyle>
+    textStyle?: ResponsiveValue<TextStyleData>
   }
 }
 
@@ -495,7 +488,7 @@ type NavigationDropdownLink = {
     label: string
     link?: LinkData
     color?: ResponsiveValue<Color>
-    textStyle?: ResponsiveValue<TextStyle>
+    textStyle?: ResponsiveValue<TextStyleData>
   }
 }
 
@@ -511,7 +504,7 @@ type NavigationDropdown = {
     size?: ResponsiveValue<ButtonSize>
     textColor?: ResponsiveValue<Color>
     color?: ResponsiveValue<Color>
-    textStyle?: ResponsiveValue<TextStyle>
+    textStyle?: ResponsiveValue<TextStyleData>
   }
 }
 
@@ -890,27 +883,6 @@ export function TextInput(options: TextInputOptions = {}): TextInputDescriptor {
   return { type: Types.TextInput, options }
 }
 
-export type TextStyleValue = ResponsiveValue<TextStyle>
-
-export type TextStyleOptions = Options<{
-  preset?: TextStyleValue
-  label?: string
-  hidden?: boolean
-}>
-
-export type TextStyleDescriptor<_T = TextStyleValue> = {
-  type: typeof Types.TextStyle
-  options: TextStyleOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function TextStyle(options: TextStyleOptions = {}): TextStyleDescriptor {
-  return { type: Types.TextStyle, options }
-}
-
 export type Descriptor<T extends Data = Data> =
   | BackgroundsDescriptor<T>
   | BorderDescriptor<T>
@@ -988,7 +960,7 @@ export type PanelDescriptorType =
   | typeof Types.Shape
   | typeof Types.ResponsiveSelect
   | typeof PropControllerTypes.ResponsiveColor
-  | typeof Types.TextStyle
+  | typeof PropControllerTypes.TextStyle
   | typeof Types.Images
   | typeof Types.ResponsiveNumber
   | typeof PropControllerTypes.Number
@@ -1082,6 +1054,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveNumberPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Number }>>
   : T['type'] extends typeof PropControllerTypes.Table
   ? ResolveTablePropControllerValue<Extract<T, { type: typeof PropControllerTypes.Table }>>
+  : T['type'] extends typeof PropControllerTypes.TextStyle
+  ? ResolveTextStylePropControllerValue<Extract<T, { type: typeof PropControllerTypes.TextStyle }>>
   : T['type'] extends typeof PropControllerTypes.Video
   ? ResolveVideoPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Video }>>
   : T extends Descriptor<infer U>

@@ -1,4 +1,4 @@
-import { Link, Margin, ResponsiveColor, Width } from '@makeswift/prop-controllers'
+import { Link, Margin, ResponsiveColor, TextStyle, Width } from '@makeswift/prop-controllers'
 import { Props, ResponsiveSelectValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride } from '../../../state/modules/breakpoints'
@@ -68,7 +68,7 @@ export function registerComponent(runtime: ReactRuntime) {
           label: 'Text color',
           placeholder: 'white',
         }),
-        textStyle: Props.TextStyle(),
+        textStyle: TextStyle(),
         width: Width(),
         margin: Margin({ format: Margin.Format.ClassName }),
       },

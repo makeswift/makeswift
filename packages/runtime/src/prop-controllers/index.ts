@@ -37,8 +37,6 @@ export type {
   ShapeValue,
   TextInputDescriptor,
   TextInputValue,
-  TextStyleDescriptor,
-  TextStyleValue,
   TypeaheadDescriptor,
   TypeaheadValue,
   TypeaheadOptions,
