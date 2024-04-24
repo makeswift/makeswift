@@ -6,47 +6,85 @@ import {
   Types,
 } from '../prop-controllers'
 
-type OpenPageLink = {
-  type: 'OPEN_PAGE'
-  payload: { pageId: string | null | undefined; openInNewTab: boolean }
-}
+import { z } from 'zod'
 
-type OpenURLLink = {
-  type: 'OPEN_URL'
-  payload: { url: string; openInNewTab: boolean }
-}
+const openPageLinkSchema = z.object({
+  type: z.literal('OPEN_PAGE'),
+  payload: z
+    .object({
+      pageId: z.string().nullable().optional(),
+      openInNewTab: z.boolean(),
+    })
+    .transform((v) => ({
+      pageId: v.pageId,
+      ...v,
+    })),
+})
 
-type SendEmailLink = {
-  type: 'SEND_EMAIL'
-  payload: { to: string; subject?: string; body?: string }
-}
+const openURLLinkSchema = z.object({
+  type: z.literal('OPEN_URL'),
+  payload: z.object({
+    url: z.string(),
+    openInNewTab: z.boolean(),
+  }),
+})
 
-type CallPhoneLink = { type: 'CALL_PHONE'; payload: { phoneNumber: string } }
+const sendEmailLinkSchema = z.object({
+  type: z.literal('SEND_EMAIL'),
+  payload: z.object({
+    to: z.string(),
+    subject: z.string().optional(),
+    body: z.string().optional(),
+  }),
+})
 
-type ScrollToElementLink = {
-  type: 'SCROLL_TO_ELEMENT'
-  payload: {
-    elementIdConfig: { elementKey: string; propName: string } | null | undefined
-    block: 'start' | 'center' | 'end'
-  }
-}
+const callPhoneLinkSchema = z.object({
+  type: z.literal('CALL_PHONE'),
+  payload: z.object({
+    phoneNumber: z.string(),
+  }),
+})
 
-type Link =
-  | OpenPageLink
-  | OpenURLLink
-  | SendEmailLink
-  | CallPhoneLink
-  | ScrollToElementLink
+const scrollToElementLinkSchema = z.object({
+  type: z.literal('SCROLL_TO_ELEMENT'),
+  payload: z
+    .object({
+      elementIdConfig: z
+        .object({
+          elementKey: z.string(),
+          propName: z.string(),
+        })
+        .nullable()
+        .optional(),
+      block: z.union([
+        z.literal('start'),
+        z.literal('center'),
+        z.literal('end'),
+      ]),
+    })
+    .transform((v) => ({
+      elementIdConfig: v.elementIdConfig,
+      ...v,
+    })),
+})
 
-export type LinkData = Link
+export const linkDataSchema = z.union([
+  openPageLinkSchema,
+  openURLLinkSchema,
+  sendEmailLinkSchema,
+  callPhoneLinkSchema,
+  scrollToElementLinkSchema,
+])
 
-export type LinkPropControllerDataV0 = Link
+export type LinkData = z.infer<typeof linkDataSchema>
+
+export type LinkPropControllerDataV0 = LinkData
 
 export const LinkPropControllerDataV1Type = 'prop-controllers::link::v1'
 
 export type LinkPropControllerDataV1 = {
   [ControlDataTypeKey]: typeof LinkPropControllerDataV1Type
-  value: Link
+  value: LinkData
 }
 
 export type LinkPropControllerData =
@@ -56,8 +94,8 @@ export type LinkPropControllerData =
 export type LinkOptions = Options<{
   preset?: LinkPropControllerData
   label?: string
-  defaultValue?: Link
-  options?: { value: Link['type']; label: string }[]
+  defaultValue?: LinkData
+  options?: { value: LinkData['type']; label: string }[]
   hidden?: boolean
 }>
 
@@ -83,7 +121,7 @@ export type LinkDescriptor<
   U extends LinkOptions = LinkOptions,
 > = LinkDescriptorV0<_T, U> | LinkDescriptorV1<_T, U>
 
-export type LinkPropControllerValue = Link
+export type LinkPropControllerValue = LinkData
 
 export function getLinkPropControllerValue(
   data: LinkPropControllerData,
