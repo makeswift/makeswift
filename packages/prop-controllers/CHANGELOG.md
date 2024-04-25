@@ -1,5 +1,11 @@
 # @makeswift/prop-controllers
 
+## 0.1.0-canary.3
+
+### Patch Changes
+
+- 24f76a8: Add data type to legacy `TextStyle` prop controller and move it to `@makeswift/prop-controllers`.
+
 ## 0.1.0-canary.2
 
 ### Minor Changes
