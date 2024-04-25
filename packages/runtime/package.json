@@ -1,6 +1,6 @@
 {
   "name": "@makeswift/runtime",
-  "version": "0.16.0-canary.2",
+  "version": "0.16.0-canary.3",
   "license": "MIT",
   "files": [
     "dist",
@@ -117,7 +117,7 @@
     "@emotion/sheet": "^1.0.3",
     "@emotion/utils": "^1.0.0",
     "@makeswift/next-plugin": "0.3.0",
-    "@makeswift/prop-controllers": "^0.1.0-canary.2",
+    "@makeswift/prop-controllers": "^0.1.0-canary.3",
     "@popmotion/popcorn": "^0.4.4",
     "@types/is-hotkey": "^0.1.7",
     "@types/use-sync-external-store": "^0.0.3",
