@@ -91,7 +91,7 @@ export type LinkPropControllerData =
   | LinkPropControllerDataV0
   | LinkPropControllerDataV1
 
-export type LinkOptions = Options<{
+type LinkOptions = Options<{
   preset?: LinkPropControllerData
   label?: string
   defaultValue?: LinkData
@@ -132,6 +132,22 @@ export function getLinkPropControllerValue(
       (v1) => v1.value,
     )
     .otherwise((v0) => v0)
+}
+
+export function createLinkPropControllerDataFromLinkData(
+  value: LinkData,
+  definition: LinkDescriptor,
+): LinkPropControllerData {
+  return match(definition)
+    .with(
+      { version: 1 },
+      () =>
+        ({
+          [ControlDataTypeKey]: LinkPropControllerDataV1Type,
+          value,
+        } as const),
+    )
+    .otherwise(() => value)
 }
 
 export function getLinkPropControllerPageIds(

@@ -64,7 +64,20 @@ export type {
   FontDescriptor,
   FontPropControllerData,
 } from './font'
-export * from './link'
+export {
+  Link,
+  linkDataSchema,
+  getLinkPropControllerValue,
+  createLinkPropControllerDataFromLinkData,
+  getLinkPropControllerPageIds,
+  copyLinkPropControllerData,
+} from './link'
+export type {
+  LinkData,
+  LinkDescriptor,
+  LinkPropControllerData,
+  LinkPropControllerValue,
+} from './link'
 export {
   Margin,
   MarginPropControllerFormat,
