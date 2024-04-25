@@ -1,4 +1,4 @@
-import { ControlDataTypeKey } from '../prop-controllers'
+import { ControlDataTypeKey, Types } from '../prop-controllers'
 import {
   LinkPropControllerData,
   LinkPropControllerDataV0,
@@ -6,12 +6,15 @@ import {
   LinkPropControllerDataV1Type,
   copyLinkPropControllerData,
   getLinkPropControllerPageIds,
-  getLinkPropControllerValue,
+  getLinkPropControllerDataLinkData,
+  LinkDescriptor,
+  createLinkPropControllerDataFromLinkData,
+  LinkData,
 } from './link'
 import { createReplacementContext } from '../utils/utils'
 
 describe('LinkPropController', () => {
-  describe('getLinkPropControllerValue', () => {
+  describe('getLinkPropControllerDataLinkData', () => {
     test('returns value for LinkPropControllerDataV1Type', () => {
       // Arrange
       const data: LinkPropControllerDataV1 = {
@@ -26,7 +29,7 @@ describe('LinkPropController', () => {
       }
 
       // Act
-      const result = getLinkPropControllerValue(data)
+      const result = getLinkPropControllerDataLinkData(data)
 
       // Assert
       expect(result).toEqual(data.value)
@@ -43,7 +46,7 @@ describe('LinkPropController', () => {
       }
 
       // Act
-      const result = getLinkPropControllerValue(data)
+      const result = getLinkPropControllerDataLinkData(data)
 
       // Assert
       expect(result).toEqual(data)
@@ -95,6 +98,54 @@ describe('LinkPropController', () => {
       }
 
       expect(getLinkPropControllerPageIds(linkData)).toEqual([pageId])
+    })
+  })
+
+  describe('createLinkPropControllerDataFromLinkData', () => {
+    test('returns LinkPropControllerDataV1 when definition version is 1', () => {
+      // Arrange
+      const link: LinkData = {
+        type: 'OPEN_PAGE',
+        payload: {
+          pageId: 'pageId',
+          openInNewTab: false,
+        },
+      }
+      const definition: LinkDescriptor = {
+        type: Types.Link,
+        version: 1,
+        options: {},
+      }
+
+      // Act
+      const result = createLinkPropControllerDataFromLinkData(link, definition)
+
+      // Assert
+      expect(result).toEqual({
+        [ControlDataTypeKey]: LinkPropControllerDataV1Type,
+        value: link,
+      })
+    })
+
+    test('returns string value when definition version is not 1', () => {
+      // Arrange
+      const link: LinkData = {
+        type: 'OPEN_PAGE',
+        payload: {
+          pageId: 'pageId',
+          openInNewTab: false,
+        },
+      }
+      const definition: LinkDescriptor = {
+        type: Types.Link,
+        options: {},
+      }
+
+      // Act
+      const result = createLinkPropControllerDataFromLinkData(link, definition)
+
+      // Assert
+      expect(result).toBe(link)
     })
   })
 

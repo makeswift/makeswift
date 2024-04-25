@@ -25,7 +25,7 @@ import {
 } from '../../utils/responsive-style'
 import { cx } from '@emotion/css'
 import {
-  LinkPropControllerValue,
+  LinkData,
   ResponsiveLengthData,
   ResponsiveTextStyleData,
 } from '@makeswift/prop-controllers'
@@ -34,7 +34,7 @@ type BaseProps<T extends ElementType> = {
   as?: T
   id?: ElementIDValue
   children?: ReactNode
-  link?: LinkPropControllerValue
+  link?: LinkData
   variant?: ResponsiveSelectValue<ButtonVariant>
   shape?: ResponsiveIconRadioGroupValue<'pill' | 'rounded' | 'square'>
   size?: ResponsiveIconRadioGroupValue<'small' | 'medium' | 'large'>

@@ -52,7 +52,7 @@ import { useResponsiveGridItem, useResponsiveStyle } from '../../utils/responsiv
 import { useStyle } from '../../../runtimes/react/use-style'
 import { useTable } from '../../../runtimes/react/hooks/makeswift-api'
 import {
-  LinkPropControllerValue,
+  LinkData,
   ResponsiveLengthData,
   ResponsiveTextStyleData,
   ResponsiveValue,
@@ -80,7 +80,7 @@ type Props = {
   id?: ElementIDValue
   tableId?: string
   fields?: TableFormFieldsValue
-  submitLink?: LinkPropControllerValue
+  submitLink?: LinkData
   gap?: GapYValue
   shape?: ResponsiveIconRadioGroupValue<Shape>
   size?: ResponsiveIconRadioGroupValue<Size>

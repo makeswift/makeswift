@@ -19,7 +19,7 @@ import {
   TextInputValue,
 } from '../../../prop-controllers/descriptors'
 import {
-  LinkPropControllerValue,
+  LinkData,
   NavigationButtonData,
   NavigationLinksData,
   ResponsiveLengthData,
@@ -43,7 +43,7 @@ type Props = {
   logoFile?: ImageValue
   logoWidth?: ResponsiveLengthData
   logoAltText?: TextInputValue
-  logoLink?: LinkPropControllerValue
+  logoLink?: LinkData
   alignment?: ResponsiveIconRadioGroupValue<'flex-start' | 'center' | 'flex-end'>
   gutter?: GapXValue
   mobileMenuAnimation?: ResponsiveSelectValue<'coverRight' | 'coverLeft'>

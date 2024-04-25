@@ -51,7 +51,7 @@ import {
   CheckboxDescriptor,
   LinkData,
   LinkDescriptor,
-  LinkPropControllerValue,
+  ResolveLinkPropControllerValue,
   Types as PropControllerTypes,
   ColorData as Color,
   ResponsiveValueType,
@@ -965,7 +965,7 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   : T['type'] extends typeof PropControllerTypes.Font
   ? ResolveFontPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Font }>>
   : T['type'] extends typeof PropControllerTypes.Link
-  ? LinkPropControllerValue
+  ? ResolveLinkPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Link }>>
   : T['type'] extends typeof PropControllerTypes.Width
   ? ResolveWidthPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Width }>>
   : T['type'] extends typeof PropControllerTypes.Padding
