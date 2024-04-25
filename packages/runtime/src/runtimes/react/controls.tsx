@@ -83,6 +83,7 @@ import { useResponsiveLengthPropControllerData } from '../../components/hooks/us
 import { useNumberPropControllerData } from '../../components/hooks/useNumberPropControllerData'
 import { useResponsiveColorPropControllerData } from '../../components/hooks/useResponsiveColorPropControllerData'
 import { useTextStylePropControllerData } from '../../components/hooks/useTextStylePropControllerData'
+import { useNavigationLinksPropControllerData } from '../../components/hooks/useNavigationLinksPropControllerData'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -439,6 +440,17 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
               <RenderHook
                 key={descriptor.type}
                 hook={useTextStylePropControllerData}
+                parameters={[props[propName]]}
+              >
+                {value => renderFn({ ...propsValue, [propName]: value })}
+              </RenderHook>
+            )
+
+          case PropControllerTypes.NavigationLinks:
+            return (
+              <RenderHook
+                key={descriptor.type}
+                hook={useNavigationLinksPropControllerData}
                 parameters={[props[propName]]}
               >
                 {value => renderFn({ ...propsValue, [propName]: value })}

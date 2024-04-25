@@ -8,6 +8,7 @@ export const Types = {
   Font: 'Font',
   Link: 'Link',
   Margin: 'Margin',
+  NavigationLinks: 'NavigationLinks',
   Padding: 'Padding',
   Number: 'Number',
   Shadows: 'Shadows',

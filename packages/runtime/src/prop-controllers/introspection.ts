@@ -16,7 +16,6 @@ import {
   ImagesValue,
   ImageValue,
   ListValue,
-  NavigationLinksValue,
   RichTextValue,
   ShapeValue,
   Types,
@@ -71,7 +70,6 @@ import {
 } from '../controls/rich-text-v2/rich-text-v2'
 import { match, P } from 'ts-pattern'
 import {
-  ResponsiveBorderData,
   getLinkPropControllerPageIds,
   getResponsiveColorPropControllerDataSawtchIds,
   getShadowsPropControllerDataSwatchIds,
@@ -82,6 +80,10 @@ import {
   getBorderPropControllerDataSwatchIds,
   TablePropControllerData,
   getTablePropControllerDataTableIds,
+  getNavigationLinksPropControllerPageIds,
+  NavigationLinksPropControllerData,
+  getNavigationLinksPropControllerSwatchIds,
+  BorderPropControllerData,
 } from '@makeswift/prop-controllers'
 
 export function getElementChildren<T extends Data>(
@@ -169,27 +171,12 @@ export function getSwatchIds<T extends Data>(
       return getBackgroundsSwatchIds(prop as BackgroundsValue)
 
     case PropControllerTypes.Border:
-      return getBorderPropControllerDataSwatchIds(prop as ResponsiveBorderData)
+      return getBorderPropControllerDataSwatchIds(prop as BorderPropControllerData)
 
-    case Types.NavigationLinks: {
-      const value = prop as NavigationLinksValue
-      return (
-        value?.flatMap(item => {
-          switch (item.type) {
-            case 'button':
-            case 'dropdown':
-              return [
-                ...(item.payload.color
-                  ?.map(override => override.value)
-                  .map(color => color.swatchId) ?? []),
-                ...(item.payload.textColor
-                  ?.map(override => override.value)
-                  .map(color => color.swatchId) ?? []),
-              ]
-          }
-        }) ?? []
-      )
+    case PropControllerTypes.NavigationLinks: {
+      return getNavigationLinksPropControllerSwatchIds(prop as NavigationLinksPropControllerData)
     }
+
     case PropControllerTypes.ResponsiveColor:
       return getResponsiveColorPropControllerDataSawtchIds(prop as ResponsiveColorData)
 
@@ -407,47 +394,8 @@ export function getPageIds<T extends Data>(
       }
     }
 
-    case Types.NavigationLinks: {
-      const value = prop as NavigationLinksValue
-      if (value == null) return []
-
-      return (
-        value?.flatMap(item => {
-          switch (item.type) {
-            case 'button': {
-              if (item.payload.link == null) return []
-
-              switch (item.payload.link.type) {
-                case 'OPEN_PAGE':
-                  return item.payload.link.payload.pageId == null
-                    ? []
-                    : [item.payload.link.payload.pageId]
-
-                default:
-                  return []
-              }
-            }
-
-            case 'dropdown': {
-              return (
-                item.payload.links?.flatMap(link => {
-                  if (link.payload.link == null) return []
-
-                  switch (link.payload.link.type) {
-                    case 'OPEN_PAGE':
-                      return link.payload.link.payload.pageId == null
-                        ? []
-                        : [link.payload.link.payload.pageId]
-
-                    default:
-                      return []
-                  }
-                }) ?? []
-              )
-            }
-          }
-        }) ?? []
-      )
+    case PropControllerTypes.NavigationLinks: {
+      return getNavigationLinksPropControllerPageIds(prop as NavigationLinksPropControllerData)
     }
 
     case RichTextControlType:

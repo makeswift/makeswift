@@ -1,9 +1,5 @@
 import { ComponentPropsWithoutRef, Fragment } from 'react'
 
-import {
-  NavigationLinksValue,
-  NavigationButton as NavigationButtonValue,
-} from '../../../../../prop-controllers/descriptors'
 import { ColorValue as Color } from '../../../../utils/types'
 import { colorToString } from '../../../../utils/colorToString'
 import { Times16 } from '../../../../icons/Times16'
@@ -15,9 +11,13 @@ import { useResponsiveColor } from '../../../../hooks'
 import { cx } from '@emotion/css'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 import { useResponsiveStyle } from '../../../../utils/responsive-style'
-import { ResponsiveValue } from '@makeswift/prop-controllers'
+import {
+  NavigationButtonData,
+  NavigationLinksData,
+  ResponsiveValue,
+} from '@makeswift/prop-controllers'
 
-type NavigationButtonProps = NavigationButtonValue['payload'] &
+type NavigationButtonProps = NavigationButtonData['payload'] &
   Omit<ComponentPropsWithoutRef<typeof Button>, 'color' | 'textColor'>
 
 function ButtonLink({
@@ -131,7 +131,7 @@ type Props = {
   animation?: ResponsiveValue<'coverRight' | 'coverLeft'>
   backgroundColor?: ResponsiveColor | null
   closeIconColor?: ResponsiveColor | null
-  links?: NavigationLinksValue
+  links?: NavigationLinksData
   onClose?: () => unknown
   open?: boolean
 }
