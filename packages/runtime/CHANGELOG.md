@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.16.0-canary.3
+
+### Patch Changes
+
+- 24f76a8: Add data type to legacy `TextStyle` prop controller and move it to `@makeswift/prop-controllers`.
+- 66c8c6c: Fix "function components cannot be given refs" warning on the built-in `Text` component
+- Updated dependencies [24f76a8]
+  - @makeswift/prop-controllers@0.1.0-canary.3
+
 ## 0.16.0-canary.2
 
 ### Minor Changes
