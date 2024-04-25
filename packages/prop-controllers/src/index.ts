@@ -92,7 +92,23 @@ export type {
   MarginDescriptor,
   MarginPropControllerData,
 } from './margin'
-
+export {
+  NavigationLinks,
+  navigationLinksPropControllerDataSchema,
+  getNavigationLinksPropControllerDataNavigationLinksData,
+  createNavigationLinksPropControllerDataFromNavigationLinksData,
+  getNavigationLinksPropControllerPageIds,
+  getNavigationLinksPropControllerSwatchIds,
+  copyNavigationLinksPropControllerData,
+} from './navigation-links'
+export type {
+  NavigationButtonData,
+  NavigationDropdownData,
+  NavigationLinksData,
+  ResolveNavigationLinksPropControllerValue,
+  NavigationLinksDescriptor,
+  NavigationLinksPropControllerData,
+} from './navigation-links'
 export {
   Number,
   createNumberPropControllerDataFromNumber,

@@ -82,9 +82,10 @@ import {
   ResolvePaddingPropControllerValue,
   WidthDescriptor,
   ResolveWidthPropControllerValue,
-  TextStyleData,
   TextStyleDescriptor,
   ResolveTextStylePropControllerValue,
+  NavigationLinksDescriptor,
+  ResolveNavigationLinksPropControllerValue,
 } from '@makeswift/prop-controllers'
 
 export type { Data }
@@ -136,7 +137,6 @@ export const Types = {
   Image: 'Image',
   Images: 'Images',
   List: 'List',
-  NavigationLinks: 'NavigationLinks',
   ResponsiveIconRadioGroup: 'ResponsiveIconRadioGroup',
   ResponsiveNumber: 'ResponsiveNumber',
   ResponsiveOpacity: 'ResponsiveOpacity',
@@ -457,72 +457,6 @@ export function getListPropControllerPageIds<T>(
   value: ListValue | undefined,
 ) {
   return introspectListPropControllerData(descriptor, value, getPageIds)
-}
-
-type ButtonVariant = 'flat' | 'outline' | 'shadow' | 'clear' | 'blocky' | 'bubbly' | 'skewed'
-
-type ButtonShape = 'pill' | 'rounded' | 'square'
-
-type ButtonSize = 'small' | 'medium' | 'large'
-
-export type NavigationButton = {
-  id: string
-  type: 'button'
-  payload: {
-    label: string
-    link?: LinkData
-    variant?: ResponsiveValue<ButtonVariant>
-    shape?: ResponsiveValue<ButtonShape>
-    size?: ResponsiveValue<ButtonSize>
-    textColor?: ResponsiveValue<Color>
-    color?: ResponsiveValue<Color>
-    textStyle?: ResponsiveValue<TextStyleData>
-  }
-}
-
-type NavigationDropdownCaretType = 'caret' | 'plus' | 'arrow-down' | 'chevron-down'
-
-type NavigationDropdownLink = {
-  id: string
-  payload: {
-    label: string
-    link?: LinkData
-    color?: ResponsiveValue<Color>
-    textStyle?: ResponsiveValue<TextStyleData>
-  }
-}
-
-type NavigationDropdown = {
-  id: string
-  type: 'dropdown'
-  payload: {
-    label: string
-    caret?: NavigationDropdownCaretType
-    links?: NavigationDropdownLink[]
-    variant?: ResponsiveValue<ButtonVariant>
-    shape?: ResponsiveValue<ButtonShape>
-    size?: ResponsiveValue<ButtonSize>
-    textColor?: ResponsiveValue<Color>
-    color?: ResponsiveValue<Color>
-    textStyle?: ResponsiveValue<TextStyleData>
-  }
-}
-
-export type NavigationLinksValue = (NavigationButton | NavigationDropdown)[]
-
-type NavigationLinksOptions = Options<Record<string, never>>
-
-type NavigationLinksDescriptor<_T = NavigationLinksValue> = {
-  type: typeof Types.NavigationLinks
-  options: NavigationLinksOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function NavigationLinks(options: NavigationLinksOptions = {}): NavigationLinksDescriptor {
-  return { type: Types.NavigationLinks, options }
 }
 
 export type IconRadioGroupOption<T extends string> = { value: T; label: string; icon: IconName }
@@ -974,7 +908,7 @@ export type PanelDescriptorType =
   | typeof Types.ResponsiveOpacity
   | typeof Types.SocialLinks
   | typeof PropControllerTypes.Video
-  | typeof Types.NavigationLinks
+  | typeof PropControllerTypes.NavigationLinks
 
 export type PanelDescriptor<T extends Data = Data> = Extract<
   Descriptor<T>,
@@ -1038,6 +972,10 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolvePaddingPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Padding }>>
   : T['type'] extends typeof PropControllerTypes.Margin
   ? ResolveMarginPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Margin }>>
+  : T['type'] extends typeof PropControllerTypes.NavigationLinks
+  ? ResolveNavigationLinksPropControllerValue<
+      Extract<T, { type: typeof PropControllerTypes.NavigationLinks }>
+    >
   : T['type'] extends typeof PropControllerTypes.BorderRadius
   ? ResolveBorderRadiusPropControllerValue<
       Extract<T, { type: typeof PropControllerTypes.BorderRadius }>

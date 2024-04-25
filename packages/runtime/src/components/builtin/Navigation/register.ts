@@ -1,5 +1,5 @@
 import { Props } from '../../../prop-controllers'
-import { NavigationLinksValue, ResponsiveSelectValue } from '../../../prop-controllers/descriptors'
+import { ResponsiveSelectValue } from '../../../prop-controllers/descriptors'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
@@ -17,6 +17,8 @@ import {
   Margin,
   Width,
   TextStyle,
+  NavigationLinks,
+  NavigationLinksData,
 } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
@@ -28,9 +30,9 @@ export function registerComponent(runtime: ReactRuntime) {
       icon: ComponentIcon.Navigation,
       props: {
         id: Props.ElementID(),
-        links: Props.NavigationLinks(),
+        links: NavigationLinks(),
         linkTextStyle: TextStyle(props => {
-          const links = props.links as NavigationLinksValue | undefined
+          const links = props.links as NavigationLinksData | undefined
 
           return {
             label: 'Link text style',

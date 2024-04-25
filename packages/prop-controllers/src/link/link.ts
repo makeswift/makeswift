@@ -166,13 +166,11 @@ export function getLinkPropControllerPageIds(
   }
 }
 
-export function copyLinkPropControllerData(
-  data: LinkPropControllerData | undefined,
+export function copyLinkData(
+  data: LinkData | undefined,
   context: CopyContext,
-): LinkPropControllerData | undefined {
-  if (data == null) return data
-
-  let value = getLinkPropControllerValue(data)
+): LinkData | undefined {
+  let value = data
 
   switch (value?.type) {
     case 'OPEN_PAGE':
@@ -212,6 +210,19 @@ export function copyLinkPropControllerData(
       break
     }
   }
+
+  return value
+}
+
+export function copyLinkPropControllerData(
+  data: LinkPropControllerData | undefined,
+  context: CopyContext,
+): LinkPropControllerData | undefined {
+  if (data == null) return data
+
+  const value = copyLinkData(getLinkPropControllerValue(data), context)
+
+  if (value == null) return value
 
   return match(data)
     .with({ [ControlDataTypeKey]: LinkPropControllerDataV1Type }, (v1) => ({

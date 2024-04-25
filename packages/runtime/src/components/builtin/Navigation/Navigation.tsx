@@ -14,14 +14,14 @@ import {
   ElementIDValue,
   GapXValue,
   ImageValue,
-  NavigationLinksValue,
   ResponsiveIconRadioGroupValue,
   ResponsiveSelectValue,
   TextInputValue,
-  NavigationButton as NavigationButtonValue,
 } from '../../../prop-controllers/descriptors'
 import {
   LinkPropControllerValue,
+  NavigationButtonData,
+  NavigationLinksData,
   ResponsiveLengthData,
   ResponsiveTextStyleData,
   ResponsiveValue,
@@ -37,7 +37,7 @@ import { useStyle } from '../../../runtimes/react/use-style'
 
 type Props = {
   id?: ElementIDValue
-  links?: NavigationLinksValue
+  links?: NavigationLinksData
   linkTextStyle?: ResponsiveTextStyleData
   showLogo?: boolean
   logoFile?: ImageValue
@@ -172,7 +172,7 @@ function OpenIconContainer({
   )
 }
 
-type NavigationButtonProps = NavigationButtonValue['payload'] &
+type NavigationButtonProps = NavigationButtonData['payload'] &
   Omit<ComponentPropsWithoutRef<typeof Button>, 'color' | 'textColor'>
 
 function NavigationButton(props: NavigationButtonProps): JSX.Element {
