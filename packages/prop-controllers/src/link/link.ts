@@ -78,18 +78,30 @@ export const linkDataSchema = z.union([
 
 export type LinkData = z.infer<typeof linkDataSchema>
 
-export type LinkPropControllerDataV0 = LinkData
+const linkPropControllerDataV0Schema = linkDataSchema
+
+export type LinkPropControllerDataV0 = z.infer<
+  typeof linkPropControllerDataV0Schema
+>
 
 export const LinkPropControllerDataV1Type = 'prop-controllers::link::v1'
+const linkPropControllerDataV1Schema = z.object({
+  [ControlDataTypeKey]: z.literal(LinkPropControllerDataV1Type),
+  value: linkDataSchema,
+})
 
-export type LinkPropControllerDataV1 = {
-  [ControlDataTypeKey]: typeof LinkPropControllerDataV1Type
-  value: LinkData
-}
+export type LinkPropControllerDataV1 = z.infer<
+  typeof linkPropControllerDataV1Schema
+>
 
-export type LinkPropControllerData =
-  | LinkPropControllerDataV0
-  | LinkPropControllerDataV1
+export const linkPropControllerDataSchema = z.union([
+  linkPropControllerDataV0Schema,
+  linkPropControllerDataV1Schema,
+])
+
+export type LinkPropControllerData = z.infer<
+  typeof linkPropControllerDataSchema
+>
 
 type LinkOptions = Options<{
   preset?: LinkPropControllerData
@@ -121,11 +133,20 @@ export type LinkDescriptor<
   U extends LinkOptions = LinkOptions,
 > = LinkDescriptorV0<_T, U> | LinkDescriptorV1<_T, U>
 
-export type LinkPropControllerValue = LinkData
+export type ResolveLinkPropControllerValue<T extends LinkDescriptor> =
+  T extends LinkDescriptor ? LinkData | undefined : never
 
-export function getLinkPropControllerValue(
+/**
+ * @deprecated Imports from `@makeswift/prop-controllers` are deprecated. Use
+ * `@makeswift/runtime/controls` instead.
+ */
+export function Link(options: LinkOptions = {}): LinkDescriptor {
+  return { type: Types.Link, version: 1, options }
+}
+
+export function getLinkPropControllerDataLinkData(
   data: LinkPropControllerData,
-): LinkPropControllerValue {
+): LinkData {
   return match(data)
     .with(
       { [ControlDataTypeKey]: LinkPropControllerDataV1Type },
@@ -155,7 +176,7 @@ export function getLinkPropControllerPageIds(
 ): string[] {
   if (linkData == null) return []
 
-  const link = getLinkPropControllerValue(linkData)
+  const link = getLinkPropControllerDataLinkData(linkData)
 
   switch (link.type) {
     case 'OPEN_PAGE':
@@ -220,7 +241,7 @@ export function copyLinkPropControllerData(
 ): LinkPropControllerData | undefined {
   if (data == null) return data
 
-  const value = copyLinkData(getLinkPropControllerValue(data), context)
+  const value = copyLinkData(getLinkPropControllerDataLinkData(data), context)
 
   if (value == null) return value
 
@@ -230,12 +251,4 @@ export function copyLinkPropControllerData(
       value,
     }))
     .otherwise((_) => value)
-}
-
-/**
- * @deprecated Imports from `@makeswift/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Link(options: LinkOptions = {}): LinkDescriptor {
-  return { type: Types.Link, version: 1, options }
 }

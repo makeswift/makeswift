@@ -2,12 +2,12 @@ import { ComponentPropsWithoutRef, forwardRef, MouseEvent } from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import NextLink from 'next/link'
 
-import { LinkPropControllerValue } from '@makeswift/prop-controllers'
+import { LinkData } from '@makeswift/prop-controllers'
 import { useElementId } from '../../../runtimes/react'
 import { usePagePathnameSlice } from '../../../runtimes/react/hooks/makeswift-api'
 
 type BaseProps = {
-  link?: LinkPropControllerValue
+  link?: LinkData
   onClick?: (event: MouseEvent<HTMLAnchorElement>) => unknown
 }
 

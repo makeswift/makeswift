@@ -1,3 +1,4 @@
+export * from './prop-controllers'
 export type { ColorData, LengthData } from './data'
 export {
   Border,
@@ -67,7 +68,8 @@ export type {
 export {
   Link,
   linkDataSchema,
-  getLinkPropControllerValue,
+  linkPropControllerDataSchema,
+  getLinkPropControllerDataLinkData,
   createLinkPropControllerDataFromLinkData,
   getLinkPropControllerPageIds,
   copyLinkPropControllerData,
@@ -76,7 +78,7 @@ export type {
   LinkData,
   LinkDescriptor,
   LinkPropControllerData,
-  LinkPropControllerValue,
+  ResolveLinkPropControllerValue,
 } from './link'
 export {
   Margin,
@@ -135,7 +137,6 @@ export type {
   PaddingDescriptor,
   PaddingPropControllerData,
 } from './padding'
-export * from './prop-controllers'
 export {
   ResponsiveColor,
   copyResponsiveColorPropControllerData,
