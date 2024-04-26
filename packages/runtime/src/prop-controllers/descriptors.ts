@@ -79,6 +79,8 @@ import {
   ResolveTextStylePropControllerValue,
   NavigationLinksDescriptor,
   ResolveNavigationLinksPropControllerValue,
+  TextAreaDescriptor,
+  ResolveTextAreaPropControllerValue,
 } from '@makeswift/prop-controllers'
 
 export type { Data }
@@ -136,7 +138,6 @@ export const Types = {
   RichText: 'RichText',
   SocialLinks: 'SocialLinks',
   TableFormFields: 'TableFormFields',
-  TextArea: 'TextArea',
   TextInput: 'TextInput',
   Style: StyleControlType,
 } as const
@@ -603,23 +604,6 @@ export function TableFormFields(options: TableFormFieldsOptions = {}): TableForm
   return { type: Types.TableFormFields, options }
 }
 
-export type TextAreaValue = string
-
-type TextAreaOptions = Options<{ preset?: TextAreaValue; label?: string; rows?: number }>
-
-type TextAreaDescriptor<_T = TextAreaValue> = {
-  type: typeof Types.TextArea
-  options: TextAreaOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function TextArea(options: TextAreaOptions = {}): TextAreaDescriptor {
-  return { type: Types.TextArea, options }
-}
-
 export type TextInputValue = string
 
 export type TextInputOptions = Options<{ label?: string; placeholder?: string; hidden?: boolean }>
@@ -715,7 +699,7 @@ export type PanelDescriptorType =
   | typeof PropControllerTypes.Number
   | typeof PropControllerTypes.Date
   | typeof PropControllerTypes.Font
-  | typeof Types.TextArea
+  | typeof PropControllerTypes.TextArea
   | typeof PropControllerTypes.Table
   | typeof Types.RichText
   | typeof Types.Image
@@ -808,6 +792,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveTablePropControllerValue<Extract<T, { type: typeof PropControllerTypes.Table }>>
   : T['type'] extends typeof PropControllerTypes.TextStyle
   ? ResolveTextStylePropControllerValue<Extract<T, { type: typeof PropControllerTypes.TextStyle }>>
+  : T['type'] extends typeof PropControllerTypes.TextArea
+  ? ResolveTextAreaPropControllerValue<Extract<T, { type: typeof PropControllerTypes.TextArea }>>
   : T['type'] extends typeof PropControllerTypes.Video
   ? ResolveVideoPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Video }>>
   : T extends Descriptor<infer U>
