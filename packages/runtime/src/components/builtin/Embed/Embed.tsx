@@ -4,14 +4,14 @@
 
 import { useState, useEffect, forwardRef, Ref, useImperativeHandle } from 'react'
 
-import { ElementIDValue, TextAreaValue } from '../../../prop-controllers/descriptors'
+import { ElementIDValue } from '../../../prop-controllers/descriptors'
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { cx } from '@emotion/css'
 
 type Props = {
   id?: ElementIDValue
-  html?: TextAreaValue
+  html?: string
   width?: string
   margin?: string
 }

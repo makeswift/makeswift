@@ -196,6 +196,18 @@ export type {
   ResolveTablePropControllerValue,
 } from './table'
 export {
+  TextArea,
+  textAreaPropControllerDataSchema,
+  getTextAreaPropControllerDataString,
+  createTextAreaPropControllerDataFromString,
+} from './text-area'
+export type {
+  TextAreaDescriptor,
+  TextAreaOptions,
+  TextAreaPropControllerData,
+  ResolveTextAreaPropControllerValue,
+} from './text-area'
+export {
   TextStyle,
   textStylePropControllerDataSchema,
   getTextStylePropControllerDataResponsiveTextStyleData,

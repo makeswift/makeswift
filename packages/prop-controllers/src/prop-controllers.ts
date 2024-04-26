@@ -14,6 +14,7 @@ export const Types = {
   Shadows: 'Shadows',
   ResponsiveColor: 'ResponsiveColor',
   ResponsiveLength: 'ResponsiveLength',
+  TextArea: 'TextArea',
   Table: 'Table',
   TextStyle: 'TextStyle',
   Width: 'Width',
