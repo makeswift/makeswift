@@ -10,13 +10,12 @@ import {
   ElementIDValue,
   ResponsiveIconRadioGroupValue,
   ResponsiveSelectValue,
-  GapXValue,
 } from '../../../prop-controllers/descriptors'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { cx } from '@emotion/css'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { useResponsiveStyle } from '../../utils/responsive-style'
-import { ResponsiveValue } from '@makeswift/prop-controllers'
+import { ResponsiveGapData, ResponsiveValue } from '@makeswift/prop-controllers'
 
 type Props = {
   id?: ElementIDValue
@@ -30,7 +29,7 @@ type Props = {
   fill?: ResponsiveColor | null
   backgroundColor?: ResponsiveColor | null
   alignment?: ResponsiveIconRadioGroupValue<'flex-start' | 'center' | 'flex-end'>
-  gutter?: GapXValue
+  gutter?: ResponsiveGapData
   width?: string
   margin?: string
 }
