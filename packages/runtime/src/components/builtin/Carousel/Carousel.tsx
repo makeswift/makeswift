@@ -22,7 +22,6 @@ import {
   ImagesValue,
   ResponsiveNumberValue,
   ResponsiveIconRadioGroupValue,
-  GapXValue,
 } from '../../../prop-controllers/descriptors'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { useStyle } from '../../../runtimes/react/use-style'
@@ -30,6 +29,7 @@ import { cx } from '@emotion/css'
 import { useResponsiveStyle } from '../../utils/responsive-style'
 import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { useBreakpoints } from '../../../runtimes/react'
+import { ResponsiveGapData } from '@makeswift/prop-controllers'
 
 const LeftChevron = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="10" height="14" viewBox="0 0 10 14">
@@ -63,7 +63,7 @@ type Props = {
   pageSize?: ResponsiveNumberValue
   step?: ResponsiveNumberValue
   slideAlignment?: ResponsiveIconRadioGroupValue<'flex-start' | 'center' | 'flex-end'>
-  gap?: GapXValue
+  gap?: ResponsiveGapData
   autoplay?: boolean
   delay?: number
   showArrows?: boolean

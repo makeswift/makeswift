@@ -2,6 +2,7 @@ import {
   Border,
   BorderRadius,
   Checkbox,
+  GapX,
   Margin,
   Padding,
   Shadows,
@@ -93,7 +94,7 @@ export function registerComponent(runtime: ReactRuntime) {
         rowGap: Props.GapY(props => ({
           hidden: props.children == null,
         })),
-        columnGap: Props.GapX(props => ({
+        columnGap: GapX(props => ({
           hidden: props.children == null,
         })),
         boxAnimateType: Props.ResponsiveSelect({

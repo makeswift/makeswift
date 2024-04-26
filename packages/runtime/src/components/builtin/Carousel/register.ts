@@ -3,7 +3,14 @@ import { v4 as uuid } from 'uuid'
 import { ImagesValue, Props, ResponsiveNumberValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride } from '../../../state/modules/breakpoints'
-import { BorderRadius, Margin, Number, ResponsiveColor, Width } from '@makeswift/prop-controllers'
+import {
+  BorderRadius,
+  GapX,
+  Margin,
+  Number,
+  ResponsiveColor,
+  Width,
+} from '@makeswift/prop-controllers'
 
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
@@ -70,7 +77,7 @@ export function registerComponent(runtime: ReactRuntime) {
           ],
           defaultValue: 'center',
         }),
-        gap: Props.GapX({
+        gap: GapX({
           label: 'Gap',
           step: 5,
           defaultValue: { value: 0, unit: 'px' },

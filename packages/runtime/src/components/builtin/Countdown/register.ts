@@ -7,6 +7,7 @@ import { lazy } from 'react'
 import {
   Date as DatePropController,
   Font,
+  GapX,
   Margin,
   ResponsiveColor,
   Width,
@@ -61,7 +62,7 @@ export function registerComponent(runtime: ReactRuntime) {
           ],
           defaultValue: 'medium',
         }),
-        gap: Props.GapX({
+        gap: GapX({
           preset: [
             {
               deviceId: getBaseBreakpoint(runtime.getBreakpoints()).id,

@@ -1,5 +1,5 @@
 export * from './prop-controllers'
-export type { ColorData, LengthData } from './data'
+export type { ColorData, LengthData, ResponsiveGapData } from './data'
 export {
   Border,
   BorderPropControllerFormat,
@@ -65,6 +65,17 @@ export type {
   FontDescriptor,
   FontPropControllerData,
 } from './font'
+export {
+  GapX,
+  gapXPropControllerDataSchema,
+  getGapXPropControllerDataResponsiveGapData,
+  createGapXPropControllerDataFromResponsiveGapData,
+} from './gap-x'
+export type {
+  ResolveGapXPropControllerValue,
+  GapXDescriptor,
+  GapXPropControllerData,
+} from './gap-x'
 export {
   Link,
   linkDataSchema,
