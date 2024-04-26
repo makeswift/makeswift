@@ -1,5 +1,11 @@
 # @makeswift/prop-controllers
 
+## 0.1.0-canary.4
+
+### Patch Changes
+
+- 9b61ad8: Add data type to legacy `NavigationLinks` prop controller and move it to `@makeswift/prop-controllers`.
+
 ## 0.1.0-canary.3
 
 ### Patch Changes
