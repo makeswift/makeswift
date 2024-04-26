@@ -84,6 +84,7 @@ import { useNumberPropControllerData } from '../../components/hooks/useNumberPro
 import { useResponsiveColorPropControllerData } from '../../components/hooks/useResponsiveColorPropControllerData'
 import { useTextStylePropControllerData } from '../../components/hooks/useTextStylePropControllerData'
 import { useNavigationLinksPropControllerData } from '../../components/hooks/useNavigationLinksPropControllerData'
+import { useTextAreaPropControllerData } from '../../components/hooks/useTextAreaPropControllerData'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -451,6 +452,17 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
               <RenderHook
                 key={descriptor.type}
                 hook={useNavigationLinksPropControllerData}
+                parameters={[props[propName]]}
+              >
+                {value => renderFn({ ...propsValue, [propName]: value })}
+              </RenderHook>
+            )
+
+          case PropControllerTypes.TextArea:
+            return (
+              <RenderHook
+                key={descriptor.type}
+                hook={useTextAreaPropControllerData}
                 parameters={[props[propName]]}
               >
                 {value => renderFn({ ...propsValue, [propName]: value })}

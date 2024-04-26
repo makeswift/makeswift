@@ -193,7 +193,7 @@ export function merge(
 export function getTranslatableData(definition: Descriptor | ControlDefinition, data: Data): Data {
   switch (definition.type) {
     case Types.TextInput:
-    case Types.TextArea:
+    case PropControllerTypes.TextArea:
     case TextInputControlType:
     case TextAreaControlType:
       return data
@@ -230,7 +230,7 @@ export function mergeTranslatedData(
 
   switch (definition.type) {
     case Types.TextInput:
-    case Types.TextArea:
+    case PropControllerTypes.TextArea:
     case TextInputControlType:
     case TextAreaControlType:
       if (translatedData == null) return data
