@@ -19,6 +19,7 @@ import {
   TextStyle,
   NavigationLinks,
   NavigationLinksData,
+  GapX,
 } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
@@ -94,7 +95,7 @@ export function registerComponent(runtime: ReactRuntime) {
           ],
           defaultValue: 'flex-end',
         }),
-        gutter: Props.GapX({
+        gutter: GapX({
           preset: [
             {
               deviceId: getBaseBreakpoint(runtime.getBreakpoints()).id,

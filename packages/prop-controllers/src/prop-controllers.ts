@@ -6,6 +6,7 @@ export const Types = {
   Checkbox: 'Checkbox',
   Date: 'Date',
   Font: 'Font',
+  GapX: 'GapX',
   Link: 'Link',
   Margin: 'Margin',
   NavigationLinks: 'NavigationLinks',

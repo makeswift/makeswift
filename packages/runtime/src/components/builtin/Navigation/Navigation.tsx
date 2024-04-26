@@ -12,7 +12,6 @@ import DropDownButton from './components/DropDownButton'
 import MobileMenu from './components/MobileMenu'
 import {
   ElementIDValue,
-  GapXValue,
   ImageValue,
   ResponsiveIconRadioGroupValue,
   ResponsiveSelectValue,
@@ -22,6 +21,7 @@ import {
   LinkData,
   NavigationButtonData,
   NavigationLinksData,
+  ResponsiveGapData,
   ResponsiveLengthData,
   ResponsiveTextStyleData,
   ResponsiveValue,
@@ -45,7 +45,7 @@ type Props = {
   logoAltText?: TextInputValue
   logoLink?: LinkData
   alignment?: ResponsiveIconRadioGroupValue<'flex-start' | 'center' | 'flex-end'>
-  gutter?: GapXValue
+  gutter?: ResponsiveGapData
   mobileMenuAnimation?: ResponsiveSelectValue<'coverRight' | 'coverLeft'>
   mobileMenuOpenIconColor?: ResponsiveColor | null
   mobileMenuCloseIconColor?: ResponsiveColor | null

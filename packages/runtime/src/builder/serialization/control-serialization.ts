@@ -1,4 +1,6 @@
 import {
+  GapXDescriptor,
+  GapXPropControllerData,
   ResponsiveLengthOptions,
   ResponsiveLengthPropControllerData,
 } from '@makeswift/prop-controllers'
@@ -18,8 +20,6 @@ import {
   Data,
   Device,
   Gap,
-  GapXDescriptor as GapXControl,
-  GapXValue as GapXControlValue,
   GapYDescriptor as GapYControl,
   GapYValue as GapYControlValue,
   ImageDescriptor as ImageControl,
@@ -90,7 +90,7 @@ type DeserializedConfig<T> =
   | DeserializedFunction<(props: Record<string, unknown>, deviceMode: Device) => T>
 
 type GapXControlConfig = {
-  preset?: GapXControlValue
+  preset?: GapXPropControllerData
   label?: string
   defaultValue?: Gap
   min?: number
@@ -99,12 +99,12 @@ type GapXControlConfig = {
   hidden?: boolean
 }
 
-type SerializedGapXControl<_T = GapXControlValue> = {
-  type: typeof Controls.Types.GapX
+type SerializedGapXControl<_T = GapXPropControllerData> = {
+  type: typeof PropControllerTypes.GapX
   options: SerializedConfig<GapXControlConfig>
 }
 
-function serializeGapXControl(control: GapXControl): [SerializedGapXControl, Transferable[]] {
+function serializeGapXControl(control: GapXDescriptor): [SerializedGapXControl, Transferable[]] {
   const { options } = control
 
   if (typeof options !== 'function') return [{ ...control, options }, []]
@@ -114,8 +114,8 @@ function serializeGapXControl(control: GapXControl): [SerializedGapXControl, Tra
   return [{ ...control, options: serializedOptions }, [serializedOptions]]
 }
 
-type DeserializedGapXControl<_T = GapXControlValue> = {
-  type: typeof Controls.Types.GapX
+type DeserializedGapXControl<_T = GapXPropControllerData> = {
+  type: typeof PropControllerTypes.GapX
   options: DeserializedConfig<GapXControlConfig>
 }
 
@@ -657,7 +657,7 @@ function deserializeRichTextControl(
 export type SerializedControl<T extends Data = Data> =
   | Exclude<
       Control<T>,
-      | GapXControl<T>
+      | GapXDescriptor<T>
       | GapYControl<T>
       | ResponsiveNumberControl<T>
       | CheckboxControl<T>
@@ -706,7 +706,7 @@ export type SerializedControl<T extends Data = Data> =
 export type DeserializedControl<T extends Data = Data> =
   | Exclude<
       Control<T>,
-      | GapXControl<T>
+      | GapXDescriptor<T>
       | GapYControl<T>
       | ResponsiveNumberControl<T>
       | CheckboxControl<T>
@@ -764,7 +764,7 @@ export function serializeControl<T extends Data>(
     case PropControllerTypes.Checkbox:
       return serializeCheckboxControl(control)
 
-    case Controls.Types.GapX:
+    case PropControllerTypes.GapX:
       return serializeGapXControl(control)
 
     case Controls.Types.GapY:
@@ -833,7 +833,7 @@ export function deserializeControl<T extends Data>(
     case PropControllerTypes.Checkbox:
       return deserializeCheckboxControl(serializedControl)
 
-    case Controls.Types.GapX:
+    case PropControllerTypes.GapX:
       return deserializeGapXControl(serializedControl)
 
     case Controls.Types.GapY:
