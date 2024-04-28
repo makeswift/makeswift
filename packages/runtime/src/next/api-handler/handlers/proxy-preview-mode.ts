@@ -158,6 +158,6 @@ async function proxyPreviewModeApiRouteHandler(
 
   const arrayBuffer = await response.arrayBuffer()
 
-  res.write(arrayBuffer)
+  res.write(new Uint8Array(arrayBuffer))
   res.end()
 }
