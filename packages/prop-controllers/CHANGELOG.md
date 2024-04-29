@@ -1,5 +1,13 @@
 # @makeswift/prop-controllers
 
+## 0.1.0-canary.5
+
+### Patch Changes
+
+- 6bab3df: Add data type to legacy `GapY` prop controller and move it to `@makeswift/prop-controllers`.
+- fe5c346: Add data type to legacy `GapX` prop controller and move it to `@makeswift/prop-controllers`.
+- df976f6: Add data type to legacy `TextArea` prop controller and move it to `@makeswift/prop-controllers`.
+
 ## 0.1.0-canary.4
 
 ### Patch Changes
