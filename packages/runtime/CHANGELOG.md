@@ -1,5 +1,73 @@
 # @makeswift/runtime
 
+## 0.16.0
+
+### Minor Changes
+
+- cf79dcb: Add data type to legacy `ResponsiveLength` prop controller and move it to `@makeswift/prop-controllers`.
+- defb8d9: Next.js 14.2 compatibility fix: decouple `PreviewProvider`'s message channel setup from the middleware creation to make store initialization compatible with React's strict mode.
+- 89a6d77: Add data type to legacy `BorderRadius` prop controller and move it to `@makeswift/prop-controllers`.
+- 5bd9b5f: Add data type to legacy `Shadows` prop controller and move it to `@makeswift/prop-controllers`.
+- 0a9a89c: Add data type to legacy `ResponsiveColor` prop controller and move it to `@makeswift/prop-controllers`.
+- 4847f1b: Add data type to legacy `Checkbox` prop controller and move it to `@makeswift/prop-controllers`.
+- 38f8798: Add data type to legacy `Border` prop controller and move it to `@makeswift/prop-controllers`.
+- b5fe83a: Add data type to legacy `Date` prop controller and move it to `@makeswift/prop-controllers`.
+- c37a850: Add data type to legacy `Number` prop controller and move it to `@makeswift/prop-controllers`.
+- 56343d0: BREAKING CHANGE: Remove deprecated `List`, `Shape`, and `Typeahead` PropControllers from `@makeswift/runtime/prop-controllers`.
+
+  This breaking change only affects a minority of users who are upgrading from versions older than `0.0.7`.
+
+  To migrate to the new version: update your components to use `List`, `Shape`, and `Combobox` from `@makeswift/runtime/controls` instead of `@makeswift/runtime/prop-controllers`.
+
+  Example migration:
+
+  ```diff
+  - import { List, Shape } from '@makeswift/runtime/prop-controllers';
+  + import { List, Shape } from '@makeswift/runtime/controls';
+  ```
+
+- a909fa1: Use the `@makeswift/prop-controllers` package, and migrate `LinkPropController`.
+
+### Patch Changes
+
+- 24f76a8: Add data type to legacy `TextStyle` prop controller and move it to `@makeswift/prop-controllers`.
+- 6bab3df: Add data type to legacy `GapY` prop controller and move it to `@makeswift/prop-controllers`.
+- 9b61ad8: Add data type to legacy `NavigationLinks` prop controller and move it to `@makeswift/prop-controllers`.
+- 045799d: Add data type to legacy `Width` prop controller and move it to `@makeswift/prop-controllers`.
+- abf95d6: Add data type to legacy `Margin` prop controller and move it to `@makeswift/prop-controllers`.
+- bc036af: Add data type to legacy `Font` prop controller and move it to `@makeswift/prop-controllers`.
+- f377f89: Add data type to legacy `Table` prop controller and move it to `@makeswift/prop-controllers`.
+- 66c8c6c: Fix "function components cannot be given refs" warning on the built-in `Text` component
+- fe5c346: Add data type to legacy `GapX` prop controller and move it to `@makeswift/prop-controllers`.
+- 6e48054: Add data type to legacy `Video` prop controller and move it to `@makeswift/prop-controllers`.
+- f7fc53e: Add data type to legacy `Padding` prop controller and move it to `@makeswift/prop-controllers`.
+- 612a40b: Resolve occasional `ERR_INVALID_ARG_TYPE` error when previewing a site built using Next.js Pages router.
+- df976f6: Add data type to legacy `TextArea` prop controller and move it to `@makeswift/prop-controllers`.
+- 2602000: Handle the new data type for `LinkPropController`.
+- Updated dependencies [24f76a8]
+- Updated dependencies [cf79dcb]
+- Updated dependencies [6bab3df]
+- Updated dependencies [89a6d77]
+- Updated dependencies [9b61ad8]
+- Updated dependencies [2602000]
+- Updated dependencies [5bd9b5f]
+- Updated dependencies [045799d]
+- Updated dependencies [abf95d6]
+- Updated dependencies [0a9a89c]
+- Updated dependencies [4847f1b]
+- Updated dependencies [38f8798]
+- Updated dependencies [bc036af]
+- Updated dependencies [b5fe83a]
+- Updated dependencies [f377f89]
+- Updated dependencies [c37a850]
+- Updated dependencies [fe5c346]
+- Updated dependencies [6e48054]
+- Updated dependencies [a909fa1]
+- Updated dependencies [f7fc53e]
+- Updated dependencies [6b62ab6]
+- Updated dependencies [df976f6]
+  - @makeswift/prop-controllers@0.1.0
+
 ## 0.15.0
 
 ### Minor Changes
