@@ -86,6 +86,7 @@ import { useTextStylePropControllerData } from '../../components/hooks/useTextSt
 import { useNavigationLinksPropControllerData } from '../../components/hooks/useNavigationLinksPropControllerData'
 import { useTextAreaPropControllerData } from '../../components/hooks/useTextAreaPropControllerData'
 import { useGapXPropControllerData } from '../../components/hooks/useGapXPropControllerData'
+import { useGapYPropControllerData } from '../../components/hooks/useGapYPropControllerData'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -475,6 +476,17 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
               <RenderHook
                 key={descriptor.type}
                 hook={useGapXPropControllerData}
+                parameters={[props[propName]]}
+              >
+                {value => renderFn({ ...propsValue, [propName]: value })}
+              </RenderHook>
+            )
+
+          case PropControllerTypes.GapY:
+            return (
+              <RenderHook
+                key={descriptor.type}
+                hook={useGapYPropControllerData}
                 parameters={[props[propName]]}
               >
                 {value => renderFn({ ...propsValue, [propName]: value })}

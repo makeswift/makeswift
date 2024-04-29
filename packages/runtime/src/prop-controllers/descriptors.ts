@@ -83,6 +83,8 @@ import {
   ResolveTextAreaPropControllerValue,
   ResolveGapXPropControllerValue,
   GapXDescriptor,
+  ResolveGapYPropControllerValue,
+  GapYDescriptor,
 } from '@makeswift/prop-controllers'
 
 export type { Data }
@@ -128,7 +130,6 @@ export type Gap = { value: number; unit: 'px' }
 export const Types = {
   Backgrounds: 'Backgrounds',
   ElementID: 'ElementID',
-  GapY: 'GapY',
   Grid: 'Grid',
   Image: 'Image',
   Images: 'Images',
@@ -234,28 +235,6 @@ type ElementIDDescriptor<_T = ElementIDValue> = {
  */
 export function ElementID(options: ElementIDOptions = {}): ElementIDDescriptor {
   return { type: Types.ElementID, options }
-}
-
-export type GapYValue = ResponsiveValue<Gap>
-
-export type GapYOptions = Options<{
-  preset?: GapYValue
-  label?: string
-  defaultValue?: Gap
-  step?: number
-  min?: number
-  max?: number
-  hidden?: boolean
-}>
-
-export type GapYDescriptor<_T = GapYValue> = { type: typeof Types.GapY; options: GapYOptions }
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function GapY(options: GapYOptions = {}): GapYDescriptor {
-  return { type: Types.GapY, options }
 }
 
 type GridColumn = { count: number; spans: number[][] }
@@ -664,7 +643,7 @@ export type PanelDescriptorType =
   | typeof PropControllerTypes.Padding
   | typeof PropControllerTypes.Shadows
   | typeof PropControllerTypes.Border
-  | typeof Types.GapY
+  | typeof PropControllerTypes.GapY
   | typeof PropControllerTypes.GapX
   | typeof PropControllerTypes.BorderRadius
   | typeof PropControllerTypes.Checkbox
@@ -743,6 +722,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveFontPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Font }>>
   : T['type'] extends typeof PropControllerTypes.GapX
   ? ResolveGapXPropControllerValue<Extract<T, { type: typeof PropControllerTypes.GapX }>>
+  : T['type'] extends typeof PropControllerTypes.GapY
+  ? ResolveGapYPropControllerValue<Extract<T, { type: typeof PropControllerTypes.GapY }>>
   : T['type'] extends typeof PropControllerTypes.Link
   ? ResolveLinkPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Link }>>
   : T['type'] extends typeof PropControllerTypes.Width

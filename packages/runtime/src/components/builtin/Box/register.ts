@@ -3,6 +3,7 @@ import {
   BorderRadius,
   Checkbox,
   GapX,
+  GapY,
   Margin,
   Padding,
   Shadows,
@@ -91,7 +92,7 @@ export function registerComponent(runtime: ReactRuntime) {
         border: Border({ format: Border.Format.ClassName }),
         borderRadius: BorderRadius({ format: BorderRadius.Format.ClassName }),
         boxShadow: Shadows({ format: Shadows.Format.ClassName }),
-        rowGap: Props.GapY(props => ({
+        rowGap: GapY(props => ({
           hidden: props.children == null,
         })),
         columnGap: GapX(props => ({
