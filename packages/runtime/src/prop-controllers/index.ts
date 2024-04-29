@@ -28,18 +28,10 @@ export type {
   ImageBackground,
   BackgroundsDescriptor,
   BackgroundImage,
-  ListDescriptor,
-  ListValue,
-  ListOptions,
   RichTextDescriptor,
   RichTextValue,
-  ShapeDescriptor,
-  ShapeValue,
   TextInputDescriptor,
   TextInputValue,
-  TypeaheadDescriptor,
-  TypeaheadValue,
-  TypeaheadOptions,
   PanelDescriptor,
   PanelDescriptorType,
   PanelDescriptorValueType,
@@ -64,3 +56,4 @@ export * as Introspection from './introspection'
 export { copy as imageCopy } from './copy/image'
 export { copy as imagesCopy } from './copy/images'
 export { copy as backgroundsCopy } from './copy/backgrounds'
+export { DELETED_PROP_CONTROLLER_TYPES } from './deleted'

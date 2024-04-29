@@ -24,9 +24,6 @@ import {
   GapYValue as GapYControlValue,
   ImageDescriptor as ImageControl,
   ImageValue as ImageControlValue,
-  ListDescriptor as ListControl,
-  ListOptions as ListControlConfig,
-  ListValue as ListControlValue,
   ResponsiveNumberDescriptor as ResponsiveNumberControl,
   ResponsiveNumberValue as ResponsiveNumberControlValue,
   ResponsiveIconRadioGroupDescriptor as ResponsiveIconRadioGroupControl,
@@ -35,19 +32,26 @@ import {
   ResponsiveSelectValue as ResponsiveSelectControlValue,
   RichTextDescriptor as RichTextControl,
   RichTextValue as RichTextControlValue,
-  ShapeDescriptor as ShapeControl,
-  ShapeValue as ShapeControlValue,
   TextInputDescriptor as TextInputControl,
   TextInputValue as TextInputControlValue,
-  TypeaheadDescriptor as TypeaheadControl,
-  TypeaheadOptions as TypeaheadControlConfig,
-  TypeaheadValue as TypeaheadControlValue,
   PanelDescriptor as PanelControl,
   PanelDescriptorType as PanelControlType,
   PanelDescriptorValueType as PanelControlValueType,
   PropControllerDescriptor as Control,
   Props as Controls,
 } from '../../prop-controllers'
+import {
+  DELETED_PROP_CONTROLLER_TYPES,
+  DeletedPropControllerDescriptor,
+  ListDescriptor as ListControl,
+  ListOptions as ListControlConfig,
+  ListValue as ListControlValue,
+  ShapeDescriptor as ShapeControl,
+  ShapeValue as ShapeControlValue,
+  TypeaheadDescriptor as TypeaheadControl,
+  TypeaheadOptions as TypeaheadControlConfig,
+  TypeaheadValue as TypeaheadControlValue,
+} from '../../prop-controllers/deleted'
 import {
   IconRadioGroupOption,
   SelectLabelOrientation,
@@ -100,7 +104,7 @@ type SerializedShapeControl<
   _T extends Record<string, Data>,
   U extends Record<string, SerializedPanelControl>,
 > = {
-  type: typeof Controls.Types.Shape
+  type: typeof DELETED_PROP_CONTROLLER_TYPES.Shape
   options: SerializedShapeControlConfig<U>
 }
 
@@ -142,7 +146,7 @@ type DeserializedShapeControl<
   _T extends Record<string, Data>,
   U extends Record<string, DeserializedPanelControl>,
 > = {
-  type: typeof Controls.Types.Shape
+  type: typeof DELETED_PROP_CONTROLLER_TYPES.Shape
   options: DeserializedShapeControlConfig<U>
 }
 
@@ -179,7 +183,7 @@ type SerializedListControlConfig<T extends Data> = {
 }
 
 type SerializedListControl<T extends ListControlValue = ListControlValue> = {
-  type: typeof Controls.Types.List
+  type: typeof DELETED_PROP_CONTROLLER_TYPES.List
   options: SerializedListControlConfig<T extends ListControlValue<infer U> ? U : never>
 }
 
@@ -217,7 +221,7 @@ type DeserializedListControlConfig<T extends Data> = {
 }
 
 type DeserializedListControl<T extends ListControlValue = ListControlValue> = {
-  type: typeof Controls.Types.List
+  type: typeof DELETED_PROP_CONTROLLER_TYPES.List
   options: DeserializedListControlConfig<T extends ListControlValue<infer U> ? U : never>
 }
 
@@ -247,7 +251,7 @@ type SerializedTypeaheadControlConfig<T extends Data> = {
 }
 
 type SerializedTypeaheadControl<T extends TypeaheadControlValue = TypeaheadControlValue> = {
-  type: typeof Controls.Types.Typeahead
+  type: typeof DELETED_PROP_CONTROLLER_TYPES.Typeahead
   options: SerializedTypeaheadControlConfig<T['value']>
 }
 
@@ -272,7 +276,7 @@ type DeserializedTypeaheadControlConfig<T extends Data> = {
 }
 
 type DeserializedTypeaheadControl<T extends TypeaheadControlValue = TypeaheadControlValue> = {
-  type: typeof Controls.Types.Typeahead
+  type: typeof DELETED_PROP_CONTROLLER_TYPES.Typeahead
   options: DeserializedTypeaheadControlConfig<T['value']>
 }
 
@@ -989,19 +993,19 @@ type DeserializedPanelControlValueType<T extends DeserializedPanelControl> =
   T extends DeserializedPanelControl<infer U> ? U : never
 
 export function serializeControl<T extends Data>(
-  control: Control<T>,
+  control: Control<T> | DeletedPropControllerDescriptor<T>,
 ): [SerializedControl<T>, Transferable[]] {
   switch (control.type) {
     case PropControllerTypes.Checkbox:
       return serializeCheckboxControl(control)
 
-    case Controls.Types.List:
+    case DELETED_PROP_CONTROLLER_TYPES.List:
       return serializeListControl(control)
 
-    case Controls.Types.Shape:
+    case DELETED_PROP_CONTROLLER_TYPES.Shape:
       return serializeShapeControl(control)
 
-    case Controls.Types.Typeahead:
+    case DELETED_PROP_CONTROLLER_TYPES.Typeahead:
       return serializeTypeaheadControl(control)
 
     case Controls.Types.GapX:
@@ -1073,13 +1077,13 @@ export function deserializeControl<T extends Data>(
     case PropControllerTypes.Checkbox:
       return deserializeCheckboxControl(serializedControl)
 
-    case Controls.Types.List:
+    case DELETED_PROP_CONTROLLER_TYPES.List:
       return deserializeListControl(serializedControl)
 
-    case Controls.Types.Shape:
+    case DELETED_PROP_CONTROLLER_TYPES.Shape:
       return deserializeShapeControl(serializedControl)
 
-    case Controls.Types.Typeahead:
+    case DELETED_PROP_CONTROLLER_TYPES.Typeahead:
       return deserializeTypeaheadControl(serializedControl)
 
     case Controls.Types.GapX:
