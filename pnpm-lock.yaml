@@ -272,7 +272,7 @@ importers:
         specifier: 0.3.0
         version: link:../makeswift-next-plugin
       '@makeswift/prop-controllers':
-        specifier: ^0.0.1
+        specifier: ^0.1.0
         version: link:../prop-controllers
       '@popmotion/popcorn':
         specifier: ^0.4.4
