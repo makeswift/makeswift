@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.16.0-canary.6
+
+### Patch Changes
+
+- 612a40b: Resolve occasional `ERR_INVALID_ARG_TYPE` error when previewing a site built using Next.js Pages router.
+
 ## 0.16.0-canary.5
 
 ### Minor Changes
