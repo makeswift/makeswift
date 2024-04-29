@@ -40,13 +40,6 @@ import { IconRadioGroupControlDefinition } from '../controls/icon-radio-group'
 import { IconRadioGroupControlValue } from '../runtimes/react/controls/icon-radio-group'
 import { TypographyControlValue } from '../runtimes/react/controls/typography'
 import {
-  getElementChildren,
-  getFileIds,
-  getPageIds,
-  getSwatchIds,
-  getTypographyIds,
-} from './introspection'
-import {
   BorderDescriptor,
   CheckboxDescriptor,
   LinkData,
@@ -136,16 +129,13 @@ export const Types = {
   Grid: 'Grid',
   Image: 'Image',
   Images: 'Images',
-  List: 'List',
   ResponsiveIconRadioGroup: 'ResponsiveIconRadioGroup',
   ResponsiveNumber: 'ResponsiveNumber',
   ResponsiveOpacity: 'ResponsiveOpacity',
   ResponsiveSelect: 'ResponsiveSelect',
   RichText: 'RichText',
-  Shape: 'Shape',
   SocialLinks: 'SocialLinks',
   TableFormFields: 'TableFormFields',
-  Typeahead: 'Typeahead',
   TextArea: 'TextArea',
   TextInput: 'TextInput',
   Style: StyleControlType,
@@ -389,76 +379,6 @@ export function Images(options: ImagesOptions = {}): ImagesDescriptor {
   return { type: Types.Images, version: 1, options }
 }
 
-type ListValueItem<T extends Data> = { id: string; value?: T }
-
-export type ListValue<T extends Data = Data> = ListValueItem<T>[]
-
-export type ListOptions<T extends Data> = {
-  type: PanelDescriptor<T>
-  label?: string
-  getItemLabel?: ((value: T | undefined) => string) | ((value: T | undefined) => Promise<string>)
-  preset?: ListValue<T>
-  defaultValue?: ListValue<T>
-}
-
-export type ListDescriptor<T extends ListValue = ListValue> = {
-  type: typeof Types.List
-  options: ListOptions<T extends ListValue<infer U> ? U : never>
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function List<T extends Data>(options: ListOptions<T>): ListDescriptor<ListValue<T>> {
-  return { type: Types.List, options }
-}
-
-export function introspectListPropControllerData<T>(
-  descriptor: ListDescriptor,
-  value: ListValue | undefined,
-  func: (definition: Descriptor, data: Data) => T[],
-): T[] {
-  if (value == null) return []
-
-  return value.flatMap(item => (item.value ? func(descriptor.options.type, item.value) : []))
-}
-
-export function getListPropControllerElementChildren<T>(
-  descriptor: ListDescriptor<T extends ListValue<Data> ? T : ListValue<Data>>,
-  value: ListValue | undefined,
-) {
-  return introspectListPropControllerData(descriptor, value, getElementChildren)
-}
-
-export function getListPropControllerSwatchIds<T>(
-  descriptor: ListDescriptor<T extends ListValue<Data> ? T : ListValue<Data>>,
-  value: ListValue | undefined,
-) {
-  return introspectListPropControllerData(descriptor, value, getSwatchIds)
-}
-
-export function getListPropControllerFileIds<T>(
-  descriptor: ListDescriptor<T extends ListValue<Data> ? T : ListValue<Data>>,
-  value: ListValue | undefined,
-) {
-  return introspectListPropControllerData(descriptor, value, getFileIds)
-}
-
-export function getListPropControllerTypographyIds<T>(
-  descriptor: ListDescriptor<T extends ListValue<Data> ? T : ListValue<Data>>,
-  value: ListValue | undefined,
-) {
-  return introspectListPropControllerData(descriptor, value, getTypographyIds)
-}
-
-export function getListPropControllerPageIds<T>(
-  descriptor: ListDescriptor<T extends ListValue<Data> ? T : ListValue<Data>>,
-  value: ListValue | undefined,
-) {
-  return introspectListPropControllerData(descriptor, value, getPageIds)
-}
-
 export type IconRadioGroupOption<T extends string> = { value: T; label: string; icon: IconName }
 
 export type ResponsiveIconRadioGroupValue<T extends string = string> = ResponsiveValue<T>
@@ -589,78 +509,6 @@ export function RichText(options: RichTextOptions = {}): RichTextDescriptor {
   return { type: Types.RichText, options }
 }
 
-export type ShapeValue<T extends Data = Data> = Record<string, T>
-
-type ShapeOptions<T extends Record<string, PanelDescriptor>> = {
-  type: T
-  preset?: { [K in keyof T]?: DescriptorValueType<T[K]> }
-}
-
-export type ShapeDescriptor<
-  _T extends Record<string, Data>,
-  U extends Record<string, PanelDescriptor>,
-> = {
-  type: typeof Types.Shape
-  options: ShapeOptions<U>
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Shape<T extends Record<string, PanelDescriptor>>(
-  options: ShapeOptions<T>,
-): ShapeDescriptor<{ [K in keyof T]?: DescriptorValueType<T[K]> }, T> {
-  return { type: Types.Shape, options }
-}
-
-export function introspectShapePropControllerData<T>(
-  descriptor: ShapeDescriptor<Record<string, Data>, Record<string, PanelDescriptor>>,
-  value: ShapeValue | undefined,
-  func: (definition: Descriptor, data: Data) => T[],
-): T[] {
-  if (value == null) return []
-
-  return Object.entries(descriptor.options.type).flatMap(([key, definition]) =>
-    func(definition, value[key]),
-  )
-}
-
-export function getShapePropControllerElementChildren(
-  descriptor: ShapeDescriptor<Record<string, Data>, Record<string, PanelDescriptor>>,
-  value: ShapeValue | undefined,
-): Element[] {
-  return introspectShapePropControllerData(descriptor, value, getElementChildren)
-}
-
-export function getShapePropControllerFileIds(
-  descriptor: ShapeDescriptor<Record<string, Data>, Record<string, PanelDescriptor>>,
-  value: ShapeValue | undefined,
-): string[] {
-  return introspectShapePropControllerData(descriptor, value, getFileIds)
-}
-
-export function getShapePropControllerTypographyIds(
-  descriptor: ShapeDescriptor<Record<string, Data>, Record<string, PanelDescriptor>>,
-  value: ShapeValue | undefined,
-): string[] {
-  return introspectShapePropControllerData(descriptor, value, getTypographyIds)
-}
-
-export function getShapePropControllerPageIds(
-  descriptor: ShapeDescriptor<Record<string, Data>, Record<string, PanelDescriptor>>,
-  value: ShapeValue | undefined,
-): string[] {
-  return introspectShapePropControllerData(descriptor, value, getPageIds)
-}
-
-export function getShapePropControllerSwatchIds(
-  descriptor: ShapeDescriptor<Record<string, Data>, Record<string, PanelDescriptor>>,
-  value: ShapeValue | undefined,
-): string[] {
-  return introspectShapePropControllerData(descriptor, value, getSwatchIds)
-}
-
 export const socialLinkTypesV0 = [
   'angellist',
   'codepen',
@@ -755,34 +603,6 @@ export function TableFormFields(options: TableFormFieldsOptions = {}): TableForm
   return { type: Types.TableFormFields, options }
 }
 
-export type TypeaheadValue<T extends Data = Data> = {
-  id: string
-  label: string
-  value: T
-}
-
-export type TypeaheadOptions<T extends Data> = {
-  getItems: (query: string) => Promise<TypeaheadValue<T>[]>
-  label?: string
-  preset?: TypeaheadValue<T>
-  defaultValue?: TypeaheadValue<T>
-}
-
-export type TypeaheadDescriptor<T extends TypeaheadValue = TypeaheadValue> = {
-  type: typeof Types.Typeahead
-  options: TypeaheadOptions<T extends TypeaheadValue<infer U> ? U : never>
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Typeahead<T extends Data>(
-  options: TypeaheadOptions<T>,
-): TypeaheadDescriptor<TypeaheadValue<T>> {
-  return { type: Types.Typeahead, options }
-}
-
 export type TextAreaValue = string
 
 type TextAreaOptions = Options<{ preset?: TextAreaValue; label?: string; rows?: number }>
@@ -831,7 +651,6 @@ export type Descriptor<T extends Data = Data> =
   | ImageDescriptor<T>
   | ImagesDescriptor<T>
   | LinkDescriptor<T>
-  | ListDescriptor<T extends ListValue ? T : ListValue>
   | MarginDescriptor<T>
   | NavigationLinksDescriptor<T>
   | NumberDescriptor<T>
@@ -848,11 +667,9 @@ export type Descriptor<T extends Data = Data> =
     >
   | RichTextDescriptor<T>
   | ShadowsDescriptor<T>
-  | ShapeDescriptor<T extends ShapeValue ? T : ShapeValue, any>
   | SocialLinksDescriptor<T>
   | TableDescriptor<T>
   | TableFormFieldsDescriptor<T>
-  | TypeaheadDescriptor<T extends TypeaheadValue ? T : TypeaheadValue>
   | TextAreaDescriptor<T>
   | TextInputDescriptor<T>
   | TextStyleDescriptor<T>
@@ -890,8 +707,6 @@ export type PanelDescriptorType =
   | typeof PropControllerTypes.Checkbox
   | typeof Types.TextInput
   | typeof PropControllerTypes.Link
-  | typeof Types.List
-  | typeof Types.Shape
   | typeof Types.ResponsiveSelect
   | typeof PropControllerTypes.ResponsiveColor
   | typeof PropControllerTypes.TextStyle
@@ -902,7 +717,6 @@ export type PanelDescriptorType =
   | typeof PropControllerTypes.Font
   | typeof Types.TextArea
   | typeof PropControllerTypes.Table
-  | typeof Types.Typeahead
   | typeof Types.RichText
   | typeof Types.Image
   | typeof Types.ResponsiveOpacity

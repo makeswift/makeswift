@@ -2,22 +2,10 @@ import {
   BackgroundsValue,
   Descriptor,
   ElementIDValue,
-  getListPropControllerElementChildren,
-  getListPropControllerFileIds,
-  getListPropControllerPageIds,
-  getListPropControllerSwatchIds,
-  getListPropControllerTypographyIds,
-  getShapePropControllerElementChildren,
-  getShapePropControllerFileIds,
-  getShapePropControllerPageIds,
-  getShapePropControllerSwatchIds,
-  getShapePropControllerTypographyIds,
   GridValue,
   ImagesValue,
   ImageValue,
-  ListValue,
   RichTextValue,
-  ShapeValue,
   Types,
 } from './descriptors'
 import { Data, Element } from '../state/react-page'
@@ -110,14 +98,6 @@ export function getElementChildren<T extends Data>(
 
     case ListControlType: {
       return getListElementChildren(descriptor, prop as ListControlData)
-    }
-
-    case Types.Shape: {
-      return getShapePropControllerElementChildren(descriptor, prop as ShapeValue)
-    }
-
-    case Types.List: {
-      return getListPropControllerElementChildren(descriptor, prop as ListValue)
     }
 
     default:
@@ -219,14 +199,6 @@ export function getSwatchIds<T extends Data>(
       return getListSwatchIds(descriptor, prop as ListControlData)
     }
 
-    case Types.Shape: {
-      return getShapePropControllerSwatchIds(descriptor, prop as ShapeValue)
-    }
-
-    case Types.List: {
-      return getListPropControllerSwatchIds(descriptor, prop as ListValue)
-    }
-
     default:
       return []
   }
@@ -296,14 +268,6 @@ export function getFileIds<T extends Data>(
       return getListFileIds(descriptor, prop as ListControlData)
     }
 
-    case Types.Shape: {
-      return getShapePropControllerFileIds(descriptor, prop as ShapeValue)
-    }
-
-    case Types.List: {
-      return getListPropControllerFileIds(descriptor, prop as ListValue)
-    }
-
     default:
       return []
   }
@@ -338,14 +302,6 @@ export function getTypographyIds<T extends Data>(
 
     case ListControlType: {
       return getListTypographyIds(descriptor, prop as ListControlData)
-    }
-
-    case Types.Shape: {
-      return getShapePropControllerTypographyIds(descriptor, prop as ShapeValue)
-    }
-
-    case Types.List: {
-      return getListPropControllerTypographyIds(descriptor, prop as ListValue)
     }
 
     default:
@@ -419,13 +375,6 @@ export function getPageIds<T extends Data>(
       return getListPageIds(descriptor, prop as ListControlData)
     }
 
-    case Types.Shape: {
-      return getShapePropControllerPageIds(descriptor, prop as ShapeValue)
-    }
-
-    case Types.List: {
-      return getListPropControllerPageIds(descriptor, prop as ListValue)
-    }
     default:
       return []
   }

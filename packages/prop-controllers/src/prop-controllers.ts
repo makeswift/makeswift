@@ -61,7 +61,7 @@ export type ResponsiveValueType<T> = T extends ResponsiveValue<infer U>
 
 export type Color = { swatchId: string; alpha: number }
 
-type Data =
+export type Data =
   | undefined
   | null
   | boolean
