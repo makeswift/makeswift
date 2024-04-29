@@ -1,5 +1,9 @@
 {
   "private": true,
+  "packageManager": "pnpm@8.15.3",
+  "engines": {
+    "pnpm": "^8.15.0"
+  },
   "scripts": {
     "format": "prettier --write .",
     "build": "turbo run build --filter=!./apps/*",
@@ -11,6 +15,6 @@
     "@playwright/test": "^1.41.1",
     "@types/node": "^20.11.11",
     "prettier": "^2.7.1",
-    "turbo": "^1.4.3"
+    "turbo": "^1.13.3"
   }
 }

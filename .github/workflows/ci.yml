@@ -33,10 +33,10 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --ignore-scripts
+        run: pnpm install --ignore-scripts --frozen-lockfile
 
       - name: Build
-        run: pnpm run build --filter=!./apps/**
+        run: pnpm run build
 
       - name: Test packages
         run: pnpm run test
