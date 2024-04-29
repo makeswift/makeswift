@@ -19,7 +19,6 @@ import {
   ElementIDValue,
   ResponsiveIconRadioGroupValue,
   GridValue,
-  GapYValue,
   BackgroundsValue,
 } from '../../../prop-controllers/descriptors'
 import { BoxModelHandle, parse, createBox } from '../../../box-model'
@@ -42,7 +41,7 @@ type Props = {
   border?: string
   borderRadius?: string
   boxShadow?: string
-  rowGap?: GapYValue
+  rowGap?: ResponsiveGapData
   columnGap?: ResponsiveGapData
   hidePlaceholder?: boolean
   children?: GridValue

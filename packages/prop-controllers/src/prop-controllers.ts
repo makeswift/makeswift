@@ -7,6 +7,7 @@ export const Types = {
   Date: 'Date',
   Font: 'Font',
   GapX: 'GapX',
+  GapY: 'GapY',
   Link: 'Link',
   Margin: 'Margin',
   NavigationLinks: 'NavigationLinks',
