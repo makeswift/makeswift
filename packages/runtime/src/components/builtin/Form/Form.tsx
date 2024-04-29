@@ -33,7 +33,6 @@ import Button from '../Button'
 import type { TableColumn } from './types'
 import {
   ElementIDValue,
-  GapYValue,
   ResponsiveIconRadioGroupValue,
   ResponsiveSelectValue,
   TableFormFieldsDescriptor,
@@ -53,6 +52,7 @@ import { useStyle } from '../../../runtimes/react/use-style'
 import { useTable } from '../../../runtimes/react/hooks/makeswift-api'
 import {
   LinkData,
+  ResponsiveGapData,
   ResponsiveLengthData,
   ResponsiveTextStyleData,
   ResponsiveValue,
@@ -81,7 +81,7 @@ type Props = {
   tableId?: string
   fields?: TableFormFieldsValue
   submitLink?: LinkData
-  gap?: GapYValue
+  gap?: ResponsiveGapData
   shape?: ResponsiveIconRadioGroupValue<Shape>
   size?: ResponsiveIconRadioGroupValue<Size>
   contrast?: ResponsiveIconRadioGroupValue<Contrast>

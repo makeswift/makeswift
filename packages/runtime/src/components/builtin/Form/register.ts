@@ -6,6 +6,7 @@ import { Alignments, Contrast, Contrasts, Shapes, Sizes } from './context/FormCo
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
 import {
+  GapY,
   Link,
   Margin,
   ResponsiveColor,
@@ -35,7 +36,7 @@ export function registerComponent(runtime: ReactRuntime) {
           ],
           hidden: props.tableId == null,
         })),
-        gap: Props.GapY(props => ({
+        gap: GapY(props => ({
           preset: [
             {
               deviceId: getBaseBreakpoint(runtime.getBreakpoints()).id,
