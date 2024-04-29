@@ -1,5 +1,33 @@
 # @makeswift/runtime
 
+## 0.16.0-canary.5
+
+### Minor Changes
+
+- defb8d9: Next.js 14.2 compatibility fix: decouple `PreviewProvider`'s message channel setup from the middleware creation to make store initialization compatible with React's strict mode.
+- 56343d0: BREAKING CHANGE: Remove deprecated `List`, `Shape`, and `Typeahead` PropControllers from `@makeswift/runtime/prop-controllers`.
+
+  This breaking change only affects a minority of users who are upgrading from versions older than `0.0.7`.
+
+  To migrate to the new version: update your components to use `List`, `Shape`, and `Combobox` from `@makeswift/runtime/controls` instead of `@makeswift/runtime/prop-controllers`.
+
+  Example migration:
+
+  ```diff
+  - import { List, Shape } from '@makeswift/runtime/prop-controllers';
+  + import { List, Shape } from '@makeswift/runtime/controls';
+  ```
+
+### Patch Changes
+
+- 6bab3df: Add data type to legacy `GapY` prop controller and move it to `@makeswift/prop-controllers`.
+- fe5c346: Add data type to legacy `GapX` prop controller and move it to `@makeswift/prop-controllers`.
+- df976f6: Add data type to legacy `TextArea` prop controller and move it to `@makeswift/prop-controllers`.
+- Updated dependencies [6bab3df]
+- Updated dependencies [fe5c346]
+- Updated dependencies [df976f6]
+  - @makeswift/prop-controllers@0.1.0-canary.5
+
 ## 0.16.0-canary.4
 
 ### Patch Changes
