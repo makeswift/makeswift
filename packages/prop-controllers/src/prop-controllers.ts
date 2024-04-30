@@ -19,6 +19,7 @@ export const Types = {
   ResponsiveLength: 'ResponsiveLength',
   TextArea: 'TextArea',
   Table: 'Table',
+  TableFormFields: 'TableFormFields',
   TextStyle: 'TextStyle',
   Width: 'Width',
   Video: 'Video',

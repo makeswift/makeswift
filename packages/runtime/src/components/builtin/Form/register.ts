@@ -13,6 +13,7 @@ import {
   ResponsiveColor,
   ResponsiveLength,
   Table,
+  TableFormFields,
   TextStyle,
   Width,
 } from '@makeswift/prop-controllers'
@@ -27,7 +28,7 @@ export function registerComponent(runtime: ReactRuntime) {
       props: {
         id: ElementID(),
         tableId: Table(),
-        fields: Props.TableFormFields(),
+        fields: TableFormFields(),
         submitLink: Link(props => ({
           label: 'Redirect to',
           // TODO: This option is hardcoded. We should import it from LinkPanelOptions

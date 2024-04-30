@@ -87,6 +87,8 @@ import {
   GapYDescriptor,
   ElementIDDescriptor,
   ResolveElementIDPropControllerValue,
+  TableFormFieldsDescriptor,
+  ResolveTableFormFieldsPropControllerValue,
 } from '@makeswift/prop-controllers'
 
 export type { Data }
@@ -140,7 +142,6 @@ export const Types = {
   ResponsiveSelect: 'ResponsiveSelect',
   RichText: 'RichText',
   SocialLinks: 'SocialLinks',
-  TableFormFields: 'TableFormFields',
   TextInput: 'TextInput',
   Style: StyleControlType,
 } as const
@@ -514,38 +515,6 @@ export function SocialLinks(options: SocialLinksOptions = {}): SocialLinksDescri
   return { type: Types.SocialLinks, options, version: 1 }
 }
 
-type TableFormField = {
-  id: string
-  tableColumnId: string
-  label?: string
-  placeholder?: string
-  defaultValue?: string | boolean | string[]
-  required?: boolean
-  hidden?: boolean
-  type?: 'select' | 'radio'
-  hideLabel?: boolean
-  autofill?: boolean
-}
-
-type Grid = { count: number; spans: number[][] }
-
-export type TableFormFieldsValue = { fields: TableFormField[]; grid: ResponsiveValue<Grid> }
-
-type TableFormFieldsOptions = Options<{ preset?: TableFormFieldsValue }>
-
-export type TableFormFieldsDescriptor<_T = TableFormFieldsValue> = {
-  type: typeof Types.TableFormFields
-  options: TableFormFieldsOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function TableFormFields(options: TableFormFieldsOptions = {}): TableFormFieldsDescriptor {
-  return { type: Types.TableFormFields, options }
-}
-
 export type TextInputValue = string
 
 export type TextInputOptions = Options<{ label?: string; placeholder?: string; hidden?: boolean }>
@@ -738,6 +707,10 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveNumberPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Number }>>
   : T['type'] extends typeof PropControllerTypes.Table
   ? ResolveTablePropControllerValue<Extract<T, { type: typeof PropControllerTypes.Table }>>
+  : T['type'] extends typeof PropControllerTypes.TableFormFields
+  ? ResolveTableFormFieldsPropControllerValue<
+      Extract<T, { type: typeof PropControllerTypes.TableFormFields }>
+    >
   : T['type'] extends typeof PropControllerTypes.TextStyle
   ? ResolveTextStylePropControllerValue<Extract<T, { type: typeof PropControllerTypes.TextStyle }>>
   : T['type'] extends typeof PropControllerTypes.TextArea

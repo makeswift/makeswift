@@ -34,8 +34,6 @@ import type { TableColumn } from './types'
 import {
   ResponsiveIconRadioGroupValue,
   ResponsiveSelectValue,
-  TableFormFieldsDescriptor,
-  TableFormFieldsValue,
   TextInputValue,
 } from '../../../prop-controllers/descriptors'
 import { Link } from '../../shared/Link'
@@ -55,6 +53,8 @@ import {
   ResponsiveLengthData,
   ResponsiveTextStyleData,
   ResponsiveValue,
+  TableFormFieldsData,
+  TableFormFieldsDescriptor,
 } from '@makeswift/prop-controllers'
 
 const LOCAL_STORAGE_NAMESPACE = '@@makeswift/components/form'
@@ -78,7 +78,7 @@ function getSizeFontSize(size: Size): number {
 type Props = {
   id?: string
   tableId?: string
-  fields?: TableFormFieldsValue
+  fields?: TableFormFieldsData
   submitLink?: LinkData
   gap?: ResponsiveGapData
   shape?: ResponsiveIconRadioGroupValue<Shape>
