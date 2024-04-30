@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.16.1
+
+### Patch Changes
+
+- a64a640: Use `turbo` in prepublishing step to automatically build dependencies as needed
+- Updated dependencies [a64a640]
+  - @makeswift/prop-controllers@0.1.1
+
 ## 0.16.0
 
 ### Minor Changes
