@@ -1,5 +1,11 @@
 # @makeswift/prop-controllers
 
+## 0.1.1
+
+### Patch Changes
+
+- a64a640: Use `turbo` in prepublishing step to automatically build dependencies as needed
+
 ## 0.1.0
 
 ### Minor Changes

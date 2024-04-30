@@ -1,5 +1,11 @@
 # makeswift
 
+## 0.2.5
+
+### Patch Changes
+
+- a64a640: Use `turbo` in prepublishing step to automatically build dependencies as needed
+
 ## 0.2.4
 
 ### Patch Changes
