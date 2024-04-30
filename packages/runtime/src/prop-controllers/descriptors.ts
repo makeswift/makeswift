@@ -85,6 +85,8 @@ import {
   GapXDescriptor,
   ResolveGapYPropControllerValue,
   GapYDescriptor,
+  ElementIDDescriptor,
+  ResolveElementIDPropControllerValue,
 } from '@makeswift/prop-controllers'
 
 export type { Data }
@@ -129,7 +131,6 @@ export type Gap = { value: number; unit: 'px' }
 
 export const Types = {
   Backgrounds: 'Backgrounds',
-  ElementID: 'ElementID',
   Grid: 'Grid',
   Image: 'Image',
   Images: 'Images',
@@ -218,23 +219,6 @@ export type BackgroundsDescriptor<_T = BackgroundsValue> = {
  */
 export function Backgrounds(options: BackgroundsOptions = {}): BackgroundsDescriptor {
   return { type: Types.Backgrounds, version: 1, options }
-}
-
-export type ElementIDValue = string
-
-type ElementIDOptions = Options<Record<string, never>>
-
-type ElementIDDescriptor<_T = ElementIDValue> = {
-  type: typeof Types.ElementID
-  options: ElementIDOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function ElementID(options: ElementIDOptions = {}): ElementIDDescriptor {
-  return { type: Types.ElementID, options }
 }
 
 type GridColumn = { count: number; spans: number[][] }
@@ -718,6 +702,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveCheckboxPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Checkbox }>>
   : T['type'] extends typeof PropControllerTypes.Date
   ? ResolveDatePropControllerValue<Extract<T, { type: typeof PropControllerTypes.Date }>>
+  : T['type'] extends typeof PropControllerTypes.ElementID
+  ? ResolveElementIDPropControllerValue<Extract<T, { type: typeof PropControllerTypes.ElementID }>>
   : T['type'] extends typeof PropControllerTypes.Font
   ? ResolveFontPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Font }>>
   : T['type'] extends typeof PropControllerTypes.GapX

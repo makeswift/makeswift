@@ -5,7 +5,7 @@ import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
-import { GapX, Margin, ResponsiveColor, Width } from '@makeswift/prop-controllers'
+import { ElementID, GapX, Margin, ResponsiveColor, Width } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -15,7 +15,7 @@ export function registerComponent(runtime: ReactRuntime) {
       label: 'Social Links',
       icon: ComponentIcon.SocialLinks,
       props: {
-        id: Props.ElementID(),
+        id: ElementID(),
         links: Props.SocialLinks({
           preset: {
             links: [

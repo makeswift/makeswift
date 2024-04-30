@@ -11,7 +11,6 @@ import LinksPlaceholder from './components/LinksPlaceholder'
 import DropDownButton from './components/DropDownButton'
 import MobileMenu from './components/MobileMenu'
 import {
-  ElementIDValue,
   ImageValue,
   ResponsiveIconRadioGroupValue,
   ResponsiveSelectValue,
@@ -36,7 +35,7 @@ import { useResponsiveStyle, useResponsiveTextStyle } from '../../utils/responsi
 import { useStyle } from '../../../runtimes/react/use-style'
 
 type Props = {
-  id?: ElementIDValue
+  id?: string
   links?: NavigationLinksData
   linkTextStyle?: ResponsiveTextStyleData
   showLogo?: boolean

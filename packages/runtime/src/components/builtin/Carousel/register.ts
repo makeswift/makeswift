@@ -5,6 +5,7 @@ import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride } from '../../../state/modules/breakpoints'
 import {
   BorderRadius,
+  ElementID,
   GapX,
   Margin,
   Number,
@@ -30,7 +31,7 @@ export function registerComponent(runtime: ReactRuntime) {
       label: 'Carousel',
       icon: ComponentIcon.Carousel,
       props: {
-        id: Props.ElementID(),
+        id: ElementID(),
         images: Props.Images({
           preset: [
             { key: uuid(), props: {} },

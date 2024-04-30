@@ -5,7 +5,6 @@ import NextImage from 'next/image'
 import type NextLegacyImageType from 'next/legacy/image'
 
 import {
-  ElementIDValue,
   ImageValue,
   ResponsiveOpacityValue,
   TextInputValue,
@@ -25,7 +24,7 @@ import { match, P } from 'ts-pattern'
 const NextLegacyImage = NextImage as typeof NextLegacyImageType
 
 type Props = {
-  id?: ElementIDValue
+  id?: string
   file?: ImageValue
   altText?: TextInputValue
   link?: LinkData

@@ -3,7 +3,13 @@ import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
-import { Margin, ResponsiveColor, ResponsiveLength, Width } from '@makeswift/prop-controllers'
+import {
+  ElementID,
+  Margin,
+  ResponsiveColor,
+  ResponsiveLength,
+  Width,
+} from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -13,7 +19,7 @@ export function registerComponent(runtime: ReactRuntime) {
       label: 'Divider',
       icon: ComponentIcon.Divider,
       props: {
-        id: Props.ElementID(),
+        id: ElementID(),
         variant: Props.ResponsiveSelect({
           label: 'Style',
           labelOrientation: 'horizontal',

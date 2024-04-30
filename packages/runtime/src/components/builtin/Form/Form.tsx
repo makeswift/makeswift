@@ -32,7 +32,6 @@ import Spinner from './components/Spinner'
 import Button from '../Button'
 import type { TableColumn } from './types'
 import {
-  ElementIDValue,
   ResponsiveIconRadioGroupValue,
   ResponsiveSelectValue,
   TableFormFieldsDescriptor,
@@ -77,7 +76,7 @@ function getSizeFontSize(size: Size): number {
 }
 
 type Props = {
-  id?: ElementIDValue
+  id?: string
   tableId?: string
   fields?: TableFormFieldsValue
   submitLink?: LinkData

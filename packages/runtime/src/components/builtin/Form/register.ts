@@ -6,6 +6,7 @@ import { Alignments, Contrast, Contrasts, Shapes, Sizes } from './context/FormCo
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
 import {
+  ElementID,
   GapY,
   Link,
   Margin,
@@ -24,7 +25,7 @@ export function registerComponent(runtime: ReactRuntime) {
       label: 'Form',
       icon: ComponentIcon.Form,
       props: {
-        id: Props.ElementID(),
+        id: ElementID(),
         tableId: Table(),
         fields: Props.TableFormFields(),
         submitLink: Link(props => ({

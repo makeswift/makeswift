@@ -1,10 +1,9 @@
-import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { RichText } from '../../../controls/rich-text-v2/rich-text-v2'
 import { lazy } from 'react'
-import { Margin, Width } from '@makeswift/prop-controllers'
+import { ElementID, Margin, Width } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -13,7 +12,7 @@ export function registerComponent(runtime: ReactRuntime) {
       type: MakeswiftComponentType.Text,
       label: 'Text',
       props: {
-        id: Props.ElementID(),
+        id: ElementID(),
         text: RichText(),
         width: Width({
           format: Width.Format.ClassName,

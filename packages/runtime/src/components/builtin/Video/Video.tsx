@@ -4,13 +4,12 @@ import { cx } from '@emotion/css'
 import { forwardRef, Ref, useEffect, useState } from 'react'
 import ReactPlayer from 'react-player'
 
-import { ElementIDValue } from '../../../prop-controllers/descriptors'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { placeholders } from '../../utils/placeholders'
 import { VideoData } from '@makeswift/prop-controllers'
 
 type Props = {
-  id?: ElementIDValue
+  id?: string
   video?: VideoData
   width?: string
   margin?: string

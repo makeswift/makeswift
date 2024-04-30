@@ -16,7 +16,6 @@ import { Element } from '../../../runtimes/react'
 import Placeholder from './components/Placeholder'
 import { areBoxAnimationPropsEqual, BoxAnimationProps, useBoxAnimation } from './animations'
 import {
-  ElementIDValue,
   ResponsiveIconRadioGroupValue,
   GridValue,
   BackgroundsValue,
@@ -29,7 +28,7 @@ import { useStyle } from '../../../runtimes/react/use-style'
 import { ResponsiveGapData } from '@makeswift/prop-controllers'
 
 type Props = {
-  id?: ElementIDValue
+  id?: string
   backgrounds?: BackgroundsValue
   width?: string
   height?: ResponsiveIconRadioGroupValue<'auto' | 'stretch'>

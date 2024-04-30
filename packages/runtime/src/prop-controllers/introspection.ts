@@ -1,7 +1,6 @@
 import {
   BackgroundsValue,
   Descriptor,
-  ElementIDValue,
   GridValue,
   ImagesValue,
   ImageValue,
@@ -72,6 +71,8 @@ import {
   NavigationLinksPropControllerData,
   getNavigationLinksPropControllerSwatchIds,
   BorderPropControllerData,
+  getElementIDPropControllerDataElementID,
+  ElementIDPropControllerData,
 } from '@makeswift/prop-controllers'
 
 export function getElementChildren<T extends Data>(
@@ -112,8 +113,8 @@ export function getElementId<T extends Data>(
   if (prop == null) return null
 
   switch (descriptor.type) {
-    case Types.ElementID:
-      return prop as ElementIDValue
+    case PropControllerTypes.ElementID:
+      return getElementIDPropControllerDataElementID(prop as ElementIDPropControllerData) ?? null
 
     default:
       return null

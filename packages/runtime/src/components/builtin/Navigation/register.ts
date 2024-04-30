@@ -20,6 +20,7 @@ import {
   NavigationLinks,
   NavigationLinksData,
   GapX,
+  ElementID,
 } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
@@ -30,7 +31,7 @@ export function registerComponent(runtime: ReactRuntime) {
       label: 'Navigation',
       icon: ComponentIcon.Navigation,
       props: {
-        id: Props.ElementID(),
+        id: ElementID(),
         links: NavigationLinks(),
         linkTextStyle: TextStyle(props => {
           const links = props.links as NavigationLinksData | undefined

@@ -6,6 +6,7 @@ import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
 import {
   Date as DatePropController,
+  ElementID,
   Font,
   GapX,
   Margin,
@@ -21,7 +22,7 @@ export function registerComponent(runtime: ReactRuntime) {
       label: 'Countdown',
       icon: ComponentIcon.Countdown,
       props: {
-        id: Props.ElementID(),
+        id: ElementID(),
         date: DatePropController(() => ({
           preset: new Date(Date.now() + 1000 * 60 * 60 * 24 * 2).toISOString(),
         })),
