@@ -1,5 +1,5 @@
 import { Editor } from 'slate'
-import { Descriptor, RichTextDescriptor, TableFormFieldsDescriptor, Types } from './descriptors'
+import { Descriptor, RichTextDescriptor, Types } from './descriptors'
 import { BuilderEditMode } from '../state/modules/builder-edit-mode'
 import { BoxModel } from '../state/modules/box-models'
 import {
@@ -28,6 +28,10 @@ import {
   StyleV2ControlMessage,
 } from '../controls'
 import { PropController } from './base'
+import {
+  Types as PropControllerTypes,
+  TableFormFieldsDescriptor,
+} from '@makeswift/prop-controllers'
 
 export const RichTextPropControllerMessageType = {
   CHANGE_BUILDER_EDIT_MODE: 'CHANGE_BUILDER_EDIT_MODE',
@@ -199,7 +203,7 @@ type DescriptorPropController<T extends Descriptor> = T extends { type: typeof T
   ? RichTextControl
   : T extends { type: typeof RichTextV2ControlType }
   ? RichTextV2Control
-  : T extends { type: typeof Types.TableFormFields }
+  : T extends { type: typeof PropControllerTypes.TableFormFields }
   ? TableFormFieldsPropController
   : DefaultPropController
 
@@ -238,7 +242,7 @@ export function createPropController<T extends PropControllerMessage>(
     case Types.RichText:
       return new RichTextPropController(send as Send<RichTextPropControllerMessage>)
 
-    case Types.TableFormFields:
+    case PropControllerTypes.TableFormFields:
       return new TableFormFieldsPropController(send as Send<TableFormFieldsMessage>)
 
     case SlotControlType:

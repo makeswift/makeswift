@@ -88,6 +88,7 @@ import { useTextAreaPropControllerData } from '../../components/hooks/useTextAre
 import { useGapXPropControllerData } from '../../components/hooks/useGapXPropControllerData'
 import { useGapYPropControllerData } from '../../components/hooks/useGapYPropControllerData'
 import { useElementIDPropControllerData } from '../../components/hooks/useElementIDPropControllerData'
+import { useTableFormFieldsPropControllerData } from '../../components/hooks/useTableFormFieldsPropControllerData'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -499,6 +500,17 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
               <RenderHook
                 key={descriptor.type}
                 hook={useElementIDPropControllerData}
+                parameters={[props[propName]]}
+              >
+                {value => renderFn({ ...propsValue, [propName]: value })}
+              </RenderHook>
+            )
+
+          case PropControllerTypes.TableFormFields:
+            return (
+              <RenderHook
+                key={descriptor.type}
+                hook={useTableFormFieldsPropControllerData}
                 parameters={[props[propName]]}
               >
                 {value => renderFn({ ...propsValue, [propName]: value })}

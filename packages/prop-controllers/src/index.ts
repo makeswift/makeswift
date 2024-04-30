@@ -231,6 +231,20 @@ export type {
   ResolveTablePropControllerValue,
 } from './table'
 export {
+  TableFormFields,
+  tableFormFieldsPropControllerDataSchema,
+  getTableFormFieldsPropControllerDataTableFormFieldsData,
+  createTableFormFieldsPropControllerDataFromTableFormFieldsData,
+  copyTableFormFieldsPropControllerData,
+} from './table-form-fields'
+export type {
+  TableFormFieldsData,
+  TableFormFieldsDescriptor,
+  TableFormFieldsOptions,
+  TableFormFieldsPropControllerData,
+  ResolveTableFormFieldsPropControllerValue,
+} from './table-form-fields'
+export {
   TextArea,
   textAreaPropControllerDataSchema,
   getTextAreaPropControllerDataString,
