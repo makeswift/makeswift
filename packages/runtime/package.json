@@ -87,8 +87,8 @@
   "scripts": {
     "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'tsup --watch'",
     "clean": "rm -rf dist",
-    "build": "pnpm run clean && tsc && tsup",
-    "prepare": "pnpm build",
+    "build": "tsc && tsup",
+    "prepublishOnly": "turbo run build",
     "generate": "graphql-codegen --config codegen.yml",
     "test": "jest",
     "test:watch": "jest --watch",

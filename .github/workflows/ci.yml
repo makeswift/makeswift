@@ -36,7 +36,7 @@ jobs:
         run: pnpm install --ignore-scripts
 
       - name: Build
-        run: pnpm run build --filter=!./apps/**
+        run: pnpm run build
 
       - name: Test packages
         run: pnpm run test

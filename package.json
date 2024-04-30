@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "format": "prettier --write .",
-    "build": "turbo run build --filter=!./apps/*",
+    "build": "turbo run build --filter=!./apps/* --force --remote-only",
     "test": "turbo run test",
     "madge": "turbo run madge"
   },
@@ -11,6 +11,6 @@
     "@playwright/test": "^1.41.1",
     "@types/node": "^20.11.11",
     "prettier": "^2.7.1",
-    "turbo": "^1.4.3"
+    "turbo": "^1.13.3"
   }
 }
