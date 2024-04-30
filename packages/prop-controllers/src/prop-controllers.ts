@@ -5,6 +5,7 @@ export const Types = {
   BorderRadius: 'BorderRadius',
   Checkbox: 'Checkbox',
   Date: 'Date',
+  ElementID: 'ElementID',
   Font: 'Font',
   GapX: 'GapX',
   GapY: 'GapY',

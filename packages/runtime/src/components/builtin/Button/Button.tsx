@@ -9,7 +9,6 @@ import {
 import ColorHelper from 'color'
 
 import {
-  ElementIDValue,
   ResponsiveSelectValue,
   ResponsiveIconRadioGroupValue,
 } from '../../../prop-controllers/descriptors'
@@ -32,7 +31,7 @@ import {
 
 type BaseProps<T extends ElementType> = {
   as?: T
-  id?: ElementIDValue
+  id?: string
   children?: ReactNode
   link?: LinkData
   variant?: ResponsiveSelectValue<ButtonVariant>

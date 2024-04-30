@@ -2,6 +2,7 @@ import {
   Border,
   BorderRadius,
   Checkbox,
+  ElementID,
   GapX,
   GapY,
   Margin,
@@ -46,7 +47,7 @@ export function registerComponent(runtime: ReactRuntime) {
       type: MakeswiftComponentType.Box,
       label: 'Box',
       props: {
-        id: Props.ElementID(),
+        id: ElementID(),
         backgrounds: Props.Backgrounds(),
         width: Width({
           format: Width.Format.ClassName,

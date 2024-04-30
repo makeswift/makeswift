@@ -54,6 +54,19 @@ export type {
   ResolveDatePropControllerValue,
 } from './date'
 export {
+  ElementID,
+  elementIDPropControllerDataSchema,
+  getElementIDPropControllerDataElementID,
+  createElementIDPropControllerDataFromElementID,
+  copyElementIDPropControllerData,
+} from './element-id'
+export type {
+  ElementIDDescriptor,
+  ElementIDOptions,
+  ElementIDPropControllerData,
+  ResolveElementIDPropControllerValue,
+} from './element-id'
+export {
   Font,
   fontPropControllerDataSchema,
   getFontPropControllerDataResponsiveFontData,

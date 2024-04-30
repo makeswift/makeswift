@@ -1,4 +1,11 @@
-import { Link, Margin, ResponsiveColor, TextStyle, Width } from '@makeswift/prop-controllers'
+import {
+  ElementID,
+  Link,
+  Margin,
+  ResponsiveColor,
+  TextStyle,
+  Width,
+} from '@makeswift/prop-controllers'
 import { Props, ResponsiveSelectValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride } from '../../../state/modules/breakpoints'
@@ -13,7 +20,7 @@ export function registerComponent(runtime: ReactRuntime) {
       type: MakeswiftComponentType.Button,
       label: 'Button',
       props: {
-        id: Props.ElementID(),
+        id: ElementID(),
         children: Props.TextInput({ placeholder: 'Button text' }),
         link: Link({
           defaultValue: {

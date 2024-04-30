@@ -3,14 +3,14 @@ import { ForwardedRef, forwardRef } from 'react'
 import { Descendant, Text } from 'slate'
 import { useResponsiveStyle } from '../../../../components/utils/responsive-style'
 import { richTextDTOtoDAO } from '../../../../controls'
-import type { ElementIDValue, RichTextValue } from '../../../../prop-controllers/descriptors'
+import type { RichTextValue } from '../../../../prop-controllers/descriptors'
 import { Inline, InlineType, Block, BlockType } from '../../../../slate'
 import { useStyle } from '../../use-style'
 import useEnhancedTypography, { useTypographyClassName } from '../typography'
 import { Link } from '../../../../components/shared/Link'
 
 type Props = {
-  id?: ElementIDValue
+  id?: string
   text?: RichTextValue
   width?: string
   margin?: string

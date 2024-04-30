@@ -18,7 +18,6 @@ import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
 import { useBuilderEditMode } from '../../..'
 import { richTextDTOtoDAO } from '../../../../../controls'
 import { RichTextValue } from '../../../../../prop-controllers'
-import { ElementIDValue } from '../../../../../prop-controllers/descriptors'
 import { DescriptorsPropControllers } from '../../../../../prop-controllers/instances'
 import {
   RichTextDAO,
@@ -37,7 +36,7 @@ import { useSyncDOMSelection } from './useSyncDOMSelection'
 import { useSyncWithBuilder } from './useSyncWithBuilder'
 
 type Props = {
-  id?: ElementIDValue
+  id?: string
   text?: RichTextValue
   width?: string
   margin?: string

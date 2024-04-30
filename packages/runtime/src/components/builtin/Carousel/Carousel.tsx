@@ -18,7 +18,6 @@ import { useMediaQuery } from '../../hooks'
 
 import Image from '../Image'
 import {
-  ElementIDValue,
   ImagesValue,
   ResponsiveNumberValue,
   ResponsiveIconRadioGroupValue,
@@ -56,7 +55,7 @@ const RightChevron = () => (
 )
 
 type Props = {
-  id?: ElementIDValue
+  id?: string
   images?: ImagesValue
   width?: string
   margin?: string

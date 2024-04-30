@@ -1,6 +1,6 @@
 import { forwardRef, Ref } from 'react'
 
-import { ElementIDValue, ResponsiveSelectValue } from '../../../prop-controllers/descriptors'
+import { ResponsiveSelectValue } from '../../../prop-controllers/descriptors'
 import { colorToString } from '../../utils/colorToString'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { useStyle } from '../../../runtimes/react/use-style'
@@ -11,7 +11,7 @@ import { ResponsiveLengthData } from '@makeswift/prop-controllers'
 type DividerVariant = 'solid' | 'dashed' | 'dotted' | 'blended'
 
 type Props = {
-  id?: ElementIDValue
+  id?: string
   variant?: ResponsiveSelectValue<DividerVariant>
   thickness?: ResponsiveLengthData
   color?: ResponsiveColor | null

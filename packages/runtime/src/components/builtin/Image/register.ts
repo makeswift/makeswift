@@ -11,6 +11,7 @@ import {
   Margin,
   Padding,
   Width,
+  ElementID,
 } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
@@ -20,7 +21,7 @@ export function registerComponent(runtime: ReactRuntime) {
       type: MakeswiftComponentType.Image,
       label: 'Image',
       props: {
-        id: Props.ElementID(),
+        id: ElementID(),
         file: Props.Image(),
         altText: Props.TextInput({ label: 'Alt text' }),
         link: Link({ label: 'On click' }),

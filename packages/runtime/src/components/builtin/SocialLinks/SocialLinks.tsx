@@ -7,7 +7,6 @@ import { SocialLinksOptions, SocialLinksOptionType } from './options'
 import GutterContainer from '../../shared/GutterContainer'
 import SocialLinksPlaceholder from './components/SocialLinksPlaceholder'
 import {
-  ElementIDValue,
   ResponsiveIconRadioGroupValue,
   ResponsiveSelectValue,
 } from '../../../prop-controllers/descriptors'
@@ -18,7 +17,7 @@ import { useResponsiveStyle } from '../../utils/responsive-style'
 import { ResponsiveGapData, ResponsiveValue } from '@makeswift/prop-controllers'
 
 type Props = {
-  id?: ElementIDValue
+  id?: string
   links?: {
     links: { id: string; payload: { type: SocialLinksOptionType; url: string } }[]
     openInNewTab: boolean

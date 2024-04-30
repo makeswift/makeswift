@@ -1,9 +1,8 @@
-import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
-import { BorderRadius, Margin, Video, Width } from '@makeswift/prop-controllers'
+import { BorderRadius, ElementID, Margin, Video, Width } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -13,7 +12,7 @@ export function registerComponent(runtime: ReactRuntime) {
       label: 'Video',
       icon: ComponentIcon.Video,
       props: {
-        id: Props.ElementID(),
+        id: ElementID(),
         video: Video({ preset: { controls: true } }),
         width: Width({
           format: Width.Format.ClassName,

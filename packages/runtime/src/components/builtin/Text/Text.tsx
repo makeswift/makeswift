@@ -1,10 +1,9 @@
 import { cx } from '@emotion/css'
 import { forwardRef } from 'react'
-import { ElementIDValue } from '../../../prop-controllers/descriptors'
 import { RichTextV2ControlValue } from '../../../runtimes/react/controls/rich-text-v2'
 
 type Props = {
-  id?: ElementIDValue
+  id?: string
   text?: RichTextV2ControlValue
   width?: string
   margin?: string
