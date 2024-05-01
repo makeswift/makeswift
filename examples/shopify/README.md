@@ -103,7 +103,7 @@ NEXT_PUBLIC_SHOPIFY_STORE_NAME=makeswift-example
 NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
 ```
 
-If you are struggling to configure these env vars feel free to reach out in our [Discord](https://discord.com/invite/7dDpz6y) and we will be happy to help!
+If you are struggling to configure these env vars feel free to [reach out](mailto:support@makeswift.com) and we will be happy to help!
 
 ---
 
@@ -208,6 +208,5 @@ To learn more about Makeswift, take a look at the following resources:
 
 - [Makeswift Website](https://www.makeswift.com/)
 - [Makeswift Documentation](https://www.makeswift.com/docs/)
-- [Makeswift Discord Community](https://discord.gg/dGNdF3Uzfz)
 
 You can check out [the Makeswift GitHub repository](https://github.com/makeswift/makeswift) - your feedback and contributions are welcome!

@@ -48,7 +48,7 @@ With the NFT drop component selected, paste your NFT drop contract address from 
 
 > If you don't have an NFT drop contract, [read this guide](https://portal.thirdweb.com/guides/release-an-nft-drop-with-no-code#create-a-drop-contract) to learn how to create one using Thirdweb without any code.
 
-If you are struggling with this example reach out in our [Discord](https://discord.com/invite/7dDpz6y) and we will be happy to help!
+If you are struggling with this example feel free to [reach out](mailto:support@makeswift.com) and we will be happy to help!
 
 ---
 
@@ -60,6 +60,5 @@ To learn more about Makeswift, take a look at the following resources:
 
 - [Makeswift Website](https://www.makeswift.com/)
 - [Makeswift Documentation](https://www.makeswift.com/docs/)
-- [Makeswift Discord Community](https://discord.gg/dGNdF3Uzfz)
 
 You can check out [the Makeswift GitHub repository](https://github.com/makeswift/makeswift) - your feedback and contributions are welcome!
