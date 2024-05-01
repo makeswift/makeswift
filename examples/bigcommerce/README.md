@@ -170,7 +170,7 @@ BIGCOMMERCE_CUSTOMER_IMPERSONATION_TOKEN="eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.e
 BIGCOMMERCE_CHANNEL_ID=1536289
 ```
 
-If you are struggling to configure these env vars feel free to reach out in our [Discord](https://discord.com/invite/7dDpz6y) and we will be happy to help!
+If you are struggling to configure these env vars feel free to [reach out](mailto:support@makeswift.com) and we will be happy to help!
 
 ---
 
@@ -279,6 +279,5 @@ To learn more about Makeswift, take a look at the following resources:
 
 - [Makeswift Website](https://www.makeswift.com/)
 - [Makeswift Documentation](https://www.makeswift.com/docs/)
-- [Makeswift Discord Community](https://discord.gg/dGNdF3Uzfz)
 
 You can check out [the Makeswift GitHub repository](https://github.com/makeswift/makeswift) - your feedback and contributions are welcome!
