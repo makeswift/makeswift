@@ -9,6 +9,7 @@ import {
   Grid,
   Margin,
   Padding,
+  ResponsiveNumber,
   Shadows,
   Width,
 } from '@makeswift/prop-controllers'
@@ -117,7 +118,7 @@ export function registerComponent(runtime: ReactRuntime) {
           ],
           defaultValue: 'none',
         }),
-        boxAnimateDuration: Props.ResponsiveNumber((props, device) => ({
+        boxAnimateDuration: ResponsiveNumber((props, device) => ({
           label: 'Box duration',
           defaultValue: DEFAULT_BOX_ANIMATE_DURATION,
           min: 0.1,
@@ -125,7 +126,7 @@ export function registerComponent(runtime: ReactRuntime) {
           suffix: 's',
           hidden: isHiddenBasedOnBoxAnimation(props, device),
         })),
-        boxAnimateDelay: Props.ResponsiveNumber((props, device) => ({
+        boxAnimateDelay: ResponsiveNumber((props, device) => ({
           label: 'Box delay',
           defaultValue: DEFAULT_BOX_ANIMATE_DELAY,
           min: 0,
@@ -149,7 +150,7 @@ export function registerComponent(runtime: ReactRuntime) {
           ],
           defaultValue: 'none',
         }),
-        itemAnimateDuration: Props.ResponsiveNumber((props, device) => ({
+        itemAnimateDuration: ResponsiveNumber((props, device) => ({
           label: 'Items duration',
           defaultValue: DEFAULT_BOX_ANIMATE_DURATION,
           min: 0.1,
@@ -157,7 +158,7 @@ export function registerComponent(runtime: ReactRuntime) {
           suffix: 's',
           hidden: isHiddenBasedOnItemAnimation(props, device),
         })),
-        itemAnimateDelay: Props.ResponsiveNumber((props, device) => ({
+        itemAnimateDelay: ResponsiveNumber((props, device) => ({
           label: 'Items delay',
           defaultValue: DEFAULT_ITEM_ANIMATE_DELAY,
           min: 0,
@@ -165,7 +166,7 @@ export function registerComponent(runtime: ReactRuntime) {
           suffix: 's',
           hidden: isHiddenBasedOnItemAnimation(props, device),
         })),
-        itemStaggerDuration: Props.ResponsiveNumber((props, device) => ({
+        itemStaggerDuration: ResponsiveNumber((props, device) => ({
           label: 'Stagger',
           min: 0,
           step: 0.05,

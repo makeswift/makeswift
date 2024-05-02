@@ -74,6 +74,8 @@ import {
   getWidthPropControllerDataResponsiveLengthData,
   WidthPropControllerFormat,
   WidthDescriptor,
+  GapX,
+  ResponsiveNumber,
 } from '@makeswift/prop-controllers'
 import { useResponsiveLengthPropControllerData } from '../../components/hooks/useResponsiveLengthPropControllerData'
 import { useNumberPropControllerData } from '../../components/hooks/useNumberPropControllerData'
@@ -81,7 +83,7 @@ import { useResponsiveColorPropControllerData } from '../../components/hooks/use
 import { useTextStylePropControllerData } from '../../components/hooks/useTextStylePropControllerData'
 import { useNavigationLinksPropControllerData } from '../../components/hooks/useNavigationLinksPropControllerData'
 import { useTextAreaPropControllerData } from '../../components/hooks/useTextAreaPropControllerData'
-import { useGapXPropControllerData } from '../../components/hooks/useGapXPropControllerData'
+import { usePropValue } from '../../components/hooks/usePropValue'
 import { useGapYPropControllerData } from '../../components/hooks/useGapYPropControllerData'
 import { useElementIDPropControllerData } from '../../components/hooks/useElementIDPropControllerData'
 import { useTableFormFieldsPropControllerData } from '../../components/hooks/useTableFormFieldsPropControllerData'
@@ -365,6 +367,17 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
               </RenderHook>
             )
 
+          case PropControllerTypes.ResponsiveNumber:
+            return (
+              <RenderHook
+                key={descriptor.type}
+                hook={data => usePropValue(ResponsiveNumber, data)}
+                parameters={[props[propName]]}
+              >
+                {value => renderFn({ ...propsValue, [propName]: value })}
+              </RenderHook>
+            )
+
           case PropControllerTypes.ResponsiveLength:
             return (
               <RenderHook
@@ -532,7 +545,7 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
             return (
               <RenderHook
                 key={descriptor.type}
-                hook={useGapXPropControllerData}
+                hook={data => usePropValue(GapX, data)}
                 parameters={[props[propName]]}
               >
                 {value => renderFn({ ...propsValue, [propName]: value })}

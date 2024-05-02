@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { AssociatedType } from './utils/associated-types'
 
 export const Types = {
   Backgrounds: 'Backgrounds',
@@ -21,6 +22,7 @@ export const Types = {
   Shadows: 'Shadows',
   ResponsiveColor: 'ResponsiveColor',
   ResponsiveLength: 'ResponsiveLength',
+  ResponsiveNumber: 'ResponsiveNumber',
   TextArea: 'TextArea',
   Table: 'Table',
   TableFormFields: 'TableFormFields',
@@ -35,11 +37,8 @@ export type Options<T> =
   | T
   | ((props: Record<string, unknown>, deviceMode: Device) => T)
 
-export type ResolveOptions<T extends Options<unknown>> = T extends Options<
-  infer U
->
-  ? U
-  : never
+export type ResolveOptions<T extends Options<unknown>> =
+  T extends Options<infer U> ? U : never
 
 const deviceSchema = z.string()
 
@@ -64,9 +63,8 @@ export function createResponsiveValueSchema<T extends z.ZodTypeAny>(
 
 export type ResponsiveValue<T> = DeviceOverride<T>[]
 
-export type ResponsiveValueType<T> = T extends ResponsiveValue<infer U>
-  ? U
-  : never
+export type ResponsiveValueType<T> =
+  T extends ResponsiveValue<infer U> ? U : never
 
 export type Color = { swatchId: string; alpha: number }
 
@@ -127,3 +125,13 @@ export type CopyContext = {
   replacementContext: ReplacementContext
   copyElement: (node: Element) => Element
 }
+
+export type PropType<T> = AssociatedType<T, 'Type'>
+export type PropData<T> = AssociatedType<T, 'PropData'>
+export type Value<T> = AssociatedType<T, 'Value'>
+export type Descriptor<T> = AssociatedType<T, 'Descriptor'>
+export type Discriminator<T> = AssociatedType<T, 'Discriminator'>
+export type OptionsType<T> = AssociatedType<Descriptor<T>, 'Options'>
+
+export type PrimitiveValue<T> =
+  Value<T> extends ResponsiveValue<infer U> ? U : Value<T>

@@ -1,10 +1,10 @@
 import { cx } from '@emotion/css'
 import { ComponentPropsWithoutRef } from 'react'
-import { ResponsiveValue, ResponsiveNumberValue } from '../../prop-controllers'
+import { ResponsiveValue } from '../../prop-controllers'
 import { useStyle } from '../../runtimes/react/use-style'
 import { useItemAnimation } from '../builtin/Box/animations'
 import { useResponsiveGridItem } from '../utils/responsive-style'
-import { LengthData } from '@makeswift/prop-controllers'
+import { type LengthData, type ResponsiveNumberValue } from '@makeswift/prop-controllers'
 
 type BaseProps = {
   className?: string

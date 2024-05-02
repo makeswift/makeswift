@@ -104,12 +104,14 @@ export class ReactRuntime {
       unregisterReactComponent()
     }
   }
+
   copyElementTree(
     elementTree: ElementData,
     replacementContext: SerializableReplacementContext,
   ): Element {
     return copyElementTree(this.store.getState(), elementTree, replacementContext)
   }
+
   getBreakpoints(): Breakpoints {
     return getBreakpoints(this.store.getState())
   }
