@@ -57,3 +57,9 @@ export type ImageDataV1 = z.infer<typeof imageDataV1Schema>
 export const imageDataSchema = z.union([imageDataV0Schema, imageDataV1Schema])
 
 export type ImageData = z.infer<typeof imageDataSchema>
+
+export const responsiveNumberValueSchema = createResponsiveValueSchema(
+  z.number(),
+)
+
+export type ResponsiveNumberValue = z.infer<typeof responsiveNumberValueSchema>
