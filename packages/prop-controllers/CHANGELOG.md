@@ -1,5 +1,12 @@
 # @makeswift/prop-controllers
 
+## 0.2.0-canary.0
+
+### Minor Changes
+
+- f5c3617: Add data type to legacy `TableFormFields` prop controller and move it to `@makeswift/prop-controllers`.
+- 092784c: Add data type to legacy `ElementID` prop controller and move it to `@makeswift/prop-controllers`.
+
 ## 0.1.1
 
 ### Patch Changes
