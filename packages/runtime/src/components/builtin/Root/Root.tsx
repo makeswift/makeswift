@@ -1,17 +1,15 @@
 import { normalize } from 'polished'
 import { forwardRef, Ref } from 'react'
 
-import Placeholder from './components/Placeholder'
-import type { GridValue, BackgroundsValue } from '../../../prop-controllers/descriptors'
-import { Element } from '../../../runtimes/react'
+import type { BackgroundsValue } from '../../../prop-controllers/descriptors'
 import BackgroundsContainer from '../../shared/BackgroundsContainer'
 import { useGlobalStyle } from '../../../runtimes/react/use-global-style'
-import { GridItem } from '../../shared/grid-item'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { ResponsiveGapData } from '@makeswift/prop-controllers'
+import { SlotControlValue } from '../../../runtimes/react/controls/slot'
 
 type Props = {
-  children?: GridValue
+  children?: SlotControlValue
   backgrounds?: BackgroundsValue
   rowGap?: ResponsiveGapData
   columnGap?: ResponsiveGapData
@@ -35,21 +33,7 @@ const Root = forwardRef(function Page(
   return (
     <BackgroundsContainer ref={ref} style={{ background: 'white' }} backgrounds={backgrounds}>
       <div className={useStyle({ display: 'flex', flexWrap: 'wrap', width: '100%' })}>
-        {children && children.elements.length > 0 ? (
-          children.elements.map((child, index) => (
-            <GridItem
-              key={child.key}
-              grid={children.columns}
-              index={index}
-              columnGap={columnGap}
-              rowGap={rowGap}
-            >
-              <Element element={child} />
-            </GridItem>
-          ))
-        ) : (
-          <Placeholder />
-        )}
+        {children}
       </div>
     </BackgroundsContainer>
   )

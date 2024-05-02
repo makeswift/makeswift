@@ -1,7 +1,6 @@
 import {
   BackgroundsValue,
   Descriptor,
-  GridValue,
   ImagesValue,
   ImageValue,
   RichTextValue,
@@ -21,6 +20,7 @@ import {
   getShapePageIds,
   getShapeSwatchIds,
   getShapeTypographyIds,
+  getSlotControlElementChildren,
   getTypographySwatchIds,
   getTypographyTypographyIds,
   ImageControlData,
@@ -74,19 +74,18 @@ import {
   getElementIDPropControllerDataElementID,
   ElementIDPropControllerData,
 } from '@makeswift/prop-controllers'
+import { DELETED_PROP_CONTROLLER_TYPES, DeletedPropControllerDescriptor } from './deleted'
 
 export function getElementChildren<T extends Data>(
-  descriptor: Descriptor<T>,
+  descriptor: Descriptor<T> | DeletedPropControllerDescriptor<T>,
   prop: T | undefined,
 ): Element[] {
   if (prop == null) return []
 
   switch (descriptor.type) {
-    case Types.Grid:
-      return (prop as GridValue).elements
-
+    case DELETED_PROP_CONTROLLER_TYPES.Grid:
     case SlotControlType:
-      return (prop as SlotControlData).elements
+      return getSlotControlElementChildren(prop as SlotControlData | undefined)
 
     case ListControlType:
       return (prop as ListControlData).flatMap(({ value }) =>

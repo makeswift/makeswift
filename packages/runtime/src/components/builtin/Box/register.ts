@@ -23,6 +23,7 @@ import {
 } from './constants'
 import { lazy } from 'react'
 import { ResponsiveSelectValue } from '../../../prop-controllers/descriptors'
+import { Slot } from '../../../controls'
 
 export function registerComponent(runtime: ReactRuntime) {
   function isHiddenBasedOnAnimationType(
@@ -175,7 +176,7 @@ export function registerComponent(runtime: ReactRuntime) {
           label: 'Hide placeholder',
           hidden: props.children != null,
         })),
-        children: Props.Grid(),
+        children: Slot(),
       },
     },
   )

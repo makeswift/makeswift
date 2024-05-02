@@ -42,7 +42,6 @@ import {
 } from '../../prop-controllers'
 import {
   DELETED_PROP_CONTROLLER_TYPES,
-  DeletedPropControllerDescriptor,
   ListDescriptor as ListControl,
   ListOptions as ListControlConfig,
   ListValue as ListControlValue,
@@ -993,7 +992,7 @@ type DeserializedPanelControlValueType<T extends DeserializedPanelControl> =
   T extends DeserializedPanelControl<infer U> ? U : never
 
 export function serializeControl<T extends Data>(
-  control: Control<T> | DeletedPropControllerDescriptor<T>,
+  control: Control<T>,
 ): [SerializedControl<T>, Transferable[]] {
   switch (control.type) {
     case PropControllerTypes.Checkbox:

@@ -1,15 +1,29 @@
+import { ResponsiveValue } from '../controls/types'
 import { Data, DescriptorValueType, PanelDescriptor } from './descriptors'
 
 export const DELETED_PROP_CONTROLLER_TYPES = {
+  Grid: 'Grid',
   List: 'List',
   Shape: 'Shape',
   Typeahead: 'Typeahead',
 } as const
 
 export type DeletedPropControllerDescriptor<T extends Data = Data> =
+  | GridDescriptor<T>
   | ListDescriptor<T extends ListValue ? T : ListValue>
   | ShapeDescriptor<T extends ShapeValue ? T : ShapeValue, any>
   | TypeaheadDescriptor<T extends TypeaheadValue ? T : TypeaheadValue>
+
+type GridColumn = { count: number; spans: number[][] }
+
+export type GridValue = { elements: Element[]; columns: ResponsiveValue<GridColumn> }
+
+type GridOptions = Record<string, never>
+
+type GridDescriptor<_T = GridValue> = {
+  type: typeof DELETED_PROP_CONTROLLER_TYPES.Grid
+  options: GridOptions
+}
 
 type ListValueItem<T extends Data> = { id: string; value?: T }
 

@@ -1,5 +1,10 @@
 import { ComponentPropsWithoutRef, ElementType, ReactNode, useEffect, useState } from 'react'
-import { SlotControl, SlotControlData } from '../../../controls'
+import {
+  SlotControl,
+  SlotControlData,
+  SlotData,
+  getSlotControlDataSlotData,
+} from '../../../controls'
 
 import { Element } from '../components/Element'
 import { getIndexes } from '../../../components/utils/columns'
@@ -10,7 +15,8 @@ import { pollBoxModel } from '../poll-box-model'
 
 export type SlotControlValue = ReactNode
 
-export function useSlot(data: SlotControlData, control: SlotControl | null) {
+export function useSlot(_data: SlotControlData, control: SlotControl | null) {
+  const data = getSlotControlDataSlotData(_data)
   // TODO(miguel): While the UI shouldn't allow the state, we should probably check that at least
   // one element is visible.
   if (data == null || data.elements.length === 0) {
@@ -73,7 +79,7 @@ Slot.Item = SlotItem
 type SlotItemProps<T extends ElementType> = {
   as?: T
   control: SlotControl | null
-  grid: SlotControlData['columns']
+  grid: SlotData['columns']
   index: number
   children?: ReactNode
   className?: string

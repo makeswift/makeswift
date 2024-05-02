@@ -31,21 +31,15 @@ import {
 } from './text-input'
 import { copyStyleData, StyleControlData, StyleControlDefinition, StyleControlType } from './style'
 import {
-  copySlotData,
+  copySlotControlData,
   mergeSlotControlTranslatedData,
-  mergeSlotData,
+  mergeSlotControlData,
   SlotControlData,
   SlotControlDefinition,
   SlotControlType,
 } from './slot'
 
-import {
-  Descriptor,
-  GridValue,
-  IndexSignatureHack,
-  Types,
-  mergeGridPropControllerTranslatedData,
-} from '../prop-controllers/descriptors'
+import { Descriptor, IndexSignatureHack, Types } from '../prop-controllers/descriptors'
 import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
 import { copy as propControllerCopy } from '../prop-controllers/copy'
 import { CopyContext, Data, MergeContext, MergeTranslatableDataContext } from '../state/react-page'
@@ -56,7 +50,7 @@ import {
   copyRichTextData,
   richTextDTOtoDAO,
 } from './rich-text'
-import { PropControllerDescriptor } from '../prop-controllers'
+import { DELETED_PROP_CONTROLLER_TYPES, PropControllerDescriptor } from '../prop-controllers'
 
 import { richTextV2DescendentsToData } from './rich-text-v2/dto'
 import { copyRichTextV2Data } from './rich-text-v2/copy'
@@ -136,7 +130,6 @@ export type ControlDefinitionData<T extends ControlDefinition> = T extends Check
 export function copy(definition: Descriptor | ControlDefinition, value: any, context: CopyContext) {
   switch (definition.type) {
     case Types.Backgrounds:
-    case Types.Grid:
     case PropControllerTypes.NavigationLinks:
     case PropControllerTypes.Link:
     case PropControllerTypes.Shadows:
@@ -168,8 +161,9 @@ export function copy(definition: Descriptor | ControlDefinition, value: any, con
       return copyListData(definition, value, context)
     case StyleControlType:
       return copyStyleData(value, context)
+    case DELETED_PROP_CONTROLLER_TYPES.Grid:
     case SlotControlType:
-      return copySlotData(value, context)
+      return copySlotControlData(value, context)
     default:
       return value
   }
@@ -183,7 +177,7 @@ export function merge(
 ): Data {
   switch (definition.type) {
     case SlotControlType:
-      return mergeSlotData(a as SlotControlData, b as SlotControlData, context)
+      return mergeSlotControlData(definition, a as SlotControlData, b as SlotControlData, context)
 
     default:
       return b
@@ -237,9 +231,7 @@ export function mergeTranslatedData(
 
       return translatedData
 
-    case Types.Grid:
-      return mergeGridPropControllerTranslatedData(data as GridValue, context)
-
+    case DELETED_PROP_CONTROLLER_TYPES.Grid:
     case SlotControlType:
       return mergeSlotControlTranslatedData(data as SlotControlData, context)
 

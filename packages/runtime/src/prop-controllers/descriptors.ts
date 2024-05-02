@@ -1,6 +1,6 @@
 import { ResponsiveColor } from '../runtimes/react/controls'
 import { StyleControlFormattedValue } from '../runtimes/react/controls/style'
-import type { Element, Data, MergeTranslatableDataContext } from '../state/react-page'
+import type { Data } from '../state/react-page'
 import { NumberControlDefinition } from '../controls/number'
 import { NumberControlValue } from '../runtimes/react/controls/number'
 import { StyleControlType } from '../controls/style'
@@ -90,6 +90,7 @@ import {
   TableFormFieldsDescriptor,
   ResolveTableFormFieldsPropControllerValue,
 } from '@makeswift/prop-controllers'
+import { DeletedPropControllerDescriptor } from './deleted'
 
 export type { Data }
 
@@ -133,7 +134,6 @@ export type Gap = { value: number; unit: 'px' }
 
 export const Types = {
   Backgrounds: 'Backgrounds',
-  Grid: 'Grid',
   Image: 'Image',
   Images: 'Images',
   ResponsiveIconRadioGroup: 'ResponsiveIconRadioGroup',
@@ -220,32 +220,6 @@ export type BackgroundsDescriptor<_T = BackgroundsValue> = {
  */
 export function Backgrounds(options: BackgroundsOptions = {}): BackgroundsDescriptor {
   return { type: Types.Backgrounds, version: 1, options }
-}
-
-type GridColumn = { count: number; spans: number[][] }
-
-export type GridValue = { elements: Element[]; columns: ResponsiveValue<GridColumn> }
-
-type GridOptions = Options<Record<string, never>>
-
-type GridDescriptor<_T = GridValue> = { type: typeof Types.Grid; options: GridOptions }
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Grid(options: GridOptions = {}): GridDescriptor {
-  return { type: Types.Grid, options }
-}
-
-export function mergeGridPropControllerTranslatedData(
-  data: GridValue,
-  context: MergeTranslatableDataContext,
-) {
-  return {
-    ...data,
-    elements: data.elements.map(element => context.mergeTranslatedData(element)),
-  }
 }
 
 export type ImageValueV0 = string
@@ -533,6 +507,7 @@ export function TextInput(options: TextInputOptions = {}): TextInputDescriptor {
 }
 
 export type Descriptor<T extends Data = Data> =
+  | DeletedPropControllerDescriptor<T>
   | BackgroundsDescriptor<T>
   | BorderDescriptor<T>
   | BorderRadiusDescriptor<T>
@@ -542,7 +517,6 @@ export type Descriptor<T extends Data = Data> =
   | FontDescriptor<T>
   | GapXDescriptor<T>
   | GapYDescriptor<T>
-  | GridDescriptor<T>
   | ImageDescriptor<T>
   | ImagesDescriptor<T>
   | LinkDescriptor<T>

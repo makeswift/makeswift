@@ -3,6 +3,7 @@ import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../react'
 import { MakeswiftComponentType } from '../constants'
 import { lazy } from 'react'
+import { Slot } from '../../../controls'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -12,7 +13,7 @@ export function registerComponent(runtime: ReactRuntime) {
       label: 'Page',
       hidden: true,
       props: {
-        children: Props.Grid(),
+        children: Slot(),
         backgrounds: Props.Backgrounds(),
         rowGap: GapY(),
         columnGap: GapX(),

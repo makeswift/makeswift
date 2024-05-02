@@ -17,7 +17,6 @@ import Placeholder from './components/Placeholder'
 import { areBoxAnimationPropsEqual, BoxAnimationProps, useBoxAnimation } from './animations'
 import {
   ResponsiveIconRadioGroupValue,
-  GridValue,
   BackgroundsValue,
 } from '../../../prop-controllers/descriptors'
 import { BoxModelHandle, parse, createBox } from '../../../box-model'
@@ -26,6 +25,7 @@ import { useResponsiveStyle } from '../../utils/responsive-style'
 import { GridItem } from '../../shared/grid-item'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { ResponsiveGapData } from '@makeswift/prop-controllers'
+import { SlotControlValue } from '../../../runtimes/react/controls/slot'
 
 type Props = {
   id?: string
@@ -43,7 +43,7 @@ type Props = {
   rowGap?: ResponsiveGapData
   columnGap?: ResponsiveGapData
   hidePlaceholder?: boolean
-  children?: GridValue
+  children?: SlotControlValue
 } & BoxAnimationProps
 
 const Box = forwardRef(function Box(
@@ -182,25 +182,7 @@ const Box = forwardRef(function Box(
           ),
         )}
       >
-        {children && children.elements.length > 0 ? (
-          children.elements.map((child, index) => (
-            <GridItem
-              key={child.key}
-              className={gridItemClassName}
-              grid={children.columns}
-              index={index}
-              itemAnimateDuration={itemAnimateDuration}
-              itemAnimateDelay={itemAnimateDelay}
-              itemStaggerDuration={itemStaggerDuration}
-              columnGap={columnGap}
-              rowGap={rowGap}
-            >
-              <Element element={child} />
-            </GridItem>
-          ))
-        ) : (
-          <Placeholder hide={hidePlaceholder} />
-        )}
+        {children}
       </div>
     </BackgroundsContainer>
   )
