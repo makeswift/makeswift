@@ -1,0 +1,17 @@
+{
+  "mode": "pre",
+  "tag": "canary",
+  "initialVersions": {
+    "nextjs-app-router": "0.1.0",
+    "nextjs-pages-router": "0.1.0",
+    "makeswift": "0.2.5",
+    "@makeswift/next-plugin": "0.3.0",
+    "@makeswift/prop-controllers": "0.1.1",
+    "@makeswift/runtime": "0.16.1",
+    "tsconfig": "0.0.0"
+  },
+  "changesets": [
+    "eleven-items-grow",
+    "quick-wombats-nail"
+  ]
+}
