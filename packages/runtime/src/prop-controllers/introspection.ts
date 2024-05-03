@@ -4,7 +4,6 @@ import {
   GridValue,
   ImagesValue,
   ImageValue,
-  RichTextValue,
   Types,
 } from './descriptors'
 import { Data, Element } from '../state/react-page'
@@ -31,6 +30,7 @@ import {
   ListControlType,
   RichTextControlData,
   RichTextControlType,
+  RichTextValue,
   ShapeControlData,
   ShapeControlType,
   SlotControlData,
@@ -74,6 +74,7 @@ import {
   getElementIDPropControllerDataElementID,
   ElementIDPropControllerData,
 } from '@makeswift/prop-controllers'
+import { DELETED_PROP_CONTROLLER_TYPES } from './deleted'
 
 export function getElementChildren<T extends Data>(
   descriptor: Descriptor<T>,
@@ -165,7 +166,7 @@ export function getSwatchIds<T extends Data>(
       return getShadowsPropControllerDataSwatchIds(prop as ShadowsPropControllerData)
 
     case RichTextControlType:
-    case Types.RichText: {
+    case DELETED_PROP_CONTROLLER_TYPES.RichText: {
       return getRichTextSwatchIds(prop as RichTextValue)
     }
 
@@ -285,7 +286,7 @@ export function getTypographyIds<T extends Data>(
       return getTypographyTypographyIds(prop as TypographyControlData[number])
     }
     case RichTextControlType:
-    case Types.RichText: {
+    case DELETED_PROP_CONTROLLER_TYPES.RichText: {
       return getRichTextTypographyIds(prop as RichTextControlData)
     }
 
@@ -356,7 +357,7 @@ export function getPageIds<T extends Data>(
     }
 
     case RichTextControlType:
-    case Types.RichText: {
+    case DELETED_PROP_CONTROLLER_TYPES.RichText: {
       return getRichTextPageIds(prop as RichTextControlData)
     }
 

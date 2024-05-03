@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Editor } from 'slate'
 import { useIsInBuilder } from '../../../../../react'
-import { richTextDTOtoDAO, richTextDTOtoSelection } from '../../../../../controls'
-import { RichTextValue } from '../../../../../prop-controllers'
+import { RichTextValue, richTextDTOtoDAO, richTextDTOtoSelection } from '../../../../../controls'
 import deepEqual from '../../../../../utils/deepEqual'
 
 const COMMIT_DEBOUNCE_DELAY = 500

@@ -1,6 +1,6 @@
-import { RichTextValue } from '../descriptors'
 import { copy } from './rich-text'
 import { ReplacementContext } from '../../state/react-page'
+import { RichTextValue } from '../../controls'
 
 describe('rich text copy', () => {
   test('replaces the swatch id', () => {

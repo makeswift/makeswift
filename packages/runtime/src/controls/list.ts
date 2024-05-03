@@ -34,11 +34,11 @@ import { ComboboxControlData, ComboboxControlDefinition } from './combobox'
 import { ShapeControlDefinition } from './shape'
 import { LinkControlData, LinkControlDefinition } from './link'
 import { RichTextControlData, RichTextControlDefinition } from './rich-text'
-import { IndexSignatureHack } from '../prop-controllers/descriptors'
 import { RichTextV2ControlData, RichTextV2ControlDefinition } from './rich-text-v2'
 import { StyleControlData, StyleControlDefinition } from './style'
 import { StyleV2ControlData, StyleV2ControlDefinition } from './style-v2'
 import { TypographyControlData, TypographyControlDefinition } from './typography'
+import { IndexSignatureHack } from '../utils/index-signature-hack'
 
 export type GetItemLabelControlData<T extends ControlDefinition> = T extends CheckboxControlDefinition
   ? boolean

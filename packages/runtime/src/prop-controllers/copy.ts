@@ -17,6 +17,7 @@ import {
   copyTablePropControllerData,
   copyNavigationLinksPropControllerData,
 } from '@makeswift/prop-controllers'
+import { DELETED_PROP_CONTROLLER_TYPES } from './deleted'
 
 // @note: note typing value, because would then have to type narrow `Data` per case
 export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
@@ -43,7 +44,7 @@ export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
       return copyTablePropControllerData(value, context)
     case PropControllerTypes.Border:
       return copyBorderPropControllerData(value, context)
-    case 'RichText':
+    case DELETED_PROP_CONTROLLER_TYPES.RichText:
       return richTextCopy(value, context)
     case 'ElementID':
       return elementIdCopy(value, context)

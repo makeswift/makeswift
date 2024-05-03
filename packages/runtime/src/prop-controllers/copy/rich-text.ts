@@ -1,6 +1,5 @@
-import { NodeJSON, InlineJSON, MarkJSON } from '../../controls'
+import { NodeJSON, InlineJSON, MarkJSON, RichTextValue } from '../../controls'
 import { CopyContext } from '../../state/react-page'
-import { RichTextValue } from '../descriptors'
 
 export function copy(
   value: RichTextValue | undefined,

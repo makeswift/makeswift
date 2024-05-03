@@ -32,7 +32,7 @@ import { ListControlValue } from '../runtimes/react/controls/list'
 import { ComboboxControlValue } from '../runtimes/react/controls/combobox'
 import { LinkControlValue } from '../runtimes/react/controls/link'
 import { SlotControlValue } from '../runtimes/react/controls/slot'
-import { RichTextControlDefinition, RichTextDTO } from '../controls/rich-text'
+import { RichTextControlDefinition } from '../controls/rich-text'
 import { RichTextControlValue } from '../runtimes/react/controls/rich-text/rich-text'
 import { RichTextV2ControlValue } from '../runtimes/react/controls/rich-text-v2'
 import { StyleV2ControlFormattedValue } from '../runtimes/react/controls/style-v2'
@@ -90,13 +90,9 @@ import {
   TableFormFieldsDescriptor,
   ResolveTableFormFieldsPropControllerValue,
 } from '@makeswift/prop-controllers'
+import { DeletedPropControllerDescriptor } from './deleted'
 
 export type { Data }
-
-// See https://github.com/microsoft/TypeScript/issues/15300
-export type IndexSignatureHack<T> = T extends Record<string, any>
-  ? { [K in keyof T]: IndexSignatureHack<T[K]> }
-  : T
 
 type IconName =
   | 'HeightAuto16'
@@ -140,7 +136,6 @@ export const Types = {
   ResponsiveNumber: 'ResponsiveNumber',
   ResponsiveOpacity: 'ResponsiveOpacity',
   ResponsiveSelect: 'ResponsiveSelect',
-  RichText: 'RichText',
   SocialLinks: 'SocialLinks',
   TextInput: 'TextInput',
   Style: StyleControlType,
@@ -436,23 +431,6 @@ export function ResponsiveSelect<_T extends string, T extends _T, U extends T>(
   return { type: Types.ResponsiveSelect, options }
 }
 
-export type RichTextValue = IndexSignatureHack<RichTextDTO>
-
-export type RichTextOptions = Options<{ preset?: RichTextValue }>
-
-export type RichTextDescriptor<_T extends Data = RichTextValue> = {
-  type: typeof Types.RichText
-  options: RichTextOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function RichText(options: RichTextOptions = {}): RichTextDescriptor {
-  return { type: Types.RichText, options }
-}
-
 export const socialLinkTypesV0 = [
   'angellist',
   'codepen',
@@ -533,6 +511,7 @@ export function TextInput(options: TextInputOptions = {}): TextInputDescriptor {
 }
 
 export type Descriptor<T extends Data = Data> =
+  | DeletedPropControllerDescriptor<T>
   | BackgroundsDescriptor<T>
   | BorderDescriptor<T>
   | BorderRadiusDescriptor<T>
@@ -560,7 +539,6 @@ export type Descriptor<T extends Data = Data> =
   | ResponsiveSelectDescriptor<
       T extends ResponsiveSelectValue<string> ? T : ResponsiveSelectValue<string>
     >
-  | RichTextDescriptor<T>
   | ShadowsDescriptor<T>
   | SocialLinksDescriptor<T>
   | TableDescriptor<T>
@@ -612,7 +590,6 @@ export type PanelDescriptorType =
   | typeof PropControllerTypes.Font
   | typeof PropControllerTypes.TextArea
   | typeof PropControllerTypes.Table
-  | typeof Types.RichText
   | typeof Types.Image
   | typeof Types.ResponsiveOpacity
   | typeof Types.SocialLinks
