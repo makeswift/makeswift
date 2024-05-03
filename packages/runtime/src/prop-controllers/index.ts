@@ -21,8 +21,6 @@ export type {
   ImageBackground,
   BackgroundsDescriptor,
   BackgroundImage,
-  RichTextDescriptor,
-  RichTextValue,
   TextInputDescriptor,
   TextInputValue,
   PanelDescriptor,

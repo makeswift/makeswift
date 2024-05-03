@@ -18,6 +18,7 @@ import {
   ShapeControlType,
   StyleV2ControlDefinition,
   StyleV2ControlType,
+  RichTextValue as RichTextControlValue,
 } from '../../controls'
 import {
   Data,
@@ -30,8 +31,6 @@ import {
   ResponsiveIconRadioGroupValue as ResponsiveIconRadioGroupControlValue,
   ResponsiveSelectDescriptor as ResponsiveSelectControl,
   ResponsiveSelectValue as ResponsiveSelectControlValue,
-  RichTextDescriptor as RichTextControl,
-  RichTextValue as RichTextControlValue,
   TextInputDescriptor as TextInputControl,
   TextInputValue as TextInputControlValue,
   PanelDescriptor as PanelControl,
@@ -42,7 +41,6 @@ import {
 } from '../../prop-controllers'
 import {
   DELETED_PROP_CONTROLLER_TYPES,
-  DeletedPropControllerDescriptor,
   ListDescriptor as ListControl,
   ListOptions as ListControlConfig,
   ListValue as ListControlValue,
@@ -51,6 +49,7 @@ import {
   TypeaheadDescriptor as TypeaheadControl,
   TypeaheadOptions as TypeaheadControlConfig,
   TypeaheadValue as TypeaheadControlValue,
+  RichTextDescriptor as RichTextControl,
 } from '../../prop-controllers/deleted'
 import {
   IconRadioGroupOption,
@@ -833,7 +832,7 @@ function deserializeImageControl(
 type RichTextControlConfig = { preset?: RichTextControlValue }
 
 type SerializedRichTextControl<_T = RichTextControlValue> = {
-  type: typeof Controls.Types.RichText
+  type: typeof DELETED_PROP_CONTROLLER_TYPES.RichText
   options: SerializedConfig<RichTextControlConfig>
 }
 
@@ -850,7 +849,7 @@ function serializeRichTextControl(
 }
 
 type DeserializedRichTextControl<_T = RichTextControlValue> = {
-  type: typeof Controls.Types.RichText
+  type: typeof DELETED_PROP_CONTROLLER_TYPES.RichText
   options: DeserializedConfig<RichTextControlConfig>
 }
 
@@ -993,7 +992,7 @@ type DeserializedPanelControlValueType<T extends DeserializedPanelControl> =
   T extends DeserializedPanelControl<infer U> ? U : never
 
 export function serializeControl<T extends Data>(
-  control: Control<T> | DeletedPropControllerDescriptor<T>,
+  control: Control<T>,
 ): [SerializedControl<T>, Transferable[]] {
   switch (control.type) {
     case PropControllerTypes.Checkbox:
@@ -1047,7 +1046,7 @@ export function serializeControl<T extends Data>(
     case Controls.Types.Image:
       return serializeImageControl(control)
 
-    case Controls.Types.RichText:
+    case DELETED_PROP_CONTROLLER_TYPES.RichText:
       return serializeRichTextControl(control)
 
     case RichTextV2ControlType:
@@ -1125,7 +1124,7 @@ export function deserializeControl<T extends Data>(
     case Controls.Types.Image:
       return deserializeImageControl(serializedControl)
 
-    case Controls.Types.RichText:
+    case DELETED_PROP_CONTROLLER_TYPES.RichText:
       return deserializeRichTextControl(serializedControl)
 
     case RichTextV2ControlType:

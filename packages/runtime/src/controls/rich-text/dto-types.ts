@@ -1,4 +1,5 @@
 import { BlockType, InlineType } from '../../slate'
+import { IndexSignatureHack } from '../../utils/index-signature-hack'
 
 export const ObjectType = {
   Value: 'value',
@@ -25,7 +26,10 @@ export interface ValueJSON {
   annotations?: { [key: string]: AnnotationJSON } | undefined
   data?: { [key: string]: any } | undefined
 }
+
 export type RichTextDTO = ValueJSON
+
+export type RichTextValue = IndexSignatureHack<RichTextDTO>
 
 export interface DocumentJSON {
   object?: typeof ObjectType.Document | undefined

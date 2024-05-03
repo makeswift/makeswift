@@ -1,5 +1,5 @@
 import { Editor } from 'slate'
-import { Descriptor, RichTextDescriptor, Types } from './descriptors'
+import { Descriptor } from './descriptors'
 import { BuilderEditMode } from '../state/modules/builder-edit-mode'
 import { BoxModel } from '../state/modules/box-models'
 import {
@@ -197,9 +197,7 @@ export class TableFormFieldsPropController extends PropController<TableFormField
   }
 }
 
-type DescriptorPropController<T extends Descriptor> = T extends { type: typeof Types.RichText }
-  ? RichTextPropController
-  : T extends { type: typeof RichTextControlType }
+type DescriptorPropController<T extends Descriptor> = T extends { type: typeof RichTextControlType }
   ? RichTextControl
   : T extends { type: typeof RichTextV2ControlType }
   ? RichTextV2Control
@@ -226,10 +224,6 @@ export type AnyPropController =
   | StyleV2Control
 
 export function createPropController(
-  descriptor: RichTextDescriptor,
-  send: Send<RichTextPropControllerMessage>,
-): RichTextPropController
-export function createPropController(
   descriptor: TableFormFieldsDescriptor,
   send: Send<TableFormFieldsMessage>,
 ): TableFormFieldsPropController
@@ -239,9 +233,6 @@ export function createPropController<T extends PropControllerMessage>(
   send: Send<T>,
 ): AnyPropController {
   switch (descriptor.type) {
-    case Types.RichText:
-      return new RichTextPropController(send as Send<RichTextPropControllerMessage>)
-
     case PropControllerTypes.TableFormFields:
       return new TableFormFieldsPropController(send as Send<TableFormFieldsMessage>)
 

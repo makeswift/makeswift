@@ -16,8 +16,7 @@ import {
 import { createEditor } from 'slate'
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
 import { useBuilderEditMode } from '../../..'
-import { richTextDTOtoDAO } from '../../../../../controls'
-import { RichTextValue } from '../../../../../prop-controllers'
+import { richTextDTOtoDAO, RichTextValue } from '../../../../../controls'
 import { DescriptorsPropControllers } from '../../../../../prop-controllers/instances'
 import {
   RichTextDAO,

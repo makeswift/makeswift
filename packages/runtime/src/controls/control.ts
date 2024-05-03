@@ -42,7 +42,6 @@ import {
 import {
   Descriptor,
   GridValue,
-  IndexSignatureHack,
   Types,
   mergeGridPropControllerTranslatedData,
 } from '../prop-controllers/descriptors'
@@ -56,7 +55,7 @@ import {
   copyRichTextData,
   richTextDTOtoDAO,
 } from './rich-text'
-import { PropControllerDescriptor } from '../prop-controllers'
+import { DELETED_PROP_CONTROLLER_TYPES, PropControllerDescriptor } from '../prop-controllers'
 
 import { richTextV2DescendentsToData } from './rich-text-v2/dto'
 import { copyRichTextV2Data } from './rich-text-v2/copy'
@@ -75,6 +74,7 @@ import {
   getRichTextV2TranslatableData,
   mergeRichTextV2TranslatedData,
 } from './rich-text-v2/translation'
+import { IndexSignatureHack } from '../utils/index-signature-hack'
 
 export type ControlDefinition =
   | CheckboxControlDefinition
@@ -146,7 +146,7 @@ export function copy(definition: Descriptor | ControlDefinition, value: any, con
     case PropControllerTypes.TableFormFields:
     case PropControllerTypes.Table:
     case PropControllerTypes.Border:
-    case Types.RichText:
+    case DELETED_PROP_CONTROLLER_TYPES.RichText:
     case PropControllerTypes.ElementID:
       return propControllerCopy(definition, value, context)
     case RichTextControlType:

@@ -1,9 +1,9 @@
 import { RichTextControlData, RichTextControlType } from '../rich-text'
 import { getPageIds, getSwatchIds, getTypographyIds } from '../../../prop-controllers/introspection'
-import { IndexSignatureHack } from '../../../prop-controllers/descriptors'
 import { RichTextV2ControlDefinition, RichTextV2ControlType } from '../../rich-text-v2'
 import { LinkPlugin } from '../../../slate/LinkPlugin'
 import { TypographyPlugin } from '../../../slate/TypographyPlugin'
+import { IndexSignatureHack } from '../../../utils/index-signature-hack'
 
 const SWATCH_ID = 'SWATCH_ID='
 const TYPOGRAPHY_ID = 'TYPOGRAPHY_ID='
