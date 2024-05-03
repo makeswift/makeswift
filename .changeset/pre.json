@@ -12,6 +12,7 @@
   },
   "changesets": [
     "eleven-items-grow",
-    "quick-wombats-nail"
+    "quick-wombats-nail",
+    "silent-doors-count"
   ]
 }
