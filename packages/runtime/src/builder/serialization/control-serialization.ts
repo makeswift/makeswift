@@ -23,8 +23,6 @@ import {
 import {
   Data,
   Device,
-  ImageDescriptor as ImageControl,
-  ImageValue as ImageControlValue,
   ResponsiveNumberDescriptor as ResponsiveNumberControl,
   ResponsiveNumberValue as ResponsiveNumberControlValue,
   ResponsiveIconRadioGroupDescriptor as ResponsiveIconRadioGroupControl,
@@ -80,6 +78,8 @@ import {
   DateDescriptor as DateControl,
   DatePropControllerData,
   Types as PropControllerTypes,
+  ImageDescriptor as ImageControl,
+  ImageData as ImageControlValue,
   LinkDescriptor as LinkControl,
   LinkPropControllerData,
   ResponsiveLengthDescriptor,
@@ -798,7 +798,7 @@ function deserializeTextStyleControl(
 type ImageControlConfig = { label?: string; hidden?: boolean }
 
 type SerializedImageControl<_T = ImageControlValue> = {
-  type: typeof Controls.Types.Image
+  type: typeof PropControllerTypes.Image
   options: SerializedConfig<ImageControlConfig>
 }
 
@@ -813,7 +813,7 @@ function serializeImageControl(control: ImageControl): [SerializedImageControl, 
 }
 
 type DeserializedImageControl<_T = ImageControlValue> = {
-  type: typeof Controls.Types.Image
+  type: typeof PropControllerTypes.Image
   options: DeserializedConfig<ImageControlConfig>
 }
 
@@ -1043,7 +1043,7 @@ export function serializeControl<T extends Data>(
     case PropControllerTypes.TextStyle:
       return serializeTextStyleControl(control)
 
-    case Controls.Types.Image:
+    case PropControllerTypes.Image:
       return serializeImageControl(control)
 
     case DELETED_PROP_CONTROLLER_TYPES.RichText:
@@ -1121,7 +1121,7 @@ export function deserializeControl<T extends Data>(
     case PropControllerTypes.TextStyle:
       return deserializeTextStyleControl(serializedControl)
 
-    case Controls.Types.Image:
+    case PropControllerTypes.Image:
       return deserializeImageControl(serializedControl)
 
     case DELETED_PROP_CONTROLLER_TYPES.RichText:

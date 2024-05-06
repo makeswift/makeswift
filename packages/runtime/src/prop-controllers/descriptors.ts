@@ -91,6 +91,10 @@ import {
   ResolveTableFormFieldsPropControllerValue,
   GridDescriptor,
   ResolveGridPropControllerValue,
+  ImageDataV0,
+  ImageDataV1,
+  ImageDescriptor,
+  ResolveImagePropControllerValue,
 } from '@makeswift/prop-controllers'
 import { DeletedPropControllerDescriptor } from './deleted'
 
@@ -132,6 +136,7 @@ export type Gap = { value: number; unit: 'px' }
 export const Types = {
   Backgrounds: 'Backgrounds',
   Image: 'Image',
+  Grid: 'Grid',
   Images: 'Images',
   ResponsiveIconRadioGroup: 'ResponsiveIconRadioGroup',
   ResponsiveNumber: 'ResponsiveNumber',
@@ -157,7 +162,7 @@ type BackgroundImageSize = 'cover' | 'contain' | 'auto'
 type BackgroundImageRepeat = 'no-repeat' | 'repeat-x' | 'repeat-y' | 'repeat'
 
 type BackgroundImageV0 = {
-  imageId: ImageValueV0
+  imageId: ImageDataV0
   position: BackgroundImagePosition
   size?: BackgroundImageSize
   repeat?: BackgroundImageRepeat
@@ -168,7 +173,7 @@ type BackgroundImageV0 = {
 
 type BackgroundImageV1 = {
   version: 1
-  image: ImageValueV1
+  image: ImageDataV1
   position: BackgroundImagePosition
   size?: BackgroundImageSize
   repeat?: BackgroundImageRepeat
@@ -218,47 +223,11 @@ export function Backgrounds(options: BackgroundsOptions = {}): BackgroundsDescri
   return { type: Types.Backgrounds, version: 1, options }
 }
 
-export type ImageValueV0 = string
-
-type ImageValueV1MakeswiftFile = {
-  version: 1
-  type: 'makeswift-file'
-  id: string
-}
-
-type ImageValueV1ExternalFile = {
-  version: 1
-  type: 'external-file'
-  url: string
-  width?: number | null
-  height?: number | null
-}
-
-export type ImageValueV1 = ImageValueV1MakeswiftFile | ImageValueV1ExternalFile
-
-export type ImageValue = ImageValueV0 | ImageValueV1
-
-export type ImageOptions = Options<{ label?: string; hidden?: boolean }>
-
-export type ImageDescriptor<_T = ImageValue> = {
-  type: typeof Types.Image
-  version?: 1
-  options: ImageOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Image(options: ImageOptions = {}): ImageDescriptor {
-  return { type: Types.Image, version: 1, options }
-}
-
 export type ImagesValueV0Item = {
   key: string
   props: {
     link?: LinkData
-    file?: ImageValueV0
+    file?: ImageDataV0
     altText?: string
   }
 }
@@ -268,7 +237,7 @@ export type ImagesValueV1Item = {
   version: 1
   props: {
     link?: LinkData
-    file?: ImageValueV1
+    file?: ImageDataV1
     altText?: string
   }
 }
@@ -565,7 +534,7 @@ export type PanelDescriptorType =
   | typeof PropControllerTypes.Font
   | typeof PropControllerTypes.TextArea
   | typeof PropControllerTypes.Table
-  | typeof Types.Image
+  | typeof PropControllerTypes.Image
   | typeof Types.ResponsiveOpacity
   | typeof Types.SocialLinks
   | typeof PropControllerTypes.Video
@@ -633,6 +602,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveGapYPropControllerValue<Extract<T, { type: typeof PropControllerTypes.GapY }>>
   : T['type'] extends typeof PropControllerTypes.Grid
   ? ResolveGridPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Grid }>>
+  : T['type'] extends typeof PropControllerTypes.Image
+  ? ResolveImagePropControllerValue<Extract<T, { type: typeof PropControllerTypes.Image }>>
   : T['type'] extends typeof PropControllerTypes.Link
   ? ResolveLinkPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Link }>>
   : T['type'] extends typeof PropControllerTypes.Width

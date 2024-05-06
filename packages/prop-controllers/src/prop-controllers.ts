@@ -10,6 +10,7 @@ export const Types = {
   GapX: 'GapX',
   GapY: 'GapY',
   Grid: 'Grid',
+  Image: 'Image',
   Link: 'Link',
   Margin: 'Margin',
   NavigationLinks: 'NavigationLinks',

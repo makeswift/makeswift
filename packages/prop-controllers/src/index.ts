@@ -1,5 +1,13 @@
 export * from './prop-controllers'
-export type { ColorData, LengthData, GapData, ResponsiveGapData } from './data'
+export type {
+  ColorData,
+  LengthData,
+  GapData,
+  ResponsiveGapData,
+  ImageDataV0,
+  ImageDataV1,
+  ImageData,
+} from './data'
 export {
   Border,
   BorderPropControllerFormat,
@@ -117,6 +125,20 @@ export type {
   GridPropControllerData,
   ResolveGridPropControllerValue,
 } from './grid'
+export {
+  Image,
+  imagePropControllerDataSchema,
+  getImagePropControllerDataImageData,
+  createImagePropControllerDataFromImageData,
+  getImagePropControllerFileIds,
+  copyImagePropControllerData,
+} from './image'
+export type {
+  ImageDescriptor,
+  ImageOptions,
+  ImagePropControllerData,
+  ResolveImagePropControllerValue,
+} from './image'
 export {
   Link,
   linkDataSchema,
