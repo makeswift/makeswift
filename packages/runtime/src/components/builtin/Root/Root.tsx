@@ -2,16 +2,16 @@ import { normalize } from 'polished'
 import { forwardRef, Ref } from 'react'
 
 import Placeholder from './components/Placeholder'
-import type { GridValue, BackgroundsValue } from '../../../prop-controllers/descriptors'
+import type { BackgroundsValue } from '../../../prop-controllers/descriptors'
 import { Element } from '../../../runtimes/react'
 import BackgroundsContainer from '../../shared/BackgroundsContainer'
 import { useGlobalStyle } from '../../../runtimes/react/use-global-style'
 import { GridItem } from '../../shared/grid-item'
 import { useStyle } from '../../../runtimes/react/use-style'
-import { ResponsiveGapData } from '@makeswift/prop-controllers'
+import { GridData, ResponsiveGapData } from '@makeswift/prop-controllers'
 
 type Props = {
-  children?: GridValue
+  children?: GridData
   backgrounds?: BackgroundsValue
   rowGap?: ResponsiveGapData
   columnGap?: ResponsiveGapData

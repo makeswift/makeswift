@@ -17,7 +17,6 @@ import Placeholder from './components/Placeholder'
 import { areBoxAnimationPropsEqual, BoxAnimationProps, useBoxAnimation } from './animations'
 import {
   ResponsiveIconRadioGroupValue,
-  GridValue,
   BackgroundsValue,
 } from '../../../prop-controllers/descriptors'
 import { BoxModelHandle, parse, createBox } from '../../../box-model'
@@ -25,7 +24,7 @@ import BackgroundsContainer from '../../shared/BackgroundsContainer'
 import { useResponsiveStyle } from '../../utils/responsive-style'
 import { GridItem } from '../../shared/grid-item'
 import { useStyle } from '../../../runtimes/react/use-style'
-import { ResponsiveGapData } from '@makeswift/prop-controllers'
+import { GridData, ResponsiveGapData } from '@makeswift/prop-controllers'
 
 type Props = {
   id?: string
@@ -43,7 +42,7 @@ type Props = {
   rowGap?: ResponsiveGapData
   columnGap?: ResponsiveGapData
   hidePlaceholder?: boolean
-  children?: GridValue
+  children?: GridData
 } & BoxAnimationProps
 
 const Box = forwardRef(function Box(

@@ -1,10 +1,10 @@
 import { Descriptor } from './descriptors'
 import { copy as backgroundsCopy } from './copy/backgrounds'
-import { copy as gridCopy } from './copy/grid'
 import {
   copyLinkPropControllerData,
   copyShadowsPropControllerData,
   copyBorderPropControllerData,
+  copyGridPropControllerData,
 } from '@makeswift/prop-controllers'
 import { copy as imageCopy } from './copy/image'
 import { copy as imagesCopy } from './copy/images'
@@ -24,8 +24,8 @@ export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
   switch (descriptor.type) {
     case 'Backgrounds':
       return backgroundsCopy(descriptor, value, context)
-    case 'Grid':
-      return gridCopy(value, context)
+    case PropControllerTypes.Grid:
+      return copyGridPropControllerData(value, context)
     case PropControllerTypes.NavigationLinks:
       return copyNavigationLinksPropControllerData(value, context)
     case PropControllerTypes.Link:

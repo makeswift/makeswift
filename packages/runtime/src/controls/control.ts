@@ -39,13 +39,12 @@ import {
   SlotControlType,
 } from './slot'
 
+import { Descriptor, Types } from '../prop-controllers/descriptors'
 import {
-  Descriptor,
-  GridValue,
-  Types,
+  GridPropControllerData,
+  Types as PropControllerTypes,
   mergeGridPropControllerTranslatedData,
-} from '../prop-controllers/descriptors'
-import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
+} from '@makeswift/prop-controllers'
 import { copy as propControllerCopy } from '../prop-controllers/copy'
 import { CopyContext, Data, MergeContext, MergeTranslatableDataContext } from '../state/react-page'
 import {
@@ -136,7 +135,7 @@ export type ControlDefinitionData<T extends ControlDefinition> = T extends Check
 export function copy(definition: Descriptor | ControlDefinition, value: any, context: CopyContext) {
   switch (definition.type) {
     case Types.Backgrounds:
-    case Types.Grid:
+    case PropControllerTypes.Grid:
     case PropControllerTypes.NavigationLinks:
     case PropControllerTypes.Link:
     case PropControllerTypes.Shadows:
@@ -237,8 +236,8 @@ export function mergeTranslatedData(
 
       return translatedData
 
-    case Types.Grid:
-      return mergeGridPropControllerTranslatedData(data as GridValue, context)
+    case PropControllerTypes.Grid:
+      return mergeGridPropControllerTranslatedData(data as GridPropControllerData, context)
 
     case SlotControlType:
       return mergeSlotControlTranslatedData(data as SlotControlData, context)

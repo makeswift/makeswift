@@ -9,6 +9,7 @@ export const Types = {
   Font: 'Font',
   GapX: 'GapX',
   GapY: 'GapY',
+  Grid: 'Grid',
   Link: 'Link',
   Margin: 'Margin',
   NavigationLinks: 'NavigationLinks',
@@ -75,15 +76,36 @@ export type Data =
   | Data[]
   | { [key: string]: Data }
 
-export type ElementData = {
-  type: string
-  key: string
-  props: Record<string, Data>
+export const dataSchema: z.ZodType<Data> = z.any()
+
+export const elementDataSchema = z.object({
+  type: z.string(),
+  key: z.string(),
+  props: z.record(dataSchema),
+})
+
+export type ElementData = z.infer<typeof elementDataSchema>
+
+const elementReferenceSchema = z.object({
+  type: z.literal('reference'),
+  key: z.string(),
+  value: z.string(),
+})
+
+export type ElementReference = z.infer<typeof elementReferenceSchema>
+
+export const elementSchema = z.union([
+  elementDataSchema,
+  elementReferenceSchema,
+])
+
+export type Element = z.infer<typeof elementSchema>
+
+export type TranslationDto = Record<string, Data>
+export type MergeTranslatableDataContext = {
+  translatedData: TranslationDto
+  mergeTranslatedData: (node: Element) => Element
 }
-
-type ElementReference = { type: 'reference'; key: string; value: string }
-
-type Element = ElementData | ElementReference
 
 export type ReplacementContext = {
   elementHtmlIds: Set<string>
