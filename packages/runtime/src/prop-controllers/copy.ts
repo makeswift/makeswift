@@ -5,8 +5,8 @@ import {
   copyShadowsPropControllerData,
   copyBorderPropControllerData,
   copyGridPropControllerData,
+  copyImagePropControllerData,
 } from '@makeswift/prop-controllers'
-import { copy as imageCopy } from './copy/image'
 import { copy as imagesCopy } from './copy/images'
 import { copy as richTextCopy } from './copy/rich-text'
 import { copy as elementIdCopy } from './copy/element-id'
@@ -32,8 +32,8 @@ export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
       return copyLinkPropControllerData(value, context)
     case 'Shadows':
       return copyShadowsPropControllerData(value, context)
-    case 'Image':
-      return imageCopy(descriptor, value, context)
+    case PropControllerTypes.Image:
+      return copyImagePropControllerData(value, context)
     case 'Images':
       return imagesCopy(descriptor, value, context)
     case 'ResponsiveColor':

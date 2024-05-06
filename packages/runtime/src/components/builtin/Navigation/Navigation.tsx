@@ -11,12 +11,12 @@ import LinksPlaceholder from './components/LinksPlaceholder'
 import DropDownButton from './components/DropDownButton'
 import MobileMenu from './components/MobileMenu'
 import {
-  ImageValue,
   ResponsiveIconRadioGroupValue,
   ResponsiveSelectValue,
   TextInputValue,
 } from '../../../prop-controllers/descriptors'
 import {
+  ImageData,
   LinkData,
   NavigationButtonData,
   NavigationLinksData,
@@ -39,7 +39,7 @@ type Props = {
   links?: NavigationLinksData
   linkTextStyle?: ResponsiveTextStyleData
   showLogo?: boolean
-  logoFile?: ImageValue
+  logoFile?: ImageData
   logoWidth?: ResponsiveLengthData
   logoAltText?: TextInputValue
   logoLink?: LinkData
