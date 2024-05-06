@@ -145,9 +145,9 @@ export function copy(definition: Descriptor | ControlDefinition, value: any, con
     case PropControllerTypes.TableFormFields:
     case PropControllerTypes.Table:
     case PropControllerTypes.Border:
-    case DELETED_PROP_CONTROLLER_TYPES.RichText:
     case PropControllerTypes.ElementID:
       return propControllerCopy(definition, value, context)
+    case DELETED_PROP_CONTROLLER_TYPES.RichText:
     case RichTextControlType:
       return copyRichTextData(value, context)
     case RichTextV2ControlType:
