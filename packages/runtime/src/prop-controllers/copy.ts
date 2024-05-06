@@ -1,5 +1,4 @@
 import { Descriptor } from './descriptors'
-import { copy as backgroundsCopy } from './copy/backgrounds'
 import {
   copyLinkPropControllerData,
   copyShadowsPropControllerData,
@@ -8,6 +7,7 @@ import {
   copyGridPropControllerData,
   copyImagePropControllerData,
   copyImagesPropControllerData,
+  copyBackgroundsPropControllerData,
 } from '@makeswift/prop-controllers'
 import { CopyContext } from '../state/react-page'
 import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
@@ -20,8 +20,8 @@ import {
 // @note: note typing value, because would then have to type narrow `Data` per case
 export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
   switch (descriptor.type) {
-    case 'Backgrounds':
-      return backgroundsCopy(descriptor, value, context)
+    case PropControllerTypes.Backgrounds:
+      return copyBackgroundsPropControllerData(descriptor, value, context)
     case PropControllerTypes.Grid:
       return copyGridPropControllerData(value, context)
     case PropControllerTypes.NavigationLinks:

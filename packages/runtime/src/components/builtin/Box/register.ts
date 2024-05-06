@@ -1,4 +1,5 @@
 import {
+  Backgrounds,
   Border,
   BorderRadius,
   Checkbox,
@@ -49,7 +50,7 @@ export function registerComponent(runtime: ReactRuntime) {
       label: 'Box',
       props: {
         id: ElementID(),
-        backgrounds: Props.Backgrounds(),
+        backgrounds: Backgrounds(),
         width: Width({
           format: Width.Format.ClassName,
           defaultValue: { value: 100, unit: '%' },

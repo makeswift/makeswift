@@ -9,9 +9,6 @@ export type {
   ResponsiveIconRadioGroupValue,
   ResponsiveSelectDescriptor,
   ResponsiveSelectValue,
-  ImageBackground,
-  BackgroundsDescriptor,
-  BackgroundImage,
   TextInputDescriptor,
   TextInputValue,
   PanelDescriptor,
@@ -35,5 +32,4 @@ export type {
 } from './instances'
 export { RichTextPropControllerMessageType, TableFormFieldsMessageType } from './instances'
 export * as Introspection from './introspection'
-export { copy as backgroundsCopy } from './copy/backgrounds'
 export { DELETED_PROP_CONTROLLER_TYPES } from './deleted'
