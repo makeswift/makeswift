@@ -42,7 +42,6 @@ import { TypographyControlValue } from '../runtimes/react/controls/typography'
 import {
   BorderDescriptor,
   CheckboxDescriptor,
-  LinkData,
   LinkDescriptor,
   ResolveLinkPropControllerValue,
   Types as PropControllerTypes,
@@ -95,6 +94,8 @@ import {
   ImageDataV1,
   ImageDescriptor,
   ResolveImagePropControllerValue,
+  ImagesDescriptor,
+  ResolveImagesPropControllerValue,
 } from '@makeswift/prop-controllers'
 import { DeletedPropControllerDescriptor } from './deleted'
 
@@ -221,45 +222,6 @@ export type BackgroundsDescriptor<_T = BackgroundsValue> = {
  */
 export function Backgrounds(options: BackgroundsOptions = {}): BackgroundsDescriptor {
   return { type: Types.Backgrounds, version: 1, options }
-}
-
-export type ImagesValueV0Item = {
-  key: string
-  props: {
-    link?: LinkData
-    file?: ImageDataV0
-    altText?: string
-  }
-}
-
-export type ImagesValueV1Item = {
-  key: string
-  version: 1
-  props: {
-    link?: LinkData
-    file?: ImageDataV1
-    altText?: string
-  }
-}
-
-export type ImagesValueItem = ImagesValueV0Item | ImagesValueV1Item
-
-export type ImagesValue = ImagesValueItem[]
-
-type ImagesOptions = Options<{ preset?: ImagesValue }>
-
-export type ImagesDescriptor<_T = ImagesValue> = {
-  type: typeof Types.Images
-  version?: 1
-  options: ImagesOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Images(options: ImagesOptions = {}): ImagesDescriptor {
-  return { type: Types.Images, version: 1, options }
 }
 
 export type IconRadioGroupOption<T extends string> = { value: T; label: string; icon: IconName }
@@ -604,6 +566,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveGridPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Grid }>>
   : T['type'] extends typeof PropControllerTypes.Image
   ? ResolveImagePropControllerValue<Extract<T, { type: typeof PropControllerTypes.Image }>>
+  : T['type'] extends typeof PropControllerTypes.Images
+  ? ResolveImagesPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Images }>>
   : T['type'] extends typeof PropControllerTypes.Link
   ? ResolveLinkPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Link }>>
   : T['type'] extends typeof PropControllerTypes.Width
