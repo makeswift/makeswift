@@ -4,12 +4,12 @@ import {
   copyLinkPropControllerData,
   copyShadowsPropControllerData,
   copyBorderPropControllerData,
+  copyElementIDPropControllerData,
   copyGridPropControllerData,
   copyImagePropControllerData,
   copyImagesPropControllerData,
 } from '@makeswift/prop-controllers'
 import { copy as richTextCopy } from './copy/rich-text'
-import { copy as elementIdCopy } from './copy/element-id'
 import { CopyContext } from '../state/react-page'
 import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
 import {
@@ -30,13 +30,13 @@ export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
       return copyNavigationLinksPropControllerData(value, context)
     case PropControllerTypes.Link:
       return copyLinkPropControllerData(value, context)
-    case 'Shadows':
+    case PropControllerTypes.Shadows:
       return copyShadowsPropControllerData(value, context)
     case PropControllerTypes.Image:
       return copyImagePropControllerData(value, context)
     case PropControllerTypes.Images:
       return copyImagesPropControllerData(value, context)
-    case 'ResponsiveColor':
+    case PropControllerTypes.ResponsiveColor:
       return copyResponsiveColorPropControllerData(value, context)
     case PropControllerTypes.TableFormFields:
       return copyTablePropControllerData(value, context)
@@ -46,8 +46,8 @@ export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
       return copyBorderPropControllerData(value, context)
     case DELETED_PROP_CONTROLLER_TYPES.RichText:
       return richTextCopy(value, context)
-    case 'ElementID':
-      return elementIdCopy(value, context)
+    case PropControllerTypes.ElementID:
+      return copyElementIDPropControllerData(value, context)
     default:
       return value
   }
