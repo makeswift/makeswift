@@ -1,5 +1,11 @@
 # @makeswift/prop-controllers
 
+## 0.2.0-canary.1
+
+### Minor Changes
+
+- 87e1665: Add data type to legacy `Grid` prop controller and move it to `@makeswift/prop-controllers`.
+
 ## 0.2.0-canary.0
 
 ### Minor Changes
