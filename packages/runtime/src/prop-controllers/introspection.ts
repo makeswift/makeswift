@@ -1,7 +1,6 @@
 import {
   BackgroundsValue,
   Descriptor,
-  GridValue,
   ImagesValue,
   ImageValue,
   Types,
@@ -73,6 +72,8 @@ import {
   BorderPropControllerData,
   getElementIDPropControllerDataElementID,
   ElementIDPropControllerData,
+  getGridPropControllerElementChildren,
+  GridPropControllerData,
 } from '@makeswift/prop-controllers'
 import { DELETED_PROP_CONTROLLER_TYPES } from './deleted'
 
@@ -83,8 +84,8 @@ export function getElementChildren<T extends Data>(
   if (prop == null) return []
 
   switch (descriptor.type) {
-    case Types.Grid:
-      return (prop as GridValue).elements
+    case PropControllerTypes.Grid:
+      return getGridPropControllerElementChildren(prop as GridPropControllerData | undefined)
 
     case SlotControlType:
       return (prop as SlotControlData).elements

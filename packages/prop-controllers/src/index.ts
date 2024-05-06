@@ -101,6 +101,23 @@ export type {
   GapYPropControllerData,
 } from './gap-y'
 export {
+  Grid,
+  gridPropControllerDataSchema,
+  getGridPropControllerDataGridData,
+  createGridPropControllerDataFromGridData,
+  mergeGridPropControllerTranslatedData,
+  getGridPropControllerElementChildren,
+  copyGridPropControllerData,
+  getGridPropControllerGetElementPath,
+} from './grid'
+export type {
+  GridData,
+  GridDescriptor,
+  GridOptions,
+  GridPropControllerData,
+  ResolveGridPropControllerValue,
+} from './grid'
+export {
   Link,
   linkDataSchema,
   linkPropControllerDataSchema,

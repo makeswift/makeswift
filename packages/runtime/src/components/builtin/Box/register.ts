@@ -5,6 +5,7 @@ import {
   ElementID,
   GapX,
   GapY,
+  Grid,
   Margin,
   Padding,
   Shadows,
@@ -175,7 +176,7 @@ export function registerComponent(runtime: ReactRuntime) {
           label: 'Hide placeholder',
           hidden: props.children != null,
         })),
-        children: Props.Grid(),
+        children: Grid(),
       },
     },
   )

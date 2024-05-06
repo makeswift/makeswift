@@ -1,4 +1,4 @@
-import { GapX, GapY } from '@makeswift/prop-controllers'
+import { GapX, GapY, Grid } from '@makeswift/prop-controllers'
 import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../react'
 import { MakeswiftComponentType } from '../constants'
@@ -12,7 +12,7 @@ export function registerComponent(runtime: ReactRuntime) {
       label: 'Page',
       hidden: true,
       props: {
-        children: Props.Grid(),
+        children: Grid(),
         backgrounds: Props.Backgrounds(),
         rowGap: GapY(),
         columnGap: GapX(),
