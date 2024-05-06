@@ -1,16 +1,19 @@
 import { v4 as uuid } from 'uuid'
 
-import { ImagesValue, Props, ResponsiveNumberValue } from '../../../prop-controllers'
+import { Props, ResponsiveNumberValue } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride } from '../../../state/modules/breakpoints'
 import {
   BorderRadius,
   ElementID,
   GapX,
+  Images,
+  ImagesPropControllerData,
   Margin,
   Number,
   ResponsiveColor,
   Width,
+  getImagesPropControllerDataImagesData,
 } from '@makeswift/prop-controllers'
 
 import { MakeswiftComponentType } from '../constants'
@@ -32,7 +35,7 @@ export function registerComponent(runtime: ReactRuntime) {
       icon: ComponentIcon.Carousel,
       props: {
         id: ElementID(),
-        images: Props.Images({
+        images: Images({
           preset: [
             { key: uuid(), props: {} },
             { key: uuid(), props: {} },
@@ -45,7 +48,9 @@ export function registerComponent(runtime: ReactRuntime) {
         }),
         margin: Margin({ format: Margin.Format.ClassName }),
         pageSize: Props.ResponsiveNumber(props => {
-          const images = props.images as ImagesValue | undefined
+          const images = getImagesPropControllerDataImagesData(
+            props.images as ImagesPropControllerData | undefined,
+          )
           const imagesLength = images?.length ?? 0
 
           return {

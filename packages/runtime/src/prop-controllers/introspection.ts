@@ -1,4 +1,4 @@
-import { BackgroundsValue, Descriptor, ImagesValue, Types } from './descriptors'
+import { BackgroundsValue, Descriptor, Types } from './descriptors'
 import { Data, Element } from '../state/react-page'
 import {
   ColorControlData,
@@ -70,6 +70,8 @@ import {
   GridPropControllerData,
   getImagePropControllerFileIds,
   ImagePropControllerData,
+  getImagesPropControllerFileIds,
+  ImagesPropControllerData,
 } from '@makeswift/prop-controllers'
 import { DELETED_PROP_CONTROLLER_TYPES } from './deleted'
 
@@ -232,18 +234,8 @@ export function getFileIds<T extends Data>(
       return getImagePropControllerFileIds(prop as ImagePropControllerData)
     }
 
-    case Types.Images: {
-      const value = prop as ImagesValue
-      return (
-        value?.flatMap(item =>
-          match(item.props.file)
-            .with(P.string, f => [f])
-            .with({ type: 'makeswift-file', version: 1 }, f => [f.id])
-            .with({ type: 'external-file', version: 1 }, () => [])
-            .with(P.nullish, () => [])
-            .otherwise(() => []),
-        ) ?? []
-      )
+    case PropControllerTypes.Images: {
+      return getImagesPropControllerFileIds(prop as ImagesPropControllerData)
     }
 
     case ImageControlType: {

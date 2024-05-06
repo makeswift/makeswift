@@ -140,6 +140,22 @@ export type {
   ResolveImagePropControllerValue,
 } from './image'
 export {
+  Images,
+  imagesPropControllerDataSchema,
+  getImagesPropControllerDataImagesData,
+  createImagesPropControllerDataFromImagesData,
+  getImagesPropControllerFileIds,
+  copyImagesPropControllerData,
+} from './images'
+export type {
+  ImagesData,
+  ImagesDataItem,
+  ImagesDescriptor,
+  ImagesOptions,
+  ImagesPropControllerData,
+  ResolveImagesPropControllerValue,
+} from './images'
+export {
   Link,
   linkDataSchema,
   linkPropControllerDataSchema,

@@ -6,8 +6,8 @@ import {
   copyBorderPropControllerData,
   copyGridPropControllerData,
   copyImagePropControllerData,
+  copyImagesPropControllerData,
 } from '@makeswift/prop-controllers'
-import { copy as imagesCopy } from './copy/images'
 import { copy as richTextCopy } from './copy/rich-text'
 import { copy as elementIdCopy } from './copy/element-id'
 import { CopyContext } from '../state/react-page'
@@ -34,8 +34,8 @@ export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
       return copyShadowsPropControllerData(value, context)
     case PropControllerTypes.Image:
       return copyImagePropControllerData(value, context)
-    case 'Images':
-      return imagesCopy(descriptor, value, context)
+    case PropControllerTypes.Images:
+      return copyImagesPropControllerData(value, context)
     case 'ResponsiveColor':
       return copyResponsiveColorPropControllerData(value, context)
     case PropControllerTypes.TableFormFields:

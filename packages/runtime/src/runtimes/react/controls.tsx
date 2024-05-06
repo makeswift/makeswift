@@ -91,6 +91,7 @@ import { useElementIDPropControllerData } from '../../components/hooks/useElemen
 import { useTableFormFieldsPropControllerData } from '../../components/hooks/useTableFormFieldsPropControllerData'
 import { useGridPropControllerData } from '../../components/hooks/useGridPropControllerData'
 import { useImagePropControllerData } from '../../components/hooks/useImagePropControllerData'
+import { useImagesPropControllerData } from '../../components/hooks/useImagesPropControllerData'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -310,6 +311,17 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
               <RenderHook
                 key={descriptor.type}
                 hook={useImagePropControllerData}
+                parameters={[props[propName]]}
+              >
+                {value => renderFn({ ...propsValue, [propName]: value })}
+              </RenderHook>
+            )
+
+          case PropControllerTypes.Images:
+            return (
+              <RenderHook
+                key={descriptor.type}
+                hook={useImagesPropControllerData}
                 parameters={[props[propName]]}
               >
                 {value => renderFn({ ...propsValue, [propName]: value })}
