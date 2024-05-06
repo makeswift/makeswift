@@ -134,9 +134,6 @@ type IconName =
 export type Gap = { value: number; unit: 'px' }
 
 export const Types = {
-  Image: 'Image',
-  Grid: 'Grid',
-  Images: 'Images',
   ResponsiveIconRadioGroup: 'ResponsiveIconRadioGroup',
   ResponsiveNumber: 'ResponsiveNumber',
   ResponsiveOpacity: 'ResponsiveOpacity',
@@ -411,7 +408,7 @@ export type PanelDescriptorType =
   | typeof Types.ResponsiveSelect
   | typeof PropControllerTypes.ResponsiveColor
   | typeof PropControllerTypes.TextStyle
-  | typeof Types.Images
+  | typeof PropControllerTypes.Images
   | typeof Types.ResponsiveNumber
   | typeof PropControllerTypes.Number
   | typeof PropControllerTypes.Date
