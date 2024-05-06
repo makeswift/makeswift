@@ -134,7 +134,7 @@ export type ControlDefinitionData<T extends ControlDefinition> = T extends Check
 
 export function copy(definition: Descriptor | ControlDefinition, value: any, context: CopyContext) {
   switch (definition.type) {
-    case Types.Backgrounds:
+    case PropControllerTypes.Backgrounds:
     case PropControllerTypes.Grid:
     case PropControllerTypes.NavigationLinks:
     case PropControllerTypes.Link:

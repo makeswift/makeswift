@@ -1,7 +1,7 @@
 import NextImage from 'next/image'
 import type NextLegacyImageType from 'next/legacy/image'
 
-import { BackgroundsPropControllerData, BackgroundsData } from '../../../../hooks'
+import { BackgroundsPropControllerValue, BackgroundsData } from '../../../../hooks'
 import { ResponsiveValue } from '../../../../../prop-controllers'
 import { ColorValue as Color } from '../../../../utils/types'
 import { colorToString } from '../../../../utils/colorToString'
@@ -42,7 +42,7 @@ const containerStyle: CSSObject = {
   borderRadius: 'inherit',
 }
 
-type Props = { backgrounds: BackgroundsPropControllerData | null | undefined }
+type Props = { backgrounds: BackgroundsPropControllerValue | null | undefined }
 
 export default function Backgrounds({ backgrounds }: Props): JSX.Element {
   if (backgrounds == null) return <></>

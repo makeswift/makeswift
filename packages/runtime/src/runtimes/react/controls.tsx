@@ -92,6 +92,7 @@ import { useTableFormFieldsPropControllerData } from '../../components/hooks/use
 import { useGridPropControllerData } from '../../components/hooks/useGridPropControllerData'
 import { useImagePropControllerData } from '../../components/hooks/useImagePropControllerData'
 import { useImagesPropControllerData } from '../../components/hooks/useImagesPropControllerData'
+import { useBackgroundsPropControllerData } from '../../components/hooks/useBackgroundsPropControllerData'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -305,6 +306,17 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
               default:
                 return renderFn({ ...propsValue, [propName]: props[propName] })
             }
+
+          case PropControllerTypes.Backgrounds:
+            return (
+              <RenderHook
+                key={descriptor.type}
+                hook={useBackgroundsPropControllerData}
+                parameters={[props[propName]]}
+              >
+                {value => renderFn({ ...propsValue, [propName]: value })}
+              </RenderHook>
+            )
 
           case PropControllerTypes.Image:
             return (

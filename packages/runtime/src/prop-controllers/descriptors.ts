@@ -45,7 +45,6 @@ import {
   LinkDescriptor,
   ResolveLinkPropControllerValue,
   Types as PropControllerTypes,
-  ColorData as Color,
   ResponsiveValueType,
   ShadowsDescriptor,
   ResolveShadowsPropControllerValue,
@@ -90,12 +89,12 @@ import {
   ResolveTableFormFieldsPropControllerValue,
   GridDescriptor,
   ResolveGridPropControllerValue,
-  ImageDataV0,
-  ImageDataV1,
   ImageDescriptor,
   ResolveImagePropControllerValue,
   ImagesDescriptor,
   ResolveImagesPropControllerValue,
+  BackgroundsDescriptor,
+  ResolveBackgroundsPropControllerValue,
 } from '@makeswift/prop-controllers'
 import { DeletedPropControllerDescriptor } from './deleted'
 
@@ -135,7 +134,6 @@ type IconName =
 export type Gap = { value: number; unit: 'px' }
 
 export const Types = {
-  Backgrounds: 'Backgrounds',
   Image: 'Image',
   Grid: 'Grid',
   Images: 'Images',
@@ -147,82 +145,6 @@ export const Types = {
   TextInput: 'TextInput',
   Style: StyleControlType,
 } as const
-
-type ColorBackground = { type: 'color'; id: string; payload: Color | null }
-
-type GradientStop = { id: string; location: number; color: Color | null }
-
-type Gradient = { angle?: number; isRadial?: boolean; stops: GradientStop[] }
-
-type GradientBackground = { type: 'gradient'; id: string; payload: Gradient }
-
-type BackgroundImagePosition = { x: number; y: number }
-
-type BackgroundImageSize = 'cover' | 'contain' | 'auto'
-
-type BackgroundImageRepeat = 'no-repeat' | 'repeat-x' | 'repeat-y' | 'repeat'
-
-type BackgroundImageV0 = {
-  imageId: ImageDataV0
-  position: BackgroundImagePosition
-  size?: BackgroundImageSize
-  repeat?: BackgroundImageRepeat
-  opacity?: number
-  parallax?: number
-  priority?: boolean
-}
-
-type BackgroundImageV1 = {
-  version: 1
-  image: ImageDataV1
-  position: BackgroundImagePosition
-  size?: BackgroundImageSize
-  repeat?: BackgroundImageRepeat
-  opacity?: number
-  parallax?: number
-  priority?: boolean
-}
-
-export type BackgroundImage = BackgroundImageV0 | BackgroundImageV1
-
-type ImageBackgroundV0 = { type: 'image'; id: string; payload: BackgroundImageV0 }
-
-type ImageBackgroundV1 = { type: 'image-v1'; id: string; payload: BackgroundImageV1 }
-
-export type ImageBackground = ImageBackgroundV0 | ImageBackgroundV1
-
-type BackgroundVideoAspectRatio = 'wide' | 'standard'
-
-type BackgroundVideo = {
-  url?: string
-  maskColor?: Color | null
-  opacity?: number
-  zoom?: number
-  aspectRatio?: BackgroundVideoAspectRatio
-  parallax?: number
-}
-
-type VideoBackground = { type: 'video'; id: string; payload: BackgroundVideo }
-
-type Background = ColorBackground | GradientBackground | ImageBackground | VideoBackground
-
-export type BackgroundsValue = ResponsiveValue<Background[]>
-
-type BackgroundsOptions = Options<Record<string, never>>
-
-export type BackgroundsDescriptor<_T = BackgroundsValue> = {
-  type: typeof Types.Backgrounds
-  version?: 1
-  options: BackgroundsOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Backgrounds(options: BackgroundsOptions = {}): BackgroundsDescriptor {
-  return { type: Types.Backgrounds, version: 1, options }
-}
 
 export type IconRadioGroupOption<T extends string> = { value: T; label: string; icon: IconName }
 
@@ -474,7 +396,7 @@ export type Descriptor<T extends Data = Data> =
   | TypographyControlDefinition
 
 export type PanelDescriptorType =
-  | typeof Types.Backgrounds
+  | typeof PropControllerTypes.Backgrounds
   | typeof Types.ResponsiveIconRadioGroup
   | typeof PropControllerTypes.Margin
   | typeof PropControllerTypes.Padding
@@ -550,6 +472,10 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
     // the resolved type is tightly coupled with the runtime (i.e., it's the result of an API call).
     // This means that we probably want to rethink how types are resolved and where that lives.
     ResponsiveColor | null | undefined
+  : T['type'] extends typeof PropControllerTypes.Backgrounds
+  ? ResolveBackgroundsPropControllerValue<
+      Extract<T, { type: typeof PropControllerTypes.Backgrounds }>
+    >
   : T['type'] extends typeof PropControllerTypes.Checkbox
   ? ResolveCheckboxPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Checkbox }>>
   : T['type'] extends typeof PropControllerTypes.Date

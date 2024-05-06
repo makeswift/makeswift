@@ -1,5 +1,4 @@
-import { GapX, GapY, Grid } from '@makeswift/prop-controllers'
-import { Props } from '../../../prop-controllers'
+import { Backgrounds, GapX, GapY, Grid } from '@makeswift/prop-controllers'
 import { ReactRuntime } from '../../../react'
 import { MakeswiftComponentType } from '../constants'
 import { lazy } from 'react'
@@ -13,7 +12,7 @@ export function registerComponent(runtime: ReactRuntime) {
       hidden: true,
       props: {
         children: Grid(),
-        backgrounds: Props.Backgrounds(),
+        backgrounds: Backgrounds(),
         rowGap: GapY(),
         columnGap: GapX(),
       },

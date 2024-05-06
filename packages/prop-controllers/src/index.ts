@@ -9,6 +9,25 @@ export type {
   ImageData,
 } from './data'
 export {
+  Backgrounds,
+  backgroundsPropControllerDataSchema,
+  getBackgroundsPropControllerDataResponsiveBackgroundsData,
+  createBackgroundsPropControllerDataFromResponsiveBackgroundsData,
+  getBackgroundsPropControllerFileIds,
+  getBackgroundsPropControllerSwatchIds,
+  copyBackgroundsPropControllerData,
+} from './backgrounds'
+export type {
+  BackgroundData,
+  BackgroundImageData,
+  ImageBackgroundData,
+  ResponsiveBackgroundsData,
+  BackgroundsDescriptor,
+  BackgroundsOptions,
+  BackgroundsPropControllerData,
+  ResolveBackgroundsPropControllerValue,
+} from './backgrounds'
+export {
   Border,
   BorderPropControllerFormat,
   borderPropControllerDataSchema,
