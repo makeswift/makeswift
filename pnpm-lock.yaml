@@ -296,6 +296,9 @@ importers:
       '@emotion/utils':
         specifier: ^1.0.0
         version: 1.1.0
+      '@makeswift/controls':
+        specifier: workspace:*
+        version: link:../controls
       '@makeswift/next-plugin':
         specifier: workspace:*
         version: link:../makeswift-next-plugin
