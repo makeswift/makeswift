@@ -13,3 +13,5 @@ export * from './style-v2'
 export * from './rich-text'
 export * from './rich-text-v2'
 export * from './typography'
+
+export * from '@makeswift/controls'
