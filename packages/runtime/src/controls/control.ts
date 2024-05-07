@@ -1,3 +1,9 @@
+import {
+  TextInputControlData,
+  TextInputControlDefinition,
+  TextInputControlType,
+} from '@makeswift/controls'
+
 import { CheckboxControlData, CheckboxControlDefinition } from './checkbox'
 import { ColorControlData, ColorControlDefinition, ColorControlType, copyColorData } from './color'
 import { ComboboxControlData, ComboboxControlDefinition } from './combobox'
@@ -24,11 +30,6 @@ import {
   ShapeControlTranslationDto,
 } from './shape'
 import { TextAreaControlData, TextAreaControlDefinition, TextAreaControlType } from './text-area'
-import {
-  TextInputControlData,
-  TextInputControlDefinition,
-  TextInputControlType,
-} from './text-input'
 import { copyStyleData, StyleControlData, StyleControlDefinition, StyleControlType } from './style'
 import {
   copySlotData,

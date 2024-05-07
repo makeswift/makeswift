@@ -1,3 +1,4 @@
+import { TextInputControlDefinition } from '@makeswift/controls'
 import { ResponsiveColor } from '../runtimes/react/controls'
 import { StyleControlFormattedValue } from '../runtimes/react/controls/style'
 import type { Data } from '../state/react-page'
@@ -15,7 +16,6 @@ import {
   ShapeControlDefinition,
   SlotControlDefinition,
   TextAreaControlDefinition,
-  TextInputControlDefinition,
   StyleControlDefinition,
   RichTextV2ControlDefinition,
   StyleV2ControlDefinition,

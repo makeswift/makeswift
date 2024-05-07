@@ -1,4 +1,4 @@
-import { ControlDataTypeKey } from "./control-data-type-key"
+import { ControlDataTypeKey } from "./common/data-type-key"
 
 export const TextInputControlDataTypeKey = ControlDataTypeKey
 

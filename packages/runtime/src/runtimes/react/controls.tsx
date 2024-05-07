@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { TextInputControlType } from '@makeswift/controls'
 
 import * as ReactPage from '../../state/react-page'
 
@@ -35,7 +36,6 @@ import {
   SlotControlType,
   StyleControlType,
   TextAreaControlType,
-  TextInputControlType,
   RichTextControl,
   RichTextControlType,
   StyleControl,

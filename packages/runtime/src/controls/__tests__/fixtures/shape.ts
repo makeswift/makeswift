@@ -1,6 +1,7 @@
+import { TextInput } from '@makeswift/controls'
+
 import { TranslationDto } from '../../../state/react-page'
 import { Shape, ShapeControlData } from '../../shape'
-import { TextInput } from '../../text-input'
 import { Link } from '../../link'
 import { Number } from '../../number'
 
