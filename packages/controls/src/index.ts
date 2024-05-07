@@ -1,4 +1,4 @@
-export * from './common/data-type-key'
+export * from './common'
 
 export * from './checkbox'
 export * from './number'

@@ -1,6 +1,6 @@
+import { Data } from '@makeswift/controls'
 import { getPageIds, getSwatchIds, getTypographyIds } from '../../prop-controllers/introspection'
 import { ControlDefinition } from '../control'
-import { Data } from '../types'
 import { RichTextV2ControlData, RichTextV2ControlDefinition } from './rich-text-v2'
 import { Descendant, Element as SlateElement, Text } from 'slate'
 
