@@ -2,6 +2,9 @@ import {
   TextInputControlData,
   TextInputControlDefinition,
   TextInputControlType,
+  TextAreaControlData,
+  TextAreaControlDefinition,
+  TextAreaControlType
 } from '@makeswift/controls'
 
 import { CheckboxControlData, CheckboxControlDefinition } from './checkbox'
@@ -29,7 +32,6 @@ import {
   mergeShapeTranslatedData,
   ShapeControlTranslationDto,
 } from './shape'
-import { TextAreaControlData, TextAreaControlDefinition, TextAreaControlType } from './text-area'
 import { copyStyleData, StyleControlData, StyleControlDefinition, StyleControlType } from './style'
 import {
   copySlotData,

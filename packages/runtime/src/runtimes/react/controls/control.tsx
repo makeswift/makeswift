@@ -2,6 +2,9 @@ import {
   TextInputControlData,
   TextInputControlDefinition,
   TextInputControlType,
+  TextAreaControlData,
+  TextAreaControlDefinition,
+  TextAreaControlType,
 } from '@makeswift/controls'
 import {
   CheckboxControlData,
@@ -55,9 +58,6 @@ import {
   StyleV2ControlData,
   StyleV2ControlDefinition,
   StyleV2ControlType,
-  TextAreaControlData,
-  TextAreaControlDefinition,
-  TextAreaControlType,
   TypographyControlData,
   TypographyControlDefinition,
   TypographyControlType,
