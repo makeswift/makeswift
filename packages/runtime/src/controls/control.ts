@@ -12,10 +12,11 @@ import {
   CheckboxControlDefinition,
   NumberControlData,
   NumberControlDefinition,
+  ComboboxControlData,
+  ComboboxControlDefinition,
 } from '@makeswift/controls'
 
 import { copyColorData } from './color'
-import { ComboboxControlData, ComboboxControlDefinition } from './combobox'
 import { ImageControlData, ImageControlDefinition, copyImageData, ImageControlType } from './image'
 import { LinkControlData, LinkControlDefinition, copyLinkData, LinkControlType } from './link'
 import {

@@ -1,5 +1,4 @@
 export * from './color'
-export * from './combobox'
 export * from './control'
 export * from './icon-radio-group'
 export * from './image'
