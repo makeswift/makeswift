@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { CheckboxControlType, TextInputControlType, TextAreaControlType } from '@makeswift/controls'
+import { CheckboxControlType, NumberControlType, TextInputControlType, TextAreaControlType } from '@makeswift/controls'
 
 import * as ReactPage from '../../state/react-page'
 
@@ -28,7 +28,6 @@ import {
   ImageControlType,
   LinkControlType,
   ListControlType,
-  NumberControlType,
   SelectControlType,
   ShapeControlType,
   SlotControl,

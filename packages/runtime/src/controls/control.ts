@@ -7,6 +7,8 @@ import {
   TextAreaControlType,
   CheckboxControlData,
   CheckboxControlDefinition,
+  NumberControlData,
+  NumberControlDefinition,
 } from '@makeswift/controls'
 
 import { ColorControlData, ColorControlDefinition, ColorControlType, copyColorData } from './color'
@@ -22,7 +24,6 @@ import {
   mergeListTranslatedData,
   ListControlTranslationDto,
 } from './list'
-import { NumberControlData, NumberControlDefinition } from './number'
 import { SelectControlData, SelectControlDefinition } from './select'
 import {
   ShapeControlData,

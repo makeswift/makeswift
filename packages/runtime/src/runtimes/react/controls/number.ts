@@ -4,7 +4,7 @@ import {
   NumberControlDataTypeKey,
   NumberControlDataTypeValueV1,
   NumberControlDefinition,
-} from '../../../controls'
+} from '@makeswift/controls'
 
 export type NumberControlValue<T extends NumberControlDefinition> =
   undefined extends T['config']['defaultValue'] ? number | undefined : number
