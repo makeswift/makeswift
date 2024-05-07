@@ -1,7 +1,4 @@
-import {
-  IconRadioGroupControlData,
-  IconRadioGroupControlDefinition,
-} from '../../../controls/icon-radio-group'
+import { IconRadioGroupControlData, IconRadioGroupControlDefinition } from '@makeswift/controls'
 
 export type IconRadioGroupControlValue<T extends IconRadioGroupControlDefinition> =
   undefined extends T['config']['defaultValue']

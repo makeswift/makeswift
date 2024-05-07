@@ -8,6 +8,8 @@ import {
   ColorControlDefinition,
   ComboboxControlData,
   ComboboxControlDefinition,
+  IconRadioGroupControlData,
+  IconRadioGroupControlDefinition,
 } from '@makeswift/controls'
 
 import {
@@ -34,7 +36,6 @@ import {
   getTypographyIds,
 } from '../prop-controllers/introspection'
 import { SelectControlData, SelectControlDefinition } from './select'
-import { IconRadioGroupControlData, IconRadioGroupControlDefinition } from './icon-radio-group'
 import { ImageControlData, ImageControlDefinition } from './image'
 import { ShapeControlDefinition } from './shape'
 import { LinkControlData, LinkControlDefinition } from './link'

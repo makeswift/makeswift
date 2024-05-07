@@ -14,6 +14,8 @@ import {
   NumberControlDefinition,
   ComboboxControlData,
   ComboboxControlDefinition,
+  IconRadioGroupControlData,
+  IconRadioGroupControlDefinition,
 } from '@makeswift/controls'
 
 import { copyColorData } from './color'
@@ -75,7 +77,6 @@ import {
 } from './rich-text-v2/rich-text-v2'
 
 import { StyleV2ControlData, StyleV2ControlDefinition } from './style-v2'
-import { IconRadioGroupControlData, IconRadioGroupControlDefinition } from './icon-radio-group'
 import { TypographyControlData, TypographyControlDefinition } from './typography'
 import {
   RichTextV2ControlTranslationDto,

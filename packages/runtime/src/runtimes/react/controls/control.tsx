@@ -21,6 +21,9 @@ import {
   ComboboxControlType,
   ControlDefinition,
   ControlDefinitionData,
+  IconRadioGroupControlData,
+  IconRadioGroupControlDefinition,
+  IconRadioGroupControlType,
   ImageControlData,
   ImageControlDefinition,
   ImageControlType,
@@ -62,11 +65,7 @@ import {
   TypographyControlDefinition,
   TypographyControlType,
 } from '../../../controls'
-import {
-  IconRadioGroupControlData,
-  IconRadioGroupControlDefinition,
-  IconRadioGroupControlType,
-} from '../../../controls/icon-radio-group'
+
 import { AnyPropController } from '../../../prop-controllers/instances'
 import { RenderHook } from '../components'
 import { CheckboxControlValue, useCheckboxControlValue } from './checkbox'

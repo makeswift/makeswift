@@ -1,4 +1,10 @@
-import { CheckboxControlDefinition, NumberControlDefinition, TextInputControlDefinition, TextAreaControlDefinition } from '@makeswift/controls'
+import {
+  CheckboxControlDefinition,
+  IconRadioGroupControlDefinition,
+  NumberControlDefinition,
+  TextInputControlDefinition,
+  TextAreaControlDefinition,
+} from '@makeswift/controls'
 import { ResponsiveColor } from '../runtimes/react/controls'
 import { StyleControlFormattedValue } from '../runtimes/react/controls/style'
 import type { Data } from '../state/react-page'
@@ -33,7 +39,6 @@ import { RichTextControlDefinition } from '../controls/rich-text'
 import { RichTextControlValue } from '../runtimes/react/controls/rich-text/rich-text'
 import { RichTextV2ControlValue } from '../runtimes/react/controls/rich-text-v2'
 import { StyleV2ControlFormattedValue } from '../runtimes/react/controls/style-v2'
-import { IconRadioGroupControlDefinition } from '../controls/icon-radio-group'
 import { IconRadioGroupControlValue } from '../runtimes/react/controls/icon-radio-group'
 import { TypographyControlValue } from '../runtimes/react/controls/typography'
 import {
