@@ -1,4 +1,7 @@
 import {
+  ColorControlData,
+  ColorControlDefinition,
+  ColorControlType,
   TextInputControlData,
   TextInputControlDefinition,
   TextInputControlType,
@@ -11,7 +14,7 @@ import {
   NumberControlDefinition,
 } from '@makeswift/controls'
 
-import { ColorControlData, ColorControlDefinition, ColorControlType, copyColorData } from './color'
+import { copyColorData } from './color'
 import { ComboboxControlData, ComboboxControlDefinition } from './combobox'
 import { ImageControlData, ImageControlDefinition, copyImageData, ImageControlType } from './image'
 import { LinkControlData, LinkControlDefinition, copyLinkData, LinkControlType } from './link'
