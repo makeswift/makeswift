@@ -5,6 +5,7 @@ import {
   TextAreaControlDefinition,
   ColorData,
   Data,
+  ColorControlDefinition,
 } from '@makeswift/controls'
 
 import {
@@ -31,7 +32,6 @@ import {
   getTypographyIds,
 } from '../prop-controllers/introspection'
 import { SelectControlData, SelectControlDefinition } from './select'
-import { ColorControlDefinition } from './color'
 import { IconRadioGroupControlData, IconRadioGroupControlDefinition } from './icon-radio-group'
 import { ImageControlData, ImageControlDefinition } from './image'
 import { ComboboxControlData, ComboboxControlDefinition } from './combobox'
