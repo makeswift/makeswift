@@ -1,4 +1,11 @@
-import { CheckboxControlDefinition, NumberControlDefinition, TextInputControlDefinition, TextAreaControlDefinition } from '@makeswift/controls'
+import {
+  CheckboxControlDefinition,
+  NumberControlDefinition,
+  TextInputControlDefinition,
+  TextAreaControlDefinition,
+  ColorData,
+  Data,
+} from '@makeswift/controls'
 
 import {
   AnyPropController,
@@ -14,7 +21,6 @@ import {
   getTranslatableData,
   mergeTranslatedData,
 } from './control'
-import { ColorData, Data } from './types'
 
 import { copy as controlCopy } from './control'
 import {

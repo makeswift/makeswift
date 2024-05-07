@@ -1,3 +1,4 @@
+import { DeviceOverride } from '@makeswift/controls'
 import { StyleV2Control, StyleV2ControlData, StyleV2ControlDefinition } from '../../../controls'
 import { useStyle } from '../use-style'
 import {
@@ -10,7 +11,6 @@ import { CSSObject } from '@emotion/css'
 
 import { ControlDefinitionValue, ControlValue } from './control'
 import { RenderHook } from '../components'
-import { DeviceOverride } from '../../../controls/types'
 import { useBreakpoints } from '../hooks/use-breakpoints'
 
 function useStyleControlCssObject(

@@ -1,4 +1,4 @@
-import { Data } from './types'
+import { Data } from '@makeswift/controls'
 
 export const ComboboxControlType = 'makeswift::controls::combobox'
 
