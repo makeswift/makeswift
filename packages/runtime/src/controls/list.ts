@@ -1,3 +1,5 @@
+import { TextInputControlDefinition } from '@makeswift/controls'
+
 import {
   AnyPropController,
   createPropController,
@@ -24,7 +26,6 @@ import {
 } from '../prop-controllers/introspection'
 import { CheckboxControlDefinition } from './checkbox'
 import { NumberControlDefinition } from './number'
-import { TextInputControlDefinition } from './text-input'
 import { TextAreaControlDefinition } from './text-area'
 import { SelectControlData, SelectControlDefinition } from './select'
 import { ColorControlDefinition } from './color'
