@@ -166,7 +166,7 @@ export type BackgroundsOptions = Options<Record<string, never>>
 
 type BackgroundsDescriptorV1<_T = BackgroundsPropControllerDataV1> = {
   type: typeof Types.Backgrounds
-  version: 1
+  version?: 1
   options: BackgroundsOptions
 }
 
@@ -324,7 +324,7 @@ function copyResponsiveBackgroundsData(
         })
         .with(
           [
-            { version: P.when((v) => v >= 1) },
+            { version: P.when((v) => v && v >= 1) },
             {
               type: 'image-v1',
               payload: {
