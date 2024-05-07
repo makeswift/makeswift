@@ -1,4 +1,4 @@
-import { ControlDataTypeKey } from "./control-data-type-key"
+import { ControlDataTypeKey } from "@makeswift/controls"
 
 export const NumberControlDataTypeKey = ControlDataTypeKey
 

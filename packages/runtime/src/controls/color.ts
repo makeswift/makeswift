@@ -1,7 +1,8 @@
 import { match } from 'ts-pattern'
+import { ControlDataTypeKey } from '@makeswift/controls'
+
 import type { CopyContext } from '../state/react-page'
 import type { ColorData } from './types'
-import { ControlDataTypeKey } from './control-data-type-key'
 
 export const ColorControlDataTypeKey = ControlDataTypeKey
 
