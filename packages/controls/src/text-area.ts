@@ -1,4 +1,4 @@
-import { ControlDataTypeKey } from "@makeswift/controls"
+import { ControlDataTypeKey } from "./common/data-type-key"
 
 export const TextAreaControlDataTypeKey = ControlDataTypeKey
 
