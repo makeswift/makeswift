@@ -1,8 +1,7 @@
-import { Number, TextInput } from '@makeswift/controls'
+import { Link, Number, TextInput } from '@makeswift/controls'
 
 import { TranslationDto } from '../../../state/react-page'
 import { Shape, ShapeControlData } from '../../shape'
-import { Link } from '../../link'
 
 export const componentRegistration = Shape({
   type: {

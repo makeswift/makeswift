@@ -12,6 +12,8 @@ import {
   IconRadioGroupControlDefinition,
   ImageControlData,
   ImageControlDefinition,
+  LinkControlData,
+  LinkControlDefinition,
 } from '@makeswift/controls'
 
 import {
@@ -39,7 +41,6 @@ import {
 } from '../prop-controllers/introspection'
 import { SelectControlData, SelectControlDefinition } from './select'
 import { ShapeControlDefinition } from './shape'
-import { LinkControlData, LinkControlDefinition } from './link'
 import { RichTextControlData, RichTextControlDefinition } from './rich-text'
 import { RichTextV2ControlData, RichTextV2ControlDefinition } from './rich-text-v2'
 import { StyleControlData, StyleControlDefinition } from './style'
