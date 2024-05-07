@@ -100,6 +100,8 @@ import {
   type Descriptor as PropDescriptor,
   type Value as PropValue,
   ResponsiveOpacity,
+  ResolveSocialLinksPropControllerValue,
+  SocialLinksDescriptor,
 } from '@makeswift/prop-controllers'
 import { DeletedPropControllerDescriptor } from './deleted'
 
@@ -141,7 +143,6 @@ export type Gap = { value: number; unit: 'px' }
 export const Types = {
   ResponsiveIconRadioGroup: 'ResponsiveIconRadioGroup',
   ResponsiveSelect: 'ResponsiveSelect',
-  SocialLinks: 'SocialLinks',
   TextInput: 'TextInput',
   Style: StyleControlType,
 } as const
@@ -211,68 +212,6 @@ export function ResponsiveSelect<_T extends string, T extends _T, U extends T>(
   options: ResponsiveSelectOptions<T, U>,
 ): ResponsiveSelectDescriptor<ResponsiveSelectValue<T>> {
   return { type: Types.ResponsiveSelect, options }
-}
-
-export const socialLinkTypesV0 = [
-  'angellist',
-  'codepen',
-  'discord',
-  'dribbble',
-  'facebook',
-  'github',
-  'instagram',
-  'linkedin',
-  'medium',
-  'pinterest',
-  'reddit',
-  'rss',
-  'snapchat',
-  'soundcloud',
-  'spotify',
-  'telegram',
-  'tumblr',
-  'twitch',
-  'twitter',
-  'vimeo',
-  'whatsapp',
-  'yelp',
-  'youtube',
-] as const
-
-type SocialLinkTypeV0 = typeof socialLinkTypesV0[number]
-
-export const socialLinkTypesV1 = [...socialLinkTypesV0, 'x', 'slack'] as const
-
-type SocialLinkTypeV1 = typeof socialLinkTypesV1[number]
-
-type SocialLinkV0 = { type: SocialLinkTypeV0; url: string }
-
-type SocialLinkV1 = { type: SocialLinkTypeV1; url: string }
-
-type SocialLinksLinkV0 = { id: string; payload: SocialLinkV0 }
-
-type SocialLinksLinkV1 = { id: string; payload: SocialLinkV1 }
-
-type SocialLinksValueV0 = { links: SocialLinksLinkV0[]; openInNewTab: boolean }
-
-type SocialLinksValueV1 = { links: SocialLinksLinkV1[]; openInNewTab: boolean }
-
-export type SocialLinksValue = SocialLinksValueV0 | SocialLinksValueV1
-
-type SocialLinksOptions = Options<{ preset?: SocialLinksValueV1 }>
-
-export type SocialLinksDescriptor<_T = SocialLinksValueV1> = {
-  type: typeof Types.SocialLinks
-  options: SocialLinksOptions
-  version?: 1
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function SocialLinks(options: SocialLinksOptions = {}): SocialLinksDescriptor {
-  return { type: Types.SocialLinks, options, version: 1 }
 }
 
 export type TextInputValue = string
@@ -374,7 +313,7 @@ export type PanelDescriptorType =
   | typeof PropControllerTypes.Table
   | typeof PropControllerTypes.Image
   | typeof PropControllerTypes.ResponsiveOpacity
-  | typeof Types.SocialLinks
+  | typeof PropControllerTypes.SocialLinks
   | typeof PropControllerTypes.Video
   | typeof PropControllerTypes.NavigationLinks
 
@@ -470,6 +409,10 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
     >
   : T['type'] extends typeof PropControllerTypes.Shadows
   ? ResolveShadowsPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Shadows }>>
+  : T['type'] extends typeof PropControllerTypes.SocialLinks
+  ? ResolveSocialLinksPropControllerValue<
+      Extract<T, { type: typeof PropControllerTypes.SocialLinks }>
+    >
   : T['type'] extends typeof PropControllerTypes.ResponsiveLength
   ? ResolveResponsiveLengthPropControllerValue<
       Extract<T, { type: typeof PropControllerTypes.ResponsiveLength }>

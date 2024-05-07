@@ -244,6 +244,19 @@ export type {
   ResponsiveLengthPropControllerData,
 } from './responsive-length'
 export {
+  SocialLinks,
+  socialLinksPropControllerDataSchema,
+  getSocialLinkTypes,
+  getSocialLinksPropControllerDataSocialLinksData,
+  createSocialLinksPropControllerDataFromSocialLinksData,
+} from './social-links'
+export type {
+  SocialLinksData,
+  ResolveSocialLinksPropControllerValue,
+  SocialLinksDescriptor,
+  SocialLinksPropControllerData,
+} from './social-links'
+export {
   Shadows,
   copyShadowsPropControllerData,
   createShadowsPropControllerDataFromResponsiveShadowsData,

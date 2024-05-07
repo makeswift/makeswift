@@ -1,5 +1,11 @@
 import { useRef } from 'react'
-import { CheckboxControlType, IconRadioGroupControlType, NumberControlType, TextInputControlType, TextAreaControlType } from '@makeswift/controls'
+import {
+  CheckboxControlType,
+  IconRadioGroupControlType,
+  NumberControlType,
+  TextInputControlType,
+  TextAreaControlType,
+} from '@makeswift/controls'
 
 import * as ReactPage from '../../state/react-page'
 
@@ -77,6 +83,7 @@ import {
   GapX,
   ResponsiveNumber,
   ResponsiveOpacity,
+  getSocialLinksPropControllerDataSocialLinksData,
 } from '@makeswift/prop-controllers'
 import { useResponsiveLengthPropControllerData } from '../../components/hooks/useResponsiveLengthPropControllerData'
 import { useNumberPropControllerData } from '../../components/hooks/useNumberPropControllerData'
@@ -596,6 +603,12 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                 {value => renderFn({ ...propsValue, [propName]: value })}
               </RenderHook>
             )
+
+          case PropControllerTypes.SocialLinks:
+            return renderFn({
+              ...propsValue,
+              [propName]: getSocialLinksPropControllerDataSocialLinksData(props[propName]),
+            })
 
           case PropControllerTypes.Grid:
             return (
