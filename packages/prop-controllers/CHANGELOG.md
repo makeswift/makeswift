@@ -1,5 +1,11 @@
 # @makeswift/prop-controllers
 
+## 0.2.1
+
+### Patch Changes
+
+- 9a439d5: Update `BackgroundsDescriptorV1` version field optional to match previous behavior.
+
 ## 0.2.0
 
 ### Minor Changes
