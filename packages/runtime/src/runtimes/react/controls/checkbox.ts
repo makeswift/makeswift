@@ -4,7 +4,7 @@ import {
   CheckboxControlDataTypeKey,
   CheckboxControlDataTypeValueV1,
   CheckboxControlDefinition,
-} from '../../../controls'
+} from '@makeswift/controls'
 
 export type CheckboxControlValue<T extends CheckboxControlDefinition> =
   undefined extends T['config']['defaultValue'] ? boolean | undefined : boolean
