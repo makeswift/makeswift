@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { TextInputControlType, TextAreaControlType } from '@makeswift/controls'
+import { CheckboxControlType, TextInputControlType, TextAreaControlType } from '@makeswift/controls'
 
 import * as ReactPage from '../../state/react-page'
 
@@ -23,7 +23,6 @@ import {
   useResponsiveWidth,
 } from '../../components/utils/responsive-style'
 import {
-  CheckboxControlType,
   ColorControlType,
   ComboboxControlType,
   ImageControlType,

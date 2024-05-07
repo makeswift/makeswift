@@ -1,4 +1,4 @@
-import { TextInputControlDefinition, TextAreaControlDefinition } from '@makeswift/controls'
+import { CheckboxControlDefinition, TextInputControlDefinition, TextAreaControlDefinition } from '@makeswift/controls'
 import { ResponsiveColor } from '../runtimes/react/controls'
 import { StyleControlFormattedValue } from '../runtimes/react/controls/style'
 import type { Data } from '../state/react-page'
@@ -6,7 +6,6 @@ import { NumberControlDefinition } from '../controls/number'
 import { NumberControlValue } from '../runtimes/react/controls/number'
 import { StyleControlType } from '../controls/style'
 import {
-  CheckboxControlDefinition,
   ColorControlDefinition,
   ComboboxControlDefinition,
   ImageControlDefinition,
