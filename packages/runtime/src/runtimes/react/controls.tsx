@@ -252,8 +252,12 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                   </RenderHook>
                 )
 
+              case WidthPropControllerFormat.ResponsiveValue:
               default:
-                return renderFn({ ...propsValue, [propName]: props[propName] })
+                return renderFn({
+                  ...propsValue,
+                  [propName]: getWidthPropControllerDataResponsiveLengthData(props[propName]),
+                })
             }
 
           case PropControllerTypes.Padding:
@@ -269,8 +273,12 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                   </RenderHook>
                 )
 
+              case PaddingPropControllerFormat.ResponsiveValue:
               default:
-                return renderFn({ ...propsValue, [propName]: props[propName] })
+                return renderFn({
+                  ...propsValue,
+                  [propName]: getPaddingPropControllerDataResponsivePaddingData(props[propName]),
+                })
             }
 
           case PropControllerTypes.Margin:
@@ -286,8 +294,12 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                   </RenderHook>
                 )
 
+              case MarginPropControllerFormat.ResponsiveValue:
               default:
-                return renderFn({ ...propsValue, [propName]: props[propName] })
+                return renderFn({
+                  ...propsValue,
+                  [propName]: getMarginPropControllerDataResponsiveMarginData(props[propName]),
+                })
             }
 
           case PropControllerTypes.BorderRadius:
@@ -303,8 +315,14 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                   </RenderHook>
                 )
 
+              case BorderRadiusPropControllerFormat.ResponsiveValue:
               default:
-                return renderFn({ ...propsValue, [propName]: props[propName] })
+                return renderFn({
+                  ...propsValue,
+                  [propName]: getBorderRadiusPropControllerDataResponsiveBorderRadiusData(
+                    props[propName],
+                  ),
+                })
             }
 
           case PropControllerTypes.Backgrounds:
@@ -396,8 +414,12 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                   </RenderHook>
                 )
 
+              case BorderPropControllerFormat.ResponsiveValue:
               default:
-                return renderFn({ ...propsValue, [propName]: props[propName] })
+                return renderFn({
+                  ...propsValue,
+                  [propName]: getBorderPropControllerDataResponsiveBorderData(props[propName]),
+                })
             }
 
           case PropControllerTypes.ResponsiveColor:
