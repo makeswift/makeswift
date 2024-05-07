@@ -1,4 +1,5 @@
-import { LinkControlData, copyLinkData } from './link'
+import { LinkControlData } from '@makeswift/controls'
+import { copyLinkData } from './link'
 import { ReplacementContext } from '../state/react-page'
 
 describe('link', () => {

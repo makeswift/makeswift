@@ -1,5 +1,5 @@
 import { Descendant, Text, Selection } from 'slate'
-import { LinkControlData } from '../link'
+import { LinkControlData } from '@makeswift/controls'
 import {
   BlockJSON,
   InlineJSON,

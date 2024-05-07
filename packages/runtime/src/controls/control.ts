@@ -19,11 +19,14 @@ import {
   ImageControlType,
   ImageControlData,
   ImageControlDefinition,
+  LinkControlData,
+  LinkControlDefinition,
+  LinkControlType,
 } from '@makeswift/controls'
 
 import { copyColorData } from './color'
 import { copyImageData } from './image'
-import { LinkControlData, LinkControlDefinition, copyLinkData, LinkControlType } from './link'
+import { copyLinkData } from './link'
 import {
   ListControlData,
   ListControlDefinition,

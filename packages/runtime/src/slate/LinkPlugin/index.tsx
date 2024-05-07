@@ -1,6 +1,6 @@
 import { Editor, Element } from 'slate'
+import { Link } from '@makeswift/controls'
 import { RenderElement, createRichTextV2Plugin } from '../../controls/rich-text-v2/plugin'
-import { Link } from '../../controls/link'
 import { ElementUtils } from '../utils/element'
 import { InlineType } from '../types'
 import { RenderElementProps } from 'slate-react'
