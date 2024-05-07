@@ -1,4 +1,3 @@
-import { match } from 'ts-pattern'
 import { ControlDataTypeKey, ColorData } from './common'
 
 export const ColorControlDataTypeKey = ControlDataTypeKey
@@ -31,4 +30,3 @@ export type ColorControlDefinition<C extends ColorControlConfig = ColorControlCo
 export function Color<C extends ColorControlConfig>(config = {} as C): ColorControlDefinition<C> {
   return { type: ColorControlType, config, version: 1 }
 }
-
