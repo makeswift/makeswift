@@ -1,4 +1,4 @@
-import { CheckboxControlDefinition, TextInputControlDefinition, TextAreaControlDefinition } from '@makeswift/controls'
+import { CheckboxControlDefinition, NumberControlDefinition, TextInputControlDefinition, TextAreaControlDefinition } from '@makeswift/controls'
 
 import {
   AnyPropController,
@@ -24,7 +24,6 @@ import {
   getSwatchIds,
   getTypographyIds,
 } from '../prop-controllers/introspection'
-import { NumberControlDefinition } from './number'
 import { SelectControlData, SelectControlDefinition } from './select'
 import { ColorControlDefinition } from './color'
 import { IconRadioGroupControlData, IconRadioGroupControlDefinition } from './icon-radio-group'
