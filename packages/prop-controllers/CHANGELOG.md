@@ -1,5 +1,21 @@
 # @makeswift/prop-controllers
 
+## 0.2.0
+
+### Minor Changes
+
+- f5c3617: Add data type to legacy `TableFormFields` prop controller and move it to `@makeswift/prop-controllers`.
+- bb82576: Add data type to legacy `Image` prop controller and move it to `@makeswift/prop-controllers`.
+- 860f92a: Add data type to legacy `Backgrounds` prop controller and move it to `@makeswift/prop-controllers`.
+- 61d43cc: Add data type to legacy `Images` prop controller and move it to `@makeswift/prop-controllers`.
+- 092784c: Add data type to legacy `ElementID` prop controller and move it to `@makeswift/prop-controllers`.
+- 87e1665: Add data type to legacy `Grid` prop controller and move it to `@makeswift/prop-controllers`.
+
+### Patch Changes
+
+- 4b0d47c: Use correct copy method for ElementID.
+- 4d38a0b: Fix v2 data values not properly transformed for `ResponsiveValue` option.
+
 ## 0.1.1
 
 ### Patch Changes
