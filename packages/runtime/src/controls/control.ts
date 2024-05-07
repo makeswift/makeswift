@@ -16,10 +16,13 @@ import {
   ComboboxControlDefinition,
   IconRadioGroupControlData,
   IconRadioGroupControlDefinition,
+  ImageControlType,
+  ImageControlData,
+  ImageControlDefinition,
 } from '@makeswift/controls'
 
 import { copyColorData } from './color'
-import { ImageControlData, ImageControlDefinition, copyImageData, ImageControlType } from './image'
+import { copyImageData } from './image'
 import { LinkControlData, LinkControlDefinition, copyLinkData, LinkControlType } from './link'
 import {
   ListControlData,
