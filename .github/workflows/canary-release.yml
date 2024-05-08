@@ -39,9 +39,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Now we pre-release
-      - name: Enter Pre-Release Mode
+      - name: Enter Pre-Release Mode (Idempotently)
         run: |
-          pnpm exec changeset pre enter canary
+          pnpm exec changeset pre enter canary || true
           pnpm exec changeset version
 
       - name: Commit Change To Pre-Release Mode
