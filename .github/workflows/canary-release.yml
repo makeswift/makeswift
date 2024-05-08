@@ -34,7 +34,7 @@ jobs:
       - name: Merge To Canary Branch
         run: |
           git checkout practice-canary
-          git merge origin/main --strategy-option=theirs --message="Merge main into canary"
+          git merge origin/alex/publish-canary --strategy-option=theirs --message="Merge main into canary"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
