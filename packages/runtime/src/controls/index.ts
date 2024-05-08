@@ -1,4 +1,3 @@
-export * from './color'
 export * from './control'
 export * from './link'
 export * from './list'

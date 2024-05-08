@@ -1,4 +1,5 @@
-import { ControlDataTypeKey, ColorData } from './common'
+import { match } from 'ts-pattern'
+import { ControlDataTypeKey, ColorData, CopyContext } from './common'
 
 export const ColorControlDataTypeKey = ControlDataTypeKey
 
@@ -29,4 +30,21 @@ export type ColorControlDefinition<C extends ColorControlConfig = ColorControlCo
 
 export function Color<C extends ColorControlConfig>(config = {} as C): ColorControlDefinition<C> {
   return { type: ColorControlType, config, version: 1 }
+}
+
+export function copyColorData(
+  value: ColorControlData | undefined,
+  context: CopyContext,
+): ColorControlData | undefined {
+  if (value == null) return value
+
+  return match(value)
+    .with({ [ColorControlDataTypeKey]: ColorControlDataTypeValueV1 }, val => ({
+      ...val,
+      swatchId: context.replacementContext.swatchIds.get(val.swatchId) ?? val.swatchId,
+    }))
+    .otherwise(val => ({
+      ...val,
+      swatchId: context.replacementContext.swatchIds.get(val.swatchId) ?? val.swatchId,
+    }))
 }
