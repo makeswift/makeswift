@@ -32,7 +32,7 @@ jobs:
       - name: Merge To Canary Branch
         run: |
           git checkout practice-canary
-          git merge main --strategy-option=theirs
+          git merge origin/main --strategy-option=theirs
 
       # Now we pre-release
       - name: Enter Pre-Release Mode
@@ -44,7 +44,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 'Enter prerelease mode and version packages'
-          branch: changeset-release/main
+          branch: practice-canary
 
       - name: Publish
         run: |
