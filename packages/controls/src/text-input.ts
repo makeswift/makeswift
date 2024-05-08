@@ -1,4 +1,4 @@
-import { ControlDataTypeKey } from "./common/data-type-key"
+import { ControlDataTypeKey } from './common'
 
 export const TextInputControlDataTypeKey = ControlDataTypeKey
 
@@ -8,7 +8,7 @@ export type TextInputControlDataV0 = string
 
 export type TextInputControlDataV1 = {
   [ControlDataTypeKey]: typeof TextInputControlDataTypeValueV1
-  value: string,
+  value: string
 }
 
 export type TextInputControlData = TextInputControlDataV0 | TextInputControlDataV1
