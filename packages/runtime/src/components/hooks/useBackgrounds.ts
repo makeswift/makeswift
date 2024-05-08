@@ -3,13 +3,14 @@ import { useMemo } from 'react'
 import { ColorValue as Color } from '../utils/types'
 import { ResponsiveValue } from '../../prop-controllers'
 import { isNonNullable } from '../utils/isNonNullable'
-import { BackgroundsValue as ResponsiveBackgroundsValue } from '../../prop-controllers/descriptors'
 import { useFiles, useSwatches } from '../../runtimes/react/hooks/makeswift-api'
-import {
-  getBackgroundsFileIds,
-  getBackgroundsSwatchIds,
-} from '../../prop-controllers/introspection'
 import { match, P } from 'ts-pattern'
+import {
+  ResponsiveBackgroundsData,
+  getBackgroundsPropControllerDataResponsiveBackgroundsData,
+  getBackgroundsPropControllerFileIds,
+  getBackgroundsPropControllerSwatchIds,
+} from '@makeswift/prop-controllers'
 
 type BackgroundColorData = Color
 
@@ -55,18 +56,19 @@ type BackgroundData =
 
 export type BackgroundsData = Array<BackgroundData>
 
-export type BackgroundsPropControllerData = ResponsiveValue<BackgroundsData>
+export type BackgroundsPropControllerValue = ResponsiveValue<BackgroundsData>
 
 export function useBackgrounds(
-  value: ResponsiveBackgroundsValue | null | undefined,
-): BackgroundsPropControllerData | null | undefined {
-  const fileIds = getBackgroundsFileIds(value)
+  data: ResponsiveBackgroundsData | undefined,
+): BackgroundsPropControllerValue | undefined {
+  const value = getBackgroundsPropControllerDataResponsiveBackgroundsData(data)
+  const fileIds = getBackgroundsPropControllerFileIds(data)
   const files = useFiles(fileIds)
-  const swatchIds = getBackgroundsSwatchIds(value)
+  const swatchIds = getBackgroundsPropControllerSwatchIds(data)
   const swatches = useSwatches(swatchIds)
 
   return useMemo(() => {
-    if (value == null) return null
+    if (value == null) return undefined
 
     return value.map(({ value: backgrounds, ...restOfValue }) => ({
       ...restOfValue,
@@ -86,7 +88,7 @@ export function useBackgrounds(
               }
             )
           }
-          
+
           if (bg.type === 'image-v1' && bg.payload != null) {
             return match(bg)
               .with(

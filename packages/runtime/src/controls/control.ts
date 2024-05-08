@@ -134,20 +134,20 @@ export type ControlDefinitionData<T extends ControlDefinition> = T extends Check
 
 export function copy(definition: Descriptor | ControlDefinition, value: any, context: CopyContext) {
   switch (definition.type) {
-    case Types.Backgrounds:
+    case PropControllerTypes.Backgrounds:
     case PropControllerTypes.Grid:
     case PropControllerTypes.NavigationLinks:
     case PropControllerTypes.Link:
     case PropControllerTypes.Shadows:
-    case Types.Image:
-    case Types.Images:
+    case PropControllerTypes.Image:
+    case PropControllerTypes.Images:
     case PropControllerTypes.ResponsiveColor:
     case PropControllerTypes.TableFormFields:
     case PropControllerTypes.Table:
     case PropControllerTypes.Border:
-    case DELETED_PROP_CONTROLLER_TYPES.RichText:
     case PropControllerTypes.ElementID:
       return propControllerCopy(definition, value, context)
+    case DELETED_PROP_CONTROLLER_TYPES.RichText:
     case RichTextControlType:
       return copyRichTextData(value, context)
     case RichTextV2ControlType:

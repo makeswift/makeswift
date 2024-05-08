@@ -4,12 +4,8 @@ import { useState, useEffect, Ref, forwardRef } from 'react'
 import NextImage from 'next/image'
 import type NextLegacyImageType from 'next/legacy/image'
 
-import {
-  ImageValue,
-  ResponsiveOpacityValue,
-  TextInputValue,
-} from '../../../prop-controllers/descriptors'
-import { LinkData, ResponsiveLengthData } from '@makeswift/prop-controllers'
+import { ResponsiveOpacityValue, TextInputValue } from '../../../prop-controllers/descriptors'
+import { LinkData, ResponsiveLengthData, ImageData } from '@makeswift/prop-controllers'
 import { Breakpoints, findBreakpointOverride } from '../../../state/modules/breakpoints'
 import { placeholders } from '../../utils/placeholders'
 import { Link } from '../../shared/Link'
@@ -25,7 +21,7 @@ const NextLegacyImage = NextImage as typeof NextLegacyImageType
 
 type Props = {
   id?: string
-  file?: ImageValue
+  file?: ImageData
   altText?: TextInputValue
   link?: LinkData
   width?: ResponsiveLengthData

@@ -90,6 +90,9 @@ import { useGapYPropControllerData } from '../../components/hooks/useGapYPropCon
 import { useElementIDPropControllerData } from '../../components/hooks/useElementIDPropControllerData'
 import { useTableFormFieldsPropControllerData } from '../../components/hooks/useTableFormFieldsPropControllerData'
 import { useGridPropControllerData } from '../../components/hooks/useGridPropControllerData'
+import { useImagePropControllerData } from '../../components/hooks/useImagePropControllerData'
+import { useImagesPropControllerData } from '../../components/hooks/useImagesPropControllerData'
+import { useBackgroundsPropControllerData } from '../../components/hooks/useBackgroundsPropControllerData'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -249,8 +252,12 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                   </RenderHook>
                 )
 
+              case WidthPropControllerFormat.ResponsiveValue:
               default:
-                return renderFn({ ...propsValue, [propName]: props[propName] })
+                return renderFn({
+                  ...propsValue,
+                  [propName]: getWidthPropControllerDataResponsiveLengthData(props[propName]),
+                })
             }
 
           case PropControllerTypes.Padding:
@@ -266,8 +273,12 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                   </RenderHook>
                 )
 
+              case PaddingPropControllerFormat.ResponsiveValue:
               default:
-                return renderFn({ ...propsValue, [propName]: props[propName] })
+                return renderFn({
+                  ...propsValue,
+                  [propName]: getPaddingPropControllerDataResponsivePaddingData(props[propName]),
+                })
             }
 
           case PropControllerTypes.Margin:
@@ -283,8 +294,12 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                   </RenderHook>
                 )
 
+              case MarginPropControllerFormat.ResponsiveValue:
               default:
-                return renderFn({ ...propsValue, [propName]: props[propName] })
+                return renderFn({
+                  ...propsValue,
+                  [propName]: getMarginPropControllerDataResponsiveMarginData(props[propName]),
+                })
             }
 
           case PropControllerTypes.BorderRadius:
@@ -300,9 +315,48 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                   </RenderHook>
                 )
 
+              case BorderRadiusPropControllerFormat.ResponsiveValue:
               default:
-                return renderFn({ ...propsValue, [propName]: props[propName] })
+                return renderFn({
+                  ...propsValue,
+                  [propName]: getBorderRadiusPropControllerDataResponsiveBorderRadiusData(
+                    props[propName],
+                  ),
+                })
             }
+
+          case PropControllerTypes.Backgrounds:
+            return (
+              <RenderHook
+                key={descriptor.type}
+                hook={useBackgroundsPropControllerData}
+                parameters={[props[propName]]}
+              >
+                {value => renderFn({ ...propsValue, [propName]: value })}
+              </RenderHook>
+            )
+
+          case PropControllerTypes.Image:
+            return (
+              <RenderHook
+                key={descriptor.type}
+                hook={useImagePropControllerData}
+                parameters={[props[propName]]}
+              >
+                {value => renderFn({ ...propsValue, [propName]: value })}
+              </RenderHook>
+            )
+
+          case PropControllerTypes.Images:
+            return (
+              <RenderHook
+                key={descriptor.type}
+                hook={useImagesPropControllerData}
+                parameters={[props[propName]]}
+              >
+                {value => renderFn({ ...propsValue, [propName]: value })}
+              </RenderHook>
+            )
 
           case PropControllerTypes.Number:
             return (
@@ -360,8 +414,12 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                   </RenderHook>
                 )
 
+              case BorderPropControllerFormat.ResponsiveValue:
               default:
-                return renderFn({ ...propsValue, [propName]: props[propName] })
+                return renderFn({
+                  ...propsValue,
+                  [propName]: getBorderPropControllerDataResponsiveBorderData(props[propName]),
+                })
             }
 
           case PropControllerTypes.ResponsiveColor:

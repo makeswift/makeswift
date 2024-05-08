@@ -1,10 +1,4 @@
-import {
-  BackgroundsValue,
-  Descriptor,
-  ImagesValue,
-  ImageValue,
-  Types,
-} from './descriptors'
+import { Descriptor } from './descriptors'
 import { Data, Element } from '../state/react-page'
 import {
   ColorControlData,
@@ -74,6 +68,13 @@ import {
   ElementIDPropControllerData,
   getGridPropControllerElementChildren,
   GridPropControllerData,
+  getImagePropControllerFileIds,
+  ImagePropControllerData,
+  getImagesPropControllerFileIds,
+  ImagesPropControllerData,
+  getBackgroundsPropControllerFileIds,
+  getBackgroundsPropControllerSwatchIds,
+  BackgroundsPropControllerData,
 } from '@makeswift/prop-controllers'
 import { DELETED_PROP_CONTROLLER_TYPES } from './deleted'
 
@@ -123,35 +124,14 @@ export function getElementId<T extends Data>(
   }
 }
 
-export function getBackgroundsSwatchIds(value: BackgroundsValue | null | undefined): string[] {
-  return (
-    value
-      ?.flatMap(override => override.value)
-      .flatMap(backgroundItem => {
-        switch (backgroundItem.type) {
-          case 'color':
-            return backgroundItem.payload?.swatchId == null ? [] : [backgroundItem.payload.swatchId]
-
-          case 'gradient':
-            return backgroundItem.payload.stops.flatMap(stop =>
-              stop.color == null ? [] : stop.color.swatchId,
-            )
-
-          default:
-            return []
-        }
-      }) ?? []
-  )
-}
-
 export function getSwatchIds<T extends Data>(
   descriptor: Descriptor<T>,
   prop: T | undefined,
 ): string[] {
   if (prop == null) return []
   switch (descriptor.type) {
-    case Types.Backgrounds:
-      return getBackgroundsSwatchIds(prop as BackgroundsValue)
+    case PropControllerTypes.Backgrounds:
+      return getBackgroundsPropControllerSwatchIds(prop as BackgroundsPropControllerData)
 
     case PropControllerTypes.Border:
       return getBorderPropControllerDataSwatchIds(prop as BorderPropControllerData)
@@ -207,21 +187,6 @@ export function getSwatchIds<T extends Data>(
   }
 }
 
-export function getBackgroundsFileIds(value: BackgroundsValue | null | undefined): string[] {
-  return (
-    value
-      ?.flatMap(override => override.value)
-      .flatMap(backgroundItem => {
-        return match(backgroundItem)
-          .with({ type: 'image-v1', payload: { image: { type: 'makeswift-file' } } }, item => [
-            item.payload.image.id,
-          ])
-          .with({ type: 'image', payload: { imageId: P.string } }, item => [item.payload.imageId])
-          .otherwise(() => [])
-      }) ?? []
-  )
-}
-
 export function getFileIds<T extends Data>(
   descriptor: Descriptor<T>,
   prop: T | undefined,
@@ -229,29 +194,15 @@ export function getFileIds<T extends Data>(
   if (prop == null) return []
 
   switch (descriptor.type) {
-    case Types.Backgrounds:
-      return getBackgroundsFileIds(prop as BackgroundsValue)
+    case PropControllerTypes.Backgrounds:
+      return getBackgroundsPropControllerFileIds(prop as BackgroundsPropControllerData)
 
-    case Types.Image: {
-      return match(prop as ImageValue)
-        .with(P.string, v => [v])
-        .with({ type: 'makeswift-file', version: 1 }, v => [v.id])
-        .with({ type: 'external-file', version: 1 }, () => [])
-        .exhaustive()
+    case PropControllerTypes.Image: {
+      return getImagePropControllerFileIds(prop as ImagePropControllerData)
     }
 
-    case Types.Images: {
-      const value = prop as ImagesValue
-      return (
-        value?.flatMap(item =>
-          match(item.props.file)
-            .with(P.string, f => [f])
-            .with({ type: 'makeswift-file', version: 1 }, f => [f.id])
-            .with({ type: 'external-file', version: 1 }, () => [])
-            .with(P.nullish, () => [])
-            .otherwise(() => []),
-        ) ?? []
-      )
+    case PropControllerTypes.Images: {
+      return getImagesPropControllerFileIds(prop as ImagesPropControllerData)
     }
 
     case ImageControlType: {
