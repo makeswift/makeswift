@@ -56,7 +56,7 @@ import {
   SlotControlType,
 } from './slot'
 
-import { Descriptor, Types } from '../prop-controllers/descriptors'
+import { Descriptor } from '../prop-controllers/descriptors'
 import {
   GridPropControllerData,
   Types as PropControllerTypes,
@@ -207,7 +207,7 @@ export function merge(
 
 export function getTranslatableData(definition: Descriptor | ControlDefinition, data: Data): Data {
   switch (definition.type) {
-    case Types.TextInput:
+    case PropControllerTypes.TextInput:
     case PropControllerTypes.TextArea:
     case TextInputControlType:
     case TextAreaControlType:
@@ -244,7 +244,7 @@ export function mergeTranslatedData(
   if (data == null) return data
 
   switch (definition.type) {
-    case Types.TextInput:
+    case PropControllerTypes.TextInput:
     case PropControllerTypes.TextArea:
     case TextInputControlType:
     case TextAreaControlType:

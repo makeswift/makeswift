@@ -6,8 +6,6 @@ export type {
   ResponsiveIconRadioGroupValue,
   ResponsiveSelectDescriptor,
   ResponsiveSelectValue,
-  TextInputDescriptor,
-  TextInputValue,
   PanelDescriptor,
   PanelDescriptorType,
   PanelDescriptorValueType,

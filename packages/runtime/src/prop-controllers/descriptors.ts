@@ -102,6 +102,8 @@ import {
   ResponsiveOpacity,
   ResolveSocialLinksPropControllerValue,
   SocialLinksDescriptor,
+  TextInputDescriptor,
+  ResolveTextInputPropControllerValue,
 } from '@makeswift/prop-controllers'
 import { DeletedPropControllerDescriptor } from './deleted'
 
@@ -143,7 +145,6 @@ export type Gap = { value: number; unit: 'px' }
 export const Types = {
   ResponsiveIconRadioGroup: 'ResponsiveIconRadioGroup',
   ResponsiveSelect: 'ResponsiveSelect',
-  TextInput: 'TextInput',
   Style: StyleControlType,
 } as const
 
@@ -214,23 +215,6 @@ export function ResponsiveSelect<_T extends string, T extends _T, U extends T>(
   return { type: Types.ResponsiveSelect, options }
 }
 
-export type TextInputValue = string
-
-export type TextInputOptions = Options<{ label?: string; placeholder?: string; hidden?: boolean }>
-
-export type TextInputDescriptor<_T = TextInputValue> = {
-  type: typeof Types.TextInput
-  options: TextInputOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function TextInput(options: TextInputOptions = {}): TextInputDescriptor {
-  return { type: Types.TextInput, options }
-}
-
 export type Descriptor<T extends Data = Data> =
   | DeletedPropControllerDescriptor<T>
   | BackgroundsDescriptor<T>
@@ -299,7 +283,7 @@ export type PanelDescriptorType =
   | typeof PropControllerTypes.GapX
   | typeof PropControllerTypes.BorderRadius
   | typeof PropControllerTypes.Checkbox
-  | typeof Types.TextInput
+  | typeof PropControllerTypes.TextInput
   | typeof PropControllerTypes.Link
   | typeof Types.ResponsiveSelect
   | typeof PropControllerTypes.ResponsiveColor
@@ -431,6 +415,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveTextStylePropControllerValue<Extract<T, { type: typeof PropControllerTypes.TextStyle }>>
   : T['type'] extends typeof PropControllerTypes.TextArea
   ? ResolveTextAreaPropControllerValue<Extract<T, { type: typeof PropControllerTypes.TextArea }>>
+  : T['type'] extends typeof PropControllerTypes.TextInput
+  ? ResolveTextInputPropControllerValue<Extract<T, { type: typeof PropControllerTypes.TextInput }>>
   : T['type'] extends typeof PropControllerTypes.Video
   ? ResolveVideoPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Video }>>
   : T extends Descriptor<infer U>

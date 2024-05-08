@@ -312,6 +312,18 @@ export type {
   ResolveTextAreaPropControllerValue,
 } from './text-area'
 export {
+  TextInput,
+  textInputPropControllerDataSchema,
+  getTextInputPropControllerDataString,
+  createTextInputPropControllerDataFromString,
+} from './text-input'
+export type {
+  TextInputDescriptor,
+  TextInputOptions,
+  TextInputPropControllerData,
+  ResolveTextInputPropControllerValue,
+} from './text-input'
+export {
   TextStyle,
   textStylePropControllerDataSchema,
   getTextStylePropControllerDataResponsiveTextStyleData,

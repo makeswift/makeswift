@@ -22,6 +22,7 @@ import {
   GapX,
   ElementID,
   Image,
+  TextInput,
 } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
@@ -74,7 +75,7 @@ export function registerComponent(runtime: ReactRuntime) {
               checkboxPropControllerDataSchema.optional().catch(undefined).parse(props.showLogo),
             ) === false,
         })),
-        logoAltText: Props.TextInput(props => ({
+        logoAltText: TextInput(props => ({
           label: 'Logo alt text',
           hidden:
             getCheckboxPropControllerDataBoolean(

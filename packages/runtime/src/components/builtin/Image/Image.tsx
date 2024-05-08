@@ -4,7 +4,6 @@ import { useState, useEffect, Ref, forwardRef } from 'react'
 import NextImage from 'next/image'
 import type NextLegacyImageType from 'next/legacy/image'
 
-import { TextInputValue } from '../../../prop-controllers/descriptors'
 import {
   LinkData,
   ResponsiveLengthData,
@@ -27,7 +26,7 @@ const NextLegacyImage = NextImage as typeof NextLegacyImageType
 type Props = {
   id?: string
   file?: ImageData
-  altText?: TextInputValue
+  altText?: string
   link?: LinkData
   width?: ResponsiveLengthData
   margin?: string
