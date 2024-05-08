@@ -1,5 +1,11 @@
 # makeswift
 
+## 0.2.6-canary.0
+
+### Patch Changes
+
+- 186234e: This is a practice.
+
 ## 0.2.5
 
 ### Patch Changes
