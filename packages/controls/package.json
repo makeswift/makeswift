@@ -12,7 +12,7 @@
     "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'tsup src/index.ts --watch'",
     "build": "tsc && tsup src/index.ts",
     "prepublishOnly": "turbo run build",
-    "test": "jest"
+    "test": "jest --passWithNoTests"
   },
   "dependencies": {
     "ts-pattern": "^5.0.8",
