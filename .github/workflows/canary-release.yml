@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     branches:
-      - main
+      - alex/publish-canary
 
 concurrency: ${{ github.workflow}}-${{ github.ref }}
 
@@ -31,7 +31,7 @@ jobs:
 
       - name: Merge To Canary Branch
         run: |
-          git checkout canary
+          git checkout practice-canary
           git merge main --strategy-option=theirs
 
       # Now we pre-release
@@ -47,7 +47,8 @@ jobs:
           branch: changeset-release/main
 
       - name: Publish
-        run: pnpm exec changeset publish
+        run: |
+          echo "This is when publish would run.."
 
       - name: Push Changes To Branch
-        run: git push origin canary --follow-tags
+        run: git push origin practice-canary --follow-tags
