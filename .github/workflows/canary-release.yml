@@ -33,6 +33,8 @@ jobs:
         run: |
           git checkout practice-canary
           git merge origin/main --strategy-option=theirs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Now we pre-release
       - name: Enter Pre-Release Mode
@@ -45,10 +47,17 @@ jobs:
         with:
           commit_message: 'Enter prerelease mode and version packages'
           branch: practice-canary
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish
         run: |
           echo "This is when publish would run.."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Push Changes To Branch
         run: git push origin practice-canary --follow-tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
