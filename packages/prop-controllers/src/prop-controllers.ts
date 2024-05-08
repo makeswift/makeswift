@@ -26,6 +26,7 @@ export const Types = {
   ResponsiveOpacity: 'ResponsiveOpacity',
   SocialLinks: 'SocialLinks',
   TextArea: 'TextArea',
+  TextInput: 'TextInput',
   Table: 'Table',
   TableFormFields: 'TableFormFields',
   TextStyle: 'TextStyle',

@@ -34,7 +34,6 @@ import type { TableColumn } from './types'
 import {
   ResponsiveIconRadioGroupValue,
   ResponsiveSelectValue,
-  TextInputValue,
 } from '../../../prop-controllers/descriptors'
 import { Link } from '../../shared/Link'
 import { BoxModelHandle, getBox } from '../../../box-model'
@@ -89,7 +88,7 @@ type Props = {
   submitTextStyle?: ResponsiveTextStyleData
   brandColor?: ResponsiveColor | null
   submitTextColor?: ResponsiveColor | null
-  submitLabel?: TextInputValue
+  submitLabel?: string
   submitVariant?: ResponsiveSelectValue<
     'flat' | 'outline' | 'shadow' | 'clear' | 'blocky' | 'bubbly' | 'skewed'
   >

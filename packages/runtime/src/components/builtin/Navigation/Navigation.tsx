@@ -13,7 +13,6 @@ import MobileMenu from './components/MobileMenu'
 import {
   ResponsiveIconRadioGroupValue,
   ResponsiveSelectValue,
-  TextInputValue,
 } from '../../../prop-controllers/descriptors'
 import {
   ImageData,
@@ -41,7 +40,7 @@ type Props = {
   showLogo?: boolean
   logoFile?: ImageData
   logoWidth?: ResponsiveLengthData
-  logoAltText?: TextInputValue
+  logoAltText?: string
   logoLink?: LinkData
   alignment?: ResponsiveIconRadioGroupValue<'flex-start' | 'center' | 'flex-end'>
   gutter?: ResponsiveGapData

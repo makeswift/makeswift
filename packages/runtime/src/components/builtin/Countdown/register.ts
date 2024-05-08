@@ -11,6 +11,7 @@ import {
   GapX,
   Margin,
   ResponsiveColor,
+  TextInput,
   Width,
 } from '@makeswift/prop-controllers'
 
@@ -95,13 +96,13 @@ export function registerComponent(runtime: ReactRuntime) {
           defaultValue: { value: 560, unit: 'px' },
         }),
         margin: Margin({ format: Margin.Format.ClassName }),
-        daysLabel: Props.TextInput({ label: 'Days label', placeholder: 'Days' }),
-        hoursLabel: Props.TextInput({ label: 'Hours label', placeholder: 'Hours' }),
-        minutesLabel: Props.TextInput({
+        daysLabel: TextInput({ label: 'Days label', placeholder: 'Days' }),
+        hoursLabel: TextInput({ label: 'Hours label', placeholder: 'Hours' }),
+        minutesLabel: TextInput({
           label: 'Minutes label',
           placeholder: 'Minutes',
         }),
-        secondsLabel: Props.TextInput({
+        secondsLabel: TextInput({
           label: 'Seconds label',
           placeholder: 'Seconds',
         }),
