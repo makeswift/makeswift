@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow}}-${{ github.ref }}
+
+jobs:
+  release:
+    name: Canary Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out git repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up pnpm 8.x
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Set up Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --ignore-scripts --frozen-lockfile
+
+      - name: Merge To Canary Branch
+        run: |
+          git checkout canary
+          git merge main --strategy-option=theirs
+
+      # Now we pre-release
+      - name: Enter Pre-Release Mode
+        run: |
+          pnpm exec changeset pre enter canary
+          pnpm exec changeset version
+
+      - name: Commit Change To Pre-Release Mode
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'Enter prerelease mode and version packages'
+          branch: changeset-release/main
+
+      - name: Publish
+        run: pnpm exec changeset publish
+
+      - name: Push Changes To Branch
+        run: git push origin canary --follow-tags
