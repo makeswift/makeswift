@@ -1,3 +1,5 @@
+import { CopyContext } from './common'
+
 type OpenPageLink = {
   type: 'OPEN_PAGE'
   payload: { pageId: string | null | undefined; openInNewTab: boolean }
@@ -41,4 +43,27 @@ export type LinkControlDefinition<C extends LinkControlConfig = LinkControlConfi
 
 export function Link<C extends LinkControlConfig>(config: C = {} as C): LinkControlDefinition<C> {
   return { type: LinkControlType, config }
+}
+
+export function copyLinkData(
+  value: LinkControlData | undefined,
+  context: CopyContext,
+): LinkControlData | undefined {
+  if (value == null) return value
+
+  if (value.type === 'OPEN_PAGE') {
+    const pageId = value.payload.pageId
+
+    if (pageId != null) {
+      return {
+        ...value,
+        payload: {
+          ...value.payload,
+          pageId: context.replacementContext.pageIds.get(pageId) ?? pageId,
+        },
+      }
+    }
+  }
+
+  return value
 }
