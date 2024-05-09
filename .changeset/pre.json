@@ -8,9 +8,11 @@
     "@makeswift/next-plugin": "0.3.0",
     "@makeswift/prop-controllers": "0.1.1",
     "@makeswift/runtime": "0.16.1",
-    "tsconfig": "0.0.0"
+    "tsconfig": "0.0.0",
+    "@makeswift/controls": "0.0.0"
   },
   "changesets": [
-    "metal-eagles-confess"
+    "metal-eagles-confess",
+    "pink-swans-know"
   ]
 }
