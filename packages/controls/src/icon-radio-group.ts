@@ -9,7 +9,7 @@ export const unstable_IconRadioGroupIcon = {
 } as const
 
 export type IconRadioGroupIcon =
-  typeof unstable_IconRadioGroupIcon[keyof typeof unstable_IconRadioGroupIcon]
+  (typeof unstable_IconRadioGroupIcon)[keyof typeof unstable_IconRadioGroupIcon]
 
 export const IconRadioGroupControlType = 'makeswift::controls::icon-radio-group'
 
