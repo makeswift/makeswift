@@ -140,6 +140,9 @@ importers:
       jest:
         specifier: ^29.0.1
         version: 29.7.0(@types/node@20.11.11)
+      prettier:
+        specifier: ^2.5.1
+        version: 2.7.1
       tsup:
         specifier: ^8.0.2
         version: 8.0.2(@swc/core@1.4.17)(typescript@5.1.6)
