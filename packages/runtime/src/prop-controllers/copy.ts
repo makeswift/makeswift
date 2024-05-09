@@ -1,15 +1,14 @@
 import { Descriptor } from './descriptors'
-import { copy as backgroundsCopy } from './copy/backgrounds'
 import {
   copyLinkPropControllerData,
   copyShadowsPropControllerData,
   copyBorderPropControllerData,
+  copyElementIDPropControllerData,
   copyGridPropControllerData,
+  copyImagePropControllerData,
+  copyImagesPropControllerData,
+  copyBackgroundsPropControllerData,
 } from '@makeswift/prop-controllers'
-import { copy as imageCopy } from './copy/image'
-import { copy as imagesCopy } from './copy/images'
-import { copy as richTextCopy } from './copy/rich-text'
-import { copy as elementIdCopy } from './copy/element-id'
 import { CopyContext } from '../state/react-page'
 import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
 import {
@@ -17,26 +16,25 @@ import {
   copyTablePropControllerData,
   copyNavigationLinksPropControllerData,
 } from '@makeswift/prop-controllers'
-import { DELETED_PROP_CONTROLLER_TYPES } from './deleted'
 
 // @note: note typing value, because would then have to type narrow `Data` per case
 export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
   switch (descriptor.type) {
-    case 'Backgrounds':
-      return backgroundsCopy(descriptor, value, context)
+    case PropControllerTypes.Backgrounds:
+      return copyBackgroundsPropControllerData(descriptor, value, context)
     case PropControllerTypes.Grid:
       return copyGridPropControllerData(value, context)
     case PropControllerTypes.NavigationLinks:
       return copyNavigationLinksPropControllerData(value, context)
     case PropControllerTypes.Link:
       return copyLinkPropControllerData(value, context)
-    case 'Shadows':
+    case PropControllerTypes.Shadows:
       return copyShadowsPropControllerData(value, context)
-    case 'Image':
-      return imageCopy(descriptor, value, context)
-    case 'Images':
-      return imagesCopy(descriptor, value, context)
-    case 'ResponsiveColor':
+    case PropControllerTypes.Image:
+      return copyImagePropControllerData(value, context)
+    case PropControllerTypes.Images:
+      return copyImagesPropControllerData(value, context)
+    case PropControllerTypes.ResponsiveColor:
       return copyResponsiveColorPropControllerData(value, context)
     case PropControllerTypes.TableFormFields:
       return copyTablePropControllerData(value, context)
@@ -44,10 +42,8 @@ export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
       return copyTablePropControllerData(value, context)
     case PropControllerTypes.Border:
       return copyBorderPropControllerData(value, context)
-    case DELETED_PROP_CONTROLLER_TYPES.RichText:
-      return richTextCopy(value, context)
-    case 'ElementID':
-      return elementIdCopy(value, context)
+    case PropControllerTypes.ElementID:
+      return copyElementIDPropControllerData(value, context)
     default:
       return value
   }

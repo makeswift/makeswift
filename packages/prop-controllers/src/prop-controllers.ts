@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 export const Types = {
+  Backgrounds: 'Backgrounds',
   Border: 'Border',
   BorderRadius: 'BorderRadius',
   Checkbox: 'Checkbox',
@@ -10,6 +11,8 @@ export const Types = {
   GapX: 'GapX',
   GapY: 'GapY',
   Grid: 'Grid',
+  Image: 'Image',
+  Images: 'Images',
   Link: 'Link',
   Margin: 'Margin',
   NavigationLinks: 'NavigationLinks',

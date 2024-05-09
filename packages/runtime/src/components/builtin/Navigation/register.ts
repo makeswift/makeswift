@@ -21,6 +21,7 @@ import {
   NavigationLinksData,
   GapX,
   ElementID,
+  Image,
 } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
@@ -42,7 +43,7 @@ export function registerComponent(runtime: ReactRuntime) {
           }
         }),
         showLogo: Checkbox({ preset: true, label: 'Show logo' }),
-        logoFile: Props.Image(props => ({
+        logoFile: Image(props => ({
           label: 'Logo',
           hidden:
             getCheckboxPropControllerDataBoolean(

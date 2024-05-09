@@ -18,7 +18,6 @@ import { useMediaQuery } from '../../hooks'
 
 import Image from '../Image'
 import {
-  ImagesValue,
   ResponsiveNumberValue,
   ResponsiveIconRadioGroupValue,
 } from '../../../prop-controllers/descriptors'
@@ -28,7 +27,7 @@ import { cx } from '@emotion/css'
 import { useResponsiveStyle } from '../../utils/responsive-style'
 import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { useBreakpoints } from '../../../runtimes/react'
-import { ResponsiveGapData } from '@makeswift/prop-controllers'
+import { ImagesData, ResponsiveGapData } from '@makeswift/prop-controllers'
 
 const LeftChevron = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="10" height="14" viewBox="0 0 10 14">
@@ -56,7 +55,7 @@ const RightChevron = () => (
 
 type Props = {
   id?: string
-  images?: ImagesValue
+  images?: ImagesData
   width?: string
   margin?: string
   pageSize?: ResponsiveNumberValue

@@ -42,11 +42,9 @@ import { TypographyControlValue } from '../runtimes/react/controls/typography'
 import {
   BorderDescriptor,
   CheckboxDescriptor,
-  LinkData,
   LinkDescriptor,
   ResolveLinkPropControllerValue,
   Types as PropControllerTypes,
-  ColorData as Color,
   ResponsiveValueType,
   ShadowsDescriptor,
   ResolveShadowsPropControllerValue,
@@ -91,6 +89,12 @@ import {
   ResolveTableFormFieldsPropControllerValue,
   GridDescriptor,
   ResolveGridPropControllerValue,
+  ImageDescriptor,
+  ResolveImagePropControllerValue,
+  ImagesDescriptor,
+  ResolveImagesPropControllerValue,
+  BackgroundsDescriptor,
+  ResolveBackgroundsPropControllerValue,
 } from '@makeswift/prop-controllers'
 import { DeletedPropControllerDescriptor } from './deleted'
 
@@ -130,9 +134,6 @@ type IconName =
 export type Gap = { value: number; unit: 'px' }
 
 export const Types = {
-  Backgrounds: 'Backgrounds',
-  Image: 'Image',
-  Images: 'Images',
   ResponsiveIconRadioGroup: 'ResponsiveIconRadioGroup',
   ResponsiveNumber: 'ResponsiveNumber',
   ResponsiveOpacity: 'ResponsiveOpacity',
@@ -141,157 +142,6 @@ export const Types = {
   TextInput: 'TextInput',
   Style: StyleControlType,
 } as const
-
-type ColorBackground = { type: 'color'; id: string; payload: Color | null }
-
-type GradientStop = { id: string; location: number; color: Color | null }
-
-type Gradient = { angle?: number; isRadial?: boolean; stops: GradientStop[] }
-
-type GradientBackground = { type: 'gradient'; id: string; payload: Gradient }
-
-type BackgroundImagePosition = { x: number; y: number }
-
-type BackgroundImageSize = 'cover' | 'contain' | 'auto'
-
-type BackgroundImageRepeat = 'no-repeat' | 'repeat-x' | 'repeat-y' | 'repeat'
-
-type BackgroundImageV0 = {
-  imageId: ImageValueV0
-  position: BackgroundImagePosition
-  size?: BackgroundImageSize
-  repeat?: BackgroundImageRepeat
-  opacity?: number
-  parallax?: number
-  priority?: boolean
-}
-
-type BackgroundImageV1 = {
-  version: 1
-  image: ImageValueV1
-  position: BackgroundImagePosition
-  size?: BackgroundImageSize
-  repeat?: BackgroundImageRepeat
-  opacity?: number
-  parallax?: number
-  priority?: boolean
-}
-
-export type BackgroundImage = BackgroundImageV0 | BackgroundImageV1
-
-type ImageBackgroundV0 = { type: 'image'; id: string; payload: BackgroundImageV0 }
-
-type ImageBackgroundV1 = { type: 'image-v1'; id: string; payload: BackgroundImageV1 }
-
-export type ImageBackground = ImageBackgroundV0 | ImageBackgroundV1
-
-type BackgroundVideoAspectRatio = 'wide' | 'standard'
-
-type BackgroundVideo = {
-  url?: string
-  maskColor?: Color | null
-  opacity?: number
-  zoom?: number
-  aspectRatio?: BackgroundVideoAspectRatio
-  parallax?: number
-}
-
-type VideoBackground = { type: 'video'; id: string; payload: BackgroundVideo }
-
-type Background = ColorBackground | GradientBackground | ImageBackground | VideoBackground
-
-export type BackgroundsValue = ResponsiveValue<Background[]>
-
-type BackgroundsOptions = Options<Record<string, never>>
-
-export type BackgroundsDescriptor<_T = BackgroundsValue> = {
-  type: typeof Types.Backgrounds
-  version?: 1
-  options: BackgroundsOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Backgrounds(options: BackgroundsOptions = {}): BackgroundsDescriptor {
-  return { type: Types.Backgrounds, version: 1, options }
-}
-
-export type ImageValueV0 = string
-
-type ImageValueV1MakeswiftFile = {
-  version: 1
-  type: 'makeswift-file'
-  id: string
-}
-
-type ImageValueV1ExternalFile = {
-  version: 1
-  type: 'external-file'
-  url: string
-  width?: number | null
-  height?: number | null
-}
-
-export type ImageValueV1 = ImageValueV1MakeswiftFile | ImageValueV1ExternalFile
-
-export type ImageValue = ImageValueV0 | ImageValueV1
-
-export type ImageOptions = Options<{ label?: string; hidden?: boolean }>
-
-export type ImageDescriptor<_T = ImageValue> = {
-  type: typeof Types.Image
-  version?: 1
-  options: ImageOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Image(options: ImageOptions = {}): ImageDescriptor {
-  return { type: Types.Image, version: 1, options }
-}
-
-export type ImagesValueV0Item = {
-  key: string
-  props: {
-    link?: LinkData
-    file?: ImageValueV0
-    altText?: string
-  }
-}
-
-export type ImagesValueV1Item = {
-  key: string
-  version: 1
-  props: {
-    link?: LinkData
-    file?: ImageValueV1
-    altText?: string
-  }
-}
-
-export type ImagesValueItem = ImagesValueV0Item | ImagesValueV1Item
-
-export type ImagesValue = ImagesValueItem[]
-
-type ImagesOptions = Options<{ preset?: ImagesValue }>
-
-export type ImagesDescriptor<_T = ImagesValue> = {
-  type: typeof Types.Images
-  version?: 1
-  options: ImagesOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function Images(options: ImagesOptions = {}): ImagesDescriptor {
-  return { type: Types.Images, version: 1, options }
-}
 
 export type IconRadioGroupOption<T extends string> = { value: T; label: string; icon: IconName }
 
@@ -543,7 +393,7 @@ export type Descriptor<T extends Data = Data> =
   | TypographyControlDefinition
 
 export type PanelDescriptorType =
-  | typeof Types.Backgrounds
+  | typeof PropControllerTypes.Backgrounds
   | typeof Types.ResponsiveIconRadioGroup
   | typeof PropControllerTypes.Margin
   | typeof PropControllerTypes.Padding
@@ -558,14 +408,14 @@ export type PanelDescriptorType =
   | typeof Types.ResponsiveSelect
   | typeof PropControllerTypes.ResponsiveColor
   | typeof PropControllerTypes.TextStyle
-  | typeof Types.Images
+  | typeof PropControllerTypes.Images
   | typeof Types.ResponsiveNumber
   | typeof PropControllerTypes.Number
   | typeof PropControllerTypes.Date
   | typeof PropControllerTypes.Font
   | typeof PropControllerTypes.TextArea
   | typeof PropControllerTypes.Table
-  | typeof Types.Image
+  | typeof PropControllerTypes.Image
   | typeof Types.ResponsiveOpacity
   | typeof Types.SocialLinks
   | typeof PropControllerTypes.Video
@@ -619,6 +469,10 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
     // the resolved type is tightly coupled with the runtime (i.e., it's the result of an API call).
     // This means that we probably want to rethink how types are resolved and where that lives.
     ResponsiveColor | null | undefined
+  : T['type'] extends typeof PropControllerTypes.Backgrounds
+  ? ResolveBackgroundsPropControllerValue<
+      Extract<T, { type: typeof PropControllerTypes.Backgrounds }>
+    >
   : T['type'] extends typeof PropControllerTypes.Checkbox
   ? ResolveCheckboxPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Checkbox }>>
   : T['type'] extends typeof PropControllerTypes.Date
@@ -633,6 +487,10 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveGapYPropControllerValue<Extract<T, { type: typeof PropControllerTypes.GapY }>>
   : T['type'] extends typeof PropControllerTypes.Grid
   ? ResolveGridPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Grid }>>
+  : T['type'] extends typeof PropControllerTypes.Image
+  ? ResolveImagePropControllerValue<Extract<T, { type: typeof PropControllerTypes.Image }>>
+  : T['type'] extends typeof PropControllerTypes.Images
+  ? ResolveImagesPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Images }>>
   : T['type'] extends typeof PropControllerTypes.Link
   ? ResolveLinkPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Link }>>
   : T['type'] extends typeof PropControllerTypes.Width

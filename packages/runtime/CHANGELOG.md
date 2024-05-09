@@ -1,20 +1,22 @@
 # @makeswift/runtime
 
-## 0.17.0-canary.2
-
-### Minor Changes
-
-- 87e1665: Add data type to legacy `Grid` prop controller and move it to `@makeswift/prop-controllers`.
+## 0.17.1
 
 ### Patch Changes
 
-- Updated dependencies [87e1665]
-  - @makeswift/prop-controllers@0.2.0-canary.1
+- Updated dependencies [9a439d5]
+  - @makeswift/prop-controllers@0.2.1
 
-## 0.17.0-canary.1
+## 0.17.0
 
 ### Minor Changes
 
+- f5c3617: Add data type to legacy `TableFormFields` prop controller and move it to `@makeswift/prop-controllers`.
+- bb82576: Add data type to legacy `Image` prop controller and move it to `@makeswift/prop-controllers`.
+- 860f92a: Add data type to legacy `Backgrounds` prop controller and move it to `@makeswift/prop-controllers`.
+- 61d43cc: Add data type to legacy `Images` prop controller and move it to `@makeswift/prop-controllers`.
+- 092784c: Add data type to legacy `ElementID` prop controller and move it to `@makeswift/prop-controllers`.
+- 87e1665: Add data type to legacy `Grid` prop controller and move it to `@makeswift/prop-controllers`.
 - 346b1f3: BREAKING CHANGE: Remove deprecated `RichText` PropControllers from `@makeswift/runtime/prop-controllers`.
 
   This breaking change only affects a minority of users who are upgrading from versions older than `0.0.7`.
@@ -28,18 +30,19 @@
   + import { RichText } from '@makeswift/runtime/controls';
   ```
 
-## 0.17.0-canary.0
-
-### Minor Changes
-
-- f5c3617: Add data type to legacy `TableFormFields` prop controller and move it to `@makeswift/prop-controllers`.
-- 092784c: Add data type to legacy `ElementID` prop controller and move it to `@makeswift/prop-controllers`.
-
 ### Patch Changes
 
+- 4b0d47c: Use correct copy method for ElementID.
+- 4d38a0b: Fix v2 data values not properly transformed for `ResponsiveValue` option.
 - Updated dependencies [f5c3617]
+- Updated dependencies [bb82576]
+- Updated dependencies [860f92a]
+- Updated dependencies [61d43cc]
 - Updated dependencies [092784c]
-  - @makeswift/prop-controllers@0.2.0-canary.0
+- Updated dependencies [87e1665]
+- Updated dependencies [4b0d47c]
+- Updated dependencies [4d38a0b]
+  - @makeswift/prop-controllers@0.2.0
 
 ## 0.16.1
 

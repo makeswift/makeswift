@@ -9,13 +9,13 @@ import {
   ReactElement,
   Ref,
 } from 'react'
-import { BackgroundsValue as BackgroundsPropControllerValue } from '../../../prop-controllers/descriptors'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { useBackgrounds } from '../../hooks'
 import Backgrounds from './components/Backgrounds'
+import { ResponsiveBackgroundsData } from '@makeswift/prop-controllers'
 
 type BaseProps = {
-  backgrounds: BackgroundsPropControllerValue | null | undefined
+  backgrounds: ResponsiveBackgroundsData | undefined
   children: ReactElement<ElementType>
 }
 

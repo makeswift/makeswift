@@ -1,5 +1,32 @@
 export * from './prop-controllers'
-export type { ColorData, LengthData, GapData, ResponsiveGapData } from './data'
+export type {
+  ColorData,
+  LengthData,
+  GapData,
+  ResponsiveGapData,
+  ImageDataV0,
+  ImageDataV1,
+  ImageData,
+} from './data'
+export {
+  Backgrounds,
+  backgroundsPropControllerDataSchema,
+  getBackgroundsPropControllerDataResponsiveBackgroundsData,
+  createBackgroundsPropControllerDataFromResponsiveBackgroundsData,
+  getBackgroundsPropControllerFileIds,
+  getBackgroundsPropControllerSwatchIds,
+  copyBackgroundsPropControllerData,
+} from './backgrounds'
+export type {
+  BackgroundData,
+  BackgroundImageData,
+  ImageBackgroundData,
+  ResponsiveBackgroundsData,
+  BackgroundsDescriptor,
+  BackgroundsOptions,
+  BackgroundsPropControllerData,
+  ResolveBackgroundsPropControllerValue,
+} from './backgrounds'
 export {
   Border,
   BorderPropControllerFormat,
@@ -117,6 +144,36 @@ export type {
   GridPropControllerData,
   ResolveGridPropControllerValue,
 } from './grid'
+export {
+  Image,
+  imagePropControllerDataSchema,
+  getImagePropControllerDataImageData,
+  createImagePropControllerDataFromImageData,
+  getImagePropControllerFileIds,
+  copyImagePropControllerData,
+} from './image'
+export type {
+  ImageDescriptor,
+  ImageOptions,
+  ImagePropControllerData,
+  ResolveImagePropControllerValue,
+} from './image'
+export {
+  Images,
+  imagesPropControllerDataSchema,
+  getImagesPropControllerDataImagesData,
+  createImagesPropControllerDataFromImagesData,
+  getImagesPropControllerFileIds,
+  copyImagesPropControllerData,
+} from './images'
+export type {
+  ImagesData,
+  ImagesDataItem,
+  ImagesDescriptor,
+  ImagesOptions,
+  ImagesPropControllerData,
+  ResolveImagesPropControllerValue,
+} from './images'
 export {
   Link,
   linkDataSchema,
