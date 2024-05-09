@@ -25,7 +25,8 @@ export const ImageControlValueFormat = {
   WithDimensions: 'makeswift::controls::image::format::with-dimensions',
 } as const
 
-type ImageControlValueFormat = typeof ImageControlValueFormat[keyof typeof ImageControlValueFormat]
+type ImageControlValueFormat =
+  (typeof ImageControlValueFormat)[keyof typeof ImageControlValueFormat]
 
 type ImageControlConfig = { label?: string; format?: ImageControlValueFormat }
 
