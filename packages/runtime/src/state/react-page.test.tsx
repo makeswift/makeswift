@@ -1,7 +1,8 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { TextInput } from '@makeswift/controls'
 
-import { Slot, TextInput } from '../controls'
+import { Slot } from '../controls'
 import { registerComponent } from './actions'
 import * as ReactPage from './react-page'
 import { ComponentIcon } from './modules/components-meta'

@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { CheckboxControlType, IconRadioGroupControlType, NumberControlType, TextInputControlType, TextAreaControlType } from '@makeswift/controls'
 
 import * as ReactPage from '../../state/react-page'
 
@@ -22,20 +23,16 @@ import {
   useResponsiveWidth,
 } from '../../components/utils/responsive-style'
 import {
-  CheckboxControlType,
   ColorControlType,
   ComboboxControlType,
   ImageControlType,
   LinkControlType,
   ListControlType,
-  NumberControlType,
   SelectControlType,
   ShapeControlType,
   SlotControl,
   SlotControlType,
   StyleControlType,
-  TextAreaControlType,
-  TextInputControlType,
   RichTextControl,
   RichTextControlType,
   StyleControl,
@@ -51,7 +48,6 @@ import { useSlot } from './controls/slot'
 import { useStyle } from './use-style'
 import { useRichText } from './controls/rich-text/rich-text'
 import { useRichTextV2 } from './controls/rich-text-v2'
-import { IconRadioGroupControlType } from '../../controls/icon-radio-group'
 import { useStore } from './hooks/use-store'
 import { useDocumentKey } from './hooks/use-document-key'
 import { useSelector } from './hooks/use-selector'

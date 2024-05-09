@@ -1,3 +1,4 @@
+import { Data } from '@makeswift/controls'
 import {
   AnyPropController,
   createPropController,
@@ -14,7 +15,6 @@ import {
 } from './control'
 
 import { copy as controlCopy } from './control'
-import { Data } from './types'
 import {
   getElementChildren,
   getFileIds,

@@ -1,3 +1,4 @@
+import { ResponsiveValue } from '@makeswift/controls'
 import { PropController } from '../prop-controllers/base'
 import { BoxModel } from '../state/modules/box-models'
 import {
@@ -7,7 +8,6 @@ import {
   MergeContext,
   MergeTranslatableDataContext,
 } from '../state/react-page'
-import { ResponsiveValue } from './types'
 
 type SlotControlColumnData = { count: number; spans: number[][] }
 

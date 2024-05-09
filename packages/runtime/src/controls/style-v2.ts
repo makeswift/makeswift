@@ -1,3 +1,4 @@
+import { ResponsiveValue } from '@makeswift/controls'
 import { BoxModel } from 'css-box-model'
 import { ControlDefinition } from './control'
 import { PropController } from '../prop-controllers/base'
@@ -7,7 +8,6 @@ import {
   Send,
   createPropController,
 } from '../prop-controllers/instances'
-import { ResponsiveValue } from './types'
 import { CSSObject } from '@emotion/serialize'
 import { useStyle } from '../runtimes/react/use-style'
 import { ControlDefinitionValue } from '../runtimes/react/controls/control'

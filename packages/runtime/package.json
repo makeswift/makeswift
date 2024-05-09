@@ -116,6 +116,7 @@
     "@emotion/server": "^11.4.0",
     "@emotion/sheet": "^1.0.3",
     "@emotion/utils": "^1.0.0",
+    "@makeswift/controls": "workspace:*",
     "@makeswift/next-plugin": "workspace:*",
     "@makeswift/prop-controllers": "workspace:*",
     "@popmotion/popcorn": "^0.4.4",

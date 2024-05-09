@@ -1,4 +1,5 @@
-import { ImageControlData, copyImageData } from './image'
+import { ImageControlData } from '@makeswift/controls'
+import { copyImageData } from './image'
 import { ReplacementContext } from '../state/react-page'
 
 describe('image copy', () => {

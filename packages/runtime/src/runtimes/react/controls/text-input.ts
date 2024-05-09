@@ -4,7 +4,7 @@ import {
   TextInputControlDataTypeKey,
   TextInputControlDataTypeValueV1,
   TextInputControlDefinition,
-} from '../../../controls'
+} from '@makeswift/controls'
 
 export type TextInputControlValue<T extends TextInputControlDefinition> =
   undefined extends T['config']['defaultValue'] ? string | undefined : string

@@ -1,4 +1,4 @@
-import { ControlDataTypeKey } from "./control-data-type-key"
+import { ControlDataTypeKey } from './common'
 
 export const CheckboxControlDataTypeKey = ControlDataTypeKey
 
@@ -8,7 +8,7 @@ export type CheckboxControlDataV0 = boolean
 
 export type CheckboxControlDataV1 = {
   [CheckboxControlDataTypeKey]: typeof CheckboxControlDataTypeValueV1
-  value: boolean,
+  value: boolean
 }
 
 export type CheckboxControlData = CheckboxControlDataV0 | CheckboxControlDataV1

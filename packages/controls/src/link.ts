@@ -1,4 +1,4 @@
-import { CopyContext } from '../state/react-page'
+import { CopyContext } from './common'
 
 type OpenPageLink = {
   type: 'OPEN_PAGE'

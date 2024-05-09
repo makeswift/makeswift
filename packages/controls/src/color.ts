@@ -1,7 +1,5 @@
 import { match } from 'ts-pattern'
-import type { CopyContext } from '../state/react-page'
-import type { ColorData } from './types'
-import { ControlDataTypeKey } from './control-data-type-key'
+import { ControlDataTypeKey, ColorData, CopyContext } from './common'
 
 export const ColorControlDataTypeKey = ControlDataTypeKey
 

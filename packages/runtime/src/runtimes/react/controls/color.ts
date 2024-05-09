@@ -1,5 +1,5 @@
 import Color from 'color'
-import { ColorControlData, ColorControlDefinition } from '../../../controls/color'
+import { ColorControlData, ColorControlDefinition } from '@makeswift/controls'
 import { useSwatch } from '../hooks/makeswift-api'
 
 export type ColorControlValue<T extends ColorControlDefinition> =

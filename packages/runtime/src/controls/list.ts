@@ -1,4 +1,22 @@
 import {
+  CheckboxControlDefinition,
+  NumberControlDefinition,
+  TextInputControlDefinition,
+  TextAreaControlDefinition,
+  ColorData,
+  Data,
+  ColorControlDefinition,
+  ComboboxControlData,
+  ComboboxControlDefinition,
+  IconRadioGroupControlData,
+  IconRadioGroupControlDefinition,
+  ImageControlData,
+  ImageControlDefinition,
+  LinkControlData,
+  LinkControlDefinition,
+} from '@makeswift/controls'
+
+import {
   AnyPropController,
   createPropController,
   PropControllerMessage,
@@ -12,7 +30,6 @@ import {
   getTranslatableData,
   mergeTranslatedData,
 } from './control'
-import { ColorData, Data } from './types'
 
 import { copy as controlCopy } from './control'
 import {
@@ -22,17 +39,8 @@ import {
   getSwatchIds,
   getTypographyIds,
 } from '../prop-controllers/introspection'
-import { CheckboxControlDefinition } from './checkbox'
-import { NumberControlDefinition } from './number'
-import { TextInputControlDefinition } from './text-input'
-import { TextAreaControlDefinition } from './text-area'
 import { SelectControlData, SelectControlDefinition } from './select'
-import { ColorControlDefinition } from './color'
-import { IconRadioGroupControlData, IconRadioGroupControlDefinition } from './icon-radio-group'
-import { ImageControlData, ImageControlDefinition } from './image'
-import { ComboboxControlData, ComboboxControlDefinition } from './combobox'
 import { ShapeControlDefinition } from './shape'
-import { LinkControlData, LinkControlDefinition } from './link'
 import { RichTextControlData, RichTextControlDefinition } from './rich-text'
 import { RichTextV2ControlData, RichTextV2ControlDefinition } from './rich-text-v2'
 import { StyleControlData, StyleControlDefinition } from './style'

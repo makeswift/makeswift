@@ -1,4 +1,4 @@
-import { ControlDataTypeKey } from "./control-data-type-key"
+import { ControlDataTypeKey } from './common'
 
 export const NumberControlDataTypeKey = ControlDataTypeKey
 
@@ -8,7 +8,7 @@ export type NumberControlDataV0 = number
 
 export type NumberControlDataV1 = {
   [NumberControlDataTypeKey]: typeof NumberControlDataTypeValueV1
-  value: number,
+  value: number
 }
 
 export type NumberControlData = NumberControlDataV0 | NumberControlDataV1

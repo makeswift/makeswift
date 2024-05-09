@@ -2,6 +2,17 @@ import {
   CheckboxControlData,
   CheckboxControlDefinition,
   CheckboxControlType,
+  NumberControlData,
+  NumberControlDefinition,
+  NumberControlType,
+  TextInputControlData,
+  TextInputControlDefinition,
+  TextInputControlType,
+  TextAreaControlData,
+  TextAreaControlDefinition,
+  TextAreaControlType,
+} from '@makeswift/controls'
+import {
   ColorControlData,
   ColorControlDefinition,
   ColorControlType,
@@ -10,6 +21,9 @@ import {
   ComboboxControlType,
   ControlDefinition,
   ControlDefinitionData,
+  IconRadioGroupControlData,
+  IconRadioGroupControlDefinition,
+  IconRadioGroupControlType,
   ImageControlData,
   ImageControlDefinition,
   ImageControlType,
@@ -20,9 +34,6 @@ import {
   ListControlData,
   ListControlDefinition,
   ListControlType,
-  NumberControlData,
-  NumberControlDefinition,
-  NumberControlType,
   RichTextControl,
   RichTextControlData,
   RichTextControlDefinition,
@@ -50,21 +61,11 @@ import {
   StyleV2ControlData,
   StyleV2ControlDefinition,
   StyleV2ControlType,
-  TextAreaControlData,
-  TextAreaControlDefinition,
-  TextAreaControlType,
-  TextInputControlData,
-  TextInputControlDefinition,
-  TextInputControlType,
   TypographyControlData,
   TypographyControlDefinition,
   TypographyControlType,
 } from '../../../controls'
-import {
-  IconRadioGroupControlData,
-  IconRadioGroupControlDefinition,
-  IconRadioGroupControlType,
-} from '../../../controls/icon-radio-group'
+
 import { AnyPropController } from '../../../prop-controllers/instances'
 import { RenderHook } from '../components'
 import { CheckboxControlValue, useCheckboxControlValue } from './checkbox'

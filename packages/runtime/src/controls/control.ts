@@ -1,8 +1,32 @@
-import { CheckboxControlData, CheckboxControlDefinition } from './checkbox'
-import { ColorControlData, ColorControlDefinition, ColorControlType, copyColorData } from './color'
-import { ComboboxControlData, ComboboxControlDefinition } from './combobox'
-import { ImageControlData, ImageControlDefinition, copyImageData, ImageControlType } from './image'
-import { LinkControlData, LinkControlDefinition, copyLinkData, LinkControlType } from './link'
+import {
+  ColorControlData,
+  ColorControlDefinition,
+  ColorControlType,
+  TextInputControlData,
+  TextInputControlDefinition,
+  TextInputControlType,
+  TextAreaControlData,
+  TextAreaControlDefinition,
+  TextAreaControlType,
+  CheckboxControlData,
+  CheckboxControlDefinition,
+  NumberControlData,
+  NumberControlDefinition,
+  ComboboxControlData,
+  ComboboxControlDefinition,
+  IconRadioGroupControlData,
+  IconRadioGroupControlDefinition,
+  ImageControlType,
+  ImageControlData,
+  ImageControlDefinition,
+  LinkControlData,
+  LinkControlDefinition,
+  LinkControlType,
+  copyColorData,
+  copyLinkData,
+} from '@makeswift/controls'
+
+import { copyImageData } from './image'
 import {
   ListControlData,
   ListControlDefinition,
@@ -12,7 +36,6 @@ import {
   mergeListTranslatedData,
   ListControlTranslationDto,
 } from './list'
-import { NumberControlData, NumberControlDefinition } from './number'
 import { SelectControlData, SelectControlDefinition } from './select'
 import {
   ShapeControlData,
@@ -23,12 +46,6 @@ import {
   mergeShapeTranslatedData,
   ShapeControlTranslationDto,
 } from './shape'
-import { TextAreaControlData, TextAreaControlDefinition, TextAreaControlType } from './text-area'
-import {
-  TextInputControlData,
-  TextInputControlDefinition,
-  TextInputControlType,
-} from './text-input'
 import { copyStyleData, StyleControlData, StyleControlDefinition, StyleControlType } from './style'
 import {
   copySlotData,
@@ -66,7 +83,6 @@ import {
 } from './rich-text-v2/rich-text-v2'
 
 import { StyleV2ControlData, StyleV2ControlDefinition } from './style-v2'
-import { IconRadioGroupControlData, IconRadioGroupControlDefinition } from './icon-radio-group'
 import { TypographyControlData, TypographyControlDefinition } from './typography'
 import {
   RichTextV2ControlTranslationDto,

@@ -4,7 +4,7 @@ import {
   TextAreaControlDataTypeKey,
   TextAreaControlDataTypeValueV1,
   TextAreaControlDefinition,
-} from '../../../controls'
+} from '@makeswift/controls'
 
 export type TextAreaControlValue<T extends TextAreaControlDefinition> =
   undefined extends T['config']['defaultValue'] ? string | undefined : string
