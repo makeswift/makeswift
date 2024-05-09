@@ -3,6 +3,7 @@ export * from './versioned'
 export * from './prop-controllers'
 export * from './gap-x'
 export * from './responsive-number'
+export * from './responsive-opacity'
 export * from './backgrounds'
 
 export {

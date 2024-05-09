@@ -99,6 +99,7 @@ import {
   ResolveBackgroundsPropControllerValue,
   type Descriptor as PropDescriptor,
   type Value as PropValue,
+  ResponsiveOpacity,
 } from '@makeswift/prop-controllers'
 import { DeletedPropControllerDescriptor } from './deleted'
 
@@ -139,7 +140,6 @@ export type Gap = { value: number; unit: 'px' }
 
 export const Types = {
   ResponsiveIconRadioGroup: 'ResponsiveIconRadioGroup',
-  ResponsiveOpacity: 'ResponsiveOpacity',
   ResponsiveSelect: 'ResponsiveSelect',
   SocialLinks: 'SocialLinks',
   TextInput: 'TextInput',
@@ -176,25 +176,6 @@ export function ResponsiveIconRadioGroup<_T extends string, T extends _T, U exte
   options: ResponsiveIconRadioGroupOptions<T, U>,
 ): ResponsiveIconRadioGroupDescriptor<ResponsiveIconRadioGroupValue<T>> {
   return { type: Types.ResponsiveIconRadioGroup, options }
-}
-
-export type ResponsiveOpacityValue = ResponsiveValue<number>
-
-type ResponsiveOpacityOptions = Options<Record<string, never>>
-
-type ResponsiveOpacityDescriptor<_T = ResponsiveOpacityValue> = {
-  type: typeof Types.ResponsiveOpacity
-  options: ResponsiveOpacityOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function ResponsiveOpacity(
-  options: ResponsiveOpacityOptions = {},
-): ResponsiveOpacityDescriptor {
-  return { type: Types.ResponsiveOpacity, options }
 }
 
 export type ResponsiveSelectValue<T extends string = string> = ResponsiveValue<T>
@@ -336,7 +317,7 @@ export type Descriptor<T extends Data = Data> =
     >
   | ResponsiveLengthDescriptor<T>
   | PropDescriptor<typeof ResponsiveNumber>
-  | ResponsiveOpacityDescriptor<T>
+  | PropDescriptor<typeof ResponsiveOpacity>
   | ResponsiveSelectDescriptor<
       T extends ResponsiveSelectValue<string> ? T : ResponsiveSelectValue<string>
     >
@@ -392,7 +373,7 @@ export type PanelDescriptorType =
   | typeof PropControllerTypes.TextArea
   | typeof PropControllerTypes.Table
   | typeof PropControllerTypes.Image
-  | typeof Types.ResponsiveOpacity
+  | typeof PropControllerTypes.ResponsiveOpacity
   | typeof Types.SocialLinks
   | typeof PropControllerTypes.Video
   | typeof PropControllerTypes.NavigationLinks
@@ -468,6 +449,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   : T['type'] extends typeof PropControllerTypes.Images
   ? ResolveImagesPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Images }>>
   : T['type'] extends typeof PropControllerTypes.ResponsiveNumber
+  ? PropValue<T> | undefined
+  : T['type'] extends typeof PropControllerTypes.ResponsiveOpacity
   ? PropValue<T> | undefined
   : T['type'] extends typeof PropControllerTypes.Link
   ? ResolveLinkPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Link }>>

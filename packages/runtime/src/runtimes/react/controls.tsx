@@ -76,6 +76,7 @@ import {
   WidthDescriptor,
   GapX,
   ResponsiveNumber,
+  ResponsiveOpacity,
 } from '@makeswift/prop-controllers'
 import { useResponsiveLengthPropControllerData } from '../../components/hooks/useResponsiveLengthPropControllerData'
 import { useNumberPropControllerData } from '../../components/hooks/useNumberPropControllerData'
@@ -372,6 +373,17 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
               <RenderHook
                 key={descriptor.type}
                 hook={data => usePropValue(ResponsiveNumber, data)}
+                parameters={[props[propName]]}
+              >
+                {value => renderFn({ ...propsValue, [propName]: value })}
+              </RenderHook>
+            )
+
+          case PropControllerTypes.ResponsiveOpacity:
+            return (
+              <RenderHook
+                key={descriptor.type}
+                hook={data => usePropValue(ResponsiveOpacity, data)}
                 parameters={[props[propName]]}
               >
                 {value => renderFn({ ...propsValue, [propName]: value })}
