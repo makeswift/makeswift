@@ -15,33 +15,35 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      # - name: Setup Git User
-      #   uses: fregante/setup-git-user@v2
-      # - name: Set up pnpm 8.x
-      #   uses: pnpm/action-setup@v2
-      #   with:
-      #     version: 8
-      # - name: Set up Node.js 18.x
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: '18'
-      #     cache: pnpm
-      # - name: Creating .npmrc
-      #   run: |
-      #     cat << EOF > "$HOME/.npmrc"
-      #       //registry.npmjs.org/:_authToken=$NPM_TOKEN
-      #     EOF
-      #   env:
-      #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      # - name: Install dependencies
-      #   run: pnpm install --ignore-scripts --frozen-lockfile
+      - name: Setup Git User
+        uses: fregante/setup-git-user@v2
+      - name: Set up pnpm 8.x
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Set up Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: pnpm
+      - name: Creating .npmrc
+        run: |
+          cat << EOF > "$HOME/.npmrc"
+            //registry.npmjs.org/:_authToken=$NPM_TOKEN
+          EOF
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Install dependencies
+        run: pnpm install --ignore-scripts --frozen-lockfile
 
-      # # Now we do the snapshot release
-      # - name: Version Packages
-      #   run: pnpm exec changeset version --snapshot "${GITHUB_SHA:0:7}"
+      # Now we do the snapshot release
+      - name: Version Packages
+        run: pnpm exec changeset version --snapshot "${GITHUB_SHA:0:7}"
 
-      # - name: Publish Packages
-      #   run: pnpm exec changeset publish --tag "${GITHUB_SHA:0:7}"
+      - name: Publish Packages
+        run: pnpm exec changeset publish --tag "${GITHUB_SHA:0:7}"
+
+      # Let the developer know
       - name: Write Message
         run: |
           cat << EOF > message.txt
