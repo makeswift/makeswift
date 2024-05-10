@@ -45,6 +45,7 @@ jobs:
           pnpm exec changeset version --snapshot "${GITHUB_SHA:0:7}"
 
           cat packages/runtime/package.json | jq '.version'
+          git tag --sort=-creatordate | head -n 1
 
       # - name: Publish
       #   run: |
