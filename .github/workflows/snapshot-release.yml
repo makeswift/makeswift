@@ -44,7 +44,17 @@ jobs:
       #   run: pnpm exec changeset publish --tag "${GITHUB_SHA:0:7}"
       - name: Foo
         run: |
-          echo "Hey there! I've published a snapshot release for your commit, ${GITHUB_SHA:0:7}.\nYou can do any of the following. ```pnpm install @makeswift/runtime${GITHUB_SHA:0:7}```" >> message.txt
+          cat << 'EOF' > message.txt
+          Hey there! I've published a snapshot release for your commit, \${GITHUB_SHA:0:7}.
+
+          You can do any of the following:
+
+          \`\`\`bash
+          pnpm install @makeswift/runtime@\${GITHUB_SHA:0:7}
+          \`\`\`
+
+          This command will install the snapshot release.
+          EOF
 
       - uses: mshick/add-pr-comment@v2
         with:
