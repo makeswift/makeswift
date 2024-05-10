@@ -15,7 +15,7 @@ import {
   ResponsiveNumber,
   Width,
   getImagesPropControllerDataImagesData,
-  type ResponsiveNumberValue,
+  type PropData,
 } from '@makeswift/prop-controllers'
 
 import { MakeswiftComponentType } from '../constants'
@@ -64,7 +64,9 @@ export function registerComponent(runtime: ReactRuntime) {
           }
         }),
         step: ResponsiveNumber((props, device) => {
-          const pageSize = props.pageSize as ResponsiveNumberValue | undefined
+          const pageSize = props.pageSize
+            ? ResponsiveNumber.fromPropData(props.pageSize as PropData<typeof ResponsiveNumber>)
+            : undefined
           const pageSizeValue =
             findBreakpointOverride(runtime.getBreakpoints(), pageSize, device)?.value ?? 1
 
