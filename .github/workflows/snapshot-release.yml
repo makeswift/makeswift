@@ -1,7 +1,8 @@
 name: Snapshot Release
 
 on:
-  push:
+  pull_request:
+    types: [opened, synchronize, reopened]
     branches-ignore:
       - main
       - canary
