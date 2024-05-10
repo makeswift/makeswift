@@ -10,7 +10,7 @@ on:
 concurrency: ${{ github.workflow}}-${{ github.ref }}
 
 jobs:
-  release:
+  snapshot_release:
     name: Snapshot Release
     runs-on: ubuntu-latest
     steps:
@@ -38,27 +38,11 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Install dependencies
         run: pnpm install --ignore-scripts --frozen-lockfile
-      # - name: Set Snapshot Tag
-      # id: set_snapshot_tag
-      # run: echo "::set-output name=snapshot_tag::$(git rev-parse --short=7 HEAD)"
-      - name: Set output
-        id: set_snapshot_tag
-        run: echo "{snapshot_tag}={$(git rev-parse --short=7 HEAD)}" >> $GITHUB_OUTPUT
-
-      - name: Use output
-        run: echo "The output was ${{ steps.set_snapshot_tag.outputs.snapshot_tag}}"
 
       # Now we do the snapshot release
       - name: Version Packages
         run: |
-          export SNAPSHOT_TAG=$(git rev-parse --short=7 HEAD)
-
-      - name: Can I see tag?
-        run: |
-          echo $SNAPSHOT_TAG
-
-          exit 1
-          # pnpm exec changeset version --snapshot SHA
+          echo "${GITHUB_SHA:0:7}"
 
       # - name: Publish
       #   run: |
