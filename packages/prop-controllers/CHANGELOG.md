@@ -1,5 +1,11 @@
 # @makeswift/prop-controllers
 
+## 0.3.0-canary.0
+
+### Minor Changes
+
+- 8f019cd: Add data type to legacy `ResponsiveNumber` prop controller, move it to `@makeswift/prop-controllers`
+
 ## 0.2.1
 
 ### Patch Changes
