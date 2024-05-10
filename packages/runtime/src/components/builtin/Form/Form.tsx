@@ -31,10 +31,7 @@ import Field from './components/Field'
 import Spinner from './components/Spinner'
 import Button from '../Button'
 import type { TableColumn } from './types'
-import {
-  ResponsiveIconRadioGroupValue,
-  ResponsiveSelectValue,
-} from '../../../prop-controllers/descriptors'
+import { ResponsiveIconRadioGroupValue } from '../../../prop-controllers/descriptors'
 import { Link } from '../../shared/Link'
 import { BoxModelHandle, getBox } from '../../../box-model'
 import { PropControllersHandle } from '../../../state/modules/prop-controller-handles'
@@ -47,13 +44,14 @@ import { useResponsiveGridItem, useResponsiveStyle } from '../../utils/responsiv
 import { useStyle } from '../../../runtimes/react/use-style'
 import { useTable } from '../../../runtimes/react/hooks/makeswift-api'
 import {
-  LinkData,
-  ResponsiveGapData,
-  ResponsiveLengthData,
-  ResponsiveTextStyleData,
-  ResponsiveValue,
-  TableFormFieldsData,
-  TableFormFieldsDescriptor,
+  type LinkData,
+  type ResponsiveGapData,
+  type ResponsiveLengthData,
+  type ResponsiveTextStyleData,
+  type ResponsiveSelectValue,
+  type ResponsiveValue,
+  type TableFormFieldsData,
+  type TableFormFieldsDescriptor,
 } from '@makeswift/prop-controllers'
 
 const LOCAL_STORAGE_NAMESPACE = '@@makeswift/components/form'

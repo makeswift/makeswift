@@ -4,6 +4,7 @@ export * from './prop-controllers'
 export * from './gap-x'
 export * from './responsive-number'
 export * from './responsive-opacity'
+export * from './responsive-select'
 export * from './backgrounds'
 
 export {

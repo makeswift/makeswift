@@ -6,6 +6,7 @@ import {
   ResponsiveLengthOptions,
   ResponsiveLengthPropControllerData,
   ResponsiveNumber,
+  ResponsiveSelect,
   type Descriptor,
   type PropDef,
   type OptionsType,
@@ -28,8 +29,6 @@ import {
   Device,
   ResponsiveIconRadioGroupDescriptor as ResponsiveIconRadioGroupControl,
   ResponsiveIconRadioGroupValue as ResponsiveIconRadioGroupControlValue,
-  ResponsiveSelectDescriptor as ResponsiveSelectControl,
-  ResponsiveSelectValue as ResponsiveSelectControlValue,
   PanelDescriptor as PanelControl,
   PanelDescriptorType as PanelControlType,
   PanelDescriptorValueType as PanelControlValueType,
@@ -48,11 +47,7 @@ import {
   TypeaheadValue as TypeaheadControlValue,
   RichTextDescriptor as RichTextControl,
 } from '../../prop-controllers/deleted'
-import {
-  IconRadioGroupOption,
-  SelectLabelOrientation,
-  SelectOption,
-} from '../../prop-controllers/descriptors'
+import { IconRadioGroupOption } from '../../prop-controllers/descriptors'
 import {
   deserializeComboboxControlDefinition,
   serializeComboboxControlDefinition,
@@ -629,48 +624,6 @@ function deserializeTextInputControl(
   return { ...serializedControl, options: deserializedOptions }
 }
 
-type SerializedResponsiveSelectControl<_T = ResponsiveSelectControlValue> = {
-  type: typeof Controls.Types.ResponsiveSelect
-  options: SerializedConfig<ResponsiveSelectControlConfig>
-}
-
-function serializeResponsiveSelectControl(
-  control: ResponsiveSelectControl,
-): [SerializedResponsiveSelectControl, Transferable[]] {
-  const { options } = control
-
-  if (typeof options !== 'function') return [{ ...control, options }, []]
-
-  const serializedOptions = serializeFunction(options)
-
-  return [{ ...control, options: serializedOptions }, [serializedOptions]]
-}
-
-type ResponsiveSelectControlConfig<T extends string = string, U extends T = T> = {
-  label?: string
-  labelOrientation?: SelectLabelOrientation
-  options: SelectOption<T>[]
-  defaultValue?: U
-  hidden?: boolean
-}
-
-type DeserializedResponsiveSelectControl<_T = ResponsiveSelectControlValue> = {
-  type: typeof Controls.Types.ResponsiveSelect
-  options: DeserializedConfig<ResponsiveSelectControlConfig>
-}
-
-function deserializeResponsiveSelectControl(
-  serializedControl: SerializedResponsiveSelectControl,
-): DeserializedResponsiveSelectControl {
-  const { options } = serializedControl
-
-  if (!isSerializedFunction(options)) return { ...serializedControl, options }
-
-  const deserializedOptions = deserializeFunction(options)
-
-  return { ...serializedControl, options: deserializedOptions }
-}
-
 type SerializedResponsiveLengthControl<_T = ResponsiveLengthPropControllerData> = {
   type: typeof PropControllerTypes.ResponsiveLength
   options: SerializedConfig<ResponsiveLengthOptions>
@@ -830,9 +783,7 @@ export type SerializedControl<T extends Data = Data> =
       | ResponsiveIconRadioGroupControl<
           T extends ResponsiveIconRadioGroupControlValue ? T : ResponsiveIconRadioGroupControlValue
         >
-      | ResponsiveSelectControl<
-          T extends ResponsiveSelectControlValue ? T : ResponsiveSelectControlValue
-        >
+      | Descriptor<typeof ResponsiveSelect>
       | ResponsiveLengthDescriptor<T>
       | DateControl<T>
       | LinkControl<T>
@@ -856,7 +807,7 @@ export type SerializedControl<T extends Data = Data> =
   | SerializedResponsiveColorControl<T>
   | SerializedNumberControl<T>
   | SerializedResponsiveIconRadioGroupControl<T>
-  | SerializedResponsiveSelectControl<T>
+  | SerializedControlDef<typeof ResponsiveSelect>
   | SerializedResponsiveLengthControl<T>
   | SerializedDateControl<T>
   | SerializedLinkControl<T>
@@ -893,9 +844,7 @@ export type DeserializedControl<T extends Data = Data> =
       | ResponsiveIconRadioGroupControl<
           T extends ResponsiveIconRadioGroupControlValue ? T : ResponsiveIconRadioGroupControlValue
         >
-      | ResponsiveSelectControl<
-          T extends ResponsiveSelectControlValue ? T : ResponsiveSelectControlValue
-        >
+      | Descriptor<typeof ResponsiveSelect>
       | ResponsiveLengthDescriptor<T>
       | DateControl<T>
       | LinkControl<T>
@@ -919,7 +868,7 @@ export type DeserializedControl<T extends Data = Data> =
   | DeserializedResponsiveColorControl<T>
   | DeserializedNumberControl<T>
   | DeserializedResponsiveIconRadioGroupControl<T>
-  | DeserializedResponsiveSelectControl<T>
+  | DeserializedControlDef<typeof ResponsiveSelect>
   | DeserializedResponsiveLengthControl<T>
   | DeserializedDateControl<T>
   | DeserializedLinkControl<T>
@@ -975,8 +924,8 @@ export function serializeControl<T extends Data>(
     case Controls.Types.ResponsiveIconRadioGroup:
       return serializeResponsiveIconRadioGroupControl(control)
 
-    case Controls.Types.ResponsiveSelect:
-      return serializeResponsiveSelectControl(control)
+    case PropControllerTypes.ResponsiveSelect:
+      return serializeControlDef<typeof ResponsiveSelect>(control)
 
     case PropControllerTypes.ResponsiveLength:
       return serializeResponsiveLengthControl(control)
@@ -1053,8 +1002,8 @@ export function deserializeControl<T extends Data>(
     case Controls.Types.ResponsiveIconRadioGroup:
       return deserializeResponsiveIconRadioGroupControl(serializedControl)
 
-    case Controls.Types.ResponsiveSelect:
-      return deserializeResponsiveSelectControl(serializedControl)
+    case PropControllerTypes.ResponsiveSelect:
+      return deserializeControlDef<typeof ResponsiveSelect>(serializedControl)
 
     case PropControllerTypes.ResponsiveLength:
       return deserializeResponsiveLengthControl(serializedControl)

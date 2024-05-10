@@ -1,5 +1,8 @@
 import { z } from 'zod'
-import { createResponsiveValueSchema } from './prop-controllers'
+import {
+  createResponsiveValueSchema,
+  type ResponsiveValue,
+} from './prop-controllers'
 
 export const colorDataSchema = z.object({
   swatchId: z.string(),
@@ -63,3 +66,10 @@ export const responsiveNumberValueSchema = createResponsiveValueSchema(
 )
 
 export type ResponsiveNumberValue = z.infer<typeof responsiveNumberValueSchema>
+
+export const responsiveSelectValueSchema = createResponsiveValueSchema(
+  z.string(),
+)
+
+export type ResponsiveSelectValue<T extends string = string> =
+  ResponsiveValue<T>

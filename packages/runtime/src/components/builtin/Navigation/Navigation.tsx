@@ -10,10 +10,7 @@ import Button from '../Button'
 import LinksPlaceholder from './components/LinksPlaceholder'
 import DropDownButton from './components/DropDownButton'
 import MobileMenu from './components/MobileMenu'
-import {
-  ResponsiveIconRadioGroupValue,
-  ResponsiveSelectValue,
-} from '../../../prop-controllers/descriptors'
+import { ResponsiveIconRadioGroupValue } from '../../../prop-controllers/descriptors'
 import {
   ImageData,
   LinkData,
@@ -23,6 +20,7 @@ import {
   ResponsiveLengthData,
   ResponsiveTextStyleData,
   ResponsiveValue,
+  type ResponsiveSelectValue,
 } from '@makeswift/prop-controllers'
 
 import { ColorValue as Color } from '../../utils/types'

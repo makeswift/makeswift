@@ -24,6 +24,7 @@ export const Types = {
   ResponsiveLength: 'ResponsiveLength',
   ResponsiveNumber: 'ResponsiveNumber',
   ResponsiveOpacity: 'ResponsiveOpacity',
+  ResponsiveSelect: 'ResponsiveSelect',
   SocialLinks: 'SocialLinks',
   TextArea: 'TextArea',
   TextInput: 'TextInput',
@@ -135,6 +136,7 @@ export type Value<T> = AssociatedType<T, 'Value'>
 export type Descriptor<T> = AssociatedType<T, 'Descriptor'>
 export type Discriminator<T> = AssociatedType<T, 'Discriminator'>
 export type OptionsType<T> = AssociatedType<Descriptor<T>, 'Options'>
+export type RawOptionsType<T> = ResolveOptions<OptionsType<T>>
 
 export type PrimitiveValue<T> =
   Value<T> extends ResponsiveValue<infer U> ? U : Value<T>

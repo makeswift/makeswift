@@ -83,6 +83,7 @@ import {
   ResolveTextAreaPropControllerValue,
   GapX,
   ResponsiveNumber,
+  ResponsiveSelect,
   ResolveGapYPropControllerValue,
   GapYDescriptor,
   ElementIDDescriptor,
@@ -144,7 +145,6 @@ export type Gap = { value: number; unit: 'px' }
 
 export const Types = {
   ResponsiveIconRadioGroup: 'ResponsiveIconRadioGroup',
-  ResponsiveSelect: 'ResponsiveSelect',
   Style: StyleControlType,
 } as const
 
@@ -180,41 +180,6 @@ export function ResponsiveIconRadioGroup<_T extends string, T extends _T, U exte
   return { type: Types.ResponsiveIconRadioGroup, options }
 }
 
-export type ResponsiveSelectValue<T extends string = string> = ResponsiveValue<T>
-
-export type SelectLabelOrientation = 'vertical' | 'horizontal'
-
-export type SelectOption<T extends string> = { value: T; label: string }
-
-export type ResponsiveSelectOptions<T extends string = string, U extends T = T> = Options<{
-  label?: string
-  labelOrientation?: SelectLabelOrientation
-  options: SelectOption<T>[]
-  defaultValue?: U
-  hidden?: boolean
-}>
-
-export type ResponsiveSelectDescriptor<
-  T extends ResponsiveSelectValue<string> = ResponsiveSelectValue<string>,
-> = {
-  type: typeof Types.ResponsiveSelect
-  options: ResponsiveSelectOptions<ResponsiveValueType<T>>
-}
-
-// HACK(miguel): We have to use a layer of indirection with `_T` and `T` because otherwise the
-// values provided would undergo type widening. For some reason, the extra layer of indirection
-// reuslts in TypeScript not widening types. Note, this only happens when the returned value of this
-// function is passed to another as an argument, which is common with the `registerComponent` API.
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function ResponsiveSelect<_T extends string, T extends _T, U extends T>(
-  options: ResponsiveSelectOptions<T, U>,
-): ResponsiveSelectDescriptor<ResponsiveSelectValue<T>> {
-  return { type: Types.ResponsiveSelect, options }
-}
-
 export type Descriptor<T extends Data = Data> =
   | DeletedPropControllerDescriptor<T>
   | BackgroundsDescriptor<T>
@@ -241,9 +206,7 @@ export type Descriptor<T extends Data = Data> =
   | ResponsiveLengthDescriptor<T>
   | PropDescriptor<typeof ResponsiveNumber>
   | PropDescriptor<typeof ResponsiveOpacity>
-  | ResponsiveSelectDescriptor<
-      T extends ResponsiveSelectValue<string> ? T : ResponsiveSelectValue<string>
-    >
+  | PropDescriptor<typeof ResponsiveSelect>
   | ShadowsDescriptor<T>
   | SocialLinksDescriptor<T>
   | TableDescriptor<T>
@@ -285,7 +248,7 @@ export type PanelDescriptorType =
   | typeof PropControllerTypes.Checkbox
   | typeof PropControllerTypes.TextInput
   | typeof PropControllerTypes.Link
-  | typeof Types.ResponsiveSelect
+  | typeof PropControllerTypes.ResponsiveSelect
   | typeof PropControllerTypes.ResponsiveColor
   | typeof PropControllerTypes.TextStyle
   | typeof PropControllerTypes.Images
@@ -374,6 +337,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   : T['type'] extends typeof PropControllerTypes.ResponsiveNumber
   ? PropValue<T> | undefined
   : T['type'] extends typeof PropControllerTypes.ResponsiveOpacity
+  ? PropValue<T> | undefined
+  : T['type'] extends typeof PropControllerTypes.ResponsiveSelect
   ? PropValue<T> | undefined
   : T['type'] extends typeof PropControllerTypes.Link
   ? ResolveLinkPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Link }>>
