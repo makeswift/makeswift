@@ -44,6 +44,8 @@ jobs:
         run: |
           pnpm exec changeset version --snapshot "${GITHUB_SHA:0:7}"
 
+          cat packages/runtime/package.json | jq '.version'
+
       # - name: Publish
       #   run: |
       #     pnpm exec changeset publish
