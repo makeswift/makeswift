@@ -39,6 +39,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --ignore-scripts --frozen-lockfile
 
+      - name: Set output
+        id: step_one
+        run: echo "::set-output name=my_output::some data"
+
+      - name: Use output
+        run: echo "The output was ${{ steps.step_one.outputs.my_output }}"
+
       # Now we do the snapshot release
       - name: Version Packages
         run: |
