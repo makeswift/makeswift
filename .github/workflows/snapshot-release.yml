@@ -46,9 +46,4 @@ jobs:
       - uses: mshick/add-pr-comment@v2
         with:
           message: |
-            **Hello**
-            🌏
-            !
-          message-failure: |
-            Uh oh!
-          allow-repeats: true
+            "${GITHUB_SHA:0:7}"
