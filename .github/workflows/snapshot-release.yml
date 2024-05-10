@@ -47,9 +47,7 @@ jobs:
           cat << EOF > message.txt
           # Snapshot Release
 
-          I've published a snapshot release for your commit, ${GITHUB_SHA:0:7}.
-
-          To use it, go to a Next.js app with \`@makeswift/runtime\` installed and run:
+          I've published a snapshot release for your commit, ${GITHUB_SHA:0:7}. To use it, go to a Next.js app with \`@makeswift/runtime\` installed and run:
           \`\`\`bash
           pnpm up @makeswift/runtime@${GITHUB_SHA:0:7}
           \`\`\`
