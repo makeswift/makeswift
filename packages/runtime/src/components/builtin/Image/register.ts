@@ -13,6 +13,7 @@ import {
   Width,
   ElementID,
   Image,
+  ResponsiveOpacity,
 } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
@@ -32,7 +33,7 @@ export function registerComponent(runtime: ReactRuntime) {
         border: Border({ format: Border.Format.ClassName }),
         borderRadius: BorderRadius({ format: BorderRadius.Format.ClassName }),
         boxShadow: Shadows({ format: Shadows.Format.ClassName }),
-        opacity: Props.ResponsiveOpacity(),
+        opacity: ResponsiveOpacity(),
         priority: Checkbox({ label: 'Priority' }),
       },
     },

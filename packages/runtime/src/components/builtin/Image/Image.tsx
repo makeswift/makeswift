@@ -4,8 +4,13 @@ import { useState, useEffect, Ref, forwardRef } from 'react'
 import NextImage from 'next/image'
 import type NextLegacyImageType from 'next/legacy/image'
 
-import { ResponsiveOpacityValue, TextInputValue } from '../../../prop-controllers/descriptors'
-import { LinkData, ResponsiveLengthData, ImageData } from '@makeswift/prop-controllers'
+import { TextInputValue } from '../../../prop-controllers/descriptors'
+import {
+  LinkData,
+  ResponsiveLengthData,
+  ImageData,
+  ResponsiveOpacityValue,
+} from '@makeswift/prop-controllers'
 import { Breakpoints, findBreakpointOverride } from '../../../state/modules/breakpoints'
 import { placeholders } from '../../utils/placeholders'
 import { Link } from '../../shared/Link'
