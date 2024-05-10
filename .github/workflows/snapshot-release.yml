@@ -44,7 +44,7 @@ jobs:
       #   run: pnpm exec changeset publish --tag "${GITHUB_SHA:0:7}"
       - name: Write Message
         run: |
-          cat << 'EOF' > message.txt
+          cat << EOF > message.txt
           Hey there! I've published a snapshot release for your commit, ${GITHUB_SHA:0:7}.
 
           You can do any of the following:
