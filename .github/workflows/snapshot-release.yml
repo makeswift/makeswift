@@ -1,0 +1,55 @@
+name: Snapshot Release
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - canary
+      - 'releases/**'
+
+concurrency: ${{ github.workflow}}-${{ github.ref }}
+
+jobs:
+  release:
+    name: Snapshot Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out git repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup Git User
+        uses: fregante/setup-git-user@v2
+      - name: Set up pnpm 8.x
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Set up Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: pnpm
+      - name: Creating .npmrc
+        run: |
+          cat << EOF > "$HOME/.npmrc"
+            //registry.npmjs.org/:_authToken=$NPM_TOKEN
+          EOF
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Install dependencies
+        run: pnpm install --ignore-scripts --frozen-lockfile
+
+      # Now we do the snapshot release
+      - name: Version Packages
+        run: |
+          sha=$(git rev-parse --short=7 HEAD)
+          echo sha = $sha
+
+          exit 1
+          pnpm exec changeset version --snapshot SHA
+
+      # - name: Publish
+      #   run: |
+      #     pnpm exec changeset publish
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
