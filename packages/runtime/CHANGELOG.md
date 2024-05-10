@@ -1,5 +1,18 @@
 # @makeswift/runtime
 
+## 0.18.0-canary.5
+
+### Minor Changes
+
+- b7a2a4c: Add data type to legacy `TextInput` prop controller and move it to `@makeswift/prop-controllers`.
+- f32d402: Add data type to legacy `SocialLinks` prop controller and move it to `@makeswift/prop-controllers`.
+
+### Patch Changes
+
+- Updated dependencies [b7a2a4c]
+- Updated dependencies [f32d402]
+  - @makeswift/prop-controllers@0.3.0-canary.2
+
 ## 0.18.0-canary.4
 
 ### Minor Changes

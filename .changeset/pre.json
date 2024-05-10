@@ -12,9 +12,11 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
+    "fair-phones-look",
     "metal-eagles-confess",
     "mighty-monkeys-doubt",
     "pink-swans-know",
+    "rich-starfishes-hope",
     "seven-nails-sniff",
     "spicy-months-trade"
   ]
