@@ -42,11 +42,14 @@ jobs:
       # Now we do the snapshot release
       - name: Version Packages
         run: |
-          sha=$(git rev-parse --short=7 HEAD)
-          echo sha = $sha
+          export SNAPSHOT_TAG=$(git rev-parse --short=7 HEAD)
+
+      - name: Can I see tag?
+        run: |
+          echo $SNAPSHOT_TAG
 
           exit 1
-          pnpm exec changeset version --snapshot SHA
+          # pnpm exec changeset version --snapshot SHA
 
       # - name: Publish
       #   run: |
