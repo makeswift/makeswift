@@ -45,7 +45,7 @@ jobs:
       - name: Write Message
         run: |
           cat << EOF > message.txt
-          \# Snapshot Release
+          # Snapshot Release
 
           I've published a snapshot release for your commit, ${GITHUB_SHA:0:7}.
 
