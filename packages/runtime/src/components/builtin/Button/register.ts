@@ -3,11 +3,13 @@ import {
   Link,
   Margin,
   ResponsiveColor,
+  ResponsiveSelect,
   TextInput,
   TextStyle,
   Width,
+  type PropData,
 } from '@makeswift/prop-controllers'
-import { Props, ResponsiveSelectValue } from '../../../prop-controllers'
+import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
@@ -32,7 +34,7 @@ export function registerComponent(runtime: ReactRuntime) {
             },
           },
         }),
-        variant: Props.ResponsiveSelect({
+        variant: ResponsiveSelect({
           label: 'Style',
           labelOrientation: 'horizontal',
           options: [
@@ -65,7 +67,9 @@ export function registerComponent(runtime: ReactRuntime) {
           defaultValue: 'medium',
         }),
         color: ResponsiveColor((props, device) => {
-          const variant = props.variant as ResponsiveSelectValue<ButtonVariant> | undefined
+          const variant = ResponsiveSelect.fromPropData<ButtonVariant>(
+            props.variant as PropData<typeof ResponsiveSelect> | undefined,
+          )
           const hidden =
             findBreakpointOverride<ButtonVariant>(runtime.getBreakpoints(), variant, device)
               ?.value === 'clear'

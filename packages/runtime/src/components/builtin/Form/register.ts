@@ -1,4 +1,4 @@
-import { Props, ResponsiveSelectValue } from '../../../prop-controllers'
+import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
@@ -12,11 +12,13 @@ import {
   Margin,
   ResponsiveColor,
   ResponsiveLength,
+  ResponsiveSelect,
   Table,
   TableFormFields,
   TextInput,
   TextStyle,
   Width,
+  type PropData,
 } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
@@ -82,7 +84,9 @@ export function registerComponent(runtime: ReactRuntime) {
         labelTextStyle: TextStyle({ label: 'Label text style' }),
         labelTextColor: ResponsiveColor((props, device) => {
           const hidden = props.tableId == null
-          const responsiveContrast = props.contrast as ResponsiveSelectValue<Contrast> | undefined
+          const responsiveContrast = ResponsiveSelect.fromPropData<Contrast>(
+            props.contrast as PropData<typeof ResponsiveSelect> | undefined,
+          )
           const contrast = findBreakpointOverride<Contrast>(
             runtime.getBreakpoints(),
             responsiveContrast,
@@ -113,7 +117,7 @@ export function registerComponent(runtime: ReactRuntime) {
           placeholder: 'Submit',
           hidden: props.tableId == null,
         })),
-        submitVariant: Props.ResponsiveSelect(props => ({
+        submitVariant: ResponsiveSelect(props => ({
           label: 'Button style',
           options: [
             { value: 'flat', label: 'Flat' },

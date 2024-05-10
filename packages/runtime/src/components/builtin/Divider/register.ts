@@ -1,4 +1,3 @@
-import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
@@ -8,6 +7,7 @@ import {
   Margin,
   ResponsiveColor,
   ResponsiveLength,
+  ResponsiveSelect,
   Width,
 } from '@makeswift/prop-controllers'
 
@@ -20,7 +20,7 @@ export function registerComponent(runtime: ReactRuntime) {
       icon: ComponentIcon.Divider,
       props: {
         id: ElementID(),
-        variant: Props.ResponsiveSelect({
+        variant: ResponsiveSelect({
           label: 'Style',
           labelOrientation: 'horizontal',
           options: [

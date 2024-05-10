@@ -1,5 +1,4 @@
 import { Props } from '../../../prop-controllers'
-import { ResponsiveSelectValue } from '../../../prop-controllers/descriptors'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
@@ -20,12 +19,22 @@ import {
   NavigationLinks,
   NavigationLinksData,
   GapX,
+  ResponsiveSelect,
   ElementID,
   Image,
   TextInput,
+  type PropData,
 } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
+  function isHiddenBasedOnMenuAnimation(props: Record<string, unknown>, deviceId: string): boolean {
+    const mobileMenuAnimation = ResponsiveSelect.fromPropData(
+      props.mobileMenuAnimation as PropData<typeof ResponsiveSelect> | undefined,
+    )
+
+    return !findBreakpointOverride(runtime.getBreakpoints(), mobileMenuAnimation, deviceId)
+  }
+
   return runtime.registerComponent(
     lazy(() => import('./Navigation')),
     {
@@ -111,7 +120,7 @@ export function registerComponent(runtime: ReactRuntime) {
           step: 1,
           defaultValue: { value: 0, unit: 'px' },
         }),
-        mobileMenuAnimation: Props.ResponsiveSelect({
+        mobileMenuAnimation: ResponsiveSelect({
           label: 'Mobile menu',
           options: [
             { value: 'coverRight', label: 'Cover from right' },
@@ -119,51 +128,24 @@ export function registerComponent(runtime: ReactRuntime) {
           ],
         }),
         mobileMenuOpenIconColor: ResponsiveColor((props, device) => {
-          const mobileMenuAnimation = props.mobileMenuAnimation as
-            | ResponsiveSelectValue<string>
-            | undefined
-          const hidden = !findBreakpointOverride(
-            runtime.getBreakpoints(),
-            mobileMenuAnimation,
-            device,
-          )
-
           return {
             label: 'Open icon color',
             placeholder: 'rgba(161, 168, 194, 0.5)',
-            hidden,
+            hidden: isHiddenBasedOnMenuAnimation(props, device),
           }
         }),
         mobileMenuCloseIconColor: ResponsiveColor((props, device) => {
-          const mobileMenuAnimation = props.mobileMenuAnimation as
-            | ResponsiveSelectValue<string>
-            | undefined
-          const hidden = !findBreakpointOverride(
-            runtime.getBreakpoints(),
-            mobileMenuAnimation,
-            device,
-          )
-
           return {
             label: 'Close icon color',
             placeholder: 'rgba(161, 168, 194, 0.5)',
-            hidden,
+            hidden: isHiddenBasedOnMenuAnimation(props, device),
           }
         }),
         mobileMenuBackgroundColor: ResponsiveColor((props, device) => {
-          const mobileMenuAnimation = props.mobileMenuAnimation as
-            | ResponsiveSelectValue<string>
-            | undefined
-          const hidden = !findBreakpointOverride(
-            runtime.getBreakpoints(),
-            mobileMenuAnimation,
-            device,
-          )
-
           return {
             label: 'Menu BG color',
             placeholder: 'black',
-            hidden,
+            hidden: isHiddenBasedOnMenuAnimation(props, device),
           }
         }),
         width: Width({
