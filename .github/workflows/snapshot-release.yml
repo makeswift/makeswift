@@ -3,10 +3,6 @@ name: Snapshot Release
 on:
   pull_request:
     types: [opened, synchronize]
-    branches-ignore:
-      - main
-      - canary
-      - 'releases/**'
 
 concurrency: ${{ github.workflow}}-${{ github.ref }}
 
