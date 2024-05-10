@@ -48,10 +48,10 @@ jobs:
         run: |
           cat << EOF > message.txt
           # Snapshot Release
+          :clock1 $(date +"The current date and time is %B %d, %Y, %H:%M:%S.")
 
           I've published a snapshot release for your commit, ${GITHUB_SHA:0:7}. To use it, go to a Next.js app with \`@makeswift/runtime\` installed and run:
           \`\`\`bash
-          \# Last updated at $(date)
           pnpm up @makeswift/runtime@${GITHUB_SHA:0:7}
           \`\`\`
           EOF
