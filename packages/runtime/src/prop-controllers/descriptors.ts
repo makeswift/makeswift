@@ -81,8 +81,8 @@ import {
   ResolveNavigationLinksPropControllerValue,
   TextAreaDescriptor,
   ResolveTextAreaPropControllerValue,
-  ResolveGapXPropControllerValue,
-  GapXDescriptor,
+  GapX,
+  ResponsiveNumber,
   ResolveGapYPropControllerValue,
   GapYDescriptor,
   ElementIDDescriptor,
@@ -97,6 +97,8 @@ import {
   ResolveImagesPropControllerValue,
   BackgroundsDescriptor,
   ResolveBackgroundsPropControllerValue,
+  type Descriptor as PropDescriptor,
+  type Value as PropValue,
 } from '@makeswift/prop-controllers'
 import { DeletedPropControllerDescriptor } from './deleted'
 
@@ -137,7 +139,6 @@ export type Gap = { value: number; unit: 'px' }
 
 export const Types = {
   ResponsiveIconRadioGroup: 'ResponsiveIconRadioGroup',
-  ResponsiveNumber: 'ResponsiveNumber',
   ResponsiveOpacity: 'ResponsiveOpacity',
   ResponsiveSelect: 'ResponsiveSelect',
   SocialLinks: 'SocialLinks',
@@ -175,33 +176,6 @@ export function ResponsiveIconRadioGroup<_T extends string, T extends _T, U exte
   options: ResponsiveIconRadioGroupOptions<T, U>,
 ): ResponsiveIconRadioGroupDescriptor<ResponsiveIconRadioGroupValue<T>> {
   return { type: Types.ResponsiveIconRadioGroup, options }
-}
-
-export type ResponsiveNumberValue = ResponsiveValue<number>
-
-export type ResponsiveNumberOptions = Options<{
-  label?: string
-  defaultValue?: number
-  min?: number
-  max?: number
-  step?: number
-  suffix?: string
-  hidden?: boolean
-}>
-
-export type ResponsiveNumberDescriptor<_T = ResponsiveNumberValue> = {
-  type: typeof Types.ResponsiveNumber
-  options: ResponsiveNumberOptions
-}
-
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function ResponsiveNumber(
-  options: ResponsiveNumberOptions = {},
-): ResponsiveNumberDescriptor {
-  return { type: Types.ResponsiveNumber, options }
 }
 
 export type ResponsiveOpacityValue = ResponsiveValue<number>
@@ -346,7 +320,7 @@ export type Descriptor<T extends Data = Data> =
   | DateDescriptor<T>
   | ElementIDDescriptor<T>
   | FontDescriptor<T>
-  | GapXDescriptor<T>
+  | PropDescriptor<typeof GapX>
   | GapYDescriptor<T>
   | GridDescriptor<T>
   | ImageDescriptor<T>
@@ -361,7 +335,7 @@ export type Descriptor<T extends Data = Data> =
       T extends ResponsiveIconRadioGroupValue<string> ? T : ResponsiveIconRadioGroupValue<string>
     >
   | ResponsiveLengthDescriptor<T>
-  | ResponsiveNumberDescriptor<T>
+  | PropDescriptor<typeof ResponsiveNumber>
   | ResponsiveOpacityDescriptor<T>
   | ResponsiveSelectDescriptor<
       T extends ResponsiveSelectValue<string> ? T : ResponsiveSelectValue<string>
@@ -411,7 +385,7 @@ export type PanelDescriptorType =
   | typeof PropControllerTypes.ResponsiveColor
   | typeof PropControllerTypes.TextStyle
   | typeof PropControllerTypes.Images
-  | typeof Types.ResponsiveNumber
+  | typeof PropControllerTypes.ResponsiveNumber
   | typeof PropControllerTypes.Number
   | typeof PropControllerTypes.Date
   | typeof PropControllerTypes.Font
@@ -484,7 +458,7 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   : T['type'] extends typeof PropControllerTypes.Font
   ? ResolveFontPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Font }>>
   : T['type'] extends typeof PropControllerTypes.GapX
-  ? ResolveGapXPropControllerValue<Extract<T, { type: typeof PropControllerTypes.GapX }>>
+  ? PropValue<T> | undefined
   : T['type'] extends typeof PropControllerTypes.GapY
   ? ResolveGapYPropControllerValue<Extract<T, { type: typeof PropControllerTypes.GapY }>>
   : T['type'] extends typeof PropControllerTypes.Grid
@@ -493,6 +467,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveImagePropControllerValue<Extract<T, { type: typeof PropControllerTypes.Image }>>
   : T['type'] extends typeof PropControllerTypes.Images
   ? ResolveImagesPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Images }>>
+  : T['type'] extends typeof PropControllerTypes.ResponsiveNumber
+  ? PropValue<T> | undefined
   : T['type'] extends typeof PropControllerTypes.Link
   ? ResolveLinkPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Link }>>
   : T['type'] extends typeof PropControllerTypes.Width

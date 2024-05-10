@@ -1,11 +1,14 @@
 import {
   GapData,
-  GapXDescriptor,
-  GapXPropControllerData,
+  GapX,
   GapYDescriptor,
   GapYPropControllerData,
   ResponsiveLengthOptions,
   ResponsiveLengthPropControllerData,
+  ResponsiveNumber,
+  type Descriptor,
+  type PropDef,
+  type OptionsType,
 } from '@makeswift/prop-controllers'
 import {
   ComboboxControlDefinition,
@@ -23,8 +26,6 @@ import {
 import {
   Data,
   Device,
-  ResponsiveNumberDescriptor as ResponsiveNumberControl,
-  ResponsiveNumberValue as ResponsiveNumberControlValue,
   ResponsiveIconRadioGroupDescriptor as ResponsiveIconRadioGroupControl,
   ResponsiveIconRadioGroupValue as ResponsiveIconRadioGroupControlValue,
   ResponsiveSelectDescriptor as ResponsiveSelectControl,
@@ -296,26 +297,17 @@ type SerializedConfig<T> =
   | T
   | SerializedFunction<(props: Record<string, unknown>, deviceMode: Device) => T>
 
-type DeserializedConfig<T> =
+export type DeserializedConfig<T> =
   | T
   | DeserializedFunction<(props: Record<string, unknown>, deviceMode: Device) => T>
 
-type GapXControlConfig = {
-  preset?: GapXPropControllerData
-  label?: string
-  defaultValue?: GapData
-  min?: number
-  max?: number
-  step?: number
-  hidden?: boolean
+type SerializedControlDef<P extends PropDef> = Descriptor<P> & {
+  options: SerializedConfig<OptionsType<P>>
 }
 
-type SerializedGapXControl<_T = GapXPropControllerData> = {
-  type: typeof PropControllerTypes.GapX
-  options: SerializedConfig<GapXControlConfig>
-}
-
-function serializeGapXControl(control: GapXDescriptor): [SerializedGapXControl, Transferable[]] {
+function serializeControlDef<P extends PropDef>(
+  control: Descriptor<P>,
+): [SerializedControlDef<P>, Transferable[]] {
   const { options } = control
 
   if (typeof options !== 'function') return [{ ...control, options }, []]
@@ -325,12 +317,13 @@ function serializeGapXControl(control: GapXDescriptor): [SerializedGapXControl, 
   return [{ ...control, options: serializedOptions }, [serializedOptions]]
 }
 
-type DeserializedGapXControl<_T = GapXPropControllerData> = {
-  type: typeof PropControllerTypes.GapX
-  options: DeserializedConfig<GapXControlConfig>
+export type DeserializedControlDef<P extends PropDef> = Descriptor<P> & {
+  options: DeserializedConfig<OptionsType<P>>
 }
 
-function deserializeGapXControl(serializedControl: SerializedGapXControl): DeserializedGapXControl {
+function deserializeControlDef<P extends PropDef>(
+  serializedControl: SerializedControlDef<P>,
+): DeserializedControlDef<P> {
   const { options } = serializedControl
 
   if (!isSerializedFunction(options)) return { ...serializedControl, options }
@@ -371,50 +364,6 @@ type DeserializedGapYControl<_T = GapYPropControllerData> = {
 }
 
 function deserializeGapYControl(serializedControl: SerializedGapYControl): DeserializedGapYControl {
-  const { options } = serializedControl
-
-  if (!isSerializedFunction(options)) return { ...serializedControl, options }
-
-  const deserializedOptions = deserializeFunction(options)
-
-  return { ...serializedControl, options: deserializedOptions }
-}
-
-type ResponsiveNumberControlConfig = {
-  preset?: ResponsiveNumberControlValue
-  label?: string
-  defaultValue?: number
-  min?: number
-  max?: number
-  step?: number
-  hidden?: boolean
-}
-
-type SerializedResponsiveNumberControl<_T = ResponsiveNumberControlValue> = {
-  type: typeof Controls.Types.ResponsiveNumber
-  options: SerializedConfig<ResponsiveNumberControlConfig>
-}
-
-function serializeResponsiveNumberControl(
-  control: ResponsiveNumberControl,
-): [SerializedResponsiveNumberControl, Transferable[]] {
-  const { options } = control
-
-  if (typeof options !== 'function') return [{ ...control, options }, []]
-
-  const serializedOptions = serializeFunction(options)
-
-  return [{ ...control, options: serializedOptions }, [serializedOptions]]
-}
-
-type DeserializedResponsiveNumberControl<_T = ResponsiveNumberControlValue> = {
-  type: typeof Controls.Types.ResponsiveNumber
-  options: DeserializedConfig<ResponsiveNumberControlConfig>
-}
-
-function deserializeResponsiveNumberControl(
-  serializedControl: SerializedResponsiveNumberControl,
-): DeserializedResponsiveNumberControl {
   const { options } = serializedControl
 
   if (!isSerializedFunction(options)) return { ...serializedControl, options }
@@ -871,9 +820,9 @@ export type SerializedControl<T extends Data = Data> =
       | ListControl<T extends ListControlValue ? T : ListControlValue>
       | ShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
       | TypeaheadControl<T extends TypeaheadControlValue ? T : TypeaheadControlValue>
-      | GapXDescriptor<T>
+      | Descriptor<typeof GapX>
       | GapYDescriptor<T>
-      | ResponsiveNumberControl<T>
+      | Descriptor<typeof ResponsiveNumber>
       | CheckboxControl<T>
       | ResponsiveColorDescriptor<T>
       | NumberDescriptor<T>
@@ -899,9 +848,9 @@ export type SerializedControl<T extends Data = Data> =
   | SerializedListControl<T extends ListControlValue ? T : ListControlValue>
   | SerializedShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
   | SerializedTypeaheadControl<T extends TypeaheadControlValue ? T : TypeaheadControlValue>
-  | SerializedGapXControl<T>
+  | SerializedControlDef<typeof GapX>
   | SerializedGapYControl<T>
-  | SerializedResponsiveNumberControl<T>
+  | SerializedControlDef<typeof ResponsiveNumber>
   | SerializedCheckboxControl<T>
   | SerializedResponsiveColorControl<T>
   | SerializedNumberControl<T>
@@ -934,9 +883,9 @@ export type DeserializedControl<T extends Data = Data> =
       | ListControl<T extends ListControlValue ? T : ListControlValue>
       | ShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
       | TypeaheadControl<T extends TypeaheadControlValue ? T : TypeaheadControlValue>
-      | GapXDescriptor<T>
+      | Descriptor<typeof GapX>
       | GapYDescriptor<T>
-      | ResponsiveNumberControl<T>
+      | Descriptor<typeof ResponsiveNumber>
       | CheckboxControl<T>
       | ResponsiveColorDescriptor<T>
       | NumberDescriptor<T>
@@ -962,9 +911,9 @@ export type DeserializedControl<T extends Data = Data> =
   | DeserializedListControl<T extends ListControlValue ? T : ListControlValue>
   | DeserializedShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
   | DeserializedTypeaheadControl<T extends TypeaheadControlValue ? T : TypeaheadControlValue>
-  | DeserializedGapXControl<T>
+  | DeserializedControlDef<typeof GapX>
   | DeserializedGapYControl<T>
-  | DeserializedResponsiveNumberControl<T>
+  | DeserializedControlDef<typeof ResponsiveNumber>
   | DeserializedCheckboxControl<T>
   | DeserializedResponsiveColorControl<T>
   | DeserializedNumberControl<T>
@@ -1008,7 +957,7 @@ export function serializeControl<T extends Data>(
       return serializeTypeaheadControl(control)
 
     case PropControllerTypes.GapX:
-      return serializeGapXControl(control)
+      return serializeControlDef<typeof GapX>(control)
 
     case PropControllerTypes.GapY:
       return serializeGapYControl(control)
@@ -1016,8 +965,8 @@ export function serializeControl<T extends Data>(
     case PropControllerTypes.ResponsiveColor:
       return serializeResponsiveColorControl(control)
 
-    case Controls.Types.ResponsiveNumber:
-      return serializeResponsiveNumberControl(control)
+    case PropControllerTypes.ResponsiveNumber:
+      return serializeControlDef<typeof ResponsiveNumber>(control)
 
     case PropControllerTypes.Number:
       return serializeNumberControl(control)
@@ -1086,7 +1035,7 @@ export function deserializeControl<T extends Data>(
       return deserializeTypeaheadControl(serializedControl)
 
     case PropControllerTypes.GapX:
-      return deserializeGapXControl(serializedControl)
+      return deserializeControlDef<typeof GapX>(serializedControl)
 
     case PropControllerTypes.GapY:
       return deserializeGapYControl(serializedControl)
@@ -1094,8 +1043,8 @@ export function deserializeControl<T extends Data>(
     case PropControllerTypes.ResponsiveColor:
       return deserializeResponsiveColorControl(serializedControl)
 
-    case Controls.Types.ResponsiveNumber:
-      return deserializeResponsiveNumberControl(serializedControl)
+    case PropControllerTypes.ResponsiveNumber:
+      return deserializeControlDef<typeof ResponsiveNumber>(serializedControl)
 
     case PropControllerTypes.Number:
       return deserializeNumberControl(serializedControl)

@@ -1,32 +1,10 @@
+export * from './data'
+export * from './versioned'
 export * from './prop-controllers'
-export type {
-  ColorData,
-  LengthData,
-  GapData,
-  ResponsiveGapData,
-  ImageDataV0,
-  ImageDataV1,
-  ImageData,
-} from './data'
-export {
-  Backgrounds,
-  backgroundsPropControllerDataSchema,
-  getBackgroundsPropControllerDataResponsiveBackgroundsData,
-  createBackgroundsPropControllerDataFromResponsiveBackgroundsData,
-  getBackgroundsPropControllerFileIds,
-  getBackgroundsPropControllerSwatchIds,
-  copyBackgroundsPropControllerData,
-} from './backgrounds'
-export type {
-  BackgroundData,
-  BackgroundImageData,
-  ImageBackgroundData,
-  ResponsiveBackgroundsData,
-  BackgroundsDescriptor,
-  BackgroundsOptions,
-  BackgroundsPropControllerData,
-  ResolveBackgroundsPropControllerValue,
-} from './backgrounds'
+export * from './gap-x'
+export * from './responsive-number'
+export * from './backgrounds'
+
 export {
   Border,
   BorderPropControllerFormat,
@@ -105,17 +83,6 @@ export type {
   FontDescriptor,
   FontPropControllerData,
 } from './font'
-export {
-  GapX,
-  gapXPropControllerDataSchema,
-  getGapXPropControllerDataResponsiveGapData,
-  createGapXPropControllerDataFromResponsiveGapData,
-} from './gap-x'
-export type {
-  ResolveGapXPropControllerValue,
-  GapXDescriptor,
-  GapXPropControllerData,
-} from './gap-x'
 export {
   GapY,
   gapYPropControllerDataSchema,

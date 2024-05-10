@@ -18,8 +18,8 @@ importers:
         specifier: ^20.11.11
         version: 20.11.11
       prettier:
-        specifier: ^2.7.1
-        version: 2.7.1
+        specifier: ^3.2.5
+        version: 3.2.5
       turbo:
         specifier: ^1.13.3
         version: 1.13.3
@@ -271,7 +271,7 @@ importers:
         version: 8.2.2
       jest:
         specifier: ^29.0.1
-        version: 29.0.1(@types/node@20.11.11)
+        version: 29.0.1
       tsup:
         specifier: ^8.0.2
         version: 8.0.2(@swc/core@1.4.17)(typescript@5.1.6)
@@ -1669,7 +1669,7 @@ packages:
       fs-extra: 7.0.1
       lodash.startcase: 4.4.0
       outdent: 0.5.0
-      prettier: 2.7.1
+      prettier: 2.8.8
       resolve-from: 5.0.0
       semver: 7.5.4
     dev: true
@@ -1836,7 +1836,7 @@ packages:
       '@changesets/types': 6.0.0
       fs-extra: 7.0.1
       human-id: 1.0.2
-      prettier: 2.7.1
+      prettier: 2.8.8
     dev: true
 
   /@dependents/detective-less@3.0.2:
@@ -8207,6 +8207,34 @@ packages:
       - supports-color
     dev: true
 
+  /jest-cli@29.0.1:
+    resolution: {integrity: sha512-XozBHtoJCS6mnjCxNESyGm47Y4xSWzNlBJj4tix9nGrG6m068B83lrTWKtjYAenYSfOqyYVpQCkyqUp35IT+qA==}
+    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+    hasBin: true
+    peerDependencies:
+      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
+    peerDependenciesMeta:
+      node-notifier:
+        optional: true
+    dependencies:
+      '@jest/core': 29.0.1
+      '@jest/test-result': 29.0.1
+      '@jest/types': 29.6.3
+      chalk: 4.1.2
+      exit: 0.1.2
+      graceful-fs: 4.2.11
+      import-local: 3.1.0
+      jest-config: 29.0.1(@types/node@20.11.11)
+      jest-util: 29.7.0
+      jest-validate: 29.0.1
+      prompts: 2.4.2
+      yargs: 17.7.2
+    transitivePeerDependencies:
+      - '@types/node'
+      - supports-color
+      - ts-node
+    dev: true
+
   /jest-cli@29.0.1(@types/node@20.11.11):
     resolution: {integrity: sha512-XozBHtoJCS6mnjCxNESyGm47Y4xSWzNlBJj4tix9nGrG6m068B83lrTWKtjYAenYSfOqyYVpQCkyqUp35IT+qA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -8971,6 +8999,26 @@ packages:
       jest-util: 29.7.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
+    dev: true
+
+  /jest@29.0.1:
+    resolution: {integrity: sha512-liHkwzaW6iwQyhRBFj0A4ZYKcsQ7ers1s62CCT95fPeNzoxT/vQRWwjTT4e7jpSCwrvPP2t1VESuy7GrXcr2ug==}
+    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+    hasBin: true
+    peerDependencies:
+      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
+    peerDependenciesMeta:
+      node-notifier:
+        optional: true
+    dependencies:
+      '@jest/core': 29.0.1
+      '@jest/types': 29.5.0
+      import-local: 3.1.0
+      jest-cli: 29.0.1
+    transitivePeerDependencies:
+      - '@types/node'
+      - supports-color
+      - ts-node
     dev: true
 
   /jest@29.0.1(@types/node@20.11.11):
@@ -10362,6 +10410,22 @@ packages:
       postcss: 8.4.33
     dev: true
 
+  /postcss-load-config@4.0.2:
+    resolution: {integrity: sha512-bSVhyJGL00wMVoPUzAVAnbEoWyqRxkjv64tUl427SKnPrENtq6hJwUojroMz2VB+Q1edmi4IfrAPpami5VVgMQ==}
+    engines: {node: '>= 14'}
+    peerDependencies:
+      postcss: '>=8.0.9'
+      ts-node: '>=9.0.0'
+    peerDependenciesMeta:
+      postcss:
+        optional: true
+      ts-node:
+        optional: true
+    dependencies:
+      lilconfig: 3.0.0
+      yaml: 2.3.4
+    dev: true
+
   /postcss-load-config@4.0.2(postcss@8.4.33):
     resolution: {integrity: sha512-bSVhyJGL00wMVoPUzAVAnbEoWyqRxkjv64tUl427SKnPrENtq6hJwUojroMz2VB+Q1edmi4IfrAPpami5VVgMQ==}
     engines: {node: '>= 14'}
@@ -10510,6 +10574,18 @@ packages:
   /prettier@2.7.1:
     resolution: {integrity: sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==}
     engines: {node: '>=10.13.0'}
+    hasBin: true
+    dev: true
+
+  /prettier@2.8.8:
+    resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
+    dev: true
+
+  /prettier@3.2.5:
+    resolution: {integrity: sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==}
+    engines: {node: '>=14'}
     hasBin: true
     dev: true
 
@@ -12075,7 +12151,7 @@ packages:
       execa: 5.1.1
       globby: 11.1.0
       joycon: 3.1.1
-      postcss-load-config: 4.0.2(postcss@8.4.33)
+      postcss-load-config: 4.0.2
       resolve-from: 5.0.0
       rollup: 4.13.0
       source-map: 0.8.0-beta.0
