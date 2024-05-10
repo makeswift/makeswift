@@ -1,5 +1,16 @@
 # @makeswift/runtime
 
+## 0.18.0-canary.4
+
+### Minor Changes
+
+- 7d05094: Add data type to legacy `ResponsiveOpacity` prop controller and move it to `@makeswift/prop-controllers`.
+
+### Patch Changes
+
+- Updated dependencies [7d05094]
+  - @makeswift/prop-controllers@0.3.0-canary.1
+
 ## 0.18.0-canary.3
 
 ### Patch Changes

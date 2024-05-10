@@ -1,5 +1,11 @@
 # @makeswift/prop-controllers
 
+## 0.3.0-canary.1
+
+### Minor Changes
+
+- 7d05094: Add data type to legacy `ResponsiveOpacity` prop controller and move it to `@makeswift/prop-controllers`.
+
 ## 0.3.0-canary.0
 
 ### Minor Changes
