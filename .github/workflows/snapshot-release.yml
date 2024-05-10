@@ -42,8 +42,10 @@ jobs:
 
       # - name: Publish Packages
       #   run: pnpm exec changeset publish --tag "${GITHUB_SHA:0:7}"
+      - name: Foo
+        run: |
+          echo "Hello, world! ${GITHUB_SHA:0:7}" >> message.txt
 
       - uses: mshick/add-pr-comment@v2
         with:
-          message: |
-            "${GITHUB_SHA:0:7}"
+          message-path: message.txt
