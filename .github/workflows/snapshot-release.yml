@@ -43,7 +43,9 @@ jobs:
       # - name: Publish Packages
       #   run: pnpm exec changeset publish --tag "${GITHUB_SHA:0:7}"
 
-      - name: View context attributes
-        uses: actions/github-script@v7
+      - uses: mshick/add-pr-comment@v2
         with:
-          script: console.log(context)
+          message: |
+            **Hello**
+            🌏
+            !
