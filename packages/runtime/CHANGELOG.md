@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.18.0-canary.3
+
+### Patch Changes
+
+- 526f71e: Handle ResponsiveNumber prop data on component registration.
+
 ## 0.18.0-canary.2
 
 ### Minor Changes
