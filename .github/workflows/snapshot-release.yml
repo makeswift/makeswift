@@ -1,0 +1,61 @@
+name: Snapshot Release
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+concurrency: ${{ github.workflow}}-${{ github.ref }}
+
+jobs:
+  snapshot_release:
+    name: Snapshot Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out git repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup Git User
+        uses: fregante/setup-git-user@v2
+      - name: Set up pnpm 8.x
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Set up Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: pnpm
+      - name: Creating .npmrc
+        run: |
+          cat << EOF > "$HOME/.npmrc"
+            //registry.npmjs.org/:_authToken=$NPM_TOKEN
+          EOF
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Install dependencies
+        run: pnpm install --ignore-scripts --frozen-lockfile
+
+      # Now we do the snapshot release
+      - name: Version Packages
+        run: pnpm exec changeset version --snapshot "${GITHUB_SHA:0:7}"
+
+      - name: Publish Packages
+        run: pnpm exec changeset publish --tag "${GITHUB_SHA:0:7}"
+
+      # Let the developer know
+      - name: Write Message
+        run: |
+          cat << EOF > message.txt
+          # Snapshot Release
+          > $(date +"Updated at %B %d, %Y, %H:%M:%S.")
+
+          I've published a snapshot release for your commit, ${GITHUB_SHA:0:7}. To use it, go to a Next.js app with \`@makeswift/runtime\` installed and run:
+          \`\`\`bash
+          pnpm up @makeswift/runtime@${GITHUB_SHA:0:7}
+          \`\`\`
+          EOF
+
+      - uses: mshick/add-pr-comment@v2
+        with:
+          message-path: message.txt
