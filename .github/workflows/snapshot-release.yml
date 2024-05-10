@@ -42,7 +42,7 @@ jobs:
       # Now we do the snapshot release
       - name: Version Packages
         run: |
-          echo "${GITHUB_SHA:0:7}"
+          pnpm exec changeset version --snapshot "${GITHUB_SHA:0:7}"
 
       # - name: Publish
       #   run: |
