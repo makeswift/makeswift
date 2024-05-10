@@ -51,3 +51,4 @@ jobs:
             !
           message-failure: |
             Uh oh!
+          allow-repeats: true
