@@ -1,5 +1,4 @@
 import { lazy } from 'react'
-import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 import {
@@ -14,6 +13,7 @@ import {
   ElementID,
   Image,
   ResponsiveOpacity,
+  TextInput,
 } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
@@ -25,7 +25,7 @@ export function registerComponent(runtime: ReactRuntime) {
       props: {
         id: ElementID(),
         file: Image(),
-        altText: Props.TextInput({ label: 'Alt text' }),
+        altText: TextInput({ label: 'Alt text' }),
         link: Link({ label: 'On click' }),
         width: Width(),
         margin: Margin({ format: Margin.Format.ClassName }),

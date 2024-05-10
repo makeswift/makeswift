@@ -1,5 +1,11 @@
 import { useRef } from 'react'
-import { CheckboxControlType, IconRadioGroupControlType, NumberControlType, TextInputControlType, TextAreaControlType } from '@makeswift/controls'
+import {
+  CheckboxControlType,
+  IconRadioGroupControlType,
+  NumberControlType,
+  TextInputControlType,
+  TextAreaControlType,
+} from '@makeswift/controls'
 
 import * as ReactPage from '../../state/react-page'
 
@@ -77,6 +83,7 @@ import {
   GapX,
   ResponsiveNumber,
   ResponsiveOpacity,
+  getSocialLinksPropControllerDataSocialLinksData,
 } from '@makeswift/prop-controllers'
 import { useResponsiveLengthPropControllerData } from '../../components/hooks/useResponsiveLengthPropControllerData'
 import { useNumberPropControllerData } from '../../components/hooks/useNumberPropControllerData'
@@ -92,6 +99,7 @@ import { useGridPropControllerData } from '../../components/hooks/useGridPropCon
 import { useImagePropControllerData } from '../../components/hooks/useImagePropControllerData'
 import { useImagesPropControllerData } from '../../components/hooks/useImagesPropControllerData'
 import { useBackgroundsPropControllerData } from '../../components/hooks/useBackgroundsPropControllerData'
+import { useTextInputPropControllerData } from '../../components/hooks/useTextInputPropControllerData'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -542,6 +550,17 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
               </RenderHook>
             )
 
+          case PropControllerTypes.TextInput:
+            return (
+              <RenderHook
+                key={descriptor.type}
+                hook={useTextInputPropControllerData}
+                parameters={[props[propName]]}
+              >
+                {value => renderFn({ ...propsValue, [propName]: value })}
+              </RenderHook>
+            )
+
           case PropControllerTypes.TextArea:
             return (
               <RenderHook
@@ -596,6 +615,12 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
                 {value => renderFn({ ...propsValue, [propName]: value })}
               </RenderHook>
             )
+
+          case PropControllerTypes.SocialLinks:
+            return renderFn({
+              ...propsValue,
+              [propName]: getSocialLinksPropControllerDataSocialLinksData(props[propName]),
+            })
 
           case PropControllerTypes.Grid:
             return (

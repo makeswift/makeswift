@@ -244,6 +244,19 @@ export type {
   ResponsiveLengthPropControllerData,
 } from './responsive-length'
 export {
+  SocialLinks,
+  socialLinksPropControllerDataSchema,
+  getSocialLinkTypes,
+  getSocialLinksPropControllerDataSocialLinksData,
+  createSocialLinksPropControllerDataFromSocialLinksData,
+} from './social-links'
+export type {
+  SocialLinksData,
+  ResolveSocialLinksPropControllerValue,
+  SocialLinksDescriptor,
+  SocialLinksPropControllerData,
+} from './social-links'
+export {
   Shadows,
   copyShadowsPropControllerData,
   createShadowsPropControllerDataFromResponsiveShadowsData,
@@ -298,6 +311,18 @@ export type {
   TextAreaPropControllerData,
   ResolveTextAreaPropControllerValue,
 } from './text-area'
+export {
+  TextInput,
+  textInputPropControllerDataSchema,
+  getTextInputPropControllerDataString,
+  createTextInputPropControllerDataFromString,
+} from './text-input'
+export type {
+  TextInputDescriptor,
+  TextInputOptions,
+  TextInputPropControllerData,
+  ResolveTextInputPropControllerValue,
+} from './text-input'
 export {
   TextStyle,
   textStylePropControllerDataSchema,

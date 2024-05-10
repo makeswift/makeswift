@@ -1,11 +1,19 @@
 import { Props } from '../../../prop-controllers'
-import { SocialLinksValue } from '../../../prop-controllers/descriptors'
 import { ReactRuntime } from '../../../runtimes/react'
 import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
-import { ElementID, GapX, Margin, ResponsiveColor, Width } from '@makeswift/prop-controllers'
+import {
+  ElementID,
+  GapX,
+  Margin,
+  ResponsiveColor,
+  SocialLinks,
+  SocialLinksPropControllerData,
+  Width,
+  getSocialLinksPropControllerDataSocialLinksData,
+} from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
@@ -16,7 +24,7 @@ export function registerComponent(runtime: ReactRuntime) {
       icon: ComponentIcon.SocialLinks,
       props: {
         id: ElementID(),
-        links: Props.SocialLinks({
+        links: SocialLinks({
           preset: {
             links: [
               {
@@ -36,7 +44,9 @@ export function registerComponent(runtime: ReactRuntime) {
           },
         }),
         shape: Props.ResponsiveIconRadioGroup(props => {
-          const links = props.links as SocialLinksValue | undefined
+          const links = getSocialLinksPropControllerDataSocialLinksData(
+            props.links as SocialLinksPropControllerData | undefined,
+          )
 
           return {
             label: 'Shape',
@@ -51,7 +61,9 @@ export function registerComponent(runtime: ReactRuntime) {
           }
         }),
         size: Props.ResponsiveIconRadioGroup(props => {
-          const links = props.links as SocialLinksValue | undefined
+          const links = getSocialLinksPropControllerDataSocialLinksData(
+            props.links as SocialLinksPropControllerData | undefined,
+          )
 
           return {
             label: 'Size',
@@ -65,7 +77,9 @@ export function registerComponent(runtime: ReactRuntime) {
           }
         }),
         hoverStyle: Props.ResponsiveSelect(props => {
-          const links = props.links as SocialLinksValue | undefined
+          const links = getSocialLinksPropControllerDataSocialLinksData(
+            props.links as SocialLinksPropControllerData | undefined,
+          )
           const hidden = links == null || links.links.length === 0
 
           return {
@@ -82,7 +96,9 @@ export function registerComponent(runtime: ReactRuntime) {
           }
         }),
         fill: ResponsiveColor(props => {
-          const links = props.links as SocialLinksValue | undefined
+          const links = getSocialLinksPropControllerDataSocialLinksData(
+            props.links as SocialLinksPropControllerData | undefined,
+          )
           const hidden = links == null || links.links.length === 0
 
           return {
@@ -91,7 +107,9 @@ export function registerComponent(runtime: ReactRuntime) {
           }
         }),
         backgroundColor: ResponsiveColor(props => {
-          const links = props.links as SocialLinksValue | undefined
+          const links = getSocialLinksPropControllerDataSocialLinksData(
+            props.links as SocialLinksPropControllerData | undefined,
+          )
           const hidden = links == null || links.links.length === 0
 
           return {

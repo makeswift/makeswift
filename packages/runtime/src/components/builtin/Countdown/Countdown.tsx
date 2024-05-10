@@ -2,10 +2,7 @@
 
 import { cx } from '@emotion/css'
 import { ComponentPropsWithoutRef, ForwardedRef, forwardRef, Ref, useEffect, useState } from 'react'
-import {
-  ResponsiveIconRadioGroupValue,
-  TextInputValue,
-} from '../../../prop-controllers/descriptors'
+import { ResponsiveIconRadioGroupValue } from '../../../prop-controllers/descriptors'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { colorToString } from '../../utils/colorToString'
@@ -29,10 +26,10 @@ type Props = {
   labelColor?: ResponsiveColor | null
   width?: string
   margin?: string
-  daysLabel?: TextInputValue
-  hoursLabel?: TextInputValue
-  minutesLabel?: TextInputValue
-  secondsLabel?: TextInputValue
+  daysLabel?: string
+  hoursLabel?: string
+  minutesLabel?: string
+  secondsLabel?: string
 }
 
 const BLOCK_CLASS_NAME = 'block'

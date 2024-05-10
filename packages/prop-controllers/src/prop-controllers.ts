@@ -24,7 +24,9 @@ export const Types = {
   ResponsiveLength: 'ResponsiveLength',
   ResponsiveNumber: 'ResponsiveNumber',
   ResponsiveOpacity: 'ResponsiveOpacity',
+  SocialLinks: 'SocialLinks',
   TextArea: 'TextArea',
+  TextInput: 'TextInput',
   Table: 'Table',
   TableFormFields: 'TableFormFields',
   TextStyle: 'TextStyle',
@@ -38,11 +40,8 @@ export type Options<T> =
   | T
   | ((props: Record<string, unknown>, deviceMode: Device) => T)
 
-export type ResolveOptions<T extends Options<unknown>> = T extends Options<
-  infer U
->
-  ? U
-  : never
+export type ResolveOptions<T extends Options<unknown>> =
+  T extends Options<infer U> ? U : never
 
 const deviceSchema = z.string()
 
@@ -67,9 +66,8 @@ export function createResponsiveValueSchema<T extends z.ZodTypeAny>(
 
 export type ResponsiveValue<T> = DeviceOverride<T>[]
 
-export type ResponsiveValueType<T> = T extends ResponsiveValue<infer U>
-  ? U
-  : never
+export type ResponsiveValueType<T> =
+  T extends ResponsiveValue<infer U> ? U : never
 
 export type Color = { swatchId: string; alpha: number }
 

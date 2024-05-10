@@ -14,6 +14,7 @@ import {
   ResponsiveLength,
   Table,
   TableFormFields,
+  TextInput,
   TextStyle,
   Width,
 } from '@makeswift/prop-controllers'
@@ -107,7 +108,7 @@ export function registerComponent(runtime: ReactRuntime) {
           placeholder: 'white',
           hidden: props.tableId == null,
         })),
-        submitLabel: Props.TextInput(props => ({
+        submitLabel: TextInput(props => ({
           label: 'Button label',
           placeholder: 'Submit',
           hidden: props.tableId == null,

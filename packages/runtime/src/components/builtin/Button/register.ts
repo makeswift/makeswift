@@ -3,6 +3,7 @@ import {
   Link,
   Margin,
   ResponsiveColor,
+  TextInput,
   TextStyle,
   Width,
 } from '@makeswift/prop-controllers'
@@ -21,7 +22,7 @@ export function registerComponent(runtime: ReactRuntime) {
       label: 'Button',
       props: {
         id: ElementID(),
-        children: Props.TextInput({ placeholder: 'Button text' }),
+        children: TextInput({ placeholder: 'Button text' }),
         link: Link({
           defaultValue: {
             type: 'OPEN_PAGE',
