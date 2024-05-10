@@ -49,3 +49,5 @@ jobs:
             **Hello**
             🌏
             !
+          message-failure: |
+            Uh oh!
