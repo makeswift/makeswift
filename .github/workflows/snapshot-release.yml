@@ -38,9 +38,12 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Install dependencies
         run: pnpm install --ignore-scripts --frozen-lockfile
-      - name: Set Snapshot Tag
+      # - name: Set Snapshot Tag
+      # id: set_snapshot_tag
+      # run: echo "::set-output name=snapshot_tag::$(git rev-parse --short=7 HEAD)"
+      - name: Set output
         id: set_snapshot_tag
-        run: echo "::set-output name=snapshot_tag::$(git rev-parse --short=7 HEAD)"
+        run: echo "{snapshot_tag}={$(git rev-parse --short=7 HEAD)}" >> $GITHUB_OUTPUT
 
       - name: Use output
         run: echo "The output was ${{ steps.set_snapshot_tag.outputs.snapshot_tag}}"
