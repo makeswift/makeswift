@@ -38,13 +38,12 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Install dependencies
         run: pnpm install --ignore-scripts --frozen-lockfile
-
-      - name: Set output
-        id: step_one
-        run: echo "::set-output name=my_output::some data"
+      - name: Set Snapshot Tag
+        id: set_snapshot_tag
+        run: echo "::set-output name=snapshot_tag::$(git rev-parse --short=7 HEAD)"
 
       - name: Use output
-        run: echo "The output was ${{ steps.step_one.outputs.my_output }}"
+        run: echo "The output was ${{ steps.set_snapshot_tag.outputs.snapshot_tag}}"
 
       # Now we do the snapshot release
       - name: Version Packages
