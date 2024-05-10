@@ -38,10 +38,13 @@ jobs:
 
       # Now we do the snapshot release
       - name: Version Packages
-        run: pnpm exec changeset version --snapshot "${GITHUB_SHA:0:7}"
+        run: |
+          pnpm exec changeset version --snapshot snapshot
+
+          cat packages/runtime/package.json | jq -r .version >> version.txt
 
       - name: Publish Packages
-        run: pnpm exec changeset publish --tag "${GITHUB_SHA:0:7}"
+        run: pnpm exec changeset publish --tag snapshot
 
       # Let the developer know
       - name: Write Message
@@ -52,7 +55,7 @@ jobs:
 
           I've published a snapshot release for your commit, ${GITHUB_SHA:0:7}. To use it, go to a Next.js app with \`@makeswift/runtime\` installed and run:
           \`\`\`bash
-          pnpm up @makeswift/runtime@${GITHUB_SHA:0:7}
+          pnpm up @makeswift/runtime@$(cat version.txt)
           \`\`\`
           EOF
 
