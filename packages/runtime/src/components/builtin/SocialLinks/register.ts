@@ -9,6 +9,7 @@ import {
   GapX,
   Margin,
   ResponsiveColor,
+  ResponsiveSelect,
   SocialLinks,
   SocialLinksPropControllerData,
   Width,
@@ -76,7 +77,7 @@ export function registerComponent(runtime: ReactRuntime) {
             hidden: links == null || links.links.length === 0,
           }
         }),
-        hoverStyle: Props.ResponsiveSelect(props => {
+        hoverStyle: ResponsiveSelect(props => {
           const links = getSocialLinksPropControllerDataSocialLinksData(
             props.links as SocialLinksPropControllerData | undefined,
           )

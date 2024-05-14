@@ -64,9 +64,9 @@ export function registerComponent(runtime: ReactRuntime) {
           }
         }),
         step: ResponsiveNumber((props, device) => {
-          const pageSize = props.pageSize
-            ? ResponsiveNumber.fromPropData(props.pageSize as PropData<typeof ResponsiveNumber>)
-            : undefined
+          const pageSize = ResponsiveNumber.fromPropData(
+            props.pageSize as PropData<typeof ResponsiveNumber> | undefined,
+          )
           const pageSizeValue =
             findBreakpointOverride(runtime.getBreakpoints(), pageSize, device)?.value ?? 1
 

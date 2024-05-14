@@ -18,8 +18,8 @@ import {
 } from '../../../utils/tests/element-data-test-test'
 
 export const pagePropControllerTest = <
-  P extends PropDef,
-  C extends ComponentType<{ propKey: Value<PropDef> | undefined }>,
+  P extends PropDef & (() => any),
+  C extends ComponentType<{ propKey: Value<P> | undefined }>,
 >(
   propDef: P,
   value: Value<typeof propDef>,

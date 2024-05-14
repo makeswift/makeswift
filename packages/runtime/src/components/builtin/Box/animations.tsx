@@ -2,7 +2,7 @@
 
 import { CSSObject } from '@emotion/css'
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { ResponsiveSelectValue, ResponsiveValue } from '../../../prop-controllers'
+import { ResponsiveValue } from '../../../prop-controllers'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { useMediaQuery } from '../../hooks'
 import { gridItemIdentifierClassName } from '../../shared/grid-item'
@@ -14,7 +14,7 @@ import {
   DEFAULT_ITEM_ANIMATE_TYPE,
   DEFAULT_ITEM_STAGGER_DURATION,
 } from './constants'
-import { ResponsiveNumberValue } from '@makeswift/prop-controllers'
+import { type ResponsiveNumberValue, type ResponsiveSelectValue } from '@makeswift/prop-controllers'
 
 function useElementOnScreen(
   options: IntersectionObserverInit,

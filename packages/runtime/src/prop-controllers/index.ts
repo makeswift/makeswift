@@ -4,8 +4,6 @@ export type {
   DescriptorValueType as PropControllerDescriptorValueType,
   ResponsiveIconRadioGroupDescriptor,
   ResponsiveIconRadioGroupValue,
-  ResponsiveSelectDescriptor,
-  ResponsiveSelectValue,
   PanelDescriptor,
   PanelDescriptorType,
   PanelDescriptorValueType,

@@ -10,8 +10,10 @@ import {
   Margin,
   Padding,
   ResponsiveNumber,
+  ResponsiveSelect,
   Shadows,
   Width,
+  type PropData,
 } from '@makeswift/prop-controllers'
 import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
@@ -25,7 +27,6 @@ import {
   DEFAULT_ITEM_STAGGER_DURATION,
 } from './constants'
 import { lazy } from 'react'
-import { ResponsiveSelectValue } from '../../../prop-controllers/descriptors'
 
 export function registerComponent(runtime: ReactRuntime) {
   function isHiddenBasedOnAnimationType(
@@ -33,7 +34,9 @@ export function registerComponent(runtime: ReactRuntime) {
     deviceId: string,
     property: 'boxAnimateType' | 'itemAnimateType',
   ): boolean {
-    const animateIn = props[property] as ResponsiveSelectValue<BoxAnimateIn> | undefined
+    const animateIn = ResponsiveSelect.fromPropData<BoxAnimateIn>(
+      props[property] as PropData<typeof ResponsiveSelect> | undefined,
+    )
     return (
       (findBreakpointOverride<BoxAnimateIn>(runtime.getBreakpoints(), animateIn, deviceId)?.value ??
         'none') === 'none'
@@ -102,7 +105,7 @@ export function registerComponent(runtime: ReactRuntime) {
         columnGap: GapX(props => ({
           hidden: props.children == null,
         })),
-        boxAnimateType: Props.ResponsiveSelect({
+        boxAnimateType: ResponsiveSelect({
           label: 'Animate box in',
           labelOrientation: 'vertical',
           options: [
@@ -134,7 +137,7 @@ export function registerComponent(runtime: ReactRuntime) {
           suffix: 's',
           hidden: isHiddenBasedOnBoxAnimation(props, device),
         })),
-        itemAnimateType: Props.ResponsiveSelect({
+        itemAnimateType: ResponsiveSelect({
           label: 'Animate items in',
           labelOrientation: 'vertical',
           options: [

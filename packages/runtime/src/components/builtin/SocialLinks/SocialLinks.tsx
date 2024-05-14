@@ -6,15 +6,16 @@ import { ColorValue as Color } from '../../utils/types'
 import { SocialLinksOptions, SocialLinksOptionType } from './options'
 import GutterContainer from '../../shared/GutterContainer'
 import SocialLinksPlaceholder from './components/SocialLinksPlaceholder'
-import {
-  ResponsiveIconRadioGroupValue,
-  ResponsiveSelectValue,
-} from '../../../prop-controllers/descriptors'
+import { ResponsiveIconRadioGroupValue } from '../../../prop-controllers/descriptors'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { cx } from '@emotion/css'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { useResponsiveStyle } from '../../utils/responsive-style'
-import { ResponsiveGapData, ResponsiveValue } from '@makeswift/prop-controllers'
+import {
+  type ResponsiveGapData,
+  type ResponsiveValue,
+  type ResponsiveSelectValue,
+} from '@makeswift/prop-controllers'
 
 type Props = {
   id?: string
