@@ -82,6 +82,7 @@ import {
   WidthDescriptor,
   GapX,
   ResponsiveNumber,
+  ResponsiveSelect,
   ResponsiveOpacity,
   getSocialLinksPropControllerDataSocialLinksData,
 } from '@makeswift/prop-controllers'
@@ -381,6 +382,17 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
               <RenderHook
                 key={descriptor.type}
                 hook={data => usePropValue(ResponsiveNumber, data)}
+                parameters={[props[propName]]}
+              >
+                {value => renderFn({ ...propsValue, [propName]: value })}
+              </RenderHook>
+            )
+
+          case PropControllerTypes.ResponsiveSelect:
+            return (
+              <RenderHook
+                key={descriptor.type}
+                hook={data => usePropValue(ResponsiveSelect, data)}
                 parameters={[props[propName]]}
               >
                 {value => renderFn({ ...propsValue, [propName]: value })}
