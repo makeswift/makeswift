@@ -6,7 +6,6 @@ import { ColorValue as Color } from '../../utils/types'
 import { SocialLinksOptions, SocialLinksOptionType } from './options'
 import GutterContainer from '../../shared/GutterContainer'
 import SocialLinksPlaceholder from './components/SocialLinksPlaceholder'
-import { ResponsiveIconRadioGroupValue } from '../../../prop-controllers/descriptors'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { cx } from '@emotion/css'
 import { useStyle } from '../../../runtimes/react/use-style'
@@ -15,6 +14,7 @@ import {
   type ResponsiveGapData,
   type ResponsiveValue,
   type ResponsiveSelectValue,
+  type ResponsiveIconRadioGroupValue,
 } from '@makeswift/prop-controllers'
 
 type Props = {

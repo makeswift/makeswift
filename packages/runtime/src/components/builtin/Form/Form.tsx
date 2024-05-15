@@ -31,7 +31,6 @@ import Field from './components/Field'
 import Spinner from './components/Spinner'
 import Button from '../Button'
 import type { TableColumn } from './types'
-import { ResponsiveIconRadioGroupValue } from '../../../prop-controllers/descriptors'
 import { Link } from '../../shared/Link'
 import { BoxModelHandle, getBox } from '../../../box-model'
 import { PropControllersHandle } from '../../../state/modules/prop-controller-handles'
@@ -47,6 +46,7 @@ import {
   type LinkData,
   type ResponsiveGapData,
   type ResponsiveLengthData,
+  type ResponsiveIconRadioGroupValue,
   type ResponsiveTextStyleData,
   type ResponsiveSelectValue,
   type ResponsiveValue,

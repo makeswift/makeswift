@@ -1,4 +1,3 @@
-import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
@@ -10,6 +9,7 @@ import {
   Margin,
   ResponsiveColor,
   ResponsiveSelect,
+  ResponsiveIconRadioGroup,
   SocialLinks,
   SocialLinksPropControllerData,
   Width,
@@ -44,7 +44,7 @@ export function registerComponent(runtime: ReactRuntime) {
             openInNewTab: false,
           },
         }),
-        shape: Props.ResponsiveIconRadioGroup(props => {
+        shape: ResponsiveIconRadioGroup(props => {
           const links = getSocialLinksPropControllerDataSocialLinksData(
             props.links as SocialLinksPropControllerData | undefined,
           )
@@ -61,7 +61,7 @@ export function registerComponent(runtime: ReactRuntime) {
             hidden: links == null || links.links.length === 0,
           }
         }),
-        size: Props.ResponsiveIconRadioGroup(props => {
+        size: ResponsiveIconRadioGroup(props => {
           const links = getSocialLinksPropControllerDataSocialLinksData(
             props.links as SocialLinksPropControllerData | undefined,
           )
@@ -118,7 +118,7 @@ export function registerComponent(runtime: ReactRuntime) {
             hidden,
           }
         }),
-        alignment: Props.ResponsiveIconRadioGroup({
+        alignment: ResponsiveIconRadioGroup({
           label: 'Alignment',
           options: [
             { label: 'flex-start', value: 'flex-start', icon: 'AlignLeft16' },

@@ -3,13 +3,13 @@ import {
   Link,
   Margin,
   ResponsiveColor,
+  ResponsiveIconRadioGroup,
   ResponsiveSelect,
   TextInput,
   TextStyle,
   Width,
   type PropData,
 } from '@makeswift/prop-controllers'
-import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
@@ -48,7 +48,7 @@ export function registerComponent(runtime: ReactRuntime) {
           ],
           defaultValue: 'flat',
         }),
-        shape: Props.ResponsiveIconRadioGroup({
+        shape: ResponsiveIconRadioGroup({
           label: 'Shape',
           options: [
             { label: 'Pill', value: 'pill', icon: 'ButtonPill16' },
@@ -57,7 +57,7 @@ export function registerComponent(runtime: ReactRuntime) {
           ],
           defaultValue: 'rounded',
         }),
-        size: Props.ResponsiveIconRadioGroup({
+        size: ResponsiveIconRadioGroup({
           label: 'Size',
           options: [
             { label: 'Small', value: 'small', icon: 'SizeSmall16' },

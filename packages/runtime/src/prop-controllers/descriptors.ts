@@ -47,11 +47,8 @@ import {
   LinkDescriptor,
   ResolveLinkPropControllerValue,
   Types as PropControllerTypes,
-  ResponsiveValueType,
   ShadowsDescriptor,
   ResolveShadowsPropControllerValue,
-  ResponsiveValue,
-  Options,
   ResponsiveLengthDescriptor,
   ResolveResponsiveLengthPropControllerValue,
   NumberDescriptor,
@@ -98,87 +95,24 @@ import {
   ResolveImagesPropControllerValue,
   BackgroundsDescriptor,
   ResolveBackgroundsPropControllerValue,
-  type Descriptor as PropDescriptor,
-  type Value as PropValue,
   ResponsiveOpacity,
+  ResponsiveIconRadioGroup,
   ResolveSocialLinksPropControllerValue,
   SocialLinksDescriptor,
   TextInputDescriptor,
   ResolveTextInputPropControllerValue,
+  type Descriptor as PropDescriptor,
+  type Value as PropValue,
 } from '@makeswift/prop-controllers'
 import { DeletedPropControllerDescriptor } from './deleted'
 
 export type { Data }
 
-type IconName =
-  | 'HeightAuto16'
-  | 'HeightMatch16'
-  | 'VerticalAlignStart16'
-  | 'VerticalAlignMiddle16'
-  | 'VerticalAlignEnd16'
-  | 'VerticalAlignSpaceBetween16'
-  | 'ButtonPill16'
-  | 'ButtonRounded16'
-  | 'ButtonSquare16'
-  | 'SizeSmall16'
-  | 'SizeMedium16'
-  | 'SizeLarge16'
-  | 'ArrowInside16'
-  | 'ArrowCenter16'
-  | 'ArrowOutside16'
-  | 'CountdownSolid16'
-  | 'CountdownSolidSplit16'
-  | 'CountdownOutline16'
-  | 'CountdownOutlineSplit16'
-  | 'CountdownNaked16'
-  | 'Sun16'
-  | 'Moon16'
-  | 'AlignLeft16'
-  | 'AlignCenter16'
-  | 'AlignRight16'
-  | 'Star16'
-  | 'StarCircle16'
-  | 'StarRoundedSquare16'
-  | 'StarSquare16'
-
 export type Gap = { value: number; unit: 'px' }
 
 export const Types = {
-  ResponsiveIconRadioGroup: 'ResponsiveIconRadioGroup',
   Style: StyleControlType,
 } as const
-
-export type IconRadioGroupOption<T extends string> = { value: T; label: string; icon: IconName }
-
-export type ResponsiveIconRadioGroupValue<T extends string = string> = ResponsiveValue<T>
-
-export type ResponsiveIconRadioGroupOptions<T extends string = string, U extends T = T> = Options<{
-  label?: string
-  options: IconRadioGroupOption<T>[]
-  defaultValue?: U
-  hidden?: boolean
-}>
-
-export type ResponsiveIconRadioGroupDescriptor<
-  T extends ResponsiveIconRadioGroupValue<string> = ResponsiveIconRadioGroupValue<string>,
-> = {
-  type: typeof Types.ResponsiveIconRadioGroup
-  options: ResponsiveIconRadioGroupOptions<ResponsiveValueType<T>>
-}
-
-// HACK(miguel): We have to use a layer of indirection with `_T` and `T` because otherwise the
-// values provided would undergo type widening. For some reason, the extra layer of indirection
-// reuslts in TypeScript not widening types. Note, this only happens when the returned value of this
-// function is passed to another as an argument, which is common with the `registerComponent` API.
-/**
- * @deprecated Imports from `@makeswift/runtime/prop-controllers` are deprecated. Use
- * `@makeswift/runtime/controls` instead.
- */
-export function ResponsiveIconRadioGroup<_T extends string, T extends _T, U extends T>(
-  options: ResponsiveIconRadioGroupOptions<T, U>,
-): ResponsiveIconRadioGroupDescriptor<ResponsiveIconRadioGroupValue<T>> {
-  return { type: Types.ResponsiveIconRadioGroup, options }
-}
 
 export type Descriptor<T extends Data = Data> =
   | DeletedPropControllerDescriptor<T>
@@ -200,10 +134,8 @@ export type Descriptor<T extends Data = Data> =
   | NumberDescriptor<T>
   | PaddingDescriptor<T>
   | ResponsiveColorDescriptor<T>
-  | ResponsiveIconRadioGroupDescriptor<
-      T extends ResponsiveIconRadioGroupValue<string> ? T : ResponsiveIconRadioGroupValue<string>
-    >
   | ResponsiveLengthDescriptor<T>
+  | PropDescriptor<typeof ResponsiveIconRadioGroup>
   | PropDescriptor<typeof ResponsiveNumber>
   | PropDescriptor<typeof ResponsiveOpacity>
   | PropDescriptor<typeof ResponsiveSelect>
@@ -237,7 +169,7 @@ export type Descriptor<T extends Data = Data> =
 
 export type PanelDescriptorType =
   | typeof PropControllerTypes.Backgrounds
-  | typeof Types.ResponsiveIconRadioGroup
+  | typeof PropControllerTypes.ResponsiveIconRadioGroup
   | typeof PropControllerTypes.Margin
   | typeof PropControllerTypes.Padding
   | typeof PropControllerTypes.Shadows
@@ -334,6 +266,8 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
   ? ResolveImagePropControllerValue<Extract<T, { type: typeof PropControllerTypes.Image }>>
   : T['type'] extends typeof PropControllerTypes.Images
   ? ResolveImagesPropControllerValue<Extract<T, { type: typeof PropControllerTypes.Images }>>
+  : T['type'] extends typeof PropControllerTypes.ResponsiveIconRadioGroup
+  ? PropValue<T> | undefined
   : T['type'] extends typeof PropControllerTypes.ResponsiveNumber
   ? PropValue<T> | undefined
   : T['type'] extends typeof PropControllerTypes.ResponsiveOpacity

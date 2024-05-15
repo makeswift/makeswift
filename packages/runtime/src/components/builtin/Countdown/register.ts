@@ -1,4 +1,3 @@
-import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
@@ -11,6 +10,7 @@ import {
   GapX,
   Margin,
   ResponsiveColor,
+  ResponsiveIconRadioGroup,
   TextInput,
   Width,
 } from '@makeswift/prop-controllers'
@@ -27,7 +27,7 @@ export function registerComponent(runtime: ReactRuntime) {
         date: DatePropController(() => ({
           preset: new Date(Date.now() + 1000 * 60 * 60 * 24 * 2).toISOString(),
         })),
-        variant: Props.ResponsiveIconRadioGroup({
+        variant: ResponsiveIconRadioGroup({
           label: 'Style',
           options: [
             { label: 'Filled', value: 'filled', icon: 'CountdownSolid16' },
@@ -46,7 +46,7 @@ export function registerComponent(runtime: ReactRuntime) {
           ],
           defaultValue: 'filled',
         }),
-        shape: Props.ResponsiveIconRadioGroup({
+        shape: ResponsiveIconRadioGroup({
           label: 'Shape',
           options: [
             { label: 'Pill', value: 'pill', icon: 'ButtonPill16' },
@@ -55,7 +55,7 @@ export function registerComponent(runtime: ReactRuntime) {
           ],
           defaultValue: 'rounded',
         }),
-        size: Props.ResponsiveIconRadioGroup({
+        size: ResponsiveIconRadioGroup({
           label: 'Size',
           options: [
             { label: 'Small', value: 'small', icon: 'SizeSmall16' },
