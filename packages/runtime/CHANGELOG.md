@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.18.0-canary.7
+
+### Patch Changes
+
+- f9f2c0c: fix: correctly render controls with versioned `ResponsiveSelect` data
+
 ## 0.18.0-canary.6
 
 ### Minor Changes
