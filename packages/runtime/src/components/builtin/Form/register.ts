@@ -1,4 +1,3 @@
-import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
@@ -13,6 +12,7 @@ import {
   ResponsiveColor,
   ResponsiveLength,
   ResponsiveSelect,
+  ResponsiveIconRadioGroup,
   Table,
   TableFormFields,
   TextInput,
@@ -52,7 +52,7 @@ export function registerComponent(runtime: ReactRuntime) {
           defaultValue: { value: 0, unit: 'px' },
           hidden: props.tableId == null,
         })),
-        shape: Props.ResponsiveIconRadioGroup(props => ({
+        shape: ResponsiveIconRadioGroup(props => ({
           label: 'Shape',
           options: [
             { label: 'Pill', value: Shapes.PILL, icon: 'ButtonPill16' },
@@ -62,7 +62,7 @@ export function registerComponent(runtime: ReactRuntime) {
           defaultValue: Shapes.ROUNDED,
           hidden: props.tableId == null,
         })),
-        size: Props.ResponsiveIconRadioGroup(props => ({
+        size: ResponsiveIconRadioGroup(props => ({
           label: 'Size',
           options: [
             { label: 'Small', value: Sizes.SMALL, icon: 'SizeSmall16' },
@@ -72,7 +72,7 @@ export function registerComponent(runtime: ReactRuntime) {
           defaultValue: Sizes.MEDIUM,
           hidden: props?.tableId == null,
         })),
-        contrast: Props.ResponsiveIconRadioGroup(props => ({
+        contrast: ResponsiveIconRadioGroup(props => ({
           label: 'Color',
           options: [
             { label: 'Light mode', value: Contrasts.LIGHT, icon: 'Sun16' },
@@ -136,7 +136,7 @@ export function registerComponent(runtime: ReactRuntime) {
           hidden: props.tableId == null,
           // TODO: Add placeholder: { value: 'auto' }
         })),
-        submitAlignment: Props.ResponsiveIconRadioGroup(props => ({
+        submitAlignment: ResponsiveIconRadioGroup(props => ({
           label: 'Button alignment',
           options: [
             { label: 'Left', value: Alignments.LEFT, icon: 'AlignLeft16' },

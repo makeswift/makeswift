@@ -73,3 +73,10 @@ export const responsiveSelectValueSchema = createResponsiveValueSchema(
 
 export type ResponsiveSelectValue<T extends string = string> =
   ResponsiveValue<T>
+
+export const responsiveIconRadioGroupValueSchema = createResponsiveValueSchema(
+  z.string(),
+)
+
+export type ResponsiveIconRadioGroupValue<T extends string = string> =
+  ResponsiveValue<T>

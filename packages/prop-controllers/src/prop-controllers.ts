@@ -21,6 +21,7 @@ export const Types = {
   Number: 'Number',
   Shadows: 'Shadows',
   ResponsiveColor: 'ResponsiveColor',
+  ResponsiveIconRadioGroup: 'ResponsiveIconRadioGroup',
   ResponsiveLength: 'ResponsiveLength',
   ResponsiveNumber: 'ResponsiveNumber',
   ResponsiveOpacity: 'ResponsiveOpacity',

@@ -2,13 +2,17 @@
 
 import { cx } from '@emotion/css'
 import { ComponentPropsWithoutRef, ForwardedRef, forwardRef, Ref, useEffect, useState } from 'react'
-import { ResponsiveIconRadioGroupValue } from '../../../prop-controllers/descriptors'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { colorToString } from '../../utils/colorToString'
 import { useResponsiveStyle } from '../../utils/responsive-style'
 import { ColorValue as Color } from '../../utils/types'
-import { ResponsiveFontData, ResponsiveGapData, ResponsiveValue } from '@makeswift/prop-controllers'
+import {
+  type ResponsiveFontData,
+  type ResponsiveGapData,
+  type ResponsiveIconRadioGroupValue,
+  type ResponsiveValue,
+} from '@makeswift/prop-controllers'
 
 type Props = {
   id?: string

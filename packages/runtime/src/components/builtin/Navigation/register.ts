@@ -1,4 +1,3 @@
-import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
@@ -19,6 +18,7 @@ import {
   NavigationLinks,
   NavigationLinksData,
   GapX,
+  ResponsiveIconRadioGroup,
   ResponsiveSelect,
   ElementID,
   Image,
@@ -98,7 +98,7 @@ export function registerComponent(runtime: ReactRuntime) {
               checkboxPropControllerDataSchema.optional().catch(undefined).parse(props.showLogo),
             ) === false,
         })),
-        alignment: Props.ResponsiveIconRadioGroup({
+        alignment: ResponsiveIconRadioGroup({
           label: 'Alignment',
           options: [
             { label: 'Left', value: 'flex-start', icon: 'AlignLeft16' },

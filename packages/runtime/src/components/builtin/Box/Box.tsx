@@ -15,13 +15,17 @@ import { v4 as uuid } from 'uuid'
 import { Element } from '../../../runtimes/react'
 import Placeholder from './components/Placeholder'
 import { areBoxAnimationPropsEqual, BoxAnimationProps, useBoxAnimation } from './animations'
-import { ResponsiveIconRadioGroupValue } from '../../../prop-controllers/descriptors'
 import { BoxModelHandle, parse, createBox } from '../../../box-model'
 import BackgroundsContainer from '../../shared/BackgroundsContainer'
 import { useResponsiveStyle } from '../../utils/responsive-style'
 import { GridItem } from '../../shared/grid-item'
 import { useStyle } from '../../../runtimes/react/use-style'
-import { GridData, ResponsiveBackgroundsData, ResponsiveGapData } from '@makeswift/prop-controllers'
+import {
+  type GridData,
+  type ResponsiveBackgroundsData,
+  type ResponsiveGapData,
+  type ResponsiveIconRadioGroupValue,
+} from '@makeswift/prop-controllers'
 
 type Props = {
   id?: string
