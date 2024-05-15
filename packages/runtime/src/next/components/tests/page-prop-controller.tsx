@@ -3,7 +3,13 @@
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import { Types, type Descriptor, type PropDef, type Value } from '@makeswift/prop-controllers'
+import {
+  type OptionsType,
+  Types,
+  type Descriptor,
+  type PropDef,
+  type Value,
+} from '@makeswift/prop-controllers'
 
 import { type ElementData, type ComponentType } from '../../../state/react-page'
 import { randomUUID } from 'crypto'
@@ -18,20 +24,21 @@ import {
 } from '../../../utils/tests/element-data-test-test'
 
 export const pagePropControllerTest = <
-  P extends PropDef & (() => any),
+  P extends PropDef & ((options?: any) => any),
   C extends ComponentType<{ propKey: Value<P> | undefined }>,
 >(
   propDef: P,
   value: Value<typeof propDef>,
   component: (testId: string) => C,
   assert: (element: HTMLElement) => void,
+  options?: OptionsType<P>,
 ) =>
   describe('Page', () => {
     test(`can render ${propDef.type} v0 data`, async () => {
       // Arrange
       const descriptorV0: Descriptor<typeof propDef> = {
         type: propDef.type,
-        options: {},
+        options,
       }
 
       const TestComponentType = 'TestComponent'
@@ -53,7 +60,7 @@ export const pagePropControllerTest = <
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          propKey: propDef(),
+          propKey: propDef(options),
         },
       })
 
@@ -94,7 +101,7 @@ export const pagePropControllerTest = <
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          propKey: propDef(),
+          propKey: propDef(options),
         },
       })
 
