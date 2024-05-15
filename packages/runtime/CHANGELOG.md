@@ -1,5 +1,16 @@
 # @makeswift/runtime
 
+## 0.18.0-canary.6
+
+### Minor Changes
+
+- c65e6a8: Add data type to legacy `ResponsiveSelect` prop controller, move it to `@makeswift/prop-controllers`
+
+### Patch Changes
+
+- Updated dependencies [c65e6a8]
+  - @makeswift/prop-controllers@0.3.0-canary.3
+
 ## 0.18.0-canary.5
 
 ### Minor Changes
