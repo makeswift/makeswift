@@ -17,7 +17,6 @@ import { colorToString } from '../../utils/colorToString'
 import { useMediaQuery } from '../../hooks'
 
 import Image from '../Image'
-import { ResponsiveIconRadioGroupValue } from '../../../prop-controllers/descriptors'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { cx } from '@emotion/css'
@@ -27,6 +26,7 @@ import { useBreakpoints } from '../../../runtimes/react'
 import {
   type ResponsiveGapData,
   type ResponsiveNumberValue,
+  type ResponsiveIconRadioGroupValue,
   type ImagesData,
 } from '@makeswift/prop-controllers'
 

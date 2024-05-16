@@ -82,6 +82,7 @@ import {
   WidthDescriptor,
   GapX,
   ResponsiveNumber,
+  ResponsiveIconRadioGroup,
   ResponsiveSelect,
   ResponsiveOpacity,
   getSocialLinksPropControllerDataSocialLinksData,
@@ -382,6 +383,17 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
               <RenderHook
                 key={descriptor.type}
                 hook={data => usePropValue(ResponsiveNumber, data)}
+                parameters={[props[propName]]}
+              >
+                {value => renderFn({ ...propsValue, [propName]: value })}
+              </RenderHook>
+            )
+
+          case PropControllerTypes.ResponsiveIconRadioGroup:
+            return (
+              <RenderHook
+                key={descriptor.type}
+                hook={data => usePropValue(ResponsiveIconRadioGroup, data)}
                 parameters={[props[propName]]}
               >
                 {value => renderFn({ ...propsValue, [propName]: value })}

@@ -2,8 +2,6 @@ export type {
   Data,
   Descriptor as PropControllerDescriptor,
   DescriptorValueType as PropControllerDescriptorValueType,
-  ResponsiveIconRadioGroupDescriptor,
-  ResponsiveIconRadioGroupValue,
   PanelDescriptor,
   PanelDescriptorType,
   PanelDescriptorValueType,

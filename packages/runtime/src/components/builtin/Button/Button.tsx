@@ -8,7 +8,6 @@ import {
 } from 'react'
 import ColorHelper from 'color'
 
-import { ResponsiveIconRadioGroupValue } from '../../../prop-controllers/descriptors'
 import { colorToString } from '../../utils/colorToString'
 import { Link } from '../../shared/Link'
 import { ResponsiveColor } from '../../../runtimes/react/controls'
@@ -25,6 +24,7 @@ import {
   type ResponsiveLengthData,
   type ResponsiveTextStyleData,
   type ResponsiveSelectValue,
+  type ResponsiveIconRadioGroupValue,
 } from '@makeswift/prop-controllers'
 
 type BaseProps<T extends ElementType> = {

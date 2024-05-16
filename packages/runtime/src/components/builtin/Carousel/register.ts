@@ -1,6 +1,5 @@
 import { v4 as uuid } from 'uuid'
 
-import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride } from '../../../state/modules/breakpoints'
 import {
@@ -12,6 +11,7 @@ import {
   Margin,
   Number,
   ResponsiveColor,
+  ResponsiveIconRadioGroup,
   ResponsiveNumber,
   Width,
   getImagesPropControllerDataImagesData,
@@ -78,7 +78,7 @@ export function registerComponent(runtime: ReactRuntime) {
             step: 1,
           }
         }),
-        slideAlignment: Props.ResponsiveIconRadioGroup({
+        slideAlignment: ResponsiveIconRadioGroup({
           label: 'Alignment',
           options: [
             { label: 'Top', value: 'flex-start', icon: 'VerticalAlignStart16' },
@@ -104,7 +104,7 @@ export function registerComponent(runtime: ReactRuntime) {
           ),
         })),
         showArrows: Checkbox({ preset: true, label: 'Show arrows' }),
-        arrowPosition: Props.ResponsiveIconRadioGroup(props => ({
+        arrowPosition: ResponsiveIconRadioGroup(props => ({
           label: 'Arrow position',
           options: [
             { label: 'Inside', value: 'inside', icon: 'ArrowInside16' },

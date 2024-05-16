@@ -9,13 +9,13 @@ import {
   Grid,
   Margin,
   Padding,
+  ResponsiveIconRadioGroup,
   ResponsiveNumber,
   ResponsiveSelect,
   Shadows,
   Width,
   type PropData,
 } from '@makeswift/prop-controllers'
-import { Props } from '../../../prop-controllers'
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
@@ -59,7 +59,7 @@ export function registerComponent(runtime: ReactRuntime) {
           format: Width.Format.ClassName,
           defaultValue: { value: 100, unit: '%' },
         }),
-        height: Props.ResponsiveIconRadioGroup({
+        height: ResponsiveIconRadioGroup({
           label: 'Height',
           options: [
             { value: 'auto', label: 'Auto', icon: 'HeightAuto16' },
@@ -67,7 +67,7 @@ export function registerComponent(runtime: ReactRuntime) {
           ],
           defaultValue: 'auto',
         }),
-        verticalAlign: Props.ResponsiveIconRadioGroup({
+        verticalAlign: ResponsiveIconRadioGroup({
           label: 'Align items',
           options: [
             { value: 'flex-start', label: 'Top', icon: 'VerticalAlignStart16' },

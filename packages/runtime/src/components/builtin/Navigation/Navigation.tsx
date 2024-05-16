@@ -10,16 +10,16 @@ import Button from '../Button'
 import LinksPlaceholder from './components/LinksPlaceholder'
 import DropDownButton from './components/DropDownButton'
 import MobileMenu from './components/MobileMenu'
-import { ResponsiveIconRadioGroupValue } from '../../../prop-controllers/descriptors'
 import {
-  ImageData,
-  LinkData,
-  NavigationButtonData,
-  NavigationLinksData,
-  ResponsiveGapData,
-  ResponsiveLengthData,
-  ResponsiveTextStyleData,
-  ResponsiveValue,
+  type ImageData,
+  type LinkData,
+  type NavigationButtonData,
+  type NavigationLinksData,
+  type ResponsiveGapData,
+  type ResponsiveLengthData,
+  type ResponsiveIconRadioGroupValue,
+  type ResponsiveTextStyleData,
+  type ResponsiveValue,
   type ResponsiveSelectValue,
 } from '@makeswift/prop-controllers'
 
