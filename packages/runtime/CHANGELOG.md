@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.18.0-canary.8
+
+### Patch Changes
+
+- 2ac496f: Add data type to legacy `ResponsiveIconRadioGroup` prop controller, move it to `@makeswift/prop-controllers`
+- Updated dependencies [2ac496f]
+  - @makeswift/prop-controllers@0.3.0-canary.4
+
 ## 0.18.0-canary.7
 
 ### Patch Changes

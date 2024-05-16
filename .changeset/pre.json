@@ -12,6 +12,7 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
+    "bright-readers-destroy",
     "fair-phones-look",
     "lemon-snails-boil",
     "metal-eagles-confess",
