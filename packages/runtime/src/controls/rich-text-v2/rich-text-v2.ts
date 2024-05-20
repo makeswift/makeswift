@@ -156,6 +156,7 @@ export class RichTextV2Control<
   }
 
   recv = (message: RichTextV2ControlMessage): void => {
+    console.log('-- runtime: rich text v2 recv', message.type, message)
     if (!this.editor) return
     switch (message.type) {
       case RichTextV2ControlMessageType.FOCUS: {
@@ -190,6 +191,7 @@ export class RichTextV2Control<
 
     const _onChange = editor.onChange
     this.editor.onChange = options => {
+      console.log('-- runtime: rich text v2 onChange', options)
       _onChange(options)
       this.updatePluginValues()
       if (this.editor == null || options?.operation == null) return
@@ -206,6 +208,7 @@ export class RichTextV2Control<
   }
 
   onLocalUserChange() {
+    console.log('-- runtime: rich text v2 onLocalUserChange')
     if (this.editor == null) return
     this.send({
       type: RichTextV2ControlMessageType.ON_CHANGE,
@@ -214,6 +217,7 @@ export class RichTextV2Control<
   }
 
   updatePluginValues() {
+    console.log('-- runtime: rich text v2 updatePluginValues')
     const editor = this.editor
     if (editor == null) return
     this.send({
