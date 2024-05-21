@@ -8,7 +8,7 @@ import {
   ElementReference as ReactPageElementReference,
 } from '../../../state/react-page'
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'
-import { ElementData } from './ElementData'
+import { Element } from './Element'
 import { Document } from './Document'
 import { DisableRegisterElement } from '../hooks/use-disable-register-element'
 
@@ -59,7 +59,8 @@ export const ElementReference = memo(
           <Document document={elementReferenceDocument} ref={ref} />
         ) : (
           <DisableRegisterElement.Provider value={true}>
-            <ElementData elementData={globalElementData} ref={ref} />
+            {/* We render Element instead of ElementData because we rely on the FindDomNode */}
+            <Element element={globalElementData} ref={ref} />
           </DisableRegisterElement.Provider>
         )}
       </DocumentCyclesContext.Provider>
