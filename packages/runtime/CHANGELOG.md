@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.18.0-canary.9
+
+### Patch Changes
+
+- 28e07c3: Fix global component cannot be selected after it is blurred.
+
 ## 0.18.0-canary.8
 
 ### Patch Changes
