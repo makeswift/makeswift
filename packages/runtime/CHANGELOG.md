@@ -1,90 +1,32 @@
 # @makeswift/runtime
 
-## 0.18.0-canary.9
-
-### Patch Changes
-
-- 28e07c3: Fix global component cannot be selected after it is blurred.
-
-## 0.18.0-canary.8
-
-### Patch Changes
-
-- 2ac496f: Add data type to legacy `ResponsiveIconRadioGroup` prop controller, move it to `@makeswift/prop-controllers`
-- Updated dependencies [2ac496f]
-  - @makeswift/prop-controllers@0.3.0-canary.4
-
-## 0.18.0-canary.7
-
-### Patch Changes
-
-- f9f2c0c: fix: correctly render controls with versioned `ResponsiveSelect` data
-
-## 0.18.0-canary.6
-
-### Minor Changes
-
-- c65e6a8: Add data type to legacy `ResponsiveSelect` prop controller, move it to `@makeswift/prop-controllers`
-
-### Patch Changes
-
-- Updated dependencies [c65e6a8]
-  - @makeswift/prop-controllers@0.3.0-canary.3
-
-## 0.18.0-canary.5
+## 0.18.0
 
 ### Minor Changes
 
 - b7a2a4c: Add data type to legacy `TextInput` prop controller and move it to `@makeswift/prop-controllers`.
+- c65e6a8: Add data type to legacy `ResponsiveSelect` prop controller, move it to `@makeswift/prop-controllers`
+- 8f019cd: Add data type to legacy `ResponsiveNumber` prop controller, move it to `@makeswift/prop-controllers`
 - f32d402: Add data type to legacy `SocialLinks` prop controller and move it to `@makeswift/prop-controllers`.
-
-### Patch Changes
-
-- Updated dependencies [b7a2a4c]
-- Updated dependencies [f32d402]
-  - @makeswift/prop-controllers@0.3.0-canary.2
-
-## 0.18.0-canary.4
-
-### Minor Changes
-
 - 7d05094: Add data type to legacy `ResponsiveOpacity` prop controller and move it to `@makeswift/prop-controllers`.
 
 ### Patch Changes
 
-- Updated dependencies [7d05094]
-  - @makeswift/prop-controllers@0.3.0-canary.1
-
-## 0.18.0-canary.3
-
-### Patch Changes
-
-- 526f71e: Handle ResponsiveNumber prop data on component registration.
-
-## 0.18.0-canary.2
-
-### Minor Changes
-
-- 8f019cd: Add data type to legacy `ResponsiveNumber` prop controller, move it to `@makeswift/prop-controllers`
-
-### Patch Changes
-
-- Updated dependencies [8f019cd]
-  - @makeswift/prop-controllers@0.3.0-canary.0
-
-## 0.17.2-canary.1
-
-### Patch Changes
-
-- 2b14406: Separate many controls into a @makeswift/controls package.
-- Updated dependencies [2b14406]
-  - @makeswift/controls@0.0.1-canary.0
-
-## 0.17.2-canary.0
-
-### Patch Changes
-
+- 2ac496f: Add data type to legacy `ResponsiveIconRadioGroup` prop controller, move it to `@makeswift/prop-controllers`
+- 28e07c3: Fix global component cannot be selected after it is blurred.
 - f6fae30: Add a README
+- 2b14406: Separate many controls into a @makeswift/controls package.
+- 526f71e: Handle ResponsiveNumber prop data on component registration.
+- f9f2c0c: fix: correctly render controls with versioned `ResponsiveSelect` data
+- Updated dependencies [2ac496f]
+- Updated dependencies [b7a2a4c]
+- Updated dependencies [c65e6a8]
+- Updated dependencies [8f019cd]
+- Updated dependencies [2b14406]
+- Updated dependencies [f32d402]
+- Updated dependencies [7d05094]
+  - @makeswift/prop-controllers@0.3.0
+  - @makeswift/controls@0.0.1
 
 ## 0.17.1
 

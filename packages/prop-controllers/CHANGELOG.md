@@ -1,35 +1,18 @@
 # @makeswift/prop-controllers
 
-## 0.3.0-canary.4
-
-### Patch Changes
-
-- 2ac496f: Add data type to legacy `ResponsiveIconRadioGroup` prop controller, move it to `@makeswift/prop-controllers`
-
-## 0.3.0-canary.3
-
-### Minor Changes
-
-- c65e6a8: Add data type to legacy `ResponsiveSelect` prop controller, move it to `@makeswift/prop-controllers`
-
-## 0.3.0-canary.2
+## 0.3.0
 
 ### Minor Changes
 
 - b7a2a4c: Add data type to legacy `TextInput` prop controller and move it to `@makeswift/prop-controllers`.
+- c65e6a8: Add data type to legacy `ResponsiveSelect` prop controller, move it to `@makeswift/prop-controllers`
+- 8f019cd: Add data type to legacy `ResponsiveNumber` prop controller, move it to `@makeswift/prop-controllers`
 - f32d402: Add data type to legacy `SocialLinks` prop controller and move it to `@makeswift/prop-controllers`.
-
-## 0.3.0-canary.1
-
-### Minor Changes
-
 - 7d05094: Add data type to legacy `ResponsiveOpacity` prop controller and move it to `@makeswift/prop-controllers`.
 
-## 0.3.0-canary.0
+### Patch Changes
 
-### Minor Changes
-
-- 8f019cd: Add data type to legacy `ResponsiveNumber` prop controller, move it to `@makeswift/prop-controllers`
+- 2ac496f: Add data type to legacy `ResponsiveIconRadioGroup` prop controller, move it to `@makeswift/prop-controllers`
 
 ## 0.2.1
 
