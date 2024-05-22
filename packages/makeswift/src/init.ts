@@ -6,10 +6,7 @@ import * as http from 'http'
 import open from 'open'
 import { createNextApp } from './create-next-app'
 import MakeswiftError from './errors/MakeswiftError'
-import { integrateNextApp } from './integrate-next-app'
-import { checkForConflictingFiles } from './utils/check-for-conflicting-files'
 import { getProjectName } from './utils/get-name'
-import isNextApp from './utils/is-next-app'
 import { Socket } from 'node:net'
 import { detectPackageManager, PM } from './utils/detect-package-manager'
 
@@ -52,11 +49,11 @@ async function init(
     }
   }
 
-  async function performHandshake({
-    usingExistingNextApp,
-  }: {
-    usingExistingNextApp: boolean
-  }): Promise<{ nextAppPort: number; envLocal: string; example: string | null }> {
+  async function performHandshake(): Promise<{
+    nextAppPort: number
+    envLocal: string
+    example: string | null
+  }> {
     const handshakePort = await detectPort(5600)
     const nextAppPort = await detectPort(3000)
 
@@ -65,7 +62,6 @@ async function init(
     const selectSiteUrl = new URL(`${MAKESWIFT_APP_ORIGIN}/cli/select-site`)
     selectSiteUrl.searchParams.set('project_name', projectName)
     selectSiteUrl.searchParams.set('callback_url', callbackUrl)
-    selectSiteUrl.searchParams.set('using_existing_next_app', String(usingExistingNextApp))
     passedInExample && selectSiteUrl.searchParams.set('example', passedInExample)
     template && selectSiteUrl.searchParams.set('template', template)
 
@@ -115,24 +111,17 @@ async function init(
   validate()
 
   const { directory: nextAppDir, name: projectName } = await getProjectName(name)
-  const usingExistingNextApp = isNextApp(nextAppDir)
 
-  checkForConflictingFiles({ dir: nextAppDir })
+  const { nextAppPort, envLocal, example } = await performHandshake()
 
-  const { nextAppPort, envLocal, example } = await performHandshake({ usingExistingNextApp })
-
-  if (usingExistingNextApp) {
-    await integrateNextApp({ dir: nextAppDir, useNpm, useYarn, usePnpm, useBun })
-  } else {
-    createNextApp({
-      dir: nextAppDir,
-      example: example || 'basic-typescript',
-      useNpm,
-      useYarn,
-      usePnpm,
-      useBun,
-    })
-  }
+  createNextApp({
+    dir: nextAppDir,
+    example: example || 'basic-typescript',
+    useNpm,
+    useYarn,
+    usePnpm,
+    useBun,
+  })
 
   fs.writeFileSync(`${nextAppDir}/.env.local`, envLocal)
 
