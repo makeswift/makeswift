@@ -1,6 +1,6 @@
 # makeswift
 
-## 0.3.0-canary.0
+## 0.3.0
 
 ### Minor Changes
 
