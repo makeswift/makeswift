@@ -13,7 +13,7 @@ program
 
 program
   .command('init', { isDefault: true })
-  .description('Create a new Next.js app or integrate an existing one, to use with Makeswift.')
+  .description('Create a new Next.js app integrated with Makeswift.')
   .argument('[name]', 'The name of the folder to create.')
   .option('--example <example>', 'The Github URL, or name of the Makeswift example to clone.')
   .option('--template <template>', 'The template slug of the Makeswift template to use.')
