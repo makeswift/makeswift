@@ -46,6 +46,7 @@ import {
   unregisterComponent,
   unregisterMeasurable,
   unregisterPropControllers,
+  setElementTreeId,
 } from './actions'
 import { ActionTypes } from './actions'
 import { createPropController } from '../prop-controllers/instances'
@@ -433,8 +434,11 @@ export interface IMessageChannel {
 
 export function initialize(
   channel: IMessageChannel,
+  elementTreeId: string,
 ): ThunkAction<() => void, State, unknown, Action> {
   return (dispatch, getState) => {
+    dispatch(setElementTreeId(elementTreeId))
+
     const stopMeasuringElements = dispatch(startMeasuringElements())
     const stopMeasuringDocumentElement = dispatch(startMeasuringDocumentElement())
     const stopHandlingFocusEvent = dispatch(startHandlingFocusEvents())
@@ -495,6 +499,7 @@ function measureBoxModelsMiddleware(): Middleware<Dispatch, State, Dispatch> {
 export function messageChannelMiddleware(
   client: MakeswiftHostApiClient,
   channel: IMessageChannel,
+  elementTreeId: string,
 ): Middleware<Dispatch, State, Dispatch> {
   return ({ dispatch }: MiddlewareAPI<Dispatch, State>) =>
     (next: ReduxDispatch<Action>) => {
@@ -513,6 +518,7 @@ export function messageChannelMiddleware(
           case ActionTypes.ELEMENT_FROM_POINT_CHANGE:
           case ActionTypes.SET_LOCALE:
           case ActionTypes.SET_BREAKPOINTS:
+          case ActionTypes.SET_ELEMENT_TREE_ID:
             channel.postMessage(action)
             break
 
@@ -551,7 +557,7 @@ export function messageChannelMiddleware(
 
           case ActionTypes.INIT:
             // dispatched by the parent window after establishing the connection
-            cleanUp = dispatch(initialize(channel))
+            cleanUp = dispatch(initialize(channel, elementTreeId))
             break
 
           case ActionTypes.CLEAN_UP:
@@ -729,10 +735,12 @@ export function configureStore({
   rootElements,
   preloadedState,
   client,
+  elementTreeId,
 }: {
   rootElements?: Map<string, Documents.Element>
   preloadedState?: PreloadedState<State>
   client: MakeswiftHostApiClient
+  elementTreeId: string
 }): Store {
   const initialState: PreloadedState<State> = {
     ...preloadedState,
@@ -755,7 +763,7 @@ export function configureStore({
       applyMiddleware(
         thunk,
         measureBoxModelsMiddleware(),
-        messageChannelMiddleware(client, channel),
+        messageChannelMiddleware(client, channel, elementTreeId),
         propControllerHandlesMiddleware(),
         makeswiftApiClientSyncMiddleware(client),
       ),

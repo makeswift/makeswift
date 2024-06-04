@@ -36,7 +36,12 @@ See our docs for more information on what's changed and instructions to migrate:
 
   return (
     <Suspense>
-      <RuntimeProvider client={client} rootElements={rootElements} preview={snapshot.preview}>
+      <RuntimeProvider
+        client={client}
+        rootElements={rootElements}
+        preview={snapshot.preview}
+        elementTreeId={snapshot.document.id}
+      >
         {/* We use a key here to reset the Snippets state in the PageMeta component */}
         <PageMeta key={snapshot.document.data.key} document={snapshot.document} />
       </RuntimeProvider>

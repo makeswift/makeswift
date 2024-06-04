@@ -80,6 +80,8 @@ export const ActionTypes = {
   SET_LOCALE: 'SET_LOCALE',
 
   SET_LOCALIZED_RESOURCE_ID: 'SET_LOCALIZED_RESOURCE_ID',
+
+  SET_ELEMENT_TREE_ID: 'SET_ELEMENT_TREE_ID',
 } as const
 
 type InitAction = { type: typeof ActionTypes.INIT }
@@ -283,6 +285,11 @@ type SetLocalizedResourceIdAction = {
   payload: { resourceId: string; localizedResourceId: string | null }
 }
 
+type SetElementTreeIdAction = {
+  type: typeof ActionTypes.SET_ELEMENT_TREE_ID
+  payload: { elementTreeId: string }
+}
+
 export type Action =
   | InitAction
   | CleanUpAction
@@ -323,9 +330,14 @@ export type Action =
   | SetBreakpointsAction
   | SetLocaleAction
   | SetLocalizedResourceIdAction
+  | SetElementTreeIdAction
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }
+}
+
+export function setElementTreeId(elementTreeId: string): SetElementTreeIdAction {
+  return { type: ActionTypes.SET_ELEMENT_TREE_ID, payload: { elementTreeId } }
 }
 
 export function cleanUp(): CleanUpAction {

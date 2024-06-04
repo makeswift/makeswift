@@ -15,9 +15,15 @@ type Props = {
   client: MakeswiftHostApiClient
   rootElements?: Map<string, ReactPage.Element>
   children?: ReactNode
+  elementTreeId: string
 }
 
-export default function PreviewProvider({ client, children, rootElements }: Props): JSX.Element {
+export default function PreviewProvider({
+  client,
+  children,
+  rootElements,
+  elementTreeId,
+}: Props): JSX.Element {
   const runtime = useReactRuntime()
   const store = useMemo(
     () =>
@@ -25,6 +31,7 @@ export default function PreviewProvider({ client, children, rootElements }: Prop
         preloadedState: runtime ? runtime.store.getState() : ReactRuntime.store.getState(),
         rootElements,
         client,
+        elementTreeId,
       }),
     [client, rootElements, runtime],
   )

@@ -9,6 +9,7 @@ type RuntimeProviderProps = {
   rootElements?: Map<string, ReactPageElement>
   children?: ReactNode
   runtime?: ReactRuntime
+  elementTreeId: string
 }
 
 const PreviewProvider = lazy(() => import('./PreviewProvider'))
