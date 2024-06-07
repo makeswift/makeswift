@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.18.1-canary.0
+
+### Patch Changes
+
+- 26b0262: Fix uncaught client exception on incomplete, protocol-only links
+
 ## 0.18.0
 
 ### Minor Changes
