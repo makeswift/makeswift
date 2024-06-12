@@ -3,19 +3,27 @@ import '@/makeswift/components'
 import { getSiteVersion } from '@makeswift/runtime/next/server'
 import { notFound } from 'next/navigation'
 import { Page as MakeswiftPage } from '@makeswift/runtime/next'
-import { locales } from '@/localization'
 
 type ParsedUrlQuery = { lang: string; path?: string[] }
 
 export async function generateStaticParams() {
-  const pages = await client.getPages()
 
-  return pages.flatMap((page) =>
-    locales.map((locale) => ({
-      path: page.path.split('/').filter((segment) => segment !== ''),
-      lang: locale,
+  const pages = await client.getPages().toArray()
+
+  return pages.flatMap((page) => [
+    {
+      params: {
+        path: page.path.split('/').filter((segment) => segment !== ''),
+        lang: page.locale,
+      },
+    },
+    ...page.localizedVariants.map((variant) => ({
+      params: {
+        path: variant.path.split('/').filter((segment) => segment !== ''),
+        lang: variant.locale,
+      },
     })),
-  )
+  ])
 }
 
 export default async function Page({ params }: { params: ParsedUrlQuery }) {
