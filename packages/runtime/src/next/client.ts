@@ -39,11 +39,73 @@ import {
   Data,
 } from '../state/react-page'
 import { getMakeswiftSiteVersion, MakeswiftSiteVersion } from './preview-mode'
+import { toIterablePaginationResult } from './utils/pagination'
 
-export type MakeswiftPage = {
-  id: string
-  path: string
+const makeswiftPageResultSchema = z.object({
+  id: z.string(),
+  path: z.string(),
+  title: z.string().nullable(),
+  description: z.string().nullable(),
+  canonicalUrl: z.string().nullable(),
+  socialImageUrl: z.string().nullable(),
+  sitemapPriority: z.number().nullable(),
+  sitemapFrequency: z
+    .enum(['always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never'])
+    .nullable(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  publishedAt: z.string().nullable(),
+  isOnline: z.boolean().nullable(),
+  excludedFromSearch: z.boolean().nullable(),
+  locale: z.string(),
+  localizedVariants: z.array(
+    z.object({
+      locale: z.string(),
+      path: z.string(),
+    }),
+  ),
+})
+
+const makeswiftGetPagesResultAPISchema = z.object({
+  data: z.array(makeswiftPageResultSchema),
+  hasMore: z.boolean(),
+})
+
+const makeswiftGetPagesParamsSchema = z.object({
+  limit: z.number().optional(),
+  after: z.string().optional(),
+  sortBy: z.enum(['title', 'path', 'createdAt', 'updatedAt', 'publishedAt']).optional(),
+  sortDirection: z.enum(['asc', 'desc']).optional(),
+  includeOffline: z.boolean().optional(),
+  pathPrefix: z.string().optional(),
+  locale: z.string().optional(),
+})
+
+function getPagesQueryParams({
+  limit = 20,
+  after,
+  sortBy,
+  sortDirection,
+  includeOffline,
+  pathPrefix,
+  locale,
+}: GetPagesParams): URLSearchParams {
+  const params = new URLSearchParams()
+
+  if (limit != null) params.set('limit', limit.toString())
+  if (after != null) params.set('after', after)
+  if (sortBy != null) params.set('sortBy', sortBy)
+  if (sortDirection != null) params.set('sortDirection', sortDirection)
+  if (includeOffline != null) params.set('includeOffline', includeOffline.toString())
+  if (pathPrefix != null) params.set('pathPrefix', pathPrefix)
+  if (locale != null) params.set('locale', locale)
+
+  return params
 }
+
+type GetPagesParams = z.infer<typeof makeswiftGetPagesParamsSchema>
+export type MakeswiftPage = z.infer<typeof makeswiftPageResultSchema>
+export type MakeswiftGetPagesResult = z.infer<typeof makeswiftGetPagesResultAPISchema>
 
 export type MakeswiftPageDocument = {
   id: string
@@ -201,22 +263,31 @@ export class Makeswift {
     return response
   }
 
-  async getPages({
+  private getPagesInternal = async ({
     siteVersion = MakeswiftSiteVersion.Live,
+    ...params
   }: {
     siteVersion?: MakeswiftSiteVersion
-  } = {}): Promise<MakeswiftPage[]> {
-    const response = await this.fetch(`v3/pages`, siteVersion)
+  } & GetPagesParams = {}): Promise<MakeswiftGetPagesResult> => {
+    const queryParams = getPagesQueryParams(params)
 
+    const response = await this.fetch(`v4/pages?${queryParams.toString()}`, siteVersion)
     if (!response.ok) {
       console.error('Failed to get pages', await response.json())
       throw new Error(`Failed to get pages with error: "${response.statusText}"`)
     }
 
-    const json = await response.json()
-
-    return json
+    const result = await response.json()
+    const parsedResponse = makeswiftGetPagesResultAPISchema.safeParse(result)
+    if (!parsedResponse.success) {
+      throw new Error(
+        `Failed to parse getPages response: ${parsedResponse.error.errors.join(', ')}`,
+      )
+    }
+    return parsedResponse.data
   }
+
+  getPages = toIterablePaginationResult(this.getPagesInternal)
 
   async getPage(
     pathname: string,
@@ -636,6 +707,10 @@ export class Makeswift {
     return result.table
   }
 
+  /**
+   * @deprecated `getSitemap` is deprecated. We recommend constructing a sitemap
+   * using data from `getPages` instead.
+   */
   async getSitemap({
     limit = 50,
     after,

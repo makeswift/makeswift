@@ -18,7 +18,7 @@ type ParsedUrlQuery = { path?: string[] }
 export async function getStaticPaths(): Promise<
   GetStaticPathsResult<ParsedUrlQuery>
 > {
-  const pages = await client.getPages()
+  const pages = await client.getPages().toArray()
 
   return {
     paths: pages.map((page) => ({
