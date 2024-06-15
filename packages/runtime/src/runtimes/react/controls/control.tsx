@@ -1,7 +1,4 @@
 import {
-  CheckboxControlData,
-  CheckboxControlDefinition,
-  CheckboxControlType,
   NumberControlData,
   NumberControlDefinition,
   NumberControlType,
@@ -13,9 +10,12 @@ import {
   TextAreaControlType,
 } from '@makeswift/controls'
 import {
-  ColorControlData,
-  ColorControlDefinition,
-  ColorControlType,
+  Checkbox,
+  // Color,
+  type ControlTraits,
+  type ControlDataType,
+  type ControlDefinitionType,
+  controlTraitsRegistry,
   ComboboxControlData,
   ComboboxControlDefinition,
   ComboboxControlType,
@@ -68,8 +68,7 @@ import {
 
 import { AnyPropController } from '../../../prop-controllers/instances'
 import { RenderHook } from '../components'
-import { CheckboxControlValue, useCheckboxControlValue } from './checkbox'
-import { ColorControlValue, useColorValue } from './color'
+// import { useColorValue } from './color'
 import { ComboboxControlValue, useComboboxControlValue } from './combobox'
 import { IconRadioGroupControlValue, useIconRadioGroupValue } from './icon-radio-group'
 import { ResolveImageControlValue, useImageControlValue } from './image'
@@ -87,50 +86,53 @@ import { TextAreaControlValue, useTextAreaValue } from './text-area'
 import { TextInputControlValue, useTextInputValue } from './text-input'
 import { TypographyControlValue, useTypographyValue } from './typography'
 
-export type ControlDefinitionValue<T extends ControlDefinition> =
-  T extends CheckboxControlDefinition
-    ? CheckboxControlValue<T>
-    : T extends NumberControlDefinition
-    ? NumberControlValue<T>
-    : T extends TextInputControlDefinition
+export type ControlDefinitionValue<T extends ControlDefinition> = T extends NumberControlDefinition
+  ? NumberControlValue<T>
+  : T extends TextInputControlDefinition
     ? TextInputControlValue<T>
     : T extends TextAreaControlDefinition
-    ? TextAreaControlValue<T>
-    : T extends SelectControlDefinition
-    ? SelectControlValue<T>
-    : T extends ColorControlDefinition
-    ? ColorControlValue<T>
-    : T extends ImageControlDefinition
-    ? ResolveImageControlValue<T>
-    : T extends IconRadioGroupControlDefinition
-    ? IconRadioGroupControlValue<T>
-    : T extends LinkControlDefinition
-    ? LinkControlValue<T>
-    : T extends ComboboxControlDefinition
-    ? ComboboxControlValue<T>
-    : T extends ShapeControlDefinition
-    ? ShapeControlValue<T>
-    : T extends ListControlDefinition
-    ? ListControlValue<T>
-    : T extends SlotControlDefinition
-    ? SlotControlValue
-    : T extends RichTextControlDefinition
-    ? RichTextControlValue
-    : T extends RichTextV2ControlDefinition
-    ? RichTextV2ControlValue
-    : T extends StyleControlDefinition
-    ? StyleControlFormattedValue
-    : T extends StyleV2ControlDefinition
-    ? StyleV2ControlFormattedValue
-    : T extends TypographyControlDefinition
-    ? TypographyControlValue
-    : never
+      ? TextAreaControlValue<T>
+      : T extends SelectControlDefinition
+        ? SelectControlValue<T>
+        : T extends ImageControlDefinition
+          ? ResolveImageControlValue<T>
+          : T extends IconRadioGroupControlDefinition
+            ? IconRadioGroupControlValue<T>
+            : T extends LinkControlDefinition
+              ? LinkControlValue<T>
+              : T extends ComboboxControlDefinition
+                ? ComboboxControlValue<T>
+                : T extends ShapeControlDefinition
+                  ? ShapeControlValue<T>
+                  : T extends ListControlDefinition
+                    ? ListControlValue<T>
+                    : T extends SlotControlDefinition
+                      ? SlotControlValue
+                      : T extends RichTextControlDefinition
+                        ? RichTextControlValue
+                        : T extends RichTextV2ControlDefinition
+                          ? RichTextV2ControlValue
+                          : T extends StyleControlDefinition
+                            ? StyleControlFormattedValue
+                            : T extends StyleV2ControlDefinition
+                              ? StyleV2ControlFormattedValue
+                              : T extends TypographyControlDefinition
+                                ? TypographyControlValue
+                                : never
 
 type ControlValueProps<T extends ControlDefinition> = {
   definition: T
   data: ControlDefinitionData<T> | undefined
   children(value: ControlDefinitionValue<T>): JSX.Element
   control?: AnyPropController
+}
+
+function useValue<T extends ControlTraits>(
+  data: ControlDataType<T>,
+  definition: ControlDefinitionType<T>,
+) {
+  const traits = controlTraitsRegistry.get(definition.type)
+  return traits?.fromData(data, definition)
 }
 
 export function ControlValue<T extends ControlDefinition>({
@@ -140,12 +142,12 @@ export function ControlValue<T extends ControlDefinition>({
   control,
 }: ControlValueProps<T>): JSX.Element {
   switch (definition.type) {
-    case CheckboxControlType:
+    case Checkbox.controlType:
       return (
         <RenderHook
           key={definition.type}
-          hook={useCheckboxControlValue}
-          parameters={[data as CheckboxControlData, definition]}
+          hook={useValue<typeof Checkbox>}
+          parameters={[data as ControlDataType<typeof Checkbox>, definition]}
         >
           {value => children(value as ControlDefinitionValue<T>)}
         </RenderHook>
@@ -195,16 +197,16 @@ export function ControlValue<T extends ControlDefinition>({
         </RenderHook>
       )
 
-    case ColorControlType:
-      return (
-        <RenderHook
-          key={definition.type}
-          hook={useColorValue}
-          parameters={[data as ColorControlData, definition]}
-        >
-          {value => children(value as ControlDefinitionValue<T>)}
-        </RenderHook>
-      )
+    // case Color.controlType:
+    //   return (
+    //     <RenderHook
+    //       key={definition.type}
+    //       hook={useColorValue}
+    //       parameters={[data as ControlDataType<typeof Color>, definition]}
+    //     >
+    //       {value => children(value as ControlDefinitionValue<T>)}
+    //     </RenderHook>
+    //   )
 
     case IconRadioGroupControlType:
       return (

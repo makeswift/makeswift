@@ -1,8 +1,12 @@
+export type WithAssociatedTypes<T> = {
+  readonly __associated_types__?: T
+}
+
 export type AssociatedTypes<T> = T extends {
   __associated_types__?: infer Types
 }
-  ? Types extends (...args: any) => any
-    ? ReturnType<Types>
+  ? Types extends Record<string, unknown>
+    ? Types
     : never
   : never
 

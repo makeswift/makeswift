@@ -1,9 +1,5 @@
 /** @jest-environment jsdom */
-import {
-  Checkbox,
-  CheckboxControlDataTypeKey,
-  CheckboxControlDataTypeValueV1,
-} from '@makeswift/controls'
+import { Checkbox } from '@makeswift/controls'
 import { testPageControlPropRendering } from './page-control-prop-rendering'
 
 describe('Page', () => {
@@ -14,14 +10,11 @@ describe('Page', () => {
     },
     {
       version: 1,
-      toData: (value: boolean | undefined) => ({
-        [CheckboxControlDataTypeKey]: CheckboxControlDataTypeValueV1,
-        value,
-      }),
+      toData: (value: boolean | undefined) => Checkbox.toData(value, Checkbox()),
     },
   ])('Checkbox control data v$version', ({ toData }) => {
     test.each([true, false])(`when value is %s`, async value => {
-      await testPageControlPropRendering(Checkbox(), { toData: toData as any, value })
+      await testPageControlPropRendering(Checkbox, Checkbox(), { toData, value })
     })
   })
 })

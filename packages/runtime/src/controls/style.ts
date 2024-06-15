@@ -1,6 +1,4 @@
-import { ColorData, copyColorData, ResponsiveValue } from '@makeswift/controls'
-import { getBorderPropControllerDataSwatchIds } from '@makeswift/prop-controllers'
-
+import { Color, type ColorData, type ResponsiveValue } from '@makeswift/controls'
 import { BorderRadiusPropertyData } from '../css/border-radius'
 import type { LengthPercentageData } from '../css/length-percentage'
 import { MarginPropertyData } from '../css/margin'
@@ -9,6 +7,7 @@ import { CopyContext } from '../state/react-page'
 import { Send } from '../prop-controllers/instances'
 import { PropController } from '../prop-controllers/base'
 import { BoxModel } from '../state/modules/box-models'
+import { getBorderPropControllerDataSwatchIds } from '@makeswift/prop-controllers'
 
 /** @see https://developer.mozilla.org/en-US/docs/Web/CSS/width */
 export type WidthPropertyData = LengthPercentageData
@@ -150,7 +149,7 @@ export const StyleControlProperty = {
   TextStyle: 'makeswift::controls::style::property::text-style',
 } as const
 
-export type StyleControlProperty = typeof StyleControlProperty[keyof typeof StyleControlProperty]
+export type StyleControlProperty = (typeof StyleControlProperty)[keyof typeof StyleControlProperty]
 
 type StyleControlParams = { properties?: StyleControlProperty[] }
 
@@ -249,7 +248,7 @@ export function copyStyleData(
 
       return {
         ...side,
-        color: copyColorData(side.color, context),
+        color: Color.copyData(side.color, context),
       }
     }
 

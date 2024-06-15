@@ -1,17 +1,14 @@
 import {
-  ColorControlData,
-  ColorControlDefinition,
-  ColorControlType,
+  Color,
   TextInputControlData,
   TextInputControlDefinition,
   TextInputControlType,
   TextAreaControlData,
   TextAreaControlDefinition,
   TextAreaControlType,
-  CheckboxControlData,
-  CheckboxControlDefinition,
   NumberControlData,
   NumberControlDefinition,
+  Checkbox,
   ComboboxControlData,
   ComboboxControlDefinition,
   IconRadioGroupControlData,
@@ -22,8 +19,9 @@ import {
   LinkControlData,
   LinkControlDefinition,
   LinkControlType,
-  copyColorData,
   copyLinkData,
+  type ControlDefinitionType,
+  controlTraitsRegistry,
 } from '@makeswift/controls'
 
 import { copyImageData } from './image'
@@ -92,12 +90,12 @@ import {
 import { IndexSignatureHack } from '../utils/index-signature-hack'
 
 export type ControlDefinition =
-  | CheckboxControlDefinition
+  | ControlDefinitionType<typeof Checkbox>
   | NumberControlDefinition
   | TextInputControlDefinition
   | TextAreaControlDefinition
   | SelectControlDefinition
-  | ColorControlDefinition
+  | ControlDefinitionType<typeof Color>
   | IconRadioGroupControlDefinition
   | ImageControlDefinition
   | ComboboxControlDefinition
@@ -112,43 +110,44 @@ export type ControlDefinition =
   | StyleV2ControlDefinition
   | TypographyControlDefinition
 
-export type ControlDefinitionData<T extends ControlDefinition> = T extends CheckboxControlDefinition
-  ? CheckboxControlData
-  : T extends NumberControlDefinition
+export type ControlDefinitionData<T extends ControlDefinition> = T extends NumberControlDefinition
   ? NumberControlData
   : T extends TextInputControlDefinition
-  ? TextInputControlData
-  : T extends TextAreaControlDefinition
-  ? TextAreaControlData
-  : T extends SelectControlDefinition
-  ? SelectControlData<T>
-  : T extends ColorControlDefinition
-  ? ColorControlData
-  : T extends IconRadioGroupControlDefinition
-  ? IconRadioGroupControlData<T>
-  : T extends ImageControlDefinition
-  ? ImageControlData
-  : T extends ComboboxControlDefinition
-  ? ComboboxControlData<T>
-  : T extends ShapeControlDefinition
-  ? ShapeControlData<T>
-  : T extends ListControlDefinition
-  ? ListControlData<T>
-  : T extends LinkControlDefinition
-  ? LinkControlData
-  : T extends RichTextControlDefinition
-  ? IndexSignatureHack<RichTextControlData>
-  : T extends RichTextV2ControlDefinition
-  ? RichTextV2ControlData
-  : T extends StyleControlDefinition
-  ? StyleControlData
-  : T extends StyleV2ControlDefinition
-  ? StyleV2ControlData
-  : T extends TypographyControlDefinition
-  ? TypographyControlData
-  : never
+    ? TextInputControlData
+    : T extends TextAreaControlDefinition
+      ? TextAreaControlData
+      : T extends SelectControlDefinition
+        ? SelectControlData<T>
+        : T extends IconRadioGroupControlDefinition
+          ? IconRadioGroupControlData<T>
+          : T extends ImageControlDefinition
+            ? ImageControlData
+            : T extends ComboboxControlDefinition
+              ? ComboboxControlData<T>
+              : T extends ShapeControlDefinition
+                ? ShapeControlData<T>
+                : T extends ListControlDefinition
+                  ? ListControlData<T>
+                  : T extends LinkControlDefinition
+                    ? LinkControlData
+                    : T extends RichTextControlDefinition
+                      ? IndexSignatureHack<RichTextControlData>
+                      : T extends RichTextV2ControlDefinition
+                        ? RichTextV2ControlData
+                        : T extends StyleControlDefinition
+                          ? StyleControlData
+                          : T extends StyleV2ControlDefinition
+                            ? StyleV2ControlData
+                            : T extends TypographyControlDefinition
+                              ? TypographyControlData
+                              : never
 
 export function copy(definition: Descriptor | ControlDefinition, value: any, context: CopyContext) {
+  const traits = controlTraitsRegistry.get(definition.type)
+  if (traits) {
+    return traits.copyData(value, context)
+  }
+
   switch (definition.type) {
     case PropControllerTypes.Backgrounds:
     case PropControllerTypes.Grid:
@@ -171,8 +170,6 @@ export function copy(definition: Descriptor | ControlDefinition, value: any, con
         isRichTextV1Data(value) ? richTextV2DescendentsToData(richTextDTOtoDAO(value)) : value,
         context,
       )
-    case ColorControlType:
-      return copyColorData(value, context)
     case ImageControlType:
       return copyImageData(value, context)
     case LinkControlType:

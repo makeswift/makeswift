@@ -1,43 +1,23 @@
 import { z } from 'zod'
+import { AssociatedType } from '../utils/associated-types'
 
-export type Data = undefined | null | boolean | number | string | Data[] | { [key: string]: Data }
+export type Data =
+  | undefined
+  | null
+  | boolean
+  | number
+  | string
+  | Data[]
+  | { [key: string]: Data }
 
-export type ColorData = { swatchId: string; alpha: number }
+export const colorDataSchema = z.object({
+  swatchId: z.string(),
+  alpha: z.number(),
+})
 
-export const Types = {
-  Backgrounds: 'Backgrounds',
-  Border: 'Border',
-  BorderRadius: 'BorderRadius',
-  Checkbox: 'Checkbox',
-  Date: 'Date',
-  ElementID: 'ElementID',
-  Font: 'Font',
-  GapX: 'GapX',
-  GapY: 'GapY',
-  Grid: 'Grid',
-  Image: 'Image',
-  Images: 'Images',
-  Link: 'Link',
-  Margin: 'Margin',
-  NavigationLinks: 'NavigationLinks',
-  Padding: 'Padding',
-  Number: 'Number',
-  Shadows: 'Shadows',
-  ResponsiveColor: 'ResponsiveColor',
-  ResponsiveLength: 'ResponsiveLength',
-  TextArea: 'TextArea',
-  Table: 'Table',
-  TableFormFields: 'TableFormFields',
-  TextStyle: 'TextStyle',
-  Width: 'Width',
-  Video: 'Video',
-} as const
+export type ColorData = z.infer<typeof colorDataSchema>
 
 export const ControlDataTypeKey = '@@makeswift/type'
-
-export type Options<T> = T | ((props: Record<string, unknown>, deviceMode: Device) => T)
-
-export type ResolveOptions<T extends Options<unknown>> = T extends Options<infer U> ? U : never
 
 const deviceSchema = z.string()
 
@@ -62,7 +42,8 @@ export function createResponsiveValueSchema<T extends z.ZodTypeAny>(
 
 export type ResponsiveValue<T> = DeviceOverride<T>[]
 
-export type ResponsiveValueType<T> = T extends ResponsiveValue<infer U> ? U : never
+export type ResponsiveValueType<T> =
+  T extends ResponsiveValue<infer U> ? U : never
 
 export const dataSchema: z.ZodType<Data> = z.any()
 
@@ -82,7 +63,10 @@ const elementReferenceSchema = z.object({
 
 export type ElementReference = z.infer<typeof elementReferenceSchema>
 
-export const elementSchema = z.union([elementDataSchema, elementReferenceSchema])
+export const elementSchema = z.union([
+  elementDataSchema,
+  elementReferenceSchema,
+])
 
 export type Element = z.infer<typeof elementSchema>
 
@@ -109,3 +93,13 @@ export type CopyContext = {
   replacementContext: ReplacementContext
   copyElement: (node: Element) => Element
 }
+
+// export type PropType<T> = AssociatedType<T, 'Type'>
+export type ControlDefinitionType<T> = AssociatedType<T, 'ControlDefinition'>
+export type ControlDataType<T> = AssociatedType<T, 'ControlData'>
+export type ValueType<T> = AssociatedType<T, 'ValueType'>
+export type ResolvedValueType<T> = AssociatedType<T, 'ResolvedValueType'>
+// export type Descriptor<T> = AssociatedType<T, 'Descriptor'>
+// export type Discriminator<T> = AssociatedType<T, 'Discriminator'>
+// export type OptionsType<T> = AssociatedType<Descriptor<T>, 'Options'>
+// export type RawOptionsType<T> = ResolveOptions<OptionsType<T>>

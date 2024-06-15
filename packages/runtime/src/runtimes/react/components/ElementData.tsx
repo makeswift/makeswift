@@ -24,6 +24,11 @@ export const ElementData = memo(
 
     return (
       <Suspense>
+        {/* {PropsValue({
+          element: elementData,
+          children: props => <Component {...props} key={elementData.key} ref={ref} />,
+        })} */}
+
         <PropsValue element={elementData}>
           {props => <Component {...props} key={elementData.key} ref={ref} />}
         </PropsValue>
