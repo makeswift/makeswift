@@ -1,10 +1,10 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import {
-  CheckboxControlType,
   IconRadioGroupControlType,
   NumberControlType,
   TextInputControlType,
   TextAreaControlType,
+  // ResourceResolver,
 } from '@makeswift/controls'
 
 import * as ReactPage from '../../state/react-page'
@@ -29,7 +29,8 @@ import {
   useResponsiveWidth,
 } from '../../components/utils/responsive-style'
 import {
-  ColorControlType,
+  Checkbox,
+  // Color,
   ComboboxControlType,
   ImageControlType,
   LinkControlType,
@@ -46,6 +47,7 @@ import {
   RichTextV2ControlType,
   StyleV2ControlType,
   TypographyControlType,
+  resolveControlValue,
 } from '../../controls'
 import { useFormattedStyle } from './controls/style'
 import { ControlValue } from './controls/control'
@@ -102,6 +104,7 @@ import { useImagePropControllerData } from '../../components/hooks/useImagePropC
 import { useImagesPropControllerData } from '../../components/hooks/useImagesPropControllerData'
 import { useBackgroundsPropControllerData } from '../../components/hooks/useBackgroundsPropControllerData'
 import { useTextInputPropControllerData } from '../../components/hooks/useTextInputPropControllerData'
+import { useMakeswiftHostApiClient } from '../../next/context/makeswift-host-api-client'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -150,11 +153,43 @@ type PropsValueProps = {
   children(props: Record<string, unknown>): JSX.Element
 }
 
-export function PropsValue({ element, children }: PropsValueProps): JSX.Element {
+// function useResolvedControlValue(
+//   elementData: ReactPage.ElementData,
+//   definition: { type: string },
+//   resourceResolver: ResourceResolver,
+// ): any {
+//   const resolvedValue = resolveControlValue(elementData, definition, resourceResolver)
+//   return useSyncExternalStore(
+//     fn => resolvedValue.subscribe(fn),
+//     () => resolvedValue.readValue(),
+//     () => resolvedValue.readValue(),
+//   )
+// }
+
+// const useResolvedProps = (
+//   propDefs: Record<string, { type: string }>,
+//   elementData: Record<string, ReactPage.ElementData>,
+//   resourceResolver: ResourceResolver,
+// ) => {
+//   const result: Record<string, any> = {}
+
+//   for (const [key, def] of Object.entries(propDefs)) {
+//     const value = useResolvedControlValue(elementData[key], def, resourceResolver)
+//     if (value !== undefined) {
+//       result[key] = value
+//     }
+//   }
+
+//   return result
+// }
+
+export function PropsValue({ element, children: renderComponent }: PropsValueProps): JSX.Element {
   const store = useStore()
-  const propControllerDescriptorsRef = useRef(
+  const client = useMakeswiftHostApiClient()
+  const propDefsRef = useRef(
     ReactPage.getComponentPropControllerDescriptors(store.getState(), element.type) ?? {},
   )
+
   const props = element.props as Record<string, any>
   const documentKey = useDocumentKey()
 
@@ -164,16 +199,28 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
     return ReactPage.getPropControllers(state, documentKey, element.key)
   })
 
-  return Object.entries(propControllerDescriptorsRef.current).reduceRight(
+  // const componentProps = useResolvedProps(propDefsRef.current, props, client)
+  const componentProps = useSelector(state => ReactPage.getComponentProps(state, element.key))
+  const count = useRef(0)
+  console.log('+++++++++ componentProps:', componentProps, 'render count:', count.current++)
+
+  useEffect(() => {
+    Object.entries(propDefsRef.current).forEach(([propName, descriptor]) => {
+      store.dispatch(
+        ReactPage.resolveComponentProp(element.key, propName, props[propName], descriptor, client),
+      )
+    })
+  }, [element.key, client])
+
+  return Object.entries(propDefsRef.current).reduceRight(
     (renderFn, [propName, descriptor]) =>
       propsValue => {
         switch (descriptor.type) {
-          case CheckboxControlType:
           case NumberControlType:
           case TextInputControlType:
           case TextAreaControlType:
           case SelectControlType:
-          case ColorControlType:
+          // case Color.controlType:
           case IconRadioGroupControlType:
           case ImageControlType:
           case ComboboxControlType:
@@ -182,6 +229,7 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
           case LinkControlType:
           case StyleV2ControlType:
           case TypographyControlType:
+          case Checkbox.controlType:
             return (
               <ControlValue
                 definition={descriptor}
@@ -661,6 +709,11 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
             return renderFn({ ...propsValue, [propName]: props[propName] })
         }
       },
-    children,
+    // renderComponent,
+    (props: any) => {
+      const newProps = Object.fromEntries(componentProps?.entries() ?? [])
+      console.log('+++++++++ renderComponent:', { props, newProps })
+      return renderComponent({ ...props, ...newProps })
+    },
   )({})
 }

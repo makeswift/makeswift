@@ -1,15 +1,14 @@
-import {
-  applyMiddleware,
-  combineReducers,
-  createStore,
-  PreloadedState,
-  Store as ReduxStore,
-} from 'redux'
-import thunk, { ThunkDispatch } from 'redux-thunk'
+import { applyMiddleware, createStore, PreloadedState, Store as ReduxStore } from 'redux'
+
+import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk'
+
+// import { ControlDefinition } from '../controls'
+// import { controlTraitsRegistry, ResourceResolver } from '@makeswift/controls'
 
 import * as Documents from './modules/read-only-documents'
 import * as ReactComponents from './modules/react-components'
 import * as ComponentsMeta from './modules/components-meta'
+import * as ComponentProps from './modules/component-props'
 import * as PropControllers from './modules/prop-controllers'
 import * as PropControllerHandles from './modules/prop-controller-handles'
 import * as IsInBuilder from './modules/is-in-builder'
@@ -17,7 +16,7 @@ import * as IsPreview from './modules/is-preview'
 import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Breakpoints from './modules/breakpoints'
 import * as Introspection from '../prop-controllers/introspection'
-import { Action } from './actions'
+import { Action, ActionTypes } from './actions'
 import { copyElementReference } from '../prop-controllers/copy'
 import {
   copy as copyFromControl,
@@ -25,6 +24,7 @@ import {
   merge,
   mergeTranslatedData,
 } from '../controls/control'
+import { controlTraitsRegistry, Data, ResolvableValue, ResourceResolver } from '@makeswift/controls'
 
 export type {
   Data,
@@ -41,19 +41,78 @@ export {
 } from './modules/read-only-documents'
 export type { ComponentType } from './modules/react-components'
 
-const reducer = combineReducers({
-  documents: Documents.reducer,
-  reactComponents: ReactComponents.reducer,
-  componentsMeta: ComponentsMeta.reducer,
-  propControllers: PropControllers.reducer,
-  propControllerHandles: PropControllerHandles.reducer,
-  isInBuilder: IsInBuilder.reducer,
-  isPreview: IsPreview.reducer,
-  builderEditMode: BuilderEditMode.reducer,
-  breakpoints: Breakpoints.reducer,
-})
+export type State = {
+  documents: Documents.State
+  reactComponents: ReactComponents.State
+  componentsMeta: ComponentsMeta.State
+  propControllers: PropControllers.State
+  propControllerHandles: PropControllerHandles.State
+  isInBuilder: IsInBuilder.State
+  isPreview: IsPreview.State
+  builderEditMode: BuilderEditMode.State
+  breakpoints: Breakpoints.State
+  componentProps: ComponentProps.State
+}
 
-export type State = ReturnType<typeof reducer>
+function reducer(state: State | undefined, action: Action): State {
+  if (state == null) {
+    return {
+      documents: Documents.getInitialState(),
+      reactComponents: ReactComponents.getInitialState(),
+      componentsMeta: ComponentsMeta.getInitialState(),
+      propControllers: PropControllers.getInitialState(),
+      propControllerHandles: PropControllerHandles.getInitialState(),
+      isInBuilder: IsInBuilder.getInitialState(),
+      isPreview: IsPreview.getInitialState(),
+      builderEditMode: BuilderEditMode.getInitialState(),
+      breakpoints: Breakpoints.getInitialState(),
+      componentProps: ComponentProps.getInitialState(),
+    }
+  }
+
+  const documents = Documents.reducer(state.documents, action)
+  const reactComponents = ReactComponents.reducer(state.reactComponents, action)
+  const componentsMeta = ComponentsMeta.reducer(state.componentsMeta, action)
+  const propControllers = PropControllers.reducer(state.propControllers, action)
+  const propControllerHandles = PropControllerHandles.reducer(state.propControllerHandles, action)
+  const isInBuilder = IsInBuilder.reducer(state.isInBuilder, action)
+  const isPreview = IsPreview.reducer(state.isPreview, action)
+  const builderEditMode = BuilderEditMode.reducer(state.builderEditMode, action)
+  const breakpoints = Breakpoints.reducer(state.breakpoints, action)
+
+  const componentProps = ComponentProps.reducer(
+    { ...state.componentProps, documents, propControllers },
+    action,
+  )
+
+  if (
+    documents === state.documents &&
+    reactComponents === state.reactComponents &&
+    componentsMeta === state.componentsMeta &&
+    propControllers === state.propControllers &&
+    propControllerHandles === state.propControllerHandles &&
+    isInBuilder === state.isInBuilder &&
+    isPreview === state.isPreview &&
+    builderEditMode === state.builderEditMode &&
+    breakpoints === state.breakpoints &&
+    componentProps === state.componentProps
+  ) {
+    return state
+  }
+
+  return {
+    documents,
+    reactComponents,
+    componentsMeta,
+    propControllers,
+    propControllerHandles,
+    isInBuilder,
+    isPreview,
+    builderEditMode,
+    breakpoints,
+    componentProps,
+  }
+}
 
 function getDocumentsStateSlice(state: State): Documents.State {
   return state.documents
@@ -72,6 +131,14 @@ export function getReactComponent(
   type: string,
 ): ReactComponents.ComponentType | null {
   return ReactComponents.getReactComponent(getReactComponentsStateSlice(state), type)
+}
+
+function getComponentPropsStateSlice(state: State): ComponentProps.State {
+  return state.componentProps
+}
+
+export function getComponentProps(state: State, elementKey: string): ComponentProps.Props | null {
+  return ComponentProps.getComponentProps(getComponentPropsStateSlice(state), elementKey)
 }
 
 function getPropControllersStateSlice(state: State): PropControllers.State {
@@ -194,11 +261,14 @@ export function getElementId(state: State, documentKey: string, elementKey: stri
 
   if (descriptors == null) return null
 
-  const elementId = Object.entries(descriptors).reduce((acc, [propName, descriptor]) => {
-    if (acc != null) return acc
+  const elementId = Object.entries(descriptors).reduce(
+    (acc, [propName, descriptor]) => {
+      if (acc != null) return acc
 
-    return Introspection.getElementId(descriptor, element.props[propName])
-  }, null as string | null)
+      return Introspection.getElementId(descriptor, element.props[propName])
+    },
+    null as string | null,
+  )
 
   return elementId
 }
@@ -325,14 +395,14 @@ export function copyElementTree(
 }
 
 function* traverseElementTree(
-  state: State,
+  state: PropControllers.State,
   elementTree: Documents.ElementData,
 ): Generator<Documents.Element> {
   yield elementTree
 
   if (Documents.isElementReference(elementTree)) return
 
-  const descriptors = getComponentPropControllerDescriptors(state, elementTree.type)
+  const descriptors = PropControllers.getComponentPropControllerDescriptors(state, elementTree.type)
 
   if (descriptors == null) return
 
@@ -343,6 +413,23 @@ function* traverseElementTree(
       if (!Documents.isElementReference(child)) yield* traverseElementTree(state, child)
 
       yield child
+    }
+  }
+}
+
+export function* traverseElementTreeProps(
+  state: PropControllers.State,
+  elementTree: Documents.ElementData,
+): Generator<[string, string, Data]> {
+  for (const element of traverseElementTree(state, elementTree)) {
+    if (Documents.isElementReference(element)) continue
+
+    const descriptors = PropControllers.getComponentPropControllerDescriptors(state, element.type)
+
+    if (descriptors == null) continue
+
+    for (const [propName] of Object.entries(descriptors)) {
+      yield [element, propName, element.props[propName]]
     }
   }
 }
@@ -481,6 +568,76 @@ export function getBreakpoints(state: State): Breakpoints.State {
   return state.breakpoints
 }
 
+export function setComponentProp(
+  elementKey: string,
+  propName: string,
+  resolvedValue: ResolvableValue<any>,
+): ThunkAction<Promise<void>, State, unknown, Action> {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.SET_COMPONENT_PROP,
+      payload: { elementKey, propName, propValue: resolvedValue.readValue() },
+    })
+
+    return new Promise<void>(resolve => {
+      resolvedValue.subscribe(() => {
+        dispatch({
+          type: ActionTypes.SET_COMPONENT_PROP,
+          payload: { elementKey, propName, propValue: resolvedValue.readValue() },
+        })
+
+        resolve()
+      })
+    })
+  }
+}
+
+export function resolveComponentProp(
+  elementKey: string,
+  propName: string,
+  elementData: Documents.Data,
+  definition: { type: string },
+  resourceResolver: ResourceResolver,
+): ThunkAction<Promise<void>, State, unknown, Action> {
+  return async (dispatch, getState) => {
+    const state = getComponentPropsStateSlice(getState())
+
+    if (ComponentProps.hasComponentProp(state, elementKey, propName)) {
+      return
+      // return ComponentProps.getComponentProp(state, elementKey, propName)
+    }
+
+    // return null
+    // let resource: APIResource | null
+
+    // switch (resourceType) {
+    //   case APIResourceType.Swatch:
+    //     resource = await fetchJson<Swatch>(`/api/makeswift/swatches/${resourceId}`)
+    //     break
+
+    //   case APIResourceType.File:
+    //     resource = await fetchJson<File>(`/api/makeswift/files/${resourceId}`)
+    //     break
+
+    //   case APIResourceType.Typography:
+    //     resource = await fetchJson<Typography>(`/api/makeswift/typographies/${resourceId}`)
+    //     break
+
+    //   default:
+    //     resource = null
+    // }
+
+    const traits = controlTraitsRegistry.get(definition.type)
+    if (traits) {
+      const controlValue = traits.fromData(elementData, definition as any)
+      const value = traits.resolveValue(controlValue, definition as any, resourceResolver)
+
+      dispatch(setComponentProp(elementKey, propName, value))
+    }
+    // return resource as Extract<APIResource, { __typename: T }> | null
+  }
+}
+
 export type Dispatch = ThunkDispatch<State, unknown, Action>
 
 export type Store = ReduxStore<State, Action> & { dispatch: Dispatch }
@@ -500,6 +657,7 @@ export function configureStore({
       ...preloadedState,
       documents: Documents.getInitialState({ rootElements }),
       breakpoints: Breakpoints.getInitialState(breakpoints ?? preloadedState?.breakpoints),
+      componentProps: ComponentProps.getInitialState(),
     },
     applyMiddleware(thunk),
   )

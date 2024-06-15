@@ -1,8 +1,7 @@
 import { Descriptor } from './descriptors'
 import { Data, Element } from '../state/react-page'
 import {
-  ColorControlData,
-  ColorControlType,
+  controlTraitsRegistry,
   getListElementChildren,
   getListFileIds,
   getListPageIds,
@@ -129,6 +128,12 @@ export function getSwatchIds<T extends Data>(
   prop: T | undefined,
 ): string[] {
   if (prop == null) return []
+
+  const traits = controlTraitsRegistry.get(descriptor.type)
+  if (traits) {
+    return traits.getSwatchIds(prop)
+  }
+
   switch (descriptor.type) {
     case PropControllerTypes.Backgrounds:
       return getBackgroundsPropControllerSwatchIds(prop as BackgroundsPropControllerData)
@@ -149,11 +154,6 @@ export function getSwatchIds<T extends Data>(
     case RichTextControlType:
     case DELETED_PROP_CONTROLLER_TYPES.RichText: {
       return getRichTextSwatchIds(prop as RichTextValue)
-    }
-
-    case ColorControlType: {
-      const value = prop as ColorControlData
-      return value?.swatchId == null ? [] : [value.swatchId]
     }
 
     case TypographyControlType: {
