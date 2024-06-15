@@ -5,11 +5,16 @@ import {
   PreloadedState,
   Store as ReduxStore,
 } from 'redux'
-import thunk, { ThunkDispatch } from 'redux-thunk'
+
+import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk'
+
+import { ControlDefinition } from '../controls'
+import { controlTraitsRegistry, ResourceResolver } from '@makeswift/controls'
 
 import * as Documents from './modules/read-only-documents'
 import * as ReactComponents from './modules/react-components'
 import * as ComponentsMeta from './modules/components-meta'
+import * as ComponentProps from './modules/component-props'
 import * as PropControllers from './modules/prop-controllers'
 import * as PropControllerHandles from './modules/prop-controller-handles'
 import * as IsInBuilder from './modules/is-in-builder'
@@ -17,7 +22,7 @@ import * as IsPreview from './modules/is-preview'
 import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Breakpoints from './modules/breakpoints'
 import * as Introspection from '../prop-controllers/introspection'
-import { Action } from './actions'
+import { Action, setComponentProp } from './actions'
 import { copyElementReference } from '../prop-controllers/copy'
 import {
   copy as copyFromControl,
@@ -51,6 +56,7 @@ const reducer = combineReducers({
   isPreview: IsPreview.reducer,
   builderEditMode: BuilderEditMode.reducer,
   breakpoints: Breakpoints.reducer,
+  componentProps: ComponentProps.reducer,
 })
 
 export type State = ReturnType<typeof reducer>
@@ -72,6 +78,14 @@ export function getReactComponent(
   type: string,
 ): ReactComponents.ComponentType | null {
   return ReactComponents.getReactComponent(getReactComponentsStateSlice(state), type)
+}
+
+function getComponentPropsStateSlice(state: State): ComponentProps.State {
+  return state.componentProps
+}
+
+export function getComponentProps(state: State, elementKey: string): ComponentProps.Props | null {
+  return ComponentProps.getComponentProps(getComponentPropsStateSlice(state), elementKey)
 }
 
 function getPropControllersStateSlice(state: State): PropControllers.State {
@@ -194,11 +208,14 @@ export function getElementId(state: State, documentKey: string, elementKey: stri
 
   if (descriptors == null) return null
 
-  const elementId = Object.entries(descriptors).reduce((acc, [propName, descriptor]) => {
-    if (acc != null) return acc
+  const elementId = Object.entries(descriptors).reduce(
+    (acc, [propName, descriptor]) => {
+      if (acc != null) return acc
 
-    return Introspection.getElementId(descriptor, element.props[propName])
-  }, null as string | null)
+      return Introspection.getElementId(descriptor, element.props[propName])
+    },
+    null as string | null,
+  )
 
   return elementId
 }
@@ -479,6 +496,53 @@ export function getBuilderEditMode(state: State): BuilderEditMode.State {
 
 export function getBreakpoints(state: State): Breakpoints.State {
   return state.breakpoints
+}
+//type Thunk<ReturnType> = ThunkAction<ReturnType, State, unknown, Action>
+// Thunk<Promise<Extract<APIResource, { __typename: T }> | null>> {
+export function resolveComponentProp(
+  elementKey: string,
+  propName: string,
+  elementData: Documents.Data,
+  definition: { type: string },
+  resourceResolver: ResourceResolver,
+): ThunkAction<Promise<void>, State, unknown, Action> {
+  return async (dispatch, getState) => {
+    const state = getComponentPropsStateSlice(getState())
+
+    if (ComponentProps.hasComponentProp(state, elementKey, propName)) {
+      return
+      // return ComponentProps.getComponentProp(state, elementKey, propName)
+    }
+
+    // return null
+    // let resource: APIResource | null
+
+    // switch (resourceType) {
+    //   case APIResourceType.Swatch:
+    //     resource = await fetchJson<Swatch>(`/api/makeswift/swatches/${resourceId}`)
+    //     break
+
+    //   case APIResourceType.File:
+    //     resource = await fetchJson<File>(`/api/makeswift/files/${resourceId}`)
+    //     break
+
+    //   case APIResourceType.Typography:
+    //     resource = await fetchJson<Typography>(`/api/makeswift/typographies/${resourceId}`)
+    //     break
+
+    //   default:
+    //     resource = null
+    // }
+
+    const traits = controlTraitsRegistry.get(definition.type)
+    if (traits) {
+      const controlValue = traits.fromData(elementData, definition as any)
+      const value = await traits.resolveValue(controlValue, definition as any, resourceResolver)
+
+      dispatch(setComponentProp(elementKey, propName, value))
+    }
+    // return resource as Extract<APIResource, { __typename: T }> | null
+  }
 }
 
 export type Dispatch = ThunkDispatch<State, unknown, Action>

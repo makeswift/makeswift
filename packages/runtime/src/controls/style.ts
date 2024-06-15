@@ -1,4 +1,4 @@
-import { ColorData, copyColorData, ResponsiveValue } from '@makeswift/controls'
+import { Color, type ColorData, type ResponsiveValue } from '@makeswift/controls'
 import { BorderRadiusPropertyData } from '../css/border-radius'
 import type { LengthPercentageData } from '../css/length-percentage'
 import { MarginPropertyData } from '../css/margin'
@@ -148,7 +148,7 @@ export const StyleControlProperty = {
   TextStyle: 'makeswift::controls::style::property::text-style',
 } as const
 
-export type StyleControlProperty = typeof StyleControlProperty[keyof typeof StyleControlProperty]
+export type StyleControlProperty = (typeof StyleControlProperty)[keyof typeof StyleControlProperty]
 
 type StyleControlParams = { properties?: StyleControlProperty[] }
 
@@ -243,7 +243,7 @@ export function copyStyleData(
 
       return {
         ...side,
-        color: copyColorData(side.color, context),
+        color: Color.copyData(side.color, context),
       }
     }
 

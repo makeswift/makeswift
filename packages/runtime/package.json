@@ -175,13 +175,13 @@
     "madge": "^6.0.0",
     "msw": "^2.3.1",
     "next": "14.1.0",
-    "prettier": "^2.5.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "slate": "^0.91.4",
     "slate-hyperscript": "^0.77.0",
     "slate-react": "^0.91.7",
     "tsup": "^8.0.1",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "undici": "^6.19.2"
   }
 }

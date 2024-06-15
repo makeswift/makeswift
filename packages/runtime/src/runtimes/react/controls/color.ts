@@ -1,34 +1,35 @@
-import Color from 'color'
-import { ColorControlData, ColorControlDefinition } from '@makeswift/controls'
+import parseColor from 'color'
+import { Color, type ControlDefinitionType, type ControlDataType } from '@makeswift/controls'
 import { useSwatch } from '../hooks/makeswift-api'
 
-export type ColorControlValue<T extends ColorControlDefinition> =
-  undefined extends T['config']['defaultValue'] ? string | undefined : string
+// export type ColorControlValue<T extends ColorControlDefinition> =
+//   undefined extends T['config']['defaultValue'] ? string | undefined : string
 
-export function useColorValue<T extends ColorControlDefinition>(
-  data: ColorControlData | undefined,
-  definition: T,
-): ColorControlValue<any> {
+export function useColorValue(
+  data: ControlDataType<typeof Color> | undefined,
+  definition: ControlDefinitionType<typeof Color>,
+): string | undefined {
   const swatchId = data?.swatchId ?? null
   const swatch = useSwatch(swatchId)
+  console.log('+++++++ useColorValue', { swatchId, swatch, data, definition })
   const alpha = data?.alpha ?? 1
 
   if (swatch == null) {
     const { defaultValue } = definition.config
 
-    if (defaultValue === undefined) return undefined as ColorControlValue<T>
+    if (defaultValue === undefined) return undefined
 
     let defaultColor
     try {
-      defaultColor = Color(definition.config.defaultValue)
+      defaultColor = parseColor(definition.config.defaultValue)
     } catch {
-      defaultColor = Color()
+      defaultColor = parseColor()
     }
 
     return defaultColor.rgb().string()
   }
 
-  return Color({ h: swatch.hue, s: swatch.saturation, l: swatch.lightness })
+  return parseColor({ h: swatch.hue, s: swatch.saturation, l: swatch.lightness })
     .alpha(alpha)
     .rgb()
     .string()

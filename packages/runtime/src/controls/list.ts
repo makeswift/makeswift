@@ -1,11 +1,8 @@
 import {
-  CheckboxControlDefinition,
   NumberControlDefinition,
   TextInputControlDefinition,
   TextAreaControlDefinition,
-  ColorData,
   Data,
-  ColorControlDefinition,
   ComboboxControlData,
   ComboboxControlDefinition,
   IconRadioGroupControlData,
@@ -48,41 +45,37 @@ import { StyleV2ControlData, StyleV2ControlDefinition } from './style-v2'
 import { TypographyControlData, TypographyControlDefinition } from './typography'
 import { IndexSignatureHack } from '../utils/index-signature-hack'
 
-export type GetItemLabelControlData<T extends ControlDefinition> = T extends CheckboxControlDefinition
-  ? boolean
-  : T extends NumberControlDefinition
+export type GetItemLabelControlData<T extends ControlDefinition> = T extends NumberControlDefinition
   ? number
   : T extends TextInputControlDefinition
-  ? string
-  : T extends TextAreaControlDefinition
-  ? string
-  : T extends SelectControlDefinition
-  ? SelectControlData<T>
-  : T extends ColorControlDefinition
-  ? ColorData
-  : T extends IconRadioGroupControlDefinition
-  ? IconRadioGroupControlData<T>
-  : T extends ImageControlDefinition
-  ? ImageControlData
-  : T extends ComboboxControlDefinition
-  ? ComboboxControlData<T>
-  : T extends ShapeControlDefinition
-  ? GetItemLabelShapeControlData<T>
-  : T extends ListControlDefinition
-  ? GetItemListControlData<T>
-  : T extends LinkControlDefinition
-  ? LinkControlData
-  : T extends RichTextControlDefinition
-  ? IndexSignatureHack<RichTextControlData>
-  : T extends RichTextV2ControlDefinition
-  ? RichTextV2ControlData
-  : T extends StyleControlDefinition
-  ? StyleControlData
-  : T extends StyleV2ControlDefinition
-  ? StyleV2ControlData
-  : T extends TypographyControlDefinition
-  ? TypographyControlData
-  : never
+    ? string
+    : T extends TextAreaControlDefinition
+      ? string
+      : T extends SelectControlDefinition
+        ? SelectControlData<T>
+        : T extends IconRadioGroupControlDefinition
+          ? IconRadioGroupControlData<T>
+          : T extends ImageControlDefinition
+            ? ImageControlData
+            : T extends ComboboxControlDefinition
+              ? ComboboxControlData<T>
+              : T extends ShapeControlDefinition
+                ? GetItemLabelShapeControlData<T>
+                : T extends ListControlDefinition
+                  ? GetItemListControlData<T>
+                  : T extends LinkControlDefinition
+                    ? LinkControlData
+                    : T extends RichTextControlDefinition
+                      ? IndexSignatureHack<RichTextControlData>
+                      : T extends RichTextV2ControlDefinition
+                        ? RichTextV2ControlData
+                        : T extends StyleControlDefinition
+                          ? StyleControlData
+                          : T extends StyleV2ControlDefinition
+                            ? StyleV2ControlData
+                            : T extends TypographyControlDefinition
+                              ? TypographyControlData
+                              : never
 
 export type GetItemLabelListControlItemData<T extends ListControlDefinition> = {
   id: string
@@ -90,7 +83,9 @@ export type GetItemLabelListControlItemData<T extends ListControlDefinition> = {
   value: GetItemLabelControlData<T['config']['type']>
 }
 
-export type GetItemLabelShapeControlData<T extends ShapeControlDefinition = ShapeControlDefinition> = {
+export type GetItemLabelShapeControlData<
+  T extends ShapeControlDefinition = ShapeControlDefinition,
+> = {
   [K in keyof T['config']['type']]?: GetItemLabelControlData<T['config']['type'][K]>
 }
 

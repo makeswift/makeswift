@@ -1,6 +1,6 @@
 import type { Operation } from 'ot-json0'
 
-import type { Document } from './modules/read-only-documents'
+import type { Document, Data } from './modules/read-only-documents'
 import type { ComponentType } from './modules/react-components'
 import type { Measurable, BoxModel } from './modules/box-models'
 import type { ThunkAction } from 'redux-thunk'
@@ -57,6 +57,8 @@ export const ActionTypes = {
   UNREGISTER_PROP_CONTROLLERS: 'UNREGISTER_PROP_CONTROLLERS',
   MESSAGE_HOST_PROP_CONTROLLER: 'MESSAGE_HOST_PROP_CONTROLLER',
   MESSAGE_BUILDER_PROP_CONTROLLER: 'MESSAGE_BUILDER_PROP_CONTROLLER',
+
+  SET_COMPONENT_PROP: 'SET_COMPONENT_PROP',
 
   CHANGE_API_RESOURCE: 'CHANGE_API_RESOURCE',
   EVICT_API_RESOURCE: 'EVICT_API_RESOURCE',
@@ -223,6 +225,11 @@ type MessageBuilderPropControllerAction<T = PropControllerMessage> = {
   payload: { documentKey: string; elementKey: string; propName: string; message: T }
 }
 
+type SetComponentPropAction = {
+  type: typeof ActionTypes.SET_COMPONENT_PROP
+  payload: { elementKey: string; propName: string; propValue: Data }
+}
+
 type ChangeAPIResourceAction = {
   type: typeof ActionTypes.CHANGE_API_RESOURCE
   payload: { resource: APIResource }
@@ -311,6 +318,7 @@ export type Action =
   | UnregisterPropControllersAction
   | MessageHostPropControllerAction
   | MessageBuilderPropControllerAction
+  | SetComponentPropAction
   | ChangeAPIResourceAction
   | EvictAPIResourceAction
   | SetIsInBuilderAction
@@ -587,6 +595,14 @@ export function messageBuilderPropController<T>(
     type: ActionTypes.MESSAGE_BUILDER_PROP_CONTROLLER,
     payload: { documentKey, elementKey, propName, message },
   }
+}
+
+export function setComponentProp(
+  elementKey: string,
+  propName: string,
+  propValue: Data,
+): SetComponentPropAction {
+  return { type: ActionTypes.SET_COMPONENT_PROP, payload: { elementKey, propName, propValue } }
 }
 
 export function changeApiResource(resource: APIResource): ChangeAPIResourceAction {

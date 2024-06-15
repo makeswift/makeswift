@@ -1,3 +1,4 @@
+import { ResourceResolver } from '@makeswift/controls'
 import * as MakeswiftApiClient from '../state/makeswift-api-client'
 import {
   APIResourceType,
@@ -39,7 +40,7 @@ export type MakeswiftClientOptions = {
  * example, swatches, files, typographies, etc. Ideally it's internal to the runtime and is only
  * used by controls to transform API references to API resources.
  *
- * Moreover, it's use should be reserved for the builder only, since for live pages all Makeswift
+ * Moreover, its use should be reserved for the builder only, since for live pages all Makeswift
  * API resources should be embedded in the "page snapshot". In the builder, this client serves the
  * purpose of sending requests for API resources and keeping a cache so that changes that happen in
  * the builder, like modifying a swatch, can be sent via `postMessage` to the host and the cache can
@@ -53,7 +54,7 @@ export type MakeswiftClientOptions = {
  * client of the host's API, not Makeswift's, intended to build and continuously maintain a realtime
  * snapshot for use in the builder, not the lives pages.
  */
-export class MakeswiftHostApiClient {
+export class MakeswiftHostApiClient implements ResourceResolver {
   graphqlClient: GraphQLClient
   makeswiftApiClient: MakeswiftApiClient.Store
   subscribe: MakeswiftApiClient.Store['subscribe']

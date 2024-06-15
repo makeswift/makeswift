@@ -18,6 +18,7 @@ import * as Documents from './modules/read-write-documents'
 import * as ReactComponents from './modules/react-components'
 import * as BoxModels from './modules/box-models'
 import * as ComponentsMeta from './modules/components-meta'
+import * as ComponentProps from './modules/component-props'
 import * as PropControllers from './modules/prop-controllers'
 import * as PropControllerHandles from './modules/prop-controller-handles'
 import * as IsInBuilder from './modules/is-in-builder'
@@ -71,6 +72,7 @@ export const reducer = combineReducers({
   pointer: Pointer.reducer,
   elementImperativeHandles: ElementImperativeHandles.reducer,
   breakpoints: Breakpoints.reducer,
+  componentProps: ComponentProps.reducer,
 })
 
 export type State = ReturnType<typeof reducer>
@@ -578,13 +580,16 @@ function createAndRegisterPropControllers(
 
     if (descriptors == null) return null
 
-    const propControllers = Object.entries(descriptors).reduce((acc, [propName, descriptor]) => {
-      const propController = createPropController(descriptor, message =>
-        dispatch(messageBuilderPropController(documentKey, elementKey, propName, message)),
-      ) as PropController
+    const propControllers = Object.entries(descriptors).reduce(
+      (acc, [propName, descriptor]) => {
+        const propController = createPropController(descriptor, message =>
+          dispatch(messageBuilderPropController(documentKey, elementKey, propName, message)),
+        ) as PropController
 
-      return { ...acc, [propName]: propController }
-    }, {} as Record<string, PropController>)
+        return { ...acc, [propName]: propController }
+      },
+      {} as Record<string, PropController>,
+    )
 
     dispatch(registerPropControllers(documentKey, elementKey, propControllers))
 
