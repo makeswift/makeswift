@@ -96,7 +96,7 @@ function pageToSitemapEntry(page: MakeswiftPage): NextSitemapItem {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return client
     .getPages()
-    .filter(p => p.path != null)
+    .filter(page => !page.excludedFromSearch)
     .map(page => pageToSitemapEntry(page))
     .toArray()
 }
