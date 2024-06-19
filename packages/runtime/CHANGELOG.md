@@ -1,6 +1,6 @@
 # @makeswift/runtime
 
-## 0.19.0-canary.0
+## 0.19.0
 
 ### Minor Changes
 
@@ -96,7 +96,7 @@
   export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return client
       .getPages()
-      .filter((p) => p.path != null)
+      .filter((page) => !page.excludedFromSearch)
       .map((page) => pageToSitemapEntry(page))
       .toArray();
   }
