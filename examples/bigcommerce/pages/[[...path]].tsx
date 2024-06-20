@@ -19,7 +19,7 @@ type Props = MakeswiftPageProps & PageProps
 export async function getStaticPaths(ctx: GetStaticPathsContext) {
   const config = getConfig()
   const makeswift = new Makeswift(config.makeswift.siteApiKey)
-  const pages = await makeswift.getPages()
+  const pages = await makeswift.getPages().toArray()
   const pagesWithLocale = pages.flatMap(page => {
     if (ctx.locales == null) return { page, locale: ctx.defaultLocale }
 

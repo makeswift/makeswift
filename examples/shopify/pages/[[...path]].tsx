@@ -17,14 +17,16 @@ type Props = MakeswiftPageProps & PageProps
 export async function getStaticPaths() {
   const config = getConfig()
   const makeswift = new Makeswift(config.makeswift.siteApiKey)
-  const pages = await makeswift.getPages()
 
   return {
-    paths: pages.map(page => ({
-      params: {
-        path: page.path.split('/').filter(segment => segment !== ''),
-      },
-    })),
+    paths: await makeswift
+      .getPages()
+      .map(page => ({
+        params: {
+          path: page.path.split('/').filter(segment => segment !== ''),
+        },
+      }))
+      .toArray(),
     fallback: 'blocking',
   }
 }

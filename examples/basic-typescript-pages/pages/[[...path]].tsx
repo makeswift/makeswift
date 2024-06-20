@@ -5,14 +5,15 @@ import { Makeswift, Page as MakeswiftPage, PageProps } from '@makeswift/runtime/
 import { client } from '@/lib/makeswift/client'
 
 export const getStaticPaths = (async () => {
-  const pages = await client.getPages()
-
   return {
-    paths: pages.map(page => ({
-      params: {
-        path: page.path.split('/').filter(segment => segment !== ''),
-      },
-    })),
+    paths: await client
+      .getPages()
+      .map(page => ({
+        params: {
+          path: page.path.split('/').filter(segment => segment !== ''),
+        },
+      }))
+      .toArray(),
     fallback: 'blocking',
   }
 }) satisfies GetStaticPaths
