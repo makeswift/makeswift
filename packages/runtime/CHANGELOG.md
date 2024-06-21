@@ -1,6 +1,6 @@
 # @makeswift/runtime
 
-## 0.19.1-canary.0
+## 0.19.1
 
 ### Patch Changes
 
