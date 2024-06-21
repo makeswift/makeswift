@@ -74,7 +74,7 @@ const makeswiftGetPagesResultAPISchema = z.object({
 const makeswiftGetPagesParamsSchema = z.object({
   limit: z.number().optional(),
   after: z.string().optional(),
-  sortBy: z.enum(['title', 'path', 'createdAt', 'updatedAt', 'publishedAt']).optional(),
+  sortBy: z.enum(['title', 'path', 'description', 'createdAt', 'updatedAt']).optional(),
   sortDirection: z.enum(['asc', 'desc']).optional(),
   includeOffline: z.boolean().optional(),
   pathPrefix: z.string().optional(),
