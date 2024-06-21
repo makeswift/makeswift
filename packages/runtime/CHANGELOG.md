@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.19.1
+
+### Patch Changes
+
+- 1ec894f: Fixes an invalid `"publishedAt"` sort option for `getPages`, which results in a
+  400 exception. Replaces this sort option with `"description"`.
+
 ## 0.19.0
 
 ### Minor Changes
