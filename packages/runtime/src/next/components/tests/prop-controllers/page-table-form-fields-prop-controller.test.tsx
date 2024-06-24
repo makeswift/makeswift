@@ -3,41 +3,36 @@
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import { ElementData } from '../../../state/react-page'
+import { ElementData } from '../../../../state/react-page'
 import { randomUUID } from 'crypto'
 import {
-  NavigationLinks,
-  NavigationLinksDescriptor,
+  TableFormFields,
+  TableFormFieldsDescriptor,
   Types,
-  createNavigationLinksPropControllerDataFromNavigationLinksData,
-  NavigationLinksData,
+  createTableFormFieldsPropControllerDataFromTableFormFieldsData,
+  TableFormFieldsData,
 } from '@makeswift/prop-controllers'
-import { Page } from '../page'
+import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../context/react-runtime'
-import { ReactRuntime } from '../../../react'
+import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
 import {
   createMakeswiftPageSnapshot,
   createRootComponent,
-} from '../../../utils/tests/element-data-test-test'
+} from '../../../../utils/tests/element-data-test-test'
 
 describe('Page', () => {
-  test('can render NavigationLinksPropController v0 data', async () => {
+  test('can render TableFormFieldsPropController v0 data', async () => {
     // Arrange
-    const navigationLinksDefinitionV0: NavigationLinksDescriptor = {
-      type: Types.NavigationLinks,
+    const tableFormFieldsDefinitionV0: TableFormFieldsDescriptor = {
+      type: Types.TableFormFields,
       options: {},
     }
-    const navigationLinksData: NavigationLinksData = [
-      {
-        id: '1',
-        type: 'button',
-        payload: {
-          label: 'Test link',
-        },
-      },
-    ]
+    const tableFormFieldsData: TableFormFieldsData = {
+      fields: [{ id: '1', tableColumnId: 'testId' }],
+      grid: [],
+    }
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent([
@@ -45,9 +40,9 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          navigationLinks: createNavigationLinksPropControllerDataFromNavigationLinksData(
-            navigationLinksData,
-            navigationLinksDefinitionV0,
+          tableFormFields: createTableFormFieldsPropControllerDataFromTableFormFieldsData(
+            tableFormFieldsData,
+            tableFormFieldsDefinitionV0,
           ),
         },
       },
@@ -56,11 +51,11 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { navigationLinks?: NavigationLinksData }>(
-        ({ navigationLinks }, ref) => {
+      forwardRef<HTMLDivElement, { tableFormFields?: TableFormFieldsData }>(
+        ({ tableFormFields }, ref) => {
           return (
             <div ref={ref} data-testid={testId}>
-              {navigationLinks?.at(0)?.payload.label}
+              {tableFormFields?.fields.at(0)?.tableColumnId}
             </div>
           )
         },
@@ -69,7 +64,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          navigationLinks: NavigationLinks(),
+          tableFormFields: TableFormFields(),
         },
       },
     )
@@ -82,25 +77,20 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent('Test link')
+    expect(screen.getByTestId(testId)).toHaveTextContent('testId')
   })
 
-  test('can render NavigationLinksPropController v1 data', async () => {
+  test('can render TableFormFieldsPropController v1 data', async () => {
     // Arrange
-    const navigationLinksDefinitionV1: NavigationLinksDescriptor = {
-      type: Types.NavigationLinks,
+    const tableFormFieldsDefinitionV1: TableFormFieldsDescriptor = {
+      type: Types.TableFormFields,
       version: 1,
       options: {},
     }
-    const navigationLinksData: NavigationLinksData = [
-      {
-        id: '1',
-        type: 'button',
-        payload: {
-          label: 'Test link',
-        },
-      },
-    ]
+    const tableFormFieldsData: TableFormFieldsData = {
+      fields: [{ id: '1', tableColumnId: 'testId' }],
+      grid: [],
+    }
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent([
@@ -108,9 +98,9 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          navigationLinks: createNavigationLinksPropControllerDataFromNavigationLinksData(
-            navigationLinksData,
-            navigationLinksDefinitionV1,
+          tableFormFields: createTableFormFieldsPropControllerDataFromTableFormFieldsData(
+            tableFormFieldsData,
+            tableFormFieldsDefinitionV1,
           ),
         },
       },
@@ -119,11 +109,11 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { navigationLinks?: NavigationLinksData }>(
-        ({ navigationLinks }, ref) => {
+      forwardRef<HTMLDivElement, { tableFormFields?: TableFormFieldsData }>(
+        ({ tableFormFields }, ref) => {
           return (
             <div ref={ref} data-testid={testId}>
-              {navigationLinks?.at(0)?.payload.label}
+              {tableFormFields?.fields.at(0)?.tableColumnId}
             </div>
           )
         },
@@ -132,7 +122,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          navigationLinks: NavigationLinks(),
+          tableFormFields: TableFormFields(),
         },
       },
     )
@@ -145,6 +135,6 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent('Test link')
+    expect(screen.getByTestId(testId)).toHaveTextContent('testId')
   })
 })

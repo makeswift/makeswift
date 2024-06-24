@@ -3,41 +3,44 @@
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import { ElementData } from '../../../state/react-page'
+import { ElementData } from '../../../../state/react-page'
 import { randomUUID } from 'crypto'
 import {
-  Margin,
-  MarginDescriptor,
-  ResponsiveMarginData,
+  Border,
+  BorderDescriptor,
+  ResponsiveBorderData,
   Types,
-  createMarginPropControllerDataFromResponsiveMarginData,
+  createBorderPropControllerDataFromResponsiveBorderData,
 } from '@makeswift/prop-controllers'
-import { Page } from '../page'
+import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../context/react-runtime'
-import { ReactRuntime } from '../../../react'
+import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
 import {
   createMakeswiftPageSnapshot,
   createRootComponent,
-} from '../../../utils/tests/element-data-test-test'
-import { DESKTOP_MEDIA_QUERY } from '../../../utils/tests/breakpoint-test-util'
+} from '../../../../utils/tests/element-data-test-test'
+import { DESKTOP_MEDIA_QUERY } from '../../../../utils/tests/breakpoint-test-util'
 
 describe('Page', () => {
-  test('can render MarginPropController v0 data', async () => {
+  test('can render BorderPropController v0 data', async () => {
     // Arrange
-    const marginDefinitionV0: MarginDescriptor = {
-      type: Types.Margin,
+    const borderDefinitionV0: BorderDescriptor = {
+      type: Types.Border,
       options: {},
     }
-    const marginData: ResponsiveMarginData = [
+    const borderData: ResponsiveBorderData = [
       {
         deviceId: 'desktop',
         value: {
-          marginTop: 'auto',
-          marginRight: null,
-          marginBottom: null,
-          marginLeft: null,
+          borderTop: {
+            width: 1,
+            style: 'solid',
+          },
+          borderRight: null,
+          borderBottom: null,
+          borderLeft: null,
         },
       },
     ]
@@ -48,9 +51,9 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          margin: createMarginPropControllerDataFromResponsiveMarginData(
-            marginData,
-            marginDefinitionV0,
+          border: createBorderPropControllerDataFromResponsiveBorderData(
+            borderDefinitionV0,
+            borderData,
           ),
         },
       },
@@ -59,14 +62,14 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { margin?: string }>(({ margin }, ref) => {
-        return <div className={margin} ref={ref} data-testid={testId} />
+      forwardRef<HTMLDivElement, { border?: string }>(({ border }, ref) => {
+        return <div className={border} ref={ref} data-testid={testId} />
       }),
       {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          margin: Margin({ format: Margin.Format.ClassName }),
+          border: Border({ format: Border.Format.ClassName }),
         },
       },
     )
@@ -79,26 +82,29 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveStyleRule('margin-top', 'auto', {
+    expect(screen.getByTestId(testId)).toHaveStyleRule('border-top', '1px solid black', {
       media: DESKTOP_MEDIA_QUERY,
     })
   })
 
-  test('can render MarginPropController v1 data', async () => {
+  test('can render BorderPropController v1 data', async () => {
     // Arrange
-    const marginDefinitionV1: MarginDescriptor = {
-      type: Types.Margin,
+    const borderDefinitionV1: BorderDescriptor = {
+      type: Types.Border,
       version: 1,
       options: {},
     }
-    const marginData: ResponsiveMarginData = [
+    const borderData: ResponsiveBorderData = [
       {
         deviceId: 'desktop',
         value: {
-          marginTop: 'auto',
-          marginRight: null,
-          marginBottom: null,
-          marginLeft: null,
+          borderTop: {
+            width: 1,
+            style: 'solid',
+          },
+          borderRight: null,
+          borderBottom: null,
+          borderLeft: null,
         },
       },
     ]
@@ -109,9 +115,9 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          margin: createMarginPropControllerDataFromResponsiveMarginData(
-            marginData,
-            marginDefinitionV1,
+          border: createBorderPropControllerDataFromResponsiveBorderData(
+            borderDefinitionV1,
+            borderData,
           ),
         },
       },
@@ -120,14 +126,14 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { margin?: string }>(({ margin }, ref) => {
-        return <div className={margin} ref={ref} data-testid={testId} />
+      forwardRef<HTMLDivElement, { border?: string }>(({ border }, ref) => {
+        return <div className={border} ref={ref} data-testid={testId} />
       }),
       {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          margin: Margin({ format: Margin.Format.ClassName }),
+          border: Border({ format: Border.Format.ClassName }),
         },
       },
     )
@@ -140,7 +146,7 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveStyleRule('margin-top', 'auto', {
+    expect(screen.getByTestId(testId)).toHaveStyleRule('border-top', '1px solid black', {
       media: DESKTOP_MEDIA_QUERY,
     })
   })

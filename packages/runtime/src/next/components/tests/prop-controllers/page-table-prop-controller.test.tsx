@@ -3,39 +3,32 @@
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import { ElementData } from '../../../state/react-page'
+import { ElementData } from '../../../../state/react-page'
 import { randomUUID } from 'crypto'
 import {
-  Link,
-  LinkData,
-  LinkDescriptor,
+  Table,
+  TableDescriptor,
   Types,
-  createLinkPropControllerDataFromLinkData,
+  createTablePropControllerDataFromTableId,
 } from '@makeswift/prop-controllers'
-import { Page } from '../page'
+import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../context/react-runtime'
-import { ReactRuntime } from '../../../react'
+import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
 import {
   createMakeswiftPageSnapshot,
   createRootComponent,
-} from '../../../utils/tests/element-data-test-test'
+} from '../../../../utils/tests/element-data-test-test'
 
 describe('Page', () => {
-  test('can render LinkPropController v0 data', async () => {
+  test('can render TablePropController v0 data', async () => {
     // Arrange
-    const linkDefinitionV0: LinkDescriptor = {
-      type: Types.Link,
+    const tableDefinitionV0: TableDescriptor = {
+      type: Types.Table,
       options: {},
     }
-    const link: LinkData = {
-      type: 'OPEN_URL',
-      payload: {
-        url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-        openInNewTab: false,
-      },
-    }
+    const tableId = 'VGFibGU6MTM5NDhlYzMtMjgwNS00Nzk0LTliNzctNDJkN2RhNmQxZWEy'
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent([
@@ -43,7 +36,7 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          link: createLinkPropControllerDataFromLinkData(link, linkDefinitionV0),
+          table: createTablePropControllerDataFromTableId(tableId, tableDefinitionV0),
         },
       },
     ])
@@ -51,10 +44,10 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { link?: LinkData }>(({ link }, ref) => {
+      forwardRef<HTMLDivElement, { table?: string }>(({ table }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {link?.type === 'OPEN_URL' ? link.payload.url : undefined}
+            {table}
           </div>
         )
       }),
@@ -62,7 +55,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          link: Link(),
+          table: Table(),
         },
       },
     )
@@ -75,23 +68,17 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent(link.payload.url)
+    expect(screen.getByTestId(testId)).toHaveTextContent(tableId)
   })
 
-  test('can render LinkPropController v1 data', async () => {
+  test('can render TablePropController v1 data', async () => {
     // Arrange
-    const linkDefinitionV1: LinkDescriptor = {
-      type: Types.Link,
+    const tableDefinitionV1: TableDescriptor = {
+      type: Types.Table,
       version: 1,
       options: {},
     }
-    const link: LinkData = {
-      type: 'OPEN_URL',
-      payload: {
-        url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-        openInNewTab: false,
-      },
-    }
+    const tableId = 'VGFibGU6MTM5NDhlYzMtMjgwNS00Nzk0LTliNzctNDJkN2RhNmQxZWEy'
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent([
@@ -99,7 +86,7 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          link: createLinkPropControllerDataFromLinkData(link, linkDefinitionV1),
+          table: createTablePropControllerDataFromTableId(tableId, tableDefinitionV1),
         },
       },
     ])
@@ -107,10 +94,10 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { link?: LinkData }>(({ link }, ref) => {
+      forwardRef<HTMLDivElement, { table?: string }>(({ table }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {link?.type === 'OPEN_URL' ? link.payload.url : undefined}
+            {table}
           </div>
         )
       }),
@@ -118,7 +105,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          link: Link(),
+          table: Table(),
         },
       },
     )
@@ -131,6 +118,6 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent(link.payload.url)
+    expect(screen.getByTestId(testId)).toHaveTextContent(tableId)
   })
 })
