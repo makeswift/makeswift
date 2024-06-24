@@ -26,9 +26,9 @@ const ROOT_ID = '00000000-0000-0000-0000-000000000000'
 const ELEMENT_ID = '11111111-1111-1111-1111-111111111111'
 
 describe('Page', () => {
-  test('can render CheckboxControl v0 data', async () => {
+  test.each([true, false])('can render CheckboxControl v0 data', async bool => {
     // Arrange
-    const checkboxControlData: CheckboxControlDataV0 = true
+    const checkboxControlData: CheckboxControlDataV0 = bool
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent(
@@ -51,7 +51,7 @@ describe('Page', () => {
       forwardRef<HTMLDivElement, { checkbox?: CheckboxControlData }>(({ checkbox }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {checkbox ? 'alpha' : 'beta'}
+            {JSON.stringify(checkbox)}
           </div>
         )
       }),
@@ -74,14 +74,14 @@ describe('Page', () => {
     )
 
     expect(snapshot).toMatchSnapshot()
-    expect(screen.getByTestId(testId)).toHaveTextContent('alpha')
+    expect(JSON.parse(screen.getByTestId(testId).textContent ?? '')).toBe(bool)
   })
 
-  test('can render CheckboxControl v1 data', async () => {
+  test.each([true, false])('can render CheckboxControl v1 data', async bool => {
     // Arrange
     const checkboxControlData: CheckboxControlDataV1 = {
       [CheckboxControlDataTypeKey]: CheckboxControlDataTypeValueV1,
-      value: true,
+      value: bool,
     }
 
     const TestComponentType = 'TestComponent'
@@ -106,7 +106,7 @@ describe('Page', () => {
       forwardRef<HTMLDivElement, { checkbox?: CheckboxControlData }>(({ checkbox }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {checkbox ? 'alpha' : 'beta'}
+            {JSON.stringify(checkbox)}
           </div>
         )
       }),
@@ -129,6 +129,6 @@ describe('Page', () => {
     )
 
     expect(snapshot).toMatchSnapshot()
-    expect(screen.getByTestId(testId)).toHaveTextContent('alpha')
+    expect(JSON.parse(screen.getByTestId(testId).textContent ?? '')).toBe(bool)
   })
 })
