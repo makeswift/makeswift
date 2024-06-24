@@ -3,9 +3,9 @@ import { MakeswiftPageSnapshot } from '../../next'
 import { ElementData } from '../../state/react-page'
 import { MakeswiftComponentType } from '../../components'
 
-export function createRootComponent(elements: ElementData[]) {
+export function createRootComponent(elements: ElementData[], rootId?: string) {
   return {
-    key: randomUUID(),
+    key: rootId ?? randomUUID(),
     type: MakeswiftComponentType.Root,
     props: {
       children: {

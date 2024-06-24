@@ -3,38 +3,39 @@
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import { ElementData } from '../../../state/react-page'
+import { ElementData } from '../../../../state/react-page'
 import { randomUUID } from 'crypto'
 import {
-  Font,
-  FontDescriptor,
+  Link,
+  LinkData,
+  LinkDescriptor,
   Types,
-  createFontPropControllerDataFromResponsiveFontData,
-  ResponsiveFontData,
+  createLinkPropControllerDataFromLinkData,
 } from '@makeswift/prop-controllers'
-import { Page } from '../page'
+import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../context/react-runtime'
-import { ReactRuntime } from '../../../react'
+import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
 import {
   createMakeswiftPageSnapshot,
   createRootComponent,
-} from '../../../utils/tests/element-data-test-test'
+} from '../../../../utils/tests/element-data-test-test'
 
 describe('Page', () => {
-  test('can render FontPropController v0 data', async () => {
+  test('can render LinkPropController v0 data', async () => {
     // Arrange
-    const fontDefinitionV0: FontDescriptor = {
-      type: Types.Font,
+    const linkDefinitionV0: LinkDescriptor = {
+      type: Types.Link,
       options: {},
     }
-    const fontData: ResponsiveFontData = [
-      {
-        deviceId: 'desktop',
-        value: 'Times New Roman',
+    const link: LinkData = {
+      type: 'OPEN_URL',
+      payload: {
+        url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        openInNewTab: false,
       },
-    ]
+    }
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent([
@@ -42,7 +43,7 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          font: createFontPropControllerDataFromResponsiveFontData(fontData, fontDefinitionV0),
+          link: createLinkPropControllerDataFromLinkData(link, linkDefinitionV0),
         },
       },
     ])
@@ -50,10 +51,10 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { font?: ResponsiveFontData }>(({ font }, ref) => {
+      forwardRef<HTMLDivElement, { link?: LinkData }>(({ link }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {font?.at(0)?.value}
+            {link?.type === 'OPEN_URL' ? link.payload.url : undefined}
           </div>
         )
       }),
@@ -61,7 +62,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          font: Font(),
+          link: Link(),
         },
       },
     )
@@ -74,22 +75,23 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent('Times New Roman')
+    expect(screen.getByTestId(testId)).toHaveTextContent(link.payload.url)
   })
 
-  test('can render FontPropController v1 data', async () => {
+  test('can render LinkPropController v1 data', async () => {
     // Arrange
-    const fontDefinitionV1: FontDescriptor = {
-      type: Types.Font,
+    const linkDefinitionV1: LinkDescriptor = {
+      type: Types.Link,
       version: 1,
       options: {},
     }
-    const fontData: ResponsiveFontData = [
-      {
-        deviceId: 'desktop',
-        value: 'Times New Roman',
+    const link: LinkData = {
+      type: 'OPEN_URL',
+      payload: {
+        url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        openInNewTab: false,
       },
-    ]
+    }
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent([
@@ -97,7 +99,7 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          font: createFontPropControllerDataFromResponsiveFontData(fontData, fontDefinitionV1),
+          link: createLinkPropControllerDataFromLinkData(link, linkDefinitionV1),
         },
       },
     ])
@@ -105,10 +107,10 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { font?: ResponsiveFontData }>(({ font }, ref) => {
+      forwardRef<HTMLDivElement, { link?: LinkData }>(({ link }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {font?.at(0)?.value}
+            {link?.type === 'OPEN_URL' ? link.payload.url : undefined}
           </div>
         )
       }),
@@ -116,7 +118,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          font: Font(),
+          link: Link(),
         },
       },
     )
@@ -129,6 +131,6 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent('Times New Roman')
+    expect(screen.getByTestId(testId)).toHaveTextContent(link.payload.url)
   })
 })

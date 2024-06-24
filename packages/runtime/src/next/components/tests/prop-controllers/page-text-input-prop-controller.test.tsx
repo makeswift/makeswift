@@ -3,38 +3,32 @@
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import { ElementData } from '../../../state/react-page'
+import { ElementData } from '../../../../state/react-page'
 import { randomUUID } from 'crypto'
 import {
-  GapY,
-  GapYDescriptor,
+  TextInput,
+  TextInputDescriptor,
   Types,
-  createGapYPropControllerDataFromResponsiveGapData,
-  ResponsiveGapData,
+  createTextInputPropControllerDataFromString,
 } from '@makeswift/prop-controllers'
-import { Page } from '../page'
+import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../context/react-runtime'
-import { ReactRuntime } from '../../../react'
+import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
 import {
   createMakeswiftPageSnapshot,
   createRootComponent,
-} from '../../../utils/tests/element-data-test-test'
+} from '../../../../utils/tests/element-data-test-test'
 
 describe('Page', () => {
-  test('can render GapYPropController v0 data', async () => {
+  test('can render TextInputPropController v0 data', async () => {
     // Arrange
-    const gapYDefinitionV0: GapYDescriptor = {
-      type: Types.GapY,
+    const textInputDefinitionV0: TextInputDescriptor = {
+      type: Types.TextInput,
       options: {},
     }
-    const gapData: ResponsiveGapData = [
-      {
-        deviceId: 'desktop',
-        value: { value: 17, unit: 'px' },
-      },
-    ]
+    const text = 'test text'
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent([
@@ -42,7 +36,7 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          gapY: createGapYPropControllerDataFromResponsiveGapData(gapData, gapYDefinitionV0),
+          textInput: createTextInputPropControllerDataFromString(text, textInputDefinitionV0),
         },
       },
     ])
@@ -50,10 +44,10 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { gapY?: ResponsiveGapData }>(({ gapY }, ref) => {
+      forwardRef<HTMLDivElement, { textInput?: string }>(({ textInput }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {gapY?.at(0)?.value.value}
+            {textInput}
           </div>
         )
       }),
@@ -61,7 +55,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          gapY: GapY(),
+          textInput: TextInput(),
         },
       },
     )
@@ -74,22 +68,17 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent('17')
+    expect(screen.getByTestId(testId)).toHaveTextContent(text)
   })
 
-  test('can render GapYPropController v1 data', async () => {
+  test('can render TextInputPropController v1 data', async () => {
     // Arrange
-    const gapYDefinitionV1: GapYDescriptor = {
-      type: Types.GapY,
+    const textInputDefinitionV1: TextInputDescriptor = {
+      type: Types.TextInput,
       version: 1,
       options: {},
     }
-    const gapData: ResponsiveGapData = [
-      {
-        deviceId: 'desktop',
-        value: { value: 17, unit: 'px' },
-      },
-    ]
+    const text = 'test text'
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent([
@@ -97,7 +86,7 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          gapY: createGapYPropControllerDataFromResponsiveGapData(gapData, gapYDefinitionV1),
+          textInput: createTextInputPropControllerDataFromString(text, textInputDefinitionV1),
         },
       },
     ])
@@ -105,10 +94,10 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { gapY?: ResponsiveGapData }>(({ gapY }, ref) => {
+      forwardRef<HTMLDivElement, { textInput?: String }>(({ textInput }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {gapY?.at(0)?.value.value}
+            {textInput}
           </div>
         )
       }),
@@ -116,7 +105,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          gapY: GapY(),
+          textInput: TextInput(),
         },
       },
     )
@@ -129,6 +118,6 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent('17')
+    expect(screen.getByTestId(testId)).toHaveTextContent(text)
   })
 })

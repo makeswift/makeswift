@@ -3,37 +3,36 @@
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import { ElementData } from '../../../state/react-page'
+import { ElementData } from '../../../../state/react-page'
 import { randomUUID } from 'crypto'
 import {
-  Width,
-  WidthDescriptor,
-  ResponsiveLengthData,
+  Font,
+  FontDescriptor,
   Types,
-  createWidthPropControllerDataFromResponsiveLengthData,
+  createFontPropControllerDataFromResponsiveFontData,
+  ResponsiveFontData,
 } from '@makeswift/prop-controllers'
-import { Page } from '../page'
+import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../context/react-runtime'
-import { ReactRuntime } from '../../../react'
+import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
 import {
   createMakeswiftPageSnapshot,
   createRootComponent,
-} from '../../../utils/tests/element-data-test-test'
-import { DESKTOP_MEDIA_QUERY } from '../../../utils/tests/breakpoint-test-util'
+} from '../../../../utils/tests/element-data-test-test'
 
 describe('Page', () => {
-  test('can render WidthPropController v0 data', async () => {
+  test('can render FontPropController v0 data', async () => {
     // Arrange
-    const widthDefinitionV0: WidthDescriptor = {
-      type: Types.Width,
+    const fontDefinitionV0: FontDescriptor = {
+      type: Types.Font,
       options: {},
     }
-    const widthData: ResponsiveLengthData = [
+    const fontData: ResponsiveFontData = [
       {
         deviceId: 'desktop',
-        value: { value: 17, unit: 'px' },
+        value: 'Times New Roman',
       },
     ]
     const TestComponentType = 'TestComponent'
@@ -43,10 +42,7 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          width: createWidthPropControllerDataFromResponsiveLengthData(
-            widthData,
-            widthDefinitionV0,
-          ),
+          font: createFontPropControllerDataFromResponsiveFontData(fontData, fontDefinitionV0),
         },
       },
     ])
@@ -54,14 +50,18 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { width?: string }>(({ width }, ref) => {
-        return <div className={width} ref={ref} data-testid={testId} />
+      forwardRef<HTMLDivElement, { font?: ResponsiveFontData }>(({ font }, ref) => {
+        return (
+          <div ref={ref} data-testid={testId}>
+            {font?.at(0)?.value}
+          </div>
+        )
       }),
       {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          width: Width({ format: Width.Format.ClassName }),
+          font: Font(),
         },
       },
     )
@@ -74,22 +74,20 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveStyleRule('width', '17px', {
-      media: DESKTOP_MEDIA_QUERY,
-    })
+    expect(screen.getByTestId(testId)).toHaveTextContent('Times New Roman')
   })
 
-  test('can render WidthPropController v1 data', async () => {
+  test('can render FontPropController v1 data', async () => {
     // Arrange
-    const widthDefinitionV1: WidthDescriptor = {
-      type: Types.Width,
+    const fontDefinitionV1: FontDescriptor = {
+      type: Types.Font,
       version: 1,
       options: {},
     }
-    const widthData: ResponsiveLengthData = [
+    const fontData: ResponsiveFontData = [
       {
         deviceId: 'desktop',
-        value: { value: 17, unit: 'px' },
+        value: 'Times New Roman',
       },
     ]
     const TestComponentType = 'TestComponent'
@@ -99,10 +97,7 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          width: createWidthPropControllerDataFromResponsiveLengthData(
-            widthData,
-            widthDefinitionV1,
-          ),
+          font: createFontPropControllerDataFromResponsiveFontData(fontData, fontDefinitionV1),
         },
       },
     ])
@@ -110,14 +105,18 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { width?: string }>(({ width }, ref) => {
-        return <div className={width} ref={ref} data-testid={testId} />
+      forwardRef<HTMLDivElement, { font?: ResponsiveFontData }>(({ font }, ref) => {
+        return (
+          <div ref={ref} data-testid={testId}>
+            {font?.at(0)?.value}
+          </div>
+        )
       }),
       {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          width: Width({ format: Width.Format.ClassName }),
+          font: Font(),
         },
       },
     )
@@ -130,8 +129,6 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveStyleRule('width', '17px', {
-      media: DESKTOP_MEDIA_QUERY,
-    })
+    expect(screen.getByTestId(testId)).toHaveTextContent('Times New Roman')
   })
 })

@@ -3,42 +3,37 @@
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import { ElementData } from '../../../state/react-page'
+import { ElementData } from '../../../../state/react-page'
 import { randomUUID } from 'crypto'
 import {
-  Padding,
-  PaddingDescriptor,
-  ResponsivePaddingData,
+  Width,
+  WidthDescriptor,
+  ResponsiveLengthData,
   Types,
-  createPaddingPropControllerDataFromResponsivePaddingData,
+  createWidthPropControllerDataFromResponsiveLengthData,
 } from '@makeswift/prop-controllers'
-import { Page } from '../page'
+import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../context/react-runtime'
-import { ReactRuntime } from '../../../react'
+import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
 import {
   createMakeswiftPageSnapshot,
   createRootComponent,
-} from '../../../utils/tests/element-data-test-test'
-import { DESKTOP_MEDIA_QUERY } from '../../../utils/tests/breakpoint-test-util'
+} from '../../../../utils/tests/element-data-test-test'
+import { DESKTOP_MEDIA_QUERY } from '../../../../utils/tests/breakpoint-test-util'
 
 describe('Page', () => {
-  test('can render PaddingPropController v0 data', async () => {
+  test('can render WidthPropController v0 data', async () => {
     // Arrange
-    const paddingDefinitionV0: PaddingDescriptor = {
-      type: Types.Padding,
+    const widthDefinitionV0: WidthDescriptor = {
+      type: Types.Width,
       options: {},
     }
-    const paddingData: ResponsivePaddingData = [
+    const widthData: ResponsiveLengthData = [
       {
         deviceId: 'desktop',
-        value: {
-          paddingTop: { value: 17, unit: 'px' },
-          paddingRight: null,
-          paddingBottom: null,
-          paddingLeft: null,
-        },
+        value: { value: 17, unit: 'px' },
       },
     ]
     const TestComponentType = 'TestComponent'
@@ -48,9 +43,9 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          padding: createPaddingPropControllerDataFromResponsivePaddingData(
-            paddingData,
-            paddingDefinitionV0,
+          width: createWidthPropControllerDataFromResponsiveLengthData(
+            widthData,
+            widthDefinitionV0,
           ),
         },
       },
@@ -59,14 +54,14 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { padding?: string }>(({ padding }, ref) => {
-        return <div className={padding} ref={ref} data-testid={testId} />
+      forwardRef<HTMLDivElement, { width?: string }>(({ width }, ref) => {
+        return <div className={width} ref={ref} data-testid={testId} />
       }),
       {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          padding: Padding({ format: Padding.Format.ClassName }),
+          width: Width({ format: Width.Format.ClassName }),
         },
       },
     )
@@ -79,27 +74,22 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveStyleRule('padding-top', '17px', {
+    expect(screen.getByTestId(testId)).toHaveStyleRule('width', '17px', {
       media: DESKTOP_MEDIA_QUERY,
     })
   })
 
-  test('can render PaddingPropController v1 data', async () => {
+  test('can render WidthPropController v1 data', async () => {
     // Arrange
-    const paddingDefinitionV1: PaddingDescriptor = {
-      type: Types.Padding,
+    const widthDefinitionV1: WidthDescriptor = {
+      type: Types.Width,
       version: 1,
       options: {},
     }
-    const paddingData: ResponsivePaddingData = [
+    const widthData: ResponsiveLengthData = [
       {
         deviceId: 'desktop',
-        value: {
-          paddingTop: { value: 17, unit: 'px' },
-          paddingRight: null,
-          paddingBottom: null,
-          paddingLeft: null,
-        },
+        value: { value: 17, unit: 'px' },
       },
     ]
     const TestComponentType = 'TestComponent'
@@ -109,9 +99,9 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          padding: createPaddingPropControllerDataFromResponsivePaddingData(
-            paddingData,
-            paddingDefinitionV1,
+          width: createWidthPropControllerDataFromResponsiveLengthData(
+            widthData,
+            widthDefinitionV1,
           ),
         },
       },
@@ -120,14 +110,14 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { padding?: string }>(({ padding }, ref) => {
-        return <div className={padding} ref={ref} data-testid={testId} />
+      forwardRef<HTMLDivElement, { width?: string }>(({ width }, ref) => {
+        return <div className={width} ref={ref} data-testid={testId} />
       }),
       {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          padding: Padding({ format: Padding.Format.ClassName }),
+          width: Width({ format: Width.Format.ClassName }),
         },
       },
     )
@@ -140,7 +130,7 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveStyleRule('padding-top', '17px', {
+    expect(screen.getByTestId(testId)).toHaveStyleRule('width', '17px', {
       media: DESKTOP_MEDIA_QUERY,
     })
   })
