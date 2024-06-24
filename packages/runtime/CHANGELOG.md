@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.19.2-canary.0
+
+### Patch Changes
+
+- d82dd59: Adds rendering tests for the checkbox control
+
 ## 0.19.1
 
 ### Patch Changes
