@@ -3,32 +3,32 @@
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import { ElementData } from '../../../state/react-page'
+import { ElementData } from '../../../../state/react-page'
 import { randomUUID } from 'crypto'
 import {
-  TextArea,
-  TextAreaDescriptor,
+  ElementID,
+  ElementIDDescriptor,
   Types,
-  createTextAreaPropControllerDataFromString,
+  createElementIDPropControllerDataFromElementID,
 } from '@makeswift/prop-controllers'
-import { Page } from '../page'
+import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../context/react-runtime'
-import { ReactRuntime } from '../../../react'
+import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
 import {
   createMakeswiftPageSnapshot,
   createRootComponent,
-} from '../../../utils/tests/element-data-test-test'
+} from '../../../../utils/tests/element-data-test-test'
 
 describe('Page', () => {
-  test('can render TextAreaPropController v0 data', async () => {
+  test('can render ElementIDPropController v0 data', async () => {
     // Arrange
-    const textAreaDefinitionV0: TextAreaDescriptor = {
-      type: Types.TextArea,
+    const elementIDDefinitionV0: ElementIDDescriptor = {
+      type: Types.ElementID,
       options: {},
     }
-    const text = 'test text'
+    const elementID = 'VGFibGU6MTM5NDhlYzMtMjgwNS00Nzk0LTliNzctNDJkN2RhNmQxZWEy'
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent([
@@ -36,7 +36,10 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          textArea: createTextAreaPropControllerDataFromString(text, textAreaDefinitionV0),
+          elementID: createElementIDPropControllerDataFromElementID(
+            elementID,
+            elementIDDefinitionV0,
+          ),
         },
       },
     ])
@@ -44,10 +47,10 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { textArea?: string }>(({ textArea }, ref) => {
+      forwardRef<HTMLDivElement, { elementID?: string }>(({ elementID }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {textArea}
+            {elementID}
           </div>
         )
       }),
@@ -55,7 +58,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          textArea: TextArea(),
+          elementID: ElementID(),
         },
       },
     )
@@ -68,17 +71,17 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent(text)
+    expect(screen.getByTestId(testId)).toHaveTextContent(elementID)
   })
 
-  test('can render TextAreaPropController v1 data', async () => {
+  test('can render ElementIDPropController v1 data', async () => {
     // Arrange
-    const textAreaDefinitionV1: TextAreaDescriptor = {
-      type: Types.TextArea,
+    const elementIDDefinitionV1: ElementIDDescriptor = {
+      type: Types.ElementID,
       version: 1,
       options: {},
     }
-    const text = 'test text'
+    const elementID = 'VGFibGU6MTM5NDhlYzMtMjgwNS00Nzk0LTliNzctNDJkN2RhNmQxZWEy'
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent([
@@ -86,7 +89,10 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          textArea: createTextAreaPropControllerDataFromString(text, textAreaDefinitionV1),
+          elementID: createElementIDPropControllerDataFromElementID(
+            elementID,
+            elementIDDefinitionV1,
+          ),
         },
       },
     ])
@@ -94,10 +100,10 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { textArea?: String }>(({ textArea }, ref) => {
+      forwardRef<HTMLDivElement, { elementID?: string }>(({ elementID }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {textArea}
+            {elementID}
           </div>
         )
       }),
@@ -105,7 +111,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          textArea: TextArea(),
+          elementID: ElementID(),
         },
       },
     )
@@ -118,6 +124,6 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent(text)
+    expect(screen.getByTestId(testId)).toHaveTextContent(elementID)
   })
 })

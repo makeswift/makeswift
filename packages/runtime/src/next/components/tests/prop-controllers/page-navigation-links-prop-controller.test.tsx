@@ -3,44 +3,102 @@
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import { ElementData } from '../../../state/react-page'
+import { ElementData } from '../../../../state/react-page'
 import { randomUUID } from 'crypto'
 import {
-  Backgrounds,
-  BackgroundsDescriptor,
+  NavigationLinks,
+  NavigationLinksDescriptor,
   Types,
-  createBackgroundsPropControllerDataFromResponsiveBackgroundsData,
-  ResponsiveBackgroundsData,
+  createNavigationLinksPropControllerDataFromNavigationLinksData,
+  NavigationLinksData,
 } from '@makeswift/prop-controllers'
-import { Page } from '../page'
+import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../context/react-runtime'
-import { ReactRuntime } from '../../../react'
+import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
 import {
   createMakeswiftPageSnapshot,
   createRootComponent,
-} from '../../../utils/tests/element-data-test-test'
+} from '../../../../utils/tests/element-data-test-test'
 
 describe('Page', () => {
-  test('can render BackgroundsPropController v1 data', async () => {
+  test('can render NavigationLinksPropController v0 data', async () => {
     // Arrange
-    const backgroundsDefinitionV1: BackgroundsDescriptor = {
-      type: Types.Backgrounds,
+    const navigationLinksDefinitionV0: NavigationLinksDescriptor = {
+      type: Types.NavigationLinks,
+      options: {},
+    }
+    const navigationLinksData: NavigationLinksData = [
+      {
+        id: '1',
+        type: 'button',
+        payload: {
+          label: 'Test link',
+        },
+      },
+    ]
+    const TestComponentType = 'TestComponent'
+    const testId = 'test-id'
+    const elementData: ElementData = createRootComponent([
+      {
+        key: randomUUID(),
+        type: TestComponentType,
+        props: {
+          navigationLinks: createNavigationLinksPropControllerDataFromNavigationLinksData(
+            navigationLinksData,
+            navigationLinksDefinitionV0,
+          ),
+        },
+      },
+    ])
+    const snapshot = createMakeswiftPageSnapshot(elementData)
+    const runtime = new ReactRuntime()
+
+    runtime.registerComponent(
+      forwardRef<HTMLDivElement, { navigationLinks?: NavigationLinksData }>(
+        ({ navigationLinks }, ref) => {
+          return (
+            <div ref={ref} data-testid={testId}>
+              {navigationLinks?.at(0)?.payload.label}
+            </div>
+          )
+        },
+      ),
+      {
+        type: TestComponentType,
+        label: 'TestComponent',
+        props: {
+          navigationLinks: NavigationLinks(),
+        },
+      },
+    )
+
+    await act(async () =>
+      render(
+        <ReactRuntimeProvider runtime={runtime}>
+          <Page snapshot={snapshot} />
+        </ReactRuntimeProvider>,
+      ),
+    )
+
+    expect(screen.getByTestId(testId)).toHaveTextContent('Test link')
+  })
+
+  test('can render NavigationLinksPropController v1 data', async () => {
+    // Arrange
+    const navigationLinksDefinitionV1: NavigationLinksDescriptor = {
+      type: Types.NavigationLinks,
       version: 1,
       options: {},
     }
-    const itemId = 'itemId'
-    const responsiveBackgroundsData: ResponsiveBackgroundsData = [
+    const navigationLinksData: NavigationLinksData = [
       {
-        deviceId: 'desktop',
-        value: [
-          {
-            type: 'color',
-            id: itemId,
-            payload: null,
-          },
-        ],
+        id: '1',
+        type: 'button',
+        payload: {
+          label: 'Test link',
+        },
       },
     ]
     const TestComponentType = 'TestComponent'
@@ -50,9 +108,9 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          backgrounds: createBackgroundsPropControllerDataFromResponsiveBackgroundsData(
-            responsiveBackgroundsData,
-            backgroundsDefinitionV1,
+          navigationLinks: createNavigationLinksPropControllerDataFromNavigationLinksData(
+            navigationLinksData,
+            navigationLinksDefinitionV1,
           ),
         },
       },
@@ -61,11 +119,11 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { backgrounds?: ResponsiveBackgroundsData }>(
-        ({ backgrounds }, ref) => {
+      forwardRef<HTMLDivElement, { navigationLinks?: NavigationLinksData }>(
+        ({ navigationLinks }, ref) => {
           return (
             <div ref={ref} data-testid={testId}>
-              {backgrounds?.at(0)?.value.at(0)?.id}
+              {navigationLinks?.at(0)?.payload.label}
             </div>
           )
         },
@@ -74,7 +132,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          backgrounds: Backgrounds(),
+          navigationLinks: NavigationLinks(),
         },
       },
     )
@@ -87,73 +145,6 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent(itemId)
-  })
-
-  test('can render BackgroundsPropController v2 data', async () => {
-    // Arrange
-    const backgroundsDefinitionV2: BackgroundsDescriptor = {
-      type: Types.Backgrounds,
-      version: 2,
-      options: {},
-    }
-    const itemId = 'itemId'
-    const responsiveBackgroundsData: ResponsiveBackgroundsData = [
-      {
-        deviceId: 'desktop',
-        value: [
-          {
-            type: 'color',
-            id: itemId,
-            payload: null,
-          },
-        ],
-      },
-    ]
-    const TestComponentType = 'TestComponent'
-    const testId = 'test-id'
-    const elementData: ElementData = createRootComponent([
-      {
-        key: randomUUID(),
-        type: TestComponentType,
-        props: {
-          backgrounds: createBackgroundsPropControllerDataFromResponsiveBackgroundsData(
-            responsiveBackgroundsData,
-            backgroundsDefinitionV2,
-          ),
-        },
-      },
-    ])
-    const snapshot = createMakeswiftPageSnapshot(elementData)
-    const runtime = new ReactRuntime()
-
-    runtime.registerComponent(
-      forwardRef<HTMLDivElement, { backgrounds?: ResponsiveBackgroundsData }>(
-        ({ backgrounds }, ref) => {
-          return (
-            <div ref={ref} data-testid={testId}>
-              {backgrounds?.at(0)?.value.at(0)?.id}
-            </div>
-          )
-        },
-      ),
-      {
-        type: TestComponentType,
-        label: 'TestComponent',
-        props: {
-          backgrounds: Backgrounds(),
-        },
-      },
-    )
-
-    await act(async () =>
-      render(
-        <ReactRuntimeProvider runtime={runtime}>
-          <Page snapshot={snapshot} />
-        </ReactRuntimeProvider>,
-      ),
-    )
-
-    expect(screen.getByTestId(testId)).toHaveTextContent(itemId)
+    expect(screen.getByTestId(testId)).toHaveTextContent('Test link')
   })
 })

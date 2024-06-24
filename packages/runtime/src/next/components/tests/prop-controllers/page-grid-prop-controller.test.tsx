@@ -3,34 +3,41 @@
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import { ElementData } from '../../../state/react-page'
+import { ElementData } from '../../../../state/react-page'
 import { randomUUID } from 'crypto'
 import {
-  Video,
-  VideoDescriptor,
+  Grid,
+  GridDescriptor,
   Types,
-  createVideoPropControllerDataFromVideoData,
-  VideoData,
+  createGridPropControllerDataFromGridData,
+  GridData,
 } from '@makeswift/prop-controllers'
-import { Page } from '../page'
+import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../context/react-runtime'
-import { ReactRuntime } from '../../../react'
+import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
 import {
   createMakeswiftPageSnapshot,
   createRootComponent,
-} from '../../../utils/tests/element-data-test-test'
+} from '../../../../utils/tests/element-data-test-test'
 
 describe('Page', () => {
-  test('can render VideoPropController v0 data', async () => {
+  test('can render GridPropController v0 data', async () => {
     // Arrange
-    const videoDefinitionV0: VideoDescriptor = {
-      type: Types.Video,
+    const gridDefinitionV0: GridDescriptor = {
+      type: Types.Grid,
       options: {},
     }
-    const videoData: VideoData = {
-      url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    const gridData: GridData = {
+      elements: [
+        {
+          key: 'element1',
+          type: 'element1',
+          props: {},
+        },
+      ],
+      columns: [],
     }
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
@@ -39,7 +46,7 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          video: createVideoPropControllerDataFromVideoData(videoData, videoDefinitionV0),
+          grid: createGridPropControllerDataFromGridData(gridData, gridDefinitionV0),
         },
       },
     ])
@@ -47,10 +54,10 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { video?: VideoData }>(({ video }, ref) => {
+      forwardRef<HTMLDivElement, { grid?: GridData }>(({ grid }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {video?.url}
+            {grid?.elements.at(0)?.key}
           </div>
         )
       }),
@@ -58,7 +65,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          video: Video(),
+          grid: Grid(),
         },
       },
     )
@@ -71,20 +78,25 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent(
-      'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    )
+    expect(screen.getByTestId(testId)).toHaveTextContent('element1')
   })
 
-  test('can render VideoPropController v1 data', async () => {
+  test('can render GridPropController v1 data', async () => {
     // Arrange
-    const videoDefinitionV1: VideoDescriptor = {
-      type: Types.Video,
+    const gridDefinitionV1: GridDescriptor = {
+      type: Types.Grid,
       version: 1,
       options: {},
     }
-    const videoData: VideoData = {
-      url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    const gridData: GridData = {
+      elements: [
+        {
+          key: 'element1',
+          type: 'element1',
+          props: {},
+        },
+      ],
+      columns: [],
     }
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
@@ -93,7 +105,7 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          video: createVideoPropControllerDataFromVideoData(videoData, videoDefinitionV1),
+          grid: createGridPropControllerDataFromGridData(gridData, gridDefinitionV1),
         },
       },
     ])
@@ -101,10 +113,10 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { video?: VideoData }>(({ video }, ref) => {
+      forwardRef<HTMLDivElement, { grid?: GridData }>(({ grid }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {video?.url}
+            {grid?.elements.at(0)?.key}
           </div>
         )
       }),
@@ -112,7 +124,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          video: Video(),
+          grid: Grid(),
         },
       },
     )
@@ -125,8 +137,6 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent(
-      'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    )
+    expect(screen.getByTestId(testId)).toHaveTextContent('element1')
   })
 })

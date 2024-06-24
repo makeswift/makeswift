@@ -3,42 +3,32 @@
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import { ElementData } from '../../../state/react-page'
+import { ElementData } from '../../../../state/react-page'
 import { randomUUID } from 'crypto'
 import {
-  Grid,
-  GridDescriptor,
+  Date as DatePropController,
+  DateDescriptor,
   Types,
-  createGridPropControllerDataFromGridData,
-  GridData,
+  createDatePropControllerDataFromString,
 } from '@makeswift/prop-controllers'
-import { Page } from '../page'
+import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../context/react-runtime'
-import { ReactRuntime } from '../../../react'
+import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
 import {
   createMakeswiftPageSnapshot,
   createRootComponent,
-} from '../../../utils/tests/element-data-test-test'
+} from '../../../../utils/tests/element-data-test-test'
 
 describe('Page', () => {
-  test('can render GridPropController v0 data', async () => {
+  test('can render DatePropController v0 data', async () => {
     // Arrange
-    const gridDefinitionV0: GridDescriptor = {
-      type: Types.Grid,
+    const dateDefinitionV0: DateDescriptor = {
+      type: Types.Date,
       options: {},
     }
-    const gridData: GridData = {
-      elements: [
-        {
-          key: 'element1',
-          type: 'element1',
-          props: {},
-        },
-      ],
-      columns: [],
-    }
+    const dateData = new Date().toISOString()
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent([
@@ -46,7 +36,7 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          grid: createGridPropControllerDataFromGridData(gridData, gridDefinitionV0),
+          date: createDatePropControllerDataFromString(dateData, dateDefinitionV0),
         },
       },
     ])
@@ -54,10 +44,10 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { grid?: GridData }>(({ grid }, ref) => {
+      forwardRef<HTMLDivElement, { date?: string }>(({ date }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {grid?.elements.at(0)?.key}
+            {date}
           </div>
         )
       }),
@@ -65,7 +55,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          grid: Grid(),
+          date: DatePropController(),
         },
       },
     )
@@ -78,26 +68,17 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent('element1')
+    expect(screen.getByTestId(testId)).toHaveTextContent(dateData)
   })
 
-  test('can render GridPropController v1 data', async () => {
+  test('can render DatePropController v1 data', async () => {
     // Arrange
-    const gridDefinitionV1: GridDescriptor = {
-      type: Types.Grid,
+    const dateDefinitionV1: DateDescriptor = {
+      type: Types.Date,
       version: 1,
       options: {},
     }
-    const gridData: GridData = {
-      elements: [
-        {
-          key: 'element1',
-          type: 'element1',
-          props: {},
-        },
-      ],
-      columns: [],
-    }
+    const dateData = new Date().toISOString()
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent([
@@ -105,7 +86,7 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          grid: createGridPropControllerDataFromGridData(gridData, gridDefinitionV1),
+          date: createDatePropControllerDataFromString(dateData, dateDefinitionV1),
         },
       },
     ])
@@ -113,10 +94,10 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { grid?: GridData }>(({ grid }, ref) => {
+      forwardRef<HTMLDivElement, { date?: string }>(({ date }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {grid?.elements.at(0)?.key}
+            {date}
           </div>
         )
       }),
@@ -124,7 +105,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          grid: Grid(),
+          date: DatePropController(),
         },
       },
     )
@@ -137,6 +118,6 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent('element1')
+    expect(screen.getByTestId(testId)).toHaveTextContent(dateData)
   })
 })

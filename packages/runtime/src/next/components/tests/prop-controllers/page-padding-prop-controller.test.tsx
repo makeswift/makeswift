@@ -3,44 +3,41 @@
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import { ElementData } from '../../../state/react-page'
+import { ElementData } from '../../../../state/react-page'
 import { randomUUID } from 'crypto'
 import {
-  Border,
-  BorderDescriptor,
-  ResponsiveBorderData,
+  Padding,
+  PaddingDescriptor,
+  ResponsivePaddingData,
   Types,
-  createBorderPropControllerDataFromResponsiveBorderData,
+  createPaddingPropControllerDataFromResponsivePaddingData,
 } from '@makeswift/prop-controllers'
-import { Page } from '../page'
+import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../context/react-runtime'
-import { ReactRuntime } from '../../../react'
+import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
 import {
   createMakeswiftPageSnapshot,
   createRootComponent,
-} from '../../../utils/tests/element-data-test-test'
-import { DESKTOP_MEDIA_QUERY } from '../../../utils/tests/breakpoint-test-util'
+} from '../../../../utils/tests/element-data-test-test'
+import { DESKTOP_MEDIA_QUERY } from '../../../../utils/tests/breakpoint-test-util'
 
 describe('Page', () => {
-  test('can render BorderPropController v0 data', async () => {
+  test('can render PaddingPropController v0 data', async () => {
     // Arrange
-    const borderDefinitionV0: BorderDescriptor = {
-      type: Types.Border,
+    const paddingDefinitionV0: PaddingDescriptor = {
+      type: Types.Padding,
       options: {},
     }
-    const borderData: ResponsiveBorderData = [
+    const paddingData: ResponsivePaddingData = [
       {
         deviceId: 'desktop',
         value: {
-          borderTop: {
-            width: 1,
-            style: 'solid',
-          },
-          borderRight: null,
-          borderBottom: null,
-          borderLeft: null,
+          paddingTop: { value: 17, unit: 'px' },
+          paddingRight: null,
+          paddingBottom: null,
+          paddingLeft: null,
         },
       },
     ]
@@ -51,9 +48,9 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          border: createBorderPropControllerDataFromResponsiveBorderData(
-            borderDefinitionV0,
-            borderData,
+          padding: createPaddingPropControllerDataFromResponsivePaddingData(
+            paddingData,
+            paddingDefinitionV0,
           ),
         },
       },
@@ -62,14 +59,14 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { border?: string }>(({ border }, ref) => {
-        return <div className={border} ref={ref} data-testid={testId} />
+      forwardRef<HTMLDivElement, { padding?: string }>(({ padding }, ref) => {
+        return <div className={padding} ref={ref} data-testid={testId} />
       }),
       {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          border: Border({ format: Border.Format.ClassName }),
+          padding: Padding({ format: Padding.Format.ClassName }),
         },
       },
     )
@@ -82,29 +79,26 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveStyleRule('border-top', '1px solid black', {
+    expect(screen.getByTestId(testId)).toHaveStyleRule('padding-top', '17px', {
       media: DESKTOP_MEDIA_QUERY,
     })
   })
 
-  test('can render BorderPropController v1 data', async () => {
+  test('can render PaddingPropController v1 data', async () => {
     // Arrange
-    const borderDefinitionV1: BorderDescriptor = {
-      type: Types.Border,
+    const paddingDefinitionV1: PaddingDescriptor = {
+      type: Types.Padding,
       version: 1,
       options: {},
     }
-    const borderData: ResponsiveBorderData = [
+    const paddingData: ResponsivePaddingData = [
       {
         deviceId: 'desktop',
         value: {
-          borderTop: {
-            width: 1,
-            style: 'solid',
-          },
-          borderRight: null,
-          borderBottom: null,
-          borderLeft: null,
+          paddingTop: { value: 17, unit: 'px' },
+          paddingRight: null,
+          paddingBottom: null,
+          paddingLeft: null,
         },
       },
     ]
@@ -115,9 +109,9 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          border: createBorderPropControllerDataFromResponsiveBorderData(
-            borderDefinitionV1,
-            borderData,
+          padding: createPaddingPropControllerDataFromResponsivePaddingData(
+            paddingData,
+            paddingDefinitionV1,
           ),
         },
       },
@@ -126,14 +120,14 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { border?: string }>(({ border }, ref) => {
-        return <div className={border} ref={ref} data-testid={testId} />
+      forwardRef<HTMLDivElement, { padding?: string }>(({ padding }, ref) => {
+        return <div className={padding} ref={ref} data-testid={testId} />
       }),
       {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          border: Border({ format: Border.Format.ClassName }),
+          padding: Padding({ format: Padding.Format.ClassName }),
         },
       },
     )
@@ -146,7 +140,7 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveStyleRule('border-top', '1px solid black', {
+    expect(screen.getByTestId(testId)).toHaveStyleRule('padding-top', '17px', {
       media: DESKTOP_MEDIA_QUERY,
     })
   })

@@ -3,43 +3,82 @@
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import { ElementData } from '../../../state/react-page'
+import { ElementData } from '../../../../state/react-page'
 import { randomUUID } from 'crypto'
 import {
-  SocialLinks,
-  SocialLinksData,
-  SocialLinksDescriptor,
+  TextArea,
+  TextAreaDescriptor,
   Types,
-  createSocialLinksPropControllerDataFromSocialLinksData,
+  createTextAreaPropControllerDataFromString,
 } from '@makeswift/prop-controllers'
-import { Page } from '../page'
+import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../context/react-runtime'
-import { ReactRuntime } from '../../../react'
+import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
 import {
   createMakeswiftPageSnapshot,
   createRootComponent,
-} from '../../../utils/tests/element-data-test-test'
+} from '../../../../utils/tests/element-data-test-test'
 
 describe('Page', () => {
-  test('can render SocialLinksPropController v1 data', async () => {
+  test('can render TextAreaPropController v0 data', async () => {
     // Arrange
-    const socialLinksDefinitionV1: SocialLinksDescriptor = {
-      type: Types.SocialLinks,
+    const textAreaDefinitionV0: TextAreaDescriptor = {
+      type: Types.TextArea,
+      options: {},
+    }
+    const text = 'test text'
+    const TestComponentType = 'TestComponent'
+    const testId = 'test-id'
+    const elementData: ElementData = createRootComponent([
+      {
+        key: randomUUID(),
+        type: TestComponentType,
+        props: {
+          textArea: createTextAreaPropControllerDataFromString(text, textAreaDefinitionV0),
+        },
+      },
+    ])
+    const snapshot = createMakeswiftPageSnapshot(elementData)
+    const runtime = new ReactRuntime()
+
+    runtime.registerComponent(
+      forwardRef<HTMLDivElement, { textArea?: string }>(({ textArea }, ref) => {
+        return (
+          <div ref={ref} data-testid={testId}>
+            {textArea}
+          </div>
+        )
+      }),
+      {
+        type: TestComponentType,
+        label: 'TestComponent',
+        props: {
+          textArea: TextArea(),
+        },
+      },
+    )
+
+    await act(async () =>
+      render(
+        <ReactRuntimeProvider runtime={runtime}>
+          <Page snapshot={snapshot} />
+        </ReactRuntimeProvider>,
+      ),
+    )
+
+    expect(screen.getByTestId(testId)).toHaveTextContent(text)
+  })
+
+  test('can render TextAreaPropController v1 data', async () => {
+    // Arrange
+    const textAreaDefinitionV1: TextAreaDescriptor = {
+      type: Types.TextArea,
       version: 1,
       options: {},
     }
-    const url = 'https://facebook.com/mark'
-    const links: SocialLinksData = {
-      links: [
-        {
-          id: 'id',
-          payload: { url, type: 'facebook' },
-        },
-      ],
-      openInNewTab: false,
-    }
+    const text = 'test text'
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent([
@@ -47,10 +86,7 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          socialLinks: createSocialLinksPropControllerDataFromSocialLinksData(
-            links,
-            socialLinksDefinitionV1,
-          ),
+          textArea: createTextAreaPropControllerDataFromString(text, textAreaDefinitionV1),
         },
       },
     ])
@@ -58,10 +94,10 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { socialLinks?: SocialLinksData }>(({ socialLinks }, ref) => {
+      forwardRef<HTMLDivElement, { textArea?: String }>(({ textArea }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {socialLinks?.links.at(0)?.payload.url}
+            {textArea}
           </div>
         )
       }),
@@ -69,7 +105,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          socialLinks: SocialLinks(),
+          textArea: TextArea(),
         },
       },
     )
@@ -82,68 +118,6 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent(url)
-  })
-
-  test('can render SocialLinksPropController v2 data', async () => {
-    // Arrange
-    const socialLinksDefinitionV2: SocialLinksDescriptor = {
-      type: Types.SocialLinks,
-      version: 2,
-      options: {},
-    }
-    const url = 'https://facebook.com/mark'
-    const links: SocialLinksData = {
-      links: [
-        {
-          id: 'id',
-          payload: { url, type: 'facebook' },
-        },
-      ],
-      openInNewTab: false,
-    }
-    const TestComponentType = 'TestComponent'
-    const testId = 'test-id'
-    const elementData: ElementData = createRootComponent([
-      {
-        key: randomUUID(),
-        type: TestComponentType,
-        props: {
-          socialLinks: createSocialLinksPropControllerDataFromSocialLinksData(
-            links,
-            socialLinksDefinitionV2,
-          ),
-        },
-      },
-    ])
-    const snapshot = createMakeswiftPageSnapshot(elementData)
-    const runtime = new ReactRuntime()
-
-    runtime.registerComponent(
-      forwardRef<HTMLDivElement, { socialLinks?: SocialLinksData }>(({ socialLinks }, ref) => {
-        return (
-          <div ref={ref} data-testid={testId}>
-            {socialLinks?.links.at(0)?.payload.url}
-          </div>
-        )
-      }),
-      {
-        type: TestComponentType,
-        label: 'TestComponent',
-        props: {
-          socialLinks: SocialLinks(),
-        },
-      },
-    )
-
-    await act(async () =>
-      render(
-        <ReactRuntimeProvider runtime={runtime}>
-          <Page snapshot={snapshot} />
-        </ReactRuntimeProvider>,
-      ),
-    )
-
-    expect(screen.getByTestId(testId)).toHaveTextContent(url)
+    expect(screen.getByTestId(testId)).toHaveTextContent(text)
   })
 })

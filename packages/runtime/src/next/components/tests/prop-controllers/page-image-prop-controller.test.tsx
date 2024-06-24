@@ -3,42 +3,33 @@
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import { ElementData } from '../../../state/react-page'
+import { ElementData } from '../../../../state/react-page'
 import { randomUUID } from 'crypto'
 import {
-  Images,
-  ImagesDescriptor,
+  Image,
+  ImageDescriptor,
   Types,
-  createImagesPropControllerDataFromImagesData,
-  ImagesData,
+  createImagePropControllerDataFromImageData,
+  ImageData,
 } from '@makeswift/prop-controllers'
-import { Page } from '../page'
+import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../context/react-runtime'
-import { ReactRuntime } from '../../../react'
+import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
 import {
   createMakeswiftPageSnapshot,
   createRootComponent,
-} from '../../../utils/tests/element-data-test-test'
-import { ImagesDataV0 } from '@makeswift/prop-controllers/dist/types/images'
+} from '../../../../utils/tests/element-data-test-test'
 
 describe('Page', () => {
-  test('can render ImagesPropController v0 data', async () => {
+  test('can render ImagePropController v0 data', async () => {
     // Arrange
-    const imagesDefinitionV0: ImagesDescriptor = {
-      type: Types.Images,
+    const imageDefinitionV0: ImageDescriptor = {
+      type: Types.Image,
       options: {},
     }
-    const fileId = 'fileId'
-    const imagesData: ImagesDataV0 = [
-      {
-        key: 'key',
-        props: {
-          file: fileId,
-        },
-      },
-    ]
+    const imageData: ImageData = 'fileId'
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent([
@@ -46,7 +37,7 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          images: createImagesPropControllerDataFromImagesData(imagesData, imagesDefinitionV0),
+          image: createImagePropControllerDataFromImageData(imageData, imageDefinitionV0),
         },
       },
     ])
@@ -54,18 +45,14 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { images?: ImagesData }>(({ images }, ref) => {
+      forwardRef<HTMLDivElement, { image?: ImageData }>(({ image }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {images?.map(image => {
-              const file = image.props.file
-
-              return typeof file === 'string'
-                ? file
-                : file?.type === 'makeswift-file'
-                ? file.id
-                : file?.url
-            })}
+            {typeof image === 'string'
+              ? image
+              : image?.type === 'makeswift-file'
+              ? image.id
+              : image?.url}
           </div>
         )
       }),
@@ -73,7 +60,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          images: Images(),
+          image: Image(),
         },
       },
     )
@@ -86,30 +73,22 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent(fileId)
+    expect(screen.getByTestId(testId)).toHaveTextContent(imageData)
   })
 
-  test('can render ImagesPropController v1 data', async () => {
+  test('can render ImagePropController v1 data', async () => {
     // Arrange
-    const imagesDefinitionV1: ImagesDescriptor = {
-      type: Types.Images,
+    const imageDefinitionV1: ImageDescriptor = {
+      type: Types.Image,
       version: 1,
       options: {},
     }
     const fileId = 'fileId'
-    const imagesData: ImagesData = [
-      {
-        key: 'key',
-        version: 1,
-        props: {
-          file: {
-            version: 1,
-            type: 'makeswift-file',
-            id: fileId,
-          },
-        },
-      },
-    ]
+    const imageData: ImageData = {
+      version: 1,
+      type: 'makeswift-file',
+      id: fileId,
+    }
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent([
@@ -117,7 +96,7 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          images: createImagesPropControllerDataFromImagesData(imagesData, imagesDefinitionV1),
+          image: createImagePropControllerDataFromImageData(imageData, imageDefinitionV1),
         },
       },
     ])
@@ -125,18 +104,14 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { images?: ImagesData }>(({ images }, ref) => {
+      forwardRef<HTMLDivElement, { image?: ImageData }>(({ image }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {images?.map(image => {
-              const file = image.props.file
-
-              return typeof file === 'string'
-                ? file
-                : file?.type === 'makeswift-file'
-                ? file.id
-                : file?.url
-            })}
+            {typeof image === 'string'
+              ? image
+              : image?.type === 'makeswift-file'
+              ? image.id
+              : image?.url}
           </div>
         )
       }),
@@ -144,7 +119,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          images: Images(),
+          image: Image(),
         },
       },
     )
@@ -160,27 +135,19 @@ describe('Page', () => {
     expect(screen.getByTestId(testId)).toHaveTextContent(fileId)
   })
 
-  test('can render ImagesPropController v2 data', async () => {
+  test('can render ImagePropController v2 data', async () => {
     // Arrange
-    const imagesDefinitionV2: ImagesDescriptor = {
-      type: Types.Images,
+    const imageDefinitionV2: ImageDescriptor = {
+      type: Types.Image,
       version: 2,
       options: {},
     }
     const fileId = 'fileId'
-    const imagesData: ImagesData = [
-      {
-        key: 'key',
-        version: 1,
-        props: {
-          file: {
-            version: 1,
-            type: 'makeswift-file',
-            id: fileId,
-          },
-        },
-      },
-    ]
+    const imageData: ImageData = {
+      version: 1,
+      type: 'makeswift-file',
+      id: fileId,
+    }
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent([
@@ -188,7 +155,7 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          images: createImagesPropControllerDataFromImagesData(imagesData, imagesDefinitionV2),
+          image: createImagePropControllerDataFromImageData(imageData, imageDefinitionV2),
         },
       },
     ])
@@ -196,18 +163,14 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { images?: ImagesData }>(({ images }, ref) => {
+      forwardRef<HTMLDivElement, { image?: ImageData }>(({ image }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {images?.map(image => {
-              const file = image.props.file
-
-              return typeof file === 'string'
-                ? file
-                : file?.type === 'makeswift-file'
-                ? file.id
-                : file?.url
-            })}
+            {typeof image === 'string'
+              ? image
+              : image?.type === 'makeswift-file'
+              ? image.id
+              : image?.url}
           </div>
         )
       }),
@@ -215,7 +178,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          images: Images(),
+          image: Image(),
         },
       },
     )

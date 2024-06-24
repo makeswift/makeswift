@@ -3,32 +3,38 @@
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import { ElementData } from '../../../state/react-page'
+import { ElementData } from '../../../../state/react-page'
 import { randomUUID } from 'crypto'
 import {
-  Date as DatePropController,
-  DateDescriptor,
+  GapY,
+  GapYDescriptor,
   Types,
-  createDatePropControllerDataFromString,
+  createGapYPropControllerDataFromResponsiveGapData,
+  ResponsiveGapData,
 } from '@makeswift/prop-controllers'
-import { Page } from '../page'
+import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../context/react-runtime'
-import { ReactRuntime } from '../../../react'
+import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
 import {
   createMakeswiftPageSnapshot,
   createRootComponent,
-} from '../../../utils/tests/element-data-test-test'
+} from '../../../../utils/tests/element-data-test-test'
 
 describe('Page', () => {
-  test('can render DatePropController v0 data', async () => {
+  test('can render GapYPropController v0 data', async () => {
     // Arrange
-    const dateDefinitionV0: DateDescriptor = {
-      type: Types.Date,
+    const gapYDefinitionV0: GapYDescriptor = {
+      type: Types.GapY,
       options: {},
     }
-    const dateData = new Date().toISOString()
+    const gapData: ResponsiveGapData = [
+      {
+        deviceId: 'desktop',
+        value: { value: 17, unit: 'px' },
+      },
+    ]
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent([
@@ -36,7 +42,7 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          date: createDatePropControllerDataFromString(dateData, dateDefinitionV0),
+          gapY: createGapYPropControllerDataFromResponsiveGapData(gapData, gapYDefinitionV0),
         },
       },
     ])
@@ -44,10 +50,10 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { date?: string }>(({ date }, ref) => {
+      forwardRef<HTMLDivElement, { gapY?: ResponsiveGapData }>(({ gapY }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {date}
+            {gapY?.at(0)?.value.value}
           </div>
         )
       }),
@@ -55,7 +61,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          date: DatePropController(),
+          gapY: GapY(),
         },
       },
     )
@@ -68,17 +74,22 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent(dateData)
+    expect(screen.getByTestId(testId)).toHaveTextContent('17')
   })
 
-  test('can render DatePropController v1 data', async () => {
+  test('can render GapYPropController v1 data', async () => {
     // Arrange
-    const dateDefinitionV1: DateDescriptor = {
-      type: Types.Date,
+    const gapYDefinitionV1: GapYDescriptor = {
+      type: Types.GapY,
       version: 1,
       options: {},
     }
-    const dateData = new Date().toISOString()
+    const gapData: ResponsiveGapData = [
+      {
+        deviceId: 'desktop',
+        value: { value: 17, unit: 'px' },
+      },
+    ]
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent([
@@ -86,7 +97,7 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          date: createDatePropControllerDataFromString(dateData, dateDefinitionV1),
+          gapY: createGapYPropControllerDataFromResponsiveGapData(gapData, gapYDefinitionV1),
         },
       },
     ])
@@ -94,10 +105,10 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { date?: string }>(({ date }, ref) => {
+      forwardRef<HTMLDivElement, { gapY?: ResponsiveGapData }>(({ gapY }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {date}
+            {gapY?.at(0)?.value.value}
           </div>
         )
       }),
@@ -105,7 +116,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          date: DatePropController(),
+          gapY: GapY(),
         },
       },
     )
@@ -118,6 +129,6 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent(dateData)
+    expect(screen.getByTestId(testId)).toHaveTextContent('17')
   })
 })

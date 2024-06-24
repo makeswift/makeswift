@@ -3,85 +3,43 @@
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import { ElementData } from '../../../state/react-page'
+import { ElementData } from '../../../../state/react-page'
 import { randomUUID } from 'crypto'
 import {
-  ElementID,
-  ElementIDDescriptor,
+  SocialLinks,
+  SocialLinksData,
+  SocialLinksDescriptor,
   Types,
-  createElementIDPropControllerDataFromElementID,
+  createSocialLinksPropControllerDataFromSocialLinksData,
 } from '@makeswift/prop-controllers'
-import { Page } from '../page'
+import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../context/react-runtime'
-import { ReactRuntime } from '../../../react'
+import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
 import {
   createMakeswiftPageSnapshot,
   createRootComponent,
-} from '../../../utils/tests/element-data-test-test'
+} from '../../../../utils/tests/element-data-test-test'
 
 describe('Page', () => {
-  test('can render ElementIDPropController v0 data', async () => {
+  test('can render SocialLinksPropController v1 data', async () => {
     // Arrange
-    const elementIDDefinitionV0: ElementIDDescriptor = {
-      type: Types.ElementID,
-      options: {},
-    }
-    const elementID = 'VGFibGU6MTM5NDhlYzMtMjgwNS00Nzk0LTliNzctNDJkN2RhNmQxZWEy'
-    const TestComponentType = 'TestComponent'
-    const testId = 'test-id'
-    const elementData: ElementData = createRootComponent([
-      {
-        key: randomUUID(),
-        type: TestComponentType,
-        props: {
-          elementID: createElementIDPropControllerDataFromElementID(
-            elementID,
-            elementIDDefinitionV0,
-          ),
-        },
-      },
-    ])
-    const snapshot = createMakeswiftPageSnapshot(elementData)
-    const runtime = new ReactRuntime()
-
-    runtime.registerComponent(
-      forwardRef<HTMLDivElement, { elementID?: string }>(({ elementID }, ref) => {
-        return (
-          <div ref={ref} data-testid={testId}>
-            {elementID}
-          </div>
-        )
-      }),
-      {
-        type: TestComponentType,
-        label: 'TestComponent',
-        props: {
-          elementID: ElementID(),
-        },
-      },
-    )
-
-    await act(async () =>
-      render(
-        <ReactRuntimeProvider runtime={runtime}>
-          <Page snapshot={snapshot} />
-        </ReactRuntimeProvider>,
-      ),
-    )
-
-    expect(screen.getByTestId(testId)).toHaveTextContent(elementID)
-  })
-
-  test('can render ElementIDPropController v1 data', async () => {
-    // Arrange
-    const elementIDDefinitionV1: ElementIDDescriptor = {
-      type: Types.ElementID,
+    const socialLinksDefinitionV1: SocialLinksDescriptor = {
+      type: Types.SocialLinks,
       version: 1,
       options: {},
     }
-    const elementID = 'VGFibGU6MTM5NDhlYzMtMjgwNS00Nzk0LTliNzctNDJkN2RhNmQxZWEy'
+    const url = 'https://facebook.com/mark'
+    const links: SocialLinksData = {
+      links: [
+        {
+          id: 'id',
+          payload: { url, type: 'facebook' },
+        },
+      ],
+      openInNewTab: false,
+    }
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent([
@@ -89,9 +47,9 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          elementID: createElementIDPropControllerDataFromElementID(
-            elementID,
-            elementIDDefinitionV1,
+          socialLinks: createSocialLinksPropControllerDataFromSocialLinksData(
+            links,
+            socialLinksDefinitionV1,
           ),
         },
       },
@@ -100,10 +58,10 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { elementID?: string }>(({ elementID }, ref) => {
+      forwardRef<HTMLDivElement, { socialLinks?: SocialLinksData }>(({ socialLinks }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {elementID}
+            {socialLinks?.links.at(0)?.payload.url}
           </div>
         )
       }),
@@ -111,7 +69,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          elementID: ElementID(),
+          socialLinks: SocialLinks(),
         },
       },
     )
@@ -124,6 +82,68 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent(elementID)
+    expect(screen.getByTestId(testId)).toHaveTextContent(url)
+  })
+
+  test('can render SocialLinksPropController v2 data', async () => {
+    // Arrange
+    const socialLinksDefinitionV2: SocialLinksDescriptor = {
+      type: Types.SocialLinks,
+      version: 2,
+      options: {},
+    }
+    const url = 'https://facebook.com/mark'
+    const links: SocialLinksData = {
+      links: [
+        {
+          id: 'id',
+          payload: { url, type: 'facebook' },
+        },
+      ],
+      openInNewTab: false,
+    }
+    const TestComponentType = 'TestComponent'
+    const testId = 'test-id'
+    const elementData: ElementData = createRootComponent([
+      {
+        key: randomUUID(),
+        type: TestComponentType,
+        props: {
+          socialLinks: createSocialLinksPropControllerDataFromSocialLinksData(
+            links,
+            socialLinksDefinitionV2,
+          ),
+        },
+      },
+    ])
+    const snapshot = createMakeswiftPageSnapshot(elementData)
+    const runtime = new ReactRuntime()
+
+    runtime.registerComponent(
+      forwardRef<HTMLDivElement, { socialLinks?: SocialLinksData }>(({ socialLinks }, ref) => {
+        return (
+          <div ref={ref} data-testid={testId}>
+            {socialLinks?.links.at(0)?.payload.url}
+          </div>
+        )
+      }),
+      {
+        type: TestComponentType,
+        label: 'TestComponent',
+        props: {
+          socialLinks: SocialLinks(),
+        },
+      },
+    )
+
+    await act(async () =>
+      render(
+        <ReactRuntimeProvider runtime={runtime}>
+          <Page snapshot={snapshot} />
+        </ReactRuntimeProvider>,
+      ),
+    )
+
+    expect(screen.getByTestId(testId)).toHaveTextContent(url)
   })
 })

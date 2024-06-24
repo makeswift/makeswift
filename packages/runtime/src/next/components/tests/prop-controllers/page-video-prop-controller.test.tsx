@@ -3,32 +3,35 @@
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import { ElementData } from '../../../state/react-page'
+import { ElementData } from '../../../../state/react-page'
 import { randomUUID } from 'crypto'
 import {
-  Table,
-  TableDescriptor,
+  Video,
+  VideoDescriptor,
   Types,
-  createTablePropControllerDataFromTableId,
+  createVideoPropControllerDataFromVideoData,
+  VideoData,
 } from '@makeswift/prop-controllers'
-import { Page } from '../page'
+import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../context/react-runtime'
-import { ReactRuntime } from '../../../react'
+import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
 import {
   createMakeswiftPageSnapshot,
   createRootComponent,
-} from '../../../utils/tests/element-data-test-test'
+} from '../../../../utils/tests/element-data-test-test'
 
 describe('Page', () => {
-  test('can render TablePropController v0 data', async () => {
+  test('can render VideoPropController v0 data', async () => {
     // Arrange
-    const tableDefinitionV0: TableDescriptor = {
-      type: Types.Table,
+    const videoDefinitionV0: VideoDescriptor = {
+      type: Types.Video,
       options: {},
     }
-    const tableId = 'VGFibGU6MTM5NDhlYzMtMjgwNS00Nzk0LTliNzctNDJkN2RhNmQxZWEy'
+    const videoData: VideoData = {
+      url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    }
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent([
@@ -36,7 +39,7 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          table: createTablePropControllerDataFromTableId(tableId, tableDefinitionV0),
+          video: createVideoPropControllerDataFromVideoData(videoData, videoDefinitionV0),
         },
       },
     ])
@@ -44,10 +47,10 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { table?: string }>(({ table }, ref) => {
+      forwardRef<HTMLDivElement, { video?: VideoData }>(({ video }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {table}
+            {video?.url}
           </div>
         )
       }),
@@ -55,7 +58,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          table: Table(),
+          video: Video(),
         },
       },
     )
@@ -68,17 +71,21 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent(tableId)
+    expect(screen.getByTestId(testId)).toHaveTextContent(
+      'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    )
   })
 
-  test('can render TablePropController v1 data', async () => {
+  test('can render VideoPropController v1 data', async () => {
     // Arrange
-    const tableDefinitionV1: TableDescriptor = {
-      type: Types.Table,
+    const videoDefinitionV1: VideoDescriptor = {
+      type: Types.Video,
       version: 1,
       options: {},
     }
-    const tableId = 'VGFibGU6MTM5NDhlYzMtMjgwNS00Nzk0LTliNzctNDJkN2RhNmQxZWEy'
+    const videoData: VideoData = {
+      url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    }
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
     const elementData: ElementData = createRootComponent([
@@ -86,7 +93,7 @@ describe('Page', () => {
         key: randomUUID(),
         type: TestComponentType,
         props: {
-          table: createTablePropControllerDataFromTableId(tableId, tableDefinitionV1),
+          video: createVideoPropControllerDataFromVideoData(videoData, videoDefinitionV1),
         },
       },
     ])
@@ -94,10 +101,10 @@ describe('Page', () => {
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
-      forwardRef<HTMLDivElement, { table?: string }>(({ table }, ref) => {
+      forwardRef<HTMLDivElement, { video?: VideoData }>(({ video }, ref) => {
         return (
           <div ref={ref} data-testid={testId}>
-            {table}
+            {video?.url}
           </div>
         )
       }),
@@ -105,7 +112,7 @@ describe('Page', () => {
         type: TestComponentType,
         label: 'TestComponent',
         props: {
-          table: Table(),
+          video: Video(),
         },
       },
     )
@@ -118,6 +125,8 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveTextContent(tableId)
+    expect(screen.getByTestId(testId)).toHaveTextContent(
+      'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    )
   })
 })
