@@ -56,6 +56,7 @@ export function withBuilder(editor: Editor) {
   }
 
   editor.focusAndSelectAll = function () {
+    console.log('-- runtime: slate focusAndSelectAll')
     ReactEditor.focus(editor)
     Transforms.select(editor, {
       anchor: Editor.start(editor, []),

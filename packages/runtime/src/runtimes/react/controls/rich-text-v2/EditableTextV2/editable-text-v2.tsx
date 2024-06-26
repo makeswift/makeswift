@@ -102,7 +102,9 @@ export function EditableTextV2({ text, definition, control }: Props) {
      * - in the case of the overlay we switch to BUILD mode
      * - in the case of the sidebar we preserve the selection
      */
+    console.log('-- runtime: slate useEffect editMode', editMode, { isPreservingFocus })
     if (editMode !== BuilderEditMode.CONTENT) {
+      console.log('-- runtime: slate useEffect DESELECTING', { isPreservingFocus })
       isPreservingFocus.current = false
       ReactEditor.deselect(editor)
     }
@@ -154,6 +156,7 @@ export function EditableTextV2({ text, definition, control }: Props) {
   // ------ Event handlers ------
 
   const handleFocus = useCallback(() => {
+    console.log('-- runtime: slate handleFocus')
     isPreservingFocus.current = true
     control?.select()
   }, [control])
@@ -189,7 +192,9 @@ export function EditableTextV2({ text, definition, control }: Props) {
 
   const handleClick = useCallback(
     (e: MouseEvent) => {
+      console.log('-- runtime: slate handleClick', e)
       if (editMode === BuilderEditMode.CONTENT) {
+        console.log('-- runtime: slate handleClick STOPPING PROPAGATION')
         e.stopPropagation()
         e.preventDefault()
       }
@@ -198,6 +203,7 @@ export function EditableTextV2({ text, definition, control }: Props) {
   )
 
   const handleBlur = useCallback((e: FocusEvent) => {
+    console.log('-- runtime: slate handleBlur', e, { isPreservingFocus })
     // outside of iframe (overlay, sidebar, etc)
     if (e.relatedTarget == null) return
     // another text
