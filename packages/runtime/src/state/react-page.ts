@@ -88,6 +88,13 @@ export function getComponentProps(state: State, elementKey: string): ComponentPr
   return ComponentProps.getComponentProps(getComponentPropsStateSlice(state), elementKey)
 }
 
+export function getResolvedComponentProps(
+  state: State,
+  elementKey: string,
+): Map<string, Documents.Data> | null {
+  return ComponentProps.getResolvedComponentProps(getComponentPropsStateSlice(state), elementKey)
+}
+
 function getPropControllersStateSlice(state: State): PropControllers.State {
   return state.propControllers
 }
@@ -508,38 +515,23 @@ export function resolveComponentProp(
 ): ThunkAction<Promise<void>, State, unknown, Action> {
   return async (dispatch, getState) => {
     const state = getComponentPropsStateSlice(getState())
-
-    if (ComponentProps.hasComponentProp(state, elementKey, propName)) {
-      return
-      // return ComponentProps.getComponentProp(state, elementKey, propName)
-    }
-
-    // return null
-    // let resource: APIResource | null
-
-    // switch (resourceType) {
-    //   case APIResourceType.Swatch:
-    //     resource = await fetchJson<Swatch>(`/api/makeswift/swatches/${resourceId}`)
-    //     break
-
-    //   case APIResourceType.File:
-    //     resource = await fetchJson<File>(`/api/makeswift/files/${resourceId}`)
-    //     break
-
-    //   case APIResourceType.Typography:
-    //     resource = await fetchJson<Typography>(`/api/makeswift/typographies/${resourceId}`)
-    //     break
-
-    //   default:
-    //     resource = null
+    // if (
+    //   !ComponentProps.hasStaleComponentPropResolvedValue(state, elementKey, propName, elementData)
+    // ) {
+    //   // console.log(`Cache hit for ${elementKey}:${propName}`)
+    //   return
     // }
 
     const traits = controlTraitsRegistry.get(definition.type)
     if (traits) {
       const controlValue = traits.fromData(elementData, definition as any)
-      const value = await traits.resolveValue(controlValue, definition as any, resourceResolver)
-
-      dispatch(setComponentProp(elementKey, propName, value))
+      const resolvedValue = await traits.resolveValue(
+        controlValue,
+        definition as any,
+        resourceResolver,
+      )
+      // console.log(`Cache miss for ${elementKey}:${propName}`)
+      dispatch(setComponentProp(elementKey, propName, elementData, resolvedValue))
     }
     // return resource as Extract<APIResource, { __typename: T }> | null
   }

@@ -227,7 +227,7 @@ type MessageBuilderPropControllerAction<T = PropControllerMessage> = {
 
 type SetComponentPropAction = {
   type: typeof ActionTypes.SET_COMPONENT_PROP
-  payload: { elementKey: string; propName: string; propValue: Data }
+  payload: { elementKey: string; propName: string; propValue: Data; resolvedValue: Data }
 }
 
 type ChangeAPIResourceAction = {
@@ -601,8 +601,12 @@ export function setComponentProp(
   elementKey: string,
   propName: string,
   propValue: Data,
+  resolvedValue: Data,
 ): SetComponentPropAction {
-  return { type: ActionTypes.SET_COMPONENT_PROP, payload: { elementKey, propName, propValue } }
+  return {
+    type: ActionTypes.SET_COMPONENT_PROP,
+    payload: { elementKey, propName, propValue, resolvedValue },
+  }
 }
 
 export function changeApiResource(resource: APIResource): ChangeAPIResourceAction {

@@ -197,16 +197,16 @@ export function ControlValue<T extends ControlDefinition>({
         </RenderHook>
       )
 
-    // case Color.controlType:
-    //   return (
-    //     <RenderHook
-    //       key={definition.type}
-    //       hook={useColorValue}
-    //       parameters={[data as ControlDataType<typeof Color>, definition]}
-    //     >
-    //       {value => children(value as ControlDefinitionValue<T>)}
-    //     </RenderHook>
-    //   )
+    case Color.controlType:
+      return (
+        <RenderHook
+          key={definition.type}
+          hook={useColorValue}
+          parameters={[data as ControlDataType<typeof Color>, definition]}
+        >
+          {value => children(value as ControlDefinitionValue<T>)}
+        </RenderHook>
+      )
 
     case IconRadioGroupControlType:
       return (

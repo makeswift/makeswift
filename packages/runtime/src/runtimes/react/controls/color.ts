@@ -11,7 +11,7 @@ export function useColorValue(
 ): string | undefined {
   const swatchId = data?.swatchId ?? null
   const swatch = useSwatch(swatchId)
-  console.log('+++++++ useColorValue', { swatchId, swatch, data, definition })
+  // console.log('+++++++ useColorValue', { swatchId, swatch, data, definition })
   const alpha = data?.alpha ?? 1
 
   if (swatch == null) {

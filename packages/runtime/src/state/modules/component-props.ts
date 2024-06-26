@@ -2,9 +2,10 @@ import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk'
 
 import { type Data } from './read-only-documents'
 import { Action, ActionTypes } from '../actions'
-import { ControlDefinition } from '../../controls'
+import deepEqual from '../../utils/deepEqual'
 
-export type Props = Map<string, Data>
+export type PropContents = { propData: Data; resolvedValue: Data }
+export type Props = Map<string, PropContents>
 export type State = Map<string, Props>
 
 export function getInitialState(): State {
@@ -15,12 +16,48 @@ export function getComponentProps(state: State, elementKey: string): Props | nul
   return state.get(elementKey) ?? null
 }
 
-export function getComponentProp(state: State, elementKey: string, propName: string): Data | null {
-  return getComponentProps(state, elementKey)?.get(propName) ?? null
+export function getResolvedComponentProps(
+  state: State,
+  elementKey: string,
+): Map<string, Data> | null {
+  const props = getComponentProps(state, elementKey)
+  if (!props) return null
+  const resolvedProps = new Map<string, Data>()
+  for (const [propName, prop] of props) {
+    resolvedProps.set(propName, prop.resolvedValue)
+  }
+  return resolvedProps
+}
+
+export function getResolvedComponentProp(
+  state: State,
+  elementKey: string,
+  propName: string,
+): Data | null {
+  return getComponentProps(state, elementKey)?.get(propName)?.resolvedValue ?? null
+}
+
+export function getRawComponentProp(
+  state: State,
+  elementKey: string,
+  propName: string,
+): Data | null {
+  return getComponentProps(state, elementKey)?.get(propName)?.propData ?? null
 }
 
 export function hasComponentProp(state: State, elementKey: string, propName: string): Boolean {
   return state.get(elementKey)?.has(propName) ?? false
+}
+
+export function hasStaleComponentPropResolvedValue(
+  state: State,
+  elementKey: string,
+  propName: string,
+  propValue: Data,
+): Boolean {
+  if (!hasComponentProp(state, elementKey, propName)) return true
+  const prop = getRawComponentProp(state, elementKey, propName)
+  return !deepEqual(prop, propValue)
 }
 
 export function reducer(state: State = getInitialState(), action: Action): State {
@@ -29,10 +66,10 @@ export function reducer(state: State = getInitialState(), action: Action): State
       const { payload } = action
       return new Map(state).set(
         payload.elementKey,
-        new Map(new Map(state.get(payload.elementKey) ?? [])).set(
-          payload.propName,
-          payload.propValue,
-        ),
+        new Map(new Map(state.get(payload.elementKey) ?? [])).set(payload.propName, {
+          propData: payload.propValue,
+          resolvedValue: payload.resolvedValue,
+        }),
       )
     }
 

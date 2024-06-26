@@ -117,17 +117,23 @@ export const Color = controlTraitsRegistry.add(
       data?.swatchId == null ? [] : [data.swatchId]
 
     ctor.resolveValue = async (
-      { swatchId, alpha }: ValueType<ControlDefinition>,
+      value: ValueType<ControlDefinition>,
       definition: ControlDefinition,
       resolver: ResourceResolver,
     ): Promise<Data> => {
+      const { defaultValue } = definition.config
+      const parsedDefaulValue =
+        defaultValue === undefined
+          ? undefined
+          : safeParseColor(defaultValue).rgb().string()
+
+      if (value == null) return parsedDefaulValue
+
+      const { swatchId, alpha } = value
       const swatch = await resolver.fetchSwatch(swatchId)
 
       if (swatch == null) {
-        const { defaultValue } = definition.config
-        return defaultValue === undefined
-          ? undefined
-          : safeParseColor(defaultValue).rgb().string()
+        return parsedDefaulValue
       }
 
       return parseColor({

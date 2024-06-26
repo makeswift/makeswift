@@ -168,9 +168,9 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
     return ReactPage.getPropControllers(state, documentKey, element.key)
   })
 
-  const componentProps = useSelector(state => ReactPage.getComponentProps(state, element.key))
-  const count = useRef(0)
-  console.log('+++++++++ componentProps:', componentProps, 'render count:', count.current++)
+  const componentProps = useSelector(state =>
+    ReactPage.getResolvedComponentProps(state, element.key),
+  )
 
   useEffect(() => {
     Object.entries(propDefsRef.current).forEach(([propName, descriptor]) => {
@@ -178,7 +178,7 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
         ReactPage.resolveComponentProp(element.key, propName, props[propName], descriptor, client),
       )
     })
-  }, [])
+  }, [element, client])
 
   return Object.entries(propDefsRef.current).reduceRight(
     (renderFn, [propName, descriptor]) =>
@@ -197,7 +197,7 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
           case LinkControlType:
           case StyleV2ControlType:
           case TypographyControlType:
-          case Checkbox.controlType:
+            // case Checkbox.controlType:
             return (
               <ControlValue
                 definition={descriptor}
@@ -680,7 +680,7 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
     // renderComponent,
     (props: any) => {
       const newProps = Object.fromEntries(componentProps?.entries() ?? [])
-      console.log('+++++++++ renderComponent:', { props, newProps })
+      // console.log('+++++++++ renderComponent:', { props, newProps })
       return renderComponent({ ...props, ...newProps })
     },
   )({})
