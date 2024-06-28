@@ -27,6 +27,7 @@ export function createRootComponent(elements: ElementData[], rootId?: string) {
 export function createMakeswiftPageSnapshot(
   elementData: ElementData,
   partialSnapshot: Partial<MakeswiftPageSnapshot> = {},
+  cacheData: MakeswiftPageSnapshot['cacheData'] = {},
 ): MakeswiftPageSnapshot {
   return {
     document: {
@@ -42,7 +43,7 @@ export function createMakeswiftPageSnapshot(
       ...partialSnapshot.document,
     },
     apiOrigin: 'https://test-api-origin.com',
-    cacheData: {},
+    cacheData,
     preview: false,
     localizedResourcesMap: {},
     locale: null,

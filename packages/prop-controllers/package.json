@@ -10,6 +10,7 @@
   "types": "./dist/types/index.d.ts",
   "scripts": {
     "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'tsup src/index.ts --watch'",
+    "clean": "rm -rf dist",
     "build": "tsc && tsup src/index.ts",
     "prepublishOnly": "turbo run build",
     "test": "jest"
