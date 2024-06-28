@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Page can render CheckboxControl v0 data 1`] = `
+exports[`Page Checkbox control data v0 when value is false: resolvedValue 1`] = `false`;
+
+exports[`Page Checkbox control data v0 when value is false: snapshot 1`] = `
 {
   "apiOrigin": "https://test-api-origin.com",
   "cacheData": {},
@@ -26,7 +28,7 @@ exports[`Page can render CheckboxControl v0 data 1`] = `
             {
               "key": "11111111-1111-1111-1111-111111111111",
               "props": {
-                "checkbox": true,
+                "propKey": false,
               },
               "type": "TestComponent",
             },
@@ -52,7 +54,9 @@ exports[`Page can render CheckboxControl v0 data 1`] = `
 }
 `;
 
-exports[`Page can render CheckboxControl v0 data 2`] = `
+exports[`Page Checkbox control data v0 when value is true: resolvedValue 1`] = `true`;
+
+exports[`Page Checkbox control data v0 when value is true: snapshot 1`] = `
 {
   "apiOrigin": "https://test-api-origin.com",
   "cacheData": {},
@@ -78,7 +82,7 @@ exports[`Page can render CheckboxControl v0 data 2`] = `
             {
               "key": "11111111-1111-1111-1111-111111111111",
               "props": {
-                "checkbox": false,
+                "propKey": true,
               },
               "type": "TestComponent",
             },
@@ -104,7 +108,9 @@ exports[`Page can render CheckboxControl v0 data 2`] = `
 }
 `;
 
-exports[`Page can render CheckboxControl v1 data 1`] = `
+exports[`Page Checkbox control data v1 when value is false: resolvedValue 1`] = `false`;
+
+exports[`Page Checkbox control data v1 when value is false: snapshot 1`] = `
 {
   "apiOrigin": "https://test-api-origin.com",
   "cacheData": {},
@@ -130,9 +136,9 @@ exports[`Page can render CheckboxControl v1 data 1`] = `
             {
               "key": "11111111-1111-1111-1111-111111111111",
               "props": {
-                "checkbox": {
+                "propKey": {
                   "@@makeswift/type": "checkbox::v1",
-                  "value": true,
+                  "value": false,
                 },
               },
               "type": "TestComponent",
@@ -159,7 +165,9 @@ exports[`Page can render CheckboxControl v1 data 1`] = `
 }
 `;
 
-exports[`Page can render CheckboxControl v1 data 2`] = `
+exports[`Page Checkbox control data v1 when value is true: resolvedValue 1`] = `true`;
+
+exports[`Page Checkbox control data v1 when value is true: snapshot 1`] = `
 {
   "apiOrigin": "https://test-api-origin.com",
   "cacheData": {},
@@ -185,9 +193,9 @@ exports[`Page can render CheckboxControl v1 data 2`] = `
             {
               "key": "11111111-1111-1111-1111-111111111111",
               "props": {
-                "checkbox": {
+                "propKey": {
                   "@@makeswift/type": "checkbox::v1",
-                  "value": false,
+                  "value": true,
                 },
               },
               "type": "TestComponent",

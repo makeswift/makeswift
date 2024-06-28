@@ -1,7 +1,8 @@
 import { Makeswift } from '../client'
 import { http, HttpResponse } from 'msw'
-import { setupServer } from 'msw/node'
 import { randomUUID } from 'crypto'
+
+import { server } from '../../mocks/server'
 
 function createRandomPageV4() {
   const id = randomUUID()
@@ -28,28 +29,13 @@ const TEST_API_KEY = 'xxx'
 const apiOrigin = 'https://api.fakeswift.com'
 const baseUrl = `${apiOrigin}/v4/pages`
 
-const handlers = [
-  http.get(baseUrl, () => HttpResponse.json({ data: [], hasMore: false }), { once: true }),
-]
-
-const server = setupServer(...handlers)
-
-beforeAll(() => {
-  server.resetHandlers()
-  server.listen()
-})
-
-// Reset any request handlers that we may add during the tests,
-// so they don't affect other tests.
-afterEach(() => server.resetHandlers())
-
-// Clean up after the tests are finished.
-afterAll(() => server.close())
-
 describe('getPages v4', () => {
   test('empty', async () => {
     // Arrange
     const client = new Makeswift(TEST_API_KEY, { apiOrigin })
+    server.use(
+      http.get(baseUrl, () => HttpResponse.json({ data: [], hasMore: false }), { once: true }),
+    )
 
     // Act
     const pageResults = await client.getPages()
