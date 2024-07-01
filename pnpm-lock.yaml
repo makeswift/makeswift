@@ -486,6 +486,9 @@ importers:
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
+      undici:
+        specifier: ^6.19.2
+        version: 6.19.2
 
   packages/tsconfig: {}
 
@@ -12506,6 +12509,11 @@ packages:
   /undici@4.16.0:
     resolution: {integrity: sha512-tkZSECUYi+/T1i4u+4+lwZmQgLXd4BLGlrc7KZPcLIW7Jpq99+Xpc30ONv7nS6F5UNOxp/HBZSSL9MafUrvJbw==}
     engines: {node: '>=12.18'}
+    dev: true
+
+  /undici@6.19.2:
+    resolution: {integrity: sha512-JfjKqIauur3Q6biAtHJ564e3bWa8VvT+7cSiOJHFbX4Erv6CLGDpg8z+Fmg/1OI/47RA+GI2QZaF48SSaLvyBA==}
+    engines: {node: '>=18.17'}
     dev: true
 
   /uniq@1.0.1:

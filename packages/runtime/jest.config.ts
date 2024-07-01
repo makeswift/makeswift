@@ -7,8 +7,11 @@ const config: Config = {
     // "**/__tests__/**/*.[jt]s?(x)",
     '**/?(*.)+(spec|test).[tj]s?(x)',
   ],
+  setupFiles: ['./jest.polyfills.js'],
   setupFilesAfterEnv: ['<rootDir>/src/jest-setup.ts'],
+  resolver: `${__dirname}/jest.resolver.js`,
   transform: {
+    '^.+\\.(t|j)s?$': '@swc/jest',
     '^.+\\.(t|j)sx?$': [
       '@swc/jest',
       {
