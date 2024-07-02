@@ -16,7 +16,6 @@ describe('Page', () => {
     },
     {
       version: 1,
-      toData: (value: ColorData) => Color.toData(value, Color()),
     },
   ])('Color control data v$version', ({ toData }) => {
     const swatchId = '[swatch-test-id]'
@@ -53,7 +52,7 @@ describe('Page', () => {
             ),
           )
 
-          await testPageControlPropRendering(Color, Color({ defaultValue }), {
+          await testPageControlPropRendering(Color({ defaultValue }), {
             toData,
             value,
             expectedRenders: swatch == null ? 1 : 2,
@@ -61,7 +60,7 @@ describe('Page', () => {
         })
 
         test(`reading swatch from cache`, async () => {
-          await testPageControlPropRendering(Color, Color({ defaultValue }), {
+          await testPageControlPropRendering(Color({ defaultValue }), {
             toData,
             value,
             cacheData: {

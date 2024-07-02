@@ -1,8 +1,7 @@
+import { type Data, type ElementData } from '@makeswift/controls'
+export { type Data, type ElementData }
+
 import { Action, ActionTypes } from '../actions'
-
-export type Data = undefined | null | boolean | number | string | Data[] | { [key: string]: Data }
-
-export type ElementData = { type: string; key: string; props: Record<string, Data> }
 
 export type ElementReference = { type: 'reference'; key: string; value: string }
 

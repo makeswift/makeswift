@@ -1,5 +1,4 @@
 export * from './control'
-export * from './list'
 export * from './select'
 export * from './shape'
 export * from './slot'

@@ -1,5 +1,5 @@
 import {
-  Color,
+  ColorDefinition,
   TextInputControlData,
   TextInputControlDefinition,
   TextInputControlType,
@@ -8,7 +8,7 @@ import {
   TextAreaControlType,
   NumberControlData,
   NumberControlDefinition,
-  Checkbox,
+  CheckboxDefinition,
   ComboboxControlData,
   ComboboxControlDefinition,
   IconRadioGroupControlData,
@@ -19,21 +19,14 @@ import {
   LinkControlData,
   LinkControlDefinition,
   LinkControlType,
+  ListDefinition,
   copyLinkData,
-  type ControlDefinitionType,
-  controlTraitsRegistry,
+  ControlDefinition as GenericControlDefinition,
+  type CopyContext,
+  type DataType,
 } from '@makeswift/controls'
 
 import { copyImageData } from './image'
-import {
-  ListControlData,
-  ListControlDefinition,
-  copyListData,
-  ListControlType,
-  getListTranslatableData,
-  mergeListTranslatedData,
-  ListControlTranslationDto,
-} from './list'
 import { SelectControlData, SelectControlDefinition } from './select'
 import {
   ShapeControlData,
@@ -61,7 +54,7 @@ import {
   mergeGridPropControllerTranslatedData,
 } from '@makeswift/prop-controllers'
 import { copy as propControllerCopy } from '../prop-controllers/copy'
-import { CopyContext, Data, MergeContext, MergeTranslatableDataContext } from '../state/react-page'
+import { Data, MergeContext, MergeTranslatableDataContext } from '../state/react-page'
 import {
   RichTextControlData,
   RichTextControlDefinition,
@@ -90,17 +83,17 @@ import {
 import { IndexSignatureHack } from '../utils/index-signature-hack'
 
 export type ControlDefinition =
-  | ControlDefinitionType<typeof Checkbox>
+  | typeof CheckboxDefinition
   | NumberControlDefinition
   | TextInputControlDefinition
   | TextAreaControlDefinition
   | SelectControlDefinition
-  | ControlDefinitionType<typeof Color>
+  | typeof ColorDefinition
   | IconRadioGroupControlDefinition
   | ImageControlDefinition
   | ComboboxControlDefinition
   | ShapeControlDefinition
-  | ListControlDefinition<any>
+  | typeof ListDefinition
   | LinkControlDefinition
   | SlotControlDefinition
   | ShapeControlDefinition
@@ -126,26 +119,26 @@ export type ControlDefinitionData<T extends ControlDefinition> = T extends Numbe
               ? ComboboxControlData<T>
               : T extends ShapeControlDefinition
                 ? ShapeControlData<T>
-                : T extends ListControlDefinition
-                  ? ListControlData<T>
-                  : T extends LinkControlDefinition
-                    ? LinkControlData
-                    : T extends RichTextControlDefinition
-                      ? IndexSignatureHack<RichTextControlData>
-                      : T extends RichTextV2ControlDefinition
-                        ? RichTextV2ControlData
-                        : T extends StyleControlDefinition
-                          ? StyleControlData
-                          : T extends StyleV2ControlDefinition
-                            ? StyleV2ControlData
-                            : T extends TypographyControlDefinition
-                              ? TypographyControlData
+                : T extends LinkControlDefinition
+                  ? LinkControlData
+                  : T extends RichTextControlDefinition
+                    ? IndexSignatureHack<RichTextControlData>
+                    : T extends RichTextV2ControlDefinition
+                      ? RichTextV2ControlData
+                      : T extends StyleControlDefinition
+                        ? StyleControlData
+                        : T extends StyleV2ControlDefinition
+                          ? StyleV2ControlData
+                          : T extends TypographyControlDefinition
+                            ? TypographyControlData
+                            : T extends GenericControlDefinition
+                              ? DataType<T>
                               : never
 
 export function copy(definition: Descriptor | ControlDefinition, value: any, context: CopyContext) {
-  const traits = controlTraitsRegistry.get(definition.type)
-  if (traits) {
-    return traits.copyData(value, context)
+  const copyData = (definition as any as GenericControlDefinition).copyData
+  if (copyData) {
+    return copyData.bind(definition)(value, context)
   }
 
   switch (definition.type) {
@@ -176,8 +169,6 @@ export function copy(definition: Descriptor | ControlDefinition, value: any, con
       return copyLinkData(value, context)
     case ShapeControlType:
       return copyShapeData(definition, value, context)
-    case ListControlType:
-      return copyListData(definition, value, context)
     case StyleControlType:
       return copyStyleData(value, context)
     case SlotControlType:

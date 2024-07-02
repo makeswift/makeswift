@@ -10,11 +10,10 @@ describe('Page', () => {
     },
     {
       version: 1,
-      toData: (value: boolean | undefined) => Checkbox.toData(value, Checkbox()),
     },
   ])('Checkbox control data v$version', ({ toData }) => {
-    test.each([true, false])(`when value is %s`, async value => {
-      await testPageControlPropRendering(Checkbox, Checkbox(), { toData, value })
+    test.each([true, false, undefined])(`when value is %s`, async value => {
+      await testPageControlPropRendering(Checkbox(), { toData, value })
     })
   })
 })

@@ -1,0 +1,151 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Page List of checkboxes when value is [true, false, undefined]: resolvedValue 1`] = `
+[
+  true,
+  false,
+  null,
+]
+`;
+
+exports[`Page List of checkboxes when value is [true, false, undefined]: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": [
+                  {
+                    "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                    "type": "makeswift::controls::checkbox",
+                    "value": {
+                      "@@makeswift/type": "checkbox::v1",
+                      "value": true,
+                    },
+                  },
+                  {
+                    "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                    "type": "makeswift::controls::checkbox",
+                    "value": {
+                      "@@makeswift/type": "checkbox::v1",
+                      "value": false,
+                    },
+                  },
+                  {
+                    "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                    "type": "makeswift::controls::checkbox",
+                    "value": undefined,
+                  },
+                ],
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page List of colors when value is {"value":[{"swatchId":"[swatch-test-id]","alpha":0.5}],"swatch":{"__typename":"Swatch","hue":238,"saturation":87,"lightness":49},"defaultValue":"rgb(255,0,0)"}: resolvedValue 1`] = `
+[
+  "rgba(16, 24, 234, 0.5)",
+]
+`;
+
+exports[`Page List of colors when value is {"value":[{"swatchId":"[swatch-test-id]","alpha":0.5}],"swatch":{"__typename":"Swatch","hue":238,"saturation":87,"lightness":49},"defaultValue":"rgb(255,0,0)"}: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": [
+                  {
+                    "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                    "type": "makeswift::controls::color",
+                    "value": {
+                      "@@makeswift/type": "color::v1",
+                      "alpha": 0.5,
+                      "swatchId": "[swatch-test-id]",
+                    },
+                  },
+                ],
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;

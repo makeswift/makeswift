@@ -4,8 +4,8 @@ import {
   NumberControlType,
   TextInputControlType,
   TextAreaControlType,
-  ResourceResolver,
-  ValueSubscription,
+  type ResourceResolver,
+  type ValueSubscription,
 } from '@makeswift/controls'
 
 import * as ReactPage from '../../state/react-page'
@@ -30,12 +30,10 @@ import {
   useResponsiveWidth,
 } from '../../components/utils/responsive-style'
 import {
-  Checkbox,
   // Color,
   ComboboxControlType,
   ImageControlType,
   LinkControlType,
-  ListControlType,
   SelectControlType,
   ShapeControlType,
   SlotControl,
@@ -166,8 +164,8 @@ const useResolvedProps = (
 
   return useSyncExternalStore(
     propsSubscription.subscribe,
-    propsSubscription.readValue,
-    propsSubscription.readValue,
+    propsSubscription.readStableValue,
+    propsSubscription.readStableValue,
   )
 }
 
@@ -181,7 +179,7 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
   const props = element.props as Record<string, any>
   const documentKey = useDocumentKey()
 
-  const propControllers = useSelector(state => {
+  const controls = useSelector(state => {
     if (documentKey == null) return null
 
     return ReactPage.getPropControllers(state, documentKey, element.key)
@@ -205,7 +203,7 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
           case ImageControlType:
           case ComboboxControlType:
           case ShapeControlType:
-          case ListControlType:
+          //          case ListControlType:
           case LinkControlType:
           case StyleV2ControlType:
           case TypographyControlType:
@@ -214,14 +212,14 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
               <ControlValue
                 definition={descriptor}
                 data={props[propName]}
-                control={propControllers?.[propName]}
+                control={controls?.[propName]}
               >
                 {value => renderFn({ ...propsValue, [propName]: value })}
               </ControlValue>
             )
 
           case StyleControlType: {
-            const control = (propControllers?.[propName] ?? null) as StyleControl | null
+            const control = (controls?.[propName] ?? null) as StyleControl | null
 
             return (
               <RenderHook
@@ -235,7 +233,7 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
           }
 
           case RichTextControlType: {
-            const control = (propControllers?.[propName] ?? null) as RichTextControl | null
+            const control = (controls?.[propName] ?? null) as RichTextControl | null
 
             return (
               <RenderHook
@@ -249,7 +247,7 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
           }
 
           case RichTextV2ControlType: {
-            const control = (propControllers?.[propName] ?? null) as RichTextV2Control | null
+            const control = (controls?.[propName] ?? null) as RichTextV2Control | null
 
             return (
               <RenderHook
@@ -263,7 +261,7 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
           }
 
           case SlotControlType: {
-            const control = (propControllers?.[propName] ?? null) as SlotControl | null
+            const control = (controls?.[propName] ?? null) as SlotControl | null
 
             return (
               <RenderHook

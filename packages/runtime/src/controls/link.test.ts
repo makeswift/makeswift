@@ -1,39 +1,26 @@
-import { LinkControlData, copyLinkData } from '@makeswift/controls'
-import { ReplacementContext } from '../state/react-page'
+import { LinkControlData, copyLinkData, createReplacementContext } from '@makeswift/controls'
 
 describe('link', () => {
   test('page id is replaced by one in replacement context', () => {
     // Arrange
+    const pageId = 'UGFnZTpmNTdmMjQ2MS0wMGY3LTQzZWUtYmIwOS03ODdiNTUyYzUyYWQ='
     const data: LinkControlData = {
       type: 'OPEN_PAGE',
       payload: {
-        pageId: 'UGFnZTpmNTdmMjQ2MS0wMGY3LTQzZWUtYmIwOS03ODdiNTUyYzUyYWQ=',
+        pageId,
         openInNewTab: false,
       },
     }
-    const expected = JSON.parse(
-      JSON.stringify(data).replace(
-        'UGFnZTpmNTdmMjQ2MS0wMGY3LTQzZWUtYmIwOS03ODdiNTUyYzUyYWQ=',
-        'testing',
-      ),
-    )
 
-    const replacementContext = {
-      elementHtmlIds: new Set(),
-      elementKeys: new Map(),
-      swatchIds: new Map(),
-      pageIds: new Map([['UGFnZTpmNTdmMjQ2MS0wMGY3LTQzZWUtYmIwOS03ODdiNTUyYzUyYWQ=', 'testing']]),
-      typographyIds: new Map(),
-      tableIds: new Map(),
-      tableColumnIds: new Map(),
-      fileIds: new Map(),
-      globalElementIds: new Map(),
-      globalElementData: new Map(),
-    }
+    const expected = JSON.parse(JSON.stringify(data).replace(pageId, 'testing'))
 
     // Act
     const result = copyLinkData(data, {
-      replacementContext: replacementContext as ReplacementContext,
+      replacementContext: createReplacementContext({
+        pageIds: {
+          [pageId]: 'testing',
+        },
+      }),
       copyElement: node => node,
     })
 

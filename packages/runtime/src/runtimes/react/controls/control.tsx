@@ -8,15 +8,9 @@ import {
   TextAreaControlData,
   TextAreaControlDefinition,
   TextAreaControlType,
-  Color,
 } from '@makeswift/controls'
+
 import {
-  Checkbox,
-  // Color,
-  type ControlTraits,
-  type ControlDataType,
-  type ControlDefinitionType,
-  controlTraitsRegistry,
   ComboboxControlData,
   ComboboxControlDefinition,
   ComboboxControlType,
@@ -31,10 +25,6 @@ import {
   LinkControlData,
   LinkControlDefinition,
   LinkControlType,
-  ListControl,
-  ListControlData,
-  ListControlDefinition,
-  ListControlType,
   RichTextControl,
   RichTextControlData,
   RichTextControlDefinition,
@@ -69,12 +59,10 @@ import {
 
 import { AnyPropController } from '../../../prop-controllers/instances'
 import { RenderHook } from '../components'
-// import { useColorValue } from './color'
 import { ComboboxControlValue, useComboboxControlValue } from './combobox'
 import { IconRadioGroupControlValue, useIconRadioGroupValue } from './icon-radio-group'
 import { ResolveImageControlValue, useImageControlValue } from './image'
 import { LinkControlValue, useLinkControlValue } from './link'
-import { ListControlValue } from './list'
 import { NumberControlValue, useNumber } from './number'
 import { RichTextControlValue, useRichText } from './rich-text/rich-text'
 import { RichTextV2ControlValue, useRichTextV2 } from './rich-text-v2'
@@ -86,8 +74,6 @@ import { StyleV2ControlFormattedValue, StyleV2ControlValue } from './style-v2'
 import { TextAreaControlValue, useTextAreaValue } from './text-area'
 import { TextInputControlValue, useTextInputValue } from './text-input'
 import { TypographyControlValue, useTypographyValue } from './typography'
-import { useMakeswiftHostApiClient } from '../../../next/context/makeswift-host-api-client'
-import { useSyncExternalStore } from 'react'
 
 export type ControlDefinitionValue<T extends ControlDefinition> = T extends NumberControlDefinition
   ? NumberControlValue<T>
@@ -107,21 +93,19 @@ export type ControlDefinitionValue<T extends ControlDefinition> = T extends Numb
                 ? ComboboxControlValue<T>
                 : T extends ShapeControlDefinition
                   ? ShapeControlValue<T>
-                  : T extends ListControlDefinition
-                    ? ListControlValue<T>
-                    : T extends SlotControlDefinition
-                      ? SlotControlValue
-                      : T extends RichTextControlDefinition
-                        ? RichTextControlValue
-                        : T extends RichTextV2ControlDefinition
-                          ? RichTextV2ControlValue
-                          : T extends StyleControlDefinition
-                            ? StyleControlFormattedValue
-                            : T extends StyleV2ControlDefinition
-                              ? StyleV2ControlFormattedValue
-                              : T extends TypographyControlDefinition
-                                ? TypographyControlValue
-                                : never
+                  : T extends SlotControlDefinition
+                    ? SlotControlValue
+                    : T extends RichTextControlDefinition
+                      ? RichTextControlValue
+                      : T extends RichTextV2ControlDefinition
+                        ? RichTextV2ControlValue
+                        : T extends StyleControlDefinition
+                          ? StyleControlFormattedValue
+                          : T extends StyleV2ControlDefinition
+                            ? StyleV2ControlFormattedValue
+                            : T extends TypographyControlDefinition
+                              ? TypographyControlValue
+                              : never
 
 type ControlValueProps<T extends ControlDefinition> = {
   definition: T
@@ -136,26 +120,7 @@ export function ControlValue<T extends ControlDefinition>({
   children,
   control,
 }: ControlValueProps<T>): JSX.Element {
-  const client = useMakeswiftHostApiClient()
-
   switch (definition.type) {
-    case Checkbox.controlType:
-    case Color.controlType:
-      const traits = controlTraitsRegistry.get(definition.type)
-      if (!traits) {
-        throw new Error(`Control traits not found for type ${definition.type}`)
-      }
-      const resolvedProp = traits.subscribeValue(data, definition, client)
-
-      // TODO: Don't call hooks conditionally
-      const syncedValue = useSyncExternalStore(
-        resolvedProp.subscribe,
-        resolvedProp.readValue,
-        resolvedProp.readValue,
-      )
-
-      return children(syncedValue as ControlDefinitionValue<T>)
-
     case NumberControlType:
       return (
         <RenderHook
@@ -253,17 +218,6 @@ export function ControlValue<T extends ControlDefinition>({
         >
           {value => children(value as ControlDefinitionValue<T>)}
         </ShapeControlValue>
-      )
-
-    case ListControlType:
-      return (
-        <ListControlValue
-          definition={definition}
-          data={data as ListControlData}
-          control={control as ListControl}
-        >
-          {value => children(value as ControlDefinitionValue<T>)}
-        </ListControlValue>
       )
 
     case StyleV2ControlType:

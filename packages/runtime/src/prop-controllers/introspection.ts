@@ -1,12 +1,6 @@
 import { Descriptor } from './descriptors'
 import { Data, Element } from '../state/react-page'
 import {
-  controlTraitsRegistry,
-  getListElementChildren,
-  getListFileIds,
-  getListPageIds,
-  getListSwatchIds,
-  getListTypographyIds,
   getShapeElementChildren,
   getShapeFileIds,
   getShapePageIds,
@@ -19,8 +13,6 @@ import {
   ImageControlType,
   LinkControlData,
   LinkControlType,
-  ListControlData,
-  ListControlType,
   RichTextControlData,
   RichTextControlType,
   RichTextValue,
@@ -79,6 +71,7 @@ import {
   BackgroundsPropControllerData,
 } from '@makeswift/prop-controllers'
 import { DELETED_PROP_CONTROLLER_TYPES } from './deleted'
+import { ControlDefinition, Targets } from '@makeswift/controls'
 
 export function getElementChildren<T extends Data>(
   descriptor: Descriptor<T>,
@@ -93,18 +86,18 @@ export function getElementChildren<T extends Data>(
     case SlotControlType:
       return (prop as SlotControlData).elements
 
-    case ListControlType:
-      return (prop as ListControlData).flatMap(({ value }) =>
-        getElementChildren(descriptor.config.type, value),
-      )
+    // case ListControlType:
+    //   return (prop as ListControlData).flatMap(({ value }) =>
+    //     getElementChildren(descriptor.config.type, value),
+    //   )
 
-    case ShapeControlType: {
-      return getShapeElementChildren(descriptor, prop as ShapeControlData)
-    }
+    // case ShapeControlType: {
+    //   return getShapeElementChildren(descriptor, prop as ShapeControlData)
+    // }
 
-    case ListControlType: {
-      return getListElementChildren(descriptor, prop as ListControlData)
-    }
+    // case ListControlType: {
+    //   return getListElementChildren(descriptor, prop as ListControlData)
+    // }
 
     default:
       return []
@@ -132,9 +125,9 @@ export function getSwatchIds<T extends Data>(
 ): string[] {
   if (prop == null) return []
 
-  const traits = controlTraitsRegistry.get(descriptor.type)
-  if (traits) {
-    return traits.getSwatchIds(prop)
+  const introspect = (descriptor as any as ControlDefinition).introspect
+  if (introspect) {
+    return introspect.bind(descriptor)(prop, Targets.Swatch)
   }
 
   switch (descriptor.type) {
@@ -173,21 +166,21 @@ export function getSwatchIds<T extends Data>(
       return value?.flatMap(value => getSwatchIds(descriptor.config.type, value.value)) ?? []
     }
 
-    case RichTextV2ControlType: {
-      const data = prop as RichTextV2ControlData | RichTextControlData
+    // case RichTextV2ControlType: {
+    //   const data = prop as RichTextV2ControlData | RichTextControlData
 
-      if (isRichTextV1Data(data)) return getRichTextSwatchIds(data)
+    //   if (isRichTextV1Data(data)) return getRichTextSwatchIds(data)
 
-      return getRichTextV2SwatchIds(descriptor, data)
-    }
+    //   return getRichTextV2SwatchIds(descriptor, data)
+    // }
 
-    case ShapeControlType: {
-      return getShapeSwatchIds(descriptor, prop as ShapeControlData)
-    }
+    // case ShapeControlType: {
+    //   return getShapeSwatchIds(descriptor, prop as ShapeControlData)
+    // }
 
-    case ListControlType: {
-      return getListSwatchIds(descriptor, prop as ListControlData)
-    }
+    // case ListControlType: {
+    //   return getListSwatchIds(descriptor, prop as ListControlData)
+    // }
 
     default:
       return []
@@ -221,13 +214,13 @@ export function getFileIds<T extends Data>(
         .otherwise(() => [])
     }
 
-    case ShapeControlType: {
-      return getShapeFileIds(descriptor, prop as ShapeControlData)
-    }
+    // case ShapeControlType: {
+    //   return getShapeFileIds(descriptor, prop as ShapeControlData)
+    // }
 
-    case ListControlType: {
-      return getListFileIds(descriptor, prop as ListControlData)
-    }
+    // case ListControlType: {
+    //   return getListFileIds(descriptor, prop as ListControlData)
+    // }
 
     default:
       return []
@@ -249,21 +242,21 @@ export function getTypographyIds<T extends Data>(
       return getRichTextTypographyIds(prop as RichTextControlData)
     }
 
-    case RichTextV2ControlType: {
-      const data = prop as RichTextV2ControlData | RichTextControlData
+    // case RichTextV2ControlType: {
+    //   const data = prop as RichTextV2ControlData | RichTextControlData
 
-      if (isRichTextV1Data(data)) return getRichTextTypographyIds(data)
+    //   if (isRichTextV1Data(data)) return getRichTextTypographyIds(data)
 
-      return getRichTextV2TypographyIds(descriptor, data)
-    }
+    //   return getRichTextV2TypographyIds(descriptor, data)
+    // }
 
-    case ShapeControlType: {
-      return getShapeTypographyIds(descriptor, prop as ShapeControlData)
-    }
+    // case ShapeControlType: {
+    //   return getShapeTypographyIds(descriptor, prop as ShapeControlData)
+    // }
 
-    case ListControlType: {
-      return getListTypographyIds(descriptor, prop as ListControlData)
-    }
+    // case ListControlType: {
+    //   return getListTypographyIds(descriptor, prop as ListControlData)
+    // }
 
     default:
       return []
@@ -320,21 +313,21 @@ export function getPageIds<T extends Data>(
       return getRichTextPageIds(prop as RichTextControlData)
     }
 
-    case RichTextV2ControlType: {
-      const data = prop as RichTextV2ControlData | RichTextControlData
+    // case RichTextV2ControlType: {
+    //   const data = prop as RichTextV2ControlData | RichTextControlData
 
-      if (isRichTextV1Data(data)) return getRichTextPageIds(data)
+    //   if (isRichTextV1Data(data)) return getRichTextPageIds(data)
 
-      return getRichTextV2PageIds(descriptor, data)
-    }
+    //   return getRichTextV2PageIds(descriptor, data)
+    // }
 
-    case ShapeControlType: {
-      return getShapePageIds(descriptor, prop as ShapeControlData)
-    }
+    // case ShapeControlType: {
+    //   return getShapePageIds(descriptor, prop as ShapeControlData)
+    // }
 
-    case ListControlType: {
-      return getListPageIds(descriptor, prop as ListControlData)
-    }
+    // case ListControlType: {
+    //   return getListPageIds(descriptor, prop as ListControlData)
+    // }
 
     default:
       return []

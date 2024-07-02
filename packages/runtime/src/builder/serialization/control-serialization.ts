@@ -12,11 +12,18 @@ import {
   type PropDef,
   type OptionsType,
 } from '@makeswift/prop-controllers'
+
+import {
+  CheckboxDefinition,
+  ColorDefinition,
+  ControlDefinition as GenericControlDefinition,
+  ListDefinition,
+  SerializedRecord,
+} from '@makeswift/controls'
+
 import {
   ComboboxControlDefinition,
   ComboboxControlType,
-  ListControlDefinition,
-  ListControlType,
   RichTextV2ControlDefinition,
   RichTextV2ControlType,
   ShapeControlDefinition,
@@ -31,7 +38,7 @@ import {
   PanelDescriptor as PanelControl,
   PanelDescriptorType as PanelControlType,
   PanelDescriptorValueType as PanelControlValueType,
-  PropControllerDescriptor as Control,
+  PropControllerDescriptor as ControlDefinition,
 } from '../../prop-controllers'
 import {
   DELETED_PROP_CONTROLLER_TYPES,
@@ -49,7 +56,6 @@ import {
   deserializeComboboxControlDefinition,
   serializeComboboxControlDefinition,
 } from './controls/combobox'
-import { deserializeListControlDefinition, serializeListControlDefinition } from './controls/list'
 import { deserializeRichTextControlV2, serializeRichTextControlV2 } from './controls/rich-text-v2'
 import {
   deserializeShapeControlDefinition,
@@ -727,7 +733,7 @@ function deserializeRichTextControl(
 
 export type SerializedControl<T extends Data = Data> =
   | Exclude<
-      Control<T>,
+      ControlDefinition<T>,
       | ListControl<T extends ListControlValue ? T : ListControlValue>
       | ShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
       | TypeaheadControl<T extends TypeaheadControlValue ? T : TypeaheadControlValue>
@@ -749,8 +755,10 @@ export type SerializedControl<T extends Data = Data> =
       | RichTextV2ControlDefinition
       | ComboboxControlDefinition
       | ShapeControlDefinition
-      | ListControlDefinition
       | StyleV2ControlDefinition
+      | typeof CheckboxDefinition
+      | typeof ColorDefinition
+      | typeof ListDefinition
     >
   | SerializedListControl<T extends ListControlValue ? T : ListControlValue>
   | SerializedShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
@@ -773,8 +781,10 @@ export type SerializedControl<T extends Data = Data> =
   | Serialize<RichTextV2ControlDefinition>
   | Serialize<ComboboxControlDefinition>
   | Serialize<ShapeControlDefinition>
-  | Serialize<ListControlDefinition>
   | Serialize<StyleV2ControlDefinition>
+  | SerializedRecord<CheckboxDefinition['controlType']>
+  | SerializedRecord<ColorDefinition['controlType']>
+  | SerializedRecord<ListDefinition['controlType']>
 
 type SerializedPanelControl<T extends Data = Data> = Extract<
   SerializedControl<T>,
@@ -786,7 +796,7 @@ type SerializedPanelControlValueType<T extends SerializedPanelControl> =
 
 export type DeserializedControl<T extends Data = Data> =
   | Exclude<
-      Control<T>,
+      ControlDefinition<T>,
       | ListControl<T extends ListControlValue ? T : ListControlValue>
       | ShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
       | TypeaheadControl<T extends TypeaheadControlValue ? T : TypeaheadControlValue>
@@ -808,8 +818,10 @@ export type DeserializedControl<T extends Data = Data> =
       | RichTextV2ControlDefinition
       | ComboboxControlDefinition
       | ShapeControlDefinition
-      | ListControlDefinition
       | StyleV2ControlDefinition
+      | typeof CheckboxDefinition
+      | typeof ColorDefinition
+      | typeof ListDefinition
     >
   | DeserializedListControl<T extends ListControlValue ? T : ListControlValue>
   | DeserializedShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
@@ -832,8 +844,8 @@ export type DeserializedControl<T extends Data = Data> =
   | Deserialize<Serialize<RichTextV2ControlDefinition>>
   | Deserialize<Serialize<ComboboxControlDefinition>>
   | Deserialize<Serialize<ShapeControlDefinition>>
-  | Deserialize<Serialize<ListControlDefinition>>
   | Deserialize<Serialize<StyleV2ControlDefinition>>
+  | GenericControlDefinition
 
 export type DeserializedPanelControl<T extends Data = Data> = Extract<
   DeserializedControl<T>,
@@ -844,9 +856,20 @@ type DeserializedPanelControlValueType<T extends DeserializedPanelControl> =
   T extends DeserializedPanelControl<infer U> ? U : never
 
 export function serializeControl<T extends Data>(
-  control: Control<T>,
+  control: ControlDefinition<T>,
 ): [SerializedControl<T>, Transferable[]] {
+  const serialize = (control as any as GenericControlDefinition).serialize
+  if (serialize) {
+    const [serializedControl, transferables] = serialize.bind(control)()
+    return [serializedControl, transferables]
+  }
+
   switch (control.type) {
+    case CheckboxDefinition.type:
+    case ColorDefinition.type:
+    case ListDefinition.type:
+      throw new Error(`${control.type} should have been serialized by generic code above`)
+
     case PropControllerTypes.Checkbox:
       return serializeCheckboxControl(control)
 
@@ -912,9 +935,6 @@ export function serializeControl<T extends Data>(
 
     case ShapeControlType:
       return serializeShapeControlDefinition(control)
-
-    case ListControlType:
-      return serializeListControlDefinition(control)
 
     default:
       return [control, []]
@@ -991,16 +1011,34 @@ export function deserializeControl<T extends Data>(
     case ShapeControlType:
       return deserializeShapeControlDefinition(serializedControl)
 
-    case ListControlType:
-      return deserializeListControlDefinition(serializedControl)
+    case CheckboxDefinition.type:
+    case ColorDefinition.type:
+    case ListDefinition.type:
+      return deserializeControlDefV2(serializedControl)
 
     default:
       return serializedControl
   }
 }
 
+function deserializeControlDefV2(record: SerializedRecord): GenericControlDefinition {
+  // FIXME: replace with a class lookup + deserialize call
+  switch (record.type) {
+    case CheckboxDefinition.type:
+      return CheckboxDefinition.deserialize(record)
+
+    case ColorDefinition.type:
+      return ColorDefinition.deserialize(record)
+
+    case ListDefinition.type:
+      return ListDefinition.deserialize(record, deserializeControlDefV2)
+  }
+
+  throw new Error(`Unknown control type: ${record.type}`)
+}
+
 export function serializeControls(
-  controls: Record<string, Control>,
+  controls: Record<string, ControlDefinition>,
 ): [Record<string, SerializedControl>, Transferable[]] {
   return Object.entries(controls).reduce(
     ([accControls, accTransferables], [key, control]) => {

@@ -1,20 +1,28 @@
-import { ResourceResolver, ValueSubscription, controlTraitsRegistry } from '@makeswift/controls'
+import {
+  ControlDefinition,
+  type ResourceResolver,
+  type ValueSubscription,
+} from '@makeswift/controls'
 import * as ReactPage from '../../state/react-page'
 
 export function createPropsValuesSubscription(
-  propDefinitions: Record<string, { type: string }>,
+  propDefinitions: Record<string, unknown>,
   elementData: Record<string, ReactPage.ElementData>,
   resourceResolver: ResourceResolver,
 ): ValueSubscription<Record<string, unknown>> {
   const propsSubscriptions: Record<string, ValueSubscription<any>> = Object.entries(
     propDefinitions,
   ).reduce((result, [propName, def]) => {
-    const traits = controlTraitsRegistry.get(def.type)
-    return traits == null
+    const resolveValue = (def as any as ControlDefinition).resolveValue // FIXME
+    const fromData = (def as any as ControlDefinition).fromData // FIXME
+    return resolveValue == null || fromData == null
       ? result
       : {
           ...result,
-          [propName]: traits.subscribeValue(elementData[propName], def as any, resourceResolver),
+          [propName]: resolveValue.bind(def)(
+            fromData.bind(def)(elementData[propName]),
+            resourceResolver,
+          ),
         }
   }, {})
 
@@ -29,23 +37,24 @@ export function createPropsValuesSubscription(
         unsubscribe.forEach(fn => fn())
       }
     },
-    readValue: () => {
-      const { isDirty, value } = Object.entries(propsSubscriptions).reduce(
-        ({ isDirty, value }, [propName, subscription]) => {
-          const propValue = subscription.readValue()
+    readStableValue: () => {
+      const { isDirty, snapshot } = Object.entries(propsSubscriptions).reduce(
+        ({ isDirty, snapshot }, [propName, subscription]) => {
+          const lastPropValue = lastSnapshot[propName]
+          const propValue = subscription.readStableValue(lastPropValue)
           return {
-            isDirty: isDirty || propValue !== lastSnapshot[propName],
-            value: {
-              ...value,
+            isDirty: isDirty || propValue !== lastPropValue,
+            snapshot: {
+              ...snapshot,
               [propName]: propValue,
             },
           }
         },
-        { isDirty: false, value: {} },
+        { isDirty: false, snapshot: {} },
       )
 
       if (isDirty) {
-        lastSnapshot = value
+        lastSnapshot = snapshot
       }
 
       return lastSnapshot

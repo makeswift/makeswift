@@ -1,4 +1,4 @@
-import { type ResourceResolver, ValueSubscription } from '@makeswift/controls'
+import { type ResourceResolver, type ValueSubscription } from '@makeswift/controls'
 import * as MakeswiftApiClient from '../state/makeswift-api-client'
 import {
   APIResourceType,
@@ -83,9 +83,14 @@ export class MakeswiftHostApiClient implements ResourceResolver {
     )
   }
 
-  subscribeSwatch(swatchId: string): ValueSubscription<Swatch | null> {
+  resolveSwatch(swatchId: string | undefined): ValueSubscription<Swatch | null> {
+    if (swatchId != null && this.readSwatch(swatchId) == null) {
+      this.fetchSwatch(swatchId).catch(console.error)
+    }
+
     return {
-      readValue: () => this.readSwatch(swatchId),
+      readStableValue: (_previous?: Swatch) =>
+        swatchId != null ? this.readSwatch(swatchId) : null,
       subscribe: this.subscribe,
     }
   }

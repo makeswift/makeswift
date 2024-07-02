@@ -3,9 +3,6 @@ import { Descriptor } from './descriptors'
 import { BuilderEditMode } from '../state/modules/builder-edit-mode'
 import { BoxModel } from '../state/modules/box-models'
 import {
-  ListControl,
-  ListControlMessage,
-  ListControlType,
   RichTextControl,
   RichTextControlMessage,
   RichTextControlType,
@@ -28,10 +25,9 @@ import {
   StyleV2ControlMessage,
 } from '../controls'
 import { PropController } from './base'
-import {
-  Types as PropControllerTypes,
-  TableFormFieldsDescriptor,
-} from '@makeswift/prop-controllers'
+import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
+
+import { ControlMessage, ControlDefinition, ControlInstance } from '@makeswift/controls'
 
 export const RichTextPropControllerMessageType = {
   CHANGE_BUILDER_EDIT_MODE: 'CHANGE_BUILDER_EDIT_MODE',
@@ -82,15 +78,7 @@ export type RichTextPropControllerMessage =
   | RedoRichTextPropControllerMessage
   | ChangeBoxModelRichTextPropControllerMessage
 
-export type PropControllerMessage =
-  | RichTextPropControllerMessage
-  | TableFormFieldsMessage
-  | SlotControlMessage
-  | RichTextControlMessage
-  | RichTextV2ControlMessage
-  | ListControlMessage
-  | ShapeControlMessage
-  | StyleControlMessage
+export type PropControllerMessage = ControlMessage
 
 export type Send<T = PropControllerMessage> = (message: T) => void
 
@@ -200,10 +188,10 @@ export class TableFormFieldsPropController extends PropController<TableFormField
 type DescriptorPropController<T extends Descriptor> = T extends { type: typeof RichTextControlType }
   ? RichTextControl
   : T extends { type: typeof RichTextV2ControlType }
-  ? RichTextV2Control
-  : T extends { type: typeof PropControllerTypes.TableFormFields }
-  ? TableFormFieldsPropController
-  : DefaultPropController
+    ? RichTextV2Control
+    : T extends { type: typeof PropControllerTypes.TableFormFields }
+      ? TableFormFieldsPropController
+      : DefaultPropController
 
 export type DescriptorsPropControllers<T extends Record<string, Descriptor>> = {
   [K in keyof T]: undefined extends T[K]
@@ -212,26 +200,26 @@ export type DescriptorsPropControllers<T extends Record<string, Descriptor>> = {
 }
 
 export type AnyPropController =
+  | ControlInstance
   | DefaultPropController
   | RichTextPropController
   | TableFormFieldsPropController
   | SlotControl
   | RichTextControl
   | RichTextV2Control
-  | ListControl
   | ShapeControl
   | StyleControl
   | StyleV2Control
 
 export function createPropController(
-  descriptor: TableFormFieldsDescriptor,
-  send: Send<TableFormFieldsMessage>,
-): TableFormFieldsPropController
-export function createPropController(descriptor: Descriptor, send: Send): DefaultPropController
-export function createPropController<T extends PropControllerMessage>(
   descriptor: Descriptor,
-  send: Send<T>,
+  send: Send<PropControllerMessage>,
 ): AnyPropController {
+  const createInstance = (descriptor as any as ControlDefinition).createInstance
+  if (createInstance) {
+    return createInstance.bind(descriptor)(send)
+  }
+
   switch (descriptor.type) {
     case PropControllerTypes.TableFormFields:
       return new TableFormFieldsPropController(send as Send<TableFormFieldsMessage>)
@@ -244,9 +232,6 @@ export function createPropController<T extends PropControllerMessage>(
 
     case RichTextV2ControlType:
       return new RichTextV2Control(send as Send<RichTextV2ControlMessage>, descriptor)
-
-    case ListControlType:
-      return new ListControl(send as Send<ListControlMessage>, descriptor)
 
     case ShapeControlType:
       return new ShapeControl(send as Send<ShapeControlMessage>, descriptor)

@@ -3,10 +3,11 @@ import {
   NumberControlDefinition,
   TextInputControlDefinition,
   TextAreaControlDefinition,
-  type ControlDefinitionType,
-  type HasAssociatedTypes,
   type ResolvedValueType,
-  Checkbox,
+  CheckboxDefinition,
+  ColorDefinition,
+  ListDefinition,
+  ControlDefinition as GenericControlDefinition,
 } from '@makeswift/controls'
 import { ResponsiveColor } from '../runtimes/react/controls'
 import { StyleControlFormattedValue } from '../runtimes/react/controls/style'
@@ -14,11 +15,9 @@ import type { Data } from '../state/react-page'
 import { NumberControlValue } from '../runtimes/react/controls/number'
 import { StyleControlType } from '../controls/style'
 import {
-  Color,
   ComboboxControlDefinition,
   ImageControlDefinition,
   LinkControlDefinition,
-  ListControlDefinition,
   SelectControlDefinition,
   ShapeControlDefinition,
   SlotControlDefinition,
@@ -32,7 +31,6 @@ import { TextAreaControlValue } from '../runtimes/react/controls/text-area'
 import { SelectControlValue } from '../runtimes/react/controls/select'
 import { ResolveImageControlValue } from '../runtimes/react/controls/image'
 import { ShapeControlValue } from '../runtimes/react/controls/shape'
-import { ListControlValue } from '../runtimes/react/controls/list'
 import { ComboboxControlValue } from '../runtimes/react/controls/combobox'
 import { LinkControlValue } from '../runtimes/react/controls/link'
 import { SlotControlValue } from '../runtimes/react/controls/slot'
@@ -152,21 +150,21 @@ export type Descriptor<T extends Data = Data> =
   | StyleControlDefinition
   | StyleV2ControlDefinition
   | NumberControlDefinition
-  | ControlDefinitionType<typeof Checkbox>
+  | typeof CheckboxDefinition
   | TextInputControlDefinition
   | TextAreaControlDefinition
+  | TypographyControlDefinition
   | SelectControlDefinition
-  | ControlDefinitionType<typeof Color>
+  | typeof ColorDefinition
   | IconRadioGroupControlDefinition
   | ImageControlDefinition
   | ComboboxControlDefinition
   | ShapeControlDefinition
-  | ListControlDefinition
+  | typeof ListDefinition
   | LinkControlDefinition
   | SlotControlDefinition
   | RichTextControlDefinition
   | RichTextV2ControlDefinition
-  | TypographyControlDefinition
 
 export type PanelDescriptorType =
   | typeof PropControllerTypes.Backgrounds
@@ -222,263 +220,255 @@ export type DescriptorValueType<T extends Descriptor> = T extends NumberControlD
                   ? ComboboxControlValue<T>
                   : T extends ShapeControlDefinition
                     ? ShapeControlValue<T>
-                    : T extends ListControlDefinition
-                      ? ListControlValue<T>
-                      : T extends LinkControlDefinition
-                        ? LinkControlValue<T>
-                        : T extends SlotControlDefinition
-                          ? SlotControlValue
-                          : T extends RichTextControlDefinition
-                            ? RichTextControlValue
-                            : T extends RichTextV2ControlDefinition
-                              ? RichTextV2ControlValue
-                              : T extends StyleV2ControlDefinition
-                                ? StyleV2ControlFormattedValue
-                                : T extends TypographyControlDefinition
-                                  ? TypographyControlValue
-                                  : T['type'] extends typeof PropControllerTypes.ResponsiveColor
-                                    ? // TODO(miguel): We're not importing a resolver type from `@makeswift/prop-controllers` because
-                                      // the resolved type is tightly coupled with the runtime (i.e., it's the result of an API call).
-                                      // This means that we probably want to rethink how types are resolved and where that lives.
-                                      ResponsiveColor | null | undefined
-                                    : T['type'] extends typeof PropControllerTypes.Backgrounds
-                                      ? ResolveBackgroundsPropControllerValue<
-                                          Extract<
-                                            T,
-                                            { type: typeof PropControllerTypes.Backgrounds }
-                                          >
+                    : T extends LinkControlDefinition
+                      ? LinkControlValue<T>
+                      : T extends SlotControlDefinition
+                        ? SlotControlValue
+                        : T extends RichTextControlDefinition
+                          ? RichTextControlValue
+                          : T extends RichTextV2ControlDefinition
+                            ? RichTextV2ControlValue
+                            : T extends StyleV2ControlDefinition
+                              ? StyleV2ControlFormattedValue
+                              : T extends TypographyControlDefinition
+                                ? TypographyControlValue
+                                : T['type'] extends typeof PropControllerTypes.ResponsiveColor
+                                  ? // TODO(miguel): We're not importing a resolver type from `@makeswift/prop-controllers` because
+                                    // the resolved type is tightly coupled with the runtime (i.e., it's the result of an API call).
+                                    // This means that we probably want to rethink how types are resolved and where that lives.
+                                    ResponsiveColor | null | undefined
+                                  : T['type'] extends typeof PropControllerTypes.Backgrounds
+                                    ? ResolveBackgroundsPropControllerValue<
+                                        Extract<T, { type: typeof PropControllerTypes.Backgrounds }>
+                                      >
+                                    : T['type'] extends typeof PropControllerTypes.Checkbox
+                                      ? ResolveCheckboxPropControllerValue<
+                                          Extract<T, { type: typeof PropControllerTypes.Checkbox }>
                                         >
-                                      : T['type'] extends typeof PropControllerTypes.Checkbox
-                                        ? ResolveCheckboxPropControllerValue<
-                                            Extract<
-                                              T,
-                                              { type: typeof PropControllerTypes.Checkbox }
-                                            >
+                                      : T['type'] extends typeof PropControllerTypes.Date
+                                        ? ResolveDatePropControllerValue<
+                                            Extract<T, { type: typeof PropControllerTypes.Date }>
                                           >
-                                        : T['type'] extends typeof PropControllerTypes.Date
-                                          ? ResolveDatePropControllerValue<
-                                              Extract<T, { type: typeof PropControllerTypes.Date }>
+                                        : T['type'] extends typeof PropControllerTypes.ElementID
+                                          ? ResolveElementIDPropControllerValue<
+                                              Extract<
+                                                T,
+                                                { type: typeof PropControllerTypes.ElementID }
+                                              >
                                             >
-                                          : T['type'] extends typeof PropControllerTypes.ElementID
-                                            ? ResolveElementIDPropControllerValue<
+                                          : T['type'] extends typeof PropControllerTypes.Font
+                                            ? ResolveFontPropControllerValue<
                                                 Extract<
                                                   T,
-                                                  { type: typeof PropControllerTypes.ElementID }
+                                                  { type: typeof PropControllerTypes.Font }
                                                 >
                                               >
-                                            : T['type'] extends typeof PropControllerTypes.Font
-                                              ? ResolveFontPropControllerValue<
-                                                  Extract<
-                                                    T,
-                                                    { type: typeof PropControllerTypes.Font }
+                                            : T['type'] extends typeof PropControllerTypes.GapX
+                                              ? PropValue<T> | undefined
+                                              : T['type'] extends typeof PropControllerTypes.GapY
+                                                ? ResolveGapYPropControllerValue<
+                                                    Extract<
+                                                      T,
+                                                      { type: typeof PropControllerTypes.GapY }
+                                                    >
                                                   >
-                                                >
-                                              : T['type'] extends typeof PropControllerTypes.GapX
-                                                ? PropValue<T> | undefined
-                                                : T['type'] extends typeof PropControllerTypes.GapY
-                                                  ? ResolveGapYPropControllerValue<
+                                                : T['type'] extends typeof PropControllerTypes.Grid
+                                                  ? ResolveGridPropControllerValue<
                                                       Extract<
                                                         T,
-                                                        { type: typeof PropControllerTypes.GapY }
+                                                        {
+                                                          type: typeof PropControllerTypes.Grid
+                                                        }
                                                       >
                                                     >
-                                                  : T['type'] extends typeof PropControllerTypes.Grid
-                                                    ? ResolveGridPropControllerValue<
+                                                  : T['type'] extends typeof PropControllerTypes.Image
+                                                    ? ResolveImagePropControllerValue<
                                                         Extract<
                                                           T,
                                                           {
-                                                            type: typeof PropControllerTypes.Grid
+                                                            type: typeof PropControllerTypes.Image
                                                           }
                                                         >
                                                       >
-                                                    : T['type'] extends typeof PropControllerTypes.Image
-                                                      ? ResolveImagePropControllerValue<
+                                                    : T['type'] extends typeof PropControllerTypes.Images
+                                                      ? ResolveImagesPropControllerValue<
                                                           Extract<
                                                             T,
                                                             {
-                                                              type: typeof PropControllerTypes.Image
+                                                              type: typeof PropControllerTypes.Images
                                                             }
                                                           >
                                                         >
-                                                      : T['type'] extends typeof PropControllerTypes.Images
-                                                        ? ResolveImagesPropControllerValue<
-                                                            Extract<
-                                                              T,
-                                                              {
-                                                                type: typeof PropControllerTypes.Images
-                                                              }
-                                                            >
-                                                          >
-                                                        : T['type'] extends typeof PropControllerTypes.ResponsiveIconRadioGroup
+                                                      : T['type'] extends typeof PropControllerTypes.ResponsiveIconRadioGroup
+                                                        ? PropValue<T> | undefined
+                                                        : T['type'] extends typeof PropControllerTypes.ResponsiveNumber
                                                           ? PropValue<T> | undefined
-                                                          : T['type'] extends typeof PropControllerTypes.ResponsiveNumber
+                                                          : T['type'] extends typeof PropControllerTypes.ResponsiveOpacity
                                                             ? PropValue<T> | undefined
-                                                            : T['type'] extends typeof PropControllerTypes.ResponsiveOpacity
+                                                            : T['type'] extends typeof PropControllerTypes.ResponsiveSelect
                                                               ? PropValue<T> | undefined
-                                                              : T['type'] extends typeof PropControllerTypes.ResponsiveSelect
-                                                                ? PropValue<T> | undefined
-                                                                : T['type'] extends typeof PropControllerTypes.Link
-                                                                  ? ResolveLinkPropControllerValue<
+                                                              : T['type'] extends typeof PropControllerTypes.Link
+                                                                ? ResolveLinkPropControllerValue<
+                                                                    Extract<
+                                                                      T,
+                                                                      {
+                                                                        type: typeof PropControllerTypes.Link
+                                                                      }
+                                                                    >
+                                                                  >
+                                                                : T['type'] extends typeof PropControllerTypes.Width
+                                                                  ? ResolveWidthPropControllerValue<
                                                                       Extract<
                                                                         T,
                                                                         {
-                                                                          type: typeof PropControllerTypes.Link
+                                                                          type: typeof PropControllerTypes.Width
                                                                         }
                                                                       >
                                                                     >
-                                                                  : T['type'] extends typeof PropControllerTypes.Width
-                                                                    ? ResolveWidthPropControllerValue<
+                                                                  : T['type'] extends typeof PropControllerTypes.Padding
+                                                                    ? ResolvePaddingPropControllerValue<
                                                                         Extract<
                                                                           T,
                                                                           {
-                                                                            type: typeof PropControllerTypes.Width
+                                                                            type: typeof PropControllerTypes.Padding
                                                                           }
                                                                         >
                                                                       >
-                                                                    : T['type'] extends typeof PropControllerTypes.Padding
-                                                                      ? ResolvePaddingPropControllerValue<
+                                                                    : T['type'] extends typeof PropControllerTypes.Margin
+                                                                      ? ResolveMarginPropControllerValue<
                                                                           Extract<
                                                                             T,
                                                                             {
-                                                                              type: typeof PropControllerTypes.Padding
+                                                                              type: typeof PropControllerTypes.Margin
                                                                             }
                                                                           >
                                                                         >
-                                                                      : T['type'] extends typeof PropControllerTypes.Margin
-                                                                        ? ResolveMarginPropControllerValue<
+                                                                      : T['type'] extends typeof PropControllerTypes.NavigationLinks
+                                                                        ? ResolveNavigationLinksPropControllerValue<
                                                                             Extract<
                                                                               T,
                                                                               {
-                                                                                type: typeof PropControllerTypes.Margin
+                                                                                type: typeof PropControllerTypes.NavigationLinks
                                                                               }
                                                                             >
                                                                           >
-                                                                        : T['type'] extends typeof PropControllerTypes.NavigationLinks
-                                                                          ? ResolveNavigationLinksPropControllerValue<
+                                                                        : T['type'] extends typeof PropControllerTypes.BorderRadius
+                                                                          ? ResolveBorderRadiusPropControllerValue<
                                                                               Extract<
                                                                                 T,
                                                                                 {
-                                                                                  type: typeof PropControllerTypes.NavigationLinks
+                                                                                  type: typeof PropControllerTypes.BorderRadius
                                                                                 }
                                                                               >
                                                                             >
-                                                                          : T['type'] extends typeof PropControllerTypes.BorderRadius
-                                                                            ? ResolveBorderRadiusPropControllerValue<
+                                                                          : T['type'] extends typeof PropControllerTypes.Shadows
+                                                                            ? ResolveShadowsPropControllerValue<
                                                                                 Extract<
                                                                                   T,
                                                                                   {
-                                                                                    type: typeof PropControllerTypes.BorderRadius
+                                                                                    type: typeof PropControllerTypes.Shadows
                                                                                   }
                                                                                 >
                                                                               >
-                                                                            : T['type'] extends typeof PropControllerTypes.Shadows
-                                                                              ? ResolveShadowsPropControllerValue<
+                                                                            : T['type'] extends typeof PropControllerTypes.SocialLinks
+                                                                              ? ResolveSocialLinksPropControllerValue<
                                                                                   Extract<
                                                                                     T,
                                                                                     {
-                                                                                      type: typeof PropControllerTypes.Shadows
+                                                                                      type: typeof PropControllerTypes.SocialLinks
                                                                                     }
                                                                                   >
                                                                                 >
-                                                                              : T['type'] extends typeof PropControllerTypes.SocialLinks
-                                                                                ? ResolveSocialLinksPropControllerValue<
+                                                                              : T['type'] extends typeof PropControllerTypes.ResponsiveLength
+                                                                                ? ResolveResponsiveLengthPropControllerValue<
                                                                                     Extract<
                                                                                       T,
                                                                                       {
-                                                                                        type: typeof PropControllerTypes.SocialLinks
+                                                                                        type: typeof PropControllerTypes.ResponsiveLength
                                                                                       }
                                                                                     >
                                                                                   >
-                                                                                : T['type'] extends typeof PropControllerTypes.ResponsiveLength
-                                                                                  ? ResolveResponsiveLengthPropControllerValue<
+                                                                                : T['type'] extends typeof PropControllerTypes.Border
+                                                                                  ? ResolveBorderPropControllerValue<
                                                                                       Extract<
                                                                                         T,
                                                                                         {
-                                                                                          type: typeof PropControllerTypes.ResponsiveLength
+                                                                                          type: typeof PropControllerTypes.Border
                                                                                         }
                                                                                       >
                                                                                     >
-                                                                                  : T['type'] extends typeof PropControllerTypes.Border
-                                                                                    ? ResolveBorderPropControllerValue<
+                                                                                  : T['type'] extends typeof PropControllerTypes.Number
+                                                                                    ? ResolveNumberPropControllerValue<
                                                                                         Extract<
                                                                                           T,
                                                                                           {
-                                                                                            type: typeof PropControllerTypes.Border
+                                                                                            type: typeof PropControllerTypes.Number
                                                                                           }
                                                                                         >
                                                                                       >
-                                                                                    : T['type'] extends typeof PropControllerTypes.Number
-                                                                                      ? ResolveNumberPropControllerValue<
+                                                                                    : T['type'] extends typeof PropControllerTypes.Table
+                                                                                      ? ResolveTablePropControllerValue<
                                                                                           Extract<
                                                                                             T,
                                                                                             {
-                                                                                              type: typeof PropControllerTypes.Number
+                                                                                              type: typeof PropControllerTypes.Table
                                                                                             }
                                                                                           >
                                                                                         >
-                                                                                      : T['type'] extends typeof PropControllerTypes.Table
-                                                                                        ? ResolveTablePropControllerValue<
+                                                                                      : T['type'] extends typeof PropControllerTypes.TableFormFields
+                                                                                        ? ResolveTableFormFieldsPropControllerValue<
                                                                                             Extract<
                                                                                               T,
                                                                                               {
-                                                                                                type: typeof PropControllerTypes.Table
+                                                                                                type: typeof PropControllerTypes.TableFormFields
                                                                                               }
                                                                                             >
                                                                                           >
-                                                                                        : T['type'] extends typeof PropControllerTypes.TableFormFields
-                                                                                          ? ResolveTableFormFieldsPropControllerValue<
+                                                                                        : T['type'] extends typeof PropControllerTypes.TextStyle
+                                                                                          ? ResolveTextStylePropControllerValue<
                                                                                               Extract<
                                                                                                 T,
                                                                                                 {
-                                                                                                  type: typeof PropControllerTypes.TableFormFields
+                                                                                                  type: typeof PropControllerTypes.TextStyle
                                                                                                 }
                                                                                               >
                                                                                             >
-                                                                                          : T['type'] extends typeof PropControllerTypes.TextStyle
-                                                                                            ? ResolveTextStylePropControllerValue<
+                                                                                          : T['type'] extends typeof PropControllerTypes.TextArea
+                                                                                            ? ResolveTextAreaPropControllerValue<
                                                                                                 Extract<
                                                                                                   T,
                                                                                                   {
-                                                                                                    type: typeof PropControllerTypes.TextStyle
+                                                                                                    type: typeof PropControllerTypes.TextArea
                                                                                                   }
                                                                                                 >
                                                                                               >
-                                                                                            : T['type'] extends typeof PropControllerTypes.TextArea
-                                                                                              ? ResolveTextAreaPropControllerValue<
+                                                                                            : T['type'] extends typeof PropControllerTypes.TextInput
+                                                                                              ? ResolveTextInputPropControllerValue<
                                                                                                   Extract<
                                                                                                     T,
                                                                                                     {
-                                                                                                      type: typeof PropControllerTypes.TextArea
+                                                                                                      type: typeof PropControllerTypes.TextInput
                                                                                                     }
                                                                                                   >
                                                                                                 >
-                                                                                              : T['type'] extends typeof PropControllerTypes.TextInput
-                                                                                                ? ResolveTextInputPropControllerValue<
+                                                                                              : T['type'] extends typeof PropControllerTypes.Video
+                                                                                                ? ResolveVideoPropControllerValue<
                                                                                                     Extract<
                                                                                                       T,
                                                                                                       {
-                                                                                                        type: typeof PropControllerTypes.TextInput
+                                                                                                        type: typeof PropControllerTypes.Video
                                                                                                       }
                                                                                                     >
                                                                                                   >
-                                                                                                : T['type'] extends typeof PropControllerTypes.Video
-                                                                                                  ? ResolveVideoPropControllerValue<
-                                                                                                      Extract<
-                                                                                                        T,
-                                                                                                        {
-                                                                                                          type: typeof PropControllerTypes.Video
-                                                                                                        }
+                                                                                                : T extends GenericControlDefinition
+                                                                                                  ? ResolvedValueType<T>
+                                                                                                  : T extends Descriptor<
+                                                                                                        infer U
                                                                                                       >
-                                                                                                    >
-                                                                                                  : HasAssociatedTypes<T> extends true
-                                                                                                    ? ResolvedValueType<T>
-                                                                                                    : T extends Descriptor<
-                                                                                                          infer U
-                                                                                                        >
-                                                                                                      ?
-                                                                                                          | U
-                                                                                                          | undefined
-                                                                                                      : never
+                                                                                                    ?
+                                                                                                        | U
+                                                                                                        | undefined
+                                                                                                    : never
 
 export type PanelDescriptorValueType<T extends PanelDescriptor> =
   T extends PanelDescriptor<infer U> ? U : never

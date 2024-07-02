@@ -1,11 +1,14 @@
-import { CopyContext } from './common'
+import { type CopyContext } from './context'
 
 type OpenPageLink = {
   type: 'OPEN_PAGE'
   payload: { pageId: string | null | undefined; openInNewTab: boolean }
 }
 
-type OpenURLLink = { type: 'OPEN_URL'; payload: { url: string; openInNewTab: boolean } }
+type OpenURLLink = {
+  type: 'OPEN_URL'
+  payload: { url: string; openInNewTab: boolean }
+}
 
 type SendEmailLink = {
   type: 'SEND_EMAIL'
@@ -36,12 +39,16 @@ type LinkControlConfig = {
   label?: string
 }
 
-export type LinkControlDefinition<C extends LinkControlConfig = LinkControlConfig> = {
+export type LinkControlDefinition<
+  C extends LinkControlConfig = LinkControlConfig,
+> = {
   type: typeof LinkControlType
   config: C
 }
 
-export function Link<C extends LinkControlConfig>(config: C = {} as C): LinkControlDefinition<C> {
+export function Link<C extends LinkControlConfig>(
+  config: C = {} as C,
+): LinkControlDefinition<C> {
   return { type: LinkControlType, config }
 }
 

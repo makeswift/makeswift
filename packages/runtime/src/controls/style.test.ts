@@ -1,9 +1,10 @@
 import { StyleControlData, copyStyleData } from './style'
-import { ReplacementContext } from '../state/react-page'
+import { createReplacementContext } from '@makeswift/controls'
 
 describe('style copy', () => {
   test('colors are replaced', () => {
-    // Arrange
+    // Arrange'
+    const swatchId = 'U3dhdGNoOmJjMDkwZWJjLTZkZDUtNDY1NS1hMDY0LTg3ZDAxM2U4YTFhNA=='
     const value: StyleControlData = {
       width: [
         {
@@ -20,7 +21,7 @@ describe('style copy', () => {
             borderTop: {
               color: {
                 alpha: 1,
-                swatchId: 'U3dhdGNoOmJjMDkwZWJjLTZkZDUtNDY1NS1hMDY0LTg3ZDAxM2U4YTFhNA==',
+                swatchId,
               },
               style: 'solid',
               width: 9,
@@ -28,7 +29,7 @@ describe('style copy', () => {
             borderLeft: {
               color: {
                 alpha: 1,
-                swatchId: 'U3dhdGNoOmJjMDkwZWJjLTZkZDUtNDY1NS1hMDY0LTg3ZDAxM2U4YTFhNA==',
+                swatchId,
               },
               style: 'solid',
               width: 9,
@@ -36,7 +37,7 @@ describe('style copy', () => {
             borderRight: {
               color: {
                 alpha: 1,
-                swatchId: 'U3dhdGNoOmJjMDkwZWJjLTZkZDUtNDY1NS1hMDY0LTg3ZDAxM2U4YTFhNA==',
+                swatchId,
               },
               style: 'solid',
               width: 9,
@@ -44,7 +45,7 @@ describe('style copy', () => {
             borderBottom: {
               color: {
                 alpha: 1,
-                swatchId: 'U3dhdGNoOmJjMDkwZWJjLTZkZDUtNDY1NS1hMDY0LTg3ZDAxM2U4YTFhNA==',
+                swatchId,
               },
               style: 'solid',
               width: 9,
@@ -93,31 +94,16 @@ describe('style copy', () => {
         },
       ],
     }
-    const expected = JSON.parse(
-      JSON.stringify(value).replaceAll(
-        'U3dhdGNoOmJjMDkwZWJjLTZkZDUtNDY1NS1hMDY0LTg3ZDAxM2U4YTFhNA==',
-        'testing',
-      ),
-    )
 
-    const replacementContext = {
-      elementHtmlIds: new Set(),
-      elementKeys: new Map(),
-      swatchIds: new Map([
-        ['U3dhdGNoOmJjMDkwZWJjLTZkZDUtNDY1NS1hMDY0LTg3ZDAxM2U4YTFhNA==', 'testing'],
-      ]),
-      fileIds: new Map(),
-      typographyIds: new Map(),
-      tableIds: new Map(),
-      tableColumnIds: new Map(),
-      pageIds: new Map(),
-      globalElementIds: new Map(),
-      globalElementData: new Map(),
-    }
+    const expected = JSON.parse(JSON.stringify(value).replaceAll(swatchId, 'testing'))
 
     // Act
     const result = copyStyleData(value, {
-      replacementContext: replacementContext as ReplacementContext,
+      replacementContext: createReplacementContext({
+        swatchIds: {
+          [swatchId]: 'testing',
+        },
+      }),
       copyElement: node => node,
     })
 

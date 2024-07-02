@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Color constructor call with default value \`red\` returns versioned definition 1`] = `
+Color {
+  "config": {
+    "defaultValue": "red",
+    "label": "color",
+  },
+  "version": 1,
+}
+`;
+
+exports[`Color constructor call with default value \`undefined\` returns versioned definition 1`] = `
+Color {
+  "config": {
+    "defaultValue": undefined,
+    "label": "color",
+  },
+  "version": 1,
+}
+`;
+
+exports[`Color definition w/ config {"defaultValue":"red","label":"visible"} toData returns v1 data for \`{ swatchId: '[swatch-id-1]', alpha: 1 }\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "color::v1",
+  "alpha": 1,
+  "swatchId": "[swatch-id-1]",
+}
+`;
+
+exports[`Color definition w/ config {"defaultValue":"red","label":"visible"} toData returns v1 data for \`{ swatchId: '[swatch-id-2]', alpha: 0.5 }\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "color::v1",
+  "alpha": 0.5,
+  "swatchId": "[swatch-id-2]",
+}
+`;

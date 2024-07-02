@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Shape constructor heterogenous controls 1`] = `
+Shape {
+  "config": {
+    "type": {
+      "num": Checkbox {
+        "config": {},
+        "version": 1,
+      },
+      "val": Color {
+        "config": {
+          "defaultValue": "red",
+        },
+        "version": 1,
+      },
+    },
+  },
+}
+`;

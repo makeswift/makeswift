@@ -1,6 +1,5 @@
-import { ImageControlData } from '@makeswift/controls'
+import { createReplacementContext, ImageControlData } from '@makeswift/controls'
 import { copyImageData } from './image'
-import { ReplacementContext } from '../state/react-page'
 
 describe('image copy', () => {
   test('image is replaced by a one in replacement context', () => {
@@ -8,22 +7,13 @@ describe('image copy', () => {
     const data: ImageControlData = 'file-id'
     const expected = 'testing'
 
-    const replacementContext = {
-      elementHtmlIds: new Set(),
-      elementKeys: new Map(),
-      swatchIds: new Map(),
-      fileIds: new Map([['file-id', 'testing']]),
-      typographyIds: new Map(),
-      tableIds: new Map(),
-      tableColumnIds: new Map(),
-      pageIds: new Map(),
-      globalElementIds: new Map(),
-      globalElementData: new Map(),
-    }
-
     // Act
     const result = copyImageData(data, {
-      replacementContext: replacementContext as ReplacementContext,
+      replacementContext: createReplacementContext({
+        fileIds: {
+          'file-id': 'testing',
+        },
+      }),
       copyElement: node => node,
     })
 
