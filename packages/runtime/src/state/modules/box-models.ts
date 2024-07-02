@@ -1,5 +1,5 @@
+import { type BoxModel } from '@makeswift/controls'
 import {
-  BoxModel,
   createBox as createBoxWithoutScroll,
   CreateBoxArgs,
   getBox as getBoxWithoutScroll,

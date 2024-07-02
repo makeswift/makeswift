@@ -1,10 +1,15 @@
-import { Color, type ColorData, type ResponsiveValue, type CopyContext } from '@makeswift/controls'
+import {
+  Color,
+  ControlInstance,
+  type ColorData,
+  type ResponsiveValue,
+  type CopyContext,
+  type SendMessage,
+} from '@makeswift/controls'
 import { BorderRadiusPropertyData } from '../css/border-radius'
 import type { LengthPercentageData } from '../css/length-percentage'
 import { MarginPropertyData } from '../css/margin'
 import { PaddingPropertyData } from '../css/padding'
-import { Send } from '../prop-controllers/instances'
-import { PropController } from '../prop-controllers/base'
 import { BoxModel } from '../state/modules/box-models'
 import { getBorderPropControllerDataSwatchIds } from '@makeswift/prop-controllers'
 
@@ -207,16 +212,19 @@ type StyleControlItemBoxModelChangeMessage = {
 
 export type StyleControlMessage = StyleControlItemBoxModelChangeMessage
 
-export class StyleControl extends PropController<StyleControlMessage> {
-  constructor(send: Send<StyleControlMessage>) {
+export class StyleControl extends ControlInstance<StyleControlMessage> {
+  constructor(send: SendMessage<StyleControlMessage>) {
     super(send)
   }
 
   changeBoxModel(boxModel: BoxModel | null): void {
-    this.send({ type: StyleControlMessageType.CHANGE_BOX_MODEL, payload: { boxModel } })
+    this.sendMessage({ type: StyleControlMessageType.CHANGE_BOX_MODEL, payload: { boxModel } })
   }
 
   recv() {}
+  child(_key: string): ControlInstance | undefined {
+    return undefined
+  }
 }
 
 export function getStyleSwatchIds(data: StyleControlData): string[] {

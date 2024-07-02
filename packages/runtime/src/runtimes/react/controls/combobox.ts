@@ -2,7 +2,7 @@ import {
   ComboboxControlData,
   ComboboxControlDefinition,
   ComboboxControlDefinitionOption,
-} from '../../../controls'
+} from '@makeswift/controls'
 
 export type ComboboxControlValue<T extends ComboboxControlDefinition> =
   | ComboboxControlDefinitionOption<T>

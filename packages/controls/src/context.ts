@@ -56,3 +56,7 @@ export type CopyContext = {
   replacementContext: ReplacementContext
   copyElement: (node: Element) => Element
 }
+
+export type MergeContext = {
+  mergeElement(a: Element, b: Element): Element
+}

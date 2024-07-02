@@ -9,13 +9,22 @@ export const StyleControlProperty = {
   TextStyle: 'makeswift::controls::style::property::text-style',
 } as const
 
-export type StyleControlProperty = (typeof StyleControlProperty)[keyof typeof StyleControlProperty]
+export type StyleControlProperty =
+  (typeof StyleControlProperty)[keyof typeof StyleControlProperty]
 
 export interface Effector {
-  defineStyle(name: string, properties: StyleControlProperty[], style: ResponsiveValue<any>): void
-  defineStyle(name: string, properties: StyleControlProperty[], style: Record<string, ResponsiveValue<any>>): void
+  defineStyle(
+    name: string,
+    properties: StyleControlProperty[],
+    style: ResponsiveValue<any>,
+  ): void
+  defineStyle(
+    name: string,
+    properties: StyleControlProperty[],
+    style: Record<string, ResponsiveValue<any>>,
+  ): void
 }
 
-export const NoOpEffector: Effector = {
+export const noOpEffector: Effector = {
   defineStyle: () => {},
 }

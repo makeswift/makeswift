@@ -7,21 +7,22 @@ import {
 
 import { type ListDefinition } from './list'
 
-type Payload = { message: ControlMessage; itemId: string }
+type Message = {
+  type: typeof ListControl.ITEM_CONTROL_MESSAGE
+  payload: { message: ControlMessage; itemId: string }
+}
 
 export class ListControl<
   Def extends ListDefinition = ListDefinition,
-> extends ControlInstance<Payload> {
-  static readonly messageType = {
-    ITEM_CONTROL_MESSAGE:
-      'makeswift::controls::list::message::item-control-message',
-  } as const
+> extends ControlInstance<Message> {
+  static ITEM_CONTROL_MESSAGE =
+    'makeswift::controls::list::message::item-control-message'
 
   private itemControls: Map<string, ControlInstance> = new Map()
 
   constructor(
     private readonly definition: Def,
-    sendMessage: SendMessage<Payload>,
+    sendMessage: SendMessage<Message>,
   ) {
     super(sendMessage)
   }
@@ -45,19 +46,20 @@ export class ListControl<
     ))
   }
 
-  recv = (message: ControlMessage<Payload>) => {
+  recv = (message: Message) => {
     switch (message.type) {
-      case ListControl.messageType.ITEM_CONTROL_MESSAGE: {
-        const control = this.itemControls.get(message.payload.itemId)
-        control?.recv(message.payload.message)
+      case ListControl.ITEM_CONTROL_MESSAGE: {
+        this.child(message.payload.itemId)?.recv(message.payload.message)
       }
     }
   }
 
+  child = (key: string) => this.itemControls.get(key)
+
   createItemControl = (id: string) => {
     return this.definition.itemDef.createInstance((message) =>
       this.sendMessage({
-        type: ListControl.messageType.ITEM_CONTROL_MESSAGE,
+        type: ListControl.ITEM_CONTROL_MESSAGE,
         payload: { message, itemId: id },
       }),
     )

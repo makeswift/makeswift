@@ -1,4 +1,4 @@
-import { ComboboxControlDefinition } from '../../../controls'
+import { ComboboxControlDefinition } from '@makeswift/controls'
 import { deserializeFunction, serializeFunction } from '../function-serialization'
 import { Deserialize, Serialize } from './types'
 

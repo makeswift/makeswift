@@ -15,8 +15,8 @@ import {
   ControlDefinition,
   safeParse,
   serialize,
-  ParseResult,
-  SerializedRecord,
+  type ParseResult,
+  type SerializedRecord,
 } from '../control-definition'
 import { map } from '../utils/functional'
 import { unionOfLiterals } from '../utils/zod'
@@ -31,11 +31,18 @@ type Config<Item extends string = string> = {
   labelOrientation?: 'horizontal' | 'vertical'
 }
 
-type DataType<C extends Config> = C['options'][number]['value']
-type ValueType<C extends Config> = C['options'][number]['value']
-type ResolvedValueType<C extends Config> = C['options'][number]['value']
+type ItemType<C extends Config> = C extends Config<infer Item> ? Item : never
+type DataType<C extends Config> = undefined extends C['defaultValue']
+  ? ItemType<C> | undefined
+  : ItemType<C>
 
-class Definition<C extends Config = Config> extends ControlDefinition<
+type ValueType<C extends Config> = DataType<C>
+type ResolvedValueType<C extends Config> = ValueType<C>
+
+class Definition<
+  Item extends string = string,
+  C extends Config<Item> = Config<Item>,
+> extends ControlDefinition<
   typeof Definition.type,
   C,
   DataType<C>,
@@ -44,16 +51,12 @@ class Definition<C extends Config = Config> extends ControlDefinition<
 > {
   static readonly type = 'makeswift::controls::select' as const
 
-  static schema<T, U>(
-    item: z.ZodType<T>,
-    values: z.ZodType<U>,
-    relaxed: boolean = true,
-  ) {
+  static schema<T>(item: z.ZodType<T>, relaxed: boolean = true) {
     const type = z.literal(Definition.type)
 
-    const data = relaxed ? values.optional() : values
-    const value = values
-    const resolvedValue = relaxed ? values.optional() : values
+    const data = relaxed ? item.optional() : item
+    const value = data
+    const resolvedValue = value
 
     const config = z.object({
       options: z.array(z.object({ value: item, label: z.string() })).nonempty(),
@@ -90,11 +93,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
       )
     }
 
-    const { config: configSchema } = Definition.schema(
-      z.string(),
-      z.array(z.string()).nonempty(),
-    )
-
+    const { config: configSchema } = Definition.schema(z.string())
     const def = z.object({
       type: z.literal(Definition.type),
       config: configSchema,
@@ -110,14 +109,11 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   }
 
   get schema() {
-    const values = unionOfLiterals(
-      map(this.config.options, ({ value }) => value),
+    const item = unionOfLiterals(
+      map(this.config.options, ({ value }) => value as ItemType<C>),
     )
-    return Definition.schema(
-      z.literal(this.config.options[0].value),
-      values,
-      this.config.defaultValue === undefined,
-    )
+
+    return Definition.schema(item, this.config.defaultValue === undefined)
   }
 
   safeParse(data: unknown | undefined): ParseResult<DataType<C> | undefined> {
@@ -125,7 +121,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   }
 
   fromData(data: DataType<C> | undefined): ValueType<C> | undefined {
-    return this.schema.data.optional().parse(data) ?? this.config.defaultValue
+    return this.schema.data.optional().parse(data)
   }
 
   toData(value: ValueType<C>): DataType<C> {
@@ -146,7 +142,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   ): ValueSubscription<ResolvedValueType<C> | undefined> {
     return {
       readStableValue: (_previous?: ResolvedValueType<C>) => {
-        return value ?? this.config.defaultValue
+        return value ?? (this.config.defaultValue as ResolvedValueType<C>)
       },
       subscribe: () => () => {},
     }
@@ -163,8 +159,16 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   }
 }
 
+type DerivedConfig<T extends string, C extends Config<T>> = Config<T> & {
+  defaultValue: C['defaultValue']
+}
+
 export const Select = <T extends string, C extends Config<T>>(
   config: C & { options: OptionList<T> },
-) => new (class Select extends Definition<C> {})(config)
+) =>
+  new (class Select extends Definition<T, DerivedConfig<T, C>> {})({
+    ...config,
+    defaultValue: config.defaultValue,
+  })
 
 export { Definition as SelectDefinition }

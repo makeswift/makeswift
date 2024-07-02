@@ -1,14 +1,4 @@
 import {
-  ColorDefinition,
-  TextInputControlData,
-  TextInputControlDefinition,
-  TextInputControlType,
-  TextAreaControlData,
-  TextAreaControlDefinition,
-  TextAreaControlType,
-  NumberControlData,
-  NumberControlDefinition,
-  CheckboxDefinition,
   ComboboxControlData,
   ComboboxControlDefinition,
   IconRadioGroupControlData,
@@ -19,42 +9,25 @@ import {
   LinkControlData,
   LinkControlDefinition,
   LinkControlType,
-  ListDefinition,
   copyLinkData,
   ControlDefinition as GenericControlDefinition,
   type CopyContext,
   type DataType,
+  type Data,
+  type MergeContext,
+  type MergeTranslatableDataContext,
 } from '@makeswift/controls'
 
 import { copyImageData } from './image'
-import { SelectControlData, SelectControlDefinition } from './select'
-import {
-  ShapeControlData,
-  ShapeControlDefinition,
-  copyShapeData,
-  ShapeControlType,
-  getShapeTranslatableData,
-  mergeShapeTranslatedData,
-  ShapeControlTranslationDto,
-} from './shape'
 import { copyStyleData, StyleControlData, StyleControlDefinition, StyleControlType } from './style'
-import {
-  copySlotData,
-  mergeSlotControlTranslatedData,
-  mergeSlotData,
-  SlotControlData,
-  SlotControlDefinition,
-  SlotControlType,
-} from './slot'
 
-import { Descriptor } from '../prop-controllers/descriptors'
+import { Descriptor, isLegacyDescriptor } from '../prop-controllers/descriptors'
 import {
   GridPropControllerData,
   Types as PropControllerTypes,
   mergeGridPropControllerTranslatedData,
 } from '@makeswift/prop-controllers'
 import { copy as propControllerCopy } from '../prop-controllers/copy'
-import { Data, MergeContext, MergeTranslatableDataContext } from '../state/react-page'
 import {
   RichTextControlData,
   RichTextControlDefinition,
@@ -82,63 +55,47 @@ import {
 } from './rich-text-v2/translation'
 import { IndexSignatureHack } from '../utils/index-signature-hack'
 
-export type ControlDefinition =
-  | typeof CheckboxDefinition
-  | NumberControlDefinition
-  | TextInputControlDefinition
-  | TextAreaControlDefinition
-  | SelectControlDefinition
-  | typeof ColorDefinition
+type LegacyControlDefinition =
   | IconRadioGroupControlDefinition
   | ImageControlDefinition
   | ComboboxControlDefinition
-  | ShapeControlDefinition
-  | typeof ListDefinition
   | LinkControlDefinition
-  | SlotControlDefinition
-  | ShapeControlDefinition
   | RichTextControlDefinition
   | RichTextV2ControlDefinition
   | StyleControlDefinition
   | StyleV2ControlDefinition
   | TypographyControlDefinition
 
-export type ControlDefinitionData<T extends ControlDefinition> = T extends NumberControlDefinition
-  ? NumberControlData
-  : T extends TextInputControlDefinition
-    ? TextInputControlData
-    : T extends TextAreaControlDefinition
-      ? TextAreaControlData
-      : T extends SelectControlDefinition
-        ? SelectControlData<T>
-        : T extends IconRadioGroupControlDefinition
-          ? IconRadioGroupControlData<T>
-          : T extends ImageControlDefinition
-            ? ImageControlData
-            : T extends ComboboxControlDefinition
-              ? ComboboxControlData<T>
-              : T extends ShapeControlDefinition
-                ? ShapeControlData<T>
-                : T extends LinkControlDefinition
-                  ? LinkControlData
-                  : T extends RichTextControlDefinition
-                    ? IndexSignatureHack<RichTextControlData>
-                    : T extends RichTextV2ControlDefinition
-                      ? RichTextV2ControlData
-                      : T extends StyleControlDefinition
-                        ? StyleControlData
-                        : T extends StyleV2ControlDefinition
-                          ? StyleV2ControlData
-                          : T extends TypographyControlDefinition
-                            ? TypographyControlData
-                            : T extends GenericControlDefinition
-                              ? DataType<T>
-                              : never
+export type LegacyControlDefinitionData<T extends LegacyControlDefinition> =
+  T extends IconRadioGroupControlDefinition
+    ? IconRadioGroupControlData<T>
+    : T extends ImageControlDefinition
+      ? ImageControlData
+      : T extends ComboboxControlDefinition
+        ? ComboboxControlData<T>
+        : T extends LinkControlDefinition
+          ? LinkControlData
+          : T extends RichTextControlDefinition
+            ? IndexSignatureHack<RichTextControlData>
+            : T extends RichTextV2ControlDefinition
+              ? RichTextV2ControlData
+              : T extends StyleControlDefinition
+                ? StyleControlData
+                : T extends StyleV2ControlDefinition
+                  ? StyleV2ControlData
+                  : T extends TypographyControlDefinition
+                    ? TypographyControlData
+                    : never
 
-export function copy(definition: Descriptor | ControlDefinition, value: any, context: CopyContext) {
-  const copyData = (definition as any as GenericControlDefinition).copyData
-  if (copyData) {
-    return copyData.bind(definition)(value, context)
+export type ControlDefinition = LegacyControlDefinition | GenericControlDefinition
+
+export type ControlDefinitionData<T extends ControlDefinition> = T extends LegacyControlDefinition
+  ? LegacyControlDefinitionData<T>
+  : DataType<T>
+
+export function copy(definition: Descriptor, value: any, context: CopyContext) {
+  if (!isLegacyDescriptor(definition)) {
+    return definition.copyData(value, context)
   }
 
   switch (definition.type) {
@@ -155,24 +112,26 @@ export function copy(definition: Descriptor | ControlDefinition, value: any, con
     case PropControllerTypes.Border:
     case PropControllerTypes.ElementID:
       return propControllerCopy(definition, value, context)
+
     case DELETED_PROP_CONTROLLER_TYPES.RichText:
     case RichTextControlType:
       return copyRichTextData(value, context)
+
     case RichTextV2ControlType:
       return copyRichTextV2Data(
         isRichTextV1Data(value) ? richTextV2DescendentsToData(richTextDTOtoDAO(value)) : value,
         context,
       )
+
     case ImageControlType:
       return copyImageData(value, context)
+
     case LinkControlType:
       return copyLinkData(value, context)
-    case ShapeControlType:
-      return copyShapeData(definition, value, context)
+
     case StyleControlType:
       return copyStyleData(value, context)
-    case SlotControlType:
-      return copySlotData(value, context)
+
     default:
       return value
   }
@@ -182,23 +141,34 @@ export function merge(
   definition: PropControllerDescriptor,
   a: Data,
   b: Data = a,
-  context: MergeContext,
+  _context: MergeContext,
 ): Data {
+  if (!isLegacyDescriptor(definition)) {
+    // FIXME
+    return b
+  }
+
   switch (definition.type) {
-    case SlotControlType:
-      return mergeSlotData(a as SlotControlData, b as SlotControlData, context)
+    // FIXME
+    // case SlotControlType:
+    //   return mergeSlotData(a as SlotControlData, b as SlotControlData, context)
 
     default:
       return b
   }
 }
 
-export function getTranslatableData(definition: Descriptor | ControlDefinition, data: Data): Data {
+export function getTranslatableData(definition: Descriptor, data: Data): Data {
+  if (!isLegacyDescriptor(definition)) {
+    // FIXME
+    return data
+  }
+
   switch (definition.type) {
     case PropControllerTypes.TextInput:
     case PropControllerTypes.TextArea:
-    case TextInputControlType:
-    case TextAreaControlType:
+      // case TextInputControlType:
+      // case TextAreaControlType:
       return data
 
     case RichTextV2ControlType:
@@ -208,15 +178,15 @@ export function getTranslatableData(definition: Descriptor | ControlDefinition, 
 
       return getRichTextV2TranslatableData(definition, richTextData as RichTextV2ControlData)
 
-    case ListControlType:
-      if (data == null) return null
+    // case ListControlType:
+    //   if (data == null) return null
 
-      return getListTranslatableData(definition, data as ListControlData)
+    //   return getListTranslatableData(definition, data as ListControlData)
 
-    case ShapeControlType:
-      if (data == null) return null
+    // case ShapeControlType:
+    //   if (data == null) return null
 
-      return getShapeTranslatableData(definition, data as ShapeControlData)
+    //   return getShapeTranslatableData(definition, data as ShapeControlData)
 
     default:
       return null
@@ -230,12 +200,16 @@ export function mergeTranslatedData(
   context: MergeTranslatableDataContext,
 ): Data {
   if (data == null) return data
+  if (!isLegacyDescriptor(definition)) {
+    // FIXME
+    return data
+  }
 
   switch (definition.type) {
     case PropControllerTypes.TextInput:
     case PropControllerTypes.TextArea:
-    case TextInputControlType:
-    case TextAreaControlType:
+      // case TextInputControlType:
+      // case TextAreaControlType:
       if (translatedData == null) return data
 
       return translatedData
@@ -243,8 +217,9 @@ export function mergeTranslatedData(
     case PropControllerTypes.Grid:
       return mergeGridPropControllerTranslatedData(data as GridPropControllerData, context)
 
-    case SlotControlType:
-      return mergeSlotControlTranslatedData(data as SlotControlData, context)
+    // FIXME
+    // case SlotControlType:
+    //   return mergeSlotControlTranslatedData(data as SlotControlData, context)
 
     case RichTextV2ControlType:
       if (translatedData == null) return data
@@ -255,25 +230,25 @@ export function mergeTranslatedData(
         translatedData as RichTextV2ControlTranslationDto,
       )
 
-    case ListControlType:
-      if (translatedData == null) return data
+    // case ListControlType:
+    //   if (translatedData == null) return data
 
-      return mergeListTranslatedData(
-        definition,
-        data as ListControlData,
-        translatedData as ListControlTranslationDto,
-        context,
-      )
+    //   return mergeListTranslatedData(
+    //     definition,
+    //     data as ListControlData,
+    //     translatedData as ListControlTranslationDto,
+    //     context,
+    //   )
 
-    case ShapeControlType:
-      if (translatedData == null) return data
+    // case ShapeControlType:
+    //   if (translatedData == null) return data
 
-      return mergeShapeTranslatedData(
-        definition,
-        data as ShapeControlData,
-        translatedData as ShapeControlTranslationDto,
-        context,
-      )
+    //   return mergeShapeTranslatedData(
+    //     definition,
+    //     data as ShapeControlData,
+    //     translatedData as ShapeControlTranslationDto,
+    //     context,
+    //   )
 
     default:
       return data

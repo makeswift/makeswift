@@ -1,11 +1,9 @@
-import { ResponsiveValue } from '@makeswift/controls'
+import { ResponsiveValue, ControlInstance, type SendMessage } from '@makeswift/controls'
 import { BoxModel } from 'css-box-model'
 import { ControlDefinition } from './control'
-import { PropController } from '../prop-controllers/base'
 import {
   AnyPropController,
   PropControllerMessage,
-  Send,
   createPropController,
 } from '../prop-controllers/instances'
 import { CSSObject } from '@emotion/serialize'
@@ -74,12 +72,12 @@ export type StyleV2ControlMessage =
 
 export class StyleV2Control<
   T extends StyleV2ControlDefinition = StyleV2ControlDefinition,
-> extends PropController<StyleV2ControlMessage> {
+> extends ControlInstance<StyleV2ControlMessage> {
   control?: AnyPropController
-  constructor(send: Send<StyleV2ControlMessage>, descriptor: T) {
+  constructor(send: SendMessage<StyleV2ControlMessage>, descriptor: T) {
     super(send)
     this.control = createPropController(descriptor.config.type, message => {
-      this.send({
+      this.sendMessage({
         type: StyleV2ControlMessageType.STYLE_V2_CONTROL_CHILD_CONTROL_MESSAGE,
         payload: { message },
       })
@@ -87,7 +85,7 @@ export class StyleV2Control<
   }
 
   changeBoxModel(boxModel: BoxModel | null): void {
-    this.send({ type: StyleV2ControlMessageType.CHANGE_BOX_MODEL, payload: { boxModel } })
+    this.sendMessage({ type: StyleV2ControlMessageType.CHANGE_BOX_MODEL, payload: { boxModel } })
   }
 
   recv(message: StyleV2ControlMessage) {
@@ -102,5 +100,9 @@ export class StyleV2Control<
         recv(message.payload.message)
       }
     }
+  }
+
+  child(_key: string): ControlInstance | undefined {
+    return undefined
   }
 }

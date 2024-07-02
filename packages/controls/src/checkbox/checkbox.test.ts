@@ -3,6 +3,7 @@ import { testDefinition } from '../tests/test-definition'
 import { noOpResourceResolver } from '../tests/mocks'
 
 import { type ValueType, type ResolvedValueType } from '../control-definition'
+import { noOpEffector } from '../effector'
 
 describe('Checkbox', () => {
   describe('constructor', () => {
@@ -54,14 +55,14 @@ describe('Checkbox', () => {
       (value) => {
         expect(
           Checkbox({ label: 'visible' })
-            .resolveValue(value, noOpResourceResolver)
+            .resolveValue(value, noOpResourceResolver, noOpEffector)
             .readStableValue(),
         ).toBe(value)
 
         const defaultValue = true
         expect(
           Checkbox({ defaultValue, label: 'visible' })
-            .resolveValue(value, noOpResourceResolver)
+            .resolveValue(value, noOpResourceResolver, noOpEffector)
             .readStableValue(),
         ).toBe(value ?? defaultValue)
       },

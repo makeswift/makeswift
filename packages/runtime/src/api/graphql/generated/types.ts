@@ -29,7 +29,7 @@ export const SnippetLocation = {
   Head: 'HEAD',
 } as const
 
-export type SnippetLocation = typeof SnippetLocation[keyof typeof SnippetLocation]
+export type SnippetLocation = (typeof SnippetLocation)[keyof typeof SnippetLocation]
 
 export type SwatchFragment = {
   __typename: 'Swatch'

@@ -2,7 +2,7 @@ import { MouseEvent, useCallback, useMemo } from 'react'
 
 import scrollIntoView from 'scroll-into-view-if-needed'
 import { useElementId } from '../'
-import { LinkControlData, LinkControlDefinition } from '../../../controls'
+import { LinkControlData, LinkControlDefinition } from '@makeswift/controls'
 import { usePagePathnameSlice } from '../hooks/makeswift-api'
 
 type LinkValue = {

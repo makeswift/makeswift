@@ -1,4 +1,5 @@
-import { Descriptor } from './descriptors'
+import { type CopyContext } from '@makeswift/controls'
+
 import {
   copyLinkPropControllerData,
   copyShadowsPropControllerData,
@@ -8,17 +9,21 @@ import {
   copyImagePropControllerData,
   copyImagesPropControllerData,
   copyBackgroundsPropControllerData,
-} from '@makeswift/prop-controllers'
-import { CopyContext } from '../state/react-page'
-import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
-import {
   copyResponsiveColorPropControllerData,
   copyTablePropControllerData,
   copyNavigationLinksPropControllerData,
+  Types as PropControllerTypes,
 } from '@makeswift/prop-controllers'
+
+import { isLegacyDescriptor, type Descriptor } from './descriptors'
 
 // @note: note typing value, because would then have to type narrow `Data` per case
 export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
+  if (!isLegacyDescriptor(descriptor)) {
+    // FIXME
+    return value
+  }
+
   switch (descriptor.type) {
     case PropControllerTypes.Backgrounds:
       return copyBackgroundsPropControllerData(descriptor, value, context)

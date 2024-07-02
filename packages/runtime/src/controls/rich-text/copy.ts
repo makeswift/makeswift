@@ -1,4 +1,4 @@
-import { CopyContext } from '../../state/react-page'
+import { type CopyContext } from '@makeswift/controls'
 import { NodeJSON, InlineJSON, MarkJSON } from './dto-types'
 import { RichTextControlData } from './rich-text'
 

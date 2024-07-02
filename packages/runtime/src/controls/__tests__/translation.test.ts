@@ -5,7 +5,7 @@ describe('GIVEN merging translations', () => {
   test('WHEN merging shape control THEN valid translations are applied', () => {
     // Act
     const result = mergeTranslatedData(
-      ShapeFixture.componentRegistration,
+      ShapeFixture.componentRegistration as any, // FIXME
       ShapeFixture.translatableComponentData,
       ShapeFixture.translatedData,
       {

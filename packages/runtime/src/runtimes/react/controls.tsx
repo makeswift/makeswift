@@ -1,17 +1,19 @@
 import { useMemo, useRef, useSyncExternalStore } from 'react'
 import {
   IconRadioGroupControlType,
-  // TextInputControlType,
-  // TextAreaControlType,
+  ComboboxControlType,
+  ImageControlType,
+  LinkControlType,
   type ResourceResolver,
   type ValueSubscription,
   type StyleControlProperty,
   mapValues,
+  ControlInstance,
 } from '@makeswift/controls'
 
 import * as ReactPage from '../../state/react-page'
 
-import { StyleControlData } from '../../../controls'
+import { StyleControlData } from '../../controls/style'
 import {
   useBoxShadow,
   useBorder as useBorderData,
@@ -33,13 +35,6 @@ import {
   useResponsiveWidth,
 } from '../../components/utils/responsive-style'
 import {
-  ComboboxControlType,
-  ImageControlType,
-  LinkControlType,
-  // SelectControlType,
-  // ShapeControlType,
-  SlotControl,
-  SlotControlType,
   StyleControlType,
   RichTextControl,
   RichTextControlType,
@@ -52,7 +47,6 @@ import {
 import { getStyleControlCssObject, useFormattedStyle } from './controls/style'
 import { ControlValue } from './controls/control'
 import { RenderHook } from './components'
-import { useSlot } from './controls/slot'
 import { useStyle, useStyles } from './use-style'
 import { useRichText } from './controls/rich-text/rich-text'
 import { useRichTextV2 } from './controls/rich-text-v2'
@@ -89,6 +83,8 @@ import {
   ResponsiveOpacity,
   getSocialLinksPropControllerDataSocialLinksData,
 } from '@makeswift/prop-controllers'
+
+import { isLegacyDescriptor, type Descriptor } from '../../prop-controllers/descriptors'
 import { useResponsiveLengthPropControllerData } from '../../components/hooks/useResponsiveLengthPropControllerData'
 import { useNumberPropControllerData } from '../../components/hooks/useNumberPropControllerData'
 import { useResponsiveColorPropControllerData } from '../../components/hooks/useResponsiveColorPropControllerData'
@@ -155,10 +151,12 @@ type PropsValueProps = {
 }
 
 const useResolvedProps = (
-  propDefs: Record<string, { type: string }>,
+  propDefs: Record<string, Descriptor>,
+  controls: Record<string, ControlInstance> | null,
   elementData: Record<string, ReactPage.ElementData>,
   resourceResolver: ResourceResolver,
 ): Record<string, unknown> => {
+  console.log('+++ useResolvedProps', propDefs, controls, elementData, resourceResolver)
   const breakpoints = useBreakpoints()
 
   const effector = useMemo(() => {
@@ -221,7 +219,7 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
     return ReactPage.getPropControllers(state, documentKey, element.key)
   })
 
-  const resolvedProps = useResolvedProps(propDefsRef.current, props, client)
+  const resolvedProps = useResolvedProps(propDefsRef.current, controls, props, client)
 
   const count = useRef(0)
   console.log('++++ componentProps:', element.type, resolvedProps, 'render count:', count.current++)
@@ -229,6 +227,10 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
   return Object.entries(propDefsRef.current).reduceRight(
     (renderFn, [propName, descriptor]) =>
       propsValue => {
+        if (!isLegacyDescriptor(descriptor)) {
+          return renderFn({ ...propsValue, [propName]: props[propName] })
+        }
+
         switch (descriptor.type) {
           // case NumberControlType:
           // case TextInputControlType:
@@ -296,19 +298,19 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
             )
           }
 
-          case SlotControlType: {
-            const control = (controls?.[propName] ?? null) as SlotControl | null
+          // case SlotControlType: {
+          //   const control = (controls?.[propName] ?? null) as SlotControl | null
 
-            return (
-              <RenderHook
-                key={descriptor.type}
-                hook={useSlot}
-                parameters={[props[propName], control]}
-              >
-                {value => renderFn({ ...propsValue, [propName]: value })}
-              </RenderHook>
-            )
-          }
+          //   return (
+          //     <RenderHook
+          //       key={descriptor.type}
+          //       hook={useSlot}
+          //       parameters={[props[propName], control]}
+          //     >
+          //       {value => renderFn({ ...propsValue, [propName]: value })}
+          //     </RenderHook>
+          //   )
+          // }
 
           case PropControllerTypes.Width:
             switch (descriptor.options.format) {

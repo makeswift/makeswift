@@ -8,6 +8,15 @@ import {
 
 import thunk, { ThunkDispatch } from 'redux-thunk'
 
+import {
+  createReplacementContext,
+  type SerializableReplacementContext,
+  type ReplacementContext,
+  type TranslationDto,
+  type MergeTranslatableDataContext,
+  type MergeContext,
+} from '@makeswift/controls'
+
 import * as Documents from './modules/read-only-documents'
 import * as ReactComponents from './modules/react-components'
 import * as ComponentsMeta from './modules/components-meta'
@@ -26,14 +35,6 @@ import {
   merge,
   mergeTranslatedData,
 } from '../controls/control'
-
-import {
-  createReplacementContext,
-  type SerializableReplacementContext,
-  type ReplacementContext,
-  type TranslationDto,
-  type MergeTranslatableDataContext,
-} from '@makeswift/controls'
 
 export type {
   Data,
@@ -346,10 +347,6 @@ export function mergeElementTreeTranslatedData(
     }
   }
   return merge(state, translatedData)(elementTree)
-}
-
-export type MergeContext = {
-  mergeElement(a: Documents.Element, b: Documents.Element): Documents.Element
 }
 
 export function mergeElement(

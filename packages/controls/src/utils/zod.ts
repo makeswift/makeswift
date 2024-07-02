@@ -1,4 +1,4 @@
-import { z, ZodError } from 'zod'
+import { z, ZodError, type Primitive } from 'zod'
 import { isTwoOrMoreElements, map } from './functional'
 
 export function summarizeError(error: ZodError<unknown>): string {
@@ -11,7 +11,12 @@ export function summarizeError(error: ZodError<unknown>): string {
   ].join('; ')
 }
 
-export function unionOfLiterals<T extends string>(constants: readonly [T, ...T[]]) {
-  const c: readonly [T, T, ...T[]] = isTwoOrMoreElements(constants) ? constants : [constants[0], constants[0]]
+export function unionOfLiterals<T extends Primitive>(
+  constants: readonly [T, ...T[]],
+) {
+  const c: readonly [T, T, ...T[]] = isTwoOrMoreElements(constants)
+    ? constants
+    : [constants[0], constants[0]]
+
   return z.union(map(c, (x) => z.literal(x)))
 }

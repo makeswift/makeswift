@@ -15,20 +15,21 @@ import {
 
 import {
   CheckboxDefinition,
+  ComboboxControlDefinition,
+  ComboboxControlType,
   ColorDefinition,
   ControlDefinition as GenericControlDefinition,
   ListDefinition,
-  ShapeDefinition,
-  SerializedRecord,
   NumberDefinition,
-  TextInputDefinition,
-  TextAreaDefinition,
   SelectDefinition,
+  ShapeDefinition,
+  SlotDefinition,
+  TextAreaDefinition,
+  TextInputDefinition,
+  type SerializedRecord,
 } from '@makeswift/controls'
 
 import {
-  ComboboxControlDefinition,
-  ComboboxControlType,
   RichTextV2ControlDefinition,
   RichTextV2ControlType,
   // ShapeControlDefinition,
@@ -61,11 +62,8 @@ import {
   deserializeComboboxControlDefinition,
   serializeComboboxControlDefinition,
 } from './controls/combobox'
+
 import { deserializeRichTextControlV2, serializeRichTextControlV2 } from './controls/rich-text-v2'
-// import {
-//   deserializeShapeControlDefinition,
-//   serializeShapeControlDefinition,
-// } from './controls/shape'
 import { deserializeStyleV2Control, serializeStyleV2Control } from './controls/style-v2'
 import { Deserialize, Serialize } from './controls/types'
 import {
@@ -75,6 +73,7 @@ import {
   SerializedFunction,
   serializeFunction,
 } from './function-serialization'
+
 import {
   LinkData,
   DateDescriptor as DateControl,
@@ -96,6 +95,8 @@ import {
   TextStylePropControllerData,
   TextInputDescriptor as TextInputControl,
 } from '@makeswift/prop-controllers'
+
+import { type LegacyDescriptor, isLegacyDescriptor } from '../../prop-controllers/descriptors'
 
 type SerializedShapeControlConfig<T extends Record<string, SerializedPanelControl>> = {
   type: T
@@ -736,9 +737,9 @@ function deserializeRichTextControl(
   return { ...serializedControl, options: deserializedOptions }
 }
 
-export type SerializedControl<T extends Data = Data> =
+export type SerializedLegacyControl<T extends Data = Data> =
   | Exclude<
-      ControlDefinition<T>,
+      LegacyDescriptor<T>,
       | ListControl<T extends ListControlValue ? T : ListControlValue>
       | ShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
       | TypeaheadControl<T extends TypeaheadControlValue ? T : TypeaheadControlValue>
@@ -760,10 +761,6 @@ export type SerializedControl<T extends Data = Data> =
       | RichTextV2ControlDefinition
       | ComboboxControlDefinition
       | StyleV2ControlDefinition
-      | typeof CheckboxDefinition
-      | typeof ColorDefinition
-      | typeof ListDefinition
-      | typeof ShapeDefinition
     >
   | SerializedListControl<T extends ListControlValue ? T : ListControlValue>
   | SerializedShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
@@ -786,10 +783,8 @@ export type SerializedControl<T extends Data = Data> =
   | Serialize<RichTextV2ControlDefinition>
   | Serialize<ComboboxControlDefinition>
   | Serialize<StyleV2ControlDefinition>
-  | SerializedRecord<CheckboxDefinition['controlType']>
-  | SerializedRecord<ColorDefinition['controlType']>
-  | SerializedRecord<ListDefinition['controlType']>
-  | SerializedRecord<ShapeDefinition['controlType']>
+
+export type SerializedControl<T extends Data = Data> = SerializedLegacyControl<T> | SerializedRecord
 
 type SerializedPanelControl<T extends Data = Data> = Extract<
   SerializedControl<T>,
@@ -799,9 +794,9 @@ type SerializedPanelControl<T extends Data = Data> = Extract<
 type SerializedPanelControlValueType<T extends SerializedPanelControl> =
   T extends SerializedPanelControl<infer U> ? U : never
 
-export type DeserializedControl<T extends Data = Data> =
+export type DeserializedLegacyControl<T extends Data = Data> =
   | Exclude<
-      ControlDefinition<T>,
+      LegacyDescriptor<T>,
       | ListControl<T extends ListControlValue ? T : ListControlValue>
       | ShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
       | TypeaheadControl<T extends TypeaheadControlValue ? T : TypeaheadControlValue>
@@ -823,10 +818,6 @@ export type DeserializedControl<T extends Data = Data> =
       | RichTextV2ControlDefinition
       | ComboboxControlDefinition
       | StyleV2ControlDefinition
-      | typeof CheckboxDefinition
-      | typeof ColorDefinition
-      | typeof ListDefinition
-      | typeof ShapeDefinition
     >
   | DeserializedListControl<T extends ListControlValue ? T : ListControlValue>
   | DeserializedShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
@@ -848,8 +839,10 @@ export type DeserializedControl<T extends Data = Data> =
   | DeserializedRichTextControl<T>
   | Deserialize<Serialize<RichTextV2ControlDefinition>>
   | Deserialize<Serialize<ComboboxControlDefinition>>
-  //| Deserialize<Serialize<ShapeControlDefinition>>
   | Deserialize<Serialize<StyleV2ControlDefinition>>
+
+export type DeserializedControl<T extends Data = Data> =
+  | DeserializedLegacyControl<T>
   | GenericControlDefinition
 
 export type DeserializedPanelControl<T extends Data = Data> = Extract<
@@ -863,24 +856,18 @@ type DeserializedPanelControlValueType<T extends DeserializedPanelControl> =
 export function serializeControl<T extends Data>(
   control: ControlDefinition<T>,
 ): [SerializedControl<T>, Transferable[]] {
-  const serialize = (control as any as GenericControlDefinition).serialize
-  if (serialize) {
-    const [serializedControl, transferables] = serialize.bind(control)()
-    return [serializedControl, transferables]
+  if (isLegacyDescriptor(control)) {
+    return serializeLegacyControl(control)
   }
 
-  switch (control.type) {
-    // @registration-point
-    case CheckboxDefinition.type:
-    case ColorDefinition.type:
-    case NumberDefinition.type:
-    case TextInputDefinition.type:
-    case TextAreaDefinition.type:
-    case SelectDefinition.type:
-    case ListDefinition.type:
-    case ShapeDefinition.type:
-      throw new Error(`${control.type} should have been serialized by generic code above`)
+  const [serializedControl, transferables] = control.serialize()
+  return [serializedControl, transferables]
+}
 
+function serializeLegacyControl<T extends Data>(
+  control: LegacyDescriptor<T>,
+): [SerializedControl<T>, Transferable[]] {
+  switch (control.type) {
     case PropControllerTypes.Checkbox:
       return serializeCheckboxControl(control)
 
@@ -944,16 +931,22 @@ export function serializeControl<T extends Data>(
     case ComboboxControlType:
       return serializeComboboxControlDefinition(control)
 
-    // case ShapeControlType:
-    //   return serializeShapeControlDefinition(control)
-
     default:
       return [control, []]
   }
 }
 
-export function deserializeControl<T extends Data>(
-  serializedControl: SerializedControl<T>,
+function isSerializedLegacyControl<T extends Data>(
+  control: SerializedControl<T>,
+): control is SerializedLegacyControl<T> {
+  return (
+    'options' in control ||
+    control.type in [RichTextV2ControlType, StyleV2ControlType, ComboboxControlType]
+  )
+}
+
+export function deserializeLegacyControl<T extends Data>(
+  serializedControl: SerializedLegacyControl<T>,
 ): DeserializedControl<T> {
   switch (serializedControl.type) {
     case PropControllerTypes.Checkbox:
@@ -1019,20 +1012,19 @@ export function deserializeControl<T extends Data>(
     case ComboboxControlType:
       return deserializeComboboxControlDefinition(serializedControl)
 
-    // @registration-point:
-    case CheckboxDefinition.type:
-    case ColorDefinition.type:
-    case NumberDefinition.type:
-    case TextInputDefinition.type:
-    case TextAreaDefinition.type:
-    case SelectDefinition.type:
-    case ListDefinition.type:
-    case ShapeDefinition.type:
-      return deserializeControlDefV2(serializedControl)
-
     default:
       return serializedControl
   }
+}
+
+export function deserializeControl<T extends Data>(
+  serializedControl: SerializedControl<T>,
+): DeserializedControl<T> {
+  if (isSerializedLegacyControl(serializedControl)) {
+    return deserializeLegacyControl(serializedControl)
+  }
+
+  return deserializeControlDefV2(serializedControl)
 }
 
 function deserializeControlDefV2(record: SerializedRecord): GenericControlDefinition {
@@ -1045,23 +1037,26 @@ function deserializeControlDefV2(record: SerializedRecord): GenericControlDefini
     case ColorDefinition.type:
       return ColorDefinition.deserialize(record)
 
+    case ListDefinition.type:
+      return ListDefinition.deserialize(record, deserializeControlDefV2)
+
     case NumberDefinition.type:
       return NumberDefinition.deserialize(record)
-
-    case TextInputDefinition.type:
-      return TextInputDefinition.deserialize(record)
-
-    case TextAreaDefinition.type:
-      return TextAreaDefinition.deserialize(record)
 
     case SelectDefinition.type:
       return SelectDefinition.deserialize(record)
 
-    case ListDefinition.type:
-      return ListDefinition.deserialize(record, deserializeControlDefV2)
-
     case ShapeDefinition.type:
       return ShapeDefinition.deserialize(record, deserializeControlDefV2)
+
+    case SlotDefinition.type:
+      return SlotDefinition.deserialize(record)
+
+    case TextAreaDefinition.type:
+      return TextAreaDefinition.deserialize(record)
+
+    case TextInputDefinition.type:
+      return TextInputDefinition.deserialize(record)
   }
 
   throw new Error(`Unknown control type: ${record.type}`)

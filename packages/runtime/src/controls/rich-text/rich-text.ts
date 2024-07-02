@@ -1,5 +1,5 @@
 import { BuilderEditMode } from '../../state/modules/builder-edit-mode'
-import { PropController } from '../../prop-controllers/base'
+import { ControlInstance } from '@makeswift/controls'
 import { BoxModel } from '../../box-model'
 import { RichTextDTO } from './dto-types'
 import { Editor } from 'slate'
@@ -26,17 +26,17 @@ export const RichTextControlMessageType = {
 
 type ChangeBuilderEditModeRichTextControlMessage = {
   type: typeof RichTextControlMessageType.CHANGE_BUILDER_EDIT_MODE
-  editMode: BuilderEditMode
+  payload: { editMode: BuilderEditMode }
 }
 
 type InitializeEditorRichTextControlMessage = {
   type: typeof RichTextControlMessageType.INITIALIZE_EDITOR
-  value: RichTextDTO
+  payload: { value: RichTextDTO }
 }
 
 type ChangeEditorValueRichTextControlMessage = {
   type: typeof RichTextControlMessageType.CHANGE_EDITOR_VALUE
-  value: RichTextDTO
+  payload: { value: RichTextDTO }
 }
 
 type FocusRichTextControlMessage = { type: typeof RichTextControlMessageType.FOCUS }
@@ -62,14 +62,17 @@ export type RichTextControlMessage =
   | RedoRichTextControlMessage
   | BoxModelChangeRichControlMessage
 
-export class RichTextControl extends PropController<RichTextControlMessage> {
+export class RichTextControl extends ControlInstance<RichTextControlMessage> {
   private editor: Editor | null = null
+  child(_key: string): ControlInstance | undefined {
+    return undefined
+  }
 
   recv = (message: RichTextControlMessage): void => {
     if (!this.editor) return
     switch (message.type) {
       case RichTextControlMessageType.CHANGE_BUILDER_EDIT_MODE: {
-        switch (message.editMode) {
+        switch (message.payload.editMode) {
           case BuilderEditMode.BUILD:
           case BuilderEditMode.INTERACT:
             this.editor.deselectAndBlur()
@@ -86,9 +89,9 @@ export class RichTextControl extends PropController<RichTextControlMessage> {
   setSlateEditor(editor: Editor) {
     this.editor = editor
 
-    this.send({
+    this.sendMessage({
       type: RichTextControlMessageType.INITIALIZE_EDITOR,
-      value: richTextDAOToDTO(editor.children, editor.selection),
+      payload: { value: richTextDAOToDTO(editor.children, editor.selection) },
     })
 
     const _onChange = editor.onChange
@@ -99,31 +102,31 @@ export class RichTextControl extends PropController<RichTextControlMessage> {
       // that is the only case in which we want to push updates
       // this prevent infinite loops that can occur when collaborating
       if (options?.operation != null) {
-        this.send({
+        this.sendMessage({
           type: RichTextControlMessageType.CHANGE_EDITOR_VALUE,
-          value: richTextDAOToDTO(editor.children, editor.selection),
+          payload: { value: richTextDAOToDTO(editor.children, editor.selection) },
         })
       }
     }
   }
 
   focus() {
-    this.send({ type: RichTextControlMessageType.FOCUS })
+    this.sendMessage({ type: RichTextControlMessageType.FOCUS })
   }
 
   blur() {
-    this.send({ type: RichTextControlMessageType.BLUR })
+    this.sendMessage({ type: RichTextControlMessageType.BLUR })
   }
 
   undo() {
-    this.send({ type: RichTextControlMessageType.UNDO })
+    this.sendMessage({ type: RichTextControlMessageType.UNDO })
   }
 
   redo() {
-    this.send({ type: RichTextControlMessageType.REDO })
+    this.sendMessage({ type: RichTextControlMessageType.REDO })
   }
 
   changeBoxModel(boxModel: BoxModel | null): void {
-    this.send({ type: RichTextControlMessageType.CHANGE_BOX_MODEL, payload: { boxModel } })
+    this.sendMessage({ type: RichTextControlMessageType.CHANGE_BOX_MODEL, payload: { boxModel } })
   }
 }

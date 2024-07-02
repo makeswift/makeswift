@@ -1,6 +1,7 @@
 import { BaseEditor, Descendant } from 'slate'
 import { ReactEditor } from 'slate-react'
-import { LinkControlData } from '../controls'
+import { LinkControlData } from '@makeswift/controls'
+
 import { BuilderEditor, TypographyEditor } from '.'
 import { ResponsiveValue } from '../prop-controllers'
 import { ResponsiveColor } from '../runtimes/react/controls'
@@ -49,7 +50,7 @@ export const RootBlockType = {
   OrderedList: 'ordered-list',
 } as const
 
-export type RootBlockType = typeof RootBlockType[keyof typeof RootBlockType]
+export type RootBlockType = (typeof RootBlockType)[keyof typeof RootBlockType]
 
 export const BlockType = {
   ...RootBlockType,
@@ -57,7 +58,7 @@ export const BlockType = {
   ListItemChild: 'list-item-child',
 } as const
 
-export type BlockType = typeof BlockType[keyof typeof BlockType]
+export type BlockType = (typeof BlockType)[keyof typeof BlockType]
 
 export type DefaultElement = {
   textAlign?: ResponsiveBlockTextAlignment
@@ -185,7 +186,7 @@ export const InlineType = {
   Link: 'link',
 } as const
 
-export type InlineType = typeof InlineType[keyof typeof InlineType]
+export type InlineType = (typeof InlineType)[keyof typeof InlineType]
 
 export const BlockTextAlignment = {
   Left: 'left',
@@ -194,7 +195,7 @@ export const BlockTextAlignment = {
   Justify: 'justify',
 } as const
 
-export type BlockTextAlignment = typeof BlockTextAlignment[keyof typeof BlockTextAlignment]
+export type BlockTextAlignment = (typeof BlockTextAlignment)[keyof typeof BlockTextAlignment]
 
 export type ResponsiveBlockTextAlignment = ResponsiveValue<BlockTextAlignment>
 
@@ -255,7 +256,11 @@ export type Element = Block | Inline
 
 export type RichTextDAO = Descendant[]
 
-export type MakeswiftEditor = BaseEditor & ReactEditor & BuilderEditor & LocalChangesEditor & TypographyEditor 
+export type MakeswiftEditor = BaseEditor &
+  ReactEditor &
+  BuilderEditor &
+  LocalChangesEditor &
+  TypographyEditor
 
 declare module 'slate' {
   interface CustomTypes {

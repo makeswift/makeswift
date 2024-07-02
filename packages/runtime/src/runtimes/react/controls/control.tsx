@@ -1,21 +1,7 @@
-// import {
-//   NumberControlData,
-//   NumberControlDefinition,
-//   NumberControlType,
-//   TextInputControlData,
-//   TextInputControlDefinition,
-//   TextInputControlType,
-//   TextAreaControlData,
-//   TextAreaControlDefinition,
-//   TextAreaControlType,
-// } from '@makeswift/controls'
-
 import {
   ComboboxControlData,
   ComboboxControlDefinition,
   ComboboxControlType,
-  ControlDefinition,
-  ControlDefinitionData,
   IconRadioGroupControlData,
   IconRadioGroupControlDefinition,
   IconRadioGroupControlType,
@@ -25,6 +11,11 @@ import {
   LinkControlData,
   LinkControlDefinition,
   LinkControlType,
+} from '@makeswift/controls'
+
+import {
+  ControlDefinition,
+  ControlDefinitionData,
   RichTextControl,
   RichTextControlData,
   RichTextControlDefinition,
@@ -33,17 +24,6 @@ import {
   RichTextV2ControlData,
   RichTextV2ControlDefinition,
   RichTextV2ControlType,
-  // SelectControlData,
-  // SelectControlDefinition,
-  // SelectControlType,
-  // ShapeControl,
-  // ShapeControlData,
-  // ShapeControlDefinition,
-  // ShapeControlType,
-  SlotControl,
-  SlotControlData,
-  SlotControlDefinition,
-  SlotControlType,
   StyleControl,
   StyleControlData,
   StyleControlDefinition,
@@ -63,16 +43,12 @@ import { ComboboxControlValue, useComboboxControlValue } from './combobox'
 import { IconRadioGroupControlValue, useIconRadioGroupValue } from './icon-radio-group'
 import { ResolveImageControlValue, useImageControlValue } from './image'
 import { LinkControlValue, useLinkControlValue } from './link'
-// import { NumberControlValue, useNumber } from './number'
 import { RichTextControlValue, useRichText } from './rich-text/rich-text'
 import { RichTextV2ControlValue, useRichTextV2 } from './rich-text-v2'
-// import { SelectControlValue, useSelectControlValue } from './select'
-import { SlotControlValue, useSlot } from './slot'
 import { StyleControlFormattedValue, useFormattedStyle } from './style'
 import { StyleV2ControlFormattedValue, StyleV2ControlValue } from './style-v2'
-// import { TextAreaControlValue, useTextAreaValue } from './text-area'
-// import { TextInputControlValue, useTextInputValue } from './text-input'
 import { TypographyControlValue, useTypographyValue } from './typography'
+import { isLegacyDescriptor } from '../../../prop-controllers/descriptors'
 
 export type ControlDefinitionValue<T extends ControlDefinition> = T extends ImageControlDefinition
   ? ResolveImageControlValue<T>
@@ -82,19 +58,17 @@ export type ControlDefinitionValue<T extends ControlDefinition> = T extends Imag
       ? LinkControlValue<T>
       : T extends ComboboxControlDefinition
         ? ComboboxControlValue<T>
-        : T extends SlotControlDefinition
-          ? SlotControlValue
-          : T extends RichTextControlDefinition
-            ? RichTextControlValue
-            : T extends RichTextV2ControlDefinition
-              ? RichTextV2ControlValue
-              : T extends StyleControlDefinition
-                ? StyleControlFormattedValue
-                : T extends StyleV2ControlDefinition
-                  ? StyleV2ControlFormattedValue
-                  : T extends TypographyControlDefinition
-                    ? TypographyControlValue
-                    : never
+        : T extends RichTextControlDefinition
+          ? RichTextControlValue
+          : T extends RichTextV2ControlDefinition
+            ? RichTextV2ControlValue
+            : T extends StyleControlDefinition
+              ? StyleControlFormattedValue
+              : T extends StyleV2ControlDefinition
+                ? StyleV2ControlFormattedValue
+                : T extends TypographyControlDefinition
+                  ? TypographyControlValue
+                  : never
 
 type ControlValueProps<T extends ControlDefinition> = {
   definition: T
@@ -109,6 +83,10 @@ export function ControlValue<T extends ControlDefinition>({
   children,
   control,
 }: ControlValueProps<T>): JSX.Element {
+  if (!isLegacyDescriptor(definition)) {
+    return children(data as ControlDefinitionValue<T>)
+  }
+
   switch (definition.type) {
     // case NumberControlType:
     //   return (
@@ -221,16 +199,16 @@ export function ControlValue<T extends ControlDefinition>({
         </StyleV2ControlValue>
       )
 
-    case SlotControlType:
-      return (
-        <RenderHook
-          key={definition.type}
-          hook={useSlot}
-          parameters={[data as unknown as SlotControlData, control as SlotControl]}
-        >
-          {value => children(value as ControlDefinitionValue<T>)}
-        </RenderHook>
-      )
+    // case SlotControlType:
+    //   return (
+    //     <RenderHook
+    //       key={definition.type}
+    //       hook={useSlot}
+    //       parameters={[data as unknown as SlotControlData, control as SlotControl]}
+    //     >
+    //       {value => children(value as ControlDefinitionValue<T>)}
+    //     </RenderHook>
+    //   )
 
     case RichTextControlType:
       return (

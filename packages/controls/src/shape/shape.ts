@@ -9,7 +9,7 @@ import {
   type ResolvedValueType as ResolvedValueType_,
 } from '../control-definition'
 
-import { type Effector } from "../effector";
+import { type Effector } from '../effector'
 
 import { CopyContext } from '../context'
 import { ResourceResolver, ValueSubscription } from '../resource-resolver'

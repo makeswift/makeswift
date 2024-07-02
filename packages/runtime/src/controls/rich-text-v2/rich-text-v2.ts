@@ -1,10 +1,9 @@
 // @ts-expect-error: there are no types for 'corporate-ipsum'
 import ipsum from 'corporate-ipsum'
 
-import { PropController } from '../../prop-controllers/base'
+import { ControlInstance, type SendMessage } from '@makeswift/controls'
 import { Descendant, Editor } from 'slate'
 import { BoxModel } from '../../box-model'
-import { Send } from '../../prop-controllers/instances'
 import { ControlDefinition } from '../control'
 import { RichTextControlData } from '../rich-text/rich-text'
 import { richTextV2DescendentsToData } from './dto'
@@ -30,7 +29,7 @@ export const RichTextV2Mode = {
   Block: 'makeswift::controls::rich-text-v2::mode::block',
 } as const
 
-export type RichTextV2Mode = typeof RichTextV2Mode[keyof typeof RichTextV2Mode]
+export type RichTextV2Mode = (typeof RichTextV2Mode)[keyof typeof RichTextV2Mode]
 
 export type RichTextMode = RichTextV2Mode
 
@@ -143,16 +142,15 @@ export type RichTextV2ControlMessage =
 
 export class RichTextV2Control<
   T extends RichTextV2ControlDefinition = RichTextV2ControlDefinition,
-> extends PropController<RichTextV2ControlMessage> {
+> extends ControlInstance<RichTextV2ControlMessage> {
   private editor: Editor | null = null
   private defaultValue: Descendant[] | null = null
   descriptor: RichTextV2ControlDefinition
 
-  constructor(send: Send<RichTextV2ControlMessage>, descriptor: T) {
+  constructor(send: SendMessage<RichTextV2ControlMessage>, descriptor: T) {
     super(send)
 
     this.descriptor = descriptor
-    this.send = send
   }
 
   recv = (message: RichTextV2ControlMessage): void => {
@@ -180,9 +178,13 @@ export class RichTextV2Control<
     }
   }
 
+  child(_key: string): ControlInstance | undefined {
+    return undefined
+  }
+
   setEditor(editor: Editor) {
     this.editor = editor
-    this.send({
+    this.sendMessage({
       type: RichTextV2ControlMessageType.SET_PLUGIN_CONTROL_VALUE,
       value:
         this.descriptor.config?.plugins?.map(plugin => plugin?.control?.getValue(editor)) ?? [],
@@ -199,7 +201,7 @@ export class RichTextV2Control<
 
   setDefaultValue(defaultValue: Descendant[]) {
     this.defaultValue = defaultValue
-    this.send({
+    this.sendMessage({
       type: RichTextV2ControlMessageType.SET_DEFAULT_VALUE,
       value: defaultValue,
     })
@@ -207,7 +209,7 @@ export class RichTextV2Control<
 
   onLocalUserChange() {
     if (this.editor == null) return
-    this.send({
+    this.sendMessage({
       type: RichTextV2ControlMessageType.ON_CHANGE,
       value: richTextV2DescendentsToData(this.editor.children, this.editor.currentKey),
     })
@@ -216,7 +218,7 @@ export class RichTextV2Control<
   updatePluginValues() {
     const editor = this.editor
     if (editor == null) return
-    this.send({
+    this.sendMessage({
       type: RichTextV2ControlMessageType.SET_PLUGIN_CONTROL_VALUE,
       value:
         this.descriptor.config?.plugins?.map(plugin => plugin?.control?.getValue(editor)) ?? [],
@@ -224,23 +226,23 @@ export class RichTextV2Control<
   }
 
   select() {
-    this.send({ type: RichTextV2ControlMessageType.SELECT })
+    this.sendMessage({ type: RichTextV2ControlMessageType.SELECT })
   }
 
   switchToBuildMode() {
-    this.send({ type: RichTextV2ControlMessageType.SWITCH_TO_BUILD_MODE })
+    this.sendMessage({ type: RichTextV2ControlMessageType.SWITCH_TO_BUILD_MODE })
   }
 
   undo() {
-    this.send({ type: RichTextV2ControlMessageType.UNDO })
+    this.sendMessage({ type: RichTextV2ControlMessageType.UNDO })
   }
 
   redo() {
-    this.send({ type: RichTextV2ControlMessageType.REDO })
+    this.sendMessage({ type: RichTextV2ControlMessageType.REDO })
   }
 
   changeBoxModel(boxModel: BoxModel | null): void {
-    this.send({ type: RichTextV2ControlMessageType.CHANGE_BOX_MODEL, payload: { boxModel } })
+    this.sendMessage({ type: RichTextV2ControlMessageType.CHANGE_BOX_MODEL, payload: { boxModel } })
   }
 }
 

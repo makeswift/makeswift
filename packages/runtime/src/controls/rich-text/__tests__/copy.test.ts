@@ -1,6 +1,7 @@
+import { type ReplacementContext } from '@makeswift/controls'
+
 import { RichTextControlData, RichTextControlType } from '../rich-text'
 import { copy } from '../../control'
-import { ReplacementContext } from '../../../state/react-page'
 
 const copyFixture: RichTextControlData = {
   object: 'value',

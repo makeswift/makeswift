@@ -6,21 +6,22 @@ import {
 } from '../control-instance'
 import { ShapeDefinition } from './shape'
 
-type Payload = { message: ControlMessage; key: string }
+type Message = {
+  type: typeof ShapeControl.CHILD_CONTROL_MESSAGE
+  payload: { message: ControlMessage; key: string }
+}
 
 export class ShapeControl<
   Def extends ShapeDefinition = ShapeDefinition,
-> extends ControlInstance<Payload> {
-  static readonly messageType = {
-    SHAPE_CONTROL_CHILD_CONTROL_MESSAGE:
-      'makeswift::controls::shape::message::child-control-message',
-  } as const
+> extends ControlInstance<Message> {
+  static CHILD_CONTROL_MESSAGE =
+    'makeswift::controls::shape::message::child-control-message'
 
   private childControls: Map<string, ControlInstance> = new Map()
 
   constructor(
     private readonly definition: Def,
-    sendMessage: SendMessage<Payload>,
+    sendMessage: SendMessage<Message>,
   ) {
     super(sendMessage)
   }
@@ -45,19 +46,20 @@ export class ShapeControl<
     ))
   }
 
-  recv = (message: ControlMessage<Payload>) => {
+  recv = (message: Message) => {
     switch (message.type) {
-      case ShapeControl.messageType.SHAPE_CONTROL_CHILD_CONTROL_MESSAGE: {
-        const control = this.childControls.get(message.payload.key)
-        control?.recv(message.payload.message)
+      case ShapeControl.CHILD_CONTROL_MESSAGE: {
+        this.child(message.payload.key)?.recv(message.payload.message)
       }
     }
   }
 
+  child = (key: string) => this.childControls.get(key)
+
   createChildControl = (key: string) => {
     return this.definition.keyDefs[key].createInstance((message) =>
       this.sendMessage({
-        type: ShapeControl.messageType.SHAPE_CONTROL_CHILD_CONTROL_MESSAGE,
+        type: ShapeControl.CHILD_CONTROL_MESSAGE,
         payload: { message, key },
       }),
     )

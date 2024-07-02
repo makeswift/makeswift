@@ -1,5 +1,5 @@
 import { Editor, Element } from 'slate'
-import { unstable_IconRadioGroup } from '../../controls'
+import { unstable_IconRadioGroup } from '@makeswift/controls'
 import { ElementUtils } from '../utils/element'
 import { InlineType } from '../types'
 import { RenderElementProps } from 'slate-react'

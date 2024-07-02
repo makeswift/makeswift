@@ -1,7 +1,8 @@
+import { type CopyContext } from '@makeswift/controls'
+
 import { Descendant, Element, Text } from 'slate'
 import { Inline } from '../../slate'
 import { ElementUtils } from '../../slate/utils/element'
-import { CopyContext } from '../../state/react-page'
 import { RichTextV2ControlData } from './rich-text-v2'
 import { richTextV2DescendentsToData } from './dto'
 

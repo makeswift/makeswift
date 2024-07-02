@@ -303,6 +303,7 @@ export function BlockPlugin() {
       getValue: editor => {
         const activeBlock = getActiveBlockType(editor)
 
+        if (activeBlock == null) return undefined
         if (activeBlock === RootBlockType.Default) return undefined
 
         return activeBlock

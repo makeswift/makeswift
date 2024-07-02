@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { type CopyContext } from './context'
-import { type Data } from './common/types'
+import { type Data, type RuntimeNode } from './common/types'
 
 import {
   type ResourceResolver,
@@ -28,7 +28,7 @@ export abstract class ControlDefinition<
   Config = unknown,
   DataType = Data,
   ValueType = Data,
-  ResolvedValueType = ValueType,
+  ResolvedValueType = ValueType | RuntimeNode,
   InstanceType = ControlInstance<any>,
 > {
   constructor(readonly config: Config) {}
@@ -72,7 +72,7 @@ export abstract class ControlDefinition<
   }
 }
 
-type ControlDefinitionTypes<D> =
+export type ControlDefinitionTypes<D> =
   D extends ControlDefinition<
     infer ControlType,
     infer Config,

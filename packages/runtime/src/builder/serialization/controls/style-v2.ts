@@ -29,7 +29,7 @@ export function serializeStyleV2Control(
 export function deserializeStyleV2Control(
   definition: Serialize<StyleV2ControlDefinition>,
 ): Deserialize<Serialize<StyleV2ControlDefinition>> {
-  const type = deserializeControl(definition.config.type)
+  const type = deserializeControl(definition.config.type as any)
   const getStyle = definition.config.getStyle && deserializeFunction(definition.config.getStyle)
 
   return {

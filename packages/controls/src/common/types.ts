@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+export { type BoxModel } from 'css-box-model'
+
 export type Data =
   | undefined
   | null
@@ -8,6 +10,8 @@ export type Data =
   | string
   | Data[]
   | { [key: string]: Data }
+
+export type RuntimeNode = unknown
 
 export const colorDataSchema = z.object({
   swatchId: z.string(),
@@ -68,3 +72,9 @@ export const elementSchema = z.union([
 ])
 
 export type Element = z.infer<typeof elementSchema>
+
+export function isElementReference(
+  element: Element,
+): element is ElementReference {
+  return !('props' in element)
+}

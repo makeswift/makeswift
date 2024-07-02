@@ -1,5 +1,11 @@
-export function map<T, U>(array: readonly [T, T, ...T[]], fn: (x: T) => U): [U, U, ...U[]]
-export function map<T, U>(array: readonly [T, ...T[]], fn: (x: T) => U): [U, ...U[]]
+export function map<T, U>(
+  array: readonly [T, T, ...T[]],
+  fn: (x: T) => U,
+): [U, U, ...U[]]
+export function map<T, U>(
+  array: readonly [T, ...T[]],
+  fn: (x: T) => U,
+): [U, ...U[]]
 export function map<T, U>(array: readonly T[], fn: (x: T) => U): U[] {
   return array.map(fn)
 }
@@ -31,10 +37,11 @@ export function isNotEmpty<T>(array: readonly T[]): array is [T, ...T[]] {
   return array.length >= 1
 }
 
-export function isTwoOrMoreElements<T>(array: readonly T[]): array is [T, T, ...T[]] {
+export function isTwoOrMoreElements<T>(
+  array: readonly T[],
+): array is [T, T, ...T[]] {
   return array.length >= 2
 }
-
 
 export function arraysAreEqual<T>(a?: T[], b?: T[]): boolean {
   if (a === b) return true

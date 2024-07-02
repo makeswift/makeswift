@@ -1,4 +1,6 @@
 import escapeHtml from 'escape-html'
+import { type TranslationDto } from '@makeswift/controls'
+
 import { BlockType, InlineType } from '../../slate/types'
 import { Descendant, Editor, Element, Node, Text, Transforms, createEditor } from 'slate'
 import { jsx } from 'slate-hyperscript'
@@ -14,7 +16,6 @@ import { TextAlignPlugin } from '../../slate/TextAlignPlugin'
 import { InlinePlugin } from '../../slate/InlinePlugin'
 import { MakeswiftEditor } from '../../slate/types'
 import { ElementUtils } from '../../slate/utils/element'
-import { TranslationDto } from '../../state/react-page'
 
 function pathToString(path: number[]): string {
   return path.join(':')

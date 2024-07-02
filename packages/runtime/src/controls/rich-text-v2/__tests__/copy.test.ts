@@ -1,6 +1,6 @@
+import { type ReplacementContext } from '@makeswift/controls'
 import { RichTextV2ControlData, RichTextV2ControlType } from '../rich-text-v2'
 import { copy } from '../../control'
-import { ReplacementContext } from '../../../state/react-page'
 
 const SWATCH_ID_FROM = 'SWATCH_ID_FROM='
 const TYPOGRAPHY_ID_FROM = 'TYPOGRAPHY_ID_FROM='

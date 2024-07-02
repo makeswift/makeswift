@@ -1,10 +1,11 @@
 import { P, match } from 'ts-pattern'
 import {
-  ControlDefinition,
   ImageControlData,
   ImageControlDefinition,
   ImageControlValueFormat,
-} from '../../../controls'
+} from '@makeswift/controls'
+
+import { ControlDefinition } from '../../../controls'
 import { useFile } from '../hooks/makeswift-api'
 
 type ImageWithDimensions = {
@@ -59,8 +60,8 @@ export type ResolveImageControlValue<T extends ControlDefinition> = T extends Im
   ? undefined extends T['config']['format']
     ? string | undefined
     : T['config']['format'] extends typeof ImageControlValueFormat.URL
-    ? string | undefined
-    : T['config']['format'] extends typeof ImageControlValueFormat.WithDimensions
-    ? ImageWithDimensions | undefined
-    : never
+      ? string | undefined
+      : T['config']['format'] extends typeof ImageControlValueFormat.WithDimensions
+        ? ImageWithDimensions | undefined
+        : never
   : never

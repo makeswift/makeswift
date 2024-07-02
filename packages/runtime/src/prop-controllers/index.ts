@@ -13,11 +13,11 @@ export type {
   ResponsiveValue,
 } from '@makeswift/prop-controllers'
 export * as Props from './descriptors'
-export type {
-  PropControllerMessage,
-  RichTextPropControllerMessage,
-  TableFormFieldsMessage,
-} from './instances'
-export { RichTextPropControllerMessageType, TableFormFieldsMessageType } from './instances'
+export type { PropControllerMessage, TableFormFieldsMessage } from './instances'
+export { TableFormFieldsMessageType } from './instances'
 export * as Introspection from './introspection'
 export { DELETED_PROP_CONTROLLER_TYPES } from './deleted'
+export {
+  RichTextControlMessageType,
+  type RichTextControlMessage,
+} from '../controls/rich-text/rich-text'

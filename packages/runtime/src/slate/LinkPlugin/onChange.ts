@@ -1,5 +1,5 @@
 import { Editor, Transforms } from 'slate'
-import { LinkControlData } from '../../controls'
+import { LinkControlData } from '@makeswift/controls'
 import { unwrapInline } from '../BlockPlugin/unwrapInline'
 import { wrapInline } from '../BlockPlugin/wrapInline'
 import { InlineType } from '../types'

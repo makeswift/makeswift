@@ -24,7 +24,7 @@ export function createPropsValuesSubscription(
           [propName]: resolveValue.bind(def)(
             fromData.bind(def)(elementData[propName]),
             resourceResolver,
-            effector
+            effector,
           ),
         }
   }, {})

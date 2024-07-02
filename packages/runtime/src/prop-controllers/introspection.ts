@@ -1,29 +1,21 @@
-import { Descriptor } from './descriptors'
+import { Descriptor, isLegacyDescriptor } from './descriptors'
 import { Data, Element } from '../state/react-page'
 import {
-  getShapeElementChildren,
-  getShapeFileIds,
-  getShapePageIds,
-  getShapeSwatchIds,
-  getShapeTypographyIds,
-  getStyleSwatchIds,
-  getTypographySwatchIds,
-  getTypographyTypographyIds,
   ImageControlData,
   ImageControlType,
   LinkControlData,
   LinkControlType,
+} from '@makeswift/controls'
+
+import {
+  getStyleSwatchIds,
+  getTypographySwatchIds,
+  getTypographyTypographyIds,
   RichTextControlData,
   RichTextControlType,
   RichTextValue,
-  ShapeControlData,
-  ShapeControlType,
-  SlotControlData,
-  SlotControlType,
   StyleControlData,
   StyleControlType,
-  StyleV2ControlData,
-  StyleV2ControlType,
   TypographyControlData,
   TypographyControlType,
 } from '../controls'
@@ -32,16 +24,16 @@ import {
   getRichTextSwatchIds,
   getRichTextTypographyIds,
 } from '../controls/rich-text/introspection'
-import {
-  getRichTextV2PageIds,
-  getRichTextV2SwatchIds,
-  getRichTextV2TypographyIds,
-} from '../controls/rich-text-v2/introspection'
-import {
-  RichTextV2ControlType,
-  RichTextV2ControlData,
-  isRichTextV1Data,
-} from '../controls/rich-text-v2/rich-text-v2'
+// import {
+//   getRichTextV2PageIds,
+//   getRichTextV2SwatchIds,
+//   getRichTextV2TypographyIds,
+// } from '../controls/rich-text-v2/introspection'
+// import {
+//   RichTextV2ControlType,
+//   RichTextV2ControlData,
+//   isRichTextV1Data,
+// } from '../controls/rich-text-v2/rich-text-v2'
 import { match, P } from 'ts-pattern'
 import {
   getLinkPropControllerPageIds,
@@ -71,7 +63,8 @@ import {
   BackgroundsPropControllerData,
 } from '@makeswift/prop-controllers'
 import { DELETED_PROP_CONTROLLER_TYPES } from './deleted'
-import { ControlDefinition, Targets } from '@makeswift/controls'
+
+import { Targets } from '@makeswift/controls'
 
 export function getElementChildren<T extends Data>(
   descriptor: Descriptor<T>,
@@ -79,12 +72,17 @@ export function getElementChildren<T extends Data>(
 ): Element[] {
   if (prop == null) return []
 
+  if (!isLegacyDescriptor(descriptor)) {
+    return descriptor.introspect(prop, Targets.ChildrenElement)
+  }
+
   switch (descriptor.type) {
     case PropControllerTypes.Grid:
       return getGridPropControllerElementChildren(prop as GridPropControllerData | undefined)
 
-    case SlotControlType:
-      return (prop as SlotControlData).elements
+    // FIXME
+    // case SlotControlType:
+    //   return (prop as SlotControlData).elements
 
     // case ListControlType:
     //   return (prop as ListControlData).flatMap(({ value }) =>
@@ -110,6 +108,10 @@ export function getElementId<T extends Data>(
 ): string | null {
   if (prop == null) return null
 
+  if (!isLegacyDescriptor(descriptor)) {
+    return null
+  }
+
   switch (descriptor.type) {
     case PropControllerTypes.ElementID:
       return getElementIDPropControllerDataElementID(prop as ElementIDPropControllerData) ?? null
@@ -125,9 +127,8 @@ export function getSwatchIds<T extends Data>(
 ): string[] {
   if (prop == null) return []
 
-  const introspect = (descriptor as any as ControlDefinition).introspect
-  if (introspect) {
-    return introspect.bind(descriptor)(prop, Targets.Swatch)
+  if (!isLegacyDescriptor(descriptor)) {
+    return descriptor.introspect(prop, Targets.Swatch)
   }
 
   switch (descriptor.type) {
@@ -160,11 +161,12 @@ export function getSwatchIds<T extends Data>(
       return getStyleSwatchIds(prop as StyleControlData)
     }
 
-    case StyleV2ControlType: {
-      const value = prop as StyleV2ControlData
+    // FIXME
+    // case StyleV2ControlType: {
+    //   const value = prop as StyleV2ControlData
 
-      return value?.flatMap(value => getSwatchIds(descriptor.config.type, value.value)) ?? []
-    }
+    //   return value?.flatMap(value => getSwatchIds(descriptor.config.type, value.value)) ?? []
+    // }
 
     // case RichTextV2ControlType: {
     //   const data = prop as RichTextV2ControlData | RichTextControlData
@@ -192,6 +194,10 @@ export function getFileIds<T extends Data>(
   prop: T | undefined,
 ): string[] {
   if (prop == null) return []
+
+  if (!isLegacyDescriptor(descriptor)) {
+    return descriptor.introspect(prop, Targets.File)
+  }
 
   switch (descriptor.type) {
     case PropControllerTypes.Backgrounds:
@@ -233,6 +239,10 @@ export function getTypographyIds<T extends Data>(
 ): string[] {
   if (prop == null) return []
 
+  if (!isLegacyDescriptor(descriptor)) {
+    return descriptor.introspect(prop, Targets.Typography)
+  }
+
   switch (descriptor.type) {
     case TypographyControlType: {
       return getTypographyTypographyIds(prop as TypographyControlData[number])
@@ -269,6 +279,10 @@ export function getTableIds<T extends Data>(
 ): string[] {
   if (prop == null) return []
 
+  if (!isLegacyDescriptor(descriptor)) {
+    return descriptor.introspect(prop, Targets.Table)
+  }
+
   switch (descriptor.type) {
     case PropControllerTypes.Table: {
       return getTablePropControllerDataTableIds(prop as TablePropControllerData)
@@ -284,6 +298,10 @@ export function getPageIds<T extends Data>(
   prop: T | undefined,
 ): string[] {
   if (prop == null) return []
+
+  if (!isLegacyDescriptor(descriptor)) {
+    return descriptor.introspect(prop, Targets.Page)
+  }
 
   switch (descriptor.type) {
     case PropControllerTypes.Link: {
