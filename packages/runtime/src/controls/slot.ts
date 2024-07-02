@@ -9,6 +9,7 @@ import {
   type DataType,
 } from '@makeswift/controls'
 
+import { renderStable } from '../runtimes/react/controls/render-stable'
 import { renderSlot } from '../runtimes/react/controls/slot'
 
 class Definition extends SlotDefinition<ReactNode> {
@@ -27,7 +28,8 @@ class Definition extends SlotDefinition<ReactNode> {
     control?: SlotControl,
   ): ValueSubscription<ReactNode | undefined> {
     return {
-      readStableValue: () => renderSlot(data, control),
+      readStableValue: (previous?: ReactNode) =>
+        renderStable(renderSlot, previous)({ data, control: control ?? null }),
       subscribe: () => () => {},
     }
   }

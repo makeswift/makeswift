@@ -152,7 +152,6 @@ const useResolvedProps = (
   elementData: Record<string, ReactPage.ElementData>,
   resourceResolver: ResourceResolver,
 ): Record<string, unknown> => {
-  console.log('+++ useResolvedProps', propDefs, controls, elementData, resourceResolver)
   const breakpoints = useBreakpoints()
 
   const effector = useMemo(() => {
@@ -168,10 +167,8 @@ const useResolvedProps = (
         } else {
           styles[name] = { props, style }
         }
-        console.log('+++ styles', styles)
       },
       useStyles: () => {
-        console.log('+++ useStyles', styles)
         useStyles(
           mapValues(styles, ({ props, style }) =>
             getStyleControlCssObject(breakpoints, style, props),
@@ -217,9 +214,6 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
   })
 
   const resolvedProps = useResolvedProps(propDefsRef.current, controls, props, client)
-
-  const count = useRef(0)
-  console.log('++++ componentProps:', element.type, resolvedProps, 'render count:', count.current++)
 
   return Object.entries(propDefsRef.current).reduceRight(
     (renderFn, [propName, descriptor]) =>

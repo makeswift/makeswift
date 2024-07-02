@@ -18,7 +18,6 @@ import { BorderRadiusLonghandPropertyData } from '../../../css/border-radius'
 import { lengthPercentageDataToString } from '../../../css/length-percentage'
 import { marginPropertyDataToStyle } from '../../../css/margin'
 import { paddingPropertyDataToStyle } from '../../../css/padding'
-import { BoxModel, getBox } from '../../../box-model'
 import { pollBoxModel } from '../poll-box-model'
 import { Breakpoints } from '../../../state/modules/breakpoints'
 

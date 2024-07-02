@@ -18,6 +18,7 @@ import {
   type ParseResult,
   type SerializedRecord,
 } from '../control-definition'
+
 import { map } from '../utils/functional'
 import { unionOfLiterals } from '../utils/zod'
 
@@ -35,16 +36,16 @@ export type IconRadioGroupIcon =
   (typeof unstable_IconRadioGroupIcon)[keyof typeof unstable_IconRadioGroupIcon]
 
 type Option<T extends string> = {
-  value: T
-  label: string
-  icon: IconRadioGroupIcon
+  readonly value: T
+  readonly label: string
+  readonly icon: IconRadioGroupIcon
 }
-type OptionList<T extends string> = [Option<T>, ...Option<T>[]]
+type OptionList<T extends string> = readonly [Option<T>, ...Option<T>[]]
 
 type Config<Item extends string = string> = {
-  options: OptionList<Item>
-  defaultValue?: Item
-  label?: string
+  readonly options: OptionList<Item>
+  readonly defaultValue?: Item
+  readonly label?: string
 }
 
 type ItemType<C extends Config> = C extends Config<infer Item> ? Item : never
@@ -196,7 +197,7 @@ type DerivedConfig<T extends string, C extends Config<T>> = Config<T> & {
 }
 
 export const unstable_IconRadioGroup = <T extends string, C extends Config<T>>(
-  config: C & { options: OptionList<T> },
+  config: C & { readonly options: OptionList<T> },
 ) =>
   new (class IconRadioGroup extends Definition<T, DerivedConfig<T, C>> {})({
     ...config,

@@ -1,5 +1,4 @@
 import {
-  IconRadioGroupControlDefinition,
   LinkControlDefinition,
   type ResolvedValueType,
   ControlDefinition as UnifiedControlDefinition,
@@ -20,7 +19,6 @@ import { RichTextControlDefinition } from '../controls/rich-text'
 import { RichTextControlValue } from '../runtimes/react/controls/rich-text/rich-text'
 import { RichTextV2ControlValue } from '../runtimes/react/controls/rich-text-v2'
 import { StyleV2ControlFormattedValue } from '../runtimes/react/controls/style-v2'
-import { IconRadioGroupControlValue } from '../runtimes/react/controls/icon-radio-group'
 import { TypographyControlValue } from '../runtimes/react/controls/typography'
 import {
   BorderDescriptor,
@@ -135,7 +133,6 @@ export type LegacyDescriptor<T extends Data = Data> =
   | StyleControlDefinition
   | StyleV2ControlDefinition
   | TypographyControlDefinition
-  | IconRadioGroupControlDefinition
   | LinkControlDefinition
   | RichTextControlDefinition
   | RichTextV2ControlDefinition
@@ -408,23 +405,21 @@ export type DescriptorValueType<T extends Descriptor> = T extends PropController
     ? StyleControlFormattedValue
     : T extends StyleV2ControlDefinition
       ? StyleV2ControlFormattedValue
-      : T extends IconRadioGroupControlDefinition
-        ? IconRadioGroupControlValue<T>
-        : T extends LinkControlDefinition
-          ? LinkControlValue<T>
-          : T extends RichTextControlDefinition
-            ? RichTextControlValue
-            : T extends RichTextV2ControlDefinition
-              ? RichTextV2ControlValue
-              : T extends StyleV2ControlDefinition
-                ? StyleV2ControlFormattedValue
-                : T extends TypographyControlDefinition
-                  ? TypographyControlValue
-                  : T extends UnifiedControlDefinition
-                    ? ResolvedValueType<T>
-                    : T extends Descriptor<infer U>
-                      ? U | undefined
-                      : never
+      : T extends LinkControlDefinition
+        ? LinkControlValue<T>
+        : T extends RichTextControlDefinition
+          ? RichTextControlValue
+          : T extends RichTextV2ControlDefinition
+            ? RichTextV2ControlValue
+            : T extends StyleV2ControlDefinition
+              ? StyleV2ControlFormattedValue
+              : T extends TypographyControlDefinition
+                ? TypographyControlValue
+                : T extends UnifiedControlDefinition
+                  ? ResolvedValueType<T>
+                  : T extends Descriptor<infer U>
+                    ? U | undefined
+                    : never
 
 export type PanelDescriptorValueType<T extends PanelDescriptor> =
   T extends PanelDescriptor<infer U> ? U : never

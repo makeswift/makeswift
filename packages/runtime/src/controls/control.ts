@@ -1,6 +1,4 @@
 import {
-  IconRadioGroupControlData,
-  IconRadioGroupControlDefinition,
   LinkControlData,
   LinkControlDefinition,
   LinkControlType,
@@ -50,7 +48,6 @@ import {
 import { IndexSignatureHack } from '../utils/index-signature-hack'
 
 type LegacyControlDefinition =
-  | IconRadioGroupControlDefinition
   | LinkControlDefinition
   | RichTextControlDefinition
   | RichTextV2ControlDefinition
@@ -59,21 +56,19 @@ type LegacyControlDefinition =
   | TypographyControlDefinition
 
 export type LegacyControlDefinitionData<T extends LegacyControlDefinition> =
-  T extends IconRadioGroupControlDefinition
-    ? IconRadioGroupControlData<T>
-    : T extends LinkControlDefinition
-      ? LinkControlData
-      : T extends RichTextControlDefinition
-        ? IndexSignatureHack<RichTextControlData>
-        : T extends RichTextV2ControlDefinition
-          ? RichTextV2ControlData
-          : T extends StyleControlDefinition
-            ? StyleControlData
-            : T extends StyleV2ControlDefinition
-              ? StyleV2ControlData
-              : T extends TypographyControlDefinition
-                ? TypographyControlData
-                : never
+  T extends LinkControlDefinition
+    ? LinkControlData
+    : T extends RichTextControlDefinition
+      ? IndexSignatureHack<RichTextControlData>
+      : T extends RichTextV2ControlDefinition
+        ? RichTextV2ControlData
+        : T extends StyleControlDefinition
+          ? StyleControlData
+          : T extends StyleV2ControlDefinition
+            ? StyleV2ControlData
+            : T extends TypographyControlDefinition
+              ? TypographyControlData
+              : never
 
 export type ControlDefinition = LegacyControlDefinition | UnifiedControlDefinition
 

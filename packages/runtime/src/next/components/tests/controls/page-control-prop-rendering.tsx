@@ -1,6 +1,6 @@
 /** @jest-environment jsdom */
 
-import { forwardRef, useRef } from 'react'
+import { forwardRef, useRef, isValidElement } from 'react'
 import { act } from 'react-dom/test-utils'
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
@@ -22,8 +22,13 @@ import { type MakeswiftPageSnapshot } from '../../../../next'
 const ROOT_ID = '00000000-0000-0000-0000-000000000000'
 const ELEMENT_ID = '11111111-1111-1111-1111-111111111111'
 
-const stringifyProp = (prop: any) => JSON.stringify(prop) ?? 'undefined'
-const parseProp = (prop: string) => (prop === 'undefined' ? undefined : JSON.parse(prop))
+const renderProp = (prop: any) =>
+  prop === undefined ? 'undefined' : isValidElement(prop) ? prop : JSON.stringify(prop)
+
+const propSnapshot = (prop: HTMLElement) =>
+  prop.hasChildNodes() ? prop.childNodes : parseStringifiedProp(prop.textContent ?? '')
+
+const parseStringifiedProp = (prop: string) => (prop === 'undefined' ? undefined : JSON.parse(prop))
 
 export async function testPageControlPropRendering<D extends ControlDefinition>(
   controlDefinition: D,
@@ -67,7 +72,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
       return (
         <div ref={ref}>
           <div data-testid={renderCountTestId}>{renderCount.current}</div>
-          <div data-testid={testId}>{stringifyProp(propKey)}</div>
+          <div data-testid={testId}>{renderProp(propKey)}</div>
         </div>
       )
     }),
@@ -90,7 +95,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
   )
 
   expect(snapshot).toMatchSnapshot('snapshot')
-  expect(parseProp(screen.getByTestId(testId).textContent ?? '')).toMatchSnapshot('resolvedValue')
+  expect(propSnapshot(screen.getByTestId(testId))).toMatchSnapshot('resolvedValue')
 
   if (expectedRenders != null) {
     expect(Number(screen.getByTestId(renderCountTestId).textContent)).toBe(expectedRenders)

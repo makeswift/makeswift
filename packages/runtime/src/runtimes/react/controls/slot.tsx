@@ -9,11 +9,11 @@ import { useResponsiveStyle } from '../../../components/utils/responsive-style'
 import { useStyle } from '../use-style'
 import { pollBoxModel } from '../poll-box-model'
 
-export function renderSlot(
-  data: DataType<SlotDefinition<ReactNode>> | undefined,
-  control: SlotControl | undefined,
-): ReactNode {
-  return <SlotValue data={data} control={control ?? null} />
+export function renderSlot(props: {
+  data: DataType<SlotDefinition<ReactNode>> | undefined
+  control: SlotControl | null
+}): ReactNode {
+  return <SlotValue {...props} />
 }
 
 const SlotValue = memo(

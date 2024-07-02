@@ -12,6 +12,8 @@ export {
   ColorDefinition,
   Image,
   ImageDefinition,
+  unstable_IconRadioGroup,
+  IconRadioGroupDefinition,
   Link,
   List,
   ListDefinition,

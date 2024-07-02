@@ -1,11 +1,6 @@
 import { Descriptor, isLegacyDescriptor } from './descriptors'
 import { Data, Element } from '../state/react-page'
-import {
-  ImageControlData,
-  ImageControlType,
-  LinkControlData,
-  LinkControlType,
-} from '@makeswift/controls'
+import { LinkControlData, LinkControlType } from '@makeswift/controls'
 
 import { RichTextControlData, RichTextControlType, RichTextValue } from '../controls/rich-text'
 import { getStyleSwatchIds, StyleControlData, StyleControlType } from '../controls/style'
@@ -31,7 +26,6 @@ import {
 //   RichTextV2ControlData,
 //   isRichTextV1Data,
 // } from '../controls/rich-text-v2/rich-text-v2'
-import { match, P } from 'ts-pattern'
 import {
   getLinkPropControllerPageIds,
   getResponsiveColorPropControllerDataSawtchIds,
@@ -208,14 +202,14 @@ export function getFileIds<T extends Data>(
       return getImagesPropControllerFileIds(prop as ImagesPropControllerData)
     }
 
-    case ImageControlType: {
-      const value = prop as ImageControlData
-      return match(value)
-        .with(P.string, f => [f])
-        .with({ type: 'makeswift-file' }, f => [f.id])
-        .with({ type: 'external-file' }, () => [])
-        .otherwise(() => [])
-    }
+    // case ImageControlType: {
+    //   const value = prop as ImageControlData
+    //   return match(value)
+    //     .with(P.string, f => [f])
+    //     .with({ type: 'makeswift-file' }, f => [f.id])
+    //     .with({ type: 'external-file' }, () => [])
+    //     .otherwise(() => [])
+    // }
 
     // case ShapeControlType: {
     //   return getShapeFileIds(descriptor, prop as ShapeControlData)

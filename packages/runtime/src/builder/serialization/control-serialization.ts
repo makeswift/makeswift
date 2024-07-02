@@ -21,16 +21,16 @@ import {
 import {
   CheckboxDefinition,
   ColorDefinition,
+  ComboboxDefinition,
+  ImageDefinition,
+  IconRadioGroupDefinition,
   ListDefinition,
   NumberDefinition,
   SelectDefinition,
-  ComboboxDefinition,
-  ImageDefinition,
   ShapeDefinition,
   SlotDefinition,
   TextAreaDefinition,
   TextInputDefinition,
-  IconRadioGroupDefinition,
 } from '../../controls'
 
 import {

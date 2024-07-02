@@ -164,13 +164,8 @@ class Definition<C extends Config = Config> extends ControlDefinition<
 
     control?.update(data)
 
-    const itemValues = data?.map((data) =>
-      this.itemDef.resolveValue(
-        data,
-        resolver,
-        effector,
-        data ? control?.child(data.id) : undefined,
-      ),
+    const itemValues = data?.map(({ value, id }) =>
+      this.itemDef.resolveValue(value, resolver, effector, control?.child(id)),
     )
 
     return {

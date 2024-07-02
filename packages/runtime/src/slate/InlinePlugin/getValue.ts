@@ -25,14 +25,10 @@ export const getValue = (editor: Editor) => {
 
   if (!areAllRootsSupportedInlineTypesOrText) return undefined
 
-  const matchingValues = roots.filter(isSupportedInlineEntry).map(([node]) => node) as (
-    | SupportedInline
-    | null
-    | undefined
-  )[]
+  const matchingValues = roots.filter(isSupportedInlineEntry).map(([node]) => node)
 
   const match = matchingValues.reduce(
-    (a, b) => (a?.type === b?.type ? b : null),
+    (a, b) => (a?.type === b?.type ? b : undefined),
     matchingValues.at(0) ?? undefined,
   )
 

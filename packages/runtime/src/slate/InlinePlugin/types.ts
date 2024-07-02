@@ -1,4 +1,4 @@
-import { IconRadioGroupOption, unstable_IconRadioGroupIcon } from '@makeswift/controls'
+import { unstable_IconRadioGroupIcon } from '@makeswift/controls'
 import { Node, NodeEntry } from 'slate'
 import { ElementUtils } from '../utils/element'
 import { Inline, InlineType, LinkElement } from '../types'
@@ -6,7 +6,7 @@ import { Inline, InlineType, LinkElement } from '../types'
 export type SupportedInlineType = Exclude<InlineType, 'link'>
 export type SupportedInline = Exclude<Inline, LinkElement>
 
-export const supportedInlineOptions: IconRadioGroupOption<SupportedInlineType>[] = [
+export const supportedInlineOptions = [
   {
     icon: unstable_IconRadioGroupIcon.Superscript,
     label: 'Superscript',
@@ -22,7 +22,7 @@ export const supportedInlineOptions: IconRadioGroupOption<SupportedInlineType>[]
     label: 'Code',
     value: 'code',
   },
-]
+] as const
 
 export function isSupportedInlineType(inline: InlineType): inline is SupportedInlineType {
   return supportedInlineOptions.findIndex(option => option.value === inline) !== -1
