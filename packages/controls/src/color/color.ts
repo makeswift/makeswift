@@ -164,10 +164,11 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   }
 
   resolveValue(
-    value: ValueType<C> | undefined,
+    data: DataType<C> | undefined,
     resolver: ResourceResolver,
     _effector: Effector,
   ): ValueSubscription<ResolvedValueType<C> | undefined> {
+    const value = this.fromData(data)
     const swatch = resolver.resolveSwatch(value?.swatchId)
 
     return {

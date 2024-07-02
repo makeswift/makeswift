@@ -1,10 +1,11 @@
 import { BaseEditor, Descendant } from 'slate'
 import { ReactEditor } from 'slate-react'
-import { LinkControlData } from '@makeswift/controls'
+import { type LinkControlData } from '@makeswift/controls'
+import { type ResponsiveValue } from '@makeswift/prop-controllers'
+
+import { type ResponsiveColor } from '../components/utils/types'
 
 import { BuilderEditor, TypographyEditor } from '.'
-import { ResponsiveValue } from '../prop-controllers'
-import { ResponsiveColor } from '../runtimes/react/controls'
 import { LocalChangesEditor } from './LocalChangesPlugin'
 
 export type RichTextTypography = {

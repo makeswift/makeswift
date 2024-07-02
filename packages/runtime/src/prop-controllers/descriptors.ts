@@ -4,10 +4,10 @@ import {
   ImageControlDefinition,
   LinkControlDefinition,
   type ResolvedValueType,
-  ControlDefinition as GenericControlDefinition,
+  ControlDefinition as UnifiedControlDefinition,
 } from '@makeswift/controls'
 
-import { ResponsiveColor } from '../runtimes/react/controls'
+import { type ResponsiveColor } from '../components/utils/types'
 import { StyleControlFormattedValue } from '../runtimes/react/controls/style'
 import type { Data } from '../state/react-page'
 import { StyleControlType } from '../controls/style'
@@ -146,12 +146,12 @@ export type LegacyDescriptor<T extends Data = Data> =
   | RichTextControlDefinition
   | RichTextV2ControlDefinition
 
-export type Descriptor<T extends Data = Data> = LegacyDescriptor<T> | GenericControlDefinition
+export type Descriptor<T extends Data = Data> = LegacyDescriptor<T> | UnifiedControlDefinition
 
 export function isLegacyDescriptor<T extends Data>(
   control: Descriptor<T>,
 ): control is LegacyDescriptor<T> {
-  return !(control instanceof GenericControlDefinition)
+  return !(control instanceof UnifiedControlDefinition)
 }
 
 export type PanelDescriptorType =
@@ -430,7 +430,7 @@ export type DescriptorValueType<T extends Descriptor> = T extends PropController
                     ? StyleV2ControlFormattedValue
                     : T extends TypographyControlDefinition
                       ? TypographyControlValue
-                      : T extends GenericControlDefinition
+                      : T extends UnifiedControlDefinition
                         ? ResolvedValueType<T>
                         : T extends Descriptor<infer U>
                           ? U | undefined

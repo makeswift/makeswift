@@ -23,9 +23,8 @@ import {
   type ResponsiveSelectValue,
 } from '@makeswift/prop-controllers'
 
-import { ColorValue as Color } from '../../utils/types'
+import { ColorValue as Color, type ResponsiveColor } from '../../utils/types'
 import { colorToString } from '../../utils/colorToString'
-import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { useResponsiveColor } from '../../hooks'
 import { cx } from '@emotion/css'
 import { useResponsiveStyle, useResponsiveTextStyle } from '../../utils/responsive-style'

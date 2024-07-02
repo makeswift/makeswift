@@ -1,7 +1,7 @@
 import { Descendant } from 'slate'
 import { BlockType } from '../../../../../slate'
 import { getBaseBreakpoint, DefaultBreakpointID } from '../../../../../state/modules/breakpoints'
-import { useBreakpoints } from '../../..'
+import { useBreakpoints } from '../../../hooks/use-breakpoints'
 import { useMemo } from 'react'
 import { RichTextV2ControlDefinition, RichTextV2Mode } from '../../../../../controls'
 

@@ -6,6 +6,7 @@ import {
 } from '../control-instance'
 
 import { type ListDefinition } from './list'
+import { hasAllKeys } from '../utils/functional'
 
 type Message = {
   type: typeof ListControl.ITEM_CONTROL_MESSAGE
@@ -15,7 +16,7 @@ type Message = {
 export class ListControl<
   Def extends ListDefinition = ListDefinition,
 > extends ControlInstance<Message> {
-  static ITEM_CONTROL_MESSAGE =
+  static readonly ITEM_CONTROL_MESSAGE =
     'makeswift::controls::list::message::item-control-message'
 
   private itemControls: Map<string, ControlInstance> = new Map()
@@ -27,25 +28,6 @@ export class ListControl<
     super(sendMessage)
   }
 
-  setItemsControl = (data: DataType<Def> | undefined) => {
-    if (data == null) return
-
-    const shouldUpdate = () => {
-      // If the length is different, should update
-      if (data.length !== this.itemControls.size) return true
-      // If this.controls does not have an itemId, should update
-      if (!data.every(({ id }) => this.itemControls.has(id))) return true
-
-      return false
-    }
-
-    if (!shouldUpdate()) return this.itemControls
-
-    return (this.itemControls = new Map(
-      data.map(({ id }) => [id, this.createItemControl(id)]),
-    ))
-  }
-
   recv = (message: Message) => {
     switch (message.type) {
       case ListControl.ITEM_CONTROL_MESSAGE: {
@@ -55,6 +37,22 @@ export class ListControl<
   }
 
   child = (key: string) => this.itemControls.get(key)
+
+  update = (data: DataType<Def> | undefined) => {
+    if (
+      data == null ||
+      hasAllKeys(
+        this.itemControls,
+        data.map(({ id }) => id),
+      )
+    ) {
+      return
+    }
+
+    this.itemControls = new Map(
+      data.map(({ id }) => [id, this.createItemControl(id)]),
+    )
+  }
 
   createItemControl = (id: string) => {
     return this.definition.itemDef.createInstance((message) =>

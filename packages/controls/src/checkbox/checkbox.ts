@@ -161,13 +161,13 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   }
 
   resolveValue(
-    value: ValueType<C> | undefined,
+    data: DataType<C> | undefined,
     _resolver: ResourceResolver,
     _effector: Effector,
-  ): ValueSubscription<ValueType<C> | undefined> {
+  ): ValueSubscription<ResolvedValueType<C> | undefined> {
     return {
-      readStableValue: (_previous?: ValueType<C>) =>
-        value ?? this.config.defaultValue,
+      readStableValue: (_previous?: ResolvedValueType<C>) =>
+        this.fromData(data) ?? this.config.defaultValue,
       subscribe: () => () => {},
     }
   }

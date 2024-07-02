@@ -1,11 +1,12 @@
-import { ResponsiveValue, ControlInstance, type SendMessage } from '@makeswift/controls'
+import {
+  ResponsiveValue,
+  ControlInstance,
+  type SendMessage,
+  type ControlMessage,
+} from '@makeswift/controls'
 import { BoxModel } from 'css-box-model'
 import { ControlDefinition } from './control'
-import {
-  AnyPropController,
-  PropControllerMessage,
-  createPropController,
-} from '../prop-controllers/instances'
+import { AnyPropController, createPropController } from '../prop-controllers/instances'
 import { CSSObject } from '@emotion/serialize'
 import { useStyle } from '../runtimes/react/use-style'
 import { ControlDefinitionValue } from '../runtimes/react/controls/control'
@@ -63,7 +64,7 @@ type StyleV2ControlItemBoxModelChangeMessage = {
 }
 type StyleV2ControlChildControlMessage = {
   type: typeof StyleV2ControlMessageType.STYLE_V2_CONTROL_CHILD_CONTROL_MESSAGE
-  payload: { message: PropControllerMessage }
+  payload: { message: ControlMessage }
 }
 
 export type StyleV2ControlMessage =
@@ -95,7 +96,7 @@ export class StyleV2Control<
 
         if (control == null) return
 
-        const recv = control.recv as (arg0: PropControllerMessage) => void
+        const recv = control.recv as (arg0: ControlMessage) => void
 
         recv(message.payload.message)
       }

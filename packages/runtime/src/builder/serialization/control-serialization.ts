@@ -14,11 +14,13 @@ import {
 } from '@makeswift/prop-controllers'
 
 import {
+  ControlDefinition as UnifiedControlDefinition,
+  type SerializedRecord,
+} from '@makeswift/controls'
+
+import {
   CheckboxDefinition,
-  ComboboxControlDefinition,
-  ComboboxControlType,
   ColorDefinition,
-  ControlDefinition as GenericControlDefinition,
   ListDefinition,
   NumberDefinition,
   SelectDefinition,
@@ -26,18 +28,18 @@ import {
   SlotDefinition,
   TextAreaDefinition,
   TextInputDefinition,
-  type SerializedRecord,
-} from '@makeswift/controls'
+} from '../../controls'
 
 import {
+  ComboboxControlDefinition,
+  ComboboxControlType,
   RichTextV2ControlDefinition,
   RichTextV2ControlType,
-  // ShapeControlDefinition,
-  // ShapeControlType,
   StyleV2ControlDefinition,
   StyleV2ControlType,
   RichTextValue as RichTextControlValue,
 } from '../../controls'
+
 import {
   Data,
   Device,
@@ -843,7 +845,7 @@ export type DeserializedLegacyControl<T extends Data = Data> =
 
 export type DeserializedControl<T extends Data = Data> =
   | DeserializedLegacyControl<T>
-  | GenericControlDefinition
+  | UnifiedControlDefinition
 
 export type DeserializedPanelControl<T extends Data = Data> = Extract<
   DeserializedControl<T>,
@@ -1027,7 +1029,7 @@ export function deserializeControl<T extends Data>(
   return deserializeControlDefV2(serializedControl)
 }
 
-function deserializeControlDefV2(record: SerializedRecord): GenericControlDefinition {
+function deserializeControlDefV2(record: SerializedRecord): UnifiedControlDefinition {
   // FIXME: replace with a class lookup + deserialize call
   // @registration-point
   switch (record.type) {

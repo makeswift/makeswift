@@ -1,19 +1,13 @@
 import { Descriptor, isLegacyDescriptor } from './descriptors'
 import { BoxModel } from '../state/modules/box-models'
+import { RichTextControl, RichTextControlMessage, RichTextControlType } from '../controls/rich-text'
+import { StyleControl, StyleControlType, StyleControlMessage } from '../controls/style'
 import {
-  RichTextControl,
-  RichTextControlMessage,
-  RichTextControlType,
-  StyleControl,
-  StyleControlType,
-  StyleControlMessage,
   RichTextV2ControlMessage,
   RichTextV2ControlType,
   RichTextV2Control,
-  StyleV2Control,
-  StyleV2ControlType,
-  StyleV2ControlMessage,
-} from '../controls'
+} from '../controls/rich-text-v2'
+import { StyleV2Control, StyleV2ControlType, StyleV2ControlMessage } from '../controls/style-v2'
 import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
 
 import {

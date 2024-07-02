@@ -136,13 +136,16 @@ class Definition<
   }
 
   resolveValue(
-    value: ValueType<C> | undefined,
+    data: DataType<C> | undefined,
     _resolver: ResourceResolver,
     _effector: Effector,
   ): ValueSubscription<ResolvedValueType<C> | undefined> {
     return {
       readStableValue: (_previous?: ResolvedValueType<C>) => {
-        return value ?? (this.config.defaultValue as ResolvedValueType<C>)
+        return (
+          this.fromData(data) ??
+          (this.config.defaultValue as ResolvedValueType<C>)
+        )
       },
       subscribe: () => () => {},
     }

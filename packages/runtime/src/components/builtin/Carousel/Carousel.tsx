@@ -14,15 +14,15 @@ import { useGesture } from '@use-gesture/react'
 import { wrap } from '@popmotion/popcorn'
 
 import { colorToString } from '../../utils/colorToString'
+import { type ResponsiveColor } from '../../utils/types'
 import { useMediaQuery } from '../../hooks'
 
 import Image from '../Image'
-import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { cx } from '@emotion/css'
 import { useResponsiveStyle } from '../../utils/responsive-style'
 import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
-import { useBreakpoints } from '../../../runtimes/react'
+import { useBreakpoints } from '../../../runtimes/react/hooks/use-breakpoints'
 import {
   type ResponsiveGapData,
   type ResponsiveNumberValue,

@@ -7,18 +7,15 @@ import {
   LinkControlType,
 } from '@makeswift/controls'
 
+import { RichTextControlData, RichTextControlType, RichTextValue } from '../controls/rich-text'
+import { getStyleSwatchIds, StyleControlData, StyleControlType } from '../controls/style'
 import {
-  getStyleSwatchIds,
   getTypographySwatchIds,
   getTypographyTypographyIds,
-  RichTextControlData,
-  RichTextControlType,
-  RichTextValue,
-  StyleControlData,
-  StyleControlType,
   TypographyControlData,
   TypographyControlType,
-} from '../controls'
+} from '../controls/typography'
+
 import {
   getRichTextPageIds,
   getRichTextSwatchIds,

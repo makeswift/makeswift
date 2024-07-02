@@ -7,14 +7,26 @@ export * from './typography'
 
 export {
   Combobox,
+  ComboboxControlType,
+  type ComboboxControlDefinition,
   Color,
+  ColorDefinition,
   Image,
   Link,
   List,
+  ListDefinition,
   Shape,
+  ShapeDefinition,
   Number,
+  NumberDefinition,
   TextInput,
+  TextInputDefinition,
   TextArea,
+  TextAreaDefinition,
   Checkbox,
+  CheckboxDefinition,
   Select,
+  SelectDefinition,
 } from '@makeswift/controls'
+
+export { Slot, SlotDefinition } from './slot'

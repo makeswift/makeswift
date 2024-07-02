@@ -1,8 +1,12 @@
-import type { ResponsiveValue } from '../../prop-controllers'
+import {
+  type ResponsiveValue,
+  type ResponsiveColorData,
+  getResponsiveColorDataSwatchIds,
+} from '@makeswift/prop-controllers'
+
 import { isNonNullable } from '../utils/isNonNullable'
 import type { ColorValue as Color } from '../utils/types'
 import { useSwatches } from '../../runtimes/react/hooks/makeswift-api'
-import { ResponsiveColorData, getResponsiveColorDataSwatchIds } from '@makeswift/prop-controllers'
 
 export function useResponsiveColor(
   color: ResponsiveColorData | null | undefined,

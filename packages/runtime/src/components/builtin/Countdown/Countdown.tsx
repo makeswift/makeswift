@@ -2,11 +2,10 @@
 
 import { cx } from '@emotion/css'
 import { ComponentPropsWithoutRef, ForwardedRef, forwardRef, Ref, useEffect, useState } from 'react'
-import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { colorToString } from '../../utils/colorToString'
 import { useResponsiveStyle } from '../../utils/responsive-style'
-import { ColorValue as Color } from '../../utils/types'
+import { type ColorValue as Color, type ResponsiveColor } from '../../utils/types'
 import {
   type ResponsiveFontData,
   type ResponsiveGapData,

@@ -4,11 +4,11 @@ import {
   ComboboxControlType,
   ImageControlType,
   LinkControlType,
+  mapValues,
+  ControlInstance,
   type ResourceResolver,
   type ValueSubscription,
   type StyleControlProperty,
-  mapValues,
-  ControlInstance,
 } from '@makeswift/controls'
 
 import * as ReactPage from '../../state/react-page'
@@ -24,8 +24,7 @@ import {
   useVideoPropControllerData,
   useTablePropControllerData,
 } from '../../components/hooks'
-import { useBreakpoints } from '../../runtimes/react'
-import type { ColorValue } from '../../components/utils/types'
+
 import {
   useResponsiveBorder,
   useResponsiveBorderRadius,
@@ -53,6 +52,8 @@ import { useRichTextV2 } from './controls/rich-text-v2'
 import { useStore } from './hooks/use-store'
 import { useDocumentKey } from './hooks/use-document-key'
 import { useSelector } from './hooks/use-selector'
+import { useBreakpoints } from './hooks/use-breakpoints'
+
 import {
   Types as PropControllerTypes,
   getShadowsPropControllerDataResponsiveShadowsData,
@@ -102,8 +103,6 @@ import { useBackgroundsPropControllerData } from '../../components/hooks/useBack
 import { useTextInputPropControllerData } from '../../components/hooks/useTextInputPropControllerData'
 import { useMakeswiftHostApiClient } from '../../next/context/makeswift-host-api-client'
 import { createPropsValuesSubscription } from './props-subscription'
-
-export type ResponsiveColor = ResponsiveValue<ColorValue>
 
 function useWidthStyle(
   data: WidthPropControllerData | undefined,
@@ -186,8 +185,9 @@ const useResolvedProps = (
   }, [])
 
   const propsSubscription = useMemo<ValueSubscription<Record<string, unknown>>>(
-    () => createPropsValuesSubscription(propDefs, elementData, resourceResolver, effector),
-    [propDefs, elementData, resourceResolver, effector],
+    () =>
+      createPropsValuesSubscription(propDefs, controls, elementData, resourceResolver, effector),
+    [propDefs, controls, elementData, resourceResolver, effector],
   )
 
   effector.useStyles()

@@ -20,7 +20,7 @@ import { mapValues, objectsAreEqual } from '../utils/functional'
 import { Deserialized } from '../serialization'
 
 type Config = {
-  type: Record<string, ControlDefinition>
+  readonly type: Record<string, ControlDefinition>
 }
 
 type DataType<C extends Config> = {
@@ -35,13 +35,15 @@ type ResolvedValueType<C extends Config> = {
   [K in keyof C['type']]?: ResolvedValueType_<C['type'][K]>
 }
 
+type ControlType<C extends Config> = ShapeControl<Definition<C>>
+
 class Definition<C extends Config = Config> extends ControlDefinition<
   typeof Definition.type,
   C,
   DataType<C>,
   ValueType<C>,
   ResolvedValueType<C>,
-  ShapeControl<Definition<C>>
+  ControlType<C>
 > {
   static readonly type = 'makeswift::controls::shape' as const
 
@@ -127,13 +129,19 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   }
 
   resolveValue(
-    value: ValueType<C> | undefined,
+    data: DataType<C> | undefined,
     resolver: ResourceResolver,
     effector: Effector,
+    control?: ControlType<C>,
   ): ValueSubscription<ResolvedValueType<C> | undefined> {
     const emptyShape: ResolvedValueType<C> = {}
-    const keyValues = mapValues(value ?? ({} as ValueType<C>), (val, key) =>
-      this.keyDefs[key as string]?.resolveValue(val, resolver, effector),
+    const keyValues = mapValues(data ?? ({} as ValueType<C>), (val, key) =>
+      this.keyDefs[key as string]?.resolveValue(
+        val,
+        resolver,
+        effector,
+        control?.child(key as string),
+      ),
     )
 
     return {
@@ -155,7 +163,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     }
   }
 
-  createInstance(sendMessage: SendMessage<any>): ShapeControl<Definition<C>> {
+  createInstance(sendMessage: SendMessage<any>): ControlType<C> {
     return new ShapeControl(this, sendMessage)
   }
 

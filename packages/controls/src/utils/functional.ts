@@ -76,3 +76,13 @@ export function objectsAreEqual(a?: object, b?: object): boolean {
 
   return true
 }
+
+export function hasAllKeys<K, V>(map: Map<K, V>, keys: readonly K[]): boolean {
+  if (keys.length !== map.size) return false
+
+  for (const key of keys) {
+    if (!map.has(key)) return false
+  }
+
+  return true
+}

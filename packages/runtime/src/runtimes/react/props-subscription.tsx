@@ -1,13 +1,16 @@
 import {
-  ControlDefinition,
+  ControlInstance,
   type ResourceResolver,
   type ValueSubscription,
   type Effector,
 } from '@makeswift/controls'
+
+import { isLegacyDescriptor, type Descriptor } from '../../prop-controllers/descriptors'
 import * as ReactPage from '../../state/react-page'
 
 export function createPropsValuesSubscription(
-  propDefinitions: Record<string, unknown>,
+  propDefinitions: Record<string, Descriptor>,
+  controls: Record<string, ControlInstance> | null,
   elementData: Record<string, ReactPage.ElementData>,
   resourceResolver: ResourceResolver,
   effector: Effector,
@@ -15,18 +18,19 @@ export function createPropsValuesSubscription(
   const propsSubscriptions: Record<string, ValueSubscription<any>> = Object.entries(
     propDefinitions,
   ).reduce((result, [propName, def]) => {
-    const resolveValue = (def as any as ControlDefinition).resolveValue // FIXME
-    const fromData = (def as any as ControlDefinition).fromData // FIXME
-    return resolveValue == null || fromData == null
-      ? result
-      : {
-          ...result,
-          [propName]: resolveValue.bind(def)(
-            fromData.bind(def)(elementData[propName]),
-            resourceResolver,
-            effector,
-          ),
-        }
+    if (isLegacyDescriptor(def)) {
+      return result
+    }
+
+    return {
+      ...result,
+      [propName]: def.resolveValue(
+        elementData[propName],
+        resourceResolver,
+        effector,
+        controls?.[propName],
+      ),
+    }
   }, {})
 
   let lastSnapshot: Record<string, unknown> = {}

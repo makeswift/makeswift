@@ -19,7 +19,7 @@ import { lengthPercentageDataToString } from '../../../css/length-percentage'
 import { marginPropertyDataToStyle } from '../../../css/margin'
 import { paddingPropertyDataToStyle } from '../../../css/padding'
 import { BoxModel, getBox } from '../../../box-model'
-import deepEqual from '../../../utils/deepEqual'
+import { pollBoxModel } from '../poll-box-model'
 import { Breakpoints } from '../../../state/modules/breakpoints'
 
 const defaultMargin = {
@@ -39,9 +39,8 @@ const defaultPadding = {
 export function getStyleControlCssObject(
   breakpoints: Breakpoints,
   style: StyleControlData | undefined,
-  properties: StyleControlProperty[]
+  properties: StyleControlProperty[],
 ): CSSObject {
-
   return {
     ...(properties.includes(StyleControlProperty.Width) && {
       maxWidth: '100%',
@@ -210,31 +209,13 @@ export function useFormattedStyle(
   const classNames = `${styleClassName} ${guid}`
 
   useEffect(() => {
-    let currentBoxModel: BoxModel | null = null
+    if (control == null) return
 
-    const handleAnimationFrameRequest = () => {
-      if (control == null) return
-
-      const element = document.querySelector(`.${guid}`)
-
-      const measuredBoxModel = element == null ? null : getBox(element)
-
-      if (!deepEqual(currentBoxModel, measuredBoxModel)) {
-        currentBoxModel = measuredBoxModel
-
-        control.changeBoxModel(currentBoxModel)
-      }
-
-      animationFrameHandle = requestAnimationFrame(handleAnimationFrameRequest)
-    }
-
-    let animationFrameHandle = requestAnimationFrame(handleAnimationFrameRequest)
-
-    return () => {
-      cancelAnimationFrame(animationFrameHandle)
-
-      control?.changeBoxModel(null)
-    }
+    const element = document.querySelector(`.${guid}`)
+    return pollBoxModel({
+      element,
+      onBoxModelChange: boxModel => control.changeBoxModel(boxModel),
+    })
   }, [guid, control])
 
   return classNames

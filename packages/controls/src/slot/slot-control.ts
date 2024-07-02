@@ -14,10 +14,10 @@ type ItemBoxModelChangeMessage = {
 type Message = BoxModelChangeMessage | ItemBoxModelChangeMessage
 
 export class SlotControl extends ControlInstance<Message> {
-  static CONTAINER_BOX_MODEL_CHANGE =
+  static readonly CONTAINER_BOX_MODEL_CHANGE =
     'makeswift::controls::slot::message::container-box-model-change'
 
-  static ITEM_BOX_MODEL_CHANGE =
+  static readonly ITEM_BOX_MODEL_CHANGE =
     'makeswift::controls::slot::message::item-box-model-change'
 
   recv = (_message: Message) => {}

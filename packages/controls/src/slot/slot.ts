@@ -3,20 +3,15 @@ import { z } from 'zod'
 import { createResponsiveValueSchema, elementSchema } from '../common'
 import { type CopyContext } from '../context'
 
-import {
-  type ResourceResolver,
-  type ValueSubscription,
-} from '../resource-resolver'
-
 import { ControlInstance, type SendMessage } from '../control-instance'
-import { type Effector } from '../effector'
 
 import {
   ControlDefinition,
   safeParse,
   serialize,
-  ParseResult,
-  SerializedRecord,
+  type ParseResult,
+  type SerializedRecord,
+  type Schema,
 } from '../control-definition'
 
 import { SlotControl } from './slot-control'
@@ -24,14 +19,12 @@ import { SlotControl } from './slot-control'
 type DataType = z.infer<typeof Definition.schema.data>
 type ValueType = z.infer<typeof Definition.schema.value>
 
-export type SlotNode = z.infer<typeof Definition.schema.resolvedValue>
-
-class Definition extends ControlDefinition<
+abstract class Definition<RuntimeNode> extends ControlDefinition<
   typeof Definition.type,
   unknown,
   DataType,
   ValueType,
-  SlotNode
+  RuntimeNode
 > {
   static readonly type = 'makeswift::controls::slot' as const
 
@@ -52,7 +45,6 @@ class Definition extends ControlDefinition<
     })
 
     const value = data
-    const resolvedValue = z.unknown()
 
     const definition = z.object({
       type,
@@ -62,19 +54,8 @@ class Definition extends ControlDefinition<
       type,
       data,
       value,
-      resolvedValue,
       definition,
     }
-  }
-
-  static deserialize(data: SerializedRecord): Definition {
-    if (data.type !== Definition.type) {
-      throw new Error(
-        `Slot: expected type ${Definition.type}, got ${data.type}`,
-      )
-    }
-
-    return new Definition()
   }
 
   constructor() {
@@ -86,7 +67,14 @@ class Definition extends ControlDefinition<
   }
 
   get schema() {
-    return Definition.schema
+    return {
+      ...Definition.schema,
+      resolvedValue: this.nodeSchema,
+    }
+  }
+
+  get nodeSchema(): Schema<RuntimeNode> {
+    return z.any()
   }
 
   safeParse(data: unknown | undefined): ParseResult<DataType | undefined> {
@@ -113,20 +101,6 @@ class Definition extends ControlDefinition<
     }
   }
 
-  resolveValue(
-    _value: ValueType | undefined,
-    _resolver: ResourceResolver,
-    _effector: Effector,
-  ): ValueSubscription<SlotNode | undefined> {
-    // FIXME
-    return {
-      readStableValue: (previous?: SlotNode) => {
-        return previous
-      },
-      subscribe: () => () => {},
-    }
-  }
-
   createInstance(sendMessage: SendMessage<any>): ControlInstance<any> {
     return new SlotControl(sendMessage)
   }
@@ -137,8 +111,6 @@ class Definition extends ControlDefinition<
     })
   }
 }
-
-export const Slot = () => new (class Slot extends Definition {})()
 
 export { Definition as SlotDefinition }
 

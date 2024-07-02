@@ -11,8 +11,6 @@ export type Data =
   | Data[]
   | { [key: string]: Data }
 
-export type RuntimeNode = unknown
-
 export const colorDataSchema = z.object({
   swatchId: z.string(),
   alpha: z.number(),

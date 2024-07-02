@@ -10,7 +10,7 @@ import {
   LinkControlDefinition,
   LinkControlType,
   copyLinkData,
-  ControlDefinition as GenericControlDefinition,
+  ControlDefinition as UnifiedControlDefinition,
   type CopyContext,
   type DataType,
   type Data,
@@ -87,7 +87,7 @@ export type LegacyControlDefinitionData<T extends LegacyControlDefinition> =
                     ? TypographyControlData
                     : never
 
-export type ControlDefinition = LegacyControlDefinition | GenericControlDefinition
+export type ControlDefinition = LegacyControlDefinition | UnifiedControlDefinition
 
 export type ControlDefinitionData<T extends ControlDefinition> = T extends LegacyControlDefinition
   ? LegacyControlDefinitionData<T>

@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { type CopyContext } from './context'
-import { type Data, type RuntimeNode } from './common/types'
+import { type Data } from './common/types'
 
 import {
   type ResourceResolver,
@@ -28,7 +28,7 @@ export abstract class ControlDefinition<
   Config = unknown,
   DataType = Data,
   ValueType = Data,
-  ResolvedValueType = ValueType | RuntimeNode,
+  ResolvedValueType = Data | unknown,
   InstanceType = ControlInstance<any>,
 > {
   constructor(readonly config: Config) {}
@@ -56,9 +56,10 @@ export abstract class ControlDefinition<
   ): DataType | undefined
 
   abstract resolveValue(
-    value: ValueType | undefined,
+    data: DataType | undefined,
     resolver: ResourceResolver,
     effector: Effector,
+    control?: InstanceType,
   ): ValueSubscription<ResolvedValueType | undefined>
 
   abstract createInstance(sendMessage: SendMessage<any>): InstanceType

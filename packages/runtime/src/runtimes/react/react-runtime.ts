@@ -1,5 +1,5 @@
 import { registerBuiltinComponents } from '../../components/builtin/register'
-import { PropControllerDescriptor, PropControllerDescriptorValueType } from '../../prop-controllers'
+import { type Descriptor, type DescriptorValueType } from '../../prop-controllers/descriptors'
 import { registerComponentEffect, registerReactComponentEffect } from '../../state/actions'
 import {
   Breakpoints,
@@ -27,8 +27,8 @@ export class ReactRuntime {
   // ------------------ Deprecated API ------------------ //
   static store = configureStore()
   static registerComponent<
-    P extends Record<string, PropControllerDescriptor>,
-    C extends ComponentType<{ [K in keyof P]: PropControllerDescriptorValueType<P[K]> }>,
+    P extends Record<string, Descriptor>,
+    C extends ComponentType<{ [K in keyof P]: DescriptorValueType<P[K]> }>,
   >(
     component: C,
     {
@@ -79,8 +79,8 @@ export class ReactRuntime {
   store: Store
 
   registerComponent<
-    P extends Record<string, PropControllerDescriptor>,
-    C extends ComponentType<{ [K in keyof P]: PropControllerDescriptorValueType<P[K]> }>,
+    P extends Record<string, Descriptor>,
+    C extends ComponentType<{ [K in keyof P]: DescriptorValueType<P[K]> }>,
   >(
     component: C,
     {

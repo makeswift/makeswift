@@ -6,15 +6,15 @@ import { Times16 } from '../../../../icons/Times16'
 
 import Button from '../../../Button'
 import DropDownButton from './components/MobileDropDownButton'
-import { ResponsiveColor } from '../../../../../runtimes/react/controls'
 import { useResponsiveColor } from '../../../../hooks'
 import { cx } from '@emotion/css'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 import { useResponsiveStyle } from '../../../../utils/responsive-style'
+import { type ResponsiveColor } from '../../../../utils/types'
 import {
-  NavigationButtonData,
-  NavigationLinksData,
-  ResponsiveValue,
+  type NavigationButtonData,
+  type NavigationLinksData,
+  type ResponsiveValue,
 } from '@makeswift/prop-controllers'
 
 type NavigationButtonProps = NavigationButtonData['payload'] &

@@ -51,6 +51,7 @@ type DataType<C extends Config> = {
 
 type ValueType<C extends Config> = ValueType_<ItemType<C>>[]
 type ResolvedValueType<C extends Config> = ResolvedValueType_<ItemType<C>>[]
+type ControlType<C extends Config> = ListControl<Definition<C>>
 
 class Definition<C extends Config = Config> extends ControlDefinition<
   typeof Definition.type,
@@ -58,7 +59,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   DataType<C>,
   ValueType<C>,
   ResolvedValueType<C>,
-  ListControl<Definition<C>>
+  ControlType<C>
 > {
   static readonly type = 'makeswift::controls::list' as const
 
@@ -154,13 +155,22 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   }
 
   resolveValue(
-    value: ValueType<C> | undefined,
+    data: DataType<C> | undefined,
     resolver: ResourceResolver,
     effector: Effector,
+    control?: ControlType<C>,
   ): ValueSubscription<ResolvedValueType<C> | undefined> {
     const emptyList: ResolvedValueType<C> = []
-    const itemValues = value?.map((value) =>
-      this.itemDef.resolveValue(value, resolver, effector),
+
+    control?.update(data)
+
+    const itemValues = data?.map((data) =>
+      this.itemDef.resolveValue(
+        data,
+        resolver,
+        effector,
+        data ? control?.child(data.id) : undefined,
+      ),
     )
 
     return {
@@ -176,7 +186,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     }
   }
 
-  createInstance(sendMessage: SendMessage<any>): ListControl<Definition<C>> {
+  createInstance(sendMessage: SendMessage<any>): ControlType<C> {
     return new ListControl(this, sendMessage)
   }
 

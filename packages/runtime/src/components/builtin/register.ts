@@ -1,4 +1,4 @@
-import { ReactRuntime } from '../../runtimes/react'
+import { type ReactRuntime } from '../../runtimes/react'
 import { registerComponent as registerBoxComponent } from './Box/register'
 import { registerComponent as registerButtonComponent } from './Button/register'
 import { registerComponent as registerCarouselComponent } from './Carousel/register'

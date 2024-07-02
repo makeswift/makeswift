@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Select constructor value type 1`] = `"p"`;
+
+exports[`Select constructor value type 2`] = `
+Select {
+  "config": {
+    "defaultValue": "p",
+    "label": "Block type",
+    "labelOrientation": "horizontal",
+    "options": [
+      {
+        "label": "Paragraph",
+        "value": "p",
+      },
+      {
+        "label": "Heading 1",
+        "value": "h1",
+      },
+      {
+        "label": "Heading 2",
+        "value": "h2",
+      },
+      {
+        "label": "Heading 3",
+        "value": "h3",
+      },
+    ],
+  },
+}
+`;

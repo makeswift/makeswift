@@ -1,6 +1,6 @@
 import { Editor, Element, NodeEntry } from 'slate'
 import { unstable_IconRadioGroup, unstable_IconRadioGroupIcon } from '@makeswift/controls'
-import { unstable_StyleV2 } from '../../controls'
+import { unstable_StyleV2 } from '../../controls/style-v2'
 import { ElementUtils } from '../utils/element'
 import { normalizeResponsiveValue, setResponsiveValue } from '../utils/responsive'
 import { getValue } from './getValue'

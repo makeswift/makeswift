@@ -5,7 +5,8 @@ import {
   ResponsiveValue as PropControllerResponsiveValue,
   DeviceOverride as PropControllerDeviceOverride,
   Device as DeviceId,
-} from '../../prop-controllers'
+} from '@makeswift/prop-controllers'
+
 import shallowMerge from '../../utils/shallowMerge'
 import { Action, ActionTypes } from '../actions'
 import coalesce from '../../utils/coalesce'
@@ -32,7 +33,7 @@ export const DefaultBreakpointID = {
   Mobile: 'mobile',
 } as const
 
-type DefaultBreakpointID = typeof DefaultBreakpointID[keyof typeof DefaultBreakpointID]
+type DefaultBreakpointID = (typeof DefaultBreakpointID)[keyof typeof DefaultBreakpointID]
 
 export const DEFAULT_BREAKPOINTS: Breakpoints = [
   {
