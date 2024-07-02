@@ -1,4 +1,4 @@
-import { type ResourceResolver, ValueSubscription } from '@makeswift/controls'
+import { type ResourceResolver, type ValueSubscription } from '@makeswift/controls'
 import * as MakeswiftApiClient from '../state/makeswift-api-client'
 import {
   APIResourceType,

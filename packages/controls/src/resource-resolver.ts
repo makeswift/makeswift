@@ -1,5 +1,9 @@
 import { Swatch } from './common/resources'
-import { ValueSubscription } from './traits'
+
+export type ValueSubscription<T> = {
+  readValue(): T
+  subscribe(onUpdate: () => void): () => void
+}
 
 export interface ResourceResolver {
   readSwatch(swatchId: string): Swatch | null

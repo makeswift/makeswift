@@ -1,5 +1,5 @@
 import {
-  Color,
+  type ColorDefinition,
   TextInputControlData,
   TextInputControlDefinition,
   TextInputControlType,
@@ -8,7 +8,7 @@ import {
   TextAreaControlType,
   NumberControlData,
   NumberControlDefinition,
-  Checkbox,
+  type CheckboxDefinition,
   ComboboxControlData,
   ComboboxControlDefinition,
   IconRadioGroupControlData,
@@ -20,8 +20,7 @@ import {
   LinkControlDefinition,
   LinkControlType,
   copyLinkData,
-  type ControlDefinitionType,
-  controlTraitsRegistry,
+  type CopyContext,
 } from '@makeswift/controls'
 
 import { copyImageData } from './image'
@@ -33,7 +32,7 @@ import {
   getListTranslatableData,
   mergeListTranslatedData,
   ListControlTranslationDto,
-} from './list'
+} from '@makeswift/controls/src/list/list'
 import { SelectControlData, SelectControlDefinition } from './select'
 import {
   ShapeControlData,
@@ -61,7 +60,7 @@ import {
   mergeGridPropControllerTranslatedData,
 } from '@makeswift/prop-controllers'
 import { copy as propControllerCopy } from '../prop-controllers/copy'
-import { CopyContext, Data, MergeContext, MergeTranslatableDataContext } from '../state/react-page'
+import { Data, MergeContext, MergeTranslatableDataContext } from '../state/react-page'
 import {
   RichTextControlData,
   RichTextControlDefinition,
@@ -90,12 +89,12 @@ import {
 import { IndexSignatureHack } from '../utils/index-signature-hack'
 
 export type ControlDefinition =
-  | ControlDefinitionType<typeof Checkbox>
+  | CheckboxDefinition
   | NumberControlDefinition
   | TextInputControlDefinition
   | TextAreaControlDefinition
   | SelectControlDefinition
-  | ControlDefinitionType<typeof Color>
+  | ColorDefinition
   | IconRadioGroupControlDefinition
   | ImageControlDefinition
   | ComboboxControlDefinition
@@ -143,9 +142,9 @@ export type ControlDefinitionData<T extends ControlDefinition> = T extends Numbe
                               : never
 
 export function copy(definition: Descriptor | ControlDefinition, value: any, context: CopyContext) {
-  const traits = controlTraitsRegistry.get(definition.type)
-  if (traits) {
-    return traits.copyData(value, context)
+  const copyData = definition.copyData
+  if (copyData) {
+    return copyData(value, context)
   }
 
   switch (definition.type) {

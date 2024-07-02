@@ -5,12 +5,7 @@ import { act } from 'react-dom/test-utils'
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import {
-  type ValueType,
-  type ControlDataType,
-  ControlTraits,
-  ControlDefinitionType,
-} from '@makeswift/controls'
+import { type ValueType, type DataType, ControlDefinition } from '@makeswift/controls'
 
 import { ElementData } from '../../../../state/react-page'
 import { Page } from '../../page'
@@ -28,23 +23,22 @@ import { type MakeswiftPageSnapshot } from '../../../../next'
 const ROOT_ID = '00000000-0000-0000-0000-000000000000'
 const ELEMENT_ID = '11111111-1111-1111-1111-111111111111'
 
-export async function testPageControlPropRendering<T extends ControlTraits>(
-  _traits: T,
-  controlDefinition: ControlDefinitionType<T>,
+export async function testPageControlPropRendering<D extends ControlDefinition>(
+  controlDefinition: D,
   {
     toData,
     value,
     cacheData,
     expectedRenders,
   }: {
-    toData: (value: ValueType<T>) => ControlDataType<T> | ValueType<T>
-    value: ValueType<T>
+    toData: (value: ValueType<D>) => DataType<D>
+    value: ValueType<D>
     cacheData?: MakeswiftPageSnapshot['cacheData']
     expectedRenders?: number
   },
 ) {
   // Arrange
-  const controlData: ControlDataType<T> = toData(value)
+  const controlData: DataType<D> = toData(value)
   const TestComponentType = 'TestComponent'
   const testId = 'test-id'
   const renderCountTestId = 'render-count-test-id'
@@ -72,7 +66,7 @@ export async function testPageControlPropRendering<T extends ControlTraits>(
 
   // Act
   runtime.registerComponent(
-    forwardRef<HTMLDivElement, { propKey?: ValueType<T> }>(({ propKey }, ref) => {
+    forwardRef<HTMLDivElement, { propKey?: ValueType<D> }>(({ propKey }, ref) => {
       const renderCount = useRef(0)
       ++renderCount.current
       return (

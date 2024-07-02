@@ -1,195 +1,198 @@
 import { match } from 'ts-pattern'
 import { z } from 'zod'
-import parseColor from 'color'
 
+import { ControlDataTypeKey, colorDataSchema } from '../common'
+import { type CopyContext } from '../context'
 import {
-  ControlDataTypeKey,
-  colorDataSchema,
-  type ColorData,
-  type CopyContext,
-  type ValueType,
-  Swatch,
-} from '../common'
-
-import { controlTraitsRegistry } from '../registry'
-import { type ResourceResolver } from '../resource-resolver'
-
-import {
-  type VersionedControlDefinition,
-  type ControlTraits,
-  type ParseResult,
+  type ResourceResolver,
   type ValueSubscription,
-} from '../traits'
+} from '../resource-resolver'
 
-import { DefaultControlInstance, type Send } from '../control-instance'
+import {
+  DefaultControlInstance,
+  ControlInstance,
+  type SendType,
+} from '../control-instance'
 
-export const Color = controlTraitsRegistry.add(
-  (() => {
-    const type = 'makeswift::controls::color' as const
-    const v1DataType = 'color::v1' as const
-    const version = 1 as const
+import {
+  ControlDefinition,
+  safeParse,
+  serialize,
+  type ParseResult,
+} from '../control-definition'
 
-    const dataSignature = {
-      v1: { [ControlDataTypeKey]: v1DataType },
-    } as const
+import { swatchToColorString } from './conversion'
 
-    const dataSchema = z.union([
-      colorDataSchema,
-      colorDataSchema.and(
+type Config = z.infer<typeof Definition.schema.relaxed.config>
+
+type DataSchemaType<C extends Config> = undefined extends C['defaultValue']
+  ? typeof Definition.schema.relaxed
+  : typeof Definition.schema.strict
+
+type DataType<C extends Config> = z.infer<DataSchemaType<C>['data']>
+type ValueType<C extends Config> = z.infer<DataSchemaType<C>['value']>
+type ResolvedValueType<C extends Config> = z.infer<
+  DataSchemaType<C>['resolvedValue']
+>
+
+class Definition<C extends Config = Config> extends ControlDefinition<
+  typeof Definition.type,
+  C,
+  DataType<C>,
+  ValueType<C>,
+  ResolvedValueType<C>
+> {
+  private static readonly v1DataType = 'color::v1' as const
+  private static readonly dataSignature = {
+    v1: { [ControlDataTypeKey]: this.v1DataType },
+  } as const
+
+  static readonly type = 'makeswift::controls::color' as const
+
+  static get schema() {
+    const type = z.literal(this.type)
+    const version = z.literal(1).optional()
+    const value = colorDataSchema
+
+    const schemas = <R>(resolvedValue: z.ZodType<R>) => {
+      const data = value.and(
         z.object({
-          [ControlDataTypeKey]: z.literal(v1DataType),
+          [ControlDataTypeKey]: z.literal(this.v1DataType).optional(),
         }),
-      ),
-    ])
+      )
 
-    const configSchema = z.object({
-      label: z.string().optional(),
-      labelOrientation: z
-        .union([z.literal('horizontal'), z.literal('vertical')])
-        .optional(),
-      defaultValue: z.string().optional(),
-      hideAlpha: z.boolean().optional(),
-    })
+      const config = z.object({
+        label: z.string().optional(),
+        labelOrientation: z
+          .union([z.literal('horizontal'), z.literal('vertical')])
+          .optional(),
+        defaultValue: resolvedValue,
+        hideAlpha: z.boolean().optional(),
+      })
 
-    type ControlData = z.infer<typeof dataSchema>
-    type Config = z.infer<typeof configSchema>
+      const definition = z.object({
+        type,
+        config,
+        version,
+      })
 
-    type ControlDefinition<C extends Config = Config> =
-      VersionedControlDefinition<
-        typeof type,
-        C,
-        ColorData,
-        typeof version,
-        undefined extends C['defaultValue'] ? string | undefined : string
-      >
+      return { type, value, resolvedValue, data, config, version, definition }
+    }
 
-    const ctor = <C extends Config>(config?: C): ControlDefinition<C> => ({
-      type,
-      config: config ?? ({} as C),
+    return {
       version,
+      relaxed: schemas(z.string().optional()),
+      strict: schemas(z.string()),
+    }
+  }
+
+  static deserialize(data: unknown): Definition {
+    const { config, version } = this.schema.relaxed.definition.parse(data)
+    return new Definition(config, version)
+  }
+
+  constructor(
+    config: C,
+    readonly version: z.infer<typeof Definition.schema.version>,
+  ) {
+    super(config)
+  }
+
+  get controlType() {
+    return Definition.type
+  }
+
+  get schema() {
+    return (
+      this.config.defaultValue === undefined
+        ? Definition.schema.relaxed
+        : Definition.schema.strict
+    ) as DataSchemaType<C>
+  }
+
+  safeParse(data: unknown | undefined): ParseResult<DataType<C> | undefined> {
+    return safeParse(this.schema.data, data)
+  }
+
+  fromData(data: DataType<C> | undefined): ValueType<C> | undefined {
+    const inputSchema = this.schema.data.optional()
+    return match(data satisfies z.infer<typeof inputSchema>)
+      .with(Definition.dataSignature.v1, ({ swatchId, alpha }) => ({
+        swatchId,
+        alpha,
+      }))
+      .otherwise((value) => value)
+  }
+
+  toData(value: ValueType<C>): DataType<C> {
+    return match(this.version)
+      .with(1, () => ({
+        ...Definition.dataSignature.v1,
+        ...value,
+      }))
+      .with(undefined, () => value)
+      .exhaustive()
+  }
+
+  copyData(
+    data: DataType<C> | undefined,
+    { replacementContext }: CopyContext,
+  ): DataType<C> | undefined {
+    if (data == null) return data
+
+    const replaceSwatchId = (swatchId: string) =>
+      replacementContext.swatchIds.get(swatchId) ?? swatchId
+
+    const inputSchema = this.schema.data.optional()
+    return match(data satisfies z.infer<typeof inputSchema>)
+      .with(Definition.dataSignature.v1, (val) => ({
+        ...val,
+        swatchId: replaceSwatchId(val.swatchId),
+      }))
+      .otherwise((val) => ({
+        ...val,
+        swatchId: replaceSwatchId(val.swatchId),
+      }))
+  }
+
+  resolveValue(
+    value: ValueType<C>,
+    resolver: ResourceResolver,
+  ): ValueSubscription<ResolvedValueType<C>> {
+    const swatchSubscription = resolver.subscribeSwatch(value?.swatchId)
+
+    if (value?.swatchId != null && swatchSubscription.readValue() == null) {
+      resolver.fetchSwatch(value.swatchId).catch(console.error)
+    }
+
+    return {
+      readValue: () =>
+        swatchToColorString(
+          swatchSubscription.readValue(),
+          value?.alpha ?? 1,
+          this.config.defaultValue,
+        ),
+      subscribe: swatchSubscription.subscribe,
+    }
+  }
+
+  createInstance(send: SendType<ControlInstance>): ControlInstance {
+    return new DefaultControlInstance(send)
+  }
+
+  serialize(): [unknown, Transferable[]] {
+    return serialize(this.config, {
+      type: Definition.type,
+      version: this.version,
     })
-
-    ctor.controlType = type
-    ctor.dataSignature = dataSignature
-
-    ctor.safeParse = (
-      data: unknown | undefined,
-    ): ParseResult<ControlData | undefined> => {
-      const result = dataSchema.optional().safeParse(data)
-      return result.success
-        ? { success: true, data: result.data }
-        : { success: false, error: result.error.flatten().formErrors[0] }
-    }
-
-    ctor.fromData = (
-      data: ControlData | undefined,
-      _definition: ControlDefinition,
-    ) => {
-      return match(data)
-        .with(dataSignature.v1, ({ swatchId, alpha }) => ({ swatchId, alpha }))
-        .otherwise((value) => value ?? null)
-    }
-
-    ctor.toData = (
-      value: ColorData,
-      definition: ControlDefinition,
-    ): ControlData => {
-      return match('version' in definition ? definition.version : undefined)
-        .with(version, () => ({
-          ...dataSignature.v1,
-          ...value,
-        }))
-        .with(undefined, () => value)
-        .exhaustive()
-    }
-
-    ctor.copyData = (
-      data: ControlData | undefined,
-      { replacementContext }: CopyContext,
-    ): ControlData | undefined => {
-      if (data == null) return data
-
-      const replaceSwatchId = (swatchId: string) =>
-        replacementContext.swatchIds.get(swatchId) ?? swatchId
-
-      return match(data)
-        .with(dataSignature.v1, (val) => ({
-          ...val,
-          swatchId: replaceSwatchId(val.swatchId),
-        }))
-        .otherwise((val) => ({
-          ...val,
-          swatchId: replaceSwatchId(val.swatchId),
-        }))
-    }
-
-    ctor.getSwatchIds = (data: ControlData | undefined): string[] =>
-      data?.swatchId == null ? [] : [data.swatchId]
-
-    ctor.resolveValue = async (
-      value: ValueType<ControlDefinition>,
-      definition: ControlDefinition,
-      resolver: ResourceResolver,
-    ): Promise<string | undefined> => {
-      const { swatchId, alpha } = value ?? {}
-      const swatch = await resolver.fetchSwatch(swatchId)
-      return swatchToColorString(swatch, alpha, definition.config.defaultValue)
-    }
-
-    ctor.subscribeValue = (
-      value: ValueType<ControlDefinition>,
-      definition: ControlDefinition,
-      resolver: ResourceResolver,
-    ): ValueSubscription<string | undefined> => {
-      const swatchSubscription = resolver.subscribeSwatch(value?.swatchId)
-
-      if (value?.swatchId != null && swatchSubscription.readValue() == null) {
-        resolver.fetchSwatch(value.swatchId).catch(console.error)
-      }
-
-      return {
-        readValue: () =>
-          swatchToColorString(
-            swatchSubscription.readValue(),
-            value?.alpha ?? 1,
-            definition.config.defaultValue,
-          ),
-        subscribe: swatchSubscription.subscribe,
-      }
-    }
-
-    ctor.createInstance = (send: Send) => new DefaultControlInstance(send)
-
-    return ctor as typeof ctor &
-      ControlTraits<typeof type, ControlData, ControlDefinition>
-  })(),
-)
-
-const swatchToColorString = (
-  swatch: Swatch | null,
-  alpha: number,
-  defaultValue?: string,
-) => {
-  if (swatch == null) {
-    return defaultValue === undefined
-      ? undefined
-      : safeParseColor(defaultValue).rgb().string()
   }
 
-  return parseColor({
-    h: swatch.hue,
-    s: swatch.saturation,
-    l: swatch.lightness,
-  })
-    .alpha(alpha)
-    .rgb()
-    .string()
-}
-
-function safeParseColor(value: string) {
-  try {
-    return parseColor(value)
-  } catch {
-    return parseColor()
+  getSwatchIds(data: DataType<C> | undefined): string[] {
+    return data?.swatchId == null ? [] : [data.swatchId]
   }
 }
+
+export const Color = <C extends Config>(config?: C) =>
+  new (class Color extends Definition<C> {})(config ?? ({} as C), 1)
+
+export { Definition as ColorDefinition }

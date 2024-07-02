@@ -4,8 +4,8 @@ import {
   NumberControlType,
   TextInputControlType,
   TextAreaControlType,
-  ResourceResolver,
-  ValueSubscription,
+  type ResourceResolver,
+  type ValueSubscription,
 } from '@makeswift/controls'
 
 import * as ReactPage from '../../state/react-page'
@@ -30,12 +30,10 @@ import {
   useResponsiveWidth,
 } from '../../components/utils/responsive-style'
 import {
-  Checkbox,
   // Color,
   ComboboxControlType,
   ImageControlType,
   LinkControlType,
-  ListControlType,
   SelectControlType,
   ShapeControlType,
   SlotControl,
@@ -205,7 +203,7 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
           case ImageControlType:
           case ComboboxControlType:
           case ShapeControlType:
-          case ListControlType:
+          //          case ListControlType:
           case LinkControlType:
           case StyleV2ControlType:
           case TypographyControlType:

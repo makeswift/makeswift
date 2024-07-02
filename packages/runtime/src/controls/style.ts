@@ -1,9 +1,8 @@
-import { Color, type ColorData, type ResponsiveValue } from '@makeswift/controls'
+import { Color, type ColorData, type ResponsiveValue, type CopyContext } from '@makeswift/controls'
 import { BorderRadiusPropertyData } from '../css/border-radius'
 import type { LengthPercentageData } from '../css/length-percentage'
 import { MarginPropertyData } from '../css/margin'
 import { PaddingPropertyData } from '../css/padding'
-import { CopyContext } from '../state/react-page'
 import { Send } from '../prop-controllers/instances'
 import { PropController } from '../prop-controllers/base'
 import { BoxModel } from '../state/modules/box-models'
@@ -243,7 +242,7 @@ export function copyStyleData(
 
       return {
         ...side,
-        color: Color.copyData(side.color, context),
+        color: Color().copyData(side.color, context),
       }
     }
 

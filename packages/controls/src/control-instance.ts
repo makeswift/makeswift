@@ -1,17 +1,27 @@
-export type Send<T = unknown> = (message: T) => void
+export type ControlMessage<Type extends string = string, Payload = unknown> = {
+  type: Type
+  payload: Payload
+}
 
-export abstract class ControlInstance<T> {
-  protected send: Send<T>
+export type Send<M = ControlMessage> = (message: M) => void
 
-  constructor(send: Send<T>) {
+export abstract class ControlInstance<
+  M extends ControlMessage = ControlMessage,
+> {
+  protected send: Send<M>
+
+  constructor(send: Send<M>) {
     this.send = send
   }
 
-  abstract recv(message: T): void
+  abstract recv(message: M): void
 }
 
-export class DefaultControlInstance extends ControlInstance<unknown> {
-  recv(_message: unknown) {
+export class DefaultControlInstance extends ControlInstance {
+  recv(_message: ControlMessage) {
     // Do nothing
   }
 }
+
+export type MessageType<I> = I extends ControlInstance<infer M> ? M : never
+export type SendType<I> = Send<MessageType<I>>

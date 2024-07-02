@@ -1,6 +1,5 @@
 import { P, match } from 'ts-pattern'
-import { ImageControlData } from '@makeswift/controls'
-import { CopyContext } from '../state/react-page'
+import { type CopyContext, type ImageControlData } from '@makeswift/controls'
 
 export function copyImageData(
   value: ImageControlData | undefined,

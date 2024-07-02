@@ -18,4 +18,7 @@ export type HasAssociatedTypes<T> = T extends {
     : false
   : false
 
-export type AssociatedType<T, K extends keyof AssociatedTypes<T>> = AssociatedTypes<T>[K]
+export type AssociatedType<
+  T,
+  K extends keyof AssociatedTypes<T>,
+> = AssociatedTypes<T>[K]

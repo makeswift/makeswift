@@ -1,5 +1,4 @@
 import { z } from 'zod'
-import { AssociatedType } from '../utils/associated-types'
 
 export type Data =
   | undefined
@@ -69,37 +68,3 @@ export const elementSchema = z.union([
 ])
 
 export type Element = z.infer<typeof elementSchema>
-
-export type TranslationDto = Record<string, Data>
-export type MergeTranslatableDataContext = {
-  translatedData: TranslationDto
-  mergeTranslatedData: (node: Element) => Element
-}
-
-export type ReplacementContext = {
-  elementHtmlIds: Set<string>
-  elementKeys: Map<string, string>
-  swatchIds: Map<string, string>
-  fileIds: Map<string, string>
-  typographyIds: Map<string, string>
-  tableIds: Map<string, string>
-  tableColumnIds: Map<string, string>
-  pageIds: Map<string, string>
-  globalElementIds: Map<string, string>
-  globalElementData: Map<string, ElementData>
-}
-
-export type CopyContext = {
-  replacementContext: ReplacementContext
-  copyElement: (node: Element) => Element
-}
-
-// export type PropType<T> = AssociatedType<T, 'Type'>
-export type ControlDefinitionType<T> = AssociatedType<T, 'ControlDefinition'>
-export type ControlDataType<T> = AssociatedType<T, 'ControlData'>
-export type ValueType<T> = AssociatedType<T, 'ValueType'>
-export type ResolvedValueType<T> = AssociatedType<T, 'ResolvedValueType'>
-// export type Descriptor<T> = AssociatedType<T, 'Descriptor'>
-// export type Discriminator<T> = AssociatedType<T, 'Discriminator'>
-// export type OptionsType<T> = AssociatedType<Descriptor<T>, 'Options'>
-// export type RawOptionsType<T> = ResolveOptions<OptionsType<T>>

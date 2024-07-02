@@ -3,10 +3,10 @@ import {
   NumberControlDefinition,
   TextInputControlDefinition,
   TextAreaControlDefinition,
-  type ControlDefinitionType,
   type HasAssociatedTypes,
   type ResolvedValueType,
-  Checkbox,
+  type CheckboxDefinition,
+  type ColorDefinition,
 } from '@makeswift/controls'
 import { ResponsiveColor } from '../runtimes/react/controls'
 import { StyleControlFormattedValue } from '../runtimes/react/controls/style'
@@ -14,7 +14,6 @@ import type { Data } from '../state/react-page'
 import { NumberControlValue } from '../runtimes/react/controls/number'
 import { StyleControlType } from '../controls/style'
 import {
-  Color,
   ComboboxControlDefinition,
   ImageControlDefinition,
   LinkControlDefinition,
@@ -152,11 +151,11 @@ export type Descriptor<T extends Data = Data> =
   | StyleControlDefinition
   | StyleV2ControlDefinition
   | NumberControlDefinition
-  | ControlDefinitionType<typeof Checkbox>
+  | typeof CheckboxDefinition
   | TextInputControlDefinition
   | TextAreaControlDefinition
   | SelectControlDefinition
-  | ControlDefinitionType<typeof Color>
+  | typeof ColorDefinition
   | IconRadioGroupControlDefinition
   | ImageControlDefinition
   | ComboboxControlDefinition

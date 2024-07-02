@@ -1,147 +1,40 @@
 import { match } from 'ts-pattern'
 import { z } from 'zod'
 
-import {
-  ControlDataTypeKey,
-  type ValueType as _ValueType,
-  type CopyContext,
-} from '../common'
-import { type ResourceResolver } from '../resource-resolver'
-import { controlTraitsRegistry } from '../registry'
+import { ControlDataTypeKey } from '../common'
+import { type CopyContext } from '../context'
 
 import {
-  type VersionedControlDefinition,
-  type ControlTraits,
-  type ParseResult,
+  type ResourceResolver,
   type ValueSubscription,
-} from '../traits'
+} from '../resource-resolver'
 
 import {
   DefaultControlInstance,
   ControlInstance,
-  type Send,
+  type SendType,
 } from '../control-instance'
 
-import { ControlDefinition, serializeConfig } from '../control-definition'
-import { WithAssociatedTypes } from '../utils/associated-types'
+import {
+  ControlDefinition,
+  safeParse,
+  serialize,
+  type ParseResult,
+} from '../control-definition'
 
-export const Checkbox = controlTraitsRegistry.add(
-  (() => {
-    const type = 'makeswift::controls::checkbox' as const
-    const v1DataType = 'checkbox::v1' as const
-    const version = 1 as const
+type Config = z.infer<typeof Definition.schema.relaxed.config>
 
-    const dataSignature = {
-      v1: { [ControlDataTypeKey]: v1DataType },
-    } as const
+type DataSchemaType<C extends Config> = undefined extends C['defaultValue']
+  ? typeof Definition.schema.relaxed
+  : typeof Definition.schema.strict
 
-    const dataSchema = z.union([
-      z.boolean(),
-      z.object({
-        [ControlDataTypeKey]: z.literal(v1DataType),
-        value: z.boolean(),
-      }),
-    ])
-
-    const configSchema = z.object({
-      label: z.string().optional(),
-      defaultValue: z.boolean().optional(),
-    })
-
-    type ControlData = z.infer<typeof dataSchema>
-    type Config = z.infer<typeof configSchema>
-
-    type ControlDefinition<C extends Config = Config> =
-      VersionedControlDefinition<
-        typeof type,
-        C,
-        undefined extends C['defaultValue'] ? boolean | undefined : boolean,
-        typeof version
-      >
-
-    const ctor = <C extends Config>(config?: C): ControlDefinition<C> => ({
-      type,
-      config: config ?? ({} as C),
-      version,
-    })
-
-    ctor.controlType = type
-    ctor.dataSignature = dataSignature
-
-    ctor.safeParse = (
-      data: unknown | undefined,
-    ): ParseResult<ControlData | undefined> => {
-      const result = dataSchema.optional().safeParse(data)
-      return result.success
-        ? { success: true, data: result.data }
-        : { success: false, error: result.error.flatten().formErrors[0] }
-    }
-
-    ctor.fromData = (
-      data: ControlData | undefined,
-      definition: ControlDefinition,
-    ) => {
-      return match(data)
-        .with(dataSignature.v1, ({ value }) => value)
-        .otherwise((value) => value ?? definition?.config?.defaultValue)
-    }
-
-    ctor.toData = (
-      value: boolean,
-      definition: ControlDefinition,
-    ): ControlData => {
-      return match('version' in definition ? definition.version : undefined)
-        .with(version, () => ({
-          ...dataSignature.v1,
-          value,
-        }))
-        .with(undefined, () => value)
-        .exhaustive()
-    }
-
-    ctor.resolveValue = (
-      value: _ValueType<ControlDefinition>,
-      _resolver: ResourceResolver,
-      definition: ControlDefinition,
-    ): Promise<boolean | undefined> => {
-      return Promise.resolve(ctor.fromData(value, definition))
-    }
-
-    ctor.subscribeValue = (
-      value: _ValueType<ControlDefinition>,
-      definition: ControlDefinition,
-      _resolver: ResourceResolver,
-    ): ValueSubscription<boolean | undefined> => {
-      return {
-        readValue() {
-          if (value === undefined) return definition.config.defaultValue
-          return ctor.fromData(value, definition)
-        },
-        subscribe() {
-          return () => {}
-        },
-      }
-    }
-
-    ctor.createInstance = (send: Send) => new DefaultControlInstance(send)
-
-    ctor.getSwatchIds = (_data: ControlData | undefined): string[] => []
-
-    return ctor as typeof ctor &
-      ControlTraits<typeof type, ControlData, ControlDefinition>
-  })(),
-)
-
-type DataType = z.infer<typeof Definition.schema.data>
-type Config = z.infer<typeof Definition.schema.config>
-
-type ValueType<C extends Config> = undefined extends C['defaultValue']
-  ? boolean | undefined
-  : boolean
+type DataType<C extends Config> = z.infer<DataSchemaType<C>['data']>
+type ValueType<C extends Config> = z.infer<DataSchemaType<C>['value']>
 
 class Definition<C extends Config = Config> extends ControlDefinition<
+  typeof Definition.type,
   C,
-  DataType,
+  DataType<C>,
   ValueType<C>
 > {
   private static readonly v1DataType = 'checkbox::v1' as const
@@ -152,107 +45,137 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   static readonly type = 'makeswift::controls::checkbox' as const
 
   static get schema() {
-    const value = z.boolean().optional()
-    const data = z.union([
-      value,
-      z.object({
-        [ControlDataTypeKey]: z.literal(this.v1DataType),
-        value,
-      }),
-    ])
-
-    const config = z.object({
-      label: z.string().optional(),
-      defaultValue: z.boolean().optional(),
-    })
-
     const version = z.literal(1).optional()
-    const definition = z.object({
-      type: z.literal(this.type),
-      config,
-      version,
-    })
 
-    return { value, data, config, version, definition }
+    const schemas = <V, U>(strictValue: z.ZodType<U>, value: z.ZodType<V>) => {
+      const type = z.literal(this.type)
+      const versionedData = z.object({
+        [ControlDataTypeKey]: z.literal(this.v1DataType),
+        value: strictValue,
+      })
+
+      const data = z.union(
+        value.isOptional()
+          ? [strictValue, versionedData, z.undefined()]
+          : [value, versionedData],
+      )
+
+      const config = z.object({
+        label: z.string().optional(),
+        defaultValue: value,
+      })
+
+      const definition = z.object({
+        type: z.literal(this.type),
+        config,
+        version,
+      })
+
+      return {
+        type,
+        value,
+        resolvedValue: value,
+        data,
+        versionedData,
+        config,
+        version,
+        definition,
+      }
+    }
+
+    return {
+      version,
+      relaxed: schemas(z.boolean(), z.boolean().optional()),
+      strict: schemas(z.boolean(), z.boolean()),
+    }
   }
 
   static deserialize(data: unknown): Definition {
-    const { config, version } = this.schema.definition.parse(data)
+    const { config, version } = this.schema.relaxed.definition.parse(data)
     return new Definition(config, version)
   }
 
   constructor(
     readonly config: C,
-    readonly version: z.infer<typeof Definition.schema.version> = 1,
+    readonly version: z.infer<typeof Definition.schema.version>,
   ) {
     super(config)
   }
 
-  safeParse(data: unknown | undefined): ParseResult<DataType | undefined> {
-    const result = Definition.schema.data.optional().safeParse(data)
-    return result.success
-      ? { success: true, data: result.data }
-      : { success: false, error: result.error.flatten().formErrors[0] }
+  get controlType() {
+    return Definition.type
   }
 
-  fromData(data: DataType | undefined): ValueType<C> | undefined {
-    return match(data)
-      .with(Definition.dataSignature.v1, ({ value }) => value)
-      .otherwise((value) => value ?? this.config.defaultValue)
+  get schema() {
+    return (
+      this.config.defaultValue === undefined
+        ? Definition.schema.relaxed
+        : Definition.schema.strict
+    ) as DataSchemaType<C>
   }
 
-  toData(value: ValueType<C>): DataType {
+  safeParse(data: unknown | undefined): ParseResult<DataType<C> | undefined> {
+    return safeParse(this.schema.data, data)
+  }
+
+  fromData(data: DataType<C> | undefined): ValueType<C> | undefined {
+    const inputSchema = this.schema.data.optional()
+    return (
+      match(data satisfies z.infer<typeof inputSchema>)
+        .with(Definition.dataSignature.v1, ({ value }) => value)
+        .otherwise((value) => value) ?? this.config.defaultValue
+    )
+  }
+
+  toData(value: ValueType<C>): DataType<C> {
     return match(this.version)
-      .with(1, () => ({
-        ...Definition.dataSignature.v1,
-        value,
-      }))
+      .with(1, () =>
+        value === undefined
+          ? undefined
+          : {
+              ...Definition.dataSignature.v1,
+              value,
+            },
+      )
       .with(undefined, () => value)
       .exhaustive()
   }
 
   copyData(
-    data: DataType | undefined,
+    data: DataType<C> | undefined,
     _context: CopyContext,
-  ): DataType | undefined {
+  ): DataType<C> | undefined {
     return data
   }
 
   resolveValue(
-    _value: ValueType<C>,
+    value: ValueType<C>,
     _resolver: ResourceResolver,
-  ): Promise<void> {
-    return Promise.resolve()
+  ): ValueSubscription<ValueType<C>> {
+    return {
+      readValue: () =>
+        value === undefined ? this.config.defaultValue : this.fromData(value),
+      subscribe: () => () => {},
+    }
   }
 
-  createInstance(send: Send): ControlInstance<unknown> {
+  createInstance(send: SendType<ControlInstance>): ControlInstance {
     return new DefaultControlInstance(send)
   }
 
   serialize(): [unknown, Transferable[]] {
-    const [config, transferables] = serializeConfig(this.config)
-    return [
-      {
-        type: Definition.type,
-        config,
-        version: this.version,
-      },
-      transferables,
-    ]
+    return serialize(this.config, {
+      type: Definition.type,
+      version: this.version,
+    })
   }
 
-  getSwatchIds(_data: DataType | undefined): string[] {
+  getSwatchIds(_data: DataType<C> | undefined): string[] {
     return []
   }
 }
 
-export const CheckboxV2 = (() => {
-  const ctor = <C extends Config>(config?: C): Definition<C> =>
-    new Definition(config ?? ({} as C))
+export const Checkbox = <C extends Config>(config?: C) =>
+  new (class Checkbox extends Definition<C> {})(config ?? ({} as C), 1)
 
-  ctor.controlType = Definition.type
-  return ctor as typeof ctor &
-    WithAssociatedTypes<{
-      Definition: Definition
-    }>
-})()
+export { Definition as CheckboxDefinition }

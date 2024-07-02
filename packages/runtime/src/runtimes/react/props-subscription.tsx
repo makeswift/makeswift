@@ -1,20 +1,20 @@
-import { ResourceResolver, ValueSubscription, controlTraitsRegistry } from '@makeswift/controls'
+import { type ResourceResolver, type ValueSubscription } from '@makeswift/controls'
 import * as ReactPage from '../../state/react-page'
 
 export function createPropsValuesSubscription(
-  propDefinitions: Record<string, { type: string }>,
+  propDefinitions: Record<string, unknown>,
   elementData: Record<string, ReactPage.ElementData>,
   resourceResolver: ResourceResolver,
 ): ValueSubscription<Record<string, unknown>> {
   const propsSubscriptions: Record<string, ValueSubscription<any>> = Object.entries(
     propDefinitions,
   ).reduce((result, [propName, def]) => {
-    const traits = controlTraitsRegistry.get(def.type)
-    return traits == null
+    const resolveValue = (def as any).resolveValue // FIXME
+    return resolveValue == null
       ? result
       : {
           ...result,
-          [propName]: traits.subscribeValue(elementData[propName], def as any, resourceResolver),
+          [propName]: resolveValue.bind(def)(elementData[propName], resourceResolver),
         }
   }, {})
 

@@ -13,7 +13,7 @@
     "clean": "rm -rf dist",
     "build": "tsc && tsup src/index.ts",
     "prepublishOnly": "turbo run build",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests --detectOpenHandles"
   },
   "dependencies": {
     "color": "^3.1.3",

@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`List constructor list of colors 1`] = `
+List {
+  "config": {
+    "label": "Color list",
+    "type": Color {
+      "config": {
+        "defaultValue": "red",
+        "labelOrientation": "horizontal",
+      },
+      "version": 1,
+    },
+  },
+}
+`;

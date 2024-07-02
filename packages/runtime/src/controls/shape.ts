@@ -1,4 +1,4 @@
-import { Data } from '@makeswift/controls'
+import { type Data, type CopyContext, type MergeTranslatableDataContext } from '@makeswift/controls'
 import {
   AnyPropController,
   createPropController,
@@ -6,7 +6,6 @@ import {
   PropControllerMessage,
 } from '../prop-controllers/instances'
 import { PropController } from '../prop-controllers/base'
-import { CopyContext, MergeTranslatableDataContext } from '../state/react-page'
 import {
   ControlDefinition,
   ControlDefinitionData,

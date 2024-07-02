@@ -58,8 +58,6 @@ export const ActionTypes = {
   MESSAGE_HOST_PROP_CONTROLLER: 'MESSAGE_HOST_PROP_CONTROLLER',
   MESSAGE_BUILDER_PROP_CONTROLLER: 'MESSAGE_BUILDER_PROP_CONTROLLER',
 
-  SET_COMPONENT_PROP: 'SET_COMPONENT_PROP',
-
   CHANGE_API_RESOURCE: 'CHANGE_API_RESOURCE',
   EVICT_API_RESOURCE: 'EVICT_API_RESOURCE',
 
@@ -225,11 +223,6 @@ type MessageBuilderPropControllerAction<T = PropControllerMessage> = {
   payload: { documentKey: string; elementKey: string; propName: string; message: T }
 }
 
-type SetComponentPropAction = {
-  type: typeof ActionTypes.SET_COMPONENT_PROP
-  payload: { elementKey: string; propName: string; propValue: Data }
-}
-
 type ChangeAPIResourceAction = {
   type: typeof ActionTypes.CHANGE_API_RESOURCE
   payload: { resource: APIResource }
@@ -318,7 +311,6 @@ export type Action =
   | UnregisterPropControllersAction
   | MessageHostPropControllerAction
   | MessageBuilderPropControllerAction
-  | SetComponentPropAction
   | ChangeAPIResourceAction
   | EvictAPIResourceAction
   | SetIsInBuilderAction
@@ -595,14 +587,6 @@ export function messageBuilderPropController<T>(
     type: ActionTypes.MESSAGE_BUILDER_PROP_CONTROLLER,
     payload: { documentKey, elementKey, propName, message },
   }
-}
-
-export function setComponentProp(
-  elementKey: string,
-  propName: string,
-  propValue: Data,
-): SetComponentPropAction {
-  return { type: ActionTypes.SET_COMPONENT_PROP, payload: { elementKey, propName, propValue } }
 }
 
 export function changeApiResource(resource: APIResource): ChangeAPIResourceAction {
