@@ -12,15 +12,13 @@ import {
 } from '../common'
 
 import { controlTraitsRegistry } from '../registry'
-import {
-  type ResourceResolver,
-  type ResolvableValue,
-} from '../resource-resolver'
+import { type ResourceResolver } from '../resource-resolver'
 
 import {
   type VersionedControlDefinition,
   type ControlTraits,
   type ParseResult,
+  type ValueSubscription,
 } from '../traits'
 
 import { DefaultControlInstance, type Send } from '../control-instance'
@@ -128,17 +126,36 @@ export const Color = controlTraitsRegistry.add(
     ctor.getSwatchIds = (data: ControlData | undefined): string[] =>
       data?.swatchId == null ? [] : [data.swatchId]
 
-    ctor.resolveValue = (
+    ctor.resolveValue = async (
       value: ValueType<ControlDefinition>,
       definition: ControlDefinition,
       resolver: ResourceResolver,
-    ): ResolvableValue<string | undefined> => {
+    ): Promise<string | undefined> => {
       const { swatchId, alpha } = value ?? {}
-      return resolver
-        .resolveSwatch(swatchId)
-        .map((swatch) =>
-          swatchToColorString(swatch, alpha, definition.config.defaultValue),
-        )
+      const swatch = await resolver.fetchSwatch(swatchId)
+      return swatchToColorString(swatch, alpha, definition.config.defaultValue)
+    }
+
+    ctor.subscribeValue = (
+      value: ValueType<ControlDefinition>,
+      definition: ControlDefinition,
+      resolver: ResourceResolver,
+    ): ValueSubscription<string | undefined> => {
+      const swatchSubscription = resolver.subscribeSwatch(value?.swatchId)
+
+      if (value?.swatchId != null && swatchSubscription.readValue() == null) {
+        resolver.fetchSwatch(value.swatchId).catch(console.error)
+      }
+
+      return {
+        readValue: () =>
+          swatchToColorString(
+            swatchSubscription.readValue(),
+            value?.alpha ?? 1,
+            definition.config.defaultValue,
+          ),
+        subscribe: swatchSubscription.subscribe,
+      }
     }
 
     ctor.createInstance = (send: Send) => new DefaultControlInstance(send)

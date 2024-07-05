@@ -8,6 +8,7 @@ import {
   TextAreaControlData,
   TextAreaControlDefinition,
   TextAreaControlType,
+  Color,
 } from '@makeswift/controls'
 import {
   Checkbox,
@@ -85,6 +86,8 @@ import { StyleV2ControlFormattedValue, StyleV2ControlValue } from './style-v2'
 import { TextAreaControlValue, useTextAreaValue } from './text-area'
 import { TextInputControlValue, useTextInputValue } from './text-input'
 import { TypographyControlValue, useTypographyValue } from './typography'
+import { useMakeswiftHostApiClient } from '../../../next/context/makeswift-host-api-client'
+import { useSyncExternalStore } from 'react'
 
 export type ControlDefinitionValue<T extends ControlDefinition> = T extends NumberControlDefinition
   ? NumberControlValue<T>
@@ -127,31 +130,31 @@ type ControlValueProps<T extends ControlDefinition> = {
   control?: AnyPropController
 }
 
-function useValue<T extends ControlTraits>(
-  data: ControlDataType<T>,
-  definition: ControlDefinitionType<T>,
-) {
-  const traits = controlTraitsRegistry.get(definition.type)
-  return traits?.fromData(data, definition)
-}
-
 export function ControlValue<T extends ControlDefinition>({
   data,
   definition,
   children,
   control,
 }: ControlValueProps<T>): JSX.Element {
+  const client = useMakeswiftHostApiClient()
+
   switch (definition.type) {
     case Checkbox.controlType:
-      return (
-        <RenderHook
-          key={definition.type}
-          hook={useValue<typeof Checkbox>}
-          parameters={[data as ControlDataType<typeof Checkbox>, definition]}
-        >
-          {value => children(value as ControlDefinitionValue<T>)}
-        </RenderHook>
+    case Color.controlType:
+      const traits = controlTraitsRegistry.get(definition.type)
+      if (!traits) {
+        throw new Error(`Control traits not found for type ${definition.type}`)
+      }
+      const resolvedProp = traits.subscribeValue(data, definition, client)
+
+      // TODO: Don't call hooks conditionally
+      const syncedValue = useSyncExternalStore(
+        resolvedProp.subscribe,
+        resolvedProp.readValue,
+        resolvedProp.readValue,
       )
+
+      return children(syncedValue as ControlDefinitionValue<T>)
 
     case NumberControlType:
       return (
@@ -196,17 +199,6 @@ export function ControlValue<T extends ControlDefinition>({
           {value => children(value as ControlDefinitionValue<T>)}
         </RenderHook>
       )
-
-    // case Color.controlType:
-    //   return (
-    //     <RenderHook
-    //       key={definition.type}
-    //       hook={useColorValue}
-    //       parameters={[data as ControlDataType<typeof Color>, definition]}
-    //     >
-    //       {value => children(value as ControlDefinitionValue<T>)}
-    //     </RenderHook>
-    //   )
 
     case IconRadioGroupControlType:
       return (

@@ -1,8 +1,5 @@
 import { type CopyContext } from './common'
-import {
-  type ResourceResolver,
-  type ResolvableValue,
-} from './resource-resolver'
+import { type ResourceResolver } from './resource-resolver'
 
 import { type ParseResult } from './traits'
 import { ControlInstance, type Send } from './control-instance'
@@ -11,7 +8,6 @@ export abstract class ControlDefinition<
   Config,
   DataType,
   ValueType,
-  ResolvedValueType = ValueType,
   InstanceType = ControlInstance<unknown>,
 > {
   constructor(readonly config: Config) {}
@@ -31,7 +27,7 @@ export abstract class ControlDefinition<
   abstract resolveValue(
     value: ValueType,
     resolver: ResourceResolver,
-  ): ResolvableValue<ResolvedValueType>
+  ): Promise<void>
 
   abstract createInstance(send: Send): InstanceType
   abstract serialize(): [unknown, Transferable[]]
