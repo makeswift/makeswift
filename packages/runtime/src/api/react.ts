@@ -1,4 +1,4 @@
-import { type ResourceResolver, type ResolvableValue } from '@makeswift/controls'
+import { type ResourceResolver, ValueSubscription } from '@makeswift/controls'
 import * as MakeswiftApiClient from '../state/makeswift-api-client'
 import {
   APIResourceType,
@@ -83,31 +83,11 @@ export class MakeswiftHostApiClient implements ResourceResolver {
     )
   }
 
-  resolveSwatch(swatchId: string): ResolvableValue<Swatch | null> {
-    const self = this
-    class MappedResolvableValue<T, U> implements ResolvableValue<U> {
-      constructor(
-        private readonly read: () => T,
-        private readonly fn: (value: T) => U,
-      ) {}
-
-      readValue() {
-        return this.fn(this.read())
-      }
-
-      subscribe(onUpdate: () => void) {
-        return self.subscribe(onUpdate)
-      }
-
-      map<V>(fn: (value: U) => V): ResolvableValue<V> {
-        return new MappedResolvableValue(this.read, value => fn(this.fn(value)))
-      }
+  subscribeSwatch(swatchId: string): ValueSubscription<Swatch | null> {
+    return {
+      readValue: () => this.readSwatch(swatchId),
+      subscribe: this.subscribe,
     }
-
-    return new MappedResolvableValue(
-      () => this.readSwatch(swatchId),
-      (swatch: Swatch | null) => swatch,
-    )
   }
 
   readFile(fileId: string): File | null {

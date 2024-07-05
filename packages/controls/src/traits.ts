@@ -4,8 +4,13 @@ import {
   type ResolvedValueType,
   type CopyContext,
 } from './common'
-import { ResourceResolver, type ResolvableValue } from './resource-resolver'
+import { ResourceResolver } from './resource-resolver'
 import { ControlInstance, type Send } from './control-instance'
+
+export type ValueSubscription<T> = {
+  readValue(): T
+  subscribe(onUpdate: () => void): () => void
+}
 
 export type VersionedControlDefinition<
   ControlType = string,
@@ -64,7 +69,13 @@ export type ControlTraits<
     value: _ValueType,
     definition: ControlDefinition,
     resolver: ResourceResolver,
-  ): ResolvableValue<_ResolvedValueType>
+  ): Promise<void>
+
+  subscribeValue(
+    value: _ResolvedValueType,
+    definition: ControlDefinition,
+    resolver: ResourceResolver,
+  ): ValueSubscription<_ValueType>
 
   createInstance(send: Send): InstanceType
 
