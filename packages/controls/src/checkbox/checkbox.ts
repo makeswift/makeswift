@@ -6,17 +6,14 @@ import {
   type ValueType as _ValueType,
   type CopyContext,
 } from '../common'
-import {
-  type ResourceResolver,
-  type ResolvableValue,
-  resolved,
-} from '../resource-resolver'
+import { type ResourceResolver } from '../resource-resolver'
 import { controlTraitsRegistry } from '../registry'
 
 import {
   type VersionedControlDefinition,
   type ControlTraits,
   type ParseResult,
+  type ValueSubscription,
 } from '../traits'
 
 import {
@@ -86,7 +83,7 @@ export const Checkbox = controlTraitsRegistry.add(
     ) => {
       return match(data)
         .with(dataSignature.v1, ({ value }) => value)
-        .otherwise((value) => value ?? definition.config.defaultValue)
+        .otherwise((value) => value ?? definition?.config?.defaultValue)
     }
 
     ctor.toData = (
@@ -105,7 +102,26 @@ export const Checkbox = controlTraitsRegistry.add(
     ctor.resolveValue = (
       value: _ValueType<ControlDefinition>,
       _resolver: ResourceResolver,
-    ): ResolvableValue<boolean | undefined> => resolved(value)
+      definition: ControlDefinition,
+    ): Promise<boolean | undefined> => {
+      return Promise.resolve(ctor.fromData(value, definition))
+    }
+
+    ctor.subscribeValue = (
+      value: _ValueType<ControlDefinition>,
+      definition: ControlDefinition,
+      _resolver: ResourceResolver,
+    ): ValueSubscription<boolean | undefined> => {
+      return {
+        readValue() {
+          if (value === undefined) return definition.config.defaultValue
+          return ctor.fromData(value, definition)
+        },
+        subscribe() {
+          return () => {}
+        },
+      }
+    }
 
     ctor.createInstance = (send: Send) => new DefaultControlInstance(send)
 
@@ -203,10 +219,10 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   }
 
   resolveValue(
-    value: ValueType<C>,
+    _value: ValueType<C>,
     _resolver: ResourceResolver,
-  ): ResolvableValue<ValueType<C>> {
-    return resolved(value)
+  ): Promise<void> {
+    return Promise.resolve()
   }
 
   createInstance(send: Send): ControlInstance<unknown> {

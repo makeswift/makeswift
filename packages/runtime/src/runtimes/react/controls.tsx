@@ -1,10 +1,11 @@
-import { useEffect, useRef } from 'react'
+import { useMemo, useRef, useSyncExternalStore } from 'react'
 import {
   IconRadioGroupControlType,
   NumberControlType,
   TextInputControlType,
   TextAreaControlType,
-  // ResourceResolver,
+  ResourceResolver,
+  ValueSubscription,
 } from '@makeswift/controls'
 
 import * as ReactPage from '../../state/react-page'
@@ -47,7 +48,6 @@ import {
   RichTextV2ControlType,
   StyleV2ControlType,
   TypographyControlType,
-  resolveControlValue,
 } from '../../controls'
 import { useFormattedStyle } from './controls/style'
 import { ControlValue } from './controls/control'
@@ -105,6 +105,7 @@ import { useImagesPropControllerData } from '../../components/hooks/useImagesPro
 import { useBackgroundsPropControllerData } from '../../components/hooks/useBackgroundsPropControllerData'
 import { useTextInputPropControllerData } from '../../components/hooks/useTextInputPropControllerData'
 import { useMakeswiftHostApiClient } from '../../next/context/makeswift-host-api-client'
+import { createPropsValuesSubscription } from './props-subscription'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
@@ -153,35 +154,22 @@ type PropsValueProps = {
   children(props: Record<string, unknown>): JSX.Element
 }
 
-// function useResolvedControlValue(
-//   elementData: ReactPage.ElementData,
-//   definition: { type: string },
-//   resourceResolver: ResourceResolver,
-// ): any {
-//   const resolvedValue = resolveControlValue(elementData, definition, resourceResolver)
-//   return useSyncExternalStore(
-//     fn => resolvedValue.subscribe(fn),
-//     () => resolvedValue.readValue(),
-//     () => resolvedValue.readValue(),
-//   )
-// }
+const useResolvedProps = (
+  propDefs: Record<string, { type: string }>,
+  elementData: Record<string, ReactPage.ElementData>,
+  resourceResolver: ResourceResolver,
+): Record<string, unknown> => {
+  const propsSubscription = useMemo<ValueSubscription<Record<string, unknown>>>(
+    () => createPropsValuesSubscription(propDefs, elementData, resourceResolver),
+    [propDefs, elementData, resourceResolver],
+  )
 
-// const useResolvedProps = (
-//   propDefs: Record<string, { type: string }>,
-//   elementData: Record<string, ReactPage.ElementData>,
-//   resourceResolver: ResourceResolver,
-// ) => {
-//   const result: Record<string, any> = {}
-
-//   for (const [key, def] of Object.entries(propDefs)) {
-//     const value = useResolvedControlValue(elementData[key], def, resourceResolver)
-//     if (value !== undefined) {
-//       result[key] = value
-//     }
-//   }
-
-//   return result
-// }
+  return useSyncExternalStore(
+    propsSubscription.subscribe,
+    propsSubscription.readValue,
+    propsSubscription.readValue,
+  )
+}
 
 export function PropsValue({ element, children: renderComponent }: PropsValueProps): JSX.Element {
   const store = useStore()
@@ -199,18 +187,10 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
     return ReactPage.getPropControllers(state, documentKey, element.key)
   })
 
-  // const componentProps = useResolvedProps(propDefsRef.current, props, client)
-  const componentProps = useSelector(state => ReactPage.getComponentProps(state, element.key))
-  const count = useRef(0)
-  console.log('+++++++++ componentProps:', componentProps, 'render count:', count.current++)
+  const resolvedProps = useResolvedProps(propDefsRef.current, props, client)
 
-  useEffect(() => {
-    Object.entries(propDefsRef.current).forEach(([propName, descriptor]) => {
-      store.dispatch(
-        ReactPage.resolveComponentProp(element.key, propName, props[propName], descriptor, client),
-      )
-    })
-  }, [element.key, client])
+  const count = useRef(0)
+  console.log('++++ componentProps:', element.type, resolvedProps, 'render count:', count.current++)
 
   return Object.entries(propDefsRef.current).reduceRight(
     (renderFn, [propName, descriptor]) =>
@@ -229,7 +209,7 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
           case LinkControlType:
           case StyleV2ControlType:
           case TypographyControlType:
-          case Checkbox.controlType:
+            // case Checkbox.controlType:
             return (
               <ControlValue
                 definition={descriptor}
@@ -711,9 +691,8 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
       },
     // renderComponent,
     (props: any) => {
-      const newProps = Object.fromEntries(componentProps?.entries() ?? [])
-      console.log('+++++++++ renderComponent:', { props, newProps })
-      return renderComponent({ ...props, ...newProps })
+      //console.log('+++++++++ renderComponent:', { props, newProps })
+      return renderComponent({ ...props, ...resolvedProps })
     },
   )({})
 }

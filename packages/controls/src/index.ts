@@ -13,6 +13,5 @@ export * from './registry'
 export * from './common/types'
 export * from './common/resources'
 export * from './resource-resolver'
-export * from './resolve-value'
 
 export * from './utils/associated-types'
