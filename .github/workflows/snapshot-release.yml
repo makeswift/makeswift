@@ -43,7 +43,7 @@ jobs:
 
           if git diff --quiet packages/*/package.json; then
             echo "No version changes detected, exiting job."
-            exit 0
+            exit 1
           else
             echo "Changes detected, continuing."
           fi
