@@ -1,0 +1,17 @@
+name: Testing Job
+
+on:
+  push:
+    branches:
+      - alex/rogue-canary
+
+concurrency: ${{ github.workflow}}-${{ github.ref }}
+
+jobs:
+  release:
+    name: Testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hello World
+        run: |
+          echo 'hello world'
