@@ -220,6 +220,19 @@ export class StyleControl extends PropController<StyleControlMessage> {
   recv() {}
 }
 
+export function getStyleSwatchIds(data: StyleControlData): string[] {
+  const swatchIds: string[] = []
+
+  data?.border?.forEach(({ value }) => {
+    if (value.borderTop?.color?.swatchId) swatchIds.push(value.borderTop.color.swatchId)
+    if (value.borderRight?.color?.swatchId) swatchIds.push(value.borderRight.color.swatchId)
+    if (value.borderBottom?.color?.swatchId) swatchIds.push(value.borderBottom.color.swatchId)
+    if (value.borderLeft?.color?.swatchId) swatchIds.push(value.borderLeft.color.swatchId)
+  })
+
+  return swatchIds
+}
+
 export function copyStyleData(
   value: StyleControlData | undefined,
   context: CopyContext,

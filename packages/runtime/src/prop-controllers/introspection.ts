@@ -40,6 +40,7 @@ import {
   getShapePageIds,
   getShapeSwatchIds,
   getShapeTypographyIds,
+  getStyleSwatchIds,
   getTypographySwatchIds,
   getTypographyTypographyIds,
   ImageControlData,
@@ -54,6 +55,8 @@ import {
   ShapeControlType,
   SlotControlData,
   SlotControlType,
+  StyleControlData,
+  StyleControlType,
   StyleV2ControlData,
   StyleV2ControlType,
   TypographyControlData,
@@ -230,6 +233,10 @@ export function getSwatchIds<T extends Data>(
 
     case TypographyControlType: {
       return getTypographySwatchIds(prop as TypographyControlData[number])
+    }
+
+    case StyleControlType: {
+      return getStyleSwatchIds(prop as StyleControlData)
     }
 
     case StyleV2ControlType: {
