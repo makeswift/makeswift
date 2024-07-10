@@ -1,15 +1,10 @@
 # @makeswift/runtime
 
-## 0.19.2-canary.1
+## 0.19.2
 
 ### Patch Changes
 
 - d51a2b0: Fix border color not loaded properly when using the Style control.
-
-## 0.19.2-canary.0
-
-### Patch Changes
-
 - d82dd59: Adds rendering tests for the checkbox control
 
 ## 0.19.1
