@@ -9,6 +9,7 @@ concurrency: ${{ github.workflow}}-${{ github.ref }}
 
 jobs:
   release:
+    if: github.ref != 'refs/heads/alex/rogue-canary'
     name: Testing
     runs-on: ubuntu-latest
     steps:
