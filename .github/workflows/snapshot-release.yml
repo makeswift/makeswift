@@ -41,6 +41,14 @@ jobs:
         run: |
           pnpm exec changeset version --snapshot snapshot
 
+          if git diff --quiet packages/*/package.json; then
+            echo "No version changes detected, exiting job."
+            exit 0
+          else
+            echo "Changes detected, continuing."
+          fi
+
+
           cat packages/runtime/package.json | jq -r .version >> version.txt
 
       - name: Publish Packages
