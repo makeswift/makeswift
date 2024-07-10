@@ -1,4 +1,6 @@
 import { ColorData, copyColorData, ResponsiveValue } from '@makeswift/controls'
+import { getBorderPropControllerDataSwatchIds } from '@makeswift/prop-controllers'
+
 import { BorderRadiusPropertyData } from '../css/border-radius'
 import type { LengthPercentageData } from '../css/length-percentage'
 import { MarginPropertyData } from '../css/margin'
@@ -217,6 +219,10 @@ export class StyleControl extends PropController<StyleControlMessage> {
   }
 
   recv() {}
+}
+
+export function getStyleSwatchIds(data: StyleControlData): string[] {
+  return getBorderPropControllerDataSwatchIds(data.border)
 }
 
 export function copyStyleData(
