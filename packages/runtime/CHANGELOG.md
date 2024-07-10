@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.14.6
+
+### Patch Changes
+
+- b03f783: Fix border color not loaded properly when using the Style control.
+
 ## 0.14.5
 
 ### Patch Changes
@@ -279,12 +285,12 @@
   To use this translation merging functionality, make sure to pass an instance of `ReactRuntime` to the Makeswift API handler like so:
 
   ```ts
-  import { MakeswiftApiHandler } from '@makeswift/runtime/next'
-  import { runtime } from '../../../lib/makeswift/register-components'
+  import { MakeswiftApiHandler } from "@makeswift/runtime/next";
+  import { runtime } from "../../../lib/makeswift/register-components";
 
   export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY, {
     runtime,
-  })
+  });
   ```
 
 ## 0.11.2
@@ -391,16 +397,16 @@
   Use this method to generate a sitemap for your Makeswift host. Here's an example using the popular library `next-sitemap`:
 
   ```ts
-  import { makeswift } from '@lib/makeswift'
-  import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next'
-  import { getServerSideSitemapLegacy } from 'next-sitemap'
+  import { makeswift } from "@lib/makeswift";
+  import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
+  import { getServerSideSitemapLegacy } from "next-sitemap";
 
   export async function getServerSideProps(
     ctx: GetServerSidePropsContext,
   ): Promise<GetServerSidePropsResult<{}>> {
-    const sitemap = await makeswift.getSitemap()
+    const sitemap = await makeswift.getSitemap();
 
-    return getServerSideSitemapLegacy(ctx, sitemap)
+    return getServerSideSitemapLegacy(ctx, sitemap);
   }
 
   export default function Sitemap() {}
@@ -409,16 +415,16 @@
   The `getSitemap` method is paginated with a default page size of `50`. If you want to request more pages or use a different page size pass the `limit` and `after` arguments. Here's an example:
 
   ```ts
-  const sitemap: Sitemap = []
-  let page
-  let after: string | undefined = undefined
+  const sitemap: Sitemap = [];
+  let page;
+  let after: string | undefined = undefined;
 
   do {
-    page = await makeswift.getSitemap({ limit: 10, after })
+    page = await makeswift.getSitemap({ limit: 10, after });
 
-    sitemap.push(...page)
-    after = page.at(-1)?.id
-  } while (page.length > 0)
+    sitemap.push(...page);
+    after = page.at(-1)?.id;
+  } while (page.length > 0);
   ```
 
   If using TypeScript, you can import the `Sitemap` type from `@makeswift/runtime/next`.
@@ -426,16 +432,18 @@
   Also, the `getSitemap` method supports filtering results by a pathname prefix using the `pathnamePrefix` parameter. Here's an example using the popular library `next-sitemap`:
 
   ```ts
-  import { makeswift } from '@lib/makeswift'
-  import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next'
-  import { getServerSideSitemapLegacy } from 'next-sitemap'
+  import { makeswift } from "@lib/makeswift";
+  import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
+  import { getServerSideSitemapLegacy } from "next-sitemap";
 
   export async function getServerSideProps(
     ctx: GetServerSidePropsContext,
   ): Promise<GetServerSidePropsResult<{}>> {
-    const blogSitemap = await makeswift.getSitemap({ pathnamePrefix: '/blog/' })
+    const blogSitemap = await makeswift.getSitemap({
+      pathnamePrefix: "/blog/",
+    });
 
-    return getServerSideSitemapLegacy(ctx, blogSitemap)
+    return getServerSideSitemapLegacy(ctx, blogSitemap);
   }
 
   export default function BlogSitemap() {}
@@ -1182,9 +1190,9 @@ This version is a BREAKING change. No public APIs have changed but there was a m
   - Create a new file at `pages/api/makeswift/[...makeswift].js` with the following contents:
 
     ```js
-    import { MakeswiftApiHandler } from '@makeswift/runtime/next'
+    import { MakeswiftApiHandler } from "@makeswift/runtime/next";
 
-    export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY)
+    export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY);
     ```
 
   - Update your dynamic optional catch-all route to use the new data fetching APIs,
@@ -1267,9 +1275,9 @@ This version is a BREAKING change. No public APIs have changed but there was a m
   Then create a new file at `pages/api/makeswift/[...makeswift].ts` with the following content:
 
   ```js
-  import { MakeswiftApiHandler } from '@makeswift/runtime/next'
+  import { MakeswiftApiHandler } from "@makeswift/runtime/next";
 
-  export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY)
+  export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY);
   ```
 
   The API handler not only enables Next.js Preview Mode, allowing you to remove your preview route,
@@ -1292,46 +1300,46 @@ This version is a BREAKING change. No public APIs have changed but there was a m
   Pages integrated with Makeswift should go from looking something like this:
 
   ```js
-  import './path/to/makeswift/register-components'
+  import "./path/to/makeswift/register-components";
 
-  export { getStaticPaths, getStaticProps, Page as default }
+  export { getStaticPaths, getStaticProps, Page as default };
   ```
 
   To now looking something like this:
 
   ```js
-  import './path/to/makeswift/register-components'
+  import "./path/to/makeswift/register-components";
 
-  import { Makeswift, Page as MakeswiftPage } from '@makeswift/runtime/next'
+  import { Makeswift, Page as MakeswiftPage } from "@makeswift/runtime/next";
 
   export async function getStaticPaths() {
-    const makeswift = new Makeswift(process.env.MAKESWIFT_SITE_API_KEY)
-    const pages = await makeswift.getPages()
+    const makeswift = new Makeswift(process.env.MAKESWIFT_SITE_API_KEY);
+    const pages = await makeswift.getPages();
 
     return {
       paths: pages.map((page) => ({
         params: {
-          path: page.path.split('/').filter((segment) => segment !== ''),
+          path: page.path.split("/").filter((segment) => segment !== ""),
         },
       })),
-      fallback: 'blocking',
-    }
+      fallback: "blocking",
+    };
   }
 
   export async function getStaticProps(ctx) {
-    const makeswift = new Makeswift(process.env.MAKESWIFT_SITE_API_KEY)
-    const path = '/' + (ctx.params?.path ?? []).join('/')
+    const makeswift = new Makeswift(process.env.MAKESWIFT_SITE_API_KEY);
+    const path = "/" + (ctx.params?.path ?? []).join("/");
     const snapshot = await makeswift.getPageSnapshot(path, {
       preview: ctx.preview,
-    })
+    });
 
-    if (snapshot == null) return { notFound: true }
+    if (snapshot == null) return { notFound: true };
 
-    return { props: { snapshot } }
+    return { props: { snapshot } };
   }
 
   export default function Page({ snapshot }) {
-    return <MakeswiftPage snapshot={snapshot} />
+    return <MakeswiftPage snapshot={snapshot} />;
   }
   ```
 
@@ -1499,16 +1507,16 @@ Make the following changes to your Next.js config file:
   via `next/dynamic` and also removes the need to manually configure `next/image` domains.
 
   ```js
-  const withMakeswift = require('@makeswift/runtime/next/plugin')()
+  const withMakeswift = require("@makeswift/runtime/next/plugin")();
 
   /**
    * @type {import('next').NextConfig}
    */
   const nextConfig = {
     /* config options here */
-  }
+  };
 
-  module.exports = withMakeswift(nextConfig)
+  module.exports = withMakeswift(nextConfig);
   ```
 
 ### Patch Changes
@@ -1705,24 +1713,24 @@ The last release, `0.0.8` didn't properly fix the `useInsertionEffect` issue. Th
   For example:
 
   ```tsx
-  import { ReactRuntime } from '@makeswift/runtime/react'
-  import { Style } from '@makeswift/runtime/controls'
+  import { ReactRuntime } from "@makeswift/runtime/react";
+  import { Style } from "@makeswift/runtime/controls";
 
   ReactRuntime.registerComponent(HelloWorld, {
-    type: 'hello-world',
-    label: 'Hello, world!',
+    type: "hello-world",
+    label: "Hello, world!",
     props: {
       className: Style(),
     },
-  })
+  });
 
   const HelloWorld = forwardRef(function HelloWorld(props, ref) {
     return (
       <p {...props} ref={ref}>
         Hello, world!
       </p>
-    )
-  })
+    );
+  });
   ```
 
   By default `Style` is configured to provide width and margin overlays and panels. This can be overwritten with the `properties` configuration option.
