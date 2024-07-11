@@ -30,12 +30,11 @@ import {
   useResponsiveWidth,
 } from '../../components/utils/responsive-style'
 import {
-  // Color,
   ComboboxControlType,
   ImageControlType,
   LinkControlType,
   SelectControlType,
-  ShapeControlType,
+  // ShapeControlType,
   SlotControl,
   SlotControlType,
   StyleControlType,
@@ -202,8 +201,8 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
           case IconRadioGroupControlType:
           case ImageControlType:
           case ComboboxControlType:
-          case ShapeControlType:
-          //          case ListControlType:
+          // case ShapeControlType:
+          // case ListControlType:
           case LinkControlType:
           case StyleV2ControlType:
           case TypographyControlType:

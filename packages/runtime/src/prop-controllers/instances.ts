@@ -7,8 +7,8 @@ import {
   RichTextControlMessage,
   RichTextControlType,
   ShapeControl,
-  ShapeControlMessage,
-  ShapeControlType,
+  // ShapeControlMessage,
+  // ShapeControlType,
   richTextDAOToDTO,
   RichTextDTO,
   SlotControl,
@@ -233,8 +233,8 @@ export function createPropController(
     case RichTextV2ControlType:
       return new RichTextV2Control(send as Send<RichTextV2ControlMessage>, descriptor)
 
-    case ShapeControlType:
-      return new ShapeControl(send as Send<ShapeControlMessage>, descriptor)
+    // case ShapeControlType:
+    //   return new ShapeControl(send as Send<ShapeControlMessage>, descriptor)
 
     case StyleControlType:
       return new StyleControl(send as Send<StyleControlMessage>)

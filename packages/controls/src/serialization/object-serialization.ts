@@ -35,15 +35,23 @@ export function serializeObject(object: unknown): [unknown, Transferable[]] {
         .with(P.array(), (arr) => arr.map(serialize))
         // TODO: @arvin Review serialization. Problem context: when serializing
         // a list, the resulting object was missing the type field of the items.
-        // In the builder, this would result in empty popuprs. Ex:
+        // In the builder, this would result in empty popups. Ex:
         // [{"config":{"type":{"config":{"defaultValue":"red","labelOrientation":"horizontal"},"version":1},"label":"Color
         // list"},"type":"makeswift::controls::list"},[]]
-        .with(P.instanceOf(ControlDefinition), (def) => def.serialize()[0])
+
+        // The same is true for serialized functions. Without manually spreading
+        // the transferrables of sub-controls, we would get a Uncaught
+        // DOMException: Failed to execute 'postMessage' on 'MessagePort': A
+        // MessagePort could not be cloned because it was not transferred.
+        .with(P.instanceOf(ControlDefinition), (def) => {
+          const [defSerialization, defTransferrables] = def.serialize()
+          transferables.push(...defTransferrables)
+          return defSerialization
+        })
         .with({}, (obj) => mapValues(obj, serialize))
         .otherwise(() => value)
     )
   }
-
   return [serialize(object), transferables]
 }
 

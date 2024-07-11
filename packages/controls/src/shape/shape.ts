@@ -15,12 +15,13 @@ import { IntrospectionTarget } from '../introspect'
 import { SendMessage } from '../control-instance'
 import { ShapeControl } from './shape-control'
 import { mapValues, objectsAreEqual } from '../utils/functional'
+import { Deserialized } from '../serialization'
 
 type Config = {
   type: Record<string, ControlDefinition>
 }
 
-export type DataType<C extends Config> = {
+type DataType<C extends Config> = {
   [K in keyof C['type']]?: DataType_<C['type'][K]>
 }
 
@@ -44,6 +45,28 @@ class Definition<C extends Config = Config> extends ControlDefinition<
 
   constructor(readonly config: C) {
     super(config)
+  }
+
+  static deserialize(
+    data: SerializedRecord,
+    deserializeCallback: (r: SerializedRecord) => ControlDefinition,
+  ) {
+    if (data.type !== Definition.type)
+      throw new Error(
+        `Shape: expected '${Definition.type}', got '${data.type}'`,
+      )
+
+    const {
+      config: { type, ...config },
+    } = z
+      .object({
+        type: z.literal(Definition.type),
+        config: z.any(),
+      })
+      .parse(data)
+
+    const itemDef = deserializeCallback(type)
+    return new Definition<Deserialized<Config>>({ type: itemDef, ...config })
   }
 
   get keyDefs() {
@@ -135,7 +158,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
 
   serialize(): [SerializedRecord, Transferable[]] {
     return serialize(this.config, {
-      type: this.controlType,
+      type: Definition.type,
     })
   }
 
