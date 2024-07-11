@@ -1,0 +1,16 @@
+name: Testing Job
+on:
+  push:
+    branches:
+      - alex/test-quotes
+concurrency: ${{ github.workflow}}-${{ github.ref }}
+
+jobs:
+  release:
+    if: "github.event.head_commit.message != 'chore: special message'"
+    name: Testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hello World
+        run: |
+          echo 'hello world 123'
