@@ -20,6 +20,7 @@ import {
   ListDefinition,
   ShapeDefinition,
   SerializedRecord,
+  NumberDefinition,
 } from '@makeswift/controls'
 
 import {
@@ -866,8 +867,10 @@ export function serializeControl<T extends Data>(
   }
 
   switch (control.type) {
+    // @registration-point
     case CheckboxDefinition.type:
     case ColorDefinition.type:
+    case NumberDefinition.type:
     case ListDefinition.type:
     case ShapeDefinition.type:
       throw new Error(`${control.type} should have been serialized by generic code above`)
@@ -1010,8 +1013,10 @@ export function deserializeControl<T extends Data>(
     case ComboboxControlType:
       return deserializeComboboxControlDefinition(serializedControl)
 
+    // @registration-point:
     case CheckboxDefinition.type:
     case ColorDefinition.type:
+    case NumberDefinition.type:
     case ListDefinition.type:
     case ShapeDefinition.type:
       return deserializeControlDefV2(serializedControl)
@@ -1023,12 +1028,16 @@ export function deserializeControl<T extends Data>(
 
 function deserializeControlDefV2(record: SerializedRecord): GenericControlDefinition {
   // FIXME: replace with a class lookup + deserialize call
+  // @registration-point
   switch (record.type) {
     case CheckboxDefinition.type:
       return CheckboxDefinition.deserialize(record)
 
     case ColorDefinition.type:
       return ColorDefinition.deserialize(record)
+
+    case NumberDefinition.type:
+      return NumberDefinition.deserialize(record)
 
     case ListDefinition.type:
       return ListDefinition.deserialize(record, deserializeControlDefV2)

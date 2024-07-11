@@ -1,7 +1,7 @@
 import {
-  NumberControlData,
-  NumberControlDefinition,
-  NumberControlType,
+  // NumberControlData,
+  // NumberControlDefinition,
+  // NumberControlType,
   TextInputControlData,
   TextInputControlDefinition,
   TextInputControlType,
@@ -63,7 +63,7 @@ import { ComboboxControlValue, useComboboxControlValue } from './combobox'
 import { IconRadioGroupControlValue, useIconRadioGroupValue } from './icon-radio-group'
 import { ResolveImageControlValue, useImageControlValue } from './image'
 import { LinkControlValue, useLinkControlValue } from './link'
-import { NumberControlValue, useNumber } from './number'
+// import { NumberControlValue, useNumber } from './number'
 import { RichTextControlValue, useRichText } from './rich-text/rich-text'
 import { RichTextV2ControlValue, useRichTextV2 } from './rich-text-v2'
 import { SelectControlValue, useSelectControlValue } from './select'
@@ -74,9 +74,8 @@ import { TextAreaControlValue, useTextAreaValue } from './text-area'
 import { TextInputControlValue, useTextInputValue } from './text-input'
 import { TypographyControlValue, useTypographyValue } from './typography'
 
-export type ControlDefinitionValue<T extends ControlDefinition> = T extends NumberControlDefinition
-  ? NumberControlValue<T>
-  : T extends TextInputControlDefinition
+export type ControlDefinitionValue<T extends ControlDefinition> =
+  T extends TextInputControlDefinition
     ? TextInputControlValue<T>
     : T extends TextAreaControlDefinition
       ? TextAreaControlValue<T>
@@ -118,16 +117,16 @@ export function ControlValue<T extends ControlDefinition>({
   control,
 }: ControlValueProps<T>): JSX.Element {
   switch (definition.type) {
-    case NumberControlType:
-      return (
-        <RenderHook
-          key={definition.type}
-          hook={useNumber}
-          parameters={[data as NumberControlData, definition]}
-        >
-          {value => children(value as ControlDefinitionValue<T>)}
-        </RenderHook>
-      )
+    // case NumberControlType:
+    //   return (
+    //     <RenderHook
+    //       key={definition.type}
+    //       hook={useNumber}
+    //       parameters={[data as NumberControlData, definition]}
+    //     >
+    //       {value => children(value as ControlDefinitionValue<T>)}
+    //     </RenderHook>
+    //   )
 
     case TextInputControlType:
       return (
