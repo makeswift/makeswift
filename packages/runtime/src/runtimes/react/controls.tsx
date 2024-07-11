@@ -2,7 +2,7 @@ import { useMemo, useRef, useSyncExternalStore } from 'react'
 import {
   IconRadioGroupControlType,
   // TextInputControlType,
-  TextAreaControlType,
+  // TextAreaControlType,
   type ResourceResolver,
   type ValueSubscription,
 } from '@makeswift/controls'
@@ -194,7 +194,7 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
         switch (descriptor.type) {
           // case NumberControlType:
           // case TextInputControlType:
-          case TextAreaControlType:
+          // case TextAreaControlType:
           case SelectControlType:
           // case Color.controlType:
           case IconRadioGroupControlType:

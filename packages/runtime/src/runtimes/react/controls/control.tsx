@@ -1,14 +1,14 @@
-import {
-  // NumberControlData,
-  // NumberControlDefinition,
-  // NumberControlType,
-  // TextInputControlData,
-  // TextInputControlDefinition,
-  // TextInputControlType,
-  TextAreaControlData,
-  TextAreaControlDefinition,
-  TextAreaControlType,
-} from '@makeswift/controls'
+// import {
+//   NumberControlData,
+//   NumberControlDefinition,
+//   NumberControlType,
+//   TextInputControlData,
+//   TextInputControlDefinition,
+//   TextInputControlType,
+//   TextAreaControlData,
+//   TextAreaControlDefinition,
+//   TextAreaControlType,
+// } from '@makeswift/controls'
 
 import {
   ComboboxControlData,
@@ -70,36 +70,33 @@ import { SelectControlValue, useSelectControlValue } from './select'
 import { SlotControlValue, useSlot } from './slot'
 import { StyleControlFormattedValue, useFormattedStyle } from './style'
 import { StyleV2ControlFormattedValue, StyleV2ControlValue } from './style-v2'
-import { TextAreaControlValue, useTextAreaValue } from './text-area'
+// import { TextAreaControlValue, useTextAreaValue } from './text-area'
 // import { TextInputControlValue, useTextInputValue } from './text-input'
 import { TypographyControlValue, useTypographyValue } from './typography'
 
-export type ControlDefinitionValue<T extends ControlDefinition> =
-  T extends TextAreaControlDefinition
-    ? TextAreaControlValue<T>
-    : T extends SelectControlDefinition
-      ? SelectControlValue<T>
-      : T extends ImageControlDefinition
-        ? ResolveImageControlValue<T>
-        : T extends IconRadioGroupControlDefinition
-          ? IconRadioGroupControlValue<T>
-          : T extends LinkControlDefinition
-            ? LinkControlValue<T>
-            : T extends ComboboxControlDefinition
-              ? ComboboxControlValue<T>
-              : T extends SlotControlDefinition
-                ? SlotControlValue
-                : T extends RichTextControlDefinition
-                  ? RichTextControlValue
-                  : T extends RichTextV2ControlDefinition
-                    ? RichTextV2ControlValue
-                    : T extends StyleControlDefinition
-                      ? StyleControlFormattedValue
-                      : T extends StyleV2ControlDefinition
-                        ? StyleV2ControlFormattedValue
-                        : T extends TypographyControlDefinition
-                          ? TypographyControlValue
-                          : never
+export type ControlDefinitionValue<T extends ControlDefinition> = T extends SelectControlDefinition
+  ? SelectControlValue<T>
+  : T extends ImageControlDefinition
+    ? ResolveImageControlValue<T>
+    : T extends IconRadioGroupControlDefinition
+      ? IconRadioGroupControlValue<T>
+      : T extends LinkControlDefinition
+        ? LinkControlValue<T>
+        : T extends ComboboxControlDefinition
+          ? ComboboxControlValue<T>
+          : T extends SlotControlDefinition
+            ? SlotControlValue
+            : T extends RichTextControlDefinition
+              ? RichTextControlValue
+              : T extends RichTextV2ControlDefinition
+                ? RichTextV2ControlValue
+                : T extends StyleControlDefinition
+                  ? StyleControlFormattedValue
+                  : T extends StyleV2ControlDefinition
+                    ? StyleV2ControlFormattedValue
+                    : T extends TypographyControlDefinition
+                      ? TypographyControlValue
+                      : never
 
 type ControlValueProps<T extends ControlDefinition> = {
   definition: T
@@ -137,16 +134,16 @@ export function ControlValue<T extends ControlDefinition>({
     //     </RenderHook>
     //   )
 
-    case TextAreaControlType:
-      return (
-        <RenderHook
-          key={definition.type}
-          hook={useTextAreaValue}
-          parameters={[data as TextAreaControlData, definition]}
-        >
-          {value => children(value as ControlDefinitionValue<T>)}
-        </RenderHook>
-      )
+    // case TextAreaControlType:
+    //   return (
+    //     <RenderHook
+    //       key={definition.type}
+    //       hook={useTextAreaValue}
+    //       parameters={[data as TextAreaControlData, definition]}
+    //     >
+    //       {value => children(value as ControlDefinitionValue<T>)}
+    //     </RenderHook>
+    //   )
 
     case SelectControlType:
       return (
