@@ -1,7 +1,7 @@
 import { useMemo, useRef, useSyncExternalStore } from 'react'
 import {
   IconRadioGroupControlType,
-  TextInputControlType,
+  // TextInputControlType,
   TextAreaControlType,
   type ResourceResolver,
   type ValueSubscription,
@@ -192,8 +192,8 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
     (renderFn, [propName, descriptor]) =>
       propsValue => {
         switch (descriptor.type) {
-          //case NumberControlType:
-          case TextInputControlType:
+          // case NumberControlType:
+          // case TextInputControlType:
           case TextAreaControlType:
           case SelectControlType:
           // case Color.controlType:

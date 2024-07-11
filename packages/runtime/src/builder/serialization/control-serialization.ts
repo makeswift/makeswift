@@ -21,6 +21,7 @@ import {
   ShapeDefinition,
   SerializedRecord,
   NumberDefinition,
+  TextInputDefinition,
 } from '@makeswift/controls'
 
 import {
@@ -871,6 +872,7 @@ export function serializeControl<T extends Data>(
     case CheckboxDefinition.type:
     case ColorDefinition.type:
     case NumberDefinition.type:
+    case TextInputDefinition.type:
     case ListDefinition.type:
     case ShapeDefinition.type:
       throw new Error(`${control.type} should have been serialized by generic code above`)
@@ -1017,6 +1019,7 @@ export function deserializeControl<T extends Data>(
     case CheckboxDefinition.type:
     case ColorDefinition.type:
     case NumberDefinition.type:
+    case TextInputDefinition.type:
     case ListDefinition.type:
     case ShapeDefinition.type:
       return deserializeControlDefV2(serializedControl)
@@ -1038,6 +1041,9 @@ function deserializeControlDefV2(record: SerializedRecord): GenericControlDefini
 
     case NumberDefinition.type:
       return NumberDefinition.deserialize(record)
+
+    case TextInputDefinition.type:
+      return TextInputDefinition.deserialize(record)
 
     case ListDefinition.type:
       return ListDefinition.deserialize(record, deserializeControlDefV2)
