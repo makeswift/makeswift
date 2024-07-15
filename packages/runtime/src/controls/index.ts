@@ -1,5 +1,5 @@
 export * from './control'
-export * from './select'
+// export * from './select'
 export * from './slot'
 export * from './style'
 export * from './style-v2'

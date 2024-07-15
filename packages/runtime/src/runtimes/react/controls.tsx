@@ -32,7 +32,7 @@ import {
   ComboboxControlType,
   ImageControlType,
   LinkControlType,
-  SelectControlType,
+  // SelectControlType,
   // ShapeControlType,
   SlotControl,
   SlotControlType,
@@ -195,7 +195,7 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
           // case NumberControlType:
           // case TextInputControlType:
           // case TextAreaControlType:
-          case SelectControlType:
+          // case SelectControlType:
           // case Color.controlType:
           case IconRadioGroupControlType:
           case ImageControlType:

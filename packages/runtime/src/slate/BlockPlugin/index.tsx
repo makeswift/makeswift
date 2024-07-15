@@ -6,7 +6,7 @@ import { wrapInline } from './wrapInline'
 import { unwrapInline } from './unwrapInline'
 import { getSelection } from '../selectors'
 import { ElementUtils } from '../utils/element'
-import { Select } from '../../controls/select'
+import { Select } from '@makeswift/controls'
 import { getActiveBlockType } from '../selectors'
 import { BlockType, RootBlockType } from '../types'
 import { unwrapList } from './unwrapList'
@@ -308,8 +308,9 @@ export function BlockPlugin() {
         return activeBlock
       },
     },
-    renderElement: renderElement => props =>
-      <BlockPluginComponent {...props} renderElement={renderElement} />,
+    renderElement: renderElement => props => (
+      <BlockPluginComponent {...props} renderElement={renderElement} />
+    ),
   })
 }
 

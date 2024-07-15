@@ -1,4 +1,5 @@
-import { ZodError } from 'zod'
+import { z, ZodError } from 'zod'
+import { isTwoOrMoreElements, map } from './functional'
 
 export function summarizeError(error: ZodError<unknown>): string {
   const { formErrors, fieldErrors } = error.flatten()
@@ -8,4 +9,9 @@ export function summarizeError(error: ZodError<unknown>): string {
       ([field, error]) => `${field}: ${error}`,
     ),
   ].join('; ')
+}
+
+export function unionOfLiterals<T extends string>(constants: readonly [T, ...T[]]) {
+  const c: readonly [T, T, ...T[]] = isTwoOrMoreElements(constants) ? constants : [constants[0], constants[0]]
+  return z.union(map(c, (x) => z.literal(x)))
 }

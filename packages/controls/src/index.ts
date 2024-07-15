@@ -9,6 +9,7 @@ export * from './shape'
 export * from './number'
 export * from './text-input'
 export * from './text-area'
+export * from './select'
 
 export * from './control-definition'
 export * from './control-instance'

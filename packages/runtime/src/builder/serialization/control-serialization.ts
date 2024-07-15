@@ -23,6 +23,7 @@ import {
   NumberDefinition,
   TextInputDefinition,
   TextAreaDefinition,
+  SelectDefinition,
 } from '@makeswift/controls'
 
 import {
@@ -875,6 +876,7 @@ export function serializeControl<T extends Data>(
     case NumberDefinition.type:
     case TextInputDefinition.type:
     case TextAreaDefinition.type:
+    case SelectDefinition.type:
     case ListDefinition.type:
     case ShapeDefinition.type:
       throw new Error(`${control.type} should have been serialized by generic code above`)
@@ -1023,6 +1025,7 @@ export function deserializeControl<T extends Data>(
     case NumberDefinition.type:
     case TextInputDefinition.type:
     case TextAreaDefinition.type:
+    case SelectDefinition.type:
     case ListDefinition.type:
     case ShapeDefinition.type:
       return deserializeControlDefV2(serializedControl)
@@ -1050,6 +1053,9 @@ function deserializeControlDefV2(record: SerializedRecord): GenericControlDefini
 
     case TextAreaDefinition.type:
       return TextAreaDefinition.deserialize(record)
+
+    case SelectDefinition.type:
+      return SelectDefinition.deserialize(record)
 
     case ListDefinition.type:
       return ListDefinition.deserialize(record, deserializeControlDefV2)

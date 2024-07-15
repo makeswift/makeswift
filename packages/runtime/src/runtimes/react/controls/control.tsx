@@ -33,9 +33,9 @@ import {
   RichTextV2ControlData,
   RichTextV2ControlDefinition,
   RichTextV2ControlType,
-  SelectControlData,
-  SelectControlDefinition,
-  SelectControlType,
+  // SelectControlData,
+  // SelectControlDefinition,
+  // SelectControlType,
   // ShapeControl,
   // ShapeControlData,
   // ShapeControlDefinition,
@@ -66,7 +66,7 @@ import { LinkControlValue, useLinkControlValue } from './link'
 // import { NumberControlValue, useNumber } from './number'
 import { RichTextControlValue, useRichText } from './rich-text/rich-text'
 import { RichTextV2ControlValue, useRichTextV2 } from './rich-text-v2'
-import { SelectControlValue, useSelectControlValue } from './select'
+// import { SelectControlValue, useSelectControlValue } from './select'
 import { SlotControlValue, useSlot } from './slot'
 import { StyleControlFormattedValue, useFormattedStyle } from './style'
 import { StyleV2ControlFormattedValue, StyleV2ControlValue } from './style-v2'
@@ -74,29 +74,27 @@ import { StyleV2ControlFormattedValue, StyleV2ControlValue } from './style-v2'
 // import { TextInputControlValue, useTextInputValue } from './text-input'
 import { TypographyControlValue, useTypographyValue } from './typography'
 
-export type ControlDefinitionValue<T extends ControlDefinition> = T extends SelectControlDefinition
-  ? SelectControlValue<T>
-  : T extends ImageControlDefinition
-    ? ResolveImageControlValue<T>
-    : T extends IconRadioGroupControlDefinition
-      ? IconRadioGroupControlValue<T>
-      : T extends LinkControlDefinition
-        ? LinkControlValue<T>
-        : T extends ComboboxControlDefinition
-          ? ComboboxControlValue<T>
-          : T extends SlotControlDefinition
-            ? SlotControlValue
-            : T extends RichTextControlDefinition
-              ? RichTextControlValue
-              : T extends RichTextV2ControlDefinition
-                ? RichTextV2ControlValue
-                : T extends StyleControlDefinition
-                  ? StyleControlFormattedValue
-                  : T extends StyleV2ControlDefinition
-                    ? StyleV2ControlFormattedValue
-                    : T extends TypographyControlDefinition
-                      ? TypographyControlValue
-                      : never
+export type ControlDefinitionValue<T extends ControlDefinition> = T extends ImageControlDefinition
+  ? ResolveImageControlValue<T>
+  : T extends IconRadioGroupControlDefinition
+    ? IconRadioGroupControlValue<T>
+    : T extends LinkControlDefinition
+      ? LinkControlValue<T>
+      : T extends ComboboxControlDefinition
+        ? ComboboxControlValue<T>
+        : T extends SlotControlDefinition
+          ? SlotControlValue
+          : T extends RichTextControlDefinition
+            ? RichTextControlValue
+            : T extends RichTextV2ControlDefinition
+              ? RichTextV2ControlValue
+              : T extends StyleControlDefinition
+                ? StyleControlFormattedValue
+                : T extends StyleV2ControlDefinition
+                  ? StyleV2ControlFormattedValue
+                  : T extends TypographyControlDefinition
+                    ? TypographyControlValue
+                    : never
 
 type ControlValueProps<T extends ControlDefinition> = {
   definition: T
@@ -145,16 +143,16 @@ export function ControlValue<T extends ControlDefinition>({
     //     </RenderHook>
     //   )
 
-    case SelectControlType:
-      return (
-        <RenderHook
-          key={definition.type}
-          hook={useSelectControlValue}
-          parameters={[data as SelectControlData, definition]}
-        >
-          {value => children(value as ControlDefinitionValue<T>)}
-        </RenderHook>
-      )
+    // case SelectControlType:
+    //   return (
+    //     <RenderHook
+    //       key={definition.type}
+    //       hook={useSelectControlValue}
+    //       parameters={[data as SelectControlData, definition]}
+    //     >
+    //       {value => children(value as ControlDefinitionValue<T>)}
+    //     </RenderHook>
+    //   )
 
     case IconRadioGroupControlType:
       return (
