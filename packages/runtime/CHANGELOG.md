@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.19.3-canary.0
+
+### Patch Changes
+
+- 1e9e820: Fix the scaling issue with social link icons when using the small or large variant.
+
 ## 0.19.2
 
 ### Patch Changes
