@@ -5,6 +5,8 @@ import { CopyContext } from '../context'
 
 import { ResourceResolver, ValueSubscription } from '../resource-resolver'
 
+import { Effector } from '../effector'
+
 import {
   DefaultControlInstance,
   ControlInstance,
@@ -155,6 +157,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   resolveValue(
     value: ValueType<C> | undefined,
     _resolver: ResourceResolver,
+    _effector: Effector,
   ): ValueSubscription<ResolvedValueType<C> | undefined> {
     return {
       readStableValue: (_previous?: ResolvedValueType<C>) => {

@@ -2,6 +2,7 @@ import {
   ControlDefinition,
   type ResourceResolver,
   type ValueSubscription,
+  type Effector,
 } from '@makeswift/controls'
 import * as ReactPage from '../../state/react-page'
 
@@ -9,6 +10,7 @@ export function createPropsValuesSubscription(
   propDefinitions: Record<string, unknown>,
   elementData: Record<string, ReactPage.ElementData>,
   resourceResolver: ResourceResolver,
+  effector: Effector,
 ): ValueSubscription<Record<string, unknown>> {
   const propsSubscriptions: Record<string, ValueSubscription<any>> = Object.entries(
     propDefinitions,
@@ -22,6 +24,7 @@ export function createPropsValuesSubscription(
           [propName]: resolveValue.bind(def)(
             fromData.bind(def)(elementData[propName]),
             resourceResolver,
+            effector
           ),
         }
   }, {})

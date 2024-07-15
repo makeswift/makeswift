@@ -14,6 +14,8 @@ import {
   type SendMessage,
 } from '../control-instance'
 
+import { type Effector } from '../effector'
+
 import {
   ControlDefinition,
   safeParse,
@@ -164,6 +166,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   resolveValue(
     value: ValueType<C> | undefined,
     resolver: ResourceResolver,
+    _effector: Effector,
   ): ValueSubscription<ResolvedValueType<C> | undefined> {
     const swatch = resolver.resolveSwatch(value?.swatchId)
 

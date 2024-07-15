@@ -18,6 +18,7 @@ import {
   ParseResult,
   SerializedRecord,
 } from '../control-definition'
+import { type Effector } from '../effector'
 
 type Config = z.infer<typeof Definition.schema.relaxed.config>
 
@@ -160,6 +161,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   resolveValue(
     value: ValueType<C> | undefined,
     _resolver: ResourceResolver,
+    _effector: Effector,
   ): ValueSubscription<ResolvedValueType<C> | undefined> {
     return {
       readStableValue: (_previous?: ResolvedValueType<C>) => {

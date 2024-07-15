@@ -5,10 +5,13 @@ import {
   // TextAreaControlType,
   type ResourceResolver,
   type ValueSubscription,
+  type StyleControlProperty,
+  mapValues,
 } from '@makeswift/controls'
 
 import * as ReactPage from '../../state/react-page'
 
+import { StyleControlData } from '../../../controls'
 import {
   useBoxShadow,
   useBorder as useBorderData,
@@ -19,6 +22,7 @@ import {
   useVideoPropControllerData,
   useTablePropControllerData,
 } from '../../components/hooks'
+import { useBreakpoints } from '../../runtimes/react'
 import type { ColorValue } from '../../components/utils/types'
 import {
   useResponsiveBorder,
@@ -45,11 +49,11 @@ import {
   StyleV2ControlType,
   TypographyControlType,
 } from '../../controls'
-import { useFormattedStyle } from './controls/style'
+import { getStyleControlCssObject, useFormattedStyle } from './controls/style'
 import { ControlValue } from './controls/control'
 import { RenderHook } from './components'
 import { useSlot } from './controls/slot'
-import { useStyle } from './use-style'
+import { useStyle, useStyles } from './use-style'
 import { useRichText } from './controls/rich-text/rich-text'
 import { useRichTextV2 } from './controls/rich-text-v2'
 import { useStore } from './hooks/use-store'
@@ -155,16 +159,50 @@ const useResolvedProps = (
   elementData: Record<string, ReactPage.ElementData>,
   resourceResolver: ResourceResolver,
 ): Record<string, unknown> => {
+  const breakpoints = useBreakpoints()
+
+  const effector = useMemo(() => {
+    const styles: Record<string, { props: StyleControlProperty[]; style: StyleControlData }> = {}
+    return {
+      defineStyle: (
+        name: string,
+        props: StyleControlProperty[],
+        style: StyleControlData | ResponsiveValue<any>,
+      ) => {
+        if (isResponsiveValue(style)) {
+          // FIXME
+        } else {
+          styles[name] = { props, style }
+        }
+        console.log('+++ styles', styles)
+      },
+      useStyles: () => {
+        console.log('+++ useStyles', styles)
+        useStyles(
+          mapValues(styles, ({ props, style }) =>
+            getStyleControlCssObject(breakpoints, style, props),
+          ),
+        )
+      },
+    }
+  }, [])
+
   const propsSubscription = useMemo<ValueSubscription<Record<string, unknown>>>(
-    () => createPropsValuesSubscription(propDefs, elementData, resourceResolver),
-    [propDefs, elementData, resourceResolver],
+    () => createPropsValuesSubscription(propDefs, elementData, resourceResolver, effector),
+    [propDefs, elementData, resourceResolver, effector],
   )
+
+  effector.useStyles()
 
   return useSyncExternalStore(
     propsSubscription.subscribe,
     propsSubscription.readStableValue,
     propsSubscription.readStableValue,
   )
+}
+
+function isResponsiveValue(value: any): value is ResponsiveValue<any> {
+  return 'deviceId' in value
 }
 
 export function PropsValue({ element, children: renderComponent }: PropsValueProps): JSX.Element {

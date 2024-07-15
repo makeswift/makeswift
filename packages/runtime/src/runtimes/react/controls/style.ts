@@ -3,7 +3,7 @@ import { useEffect, useId } from 'react'
 
 import { useBorder, BorderSide } from '../../../components/hooks'
 import { colorToString } from '../../../components/utils/colorToString'
-import { useResponsiveStyle } from '../../../components/utils/responsive-style'
+import { useResponsiveStyle, responsiveStyle } from '../../../components/utils/responsive-style'
 
 import {
   FontSizePropertyData,
@@ -20,6 +20,7 @@ import { marginPropertyDataToStyle } from '../../../css/margin'
 import { paddingPropertyDataToStyle } from '../../../css/padding'
 import { BoxModel, getBox } from '../../../box-model'
 import deepEqual from '../../../utils/deepEqual'
+import { Breakpoints } from '../../../state/modules/breakpoints'
 
 const defaultMargin = {
   marginTop: 0,
@@ -33,6 +34,86 @@ const defaultPadding = {
   paddingRight: 0,
   paddingBottom: 0,
   paddingLeft: 0,
+}
+
+export function getStyleControlCssObject(
+  breakpoints: Breakpoints,
+  style: StyleControlData | undefined,
+  properties: StyleControlProperty[]
+): CSSObject {
+
+  return {
+    ...(properties.includes(StyleControlProperty.Width) && {
+      maxWidth: '100%',
+    }),
+    ...responsiveStyle(
+      breakpoints,
+      [
+        style?.width,
+        style?.margin,
+        style?.padding,
+        useBorder(style?.border),
+        style?.borderRadius,
+        style?.textStyle,
+      ] as const,
+      ([width, margin, padding, border, borderRadius, textStyle]) => ({
+        ...(properties.includes(StyleControlProperty.Width) && {
+          width: widthToString(width) ?? '100%',
+        }),
+        ...(properties.includes(StyleControlProperty.Margin) &&
+          marginPropertyDataToStyle(margin ?? defaultMargin, defaultMargin)),
+        ...(properties.includes(StyleControlProperty.Padding) &&
+          paddingPropertyDataToStyle(padding ?? defaultPadding, defaultPadding)),
+        ...(properties.includes(StyleControlProperty.Border) && {
+          borderTop: borderSideToString(border?.borderTop) ?? '0 solid black',
+          borderRight: borderSideToString(border?.borderRight) ?? '0 solid black',
+          borderBottom: borderSideToString(border?.borderBottom) ?? '0 solid black',
+          borderLeft: borderSideToString(border?.borderLeft) ?? '0 solid black',
+        }),
+        ...(properties.includes(StyleControlProperty.BorderRadius) && {
+          borderTopLeftRadius: borderRadiusToString(borderRadius?.borderTopLeftRadius) ?? 0,
+          borderTopRightRadius: borderRadiusToString(borderRadius?.borderTopRightRadius) ?? 0,
+          borderBottomRightRadius: borderRadiusToString(borderRadius?.borderBottomRightRadius) ?? 0,
+          borderBottomLeftRadius: borderRadiusToString(borderRadius?.borderBottomLeftRadius) ?? 0,
+        }),
+        ...(properties.includes(StyleControlProperty.TextStyle) && {
+          ...(textStyle?.fontFamily && { fontFamily: `"${textStyle.fontFamily}"` }),
+          ...(textStyle?.letterSpacing && { letterSpacing: textStyle.letterSpacing }),
+          ...(textStyle?.fontSize && { fontSize: fontSizeToString(textStyle.fontSize) }),
+          ...(textStyle?.fontWeight && { fontWeight: textStyle.fontWeight }),
+          textTransform: textStyle?.textTransform ?? [],
+          fontStyle: textStyle?.fontStyle ?? [],
+        }),
+      }),
+    ),
+  }
+
+  function widthToString(widthProperty: WidthPropertyData | undefined): string | null {
+    if (widthProperty == null) return null
+
+    return lengthPercentageDataToString(widthProperty)
+  }
+
+  function borderSideToString(borderSide: BorderSide | null | undefined): string | null {
+    if (borderSide == null) return null
+
+    const { width, color, style } = borderSide
+    return `${width != null ? width : 0}px ${style} ${
+      color != null ? colorToString(color) : 'black'
+    }`
+  }
+
+  function borderRadiusToString(
+    borderRadius: BorderRadiusLonghandPropertyData | null | undefined,
+  ): string | null {
+    if (borderRadius == null) return null
+
+    return lengthPercentageDataToString(borderRadius)
+  }
+
+  function fontSizeToString(fontSize: NonNullable<FontSizePropertyData>) {
+    return `${fontSize.value}${fontSize.unit}`
+  }
 }
 
 function useStyleControlCssObject(

@@ -7,6 +7,8 @@ import {
   type ValueSubscription,
 } from './resource-resolver'
 
+import { type Effector } from './effector'
+
 import { ControlInstance, type SendMessage } from './control-instance'
 import { serializeObject } from './serialization'
 import { summarizeError } from './utils/zod'
@@ -56,6 +58,7 @@ export abstract class ControlDefinition<
   abstract resolveValue(
     value: ValueType | undefined,
     resolver: ResourceResolver,
+    effector: Effector,
   ): ValueSubscription<ResolvedValueType | undefined>
 
   abstract createInstance(sendMessage: SendMessage<any>): InstanceType

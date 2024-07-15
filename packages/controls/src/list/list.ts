@@ -9,6 +9,8 @@ import {
 
 import { type SendMessage } from '../control-instance'
 
+import { type Effector } from '../effector'
+
 import {
   ControlDefinition,
   safeParse,
@@ -154,10 +156,11 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   resolveValue(
     value: ValueType<C> | undefined,
     resolver: ResourceResolver,
+    effector: Effector,
   ): ValueSubscription<ResolvedValueType<C> | undefined> {
     const emptyList: ResolvedValueType<C> = []
     const itemValues = value?.map((value) =>
-      this.itemDef.resolveValue(value, resolver),
+      this.itemDef.resolveValue(value, resolver, effector),
     )
 
     return {

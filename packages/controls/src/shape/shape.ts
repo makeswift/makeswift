@@ -9,6 +9,8 @@ import {
   type ResolvedValueType as ResolvedValueType_,
 } from '../control-definition'
 
+import { type Effector } from "../effector";
+
 import { CopyContext } from '../context'
 import { ResourceResolver, ValueSubscription } from '../resource-resolver'
 import { IntrospectionTarget } from '../introspect'
@@ -127,10 +129,11 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   resolveValue(
     value: ValueType<C> | undefined,
     resolver: ResourceResolver,
+    effector: Effector,
   ): ValueSubscription<ResolvedValueType<C> | undefined> {
     const emptyShape: ResolvedValueType<C> = {}
     const keyValues = mapValues(value ?? ({} as ValueType<C>), (val, key) =>
-      this.keyDefs[key as string]?.resolveValue(val, resolver),
+      this.keyDefs[key as string]?.resolveValue(val, resolver, effector),
     )
 
     return {

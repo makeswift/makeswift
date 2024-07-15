@@ -9,6 +9,8 @@ import {
   type ValueSubscription,
 } from '../resource-resolver'
 
+import { type Effector } from '../effector'
+
 import {
   DefaultControlInstance,
   ControlInstance,
@@ -161,6 +163,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   resolveValue(
     value: ValueType<C> | undefined,
     _resolver: ResourceResolver,
+    _effector: Effector,
   ): ValueSubscription<ValueType<C> | undefined> {
     return {
       readStableValue: (_previous?: ValueType<C>) =>

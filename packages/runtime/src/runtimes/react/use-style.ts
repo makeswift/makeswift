@@ -1,7 +1,7 @@
 import React from 'react'
 import { CSSObject } from '@emotion/css'
 import { serializeStyles } from '@emotion/serialize'
-import { registerStyles, insertStyles } from '@emotion/utils'
+import { registerStyles, insertStyles, type SerializedStyles } from '@emotion/utils'
 import { useCache } from '../../next/root-style-registry'
 
 const isServer = typeof window === 'undefined'
@@ -21,4 +21,23 @@ export function useStyle(style: CSSObject): string {
   if (isServer) insertStyles(cache, serialized, false)
 
   return `${cache.key}-${serialized.name}`
+}
+
+function useUniversalInsertionEffect(effect: () => void) {
+  useInsertionEffect(effect)
+  if (isServer) effect()
+}
+
+export function useStyles(styles: Record<string, CSSObject>) {
+  const cache = useCache()
+  const serialized = Object.entries(styles).map(
+    ([key, value]) =>
+      ({ ...serializeStyles([value], cache.registered), name: key }) satisfies SerializedStyles,
+  )
+
+  serialized.forEach(s => registerStyles(cache, s, false))
+
+  useUniversalInsertionEffect(() => {
+    serialized.forEach(s => insertStyles(cache, s, false))
+  })
 }
