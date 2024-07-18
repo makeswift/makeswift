@@ -1,13 +1,7 @@
 import {
-  ComboboxControlData,
-  ComboboxControlDefinition,
-  ComboboxControlType,
   IconRadioGroupControlData,
   IconRadioGroupControlDefinition,
   IconRadioGroupControlType,
-  ImageControlData,
-  ImageControlDefinition,
-  ImageControlType,
   LinkControlData,
   LinkControlDefinition,
   LinkControlType,
@@ -39,7 +33,6 @@ import {
 
 import { AnyPropController } from '../../../prop-controllers/instances'
 import { RenderHook } from '../components'
-import { ComboboxControlValue, useComboboxControlValue } from './combobox'
 import { IconRadioGroupControlValue, useIconRadioGroupValue } from './icon-radio-group'
 import { LinkControlValue, useLinkControlValue } from './link'
 import { RichTextControlValue, useRichText } from './rich-text/rich-text'
@@ -54,19 +47,17 @@ export type ControlDefinitionValue<T extends ControlDefinition> =
     ? IconRadioGroupControlValue<T>
     : T extends LinkControlDefinition
       ? LinkControlValue<T>
-      : T extends ComboboxControlDefinition
-        ? ComboboxControlValue<T>
-        : T extends RichTextControlDefinition
-          ? RichTextControlValue
-          : T extends RichTextV2ControlDefinition
-            ? RichTextV2ControlValue
-            : T extends StyleControlDefinition
-              ? StyleControlFormattedValue
-              : T extends StyleV2ControlDefinition
-                ? StyleV2ControlFormattedValue
-                : T extends TypographyControlDefinition
-                  ? TypographyControlValue
-                  : never
+      : T extends RichTextControlDefinition
+        ? RichTextControlValue
+        : T extends RichTextV2ControlDefinition
+          ? RichTextV2ControlValue
+          : T extends StyleControlDefinition
+            ? StyleControlFormattedValue
+            : T extends StyleV2ControlDefinition
+              ? StyleV2ControlFormattedValue
+              : T extends TypographyControlDefinition
+                ? TypographyControlValue
+                : never
 
 type ControlValueProps<T extends ControlDefinition> = {
   definition: T
@@ -163,16 +154,16 @@ export function ControlValue<T extends ControlDefinition>({
         </RenderHook>
       )
 
-    case ComboboxControlType:
-      return (
-        <RenderHook
-          key={definition.type}
-          hook={useComboboxControlValue}
-          parameters={[data as ComboboxControlData]}
-        >
-          {value => children(value as ControlDefinitionValue<T>)}
-        </RenderHook>
-      )
+    // case ComboboxControlType:
+    //   return (
+    //     <RenderHook
+    //       key={definition.type}
+    //       hook={useComboboxControlValue}
+    //       parameters={[data as ComboboxControlData]}
+    //     >
+    //       {value => children(value as ControlDefinitionValue<T>)}
+    //     </RenderHook>
+    //   )
 
     // case ShapeControlType:
     //   return (

@@ -24,6 +24,7 @@ import {
   ListDefinition,
   NumberDefinition,
   SelectDefinition,
+  ComboboxDefinition,
   ImageDefinition,
   ShapeDefinition,
   SlotDefinition,
@@ -32,8 +33,6 @@ import {
 } from '../../controls'
 
 import {
-  ComboboxControlDefinition,
-  ComboboxControlType,
   RichTextV2ControlDefinition,
   RichTextV2ControlType,
   StyleV2ControlDefinition,
@@ -61,10 +60,6 @@ import {
   TypeaheadValue as TypeaheadControlValue,
   RichTextDescriptor as RichTextControl,
 } from '../../prop-controllers/deleted'
-import {
-  deserializeComboboxControlDefinition,
-  serializeComboboxControlDefinition,
-} from './controls/combobox'
 
 import { deserializeRichTextControlV2, serializeRichTextControlV2 } from './controls/rich-text-v2'
 import { deserializeStyleV2Control, serializeStyleV2Control } from './controls/style-v2'
@@ -762,7 +757,6 @@ export type SerializedLegacyControl<T extends Data = Data> =
       | ImageControl<T>
       | RichTextControl<T>
       | RichTextV2ControlDefinition
-      | ComboboxControlDefinition
       | StyleV2ControlDefinition
     >
   | SerializedListControl<T extends ListControlValue ? T : ListControlValue>
@@ -784,7 +778,6 @@ export type SerializedLegacyControl<T extends Data = Data> =
   | SerializedImageControl<T>
   | SerializedRichTextControl<T>
   | Serialize<RichTextV2ControlDefinition>
-  | Serialize<ComboboxControlDefinition>
   | Serialize<StyleV2ControlDefinition>
 
 export type SerializedControl<T extends Data = Data> = SerializedLegacyControl<T> | SerializedRecord
@@ -819,7 +812,6 @@ export type DeserializedLegacyControl<T extends Data = Data> =
       | ImageControl<T>
       | RichTextControl<T>
       | RichTextV2ControlDefinition
-      | ComboboxControlDefinition
       | StyleV2ControlDefinition
     >
   | DeserializedListControl<T extends ListControlValue ? T : ListControlValue>
@@ -841,7 +833,6 @@ export type DeserializedLegacyControl<T extends Data = Data> =
   | DeserializedImageControl<T>
   | DeserializedRichTextControl<T>
   | Deserialize<Serialize<RichTextV2ControlDefinition>>
-  | Deserialize<Serialize<ComboboxControlDefinition>>
   | Deserialize<Serialize<StyleV2ControlDefinition>>
 
 export type DeserializedControl<T extends Data = Data> =
@@ -931,9 +922,6 @@ function serializeLegacyControl<T extends Data>(
     case StyleV2ControlType:
       return serializeStyleV2Control(control)
 
-    case ComboboxControlType:
-      return serializeComboboxControlDefinition(control)
-
     default:
       return [control, []]
   }
@@ -942,10 +930,7 @@ function serializeLegacyControl<T extends Data>(
 function isSerializedLegacyControl<T extends Data>(
   control: SerializedControl<T>,
 ): control is SerializedLegacyControl<T> {
-  return (
-    'options' in control ||
-    control.type in [RichTextV2ControlType, StyleV2ControlType, ComboboxControlType]
-  )
+  return 'options' in control || control.type in [RichTextV2ControlType, StyleV2ControlType]
 }
 
 export function deserializeLegacyControl<T extends Data>(
@@ -1012,9 +997,6 @@ export function deserializeLegacyControl<T extends Data>(
     case StyleV2ControlType:
       return deserializeStyleV2Control(serializedControl)
 
-    case ComboboxControlType:
-      return deserializeComboboxControlDefinition(serializedControl)
-
     default:
       return serializedControl
   }
@@ -1047,6 +1029,9 @@ function deserializeControlDefV2(record: SerializedRecord): UnifiedControlDefini
 
     case SelectDefinition.type:
       return SelectDefinition.deserialize(record)
+
+    case ComboboxDefinition.type:
+      return ComboboxDefinition.deserialize(record)
 
     case ImageDefinition.type:
       return ImageDefinition.deserialize(record)

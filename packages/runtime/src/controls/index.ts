@@ -7,11 +7,11 @@ export * from './typography'
 
 export {
   Combobox,
-  ComboboxControlType,
-  type ComboboxControlDefinition,
+  ComboboxDefinition,
   Color,
   ColorDefinition,
   Image,
+  ImageDefinition,
   Link,
   List,
   ListDefinition,

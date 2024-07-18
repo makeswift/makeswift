@@ -1,7 +1,5 @@
 import {
   IconRadioGroupControlDefinition,
-  ComboboxControlDefinition,
-  ImageControlDefinition,
   LinkControlDefinition,
   type ResolvedValueType,
   ControlDefinition as UnifiedControlDefinition,
@@ -17,8 +15,6 @@ import {
   StyleV2ControlDefinition,
   TypographyControlDefinition,
 } from '../controls'
-import { ResolveImageControlValue } from '../runtimes/react/controls/image'
-import { ComboboxControlValue } from '../runtimes/react/controls/combobox'
 import { LinkControlValue } from '../runtimes/react/controls/link'
 import { RichTextControlDefinition } from '../controls/rich-text'
 import { RichTextControlValue } from '../runtimes/react/controls/rich-text/rich-text'
@@ -140,8 +136,6 @@ export type LegacyDescriptor<T extends Data = Data> =
   | StyleV2ControlDefinition
   | TypographyControlDefinition
   | IconRadioGroupControlDefinition
-  | ImageControlDefinition
-  | ComboboxControlDefinition
   | LinkControlDefinition
   | RichTextControlDefinition
   | RichTextV2ControlDefinition
@@ -416,25 +410,21 @@ export type DescriptorValueType<T extends Descriptor> = T extends PropController
       ? StyleV2ControlFormattedValue
       : T extends IconRadioGroupControlDefinition
         ? IconRadioGroupControlValue<T>
-        : T extends ImageControlDefinition
-          ? ResolveImageControlValue<T>
-          : T extends ComboboxControlDefinition
-            ? ComboboxControlValue<T>
-            : T extends LinkControlDefinition
-              ? LinkControlValue<T>
-              : T extends RichTextControlDefinition
-                ? RichTextControlValue
-                : T extends RichTextV2ControlDefinition
-                  ? RichTextV2ControlValue
-                  : T extends StyleV2ControlDefinition
-                    ? StyleV2ControlFormattedValue
-                    : T extends TypographyControlDefinition
-                      ? TypographyControlValue
-                      : T extends UnifiedControlDefinition
-                        ? ResolvedValueType<T>
-                        : T extends Descriptor<infer U>
-                          ? U | undefined
-                          : never
+        : T extends LinkControlDefinition
+          ? LinkControlValue<T>
+          : T extends RichTextControlDefinition
+            ? RichTextControlValue
+            : T extends RichTextV2ControlDefinition
+              ? RichTextV2ControlValue
+              : T extends StyleV2ControlDefinition
+                ? StyleV2ControlFormattedValue
+                : T extends TypographyControlDefinition
+                  ? TypographyControlValue
+                  : T extends UnifiedControlDefinition
+                    ? ResolvedValueType<T>
+                    : T extends Descriptor<infer U>
+                      ? U | undefined
+                      : never
 
 export type PanelDescriptorValueType<T extends PanelDescriptor> =
   T extends PanelDescriptor<infer U> ? U : never

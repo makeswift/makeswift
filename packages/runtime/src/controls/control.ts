@@ -1,11 +1,6 @@
 import {
-  ComboboxControlData,
-  ComboboxControlDefinition,
   IconRadioGroupControlData,
   IconRadioGroupControlDefinition,
-  ImageControlType,
-  ImageControlData,
-  ImageControlDefinition,
   LinkControlData,
   LinkControlDefinition,
   LinkControlType,
@@ -18,7 +13,6 @@ import {
   type MergeTranslatableDataContext,
 } from '@makeswift/controls'
 
-import { copyImageData } from './image'
 import { copyStyleData, StyleControlData, StyleControlDefinition, StyleControlType } from './style'
 
 import { Descriptor, isLegacyDescriptor } from '../prop-controllers/descriptors'
@@ -57,8 +51,6 @@ import { IndexSignatureHack } from '../utils/index-signature-hack'
 
 type LegacyControlDefinition =
   | IconRadioGroupControlDefinition
-  | ImageControlDefinition
-  | ComboboxControlDefinition
   | LinkControlDefinition
   | RichTextControlDefinition
   | RichTextV2ControlDefinition
@@ -69,23 +61,19 @@ type LegacyControlDefinition =
 export type LegacyControlDefinitionData<T extends LegacyControlDefinition> =
   T extends IconRadioGroupControlDefinition
     ? IconRadioGroupControlData<T>
-    : T extends ImageControlDefinition
-      ? ImageControlData
-      : T extends ComboboxControlDefinition
-        ? ComboboxControlData<T>
-        : T extends LinkControlDefinition
-          ? LinkControlData
-          : T extends RichTextControlDefinition
-            ? IndexSignatureHack<RichTextControlData>
-            : T extends RichTextV2ControlDefinition
-              ? RichTextV2ControlData
-              : T extends StyleControlDefinition
-                ? StyleControlData
-                : T extends StyleV2ControlDefinition
-                  ? StyleV2ControlData
-                  : T extends TypographyControlDefinition
-                    ? TypographyControlData
-                    : never
+    : T extends LinkControlDefinition
+      ? LinkControlData
+      : T extends RichTextControlDefinition
+        ? IndexSignatureHack<RichTextControlData>
+        : T extends RichTextV2ControlDefinition
+          ? RichTextV2ControlData
+          : T extends StyleControlDefinition
+            ? StyleControlData
+            : T extends StyleV2ControlDefinition
+              ? StyleV2ControlData
+              : T extends TypographyControlDefinition
+                ? TypographyControlData
+                : never
 
 export type ControlDefinition = LegacyControlDefinition | UnifiedControlDefinition
 
@@ -122,9 +110,6 @@ export function copy(definition: Descriptor, value: any, context: CopyContext) {
         isRichTextV1Data(value) ? richTextV2DescendentsToData(richTextDTOtoDAO(value)) : value,
         context,
       )
-
-    case ImageControlType:
-      return copyImageData(value, context)
 
     case LinkControlType:
       return copyLinkData(value, context)

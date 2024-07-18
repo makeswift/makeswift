@@ -1,7 +1,6 @@
 import { useMemo, useRef, useSyncExternalStore } from 'react'
 import {
   IconRadioGroupControlType,
-  ComboboxControlType,
   LinkControlType,
   mapValues,
   ControlInstance,
@@ -238,7 +237,7 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
           // case Color.controlType:
           case IconRadioGroupControlType:
           // case ImageControlType:
-          case ComboboxControlType:
+          // case ComboboxControlType:
           // case ShapeControlType:
           // case ListControlType:
           case LinkControlType:
