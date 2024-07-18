@@ -109,6 +109,17 @@ export class MakeswiftHostApiClient implements ResourceResolver {
     )
   }
 
+  resolveFile(fileId: string | undefined): ValueSubscription<File | null> {
+    if (fileId != null && this.readFile(fileId) == null) {
+      this.fetchFile(fileId).catch(console.error)
+    }
+
+    return {
+      readStableValue: (_previous?: File) => (fileId != null ? this.readFile(fileId) : null),
+      subscribe: this.subscribe,
+    }
+  }
+
   readTypography(typographyId: string): Typography | null {
     return MakeswiftApiClient.getAPIResource(
       this.makeswiftApiClient.getState(),

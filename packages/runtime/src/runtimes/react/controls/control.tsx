@@ -41,7 +41,6 @@ import { AnyPropController } from '../../../prop-controllers/instances'
 import { RenderHook } from '../components'
 import { ComboboxControlValue, useComboboxControlValue } from './combobox'
 import { IconRadioGroupControlValue, useIconRadioGroupValue } from './icon-radio-group'
-import { ResolveImageControlValue, useImageControlValue } from './image'
 import { LinkControlValue, useLinkControlValue } from './link'
 import { RichTextControlValue, useRichText } from './rich-text/rich-text'
 import { RichTextV2ControlValue, useRichTextV2 } from './rich-text-v2'
@@ -50,9 +49,8 @@ import { StyleV2ControlFormattedValue, StyleV2ControlValue } from './style-v2'
 import { TypographyControlValue, useTypographyValue } from './typography'
 import { isLegacyDescriptor } from '../../../prop-controllers/descriptors'
 
-export type ControlDefinitionValue<T extends ControlDefinition> = T extends ImageControlDefinition
-  ? ResolveImageControlValue<T>
-  : T extends IconRadioGroupControlDefinition
+export type ControlDefinitionValue<T extends ControlDefinition> =
+  T extends IconRadioGroupControlDefinition
     ? IconRadioGroupControlValue<T>
     : T extends LinkControlDefinition
       ? LinkControlValue<T>
@@ -143,16 +141,16 @@ export function ControlValue<T extends ControlDefinition>({
         </RenderHook>
       )
 
-    case ImageControlType:
-      return (
-        <RenderHook
-          key={definition.type}
-          hook={useImageControlValue}
-          parameters={[data as ImageControlData, definition]}
-        >
-          {value => children(value as ControlDefinitionValue<T>)}
-        </RenderHook>
-      )
+    // case ImageControlType:
+    //   return (
+    //     <RenderHook
+    //       key={definition.type}
+    //       hook={useImageControlValue}
+    //       parameters={[data as ImageControlData, definition]}
+    //     >
+    //       {value => children(value as ControlDefinitionValue<T>)}
+    //     </RenderHook>
+    //   )
 
     case LinkControlType:
       return (

@@ -1,4 +1,4 @@
-import { type Swatch } from './common/resources'
+import { type Swatch, type File } from './common/resources'
 
 export type ValueSubscription<T> = {
   readStableValue(previous?: T): T
@@ -7,4 +7,5 @@ export type ValueSubscription<T> = {
 
 export interface ResourceResolver {
   resolveSwatch(swatchId: string | undefined): ValueSubscription<Swatch | null>
+  resolveFile(fileId: string | undefined): ValueSubscription<File | null>
 }

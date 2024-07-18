@@ -24,6 +24,7 @@ import {
   ListDefinition,
   NumberDefinition,
   SelectDefinition,
+  ImageDefinition,
   ShapeDefinition,
   SlotDefinition,
   TextAreaDefinition,
@@ -1031,7 +1032,6 @@ export function deserializeControl<T extends Data>(
 
 function deserializeControlDefV2(record: SerializedRecord): UnifiedControlDefinition {
   // FIXME: replace with a class lookup + deserialize call
-  // @registration-point
   switch (record.type) {
     case CheckboxDefinition.type:
       return CheckboxDefinition.deserialize(record)
@@ -1047,6 +1047,9 @@ function deserializeControlDefV2(record: SerializedRecord): UnifiedControlDefini
 
     case SelectDefinition.type:
       return SelectDefinition.deserialize(record)
+
+    case ImageDefinition.type:
+      return ImageDefinition.deserialize(record)
 
     case ShapeDefinition.type:
       return ShapeDefinition.deserialize(record, deserializeControlDefV2)
