@@ -1,11 +1,4 @@
-import {
-  IconRadioGroupControlData,
-  IconRadioGroupControlDefinition,
-  IconRadioGroupControlType,
-  LinkControlData,
-  LinkControlDefinition,
-  LinkControlType,
-} from '@makeswift/controls'
+import { LinkControlData, LinkControlDefinition, LinkControlType } from '@makeswift/controls'
 
 import {
   ControlDefinition,
@@ -33,7 +26,6 @@ import {
 
 import { AnyPropController } from '../../../prop-controllers/instances'
 import { RenderHook } from '../components'
-import { IconRadioGroupControlValue, useIconRadioGroupValue } from './icon-radio-group'
 import { LinkControlValue, useLinkControlValue } from './link'
 import { RichTextControlValue, useRichText } from './rich-text/rich-text'
 import { RichTextV2ControlValue, useRichTextV2 } from './rich-text-v2'
@@ -42,22 +34,19 @@ import { StyleV2ControlFormattedValue, StyleV2ControlValue } from './style-v2'
 import { TypographyControlValue, useTypographyValue } from './typography'
 import { isLegacyDescriptor } from '../../../prop-controllers/descriptors'
 
-export type ControlDefinitionValue<T extends ControlDefinition> =
-  T extends IconRadioGroupControlDefinition
-    ? IconRadioGroupControlValue<T>
-    : T extends LinkControlDefinition
-      ? LinkControlValue<T>
-      : T extends RichTextControlDefinition
-        ? RichTextControlValue
-        : T extends RichTextV2ControlDefinition
-          ? RichTextV2ControlValue
-          : T extends StyleControlDefinition
-            ? StyleControlFormattedValue
-            : T extends StyleV2ControlDefinition
-              ? StyleV2ControlFormattedValue
-              : T extends TypographyControlDefinition
-                ? TypographyControlValue
-                : never
+export type ControlDefinitionValue<T extends ControlDefinition> = T extends LinkControlDefinition
+  ? LinkControlValue<T>
+  : T extends RichTextControlDefinition
+    ? RichTextControlValue
+    : T extends RichTextV2ControlDefinition
+      ? RichTextV2ControlValue
+      : T extends StyleControlDefinition
+        ? StyleControlFormattedValue
+        : T extends StyleV2ControlDefinition
+          ? StyleV2ControlFormattedValue
+          : T extends TypographyControlDefinition
+            ? TypographyControlValue
+            : never
 
 type ControlValueProps<T extends ControlDefinition> = {
   definition: T
@@ -121,16 +110,16 @@ export function ControlValue<T extends ControlDefinition>({
     //     </RenderHook>
     //   )
 
-    case IconRadioGroupControlType:
-      return (
-        <RenderHook
-          key={definition.type}
-          hook={useIconRadioGroupValue}
-          parameters={[data as IconRadioGroupControlData, definition]}
-        >
-          {value => children(value as ControlDefinitionValue<T>)}
-        </RenderHook>
-      )
+    // case IconRadioGroupControlType:
+    //   return (
+    //     <RenderHook
+    //       key={definition.type}
+    //       hook={useIconRadioGroupValue}
+    //       parameters={[data as IconRadioGroupControlData, definition]}
+    //     >
+    //       {value => children(value as ControlDefinitionValue<T>)}
+    //     </RenderHook>
+    //   )
 
     // case ImageControlType:
     //   return (

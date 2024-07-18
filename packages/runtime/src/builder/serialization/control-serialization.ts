@@ -30,6 +30,7 @@ import {
   SlotDefinition,
   TextAreaDefinition,
   TextInputDefinition,
+  IconRadioGroupDefinition,
 } from '../../controls'
 
 import {
@@ -1047,6 +1048,9 @@ function deserializeControlDefV2(record: SerializedRecord): UnifiedControlDefini
 
     case TextInputDefinition.type:
       return TextInputDefinition.deserialize(record)
+
+    case IconRadioGroupDefinition.type:
+      return IconRadioGroupDefinition.deserialize(record)
   }
 
   throw new Error(`Unknown control type: ${record.type}`)
