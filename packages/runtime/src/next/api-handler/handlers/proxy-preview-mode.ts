@@ -35,13 +35,13 @@ function mapRequestHeadersToHeaders(requestHeaders: NextApiRequest['headers']): 
 }
 
 function mapRequestToProxyUrl(req: NextApiRequest): URL {
-  const isForwardedProtoHttps = match(req.headers['X-Forwarded-Proto'])
+  const isForwardedProtoHttps = match(req.headers['x-forwarded-proto'])
     .with(P.string, x => x.split(','))
     .with(P.array(P.string), x => x)
     .otherwise(() => [])
     .includes('https')
 
-  const isForwardedSSL = match(req.headers['X-Forwarded-SSL'])
+  const isForwardedSSL = match(req.headers['x-forwarded-ssl'])
     .with('on', () => true)
     .otherwise(() => false)
 
@@ -133,17 +133,17 @@ async function proxyPreviewModeApiRouteHandler(
 
   if (!Array.isArray(setCookie)) return res.status(500).send('Internal Server Error')
 
-  setCookie.forEach((cookie) => proxyHeaders.append('cookie', cookie))
+  setCookie.forEach(cookie => proxyHeaders.append('cookie', cookie))
 
   const response = await fetch(proxyUrl, {
     headers: proxyHeaders,
-  });
-
-  response.headers.forEach((value, name) => {
-    res.setHeader(name, value);
   })
 
-  res.statusCode = response.status;
+  response.headers.forEach((value, name) => {
+    res.setHeader(name, value)
+  })
+
+  res.statusCode = response.status
   res.statusMessage = response.statusText
 
   // `fetch` automatically decompresses the response, but the response headers will keep the
