@@ -1,6 +1,5 @@
 import { Descriptor, isLegacyDescriptor } from './descriptors'
 import { Data, Element } from '../state/react-page'
-import { LinkControlData, LinkControlType } from '@makeswift/controls'
 
 import { RichTextControlData, RichTextControlType, RichTextValue } from '../controls/rich-text'
 import { getStyleSwatchIds, StyleControlData, StyleControlType } from '../controls/style'
@@ -299,19 +298,19 @@ export function getPageIds<T extends Data>(
       return getLinkPropControllerPageIds(prop as LinkPropControllerData)
     }
 
-    case LinkControlType: {
-      const value = prop as LinkControlData
+    // case LinkControlType: {
+    //   const value = prop as LinkControlData
 
-      if (value == null) return []
+    //   if (value == null) return []
 
-      switch (value.type) {
-        case 'OPEN_PAGE':
-          return value.payload.pageId == null ? [] : [value.payload.pageId]
+    //   switch (value.type) {
+    //     case 'OPEN_PAGE':
+    //       return value.payload.pageId == null ? [] : [value.payload.pageId]
 
-        default:
-          return []
-      }
-    }
+    //     default:
+    //       return []
+    //   }
+    // }
 
     case PropControllerTypes.NavigationLinks: {
       return getNavigationLinksPropControllerPageIds(prop as NavigationLinksPropControllerData)

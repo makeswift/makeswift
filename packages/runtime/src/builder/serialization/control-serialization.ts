@@ -25,6 +25,7 @@ import {
   ImageDefinition,
   IconRadioGroupDefinition,
   ListDefinition,
+  LinkDefinition,
   NumberDefinition,
   SelectDefinition,
   ShapeDefinition,
@@ -1051,6 +1052,9 @@ function deserializeControlDefV2(record: SerializedRecord): UnifiedControlDefini
 
     case IconRadioGroupDefinition.type:
       return IconRadioGroupDefinition.deserialize(record)
+
+    case LinkDefinition.type:
+      return LinkDefinition.deserialize(record)
   }
 
   throw new Error(`Unknown control type: ${record.type}`)

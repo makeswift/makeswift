@@ -1,6 +1,5 @@
 import { useMemo, useRef, useSyncExternalStore } from 'react'
 import {
-  LinkControlType,
   mapValues,
   ControlInstance,
   type ResourceResolver,
@@ -233,7 +232,7 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
           // case ComboboxControlType:
           // case ShapeControlType:
           // case ListControlType:
-          case LinkControlType:
+          // case LinkControlType:
           case StyleV2ControlType:
           case TypographyControlType:
             // case Checkbox.controlType:

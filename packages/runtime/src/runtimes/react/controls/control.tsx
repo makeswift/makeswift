@@ -1,5 +1,3 @@
-import { LinkControlData, LinkControlDefinition, LinkControlType } from '@makeswift/controls'
-
 import {
   ControlDefinition,
   ControlDefinitionData,
@@ -26,7 +24,6 @@ import {
 
 import { AnyPropController } from '../../../prop-controllers/instances'
 import { RenderHook } from '../components'
-import { LinkControlValue, useLinkControlValue } from './link'
 import { RichTextControlValue, useRichText } from './rich-text/rich-text'
 import { RichTextV2ControlValue, useRichTextV2 } from './rich-text-v2'
 import { StyleControlFormattedValue, useFormattedStyle } from './style'
@@ -34,9 +31,8 @@ import { StyleV2ControlFormattedValue, StyleV2ControlValue } from './style-v2'
 import { TypographyControlValue, useTypographyValue } from './typography'
 import { isLegacyDescriptor } from '../../../prop-controllers/descriptors'
 
-export type ControlDefinitionValue<T extends ControlDefinition> = T extends LinkControlDefinition
-  ? LinkControlValue<T>
-  : T extends RichTextControlDefinition
+export type ControlDefinitionValue<T extends ControlDefinition> =
+  T extends RichTextControlDefinition
     ? RichTextControlValue
     : T extends RichTextV2ControlDefinition
       ? RichTextV2ControlValue
@@ -132,16 +128,16 @@ export function ControlValue<T extends ControlDefinition>({
     //     </RenderHook>
     //   )
 
-    case LinkControlType:
-      return (
-        <RenderHook
-          key={definition.type}
-          hook={useLinkControlValue}
-          parameters={[data as LinkControlData, definition]}
-        >
-          {value => children(value as ControlDefinitionValue<T>)}
-        </RenderHook>
-      )
+    // case LinkControlType:
+    //   return (
+    //     <RenderHook
+    //       key={definition.type}
+    //       hook={useLinkControlValue}
+    //       parameters={[data as LinkControlData, definition]}
+    //     >
+    //       {value => children(value as ControlDefinitionValue<T>)}
+    //     </RenderHook>
+    //   )
 
     // case ComboboxControlType:
     //   return (

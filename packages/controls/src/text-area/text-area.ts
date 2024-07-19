@@ -114,7 +114,6 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     return Definition.type
   }
 
-  // @arvin: net new, should we add max, min, and step to the schema?
   get schema() {
     return (
       this.config.defaultValue === undefined

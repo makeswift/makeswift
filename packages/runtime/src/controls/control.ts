@@ -1,8 +1,4 @@
 import {
-  LinkControlData,
-  LinkControlDefinition,
-  LinkControlType,
-  copyLinkData,
   ControlDefinition as UnifiedControlDefinition,
   type CopyContext,
   type DataType,
@@ -48,7 +44,6 @@ import {
 import { IndexSignatureHack } from '../utils/index-signature-hack'
 
 type LegacyControlDefinition =
-  | LinkControlDefinition
   | RichTextControlDefinition
   | RichTextV2ControlDefinition
   | StyleControlDefinition
@@ -56,19 +51,17 @@ type LegacyControlDefinition =
   | TypographyControlDefinition
 
 export type LegacyControlDefinitionData<T extends LegacyControlDefinition> =
-  T extends LinkControlDefinition
-    ? LinkControlData
-    : T extends RichTextControlDefinition
-      ? IndexSignatureHack<RichTextControlData>
-      : T extends RichTextV2ControlDefinition
-        ? RichTextV2ControlData
-        : T extends StyleControlDefinition
-          ? StyleControlData
-          : T extends StyleV2ControlDefinition
-            ? StyleV2ControlData
-            : T extends TypographyControlDefinition
-              ? TypographyControlData
-              : never
+  T extends RichTextControlDefinition
+    ? IndexSignatureHack<RichTextControlData>
+    : T extends RichTextV2ControlDefinition
+      ? RichTextV2ControlData
+      : T extends StyleControlDefinition
+        ? StyleControlData
+        : T extends StyleV2ControlDefinition
+          ? StyleV2ControlData
+          : T extends TypographyControlDefinition
+            ? TypographyControlData
+            : never
 
 export type ControlDefinition = LegacyControlDefinition | UnifiedControlDefinition
 
@@ -105,9 +98,6 @@ export function copy(definition: Descriptor, value: any, context: CopyContext) {
         isRichTextV1Data(value) ? richTextV2DescendentsToData(richTextDTOtoDAO(value)) : value,
         context,
       )
-
-    case LinkControlType:
-      return copyLinkData(value, context)
 
     case StyleControlType:
       return copyStyleData(value, context)

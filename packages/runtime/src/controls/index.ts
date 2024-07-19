@@ -15,6 +15,7 @@ export {
   unstable_IconRadioGroup,
   IconRadioGroupDefinition,
   Link,
+  LinkDefinition,
   List,
   ListDefinition,
   Shape,
