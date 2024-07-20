@@ -12,3 +12,9 @@ export type File = {
   publicUrl: string
   dimensions: { width: number; height: number } | null
 }
+
+export type PagePathnameSlice = {
+  id: string
+  pathname: string
+  localizedPathname?: string | null
+}

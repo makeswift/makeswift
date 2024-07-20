@@ -212,7 +212,24 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
     return ReactPage.getPropControllers(state, documentKey, element.key)
   })
 
-  const resolvedProps = useResolvedProps(propDefsRef.current, controls, props, client)
+  const resourceResolver = useMemo<ResourceResolver>(() => {
+    return {
+      resolveSwatch: swatchId => client.resolveSwatch(swatchId),
+      resolveFile: fileId => client.resolveFile(fileId),
+      resolvePagePathnameSlice: pageId => client.resolvePagePathnameSlice(pageId),
+      resolveElementId: elementKey => {
+        return {
+          readStableValue: () => {
+            if (documentKey == null) return null
+            return ReactPage.getElementId(store.getState(), documentKey, elementKey)
+          },
+          subscribe: store.subscribe,
+        }
+      },
+    }
+  }, [client, documentKey])
+
+  const resolvedProps = useResolvedProps(propDefsRef.current, controls, props, resourceResolver)
 
   return Object.entries(propDefsRef.current).reduceRight(
     (renderFn, [propName, descriptor]) =>

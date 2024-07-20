@@ -25,6 +25,19 @@ import {
   sendEmailLinkDataSchema,
 } from './zod'
 import { IntrospectionTarget, IntrospectionTargetType } from '../introspect'
+import scrollIntoView from 'scroll-into-view-if-needed'
+import { PagePathnameSlice } from '../common'
+import memoize from 'micro-memoize'
+import { match } from 'ts-pattern'
+
+const defaultResolvedValue = {
+  href: '#',
+  onClick: (e: MouseEvent) => {
+    if (e.defaultPrevented) return
+  },
+}
+
+type LinkTarget = '_blank' | '_self'
 
 type Config = z.infer<typeof Definition.schema.config>
 
@@ -35,13 +48,6 @@ type ValueType<C extends Config> = z.infer<DataSchemaType<C>['value']>
 type ResolvedValueType<C extends Config> = z.infer<
   DataSchemaType<C>['resolvedValue']
 >
-
-const t = {
-  href: '#arvin',
-  onClick: () => {
-    console.log('Arvin was here')
-  },
-}
 
 class Definition<C extends Config = Config> extends ControlDefinition<
   typeof Definition.type,
@@ -149,21 +155,108 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   }
 
   resolveValue(
-    _data: DataType<C> | undefined,
-    _resolver: ResourceResolver,
+    data: DataType<C> | undefined,
+    resolver: ResourceResolver,
     _effector: Effector,
   ): ValueSubscription<ResolvedValueType<C> | undefined> {
+    const pageId = data?.type === 'OPEN_PAGE' ? data.payload.pageId : null
+    const pageSubscription = resolver.resolvePagePathnameSlice(
+      pageId ?? undefined,
+    )
+
+    const elementKey =
+      data?.type === 'SCROLL_TO_ELEMENT'
+        ? data.payload.elementIdConfig?.elementKey
+        : null
+
+    const elementIdSubscription = resolver.resolveElementId(elementKey ?? '')
+    // FIXME: @arvin review whether we need memoize library to do this
+    const resolveLink = memoize(this.resolveLinkPropValues)
+
     return {
       readStableValue: (_previous?: ResolvedValueType<C>) => {
-        return t
-        // return (
-        //   this.fromData(data) ?? {
-        //     href: '#',
-        //     onClick: () => {},
-        //   }
-        // )
+        if (data == null) return defaultResolvedValue
+        const page = pageSubscription.readStableValue()
+        const elementId = elementIdSubscription.readStableValue()
+        return resolveLink(data, page, elementId)
       },
-      subscribe: () => () => {},
+      subscribe: () => {
+        const unsubscribes = [
+          pageSubscription.subscribe(() => {}),
+          elementIdSubscription.subscribe(() => {}),
+        ]
+        return () => {
+          unsubscribes.forEach((unsubscribe) => unsubscribe())
+        }
+      },
+    }
+  }
+
+  resolveLinkPropValues(
+    data: DataType<C> | undefined,
+    page: PagePathnameSlice | null,
+    elementId: string | null,
+  ) {
+    const { href, target, block } = match(data)
+      .with({ type: 'OPEN_PAGE' }, ({ payload }) => {
+        const href =
+          page != null ? `/${page.localizedPathname ?? page.pathname}` : '#'
+        const target: LinkTarget = payload.openInNewTab ? '_blank' : '_self'
+        return { href, target, block: undefined }
+      })
+      .with({ type: 'OPEN_URL' }, ({ payload }) => {
+        const href = payload.url
+        const target: LinkTarget = payload.openInNewTab ? '_blank' : '_self'
+        return { href, target, block: undefined }
+      })
+      .with({ type: 'SEND_EMAIL' }, ({ payload }) => {
+        const { to, subject = '', body = '' } = payload
+        const href =
+          to != null ? `mailto:${to}?subject=${subject}&body=${body}` : '#'
+        return { href, target: undefined, block: undefined }
+      })
+      .with({ type: 'CALL_PHONE' }, ({ payload }) => {
+        const href = `tel:${payload.phoneNumber}`
+        return { href, target: undefined, block: undefined }
+      })
+      .with({ type: 'SCROLL_TO_ELEMENT' }, ({ payload }) => {
+        const href = `#${elementId ?? ''}`
+        const block = payload.block
+        return { href, block, target: undefined }
+      })
+      .otherwise(() => {
+        throw new RangeError(`Invalid link type "${(data as any).type}".`)
+      })
+
+    const handleClick = (event: MouseEvent) => {
+      if (event.defaultPrevented) return
+      if (data && data.type === 'SCROLL_TO_ELEMENT') {
+        let hash: string | undefined
+
+        try {
+          hash = new URL(`http://www.example.com/${href}`).hash
+        } catch (error) {
+          console.error(`Link received invalid href: ${href}`, error)
+        }
+
+        if (href != null && href === hash) {
+          event.preventDefault()
+          const view = event.view as unknown as Window
+
+          scrollIntoView(view.document.querySelector(hash)!, {
+            behavior: 'smooth',
+            block,
+          })
+
+          if (view.location.hash !== hash) view.history.pushState({}, '', hash)
+        }
+      }
+    }
+
+    return {
+      href,
+      target,
+      onClick: handleClick,
     }
   }
 

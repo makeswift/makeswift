@@ -1,4 +1,8 @@
-import { type Swatch, type File } from './common/resources'
+import {
+  type Swatch,
+  type File,
+  type PagePathnameSlice,
+} from './common/resources'
 
 export type ValueSubscription<T> = {
   readStableValue(previous?: T): T
@@ -7,5 +11,12 @@ export type ValueSubscription<T> = {
 
 export interface ResourceResolver {
   resolveSwatch(swatchId: string | undefined): ValueSubscription<Swatch | null>
+
   resolveFile(fileId: string | undefined): ValueSubscription<File | null>
+
+  resolvePagePathnameSlice(
+    pageId: string | undefined,
+  ): ValueSubscription<PagePathnameSlice | null>
+
+  resolveElementId(elementKey: string): ValueSubscription<string | null>
 }

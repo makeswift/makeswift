@@ -54,7 +54,8 @@ export type MakeswiftClientOptions = {
  * client of the host's API, not Makeswift's, intended to build and continuously maintain a realtime
  * snapshot for use in the builder, not the lives pages.
  */
-export class MakeswiftHostApiClient implements ResourceResolver {
+// FIXME: @arvin review
+export class MakeswiftHostApiClient /* implements ResourceResolver */ {
   graphqlClient: GraphQLClient
   makeswiftApiClient: MakeswiftApiClient.Store
   subscribe: MakeswiftApiClient.Store['subscribe']
@@ -210,6 +211,20 @@ export class MakeswiftHostApiClient implements ResourceResolver {
     return await this.makeswiftApiClient.dispatch(
       MakeswiftApiClient.fetchAPIResource(APIResourceType.PagePathnameSlice, pageId, this.locale),
     )
+  }
+
+  resolvePagePathnameSlice(
+    pageId: string | undefined,
+  ): ValueSubscription<PagePathnameSlice | null> {
+    if (pageId != null && this.readPagePathnameSlice(pageId) == null) {
+      this.fetchPagePathnameSlice(pageId).catch(console.error)
+    }
+
+    return {
+      readStableValue: (_previous?: PagePathnameSlice) =>
+        pageId != null ? this.readPagePathnameSlice(pageId) : null,
+      subscribe: this.subscribe,
+    }
   }
 
   readTable(tableId: string): Table | null {

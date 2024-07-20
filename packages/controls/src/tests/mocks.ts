@@ -2,7 +2,11 @@ import {
   type ResourceResolver,
   type ValueSubscription,
 } from '../resource-resolver'
-import { type Swatch, type File } from '../common/resources'
+import {
+  type Swatch,
+  type File,
+  type PagePathnameSlice,
+} from '../common/resources'
 
 export const noOpResourceResolver: ResourceResolver = {
   resolveSwatch(_swatchId: string): ValueSubscription<Swatch | null> {
@@ -13,6 +17,22 @@ export const noOpResourceResolver: ResourceResolver = {
   },
 
   resolveFile(_fileId: string): ValueSubscription<File | null> {
+    return {
+      readStableValue: () => null,
+      subscribe: () => () => {},
+    }
+  },
+
+  resolvePagePathnameSlice(
+    _pageId: string,
+  ): ValueSubscription<PagePathnameSlice | null> {
+    return {
+      readStableValue: () => null,
+      subscribe: () => () => {},
+    }
+  },
+
+  resolveElementId(_elementKey: string): ValueSubscription<string | null> {
     return {
       readStableValue: () => null,
       subscribe: () => () => {},
