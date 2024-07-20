@@ -94,7 +94,7 @@ exports[`Page Slot renders a placeholder when empty: snapshot 1`] = `
 }
 `;
 
-exports[`Page Slot renders a slot with a button: resolvedValue 1`] = `
+exports[`Page Slot renders a slot with a clickable button: resolvedValue 1`] = `
 NodeList [
   .emotion-0 {
   display: -webkit-box;
@@ -142,147 +142,23 @@ NodeList [
   }
 }
 
-.emotion-2 {
-  display: table;
-  border: 0;
-  outline: 0;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  cursor: pointer;
-  font-family: inherit;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  text-align: center;
-  max-width: 100%;
-}
-
-@media only screen and (min-width: 769px) {
-  .emotion-2 {
-    width: auto;
-  }
-}
-
-@media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-2 {
-    width: auto;
-  }
-}
-
-@media only screen and (max-width: 575px) {
-  .emotion-2 {
-    width: auto;
-  }
-}
-
-@media only screen and (min-width: 769px) {
-  .emotion-2 {
-    margin-top: 0px;
-    margin-right: auto;
-    margin-bottom: 0px;
-    margin-left: auto;
-  }
-}
-
-@media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-2 {
-    margin-top: 0px;
-    margin-right: auto;
-    margin-bottom: 0px;
-    margin-left: auto;
-  }
-}
-
-@media only screen and (max-width: 575px) {
-  .emotion-2 {
-    margin-top: 0px;
-    margin-right: auto;
-    margin-bottom: 0px;
-    margin-left: auto;
-  }
-}
-
-@media only screen and (min-width: 769px) {
-  .emotion-2 {
-    color: hsla(0,0%,100%,1);
-    border-radius: 4px;
-    padding: 12px 16px;
-    font-size: 14px;
-    background: hsla(0,0%,0%,1);
-    border: none;
-    -webkit-transition: color 0.15s ease-in-out,background 0.15s ease-in-out,border 0.15s ease-in-out,box-shadow 0.15s ease-in-out;
-    transition: color 0.15s ease-in-out,background 0.15s ease-in-out,border 0.15s ease-in-out,box-shadow 0.15s ease-in-out;
-  }
-
-  .emotion-2:hover {
-    background: #000000;
-  }
-
-  .emotion-2:active {
-    background: #000000;
-  }
-}
-
-@media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-2 {
-    color: hsla(0,0%,100%,1);
-    border-radius: 4px;
-    padding: 12px 16px;
-    font-size: 14px;
-    background: hsla(0,0%,0%,1);
-    border: none;
-    -webkit-transition: color 0.15s ease-in-out,background 0.15s ease-in-out,border 0.15s ease-in-out,box-shadow 0.15s ease-in-out;
-    transition: color 0.15s ease-in-out,background 0.15s ease-in-out,border 0.15s ease-in-out,box-shadow 0.15s ease-in-out;
-  }
-
-  .emotion-2:hover {
-    background: #000000;
-  }
-
-  .emotion-2:active {
-    background: #000000;
-  }
-}
-
-@media only screen and (max-width: 575px) {
-  .emotion-2 {
-    color: hsla(0,0%,100%,1);
-    border-radius: 4px;
-    padding: 12px 16px;
-    font-size: 14px;
-    background: hsla(0,0%,0%,1);
-    border: none;
-    -webkit-transition: color 0.15s ease-in-out,background 0.15s ease-in-out,border 0.15s ease-in-out,box-shadow 0.15s ease-in-out;
-    transition: color 0.15s ease-in-out,background 0.15s ease-in-out,border 0.15s ease-in-out,box-shadow 0.15s ease-in-out;
-  }
-
-  .emotion-2:hover {
-    background: #000000;
-  }
-
-  .emotion-2:active {
-    background: #000000;
-  }
-}
-
 <div
     class="emotion-0"
   >
     <div
       class="emotion-1"
     >
-      <a
-        class="emotion-2"
+      <button
+        data-click-count="1"
       >
-        Button Text
-      </a>
+        Click me
+      </button>
     </div>
   </div>,
 ]
 `;
 
-exports[`Page Slot renders a slot with a button: snapshot 1`] = `
+exports[`Page Slot renders a slot with a clickable button: snapshot 1`] = `
 {
   "apiOrigin": "https://test-api-origin.com",
   "cacheData": {},
@@ -313,7 +189,9 @@ exports[`Page Slot renders a slot with a button: snapshot 1`] = `
                   "elements": [
                     {
                       "key": "22222222-2222-2222-2222-222222222222",
-                      "props": {},
+                      "props": {
+                        "title": "Click me",
+                      },
                       "type": "./components/Button/index.js",
                     },
                   ],

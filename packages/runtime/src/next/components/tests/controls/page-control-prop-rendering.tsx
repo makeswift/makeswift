@@ -26,7 +26,7 @@ const renderProp = (prop: any) =>
   prop === undefined ? 'undefined' : isValidElement(prop) ? prop : JSON.stringify(prop)
 
 const propSnapshot = (prop: HTMLElement) =>
-  prop.hasChildNodes() ? prop.childNodes : parseStringifiedProp(prop.textContent ?? '')
+  prop.childElementCount ? prop.childNodes : parseStringifiedProp(prop.textContent ?? '')
 
 const parseStringifiedProp = (prop: string) => (prop === 'undefined' ? undefined : JSON.parse(prop))
 
@@ -37,11 +37,15 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
     value,
     cacheData,
     expectedRenders,
+    registerComponents,
+    action,
   }: {
     toData?: (value: ValueType<D>) => DataType<D>
     value: ValueType<D>
     cacheData?: MakeswiftPageSnapshot['cacheData']
     expectedRenders?: number
+    registerComponents?: (runtime: ReactRuntime) => void
+    action?: (element: HTMLElement) => Promise<void>
   },
 ) {
   // Arrange
@@ -63,12 +67,14 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
   )
   const snapshot = createMakeswiftPageSnapshot(elementData, {}, cacheData)
   const runtime = new ReactRuntime()
+  registerComponents?.(runtime)
 
   // Act
   runtime.registerComponent(
     forwardRef<HTMLDivElement, { propKey?: any }>(({ propKey }, ref) => {
       const renderCount = useRef(0)
       ++renderCount.current
+
       return (
         <div ref={ref}>
           <div data-testid={renderCountTestId}>{renderCount.current}</div>
@@ -93,6 +99,12 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
       </ReactRuntimeProvider>,
     ),
   )
+
+  if (action) {
+    await act(async () => {
+      await action(screen.getByTestId(testId))
+    })
+  }
 
   expect(snapshot).toMatchSnapshot('snapshot')
   expect(propSnapshot(screen.getByTestId(testId))).toMatchSnapshot('resolvedValue')

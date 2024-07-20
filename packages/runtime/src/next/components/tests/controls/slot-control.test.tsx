@@ -1,7 +1,20 @@
 /** @jest-environment jsdom */
-import { Slot } from '../../../../controls'
+import { useState } from 'react'
+import { fireEvent, screen } from '@testing-library/react'
+
+import { Slot, TextInput } from '../../../../controls'
 import { testPageControlPropRendering } from './page-control-prop-rendering'
 import { MakeswiftComponentType } from '../../../../components/builtin/constants'
+import { ReactRuntime } from '../../../../react'
+
+function Button({ title }: { title: string }) {
+  const [count, setCount] = useState(0)
+  return (
+    <button data-click-count={count} onClick={() => setCount(count + 1)}>
+      {title}
+    </button>
+  )
+}
 
 describe('Page', () => {
   describe('Slot', () => {
@@ -12,19 +25,34 @@ describe('Page', () => {
       })
     })
 
-    test(`renders a slot with a button`, async () => {
+    test(`renders a slot with a clickable button`, async () => {
       await testPageControlPropRendering(Slot(), {
         value: {
           elements: [
             {
               type: MakeswiftComponentType.Button,
               key: '22222222-2222-2222-2222-222222222222',
-              props: {},
+              props: {
+                title: 'Click me',
+              },
             },
           ],
           columns: [],
         },
         expectedRenders: 1,
+        registerComponents: (runtime: ReactRuntime) => {
+          runtime.registerComponent(Button, {
+            type: MakeswiftComponentType.Button,
+            label: 'Button',
+            props: {
+              title: TextInput(),
+            },
+          })
+        },
+        action: async () => {
+          const button = await screen.findByText<HTMLButtonElement>('Click me')
+          fireEvent.click(button)
+        },
       })
     })
   })
