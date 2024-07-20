@@ -1,3 +1,5 @@
+export type { Device, DeviceOverride, ResponsiveValue } from '@makeswift/controls'
+
 export type {
   Data,
   Descriptor as PropControllerDescriptor,
@@ -6,12 +8,7 @@ export type {
   PanelDescriptorType,
   PanelDescriptorValueType,
 } from './descriptors'
-export type {
-  ResponsiveValueType,
-  Device,
-  DeviceOverride,
-  ResponsiveValue,
-} from '@makeswift/prop-controllers'
+
 export * as Props from './descriptors'
 export type { PropControllerMessage, TableFormFieldsMessage } from './instances'
 export { TableFormFieldsMessageType } from './instances'

@@ -7,6 +7,7 @@ import {
   BorderSideData,
   getBorderPropControllerDataSwatchIds,
 } from '@makeswift/prop-controllers'
+
 import { useSwatches } from '../../runtimes/react/hooks/makeswift-api'
 import { Swatch } from '../../api'
 import { isNonNullable } from '../utils/isNonNullable'
@@ -22,9 +23,9 @@ function mapSideColor(swatches: (Swatch | null)[], { color, ...restOfSide }: Bor
 }
 
 export type BorderSide = {
-  width: number | null | undefined
+  width?: number | null | undefined
   style: BorderStyleProperty
-  color: Color | null | undefined
+  color?: Color | null | undefined
 }
 
 type BorderData = {

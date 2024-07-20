@@ -1,6 +1,6 @@
 import parseColor from 'color'
 
-import { type Swatch } from '../common'
+import { type Swatch } from '../resources'
 
 export function swatchToColorString(
   swatch: Swatch | null,

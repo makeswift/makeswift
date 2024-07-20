@@ -7,8 +7,6 @@ import {
   type MergeTranslatableDataContext,
 } from '@makeswift/controls'
 
-import { copyStyleData, StyleControlData, StyleControlDefinition, StyleControlType } from './style'
-
 import { Descriptor, isLegacyDescriptor } from '../prop-controllers/descriptors'
 import {
   GridPropControllerData,
@@ -46,7 +44,6 @@ import { IndexSignatureHack } from '../utils/index-signature-hack'
 type LegacyControlDefinition =
   | RichTextControlDefinition
   | RichTextV2ControlDefinition
-  | StyleControlDefinition
   | StyleV2ControlDefinition
   | TypographyControlDefinition
 
@@ -55,13 +52,11 @@ export type LegacyControlDefinitionData<T extends LegacyControlDefinition> =
     ? IndexSignatureHack<RichTextControlData>
     : T extends RichTextV2ControlDefinition
       ? RichTextV2ControlData
-      : T extends StyleControlDefinition
-        ? StyleControlData
-        : T extends StyleV2ControlDefinition
-          ? StyleV2ControlData
-          : T extends TypographyControlDefinition
-            ? TypographyControlData
-            : never
+      : T extends StyleV2ControlDefinition
+        ? StyleV2ControlData
+        : T extends TypographyControlDefinition
+          ? TypographyControlData
+          : never
 
 export type ControlDefinition = LegacyControlDefinition | UnifiedControlDefinition
 
@@ -99,8 +94,9 @@ export function copy(definition: Descriptor, value: any, context: CopyContext) {
         context,
       )
 
-    case StyleControlType:
-      return copyStyleData(value, context)
+    // FIXME
+    // case StyleControlType:
+    //   return copyStyleData(value, context)
 
     default:
       return value
@@ -111,11 +107,10 @@ export function merge(
   definition: PropControllerDescriptor,
   a: Data,
   b: Data = a,
-  _context: MergeContext,
+  context: MergeContext,
 ): Data {
   if (!isLegacyDescriptor(definition)) {
-    // FIXME
-    return b
+    return definition.merge(a, b, context)
   }
 
   switch (definition.type) {
@@ -130,8 +125,7 @@ export function merge(
 
 export function getTranslatableData(definition: Descriptor, data: Data): Data {
   if (!isLegacyDescriptor(definition)) {
-    // FIXME
-    return data
+    return definition.getTranslatableData(data)
   }
 
   switch (definition.type) {
@@ -171,8 +165,7 @@ export function mergeTranslatedData(
 ): Data {
   if (data == null) return data
   if (!isLegacyDescriptor(definition)) {
-    // FIXME
-    return data
+    return definition.mergeTranslatedData(data, translatedData, context)
   }
 
   switch (definition.type) {

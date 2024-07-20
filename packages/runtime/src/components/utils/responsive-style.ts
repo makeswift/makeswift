@@ -1,7 +1,9 @@
 import { WidthProperty } from 'csstype'
 import { CSSObject } from '@emotion/css'
+
+import type { ResponsiveValueType as ExtractResponsiveValue } from '@makeswift/controls'
+
 import type {
-  ResponsiveValueType as ExtractResponsiveValue,
   LengthData,
   ResponsiveBorderRadiusData,
   ResponsiveMarginData,

@@ -1,7 +1,6 @@
 import { Ref, Suspense, forwardRef, memo } from 'react'
 import { ElementData as ReactPageElementData } from '../../../state/react-page'
 import { useComponent } from '../hooks/use-component'
-import { suppressRefWarning } from '../utils/suppress-ref-warning'
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'
 import { PropsValue } from '../controls'
 

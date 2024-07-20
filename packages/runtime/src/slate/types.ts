@@ -1,6 +1,6 @@
 import { BaseEditor, Descendant } from 'slate'
 import { ReactEditor } from 'slate-react'
-import { type LinkControlData } from '@makeswift/controls'
+import { type DataType, LinkDefinition } from '@makeswift/controls'
 import { type ResponsiveValue } from '@makeswift/prop-controllers'
 
 import { type ResponsiveColor } from '../components/utils/types'
@@ -230,7 +230,7 @@ export type SubElement = {
 export type LinkElement = {
   children: Array<Text | Inline>
   type: typeof InlineType.Link
-  link: LinkControlData
+  link: DataType<LinkDefinition>
   className?: string
   slice?: boolean
   typography?: RichTextTypography

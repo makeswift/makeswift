@@ -1,9 +1,12 @@
 import { z } from 'zod'
-import { CopyContext } from '../context'
 
-import { ResourceResolver, ValueSubscription } from '../resource-resolver'
+import { type CopyContext } from '../context'
+import {
+  type ResourceResolver,
+  type ValueSubscription,
+} from '../resource-resolver'
 
-import { ControlInstance, SendMessage } from '../control-instance'
+import { type SendMessage } from '../control-instance'
 
 import {
   ControlDefinition,
@@ -12,68 +15,54 @@ import {
   ParseResult,
   SerializedRecord,
 } from '../control-definition'
-import { type Effector } from '../effector'
-import {
-  BorderPropertyData,
-  borderPropertyDataSchema,
-  borderRadiusDataSchema,
-  BorderSideShorthandPropertyData,
-  marginDataSchema,
-  paddingDataSchema,
-  textStylePropertyDataSchema,
-  widthDataSchema,
-} from './data-types'
-import { StyleControl } from './style-control'
 
-import { createResponsiveValueSchema, ResponsiveValue } from '../common'
+import { mapValues, notNil, nullToUndefined } from '../utils/functional'
+import { type Effector } from '../effector'
+import { ColorData, Schema, type ResponsiveValue } from '../common'
+import { responsiveValue } from '../common/schema'
 import { Color } from '../color'
-import { mapValues, notNil } from '../utils/functional'
 import { IntrospectionTarget } from '../introspect'
 
-export const StyleControlProperty = {
-  Width: 'makeswift::controls::style::property::width',
-  Margin: 'makeswift::controls::style::property::margin',
-  Padding: 'makeswift::controls::style::property::padding',
-  Border: 'makeswift::controls::style::property::border',
-  BorderRadius: 'makeswift::controls::style::property::border-radius',
-  TextStyle: 'makeswift::controls::style::property::text-style',
-} as const
-
-export type StyleControlProperty =
-  (typeof StyleControlProperty)[keyof typeof StyleControlProperty]
-
-const StyleControlDefaultProperties: StyleControlProperty[] = [
-  StyleControlProperty.Width,
-  StyleControlProperty.Margin,
-]
-
-const AllStyleControlProperties: StyleControlProperty[] = [
-  StyleControlProperty.Width,
-  StyleControlProperty.Margin,
-  StyleControlProperty.Padding,
-  StyleControlProperty.Border,
-  StyleControlProperty.BorderRadius,
-  StyleControlProperty.TextStyle,
-]
+import { type BorderData, type BorderSideData } from './types'
+import * as StyleSchema from './schema'
+import { StyleControl } from './style-control'
 
 type Config = z.infer<typeof Definition.schema.config>
 
-type DataSchemaType<_C extends Config> = typeof Definition.schema
+type SchemaType<_C extends Config> = typeof Definition.schema
 
-type DataType<C extends Config> = z.infer<DataSchemaType<C>['data']>
-type ValueType<C extends Config> = z.infer<DataSchemaType<C>['value']>
+type DataType<C extends Config> = z.infer<SchemaType<C>['data']>
+type ValueType<C extends Config> = z.infer<SchemaType<C>['value']>
 type ResolvedValueType<C extends Config> = z.infer<
-  DataSchemaType<C>['resolvedValue']
+  SchemaType<C>['resolvedValue']
 >
+
+type InstanceType<_C extends Config> = StyleControl
 
 class Definition<C extends Config = Config> extends ControlDefinition<
   typeof Definition.type,
   C,
   DataType<C>,
   ValueType<C>,
-  ResolvedValueType<C>
+  ResolvedValueType<C>,
+  InstanceType<C>
 > {
   static readonly type = 'makeswift::controls::style' as const
+  static readonly Property = {
+    Width: `${this.type}::property::width`,
+    Margin: `${this.type}::property::margin`,
+    Padding: `${this.type}::property::padding`,
+    Border: `${this.type}::property::border`,
+    BorderRadius: `${this.type}::property::border-radius`,
+    TextStyle: `${this.type}::property::text-style`,
+  } as const
+
+  static readonly DefaultProperties: StyleProperty[] = [
+    this.Property.Width,
+    this.Property.Margin,
+  ]
+
+  static readonly AllProperties: StyleProperty[] = Object.values(this.Property)
 
   constructor(readonly config: C) {
     super(config)
@@ -83,33 +72,33 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     const type = z.literal(Definition.type)
 
     const properties = z.union([
-      z.literal(StyleControlProperty.Width),
-      z.literal(StyleControlProperty.Margin),
-      z.literal(StyleControlProperty.Padding),
-      z.literal(StyleControlProperty.Border),
-      z.literal(StyleControlProperty.BorderRadius),
-      z.literal(StyleControlProperty.TextStyle),
+      z.literal(this.Property.Width),
+      z.literal(this.Property.Margin),
+      z.literal(this.Property.Padding),
+      z.literal(this.Property.Border),
+      z.literal(this.Property.BorderRadius),
+      z.literal(this.Property.TextStyle),
     ])
 
     const config = z.object({
       properties: z.array(properties),
     })
 
-    const data = z.object({
-      width: createResponsiveValueSchema(widthDataSchema).optional(),
-      margin: createResponsiveValueSchema(marginDataSchema).optional(),
-      padding: createResponsiveValueSchema(paddingDataSchema).optional(),
-      border: createResponsiveValueSchema(borderPropertyDataSchema).optional(),
-      borderRadius: createResponsiveValueSchema(
-        borderRadiusDataSchema,
-      ).optional(),
-      textStyle: createResponsiveValueSchema(
-        textStylePropertyDataSchema,
-      ).optional(),
-    })
+    const dataSchema = <C extends z.ZodTypeAny>(color: C) =>
+      z.object({
+        width: responsiveValue(StyleSchema.width).optional(),
+        margin: responsiveValue(StyleSchema.margin).optional(),
+        padding: responsiveValue(StyleSchema.padding).optional(),
+        border: responsiveValue(StyleSchema.borderSchema(color)).optional(),
+        borderRadius: responsiveValue(StyleSchema.borderRadius).optional(),
+        textStyle: responsiveValue(StyleSchema.textStyle).optional(),
+      })
+
+    const data = dataSchema(Schema.colorData)
+    const resolvedData = dataSchema(Schema.resolvedColorData)
 
     const value = data
-    const resolvedValue = z.unknown()
+    const resolvedValue = z.string()
 
     const definition = z.object({
       type,
@@ -121,6 +110,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
       config,
       definition,
       data,
+      resolvedData,
       value,
       resolvedValue,
     }
@@ -163,43 +153,60 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   ): DataType<C> | undefined {
     if (data == null) return data
 
-    function copyResponsiveBorder(
-      responsiveBorder: ResponsiveValue<BorderPropertyData> | undefined,
-    ) {
-      if (responsiveBorder == null) return undefined
-      return responsiveBorder.map((deviceBorder) => ({
-        ...deviceBorder,
-        value: mapValues(
-          deviceBorder.value,
-          (side: BorderSideShorthandPropertyData | undefined | null) => {
-            if (side == null) return null
-            if (side.color == null) return side
-            return {
+    return {
+      ...data,
+      border: mapBorderSides(data.border, (side) =>
+        side.color == null
+          ? side
+          : {
               ...side,
               color: Color().copyData(side.color, context),
-            }
-          },
-        ),
-      }))
+            },
+      ),
     }
-
-    return { ...data, border: copyResponsiveBorder(data.border) }
   }
 
   resolveValue(
     data: DataType<C> | undefined,
-    _resolver: ResourceResolver,
-    _effector: Effector,
+    resolver: ResourceResolver,
+    effector: Effector,
+    control?: InstanceType<C>,
   ): ValueSubscription<ResolvedValueType<C> | undefined> {
+    const resolved: ValueSubscription<unknown>[] = []
+
+    const resolveSwatch = (color: ColorData | null | undefined) => {
+      const r = Color().resolveSwatch(nullToUndefined(color), resolver)
+      resolved.push(r)
+      return r.readStableValue()
+    }
+
+    const resolvedData =
+      data != null
+        ? {
+            ...data,
+            border: mapBorderSides(data.border, (side) => ({
+              ...side,
+              color: resolveSwatch(side?.color),
+            })),
+          }
+        : undefined
+
     return {
-      readStableValue: (_previous?: ResolvedValueType<C>) => {
-        return this.fromData(data)
+      readStableValue: (previous?: ResolvedValueType<C>) => {
+        return resolvedData != null
+          ? effector.defineStyle(
+              previous,
+              this.config.properties,
+              resolvedData,
+              (boxModel) => control?.changeBoxModel(boxModel),
+            )
+          : undefined
       },
       subscribe: () => () => {},
     }
   }
 
-  createInstance(sendMessage: SendMessage<any>): ControlInstance<any> {
+  createInstance(sendMessage: SendMessage<any>) {
     return new StyleControl(sendMessage)
   }
 
@@ -224,21 +231,40 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   }
 }
 
+function mapBorderSides<R>(
+  responsibeBorder: ResponsiveValue<BorderData> | undefined,
+  callback: (side: BorderSideData) => R,
+) {
+  return responsibeBorder?.map((deviceBorder) => ({
+    ...deviceBorder,
+    value: mapValues(
+      deviceBorder.value,
+      (side: BorderSideData | undefined | null) =>
+        side == null ? side : callback(side),
+    ),
+  }))
+}
+
 export const Style = <C extends Config>(config?: C) =>
   new (class Style extends Definition<C> {})(
     config ??
       ({
-        properties: StyleControlDefaultProperties,
+        properties: Definition.DefaultProperties,
       } as C),
   )
 
-Style.Default = StyleControlDefaultProperties
-Style.All = AllStyleControlProperties
-Style.Width = StyleControlProperty.Width
-Style.Margin = StyleControlProperty.Margin
-Style.Padding = StyleControlProperty.Padding
-Style.Border = StyleControlProperty.Border
-Style.BorderRadius = StyleControlProperty.BorderRadius
-Style.TextStyle = StyleControlProperty.TextStyle
+Style.Default = Definition.DefaultProperties
+Style.All = Definition.AllProperties
+Style.Width = Definition.Property.Width
+Style.Margin = Definition.Property.Margin
+Style.Padding = Definition.Property.Padding
+Style.Border = Definition.Property.Border
+Style.BorderRadius = Definition.Property.BorderRadius
+Style.TextStyle = Definition.Property.TextStyle
+
+export type StyleProperty =
+  (typeof Definition.Property)[keyof typeof Definition.Property]
+
+export type ResolvedStyleData = z.infer<Definition['schema']['resolvedData']>
 
 export { Definition as StyleDefinition }

@@ -1,7 +1,7 @@
 import { P, match } from 'ts-pattern'
 import { z } from 'zod'
-import { ControlDataTypeKey } from '../common'
-import { CopyContext } from '../context'
+import { ControlDataTypeKey, Data } from '../common'
+import { CopyContext, MergeTranslatableDataContext } from '../context'
 
 import { ResourceResolver, ValueSubscription } from '../resource-resolver'
 
@@ -23,14 +23,14 @@ import {
 
 type Config = z.infer<typeof Definition.schema.relaxed.config>
 
-type DataSchemaType<C extends Config> = undefined extends C['defaultValue']
+type SchemaType<C extends Config> = undefined extends C['defaultValue']
   ? typeof Definition.schema.relaxed
   : typeof Definition.schema.strict
 
-type DataType<C extends Config> = z.infer<DataSchemaType<C>['data']>
-type ValueType<C extends Config> = z.infer<DataSchemaType<C>['value']>
+type DataType<C extends Config> = z.infer<SchemaType<C>['data']>
+type ValueType<C extends Config> = z.infer<SchemaType<C>['value']>
 type ResolvedValueType<C extends Config> = z.infer<
-  DataSchemaType<C>['resolvedValue']
+  SchemaType<C>['resolvedValue']
 >
 
 class Definition<C extends Config = Config> extends ControlDefinition<
@@ -119,7 +119,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
       this.config.defaultValue === undefined
         ? Definition.schema.relaxed
         : Definition.schema.strict
-    ) as DataSchemaType<C>
+    ) as SchemaType<C>
   }
 
   safeParse(data: unknown | undefined): ParseResult<DataType<C> | undefined> {
@@ -175,6 +175,19 @@ class Definition<C extends Config = Config> extends ControlDefinition<
       type: Definition.type,
       version: this.version,
     })
+  }
+
+  getTranslatableData(data: DataType<C>): Data {
+    return data
+  }
+
+  mergeTranslatedData(
+    data: DataType<C>,
+    translatedData: Data,
+    _context: MergeTranslatableDataContext,
+  ): Data {
+    if (translatedData == null) return data
+    return translatedData
   }
 }
 

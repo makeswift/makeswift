@@ -1,11 +1,15 @@
-import { StyleControlData, copyStyleData } from './style'
-import { createReplacementContext } from '@makeswift/controls'
+import {
+  Style,
+  StyleDefinition,
+  type DataType,
+  createReplacementContext,
+} from '@makeswift/controls'
 
 describe('style copy', () => {
   test('colors are replaced', () => {
     // Arrange'
     const swatchId = 'U3dhdGNoOmJjMDkwZWJjLTZkZDUtNDY1NS1hMDY0LTg3ZDAxM2U4YTFhNA=='
-    const value: StyleControlData = {
+    const value: DataType<StyleDefinition> = {
       width: [
         {
           value: {
@@ -98,7 +102,7 @@ describe('style copy', () => {
     const expected = JSON.parse(JSON.stringify(value).replaceAll(swatchId, 'testing'))
 
     // Act
-    const result = copyStyleData(value, {
+    const result = Style().copyData(value, {
       replacementContext: createReplacementContext({
         swatchIds: {
           [swatchId]: 'testing',

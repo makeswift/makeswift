@@ -9,10 +9,6 @@ import {
   RichTextV2ControlData,
   RichTextV2ControlDefinition,
   RichTextV2ControlType,
-  StyleControl,
-  StyleControlData,
-  StyleControlDefinition,
-  StyleControlType,
   StyleV2Control,
   StyleV2ControlData,
   StyleV2ControlDefinition,
@@ -26,7 +22,6 @@ import { AnyPropController } from '../../../prop-controllers/instances'
 import { RenderHook } from '../components'
 import { RichTextControlValue, useRichText } from './rich-text/rich-text'
 import { RichTextV2ControlValue, useRichTextV2 } from './rich-text-v2'
-import { StyleControlFormattedValue, useFormattedStyle } from './style'
 import { StyleV2ControlFormattedValue, StyleV2ControlValue } from './style-v2'
 import { TypographyControlValue, useTypographyValue } from './typography'
 import { isLegacyDescriptor } from '../../../prop-controllers/descriptors'
@@ -36,13 +31,11 @@ export type ControlDefinitionValue<T extends ControlDefinition> =
     ? RichTextControlValue
     : T extends RichTextV2ControlDefinition
       ? RichTextV2ControlValue
-      : T extends StyleControlDefinition
-        ? StyleControlFormattedValue
-        : T extends StyleV2ControlDefinition
-          ? StyleV2ControlFormattedValue
-          : T extends TypographyControlDefinition
-            ? TypographyControlValue
-            : never
+      : T extends StyleV2ControlDefinition
+        ? StyleV2ControlFormattedValue
+        : T extends TypographyControlDefinition
+          ? TypographyControlValue
+          : never
 
 type ControlValueProps<T extends ControlDefinition> = {
   definition: T
@@ -210,16 +203,16 @@ export function ControlValue<T extends ControlDefinition>({
         </RenderHook>
       )
 
-    case StyleControlType:
-      return (
-        <RenderHook
-          key={definition.type}
-          hook={useFormattedStyle}
-          parameters={[data as unknown as StyleControlData, definition, control as StyleControl]}
-        >
-          {value => children(value as ControlDefinitionValue<T>)}
-        </RenderHook>
-      )
+    // case StyleControlType:
+    //   return (
+    //     <RenderHook
+    //       key={definition.type}
+    //       hook={useFormattedStyle}
+    //       parameters={[data as unknown as StyleControlData, definition, control as StyleControl]}
+    //     >
+    //       {value => children(value as ControlDefinitionValue<T>)}
+    //     </RenderHook>
+    //   )
 
     case TypographyControlType:
       return (

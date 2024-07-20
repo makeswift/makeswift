@@ -1,5 +1,5 @@
 import { Descendant, Text, Selection } from 'slate'
-import { LinkControlData } from '@makeswift/controls'
+import { type DataType, LinkDefinition } from '@makeswift/controls'
 import {
   BlockJSON,
   InlineJSON,
@@ -35,7 +35,7 @@ function toInlineDAO(node: InlineJSON): Inline[] {
       return [
         {
           children: node.nodes?.flatMap(toInlineOrTextDAO) ?? [],
-          [node.type]: node.data as LinkControlData,
+          [node.type]: node.data as DataType<LinkDefinition>,
           type: node.type,
         },
       ]

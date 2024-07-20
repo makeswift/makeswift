@@ -2,7 +2,7 @@ import {
   type Swatch,
   type File,
   type PagePathnameSlice,
-} from './common/resources'
+} from './resources/types'
 
 export type ValueSubscription<T> = {
   readStableValue(previous?: T): T

@@ -1,15 +1,8 @@
 import { useMemo, useRef, useSyncExternalStore } from 'react'
-import {
-  mapValues,
-  ControlInstance,
-  type ResourceResolver,
-  type ValueSubscription,
-  type StyleControlProperty,
-} from '@makeswift/controls'
+import { ControlInstance, type ResourceResolver, type ValueSubscription } from '@makeswift/controls'
 
 import * as ReactPage from '../../state/react-page'
 
-import { StyleControlData } from '../../controls/style'
 import {
   useBoxShadow,
   useBorder as useBorderData,
@@ -30,32 +23,27 @@ import {
   useResponsiveWidth,
 } from '../../components/utils/responsive-style'
 import {
-  StyleControlType,
   RichTextControl,
   RichTextControlType,
-  StyleControl,
   RichTextV2Control,
   RichTextV2ControlType,
   StyleV2ControlType,
   TypographyControlType,
 } from '../../controls'
-import { getStyleControlCssObject, useFormattedStyle } from './controls/style'
 import { ControlValue } from './controls/control'
 import { RenderHook } from './components'
-import { useStyle, useStyles } from './use-style'
+import { useStyle, useEffector } from './use-style'
 import { useRichText } from './controls/rich-text/rich-text'
 import { useRichTextV2 } from './controls/rich-text-v2'
 import { useStore } from './hooks/use-store'
 import { useDocumentKey } from './hooks/use-document-key'
 import { useSelector } from './hooks/use-selector'
-import { useBreakpoints } from './hooks/use-breakpoints'
 
 import {
   Types as PropControllerTypes,
   getShadowsPropControllerDataResponsiveShadowsData,
   ShadowsPropControllerData,
   Shadows,
-  ResponsiveValue,
   BorderPropControllerFormat,
   ResponsiveBorderData,
   BorderPropControllerData,
@@ -151,32 +139,7 @@ const useResolvedProps = (
   elementData: Record<string, ReactPage.ElementData>,
   resourceResolver: ResourceResolver,
 ): Record<string, unknown> => {
-  const breakpoints = useBreakpoints()
-
-  const effector = useMemo(() => {
-    const styles: Record<string, { props: StyleControlProperty[]; style: StyleControlData }> = {}
-    return {
-      defineStyle: (
-        name: string,
-        props: StyleControlProperty[],
-        style: StyleControlData | ResponsiveValue<any>,
-      ) => {
-        if (isResponsiveValue(style)) {
-          // FIXME
-        } else {
-          styles[name] = { props, style }
-        }
-      },
-      useStyles: () => {
-        useStyles(
-          mapValues(styles, ({ props, style }) =>
-            getStyleControlCssObject(breakpoints, style, props),
-          ),
-        )
-      },
-    }
-  }, [])
-
+  const effector = useEffector()
   const propsSubscription = useMemo<ValueSubscription<Record<string, unknown>>>(
     () =>
       createPropsValuesSubscription(propDefs, controls, elementData, resourceResolver, effector),
@@ -190,10 +153,6 @@ const useResolvedProps = (
     propsSubscription.readStableValue,
     propsSubscription.readStableValue,
   )
-}
-
-function isResponsiveValue(value: any): value is ResponsiveValue<any> {
-  return 'deviceId' in value
 }
 
 export function PropsValue({ element, children: renderComponent }: PropsValueProps): JSX.Element {
@@ -263,19 +222,19 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
               </ControlValue>
             )
 
-          case StyleControlType: {
-            const control = (controls?.[propName] ?? null) as StyleControl | null
+          // case StyleControlType: {
+          //   const control = (controls?.[propName] ?? null) as StyleControl | null
 
-            return (
-              <RenderHook
-                key={descriptor.type}
-                hook={useFormattedStyle}
-                parameters={[props[propName], descriptor, control]}
-              >
-                {value => renderFn({ ...propsValue, [propName]: value })}
-              </RenderHook>
-            )
-          }
+          //   return (
+          //     <RenderHook
+          //       key={descriptor.type}
+          //       hook={useFormattedStyle}
+          //       parameters={[props[propName], descriptor, control]}
+          //     >
+          //       {value => renderFn({ ...propsValue, [propName]: value })}
+          //     </RenderHook>
+          //   )
+          // }
 
           case RichTextControlType: {
             const control = (controls?.[propName] ?? null) as RichTextControl | null

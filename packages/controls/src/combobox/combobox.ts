@@ -15,11 +15,12 @@ import {
   ControlDefinition,
   safeParse,
   serialize,
-  type Schema,
+  type SchemaType,
   type ParseResult,
   type SerializedRecord,
 } from '../control-definition'
-import { Data, dataSchema } from '../common'
+
+import { Data, Schema } from '../common'
 
 type Option<T extends Data> = { id: string; value: T; label: string }
 
@@ -53,7 +54,7 @@ class Definition<
     const data = z
       .object({
         id: z.string(),
-        value: dataSchema,
+        value: Schema.data,
         label: z.string(),
       })
       .transform(({ id, value, label }) => ({
@@ -63,7 +64,7 @@ class Definition<
       }))
 
     const value = data
-    const resolvedValue = dataSchema
+    const resolvedValue = Schema.data
 
     const options = z.array(data)
 
@@ -101,7 +102,7 @@ class Definition<
       )
     }
 
-    const config = Definition.schema.config.parse(data)
+    const { config } = Definition.schema.definition.parse(data)
 
     return new Definition(config)
   }
@@ -112,15 +113,14 @@ class Definition<
 
   get schema() {
     // FIXME: @arvin casts for schemas
-    const data = Definition.schema.data.optional() as Schema<
+    const data = Definition.schema.data.optional() as SchemaType<
       DataType<C> | undefined
     >
 
-    const value = Definition.schema.value as unknown as Schema<ValueType<C>>
+    const value = Definition.schema.value as unknown as SchemaType<ValueType<C>>
 
-    const resolvedValue = Definition.schema.resolvedValue as unknown as Schema<
-      ResolvedValueType<C>
-    >
+    const resolvedValue = Definition.schema
+      .resolvedValue as unknown as SchemaType<ResolvedValueType<C>>
 
     return {
       ...Definition.schema,

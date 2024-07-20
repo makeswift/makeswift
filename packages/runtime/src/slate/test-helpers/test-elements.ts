@@ -1,5 +1,5 @@
 import { ComponentType } from 'react'
-import { LinkControlData } from '@makeswift/controls'
+import { type DataType, LinkDefinition } from '@makeswift/controls'
 import { BlockType, InlineType, ResponsiveBlockTextAlignment, RichTextTypography } from '..'
 
 type Children = string | JSX.Element | (string | JSX.Element)[]
@@ -41,5 +41,5 @@ export const Super = InlineType.SuperScript as unknown as ComponentType<BaseInli
 export const Sub = InlineType.SubScript as unknown as ComponentType<BaseInline>
 export const Link = InlineType.Link as unknown as ComponentType<{
   children?: Children
-  link?: LinkControlData
+  link?: DataType<LinkDefinition>
 }>

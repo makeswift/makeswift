@@ -1,7 +1,9 @@
 import { match } from 'ts-pattern'
 import { z } from 'zod'
 
-import { ControlDataTypeKey, colorDataSchema } from '../common'
+import { Schema, ControlDataTypeKey } from '../common'
+import { objectsAreEqual } from '../utils/functional'
+
 import { type CopyContext } from '../context'
 import {
   type ResourceResolver,
@@ -28,14 +30,18 @@ import { swatchToColorString } from './conversion'
 
 type Config = z.infer<typeof Definition.schema.relaxed.config>
 
-type DataSchemaType<C extends Config> = undefined extends C['defaultValue']
+type SchemaType<C extends Config> = undefined extends C['defaultValue']
   ? typeof Definition.schema.relaxed
   : typeof Definition.schema.strict
 
-type DataType<C extends Config> = z.infer<DataSchemaType<C>['data']>
-type ValueType<C extends Config> = z.infer<DataSchemaType<C>['value']>
+type DataType<C extends Config> = z.infer<SchemaType<C>['data']>
+type ValueType<C extends Config> = z.infer<SchemaType<C>['value']>
 type ResolvedValueType<C extends Config> = z.infer<
-  DataSchemaType<C>['resolvedValue']
+  SchemaType<C>['resolvedValue']
+>
+
+type ResolvedSwatchValueType<C extends Config> = z.infer<
+  SchemaType<C>['resolvedSwatchValue']
 >
 
 class Definition<C extends Config = Config> extends ControlDefinition<
@@ -55,7 +61,8 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   static get schema() {
     const type = z.literal(this.type)
     const version = z.literal(1).optional()
-    const value = colorDataSchema
+    const value = Schema.colorData
+    const resolvedSwatchValue = Schema.resolvedColorData
 
     const schemas = <R>(resolvedValue: z.ZodType<R>) => {
       const data = value.and(
@@ -79,7 +86,16 @@ class Definition<C extends Config = Config> extends ControlDefinition<
         version,
       })
 
-      return { type, value, resolvedValue, data, config, version, definition }
+      return {
+        type,
+        value,
+        resolvedSwatchValue,
+        resolvedValue,
+        data,
+        config,
+        version,
+        definition,
+      }
     }
 
     return {
@@ -115,7 +131,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
       this.config.defaultValue === undefined
         ? Definition.schema.relaxed
         : Definition.schema.strict
-    ) as DataSchemaType<C>
+    ) as SchemaType<C>
   }
 
   safeParse(data: unknown | undefined): ParseResult<DataType<C> | undefined> {
@@ -161,6 +177,29 @@ class Definition<C extends Config = Config> extends ControlDefinition<
         ...val,
         swatchId: replaceSwatchId(val.swatchId),
       }))
+  }
+
+  resolveSwatch(
+    data: DataType<C> | undefined,
+    resolver: ResourceResolver,
+  ): ValueSubscription<ResolvedSwatchValueType<C> | undefined> {
+    const value = this.fromData(data)
+    const swatchSub = resolver.resolveSwatch(value?.swatchId)
+
+    return {
+      readStableValue: (previous: ResolvedSwatchValueType<C>) => {
+        const swatch = swatchSub.readStableValue(previous?.swatch)
+        if (swatch == null) return undefined
+
+        const r = {
+          swatch,
+          alpha: value?.alpha ?? 1,
+        }
+
+        return objectsAreEqual(r, previous) ? previous : r
+      },
+      subscribe: swatchSub.subscribe,
+    }
   }
 
   resolveValue(

@@ -5,11 +5,11 @@ import {
   CopyContext,
   Options,
   Types,
-  createResponsiveValueSchema,
+  Schema,
 } from './prop-controllers'
 import { match } from 'ts-pattern'
 
-const responsiveColorDataSchema = createResponsiveValueSchema(colorDataSchema)
+const responsiveColorDataSchema = Schema.responsiveValue(colorDataSchema)
 
 export type ResponsiveColorData = z.infer<typeof responsiveColorDataSchema>
 
@@ -93,7 +93,7 @@ export function createResponsiveColorPropControllerDataFromResponsiveColorData(
         ({
           [ControlDataTypeKey]: ResponsiveColorPropControllerDataV1Type,
           value: responsiveColorData,
-        } as const),
+        }) as const,
     )
     .otherwise(() => responsiveColorData)
 }
@@ -145,7 +145,7 @@ export function copyResponsiveColorPropControllerData(
         ({
           [ControlDataTypeKey]: ResponsiveColorPropControllerDataV1Type,
           value: copyResponsiveColorData(v1.value, context),
-        } as const),
+        }) as const,
     )
     .otherwise((v0) => copyResponsiveColorData(v0, context))
 }

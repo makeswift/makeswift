@@ -1,3 +1,7 @@
+export function nullToUndefined<T>(value: T | null): T | undefined {
+  return value === null ? undefined : value
+}
+
 export function map<T, U>(
   array: readonly [T, T, ...T[]],
   fn: (x: T) => U,

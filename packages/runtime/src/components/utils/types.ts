@@ -1,4 +1,4 @@
-import { type ResponsiveValue } from '@makeswift/prop-controllers'
+import { type ResponsiveValue } from '@makeswift/controls'
 
 export type SwatchValue = {
   hue: number

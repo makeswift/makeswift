@@ -1,4 +1,4 @@
-import { type ResourceResolver, type ValueSubscription } from '@makeswift/controls'
+import { type ValueSubscription } from '@makeswift/controls'
 import * as MakeswiftApiClient from '../state/makeswift-api-client'
 import {
   APIResourceType,
@@ -55,7 +55,7 @@ export type MakeswiftClientOptions = {
  * snapshot for use in the builder, not the lives pages.
  */
 // FIXME: @arvin review
-export class MakeswiftHostApiClient /* implements ResourceResolver */ {
+export class MakeswiftHostApiClient {
   graphqlClient: GraphQLClient
   makeswiftApiClient: MakeswiftApiClient.Store
   subscribe: MakeswiftApiClient.Store['subscribe']

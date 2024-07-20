@@ -20,6 +20,7 @@ export {
 export type {
   ResolveBorderPropControllerValue,
   ResponsiveBorderData,
+  BorderData,
   BorderSideData,
   BorderDescriptor,
   BorderPropControllerData,

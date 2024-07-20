@@ -11,13 +11,14 @@ import {
 
 import { type Effector } from '../effector'
 
-import { CopyContext } from '../context'
+import { CopyContext, MergeTranslatableDataContext } from '../context'
 import { ResourceResolver, ValueSubscription } from '../resource-resolver'
 import { IntrospectionTarget } from '../introspect'
 import { SendMessage } from '../control-instance'
 import { ShapeControl } from './shape-control'
 import { mapValues, objectsAreEqual } from '../utils/functional'
 import { Deserialized } from '../serialization'
+import { Data } from '../common'
 
 type Config = {
   readonly type: Record<string, ControlDefinition>
@@ -176,6 +177,28 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   introspect<R>(data: DataType<C> | undefined, target: IntrospectionTarget<R>) {
     return Object.entries(data ?? {}).flatMap(([key, value]) =>
       this.keyDefs[key as string].introspect(value, target),
+    )
+  }
+
+  getTranslatableData(data: DataType<C>): Data {
+    if (data == null) return null
+    return mapValues(data, (value, key) => {
+      return this.keyDefs[key as string].getTranslatableData(value)
+    })
+  }
+
+  mergeTranslatedData(
+    data: DataType<C>,
+    translatedData: Record<string, DataType<C>>,
+    context: MergeTranslatableDataContext,
+  ): Data {
+    if (translatedData == null) return data
+    return mapValues(data, (value, key) =>
+      this.keyDefs[key as string].mergeTranslatedData(
+        value,
+        translatedData[key as string],
+        context,
+      ),
     )
   }
 }

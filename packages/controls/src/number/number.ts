@@ -22,14 +22,14 @@ import { type Effector } from '../effector'
 
 type Config = z.infer<typeof Definition.schema.relaxed.config>
 
-type DataSchemaType<C extends Config> = undefined extends C['defaultValue']
+type SchemaType<C extends Config> = undefined extends C['defaultValue']
   ? typeof Definition.schema.relaxed
   : typeof Definition.schema.strict
 
-type DataType<C extends Config> = z.infer<DataSchemaType<C>['data']>
-type ValueType<C extends Config> = z.infer<DataSchemaType<C>['value']>
+type DataType<C extends Config> = z.infer<SchemaType<C>['data']>
+type ValueType<C extends Config> = z.infer<SchemaType<C>['value']>
 type ResolvedValueType<C extends Config> = z.infer<
-  DataSchemaType<C>['resolvedValue']
+  SchemaType<C>['resolvedValue']
 >
 
 class Definition<C extends Config = Config> extends ControlDefinition<
@@ -124,7 +124,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
       this.config.defaultValue === undefined
         ? Definition.schema.relaxed
         : Definition.schema.strict
-    ) as DataSchemaType<C>
+    ) as SchemaType<C>
   }
 
   safeParse(data: unknown | undefined): ParseResult<DataType<C> | undefined> {

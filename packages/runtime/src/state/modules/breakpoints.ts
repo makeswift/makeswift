@@ -5,7 +5,7 @@ import {
   ResponsiveValue as PropControllerResponsiveValue,
   DeviceOverride as PropControllerDeviceOverride,
   Device as DeviceId,
-} from '@makeswift/prop-controllers'
+} from '@makeswift/controls'
 
 import shallowMerge from '../../utils/shallowMerge'
 import { Action, ActionTypes } from '../actions'

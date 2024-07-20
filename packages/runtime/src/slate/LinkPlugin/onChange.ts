@@ -1,5 +1,5 @@
 import { Editor, Transforms } from 'slate'
-import { LinkControlData } from '@makeswift/controls'
+import { type DataType, LinkDefinition } from '@makeswift/controls'
 import { unwrapInline } from '../BlockPlugin/unwrapInline'
 import { wrapInline } from '../BlockPlugin/wrapInline'
 import { InlineType } from '../types'
@@ -7,7 +7,7 @@ import { filterForSubtreeRoots } from '../BlockPlugin/utils/filterForSubtreeRoot
 import { isLinkEntry } from './types'
 import { getLinksAndTextInSelection } from './getValue'
 
-export const onChange = (editor: Editor, value: LinkControlData) => {
+export const onChange = (editor: Editor, value: DataType<LinkDefinition>) => {
   if (value == null) return unwrapInline(editor, InlineType.Link)
 
   const roots = filterForSubtreeRoots(getLinksAndTextInSelection(editor))

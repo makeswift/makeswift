@@ -1,13 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`List constructor list of checkboxes 1`] = `
+exports[`List constructor list of Checkbox 1`] = `
 List {
   "config": {
-    "getItemLabel": [Function],
-    "label": "Checkbox list",
     "type": Checkbox {
       "config": {
         "defaultValue": true,
+        "label": "Checkbox",
       },
       "version": 1,
     },
@@ -15,17 +14,193 @@ List {
 }
 `;
 
-exports[`List constructor list of colors 1`] = `
+exports[`List constructor list of Color 1`] = `
 List {
   "config": {
-    "label": "Color list",
     "type": Color {
       "config": {
         "defaultValue": "red",
-        "labelOrientation": "horizontal",
+        "label": "Color",
       },
       "version": 1,
     },
   },
+}
+`;
+
+exports[`List constructor list of Combobox 1`] = `
+List {
+  "config": {
+    "type": Combobox {
+      "config": {
+        "getOptions": [Function],
+        "label": "Combobox",
+      },
+    },
+  },
+}
+`;
+
+exports[`List constructor list of Image 1`] = `
+List {
+  "config": {
+    "type": Image {
+      "config": {
+        "label": "Image",
+      },
+      "version": 1,
+    },
+  },
+}
+`;
+
+exports[`List constructor list of Link 1`] = `
+List {
+  "config": {
+    "type": Link {
+      "config": {
+        "label": "Link",
+      },
+    },
+  },
+}
+`;
+
+exports[`List constructor list of List 1`] = `
+List {
+  "config": {
+    "type": List {
+      "config": {
+        "type": List {
+          "config": {
+            "type": Checkbox {
+              "config": {
+                "defaultValue": true,
+              },
+              "version": 1,
+            },
+          },
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`List constructor list of Number 1`] = `
+List {
+  "config": {
+    "type": Number {
+      "config": {
+        "defaultValue": 1,
+        "label": "Number",
+      },
+      "version": 1,
+    },
+  },
+}
+`;
+
+exports[`List constructor list of Select 1`] = `
+List {
+  "config": {
+    "type": Select {
+      "config": {
+        "defaultValue": undefined,
+        "label": "Select",
+        "options": [
+          {
+            "label": "Alpha",
+            "value": "a",
+          },
+        ],
+      },
+    },
+  },
+}
+`;
+
+exports[`List constructor list of Shape 1`] = `
+List {
+  "config": {
+    "type": Shape {
+      "config": {
+        "type": {
+          "checkbox": Checkbox {
+            "config": {
+              "defaultValue": true,
+            },
+            "version": 1,
+          },
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`List constructor list of TextArea 1`] = `
+List {
+  "config": {
+    "type": TextArea {
+      "config": {
+        "defaultValue": "alpha",
+        "label": "Text Area",
+      },
+      "version": 1,
+    },
+  },
+}
+`;
+
+exports[`List constructor list of TextInput 1`] = `
+List {
+  "config": {
+    "type": TextInput {
+      "config": {
+        "defaultValue": "alpha",
+        "label": "Text Input",
+      },
+      "version": 1,
+    },
+  },
+}
+`;
+
+exports[`List serialization serialize list of composable controls 1`] = `
+{
+  "config": {
+    "label": "Color list",
+    "type": {
+      "config": {
+        "label": "Color sub-list",
+        "type": {
+          "config": {
+            "defaultValue": "red",
+          },
+          "type": "makeswift::controls::color",
+          "version": 1,
+        },
+      },
+      "type": "makeswift::controls::list",
+    },
+  },
+  "type": "makeswift::controls::list",
+}
+`;
+
+exports[`List serialization serialize list of controls 1`] = `
+{
+  "config": {
+    "label": "Color list",
+    "type": {
+      "config": {
+        "defaultValue": "red",
+      },
+      "type": "makeswift::controls::color",
+      "version": 1,
+    },
+  },
+  "type": "makeswift::controls::list",
 }
 `;

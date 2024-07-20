@@ -2,77 +2,25 @@ import { z } from 'zod'
 
 export { type BoxModel } from 'css-box-model'
 
-export type Data =
-  | undefined
-  | null
-  | boolean
-  | number
-  | string
-  | Data[]
-  | { [key: string]: Data }
+import * as schema from './schema'
 
-export const colorDataSchema = z.object({
-  swatchId: z.string(),
-  alpha: z.number(),
-})
-
-export type ColorData = z.infer<typeof colorDataSchema>
-
-export const ControlDataTypeKey = '@@makeswift/type'
-
-const deviceSchema = z.string()
-
-export type Device = z.infer<typeof deviceSchema>
-
-function createDeviceOverrideSchema<T extends z.ZodTypeAny>(
-  schema: T,
-): z.ZodObject<{ deviceId: typeof deviceSchema; value: T }> {
-  return z.object({
-    deviceId: deviceSchema,
-    value: schema,
-  })
-}
-
+export type Data = z.infer<typeof schema.data>
+export type ColorData = z.infer<typeof schema.colorData>
+export type ResolvedColorData = z.infer<typeof schema.resolvedColorData>
+export type Device = z.infer<typeof schema.deviceId>
 export type DeviceOverride<T> = { deviceId: Device; value: T }
-
-export function createResponsiveValueSchema<T extends z.ZodTypeAny>(
-  schema: T,
-): z.ZodArray<ReturnType<typeof createDeviceOverrideSchema<T>>> {
-  return z.array(createDeviceOverrideSchema(schema))
-}
-
 export type ResponsiveValue<T> = DeviceOverride<T>[]
-
 export type ResponsiveValueType<T> =
   T extends ResponsiveValue<infer U> ? U : never
 
-export const dataSchema: z.ZodType<Data> = z.any()
-
-export const elementDataSchema = z.object({
-  type: z.string(),
-  key: z.string(),
-  props: z.record(dataSchema),
-})
-
-export type ElementData = z.infer<typeof elementDataSchema>
-
-const elementReferenceSchema = z.object({
-  type: z.literal('reference'),
-  key: z.string(),
-  value: z.string(),
-})
-
-export type ElementReference = z.infer<typeof elementReferenceSchema>
-
-export const elementSchema = z.union([
-  elementDataSchema,
-  elementReferenceSchema,
-])
-
-export type Element = z.infer<typeof elementSchema>
+export type ElementData = z.infer<typeof schema.elementData>
+export type ElementReference = z.infer<typeof schema.elementReference>
+export type Element = z.infer<typeof schema.element>
 
 export function isElementReference(
   element: Element,
 ): element is ElementReference {
   return !('props' in element)
 }
+
+export const ControlDataTypeKey = '@@makeswift/type'

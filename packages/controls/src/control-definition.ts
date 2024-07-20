@@ -1,5 +1,9 @@
 import { z } from 'zod'
-import { type CopyContext } from './context'
+import {
+  MergeContext,
+  MergeTranslatableDataContext,
+  type CopyContext,
+} from './context'
 import { type Data } from './common/types'
 
 import {
@@ -18,7 +22,7 @@ export type ParseResult<T> =
   | { success: true; data: T }
   | { success: false; error: string }
 
-export type Schema<T> = z.ZodType<T>
+export type SchemaType<T> = z.ZodType<T>
 export type SerializedRecord<T extends string = string> = {
   type: T
 } & Record<string, unknown>
@@ -36,11 +40,11 @@ export abstract class ControlDefinition<
   abstract get controlType(): ControlType
 
   abstract get schema(): {
-    definition: Schema<unknown>
-    type: Schema<ControlType>
-    data: Schema<DataType | undefined>
-    value: Schema<ValueType | undefined>
-    resolvedValue: Schema<ResolvedValueType | undefined>
+    definition: SchemaType<unknown>
+    type: SchemaType<ControlType>
+    data: SchemaType<DataType | undefined>
+    value: SchemaType<ValueType | undefined>
+    resolvedValue: SchemaType<ResolvedValueType | undefined>
   }
 
   abstract safeParse(
@@ -70,6 +74,26 @@ export abstract class ControlDefinition<
     target: IntrospectionTarget<R>,
   ): R[] {
     return target.introspect(data)
+  }
+
+  merge(
+    base: DataType,
+    override: DataType = base,
+    _context: MergeContext,
+  ): DataType {
+    return override
+  }
+
+  getTranslatableData(_data: DataType): Data {
+    return null
+  }
+
+  mergeTranslatedData(
+    data: DataType,
+    _translatedData: Data,
+    _context: MergeTranslatableDataContext,
+  ): Data {
+    return data as Data
   }
 }
 

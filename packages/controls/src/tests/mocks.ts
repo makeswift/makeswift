@@ -6,7 +6,7 @@ import {
   type Swatch,
   type File,
   type PagePathnameSlice,
-} from '../common/resources'
+} from '../resources/types'
 
 export const noOpResourceResolver: ResourceResolver = {
   resolveSwatch(_swatchId: string): ValueSubscription<Swatch | null> {

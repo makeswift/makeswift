@@ -1,10 +1,10 @@
-import { LinkControlData, copyLinkData, createReplacementContext } from '@makeswift/controls'
+import { type DataType, Link, LinkDefinition, createReplacementContext } from '@makeswift/controls'
 
 describe('link', () => {
   test('page id is replaced by one in replacement context', () => {
     // Arrange
     const pageId = 'UGFnZTpmNTdmMjQ2MS0wMGY3LTQzZWUtYmIwOS03ODdiNTUyYzUyYWQ='
-    const data: LinkControlData = {
+    const data: DataType<LinkDefinition> = {
       type: 'OPEN_PAGE',
       payload: {
         pageId,
@@ -15,7 +15,7 @@ describe('link', () => {
     const expected = JSON.parse(JSON.stringify(data).replace(pageId, 'testing'))
 
     // Act
-    const result = copyLinkData(data, {
+    const result = Link().copyData(data, {
       replacementContext: createReplacementContext({
         pageIds: {
           [pageId]: 'testing',

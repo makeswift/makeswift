@@ -1,7 +1,6 @@
 import { Descriptor, isLegacyDescriptor } from './descriptors'
 import { BoxModel } from '../state/modules/box-models'
 import { RichTextControl, RichTextControlMessage, RichTextControlType } from '../controls/rich-text'
-import { StyleControl, StyleControlType, StyleControlMessage } from '../controls/style'
 import {
   RichTextV2ControlMessage,
   RichTextV2ControlType,
@@ -73,7 +72,6 @@ export type AnyPropController =
   | TableFormFieldsPropController
   | RichTextControl
   | RichTextV2Control
-  | StyleControl
   | StyleV2Control
 
 export function createPropController(
@@ -93,9 +91,6 @@ export function createPropController(
 
     case RichTextV2ControlType:
       return new RichTextV2Control(send as SendMessage<RichTextV2ControlMessage>, descriptor)
-
-    case StyleControlType:
-      return new StyleControl(send as SendMessage<StyleControlMessage>)
 
     case StyleV2ControlType:
       return new StyleV2Control(send as SendMessage<StyleV2ControlMessage>, descriptor)

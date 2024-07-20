@@ -26,6 +26,12 @@ const config: Config = {
     ],
   },
   snapshotSerializers: ['@emotion/jest/serializer'],
+  moduleNameMapper: {
+    // FIXME: Tests are not picking up dependencies
+    '^@makeswift/controls$': '<rootDir>/node_modules/@makeswift/controls/dist/esm/index.js',
+    '^@makeswift/prop-controllers$':
+      '<rootDir>/node_modules/@makeswift/prop-controllers/dist/esm/index.js',
+  },
 }
 
 export default config

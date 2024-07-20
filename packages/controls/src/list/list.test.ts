@@ -1,40 +1,165 @@
-import { List } from './list'
-import { Color } from '../color'
+import { List, ListDefinition } from './list'
+import { Color, ColorDefinition } from '../color'
 import { Checkbox } from '../checkbox'
-// import { Number } from '../number'
-// import {
-//   type ValueType,
-//   type ResolvedValueType,
-//   DataType,
-// } from '../control-definition'
+import { Number } from '../number'
+import { TextArea } from '../text-area'
+import { TextInput, TextInputDefinition } from '../text-input'
+import { Link } from '../link'
+import { Image } from '../image'
+import { Select } from '../select'
+import { Combobox } from '../combobox'
+import { Shape } from '../shape'
+import {
+  type ValueType,
+  type ResolvedValueType,
+  DataType,
+} from '../control-definition'
+import { Targets } from '../introspect'
+import { ControlDataTypeKey } from '../common'
 
 describe('List', () => {
   describe('constructor', () => {
-    test('list of colors', () => {
+    describe.each([
+      ['Color', Color({ label: 'Color', defaultValue: 'red' })],
+      ['Checkbox', Checkbox({ label: 'Checkbox', defaultValue: true })],
+      ['Number', Number({ label: 'Number', defaultValue: 1 })],
+      ['TextInput', TextInput({ label: 'Text Input', defaultValue: 'alpha' })],
+      ['TextArea', TextArea({ label: 'Text Area', defaultValue: 'alpha' })],
+      ['Link', Link({ label: 'Link' })],
+      ['Image', Image({ label: 'Image' })],
+      [
+        'Select',
+        Select({ label: 'Select', options: [{ value: 'a', label: 'Alpha' }] }),
+      ],
+      [
+        'Combobox',
+        Combobox({
+          label: 'Combobox',
+          getOptions: () => [{ id: '0', value: 'a', label: 'Alpha' }],
+        }),
+      ],
+      [
+        'Shape',
+        Shape({
+          type: {
+            checkbox: Checkbox({ defaultValue: true }),
+          },
+        }),
+      ],
+      [
+        'List',
+        List({
+          type: List({
+            type: Checkbox({ defaultValue: true }),
+          }),
+        }),
+      ],
+    ])('list of', (defName, def) => {
+      test(`${defName}`, () => {
+        const list = List({
+          type: def,
+        })
+        expect(list).toMatchSnapshot()
+      })
+    })
+  })
+
+  describe('serialization', () => {
+    test('serialize list of controls', () => {
       const list = List({
-        type: Color({ defaultValue: 'red', labelOrientation: 'horizontal' }),
+        type: Color({ defaultValue: 'red' }),
         label: 'Color list',
       })
-      expect(list).toMatchSnapshot()
-      //   type D = DataType<typeof list>
-      //   type V = ValueType<typeof list>
-      //   type R = ResolvedValueType<typeof list>
-      //   const r: R = [['#ff0000', undefined], ['#00ff00']]
-      // colorList: List({ label: 'Color list', type: Color({ defaultValue: 'blue' }) }),
+
+      const [serialized, _] = list.serialize()
+      expect(serialized).toMatchSnapshot()
     })
 
-    test('list of checkboxes', () => {
+    test('serialize list of composable controls', () => {
       const list = List({
-        type: Checkbox({ defaultValue: true }),
-        label: 'Checkbox list',
-        getItemLabel: (value: boolean): string => (value ? 'true' : 'false'),
+        type: List({
+          type: Color({ defaultValue: 'red' }),
+          label: 'Color sub-list',
+        }),
+        label: 'Color list',
       })
 
-      expect(list).toMatchSnapshot()
+      const [serialized, _] = list.serialize()
+      expect(serialized).toMatchSnapshot()
     })
+  })
 
-    // test('list of numbers', () => {
-    //   const numberList = List({ label: 'Number list', type: Number() })
-    // })
+  describe('introspection', () => {
+    test('is correctly delegated to subcontrols', () => {
+      const list = List({
+        type: List({
+          type: Color({ defaultValue: 'red' }),
+        }),
+        label: 'Color list',
+      })
+
+      const swatchIds = list.introspect(
+        [
+          {
+            id: '000',
+            type: ListDefinition.type,
+            value: [
+              {
+                id: '000',
+                type: ColorDefinition.type,
+                value: {
+                  swatchId: 'swatch-id',
+                  alpha: 1,
+                  [ControlDataTypeKey]: 'color::v1',
+                },
+              },
+            ],
+          },
+          {
+            id: '001',
+            type: ListDefinition.type,
+            value: [
+              {
+                id: '000',
+                type: ColorDefinition.type,
+                value: {
+                  swatchId: 'swatch-id-2',
+                  alpha: 1,
+                  [ControlDataTypeKey]: 'color::v1',
+                },
+              },
+            ],
+          },
+        ],
+        Targets.Swatch,
+      )
+      expect(swatchIds).toEqual(['swatch-id', 'swatch-id-2'])
+    })
+  })
+
+  describe('getTranslatableData', () => {
+    test('is correctly delegated to subcontrols', () => {
+      const list = List({
+        type: TextInput({ defaultValue: 'alpha' }),
+        label: 'Text list',
+      })
+
+      const translatableData = list.getTranslatableData([
+        {
+          id: '000',
+          type: TextInputDefinition.type,
+          value: {
+            value: 'alpha',
+            [ControlDataTypeKey]: 'text-input::v1',
+          },
+        },
+      ])
+      expect(translatableData).toEqual({
+        '000': {
+          value: 'alpha',
+          [ControlDataTypeKey]: 'text-input::v1',
+        },
+      })
+    })
   })
 })

@@ -1015,49 +1015,31 @@ export function deserializeControl<T extends Data>(
 }
 
 function deserializeControlDefV2(record: SerializedRecord): UnifiedControlDefinition {
-  // FIXME: replace with a class lookup + deserialize call
-  switch (record.type) {
-    case CheckboxDefinition.type:
-      return CheckboxDefinition.deserialize(record)
+  const deserializeMethod: Record<string, (data: SerializedRecord) => UnifiedControlDefinition> = {
+    [CheckboxDefinition.type]: CheckboxDefinition.deserialize,
+    [ColorDefinition.type]: ColorDefinition.deserialize,
+    [ListDefinition.type]: (record: SerializedRecord) =>
+      ListDefinition.deserialize(record, deserializeControlDefV2),
+    [NumberDefinition.type]: NumberDefinition.deserialize,
+    [SelectDefinition.type]: SelectDefinition.deserialize,
+    [ComboboxDefinition.type]: ComboboxDefinition.deserialize,
+    [ImageDefinition.type]: ImageDefinition.deserialize,
+    [ShapeDefinition.type]: (record: SerializedRecord) =>
+      ListDefinition.deserialize(record, deserializeControlDefV2),
+    [SlotDefinition.type]: SlotDefinition.deserialize,
+    [TextAreaDefinition.type]: TextAreaDefinition.deserialize,
+    [TextInputDefinition.type]: TextInputDefinition.deserialize,
+    [IconRadioGroupDefinition.type]: IconRadioGroupDefinition.deserialize,
+    [LinkDefinition.type]: LinkDefinition.deserialize,
+  } as const
 
-    case ColorDefinition.type:
-      return ColorDefinition.deserialize(record)
+  const deserialize = deserializeMethod[record.type] ?? null
 
-    case ListDefinition.type:
-      return ListDefinition.deserialize(record, deserializeControlDefV2)
-
-    case NumberDefinition.type:
-      return NumberDefinition.deserialize(record)
-
-    case SelectDefinition.type:
-      return SelectDefinition.deserialize(record)
-
-    case ComboboxDefinition.type:
-      return ComboboxDefinition.deserialize(record)
-
-    case ImageDefinition.type:
-      return ImageDefinition.deserialize(record)
-
-    case ShapeDefinition.type:
-      return ShapeDefinition.deserialize(record, deserializeControlDefV2)
-
-    case SlotDefinition.type:
-      return SlotDefinition.deserialize(record)
-
-    case TextAreaDefinition.type:
-      return TextAreaDefinition.deserialize(record)
-
-    case TextInputDefinition.type:
-      return TextInputDefinition.deserialize(record)
-
-    case IconRadioGroupDefinition.type:
-      return IconRadioGroupDefinition.deserialize(record)
-
-    case LinkDefinition.type:
-      return LinkDefinition.deserialize(record)
+  if (deserialize == null) {
+    throw new Error(`Unknown control type: ${record.type}`)
   }
 
-  throw new Error(`Unknown control type: ${record.type}`)
+  return deserialize(record)
 }
 
 export function serializeControls(

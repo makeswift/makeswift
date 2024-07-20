@@ -1,5 +1,8 @@
 {
   "transform": {
     "^.+\\.(t|j)sx?$": "@swc/jest"
+  },
+  "moduleNameMapper": {
+    "^@makeswift/controls$": "<rootDir>/node_modules/@makeswift/controls/dist/esm/index.js"
   }
 }

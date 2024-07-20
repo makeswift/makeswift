@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { v4 as uuid } from 'uuid'
 
-import { type CopyContext } from '../context'
+import { MergeTranslatableDataContext, type CopyContext } from '../context'
 import {
   type ResourceResolver,
   type ValueSubscription,
@@ -15,7 +15,7 @@ import {
   ControlDefinition,
   safeParse,
   serialize,
-  type Schema,
+  type SchemaType,
   type ParseResult,
   type SerializedRecord,
   type DataType as DataType_,
@@ -28,6 +28,7 @@ import { arraysAreEqual } from '../utils/functional'
 import { ListControl } from './list-control'
 import { type IntrospectionTarget } from '../introspect'
 import { type Deserialized } from '../serialization'
+import { Data } from '../common'
 
 type ItemLabelType<Item extends ControlDefinition> = (
   item: ResolvedValueType_<Item>,
@@ -63,7 +64,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
 > {
   static readonly type = 'makeswift::controls::list' as const
 
-  static schema<T>({ itemDef }: { itemDef: Schema<T> }) {
+  static schema<T>({ itemDef }: { itemDef: SchemaType<T> }) {
     const type = z.literal(Definition.type)
     const config = z.object({
       type: itemDef,
@@ -115,7 +116,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
         type: item.type.optional(),
         value: item.data,
       }),
-    ) as Schema<DataType<C> | undefined>
+    ) as SchemaType<DataType<C> | undefined>
 
     const value = z.array(item.value)
     const resolvedValue = z.array(item.resolvedValue)
@@ -195,6 +196,34 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     return (
       data?.flatMap((item) => this.itemDef.introspect(item.value, target)) ?? []
     )
+  }
+
+  getTranslatableData(data: DataType<C>): Data {
+    if (data == null) return null
+    return Object.fromEntries(
+      data.map((item) => [
+        item.id,
+        this.itemDef.getTranslatableData(item.value),
+      ]),
+    )
+  }
+
+  mergeTranslatedData(
+    data: DataType<C>,
+    translatedData: Record<string, DataType<C>>,
+    context: MergeTranslatableDataContext,
+  ): Data {
+    if (translatedData == null) return data
+    return data.map((item) => {
+      return {
+        ...item,
+        value: this.itemDef.mergeTranslatedData(
+          item.value,
+          translatedData[item.id],
+          context,
+        ),
+      }
+    })
   }
 }
 

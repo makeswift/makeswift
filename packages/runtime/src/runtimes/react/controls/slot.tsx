@@ -87,7 +87,10 @@ Slot.Item = SlotItem
 type SlotItemProps<T extends ElementType> = {
   as?: T
   control: SlotControl | null
-  grid: DataType<SlotDefinition<ReactNode>>['columns']
+  // @arvin: review for correctness
+  grid: DataType<SlotDefinition<ReactNode>> extends undefined
+    ? undefined
+    : NonNullable<DataType<SlotDefinition<ReactNode>>>['columns']
   index: number
   children?: ReactNode
   className?: string

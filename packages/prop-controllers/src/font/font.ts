@@ -1,17 +1,12 @@
 import { P, match } from 'ts-pattern'
-import {
-  ControlDataTypeKey,
-  Options,
-  Types,
-  createResponsiveValueSchema,
-} from '../prop-controllers'
+import { ControlDataTypeKey, Options, Types, Schema } from '../prop-controllers'
 import { z } from 'zod'
 
 const fontDataSchema = z.string()
 
 export type FontData = z.infer<typeof fontDataSchema>
 
-const responsiveFontDataSchema = createResponsiveValueSchema(fontDataSchema)
+const responsiveFontDataSchema = Schema.responsiveValue(fontDataSchema)
 
 export type ResponsiveFontData = z.infer<typeof responsiveFontDataSchema>
 
@@ -101,7 +96,7 @@ export function createFontPropControllerDataFromResponsiveFontData(
         ({
           [ControlDataTypeKey]: FontPropControllerDataV1Type,
           value: responsiveFontData,
-        } as const),
+        }) as const,
     )
     .otherwise(() => responsiveFontData)
 }

@@ -1,8 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Select constructor value type 1`] = `"p"`;
-
-exports[`Select constructor value type 2`] = `
+exports[`Select constructor refines value type and resolved value based on options 1`] = `
 Select {
   "config": {
     "defaultValue": "p",
@@ -17,15 +15,15 @@ Select {
         "label": "Heading 1",
         "value": "h1",
       },
-      {
-        "label": "Heading 2",
-        "value": "h2",
-      },
-      {
-        "label": "Heading 3",
-        "value": "h3",
-      },
     ],
   },
 }
 `;
+
+exports[`Select constructor refines value type and resolved value based on options 2`] = `"p"`;
+
+exports[`Select constructor refines value type and resolved value based on options 3`] = `"p"`;
+
+exports[`Select definition w/ config {"label":"Block type","labelOrientation":"horizontal","options":[{"value":"p","label":"Paragraph"},{"value":"h1","label":"Heading 1"}]} toData returns v1 data for \`h1\` when definition version is 1 1`] = `"h1"`;
+
+exports[`Select definition w/ config {"label":"Block type","labelOrientation":"horizontal","options":[{"value":"p","label":"Paragraph"},{"value":"h1","label":"Heading 1"}]} toData returns v1 data for \`p\` when definition version is 1 1`] = `"p"`;

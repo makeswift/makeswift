@@ -4,11 +4,8 @@ import {
 } from '@makeswift/controls'
 
 import { type ResponsiveColor } from '../components/utils/types'
-import { StyleControlFormattedValue } from '../runtimes/react/controls/style'
 import type { Data } from '../state/react-page'
-import { StyleControlType } from '../controls/style'
 import {
-  StyleControlDefinition,
   RichTextV2ControlDefinition,
   StyleV2ControlDefinition,
   TypographyControlDefinition,
@@ -87,10 +84,6 @@ export type { Data }
 
 export type Gap = { value: number; unit: 'px' }
 
-export const Types = {
-  Style: StyleControlType,
-} as const
-
 type PropControllerDescriptor<T extends Data = Data> =
   | DeletedPropControllerDescriptor<T>
   | BackgroundsDescriptor<T>
@@ -128,7 +121,6 @@ type PropControllerDescriptor<T extends Data = Data> =
 
 export type LegacyDescriptor<T extends Data = Data> =
   | PropControllerDescriptor<T>
-  | StyleControlDefinition
   | StyleV2ControlDefinition
   | TypographyControlDefinition
   | RichTextControlDefinition
@@ -398,23 +390,21 @@ export type PropControllerDescriptorValueType<T extends PropControllerDescriptor
 
 export type DescriptorValueType<T extends Descriptor> = T extends PropControllerDescriptor
   ? PropControllerDescriptorValueType<T>
-  : T extends StyleControlDefinition
-    ? StyleControlFormattedValue
-    : T extends StyleV2ControlDefinition
-      ? StyleV2ControlFormattedValue
-      : T extends RichTextControlDefinition
-        ? RichTextControlValue
-        : T extends RichTextV2ControlDefinition
-          ? RichTextV2ControlValue
-          : T extends StyleV2ControlDefinition
-            ? StyleV2ControlFormattedValue
-            : T extends TypographyControlDefinition
-              ? TypographyControlValue
-              : T extends UnifiedControlDefinition
-                ? ResolvedValueType<T>
-                : T extends Descriptor<infer U>
-                  ? U | undefined
-                  : never
+  : T extends StyleV2ControlDefinition
+    ? StyleV2ControlFormattedValue
+    : T extends RichTextControlDefinition
+      ? RichTextControlValue
+      : T extends RichTextV2ControlDefinition
+        ? RichTextV2ControlValue
+        : T extends StyleV2ControlDefinition
+          ? StyleV2ControlFormattedValue
+          : T extends TypographyControlDefinition
+            ? TypographyControlValue
+            : T extends UnifiedControlDefinition
+              ? ResolvedValueType<T>
+              : T extends Descriptor<infer U>
+                ? U | undefined
+                : never
 
 export type PanelDescriptorValueType<T extends PanelDescriptor> =
   T extends PanelDescriptor<infer U> ? U : never

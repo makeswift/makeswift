@@ -4,7 +4,7 @@ import {
   CopyContext,
   Options,
   Types,
-  createResponsiveValueSchema,
+  Schema,
 } from '../prop-controllers'
 import { P, match } from 'ts-pattern'
 import { colorDataSchema, imageDataV0Schema, imageDataV1Schema } from '../data'
@@ -127,7 +127,7 @@ const backgroundDataSchema = z.union([
 
 export type BackgroundData = z.infer<typeof backgroundDataSchema>
 
-const responsiveBackgroundsDataSchema = createResponsiveValueSchema(
+const responsiveBackgroundsDataSchema = Schema.responsiveValue(
   z.array(backgroundDataSchema),
 )
 
@@ -218,7 +218,7 @@ export function createBackgroundsPropControllerDataFromResponsiveBackgroundsData
         ({
           [ControlDataTypeKey]: BackgroundsPropControllerDataV2Type,
           value: data,
-        } as const),
+        }) as const,
     )
     .otherwise(() => data)
 }

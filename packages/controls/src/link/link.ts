@@ -1,34 +1,38 @@
 import { z } from 'zod'
-import { CopyContext } from '../context'
+import memoize from 'micro-memoize'
+import { match } from 'ts-pattern'
 
-import { ResourceResolver, ValueSubscription } from '../resource-resolver'
+import scrollIntoView from 'scroll-into-view-if-needed'
+
+import { type PagePathnameSlice } from '../resources'
+import { type CopyContext } from '../context'
+
+import {
+  type ResourceResolver,
+  type ValueSubscription,
+} from '../resource-resolver'
 
 import {
   DefaultControlInstance,
   ControlInstance,
-  SendMessage,
+  type SendMessage,
 } from '../control-instance'
 
 import {
   ControlDefinition,
   safeParse,
   serialize,
-  ParseResult,
-  SerializedRecord,
+  type ParseResult,
+  type SerializedRecord,
 } from '../control-definition'
+
 import { type Effector } from '../effector'
 import {
-  callPhoneLinkDataSchema,
-  openPageLinkDataSchema,
-  openUrlLinkDataSchema,
-  scrollToElementLink,
-  sendEmailLinkDataSchema,
-} from './zod'
-import { IntrospectionTarget, IntrospectionTargetType } from '../introspect'
-import scrollIntoView from 'scroll-into-view-if-needed'
-import { PagePathnameSlice } from '../common'
-import memoize from 'micro-memoize'
-import { match } from 'ts-pattern'
+  type IntrospectionTarget,
+  IntrospectionTargetType,
+} from '../introspect'
+
+import { linkSchema } from './schema'
 
 const defaultResolvedValue = {
   href: '#',
@@ -41,12 +45,12 @@ type LinkTarget = '_blank' | '_self'
 
 type Config = z.infer<typeof Definition.schema.config>
 
-type DataSchemaType<_C extends Config> = typeof Definition.schema
+type SchemaType<_C extends Config> = typeof Definition.schema
 
-type DataType<C extends Config> = z.infer<DataSchemaType<C>['data']>
-type ValueType<C extends Config> = z.infer<DataSchemaType<C>['value']>
+type DataType<C extends Config> = z.infer<SchemaType<C>['data']>
+type ValueType<C extends Config> = z.infer<SchemaType<C>['value']>
 type ResolvedValueType<C extends Config> = z.infer<
-  DataSchemaType<C>['resolvedValue']
+  SchemaType<C>['resolvedValue']
 >
 
 class Definition<C extends Config = Config> extends ControlDefinition<
@@ -65,15 +69,8 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   static get schema() {
     const type = z.literal(this.type)
 
-    const data = z.union([
-      openPageLinkDataSchema,
-      openUrlLinkDataSchema,
-      sendEmailLinkDataSchema,
-      callPhoneLinkDataSchema,
-      scrollToElementLink,
-      z.null(),
-    ])
-
+    const link = linkSchema
+    const data = z.union([link, z.null()])
     const value = data
 
     const config = z.object({
@@ -87,13 +84,14 @@ class Definition<C extends Config = Config> extends ControlDefinition<
 
     const resolvedValue = z.object({
       href: z.string(),
-      target: z.union([z.literal('_blank'), z.literal('_self')]).optional(),
+      target: z.enum(['_blank', '_self']).optional(),
       onClick: z.function().args(z.any()).returns(z.void()),
     })
 
     return {
       type,
       data,
+      link,
       value,
       resolvedValue,
       config,
@@ -134,20 +132,37 @@ class Definition<C extends Config = Config> extends ControlDefinition<
 
   copyData(
     data: DataType<C> | undefined,
-    _context: CopyContext,
+    { replacementContext }: CopyContext,
   ): DataType<C> | undefined {
     if (data == null) return data
 
     if (data.type === 'OPEN_PAGE') {
-      const pageId = data.payload.pageId
+      const { pageId } = data.payload
       if (pageId != null) {
         return {
           ...data,
           payload: {
             ...data.payload,
-            pageId: _context.replacementContext.pageIds.get(pageId) ?? pageId,
+            pageId: replacementContext.pageIds.get(pageId) ?? pageId,
           },
         }
+      }
+    }
+
+    if (data.type === 'SCROLL_TO_ELEMENT') {
+      const { elementIdConfig } = data.payload
+      if (elementIdConfig == null) return data
+      const elementKey = elementIdConfig.elementKey
+      return {
+        ...data,
+        payload: {
+          ...data.payload,
+          elementIdConfig: {
+            ...elementIdConfig,
+            elementKey:
+              replacementContext.elementKeys.get(elementKey) ?? elementKey,
+          },
+        },
       }
     }
 
@@ -180,11 +195,13 @@ class Definition<C extends Config = Config> extends ControlDefinition<
         const elementId = elementIdSubscription.readStableValue()
         return resolveLink(data, page, elementId)
       },
-      subscribe: () => {
+
+      subscribe: (onUpdate: () => void) => {
         const unsubscribes = [
-          pageSubscription.subscribe(() => {}),
-          elementIdSubscription.subscribe(() => {}),
+          pageSubscription.subscribe(onUpdate),
+          elementIdSubscription.subscribe(onUpdate),
         ]
+
         return () => {
           unsubscribes.forEach((unsubscribe) => unsubscribe())
         }

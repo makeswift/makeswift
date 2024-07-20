@@ -1,7 +1,11 @@
 import { z } from 'zod'
 
-import { createResponsiveValueSchema, elementSchema } from '../common'
-import { type CopyContext } from '../context'
+import { Schema, Data, isElementReference } from '../common'
+import {
+  MergeContext,
+  MergeTranslatableDataContext,
+  type CopyContext,
+} from '../context'
 
 import { ControlInstance, type SendMessage } from '../control-instance'
 
@@ -11,10 +15,11 @@ import {
   serialize,
   type ParseResult,
   type SerializedRecord,
-  type Schema,
+  type SchemaType,
 } from '../control-definition'
 
 import { SlotControl } from './slot-control'
+import { IntrospectionTarget, IntrospectionTargetType } from '../introspect'
 
 type DataType = z.infer<typeof Definition.schema.data>
 type ValueType = z.infer<typeof Definition.schema.value>
@@ -35,13 +40,13 @@ abstract class Definition<RuntimeNode> extends ControlDefinition<
       spans: z.array(z.array(z.number())),
     })
 
-    const element = elementSchema.and(
+    const element = Schema.element.and(
       z.object({ deleted: z.boolean().optional() }),
     )
 
     const data = z.object({
       elements: z.array(element),
-      columns: createResponsiveValueSchema(columnData),
+      columns: Schema.responsiveValue(columnData),
     })
 
     const value = data
@@ -73,7 +78,7 @@ abstract class Definition<RuntimeNode> extends ControlDefinition<
     }
   }
 
-  get nodeSchema(): Schema<RuntimeNode> {
+  get nodeSchema(): SchemaType<RuntimeNode> {
     return z.any()
   }
 
@@ -110,47 +115,52 @@ abstract class Definition<RuntimeNode> extends ControlDefinition<
       type: Definition.type,
     })
   }
+
+  introspect<R>(
+    data: DataType | undefined,
+    target: IntrospectionTarget<R>,
+  ): R[] {
+    if (data == null) return []
+    if (target.type == IntrospectionTargetType.ChildrenElement) {
+      return data.elements as R[]
+    }
+    return []
+  }
+
+  merge(
+    base: DataType | undefined = { columns: [], elements: [] },
+    override: DataType | undefined = { columns: [], elements: [] },
+    context: MergeContext,
+  ): DataType {
+    const mergedColumns = base.columns
+    const mergedElements = base.elements.flatMap((baseElement) => {
+      const overrideElement = override.elements.find(
+        (e) => baseElement.type === e.type && baseElement.key === e.key,
+      )
+
+      if (overrideElement == null) return [baseElement]
+      if (overrideElement.deleted) return []
+      if (isElementReference(overrideElement)) return [overrideElement]
+      if (isElementReference(baseElement)) return [baseElement]
+
+      return context.mergeElement(baseElement, overrideElement)
+    })
+
+    return { columns: mergedColumns, elements: mergedElements }
+  }
+
+  mergeTranslatedData(
+    data: DataType,
+    _translatedData: Data,
+    context: MergeTranslatableDataContext,
+  ): DataType {
+    return {
+      ...data,
+      elements: data.elements.map((element) =>
+        context.mergeTranslatedData(element),
+      ),
+    }
+  }
 }
 
 export { Definition as SlotDefinition }
-
-// /**
-//  * @todo
-//  * - Inserting elements
-//  * - Moving elements
-//  * - Merging column data
-//  */
-// export function mergeSlotData(
-//   base: SlotControlData | undefined = { columns: [], elements: [] },
-//   override: SlotControlData | undefined = { columns: [], elements: [] },
-//   context: MergeContext,
-// ): SlotControlData {
-//   const mergedColumns = base.columns
-//   const mergedElements = base.elements.flatMap(baseElement => {
-//     const overrideElement = override.elements.find(
-//       e => baseElement.type === e.type && baseElement.key === e.key,
-//     )
-
-//     if (overrideElement == null) return [baseElement]
-
-//     if (overrideElement.deleted) return []
-
-//     if (isElementReference(overrideElement)) return [overrideElement]
-
-//     if (isElementReference(baseElement)) return [baseElement]
-
-//     return context.mergeElement(baseElement, overrideElement)
-//   })
-
-//   return { columns: mergedColumns, elements: mergedElements }
-// }
-
-// export function mergeSlotControlTranslatedData(
-//   data: SlotControlData,
-//   context: MergeTranslatableDataContext,
-// ) {
-//   return {
-//     ...data,
-//     elements: data.elements.map(element => context.mergeTranslatedData(element)),
-//   }
-// }

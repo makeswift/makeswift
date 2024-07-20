@@ -2,7 +2,6 @@ import { Descriptor, isLegacyDescriptor } from './descriptors'
 import { Data, Element } from '../state/react-page'
 
 import { RichTextControlData, RichTextControlType, RichTextValue } from '../controls/rich-text'
-import { getStyleSwatchIds, StyleControlData, StyleControlType } from '../controls/style'
 import {
   getTypographySwatchIds,
   getTypographyTypographyIds,
@@ -147,11 +146,11 @@ export function getSwatchIds<T extends Data>(
       return getTypographySwatchIds(prop as TypographyControlData[number])
     }
 
-    case StyleControlType: {
-      return getStyleSwatchIds(prop as StyleControlData)
-    }
-
     // FIXME
+    // case StyleControlType: {
+    //   return getStyleSwatchIds(prop as StyleControlData)
+    // }
+
     // case StyleV2ControlType: {
     //   const value = prop as StyleV2ControlData
 
