@@ -1,10 +1,6 @@
 import { ControlDataTypeKey } from '../common/types'
 
-import {
-  type ValueType,
-  type DataType,
-  ControlDefinition,
-} from '../control-definition'
+import { type ValueType, ControlDefinition } from '../control-definition'
 
 export function testDefinition<Def extends ControlDefinition>(
   definition: Def,
@@ -97,7 +93,7 @@ export function testDefinition<Def extends ControlDefinition>(
     describe('fromData', () => {
       test.each(values)('v1 `%s`', (value) => {
         // Arrange
-        const data: DataType<typeof definition> = definition.toData(value)
+        const data = definition.toData(value)
 
         // Act
         const result = definition.fromData(data)
@@ -108,7 +104,7 @@ export function testDefinition<Def extends ControlDefinition>(
 
       test.each(values)('v0 `%s`', (value) => {
         // Arrange
-        const data = value satisfies DataType<typeof definition>
+        const data = value
 
         // Act
         const result = definition.fromData(data)

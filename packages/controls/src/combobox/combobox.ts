@@ -49,23 +49,17 @@ class Definition<
 > {
   static readonly type = 'makeswift::controls::combobox' as const
 
-  static get schema() {
+  static schema<T extends Data>(item: z.ZodType<T>) {
     const type = z.literal(Definition.type)
 
-    const data = z
-      .object({
-        id: z.string(),
-        value: Schema.data,
-        label: z.string(),
-      })
-      .transform(({ id, value, label }) => ({
-        value,
-        label,
-        id,
-      }))
+    const data = z.object({
+      id: z.string(),
+      value: item,
+      label: z.string(),
+    }) as SchemaType<Option<T>>
 
     const value = data
-    const resolvedValue = Schema.data
+    const resolvedValue = item.optional()
 
     const options = z.array(data)
 
@@ -103,7 +97,7 @@ class Definition<
       )
     }
 
-    const { config } = Definition.schema.definition.parse(data)
+    const { config } = Definition.schema(Schema.data).definition.parse(data)
 
     return new Definition(config)
   }
@@ -113,22 +107,7 @@ class Definition<
   }
 
   get schema() {
-    // FIXME: @arvin casts for schemas
-    const data = Definition.schema.data.optional() as SchemaType<
-      DataType<C> | undefined
-    >
-
-    const value = Definition.schema.value as unknown as SchemaType<ValueType<C>>
-
-    const resolvedValue = Definition.schema
-      .resolvedValue as unknown as SchemaType<ResolvedValueType<C>>
-
-    return {
-      ...Definition.schema,
-      data,
-      value,
-      resolvedValue,
-    }
+    return Definition.schema(Schema.data as SchemaType<ItemType<C>>)
   }
 
   safeParse(data: unknown | undefined): ParseResult<DataType<C> | undefined> {

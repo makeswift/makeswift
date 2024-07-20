@@ -2,20 +2,20 @@ import { z } from 'zod'
 
 export { type BoxModel } from 'css-box-model'
 
-import * as schema from './schema'
+import * as Schema from './schema'
 
-export type Data = z.infer<typeof schema.data>
-export type ColorData = z.infer<typeof schema.colorData>
-export type ResolvedColorData = z.infer<typeof schema.resolvedColorData>
-export type Device = z.infer<typeof schema.deviceId>
+export type Data = z.infer<typeof Schema.data>
+export type ColorData = z.infer<typeof Schema.colorData>
+export type ResolvedColorData = z.infer<typeof Schema.resolvedColorData>
+export type Device = z.infer<typeof Schema.deviceId>
 export type DeviceOverride<T> = { deviceId: Device; value: T }
 export type ResponsiveValue<T> = DeviceOverride<T>[]
 export type ResponsiveValueType<T> =
   T extends ResponsiveValue<infer U> ? U : never
 
-export type ElementData = z.infer<typeof schema.elementData>
-export type ElementReference = z.infer<typeof schema.elementReference>
-export type Element = z.infer<typeof schema.element>
+export type ElementData = z.infer<typeof Schema.elementData>
+export type ElementReference = z.infer<typeof Schema.elementReference>
+export type Element = z.infer<typeof Schema.element>
 
 export function isElementReference(
   element: Element,

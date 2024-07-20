@@ -55,8 +55,6 @@ describe('Checkbox Types', () => {
     expectTypeOf<Value>().toEqualTypeOf<boolean | undefined>()
 
     type Resolved = ResolvedValueType<typeof def>
-
-    // @ts-expect-error
     expectTypeOf<Resolved>().toEqualTypeOf<boolean | undefined>()
   })
 })

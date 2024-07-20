@@ -21,8 +21,8 @@ import {
   serialize,
   type ParseResult,
   type SerializedRecord,
-  type SchemaType as SchemaType_,
 } from '../control-definition'
+
 import { IntrospectionTarget, IntrospectionTargetType } from '../introspect'
 
 const resolvedImageUrlSchema = z.string().optional()
@@ -82,14 +82,6 @@ type ResolvedValueType<C extends Config> = z.infer<
 >
 
 type InstanceType<_C extends Config> = ControlInstance<any>
-
-type SchemaReturnType<C extends Config> = {
-  definition: SchemaType_<unknown>
-  type: SchemaType_<typeof Definition.type>
-  data: SchemaType_<DataType<C> | undefined>
-  value: SchemaType_<ValueType<C> | undefined>
-  resolvedValue: SchemaType_<ResolvedValueType<C> | undefined>
-}
 
 class Definition<C extends Config = Config> extends ControlDefinition<
   typeof Definition.type,
@@ -164,7 +156,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     return Definition.type
   }
 
-  get refinedSchema() {
+  get schema() {
     return match(this.config.format)
       .with(ImageControlValueFormat.URL, () => Definition.schema.url)
       .with(
@@ -173,15 +165,6 @@ class Definition<C extends Config = Config> extends ControlDefinition<
       )
       .with(undefined, () => Definition.schema.url)
       .exhaustive()
-  }
-
-  // Without manually specifying the return type of the `schema` method,
-  // Typescript incorrectly infers the resolvedValue of the returned schema as a
-  // union of the schema returned here and the return type of the
-  // ControlDefinition base class. However directly using this schema in other
-  // class methods results in an inability to match against the data types.
-  get schema(): SchemaReturnType<C> {
-    return this.refinedSchema
   }
 
   safeParse(data: unknown | undefined): ParseResult<DataType<C> | undefined> {
@@ -213,7 +196,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     const replaceFileId = (fileId: string) =>
       replacementContext.fileIds.get(fileId) ?? fileId
 
-    const inputSchema = this.refinedSchema.data.optional()
+    const inputSchema = this.schema.data.optional()
 
     return match(data satisfies z.infer<typeof inputSchema>)
       .with(P.string, (id) => replaceFileId(id))
@@ -230,8 +213,8 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     effector: Effector,
   ): ValueSubscription<ResolvedValueType<C> | undefined> {
     const format = this.config.format
-    const dataSchema = this.refinedSchema.data.optional()
-    const resolvedValueSchema = this.refinedSchema.resolvedValue
+    const dataSchema = this.schema.data.optional()
+    const resolvedValueSchema = this.schema.resolvedValue
 
     function toResolvedValue(
       previous: ResolvedValueType<C>,
@@ -345,7 +328,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   ): R[] {
     if (target.type !== IntrospectionTargetType.File) return []
 
-    const dataSchema = this.refinedSchema.data.optional()
+    const dataSchema = this.schema.data.optional()
     return match(data satisfies z.infer<typeof dataSchema>)
       .with(P.string, (id) => [id])
       .with({ type: 'makeswift-file' }, ({ id }) => [id])

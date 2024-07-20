@@ -272,3 +272,41 @@ exports[`List serialization serialize/deserialize list of controls 1`] = `
   "type": "makeswift::controls::list",
 }
 `;
+
+exports[`List serialization serialize/deserialize list of composable controls 1`] = `
+{
+  "config": {
+    "label": "Color list",
+    "type": {
+      "config": {
+        "label": "Color sub-list",
+        "type": {
+          "config": {
+            "defaultValue": "red",
+          },
+          "type": "makeswift::controls::color",
+          "version": 1,
+        },
+      },
+      "type": "makeswift::controls::list",
+    },
+  },
+  "type": "makeswift::controls::list",
+}
+`;
+
+exports[`List serialization serialize/deserialize list of controls 1`] = `
+{
+  "config": {
+    "label": "Color list",
+    "type": {
+      "config": {
+        "defaultValue": "red",
+      },
+      "type": "makeswift::controls::color",
+      "version": 1,
+    },
+  },
+  "type": "makeswift::controls::list",
+}
+`;

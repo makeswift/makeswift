@@ -17,6 +17,7 @@ import {
   serialize,
   type ParseResult,
   type SerializedRecord,
+  type SchemaType,
 } from '../control-definition'
 
 import { map } from '../utils/functional'
@@ -68,10 +69,9 @@ class Definition<
 > {
   static readonly type = 'makeswift::controls::icon-radio-group' as const
 
-  static schema<T>(item: z.ZodType<T>, relaxed: boolean = true) {
+  static schema<T, D>(item: z.ZodType<T>, data: z.ZodType<D>) {
     const type = z.literal(Definition.type)
 
-    const data = relaxed ? item.optional() : item
     const value = data
     const resolvedValue = value
 
@@ -123,7 +123,11 @@ class Definition<
       )
     }
 
-    const { config: configSchema } = Definition.schema(z.string())
+    const { config: configSchema } = Definition.schema(
+      z.string(),
+      z.string().optional(),
+    )
+
     const def = z.object({
       type: z.literal(Definition.type),
       config: configSchema,
@@ -143,7 +147,12 @@ class Definition<
       map(this.config.options, ({ value }) => value as ItemType<C>),
     )
 
-    return Definition.schema(item, this.config.defaultValue === undefined)
+    return Definition.schema(
+      item as SchemaType<ItemType<C>>,
+      (this.config.defaultValue === undefined
+        ? item.optional()
+        : item) as SchemaType<DataType<C>>,
+    )
   }
 
   safeParse(data: unknown | undefined): ParseResult<DataType<C> | undefined> {

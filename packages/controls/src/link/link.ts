@@ -24,7 +24,6 @@ import {
   serialize,
   type ParseResult,
   type SerializedRecord,
-  type SchemaType as SchemaType_,
 } from '../control-definition'
 
 import { type Effector } from '../effector'
@@ -54,14 +53,6 @@ type ResolvedValueType<_C extends Config> = {
   href: string
   target?: LinkTarget
   onClick: (event: MouseEvent) => void
-}
-
-type SchemaReturnType<C extends Config> = {
-  definition: SchemaType_<unknown>
-  type: SchemaType_<typeof Definition.type>
-  data: SchemaType_<DataType<C> | undefined>
-  value: SchemaType_<ValueType<C> | undefined>
-  resolvedValue: SchemaType_<ResolvedValueType<C> | undefined>
 }
 
 class Definition<C extends Config = Config> extends ControlDefinition<
@@ -125,7 +116,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     return Definition.type
   }
 
-  get schema(): SchemaReturnType<C> {
+  get schema() {
     return Definition.schema
   }
 

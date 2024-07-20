@@ -1,9 +1,6 @@
 import { z } from 'zod'
-import {
-  ControlDefinition,
-  ParseResult,
-  SchemaType,
-} from '../control-definition'
+import { ControlDefinition, ParseResult } from '../control-definition'
+
 import {
   safeParse,
   serialize,
@@ -24,8 +21,10 @@ import { mapValues, objectsAreEqual } from '../utils/functional'
 import { Deserialized } from '../serialization'
 import { Data } from '../common'
 
+type ItemDefinition = ControlDefinition<string, unknown, any, any, any>
+
 type Config = {
-  readonly type: Record<string, ControlDefinition>
+  readonly type: Record<string, ItemDefinition>
 }
 
 type DataType<C extends Config> = {
@@ -41,14 +40,6 @@ type ResolvedValueType<C extends Config> = {
 }
 
 type ControlType<C extends Config> = ShapeControl<Definition<C>>
-
-type SchemaReturnType<C extends Config> = {
-  definition: SchemaType<unknown>
-  type: SchemaType<typeof Definition.type>
-  data: SchemaType<DataType<C> | undefined>
-  value: SchemaType<ValueType<C> | undefined>
-  resolvedValue: SchemaType<ResolvedValueType<C> | undefined>
-}
 
 class Definition<C extends Config = Config> extends ControlDefinition<
   typeof Definition.type,
@@ -94,7 +85,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     return Definition.type
   }
 
-  get schema(): SchemaReturnType<C> {
+  get schema() {
     const type = z.literal(Definition.type)
     const keys = mapValues(this.keyDefs, (def) => def.schema)
 

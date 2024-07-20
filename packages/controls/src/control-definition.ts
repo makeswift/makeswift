@@ -42,9 +42,9 @@ export abstract class ControlDefinition<
   abstract get schema(): {
     definition: SchemaType<unknown>
     type: SchemaType<ControlType>
-    data: SchemaType<DataType | undefined>
-    value: SchemaType<ValueType | undefined>
-    resolvedValue: SchemaType<ResolvedValueType | undefined>
+    data: SchemaType<DataType>
+    value: SchemaType<ValueType>
+    resolvedValue: SchemaType<ResolvedValueType>
   }
 
   abstract safeParse(
@@ -97,32 +97,35 @@ export abstract class ControlDefinition<
   }
 }
 
-export type ControlDefinitionTypes<D> =
-  D extends ControlDefinition<
-    infer ControlType,
-    infer Config,
-    infer DataType,
-    infer ValueType,
-    infer ResolvedValueType,
-    infer InstanceType
-  >
-    ? {
-        ControlType: ControlType
-        Config: Config
-        DataType: DataType
-        ValueType: ValueType
-        ResolvedValueType: ResolvedValueType
-        InstanceType: InstanceType
-      }
+export type ControlType<D> =
+  D extends ControlDefinition<infer ControlType, any, any, any, any, any>
+    ? ControlType
     : never
 
-export type ControlType<D> = ControlDefinitionTypes<D>['ControlType']
-export type ConfigType<D> = ControlDefinitionTypes<D>['Config']
-export type DataType<D> = ControlDefinitionTypes<D>['DataType']
-export type ValueType<D> = ControlDefinitionTypes<D>['ValueType']
+export type ConfigType<D> =
+  D extends ControlDefinition<any, infer Config, any, any, any, any>
+    ? Config
+    : never
+
+export type DataType<D> =
+  D extends ControlDefinition<any, any, infer DataType, any, any, any>
+    ? DataType
+    : never
+
+export type ValueType<D> =
+  D extends ControlDefinition<any, any, any, infer ValueType, any, any>
+    ? ValueType
+    : never
+
 export type ResolvedValueType<D> =
-  ControlDefinitionTypes<D>['ResolvedValueType']
-export type InstanceType<D> = ControlDefinitionTypes<D>['InstanceType']
+  D extends ControlDefinition<any, any, any, any, infer ResolvedValueType, any>
+    ? ResolvedValueType
+    : never
+
+export type InstanceType<D> =
+  D extends ControlDefinition<any, any, any, any, any, infer InstanceType>
+    ? InstanceType
+    : never
 
 export function safeParse<Schema extends z.ZodType>(
   schema: Schema,

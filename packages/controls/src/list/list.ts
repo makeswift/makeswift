@@ -20,7 +20,6 @@ import {
   type SerializedRecord,
   type DataType as DataType_,
   type ValueType as ValueType_,
-  type SchemaType as SchemaType_,
   type ResolvedValueType as ResolvedValueType_,
 } from '../control-definition'
 
@@ -31,12 +30,14 @@ import { type IntrospectionTarget } from '../introspect'
 import { type Deserialized } from '../serialization'
 import { Data } from '../common'
 
-type ItemLabelType<Item extends ControlDefinition> = (
+type ItemDefinition = ControlDefinition<string, unknown, any, any, any>
+
+type ItemLabelType<Item extends ItemDefinition> = (
   item: ResolvedValueType_<Item>,
 ) => string | Promise<string>
 
 type Config<
-  Item extends ControlDefinition = ControlDefinition,
+  Item extends ItemDefinition = ItemDefinition,
   ItemLabel extends ItemLabelType<Item> = ItemLabelType<Item>,
 > = {
   type: Item
@@ -54,14 +55,6 @@ type DataType<C extends Config> = {
 type ValueType<C extends Config> = ValueType_<ItemType<C>>[]
 type ResolvedValueType<C extends Config> = ResolvedValueType_<ItemType<C>>[]
 type ControlType<C extends Config> = ListControl<Definition<C>>
-
-type SchemaReturnType<C extends Config> = {
-  definition: SchemaType_<unknown>
-  type: SchemaType_<typeof Definition.type>
-  data: SchemaType_<DataType<C> | undefined>
-  value: SchemaType_<ValueType<C> | undefined>
-  resolvedValue: SchemaType_<ResolvedValueType<C> | undefined>
-}
 
 class Definition<C extends Config = Config> extends ControlDefinition<
   typeof Definition.type,
@@ -116,7 +109,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     return Definition.type
   }
 
-  get refinedSchema() {
+  get schema() {
     const item = this.itemDef.schema
 
     const data = z.array(
@@ -125,7 +118,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
         type: item.type.optional(),
         value: item.data,
       }),
-    ) as SchemaType<DataType<C> | undefined>
+    ) as SchemaType<DataType<C>>
 
     const value = z.array(item.value)
     const resolvedValue = z.array(item.resolvedValue)
@@ -138,13 +131,8 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     }
   }
 
-  // See Image control for explanation
-  get schema(): SchemaReturnType<C> {
-    return this.refinedSchema
-  }
-
   safeParse(data: unknown | undefined): ParseResult<DataType<C> | undefined> {
-    return safeParse(this.refinedSchema.data, data)
+    return safeParse(this.schema.data, data)
   }
 
   fromData(data: DataType<C> | undefined): ValueType<C> | undefined {
