@@ -39,14 +39,16 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
     expectedRenders,
     registerComponents,
     action,
+    rootElements = [],
   }: {
     toData?: (value: ValueType<D>) => DataType<D>
-    value: ValueType<D>
+    value?: ValueType<D>
     cacheData?: MakeswiftPageSnapshot['cacheData']
     expectedRenders?: number
     registerComponents?: (runtime: ReactRuntime) => void
     action?: (element: HTMLElement) => Promise<void>
-  },
+    rootElements?: ElementData[]
+  } = {},
 ) {
   // Arrange
   const controlData: DataType<D> = toData ? toData(value) : controlDefinition.toData(value)
@@ -62,6 +64,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
           propKey: controlData,
         },
       },
+      ...rootElements
     ],
     ROOT_ID,
   )

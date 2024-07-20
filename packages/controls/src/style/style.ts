@@ -123,7 +123,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
       )
     }
 
-    const { config } = this.schema.definition.parse(data)
+    const { config } = Definition.schema.definition.parse(data)
     return new Definition(config)
   }
 

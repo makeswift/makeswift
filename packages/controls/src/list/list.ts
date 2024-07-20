@@ -20,6 +20,7 @@ import {
   type SerializedRecord,
   type DataType as DataType_,
   type ValueType as ValueType_,
+  type SchemaType as SchemaType_,
   type ResolvedValueType as ResolvedValueType_,
 } from '../control-definition'
 
@@ -53,6 +54,14 @@ type DataType<C extends Config> = {
 type ValueType<C extends Config> = ValueType_<ItemType<C>>[]
 type ResolvedValueType<C extends Config> = ResolvedValueType_<ItemType<C>>[]
 type ControlType<C extends Config> = ListControl<Definition<C>>
+
+type SchemaReturnType<C extends Config> = {
+  definition: SchemaType_<unknown>
+  type: SchemaType_<typeof Definition.type>
+  data: SchemaType_<DataType<C> | undefined>
+  value: SchemaType_<ValueType<C> | undefined>
+  resolvedValue: SchemaType_<ResolvedValueType<C> | undefined>
+}
 
 class Definition<C extends Config = Config> extends ControlDefinition<
   typeof Definition.type,
@@ -107,7 +116,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     return Definition.type
   }
 
-  get schema() {
+  get refinedSchema() {
     const item = this.itemDef.schema
 
     const data = z.array(
@@ -129,8 +138,13 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     }
   }
 
+  // See Image control for explanation
+  get schema(): SchemaReturnType<C> {
+    return this.refinedSchema
+  }
+
   safeParse(data: unknown | undefined): ParseResult<DataType<C> | undefined> {
-    return safeParse(this.schema.data, data)
+    return safeParse(this.refinedSchema.data, data)
   }
 
   fromData(data: DataType<C> | undefined): ValueType<C> | undefined {
@@ -163,10 +177,18 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   ): ValueSubscription<ResolvedValueType<C> | undefined> {
     const emptyList: ResolvedValueType<C> = []
 
-    control?.update(data)
+    const childControls = control?.childControls(data?.map(({ id }) => id))
+    if (childControls) {
+      effector.queueEffect(() => control?.setChildControls(childControls))
+    }
 
     const itemValues = data?.map(({ value, id }) =>
-      this.itemDef.resolveValue(value, resolver, effector, control?.child(id)),
+      this.itemDef.resolveValue(
+        value,
+        resolver,
+        effector,
+        childControls?.get(id),
+      ),
     )
 
     return {

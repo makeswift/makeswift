@@ -21,6 +21,7 @@ import {
 } from '../control-definition'
 
 import { Data, Schema } from '../common'
+import { deepEqual } from '../utils/functional'
 
 type Option<T extends Data> = { id: string; value: T; label: string }
 
@@ -155,8 +156,10 @@ class Definition<
     _effector: Effector,
   ): ValueSubscription<ResolvedValueType<C> | undefined> {
     return {
-      readStableValue: (_previous?: ResolvedValueType<C>) => {
-        return this.fromData(data)?.value
+      readStableValue: (previous?: ResolvedValueType<C>) => {
+        const curr = this.fromData(data)?.value
+        if (!deepEqual(curr, previous)) return curr
+        return previous
       },
       subscribe: () => () => {},
     }

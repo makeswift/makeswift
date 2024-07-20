@@ -227,7 +227,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   resolveValue(
     data: DataType<C> | undefined,
     resolver: ResourceResolver,
-    _effector: Effector,
+    effector: Effector,
   ): ValueSubscription<ResolvedValueType<C> | undefined> {
     const format = this.config.format
     const dataSchema = this.refinedSchema.data.optional()
@@ -308,6 +308,9 @@ class Definition<C extends Config = Config> extends ControlDefinition<
       .otherwise(() => undefined)
 
     const file = resolver.resolveFile(fileId)
+    if (fileId != null && file.readStableValue() == null) {
+      effector.queueAsyncEffect(() => file.fetch())
+    }
 
     return {
       readStableValue: (previous: ResolvedValueType<C>) => {

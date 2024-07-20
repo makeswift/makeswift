@@ -1,0 +1,733 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Page Combobox control data async getOptions resolves when value is { id: '1', label: 'One', value: [Object] }: resolvedValue 1`] = `
+{
+  "id": "1",
+  "name": "one",
+}
+`;
+
+exports[`Page Combobox control data async getOptions resolves when value is { id: '1', label: 'One', value: [Object] }: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "id": "1",
+                  "label": "One",
+                  "value": {
+                    "id": "1",
+                    "name": "one",
+                  },
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Combobox control data async getOptions resolves when value is { id: '2', label: 'Two', value: [Object] }: resolvedValue 1`] = `
+{
+  "id": "2",
+  "name": "two",
+}
+`;
+
+exports[`Page Combobox control data async getOptions resolves when value is { id: '2', label: 'Two', value: [Object] }: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "id": "2",
+                  "label": "Two",
+                  "value": {
+                    "id": "2",
+                    "name": "two",
+                  },
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Combobox control data async getOptions resolves when value is { id: '3', label: 'Three', value: [Object] }: resolvedValue 1`] = `
+{
+  "id": "3",
+  "name": "three",
+}
+`;
+
+exports[`Page Combobox control data async getOptions resolves when value is { id: '3', label: 'Three', value: [Object] }: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "id": "3",
+                  "label": "Three",
+                  "value": {
+                    "id": "3",
+                    "name": "three",
+                  },
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Combobox control data async getOptions resolves when value is undefined: resolvedValue 1`] = `undefined`;
+
+exports[`Page Combobox control data async getOptions resolves when value is undefined: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": undefined,
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Combobox control data object values resolves when value is { id: '1', label: 'One', value: [Object] }: resolvedValue 1`] = `
+{
+  "id": "1",
+  "name": "one",
+}
+`;
+
+exports[`Page Combobox control data object values resolves when value is { id: '1', label: 'One', value: [Object] }: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "id": "1",
+                  "label": "One",
+                  "value": {
+                    "id": "1",
+                    "name": "one",
+                  },
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Combobox control data object values resolves when value is { id: '2', label: 'Two', value: [Object] }: resolvedValue 1`] = `
+{
+  "id": "2",
+  "name": "two",
+}
+`;
+
+exports[`Page Combobox control data object values resolves when value is { id: '2', label: 'Two', value: [Object] }: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "id": "2",
+                  "label": "Two",
+                  "value": {
+                    "id": "2",
+                    "name": "two",
+                  },
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Combobox control data object values resolves when value is { id: '3', label: 'Three', value: [Object] }: resolvedValue 1`] = `
+{
+  "id": "3",
+  "name": "three",
+}
+`;
+
+exports[`Page Combobox control data object values resolves when value is { id: '3', label: 'Three', value: [Object] }: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "id": "3",
+                  "label": "Three",
+                  "value": {
+                    "id": "3",
+                    "name": "three",
+                  },
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Combobox control data object values resolves when value is undefined: resolvedValue 1`] = `undefined`;
+
+exports[`Page Combobox control data object values resolves when value is undefined: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": undefined,
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Combobox control data primitive values resolves when value is { id: '1', label: 'One', value: 'one' }: resolvedValue 1`] = `"one"`;
+
+exports[`Page Combobox control data primitive values resolves when value is { id: '1', label: 'One', value: 'one' }: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "id": "1",
+                  "label": "One",
+                  "value": "one",
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Combobox control data primitive values resolves when value is { id: '2', label: 'Two', value: 'two' }: resolvedValue 1`] = `"two"`;
+
+exports[`Page Combobox control data primitive values resolves when value is { id: '2', label: 'Two', value: 'two' }: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "id": "2",
+                  "label": "Two",
+                  "value": "two",
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Combobox control data primitive values resolves when value is { id: '3', label: 'Three', value: 'three' }: resolvedValue 1`] = `"three"`;
+
+exports[`Page Combobox control data primitive values resolves when value is { id: '3', label: 'Three', value: 'three' }: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "id": "3",
+                  "label": "Three",
+                  "value": "three",
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Combobox control data primitive values resolves when value is undefined: resolvedValue 1`] = `undefined`;
+
+exports[`Page Combobox control data primitive values resolves when value is undefined: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": undefined,
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;

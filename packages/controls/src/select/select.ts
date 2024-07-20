@@ -166,7 +166,7 @@ type DerivedConfig<T extends string, C extends Config<T>> = Config<T> & {
   defaultValue: C['defaultValue']
 }
 
-export const Select = <T extends string, C extends Config<T>>(
+export const Select = <const T extends string, C extends Config<T>>(
   config: C & { options: OptionList<T> },
 ) =>
   new (class Select extends Definition<T, DerivedConfig<T, C>> {})({

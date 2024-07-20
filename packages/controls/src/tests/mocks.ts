@@ -1,7 +1,9 @@
 import {
   type ResourceResolver,
   type ValueSubscription,
+  type FetchableValue,
 } from '../resource-resolver'
+
 import {
   type Swatch,
   type File,
@@ -9,26 +11,29 @@ import {
 } from '../resources/types'
 
 export const noOpResourceResolver: ResourceResolver = {
-  resolveSwatch(_swatchId: string): ValueSubscription<Swatch | null> {
+  resolveSwatch(_swatchId: string): FetchableValue<Swatch | null> {
     return {
       readStableValue: () => null,
       subscribe: () => () => {},
+      fetch: () => Promise.resolve(null),
     }
   },
 
-  resolveFile(_fileId: string): ValueSubscription<File | null> {
+  resolveFile(_fileId: string): FetchableValue<File | null> {
     return {
       readStableValue: () => null,
       subscribe: () => () => {},
+      fetch: () => Promise.resolve(null),
     }
   },
 
   resolvePagePathnameSlice(
     _pageId: string,
-  ): ValueSubscription<PagePathnameSlice | null> {
+  ): FetchableValue<PagePathnameSlice | null> {
     return {
       readStableValue: () => null,
       subscribe: () => () => {},
+      fetch: () => Promise.resolve(null),
     }
   },
 

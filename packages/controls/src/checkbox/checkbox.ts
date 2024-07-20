@@ -103,7 +103,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
         `Checkbox: expected '${Definition.type}', got '${data.type}'`,
       )
 
-    const { config, version } = this.schema.relaxed.definition.parse(data)
+    const { config, version } = Definition.schema.relaxed.definition.parse(data)
     return new Definition(config, version)
   }
 

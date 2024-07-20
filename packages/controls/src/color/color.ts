@@ -111,7 +111,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
         `Color deserialization: expected '${Definition.type}', got '${data.type}'`,
       )
 
-    const { config, version } = this.schema.relaxed.definition.parse(data)
+    const { config, version } = Definition.schema.relaxed.definition.parse(data)
     return new Definition(config, version)
   }
 
@@ -205,10 +205,13 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   resolveValue(
     data: DataType<C> | undefined,
     resolver: ResourceResolver,
-    _effector: Effector,
+    effector: Effector,
   ): ValueSubscription<ResolvedValueType<C> | undefined> {
     const value = this.fromData(data)
     const swatch = resolver.resolveSwatch(value?.swatchId)
+    if (value?.swatchId != null && swatch.readStableValue() == null) {
+      effector.queueAsyncEffect(() => swatch.fetch())
+    }
 
     return {
       readStableValue: (_previous: ResolvedValueType<C>) =>

@@ -24,6 +24,7 @@ import {
   serialize,
   type ParseResult,
   type SerializedRecord,
+  type SchemaType as SchemaType_,
 } from '../control-definition'
 
 import { type Effector } from '../effector'
@@ -49,9 +50,19 @@ type SchemaType<_C extends Config> = typeof Definition.schema
 
 type DataType<C extends Config> = z.infer<SchemaType<C>['data']>
 type ValueType<C extends Config> = z.infer<SchemaType<C>['value']>
-type ResolvedValueType<C extends Config> = z.infer<
-  SchemaType<C>['resolvedValue']
->
+type ResolvedValueType<_C extends Config> = {
+  href: string
+  target?: LinkTarget
+  onClick: (event: MouseEvent) => void
+}
+
+type SchemaReturnType<C extends Config> = {
+  definition: SchemaType_<unknown>
+  type: SchemaType_<typeof Definition.type>
+  data: SchemaType_<DataType<C> | undefined>
+  value: SchemaType_<ValueType<C> | undefined>
+  resolvedValue: SchemaType_<ResolvedValueType<C> | undefined>
+}
 
 class Definition<C extends Config = Config> extends ControlDefinition<
   typeof Definition.type,
@@ -114,7 +125,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     return Definition.type
   }
 
-  get schema() {
+  get schema(): SchemaReturnType<C> {
     return Definition.schema
   }
 
@@ -172,12 +183,15 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   resolveValue(
     data: DataType<C> | undefined,
     resolver: ResourceResolver,
-    _effector: Effector,
+    effector: Effector,
   ): ValueSubscription<ResolvedValueType<C> | undefined> {
     const pageId = data?.type === 'OPEN_PAGE' ? data.payload.pageId : null
     const pageSubscription = resolver.resolvePagePathnameSlice(
       pageId ?? undefined,
     )
+    if (pageId != null && pageSubscription.readStableValue() == null) {
+      effector.queueAsyncEffect(() => pageSubscription.fetch())
+    }
 
     const elementKey =
       data?.type === 'SCROLL_TO_ELEMENT'

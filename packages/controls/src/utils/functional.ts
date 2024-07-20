@@ -90,3 +90,62 @@ export function hasAllKeys<K, V>(map: Map<K, V>, keys: readonly K[]): boolean {
 
   return true
 }
+
+export function is(x: unknown, y: unknown): boolean {
+  if (x === y) return x !== 0 || y !== 0 || 1 / x === 1 / y
+  return x !== x && y !== y
+}
+
+export function shallowEqual(a: unknown, b: unknown) {
+  if (is(a, b)) return true
+
+  if (
+    typeof a !== 'object' ||
+    a === null ||
+    typeof b !== 'object' ||
+    b === null
+  )
+    return false
+
+  const keysA = Object.keys(a)
+  const keysB = Object.keys(b)
+
+  if (keysA.length !== keysB.length) return false
+  if (
+    keysA.some(
+      (key) =>
+        !Object.prototype.hasOwnProperty.call(b, key) ||
+        !is(a[key as keyof typeof a], b[key as keyof typeof b]),
+    )
+  )
+    return false
+
+  return true
+}
+export function deepEqual(a: unknown, b: unknown) {
+  if (shallowEqual(a, b)) return true
+
+  if (
+    typeof a !== 'object' ||
+    a === null ||
+    typeof b !== 'object' ||
+    b === null
+  )
+    return false
+
+  const keysA = Object.keys(a)
+  const keysB = Object.keys(b)
+
+  if (keysA.length !== keysB.length) return false
+
+  if (
+    keysA.some(
+      (key) =>
+        !Object.prototype.hasOwnProperty.call(b, key) ||
+        !deepEqual(a[key as keyof typeof a], b[key as keyof typeof b]),
+    )
+  )
+    return false
+
+  return true
+}

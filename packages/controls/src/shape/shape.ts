@@ -1,5 +1,9 @@
 import { z } from 'zod'
-import { ControlDefinition, ParseResult } from '../control-definition'
+import {
+  ControlDefinition,
+  ParseResult,
+  SchemaType,
+} from '../control-definition'
 import {
   safeParse,
   serialize,
@@ -37,6 +41,14 @@ type ResolvedValueType<C extends Config> = {
 }
 
 type ControlType<C extends Config> = ShapeControl<Definition<C>>
+
+type SchemaReturnType<C extends Config> = {
+  definition: SchemaType<unknown>
+  type: SchemaType<typeof Definition.type>
+  data: SchemaType<DataType<C> | undefined>
+  value: SchemaType<ValueType<C> | undefined>
+  resolvedValue: SchemaType<ResolvedValueType<C> | undefined>
+}
 
 class Definition<C extends Config = Config> extends ControlDefinition<
   typeof Definition.type,
@@ -82,7 +94,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     return Definition.type
   }
 
-  get schema() {
+  get schema(): SchemaReturnType<C> {
     const type = z.literal(Definition.type)
     const keys = mapValues(this.keyDefs, (def) => def.schema)
 
@@ -99,7 +111,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
       config,
     })
 
-    return { type, data, value, resolvedValue, config, definition }
+    return { type, data, value, resolvedValue, definition }
   }
 
   safeParse(data: unknown | undefined): ParseResult<DataType<C> | undefined> {
@@ -159,7 +171,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
           v?.subscribe(onUpdate),
         )
 
-        return () => unsubscribes.forEach((u) => u())
+        return () => unsubscribes.forEach((u) => u?.())
       },
     }
   }

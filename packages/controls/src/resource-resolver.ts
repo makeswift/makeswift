@@ -9,14 +9,18 @@ export type ValueSubscription<T> = {
   subscribe(onUpdate: () => void): () => void
 }
 
-export interface ResourceResolver {
-  resolveSwatch(swatchId: string | undefined): ValueSubscription<Swatch | null>
+export type FetchableValue<T> = ValueSubscription<T> & {
+  fetch(): Promise<T>
+}
 
-  resolveFile(fileId: string | undefined): ValueSubscription<File | null>
+export interface ResourceResolver {
+  resolveSwatch(swatchId: string | undefined): FetchableValue<Swatch | null>
+
+  resolveFile(fileId: string | undefined): FetchableValue<File | null>
 
   resolvePagePathnameSlice(
     pageId: string | undefined,
-  ): ValueSubscription<PagePathnameSlice | null>
+  ): FetchableValue<PagePathnameSlice | null>
 
   resolveElementId(elementKey: string): ValueSubscription<string | null>
 }

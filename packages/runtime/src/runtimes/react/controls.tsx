@@ -1,5 +1,5 @@
-import { useMemo, useRef, useSyncExternalStore } from 'react'
-import { ControlInstance, type ResourceResolver, type ValueSubscription } from '@makeswift/controls'
+import { useMemo, useRef } from 'react'
+import { type ResourceResolver } from '@makeswift/controls'
 
 import * as ReactPage from '../../state/react-page'
 
@@ -32,7 +32,8 @@ import {
 } from '../../controls'
 import { ControlValue } from './controls/control'
 import { RenderHook } from './components'
-import { useStyle, useEffector } from './use-style'
+import { useStyle } from './use-style'
+import { useResolvedProps } from './use-resolved-props'
 import { useRichText } from './controls/rich-text/rich-text'
 import { useRichTextV2 } from './controls/rich-text-v2'
 import { useStore } from './hooks/use-store'
@@ -69,7 +70,7 @@ import {
   getSocialLinksPropControllerDataSocialLinksData,
 } from '@makeswift/prop-controllers'
 
-import { isLegacyDescriptor, type Descriptor } from '../../prop-controllers/descriptors'
+import { isLegacyDescriptor } from '../../prop-controllers/descriptors'
 import { useResponsiveLengthPropControllerData } from '../../components/hooks/useResponsiveLengthPropControllerData'
 import { useNumberPropControllerData } from '../../components/hooks/useNumberPropControllerData'
 import { useResponsiveColorPropControllerData } from '../../components/hooks/useResponsiveColorPropControllerData'
@@ -86,7 +87,6 @@ import { useImagesPropControllerData } from '../../components/hooks/useImagesPro
 import { useBackgroundsPropControllerData } from '../../components/hooks/useBackgroundsPropControllerData'
 import { useTextInputPropControllerData } from '../../components/hooks/useTextInputPropControllerData'
 import { useMakeswiftHostApiClient } from '../../next/context/makeswift-host-api-client'
-import { createPropsValuesSubscription } from './props-subscription'
 
 function useWidthStyle(
   data: WidthPropControllerData | undefined,
@@ -131,28 +131,6 @@ export function useBorderStyle(
 type PropsValueProps = {
   element: ReactPage.ElementData
   children(props: Record<string, unknown>): JSX.Element
-}
-
-const useResolvedProps = (
-  propDefs: Record<string, Descriptor>,
-  controls: Record<string, ControlInstance> | null,
-  elementData: Record<string, ReactPage.ElementData>,
-  resourceResolver: ResourceResolver,
-): Record<string, unknown> => {
-  const effector = useEffector()
-  const propsSubscription = useMemo<ValueSubscription<Record<string, unknown>>>(
-    () =>
-      createPropsValuesSubscription(propDefs, controls, elementData, resourceResolver, effector),
-    [propDefs, controls, elementData, resourceResolver, effector],
-  )
-
-  effector.useStyles()
-
-  return useSyncExternalStore(
-    propsSubscription.subscribe,
-    propsSubscription.readStableValue,
-    propsSubscription.readStableValue,
-  )
 }
 
 export function PropsValue({ element, children: renderComponent }: PropsValueProps): JSX.Element {

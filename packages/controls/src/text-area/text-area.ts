@@ -106,7 +106,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
       )
     }
 
-    const { version, config } = this.schema.relaxed.definition.parse(data)
+    const { version, config } = Definition.schema.relaxed.definition.parse(data)
     return new Definition(config, version)
   }
 

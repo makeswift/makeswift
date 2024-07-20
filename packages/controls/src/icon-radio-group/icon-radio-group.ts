@@ -36,11 +36,11 @@ export type IconRadioGroupIcon =
   (typeof unstable_IconRadioGroupIcon)[keyof typeof unstable_IconRadioGroupIcon]
 
 type Option<T extends string> = {
-  readonly value: T
-  readonly label: string
-  readonly icon: IconRadioGroupIcon
+  value: T
+  label: string
+  icon: IconRadioGroupIcon
 }
-type OptionList<T extends string> = readonly [Option<T>, ...Option<T>[]]
+type OptionList<T extends string> = [Option<T>, ...Option<T>[]]
 
 type Config<Item extends string = string> = {
   readonly options: OptionList<Item>
@@ -196,7 +196,10 @@ type DerivedConfig<T extends string, C extends Config<T>> = Config<T> & {
   defaultValue: C['defaultValue']
 }
 
-export const unstable_IconRadioGroup = <T extends string, C extends Config<T>>(
+export const unstable_IconRadioGroup = <
+  const T extends string,
+  C extends Config<T>,
+>(
   config: C & { readonly options: OptionList<T> },
 ) =>
   new (class IconRadioGroup extends Definition<T, DerivedConfig<T, C>> {})({

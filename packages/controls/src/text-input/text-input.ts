@@ -106,7 +106,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
       )
     }
 
-    const { version, config } = this.schema.relaxed.definition.parse(data)
+    const { version, config } = Definition.schema.relaxed.definition.parse(data)
     return new Definition(config, version)
   }
 
@@ -154,13 +154,13 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   }
 
   resolveValue(
-    value: ValueType<C> | undefined,
+    value: DataType<C> | undefined,
     _resolver: ResourceResolver,
     _effector: Effector,
   ): ValueSubscription<ResolvedValueType<C> | undefined> {
     return {
       readStableValue: (_previous?: ResolvedValueType<C>) => {
-        return value ?? this.config.defaultValue
+        return this.fromData(value) ?? this.config.defaultValue
       },
       subscribe: () => () => {},
     }

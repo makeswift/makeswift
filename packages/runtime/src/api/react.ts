@@ -1,4 +1,4 @@
-import { type ValueSubscription } from '@makeswift/controls'
+import { type FetchableValue } from '@makeswift/controls'
 import * as MakeswiftApiClient from '../state/makeswift-api-client'
 import {
   APIResourceType,
@@ -84,15 +84,12 @@ export class MakeswiftHostApiClient {
     )
   }
 
-  resolveSwatch(swatchId: string | undefined): ValueSubscription<Swatch | null> {
-    if (swatchId != null && this.readSwatch(swatchId) == null) {
-      this.fetchSwatch(swatchId).catch(console.error)
-    }
-
+  resolveSwatch(swatchId: string | undefined): FetchableValue<Swatch | null> {
     return {
       readStableValue: (_previous?: Swatch) =>
         swatchId != null ? this.readSwatch(swatchId) : null,
       subscribe: this.subscribe,
+      fetch: async () => (swatchId != null ? this.fetchSwatch(swatchId) : null),
     }
   }
 
@@ -110,14 +107,11 @@ export class MakeswiftHostApiClient {
     )
   }
 
-  resolveFile(fileId: string | undefined): ValueSubscription<File | null> {
-    if (fileId != null && this.readFile(fileId) == null) {
-      this.fetchFile(fileId).catch(console.error)
-    }
-
+  resolveFile(fileId: string | undefined): FetchableValue<File | null> {
     return {
       readStableValue: (_previous?: File) => (fileId != null ? this.readFile(fileId) : null),
       subscribe: this.subscribe,
+      fetch: async () => (fileId != null ? this.fetchFile(fileId) : null),
     }
   }
 
@@ -213,17 +207,12 @@ export class MakeswiftHostApiClient {
     )
   }
 
-  resolvePagePathnameSlice(
-    pageId: string | undefined,
-  ): ValueSubscription<PagePathnameSlice | null> {
-    if (pageId != null && this.readPagePathnameSlice(pageId) == null) {
-      this.fetchPagePathnameSlice(pageId).catch(console.error)
-    }
-
+  resolvePagePathnameSlice(pageId: string | undefined): FetchableValue<PagePathnameSlice | null> {
     return {
       readStableValue: (_previous?: PagePathnameSlice) =>
         pageId != null ? this.readPagePathnameSlice(pageId) : null,
       subscribe: this.subscribe,
+      fetch: async () => (pageId != null ? this.fetchPagePathnameSlice(pageId) : null),
     }
   }
 

@@ -5,6 +5,7 @@ import { noOpResourceResolver } from '../tests/mocks'
 import { type ValueType, type ResolvedValueType } from '../control-definition'
 import { noOpEffector } from '../effector'
 import { MergeTranslatableDataContext, TranslationDto } from '../context'
+import { ControlDataTypeKey } from '../common'
 
 describe('TextInput', () => {
   describe('constructor', () => {
@@ -33,7 +34,7 @@ describe('TextInput', () => {
       }).config satisfies { label: string }
     })
 
-    test("refines value type based on ctor's `defaultValue`", () => {
+    test("refines types based on ctor's `defaultValue`", () => {
       // Arrange
       const definition = TextInput({
         label: 'TextInput',
@@ -52,34 +53,58 @@ describe('TextInput', () => {
   })
 
   describe('resolveValue', () => {
-    test.each(['cookie monster', 'zoe', undefined])(
-      'correctly resolves valid value %s',
-      (data) => {
+    test('resolves v0 data', () => {
+      const data = 'cookie monster'
+      expect(
+        TextInput({ label: 'TextInput' })
+          .resolveValue(data, noOpResourceResolver, noOpEffector)
+          .readStableValue(),
+      ).toBe('cookie monster')
+    })
+
+    test('resolves v1 data', () => {
+      const data = {
+        [ControlDataTypeKey]: 'text-input::v1' as const,
+        value: 'elmo',
+      }
+      expect(
+        TextInput({ label: 'TextInput' })
+          .resolveValue(data, noOpResourceResolver, noOpEffector)
+          .readStableValue(),
+      ).toBe('elmo')
+    })
+
+    describe('resolves undefined data', () => {
+      test('resolved undefined when no default value is provided', () => {
         expect(
           TextInput({ label: 'TextInput' })
-            .resolveValue(data, noOpResourceResolver, noOpEffector)
+            .resolveValue(undefined, noOpResourceResolver, noOpEffector)
             .readStableValue(),
-        ).toBe(data)
+        ).toBe(undefined)
+      })
 
-        const defaultValue = 'elmo'
+      test('resolves default value when default is provided', () => {
         expect(
-          TextInput({ defaultValue, label: 'TextInput' })
-            .resolveValue(data, noOpResourceResolver, noOpEffector)
+          TextInput({ label: 'TextInput', defaultValue: 'elmo' })
+            .resolveValue(undefined, noOpResourceResolver, noOpEffector)
             .readStableValue(),
-        ).toBe(data ?? defaultValue)
-      },
-    )
+        ).toBe('elmo')
+      })
+    })
   })
 
   describe('getTranslatableData', () => {
-    const def = TextInput({ label: 'TextInput' })
-    test.each(['cookie monster', def.toData('cookie monster'), undefined])(
-      'returns `%s` when data is `%s`',
-      (data) => {
-        const def = TextInput({ label: 'TextInput' })
-        expect(def.getTranslatableData(data)).toBe(data)
+    test.each([
+      'cookie monster',
+      {
+        [ControlDataTypeKey]: 'text-input::v1' as const,
+        value: 'elmo',
       },
-    )
+      undefined,
+    ])('returns `%s` when data is `%s`', (data) => {
+      const def = TextInput({ label: 'TextInput' })
+      expect(def.getTranslatableData(data)).toBe(data)
+    })
   })
 
   describe('mergeTranslatedData', () => {
@@ -95,15 +120,35 @@ describe('TextInput', () => {
     const def = TextInput({ label: 'TextInput' })
 
     test('returns translated data when translated data is non-nullish', () => {
-      const data = 'cookie monster'
-      expect(def.mergeTranslatedData(data, translationData, mergeContext)).toBe(
-        translationData,
+      const dataV0 = 'cookie monster'
+      expect(
+        def.mergeTranslatedData(dataV0, translationData, mergeContext),
+      ).toBe(translationData)
+
+      const dataV1 = {
+        [ControlDataTypeKey]: 'text-input::v1' as const,
+        value: 'elmo',
+      }
+      expect(
+        def.mergeTranslatedData(dataV1, translationData, mergeContext),
+      ).toBe(translationData)
+    })
+
+    test('returns data when translated data is nullish', () => {
+      const dataV0 = 'cookie monster'
+      expect(def.mergeTranslatedData(dataV0, undefined, mergeContext)).toBe(
+        dataV0,
       )
     })
 
     test('returns data when translated data is nullish', () => {
-      const data = 'cookie monster'
-      expect(def.mergeTranslatedData(data, undefined, mergeContext)).toBe(data)
+      const dataV1 = {
+        [ControlDataTypeKey]: 'text-input::v1' as const,
+        value: 'elmo',
+      }
+      expect(def.mergeTranslatedData(dataV1, undefined, mergeContext)).toBe(
+        dataV1,
+      )
     })
   })
 

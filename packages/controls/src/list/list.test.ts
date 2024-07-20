@@ -9,13 +9,9 @@ import { Image } from '../image'
 import { Select } from '../select'
 import { Combobox } from '../combobox'
 import { Shape } from '../shape'
-import {
-  type ValueType,
-  type ResolvedValueType,
-  DataType,
-} from '../control-definition'
 import { Targets } from '../introspect'
 import { ControlDataTypeKey } from '../common'
+import { DataType, ResolvedValueType, ValueType } from '../control-definition'
 
 describe('List', () => {
   describe('constructor', () => {
@@ -64,8 +60,82 @@ describe('List', () => {
     })
   })
 
+  describe('infers types from config', () => {
+    test('infers type from single control', () => {
+      const def = List({
+        type: Color({ label: 'Color', defaultValue: 'red' }),
+      })
+
+      type Value = ValueType<typeof def>
+      type Data = DataType<typeof def>
+      type ResolvedValue = ResolvedValueType<typeof def>
+
+      const validValue: Value = [
+        { swatchId: 'swatch-id', alpha: 1 },
+      ] satisfies Value
+
+      const validData: Data = [
+        {
+          id: '000',
+          type: ColorDefinition.type,
+          value: {
+            swatchId: 'swatch-id',
+            alpha: 1,
+            [ControlDataTypeKey]: 'color::v1',
+          },
+        },
+      ] satisfies Data
+
+      const validResolvedValue: ResolvedValue = [
+        'rgba(255, 0, 0, 1)',
+      ] satisfies ResolvedValue
+
+      expect(validValue).toMatchSnapshot()
+      expect(validData).toMatchSnapshot()
+      expect(validResolvedValue).toMatchSnapshot()
+
+      // TODO: @arvin - add negative assertion tests
+    })
+
+    test('infers type from composable control definition', () => {
+      const def = List({
+        type: List({
+          type: Color({ label: 'Color', defaultValue: 'red' }),
+        }),
+      })
+
+      type Value = ValueType<typeof def>
+      type Data = DataType<typeof def>
+      type ResolvedValue = ResolvedValueType<typeof def>
+
+      const validValue: Value = [[{ swatchId: 'swatch-id', alpha: 1 }]]
+      const validData: Data = [
+        {
+          id: '000',
+          type: ListDefinition.type,
+          value: [
+            {
+              id: '000',
+              type: ColorDefinition.type,
+              value: {
+                swatchId: 'swatch-id',
+                alpha: 1,
+                [ControlDataTypeKey]: 'color::v1',
+              },
+            },
+          ],
+        },
+      ]
+      const validResolvedValue: ResolvedValue = [['rgba(255, 0, 0, 1)']]
+
+      expect(validValue).toMatchSnapshot()
+      expect(validData).toMatchSnapshot()
+      expect(validResolvedValue).toMatchSnapshot()
+    })
+  })
+
   describe('serialization', () => {
-    test('serialize list of controls', () => {
+    test('serialize/deserialize list of controls', () => {
       const list = List({
         type: Color({ defaultValue: 'red' }),
         label: 'Color list',
@@ -73,9 +143,15 @@ describe('List', () => {
 
       const [serialized, _] = list.serialize()
       expect(serialized).toMatchSnapshot()
+
+      const deserialized = ListDefinition.deserialize(
+        serialized,
+        ColorDefinition.deserialize,
+      )
+      expect(deserialized).toEqual(list)
     })
 
-    test('serialize list of composable controls', () => {
+    test('serialize/deserialize list of composable controls', () => {
       const list = List({
         type: List({
           type: Color({ defaultValue: 'red' }),
@@ -86,6 +162,11 @@ describe('List', () => {
 
       const [serialized, _] = list.serialize()
       expect(serialized).toMatchSnapshot()
+
+      const deserialized = ListDefinition.deserialize(serialized, (data) =>
+        ListDefinition.deserialize(data, ColorDefinition.deserialize),
+      )
+      expect(deserialized).toEqual(list)
     })
   })
 

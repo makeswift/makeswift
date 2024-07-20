@@ -1,4 +1,3 @@
-import { type DataType } from '../control-definition'
 import {
   ControlInstance,
   type ControlMessage,
@@ -38,20 +37,18 @@ export class ListControl<
 
   child = (key: string) => this.itemControls.get(key)
 
-  update = (data: DataType<Def> | undefined) => {
-    if (
-      data == null ||
-      hasAllKeys(
-        this.itemControls,
-        data.map(({ id }) => id),
-      )
-    ) {
-      return
+  childControls = (ids: string[] | undefined) => {
+    if (ids == null || hasAllKeys(this.itemControls, ids)) {
+      return this.itemControls
     }
 
-    this.itemControls = new Map(
-      data.map(({ id }) => [id, this.createItemControl(id)]),
+    return new Map(
+      ids.map((id) => [id, this.child(id) ?? this.createItemControl(id)]),
     )
+  }
+
+  setChildControls = (children: Map<string, ControlInstance>) => {
+    this.itemControls = children
   }
 
   createItemControl = (id: string) => {
