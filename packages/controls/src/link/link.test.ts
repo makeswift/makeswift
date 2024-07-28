@@ -31,11 +31,13 @@ function testLinkDefinition<Def extends ControlDefinition>(
 
 describe('Link', () => {
   describe('constructor', () => {
-    test("definition's config type is derived from constructor's arguments", () => {
+    test('definition matches snapshot', () => {
       // Assert
-      Link({
+      const def = Link({
         label: 'Link',
-      }).config satisfies { label: string }
+      })
+
+      expect(def).toMatchSnapshot()
     })
   })
 

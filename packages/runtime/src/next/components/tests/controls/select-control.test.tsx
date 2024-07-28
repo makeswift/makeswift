@@ -31,6 +31,7 @@ describe('Page', () => {
         ],
         defaultValue: 'two',
       }),
+      { value: undefined },
     )
   })
 })

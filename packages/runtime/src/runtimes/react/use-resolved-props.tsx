@@ -1,5 +1,5 @@
-import { useMemo, useSyncExternalStore } from 'react'
-import { ControlInstance, type ResourceResolver, type ValueSubscription } from '@makeswift/controls'
+import { useMemo, useEffect, useSyncExternalStore } from 'react'
+import { ControlInstance, type ResourceResolver } from '@makeswift/controls'
 
 import * as ReactPage from '../../state/react-page'
 
@@ -15,7 +15,7 @@ export const useResolvedProps = (
   resourceResolver: ResourceResolver,
 ): Record<string, unknown> => {
   const effectorFactory = useEffectorFactory()
-  const propsSubscription = useMemo<ValueSubscription<Record<string, unknown>>>(
+  const propsSubscription = useMemo(
     () =>
       createPropsValuesSubscription(
         propDefs,
@@ -28,7 +28,10 @@ export const useResolvedProps = (
   )
 
   effectorFactory.useStyles() // FIXME: useSyncExternalStore
-  effectorFactory.useEffects()
+
+  useEffect(() => {
+    propsSubscription.triggerResolve()
+  })
 
   return useSyncExternalStore(
     propsSubscription.subscribe,

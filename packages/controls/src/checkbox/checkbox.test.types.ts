@@ -3,6 +3,13 @@ import { Checkbox } from './checkbox'
 import { DataType, ResolvedValueType, ValueType } from '../control-definition'
 import { ControlDataTypeKey } from '../common'
 
+type ExpectedCheckboxDataType =
+  | boolean
+  | {
+      [ControlDataTypeKey]: 'checkbox::v1'
+      value: boolean
+    }
+
 describe('Checkbox Types', () => {
   test('infers types from control definitions (default passed)', () => {
     const def = Checkbox({ label: 'test', defaultValue: true })
@@ -13,17 +20,8 @@ describe('Checkbox Types', () => {
       defaultValue: true
     }>()
 
-    // undefined is an option here because the optional() schema is evaluated at
-    // runtime
     type Data = DataType<typeof def>
-    expectTypeOf<Data>().toEqualTypeOf<
-      | undefined
-      | boolean
-      | {
-          [ControlDataTypeKey]: 'checkbox::v1'
-          value: boolean
-        }
-    >()
+    expectTypeOf<Data>().toEqualTypeOf<ExpectedCheckboxDataType>()
 
     type Value = ValueType<typeof def>
     expectTypeOf<Value>().toEqualTypeOf<boolean>()
@@ -42,19 +40,13 @@ describe('Checkbox Types', () => {
     }>()
 
     type Data = DataType<typeof def>
-    expectTypeOf<Data>().toEqualTypeOf<
-      | undefined
-      | boolean
-      | {
-          [ControlDataTypeKey]: 'checkbox::v1'
-          value: boolean
-        }
-    >()
+    expectTypeOf<Data>().toEqualTypeOf<ExpectedCheckboxDataType | undefined>()
 
     type Value = ValueType<typeof def>
     expectTypeOf<Value>().toEqualTypeOf<boolean | undefined>()
 
     type Resolved = ResolvedValueType<typeof def>
+
     expectTypeOf<Resolved>().toEqualTypeOf<boolean | undefined>()
   })
 })

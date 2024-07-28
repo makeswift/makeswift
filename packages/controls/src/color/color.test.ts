@@ -2,12 +2,29 @@ import { Color } from './color'
 import { testDefinition } from '../tests/test-definition'
 
 import { type CopyContext, createReplacementContext } from '../context'
-import {
-  type ValueType,
-  type ResolvedValueType,
-  ControlDefinition,
-} from '../control-definition'
+import { type ValueType, ControlDefinition } from '../control-definition'
 import { Targets } from '../introspect'
+import { ControlDataTypeKey } from '../common'
+import { noOpEffector } from '../effector'
+import { noOpResourceResolver } from '../tests/mocks'
+import { FetchableValue, ResourceResolver } from '../resource-resolver'
+import { Swatch } from '../resources'
+
+export const colorResolver: ResourceResolver = {
+  ...noOpResourceResolver,
+  resolveSwatch(swatchId: string): FetchableValue<Swatch | null> {
+    return {
+      readStableValue: () => ({
+        id: swatchId,
+        hue: 0,
+        saturation: 0,
+        lightness: 0,
+      }),
+      subscribe: () => () => {},
+      fetch: () => Promise.resolve(null),
+    }
+  },
+}
 
 function testColorDefinition<Def extends ControlDefinition>(
   definition: Def,
@@ -77,30 +94,32 @@ describe('Color', () => {
         ).toMatchSnapshot()
       },
     )
+  })
 
-    test("definition's config type is derived from constructor's arguments", () => {
-      // Assert
-      Color({
-        label: 'color',
-        defaultValue: '#ff0000',
-      }).config satisfies { label: string; defaultValue: string }
-
-      Color({
-        label: 'color',
-        labelOrientation: 'horizontal',
-      }).config satisfies { label: string; labelOrientation: string }
+  describe('resolveValue', () => {
+    test('resolves v0 data', () => {
+      const data = {
+        swatchId: '[swatch-id-1]',
+        alpha: 0.5,
+      }
+      expect(
+        Color({ label: 'Color' })
+          .resolveValue(data, colorResolver, noOpEffector)
+          .readStableValue(),
+      ).toBe('rgba(0, 0, 0, 0.5)')
     })
 
-    test("refines value type based on ctor's `defaultValue`", () => {
-      // Arrange
-      const definition = Color({
-        label: 'color',
-        defaultValue: 'blue',
-      })
-
-      // Assert
-      const value: string = 'green' as ResolvedValueType<typeof definition>
-      expect(value).toBe('green')
+    test('resolves v1 data', () => {
+      const data = {
+        [ControlDataTypeKey]: 'color::v1' as const,
+        swatchId: '[swatch-id-1]',
+        alpha: 0.5,
+      }
+      expect(
+        Color({ label: 'Color' })
+          .resolveValue(data, colorResolver, noOpEffector)
+          .readStableValue(),
+      ).toBe('rgba(0, 0, 0, 0.5)')
     })
   })
 

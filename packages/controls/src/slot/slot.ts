@@ -1,9 +1,9 @@
 import { z } from 'zod'
 
-import { Schema, Data, isElementReference } from '../common'
+import { Schema, type Data, isElementReference } from '../common'
 import {
-  MergeContext,
-  MergeTranslatableDataContext,
+  type MergeContext,
+  type MergeTranslatableDataContext,
   type CopyContext,
 } from '../context'
 
@@ -18,8 +18,12 @@ import {
   type SchemaType,
 } from '../control-definition'
 
+import {
+  type IntrospectionTarget,
+  IntrospectionTargetType,
+} from '../introspect'
+
 import { SlotControl } from './slot-control'
-import { IntrospectionTarget, IntrospectionTargetType } from '../introspect'
 
 type DataType = z.infer<typeof Definition.schema.data>
 type ValueType = z.infer<typeof Definition.schema.value>

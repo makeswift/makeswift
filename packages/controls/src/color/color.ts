@@ -5,10 +5,7 @@ import { Schema, ControlDataTypeKey } from '../common'
 import { objectsAreEqual } from '../utils/functional'
 
 import { type CopyContext } from '../context'
-import {
-  type ResourceResolver,
-  type ValueSubscription,
-} from '../resource-resolver'
+import { type ResourceResolver } from '../resource-resolver'
 
 import {
   DefaultControlInstance,
@@ -24,6 +21,7 @@ import {
   serialize,
   type ParseResult,
   type SerializedRecord,
+  type Resolvable,
 } from '../control-definition'
 
 import { swatchToColorString } from './conversion'
@@ -65,7 +63,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     const resolvedSwatchValue = Schema.resolvedColorData
 
     const schemas = <R>(resolvedValue: z.ZodType<R>) => {
-      const data = value.and(
+      const data = value.merge(
         z.object({
           [ControlDataTypeKey]: z.literal(this.v1DataType).optional(),
         }),
@@ -182,12 +180,12 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   resolveSwatch(
     data: DataType<C> | undefined,
     resolver: ResourceResolver,
-  ): ValueSubscription<ResolvedSwatchValueType<C> | undefined> {
+  ): Resolvable<ResolvedSwatchValueType<C> | undefined> {
     const value = this.fromData(data)
     const swatchSub = resolver.resolveSwatch(value?.swatchId)
 
     return {
-      readStableValue: (previous: ResolvedSwatchValueType<C>) => {
+      readStableValue: (previous?: ResolvedSwatchValueType<C>) => {
         const swatch = swatchSub.readStableValue(previous?.swatch)
         if (swatch == null) return undefined
 
@@ -199,28 +197,35 @@ class Definition<C extends Config = Config> extends ControlDefinition<
         return objectsAreEqual(r, previous) ? previous : r
       },
       subscribe: swatchSub.subscribe,
+      triggerResolve: async (currentValue?: ResolvedSwatchValueType<C>) => {
+        if (currentValue == null) {
+          await swatchSub.fetch()
+        }
+      },
     }
   }
 
   resolveValue(
     data: DataType<C> | undefined,
     resolver: ResourceResolver,
-    effector: Effector,
-  ): ValueSubscription<ResolvedValueType<C> | undefined> {
+    _effector: Effector,
+  ): Resolvable<ResolvedValueType<C> | undefined> {
     const value = this.fromData(data)
     const swatch = resolver.resolveSwatch(value?.swatchId)
-    if (value?.swatchId != null && swatch.readStableValue() == null) {
-      effector.queueAsyncEffect(() => swatch.fetch())
-    }
 
     return {
-      readStableValue: (_previous: ResolvedValueType<C>) =>
+      readStableValue: (_previous?: ResolvedValueType<C>) =>
         swatchToColorString(
           swatch.readStableValue(),
           value?.alpha ?? 1,
           this.config.defaultValue,
         ),
       subscribe: swatch.subscribe,
+      triggerResolve: async (_currentValue?: ResolvedValueType<C>) => {
+        if (swatch.readStableValue() == null) {
+          await swatch.fetch()
+        }
+      },
     }
   }
 

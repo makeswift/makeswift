@@ -18,6 +18,8 @@ describe('Page', () => {
   })
 
   test(`when defaultValue is set`, async () => {
-    await testPageControlPropRendering(TextArea({ defaultValue: 'The Deathly Hallows' }))
+    await testPageControlPropRendering(TextArea({ defaultValue: 'The Deathly Hallows' }), {
+      value: undefined,
+    })
   })
 })

@@ -1,5 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Link constructor definition matches snapshot 1`] = `
+Link {
+  "config": {
+    "label": "Link",
+  },
+}
+`;
+
 exports[`Link definition w/ config {"label":"Link"} toData returns v1 data for \`{ type: 'CALL_PHONE', payload: [Object] }\` when definition version is 1 1`] = `
 {
   "payload": {

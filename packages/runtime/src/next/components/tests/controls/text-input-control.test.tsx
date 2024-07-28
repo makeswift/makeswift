@@ -18,6 +18,8 @@ describe('Page', () => {
   })
 
   test(`when defaultValue is set`, async () => {
-    await testPageControlPropRendering(TextInput({ defaultValue: 'Magna Carta Holy Grail' }))
+    await testPageControlPropRendering(TextInput({ defaultValue: 'Magna Carta Holy Grail' }), {
+      value: undefined,
+    })
   })
 })

@@ -1,9 +1,8 @@
 import { Number } from './number'
 import { testDefinition } from '../tests/test-definition'
 import { noOpResourceResolver } from '../tests/mocks'
-
-import { type ValueType, type ResolvedValueType } from '../control-definition'
 import { noOpEffector } from '../effector'
+import { ControlDataTypeKey } from '../common'
 
 describe('Number', () => {
   describe('constructor', () => {
@@ -18,71 +17,29 @@ describe('Number', () => {
         ).toMatchSnapshot()
       },
     )
-
-    test("definition's config type is derived from constructor's arguments", () => {
-      // Assert
-      Number({
-        label: 'Number',
-        labelOrientation: 'horizontal',
-        defaultValue: 15,
-        min: 10,
-        max: 20,
-        step: 2,
-        suffix: 'px',
-      }).config satisfies {
-        label: string
-        defaultValue: number
-        labelOrientation: 'horizontal'
-        min: number
-        max: number
-        step: number
-        suffix: string
-      }
-
-      Number({
-        label: 'Number',
-        defaultValue: 5,
-      }).config satisfies { label: string; defaultValue: number }
-
-      Number({
-        label: 'Number',
-      }).config satisfies { label: string }
-    })
-
-    test("refines value type based on ctor's `defaultValue`", () => {
-      // Arrange
-      const definition = Number({
-        label: 'Number',
-        defaultValue: 6,
-      })
-
-      // Assert
-      const value: number = 6 as ValueType<typeof definition>
-      const resolvedValue: number = 6 as ResolvedValueType<typeof definition>
-
-      expect(value).toBe(6)
-      expect(resolvedValue).toBe(6)
-    })
   })
 
   describe('resolveValue', () => {
-    test.each([21, 22, undefined])(
-      'correctly resolves valid value %s',
-      (value) => {
-        expect(
-          Number({ label: 'Number' })
-            .resolveValue(value, noOpResourceResolver, noOpEffector)
-            .readStableValue(),
-        ).toBe(value)
+    test('resolves v0 data', () => {
+      const data = 5
+      expect(
+        Number({ label: 'Number' })
+          .resolveValue(data, noOpResourceResolver, noOpEffector)
+          .readStableValue(),
+      ).toBe(5)
+    })
 
-        const defaultValue = 42
-        expect(
-          Number({ defaultValue, label: 'Number' })
-            .resolveValue(value, noOpResourceResolver, noOpEffector)
-            .readStableValue(),
-        ).toBe(value ?? defaultValue)
-      },
-    )
+    test('resolves v1 data', () => {
+      const data = {
+        [ControlDataTypeKey]: 'number::v1' as const,
+        value: 4,
+      }
+      expect(
+        Number({ label: 'Number' })
+          .resolveValue(data, noOpResourceResolver, noOpEffector)
+          .readStableValue(),
+      ).toBe(4)
+    })
   })
 
   const invalidValues = [null, false, 'text']

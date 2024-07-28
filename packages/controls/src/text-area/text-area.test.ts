@@ -1,10 +1,9 @@
 import { TextArea } from './text-area'
 import { testDefinition } from '../tests/test-definition'
 import { noOpResourceResolver } from '../tests/mocks'
-
-import { type ValueType, type ResolvedValueType } from '../control-definition'
 import { noOpEffector } from '../effector'
 import { MergeTranslatableDataContext, TranslationDto } from '../context'
+import { ControlDataTypeKey } from '../common'
 
 describe('TextArea', () => {
   describe('constructor', () => {
@@ -19,61 +18,29 @@ describe('TextArea', () => {
         ).toMatchSnapshot()
       },
     )
-
-    test("definition's config type is derived from constructor's arguments", () => {
-      // Assert
-      TextArea({
-        label: 'TextArea',
-        defaultValue: 'Soul',
-        rows: 5,
-      }).config satisfies { label: string; defaultValue: string; rows: number }
-
-      TextArea({
-        label: 'TextArea',
-        defaultValue: 'Soul',
-      }).config satisfies { label: string; defaultValue: string }
-
-      TextArea({
-        label: 'Inside Out',
-      }).config satisfies { label: string }
-    })
-
-    test("refines value type based on ctor's `defaultValue`", () => {
-      // Arrange
-      const definition = TextArea({
-        label: 'TextArea',
-        defaultValue: "A Bug's Life",
-      })
-
-      // Assert
-      const value: string = "A Bug's Life" as ValueType<typeof definition>
-      const resolvedValue: string = "A Bug's Life" as ResolvedValueType<
-        typeof definition
-      >
-
-      expect(value).toBe("A Bug's Life")
-      expect(resolvedValue).toBe("A Bug's Life")
-    })
   })
 
   describe('resolveValue', () => {
-    test.each(['Finding Dory', 'Coco', undefined])(
-      'correctly resolves valid value %s',
-      (data) => {
-        expect(
-          TextArea({ label: 'TextArea' })
-            .resolveValue(data, noOpResourceResolver, noOpEffector)
-            .readStableValue(),
-        ).toBe(data)
+    test('resolves v0 data', () => {
+      const data = 'Monsters, Inc.'
+      expect(
+        TextArea({ label: 'TextArea' })
+          .resolveValue(data, noOpResourceResolver, noOpEffector)
+          .readStableValue(),
+      ).toBe('Monsters, Inc.')
+    })
 
-        const defaultValue = 'Toy Story 4'
-        expect(
-          TextArea({ defaultValue, label: 'TextArea' })
-            .resolveValue(data, noOpResourceResolver, noOpEffector)
-            .readStableValue(),
-        ).toBe(data ?? defaultValue)
-      },
-    )
+    test('resolves v1 data', () => {
+      const data = {
+        [ControlDataTypeKey]: 'text-area::v1' as const,
+        value: 'Finding Dory',
+      }
+      expect(
+        TextArea({ label: 'TextArea' })
+          .resolveValue(data, noOpResourceResolver, noOpEffector)
+          .readStableValue(),
+      ).toBe('Finding Dory')
+    })
   })
 
   describe('getTranslatableData', () => {

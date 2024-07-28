@@ -5,7 +5,7 @@ import {
   type SerializedRecord,
   type ResourceResolver,
   type Effector,
-  type ValueSubscription,
+  type Resolvable,
   type DataType,
 } from '@makeswift/controls'
 
@@ -26,11 +26,12 @@ class Definition extends SlotDefinition<ReactNode> {
     _resolver: ResourceResolver,
     _effector: Effector,
     control?: SlotControl,
-  ): ValueSubscription<ReactNode | undefined> {
+  ): Resolvable<ReactNode | undefined> {
     return {
       readStableValue: (previous?: ReactNode) =>
         renderStable(renderSlot, previous)({ data, control: control ?? null }),
       subscribe: () => () => {},
+      triggerResolve: async () => {},
     }
   }
 }

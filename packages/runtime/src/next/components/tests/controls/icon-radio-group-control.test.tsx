@@ -45,6 +45,7 @@ describe('Page', () => {
         ],
         defaultValue: 'superscript',
       }),
+      { value: undefined },
     )
   })
 })

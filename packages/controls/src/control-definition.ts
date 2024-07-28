@@ -27,6 +27,10 @@ export type SerializedRecord<T extends string = string> = {
   type: T
 } & Record<string, unknown>
 
+export type Resolvable<T> = ValueSubscription<T> & {
+  triggerResolve(currentValue?: T): Promise<unknown>
+}
+
 export abstract class ControlDefinition<
   ControlType extends string = string,
   Config = unknown,
@@ -64,7 +68,7 @@ export abstract class ControlDefinition<
     resolver: ResourceResolver,
     effector: Effector,
     control?: InstanceType,
-  ): ValueSubscription<ResolvedValueType | undefined>
+  ): Resolvable<ResolvedValueType | undefined>
 
   abstract createInstance(sendMessage: SendMessage<any>): InstanceType
   abstract serialize(): [SerializedRecord<any>, Transferable[]]

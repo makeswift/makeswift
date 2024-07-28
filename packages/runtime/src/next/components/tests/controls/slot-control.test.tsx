@@ -45,7 +45,7 @@ describe('Page', () => {
             type: MakeswiftComponentType.Button,
             label: 'Button',
             props: {
-              title: TextInput(),
+              title: TextInput({ defaultValue: 'Button' }),
             },
           })
         },

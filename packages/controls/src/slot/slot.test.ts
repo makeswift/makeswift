@@ -1,9 +1,10 @@
-import {
-  type ResourceResolver,
-  type ValueSubscription,
-} from '../resource-resolver'
+import { type ResourceResolver } from '../resource-resolver'
 import { type Effector } from '../effector'
-import { type DataType, type ResolvedValueType } from '../control-definition'
+import {
+  type DataType,
+  type ResolvedValueType,
+  type Resolvable,
+} from '../control-definition'
 
 import { SlotDefinition } from './slot'
 
@@ -12,10 +13,11 @@ class Definition extends SlotDefinition<string> {
     data: DataType<SlotDefinition<string>> | undefined,
     _resolver: ResourceResolver,
     _effector: Effector,
-  ): ValueSubscription<string | undefined> {
+  ): Resolvable<string | undefined> {
     return {
       readStableValue: () => JSON.stringify(data),
       subscribe: () => () => {},
+      triggerResolve: async () => {},
     }
   }
 }

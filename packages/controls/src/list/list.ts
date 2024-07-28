@@ -2,14 +2,11 @@ import { z } from 'zod'
 import { v4 as uuid } from 'uuid'
 
 import { MergeTranslatableDataContext, type CopyContext } from '../context'
-import {
-  type ResourceResolver,
-  type ValueSubscription,
-} from '../resource-resolver'
+import { type ResourceResolver } from '../resource-resolver'
 
 import { type SendMessage } from '../control-instance'
 
-import { type Effector } from '../effector'
+import { Effects, type Effector } from '../effector'
 
 import {
   ControlDefinition,
@@ -18,6 +15,7 @@ import {
   type SchemaType,
   type ParseResult,
   type SerializedRecord,
+  type Resolvable,
   type DataType as DataType_,
   type ValueType as ValueType_,
   type ResolvedValueType as ResolvedValueType_,
@@ -120,8 +118,10 @@ class Definition<C extends Config = Config> extends ControlDefinition<
       }),
     ) as SchemaType<DataType<C>>
 
-    const value = z.array(item.value)
-    const resolvedValue = z.array(item.resolvedValue)
+    const value = z.array(item.value) as SchemaType<ValueType<C>>
+    const resolvedValue = z.array(item.resolvedValue) as SchemaType<
+      ResolvedValueType<C>
+    >
 
     return {
       ...Definition.schema({ itemDef: item.definition }),
@@ -162,12 +162,13 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     resolver: ResourceResolver,
     effector: Effector,
     control?: ControlType<C>,
-  ): ValueSubscription<ResolvedValueType<C> | undefined> {
+  ): Resolvable<ResolvedValueType<C> | undefined> {
     const emptyList: ResolvedValueType<C> = []
+    const effects = new Effects()
 
     const childControls = control?.childControls(data?.map(({ id }) => id))
     if (childControls) {
-      effector.queueEffect(() => control?.setChildControls(childControls))
+      effects.add(() => control?.setChildControls(childControls))
     }
 
     const itemValues = data?.map(({ value, id }) =>
@@ -188,6 +189,14 @@ class Definition<C extends Config = Config> extends ControlDefinition<
       subscribe: (onUpdate: () => void) => {
         const unsubscribes = itemValues?.map((v) => v.subscribe(onUpdate))
         return () => unsubscribes?.forEach((u) => u())
+      },
+
+      triggerResolve: async (currentValue?: ResolvedValueType<C>) => {
+        await Promise.all([
+          effects.run(),
+          ...(itemValues?.map((v, i) => v.triggerResolve(currentValue?.[i])) ??
+            []),
+        ])
       },
     }
   }

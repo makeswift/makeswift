@@ -1,8 +1,6 @@
 import { TextInput } from './text-input'
 import { testDefinition } from '../tests/test-definition'
 import { noOpResourceResolver } from '../tests/mocks'
-
-import { type ValueType, type ResolvedValueType } from '../control-definition'
 import { noOpEffector } from '../effector'
 import { MergeTranslatableDataContext, TranslationDto } from '../context'
 import { ControlDataTypeKey } from '../common'
@@ -20,36 +18,6 @@ describe('TextInput', () => {
         ).toMatchSnapshot()
       },
     )
-
-    test("definition's config type is derived from constructor's arguments", () => {
-      // Assert
-
-      TextInput({
-        label: 'TextInput',
-        defaultValue: 'big bird',
-      }).config satisfies { label: string; defaultValue: string }
-
-      TextInput({
-        label: 'TextInput',
-      }).config satisfies { label: string }
-    })
-
-    test("refines types based on ctor's `defaultValue`", () => {
-      // Arrange
-      const definition = TextInput({
-        label: 'TextInput',
-        defaultValue: 'elmo',
-      })
-
-      // Assert
-      const value: string = 'elmo' as ValueType<typeof definition>
-      const resolvedValue: string = 'elmo' as ResolvedValueType<
-        typeof definition
-      >
-
-      expect(value).toBe('elmo')
-      expect(resolvedValue).toBe('elmo')
-    })
   })
 
   describe('resolveValue', () => {

@@ -2,11 +2,7 @@ import { Image } from './image'
 import { testDefinition } from '../tests/test-definition'
 
 import { type CopyContext, createReplacementContext } from '../context'
-import {
-  type ValueType,
-  type ResolvedValueType,
-  ControlDefinition,
-} from '../control-definition'
+import { type ValueType, ControlDefinition } from '../control-definition'
 
 import { Targets } from '../introspect'
 
@@ -41,62 +37,6 @@ describe('Image', () => {
         expect(Image({ label: 'Image', format: value })).toMatchSnapshot()
       },
     )
-
-    test("definition's config type is derived from constructor's arguments", () => {
-      // Assert
-      Image({
-        label: 'Image',
-      }).config satisfies { label: string }
-
-      Image({
-        label: 'Image',
-        format: Image.Format.URL,
-      }).config satisfies { label: string; format: string }
-    })
-
-    describe("refines resolved value type based on ctor's `format`", () => {
-      test(`format is ${undefined}`, () => {
-        // Arrange
-        const definition = Image({ label: 'color' })
-
-        // Assert
-        const value: string = 'test' as ResolvedValueType<typeof definition>
-        expect(value).toBe('test')
-      })
-
-      test(`format is ${Image.Format.URL}`, () => {
-        // Arrange
-        const definition = Image({ label: 'color', format: Image.Format.URL })
-
-        // Assert
-        const value: string = 'test' as ResolvedValueType<typeof definition>
-        expect(value).toBe('test')
-      })
-
-      test(`format is ${Image.Format.WithDimensions}`, () => {
-        // Arrange
-        const definition = Image({
-          label: 'color',
-          format: Image.Format.WithDimensions,
-        })
-
-        // Assert
-        const value: {
-          url: string
-          dimensions: {
-            width: number
-            height: number
-          }
-        } = {
-          url: 'test',
-          dimensions: { width: 100, height: 100 },
-        } as ResolvedValueType<typeof definition>
-        expect(value).toEqual({
-          url: 'test',
-          dimensions: { width: 100, height: 100 },
-        })
-      })
-    })
   })
 
   describe('copyData', () => {

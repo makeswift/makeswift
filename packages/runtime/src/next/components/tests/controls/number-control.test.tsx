@@ -18,6 +18,6 @@ describe('Page', () => {
   })
 
   test(`when defaultValue is set`, async () => {
-    await testPageControlPropRendering(Number({ defaultValue: 23 }))
+    await testPageControlPropRendering(Number({ defaultValue: 23 }), { value: undefined })
   })
 })

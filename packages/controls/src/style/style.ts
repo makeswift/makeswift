@@ -1,27 +1,32 @@
 import { z } from 'zod'
 
-import { type CopyContext } from '../context'
 import {
-  type ResourceResolver,
-  type ValueSubscription,
-} from '../resource-resolver'
+  type ColorData,
+  type ResolvedColorData,
+  type ResponsiveValue,
+  Schema,
+} from '../common'
 
+import { responsiveValue } from '../common/schema'
+
+import { type CopyContext } from '../context'
+import { type ResourceResolver } from '../resource-resolver'
+import { type Effector } from '../effector'
+import { type IntrospectionTarget } from '../introspect'
 import { type SendMessage } from '../control-instance'
 
 import {
   ControlDefinition,
   safeParse,
   serialize,
-  ParseResult,
-  SerializedRecord,
+  type ParseResult,
+  type SerializedRecord,
+  type Resolvable,
 } from '../control-definition'
 
-import { mapValues, notNil, nullToUndefined } from '../utils/functional'
-import { type Effector } from '../effector'
-import { ColorData, Schema, type ResponsiveValue } from '../common'
-import { responsiveValue } from '../common/schema'
 import { Color } from '../color'
-import { IntrospectionTarget } from '../introspect'
+
+import { mapValues, notNil, nullToUndefined } from '../utils/functional'
 
 import { type BorderData, type BorderSideData } from './types'
 import * as StyleSchema from './schema'
@@ -171,38 +176,61 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     resolver: ResourceResolver,
     effector: Effector,
     control?: InstanceType<C>,
-  ): ValueSubscription<ResolvedValueType<C> | undefined> {
-    const resolved: ValueSubscription<unknown>[] = []
+  ): Resolvable<ResolvedValueType<C> | undefined> {
+    const resolvedColors = new Map<
+      string,
+      Resolvable<ResolvedColorData | undefined>
+    >(
+      [...borderColors(data?.border)].map((color) => [
+        color.swatchId,
+        Color().resolveSwatch(nullToUndefined(color), resolver),
+      ]),
+    )
 
-    const resolveSwatch = (color: ColorData | null | undefined) => {
-      const r = Color().resolveSwatch(nullToUndefined(color), resolver)
-      resolved.push(r)
-      return r.readStableValue()
-    }
+    const resolvedColor = (swatchId: string | undefined) =>
+      swatchId ? resolvedColors.get(swatchId)?.readStableValue() : undefined
 
-    const resolvedData =
-      data != null
-        ? {
-            ...data,
-            border: mapBorderSides(data.border, (side) => ({
-              ...side,
-              color: resolveSwatch(side?.color),
-            })),
-          }
-        : undefined
+    const resolvedStyle = (data: DataType<C>) => ({
+      ...data,
+      border: mapBorderSides(data.border, (side) => ({
+        ...side,
+        color: resolvedColor(side?.color?.swatchId),
+      })),
+    })
 
     return {
       readStableValue: (previous?: ResolvedValueType<C>) => {
-        return resolvedData != null
-          ? effector.defineStyle(
+        return data != null
+          ? effector.computeClassName(
               previous,
               this.config.properties,
-              resolvedData,
-              (boxModel) => control?.changeBoxModel(boxModel),
+              resolvedStyle(data),
             )
           : undefined
       },
-      subscribe: () => () => {},
+
+      subscribe: (onUpdate: () => void) => {
+        const unsubscribes = [...resolvedColors.values()].map((v) =>
+          v.subscribe(onUpdate),
+        )
+
+        return () => unsubscribes?.forEach((u) => u())
+      },
+
+      triggerResolve: async (currentValue?: ResolvedValueType<C>) => {
+        if (data != null && currentValue != null) {
+          effector.defineStyle(
+            currentValue,
+            this.config.properties,
+            resolvedStyle(data),
+            (boxModel) => control?.changeBoxModel(boxModel),
+          )
+        }
+
+        await Promise.all(
+          [...resolvedColors.values()].map((r) => r.triggerResolve()),
+        )
+      },
     }
   }
 
@@ -228,6 +256,19 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     )
 
     return Object.values(introspectedProperties).flat().filter(notNil)
+  }
+}
+
+function* borderColors(
+  responsibeBorder: ResponsiveValue<BorderData> | undefined,
+): Generator<ColorData> {
+  for (const deviceBorder of responsibeBorder ?? []) {
+    const sides = deviceBorder.value
+    for (const side of Object.values(sides)) {
+      if (side?.color != null) {
+        yield side?.color
+      }
+    }
   }
 }
 

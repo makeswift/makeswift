@@ -5,7 +5,7 @@ import { act } from 'react-dom/test-utils'
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import { type ValueType, type DataType, ControlDefinition } from '@makeswift/controls'
+import { type Data, type ValueType, type DataType, ControlDefinition } from '@makeswift/controls'
 
 import { ElementData } from '../../../../state/react-page'
 import { Page } from '../../page'
@@ -42,16 +42,18 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
     rootElements = [],
   }: {
     toData?: (value: ValueType<D>) => DataType<D>
-    value?: ValueType<D>
+    value: ValueType<D> | undefined
     cacheData?: MakeswiftPageSnapshot['cacheData']
     expectedRenders?: number
     registerComponents?: (runtime: ReactRuntime) => void
     action?: (element: HTMLElement) => Promise<void>
     rootElements?: ElementData[]
-  } = {},
+  },
 ) {
   // Arrange
-  const controlData: DataType<D> = toData ? toData(value) : controlDefinition.toData(value)
+  const controlData: DataType<D> | Data =
+    value != null ? (toData ? toData(value) : controlDefinition.toData(value)) : undefined
+
   const TestComponentType = 'TestComponent'
   const testId = 'test-id'
   const renderCountTestId = 'render-count-test-id'
@@ -64,7 +66,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
           propKey: controlData,
         },
       },
-      ...rootElements
+      ...rootElements,
     ],
     ROOT_ID,
   )

@@ -2,10 +2,7 @@ import { match, P } from 'ts-pattern'
 import { z } from 'zod'
 
 import { type CopyContext } from '../context'
-import {
-  type ResourceResolver,
-  type ValueSubscription,
-} from '../resource-resolver'
+import { type ResourceResolver } from '../resource-resolver'
 
 import {
   DefaultControlInstance,
@@ -21,47 +18,10 @@ import {
   serialize,
   type ParseResult,
   type SerializedRecord,
+  type Resolvable,
 } from '../control-definition'
 
 import { IntrospectionTarget, IntrospectionTargetType } from '../introspect'
-
-const resolvedImageUrlSchema = z.string().optional()
-
-const resolvedImageWithDimensionsSchema = z
-  .object({
-    url: z.string(),
-    dimensions: z.object({
-      width: z.number(),
-      height: z.number(),
-    }),
-  })
-  .optional()
-
-const v0DataSchema = z.string()
-
-const makeswiftFileDataSchema = z.object({
-  type: z.literal('makeswift-file'),
-  version: z.literal(1),
-  id: z.string(),
-})
-
-const externalFileDataSchema = z.object({
-  type: z.literal('external-file'),
-  version: z.literal(1),
-  url: z.string(),
-  width: z.number().nullable().optional(),
-  height: z.number().nullable().optional(),
-})
-
-const v1DataSchema = z.union([makeswiftFileDataSchema, externalFileDataSchema])
-
-export const ImageControlValueFormat = {
-  URL: 'makeswift::controls::image::format::url',
-  WithDimensions: 'makeswift::controls::image::format::with-dimensions',
-} as const
-
-type ImageControlValueFormat =
-  (typeof ImageControlValueFormat)[keyof typeof ImageControlValueFormat]
 
 type Config =
   | z.infer<typeof Definition.schema.url.config>
@@ -69,9 +29,9 @@ type Config =
 
 type SchemaType<C extends Config> = undefined extends C['format']
   ? typeof Definition.schema.url
-  : C['format'] extends typeof ImageControlValueFormat.WithDimensions
+  : C['format'] extends typeof Definition.Format.WithDimensions
     ? typeof Definition.schema.withDimensions
-    : C['format'] extends typeof ImageControlValueFormat.URL
+    : C['format'] extends typeof Definition.Format.URL
       ? typeof Definition.schema.url
       : never
 
@@ -91,13 +51,39 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   ResolvedValueType<C>,
   InstanceType<C>
 > {
+  private static readonly dataSignature = {
+    makeswiftFile: { type: 'makeswift-file' },
+    externalFile: { type: 'external-file' },
+  } as const
+
   static readonly type = 'makeswift::controls::image' as const
+  static readonly Format = {
+    URL: `${this.type}::format::url`,
+    WithDimensions: `${this.type}::format::with-dimensions`,
+  } as const
 
   static get schema() {
     const type = z.literal(this.type)
     const version = z.literal(1).optional()
 
-    const data = z.union([v0DataSchema, v1DataSchema])
+    const makeswiftFileData = z.object({
+      type: z.literal(this.dataSignature.makeswiftFile.type),
+      version: z.literal(1),
+      id: z.string(),
+    })
+
+    const externalFileData = z.object({
+      type: z.literal(this.dataSignature.externalFile.type),
+      version: z.literal(1),
+      url: z.string(),
+      width: z.number().nullable().optional(),
+      height: z.number().nullable().optional(),
+    })
+
+    const data = z.union([
+      z.string(),
+      z.union([makeswiftFileData, externalFileData]),
+    ])
 
     const value = data
 
@@ -105,8 +91,8 @@ class Definition<C extends Config = Config> extends ControlDefinition<
       label: z.string().optional(),
       format: z
         .union([
-          z.literal(ImageControlValueFormat.URL),
-          z.literal(ImageControlValueFormat.WithDimensions),
+          z.literal(this.Format.URL),
+          z.literal(this.Format.WithDimensions),
         ])
         .optional(),
     })
@@ -127,11 +113,20 @@ class Definition<C extends Config = Config> extends ControlDefinition<
       definition,
     })
 
+    const url = z.string()
+    const urlWithDimensions = z.object({
+      url,
+      dimensions: z.object({
+        width: z.number(),
+        height: z.number(),
+      }),
+    })
+
     return {
       type,
       version,
-      withDimensions: schemas(resolvedImageWithDimensionsSchema),
-      url: schemas(resolvedImageUrlSchema),
+      url: schemas(url.optional()),
+      withDimensions: schemas(urlWithDimensions.optional()),
     }
   }
 
@@ -158,13 +153,13 @@ class Definition<C extends Config = Config> extends ControlDefinition<
 
   get schema() {
     return match(this.config.format)
-      .with(ImageControlValueFormat.URL, () => Definition.schema.url)
+      .with(Definition.Format.URL, () => Definition.schema.url)
       .with(
-        ImageControlValueFormat.WithDimensions,
+        Definition.Format.WithDimensions,
         () => Definition.schema.withDimensions,
       )
       .with(undefined, () => Definition.schema.url)
-      .exhaustive()
+      .exhaustive() as SchemaType<C>
   }
 
   safeParse(data: unknown | undefined): ParseResult<DataType<C> | undefined> {
@@ -180,7 +175,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     const version = this.version
     return match({ version, value })
       .with({ version: 1, value: P.string }, ({ version, value }) => ({
-        type: 'makeswift-file' as const,
+        ...Definition.dataSignature.makeswiftFile,
         id: value,
         version,
       }))
@@ -200,7 +195,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
 
     return match(data satisfies z.infer<typeof inputSchema>)
       .with(P.string, (id) => replaceFileId(id))
-      .with({ type: 'makeswift-file' }, (data) => ({
+      .with(Definition.dataSignature.makeswiftFile, (data) => ({
         ...data,
         id: replaceFileId(data.id),
       }))
@@ -210,8 +205,8 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   resolveValue(
     data: DataType<C> | undefined,
     resolver: ResourceResolver,
-    effector: Effector,
-  ): ValueSubscription<ResolvedValueType<C> | undefined> {
+    _effector: Effector,
+  ): Resolvable<ResolvedValueType<C> | undefined> {
     const format = this.config.format
     const dataSchema = this.schema.data.optional()
     const resolvedValueSchema = this.schema.resolvedValue
@@ -224,7 +219,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
         height?: number | null
       },
     ): ResolvedValueType<C> {
-      if (format === ImageControlValueFormat.URL || format == null) {
+      if (format === Definition.Format.URL || format == null) {
         return curr.url
       }
 
@@ -270,33 +265,31 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     }
 
     const externalFile = match(data satisfies z.infer<typeof dataSchema>)
-      .with({ type: 'external-file' }, (val) => val)
+      .with(Definition.dataSignature.externalFile, (val) => val)
       .otherwise(() => null)
 
     if (externalFile != null) {
       return {
-        readStableValue: (previous: ResolvedValueType<C>) =>
+        readStableValue: (previous?: ResolvedValueType<C>) =>
           toResolvedValue(previous, {
             url: externalFile.url,
             width: externalFile.width,
             height: externalFile.height,
           }),
         subscribe: () => () => {},
+        triggerResolve: async () => {},
       }
     }
 
     const fileId = match(data satisfies z.infer<typeof dataSchema>)
       .with(P.string, (id) => id)
-      .with({ type: 'makeswift-file' }, ({ id }) => id)
+      .with(Definition.dataSignature.makeswiftFile, ({ id }) => id)
       .otherwise(() => undefined)
 
     const file = resolver.resolveFile(fileId)
-    if (fileId != null && file.readStableValue() == null) {
-      effector.queueAsyncEffect(() => file.fetch())
-    }
 
     return {
-      readStableValue: (previous: ResolvedValueType<C>) => {
+      readStableValue: (previous?: ResolvedValueType<C>) => {
         const currentFile = file.readStableValue()
         if (currentFile == null) return undefined
         const currentUrl = currentFile.publicUrl
@@ -308,6 +301,11 @@ class Definition<C extends Config = Config> extends ControlDefinition<
         })
       },
       subscribe: file.subscribe,
+      triggerResolve: async (currentValue) => {
+        if (currentValue == null) {
+          await file.fetch()
+        }
+      },
     }
   }
 
@@ -331,7 +329,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     const dataSchema = this.schema.data.optional()
     return match(data satisfies z.infer<typeof dataSchema>)
       .with(P.string, (id) => [id])
-      .with({ type: 'makeswift-file' }, ({ id }) => [id])
+      .with(Definition.dataSignature.makeswiftFile, ({ id }) => [id])
       .otherwise(() => []) as R[]
   }
 }
@@ -341,4 +339,4 @@ export const Image = <C extends Config>(config?: C) =>
 
 export { Definition as ImageDefinition }
 
-Image.Format = ImageControlValueFormat
+Image.Format = Definition.Format

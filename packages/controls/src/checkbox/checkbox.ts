@@ -4,10 +4,7 @@ import { z } from 'zod'
 import { ControlDataTypeKey } from '../common'
 import { type CopyContext } from '../context'
 
-import {
-  type ResourceResolver,
-  type ValueSubscription,
-} from '../resource-resolver'
+import { type ResourceResolver } from '../resource-resolver'
 
 import { type Effector } from '../effector'
 
@@ -23,6 +20,7 @@ import {
   serialize,
   type ParseResult,
   type SerializedRecord,
+  type Resolvable,
 } from '../control-definition'
 
 type Config = z.infer<typeof Definition.schema.relaxed.config>
@@ -53,19 +51,13 @@ class Definition<C extends Config = Config> extends ControlDefinition<
 
   static get schema() {
     const version = z.literal(1).optional()
+    const versionedData = z.object({
+      [ControlDataTypeKey]: z.literal(this.v1DataType),
+      value: z.boolean(),
+    })
 
-    const schemas = <V, U>(strictValue: z.ZodType<U>, value: z.ZodType<V>) => {
+    const schemas = <V, D>(value: z.ZodType<V>, data: z.ZodType<D>) => {
       const type = z.literal(this.type)
-      const versionedData = z.object({
-        [ControlDataTypeKey]: z.literal(this.v1DataType),
-        value: strictValue,
-      })
-
-      const data = z.union(
-        value.isOptional()
-          ? [strictValue, versionedData, z.undefined()]
-          : [value, versionedData],
-      )
 
       const config = z.object({
         label: z.string().optional(),
@@ -92,8 +84,11 @@ class Definition<C extends Config = Config> extends ControlDefinition<
 
     return {
       version,
-      relaxed: schemas(z.boolean(), z.boolean().optional()),
-      strict: schemas(z.boolean(), z.boolean()),
+      relaxed: schemas(
+        z.boolean().optional(),
+        z.union([z.boolean(), versionedData, z.undefined()]),
+      ),
+      strict: schemas(z.boolean(), z.union([z.boolean(), versionedData])),
     }
   }
 
@@ -164,11 +159,12 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     data: DataType<C> | undefined,
     _resolver: ResourceResolver,
     _effector: Effector,
-  ): ValueSubscription<ResolvedValueType<C> | undefined> {
+  ): Resolvable<ResolvedValueType<C> | undefined> {
     return {
       readStableValue: (_previous?: ResolvedValueType<C>) =>
         this.fromData(data) ?? this.config.defaultValue,
       subscribe: () => () => {},
+      triggerResolve: async () => {},
     }
   }
 

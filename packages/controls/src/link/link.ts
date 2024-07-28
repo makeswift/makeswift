@@ -6,11 +6,8 @@ import scrollIntoView from 'scroll-into-view-if-needed'
 
 import { type PagePathnameSlice } from '../resources'
 import { type CopyContext } from '../context'
-
-import {
-  type ResourceResolver,
-  type ValueSubscription,
-} from '../resource-resolver'
+import { type ResourceResolver } from '../resource-resolver'
+import { type Effector } from '../effector'
 
 import {
   DefaultControlInstance,
@@ -24,15 +21,17 @@ import {
   serialize,
   type ParseResult,
   type SerializedRecord,
+  type Resolvable,
 } from '../control-definition'
 
-import { type Effector } from '../effector'
 import {
   type IntrospectionTarget,
   IntrospectionTargetType,
 } from '../introspect'
 
 import { linkSchema } from './schema'
+
+export type LinkControlData = z.infer<typeof linkSchema> | null
 
 const defaultResolvedValue = {
   href: '#',
@@ -174,15 +173,12 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   resolveValue(
     data: DataType<C> | undefined,
     resolver: ResourceResolver,
-    effector: Effector,
-  ): ValueSubscription<ResolvedValueType<C> | undefined> {
+    _effector: Effector,
+  ): Resolvable<ResolvedValueType<C> | undefined> {
     const pageId = data?.type === 'OPEN_PAGE' ? data.payload.pageId : null
     const pageSubscription = resolver.resolvePagePathnameSlice(
       pageId ?? undefined,
     )
-    if (pageId != null && pageSubscription.readStableValue() == null) {
-      effector.queueAsyncEffect(() => pageSubscription.fetch())
-    }
 
     const elementKey =
       data?.type === 'SCROLL_TO_ELEMENT'
@@ -196,6 +192,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     return {
       readStableValue: (_previous?: ResolvedValueType<C>) => {
         if (data == null) return defaultResolvedValue
+
         const page = pageSubscription.readStableValue()
         const elementId = elementIdSubscription.readStableValue()
         return resolveLink(data, page, elementId)
@@ -209,6 +206,12 @@ class Definition<C extends Config = Config> extends ControlDefinition<
 
         return () => {
           unsubscribes.forEach((unsubscribe) => unsubscribe())
+        }
+      },
+
+      triggerResolve: async (_currentValue?: ResolvedValueType<C>) => {
+        if (pageSubscription.readStableValue() == null) {
+          pageSubscription.fetch()
         }
       },
     }

@@ -1,25 +1,29 @@
 import { z } from 'zod'
-import { ControlDefinition, ParseResult } from '../control-definition'
+
+import { type Effector } from '../effector'
+import { type Data } from '../common'
+import { type CopyContext, type MergeTranslatableDataContext } from '../context'
+import { type ResourceResolver } from '../resource-resolver'
+import { type IntrospectionTarget } from '../introspect'
+import { type SendMessage } from '../control-instance'
+import { type Deserialized } from '../serialization'
 
 import {
+  ControlDefinition,
   safeParse,
   serialize,
+  type ParseResult,
   type SerializedRecord,
   type DataType as DataType_,
   type ValueType as ValueType_,
   type ResolvedValueType as ResolvedValueType_,
+  type SchemaType,
+  type Resolvable,
 } from '../control-definition'
 
-import { type Effector } from '../effector'
-
-import { CopyContext, MergeTranslatableDataContext } from '../context'
-import { ResourceResolver, ValueSubscription } from '../resource-resolver'
-import { IntrospectionTarget } from '../introspect'
-import { SendMessage } from '../control-instance'
-import { ShapeControl } from './shape-control'
 import { mapValues, objectsAreEqual } from '../utils/functional'
-import { Deserialized } from '../serialization'
-import { Data } from '../common'
+
+import { ShapeControl } from './shape-control'
 
 type ItemDefinition = ControlDefinition<string, unknown, any, any, any>
 
@@ -36,7 +40,7 @@ type ValueType<C extends Config> = {
 }
 
 type ResolvedValueType<C extends Config> = {
-  [K in keyof C['type']]?: ResolvedValueType_<C['type'][K]>
+  [K in keyof C['type']]: ResolvedValueType_<C['type'][K]>
 }
 
 type ControlType<C extends Config> = ShapeControl<Definition<C>>
@@ -89,9 +93,17 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     const type = z.literal(Definition.type)
     const keys = mapValues(this.keyDefs, (def) => def.schema)
 
-    const data = z.object(mapValues(keys, (key) => key.data))
-    const value = z.object(mapValues(keys, (key) => key.value))
-    const resolvedValue = z.object(mapValues(keys, (key) => key.resolvedValue))
+    const data = z.object(mapValues(keys, (key) => key.data)) as SchemaType<
+      DataType<C>
+    >
+
+    const value = z.object(mapValues(keys, (key) => key.value)) as SchemaType<
+      ValueType<C>
+    >
+
+    const resolvedValue = z.object(
+      mapValues(keys, (key) => key.resolvedValue),
+    ) as SchemaType<ResolvedValueType<C>>
 
     const config = z.object({
       type: z.object(mapValues(keys, (key) => key.definition)),
@@ -137,8 +149,8 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     resolver: ResourceResolver,
     effector: Effector,
     control?: ControlType<C>,
-  ): ValueSubscription<ResolvedValueType<C> | undefined> {
-    const emptyShape: ResolvedValueType<C> = {}
+  ): Resolvable<ResolvedValueType<C> | undefined> {
+    const emptyShape = {}
     const keyValues = mapValues(data ?? ({} as ValueType<C>), (val, key) =>
       this.keyDefs[key as string]?.resolveValue(
         val,
@@ -154,7 +166,8 @@ class Definition<C extends Config = Config> extends ControlDefinition<
           v?.readStableValue(previous?.[key]),
         )
 
-        return (objectsAreEqual(r, previous) ? previous : r) ?? emptyShape
+        return ((objectsAreEqual(r, previous) ? previous : r) ??
+          emptyShape) as ResolvedValueType<C>
       },
 
       subscribe: (onUpdate: () => void) => {
@@ -163,6 +176,14 @@ class Definition<C extends Config = Config> extends ControlDefinition<
         )
 
         return () => unsubscribes.forEach((u) => u?.())
+      },
+
+      triggerResolve: async (currentValue?: ResolvedValueType<C>) => {
+        await Promise.all(
+          Object.entries(keyValues).map(([key, v]) =>
+            v?.triggerResolve(currentValue?.[key]),
+          ),
+        )
       },
     }
   }

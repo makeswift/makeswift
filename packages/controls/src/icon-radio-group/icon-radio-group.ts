@@ -1,14 +1,13 @@
 import { z } from 'zod'
-import { CopyContext } from '../context'
 
-import { ResourceResolver, ValueSubscription } from '../resource-resolver'
-
-import { Effector } from '../effector'
+import { type CopyContext } from '../context'
+import { type ResourceResolver } from '../resource-resolver'
+import { type Effector } from '../effector'
 
 import {
   DefaultControlInstance,
   ControlInstance,
-  SendMessage,
+  type SendMessage,
 } from '../control-instance'
 
 import {
@@ -18,6 +17,7 @@ import {
   type ParseResult,
   type SerializedRecord,
   type SchemaType,
+  type Resolvable,
 } from '../control-definition'
 
 import { map } from '../utils/functional'
@@ -37,11 +37,12 @@ export type IconRadioGroupIcon =
   (typeof unstable_IconRadioGroupIcon)[keyof typeof unstable_IconRadioGroupIcon]
 
 type Option<T extends string> = {
-  value: T
-  label: string
-  icon: IconRadioGroupIcon
+  readonly value: T
+  readonly label: string
+  readonly icon: IconRadioGroupIcon
 }
-type OptionList<T extends string> = [Option<T>, ...Option<T>[]]
+
+type OptionList<T extends string> = readonly [Option<T>, ...Option<T>[]]
 
 type Config<Item extends string = string> = {
   readonly options: OptionList<Item>
@@ -178,7 +179,7 @@ class Definition<
     data: DataType<C> | undefined,
     _resolver: ResourceResolver,
     _effector: Effector,
-  ): ValueSubscription<ResolvedValueType<C> | undefined> {
+  ): Resolvable<ResolvedValueType<C> | undefined> {
     return {
       readStableValue: (_previous?: ResolvedValueType<C>) => {
         return (
@@ -187,6 +188,7 @@ class Definition<
         )
       },
       subscribe: () => () => {},
+      triggerResolve: async () => {},
     }
   }
 

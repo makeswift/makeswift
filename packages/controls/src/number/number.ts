@@ -1,24 +1,25 @@
 import { P, match } from 'ts-pattern'
 import { z } from 'zod'
-import { ControlDataTypeKey } from '../common'
-import { CopyContext } from '../context'
 
-import { ResourceResolver, ValueSubscription } from '../resource-resolver'
+import { ControlDataTypeKey } from '../common'
+import { type CopyContext } from '../context'
+import { type ResourceResolver } from '../resource-resolver'
+import { type Effector } from '../effector'
 
 import {
   DefaultControlInstance,
   ControlInstance,
-  SendMessage,
+  type SendMessage,
 } from '../control-instance'
 
 import {
   ControlDefinition,
   safeParse,
   serialize,
-  ParseResult,
-  SerializedRecord,
+  type ParseResult,
+  type SerializedRecord,
+  type Resolvable,
 } from '../control-definition'
-import { type Effector } from '../effector'
 
 type Config = z.infer<typeof Definition.schema.relaxed.config>
 
@@ -43,6 +44,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   private static readonly dataSignature = {
     v1: { [ControlDataTypeKey]: this.v1DataType },
   } as const
+
   static readonly type = 'makeswift::controls::number' as const
 
   constructor(
@@ -55,18 +57,13 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   static get schema() {
     const version = z.literal(1).optional()
 
-    const schemas = <V, U>(strictValue: z.ZodType<U>, value: z.ZodType<V>) => {
-      const type = z.literal(this.type)
-      const versionedData = z.object({
-        [ControlDataTypeKey]: z.literal(this.v1DataType),
-        value: strictValue,
-      })
+    const versionedData = z.object({
+      [ControlDataTypeKey]: z.literal(this.v1DataType),
+      value: z.number(),
+    })
 
-      const data = z.union(
-        value.isOptional()
-          ? [strictValue, versionedData, z.undefined()]
-          : [strictValue, versionedData],
-      )
+    const schemas = <V, D>(value: z.ZodType<V>, data: z.ZodType<D>) => {
+      const type = z.literal(this.type)
 
       const config = z.object({
         label: z.string().optional(),
@@ -98,8 +95,11 @@ class Definition<C extends Config = Config> extends ControlDefinition<
 
     return {
       version,
-      relaxed: schemas(z.number(), z.number().optional()),
-      strict: schemas(z.number(), z.number()),
+      relaxed: schemas(
+        z.number().optional(),
+        z.union([z.number(), versionedData, z.undefined()]),
+      ),
+      strict: schemas(z.number(), z.union([z.number(), versionedData])),
     }
   }
 
@@ -162,12 +162,13 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     data: DataType<C> | undefined,
     _resolver: ResourceResolver,
     _effector: Effector,
-  ): ValueSubscription<ResolvedValueType<C> | undefined> {
+  ): Resolvable<ResolvedValueType<C> | undefined> {
     return {
       readStableValue: (_previous?: ResolvedValueType<C>) => {
         return this.fromData(data) ?? this.config.defaultValue
       },
       subscribe: () => () => {},
+      triggerResolve: async () => {},
     }
   }
 

@@ -1,8 +1,8 @@
 import {
   ControlInstance,
-  type ControlDefinition,
+  ControlDefinition,
   type ResourceResolver,
-  type ValueSubscription,
+  type Resolvable,
 } from '@makeswift/controls'
 
 import { isLegacyDescriptor, type Descriptor } from '../../prop-controllers/descriptors'
@@ -15,7 +15,7 @@ export function createPropsValuesSubscription(
   elementData: Record<string, ReactPage.ElementData>,
   resourceResolver: ResourceResolver,
   effectorFactory: EffectorFactory,
-): ValueSubscription<Record<string, unknown>> {
+): Resolvable<Record<string, unknown>> {
   const propsSubscriptions = createPropsSubscriptions(propDefinitions, (def, propName) =>
     def.resolveValue(
       elementData[propName],
@@ -57,13 +57,21 @@ export function createPropsValuesSubscription(
 
       return lastSnapshot
     },
+
+    triggerResolve: async () => {
+      return await Promise.all(
+        Object.entries(propsSubscriptions).map(([propName, sub]) =>
+          sub.triggerResolve(lastSnapshot[propName]),
+        ),
+      )
+    },
   }
 }
 
 function createPropsSubscriptions(
   propDefinitions: Record<string, Descriptor>,
-  createSubscription: (def: ControlDefinition, propName: string) => ValueSubscription<any>,
-): Record<string, ValueSubscription<any>> {
+  createSubscription: (def: ControlDefinition, propName: string) => Resolvable<any>,
+): Record<string, Resolvable<any>> {
   return Object.entries(propDefinitions).reduce(
     (result, [propName, def]) =>
       isLegacyDescriptor(def)

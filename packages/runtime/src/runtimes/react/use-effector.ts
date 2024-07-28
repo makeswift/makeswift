@@ -22,7 +22,6 @@ import { pollBoxModel } from './poll-box-model'
 
 export type EffectorFactory = {
   get(propName: string): Effector
-  useEffects(): void
   useStyles(): void
 }
 
@@ -31,12 +30,8 @@ export function useEffectorFactory(): EffectorFactory {
   const cache = useCache()
   const componentUid = useId().replaceAll(':', '') // colons are prohibited in class names
 
-  const effects = useRef<(() => void)[]>([]).current
-  const asyncEffects = useRef<(() => Promise<unknown>)[]>([]).current
-
-  const styles = useRef<
-    Record<string, { style: SerializedStyles; callback?: (boxModel: BoxModel | null) => void }>
-  >({}).current
+  const computedStyles = useRef<Record<string, SerializedStyles>>({}).current
+  const boxModelCallbacks = useRef<Record<string, (boxModel: BoxModel | null) => void>>({}).current
 
   return useMemo(() => {
     return {
@@ -44,40 +39,32 @@ export function useEffectorFactory(): EffectorFactory {
         const styleUid = () => `u-${componentUid}-${propName}`
 
         return {
-          queueEffect: (effect: () => void) => {
-            effects.push(effect)
-          },
+          computeClassName(
+            previous: string | undefined,
+            props: StyleProperty[],
+            style: ResponsiveValue<any> | ResolvedStyleData,
+          ): string {
+            const serialized = serializeStyle(breakpoints, style, props)
+            const serializedClassName = fullSerializedClassName(cache, serialized)
 
-          queueAsyncEffect: (effect: () => Promise<unknown>) => {
-            asyncEffects.push(effect)
+            const uid = extractUid(previous) ?? styleUid()
+            computedStyles[uid] = serialized
+            return `${uid} ${serializedClassName}`
           },
 
           defineStyle: (
-            className: string | undefined,
-            props: StyleProperty[],
-            style: ResolvedStyleData | ResponsiveValue<any>,
+            className: string,
+            _props: StyleProperty[],
+            _style: ResolvedStyleData | ResponsiveValue<any>,
             onBoxModelChange?: (boxModel: BoxModel | null) => void,
-          ): string => {
-            const [serialized, styleClassName] = serializeStyle(cache, breakpoints, style, props)
-            const uid = extractUid(className) ?? styleUid()
-            styles[uid] = { style: serialized, callback: onBoxModelChange }
-            return `${uid} ${styleClassName}`
+          ) => {
+            const [uid, _] = splitClassName(className)
+            if (onBoxModelChange) boxModelCallbacks[uid] = onBoxModelChange
+
+            // const serialized = serializeStyle(breakpoints, style, props, cache)
+            // const styleClassName = `${cache.key}-${serialized.name}` // see https://github.com/emotion-js/emotion/blob/main/packages/utils/src/index.ts#L26
           },
         }
-      },
-
-      useEffects() {
-        useEffect(() => {
-          while (effects.length > 0) {
-            effects.shift()?.()
-          }
-        }, [effects])
-
-        useEffect(() => {
-          while (asyncEffects.length > 0) {
-            asyncEffects.shift()?.().catch(console.error)
-          }
-        }, [asyncEffects])
       },
 
       useStyles() {
@@ -87,16 +74,15 @@ export function useEffectorFactory(): EffectorFactory {
         //   propsSubscription.readStableValue,
         // )
 
-        console.log('+++ effector.useStyle')
+        // console.log('+++ effector.useStyle')
         useStyles(
           cache,
-          Object.entries(styles).map(([_, { style }]) => style),
+          Object.entries(computedStyles).map(([_, style]) => style),
         )
 
         useEffect(() => {
-          console.log('+++ useStyle pollBoxModel effect')
-          const unsubscribes = Object.entries(styles)
-            .map(([uid, { callback }]) => [uid, callback] as const)
+          // console.log('+++ useStyle pollBoxModel effect')
+          const unsubscribes = Object.entries(boxModelCallbacks)
             .map(([uid, callback]) =>
               callback != null
                 ? pollBoxModel({
@@ -108,9 +94,9 @@ export function useEffectorFactory(): EffectorFactory {
             .filter(notNil)
 
           return () => unsubscribes.forEach(fn => fn())
-        }, [...Object.values(styles).map(({ style }) => style.name)])
+        }, [...Object.values(computedStyles).map(style => style.name)])
 
-        console.log('--- effector.useStyle')
+        // console.log('--- effector.useStyle')
       },
     }
   }, [breakpoints, cache, componentUid])
@@ -120,12 +106,19 @@ function isResponsiveValue(value: any): value is ResponsiveValue<any> {
   return 'deviceId' in value
 }
 
-function extractUid(name: string | undefined): string | undefined {
-  if (name == null) return undefined
+function splitClassName(className: string): [string, string] {
+  const [uid, serializedClassName] = className.split(' ')
+  console.assert(uid.startsWith('u-'), `expected style uid to start with "u-", got ${uid}`)
+  console.assert(
+    serializedClassName != null,
+    `expected class name '${className}' to contain a serialized class name`,
+  )
 
-  const uid = name.split(' ')[0]
-  console.assert(uid?.startsWith('u-'), `expected style uid to start with "u-", got ${uid}`)
-  return uid
+  return [uid, serializedClassName ?? '']
+}
+
+function extractUid(className: string | undefined): string | undefined {
+  return className == null ? undefined : splitClassName(className)[0]
 }
 
 function styleToCssObject(
@@ -143,15 +136,17 @@ function styleToCssObject(
 }
 
 function serializeStyle(
-  cache: EmotionCache,
   breakpoints: Breakpoints,
   style: ResolvedStyleData | ResponsiveValue<any>,
   props: StyleProperty[],
-): [SerializedStyles, string] {
+  cache?: EmotionCache,
+): SerializedStyles {
   const cssObject = styleToCssObject(breakpoints, style, props)
-  const serialized = serializeStyles([cssObject], cache.registered)
-  return [
-    serialized,
-    `${cache.key}-${serialized.name}`, // see https://github.com/emotion-js/emotion/blob/main/packages/utils/src/index.ts#L26
-  ]
+  const serialized = serializeStyles([cssObject], cache?.registered ?? {})
+  return serialized
+}
+
+function fullSerializedClassName(cache: EmotionCache, serialized: SerializedStyles): string {
+  // see https://github.com/emotion-js/emotion/blob/main/packages/utils/src/index.ts#L26
+  return `${cache.key}-${serialized.name}`
 }

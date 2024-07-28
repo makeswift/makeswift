@@ -23,7 +23,7 @@ describe('Page', () => {
             label: 'Button',
             props: {
               className: Style(),
-              title: TextInput(),
+              title: TextInput({ defaultValue: 'Button' }),
             },
           })
         },

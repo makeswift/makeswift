@@ -1,14 +1,13 @@
 import { z } from 'zod'
 import { CopyContext } from '../context'
 
-import { ResourceResolver, ValueSubscription } from '../resource-resolver'
-
-import { Effector } from '../effector'
+import { type ResourceResolver } from '../resource-resolver'
+import { type Effector } from '../effector'
 
 import {
   DefaultControlInstance,
   ControlInstance,
-  SendMessage,
+  type SendMessage,
 } from '../control-instance'
 
 import {
@@ -18,9 +17,10 @@ import {
   type SchemaType,
   type ParseResult,
   type SerializedRecord,
+  type Resolvable,
 } from '../control-definition'
 
-import { Data, Schema } from '../common'
+import { type Data, Schema } from '../common'
 import { deepEqual } from '../utils/functional'
 
 type Option<T extends Data> = { id: string; value: T; label: string }
@@ -133,14 +133,14 @@ class Definition<
     data: DataType<C> | undefined,
     _resolver: ResourceResolver,
     _effector: Effector,
-  ): ValueSubscription<ResolvedValueType<C> | undefined> {
+  ): Resolvable<ResolvedValueType<C> | undefined> {
     return {
       readStableValue: (previous?: ResolvedValueType<C>) => {
-        const curr = this.fromData(data)?.value
-        if (!deepEqual(curr, previous)) return curr
-        return previous
+        const r = this.fromData(data)?.value
+        return deepEqual(r, previous) ? previous : r
       },
       subscribe: () => () => {},
+      triggerResolve: async () => {},
     }
   }
 

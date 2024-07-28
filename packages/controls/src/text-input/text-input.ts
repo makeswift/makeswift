@@ -1,24 +1,24 @@
 import { P, match } from 'ts-pattern'
 import { z } from 'zod'
-import { ControlDataTypeKey, Data } from '../common'
-import { CopyContext, MergeTranslatableDataContext } from '../context'
 
-import { ResourceResolver, ValueSubscription } from '../resource-resolver'
-
-import { Effector } from '../effector'
+import { ControlDataTypeKey, type Data } from '../common'
+import { type CopyContext, type MergeTranslatableDataContext } from '../context'
+import { type ResourceResolver } from '../resource-resolver'
+import { type Effector } from '../effector'
 
 import {
   DefaultControlInstance,
   ControlInstance,
-  SendMessage,
+  type SendMessage,
 } from '../control-instance'
 
 import {
   ControlDefinition,
   safeParse,
   serialize,
-  ParseResult,
-  SerializedRecord,
+  type ParseResult,
+  type SerializedRecord,
+  type Resolvable,
 } from '../control-definition'
 
 type Config = z.infer<typeof Definition.schema.relaxed.config>
@@ -157,12 +157,13 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     value: DataType<C> | undefined,
     _resolver: ResourceResolver,
     _effector: Effector,
-  ): ValueSubscription<ResolvedValueType<C> | undefined> {
+  ): Resolvable<ResolvedValueType<C> | undefined> {
     return {
       readStableValue: (_previous?: ResolvedValueType<C>) => {
         return this.fromData(value) ?? this.config.defaultValue
       },
       subscribe: () => () => {},
+      triggerResolve: async () => {},
     }
   }
 
