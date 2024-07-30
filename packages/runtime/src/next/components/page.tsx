@@ -28,17 +28,23 @@ See our docs for more information on what's changed and instructions to migrate:
       }),
     [snapshot],
   )
-  const rootElements = new Map([[snapshot.document.id, snapshot.document.data]])
 
-  snapshot.document.localizedPages.forEach(localizedPage => {
-    rootElements.set(localizedPage.elementTreeId, localizedPage.data)
-  })
+  const localizedPage = snapshot.document.localizedPages.find(({ parentId }) => parentId == null)
+  const rootElement = localizedPage
+    ? { key: localizedPage.elementTreeId, data: localizedPage.data }
+    : { key: snapshot.document.id, data: snapshot.document.data }
+
+  const rootElements = new Map([[rootElement.key, rootElement.data]])
 
   return (
     <Suspense>
       <RuntimeProvider client={client} rootElements={rootElements} preview={snapshot.preview}>
         {/* We use a key here to reset the Snippets state in the PageMeta component */}
-        <PageMeta key={snapshot.document.data.key} document={snapshot.document} />
+        <PageMeta
+          key={snapshot.document.data.key}
+          pageDocument={snapshot.document}
+          documentKey={rootElement.key}
+        />
       </RuntimeProvider>
     </Suspense>
   )
