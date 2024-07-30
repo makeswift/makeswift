@@ -46,6 +46,7 @@ import {
   unregisterComponent,
   unregisterMeasurable,
   unregisterPropControllers,
+  registerBuilderDocument,
 } from './actions'
 import { ActionTypes } from './actions'
 import { createPropController } from '../prop-controllers/instances'
@@ -74,6 +75,10 @@ export const reducer = combineReducers({
 })
 
 export type State = ReturnType<typeof reducer>
+
+function getDocumentsStateSlice(state: State): Documents.State {
+  return state.documents
+}
 
 function getBoxModelsStateSlice(state: State): BoxModels.State {
   return state.boxModels
@@ -426,6 +431,22 @@ function registerBuilderComponents(): ThunkAction<() => void, State, unknown, Ac
   }
 }
 
+function registerBuilderDocuments(): ThunkAction<() => void, State, unknown, Action> {
+  return (dispatch, getState) => {
+    const documents = Documents.getDocuments(getDocumentsStateSlice(getState()))
+
+    documents.forEach(document => {
+      dispatch(registerBuilderDocument(document))
+    })
+
+    return () => {
+      documents.forEach((_document, documentKey) => {
+        dispatch(unregisterBuilderComponent(documentKey))
+      })
+    }
+  }
+}
+
 export interface IMessageChannel {
   postMessage(message: any, transferables?: Transferable[]): void
   dispatchBuffered(): void
@@ -435,6 +456,7 @@ export function initialize(
   channel: IMessageChannel,
 ): ThunkAction<() => void, State, unknown, Action> {
   return (dispatch, getState) => {
+    const unregisterBuilderDocuments = dispatch(registerBuilderDocuments())
     const stopMeasuringElements = dispatch(startMeasuringElements())
     const stopMeasuringDocumentElement = dispatch(startMeasuringDocumentElement())
     const stopHandlingFocusEvent = dispatch(startHandlingFocusEvents())
@@ -449,6 +471,7 @@ export function initialize(
     channel.dispatchBuffered()
 
     return () => {
+      unregisterBuilderDocuments()
       stopMeasuringElements()
       stopMeasuringDocumentElement()
       stopHandlingFocusEvent()
@@ -513,6 +536,8 @@ export function messageChannelMiddleware(
           case ActionTypes.ELEMENT_FROM_POINT_CHANGE:
           case ActionTypes.SET_LOCALE:
           case ActionTypes.SET_BREAKPOINTS:
+          case ActionTypes.REGISTER_BUILDER_DOCUMENT:
+          case ActionTypes.UNREGISTER_BUILDER_DOCUMENT:
             channel.postMessage(action)
             break
 
