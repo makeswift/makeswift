@@ -6,7 +6,7 @@ import {
   RichTextV2ControlType,
   RichTextV2Control,
 } from '../controls/rich-text-v2'
-import { StyleV2Control, StyleV2ControlType, StyleV2ControlMessage } from '../controls/style-v2'
+// import { StyleV2Control, StyleV2ControlType, StyleV2ControlMessage } from '../controls/style-v2'
 import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
 
 import {
@@ -72,7 +72,7 @@ export type AnyPropController =
   | TableFormFieldsPropController
   | RichTextControl
   | RichTextV2Control
-  | StyleV2Control
+  // | StyleV2Control
 
 export function createPropController(
   descriptor: Descriptor,
@@ -92,8 +92,8 @@ export function createPropController(
     case RichTextV2ControlType:
       return new RichTextV2Control(send as SendMessage<RichTextV2ControlMessage>, descriptor)
 
-    case StyleV2ControlType:
-      return new StyleV2Control(send as SendMessage<StyleV2ControlMessage>, descriptor)
+    // case StyleV2ControlType:
+    //   return new StyleV2Control(send as SendMessage<StyleV2ControlMessage>, descriptor)
 
     default:
       return new DefaultControlInstance(send as SendMessage)

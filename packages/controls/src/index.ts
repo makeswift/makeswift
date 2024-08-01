@@ -12,6 +12,7 @@ export * from './text-input'
 export * from './text-area'
 export * from './select'
 export * from './style'
+export * from './style-v2'
 
 export * from './control-definition'
 export * from './control-instance'

@@ -77,8 +77,14 @@ class Definition<C extends Config = Config> extends ControlDefinition<
       })
       .parse(data)
 
-    const itemDef = deserializeCallback(type)
-    return new Definition<Deserialized<Config>>({ type: itemDef, ...config })
+    const deserializedType = mapValues(type, (itemDef) => {
+      return deserializeCallback(itemDef)
+    })
+
+    return new Definition<Deserialized<Config>>({
+      type: deserializedType,
+      ...config,
+    })
   }
 
   get keyDefs() {
@@ -200,14 +206,14 @@ class Definition<C extends Config = Config> extends ControlDefinition<
 
   introspect<R>(data: DataType<C> | undefined, target: IntrospectionTarget<R>) {
     return Object.entries(data ?? {}).flatMap(([key, value]) =>
-      this.keyDefs[key as string].introspect(value, target),
+      this.keyDefs[key as string]?.introspect(value, target),
     )
   }
 
   getTranslatableData(data: DataType<C>): Data {
     if (data == null) return null
     return mapValues(data, (value, key) => {
-      return this.keyDefs[key as string].getTranslatableData(value)
+      return this.keyDefs[key as string]?.getTranslatableData(value)
     })
   }
 
@@ -218,7 +224,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   ): Data {
     if (translatedData == null) return data
     return mapValues(data, (value, key) =>
-      this.keyDefs[key as string].mergeTranslatedData(
+      this.keyDefs[key as string]?.mergeTranslatedData(
         value,
         translatedData[key as string],
         context,

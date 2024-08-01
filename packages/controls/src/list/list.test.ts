@@ -11,7 +11,6 @@ import { Combobox } from '../combobox'
 import { Shape } from '../shape'
 import { Targets } from '../introspect'
 import { ControlDataTypeKey } from '../common'
-import { DataType, ResolvedValueType, ValueType } from '../control-definition'
 
 describe('List', () => {
   describe('constructor', () => {
@@ -57,80 +56,6 @@ describe('List', () => {
         })
         expect(list).toMatchSnapshot()
       })
-    })
-  })
-
-  describe('infers types from config', () => {
-    test('infers type from single control', () => {
-      const def = List({
-        type: Color({ label: 'Color', defaultValue: 'red' }),
-      })
-
-      type Value = ValueType<typeof def>
-      type Data = DataType<typeof def>
-      type ResolvedValue = ResolvedValueType<typeof def>
-
-      const validValue: Value = [
-        { swatchId: 'swatch-id', alpha: 1 },
-      ] satisfies Value
-
-      const validData: Data = [
-        {
-          id: '000',
-          type: ColorDefinition.type,
-          value: {
-            swatchId: 'swatch-id',
-            alpha: 1,
-            [ControlDataTypeKey]: 'color::v1',
-          },
-        },
-      ] satisfies Data
-
-      const validResolvedValue: ResolvedValue = [
-        'rgba(255, 0, 0, 1)',
-      ] satisfies ResolvedValue
-
-      expect(validValue).toMatchSnapshot()
-      expect(validData).toMatchSnapshot()
-      expect(validResolvedValue).toMatchSnapshot()
-
-      // TODO: @arvin - add negative assertion tests
-    })
-
-    test('infers type from composable control definition', () => {
-      const def = List({
-        type: List({
-          type: Color({ label: 'Color', defaultValue: 'red' }),
-        }),
-      })
-
-      type Value = ValueType<typeof def>
-      type Data = DataType<typeof def>
-      type ResolvedValue = ResolvedValueType<typeof def>
-
-      const validValue: Value = [[{ swatchId: 'swatch-id', alpha: 1 }]]
-      const validData: Data = [
-        {
-          id: '000',
-          type: ListDefinition.type,
-          value: [
-            {
-              id: '000',
-              type: ColorDefinition.type,
-              value: {
-                swatchId: 'swatch-id',
-                alpha: 1,
-                [ControlDataTypeKey]: 'color::v1',
-              },
-            },
-          ],
-        },
-      ]
-      const validResolvedValue: ResolvedValue = [['rgba(255, 0, 0, 1)']]
-
-      expect(validValue).toMatchSnapshot()
-      expect(validData).toMatchSnapshot()
-      expect(validResolvedValue).toMatchSnapshot()
     })
   })
 

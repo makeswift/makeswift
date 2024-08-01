@@ -9,10 +9,10 @@ import {
   RichTextV2ControlData,
   RichTextV2ControlDefinition,
   RichTextV2ControlType,
-  StyleV2Control,
-  StyleV2ControlData,
-  StyleV2ControlDefinition,
-  StyleV2ControlType,
+  // StyleV2Control,
+  // StyleV2ControlData,
+  // StyleV2ControlDefinition,
+  // StyleV2ControlType,
   TypographyControlData,
   TypographyControlDefinition,
   TypographyControlType,
@@ -22,7 +22,7 @@ import { AnyPropController } from '../../../prop-controllers/instances'
 import { RenderHook } from '../components'
 import { RichTextControlValue, useRichText } from './rich-text/rich-text'
 import { RichTextV2ControlValue, useRichTextV2 } from './rich-text-v2'
-import { StyleV2ControlFormattedValue, StyleV2ControlValue } from './style-v2'
+// import { StyleV2ControlFormattedValue, StyleV2ControlValue } from './style-v2'
 import { TypographyControlValue, useTypographyValue } from './typography'
 import { isLegacyDescriptor } from '../../../prop-controllers/descriptors'
 
@@ -31,11 +31,11 @@ export type ControlDefinitionValue<T extends ControlDefinition> =
     ? RichTextControlValue
     : T extends RichTextV2ControlDefinition
       ? RichTextV2ControlValue
-      : T extends StyleV2ControlDefinition
-        ? StyleV2ControlFormattedValue
-        : T extends TypographyControlDefinition
-          ? TypographyControlValue
-          : never
+      : // : T extends StyleV2ControlDefinition
+        //   ? StyleV2ControlFormattedValue
+        T extends TypographyControlDefinition
+        ? TypographyControlValue
+        : never
 
 type ControlValueProps<T extends ControlDefinition> = {
   definition: T
@@ -154,17 +154,17 @@ export function ControlValue<T extends ControlDefinition>({
     //     </ShapeControlValue>
     //   )
 
-    case StyleV2ControlType:
-      return (
-        <StyleV2ControlValue
-          key={definition.type}
-          data={data as StyleV2ControlData}
-          definition={definition}
-          control={control as StyleV2Control}
-        >
-          {value => children(value as ControlDefinitionValue<T>)}
-        </StyleV2ControlValue>
-      )
+    // case StyleV2Definition.type:
+    //   return (
+    //     <StyleV2ControlValue
+    //       key={definition.type}
+    //       data={data as StyleV2ControlData}
+    //       definition={definition}
+    //       control={control as StyleV2Control}
+    //     >
+    //       {value => children(value as ControlDefinitionValue<T>)}
+    //     </StyleV2ControlValue>
+    //   )
 
     // case SlotControlType:
     //   return (

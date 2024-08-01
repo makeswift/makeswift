@@ -18,3 +18,54 @@ Shape {
   },
 }
 `;
+
+exports[`Shape serialization serialize/deserialize composable shape of controls 1`] = `
+{
+  "config": {
+    "type": {
+      "shape": {
+        "config": {
+          "type": {
+            "checkbox": {
+              "config": {},
+              "type": "makeswift::controls::checkbox",
+              "version": 1,
+            },
+            "color": {
+              "config": {
+                "defaultValue": "red",
+              },
+              "type": "makeswift::controls::color",
+              "version": 1,
+            },
+          },
+        },
+        "type": "makeswift::controls::shape",
+      },
+    },
+  },
+  "type": "makeswift::controls::shape",
+}
+`;
+
+exports[`Shape serialization serialize/deserialize shape of controls 1`] = `
+{
+  "config": {
+    "type": {
+      "checkbox": {
+        "config": {},
+        "type": "makeswift::controls::checkbox",
+        "version": 1,
+      },
+      "color": {
+        "config": {
+          "defaultValue": "red",
+        },
+        "type": "makeswift::controls::color",
+        "version": 1,
+      },
+    },
+  },
+  "type": "makeswift::controls::shape",
+}
+`;

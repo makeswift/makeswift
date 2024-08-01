@@ -12,7 +12,10 @@ import { responsiveValue } from '../common/schema'
 import { type CopyContext } from '../context'
 import { type ResourceResolver } from '../resource-resolver'
 import { type Effector } from '../effector'
-import { type IntrospectionTarget } from '../introspect'
+import {
+  IntrospectionTargetType,
+  type IntrospectionTarget,
+} from '../introspect'
 import { type SendMessage } from '../control-instance'
 
 import {
@@ -31,6 +34,7 @@ import { mapValues, notNil, nullToUndefined } from '../utils/functional'
 import { type BorderData, type BorderSideData } from './types'
 import * as StyleSchema from './schema'
 import { StyleControl } from './style-control'
+import { match, P } from 'ts-pattern'
 
 type Config = z.infer<typeof Definition.schema.config>
 
@@ -245,17 +249,31 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   }
 
   introspect<R>(data: DataType<C> | undefined, target: IntrospectionTarget<R>) {
-    if (data == null) return []
+    if (data == null || target.type !== IntrospectionTargetType.Swatch) {
+      return []
+    }
 
-    const introspectedProperties = mapValues(
-      data,
-      (responsiveProperty) =>
-        responsiveProperty
-          ?.map((override) => target.introspect(override.value))
-          .flat() ?? [],
-    )
-
-    return Object.values(introspectedProperties).flat().filter(notNil)
+    return Object.values(data)
+      .flat()
+      .flatMap((override) =>
+        match(override.value)
+          .with(
+            P.union(
+              { borderTop: { color: P.any } },
+              { borderLeft: { color: P.any } },
+              { borderBottom: { color: P.any } },
+              { borderRight: { color: P.any } },
+            ),
+            (overrideValue) => [
+              overrideValue.borderBottom?.color,
+              overrideValue.borderTop?.color,
+              overrideValue.borderLeft?.color,
+              overrideValue.borderRight?.color,
+            ],
+          )
+          .otherwise(() => [null]),
+      )
+      .flatMap((color) => target.introspect(color))
   }
 }
 

@@ -32,7 +32,7 @@ import {
   isRichTextV1Data,
 } from './rich-text-v2/rich-text-v2'
 
-import { StyleV2ControlData, StyleV2ControlDefinition } from './style-v2'
+// import { StyleV2ControlData, StyleV2ControlDefinition } from './style-v2'
 import { TypographyControlData, TypographyControlDefinition } from './typography'
 import {
   RichTextV2ControlTranslationDto,
@@ -44,7 +44,7 @@ import { IndexSignatureHack } from '../utils/index-signature-hack'
 type LegacyControlDefinition =
   | RichTextControlDefinition
   | RichTextV2ControlDefinition
-  | StyleV2ControlDefinition
+  // | StyleV2ControlDefinition
   | TypographyControlDefinition
 
 export type LegacyControlDefinitionData<T extends LegacyControlDefinition> =
@@ -52,8 +52,8 @@ export type LegacyControlDefinitionData<T extends LegacyControlDefinition> =
     ? IndexSignatureHack<RichTextControlData>
     : T extends RichTextV2ControlDefinition
       ? RichTextV2ControlData
-      : T extends StyleV2ControlDefinition
-        ? StyleV2ControlData
+      // : T extends StyleV2ControlDefinition
+      //   ? StyleV2ControlData
         : T extends TypographyControlDefinition
           ? TypographyControlData
           : never

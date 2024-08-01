@@ -1,109 +1,91 @@
 import {
+  type SerializedRecord,
+  type ResourceResolver,
+  type Effector,
+  type Resolvable,
+  type DataType,
+  StyleV2Definition,
+  StyleV2Control,
+  ControlDefinition,
+  ResolvedValueType,
   ResponsiveValue,
-  ControlInstance,
-  type SendMessage,
-  type ControlMessage,
+  mapValues,
+  deepEqual,
 } from '@makeswift/controls'
-import { BoxModel } from 'css-box-model'
-import { ControlDefinition } from './control'
-import { AnyPropController, createPropController } from '../prop-controllers/instances'
+
 import { CSSObject } from '@emotion/serialize'
-import { useStyle } from '../runtimes/react/use-style'
-import { ControlDefinitionValue } from '../runtimes/react/controls/control'
+import { z } from 'zod'
 
-export const StyleV2ControlType = 'makeswift::controls::style-v2'
+type ResolvedStyles = ResponsiveValue<CSSObject>
 
-export type StyleV2CSSObject = CSSObject
-export const unstable_useStyleV2ClassName = useStyle
-
-type StyleV2ControlConfig<T extends ControlDefinition = ControlDefinition> = {
-  type: T
-  getStyle(item: ControlDefinitionValue<T> | undefined): CSSObject
+type Config<Item extends ControlDefinition> = {
+  type: Item
+  getStyle: (val: ResolvedValueType<Item>) => CSSObject
 }
 
-export type StyleV2ControlDefinition = {
-  type: typeof StyleV2ControlType
-  config: StyleV2ControlConfig
-}
+class Definition<Item extends ControlDefinition> extends StyleV2Definition<
+  CSSObject,
+  Config<Item>
+> {
+  static deserialize(
+    data: SerializedRecord,
+    deserializeCallback: (r: SerializedRecord) => ControlDefinition,
+  ) {
+    if (data.type !== Definition.type) {
+      throw new Error(`StyleV2: expected type ${Definition.type}, got ${data.type}`)
+    }
 
-export function unstable_StyleV2<C extends StyleV2ControlConfig>(
-  config: C,
-): StyleV2ControlDefinition {
-  return { type: StyleV2ControlType, config }
-}
+    const {
+      config: { type, ...config },
+    } = Definition.schema({ typeDef: z.any() }).definition.parse(data)
 
-/**
- * TODO: Rewrite `ControlDefinitionData` as a tail recursive type.
- *
- * Explanation: Making `StyleV2ControlData` generic causes us to hit a limitation of TS conditional types for the definition of `ControlDefinitionData`.
- * We get "Type instantiation is excessively deep and possibly infinite."
- *
- * Helpful links:
- * * The PR changing the limit of conditional types: https://github.com/microsoft/TypeScript/pull/45711
- * * TS 4.5 docs releasing this limitation: https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-5.html#tail-recursion-elimination-on-conditional-types
- * * A SO user implementing a tail recursive type: https://stackoverflow.com/questions/72370456/tail-recursion-elimination-on-conditional-types-doesnt-work
- *
- *
- * This is what the type should be:
- * ```
- * export type StyleV2ControlData<T extends StyleV2ControlDefinition = StyleV2ControlDefinition> =
- *   ResponsiveValue<ControlDefinitionData<T['config']['type']>>
- * ```
- */
-export type StyleV2ControlData = ResponsiveValue<any>
+    const typeDef = deserializeCallback(type)
 
-export const StyleV2ControlMessageType = {
-  CHANGE_BOX_MODEL: 'makeswift::controls::style::message::change-box-model',
-  STYLE_V2_CONTROL_CHILD_CONTROL_MESSAGE:
-    'makeswift::controls::style-v2::message::child-control-message',
-} as const
-
-type StyleV2ControlItemBoxModelChangeMessage = {
-  type: typeof StyleV2ControlMessageType.CHANGE_BOX_MODEL
-  payload: { boxModel: BoxModel | null }
-}
-type StyleV2ControlChildControlMessage = {
-  type: typeof StyleV2ControlMessageType.STYLE_V2_CONTROL_CHILD_CONTROL_MESSAGE
-  payload: { message: ControlMessage }
-}
-
-export type StyleV2ControlMessage =
-  | StyleV2ControlItemBoxModelChangeMessage
-  | StyleV2ControlChildControlMessage
-
-export class StyleV2Control<
-  T extends StyleV2ControlDefinition = StyleV2ControlDefinition,
-> extends ControlInstance<StyleV2ControlMessage> {
-  control?: AnyPropController
-  constructor(send: SendMessage<StyleV2ControlMessage>, descriptor: T) {
-    super(send)
-    this.control = createPropController(descriptor.config.type, message => {
-      this.sendMessage({
-        type: StyleV2ControlMessageType.STYLE_V2_CONTROL_CHILD_CONTROL_MESSAGE,
-        payload: { message },
-      })
-    })
+    return new Definition({ type: typeDef, ...config })
   }
 
-  changeBoxModel(boxModel: BoxModel | null): void {
-    this.sendMessage({ type: StyleV2ControlMessageType.CHANGE_BOX_MODEL, payload: { boxModel } })
-  }
+  resolveValue(
+    data: DataType<StyleV2Definition<CSSObject, Config<Item>>> | undefined,
+    resolver: ResourceResolver,
+    effector: Effector,
+    control?: StyleV2Control<CSSObject>,
+  ): Resolvable<ResolvedStyles | undefined> {
+    const responsiveValues = Object.fromEntries(
+      data?.map(item => [
+        item.deviceId,
+        this.typeDef.resolveValue(item.value, resolver, effector, control?.getChildControl()),
+      ]) ?? [],
+    )
 
-  recv(message: StyleV2ControlMessage) {
-    switch (message.type) {
-      case StyleV2ControlMessageType.STYLE_V2_CONTROL_CHILD_CONTROL_MESSAGE: {
-        const control = this.control
-
-        if (control == null) return
-
-        const recv = control.recv as (arg0: ControlMessage) => void
-
-        recv(message.payload.message)
-      }
+    return {
+      // TODO: review
+      readStableValue: (previous?: ResolvedStyles) => {
+        // return previous
+        const r = mapValues(responsiveValues, item => item.readStableValue())
+        const newStyles = data?.map(item => ({
+          deviceId: item.deviceId,
+          value: this.config.getStyle(r[item.deviceId]),
+        }))
+        if (deepEqual(newStyles, previous)) return previous
+        return newStyles
+      },
+      subscribe: (onUpdate: () => void) => {
+        const unsubscribes = Object.entries(responsiveValues).map(([, item]) =>
+          item.subscribe(onUpdate),
+        )
+        return () => unsubscribes?.forEach(u => u())
+      },
+      triggerResolve: async (currentValue: ResolvedStyles) => {
+        const subResolves =
+          Object.values(mapValues(responsiveValues, item => item.triggerResolve(currentValue))) ??
+          []
+        await Promise.all([...subResolves])
+      },
     }
   }
-
-  child(_key: string): ControlInstance | undefined {
-    return undefined
-  }
 }
+
+// TODO: review
+export const unstable_StyleV2 = <Item extends ControlDefinition>(config: Config<Item>) =>
+  new (class unstable_StyleV2 extends Definition<Item> {})(config)
+export { Definition as StyleV2Definition }

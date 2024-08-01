@@ -21,7 +21,7 @@ import { isLegacyDescriptor, type Descriptor } from './descriptors'
 export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
   if (!isLegacyDescriptor(descriptor)) {
     // FIXME
-    return value
+    return descriptor.copyData(value, context)
   }
 
   switch (descriptor.type) {

@@ -7,13 +7,13 @@ import { type ResponsiveColor } from '../components/utils/types'
 import type { Data } from '../state/react-page'
 import {
   RichTextV2ControlDefinition,
-  StyleV2ControlDefinition,
+  // StyleV2ControlDefinition,
   TypographyControlDefinition,
 } from '../controls'
 import { RichTextControlDefinition } from '../controls/rich-text'
 import { RichTextControlValue } from '../runtimes/react/controls/rich-text/rich-text'
 import { RichTextV2ControlValue } from '../runtimes/react/controls/rich-text-v2'
-import { StyleV2ControlFormattedValue } from '../runtimes/react/controls/style-v2'
+// import { StyleV2ControlFormattedValue } from '../runtimes/react/controls/style-v2'
 import { TypographyControlValue } from '../runtimes/react/controls/typography'
 import {
   BorderDescriptor,
@@ -121,7 +121,7 @@ type PropControllerDescriptor<T extends Data = Data> =
 
 export type LegacyDescriptor<T extends Data = Data> =
   | PropControllerDescriptor<T>
-  | StyleV2ControlDefinition
+  // | StyleV2ControlDefinition
   | TypographyControlDefinition
   | RichTextControlDefinition
   | RichTextV2ControlDefinition
@@ -390,21 +390,21 @@ export type PropControllerDescriptorValueType<T extends PropControllerDescriptor
 
 export type DescriptorValueType<T extends Descriptor> = T extends PropControllerDescriptor
   ? PropControllerDescriptorValueType<T>
-  : T extends StyleV2ControlDefinition
-    ? StyleV2ControlFormattedValue
-    : T extends RichTextControlDefinition
-      ? RichTextControlValue
-      : T extends RichTextV2ControlDefinition
-        ? RichTextV2ControlValue
-        : T extends StyleV2ControlDefinition
-          ? StyleV2ControlFormattedValue
-          : T extends TypographyControlDefinition
-            ? TypographyControlValue
-            : T extends UnifiedControlDefinition
-              ? ResolvedValueType<T>
-              : T extends Descriptor<infer U>
-                ? U | undefined
-                : never
+  : // : T extends StyleV2ControlDefinition
+    //   ? StyleV2ControlFormattedValue
+    T extends RichTextControlDefinition
+    ? RichTextControlValue
+    : T extends RichTextV2ControlDefinition
+      ? RichTextV2ControlValue
+      : // : T extends StyleV2ControlDefinition
+        //   ? StyleV2ControlFormattedValue
+        T extends TypographyControlDefinition
+        ? TypographyControlValue
+        : T extends UnifiedControlDefinition
+          ? ResolvedValueType<T>
+          : T extends Descriptor<infer U>
+            ? U | undefined
+            : never
 
 export type PanelDescriptorValueType<T extends PanelDescriptor> =
   T extends PanelDescriptor<infer U> ? U : never

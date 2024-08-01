@@ -32,13 +32,14 @@ import {
   SlotDefinition,
   TextAreaDefinition,
   TextInputDefinition,
+  StyleV2Definition,
 } from '../../controls'
 
 import {
   RichTextV2ControlDefinition,
   RichTextV2ControlType,
-  StyleV2ControlDefinition,
-  StyleV2ControlType,
+  // StyleV2ControlDefinition,
+  // StyleV2ControlType,
   RichTextValue as RichTextControlValue,
 } from '../../controls'
 
@@ -64,7 +65,7 @@ import {
 } from '../../prop-controllers/deleted'
 
 import { deserializeRichTextControlV2, serializeRichTextControlV2 } from './controls/rich-text-v2'
-import { deserializeStyleV2Control, serializeStyleV2Control } from './controls/style-v2'
+// import { deserializeStyleV2Control, serializeStyleV2Control } from './controls/style-v2'
 import { Deserialize, Serialize } from './controls/types'
 import {
   DeserializedFunction,
@@ -759,7 +760,7 @@ export type SerializedLegacyControl<T extends Data = Data> =
       | ImageControl<T>
       | RichTextControl<T>
       | RichTextV2ControlDefinition
-      | StyleV2ControlDefinition
+      // | StyleV2ControlDefinition
     >
   | SerializedListControl<T extends ListControlValue ? T : ListControlValue>
   | SerializedShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
@@ -780,7 +781,7 @@ export type SerializedLegacyControl<T extends Data = Data> =
   | SerializedImageControl<T>
   | SerializedRichTextControl<T>
   | Serialize<RichTextV2ControlDefinition>
-  | Serialize<StyleV2ControlDefinition>
+// | Serialize<StyleV2ControlDefinition>
 
 export type SerializedControl<T extends Data = Data> = SerializedLegacyControl<T> | SerializedRecord
 
@@ -814,7 +815,7 @@ export type DeserializedLegacyControl<T extends Data = Data> =
       | ImageControl<T>
       | RichTextControl<T>
       | RichTextV2ControlDefinition
-      | StyleV2ControlDefinition
+      // | StyleV2ControlDefinition
     >
   | DeserializedListControl<T extends ListControlValue ? T : ListControlValue>
   | DeserializedShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
@@ -835,7 +836,7 @@ export type DeserializedLegacyControl<T extends Data = Data> =
   | DeserializedImageControl<T>
   | DeserializedRichTextControl<T>
   | Deserialize<Serialize<RichTextV2ControlDefinition>>
-  | Deserialize<Serialize<StyleV2ControlDefinition>>
+// | Deserialize<Serialize<StyleV2ControlDefinition>>
 
 export type DeserializedControl<T extends Data = Data> =
   | DeserializedLegacyControl<T>
@@ -921,8 +922,8 @@ function serializeLegacyControl<T extends Data>(
     case RichTextV2ControlType:
       return serializeRichTextControlV2(control)
 
-    case StyleV2ControlType:
-      return serializeStyleV2Control(control)
+    // case StyleV2ControlType:
+    //   return serializeStyleV2Control(control)
 
     default:
       return [control, []]
@@ -932,7 +933,7 @@ function serializeLegacyControl<T extends Data>(
 function isSerializedLegacyControl<T extends Data>(
   control: SerializedControl<T>,
 ): control is SerializedLegacyControl<T> {
-  return 'options' in control || control.type in [RichTextV2ControlType, StyleV2ControlType]
+  return 'options' in control || control.type in [RichTextV2ControlType /*StyleV2ControlType*/]
 }
 
 export function deserializeLegacyControl<T extends Data>(
@@ -996,8 +997,8 @@ export function deserializeLegacyControl<T extends Data>(
     case RichTextV2ControlType:
       return deserializeRichTextControlV2(serializedControl)
 
-    case StyleV2ControlType:
-      return deserializeStyleV2Control(serializedControl)
+    // case StyleV2ControlType:
+    //   return deserializeStyleV2Control(serializedControl)
 
     default:
       return serializedControl
@@ -1018,19 +1019,21 @@ function deserializeControlDefV2(record: SerializedRecord): UnifiedControlDefini
   const deserializeMethod: Record<string, (data: SerializedRecord) => UnifiedControlDefinition> = {
     [CheckboxDefinition.type]: CheckboxDefinition.deserialize,
     [ColorDefinition.type]: ColorDefinition.deserialize,
-    [ListDefinition.type]: (record: SerializedRecord) =>
-      ListDefinition.deserialize(record, deserializeControlDefV2),
     [NumberDefinition.type]: NumberDefinition.deserialize,
     [SelectDefinition.type]: SelectDefinition.deserialize,
     [ComboboxDefinition.type]: ComboboxDefinition.deserialize,
     [ImageDefinition.type]: ImageDefinition.deserialize,
-    [ShapeDefinition.type]: (record: SerializedRecord) =>
-      ListDefinition.deserialize(record, deserializeControlDefV2),
     [SlotDefinition.type]: SlotDefinition.deserialize,
     [TextAreaDefinition.type]: TextAreaDefinition.deserialize,
     [TextInputDefinition.type]: TextInputDefinition.deserialize,
     [IconRadioGroupDefinition.type]: IconRadioGroupDefinition.deserialize,
     [LinkDefinition.type]: LinkDefinition.deserialize,
+    [ListDefinition.type]: (record: SerializedRecord) =>
+      ListDefinition.deserialize(record, deserializeControlDefV2),
+    [ShapeDefinition.type]: (record: SerializedRecord) =>
+      ListDefinition.deserialize(record, deserializeControlDefV2),
+    [StyleV2Definition.type]: (record: SerializedRecord) =>
+      StyleV2Definition.deserialize(record, deserializeControlDefV2),
   } as const
 
   const deserialize = deserializeMethod[record.type] ?? null

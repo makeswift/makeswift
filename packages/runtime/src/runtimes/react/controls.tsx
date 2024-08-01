@@ -27,7 +27,7 @@ import {
   RichTextControlType,
   RichTextV2Control,
   RichTextV2ControlType,
-  StyleV2ControlType,
+  // StyleV2ControlType,
   TypographyControlType,
 } from '../../controls'
 import { ControlValue } from './controls/control'
@@ -187,7 +187,7 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
           // case ShapeControlType:
           // case ListControlType:
           // case LinkControlType:
-          case StyleV2ControlType:
+          // case StyleV2ControlType:
           case TypographyControlType:
             // case Checkbox.controlType:
             return (
