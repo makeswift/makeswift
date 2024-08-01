@@ -22,6 +22,7 @@ import {
   type ParseResult,
   type SerializedRecord,
   type Resolvable,
+  type SchemaType as SchemaType_,
 } from '../control-definition'
 
 import {
@@ -31,14 +32,13 @@ import {
 
 import { linkSchema } from './schema'
 
-export type LinkControlData = z.infer<typeof linkSchema> | null
-
-const defaultResolvedValue = {
-  href: '#',
-  onClick: (e: MouseEvent) => {
-    if (e.defaultPrevented) return
-  },
+type RootMouseEvent = {
+  defaultPrevented: boolean
+  preventDefault: () => void
+  view: unknown
 }
+
+export type LinkControlData = z.infer<typeof linkSchema> | null
 
 type LinkTarget = '_blank' | '_self'
 
@@ -48,18 +48,24 @@ type SchemaType<_C extends Config> = typeof Definition.schema
 
 type DataType<C extends Config> = z.infer<SchemaType<C>['data']>
 type ValueType<C extends Config> = z.infer<SchemaType<C>['value']>
-type ResolvedValueType<_C extends Config> = {
+type ResolvedValueType<
+  MouseEventType extends RootMouseEvent,
+  _C extends Config,
+> = {
   href: string
   target?: LinkTarget
-  onClick: (event: MouseEvent) => void
+  onClick: (event: MouseEventType) => void
 }
 
-class Definition<C extends Config = Config> extends ControlDefinition<
+abstract class Definition<
+  MouseEventType extends RootMouseEvent,
+  C extends Config = Config,
+> extends ControlDefinition<
   typeof Definition.type,
   C,
   DataType<C>,
   ValueType<C>,
-  ResolvedValueType<C>
+  ResolvedValueType<MouseEventType, C>
 > {
   static readonly type = 'makeswift::controls::link' as const
 
@@ -100,23 +106,17 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     }
   }
 
-  static deserialize(data: SerializedRecord): Definition {
-    if (data.type !== Definition.type) {
-      throw new Error(
-        `Link: expected type ${Definition.type}, got ${data.type}`,
-      )
-    }
-
-    const { config } = Definition.schema.definition.parse(data)
-    return new Definition(config)
-  }
-
   get controlType() {
     return Definition.type
   }
 
   get schema() {
-    return Definition.schema
+    return {
+      ...Definition.schema,
+      resolvedValue: Definition.schema.resolvedValue as SchemaType_<
+        ResolvedValueType<MouseEventType, C>
+      >,
+    }
   }
 
   safeParse(data: unknown | undefined): ParseResult<DataType<C> | undefined> {
@@ -174,7 +174,14 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     data: DataType<C> | undefined,
     resolver: ResourceResolver,
     _effector: Effector,
-  ): Resolvable<ResolvedValueType<C> | undefined> {
+  ): Resolvable<ResolvedValueType<MouseEventType, C> | undefined> {
+    const defaultResolvedValue = {
+      href: '#',
+      onClick: (e: MouseEventType) => {
+        if (e.defaultPrevented) return
+      },
+    } as const
+
     const pageId = data?.type === 'OPEN_PAGE' ? data.payload.pageId : null
     const pageSubscription = resolver.resolvePagePathnameSlice(
       pageId ?? undefined,
@@ -190,7 +197,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     const resolveLink = memoize(this.resolveLinkPropValues)
 
     return {
-      readStableValue: (_previous?: ResolvedValueType<C>) => {
+      readStableValue: (_previous?: ResolvedValueType<MouseEventType, C>) => {
         if (data == null) return defaultResolvedValue
 
         const page = pageSubscription.readStableValue()
@@ -209,7 +216,9 @@ class Definition<C extends Config = Config> extends ControlDefinition<
         }
       },
 
-      triggerResolve: async (_currentValue?: ResolvedValueType<C>) => {
+      triggerResolve: async (
+        _currentValue?: ResolvedValueType<MouseEventType, C>,
+      ) => {
         if (pageSubscription.readStableValue() == null) {
           pageSubscription.fetch()
         }
@@ -253,7 +262,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
         throw new RangeError(`Invalid link type "${(data as any).type}".`)
       })
 
-    const handleClick = (event: MouseEvent) => {
+    const handleClick = (event: MouseEventType) => {
       if (event.defaultPrevented) return
       if (data && data.type === 'SCROLL_TO_ELEMENT') {
         let hash: string | undefined
@@ -309,8 +318,5 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     })
   }
 }
-
-export const Link = <C extends Config>(config?: C) =>
-  new (class Link extends Definition<C> {})(config ?? ({} as C))
 
 export { Definition as LinkDefinition }

@@ -1,5 +1,5 @@
 import { Editor, Element } from 'slate'
-import { Link } from '@makeswift/controls'
+import { Link } from '../../controls/link'
 import { RenderElement, createRichTextV2Plugin } from '../../controls/rich-text-v2/plugin'
 import { ElementUtils } from '../utils/element'
 import { InlineType } from '../types'

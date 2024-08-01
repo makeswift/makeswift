@@ -1,7 +1,7 @@
 import { Shape, ShapeDefinition } from './shape'
 import { Color, ColorDefinition } from '../color'
 import { Checkbox, CheckboxDefinition } from '../checkbox'
-import { Link } from '../link'
+import { NativeLink as Link } from '../link/native-mouse-event-link'
 import { Targets } from '../introspect'
 import { Image } from '../image'
 import { TextArea } from '../text-area'

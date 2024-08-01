@@ -1,11 +1,6 @@
-import {
-  Number,
-  TextInput,
-  Shape,
-  type DataType,
-  type TranslationDto,
-  Link,
-} from '@makeswift/controls'
+import { Number, TextInput, Shape, type DataType, type TranslationDto } from '@makeswift/controls'
+
+import { Link } from '../../link'
 
 export const componentRegistration = Shape({
   type: {

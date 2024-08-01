@@ -1,5 +1,6 @@
 import { ComponentType } from 'react'
-import { type DataType, LinkDefinition } from '@makeswift/controls'
+import { DataType } from '@makeswift/controls'
+import { LinkDefinition } from '../../controls'
 import { BlockType, InlineType, ResponsiveBlockTextAlignment, RichTextTypography } from '..'
 
 type Children = string | JSX.Element | (string | JSX.Element)[]

@@ -29,7 +29,7 @@ import {
 
 import { Color } from '../color'
 
-import { mapValues, notNil, nullToUndefined } from '../utils/functional'
+import { mapValues, nullToUndefined } from '../utils/functional'
 
 import { type BorderData, type BorderSideData } from './types'
 import * as StyleSchema from './schema'

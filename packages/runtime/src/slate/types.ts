@@ -1,6 +1,7 @@
 import { BaseEditor, Descendant } from 'slate'
 import { ReactEditor } from 'slate-react'
-import { type DataType, LinkDefinition } from '@makeswift/controls'
+import { type DataType } from '@makeswift/controls'
+import { LinkDefinition } from '../controls'
 import { type ResponsiveValue } from '@makeswift/prop-controllers'
 
 import { type ResponsiveColor } from '../components/utils/types'

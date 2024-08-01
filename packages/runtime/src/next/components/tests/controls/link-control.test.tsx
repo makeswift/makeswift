@@ -1,5 +1,5 @@
 /** @jest-environment jsdom */
-import { Link } from '@makeswift/controls'
+import { Link } from '../../../../controls'
 import { testPageControlPropRendering } from './page-control-prop-rendering'
 import { APIResourceType } from '../../../../api'
 import { http, HttpResponse } from 'msw'

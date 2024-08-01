@@ -1,4 +1,4 @@
-import { Link } from './link'
+import { NativeLink as Link } from './native-mouse-event-link'
 import { testDefinition } from '../tests/test-definition'
 
 import { type CopyContext, createReplacementContext } from '../context'

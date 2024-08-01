@@ -1,5 +1,5 @@
 import { Element } from 'slate'
-import { Link } from '@makeswift/controls'
+import { Link } from '../../controls/link'
 import { createRichTextV2Plugin } from '../../controls/rich-text-v2/plugin'
 import { ElementUtils } from '../utils/element'
 import { isLinkElement } from './types'

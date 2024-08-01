@@ -13,8 +13,6 @@ export {
   ImageDefinition,
   unstable_IconRadioGroup,
   IconRadioGroupDefinition,
-  Link,
-  LinkDefinition,
   List,
   ListDefinition,
   Shape,
@@ -35,3 +33,4 @@ export {
 
 export { Slot, SlotDefinition } from './slot'
 export { unstable_StyleV2, StyleV2Definition } from './style-v2'
+export { Link, LinkDefinition } from './link'

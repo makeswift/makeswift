@@ -1,5 +1,6 @@
 import { expectTypeOf } from 'expect-type'
-import { Link, LinkControlData } from './link'
+import { LinkControlData } from './link'
+import { NativeLink as Link } from './native-mouse-event-link'
 import { DataType, ResolvedValueType, ValueType } from '../control-definition'
 
 describe('Link Types', () => {
@@ -22,7 +23,7 @@ describe('Link Types', () => {
       expectTypeOf<Resolved>().toEqualTypeOf<{
         href: string
         target: '_blank' | '_self' | undefined
-        onClick: (args: MouseEvent, ...argsRest: unknown[]) => void
+        onClick: (args: MouseEvent) => void
       }>
     })
   })

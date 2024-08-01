@@ -52,7 +52,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
 ) {
   // Arrange
   const controlData: DataType<D> | Data =
-    value != null ? (toData ? toData(value) : controlDefinition.toData(value)) : undefined
+    value !== undefined ? (toData ? toData(value) : controlDefinition.toData(value)) : undefined
 
   const TestComponentType = 'TestComponent'
   const testId = 'test-id'
