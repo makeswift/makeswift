@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.19.4
+
+### Patch Changes
+
+- 4050164: Fix issue where Makeswift integrations with Pages Router wouldn't load in the builder when deployed on Vercel.
+- 5b3d400: Send the `REGISTER_BUILDER_DOCUMENT` event during `initialize()`. This is used to inform the builder which document or element tree to subscribe to.
+
 ## 0.19.3
 
 ### Patch Changes
