@@ -12,6 +12,7 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
-    "giant-mails-study"
+    "plenty-flies-poke",
+    "quick-eagles-sort"
   ]
 }
