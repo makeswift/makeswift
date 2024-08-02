@@ -9,14 +9,12 @@ import { usePageSnippets } from '../hooks/usePageSnippets'
 import { PageHead } from './PageHead'
 
 type Props = {
-  document: MakeswiftPageDocument
+  pageDocument: MakeswiftPageDocument
+  documentKey: string
 }
 
-export function Page({ document: page }: Props): JSX.Element {
+export function Page({ pageDocument: page, documentKey }: Props): JSX.Element {
   const { bodySnippets } = usePageSnippets({ page })
-
-  const baseLocalizedPage = page.localizedPages.find(({ parentId }) => parentId == null)
-  const documentId = baseLocalizedPage?.elementTreeId ?? page.id
 
   useRouterLocaleSync()
 
@@ -24,7 +22,7 @@ export function Page({ document: page }: Props): JSX.Element {
     <>
       <PageHead document={page} />
 
-      <DocumentReference documentReference={createDocumentReference(documentId)} />
+      <DocumentReference documentReference={createDocumentReference(documentKey)} />
 
       {bodySnippets.map(snippet => (
         <BodySnippet key={snippet.id} code={snippet.code} cleanup={snippet.cleanup} />

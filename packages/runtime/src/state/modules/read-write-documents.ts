@@ -46,6 +46,10 @@ export function getDocument(state: State, documentKey: string): ReadOnlyDocument
   return ReadOnlyDocuments.getDocument(getReadOnlyDocumentsStateSlice(state), documentKey)
 }
 
+export function getDocuments(state: State): ReadOnlyDocuments.State {
+  return ReadOnlyDocuments.getDocuments(getReadOnlyDocumentsStateSlice(state))
+}
+
 export function reducer(state: State = getInitialState(), action: Action): State {
   const nextState = ReadOnlyDocuments.reducer(state, action)
 

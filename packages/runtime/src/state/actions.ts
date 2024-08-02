@@ -27,6 +27,9 @@ export const ActionTypes = {
 
   CHANGE_DOCUMENT: 'CHANGE_DOCUMENT',
 
+  REGISTER_BUILDER_DOCUMENT: 'REGISTER_BUILDER_DOCUMENT',
+  UNREGISTER_BUILDER_DOCUMENT: 'UNREGISTER_BUILDER_DOCUMENT',
+
   REGISTER_COMPONENT: 'REGISTER_COMPONENT',
   UNREGISTER_COMPONENT: 'UNREGISTER_COMPONENT',
 
@@ -93,6 +96,16 @@ type RegisterDocumentAction = {
 
 type UnregisterDocumentAction = {
   type: typeof ActionTypes.UNREGISTER_DOCUMENT
+  payload: { documentKey: string }
+}
+
+type RegisterBuilderDocumentAction = {
+  type: typeof ActionTypes.REGISTER_BUILDER_DOCUMENT
+  payload: { documentKey: string; document: Document }
+}
+
+type UnregisterBuilderDocumentAction = {
+  type: typeof ActionTypes.UNREGISTER_BUILDER_DOCUMENT
   payload: { documentKey: string }
 }
 
@@ -289,6 +302,8 @@ export type Action =
   | ChangeDocumentAction
   | RegisterDocumentAction
   | UnregisterDocumentAction
+  | RegisterBuilderDocumentAction
+  | UnregisterBuilderDocumentAction
   | RegisterComponentAction
   | UnregisterComponentAction
   | RegisterBuilderComponentAction
@@ -338,6 +353,17 @@ export function registerDocument(document: Document): RegisterDocumentAction {
 
 export function unregisterDocument(documentKey: string): UnregisterDocumentAction {
   return { type: ActionTypes.UNREGISTER_DOCUMENT, payload: { documentKey } }
+}
+
+export function registerBuilderDocument(document: Document): RegisterBuilderDocumentAction {
+  return {
+    type: ActionTypes.REGISTER_BUILDER_DOCUMENT,
+    payload: { documentKey: document.key, document },
+  }
+}
+
+export function unregisterBuilderDocument(documentKey: string): UnregisterBuilderDocumentAction {
+  return { type: ActionTypes.UNREGISTER_BUILDER_DOCUMENT, payload: { documentKey } }
 }
 
 export function registerDocumentEffect(
