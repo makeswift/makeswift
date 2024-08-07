@@ -13,6 +13,8 @@ export {
   ImageDefinition,
   unstable_IconRadioGroup,
   IconRadioGroupDefinition,
+  type IconRadioGroupIcon,
+  unstable_IconRadioGroupIcon,
   List,
   ListDefinition,
   Shape,
@@ -29,6 +31,13 @@ export {
   SelectDefinition,
   Style,
   StyleDefinition,
+  type StyleProperty,
+  ListControl,
+  ShapeControl,
+  StyleControl,
+  StyleV2Control,
+  SlotControl,
+  DefaultControlInstance,
 } from '@makeswift/controls'
 
 export { Slot, SlotDefinition } from './slot'

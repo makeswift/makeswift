@@ -3,15 +3,16 @@ import { z } from 'zod'
 export const linkSchema = z.union([
   z.object({
     type: z.literal('OPEN_PAGE'),
-    payload: z.object({
-      pageId: z.string().nullable().or(z.undefined()),
-      openInNewTab: z.boolean(),
-    }),
-    // FIXME
-    // .transform((v) => ({
-    //   pageId: v.pageId,
-    //   ...v,
-    // })),
+    payload: z
+      .object({
+        pageId: z.string().nullable().optional(),
+        openInNewTab: z.boolean(),
+      })
+      // FIXME: REVIEW
+      .transform((v) => ({
+        pageId: v.pageId,
+        ...v,
+      })),
   }),
 
   z.object({
@@ -40,20 +41,21 @@ export const linkSchema = z.union([
 
   z.object({
     type: z.literal('SCROLL_TO_ELEMENT'),
-    payload: z.object({
-      elementIdConfig: z
-        .object({
-          elementKey: z.string(),
-          propName: z.string(),
-        })
-        .nullable()
-        .optional(),
-      block: z.enum(['start', 'center', 'end']),
-    }),
-    // FIXME
-    // .transform((v) => ({
-    //   elementIdConfig: v.elementIdConfig,
-    //   ...v,
-    // })),
+    payload: z
+      .object({
+        elementIdConfig: z
+          .object({
+            elementKey: z.string(),
+            propName: z.string(),
+          })
+          .nullable()
+          .optional(),
+        block: z.enum(['start', 'center', 'end']),
+      })
+      // FIXME: REVIEW
+      .transform((v) => ({
+        ...v,
+        elementIdConfig: v.elementIdConfig,
+      })),
   }),
 ])

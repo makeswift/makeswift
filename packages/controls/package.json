@@ -2,7 +2,6 @@
   "name": "@makeswift/controls",
   "version": "0.0.1",
   "license": "MIT",
-  "type": "module",
   "files": [
     "dist"
   ],

@@ -1,33 +1,9 @@
 import { Image } from './image'
-import { testDefinition } from '../tests/test-definition'
-
 import { type CopyContext, createReplacementContext } from '../context'
-import { type ValueType, ControlDefinition } from '../control-definition'
 
 import { Targets } from '../introspect'
 
 const fakeImageUrl = 'https://example.com/image.jpg'
-
-function testImageDefinition<Def extends ControlDefinition>(
-  definition: Def,
-  values: ValueType<Def>[],
-  invalidValues: unknown[],
-) {
-  testDefinition(definition, values, invalidValues)
-
-  describe('introspect file IDs', () => {
-    test.each([
-      { type: 'makeswift-file', id: 'fake-id', version: 1 },
-      'fake-id',
-    ])("returns data's `fileId`", (data) => {
-      expect(definition.introspect(data, Targets.File)).toEqual(['fake-id'])
-    })
-
-    test.each([null, undefined])('gracefully handles %s', (value) => {
-      expect(definition.introspect(value, Targets.File)).toEqual([])
-    })
-  })
-}
 
 describe('Image', () => {
   describe('constructor', () => {
@@ -102,23 +78,24 @@ describe('Image', () => {
     test.each([undefined])('gracefully handles %s', (value) => {
       expect(Image().copyData(value, context)).toBe(value)
     })
+  })
 
-    test('`fromData` on v0 data will promote to v1 data', () => {
-      // Arrange
-      const v0Data = 'fake-file-id'
+  describe('introspect file IDs', () => {
+    const def = Image()
+    test.each([
+      { type: 'makeswift-file', id: 'fake-id', version: 1 } as const,
+      'fake-id',
+    ])("returns data's `fileId`", (data) => {
+      expect(def.introspect(data, Targets.File)).toEqual(['fake-id'])
+    })
 
-      // Act
-      const result = Image().fromData(v0Data)
-
-      expect(result).toMatchSnapshot()
+    test.each([undefined])('gracefully handles %s', (value) => {
+      expect(def.introspect(value, Targets.File)).toEqual([])
     })
   })
 
-  const invalidValues = [null, 17, { key: 'val' }]
-
-  testImageDefinition(
-    Image({ label: 'Image' }),
-    [
+  describe('fromData', () => {
+    test.each([
       {
         type: 'makeswift-file',
         version: 1,
@@ -132,7 +109,176 @@ describe('Image', () => {
         height: 100,
       },
       { type: 'external-file', url: fakeImageUrl, version: 1 },
-    ],
-    invalidValues,
-  )
+    ] as const)('v1 `%s`', (rawData) => {
+      const definition = Image()
+      // Arrange
+      const val = definition.fromData(rawData)
+      if (!val) throw new Error('Unexpected null value')
+
+      // Act
+      const data = definition.toData(val)
+
+      // Assert
+      expect(data).toEqual(rawData)
+    })
+
+    test('gracefully handles undefined', () => {
+      const definition = Image()
+      // Arrange
+      const val = definition.fromData(undefined)
+      expect(val).toBe(undefined)
+    })
+
+    test('v0 definition does NOT promote v0 data', () => {
+      const definition = Image()
+      const DefinitionClass = definition.constructor as any
+      const v0Definition = DefinitionClass.deserialize({
+        type: DefinitionClass.type,
+        config: definition.config,
+      })
+
+      const value = v0Definition.fromData('fake-file-id')
+
+      // Act
+      const data = v0Definition.toData(value)
+
+      // Assert
+      expect(v0Definition.version).toBe(undefined)
+      expect(value).toEqual({
+        type: 'makeswift-file',
+        id: 'fake-file-id',
+      })
+      expect(data).toBe('fake-file-id')
+    })
+
+    test('v1 definition DOES promote v0 data', () => {
+      const definition = Image()
+
+      const value = definition.fromData('fake-file-id')
+      if (!value) throw new Error('Unexpected nullish value')
+
+      // Act
+      const data = definition.toData(value)
+
+      // Assert
+      expect(definition.version).toBe(1)
+      expect(value).toEqual({
+        type: 'makeswift-file',
+        id: 'fake-file-id',
+      })
+      expect(data).toEqual({
+        type: 'makeswift-file',
+        id: 'fake-file-id',
+        version: 1,
+      })
+    })
+  })
+
+  describe('toData', () => {
+    test.each([
+      {
+        type: 'makeswift-file',
+        id: 'fake-file-id',
+      },
+      {
+        type: 'external-file',
+        url: fakeImageUrl,
+        width: 100,
+        height: 100,
+      },
+      { type: 'external-file', url: fakeImageUrl },
+    ] as const)(
+      'returns v1 data for `%s` when definition version is 1',
+      (value) => {
+        const definition = Image()
+        expect(definition.toData(value)).toMatchSnapshot()
+      },
+    )
+
+    test('returns v0 value for `%s` when definition is unversioned', () => {
+      // Arrange
+      const definition = Image()
+      const DefinitionClass = definition.constructor as any
+      const v0Definition = DefinitionClass.deserialize({
+        type: DefinitionClass.type,
+        config: definition.config,
+      })
+
+      // Act
+      const result = v0Definition.toData({
+        type: 'makeswift-file',
+        id: 'fake-file-id',
+      })
+
+      // Assert
+      expect(v0Definition.version).toBe(undefined)
+      expect(result).toBe('fake-file-id')
+    })
+
+    test('throws error for external image value on v0 definition', () => {
+      const definition = Image()
+      const DefinitionClass = definition.constructor as any
+      const v0Definition = DefinitionClass.deserialize({
+        type: DefinitionClass.type,
+        config: definition.config,
+      })
+
+      const toData = () =>
+        v0Definition.toData({
+          type: 'external-file',
+          url: fakeImageUrl,
+        })
+
+      // Assert
+      expect(v0Definition.version).toBe(undefined)
+      expect(toData).toThrowErrorMatchingSnapshot()
+    })
+  })
+
+  describe('safeParse', () => {
+    const definition = Image()
+
+    describe('v0', () => {
+      test.each([
+        'fake-file-id',
+        {
+          type: 'makeswift-file',
+          version: 1,
+          id: 'fake-file-id',
+        },
+        {
+          type: 'external-file',
+          url: fakeImageUrl,
+          version: 1,
+          width: 100,
+          height: 100,
+        },
+      ])('parses `%s`', (value) => {
+        expect(definition.safeParse(value)).toEqual({
+          success: true,
+          data: value,
+        })
+      })
+
+      test('parses `undefined`', () => {
+        expect(definition.safeParse(undefined)).toEqual({
+          success: true,
+          data: undefined,
+        })
+      })
+
+      test.each([
+        null,
+        17,
+        ['foo'],
+        { key: 'val' },
+        { type: 'makeswift-file' },
+      ])('refuses to parse `%s` as invalid input', (value) => {
+        expect(definition.safeParse(value)).toEqual({
+          success: false,
+          error: expect.any(String),
+        })
+      })
+    })
+  })
 })

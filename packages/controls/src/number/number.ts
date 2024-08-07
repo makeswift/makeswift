@@ -133,11 +133,9 @@ class Definition<C extends Config = Config> extends ControlDefinition<
 
   fromData(data: DataType<C> | undefined): ValueType<C> | undefined {
     const inputSchema = this.schema.data.optional()
-    return (
-      match(data satisfies z.infer<typeof inputSchema>)
-        .with(Definition.dataSignature.v1, ({ value }) => value)
-        .otherwise((val) => val) ?? this.config.defaultValue
-    )
+    return match(data satisfies z.infer<typeof inputSchema>)
+      .with(Definition.dataSignature.v1, ({ value }) => value)
+      .otherwise((val) => val)
   }
 
   toData(value: ValueType<C>): DataType<C> {

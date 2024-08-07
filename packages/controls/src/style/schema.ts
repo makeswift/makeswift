@@ -34,16 +34,17 @@ export const borderStyle = z.enum(['dotted', 'dashed', 'solid'])
  */
 
 export const borderSideSchema = <C extends z.ZodTypeAny>(color: C) =>
-  z.object({
-    width: z.number().nullable().optional(),
-    style: borderStyle,
-    color: color.optional().nullable(),
-  })
-// FIXME
-// .transform((v) => ({
-//   ...v,
-//   width: v.width,
-// }))
+  z
+    .object({
+      width: z.number().nullable().optional(),
+      style: borderStyle,
+      color: color.optional().nullable(),
+    })
+    // FIXME: REVIEW
+    .transform((v) => ({
+      ...v,
+      width: v.width,
+    }))
 
 export const borderSide = borderSideSchema(Schema.colorData)
 
@@ -56,19 +57,20 @@ export const borderSide = borderSideSchema(Schema.colorData)
  */
 
 export const borderSchema = <C extends z.ZodTypeAny>(color: C) =>
-  z.object({
-    borderTop: borderSideSchema(color).optional().nullable(),
-    borderRight: borderSideSchema(color).optional().nullable(),
-    borderBottom: borderSideSchema(color).optional().nullable(),
-    borderLeft: borderSideSchema(color).optional().nullable(),
-  })
-// FIXME
-// .transform((v) => ({
-//     borderTop: v.borderTop,
-//     borderRight: v.borderRight,
-//     borderBottom: v.borderBottom,
-//     borderLeft: v.borderLeft,
-//   }))
+  z
+    .object({
+      borderTop: borderSideSchema(color).optional().nullable(),
+      borderRight: borderSideSchema(color).optional().nullable(),
+      borderBottom: borderSideSchema(color).optional().nullable(),
+      borderLeft: borderSideSchema(color).optional().nullable(),
+    })
+    // FIXME: REVIEW
+    .transform((v) => ({
+      borderTop: v.borderTop,
+      borderRight: v.borderRight,
+      borderBottom: v.borderBottom,
+      borderLeft: v.borderLeft,
+    }))
 
 export const border = borderSchema(Schema.colorData)
 
@@ -136,14 +138,22 @@ export const fontStyle = z.array(z.literal('italic'))
  * - Remove `undefined` from possible values and make fields optional
  */
 
-export const textStyle = z.object({
-  fontFamily: fontFamily.optional().nullable(),
-  letterSpacing: letterSpacing.optional().nullable(),
-  fontSize: fontSize.optional().nullable(),
-  fontWeight: fontWeight.optional().nullable(),
-  textTransform,
-  fontStyle,
-})
+export const textStyle = z
+  .object({
+    fontFamily: fontFamily.optional().nullable(),
+    letterSpacing: letterSpacing.optional().nullable(),
+    fontSize: fontSize.optional().nullable(),
+    fontWeight: fontWeight.optional().nullable(),
+    textTransform,
+    fontStyle,
+  })
+  // FIXME: REVIEW
+  .transform((v) => ({
+    ...v,
+    fontWeight: v.fontWeight,
+    fontSize: v.fontSize,
+    letterSpacing: v.letterSpacing,
+  }))
 
 /**
  * Primitives like `string` and `number` are excluded from the style data because the relevant
@@ -152,31 +162,46 @@ export const textStyle = z.object({
  * `'100px'`.
  */
 
-export const width = z.union([pixelLength, percentageLength, z.literal('auto')])
+export const width = z.union([pixelLength, percentageLength])
 
 const marginValue = z
   .union([pixelLength, z.literal('auto')])
   .nullable()
   .optional()
 
-export const margin = z.object({
-  marginTop: marginValue,
-  marginRight: marginValue,
-  marginBottom: marginValue,
-  marginLeft: marginValue,
-})
+export const margin = z
+  .object({
+    marginTop: marginValue,
+    marginRight: marginValue,
+    marginBottom: marginValue,
+    marginLeft: marginValue,
+  })
+  // FIXME: REVIEW
+  .transform((v) => ({
+    ...v,
+    marginTop: v.marginTop,
+    marginRight: v.marginRight,
+    marginBottom: v.marginBottom,
+    marginLeft: v.marginLeft,
+  }))
 
-const paddingValue = z
-  .union([pixelLength, z.literal('auto')])
-  .nullable()
-  .optional()
+const paddingValue = pixelLength.nullable().optional()
 
-export const padding = z.object({
-  paddingTop: paddingValue,
-  paddingRight: paddingValue,
-  paddingBottom: paddingValue,
-  paddingLeft: paddingValue,
-})
+export const padding = z
+  .object({
+    paddingTop: paddingValue,
+    paddingRight: paddingValue,
+    paddingBottom: paddingValue,
+    paddingLeft: paddingValue,
+  })
+  // FIXME: REVIEW
+  .transform((v) => ({
+    ...v,
+    paddingTop: v.paddingTop,
+    paddingRight: v.paddingRight,
+    paddingBottom: v.paddingBottom,
+    paddingLeft: v.paddingLeft,
+  }))
 
 const borderRadiusValue = z
   .union([pixelLength, percentageLength])

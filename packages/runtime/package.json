@@ -8,6 +8,7 @@
     "react",
     "box-model",
     "components",
+    "core",
     "api",
     "next",
     "builder",
@@ -41,6 +42,11 @@
       "require": "./dist/cjs/components/index.js",
       "import": "./dist/esm/components/index.js",
       "types": "./dist/types/components/index.d.ts"
+    },
+    "./core": {
+      "require": "./dist/cjs/core/index.js",
+      "import": "./dist/esm/core/index.js",
+      "types": "./dist/types/core/index.d.ts"
     },
     "./api": {
       "require": "./dist/cjs/api/index.js",

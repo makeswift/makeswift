@@ -1,6 +1,5 @@
 import { match } from 'ts-pattern'
 import { StyleSchema } from '@makeswift/controls'
-export { type BorderData, type BorderSideData } from '@makeswift/controls'
 
 import {
   ControlDataTypeKey,

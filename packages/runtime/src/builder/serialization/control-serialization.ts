@@ -33,6 +33,8 @@ import {
   TextAreaDefinition,
   TextInputDefinition,
   StyleV2Definition,
+  StyleDefinition,
+  TypographyControlType,
 } from '../../controls'
 
 import {
@@ -98,6 +100,7 @@ import {
 } from '@makeswift/prop-controllers'
 
 import { type LegacyDescriptor, isLegacyDescriptor } from '../../prop-controllers/descriptors'
+import { deserializeObject } from '@makeswift/controls'
 
 type SerializedShapeControlConfig<T extends Record<string, SerializedPanelControl>> = {
   type: T
@@ -933,7 +936,9 @@ function serializeLegacyControl<T extends Data>(
 function isSerializedLegacyControl<T extends Data>(
   control: SerializedControl<T>,
 ): control is SerializedLegacyControl<T> {
-  return 'options' in control || control.type in [RichTextV2ControlType /*StyleV2ControlType*/]
+  return (
+    'options' in control || [RichTextV2ControlType, TypographyControlType].includes(control.type)
+  )
 }
 
 export function deserializeLegacyControl<T extends Data>(
@@ -1028,21 +1033,23 @@ function deserializeControlDefV2(record: SerializedRecord): UnifiedControlDefini
     [TextInputDefinition.type]: TextInputDefinition.deserialize,
     [IconRadioGroupDefinition.type]: IconRadioGroupDefinition.deserialize,
     [LinkDefinition.type]: LinkDefinition.deserialize,
+    [StyleDefinition.type]: StyleDefinition.deserialize,
     [ListDefinition.type]: (record: SerializedRecord) =>
       ListDefinition.deserialize(record, deserializeControlDefV2),
     [ShapeDefinition.type]: (record: SerializedRecord) =>
-      ListDefinition.deserialize(record, deserializeControlDefV2),
+      ShapeDefinition.deserialize(record, deserializeControlDefV2),
     [StyleV2Definition.type]: (record: SerializedRecord) =>
       StyleV2Definition.deserialize(record, deserializeControlDefV2),
   } as const
 
-  const deserialize = deserializeMethod[record.type] ?? null
+  const deserializedObject = deserializeObject(record) as SerializedRecord
+  const deserialize = deserializeMethod[deserializedObject.type] ?? null
 
   if (deserialize == null) {
     throw new Error(`Unknown control type: ${record.type}`)
   }
 
-  return deserialize(record)
+  return deserialize(deserializedObject)
 }
 
 export function serializeControls(

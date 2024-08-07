@@ -10,13 +10,17 @@ export default defineConfig(() => {
     bundle: false,
     minify: false,
     sourcemap: true,
+    legacyOutput: true,
+    esbuildOptions(options, { format }) {
+      if (format === 'cjs')
+        options.supported = { ...options.supported, 'dynamic-import': true }
+    },
   } satisfies Options
 
   const esmOptions: Options = {
     ...commonOptions,
     entry: [...commonOptions.entry],
     format: 'esm',
-    outDir: 'dist/esm',
   }
 
   const cjsOptions: Options = {

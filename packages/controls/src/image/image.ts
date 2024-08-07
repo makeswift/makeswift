@@ -66,26 +66,36 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     const type = z.literal(this.type)
     const version = z.literal(1).optional()
 
-    const makeswiftFileData = z.object({
+    const makeswiftFileValue = z.object({
       type: z.literal(this.dataSignature.makeswiftFile.type),
-      version: z.literal(1),
       id: z.string(),
     })
 
-    const externalFileData = z.object({
+    const externalFileValue = z.object({
       type: z.literal(this.dataSignature.externalFile.type),
-      version: z.literal(1),
       url: z.string(),
       width: z.number().nullable().optional(),
       height: z.number().nullable().optional(),
     })
+
+    const makeswiftFileData = makeswiftFileValue.merge(
+      z.object({
+        version: z.literal(1),
+      }),
+    )
+
+    const externalFileData = externalFileValue.merge(
+      z.object({
+        version: z.literal(1),
+      }),
+    )
 
     const data = z.union([
       z.string(),
       z.union([makeswiftFileData, externalFileData]),
     ])
 
-    const value = data
+    const value = z.union([makeswiftFileValue, externalFileValue])
 
     const config = z.object({
       label: z.string().optional(),
@@ -167,19 +177,56 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   }
 
   fromData(data: DataType<C> | undefined): ValueType<C> | undefined {
-    //TODO: @arvin Review
-    return this.schema.data.optional().parse(data)
+    const inputSchema = this.schema.data.optional()
+    return match(data satisfies z.infer<typeof inputSchema>)
+      .with(
+        Definition.dataSignature.makeswiftFile,
+        ({ version, ...value }) => value,
+      )
+      .with(
+        Definition.dataSignature.externalFile,
+        ({ version, ...value }) => value,
+      )
+      .with(P.string, (value) => ({
+        ...Definition.dataSignature.makeswiftFile,
+        id: value,
+      }))
+      .otherwise(() => undefined)
   }
 
   toData(value: ValueType<C>): DataType<C> {
     const version = this.version
-    return match({ version, value })
-      .with({ version: 1, value: P.string }, ({ version, value }) => ({
-        ...Definition.dataSignature.makeswiftFile,
-        id: value,
-        version,
-      }))
-      .otherwise(() => value)
+    const parsedValue = this.schema.value.parse(value)
+    return match({
+      version,
+      value: parsedValue,
+    })
+      .with(
+        {
+          version: 1,
+          value: Definition.dataSignature.makeswiftFile,
+        },
+        ({ value, version }) => ({ ...value, version }),
+      )
+      .with(
+        {
+          version: 1,
+          value: Definition.dataSignature.externalFile,
+        },
+        ({ value, version }) => ({ ...value, version }),
+      )
+      .with(
+        {
+          version: P.nullish,
+          value: Definition.dataSignature.makeswiftFile,
+        },
+        ({ value }) => value.id,
+      )
+      .otherwise(() => {
+        throw new Error(
+          `Invalid ValueType for Image v${this.version ?? 0}: ${JSON.stringify(value)}`,
+        )
+      })
   }
 
   copyData(

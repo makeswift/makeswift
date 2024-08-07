@@ -23,7 +23,7 @@ type Config<Item extends ControlDefinition> = {
   getStyle: (val: ResolvedValueType<Item>) => CSSObject
 }
 
-class Definition<Item extends ControlDefinition> extends StyleV2Definition<
+class Definition<Item extends ControlDefinition = ControlDefinition> extends StyleV2Definition<
   CSSObject,
   Config<Item>
 > {
@@ -86,6 +86,7 @@ class Definition<Item extends ControlDefinition> extends StyleV2Definition<
 }
 
 // TODO: review
-export const unstable_StyleV2 = <Item extends ControlDefinition>(config: Config<Item>) =>
-  new (class unstable_StyleV2 extends Definition<Item> {})(config)
+export const unstable_StyleV2 = <Item extends ControlDefinition = ControlDefinition>(
+  config: Config<Item>,
+) => new (class unstable_StyleV2 extends Definition<Item> {})(config)
 export { Definition as StyleV2Definition }

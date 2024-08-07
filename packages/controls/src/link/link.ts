@@ -38,8 +38,6 @@ type RootMouseEvent = {
   view: unknown
 }
 
-export type LinkControlData = z.infer<typeof linkSchema> | null
-
 type LinkTarget = '_blank' | '_self'
 
 type Config = z.infer<typeof Definition.schema.config>
@@ -113,6 +111,8 @@ abstract class Definition<
   get schema() {
     return {
       ...Definition.schema,
+      data: Definition.schema.data as SchemaType_<DataType<C>>,
+      value: Definition.schema.value as SchemaType_<ValueType<C>>,
       resolvedValue: Definition.schema.resolvedValue as SchemaType_<
         ResolvedValueType<MouseEventType, C>
       >,

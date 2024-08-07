@@ -21,6 +21,18 @@ type ExpectedDataType =
       height?: number | null | undefined
     }
 
+type ExpectedValueType =
+  | {
+      type: 'makeswift-file'
+      id: string
+    }
+  | {
+      type: 'external-file'
+      url: string
+      width?: number | null | undefined
+      height?: number | null | undefined
+    }
+
 describe('Image Types', () => {
   describe('infers types from control definitions', () => {
     test('empty config', () => {
@@ -36,7 +48,7 @@ describe('Image Types', () => {
       expectTypeOf<Data>().toEqualTypeOf<ExpectedDataType>()
 
       type Value = ValueType<typeof def>
-      expectTypeOf<Value>().toEqualTypeOf<ExpectedDataType>()
+      expectTypeOf<Value>().toEqualTypeOf<ExpectedValueType>()
 
       type Resolved = ResolvedValueType<typeof def>
       expectTypeOf<Resolved>().toEqualTypeOf<string | undefined>()
@@ -56,7 +68,7 @@ describe('Image Types', () => {
       expectTypeOf<Data>().toEqualTypeOf<ExpectedDataType>()
 
       type Value = ValueType<typeof def>
-      expectTypeOf<Value>().toEqualTypeOf<ExpectedDataType>
+      expectTypeOf<Value>().toEqualTypeOf<ExpectedValueType>
 
       type Resolved = ResolvedValueType<typeof def>
       expectTypeOf<Resolved>().toEqualTypeOf<string | undefined>
@@ -76,7 +88,7 @@ describe('Image Types', () => {
       expectTypeOf<Data>().toEqualTypeOf<ExpectedDataType>()
 
       type Value = ValueType<typeof def>
-      expectTypeOf<Value>().toEqualTypeOf<ExpectedDataType>
+      expectTypeOf<Value>().toEqualTypeOf<ExpectedValueType>
 
       type Resolved = ResolvedValueType<typeof def>
       expectTypeOf<Resolved>().toEqualTypeOf<

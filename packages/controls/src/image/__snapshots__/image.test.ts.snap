@@ -30,24 +30,9 @@ Image {
 }
 `;
 
-exports[`Image copyData \`fromData\` on v0 data will promote to v1 data 1`] = `"fake-file-id"`;
-
-exports[`Image definition w/ config {"label":"Image"} toData returns v1 data for \`{
+exports[`Image toData returns v1 data for \`{
   type: 'external-file',
   url: 'https://example.com/image.jpg',
-  version: 1
-}\` when definition version is 1 1`] = `
-{
-  "type": "external-file",
-  "url": "https://example.com/image.jpg",
-  "version": 1,
-}
-`;
-
-exports[`Image definition w/ config {"label":"Image"} toData returns v1 data for \`{
-  type: 'external-file',
-  url: 'https://example.com/image.jpg',
-  version: 1,
   width: 100,
   height: 100
 }\` when definition version is 1 1`] = `
@@ -60,10 +45,20 @@ exports[`Image definition w/ config {"label":"Image"} toData returns v1 data for
 }
 `;
 
-exports[`Image definition w/ config {"label":"Image"} toData returns v1 data for \`{ type: 'makeswift-file', version: 1, id: 'fake-file-id' }\` when definition version is 1 1`] = `
+exports[`Image toData returns v1 data for \`{ type: 'external-file', url: 'https://example.com/image.jpg' }\` when definition version is 1 1`] = `
+{
+  "type": "external-file",
+  "url": "https://example.com/image.jpg",
+  "version": 1,
+}
+`;
+
+exports[`Image toData returns v1 data for \`{ type: 'makeswift-file', id: 'fake-file-id' }\` when definition version is 1 1`] = `
 {
   "id": "fake-file-id",
   "type": "makeswift-file",
   "version": 1,
 }
 `;
+
+exports[`Image toData throws error for external image value on v0 definition 1`] = `"Invalid ValueType for Image v0: {"type":"external-file","url":"https://example.com/image.jpg"}"`;

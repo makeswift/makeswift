@@ -22,6 +22,7 @@ import {
   ControlDefinition,
   safeParse,
   serialize,
+  type SchemaType as SchemaType_,
   type ParseResult,
   type SerializedRecord,
   type Resolvable,
@@ -141,7 +142,14 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   }
 
   get schema() {
-    return Definition.schema
+    return {
+      ...Definition.schema,
+      data: Definition.schema.data as SchemaType_<DataType<C>>,
+      value: Definition.schema.value as SchemaType_<ValueType<C>>,
+      resolvedData: Definition.schema.resolvedValue as SchemaType_<
+        ResolvedValueType<C>
+      >,
+    }
   }
 
   safeParse(data: unknown | undefined): ParseResult<DataType<C> | undefined> {
