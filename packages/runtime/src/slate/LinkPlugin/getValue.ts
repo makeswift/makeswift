@@ -1,29 +1,28 @@
 import { Editor, NodeEntry, Text } from 'slate'
-import { ElementUtils } from '../utils/element'
-import { LinkElement } from '../types'
+import { Slate } from '@makeswift/controls'
+
 import { getSelection } from '../selectors'
 import { filterForSubtreeRoots } from '../BlockPlugin/utils/filterForSubtreeRoots'
-import { isLinkElement } from './types'
 import deepEqual from '../../utils/deepEqual'
 
-export function getLinksAndTextInSelection(editor: Editor): NodeEntry<LinkElement | Text>[] {
+export function getLinksAndTextInSelection(editor: Editor): NodeEntry<Slate.LinkElement | Text>[] {
   return Array.from(
     Editor.nodes(editor, {
       at: getSelection(editor),
-      match: node => (ElementUtils.isInline(node) && isLinkElement(node)) || Text.isText(node),
+      match: node => (Slate.isInline(node) && Slate.isLink(node)) || Text.isText(node),
     }),
-  ) as NodeEntry<Text | LinkElement>[]
+  ) as NodeEntry<Text | Slate.LinkElement>[]
 }
 
 export const getValue = (editor: Editor) => {
   const roots = filterForSubtreeRoots(getLinksAndTextInSelection(editor))
 
-  const areAllRootsLinks = roots.every(([root]) => isLinkElement(root) || Text.isText(root))
+  const areAllRootsLinks = roots.every(([root]) => Slate.isLink(root) || Text.isText(root))
 
   if (!areAllRootsLinks) return undefined
 
-  const matchingValues = roots.map(([node]) => node).filter(isLinkElement) as (
-    | LinkElement
+  const matchingValues = roots.map(([node]) => node).filter(Slate.isLink) as (
+    | Slate.LinkElement
     | null
     | undefined
   )[]

@@ -1,20 +1,21 @@
+import { useMemo } from 'react'
 import { Descendant } from 'slate'
-import { BlockType } from '../../../../../slate'
+import { Slate } from '@makeswift/controls'
+
 import { getBaseBreakpoint, DefaultBreakpointID } from '../../../../../state/modules/breakpoints'
 import { useBreakpoints } from '../../../hooks/use-breakpoints'
-import { useMemo } from 'react'
-import { RichTextV2ControlDefinition, RichTextV2Mode } from '../../../../../controls'
+import { RichTextV2Definition, RichText } from '../../../../../controls'
 
-export function usePresetValue(definition: RichTextV2ControlDefinition): Descendant[] {
+export function usePresetValue(definition: RichTextV2Definition): Descendant[] {
   const breakpoints = useBreakpoints()
   return useMemo(
     () => [
       {
-        type: BlockType.Default,
+        type: Slate.BlockType.Default,
         children: [
           {
             text: definition.config.defaultValue ?? '',
-            ...(definition.config.mode === RichTextV2Mode.Inline
+            ...(definition.config.mode === RichText.Mode.Inline
               ? {}
               : {
                   typography: {
@@ -48,7 +49,7 @@ export function usePresetValue(definition: RichTextV2ControlDefinition): Descend
 
 export const defaultValue = [
   {
-    type: BlockType.Default,
+    type: Slate.BlockType.Default,
     children: [
       {
         text: '',

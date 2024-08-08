@@ -14,18 +14,13 @@ import {
 } from 'react'
 
 import { createEditor } from 'slate'
-import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
+import { Slate as SlateReact, Editable, withReact, ReactEditor } from 'slate-react'
+
+import { Slate, richTextDTOtoDAO, type RichTextValue } from '@makeswift/controls'
+
 import { useBuilderEditMode } from '../../..'
-import { richTextDTOtoDAO, RichTextValue } from '../../../../../controls'
 import { DescriptorsPropControllers } from '../../../../../prop-controllers/instances'
-import {
-  RichTextDAO,
-  BlockType,
-  withBlock,
-  withTypography,
-  withBuilder,
-  onKeyDown,
-} from '../../../../../slate'
+import { withBlock, withTypography, withBuilder, onKeyDown } from '../../../../../slate'
 import { BuilderEditMode } from '../../../../../state/modules/builder-edit-mode'
 import { PropControllersHandle } from '../../../../../state/modules/prop-controller-handles'
 import { pollBoxModel } from '../../../poll-box-model'
@@ -41,7 +36,9 @@ type Props = {
   margin?: string
 }
 
-const defaultText: RichTextDAO = [{ type: BlockType.Paragraph, children: [{ text: '' }] }]
+const defaultText: Slate.RichTextDAO = [
+  { type: Slate.BlockType.Paragraph, children: [{ text: '' }] },
+]
 
 export const EditableText = forwardRef(function EditableText(
   { id, text, width, margin }: Props,
@@ -112,7 +109,7 @@ export const EditableText = forwardRef(function EditableText(
   }, [])
 
   return (
-    <Slate editor={editor} value={initialValue} onChange={delaySync}>
+    <SlateReact editor={editor} value={initialValue} onChange={delaySync}>
       <Editable
         id={id}
         renderLeaf={Leaf}
@@ -124,7 +121,7 @@ export const EditableText = forwardRef(function EditableText(
         readOnly={editMode !== BuilderEditMode.CONTENT}
         placeholder="Write some text..."
       />
-    </Slate>
+    </SlateReact>
   )
 })
 

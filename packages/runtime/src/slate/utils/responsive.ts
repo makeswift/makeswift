@@ -1,8 +1,8 @@
 import { Editor, Transforms, NodeMatch, Descendant, NodeEntry } from 'slate'
+import { Slate, type ResponsiveValue } from '@makeswift/controls'
+
 import { getSelection } from '../selectors'
-import { ResponsiveValue } from '../../prop-controllers'
 import shallowEqual from '../../utils/shallowEqual'
-import { BlockTextAlignment } from '../types'
 
 type SetResponsiveValueOptions<T extends Descendant> = {
   match: NodeMatch<T>
@@ -93,14 +93,14 @@ export function responsiveShallowEqual<T>(
   a: ResponsiveValue<T> = [],
   b: ResponsiveValue<T> = [],
 ): ResponsiveValue<T> {
-  const aObject: Record<string, BlockTextAlignment> = a.reduce(
+  const aObject: Record<string, Slate.BlockTextAlignment> = a.reduce(
     (acc, curr) => ({
       ...acc,
       [curr.deviceId]: curr.value,
     }),
     {},
   )
-  const bObject: Record<string, BlockTextAlignment> = b.reduce(
+  const bObject: Record<string, Slate.BlockTextAlignment> = b.reduce(
     (acc, curr) => ({
       ...acc,
       [curr.deviceId]: curr.value,

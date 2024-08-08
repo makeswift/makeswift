@@ -1,12 +1,12 @@
-import { RichText, RichTextV2ControlData, RichTextV2ControlType } from '../rich-text-v2'
-import { getPageIds, getSwatchIds, getTypographyIds } from '../../../prop-controllers/introspection'
+import { type DataType, Targets } from '@makeswift/controls'
+import { RichText, RichTextV2Definition } from '../../rich-text-v2'
 
 const SWATCH_ID = 'SWATCH_ID='
 const TYPOGRAPHY_ID = 'TYPOGRAPHY_ID='
 const PAGE_ID = 'PAGE_ID='
 
-const introspectionFixture: RichTextV2ControlData = {
-  type: RichTextV2ControlType,
+const introspectionFixture: DataType<RichTextV2Definition> = {
+  type: RichTextV2Definition.type,
   version: 2,
   key: 'uuid',
   descendants: [
@@ -56,13 +56,11 @@ const introspectionFixture: RichTextV2ControlData = {
 }
 
 describe('GIVEN introspecting RichTextV2', () => {
-  test('WHEN getSwatchIds THEN correct swatches are returned', () => {
-    expect(getSwatchIds(RichText(), introspectionFixture)).toStrictEqual([SWATCH_ID])
-  })
-  test('WHEN getTypographyIds THEN correct typographies are returned', () => {
-    expect(getTypographyIds(RichText(), introspectionFixture)).toStrictEqual([TYPOGRAPHY_ID])
-  })
-  test('WHEN getPageIds THEN correct pageIds are returned', () => {
-    expect(getPageIds(RichText(), introspectionFixture)).toStrictEqual([PAGE_ID])
+  test.each([
+    [Targets.Swatch, [SWATCH_ID]],
+    [Targets.Typography, [TYPOGRAPHY_ID]],
+    [Targets.Page, [PAGE_ID]],
+  ])('WHEN target is %s THEN correct ids are returned (%o)', (target, expected) => {
+    expect(RichText().introspect(introspectionFixture, target)).toStrictEqual(expected)
   })
 })

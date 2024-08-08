@@ -1,5 +1,6 @@
 import { Editor, NodeEntry, Text } from 'slate'
-import { ElementUtils } from '../utils/element'
+import { Slate } from '@makeswift/controls'
+
 import { getSelection } from '../selectors'
 import { filterForSubtreeRoots } from '../BlockPlugin/utils/filterForSubtreeRoots'
 import { SupportedInline, isSupportedInlineType, isSupportedInlineEntry } from './types'
@@ -11,7 +12,7 @@ export function getSupportedInlinesAndTextInSelection(
     Editor.nodes(editor, {
       at: getSelection(editor),
       match: node =>
-        (ElementUtils.isInline(node) && isSupportedInlineType(node.type)) || Text.isText(node),
+        (Slate.isInline(node) && isSupportedInlineType(node.type)) || Text.isText(node),
     }),
   ) as NodeEntry<Text | SupportedInline>[]
 }

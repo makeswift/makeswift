@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Editor } from 'slate'
-import { RichTextV2ControlData, richTextV2DataToDescendents } from '../../../../../controls'
+
+import { RichText, RichTextDataV2 } from '../../../../../controls/rich-text-v2'
 import { LocalChange } from '../../../../../slate'
 import { useIsInBuilder } from '../../../hooks/use-is-in-builder'
 
@@ -10,7 +11,7 @@ function isChangeWithinPreviousSec(change?: LocalChange) {
   return performance.now() - (change?.time ?? 0) < 1000
 }
 
-export function useSyncRemoteChanges(editor: Editor, data?: RichTextV2ControlData) {
+export function useSyncRemoteChanges(editor: Editor, data?: RichTextDataV2) {
   const isInBuilder = useIsInBuilder()
 
   useEffect(() => {
@@ -19,7 +20,7 @@ export function useSyncRemoteChanges(editor: Editor, data?: RichTextV2ControlDat
       data &&
       isInBuilder
     ) {
-      editor.children = richTextV2DataToDescendents(data)
+      editor.children = RichText.dataToNodes(data)
       editor.selection = editor?.localChanges.get(data.key)?.selection ?? null
       editor.onChange()
     }

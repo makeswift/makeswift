@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { responsiveValue } from '../common/schema'
 
-export function getTypographySchema<C extends z.ZodTypeAny>(color: C) {
+export function typography<C extends z.ZodTypeAny>(color: C) {
   return z.object({
     id: z.string().optional(),
     style: responsiveValue(
@@ -22,7 +22,7 @@ export function getTypographySchema<C extends z.ZodTypeAny>(color: C) {
           })
           .nullable()
           .optional(),
-        color: color,
+        color: color.optional(),
       }),
     ),
   })

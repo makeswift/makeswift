@@ -7,7 +7,7 @@ import {
   type CopyContext,
 } from '../context'
 
-import { ControlInstance, type SendMessage } from '../control-instance'
+import { type SendMessage } from '../control-instance'
 
 import {
   ControlDefinition,
@@ -18,10 +18,7 @@ import {
   type SchemaType,
 } from '../control-definition'
 
-import {
-  type IntrospectionTarget,
-  IntrospectionTargetType,
-} from '../introspect'
+import { type IntrospectionTarget, Targets } from '../introspect'
 
 import { SlotControl } from './slot-control'
 
@@ -33,7 +30,8 @@ abstract class Definition<RuntimeNode> extends ControlDefinition<
   unknown,
   DataType,
   ValueType,
-  RuntimeNode
+  RuntimeNode,
+  SlotControl
 > {
   static readonly type = 'makeswift::controls::slot' as const
 
@@ -110,7 +108,7 @@ abstract class Definition<RuntimeNode> extends ControlDefinition<
     }
   }
 
-  createInstance(sendMessage: SendMessage<any>): ControlInstance<any> {
+  createInstance(sendMessage: SendMessage) {
     return new SlotControl(sendMessage)
   }
 
@@ -125,9 +123,10 @@ abstract class Definition<RuntimeNode> extends ControlDefinition<
     target: IntrospectionTarget<R>,
   ): R[] {
     if (data == null) return []
-    if (target.type == IntrospectionTargetType.ChildrenElement) {
+    if (target.type == Targets.ChildrenElement.type) {
       return data.elements as R[]
     }
+
     return []
   }
 

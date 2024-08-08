@@ -1,17 +1,12 @@
 import { ReactNode, lazy } from 'react'
 
-import {
-  RichTextControlData,
-  RichTextV2Control,
-  RichTextV2ControlData,
-  RichTextV2ControlDefinition,
-  isRichTextV1Data,
-} from '../../../../controls'
+import { type DataType } from '@makeswift/controls'
+import { RichTextV2Control, RichTextV2Definition } from '../../../../controls/rich-text-v2'
 import { useIsPreview } from '../../../react'
 
 export type RichTextV2ControlValue = ReactNode
 
-export type Descriptors = { text?: RichTextV2ControlDefinition }
+export type Descriptors = { text?: RichTextV2Definition }
 
 const EditableText = lazy(() => import('./EditableTextV2'))
 const ReadOnlyText = lazy(() => import('./ReadOnlyTextV2'))
@@ -19,13 +14,13 @@ const ReadOnlyText = lazy(() => import('./ReadOnlyTextV2'))
 const ReadOnlyTextV1 = lazy(() => import('../rich-text/ReadOnlyText'))
 
 export function useRichTextV2(
-  data: RichTextV2ControlData | RichTextControlData,
-  definition: RichTextV2ControlDefinition,
+  data: DataType<RichTextV2Definition>,
+  definition: RichTextV2Definition,
   control: RichTextV2Control | null,
 ) {
   const isPreview = useIsPreview()
 
-  if (isRichTextV1Data(data)) {
+  if (RichTextV2Definition.isV1Data(data)) {
     return <ReadOnlyTextV1 text={data} />
   }
 

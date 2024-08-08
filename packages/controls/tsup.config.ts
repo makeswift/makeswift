@@ -5,12 +5,12 @@ export default defineConfig(() => {
     entry: [
       'src/**/*.{ts,tsx}',
       '!src/**/*.test.{ts,tsx}',
+      '!src/**/*.test.types.{ts,tsx}',
       '!src/**/__tests__/**',
     ],
     bundle: false,
     minify: false,
     sourcemap: true,
-    // FIXME: REVIEW
     legacyOutput: true,
     esbuildOptions(options, { format }) {
       if (format === 'cjs')

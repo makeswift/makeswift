@@ -1,17 +1,11 @@
-import { Descriptor, isLegacyDescriptor } from './descriptors'
-import { BoxModel } from '../state/modules/box-models'
-import { RichTextControl, RichTextControlMessage, RichTextControlType } from '../controls/rich-text'
-import {
-  RichTextV2ControlMessage,
-  RichTextV2ControlType,
-  RichTextV2Control,
-} from '../controls/rich-text-v2'
-// import { StyleV2Control, StyleV2ControlType, StyleV2ControlMessage } from '../controls/style-v2'
+import { type Descriptor, isLegacyDescriptor } from './descriptors'
+import { type BoxModel } from '../state/modules/box-models'
 import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
 
 import {
   type ControlMessage,
   type SendMessage,
+  type InstanceType,
   ControlInstance,
   DefaultControlInstance,
 } from '@makeswift/controls'
@@ -52,13 +46,11 @@ export class TableFormFieldsPropController extends ControlInstance<TableFormFiel
   }
 }
 
-type DescriptorPropController<T extends Descriptor> = T extends { type: typeof RichTextControlType }
-  ? RichTextControl
-  : T extends { type: typeof RichTextV2ControlType }
-    ? RichTextV2Control
-    : T extends { type: typeof PropControllerTypes.TableFormFields }
-      ? TableFormFieldsPropController
-      : ControlInstance
+type DescriptorPropController<T extends Descriptor> = T extends {
+  type: typeof PropControllerTypes.TableFormFields
+}
+  ? TableFormFieldsPropController
+  : InstanceType<T>
 
 export type DescriptorsPropControllers<T extends Record<string, Descriptor>> = {
   [K in keyof T]: undefined extends T[K]
@@ -66,13 +58,7 @@ export type DescriptorsPropControllers<T extends Record<string, Descriptor>> = {
     : DescriptorPropController<T[K]>
 }
 
-export type AnyPropController =
-  | ControlInstance
-  | RichTextControl
-  | TableFormFieldsPropController
-  | RichTextControl
-  | RichTextV2Control
-  // | StyleV2Control
+export type AnyPropController = ControlInstance<any> | TableFormFieldsPropController
 
 export function createPropController(
   descriptor: Descriptor,
@@ -85,15 +71,6 @@ export function createPropController(
   switch (descriptor.type) {
     case PropControllerTypes.TableFormFields:
       return new TableFormFieldsPropController(send as SendMessage<TableFormFieldsMessage>)
-
-    case RichTextControlType:
-      return new RichTextControl(send as SendMessage<RichTextControlMessage>)
-
-    case RichTextV2ControlType:
-      return new RichTextV2Control(send as SendMessage<RichTextV2ControlMessage>, descriptor)
-
-    // case StyleV2ControlType:
-    //   return new StyleV2Control(send as SendMessage<StyleV2ControlMessage>, descriptor)
 
     default:
       return new DefaultControlInstance(send as SendMessage)

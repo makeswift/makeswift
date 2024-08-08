@@ -12,10 +12,7 @@ import { responsiveValue } from '../common/schema'
 import { type CopyContext } from '../context'
 import { type ResourceResolver } from '../resource-resolver'
 import { type Effector } from '../effector'
-import {
-  IntrospectionTargetType,
-  type IntrospectionTarget,
-} from '../introspect'
+import { Targets, type IntrospectionTarget } from '../introspect'
 import { type SendMessage } from '../control-instance'
 
 import {
@@ -73,10 +70,6 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   ]
 
   static readonly AllProperties: StyleProperty[] = Object.values(this.Property)
-
-  constructor(readonly config: C) {
-    super(config)
-  }
 
   static get schema() {
     const type = z.literal(Definition.type)
@@ -146,9 +139,6 @@ class Definition<C extends Config = Config> extends ControlDefinition<
       ...Definition.schema,
       data: Definition.schema.data as SchemaType_<DataType<C>>,
       value: Definition.schema.value as SchemaType_<ValueType<C>>,
-      resolvedData: Definition.schema.resolvedValue as SchemaType_<
-        ResolvedValueType<C>
-      >,
     }
   }
 
@@ -246,7 +236,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     }
   }
 
-  createInstance(sendMessage: SendMessage<any>) {
+  createInstance(sendMessage: SendMessage) {
     return new StyleControl(sendMessage)
   }
 
@@ -257,7 +247,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   }
 
   introspect<R>(data: DataType<C> | undefined, target: IntrospectionTarget<R>) {
-    if (data == null || target.type !== IntrospectionTargetType.Swatch) {
+    if (data == null || target.type !== Targets.Swatch.type) {
       return []
     }
 

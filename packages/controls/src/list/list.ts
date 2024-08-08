@@ -52,7 +52,7 @@ type DataType<C extends Config> = {
 
 type ValueType<C extends Config> = ValueType_<ItemType<C>>[]
 type ResolvedValueType<C extends Config> = ResolvedValueType_<ItemType<C>>[]
-type ControlType<C extends Config> = ListControl<Definition<C>>
+type InstanceType<C extends Config> = ListControl<Definition<C>>
 
 class Definition<C extends Config = Config> extends ControlDefinition<
   typeof Definition.type,
@@ -60,7 +60,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   DataType<C>,
   ValueType<C>,
   ResolvedValueType<C>,
-  ControlType<C>
+  InstanceType<C>
 > {
   static readonly type = 'makeswift::controls::list' as const
 
@@ -93,10 +93,6 @@ class Definition<C extends Config = Config> extends ControlDefinition<
 
     const itemDef = deserializeCallback(type)
     return new Definition<Deserialized<Config>>({ type: itemDef, ...config })
-  }
-
-  constructor(readonly config: C) {
-    super(config)
   }
 
   get itemDef() {
@@ -161,7 +157,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     data: DataType<C> | undefined,
     resolver: ResourceResolver,
     effector: Effector,
-    control?: ControlType<C>,
+    control?: InstanceType<C>,
   ): Resolvable<ResolvedValueType<C> | undefined> {
     const emptyList: ResolvedValueType<C> = []
     const effects = new Effects()
@@ -201,7 +197,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     }
   }
 
-  createInstance(sendMessage: SendMessage<any>): ControlType<C> {
+  createInstance(sendMessage: SendMessage<any>): InstanceType<C> {
     return new ListControl(this, sendMessage)
   }
 

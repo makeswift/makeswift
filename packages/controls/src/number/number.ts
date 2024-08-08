@@ -6,11 +6,7 @@ import { type CopyContext } from '../context'
 import { type ResourceResolver } from '../resource-resolver'
 import { type Effector } from '../effector'
 
-import {
-  DefaultControlInstance,
-  ControlInstance,
-  type SendMessage,
-} from '../control-instance'
+import { DefaultControlInstance, type SendMessage } from '../control-instance'
 
 import {
   ControlDefinition,
@@ -48,7 +44,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   static readonly type = 'makeswift::controls::number' as const
 
   constructor(
-    readonly config: C,
+    config: C,
     readonly version: z.infer<typeof Definition.schema.relaxed.version>,
   ) {
     super(config)
@@ -170,7 +166,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     }
   }
 
-  createInstance(sendMessage: SendMessage<any>): ControlInstance<any> {
+  createInstance(sendMessage: SendMessage<any>) {
     return new DefaultControlInstance(sendMessage)
   }
 

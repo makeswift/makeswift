@@ -22,20 +22,13 @@ import {
   useResponsiveShadow,
   useResponsiveWidth,
 } from '../../components/utils/responsive-style'
-import {
-  RichTextControl,
-  RichTextControlType,
-  RichTextV2Control,
-  RichTextV2ControlType,
-  // StyleV2ControlType,
-  TypographyControlType,
-} from '../../controls'
-import { ControlValue } from './controls/control'
+
+// import { ControlValue } from './controls/control'
 import { RenderHook } from './components'
 import { useStyle } from './use-style'
 import { useResolvedProps } from './use-resolved-props'
-import { useRichText } from './controls/rich-text/rich-text'
-import { useRichTextV2 } from './controls/rich-text-v2'
+// import { useRichText } from './controls/rich-text/rich-text'
+// import { useRichTextV2 } from './controls/rich-text-v2'
 import { useStore } from './hooks/use-store'
 import { useDocumentKey } from './hooks/use-document-key'
 import { useSelector } from './hooks/use-selector'
@@ -188,17 +181,17 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
           // case ListControlType:
           // case LinkControlType:
           // case StyleV2ControlType:
-          case TypographyControlType:
-            // case Checkbox.controlType:
-            return (
-              <ControlValue
-                definition={descriptor}
-                data={props[propName]}
-                control={controls?.[propName]}
-              >
-                {value => renderFn({ ...propsValue, [propName]: value })}
-              </ControlValue>
-            )
+          // case TypographyControlType:
+          // case Checkbox.controlType:
+          // return (
+          //   <ControlValue
+          //     definition={descriptor}
+          //     data={props[propName]}
+          //     control={controls?.[propName]}
+          //   >
+          //     {value => renderFn({ ...propsValue, [propName]: value })}
+          //   </ControlValue>
+          // )
 
           // case StyleControlType: {
           //   const control = (controls?.[propName] ?? null) as StyleControl | null
@@ -214,33 +207,33 @@ export function PropsValue({ element, children: renderComponent }: PropsValuePro
           //   )
           // }
 
-          case RichTextControlType: {
-            const control = (controls?.[propName] ?? null) as RichTextControl | null
+          // case RichTextControlType: {
+          //   const control = (controls?.[propName] ?? null) as RichTextControl | null
 
-            return (
-              <RenderHook
-                key={descriptor.type}
-                hook={useRichText}
-                parameters={[props[propName], control]}
-              >
-                {value => renderFn({ ...propsValue, [propName]: value })}
-              </RenderHook>
-            )
-          }
+          //   return (
+          //     <RenderHook
+          //       key={descriptor.type}
+          //       hook={useRichText}
+          //       parameters={[props[propName], control]}
+          //     >
+          //       {value => renderFn({ ...propsValue, [propName]: value })}
+          //     </RenderHook>
+          //   )
+          // }
 
-          case RichTextV2ControlType: {
-            const control = (controls?.[propName] ?? null) as RichTextV2Control | null
+          // case RichTextV2ControlType: {
+          //   const control = (controls?.[propName] ?? null) as RichTextV2Control | null
 
-            return (
-              <RenderHook
-                key={descriptor.type}
-                hook={useRichTextV2}
-                parameters={[props[propName], descriptor, control]}
-              >
-                {value => renderFn({ ...propsValue, [propName]: value })}
-              </RenderHook>
-            )
-          }
+          //   return (
+          //     <RenderHook
+          //       key={descriptor.type}
+          //       hook={useRichTextV2}
+          //       parameters={[props[propName], descriptor, control]}
+          //     >
+          //       {value => renderFn({ ...propsValue, [propName]: value })}
+          //     </RenderHook>
+          //   )
+          // }
 
           // case SlotControlType: {
           //   const control = (controls?.[propName] ?? null) as SlotControl | null

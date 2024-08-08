@@ -1,6 +1,7 @@
 import { Editor, NodeEntry, Range, Text } from 'slate'
+import { Slate } from '@makeswift/controls'
+
 import { EditableBlockKey } from './BlockPlugin/types'
-import { ElementUtils } from './utils/element'
 
 import unhangRange from './utils/unhangRange'
 import shallowEqual from '../utils/shallowEqual'
@@ -9,14 +10,6 @@ import { isNonNullable } from '../utils/isNonNullable'
 import { Breakpoints, BreakpointId, findBreakpointOverride } from '../state/modules/breakpoints'
 import deepEqual from '../utils/deepEqual'
 import keys from '../utils/keys'
-import {
-  RootBlock,
-  Inline,
-  RootBlockType,
-  ResponsiveBlockTextAlignment,
-  BlockTextAlignment,
-  RichTextTypography,
-} from './types'
 
 export function getSelection(editor: Editor): Range {
   if (editor.selection) return unhangRange(editor, editor.selection)
@@ -26,28 +19,28 @@ export function getSelection(editor: Editor): Range {
   }
 }
 
-export function getBlocksInSelection(editor: Editor): NodeEntry<RootBlock>[] {
+export function getBlocksInSelection(editor: Editor): NodeEntry<Slate.RootBlock>[] {
   return Array.from(
     Editor.nodes(editor, {
       at: getSelection(editor),
-      match: node => ElementUtils.isRootBlock(node),
+      match: node => Slate.isRootBlock(node),
     }),
-  ).filter((entry): entry is NodeEntry<RootBlock> => ElementUtils.isRootBlock(entry[0]))
+  ).filter((entry): entry is NodeEntry<Slate.RootBlock> => Slate.isRootBlock(entry[0]))
 }
 
-export function getInlinesInSelection(editor: Editor): NodeEntry<Inline>[] {
+export function getInlinesInSelection(editor: Editor): NodeEntry<Slate.Inline>[] {
   return Array.from(
     Editor.nodes(editor, {
       at: getSelection(editor),
-      match: node => ElementUtils.isInline(node),
+      match: node => Slate.isInline(node),
     }),
-  ).filter((entry): entry is NodeEntry<Inline> => ElementUtils.isInline(entry[0]))
+  ).filter((entry): entry is NodeEntry<Slate.Inline> => Slate.isInline(entry[0]))
 }
 
-export function getActiveBlockType(editor: Editor): RootBlockType | null {
+export function getActiveBlockType(editor: Editor): Slate.RootBlockType | null {
   const rootBlocks = getBlocksInSelection(editor).map(([node]) => node.type)
 
-  return rootBlocks.reduce<RootBlockType | null>(
+  return rootBlocks.reduce<Slate.RootBlockType | null>(
     (a, b) => (a === b ? b : null),
     rootBlocks.at(0) ?? null,
   )
@@ -58,7 +51,7 @@ export function getActiveBlockValue(editor: Editor, key: EditableBlockKey) {
 
   const active = blocks.map(
     ([block]) => block[key] ?? null,
-  ) as (ResponsiveBlockTextAlignment | null)[]
+  ) as (Slate.ResponsiveBlockTextAlignment | null)[]
 
   return active.length === 0 ? null : active.reduce((a, b) => (shallowEqual(a, b) ? b : null))
 }
@@ -69,12 +62,12 @@ export function getActiveBlockDeviceOverrideValue(
   breakpoints: Breakpoints,
   deviceId: BreakpointId,
 ) {
-  const active: (BlockTextAlignment | null)[] = []
+  const active: (Slate.BlockTextAlignment | null)[] = []
   const blocks = getBlocksInSelection(editor)
 
   blocks.forEach(([block]) => {
     const deviceOverride =
-      findBreakpointOverride<BlockTextAlignment>(breakpoints, block[key], deviceId) || null
+      findBreakpointOverride<Slate.BlockTextAlignment>(breakpoints, block[key], deviceId) || null
     active.push(deviceOverride?.value ?? null)
   })
 
@@ -97,18 +90,21 @@ export default function intersection<A extends Record<string, unknown>, B extend
 ): { [K in keyof A]: A[K] | undefined } {
   const allKeys = [...new Set([...keys(a), ...keys(b)])] as (keyof A)[]
 
-  return allKeys.reduce((acc, k) => {
-    if (isEqual(a[k], b[k])) acc[k] = a[k]
-    else acc[k] = undefined
+  return allKeys.reduce(
+    (acc, k) => {
+      if (isEqual(a[k], b[k])) acc[k] = a[k]
+      else acc[k] = undefined
 
-    return acc
-  }, {} as { [K in keyof A]: A[K] | undefined })
+      return acc
+    },
+    {} as { [K in keyof A]: A[K] | undefined },
+  )
 }
 
 const fuseTypographyMarks = (
-  values: Array<RichTextTypography | null | undefined>,
+  values: Array<Slate.Typography | null | undefined>,
   breakpoints: Breakpoints,
-): RichTextTypography => {
+): Slate.Typography => {
   const devices = [
     ...new Set(
       values
@@ -143,8 +139,8 @@ const fuseTypographyMarks = (
 export function getActiveTypographyMark(
   editor: Editor,
   breakpoints: Breakpoints,
-): RichTextTypography {
-  const active: RichTextTypography[] = []
+): Slate.Typography {
+  const active: Slate.Typography[] = []
 
   const textNodes = Editor.nodes(editor, {
     at: getSelection(editor),

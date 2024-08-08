@@ -1,10 +1,10 @@
 import { RenderLeafProps } from 'slate-react'
-import { RichTextV2ControlDefinition } from '../../../../../controls'
-import { ControlValue } from '../../control'
+import { RichTextV2Definition } from '../../../../../controls/rich-text-v2'
 import { RichTextV2Plugin } from '../../../../../controls/rich-text-v2/plugin'
+import { ControlValue } from '../../control'
 
 type RichTextV2LeafProps = RenderLeafProps & {
-  definition: RichTextV2ControlDefinition
+  definition: RichTextV2Definition
   plugins: RichTextV2Plugin[]
 }
 

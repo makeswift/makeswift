@@ -1,0 +1,107 @@
+import { z } from 'zod'
+
+import { type CopyContext } from '../../context'
+
+import {
+  ControlDefinition,
+  safeParse,
+  serialize,
+  type ParseResult,
+  type SerializedRecord,
+  type SchemaType,
+} from '../../control-definition'
+
+import { ControlInstance } from '../../control-instance'
+import { type IntrospectionTarget } from '../../introspect'
+import { DTOSchema } from '../dto'
+
+import { copyRichTextData } from './copy'
+import { introspectRichTextData } from './introspection'
+
+type DataType = z.infer<typeof Definition.schema.data>
+type ValueType = z.infer<typeof Definition.schema.value>
+
+abstract class Definition<
+  RuntimeNode,
+  InstanceType extends ControlInstance<any>,
+> extends ControlDefinition<
+  typeof Definition.type,
+  unknown,
+  DataType,
+  ValueType,
+  RuntimeNode,
+  InstanceType
+> {
+  static readonly type = 'makeswift::controls::rich-text' as const
+
+  static get schema() {
+    const type = z.literal(this.type)
+    const data = DTOSchema.valueJSON
+    const value = data
+    const definition = z.object({
+      type,
+    })
+
+    return {
+      type,
+      data,
+      value,
+      definition,
+    }
+  }
+
+  constructor() {
+    super({})
+  }
+
+  get controlType() {
+    return Definition.type
+  }
+
+  get schema() {
+    const baseSchema = Definition.schema
+    return {
+      ...baseSchema,
+      resolvedValue: this.nodeSchema,
+    }
+  }
+
+  get nodeSchema(): SchemaType<RuntimeNode> {
+    return z.any()
+  }
+
+  safeParse(data: unknown | undefined): ParseResult<DataType | undefined> {
+    return safeParse(this.schema.data, data)
+  }
+
+  fromData(data: DataType | undefined): ValueType | undefined {
+    return data
+  }
+
+  toData(value: ValueType): DataType {
+    return value
+  }
+
+  copyData(
+    data: DataType | undefined,
+    context: CopyContext,
+  ): DataType | undefined {
+    return copyRichTextData(data, context)
+  }
+
+  serialize(): [SerializedRecord, Transferable[]] {
+    return serialize(this.config, {
+      type: Definition.type,
+    })
+  }
+
+  introspect<R>(
+    data: DataType | undefined,
+    target: IntrospectionTarget<R>,
+  ): R[] {
+    return introspectRichTextData(data, target)
+  }
+}
+
+export type RichTextValue = DataType
+export { Definition as RichTextV1Definition }

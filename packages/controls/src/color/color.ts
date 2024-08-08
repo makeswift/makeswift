@@ -7,11 +7,7 @@ import { objectsAreEqual } from '../utils/functional'
 import { type CopyContext } from '../context'
 import { type ResourceResolver } from '../resource-resolver'
 
-import {
-  DefaultControlInstance,
-  ControlInstance,
-  type SendMessage,
-} from '../control-instance'
+import { DefaultControlInstance, type SendMessage } from '../control-instance'
 
 import { type Effector } from '../effector'
 
@@ -229,7 +225,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     }
   }
 
-  createInstance(sendMessage: SendMessage<any>): ControlInstance {
+  createInstance(sendMessage: SendMessage<any>) {
     return new DefaultControlInstance(sendMessage)
   }
 

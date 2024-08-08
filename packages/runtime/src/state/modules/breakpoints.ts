@@ -1,18 +1,19 @@
 import { Viewport } from 'csstype'
-import { Data } from '@makeswift/controls'
 
 import {
-  ResponsiveValue as PropControllerResponsiveValue,
-  DeviceOverride as PropControllerDeviceOverride,
-  Device as DeviceId,
+  type Data,
+  type ResponsiveValue,
+  type DeviceOverride,
+  type Device as DeviceId,
 } from '@makeswift/controls'
 
-import shallowMerge from '../../utils/shallowMerge'
 import { Action, ActionTypes } from '../actions'
+
+import shallowMerge from '../../utils/shallowMerge'
 import coalesce from '../../utils/coalesce'
 
-export type DeviceOverride<T> = PropControllerDeviceOverride<T>
-export type ResponsiveValue<T> = PropControllerResponsiveValue<T>
+export { type ResponsiveValue, type DeviceOverride } from '@makeswift/controls'
+
 export type BreakpointId = DeviceId
 
 export type Breakpoint = {

@@ -4,11 +4,7 @@ import { z } from 'zod'
 import { type CopyContext } from '../context'
 import { type ResourceResolver } from '../resource-resolver'
 
-import {
-  DefaultControlInstance,
-  ControlInstance,
-  type SendMessage,
-} from '../control-instance'
+import { DefaultControlInstance, type SendMessage } from '../control-instance'
 
 import { type Effector } from '../effector'
 
@@ -21,7 +17,7 @@ import {
   type Resolvable,
 } from '../control-definition'
 
-import { IntrospectionTarget, IntrospectionTargetType } from '../introspect'
+import { IntrospectionTarget, Targets } from '../introspect'
 
 type Config =
   | z.infer<typeof Definition.schema.url.config>
@@ -41,15 +37,12 @@ type ResolvedValueType<C extends Config> = z.infer<
   SchemaType<C>['resolvedValue']
 >
 
-type InstanceType<_C extends Config> = ControlInstance<any>
-
 class Definition<C extends Config = Config> extends ControlDefinition<
   typeof Definition.type,
   C,
   DataType<C>,
   ValueType<C>,
-  ResolvedValueType<C>,
-  InstanceType<C>
+  ResolvedValueType<C>
 > {
   private static readonly dataSignature = {
     makeswiftFile: { type: 'makeswift-file' },
@@ -356,7 +349,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     }
   }
 
-  createInstance(sendMessage: SendMessage<any>): ControlInstance {
+  createInstance(sendMessage: SendMessage<any>) {
     return new DefaultControlInstance(sendMessage)
   }
 
@@ -371,7 +364,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     data: DataType<C> | undefined,
     target: IntrospectionTarget<R>,
   ): R[] {
-    if (target.type !== IntrospectionTargetType.File) return []
+    if (target.type !== Targets.File.type) return []
 
     const dataSchema = this.schema.data.optional()
     return match(data satisfies z.infer<typeof dataSchema>)

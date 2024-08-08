@@ -9,11 +9,7 @@ import { type CopyContext } from '../context'
 import { type ResourceResolver } from '../resource-resolver'
 import { type Effector } from '../effector'
 
-import {
-  DefaultControlInstance,
-  ControlInstance,
-  type SendMessage,
-} from '../control-instance'
+import { DefaultControlInstance, type SendMessage } from '../control-instance'
 
 import {
   ControlDefinition,
@@ -25,14 +21,11 @@ import {
   type SchemaType as SchemaType_,
 } from '../control-definition'
 
-import {
-  type IntrospectionTarget,
-  IntrospectionTargetType,
-} from '../introspect'
+import { type IntrospectionTarget, Targets } from '../introspect'
 
 import { linkSchema } from './schema'
 
-type RootMouseEvent = {
+type GenericMouseEvent = {
   defaultPrevented: boolean
   preventDefault: () => void
   view: unknown
@@ -47,7 +40,7 @@ type SchemaType<_C extends Config> = typeof Definition.schema
 type DataType<C extends Config> = z.infer<SchemaType<C>['data']>
 type ValueType<C extends Config> = z.infer<SchemaType<C>['value']>
 type ResolvedValueType<
-  MouseEventType extends RootMouseEvent,
+  MouseEventType extends GenericMouseEvent,
   _C extends Config,
 > = {
   href: string
@@ -55,8 +48,8 @@ type ResolvedValueType<
   onClick: (event: MouseEventType) => void
 }
 
-abstract class Definition<
-  MouseEventType extends RootMouseEvent,
+class Definition<
+  MouseEventType extends GenericMouseEvent = GenericMouseEvent,
   C extends Config = Config,
 > extends ControlDefinition<
   typeof Definition.type,
@@ -66,10 +59,6 @@ abstract class Definition<
   ResolvedValueType<MouseEventType, C>
 > {
   static readonly type = 'makeswift::controls::link' as const
-
-  constructor(readonly config: C) {
-    super(config)
-  }
 
   static get schema() {
     const type = z.literal(this.type)
@@ -153,7 +142,8 @@ abstract class Definition<
     if (data.type === 'SCROLL_TO_ELEMENT') {
       const { elementIdConfig } = data.payload
       if (elementIdConfig == null) return data
-      const elementKey = elementIdConfig.elementKey
+
+      const { elementKey } = elementIdConfig
       return {
         ...data,
         payload: {
@@ -275,6 +265,7 @@ abstract class Definition<
 
         if (href != null && href === hash) {
           event.preventDefault()
+          // FIXME
           const view = event.view as unknown as Window
 
           scrollIntoView(view.document.querySelector(hash)!, {
@@ -298,17 +289,19 @@ abstract class Definition<
     data: DataType<C> | undefined,
     target: IntrospectionTarget<R>,
   ): R[] {
-    if (target.type !== IntrospectionTargetType.Page) return []
+    if (target.type !== Targets.Page.type) return []
     if (data == null) return []
+
     switch (data.type) {
       case 'OPEN_PAGE':
         return (data.payload.pageId != null ? [data.payload.pageId] : []) as R[]
+
       default:
         return []
     }
   }
 
-  createInstance(sendMessage: SendMessage<any>): ControlInstance<any> {
+  createInstance(sendMessage: SendMessage<any>) {
     return new DefaultControlInstance(sendMessage)
   }
 
@@ -318,5 +311,8 @@ abstract class Definition<
     })
   }
 }
+
+export const GenericLink = (config?: { label?: string }) =>
+  new (class GenericLink extends Definition {})(config ?? {})
 
 export { Definition as LinkDefinition }

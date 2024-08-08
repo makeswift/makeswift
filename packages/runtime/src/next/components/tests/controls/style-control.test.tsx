@@ -14,7 +14,18 @@ describe('Page', () => {
       await testPageControlPropRendering(Style(), {
         value: {
           width: [{ deviceId: 'desktop', value: { value: 80, unit: '%' } }],
-          margin: [{ deviceId: 'desktop', value: { marginTop: { value: 4, unit: 'px' } } }],
+          margin: [
+            {
+              deviceId: 'desktop',
+              value: {
+                marginTop: { value: 4, unit: 'px' },
+                // FIXME
+                marginLeft: undefined,
+                marginRight: undefined,
+                marginBottom: undefined,
+              },
+            },
+          ],
         },
         expectedRenders: 1,
         registerComponents: (runtime: ReactRuntime) => {

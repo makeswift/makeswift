@@ -16,6 +16,7 @@ import {
 import {
   ControlDefinition as UnifiedControlDefinition,
   type SerializedRecord,
+  type RichTextValue as RichTextControlValue,
 } from '@makeswift/controls'
 
 import {
@@ -27,22 +28,15 @@ import {
   ListDefinition,
   LinkDefinition,
   NumberDefinition,
+  RichTextV1Definition,
+  RichTextV2Definition,
   SelectDefinition,
   ShapeDefinition,
   SlotDefinition,
+  StyleDefinition,
+  StyleV2Definition,
   TextAreaDefinition,
   TextInputDefinition,
-  StyleV2Definition,
-  StyleDefinition,
-  TypographyControlType,
-} from '../../controls'
-
-import {
-  RichTextV2ControlDefinition,
-  RichTextV2ControlType,
-  // StyleV2ControlDefinition,
-  // StyleV2ControlType,
-  RichTextValue as RichTextControlValue,
 } from '../../controls'
 
 import {
@@ -53,6 +47,7 @@ import {
   PanelDescriptorValueType as PanelControlValueType,
   PropControllerDescriptor as ControlDefinition,
 } from '../../prop-controllers'
+
 import {
   DELETED_PROP_CONTROLLER_TYPES,
   ListDescriptor as ListControl,
@@ -66,9 +61,6 @@ import {
   RichTextDescriptor as RichTextControl,
 } from '../../prop-controllers/deleted'
 
-import { deserializeRichTextControlV2, serializeRichTextControlV2 } from './controls/rich-text-v2'
-// import { deserializeStyleV2Control, serializeStyleV2Control } from './controls/style-v2'
-import { Deserialize, Serialize } from './controls/types'
 import {
   DeserializedFunction,
   deserializeFunction,
@@ -762,8 +754,6 @@ export type SerializedLegacyControl<T extends Data = Data> =
       | TextStyleControl<T>
       | ImageControl<T>
       | RichTextControl<T>
-      | RichTextV2ControlDefinition
-      // | StyleV2ControlDefinition
     >
   | SerializedListControl<T extends ListControlValue ? T : ListControlValue>
   | SerializedShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
@@ -783,8 +773,6 @@ export type SerializedLegacyControl<T extends Data = Data> =
   | SerializedTextStyleControl<T>
   | SerializedImageControl<T>
   | SerializedRichTextControl<T>
-  | Serialize<RichTextV2ControlDefinition>
-// | Serialize<StyleV2ControlDefinition>
 
 export type SerializedControl<T extends Data = Data> = SerializedLegacyControl<T> | SerializedRecord
 
@@ -817,8 +805,6 @@ export type DeserializedLegacyControl<T extends Data = Data> =
       | TextStyleControl<T>
       | ImageControl<T>
       | RichTextControl<T>
-      | RichTextV2ControlDefinition
-      // | StyleV2ControlDefinition
     >
   | DeserializedListControl<T extends ListControlValue ? T : ListControlValue>
   | DeserializedShapeControl<T extends ShapeControlValue ? T : ShapeControlValue, any>
@@ -838,8 +824,6 @@ export type DeserializedLegacyControl<T extends Data = Data> =
   | DeserializedTextStyleControl<T>
   | DeserializedImageControl<T>
   | DeserializedRichTextControl<T>
-  | Deserialize<Serialize<RichTextV2ControlDefinition>>
-// | Deserialize<Serialize<StyleV2ControlDefinition>>
 
 export type DeserializedControl<T extends Data = Data> =
   | DeserializedLegacyControl<T>
@@ -922,12 +906,6 @@ function serializeLegacyControl<T extends Data>(
     case DELETED_PROP_CONTROLLER_TYPES.RichText:
       return serializeRichTextControl(control)
 
-    case RichTextV2ControlType:
-      return serializeRichTextControlV2(control)
-
-    // case StyleV2ControlType:
-    //   return serializeStyleV2Control(control)
-
     default:
       return [control, []]
   }
@@ -936,9 +914,7 @@ function serializeLegacyControl<T extends Data>(
 function isSerializedLegacyControl<T extends Data>(
   control: SerializedControl<T>,
 ): control is SerializedLegacyControl<T> {
-  return (
-    'options' in control || [RichTextV2ControlType, TypographyControlType].includes(control.type)
-  )
+  return 'options' in control
 }
 
 export function deserializeLegacyControl<T extends Data>(
@@ -999,12 +975,6 @@ export function deserializeLegacyControl<T extends Data>(
     case DELETED_PROP_CONTROLLER_TYPES.RichText:
       return deserializeRichTextControl(serializedControl)
 
-    case RichTextV2ControlType:
-      return deserializeRichTextControlV2(serializedControl)
-
-    // case StyleV2ControlType:
-    //   return deserializeStyleV2Control(serializedControl)
-
     default:
       return serializedControl
   }
@@ -1021,7 +991,8 @@ export function deserializeControl<T extends Data>(
 }
 
 function deserializeControlDefV2(record: SerializedRecord): UnifiedControlDefinition {
-  const deserializeMethod: Record<string, (data: SerializedRecord) => UnifiedControlDefinition> = {
+  type DeserializeMethod = (data: SerializedRecord) => UnifiedControlDefinition
+  const deserializeMethod: Record<string, DeserializeMethod> = {
     [CheckboxDefinition.type]: CheckboxDefinition.deserialize,
     [ColorDefinition.type]: ColorDefinition.deserialize,
     [NumberDefinition.type]: NumberDefinition.deserialize,
@@ -1040,6 +1011,8 @@ function deserializeControlDefV2(record: SerializedRecord): UnifiedControlDefini
       ShapeDefinition.deserialize(record, deserializeControlDefV2),
     [StyleV2Definition.type]: (record: SerializedRecord) =>
       StyleV2Definition.deserialize(record, deserializeControlDefV2),
+    [RichTextV1Definition.type]: RichTextV1Definition.deserialize,
+    [RichTextV2Definition.type]: RichTextV2Definition.deserialize,
   } as const
 
   const deserializedObject = deserializeObject(record) as SerializedRecord

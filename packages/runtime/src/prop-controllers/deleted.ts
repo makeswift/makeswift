@@ -1,4 +1,4 @@
-import { RichTextValue } from '../controls'
+import { type RichTextValue } from '@makeswift/controls'
 import { Data, DescriptorValueType, PanelDescriptor } from './descriptors'
 
 export const DELETED_PROP_CONTROLLER_TYPES = {

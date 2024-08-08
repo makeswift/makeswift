@@ -1,14 +1,14 @@
-export type ControlMessage<Payload = unknown> = {
+export type ControlMessage<Payload = any> = {
   type: string
   payload?: Payload
 }
 
-export type SendMessage<M extends ControlMessage = ControlMessage<unknown>> = (
+export type SendMessage<M extends ControlMessage = ControlMessage> = (
   message: M,
 ) => void
 
 export abstract class ControlInstance<
-  M extends ControlMessage = ControlMessage<unknown>,
+  M extends ControlMessage = ControlMessage,
 > {
   constructor(protected readonly sendMessage: SendMessage<M>) {}
 
@@ -17,7 +17,7 @@ export abstract class ControlInstance<
 }
 
 export class DefaultControlInstance extends ControlInstance {
-  recv(_message: ControlMessage<unknown>) {
+  recv(_message: ControlMessage) {
     // Do nothing
   }
 

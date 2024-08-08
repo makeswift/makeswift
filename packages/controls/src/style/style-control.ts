@@ -3,12 +3,12 @@ import { ControlInstance } from '../control-instance'
 import { type BoxModel } from '../common'
 
 type Message = {
-  type: typeof StyleControl.CHANGE_BOX_MODEL_MESSAGE
+  type: typeof StyleControl.CHANGE_BOX_MODEL
   payload: { boxModel: BoxModel | null }
 }
 
 export class StyleControl extends ControlInstance<Message> {
-  static CHANGE_BOX_MODEL_MESSAGE =
+  static CHANGE_BOX_MODEL =
     'makeswift::controls::style::message::change-box-model'
 
   recv = (_message: Message) => {}
@@ -19,7 +19,7 @@ export class StyleControl extends ControlInstance<Message> {
 
   changeBoxModel(boxModel: BoxModel | null): void {
     this.sendMessage({
-      type: StyleControl.CHANGE_BOX_MODEL_MESSAGE,
+      type: StyleControl.CHANGE_BOX_MODEL,
       payload: { boxModel },
     })
   }

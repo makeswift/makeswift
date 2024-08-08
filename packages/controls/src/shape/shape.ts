@@ -43,7 +43,7 @@ type ResolvedValueType<C extends Config> = {
   [K in keyof C['type']]: ResolvedValueType_<C['type'][K]>
 }
 
-type ControlType<C extends Config> = ShapeControl<Definition<C>>
+type InstanceType<C extends Config> = ShapeControl<Definition<C>>
 
 class Definition<C extends Config = Config> extends ControlDefinition<
   typeof Definition.type,
@@ -51,13 +51,9 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   DataType<C>,
   ValueType<C>,
   ResolvedValueType<C>,
-  ControlType<C>
+  InstanceType<C>
 > {
   static readonly type = 'makeswift::controls::shape' as const
-
-  constructor(readonly config: C) {
-    super(config)
-  }
 
   static deserialize(
     data: SerializedRecord,
@@ -154,7 +150,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     data: DataType<C> | undefined,
     resolver: ResourceResolver,
     effector: Effector,
-    control?: ControlType<C>,
+    control?: InstanceType<C>,
   ): Resolvable<ResolvedValueType<C> | undefined> {
     const emptyShape = {}
     const keyValues = mapValues(data ?? ({} as ValueType<C>), (val, key) =>
@@ -194,7 +190,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     }
   }
 
-  createInstance(sendMessage: SendMessage<any>): ControlType<C> {
+  createInstance(sendMessage: SendMessage): InstanceType<C> {
     return new ShapeControl(this, sendMessage)
   }
 

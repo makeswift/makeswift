@@ -5,10 +5,7 @@ import { type ResolvedColorData } from '../common'
 import { type CopyContext } from '../context'
 import { type ResourceResolver } from '../resource-resolver'
 import { type Effector } from '../effector'
-import {
-  IntrospectionTargetType,
-  type IntrospectionTarget,
-} from '../introspect'
+import { Targets, type IntrospectionTarget } from '../introspect'
 import { DefaultControlInstance, type SendMessage } from '../control-instance'
 
 import {
@@ -23,36 +20,29 @@ import {
 import { Color } from '../color'
 
 import { notNil } from '../utils/functional'
-import { getTypographySchema } from './schema'
 
-type Config = z.infer<typeof Definition.schema.config>
+import * as Schema from './schema'
 
-type SchemaType<_C extends Config> = typeof Definition.schema
+type SchemaType = typeof Definition.schema
+type DataType = z.infer<SchemaType['data']>
+type ValueType = z.infer<SchemaType['value']>
+type ResolvedValueType = z.infer<SchemaType['resolvedValue']>
+type InstanceType = DefaultControlInstance
 
-type DataType<C extends Config> = z.infer<SchemaType<C>['data']>
-type ValueType<C extends Config> = z.infer<SchemaType<C>['value']>
-type ResolvedValueType<C extends Config> = z.infer<
-  SchemaType<C>['resolvedValue']
->
-
-type InstanceType<_C extends Config> = DefaultControlInstance
-
-class Definition<C extends Config = Config> extends ControlDefinition<
+class Definition extends ControlDefinition<
   typeof Definition.type,
-  C,
-  DataType<C>,
-  ValueType<C>,
-  ResolvedValueType<C>,
-  InstanceType<C>
+  unknown,
+  DataType,
+  ValueType,
+  ResolvedValueType,
+  InstanceType
 > {
   static readonly type = 'makeswift::controls::typography' as const
 
   static get schema() {
     const type = z.literal(Definition.type)
 
-    const config = z.object({})
-
-    const data = getTypographySchema(
+    const data = Schema.typography(
       z
         .object({
           swatchId: z.string().nullable(),
@@ -61,7 +51,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
         .nullable(),
     )
 
-    const resolvedData = getTypographySchema(
+    const resolvedData = Schema.typography(
       z
         .object({
           swatch: z.object({
@@ -84,7 +74,6 @@ class Definition<C extends Config = Config> extends ControlDefinition<
 
     return {
       type,
-      config,
       definition,
       data,
       resolvedData,
@@ -101,11 +90,11 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     }
 
     Definition.schema.definition.parse(data)
-    return new Definition({})
+    return new Definition()
   }
 
-  constructor(readonly config: C) {
-    super(config)
+  constructor() {
+    super({})
   }
 
   get controlType() {
@@ -113,25 +102,25 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   }
 
   get schema() {
-    return Definition.schema as SchemaType<C>
+    return Definition.schema
   }
 
-  safeParse(data: unknown | undefined): ParseResult<DataType<C> | undefined> {
+  safeParse(data: unknown | undefined): ParseResult<DataType | undefined> {
     return safeParse(this.schema.data, data)
   }
 
-  fromData(data: DataType<C> | undefined): ValueType<C> | undefined {
+  fromData(data: DataType | undefined): ValueType | undefined {
     return this.schema.data.optional().parse(data)
   }
 
-  toData(value: ValueType<C>): DataType<C> {
+  toData(value: ValueType): DataType {
     return value
   }
 
   copyData(
-    data: DataType<C> | undefined,
+    data: DataType | undefined,
     context: CopyContext,
-  ): DataType<C> | undefined {
+  ): DataType | undefined {
     if (data == null) return data
 
     return {
@@ -141,6 +130,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
         ...override,
         value: {
           ...override.value,
+          // FIXME: Color().copyData ??
           color:
             override.value.color == null
               ? null
@@ -160,11 +150,11 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   }
 
   resolveValue(
-    data: DataType<C> | undefined,
+    data: DataType | undefined,
     resolver: ResourceResolver,
     effector: Effector,
-    _control?: InstanceType<C>,
-  ): Resolvable<ResolvedValueType<C> | undefined> {
+    _control?: InstanceType,
+  ): Resolvable<ResolvedValueType | undefined> {
     const resolvedColors = new Map<
       string,
       Resolvable<ResolvedColorData | undefined>
@@ -190,7 +180,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     const resolvedColor = (swatchId: string | undefined | null) =>
       swatchId ? resolvedColors.get(swatchId)?.readStableValue() : undefined
 
-    const resolvedStyle = (data: DataType<C>) => {
+    const resolvedStyle = (data: DataType) => {
       return data.style.map((typography) => {
         return {
           ...typography,
@@ -203,7 +193,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     }
 
     return {
-      readStableValue: (previous?: ResolvedValueType<C>) => {
+      readStableValue: (previous?: ResolvedValueType) => {
         return data != null
           ? effector.computeClassName(previous, [], resolvedStyle(data))
           : undefined
@@ -217,7 +207,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
         return () => unsubscribes?.forEach((u) => u())
       },
 
-      triggerResolve: async (currentValue?: ResolvedValueType<C>) => {
+      triggerResolve: async (currentValue?: ResolvedValueType) => {
         if (data != null && currentValue != null) {
           effector.defineStyle(
             currentValue,
@@ -235,7 +225,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     }
   }
 
-  createInstance(sendMessage: SendMessage<any>) {
+  createInstance(sendMessage: SendMessage) {
     return new DefaultControlInstance(sendMessage)
   }
 
@@ -245,10 +235,10 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     })
   }
 
-  introspect<R>(data: DataType<C> | undefined, target: IntrospectionTarget<R>) {
+  introspect<R>(data: DataType | undefined, target: IntrospectionTarget<R>) {
     if (data == null) return []
 
-    if (target.type === IntrospectionTargetType.Swatch) {
+    if (target.type === Targets.Swatch.type) {
       return (
         data.style.flatMap(
           (typography) => target.introspect(typography.value.color) ?? [],
@@ -256,7 +246,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
       )
     }
 
-    if (target.type === IntrospectionTargetType.Typography) {
+    if (target.type === Targets.Typography.type) {
       return [data.id].filter(notNil) as R[]
     }
 
@@ -264,11 +254,7 @@ class Definition<C extends Config = Config> extends ControlDefinition<
   }
 }
 
-export const Typography = <C extends Config>() =>
-  new (class Typography extends Definition<C> {})({} as C)
-
-export type ResolvedTypographyData = z.infer<
-  Definition['schema']['resolvedData']
->
+export const unstable_Typography = () =>
+  new (class Typography extends Definition {})()
 
 export { Definition as unstable_TypographyDefinition }

@@ -4,11 +4,7 @@ import { CopyContext } from '../context'
 import { type ResourceResolver } from '../resource-resolver'
 import { type Effector } from '../effector'
 
-import {
-  DefaultControlInstance,
-  ControlInstance,
-  type SendMessage,
-} from '../control-instance'
+import { DefaultControlInstance, type SendMessage } from '../control-instance'
 
 import {
   ControlDefinition,
@@ -49,7 +45,7 @@ class Definition<
 > {
   static readonly type = 'makeswift::controls::combobox' as const
 
-  static schema<T extends Data>(item: z.ZodType<T>) {
+  static schema<T extends Data>(item: SchemaType<T>) {
     const type = z.literal(Definition.type)
 
     const data = z.object({
@@ -84,10 +80,6 @@ class Definition<
       config,
       definition,
     }
-  }
-
-  constructor(readonly config: C) {
-    super(config)
   }
 
   static deserialize(data: SerializedRecord): Definition {
@@ -144,7 +136,7 @@ class Definition<
     }
   }
 
-  createInstance(sendMessage: SendMessage<any>): ControlInstance<any> {
+  createInstance(sendMessage: SendMessage<any>) {
     return new DefaultControlInstance(sendMessage)
   }
 

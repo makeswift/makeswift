@@ -1,17 +1,13 @@
 import { P, match } from 'ts-pattern'
 import { Element } from './common'
 
-export const IntrospectionTargetType = {
-  Swatch: 'swatch',
-  File: 'file',
-  Typography: 'typography',
-  Table: 'table',
-  Page: 'page',
-  ChildrenElement: 'children-element',
-} as const
-
 type IntrospectionTargetType =
-  (typeof IntrospectionTargetType)[keyof typeof IntrospectionTargetType]
+  | typeof SwatchTarget.Type
+  | typeof FileTarget.Type
+  | typeof TypographyTarget.Type
+  | typeof TableTarget.Type
+  | typeof PageTarget.Type
+  | typeof ChildrenElementTarget.Type
 
 export interface IntrospectionTarget<R = unknown> {
   get type(): IntrospectionTargetType
@@ -19,8 +15,10 @@ export interface IntrospectionTarget<R = unknown> {
 }
 
 class SwatchTarget implements IntrospectionTarget<string> {
+  static readonly Type = 'swatch' as const
+
   get type() {
-    return IntrospectionTargetType.Swatch
+    return SwatchTarget.Type
   }
 
   introspect(data: unknown) {
@@ -31,8 +29,10 @@ class SwatchTarget implements IntrospectionTarget<string> {
 }
 
 class FileTarget implements IntrospectionTarget<string> {
+  static readonly Type = 'file' as const
+
   get type() {
-    return IntrospectionTargetType.File
+    return FileTarget.Type
   }
 
   introspect(_data: unknown) {
@@ -42,8 +42,10 @@ class FileTarget implements IntrospectionTarget<string> {
 }
 
 class TypographyTarget implements IntrospectionTarget<string> {
+  static readonly Type = 'typography' as const
+
   get type() {
-    return IntrospectionTargetType.Typography
+    return TypographyTarget.Type
   }
 
   introspect(_data: unknown) {
@@ -53,8 +55,9 @@ class TypographyTarget implements IntrospectionTarget<string> {
 }
 
 class TableTarget implements IntrospectionTarget<string> {
+  static readonly Type = 'table' as const
   get type() {
-    return IntrospectionTargetType.Table
+    return TableTarget.Type
   }
 
   introspect(_data: unknown) {
@@ -64,8 +67,9 @@ class TableTarget implements IntrospectionTarget<string> {
 }
 
 class PageTarget implements IntrospectionTarget<string> {
+  static readonly Type = 'page' as const
   get type() {
-    return IntrospectionTargetType.Page
+    return PageTarget.Type
   }
 
   introspect(_data: unknown) {
@@ -75,8 +79,10 @@ class PageTarget implements IntrospectionTarget<string> {
 }
 
 class ChildrenElementTarget implements IntrospectionTarget<Element> {
+  static readonly Type = 'children-element' as const
+
   get type() {
-    return IntrospectionTargetType.ChildrenElement
+    return ChildrenElementTarget.Type
   }
 
   introspect(_data: unknown) {

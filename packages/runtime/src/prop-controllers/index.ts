@@ -14,7 +14,3 @@ export type { PropControllerMessage, TableFormFieldsMessage } from './instances'
 export { TableFormFieldsMessageType } from './instances'
 export * as Introspection from './introspection'
 export { DELETED_PROP_CONTROLLER_TYPES } from './deleted'
-export {
-  RichTextControlMessageType,
-  type RichTextControlMessage,
-} from '../controls/rich-text/rich-text'

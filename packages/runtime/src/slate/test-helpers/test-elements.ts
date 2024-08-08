@@ -1,13 +1,14 @@
 import { ComponentType } from 'react'
-import { DataType } from '@makeswift/controls'
+import { Slate, type RichTextTypography, type DataType } from '@makeswift/controls'
+
 import { LinkDefinition } from '../../controls'
-import { BlockType, InlineType, ResponsiveBlockTextAlignment, RichTextTypography } from '..'
+import { BlockType, InlineType } from '..'
 
 type Children = string | JSX.Element | (string | JSX.Element)[]
 
 export type BaseBlock = {
   children?: Children
-  textAlign?: ResponsiveBlockTextAlignment
+  textAlign?: Slate.ResponsiveBlockTextAlignment
   typography?: RichTextTypography
 }
 export type BaseInline = { children?: Children; typography?: RichTextTypography }

@@ -1,10 +1,12 @@
 import { z } from 'zod'
+
+import { type Data } from './common/types'
+
 import {
   MergeContext,
   MergeTranslatableDataContext,
   type CopyContext,
 } from './context'
-import { type Data } from './common/types'
 
 import {
   type ResourceResolver,
@@ -14,6 +16,7 @@ import {
 import { type Effector } from './effector'
 
 import { ControlInstance, type SendMessage } from './control-instance'
+
 import { serializeObject } from './serialization'
 import { summarizeError } from './utils/zod'
 import { type IntrospectionTarget } from './introspect'
@@ -34,10 +37,10 @@ export type Resolvable<T> = ValueSubscription<T> & {
 export abstract class ControlDefinition<
   ControlType extends string = string,
   Config = unknown,
-  DataType = Data,
-  ValueType = Data,
+  DataType extends Data = Data,
+  ValueType extends Data = Data,
   ResolvedValueType = Data | unknown,
-  InstanceType = ControlInstance<any>,
+  InstanceType extends ControlInstance<any> = ControlInstance<any>,
 > {
   constructor(readonly config: Config) {}
 
@@ -71,6 +74,7 @@ export abstract class ControlDefinition<
   ): Resolvable<ResolvedValueType | undefined>
 
   abstract createInstance(sendMessage: SendMessage<any>): InstanceType
+
   abstract serialize(): [SerializedRecord<any>, Transferable[]]
 
   introspect<R>(

@@ -1,45 +1,42 @@
 export * from './control'
-// export * from './style-v2'
-export * from './rich-text'
-export * from './rich-text-v2'
-export * from './typography'
 
 export {
-  Combobox,
-  ComboboxDefinition,
+  Checkbox,
+  CheckboxDefinition,
   Color,
   ColorDefinition,
-  Image,
-  ImageDefinition,
-  unstable_IconRadioGroup,
+  Combobox,
+  ComboboxDefinition,
   IconRadioGroupDefinition,
   type IconRadioGroupIcon,
+  unstable_IconRadioGroup,
   unstable_IconRadioGroupIcon,
+  Image,
+  ImageDefinition,
   List,
   ListDefinition,
+  ListControl,
   Shape,
   ShapeDefinition,
+  ShapeControl,
   Number,
   NumberDefinition,
   TextInput,
   TextInputDefinition,
   TextArea,
   TextAreaDefinition,
-  Checkbox,
-  CheckboxDefinition,
   Select,
   SelectDefinition,
   Style,
   StyleDefinition,
   type StyleProperty,
-  ListControl,
-  ShapeControl,
   StyleControl,
-  StyleV2Control,
-  SlotControl,
-  DefaultControlInstance,
+  unstable_Typography,
+  unstable_TypographyDefinition,
 } from '@makeswift/controls'
 
-export { Slot, SlotDefinition } from './slot'
-export { unstable_StyleV2, StyleV2Definition } from './style-v2'
 export { Link, LinkDefinition } from './link'
+export { RichTextV1Definition, RichTextV1Control } from './rich-text'
+export { RichText, RichTextV2Definition } from './rich-text-v2'
+export { Slot, SlotDefinition, SlotControl } from './slot'
+export { unstable_StyleV2, StyleV2Definition, StyleV2Control } from './style-v2'

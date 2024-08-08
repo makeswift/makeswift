@@ -1,4 +1,4 @@
-import { MouseEvent } from 'react'
+import { type MouseEvent } from 'react'
 import { type SerializedRecord, LinkDefinition } from '@makeswift/controls'
 
 class Definition extends LinkDefinition<MouseEvent> {

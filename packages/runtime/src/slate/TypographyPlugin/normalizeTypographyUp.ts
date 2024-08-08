@@ -1,6 +1,7 @@
-import { MakeswiftEditor } from '../types'
 import { Editor, Element, NodeEntry, Transforms, Node, Text } from 'slate'
-import { RichTextTypography } from '../types'
+import { RichTextTypography } from '@makeswift/controls'
+
+import { MakeswiftEditor } from '../types'
 import keys from '../../utils/keys'
 import deepEqual from '../../utils/deepEqual'
 import { shallowMergeTypographies } from './normalizeTypographyDown'
@@ -38,9 +39,12 @@ function shallowAndTypographies(...typographies: RichTextTypography[]): RichText
 
       if (typographies.length !== stylesForThisDevice.length) return []
 
-      const value = stylesForThisDevice.reduce((acc, curr) => {
-        return shallowAnd(acc, curr)
-      }, stylesForThisDevice.at(0) as RichTextTypography['style'][number]['value'])
+      const value = stylesForThisDevice.reduce(
+        (acc, curr) => {
+          return shallowAnd(acc, curr)
+        },
+        stylesForThisDevice.at(0) as RichTextTypography['style'][number]['value'],
+      )
 
       if (value == null || Object.keys(value).length === 0) {
         return []

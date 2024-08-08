@@ -1,10 +1,11 @@
-import { Editor, Path, Text, Transforms } from 'slate'
-import { KeyboardEvent } from 'react'
+import { type KeyboardEvent } from 'react'
+import { type Editor, Path, Text, Transforms } from 'slate'
+import { type RenderElementProps } from 'slate-react'
 import isHotkey from 'is-hotkey'
-import { RenderElement, createRichTextV2Plugin } from '../../controls/rich-text-v2/plugin'
-import { ElementUtils } from '../utils/element'
-import { BlockType } from '../types'
-import { RenderElementProps } from 'slate-react'
+
+import { Slate } from '@makeswift/controls'
+
+import { type RenderElement, Plugin } from '../../controls/rich-text-v2/plugin'
 
 const BLOCK_ONE_PATH = [0]
 const BLOCK_TWO_PATH = [1]
@@ -24,10 +25,7 @@ export function withInlineMode(editor: Editor): Editor {
     /**
      * Unwrap non text nodes of first root node
      */
-    if (
-      Path.isAncestor(BLOCK_ONE_PATH, normalizationPath) &&
-      ElementUtils.isBlock(normalizationNode)
-    ) {
+    if (Path.isAncestor(BLOCK_ONE_PATH, normalizationPath) && Slate.isBlock(normalizationNode)) {
       Transforms.unwrapNodes(editor, {
         at: normalizationPath,
       })
@@ -37,7 +35,7 @@ export function withInlineMode(editor: Editor): Editor {
      * Update type of root nodes to be `text-block`
      */
     if (Path.equals(BLOCK_ONE_PATH, normalizationPath)) {
-      Transforms.setNodes(editor, { type: BlockType.Default }, { at: normalizationPath })
+      Transforms.setNodes(editor, { type: Slate.BlockType.Default }, { at: normalizationPath })
       return
     }
 
@@ -48,13 +46,14 @@ export function withInlineMode(editor: Editor): Editor {
 }
 
 export function InlineModePlugin() {
-  return createRichTextV2Plugin({
+  return Plugin({
     onKeyDown: (e: KeyboardEvent) => {
       if (isHotkey('enter', e)) e.preventDefault()
     },
     withPlugin: withInlineMode,
-    renderElement: renderElement => props =>
-      <InlineModePluginComponent {...props} renderElement={renderElement} />,
+    renderElement: renderElement => props => (
+      <InlineModePluginComponent {...props} renderElement={renderElement} />
+    ),
   })
 }
 
