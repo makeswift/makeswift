@@ -1,5 +1,13 @@
 # makeswift
 
+## 0.3.1-canary.0
+
+### Patch Changes
+
+- 2a5e096: Add a `link` command.
+
+  The `link` command will allow users with an existing Next.js site to link it to a Makeswift site. This command does nothing in terms of setting up Makeswift pages or using the client inside the Next.js site - that part is expected to already be done upon use of this command.
+
 ## 0.3.0
 
 ### Minor Changes

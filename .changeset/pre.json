@@ -12,7 +12,6 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
-    "plenty-flies-poke",
-    "quick-eagles-sort"
+    "clean-moose-allow"
   ]
 }
