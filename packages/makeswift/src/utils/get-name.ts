@@ -34,7 +34,7 @@ async function askForProjectName(): Promise<string> {
 }
 
 export async function getProjectName(
-  name: string | undefined,
+  name?: string | undefined,
 ): Promise<{ name: string; directory: string }> {
   const currentDir = process.cwd()
 
