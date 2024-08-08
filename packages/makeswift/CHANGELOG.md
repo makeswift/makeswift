@@ -1,5 +1,11 @@
 # makeswift
 
+## 0.3.2
+
+### Patch Changes
+
+- efec6cd: Fix bug where link command overwrites existing environment variables
+
 ## 0.3.1
 
 ### Patch Changes
