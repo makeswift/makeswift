@@ -22,6 +22,7 @@ export async function performHandshake({
   redirectUrl: URL
 }): Promise<{
   envLocal: string
+  siteApiKey: string
   example: string | null
 }> {
   const handshakePort = await detectPort(5600)
@@ -71,7 +72,7 @@ export async function performHandshake({
   // Handshake Step 4 - Makeswift redirects to the builder with the site open,
   //                    with the host using `nextAppUrl` for the builder
 
-  return { envLocal, example: example || passedInExample || null }
+  return { siteApiKey, envLocal, example: example || passedInExample || null }
 }
 
 export async function getSiteMetadata({
