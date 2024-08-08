@@ -3,6 +3,7 @@
 import { Command } from 'commander'
 import init from './init'
 import pkg from '../package.json'
+import link from './link'
 
 const program = new Command()
 
@@ -26,5 +27,16 @@ program
     "Provide environment variables as comma-separated key=value pairs to go into the Next app's .env file.",
   )
   .action(init)
+
+program
+  .command('link')
+  .description(
+    'Link an existing Next.js site, already integrated with Makeswift, to a Makeswift site.',
+  )
+  .option(
+    '--template <template>',
+    'The template slug of the Makeswift template to use, if creating a new site.',
+  )
+  .action(link)
 
 program.parse()
