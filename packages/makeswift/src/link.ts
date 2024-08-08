@@ -55,9 +55,9 @@ async function link({ template }: LinkArgs): Promise<void> {
     envLocal = fs.readFileSync(`.env.local`, 'utf8')
   } catch (err) {}
 
-  envLocal = 'MAKESWIFT_SITE_API_KEY=' + siteApiKey
+  envLocal = envLocal + '\n' + 'MAKESWIFT_SITE_API_KEY=' + siteApiKey
 
-  fs.writeFileSync(`.env.local`, envLocal)
+  fs.writeFileSync(`.env.local`, envLocal.split('\n').filter(Boolean).join('\n') + '\n')
 
   console.log(chalk.green('\n\nSite linked successfully!\n'))
   console.log(
