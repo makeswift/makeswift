@@ -448,8 +448,13 @@ function registerBuilderDocuments(): ThunkAction<() => void, State, unknown, Act
 }
 
 export interface IMessageChannel {
-  postMessage(message: any, transferables?: Transferable[]): void
-  dispatchBuffered(): void
+  postMessage(
+    message: any,
+    transferables?: Transferable[],
+    options?: { lifecycle?: Lifecycle },
+  ): void
+  dispatchBuffered(options?: { lifecycle?: Lifecycle }): void
+  initialize(): void
 }
 
 export function initialize(
@@ -464,11 +469,15 @@ export function initialize(
     const stopHandlingPointerMoveEvent = dispatch(startHandlingPointerMoveEvent())
     const stopPollingElementFromPoint = dispatch(startPollingElementFromPoint())
     const unregisterBuilderComponents = dispatch(registerBuilderComponents())
-
     const breakpoints = ReactPage.getBreakpoints(getState())
     dispatch(setBreakpoints(breakpoints))
     dispatch(setIsInBuilder(true))
+
+    // This will dispatch any buffered actions, but we don't control the order of the messages.
     channel.dispatchBuffered()
+    channel.initialize()
+    // This will dispatch any buffered actions that need to be run after the builder receive all the previous messages.
+    channel.dispatchBuffered({ lifecycle: Lifecycle.AFTER_INITIALIZED })
 
     return () => {
       unregisterBuilderDocuments()
@@ -515,6 +524,12 @@ function measureBoxModelsMiddleware(): Middleware<Dispatch, State, Dispatch> {
     }
 }
 
+const Lifecycle = {
+  AFTER_INITIALIZED: 'AFTER_INITIALIZED',
+} as const
+
+type Lifecycle = typeof Lifecycle[keyof typeof Lifecycle]
+
 export function messageChannelMiddleware(
   client: MakeswiftHostApiClient,
   channel: IMessageChannel,
@@ -527,8 +542,6 @@ export function messageChannelMiddleware(
       return (action: Action): Action => {
         switch (action.type) {
           case ActionTypes.CHANGE_ELEMENT_BOX_MODELS:
-          case ActionTypes.MOUNT_COMPONENT:
-          case ActionTypes.UNMOUNT_COMPONENT:
           case ActionTypes.CHANGE_DOCUMENT_ELEMENT_SIZE:
           case ActionTypes.MESSAGE_BUILDER_PROP_CONTROLLER:
           case ActionTypes.HANDLE_WHEEL:
@@ -539,6 +552,11 @@ export function messageChannelMiddleware(
           case ActionTypes.REGISTER_BUILDER_DOCUMENT:
           case ActionTypes.UNREGISTER_BUILDER_DOCUMENT:
             channel.postMessage(action)
+            break
+
+          case ActionTypes.MOUNT_COMPONENT:
+          case ActionTypes.UNMOUNT_COMPONENT:
+            channel.postMessage(action, undefined, { lifecycle: Lifecycle.AFTER_INITIALIZED })
             break
 
           case ActionTypes.REGISTER_COMPONENT: {
@@ -685,11 +703,24 @@ function makeswiftApiClientSyncMiddleware(
   }
 }
 
+type BufferedMessages = [Action, Transferable[]?][]
+
 class MessageChannel {
   private channel: MessagePort | null = null
-  private bufferedMessages: [Action, Transferable[]?][] = []
+  private bufferedMessages: BufferedMessages = []
+  private bufferedMessagesAfterInitialized: BufferedMessages = []
+  private initialized = false
 
-  public postMessage(message: any, transferables?: Transferable[]) {
+  public postMessage(
+    message: any,
+    transferables?: Transferable[],
+    { lifecycle }: { lifecycle?: Lifecycle } = {},
+  ) {
+    if (lifecycle === Lifecycle.AFTER_INITIALIZED && !this.initialized) {
+      this.bufferedMessagesAfterInitialized.push([message, transferables])
+      return
+    }
+
     if (this.channel) {
       this.channel.postMessage(message, transferables ?? [])
     } else {
@@ -708,14 +739,26 @@ class MessageChannel {
     this.channel = channel.port1
   }
 
-  public dispatchBuffered() {
+  public dispatchBuffered({ lifecycle }: { lifecycle?: Lifecycle } = {}) {
     console.assert(this.channel != null, 'channel is not setup')
 
-    this.bufferedMessages.forEach(([message, transferables]) => {
+    let messages: BufferedMessages
+
+    switch (lifecycle) {
+      case Lifecycle.AFTER_INITIALIZED:
+        messages = this.bufferedMessagesAfterInitialized
+        break
+
+      default:
+        messages = this.bufferedMessages
+        break
+    }
+
+    messages.forEach(([message, transferables]) => {
       this.channel?.postMessage(message, transferables ?? [])
     })
 
-    this.bufferedMessages = []
+    messages = []
   }
 
   public teardown() {
@@ -723,6 +766,10 @@ class MessageChannel {
       this.channel.onmessage = null
       this.channel.close()
     }
+  }
+
+  public initialize() {
+    this.initialized = true
   }
 }
 
