@@ -4,7 +4,7 @@ import {
   CopyContext,
   Options,
   Types,
-  createResponsiveValueSchema,
+  Schema,
 } from '../prop-controllers'
 import { P, match } from 'ts-pattern'
 
@@ -25,7 +25,7 @@ const tableFormFieldSchema = z.object({
 
 export const tableFormFieldsDataSchema = z.object({
   fields: z.array(tableFormFieldSchema),
-  grid: createResponsiveValueSchema(
+  grid: Schema.responsiveValue(
     z.object({
       count: z.number(),
       spans: z.array(z.array(z.number())),
@@ -123,7 +123,7 @@ export function createTableFormFieldsPropControllerDataFromTableFormFieldsData(
         ({
           [ControlDataTypeKey]: TableFormFieldsPropControllerDataV1Type,
           value,
-        } as const),
+        }) as const,
     )
     .otherwise(() => value)
 }
@@ -157,7 +157,7 @@ export function copyTableFormFieldsPropControllerData(
         ({
           [ControlDataTypeKey]: TableFormFieldsPropControllerDataV1Type,
           value: copyTableFormFieldsData(v1.value, context),
-        } as const),
+        }) as const,
     )
     .otherwise((v0) => copyTableFormFieldsData(v0, context))
 }

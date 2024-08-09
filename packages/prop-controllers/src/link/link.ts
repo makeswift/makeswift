@@ -6,75 +6,11 @@ import {
   Types,
 } from '../prop-controllers'
 
+import { LinkDefinition } from '@makeswift/controls'
+
 import { z } from 'zod'
 
-const openPageLinkSchema = z.object({
-  type: z.literal('OPEN_PAGE'),
-  payload: z
-    .object({
-      pageId: z.string().nullable().optional(),
-      openInNewTab: z.boolean(),
-    })
-    .transform((v) => ({
-      pageId: v.pageId,
-      ...v,
-    })),
-})
-
-const openURLLinkSchema = z.object({
-  type: z.literal('OPEN_URL'),
-  payload: z.object({
-    url: z.string(),
-    openInNewTab: z.boolean(),
-  }),
-})
-
-const sendEmailLinkSchema = z.object({
-  type: z.literal('SEND_EMAIL'),
-  payload: z.object({
-    to: z.string(),
-    subject: z.string().optional(),
-    body: z.string().optional(),
-  }),
-})
-
-const callPhoneLinkSchema = z.object({
-  type: z.literal('CALL_PHONE'),
-  payload: z.object({
-    phoneNumber: z.string(),
-  }),
-})
-
-const scrollToElementLinkSchema = z.object({
-  type: z.literal('SCROLL_TO_ELEMENT'),
-  payload: z
-    .object({
-      elementIdConfig: z
-        .object({
-          elementKey: z.string(),
-          propName: z.string(),
-        })
-        .nullable()
-        .optional(),
-      block: z.union([
-        z.literal('start'),
-        z.literal('center'),
-        z.literal('end'),
-      ]),
-    })
-    .transform((v) => ({
-      elementIdConfig: v.elementIdConfig,
-      ...v,
-    })),
-})
-
-export const linkDataSchema = z.union([
-  openPageLinkSchema,
-  openURLLinkSchema,
-  sendEmailLinkSchema,
-  callPhoneLinkSchema,
-  scrollToElementLinkSchema,
-])
+export const linkDataSchema = LinkDefinition.schema.link
 
 export type LinkData = z.infer<typeof linkDataSchema>
 
@@ -166,7 +102,7 @@ export function createLinkPropControllerDataFromLinkData(
         ({
           [ControlDataTypeKey]: LinkPropControllerDataV1Type,
           value,
-        } as const),
+        }) as const,
     )
     .otherwise(() => value)
 }

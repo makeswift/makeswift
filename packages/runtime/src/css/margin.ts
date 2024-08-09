@@ -18,14 +18,14 @@ export type MarginLonghandPropertyData = LengthData | 'auto'
  * - Remove `undefined` from possible values and make fields optional
  */
 export type MarginPropertyData = {
-  marginTop: MarginLonghandPropertyData | MarginTopProperty<string | number> | null | undefined
-  marginRight: MarginLonghandPropertyData | MarginRightProperty<string | number> | null | undefined
-  marginBottom:
+  marginTop?: MarginLonghandPropertyData | MarginTopProperty<string | number> | null | undefined
+  marginRight?: MarginLonghandPropertyData | MarginRightProperty<string | number> | null | undefined
+  marginBottom?:
     | MarginLonghandPropertyData
     | MarginBottomProperty<string | number>
     | null
     | undefined
-  marginLeft: MarginLonghandPropertyData | MarginLeftProperty<string | number> | null | undefined
+  marginLeft?: MarginLonghandPropertyData | MarginLeftProperty<string | number> | null | undefined
 }
 
 export function marginPropertyDataToStyle(

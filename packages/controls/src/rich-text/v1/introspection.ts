@@ -1,0 +1,76 @@
+import { type DataType } from '../../control-definition'
+import { type IntrospectionTarget } from '../../introspect'
+import { LinkDefinition, GenericLink } from '../../link'
+import { unstable_Typography } from '../../typography'
+
+import {
+  type NodeJSON,
+  type InlineJSON,
+  type MarkJSON,
+  TextJSON,
+} from '../dto/types'
+
+import { type RichTextDTO } from '../dto'
+
+export function introspectRichTextData<R>(
+  data: RichTextDTO | undefined,
+  target: IntrospectionTarget<R>,
+): R[] {
+  if (data == null || data.document == null) return []
+
+  function introspectNode(node: NodeJSON): R[] {
+    switch (node.object) {
+      case 'document':
+      case 'block':
+        return node.nodes?.flatMap(introspectNode) ?? []
+
+      case 'inline':
+      case 'text':
+        return introspectInlineOrTextNode(node)
+
+      default:
+        return []
+    }
+  }
+
+  function introspectInlineOrTextNode(node: InlineJSON | TextJSON): R[] {
+    switch (node.object) {
+      case 'inline':
+        return [
+          ...introspectInlineNode(node),
+          ...(node.nodes?.flatMap(introspectInlineOrTextNode) ?? []),
+        ]
+
+      case 'text':
+        return node.marks?.flatMap(introspectMark) ?? []
+
+      default:
+        return []
+    }
+  }
+
+  function introspectInlineNode(inline: InlineJSON): R[] {
+    switch (inline.type) {
+      case 'link': {
+        return GenericLink().introspect(
+          inline.data as DataType<LinkDefinition>,
+          target,
+        )
+      }
+
+      default:
+        return []
+    }
+  }
+
+  function introspectMark(mark: MarkJSON): R[] {
+    const typographyResult = unstable_Typography().introspect(
+      mark.data?.value,
+      target,
+    )
+
+    return [...typographyResult]
+  }
+
+  return introspectNode(data.document)
+}

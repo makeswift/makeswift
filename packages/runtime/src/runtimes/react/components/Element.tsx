@@ -1,7 +1,7 @@
 'use client'
 
 import { Ref, forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
-import { Element as ReactPageElement, isElementReference } from '../../../state/react-page'
+import { Element as ElementDataOrRef, isElementReference } from '../../../state/react-page'
 import { ElementImperativeHandle } from '../element-imperative-handle'
 import { useDispatch } from '../hooks/use-dispatch'
 import { useDocumentKey } from '../hooks/use-document-key'
@@ -12,7 +12,7 @@ import { ElementData } from './ElementData'
 import { FindDomNode } from '../find-dom-node'
 
 type ElementProps = {
-  element: ReactPageElement
+  element: ElementDataOrRef
 }
 
 export const Element = memo(

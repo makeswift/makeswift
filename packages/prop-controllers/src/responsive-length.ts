@@ -1,15 +1,10 @@
 import { z } from 'zod'
 import { LengthData, lengthDataSchema } from './data'
-import {
-  ControlDataTypeKey,
-  Options,
-  Types,
-  createResponsiveValueSchema,
-} from './prop-controllers'
+import { ControlDataTypeKey, Options, Types, Schema } from './prop-controllers'
 import { match } from 'ts-pattern'
 
 export const responsiveLengthDataSchema =
-  createResponsiveValueSchema(lengthDataSchema)
+  Schema.responsiveValue(lengthDataSchema)
 
 export type ResponsiveLengthData = z.infer<typeof responsiveLengthDataSchema>
 
@@ -106,7 +101,7 @@ export function createResponsiveLengthPropControllerDataFromResponsiveLengthData
         ({
           [ControlDataTypeKey]: ResponsiveLengthPropControllerDataV1Type,
           value: responsiveLengthData,
-        } as const),
+        }) as const,
     )
     .otherwise(() => responsiveLengthData)
 }

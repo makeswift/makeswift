@@ -1,5 +1,6 @@
 import { CSSObject } from '@emotion/serialize'
-import { TypographyControlData } from '../../../controls/typography'
+import { unstable_TypographyDefinition, type DataType } from '@makeswift/controls'
+
 import { useSwatches, useTypography } from '../hooks/makeswift-api'
 import { Typography, Swatch } from '../../../api'
 import { colorToString } from '../../../components/utils/colorToString'
@@ -13,7 +14,7 @@ import { useBreakpoints } from '../hooks/use-breakpoints'
 
 export function typographyFragementToTypographyControlData(
   typography: Typography | null,
-): TypographyControlData[number] | undefined {
+): DataType<unstable_TypographyDefinition> | undefined {
   if (typography == null) return undefined
   return {
     id: typography.id,
@@ -41,7 +42,7 @@ type EnhancedColor = {
 }
 
 export type TypographyControlDataValue = Exclude<
-  TypographyControlData[number],
+  DataType<unstable_TypographyDefinition>,
   undefined
 >['style'][number]['value']
 
@@ -51,7 +52,7 @@ export type EnhancedTypography = Array<DeviceOverride<EnhancedTypographyValue>>
 
 export function getTypographyStyleSwatchIds(
   style:
-    | Exclude<TypographyControlData[number], undefined>['style']
+    | Exclude<DataType<unstable_TypographyDefinition>, undefined>['style']
     | Typography['style']
     | null
     | undefined,
@@ -96,7 +97,7 @@ const getDeviceId = ({ deviceId }: DeviceOverride<unknown>) => deviceId
  * `enhanced` here just means typography ids have been replaced with the related entity.
  */
 export default function useEnhancedTypography(
-  value?: TypographyControlData[number] | null,
+  value?: DataType<unstable_TypographyDefinition> | null,
 ): EnhancedTypography {
   const typography = typographyFragementToTypographyControlData(useTypography(value?.id ?? null))
   const source = typography?.style ?? []
@@ -186,7 +187,7 @@ export function useTypographyClassName(value: EnhancedTypography): string {
 export type TypographyControlValue = string
 
 export function useTypographyValue(
-  data: TypographyControlData[number] | undefined,
+  data: DataType<unstable_TypographyDefinition> | undefined,
 ): TypographyControlValue {
   // for each breakpoint fetch related resources and merge its value with its override
   const enhancedTypography = useEnhancedTypography(data)

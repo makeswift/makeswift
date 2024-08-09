@@ -1,5 +1,7 @@
 import type { Operation } from 'ot-json0'
 
+import { ControlInstance } from '@makeswift/controls'
+
 import type { Document } from './modules/read-only-documents'
 import type { ComponentType } from './modules/react-components'
 import type { Measurable, BoxModel } from './modules/box-models'
@@ -9,7 +11,6 @@ import { PropControllerDescriptor } from '../prop-controllers'
 import type { Size } from './react-builder-preview'
 import type { PropControllersHandle } from './modules/prop-controller-handles'
 import type { PropControllerMessage } from '../prop-controllers/instances'
-import type { PropController } from '../prop-controllers/base'
 import type { APIResource, APIResourceType } from '../api/graphql/types'
 import type { SerializedControl } from '../builder'
 import { ElementImperativeHandle } from '../runtimes/react/element-imperative-handle'
@@ -217,7 +218,7 @@ type RegisterPropControllersAction = {
   payload: {
     documentKey: string
     elementKey: string
-    propControllers: Record<string, PropController>
+    propControllers: Record<string, ControlInstance>
   }
 }
 
@@ -576,7 +577,7 @@ export function unregisterPropControllersHandle(
 export function registerPropControllers(
   documentKey: string,
   elementKey: string,
-  propControllers: Record<string, PropController>,
+  propControllers: Record<string, ControlInstance>,
 ): RegisterPropControllersAction {
   return {
     type: ActionTypes.REGISTER_PROP_CONTROLLERS,

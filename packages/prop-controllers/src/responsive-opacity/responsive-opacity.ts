@@ -1,10 +1,8 @@
-import { Types, createResponsiveValueSchema } from '../prop-controllers'
+import { Types, Schema } from '../prop-controllers'
 import { versionedPropDef, typeArg } from '../versioned'
 import { z } from 'zod'
 
-export const responsiveOpacityValueSchema = createResponsiveValueSchema(
-  z.number(),
-)
+export const responsiveOpacityValueSchema = Schema.responsiveValue(z.number())
 
 export type ResponsiveOpacityValue = z.infer<
   typeof responsiveOpacityValueSchema

@@ -5,13 +5,13 @@ export function pollBoxModel({
   element,
   onBoxModelChange,
 }: {
-  element: Element
+  element: Element | null
   onBoxModelChange(boxModel: BoxModel | null): void
 }): () => void {
   let currentBoxModel: BoxModel | null = null
 
   const handleAnimationFrameRequest = () => {
-    const measuredBoxModel = getBox(element)
+    const measuredBoxModel = element == null ? null : getBox(element)
 
     if (!deepEqual(currentBoxModel, measuredBoxModel)) {
       currentBoxModel = measuredBoxModel

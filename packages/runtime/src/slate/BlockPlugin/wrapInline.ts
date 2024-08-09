@@ -1,8 +1,9 @@
 import { Editor, Transforms } from 'slate'
-import { getSelection } from '../selectors'
-import { Inline } from '../types'
+import { Slate } from '@makeswift/controls'
 
-export function wrapInline(editor: Editor, inline: Inline) {
+import { getSelection } from '../selectors'
+
+export function wrapInline(editor: Editor, inline: Slate.Inline) {
   Transforms.wrapNodes(editor, inline, {
     at: getSelection(editor),
     split: true,

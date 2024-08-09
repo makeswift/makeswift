@@ -1,111 +1,42 @@
-import { ResponsiveValue } from '@makeswift/controls'
-import { PropController } from '../prop-controllers/base'
-import { BoxModel } from '../state/modules/box-models'
+import { ReactNode } from 'react'
 import {
-  CopyContext,
-  Element,
-  isElementReference,
-  MergeContext,
-  MergeTranslatableDataContext,
-} from '../state/react-page'
+  SlotDefinition,
+  SlotControl,
+  type SerializedRecord,
+  type ResourceResolver,
+  type Effector,
+  type Resolvable,
+  type DataType,
+} from '@makeswift/controls'
 
-type SlotControlColumnData = { count: number; spans: number[][] }
+import { renderStable } from '../runtimes/react/controls/render-stable'
+import { renderSlot } from '../runtimes/react/controls/slot'
 
-export type SlotControlData = {
-  elements: (Element & { deleted?: boolean })[]
-  columns: ResponsiveValue<SlotControlColumnData>
-}
+abstract class BaseDefinition extends SlotDefinition<ReactNode> {}
 
-export const SlotControlType = 'makeswift::controls::slot'
+class Definition extends BaseDefinition {
+  static deserialize(data: SerializedRecord): Definition {
+    if (data.type !== Definition.type) {
+      throw new Error(`Slot: expected type ${Definition.type}, got ${data.type}`)
+    }
 
-export type SlotControlDefinition = {
-  type: typeof SlotControlType
-}
-
-export function Slot(): SlotControlDefinition {
-  return { type: SlotControlType }
-}
-
-export const SlotControlMessageType = {
-  CONTAINER_BOX_MODEL_CHANGE: 'makeswift::controls::slot::message::container-box-model-change',
-  ITEM_BOX_MODEL_CHANGE: 'makeswift::controls::slot::message::item-box-model-change',
-} as const
-
-type SlotControlContainerBoxModelChangeMessage = {
-  type: typeof SlotControlMessageType.CONTAINER_BOX_MODEL_CHANGE
-  payload: { boxModel: BoxModel | null }
-}
-
-type SlotControlItemBoxModelChangeMessage = {
-  type: typeof SlotControlMessageType.ITEM_BOX_MODEL_CHANGE
-  payload: { index: number; boxModel: BoxModel | null }
-}
-
-export type SlotControlMessage =
-  | SlotControlContainerBoxModelChangeMessage
-  | SlotControlItemBoxModelChangeMessage
-
-export class SlotControl extends PropController<SlotControlMessage> {
-  recv = () => {}
-
-  changeContainerBoxModel(boxModel: BoxModel | null): void {
-    this.send({ type: SlotControlMessageType.CONTAINER_BOX_MODEL_CHANGE, payload: { boxModel } })
+    return new Definition()
   }
 
-  changeItemBoxModel(index: number, boxModel: BoxModel | null): void {
-    this.send({ type: SlotControlMessageType.ITEM_BOX_MODEL_CHANGE, payload: { index, boxModel } })
+  resolveValue(
+    data: DataType<BaseDefinition> | undefined,
+    _resolver: ResourceResolver,
+    _effector: Effector,
+    control?: SlotControl,
+  ): Resolvable<ReactNode | undefined> {
+    return {
+      readStableValue: (previous?: ReactNode) =>
+        renderStable(renderSlot, previous)({ data, control: control ?? null }),
+      subscribe: () => () => {},
+      triggerResolve: async () => {},
+    }
   }
 }
 
-export function copySlotData(
-  value: SlotControlData | undefined,
-  context: CopyContext,
-): SlotControlData | undefined {
-  if (value == null) return value
-
-  return {
-    ...value,
-    elements: value.elements.map(element => context.copyElement(element)),
-  }
-}
-
-/**
- * @todo
- * - Inserting elements
- * - Moving elements
- * - Merging column data
- */
-export function mergeSlotData(
-  base: SlotControlData | undefined = { columns: [], elements: [] },
-  override: SlotControlData | undefined = { columns: [], elements: [] },
-  context: MergeContext,
-): SlotControlData {
-  const mergedColumns = base.columns
-  const mergedElements = base.elements.flatMap(baseElement => {
-    const overrideElement = override.elements.find(
-      e => baseElement.type === e.type && baseElement.key === e.key,
-    )
-
-    if (overrideElement == null) return [baseElement]
-
-    if (overrideElement.deleted) return []
-
-    if (isElementReference(overrideElement)) return [overrideElement]
-
-    if (isElementReference(baseElement)) return [baseElement]
-
-    return context.mergeElement(baseElement, overrideElement)
-  })
-
-  return { columns: mergedColumns, elements: mergedElements }
-}
-
-export function mergeSlotControlTranslatedData(
-  data: SlotControlData,
-  context: MergeTranslatableDataContext,
-) {
-  return {
-    ...data,
-    elements: data.elements.map(element => context.mergeTranslatedData(element)),
-  }
-}
+export const Slot = () => new (class Slot extends Definition {})()
+export { Definition as SlotDefinition, SlotControl }

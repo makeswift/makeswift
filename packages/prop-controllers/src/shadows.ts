@@ -5,7 +5,7 @@ import {
   CopyContext,
   ResolveOptions,
   Types,
-  createResponsiveValueSchema,
+  Schema,
 } from './prop-controllers'
 import { z } from 'zod'
 
@@ -29,8 +29,7 @@ const shadowsDataSchema = z.array(
 
 export type ShadowsData = z.infer<typeof shadowsDataSchema>
 
-const responsiveShadowsDataSchema =
-  createResponsiveValueSchema(shadowsDataSchema)
+const responsiveShadowsDataSchema = Schema.responsiveValue(shadowsDataSchema)
 
 type ResponsiveShadowsData = z.infer<typeof responsiveShadowsDataSchema>
 
@@ -63,7 +62,7 @@ export const ShadowsPropControllerFormat = {
 } as const
 
 export type ShadowsPropControllerFormat =
-  typeof ShadowsPropControllerFormat[keyof typeof ShadowsPropControllerFormat]
+  (typeof ShadowsPropControllerFormat)[keyof typeof ShadowsPropControllerFormat]
 
 type ShadowsOptions = { format?: ShadowsPropControllerFormat }
 
@@ -94,14 +93,14 @@ export type ResolveShadowsPropControllerValue<T extends ShadowsDescriptor> =
     ? undefined extends ResolveOptions<T['options']>['format']
       ? ResponsiveShadowsData | undefined
       : ResolveOptions<
-          T['options']
-        >['format'] extends typeof ShadowsPropControllerFormat.ClassName
-      ? string
-      : ResolveOptions<
-          T['options']
-        >['format'] extends typeof ShadowsPropControllerFormat.ResponsiveValue
-      ? ResponsiveShadowsData | undefined
-      : never
+            T['options']
+          >['format'] extends typeof ShadowsPropControllerFormat.ClassName
+        ? string
+        : ResolveOptions<
+              T['options']
+            >['format'] extends typeof ShadowsPropControllerFormat.ResponsiveValue
+          ? ResponsiveShadowsData | undefined
+          : never
     : never
 
 /**
@@ -138,7 +137,7 @@ export function createShadowsPropControllerDataFromResponsiveShadowsData(
         ({
           [ControlDataTypeKey]: ShadowsPropControllerDataV1Type,
           value: responsiveShadowsData,
-        } as const),
+        }) as const,
     )
     .otherwise(() => responsiveShadowsData)
 }
@@ -196,7 +195,7 @@ export function copyShadowsPropControllerData(
         ({
           [ControlDataTypeKey]: ShadowsPropControllerDataV1Type,
           value: copyResponsiveShadowsData(v1.value, context),
-        } as const),
+        }) as const,
     )
     .otherwise((v0) => copyResponsiveShadowsData(v0, context))
 }

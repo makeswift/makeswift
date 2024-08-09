@@ -1,0 +1,222 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Page Slot renders a placeholder when empty: resolvedValue 1`] = `
+NodeList [
+  .emotion-0 {
+  width: 100%;
+  background: rgba(161, 168, 194, 0.18);
+  height: 80px;
+}
+
+.emotion-1 {
+  overflow: visible;
+  padding: 8px;
+}
+
+<div
+    class="emotion-0"
+  >
+    <svg
+      class="emotion-1"
+      height="100%"
+      width="100%"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect
+        fill="none"
+        height="100%"
+        rx="4"
+        ry="4"
+        stroke="rgba(161, 168, 194, 0.40)"
+        stroke-dasharray="4 2"
+        stroke-width="2"
+        width="100%"
+        x="0"
+        y="0"
+      />
+    </svg>
+  </div>,
+]
+`;
+
+exports[`Page Slot renders a placeholder when empty: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "columns": [],
+                  "elements": [],
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Slot renders a slot with a clickable button: resolvedValue 1`] = `
+NodeList [
+  .emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.emotion-1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-1 {
+    -webkit-flex-basis: calc(100% * 1.00000);
+    -ms-flex-preferred-size: calc(100% * 1.00000);
+    flex-basis: calc(100% * 1.00000);
+    min-width: calc(100% * 1.00000);
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-1 {
+    -webkit-flex-basis: calc(100% * 1.00000);
+    -ms-flex-preferred-size: calc(100% * 1.00000);
+    flex-basis: calc(100% * 1.00000);
+    min-width: calc(100% * 1.00000);
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-1 {
+    -webkit-flex-basis: calc(100% * 1.00000);
+    -ms-flex-preferred-size: calc(100% * 1.00000);
+    flex-basis: calc(100% * 1.00000);
+    min-width: calc(100% * 1.00000);
+  }
+}
+
+<div
+    class="emotion-0"
+  >
+    <div
+      class="emotion-1"
+    >
+      <button
+        data-click-count="1"
+      >
+        Click me
+      </button>
+    </div>
+  </div>,
+]
+`;
+
+exports[`Page Slot renders a slot with a clickable button: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "columns": [],
+                  "elements": [
+                    {
+                      "key": "22222222-2222-2222-2222-222222222222",
+                      "props": {
+                        "title": "Click me",
+                      },
+                      "type": "./components/Button/index.js",
+                    },
+                  ],
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;

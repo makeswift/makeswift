@@ -18,18 +18,22 @@ export type PaddingLonghandPropertyData = LengthData
  * - Remove `undefined` from possible values and make fields optional
  */
 export type PaddingPropertyData = {
-  paddingTop: PaddingLonghandPropertyData | PaddingTopProperty<number | string> | null | undefined
-  paddingRight:
+  paddingTop?: PaddingLonghandPropertyData | PaddingTopProperty<number | string> | null | undefined
+  paddingRight?:
     | PaddingLonghandPropertyData
     | PaddingRightProperty<number | string>
     | null
     | undefined
-  paddingBottom:
+  paddingBottom?:
     | PaddingLonghandPropertyData
     | PaddingBottomProperty<number | string>
     | null
     | undefined
-  paddingLeft: PaddingLonghandPropertyData | PaddingLeftProperty<number | string> | null | undefined
+  paddingLeft?:
+    | PaddingLonghandPropertyData
+    | PaddingLeftProperty<number | string>
+    | null
+    | undefined
 }
 
 export function paddingPropertyDataToStyle(

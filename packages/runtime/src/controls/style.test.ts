@@ -1,127 +1,222 @@
-import { StyleControlData, copyStyleData } from './style'
-import { ReplacementContext } from '../state/react-page'
+import {
+  Style,
+  StyleDefinition,
+  type DataType,
+  createReplacementContext,
+  Targets,
+} from '@makeswift/controls'
 
-describe('style copy', () => {
-  test('colors are replaced', () => {
-    // Arrange
-    const value: StyleControlData = {
-      width: [
-        {
-          value: {
-            unit: 'px',
-            value: 100,
+describe('Style', () => {
+  describe('style copy', () => {
+    test('colors are replaced', () => {
+      // Arrange'
+      const swatchId = 'U3dhdGNoOmJjMDkwZWJjLTZkZDUtNDY1NS1hMDY0LTg3ZDAxM2U4YTFhNA=='
+      const value: DataType<StyleDefinition> = {
+        width: [
+          {
+            value: {
+              unit: 'px',
+              value: 100,
+            },
+            deviceId: 'desktop',
           },
-          deviceId: 'desktop',
-        },
-      ],
-      border: [
-        {
-          value: {
-            borderTop: {
-              color: {
-                alpha: 1,
-                swatchId: 'U3dhdGNoOmJjMDkwZWJjLTZkZDUtNDY1NS1hMDY0LTg3ZDAxM2U4YTFhNA==',
+        ],
+        border: [
+          {
+            value: {
+              borderTop: {
+                color: {
+                  alpha: 1,
+                  swatchId,
+                },
+                style: 'solid',
+                width: 9,
               },
-              style: 'solid',
-              width: 9,
-            },
-            borderLeft: {
-              color: {
-                alpha: 1,
-                swatchId: 'U3dhdGNoOmJjMDkwZWJjLTZkZDUtNDY1NS1hMDY0LTg3ZDAxM2U4YTFhNA==',
+              borderLeft: {
+                color: {
+                  alpha: 1,
+                  swatchId,
+                },
+                style: 'solid',
+                width: 9,
               },
-              style: 'solid',
-              width: 9,
-            },
-            borderRight: {
-              color: {
-                alpha: 1,
-                swatchId: 'U3dhdGNoOmJjMDkwZWJjLTZkZDUtNDY1NS1hMDY0LTg3ZDAxM2U4YTFhNA==',
+              borderRight: {
+                color: {
+                  alpha: 1,
+                  swatchId,
+                },
+                style: 'solid',
+                width: 9,
               },
-              style: 'solid',
-              width: 9,
-            },
-            borderBottom: {
-              color: {
-                alpha: 1,
-                swatchId: 'U3dhdGNoOmJjMDkwZWJjLTZkZDUtNDY1NS1hMDY0LTg3ZDAxM2U4YTFhNA==',
+              borderBottom: {
+                color: {
+                  alpha: 1,
+                  swatchId,
+                },
+                style: 'solid',
+                width: 9,
               },
-              style: 'solid',
-              width: 9,
             },
+            deviceId: 'desktop',
           },
-          deviceId: 'desktop',
-        },
-      ],
-      textStyle: [
-        {
-          value: {
-            fontSize: {
-              unit: 'px',
-              value: 46,
+        ],
+        textStyle: [
+          {
+            value: {
+              fontSize: {
+                unit: 'px',
+                value: 46,
+              },
+              fontStyle: [],
+              fontFamily: 'Oswald',
+              fontWeight: 400,
+              letterSpacing: 5.2,
+              textTransform: [],
             },
-            fontStyle: [],
-            fontFamily: 'Oswald',
-            fontWeight: 400,
-            letterSpacing: 5.2,
-            textTransform: [],
+            deviceId: 'desktop',
           },
-          deviceId: 'desktop',
-        },
-      ],
-      borderRadius: [
-        {
-          value: {
-            borderTopLeftRadius: {
-              unit: 'px',
-              value: 4,
+        ],
+        borderRadius: [
+          {
+            value: {
+              borderTopLeftRadius: {
+                unit: 'px',
+                value: 4,
+              },
+              borderTopRightRadius: {
+                unit: 'px',
+                value: 4,
+              },
+              borderBottomLeftRadius: {
+                unit: 'px',
+                value: 4,
+              },
+              borderBottomRightRadius: {
+                unit: 'px',
+                value: 4,
+              },
             },
-            borderTopRightRadius: {
-              unit: 'px',
-              value: 4,
-            },
-            borderBottomLeftRadius: {
-              unit: 'px',
-              value: 4,
-            },
-            borderBottomRightRadius: {
-              unit: 'px',
-              value: 4,
-            },
+            deviceId: 'desktop',
           },
-          deviceId: 'desktop',
-        },
-      ],
-    }
-    const expected = JSON.parse(
-      JSON.stringify(value).replaceAll(
-        'U3dhdGNoOmJjMDkwZWJjLTZkZDUtNDY1NS1hMDY0LTg3ZDAxM2U4YTFhNA==',
-        'testing',
-      ),
-    )
+        ],
+      }
 
-    const replacementContext = {
-      elementHtmlIds: new Set(),
-      elementKeys: new Map(),
-      swatchIds: new Map([
-        ['U3dhdGNoOmJjMDkwZWJjLTZkZDUtNDY1NS1hMDY0LTg3ZDAxM2U4YTFhNA==', 'testing'],
-      ]),
-      fileIds: new Map(),
-      typographyIds: new Map(),
-      tableIds: new Map(),
-      tableColumnIds: new Map(),
-      pageIds: new Map(),
-      globalElementIds: new Map(),
-      globalElementData: new Map(),
-    }
+      const expected = JSON.parse(JSON.stringify(value).replaceAll(swatchId, 'testing'))
 
-    // Act
-    const result = copyStyleData(value, {
-      replacementContext: replacementContext as ReplacementContext,
-      copyElement: node => node,
+      // Act
+      const result = Style().copyData(value, {
+        replacementContext: createReplacementContext({
+          swatchIds: {
+            [swatchId]: 'testing',
+          },
+        }),
+        copyElement: node => node,
+      })
+
+      // Assert
+      expect(result).toMatchObject(expected)
     })
+  })
 
-    // Assert
-    expect(result).toMatchObject(expected)
+  describe('style introspection', () => {
+    test('swatchIds are found', () => {
+      // Arrange'
+      const value: DataType<StyleDefinition> = {
+        width: [
+          {
+            value: {
+              unit: 'px',
+              value: 100,
+            },
+            deviceId: 'desktop',
+          },
+        ],
+        border: [
+          {
+            value: {
+              borderTop: {
+                color: {
+                  alpha: 1,
+                  swatchId: 'swatch-id-1',
+                },
+                style: 'solid',
+                width: 9,
+              },
+              borderLeft: {
+                color: {
+                  alpha: 1,
+                  swatchId: 'swatch-id-2',
+                },
+                style: 'solid',
+                width: 9,
+              },
+              borderRight: {
+                color: {
+                  alpha: 1,
+                  swatchId: 'swatch-id-3',
+                },
+                style: 'solid',
+                width: 9,
+              },
+              borderBottom: {
+                color: {
+                  alpha: 1,
+                  swatchId: 'swatch-id-4',
+                },
+                style: 'solid',
+                width: 9,
+              },
+            },
+            deviceId: 'desktop',
+          },
+        ],
+        textStyle: [
+          {
+            value: {
+              fontSize: {
+                unit: 'px',
+                value: 46,
+              },
+              fontStyle: [],
+              fontFamily: 'Oswald',
+              fontWeight: 400,
+              letterSpacing: 5.2,
+              textTransform: [],
+            },
+            deviceId: 'desktop',
+          },
+        ],
+        borderRadius: [
+          {
+            value: {
+              borderTopLeftRadius: {
+                unit: 'px',
+                value: 4,
+              },
+              borderTopRightRadius: {
+                unit: 'px',
+                value: 4,
+              },
+              borderBottomLeftRadius: {
+                unit: 'px',
+                value: 4,
+              },
+              borderBottomRightRadius: {
+                unit: 'px',
+                value: 4,
+              },
+            },
+            deviceId: 'desktop',
+          },
+        ],
+      }
+
+      // Act
+      const swatchIds = Style().introspect(value, Targets.Swatch)
+      // Assert
+      expect(new Set(swatchIds)).toEqual(
+        new Set(['swatch-id-1', 'swatch-id-2', 'swatch-id-3', 'swatch-id-4']),
+      )
+    })
   })
 })

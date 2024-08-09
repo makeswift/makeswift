@@ -1,11 +1,5 @@
-import { useRef } from 'react'
-import {
-  CheckboxControlType,
-  IconRadioGroupControlType,
-  NumberControlType,
-  TextInputControlType,
-  TextAreaControlType,
-} from '@makeswift/controls'
+import { useMemo, useRef } from 'react'
+import { type ResourceResolver } from '@makeswift/controls'
 
 import * as ReactPage from '../../state/react-page'
 
@@ -19,7 +13,7 @@ import {
   useVideoPropControllerData,
   useTablePropControllerData,
 } from '../../components/hooks'
-import type { ColorValue } from '../../components/utils/types'
+
 import {
   useResponsiveBorder,
   useResponsiveBorderRadius,
@@ -28,41 +22,22 @@ import {
   useResponsiveShadow,
   useResponsiveWidth,
 } from '../../components/utils/responsive-style'
-import {
-  ColorControlType,
-  ComboboxControlType,
-  ImageControlType,
-  LinkControlType,
-  ListControlType,
-  SelectControlType,
-  ShapeControlType,
-  SlotControl,
-  SlotControlType,
-  StyleControlType,
-  RichTextControl,
-  RichTextControlType,
-  StyleControl,
-  RichTextV2Control,
-  RichTextV2ControlType,
-  StyleV2ControlType,
-  TypographyControlType,
-} from '../../controls'
-import { useFormattedStyle } from './controls/style'
-import { ControlValue } from './controls/control'
+
+// import { ControlValue } from './controls/control'
 import { RenderHook } from './components'
-import { useSlot } from './controls/slot'
 import { useStyle } from './use-style'
-import { useRichText } from './controls/rich-text/rich-text'
-import { useRichTextV2 } from './controls/rich-text-v2'
+import { useResolvedProps } from './use-resolved-props'
+// import { useRichText } from './controls/rich-text/rich-text'
+// import { useRichTextV2 } from './controls/rich-text-v2'
 import { useStore } from './hooks/use-store'
 import { useDocumentKey } from './hooks/use-document-key'
 import { useSelector } from './hooks/use-selector'
+
 import {
   Types as PropControllerTypes,
   getShadowsPropControllerDataResponsiveShadowsData,
   ShadowsPropControllerData,
   Shadows,
-  ResponsiveValue,
   BorderPropControllerFormat,
   ResponsiveBorderData,
   BorderPropControllerData,
@@ -87,6 +62,8 @@ import {
   ResponsiveOpacity,
   getSocialLinksPropControllerDataSocialLinksData,
 } from '@makeswift/prop-controllers'
+
+import { isLegacyDescriptor } from '../../prop-controllers/descriptors'
 import { useResponsiveLengthPropControllerData } from '../../components/hooks/useResponsiveLengthPropControllerData'
 import { useNumberPropControllerData } from '../../components/hooks/useNumberPropControllerData'
 import { useResponsiveColorPropControllerData } from '../../components/hooks/useResponsiveColorPropControllerData'
@@ -102,8 +79,7 @@ import { useImagePropControllerData } from '../../components/hooks/useImagePropC
 import { useImagesPropControllerData } from '../../components/hooks/useImagesPropControllerData'
 import { useBackgroundsPropControllerData } from '../../components/hooks/useBackgroundsPropControllerData'
 import { useTextInputPropControllerData } from '../../components/hooks/useTextInputPropControllerData'
-
-export type ResponsiveColor = ResponsiveValue<ColorValue>
+import { useMakeswiftHostApiClient } from '../../next/context/makeswift-host-api-client'
 
 function useWidthStyle(
   data: WidthPropControllerData | undefined,
@@ -150,103 +126,128 @@ type PropsValueProps = {
   children(props: Record<string, unknown>): JSX.Element
 }
 
-export function PropsValue({ element, children }: PropsValueProps): JSX.Element {
+export function PropsValue({ element, children: renderComponent }: PropsValueProps): JSX.Element {
   const store = useStore()
-  const propControllerDescriptorsRef = useRef(
+  const client = useMakeswiftHostApiClient()
+  const propDefsRef = useRef(
     ReactPage.getComponentPropControllerDescriptors(store.getState(), element.type) ?? {},
   )
+
   const props = element.props as Record<string, any>
   const documentKey = useDocumentKey()
 
-  const propControllers = useSelector(state => {
+  const controls = useSelector(state => {
     if (documentKey == null) return null
 
     return ReactPage.getPropControllers(state, documentKey, element.key)
   })
 
-  return Object.entries(propControllerDescriptorsRef.current).reduceRight(
+  const resourceResolver = useMemo<ResourceResolver>(() => {
+    return {
+      resolveSwatch: swatchId => client.resolveSwatch(swatchId),
+      resolveFile: fileId => client.resolveFile(fileId),
+      resolvePagePathnameSlice: pageId => client.resolvePagePathnameSlice(pageId),
+      resolveElementId: elementKey => {
+        return {
+          readStableValue: () => {
+            if (documentKey == null) return null
+            return ReactPage.getElementId(store.getState(), documentKey, elementKey)
+          },
+          subscribe: store.subscribe,
+        }
+      },
+    }
+  }, [client, documentKey])
+
+  const resolvedProps = useResolvedProps(propDefsRef.current, controls, props, resourceResolver)
+
+  return Object.entries(propDefsRef.current).reduceRight(
     (renderFn, [propName, descriptor]) =>
       propsValue => {
+        if (!isLegacyDescriptor(descriptor)) {
+          return renderFn({ ...propsValue, [propName]: props[propName] })
+        }
+
         switch (descriptor.type) {
-          case CheckboxControlType:
-          case NumberControlType:
-          case TextInputControlType:
-          case TextAreaControlType:
-          case SelectControlType:
-          case ColorControlType:
-          case IconRadioGroupControlType:
-          case ImageControlType:
-          case ComboboxControlType:
-          case ShapeControlType:
-          case ListControlType:
-          case LinkControlType:
-          case StyleV2ControlType:
-          case TypographyControlType:
-            return (
-              <ControlValue
-                definition={descriptor}
-                data={props[propName]}
-                control={propControllers?.[propName]}
-              >
-                {value => renderFn({ ...propsValue, [propName]: value })}
-              </ControlValue>
-            )
+          // case NumberControlType:
+          // case TextInputControlType:
+          // case TextAreaControlType:
+          // case SelectControlType:
+          // case Color.controlType:
+          // case IconRadioGroupControlType:
+          // case ImageControlType:
+          // case ComboboxControlType:
+          // case ShapeControlType:
+          // case ListControlType:
+          // case LinkControlType:
+          // case StyleV2ControlType:
+          // case TypographyControlType:
+          // case Checkbox.controlType:
+          // return (
+          //   <ControlValue
+          //     definition={descriptor}
+          //     data={props[propName]}
+          //     control={controls?.[propName]}
+          //   >
+          //     {value => renderFn({ ...propsValue, [propName]: value })}
+          //   </ControlValue>
+          // )
 
-          case StyleControlType: {
-            const control = (propControllers?.[propName] ?? null) as StyleControl | null
+          // case StyleControlType: {
+          //   const control = (controls?.[propName] ?? null) as StyleControl | null
 
-            return (
-              <RenderHook
-                key={descriptor.type}
-                hook={useFormattedStyle}
-                parameters={[props[propName], descriptor, control]}
-              >
-                {value => renderFn({ ...propsValue, [propName]: value })}
-              </RenderHook>
-            )
-          }
+          //   return (
+          //     <RenderHook
+          //       key={descriptor.type}
+          //       hook={useFormattedStyle}
+          //       parameters={[props[propName], descriptor, control]}
+          //     >
+          //       {value => renderFn({ ...propsValue, [propName]: value })}
+          //     </RenderHook>
+          //   )
+          // }
 
-          case RichTextControlType: {
-            const control = (propControllers?.[propName] ?? null) as RichTextControl | null
+          // case RichTextControlType: {
+          //   const control = (controls?.[propName] ?? null) as RichTextControl | null
 
-            return (
-              <RenderHook
-                key={descriptor.type}
-                hook={useRichText}
-                parameters={[props[propName], control]}
-              >
-                {value => renderFn({ ...propsValue, [propName]: value })}
-              </RenderHook>
-            )
-          }
+          //   return (
+          //     <RenderHook
+          //       key={descriptor.type}
+          //       hook={useRichText}
+          //       parameters={[props[propName], control]}
+          //     >
+          //       {value => renderFn({ ...propsValue, [propName]: value })}
+          //     </RenderHook>
+          //   )
+          // }
 
-          case RichTextV2ControlType: {
-            const control = (propControllers?.[propName] ?? null) as RichTextV2Control | null
+          // case RichTextV2ControlType: {
+          //   const control = (controls?.[propName] ?? null) as RichTextV2Control | null
 
-            return (
-              <RenderHook
-                key={descriptor.type}
-                hook={useRichTextV2}
-                parameters={[props[propName], descriptor, control]}
-              >
-                {value => renderFn({ ...propsValue, [propName]: value })}
-              </RenderHook>
-            )
-          }
+          //   return (
+          //     <RenderHook
+          //       key={descriptor.type}
+          //       hook={useRichTextV2}
+          //       parameters={[props[propName], descriptor, control]}
+          //     >
+          //       {value => renderFn({ ...propsValue, [propName]: value })}
+          //     </RenderHook>
+          //   )
+          // }
 
-          case SlotControlType: {
-            const control = (propControllers?.[propName] ?? null) as SlotControl | null
+          // case SlotControlType: {
+          //   const control = (controls?.[propName] ?? null) as SlotControl | null
 
-            return (
-              <RenderHook
-                key={descriptor.type}
-                hook={useSlot}
-                parameters={[props[propName], control]}
-              >
-                {value => renderFn({ ...propsValue, [propName]: value })}
-              </RenderHook>
-            )
-          }
+          //   return (
+          //     <RenderHook
+          //       key={descriptor.type}
+          //       hook={useSlot}
+          //       parameters={[props[propName], control]}
+          //     >
+          //       {value => renderFn({ ...propsValue, [propName]: value })}
+          //     </RenderHook>
+          //   )
+          // }
 
           case PropControllerTypes.Width:
             switch (descriptor.options.format) {
@@ -661,6 +662,10 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
             return renderFn({ ...propsValue, [propName]: props[propName] })
         }
       },
-    children,
+    // renderComponent,
+    (props: any) => {
+      //console.log('+++++++++ renderComponent:', { props, newProps })
+      return renderComponent({ ...props, ...resolvedProps })
+    },
   )({})
 }

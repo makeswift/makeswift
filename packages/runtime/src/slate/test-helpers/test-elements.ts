@@ -1,12 +1,14 @@
 import { ComponentType } from 'react'
-import { LinkControlData } from '../../controls'
-import { BlockType, InlineType, ResponsiveBlockTextAlignment, RichTextTypography } from '..'
+import { Slate, type RichTextTypography, type DataType } from '@makeswift/controls'
+
+import { LinkDefinition } from '../../controls'
+import { BlockType, InlineType } from '..'
 
 type Children = string | JSX.Element | (string | JSX.Element)[]
 
 export type BaseBlock = {
   children?: Children
-  textAlign?: ResponsiveBlockTextAlignment
+  textAlign?: Slate.ResponsiveBlockTextAlignment
   typography?: RichTextTypography
 }
 export type BaseInline = { children?: Children; typography?: RichTextTypography }
@@ -41,5 +43,5 @@ export const Super = InlineType.SuperScript as unknown as ComponentType<BaseInli
 export const Sub = InlineType.SubScript as unknown as ComponentType<BaseInline>
 export const Link = InlineType.Link as unknown as ComponentType<{
   children?: Children
-  link?: LinkControlData
+  link?: DataType<LinkDefinition>
 }>

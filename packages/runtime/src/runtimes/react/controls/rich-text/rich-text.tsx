@@ -1,13 +1,13 @@
 import { ReactNode, lazy, useCallback } from 'react'
-import {
-  RichTextControl,
-  RichTextControlData,
-  RichTextControlDefinition,
-} from '../../../../controls/rich-text'
+
+import { type DataType } from '@makeswift/controls'
+import { RichTextV1Control, RichTextV1Definition } from '../../../../controls/rich-text'
+
 import {
   isPropControllersHandle,
   PropControllersHandle,
 } from '../../../../state/modules/prop-controller-handles'
+
 import { useIsPreview } from '../../hooks/use-is-preview'
 
 const EditableText = lazy(() => import('./EditableText'))
@@ -15,9 +15,12 @@ const ReadOnlyText = lazy(() => import('./ReadOnlyText'))
 
 export type RichTextControlValue = ReactNode
 
-export type Descriptors = { text?: RichTextControlDefinition }
+export type Descriptors = { text?: RichTextV1Definition }
 
-export function useRichText(data: RichTextControlData, control: RichTextControl | null) {
+export function useRichText(
+  data: DataType<RichTextV1Definition>,
+  control: RichTextV1Control | null,
+) {
   const textCallbackRef = useCallback(
     (handle: PropControllersHandle<Descriptors> | HTMLDivElement | null) => {
       if (isPropControllersHandle(handle))

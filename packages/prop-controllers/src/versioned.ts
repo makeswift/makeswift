@@ -7,7 +7,7 @@ import {
   type PrimitiveValue,
   type ResponsiveValue,
 } from './prop-controllers'
-import { AssociatedType } from './utils/associated-types'
+import { AssociatedType, WithAssociatedTypes } from './utils/associated-types'
 
 export type VersionDiscriminator<
   Version extends number = number,
@@ -39,33 +39,28 @@ type VersionedPropData<Value, Key extends string = string> =
       value: Value
     }
 
-export abstract class PropDef<
+export type PropDef<
   Type = string,
   Value = any,
   PropData extends VersionedPropData<Value> = VersionedPropData<Value>,
   Descriptor extends VersionedDescriptor = VersionedDescriptor,
-> {
-  readonly __associated_types__?: () => {
-    Type: Type
-    Value: Value
-    PropData: PropData
-    Descriptor: Descriptor
-    Discriminator: VersionDiscriminator | {}
-  }
+> = WithAssociatedTypes<{
+  Type: Type
+  Value: Value
+  PropData: PropData
+  Descriptor: Descriptor
+  Discriminator: VersionDiscriminator | {}
+}> & {
+  get type(): Type
+  get schema(): z.ZodSchema
 
-  abstract get type(): Type
-  abstract get schema(): z.ZodSchema
-
-  abstract fromPropData(propData: PropData): Value
-  abstract fromPropData(propData: PropData | undefined): Value | undefined
-  abstract fromPropData<V extends PrimitiveValue<Value>>(
+  fromPropData(propData: PropData): Value
+  fromPropData(propData: PropData | undefined): Value | undefined
+  fromPropData<V extends PrimitiveValue<Value>>(
     propData: PropData | undefined,
   ): ResponsiveValue<V> | undefined
 
-  abstract toPropData(
-    data: Value,
-    descriptor: VersionDiscriminator | {},
-  ): PropData
+  toPropData(data: Value, descriptor: VersionDiscriminator | {}): PropData
 }
 
 type FillPresetType<RawOptions, Preset> = RawOptions extends {
@@ -83,11 +78,8 @@ type IfNullable<Opts extends Options<any>, R> =
 
 type Select<T, U> = unknown extends T ? U : T
 
-class TypeArg<T> {
-  __associated_types__?: () => { T: T }
-}
-
-export const typeArg = <T>() => new TypeArg<T>()
+interface TypeArg<T> extends WithAssociatedTypes<{ T: T }> {}
+export const typeArg = <T>(): TypeArg<T> => ({})
 
 export interface DefaultCtor<Opts, Descriptor> {
   /**
@@ -128,9 +120,8 @@ export const versionedPropDef = <
   type Opts = Options<FillPresetType<RawOptions, PropData>>
   type Discriminator = typeof discriminator
   type VersionDiscriminator = Discriminator | {}
-  type Descriptor = VersionedDescriptor<Discriminator, Type, Opts> & {
-    __associated_types__?: () => { Options: Opts; Value: Value }
-  }
+  type Descriptor = VersionedDescriptor<Discriminator, Type, Opts> &
+    WithAssociatedTypes<{ Options: Opts; Value: Value }>
 
   type Ctor = Select<
     AssociatedType<typeof _ctor, 'T'>,
@@ -138,15 +129,14 @@ export const versionedPropDef = <
   >
 
   type Def = PropDef<Type, Value, PropData, Descriptor> &
-    Ctor & {
-      __associated_types__?: () => {
-        Type: Type
-        Value: Value
-        PropData: PropData
-        Descriptor: Descriptor
-        Discriminator: VersionDiscriminator
-      }
-
+    Ctor &
+    WithAssociatedTypes<{
+      Type: Type
+      Value: Value
+      PropData: PropData
+      Descriptor: Descriptor
+      Discriminator: VersionDiscriminator
+    }> & {
       readonly discriminator: Discriminator
     }
 

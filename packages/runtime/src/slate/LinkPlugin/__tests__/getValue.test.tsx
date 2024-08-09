@@ -2,11 +2,12 @@
 /** @jsx jsx */
 
 import { getValue } from '../getValue'
-import { LinkControlData } from '../../../controls'
+import { type DataType } from '@makeswift/controls'
+import { LinkDefinition } from '../../../controls'
 // @ts-expect-error: 'jsx' is declared but its value is never read.
 import { jsx, Paragraph, Text, EditorV2, Focus, Anchor, Link, Code } from '../../test-helpers'
 
-const SCROLL_LINK_DATA: LinkControlData = {
+const SCROLL_LINK_DATA: DataType<LinkDefinition> = {
   type: 'SCROLL_TO_ELEMENT',
   payload: {
     block: 'center',
@@ -17,7 +18,7 @@ const SCROLL_LINK_DATA: LinkControlData = {
   },
 }
 
-const URL_LINK_DATA: LinkControlData = {
+const URL_LINK_DATA: DataType<LinkDefinition> = {
   type: 'OPEN_URL',
   payload: {
     url: 'https://google.com',

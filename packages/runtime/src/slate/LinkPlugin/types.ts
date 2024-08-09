@@ -1,11 +1,6 @@
-import { Node, NodeEntry } from 'slate'
-import { ElementUtils } from '../utils/element'
-import { InlineType, LinkElement } from '../types'
+import { type Node, type NodeEntry, Element } from 'slate'
+import { Slate } from '@makeswift/controls'
 
-export function isLinkElement(node: Node): node is LinkElement {
-  return ElementUtils.isInline(node) && node.type === InlineType.Link
-}
-
-export function isLinkEntry(inline: NodeEntry<Node>): inline is NodeEntry<LinkElement> {
-  return ElementUtils.isInline(inline[0]) && inline[0].type === InlineType.Link
+export function isLinkEntry(inline: NodeEntry<Node>): inline is NodeEntry<Slate.LinkElement> {
+  return Slate.isInline(inline[0]) && Element.isElementType(inline[0], Slate.InlineType.Link)
 }

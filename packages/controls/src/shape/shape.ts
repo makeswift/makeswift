@@ -1,0 +1,235 @@
+import { z } from 'zod'
+
+import { type Effector } from '../effector'
+import { type Data } from '../common'
+import { type CopyContext, type MergeTranslatableDataContext } from '../context'
+import { type ResourceResolver } from '../resource-resolver'
+import { type IntrospectionTarget } from '../introspect'
+import { type SendMessage } from '../control-instance'
+import { type Deserialized } from '../serialization'
+
+import {
+  ControlDefinition,
+  safeParse,
+  serialize,
+  type ParseResult,
+  type SerializedRecord,
+  type DataType as DataType_,
+  type ValueType as ValueType_,
+  type ResolvedValueType as ResolvedValueType_,
+  type SchemaType,
+  type Resolvable,
+} from '../control-definition'
+
+import { mapValues, objectsAreEqual } from '../utils/functional'
+
+import { ShapeControl } from './shape-control'
+
+type ItemDefinition = ControlDefinition<string, unknown, any, any, any>
+
+type Config = {
+  readonly type: Record<string, ItemDefinition>
+}
+
+type DataType<C extends Config> = {
+  [K in keyof C['type']]?: DataType_<C['type'][K]>
+}
+
+type ValueType<C extends Config> = {
+  [K in keyof C['type']]?: ValueType_<C['type'][K]>
+}
+
+type ResolvedValueType<C extends Config> = {
+  [K in keyof C['type']]: ResolvedValueType_<C['type'][K]>
+}
+
+type InstanceType<C extends Config> = ShapeControl<Definition<C>>
+
+class Definition<C extends Config = Config> extends ControlDefinition<
+  typeof Definition.type,
+  C,
+  DataType<C>,
+  ValueType<C>,
+  ResolvedValueType<C>,
+  InstanceType<C>
+> {
+  static readonly type = 'makeswift::controls::shape' as const
+
+  static deserialize(
+    data: SerializedRecord,
+    deserializeCallback: (r: SerializedRecord) => ControlDefinition,
+  ) {
+    if (data.type !== Definition.type)
+      throw new Error(
+        `Shape: expected '${Definition.type}', got '${data.type}'`,
+      )
+
+    const {
+      config: { type, ...config },
+    } = z
+      .object({
+        type: z.literal(Definition.type),
+        config: z.any(),
+      })
+      .parse(data)
+
+    const deserializedType = mapValues(type, (itemDef) => {
+      return deserializeCallback(itemDef)
+    })
+
+    return new Definition<Deserialized<Config>>({
+      type: deserializedType,
+      ...config,
+    })
+  }
+
+  get keyDefs() {
+    return this.config.type
+  }
+
+  get controlType() {
+    return Definition.type
+  }
+
+  get schema() {
+    const type = z.literal(Definition.type)
+    const keys = mapValues(this.keyDefs, (def) => def.schema)
+
+    const data = z.object(mapValues(keys, (key) => key.data)) as SchemaType<
+      DataType<C>
+    >
+
+    const value = z.object(mapValues(keys, (key) => key.value)) as SchemaType<
+      ValueType<C>
+    >
+
+    const resolvedValue = z.object(
+      mapValues(keys, (key) => key.resolvedValue),
+    ) as SchemaType<ResolvedValueType<C>>
+
+    const config = z.object({
+      type: z.object(mapValues(keys, (key) => key.definition)),
+    })
+
+    const definition = z.object({
+      type,
+      config,
+    })
+
+    return { type, data, value, resolvedValue, definition }
+  }
+
+  safeParse(data: unknown | undefined): ParseResult<DataType<C> | undefined> {
+    return safeParse(this.schema.data, data)
+  }
+
+  fromData(data: DataType<C> | undefined): ValueType<C> | undefined {
+    if (data == null) return undefined
+    return mapValues(data, (value, key) =>
+      this.keyDefs[key as string]?.fromData(value),
+    )
+  }
+
+  toData(value: ValueType<C>): DataType<C> {
+    return mapValues(value, (value, key) =>
+      this.keyDefs[key as string]?.toData(value),
+    )
+  }
+
+  copyData(
+    data: DataType<C> | undefined,
+    context: CopyContext,
+  ): DataType<C> | undefined {
+    if (data == null) return undefined
+    return mapValues(data, (value, key) =>
+      this.keyDefs[key as string].copyData(value, context),
+    )
+  }
+
+  resolveValue(
+    data: DataType<C> | undefined,
+    resolver: ResourceResolver,
+    effector: Effector,
+    control?: InstanceType<C>,
+  ): Resolvable<ResolvedValueType<C> | undefined> {
+    const emptyShape = {}
+    const keyValues = mapValues(data ?? ({} as ValueType<C>), (val, key) =>
+      this.keyDefs[key as string]?.resolveValue(
+        val,
+        resolver,
+        effector,
+        control?.child(key as string),
+      ),
+    )
+
+    return {
+      readStableValue: (previous?: ResolvedValueType<C>) => {
+        const r = mapValues(keyValues, (v, key) =>
+          v?.readStableValue(previous?.[key]),
+        )
+
+        return ((objectsAreEqual(r, previous) ? previous : r) ??
+          emptyShape) as ResolvedValueType<C>
+      },
+
+      subscribe: (onUpdate: () => void) => {
+        const unsubscribes = Object.values(keyValues).map((v) =>
+          v?.subscribe(onUpdate),
+        )
+
+        return () => unsubscribes.forEach((u) => u?.())
+      },
+
+      triggerResolve: async (currentValue?: ResolvedValueType<C>) => {
+        await Promise.all(
+          Object.entries(keyValues).map(([key, v]) =>
+            v?.triggerResolve(currentValue?.[key]),
+          ),
+        )
+      },
+    }
+  }
+
+  createInstance(sendMessage: SendMessage): InstanceType<C> {
+    return new ShapeControl(this, sendMessage)
+  }
+
+  serialize(): [SerializedRecord, Transferable[]] {
+    return serialize(this.config, {
+      type: Definition.type,
+    })
+  }
+
+  introspect<R>(data: DataType<C> | undefined, target: IntrospectionTarget<R>) {
+    return Object.entries(data ?? {}).flatMap(([key, value]) =>
+      this.keyDefs[key as string]?.introspect(value, target),
+    )
+  }
+
+  getTranslatableData(data: DataType<C>): Data {
+    if (data == null) return null
+    return mapValues(data, (value, key) => {
+      return this.keyDefs[key as string]?.getTranslatableData(value)
+    })
+  }
+
+  mergeTranslatedData(
+    data: DataType<C>,
+    translatedData: Record<string, DataType<C>>,
+    context: MergeTranslatableDataContext,
+  ): Data {
+    if (translatedData == null) return data
+    return mapValues(data, (value, key) =>
+      this.keyDefs[key as string]?.mergeTranslatedData(
+        value,
+        translatedData[key as string],
+        context,
+      ),
+    )
+  }
+}
+
+export const Shape = <C extends Config>(config: C) =>
+  new (class Shape extends Definition<C> {})(config)
+
+export { Definition as ShapeDefinition }

@@ -1,16 +1,13 @@
+import { type Element } from '@makeswift/controls'
 import { Action, ActionTypes } from '../actions'
 
-export type Data = undefined | null | boolean | number | string | Data[] | { [key: string]: Data }
-
-export type ElementData = { type: string; key: string; props: Record<string, Data> }
-
-export type ElementReference = { type: 'reference'; key: string; value: string }
-
-export type Element = ElementData | ElementReference
-
-export function isElementReference(element: Element): element is ElementReference {
-  return !('props' in element)
-}
+export {
+  type Data,
+  type ElementData,
+  type ElementReference,
+  type Element,
+  isElementReference,
+} from '@makeswift/controls'
 
 export type DocumentReference = {
   key: string

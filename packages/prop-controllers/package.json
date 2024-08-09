@@ -2,20 +2,21 @@
   "name": "@makeswift/prop-controllers",
   "version": "0.3.0",
   "license": "MIT",
-  "type": "module",
   "files": [
     "dist"
   ],
-  "main": "./dist/index.cjs",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
   "scripts": {
-    "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'tsup src/index.ts --watch'",
+    "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'tsup --watch'",
     "clean": "rm -rf dist",
-    "build": "tsc && tsup src/index.ts",
+    "build": "tsc && tsup",
     "prepublishOnly": "turbo run build",
     "test": "jest"
   },
   "dependencies": {
+    "@makeswift/controls": "workspace:*",
     "ts-pattern": "^5.0.8",
     "zod": "^3.21.4"
   },
@@ -23,7 +24,7 @@
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.12",
     "concurrently": "^8.2.2",
-    "jest": "^29.0.1",
+    "jest": "^29.7.0",
     "tsup": "^8.0.2",
     "typescript": "^5.1.6"
   }

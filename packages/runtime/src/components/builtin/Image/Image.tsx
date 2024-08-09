@@ -18,7 +18,7 @@ import { useStyle } from '../../../runtimes/react/use-style'
 import { useResponsiveStyle, useResponsiveWidth } from '../../utils/responsive-style'
 import { useFile } from '../../../runtimes/react/hooks/makeswift-api'
 import { major as nextMajorVersion } from '../../../next/next-version'
-import { useBreakpoints } from '../../../runtimes/react'
+import { useBreakpoints } from '../../../runtimes/react/hooks/use-breakpoints'
 import { match, P } from 'ts-pattern'
 
 const NextLegacyImage = NextImage as typeof NextLegacyImageType

@@ -1,6 +1,6 @@
 import { BaseEditor, Descendant, Editor, Transforms, Text, Node } from 'slate'
 import { ReactEditor } from 'slate-react'
-import { ElementUtils } from '../utils/element'
+import { Slate } from '@makeswift/controls'
 
 export interface BuilderEditor extends BaseEditor {
   focusAndSelectAll: () => void
@@ -12,9 +12,7 @@ export function withBuilder(editor: Editor) {
   editor.resetValue = function (value: Descendant[]) {
     const firstRootBlock = Node.has(editor, [0]) && Node.get(editor, [0])
     const textAlignOfFirstBlock =
-      firstRootBlock && ElementUtils.isRootBlock(firstRootBlock)
-        ? firstRootBlock.textAlign
-        : undefined
+      firstRootBlock && Slate.isRootBlock(firstRootBlock) ? firstRootBlock.textAlign : undefined
     const typographyOfFirstText = Array.from(Node.texts(editor)).at(0)?.[0].typography
 
     ReactEditor.deselect(editor)
@@ -41,7 +39,7 @@ export function withBuilder(editor: Editor) {
         editor,
         { textAlign: textAlignOfFirstBlock },
         {
-          match: ElementUtils.isRootBlock,
+          match: Slate.isRootBlock,
           at: {
             anchor: Editor.start(editor, []),
             focus: Editor.end(editor, []),

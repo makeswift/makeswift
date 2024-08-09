@@ -1,8 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { TextInput } from '@makeswift/controls'
+import { Slot, TextInput } from '../controls'
 
-import { Slot } from '../controls'
 import { registerComponent } from './actions'
 import * as ReactPage from './react-page'
 import { ComponentIcon } from './modules/components-meta'
@@ -15,8 +14,8 @@ function jsx(type: Function, props: Record<string, unknown> = {}, ...children: J
       children.length === 0
         ? props.children ?? []
         : children.length === 1
-        ? children.at(0)
-        : children,
+          ? children.at(0)
+          : children,
   })
 }
 
@@ -25,7 +24,7 @@ const ElementType = {
   Button: 'button',
 } as const
 
-type ElementType = typeof ElementType[keyof typeof ElementType]
+type ElementType = (typeof ElementType)[keyof typeof ElementType]
 
 function Box({ key, children }: { key: string; children?: JSX.Element | JSX.Element[] }) {
   const elements = children == null ? [] : [children].flat()

@@ -1,0 +1,243 @@
+import { match } from 'ts-pattern'
+import { z } from 'zod'
+
+import { Schema, ControlDataTypeKey } from '../common'
+import { objectsAreEqual } from '../utils/functional'
+
+import { type CopyContext } from '../context'
+import { type ResourceResolver } from '../resource-resolver'
+
+import { DefaultControlInstance, type SendMessage } from '../control-instance'
+
+import { type Effector } from '../effector'
+
+import {
+  ControlDefinition,
+  safeParse,
+  serialize,
+  type ParseResult,
+  type SerializedRecord,
+  type Resolvable,
+} from '../control-definition'
+
+import { swatchToColorString } from './conversion'
+
+type Config = z.infer<typeof Definition.schema.relaxed.config>
+
+type SchemaType<C extends Config> = undefined extends C['defaultValue']
+  ? typeof Definition.schema.relaxed
+  : typeof Definition.schema.strict
+
+type DataType<C extends Config> = z.infer<SchemaType<C>['data']>
+type ValueType<C extends Config> = z.infer<SchemaType<C>['value']>
+type ResolvedValueType<C extends Config> = z.infer<
+  SchemaType<C>['resolvedValue']
+>
+
+type ResolvedSwatchValueType<C extends Config> = z.infer<
+  SchemaType<C>['resolvedSwatchValue']
+>
+
+class Definition<C extends Config = Config> extends ControlDefinition<
+  typeof Definition.type,
+  C,
+  DataType<C>,
+  ValueType<C>,
+  ResolvedValueType<C>
+> {
+  private static readonly v1DataType = 'color::v1' as const
+  private static readonly dataSignature = {
+    v1: { [ControlDataTypeKey]: this.v1DataType },
+  } as const
+
+  static readonly type = 'makeswift::controls::color' as const
+
+  static get schema() {
+    const type = z.literal(this.type)
+    const version = z.literal(1).optional()
+    const value = Schema.colorData
+    const resolvedSwatchValue = Schema.resolvedColorData
+
+    const schemas = <R>(resolvedValue: z.ZodType<R>) => {
+      const data = value.merge(
+        z.object({
+          [ControlDataTypeKey]: z.literal(this.v1DataType).optional(),
+        }),
+      )
+
+      const config = z.object({
+        label: z.string().optional(),
+        labelOrientation: z
+          .union([z.literal('horizontal'), z.literal('vertical')])
+          .optional(),
+        defaultValue: resolvedValue,
+        hideAlpha: z.boolean().optional(),
+      })
+
+      const definition = z.object({
+        type,
+        config,
+        version,
+      })
+
+      return {
+        type,
+        value,
+        resolvedSwatchValue,
+        resolvedValue,
+        data,
+        config,
+        version,
+        definition,
+      }
+    }
+
+    return {
+      version,
+      relaxed: schemas(z.string().optional()),
+      strict: schemas(z.string()),
+    }
+  }
+
+  static deserialize(data: SerializedRecord): Definition {
+    if (data.type !== Definition.type)
+      throw new Error(
+        `Color deserialization: expected '${Definition.type}', got '${data.type}'`,
+      )
+
+    const { config, version } = Definition.schema.relaxed.definition.parse(data)
+    return new Definition(config, version)
+  }
+
+  constructor(
+    config: C,
+    readonly version: z.infer<typeof Definition.schema.version>,
+  ) {
+    super(config)
+  }
+
+  get controlType() {
+    return Definition.type
+  }
+
+  get schema() {
+    return (
+      this.config.defaultValue === undefined
+        ? Definition.schema.relaxed
+        : Definition.schema.strict
+    ) as SchemaType<C>
+  }
+
+  safeParse(data: unknown | undefined): ParseResult<DataType<C> | undefined> {
+    return safeParse(this.schema.data, data)
+  }
+
+  fromData(data: DataType<C> | undefined): ValueType<C> | undefined {
+    const inputSchema = this.schema.data.optional()
+    return match(data satisfies z.infer<typeof inputSchema>)
+      .with(Definition.dataSignature.v1, ({ swatchId, alpha }) => ({
+        swatchId,
+        alpha,
+      }))
+      .otherwise((value) => value)
+  }
+
+  toData(value: ValueType<C>): DataType<C> {
+    return match(this.version)
+      .with(1, () => ({
+        ...Definition.dataSignature.v1,
+        ...value,
+      }))
+      .with(undefined, () => value)
+      .exhaustive()
+  }
+
+  copyData(
+    data: DataType<C> | undefined,
+    { replacementContext }: CopyContext,
+  ): DataType<C> | undefined {
+    if (data == null) return data
+
+    const replaceSwatchId = (swatchId: string) =>
+      replacementContext.swatchIds.get(swatchId) ?? swatchId
+
+    const inputSchema = this.schema.data.optional()
+    return match(data satisfies z.infer<typeof inputSchema>)
+      .with(Definition.dataSignature.v1, (val) => ({
+        ...val,
+        swatchId: replaceSwatchId(val.swatchId),
+      }))
+      .otherwise((val) => ({
+        ...val,
+        swatchId: replaceSwatchId(val.swatchId),
+      }))
+  }
+
+  resolveSwatch(
+    data: DataType<C> | undefined,
+    resolver: ResourceResolver,
+  ): Resolvable<ResolvedSwatchValueType<C> | undefined> {
+    const value = this.fromData(data)
+    const swatchSub = resolver.resolveSwatch(value?.swatchId)
+
+    return {
+      readStableValue: (previous?: ResolvedSwatchValueType<C>) => {
+        const swatch = swatchSub.readStableValue(previous?.swatch)
+        if (swatch == null) return undefined
+
+        const r = {
+          swatch,
+          alpha: value?.alpha ?? 1,
+        }
+
+        return objectsAreEqual(r, previous) ? previous : r
+      },
+      subscribe: swatchSub.subscribe,
+      triggerResolve: async (currentValue?: ResolvedSwatchValueType<C>) => {
+        if (currentValue == null) {
+          await swatchSub.fetch()
+        }
+      },
+    }
+  }
+
+  resolveValue(
+    data: DataType<C> | undefined,
+    resolver: ResourceResolver,
+    _effector: Effector,
+  ): Resolvable<ResolvedValueType<C> | undefined> {
+    const value = this.fromData(data)
+    const swatch = resolver.resolveSwatch(value?.swatchId)
+
+    return {
+      readStableValue: (_previous?: ResolvedValueType<C>) =>
+        swatchToColorString(
+          swatch.readStableValue(),
+          value?.alpha ?? 1,
+          this.config.defaultValue,
+        ),
+      subscribe: swatch.subscribe,
+      triggerResolve: async (_currentValue?: ResolvedValueType<C>) => {
+        if (swatch.readStableValue() == null) {
+          await swatch.fetch()
+        }
+      },
+    }
+  }
+
+  createInstance(sendMessage: SendMessage<any>) {
+    return new DefaultControlInstance(sendMessage)
+  }
+
+  serialize(): [SerializedRecord, Transferable[]] {
+    return serialize(this.config, {
+      type: Definition.type,
+      version: this.version,
+    })
+  }
+}
+
+export const Color = <C extends Config>(config?: C) =>
+  new (class Color extends Definition<C> {})(config ?? ({} as C), 1)
+
+export { Definition as ColorDefinition }

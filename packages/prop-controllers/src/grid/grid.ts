@@ -6,8 +6,7 @@ import {
   MergeTranslatableDataContext,
   Options,
   Types,
-  createResponsiveValueSchema,
-  elementSchema,
+  Schema,
 } from '../prop-controllers'
 import { P, match } from 'ts-pattern'
 
@@ -17,8 +16,8 @@ const gridColumnSchema = z.object({
 })
 
 const gridDataSchema = z.object({
-  elements: z.array(elementSchema),
-  columns: createResponsiveValueSchema(gridColumnSchema),
+  elements: z.array(Schema.element),
+  columns: Schema.responsiveValue(gridColumnSchema),
 })
 
 export type GridData = z.infer<typeof gridDataSchema>
@@ -103,7 +102,7 @@ export function createGridPropControllerDataFromGridData(
         ({
           [ControlDataTypeKey]: GridPropControllerDataV1Type,
           value,
-        } as const),
+        }) as const,
     )
     .otherwise(() => value)
 }
@@ -131,7 +130,7 @@ export function mergeGridPropControllerTranslatedData(
         ({
           [ControlDataTypeKey]: GridPropControllerDataV1Type,
           value: mergeGridDataTranslatedData(v1.value, context),
-        } as const),
+        }) as const,
     )
     .otherwise((v0) => mergeGridDataTranslatedData(v0, context))
 }
@@ -161,7 +160,7 @@ export function copyGridPropControllerData(
         ({
           [ControlDataTypeKey]: GridPropControllerDataV1Type,
           value: copyGridData(v1.value, context),
-        } as const),
+        }) as const,
     )
     .otherwise((v0) => copyGridData(v0, context))
 }

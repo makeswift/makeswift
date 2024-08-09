@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`unstable_IconRadioGroup constructor 1`] = `
+IconRadioGroup {
+  "config": {
+    "defaultValue": "code",
+    "label": "Block type",
+    "labelOrientation": "horizontal",
+    "options": [
+      {
+        "icon": "Code16",
+        "label": "Code",
+        "value": "code",
+      },
+      {
+        "icon": "Superscript16",
+        "label": "Superscript",
+        "value": "superscript",
+      },
+    ],
+  },
+}
+`;
+
+exports[`unstable_IconRadioGroup definition w/ config {"label":"Block type","labelOrientation":"horizontal","options":[{"value":"code","label":"Code","icon":"Code16"},{"value":"superscript","label":"Superscript","icon":"Superscript16"}],"defaultValue":"code"} toData returns v1 data for \`code\` when definition version is 1 1`] = `"code"`;
+
+exports[`unstable_IconRadioGroup definition w/ config {"label":"Block type","labelOrientation":"horizontal","options":[{"value":"code","label":"Code","icon":"Code16"},{"value":"superscript","label":"Superscript","icon":"Superscript16"}],"defaultValue":"code"} toData returns v1 data for \`superscript\` when definition version is 1 1`] = `"superscript"`;

@@ -1,13 +1,14 @@
 import { BaseEditor, Descendant, Editor, NodeEntry, Text, Transforms } from 'slate'
+import { unstable_Typography } from '@makeswift/controls'
+
 import { clearActiveTypographyStyle } from './clearActiveTypographyStyle'
 import { clearDeviceActiveTypography } from './clearDeviceActiveTypography'
 import { detachActiveTypography } from './detachActiveTypography'
 import { setActiveTypographyId } from './setActiveTypographyId'
 import { setActiveTypographyStyle } from './setActiveTypographyStyle'
-import { unstable_Typography } from '../../controls'
 import { getValue } from './getValue'
 import { getSelection } from '../selectors'
-import { createRichTextV2Plugin } from '../../controls/rich-text-v2/plugin'
+import { Plugin } from '../../controls/rich-text-v2/plugin'
 import { normalizeTypographyUp } from './normalizeTypographyUp'
 import { normalizeTypographyDown } from './normalizeTypographyDown'
 import { normalizeSimilarText } from './normalizeSimilarText'
@@ -64,7 +65,7 @@ export function withTypography(editor: Editor) {
 }
 
 export function TypographyPlugin() {
-  return createRichTextV2Plugin({
+  return Plugin({
     withPlugin: withTypography,
     control: {
       definition: unstable_Typography(),
@@ -98,7 +99,7 @@ export function TypographyPlugin() {
             if (nodesToUpdate.length !== value?.length)
               return console.error(
                 `TypographyControl.onChange received the wrong number of arguments.
-Called with ${value?.length} values mapping to ${nodesToUpdate.length} nodes.`,
+            Called with ${value?.length} values mapping to ${nodesToUpdate.length} nodes.`,
               )
 
             for (const [index, [, path]] of nodesToUpdate.entries()) {
@@ -115,7 +116,7 @@ Called with ${value?.length} values mapping to ${nodesToUpdate.length} nodes.`,
           atRef.unref()
         })
       },
-      getValue: editor => getValue(editor),
+      getValue,
       getLeafValue: (text: Text) => {
         return Text.isText(text) ? text.typography : undefined
       },

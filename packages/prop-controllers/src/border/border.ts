@@ -1,45 +1,17 @@
 import { match } from 'ts-pattern'
-import { colorDataSchema } from '../data'
+import { StyleSchema } from '@makeswift/controls'
+
 import {
   ControlDataTypeKey,
   CopyContext,
   ResolveOptions,
   Types,
-  createResponsiveValueSchema,
+  Schema,
 } from '../prop-controllers'
+
 import { z } from 'zod'
 
-const borderSideDataSchema = z
-  .object({
-    width: z.number().nullable().optional(),
-    style: z.enum(['dashed', 'dotted', 'solid']),
-    color: colorDataSchema.nullable().optional(),
-  })
-  .transform((v) => ({
-    ...v,
-    width: v.width,
-  }))
-
-export type BorderSideData = z.infer<typeof borderSideDataSchema>
-
-const borderDataSchema = z
-  .object({
-    borderTop: borderSideDataSchema.nullable().optional(),
-    borderRight: borderSideDataSchema.nullable().optional(),
-    borderBottom: borderSideDataSchema.nullable().optional(),
-    borderLeft: borderSideDataSchema.nullable().optional(),
-  })
-  // To make the key required.
-  .transform((v) => ({
-    borderTop: v.borderTop,
-    borderRight: v.borderRight,
-    borderBottom: v.borderBottom,
-    borderLeft: v.borderLeft,
-  }))
-
-export type BorderData = z.infer<typeof borderDataSchema>
-
-const responsiveBorderDataSchema = createResponsiveValueSchema(borderDataSchema)
+const responsiveBorderDataSchema = Schema.responsiveValue(StyleSchema.border)
 
 export type ResponsiveBorderData = z.infer<typeof responsiveBorderDataSchema>
 
@@ -76,7 +48,7 @@ export const BorderPropControllerFormat = {
 } as const
 
 export type BorderPropControllerFormat =
-  typeof BorderPropControllerFormat[keyof typeof BorderPropControllerFormat]
+  (typeof BorderPropControllerFormat)[keyof typeof BorderPropControllerFormat]
 
 type BorderOptions = { format?: BorderPropControllerFormat }
 
@@ -107,14 +79,14 @@ export type ResolveBorderPropControllerValue<T extends BorderDescriptor> =
     ? undefined extends ResolveOptions<T['options']>['format']
       ? ResponsiveBorderData | undefined
       : ResolveOptions<
-          T['options']
-        >['format'] extends typeof BorderPropControllerFormat.ClassName
-      ? string
-      : ResolveOptions<
-          T['options']
-        >['format'] extends typeof BorderPropControllerFormat.ResponsiveValue
-      ? ResponsiveBorderData | undefined
-      : never
+            T['options']
+          >['format'] extends typeof BorderPropControllerFormat.ClassName
+        ? string
+        : ResolveOptions<
+              T['options']
+            >['format'] extends typeof BorderPropControllerFormat.ResponsiveValue
+          ? ResponsiveBorderData | undefined
+          : never
     : never
 
 /**
@@ -151,7 +123,7 @@ export function createBorderPropControllerDataFromResponsiveBorderData(
         ({
           [ControlDataTypeKey]: BorderPropControllerDataV1Type,
           value: responsiveBorderData,
-        } as const),
+        }) as const,
     )
     .otherwise(() => responsiveBorderData)
 }
@@ -228,7 +200,7 @@ export function copyBorderPropControllerData(
         ({
           [ControlDataTypeKey]: BorderPropControllerDataV1Type,
           value: copyResponsiveBorderData(v1.value, context),
-        } as const),
+        }) as const,
     )
     .otherwise((v0) => copyResponsiveBorderData(v0, context))
 }

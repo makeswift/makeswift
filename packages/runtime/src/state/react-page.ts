@@ -1,11 +1,21 @@
 import {
   applyMiddleware,
-  combineReducers,
   createStore,
   PreloadedState,
   Store as ReduxStore,
+  combineReducers,
 } from 'redux'
+
 import thunk, { ThunkDispatch } from 'redux-thunk'
+
+import {
+  createReplacementContext,
+  type SerializableReplacementContext,
+  type ReplacementContext,
+  type TranslationDto,
+  type MergeTranslatableDataContext,
+  type MergeContext,
+} from '@makeswift/controls'
 
 import * as Documents from './modules/read-only-documents'
 import * as ReactComponents from './modules/react-components'
@@ -34,11 +44,13 @@ export type {
   ElementData,
   ElementReference,
 } from './modules/read-only-documents'
+
 export {
   createDocument,
   createDocumentReference,
   isElementReference,
 } from './modules/read-only-documents'
+
 export type { ComponentType } from './modules/react-components'
 
 const reducer = combineReducers({
@@ -194,90 +206,16 @@ export function getElementId(state: State, documentKey: string, elementKey: stri
 
   if (descriptors == null) return null
 
-  const elementId = Object.entries(descriptors).reduce((acc, [propName, descriptor]) => {
-    if (acc != null) return acc
+  const elementId = Object.entries(descriptors).reduce(
+    (acc, [propName, descriptor]) => {
+      if (acc != null) return acc
 
-    return Introspection.getElementId(descriptor, element.props[propName])
-  }, null as string | null)
+      return Introspection.getElementId(descriptor, element.props[propName])
+    },
+    null as string | null,
+  )
 
   return elementId
-}
-
-export type ReplacementContext = {
-  elementHtmlIds: Set<string>
-  elementKeys: Map<string, string>
-  swatchIds: Map<string, string>
-  fileIds: Map<string, string>
-  typographyIds: Map<string, string>
-  tableIds: Map<string, string>
-  tableColumnIds: Map<string, string>
-  pageIds: Map<string, string>
-  globalElementIds: Map<string, string>
-  globalElementData: Map<string, Documents.ElementData>
-}
-
-export type SerializableReplacementContext = {
-  elementHtmlIds: string[]
-  elementKeys: { [s: string]: string }
-  swatchIds: { [s: string]: string }
-  fileIds: { [s: string]: string }
-  typographyIds: { [s: string]: string }
-  tableIds: { [s: string]: string }
-  tableColumnIds: { [s: string]: string }
-  pageIds: { [s: string]: string }
-  globalElementIds: { [s: string]: string }
-  globalElementData: { [s: string]: Documents.ElementData }
-}
-
-export function createReplacementContext(
-  serializableReplacementContext: SerializableReplacementContext,
-): ReplacementContext {
-  const rc: ReplacementContext = {
-    elementHtmlIds: new Set(serializableReplacementContext.elementHtmlIds),
-    elementKeys: new Map(
-      serializableReplacementContext.elementKeys &&
-        Object.entries(serializableReplacementContext.elementKeys),
-    ),
-    swatchIds: new Map(
-      serializableReplacementContext.swatchIds &&
-        Object.entries(serializableReplacementContext.swatchIds),
-    ),
-    fileIds: new Map(
-      serializableReplacementContext.fileIds &&
-        Object.entries(serializableReplacementContext.fileIds),
-    ),
-    typographyIds: new Map(
-      serializableReplacementContext.typographyIds &&
-        Object.entries(serializableReplacementContext.typographyIds),
-    ),
-    tableIds: new Map(
-      serializableReplacementContext.tableIds &&
-        Object.entries(serializableReplacementContext.tableIds),
-    ),
-    tableColumnIds: new Map(
-      serializableReplacementContext.tableColumnIds &&
-        Object.entries(serializableReplacementContext.tableColumnIds),
-    ),
-    pageIds: new Map(
-      serializableReplacementContext.pageIds &&
-        Object.entries(serializableReplacementContext.pageIds),
-    ),
-    globalElementIds: new Map(
-      serializableReplacementContext.globalElementIds &&
-        Object.entries(serializableReplacementContext.globalElementIds),
-    ),
-    globalElementData: new Map(
-      serializableReplacementContext.globalElementData &&
-        Object.entries(serializableReplacementContext.globalElementData),
-    ),
-  }
-
-  return rc
-}
-
-export type CopyContext = {
-  replacementContext: ReplacementContext
-  copyElement: (node: Documents.Element) => Documents.Element
 }
 
 export function copyElementTree(
@@ -372,13 +310,6 @@ export function getElementTreeTranslatableData(
   return translatableData
 }
 
-export type TranslationDto = Record<string, Documents.Data>
-
-export type MergeTranslatableDataContext = {
-  translatedData: TranslationDto
-  mergeTranslatedData: (node: Documents.Element) => Documents.Element
-}
-
 export function mergeElementTreeTranslatedData(
   state: State,
   elementTree: Documents.ElementData,
@@ -416,10 +347,6 @@ export function mergeElementTreeTranslatedData(
     }
   }
   return merge(state, translatedData)(elementTree)
-}
-
-export type MergeContext = {
-  mergeElement(a: Documents.Element, b: Documents.Element): Documents.Element
 }
 
 export function mergeElement(

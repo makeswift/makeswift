@@ -1,14 +1,14 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
+import { Slate } from '@makeswift/controls'
 import { getValue } from '../getValue'
 // @ts-expect-error: 'jsx' is declared but its value is never read.
 import { jsx, Paragraph, Text, EditorV2, Focus, Anchor, Fragment } from '../../test-helpers'
-import { BlockTextAlignment } from '../..'
 
-const DESKTOP_LEFT = { deviceId: 'desktop', value: BlockTextAlignment.Left }
+const DESKTOP_LEFT = { deviceId: 'desktop', value: Slate.BlockTextAlignment.Left }
 const DESKTOP_NULL = { deviceId: 'desktop', value: null }
-const MOBILE_RIGHT = { deviceId: 'mobile', value: BlockTextAlignment.Right }
+const MOBILE_RIGHT = { deviceId: 'mobile', value: Slate.BlockTextAlignment.Right }
 
 describe('GIVEN TextAlignPlugin.getValue', () => {
   it('WHEN run on single type THEN return the correct value', () => {

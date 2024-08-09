@@ -2,11 +2,10 @@ import { ComponentPropsWithoutRef, forwardRef, Ref } from 'react'
 
 import { Link } from '../../shared/Link'
 import { colorToString } from '../../utils/colorToString'
-import { ColorValue as Color } from '../../utils/types'
+import { type ColorValue as Color, type ResponsiveColor } from '../../utils/types'
 import { SocialLinksOptions, SocialLinksOptionType } from './options'
 import GutterContainer from '../../shared/GutterContainer'
 import SocialLinksPlaceholder from './components/SocialLinksPlaceholder'
-import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { cx } from '@emotion/css'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { useResponsiveStyle } from '../../utils/responsive-style'
@@ -140,8 +139,8 @@ function StyledLink({
                 shape === 'naked'
                   ? 'transparent'
                   : backgroundColor == null
-                  ? 'currentColor'
-                  : colorToString(backgroundColor),
+                    ? 'currentColor'
+                    : colorToString(backgroundColor),
 
               ':hover': {
                 none: {},

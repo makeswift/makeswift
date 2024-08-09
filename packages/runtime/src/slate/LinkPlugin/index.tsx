@@ -1,13 +1,13 @@
-import { Editor, Element } from 'slate'
-import { Link } from '@makeswift/controls'
-import { RenderElement, createRichTextV2Plugin } from '../../controls/rich-text-v2/plugin'
-import { ElementUtils } from '../utils/element'
-import { InlineType } from '../types'
-import { RenderElementProps } from 'slate-react'
+import { cx } from '@emotion/css'
+import { type Editor, Element } from 'slate'
+import { type RenderElementProps } from 'slate-react'
+import { Slate } from '@makeswift/controls'
+
+import { Link } from '../../controls/link'
 import { useStyle } from '../../runtimes/react/use-style'
 import { Link as LinkComponent } from '../../components/shared/Link'
-import { cx } from '@emotion/css'
-import { isLinkElement } from './types'
+import { type RenderElement, Plugin } from '../../controls/rich-text-v2/plugin'
+
 import { onChange } from './onChange'
 import { getValue } from './getValue'
 
@@ -15,7 +15,7 @@ export const withLink = (editor: Editor) => {
   const { isInline } = editor
 
   editor.isInline = entry => {
-    return ElementUtils.isInline(entry) && isInline(entry)
+    return Slate.isInline(entry) && isInline(entry)
   }
 
   return editor
@@ -29,7 +29,7 @@ function InlinePluginComponent({
 }: RenderElementProps & { renderElement: RenderElement }) {
   const linkStyle = useStyle({ textDecoration: 'none' })
   switch (element.type) {
-    case InlineType.Link:
+    case Slate.InlineType.Link:
       return (
         <LinkComponent
           {...attributes}
@@ -58,7 +58,7 @@ function InlinePluginComponent({
 }
 
 export function LinkPlugin() {
-  return createRichTextV2Plugin({
+  return Plugin({
     control: {
       definition: Link({
         label: 'On Click',
@@ -66,7 +66,7 @@ export function LinkPlugin() {
       onChange,
       getValue,
       getElementValue: (element: Element) => {
-        return ElementUtils.isInline(element) && isLinkElement(element) ? element.link : undefined
+        return Slate.isLink(element) ? element.link : undefined
       },
     },
     withPlugin: withLink,
