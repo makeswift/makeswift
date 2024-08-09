@@ -1,5 +1,5 @@
 import { expectTypeOf } from 'expect-type'
-import { Image } from './image'
+import { Image, ImageDefinition } from './image'
 import {
   type DataType,
   type ResolvedValueType,
@@ -35,6 +35,27 @@ type ExpectedValueType =
 
 describe('Image Types', () => {
   describe('infers types from control definitions', () => {
+    test('definition', () => {
+      type Data = DataType<ImageDefinition>
+      expectTypeOf<Data>().toEqualTypeOf<ExpectedDataType>()
+
+      type Value = ValueType<ImageDefinition>
+      expectTypeOf<Value>().toEqualTypeOf<ExpectedValueType>()
+
+      type Resolved = ResolvedValueType<ImageDefinition>
+      expectTypeOf<Resolved>().toEqualTypeOf<
+        | string
+        | {
+            url: string
+            dimensions: {
+              height: number
+              width: number
+            }
+          }
+        | undefined
+      >()
+    })
+
     test('empty config', () => {
       const def = Image()
 

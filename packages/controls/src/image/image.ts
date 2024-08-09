@@ -15,21 +15,29 @@ import {
   type ParseResult,
   type SerializedRecord,
   type Resolvable,
+  type SchemaType as SchemaType_,
 } from '../control-definition'
 
 import { IntrospectionTarget, Targets } from '../introspect'
+import { _ } from 'ts-pattern/dist/patterns'
 
-type Config =
-  | z.infer<typeof Definition.schema.url.config>
-  | z.infer<typeof Definition.schema.withDimensions.config>
+type Config = z.infer<typeof Definition.schema.config>
+type DefaultConfig = Config & {
+  format: typeof Definition.Format.WithDimensions | typeof Definition.Format.URL
+}
 
+type BaseSchema = typeof Definition.schema
 type SchemaType<C extends Config> = undefined extends C['format']
-  ? typeof Definition.schema.url
-  : C['format'] extends typeof Definition.Format.WithDimensions
-    ? typeof Definition.schema.withDimensions
-    : C['format'] extends typeof Definition.Format.URL
-      ? typeof Definition.schema.url
-      : never
+  ? BaseSchema['url']
+  :
+        | typeof Definition.Format.WithDimensions
+        | typeof Definition.Format.URL extends C['format']
+    ? BaseSchema['withDimensions'] | BaseSchema['url']
+    : C['format'] extends typeof Definition.Format.WithDimensions
+      ? BaseSchema['withDimensions']
+      : C['format'] extends typeof Definition.Format.URL
+        ? BaseSchema['url']
+        : never
 
 type DataType<C extends Config> = z.infer<SchemaType<C>['data']>
 type ValueType<C extends Config> = z.infer<SchemaType<C>['value']>
@@ -37,7 +45,7 @@ type ResolvedValueType<C extends Config> = z.infer<
   SchemaType<C>['resolvedValue']
 >
 
-class Definition<C extends Config = Config> extends ControlDefinition<
+class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
   typeof Definition.type,
   C,
   DataType<C>,
@@ -106,14 +114,14 @@ class Definition<C extends Config = Config> extends ControlDefinition<
       version,
     })
 
-    const schemas = <R>(resolvedValue: z.ZodType<R>) => ({
+    const schemas = <R>(resolvedValue: SchemaType_<R>) => ({
       type,
+      config,
+      definition,
       data,
       value,
       resolvedValue,
-      config,
       version,
-      definition,
     })
 
     const url = z.string()
@@ -128,18 +136,20 @@ class Definition<C extends Config = Config> extends ControlDefinition<
     return {
       type,
       version,
+      config,
+      definition,
       url: schemas(url.optional()),
       withDimensions: schemas(urlWithDimensions.optional()),
     }
   }
 
-  static deserialize(data: SerializedRecord): Definition {
+  static deserialize(data: SerializedRecord): Definition<Config> {
     if (data.type !== Definition.type)
       throw new Error(
         `Image deserialization: expected '${Definition.type}', got '${data.type}'`,
       )
 
-    const { config, version } = Definition.schema.url.definition.parse(data)
+    const { config, version } = Definition.schema.definition.parse(data)
     return new Definition(config, version)
   }
 
