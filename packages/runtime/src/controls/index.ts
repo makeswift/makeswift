@@ -37,6 +37,7 @@ export {
 
 export { Link, LinkDefinition } from './link'
 export { RichTextV1Definition, RichTextV1Control } from './rich-text'
-export { RichText, RichTextV2Definition } from './rich-text-v2'
+export { RichText, RichTextV2Definition, RichTextV2Control } from './rich-text-v2'
 export { Slot, SlotDefinition, SlotControl } from './slot'
 export { unstable_StyleV2, StyleV2Definition, StyleV2Control } from './style-v2'
+export { Slate as RichTextCore } from '@makeswift/controls'

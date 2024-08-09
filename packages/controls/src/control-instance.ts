@@ -1,6 +1,7 @@
 export type ControlMessage<Payload = any> = {
   type: string
   payload?: Payload
+  [key: string]: any
 }
 
 export type SendMessage<M extends ControlMessage = ControlMessage> = (

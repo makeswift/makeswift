@@ -10,7 +10,10 @@ import { CSSObject } from '@emotion/serialize'
 type PropDefinition = StyleV2PropDefinition
 type Config<Prop extends PropDefinition> = StyleV2Config<Prop, CSSObject>
 
-class Definition<Prop extends PropDefinition> extends StyleV2Definition<Prop, CSSObject> {}
+class Definition<Prop extends PropDefinition = StyleV2PropDefinition> extends StyleV2Definition<
+  Prop,
+  CSSObject
+> {}
 
 export const unstable_StyleV2 = <Prop extends PropDefinition>(config: Config<Prop>) =>
   new (class unstable_StyleV2 extends Definition<Prop> {})(config)

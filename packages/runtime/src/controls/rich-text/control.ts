@@ -16,12 +16,12 @@ type ChangeBuilderEditModeMessage = {
 
 type InitializeEditorMessage = {
   type: typeof RichTextControl.INITIALIZE_EDITOR
-  payload: { value: RichTextValue }
+  value: RichTextValue
 }
 
 type ChangeEditorValueMessage = {
   type: typeof RichTextControl.CHANGE_EDITOR_VALUE
-  payload: { value: RichTextValue }
+  value: RichTextValue
 }
 
 type FocusMessage = {
@@ -96,7 +96,7 @@ export class RichTextControl extends ControlInstance<Message> {
 
     this.sendMessage({
       type: RichTextControl.INITIALIZE_EDITOR,
-      payload: { value: richTextDAOToDTO(editor.children, editor.selection) },
+      value: richTextDAOToDTO(editor.children, editor.selection),
     })
 
     const _onChange = editor.onChange
@@ -109,9 +109,7 @@ export class RichTextControl extends ControlInstance<Message> {
       if (options?.operation != null) {
         this.sendMessage({
           type: RichTextControl.CHANGE_EDITOR_VALUE,
-          payload: {
-            value: richTextDAOToDTO(editor.children, editor.selection),
-          },
+          value: richTextDAOToDTO(editor.children, editor.selection),
         })
       }
     }

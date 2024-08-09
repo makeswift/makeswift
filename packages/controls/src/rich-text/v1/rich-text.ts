@@ -13,10 +13,17 @@ import {
 
 import { ControlInstance } from '../../control-instance'
 import { type IntrospectionTarget } from '../../introspect'
-import { DTOSchema } from '../dto'
+import {
+  DTOSchema,
+  richTextDAOToDTO,
+  richTextDTOtoDAO,
+  richTextDTOtoSelection,
+} from '../dto'
 
 import { copyRichTextData } from './copy'
 import { introspectRichTextData } from './introspection'
+import { Selection } from 'slate'
+import { Descendant } from '../slate'
 
 type DataType = z.infer<typeof Definition.schema.data>
 type ValueType = z.infer<typeof Definition.schema.value>
@@ -100,6 +107,18 @@ abstract class Definition<
     target: IntrospectionTarget<R>,
   ): R[] {
     return introspectRichTextData(data, target)
+  }
+
+  static nodesToData(children: Descendant[], selection: Selection): DataType {
+    return richTextDAOToDTO(children, selection)
+  }
+
+  static dataToNodes(data: DataType): Descendant[] {
+    return richTextDTOtoDAO(data)
+  }
+
+  static dataToSelection(data: DataType): Selection {
+    return richTextDTOtoSelection(data)
   }
 }
 
