@@ -1,0 +1,333 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RichTextV2 serialization deserialized definition in block mode contains correct plugins 1`] = `
+RichTextV2Definition {
+  "config": {
+    "defaultValue": "[generated random text]",
+    "mode": undefined,
+    "plugins": [
+      {
+        "control": {
+          "definition": SelectDefinition {
+            "config": {
+              "defaultValue": "paragraph",
+              "label": "Block",
+              "labelOrientation": "horizontal",
+              "options": [
+                {
+                  "label": "Paragraph",
+                  "value": "paragraph",
+                },
+                {
+                  "label": "Heading 1",
+                  "value": "heading-one",
+                },
+                {
+                  "label": "Heading 2",
+                  "value": "heading-two",
+                },
+                {
+                  "label": "Heading 3",
+                  "value": "heading-three",
+                },
+                {
+                  "label": "Heading 4",
+                  "value": "heading-four",
+                },
+                {
+                  "label": "Heading 5",
+                  "value": "heading-five",
+                },
+                {
+                  "label": "Heading 6",
+                  "value": "heading-six",
+                },
+                {
+                  "label": "Bulleted list",
+                  "value": "unordered-list",
+                },
+                {
+                  "label": "Numbered list",
+                  "value": "ordered-list",
+                },
+                {
+                  "label": "Quote",
+                  "value": "blockquote",
+                },
+              ],
+            },
+          },
+        },
+      },
+      {
+        "control": {
+          "definition": Typography {
+            "config": {},
+          },
+        },
+      },
+      {
+        "control": {
+          "definition": StyleV2Definition {
+            "config": {
+              "getStyle": [Function],
+              "type": IconRadioGroupDefinition {
+                "config": {
+                  "defaultValue": "left",
+                  "label": "Alignment",
+                  "options": [
+                    {
+                      "icon": "TextAlignLeft",
+                      "label": "Left Align",
+                      "value": "left",
+                    },
+                    {
+                      "icon": "TextAlignCenter",
+                      "label": "Center Align",
+                      "value": "center",
+                    },
+                    {
+                      "icon": "TextAlignRight",
+                      "label": "Right Align",
+                      "value": "right",
+                    },
+                    {
+                      "icon": "TextAlignJustify",
+                      "label": "Justify",
+                      "value": "justify",
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+      {
+        "control": {
+          "definition": IconRadioGroupDefinition {
+            "config": {
+              "label": "Inline",
+              "options": [
+                {
+                  "icon": "Superscript16",
+                  "label": "Superscript",
+                  "value": "superscript",
+                },
+                {
+                  "icon": "Subscript16",
+                  "label": "Subscript",
+                  "value": "subscript",
+                },
+                {
+                  "icon": "Code16",
+                  "label": "Code",
+                  "value": "code",
+                },
+              ],
+            },
+          },
+        },
+      },
+      {
+        "control": {
+          "definition": LinkDefinition {
+            "config": {
+              "label": "On Click",
+            },
+          },
+        },
+      },
+    ],
+  },
+}
+`;
+
+exports[`RichTextV2 serialization deserialized definition in block mode contains correct plugins: serialized definition 1`] = `
+{
+  "config": {
+    "defaultValue": "[generated random text]",
+    "mode": undefined,
+    "plugins": [
+      {
+        "control": {
+          "definition": {
+            "config": {
+              "defaultValue": "paragraph",
+              "label": "Block",
+              "labelOrientation": "horizontal",
+              "options": [
+                {
+                  "label": "Paragraph",
+                  "value": "paragraph",
+                },
+                {
+                  "label": "Heading 1",
+                  "value": "heading-one",
+                },
+                {
+                  "label": "Heading 2",
+                  "value": "heading-two",
+                },
+                {
+                  "label": "Heading 3",
+                  "value": "heading-three",
+                },
+                {
+                  "label": "Heading 4",
+                  "value": "heading-four",
+                },
+                {
+                  "label": "Heading 5",
+                  "value": "heading-five",
+                },
+                {
+                  "label": "Heading 6",
+                  "value": "heading-six",
+                },
+                {
+                  "label": "Bulleted list",
+                  "value": "unordered-list",
+                },
+                {
+                  "label": "Numbered list",
+                  "value": "ordered-list",
+                },
+                {
+                  "label": "Quote",
+                  "value": "blockquote",
+                },
+              ],
+            },
+            "type": "makeswift::controls::select",
+          },
+          "getValue": [MessagePort],
+          "onChange": [MessagePort],
+        },
+      },
+      {
+        "control": {
+          "definition": {
+            "config": {},
+            "type": "makeswift::controls::typography",
+          },
+          "getValue": [MessagePort],
+          "onChange": [MessagePort],
+        },
+      },
+      {
+        "control": {
+          "definition": {
+            "config": {
+              "getStyle": [MessagePort],
+              "type": {
+                "config": {
+                  "defaultValue": "left",
+                  "label": "Alignment",
+                  "options": [
+                    {
+                      "icon": "TextAlignLeft",
+                      "label": "Left Align",
+                      "value": "left",
+                    },
+                    {
+                      "icon": "TextAlignCenter",
+                      "label": "Center Align",
+                      "value": "center",
+                    },
+                    {
+                      "icon": "TextAlignRight",
+                      "label": "Right Align",
+                      "value": "right",
+                    },
+                    {
+                      "icon": "TextAlignJustify",
+                      "label": "Justify",
+                      "value": "justify",
+                    },
+                  ],
+                },
+                "type": "makeswift::controls::icon-radio-group",
+              },
+            },
+            "type": "makeswift::controls::style-v2",
+          },
+          "getValue": [MessagePort],
+          "onChange": [MessagePort],
+        },
+      },
+      {
+        "control": {
+          "definition": {
+            "config": {
+              "label": "Inline",
+              "options": [
+                {
+                  "icon": "Superscript16",
+                  "label": "Superscript",
+                  "value": "superscript",
+                },
+                {
+                  "icon": "Subscript16",
+                  "label": "Subscript",
+                  "value": "subscript",
+                },
+                {
+                  "icon": "Code16",
+                  "label": "Code",
+                  "value": "code",
+                },
+              ],
+            },
+            "type": "makeswift::controls::icon-radio-group",
+          },
+          "getValue": [MessagePort],
+          "onChange": [MessagePort],
+        },
+      },
+      {
+        "control": {
+          "definition": {
+            "config": {
+              "label": "On Click",
+            },
+            "type": "makeswift::controls::link",
+          },
+          "getValue": [MessagePort],
+          "onChange": [MessagePort],
+        },
+      },
+    ],
+  },
+  "type": "makeswift::controls::rich-text-v2",
+}
+`;
+
+exports[`RichTextV2 serialization deserialized definition in block mode contains correct plugins: transferables 1`] = `11`;
+
+exports[`RichTextV2 serialization deserialized definition in inline mode contains correct plugins 1`] = `
+RichTextV2Definition {
+  "config": {
+    "defaultValue": "Edit this text",
+    "mode": "makeswift::controls::rich-text-v2::mode::inline",
+    "plugins": [
+      {},
+    ],
+  },
+}
+`;
+
+exports[`RichTextV2 serialization deserialized definition in inline mode contains correct plugins: serialized definition 1`] = `
+{
+  "config": {
+    "defaultValue": "Edit this text",
+    "mode": "makeswift::controls::rich-text-v2::mode::inline",
+    "plugins": [
+      {},
+    ],
+  },
+  "type": "makeswift::controls::rich-text-v2",
+}
+`;
+
+exports[`RichTextV2 serialization deserialized definition in inline mode contains correct plugins: transferables 1`] = `0`;

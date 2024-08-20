@@ -1,11 +1,4 @@
 import { useRef } from 'react'
-import {
-  CheckboxControlType,
-  IconRadioGroupControlType,
-  NumberControlType,
-  TextInputControlType,
-  TextAreaControlType,
-} from '@makeswift/controls'
 
 import * as ReactPage from '../../state/react-page'
 
@@ -28,25 +21,32 @@ import {
   useResponsiveShadow,
   useResponsiveWidth,
 } from '../../components/utils/responsive-style'
+
 import {
-  ColorControlType,
-  ComboboxControlType,
-  ImageControlType,
-  LinkControlType,
-  ListControlType,
-  SelectControlType,
-  ShapeControlType,
-  SlotControl,
-  SlotControlType,
-  StyleControlType,
-  RichTextControl,
-  RichTextControlType,
-  StyleControl,
+  CheckboxDefinition,
+  NumberDefinition,
+  RichTextV2Definition,
   RichTextV2Control,
-  RichTextV2ControlType,
-  StyleV2ControlType,
-  TypographyControlType,
+  ColorDefinition,
+  ComboboxDefinition,
+  IconRadioGroupDefinition,
+  ImageDefinition,
+  LinkDefinition,
+  ListDefinition,
+  RichTextV1Definition,
+  RichTextV1Control,
+  SelectDefinition,
+  ShapeDefinition,
+  SlotDefinition,
+  SlotControl,
+  StyleDefinition,
+  StyleControl,
+  StyleV2Definition,
+  TextAreaDefinition,
+  TextInputDefinition,
+  unstable_TypographyDefinition,
 } from '../../controls'
+
 import { useFormattedStyle } from './controls/style'
 import { ControlValue } from './controls/control'
 import { RenderHook } from './components'
@@ -87,6 +87,8 @@ import {
   ResponsiveOpacity,
   getSocialLinksPropControllerDataSocialLinksData,
 } from '@makeswift/prop-controllers'
+
+import { isLegacyDescriptor } from '../../prop-controllers/descriptors'
 import { useResponsiveLengthPropControllerData } from '../../components/hooks/useResponsiveLengthPropControllerData'
 import { useNumberPropControllerData } from '../../components/hooks/useNumberPropControllerData'
 import { useResponsiveColorPropControllerData } from '../../components/hooks/useResponsiveColorPropControllerData'
@@ -167,87 +169,94 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
   return Object.entries(propControllerDescriptorsRef.current).reduceRight(
     (renderFn, [propName, descriptor]) =>
       propsValue => {
+        if (!isLegacyDescriptor(descriptor)) {
+          switch (descriptor.controlType) {
+            case CheckboxDefinition.type:
+            case NumberDefinition.type:
+            case TextInputDefinition.type:
+            case TextAreaDefinition.type:
+            case SelectDefinition.type:
+            case ColorDefinition.type:
+            case IconRadioGroupDefinition.type:
+            case ImageDefinition.type:
+            case ComboboxDefinition.type:
+            case ShapeDefinition.type:
+            case ListDefinition.type:
+            case LinkDefinition.type:
+            case StyleV2Definition.type:
+            case unstable_TypographyDefinition.type:
+              return (
+                <ControlValue
+                  definition={descriptor}
+                  data={props[propName]}
+                  control={propControllers?.[propName]}
+                >
+                  {value => renderFn({ ...propsValue, [propName]: value })}
+                </ControlValue>
+              )
+
+            case StyleDefinition.type: {
+              const control = (propControllers?.[propName] ?? null) as StyleControl | null
+
+              return (
+                <RenderHook
+                  key={descriptor.controlType}
+                  hook={useFormattedStyle}
+                  parameters={[props[propName], descriptor as StyleDefinition, control]}
+                >
+                  {value => renderFn({ ...propsValue, [propName]: value })}
+                </RenderHook>
+              )
+            }
+
+            case RichTextV1Definition.type: {
+              const control = (propControllers?.[propName] ?? null) as RichTextV1Control | null
+
+              return (
+                <RenderHook
+                  key={descriptor.controlType}
+                  hook={useRichText}
+                  parameters={[props[propName], control]}
+                >
+                  {value => renderFn({ ...propsValue, [propName]: value })}
+                </RenderHook>
+              )
+            }
+
+            case RichTextV2Definition.type: {
+              const control = (propControllers?.[propName] ?? null) as RichTextV2Control | null
+
+              return (
+                <RenderHook
+                  key={descriptor.controlType}
+                  hook={useRichTextV2}
+                  parameters={[props[propName], descriptor as RichTextV2Definition, control]}
+                >
+                  {value => renderFn({ ...propsValue, [propName]: value })}
+                </RenderHook>
+              )
+            }
+
+            case SlotDefinition.type: {
+              const control = (propControllers?.[propName] ?? null) as SlotControl | null
+
+              return (
+                <RenderHook
+                  key={descriptor.controlType}
+                  hook={useSlot}
+                  parameters={[props[propName], control]}
+                >
+                  {value => renderFn({ ...propsValue, [propName]: value })}
+                </RenderHook>
+              )
+            }
+          }
+
+          console.error(`Unknown control type: ${descriptor.controlType}`)
+          return renderFn({ ...propsValue, [propName]: props[propName] })
+        }
+
         switch (descriptor.type) {
-          case CheckboxControlType:
-          case NumberControlType:
-          case TextInputControlType:
-          case TextAreaControlType:
-          case SelectControlType:
-          case ColorControlType:
-          case IconRadioGroupControlType:
-          case ImageControlType:
-          case ComboboxControlType:
-          case ShapeControlType:
-          case ListControlType:
-          case LinkControlType:
-          case StyleV2ControlType:
-          case TypographyControlType:
-            return (
-              <ControlValue
-                definition={descriptor}
-                data={props[propName]}
-                control={propControllers?.[propName]}
-              >
-                {value => renderFn({ ...propsValue, [propName]: value })}
-              </ControlValue>
-            )
-
-          case StyleControlType: {
-            const control = (propControllers?.[propName] ?? null) as StyleControl | null
-
-            return (
-              <RenderHook
-                key={descriptor.type}
-                hook={useFormattedStyle}
-                parameters={[props[propName], descriptor, control]}
-              >
-                {value => renderFn({ ...propsValue, [propName]: value })}
-              </RenderHook>
-            )
-          }
-
-          case RichTextControlType: {
-            const control = (propControllers?.[propName] ?? null) as RichTextControl | null
-
-            return (
-              <RenderHook
-                key={descriptor.type}
-                hook={useRichText}
-                parameters={[props[propName], control]}
-              >
-                {value => renderFn({ ...propsValue, [propName]: value })}
-              </RenderHook>
-            )
-          }
-
-          case RichTextV2ControlType: {
-            const control = (propControllers?.[propName] ?? null) as RichTextV2Control | null
-
-            return (
-              <RenderHook
-                key={descriptor.type}
-                hook={useRichTextV2}
-                parameters={[props[propName], descriptor, control]}
-              >
-                {value => renderFn({ ...propsValue, [propName]: value })}
-              </RenderHook>
-            )
-          }
-
-          case SlotControlType: {
-            const control = (propControllers?.[propName] ?? null) as SlotControl | null
-
-            return (
-              <RenderHook
-                key={descriptor.type}
-                hook={useSlot}
-                parameters={[props[propName], control]}
-              >
-                {value => renderFn({ ...propsValue, [propName]: value })}
-              </RenderHook>
-            )
-          }
-
           case PropControllerTypes.Width:
             switch (descriptor.options.format) {
               case WidthPropControllerFormat.ClassName:

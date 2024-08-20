@@ -1,8 +1,5 @@
 import { z } from 'zod'
-import {
-  createResponsiveValueSchema,
-  type ResponsiveValue,
-} from './prop-controllers'
+import { Schema, type ResponsiveValue } from './prop-controllers'
 
 export const colorDataSchema = z.object({
   swatchId: z.string(),
@@ -13,7 +10,7 @@ export type ColorData = z.infer<typeof colorDataSchema>
 
 export const lengthDataSchema = z.object({
   value: z.number(),
-  unit: z.union([z.literal('px'), z.literal('%')]),
+  unit: z.enum(['px', '%']),
 })
 
 export type LengthData = z.infer<typeof lengthDataSchema>
@@ -25,8 +22,7 @@ export const gapDataSchema = z.object({
 
 export type GapData = z.infer<typeof gapDataSchema>
 
-export const responsiveGapDataSchema =
-  createResponsiveValueSchema(gapDataSchema)
+export const responsiveGapDataSchema = Schema.responsiveValue(gapDataSchema)
 
 export type ResponsiveGapData = z.infer<typeof responsiveGapDataSchema>
 
@@ -61,20 +57,16 @@ export const imageDataSchema = z.union([imageDataV0Schema, imageDataV1Schema])
 
 export type ImageData = z.infer<typeof imageDataSchema>
 
-export const responsiveNumberValueSchema = createResponsiveValueSchema(
-  z.number(),
-)
+export const responsiveNumberValueSchema = Schema.responsiveValue(z.number())
 
 export type ResponsiveNumberValue = z.infer<typeof responsiveNumberValueSchema>
 
-export const responsiveSelectValueSchema = createResponsiveValueSchema(
-  z.string(),
-)
+export const responsiveSelectValueSchema = Schema.responsiveValue(z.string())
 
 export type ResponsiveSelectValue<T extends string = string> =
   ResponsiveValue<T>
 
-export const responsiveIconRadioGroupValueSchema = createResponsiveValueSchema(
+export const responsiveIconRadioGroupValueSchema = Schema.responsiveValue(
   z.string(),
 )
 

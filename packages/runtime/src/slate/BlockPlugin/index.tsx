@@ -1,14 +1,16 @@
 import type { KeyboardEvent } from 'react'
+import { cx } from '@emotion/css'
 import { Editor, Transforms, Range, Node, PathRef, Text } from 'slate'
+import { type RenderElementProps } from 'slate-react'
+import { Select, Slate, type DataType } from '@makeswift/controls'
+
 import { setBlockKeyForDevice } from './setBlockKeyForDevice'
 import { clearBlockKeyForDevice } from './clearBlockKeyForDevice'
 import { wrapInline } from './wrapInline'
 import { unwrapInline } from './unwrapInline'
 import { getSelection } from '../selectors'
 import { ElementUtils } from '../utils/element'
-import { Select } from '../../controls/select'
 import { getActiveBlockType } from '../selectors'
-import { BlockType, RootBlockType } from '../types'
 import { unwrapList } from './unwrapList'
 import { wrapList } from './wrapList'
 import { indent } from './indent'
@@ -18,9 +20,8 @@ import { EditorUtils } from '../utils/editor'
 import isHotkey from 'is-hotkey'
 import { LIST_ITEM_CHILD_POSITION } from './constants'
 import { useStyle } from '../../runtimes/react/use-style'
-import { cx } from '@emotion/css'
-import { RenderElementProps } from 'slate-react'
-import { RenderElement, createRichTextV2Plugin } from '../../controls/rich-text-v2/plugin'
+import { type RenderElement, Plugin } from '../../controls/rich-text-v2/plugin'
+import { BlockType } from '../../slate/types'
 
 export const BlockActions = {
   setBlockKeyForDevice,
@@ -42,7 +43,7 @@ export const ListActions = {
 export function onKeyDown(e: KeyboardEvent, editor: Editor) {
   if (
     !editor.selection ||
-    Array.from(Editor.nodes(editor, { match: node => ElementUtils.isListItem(node) })).length === 0
+    Array.from(Editor.nodes(editor, { match: node => Slate.isListItem(node) })).length === 0
   )
     return
 
@@ -103,7 +104,7 @@ export function onKeyDown(e: KeyboardEvent, editor: Editor) {
     Transforms.splitNodes(editor, {
       at: editor.selection,
       always: true,
-      match: node => ElementUtils.isListItem(node),
+      match: node => Slate.isListItem(node),
     })
   }
 
@@ -117,13 +118,13 @@ export function withBlock(editor: Editor) {
   const { normalizeNode } = editor
 
   editor.isInline = entry => {
-    return ElementUtils.isInline(entry)
+    return Slate.isInline(entry)
   }
 
   editor.normalizeNode = entry => {
     const [normalizationNode, normalizationPath] = entry
     // Normalization textAlign with empty array of values
-    if (ElementUtils.isBlock(normalizationNode) && normalizationNode?.textAlign?.length == 0) {
+    if (Slate.isBlock(normalizationNode) && normalizationNode?.textAlign?.length == 0) {
       Transforms.unsetNodes(editor, 'textAlign', { at: normalizationPath })
       return
     }
@@ -131,11 +132,11 @@ export function withBlock(editor: Editor) {
     // Normalization for preventing non-list root blocks from being nested.
     if (
       normalizationPath.length === 1 &&
-      ElementUtils.isRootBlock(normalizationNode) &&
-      !ElementUtils.isList(normalizationNode)
+      Slate.isRootBlock(normalizationNode) &&
+      !Slate.isList(normalizationNode)
     ) {
       const children = Array.from(Node.children(editor, normalizationPath))
-      if (children.findIndex(([child]) => ElementUtils.isRootBlock(child)) !== -1) {
+      if (children.findIndex(([child]) => Slate.isRootBlock(child)) !== -1) {
         Transforms.unwrapNodes(editor, { at: normalizationPath })
         return
       }
@@ -143,12 +144,12 @@ export function withBlock(editor: Editor) {
 
     // Normalization for converting children of list items to list item children
     // In the case of backspace from position 0 of node into a list this converts the node into a list item.
-    if (ElementUtils.isListItem(normalizationNode)) {
+    if (Slate.isListItem(normalizationNode)) {
       const pathToListItemText = [...normalizationPath, LIST_ITEM_CHILD_POSITION]
 
       if (Node.has(editor, pathToListItemText)) {
         const nodeInListItemTextPosition = Node.get(editor, pathToListItemText)
-        if (ElementUtils.isRootBlock(nodeInListItemTextPosition)) {
+        if (Slate.isRootBlock(nodeInListItemTextPosition)) {
           Transforms.setNodes(
             editor,
             { type: BlockType.ListItemChild },
@@ -173,8 +174,8 @@ export function withBlock(editor: Editor) {
           const potentialNodeToBeMerged = children.at(index + 1)
           if (
             !potentialNodeToBeMerged ||
-            !ElementUtils.isList(potentialNodeToBeMerged[0]) ||
-            !ElementUtils.isList(child[0]) ||
+            !Slate.isList(potentialNodeToBeMerged[0]) ||
+            !Slate.isList(child[0]) ||
             potentialNodeToBeMerged[0].type !== child[0].type
           ) {
             return null
@@ -264,12 +265,12 @@ const definition = Select({
 })
 
 export function BlockPlugin() {
-  return createRichTextV2Plugin({
+  return Plugin({
     withPlugin: withBlock,
     onKeyDown: onKeyDown,
     control: {
       definition,
-      onChange: (editor, value) => {
+      onChange: (editor, value: DataType<typeof definition>) => {
         // TODO: This onChange being so complex is an artifact of how the List plugin used to be seperated out from the block plugin.
         // Would be great to refactor and simplify here.
 
@@ -303,13 +304,15 @@ export function BlockPlugin() {
       getValue: editor => {
         const activeBlock = getActiveBlockType(editor)
 
-        if (activeBlock === RootBlockType.Default) return undefined
+        if (activeBlock == null) return undefined
+        if (activeBlock === Slate.RootBlockType.Default) return undefined
 
         return activeBlock
       },
     },
-    renderElement: renderElement => props =>
-      <BlockPluginComponent {...props} renderElement={renderElement} />,
+    renderElement: renderElement => props => (
+      <BlockPluginComponent {...props} renderElement={renderElement} />
+    ),
   })
 }
 

@@ -1,36 +1,21 @@
 import { registerBuiltinComponents } from '../../components/builtin/register'
-import { PropControllerDescriptor, PropControllerDescriptorValueType } from '../../prop-controllers'
-import { registerComponentEffect, registerReactComponentEffect } from '../../state/actions'
-import {
-  Breakpoints,
-  BreakpointsInput,
-  parseBreakpointsInput,
-} from '../../state/modules/breakpoints'
-import { ComponentIcon } from '../../state/modules/components-meta'
-import type {
-  ComponentType,
-  Data,
-  Element,
-  ElementData,
-  SerializableReplacementContext,
-  Store,
-} from '../../state/react-page'
-import {
-  configureStore,
-  copyElementTree,
-  getBreakpoints,
-  getElementTreeTranslatableData,
-  mergeElementTreeTranslatedData,
-} from '../../state/react-page'
 
-export class ReactRuntime {
+import { type Descriptor, type DescriptorValueType } from '../../prop-controllers/descriptors'
+
+import { registerComponentEffect, registerReactComponentEffect } from '../../state/actions'
+import { BreakpointsInput } from '../../state/modules/breakpoints'
+import { ComponentIcon } from '../../state/modules/components-meta'
+import type { ComponentType } from '../../state/react-page'
+
+import { RuntimeCore } from './runtime-core'
+
+export class ReactRuntime extends RuntimeCore {
   // TODO: the static methods here are deprecated and only keep here for backward-compatibility purpose.
   // We will remove them when we release a new breaking change.
   // ------------------ Deprecated API ------------------ //
-  static store = configureStore()
   static registerComponent<
-    P extends Record<string, PropControllerDescriptor>,
-    C extends ComponentType<{ [K in keyof P]: PropControllerDescriptorValueType<P[K]> }>,
+    P extends Record<string, Descriptor>,
+    C extends ComponentType<{ [K in keyof P]: DescriptorValueType<P[K]> }>,
   >(
     component: C,
     {
@@ -54,33 +39,12 @@ export class ReactRuntime {
       unregisterReactComponent()
     }
   }
-  static copyElementTree(
-    elementTree: ElementData,
-    replacementContext: SerializableReplacementContext,
-  ): Element {
-    return copyElementTree(this.store.getState(), elementTree, replacementContext)
-  }
-  static getBreakpoints(): Breakpoints {
-    return getBreakpoints(this.store.getState())
-  }
 
-  static getTranslatableData(elementTree: ElementData): Record<string, Data> {
-    return getElementTreeTranslatableData(this.store.getState(), elementTree)
-  }
-
-  static mergeTranslatedData(
-    elementTree: ElementData,
-    translatedData: Record<string, Data>,
-  ): Element {
-    return mergeElementTreeTranslatedData(this.store.getState(), elementTree, translatedData)
-  }
   // ------------------ Deprecated API ends here ------------------ //
 
-  store: Store
-
   registerComponent<
-    P extends Record<string, PropControllerDescriptor>,
-    C extends ComponentType<{ [K in keyof P]: PropControllerDescriptorValueType<P[K]> }>,
+    P extends Record<string, Descriptor>,
+    C extends ComponentType<{ [K in keyof P]: DescriptorValueType<P[K]> }>,
   >(
     component: C,
     {
@@ -105,31 +69,10 @@ export class ReactRuntime {
     }
   }
 
-  copyElementTree(
-    elementTree: ElementData,
-    replacementContext: SerializableReplacementContext,
-  ): Element {
-    return copyElementTree(this.store.getState(), elementTree, replacementContext)
-  }
-
-  getBreakpoints(): Breakpoints {
-    return getBreakpoints(this.store.getState())
-  }
-
   constructor({ breakpoints }: { breakpoints?: BreakpointsInput } = {}) {
-    this.store = configureStore({
-      breakpoints: breakpoints ? parseBreakpointsInput(breakpoints) : undefined,
-    })
+    super({ breakpoints })
 
     registerBuiltinComponents(this)
-  }
-
-  getTranslatableData(elementTree: ElementData): Record<string, Data> {
-    return getElementTreeTranslatableData(this.store.getState(), elementTree)
-  }
-
-  mergeTranslatedData(elementTree: ElementData, translatedData: Record<string, Data>): Element {
-    return mergeElementTreeTranslatedData(this.store.getState(), elementTree, translatedData)
   }
 }
 

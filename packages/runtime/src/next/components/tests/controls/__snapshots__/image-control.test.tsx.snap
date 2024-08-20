@@ -1,0 +1,1410 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Page Image control data v0 with format: makeswift::controls::image::format::url fetching image: resolvedValue 1`] = `"https://example.com/image.jpg"`;
+
+exports[`Page Image control data v0 with format: makeswift::controls::image::format::url fetching image: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": "image-test-id",
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Image control data v0 with format: makeswift::controls::image::format::url reading file from cache: resolvedValue 1`] = `"https://example.com/image.jpg"`;
+
+exports[`Page Image control data v0 with format: makeswift::controls::image::format::url reading file from cache: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {
+    "File": [
+      {
+        "id": "image-test-id",
+        "value": {
+          "__typename": "File",
+          "dimensions": {
+            "height": 100,
+            "width": 100,
+          },
+          "extension": "jpg",
+          "id": "image-test-id",
+          "name": "image",
+          "publicUrl": "https://example.com/image.jpg",
+        },
+      },
+    ],
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": "image-test-id",
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Image control data v0 with format: makeswift::controls::image::format::with-dimensions fetching image: resolvedValue 1`] = `
+{
+  "dimensions": {
+    "height": 100,
+    "width": 100,
+  },
+  "url": "https://example.com/image.jpg",
+}
+`;
+
+exports[`Page Image control data v0 with format: makeswift::controls::image::format::with-dimensions fetching image: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": "image-test-id",
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Image control data v0 with format: makeswift::controls::image::format::with-dimensions reading file from cache: resolvedValue 1`] = `
+{
+  "dimensions": {
+    "height": 100,
+    "width": 100,
+  },
+  "url": "https://example.com/image.jpg",
+}
+`;
+
+exports[`Page Image control data v0 with format: makeswift::controls::image::format::with-dimensions reading file from cache: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {
+    "File": [
+      {
+        "id": "image-test-id",
+        "value": {
+          "__typename": "File",
+          "dimensions": {
+            "height": 100,
+            "width": 100,
+          },
+          "extension": "jpg",
+          "id": "image-test-id",
+          "name": "image",
+          "publicUrl": "https://example.com/image.jpg",
+        },
+      },
+    ],
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": "image-test-id",
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Image control data v0 with format: undefined fetching image: resolvedValue 1`] = `"https://example.com/image.jpg"`;
+
+exports[`Page Image control data v0 with format: undefined fetching image: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": "image-test-id",
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Image control data v0 with format: undefined reading file from cache: resolvedValue 1`] = `"https://example.com/image.jpg"`;
+
+exports[`Page Image control data v0 with format: undefined reading file from cache: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {
+    "File": [
+      {
+        "id": "image-test-id",
+        "value": {
+          "__typename": "File",
+          "dimensions": {
+            "height": 100,
+            "width": 100,
+          },
+          "extension": "jpg",
+          "id": "image-test-id",
+          "name": "image",
+          "publicUrl": "https://example.com/image.jpg",
+        },
+      },
+    ],
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": "image-test-id",
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Image control data v1 (external image) with value: {"height": 100, "type": "external-file", "url": "https://example.com/image.jpg", "width": 100} with format: makeswift::controls::image::format::url rendering external image: resolvedValue 1`] = `"https://example.com/image.jpg"`;
+
+exports[`Page Image control data v1 (external image) with value: {"height": 100, "type": "external-file", "url": "https://example.com/image.jpg", "width": 100} with format: makeswift::controls::image::format::url rendering external image: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "height": 100,
+                  "type": "external-file",
+                  "url": "https://example.com/image.jpg",
+                  "version": 1,
+                  "width": 100,
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Image control data v1 (external image) with value: {"height": 100, "type": "external-file", "url": "https://example.com/image.jpg", "width": 100} with format: makeswift::controls::image::format::with-dimensions rendering external image: resolvedValue 1`] = `
+{
+  "dimensions": {
+    "height": 100,
+    "width": 100,
+  },
+  "url": "https://example.com/image.jpg",
+}
+`;
+
+exports[`Page Image control data v1 (external image) with value: {"height": 100, "type": "external-file", "url": "https://example.com/image.jpg", "width": 100} with format: makeswift::controls::image::format::with-dimensions rendering external image: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "height": 100,
+                  "type": "external-file",
+                  "url": "https://example.com/image.jpg",
+                  "version": 1,
+                  "width": 100,
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Image control data v1 (external image) with value: {"height": 100, "type": "external-file", "url": "https://example.com/image.jpg", "width": 100} with format: undefined rendering external image: resolvedValue 1`] = `"https://example.com/image.jpg"`;
+
+exports[`Page Image control data v1 (external image) with value: {"height": 100, "type": "external-file", "url": "https://example.com/image.jpg", "width": 100} with format: undefined rendering external image: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "height": 100,
+                  "type": "external-file",
+                  "url": "https://example.com/image.jpg",
+                  "version": 1,
+                  "width": 100,
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": "makeswift-file"} with format: makeswift::controls::image::format::url fetching image: resolvedValue 1`] = `"https://example.com/image.jpg"`;
+
+exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": "makeswift-file"} with format: makeswift::controls::image::format::url fetching image: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "id": "image-test-id",
+                  "type": "makeswift-file",
+                  "version": 1,
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": "makeswift-file"} with format: makeswift::controls::image::format::url reading file from cache: resolvedValue 1`] = `"https://example.com/image.jpg"`;
+
+exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": "makeswift-file"} with format: makeswift::controls::image::format::url reading file from cache: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {
+    "File": [
+      {
+        "id": "image-test-id",
+        "value": {
+          "__typename": "File",
+          "dimensions": {
+            "height": 100,
+            "width": 100,
+          },
+          "extension": "jpg",
+          "id": "image-test-id",
+          "name": "image",
+          "publicUrl": "https://example.com/image.jpg",
+        },
+      },
+    ],
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "id": "image-test-id",
+                  "type": "makeswift-file",
+                  "version": 1,
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": "makeswift-file"} with format: makeswift::controls::image::format::with-dimensions fetching image: resolvedValue 1`] = `
+{
+  "dimensions": {
+    "height": 100,
+    "width": 100,
+  },
+  "url": "https://example.com/image.jpg",
+}
+`;
+
+exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": "makeswift-file"} with format: makeswift::controls::image::format::with-dimensions fetching image: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "id": "image-test-id",
+                  "type": "makeswift-file",
+                  "version": 1,
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": "makeswift-file"} with format: makeswift::controls::image::format::with-dimensions reading file from cache: resolvedValue 1`] = `
+{
+  "dimensions": {
+    "height": 100,
+    "width": 100,
+  },
+  "url": "https://example.com/image.jpg",
+}
+`;
+
+exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": "makeswift-file"} with format: makeswift::controls::image::format::with-dimensions reading file from cache: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {
+    "File": [
+      {
+        "id": "image-test-id",
+        "value": {
+          "__typename": "File",
+          "dimensions": {
+            "height": 100,
+            "width": 100,
+          },
+          "extension": "jpg",
+          "id": "image-test-id",
+          "name": "image",
+          "publicUrl": "https://example.com/image.jpg",
+        },
+      },
+    ],
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "id": "image-test-id",
+                  "type": "makeswift-file",
+                  "version": 1,
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": "makeswift-file"} with format: undefined fetching image: resolvedValue 1`] = `"https://example.com/image.jpg"`;
+
+exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": "makeswift-file"} with format: undefined fetching image: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "id": "image-test-id",
+                  "type": "makeswift-file",
+                  "version": 1,
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": "makeswift-file"} with format: undefined reading file from cache: resolvedValue 1`] = `"https://example.com/image.jpg"`;
+
+exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": "makeswift-file"} with format: undefined reading file from cache: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {
+    "File": [
+      {
+        "id": "image-test-id",
+        "value": {
+          "__typename": "File",
+          "dimensions": {
+            "height": 100,
+            "width": 100,
+          },
+          "extension": "jpg",
+          "id": "image-test-id",
+          "name": "image",
+          "publicUrl": "https://example.com/image.jpg",
+        },
+      },
+    ],
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "id": "image-test-id",
+                  "type": "makeswift-file",
+                  "version": 1,
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::controls::image::format::url fetching image: resolvedValue 1`] = `"https://example.com/image.jpg"`;
+
+exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::controls::image::format::url fetching image: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "id": "image-test-id",
+                  "type": "makeswift-file",
+                  "version": 1,
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::controls::image::format::url reading file from cache: resolvedValue 1`] = `"https://example.com/image.jpg"`;
+
+exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::controls::image::format::url reading file from cache: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {
+    "File": [
+      {
+        "id": "image-test-id",
+        "value": {
+          "__typename": "File",
+          "dimensions": {
+            "height": 100,
+            "width": 100,
+          },
+          "extension": "jpg",
+          "id": "image-test-id",
+          "name": "image",
+          "publicUrl": "https://example.com/image.jpg",
+        },
+      },
+    ],
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "id": "image-test-id",
+                  "type": "makeswift-file",
+                  "version": 1,
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::controls::image::format::with-dimensions fetching image: resolvedValue 1`] = `
+{
+  "dimensions": {
+    "height": 100,
+    "width": 100,
+  },
+  "url": "https://example.com/image.jpg",
+}
+`;
+
+exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::controls::image::format::with-dimensions fetching image: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "id": "image-test-id",
+                  "type": "makeswift-file",
+                  "version": 1,
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::controls::image::format::with-dimensions reading file from cache: resolvedValue 1`] = `
+{
+  "dimensions": {
+    "height": 100,
+    "width": 100,
+  },
+  "url": "https://example.com/image.jpg",
+}
+`;
+
+exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::controls::image::format::with-dimensions reading file from cache: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {
+    "File": [
+      {
+        "id": "image-test-id",
+        "value": {
+          "__typename": "File",
+          "dimensions": {
+            "height": 100,
+            "width": 100,
+          },
+          "extension": "jpg",
+          "id": "image-test-id",
+          "name": "image",
+          "publicUrl": "https://example.com/image.jpg",
+        },
+      },
+    ],
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "id": "image-test-id",
+                  "type": "makeswift-file",
+                  "version": 1,
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page ImageDefinition v1 reading v0 data with format: undefined fetching image: resolvedValue 1`] = `"https://example.com/image.jpg"`;
+
+exports[`Page ImageDefinition v1 reading v0 data with format: undefined fetching image: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "id": "image-test-id",
+                  "type": "makeswift-file",
+                  "version": 1,
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page ImageDefinition v1 reading v0 data with format: undefined reading file from cache: resolvedValue 1`] = `"https://example.com/image.jpg"`;
+
+exports[`Page ImageDefinition v1 reading v0 data with format: undefined reading file from cache: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {
+    "File": [
+      {
+        "id": "image-test-id",
+        "value": {
+          "__typename": "File",
+          "dimensions": {
+            "height": 100,
+            "width": 100,
+          },
+          "extension": "jpg",
+          "id": "image-test-id",
+          "name": "image",
+          "publicUrl": "https://example.com/image.jpg",
+        },
+      },
+    ],
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "id": "image-test-id",
+                  "type": "makeswift-file",
+                  "version": 1,
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;

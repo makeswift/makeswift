@@ -1,15 +1,9 @@
-import {
-  ComboboxControlData,
-  ComboboxControlDefinition,
-  ComboboxControlDefinitionOption,
-} from '../../../controls'
+import { type DataType, type ResolvedValueType } from '@makeswift/controls'
 
-export type ComboboxControlValue<T extends ComboboxControlDefinition> =
-  | ComboboxControlDefinitionOption<T>
-  | undefined
+import { ComboboxDefinition } from '../../../controls'
 
-export function useComboboxControlValue<T extends ComboboxControlDefinition>(
-  data: ComboboxControlData<T> | undefined,
-): ComboboxControlValue<T> {
+export function useComboboxControlValue(
+  data: DataType<ComboboxDefinition> | undefined,
+): ResolvedValueType<ComboboxDefinition> {
   return data?.value
 }

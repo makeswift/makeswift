@@ -1,35 +1,28 @@
-import { ShapeControl, ShapeControlData, ShapeControlDefinition } from '../../../controls/shape'
-import { ControlDefinitionValue, ControlValue } from './control'
+import { type DataType, type ResolvedValueType } from '@makeswift/controls'
 
-export type ShapeControlValue<T extends ShapeControlDefinition> = {
-  [K in keyof T['config']['type']]: ControlDefinitionValue<T['config']['type'][K]>
-}
+import { ShapeControl, ShapeDefinition } from '../../../controls'
 
-type ShapeControlValueProps<T extends ShapeControlDefinition> = {
-  definition: T
-  data: ShapeControlData<T> | undefined
-  children(value: ShapeControlValue<T>): JSX.Element
+import { ControlValue } from './control'
+
+type ShapeControlValueProps = {
+  definition: ShapeDefinition
+  data: DataType<ShapeDefinition> | undefined
+  children(value: ResolvedValueType<ShapeDefinition>): JSX.Element
   control: ShapeControl
 }
 
-export function ShapeControlValue<T extends ShapeControlDefinition>({
-  definition,
-  data,
-  children,
-  control,
-}: ShapeControlValueProps<T>) {
+export function ShapeControlValue({ definition, data, children, control }: ShapeControlValueProps) {
   return Object.entries(definition.config.type).reduceRight(
     (renderFn, [key, controlDefinition]) =>
-      shapeControlValue =>
-        (
-          <ControlValue
-            definition={controlDefinition}
-            data={data?.[key]}
-            control={control?.controls.get(key)}
-          >
-            {value => renderFn({ ...shapeControlValue, [key]: value })}
-          </ControlValue>
-        ),
+      shapeControlValue => (
+        <ControlValue
+          definition={controlDefinition}
+          data={data?.[key]}
+          control={control?.child(key)}
+        >
+          {value => renderFn({ ...shapeControlValue, [key]: value })}
+        </ControlValue>
+      ),
     children,
-  )({} as ShapeControlValue<T>)
+  )({} as ResolvedValueType<ShapeDefinition>)
 }

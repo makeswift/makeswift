@@ -1,6 +1,6 @@
+import { ControlInstance } from '@makeswift/controls'
 import { Action, ActionTypes } from '../actions'
 import type { DescriptorsPropControllers } from '../../prop-controllers/instances'
-import { PropController } from '../../prop-controllers/base'
 import type { Descriptor } from '../../prop-controllers/descriptors'
 
 export interface PropControllersHandle<
@@ -24,7 +24,7 @@ export function isPropControllersHandle(value: unknown): value is PropController
 
 export type State = {
   handles: Map<string, Map<string, PropControllersHandle>>
-  instances: Map<string, Map<string, Record<string, PropController>>>
+  instances: Map<string, Map<string, Record<string, ControlInstance>>>
 }
 
 export function getInitialState(): State {
@@ -43,7 +43,7 @@ export function getPropControllers(
   state: State,
   documentKey: string,
   elementKey: string,
-): Record<string, PropController> | null {
+): Record<string, ControlInstance> | null {
   return state.instances.get(documentKey)?.get(elementKey) ?? null
 }
 
@@ -52,7 +52,7 @@ export function getPropController(
   documentKey: string,
   elementKey: string,
   propName: string,
-): PropController | null {
+): ControlInstance | null {
   return getPropControllers(state, documentKey, elementKey)?.[propName] ?? null
 }
 

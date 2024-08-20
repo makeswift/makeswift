@@ -1,5 +1,6 @@
 import { Editor, Transforms } from 'slate'
-import { ElementUtils } from '../utils/element'
+import { Slate } from '@makeswift/controls'
+
 import { EditableBlockKey } from './types'
 import { getBlocksInSelection } from '../selectors'
 import { BreakpointId } from '../../state/modules/breakpoints'
@@ -12,7 +13,7 @@ export function clearBlockKeyForDevice(
   const rootElements = getBlocksInSelection(editor)
 
   for (const [node, path] of rootElements) {
-    if (ElementUtils.isBlock(node)) {
+    if (Slate.isBlock(node)) {
       const deviceOverrides = node[key] ?? []
       Transforms.setNodes(
         editor,

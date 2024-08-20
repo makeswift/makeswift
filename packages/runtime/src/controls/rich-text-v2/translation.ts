@@ -1,20 +1,20 @@
 import escapeHtml from 'escape-html'
-import { BlockType, InlineType } from '../../slate/types'
 import { Descendant, Editor, Element, Node, Text, Transforms, createEditor } from 'slate'
 import { jsx } from 'slate-hyperscript'
 import { parseFragment } from 'parse5'
 import { ChildNode, DocumentFragment } from 'parse5/dist/tree-adapters/default'
 
-import { RichTextV2ControlData, RichTextV2ControlDefinition, RichTextV2Mode } from './rich-text-v2'
+import { type TranslationDto, Slate } from '@makeswift/controls'
+
 import { RichTextV2Plugin } from './plugin'
-import { InlineModePlugin } from '../../slate/InlineModePlugin'
-import { BlockPlugin } from '../../slate/BlockPlugin'
-import { TypographyPlugin } from '../../slate/TypographyPlugin'
-import { TextAlignPlugin } from '../../slate/TextAlignPlugin'
-import { InlinePlugin } from '../../slate/InlinePlugin'
-import { MakeswiftEditor } from '../../slate/types'
-import { ElementUtils } from '../../slate/utils/element'
-import { TranslationDto } from '../../state/react-page'
+import { type MakeswiftEditor, BlockType, InlineType } from '../../slate/types'
+
+function createEditorWithPlugins(plugins: RichTextV2Plugin[]): MakeswiftEditor {
+  return plugins.reduceRight(
+    (editor, plugin) => plugin?.withPlugin?.(editor) ?? editor,
+    createEditor(),
+  )
+}
 
 function pathToString(path: number[]): string {
   return path.join(':')
@@ -29,22 +29,17 @@ function getDescendantTranslatableData(descendant: Descendant, path: number[]): 
     return {}
   }
 
-  switch (descendant.type) {
-    case BlockType.UnorderedList:
-    case BlockType.OrderedList:
-    case BlockType.ListItem:
-      return descendant.children.reduce(
-        (acc, d, j) => ({ ...acc, ...getDescendantTranslatableData(d, [...path, j]) }),
-        {},
-      )
-
-    default:
-      const text = getInlineOrTextTranslatableData(descendant)
-
-      if (text == null) return {}
-
-      return { [pathToString(path)]: text }
+  if (Slate.isList(descendant) || Slate.isListItem(descendant)) {
+    return descendant.children.reduce(
+      (acc, d, j) => ({ ...acc, ...getDescendantTranslatableData(d, [...path, j]) }),
+      {},
+    )
   }
+
+  const text = getInlineOrTextTranslatableData(descendant)
+  if (text == null) return {}
+
+  return { [pathToString(path)]: text }
 }
 
 function getInlineOrTextTranslatableData(
@@ -70,32 +65,30 @@ function getInlineOrTextTranslatableData(
   switch (descendant.type) {
     case InlineType.Link:
       return `<a key="${pathToString(path)}">${children}</a>`
+
     case InlineType.SuperScript:
       return `<sup key="${pathToString(path)}">${children}</sup>`
+
     case InlineType.SubScript:
       return `<sub key="${pathToString(path)}">${children}</sub>`
+
     case InlineType.Code:
       return `<code key="${pathToString(path)}">${children}</code>`
+
     default:
       return children
   }
 }
 
-export function getRichTextV2TranslatableData(
-  definition: RichTextV2ControlDefinition,
-  data: RichTextV2ControlData,
-): Record<string, string> {
-  const plugins: RichTextV2Plugin[] =
-    definition?.config?.mode === RichTextV2Mode.Inline
-      ? [InlineModePlugin()]
-      : [BlockPlugin(), TypographyPlugin(), TextAlignPlugin(), InlinePlugin()]
+export type RichTextTranslationDto = Record<string, string>
 
-  const editor: MakeswiftEditor = plugins.reduceRight(
-    (editor, plugin) => plugin?.withPlugin?.(editor) ?? editor,
-    createEditor(),
-  )
+export function getTranslatableData(
+  nodes: Slate.Descendant[],
+  plugins: RichTextV2Plugin[],
+): RichTextTranslationDto {
+  const editor = createEditorWithPlugins(plugins)
 
-  editor.children = data.descendants
+  editor.children = nodes
   editor.typographyNormalizationDirection = 'up'
   Editor.normalize(editor, { force: true })
 
@@ -122,9 +115,13 @@ function deserializeTranslationHtmlString(
     }
 
     return children
-  } else if (el.nodeName === '#text' && 'value' in el) {
+  }
+
+  if (el.nodeName === '#text' && 'value' in el) {
     return [jsx('text', { translationKey: translationKey ?? undefined }, el.value)]
-  } else if ('namespaceURI' in el) {
+  }
+
+  if ('namespaceURI' in el) {
     const translationKey = el.attrs.find(a => a.name === 'key')?.value ?? undefined
     const children = Array.from(el.childNodes)
       .map(element => deserializeTranslationHtmlString(element, translationKey))
@@ -137,42 +134,33 @@ function deserializeTranslationHtmlString(
     switch (el.nodeName) {
       case 'code':
         return [jsx('element', { type: InlineType.Code, translationKey }, children)]
+
       case 'sub':
         return [jsx('element', { type: InlineType.SubScript, translationKey }, children)]
+
       case 'sup':
         return [jsx('element', { type: InlineType.SuperScript, translationKey }, children)]
+
       case 'a':
         return [jsx('element', { type: InlineType.Link, translationKey }, children)]
+
       default:
         return children
     }
   }
+
   return []
 }
 
-export type RichTextV2ControlTranslationDto = Record<string, string>
+export function mergeTranslatedNodes(
+  nodes: Slate.Descendant[],
+  translatedData: RichTextTranslationDto,
+  plugins: RichTextV2Plugin[],
+): Slate.Descendant[] {
+  const sourceEditor = createEditorWithPlugins(plugins)
+  const targetEditor = createEditorWithPlugins(plugins)
 
-export function mergeRichTextV2TranslatedData(
-  definition: RichTextV2ControlDefinition,
-  data: RichTextV2ControlData,
-  translatedData: RichTextV2ControlTranslationDto,
-): RichTextV2ControlData {
-  const plugins: RichTextV2Plugin[] =
-    definition?.config?.mode === RichTextV2Mode.Inline
-      ? [InlineModePlugin()]
-      : [BlockPlugin(), TypographyPlugin(), TextAlignPlugin(), InlinePlugin()]
-
-  const sourceEditor: MakeswiftEditor = plugins.reduceRight(
-    (editor, plugin) => plugin?.withPlugin?.(editor) ?? editor,
-    createEditor(),
-  )
-
-  const targetEditor: MakeswiftEditor = plugins.reduceRight(
-    (editor, plugin) => plugin?.withPlugin?.(editor) ?? editor,
-    createEditor(),
-  )
-
-  sourceEditor.children = data.descendants
+  sourceEditor.children = nodes
   sourceEditor.typographyNormalizationDirection = 'up'
   Editor.normalize(sourceEditor, { force: true })
 
@@ -192,7 +180,7 @@ export function mergeRichTextV2TranslatedData(
 
       for (const [descendant, absolutePathToTargetNode] of Node.descendants(targetEditor)) {
         if (
-          (!Text.isText(descendant) && !ElementUtils.isInline(descendant)) ||
+          (!Text.isText(descendant) && !Slate.isInline(descendant)) ||
           descendant.translationKey == null ||
           descendant.translationKey === ''
         ) {
@@ -209,7 +197,7 @@ export function mergeRichTextV2TranslatedData(
           const { translationKey, text, ...rest } = sourceNode
           Transforms.setNodes(targetEditor, rest, { at: absolutePathToTargetNode })
           Transforms.unsetNodes(targetEditor, 'translationKey', { at: absolutePathToTargetNode })
-        } else if (ElementUtils.isInline(sourceNode) && ElementUtils.isInline(descendant)) {
+        } else if (Slate.isInline(sourceNode) && Slate.isInline(descendant)) {
           const { translationKey, children, ...rest } = sourceNode
           Transforms.setNodes(targetEditor, rest, { at: absolutePathToTargetNode })
           Transforms.unsetNodes(targetEditor, 'translationKey', { at: absolutePathToTargetNode })
@@ -231,5 +219,5 @@ export function mergeRichTextV2TranslatedData(
   sourceEditor.typographyNormalizationDirection = 'down'
   Editor.normalize(sourceEditor, { force: true })
 
-  return { ...data, descendants: sourceEditor.children }
+  return sourceEditor.children
 }

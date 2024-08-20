@@ -1,32 +1,46 @@
-import { ComponentPropsWithoutRef, ElementType, ReactNode, useEffect, useState } from 'react'
-import { SlotControl, SlotControlData } from '../../../controls'
+import { ComponentPropsWithoutRef, ElementType, ReactNode, useEffect, useState, memo } from 'react'
+import { cx } from '@emotion/css'
+
+import { SlotDefinition, SlotControl, type DataType } from '@makeswift/controls'
 
 import { Element } from '../components/Element'
 import { getIndexes } from '../../../components/utils/columns'
 import { useResponsiveStyle } from '../../../components/utils/responsive-style'
 import { useStyle } from '../use-style'
-import { cx } from '@emotion/css'
 import { pollBoxModel } from '../poll-box-model'
 
-export type SlotControlValue = ReactNode
-
-export function useSlot(data: SlotControlData, control: SlotControl | null) {
-  // TODO(miguel): While the UI shouldn't allow the state, we should probably check that at least
-  // one element is visible.
-  if (data == null || data.elements.length === 0) {
-    return <Slot.Placeholder control={control} />
-  }
-
-  return (
-    <Slot control={control}>
-      {data.elements.map((element, i) => (
-        <Slot.Item key={element.key} control={control} grid={data.columns} index={i}>
-          <Element element={element} />
-        </Slot.Item>
-      ))}
-    </Slot>
-  )
+export function useSlot(
+  data: DataType<SlotDefinition<ReactNode>> | undefined,
+  control: SlotControl | null,
+) {
+  return <SlotValue data={data} control={control} />
 }
+
+const SlotValue = memo(
+  ({
+    data,
+    control,
+  }: {
+    data: DataType<SlotDefinition<ReactNode>> | undefined
+    control: SlotControl | null
+  }): ReactNode => {
+    // TODO(miguel): While the UI shouldn't allow the state, we should probably check that at least
+    // one element is visible.
+    if (data == null || data.elements.length === 0) {
+      return <Slot.Placeholder control={control} />
+    }
+
+    return (
+      <Slot control={control}>
+        {data.elements.map((element, i) => (
+          <Slot.Item key={element.key} control={control} grid={data.columns} index={i}>
+            <Element element={element} />
+          </Slot.Item>
+        ))}
+      </Slot>
+    )
+  },
+)
 
 type SlotProps<T extends ElementType> = {
   as?: T
@@ -73,7 +87,10 @@ Slot.Item = SlotItem
 type SlotItemProps<T extends ElementType> = {
   as?: T
   control: SlotControl | null
-  grid: SlotControlData['columns']
+  // @arvin: review for correctness
+  grid: DataType<SlotDefinition<ReactNode>> extends undefined
+    ? undefined
+    : NonNullable<DataType<SlotDefinition<ReactNode>>>['columns']
   index: number
   children?: ReactNode
   className?: string

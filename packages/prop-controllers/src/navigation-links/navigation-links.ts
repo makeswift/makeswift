@@ -4,7 +4,7 @@ import {
   CopyContext,
   Options,
   Types,
-  createResponsiveValueSchema,
+  Schema,
 } from '../prop-controllers'
 import { z } from 'zod'
 import { colorDataSchema } from '../data'
@@ -32,12 +32,12 @@ const navigationButtonSchema = z.object({
   payload: z.object({
     label: z.string(),
     link: linkDataSchema.optional(),
-    variant: createResponsiveValueSchema(buttonVariantSchema).optional(),
-    shape: createResponsiveValueSchema(buttonShapeSchema).optional(),
-    size: createResponsiveValueSchema(buttonSizeSchema).optional(),
-    textColor: createResponsiveValueSchema(colorDataSchema).optional(),
-    color: createResponsiveValueSchema(colorDataSchema).optional(),
-    textStyle: createResponsiveValueSchema(textStyleDataSchema).optional(),
+    variant: Schema.responsiveValue(buttonVariantSchema).optional(),
+    shape: Schema.responsiveValue(buttonShapeSchema).optional(),
+    size: Schema.responsiveValue(buttonSizeSchema).optional(),
+    textColor: Schema.responsiveValue(colorDataSchema).optional(),
+    color: Schema.responsiveValue(colorDataSchema).optional(),
+    textStyle: Schema.responsiveValue(textStyleDataSchema).optional(),
   }),
 })
 
@@ -55,8 +55,8 @@ const navigationDropdownLinkSchema = z.object({
   payload: z.object({
     label: z.string(),
     link: linkDataSchema.optional(),
-    color: createResponsiveValueSchema(colorDataSchema).optional(),
-    textStyle: createResponsiveValueSchema(textStyleDataSchema).optional(),
+    color: Schema.responsiveValue(colorDataSchema).optional(),
+    textStyle: Schema.responsiveValue(textStyleDataSchema).optional(),
   }),
 })
 
@@ -67,12 +67,12 @@ const navigationDropdownSchema = z.object({
     label: z.string(),
     caret: navigationDropdownCaretTypeSchema.optional(),
     links: z.array(navigationDropdownLinkSchema).optional(),
-    variant: createResponsiveValueSchema(buttonVariantSchema).optional(),
-    shape: createResponsiveValueSchema(buttonShapeSchema).optional(),
-    size: createResponsiveValueSchema(buttonSizeSchema).optional(),
-    textColor: createResponsiveValueSchema(colorDataSchema).optional(),
-    color: createResponsiveValueSchema(colorDataSchema).optional(),
-    textStyle: createResponsiveValueSchema(textStyleDataSchema).optional(),
+    variant: Schema.responsiveValue(buttonVariantSchema).optional(),
+    shape: Schema.responsiveValue(buttonShapeSchema).optional(),
+    size: Schema.responsiveValue(buttonSizeSchema).optional(),
+    textColor: Schema.responsiveValue(colorDataSchema).optional(),
+    color: Schema.responsiveValue(colorDataSchema).optional(),
+    textStyle: Schema.responsiveValue(textStyleDataSchema).optional(),
   }),
 })
 
@@ -173,7 +173,7 @@ export function createNavigationLinksPropControllerDataFromNavigationLinksData(
         ({
           [ControlDataTypeKey]: NavigationLinksPropControllerDataV1Type,
           value: navigationLinksData,
-        } as const),
+        }) as const,
     )
     .otherwise(() => navigationLinksData)
 }
@@ -314,7 +314,7 @@ export function copyNavigationLinksPropControllerData(
         ({
           [ControlDataTypeKey]: NavigationLinksPropControllerDataV1Type,
           value: copyNavigationLinksData(v1.value, context),
-        } as const),
+        }) as const,
     )
     .otherwise((v0) => copyNavigationLinksData(v0, context))
 }

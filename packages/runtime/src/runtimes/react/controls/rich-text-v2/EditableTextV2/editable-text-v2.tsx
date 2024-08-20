@@ -21,57 +21,34 @@ import {
 } from 'slate-react'
 
 import {
+  RichTextV2Definition,
+  RichText,
   RichTextV2Control,
-  RichTextV2ControlData,
-  RichTextV2ControlDefinition,
-  RichTextV2Mode,
-} from '../../../../../controls'
+  type RichTextDataV2,
+} from '../../../../../controls/rich-text-v2'
+
 import { useBuilderEditMode } from '../../..'
 import { BuilderEditMode } from '../../../../../state/modules/builder-edit-mode'
 import { pollBoxModel } from '../../../poll-box-model'
-import {
-  BlockPlugin,
-  InlineModePlugin,
-  InlinePlugin,
-  LinkPlugin,
-  TextAlignPlugin,
-  TypographyPlugin,
-  withBuilder,
-  withLocalChanges,
-} from '../../../../../slate'
+import { withBuilder, withLocalChanges } from '../../../../../slate'
 import { useSyncDOMSelection } from './useSyncDOMSelection'
 import { RichTextV2Element } from './render-element'
 import { RichTextV2Leaf } from './render-leaf'
-import { richTextV2DataToDescendents } from '../../../../../controls/rich-text-v2/dto'
 import { useSyncRemoteChanges } from './useRemoteChanges'
 import { defaultValue, usePresetValue } from './usePresetValue'
 
 export type RichTextV2ControlValue = ReactNode
 
-export type Descriptors = { text?: RichTextV2ControlDefinition }
+export type Descriptors = { text?: RichTextV2Definition }
 
 type Props = {
-  text?: RichTextV2ControlData
-  definition: RichTextV2ControlDefinition
+  text?: RichTextDataV2
+  definition: RichTextV2Definition
   control: RichTextV2Control | null
 }
 
 export function EditableTextV2({ text, definition, control }: Props) {
-  const plugins = useMemo(() => {
-    const plugins = [
-      /**
-       * TODO: we are manually referencing our default plugins for each mode here because
-       * Referencing the real LinkPlugin causes a circular dependency.
-       * When circular dependencies calm down we should update the plugin definition to use real plugins,
-       * and just use the plugins that are defined by our config.
-       */
-      // ...(definition?.config?.plugins ?? []),
-      ...(definition?.config?.mode === RichTextV2Mode.Inline
-        ? [InlineModePlugin()]
-        : [BlockPlugin(), TypographyPlugin(), TextAlignPlugin(), InlinePlugin(), LinkPlugin()]),
-    ]
-    return plugins
-  }, [definition])
+  const plugins = useMemo(() => definition.config.plugins, [definition])
 
   const [editor] = useState(() =>
     plugins.reduceRight(
@@ -117,7 +94,7 @@ export function EditableTextV2({ text, definition, control }: Props) {
   const presetValue = usePresetValue(definition)
 
   const initialValue = useMemo(
-    () => (text && richTextV2DataToDescendents(text)) ?? presetValue,
+    () => (text && RichText.dataToNodes(text)) ?? presetValue,
     [text, presetValue],
   )
 
