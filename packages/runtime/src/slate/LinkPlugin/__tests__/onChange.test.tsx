@@ -2,18 +2,19 @@
 /** @jsx jsx */
 
 import { onChange } from '../onChange'
-import { LinkControlData } from '../../../controls'
+import { type DataType } from '@makeswift/controls'
+import { LinkDefinition } from '../../../controls'
 // @ts-expect-error: 'jsx' is declared but its value is never read.
 import { jsx, Paragraph, Text, EditorV2, Focus, Anchor, Link, Code } from '../../test-helpers'
 
-const initialLinkData: LinkControlData = {
+const initialLinkData: DataType<LinkDefinition> = {
   type: 'OPEN_URL',
   payload: {
     openInNewTab: false,
     url: 'https://',
   },
 }
-const nextLinkData: LinkControlData = {
+const nextLinkData: DataType<LinkDefinition> = {
   type: 'OPEN_URL',
   payload: {
     openInNewTab: false,

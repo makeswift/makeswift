@@ -1,0 +1,217 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Page IconRadioGroup control data resolves when value is subscript: resolvedValue 1`] = `"subscript"`;
+
+exports[`Page IconRadioGroup control data resolves when value is subscript: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": "subscript",
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page IconRadioGroup control data resolves when value is superscript: resolvedValue 1`] = `"superscript"`;
+
+exports[`Page IconRadioGroup control data resolves when value is superscript: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": "superscript",
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page IconRadioGroup control data resolves when value is undefined: resolvedValue 1`] = `undefined`;
+
+exports[`Page IconRadioGroup control data resolves when value is undefined: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": undefined,
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page resolves value when defaultValue is set: resolvedValue 1`] = `"superscript"`;
+
+exports[`Page resolves value when defaultValue is set: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": undefined,
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;

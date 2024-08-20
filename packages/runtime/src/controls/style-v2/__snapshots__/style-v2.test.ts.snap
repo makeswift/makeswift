@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StyleV2 serialization 1`] = `
+StyleV2Definition {
+  "config": {
+    "getStyle": [Function],
+    "type": IconRadioGroupDefinition {
+      "config": {
+        "defaultValue": "left",
+        "label": "Alignment",
+        "options": [
+          {
+            "icon": "TextAlignLeft",
+            "label": "Left Align",
+            "value": "left",
+          },
+          {
+            "icon": "TextAlignCenter",
+            "label": "Center Align",
+            "value": "center",
+          },
+          {
+            "icon": "TextAlignRight",
+            "label": "Right Align",
+            "value": "right",
+          },
+          {
+            "icon": "TextAlignJustify",
+            "label": "Justify",
+            "value": "justify",
+          },
+        ],
+      },
+    },
+  },
+}
+`;

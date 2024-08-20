@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Checkbox constructor call with default value \`false\` returns versioned definition 1`] = `
+CheckboxDefinition {
+  "config": {
+    "defaultValue": false,
+    "label": "visible",
+  },
+  "version": 1,
+}
+`;
+
+exports[`Checkbox constructor call with default value \`true\` returns versioned definition 1`] = `
+CheckboxDefinition {
+  "config": {
+    "defaultValue": true,
+    "label": "visible",
+  },
+  "version": 1,
+}
+`;
+
+exports[`Checkbox constructor call with default value \`undefined\` returns versioned definition 1`] = `
+CheckboxDefinition {
+  "config": {
+    "defaultValue": undefined,
+    "label": "visible",
+  },
+  "version": 1,
+}
+`;
+
+exports[`Checkbox definition w/ config {"defaultValue":false,"label":"visible"} toData returns v1 data for \`false\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "checkbox::v1",
+  "value": false,
+}
+`;
+
+exports[`Checkbox definition w/ config {"defaultValue":false,"label":"visible"} toData returns v1 data for \`true\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "checkbox::v1",
+  "value": true,
+}
+`;
+
+exports[`Checkbox definition w/ config {"label":"disabled"} toData returns v1 data for \`false\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "checkbox::v1",
+  "value": false,
+}
+`;
+
+exports[`Checkbox definition w/ config {"label":"disabled"} toData returns v1 data for \`true\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "checkbox::v1",
+  "value": true,
+}
+`;
+
+exports[`Checkbox definition w/ config {"label":"disabled"} toData returns v1 data for \`undefined\` when definition version is 1 1`] = `undefined`;

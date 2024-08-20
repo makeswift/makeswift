@@ -1,349 +1,280 @@
 import {
-  CheckboxControlData,
-  CheckboxControlDefinition,
-  CheckboxControlType,
-  NumberControlData,
-  NumberControlDefinition,
-  NumberControlType,
-  TextInputControlData,
-  TextInputControlDefinition,
-  TextInputControlType,
-  TextAreaControlData,
-  TextAreaControlDefinition,
-  TextAreaControlType,
-} from '@makeswift/controls'
-import {
-  ColorControlData,
-  ColorControlDefinition,
-  ColorControlType,
-  ComboboxControlData,
-  ComboboxControlDefinition,
-  ComboboxControlType,
   ControlDefinition,
-  ControlDefinitionData,
-  IconRadioGroupControlData,
-  IconRadioGroupControlDefinition,
-  IconRadioGroupControlType,
-  ImageControlData,
-  ImageControlDefinition,
-  ImageControlType,
-  LinkControlData,
-  LinkControlDefinition,
-  LinkControlType,
-  ListControl,
-  ListControlData,
-  ListControlDefinition,
-  ListControlType,
-  RichTextControl,
-  RichTextControlData,
-  RichTextControlDefinition,
-  RichTextControlType,
-  RichTextV2Control,
-  RichTextV2ControlData,
-  RichTextV2ControlDefinition,
-  RichTextV2ControlType,
-  SelectControlData,
-  SelectControlDefinition,
-  SelectControlType,
-  ShapeControl,
-  ShapeControlData,
-  ShapeControlDefinition,
-  ShapeControlType,
-  SlotControl,
-  SlotControlData,
-  SlotControlDefinition,
-  SlotControlType,
-  StyleControl,
-  StyleControlData,
-  StyleControlDefinition,
-  StyleControlType,
-  StyleV2Control,
-  StyleV2ControlData,
-  StyleV2ControlDefinition,
-  StyleV2ControlType,
-  TypographyControlData,
-  TypographyControlDefinition,
-  TypographyControlType,
+  ControlInstance,
+  type DataType,
+  type ResolvedValueType,
+  type InstanceType,
+} from '@makeswift/controls'
+
+import {
+  CheckboxDefinition,
+  NumberDefinition,
+  RichTextV2Definition,
+  ColorDefinition,
+  ComboboxDefinition,
+  IconRadioGroupDefinition,
+  ImageDefinition,
+  LinkDefinition,
+  ListDefinition,
+  RichTextV1Definition,
+  SelectDefinition,
+  ShapeDefinition,
+  SlotDefinition,
+  StyleDefinition,
+  StyleV2Definition,
+  TextAreaDefinition,
+  TextInputDefinition,
+  unstable_TypographyDefinition,
 } from '../../../controls'
 
-import { AnyPropController } from '../../../prop-controllers/instances'
 import { RenderHook } from '../components'
-import { CheckboxControlValue, useCheckboxControlValue } from './checkbox'
-import { ColorControlValue, useColorValue } from './color'
-import { ComboboxControlValue, useComboboxControlValue } from './combobox'
-import { IconRadioGroupControlValue, useIconRadioGroupValue } from './icon-radio-group'
-import { ResolveImageControlValue, useImageControlValue } from './image'
-import { LinkControlValue, useLinkControlValue } from './link'
+import { useCheckboxControlValue } from './checkbox'
+import { useColorValue } from './color'
+import { useComboboxControlValue } from './combobox'
+import { useIconRadioGroupValue } from './icon-radio-group'
+import { useImageControlValue } from './image'
+import { useLinkControlValue } from './link'
 import { ListControlValue } from './list'
-import { NumberControlValue, useNumber } from './number'
-import { RichTextControlValue, useRichText } from './rich-text/rich-text'
-import { RichTextV2ControlValue, useRichTextV2 } from './rich-text-v2'
-import { SelectControlValue, useSelectControlValue } from './select'
+import { useNumber } from './number'
+import { useRichText } from './rich-text/rich-text'
+import { useRichTextV2 } from './rich-text-v2'
+import { useSelectControlValue } from './select'
 import { ShapeControlValue } from './shape'
-import { SlotControlValue, useSlot } from './slot'
-import { StyleControlFormattedValue, useFormattedStyle } from './style'
-import { StyleV2ControlFormattedValue, StyleV2ControlValue } from './style-v2'
-import { TextAreaControlValue, useTextAreaValue } from './text-area'
-import { TextInputControlValue, useTextInputValue } from './text-input'
-import { TypographyControlValue, useTypographyValue } from './typography'
+import { useSlot } from './slot'
+import { useFormattedStyle } from './style'
+import { StyleV2ControlValue } from './style-v2'
+import { useTextAreaValue } from './text-area'
+import { useTextInputValue } from './text-input'
+import { useTypographyValue } from './typography'
 
-export type ControlDefinitionValue<T extends ControlDefinition> =
-  T extends CheckboxControlDefinition
-    ? CheckboxControlValue<T>
-    : T extends NumberControlDefinition
-    ? NumberControlValue<T>
-    : T extends TextInputControlDefinition
-    ? TextInputControlValue<T>
-    : T extends TextAreaControlDefinition
-    ? TextAreaControlValue<T>
-    : T extends SelectControlDefinition
-    ? SelectControlValue<T>
-    : T extends ColorControlDefinition
-    ? ColorControlValue<T>
-    : T extends ImageControlDefinition
-    ? ResolveImageControlValue<T>
-    : T extends IconRadioGroupControlDefinition
-    ? IconRadioGroupControlValue<T>
-    : T extends LinkControlDefinition
-    ? LinkControlValue<T>
-    : T extends ComboboxControlDefinition
-    ? ComboboxControlValue<T>
-    : T extends ShapeControlDefinition
-    ? ShapeControlValue<T>
-    : T extends ListControlDefinition
-    ? ListControlValue<T>
-    : T extends SlotControlDefinition
-    ? SlotControlValue
-    : T extends RichTextControlDefinition
-    ? RichTextControlValue
-    : T extends RichTextV2ControlDefinition
-    ? RichTextV2ControlValue
-    : T extends StyleControlDefinition
-    ? StyleControlFormattedValue
-    : T extends StyleV2ControlDefinition
-    ? StyleV2ControlFormattedValue
-    : T extends TypographyControlDefinition
-    ? TypographyControlValue
-    : never
-
-type ControlValueProps<T extends ControlDefinition> = {
-  definition: T
-  data: ControlDefinitionData<T> | undefined
-  children(value: ControlDefinitionValue<T>): JSX.Element
-  control?: AnyPropController
+type ControlValueProps = {
+  definition: ControlDefinition
+  data: DataType<ControlDefinition> | undefined
+  children(value: ResolvedValueType<ControlDefinition>): JSX.Element
+  control?: ControlInstance
 }
 
-export function ControlValue<T extends ControlDefinition>({
+export function ControlValue({
   data,
   definition,
   children,
   control,
-}: ControlValueProps<T>): JSX.Element {
-  switch (definition.type) {
-    case CheckboxControlType:
+}: ControlValueProps): JSX.Element {
+  switch (definition.controlType) {
+    case CheckboxDefinition.type:
       return (
         <RenderHook
-          key={definition.type}
+          key={definition.controlType}
           hook={useCheckboxControlValue}
-          parameters={[data as CheckboxControlData, definition]}
+          parameters={[data as DataType<CheckboxDefinition>, definition as CheckboxDefinition]}
         >
-          {value => children(value as ControlDefinitionValue<T>)}
+          {value => children(value)}
         </RenderHook>
       )
 
-    case NumberControlType:
+    case NumberDefinition.type:
       return (
         <RenderHook
-          key={definition.type}
+          key={definition.controlType}
           hook={useNumber}
-          parameters={[data as NumberControlData, definition]}
+          parameters={[data as DataType<NumberDefinition>, definition as NumberDefinition]}
         >
-          {value => children(value as ControlDefinitionValue<T>)}
+          {value => children(value)}
         </RenderHook>
       )
 
-    case TextInputControlType:
+    case TextInputDefinition.type:
       return (
         <RenderHook
-          key={definition.type}
+          key={definition.controlType}
           hook={useTextInputValue}
-          parameters={[data as TextInputControlData, definition]}
+          parameters={[data as DataType<TextInputDefinition>, definition as TextInputDefinition]}
         >
-          {value => children(value as ControlDefinitionValue<T>)}
+          {value => children(value)}
         </RenderHook>
       )
 
-    case TextAreaControlType:
+    case TextAreaDefinition.type:
       return (
         <RenderHook
-          key={definition.type}
+          key={definition.controlType}
           hook={useTextAreaValue}
-          parameters={[data as TextAreaControlData, definition]}
+          parameters={[data as DataType<TextAreaDefinition>, definition as TextAreaDefinition]}
         >
-          {value => children(value as ControlDefinitionValue<T>)}
+          {value => children(value)}
         </RenderHook>
       )
 
-    case SelectControlType:
+    case SelectDefinition.type:
       return (
         <RenderHook
-          key={definition.type}
+          key={definition.controlType}
           hook={useSelectControlValue}
-          parameters={[data as SelectControlData, definition]}
+          parameters={[data as DataType<SelectDefinition>, definition as SelectDefinition]}
         >
-          {value => children(value as ControlDefinitionValue<T>)}
+          {value => children(value)}
         </RenderHook>
       )
 
-    case ColorControlType:
+    case ColorDefinition.type:
       return (
         <RenderHook
-          key={definition.type}
+          key={definition.controlType}
           hook={useColorValue}
-          parameters={[data as ColorControlData, definition]}
+          parameters={[data as DataType<ColorDefinition>, definition as ColorDefinition]}
         >
-          {value => children(value as ControlDefinitionValue<T>)}
+          {value => children(value)}
         </RenderHook>
       )
 
-    case IconRadioGroupControlType:
+    case IconRadioGroupDefinition.type:
       return (
         <RenderHook
-          key={definition.type}
+          key={definition.controlType}
           hook={useIconRadioGroupValue}
-          parameters={[data as IconRadioGroupControlData, definition]}
+          parameters={[
+            data as DataType<IconRadioGroupDefinition>,
+            definition as IconRadioGroupDefinition,
+          ]}
         >
-          {value => children(value as ControlDefinitionValue<T>)}
+          {value => children(value)}
         </RenderHook>
       )
 
-    case ImageControlType:
+    case ImageDefinition.type:
       return (
         <RenderHook
-          key={definition.type}
+          key={definition.controlType}
           hook={useImageControlValue}
-          parameters={[data as ImageControlData, definition]}
+          parameters={[data as DataType<ImageDefinition>, definition as ImageDefinition]}
         >
-          {value => children(value as ControlDefinitionValue<T>)}
+          {value => children(value)}
         </RenderHook>
       )
 
-    case LinkControlType:
+    case LinkDefinition.type:
       return (
         <RenderHook
-          key={definition.type}
+          key={definition.controlType}
           hook={useLinkControlValue}
-          parameters={[data as LinkControlData, definition]}
+          parameters={[data as DataType<LinkDefinition>, definition as LinkDefinition]}
         >
-          {value => children(value as ControlDefinitionValue<T>)}
+          {value => children(value)}
         </RenderHook>
       )
 
-    case ComboboxControlType:
+    case ComboboxDefinition.type:
       return (
         <RenderHook
-          key={definition.type}
+          key={definition.controlType}
           hook={useComboboxControlValue}
-          parameters={[data as ComboboxControlData]}
+          parameters={[data as DataType<ComboboxDefinition>]}
         >
-          {value => children(value as ControlDefinitionValue<T>)}
+          {value => children(value)}
         </RenderHook>
       )
 
-    case ShapeControlType:
+    case ShapeDefinition.type:
       return (
         <ShapeControlValue
-          definition={definition}
-          data={data as ShapeControlData}
-          control={control as ShapeControl}
+          definition={definition as ShapeDefinition}
+          data={data as DataType<ShapeDefinition>}
+          control={control as InstanceType<ShapeDefinition>}
         >
-          {value => children(value as ControlDefinitionValue<T>)}
+          {value => children(value)}
         </ShapeControlValue>
       )
 
-    case ListControlType:
+    case ListDefinition.type:
       return (
         <ListControlValue
-          definition={definition}
-          data={data as ListControlData}
-          control={control as ListControl}
+          definition={definition as ListDefinition}
+          data={data as DataType<ListDefinition>}
+          control={control as InstanceType<ListDefinition>}
         >
-          {value => children(value as ControlDefinitionValue<T>)}
+          {value => children(value)}
         </ListControlValue>
       )
 
-    case StyleV2ControlType:
+    case StyleV2Definition.type:
       return (
         <StyleV2ControlValue
-          key={definition.type}
-          data={data as StyleV2ControlData}
-          definition={definition}
-          control={control as StyleV2Control}
+          key={definition.controlType}
+          data={data as DataType<StyleV2Definition>}
+          definition={definition as StyleV2Definition}
+          control={control as InstanceType<StyleV2Definition>}
         >
-          {value => children(value as ControlDefinitionValue<T>)}
+          {value => children(value)}
         </StyleV2ControlValue>
       )
 
-    case SlotControlType:
+    case SlotDefinition.type:
       return (
         <RenderHook
-          key={definition.type}
+          key={definition.controlType}
           hook={useSlot}
-          parameters={[data as unknown as SlotControlData, control as SlotControl]}
+          parameters={[data as DataType<SlotDefinition>, control as InstanceType<SlotDefinition>]}
         >
-          {value => children(value as ControlDefinitionValue<T>)}
+          {value => children(value)}
         </RenderHook>
       )
 
-    case RichTextControlType:
+    case RichTextV1Definition.type:
       return (
         <RenderHook
-          key={definition.type}
+          key={definition.controlType}
           hook={useRichText}
-          parameters={[data as unknown as RichTextControlData, control as RichTextControl]}
-        >
-          {value => children(value as ControlDefinitionValue<T>)}
-        </RenderHook>
-      )
-
-    case RichTextV2ControlType:
-      return (
-        <RenderHook
-          key={definition.type}
-          hook={useRichTextV2}
           parameters={[
-            data as unknown as RichTextV2ControlData,
-            definition,
-            control as RichTextV2Control,
+            data as DataType<RichTextV1Definition>,
+            control as InstanceType<RichTextV1Definition>,
           ]}
         >
-          {value => children(value as ControlDefinitionValue<T>)}
+          {value => children(value)}
         </RenderHook>
       )
 
-    case StyleControlType:
+    case RichTextV2Definition.type:
       return (
         <RenderHook
-          key={definition.type}
+          key={definition.controlType}
+          hook={useRichTextV2}
+          parameters={[
+            data as DataType<RichTextV2Definition>,
+            definition as RichTextV2Definition,
+            control as InstanceType<RichTextV2Definition>,
+          ]}
+        >
+          {value => children(value)}
+        </RenderHook>
+      )
+
+    case StyleDefinition.type:
+      return (
+        <RenderHook
+          key={definition.controlType}
           hook={useFormattedStyle}
-          parameters={[data as unknown as StyleControlData, definition, control as StyleControl]}
+          parameters={[
+            data as DataType<StyleDefinition>,
+            definition as StyleDefinition,
+            control as InstanceType<StyleDefinition>,
+          ]}
         >
-          {value => children(value as ControlDefinitionValue<T>)}
+          {value => children(value)}
         </RenderHook>
       )
 
-    case TypographyControlType:
+    case unstable_TypographyDefinition.type:
       return (
         <RenderHook
-          key={definition.type}
+          key={definition.controlType}
           hook={useTypographyValue}
-          parameters={[data as unknown as TypographyControlData[number]]}
+          parameters={[data as DataType<unstable_TypographyDefinition>]}
         >
-          {value => children(value as ControlDefinitionValue<T>)}
+          {value => children(value)}
         </RenderHook>
       )
 
     default:
-      return children(data as ControlDefinitionValue<T>)
+      return children(data)
   }
 }

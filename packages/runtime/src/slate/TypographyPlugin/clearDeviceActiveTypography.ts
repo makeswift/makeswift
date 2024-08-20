@@ -1,5 +1,5 @@
 import { Editor, Transforms, Text, Range } from 'slate'
-import { RichTextTypography } from '../types'
+import { RichTextTypography } from '@makeswift/controls'
 
 type ClearDeviceActiveTypographyOptions = {
   at?: Range

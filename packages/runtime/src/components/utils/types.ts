@@ -1,3 +1,5 @@
+import { type ResponsiveValue } from '@makeswift/controls'
+
 export type SwatchValue = {
   hue: number
   saturation: number
@@ -5,3 +7,5 @@ export type SwatchValue = {
 }
 
 export type ColorValue = { swatch?: SwatchValue; alpha?: number }
+
+export type ResponsiveColor = ResponsiveValue<ColorValue>

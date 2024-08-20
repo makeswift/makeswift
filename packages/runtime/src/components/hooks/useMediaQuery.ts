@@ -8,7 +8,7 @@ import {
   getBaseBreakpoint,
   getBreakpointMediaQuery,
 } from '../../state/modules/breakpoints'
-import { useBreakpoints } from '../../runtimes/react'
+import { useBreakpoints } from '../../runtimes/react/hooks/use-breakpoints'
 
 const getDeviceQueries = (breakpoints: Breakpoints) =>
   breakpoints.map(device => ({

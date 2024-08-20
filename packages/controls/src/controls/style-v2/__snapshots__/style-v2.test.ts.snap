@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StyleV2 constructor returns correct definition: text alignment 1`] = `
+Definition {
+  "config": {
+    "getStyle": [Function],
+    "type": SelectDefinition {
+      "config": {
+        "defaultValue": "left",
+        "label": "Alignment",
+        "options": [
+          {
+            "label": "Left Align",
+            "value": "left",
+          },
+          {
+            "label": "Center Align",
+            "value": "center",
+          },
+          {
+            "label": "Right Align",
+            "value": "right",
+          },
+        ],
+      },
+    },
+  },
+}
+`;
+
+exports[`StyleV2 constructor returns correct definition: visibility 1`] = `
+Definition {
+  "config": {
+    "getStyle": [Function],
+    "type": CheckboxDefinition {
+      "config": {
+        "defaultValue": true,
+      },
+      "version": 1,
+    },
+  },
+}
+`;

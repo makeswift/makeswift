@@ -1,16 +1,16 @@
 import { Editor } from 'slate'
-import { ElementUtils } from '../utils/element'
-import { ResponsiveBlockTextAlignment } from '../types'
+import { Slate } from '@makeswift/controls'
+
 import { getSelection } from '../selectors'
 import { responsiveShallowEqual } from '../utils/responsive'
 
-export function getValue(editor: Editor): ResponsiveBlockTextAlignment | undefined {
+export function getValue(editor: Editor): Slate.ResponsiveBlockTextAlignment | undefined {
   const matchingValues = Array.from(
     Editor.nodes(editor, {
       at: getSelection(editor),
-      match: ElementUtils.isRootBlock,
+      match: Slate.isRootBlock,
     }),
-  ).map(([node]) => node['textAlign']) as (ResponsiveBlockTextAlignment | undefined)[]
+  ).map(([node]) => node['textAlign']) as (Slate.ResponsiveBlockTextAlignment | undefined)[]
 
   return matchingValues.length === 0
     ? undefined

@@ -1,5 +1,6 @@
 import { Editor, Text } from 'slate'
-import { RichTextTypography } from '../types'
+import { RichTextTypography } from '@makeswift/controls'
+
 import { getSelection } from '../selectors'
 
 export function getValue(editor: Editor) {

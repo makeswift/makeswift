@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Shape constructor heterogenous controls 1`] = `
+ShapeDefinition {
+  "config": {
+    "type": {
+      "num": CheckboxDefinition {
+        "config": {},
+        "version": 1,
+      },
+      "val": ColorDefinition {
+        "config": {
+          "defaultValue": "red",
+        },
+        "version": 1,
+      },
+    },
+  },
+}
+`;
+
+exports[`Shape serialization serialize/deserialize composable shape of controls 1`] = `
+{
+  "config": {
+    "type": {
+      "shape": {
+        "config": {
+          "type": {
+            "checkbox": {
+              "config": {},
+              "type": "makeswift::controls::checkbox",
+              "version": 1,
+            },
+            "color": {
+              "config": {
+                "defaultValue": "red",
+              },
+              "type": "makeswift::controls::color",
+              "version": 1,
+            },
+          },
+        },
+        "type": "makeswift::controls::shape",
+      },
+    },
+  },
+  "type": "makeswift::controls::shape",
+}
+`;
+
+exports[`Shape serialization serialize/deserialize shape of controls 1`] = `
+{
+  "config": {
+    "type": {
+      "checkbox": {
+        "config": {},
+        "type": "makeswift::controls::checkbox",
+        "version": 1,
+      },
+      "color": {
+        "config": {
+          "defaultValue": "red",
+        },
+        "type": "makeswift::controls::color",
+        "version": 1,
+      },
+    },
+  },
+  "type": "makeswift::controls::shape",
+}
+`;

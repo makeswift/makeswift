@@ -1,0 +1,141 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Page Shape (heterogenous properties): resolvedValue 1`] = `
+{
+  "checkbox": true,
+  "color": "rgba(16, 24, 234, 0.5)",
+  "image": {
+    "dimensions": {
+      "height": 100,
+      "width": 100,
+    },
+    "url": "https://example.com/image.png",
+  },
+  "image2": "https://example.com/external-jpg.jpg",
+  "list": [
+    true,
+  ],
+  "shape": {
+    "checkbox": true,
+  },
+}
+`;
+
+exports[`Page Shape (heterogenous properties): snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {
+    "File": [
+      {
+        "id": "[file-test-id]",
+        "value": {
+          "__typename": "File",
+          "dimensions": {
+            "height": 100,
+            "width": 100,
+          },
+          "extension": "png",
+          "id": "[file-test-id]",
+          "name": "image",
+          "publicUrl": "https://example.com/image.png",
+        },
+      },
+    ],
+    "Swatch": [
+      {
+        "id": "[swatch-test-id]",
+        "value": {
+          "__typename": "Swatch",
+          "hue": 238,
+          "id": "[swatch-test-id]",
+          "lightness": 49,
+          "saturation": 87,
+        },
+      },
+    ],
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "checkbox": {
+                    "@@makeswift/type": "checkbox::v1",
+                    "value": true,
+                  },
+                  "color": {
+                    "@@makeswift/type": "color::v1",
+                    "alpha": 0.5,
+                    "swatchId": "[swatch-test-id]",
+                  },
+                  "image": {
+                    "id": "[file-test-id]",
+                    "type": "makeswift-file",
+                    "version": 1,
+                  },
+                  "image2": {
+                    "height": 100,
+                    "type": "external-file",
+                    "url": "https://example.com/external-jpg.jpg",
+                    "version": 1,
+                    "width": 100,
+                  },
+                  "list": [
+                    {
+                      "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                      "type": "makeswift::controls::checkbox",
+                      "value": {
+                        "@@makeswift/type": "checkbox::v1",
+                        "value": true,
+                      },
+                    },
+                  ],
+                  "shape": {
+                    "checkbox": {
+                      "@@makeswift/type": "checkbox::v1",
+                      "value": true,
+                    },
+                  },
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;

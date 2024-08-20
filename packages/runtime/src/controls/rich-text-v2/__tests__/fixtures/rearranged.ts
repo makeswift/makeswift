@@ -1,7 +1,8 @@
+import { type DataType } from '@makeswift/controls'
+import { RichTextV2Definition } from '../../rich-text-v2'
 import { InlineType } from '../../../../slate'
-import { RichTextV2ControlData } from '../../rich-text-v2'
 
-export const sourceElementTree: RichTextV2ControlData = {
+export const sourceElementTree: DataType<RichTextV2Definition> = {
   type: 'makeswift::controls::rich-text-v2',
   version: 2,
   descendants: [
@@ -54,7 +55,7 @@ export const translatableData = {
   '0': `<span key="0">One</span><code key="1"><span key="1:0">Two</span></code><span key="2">Three</span><sub key="3"><span key="3:0">Four</span></sub><span key="4">Five</span><sup key="5"><span key="5:0">Six</span></sup>`,
 }
 
-export const targetElementTree: RichTextV2ControlData = {
+export const targetElementTree: DataType<RichTextV2Definition> = {
   type: 'makeswift::controls::rich-text-v2',
   version: 2,
   descendants: [

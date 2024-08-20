@@ -1,6 +1,7 @@
-import { getSupportedInlinesAndTextInSelection } from './getValue'
 import { Editor, Transforms } from 'slate'
-import { ElementUtils } from '../utils/element'
+import { Slate } from '@makeswift/controls'
+
+import { getSupportedInlinesAndTextInSelection } from './getValue'
 import { unwrapInline } from '../BlockPlugin/unwrapInline'
 import { wrapInline } from '../BlockPlugin/wrapInline'
 import { getSelection } from '../selectors'
@@ -19,7 +20,7 @@ export const onChange = (editor: Editor, value: SupportedInlineType) => {
 
   function unwrapAllInlines() {
     Transforms.unwrapNodes(editor, {
-      match: node => ElementUtils.isInline(node),
+      match: node => Slate.isInline(node),
       at: getSelection(editor),
     })
   }

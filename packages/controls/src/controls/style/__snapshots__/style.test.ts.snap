@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Style constructor returns correct definition: all 1`] = `
+StyleDefinition {
+  "config": {
+    "properties": [
+      "makeswift::controls::style::property::width",
+      "makeswift::controls::style::property::margin",
+      "makeswift::controls::style::property::padding",
+      "makeswift::controls::style::property::border",
+      "makeswift::controls::style::property::border-radius",
+      "makeswift::controls::style::property::text-style",
+    ],
+  },
+}
+`;
+
+exports[`Style constructor returns correct definition: border and margin 1`] = `
+StyleDefinition {
+  "config": {
+    "properties": [
+      "makeswift::controls::style::property::border",
+      "makeswift::controls::style::property::margin",
+    ],
+  },
+}
+`;
+
+exports[`Style constructor returns correct definition: default 1`] = `
+StyleDefinition {
+  "config": {
+    "properties": [
+      "makeswift::controls::style::property::width",
+      "makeswift::controls::style::property::margin",
+    ],
+  },
+}
+`;

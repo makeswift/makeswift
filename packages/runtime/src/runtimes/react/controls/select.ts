@@ -1,17 +1,10 @@
-import {
-  SelectControlData,
-  SelectControlDefinition,
-  SelectControlDefinitionOption,
-} from '../../../controls'
+import { type DataType, type ResolvedValueType } from '@makeswift/controls'
 
-export type SelectControlValue<T extends SelectControlDefinition> =
-  undefined extends T['config']['defaultValue']
-    ? SelectControlDefinitionOption<T> | undefined
-    : SelectControlDefinitionOption<T>
+import { SelectDefinition } from '../../../controls'
 
-export function useSelectControlValue<T extends SelectControlDefinition>(
-  data: SelectControlData<T> | undefined,
-  definition: T,
-): SelectControlValue<T> {
-  return (data ?? definition?.config.defaultValue) as SelectControlValue<T>
+export function useSelectControlValue(
+  data: DataType<SelectDefinition> | undefined,
+  definition: SelectDefinition,
+): ResolvedValueType<SelectDefinition> {
+  return definition.fromData(data) ?? definition.config.defaultValue
 }

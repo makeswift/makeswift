@@ -1,28 +1,25 @@
 import { useEffect, useState } from 'react'
-import { ListControl, ListControlData, ListControlDefinition } from '../../../controls'
-import { AnyPropController } from '../../../prop-controllers/instances'
-import { ControlDefinitionValue, ControlValue } from './control'
 
-type ListControlItemValue<T extends ListControlDefinition> = ControlDefinitionValue<
-  T['config']['type']
->
+import { ControlInstance, type DataType, type ResolvedValueType } from '@makeswift/controls'
 
-export type ListControlValue<T extends ListControlDefinition> = ListControlItemValue<T>[]
+import { ListDefinition, ListControl } from '../../../controls'
 
-type ListControlValueProps<T extends ListControlDefinition> = {
-  definition: T
-  data: ListControlData<T> | undefined
-  children(value: ListControlValue<T>): JSX.Element
+import { ControlValue } from './control'
+
+type ListControlValueProps = {
+  definition: ListDefinition
+  data: DataType<ListDefinition> | undefined
+  children(value: ResolvedValueType<ListDefinition>): JSX.Element
   control: ListControl
 }
 
-export function ListControlValue<T extends ListControlDefinition>({
+export function ListControlValue({
   definition,
   data,
   children,
   control,
-}: ListControlValueProps<T>): JSX.Element {
-  const [controls, setControls] = useState<Map<string, AnyPropController> | undefined>(new Map())
+}: ListControlValueProps): JSX.Element {
+  const [controls, setControls] = useState<Map<string, ControlInstance> | undefined>(new Map())
 
   useEffect(() => {
     if (control == null || data == null) return
@@ -31,20 +28,21 @@ export function ListControlValue<T extends ListControlDefinition>({
     // This is because right now we don't have a subscribeToValue function inside the control.
     // We can improve this by adding the subscribeToValue to createPropController and by
     // moving the setItemsControl to the control itself.
-    setControls(control.setItemsControl(data))
+    const childControls = control.childControls(data.map(item => item.id))
+    control.setChildControls(childControls)
+    setControls(childControls)
   }, [data, control])
 
   return (data ?? []).reduce(
-    (renderFn, item) => listControlValue =>
-      (
-        <ControlValue
-          definition={definition.config.type}
-          data={item.value}
-          control={controls?.get(item.id)}
-        >
-          {value => renderFn([value as ListControlItemValue<T>, ...listControlValue])}
-        </ControlValue>
-      ),
+    (renderFn, item) => listControlValue => (
+      <ControlValue
+        definition={definition.config.type}
+        data={item.value}
+        control={controls?.get(item.id)}
+      >
+        {value => renderFn([value, ...listControlValue])}
+      </ControlValue>
+    ),
     children,
   )([])
 }

@@ -8,9 +8,9 @@ import {
 } from 'react'
 import ColorHelper from 'color'
 
+import { type ResponsiveColor } from '../../utils/types'
 import { colorToString } from '../../utils/colorToString'
 import { Link } from '../../shared/Link'
-import { ResponsiveColor } from '../../../runtimes/react/controls'
 import { ButtonVariant } from './contants'
 import { useStyle } from '../../../runtimes/react/use-style'
 import {

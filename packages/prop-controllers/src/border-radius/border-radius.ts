@@ -3,7 +3,7 @@ import {
   ControlDataTypeKey,
   ResolveOptions,
   Types,
-  createResponsiveValueSchema,
+  Schema,
 } from '../prop-controllers'
 import { lengthDataSchema } from '../data'
 import { match } from 'ts-pattern'
@@ -15,7 +15,7 @@ const borderRadiusDataSchema = z.object({
   borderBottomRightRadius: lengthDataSchema.nullable().optional(),
 })
 
-const responsiveBorderRadiusDataSchema = createResponsiveValueSchema(
+const responsiveBorderRadiusDataSchema = Schema.responsiveValue(
   borderRadiusDataSchema,
 )
 
@@ -53,7 +53,7 @@ export const BorderRadiusPropControllerFormat = {
 } as const
 
 export type BorderRadiusPropControllerFormat =
-  typeof BorderRadiusPropControllerFormat[keyof typeof BorderRadiusPropControllerFormat]
+  (typeof BorderRadiusPropControllerFormat)[keyof typeof BorderRadiusPropControllerFormat]
 
 type BorderRadiusOptions = { format?: BorderRadiusPropControllerFormat }
 
@@ -85,14 +85,14 @@ export type ResolveBorderRadiusPropControllerValue<
   ? undefined extends ResolveOptions<T['options']>['format']
     ? ResponsiveBorderRadiusData | undefined
     : ResolveOptions<
-        T['options']
-      >['format'] extends typeof BorderRadiusPropControllerFormat.ClassName
-    ? string
-    : ResolveOptions<
-        T['options']
-      >['format'] extends typeof BorderRadiusPropControllerFormat.ResponsiveValue
-    ? ResponsiveBorderRadiusData | undefined
-    : never
+          T['options']
+        >['format'] extends typeof BorderRadiusPropControllerFormat.ClassName
+      ? string
+      : ResolveOptions<
+            T['options']
+          >['format'] extends typeof BorderRadiusPropControllerFormat.ResponsiveValue
+        ? ResponsiveBorderRadiusData | undefined
+        : never
   : never
 
 /**
@@ -129,7 +129,7 @@ export function createBorderRadiusPropControllerDataFromResponsiveBorderRadiusDa
         ({
           [ControlDataTypeKey]: BorderRadiusPropControllerDataV1Type,
           value: responsiveBorderRadiusData,
-        } as const),
+        }) as const,
     )
     .otherwise(() => responsiveBorderRadiusData)
 }

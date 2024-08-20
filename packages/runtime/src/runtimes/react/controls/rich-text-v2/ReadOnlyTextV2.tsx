@@ -1,34 +1,27 @@
 import { ForwardedRef, forwardRef } from 'react'
-import {
-  RichTextV2ControlData,
-  RichTextV2ControlDefinition,
-  RichTextV2Mode,
-} from '../../../../controls'
+
+import { RichTextV2Definition, RichText } from '../../../../controls'
 import { useStyle } from '../../use-style'
 import { Descendant, Element, Text } from 'slate'
-import {
-  BlockPlugin,
-  InlineModePlugin,
-  InlinePlugin,
-  LinkPlugin,
-  TextAlignPlugin,
-  TypographyPlugin,
-  toText,
-} from '../../../../slate'
+import { toText } from '../../../../slate'
 import { ControlValue } from '../control'
 import { RenderElementProps, RenderLeafProps } from 'slate-react'
 import { RichTextV2Plugin } from '../../../../controls/rich-text-v2/plugin'
+import { RichTextDataV2 } from '../../../../controls/rich-text-v2'
 
 type Props = {
-  text: RichTextV2ControlData
-  definition: RichTextV2ControlDefinition | null
+  text: RichTextDataV2 | null
+  definition: RichTextV2Definition | null
 }
 
 const ReadOnlyTextV2 = forwardRef(function ReadOnlyText(
-  { text: { descendants }, definition }: Props,
+  { text, definition }: Props,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
-  const descendantsAsString = toText(descendants, definition?.config.mode ?? RichTextV2Mode.Block)
+  const descendantsAsString = toText(
+    text?.descendants ?? [],
+    definition?.config.mode ?? RichText.Mode.Block,
+  )
 
   return (
     <div
@@ -48,19 +41,8 @@ const ReadOnlyTextV2 = forwardRef(function ReadOnlyText(
         <Placeholder />
       ) : (
         <Descendants
-          plugins={
-            /**
-             * TODO: we are manually referencing our default plugins for each mode here because
-             * Referencing the real LinkPlugin causes a circular dependency.
-             * When circular dependencies calm down we should update the plugin definition to use real plugins,
-             * and just use the plugins that are defined by our config.
-             */
-            // definition?.config?.plugins ,
-            definition?.config?.mode === RichTextV2Mode.Inline
-              ? [InlineModePlugin()]
-              : [BlockPlugin(), TypographyPlugin(), TextAlignPlugin(), InlinePlugin(), LinkPlugin()]
-          }
-          descendants={descendants}
+          plugins={definition?.config.plugins ?? []}
+          descendants={text?.descendants ?? []}
         />
       )}
     </div>

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json.schemastore.org/prettierrc",
+  "arrowParens": "always",
+  "bracketSameLine": false,
+  "bracketSpacing": true,
+  "jsxSingleQuote": false,
+  "printWidth": 80,
+  "quoteProps": "as-needed",
+  "semi": false,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "useTabs": false,
+  "plugins": ["@ianvs/prettier-plugin-sort-imports"],
+  "importOrder": [
+    "<BUILTIN_MODULES>",
+    "",
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "^[.][.](/[.][.])*/testing/.*$",
+    "",
+    "^[.][.](/[.][.])*/lib/.*$",
+    "",
+    "^[.][.](/[.][.])+/.*$",
+    "",
+    "^[.][.]/.*$",
+    "",
+    "^[.]"
+  ],
+  "importOrderTypeScriptVersion": "5.0.0"
+}

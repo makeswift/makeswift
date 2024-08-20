@@ -1,14 +1,10 @@
 import { Editor, Element, NodeEntry } from 'slate'
-import {
-  unstable_IconRadioGroup,
-  unstable_IconRadioGroupIcon,
-  unstable_StyleV2,
-} from '../../controls'
-import { ElementUtils } from '../utils/element'
+import { unstable_IconRadioGroup, Slate } from '@makeswift/controls'
+
+import { unstable_StyleV2 } from '../../controls/style-v2/style-v2'
 import { normalizeResponsiveValue, setResponsiveValue } from '../utils/responsive'
 import { getValue } from './getValue'
-import { RootBlock } from '../types'
-import { createRichTextV2Plugin } from '../../controls/rich-text-v2/plugin'
+import { Plugin } from '../../controls/rich-text-v2/plugin'
 
 const TEXT_ALIGN_KEY = 'textAlign'
 
@@ -16,8 +12,8 @@ export const withTextAlign = (editor: Editor) => {
   const { normalizeNode } = editor
   editor.normalizeNode = entry => {
     if (
-      normalizeResponsiveValue(editor, TEXT_ALIGN_KEY, { match: ElementUtils.isRootBlock })(
-        entry as NodeEntry<RootBlock>,
+      normalizeResponsiveValue(editor, TEXT_ALIGN_KEY, { match: Slate.isRootBlock })(
+        entry as NodeEntry<Slate.RootBlock>,
       )
     ) {
       return
@@ -29,47 +25,47 @@ export const withTextAlign = (editor: Editor) => {
 }
 
 export function TextAlignPlugin() {
-  return createRichTextV2Plugin({
+  return Plugin({
     control: {
       definition: unstable_StyleV2({
         type: unstable_IconRadioGroup({
           label: 'Alignment',
           options: [
             {
-              icon: unstable_IconRadioGroupIcon.TextAlignLeft,
+              icon: unstable_IconRadioGroup.Icon.TextAlignLeft,
               label: 'Left Align',
               value: 'left',
             },
             {
-              icon: unstable_IconRadioGroupIcon.TextAlignCenter,
+              icon: unstable_IconRadioGroup.Icon.TextAlignCenter,
               label: 'Center Align',
               value: 'center',
             },
             {
-              icon: unstable_IconRadioGroupIcon.TextAlignRight,
+              icon: unstable_IconRadioGroup.Icon.TextAlignRight,
               label: 'Right Align',
               value: 'right',
             },
             {
-              icon: unstable_IconRadioGroupIcon.TextAlignJustify,
+              icon: unstable_IconRadioGroup.Icon.TextAlignJustify,
               label: 'Justify',
               value: 'justify',
             },
           ],
           defaultValue: 'left',
         }),
-        getStyle(textAlign: 'left' | 'center' | 'right' | 'justify' | undefined) {
+        getStyle(textAlign) {
           return { textAlign }
         },
       }),
       onChange: (editor, value) =>
         setResponsiveValue(editor, TEXT_ALIGN_KEY, value, {
-          match: ElementUtils.isRootBlock,
+          match: Slate.isRootBlock,
           split: false,
         }),
-      getValue: editor => getValue(editor),
+      getValue,
       getElementValue: (element: Element) => {
-        return ElementUtils.isRootBlock(element) ? element.textAlign : undefined
+        return Slate.isRootBlock(element) ? element.textAlign : undefined
       },
     },
     withPlugin: withTextAlign,

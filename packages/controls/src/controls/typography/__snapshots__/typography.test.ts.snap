@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Typography constructor returns correct definition 1`] = `
+unstable_TypographyDefinition {
+  "config": {},
+}
+`;

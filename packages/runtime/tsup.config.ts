@@ -18,7 +18,7 @@ export default defineConfig(() => {
     },
     esbuildOptions(options, { format }) {
       if (format === 'cjs') options.supported = { ...options.supported, 'dynamic-import': false }
-    }
+    },
   } satisfies Options
 
   const esmOptions: Options = {

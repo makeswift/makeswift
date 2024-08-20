@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Link constructor definition matches snapshot 1`] = `
+GenericLinkDefinition {
+  "config": {
+    "label": "Link",
+  },
+}
+`;
+
+exports[`Link definition w/ config {"label":"Link"} toData returns v1 data for \`{ type: 'CALL_PHONE', payload: [Object] }\` when definition version is 1 1`] = `
+{
+  "payload": {
+    "phoneNumber": "555-555-5555",
+  },
+  "type": "CALL_PHONE",
+}
+`;
+
+exports[`Link definition w/ config {"label":"Link"} toData returns v1 data for \`{ type: 'OPEN_PAGE', payload: [Object] }\` when definition version is 1 1`] = `
+{
+  "payload": {
+    "openInNewTab": false,
+    "pageId": "fake-page-id-2",
+  },
+  "type": "OPEN_PAGE",
+}
+`;
+
+exports[`Link definition w/ config {"label":"Link"} toData returns v1 data for \`{ type: 'OPEN_URL', payload: [Object] }\` when definition version is 1 1`] = `
+{
+  "payload": {
+    "openInNewTab": false,
+    "url": "https://example.com",
+  },
+  "type": "OPEN_URL",
+}
+`;
+
+exports[`Link definition w/ config {"label":"Link"} toData returns v1 data for \`{ type: 'SCROLL_TO_ELEMENT', payload: [Object] }\` when definition version is 1 1`] = `
+{
+  "payload": {
+    "block": "start",
+    "elementIdConfig": {
+      "elementKey": "key",
+      "propName": "prop",
+    },
+  },
+  "type": "SCROLL_TO_ELEMENT",
+}
+`;
+
+exports[`Link definition w/ config {"label":"Link"} toData returns v1 data for \`{ type: 'SEND_EMAIL', payload: [Object] }\` when definition version is 1 1`] = `
+{
+  "payload": {
+    "body": "world",
+    "subject": "hello",
+    "to": "bob@gmail.com",
+  },
+  "type": "SEND_EMAIL",
+}
+`;
+
+exports[`Link definition w/ config {"label":"Link"} toData returns v1 data for \`null\` when definition version is 1 1`] = `null`;
