@@ -33,10 +33,6 @@ export class StyleV2Control extends ControlInstance<Message> {
     )
   }
 
-  get propControl() {
-    return this.control
-  }
-
   child(_key?: string): ControlInstance | undefined {
     return this.control
   }

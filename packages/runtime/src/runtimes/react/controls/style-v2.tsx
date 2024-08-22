@@ -77,11 +77,7 @@ export function StyleV2ControlValue({
     (renderFn, { deviceId, value }: DeviceOverride<DataType<StyleV2Definition>>) =>
       responsiveValue => {
         return (
-          <ControlValue
-            definition={definition.config.type}
-            data={value}
-            control={control?.propControl}
-          >
+          <ControlValue definition={definition.config.type} data={value} control={control?.child()}>
             {value =>
               renderFn([
                 { deviceId, value: value as ResolvedValueType<typeof definition.config.type> },
