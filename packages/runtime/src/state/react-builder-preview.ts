@@ -11,6 +11,7 @@ import {
   StoreEnhancer,
 } from 'redux'
 import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk'
+import { ControlInstance } from '@makeswift/controls'
 
 import deepEqual from '../utils/deepEqual'
 
@@ -50,7 +51,6 @@ import {
 } from './actions'
 import { ActionTypes } from './actions'
 import { createPropController } from '../prop-controllers/instances'
-import { PropController } from '../prop-controllers/base'
 import { serializeControls } from '../builder'
 import { MakeswiftHostApiClient } from '../api/react'
 import { ElementImperativeHandle } from '../runtimes/react/element-imperative-handle'
@@ -593,7 +593,7 @@ export function messageChannelMiddleware(
 function createAndRegisterPropControllers(
   documentKey: string,
   elementKey: string,
-): ThunkAction<Record<string, PropController> | null, State, unknown, Action> {
+): ThunkAction<Record<string, ControlInstance> | null, State, unknown, Action> {
   return (dispatch, getState) => {
     const descriptors = ReactPage.getElementPropControllerDescriptors(
       getState(),
@@ -603,13 +603,16 @@ function createAndRegisterPropControllers(
 
     if (descriptors == null) return null
 
-    const propControllers = Object.entries(descriptors).reduce((acc, [propName, descriptor]) => {
-      const propController = createPropController(descriptor, message =>
-        dispatch(messageBuilderPropController(documentKey, elementKey, propName, message)),
-      ) as PropController
+    const propControllers = Object.entries(descriptors).reduce(
+      (acc, [propName, descriptor]) => {
+        const propController = createPropController(descriptor, message =>
+          dispatch(messageBuilderPropController(documentKey, elementKey, propName, message)),
+        ) as ControlInstance
 
-      return { ...acc, [propName]: propController }
-    }, {} as Record<string, PropController>)
+        return { ...acc, [propName]: propController }
+      },
+      {} as Record<string, ControlInstance>,
+    )
 
     dispatch(registerPropControllers(documentKey, elementKey, propControllers))
 

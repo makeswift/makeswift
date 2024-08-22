@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Number constructor call with default value \`1\` returns versioned definition 1`] = `
+NumberDefinition {
+  "config": {
+    "defaultValue": 1,
+    "label": "Number",
+  },
+  "version": 1,
+}
+`;
+
+exports[`Number constructor call with default value \`2\` returns versioned definition 1`] = `
+NumberDefinition {
+  "config": {
+    "defaultValue": 2,
+    "label": "Number",
+  },
+  "version": 1,
+}
+`;
+
+exports[`Number constructor call with default value \`undefined\` returns versioned definition 1`] = `
+NumberDefinition {
+  "config": {
+    "defaultValue": undefined,
+    "label": "Number",
+  },
+  "version": 1,
+}
+`;
+
+exports[`Number definition w/ config {"defaultValue":17,"label":"visible"} toData returns v1 data for \`20\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "number::v1",
+  "value": 20,
+}
+`;
+
+exports[`Number definition w/ config {"defaultValue":17,"label":"visible"} toData returns v1 data for \`21\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "number::v1",
+  "value": 21,
+}
+`;
+
+exports[`Number definition w/ config {"label":"Number"} toData returns v1 data for \`50\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "number::v1",
+  "value": 50,
+}
+`;
+
+exports[`Number definition w/ config {"label":"Number"} toData returns v1 data for \`51\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "number::v1",
+  "value": 51,
+}
+`;
+
+exports[`Number definition w/ config {"label":"Number"} toData returns v1 data for \`undefined\` when definition version is 1 1`] = `undefined`;

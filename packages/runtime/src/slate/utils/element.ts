@@ -1,88 +1,28 @@
-import { Node, Element } from 'slate'
-import {
-  RootBlock,
-  BlockType,
-  Block,
-  Inline,
-  InlineType,
-  OrderedListElement,
-  UnorderedListElement,
-  ListItemElement,
-  ListItemChildElement,
-} from '../types'
+import { Slate } from '@makeswift/controls'
 
 export const ElementUtils = {
-  isRootBlock(node: Node): node is RootBlock {
-    return (
-      Element.isElement(node) &&
-      (Element.isElementType(node, BlockType.Paragraph) ||
-        Element.isElementType(node, BlockType.Heading1) ||
-        Element.isElementType(node, BlockType.Heading2) ||
-        Element.isElementType(node, BlockType.Heading3) ||
-        Element.isElementType(node, BlockType.Heading3) ||
-        Element.isElementType(node, BlockType.Heading4) ||
-        Element.isElementType(node, BlockType.Heading5) ||
-        Element.isElementType(node, BlockType.Heading6) ||
-        Element.isElementType(node, BlockType.BlockQuote) ||
-        Element.isElementType(node, BlockType.UnorderedList) ||
-        Element.isElementType(node, BlockType.OrderedList) ||
-        Element.isElementType(node, BlockType.Default))
-    )
-  },
-  isBlock(node: Node): node is Block {
-    return (
-      Element.isElement(node) &&
-      (this.isRootBlock(node) ||
-        Element.isElementType(node, BlockType.ListItem) ||
-        Element.isElementType(node, BlockType.ListItemChild))
-    )
-  },
-  isInline(node: unknown): node is Inline {
-    return (
-      Element.isElement(node) &&
-      (Element.isElementType(node, InlineType.Code) ||
-        Element.isElementType(node, InlineType.Link) ||
-        Element.isElementType(node, InlineType.SubScript) ||
-        Element.isElementType(node, InlineType.SuperScript))
-    )
-  },
-  isConvertibleToListTextNode(node: Node) {
-    return !this.isList(node) && !this.isListItem(node) && !this.isListItemChild(node)
-  },
-  isList(node: Node): node is OrderedListElement | UnorderedListElement {
-    return (
-      Element.isElementType(node, BlockType.OrderedList) ||
-      Element.isElementType(node, BlockType.UnorderedList)
-    )
-  },
-  isListItem(node: Node): node is ListItemElement {
-    return Element.isElementType(node, BlockType.ListItem)
-  },
-  isListItemChild(node: Node): node is ListItemChildElement {
-    return Element.isElementType(node, BlockType.ListItemChild)
-  },
   createText() {
     return { text: '' }
   },
   createParagraph() {
     return {
       children: [this.createText()],
-      type: BlockType.Paragraph,
+      type: Slate.BlockType.Paragraph,
     }
   },
-  createList(type: BlockType = BlockType.UnorderedList): Block {
+  createList(type: Slate.BlockType = Slate.BlockType.UnorderedList): Slate.Block {
     return { children: [this.createText()], type }
   },
-  createListItem(): Block {
+  createListItem(): Slate.Block {
     return {
       children: [this.createListItemChild()],
-      type: BlockType.ListItem,
+      type: Slate.BlockType.ListItem,
     }
   },
-  createListItemChild(): Block {
+  createListItemChild(): Slate.Block {
     return {
       children: [this.createText()],
-      type: BlockType.ListItemChild,
+      type: Slate.BlockType.ListItemChild,
     }
   },
 }

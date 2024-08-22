@@ -3,7 +3,7 @@ import scrollIntoView from 'scroll-into-view-if-needed'
 import NextLink from 'next/link'
 
 import { LinkData } from '@makeswift/prop-controllers'
-import { useElementId } from '../../../runtimes/react'
+import { useElementId } from '../../../runtimes/react/hooks/use-element-id'
 import { usePagePathnameSlice } from '../../../runtimes/react/hooks/makeswift-api'
 
 type BaseProps = {

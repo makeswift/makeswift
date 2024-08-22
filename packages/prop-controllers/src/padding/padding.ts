@@ -3,7 +3,7 @@ import {
   ControlDataTypeKey,
   ResolveOptions,
   Types,
-  createResponsiveValueSchema,
+  Schema,
 } from '../prop-controllers'
 import { z } from 'zod'
 
@@ -31,8 +31,7 @@ const paddingDataSchema = z
 
 export type PaddingData = z.infer<typeof paddingDataSchema>
 
-const responsivePaddingDataSchema =
-  createResponsiveValueSchema(paddingDataSchema)
+const responsivePaddingDataSchema = Schema.responsiveValue(paddingDataSchema)
 
 export type ResponsivePaddingData = z.infer<typeof responsivePaddingDataSchema>
 
@@ -69,7 +68,7 @@ export const PaddingPropControllerFormat = {
 } as const
 
 export type PaddingPropControllerFormat =
-  typeof PaddingPropControllerFormat[keyof typeof PaddingPropControllerFormat]
+  (typeof PaddingPropControllerFormat)[keyof typeof PaddingPropControllerFormat]
 
 type PaddingOptions = {
   preset?: PaddingPropControllerData
@@ -103,14 +102,14 @@ export type ResolvePaddingPropControllerValue<T extends PaddingDescriptor> =
     ? undefined extends ResolveOptions<T['options']>['format']
       ? ResponsivePaddingData | undefined
       : ResolveOptions<
-          T['options']
-        >['format'] extends typeof PaddingPropControllerFormat.ClassName
-      ? string
-      : ResolveOptions<
-          T['options']
-        >['format'] extends typeof PaddingPropControllerFormat.ResponsiveValue
-      ? ResponsivePaddingData | undefined
-      : never
+            T['options']
+          >['format'] extends typeof PaddingPropControllerFormat.ClassName
+        ? string
+        : ResolveOptions<
+              T['options']
+            >['format'] extends typeof PaddingPropControllerFormat.ResponsiveValue
+          ? ResponsivePaddingData | undefined
+          : never
     : never
 
 /**
@@ -148,7 +147,7 @@ export function createPaddingPropControllerDataFromResponsivePaddingData(
         ({
           [ControlDataTypeKey]: PaddingPropControllerDataV1Type,
           value: responsivePaddingData,
-        } as const),
+        }) as const,
     )
     .otherwise(() => responsivePaddingData)
 }

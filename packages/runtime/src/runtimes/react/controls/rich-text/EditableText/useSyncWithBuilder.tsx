@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Editor } from 'slate'
+import { type RichTextDTO, richTextDTOtoDAO, richTextDTOtoSelection } from '@makeswift/controls'
+
 import { useIsInBuilder } from '../../../../../react'
-import { RichTextValue, richTextDTOtoDAO, richTextDTOtoSelection } from '../../../../../controls'
 import deepEqual from '../../../../../utils/deepEqual'
 
 const COMMIT_DEBOUNCE_DELAY = 500
@@ -10,7 +11,7 @@ const COMMIT_DEBOUNCE_DELAY = 500
  * Compare new prop value with current editor and update editor
  * if the values are not equal.
  */
-export function useSyncWithBuilder(editor: Editor, text?: RichTextValue) {
+export function useSyncWithBuilder(editor: Editor, text?: RichTextDTO) {
   const [shouldCommit, setShouldCommit] = useState(true)
   const isInBuilder = useIsInBuilder()
 

@@ -8,6 +8,10 @@ afterAll(() => server.close())
 
 expect.extend(matchers)
 
+jest.mock('uuid', () => ({
+  v4: jest.fn(() => 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'),
+}))
+
 if (typeof window !== 'undefined') {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,

@@ -1,22 +1,10 @@
-import { match } from 'ts-pattern'
-import {
-  TextInputControlData,
-  TextInputControlDataTypeKey,
-  TextInputControlDataTypeValueV1,
-  TextInputControlDefinition,
-} from '@makeswift/controls'
+import { type DataType, type ResolvedValueType } from '@makeswift/controls'
 
-export type TextInputControlValue<T extends TextInputControlDefinition> =
-  undefined extends T['config']['defaultValue'] ? string | undefined : string
+import { TextInputDefinition } from '../../../controls'
 
-export function useTextInputValue<T extends TextInputControlDefinition>(
-  data: TextInputControlData | undefined,
-  definition: T,
-): TextInputControlValue<T> {
-  const value: string | undefined =
-    match(data)
-      .with({ [TextInputControlDataTypeKey]: TextInputControlDataTypeValueV1 }, val => val.value)
-      .otherwise(val => val) ?? definition.config.defaultValue
-
-  return value as TextInputControlValue<T>
+export function useTextInputValue(
+  data: DataType<TextInputDefinition> | undefined,
+  definition: TextInputDefinition,
+): ResolvedValueType<TextInputDefinition> {
+  return definition.fromData(data) ?? definition.config.defaultValue
 }

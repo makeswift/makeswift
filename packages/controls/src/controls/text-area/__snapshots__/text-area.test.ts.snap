@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TextArea constructor call with default value \`Cars\` returns versioned definition 1`] = `
+TextAreaDefinition {
+  "config": {
+    "defaultValue": "Cars",
+    "label": "TextArea",
+  },
+  "version": 1,
+}
+`;
+
+exports[`TextArea constructor call with default value \`Toy Story\` returns versioned definition 1`] = `
+TextAreaDefinition {
+  "config": {
+    "defaultValue": "Toy Story",
+    "label": "TextArea",
+  },
+  "version": 1,
+}
+`;
+
+exports[`TextArea constructor call with default value \`undefined\` returns versioned definition 1`] = `
+TextAreaDefinition {
+  "config": {
+    "defaultValue": undefined,
+    "label": "TextArea",
+  },
+  "version": 1,
+}
+`;
+
+exports[`TextArea definition w/ config {"defaultValue":"Up","label":"visible"} toData returns v1 data for \`Monster's Inc.\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "text-area::v1",
+  "value": "Monster's Inc.",
+}
+`;
+
+exports[`TextArea definition w/ config {"defaultValue":"Up","label":"visible"} toData returns v1 data for \`Toy Story 3\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "text-area::v1",
+  "value": "Toy Story 3",
+}
+`;
+
+exports[`TextArea definition w/ config {"label":"TextArea"} toData returns v1 data for \`Ratatouille\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "text-area::v1",
+  "value": "Ratatouille",
+}
+`;
+
+exports[`TextArea definition w/ config {"label":"TextArea"} toData returns v1 data for \`WALL-E\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "text-area::v1",
+  "value": "WALL-E",
+}
+`;
+
+exports[`TextArea definition w/ config {"label":"TextArea"} toData returns v1 data for \`undefined\` when definition version is 1 1`] = `undefined`;

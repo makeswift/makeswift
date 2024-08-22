@@ -1,14 +1,17 @@
-import { Editor, Transforms } from 'slate'
-import { LinkControlData } from '../../controls'
+import { type Editor, Transforms } from 'slate'
+import { type DataType, Slate } from '@makeswift/controls'
+
+import { LinkDefinition } from '../../controls/link'
+
 import { unwrapInline } from '../BlockPlugin/unwrapInline'
 import { wrapInline } from '../BlockPlugin/wrapInline'
-import { InlineType } from '../types'
 import { filterForSubtreeRoots } from '../BlockPlugin/utils/filterForSubtreeRoots'
+
 import { isLinkEntry } from './types'
 import { getLinksAndTextInSelection } from './getValue'
 
-export const onChange = (editor: Editor, value: LinkControlData) => {
-  if (value == null) return unwrapInline(editor, InlineType.Link)
+export const onChange = (editor: Editor, value: DataType<LinkDefinition>) => {
+  if (value == null) return unwrapInline(editor, Slate.InlineType.Link)
 
   const roots = filterForSubtreeRoots(getLinksAndTextInSelection(editor))
   const root = roots.at(0)
@@ -25,7 +28,7 @@ export const onChange = (editor: Editor, value: LinkControlData) => {
   }
   // In all other cases we want to remove all existing links and wrap the current selection in a new link
   else {
-    unwrapInline(editor, InlineType.Link)
-    wrapInline(editor, { type: InlineType.Link, link: value, children: [] })
+    unwrapInline(editor, Slate.InlineType.Link)
+    wrapInline(editor, { type: Slate.InlineType.Link, link: value, children: [] })
   }
 }

@@ -7,24 +7,28 @@ import {
 describe('serializeFunction & deserializeFunction', () => {
   test('simple call', async () => {
     // Arrange
-    const add = deserializeFunction(serializeFunction((a, b) => a + b))
+    const serialized = serializeFunction((a, b) => a + b)
+    const add = deserializeFunction(serialized)
 
     // Act
     const result = await add(2, 2)
 
     // Assert
     expect(result).toBe(4)
+    serialized.close()
   })
 
   test('multiple synchronous calls', async () => {
     // Arrange
-    const add = deserializeFunction(serializeFunction((a, b) => a + b))
+    const serialized = serializeFunction((a, b) => a + b)
+    const add = deserializeFunction(serialized)
 
     // Act
     const results = await Promise.all(Array.from({ length: 5 }, (_, i) => add(1, i)))
 
     // Assert
     expect(results).toEqual([1, 2, 3, 4, 5])
+    serialized.close()
   })
 })
 
@@ -38,6 +42,7 @@ describe('isSerializedFunction', () => {
 
     // Assert
     expect(result).toBe(true)
+    add.close()
   })
 
   test('false positive', () => {

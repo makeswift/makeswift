@@ -1,10 +1,5 @@
 import { match } from 'ts-pattern'
-import {
-  ControlDataTypeKey,
-  Options,
-  Types,
-  createResponsiveValueSchema,
-} from '../prop-controllers'
+import { ControlDataTypeKey, Options, Types, Schema } from '../prop-controllers'
 import { z } from 'zod'
 
 export const textStyleDataSchema = z
@@ -35,7 +30,7 @@ export const textStyleDataSchema = z
 export type TextStyleData = z.infer<typeof textStyleDataSchema>
 
 const responsiveTextStyleDataSchema =
-  createResponsiveValueSchema(textStyleDataSchema)
+  Schema.responsiveValue(textStyleDataSchema)
 
 export type ResponsiveTextStyleData = z.infer<
   typeof responsiveTextStyleDataSchema
@@ -131,7 +126,7 @@ export function createTextStylePropControllerDataFromResponsiveTextStyleData(
         ({
           [ControlDataTypeKey]: TextStylePropControllerDataV1Type,
           value: responsiveTextStyleData,
-        } as const),
+        }) as const,
     )
     .otherwise(() => responsiveTextStyleData)
 }

@@ -1,22 +1,17 @@
 import { MouseEvent, useCallback, useMemo } from 'react'
 
+import { type DataType, type ResolvedValueType } from '@makeswift/controls'
+
+import { LinkDefinition } from '../../../controls'
+
 import scrollIntoView from 'scroll-into-view-if-needed'
 import { useElementId } from '../'
-import { LinkControlData, LinkControlDefinition } from '../../../controls'
 import { usePagePathnameSlice } from '../hooks/makeswift-api'
 
-type LinkValue = {
-  href: string
-  target: '_blank' | '_self' | undefined
-  onClick: (event: MouseEvent<HTMLElement>) => void
-}
-
-export type LinkControlValue<_T extends LinkControlDefinition> = LinkValue | undefined
-
-export function useLinkControlValue<T extends LinkControlDefinition>(
-  link: LinkControlData | undefined,
-  _definition: T,
-): LinkControlValue<T> {
+export function useLinkControlValue(
+  link: DataType<LinkDefinition> | undefined,
+  _definition: LinkDefinition,
+): ResolvedValueType<LinkDefinition> {
   const pageId = link && link.type === 'OPEN_PAGE' ? link.payload.pageId : null
   const page = usePagePathnameSlice(pageId ?? null)
 
@@ -73,7 +68,7 @@ export function useLinkControlValue<T extends LinkControlDefinition>(
   }
 
   const handleClick = useCallback(
-    (event: MouseEvent<HTMLElement>) => {
+    (event: MouseEvent<Element>) => {
       if (event.defaultPrevented) return
 
       if (link && link.type === 'SCROLL_TO_ELEMENT') {

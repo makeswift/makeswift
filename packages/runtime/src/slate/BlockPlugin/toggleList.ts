@@ -1,5 +1,6 @@
 import { Editor, Location, Node, Path, Transforms } from 'slate'
-import { ElementUtils } from '../utils/element'
+import { Slate } from '@makeswift/controls'
+
 import { unwrapList } from './unwrapList'
 import { LocationUtils } from './utils/location'
 import { wrapList } from './wrapList'
@@ -21,7 +22,7 @@ export function toggleList(
   if (!ancestorPath || !Node.has(editor, ancestorPath)) return
   const ancestor = Node.get(editor, ancestorPath)
 
-  if (!ElementUtils.isList(ancestor)) {
+  if (!Slate.isList(ancestor)) {
     return wrapList(editor, { type: options.type, at })
   }
 

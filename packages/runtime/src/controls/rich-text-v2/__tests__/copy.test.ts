@@ -1,6 +1,6 @@
-import { RichTextV2ControlData, RichTextV2ControlType } from '../rich-text-v2'
-import { copy } from '../../control'
-import { ReplacementContext } from '../../../state/react-page'
+import { createReplacementContext } from '@makeswift/controls'
+import { type DataType } from '@makeswift/controls'
+import { RichText, RichTextV2Definition } from '../../rich-text-v2'
 
 const SWATCH_ID_FROM = 'SWATCH_ID_FROM='
 const TYPOGRAPHY_ID_FROM = 'TYPOGRAPHY_ID_FROM='
@@ -12,8 +12,8 @@ const TYPOGRAPHY_ID_TO = 'TYPOGRAPHY_ID_TO='
 const PAGE_ID_TO = 'PAGE_ID_TO='
 const ELEMENT_ID_TO = 'ELEMENT_ID_TO='
 
-const copyFixture: RichTextV2ControlData = {
-  type: RichTextV2ControlType,
+const copyFixture: DataType<RichTextV2Definition> = {
+  type: RichTextV2Definition.type,
   version: 2,
   key: 'uuid',
   descendants: [
@@ -89,31 +89,26 @@ describe('GIVEN copying RichTextV2', () => {
   test('GIVEN swatch, typography, page, and element ids THEN all are copied', () => {
     const expected = JSON.parse(
       JSON.stringify(copyFixture)
+        .replace(ELEMENT_ID_FROM, ELEMENT_ID_TO)
         .replace(SWATCH_ID_FROM, SWATCH_ID_TO)
         .replace(TYPOGRAPHY_ID_FROM, TYPOGRAPHY_ID_TO)
-        .replace(PAGE_ID_FROM, PAGE_ID_TO)
-        .replace(ELEMENT_ID_FROM, ELEMENT_ID_TO),
+        .replace(PAGE_ID_FROM, PAGE_ID_TO),
     )
 
-    const replacementContext = {
-      elementHtmlIds: new Set(),
-      elementKeys: new Map([[ELEMENT_ID_FROM, ELEMENT_ID_TO]]),
-      swatchIds: new Map([[SWATCH_ID_FROM, SWATCH_ID_TO]]),
-      fileIds: new Map(),
-      typographyIds: new Map([[TYPOGRAPHY_ID_FROM, TYPOGRAPHY_ID_TO]]),
-      tableIds: new Map(),
-      tableColumnIds: new Map(),
-      pageIds: new Map([[PAGE_ID_FROM, PAGE_ID_TO]]),
-      globalElementIds: new Map(),
-      globalElementData: new Map(),
-    }
-
     // Act
-    const result = copy({ type: RichTextV2ControlType, config: {} }, copyFixture, {
-      replacementContext: replacementContext as ReplacementContext,
+    const result = RichText().copyData(copyFixture, {
+      replacementContext: createReplacementContext({
+        elementKeys: { [ELEMENT_ID_FROM]: ELEMENT_ID_TO },
+        swatchIds: { [SWATCH_ID_FROM]: SWATCH_ID_TO },
+        typographyIds: { [TYPOGRAPHY_ID_FROM]: TYPOGRAPHY_ID_TO },
+        pageIds: { [PAGE_ID_FROM]: PAGE_ID_TO },
+      }),
       copyElement: node => node,
     })
 
-    expect(result.descendants).toStrictEqual(expected.descendants)
+    expect(RichText.isV1Data(result)).toBe(false)
+    expect(RichText.isV1Data(result) ? null : result?.descendants).toStrictEqual(
+      expected.descendants,
+    )
   })
 })

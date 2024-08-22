@@ -1,11 +1,6 @@
 /** @jest-environment jsdom */
 
-import {
-  Color,
-  ColorControlDataTypeKey,
-  ColorControlDataTypeValueV1,
-  ColorData,
-} from '@makeswift/controls'
+import { Color, ColorData } from '@makeswift/controls'
 import { testPageControlPropRendering } from './page-control-prop-rendering'
 import { http, HttpResponse } from 'msw'
 import { server } from '../../../../mocks/server'
@@ -21,10 +16,6 @@ describe('Page', () => {
     },
     {
       version: 1,
-      toData: (value: ColorData) => ({
-        [ColorControlDataTypeKey]: ColorControlDataTypeValueV1,
-        ...value,
-      }),
     },
   ])('Color control data v$version', ({ toData }) => {
     const swatchId = '[swatch-test-id]'
@@ -62,7 +53,7 @@ describe('Page', () => {
           )
 
           await testPageControlPropRendering(Color({ defaultValue }), {
-            toData: toData as any,
+            toData,
             value,
             expectedRenders: swatch == null ? 1 : 2,
           })
@@ -70,7 +61,7 @@ describe('Page', () => {
 
         test(`reading swatch from cache`, async () => {
           await testPageControlPropRendering(Color({ defaultValue }), {
-            toData: toData as any,
+            toData,
             value,
             cacheData: {
               Swatch: [

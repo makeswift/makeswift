@@ -1,25 +1,25 @@
-import { Editor, Element } from 'slate'
-import { unstable_IconRadioGroup } from '../../controls'
-import { ElementUtils } from '../utils/element'
-import { InlineType } from '../types'
-import { RenderElementProps } from 'slate-react'
-import { supportedInlineOptions } from './types'
+import { type Editor, type Element } from 'slate'
+import { type RenderElementProps } from 'slate-react'
+import { unstable_IconRadioGroup, Slate } from '@makeswift/controls'
+
+import { type RenderElement, Plugin } from '../../controls/rich-text-v2/plugin'
+
+import { supportedInlineOptions, isSupportedInlineNode } from './types'
 import { onChange } from './onChange'
 import { getValue } from './getValue'
-import { RenderElement, createRichTextV2Plugin } from '../../controls/rich-text-v2/plugin'
 
 export const withInline = (editor: Editor) => {
   const { isInline } = editor
 
   editor.isInline = entry => {
-    return ElementUtils.isInline(entry) && isInline(entry)
+    return Slate.isInline(entry) && isInline(entry)
   }
 
   return editor
 }
 
 export function InlinePlugin() {
-  return createRichTextV2Plugin({
+  return Plugin({
     control: {
       definition: unstable_IconRadioGroup({
         label: 'Inline',
@@ -27,9 +27,8 @@ export function InlinePlugin() {
       }),
       onChange,
       getValue,
-      getElementValue: (element: Element) => {
-        return ElementUtils.isInline(element) ? element.type : undefined
-      },
+      getElementValue: (element: Element) =>
+        isSupportedInlineNode(element) ? element.type : undefined,
     },
     withPlugin: withInline,
     renderElement: renderElement => props => {
@@ -43,11 +42,13 @@ function InlinePluginComponent({
   ...props
 }: RenderElementProps & { renderElement: RenderElement }) {
   switch (props.element.type) {
-    case InlineType.Code:
+    case Slate.InlineType.Code:
       return <code {...props.attributes}>{renderElement(props)}</code>
-    case InlineType.SuperScript:
+
+    case Slate.InlineType.SuperScript:
       return <sup {...props.attributes}>{renderElement(props)}</sup>
-    case InlineType.SubScript:
+
+    case Slate.InlineType.SubScript:
       return <sub {...props.attributes}>{renderElement(props)}</sub>
 
     default:

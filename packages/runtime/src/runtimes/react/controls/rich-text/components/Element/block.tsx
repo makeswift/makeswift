@@ -1,11 +1,13 @@
 import { cx } from '@emotion/css'
 import { RenderElementProps } from 'slate-react'
+import { Slate } from '@makeswift/controls'
+
 import { useResponsiveStyle } from '../../../../../../components/utils/responsive-style'
-import { Block, BlockType } from '../../../../../../slate'
 import { useStyle } from '../../../../use-style'
+import { BlockType } from '../../../../../../slate/types'
 
 export interface InlineRenderElementProps extends RenderElementProps {
-  element: Block
+  element: Slate.Block
 }
 
 export function BlockElement({ element, attributes, children }: InlineRenderElementProps) {

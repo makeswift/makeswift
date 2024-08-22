@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`object serialization {
+  arrayOfFunctions: [ [Function (anonymous)] { [length]: 1, [name]: '' }, [length]: 1 ]
+} should deserialize serialized functions 1`] = `
+{
+  "arrayOfFunctions": [
+    [Function],
+  ],
+}
+`;
+
+exports[`object serialization {
+  arrayOfFunctions: [ [Function (anonymous)] { [length]: 1, [name]: '' }, [length]: 1 ]
+} should handle function serialization 1`] = `
+{
+  "arrayOfFunctions": [
+    [MessagePort],
+  ],
+}
+`;
+
+exports[`object serialization {
+  getItemLabel: [Function: getItemLabel] { [length]: 1, [name]: 'getItemLabel' }
+} should deserialize serialized functions 1`] = `
+{
+  "getItemLabel": [Function],
+}
+`;
+
+exports[`object serialization {
+  getItemLabel: [Function: getItemLabel] { [length]: 1, [name]: 'getItemLabel' }
+} should handle function serialization 1`] = `
+{
+  "getItemLabel": [MessagePort],
+}
+`;
+
+exports[`object serialization Deserialized 1`] = `[Function]`;
+
+exports[`object serialization should correctly serialize nested Serializables 1`] = `
+{
+  "item": {
+    "getItemLabel": [MessagePort],
+    "subitems": [
+      {
+        "arrayOfFunctions": [
+          [MessagePort],
+        ],
+        "type": "subitem 1",
+      },
+      {
+        "getItemLabel": [MessagePort],
+        "type": "subitem 2",
+      },
+    ],
+    "type": "item",
+  },
+}
+`;

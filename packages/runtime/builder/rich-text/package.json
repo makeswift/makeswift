@@ -1,0 +1,5 @@
+{
+  "main": "../../dist/cjs/builder/rich-text/index.js",
+  "module": "../../dist/esm/builder/rich-text/index.js",
+  "types": "../../dist/types/builder/rich-text/index.d.ts"
+}

@@ -1,7 +1,9 @@
 import { WidthProperty } from 'csstype'
 import { CSSObject } from '@emotion/css'
+
+import type { ResponsiveValueType as ExtractResponsiveValue } from '@makeswift/controls'
+
 import type {
-  ResponsiveValueType as ExtractResponsiveValue,
   LengthData,
   ResponsiveBorderRadiusData,
   ResponsiveMarginData,
@@ -18,6 +20,9 @@ import {
   join as joinResponsiveValues,
   Breakpoints,
 } from '../../state/modules/breakpoints'
+
+import { useBreakpoints } from '../../runtimes/react/hooks/use-breakpoints'
+
 import { getIndexes } from './columns'
 import { PaddingPropertyData, paddingPropertyDataToStyle } from '../../css/padding'
 import { MarginPropertyData, marginPropertyDataToStyle } from '../../css/margin'
@@ -26,7 +31,6 @@ import { BorderPropertyData, borderPropertyDataToStyle } from '../../css/border'
 import { BorderPropControllerData } from '../hooks/useBorder'
 import { colorToString } from './colorToString'
 import { BoxShadow, ResponsiveBoxShadow } from '../hooks'
-import { useBreakpoints } from '../../runtimes/react'
 import { DropFirst } from './drop-first'
 
 export function responsiveStyle<V, A extends ReadonlyArray<ResponsiveValue<V> | null | undefined>>(

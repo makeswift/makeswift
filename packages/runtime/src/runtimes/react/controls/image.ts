@@ -1,24 +1,16 @@
 import { P, match } from 'ts-pattern'
-import {
-  ControlDefinition,
-  ImageControlData,
-  ImageControlDefinition,
-  ImageControlValueFormat,
-} from '../../../controls'
+
+import { type DataType, type ResolvedValueType } from '@makeswift/controls'
+
+import { Image, ImageDefinition } from '../../../controls'
+
 import { useFile } from '../hooks/makeswift-api'
 
-type ImageWithDimensions = {
-  url: string
-  dimensions: { width: number; height: number }
-}
-
-export type ImageControlValue = string | ImageWithDimensions | undefined
-
 export function useImageControlValue(
-  data: ImageControlData | undefined,
-  definition: ImageControlDefinition,
-): ImageControlValue {
-  const format = definition.config.format ?? ImageControlValueFormat.URL
+  data: DataType<ImageDefinition> | undefined,
+  definition: ImageDefinition,
+): ResolvedValueType<ImageDefinition> {
+  const format = definition.config.format ?? Image.Format.URL
 
   const fileId = match(data)
     .with(P.string, id => id)
@@ -28,24 +20,20 @@ export function useImageControlValue(
   const file = useFile(fileId)
 
   return match([file, data, format])
-    .with([{ __typename: 'File' }, P.any, ImageControlValueFormat.URL], ([file]) => file.publicUrl)
+    .with([{ __typename: 'File' }, P.any, Image.Format.URL], ([file]) => file.publicUrl)
     .with(
-      [
-        { __typename: 'File', dimensions: P.not(P.nullish) },
-        P.any,
-        ImageControlValueFormat.WithDimensions,
-      ],
+      [{ __typename: 'File', dimensions: P.not(P.nullish) }, P.any, Image.Format.WithDimensions],
       ([file]) => ({
         url: file.publicUrl,
         dimensions: file.dimensions,
       }),
     )
-    .with([P.any, { type: 'external-file' }, ImageControlValueFormat.URL], ([, d]) => d.url)
+    .with([P.any, { type: 'external-file' }, Image.Format.URL], ([, d]) => d.url)
     .with(
       [
         P.any,
         { type: 'external-file', width: P.number, height: P.number },
-        ImageControlValueFormat.WithDimensions,
+        Image.Format.WithDimensions,
       ],
       ([, d]) => ({
         url: d.url,
@@ -54,13 +42,3 @@ export function useImageControlValue(
     )
     .otherwise(() => undefined)
 }
-
-export type ResolveImageControlValue<T extends ControlDefinition> = T extends ImageControlDefinition
-  ? undefined extends T['config']['format']
-    ? string | undefined
-    : T['config']['format'] extends typeof ImageControlValueFormat.URL
-    ? string | undefined
-    : T['config']['format'] extends typeof ImageControlValueFormat.WithDimensions
-    ? ImageWithDimensions | undefined
-    : never
-  : never

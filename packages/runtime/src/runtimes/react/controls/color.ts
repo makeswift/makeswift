@@ -1,14 +1,15 @@
 import Color from 'color'
-import { ColorControlData, ColorControlDefinition } from '@makeswift/controls'
+
+import { type DataType, type ResolvedValueType } from '@makeswift/controls'
+
+import { ColorDefinition } from '../../../controls'
+
 import { useSwatch } from '../hooks/makeswift-api'
 
-export type ColorControlValue<T extends ColorControlDefinition> =
-  undefined extends T['config']['defaultValue'] ? string | undefined : string
-
-export function useColorValue<T extends ColorControlDefinition>(
-  data: ColorControlData | undefined,
-  definition: T,
-): ColorControlValue<any> {
+export function useColorValue(
+  data: DataType<ColorDefinition> | undefined,
+  definition: ColorDefinition,
+): ResolvedValueType<ColorDefinition> {
   const swatchId = data?.swatchId ?? null
   const swatch = useSwatch(swatchId)
   const alpha = data?.alpha ?? 1
@@ -16,7 +17,7 @@ export function useColorValue<T extends ColorControlDefinition>(
   if (swatch == null) {
     const { defaultValue } = definition.config
 
-    if (defaultValue === undefined) return undefined as ColorControlValue<T>
+    if (defaultValue === undefined) return undefined
 
     let defaultColor
     try {

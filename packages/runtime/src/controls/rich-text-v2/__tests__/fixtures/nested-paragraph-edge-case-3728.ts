@@ -1,6 +1,7 @@
-import { RichTextV2ControlData } from '../../rich-text-v2'
+import { type DataType } from '@makeswift/controls'
+import { RichTextV2Definition } from '../../rich-text-v2'
 
-export const sourceElementTree: RichTextV2ControlData = {
+export const sourceElementTree: DataType<RichTextV2Definition> = {
   type: 'makeswift::controls::rich-text-v2',
   version: 2,
   descendants: [

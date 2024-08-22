@@ -1,9 +1,11 @@
 import { cx } from '@emotion/css'
 import { ForwardedRef, forwardRef } from 'react'
 import { Descendant, Text } from 'slate'
+
+import { Slate, RichTextValue, richTextDTOtoDAO } from '@makeswift/controls'
+
 import { useResponsiveStyle } from '../../../../components/utils/responsive-style'
-import { RichTextValue, richTextDTOtoDAO } from '../../../../controls'
-import { Inline, InlineType, Block, BlockType } from '../../../../slate'
+import { InlineType, BlockType } from '../../../../slate'
 import { useStyle } from '../../use-style'
 import useEnhancedTypography, { useTypographyClassName } from '../typography'
 import { Link } from '../../../../components/shared/Link'
@@ -78,7 +80,7 @@ export function TextElement({ descendant }: TextProps) {
 }
 
 export interface InlineProps {
-  descendant: Inline
+  descendant: Slate.Inline
 }
 
 function InlineElement({ descendant }: InlineProps) {
@@ -116,7 +118,7 @@ function InlineElement({ descendant }: InlineProps) {
 }
 
 export interface BlockProps {
-  descendant: Block
+  descendant: Slate.Block
 }
 
 export function BlockElement({ descendant }: BlockProps) {
@@ -210,18 +212,11 @@ export function BlockElement({ descendant }: BlockProps) {
   }
 }
 
-// reimplemented from slate source for code splitting
-function isText(node: any): node is Text {
-  if (typeof node === 'object' && 'text' in node) return true
-
-  return false
-}
-
 function Descendants({ descendants }: { descendants: Descendant[] }) {
   return (
     <>
       {descendants.map((descendant, index) => {
-        if (isText(descendant)) {
+        if (Slate.isText(descendant)) {
           return <TextElement key={index} descendant={descendant} />
         }
 
@@ -253,7 +248,7 @@ function Descendants({ descendants }: { descendants: Descendant[] }) {
   )
 }
 
-function isBlock(descendant: Descendant): descendant is Block {
+function isBlock(descendant: Descendant): descendant is Slate.Block {
   if ('text' in descendant) return false
 
   switch (descendant.type) {

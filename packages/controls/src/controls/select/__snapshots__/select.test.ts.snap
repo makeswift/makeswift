@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Select constructor returns correct definition 1`] = `
+SelectDefinition {
+  "config": {
+    "defaultValue": "p",
+    "label": "Block type",
+    "labelOrientation": "horizontal",
+    "options": [
+      {
+        "label": "Paragraph",
+        "value": "p",
+      },
+      {
+        "label": "Heading 1",
+        "value": "h1",
+      },
+    ],
+  },
+}
+`;
+
+exports[`Select definition w/ config {"label":"Block type","labelOrientation":"horizontal","options":[{"value":"p","label":"Paragraph"},{"value":"h1","label":"Heading 1"}]} toData returns v1 data for \`h1\` when definition version is 1 1`] = `"h1"`;
+
+exports[`Select definition w/ config {"label":"Block type","labelOrientation":"horizontal","options":[{"value":"p","label":"Paragraph"},{"value":"h1","label":"Heading 1"}]} toData returns v1 data for \`p\` when definition version is 1 1`] = `"p"`;

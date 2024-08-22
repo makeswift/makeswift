@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TextInput constructor call with default value \`bert\` returns versioned definition 1`] = `
+TextInputDefinition {
+  "config": {
+    "defaultValue": "bert",
+    "label": "TextInput",
+  },
+  "version": 1,
+}
+`;
+
+exports[`TextInput constructor call with default value \`ernie\` returns versioned definition 1`] = `
+TextInputDefinition {
+  "config": {
+    "defaultValue": "ernie",
+    "label": "TextInput",
+  },
+  "version": 1,
+}
+`;
+
+exports[`TextInput constructor call with default value \`undefined\` returns versioned definition 1`] = `
+TextInputDefinition {
+  "config": {
+    "defaultValue": undefined,
+    "label": "TextInput",
+  },
+  "version": 1,
+}
+`;
+
+exports[`TextInput definition w/ config {"defaultValue":"elmo","label":"visible"} toData returns v1 data for \`bert\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "text-input::v1",
+  "value": "bert",
+}
+`;
+
+exports[`TextInput definition w/ config {"defaultValue":"elmo","label":"visible"} toData returns v1 data for \`ernie\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "text-input::v1",
+  "value": "ernie",
+}
+`;
+
+exports[`TextInput definition w/ config {"label":"TextInput"} toData returns v1 data for \`big bird\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "text-input::v1",
+  "value": "big bird",
+}
+`;
+
+exports[`TextInput definition w/ config {"label":"TextInput"} toData returns v1 data for \`cookie monster\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "text-input::v1",
+  "value": "cookie monster",
+}
+`;
+
+exports[`TextInput definition w/ config {"label":"TextInput"} toData returns v1 data for \`undefined\` when definition version is 1 1`] = `undefined`;

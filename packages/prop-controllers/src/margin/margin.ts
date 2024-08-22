@@ -3,7 +3,7 @@ import {
   ControlDataTypeKey,
   ResolveOptions,
   Types,
-  createResponsiveValueSchema,
+  Schema,
 } from '../prop-controllers'
 import { z } from 'zod'
 
@@ -34,7 +34,7 @@ const marginDataSchema = z
 
 export type MarginData = z.infer<typeof marginDataSchema>
 
-const responsiveMarginDataSchema = createResponsiveValueSchema(marginDataSchema)
+const responsiveMarginDataSchema = Schema.responsiveValue(marginDataSchema)
 
 export type ResponsiveMarginData = z.infer<typeof responsiveMarginDataSchema>
 
@@ -71,7 +71,7 @@ export const MarginPropControllerFormat = {
 } as const
 
 export type MarginPropControllerFormat =
-  typeof MarginPropControllerFormat[keyof typeof MarginPropControllerFormat]
+  (typeof MarginPropControllerFormat)[keyof typeof MarginPropControllerFormat]
 
 type MarginOptions = {
   preset?: MarginPropControllerData
@@ -105,14 +105,14 @@ export type ResolveMarginPropControllerValue<T extends MarginDescriptor> =
     ? undefined extends ResolveOptions<T['options']>['format']
       ? ResponsiveMarginData | undefined
       : ResolveOptions<
-          T['options']
-        >['format'] extends typeof MarginPropControllerFormat.ClassName
-      ? string
-      : ResolveOptions<
-          T['options']
-        >['format'] extends typeof MarginPropControllerFormat.ResponsiveValue
-      ? ResponsiveMarginData | undefined
-      : never
+            T['options']
+          >['format'] extends typeof MarginPropControllerFormat.ClassName
+        ? string
+        : ResolveOptions<
+              T['options']
+            >['format'] extends typeof MarginPropControllerFormat.ResponsiveValue
+          ? ResponsiveMarginData | undefined
+          : never
     : never
 
 /**
@@ -150,7 +150,7 @@ export function createMarginPropControllerDataFromResponsiveMarginData(
         ({
           [ControlDataTypeKey]: MarginPropControllerDataV1Type,
           value: responsiveMarginData,
-        } as const),
+        }) as const,
     )
     .otherwise(() => responsiveMarginData)
 }

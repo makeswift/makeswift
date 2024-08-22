@@ -1,5 +1,13 @@
-import { DeviceOverride } from '@makeswift/controls'
-import { StyleV2Control, StyleV2ControlData, StyleV2ControlDefinition } from '../../../controls'
+import { CSSObject } from '@emotion/css'
+import {
+  type ResponsiveValue,
+  type ResolvedValueType,
+  type DataType,
+  type DeviceOverride,
+} from '@makeswift/controls'
+
+import { StyleV2Definition, StyleV2Control } from '../../../controls/style-v2/style-v2'
+
 import { useStyle } from '../use-style'
 import {
   findBreakpointOverride,
@@ -7,15 +15,14 @@ import {
   getBreakpointMediaQuery,
   mergeOrCoalesceFallbacks,
 } from '../../../state/modules/breakpoints'
-import { CSSObject } from '@emotion/css'
 
-import { ControlDefinitionValue, ControlValue } from './control'
+import { ControlValue } from './control'
 import { RenderHook } from '../components'
 import { useBreakpoints } from '../hooks/use-breakpoints'
 
 function useStyleControlCssObject(
-  styleControlData: StyleV2ControlData,
-  controlDefinition: StyleV2ControlDefinition,
+  styleControlData: ResponsiveValue<ResolvedValueType<StyleV2Definition>>,
+  controlDefinition: StyleV2Definition,
 ): CSSObject {
   const breakpoints = useBreakpoints()
 
@@ -44,50 +51,50 @@ function useStyleControlCssObject(
   }
 }
 
-export type StyleV2ControlFormattedValue = string
-
-export function useFormattedStyleV2<T extends StyleV2ControlDefinition>(
-  styleControlData: StyleV2ControlData,
-  controlDefinition: T,
-): StyleV2ControlFormattedValue {
+export function useFormattedStyleV2(
+  styleControlData: ResponsiveValue<ResolvedValueType<StyleV2Definition>>,
+  controlDefinition: StyleV2Definition,
+): ResolvedValueType<StyleV2Definition> {
   const styles = useStyleControlCssObject(styleControlData, controlDefinition)
 
   return useStyle(styles)
 }
 
-type StyleV2ControlValueProps<T extends StyleV2ControlDefinition> = {
-  definition: T
-  data: StyleV2ControlData | undefined
+type ValueProps = {
+  definition: StyleV2Definition
+  data: DataType<StyleV2Definition> | undefined
   children(value: string): JSX.Element
   control?: StyleV2Control
 }
 
-export function StyleV2ControlValue<T extends StyleV2ControlDefinition>({
+export function StyleV2ControlValue({
   definition,
   data,
   children,
   control,
-}: StyleV2ControlValueProps<T>): JSX.Element {
+}: ValueProps): JSX.Element {
   return (data ?? []).reduceRight(
-    (renderFn, deviceOverrideData: DeviceOverride<any>) => responsiveValue => {
-      return (
-        <ControlValue
-          definition={definition.config.type}
-          data={deviceOverrideData.value}
-          control={control?.control}
-        >
-          {value => renderFn([{ ...deviceOverrideData, value }, ...responsiveValue])}
-        </ControlValue>
-      )
-    },
-    (value: StyleV2ControlData) => {
+    (renderFn, { deviceId, value }: DeviceOverride<DataType<StyleV2Definition>>) =>
+      responsiveValue => {
+        return (
+          <ControlValue definition={definition.config.type} data={value} control={control?.child()}>
+            {value =>
+              renderFn([
+                { deviceId, value: value as ResolvedValueType<typeof definition.config.type> },
+                ...responsiveValue,
+              ])
+            }
+          </ControlValue>
+        )
+      },
+    (value: ResponsiveValue<ResolvedValueType<StyleV2Definition>>) => {
       return (
         <RenderHook
-          key={definition.type}
+          key={definition.controlType}
           hook={useFormattedStyleV2}
           parameters={[value, definition]}
         >
-          {value => children(value as ControlDefinitionValue<T>)}
+          {value => children(value)}
         </RenderHook>
       )
     },

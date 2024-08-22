@@ -1,14 +1,10 @@
-import { IconRadioGroupControlData, IconRadioGroupControlDefinition } from '@makeswift/controls'
+import { type DataType, type ResolvedValueType } from '@makeswift/controls'
 
-export type IconRadioGroupControlValue<T extends IconRadioGroupControlDefinition> =
-  undefined extends T['config']['defaultValue']
-    ? IconRadioGroupControlData | undefined
-    : IconRadioGroupControlData
+import { IconRadioGroupDefinition } from '../../../controls'
 
-export function useIconRadioGroupValue<T extends IconRadioGroupControlDefinition>(
-  iconRadioGroupControlData: IconRadioGroupControlData | undefined,
-  controlDefinition: T,
-): IconRadioGroupControlValue<T> {
-  return (iconRadioGroupControlData ??
-    controlDefinition.config.defaultValue) as IconRadioGroupControlValue<T>
+export function useIconRadioGroupValue(
+  iconRadioGroupControlData: DataType<IconRadioGroupDefinition> | undefined,
+  controlDefinition: IconRadioGroupDefinition,
+): ResolvedValueType<IconRadioGroupDefinition> {
+  return iconRadioGroupControlData ?? controlDefinition.config.defaultValue
 }

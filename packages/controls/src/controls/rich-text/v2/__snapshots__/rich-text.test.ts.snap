@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RichText v2 constructor returns correct definition: default 1`] = `
+Definition {
+  "config": {},
+}
+`;
+
+exports[`RichText v2 constructor returns correct definition: inline mode 1`] = `
+Definition {
+  "config": {
+    "defaultValue": "your message",
+    "mode": "makeswift::controls::rich-text-v2::mode::inline",
+  },
+}
+`;
