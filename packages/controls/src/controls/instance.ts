@@ -1,7 +1,10 @@
-export type ControlMessage<Payload = any> = {
+import { type Data } from '../common/types'
+
+export type ControlMessage<Payload = Data> = {
+  [key: string]: Data
+} & {
   type: string
   payload?: Payload
-  [key: string]: any
 }
 
 export type SendMessage<M extends ControlMessage = ControlMessage> = (
