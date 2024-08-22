@@ -1,6 +1,5 @@
 import {
   ControlDefinition,
-  ControlInstance,
   type DataType,
   type ResolvedValueType,
   type InstanceType,
@@ -51,7 +50,7 @@ type ControlValueProps = {
   definition: ControlDefinition
   data: DataType<ControlDefinition> | undefined
   children(value: ResolvedValueType<ControlDefinition>): JSX.Element
-  control?: ControlInstance
+  control?: InstanceType<ControlDefinition>
 }
 
 export function ControlValue({
