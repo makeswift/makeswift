@@ -12,6 +12,8 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
-    "lovely-scissors-build"
+    "nasty-drinks-judge",
+    "spicy-pumas-suffer",
+    "thirty-zebras-hug"
   ]
 }
