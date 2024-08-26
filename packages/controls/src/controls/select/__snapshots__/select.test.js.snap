@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Select deserialize correctly coerces numeric values to string 1`] = `
+SelectDefinition {
+  "config": {
+    "defaultValue": "12",
+    "label": "Text size",
+    "options": [
+      {
+        "label": "sm",
+        "value": "8",
+      },
+      {
+        "label": "md",
+        "value": "12",
+      },
+      {
+        "label": "lg",
+        "value": "16",
+      },
+    ],
+  },
+}
+`;
+
+exports[`Select deserialize string values 1`] = `
+SelectDefinition {
+  "config": {
+    "defaultValue": "p",
+    "label": "Block type",
+    "labelOrientation": "horizontal",
+    "options": [
+      {
+        "label": "Paragraph",
+        "value": "p",
+      },
+      {
+        "label": "Heading 1",
+        "value": "h1",
+      },
+    ],
+  },
+}
+`;

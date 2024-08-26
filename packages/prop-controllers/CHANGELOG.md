@@ -1,13 +1,13 @@
 # @makeswift/prop-controllers
 
-## 0.3.1-canary.0
+## 0.3.1
 
 ### Patch Changes
 
 - 30a7c9b: Refactored package to use common types and schemas defined in the
   `@makeswift/controls` package.
 - Updated dependencies [30a7c9b]
-  - @makeswift/controls@0.1.0-canary.0
+  - @makeswift/controls@0.1.0
 
 ## 0.3.0
 

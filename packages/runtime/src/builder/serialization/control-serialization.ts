@@ -1041,10 +1041,25 @@ export function serializeControls(
 
 export function deserializeControls(
   serializedControls: Record<string, SerializedControl>,
+  { onError }: { onError?: (err: Error) => void } = {},
 ): Record<string, DeserializedControl> {
   return Object.entries(serializedControls).reduce(
     (deserializedControls, [key, serializedControl]) => {
-      return { ...deserializedControls, [key]: deserializeControl(serializedControl) }
+      try {
+        const deserializedControl = deserializeControl(serializedControl)
+        return { ...deserializedControls, [key]: deserializedControl }
+      } catch (err: unknown) {
+        const error =
+          err instanceof Error
+            ? new Error(`Could not deserialize control for "${key}": ${err.message}`, {
+                cause: err,
+              })
+            : new Error(`Could not deserialize control for "${key}", unknown error: ${err}`)
+
+        onError?.(error)
+
+        return deserializedControls
+      }
     },
     {} as Record<string, DeserializedControl>,
   )

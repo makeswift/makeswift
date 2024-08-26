@@ -1,6 +1,6 @@
 # @makeswift/controls
 
-## 0.1.0-canary.0
+## 0.1.0
 
 ### Minor Changes
 

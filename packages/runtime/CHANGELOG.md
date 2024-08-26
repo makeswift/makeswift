@@ -1,6 +1,6 @@
 # @makeswift/runtime
 
-## 0.20.0-canary.0
+## 0.20.0
 
 ### Minor Changes
 
@@ -36,12 +36,19 @@
 
      Previously, the `options` array was allowed to be empty.
 
+  3. In addition to stricter compile-time checks, control definitions are now
+     validated at runtime when you load your site in the Makeswift builder.
+     Previously, if you were using vanilla JavaScript, you might have been
+     able to pass invalid or unsupported options to controls without
+     encountering an error. Now, such issues will trigger an error entry in the
+     browser console, and the related control panel will not appear.
+
 ### Patch Changes
 
 - Updated dependencies [30a7c9b]
 - Updated dependencies [30a7c9b]
-  - @makeswift/controls@0.1.0-canary.0
-  - @makeswift/prop-controllers@0.3.1-canary.0
+  - @makeswift/controls@0.1.0
+  - @makeswift/prop-controllers@0.3.1
 
 ## 0.19.4
 
