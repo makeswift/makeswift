@@ -145,7 +145,7 @@ class Definition<C extends Config> extends ControlDefinition<
   ): DataType<C> | undefined {
     if (data == null) return undefined
     return mapValues(data, (value, key) =>
-      this.keyDefs[key as string].copyData(value, context),
+      this.keyDefs[key as string]?.copyData(value, context),
     )
   }
 
@@ -182,8 +182,9 @@ class Definition<C extends Config> extends ControlDefinition<
   }
 
   introspect<R>(data: DataType<C> | undefined, target: IntrospectionTarget<R>) {
-    return Object.entries(data ?? {}).flatMap(([key, value]) =>
-      this.keyDefs[key as string]?.introspect(value, target),
+    return Object.entries(data ?? {}).flatMap(
+      ([key, value]) =>
+        this.keyDefs[key as string]?.introspect(value, target) ?? [],
     )
   }
 }
