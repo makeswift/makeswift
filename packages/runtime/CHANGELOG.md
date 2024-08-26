@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.20.2-canary.0
+
+### Patch Changes
+
+- be118e6: fixes `Shape` introspection and copying to properly handle non-existent/orphaned props.
+- Updated dependencies [be118e6]
+  - @makeswift/controls@0.1.2-canary.0
+  - @makeswift/prop-controllers@0.3.3-canary.0
+
 ## 0.20.1
 
 ### Patch Changes
