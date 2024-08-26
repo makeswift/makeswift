@@ -1,6 +1,7 @@
 import { Targets } from '../../introspection'
 import { deserializeRecord, type DeserializedRecord } from '../../serialization'
 
+import { type DataType } from '../associated-types'
 import { Checkbox, CheckboxDefinition } from '../checkbox'
 import { Color, ColorDefinition } from '../color'
 import { Combobox } from '../combobox'
@@ -157,6 +158,28 @@ describe('Shape', () => {
 
       const fileIds = shape.introspect(shapeData, Targets.File)
       expect(fileIds).toEqual(['file-id'])
+    })
+
+    test('gracefully handles missing/extra props', () => {
+      const shape = Shape({
+        type: {
+          color: Color({ defaultValue: 'red' }),
+          link: Link(),
+          image: Image(),
+        },
+      })
+
+      const shapeData = {
+        // missing props + extra prop that should be ignored
+        extraProp: 'extra',
+      }
+
+      expect(
+        shape.introspect(
+          shapeData as DataType<typeof shape>,
+          Targets.ChildrenElement,
+        ),
+      ).toStrictEqual([])
     })
   })
 
