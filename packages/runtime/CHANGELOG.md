@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.20.1-canary.1
+
+### Patch Changes
+
+- 97b2222: Relax `Select` options schema to allow values that can be coerced to a string.
+
 ## 0.20.1-canary.0
 
 ### Patch Changes
