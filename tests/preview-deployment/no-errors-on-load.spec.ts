@@ -14,5 +14,5 @@ test('should have no errors in the console', async ({ page }) => {
   await page.goto('/')
 
   // Assert
-  expect(consoleErrors).toHaveLength(0)
+  expect(consoleErrors).toEqual([])
 })
