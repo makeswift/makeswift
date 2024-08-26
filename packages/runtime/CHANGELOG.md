@@ -1,5 +1,17 @@
 # @makeswift/runtime
 
+## 0.20.1
+
+### Patch Changes
+
+- 6bb81f0: `deserializeControls` now handles deserialization issues more gracefully:
+  the function attempts to deserialize all of the controls, reporting
+  deserialization errors through an optional error callback.
+- 97b2222: Relax `Select` options schema to allow values that can be coerced to a string.
+- Updated dependencies [5cfd1af]
+  - @makeswift/controls@0.1.1
+  - @makeswift/prop-controllers@0.3.2
+
 ## 0.20.0
 
 ### Minor Changes
