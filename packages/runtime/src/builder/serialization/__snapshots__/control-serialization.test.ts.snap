@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`deserializeControls gracefully deserializes record of serialized controls when invalid config is provided 1`] = `
+[
+  [Error: Could not deserialize control for "faultyNumber": [
+  {
+    "code": "invalid_type",
+    "expected": "number",
+    "received": "string",
+    "path": [
+      "config",
+      "defaultValue"
+    ],
+    "message": "Expected number, received string"
+  }
+]],
+  [Error: Could not deserialize control for "faultySelect": [
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "number",
+    "path": [
+      "config",
+      "options",
+      0,
+      "value"
+    ],
+    "message": "Expected string, received number"
+  }
+]],
+]
+`;

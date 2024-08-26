@@ -1,8 +1,9 @@
 ---
-"@makeswift/runtime": patch
+'@makeswift/runtime': patch
 ---
 
-Gracefully deserialize controls - if an invalid control definition is provided,
-a helpful console error message is shown and the remaining controls will still
-be deserialized. In the builder, the panel for the invalid control will be
-unavailable.
+- Relax `Select` options schema to allow values that can be coerced to a string.
+
+- `deserializeControls` now handles deserialization issues more gracefully:
+  the function attempts to deserialize all of the controls, reporting
+  deserialization errors through an optional error callback.

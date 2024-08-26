@@ -81,9 +81,9 @@ class Definition<C extends Config> extends ControlDefinition<
     }
 
     const { config: configSchema } = Definition.schema(
-      z.string(),
-      z.string().optional(),
-      z.string().optional(),
+      z.coerce.string(),
+      z.coerce.string().optional(),
+      z.coerce.string().optional(),
     )
 
     const def = z.object({

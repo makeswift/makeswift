@@ -35,7 +35,8 @@ describe('deserializeControls', () => {
     const [serialized, transferables] = serializeControls(controls)
 
     // Act
-    const errorCallback = jest.fn()
+    const errors: Error[] = []
+    const errorCallback = jest.fn().mockImplementation(e => errors.push(e))
     const deserializedControls = deserializeControls(serialized, {
       onError: errorCallback,
     })
@@ -43,6 +44,7 @@ describe('deserializeControls', () => {
     // Assert
     expect(Object.keys(deserializedControls)).toEqual(['checkbox'])
     expect(errorCallback).toHaveBeenCalledTimes(2)
+    expect(errors).toMatchSnapshot()
 
     transferables.forEach((port: any) => port.close())
   })
