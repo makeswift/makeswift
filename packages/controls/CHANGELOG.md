@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.1-canary.0
+
+### Patch Changes
+
+- 5cfd1af: Relax `Select` options schema to allow values that can be coerced to a string.
+
 ## 0.1.0
 
 ### Minor Changes

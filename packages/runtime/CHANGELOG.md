@@ -1,5 +1,19 @@
 # @makeswift/runtime
 
+## 0.20.1-canary.0
+
+### Patch Changes
+
+- 6bb81f0: - Relax `Select` options schema to allow values that can be coerced to a string.
+
+  - `deserializeControls` now handles deserialization issues more gracefully:
+    the function attempts to deserialize all of the controls, reporting
+    deserialization errors through an optional error callback.
+
+- Updated dependencies [5cfd1af]
+  - @makeswift/controls@0.1.1-canary.0
+  - @makeswift/prop-controllers@0.3.2-canary.0
+
 ## 0.20.0
 
 ### Minor Changes
