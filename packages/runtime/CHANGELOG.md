@@ -8,12 +8,6 @@
   `@makeswift/controls`. As part of this update, this package is no longer
   exposing internal data types and functions associated with our controls.
 
-  Controls and their options are now verified at runtime. If you were previously
-  using our controls without TypeScript, you may have been able to pass invalid
-  options to controls without seeing an error. This will now result in an error
-  being thrown in the builder console and the associated control panel not
-  appearing.
-
   ## BREAKING:
 
   1. Attempting to create a control with arbitrary configuration options will
@@ -41,6 +35,13 @@
      ```
 
      Previously, the `options` array was allowed to be empty.
+
+  3. In addition to stricter compile-time checks, control definitions are now
+     validated at runtime when you load your site in the Makeswift builder.
+     Previously, if you were using vanilla JavaScript, you might have been
+     able to pass invalid or unsupported options to controls without
+     encountering an error. Now, such issues will trigger an error entry in the
+     browser console, and the related control panel will not appear.
 
 ### Patch Changes
 
