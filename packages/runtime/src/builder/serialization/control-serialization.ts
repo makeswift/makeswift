@@ -1049,12 +1049,15 @@ export function deserializeControls(
         const deserializedControl = deserializeControl(serializedControl)
         return { ...deserializedControls, [key]: deserializedControl }
       } catch (err: unknown) {
-        if (err instanceof Error) {
-          const error = new Error(`Could not deserialize control for "${key}": ${err.message}`, {
-            cause: err,
-          })
-          onError?.(error)
-        }
+        const error =
+          err instanceof Error
+            ? new Error(`Could not deserialize control for "${key}": ${err.message}`, {
+                cause: err,
+              })
+            : new Error(`Could not deserialize control for "${key}", unknown error: ${err}`)
+
+        onError?.(error)
+
         return deserializedControls
       }
     },
