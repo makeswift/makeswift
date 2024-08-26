@@ -8,6 +8,12 @@
   `@makeswift/controls`. As part of this update, this package is no longer
   exposing internal data types and functions associated with our controls.
 
+  Controls and their options are now verified at runtime. If you were previously
+  using our controls without TypeScript, you may have been able to pass invalid
+  options to controls without seeing an error. This will now result in an error
+  being thrown in the builder console and the associated control panel not
+  appearing.
+
   ## BREAKING:
 
   1. Attempting to create a control with arbitrary configuration options will
