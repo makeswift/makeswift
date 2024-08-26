@@ -2,6 +2,18 @@
 
 exports[`deserializeControls gracefully deserializes record of serialized controls when invalid config is provided 1`] = `
 [
+  [Error: Could not deserialize control for "faultyCheckbox": [
+  {
+    "code": "invalid_type",
+    "expected": "boolean",
+    "received": "number",
+    "path": [
+      "config",
+      "defaultValue"
+    ],
+    "message": "Expected boolean, received number"
+  }
+]],
   [Error: Could not deserialize control for "faultyNumber": [
   {
     "code": "invalid_type",
@@ -12,20 +24,6 @@ exports[`deserializeControls gracefully deserializes record of serialized contro
       "defaultValue"
     ],
     "message": "Expected number, received string"
-  }
-]],
-  [Error: Could not deserialize control for "faultySelect": [
-  {
-    "code": "invalid_type",
-    "expected": "string",
-    "received": "number",
-    "path": [
-      "config",
-      "options",
-      0,
-      "value"
-    ],
-    "message": "Expected string, received number"
   }
 ]],
 ]
