@@ -26,10 +26,12 @@ describe('deserializeControls', () => {
     // Arrange
     const controls = {
       checkbox: Checkbox({ label: 'Checkbox', defaultValue: true }),
+      // @ts-expect-error Semi-valid config for select: at runtime, we allow for values that can be coerced to string
+      select: Select({ label: 'Select', options: [{ value: 1, label: 'Red' }] }),
+      // @ts-expect-error Invalid config for checkbox, we expect a strict boolean value
+      faultyCheckbox: Checkbox({ label: 'Boolean', defaultValue: 1 }),
       // @ts-expect-error Invalid config for number
       faultyNumber: Number({ label: 'Number', defaultValue: 'not a number!' }),
-      // @ts-expect-error Invalid config for select
-      faultySelect: Select({ label: 'Select', options: [{ value: 1, label: 'Red' }] }),
     } as const
 
     const [serialized, transferables] = serializeControls(controls)
@@ -42,7 +44,7 @@ describe('deserializeControls', () => {
     })
 
     // Assert
-    expect(Object.keys(deserializedControls)).toEqual(['checkbox'])
+    expect(Object.keys(deserializedControls)).toEqual(['checkbox', 'select'])
     expect(errorCallback).toHaveBeenCalledTimes(2)
     expect(errors).toMatchSnapshot()
 
