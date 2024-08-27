@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.20.3
+
+### Patch Changes
+
+- b42d767: Only forward a ref if the component supports it, with the exception of lazy components, which continue to receive a ref unconditionally.
+
 ## 0.20.2
 
 ### Patch Changes
