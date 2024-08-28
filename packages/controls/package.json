@@ -9,9 +9,9 @@
   "module": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
   "scripts": {
-    "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'tsup --watch'",
+    "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'tsc-alias --watch' 'tsup --watch'",
     "clean": "rm -rf dist",
-    "build": "tsc && tsup",
+    "build": "tsc && tsc-alias && tsup",
     "format": "prettier --write .",
     "prepublishOnly": "turbo run build",
     "test": "jest",
@@ -34,6 +34,7 @@
     "concurrently": "^8.2.2",
     "expect-type": "^0.19.0",
     "jest": "^29.7.0",
+    "tsc-alias": "^1.8.10",
     "tsup": "^8.0.2",
     "typescript": "^5.1.6"
   }
