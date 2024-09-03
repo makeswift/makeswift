@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.20.4-canary.0
+
+### Patch Changes
+
+- dfa5c65: refactor: move legacy descriptor prop rendering into its own file
+
 ## 0.20.3
 
 ### Patch Changes
