@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { type SerializedRecord } from '../../../serialization'
 import { type DataType } from '../../associated-types'
-import { serialize } from '../../definition'
+import { serialize, type Resolvable } from '../../definition'
 import {
   ControlInstance,
   DefaultControlInstance,
@@ -19,6 +19,15 @@ export type RenderedNode = typeof renderedNode
 type UserConfig = z.infer<typeof Definition.schema.userConfig>
 
 class Definition extends RichTextDefinition<RenderedNode> {
+  resolveValue(
+    _data: DataType<RichTextDefinition<RenderedNode>> | undefined,
+  ): Resolvable<RenderedNode | undefined> {
+    return {
+      readStableValue: () => renderedNode,
+      subscribe: () => () => {},
+    }
+  }
+
   createInstance(sendMessage: SendMessage<any>): ControlInstance<any> {
     return new DefaultControlInstance(sendMessage)
   }

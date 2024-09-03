@@ -1,4 +1,4 @@
-import { testDefinition } from '../../testing/test-definition'
+import { testDefinition, testResolveValue } from '../../testing/test-definition'
 
 import { Select } from './select'
 
@@ -53,16 +53,13 @@ describe('Select', () => {
     // assignTest(Select({ label: 'Block type', options, defaultValue: undefined }))
     // assignTest(Select({ label: undefined, options, defaultValue: undefined }))
   })
+})
 
+describe.each([
+  [Select({ options }), ['p', 'h1'] as const],
+  [Select({ options, defaultValue: 'h1' }), ['p', 'h1'] as const],
+])('Select', (def, values) => {
   const invalidValues = [null, 17, 'random', { swatchId: 42 }]
-
-  testDefinition(
-    Select({
-      label: 'Block type',
-      labelOrientation: 'horizontal',
-      options,
-    }),
-    ['p', 'h1'],
-    invalidValues,
-  )
+  testDefinition(def, values, invalidValues)
+  testResolveValue(def, values)
 })

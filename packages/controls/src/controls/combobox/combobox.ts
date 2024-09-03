@@ -9,7 +9,12 @@ import {
   type SerializedRecord,
 } from '../../serialization'
 
-import { ControlDefinition, serialize, type SchemaType } from '../definition'
+import {
+  ControlDefinition,
+  serialize,
+  type Resolvable,
+  type SchemaType,
+} from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
 
 type Option<T extends Data> = { id: string; value: T; label: string }
@@ -100,7 +105,7 @@ class Definition<C extends Config> extends ControlDefinition<
   }
 
   fromData(data: DataType<C> | undefined): ValueType<C> | undefined {
-    return this.schema.data.optional().parse(data)
+    return data
   }
 
   toData(value: ValueType<C>): DataType<C> {
@@ -112,6 +117,17 @@ class Definition<C extends Config> extends ControlDefinition<
     _context: CopyContext,
   ): DataType<C> | undefined {
     return data
+  }
+
+  resolveValue(
+    data: DataType<C> | undefined,
+  ): Resolvable<ResolvedValueType<C> | undefined> {
+    return {
+      readStableValue: (_previous?: ResolvedValueType<C>) => {
+        return this.fromData(data)?.value
+      },
+      subscribe: () => () => {},
+    }
   }
 
   createInstance(sendMessage: SendMessage<any>) {

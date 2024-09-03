@@ -1,5 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Combobox constructor refines value type and resolved value based on options 1`] = `
+ComboboxDefinition {
+  "config": {
+    "getOptions": [Function],
+    "label": "Block type",
+  },
+}
+`;
+
+exports[`Combobox constructor refines value type and resolved value based on options 2`] = `
+{
+  "id": "p",
+  "label": "Paragraph",
+  "value": "p",
+}
+`;
+
+exports[`Combobox constructor refines value type and resolved value based on options 3`] = `"p"`;
+
 exports[`Combobox definition w/ config {"label":"Block type"} toData returns v1 data for \`{ id: 'h1', value: 'h1', label: 'Paragraph' }\` when definition version is 1 1`] = `
 {
   "id": "h1",
@@ -15,3 +34,7 @@ exports[`Combobox definition w/ config {"label":"Block type"} toData returns v1 
   "value": "p",
 }
 `;
+
+exports[`Combobox resolveValue w/ config {"label":"Block type"} resolves data ({ id: 'h1', value: 'h1', label: 'Paragraph' }) 1`] = `"h1"`;
+
+exports[`Combobox resolveValue w/ config {"label":"Block type"} resolves data ({ id: 'p', value: 'p', label: 'Paragraph' }) 1`] = `"p"`;

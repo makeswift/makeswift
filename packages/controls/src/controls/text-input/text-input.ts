@@ -13,7 +13,12 @@ import {
   type SerializedRecord,
 } from '../../serialization'
 
-import { ControlDefinition, serialize, type SchemaType } from '../definition'
+import {
+  ControlDefinition,
+  serialize,
+  type Resolvable,
+  type SchemaType,
+} from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
 
 type Config = z.infer<typeof Definition.schema.relaxed.config>
@@ -168,6 +173,17 @@ class Definition<C extends Config> extends ControlDefinition<
   ): Data {
     if (translatedData == null) return data
     return translatedData
+  }
+
+  resolveValue(
+    value: DataType<C> | undefined,
+  ): Resolvable<ResolvedValueType<C> | undefined> {
+    return {
+      readStableValue: (_previous?: ResolvedValueType<C>) => {
+        return this.fromData(value) ?? this.config.defaultValue
+      },
+      subscribe: () => () => {},
+    }
   }
 
   createInstance(sendMessage: SendMessage) {

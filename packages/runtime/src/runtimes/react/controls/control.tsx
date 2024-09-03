@@ -27,24 +27,18 @@ import {
 } from '../../../controls'
 
 import { RenderHook } from '../components'
-import { useCheckboxControlValue } from './checkbox'
 import { useColorValue } from './color'
-import { useComboboxControlValue } from './combobox'
-import { useIconRadioGroupValue } from './icon-radio-group'
 import { useImageControlValue } from './image'
 import { useLinkControlValue } from './link'
 import { ListControlValue } from './list'
-import { useNumber } from './number'
 import { useRichText } from './rich-text/rich-text'
 import { useRichTextV2 } from './rich-text-v2'
-import { useSelectControlValue } from './select'
 import { ShapeControlValue } from './shape'
 import { useSlot } from './slot'
 import { useFormattedStyle } from './style'
 import { StyleV2ControlValue } from './style-v2'
-import { useTextAreaValue } from './text-area'
-import { useTextInputValue } from './text-input'
 import { useTypographyValue } from './typography'
+import { useResolvedValue } from '../hooks/use-resolved-value'
 
 type ControlValueProps = {
   definition: ControlDefinition
@@ -61,55 +55,17 @@ export function ControlValue({
 }: ControlValueProps): JSX.Element {
   switch (definition.controlType) {
     case CheckboxDefinition.type:
-      return (
-        <RenderHook
-          key={definition.controlType}
-          hook={useCheckboxControlValue}
-          parameters={[data as DataType<CheckboxDefinition>, definition as CheckboxDefinition]}
-        >
-          {value => children(value)}
-        </RenderHook>
-      )
-
     case NumberDefinition.type:
-      return (
-        <RenderHook
-          key={definition.controlType}
-          hook={useNumber}
-          parameters={[data as DataType<NumberDefinition>, definition as NumberDefinition]}
-        >
-          {value => children(value)}
-        </RenderHook>
-      )
-
     case TextInputDefinition.type:
-      return (
-        <RenderHook
-          key={definition.controlType}
-          hook={useTextInputValue}
-          parameters={[data as DataType<TextInputDefinition>, definition as TextInputDefinition]}
-        >
-          {value => children(value)}
-        </RenderHook>
-      )
-
     case TextAreaDefinition.type:
-      return (
-        <RenderHook
-          key={definition.controlType}
-          hook={useTextAreaValue}
-          parameters={[data as DataType<TextAreaDefinition>, definition as TextAreaDefinition]}
-        >
-          {value => children(value)}
-        </RenderHook>
-      )
-
     case SelectDefinition.type:
+    case IconRadioGroupDefinition.type:
+    case ComboboxDefinition.type:
       return (
         <RenderHook
           key={definition.controlType}
-          hook={useSelectControlValue}
-          parameters={[data as DataType<SelectDefinition>, definition as SelectDefinition]}
+          hook={useResolvedValue}
+          parameters={[data, definition]}
         >
           {value => children(value)}
         </RenderHook>
@@ -121,20 +77,6 @@ export function ControlValue({
           key={definition.controlType}
           hook={useColorValue}
           parameters={[data as DataType<ColorDefinition>, definition as ColorDefinition]}
-        >
-          {value => children(value)}
-        </RenderHook>
-      )
-
-    case IconRadioGroupDefinition.type:
-      return (
-        <RenderHook
-          key={definition.controlType}
-          hook={useIconRadioGroupValue}
-          parameters={[
-            data as DataType<IconRadioGroupDefinition>,
-            definition as IconRadioGroupDefinition,
-          ]}
         >
           {value => children(value)}
         </RenderHook>
@@ -157,17 +99,6 @@ export function ControlValue({
           key={definition.controlType}
           hook={useLinkControlValue}
           parameters={[data as DataType<LinkDefinition>, definition as LinkDefinition]}
-        >
-          {value => children(value)}
-        </RenderHook>
-      )
-
-    case ComboboxDefinition.type:
-      return (
-        <RenderHook
-          key={definition.controlType}
-          hook={useComboboxControlValue}
-          parameters={[data as DataType<ComboboxDefinition>]}
         >
           {value => children(value)}
         </RenderHook>

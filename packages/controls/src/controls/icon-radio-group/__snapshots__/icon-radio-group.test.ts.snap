@@ -21,6 +21,12 @@ IconRadioGroupDefinition {
 }
 `;
 
-exports[`unstable_IconRadioGroup definition w/ config {"label":"Block type","options":[{"value":"code","label":"Code","icon":"Code16"},{"value":"superscript","label":"Superscript","icon":"Superscript16"}],"defaultValue":"code"} toData returns v1 data for \`code\` when definition version is 1 1`] = `"code"`;
+exports[`unstable_IconRadioGroup definition w/ config {"options":[{"value":"code","label":"Code","icon":"Code16"},{"value":"superscript","label":"Superscript","icon":"Superscript16"}],"defaultValue":"code"} toData returns v1 data for \`code\` when definition version is 1 1`] = `"code"`;
 
-exports[`unstable_IconRadioGroup definition w/ config {"label":"Block type","options":[{"value":"code","label":"Code","icon":"Code16"},{"value":"superscript","label":"Superscript","icon":"Superscript16"}],"defaultValue":"code"} toData returns v1 data for \`superscript\` when definition version is 1 1`] = `"superscript"`;
+exports[`unstable_IconRadioGroup definition w/ config {"options":[{"value":"code","label":"Code","icon":"Code16"},{"value":"superscript","label":"Superscript","icon":"Superscript16"}],"defaultValue":"code"} toData returns v1 data for \`superscript\` when definition version is 1 1`] = `"superscript"`;
+
+exports[`unstable_IconRadioGroup definition w/ config {"options":[{"value":"code","label":"Code","icon":"Code16"},{"value":"superscript","label":"Superscript","icon":"Superscript16"}]} toData returns v1 data for \`code\` when definition version is 1 1`] = `"code"`;
+
+exports[`unstable_IconRadioGroup definition w/ config {"options":[{"value":"code","label":"Code","icon":"Code16"},{"value":"superscript","label":"Superscript","icon":"Superscript16"}]} toData returns v1 data for \`superscript\` when definition version is 1 1`] = `"superscript"`;
+
+exports[`unstable_IconRadioGroup definition w/ config {"options":[{"value":"code","label":"Code","icon":"Code16"},{"value":"superscript","label":"Superscript","icon":"Superscript16"}]} toData returns v1 data for \`undefined\` when definition version is 1 1`] = `undefined`;

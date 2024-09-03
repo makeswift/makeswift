@@ -1,4 +1,4 @@
-import { testDefinition } from '../../testing/test-definition'
+import { testDefinition, testResolveValue } from '../../testing/test-definition'
 
 import { Number, NumberDefinition } from './number'
 
@@ -39,18 +39,13 @@ describe('Number', () => {
     assignTest(Number({ defaultValue: undefined, min: 0, max: 100 }))
     assignTest(Number({ label: undefined, defaultValue: undefined }))
   })
+})
 
+describe.each([
+  [Number({ defaultValue: 17, label: 'visible' }), [21, 20]],
+  [Number({ label: 'Number' }), [50, 51, undefined]],
+])('Number', (def, values) => {
   const invalidValues = [null, false, 'text']
-
-  testDefinition(
-    Number({ defaultValue: 17, label: 'visible' }),
-    [21, 20],
-    invalidValues,
-  )
-
-  testDefinition(
-    Number({ label: 'Number' }),
-    [50, 51, undefined],
-    invalidValues,
-  )
+  testDefinition(def, values, invalidValues)
+  testResolveValue(def, values)
 })
