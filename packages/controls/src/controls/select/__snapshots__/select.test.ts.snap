@@ -20,6 +20,10 @@ SelectDefinition {
 }
 `;
 
-exports[`Select definition w/ config {"label":"Block type","labelOrientation":"horizontal","options":[{"value":"p","label":"Paragraph"},{"value":"h1","label":"Heading 1"}]} toData returns v1 data for \`h1\` when definition version is 1 1`] = `"h1"`;
+exports[`Select definition w/ config {"options":[{"value":"p","label":"Paragraph"},{"value":"h1","label":"Heading 1"}],"defaultValue":"h1"} toData returns v1 data for \`h1\` when definition version is 1 1`] = `"h1"`;
 
-exports[`Select definition w/ config {"label":"Block type","labelOrientation":"horizontal","options":[{"value":"p","label":"Paragraph"},{"value":"h1","label":"Heading 1"}]} toData returns v1 data for \`p\` when definition version is 1 1`] = `"p"`;
+exports[`Select definition w/ config {"options":[{"value":"p","label":"Paragraph"},{"value":"h1","label":"Heading 1"}],"defaultValue":"h1"} toData returns v1 data for \`p\` when definition version is 1 1`] = `"p"`;
+
+exports[`Select definition w/ config {"options":[{"value":"p","label":"Paragraph"},{"value":"h1","label":"Heading 1"}]} toData returns v1 data for \`h1\` when definition version is 1 1`] = `"h1"`;
+
+exports[`Select definition w/ config {"options":[{"value":"p","label":"Paragraph"},{"value":"h1","label":"Heading 1"}]} toData returns v1 data for \`p\` when definition version is 1 1`] = `"p"`;

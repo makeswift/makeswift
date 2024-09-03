@@ -1,4 +1,4 @@
-import { testDefinition } from '../../testing/test-definition'
+import { testDefinition, testResolveValue } from '../../testing/test-definition'
 
 import { ControlDataTypeKey } from '../../common'
 import { MergeTranslatableDataContext, TranslationDto } from '../../context'
@@ -93,18 +93,16 @@ describe('TextArea', () => {
       expect(def.mergeTranslatedData(dataV0, null, mergeContext)).toBe(dataV0)
     })
   })
+})
 
-  const invalidValues = [null, false, 5, []]
-
-  testDefinition(
+describe.each([
+  [
     TextArea({ defaultValue: 'Up', label: 'visible' }),
     ['Toy Story 3', "Monster's Inc."],
-    invalidValues,
-  )
-
-  testDefinition(
-    TextArea({ label: 'TextArea' }),
-    ['WALL-E', 'Ratatouille', undefined],
-    invalidValues,
-  )
+  ],
+  [TextArea({ label: 'TextArea' }), ['WALL-E', 'Ratatouille', undefined]],
+])('TextArea', (def, values) => {
+  const invalidValues = [null, false, 5, []]
+  testDefinition(def, values, invalidValues)
+  testResolveValue(def, values)
 })
