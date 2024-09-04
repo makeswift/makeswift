@@ -12,6 +12,7 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
-    "calm-bobcats-grow"
+    "calm-bobcats-grow",
+    "two-days-repair"
   ]
 }

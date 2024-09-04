@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.20.4-canary.1
+
+### Patch Changes
+
+- 4d82ccd: refactor: move `is`, `deepEqual` and `shallowEqual` predicates to the `@makeswift/controls` package
+- Updated dependencies [4d82ccd]
+  - @makeswift/controls@0.1.3-canary.0
+  - @makeswift/prop-controllers@0.3.4-canary.0
+
 ## 0.20.4-canary.0
 
 ### Patch Changes
