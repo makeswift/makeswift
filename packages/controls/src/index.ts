@@ -7,3 +7,4 @@ export * from './context'
 export * from './introspection'
 
 export * from './lib/functional'
+export * from './lib/predicates'
