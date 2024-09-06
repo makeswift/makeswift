@@ -434,6 +434,7 @@ function registerBuilderComponents(): ThunkAction<() => void, State, unknown, Ac
 function registerBuilderDocuments(): ThunkAction<() => void, State, unknown, Action> {
   return (dispatch, getState) => {
     const documents = Documents.getDocuments(getDocumentsStateSlice(getState()))
+    console.log('@@@', { documents })
 
     documents.forEach(document => {
       dispatch(registerBuilderDocument(document))

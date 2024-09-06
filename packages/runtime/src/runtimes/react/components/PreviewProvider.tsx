@@ -3,7 +3,7 @@
 import { ReactNode, useEffect, useMemo } from 'react'
 
 import { ReactRuntime } from '../react-runtime'
-import { StoreContext } from '../hooks/use-store'
+import { StoreContext, useStore } from '../hooks/use-store'
 import * as ReactBuilderPreview from '../../../state/react-builder-preview'
 import * as ReactPage from '../../../state/react-page'
 import { MakeswiftHostApiClient } from '../../../api/react'
@@ -18,21 +18,8 @@ type Props = {
 }
 
 export default function PreviewProvider({ client, children, rootElements }: Props): JSX.Element {
-  const runtime = useReactRuntime()
-  const store = useMemo(
-    () =>
-      ReactBuilderPreview.configureStore({
-        preloadedState: runtime ? runtime.store.getState() : ReactRuntime.store.getState(),
-        rootElements,
-        client,
-      }),
-    [client, rootElements, runtime],
-  )
-
-  useEffect(() => {
-    store.setup()
-    return () => store.teardown()
-  }, [store])
+  // const runtime = useReactRuntime()
+  const store = useStore()
 
   useEffect(() => {
     const unregisterDocuments = Array.from(rootElements?.entries() ?? []).map(
@@ -47,9 +34,5 @@ export default function PreviewProvider({ client, children, rootElements }: Prop
     }
   }, [store, rootElements])
 
-  return (
-    <StoreContext.Provider value={store}>
-      <MakeswiftHostApiClientProvider client={client}>{children}</MakeswiftHostApiClientProvider>
-    </StoreContext.Provider>
-  )
+  return <MakeswiftHostApiClientProvider client={client}>{children}</MakeswiftHostApiClientProvider>
 }

@@ -3,6 +3,7 @@ export { ReactRuntime } from './react-runtime'
 export { Element } from './components/Element'
 export { DocumentReference } from './components/DocumentReference'
 export { RuntimeProvider } from './components/RuntimeProvider'
+export { MultiProvider } from './components/MultiProvider'
 export { PageProvider } from './components/PageProvider'
 
 export { useBreakpoints } from './hooks/use-breakpoints'

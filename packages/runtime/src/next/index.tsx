@@ -7,3 +7,6 @@ export { PreviewModeScript } from './preview-mode'
 export { Document } from './document'
 export { RootStyleRegistry } from './root-style-registry'
 export { ReactRuntimeProvider } from './context/react-runtime'
+
+export { MultiProvider } from '../runtimes/react'
+export { MakeswiftHostApiClient } from '../api/react'

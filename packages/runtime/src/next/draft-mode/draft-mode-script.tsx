@@ -5,7 +5,7 @@ type Props = {
   appOrigin?: string
 }
 
-export function DraftModeScript({ appOrigin = 'https://app.makeswift.com' }: Props) {
+export function DraftModeScript({ appOrigin = 'http://localhost:7050' }: Props) {
   const { isEnabled: isDraftModeEnabled } = draftMode()
   const draftModeScript = `
 const isDraft = ${isDraftModeEnabled}
