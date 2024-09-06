@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.20.4-canary.2
+
+### Patch Changes
+
+- ec65529: Performs runtime verification of incoming data during control deserialization.
+  Also adds new fields to the `deserializeControls` error callback.
+
 ## 0.20.4-canary.1
 
 ### Patch Changes
