@@ -1,4 +1,10 @@
-import { serializeControls, deserializeControls } from './control-serialization'
+import { Grid, Image, Width } from '@makeswift/prop-controllers'
+import {
+  serializeControls,
+  deserializeControls,
+  isSerializedControl,
+  serializeControl,
+} from './control-serialization'
 import { Checkbox, Number, Select } from '@makeswift/controls'
 
 describe('deserializeControls', () => {
@@ -50,4 +56,31 @@ describe('deserializeControls', () => {
 
     transferables.forEach((port: any) => port.close())
   })
+})
+
+describe('isSerializedControl', () => {
+  test.each([serializeControl(Grid()), serializeControl(Width()), serializeControl(Image())])(
+    `returns true for serialized prop-controllers: %p`,
+    value => {
+      // Assert
+      expect(isSerializedControl(value)).toBe(true)
+    },
+  )
+
+  test.each([
+    Checkbox({ label: 'Checkbox', defaultValue: true }).serialize(),
+    Number({ label: 'Number', defaultValue: 42 }).serialize(),
+    Select({ label: 'Select', options: [{ value: 'red', label: 'Red' }] }).serialize(),
+  ])(`returns true for serialized controls: %p`, value => {
+    // Assert
+    expect(isSerializedControl(value)).toBe(true)
+  })
+
+  test.each(['string', 1, true, null, undefined, { key: 'value' }, [{ key: 'value' }]])(
+    'returns false for invalid serialized data: %p',
+    value => {
+      // Assert
+      expect(isSerializedControl(value)).toBe(false)
+    },
+  )
 })

@@ -849,6 +849,15 @@ export function serializeControl<T extends Data>(
   return [serializedControl, transferables]
 }
 
+export function isSerializedControl(control: unknown): control is SerializedControl {
+  return (
+    control != null &&
+    typeof control === 'object' &&
+    'type' in control &&
+    typeof control.type === 'string'
+  )
+}
+
 function serializeLegacyControl<T extends Data>(
   control: LegacyDescriptor<T>,
 ): [SerializedControl<T>, Transferable[]] {
@@ -1040,12 +1049,19 @@ export function serializeControls(
 }
 
 export function deserializeControls(
-  serializedControls: Record<string, SerializedControl>,
-  { onError }: { onError?: (err: Error) => void } = {},
+  serializedControls: Record<string, unknown>,
+  {
+    onError,
+  }: { onError?: (err: Error, context: { key: string; serializedControl: unknown }) => void } = {},
 ): Record<string, DeserializedControl> {
   return Object.entries(serializedControls).reduce(
     (deserializedControls, [key, serializedControl]) => {
       try {
+        if (!isSerializedControl(serializedControl)) {
+          throw new Error(
+            `Expected serialized control data, got ${JSON.stringify(serializedControl)}`,
+          )
+        }
         const deserializedControl = deserializeControl(serializedControl)
         return { ...deserializedControls, [key]: deserializedControl }
       } catch (err: unknown) {
@@ -1056,7 +1072,7 @@ export function deserializeControls(
               })
             : new Error(`Could not deserialize control for "${key}", unknown error: ${err}`)
 
-        onError?.(error)
+        onError?.(error, { key, serializedControl })
 
         return deserializedControls
       }
