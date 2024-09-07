@@ -5,7 +5,13 @@ import ipsum from 'corporate-ipsum'
 
 import {
   RichTextDefinition as BaseRichTextDefinition,
+  isNotNil,
+  ControlDefinition,
+  SerializationSchema,
+  serialize,
+  StableValue,
   type Data,
+  type Resolvable,
   type SendMessage,
   type SerializedRecord,
   type DeserializedRecord,
@@ -13,11 +19,9 @@ import {
   type SchemaTypeAny,
   type MergeTranslatableDataContext,
   type RichTextPluginControl,
+  type ResourceResolver,
+  type Stylesheet,
   type RichTextMode,
-  isNotNil,
-  ControlDefinition,
-  SerializationSchema,
-  serialize,
 } from '@makeswift/controls'
 
 import { LinkPlugin } from '../../slate/LinkPlugin'
@@ -27,6 +31,8 @@ import { BlockPlugin } from '../../slate/BlockPlugin'
 import { TypographyPlugin } from '../../slate/TypographyPlugin'
 import { InlineModePlugin } from '../../slate/InlineModePlugin'
 import { toText } from '../../slate/utils'
+
+import { renderRichTextV2 } from '../../runtimes/react/controls/rich-text-v2'
 
 import { RichTextV2Plugin, Plugin } from './plugin'
 import { RichTextV2Control } from './control'
@@ -117,6 +123,23 @@ class Definition extends BaseRichTextDefinition<ReactNode, Config, InstanceType>
 
   createInstance(sendMessage: SendMessage): InstanceType {
     return new RichTextV2Control(sendMessage, this)
+  }
+
+  resolveValue(
+    data: DataType | undefined,
+    _resolver: ResourceResolver,
+    _stylesheet: Stylesheet,
+    control?: InstanceType,
+  ): Resolvable<ReactNode | undefined> {
+    const stableValue = StableValue({
+      name: Definition.type,
+      read: () => renderRichTextV2(data, this, control ?? null),
+    })
+
+    return {
+      ...stableValue,
+      triggerResolve: async () => {},
+    }
   }
 
   getTranslatableData(data: DataType): Data {

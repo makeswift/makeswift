@@ -5,7 +5,8 @@ import {
   type Node,
 } from 'slate'
 
-import { type ResolvedColorData, type ResponsiveValue } from '../../common'
+import { type ResponsiveValue } from '../../common'
+import { type ResolvedColorData } from '../../resources'
 
 import { type DataType } from '../associated-types'
 import { LinkDefinition } from '../link'

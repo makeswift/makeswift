@@ -48,7 +48,7 @@ type ExpectedLinkControlData =
             }
           | null
           | undefined
-        block: 'start' | 'center' | 'end'
+        block: 'start' | 'center' | 'end' | 'nearest'
       }
     }
   | null
@@ -73,7 +73,13 @@ describe('Link Types', () => {
       expectTypeOf<Resolved>().toEqualTypeOf<{
         href: string
         target?: '_blank' | '_self'
-        onClick: (args: GenericMouseEvent) => void
+        onClick: ((args: GenericMouseEvent) => void) & {
+          $scrollOptions?: {
+            behavior?: 'smooth' | 'instant' | 'auto'
+            block?: 'start' | 'center' | 'end' | 'nearest'
+            inline?: 'start' | 'center' | 'end' | 'nearest'
+          }
+        }
       }>
     })
   })

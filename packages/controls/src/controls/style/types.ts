@@ -6,6 +6,7 @@ export type PixelLengthData = z.infer<typeof Schema.pixelLength>
 export type PercentageData = z.infer<typeof Schema.percentageLength>
 export type BorderStyle = z.infer<typeof Schema.borderStyle>
 export type BorderSideData = z.infer<typeof Schema.borderSide>
+export type ResolvedBorderSideData = z.infer<typeof Schema.resolvedBorderSide>
 export type BorderData = z.infer<typeof Schema.border>
 export type FontFamilyPropertyData = z.infer<typeof Schema.fontFamily>
 export type LetterSpacingPropertyData = z.infer<typeof Schema.letterSpacing>

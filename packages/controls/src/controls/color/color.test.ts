@@ -1,12 +1,36 @@
+import { noOpResourceResolver } from '../../testing/mocks/resource-resolver'
 import { testDefinition } from '../../testing/test-definition'
 
+import { ControlDataTypeKey } from '../../common'
 import { createReplacementContext, type CopyContext } from '../../context'
 import { Targets } from '../../introspection'
+import { Swatch } from '../../resources'
+import {
+  type FetchableValue,
+  type ResourceResolver,
+} from '../../resources/resolver'
 
 import { type ValueType } from '../associated-types'
 import { ControlDefinition } from '../definition'
 
 import { Color, ColorDefinition } from './color'
+
+export const colorResolver: ResourceResolver = {
+  ...noOpResourceResolver,
+  resolveSwatch(swatchId: string): FetchableValue<Swatch | null> {
+    return {
+      name: 'test-swatch',
+      readStable: () => ({
+        id: swatchId,
+        hue: 0,
+        saturation: 0,
+        lightness: 0,
+      }),
+      subscribe: () => () => {},
+      fetch: () => Promise.resolve(null),
+    }
+  },
+}
 
 function testColorDefinition<Def extends ControlDefinition>(
   definition: Def,
@@ -108,6 +132,33 @@ describe('Color', () => {
         defaultValue: undefined,
       }),
     )
+  })
+
+  describe('resolveValue', () => {
+    test('resolves v0 data', () => {
+      const data = {
+        swatchId: '[swatch-id-1]',
+        alpha: 0.5,
+      }
+      expect(
+        Color({ label: 'Color' })
+          .resolveValue(data, colorResolver)
+          .readStable(),
+      ).toBe('rgba(0, 0, 0, 0.5)')
+    })
+
+    test('resolves v1 data', () => {
+      const data = {
+        [ControlDataTypeKey]: 'color::v1' as const,
+        swatchId: '[swatch-id-1]',
+        alpha: 0.5,
+      }
+      expect(
+        Color({ label: 'Color' })
+          .resolveValue(data, colorResolver)
+          .readStable(),
+      ).toBe('rgba(0, 0, 0, 0.5)')
+    })
   })
 
   const invalidValues = [null, 17, 'text', { swatchId: 42 }, { alpha: 1 }]

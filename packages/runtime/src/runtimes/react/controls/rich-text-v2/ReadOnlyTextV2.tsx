@@ -1,6 +1,6 @@
 import { ForwardedRef, forwardRef } from 'react'
 
-import { RichTextV2Definition, RichText } from '../../../../controls'
+import { RichTextV2Definition, RichText } from '../../../../controls/rich-text-v2'
 import { useStyle } from '../../use-style'
 import { Descendant, Element, Text } from 'slate'
 import { toText } from '../../../../slate'
@@ -10,8 +10,8 @@ import { RichTextV2Plugin } from '../../../../controls/rich-text-v2/plugin'
 import { RichTextDataV2 } from '../../../../controls/rich-text-v2'
 
 type Props = {
-  text: RichTextDataV2 | null
-  definition: RichTextV2Definition | null
+  text: RichTextDataV2 | undefined
+  definition: RichTextV2Definition | undefined
 }
 
 const ReadOnlyTextV2 = forwardRef(function ReadOnlyText(

@@ -1,4 +1,4 @@
-const coalesce = <T>(...args: Array<T>): T => {
+export function coalesce<T>(...args: Array<T>): T {
   let i: number
 
   for (i = 0; i < args.length - 1; i += 1) {
@@ -7,5 +7,3 @@ const coalesce = <T>(...args: Array<T>): T => {
 
   return args[i]
 }
-
-export default coalesce

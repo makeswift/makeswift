@@ -2,6 +2,9 @@ import { ControlDataTypeKey } from '../common/types'
 import { type ValueType } from '../controls/associated-types'
 import { ControlDefinition } from '../controls/definition'
 
+import { noOpResourceResolver } from './mocks/resource-resolver'
+import { noOpStylesheet } from './mocks/stylesheet'
+
 function toV0<Def extends ControlDefinition>(definition: Def) {
   const DefinitionClass = definition.constructor as any
   return DefinitionClass.deserialize({
@@ -155,10 +158,13 @@ export function testResolveValue<Def extends ControlDefinition>(
   describe(`resolveValue w/ config ${JSON.stringify(definition.config)}`, () => {
     test.each(values)('resolves data (%s)', (value) => {
       const data = definition.toData(value)
-      const resolvedValue = definition.resolveValue(data).readStableValue()
       // for all basic controls, if the resolved value is a primitive, it should equal to the original value;
       // we assert this explicitly rather than matching against a snapshot to avoid generating a lot of
       // trivial snapshots, which would be harder to parse/verify
+      const resolvedValue = definition
+        .resolveValue(data, noOpResourceResolver, noOpStylesheet)
+        .readStable()
+
       if (typeof value !== 'object') {
         expect(resolvedValue).toBe(value)
       } else {
@@ -170,7 +176,10 @@ export function testResolveValue<Def extends ControlDefinition>(
       test.each(values)('resolves unversioned data (%s)', (value) => {
         const v0Definition = toV0(definition)
         const data = v0Definition.toData(value as any)
-        const resolvedValue = definition.resolveValue(data).readStableValue()
+        const resolvedValue = definition
+          .resolveValue(data, noOpResourceResolver, noOpStylesheet)
+          .readStable()
+
         if (typeof value !== 'object') {
           expect(resolvedValue).toBe(value)
         } else {
@@ -182,9 +191,11 @@ export function testResolveValue<Def extends ControlDefinition>(
     describe('resolves undefined data', () => {
       const defaultValue = (definition.config as any).defaultValue
       test(`resolves to ${defaultValue !== undefined ? 'default value when default' : 'undefined when no default value '} is provided`, () => {
-        expect(definition.resolveValue(undefined).readStableValue()).toBe(
-          defaultValue,
-        )
+        expect(
+          definition
+            .resolveValue(undefined, noOpResourceResolver, noOpStylesheet)
+            .readStable(),
+        ).toBe(defaultValue)
       })
     })
   })

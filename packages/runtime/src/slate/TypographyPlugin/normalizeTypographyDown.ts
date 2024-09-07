@@ -1,8 +1,7 @@
 import { Editor, Element, NodeEntry, Transforms } from 'slate'
-import { RichTextTypography } from '@makeswift/controls'
+import { RichTextTypography, shallowMerge } from '@makeswift/controls'
 
 import { MakeswiftEditor } from '../types'
-import shallowMerge from '../../utils/shallowMerge'
 import { TYPOGRAPHY_KEY } from '.'
 
 export function shallowMergeTypographies(

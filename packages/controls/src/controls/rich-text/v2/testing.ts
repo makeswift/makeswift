@@ -23,8 +23,10 @@ class Definition extends RichTextDefinition<RenderedNode> {
     _data: DataType<RichTextDefinition<RenderedNode>> | undefined,
   ): Resolvable<RenderedNode | undefined> {
     return {
-      readStableValue: () => renderedNode,
+      name: Definition.type,
+      readStable: () => renderedNode,
       subscribe: () => () => {},
+      triggerResolve: async () => {},
     }
   }
 

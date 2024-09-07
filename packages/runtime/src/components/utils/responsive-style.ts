@@ -15,11 +15,11 @@ import type {
 
 import {
   FallbackStrategy,
-  getBreakpoint,
-  getBreakpointMediaQuery,
   join as joinResponsiveValues,
-  Breakpoints,
-} from '../../state/modules/breakpoints'
+  type Breakpoints,
+} from '@makeswift/controls'
+
+import { getBreakpoint, getBreakpointMediaQuery } from '../../state/modules/breakpoints'
 
 import { useBreakpoints } from '../../runtimes/react/hooks/use-breakpoints'
 

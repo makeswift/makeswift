@@ -19,9 +19,6 @@ describe('Shape Types', () => {
       const colorDef = Color({ label: 'Color' })
       const numberListDef = List({ type: Number({ defaultValue: 0 }) })
 
-      const colorFn = () => colorDef
-      const listFn = () => numberListDef
-
       const def = Shape({
         type: {
           color: colorDef,
@@ -35,20 +32,20 @@ describe('Shape Types', () => {
 
       expectTypeOf<Config>().toEqualTypeOf<{
         readonly type: {
-          color: ReturnType<typeof colorFn>
-          list: ReturnType<typeof listFn>
+          color: typeof colorDef
+          list: typeof numberListDef
         }
       }>()
 
       type Data = DataType<typeof def>
 
       expectTypeOf<Data>().toEqualTypeOf<{
-        color?: {
+        color: {
           swatchId: string
           alpha: number
           [ControlDataTypeKey]?: 'color::v1'
         }
-        list?: {
+        list: {
           id: string
           type?: string
           value:
@@ -62,8 +59,8 @@ describe('Shape Types', () => {
 
       type Value = ValueType<typeof def>
       expectTypeOf<Value>().toEqualTypeOf<{
-        color?: { swatchId: string; alpha: number }
-        list?: number[]
+        color: { swatchId: string; alpha: number }
+        list: number[]
       }>()
 
       type Resolved = ResolvedValueType<typeof def>

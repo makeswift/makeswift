@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { Schema } from '../../common'
+import { ResourceSchema } from '../../resources'
 
 /**
  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/length
@@ -49,7 +49,10 @@ export const borderSideSchema = <C extends z.ZodTypeAny>(color: C) =>
       width: v.width,
     }))
 
-export const borderSide = borderSideSchema(Schema.colorData)
+export const borderSide = borderSideSchema(ResourceSchema.colorData)
+export const resolvedBorderSide = borderSideSchema(
+  ResourceSchema.resolvedColorData,
+)
 
 /**
  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/border
@@ -74,7 +77,7 @@ export const borderSchema = <C extends z.ZodTypeAny>(color: C) =>
       borderLeft: v.borderLeft,
     }))
 
-export const border = borderSchema(Schema.colorData)
+export const border = borderSchema(ResourceSchema.colorData)
 
 /**
  * https://developer.mozilla.org/en-US/docs/Web/CSS/font-family

@@ -1,5 +1,5 @@
 /** @jest-environment jsdom */
-import { useState, forwardRef } from 'react'
+import { useState } from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 
 import { Slot, TextInput } from '../../../../controls'
@@ -7,14 +7,14 @@ import { testPageControlPropRendering } from './page-control-prop-rendering'
 import { MakeswiftComponentType } from '../../../../components/builtin/constants'
 import { ReactRuntime } from '../../../../react'
 
-const Button = forwardRef(function Button({ title }: { title: string }, _ref) {
+function Button({ title }: { title: string }) {
   const [count, setCount] = useState(0)
   return (
     <button data-click-count={count} onClick={() => setCount(count + 1)}>
       {title}
     </button>
   )
-})
+}
 
 describe('Page', () => {
   describe('Slot', () => {

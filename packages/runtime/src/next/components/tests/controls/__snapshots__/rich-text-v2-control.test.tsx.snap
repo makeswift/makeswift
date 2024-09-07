@@ -1,0 +1,620 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Page RichTextV2 renders a makeswift::controls::rich-text-v2::mode::block placeholder when empty: resolvedValue 1`] = `
+NodeList [
+  .emotion-0 {
+  display: inline-block;
+  width: 0;
+  max-width: 100%;
+  white-space: nowrap;
+  opacity: 0.333;
+  vertical-align: text-top;
+}
+
+<div
+    style="position: relative; white-space: pre-wrap; word-wrap: break-word;"
+  >
+    <span
+      class="emotion-0"
+    >
+      Write some text...
+    </span>
+  </div>,
+]
+`;
+
+exports[`Page RichTextV2 renders a makeswift::controls::rich-text-v2::mode::block placeholder when empty: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": undefined,
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page RichTextV2 renders a makeswift::controls::rich-text-v2::mode::inline placeholder when empty: resolvedValue 1`] = `
+NodeList [
+  .emotion-0 {
+  display: inline-block;
+  width: 0;
+  max-width: 100%;
+  white-space: nowrap;
+  opacity: 0.333;
+  vertical-align: text-top;
+}
+
+<div
+    style="position: relative; white-space: pre-wrap; word-wrap: break-word;"
+  >
+    <span
+      class="emotion-0"
+    >
+      Write some text...
+    </span>
+  </div>,
+]
+`;
+
+exports[`Page RichTextV2 renders a makeswift::controls::rich-text-v2::mode::inline placeholder when empty: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {},
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": undefined,
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;
+
+exports[`Page RichTextV2 renders provided text content: resolvedValue 1`] = `
+NodeList [
+  .emotion-0 {
+  margin: 0;
+}
+
+.emotion-2 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-3 {
+    color: hsla(238,87%,49%,1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-3 {
+    color: hsla(238,87%,49%,1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-3 {
+    color: hsla(238,87%,49%,1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+<div
+    style="position: relative; white-space: pre-wrap; word-wrap: break-word;"
+  >
+    <p
+      class="emotion-0"
+    >
+      <span
+        class="emotion-1"
+      >
+        ﻿
+      </span>
+      <a
+        class="emotion-2"
+        href="https://www.bigcommerce.com/adyen"
+        target="_blank"
+      >
+        <span
+          class="emotion-3"
+        >
+          Adyen
+        </span>
+      </a>
+      <span
+        class="emotion-1"
+      >
+        ﻿
+      </span>
+    </p>
+    <p
+      class="emotion-0"
+    >
+      <span
+        class="emotion-1"
+      >
+        ﻿
+      </span>
+      <a
+        class="emotion-2"
+        href="http://www.authorize.net/"
+        target="_blank"
+      >
+        <span
+          class="emotion-3"
+        >
+          Authorize.net
+        </span>
+      </a>
+      <span
+        class="emotion-1"
+      >
+        ﻿
+      </span>
+    </p>
+    <p
+      class="emotion-0"
+    >
+      <span
+        class="emotion-1"
+      >
+        ﻿
+      </span>
+      <a
+        class="emotion-2"
+        href="https://www.bigcommerce.com/bluesnap/"
+        target="_blank"
+      >
+        <span
+          class="emotion-3"
+        >
+          BlueSnap
+        </span>
+      </a>
+      <span
+        class="emotion-1"
+      >
+        ﻿
+      </span>
+    </p>
+    <p
+      class="emotion-0"
+    >
+      <span
+        class="emotion-1"
+      >
+        ﻿
+      </span>
+      <a
+        class="emotion-2"
+        href="https://support.bigcommerce.com/s/article/Connecting-with-Checkoutcom/"
+        target="_blank"
+      >
+        <span
+          class="emotion-3"
+        >
+          Checkout.com
+        </span>
+      </a>
+      <span
+        class="emotion-1"
+      >
+        ﻿
+      </span>
+    </p>
+    <p
+      class="emotion-0"
+    >
+      <span
+        class="emotion-1"
+      >
+        ﻿
+      </span>
+      <a
+        class="emotion-2"
+        href="http://www.cybersource.com/"
+        target="_blank"
+      >
+        <span
+          class="emotion-3"
+        >
+          CyberSource Direct
+        </span>
+      </a>
+      <span
+        class="emotion-1"
+      >
+        ﻿
+      </span>
+    </p>
+  </div>,
+]
+`;
+
+exports[`Page RichTextV2 renders provided text content: snapshot 1`] = `
+{
+  "apiOrigin": "https://test-api-origin.com",
+  "cacheData": {
+    "Swatch": [
+      {
+        "id": "U3dhdGNoOmJkODYxMWM5LTNiZjItNDM3MS1iMmU4LTBmMmNlMDZjNDE1OA==",
+        "value": {
+          "__typename": "Swatch",
+          "hue": 238,
+          "id": "U3dhdGNoOmJkODYxMWM5LTNiZjItNDM3MS1iMmU4LTBmMmNlMDZjNDE1OA==",
+          "lightness": 49,
+          "saturation": 87,
+        },
+      },
+    ],
+    "Typography": [
+      {
+        "id": "VHlwb2dyYXBoeTowNGI4OTZlMC0wZWEyLTRkMTMtYmU3ZS0xYmY1M2VmMjBiZjc=",
+        "value": {
+          "__typename": "Typography",
+          "id": "VHlwb2dyYXBoeTowNGI4OTZlMC0wZWEyLTRkMTMtYmU3ZS0xYmY1M2VmMjBiZjc=",
+          "name": "Body",
+          "style": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "color": null,
+                "fontFamily": "Lato",
+                "fontSize": {
+                  "unit": "px",
+                  "value": 16,
+                },
+                "fontWeight": null,
+                "italic": null,
+                "letterSpacing": null,
+                "lineHeight": null,
+                "strikethrough": null,
+                "textAlign": null,
+                "underline": null,
+                "uppercase": null,
+              },
+            },
+          ],
+        },
+      },
+    ],
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "descendants": [
+                    {
+                      "children": [
+                        {
+                          "text": "",
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "Adyen",
+                              "typography": {
+                                "id": "VHlwb2dyYXBoeTowNGI4OTZlMC0wZWEyLTRkMTMtYmU3ZS0xYmY1M2VmMjBiZjc=",
+                                "style": [
+                                  {
+                                    "deviceId": "desktop",
+                                    "value": {
+                                      "color": {
+                                        "alpha": 1,
+                                        "swatchId": "U3dhdGNoOmJkODYxMWM5LTNiZjItNDM3MS1iMmU4LTBmMmNlMDZjNDE1OA==",
+                                      },
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                          "link": {
+                            "payload": {
+                              "openInNewTab": true,
+                              "url": "https://www.bigcommerce.com/adyen",
+                            },
+                            "type": "OPEN_URL",
+                          },
+                          "type": "link",
+                        },
+                        {
+                          "text": "",
+                        },
+                      ],
+                      "type": "paragraph",
+                    },
+                    {
+                      "children": [
+                        {
+                          "text": "",
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "Authorize.net",
+                              "typography": {
+                                "id": "VHlwb2dyYXBoeTowNGI4OTZlMC0wZWEyLTRkMTMtYmU3ZS0xYmY1M2VmMjBiZjc=",
+                                "style": [
+                                  {
+                                    "deviceId": "desktop",
+                                    "value": {
+                                      "color": {
+                                        "alpha": 1,
+                                        "swatchId": "U3dhdGNoOmJkODYxMWM5LTNiZjItNDM3MS1iMmU4LTBmMmNlMDZjNDE1OA==",
+                                      },
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                          "link": {
+                            "payload": {
+                              "openInNewTab": true,
+                              "url": "http://www.authorize.net/",
+                            },
+                            "type": "OPEN_URL",
+                          },
+                          "type": "link",
+                        },
+                        {
+                          "text": "",
+                        },
+                      ],
+                      "type": "paragraph",
+                    },
+                    {
+                      "children": [
+                        {
+                          "text": "",
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "BlueSnap",
+                              "typography": {
+                                "id": "VHlwb2dyYXBoeTowNGI4OTZlMC0wZWEyLTRkMTMtYmU3ZS0xYmY1M2VmMjBiZjc=",
+                                "style": [
+                                  {
+                                    "deviceId": "desktop",
+                                    "value": {
+                                      "color": {
+                                        "alpha": 1,
+                                        "swatchId": "U3dhdGNoOmJkODYxMWM5LTNiZjItNDM3MS1iMmU4LTBmMmNlMDZjNDE1OA==",
+                                      },
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                          "link": {
+                            "payload": {
+                              "openInNewTab": true,
+                              "url": "https://www.bigcommerce.com/bluesnap/",
+                            },
+                            "type": "OPEN_URL",
+                          },
+                          "type": "link",
+                        },
+                        {
+                          "text": "",
+                        },
+                      ],
+                      "type": "paragraph",
+                    },
+                    {
+                      "children": [
+                        {
+                          "text": "",
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "Checkout.com",
+                              "typography": {
+                                "id": "VHlwb2dyYXBoeTowNGI4OTZlMC0wZWEyLTRkMTMtYmU3ZS0xYmY1M2VmMjBiZjc=",
+                                "style": [
+                                  {
+                                    "deviceId": "desktop",
+                                    "value": {
+                                      "color": {
+                                        "alpha": 1,
+                                        "swatchId": "U3dhdGNoOmJkODYxMWM5LTNiZjItNDM3MS1iMmU4LTBmMmNlMDZjNDE1OA==",
+                                      },
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                          "link": {
+                            "payload": {
+                              "openInNewTab": true,
+                              "url": "https://support.bigcommerce.com/s/article/Connecting-with-Checkoutcom/",
+                            },
+                            "type": "OPEN_URL",
+                          },
+                          "type": "link",
+                        },
+                        {
+                          "text": "",
+                        },
+                      ],
+                      "type": "paragraph",
+                    },
+                    {
+                      "children": [
+                        {
+                          "text": "",
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "CyberSource Direct",
+                              "typography": {
+                                "id": "VHlwb2dyYXBoeTowNGI4OTZlMC0wZWEyLTRkMTMtYmU3ZS0xYmY1M2VmMjBiZjc=",
+                                "style": [
+                                  {
+                                    "deviceId": "desktop",
+                                    "value": {
+                                      "color": {
+                                        "alpha": 1,
+                                        "swatchId": "U3dhdGNoOmJkODYxMWM5LTNiZjItNDM3MS1iMmU4LTBmMmNlMDZjNDE1OA==",
+                                      },
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                          "link": {
+                            "payload": {
+                              "openInNewTab": true,
+                              "url": "http://www.cybersource.com/",
+                            },
+                            "type": "OPEN_URL",
+                          },
+                          "type": "link",
+                        },
+                        {
+                          "text": "",
+                        },
+                      ],
+                      "type": "paragraph",
+                    },
+                  ],
+                  "key": "c438a1d3-fee2-4eb4-b49b-f1856c12de42",
+                  "type": "makeswift::controls::rich-text-v2",
+                  "version": 2,
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+  "locale": null,
+  "localizedResourcesMap": {},
+  "preview": false,
+}
+`;

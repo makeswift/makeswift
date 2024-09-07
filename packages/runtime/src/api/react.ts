@@ -1,3 +1,4 @@
+import { type FetchableValue } from '@makeswift/controls'
 import * as MakeswiftApiClient from '../state/makeswift-api-client'
 import {
   APIResourceType,
@@ -82,6 +83,14 @@ export class MakeswiftHostApiClient {
     )
   }
 
+  resolveSwatch(swatchId: string | undefined): FetchableValue<Swatch | null> {
+    return this.resolveResource(APIResourceType.Swatch, {
+      id: swatchId,
+      read: id => this.readSwatch(id),
+      fetch: id => this.fetchSwatch(id),
+    })
+  }
+
   readFile(fileId: string): File | null {
     return MakeswiftApiClient.getAPIResource(
       this.makeswiftApiClient.getState(),
@@ -96,6 +105,14 @@ export class MakeswiftHostApiClient {
     )
   }
 
+  resolveFile(fileId: string | undefined): FetchableValue<File | null> {
+    return this.resolveResource(APIResourceType.File, {
+      id: fileId,
+      read: id => this.readFile(id),
+      fetch: id => this.fetchFile(id),
+    })
+  }
+
   readTypography(typographyId: string): Typography | null {
     return MakeswiftApiClient.getAPIResource(
       this.makeswiftApiClient.getState(),
@@ -108,6 +125,14 @@ export class MakeswiftHostApiClient {
     return await this.makeswiftApiClient.dispatch(
       MakeswiftApiClient.fetchAPIResource(APIResourceType.Typography, typographyId),
     )
+  }
+
+  resolveTypography(typographyId: string | undefined): FetchableValue<Typography | null> {
+    return this.resolveResource(APIResourceType.Typography, {
+      id: typographyId,
+      read: id => this.readTypography(id),
+      fetch: id => this.fetchTypography(id),
+    })
   }
 
   readGlobalElement(globalElementId: string): GlobalElement | null {
@@ -186,6 +211,39 @@ export class MakeswiftHostApiClient {
     return await this.makeswiftApiClient.dispatch(
       MakeswiftApiClient.fetchAPIResource(APIResourceType.PagePathnameSlice, pageId, this.locale),
     )
+  }
+
+  resolvePagePathnameSlice(pageId: string | undefined): FetchableValue<PagePathnameSlice | null> {
+    return this.resolveResource(APIResourceType.PagePathnameSlice, {
+      id: pageId,
+      read: id => this.readPagePathnameSlice(id),
+      fetch: id => this.fetchPagePathnameSlice(id),
+    })
+  }
+
+  resolveResource<R>(
+    type: APIResourceType,
+    {
+      id,
+      read,
+      fetch,
+    }: {
+      id: string | undefined
+      read: (id: string) => R | null
+      fetch: (id: string) => Promise<R | null>
+    },
+  ): FetchableValue<R | null> {
+    const _read = () => (id != null ? read(id) : null)
+    let lastValue: R | null = null
+    return {
+      name: `${type}:${id}`,
+      readStable: () => (lastValue = _read()),
+      subscribe: (onUpdate: () => void) =>
+        this.subscribe(() => {
+          if (_read() !== lastValue) onUpdate()
+        }),
+      fetch: async () => (id != null ? fetch(id) : null),
+    }
   }
 
   readTable(tableId: string): Table | null {
