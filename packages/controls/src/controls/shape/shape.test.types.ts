@@ -68,8 +68,8 @@ describe('Shape Types', () => {
 
       type Resolved = ResolvedValueType<typeof def>
       expectTypeOf<Resolved>().toEqualTypeOf<{
-        color: string | undefined
-        list: number[]
+        color?: string
+        list?: number[]
       }>()
     })
   })

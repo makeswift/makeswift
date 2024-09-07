@@ -10,19 +10,24 @@ import {
 } from '../context'
 import { type IntrospectionTarget } from '../introspection'
 import {
+  type ResourceResolver,
+  type ValueSubscription,
+} from '../resources/resolver'
+import {
   Serializable,
   serializeObject,
   type SerializedRecord,
 } from '../serialization'
+import { type Stylesheet } from '../stylesheet'
 
 import { ControlInstance, type SendMessage } from './instance'
 
 export type SchemaType<T> = z.ZodType<T>
 export type SchemaTypeAny = SchemaType<any> | z.ZodBranded<SchemaType<any>, any>
 
-export type Resolvable<T> = {
-  readStableValue(previous?: T): T
-  subscribe(onUpdate: () => void): () => void
+export type Resolvable<T> = ValueSubscription<T> & {
+  data: unknown
+  triggerResolve(currentValue?: T): Promise<unknown>
 }
 
 export abstract class ControlDefinition<
@@ -79,19 +84,12 @@ export abstract class ControlDefinition<
     return data as Data
   }
 
-  resolveValue(
-    _data: DataType | undefined,
-  ): Resolvable<ResolvedValueType | undefined> {
-    console.assert(
-      false,
-      `${this.controlType}: 'resolveValue' is not implemented`,
-    )
-
-    return {
-      readStableValue: (_previous?: ResolvedValueType) => undefined,
-      subscribe: () => () => {},
-    }
-  }
+  abstract resolveValue(
+    data: DataType | undefined,
+    resolver: ResourceResolver,
+    stylesheet: Stylesheet,
+    control?: InstanceType,
+  ): Resolvable<ResolvedValueType | undefined>
 
   abstract createInstance(sendMessage: SendMessage<any>): InstanceType
 

@@ -20,11 +20,13 @@ type UserConfig = z.infer<typeof Definition.schema.userConfig>
 
 class Definition extends RichTextDefinition<RenderedNode> {
   resolveValue(
-    _data: DataType<RichTextDefinition<RenderedNode>> | undefined,
+    data: DataType<RichTextDefinition<RenderedNode>> | undefined,
   ): Resolvable<RenderedNode | undefined> {
     return {
+      data,
       readStableValue: () => renderedNode,
       subscribe: () => () => {},
+      triggerResolve: async () => {},
     }
   }
 

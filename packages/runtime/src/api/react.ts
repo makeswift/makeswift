@@ -1,3 +1,4 @@
+import { type FetchableValue } from '@makeswift/controls'
 import * as MakeswiftApiClient from '../state/makeswift-api-client'
 import {
   APIResourceType,
@@ -82,6 +83,19 @@ export class MakeswiftHostApiClient {
     )
   }
 
+  resolveSwatch(swatchId: string | undefined): FetchableValue<Swatch | null> {
+    const read = () => (swatchId != null ? this.readSwatch(swatchId) : null)
+    let lastValue: Swatch | null = null
+    return {
+      readStableValue: () => (lastValue = read()),
+      subscribe: (onUpdate: () => void) =>
+        this.subscribe(() => {
+          if (read() !== lastValue) onUpdate()
+        }),
+      fetch: async () => (swatchId != null ? this.fetchSwatch(swatchId) : null),
+    }
+  }
+
   readFile(fileId: string): File | null {
     return MakeswiftApiClient.getAPIResource(
       this.makeswiftApiClient.getState(),
@@ -96,6 +110,19 @@ export class MakeswiftHostApiClient {
     )
   }
 
+  resolveFile(fileId: string | undefined): FetchableValue<File | null> {
+    const read = () => (fileId != null ? this.readFile(fileId) : null)
+    let lastValue: File | null = null
+    return {
+      readStableValue: () => (lastValue = read()),
+      subscribe: (onUpdate: () => void) =>
+        this.subscribe(() => {
+          if (read() !== lastValue) onUpdate()
+        }),
+      fetch: async () => (fileId != null ? this.fetchFile(fileId) : null),
+    }
+  }
+
   readTypography(typographyId: string): Typography | null {
     return MakeswiftApiClient.getAPIResource(
       this.makeswiftApiClient.getState(),
@@ -108,6 +135,19 @@ export class MakeswiftHostApiClient {
     return await this.makeswiftApiClient.dispatch(
       MakeswiftApiClient.fetchAPIResource(APIResourceType.Typography, typographyId),
     )
+  }
+
+  resolveTypography(typographyId: string | undefined): FetchableValue<Typography | null> {
+    const read = () => (typographyId != null ? this.readTypography(typographyId) : null)
+    let lastValue: Typography | null = null
+    return {
+      readStableValue: () => (lastValue = read()),
+      subscribe: (onUpdate: () => void) =>
+        this.subscribe(() => {
+          if (read() !== lastValue) onUpdate()
+        }),
+      fetch: async () => (typographyId != null ? this.fetchTypography(typographyId) : null),
+    }
   }
 
   readGlobalElement(globalElementId: string): GlobalElement | null {
@@ -186,6 +226,15 @@ export class MakeswiftHostApiClient {
     return await this.makeswiftApiClient.dispatch(
       MakeswiftApiClient.fetchAPIResource(APIResourceType.PagePathnameSlice, pageId, this.locale),
     )
+  }
+
+  resolvePagePathnameSlice(pageId: string | undefined): FetchableValue<PagePathnameSlice | null> {
+    return {
+      readStableValue: (_previous?: PagePathnameSlice) =>
+        pageId != null ? this.readPagePathnameSlice(pageId) : null,
+      subscribe: this.subscribe,
+      fetch: async () => (pageId != null ? this.fetchPagePathnameSlice(pageId) : null),
+    }
   }
 
   readTable(tableId: string): Table | null {

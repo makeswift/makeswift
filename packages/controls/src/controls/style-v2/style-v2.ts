@@ -1,12 +1,15 @@
 import { z } from 'zod'
 
+import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
 import { type ResponsiveValue } from '../../common'
 import { responsiveValue } from '../../common/schema'
 import { type CopyContext } from '../../context'
 import { type IntrospectionTarget } from '../../introspection'
+import { type ResourceResolver } from '../../resources/resolver'
 import { type SerializedRecord } from '../../serialization'
+import { type Stylesheet } from '../../stylesheet'
 
 import {
   type DataType as DataType_,
@@ -16,6 +19,7 @@ import {
 import {
   ControlDefinition,
   serialize,
+  type Resolvable,
   type SchemaType,
   type SchemaTypeAny,
 } from '../definition'
@@ -127,6 +131,47 @@ class Definition<
         value: this.typeDef.toData(item.value),
       })) ?? []
     )
+  }
+
+  resolveValue(
+    data: DataType<Prop> | undefined,
+    resolver: ResourceResolver,
+    stylesheet: Stylesheet,
+    control?: InstanceType<Prop>,
+  ): Resolvable<ResolvedValueType<Prop> | undefined> {
+    const responsiveValues = Object.fromEntries(
+      data?.map(({ deviceId, value }) => [
+        deviceId,
+        this.typeDef.resolveValue(
+          value,
+          resolver,
+          stylesheet,
+          control?.child(),
+        ),
+      ]) ?? [],
+    )
+
+    const stableValue = StableValue({
+      read: () => {
+        // FIXME
+        return undefined
+      },
+      deps: Object.values(responsiveValues),
+    })
+
+    return {
+      data,
+      readStableValue: stableValue.read,
+      subscribe: stableValue.subscribe,
+      triggerResolve: async (currentValue: ResolvedValueType<Prop>) => {
+        const subResolves =
+          Object.values(responsiveValues).map((item) =>
+            item.triggerResolve(currentValue),
+          ) ?? []
+
+        await Promise.all([...subResolves])
+      },
+    }
   }
 
   copyData(

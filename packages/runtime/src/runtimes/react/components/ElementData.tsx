@@ -3,7 +3,7 @@ import { ElementData as ReactPageElementData } from '../../../state/react-page'
 import { useComponent } from '../hooks/use-component'
 import { canAcceptRef } from '../utils/can-accept-ref'
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'
-import { PropsValue } from '../controls'
+import { ResolveProps } from '../controls'
 
 type ElementDataProps = {
   elementData: ReactPageElementData
@@ -24,7 +24,7 @@ export const ElementData = memo(
 
     return (
       <Suspense>
-        <PropsValue element={elementData}>
+        <ResolveProps element={elementData}>
           {props =>
             forwardRef ? (
               <Component {...props} key={elementData.key} ref={ref} />
@@ -32,7 +32,7 @@ export const ElementData = memo(
               <Component {...props} key={elementData.key} />
             )
           }
-        </PropsValue>
+        </ResolveProps>
       </Suspense>
     )
   }),
