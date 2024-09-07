@@ -176,13 +176,12 @@ class Definition<C extends Config> extends ControlDefinition<
     data: DataType<C> | undefined,
   ): Resolvable<ResolvedValueType<C> | undefined> {
     return {
-      readStableValue: (_previous?: ResolvedValueType<C>) => {
-        return (
-          this.fromData(data) ??
-          (this.config.defaultValue as ResolvedValueType<C>)
-        )
-      },
+      name: Definition.type,
+      readStable: () =>
+        this.fromData(data) ??
+        (this.config.defaultValue as ResolvedValueType<C>),
       subscribe: () => () => {},
+      triggerResolve: async () => {},
     }
   }
 

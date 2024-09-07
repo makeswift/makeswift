@@ -1,12 +1,20 @@
 import { z } from 'zod'
 
+import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
+import {
+  findBreakpointOverride,
+  mergeOrCoalesceFallbacks,
+  type Breakpoint,
+} from '../../breakpoints'
 import { type ResponsiveValue } from '../../common'
 import { responsiveValue } from '../../common/schema'
 import { type CopyContext } from '../../context'
 import { type IntrospectionTarget } from '../../introspection'
+import { type ResourceResolver } from '../../resources/resolver'
 import { type SerializedRecord } from '../../serialization'
+import { type Stylesheet } from '../../stylesheet'
 
 import {
   type DataType as DataType_,
@@ -16,6 +24,7 @@ import {
 import {
   ControlDefinition,
   serialize,
+  type Resolvable,
   type SchemaType,
   type SchemaTypeAny,
 } from '../definition'
@@ -127,6 +136,53 @@ class Definition<
         value: this.typeDef.toData(item.value),
       })) ?? []
     )
+  }
+
+  resolveValue(
+    data: DataType<Prop> | undefined,
+    resolver: ResourceResolver,
+    stylesheet: Stylesheet,
+    control?: InstanceType<Prop>,
+  ): Resolvable<ResolvedValueType<Prop> | undefined> {
+    const responsiveValues = (data ?? []).map(({ deviceId, value }) => ({
+      deviceId,
+      value: this.typeDef.resolveValue(
+        value,
+        resolver,
+        stylesheet,
+        control?.child(),
+      ),
+    }))
+
+    const getStyle = (breakpoint: Breakpoint) => {
+      const values = responsiveValues.map(({ deviceId, value }) => ({
+        deviceId,
+        value: value.readStable(),
+      }))
+
+      const breakpointValue = findBreakpointOverride<ResolvedValueType_<Prop>>(
+        stylesheet.breakpoints(),
+        values,
+        breakpoint.id,
+        mergeOrCoalesceFallbacks,
+      )?.value
+
+      return this.config.getStyle(breakpointValue)
+    }
+
+    const stableValue = StableValue({
+      name: Definition.type,
+      read: () => stylesheet.defineStyle({ getStyle }),
+      deps: responsiveValues.map(({ value }) => value),
+    })
+
+    return {
+      ...stableValue,
+      triggerResolve: async () =>
+        await Promise.all(
+          responsiveValues.map(({ value }) => value.triggerResolve()),
+        ),
+    }
   }
 
   copyData(

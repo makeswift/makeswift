@@ -10,20 +10,19 @@ export function map<T, U>(
   array: readonly [T, ...T[]],
   fn: (x: T) => U,
 ): [U, ...U[]]
+export function map<T, U>(array: readonly T[], fn: (x: T) => U): U[]
 export function map<T, U>(array: readonly T[], fn: (x: T) => U): U[] {
   return array.map(fn)
 }
 
-export function mapValues<T extends object, R>(
+export function mapValues<T extends object, R extends { [K in keyof T]: any }>(
   obj: T,
-  callback: (t: T[keyof T], key: keyof T) => R,
-): { [P in keyof T]: R } {
+  callback: <K extends keyof T>(value: T[K], key: K) => R[K],
+): R
+export function mapValues(obj: object, callback: Function): object {
   return Object.fromEntries(
-    Object.entries(obj).map(([key, value]) => [
-      key,
-      callback(value, key as keyof T),
-    ]),
-  ) as { [P in keyof T]: R }
+    Object.entries(obj).map(([key, value]) => [key, callback(value, key)]),
+  )
 }
 
 export function isNotNil<T>(value: T | null | undefined): value is T {

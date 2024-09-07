@@ -1,7 +1,5 @@
 import { z } from 'zod'
 
-import { ResourceSchema } from '../resources'
-
 const primitives = z.union([
   z.undefined(),
   z.null(),
@@ -13,17 +11,8 @@ const primitives = z.union([
 // See https://github.com/colinhacks/zod?tab=readme-ov-file#recursive-types
 type Data = z.infer<typeof primitives> | Data[] | { [key: string]: Data }
 
+// eschew runtime validation to avoid performance hit
 export const data: z.ZodType<Data> = z.any()
-
-export const colorData = z.object({
-  swatchId: z.string(),
-  alpha: z.number(),
-})
-
-export const resolvedColorData = z.object({
-  swatch: ResourceSchema.swatch,
-  alpha: z.number(),
-})
 
 export const deviceId = z.string()
 

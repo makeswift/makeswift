@@ -1,17 +1,27 @@
 import { match } from 'ts-pattern'
 import { z } from 'zod'
 
+import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
-import { ControlDataTypeKey, Schema } from '../../common'
+import { ControlDataTypeKey } from '../../common'
 import { type CopyContext } from '../../context'
+import { ResourceSchema } from '../../resources'
+import { type ResourceResolver } from '../../resources/resolver'
 import {
   type DeserializedRecord,
   type SerializedRecord,
 } from '../../serialization'
 
-import { ControlDefinition, serialize, type SchemaType } from '../definition'
+import {
+  ControlDefinition,
+  serialize,
+  type Resolvable,
+  type SchemaType,
+} from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
+
+import { swatchToColorString } from './conversion'
 
 type Config = z.infer<typeof Definition.schema.relaxed.config>
 
@@ -24,6 +34,10 @@ type Schema<C extends Config> = SchemaByDefaultValue<C['defaultValue']>
 type DataType<C extends Config> = z.infer<Schema<C>['data']>
 type ValueType<C extends Config> = z.infer<Schema<C>['value']>
 type ResolvedValueType<C extends Config> = z.infer<Schema<C>['resolvedValue']>
+
+type ResolvedSwatchValueType<C extends Config> = z.infer<
+  Schema<C>['resolvedSwatchValue']
+>
 
 type ReturnedSchemaType<C extends Config> = {
   definition: typeof Definition.schema.relaxed.definition
@@ -50,8 +64,8 @@ class Definition<C extends Config> extends ControlDefinition<
   static get schema() {
     const type = z.literal(this.type)
     const version = z.literal(1).optional()
-    const value = Schema.colorData
-    const resolvedSwatchValue = Schema.resolvedColorData
+    const value = ResourceSchema.colorData
+    const resolvedSwatchValue = ResourceSchema.resolvedColorData
 
     const schemas = <R>(resolvedValue: SchemaType<R>) => {
       const data = value.merge(
@@ -170,6 +184,65 @@ class Definition<C extends Config> extends ControlDefinition<
         ...val,
         swatchId: replaceSwatchId(val.swatchId),
       }))
+  }
+
+  resolveSwatch(
+    data: DataType<C> | undefined,
+    resolver: ResourceResolver,
+  ): Resolvable<ResolvedSwatchValueType<C> | undefined> {
+    const value = this.fromData(data)
+    const swatchSub = resolver.resolveSwatch(value?.swatchId)
+
+    const stableValue = StableValue({
+      name: `${Definition.type}:swatch`,
+      read: () => {
+        const swatch = swatchSub.readStable()
+        return swatch == null
+          ? undefined
+          : {
+              swatch,
+              alpha: value?.alpha ?? 1,
+            }
+      },
+      deps: [swatchSub],
+    })
+
+    return {
+      ...stableValue,
+      triggerResolve: async (currentValue?: ResolvedSwatchValueType<C>) => {
+        if (currentValue == null) {
+          await swatchSub.fetch()
+        }
+      },
+    }
+  }
+
+  resolveValue(
+    data: DataType<C> | undefined,
+    resolver: ResourceResolver,
+  ): Resolvable<ResolvedValueType<C> | undefined> {
+    const value = this.fromData(data)
+    const swatch = resolver.resolveSwatch(value?.swatchId)
+
+    const stableValue = StableValue({
+      name: Definition.type,
+      read: () =>
+        swatchToColorString(
+          swatch.readStable(),
+          value?.alpha ?? 1,
+          this.config.defaultValue,
+        ),
+      deps: [swatch],
+    })
+
+    return {
+      ...stableValue,
+      triggerResolve: async () => {
+        if (swatch.readStable() == null) {
+          await swatch.fetch()
+        }
+      },
+    }
   }
 
   createInstance(sendMessage: SendMessage<any>) {

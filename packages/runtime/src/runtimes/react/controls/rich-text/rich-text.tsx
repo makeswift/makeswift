@@ -17,10 +17,20 @@ export type RichTextControlValue = ReactNode
 
 export type Descriptors = { text?: RichTextV1Definition }
 
-export function useRichText(
-  data: DataType<RichTextV1Definition>,
+export function renderRichText(
+  data: DataType<RichTextV1Definition> | undefined,
   control: RichTextV1Control | null,
 ) {
+  return <RichText data={data} control={control} />
+}
+
+function RichText({
+  data,
+  control,
+}: {
+  data: DataType<RichTextV1Definition> | undefined
+  control: RichTextV1Control | null
+}) {
   const textCallbackRef = useCallback(
     (handle: PropControllersHandle<Descriptors> | HTMLDivElement | null) => {
       if (isPropControllersHandle(handle))

@@ -1,3 +1,5 @@
+'use client'
+
 import { ComponentPropsWithoutRef, ElementType, ReactNode, useEffect, useState, memo } from 'react'
 import { cx } from '@emotion/css'
 
@@ -9,11 +11,11 @@ import { useResponsiveStyle } from '../../../components/utils/responsive-style'
 import { useStyle } from '../use-style'
 import { pollBoxModel } from '../poll-box-model'
 
-export function useSlot(
-  data: DataType<SlotDefinition<ReactNode>> | undefined,
-  control: SlotControl | null,
-) {
-  return <SlotValue data={data} control={control} />
+export function renderSlot(props: {
+  data: DataType<SlotDefinition<ReactNode>> | undefined
+  control: SlotControl | null
+}): ReactNode {
+  return <SlotValue {...props} />
 }
 
 const SlotValue = memo(

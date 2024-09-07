@@ -1,16 +1,23 @@
 import { match, P } from 'ts-pattern'
 import { z } from 'zod'
 
+import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
 import { type CopyContext } from '../../context'
 import { IntrospectionTarget, Targets } from '../../introspection'
+import { type ResourceResolver } from '../../resources/resolver'
 import {
   type DeserializedRecord,
   type SerializedRecord,
 } from '../../serialization'
 
-import { ControlDefinition, serialize, type SchemaType } from '../definition'
+import {
+  ControlDefinition,
+  serialize,
+  type Resolvable,
+  type SchemaType,
+} from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
 
 type Config = z.infer<typeof Definition.schema.config>
@@ -262,6 +269,81 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
         id: replaceFileId(data.id),
       }))
       .otherwise((val) => val)
+  }
+
+  resolveValue(
+    data: DataType<C> | undefined,
+    resolver: ResourceResolver,
+  ): Resolvable<ResolvedValueType<C> | undefined> {
+    const dataSchema = this.dataSchema.optional()
+
+    const externalFile = match(data satisfies z.infer<typeof dataSchema>)
+      .with(Definition.dataSignature.externalFile, (val) => val)
+      .otherwise(() => null)
+
+    if (externalFile != null) {
+      const stableValue = StableValue({
+        name: Definition.type,
+        read: () => this.resolveImage(externalFile),
+      })
+
+      return {
+        ...stableValue,
+        triggerResolve: async () => {},
+      }
+    }
+
+    const fileId = match(data satisfies z.infer<typeof dataSchema>)
+      .with(P.string, (id) => id)
+      .with(Definition.dataSignature.makeswiftFile, ({ id }) => id)
+      .otherwise(() => undefined)
+
+    const fileSub = resolver.resolveFile(fileId)
+    const stableValue = StableValue({
+      name: Definition.type,
+      read: () => {
+        const file = fileSub.readStable()
+        return file != null
+          ? this.resolveImage({
+              url: file.publicUrl,
+              width: file.dimensions?.width,
+              height: file.dimensions?.height,
+            })
+          : undefined
+      },
+      deps: [fileSub],
+    })
+
+    return {
+      ...stableValue,
+      triggerResolve: async (currentValue) => {
+        if (currentValue == null) {
+          await fileSub.fetch()
+        }
+      },
+    }
+  }
+
+  resolveImage({
+    url,
+    width,
+    height,
+  }: {
+    url: string
+    width?: number | null
+    height?: number | null
+  }): ResolvedValueType<C> {
+    const format = this.config.format
+    if (format === Definition.Format.URL || format == null) {
+      return url
+    }
+
+    return width != null && height != null
+      ? {
+          url,
+          dimensions: { width, height },
+        }
+      : undefined
   }
 
   createInstance(sendMessage: SendMessage<any>) {

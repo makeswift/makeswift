@@ -2,8 +2,15 @@ import { ReactNode } from 'react'
 import {
   SlotDefinition as BaseSlotDefinition,
   SlotControl,
+  StableValue,
   type DeserializedRecord,
+  type ResourceResolver,
+  type Stylesheet,
+  type Resolvable,
+  type DataType,
 } from '@makeswift/controls'
+
+import { renderSlot } from '../runtimes/react/controls/slot'
 
 abstract class BaseDefinition extends BaseSlotDefinition<ReactNode> {}
 
@@ -14,6 +21,23 @@ export class SlotDefinition extends BaseDefinition {
     }
 
     return Slot()
+  }
+
+  resolveValue(
+    data: DataType<BaseDefinition> | undefined,
+    _resolver: ResourceResolver,
+    _stylesheet: Stylesheet,
+    control?: SlotControl,
+  ): Resolvable<ReactNode | undefined> {
+    const stableValue = StableValue({
+      name: SlotDefinition.type,
+      read: () => renderSlot({ data, control: control ?? null }),
+    })
+
+    return {
+      ...stableValue,
+      triggerResolve: async () => {},
+    }
   }
 }
 

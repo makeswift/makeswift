@@ -5,8 +5,6 @@ import * as Schema from './schema'
 export { type BoxModel } from 'css-box-model'
 
 export type Data = z.infer<typeof Schema.data>
-export type ColorData = z.infer<typeof Schema.colorData>
-export type ResolvedColorData = z.infer<typeof Schema.resolvedColorData>
 export type Device = z.infer<typeof Schema.deviceId>
 export type DeviceOverride<T> = { deviceId: Device; value: T }
 export type ResponsiveValue<T> = DeviceOverride<T>[]

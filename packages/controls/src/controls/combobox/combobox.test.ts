@@ -52,7 +52,7 @@ describe('Combobox', () => {
 
       const resolvedValue: 'p' | 'h1' | undefined = comboDef
         .resolveValue({ id: 'foo', value: 'p', label: 'label' })
-        .readStableValue() as ResolvedValueType<typeof comboDef>
+        .readStable() as ResolvedValueType<typeof comboDef>
 
       expect(comboDef).toMatchSnapshot()
       expect(value).toMatchSnapshot()

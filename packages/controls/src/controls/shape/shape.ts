@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import { mapValues } from '../../lib/functional'
+import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
 import { type Data } from '../../common'
@@ -9,18 +10,25 @@ import {
   type MergeTranslatableDataContext,
 } from '../../context'
 import { type IntrospectionTarget } from '../../introspection'
+import { type ResourceResolver } from '../../resources/resolver'
 import {
   SerializationSchema,
   type DeserializedRecord,
   type SerializedRecord,
 } from '../../serialization'
+import { type Stylesheet } from '../../stylesheet'
 
 import {
   type DataType as DataType_,
   type ResolvedValueType as ResolvedValueType_,
   type ValueType as ValueType_,
 } from '../associated-types'
-import { ControlDefinition, serialize, type SchemaType } from '../definition'
+import {
+  ControlDefinition,
+  serialize,
+  type Resolvable,
+  type SchemaType,
+} from '../definition'
 import { type SendMessage } from '../instance'
 
 import { ShapeControl } from './shape-control'
@@ -33,11 +41,11 @@ type Config<Defs extends KeyDefinitions = KeyDefinitions> = {
 }
 
 type DataType<C extends Config> = {
-  [K in keyof C['type']]?: DataType_<C['type'][K]>
+  [K in keyof C['type']]: DataType_<C['type'][K]>
 }
 
 type ValueType<C extends Config> = {
-  [K in keyof C['type']]?: ValueType_<C['type'][K]>
+  [K in keyof C['type']]: ValueType_<C['type'][K]>
 }
 
 type ResolvedValueType<C extends Config> = {
@@ -128,7 +136,9 @@ class Definition<C extends Config> extends ControlDefinition<
 
   fromData(data: DataType<C> | undefined): ValueType<C> | undefined {
     if (data == null) return undefined
-    return mapValues(this.keyDefs, (def, key) => def.fromData(data[key]))
+    return mapValues(this.keyDefs, (def, key) =>
+      def.fromData(data[key]),
+    ) as ValueType<C>
   }
 
   toData(value: ValueType<C>): DataType<C> {
@@ -142,7 +152,7 @@ class Definition<C extends Config> extends ControlDefinition<
     if (data == null) return undefined
     return mapValues(this.keyDefs, (def, key) =>
       def.copyData(data[key], context),
-    )
+    ) as DataType<C>
   }
 
   getTranslatableData(data: DataType<C>): Data {
@@ -161,6 +171,40 @@ class Definition<C extends Config> extends ControlDefinition<
     return mapValues(this.keyDefs, (def, key) =>
       def.mergeTranslatedData(data[key], translatedData[key], context),
     )
+  }
+
+  resolveValue(
+    data: DataType<C> | undefined,
+    resolver: ResourceResolver,
+    stylesheet: Stylesheet,
+    control?: InstanceType<C>,
+  ): Resolvable<ResolvedValueType<C> | undefined> {
+    const keyValues = mapValues(this.keyDefs, (def, key) =>
+      def.resolveValue(
+        data?.[key],
+        resolver,
+        stylesheet.child(key),
+        control?.child(key),
+      ),
+    )
+
+    const stableValue = StableValue({
+      name: Definition.type,
+      read: () =>
+        mapValues(keyValues, (v) => v.readStable()) as ResolvedValueType<C>,
+      deps: Object.values(keyValues),
+    })
+
+    return {
+      ...stableValue,
+      triggerResolve: async (currentValue?: ResolvedValueType<C>) => {
+        await Promise.all(
+          Object.entries(keyValues).map(([key, v]) =>
+            v?.triggerResolve(currentValue?.[key]),
+          ),
+        )
+      },
+    }
   }
 
   createInstance(sendMessage: SendMessage): InstanceType<C> {

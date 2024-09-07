@@ -1,5 +1,16 @@
 import { ReactNode } from 'react'
-import { RichTextV1Definition, type DeserializedRecord, SendMessage } from '@makeswift/controls'
+import {
+  RichTextV1Definition,
+  SendMessage,
+  StableValue,
+  type DeserializedRecord,
+  type ResourceResolver,
+  type Stylesheet,
+  type Resolvable,
+  type DataType,
+} from '@makeswift/controls'
+
+import { renderRichText } from '../../runtimes/react/controls/rich-text'
 
 import { RichTextControl } from './control'
 
@@ -12,6 +23,23 @@ class Definition extends BaseDefinition {
     }
 
     return new (class RichTextV1 extends Definition {})()
+  }
+
+  resolveValue(
+    data: DataType<BaseDefinition> | undefined,
+    _resolver: ResourceResolver,
+    _stylesheet: Stylesheet,
+    control?: RichTextControl,
+  ): Resolvable<ReactNode | undefined> {
+    const stableValue = StableValue({
+      name: Definition.type,
+      read: () => renderRichText(data, control ?? null),
+    })
+
+    return {
+      ...stableValue,
+      triggerResolve: async () => {},
+    }
   }
 
   createInstance(sendMessage: SendMessage<any>) {

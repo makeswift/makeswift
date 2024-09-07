@@ -44,7 +44,7 @@ export function serializeObject(object: unknown): [unknown, Transferable[]] {
       .with(P.when(isFunction), serializeFunc)
       .with(P.instanceOf(Serializable), serializeSerializable)
       .with(P.array(), (arr) => arr.map(serialize))
-      .with({}, (obj) => mapValues(obj, serialize))
+      .with({}, (obj) => mapValues(obj, (obj) => serialize(obj) as any))
       .otherwise(() => value)
   }
   return [serialize(object), transferables]
@@ -55,7 +55,7 @@ export function deserializeObject(object: unknown): unknown {
     match(value)
       .with(P.when(isSerializedFunction), deserializeFunction)
       .with(P.array(), (arr) => arr.map(deserialize))
-      .with({}, (obj) => mapValues(obj, deserialize))
+      .with({}, (obj) => mapValues(obj, (obj) => deserialize(obj) as any))
       .otherwise(() => value)
 
   return deserialize(object)
