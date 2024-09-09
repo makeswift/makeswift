@@ -1,5 +1,19 @@
 # @makeswift/runtime
 
+## 0.20.4
+
+### Patch Changes
+
+- dfa5c65: refactor: move legacy descriptor prop rendering into its own file
+- 1081caa: refactor: move basic controls' value resolution to the new `resolveValue` method
+- ec65529: Performs runtime verification of incoming data during control deserialization.
+  Also adds new fields to the `deserializeControls` error callback.
+- 4d82ccd: refactor: move `is`, `deepEqual` and `shallowEqual` predicates to the `@makeswift/controls` package
+- Updated dependencies [1081caa]
+- Updated dependencies [4d82ccd]
+  - @makeswift/controls@0.1.3
+  - @makeswift/prop-controllers@0.3.4
+
 ## 0.20.3
 
 ### Patch Changes
