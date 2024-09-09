@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.3-canary.1
+
+### Patch Changes
+
+- 1081caa: refactor: move basic controls' value resolution to the new `resolveValue` method
+
 ## 0.1.3-canary.0
 
 ### Patch Changes

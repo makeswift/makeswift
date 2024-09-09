@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.20.4-canary.3
+
+### Patch Changes
+
+- 1081caa: refactor: move basic controls' value resolution to the new `resolveValue` method
+- Updated dependencies [1081caa]
+  - @makeswift/controls@0.1.3-canary.1
+  - @makeswift/prop-controllers@0.3.4-canary.1
+
 ## 0.20.4-canary.2
 
 ### Patch Changes
