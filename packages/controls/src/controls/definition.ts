@@ -20,6 +20,11 @@ import { ControlInstance, type SendMessage } from './instance'
 export type SchemaType<T> = z.ZodType<T>
 export type SchemaTypeAny = SchemaType<any> | z.ZodBranded<SchemaType<any>, any>
 
+export type Resolvable<T> = {
+  readStableValue(previous?: T): T
+  subscribe(onUpdate: () => void): () => void
+}
+
 export abstract class ControlDefinition<
   ControlType extends string = string,
   Config = unknown,
@@ -72,6 +77,20 @@ export abstract class ControlDefinition<
     _context: MergeTranslatableDataContext,
   ): Data {
     return data as Data
+  }
+
+  resolveValue(
+    _data: DataType | undefined,
+  ): Resolvable<ResolvedValueType | undefined> {
+    console.assert(
+      false,
+      `${this.controlType}: 'resolveValue' is not implemented`,
+    )
+
+    return {
+      readStableValue: (_previous?: ResolvedValueType) => undefined,
+      subscribe: () => () => {},
+    }
   }
 
   abstract createInstance(sendMessage: SendMessage<any>): InstanceType

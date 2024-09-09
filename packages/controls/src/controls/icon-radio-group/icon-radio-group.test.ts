@@ -1,4 +1,4 @@
-import { testDefinition } from '../../testing/test-definition'
+import { testDefinition, testResolveValue } from '../../testing/test-definition'
 
 import { unstable_IconRadioGroup as IconRadioGroup } from './icon-radio-group'
 
@@ -61,16 +61,16 @@ describe('unstable_IconRadioGroup', () => {
     // assignTest(IconRadioGroup({ label: 'visible', defaultValue: undefined }))
     // assignTest(IconRadioGroup({ label: undefined, defaultValue: undefined }))
   })
+})
 
+describe.each([
+  [IconRadioGroup({ options }), ['code', 'superscript', undefined] as const],
+  [
+    IconRadioGroup({ options, defaultValue: 'code' }),
+    ['code', 'superscript'] as const,
+  ],
+])('unstable_IconRadioGroup', (def, values) => {
   const invalidValues = [null, 17, 'random', { swatchId: 42 }]
-
-  testDefinition(
-    IconRadioGroup({
-      label: 'Block type',
-      options,
-      defaultValue: 'code',
-    }),
-    ['code', 'superscript'],
-    invalidValues,
-  )
+  testDefinition(def, values, invalidValues)
+  testResolveValue(def, values)
 })

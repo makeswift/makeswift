@@ -9,7 +9,12 @@ import {
   type SerializedRecord,
 } from '../../serialization'
 
-import { ControlDefinition, serialize, type SchemaType } from '../definition'
+import {
+  ControlDefinition,
+  serialize,
+  type Resolvable,
+  type SchemaType,
+} from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
 
 type Option<T extends string> = { readonly value: T; readonly label: string }
@@ -138,6 +143,20 @@ class Definition<C extends Config> extends ControlDefinition<
     _context: CopyContext,
   ): DataType<C> | undefined {
     return data
+  }
+
+  resolveValue(
+    data: DataType<C> | undefined,
+  ): Resolvable<ResolvedValueType<C> | undefined> {
+    return {
+      readStableValue: (_previous?: ResolvedValueType<C>) => {
+        return (
+          this.fromData(data) ??
+          (this.config.defaultValue as ResolvedValueType<C>)
+        )
+      },
+      subscribe: () => () => {},
+    }
   }
 
   createInstance(sendMessage: SendMessage) {

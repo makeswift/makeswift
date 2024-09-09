@@ -1,4 +1,4 @@
-import { testDefinition } from '../../testing/test-definition'
+import { testDefinition, testResolveValue } from '../../testing/test-definition'
 
 import { ControlDataTypeKey } from '../../common'
 import { MergeTranslatableDataContext, TranslationDto } from '../../context'
@@ -98,18 +98,16 @@ describe('TextInput', () => {
       )
     })
   })
+})
 
-  const invalidValues = [null, false, 5, []]
-
-  testDefinition(
-    TextInput({ defaultValue: 'elmo', label: 'visible' }),
-    ['bert', 'ernie'],
-    invalidValues,
-  )
-
-  testDefinition(
+describe.each([
+  [TextInput({ defaultValue: 'elmo', label: 'visible' }), ['bert', 'ernie']],
+  [
     TextInput({ label: 'TextInput' }),
     ['big bird', 'cookie monster', undefined],
-    invalidValues,
-  )
+  ],
+])('TextInput', (def, values) => {
+  const invalidValues = [null, false, 5, []]
+  testDefinition(def, values, invalidValues)
+  testResolveValue(def, values)
 })

@@ -1,4 +1,4 @@
-import { testDefinition } from '../../testing/test-definition'
+import { testDefinition, testResolveValue } from '../../testing/test-definition'
 
 import { Checkbox, CheckboxDefinition } from './checkbox'
 
@@ -37,18 +37,13 @@ describe('Checkbox', () => {
     assignTest(Checkbox({ label: 'visible', defaultValue: undefined }))
     assignTest(Checkbox({ label: undefined, defaultValue: undefined }))
   })
+})
 
+describe.each([
+  [Checkbox({ defaultValue: false, label: 'visible' }), [true, false]],
+  [Checkbox({ label: 'disabled' }), [true, false, undefined]],
+])('Checkbox', (def, values) => {
   const invalidValues = [null, 17, 'text']
-
-  testDefinition(
-    Checkbox({ defaultValue: false, label: 'visible' }),
-    [true, false],
-    invalidValues,
-  )
-
-  testDefinition(
-    Checkbox({ label: 'disabled' }),
-    [true, false, undefined],
-    invalidValues,
-  )
+  testDefinition(def, values, invalidValues)
+  testResolveValue(def, values)
 })
