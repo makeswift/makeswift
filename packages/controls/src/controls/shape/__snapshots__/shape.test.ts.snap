@@ -19,6 +19,82 @@ ShapeDefinition {
 }
 `;
 
+exports[`Shape gracefully handles missing/extra props copyData 1`] = `
+{
+  "color": {
+    "alpha": 1,
+    "swatchId": "[swatch-id]",
+  },
+  "link": undefined,
+  "list": undefined,
+  "text": "Hello world",
+}
+`;
+
+exports[`Shape gracefully handles missing/extra props fromData 1`] = `
+{
+  "color": {
+    "alpha": 1,
+    "swatchId": "[swatch-id]",
+  },
+  "link": undefined,
+  "list": undefined,
+  "text": "Hello world",
+}
+`;
+
+exports[`Shape gracefully handles missing/extra props getTranslatableData 1`] = `
+{
+  "color": null,
+  "link": null,
+  "list": null,
+  "text": "Hello world",
+}
+`;
+
+exports[`Shape gracefully handles missing/extra props mergeTranslatedData 1`] = `
+{
+  "color": {
+    "alpha": 1,
+    "swatchId": "[swatch-id]",
+  },
+  "link": undefined,
+  "list": undefined,
+  "text": "Hello world",
+}
+`;
+
+exports[`Shape gracefully handles missing/extra props toData 1`] = `
+{
+  "color": {
+    "@@makeswift/type": "color::v1",
+    "alpha": 1,
+    "swatchId": "[swatch-id]",
+  },
+  "link": {
+    "payload": {
+      "openInNewTab": false,
+      "pageId": "[page-id]",
+    },
+    "type": "OPEN_PAGE",
+  },
+  "list": [
+    {
+      "id": "xxxxxxxx-xxxx-xxxx-xxxx-100000000000",
+      "type": "makeswift::controls::number",
+      "value": {
+        "@@makeswift/type": "number::v1",
+        "value": 17,
+      },
+    },
+  ],
+  "text": {
+    "@@makeswift/type": "text-area::v1",
+    "value": "Hello world",
+  },
+}
+`;
+
 exports[`Shape serialization serialize/deserialize composable shape of controls 1`] = `
 {
   "config": {
