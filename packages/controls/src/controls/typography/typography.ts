@@ -1,19 +1,26 @@
 import { z } from 'zod'
 
-import { isNotNil } from '../../lib/functional'
+import { isNotNil, mapValues } from '../../lib/functional'
+import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
+import { type ResolvedColorData } from '../../common'
 import { type CopyContext } from '../../context'
 import { Targets, type IntrospectionTarget } from '../../introspection'
+import { type ResourceResolver } from '../../resources/resolver'
+import { type Typography as TypographyFragment } from '../../resources/types'
 import {
   type DeserializedRecord,
   type SerializedRecord,
 } from '../../serialization'
+import { type Stylesheet } from '../../stylesheet'
 
-import { ControlDefinition, serialize } from '../definition'
+import { Color } from '../color'
+import { ControlDefinition, serialize, type Resolvable } from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
 
 import * as Schema from './schema'
+import { mergeStyles, type ResolvedStyle } from './style'
 
 type Schema = typeof Definition.schema
 type DataType = z.infer<Schema['data']>
@@ -43,23 +50,6 @@ class Definition extends ControlDefinition<
         .nullable(),
     )
 
-    const resolvedData = Schema.typography(
-      z
-        .object({
-          swatch: z
-            .object({
-              hue: z.number().nullable(),
-              saturation: z.number().nullable(),
-              lightness: z.number().nullable(),
-            })
-            .nullable()
-            .optional(),
-          alpha: z.number().nullable(),
-        })
-        .optional()
-        .nullable(),
-    )
-
     const value = data
     const resolvedValue = z.string()
 
@@ -71,7 +61,6 @@ class Definition extends ControlDefinition<
       type,
       definition,
       data,
-      resolvedData,
       value,
       resolvedValue,
     }
@@ -147,6 +136,65 @@ class Definition extends ControlDefinition<
     }
   }
 
+  resolveValue(
+    data: DataType | undefined,
+    resolver: ResourceResolver,
+    stylesheet: Stylesheet,
+    _control?: InstanceType,
+  ): Resolvable<ResolvedValueType | undefined> {
+    const typographySub = resolver.resolveTypography(data?.id)
+    // FIXME: use Effects?
+    let sourceColors: Resolvable<ResolvedColorData | undefined>[] = []
+    // typographySub.subscribe(() => {
+    //   // FIXME
+    //   const typography = this.fragmentToData(typographySub.readStableValue())
+    //   sourceSwatches = resolveSwatches(typography, resolver)
+    // })
+
+    const overrideColors = resolveSwatches(data, resolver)
+
+    const readResolved = () => {
+      const typography = this.fragmentToData(typographySub.readStableValue())
+
+      sourceColors = resolveSwatches(typography, resolver)
+      const resolvedColors = [...sourceColors, ...overrideColors]
+      const colors = new Map(
+        resolvedColors
+          .map((r) => r.readStableValue())
+          .filter(isNotNil)
+          .map((c) => [c.swatch.id, c]),
+      )
+
+      const source = typography?.style.map(withColor(colors)) ?? []
+      const override = data?.style.map(withColor(colors)) ?? []
+
+      return mergeStyles(source, override, stylesheet.breakpoints())
+    }
+
+    const stableValue = StableValue({
+      read: () =>
+        data != null
+          ? stylesheet.defineStyle(
+              [],
+              readResolved(),
+              // FIXME: implement onBoxModelChange, if at all
+              (_boxModel) => {},
+            )
+          : undefined,
+      deps: [typographySub, ...overrideColors],
+    })
+
+    return {
+      data,
+      readStableValue: stableValue.read,
+      subscribe: stableValue.subscribe,
+      triggerResolve: () =>
+        Promise.all(
+          [...sourceColors, ...overrideColors].map((r) => r.triggerResolve()),
+        ),
+    }
+  }
+
   createInstance(sendMessage: SendMessage) {
     return new DefaultControlInstance(sendMessage)
   }
@@ -174,8 +222,80 @@ class Definition extends ControlDefinition<
 
     return []
   }
+
+  fragmentToData(fragment: TypographyFragment | null): DataType | undefined {
+    if (fragment == null) return undefined
+    return {
+      id: fragment.id,
+      style: fragment.style.map(({ deviceId, value }) => ({
+        deviceId,
+        value: mapValues(
+          value,
+          (prop) => prop ?? undefined,
+        ) as DataType['style'][number]['value'],
+      })),
+    }
+  }
 }
 
+function resolveSwatches(
+  data: DataType | undefined,
+  resolver: ResourceResolver,
+): Resolvable<ResolvedColorData | undefined>[] {
+  return (
+    data?.style.flatMap(({ value: { color } }) =>
+      color?.swatchId
+        ? [
+            Color().resolveSwatch(
+              {
+                swatchId: color.swatchId,
+                alpha: color.alpha ?? 1,
+              },
+              resolver,
+            ),
+          ]
+        : [],
+    ) ?? []
+  )
+}
+
+function withColor(colors: Map<string, ResolvedColorData>) {
+  return (
+    deviceRawTypographyValue: DataType['style'][number],
+  ): ResolvedStyle[number] => {
+    const { value, deviceId } = deviceRawTypographyValue
+
+    if (value.color == null) {
+      const { color, ...nextValue } = value
+      return {
+        deviceId,
+        value: nextValue,
+      }
+    }
+
+    const { swatchId, alpha } = value.color
+    const baseColor = swatchId != null ? colors.get(swatchId) : undefined
+    if (baseColor == null) {
+      return {
+        deviceId,
+        value,
+      }
+    }
+
+    return {
+      deviceId,
+      value: {
+        ...value,
+        color: {
+          ...baseColor,
+          alpha: alpha ?? baseColor?.alpha ?? undefined,
+        },
+      },
+    }
+  }
+}
+
+export type { ResolvedStyle as ResolvedTypographyStyle }
 export class unstable_TypographyDefinition extends Definition {}
 
 export function unstable_Typography(): unstable_TypographyDefinition {

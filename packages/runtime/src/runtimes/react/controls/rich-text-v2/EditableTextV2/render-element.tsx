@@ -1,4 +1,5 @@
 import { RenderElementProps } from 'slate-react'
+import { partition } from '../../../../../utils/partition'
 
 import { RichTextV2Definition } from '../../../../../controls/rich-text-v2'
 import { RichTextV2Plugin } from '../../../../../controls/rich-text-v2/plugin'
@@ -14,6 +15,8 @@ export function RichTextV2Element({ definition, plugins, ...props }: RichTextV2E
   function initialRenderElement(props: RenderElementProps) {
     return props.children
   }
+
+  const [] = partition(plugins, plugin => plugin.control != null)
 
   const renderElement = plugins.reduce(
     (renderFn, plugin) => (props: RenderElementProps) => {

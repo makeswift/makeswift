@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import { mapValues } from '../../lib/functional'
+import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
 import { type Data } from '../../common'
@@ -9,18 +10,25 @@ import {
   type MergeTranslatableDataContext,
 } from '../../context'
 import { type IntrospectionTarget } from '../../introspection'
+import { type ResourceResolver } from '../../resources/resolver'
 import {
   SerializationSchema,
   type DeserializedRecord,
   type SerializedRecord,
 } from '../../serialization'
+import { type Stylesheet } from '../../stylesheet'
 
 import {
   type DataType as DataType_,
   type ResolvedValueType as ResolvedValueType_,
   type ValueType as ValueType_,
 } from '../associated-types'
-import { ControlDefinition, serialize, type SchemaType } from '../definition'
+import {
+  ControlDefinition,
+  serialize,
+  type Resolvable,
+  type SchemaType,
+} from '../definition'
 import { type SendMessage } from '../instance'
 
 import { ShapeControl } from './shape-control'
@@ -41,7 +49,7 @@ type ValueType<C extends Config> = {
 }
 
 type ResolvedValueType<C extends Config> = {
-  [K in keyof C['type']]: ResolvedValueType_<C['type'][K]>
+  [K in keyof C['type']]?: ResolvedValueType_<C['type'][K]>
 }
 
 type InstanceType<C extends Config> = ShapeControl<Definition<C>>
@@ -169,6 +177,40 @@ class Definition<C extends Config> extends ControlDefinition<
         context,
       ),
     )
+  }
+
+  resolveValue(
+    data: DataType<C> | undefined,
+    resolver: ResourceResolver,
+    stylesheet: Stylesheet,
+    control?: InstanceType<C>,
+  ): Resolvable<ResolvedValueType<C> | undefined> {
+    const keyValues = mapValues(data ?? ({} as ValueType<C>), (val, key) =>
+      this.keyDefs[key as string]?.resolveValue(
+        val,
+        resolver,
+        stylesheet.child(key as string),
+        control?.child(key as string),
+      ),
+    )
+
+    const stableValue = StableValue({
+      read: () => mapValues(keyValues, (v) => v?.readStableValue()),
+      deps: Object.values(keyValues),
+    })
+
+    return {
+      data,
+      readStableValue: stableValue.read,
+      subscribe: stableValue.subscribe,
+      triggerResolve: async (currentValue?: ResolvedValueType<C>) => {
+        await Promise.all(
+          Object.entries(keyValues).map(([key, v]) =>
+            v?.triggerResolve(currentValue?.[key]),
+          ),
+        )
+      },
+    }
   }
 
   createInstance(sendMessage: SendMessage): InstanceType<C> {

@@ -13,12 +13,12 @@ import { useStyle } from '../use-style'
 import { useBreakpoints } from '../hooks/use-breakpoints'
 
 export function typographyFragementToTypographyControlData(
-  typography: Typography | null,
+  fragment: Typography | null,
 ): DataType<unstable_TypographyDefinition> | undefined {
-  if (typography == null) return undefined
+  if (fragment == null) return undefined
   return {
-    id: typography.id,
-    style: typography.style.map(({ deviceId, value }) => ({
+    id: fragment.id,
+    style: fragment.style.map(({ deviceId, value }) => ({
       deviceId,
       value: {
         fontFamily: value.fontFamily ?? undefined,
@@ -97,15 +97,15 @@ const getDeviceId = ({ deviceId }: DeviceOverride<unknown>) => deviceId
  * `enhanced` here just means typography ids have been replaced with the related entity.
  */
 export default function useEnhancedTypography(
-  value?: DataType<unstable_TypographyDefinition> | null,
+  data?: DataType<unstable_TypographyDefinition> | null,
 ): EnhancedTypography {
-  const typography = typographyFragementToTypographyControlData(useTypography(value?.id ?? null))
+  const typography = typographyFragementToTypographyControlData(useTypography(data?.id ?? null))
   const source = typography?.style ?? []
-  const override = value?.style ?? []
+  const override = data?.style ?? []
   const breakpoints = useBreakpoints()
 
   const swatchIds = [
-    ...getTypographyStyleSwatchIds(value?.style),
+    ...getTypographyStyleSwatchIds(data?.style),
     ...getTypographyStyleSwatchIds(typography?.style),
   ]
   const swatches = useSwatches(swatchIds).filter(isNonNullable)

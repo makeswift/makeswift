@@ -50,6 +50,7 @@ export const borderSideSchema = <C extends z.ZodTypeAny>(color: C) =>
     }))
 
 export const borderSide = borderSideSchema(Schema.colorData)
+export const resolvedBorderSide = borderSideSchema(Schema.resolvedColorData)
 
 /**
  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/border

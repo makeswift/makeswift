@@ -1,20 +1,33 @@
 import { match, P } from 'ts-pattern'
 import { z } from 'zod'
 
-import { mapValues } from '../../lib/functional'
+import { mapValues, nullToUndefined } from '../../lib/functional'
+import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
-import { Schema, type ResponsiveValue } from '../../common'
+import {
+  Schema,
+  type ColorData,
+  type ResolvedColorData,
+  type ResponsiveValue,
+} from '../../common'
 import { responsiveValue } from '../../common/schema'
 import { type CopyContext } from '../../context'
 import { Targets, type IntrospectionTarget } from '../../introspection'
+import { type ResourceResolver } from '../../resources/resolver'
 import {
   type DeserializedRecord,
   type SerializedRecord,
 } from '../../serialization'
+import { type Stylesheet } from '../../stylesheet'
 
 import { Color } from '../color'
-import { ControlDefinition, serialize, type SchemaType } from '../definition'
+import {
+  ControlDefinition,
+  serialize,
+  type Resolvable,
+  type SchemaType,
+} from '../definition'
 import { type SendMessage } from '../instance'
 
 import * as StyleSchema from './schema'
@@ -157,6 +170,56 @@ class Definition<C extends Config> extends ControlDefinition<
     }
   }
 
+  resolveValue(
+    data: DataType<C> | undefined,
+    resolver: ResourceResolver,
+    stylesheet: Stylesheet,
+    control?: InstanceType<C>,
+  ): Resolvable<ResolvedValueType<C> | undefined> {
+    const resolvedColors = new Map<
+      string,
+      Resolvable<ResolvedColorData | undefined>
+    >(
+      [...borderColors(data?.border)].map((color) => [
+        color.swatchId,
+        Color().resolveSwatch(nullToUndefined(color), resolver),
+      ]),
+    )
+
+    const resolvedColor = (swatchId: string | undefined) =>
+      swatchId ? resolvedColors.get(swatchId)?.readStableValue() : undefined
+
+    const resolvedStyle = (data: DataType<C>) => ({
+      ...data,
+      border: mapBorderSides(data.border, (side) => ({
+        ...side,
+        color: resolvedColor(side?.color?.swatchId),
+      })),
+    })
+
+    const stableValue = StableValue({
+      read: () =>
+        data != null
+          ? stylesheet.defineStyle(
+              this.config.properties,
+              resolvedStyle(data),
+              (boxModel) => control?.changeBoxModel(boxModel),
+            )
+          : undefined,
+      deps: [...resolvedColors.values()],
+    })
+
+    return {
+      data,
+      readStableValue: stableValue.read,
+      subscribe: stableValue.subscribe,
+      triggerResolve: () =>
+        Promise.all(
+          [...resolvedColors.values()].map((r) => r.triggerResolve()),
+        ),
+    }
+  }
+
   createInstance(sendMessage: SendMessage) {
     return new StyleControl(sendMessage)
   }
@@ -193,6 +256,19 @@ class Definition<C extends Config> extends ControlDefinition<
           .otherwise(() => [null]),
       )
       .flatMap((color) => target.introspect(color))
+  }
+}
+
+function* borderColors(
+  responsibeBorder: ResponsiveValue<BorderData> | undefined,
+): Generator<ColorData> {
+  for (const deviceBorder of responsibeBorder ?? []) {
+    const sides = deviceBorder.value
+    for (const side of Object.values(sides)) {
+      if (side?.color != null) {
+        yield side?.color
+      }
+    }
   }
 }
 

@@ -1,26 +1,21 @@
 import { CSSObject } from '@emotion/css'
-import { useEffect, useId } from 'react'
-
 import {
   Style,
-  StyleDefinition,
-  StyleControl,
-  type DataType,
+  type StyleProperty,
+  type ResolvedBorderSideData,
   type FontSizePropertyData,
   type WidthPropertyData,
+  type ResolvedStyleData,
 } from '@makeswift/controls'
 
-import { useBorder, BorderSide } from '../../../components/hooks'
 import { colorToString } from '../../../components/utils/colorToString'
-import { useResponsiveStyle } from '../../../components/utils/responsive-style'
+import { responsiveStyle } from '../../../components/utils/responsive-style'
 
-import { useStyle } from '../use-style'
 import { BorderRadiusLonghandPropertyData } from '../../../css/border-radius'
 import { lengthPercentageDataToString } from '../../../css/length-percentage'
 import { marginPropertyDataToStyle } from '../../../css/margin'
 import { paddingPropertyDataToStyle } from '../../../css/padding'
-import { BoxModel, getBox } from '../../../box-model'
-import deepEqual from '../../../utils/deepEqual'
+import { Breakpoints } from '../../../state/modules/breakpoints'
 
 const defaultMargin = {
   marginTop: 0,
@@ -36,22 +31,22 @@ const defaultPadding = {
   paddingLeft: 0,
 }
 
-function useStyleControlCssObject(
-  style: DataType<StyleDefinition> | undefined,
-  controlDefinition: StyleDefinition,
+export function getStyleControlCssObject(
+  breakpoints: Breakpoints,
+  style: ResolvedStyleData | undefined,
+  properties: StyleProperty[],
 ): CSSObject {
-  const { properties } = controlDefinition.config
-
   return {
     ...(properties.includes(Style.Width) && {
       maxWidth: '100%',
     }),
-    ...useResponsiveStyle(
+    ...responsiveStyle(
+      breakpoints,
       [
         style?.width,
         style?.margin,
         style?.padding,
-        useBorder(style?.border),
+        style?.border,
         style?.borderRadius,
         style?.textStyle,
       ] as const,
@@ -93,7 +88,9 @@ function useStyleControlCssObject(
     return lengthPercentageDataToString(widthProperty)
   }
 
-  function borderSideToString(borderSide: BorderSide | null | undefined): string | null {
+  function borderSideToString(
+    borderSide: ResolvedBorderSideData | null | undefined,
+  ): string | null {
     if (borderSide == null) return null
 
     const { width, color, style } = borderSide
@@ -115,47 +112,108 @@ function useStyleControlCssObject(
   }
 }
 
-export type StyleControlFormattedValue = string
+// function useStyleControlCssObject(
+//   style: DataType<StyleDefinition> | undefined,
+//   controlDefinition: StyleDefinition,
+// ): CSSObject {
+//   const { properties } = controlDefinition.config
 
-export function useFormattedStyle(
-  styleControlData: DataType<StyleDefinition> | undefined,
-  controlDefinition: StyleDefinition,
-  control: StyleControl | null,
-): StyleControlFormattedValue {
-  const style = useStyleControlCssObject(styleControlData, controlDefinition)
-  // We're removing the colons because useId returns a string wrapped with colons, e.g. ":R3d5sm:",
-  // and we cannot use colons in a class name.
-  const guid = useId().replaceAll(':', '')
-  const styleClassName = useStyle(style)
-  const classNames = `${styleClassName} ${guid}`
+//   return {
+//     ...(properties.includes(Style.Width) && {
+//       maxWidth: '100%',
+//     }),
+//     ...useResponsiveStyle(
+//       [
+//         style?.width,
+//         style?.margin,
+//         style?.padding,
+//         useBorder(style?.border),
+//         style?.borderRadius,
+//         style?.textStyle,
+//       ] as const,
+//       ([width, margin, padding, border, borderRadius, textStyle]) => ({
+//         ...(properties.includes(Style.Width) && {
+//           width: widthToString(width) ?? '100%',
+//         }),
+//         ...(properties.includes(Style.Margin) &&
+//           marginPropertyDataToStyle(margin ?? defaultMargin, defaultMargin)),
+//         ...(properties.includes(Style.Padding) &&
+//           paddingPropertyDataToStyle(padding ?? defaultPadding, defaultPadding)),
+//         ...(properties.includes(Style.Border) && {
+//           borderTop: borderSideToString(border?.borderTop) ?? '0 solid black',
+//           borderRight: borderSideToString(border?.borderRight) ?? '0 solid black',
+//           borderBottom: borderSideToString(border?.borderBottom) ?? '0 solid black',
+//           borderLeft: borderSideToString(border?.borderLeft) ?? '0 solid black',
+//         }),
+//         ...(properties.includes(Style.BorderRadius) && {
+//           borderTopLeftRadius: borderRadiusToString(borderRadius?.borderTopLeftRadius) ?? 0,
+//           borderTopRightRadius: borderRadiusToString(borderRadius?.borderTopRightRadius) ?? 0,
+//           borderBottomRightRadius: borderRadiusToString(borderRadius?.borderBottomRightRadius) ?? 0,
+//           borderBottomLeftRadius: borderRadiusToString(borderRadius?.borderBottomLeftRadius) ?? 0,
+//         }),
+//         ...(properties.includes(Style.TextStyle) && {
+//           ...(textStyle?.fontFamily && { fontFamily: `"${textStyle.fontFamily}"` }),
+//           ...(textStyle?.letterSpacing && { letterSpacing: textStyle.letterSpacing }),
+//           ...(textStyle?.fontSize && { fontSize: fontSizeToString(textStyle.fontSize) }),
+//           ...(textStyle?.fontWeight && { fontWeight: textStyle.fontWeight }),
+//           textTransform: textStyle?.textTransform ?? [],
+//           fontStyle: textStyle?.fontStyle ?? [],
+//         }),
+//       }),
+//     ),
+//   }
 
-  useEffect(() => {
-    let currentBoxModel: BoxModel | null = null
+//   function widthToString(widthProperty: WidthPropertyData | undefined): string | null {
+//     if (widthProperty == null) return null
 
-    const handleAnimationFrameRequest = () => {
-      if (control == null) return
+//     return lengthPercentageDataToString(widthProperty)
+//   }
 
-      const element = document.querySelector(`.${guid}`)
+//   function borderSideToString(borderSide: BorderSide | null | undefined): string | null {
+//     if (borderSide == null) return null
 
-      const measuredBoxModel = element == null ? null : getBox(element)
+//     const { width, color, style } = borderSide
+//     return `${width != null ? width : 0}px ${style} ${
+//       color != null ? colorToString(color) : 'black'
+//     }`
+//   }
 
-      if (!deepEqual(currentBoxModel, measuredBoxModel)) {
-        currentBoxModel = measuredBoxModel
+//   function borderRadiusToString(
+//     borderRadius: BorderRadiusLonghandPropertyData | null | undefined,
+//   ): string | null {
+//     if (borderRadius == null) return null
 
-        control.changeBoxModel(currentBoxModel)
-      }
+//     return lengthPercentageDataToString(borderRadius)
+//   }
 
-      animationFrameHandle = requestAnimationFrame(handleAnimationFrameRequest)
-    }
+//   function fontSizeToString(fontSize: NonNullable<FontSizePropertyData>) {
+//     return `${fontSize.value}${fontSize.unit}`
+//   }
+// }
 
-    let animationFrameHandle = requestAnimationFrame(handleAnimationFrameRequest)
+// export type StyleControlFormattedValue = string
 
-    return () => {
-      cancelAnimationFrame(animationFrameHandle)
+// export function useFormattedStyle(
+//   styleControlData: DataType<StyleDefinition> | undefined,
+//   controlDefinition: StyleDefinition,
+//   control: StyleControl | null,
+// ): StyleControlFormattedValue {
+//   const style = useStyleControlCssObject(styleControlData, controlDefinition)
+//   // We're removing the colons because useId returns a string wrapped with colons, e.g. ":R3d5sm:",
+//   // and we cannot use colons in a class name.
+//   const guid = useId().replaceAll(':', '')
+//   const styleClassName = useStyle(style)
+//   const classNames = `${styleClassName} ${guid}`
 
-      control?.changeBoxModel(null)
-    }
-  }, [guid, control])
+//   useEffect(() => {
+//     if (control == null) return
 
-  return classNames
-}
+//     const element = document.querySelector(`.${guid}`)
+//     return pollBoxModel({
+//       element,
+//       onBoxModelChange: boxModel => control.changeBoxModel(boxModel),
+//     })
+//   }, [guid, control])
+
+//   return classNames
+// }
