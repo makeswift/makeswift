@@ -1,15 +1,10 @@
 # @makeswift/controls
 
-## 0.1.3-canary.1
+## 0.1.3
 
 ### Patch Changes
 
 - 1081caa: refactor: move basic controls' value resolution to the new `resolveValue` method
-
-## 0.1.3-canary.0
-
-### Patch Changes
-
 - 4d82ccd: refactor: move `is`, `deepEqual` and `shallowEqual` predicates to the `@makeswift/controls` package
 
 ## 0.1.2

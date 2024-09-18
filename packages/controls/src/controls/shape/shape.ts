@@ -128,15 +128,11 @@ class Definition<C extends Config> extends ControlDefinition<
 
   fromData(data: DataType<C> | undefined): ValueType<C> | undefined {
     if (data == null) return undefined
-    return mapValues(data, (value, key) =>
-      this.keyDefs[key as string]?.fromData(value),
-    )
+    return mapValues(this.keyDefs, (def, key) => def.fromData(data[key]))
   }
 
   toData(value: ValueType<C>): DataType<C> {
-    return mapValues(value, (value, key) =>
-      this.keyDefs[key as string]?.toData(value),
-    )
+    return mapValues(this.keyDefs, (def, key) => def.toData(value[key]))
   }
 
   copyData(
@@ -144,15 +140,15 @@ class Definition<C extends Config> extends ControlDefinition<
     context: CopyContext,
   ): DataType<C> | undefined {
     if (data == null) return undefined
-    return mapValues(data, (value, key) =>
-      this.keyDefs[key as string]?.copyData(value, context),
+    return mapValues(this.keyDefs, (def, key) =>
+      def.copyData(data[key], context),
     )
   }
 
   getTranslatableData(data: DataType<C>): Data {
     if (data == null) return null
-    return mapValues(data, (value, key) => {
-      return this.keyDefs[key as string]?.getTranslatableData(value)
+    return mapValues(this.keyDefs, (def, key) => {
+      return def.getTranslatableData(data[key])
     })
   }
 
@@ -162,12 +158,8 @@ class Definition<C extends Config> extends ControlDefinition<
     context: MergeTranslatableDataContext,
   ): Data {
     if (translatedData == null) return data
-    return mapValues(data, (value, key) =>
-      this.keyDefs[key as string]?.mergeTranslatedData(
-        value,
-        translatedData[key as string],
-        context,
-      ),
+    return mapValues(this.keyDefs, (def, key) =>
+      def.mergeTranslatedData(data[key], translatedData[key], context),
     )
   }
 
@@ -182,9 +174,9 @@ class Definition<C extends Config> extends ControlDefinition<
   }
 
   introspect<R>(data: DataType<C> | undefined, target: IntrospectionTarget<R>) {
-    return Object.entries(data ?? {}).flatMap(
-      ([key, value]) =>
-        this.keyDefs[key as string]?.introspect(value, target) ?? [],
+    if (data == null) return []
+    return Object.entries(this.keyDefs).flatMap(
+      ([key, def]) => def.introspect(data[key], target) ?? [],
     )
   }
 }

@@ -2,5 +2,6 @@
   "testRegex": "(\\./__tests__/.*|(\\.|/)(test|spec))\\.(types\\.)?[jt]sx?$",
   "transform": {
     "^.+\\.(t|j)sx?$": "@swc/jest"
-  }
+  },
+  "setupFilesAfterEnv": ["<rootDir>/src/jest-setup.ts"]
 }
