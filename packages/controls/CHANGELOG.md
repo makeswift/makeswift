@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.4-canary.0
+
+### Patch Changes
+
+- e2eb5d6: fix: `Shape` control iterates through definition instead of data/value keys
+
 ## 0.1.3
 
 ### Patch Changes
