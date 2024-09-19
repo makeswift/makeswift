@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`state / LocalizedResourcesMap \`Actions.setLocalizedResourceId\` correctly updates the store 1`] = `
+{
+  "es-ES": {
+    "15": "2555",
+  },
+  "fr-FR": {
+    "11": "2111",
+    "12": "22",
+    "13": "2333",
+  },
+  "it-IT": {
+    "13": "23",
+    "14": "2444",
+  },
+}
+`;
+
+exports[`state / LocalizedResourcesMap \`Actions.updateAPIClientCache\` fills in the state from cache w/o overriding existing resources 1`] = `
+{
+  "fr-FR": {
+    "11": "21",
+    "12": "22",
+    "13": "2333",
+  },
+  "it-IT": {
+    "13": "23",
+    "14": "2444",
+  },
+}
+`;
