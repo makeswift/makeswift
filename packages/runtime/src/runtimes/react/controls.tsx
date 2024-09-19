@@ -36,7 +36,7 @@ import { useRichText } from './controls/rich-text/rich-text'
 import { useRichTextV2 } from './controls/rich-text-v2'
 
 import { useStore } from './hooks/use-store'
-import { useDocumentKey } from './hooks/use-document-key'
+import { useDocumentKey } from './hooks/use-document-context'
 import { useSelector } from './hooks/use-selector'
 
 import { RenderHook } from './components'

@@ -119,7 +119,7 @@ describe('state / APIResources', () => {
     expect(serializedState).toMatchSnapshot()
   })
 
-  test('`getInitialState` correctly deserializes passed state', () => {
+  test('`getInitialState`/`getSerializedState` are symmetrical', () => {
     const serializedState = {
       Swatch: [{ id: swatch.id, value: swatch }],
       File: [{ id: file.id, value: file }],
@@ -299,5 +299,71 @@ describe('state / APIResources', () => {
         })
       },
     )
+  })
+
+  test('`Actions.updateAPIClientCache` fills in the state from cache w/o overriding existing resources', () => {
+    const state = (
+      [
+        [swatch, null],
+        [pagePathnameSlice, null],
+        [localizedPagePathnameSlice_fr_FR, 'fr-FR'],
+        [globalElement, null],
+        [localizedGlobalElement_it_IT, 'it-IT'],
+      ] as [APIResource, string][]
+    ).reduce(
+      (state, [resource, locale]) =>
+        APIResources.reducer(
+          state,
+          Actions.apiResourceFulfilled(resource.__typename, resource.id, resource, locale),
+        ),
+      APIResources.getInitialState(),
+    )
+
+    const apiResources = {
+      Swatch: [{ id: swatch.id, value: { ...swatch, hue: 17 } }],
+      PagePathnameSlice: [
+        {
+          id: pagePathnameSlice.id,
+          value: { ...pagePathnameSlice, pathname: 'test/new-pathname' },
+        },
+        {
+          id: localizedPagePathnameSlice_fr_FR.id,
+          value: {
+            ...localizedPagePathnameSlice_fr_FR,
+            localizedPathname: 'test/new-localized-pathname-fr-FR',
+          },
+          locale: 'fr-FR',
+        },
+        {
+          id: localizedPagePathnameSlice_it_IT.id,
+          value: localizedPagePathnameSlice_it_IT,
+          locale: 'it-IT',
+        },
+      ],
+      LocalizedGlobalElement: [
+        {
+          id: localizedGlobalElement_fr_FR.id,
+          value: localizedGlobalElement_fr_FR,
+          locale: 'fr-FR',
+        },
+        {
+          id: localizedGlobalElement_it_IT.id,
+          value: {
+            ...localizedGlobalElement_it_IT,
+            localizedPathname: 'test/new-localized-pathname-it-IT',
+          },
+          locale: 'it-IT',
+        },
+      ],
+      Table: [{ id: table.id, value: table }],
+      Snippet: [{ id: snippet.id, value: snippet }],
+    }
+
+    const updatedState = APIResources.reducer(
+      state,
+      Actions.updateAPIClientCache({ apiResources, localizedResourcesMap: {} }),
+    )
+
+    expect(APIResources.getSerializedState(updatedState)).toMatchSnapshot()
   })
 })

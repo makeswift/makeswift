@@ -14,7 +14,7 @@ import {
 } from '@makeswift/prop-controllers'
 import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntimeProvider } from '../../../../runtimes/react'
 import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
 import {
