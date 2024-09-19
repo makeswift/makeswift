@@ -23,36 +23,38 @@ exports[`Page Shape (heterogenous properties): resolvedValue 1`] = `
 
 exports[`Page Shape (heterogenous properties): snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
   "cacheData": {
-    "File": [
-      {
-        "id": "[file-test-id]",
-        "value": {
-          "__typename": "File",
-          "dimensions": {
-            "height": 100,
-            "width": 100,
-          },
-          "extension": "png",
+    "apiResources": {
+      "File": [
+        {
           "id": "[file-test-id]",
-          "name": "image",
-          "publicUrl": "https://example.com/image.png",
+          "value": {
+            "__typename": "File",
+            "dimensions": {
+              "height": 100,
+              "width": 100,
+            },
+            "extension": "png",
+            "id": "[file-test-id]",
+            "name": "image",
+            "publicUrl": "https://example.com/image.png",
+          },
         },
-      },
-    ],
-    "Swatch": [
-      {
-        "id": "[swatch-test-id]",
-        "value": {
-          "__typename": "Swatch",
-          "hue": 238,
+      ],
+      "Swatch": [
+        {
           "id": "[swatch-test-id]",
-          "lightness": 49,
-          "saturation": 87,
+          "value": {
+            "__typename": "Swatch",
+            "hue": 238,
+            "id": "[swatch-test-id]",
+            "lightness": 49,
+            "saturation": 87,
+          },
         },
-      },
-    ],
+      ],
+    },
+    "localizedResourcesMap": {},
   },
   "document": {
     "data": {
@@ -134,8 +136,5 @@ exports[`Page Shape (heterogenous properties): snapshot 1`] = `
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
