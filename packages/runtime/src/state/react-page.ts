@@ -30,6 +30,7 @@ import * as IsPreview from './modules/is-preview'
 import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Breakpoints from './modules/breakpoints'
 import * as Introspection from '../prop-controllers/introspection'
+
 import { Action } from './actions'
 import { copyElementReference } from '../prop-controllers/copy'
 import {
@@ -38,6 +39,8 @@ import {
   merge,
   mergeTranslatedData,
 } from '../controls/control'
+
+import { type SetupTeardownMixin, withSetupTeardown } from './mixins/setup-teardown'
 
 export type {
   Data,
@@ -413,16 +416,14 @@ export function getBreakpoints(state: State): Breakpoints.State {
 
 export type Dispatch = ThunkDispatch<State, unknown, Action>
 
-export type Store = ReduxStore<State, Action> & { dispatch: Dispatch }
+export type Store = ReduxStore<State, Action> & { dispatch: Dispatch } & SetupTeardownMixin
 
 export function configureStore({
   name,
-  rootElements,
   preloadedState,
   breakpoints,
 }: {
   name: string
-  rootElements?: Map<string, Documents.Element>
   preloadedState?: PreloadedState<State>
   breakpoints?: Breakpoints.State
 }): Store {
@@ -436,9 +437,14 @@ export function configureStore({
     reducer,
     {
       ...preloadedState,
-      documents: Documents.getInitialState({ rootElements }),
       breakpoints: Breakpoints.getInitialState(breakpoints ?? preloadedState?.breakpoints),
     },
-    composeEnhancers(applyMiddleware(thunk)),
+    composeEnhancers(
+      withSetupTeardown(
+        () => {},
+        () => {},
+      ),
+      applyMiddleware(thunk),
+    ),
   )
 }
