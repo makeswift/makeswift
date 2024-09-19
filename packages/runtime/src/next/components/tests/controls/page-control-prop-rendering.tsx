@@ -9,7 +9,7 @@ import { type Data, type ValueType, type DataType, ControlDefinition } from '@ma
 
 import { ElementData } from '../../../../state/react-page'
 import { Page } from '../../page'
-import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntimeProvider } from '../../../../runtimes/react'
 import { ReactRuntime } from '../../../../react'
 
 import {
@@ -45,7 +45,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
     toData?: (value: ValueType<D>) => DataType<D>
     value: ValueType<D> | undefined
     locale?: string | null
-    cacheData?: MakeswiftPageSnapshot['cacheData']
+    cacheData?: Partial<MakeswiftPageSnapshot['cacheData']>
     expectedRenders?: number
     registerComponents?: (runtime: ReactRuntime) => void
     action?: (element: HTMLElement) => Promise<void>

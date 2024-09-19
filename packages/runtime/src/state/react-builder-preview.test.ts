@@ -16,7 +16,7 @@ describe('propControllerHandlesMiddleware', () => {
 
     handle.callback(() => ({ setPropControllers }))
 
-    store.dispatch(registerDocument(ReactPage.createDocument(documentKey, element)))
+    store.dispatch(registerDocument(ReactPage.createDocument(documentKey, element, null)))
 
     // Act
     store.dispatch(registerComponentHandle(documentKey, element.key, handle))
@@ -35,7 +35,7 @@ describe('propControllerHandlesMiddleware', () => {
 
     handle.callback(() => ({ setPropControllers }))
 
-    store.dispatch(registerDocument(ReactPage.createDocument(documentKey, element)))
+    store.dispatch(registerDocument(ReactPage.createDocument(documentKey, element, null)))
 
     // Act
     store.dispatch(registerComponentHandle(documentKey, element.key, handle))
