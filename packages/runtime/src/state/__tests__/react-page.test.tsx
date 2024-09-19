@@ -45,7 +45,7 @@ function render(element: JSX.Element): ReactPage.ElementData {
 }
 
 function createTestStore(): ReactPage.Store {
-  const store = ReactPage.configureStore({ name: 'Test store' })
+  const store = ReactPage.configureStore({ name: 'Test store', preloadedState: null })
 
   store.dispatch(
     registerComponent(

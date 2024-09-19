@@ -4,8 +4,10 @@ exports[`Page Style renders a style: resolvedValue 1`] = `"css-1cny9vj u-r2-prop
 
 exports[`Page Style renders a style: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -72,8 +74,5 @@ exports[`Page Style renders a style: snapshot 1`] = `
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;

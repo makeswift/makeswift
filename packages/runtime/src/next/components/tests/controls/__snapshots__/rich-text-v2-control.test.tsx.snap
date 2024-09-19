@@ -25,8 +25,10 @@ NodeList [
 
 exports[`Page RichTextV2 renders a makeswift::controls::rich-text-v2::mode::block placeholder when empty: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -69,9 +71,6 @@ exports[`Page RichTextV2 renders a makeswift::controls::rich-text-v2::mode::bloc
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -100,8 +99,10 @@ NodeList [
 
 exports[`Page RichTextV2 renders a makeswift::controls::rich-text-v2::mode::inline placeholder when empty: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -144,9 +145,6 @@ exports[`Page RichTextV2 renders a makeswift::controls::rich-text-v2::mode::inli
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -319,51 +317,53 @@ NodeList [
 
 exports[`Page RichTextV2 renders provided text content: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
   "cacheData": {
-    "Swatch": [
-      {
-        "id": "U3dhdGNoOmJkODYxMWM5LTNiZjItNDM3MS1iMmU4LTBmMmNlMDZjNDE1OA==",
-        "value": {
-          "__typename": "Swatch",
-          "hue": 238,
+    "apiResources": {
+      "Swatch": [
+        {
           "id": "U3dhdGNoOmJkODYxMWM5LTNiZjItNDM3MS1iMmU4LTBmMmNlMDZjNDE1OA==",
-          "lightness": 49,
-          "saturation": 87,
+          "value": {
+            "__typename": "Swatch",
+            "hue": 238,
+            "id": "U3dhdGNoOmJkODYxMWM5LTNiZjItNDM3MS1iMmU4LTBmMmNlMDZjNDE1OA==",
+            "lightness": 49,
+            "saturation": 87,
+          },
         },
-      },
-    ],
-    "Typography": [
-      {
-        "id": "VHlwb2dyYXBoeTowNGI4OTZlMC0wZWEyLTRkMTMtYmU3ZS0xYmY1M2VmMjBiZjc=",
-        "value": {
-          "__typename": "Typography",
+      ],
+      "Typography": [
+        {
           "id": "VHlwb2dyYXBoeTowNGI4OTZlMC0wZWEyLTRkMTMtYmU3ZS0xYmY1M2VmMjBiZjc=",
-          "name": "Body",
-          "style": [
-            {
-              "deviceId": "desktop",
-              "value": {
-                "color": null,
-                "fontFamily": "Lato",
-                "fontSize": {
-                  "unit": "px",
-                  "value": 16,
+          "value": {
+            "__typename": "Typography",
+            "id": "VHlwb2dyYXBoeTowNGI4OTZlMC0wZWEyLTRkMTMtYmU3ZS0xYmY1M2VmMjBiZjc=",
+            "name": "Body",
+            "style": [
+              {
+                "deviceId": "desktop",
+                "value": {
+                  "color": null,
+                  "fontFamily": "Lato",
+                  "fontSize": {
+                    "unit": "px",
+                    "value": 16,
+                  },
+                  "fontWeight": null,
+                  "italic": null,
+                  "letterSpacing": null,
+                  "lineHeight": null,
+                  "strikethrough": null,
+                  "textAlign": null,
+                  "underline": null,
+                  "uppercase": null,
                 },
-                "fontWeight": null,
-                "italic": null,
-                "letterSpacing": null,
-                "lineHeight": null,
-                "strikethrough": null,
-                "textAlign": null,
-                "underline": null,
-                "uppercase": null,
               },
-            },
-          ],
+            ],
+          },
         },
-      },
-    ],
+      ],
+    },
+    "localizedResourcesMap": {},
   },
   "document": {
     "data": {
@@ -613,8 +613,5 @@ exports[`Page RichTextV2 renders provided text content: snapshot 1`] = `
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;

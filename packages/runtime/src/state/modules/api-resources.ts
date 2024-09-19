@@ -16,7 +16,7 @@ function parseCompositeId(compositeId: CompositeResourceId): [string, string | n
   return [resourceId, locale ?? null]
 }
 
-type State = Map<APIResourceType, Map<CompositeResourceId, APIResource | null>>
+export type State = Map<APIResourceType, Map<CompositeResourceId, APIResource | null>>
 
 export type SerializedState = {
   [key in APIResourceType]?: {
@@ -102,6 +102,27 @@ export function getAPIResource<T extends APIResourceType>(
 
 export function reducer(state: State = getInitialState(), action: Action): State {
   switch (action.type) {
+    case ActionTypes.UPDATE_API_CLIENT_CACHE: {
+      const { apiResources } = action.payload
+
+      return Object.entries(apiResources).reduce((state, [resourceType, cachedResources]) => {
+        const resType = resourceType as APIResourceType
+        const cached:
+          | { id: string; value: APIResource | null; locale?: string | null }[]
+          | undefined = cachedResources
+
+        const existing = state.get(resType) ?? new Map<CompositeResourceId, APIResource | null>()
+        const updated = cached?.reduce((r, { id, value, locale }) => {
+          const cid = compositeId(id, locale)
+          return r.get(cid) != null ? r : new Map(r).set(cid, value)
+        }, existing)
+
+        return updated == null || updated === existing
+          ? state
+          : new Map(state).set(resType, updated)
+      }, state)
+    }
+
     case ActionTypes.API_RESOURCE_FULFILLED: {
       const { resourceType, resourceId, resource, locale } = action.payload
 

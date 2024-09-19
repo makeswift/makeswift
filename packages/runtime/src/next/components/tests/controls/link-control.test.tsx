@@ -73,7 +73,9 @@ describe('Page', () => {
         value: openPageLink,
         locale,
         cacheData: {
-          PagePathnameSlice: [{ id: pageId, value: null }],
+          apiResources: {
+            PagePathnameSlice: [{ id: pageId, value: null, locale }],
+          },
         },
       })
     })
@@ -99,7 +101,9 @@ describe('Page', () => {
         value: openPageLink,
         locale,
         cacheData: {
-          PagePathnameSlice: [{ id: pageId, value: pathnameSlice }],
+          apiResources: {
+            PagePathnameSlice: [{ id: pageId, value: pathnameSlice, locale }],
+          },
         },
         expectedRenders: 1,
       })

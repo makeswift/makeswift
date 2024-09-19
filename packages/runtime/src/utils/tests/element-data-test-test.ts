@@ -28,10 +28,8 @@ export function createMakeswiftPageSnapshot(
   elementData: ElementData,
   {
     cacheData = {},
-    localizedResourcesMap = {},
     locale = null,
-    ...rest
-  }: Partial<MakeswiftPageSnapshot> = {},
+  }: { cacheData?: Partial<MakeswiftPageSnapshot['cacheData']>; locale?: string | null } = {},
 ): MakeswiftPageSnapshot {
   return {
     document: {
@@ -45,11 +43,10 @@ export function createMakeswiftPageSnapshot(
       localizedPages: [],
       locale,
     },
-    apiOrigin: 'https://test-api-origin.com',
-    cacheData,
-    preview: false,
-    localizedResourcesMap,
-    locale,
-    ...rest,
+    cacheData: {
+      apiResources: {},
+      localizedResourcesMap: {},
+      ...cacheData,
+    },
   }
 }
