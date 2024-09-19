@@ -2,7 +2,7 @@ import type { Operation } from 'ot-json0'
 
 import { ControlInstance } from '@makeswift/controls'
 
-import type { Document } from './modules/read-only-documents'
+import type { Element, Document } from './modules/read-only-documents'
 import type { DescriptorsByComponentType } from './modules/prop-controllers'
 
 import type { ComponentType } from './modules/react-components'
@@ -19,6 +19,7 @@ import { ElementImperativeHandle } from '../runtimes/react/element-imperative-ha
 import { BuilderEditMode } from './modules/builder-edit-mode'
 import type { Point } from './modules/pointer'
 import { Breakpoints } from './modules/breakpoints'
+import { type SerializedState as APIClientCache } from './makeswift-api-client'
 import { LocaleString, localeStringSchema } from '../locale'
 
 export const ActionTypes = {
@@ -89,15 +90,23 @@ export const ActionTypes = {
   SET_LOCALE: 'SET_LOCALE',
 
   SET_LOCALIZED_RESOURCE_ID: 'SET_LOCALIZED_RESOURCE_ID',
+
+  UPDATE_API_CLIENT_CACHE: 'UPDATE_API_CLIENT_CACHE',
 } as const
 
 type InitAction = { type: typeof ActionTypes.INIT }
 
 type CleanUpAction = { type: typeof ActionTypes.CLEAN_UP }
 
+type DocumentPayload = {
+  key: string
+  rootElement: Element
+  locale?: string | null // older versions of the runtime may not provide this field
+}
+
 type RegisterDocumentAction = {
   type: typeof ActionTypes.REGISTER_DOCUMENT
-  payload: { documentKey: string; document: Document }
+  payload: { documentKey: string; document: DocumentPayload }
 }
 
 type UnregisterDocumentAction = {
@@ -112,7 +121,7 @@ type ChangeDocumentAction = {
 
 type CreateElementTreeAction = {
   type: typeof ActionTypes.CREATE_ELEMENT_TREE
-  payload: { document: Document; descriptors: DescriptorsByComponentType }
+  payload: { document: DocumentPayload; descriptors: DescriptorsByComponentType }
 }
 
 type DeleteElementTreeAction = {
@@ -123,8 +132,8 @@ type DeleteElementTreeAction = {
 type ChangeElementTreeAction = {
   type: typeof ActionTypes.CHANGE_ELEMENT_TREE
   payload: {
-    oldDocument: Document
-    newDocument: Document
+    oldDocument: DocumentPayload
+    newDocument: DocumentPayload
     descriptors: DescriptorsByComponentType
     operation: Operation
   }
@@ -132,7 +141,7 @@ type ChangeElementTreeAction = {
 
 type RegisterBuilderDocumentAction = {
   type: typeof ActionTypes.REGISTER_BUILDER_DOCUMENT
-  payload: { documentKey: string; document: Document }
+  payload: { documentKey: string; document: DocumentPayload }
 }
 
 type UnregisterBuilderDocumentAction = {
@@ -325,7 +334,13 @@ type SetLocaleAction = {
 
 type SetLocalizedResourceIdAction = {
   type: typeof ActionTypes.SET_LOCALIZED_RESOURCE_ID
-  payload: { resourceId: string; localizedResourceId: string | null }
+  // TODO: make `locale` required once we've upgraded the builder to always provide it
+  payload: { locale?: string; resourceId: string; localizedResourceId: string | null }
+}
+
+type UpdateAPIClientCache = {
+  type: typeof ActionTypes.UPDATE_API_CLIENT_CACHE
+  payload: APIClientCache
 }
 
 export type Action =
@@ -373,6 +388,7 @@ export type Action =
   | SetBreakpointsAction
   | SetLocaleAction
   | SetLocalizedResourceIdAction
+  | UpdateAPIClientCache
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }
@@ -425,14 +441,14 @@ export function unregisterBuilderDocument(documentKey: string): UnregisterBuilde
   return { type: ActionTypes.UNREGISTER_BUILDER_DOCUMENT, payload: { documentKey } }
 }
 
-export function registerDocumentEffect(
-  document: Document,
+export function registerDocumentsEffect(
+  documents: Document[],
 ): ThunkAction<() => void, unknown, unknown, Action> {
   return dispatch => {
-    dispatch(registerDocument(document))
+    documents.forEach(document => dispatch(registerDocument(document)))
 
     return () => {
-      dispatch(unregisterDocument(document.key))
+      documents.forEach(document => dispatch(unregisterDocument(document.key)))
     }
   }
 }
@@ -748,12 +764,18 @@ export function setLocale(locale: Intl.Locale, pathname?: string): SetLocaleActi
 export function setLocalizedResourceId({
   resourceId,
   localizedResourceId,
+  locale,
 }: {
   resourceId: string
   localizedResourceId: string | null
+  locale?: string
 }): SetLocalizedResourceIdAction {
   return {
     type: ActionTypes.SET_LOCALIZED_RESOURCE_ID,
-    payload: { resourceId, localizedResourceId },
+    payload: { resourceId, localizedResourceId, locale },
   }
+}
+
+export function updateAPIClientCache(payload: APIClientCache): UpdateAPIClientCache {
+  return { type: ActionTypes.UPDATE_API_CLIENT_CACHE, payload }
 }

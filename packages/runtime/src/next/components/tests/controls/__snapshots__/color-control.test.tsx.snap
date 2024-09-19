@@ -4,8 +4,10 @@ exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swa
 
 exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87}, default value: rgb(255,0,0) fetching swatch: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -51,9 +53,6 @@ exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swa
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -61,20 +60,22 @@ exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swa
 
 exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87}, default value: rgb(255,0,0) reading swatch from cache: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
   "cacheData": {
-    "Swatch": [
-      {
-        "id": "[swatch-test-id]",
-        "value": {
-          "__typename": "Swatch",
-          "hue": 238,
+    "apiResources": {
+      "Swatch": [
+        {
           "id": "[swatch-test-id]",
-          "lightness": 49,
-          "saturation": 87,
+          "value": {
+            "__typename": "Swatch",
+            "hue": 238,
+            "id": "[swatch-test-id]",
+            "lightness": 49,
+            "saturation": 87,
+          },
         },
-      },
-    ],
+      ],
+    },
+    "localizedResourcesMap": {},
   },
   "document": {
     "data": {
@@ -121,9 +122,6 @@ exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swa
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -131,8 +129,10 @@ exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swa
 
 exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: null, default value: rgb(255,0,0) fetching swatch: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -178,9 +178,6 @@ exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swa
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -188,14 +185,16 @@ exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swa
 
 exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: null, default value: rgb(255,0,0) reading swatch from cache: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
   "cacheData": {
-    "Swatch": [
-      {
-        "id": "[swatch-test-id]",
-        "value": null,
-      },
-    ],
+    "apiResources": {
+      "Swatch": [
+        {
+          "id": "[swatch-test-id]",
+          "value": null,
+        },
+      ],
+    },
+    "localizedResourcesMap": {},
   },
   "document": {
     "data": {
@@ -242,9 +241,6 @@ exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swa
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -252,8 +248,10 @@ exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swa
 
 exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87}, default value: rgb(255,0,0) fetching swatch: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -300,9 +298,6 @@ exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swa
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -310,20 +305,22 @@ exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swa
 
 exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87}, default value: rgb(255,0,0) reading swatch from cache: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
   "cacheData": {
-    "Swatch": [
-      {
-        "id": "[swatch-test-id]",
-        "value": {
-          "__typename": "Swatch",
-          "hue": 238,
+    "apiResources": {
+      "Swatch": [
+        {
           "id": "[swatch-test-id]",
-          "lightness": 49,
-          "saturation": 87,
+          "value": {
+            "__typename": "Swatch",
+            "hue": 238,
+            "id": "[swatch-test-id]",
+            "lightness": 49,
+            "saturation": 87,
+          },
         },
-      },
-    ],
+      ],
+    },
+    "localizedResourcesMap": {},
   },
   "document": {
     "data": {
@@ -371,9 +368,6 @@ exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swa
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -381,8 +375,10 @@ exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swa
 
 exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: null, default value: rgb(255,0,0) fetching swatch: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -429,9 +425,6 @@ exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swa
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -439,14 +432,16 @@ exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swa
 
 exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: null, default value: rgb(255,0,0) reading swatch from cache: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
   "cacheData": {
-    "Swatch": [
-      {
-        "id": "[swatch-test-id]",
-        "value": null,
-      },
-    ],
+    "apiResources": {
+      "Swatch": [
+        {
+          "id": "[swatch-test-id]",
+          "value": null,
+        },
+      ],
+    },
+    "localizedResourcesMap": {},
   },
   "document": {
     "data": {
@@ -494,8 +489,5 @@ exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swa
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;

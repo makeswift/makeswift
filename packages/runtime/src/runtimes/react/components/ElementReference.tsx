@@ -11,6 +11,7 @@ import { FallbackComponent } from '../../../components/shared/FallbackComponent'
 import { Element } from './Element'
 import { Document } from './Document'
 import { DisableRegisterElement } from '../hooks/use-disable-register-element'
+import { useDocumentLocale } from '../hooks/use-document-context'
 
 type ElementRefereceProps = {
   elementReference: ReactPageElementReference
@@ -22,8 +23,9 @@ export const ElementReference = memo(
     ref: Ref<ElementImperativeHandle>,
   ): JSX.Element {
     const globalElement = useGlobalElement(elementReference.value)
+    const locale = useDocumentLocale()
     // Update the logic here when we can merge element trees
-    const localizedGlobalElement = useLocalizedGlobalElement(elementReference.value)
+    const localizedGlobalElement = useLocalizedGlobalElement(locale, elementReference.value)
     const globalElementData = (localizedGlobalElement?.data ?? globalElement?.data) as
       | ReactPageElementData
       | undefined

@@ -9,7 +9,7 @@ import {
 
 import * as ReactPage from '../../../state/react-page'
 import { useResourceResolver } from './use-resource-resolver'
-import { useDocumentKey } from './use-document-key'
+import { useDocumentKey } from './use-document-context'
 import { useSelector } from './use-selector'
 
 import { useStylesheetFactory } from './use-stylesheet-factory'

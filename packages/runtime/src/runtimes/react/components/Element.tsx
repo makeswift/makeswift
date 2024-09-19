@@ -4,7 +4,7 @@ import { Ref, forwardRef, memo, useCallback, useEffect, useImperativeHandle, use
 import { Element as ElementDataOrRef, isElementReference } from '../../../state/react-page'
 import { ElementImperativeHandle } from '../element-imperative-handle'
 import { useDispatch } from '../hooks/use-dispatch'
-import { useDocumentKey } from '../hooks/use-document-key'
+import { useDocumentKey } from '../hooks/use-document-context'
 import { useDisableRegisterElement } from '../hooks/use-disable-register-element'
 import { mountComponentEffect, registerComponentHandleEffect } from '../../../state/actions'
 import { ElementReference } from './ElementReference'

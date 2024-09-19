@@ -2,21 +2,21 @@ import { useMemo } from 'react'
 import { type ResourceResolver } from '@makeswift/controls'
 
 import * as ReactPage from '../../../state/react-page'
+import { useMakeswiftHostApiClient } from '../host-api-client'
 import { useStore } from './use-store'
-import { useDocumentKey } from './use-document-key'
-import { useMakeswiftHostApiClient } from '../../../next/context/makeswift-host-api-client'
+import { useDocumentContext } from './use-document-context'
 
 export function useResourceResolver(): ResourceResolver {
   const store = useStore()
   const client = useMakeswiftHostApiClient()
-  const documentKey = useDocumentKey()
+  const { key: documentKey, locale } = useDocumentContext()
 
   return useMemo<ResourceResolver>(() => {
     return {
       resolveSwatch: swatchId => client.resolveSwatch(swatchId),
       resolveFile: fileId => client.resolveFile(fileId),
       resolveTypography: typographyId => client.resolveTypography(typographyId),
-      resolvePagePathnameSlice: pageId => client.resolvePagePathnameSlice(pageId),
+      resolvePagePathnameSlice: pageId => client.resolvePagePathnameSlice({ pageId, locale }),
       resolveElementId: elementKey => {
         const read = () =>
           documentKey == null
@@ -34,5 +34,5 @@ export function useResourceResolver(): ResourceResolver {
         }
       },
     }
-  }, [client, store, documentKey])
+  }, [client, store, documentKey, locale])
 }
