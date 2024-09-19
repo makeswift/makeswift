@@ -6,7 +6,7 @@ import '@testing-library/jest-dom'
 
 import { APIResourceType, type LocalizedGlobalElement, type GlobalElement } from '../../../api'
 import { ReactRuntime } from '../../../react'
-import { ReactRuntimeProvider } from '../../context/react-runtime'
+import { ReactRuntimeProvider } from '../../../runtimes/react'
 import { createMakeswiftPageSnapshot } from '../../../utils/tests/element-data-test-test'
 
 import { Page } from '../page'
@@ -155,51 +155,52 @@ const localizedGlobalElementData = {
   },
 } as LocalizedGlobalElement['data']
 
-async function testGlobalElementRendering({
-  locale,
-  localizedResourcesMap,
-}: {
-  locale: string | null
-  localizedResourcesMap?: Record<string, string>
-}) {
+async function testGlobalElementRendering({ locale }: { locale: string | null }) {
   const runtime = new ReactRuntime()
   const snapshot = createMakeswiftPageSnapshot(pageElementData, {
     locale,
     cacheData: {
-      [APIResourceType.GlobalElement]: [
-        {
-          id: globalElementId,
-          value: {
-            __typename: APIResourceType.GlobalElement,
+      apiResources: {
+        [APIResourceType.GlobalElement]: [
+          {
             id: globalElementId,
-            data: globalElementData,
+            value: {
+              __typename: APIResourceType.GlobalElement,
+              id: globalElementId,
+              data: globalElementData,
+            },
           },
-        },
-      ],
-      [APIResourceType.LocalizedGlobalElement]: [
-        {
-          id: localizedGlobalElementId,
-          value: {
-            __typename: APIResourceType.LocalizedGlobalElement,
+        ],
+        [APIResourceType.LocalizedGlobalElement]: [
+          {
             id: localizedGlobalElementId,
-            data: localizedGlobalElementData,
+            value: {
+              __typename: APIResourceType.LocalizedGlobalElement,
+              id: localizedGlobalElementId,
+              data: localizedGlobalElementData,
+            },
+            locale: 'fr-FR',
           },
-        },
-      ],
-      [APIResourceType.Swatch]: [
-        {
-          id: swatchId,
-          value: {
-            __typename: APIResourceType.Swatch,
+        ],
+        [APIResourceType.Swatch]: [
+          {
             id: swatchId,
-            hue: 238,
-            saturation: 87,
-            lightness: 49,
+            value: {
+              __typename: APIResourceType.Swatch,
+              id: swatchId,
+              hue: 238,
+              saturation: 87,
+              lightness: 49,
+            },
           },
+        ],
+      },
+      localizedResourcesMap: {
+        'fr-FR': {
+          [globalElementId]: localizedGlobalElementId,
         },
-      ],
+      },
     },
-    localizedResourcesMap,
   })
 
   // Assert
@@ -224,9 +225,6 @@ describe('Page', () => {
   test('correctly renders a localized global element', async () => {
     await testGlobalElementRendering({
       locale: 'fr-FR',
-      localizedResourcesMap: {
-        [globalElementId]: localizedGlobalElementId,
-      },
     })
   })
 })

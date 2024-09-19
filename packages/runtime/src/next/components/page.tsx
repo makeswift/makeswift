@@ -1,14 +1,46 @@
 'use client'
 
-import { Suspense, memo, useMemo } from 'react'
+import { Suspense, memo, useEffect, useMemo } from 'react'
 
-import { RuntimeProvider } from '../../runtimes/react'
-import { Page as PageMeta } from '../../components/page'
-import { MakeswiftHostApiClient } from '../../api/react'
-import { MakeswiftPageSnapshot } from '../client'
+import { type CacheData } from '../../api/react'
+
+import { useDispatch } from '../../runtimes/react/hooks/use-dispatch'
+import { useMakeswiftHostApiClient } from '../../runtimes/react/host-api-client'
+
+import { Page as PageComponent } from '../../components/page'
+import {
+  type MakeswiftPageSnapshot,
+  type MakeswiftPageDocument,
+  pageToRootDocument,
+} from '../client'
+
+import * as ReactPage from '../../state/react-page'
+import { registerDocumentsEffect, updateAPIClientCache } from '../../state/actions'
 
 export type PageProps = {
   snapshot: MakeswiftPageSnapshot
+}
+
+const isServer = typeof window === 'undefined'
+
+function useCacheData(cacheData: CacheData) {
+  const client = useMakeswiftHostApiClient()
+
+  if (isServer) {
+    client.makeswiftApiClient.dispatch(updateAPIClientCache(cacheData))
+  }
+
+  useEffect(() => {
+    client.makeswiftApiClient.dispatch(updateAPIClientCache(cacheData))
+  }, [cacheData, client])
+}
+
+function useRegisterPageDocument(pageDocument: MakeswiftPageDocument): ReactPage.Document {
+  const dispatch = useDispatch()
+
+  const rootDocument = useMemo(() => pageToRootDocument(pageDocument), [pageDocument])
+  useEffect(() => dispatch(registerDocumentsEffect([rootDocument])), [rootDocument])
+  return rootDocument
 }
 
 export const Page = memo(({ snapshot, ...props }: PageProps) => {
@@ -18,34 +50,19 @@ export const Page = memo(({ snapshot, ...props }: PageProps) => {
 See our docs for more information on what's changed and instructions to migrate: https://docs.makeswift.com/migrations/0.15.0`,
     )
   }
-  const client = useMemo(
-    () =>
-      new MakeswiftHostApiClient({
-        uri: new URL('graphql', snapshot.apiOrigin).href,
-        cacheData: snapshot.cacheData,
-        localizedResourcesMap: snapshot.localizedResourcesMap,
-        locale: snapshot.locale ? new Intl.Locale(snapshot.locale) : undefined,
-      }),
-    [snapshot],
-  )
 
-  const localizedPage = snapshot.document.localizedPages.find(({ parentId }) => parentId == null)
-  const rootElement = localizedPage
-    ? { key: localizedPage.elementTreeId, data: localizedPage.data }
-    : { key: snapshot.document.id, data: snapshot.document.data }
+  useCacheData(snapshot.cacheData)
 
-  const rootElements = new Map([[rootElement.key, rootElement.data]])
+  const rootDocument = useRegisterPageDocument(snapshot.document)
 
   return (
     <Suspense>
-      <RuntimeProvider client={client} rootElements={rootElements} preview={snapshot.preview}>
-        {/* We use a key here to reset the Snippets state in the PageMeta component */}
-        <PageMeta
-          key={snapshot.document.data.key}
-          pageDocument={snapshot.document}
-          documentKey={rootElement.key}
-        />
-      </RuntimeProvider>
+      {/* We use a key here to reset the Snippets state in the PageMeta component */}
+      <PageComponent
+        key={snapshot.document.data.key}
+        page={snapshot.document}
+        rootDocument={rootDocument}
+      />
     </Suspense>
   )
 })

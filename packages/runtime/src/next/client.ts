@@ -20,7 +20,8 @@ import {
   TableQueryResult,
   TableQueryVariables,
 } from '../api/graphql/generated/types'
-import { CacheData, SerializedLocalizedResourcesMap } from '../api/react'
+
+import { type CacheData } from '../api/react'
 import { Descriptor as PropControllerDescriptor } from '../prop-controllers/descriptors'
 import {
   getElementChildren,
@@ -32,11 +33,12 @@ import {
 } from '../prop-controllers/introspection'
 import { ReactRuntime } from '../runtimes/react'
 import {
-  Element,
-  ElementData,
+  type Element,
+  type ElementData,
+  type Data,
+  type Document,
   getPropControllerDescriptors,
   isElementReference,
-  Data,
 } from '../state/react-page'
 import { getMakeswiftSiteVersion, MakeswiftSiteVersion } from './preview-mode'
 import { toIterablePaginationResult } from './utils/pagination'
@@ -119,13 +121,17 @@ export type MakeswiftPageDocument = {
   locale: string | null
 }
 
+export function pageToRootDocument(pageDocument: MakeswiftPageDocument): Document {
+  const { locale, localizedPages, id, data } = pageDocument
+  const localizedPage = localizedPages.find(({ parentId }) => parentId == null)
+  return localizedPage
+    ? { key: localizedPage.elementTreeId, rootElement: localizedPage.data, locale }
+    : { key: id, rootElement: data, locale }
+}
+
 export type MakeswiftPageSnapshot = {
   document: MakeswiftPageDocument
-  apiOrigin: string
   cacheData: CacheData
-  preview: boolean
-  localizedResourcesMap: SerializedLocalizedResourcesMap
-  locale: string | null
 }
 
 type Snippet = {
@@ -217,6 +223,10 @@ export class Makeswift {
 
   static getSiteVersion(previewData: PreviewData): MakeswiftSiteVersion {
     return getMakeswiftSiteVersion(previewData) ?? MakeswiftSiteVersion.Live
+  }
+
+  static getPreviewMode(previewData: PreviewData): boolean {
+    return getMakeswiftSiteVersion(previewData) === MakeswiftSiteVersion.Working
   }
 
   constructor(
@@ -381,7 +391,7 @@ export class Makeswift {
     element: Element,
     siteVersion: MakeswiftSiteVersion,
     locale?: string,
-  ): Promise<{ cacheData: CacheData; localizedResourcesMap: SerializedLocalizedResourcesMap }> {
+  ): Promise<CacheData> {
     const runtime = this.runtime
     const descriptors = getPropControllerDescriptors(runtime.store.getState())
     const swatchIds = new Set<string>()
@@ -488,7 +498,7 @@ export class Makeswift {
       siteVersion,
     )
 
-    const cacheData = {
+    const apiResources = {
       [APIResourceType.Swatch]: [...swatchIds].map(id => ({
         id,
         value: swatches.find(swatch => swatch?.id === id) ?? null,
@@ -508,6 +518,7 @@ export class Makeswift {
       [APIResourceType.PagePathnameSlice]: [...pageIds].map(id => ({
         id,
         value: pagePathnames.find(pagePathnameSlice => pagePathnameSlice?.id === id) ?? null,
+        locale,
       })),
       [APIResourceType.GlobalElement]: [...globalElements.entries()].map(([id, value]) => ({
         id,
@@ -517,11 +528,16 @@ export class Makeswift {
         ([id, value]) => ({
           id,
           value,
+          locale,
         }),
       ),
     }
 
-    return { cacheData, localizedResourcesMap: Object.fromEntries(localizedResourcesMap.entries()) }
+    return {
+      apiResources,
+      localizedResourcesMap:
+        locale != null ? { [locale]: Object.fromEntries(localizedResourcesMap.entries()) } : {},
+    }
   }
 
   async getPageSnapshot(
@@ -547,25 +563,16 @@ export class Makeswift {
 
     const document: MakeswiftPageDocument = await response.json()
     const baseLocalizedPage = document.localizedPages.find(({ parentId }) => parentId == null)
-    // We're using the locale from the response instead from the arg because in the server
-    // we make the locale null if the locale === defaultLocale.
-    const locale = document.locale
 
-    const { cacheData, localizedResourcesMap } = await this.introspect(
+    const cacheData = await this.introspect(
       baseLocalizedPage?.data ?? document.data,
       siteVersion,
-      locale ?? undefined,
+      localeInput,
     )
-    const apiOrigin = this.apiOrigin.href
-    const preview = siteVersion === MakeswiftSiteVersion.Working
 
     return {
       document,
       cacheData,
-      apiOrigin,
-      preview,
-      localizedResourcesMap,
-      locale,
     }
   }
 

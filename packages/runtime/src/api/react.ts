@@ -19,20 +19,7 @@ import {
   CreateTableRecordMutationVariables,
 } from './graphql/generated/types'
 
-export type SerializedLocalizedResourcesMap = {
-  [resourceId: string]: string | null
-}
-
-type LocalizedResourcesMap = Map<string, string | null>
-
 export type CacheData = MakeswiftApiClient.SerializedState
-
-export type MakeswiftClientOptions = {
-  uri: string
-  cacheData?: CacheData
-  localizedResourcesMap?: SerializedLocalizedResourcesMap
-  locale?: Intl.Locale
-}
 
 /**
  * NOTE(miguel): This "client" is used to fetch Makeswift API resources needed for the host. For
@@ -57,15 +44,15 @@ export class MakeswiftHostApiClient {
   graphqlClient: GraphQLClient
   makeswiftApiClient: MakeswiftApiClient.Store
   subscribe: MakeswiftApiClient.Store['subscribe']
-  private localizedResourcesMap: LocalizedResourcesMap
-  private locale: Intl.Locale | undefined
 
-  constructor({ uri, cacheData, localizedResourcesMap = {}, locale }: MakeswiftClientOptions) {
+  constructor({ uri, cacheData, locale }: { uri: string; cacheData?: CacheData; locale?: string }) {
     this.graphqlClient = new GraphQLClient(uri)
-    this.makeswiftApiClient = MakeswiftApiClient.configureStore({ serializedState: cacheData })
+    this.makeswiftApiClient = MakeswiftApiClient.configureStore({
+      serializedState: cacheData,
+      defaultLocale: locale,
+    })
+
     this.subscribe = this.makeswiftApiClient.subscribe
-    this.localizedResourcesMap = new Map(Object.entries(localizedResourcesMap))
-    this.locale = locale
   }
 
   readSwatch(swatchId: string): Swatch | null {
@@ -124,67 +111,61 @@ export class MakeswiftHostApiClient {
     )
   }
 
-  readLocalizedGlobalElement(globalElementId: string): LocalizedGlobalElement | null {
-    const localizedGlobalElementId = this.getLocalizedResourceId(globalElementId)
-
-    if (localizedGlobalElementId == null) return null
-
+  readLocalizedGlobalElement({
+    globalElementId,
+    locale,
+  }: {
+    globalElementId: string
+    locale: string
+  }): LocalizedGlobalElement | null {
     return MakeswiftApiClient.getAPIResource(
       this.makeswiftApiClient.getState(),
       APIResourceType.LocalizedGlobalElement,
-      localizedGlobalElementId,
+      globalElementId,
+      locale,
     )
   }
 
-  async fetchLocalizedGlobalElement(
-    globalElementId: string,
-  ): Promise<LocalizedGlobalElement | null> {
-    const locale = this.locale
-
-    if (locale == null) return null
-
-    // If getLocalizedResourceId returns null, it means we have tried to fetch the resource,
-    // but the resource is not available. If we haven't fetched it yet, it'll return undefined.
-    const noLocalizedResource = this.getLocalizedResourceId(globalElementId) === null
-
-    if (noLocalizedResource) return null
-
-    // TODO(fikri): We're checking the cache here because the cache hit will fail on fetchAPIResource.
-    // This is because in the cache we're saving the ID of the localizedGlobalElementId,
-    // but we're reading the cache using the globalElementId.
-    // This is very confusing and it can lead to more bugs. We need to refactor how we handle
-    // localized global element.
-    const cacheResult = this.readLocalizedGlobalElement(globalElementId)
-
-    if (cacheResult) return cacheResult
-
-    const result = await this.makeswiftApiClient.dispatch(
+  async fetchLocalizedGlobalElement({
+    globalElementId,
+    locale,
+  }: {
+    globalElementId: string
+    locale: string
+  }): Promise<LocalizedGlobalElement | null> {
+    return await this.makeswiftApiClient.dispatch(
       MakeswiftApiClient.fetchAPIResource(
         APIResourceType.LocalizedGlobalElement,
         globalElementId,
         locale,
       ),
     )
-
-    this.setLocalizedResourceId({
-      resourceId: globalElementId,
-      localizedResourceId: result?.id ?? null,
-    })
-
-    return result
   }
 
-  readPagePathnameSlice(pageId: string): PagePathnameSlice | null {
+  readPagePathnameSlice({
+    pageId,
+    locale,
+  }: {
+    pageId: string
+    locale: string | null
+  }): PagePathnameSlice | null {
     return MakeswiftApiClient.getAPIResource(
       this.makeswiftApiClient.getState(),
       APIResourceType.PagePathnameSlice,
       pageId,
+      locale,
     )
   }
 
-  async fetchPagePathnameSlice(pageId: string): Promise<PagePathnameSlice | null> {
+  async fetchPagePathnameSlice({
+    pageId,
+    locale,
+  }: {
+    pageId: string
+    locale: string | null
+  }): Promise<PagePathnameSlice | null> {
     return await this.makeswiftApiClient.dispatch(
-      MakeswiftApiClient.fetchAPIResource(APIResourceType.PagePathnameSlice, pageId, this.locale),
+      MakeswiftApiClient.fetchAPIResource(APIResourceType.PagePathnameSlice, pageId, locale),
     )
   }
 
@@ -231,19 +212,5 @@ export class MakeswiftHostApiClient {
       APIResourceType.Snippet,
       snippetId,
     )
-  }
-
-  private getLocalizedResourceId(resourceId: string): string | undefined | null {
-    return this.localizedResourcesMap?.get(resourceId)
-  }
-
-  setLocalizedResourceId({
-    resourceId,
-    localizedResourceId,
-  }: {
-    resourceId: string
-    localizedResourceId: string | null
-  }): void {
-    this.localizedResourcesMap.set(resourceId, localizedResourceId)
   }
 }
