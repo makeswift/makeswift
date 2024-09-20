@@ -70,7 +70,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
     ],
     ROOT_ID,
   )
-  const snapshot = createMakeswiftPageSnapshot(elementData, {}, cacheData)
+  const snapshot = createMakeswiftPageSnapshot(elementData, { cacheData })
   const runtime = new ReactRuntime()
   registerComponents?.(runtime)
 
