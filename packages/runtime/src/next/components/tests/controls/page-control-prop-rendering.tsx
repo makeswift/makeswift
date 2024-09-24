@@ -35,6 +35,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
   {
     toData,
     value,
+    locale,
     cacheData,
     expectedRenders,
     registerComponents,
@@ -43,6 +44,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
   }: {
     toData?: (value: ValueType<D>) => DataType<D>
     value: ValueType<D> | undefined
+    locale?: string | null
     cacheData?: MakeswiftPageSnapshot['cacheData']
     expectedRenders?: number
     registerComponents?: (runtime: ReactRuntime) => void
@@ -70,7 +72,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
     ],
     ROOT_ID,
   )
-  const snapshot = createMakeswiftPageSnapshot(elementData, { cacheData })
+  const snapshot = createMakeswiftPageSnapshot(elementData, { locale, cacheData })
   const runtime = new ReactRuntime()
   registerComponents?.(runtime)
 
