@@ -15,12 +15,19 @@ const Button = forwardRef(function Button({ id }: { id?: string }, _ref) {
 
 const pathnameSlicesBaseUrl = `/api/makeswift/page-pathname-slices`
 
-const pageId = 'fake-page-id'
+const pageId = '[test-page-id]'
 
 const pagePathnameSlice = {
   __typename: APIResourceType.PagePathnameSlice,
   id: pageId,
-  pathname: 'fake-pathname',
+  pathname: 'test-pathname',
+}
+
+const localizedPagePathnameSlice = {
+  __typename: APIResourceType.PagePathnameSlice,
+  id: pageId,
+  basePageId: '[test-base-page-id]',
+  pathname: 'fr-FR/test-localized-pathname',
 }
 
 const openPageLink = {
@@ -59,10 +66,13 @@ describe('Page', () => {
     },
   )
 
-  describe('Link control data OPEN_PAGE', () => {
+  describe.each([null, 'fr-FR'])('Link control data OPEN_PAGE for locale %s', locale => {
+    const pathnameSlice = locale ? localizedPagePathnameSlice : pagePathnameSlice
+
     test('resolves default link attributes when unable to find pathname slice', async () => {
       await testPageControlPropRendering(Link(), {
         value: openPageLink,
+        locale,
         cacheData: {
           PagePathnameSlice: [{ id: pageId, value: null }],
         },
@@ -71,12 +81,16 @@ describe('Page', () => {
 
     test('fetches pathname slice when not in cache', async () => {
       server.use(
-        http.get(`${pathnameSlicesBaseUrl}/${openPageLink.payload.pageId}`, () =>
-          HttpResponse.json(pagePathnameSlice),
-        ),
+        http.get(`${pathnameSlicesBaseUrl}/${openPageLink.payload.pageId}`, ({ request }) => {
+          const requestedLocale = new URL(request.url).searchParams.get('locale')
+          return requestedLocale === locale
+            ? HttpResponse.json(pathnameSlice)
+            : HttpResponse.json(null)
+        }),
       )
       await testPageControlPropRendering(Link(), {
         value: openPageLink,
+        locale,
         expectedRenders: 2,
       })
     })
@@ -84,8 +98,9 @@ describe('Page', () => {
     test('renders page link when page pathname slice is in cache', async () => {
       await testPageControlPropRendering(Link(), {
         value: openPageLink,
+        locale,
         cacheData: {
-          PagePathnameSlice: [{ id: pageId, value: pagePathnameSlice }],
+          PagePathnameSlice: [{ id: pageId, value: pathnameSlice }],
         },
         expectedRenders: 1,
       })
@@ -117,7 +132,7 @@ describe('Page', () => {
             key: 'key',
             type: MakeswiftComponentType.Button,
             props: {
-              id: 'fake-element-id',
+              id: 'test-element-id',
             },
           },
         ],
