@@ -1,2 +1,2 @@
-export * from './graphql/types'
-export * from './graphql/fragments'
+export * from './types'
+export * from './fragments'
