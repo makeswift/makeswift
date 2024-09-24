@@ -13,7 +13,7 @@ import { PropControllerDescriptor } from '../prop-controllers'
 import type { Size } from './react-builder-preview'
 import type { PropControllersHandle } from './modules/prop-controller-handles'
 import type { PropControllerMessage } from '../prop-controllers/instances'
-import type { APIResource, APIResourceType } from '../api/graphql/types'
+import type { APIResource, APIResourceType, APIResourceLocale } from '../api/types'
 import type { SerializedControl } from '../builder'
 import { ElementImperativeHandle } from '../runtimes/react/element-imperative-handle'
 import { BuilderEditMode } from './modules/builder-edit-mode'
@@ -265,12 +265,12 @@ type MessageBuilderPropControllerAction<T = PropControllerMessage> = {
 
 type ChangeAPIResourceAction = {
   type: typeof ActionTypes.CHANGE_API_RESOURCE
-  payload: { resource: APIResource }
+  payload: { resource: APIResource; locale?: string | null }
 }
 
 type EvictAPIResourceAction = {
   type: typeof ActionTypes.EVICT_API_RESOURCE
-  payload: { id: string }
+  payload: { id: string; locale?: string | null }
 }
 
 type SetIsInBuilderAction = {
@@ -290,7 +290,12 @@ type HandlePointerMoveAction = {
 
 type APIResourceFulfilledAction = {
   type: typeof ActionTypes.API_RESOURCE_FULFILLED
-  payload: { resourceType: APIResourceType; resourceId: string; resource: APIResource | null }
+  payload: {
+    resourceType: APIResourceType
+    resourceId: string
+    resource: APIResource | null
+    locale?: string | null
+  }
 }
 
 type SetBuilderEditModeAction = {
@@ -671,12 +676,15 @@ export function messageBuilderPropController<T>(
   }
 }
 
-export function changeApiResource(resource: APIResource): ChangeAPIResourceAction {
-  return { type: ActionTypes.CHANGE_API_RESOURCE, payload: { resource } }
+export function changeApiResource<R extends APIResource>(
+  resource: R,
+  locale?: APIResourceLocale<R>,
+): ChangeAPIResourceAction {
+  return { type: ActionTypes.CHANGE_API_RESOURCE, payload: { resource, locale } }
 }
 
-export function evictApiResource(id: string): EvictAPIResourceAction {
-  return { type: ActionTypes.EVICT_API_RESOURCE, payload: { id } }
+export function evictApiResource(id: string, locale?: string | null): EvictAPIResourceAction {
+  return { type: ActionTypes.EVICT_API_RESOURCE, payload: { id, locale } }
 }
 
 export function setIsInBuilder(isInBuilder: boolean): SetIsInBuilderAction {
@@ -694,14 +702,15 @@ export function handlePointerMove(payload: {
   return { type: ActionTypes.HANDLE_POINTER_MOVE, payload }
 }
 
-export function apiResourceFulfilled(
-  resourceType: APIResourceType,
+export function apiResourceFulfilled<T extends APIResourceType>(
+  resourceType: T,
   resourceId: string,
   resource: APIResource | null,
+  locale?: APIResourceLocale<T>,
 ): APIResourceFulfilledAction {
   return {
     type: ActionTypes.API_RESOURCE_FULFILLED,
-    payload: { resourceType, resourceId, resource },
+    payload: { resourceType, resourceId, resource, locale },
   }
 }
 

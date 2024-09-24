@@ -12,7 +12,7 @@ import {
   Swatch,
   Table,
   Typography,
-} from './graphql/types'
+} from './types'
 import { GraphQLClient } from './graphql/client'
 import { CreateTableRecordMutation } from './graphql/documents'
 import {
