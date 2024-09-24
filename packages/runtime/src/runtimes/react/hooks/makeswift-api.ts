@@ -6,11 +6,12 @@ import {
   File,
   GlobalElement,
   LocalizedGlobalElement,
+  PagePathnameSlice,
   Swatch,
   Table,
   Typography,
 } from '../../../api'
-import { PagePathnameSlice } from '../../../api/resource-types'
+
 import { useMakeswiftHostApiClient } from '../../../next/context/makeswift-host-api-client'
 
 export function useSwatch(swatchId: string | null): Swatch | null {
