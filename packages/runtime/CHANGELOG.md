@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.20.6-canary.0
+
+### Patch Changes
+
+- 4203ec3: Validate registered component types at runtime
+
 ## 0.20.5
 
 ### Patch Changes
