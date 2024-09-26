@@ -17,24 +17,32 @@ export function createDocumentReference(key: string): DocumentReference {
   return { key }
 }
 
+export const DESERIALIZED_PAGES_COLLECTION = 'deserialized_pages' as const
+export const ELEMENT_TREE_COLLECTION = 'element_tree' as const
+
+type DeserializedPagesCollection = typeof DESERIALIZED_PAGES_COLLECTION
+type ElementTreeCollection = typeof ELEMENT_TREE_COLLECTION
+
+type DocumentCollection = DeserializedPagesCollection | ElementTreeCollection
+
 export type Document = {
   key: string
   rootElement: Element
+  type?: string
+  collection?: DocumentCollection
 }
 
-export function createDocument(key: string, rootElement: Element): Document {
-  return { key, rootElement }
+export function createDocument(document: Document): Document {
+  return document
 }
 
 export type State = Map<string, Document>
 
-export function getInitialState({
-  rootElements = new Map(),
-}: { rootElements?: Map<string, Element> } = {}): State {
+export function getInitialState({ documents = [] }: { documents?: Document[] } = {}): State {
   const initialState = new Map()
 
-  rootElements.forEach((rootElement, documentKey) => {
-    initialState.set(documentKey, createDocument(documentKey, rootElement))
+  documents.forEach(document => {
+    initialState.set(document.key, createDocument(document))
   })
 
   return initialState

@@ -2,6 +2,7 @@ export type { Action } from './state/actions'
 export { ActionTypes, changeDocument } from './state/actions'
 export {
   Element,
+  Unstable_MakeswiftComponent,
   RuntimeProvider,
   ReactRuntime,
   useIsInBuilder,

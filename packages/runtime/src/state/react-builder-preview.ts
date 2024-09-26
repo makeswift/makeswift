@@ -754,17 +754,17 @@ function withSetupTeardown(
 }
 
 export function configureStore({
-  rootElements,
+  documents,
   preloadedState,
   client,
 }: {
-  rootElements?: Map<string, Documents.Element>
+  documents?: ReactPage.Document[]
   preloadedState?: PreloadedState<State>
   client: MakeswiftHostApiClient
 }): Store {
   const initialState: PreloadedState<State> = {
     ...preloadedState,
-    documents: Documents.getInitialState({ rootElements }),
+    documents: Documents.getInitialState({ documents }),
     isPreview: IsPreview.getInitialState(true),
   }
 

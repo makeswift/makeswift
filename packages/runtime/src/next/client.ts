@@ -40,6 +40,11 @@ import {
 } from '../state/react-page'
 import { getMakeswiftSiteVersion, MakeswiftSiteVersion } from './preview-mode'
 import { toIterablePaginationResult } from './utils/pagination'
+import {
+  MakeswiftComponentDocument,
+  MakeswiftComponentSnapshot,
+} from '../runtimes/react/components/MakeswiftComponent'
+import { randomUUID } from 'crypto'
 
 const makeswiftPageResultSchema = z.object({
   id: z.string(),
@@ -558,6 +563,75 @@ export class Makeswift {
     )
     const apiOrigin = this.apiOrigin.href
     const preview = siteVersion === MakeswiftSiteVersion.Working
+
+    return {
+      document,
+      cacheData,
+      apiOrigin,
+      preview,
+      localizedResourcesMap,
+      locale,
+    }
+  }
+
+  async unstable_getComponentSnapshot({
+    type,
+    key,
+    siteVersion,
+    locale: localeInput,
+  }: {
+    type: string
+    key: string
+    siteVersion: MakeswiftSiteVersion
+    locale?: string
+  }): Promise<MakeswiftComponentSnapshot> {
+    const locale = localeInput ?? null
+    const searchParams = new URLSearchParams({
+      key,
+      type,
+    })
+    if (localeInput) {
+      searchParams.set('locale', localeInput)
+    }
+
+    const response = await this.fetch(`v1/element_trees?${searchParams.toString()}`, siteVersion)
+
+    const apiOrigin = this.apiOrigin.href
+    const preview = siteVersion === MakeswiftSiteVersion.Working
+
+    if (response.status === 404) {
+      const documentId = randomUUID()
+
+      const emptyElementData: ElementData = {
+        key: documentId,
+        type: type,
+        props: {},
+      }
+
+      return {
+        document: {
+          id: documentId,
+          type,
+          key,
+          data: emptyElementData,
+          siteId: 'siteId',
+        },
+        cacheData: {},
+        apiOrigin,
+        preview,
+        localizedResourcesMap: {},
+        locale,
+      }
+    }
+
+    if (!response.ok) {
+      console.error('Failed to get page snapshot', await response.json())
+      throw new Error(`Failed to get page snapshot with error: "${response.statusText}"`)
+    }
+
+    const document: MakeswiftComponentDocument = await response.json()
+
+    const { cacheData, localizedResourcesMap } = await this.introspect(document.data, siteVersion)
 
     return {
       document,

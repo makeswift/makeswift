@@ -8,15 +8,15 @@ import { MakeswiftHostApiClientProvider } from '../../../next/context/makeswift-
 
 type Props = {
   client: MakeswiftHostApiClient
-  rootElements?: Map<string, ReactPage.Element>
+  documents?: ReactPage.Document[]
   children?: ReactNode
 }
 
-export default function LiveProvider({ client, children, rootElements }: Props): JSX.Element {
+export default function LiveProvider({ client, children, documents }: Props): JSX.Element {
   const runtime = useReactRuntime()
   const store = useMemo(
-    () => ReactPage.configureStore({ preloadedState: runtime.store.getState(), rootElements }),
-    [rootElements, runtime],
+    () => ReactPage.configureStore({ preloadedState: runtime.store.getState(), documents }),
+    [documents, runtime],
   )
 
   return (

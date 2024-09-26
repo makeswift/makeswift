@@ -4,6 +4,7 @@ import { applyMiddleware, createStore } from 'redux'
 import { propControllerHandlesMiddleware, reducer } from './react-builder-preview'
 import thunk from 'redux-thunk'
 import * as ReactPage from './react-page'
+import { DESERIALIZED_PAGES_COLLECTION } from './modules/read-only-documents'
 
 describe('propControllerHandlesMiddleware', () => {
   it('registers prop controllers for element data', () => {
@@ -16,7 +17,15 @@ describe('propControllerHandlesMiddleware', () => {
 
     handle.callback(() => ({ setPropControllers }))
 
-    store.dispatch(registerDocument(ReactPage.createDocument(documentKey, element)))
+    store.dispatch(
+      registerDocument(
+        ReactPage.createDocument({
+          key: documentKey,
+          rootElement: element,
+          collection: DESERIALIZED_PAGES_COLLECTION,
+        }),
+      ),
+    )
 
     // Act
     store.dispatch(registerComponentHandle(documentKey, element.key, handle))
@@ -35,7 +44,15 @@ describe('propControllerHandlesMiddleware', () => {
 
     handle.callback(() => ({ setPropControllers }))
 
-    store.dispatch(registerDocument(ReactPage.createDocument(documentKey, element)))
+    store.dispatch(
+      registerDocument(
+        ReactPage.createDocument({
+          key: documentKey,
+          rootElement: element,
+          collection: DESERIALIZED_PAGES_COLLECTION,
+        }),
+      ),
+    )
 
     // Act
     store.dispatch(registerComponentHandle(documentKey, element.key, handle))

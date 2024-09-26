@@ -31,11 +31,11 @@ function apply(data: ReadOnlyDocuments.Element, operation: Operation): ReadOnlyD
 export type State = ReadOnlyDocuments.State
 
 export function getInitialState({
-  rootElements,
+  documents,
 }: {
-  rootElements?: Map<string, ReadOnlyDocuments.Element>
+  documents?: ReadOnlyDocuments.Document[]
 } = {}): State {
-  return ReadOnlyDocuments.getInitialState({ rootElements })
+  return ReadOnlyDocuments.getInitialState({ documents })
 }
 
 function getReadOnlyDocumentsStateSlice(state: State): ReadOnlyDocuments.State {
@@ -55,21 +55,47 @@ export function reducer(state: State = getInitialState(), action: Action): State
 
   switch (action.type) {
     case ActionTypes.CHANGE_DOCUMENT: {
-      const currentRootElement = getDocument(nextState, action.payload.documentKey)?.rootElement
+      const document = getDocument(nextState, action.payload.documentKey)
 
-      if (currentRootElement == null) return nextState
+      if (document == null) return nextState
 
+      const currentRootElement = document.rootElement
       const nextRootElement = apply(currentRootElement, action.payload.operation)
 
       return currentRootElement === nextRootElement
         ? nextState
         : new Map(nextState).set(
             action.payload.documentKey,
-            ReadOnlyDocuments.createDocument(action.payload.documentKey, nextRootElement),
+            ReadOnlyDocuments.createDocument({ ...document, rootElement: nextRootElement }),
           )
     }
 
     default:
       return nextState
   }
+}
+
+export function encodeDocumentIdV1({
+  id,
+  type,
+  key,
+  branch,
+}: {
+  id: string
+  type: string
+  key: string
+  branch?: string
+}): string {
+  return `v1:${id}:${type}:${key}:${branch}`
+}
+
+export function decodeDocumentId(documentId: string): {
+  id: string
+  type: string
+  key: string
+  branch: string
+} {
+  const [_version, id, type, key, branch] = documentId.split(':')
+
+  return { id, type, key, branch }
 }

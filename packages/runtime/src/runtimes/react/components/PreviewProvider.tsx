@@ -13,20 +13,20 @@ import { MakeswiftHostApiClientProvider } from '../../../next/context/makeswift-
 
 type Props = {
   client: MakeswiftHostApiClient
-  rootElements?: Map<string, ReactPage.Element>
+  documents?: ReactPage.Document[]
   children?: ReactNode
 }
 
-export default function PreviewProvider({ client, children, rootElements }: Props): JSX.Element {
+export default function PreviewProvider({ client, children, documents }: Props): JSX.Element {
   const runtime = useReactRuntime()
   const store = useMemo(
     () =>
       ReactBuilderPreview.configureStore({
         preloadedState: runtime ? runtime.store.getState() : ReactRuntime.store.getState(),
-        rootElements,
+        documents,
         client,
       }),
-    [client, rootElements, runtime],
+    [client, documents, runtime],
   )
 
   useEffect(() => {
@@ -35,9 +35,8 @@ export default function PreviewProvider({ client, children, rootElements }: Prop
   }, [store])
 
   useEffect(() => {
-    const unregisterDocuments = Array.from(rootElements?.entries() ?? []).map(
-      ([documentKey, rootElement]) =>
-        store.dispatch(registerDocumentEffect(ReactPage.createDocument(documentKey, rootElement))),
+    const unregisterDocuments = (documents ?? []).map(document =>
+      store.dispatch(registerDocumentEffect(ReactPage.createDocument(document))),
     )
 
     return () => {
@@ -45,7 +44,7 @@ export default function PreviewProvider({ client, children, rootElements }: Prop
         unregisterDocument()
       })
     }
-  }, [store, rootElements])
+  }, [store, documents])
 
   return (
     <StoreContext.Provider value={store}>

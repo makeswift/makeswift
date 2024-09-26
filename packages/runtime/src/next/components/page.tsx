@@ -6,6 +6,7 @@ import { RuntimeProvider } from '../../runtimes/react'
 import { Page as PageMeta } from '../../components/page'
 import { MakeswiftHostApiClient } from '../../api/react'
 import { MakeswiftPageSnapshot } from '../client'
+import { DESERIALIZED_PAGES_COLLECTION } from '../../state/modules/read-only-documents'
 
 export type PageProps = {
   snapshot: MakeswiftPageSnapshot
@@ -34,11 +35,17 @@ See our docs for more information on what's changed and instructions to migrate:
     ? { key: localizedPage.elementTreeId, data: localizedPage.data }
     : { key: snapshot.document.id, data: snapshot.document.data }
 
-  const rootElements = new Map([[rootElement.key, rootElement.data]])
+  const documents = [
+    {
+      key: rootElement.key,
+      rootElement: rootElement.data,
+      collection: DESERIALIZED_PAGES_COLLECTION,
+    },
+  ]
 
   return (
     <Suspense>
-      <RuntimeProvider client={client} rootElements={rootElements} preview={snapshot.preview}>
+      <RuntimeProvider client={client} documents={documents} preview={snapshot.preview}>
         {/* We use a key here to reset the Snippets state in the PageMeta component */}
         <PageMeta
           key={snapshot.document.data.key}
