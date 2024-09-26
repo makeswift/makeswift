@@ -9,6 +9,15 @@ import type { ComponentType } from '../../state/react-page'
 
 import { RuntimeCore } from './runtime-core'
 
+function validateComponentType(type: string, component?: ComponentType): void {
+  const componentName = component?.name ?? 'Component'
+  if (typeof type !== 'string' || type === '') {
+    throw new Error(
+      `${componentName}: A non-empty string \`type\` is required for component registration, got ${type}`,
+    )
+  }
+}
+
 export class ReactRuntime extends RuntimeCore {
   // TODO: the static methods here are deprecated and only keep here for backward-compatibility purpose.
   // We will remove them when we release a new breaking change.
@@ -26,6 +35,8 @@ export class ReactRuntime extends RuntimeCore {
       props,
     }: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P },
   ): () => void {
+    validateComponentType(type, component as unknown as ComponentType)
+
     const unregisterComponent = this.store.dispatch(
       registerComponentEffect(type, { label, icon, hidden }, props ?? {}),
     )
@@ -55,6 +66,8 @@ export class ReactRuntime extends RuntimeCore {
       props,
     }: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P },
   ): () => void {
+    validateComponentType(type, component as unknown as ComponentType)
+
     const unregisterComponent = this.store.dispatch(
       registerComponentEffect(type, { label, icon, hidden }, props ?? {}),
     )
