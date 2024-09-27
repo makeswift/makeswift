@@ -44,13 +44,13 @@ export function Unstable_MakeswiftComponent({ snapshot }: Props): JSX.Element {
   )
 
   const { document } = snapshot
-  const rootElement = { key: document.id, data: document.data }
-  const rootElements = new Map([[rootElement.key, rootElement.data]])
+  const documentKey = document.id
+  const rootElements = new Map([[documentKey, document.data]])
   const embeddedComponents = new Map([
     [
-      document.key,
+      documentKey,
       {
-        documentKey: document.key,
+        documentKey: documentKey,
         key: document.key,
         type: document.type,
         rootElement: document.data,
@@ -66,7 +66,7 @@ export function Unstable_MakeswiftComponent({ snapshot }: Props): JSX.Element {
         embeddedComponents={embeddedComponents}
         preview={snapshot.preview}
       >
-        <DocumentReference documentReference={createDocumentReference(rootElement.key)} />
+        <DocumentReference documentReference={createDocumentReference(documentKey)} />
       </RuntimeProvider>
     </Suspense>
   )

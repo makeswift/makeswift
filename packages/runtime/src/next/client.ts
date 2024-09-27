@@ -594,7 +594,7 @@ export class Makeswift {
     const preview = siteVersion === MakeswiftSiteVersion.Working
 
     if (response.status === 404) {
-      const id = deterministicUUID({
+      const documentKey = deterministicUUID({
         type,
         key,
         locale,
@@ -603,13 +603,13 @@ export class Makeswift {
       })
 
       const emptyElementData: ElementData = {
-        key: deterministicUUID(id),
+        key: deterministicUUID(documentKey),
         type: type,
         props: {},
       }
 
       return {
-        document: { id, type, key, data: emptyElementData },
+        document: { id: documentKey, type, key, data: emptyElementData },
         cacheData: {},
         apiOrigin,
         preview,
