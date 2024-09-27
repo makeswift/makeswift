@@ -27,6 +27,7 @@ import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Pointer from './modules/pointer'
 import * as ElementImperativeHandles from './modules/element-imperative-handles'
 import * as Breakpoints from './modules/breakpoints'
+import * as EmbeddedComponents from './modules/embedded-components'
 import * as ReactPage from './react-page'
 import {
   Action,
@@ -48,6 +49,8 @@ import {
   unregisterMeasurable,
   unregisterPropControllers,
   registerBuilderDocument,
+  registerBuilderEmbeddedComponent,
+  unregisterBuilderEmbeddedComponent,
 } from './actions'
 import { ActionTypes } from './actions'
 import { createPropController } from '../prop-controllers/instances'
@@ -72,6 +75,7 @@ export const reducer = combineReducers({
   pointer: Pointer.reducer,
   elementImperativeHandles: ElementImperativeHandles.reducer,
   breakpoints: Breakpoints.reducer,
+  embeddedComponents: EmbeddedComponents.reducer,
 })
 
 export type State = ReturnType<typeof reducer>
@@ -124,6 +128,10 @@ function getComponentPropControllerDescriptors(
 
 function getPropControllerHandlesStateSlice(state: State): PropControllerHandles.State {
   return state.propControllerHandles
+}
+
+function getEmbeddedComponentsStateSlice(state: State): EmbeddedComponents.State {
+  return state.embeddedComponents
 }
 
 function getPointer(state: State): Pointer.Point | null {
@@ -447,6 +455,24 @@ function registerBuilderDocuments(): ThunkAction<() => void, State, unknown, Act
   }
 }
 
+function registerBuilderEmbeddedComponents(): ThunkAction<() => void, State, unknown, Action> {
+  return (dispatch, getState) => {
+    const embeddedComponents = EmbeddedComponents.getEmbeddedComponents(
+      getEmbeddedComponentsStateSlice(getState()),
+    )
+
+    embeddedComponents.forEach(embeddedComponent => {
+      dispatch(registerBuilderEmbeddedComponent(embeddedComponent))
+    })
+
+    return () => {
+      embeddedComponents.forEach(embeddedComponent => {
+        dispatch(unregisterBuilderEmbeddedComponent(embeddedComponent.documentKey))
+      })
+    }
+  }
+}
+
 export interface IMessageChannel {
   postMessage(message: any, transferables?: Transferable[]): void
   dispatchBuffered(): void
@@ -456,6 +482,7 @@ export function initialize(
   channel: IMessageChannel,
 ): ThunkAction<() => void, State, unknown, Action> {
   return (dispatch, getState) => {
+    const unregisterBuilderEmbeddedComponents = dispatch(registerBuilderEmbeddedComponents())
     const unregisterBuilderDocuments = dispatch(registerBuilderDocuments())
     const stopMeasuringElements = dispatch(startMeasuringElements())
     const stopMeasuringDocumentElement = dispatch(startMeasuringDocumentElement())
@@ -471,6 +498,7 @@ export function initialize(
     channel.dispatchBuffered()
 
     return () => {
+      unregisterBuilderEmbeddedComponents()
       unregisterBuilderDocuments()
       stopMeasuringElements()
       stopMeasuringDocumentElement()
@@ -538,6 +566,8 @@ export function messageChannelMiddleware(
           case ActionTypes.SET_BREAKPOINTS:
           case ActionTypes.REGISTER_BUILDER_DOCUMENT:
           case ActionTypes.UNREGISTER_BUILDER_DOCUMENT:
+          case ActionTypes.REGISTER_BUILDER_EMBEDDED_COMPONENT:
+          case ActionTypes.UNREGISTER_BUILDER_EMBEDDED_COMPONENT:
             channel.postMessage(action)
             break
 
@@ -755,16 +785,19 @@ function withSetupTeardown(
 
 export function configureStore({
   rootElements,
+  embeddedComponents,
   preloadedState,
   client,
 }: {
   rootElements?: Map<string, Documents.Element>
+  embeddedComponents?: Map<string, EmbeddedComponents.EmbeddedComponent>
   preloadedState?: PreloadedState<State>
   client: MakeswiftHostApiClient
 }): Store {
   const initialState: PreloadedState<State> = {
     ...preloadedState,
     documents: Documents.getInitialState({ rootElements }),
+    embeddedComponents: EmbeddedComponents.getInitialState({ embeddedComponents }),
     isPreview: IsPreview.getInitialState(true),
   }
 

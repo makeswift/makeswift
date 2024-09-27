@@ -2,11 +2,13 @@ import { ReactNode, lazy } from 'react'
 import { MakeswiftHostApiClient } from '../../../api/react'
 import { Element as ReactPageElement } from '../../../state/react-page'
 import { ReactRuntime } from '../react-runtime'
+import { EmbeddedComponent } from '../../../state/modules/embedded-components'
 
 type RuntimeProviderProps = {
   client: MakeswiftHostApiClient
   preview: boolean
   rootElements?: Map<string, ReactPageElement>
+  embeddedComponents?: Map<string, EmbeddedComponent>
   children?: ReactNode
   runtime?: ReactRuntime
 }

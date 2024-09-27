@@ -1,6 +1,6 @@
 import type { Operation } from 'ot-json0'
 
-import { ControlInstance } from '@makeswift/controls'
+import { ControlInstance, type Element } from '@makeswift/controls'
 
 import type { Document } from './modules/read-only-documents'
 import type { ComponentType } from './modules/react-components'
@@ -18,6 +18,7 @@ import { BuilderEditMode } from './modules/builder-edit-mode'
 import type { Point } from './modules/pointer'
 import { Breakpoints } from './modules/breakpoints'
 import { LocaleString, localeStringSchema } from '../locale'
+import { EmbeddedComponent } from './modules/embedded-components'
 
 export const ActionTypes = {
   INIT: 'INIT',
@@ -84,6 +85,9 @@ export const ActionTypes = {
   SET_LOCALE: 'SET_LOCALE',
 
   SET_LOCALIZED_RESOURCE_ID: 'SET_LOCALIZED_RESOURCE_ID',
+
+  REGISTER_BUILDER_EMBEDDED_COMPONENT: 'REGISTER_BUILDER_EMBEDDED_COMPONENT',
+  UNREGISTER_BUILDER_EMBEDDED_COMPONENT: 'UNREGISTER_BUILDER_EMBEDDED_COMPONENT',
 } as const
 
 type InitAction = { type: typeof ActionTypes.INIT }
@@ -297,6 +301,24 @@ type SetLocalizedResourceIdAction = {
   payload: { resourceId: string; localizedResourceId: string | null }
 }
 
+type RegisterBuilderEmbeddedComponentAction = {
+  type: typeof ActionTypes.REGISTER_BUILDER_EMBEDDED_COMPONENT
+  payload: {
+    documentKey: string
+    embeddedComponent: {
+      documentKey: string
+      key: string
+      type: string
+      rootElement: Element
+    }
+  }
+}
+
+type UnregisterBuilderEmbeddedComponentAction = {
+  type: typeof ActionTypes.UNREGISTER_BUILDER_EMBEDDED_COMPONENT
+  payload: { documentKey: string }
+}
+
 export type Action =
   | InitAction
   | CleanUpAction
@@ -339,6 +361,8 @@ export type Action =
   | SetBreakpointsAction
   | SetLocaleAction
   | SetLocalizedResourceIdAction
+  | RegisterBuilderEmbeddedComponentAction
+  | UnregisterBuilderEmbeddedComponentAction
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }
@@ -365,6 +389,21 @@ export function registerBuilderDocument(document: Document): RegisterBuilderDocu
 
 export function unregisterBuilderDocument(documentKey: string): UnregisterBuilderDocumentAction {
   return { type: ActionTypes.UNREGISTER_BUILDER_DOCUMENT, payload: { documentKey } }
+}
+
+export function registerBuilderEmbeddedComponent(
+  embeddedComponent: EmbeddedComponent,
+): RegisterBuilderEmbeddedComponentAction {
+  return {
+    type: ActionTypes.REGISTER_BUILDER_EMBEDDED_COMPONENT,
+    payload: { documentKey: embeddedComponent.documentKey, embeddedComponent },
+  }
+}
+
+export function unregisterBuilderEmbeddedComponent(
+  documentKey: string,
+): UnregisterBuilderEmbeddedComponentAction {
+  return { type: ActionTypes.UNREGISTER_BUILDER_EMBEDDED_COMPONENT, payload: { documentKey } }
 }
 
 export function registerDocumentEffect(

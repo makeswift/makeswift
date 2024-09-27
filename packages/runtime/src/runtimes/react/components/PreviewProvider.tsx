@@ -10,20 +10,28 @@ import { MakeswiftHostApiClient } from '../../../api/react'
 import { registerDocumentEffect } from '../../../state/actions'
 import { useReactRuntime } from '../../../next/context/react-runtime'
 import { MakeswiftHostApiClientProvider } from '../../../next/context/makeswift-host-api-client'
+import { EmbeddedComponent } from '../../../state/modules/embedded-components'
 
 type Props = {
   client: MakeswiftHostApiClient
   rootElements?: Map<string, ReactPage.Element>
+  embeddedComponents?: Map<string, EmbeddedComponent>
   children?: ReactNode
 }
 
-export default function PreviewProvider({ client, children, rootElements }: Props): JSX.Element {
+export default function PreviewProvider({
+  client,
+  children,
+  rootElements,
+  embeddedComponents,
+}: Props): JSX.Element {
   const runtime = useReactRuntime()
   const store = useMemo(
     () =>
       ReactBuilderPreview.configureStore({
         preloadedState: runtime ? runtime.store.getState() : ReactRuntime.store.getState(),
         rootElements,
+        embeddedComponents,
         client,
       }),
     [client, rootElements, runtime],
