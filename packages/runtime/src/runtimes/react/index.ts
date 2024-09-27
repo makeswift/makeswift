@@ -4,6 +4,7 @@ export { Element } from './components/Element'
 export { DocumentReference } from './components/DocumentReference'
 export { RuntimeProvider } from './components/RuntimeProvider'
 export { PageProvider } from './components/PageProvider'
+export { Unstable_MakeswiftComponent } from './components/MakeswiftComponent'
 
 export { useBreakpoints } from './hooks/use-breakpoints'
 export { useBuilderEditMode } from './hooks/use-builder-edit-mode'
