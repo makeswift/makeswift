@@ -309,6 +309,7 @@ type RegisterBuilderEmbeddedComponentAction = {
       documentKey: string
       key: string
       type: string
+      locale: string | null
       rootElement: Element
     }
   }

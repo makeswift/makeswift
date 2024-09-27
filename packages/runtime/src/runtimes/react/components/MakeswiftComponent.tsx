@@ -15,6 +15,7 @@ export type MakeswiftComponentDocument = {
   id: string
   type: string
   key: string
+  locale: string | null
   data: Element
 }
 
@@ -53,6 +54,7 @@ export function Unstable_MakeswiftComponent({ snapshot }: Props): JSX.Element {
         documentKey: documentKey,
         key: document.key,
         type: document.type,
+        locale: document.locale,
         rootElement: document.data,
       },
     ],

@@ -5,6 +5,7 @@ export type EmbeddedComponent = {
   documentKey: string
   type: string
   key: string
+  locale: string | null
   rootElement: Element
 }
 

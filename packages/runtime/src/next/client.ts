@@ -609,7 +609,7 @@ export class Makeswift {
       }
 
       return {
-        document: { id: documentKey, type, key, data: emptyElementData },
+        document: { id: documentKey, type, key, locale, data: emptyElementData },
         cacheData: {},
         apiOrigin,
         preview,
