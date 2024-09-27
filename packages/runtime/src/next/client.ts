@@ -40,6 +40,11 @@ import {
 } from '../state/react-page'
 import { getMakeswiftSiteVersion, MakeswiftSiteVersion } from './preview-mode'
 import { toIterablePaginationResult } from './utils/pagination'
+import {
+  MakeswiftComponentDocument,
+  MakeswiftComponentSnapshot,
+} from '../runtimes/react/components/MakeswiftComponent'
+import { deterministicUUID } from '../utils/deterministic-uuid'
 
 const makeswiftPageResultSchema = z.object({
   id: z.string(),
@@ -558,6 +563,69 @@ export class Makeswift {
     )
     const apiOrigin = this.apiOrigin.href
     const preview = siteVersion === MakeswiftSiteVersion.Working
+
+    return {
+      document,
+      cacheData,
+      apiOrigin,
+      preview,
+      localizedResourcesMap,
+      locale,
+    }
+  }
+
+  async unstable_getComponentSnapshot({
+    type,
+    key,
+    siteVersion,
+    locale = null,
+  }: {
+    type: string
+    key: string
+    siteVersion: MakeswiftSiteVersion
+    locale?: string | null
+  }): Promise<MakeswiftComponentSnapshot> {
+    const searchParams = new URLSearchParams({ key, type })
+    if (locale) searchParams.set('locale', locale)
+
+    const response = await this.fetch(`v1/element_trees?${searchParams.toString()}`, siteVersion)
+
+    const apiOrigin = this.apiOrigin.href
+    const preview = siteVersion === MakeswiftSiteVersion.Working
+
+    if (response.status === 404) {
+      const id = deterministicUUID({
+        type,
+        key,
+        locale,
+        siteVersion,
+        apiKey: this.apiKey,
+      })
+
+      const emptyElementData: ElementData = {
+        key: deterministicUUID(id),
+        type: type,
+        props: {},
+      }
+
+      return {
+        document: { id, type, key, data: emptyElementData },
+        cacheData: {},
+        apiOrigin,
+        preview,
+        localizedResourcesMap: {},
+        locale,
+      }
+    }
+
+    if (!response.ok) {
+      console.error('Failed to get page snapshot', await response.json())
+      throw new Error(`Failed to get page snapshot with error: "${response.statusText}"`)
+    }
+
+    const document: MakeswiftComponentDocument = await response.json()
+
+    const { cacheData, localizedResourcesMap } = await this.introspect(document.data, siteVersion)
 
     return {
       document,
