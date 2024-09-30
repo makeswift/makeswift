@@ -592,6 +592,7 @@ export class Makeswift {
 
     const apiOrigin = this.apiOrigin.href
     const preview = siteVersion === MakeswiftSiteVersion.Working
+    const apiKeyPrefix = this.apiKey.split('-').at(0)
 
     if (response.status === 404) {
       const generatedKey = deterministicUUID({
@@ -599,7 +600,7 @@ export class Makeswift {
         key,
         locale,
         siteVersion,
-        apiKey: this.apiKey,
+        apiKeyPrefix,
       })
 
       const emptyElementData: ElementData = {
