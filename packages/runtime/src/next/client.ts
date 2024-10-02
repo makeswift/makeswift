@@ -42,6 +42,9 @@ import {
 } from '../state/react-page'
 import { getMakeswiftSiteVersion, MakeswiftSiteVersion } from './preview-mode'
 import { toIterablePaginationResult } from './utils/pagination'
+import { deterministicUUID } from '../utils/deterministic-uuid'
+import { randomUUID } from 'crypto'
+import { Schema } from '@makeswift/controls'
 
 const makeswiftPageResultSchema = z.object({
   id: z.string(),
@@ -131,6 +134,22 @@ export function pageToRootDocument(pageDocument: MakeswiftPageDocument): Documen
 
 export type MakeswiftPageSnapshot = {
   document: MakeswiftPageDocument
+  cacheData: CacheData
+}
+
+const makeswiftComponentDocumentSchema = z.object({
+  id: z.string(),
+  type: z.string(),
+  key: z.string(),
+  name: z.string().nullable(),
+  locale: z.string().nullable(),
+  data: Schema.element,
+})
+
+export type MakeswiftComponentDocument = z.infer<typeof makeswiftComponentDocumentSchema>
+
+export type MakeswiftComponentSnapshot = {
+  document: MakeswiftComponentDocument
   cacheData: CacheData
 }
 
@@ -573,6 +592,72 @@ export class Makeswift {
       document,
       cacheData,
     }
+  }
+
+  async unstable_getComponentSnapshot({
+    type,
+    key,
+    name,
+    siteVersion,
+    locale,
+  }: {
+    type: string
+    key: string
+    name?: string
+    siteVersion: MakeswiftSiteVersion
+    locale?: string
+  }): Promise<MakeswiftComponentSnapshot> {
+    const searchParams = new URLSearchParams({ key, type })
+    if (locale) searchParams.set('locale', locale)
+
+    const response = await this.fetch(`v1/element_trees?${searchParams.toString()}`, siteVersion)
+
+    // If the element tree is not found, we generate a new document
+    if (response.status === 404) {
+      const apiKeyPrefix = this.apiKey.split('-').at(0)
+
+      // Create a stable uuid so two different clients will have the same empty element data.
+      // This is needed to make presence feature work for an element that is not yet created.
+      const generatedKey = deterministicUUID({
+        type,
+        key,
+        locale,
+        siteVersion,
+        apiKeyPrefix,
+      })
+
+      const emptyElementData: ElementData = {
+        key: generatedKey,
+        type: type,
+        props: {},
+      }
+
+      const cacheData = await this.introspect(emptyElementData, siteVersion, locale)
+
+      return {
+        document: {
+          id: randomUUID(),
+          type,
+          key,
+          name: name ?? null,
+          locale: locale ?? null,
+          data: emptyElementData,
+        },
+        cacheData,
+      }
+    }
+
+    const json = await response.json()
+
+    if (!response.ok) {
+      console.error('Failed to get page snapshot', json)
+      throw new Error(`Failed to get page snapshot with error: "${response.statusText}"`)
+    }
+
+    const document = makeswiftComponentDocumentSchema.parse(json)
+    const cacheData = await this.introspect(document.data, siteVersion, locale)
+
+    return { document, cacheData }
   }
 
   async getSwatch(swatchId: string, siteVersion: MakeswiftSiteVersion): Promise<Swatch | null> {
