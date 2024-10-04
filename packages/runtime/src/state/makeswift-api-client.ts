@@ -1,8 +1,11 @@
-import { applyMiddleware, createStore, Store as ReduxStore } from 'redux'
-import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk'
+import { applyMiddleware, createStore, type Store as ReduxStore } from 'redux'
+import thunk, { type ThunkAction, type ThunkDispatch } from 'redux-thunk'
+import { composeWithDevToolsDevelopmentOnly } from '@redux-devtools/extension'
+
+import { serializeState } from '../utils/serializeState'
 
 import * as APIResources from './modules/api-resources'
-import { Action, apiResourceFulfilled } from './actions'
+import { Action, ActionTypes, apiResourceFulfilled } from './actions'
 import {
   APIResource,
   APIResourceType,
@@ -129,5 +132,20 @@ export type Dispatch = ThunkDispatch<State, unknown, Action>
 export type Store = ReduxStore<State, Action> & { dispatch: Dispatch }
 
 export function configureStore({ serializedState }: { serializedState?: SerializedState }): Store {
-  return createStore(reducer, APIResources.getInitialState(serializedState), applyMiddleware(thunk))
+  const composeEnhancers = composeWithDevToolsDevelopmentOnly({
+    name: `API client store (${new Date().toISOString()})`,
+    serialize: true,
+    stateSanitizer: (state: any) => serializeState(state),
+    actionsDenylist: [
+      ActionTypes.BUILDER_POINTER_MOVE,
+      ActionTypes.HANDLE_POINTER_MOVE,
+      ActionTypes.ELEMENT_FROM_POINT_CHANGE,
+    ],
+  })
+
+  return createStore(
+    reducer,
+    APIResources.getInitialState(serializedState),
+    composeEnhancers(applyMiddleware(thunk)),
+  )
 }
