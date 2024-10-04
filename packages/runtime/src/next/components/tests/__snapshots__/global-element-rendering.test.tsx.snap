@@ -95,7 +95,7 @@ exports[`Page correctly renders a global element 1`] = `
       class="emotion-1"
     >
       <span
-        class="undefined emotion-2"
+        class="emotion-2"
       >
         About Us
       </span>
@@ -202,7 +202,7 @@ exports[`Page correctly renders a localized global element 1`] = `
       class="emotion-1"
     >
       <span
-        class="undefined emotion-2"
+        class="emotion-2"
       >
         À propos de nous
       </span>
