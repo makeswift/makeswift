@@ -2,17 +2,19 @@ import {
   applyMiddleware,
   combineReducers,
   createStore,
-  compose,
   type Dispatch as ReduxDispatch,
   type Middleware,
   type MiddlewareAPI,
   type Store as ReduxStore,
   type StoreEnhancer,
 } from 'redux'
-import thunk, { type ThunkAction, type ThunkDispatch } from 'redux-thunk'
+import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk'
+import { composeWithDevToolsDevelopmentOnly } from '@redux-devtools/extension'
+
 import { ControlInstance } from '@makeswift/controls'
 
 import deepEqual from '../utils/deepEqual'
+import { serializeState } from '../utils/serializeState'
 
 import * as Documents from './modules/read-write-documents'
 import * as ElementTrees from './modules/element-trees'
@@ -818,11 +820,22 @@ export function configureStore({
     isPreview: IsPreview.getInitialState(true),
   }
 
+  const composeEnhancers = composeWithDevToolsDevelopmentOnly({
+    name: `Host store (${new Date().toISOString()})`,
+    serialize: true,
+    stateSanitizer: (state: any) => serializeState(state),
+    actionsDenylist: [
+      ActionTypes.BUILDER_POINTER_MOVE,
+      ActionTypes.HANDLE_POINTER_MOVE,
+      ActionTypes.ELEMENT_FROM_POINT_CHANGE,
+    ],
+  })
+
   const channel = new MessageChannel()
   const store = createStore(
     reducer,
     initialState,
-    compose(
+    composeEnhancers(
       withSetupTeardown(
         () => {
           const dispatch = store.dispatch as Dispatch

@@ -22,7 +22,7 @@ export class RuntimeCore {
   // TODO: the static methods here are deprecated and only keep here for backward-compatibility purpose.
   // We will remove them when we release a new breaking change.
   // ------------------ Deprecated API ------------------ //
-  static store = configureStore()
+  static store = configureStore({ name: 'Runtime store (static)' })
 
   static copyElementTree(
     elementTree: ElementData,
@@ -52,6 +52,7 @@ export class RuntimeCore {
 
   constructor({ breakpoints }: { breakpoints?: BreakpointsInput }) {
     this.store = configureStore({
+      name: 'Runtime store',
       breakpoints: breakpoints ? parseBreakpointsInput(breakpoints) : undefined,
     })
   }
