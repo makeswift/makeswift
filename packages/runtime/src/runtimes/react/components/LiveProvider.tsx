@@ -15,7 +15,12 @@ type Props = {
 export default function LiveProvider({ client, children, rootElements }: Props): JSX.Element {
   const runtime = useReactRuntime()
   const store = useMemo(
-    () => ReactPage.configureStore({ preloadedState: runtime.store.getState(), rootElements }),
+    () =>
+      ReactPage.configureStore({
+        name: 'Host store',
+        preloadedState: runtime.store.getState(),
+        rootElements,
+      }),
     [rootElements, runtime],
   )
 

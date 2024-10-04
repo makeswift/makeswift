@@ -7,6 +7,7 @@ import {
 } from 'redux'
 
 import thunk, { ThunkDispatch } from 'redux-thunk'
+import { composeWithDevToolsDevelopmentOnly } from '@redux-devtools/extension'
 
 import {
   createReplacementContext,
@@ -16,6 +17,8 @@ import {
   type MergeTranslatableDataContext,
   type MergeContext,
 } from '@makeswift/controls'
+
+import { serializeState } from '../utils/serializeState'
 
 import * as Documents from './modules/read-only-documents'
 import * as ReactComponents from './modules/react-components'
@@ -413,14 +416,22 @@ export type Dispatch = ThunkDispatch<State, unknown, Action>
 export type Store = ReduxStore<State, Action> & { dispatch: Dispatch }
 
 export function configureStore({
+  name,
   rootElements,
   preloadedState,
   breakpoints,
 }: {
+  name: string
   rootElements?: Map<string, Documents.Element>
   preloadedState?: PreloadedState<State>
   breakpoints?: Breakpoints.State
-} = {}): Store {
+}): Store {
+  const composeEnhancers = composeWithDevToolsDevelopmentOnly({
+    name: `${name} (${new Date().toISOString()})`,
+    serialize: true,
+    stateSanitizer: (state: any) => serializeState(state),
+  })
+
   return createStore(
     reducer,
     {
@@ -428,6 +439,6 @@ export function configureStore({
       documents: Documents.getInitialState({ rootElements }),
       breakpoints: Breakpoints.getInitialState(breakpoints ?? preloadedState?.breakpoints),
     },
-    applyMiddleware(thunk),
+    composeEnhancers(applyMiddleware(thunk)),
   )
 }
