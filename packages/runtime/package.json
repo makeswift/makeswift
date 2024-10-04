@@ -137,6 +137,7 @@
     "@makeswift/next-plugin": "workspace:*",
     "@makeswift/prop-controllers": "workspace:*",
     "@popmotion/popcorn": "^0.4.4",
+    "@redux-devtools/extension": "^3.3.0",
     "@types/is-hotkey": "^0.1.7",
     "@types/use-sync-external-store": "^0.0.3",
     "@types/uuid": "^9.0.1",
