@@ -2,11 +2,9 @@
 
 import { Suspense, memo, useMemo } from 'react'
 
-import { type CacheData } from '../../api/react'
-
 import { useDispatch } from '../../runtimes/react/hooks/use-dispatch'
 import { useUniversalDispatch } from '../../runtimes/react/hooks/use-universal-dispatch'
-import { useMakeswiftHostApiClient } from '../../runtimes/react/host-api-client'
+import { useCacheData } from '../../runtimes/react/hooks/use-cache-data'
 
 import { Page as PageComponent } from '../../components/page'
 import {
@@ -14,17 +12,11 @@ import {
   type MakeswiftPageDocument,
   pageToRootDocument,
 } from '../client'
-
 import * as ReactPage from '../../state/react-page'
-import { registerDocumentsEffect, updateAPIClientCache } from '../../state/actions'
+import { registerDocumentsEffect } from '../../state/actions'
 
 export type PageProps = {
   snapshot: MakeswiftPageSnapshot
-}
-
-export function useCacheData(cacheData: CacheData) {
-  const { makeswiftApiClient: apiStore } = useMakeswiftHostApiClient()
-  useUniversalDispatch(apiStore.dispatch, updateAPIClientCache, [cacheData])
 }
 
 function useRegisterPageDocument(pageDocument: MakeswiftPageDocument): ReactPage.Document {
