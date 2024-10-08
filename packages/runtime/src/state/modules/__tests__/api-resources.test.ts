@@ -163,17 +163,17 @@ describe('state / APIResources', () => {
   test('`Actions.apiResourceFulfilled` correctly populates the store', () => {
     const state = (
       [
-        [swatch, null],
+        [swatch, 'en-US'], // locale on non-localizable resources should be ignored
         [file, null],
         [typography, null],
         [pagePathnameSlice, null],
         [localizedPagePathnameSlice_fr_FR, 'fr-FR'],
-        [globalElement, null],
+        [globalElement, 'en-US'], // see above
         [localizedGlobalElement_fr_FR, 'fr-FR'],
         [localizedGlobalElement_it_IT, 'it-IT'],
         [table, null],
         [snippet, null],
-        [page, null],
+        [page, 'fr-FR'], // see above
         [site, null],
       ] as [APIResource, string][]
     ).reduce(
@@ -210,7 +210,7 @@ describe('state / APIResources', () => {
 
     const updatedState = (
       [
-        [{ ...swatch, hue: 17 }, null],
+        [{ ...swatch, hue: 17 }, 'en-US'], // locale on non-localizable resources should be ignored
         [{ ...pagePathnameSlice, pathname: 'test/new-pathname' }, null],
         [
           {
@@ -253,7 +253,7 @@ describe('state / APIResources', () => {
 
     const updatedState = (
       [
-        [`${APIResourceType.Swatch}:${swatch.id}`, null],
+        [`${APIResourceType.Swatch}:${swatch.id}`, 'en-US'], // locale on non-localizable resources should be ignored
         [`${APIResourceType.PagePathnameSlice}:${localizedPagePathnameSlice_fr_FR.id}`, 'fr-FR'],
         [`${APIResourceType.LocalizedGlobalElement}:${localizedGlobalElement_it_IT.id}`, 'it-IT'],
       ] as [string, string][]

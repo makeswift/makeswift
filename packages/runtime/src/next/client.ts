@@ -422,12 +422,11 @@ export class Makeswift {
             siteVersion,
           )
 
-          localizedResourcesMap.set(globalElementId, localizedGlobalElement?.id ?? null)
-
           if (localizedGlobalElement) {
             // Update the logic here when we can merge element trees
             elementData = localizedGlobalElement.data
 
+            localizedResourcesMap.set(globalElementId, localizedGlobalElement.id)
             localizedGlobalElements.set(localizedGlobalElement.id, localizedGlobalElement)
           }
         }
