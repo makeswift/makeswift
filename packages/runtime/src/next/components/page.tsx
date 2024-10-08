@@ -2,37 +2,19 @@
 
 import { Suspense, memo, useEffect, useMemo } from 'react'
 
-import { type CacheData } from '../../api/react'
-
 import { useDispatch } from '../../runtimes/react/hooks/use-dispatch'
-import { useMakeswiftHostApiClient } from '../../runtimes/react/host-api-client'
-
 import { Page as PageComponent } from '../../components/page'
 import {
   type MakeswiftPageSnapshot,
   type MakeswiftPageDocument,
   pageToRootDocument,
 } from '../client'
-
 import * as ReactPage from '../../state/react-page'
-import { registerDocumentsEffect, updateAPIClientCache } from '../../state/actions'
+import { registerDocumentsEffect } from '../../state/actions'
+import { useSyncCacheData } from '../hooks/use-sync-cache-data'
 
 export type PageProps = {
   snapshot: MakeswiftPageSnapshot
-}
-
-const isServer = typeof window === 'undefined'
-
-function useCacheData(cacheData: CacheData) {
-  const client = useMakeswiftHostApiClient()
-
-  if (isServer) {
-    client.makeswiftApiClient.dispatch(updateAPIClientCache(cacheData))
-  }
-
-  useEffect(() => {
-    client.makeswiftApiClient.dispatch(updateAPIClientCache(cacheData))
-  }, [cacheData, client])
 }
 
 function useRegisterPageDocument(pageDocument: MakeswiftPageDocument): ReactPage.Document {
@@ -51,7 +33,7 @@ See our docs for more information on what's changed and instructions to migrate:
     )
   }
 
-  useCacheData(snapshot.cacheData)
+  useSyncCacheData(snapshot.cacheData)
 
   const rootDocument = useRegisterPageDocument(snapshot.document)
 
