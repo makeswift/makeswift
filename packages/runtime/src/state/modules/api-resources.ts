@@ -1,14 +1,37 @@
-import { APIResourceType, APIResourceLocale, type APIResource } from '../../api'
+import {
+  APIResourceType,
+  APIResourceLocale,
+  LocalizableAPIResourceType,
+  type APIResource,
+} from '../../api'
 
 import deepEqual from '../../utils/deepEqual'
 import { Branded } from '../../utils/branded'
 
-import { Action, ActionTypes } from '../actions'
+import { type Action, ActionTypes } from '../actions'
 
 type CompositeResourceId = Branded<string, 'CompositeResourceId'>
 
-function compositeId(resourceId: string, locale?: string | null): CompositeResourceId {
-  return (locale != null ? `${resourceId}@${locale}` : resourceId) as CompositeResourceId
+function isValidAPIResourceType(resourceType: string): resourceType is APIResourceType {
+  return resourceType in APIResourceType
+}
+
+function isLocalizableAPIResourceType(
+  resourceType: APIResourceType,
+): resourceType is LocalizableAPIResourceType {
+  return resourceType in LocalizableAPIResourceType
+}
+
+function compositeId(
+  resourceId: string,
+  resourceType: APIResourceType,
+  locale?: string | null,
+): CompositeResourceId {
+  return (
+    locale != null && isLocalizableAPIResourceType(resourceType)
+      ? `${resourceId}@${locale}`
+      : resourceId
+  ) as CompositeResourceId
 }
 
 function parseCompositeId(compositeId: CompositeResourceId): [string, string | null] {
@@ -41,9 +64,14 @@ export function getInitialState(
   },
 ): State {
   return new Map(
-    Object.entries(serializedState).map(([apiResourceType, resources]) => [
-      apiResourceType,
-      new Map(resources.map(({ id, value, locale }) => [compositeId(id, locale), value])),
+    Object.entries(serializedState).map(([resourceType, resources]) => [
+      resourceType,
+      new Map(
+        resources.map(({ id, value, locale }) => [
+          compositeId(id, resourceType as APIResourceType, locale),
+          value,
+        ]),
+      ),
     ]),
   ) as State
 }
@@ -68,6 +96,12 @@ export function getSerializedState(state: State): SerializedState {
     Array.from(resources.entries()).forEach(([compositeId, value]) => {
       if (value != null) {
         const [id, locale] = parseCompositeId(compositeId)
+        console.assert(
+          locale == null || isLocalizableAPIResourceType(resourceType),
+          `Unexpected locale for non-localizable resource type ${resourceType}`,
+          { id, locale },
+        )
+
         particularResourceMap.push(locale != null ? { id, value, locale } : { id, value })
       }
     })
@@ -84,7 +118,7 @@ export function getHasAPIResource<T extends APIResourceType>(
   resourceId: string,
   locale?: APIResourceLocale<T>,
 ): boolean {
-  return state.get(resourceType)?.has(compositeId(resourceId, locale)) ?? false
+  return state.get(resourceType)?.has(compositeId(resourceId, resourceType, locale)) ?? false
 }
 
 export function getAPIResource<T extends APIResourceType>(
@@ -93,7 +127,7 @@ export function getAPIResource<T extends APIResourceType>(
   resourceId: string,
   locale?: APIResourceLocale<T>,
 ): Extract<APIResource, { __typename: T }> | null {
-  const resource = state.get(resourceType)?.get(compositeId(resourceId, locale))
+  const resource = state.get(resourceType)?.get(compositeId(resourceId, resourceType, locale))
 
   return resource?.__typename === resourceType
     ? (resource as Extract<typeof resource, { __typename: T }>)
@@ -113,7 +147,7 @@ export function reducer(state: State = getInitialState(), action: Action): State
 
         const existing = state.get(resType) ?? new Map<CompositeResourceId, APIResource | null>()
         const updated = cached?.reduce((r, { id, value, locale }) => {
-          const cid = compositeId(id, locale)
+          const cid = compositeId(id, resType, locale)
           return r.get(cid) != null ? r : new Map(r).set(cid, value)
         }, existing)
 
@@ -125,10 +159,12 @@ export function reducer(state: State = getInitialState(), action: Action): State
 
     case ActionTypes.API_RESOURCE_FULFILLED: {
       const { resourceType, resourceId, resource, locale } = action.payload
-
       return new Map(state).set(
         resourceType,
-        new Map(state.get(resourceType)!).set(compositeId(resourceId, locale), resource),
+        new Map(state.get(resourceType)!).set(
+          compositeId(resourceId, resourceType, locale),
+          resource,
+        ),
       )
     }
 
@@ -140,7 +176,10 @@ export function reducer(state: State = getInitialState(), action: Action): State
 
       return new Map(state).set(
         resource.__typename,
-        new Map(state.get(resource.__typename)!).set(compositeId(resource.id, locale), resource),
+        new Map(state.get(resource.__typename)!).set(
+          compositeId(resource.id, resource.__typename, locale),
+          resource,
+        ),
       )
     }
 
@@ -148,11 +187,11 @@ export function reducer(state: State = getInitialState(), action: Action): State
       const { id, locale } = action.payload
       const [resourceType, resourceId] = id.split(':')
 
-      if (!(resourceType in APIResourceType)) return state
+      if (!isValidAPIResourceType(resourceType)) return state
 
       const resources = new Map(state.get(resourceType as APIResourceType)!)
 
-      const deleted = resources.delete(compositeId(resourceId, locale))
+      const deleted = resources.delete(compositeId(resourceId, resourceType, locale))
 
       return deleted ? new Map(state).set(resourceType as APIResourceType, resources) : state
     }
