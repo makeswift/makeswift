@@ -62,7 +62,7 @@ export type {
 } from './modules/read-only-documents'
 
 export {
-  createDocument,
+  createBaseDocument,
   createDocumentReference,
   isElementReference,
 } from './modules/read-only-documents'
