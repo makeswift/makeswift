@@ -53,23 +53,19 @@ export function reducer(state: State = getInitialState(), action: Action): State
 
   switch (action.type) {
     case ActionTypes.CHANGE_DOCUMENT: {
-      const { rootElement: currentRootElement, locale } =
-        getDocument(nextState, action.payload.documentKey) ?? {}
+      const document = getDocument(nextState, action.payload.documentKey)
+      if (document == null) return nextState
 
-      if (currentRootElement == null) return nextState
+      const currentRootElement = document.rootElement
 
       const nextRootElement = apply(currentRootElement, action.payload.operation)
 
       return currentRootElement === nextRootElement
         ? nextState
-        : new Map(nextState).set(
-            action.payload.documentKey,
-            ReadOnlyDocuments.createDocument(
-              action.payload.documentKey,
-              nextRootElement,
-              locale ?? null,
-            ),
-          )
+        : new Map(nextState).set(action.payload.documentKey, {
+            ...document,
+            rootElement: nextRootElement,
+          })
     }
 
     default:
