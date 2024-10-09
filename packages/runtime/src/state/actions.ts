@@ -2,7 +2,7 @@ import type { Operation } from 'ot-json0'
 
 import { ControlInstance } from '@makeswift/controls'
 
-import type { Element, Document } from './modules/read-only-documents'
+import type { Element, Document, EMBEDDED_DOCUMENT_TYPE } from './modules/read-only-documents'
 import type { ComponentType } from './modules/react-components'
 import type { Measurable, BoxModel } from './modules/box-models'
 import type { ThunkAction } from 'redux-thunk'
@@ -93,11 +93,22 @@ type InitAction = { type: typeof ActionTypes.INIT }
 
 type CleanUpAction = { type: typeof ActionTypes.CLEAN_UP }
 
-type DocumentPayload = {
+type DocumentPayloadBaseDocument = {
   key: string
   rootElement: Element
   locale?: string | null // older versions of the runtime may not provide this field
 }
+
+type DocumentPayloadEmbeddedDocument = DocumentPayloadBaseDocument & {
+  userProvidedKey: string
+  type: string
+  meta: {
+    name: string | null
+  }
+  __type: typeof EMBEDDED_DOCUMENT_TYPE
+}
+
+type DocumentPayload = DocumentPayloadBaseDocument | DocumentPayloadEmbeddedDocument
 
 type RegisterDocumentAction = {
   type: typeof ActionTypes.REGISTER_DOCUMENT

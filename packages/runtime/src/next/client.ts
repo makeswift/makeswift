@@ -45,6 +45,7 @@ import { toIterablePaginationResult } from './utils/pagination'
 import { deterministicUUID } from '../utils/deterministic-uuid'
 import { randomUUID } from 'crypto'
 import { Schema } from '@makeswift/controls'
+import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-only-documents'
 
 const makeswiftPageResultSchema = z.object({
   id: z.string(),
@@ -151,6 +152,22 @@ export type MakeswiftComponentDocument = z.infer<typeof makeswiftComponentDocume
 export type MakeswiftComponentSnapshot = {
   document: MakeswiftComponentDocument
   cacheData: CacheData
+}
+
+export function componentDocumentToRootEmbeddedDocument(
+  componentDocument: MakeswiftComponentDocument,
+): EmbeddedDocument {
+  const { id, data, locale, key, type, name } = componentDocument
+  const rootDocument = {
+    key: id,
+    rootElement: data,
+    locale,
+    userProvidedKey: key,
+    type,
+    meta: { name },
+    __type: EMBEDDED_DOCUMENT_TYPE,
+  }
+  return rootDocument
 }
 
 type Snippet = {
