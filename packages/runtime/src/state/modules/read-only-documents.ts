@@ -17,13 +17,30 @@ export function createDocumentReference(key: string): DocumentReference {
   return { key }
 }
 
-export type Document = {
+type BaseDocument = {
   key: string
   rootElement: Element
   locale: string | null
 }
 
-export function createDocument(key: string, rootElement: Element, locale: string | null): Document {
+export const EMBEDDED_DOCUMENT_TYPE = 'EMBEDDED_DOCUMENT' as const
+
+export type EmbeddedDocument = BaseDocument & {
+  userProvidedKey: string
+  type: string
+  meta: {
+    name: string | null
+  }
+  __type: typeof EMBEDDED_DOCUMENT_TYPE
+}
+
+export type Document = BaseDocument | EmbeddedDocument
+
+export function createBaseDocument(
+  key: string,
+  rootElement: Element,
+  locale: string | null,
+): Document {
   return { key, rootElement, locale }
 }
 
