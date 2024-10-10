@@ -6,12 +6,14 @@ import {
   File,
   GlobalElement,
   LocalizedGlobalElement,
+  PagePathnameSlice,
   Swatch,
   Table,
   Typography,
 } from '../../../api'
-import { PagePathnameSlice } from '../../../api/resource-types'
-import { useMakeswiftHostApiClient } from '../../../next/context/makeswift-host-api-client'
+
+import { useMakeswiftHostApiClient } from '../host-api-client'
+import { useDocumentLocale } from './use-document-context'
 
 export function useSwatch(swatchId: string | null): Swatch | null {
   const client = useMakeswiftHostApiClient()
@@ -117,11 +119,15 @@ export function useGlobalElement(globalElementId: string | null): GlobalElement 
 }
 
 export function useLocalizedGlobalElement(
+  locale: string | null,
   globalElementId: string | null,
 ): LocalizedGlobalElement | null {
   const client = useMakeswiftHostApiClient()
   const readLocalizedGlobalElement = () =>
-    globalElementId == null ? null : client.readLocalizedGlobalElement(globalElementId)
+    locale == null || globalElementId == null
+      ? null
+      : client.readLocalizedGlobalElement({ globalElementId, locale })
+
   const localizedGlobalElement = useSyncExternalStore(
     client.subscribe,
     readLocalizedGlobalElement,
@@ -129,17 +135,21 @@ export function useLocalizedGlobalElement(
   )
 
   useEffect(() => {
-    if (globalElementId != null) {
-      client.fetchLocalizedGlobalElement(globalElementId).catch(console.error)
+    if (locale != null && globalElementId != null) {
+      client.fetchLocalizedGlobalElement({ globalElementId, locale }).catch(console.error)
     }
-  }, [client, globalElementId])
+  }, [client, locale, globalElementId])
 
   return localizedGlobalElement
 }
 
 export function usePagePathnameSlice(pageId: string | null): PagePathnameSlice | null {
   const client = useMakeswiftHostApiClient()
-  const readPagePathnameSlice = () => (pageId == null ? null : client.readPagePathnameSlice(pageId))
+  const locale = useDocumentLocale()
+
+  const readPagePathnameSlice = () =>
+    pageId == null ? null : client.readPagePathnameSlice({ pageId, locale })
+
   const pagePathnameSlice = useSyncExternalStore(
     client.subscribe,
     readPagePathnameSlice,
@@ -147,8 +157,8 @@ export function usePagePathnameSlice(pageId: string | null): PagePathnameSlice |
   )
 
   useEffect(() => {
-    if (pageId != null) client.fetchPagePathnameSlice(pageId).catch(console.error)
-  }, [client, pageId])
+    if (pageId != null) client.fetchPagePathnameSlice({ pageId, locale }).catch(console.error)
+  }, [client, pageId, locale])
 
   return pagePathnameSlice
 }

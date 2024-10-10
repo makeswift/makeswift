@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`serializeState correctly serializes Map(6) {
+  'text' => 'hi',
+  'number' => 24.99,
+  'array' => [Array],
+  'record' => [Object],
+  'set' => [Set],
+  'map' => [Map]
+} 1`] = `
+{
+  "array": [
+    "hello",
+    17,
+  ],
+  "map": {
+    "price": 9.99,
+  },
+  "number": 24.99,
+  "record": {
+    "big": "fish",
+    "nestedArray": [
+      3,
+      5,
+      7,
+      9,
+    ],
+    "nestedMap": {
+      "key": "value",
+    },
+    "nestedSet": [
+      1,
+      2,
+      3,
+    ],
+    "small": "pond",
+  },
+  "set": [
+    3,
+    5,
+    7,
+  ],
+  "text": "hi",
+}
+`;

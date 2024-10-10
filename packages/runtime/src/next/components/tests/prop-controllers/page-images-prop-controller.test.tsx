@@ -14,7 +14,7 @@ import {
 } from '@makeswift/prop-controllers'
 import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntimeProvider } from '../../../../runtimes/react'
 import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
 import {
@@ -63,8 +63,8 @@ describe('Page', () => {
               return typeof file === 'string'
                 ? file
                 : file?.type === 'makeswift-file'
-                ? file.id
-                : file?.url
+                  ? file.id
+                  : file?.url
             })}
           </div>
         )
@@ -134,8 +134,8 @@ describe('Page', () => {
               return typeof file === 'string'
                 ? file
                 : file?.type === 'makeswift-file'
-                ? file.id
-                : file?.url
+                  ? file.id
+                  : file?.url
             })}
           </div>
         )
@@ -205,8 +205,8 @@ describe('Page', () => {
               return typeof file === 'string'
                 ? file
                 : file?.type === 'makeswift-file'
-                ? file.id
-                : file?.url
+                  ? file.id
+                  : file?.url
             })}
           </div>
         )

@@ -2,7 +2,7 @@ import type { Operation } from 'ot-json0'
 
 import { ControlInstance } from '@makeswift/controls'
 
-import type { Document } from './modules/read-only-documents'
+import type { Element, Document, EMBEDDED_DOCUMENT_TYPE } from './modules/read-only-documents'
 import type { ComponentType } from './modules/react-components'
 import type { Measurable, BoxModel } from './modules/box-models'
 import type { ThunkAction } from 'redux-thunk'
@@ -11,12 +11,13 @@ import { PropControllerDescriptor } from '../prop-controllers'
 import type { Size } from './react-builder-preview'
 import type { PropControllersHandle } from './modules/prop-controller-handles'
 import type { PropControllerMessage } from '../prop-controllers/instances'
-import type { APIResource, APIResourceType } from '../api/graphql/types'
+import type { APIResource, APIResourceType, APIResourceLocale } from '../api/types'
 import type { SerializedControl } from '../builder'
 import { ElementImperativeHandle } from '../runtimes/react/element-imperative-handle'
 import { BuilderEditMode } from './modules/builder-edit-mode'
 import type { Point } from './modules/pointer'
 import { Breakpoints } from './modules/breakpoints'
+import { type SerializedState as APIClientCache } from './makeswift-api-client'
 import { LocaleString, localeStringSchema } from '../locale'
 
 export const ActionTypes = {
@@ -84,15 +85,34 @@ export const ActionTypes = {
   SET_LOCALE: 'SET_LOCALE',
 
   SET_LOCALIZED_RESOURCE_ID: 'SET_LOCALIZED_RESOURCE_ID',
+
+  UPDATE_API_CLIENT_CACHE: 'UPDATE_API_CLIENT_CACHE',
 } as const
 
 type InitAction = { type: typeof ActionTypes.INIT }
 
 type CleanUpAction = { type: typeof ActionTypes.CLEAN_UP }
 
+type DocumentPayloadBaseDocument = {
+  key: string
+  rootElement: Element
+  locale?: string | null // older versions of the runtime may not provide this field
+}
+
+type DocumentPayloadEmbeddedDocument = DocumentPayloadBaseDocument & {
+  userProvidedKey: string
+  type: string
+  meta: {
+    name: string | null
+  }
+  __type: typeof EMBEDDED_DOCUMENT_TYPE
+}
+
+type DocumentPayload = DocumentPayloadBaseDocument | DocumentPayloadEmbeddedDocument
+
 type RegisterDocumentAction = {
   type: typeof ActionTypes.REGISTER_DOCUMENT
-  payload: { documentKey: string; document: Document }
+  payload: { documentKey: string; document: DocumentPayload }
 }
 
 type UnregisterDocumentAction = {
@@ -102,7 +122,7 @@ type UnregisterDocumentAction = {
 
 type RegisterBuilderDocumentAction = {
   type: typeof ActionTypes.REGISTER_BUILDER_DOCUMENT
-  payload: { documentKey: string; document: Document }
+  payload: { documentKey: string; document: DocumentPayload }
 }
 
 type UnregisterBuilderDocumentAction = {
@@ -239,12 +259,12 @@ type MessageBuilderPropControllerAction<T = PropControllerMessage> = {
 
 type ChangeAPIResourceAction = {
   type: typeof ActionTypes.CHANGE_API_RESOURCE
-  payload: { resource: APIResource }
+  payload: { resource: APIResource; locale?: string | null }
 }
 
 type EvictAPIResourceAction = {
   type: typeof ActionTypes.EVICT_API_RESOURCE
-  payload: { id: string }
+  payload: { id: string; locale?: string | null }
 }
 
 type SetIsInBuilderAction = {
@@ -264,7 +284,12 @@ type HandlePointerMoveAction = {
 
 type APIResourceFulfilledAction = {
   type: typeof ActionTypes.API_RESOURCE_FULFILLED
-  payload: { resourceType: APIResourceType; resourceId: string; resource: APIResource | null }
+  payload: {
+    resourceType: APIResourceType
+    resourceId: string
+    resource: APIResource | null
+    locale?: string | null
+  }
 }
 
 type SetBuilderEditModeAction = {
@@ -294,7 +319,13 @@ type SetLocaleAction = {
 
 type SetLocalizedResourceIdAction = {
   type: typeof ActionTypes.SET_LOCALIZED_RESOURCE_ID
-  payload: { resourceId: string; localizedResourceId: string | null }
+  // TODO: make `locale` required once we've upgraded the builder to always provide it
+  payload: { locale?: string; resourceId: string; localizedResourceId: string | null }
+}
+
+type UpdateAPIClientCache = {
+  type: typeof ActionTypes.UPDATE_API_CLIENT_CACHE
+  payload: APIClientCache
 }
 
 export type Action =
@@ -339,6 +370,7 @@ export type Action =
   | SetBreakpointsAction
   | SetLocaleAction
   | SetLocalizedResourceIdAction
+  | UpdateAPIClientCache
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }
@@ -367,14 +399,14 @@ export function unregisterBuilderDocument(documentKey: string): UnregisterBuilde
   return { type: ActionTypes.UNREGISTER_BUILDER_DOCUMENT, payload: { documentKey } }
 }
 
-export function registerDocumentEffect(
-  document: Document,
+export function registerDocumentsEffect(
+  documents: Document[],
 ): ThunkAction<() => void, unknown, unknown, Action> {
   return dispatch => {
-    dispatch(registerDocument(document))
+    documents.forEach(document => dispatch(registerDocument(document)))
 
     return () => {
-      dispatch(unregisterDocument(document.key))
+      documents.forEach(document => dispatch(unregisterDocument(document.key)))
     }
   }
 }
@@ -616,12 +648,15 @@ export function messageBuilderPropController<T>(
   }
 }
 
-export function changeApiResource(resource: APIResource): ChangeAPIResourceAction {
-  return { type: ActionTypes.CHANGE_API_RESOURCE, payload: { resource } }
+export function changeApiResource<R extends APIResource>(
+  resource: R,
+  locale?: APIResourceLocale<R>,
+): ChangeAPIResourceAction {
+  return { type: ActionTypes.CHANGE_API_RESOURCE, payload: { resource, locale } }
 }
 
-export function evictApiResource(id: string): EvictAPIResourceAction {
-  return { type: ActionTypes.EVICT_API_RESOURCE, payload: { id } }
+export function evictApiResource(id: string, locale?: string | null): EvictAPIResourceAction {
+  return { type: ActionTypes.EVICT_API_RESOURCE, payload: { id, locale } }
 }
 
 export function setIsInBuilder(isInBuilder: boolean): SetIsInBuilderAction {
@@ -639,14 +674,15 @@ export function handlePointerMove(payload: {
   return { type: ActionTypes.HANDLE_POINTER_MOVE, payload }
 }
 
-export function apiResourceFulfilled(
-  resourceType: APIResourceType,
+export function apiResourceFulfilled<T extends APIResourceType>(
+  resourceType: T,
   resourceId: string,
   resource: APIResource | null,
+  locale?: APIResourceLocale<T>,
 ): APIResourceFulfilledAction {
   return {
     type: ActionTypes.API_RESOURCE_FULFILLED,
-    payload: { resourceType, resourceId, resource },
+    payload: { resourceType, resourceId, resource, locale },
   }
 }
 
@@ -684,12 +720,18 @@ export function setLocale(locale: Intl.Locale, pathname?: string): SetLocaleActi
 export function setLocalizedResourceId({
   resourceId,
   localizedResourceId,
+  locale,
 }: {
   resourceId: string
   localizedResourceId: string | null
+  locale?: string
 }): SetLocalizedResourceIdAction {
   return {
     type: ActionTypes.SET_LOCALIZED_RESOURCE_ID,
-    payload: { resourceId, localizedResourceId },
+    payload: { resourceId, localizedResourceId, locale },
   }
+}
+
+export function updateAPIClientCache(payload: APIClientCache): UpdateAPIClientCache {
+  return { type: ActionTypes.UPDATE_API_CLIENT_CACHE, payload }
 }

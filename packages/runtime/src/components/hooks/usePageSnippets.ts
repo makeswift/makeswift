@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useIsInBuilder } from '../../react'
 import { MakeswiftPageDocument } from '../../next'
 import deepEqual from '../../utils/deepEqual'
-import { useMakeswiftHostApiClient } from '../../next/context/makeswift-host-api-client'
+import { useMakeswiftHostApiClient } from '../../runtimes/react/host-api-client'
 import { useSyncExternalStore } from 'use-sync-external-store/shim'
 import { Page as PageType } from '../../api'
 
@@ -11,7 +11,7 @@ const SnippetLocation = {
   Head: 'HEAD',
 } as const
 
-export type SnippetLocation = typeof SnippetLocation[keyof typeof SnippetLocation]
+export type SnippetLocation = (typeof SnippetLocation)[keyof typeof SnippetLocation]
 
 export type Snippet = {
   builderEnabled: boolean

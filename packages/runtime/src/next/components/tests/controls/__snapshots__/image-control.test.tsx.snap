@@ -4,8 +4,10 @@ exports[`Page Image control data v0 with format: makeswift::controls::image::for
 
 exports[`Page Image control data v0 with format: makeswift::controls::image::format::url fetching image: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -48,9 +50,6 @@ exports[`Page Image control data v0 with format: makeswift::controls::image::for
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -58,24 +57,26 @@ exports[`Page Image control data v0 with format: makeswift::controls::image::for
 
 exports[`Page Image control data v0 with format: makeswift::controls::image::format::url reading file from cache: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
   "cacheData": {
-    "File": [
-      {
-        "id": "image-test-id",
-        "value": {
-          "__typename": "File",
-          "dimensions": {
-            "height": 100,
-            "width": 100,
-          },
-          "extension": "jpg",
+    "apiResources": {
+      "File": [
+        {
           "id": "image-test-id",
-          "name": "image",
-          "publicUrl": "https://example.com/image.jpg",
+          "value": {
+            "__typename": "File",
+            "dimensions": {
+              "height": 100,
+              "width": 100,
+            },
+            "extension": "jpg",
+            "id": "image-test-id",
+            "name": "image",
+            "publicUrl": "https://example.com/image.jpg",
+          },
         },
-      },
-    ],
+      ],
+    },
+    "localizedResourcesMap": {},
   },
   "document": {
     "data": {
@@ -119,9 +120,6 @@ exports[`Page Image control data v0 with format: makeswift::controls::image::for
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -137,8 +135,10 @@ exports[`Page Image control data v0 with format: makeswift::controls::image::for
 
 exports[`Page Image control data v0 with format: makeswift::controls::image::format::with-dimensions fetching image: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -181,9 +181,6 @@ exports[`Page Image control data v0 with format: makeswift::controls::image::for
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -199,24 +196,26 @@ exports[`Page Image control data v0 with format: makeswift::controls::image::for
 
 exports[`Page Image control data v0 with format: makeswift::controls::image::format::with-dimensions reading file from cache: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
   "cacheData": {
-    "File": [
-      {
-        "id": "image-test-id",
-        "value": {
-          "__typename": "File",
-          "dimensions": {
-            "height": 100,
-            "width": 100,
-          },
-          "extension": "jpg",
+    "apiResources": {
+      "File": [
+        {
           "id": "image-test-id",
-          "name": "image",
-          "publicUrl": "https://example.com/image.jpg",
+          "value": {
+            "__typename": "File",
+            "dimensions": {
+              "height": 100,
+              "width": 100,
+            },
+            "extension": "jpg",
+            "id": "image-test-id",
+            "name": "image",
+            "publicUrl": "https://example.com/image.jpg",
+          },
         },
-      },
-    ],
+      ],
+    },
+    "localizedResourcesMap": {},
   },
   "document": {
     "data": {
@@ -260,9 +259,6 @@ exports[`Page Image control data v0 with format: makeswift::controls::image::for
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -270,8 +266,10 @@ exports[`Page Image control data v0 with format: undefined fetching image: resol
 
 exports[`Page Image control data v0 with format: undefined fetching image: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -314,9 +312,6 @@ exports[`Page Image control data v0 with format: undefined fetching image: snaps
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -324,24 +319,26 @@ exports[`Page Image control data v0 with format: undefined reading file from cac
 
 exports[`Page Image control data v0 with format: undefined reading file from cache: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
   "cacheData": {
-    "File": [
-      {
-        "id": "image-test-id",
-        "value": {
-          "__typename": "File",
-          "dimensions": {
-            "height": 100,
-            "width": 100,
-          },
-          "extension": "jpg",
+    "apiResources": {
+      "File": [
+        {
           "id": "image-test-id",
-          "name": "image",
-          "publicUrl": "https://example.com/image.jpg",
+          "value": {
+            "__typename": "File",
+            "dimensions": {
+              "height": 100,
+              "width": 100,
+            },
+            "extension": "jpg",
+            "id": "image-test-id",
+            "name": "image",
+            "publicUrl": "https://example.com/image.jpg",
+          },
         },
-      },
-    ],
+      ],
+    },
+    "localizedResourcesMap": {},
   },
   "document": {
     "data": {
@@ -385,9 +382,6 @@ exports[`Page Image control data v0 with format: undefined reading file from cac
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -395,8 +389,10 @@ exports[`Page Image control data v1 (external image) with value: {"height": 100,
 
 exports[`Page Image control data v1 (external image) with value: {"height": 100, "type": "external-file", "url": "https://example.com/image.jpg", "width": 100} with format: makeswift::controls::image::format::url rendering external image: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -445,9 +441,6 @@ exports[`Page Image control data v1 (external image) with value: {"height": 100,
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -463,8 +456,10 @@ exports[`Page Image control data v1 (external image) with value: {"height": 100,
 
 exports[`Page Image control data v1 (external image) with value: {"height": 100, "type": "external-file", "url": "https://example.com/image.jpg", "width": 100} with format: makeswift::controls::image::format::with-dimensions rendering external image: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -513,9 +508,6 @@ exports[`Page Image control data v1 (external image) with value: {"height": 100,
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -523,8 +515,10 @@ exports[`Page Image control data v1 (external image) with value: {"height": 100,
 
 exports[`Page Image control data v1 (external image) with value: {"height": 100, "type": "external-file", "url": "https://example.com/image.jpg", "width": 100} with format: undefined rendering external image: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -573,9 +567,6 @@ exports[`Page Image control data v1 (external image) with value: {"height": 100,
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -583,8 +574,10 @@ exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": 
 
 exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": "makeswift-file"} with format: makeswift::controls::image::format::url fetching image: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -631,9 +624,6 @@ exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": 
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -641,24 +631,26 @@ exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": 
 
 exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": "makeswift-file"} with format: makeswift::controls::image::format::url reading file from cache: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
   "cacheData": {
-    "File": [
-      {
-        "id": "image-test-id",
-        "value": {
-          "__typename": "File",
-          "dimensions": {
-            "height": 100,
-            "width": 100,
-          },
-          "extension": "jpg",
+    "apiResources": {
+      "File": [
+        {
           "id": "image-test-id",
-          "name": "image",
-          "publicUrl": "https://example.com/image.jpg",
+          "value": {
+            "__typename": "File",
+            "dimensions": {
+              "height": 100,
+              "width": 100,
+            },
+            "extension": "jpg",
+            "id": "image-test-id",
+            "name": "image",
+            "publicUrl": "https://example.com/image.jpg",
+          },
         },
-      },
-    ],
+      ],
+    },
+    "localizedResourcesMap": {},
   },
   "document": {
     "data": {
@@ -706,9 +698,6 @@ exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": 
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -724,8 +713,10 @@ exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": 
 
 exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": "makeswift-file"} with format: makeswift::controls::image::format::with-dimensions fetching image: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -772,9 +763,6 @@ exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": 
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -790,24 +778,26 @@ exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": 
 
 exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": "makeswift-file"} with format: makeswift::controls::image::format::with-dimensions reading file from cache: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
   "cacheData": {
-    "File": [
-      {
-        "id": "image-test-id",
-        "value": {
-          "__typename": "File",
-          "dimensions": {
-            "height": 100,
-            "width": 100,
-          },
-          "extension": "jpg",
+    "apiResources": {
+      "File": [
+        {
           "id": "image-test-id",
-          "name": "image",
-          "publicUrl": "https://example.com/image.jpg",
+          "value": {
+            "__typename": "File",
+            "dimensions": {
+              "height": 100,
+              "width": 100,
+            },
+            "extension": "jpg",
+            "id": "image-test-id",
+            "name": "image",
+            "publicUrl": "https://example.com/image.jpg",
+          },
         },
-      },
-    ],
+      ],
+    },
+    "localizedResourcesMap": {},
   },
   "document": {
     "data": {
@@ -855,9 +845,6 @@ exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": 
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -865,8 +852,10 @@ exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": 
 
 exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": "makeswift-file"} with format: undefined fetching image: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -913,9 +902,6 @@ exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": 
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -923,24 +909,26 @@ exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": 
 
 exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": "makeswift-file"} with format: undefined reading file from cache: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
   "cacheData": {
-    "File": [
-      {
-        "id": "image-test-id",
-        "value": {
-          "__typename": "File",
-          "dimensions": {
-            "height": 100,
-            "width": 100,
-          },
-          "extension": "jpg",
+    "apiResources": {
+      "File": [
+        {
           "id": "image-test-id",
-          "name": "image",
-          "publicUrl": "https://example.com/image.jpg",
+          "value": {
+            "__typename": "File",
+            "dimensions": {
+              "height": 100,
+              "width": 100,
+            },
+            "extension": "jpg",
+            "id": "image-test-id",
+            "name": "image",
+            "publicUrl": "https://example.com/image.jpg",
+          },
         },
-      },
-    ],
+      ],
+    },
+    "localizedResourcesMap": {},
   },
   "document": {
     "data": {
@@ -988,9 +976,6 @@ exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": 
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -998,8 +983,10 @@ exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::control
 
 exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::controls::image::format::url fetching image: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -1046,9 +1033,6 @@ exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::control
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -1056,24 +1040,26 @@ exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::control
 
 exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::controls::image::format::url reading file from cache: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
   "cacheData": {
-    "File": [
-      {
-        "id": "image-test-id",
-        "value": {
-          "__typename": "File",
-          "dimensions": {
-            "height": 100,
-            "width": 100,
-          },
-          "extension": "jpg",
+    "apiResources": {
+      "File": [
+        {
           "id": "image-test-id",
-          "name": "image",
-          "publicUrl": "https://example.com/image.jpg",
+          "value": {
+            "__typename": "File",
+            "dimensions": {
+              "height": 100,
+              "width": 100,
+            },
+            "extension": "jpg",
+            "id": "image-test-id",
+            "name": "image",
+            "publicUrl": "https://example.com/image.jpg",
+          },
         },
-      },
-    ],
+      ],
+    },
+    "localizedResourcesMap": {},
   },
   "document": {
     "data": {
@@ -1121,9 +1107,6 @@ exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::control
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -1139,8 +1122,10 @@ exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::control
 
 exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::controls::image::format::with-dimensions fetching image: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -1187,9 +1172,6 @@ exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::control
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -1205,24 +1187,26 @@ exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::control
 
 exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::controls::image::format::with-dimensions reading file from cache: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
   "cacheData": {
-    "File": [
-      {
-        "id": "image-test-id",
-        "value": {
-          "__typename": "File",
-          "dimensions": {
-            "height": 100,
-            "width": 100,
-          },
-          "extension": "jpg",
+    "apiResources": {
+      "File": [
+        {
           "id": "image-test-id",
-          "name": "image",
-          "publicUrl": "https://example.com/image.jpg",
+          "value": {
+            "__typename": "File",
+            "dimensions": {
+              "height": 100,
+              "width": 100,
+            },
+            "extension": "jpg",
+            "id": "image-test-id",
+            "name": "image",
+            "publicUrl": "https://example.com/image.jpg",
+          },
         },
-      },
-    ],
+      ],
+    },
+    "localizedResourcesMap": {},
   },
   "document": {
     "data": {
@@ -1270,9 +1254,6 @@ exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::control
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -1280,8 +1261,10 @@ exports[`Page ImageDefinition v1 reading v0 data with format: undefined fetching
 
 exports[`Page ImageDefinition v1 reading v0 data with format: undefined fetching image: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -1328,9 +1311,6 @@ exports[`Page ImageDefinition v1 reading v0 data with format: undefined fetching
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -1338,24 +1318,26 @@ exports[`Page ImageDefinition v1 reading v0 data with format: undefined reading 
 
 exports[`Page ImageDefinition v1 reading v0 data with format: undefined reading file from cache: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
   "cacheData": {
-    "File": [
-      {
-        "id": "image-test-id",
-        "value": {
-          "__typename": "File",
-          "dimensions": {
-            "height": 100,
-            "width": 100,
-          },
-          "extension": "jpg",
+    "apiResources": {
+      "File": [
+        {
           "id": "image-test-id",
-          "name": "image",
-          "publicUrl": "https://example.com/image.jpg",
+          "value": {
+            "__typename": "File",
+            "dimensions": {
+              "height": 100,
+              "width": 100,
+            },
+            "extension": "jpg",
+            "id": "image-test-id",
+            "name": "image",
+            "publicUrl": "https://example.com/image.jpg",
+          },
         },
-      },
-    ],
+      ],
+    },
+    "localizedResourcesMap": {},
   },
   "document": {
     "data": {
@@ -1403,8 +1385,5 @@ exports[`Page ImageDefinition v1 reading v0 data with format: undefined reading 
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;

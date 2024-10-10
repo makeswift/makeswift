@@ -30,22 +30,35 @@ export async function getStaticPaths(): Promise<
   }
 }
 
-type Props = MakeswiftPageProps
+export type PageProps = MakeswiftPageProps & {
+  previewMode: boolean
+  locale: string | undefined
+}
 
-export async function getStaticProps(
-  ctx: GetStaticPropsContext<ParsedUrlQuery>,
-): Promise<GetStaticPropsResult<Props>> {
-  const path = '/' + (ctx.params?.path ?? []).join('/')
+export async function getStaticProps({
+  params,
+  previewData,
+  locale,
+}: GetStaticPropsContext<ParsedUrlQuery>): Promise<
+  GetStaticPropsResult<PageProps>
+> {
+  const path = '/' + (params?.path ?? []).join('/')
   const snapshot = await client.getPageSnapshot(path, {
-    siteVersion: Makeswift.getSiteVersion(ctx.previewData),
-    locale: ctx.locale,
+    siteVersion: Makeswift.getSiteVersion(previewData),
+    locale,
   })
 
   if (snapshot == null) return { notFound: true }
 
-  return { props: { snapshot } }
+  return {
+    props: {
+      snapshot,
+      previewMode: Makeswift.getPreviewMode(previewData),
+      locale,
+    },
+  }
 }
 
-export default function Page({ snapshot }: Props) {
+export default function Page({ snapshot }: MakeswiftPageProps) {
   return <MakeswiftPage snapshot={snapshot} />
 }
