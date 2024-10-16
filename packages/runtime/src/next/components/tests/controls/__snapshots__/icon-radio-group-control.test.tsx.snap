@@ -4,8 +4,10 @@ exports[`Page IconRadioGroup control data resolves when value is subscript: reso
 
 exports[`Page IconRadioGroup control data resolves when value is subscript: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -48,9 +50,6 @@ exports[`Page IconRadioGroup control data resolves when value is subscript: snap
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -58,8 +57,10 @@ exports[`Page IconRadioGroup control data resolves when value is superscript: re
 
 exports[`Page IconRadioGroup control data resolves when value is superscript: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -102,9 +103,6 @@ exports[`Page IconRadioGroup control data resolves when value is superscript: sn
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -112,8 +110,10 @@ exports[`Page IconRadioGroup control data resolves when value is undefined: reso
 
 exports[`Page IconRadioGroup control data resolves when value is undefined: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -156,9 +156,6 @@ exports[`Page IconRadioGroup control data resolves when value is undefined: snap
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -166,8 +163,10 @@ exports[`Page resolves value when defaultValue is set: resolvedValue 1`] = `"sup
 
 exports[`Page resolves value when defaultValue is set: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -210,8 +209,5 @@ exports[`Page resolves value when defaultValue is set: snapshot 1`] = `
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;

@@ -45,34 +45,36 @@ describe('Page', () => {
           },
         },
         cacheData: {
-          Swatch: [
-            {
-              id: swatchId,
-              value: {
-                __typename: APIResourceType.Swatch,
+          apiResources: {
+            Swatch: [
+              {
                 id: swatchId,
-                hue: 238,
-                saturation: 87,
-                lightness: 49,
-              },
-            },
-          ],
-          File: [
-            {
-              id: fileId,
-              value: {
-                __typename: APIResourceType.File,
-                id: fileId,
-                publicUrl: 'https://example.com/image.png',
-                name: 'image',
-                extension: 'png',
-                dimensions: {
-                  width: 100,
-                  height: 100,
+                value: {
+                  __typename: APIResourceType.Swatch,
+                  id: swatchId,
+                  hue: 238,
+                  saturation: 87,
+                  lightness: 49,
                 },
               },
-            },
-          ],
+            ],
+            File: [
+              {
+                id: fileId,
+                value: {
+                  __typename: APIResourceType.File,
+                  id: fileId,
+                  publicUrl: 'https://example.com/image.png',
+                  name: 'image',
+                  extension: 'png',
+                  dimensions: {
+                    width: 100,
+                    height: 100,
+                  },
+                },
+              },
+            ],
+          },
         },
         expectedRenders: 1,
       },

@@ -9,8 +9,10 @@ exports[`Page Combobox control data async getOptions resolves when value is { id
 
 exports[`Page Combobox control data async getOptions resolves when value is { id: '1', label: 'One', value: [Object] }: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -60,9 +62,6 @@ exports[`Page Combobox control data async getOptions resolves when value is { id
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -75,8 +74,10 @@ exports[`Page Combobox control data async getOptions resolves when value is { id
 
 exports[`Page Combobox control data async getOptions resolves when value is { id: '2', label: 'Two', value: [Object] }: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -126,9 +127,6 @@ exports[`Page Combobox control data async getOptions resolves when value is { id
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -141,8 +139,10 @@ exports[`Page Combobox control data async getOptions resolves when value is { id
 
 exports[`Page Combobox control data async getOptions resolves when value is { id: '3', label: 'Three', value: [Object] }: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -192,9 +192,6 @@ exports[`Page Combobox control data async getOptions resolves when value is { id
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -202,8 +199,10 @@ exports[`Page Combobox control data async getOptions resolves when value is unde
 
 exports[`Page Combobox control data async getOptions resolves when value is undefined: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -246,9 +245,6 @@ exports[`Page Combobox control data async getOptions resolves when value is unde
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -261,8 +257,10 @@ exports[`Page Combobox control data object values resolves when value is { id: '
 
 exports[`Page Combobox control data object values resolves when value is { id: '1', label: 'One', value: [Object] }: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -312,9 +310,6 @@ exports[`Page Combobox control data object values resolves when value is { id: '
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -327,8 +322,10 @@ exports[`Page Combobox control data object values resolves when value is { id: '
 
 exports[`Page Combobox control data object values resolves when value is { id: '2', label: 'Two', value: [Object] }: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -378,9 +375,6 @@ exports[`Page Combobox control data object values resolves when value is { id: '
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -393,8 +387,10 @@ exports[`Page Combobox control data object values resolves when value is { id: '
 
 exports[`Page Combobox control data object values resolves when value is { id: '3', label: 'Three', value: [Object] }: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -444,9 +440,6 @@ exports[`Page Combobox control data object values resolves when value is { id: '
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -454,8 +447,10 @@ exports[`Page Combobox control data object values resolves when value is undefin
 
 exports[`Page Combobox control data object values resolves when value is undefined: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -498,9 +493,6 @@ exports[`Page Combobox control data object values resolves when value is undefin
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -508,8 +500,10 @@ exports[`Page Combobox control data primitive values resolves when value is { id
 
 exports[`Page Combobox control data primitive values resolves when value is { id: '1', label: 'One', value: 'one' }: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -556,9 +550,6 @@ exports[`Page Combobox control data primitive values resolves when value is { id
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -566,8 +557,10 @@ exports[`Page Combobox control data primitive values resolves when value is { id
 
 exports[`Page Combobox control data primitive values resolves when value is { id: '2', label: 'Two', value: 'two' }: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -614,9 +607,6 @@ exports[`Page Combobox control data primitive values resolves when value is { id
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -624,8 +614,10 @@ exports[`Page Combobox control data primitive values resolves when value is { id
 
 exports[`Page Combobox control data primitive values resolves when value is { id: '3', label: 'Three', value: 'three' }: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -672,9 +664,6 @@ exports[`Page Combobox control data primitive values resolves when value is { id
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -682,8 +671,10 @@ exports[`Page Combobox control data primitive values resolves when value is unde
 
 exports[`Page Combobox control data primitive values resolves when value is undefined: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -726,8 +717,5 @@ exports[`Page Combobox control data primitive values resolves when value is unde
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;

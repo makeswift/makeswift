@@ -1,5 +1,6 @@
 import { MakeswiftProvider } from '@/makeswift/provider'
 import { DraftModeScript } from '@makeswift/runtime/next/server'
+import { draftMode } from 'next/headers'
 
 type Params = { lang: string; path?: string[] }
 
@@ -13,10 +14,15 @@ export default function RootLayout({
   return (
     <html lang={params.lang}>
       <head>
-        <DraftModeScript />
+        <DraftModeScript appOrigin={process.env.MAKESWIFT_APP_ORIGIN} />
       </head>
       <body>
-        <MakeswiftProvider>{children}</MakeswiftProvider>
+        <MakeswiftProvider
+          previewMode={draftMode().isEnabled}
+          locale={params.lang}
+        >
+          {children}
+        </MakeswiftProvider>
       </body>
     </html>
   )
