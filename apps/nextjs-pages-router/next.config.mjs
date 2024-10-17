@@ -6,8 +6,18 @@ const withMakeswift = createWithMakeswift()
 const nextConfig = {
   reactStrictMode: true,
   i18n: {
-    locales: ["en-US", "fr-FR"],
-    defaultLocale: "en-US",
+    locales: ['en-US', 'fr-FR'],
+    defaultLocale: 'en-US',
+    domains: [
+      {
+        domain: 'pages.agurtovoy.work',
+        defaultLocale: 'en-US',
+      },
+      {
+        domain: 'pages-fr.agurtovoy.work',
+        defaultLocale: 'fr-FR',
+      },
+    ],
   },
 }
 
