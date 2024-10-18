@@ -1,6 +1,6 @@
 'use client'
 
-import { memo, Suspense, useEffect, useMemo } from 'react'
+import { memo, ReactNode, Suspense, useEffect, useMemo } from 'react'
 import { componentDocumentToRootEmbeddedDocument, MakeswiftComponentSnapshot } from '../client'
 import { DocumentRoot } from '../../runtimes/react/components/DocumentRoot'
 import { useCacheData } from '../../runtimes/react/hooks/use-cache-data'
@@ -11,15 +11,22 @@ type Props = {
   snapshot: MakeswiftComponentSnapshot
   name: string
   type: string
+  fallback?: ReactNode
 }
 
-export const MakeswiftComponent = memo(({ snapshot, name, type }: Props) => {
+export const MakeswiftComponent = memo(({ snapshot, name, type, fallback }: Props) => {
   const dispatch = useDispatch()
 
   useCacheData(snapshot.cacheData)
 
   const rootDocument = useMemo(
-    () => componentDocumentToRootEmbeddedDocument({ document: snapshot.document, name, type }),
+    () =>
+      componentDocumentToRootEmbeddedDocument({
+        document: snapshot.document,
+        name,
+        type,
+        hasFallback: fallback != null,
+      }),
     [snapshot, name, type],
   )
 
@@ -27,7 +34,7 @@ export const MakeswiftComponent = memo(({ snapshot, name, type }: Props) => {
 
   return (
     <Suspense>
-      <DocumentRoot rootDocument={rootDocument} />
+      <DocumentRoot rootDocument={rootDocument} fallback={fallback} />
     </Suspense>
   )
 })
