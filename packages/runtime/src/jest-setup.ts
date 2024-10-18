@@ -10,6 +10,7 @@ expect.extend(matchers)
 
 jest.mock('uuid', () => ({
   v4: jest.fn(() => 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'),
+  v5: jest.fn(() => 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'),
 }))
 
 if (typeof window !== 'undefined') {
