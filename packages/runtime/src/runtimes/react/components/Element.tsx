@@ -1,66 +1,47 @@
 'use client'
 
-import { Ref, forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
-import { Element as ElementDataOrRef, isElementReference } from '../../../state/react-page'
-import { ElementImperativeHandle } from '../element-imperative-handle'
-import { useDispatch } from '../hooks/use-dispatch'
-import { useDocumentKey } from '../hooks/use-document-context'
-import { useDisableRegisterElement } from '../hooks/use-disable-register-element'
-import { mountComponentEffect, registerComponentHandleEffect } from '../../../state/actions'
+import { forwardRef, memo, ReactNode, Ref } from 'react'
+import { isElementReference, type Element as ReactPageElement } from '../../../state/react-page'
+import { RegisterChildrenAsElement } from './RegisterChildrenAsElement'
 import { ElementReference } from './ElementReference'
 import { ElementData } from './ElementData'
-import { FindDomNode } from '../find-dom-node'
+import { ElementImperativeHandle } from '../element-imperative-handle'
+
+type ElementWithFallbackProps = {
+  element: ReactPageElement
+  fallback?: ReactNode
+  isInitialData?: boolean
+}
+
+export const ElementWithFallback = memo(
+  forwardRef(function Element(
+    { element, fallback, isInitialData = false }: ElementWithFallbackProps,
+    ref: Ref<ElementImperativeHandle>,
+  ): JSX.Element | null {
+    const showFallback = fallback != null && isInitialData
+    return (
+      <RegisterChildrenAsElement elementKey={element.key}>
+        {showFallback ? (
+          fallback
+        ) : isElementReference(element) ? (
+          <ElementReference key={element.key} ref={ref} elementReference={element} />
+        ) : (
+          <ElementData key={element.key} ref={ref} elementData={element} />
+        )}
+      </RegisterChildrenAsElement>
+    )
+  }),
+)
 
 type ElementProps = {
-  element: ElementDataOrRef
+  element: ReactPageElement
 }
 
 export const Element = memo(
   forwardRef(function Element(
     { element }: ElementProps,
     ref: Ref<ElementImperativeHandle>,
-  ): JSX.Element {
-    const elementKey = element.key
-    const dispatch = useDispatch()
-    const documentKey = useDocumentKey()
-    const useFindDomNodeRef = useRef(true)
-    const imperativeHandleRef = useRef(new ElementImperativeHandle())
-    const findDomNodeCallbackRef = useCallback((current: (() => Element | Text | null) | null) => {
-      if (useFindDomNodeRef.current === true) {
-        imperativeHandleRef.current.callback(() => current?.() ?? null)
-      }
-    }, [])
-    const elementCallbackRef = useCallback((current: unknown | null) => {
-      useFindDomNodeRef.current = false
-
-      imperativeHandleRef.current.callback(() => current)
-    }, [])
-    const isRegisterElementDisabled = useDisableRegisterElement()
-
-    useImperativeHandle(ref, () => imperativeHandleRef.current, [])
-
-    useEffect(() => {
-      if (documentKey == null || isRegisterElementDisabled) return
-
-      return dispatch(
-        registerComponentHandleEffect(documentKey, elementKey, imperativeHandleRef.current),
-      )
-    }, [dispatch, documentKey, elementKey, isRegisterElementDisabled])
-
-    useEffect(() => {
-      if (documentKey == null || isRegisterElementDisabled) return
-
-      return dispatch(mountComponentEffect(documentKey, elementKey))
-    }, [dispatch, documentKey, elementKey, isRegisterElementDisabled])
-
-    return (
-      <FindDomNode ref={findDomNodeCallbackRef}>
-        {isElementReference(element) ? (
-          <ElementReference key={elementKey} ref={elementCallbackRef} elementReference={element} />
-        ) : (
-          <ElementData key={elementKey} ref={elementCallbackRef} elementData={element} />
-        )}
-      </FindDomNode>
-    )
+  ): JSX.Element | null {
+    return <ElementWithFallback element={element} ref={ref} />
   }),
 )
