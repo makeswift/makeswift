@@ -43,7 +43,6 @@ import {
 import { getMakeswiftSiteVersion, MakeswiftSiteVersion } from './preview-mode'
 import { toIterablePaginationResult } from './utils/pagination'
 import { deterministicUUID } from '../utils/deterministic-uuid'
-import { randomUUID } from 'crypto'
 import { Schema } from '@makeswift/controls'
 import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-only-documents'
 
@@ -139,7 +138,6 @@ export type MakeswiftPageSnapshot = {
 }
 
 const makeswiftComponentDocumentSchema = z.object({
-  id: z.string(),
   type: z.string(),
   key: z.string(),
   name: z.string().nullable(),
@@ -157,9 +155,17 @@ export type MakeswiftComponentSnapshot = {
 export function componentDocumentToRootEmbeddedDocument(
   componentDocument: MakeswiftComponentDocument,
 ): EmbeddedDocument {
-  const { id, data, locale, key, type, name } = componentDocument
+  const { data, locale, key, type, name } = componentDocument
+  // Because EmbeddedDocument has composite keys instead of a UUID, we need to generate a stable UUID for the key/documentKey.
+  const stableUUID = deterministicUUID({
+    type,
+    key,
+    locale,
+    dataKey: data.key,
+  })
+
   const rootDocument = {
-    key: id,
+    key: stableUUID,
     rootElement: data,
     locale,
     userProvidedKey: key,
@@ -635,7 +641,7 @@ export class Makeswift {
 
       // Create a stable uuid so two different clients will have the same empty element data.
       // This is needed to make presence feature work for an element that is not yet created.
-      const generatedKey = deterministicUUID({
+      const generatedElementDataKey = deterministicUUID({
         type,
         key,
         locale,
@@ -644,7 +650,7 @@ export class Makeswift {
       })
 
       const emptyElementData: ElementData = {
-        key: generatedKey,
+        key: generatedElementDataKey,
         type: type,
         props: {},
       }
@@ -653,7 +659,6 @@ export class Makeswift {
 
       return {
         document: {
-          id: randomUUID(),
           type,
           key,
           name: name ?? null,
