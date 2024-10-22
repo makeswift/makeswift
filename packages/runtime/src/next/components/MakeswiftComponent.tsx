@@ -1,12 +1,7 @@
 'use client'
 
 import { memo, Suspense, useEffect, useMemo } from 'react'
-import {
-  componentDocumentToRootEmbeddedDocument,
-  MakeswiftComponentDocument,
-  MakeswiftComponentSnapshot,
-} from '../client'
-import * as ReactPage from '../../state/react-page'
+import { componentDocumentToRootEmbeddedDocument, MakeswiftComponentSnapshot } from '../client'
 import { DocumentRoot } from '../../runtimes/react/components/DocumentRoot'
 import { useCacheData } from '../../runtimes/react/hooks/use-cache-data'
 import { useDispatch } from '../../runtimes/react/hooks/use-dispatch'
@@ -14,20 +9,21 @@ import { registerDocumentsEffect } from '../../state/actions'
 
 type Props = {
   snapshot: MakeswiftComponentSnapshot
+  name: string
+  type: string
 }
 
-function useRegisterEmbeddedDocument(document: MakeswiftComponentDocument): ReactPage.Document {
+export const Unstable_MakeswiftComponent = memo(({ snapshot, name, type }: Props) => {
   const dispatch = useDispatch()
 
-  const rootDocument = useMemo(() => componentDocumentToRootEmbeddedDocument(document), [document])
-  useEffect(() => dispatch(registerDocumentsEffect([rootDocument])), [rootDocument])
-  return rootDocument
-}
-
-export const Unstable_MakeswiftComponent = memo(({ snapshot }: Props) => {
   useCacheData(snapshot.cacheData)
 
-  const rootDocument = useRegisterEmbeddedDocument(snapshot.document)
+  const rootDocument = useMemo(
+    () => componentDocumentToRootEmbeddedDocument({ document: snapshot.document, name, type }),
+    [snapshot, name, type],
+  )
+
+  useEffect(() => dispatch(registerDocumentsEffect([rootDocument])), [rootDocument])
 
   return (
     <Suspense>

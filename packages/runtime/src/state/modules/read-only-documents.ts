@@ -26,11 +26,9 @@ type BaseDocument = {
 export const EMBEDDED_DOCUMENT_TYPE = 'EMBEDDED_DOCUMENT' as const
 
 export type EmbeddedDocument = BaseDocument & {
-  userProvidedKey: string
+  id: string
   type: string
-  meta: {
-    name: string | null
-  }
+  name: string
   __type: typeof EMBEDDED_DOCUMENT_TYPE
 }
 
