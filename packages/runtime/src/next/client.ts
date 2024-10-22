@@ -21,7 +21,7 @@ import {
   TableQueryVariables,
 } from '../api/graphql/generated/types'
 
-import { type CacheData } from '../api/react'
+import { CacheData } from '../api/react'
 import { Descriptor as PropControllerDescriptor } from '../prop-controllers/descriptors'
 import {
   getElementChildren,
@@ -43,7 +43,7 @@ import {
 import { getMakeswiftSiteVersion, MakeswiftSiteVersion } from './preview-mode'
 import { toIterablePaginationResult } from './utils/pagination'
 import { deterministicUUID } from '../utils/deterministic-uuid'
-import { randomUUID } from 'crypto'
+import { v4 as uuid } from 'uuid'
 import { Schema } from '@makeswift/controls'
 import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-only-documents'
 
@@ -140,33 +140,66 @@ export type MakeswiftPageSnapshot = {
 
 const makeswiftComponentDocumentSchema = z.object({
   id: z.string(),
-  type: z.string(),
-  key: z.string(),
   name: z.string().nullable(),
   locale: z.string().nullable(),
   data: Schema.element,
+  siteId: z.string(),
 })
 
 export type MakeswiftComponentDocument = z.infer<typeof makeswiftComponentDocumentSchema>
 
+const makeswiftComponentDocumentFallbackSchema = z.object({
+  id: z.string(),
+  locale: z.string().nullable(),
+  data: z.null(),
+  seed: z.string(),
+})
+
+export type MakeswiftComponentDocumentFallback = z.infer<
+  typeof makeswiftComponentDocumentFallbackSchema
+>
+
 export type MakeswiftComponentSnapshot = {
-  document: MakeswiftComponentDocument
+  document: MakeswiftComponentDocument | MakeswiftComponentDocumentFallback
   cacheData: CacheData
 }
 
-export function componentDocumentToRootEmbeddedDocument(
-  componentDocument: MakeswiftComponentDocument,
-): EmbeddedDocument {
-  const { id, data, locale, key, type, name } = componentDocument
-  const rootDocument = {
-    key: id,
-    rootElement: data,
-    locale,
-    userProvidedKey: key,
+export function componentDocumentToRootEmbeddedDocument({
+  document,
+  name,
+  type,
+}: {
+  document: MakeswiftComponentDocument | MakeswiftComponentDocumentFallback
+  name: string
+  type: string
+}): EmbeddedDocument {
+  const { data, locale, id } = document
+
+  if (data != null && data.type !== type) {
+    throw new Error(
+      `Type "${data.type}" does not match the expected type "${type}" from the snapshot`,
+    )
+  }
+
+  const rootElement = data ?? {
+    // Fallback rootElement
+    // Create a stable uuid so two different clients will have the same empty element data.
+    // This is needed to make presence feature work for an element that is not yet created.
+    key: deterministicUUID({ id, locale, seed: document.seed }),
     type,
-    meta: { name },
+    props: {},
+  }
+
+  const rootDocument: EmbeddedDocument = {
+    key: uuid(),
+    rootElement,
+    locale,
+    id,
+    type,
+    name,
     __type: EMBEDDED_DOCUMENT_TYPE,
   }
+
   return rootDocument
 }
 
@@ -611,56 +644,37 @@ export class Makeswift {
     }
   }
 
-  async unstable_getComponentSnapshot({
-    type,
-    key,
-    name,
-    siteVersion,
-    locale,
-  }: {
-    type: string
-    key: string
-    name?: string
-    siteVersion: MakeswiftSiteVersion
-    locale?: string
-  }): Promise<MakeswiftComponentSnapshot> {
-    const searchParams = new URLSearchParams({ key, type })
+  async unstable_getComponentSnapshot(
+    id: string,
+    {
+      siteVersion = MakeswiftSiteVersion.Working,
+      locale,
+    }: {
+      siteVersion?: MakeswiftSiteVersion
+      locale?: string
+    } = {},
+  ): Promise<MakeswiftComponentSnapshot> {
+    const searchParams = new URLSearchParams()
     if (locale) searchParams.set('locale', locale)
 
-    const response = await this.fetch(`v1/element_trees?${searchParams.toString()}`, siteVersion)
+    const response = await this.fetch(
+      `v1/element_trees/${id}?${searchParams.toString()}`,
+      siteVersion,
+    )
 
-    // If the element tree is not found, we generate a new document
+    // If the element tree is not found, we generate a document with null data
     if (response.status === 404) {
-      const apiKeyPrefix = this.apiKey.split('-').at(0)
-
-      // Create a stable uuid so two different clients will have the same empty element data.
-      // This is needed to make presence feature work for an element that is not yet created.
-      const generatedKey = deterministicUUID({
-        type,
-        key,
-        locale,
-        siteVersion,
-        apiKeyPrefix,
-      })
-
-      const emptyElementData: ElementData = {
-        key: generatedKey,
-        type: type,
-        props: {},
-      }
-
-      const cacheData = await this.introspect(emptyElementData, siteVersion, locale)
+      const apiKeyPrefix = z.string().parse(this.apiKey.split('-').at(0))
 
       return {
         document: {
-          id: randomUUID(),
-          type,
-          key,
-          name: name ?? null,
+          id,
           locale: locale ?? null,
-          data: emptyElementData,
+          data: null,
+          // We pass the seed to generate the elementKey to make sure it's unique for each site.
+          seed: apiKeyPrefix,
         },
-        cacheData,
+        cacheData: CacheData.empty(),
       }
     }
 

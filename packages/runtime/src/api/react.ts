@@ -21,6 +21,15 @@ import {
 
 export type CacheData = MakeswiftApiClient.SerializedState
 
+export const CacheData = {
+  empty(): CacheData {
+    return {
+      apiResources: {},
+      localizedResourcesMap: {},
+    }
+  },
+}
+
 /**
  * NOTE(miguel): This "client" is used to fetch Makeswift API resources needed for the host. For
  * example, swatches, files, typographies, etc. Ideally it's internal to the runtime and is only
