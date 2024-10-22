@@ -100,11 +100,9 @@ type DocumentPayloadBaseDocument = {
 }
 
 type DocumentPayloadEmbeddedDocument = DocumentPayloadBaseDocument & {
-  userProvidedKey: string
+  id: string
   type: string
-  meta: {
-    name: string | null
-  }
+  name: string
   __type: typeof EMBEDDED_DOCUMENT_TYPE
 }
 
