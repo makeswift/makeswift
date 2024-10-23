@@ -662,7 +662,7 @@ export class Makeswift {
     if (locale) searchParams.set('locale', locale)
 
     const response = await this.fetch(
-      `v1/element_trees/${id}?${searchParams.toString()}`,
+      `v1/element-trees/${id}?${searchParams.toString()}`,
       siteVersion,
     )
 
