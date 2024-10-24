@@ -1,5 +1,5 @@
 import { getElementId } from '../../../state/react-page'
-import { useDocumentKey } from './use-document-key'
+import { useDocumentKey } from './use-document-context'
 import { useSelector } from './use-selector'
 
 export function useElementId(elementKey: string | null | undefined): string | null {

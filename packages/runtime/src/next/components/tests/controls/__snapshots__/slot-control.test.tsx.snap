@@ -41,8 +41,10 @@ NodeList [
 
 exports[`Page Slot renders a placeholder when empty: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -88,9 +90,6 @@ exports[`Page Slot renders a placeholder when empty: snapshot 1`] = `
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -160,8 +159,10 @@ NodeList [
 
 exports[`Page Slot renders a slot with a clickable button: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -215,8 +216,5 @@ exports[`Page Slot renders a slot with a clickable button: snapshot 1`] = `
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;

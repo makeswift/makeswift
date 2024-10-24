@@ -4,8 +4,10 @@ exports[`Page TextArea control data v0 when value is The Prizoner of Azkaban: re
 
 exports[`Page TextArea control data v0 when value is The Prizoner of Azkaban: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -48,9 +50,6 @@ exports[`Page TextArea control data v0 when value is The Prizoner of Azkaban: sn
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -58,8 +57,10 @@ exports[`Page TextArea control data v0 when value is undefined: resolvedValue 1`
 
 exports[`Page TextArea control data v0 when value is undefined: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -102,9 +103,6 @@ exports[`Page TextArea control data v0 when value is undefined: snapshot 1`] = `
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -112,8 +110,10 @@ exports[`Page TextArea control data v1 when value is The Prizoner of Azkaban: re
 
 exports[`Page TextArea control data v1 when value is The Prizoner of Azkaban: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -159,9 +159,6 @@ exports[`Page TextArea control data v1 when value is The Prizoner of Azkaban: sn
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -169,8 +166,10 @@ exports[`Page TextArea control data v1 when value is undefined: resolvedValue 1`
 
 exports[`Page TextArea control data v1 when value is undefined: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -213,9 +212,6 @@ exports[`Page TextArea control data v1 when value is undefined: snapshot 1`] = `
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -223,8 +219,10 @@ exports[`Page when defaultValue is set: resolvedValue 1`] = `"The Deathly Hallow
 
 exports[`Page when defaultValue is set: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -267,8 +265,5 @@ exports[`Page when defaultValue is set: snapshot 1`] = `
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;

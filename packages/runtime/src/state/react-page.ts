@@ -7,6 +7,7 @@ import {
 } from 'redux'
 
 import thunk, { ThunkDispatch } from 'redux-thunk'
+import { composeWithDevToolsDevelopmentOnly } from '@redux-devtools/extension'
 
 import {
   createReplacementContext,
@@ -16,6 +17,8 @@ import {
   type MergeTranslatableDataContext,
   type MergeContext,
 } from '@makeswift/controls'
+
+import { serializeState } from '../utils/serializeState'
 
 import * as Documents from './modules/read-only-documents'
 import * as ReactComponents from './modules/react-components'
@@ -27,6 +30,7 @@ import * as IsPreview from './modules/is-preview'
 import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Breakpoints from './modules/breakpoints'
 import * as Introspection from '../prop-controllers/introspection'
+
 import { Action } from './actions'
 import { copyElementReference } from '../prop-controllers/copy'
 import {
@@ -35,6 +39,8 @@ import {
   merge,
   mergeTranslatedData,
 } from '../controls/control'
+
+import { type SetupTeardownMixin, withSetupTeardown } from './mixins/setup-teardown'
 
 export type {
   Data,
@@ -46,7 +52,7 @@ export type {
 } from './modules/read-only-documents'
 
 export {
-  createDocument,
+  createBaseDocument,
   createDocumentReference,
   isElementReference,
 } from './modules/read-only-documents'
@@ -410,24 +416,35 @@ export function getBreakpoints(state: State): Breakpoints.State {
 
 export type Dispatch = ThunkDispatch<State, unknown, Action>
 
-export type Store = ReduxStore<State, Action> & { dispatch: Dispatch }
+export type Store = ReduxStore<State, Action> & { dispatch: Dispatch } & SetupTeardownMixin
 
 export function configureStore({
-  rootElements,
+  name,
   preloadedState,
   breakpoints,
 }: {
-  rootElements?: Map<string, Documents.Element>
+  name: string
   preloadedState?: PreloadedState<State>
   breakpoints?: Breakpoints.State
-} = {}): Store {
+}): Store {
+  const composeEnhancers = composeWithDevToolsDevelopmentOnly({
+    name: `${name} (${new Date().toISOString()})`,
+    serialize: true,
+    stateSanitizer: (state: any) => serializeState(state),
+  })
+
   return createStore(
     reducer,
     {
       ...preloadedState,
-      documents: Documents.getInitialState({ rootElements }),
       breakpoints: Breakpoints.getInitialState(breakpoints ?? preloadedState?.breakpoints),
     },
-    applyMiddleware(thunk),
+    composeEnhancers(
+      withSetupTeardown(
+        () => {},
+        () => {},
+      ),
+      applyMiddleware(thunk),
+    ),
   )
 }

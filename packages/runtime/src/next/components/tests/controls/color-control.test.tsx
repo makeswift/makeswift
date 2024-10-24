@@ -64,9 +64,11 @@ describe('Page', () => {
             toData,
             value,
             cacheData: {
-              Swatch: [
-                { id: swatchId, value: swatch == null ? null : { id: swatchId, ...swatch } },
-              ],
+              apiResources: {
+                Swatch: [
+                  { id: swatchId, value: swatch == null ? null : { id: swatchId, ...swatch } },
+                ],
+              },
             },
             expectedRenders: 1,
           })

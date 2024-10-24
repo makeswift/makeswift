@@ -8,8 +8,10 @@ exports[`Page Link control data { type: 'CALL_PHONE', payload: [Object] }: resol
 
 exports[`Page Link control data { type: 'CALL_PHONE', payload: [Object] }: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -57,9 +59,6 @@ exports[`Page Link control data { type: 'CALL_PHONE', payload: [Object] }: snaps
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -72,8 +71,10 @@ exports[`Page Link control data { type: 'OPEN_URL', payload: [Object] }: resolve
 
 exports[`Page Link control data { type: 'OPEN_URL', payload: [Object] }: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -122,9 +123,6 @@ exports[`Page Link control data { type: 'OPEN_URL', payload: [Object] }: snapsho
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -136,8 +134,10 @@ exports[`Page Link control data { type: 'SCROLL_TO_ELEMENT', payload: [Object] }
 
 exports[`Page Link control data { type: 'SCROLL_TO_ELEMENT', payload: [Object] }: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -189,9 +189,6 @@ exports[`Page Link control data { type: 'SCROLL_TO_ELEMENT', payload: [Object] }
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -203,8 +200,10 @@ exports[`Page Link control data { type: 'SEND_EMAIL', payload: [Object] }: resol
 
 exports[`Page Link control data { type: 'SEND_EMAIL', payload: [Object] }: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -254,98 +253,21 @@ exports[`Page Link control data { type: 'SEND_EMAIL', payload: [Object] }: snaps
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
-exports[`Page Link control data OPEN_PAGE fetches pathname slice when not in cache: resolvedValue 1`] = `
+exports[`Page Link control data OPEN_PAGE for locale fr-FR fetches pathname slice when not in cache: resolvedValue 1`] = `
 {
-  "href": "/fake-pathname",
+  "href": "/fr-FR/test-localized-pathname",
   "target": "_self",
 }
 `;
 
-exports[`Page Link control data OPEN_PAGE fetches pathname slice when not in cache: snapshot 1`] = `
+exports[`Page Link control data OPEN_PAGE for locale fr-FR fetches pathname slice when not in cache: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
-  "document": {
-    "data": {
-      "key": "00000000-0000-0000-0000-000000000000",
-      "props": {
-        "children": {
-          "columns": [
-            {
-              "deviceId": "desktop",
-              "value": {
-                "count": 12,
-                "spans": [
-                  [
-                    12,
-                  ],
-                ],
-              },
-            },
-          ],
-          "elements": [
-            {
-              "key": "11111111-1111-1111-1111-111111111111",
-              "props": {
-                "propKey": {
-                  "payload": {
-                    "openInNewTab": false,
-                    "pageId": "fake-page-id",
-                  },
-                  "type": "OPEN_PAGE",
-                },
-              },
-              "type": "TestComponent",
-            },
-          ],
-        },
-      },
-      "type": "./components/Root/index.js",
-    },
-    "fonts": [],
-    "id": "test-page-id",
-    "locale": null,
-    "localizedPages": [],
-    "meta": {},
-    "seo": {},
-    "site": {
-      "id": "test-site-id",
-    },
-    "snippets": [],
-  },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
-}
-`;
-
-exports[`Page Link control data OPEN_PAGE renders page link when page pathname slice is in cache: resolvedValue 1`] = `
-{
-  "href": "/fake-pathname",
-  "target": "_self",
-}
-`;
-
-exports[`Page Link control data OPEN_PAGE renders page link when page pathname slice is in cache: snapshot 1`] = `
-{
-  "apiOrigin": "https://test-api-origin.com",
   "cacheData": {
-    "PagePathnameSlice": [
-      {
-        "id": "fake-page-id",
-        "value": {
-          "__typename": "PagePathnameSlice",
-          "id": "fake-page-id",
-          "pathname": "fake-pathname",
-        },
-      },
-    ],
+    "apiResources": {},
+    "localizedResourcesMap": {},
   },
   "document": {
     "data": {
@@ -372,7 +294,7 @@ exports[`Page Link control data OPEN_PAGE renders page link when page pathname s
                 "propKey": {
                   "payload": {
                     "openInNewTab": false,
-                    "pageId": "fake-page-id",
+                    "pageId": "[test-page-id]",
                   },
                   "type": "OPEN_PAGE",
                 },
@@ -386,7 +308,7 @@ exports[`Page Link control data OPEN_PAGE renders page link when page pathname s
     },
     "fonts": [],
     "id": "test-page-id",
-    "locale": null,
+    "locale": "fr-FR",
     "localizedPages": [],
     "meta": {},
     "seo": {},
@@ -395,29 +317,106 @@ exports[`Page Link control data OPEN_PAGE renders page link when page pathname s
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
-exports[`Page Link control data OPEN_PAGE resolves default link attributes when unable to find pathname slice: resolvedValue 1`] = `
+exports[`Page Link control data OPEN_PAGE for locale fr-FR renders page link when page pathname slice is in cache: resolvedValue 1`] = `
+{
+  "href": "/fr-FR/test-localized-pathname",
+  "target": "_self",
+}
+`;
+
+exports[`Page Link control data OPEN_PAGE for locale fr-FR renders page link when page pathname slice is in cache: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {
+      "PagePathnameSlice": [
+        {
+          "id": "[test-page-id]",
+          "locale": "fr-FR",
+          "value": {
+            "__typename": "PagePathnameSlice",
+            "basePageId": "[test-base-page-id]",
+            "id": "[test-page-id]",
+            "pathname": "fr-FR/test-localized-pathname",
+          },
+        },
+      ],
+    },
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "payload": {
+                    "openInNewTab": false,
+                    "pageId": "[test-page-id]",
+                  },
+                  "type": "OPEN_PAGE",
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": "fr-FR",
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`Page Link control data OPEN_PAGE for locale fr-FR resolves default link attributes when unable to find pathname slice: resolvedValue 1`] = `
 {
   "href": "#",
   "target": "_self",
 }
 `;
 
-exports[`Page Link control data OPEN_PAGE resolves default link attributes when unable to find pathname slice: snapshot 1`] = `
+exports[`Page Link control data OPEN_PAGE for locale fr-FR resolves default link attributes when unable to find pathname slice: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
   "cacheData": {
-    "PagePathnameSlice": [
-      {
-        "id": "fake-page-id",
-        "value": null,
-      },
-    ],
+    "apiResources": {
+      "PagePathnameSlice": [
+        {
+          "id": "[test-page-id]",
+          "locale": "fr-FR",
+          "value": null,
+        },
+      ],
+    },
+    "localizedResourcesMap": {},
   },
   "document": {
     "data": {
@@ -444,7 +443,71 @@ exports[`Page Link control data OPEN_PAGE resolves default link attributes when 
                 "propKey": {
                   "payload": {
                     "openInNewTab": false,
-                    "pageId": "fake-page-id",
+                    "pageId": "[test-page-id]",
+                  },
+                  "type": "OPEN_PAGE",
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": "fr-FR",
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`Page Link control data OPEN_PAGE for locale null fetches pathname slice when not in cache: resolvedValue 1`] = `
+{
+  "href": "/test-pathname",
+  "target": "_self",
+}
+`;
+
+exports[`Page Link control data OPEN_PAGE for locale null fetches pathname slice when not in cache: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "payload": {
+                    "openInNewTab": false,
+                    "pageId": "[test-page-id]",
                   },
                   "type": "OPEN_PAGE",
                 },
@@ -467,9 +530,154 @@ exports[`Page Link control data OPEN_PAGE resolves default link attributes when 
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
+}
+`;
+
+exports[`Page Link control data OPEN_PAGE for locale null renders page link when page pathname slice is in cache: resolvedValue 1`] = `
+{
+  "href": "/test-pathname",
+  "target": "_self",
+}
+`;
+
+exports[`Page Link control data OPEN_PAGE for locale null renders page link when page pathname slice is in cache: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {
+      "PagePathnameSlice": [
+        {
+          "id": "[test-page-id]",
+          "locale": null,
+          "value": {
+            "__typename": "PagePathnameSlice",
+            "id": "[test-page-id]",
+            "pathname": "test-pathname",
+          },
+        },
+      ],
+    },
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "payload": {
+                    "openInNewTab": false,
+                    "pageId": "[test-page-id]",
+                  },
+                  "type": "OPEN_PAGE",
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`Page Link control data OPEN_PAGE for locale null resolves default link attributes when unable to find pathname slice: resolvedValue 1`] = `
+{
+  "href": "#",
+  "target": "_self",
+}
+`;
+
+exports[`Page Link control data OPEN_PAGE for locale null resolves default link attributes when unable to find pathname slice: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {
+      "PagePathnameSlice": [
+        {
+          "id": "[test-page-id]",
+          "locale": null,
+          "value": null,
+        },
+      ],
+    },
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "payload": {
+                    "openInNewTab": false,
+                    "pageId": "[test-page-id]",
+                  },
+                  "type": "OPEN_PAGE",
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
 }
 `;
 
@@ -481,8 +689,10 @@ exports[`Page Link control data SCROLL_TO_ELEMENT resolves default link attribut
 
 exports[`Page Link control data SCROLL_TO_ELEMENT resolves default link attributes when elementIdConfig is not provided: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -534,22 +744,21 @@ exports[`Page Link control data SCROLL_TO_ELEMENT resolves default link attribut
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
 exports[`Page Link control data SCROLL_TO_ELEMENT resolves scroll target when element key is on screen: resolvedValue 1`] = `
 {
-  "href": "#fake-element-id",
+  "href": "#test-element-id",
 }
 `;
 
 exports[`Page Link control data SCROLL_TO_ELEMENT resolves scroll target when element key is on screen: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -591,7 +800,7 @@ exports[`Page Link control data SCROLL_TO_ELEMENT resolves scroll target when el
             {
               "key": "key",
               "props": {
-                "id": "fake-element-id",
+                "id": "test-element-id",
               },
               "type": "./components/Button/index.js",
             },
@@ -611,9 +820,6 @@ exports[`Page Link control data SCROLL_TO_ELEMENT resolves scroll target when el
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -625,8 +831,10 @@ exports[`Page Link control data null: resolvedValue 1`] = `
 
 exports[`Page Link control data null: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -669,8 +877,5 @@ exports[`Page Link control data null: snapshot 1`] = `
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;

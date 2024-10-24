@@ -1,0 +1,423 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`state / APIResources \`Actions.apiResourceFulfilled\` correctly populates the store 1`] = `
+{
+  "File": [
+    {
+      "id": "[test-file-id]",
+      "value": {
+        "__typename": "File",
+        "dimensions": {
+          "height": 1024,
+          "width": 1024,
+        },
+        "extension": "png",
+        "id": "[test-file-id]",
+        "name": "test-file-name",
+        "publicUrl": "https://example.com/test-file.png",
+      },
+    },
+  ],
+  "GlobalElement": [
+    {
+      "id": "[test-global-element-id]",
+      "value": {
+        "__typename": "GlobalElement",
+        "data": {},
+        "id": "[test-global-element-id]",
+      },
+    },
+  ],
+  "LocalizedGlobalElement": [
+    {
+      "id": "[test-localized-global-element-id]",
+      "locale": "fr-FR",
+      "value": {
+        "__typename": "LocalizedGlobalElement",
+        "data": {
+          "prompt": "bonjour le monde",
+        },
+        "id": "[test-localized-global-element-id]",
+      },
+    },
+    {
+      "id": "[test-localized-global-element-id]",
+      "locale": "it-IT",
+      "value": {
+        "__typename": "LocalizedGlobalElement",
+        "data": {
+          "prompt": "ciao mondo",
+        },
+        "id": "[test-localized-global-element-id]",
+      },
+    },
+  ],
+  "Page": [
+    {
+      "id": "[test-page-id]",
+      "value": {
+        "__typename": "Page",
+        "id": "[test-page-id]",
+        "snippets": [],
+      },
+    },
+  ],
+  "PagePathnameSlice": [
+    {
+      "id": "[test-page-pathname-slice-id]",
+      "value": {
+        "__typename": "PagePathnameSlice",
+        "id": "[test-page-pathname-slice-id]",
+        "pathname": "test/pathname",
+      },
+    },
+    {
+      "id": "[test-page-pathname-slice-id]",
+      "locale": "fr-FR",
+      "value": {
+        "__typename": "PagePathnameSlice",
+        "basePageId": "[test-base-page-id]",
+        "id": "[test-page-pathname-slice-id]",
+        "localizedPathname": "fr-FR/test/localized-pathname",
+        "pathname": "test-pathname",
+      },
+    },
+  ],
+  "Site": [
+    {
+      "id": "[test-site-id]",
+      "value": {
+        "__typename": "Site",
+        "googleFonts": {
+          "edges": [],
+        },
+        "id": "[test-site-id]",
+      },
+    },
+  ],
+  "Snippet": [
+    {
+      "id": "[test-snippet-id]",
+      "value": {
+        "__typename": "Snippet",
+        "builderEnabled": false,
+        "cleanup": null,
+        "code": "test-snippet-code",
+        "id": "[test-snippet-id]",
+        "liveEnabled": false,
+        "location": "BODY",
+        "name": "test-snippet-name",
+        "shouldAddToNewPages": false,
+      },
+    },
+  ],
+  "Swatch": [
+    {
+      "id": "[test-swatch-id]",
+      "value": {
+        "__typename": "Swatch",
+        "hue": 100,
+        "id": "[test-swatch-id]",
+        "lightness": 90,
+        "saturation": 70,
+      },
+    },
+  ],
+  "Table": [
+    {
+      "id": "[test-table-id]",
+      "value": {
+        "__typename": "Table",
+        "columns": [],
+        "id": "[test-table-id]",
+        "name": "test-table-name",
+      },
+    },
+  ],
+  "Typography": [
+    {
+      "id": "[test-typography-id]",
+      "value": {
+        "__typename": "Typography",
+        "id": "[test-typography-id]",
+        "name": "test-typography-name",
+        "style": [],
+      },
+    },
+  ],
+}
+`;
+
+exports[`state / APIResources \`Actions.changeApiResource\` correctly updates the store 1`] = `
+{
+  "File": [],
+  "GlobalElement": [
+    {
+      "id": "[test-global-element-id]",
+      "value": {
+        "__typename": "GlobalElement",
+        "data": {},
+        "id": "[test-global-element-id]",
+      },
+    },
+  ],
+  "LocalizedGlobalElement": [
+    {
+      "id": "[test-localized-global-element-id]",
+      "locale": "fr-FR",
+      "value": {
+        "__typename": "LocalizedGlobalElement",
+        "data": {
+          "prompt": "hello world",
+        },
+        "id": "[test-localized-global-element-id]",
+      },
+    },
+    {
+      "id": "[test-localized-global-element-id]",
+      "locale": "it-IT",
+      "value": {
+        "__typename": "LocalizedGlobalElement",
+        "data": {
+          "prompt": "ciao mondo",
+        },
+        "id": "[test-localized-global-element-id]",
+      },
+    },
+  ],
+  "Page": [],
+  "PagePathnameSlice": [
+    {
+      "id": "[test-page-pathname-slice-id]",
+      "value": {
+        "__typename": "PagePathnameSlice",
+        "id": "[test-page-pathname-slice-id]",
+        "pathname": "test/new-pathname",
+      },
+    },
+    {
+      "id": "[test-page-pathname-slice-id]",
+      "locale": "fr-FR",
+      "value": {
+        "__typename": "PagePathnameSlice",
+        "basePageId": "[test-base-page-id]",
+        "id": "[test-page-pathname-slice-id]",
+        "localizedPathname": "fr-FR/test/localized-pathname",
+        "pathname": "test-pathname",
+      },
+    },
+    {
+      "id": "[test-page-pathname-slice-id]",
+      "locale": "it-IT",
+      "value": {
+        "__typename": "PagePathnameSlice",
+        "basePageId": "[test-base-page-id]",
+        "id": "[test-page-pathname-slice-id]",
+        "localizedPathname": "test/new-localized-pathname-it-IT",
+        "pathname": "test/new-pathname",
+      },
+    },
+  ],
+  "Site": [],
+  "Snippet": [],
+  "Swatch": [
+    {
+      "id": "[test-swatch-id]",
+      "value": {
+        "__typename": "Swatch",
+        "hue": 17,
+        "id": "[test-swatch-id]",
+        "lightness": 90,
+        "saturation": 70,
+      },
+    },
+  ],
+  "Table": [],
+  "Typography": [],
+}
+`;
+
+exports[`state / APIResources \`Actions.evictApiResource\` correctly removes the resource from the store 1`] = `
+{
+  "File": [],
+  "GlobalElement": [
+    {
+      "id": "[test-global-element-id]",
+      "value": {
+        "__typename": "GlobalElement",
+        "data": {},
+        "id": "[test-global-element-id]",
+      },
+    },
+  ],
+  "LocalizedGlobalElement": [
+    {
+      "id": "[test-localized-global-element-id]",
+      "locale": "fr-FR",
+      "value": {
+        "__typename": "LocalizedGlobalElement",
+        "data": {
+          "prompt": "bonjour le monde",
+        },
+        "id": "[test-localized-global-element-id]",
+      },
+    },
+  ],
+  "Page": [],
+  "PagePathnameSlice": [
+    {
+      "id": "[test-page-pathname-slice-id]",
+      "value": {
+        "__typename": "PagePathnameSlice",
+        "id": "[test-page-pathname-slice-id]",
+        "pathname": "test/pathname",
+      },
+    },
+    {
+      "id": "[test-page-pathname-slice-id]",
+      "locale": "it-IT",
+      "value": {
+        "__typename": "PagePathnameSlice",
+        "basePageId": "[test-base-page-id]",
+        "id": "[test-page-pathname-slice-id]",
+        "localizedPathname": "it-IT/test/localized-pathname",
+        "pathname": "test-pathname",
+      },
+    },
+  ],
+  "Site": [],
+  "Snippet": [],
+  "Swatch": [],
+  "Table": [],
+  "Typography": [],
+}
+`;
+
+exports[`state / APIResources \`Actions.updateAPIClientCache\` fills in the state from cache w/o overriding existing resources 1`] = `
+{
+  "File": [],
+  "GlobalElement": [
+    {
+      "id": "[test-global-element-id]",
+      "value": {
+        "__typename": "GlobalElement",
+        "data": {},
+        "id": "[test-global-element-id]",
+      },
+    },
+  ],
+  "LocalizedGlobalElement": [
+    {
+      "id": "[test-localized-global-element-id]",
+      "locale": "it-IT",
+      "value": {
+        "__typename": "LocalizedGlobalElement",
+        "data": {
+          "prompt": "ciao mondo",
+        },
+        "id": "[test-localized-global-element-id]",
+      },
+    },
+    {
+      "id": "[test-localized-global-element-id]",
+      "locale": "fr-FR",
+      "value": {
+        "__typename": "LocalizedGlobalElement",
+        "data": {
+          "prompt": "bonjour le monde",
+        },
+        "id": "[test-localized-global-element-id]",
+      },
+    },
+  ],
+  "Page": [],
+  "PagePathnameSlice": [
+    {
+      "id": "[test-page-pathname-slice-id]",
+      "value": {
+        "__typename": "PagePathnameSlice",
+        "id": "[test-page-pathname-slice-id]",
+        "pathname": "test/pathname",
+      },
+    },
+    {
+      "id": "[test-page-pathname-slice-id]",
+      "locale": "fr-FR",
+      "value": {
+        "__typename": "PagePathnameSlice",
+        "basePageId": "[test-base-page-id]",
+        "id": "[test-page-pathname-slice-id]",
+        "localizedPathname": "fr-FR/test/localized-pathname",
+        "pathname": "test-pathname",
+      },
+    },
+    {
+      "id": "[test-page-pathname-slice-id]",
+      "locale": "it-IT",
+      "value": {
+        "__typename": "PagePathnameSlice",
+        "basePageId": "[test-base-page-id]",
+        "id": "[test-page-pathname-slice-id]",
+        "localizedPathname": "it-IT/test/localized-pathname",
+        "pathname": "test-pathname",
+      },
+    },
+  ],
+  "Site": [],
+  "Snippet": [
+    {
+      "id": "[test-snippet-id]",
+      "value": {
+        "__typename": "Snippet",
+        "builderEnabled": false,
+        "cleanup": null,
+        "code": "test-snippet-code",
+        "id": "[test-snippet-id]",
+        "liveEnabled": false,
+        "location": "BODY",
+        "name": "test-snippet-name",
+        "shouldAddToNewPages": false,
+      },
+    },
+  ],
+  "Swatch": [
+    {
+      "id": "[test-swatch-id]",
+      "value": {
+        "__typename": "Swatch",
+        "hue": 100,
+        "id": "[test-swatch-id]",
+        "lightness": 90,
+        "saturation": 70,
+      },
+    },
+  ],
+  "Table": [
+    {
+      "id": "[test-table-id]",
+      "value": {
+        "__typename": "Table",
+        "columns": [],
+        "id": "[test-table-id]",
+        "name": "test-table-name",
+      },
+    },
+  ],
+  "Typography": [],
+}
+`;
+
+exports[`state / APIResources \`getInitialState\` w/o arguments returns an empty state 1`] = `
+{
+  "File": [],
+  "GlobalElement": [],
+  "LocalizedGlobalElement": [],
+  "Page": [],
+  "PagePathnameSlice": [],
+  "Site": [],
+  "Snippet": [],
+  "Swatch": [],
+  "Table": [],
+  "Typography": [],
+}
+`;

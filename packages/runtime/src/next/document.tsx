@@ -12,7 +12,9 @@ import NextDocument, {
 } from 'next/document'
 import { PreviewModeScript } from './preview-mode'
 
-export class Document extends NextDocument {
+type DocumentProps = { appOrigin?: string }
+
+export class Document extends NextDocument<DocumentProps> {
   static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
     const initialProps = await NextDocument.getInitialProps(ctx)
 
@@ -36,7 +38,7 @@ export class Document extends NextDocument {
     return (
       <Html>
         <Head>
-          <PreviewModeScript isPreview={isPreview} />
+          <PreviewModeScript isPreview={isPreview} appOrigin={this.props.appOrigin} />
         </Head>
         <body>
           <Main />

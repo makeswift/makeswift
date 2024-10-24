@@ -6,8 +6,8 @@ const withMakeswift = createWithMakeswift()
 const nextConfig = {
   reactStrictMode: true,
   i18n: {
-    locales: ["en-US", "fr-FR"],
-    defaultLocale: "en-US",
+    locales: ['en-US', 'fr-FR', 'it-IT'],
+    defaultLocale: 'en-US',
   },
 }
 
