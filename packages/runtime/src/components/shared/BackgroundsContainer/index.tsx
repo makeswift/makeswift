@@ -25,6 +25,11 @@ export default forwardRef<HTMLDivElement | null, Props>(function BackgroundsCont
   { backgrounds, children, className, ...restOfProps }: Props,
   ref: Ref<HTMLDivElement>,
 ) {
+  const widthAndMarginStyle = useStyle({
+    width: '100%',
+    margin: '0 auto',
+  })
+
   return (
     <div
       {...restOfProps}
@@ -32,8 +37,6 @@ export default forwardRef<HTMLDivElement | null, Props>(function BackgroundsCont
       className={cx(
         useStyle({
           position: 'relative',
-          width: '100%',
-          margin: '0 auto',
           '> *': {
             borderRadius: 'inherit',
             height: 'inherit',
@@ -42,7 +45,7 @@ export default forwardRef<HTMLDivElement | null, Props>(function BackgroundsCont
             position: 'relative',
           },
         }),
-        className,
+        className ? className : widthAndMarginStyle,
       )}
     >
       <Backgrounds backgrounds={useBackgrounds(backgrounds)} />
