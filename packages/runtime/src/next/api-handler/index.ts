@@ -46,6 +46,12 @@ type MakeswiftApiHandlerArgs =
   | [NextRequest, Context]
   | [NextApiRequest, NextApiResponse<MakeswiftApiHandlerResponse>]
 
+function apiRequestParams(request: NextApiRequest): Promise<NextApiRequest['query']> {
+  // `NextApiRequest.query` prop became async in Next.js 15, but it's not reflected in the type definition;
+  // force-casting it to a `Promise` manually
+  return Promise.resolve(request.query)
+}
+
 export function MakeswiftApiHandler(
   apiKey: string,
   {
@@ -109,10 +115,10 @@ export function MakeswiftApiHandler(
   ): Promise<NextResponse<MakeswiftApiHandlerResponse> | void> {
     const params = match(args)
       .with(routeHandlerPattern, ([, context]) => context.params)
-      .with(apiRoutePattern, ([req]) => req.query)
+      .with(apiRoutePattern, ([req]) => apiRequestParams(req))
       .exhaustive()
 
-    const { makeswift } = params
+    const { makeswift } = await params
 
     if (!Array.isArray(makeswift)) {
       throw new Error(
@@ -123,7 +129,7 @@ export function MakeswiftApiHandler(
     }
 
     const client = new Makeswift(apiKey, { apiOrigin, runtime })
-    const siteVersion = match(args)
+    const siteVersion = await match(args)
       .with(routeHandlerPattern, () => getSiteVersion())
       .with(apiRoutePattern, ([req]) => Makeswift.getSiteVersion(req.previewData))
       .exhaustive()

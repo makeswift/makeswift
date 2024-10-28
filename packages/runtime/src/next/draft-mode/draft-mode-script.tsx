@@ -5,8 +5,8 @@ type Props = {
   appOrigin?: string
 }
 
-export function DraftModeScript({ appOrigin = 'https://app.makeswift.com' }: Props) {
-  const { isEnabled: isDraftModeEnabled } = draftMode()
+export async function DraftModeScript({ appOrigin = 'https://app.makeswift.com' }: Props) {
+  const { isEnabled: isDraftModeEnabled } = await draftMode()
   const draftModeScript = `
 const isDraft = ${isDraftModeEnabled}
 const appOrigin = '${appOrigin.replace("'", "\\'")}'
