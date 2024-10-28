@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { NextRequest, NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
 import { cookies, draftMode } from 'next/headers'
+
 import { MAKESWIFT_DRAFT_MODE_DATA_COOKIE, MakeswiftDraftData } from '../../draft-mode'
 import { MakeswiftSiteVersion } from '../../preview-mode'
 
@@ -55,7 +56,8 @@ async function proxyDraftModeRouteHandler(
     siteVersion: MakeswiftSiteVersion.Working,
   }
 
-  draftMode().enable()
+  const draft = await draftMode()
+  draft.enable()
 
   const proxyUrl = request.nextUrl.clone()
   proxyUrl.searchParams.delete('x-makeswift-draft-mode')
@@ -63,13 +65,13 @@ async function proxyDraftModeRouteHandler(
   const proxyRequest = new NextRequest(proxyUrl, { headers: request.headers })
   proxyRequest.headers.delete('x-makeswift-draft-mode')
 
-  const draftModeCookie = cookies().get('__prerender_bypass')
+  const draftModeCookie = (await cookies()).get('__prerender_bypass')
   if (draftModeCookie) {
     proxyRequest.cookies.set(draftModeCookie)
     proxyRequest.cookies.set(MAKESWIFT_DRAFT_MODE_DATA_COOKIE, JSON.stringify(draftModeData))
   }
 
-  draftMode().disable()
+  draft.disable()
 
   const proxyResponse = await fetch(proxyRequest)
 

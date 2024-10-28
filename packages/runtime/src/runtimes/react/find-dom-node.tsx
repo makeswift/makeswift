@@ -1,19 +1,19 @@
 import {
   Component,
   MutableRefObject,
-  ReactInstance,
   ReactNode,
   forwardRef,
   useImperativeHandle,
   useRef,
 } from 'react'
-import { findDOMNode } from 'react-dom'
+
+import { findDOMNode } from './lib/react-dom'
 
 /**
  * @see https://github.com/facebook/react/blob/a2505792ed17fd4d7ddc69561053c3ac90899491/packages/react-reconciler/src/ReactFiberReconciler.new.js#L179-L244
  */
 function suppressWarningAndFindDomNode(
-  instance: ReactInstance | null | undefined,
+  instance: Component | null | undefined,
 ): Element | Text | null {
   const error = console.error
 

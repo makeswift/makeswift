@@ -11,11 +11,11 @@ export const makeswiftDraftDataSchema = z.object({
 
 export type MakeswiftDraftData = z.infer<typeof makeswiftDraftDataSchema>
 
-function getDraftData(): MakeswiftDraftData | null {
-  const { isEnabled: isDraftModeEnabled } = draftMode()
+async function getDraftData(): Promise<MakeswiftDraftData | null> {
+  const { isEnabled: isDraftModeEnabled } = await draftMode()
   if (!isDraftModeEnabled) return null
 
-  const cookie = cookies().get(MAKESWIFT_DRAFT_MODE_DATA_COOKIE)
+  const cookie = (await cookies()).get(MAKESWIFT_DRAFT_MODE_DATA_COOKIE)
   if (cookie == null) return null
 
   const draftData = JSON.parse(cookie.value)
@@ -25,6 +25,6 @@ function getDraftData(): MakeswiftDraftData | null {
   return null
 }
 
-export function getSiteVersion() {
-  return getDraftData()?.siteVersion ?? MakeswiftSiteVersion.Live
+export async function getSiteVersion() {
+  return (await getDraftData())?.siteVersion ?? MakeswiftSiteVersion.Live
 }
