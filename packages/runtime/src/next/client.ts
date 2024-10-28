@@ -644,7 +644,7 @@ export class Makeswift {
     }
   }
 
-  async unstable_getComponentSnapshot(
+  async getComponentSnapshot(
     id: string,
     {
       siteVersion = MakeswiftSiteVersion.Working,
