@@ -13,7 +13,7 @@ type Props = {
   type: string
 }
 
-export const Unstable_MakeswiftComponent = memo(({ snapshot, name, type }: Props) => {
+export const MakeswiftComponent = memo(({ snapshot, name, type }: Props) => {
   const dispatch = useDispatch()
 
   useCacheData(snapshot.cacheData)
