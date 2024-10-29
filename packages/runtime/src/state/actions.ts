@@ -409,6 +409,18 @@ export function registerDocumentsEffect(
   }
 }
 
+export function registerBuilderDocumentsEffect(
+  documents: Document[],
+): ThunkAction<() => void, unknown, unknown, Action> {
+  return dispatch => {
+    documents.forEach(document => dispatch(registerBuilderDocument(document)))
+
+    return () => {
+      documents.forEach(document => dispatch(unregisterBuilderDocument(document.key)))
+    }
+  }
+}
+
 export function changeDocument(documentKey: string, operation: Operation): ChangeDocumentAction {
   return { type: ActionTypes.CHANGE_DOCUMENT, payload: { documentKey, operation } }
 }
