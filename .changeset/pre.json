@@ -12,6 +12,7 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
-    "lemon-pugs-battle"
+    "lemon-pugs-battle",
+    "shy-jeans-join"
   ]
 }
