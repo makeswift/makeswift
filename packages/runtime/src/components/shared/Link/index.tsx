@@ -34,7 +34,6 @@ export const Link = forwardRef<HTMLAnchorElement, Props>(function Link(
 ) {
   const pageId = link && link.type === 'OPEN_PAGE' ? link.payload.pageId : null
   const page = usePagePathnameSlice(pageId ?? null)
-  const hasLocalizedPathname = page?.localizedPathname != null
 
   const elementKey =
     link?.type === 'SCROLL_TO_ELEMENT' ? link.payload.elementIdConfig?.elementKey : null
@@ -147,9 +146,7 @@ export const Link = forwardRef<HTMLAnchorElement, Props>(function Link(
         target={target}
         onClick={handleClick}
         href={href}
-        {...(hasLocalizedPathname && {
-          locale: false,
-        })}
+        locale={false}
         // Next.js v12 has legacyBehavior set to true by default
         legacyBehavior={false}
       />
