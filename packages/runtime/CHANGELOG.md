@@ -1,5 +1,27 @@
 # @makeswift/runtime
 
+## 0.21.0
+
+### Minor Changes
+
+- 92cb216: Next.js 15 / React 19 RC support
+
+  ## Breaking Changes
+
+  ### Pages Router's custom `Document`
+
+  The Makeswift custom `Document` export has been moved from `@makeswift/runtime/next` to `@makeswift/runtime/next/document`. To migrate, adjust the custom `Document` import in `src/pages/_document.ts` as follows:
+
+  ```diff
+  - export { Document as default } from '@makeswift/runtime/next'
+  + export { Document as default } from '@makeswift/runtime/next/document'
+  ```
+
+### Patch Changes
+
+- 4203ec3: Validate registered component types at runtime
+- 9e4298a: fix(pages router): links from a localized page to base pages don't work
+
 ## 0.20.5
 
 ### Patch Changes
