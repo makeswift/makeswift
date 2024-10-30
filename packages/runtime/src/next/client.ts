@@ -526,13 +526,17 @@ export class Makeswift {
 
   async getPageSnapshot(
     pathname: string,
-    { siteVersion, locale: localeInput }: { siteVersion: MakeswiftSiteVersion; locale?: string },
+    {
+      siteVersion: siteVersionPromise,
+      locale: localeInput,
+    }: { siteVersion: MakeswiftSiteVersion | Promise<MakeswiftSiteVersion>; locale?: string },
   ): Promise<MakeswiftPageSnapshot | null> {
     const searchParams = new URLSearchParams()
     if (localeInput) {
       searchParams.set('locale', localeInput)
     }
 
+    const siteVersion = await siteVersionPromise
     const response = await this.fetch(
       `v3/pages/${encodeURIComponent(pathname)}/document?${searchParams.toString()}`,
       siteVersion,
