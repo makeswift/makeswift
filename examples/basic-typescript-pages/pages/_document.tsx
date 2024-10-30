@@ -1,5 +1,7 @@
-import { Html, Head, Main, NextScript } from "next/document";
-import { Document, PreviewModeScript } from "@makeswift/runtime/next";
+import { Head, Html, Main, NextScript } from 'next/document'
+
+import { PreviewModeScript } from '@makeswift/runtime/next'
+import { Document } from '@makeswift/runtime/next/document'
 
 export default class MyDocument extends Document {
   render() {
@@ -13,6 +15,6 @@ export default class MyDocument extends Document {
           <NextScript />
         </body>
       </Html>
-    );
+    )
   }
 }
