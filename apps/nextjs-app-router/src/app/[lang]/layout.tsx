@@ -19,8 +19,8 @@ export default async function RootLayout({
       </head>
       <body>
         <MakeswiftProvider
-          previewMode={draftMode().isEnabled}
-          locale={params.lang}
+          previewMode={(await draftMode()).isEnabled}
+          locale={lang}
         >
           {children}
         </MakeswiftProvider>
