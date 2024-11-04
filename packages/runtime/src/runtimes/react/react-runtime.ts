@@ -1,6 +1,7 @@
 import { registerBuiltinComponents } from '../../components/builtin/register'
+import { ControlDefinition as UnifiedControlDefinition } from '@makeswift/controls'
 
-import { type Descriptor, type DescriptorValueType } from '../../prop-controllers/descriptors'
+import { type LegacyDescriptor, type DescriptorValueType } from '../../prop-controllers/descriptors'
 
 import { registerComponentEffect, registerReactComponentEffect } from '../../state/actions'
 import { BreakpointsInput } from '../../state/modules/breakpoints'
@@ -23,7 +24,8 @@ export class ReactRuntime extends RuntimeCore {
   // We will remove them when we release a new breaking change.
   // ------------------ Deprecated API ------------------ //
   static registerComponent<
-    P extends Record<string, Descriptor>,
+    ControlDef extends UnifiedControlDefinition,
+    P extends Record<string, LegacyDescriptor | ControlDef>,
     C extends ComponentType<{ [K in keyof P]: DescriptorValueType<P[K]> }>,
   >(
     component: C,
@@ -54,7 +56,8 @@ export class ReactRuntime extends RuntimeCore {
   // ------------------ Deprecated API ends here ------------------ //
 
   registerComponent<
-    P extends Record<string, Descriptor>,
+    ControlDef extends UnifiedControlDefinition,
+    P extends Record<string, LegacyDescriptor | ControlDef>,
     C extends ComponentType<{ [K in keyof P]: DescriptorValueType<P[K]> }>,
   >(
     component: C,
