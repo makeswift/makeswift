@@ -1,6 +1,6 @@
 # @makeswift/runtime
 
-## 0.21.0-canary.2
+## 0.21.0
 
 ### Minor Changes
 
@@ -17,17 +17,10 @@
   + export { Document as default } from '@makeswift/runtime/next/document'
   ```
 
-## 0.20.6-canary.1
-
-### Patch Changes
-
-- 9e4298a: fix(pages router): links from a localized page to base pages don't work
-
-## 0.20.6-canary.0
-
 ### Patch Changes
 
 - 4203ec3: Validate registered component types at runtime
+- 9e4298a: fix(pages router): links from a localized page to base pages don't work
 
 ## 0.20.5
 
