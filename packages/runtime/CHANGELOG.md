@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.21.1-canary.0
+
+### Patch Changes
+
+- 4726279: fix: `registerComponent` fails to correctly deduce resolved value type in some cases
+
 ## 0.21.0
 
 ### Minor Changes
