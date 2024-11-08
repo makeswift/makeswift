@@ -78,7 +78,7 @@ async function testMakeswiftComponentRendering(
     render(
       <ReactRuntimeProvider runtime={runtime}>
         <MakeswiftComponent
-          name="Embedded Component"
+          label="Embedded Component"
           type={CustomComponentType}
           snapshot={snapshot}
           fallback={fallback}
