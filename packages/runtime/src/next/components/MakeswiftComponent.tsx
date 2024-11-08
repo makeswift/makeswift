@@ -8,23 +8,23 @@ import { useRegisterDocument } from '../../runtimes/react/hooks/use-register-doc
 
 type Props = {
   snapshot: MakeswiftComponentSnapshot
-  name: string
+  label: string
   type: string
   fallback?: ReactNode
 }
 
-export const MakeswiftComponent = memo(({ snapshot, name, type, fallback }: Props) => {
+export const MakeswiftComponent = memo(({ snapshot, label, type, fallback }: Props) => {
   useCacheData(snapshot.cacheData)
 
   const rootDocument = useMemo(
     () =>
       componentDocumentToRootEmbeddedDocument({
         document: snapshot.document,
-        name,
+        name: label,
         type,
         hasFallback: fallback != null,
       }),
-    [snapshot, name, type],
+    [snapshot, label, type],
   )
 
   useRegisterDocument(rootDocument)
