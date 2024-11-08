@@ -343,6 +343,7 @@ export class Makeswift {
         'Makeswift-Site-Version': siteVersion,
         ...init?.headers,
       },
+      ...(siteVersion === MakeswiftSiteVersion.Working ? { cache: 'no-store' } : {}),
     })
 
     return response
