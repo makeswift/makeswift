@@ -1,4 +1,5 @@
 import { draftMode } from 'next/headers'
+import Script from 'next/script'
 import { ActionTypes } from '../../react'
 
 type Props = {
@@ -82,12 +83,12 @@ if (window.parent !== window) {
 
   return (
     <>
-      <script
+      <Script
         id="makeswift-draft-mode"
         type="module"
         dangerouslySetInnerHTML={{ __html: draftModeScript }}
       />
-      <script
+      <Script
         id="makeswift-connection-check"
         type="module"
         dangerouslySetInnerHTML={{ __html: makeswiftConnectionCheckScript }}
