@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.5-canary.0
+
+### Patch Changes
+
+- da076ce: fix: stalled calls/memory leaks on repeated function deserialization
+
 ## 0.1.4
 
 ### Patch Changes
