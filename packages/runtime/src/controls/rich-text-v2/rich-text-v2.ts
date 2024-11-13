@@ -26,7 +26,7 @@ import { TextAlignPlugin } from '../../slate/TextAlignPlugin'
 import { BlockPlugin } from '../../slate/BlockPlugin'
 import { TypographyPlugin } from '../../slate/TypographyPlugin'
 import { InlineModePlugin } from '../../slate/InlineModePlugin'
-import { toText } from '../../slate'
+import { toText } from '../../slate/utils'
 
 import { RichTextV2Plugin, Plugin } from './plugin'
 import { RichTextV2Control } from './control'
