@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.21.3-canary.0
+
+### Patch Changes
+
+- bdfdfcf: fix: "attempted import" errors on registering component in server-side code
+
 ## 0.21.2
 
 ### Patch Changes
