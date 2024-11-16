@@ -26,6 +26,8 @@ import {
   unstable_TypographyDefinition,
 } from '../../../controls'
 
+import { FallbackComponent } from '../../../components/shared/FallbackComponent'
+
 import { RenderHook } from '../components'
 import { useColorValue } from './color'
 import { useImageControlValue } from './image'
@@ -38,13 +40,26 @@ import { useSlot } from './slot'
 import { useFormattedStyle } from './style'
 import { StyleV2ControlValue } from './style-v2'
 import { useTypographyValue } from './typography'
-import { useResolvedValue } from '../hooks/use-resolved-value'
 
 type ControlValueProps = {
   definition: ControlDefinition
   data: DataType<ControlDefinition> | undefined
   children(value: ResolvedValueType<ControlDefinition>): JSX.Element
   control?: InstanceType<ControlDefinition>
+}
+
+type Result<T> = { success: true; value: T } | { success: false; error: string }
+
+export function resolveValue(
+  data: DataType<ControlDefinition> | undefined,
+  definition: ControlDefinition,
+): Result<ResolvedValueType<ControlDefinition>> {
+  try {
+    return { success: true, value: definition.resolveValue(data).readStableValue() }
+  } catch (error) {
+    console.error(`Error resolving '${definition.controlType}' prop value`, { error, data })
+    return { success: false, error: `${error}` }
+  }
 }
 
 export function ControlValue({
@@ -61,14 +76,13 @@ export function ControlValue({
     case SelectDefinition.type:
     case IconRadioGroupDefinition.type:
     case ComboboxDefinition.type:
-      return (
-        <RenderHook
-          key={definition.controlType}
-          hook={useResolvedValue}
-          parameters={[data, definition]}
-        >
+      const resolved = resolveValue(data, definition)
+      return resolved.success ? (
+        <RenderHook key={definition.controlType} hook={() => resolved.value} parameters={[]}>
           {value => children(value)}
         </RenderHook>
+      ) : (
+        <FallbackComponent text="Incompatible component version" />
       )
 
     case ColorDefinition.type:
