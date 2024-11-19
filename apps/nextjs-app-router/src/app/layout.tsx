@@ -14,7 +14,7 @@ export default async function RootLayout({
   return (
     <html lang={lang}>
       <head>
-        <DraftModeScript />
+        <DraftModeScript appOrigin={process.env.MAKESWIFT_APP_ORIGIN} />
       </head>
       <body>
         <MakeswiftProvider>{children}</MakeswiftProvider>
