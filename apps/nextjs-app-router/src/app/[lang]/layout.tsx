@@ -2,6 +2,8 @@ import { MakeswiftProvider } from '@/makeswift/provider'
 import { DraftModeScript } from '@makeswift/runtime/next/server'
 import { draftMode } from 'next/headers'
 
+import '@/app/global.css'
+
 type Params = Promise<{ lang: string; path?: string[] }>
 
 export default async function RootLayout({
