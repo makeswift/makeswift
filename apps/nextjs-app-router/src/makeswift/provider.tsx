@@ -8,6 +8,8 @@ import {
   RootStyleRegistry,
 } from '@makeswift/runtime/next'
 
+import '@/makeswift/components'
+
 export function MakeswiftProvider({
   children,
   locale = undefined,
