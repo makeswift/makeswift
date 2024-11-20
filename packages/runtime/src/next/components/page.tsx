@@ -39,6 +39,9 @@ See our docs for more information on what's changed and instructions to migrate:
 
   return (
     <Suspense>
+      <div style={{ backgroundColor: 'black', color: 'yellow', padding: '8px' }}>
+        working locally
+      </div>
       {/* We use a key here to reset the Snippets state in the PageMeta component */}
       <PageComponent
         key={snapshot.document.data.key}

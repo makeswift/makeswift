@@ -42,6 +42,9 @@ function InlinePluginComponent({
   ...props
 }: RenderElementProps & { renderElement: RenderElement }) {
   switch (props.element.type) {
+    case Slate.InlineType.KBD:
+      return <kbd {...props.attributes}>{renderElement(props)}</kbd>
+
     case Slate.InlineType.Code:
       return <code {...props.attributes}>{renderElement(props)}</code>
 

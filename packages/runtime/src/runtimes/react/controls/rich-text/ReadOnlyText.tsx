@@ -87,6 +87,12 @@ function InlineElement({ descendant }: InlineProps) {
   const linkClassName = useStyle({ textDecoration: 'none' })
 
   switch (descendant.type) {
+    case InlineType.KBD:
+      return (
+        <kbd>
+          <Descendants descendants={descendant.children} />
+        </kbd>
+      )
     case InlineType.Code:
       return (
         <code>

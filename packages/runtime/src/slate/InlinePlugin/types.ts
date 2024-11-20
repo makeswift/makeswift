@@ -20,6 +20,11 @@ export const supportedInlineOptions = [
     label: 'Code',
     value: 'code',
   },
+  {
+    icon: unstable_IconRadioGroup.Icon.Code,
+    label: 'KBD',
+    value: 'kbd',
+  },
 ] as const
 
 export function isSupportedInlineType(inline: Slate.InlineType): inline is SupportedInlineType {

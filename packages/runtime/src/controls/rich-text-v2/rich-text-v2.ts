@@ -183,8 +183,12 @@ class Definition extends BaseRichTextDefinition<ReactNode, Config, InstanceType>
 
 export class RichTextV2Definition extends Definition {}
 
-export function RichText(config?: UserConfig): RichTextV2Definition {
-  return new RichTextV2Definition(config ?? {})
+// todo(josh): when we ship this thing plugins should be in config
+export function RichText(
+  config: UserConfig = {},
+  plugins: RichTextV2Plugin[] = [],
+): RichTextV2Definition {
+  return new RichTextV2Definition(config ?? {}, plugins)
 }
 
 RichText.Mode = Definition.Mode

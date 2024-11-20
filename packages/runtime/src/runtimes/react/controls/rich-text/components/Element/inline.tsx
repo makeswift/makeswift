@@ -17,6 +17,9 @@ export interface InlineRenderElementProps extends RenderElementProps {
 
 export function InlineElement({ element, attributes, children }: InlineRenderElementProps) {
   switch (element.type) {
+    case InlineType.KBD:
+      return <kbd {...attributes}>{children}</kbd>
+
     case InlineType.Code:
       return <code {...attributes}>{children}</code>
 

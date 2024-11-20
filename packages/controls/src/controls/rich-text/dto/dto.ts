@@ -177,6 +177,7 @@ function toInlineOrTextDTO(
     case InlineType.Code:
     case InlineType.SubScript:
     case InlineType.SuperScript:
+    case InlineType.KBD:
       return [
         {
           object: 'inline',

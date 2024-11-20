@@ -175,6 +175,7 @@ export const InlineType = {
   SuperScript: 'superscript',
   SubScript: 'subscript',
   Link: 'link',
+  KBD: 'kbd',
 } as const
 
 export type InlineType = (typeof InlineType)[keyof typeof InlineType]
@@ -193,6 +194,7 @@ type InlineElement<T extends InlineType> = {
 export type CodeElement = InlineElement<typeof InlineType.Code>
 export type SuperElement = InlineElement<typeof InlineType.SuperScript>
 export type SubElement = InlineElement<typeof InlineType.SubScript>
+export type KBDElement = InlineElement<typeof InlineType.KBD>
 export type LinkElement = InlineElement<typeof InlineType.Link> & {
   link?: DataType<LinkDefinition>
 }
@@ -201,7 +203,12 @@ export function isLink(node: unknown): node is LinkElement {
   return Element.isElement(node) && Element.isElementType(node, InlineType.Link)
 }
 
-export type Inline = CodeElement | SuperElement | SubElement | LinkElement
+export type Inline =
+  | CodeElement
+  | SuperElement
+  | SubElement
+  | LinkElement
+  | KBDElement
 
 export function isInline(node: unknown): node is Inline {
   return (
@@ -209,7 +216,8 @@ export function isInline(node: unknown): node is Inline {
     (Element.isElementType(node, InlineType.Code) ||
       Element.isElementType(node, InlineType.Link) ||
       Element.isElementType(node, InlineType.SubScript) ||
-      Element.isElementType(node, InlineType.SuperScript))
+      Element.isElementType(node, InlineType.SuperScript) ||
+      Element.isElementType(node, InlineType.KBD))
   )
 }
 
