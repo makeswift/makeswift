@@ -3,6 +3,7 @@ import { DraftModeScript } from '@makeswift/runtime/next/server'
 import { draftMode } from 'next/headers'
 
 import '@/app/global.css'
+import '@/makeswift/components'
 
 type Params = Promise<{ lang: string; path?: string[] }>
 

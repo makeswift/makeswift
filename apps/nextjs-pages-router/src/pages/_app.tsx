@@ -2,6 +2,7 @@ import { runtime } from '@/makeswift/runtime'
 import { ReactRuntimeProvider } from '@makeswift/runtime/next'
 import type { AppProps } from 'next/app'
 
+import '@/makeswift/components'
 import '@/pages/global.css'
 
 export default function App({
