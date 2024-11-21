@@ -1,0 +1,82 @@
+name: Release Candidate Release
+
+on:
+  pull_request:
+    # Run when PR opened and when subsequent commits are made https://github.com/orgs/community/discussions/25161 
+    # Will further restrict to only rc branches targeting the main branch below (in the 'if' under the job)
+    types: [opened, synchronize]
+
+concurrency: ${{ github.workflow}}-${{ github.ref }}
+
+jobs:
+  release_candidate_release:
+    if: contains(github.head_ref, '-rc-') && github.base_ref == 'main'
+    name: Release Candidate Release
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+
+      # Setup steps
+      - name: Check out git repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up pnpm 8.x
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Set up Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --ignore-scripts --frozen-lockfile
+
+        # Prerelease-related steps
+        # output of the action used below is named 'files_exists', see: https://github.com/andstor/file-existence-action
+      - name: Check if Already in Prerelease Mode
+        id: is_in_prerelease_mode
+        uses: andstor/file-existence-action@v3
+        with:
+          files: '.changeset/pre.json'
+      # See: https://github.com/changesets/changesets/blob/main/docs/prereleases.md 
+      - name: Enter Prerelease Mode
+        if: steps.is_in_prerelease_mode.outputs.files_exists == 'false'
+        run: pnpm exec changeset pre enter rc
+        # increment version in pre.json and store new version in a .txt file to be used in a PR comment
+        # ubuntu-latest includes jq, see 'Included Software' for ubuntu-latest: https://github.com/actions/runner-images
+      - name: Version 
+        run: | 
+          pnpm exec changeset version
+
+          cat .changeset/pre.json | jq -r .version >> version.txt
+
+        # Commit change to version in pre.json and push to remote
+      - name: Commit Change to Prerelease Version
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: version release candidate'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish 
+        run: pnpm exec changeset publish --tag rc
+      - name: Comment on PR
+        run: |
+          cat << EOF > message.txt
+          # Candidate Release
+          > $(date +"Updated at %B %d, %Y, %H:%M:%S.")
+
+          I've published a prerelease for your commit, ${GITHUB_SHA:0:7}. To use it, go to a Next.js app with \`@makeswift/runtime\` installed and run:
+          \`\`\`bash
+          pnpm up @makeswift/runtime@$(cat version.txt)
+          \`\`\`
+          EOF
+      - uses: mshick/add-pr-comment@v2
+        with:
+          message-path: message.txt
+      - name: Push Tag to Remote
+        run: git push --follow-tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

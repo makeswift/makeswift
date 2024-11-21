@@ -29,6 +29,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --ignore-scripts --frozen-lockfile
 
+      # output of the action used below is named 'files_exists', see: https://github.com/andstor/file-existence-action
+      - name: Check if in Prerelease Mode
+        id: is_in_prerelease_mode
+        uses: andstor/file-existence-action@v3
+        with:
+          files: '.changeset/pre.json'
+      # This step itself does not exit prerelease mode, but rather will "set an intent" to exit prerelease mode in 'pre.json' (see: https://github.com/changesets/changesets/blob/main/docs/prereleases.md)
+      # As a result, when the subsequent use of changesets/action@v1 (in a step below) runs 'changeset version', prerelease mode will be exited and versioning/release will proceed as normal.
+      - name: Prepare to Exit Prerelease Mode if Needed
+        if: steps.is_in_prerelease_mode.outputs.files_exists == 'true'
+        run: pnpm exec changeset pre exit
       - name: Create release pull request or publish to NPM
         uses: changesets/action@v1
         with:

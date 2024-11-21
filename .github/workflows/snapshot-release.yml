@@ -8,6 +8,7 @@ concurrency: ${{ github.workflow}}-${{ github.ref }}
 
 jobs:
   snapshot_release:
+    if: ${{ !contains(github.head_ref, '-rc-') }}
     name: Snapshot Release
     runs-on: ubuntu-latest
     steps:
