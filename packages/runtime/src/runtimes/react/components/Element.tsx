@@ -24,6 +24,10 @@ export const ElementWithFallback = memo(
     const useFindDomNodeRef = useRef(true)
     const imperativeHandleRef = useRef(new ElementImperativeHandle())
 
+    const fallbackCallbackRef = useCallback((current: (() => Element | Text | null) | null) => {
+      imperativeHandleRef.current.callback(() => current?.() ?? null)
+    }, [])
+
     const findDomNodeCallbackRef = useCallback((current: (() => Element | Text | null) | null) => {
       if (useFindDomNodeRef.current === true) {
         imperativeHandleRef.current.callback(() => current?.() ?? null)
@@ -39,21 +43,23 @@ export const ElementWithFallback = memo(
     useImperativeHandle(ref, () => imperativeHandleRef.current, [])
 
     return (
-      <FindDomNode ref={findDomNodeCallbackRef}>
-        <ElementRegistration componentHandle={imperativeHandleRef.current} elementKey={element.key}>
-          {showFallback ? (
-            fallback
-          ) : isElementReference(element) ? (
-            <ElementReference
-              key={element.key}
-              ref={elementCallbackRef}
-              elementReference={element}
-            />
-          ) : (
-            <ElementData key={element.key} ref={elementCallbackRef} elementData={element} />
-          )}
-        </ElementRegistration>
-      </FindDomNode>
+      <ElementRegistration componentHandle={imperativeHandleRef.current} elementKey={element.key}>
+        {showFallback ? (
+          <FindDomNode ref={fallbackCallbackRef}>{fallback}</FindDomNode>
+        ) : (
+          <FindDomNode ref={findDomNodeCallbackRef}>
+            {isElementReference(element) ? (
+              <ElementReference
+                key={element.key}
+                ref={elementCallbackRef}
+                elementReference={element}
+              />
+            ) : (
+              <ElementData key={element.key} ref={elementCallbackRef} elementData={element} />
+            )}
+          </FindDomNode>
+        )}
+      </ElementRegistration>
     )
   }),
 )
