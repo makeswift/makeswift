@@ -38,11 +38,11 @@
     ```typescript
     Group({
       props: {
-        text: Color({ label: "Text" }),
-        background: Color({ label: "Background" }),
-        dismissable: Checkbox({ label: "Can be dismissed?" }),
+        text: Color({ label: 'Text' }),
+        background: Color({ label: 'Background' }),
+        dismissable: Checkbox({ label: 'Can be dismissed?' }),
       },
-    });
+    })
     ```
 
   For full documentation, visit the [`Group` control reference page](https://docs.makeswift.com/developer/reference/controls/group).
@@ -73,19 +73,19 @@
   We need to import a font within our root layout. In this example I am using `next/font`.
 
   ```tsx
-  import { Grenze_Gotisch, Grenze } from "next/font/google";
+  import { Grenze, Grenze_Gotisch } from 'next/font/google'
 
-  import "@/app/global.css";
-  import "@/makeswift/components";
+  import '@/app/global.css'
+  import '@/makeswift/components'
 
   const GrenzeGotischFont = Grenze_Gotisch({
-    subsets: ["latin"],
-    weight: ["400", "500", "700", "900"],
-    variable: "--font-grenze-gotisch",
-  });
+    subsets: ['latin'],
+    weight: ['400', '500', '700', '900'],
+    variable: '--font-grenze-gotisch',
+  })
 
   export default async function RootLayout() {
-    return <html className={GrenzeGotischFont.variable}>{/* ... */}</html>;
+    return <html className={GrenzeGotischFont.variable}>{/* ... */}</html>
   }
   ```
 
@@ -94,39 +94,39 @@
   Then we need to add this font within our Makeswift route handler `getFonts` option in `./src/app/api/makeswift/[...makeswift]/route.ts`.
 
   ```ts
-  import { MAKESWIFT_SITE_API_KEY } from "@/makeswift/env";
-  import { MakeswiftApiHandler } from "@makeswift/runtime/next/server";
+  import { MAKESWIFT_SITE_API_KEY } from '@/makeswift/env'
+  import { MakeswiftApiHandler } from '@makeswift/runtime/next/server'
 
   const handler = MakeswiftApiHandler(MAKESWIFT_SITE_API_KEY, {
     getFonts() {
       return [
         {
-          family: "var(--font-grenze-gotisch)",
-          label: "Grenze Gotisch",
+          family: 'var(--font-grenze-gotisch)',
+          label: 'Grenze Gotisch',
           variants: [
             {
-              weight: "400",
-              style: "normal",
+              weight: '400',
+              style: 'normal',
             },
             {
-              weight: "500",
-              style: "normal",
+              weight: '500',
+              style: 'normal',
             },
             {
-              weight: "700",
-              style: "normal",
+              weight: '700',
+              style: 'normal',
             },
             {
-              weight: "900",
-              style: "normal",
+              weight: '900',
+              style: 'normal',
             },
           ],
         },
-      ];
+      ]
     },
-  });
+  })
 
-  export { handler as GET, handler as POST };
+  export { handler as GET, handler as POST }
   ```
 
   #### Component:
@@ -174,29 +174,28 @@
   Note since our component's `font` prop isn't optional we must pass a `defaultValue`
 
   ```tsx
-  import { runtime } from "@/makeswift/runtime";
-  import { lazy } from "react";
-
-  import { Style, Font, TextInput } from "@makeswift/runtime/controls";
+  import { runtime } from '@/makeswift/runtime'
+  import { Font, Style, TextInput } from '@makeswift/runtime/controls'
+  import { lazy } from 'react'
 
   runtime.registerComponent(
-    lazy(() => import("./my-component")),
+    lazy(() => import('./my-component')),
     {
-      type: "Font Control Demo",
-      label: "My Component",
+      type: 'Font Control Demo',
+      label: 'My Component',
       props: {
         className: Style(),
         font: Font({
           defaultValue: {
-            fontFamily: "var(--font-grenze-gotisch)",
-            fontStyle: "normal",
+            fontFamily: 'var(--font-grenze-gotisch)',
+            fontStyle: 'normal',
             fontWeight: 700,
           },
         }),
         text: TextInput(),
       },
     },
-  );
+  )
   ```
 
   Now you can visually control fonts outside of `RichText`.
