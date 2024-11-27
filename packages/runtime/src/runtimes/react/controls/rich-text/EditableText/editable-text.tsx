@@ -1,3 +1,5 @@
+'use client'
+
 import { cx } from '@emotion/css'
 import { getBox } from 'css-box-model'
 import isHotkey from 'is-hotkey'

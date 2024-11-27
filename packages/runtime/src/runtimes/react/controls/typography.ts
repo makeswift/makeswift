@@ -1,24 +1,30 @@
 import { CSSObject } from '@emotion/serialize'
-import { unstable_TypographyDefinition, type DataType } from '@makeswift/controls'
+import {
+  unstable_TypographyDefinition,
+  findBreakpointOverride,
+  shallowMergeFallbacks,
+  type DataType,
+  type Breakpoints,
+  type DeviceOverride,
+  type ResponsiveValue,
+} from '@makeswift/controls'
 
 import { useSwatches, useTypography } from '../hooks/makeswift-api'
 import { Typography, Swatch } from '../../../api'
 import { colorToString } from '../../../components/utils/colorToString'
-import { useResponsiveStyle } from '../../../components/utils/responsive-style'
+import { responsiveStyle } from '../../../components/utils/responsive-style'
 import { ColorValue } from '../../../components/utils/types'
-import { DeviceOverride, ResponsiveValue } from '../../../prop-controllers'
-import { findBreakpointOverride, shallowMergeFallbacks } from '../../../state/modules/breakpoints'
 import { isNonNullable } from '../../../utils/isNonNullable'
 import { useStyle } from '../use-style'
 import { useBreakpoints } from '../hooks/use-breakpoints'
 
 export function typographyFragementToTypographyControlData(
-  typography: Typography | null,
+  fragment: Typography | null,
 ): DataType<unstable_TypographyDefinition> | undefined {
-  if (typography == null) return undefined
+  if (fragment == null) return undefined
   return {
-    id: typography.id,
-    style: typography.style.map(({ deviceId, value }) => ({
+    id: fragment.id,
+    style: fragment.style.map(({ deviceId, value }) => ({
       deviceId,
       value: {
         fontFamily: value.fontFamily ?? undefined,
@@ -97,15 +103,15 @@ const getDeviceId = ({ deviceId }: DeviceOverride<unknown>) => deviceId
  * `enhanced` here just means typography ids have been replaced with the related entity.
  */
 export default function useEnhancedTypography(
-  value?: DataType<unstable_TypographyDefinition> | null,
+  data?: DataType<unstable_TypographyDefinition> | null,
 ): EnhancedTypography {
-  const typography = typographyFragementToTypographyControlData(useTypography(value?.id ?? null))
+  const typography = typographyFragementToTypographyControlData(useTypography(data?.id ?? null))
   const source = typography?.style ?? []
-  const override = value?.style ?? []
+  const override = data?.style ?? []
   const breakpoints = useBreakpoints()
 
   const swatchIds = [
-    ...getTypographyStyleSwatchIds(value?.style),
+    ...getTypographyStyleSwatchIds(data?.style),
     ...getTypographyStyleSwatchIds(typography?.style),
   ]
   const swatches = useSwatches(swatchIds).filter(isNonNullable)
@@ -148,50 +154,42 @@ export default function useEnhancedTypography(
     .filter(isNonNullable)
 }
 
-export function useTypographyClassName(value: EnhancedTypography): string {
-  return useStyle(
-    useResponsiveStyle<
-      EnhancedTypographyValue,
-      [ResponsiveValue<EnhancedTypographyValue> | null | undefined]
-    >(
-      [value],
-      ([value]) => {
-        if (value === undefined) return {}
+function typographyToCssObject(value: EnhancedTypographyValue): CSSObject {
+  let styles: CSSObject = {}
+  if (value.color != null) styles.color = colorToString(value.color)
+  if (value.fontFamily != null) styles.fontFamily = value.fontFamily
+  if (value.fontSize != null && value.fontSize.value != null && value.fontSize.unit != null)
+    styles.fontSize = `${value.fontSize.value}${value.fontSize.unit}`
+  if (value.fontWeight != null) styles.fontWeight = value.fontWeight
+  if (value.lineHeight != null) styles.lineHeight = value.lineHeight
+  if (value.letterSpacing != null) styles.letterSpacing = `${value.letterSpacing / 10}em`
+  if (value.uppercase != null)
+    styles.textTransform = value.uppercase === true ? 'uppercase' : 'initial'
+  if (value.underline != null || value.strikethrough != null)
+    styles.textDecoration = [
+      Boolean(value.underline) && 'underline',
+      Boolean(value.strikethrough) && 'line-through',
+    ]
+      .filter(Boolean)
+      .join(' ')
+  if (value.italic != null) styles.fontStyle = value.italic === true ? 'italic' : 'initial'
 
-        let styles: CSSObject = {}
-        if (value.color != null) styles.color = colorToString(value.color)
-        if (value.fontFamily != null) styles.fontFamily = value.fontFamily
-        if (value.fontSize != null && value.fontSize.value != null && value.fontSize.unit != null)
-          styles.fontSize = `${value.fontSize.value}${value.fontSize.unit}`
-        if (value.fontWeight != null) styles.fontWeight = value.fontWeight
-        if (value.lineHeight != null) styles.lineHeight = value.lineHeight
-        if (value.letterSpacing != null) styles.letterSpacing = `${value.letterSpacing / 10}em`
-        if (value.uppercase != null)
-          styles.textTransform = value.uppercase === true ? 'uppercase' : 'initial'
-        if (value.underline != null || value.strikethrough != null)
-          styles.textDecoration = [
-            Boolean(value.underline) && 'underline',
-            Boolean(value.strikethrough) && 'line-through',
-          ]
-            .filter(Boolean)
-            .join(' ')
-        if (value.italic != null) styles.fontStyle = value.italic === true ? 'italic' : 'initial'
+  return styles
+}
 
-        return styles
-      },
-      shallowMergeFallbacks,
-    ),
+export function typographyCss(breakpoints: Breakpoints, style: EnhancedTypography): CSSObject {
+  return responsiveStyle<
+    EnhancedTypographyValue,
+    [ResponsiveValue<EnhancedTypographyValue> | null | undefined]
+  >(
+    breakpoints,
+    [style],
+    ([value]) => (value !== undefined ? typographyToCssObject(value) : {}),
+    shallowMergeFallbacks,
   )
 }
 
-export type TypographyControlValue = string
-
-export function useTypographyValue(
-  data: DataType<unstable_TypographyDefinition> | undefined,
-): TypographyControlValue {
-  // for each breakpoint fetch related resources and merge its value with its override
-  const enhancedTypography = useEnhancedTypography(data)
-
-  // for each breakpoint shallow merge back up through the breakpoints and create a className
-  return useTypographyClassName(enhancedTypography)
+export function useTypographyClassName(value: EnhancedTypography): string {
+  const breakpoints = useBreakpoints()
+  return useStyle(typographyCss(breakpoints, value))
 }

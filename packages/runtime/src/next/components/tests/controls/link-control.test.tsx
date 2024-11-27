@@ -1,5 +1,4 @@
 /** @jest-environment jsdom */
-import { forwardRef } from 'react'
 import { Link } from '../../../../controls'
 import { testPageControlPropRendering } from './page-control-prop-rendering'
 import { APIResourceType } from '../../../../api'
@@ -9,9 +8,9 @@ import { MakeswiftComponentType } from '../../../../components'
 import { ElementID } from '@makeswift/prop-controllers'
 import { ReactRuntime } from '../../../../react'
 
-const Button = forwardRef(function Button({ id }: { id?: string }, _ref) {
+function Button({ id }: { id?: string }) {
   return <button id={id} />
-})
+}
 
 const pathnameSlicesBaseUrl = `/api/makeswift/page-pathname-slices`
 

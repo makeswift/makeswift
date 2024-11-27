@@ -1,4 +1,5 @@
 import { BaseEditor, Descendant, Editor, NodeEntry, Text, Transforms } from 'slate'
+import { cx } from '@emotion/css'
 import { unstable_Typography } from '@makeswift/controls'
 
 import { clearActiveTypographyStyle } from './clearActiveTypographyStyle'
@@ -126,7 +127,7 @@ export function TypographyPlugin() {
         ...props,
         leaf: {
           ...props.leaf,
-          className: `${props.leaf.className} ${className}`,
+          className: cx(props.leaf.className, className),
         },
       })
     },

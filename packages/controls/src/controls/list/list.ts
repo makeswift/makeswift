@@ -1,6 +1,8 @@
 import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
 
+import { Effects } from '../../lib/effects'
+import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
 import { type Data } from '../../common'
@@ -9,11 +11,13 @@ import {
   type MergeTranslatableDataContext,
 } from '../../context'
 import { type IntrospectionTarget } from '../../introspection'
+import { type ResourceResolver } from '../../resources/resolver'
 import {
   SerializationSchema,
   type DeserializedRecord,
   type SerializedRecord,
 } from '../../serialization'
+import { type Stylesheet } from '../../stylesheet'
 
 import {
   type DataType as DataType_,
@@ -23,6 +27,7 @@ import {
 import {
   ControlDefinition,
   serialize,
+  type Resolvable,
   type SchemaType,
   type SchemaTypeAny,
 } from '../definition'
@@ -189,6 +194,46 @@ class Definition<C extends Config> extends ControlDefinition<
         ),
       }
     })
+  }
+
+  resolveValue(
+    data: DataType<C> | undefined,
+    resolver: ResourceResolver,
+    stylesheet: Stylesheet,
+    control?: InstanceType<C>,
+  ): Resolvable<ResolvedValueType<C> | undefined> {
+    const effects = new Effects()
+
+    const childControls = control?.childControls(data?.map(({ id }) => id))
+    if (childControls) {
+      effects.add(() => control?.setChildControls(childControls))
+    }
+
+    const itemValues = data?.map(({ value, id }) =>
+      this.itemDef.resolveValue(
+        value,
+        resolver,
+        stylesheet.child(id),
+        childControls?.get(id),
+      ),
+    )
+
+    const stableValue = StableValue({
+      name: Definition.type,
+      read: () => itemValues?.map((v) => v.readStable()) ?? [],
+      deps: itemValues,
+    })
+
+    return {
+      ...stableValue,
+      triggerResolve: async (currentValue?: ResolvedValueType<C>) => {
+        await Promise.all([
+          effects.run(),
+          ...(itemValues?.map((v, i) => v.triggerResolve(currentValue?.[i])) ??
+            []),
+        ])
+      },
+    }
   }
 
   createInstance(sendMessage: SendMessage<any>): InstanceType<C> {

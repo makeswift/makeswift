@@ -1,10 +1,16 @@
 export * from './common'
+export * from './breakpoints'
 export * from './controls'
 export * from './resources'
 export * from './serialization'
 
 export * from './context'
+export * from './stylesheet'
 export * from './introspection'
 
 export * from './lib/functional'
+export * from './lib/stable-value'
+export * from './lib/shallow-merge'
+export * from './lib/value-subscription'
+export * from './lib/coalesce'
 export * from './lib/predicates'

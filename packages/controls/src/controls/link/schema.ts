@@ -1,6 +1,15 @@
 import { z } from 'zod'
 
-export const linkSchema = z.union([
+// see https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView#syntax
+const scrollLogicalPosition = z.enum(['start', 'center', 'end', 'nearest'])
+
+export const scrollOptions = z.object({
+  behavior: z.enum(['smooth', 'instant', 'auto']).optional(),
+  block: scrollLogicalPosition.optional(),
+  inline: scrollLogicalPosition.optional(),
+})
+
+export const link = z.union([
   z.object({
     type: z.literal('OPEN_PAGE'),
     payload: z
@@ -49,7 +58,7 @@ export const linkSchema = z.union([
           })
           .nullable()
           .optional(),
-        block: z.enum(['start', 'center', 'end']),
+        block: scrollLogicalPosition,
       })
       .transform((v) => ({
         ...v,
@@ -57,3 +66,6 @@ export const linkSchema = z.union([
       })),
   }),
 ])
+
+export const data = z.union([link, z.null()])
+export const target = z.enum(['_blank', '_self'])

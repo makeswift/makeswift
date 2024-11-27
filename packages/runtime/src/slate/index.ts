@@ -1,3 +1,4 @@
+export { type NodeJSON, type ValueJSON, type InlineJSON, type MarkJSON } from '@makeswift/controls'
 export * from './BlockPlugin'
 export * from './BuilderPlugin'
 export * from './InlineModePlugin'

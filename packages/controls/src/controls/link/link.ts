@@ -1,16 +1,24 @@
 import { z } from 'zod'
 
+import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
 import { type CopyContext } from '../../context'
 import { Targets, type IntrospectionTarget } from '../../introspection'
+import { type ResourceResolver } from '../../resources/resolver'
 import { type SerializedRecord } from '../../serialization'
 
-import { ControlDefinition, serialize, type SchemaType } from '../definition'
+import {
+  ControlDefinition,
+  serialize,
+  type Resolvable,
+  type SchemaType,
+} from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
 
 import { type GenericMouseEvent } from './mouse-event'
-import { linkSchema } from './schema'
+import { resolveLink } from './resolve-link'
+import * as LinkSchema from './schema'
 
 type Config = z.infer<typeof Definition.schema.config>
 
@@ -18,13 +26,21 @@ type Schema<_C extends Config> = typeof Definition.schema
 type LinkTarget<C extends Config> = z.infer<Schema<C>['linkTarget']>
 type DataType<C extends Config> = z.infer<Schema<C>['data']>
 type ValueType<C extends Config> = z.infer<Schema<C>['value']>
+
+type ScrollOptions = z.infer<typeof LinkSchema.scrollOptions>
+type OnClick<MouseEventType extends GenericMouseEvent> = ((
+  event: MouseEventType,
+) => void) & {
+  $scrollOptions?: ScrollOptions
+}
+
 type ResolvedValueType<
   MouseEventType extends GenericMouseEvent,
   C extends Config,
 > = {
   href: string
   target?: LinkTarget<C>
-  onClick: (event: MouseEventType) => void
+  onClick: OnClick<MouseEventType>
 }
 
 class Definition<
@@ -42,8 +58,8 @@ class Definition<
   static get schema() {
     const type = z.literal(this.type)
 
-    const link = linkSchema
-    const data = z.union([link, z.null()])
+    const link = LinkSchema.link
+    const data = LinkSchema.data
     const value = data
 
     const config = z.object({
@@ -55,7 +71,7 @@ class Definition<
       config,
     })
 
-    const linkTarget = z.enum(['_blank', '_self'])
+    const linkTarget = LinkSchema.target
 
     const resolvedValue = z.object({
       href: z.string(),
@@ -140,6 +156,72 @@ class Definition<
     }
 
     return data
+  }
+
+  resolveValue(
+    data: DataType<C> | undefined,
+    resolver: ResourceResolver,
+  ): Resolvable<ResolvedValueType<MouseEventType, C>> {
+    const emptyLink = {
+      href: '#',
+      onClick: (e: MouseEventType) => {
+        if (e.defaultPrevented) return
+      },
+    } as const
+
+    const pageId = data?.type === 'OPEN_PAGE' ? data.payload.pageId : null
+    const pageSub = resolver.resolvePagePathnameSlice(pageId ?? undefined)
+
+    const elementKey =
+      data?.type === 'SCROLL_TO_ELEMENT'
+        ? data.payload.elementIdConfig?.elementKey
+        : null
+
+    const elementIdSub = resolver.resolveElementId(elementKey ?? '')
+
+    const stableValue = StableValue({
+      name: Definition.type,
+      read: () => {
+        if (data == null) return emptyLink
+
+        const page = pageSub.readStable()
+        const elementId = elementIdSub.readStable()
+        const { href, target, scrollOptions } = resolveLink(
+          data,
+          page,
+          elementId,
+        )
+
+        return {
+          href,
+          target,
+          onClick: this.resolveOnClick(data, href, scrollOptions),
+        }
+      },
+      deps: [pageSub, elementIdSub],
+    })
+
+    return {
+      ...stableValue,
+      triggerResolve: async () => {
+        if (pageSub.readStable() == null) {
+          pageSub.fetch()
+        }
+      },
+    }
+  }
+
+  resolveOnClick(
+    _data: DataType<C> | undefined,
+    _href: string,
+    scrollOptions: ScrollOptions | undefined,
+  ): OnClick<MouseEventType> {
+    const onClick = (event: MouseEventType) => {
+      if (event.defaultPrevented) return
+    }
+
+    onClick.$scrollOptions = scrollOptions
+    return onClick
   }
 
   introspect<R>(

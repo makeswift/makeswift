@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Page Style renders a style: resolvedValue 1`] = `"css-1cny9vj r0"`;
+exports[`Page Style renders a style: resolvedValue 1`] = `"css-1cny9vj u-r2-propKey"`;
 
 exports[`Page Style renders a style: snapshot 1`] = `
 {

@@ -1,10 +1,12 @@
+'use client'
+
 import { ComponentPropsWithoutRef, forwardRef, MouseEvent } from 'react'
-import scrollIntoView from 'scroll-into-view-if-needed'
 import NextLink from 'next/link'
 
 import { LinkData } from '@makeswift/prop-controllers'
-import { useElementId } from '../../../runtimes/react/hooks/use-element-id'
-import { usePagePathnameSlice } from '../../../runtimes/react/hooks/makeswift-api'
+
+import { Link as LinkDef } from '../../../controls/link'
+import { useResolvedValue } from '../../../runtimes/react/hooks/use-resolved-value'
 
 type BaseProps = {
   link?: LinkData
@@ -32,76 +34,13 @@ export const Link = forwardRef<HTMLAnchorElement, Props>(function Link(
   { link, onClick = () => {}, ...restOfProps }: Props,
   ref,
 ) {
-  const pageId = link && link.type === 'OPEN_PAGE' ? link.payload.pageId : null
-  const page = usePagePathnameSlice(pageId ?? null)
-
-  const elementKey =
-    link?.type === 'SCROLL_TO_ELEMENT' ? link.payload.elementIdConfig?.elementKey : null
-  const elementId = useElementId(elementKey)
-
-  // We don't want to use `next/link` with relative paths because Next.js will attempt to normalize
-  // it and mess up the path.
-  let useNextLink: boolean | undefined
-  let href: string | undefined
-  let target: '_blank' | '_self' | undefined
-  let block: 'start' | 'center' | 'end' | undefined
-
-  if (link) {
-    switch (link.type) {
-      case 'OPEN_PAGE': {
-        if (page) {
-          useNextLink = true
-
-          href = `/${page.localizedPathname ?? page.pathname}`
-        }
-
-        target = link.payload.openInNewTab ? '_blank' : '_self'
-
-        break
-      }
-
-      case 'OPEN_URL': {
-        useNextLink = isValidHref(link.payload.url)
-
-        href = link.payload.url
-
-        target = link.payload.openInNewTab ? '_blank' : '_self'
-
-        break
-      }
-
-      case 'SEND_EMAIL': {
-        useNextLink = false
-
-        const { to, subject = '', body = '' } = link.payload
-
-        if (to != null) href = `mailto:${to}?subject=${subject}&body=${body}`
-
-        break
-      }
-
-      case 'CALL_PHONE': {
-        useNextLink = false
-
-        href = `tel:${link.payload.phoneNumber}`
-
-        break
-      }
-
-      case 'SCROLL_TO_ELEMENT': {
-        useNextLink = false
-
-        href = `#${elementId ?? ''}`
-
-        block = link.payload.block
-
-        break
-      }
-
-      default:
-        throw new RangeError(`Invalid link type "${(link as any).type}."`)
-    }
-  }
+  const {
+    href,
+    target,
+    onClick: resolvedOnClick,
+  } = useResolvedValue(link, (link, resourceResolver) =>
+    LinkDef().resolveValue(link, resourceResolver),
+  ) ?? {}
 
   function handleClick(event: MouseEvent<HTMLAnchorElement>) {
     onClick(event)
@@ -115,30 +54,15 @@ export const Link = forwardRef<HTMLAnchorElement, Props>(function Link(
      */
     if (event.currentTarget.isContentEditable) return event.preventDefault()
 
-    if (link && link.type === 'SCROLL_TO_ELEMENT') {
-      let hash: string | undefined
-
-      try {
-        if (href != null) hash = new URL(`http://www.example.com/${href}`).hash
-      } catch (error) {
-        console.error(`Link received invalid href: ${href}`, error)
-      }
-
-      if (href != null && hash != null && href === hash) {
-        event.preventDefault()
-        const view = event.view as unknown as Window
-
-        scrollIntoView(view.document.querySelector(hash)!, {
-          behavior: 'smooth',
-          block,
-        })
-
-        if (view.location.hash !== hash) view.history.pushState({}, '', hash)
-      }
-    }
+    return resolvedOnClick?.(event)
   }
 
-  if (useNextLink && href != null) {
+  const useNextLink =
+    href != null &&
+    link &&
+    (link.type === 'OPEN_PAGE' || (link.type === 'OPEN_URL' && isValidHref(link.payload.url)))
+
+  if (useNextLink) {
     return (
       <NextLink
         {...restOfProps}

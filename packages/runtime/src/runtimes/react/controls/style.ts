@@ -1,26 +1,21 @@
 import { CSSObject } from '@emotion/css'
-import { useEffect, useId } from 'react'
-
 import {
   Style,
-  StyleDefinition,
-  StyleControl,
-  type DataType,
+  type StyleProperty,
+  type ResolvedBorderSideData,
   type FontSizePropertyData,
   type WidthPropertyData,
+  type ResolvedStyleData,
 } from '@makeswift/controls'
 
-import { useBorder, BorderSide } from '../../../components/hooks'
 import { colorToString } from '../../../components/utils/colorToString'
-import { useResponsiveStyle } from '../../../components/utils/responsive-style'
+import { responsiveStyle } from '../../../components/utils/responsive-style'
 
-import { useStyle } from '../use-style'
 import { BorderRadiusLonghandPropertyData } from '../../../css/border-radius'
 import { lengthPercentageDataToString } from '../../../css/length-percentage'
 import { marginPropertyDataToStyle } from '../../../css/margin'
 import { paddingPropertyDataToStyle } from '../../../css/padding'
-import { BoxModel, getBox } from '../../../box-model'
-import deepEqual from '../../../utils/deepEqual'
+import { Breakpoints } from '../../../state/modules/breakpoints'
 
 const defaultMargin = {
   marginTop: 0,
@@ -36,22 +31,22 @@ const defaultPadding = {
   paddingLeft: 0,
 }
 
-function useStyleControlCssObject(
-  style: DataType<StyleDefinition> | undefined,
-  controlDefinition: StyleDefinition,
+export function styleV1Css(
+  breakpoints: Breakpoints,
+  style: ResolvedStyleData | undefined,
+  properties: StyleProperty[],
 ): CSSObject {
-  const { properties } = controlDefinition.config
-
   return {
     ...(properties.includes(Style.Width) && {
       maxWidth: '100%',
     }),
-    ...useResponsiveStyle(
+    ...responsiveStyle(
+      breakpoints,
       [
         style?.width,
         style?.margin,
         style?.padding,
-        useBorder(style?.border),
+        style?.border,
         style?.borderRadius,
         style?.textStyle,
       ] as const,
@@ -93,7 +88,9 @@ function useStyleControlCssObject(
     return lengthPercentageDataToString(widthProperty)
   }
 
-  function borderSideToString(borderSide: BorderSide | null | undefined): string | null {
+  function borderSideToString(
+    borderSide: ResolvedBorderSideData | null | undefined,
+  ): string | null {
     if (borderSide == null) return null
 
     const { width, color, style } = borderSide
@@ -113,49 +110,4 @@ function useStyleControlCssObject(
   function fontSizeToString(fontSize: NonNullable<FontSizePropertyData>) {
     return `${fontSize.value}${fontSize.unit}`
   }
-}
-
-export type StyleControlFormattedValue = string
-
-export function useFormattedStyle(
-  styleControlData: DataType<StyleDefinition> | undefined,
-  controlDefinition: StyleDefinition,
-  control: StyleControl | null,
-): StyleControlFormattedValue {
-  const style = useStyleControlCssObject(styleControlData, controlDefinition)
-  // We're removing the colons because useId returns a string wrapped with colons, e.g. ":R3d5sm:",
-  // and we cannot use colons in a class name.
-  const guid = useId().replaceAll(':', '')
-  const styleClassName = useStyle(style)
-  const classNames = `${styleClassName} ${guid}`
-
-  useEffect(() => {
-    let currentBoxModel: BoxModel | null = null
-
-    const handleAnimationFrameRequest = () => {
-      if (control == null) return
-
-      const element = document.querySelector(`.${guid}`)
-
-      const measuredBoxModel = element == null ? null : getBox(element)
-
-      if (!deepEqual(currentBoxModel, measuredBoxModel)) {
-        currentBoxModel = measuredBoxModel
-
-        control.changeBoxModel(currentBoxModel)
-      }
-
-      animationFrameHandle = requestAnimationFrame(handleAnimationFrameRequest)
-    }
-
-    let animationFrameHandle = requestAnimationFrame(handleAnimationFrameRequest)
-
-    return () => {
-      cancelAnimationFrame(animationFrameHandle)
-
-      control?.changeBoxModel(null)
-    }
-  }, [guid, control])
-
-  return classNames
 }
