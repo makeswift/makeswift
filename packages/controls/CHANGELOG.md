@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.6
+
+### Patch Changes
+
+- 11ae3c2: refactor: rewrite element tree rendering using "unified" controls interface
+
 ## 0.1.5
 
 ### Patch Changes
