@@ -8,7 +8,7 @@
     "icons": "npx @svgr/cli --typescript --replace-attr-values \"#000=currentColor\" --out-dir generated/icons -- public/icons"
   },
   "dependencies": {
-    "@makeswift/runtime": "^0.19.1",
+    "@makeswift/runtime": "^0.21.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-tabs": "^1.0.4",
     "clsx": "^2.0.0",
@@ -22,7 +22,7 @@
     "@types/react": "18.2.60",
     "@types/react-dom": "^18.2.0",
     "autoprefixer": "^10.4.15",
-    "eslint": "8.16.0",
+    "eslint": "9.13.0",
     "eslint-config-next": "^14.2.3",
     "postcss": "^8.4.29",
     "prettier": "^3.0.3",
