@@ -3,7 +3,7 @@ import { type Document as ReactPageDocument } from '../../../state/react-page'
 import { ElementImperativeHandle } from '../element-imperative-handle'
 import { DocumentContext } from '../hooks/use-document-context'
 import { ElementWithFallback } from './Element'
-import { match } from 'ts-pattern'
+import { getRootElementFromDocument } from '../../../state/utils/get-root-element-from-document'
 
 type DocumentProps = {
   document: ReactPageDocument
@@ -15,15 +15,14 @@ export const Document = memo(
     { document, fallback }: DocumentProps,
     ref: Ref<ElementImperativeHandle>,
   ): JSX.Element {
-    const isInitialData = match(document)
-      .with({ meta: { isInitialData: true } }, () => true)
-      .otherwise(() => false)
+    const isInitialData = document.rootElement == null
+    const rootElement = getRootElementFromDocument(document)
 
     return (
       <DocumentContext.Provider value={document}>
         <ElementWithFallback
           ref={ref}
-          element={document.rootElement}
+          element={rootElement}
           fallback={fallback}
           isInitialData={isInitialData}
         />

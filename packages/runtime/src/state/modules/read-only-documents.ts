@@ -25,14 +25,15 @@ type BaseDocument = {
 
 export const EMBEDDED_DOCUMENT_TYPE = 'EMBEDDED_DOCUMENT' as const
 
-export type EmbeddedDocument = BaseDocument & {
+export type EmbeddedDocument = {
+  key: string
+  locale: string | null
   id: string
   type: string
   name: string
-  meta?: {
-    isInitialData?: boolean
-    hasFallback?: boolean
-  }
+  rootElement: Element | null
+  initialRootElement: Element
+  hasFallback?: boolean
   __type: typeof EMBEDDED_DOCUMENT_TYPE
 }
 

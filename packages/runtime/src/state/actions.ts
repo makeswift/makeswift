@@ -2,7 +2,7 @@ import type { Operation } from 'ot-json0'
 
 import { ControlInstance } from '@makeswift/controls'
 
-import type { Element, Document, EMBEDDED_DOCUMENT_TYPE } from './modules/read-only-documents'
+import { type Element, type Document, EMBEDDED_DOCUMENT_TYPE } from './modules/read-only-documents'
 import type { ComponentType } from './modules/react-components'
 import type { Measurable, BoxModel } from './modules/box-models'
 import type { ThunkAction } from 'redux-thunk'
@@ -93,20 +93,44 @@ type InitAction = { type: typeof ActionTypes.INIT }
 
 type CleanUpAction = { type: typeof ActionTypes.CLEAN_UP }
 
-type DocumentPayloadBaseDocument = {
+export type BaseDocumentPayload = {
   key: string
   rootElement: Element
   locale?: string | null // older versions of the runtime may not provide this field
 }
 
-type DocumentPayloadEmbeddedDocument = DocumentPayloadBaseDocument & {
+export type MakeswiftComponentDocumentPayloadV0 = {
+  key: string
+  rootElement: Element
+  locale?: string | null // older versions of the runtime may not provide this field
   id: string
   type: string
   name: string
   __type: typeof EMBEDDED_DOCUMENT_TYPE
+  meta?: {
+    isInitialData?: boolean
+    hasFallback?: boolean
+  }
 }
 
-type DocumentPayload = DocumentPayloadBaseDocument | DocumentPayloadEmbeddedDocument
+export type MakeswiftComponentDocumentPayloadV1 = {
+  key: string
+  locale: string | null
+  id: string
+  type: string
+  name: string
+  rootElement: Element | null
+  initialRootElement: Element
+  hasFallback?: boolean
+  __version: 1
+  __type: typeof EMBEDDED_DOCUMENT_TYPE
+}
+
+export type MakeswiftComponentDocumentPayload =
+  | MakeswiftComponentDocumentPayloadV0
+  | MakeswiftComponentDocumentPayloadV1
+
+export type DocumentPayload = BaseDocumentPayload | MakeswiftComponentDocumentPayload
 
 type RegisterDocumentAction = {
   type: typeof ActionTypes.REGISTER_DOCUMENT
@@ -379,7 +403,10 @@ export function cleanUp(): CleanUpAction {
 }
 
 export function registerDocument(document: Document): RegisterDocumentAction {
-  return { type: ActionTypes.REGISTER_DOCUMENT, payload: { documentKey: document.key, document } }
+  return {
+    type: ActionTypes.REGISTER_DOCUMENT,
+    payload: { documentKey: document.key, document: { ...document, __version: 1 } },
+  }
 }
 
 export function unregisterDocument(documentKey: string): UnregisterDocumentAction {
@@ -389,7 +416,7 @@ export function unregisterDocument(documentKey: string): UnregisterDocumentActio
 export function registerBuilderDocument(document: Document): RegisterBuilderDocumentAction {
   return {
     type: ActionTypes.REGISTER_BUILDER_DOCUMENT,
-    payload: { documentKey: document.key, document },
+    payload: { documentKey: document.key, document: { ...document, __version: 1 } },
   }
 }
 
