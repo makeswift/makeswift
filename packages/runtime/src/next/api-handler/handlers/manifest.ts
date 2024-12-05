@@ -14,6 +14,7 @@ export type Manifest = {
   siteVersions: boolean
   unstable_siteVersions: boolean
   localizedPageSSR: boolean
+  webhook: boolean
 }
 
 type ManifestError = { message: string }
@@ -78,6 +79,7 @@ export default async function handler(
     siteVersions: true,
     unstable_siteVersions: true,
     localizedPageSSR: true,
+    webhook: true,
   }
 
   return match(args)

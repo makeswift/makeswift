@@ -324,14 +324,14 @@ importers:
         specifier: ^1.0.0
         version: 1.1.0
       '@makeswift/controls':
-        specifier: workspace:*
-        version: link:../controls
+        specifier: 0.1.6
+        version: 0.1.6
       '@makeswift/next-plugin':
-        specifier: workspace:*
+        specifier: 0.3.0
         version: link:../makeswift-next-plugin
       '@makeswift/prop-controllers':
-        specifier: workspace:*
-        version: link:../prop-controllers
+        specifier: 0.3.7
+        version: 0.3.7
       '@popmotion/popcorn':
         specifier: ^0.4.4
         version: 0.4.4
@@ -3385,6 +3385,25 @@ packages:
 
   /@juggle/resize-observer@3.4.0:
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
+    dev: false
+
+  /@makeswift/controls@0.1.6:
+    resolution: {integrity: sha512-hYXh4zgGZMsNrbIcN24PH2+N265SH/i2UoY2pKX0XNpalYsV1Qsfar7llKJtOzX6vR/mKq5WG8WAKVzOUXGG0g==}
+    dependencies:
+      color: 3.2.1
+      css-box-model: 1.2.1
+      slate: 0.91.4
+      ts-pattern: 5.0.8
+      uuid: 9.0.0
+      zod: 3.21.4
+    dev: false
+
+  /@makeswift/prop-controllers@0.3.7:
+    resolution: {integrity: sha512-jvPjRAP+WEteQ/9Q+pTup/bfpnPIlHaGwpvyXaGePw3Pmu0g4bpjUyc2kpPTju49sMsUF2ZD24af+PxLZouZzw==}
+    dependencies:
+      '@makeswift/controls': 0.1.6
+      ts-pattern: 5.0.8
+      zod: 3.21.4
     dev: false
 
   /@manypkg/find-root@1.1.0:
@@ -7208,11 +7227,11 @@ packages:
       debug: 4.3.5
       enhanced-resolve: 5.14.1
       eslint: 8.56.0
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@6.20.0)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.56.0)
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@6.20.0)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.56.0)
       eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.20.0)(eslint-import-resolver-typescript@3.6.1)(eslint@8.56.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.2
-      is-core-module: 2.13.1
+      is-core-module: 2.15.1
       is-glob: 4.0.3
     transitivePeerDependencies:
       - '@typescript-eslint/parser'
@@ -7241,6 +7260,36 @@ packages:
       - '@typescript-eslint/parser'
       - eslint-import-resolver-node
       - eslint-import-resolver-webpack
+      - supports-color
+    dev: true
+
+  /eslint-module-utils@2.12.0(@typescript-eslint/parser@6.20.0)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.56.0):
+    resolution: {integrity: sha512-wALZ0HFoytlyh/1+4wuZ9FJCD/leWHQzzrxJ8+rebyReSLk7LApMyd3WJaLVoN+D5+WIdJyDK1c6JnE65V4Zyg==}
+    engines: {node: '>=4'}
+    peerDependencies:
+      '@typescript-eslint/parser': '*'
+      eslint: '*'
+      eslint-import-resolver-node: '*'
+      eslint-import-resolver-typescript: '*'
+      eslint-import-resolver-webpack: '*'
+    peerDependenciesMeta:
+      '@typescript-eslint/parser':
+        optional: true
+      eslint:
+        optional: true
+      eslint-import-resolver-node:
+        optional: true
+      eslint-import-resolver-typescript:
+        optional: true
+      eslint-import-resolver-webpack:
+        optional: true
+    dependencies:
+      '@typescript-eslint/parser': 6.20.0(eslint@8.56.0)(typescript@5.1.6)
+      debug: 3.2.7
+      eslint: 8.56.0
+      eslint-import-resolver-node: 0.3.9
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.20.0)(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.56.0)
+    transitivePeerDependencies:
       - supports-color
     dev: true
 

@@ -101,9 +101,14 @@ export function getAPIResource<T extends APIResourceType>(
 
 type Thunk<ReturnType> = ThunkAction<ReturnType, State, unknown, Action>
 
-async function fetchJson<T>(url: string): Promise<T | null> {
+async function fetchJson<T>(
+  url: string,
+  { tags = [] }: { tags?: string[] } = {},
+): Promise<T | null> {
+  console.log({ tags })
   const response = await fetch(url, {
     headers: { 'Content-Type': 'application/json' },
+    next: { tags },
   })
 
   if (response.status === 404) return null
@@ -135,7 +140,9 @@ export function fetchAPIResource<T extends APIResourceType>(
 
     switch (resourceType) {
       case APIResourceType.Swatch:
-        resource = await fetchJson<Swatch>(`/api/makeswift/swatches/${resourceId}`)
+        resource = await fetchJson<Swatch>(`/api/makeswift/swatches/${resourceId}`, {
+          tags: [fromNodeId(resourceId).key],
+        })
         break
 
       case APIResourceType.File:
@@ -253,4 +260,16 @@ export function configureStore({
     },
     composeEnhancers(applyMiddleware(thunk, defaultLocaleMiddleware(defaultLocale))),
   )
+}
+
+export const fromNodeId = (nodeId: string) => {
+  const match = Buffer.from(nodeId, 'base64')
+    .toString('utf8')
+    .match(/^([^:]+):([^:]+)$/)
+
+  if (!match) throw new TypeError(`NodeID cannot represent value: ${String(nodeId)}`)
+
+  const [, typeName, key] = match
+
+  return { key, typeName }
 }
