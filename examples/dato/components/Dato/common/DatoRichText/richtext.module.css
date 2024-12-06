@@ -1,0 +1,21 @@
+.bquote > p {
+  font-size: 28px;
+  margin: 0px;
+  line-height: 150%;
+}
+
+.ordered > li > p {
+  margin-left: 12px;
+}
+
+.ordered > li::marker {
+  font-weight: bold;
+}
+
+.unordered > li > p {
+  margin-left: 4px;
+}
+
+.unordered > li::marker {
+  font-size: 24px;
+}
