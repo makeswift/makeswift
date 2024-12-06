@@ -1,0 +1,5 @@
+import '@/components/Accordions/Accordions.makeswift'
+import '@/components/Dato/entries/Blog/BlogPostRichText/BlogPostRichText.makeswift'
+import '@/components/Embedded/Blog/Blog.makeswift'
+import '@/components/Marquee/Marquee.makeswift'
+import '@/components/Tabs/Tabs.makeswift'
