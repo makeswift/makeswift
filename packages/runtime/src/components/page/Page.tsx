@@ -20,6 +20,7 @@ export function Page({ page, rootDocument }: Props): JSX.Element {
 
   return (
     <>
+      <div>running locally</div>
       <PageHead document={page} />
 
       <DocumentRoot rootDocument={rootDocument} />
