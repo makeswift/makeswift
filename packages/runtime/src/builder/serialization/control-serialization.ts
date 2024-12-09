@@ -38,6 +38,7 @@ import {
   TextAreaDefinition,
   TextInputDefinition,
   unstable_TypographyDefinition,
+  FontDefinition,
 } from '../../controls'
 
 import {
@@ -1025,6 +1026,7 @@ export function deserializeUnifiedControlDef(record: DeserializedRecord): Unifie
     [RichTextV2Definition.type]: (record: DeserializedRecord) =>
       RichTextV2Definition.deserialize(record, deserializeUnifiedControlDef),
     [unstable_TypographyDefinition.type]: unstable_TypographyDefinition.deserialize,
+    [FontDefinition.type]: FontDefinition.deserialize,
   } as const
 
   const deserialize = deserializeMethod[record.type] ?? null
