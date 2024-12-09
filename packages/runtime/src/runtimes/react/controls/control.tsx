@@ -3,6 +3,7 @@ import {
   type DataType,
   type ResolvedValueType,
   type InstanceType,
+  FontDefinition,
 } from '@makeswift/controls'
 
 import {
@@ -76,6 +77,7 @@ export function ControlValue({
     case SelectDefinition.type:
     case IconRadioGroupDefinition.type:
     case ComboboxDefinition.type:
+    case FontDefinition.type:
       const resolved = resolveValue(data, definition)
       return resolved.success ? (
         <RenderHook key={definition.controlType} hook={() => resolved.value} parameters={[]}>
