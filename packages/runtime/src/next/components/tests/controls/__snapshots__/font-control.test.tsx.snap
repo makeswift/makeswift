@@ -1,0 +1,529 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Page Font control data resolves to {"fontFamily":"comic sans","fontStyle":"normal","fontWeight":400} when config === {"variant":true}: resolvedValue 1`] = `
+{
+  "fontFamily": "comic sans",
+  "fontStyle": "normal",
+  "fontWeight": 400,
+}
+`;
+
+exports[`Page Font control data resolves to {"fontFamily":"comic sans","fontStyle":"normal","fontWeight":400} when config === {"variant":true}: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "@@makeswift/type": "font::v1",
+                  "value": {
+                    "fontFamily": "comic sans",
+                    "fontStyle": "normal",
+                    "fontWeight": 400,
+                  },
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`Page Font control data resolves to {"fontFamily":"comic sans","fontStyle":"normal","fontWeight":400} when config === undefined: resolvedValue 1`] = `
+{
+  "fontFamily": "comic sans",
+  "fontStyle": "normal",
+  "fontWeight": 400,
+}
+`;
+
+exports[`Page Font control data resolves to {"fontFamily":"comic sans","fontStyle":"normal","fontWeight":400} when config === undefined: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "@@makeswift/type": "font::v1",
+                  "value": {
+                    "fontFamily": "comic sans",
+                    "fontStyle": "normal",
+                    "fontWeight": 400,
+                  },
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`Page Font control data resolves to {"fontFamily":"comic sans"} when config === {"variant":false}: resolvedValue 1`] = `
+{
+  "fontFamily": "comic sans",
+}
+`;
+
+exports[`Page Font control data resolves to {"fontFamily":"comic sans"} when config === {"variant":false}: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "@@makeswift/type": "font::v1",
+                  "value": {
+                    "fontFamily": "comic sans",
+                  },
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`Page Font control data resolves to defaultValue when config is {"defaultValue":{"fontFamily":"comic sans","fontStyle":"normal","fontWeight":400}}: resolvedValue 1`] = `
+{
+  "fontFamily": "comic sans",
+  "fontStyle": "normal",
+  "fontWeight": 400,
+}
+`;
+
+exports[`Page Font control data resolves to defaultValue when config is {"defaultValue":{"fontFamily":"comic sans","fontStyle":"normal","fontWeight":400}}: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": undefined,
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`Page Font control data resolves to defaultValue when config is {"variant":false,"defaultValue":{"fontFamily":"comic sans"}}: resolvedValue 1`] = `
+{
+  "fontFamily": "comic sans",
+}
+`;
+
+exports[`Page Font control data resolves to defaultValue when config is {"variant":false,"defaultValue":{"fontFamily":"comic sans"}}: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": undefined,
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`Page Font control data resolves to defaultValue when config is {"variant":true,"defaultValue":{"fontFamily":"comic sans","fontStyle":"normal","fontWeight":400}}: resolvedValue 1`] = `
+{
+  "fontFamily": "comic sans",
+  "fontStyle": "normal",
+  "fontWeight": 400,
+}
+`;
+
+exports[`Page Font control data resolves to defaultValue when config is {"variant":true,"defaultValue":{"fontFamily":"comic sans","fontStyle":"normal","fontWeight":400}}: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": undefined,
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`Page Font control data resolves to undefined when config === {"variant":false}: resolvedValue 1`] = `undefined`;
+
+exports[`Page Font control data resolves to undefined when config === {"variant":false}: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": undefined,
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`Page Font control data resolves to undefined when config === {"variant":true}: resolvedValue 1`] = `undefined`;
+
+exports[`Page Font control data resolves to undefined when config === {"variant":true}: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": undefined,
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`Page Font control data resolves to undefined when config === undefined: resolvedValue 1`] = `undefined`;
+
+exports[`Page Font control data resolves to undefined when config === undefined: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": undefined,
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
