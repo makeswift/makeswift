@@ -29,10 +29,6 @@ export type EmbeddedDocument = BaseDocument & {
   id: string
   type: string
   name: string
-  meta?: {
-    isInitialData?: boolean
-    hasFallback?: boolean
-  }
   __type: typeof EMBEDDED_DOCUMENT_TYPE
 }
 
