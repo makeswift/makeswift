@@ -138,6 +138,22 @@ export type MakeswiftPageSnapshot = {
   cacheData: CacheData
 }
 
+const makeswiftComponentDocumentSchemaV2 = z.object({
+  id: z.string(),
+  name: z.string().nullable(),
+  locale: z.string(),
+  data: Schema.element,
+  type: z.string().nullable(),
+  siteId: z.string(),
+})
+
+export type MakeswiftComponentDocumentSchemaV2 = z.infer<typeof makeswiftComponentDocumentSchemaV2>
+
+const getMakeswiftComponentDocumentSchemaV2 = z.object({
+  elementTree: makeswiftComponentDocumentSchemaV2.nullable(),
+  parentLocaleElementTree: makeswiftComponentDocumentSchemaV2.nullable()
+})
+
 const makeswiftComponentDocumentSchema = z.object({
   id: z.string(),
   name: z.string().nullable(),
@@ -652,45 +668,41 @@ export class Makeswift {
   async getComponentSnapshot(
     id: string,
     {
-      siteVersion = MakeswiftSiteVersion.Working,
+      siteVersion: siteVersionPromise,
       locale,
-    }: {
-      siteVersion?: MakeswiftSiteVersion
-      locale?: string
-    } = {},
+    }: { siteVersion: MakeswiftSiteVersion | Promise<MakeswiftSiteVersion>; locale?: string},
   ): Promise<MakeswiftComponentSnapshot> {
     const searchParams = new URLSearchParams()
     if (locale) searchParams.set('locale', locale)
 
+    const siteVersion = await siteVersionPromise
     const response = await this.fetch(
-      `v1/element-trees/${id}?${searchParams.toString()}`,
+      `v2/element-trees/${id}?${searchParams.toString()}`,
       siteVersion,
     )
 
     // If the element tree is not found, we generate a document with null data
     if (response.status === 404) {
-      const apiKeyPrefix = z.string().parse(this.apiKey.split('-').at(0))
-
-      return {
-        document: {
-          id,
-          locale: locale ?? null,
-          data: null,
-          // We pass the seed to generate the elementKey to make sure it's unique for each site.
-          seed: apiKeyPrefix,
-        },
-        cacheData: CacheData.empty(),
-      }
+      return this.getDummyDocument(id, locale)
     }
 
     const json = await response.json()
 
     if (!response.ok) {
-      console.error('Failed to get page snapshot', json)
-      throw new Error(`Failed to get page snapshot with error: "${response.statusText}"`)
+      console.error('Failed to get component snapshot', json)
+      throw new Error(`Failed to get component snapshot with error: "${response.statusText}"`)
     }
 
-    const document = makeswiftComponentDocumentSchema.parse(json)
+    const elementTreeResponse = getMakeswiftComponentDocumentSchemaV2.parse(json)
+
+    // favor picking 'elementTree' if it is available.
+    const document = elementTreeResponse.elementTree ?? elementTreeResponse.parentLocaleElementTree
+
+    // This case should never be reached (response was an http 200, but neither the element tree nor the parent locale element tree were provided in the response)
+    if (document == null) {
+      return this.getDummyDocument(id, locale)
+    }
+
     const cacheData = await this.introspect(document.data, siteVersion, locale)
 
     return { document, cacheData }
@@ -874,5 +886,19 @@ export class Makeswift {
 
   mergeTranslatedData(elementTree: ElementData, translatedData: Record<string, Data>): Element {
     return this.runtime.mergeTranslatedData(elementTree, translatedData)
+  }
+
+  getDummyDocument(id: string, locale: string | undefined): MakeswiftComponentSnapshot {
+    const apiKeyPrefix = z.string().parse(this.apiKey.split('-').at(0))
+    return {
+      document: {
+        id,
+        locale: locale ?? null,
+        data: null,
+        // We pass the seed to generate the elementKey to make sure it's unique for each site.
+        seed: apiKeyPrefix,
+      },
+      cacheData: CacheData.empty(),
+    }
   }
 }
