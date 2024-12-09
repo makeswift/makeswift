@@ -1,31 +1,19 @@
-import { ControlDefinition } from './definition'
-
-export type ControlType<D> =
-  D extends ControlDefinition<infer ControlType, any, any, any, any, any>
-    ? ControlType
+export type AssociatedTypes<T> = T extends {
+  __associatedTypes(types: infer Types): void
+}
+  ? Types extends Record<string, unknown>
+    ? Types
     : never
+  : never
 
-export type ConfigType<D> =
-  D extends ControlDefinition<any, infer Config, any, any, any, any>
-    ? Config
-    : never
+export type AssociatedType<
+  T,
+  K extends keyof AssociatedTypes<T>,
+> = AssociatedTypes<T>[K]
 
-export type DataType<D> =
-  D extends ControlDefinition<any, any, infer DataType, any, any, any>
-    ? DataType
-    : never
-
-export type ValueType<D> =
-  D extends ControlDefinition<any, any, any, infer ValueType, any, any>
-    ? ValueType
-    : never
-
-export type ResolvedValueType<D> =
-  D extends ControlDefinition<any, any, any, any, infer ResolvedValueType, any>
-    ? ResolvedValueType
-    : never
-
-export type InstanceType<D> =
-  D extends ControlDefinition<any, any, any, any, any, infer InstanceType>
-    ? InstanceType
-    : never
+export type ControlType<D> = AssociatedType<D, 'ControlType'>
+export type ConfigType<D> = AssociatedType<D, 'Config'>
+export type DataType<D> = AssociatedType<D, 'DataType'>
+export type ValueType<D> = AssociatedType<D, 'ValueType'>
+export type ResolvedValueType<D> = AssociatedType<D, 'ResolvedValueType'>
+export type InstanceType<D> = AssociatedType<D, 'InstanceType'>

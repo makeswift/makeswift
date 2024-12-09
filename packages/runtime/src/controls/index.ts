@@ -33,6 +33,8 @@ export {
   StyleControl,
   unstable_Typography,
   unstable_TypographyDefinition,
+  Font,
+  FontDefinition,
 } from '@makeswift/controls'
 
 export { Link, LinkDefinition } from './link'
