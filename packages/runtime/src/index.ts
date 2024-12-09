@@ -1,4 +1,10 @@
-export type { Action, SetBreakpointsAction } from './state/actions'
+export type {
+  Action,
+  SetBreakpointsAction,
+  BaseDocumentPayload,
+  MakeswiftComponentDocumentPayload,
+  DocumentPayload,
+} from './state/actions'
 export {
   ActionTypes,
   changeDocument,

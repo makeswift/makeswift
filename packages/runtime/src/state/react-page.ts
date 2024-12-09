@@ -39,6 +39,7 @@ import {
   merge,
   mergeTranslatedData,
 } from '../controls/control'
+import { getRootElementFromDocument } from './utils/get-root-element-from-document'
 
 import { type SetupTeardownMixin, withSetupTeardown } from './mixins/setup-teardown'
 
@@ -158,7 +159,7 @@ function getDocumentElements(state: State, documentKey: string): Map<string, Doc
 
   if (document == null) return new Map()
 
-  return normalizeElement(document.rootElement, descriptors)
+  return normalizeElement(getRootElementFromDocument(document), descriptors)
 }
 
 /**
