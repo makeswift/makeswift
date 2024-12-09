@@ -168,12 +168,10 @@ export function componentDocumentToRootEmbeddedDocument({
   document,
   name,
   type,
-  hasFallback = false,
 }: {
   document: MakeswiftComponentDocument | MakeswiftComponentDocumentFallback
   name: string
   type: string
-  hasFallback?: boolean
 }): EmbeddedDocument {
   const { data, locale, id } = document
 
@@ -200,10 +198,6 @@ export function componentDocumentToRootEmbeddedDocument({
     type,
     name,
     __type: EMBEDDED_DOCUMENT_TYPE,
-    meta: {
-      isInitialData: data == null,
-      hasFallback,
-    },
   }
 
   return rootDocument

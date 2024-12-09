@@ -12,13 +12,7 @@ import {
   type MakeswiftComponentSnapshot,
 } from '../../client'
 import { type CacheData } from '../../../api/react'
-import { type ReactNode } from 'react'
 import { TextInput } from '@makeswift/controls'
-
-const fallbackTestId = 'fallback'
-function FallbackNode() {
-  return <div data-testid={fallbackTestId}>Fallback Node</div>
-}
 
 const CustomComponentType = 'CustomComponent'
 const customComponentContentTestId = 'custom'
@@ -60,10 +54,7 @@ function createMakeswiftComponentSnapshot(
   }
 }
 
-async function testMakeswiftComponentRendering(
-  snapshot: MakeswiftComponentSnapshot,
-  fallback?: ReactNode,
-) {
+async function testMakeswiftComponentRendering(snapshot: MakeswiftComponentSnapshot) {
   const runtime = new ReactRuntime()
 
   runtime.registerComponent(CustomComponent, {
@@ -81,7 +72,6 @@ async function testMakeswiftComponentRendering(
           label="Embedded Component"
           type={CustomComponentType}
           snapshot={snapshot}
-          fallback={fallback}
         />
       </ReactRuntimeProvider>,
     ),
@@ -89,39 +79,17 @@ async function testMakeswiftComponentRendering(
 }
 
 describe('MakeswiftComponent', () => {
-  describe('without fallback', () => {
-    test('empty snapshot renders component with default props', async () => {
-      const snapshot = createMakeswiftComponentSnapshot(emptyDocumentFixture)
-      await testMakeswiftComponentRendering(snapshot)
+  test('empty snapshot renders component with default props', async () => {
+    const snapshot = createMakeswiftComponentSnapshot(emptyDocumentFixture)
+    await testMakeswiftComponentRendering(snapshot)
 
-      expect(screen.queryByTestId(customComponentContentTestId)).toHaveTextContent('Default Text')
-      expect(screen.queryByTestId(fallbackTestId)).not.toBeInTheDocument()
-    })
-
-    test('existing snapshot renders component with saved props', async () => {
-      const snapshot = createMakeswiftComponentSnapshot(existingDocumentFixture)
-      await testMakeswiftComponentRendering(snapshot)
-
-      expect(screen.queryByTestId(customComponentContentTestId)).toHaveTextContent('Hello World')
-      expect(screen.queryByTestId(fallbackTestId)).not.toBeInTheDocument()
-    })
+    expect(screen.queryByTestId(customComponentContentTestId)).toHaveTextContent('Default Text')
   })
 
-  describe('with fallback', () => {
-    test('empty snapshot renders fallback component', async () => {
-      const snapshot = createMakeswiftComponentSnapshot(emptyDocumentFixture)
-      await testMakeswiftComponentRendering(snapshot, <FallbackNode />)
+  test('existing snapshot renders component with saved props', async () => {
+    const snapshot = createMakeswiftComponentSnapshot(existingDocumentFixture)
+    await testMakeswiftComponentRendering(snapshot)
 
-      expect(screen.queryByTestId(customComponentContentTestId)).not.toBeInTheDocument()
-      expect(screen.queryByTestId(fallbackTestId)).toHaveTextContent('Fallback Node')
-    })
-
-    test('existing snapshot renders component with saved props', async () => {
-      const snapshot = createMakeswiftComponentSnapshot(existingDocumentFixture)
-      await testMakeswiftComponentRendering(snapshot, <FallbackNode />)
-
-      expect(screen.queryByTestId(customComponentContentTestId)).toHaveTextContent('Hello World')
-      expect(screen.queryByTestId(fallbackTestId)).not.toBeInTheDocument()
-    })
+    expect(screen.queryByTestId(customComponentContentTestId)).toHaveTextContent('Hello World')
   })
 })

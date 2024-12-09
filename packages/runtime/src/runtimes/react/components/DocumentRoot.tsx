@@ -1,4 +1,4 @@
-import { ReactNode, Ref, forwardRef, memo } from 'react'
+import { Ref, forwardRef, memo } from 'react'
 import { type Document } from '../../../state/react-page'
 import { ElementImperativeHandle } from '../element-imperative-handle'
 import { useDocument } from '../hooks/use-document'
@@ -7,12 +7,11 @@ import { Document as DocumentComponent } from './Document'
 
 type Props = {
   rootDocument: Document
-  fallback?: ReactNode
 }
 
 export const DocumentRoot = memo(
   forwardRef(function DocumentRoot(
-    { rootDocument, fallback }: Props,
+    { rootDocument }: Props,
     ref: Ref<ElementImperativeHandle>,
   ): JSX.Element {
     const document = useDocument(rootDocument.key) ?? rootDocument
@@ -21,6 +20,6 @@ export const DocumentRoot = memo(
       return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Document not found" />
     }
 
-    return <DocumentComponent ref={ref} document={document} fallback={fallback} />
+    return <DocumentComponent ref={ref} document={document} />
   }),
 )
