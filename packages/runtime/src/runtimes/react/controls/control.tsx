@@ -3,6 +3,7 @@ import {
   type DataType,
   type ResolvedValueType,
   type InstanceType,
+  FontDefinition,
 } from '@makeswift/controls'
 
 import {
