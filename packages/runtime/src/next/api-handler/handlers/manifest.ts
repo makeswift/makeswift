@@ -14,6 +14,7 @@ export type Manifest = {
   siteVersions: boolean
   unstable_siteVersions: boolean
   localizedPageSSR: boolean
+  webhook: boolean
 }
 
 type ManifestError = { message: string }
@@ -67,6 +68,11 @@ export default async function handler(
     .with(apiRoutePattern, () => false)
     .exhaustive()
 
+  const supportsWebhook = match(args)
+    .with(routeHandlerPattern, () => true)
+    .with(apiRoutePattern, () => false)
+    .exhaustive()
+
   const body = {
     version: PACKAGE_VERSION,
     previewMode: supportsPreviewMode,
@@ -78,6 +84,7 @@ export default async function handler(
     siteVersions: true,
     unstable_siteVersions: true,
     localizedPageSSR: true,
+    webhook: supportsWebhook,
   }
 
   return match(args)
