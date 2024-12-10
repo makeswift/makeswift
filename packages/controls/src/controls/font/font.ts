@@ -16,21 +16,42 @@ import {
 } from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
 
-type Config = z.infer<typeof Definition.schema.relaxed.config>
+type Config = z.infer<
+  | typeof Definition.schema.withVariants.relaxed.config
+  | typeof Definition.schema.withoutVariants.relaxed.config
+>
 
-type SchemaByDefaultValue<D extends Config['defaultValue']> =
-  undefined extends D
-    ? typeof Definition.schema.relaxed
-    : typeof Definition.schema.strict
+type A = typeof Definition.schema.withVariants.relaxed
+type B = typeof Definition.schema.withVariants.strict
+type C = typeof Definition.schema.withoutVariants.relaxed
+type D = typeof Definition.schema.withoutVariants.strict
 
-type Schema<C extends Config> = SchemaByDefaultValue<C['defaultValue']>
+type SchemaByVariantAndDefaultValue<
+  V extends Config['variant'],
+  D extends Config['defaultValue'],
+> = false extends V
+  ? undefined extends D
+    ? typeof Definition.schema.withoutVariants.relaxed
+    : typeof Definition.schema.withoutVariants.strict
+  : undefined extends D
+    ? typeof Definition.schema.withVariants.relaxed
+    : typeof Definition.schema.withVariants.strict
+
+type Schema<C extends Config> = SchemaByVariantAndDefaultValue<
+  C['variant'],
+  C['defaultValue']
+>
 type DataType<C extends Config> = z.infer<Schema<C>['data']>
 type ValueType<C extends Config> = z.infer<Schema<C>['value']>
 type ResolvedValueType<C extends Config> = z.infer<Schema<C>['resolvedValue']>
 
 type ReturnedSchemaType<C extends Config> = {
-  definition: typeof Definition.schema.relaxed.definition
-  type: typeof Definition.schema.relaxed.type
+  definition:
+    | typeof Definition.schema.withoutVariants.relaxed.definition
+    | typeof Definition.schema.withVariants.relaxed.definition
+  type:
+    | typeof Definition.schema.withoutVariants.relaxed.type
+    | typeof Definition.schema.withVariants.relaxed.type
   data: SchemaType<DataType<C>>
   value: SchemaType<ValueType<C>>
   resolvedValue: SchemaType<ResolvedValueType<C>>
@@ -53,21 +74,38 @@ class Definition<C extends Config> extends ControlDefinition<
     const version = z.literal(1)
     const type = z.literal(this.type)
 
-    const value = z.object({
+    const withVariants = z.object({
       fontFamily: z.string(),
       fontStyle: z.string(),
       fontWeight: z.number(),
     })
 
-    const versionedData = z.object({
-      [ControlDataTypeKey]: z.literal(this.v1DataType),
-      value,
+    const withoutVariants = z.object({
+      fontFamily: z.string(),
     })
 
-    const schemas = <V, D>(value: SchemaType<V>, data: SchemaType<D>) => {
+    const versionedDataWithVariants = z.object({
+      [ControlDataTypeKey]: z.literal(this.v1DataType),
+      value: withVariants,
+    })
+
+    const versionedDataWithoutVariants = z.object({
+      [ControlDataTypeKey]: z.literal(this.v1DataType),
+      value: withoutVariants,
+    })
+
+    const withVariant = z.literal<boolean>(true)
+    const withoutVariant = z.literal<boolean>(false)
+
+    const schemas = <V, D>(
+      value: SchemaType<V>,
+      data: SchemaType<D>,
+      hasVariant: z.ZodLiteral<boolean>,
+    ) => {
       const config = z.object({
         label: z.string().optional(),
         defaultValue: value,
+        variant: hasVariant,
       })
 
       const definition = z.object({
@@ -81,7 +119,6 @@ class Definition<C extends Config> extends ControlDefinition<
         value,
         resolvedValue: value,
         data,
-        versionedData,
         config,
         version,
         definition,
@@ -90,8 +127,26 @@ class Definition<C extends Config> extends ControlDefinition<
 
     return {
       version,
-      relaxed: schemas(value.optional(), versionedData.optional()),
-      strict: schemas(value, versionedData),
+      withoutVariants: {
+        relaxed: schemas(
+          withoutVariants.optional(),
+          versionedDataWithoutVariants.optional(),
+          withoutVariant,
+        ),
+        strict: schemas(
+          withoutVariants,
+          versionedDataWithoutVariants,
+          withoutVariant,
+        ),
+      },
+      withVariants: {
+        relaxed: schemas(
+          withVariants.optional(),
+          versionedDataWithVariants.optional(),
+          withVariant,
+        ),
+        strict: schemas(withVariants, versionedDataWithVariants, withVariant),
+      },
     }
   }
 
@@ -102,7 +157,8 @@ class Definition<C extends Config> extends ControlDefinition<
       )
     }
 
-    const { config, version } = Definition.schema.relaxed.definition.parse(data)
+    const { config, version } =
+      Definition.schema.withVariants.relaxed.definition.parse(data)
     return new FontDefinition(config, version)
   }
 
@@ -118,14 +174,33 @@ class Definition<C extends Config> extends ControlDefinition<
   }
 
   get schema(): ReturnedSchemaType<C> {
-    return Definition.schema.relaxed
+    const { withVariants, withoutVariants, ...baseSchema } = Definition.schema
+
+    return {
+      ...baseSchema,
+      type: withVariants.relaxed.type,
+      definition: withVariants.relaxed.definition,
+      value: z.union([
+        withoutVariants.relaxed.value,
+        withVariants.relaxed.value,
+      ]),
+      data: z.union([withoutVariants.relaxed.data, withVariants.relaxed.data]),
+      resolvedValue: z.union([
+        withoutVariants.relaxed.resolvedValue,
+        withVariants.relaxed.resolvedValue,
+      ]),
+    }
   }
 
   get dataSchema() {
     return (
-      (this.config.defaultValue === undefined
-        ? Definition.schema.relaxed
-        : Definition.schema.strict) as Schema<C>
+      this.config.variant === false
+        ? ((this.config.defaultValue === undefined
+            ? Definition.schema.withoutVariants.relaxed
+            : Definition.schema.withoutVariants.strict) as Schema<C>)
+        : ((this.config.defaultValue === undefined
+            ? Definition.schema.withVariants.relaxed
+            : Definition.schema.withVariants.strict) as Schema<C>)
     ).data
   }
 
@@ -180,16 +255,23 @@ class Definition<C extends Config> extends ControlDefinition<
 
 export class FontDefinition<C extends Config = Config> extends Definition<C> {}
 
-type UserConfig<D extends Config['defaultValue']> = Config & {
+// todo(josh): i am struggling to understand why there are two configs here.
+type UserConfig<
+  V extends Config['variant'],
+  D extends Config['defaultValue'],
+> = Config & {
+  variant?: V
   defaultValue?: D
 }
 
-type NormedConfig<D extends Config['defaultValue']> = z.infer<
-  SchemaByDefaultValue<D>['config']
->
+type NormedConfig<
+  V extends Config['variant'],
+  D extends Config['defaultValue'],
+> = z.infer<SchemaByVariantAndDefaultValue<V, D>['config']>
 
-export function Font<C extends Config['defaultValue']>(
-  config?: UserConfig<C>,
-): FontDefinition<NormedConfig<C>> {
-  return new FontDefinition((config ?? {}) as NormedConfig<C>, 1)
+export function Font<
+  V extends Config['variant'],
+  D extends Config['defaultValue'],
+>(config?: UserConfig<V, D>): FontDefinition<NormedConfig<V, D>> {
+  return new FontDefinition((config ?? {}) as NormedConfig<V, D>, 1)
 }
