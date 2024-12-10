@@ -56,7 +56,7 @@ export function reducer(state: State = getInitialState(), action: Action): State
       const document = getDocument(nextState, action.payload.documentKey)
       if (document == null) return nextState
 
-      const currentRootElement = document.rootElement
+      const currentRootElement = ReadOnlyDocuments.getRootElement(document)
 
       const nextRootElement = apply(currentRootElement, action.payload.operation)
 
