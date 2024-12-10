@@ -153,6 +153,11 @@ const getMakeswiftComponentDocumentSchemaV2 = z.object({
   elementTree: makeswiftComponentDocumentSchemaV2.nullable(),
   parentLocaleElementTree: makeswiftComponentDocumentSchemaV2.nullable()
 })
+.and(z.union([
+  z.object({ elementTree: z.null(), parentLocaleElementTree: makeswiftComponentDocumentSchemaV2 }),
+  z.object({ elementTree: makeswiftComponentDocumentSchemaV2, parentLocaleElementTree: z.null()}),
+  z.object({ elementTree: makeswiftComponentDocumentSchemaV2, parentLocaleElementTree: makeswiftComponentDocumentSchemaV2 }),
+], {errorMap: (_issue, _ctx) => ({message: "One or both of 'elementTree' and 'parentLocaleElementTree' must be present."})}))
 
 const makeswiftComponentDocumentSchema = z.object({
   id: z.string(),
@@ -697,11 +702,6 @@ export class Makeswift {
 
     // favor picking 'elementTree' if it is available.
     const document = elementTreeResponse.elementTree ?? elementTreeResponse.parentLocaleElementTree
-
-    // This case should never be reached (response was an http 200, but neither the element tree nor the parent locale element tree were provided in the response)
-    if (document == null) {
-      return this.getSnapshotWithFallbackDocument(id, locale)
-    }
 
     const cacheData = await this.introspect(document.data, siteVersion, locale)
 
