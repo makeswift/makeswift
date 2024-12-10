@@ -1,5 +1,23 @@
 # @makeswift/runtime
 
+## 0.22.0
+
+### Minor Changes
+
+- b0b664c: Bumping to 0.22 in preparation for publishing the rc
+
+### Patch Changes
+
+- ed2dfea: fix: not found localized global components saved as `null` (previouly saved "not found" payload)
+- 1dedeef: Add fallback prop to MakeswiftComponent, restructure element data rendering primitives.
+- f026de6: fix: do not crash on incompatible prop data
+- 0ebaa63: feat: add optional locale scope to the API resources state
+- f458b50: test: add global elements rendering tests
+- 5c0cce4: debug: configure Redux Devtools logging for all `runtime` stores
+- 9227caa: Prevent default styles from overriding resolved props styles based on injection
+  order. Default styles are now conditionally applied if resolved styles are not
+  provided.
+
 ## 0.21.3
 
 ### Patch Changes
