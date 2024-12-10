@@ -64,6 +64,7 @@ export type {
 export {
   createBaseDocument,
   createDocumentReference,
+  getRootElement,
   isElementReference,
 } from './modules/read-only-documents'
 

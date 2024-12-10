@@ -173,19 +173,22 @@ export function componentDocumentToRootEmbeddedDocument({
   name: string
   type: string
 }): EmbeddedDocument {
-  const { data, locale, id } = document
+  const { data: rootElement, locale, id } = document
 
-  if (data != null && data.type !== type) {
+  if (rootElement != null && rootElement.type !== type) {
     throw new Error(
-      `Type "${data.type}" does not match the expected type "${type}" from the snapshot`,
+      `Type "${rootElement.type}" does not match the expected type "${type}" from the snapshot`,
     )
   }
 
-  const rootElement = data ?? {
+  const initialRootElement = {
     // Fallback rootElement
     // Create a stable uuid so two different clients will have the same empty element data.
     // This is needed to make presence feature work for an element that is not yet created.
-    key: deterministicUUID({ id, locale, seed: document.seed }),
+    key:
+      rootElement != null
+        ? rootElement.key
+        : deterministicUUID({ id, locale, seed: document.seed }),
     type,
     props: {},
   }
@@ -193,6 +196,7 @@ export function componentDocumentToRootEmbeddedDocument({
   const rootDocument: EmbeddedDocument = {
     key: uuid(),
     rootElement,
+    initialRootElement,
     locale,
     id,
     type,
