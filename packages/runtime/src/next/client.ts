@@ -683,7 +683,7 @@ export class Makeswift {
 
     // If the element tree is not found, we generate a document with null data
     if (response.status === 404) {
-      return this.getDummyDocument(id, locale)
+      return this.getSnapshotWithFallbackDocument(id, locale)
     }
 
     const json = await response.json()
@@ -700,7 +700,7 @@ export class Makeswift {
 
     // This case should never be reached (response was an http 200, but neither the element tree nor the parent locale element tree were provided in the response)
     if (document == null) {
-      return this.getDummyDocument(id, locale)
+      return this.getSnapshotWithFallbackDocument(id, locale)
     }
 
     const cacheData = await this.introspect(document.data, siteVersion, locale)
@@ -888,7 +888,7 @@ export class Makeswift {
     return this.runtime.mergeTranslatedData(elementTree, translatedData)
   }
 
-  getDummyDocument(id: string, locale: string | undefined): MakeswiftComponentSnapshot {
+  getSnapshotWithFallbackDocument(id: string, locale: string | undefined): MakeswiftComponentSnapshot {
     const apiKeyPrefix = z.string().parse(this.apiKey.split('-').at(0))
     return {
       document: {
