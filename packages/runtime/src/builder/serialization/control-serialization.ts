@@ -38,6 +38,7 @@ import {
   TextAreaDefinition,
   TextInputDefinition,
   unstable_TypographyDefinition,
+  FontDefinition,
 } from '../../controls'
 
 import {
@@ -1025,6 +1026,7 @@ export function deserializeUnifiedControlDef(record: DeserializedRecord): Unifie
     [RichTextV2Definition.type]: (record: DeserializedRecord) =>
       RichTextV2Definition.deserialize(record, deserializeUnifiedControlDef),
     [unstable_TypographyDefinition.type]: unstable_TypographyDefinition.deserialize,
+    [FontDefinition.type]: FontDefinition.deserialize,
   } as const
 
   const deserialize = deserializeMethod[record.type] ?? null
@@ -1056,6 +1058,7 @@ export function deserializeControls(
 ): Record<string, DeserializedControl> {
   return Object.entries(serializedControls).reduce(
     (deserializedControls, [key, serializedControl]) => {
+      console.log('serializedControl', serializedControl)
       try {
         if (!isSerializedControl(serializedControl)) {
           throw new Error(
@@ -1067,9 +1070,12 @@ export function deserializeControls(
       } catch (err: unknown) {
         const error =
           err instanceof Error
-            ? new Error(`Could not deserialize control for "${key}": ${err.message}`, {
-                cause: err,
-              })
+            ? new Error(
+                `Could not deserialize control for "${key}": ${err.message} || ${JSON.stringify(serializedControl)}`,
+                {
+                  cause: err,
+                },
+              )
             : new Error(`Could not deserialize control for "${key}", unknown error: ${err}`)
 
         onError?.(error, { key, serializedControl })

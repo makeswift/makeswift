@@ -25,6 +25,7 @@ import {
   TextAreaDefinition,
   TextInputDefinition,
   unstable_TypographyDefinition,
+  FontDefinition,
 } from '../../controls'
 
 import { isLegacyDescriptor } from '../../prop-controllers/descriptors'
@@ -89,6 +90,7 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
           case LinkDefinition.type:
           case StyleV2Definition.type:
           case unstable_TypographyDefinition.type:
+          case FontDefinition.type:
             return (
               <ControlValue
                 definition={descriptor}
