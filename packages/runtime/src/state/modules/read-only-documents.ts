@@ -25,10 +25,14 @@ type BaseDocument = {
 
 export const EMBEDDED_DOCUMENT_TYPE = 'EMBEDDED_DOCUMENT' as const
 
-export type EmbeddedDocument = BaseDocument & {
+export type EmbeddedDocument = {
+  key: string
+  locale: string | null
   id: string
   type: string
   name: string
+  rootElement: Element | null
+  initialRootElement: Element
   __type: typeof EMBEDDED_DOCUMENT_TYPE
 }
 
