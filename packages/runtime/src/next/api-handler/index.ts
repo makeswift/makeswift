@@ -13,6 +13,7 @@ import proxyDraftMode, { ProxyDraftModeResponse } from './handlers/proxy-draft-m
 import { revalidate, RevalidationResponse } from './handlers/revalidate'
 import translatableData, { TranslatableDataResponse } from './handlers/translatable-data'
 import mergeTranslatedData, { TranslatedDataResponse } from './handlers/merge-translated-data'
+import webhook, { WebhookResponse } from './handlers/webhook'
 import { ReactRuntime } from '../../react'
 import { P, match } from 'ts-pattern'
 import { getSiteVersion } from '../draft-mode'
@@ -41,6 +42,7 @@ export type MakeswiftApiHandlerResponse =
   | TranslatedDataResponse
   | APIResource
   | NotFoundError
+  | WebhookResponse
 
 type MakeswiftApiHandlerArgs =
   | [NextRequest, Context]
@@ -192,6 +194,13 @@ export function MakeswiftApiHandler(
       return match(args)
         .with(routeHandlerPattern, args => mergeTranslatedData(...args, client))
         .with(apiRoutePattern, args => mergeTranslatedData(...args, client))
+        .exhaustive()
+    }
+
+    if (matches('/webhook')) {
+      return match(args)
+        .with(routeHandlerPattern, args => webhook(...args, { apiKey }))
+        .with(apiRoutePattern, args => webhook(...args, { apiKey }))
         .exhaustive()
     }
 

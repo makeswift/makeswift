@@ -46,6 +46,8 @@ import { deterministicUUID } from '../utils/deterministic-uuid'
 import { v4 as uuid } from 'uuid'
 import { Schema } from '@makeswift/controls'
 import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-only-documents'
+import { toUUID } from '../utils/node-id'
+import { TransformTag } from './api-handler/handlers/webhook/site-published'
 
 const makeswiftPageResultSchema = z.object({
   id: z.string(),
@@ -332,18 +334,21 @@ export class Makeswift {
 
   private async fetch(
     path: string,
-    siteVersion: MakeswiftSiteVersion = MakeswiftSiteVersion.Live,
-    init?: RequestInit,
+    {
+      siteVersion = MakeswiftSiteVersion.Live,
+      tags,
+    }: { siteVersion: MakeswiftSiteVersion; tags: string[] },
   ): Promise<Response> {
+    console.log({ tags })
     const response = await fetch(new URL(path, this.apiOrigin).toString(), {
-      ...init,
       headers: {
         ['X-API-Key']: this.apiKey,
         'Makeswift-Site-API-Key': this.apiKey,
         'Makeswift-Site-Version': siteVersion,
-        ...init?.headers,
       },
-      ...(siteVersion === MakeswiftSiteVersion.Working ? { cache: 'no-store' } : {}),
+      ...(siteVersion === MakeswiftSiteVersion.Working
+        ? { cache: 'no-store', next: { tags } }
+        : { next: { tags } }),
     })
 
     return response
@@ -357,7 +362,10 @@ export class Makeswift {
   } & GetPagesParams = {}): Promise<MakeswiftGetPagesResult> => {
     const queryParams = getPagesQueryParams(params)
 
-    const response = await this.fetch(`v4/pages?${queryParams.toString()}`, siteVersion)
+    const response = await this.fetch(`v4/pages?${queryParams.toString()}`, {
+      siteVersion,
+      tags: [], // TODO: Handle pathname
+    })
     if (!response.ok) {
       console.error('Failed to get pages', await response.json())
       throw new Error(`Failed to get pages with error: "${response.statusText}"`)
@@ -385,7 +393,10 @@ export class Makeswift {
     const url = new URL(`v2/pages/${encodeURIComponent(pathname)}`, this.apiOrigin)
     if (localeInput) url.searchParams.set('locale', localeInput)
 
-    const response = await this.fetch(url.pathname + url.search, siteVersion)
+    const response = await this.fetch(url.pathname + url.search, {
+      siteVersion,
+      tags: [TransformTag.pathname(pathname)], // TODO: Handle pathname
+    })
 
     if (!response.ok) {
       if (response.status === 404) return null
@@ -411,7 +422,10 @@ export class Makeswift {
       url.searchParams.append('ids', id)
     })
 
-    const response = await this.fetch(url.pathname + url.search, siteVersion)
+    const response = await this.fetch(url.pathname + url.search, {
+      siteVersion,
+      tags: typographyIds.map(TransformTag.id),
+    })
 
     if (!response.ok) {
       console.error('Failed to get typographies', await response.json())
@@ -436,7 +450,10 @@ export class Makeswift {
       url.searchParams.append('ids', id)
     })
 
-    const response = await this.fetch(url.pathname + url.search, siteVersion)
+    const response = await this.fetch(url.pathname + url.search, {
+      siteVersion,
+      tags: ids.map(toUUID),
+    })
 
     if (!response.ok) {
       console.error('Failed to get swatches', await response.json())
@@ -631,6 +648,7 @@ export class Makeswift {
     const response = await this.fetch(
       `v3/pages/${encodeURIComponent(pathname)}/document?${searchParams.toString()}`,
       siteVersion,
+      { tags: [encodeURIComponent(removeFirstAndLastSlash(pathname))] },
     )
 
     if (!response.ok) {
@@ -671,6 +689,7 @@ export class Makeswift {
     const response = await this.fetch(
       `v1/element-trees/${id}?${searchParams.toString()}`,
       siteVersion,
+      { tags: [id] },
     )
 
     // If the element tree is not found, we generate a document with null data
@@ -881,4 +900,8 @@ export class Makeswift {
   mergeTranslatedData(elementTree: ElementData, translatedData: Record<string, Data>): Element {
     return this.runtime.mergeTranslatedData(elementTree, translatedData)
   }
+}
+
+function removeFirstAndLastSlash(str: string): string {
+  return str.replace(/^\/|\/$/g, '')
 }
