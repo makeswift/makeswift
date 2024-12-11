@@ -682,7 +682,6 @@ export class Makeswift {
       siteVersion,
     )
 
-    // If the element tree is not found, we generate a document with null data
     if (response.status === 404) {
       return this.getSnapshotWithFallbackDocument(id, locale)
     }
@@ -696,7 +695,6 @@ export class Makeswift {
 
     const elementTreeResponse = getMakeswiftComponentDocumentSchemaV2.parse(json)
 
-    // favor picking 'elementTree' if it is available.
     const document = elementTreeResponse.elementTree ?? elementTreeResponse.parentLocaleElementTree
 
     const cacheData = await this.introspect(document.data, siteVersion, locale)
