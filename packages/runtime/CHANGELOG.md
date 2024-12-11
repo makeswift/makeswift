@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.0-rc.0
+
+### Minor Changes
+
+- d336fe9: add changeset with minor bump in preparation for publishing rc
+
 ## 0.22.0
 
 ### Minor Changes

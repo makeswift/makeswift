@@ -11,5 +11,7 @@
     "@makeswift/runtime": "0.22.0",
     "tsconfig": "0.0.0"
   },
-  "changesets": []
+  "changesets": [
+    "nervous-otters-talk"
+  ]
 }
