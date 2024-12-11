@@ -149,15 +149,11 @@ const makeswiftComponentDocumentSchemaV2 = z.object({
 
 export type MakeswiftComponentDocumentSchemaV2 = z.infer<typeof makeswiftComponentDocumentSchemaV2>
 
-const getMakeswiftComponentDocumentSchemaV2 = z.object({
-  elementTree: makeswiftComponentDocumentSchemaV2.nullable(),
-  parentLocaleElementTree: makeswiftComponentDocumentSchemaV2.nullable()
-})
-.and(z.union([
+const getMakeswiftComponentDocumentSchemaV2 = z.union([
   z.object({ elementTree: z.null(), parentLocaleElementTree: makeswiftComponentDocumentSchemaV2 }),
   z.object({ elementTree: makeswiftComponentDocumentSchemaV2, parentLocaleElementTree: z.null()}),
   z.object({ elementTree: makeswiftComponentDocumentSchemaV2, parentLocaleElementTree: makeswiftComponentDocumentSchemaV2 }),
-], {errorMap: (_issue, _ctx) => ({message: "One or both of 'elementTree' and 'parentLocaleElementTree' must be present."})}))
+], {errorMap: (_issue, _ctx) => ({message: "One or both of 'elementTree' and 'parentLocaleElementTree' must be present."})})
 
 const makeswiftComponentDocumentSchema = z.object({
   id: z.string(),
