@@ -27,6 +27,7 @@ import {
   type LocalizedGlobalElement,
   type APIResourceLocale,
 } from '../api'
+import { MAKESWIFT_CACHE_TAG } from '../next/api-handler/handlers/webhook/site-published'
 
 const reducer = combineReducers({
   apiResources: APIResources.reducer,
@@ -104,6 +105,7 @@ type Thunk<ReturnType> = ThunkAction<ReturnType, State, unknown, Action>
 async function fetchJson<T>(url: string): Promise<T | null> {
   const response = await fetch(url, {
     headers: { 'Content-Type': 'application/json' },
+    next: { tags: [MAKESWIFT_CACHE_TAG] },
   })
 
   if (response.status === 404) return null
