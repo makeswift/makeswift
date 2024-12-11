@@ -46,6 +46,7 @@ import { deterministicUUID } from '../utils/deterministic-uuid'
 import { v4 as uuid } from 'uuid'
 import { Schema } from '@makeswift/controls'
 import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-only-documents'
+import { MAKESWIFT_CACHE_TAG } from './api-handler/handlers/webhook/site-published'
 
 const makeswiftPageResultSchema = z.object({
   id: z.string(),
@@ -336,6 +337,10 @@ export class Makeswift {
         ...init?.headers,
       },
       ...(siteVersion === MakeswiftSiteVersion.Working ? { cache: 'no-store' } : {}),
+      next: {
+        ...init?.next,
+        tags: [...(init?.next?.tags ?? []), MAKESWIFT_CACHE_TAG],
+      },
     })
 
     return response
