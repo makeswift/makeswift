@@ -1,0 +1,15 @@
+{
+  "mode": "pre",
+  "tag": "rc",
+  "initialVersions": {
+    "nextjs-app-router": "0.1.0",
+    "nextjs-pages-router": "0.1.0",
+    "@makeswift/controls": "0.1.5",
+    "makeswift": "0.3.2",
+    "@makeswift/next-plugin": "0.3.0",
+    "@makeswift/prop-controllers": "0.3.6",
+    "@makeswift/runtime": "0.22.0",
+    "tsconfig": "0.0.0"
+  },
+  "changesets": []
+}
