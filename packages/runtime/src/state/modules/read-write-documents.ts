@@ -3,7 +3,6 @@ import { removeIn, setIn } from 'immutable'
 
 import * as ReadOnlyDocuments from './read-only-documents'
 import { Action, ActionTypes } from '../actions'
-import { getRootElementFromDocument } from '../utils/get-root-element-from-document'
 
 export type { Document, Element, ElementData, ElementReference } from './read-only-documents'
 export { isElementReference } from './read-only-documents'
@@ -57,7 +56,7 @@ export function reducer(state: State = getInitialState(), action: Action): State
       const document = getDocument(nextState, action.payload.documentKey)
       if (document == null) return nextState
 
-      const currentRootElement = getRootElementFromDocument(document)
+      const currentRootElement = document.rootElement
 
       const nextRootElement = apply(currentRootElement, action.payload.operation)
 
