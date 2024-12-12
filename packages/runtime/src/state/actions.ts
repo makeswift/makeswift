@@ -109,8 +109,7 @@ type DocumentPayloadEmbeddedDocument = {
   id: string
   type: string
   name: string
-  rootElement: Element | null
-  initialRootElement: Element
+  rootElement: Element
   __type: typeof EMBEDDED_DOCUMENT_TYPE
 }
 

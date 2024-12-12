@@ -1,5 +1,3 @@
-import { match } from 'ts-pattern'
-
 import { type Element } from '@makeswift/controls'
 
 import { type Action, type DocumentPayload, ActionTypes } from '../actions'
@@ -34,17 +32,14 @@ export type EmbeddedDocument = {
   id: string
   type: string
   name: string
-  rootElement: Element | null
-  initialRootElement: Element
+  rootElement: Element
   __type: typeof EMBEDDED_DOCUMENT_TYPE
 }
 
 export type Document = BaseDocument | EmbeddedDocument
 
 export function getRootElement(document: Document | DocumentPayload): Element {
-  return match(document)
-    .with({ __type: EMBEDDED_DOCUMENT_TYPE }, doc => doc.rootElement ?? doc.initialRootElement)
-    .otherwise(doc => doc.rootElement)
+  return document.rootElement
 }
 
 export function createBaseDocument(

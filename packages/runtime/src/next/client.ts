@@ -181,22 +181,16 @@ export function componentDocumentToRootEmbeddedDocument({
     )
   }
 
-  const initialRootElement = {
-    // Fallback rootElement
-    // Create a stable uuid so two different clients will have the same empty element data.
-    // This is needed to make presence feature work for an element that is not yet created.
-    key:
-      rootElement != null
-        ? rootElement.key
-        : deterministicUUID({ id, locale, seed: document.seed }),
-    type,
-    props: {},
-  }
-
   const rootDocument: EmbeddedDocument = {
     key: uuid(),
-    rootElement,
-    initialRootElement,
+    rootElement: rootElement ?? {
+      // Fallback rootElement
+      // Create a stable uuid so two different clients will have the same empty element data.
+      // This is needed to make presence feature work for an element that is not yet created.
+      key: deterministicUUID({ id, locale, seed: document.seed }),
+      type,
+      props: {},
+    },
     locale,
     id,
     type,
