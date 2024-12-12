@@ -13,11 +13,9 @@ export const Document = memo(
     { document }: DocumentProps,
     ref: Ref<ElementImperativeHandle>,
   ): JSX.Element {
-    const rootElement = getRootElement(document)
-
     return (
       <DocumentContext.Provider value={document}>
-        <Element ref={ref} element={rootElement} />
+        <Element ref={ref} element={getRootElement(document)} />
       </DocumentContext.Provider>
     )
   }),
