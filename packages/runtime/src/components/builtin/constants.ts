@@ -13,6 +13,7 @@ export const MakeswiftComponentType = {
   Image: './components/Image/index.js',
   Navigation: './components/Navigation/index.js',
   Root: './components/Root/index.js',
+  Slot: 'makeswift::components::slot::v1',
   SocialLinks: './components/SocialLinks/index.js',
   Text: './components/Text/index.js',
   Video: './components/Video/index.js',
