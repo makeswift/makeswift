@@ -655,16 +655,14 @@ export class Makeswift {
   async getComponentSnapshot(
     id: string,
     {
-      siteVersion = MakeswiftSiteVersion.Working,
+      siteVersion: siteVersionPromise,
       locale,
-    }: {
-      siteVersion?: MakeswiftSiteVersion
-      locale?: string
-    } = {},
+    }: { siteVersion: MakeswiftSiteVersion | Promise<MakeswiftSiteVersion>; locale?: string },
   ): Promise<MakeswiftComponentSnapshot> {
     const searchParams = new URLSearchParams()
     if (locale) searchParams.set('locale', locale)
 
+    const siteVersion = await siteVersionPromise
     const response = await this.fetch(
       `v1/element-trees/${id}?${searchParams.toString()}`,
       siteVersion,
