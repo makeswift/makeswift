@@ -13,7 +13,7 @@ export const SlotRoot = (props: Props) => {
 
   return (
       <>
-        { props.showFallback ? props.children : ctx.fallback}
+        { props.showFallback ? ctx.fallback : props.children }
       </>
   )
 }
