@@ -1,4 +1,5 @@
 export {
+  type ConfigType,
   type Data,
   type DataType,
   type ValueType,
