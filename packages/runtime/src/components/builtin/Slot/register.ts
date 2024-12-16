@@ -13,7 +13,7 @@ export function registerComponent(runtime: ReactRuntime) {
         hidden: true,
         props: {
           children: Slot(),
-          showFallback: Checkbox({ label: "Use Fallback", defaultValue: true })
+          showFallback: Checkbox({ label: "Use fallback", defaultValue: true })
         }
       } 
   )
