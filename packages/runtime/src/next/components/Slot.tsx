@@ -19,14 +19,13 @@ export const PropsContextProvider = ({ value, children }: { value: {fallback: Re
 );
 
 export const Slot = ({ label, snapshot, fallback }: Props) => {
-  const componentType = MakeswiftComponentType.Slot
 
   return (
     <PropsContextProvider value={{fallback}}>
       <MakeswiftComponent
         snapshot={snapshot}
         label={label}
-        type={componentType}
+        type={MakeswiftComponentType.Slot}
       />
     </PropsContextProvider>
   )
