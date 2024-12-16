@@ -18,7 +18,7 @@ export const PropsContextProvider = ({ value, children }: { value: {fallback: Re
   <PropsContext.Provider value={value}>{children}</PropsContext.Provider>
 );
 
-export const MakeswiftSlot = ({ label, snapshot, fallback }: Props) => {
+export const Slot = ({ label, snapshot, fallback }: Props) => {
   const componentType = MakeswiftComponentType.Slot
 
   return (
@@ -32,4 +32,4 @@ export const MakeswiftSlot = ({ label, snapshot, fallback }: Props) => {
   )
 }
 
-export default MakeswiftSlot
+export default Slot
