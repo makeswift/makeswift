@@ -1,14 +1,14 @@
 'use client'
 
 import { ReactNode, useContext } from "react"
-import { PropsContext } from "../../../next/components/MakeswiftSlot"
+import { PropsContext } from "../../../next/components/Slot"
 
 type Props = {
   children: ReactNode
   showFallback: boolean
 }
 
-export const SlotRoot = (props: Props) => {
+export const Slot = (props: Props) => {
   const ctx = useContext(PropsContext)
 
   return (
@@ -18,4 +18,4 @@ export const SlotRoot = (props: Props) => {
   )
 }
 
-export default SlotRoot
+export default Slot

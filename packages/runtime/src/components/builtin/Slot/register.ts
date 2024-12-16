@@ -6,7 +6,7 @@ import { Slot } from '../../../controls';
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
-    lazy(() => import('./SlotRoot')),
+    lazy(() => import('./Slot')),
       {
         type: MakeswiftComponentType.Slot, 
         label: 'Slot',

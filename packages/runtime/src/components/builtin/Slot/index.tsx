@@ -1,1 +1,1 @@
-export { default } from './SlotRoot'
+export { default } from './Slot'
