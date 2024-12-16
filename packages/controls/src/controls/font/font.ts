@@ -14,6 +14,7 @@ import {
   serialize,
   type Resolvable,
   type SchemaType,
+  type UndefinedOr,
 } from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
 
@@ -27,7 +28,7 @@ type Config = z.infer<
 type SchemaByVariantAndDefaultValue<
   V extends Config['variant'],
   D extends Config['defaultValue'],
-> = false extends V
+> = V extends false
   ? undefined extends D
     ? typeof Definition.schema.withoutVariants.relaxed
     : typeof Definition.schema.withoutVariants.strict
@@ -215,11 +216,11 @@ class Definition<C extends Config> extends ControlDefinition<
     return this.refinedSchema.data
   }
 
-  safeParse(data: unknown | undefined): ParseResult<DataType<C> | undefined> {
+  safeParse(data: UndefinedOr<unknown>): ParseResult<UndefinedOr<DataType<C>>> {
     return safeParse(this.dataSchema, data)
   }
 
-  fromData(data: DataType<C> | undefined): ValueType<C> | undefined {
+  fromData(data: UndefinedOr<DataType<C>>): UndefinedOr<ValueType<C>> {
     const inputSchema = this.dataSchema.optional()
     return match(data satisfies z.infer<typeof inputSchema>)
       .with(Definition.dataSignature.v1, ({ value }) => value)
@@ -235,7 +236,7 @@ class Definition<C extends Config> extends ControlDefinition<
     }
   }
 
-  copyData(data: DataType<C> | undefined): DataType<C> | undefined {
+  copyData(data: UndefinedOr<DataType<C>>): UndefinedOr<DataType<C>> {
     if (data == null) return data
 
     return {
@@ -247,8 +248,8 @@ class Definition<C extends Config> extends ControlDefinition<
   }
 
   resolveValue(
-    data: DataType<C> | undefined,
-  ): Resolvable<ResolvedValueType<C> | undefined> {
+    data: UndefinedOr<DataType<C>>,
+  ): Resolvable<UndefinedOr<ResolvedValueType<C>>> {
     return {
       readStableValue: (_previous?: ResolvedValueType<C>) => {
         return (
