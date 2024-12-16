@@ -3,6 +3,8 @@ import type { Operation } from 'ot-json0'
 import { ControlInstance } from '@makeswift/controls'
 
 import type { Document } from './modules/read-only-documents'
+import type { DescriptorsByComponentType } from './modules/prop-controllers'
+
 import type { ComponentType } from './modules/react-components'
 import type { Measurable, BoxModel } from './modules/box-models'
 import type { ThunkAction } from 'redux-thunk'
@@ -25,8 +27,11 @@ export const ActionTypes = {
 
   REGISTER_DOCUMENT: 'REGISTER_DOCUMENT',
   UNREGISTER_DOCUMENT: 'UNREGISTER_DOCUMENT',
-
   CHANGE_DOCUMENT: 'CHANGE_DOCUMENT',
+
+  CREATE_ELEMENT_TREE: 'CREATE_ELEMENT_TREE',
+  DELETE_ELEMENT_TREE: 'DELETE_ELEMENT_TREE',
+  CHANGE_ELEMENT_TREE: 'CHANGE_ELEMENT_TREE',
 
   REGISTER_BUILDER_DOCUMENT: 'REGISTER_BUILDER_DOCUMENT',
   UNREGISTER_BUILDER_DOCUMENT: 'UNREGISTER_BUILDER_DOCUMENT',
@@ -100,6 +105,31 @@ type UnregisterDocumentAction = {
   payload: { documentKey: string }
 }
 
+type ChangeDocumentAction = {
+  type: typeof ActionTypes.CHANGE_DOCUMENT
+  payload: { documentKey: string; operation: Operation }
+}
+
+type CreateElementTreeAction = {
+  type: typeof ActionTypes.CREATE_ELEMENT_TREE
+  payload: { document: Document; descriptors: DescriptorsByComponentType }
+}
+
+type DeleteElementTreeAction = {
+  type: typeof ActionTypes.DELETE_ELEMENT_TREE
+  payload: { documentKey: string }
+}
+
+type ChangeElementTreeAction = {
+  type: typeof ActionTypes.CHANGE_ELEMENT_TREE
+  payload: {
+    oldDocument: Document
+    newDocument: Document
+    descriptors: DescriptorsByComponentType
+    operation: Operation
+  }
+}
+
 type RegisterBuilderDocumentAction = {
   type: typeof ActionTypes.REGISTER_BUILDER_DOCUMENT
   payload: { documentKey: string; document: Document }
@@ -108,11 +138,6 @@ type RegisterBuilderDocumentAction = {
 type UnregisterBuilderDocumentAction = {
   type: typeof ActionTypes.UNREGISTER_BUILDER_DOCUMENT
   payload: { documentKey: string }
-}
-
-type ChangeDocumentAction = {
-  type: typeof ActionTypes.CHANGE_DOCUMENT
-  payload: { documentKey: string; operation: Operation }
 }
 
 type RegisterComponentAction = {
@@ -136,6 +161,7 @@ type RegisterBuilderComponentAction = {
     meta: ComponentMeta
     serializedControls: Record<string, SerializedControl>
   }
+  transferables?: Transferable[]
 }
 
 type UnregisterBuilderComponentAction = {
@@ -300,9 +326,12 @@ type SetLocalizedResourceIdAction = {
 export type Action =
   | InitAction
   | CleanUpAction
-  | ChangeDocumentAction
   | RegisterDocumentAction
   | UnregisterDocumentAction
+  | ChangeDocumentAction
+  | CreateElementTreeAction
+  | DeleteElementTreeAction
+  | ChangeElementTreeAction
   | RegisterBuilderDocumentAction
   | UnregisterBuilderDocumentAction
   | RegisterComponentAction
@@ -354,6 +383,30 @@ export function registerDocument(document: Document): RegisterDocumentAction {
 
 export function unregisterDocument(documentKey: string): UnregisterDocumentAction {
   return { type: ActionTypes.UNREGISTER_DOCUMENT, payload: { documentKey } }
+}
+
+export function createElementTree(
+  payload: CreateElementTreeAction['payload'],
+): CreateElementTreeAction {
+  return {
+    type: ActionTypes.CREATE_ELEMENT_TREE,
+    payload,
+  }
+}
+
+export function deleteElementTree(
+  payload: DeleteElementTreeAction['payload'],
+): DeleteElementTreeAction {
+  return { type: ActionTypes.DELETE_ELEMENT_TREE, payload }
+}
+
+export function changeElementTree(
+  payload: ChangeElementTreeAction['payload'],
+): ChangeElementTreeAction {
+  return {
+    type: ActionTypes.CHANGE_ELEMENT_TREE,
+    payload,
+  }
 }
 
 export function registerBuilderDocument(document: Document): RegisterBuilderDocumentAction {
@@ -413,18 +466,20 @@ export function registerComponentEffect(
 }
 
 export function registerBuilderComponent(
-  type: string,
-  meta: ComponentMeta,
-  serializedControls: Record<string, SerializedControl>,
+  payload: RegisterBuilderComponentAction['payload'],
+  transferables?: Transferable[],
 ): RegisterBuilderComponentAction {
   return {
     type: ActionTypes.REGISTER_BUILDER_COMPONENT,
-    payload: { type, meta, serializedControls },
+    payload,
+    transferables,
   }
 }
 
-export function unregisterBuilderComponent(type: string): UnregisterBuilderComponentAction {
-  return { type: ActionTypes.UNREGISTER_BUILDER_COMPONENT, payload: { type } }
+export function unregisterBuilderComponent(
+  payload: UnregisterBuilderComponentAction['payload'],
+): UnregisterBuilderComponentAction {
+  return { type: ActionTypes.UNREGISTER_BUILDER_COMPONENT, payload }
 }
 
 function registerReactComponent(

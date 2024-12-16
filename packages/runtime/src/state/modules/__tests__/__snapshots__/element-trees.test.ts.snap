@@ -1,0 +1,274 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`traverseElementTree walks the tree in the correct order 1`] = `
+[
+  {
+    "key": "1cbb8e34-bf1c-4449-a002-71177d2f61ab",
+    "type": "./components/Root/index.js",
+  },
+  {
+    "key": "182a5df5-2ce8-4c26-8c6a-181aaa071e9c",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "1556e2db-f134-49b6-8091-f9b972c84a8e",
+    "type": "./components/Navigation/index.js",
+  },
+  {
+    "key": "f83c4c81-d23e-4ecf-857f-4dadc5e5fbd1",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "2de2123b-bf6c-4049-8d32-747d5451ccd0",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "fb01353b-ef6c-4fe3-a72f-6b05556f79ab",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "acf27ae9-21df-4701-8efc-ac1c2900f3ac",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "45c4bd3a-c398-4989-93b4-58900dbe4490",
+    "type": "./components/Button/index.js",
+  },
+  {
+    "key": "c1eaa434-28a6-4791-843c-c44d6672a8b6",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "ffe7d557-7d12-495a-9e80-dc2565e57f04",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "a2e9807f-f684-40c1-98f1-946676946cc2",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "e4b17748-47bf-479e-8230-e3f3eb9184b6",
+    "type": "./components/Image/index.js",
+  },
+  {
+    "key": "7b83e225-d6d4-4587-8776-42929c4b7992",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "d81b4dd7-8f45-4524-aa93-d58f6c7b322f",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "288b5f11-70ea-48d4-80ca-b8a690685f72",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "78458aea-6606-4395-9eb9-7720518c9282",
+    "type": "./components/Image/index.js",
+  },
+  {
+    "key": "5489494f-6c21-44fa-a67a-1898c9a75c27",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "7eb43920-04a6-4be9-ba81-2d08a4562feb",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "6eda79f6-8ba2-43a9-9973-bf433b92f29b",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "61276a5f-941c-4aef-908c-29593a48c68a",
+    "type": "./components/Image/index.js",
+  },
+  {
+    "key": "8e6a96dd-c598-4957-8e5d-4d96677d7797",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "465716fa-4256-4a4b-9edb-49d70f5a8b47",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "8b2248af-2de6-4d9d-84c1-d725701bec3d",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "a6add9b7-16ba-4d2b-b7ad-42512824a3aa",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "50070ac1-1832-4610-9e6e-9e64bcc302d8",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "ba5f8e72-9521-4d56-98ef-2416bd9de82f",
+    "type": "./components/Image/index.js",
+  },
+  {
+    "key": "ee1bf334-96cb-4fef-8178-4223f21e4c98",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "f4d9f509-aa1d-40c4-8685-c7dfb9af7f21",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "bdaeccb8-2ea1-404f-80ba-e366632d339a",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "8f44a1ea-8c4a-431f-a5ac-09d93ce189de",
+    "type": "./components/Button/index.js",
+  },
+  {
+    "key": "37506080-292b-4534-a21c-6ffcc10cd751",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "fb50cf71-6765-424a-9b68-00bec94d9262",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "3bbad17b-3ab5-4893-acdb-426d6a731c84",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "0c45f6fa-4a08-40a4-b2ac-c460d64d95ff",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "a554a115-b3b0-4e6a-b211-292a6ad1c6ed",
+    "type": "./components/Button/index.js",
+  },
+  {
+    "key": "687fb75a-fa88-437d-b2af-c08a639dabc7",
+    "type": "./components/Image/index.js",
+  },
+  {
+    "key": "154f4c19-941b-45f5-ba01-44a90aebe84f",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "29e84b30-417a-46ed-a852-68027e0c1de4",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "f77fe602-1619-4f21-8f44-6c93e5bbcf01",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "844ecfd2-e36b-417c-b9c8-f449573d7726",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "095033fc-0812-4bde-aa5c-aa178bec13d5",
+    "type": "./components/Image/index.js",
+  },
+  {
+    "key": "38cdf329-3b63-4b70-8d8c-186e1233df75",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "b7e673c7-41e3-40d2-8247-61f82acc6a82",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "e134a9e2-1300-4312-b2ba-119c91b6bf24",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "c6947e5b-af79-4d0f-9473-9e32db062f49",
+    "type": "./components/Button/index.js",
+  },
+  {
+    "key": "49687195-b717-407c-a820-05b83a37a06c",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "34901d6f-3df0-4cac-a8c9-150ff7296a95",
+    "type": "./components/Image/index.js",
+  },
+  {
+    "key": "7a096a31-93eb-42d2-9d72-1ce3eba628c6",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "fe5dd958-f9c4-44da-869b-bd6e86da7c8d",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "74447549-e0c7-4bb0-96a6-550571bcd378",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "debfe56a-e8a2-432e-aa95-edc316be18a4",
+    "type": "./components/Button/index.js",
+  },
+  {
+    "key": "d7b40aa9-41f0-4cc1-9cd8-6dfb86cbc849",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "6e1df1ae-7327-4a5f-b4c7-ae5b27d73bb4",
+    "type": "./components/Image/index.js",
+  },
+  {
+    "key": "bd194792-9843-42eb-9c9e-45962fdce3eb",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "067066c3-d9fe-4fc0-9e84-f017f3df2366",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "93f89fac-baa1-4095-8d26-a895077c9cbf",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "ba2cef2e-5ce2-43d9-8e6e-885bedfebe0e",
+    "type": "./components/Button/index.js",
+  },
+  {
+    "key": "a2c976a9-050d-4ae8-a38f-47d0fd8bfb9b",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "ff218c09-26b3-41e5-a8ab-ce0bb1928cfd",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "d7fec7c7-648a-4a4f-9575-2a89f80b3c9e",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "8b517842-b920-401e-851d-a895c191a1bf",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "0866ec28-8338-46d1-99a9-06a68b2ee0df",
+    "type": "./components/Button/index.js",
+  },
+  {
+    "key": "45872075-8891-4802-a6f2-2fcc9f5820f2",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "20437331-c0d7-4aa3-add0-1d872ed5fe9f",
+    "type": "./components/Box/index.js",
+  },
+  {
+    "key": "027cc40c-d276-4e55-a22e-9c2f6edaf7a5",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "39c5caef-71ef-4cf8-b2c8-7832d0f8b00a",
+    "type": "./components/Text/index.js",
+  },
+  {
+    "key": "fcb6c76e-46be-4db4-98bd-9cb075fba851",
+    "type": "./components/SocialLinks/index.js",
+  },
+]
+`;
