@@ -1,10 +1,9 @@
 'use client'
 
-import { createContext, ReactNode } from "react";
+import { createContext, ReactNode, useMemo } from "react";
 import { MakeswiftComponentSnapshot } from "../client";
 import { MakeswiftComponentType } from "../../components";
 import { MakeswiftComponent } from "./MakeswiftComponent";
-
 
 type Props = {
   label: string
@@ -19,9 +18,14 @@ export const PropsContextProvider = ({ value, children }: { value: {fallback: Re
 );
 
 export const Slot = ({ label, snapshot, fallback }: Props) => {
+  const contextValue = useMemo(
+    () =>
+      ({ fallback }),
+    [fallback]
+  )
 
   return (
-    <PropsContextProvider value={{fallback}}>
+    <PropsContextProvider value={contextValue}>
       <MakeswiftComponent
         snapshot={snapshot}
         label={label}
