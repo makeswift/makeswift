@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactNode, useContext } from "react"
-import { PropsContext } from "../../../next/components/Slot"
+import { PropsContext } from "../../../next/components/SlotProvider"
 
 type Props = {
   children: ReactNode
