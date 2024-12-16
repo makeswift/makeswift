@@ -3,19 +3,19 @@ import {
   combineReducers,
   createStore,
   compose,
-  Dispatch as ReduxDispatch,
-  Middleware,
-  MiddlewareAPI,
-  PreloadedState,
-  Store as ReduxStore,
-  StoreEnhancer,
+  type Dispatch as ReduxDispatch,
+  type Middleware,
+  type MiddlewareAPI,
+  type Store as ReduxStore,
+  type StoreEnhancer,
 } from 'redux'
-import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk'
+import thunk, { type ThunkAction, type ThunkDispatch } from 'redux-thunk'
 import { ControlInstance } from '@makeswift/controls'
 
 import deepEqual from '../utils/deepEqual'
 
 import * as Documents from './modules/read-write-documents'
+import * as ElementTrees from './modules/element-trees'
 import * as ReactComponents from './modules/react-components'
 import * as BoxModels from './modules/box-models'
 import * as ComponentsMeta from './modules/components-meta'
@@ -29,27 +29,30 @@ import * as ElementImperativeHandles from './modules/element-imperative-handles'
 import * as Breakpoints from './modules/breakpoints'
 import * as ReactPage from './react-page'
 import {
-  Action,
+  type Action,
+  ActionTypes,
   changeDocumentElementSize,
   changeElementBoxModels,
+  changeElementTree,
   elementFromPointChange,
   handleWheel,
   handlePointerMove,
   messageBuilderPropController,
   registerBuilderComponent,
-  registerComponent,
+  createElementTree,
   registerMeasurable,
   registerPropControllers,
   registerPropControllersHandle,
   setBreakpoints,
   setIsInBuilder,
   unregisterBuilderComponent,
-  unregisterComponent,
+  unregisterBuilderDocument,
+  deleteElementTree,
   unregisterMeasurable,
   unregisterPropControllers,
   registerBuilderDocument,
 } from './actions'
-import { ActionTypes } from './actions'
+
 import { createPropController } from '../prop-controllers/instances'
 import { serializeControls } from '../builder'
 import { MakeswiftHostApiClient } from '../api/react'
@@ -61,6 +64,7 @@ export { createBox, getBox, parse } from './modules/box-models'
 
 export const reducer = combineReducers({
   documents: Documents.reducer,
+  elementTrees: ElementTrees.reducer,
   reactComponents: ReactComponents.reducer,
   boxModels: BoxModels.reducer,
   componentsMeta: ComponentsMeta.reducer,
@@ -78,6 +82,10 @@ export type State = ReturnType<typeof reducer>
 
 function getDocumentsStateSlice(state: State): Documents.State {
   return state.documents
+}
+
+function getDocument(state: State, documentKey: string): Documents.Document | null {
+  return Documents.getDocument(getDocumentsStateSlice(state), documentKey)
 }
 
 function getBoxModelsStateSlice(state: State): BoxModels.State {
@@ -358,8 +366,8 @@ function elementKeysFromElementFromPoint(
       getState(),
       elementFromPoint,
     )
-    const acendingDepthDocumentKeys = ReactPage.getDocumentKeysSortedByDepth(getState())
-    const descendingDepthDocumentKeys = acendingDepthDocumentKeys.slice().reverse()
+    const ascendingDepthDocumentKeys = ReactPage.getDocumentKeysSortedByDepth(getState())
+    const descendingDepthDocumentKeys = ascendingDepthDocumentKeys.slice().reverse()
 
     let currentElement: Element | null = elementFromPoint
     let keys = null
@@ -417,15 +425,16 @@ function registerBuilderComponents(): ThunkAction<() => void, State, unknown, Ac
     const componentsMeta = getComponentsMeta(state)
 
     componentsMeta.forEach((meta, type) => {
-      const propControllerDescriptors = getComponentPropControllerDescriptors(state, type)
-      if (propControllerDescriptors != null) {
-        dispatch(registerComponent(type, meta, propControllerDescriptors))
+      const descriptors = getComponentPropControllerDescriptors(state, type)
+      if (descriptors != null) {
+        const [serializedControls, transferables] = serializeControls(descriptors)
+        dispatch(registerBuilderComponent({ type, meta, serializedControls }, transferables))
       }
     })
 
     return () => {
-      componentsMeta.forEach((_, componentType) => {
-        dispatch(unregisterComponent(componentType))
+      componentsMeta.forEach((_, type) => {
+        dispatch(unregisterBuilderComponent({ type }))
       })
     }
   }
@@ -441,7 +450,7 @@ function registerBuilderDocuments(): ThunkAction<() => void, State, unknown, Act
 
     return () => {
       documents.forEach((_document, documentKey) => {
-        dispatch(unregisterBuilderComponent(documentKey))
+        dispatch(unregisterBuilderDocument(documentKey))
       })
     }
   }
@@ -541,19 +550,14 @@ export function messageChannelMiddleware(
             channel.postMessage(action)
             break
 
-          case ActionTypes.REGISTER_COMPONENT: {
-            const { type, meta, propControllerDescriptors } = action.payload
-            const [serializedControls, transferables] = serializeControls(propControllerDescriptors)
-
-            channel.postMessage(
-              registerBuilderComponent(type, meta, serializedControls),
-              transferables,
-            )
+          case ActionTypes.REGISTER_BUILDER_COMPONENT: {
+            const { transferables, ...forwardedAction } = action
+            channel.postMessage(forwardedAction, transferables)
             break
           }
 
-          case ActionTypes.UNREGISTER_COMPONENT:
-            channel.postMessage(unregisterBuilderComponent(action.payload.type))
+          case ActionTypes.UNREGISTER_BUILDER_COMPONENT:
+            channel.postMessage(action)
             break
 
           case ActionTypes.CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP:
@@ -676,6 +680,51 @@ export function propControllerHandlesMiddleware(): Middleware<Dispatch, State, D
     }
 }
 
+export function elementTreeMiddleware(): Middleware<Dispatch, State, Dispatch> {
+  return ({ dispatch, getState }: MiddlewareAPI<Dispatch, State>) =>
+    (next: ReduxDispatch<Action>) => {
+      return (action: Action): Action => {
+        switch (action.type) {
+          case ActionTypes.REGISTER_DOCUMENT:
+            dispatch(
+              createElementTree({
+                document: action.payload.document,
+                descriptors: ReactPage.getPropControllerDescriptors(getState()),
+              }),
+            )
+            break
+
+          case ActionTypes.CHANGE_DOCUMENT: {
+            const { documentKey, operation } = action.payload
+
+            const oldDocument = getDocument(getState(), documentKey)
+            const result = next(action)
+            const newDocument = getDocument(getState(), documentKey)
+
+            if (oldDocument != null && newDocument != null && newDocument !== oldDocument) {
+              dispatch(
+                changeElementTree({
+                  oldDocument,
+                  newDocument,
+                  descriptors: ReactPage.getPropControllerDescriptors(getState()),
+                  operation,
+                }),
+              )
+            }
+
+            return result
+          }
+
+          case ActionTypes.UNREGISTER_DOCUMENT:
+            dispatch(deleteElementTree(action.payload))
+            break
+        }
+
+        return next(action)
+      }
+    }
+}
+
 function makeswiftApiClientSyncMiddleware(
   client: MakeswiftHostApiClient,
 ): Middleware<Dispatch, State, Dispatch> {
@@ -759,12 +808,13 @@ export function configureStore({
   client,
 }: {
   rootElements?: Map<string, Documents.Element>
-  preloadedState?: PreloadedState<State>
+  preloadedState?: Partial<State>
   client: MakeswiftHostApiClient
 }): Store {
-  const initialState: PreloadedState<State> = {
+  const initialState: Partial<State> = {
     ...preloadedState,
     documents: Documents.getInitialState({ rootElements }),
+    elementTrees: ElementTrees.getInitialState(rootElements, preloadedState?.propControllers),
     isPreview: IsPreview.getInitialState(true),
   }
 
@@ -782,6 +832,7 @@ export function configureStore({
       ),
       applyMiddleware(
         thunk,
+        elementTreeMiddleware(),
         measureBoxModelsMiddleware(),
         messageChannelMiddleware(client, channel),
         propControllerHandlesMiddleware(),

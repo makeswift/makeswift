@@ -1,10 +1,10 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { Slot, TextInput } from '../controls'
+import { Slot, TextInput } from '../../controls'
 
-import { registerComponent } from './actions'
-import * as ReactPage from './react-page'
-import { ComponentIcon } from './modules/components-meta'
+import { registerComponent } from '../actions'
+import * as ReactPage from '../react-page'
+import { ComponentIcon } from '../modules/components-meta'
 
 // @ts-ignore Used by JSX pragma
 function jsx(type: Function, props: Record<string, unknown> = {}, ...children: JSX.Element[]) {

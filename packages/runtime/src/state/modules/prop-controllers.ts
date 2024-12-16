@@ -3,26 +3,26 @@ import { PropControllerDescriptor } from '../../prop-controllers'
 
 export type { PropControllerDescriptor }
 
-export type State = Map<string, Record<string, PropControllerDescriptor>>
+export type DescriptorsByProp = Record<string, PropControllerDescriptor>
+export type DescriptorsByComponentType = Map<string, DescriptorsByProp>
+export type State = DescriptorsByComponentType
 
 export function getInitialState({
   propControllerDescriptors = new Map(),
 }: {
-  propControllerDescriptors?: Map<string, Record<string, PropControllerDescriptor>>
+  propControllerDescriptors?: State
 } = {}): State {
   return propControllerDescriptors
 }
 
-export function getPropControllerDescriptors(
-  state: State,
-): Map<string, Record<string, PropControllerDescriptor>> {
+export function getPropControllerDescriptors(state: State): State {
   return state
 }
 
 export function getComponentPropControllerDescriptors(
   state: State,
   componentType: string,
-): Record<string, PropControllerDescriptor> | null {
+): DescriptorsByProp | null {
   return getPropControllerDescriptors(state).get(componentType) ?? null
 }
 
@@ -33,9 +33,7 @@ export function reducer(state: State = getInitialState(), action: Action): State
 
     case ActionTypes.UNREGISTER_COMPONENT: {
       const nextState = new Map(state)
-
       const deleted = nextState.delete(action.payload.type)
-
       return deleted ? nextState : state
     }
 

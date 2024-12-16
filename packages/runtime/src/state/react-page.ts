@@ -1,10 +1,6 @@
-import {
-  applyMiddleware,
-  createStore,
-  PreloadedState,
-  Store as ReduxStore,
-  combineReducers,
-} from 'redux'
+import { type Store as ReduxStore, applyMiddleware, createStore, combineReducers } from 'redux'
+
+import { createSelector } from 'reselect'
 
 import thunk, { ThunkDispatch } from 'redux-thunk'
 
@@ -18,6 +14,7 @@ import {
 } from '@makeswift/controls'
 
 import * as Documents from './modules/read-only-documents'
+import * as ElementTrees from './modules/element-trees'
 import * as ReactComponents from './modules/react-components'
 import * as ComponentsMeta from './modules/components-meta'
 import * as PropControllers from './modules/prop-controllers'
@@ -26,8 +23,7 @@ import * as IsInBuilder from './modules/is-in-builder'
 import * as IsPreview from './modules/is-preview'
 import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Breakpoints from './modules/breakpoints'
-import * as Introspection from '../prop-controllers/introspection'
-import { Action } from './actions'
+import { type Action } from './actions'
 import { copyElementReference } from '../prop-controllers/copy'
 import {
   copy as copyFromControl,
@@ -55,6 +51,7 @@ export type { ComponentType } from './modules/react-components'
 
 const reducer = combineReducers({
   documents: Documents.reducer,
+  elementTrees: ElementTrees.reducer,
   reactComponents: ReactComponents.reducer,
   componentsMeta: ComponentsMeta.reducer,
   propControllers: PropControllers.reducer,
@@ -75,6 +72,24 @@ export function getDocument(state: State, documentKey: string): Documents.Docume
   return Documents.getDocument(getDocumentsStateSlice(state), documentKey)
 }
 
+function getElementTreesSlice(state: State): ElementTrees.State {
+  return state.elementTrees
+}
+
+export function getElements(
+  state: State,
+  documentKey: string,
+): ElementTrees.ElementTree['elements'] {
+  return ElementTrees.getElements(getElementTreesSlice(state), documentKey)
+}
+
+export function getElementIds(
+  state: State,
+  documentKey: string,
+): ElementTrees.ElementTree['elementIds'] {
+  return ElementTrees.getElementIds(getElementTreesSlice(state), documentKey)
+}
+
 function getReactComponentsStateSlice(state: State): ReactComponents.State {
   return state.reactComponents
 }
@@ -90,16 +105,14 @@ function getPropControllersStateSlice(state: State): PropControllers.State {
   return state.propControllers
 }
 
-export function getPropControllerDescriptors(
-  state: State,
-): Map<string, Record<string, PropControllers.PropControllerDescriptor>> {
+export function getPropControllerDescriptors(state: State): PropControllers.State {
   return PropControllers.getPropControllerDescriptors(getPropControllersStateSlice(state))
 }
 
 export function getComponentPropControllerDescriptors(
   state: State,
   componentType: string,
-): Record<string, PropControllers.PropControllerDescriptor> | null {
+): PropControllers.DescriptorsByProp | null {
   return PropControllers.getComponentPropControllerDescriptors(
     getPropControllersStateSlice(state),
     componentType,
@@ -118,71 +131,26 @@ export function getPropControllers(state: State, documentKey: string, elementKey
   )
 }
 
-function normalizeElement(
-  element: Documents.Element,
-  descriptors: Map<string, Record<string, PropControllers.PropControllerDescriptor>>,
-): Map<string, Documents.Element> {
-  const elements = new Map<string, Documents.Element>()
-  const remaining = [element]
-  let current: Documents.Element | undefined
-
-  while ((current = remaining.pop())) {
-    elements.set(current.key, current)
-
-    if (Documents.isElementReference(current)) continue
-
-    const elementDescriptors = descriptors.get(current.type)
-
-    if (elementDescriptors == null) continue
-
-    const parent = current
-    const children = Object.entries(elementDescriptors).reduce((acc, [propName, descriptor]) => {
-      return [...acc, ...Introspection.getElementChildren(descriptor, parent.props[propName])]
-    }, [] as Documents.Element[])
-
-    remaining.push(...children)
-  }
-
-  return elements
-}
-
-function getDocumentElements(state: State, documentKey: string): Map<string, Documents.Element> {
-  const document = getDocument(state, documentKey)
-  const descriptors = getPropControllerDescriptors(state)
-
-  if (document == null) return new Map()
-
-  return normalizeElement(document.rootElement, descriptors)
-}
-
 /**
  * Returns all document keys sorted by depth, i.e., parent documents come before child documents.
- *
- * @todo Make this selector more efficient.
  */
-export function getDocumentKeysSortedByDepth(state: State): string[] {
-  const documents = Documents.getDocuments(getDocumentsStateSlice(state))
-  const keys = Array.from(documents.keys())
-
-  if (keys.length < 2) return keys
-
-  const elements = new Map<string, Map<string, Documents.Element>>()
-
-  keys.forEach(key => {
-    elements.set(key, getDocumentElements(state, key))
-  })
-
-  keys.sort((a, b) => (elements.get(a)?.has(b) ? -1 : 1))
-
-  return keys
-}
+export const getDocumentKeysSortedByDepth: (state: State) => string[] = createSelector(
+  [getDocumentsStateSlice, getElementTreesSlice],
+  (documents, elementTrees) => {
+    return [...documents.keys()].sort((a, b) => (elementTrees.get(a)?.elements.has(b) ? -1 : 1))
+  },
+)
 
 export function getElement(
   state: State,
   documentKey: string,
   elementKey: string,
 ): Documents.Element | null {
-  return getDocumentElements(state, documentKey).get(elementKey) ?? null
+  return ElementTrees.getElement(getElementTreesSlice(state), documentKey, elementKey)
+}
+
+export function getElementId(state: State, documentKey: string, elementKey: string): string | null {
+  return ElementTrees.getElementId(getElementTreesSlice(state), documentKey, elementKey)
 }
 
 export function getElementPropControllerDescriptors(
@@ -195,27 +163,6 @@ export function getElementPropControllerDescriptors(
   if (element == null || Documents.isElementReference(element)) return null
 
   return getComponentPropControllerDescriptors(state, element.type)
-}
-
-export function getElementId(state: State, documentKey: string, elementKey: string): string | null {
-  const element = getElement(state, documentKey, elementKey)
-
-  if (element == null || Documents.isElementReference(element)) return null
-
-  const descriptors = getComponentPropControllerDescriptors(state, element.type)
-
-  if (descriptors == null) return null
-
-  const elementId = Object.entries(descriptors).reduce(
-    (acc, [propName, descriptor]) => {
-      if (acc != null) return acc
-
-      return Introspection.getElementId(descriptor, element.props[propName])
-    },
-    null as string | null,
-  )
-
-  return elementId
 }
 
 export function copyElementTree(
@@ -262,43 +209,20 @@ export function copyElementTree(
   return copyElementTreeNode(state, createReplacementContext(replacementContext))(copy)
 }
 
-function* traverseElementTree(
-  state: State,
-  elementTree: Documents.ElementData,
-): Generator<Documents.Element> {
-  yield elementTree
-
-  if (Documents.isElementReference(elementTree)) return
-
-  const descriptors = getComponentPropControllerDescriptors(state, elementTree.type)
-
-  if (descriptors == null) return
-
-  for (const [propKey, descriptor] of Object.entries(descriptors)) {
-    const children = Introspection.getElementChildren(descriptor, elementTree.props[propKey])
-
-    for (const child of children) {
-      if (!Documents.isElementReference(child)) yield* traverseElementTree(state, child)
-
-      yield child
-    }
-  }
-}
-
 export function getElementTreeTranslatableData(
   state: State,
   elementTree: Documents.ElementData,
 ): Record<string, Documents.Data> {
   const translatableData: Record<string, Documents.Data> = {}
+  const descriptors = getPropControllerDescriptors(state)
 
-  for (const element of traverseElementTree(state, elementTree)) {
+  for (const element of ElementTrees.traverseElementTree(elementTree, descriptors)) {
     if (Documents.isElementReference(element)) continue
 
-    const descriptors = getComponentPropControllerDescriptors(state, element.type)
+    const elementPescriptors = descriptors.get(element.type)
+    if (elementPescriptors == null) continue
 
-    if (descriptors == null) continue
-
-    Object.entries(descriptors).forEach(([propName, descriptor]) => {
+    Object.entries(elementPescriptors).forEach(([propName, descriptor]) => {
       const translatablePropData = getTranslatableData(descriptor, element.props[propName])
 
       if (translatablePropData != null) {
@@ -418,7 +342,7 @@ export function configureStore({
   breakpoints,
 }: {
   rootElements?: Map<string, Documents.Element>
-  preloadedState?: PreloadedState<State>
+  preloadedState?: Partial<State>
   breakpoints?: Breakpoints.State
 } = {}): Store {
   return createStore(
@@ -426,6 +350,7 @@ export function configureStore({
     {
       ...preloadedState,
       documents: Documents.getInitialState({ rootElements }),
+      elementTrees: ElementTrees.getInitialState(rootElements, preloadedState?.propControllers),
       breakpoints: Breakpoints.getInitialState(breakpoints ?? preloadedState?.breakpoints),
     },
     applyMiddleware(thunk),
