@@ -8,7 +8,7 @@ type Props = {
   showFallback: boolean
 }
 
-export const Slot = (props: Props) => {
+function Slot(props: Props) {
   const ctx = useContext(PropsContext)
 
   return (
