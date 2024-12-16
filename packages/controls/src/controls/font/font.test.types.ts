@@ -8,7 +8,7 @@ import {
   type ValueType,
 } from '../associated-types'
 
-import { Font } from './font'
+import { Font, FontDefinition } from './font'
 
 type ExpectedValueWithoutVariantsType = {
   fontFamily: string
@@ -21,7 +21,7 @@ type ExpectedValueWithVariantsType = {
 }
 
 describe('Font Types', () => {
-  test('infers types from control definition (without variants / default passed)', () => {
+  test('infers types from control function (without variants / default passed)', () => {
     const def = Font({
       label: 'label',
       variant: false,
@@ -50,7 +50,7 @@ describe('Font Types', () => {
     expectTypeOf<Resolved>().toEqualTypeOf<ExpectedValueWithoutVariantsType>()
   })
 
-  test('infers types from control definition (without variants / no default)', () => {
+  test('infers types from control function (without variants / no default)', () => {
     const def = Font({
       variant: false,
     })
@@ -82,7 +82,7 @@ describe('Font Types', () => {
     >()
   })
 
-  test('infers types from control definition (with variants / default passed)', () => {
+  test('infers types from control function (with variants / default passed)', () => {
     const def = Font({
       label: 'test',
       variant: true,
@@ -113,7 +113,7 @@ describe('Font Types', () => {
     expectTypeOf<Resolved>().toEqualTypeOf<ExpectedValueWithVariantsType>()
   })
 
-  test('infers types from control definition (with variants / no default)', () => {
+  test('infers types from control function (with variants / no default)', () => {
     const def = Font()
 
     type Config = typeof def.config
@@ -140,6 +140,37 @@ describe('Font Types', () => {
     type Resolved = ResolvedValueType<typeof def>
     expectTypeOf<Resolved>().toEqualTypeOf<
       ExpectedValueWithVariantsType | undefined
+    >()
+  })
+
+  test('infers types from control definition', () => {
+    type def = FontDefinition
+
+    type Data = DataType<def>
+    expectTypeOf<Data>().toEqualTypeOf<
+      | {
+          [ControlDataTypeKey]: 'font::v1'
+          value: ExpectedValueWithoutVariantsType
+        }
+      | {
+          [ControlDataTypeKey]: 'font::v1'
+          value: ExpectedValueWithVariantsType
+        }
+      | undefined
+    >()
+
+    type Value = ValueType<def>
+    expectTypeOf<Value>().toEqualTypeOf<
+      | ExpectedValueWithVariantsType
+      | ExpectedValueWithoutVariantsType
+      | undefined
+    >()
+
+    type Resolved = ResolvedValueType<def>
+    expectTypeOf<Resolved>().toEqualTypeOf<
+      | ExpectedValueWithVariantsType
+      | ExpectedValueWithoutVariantsType
+      | undefined
     >()
   })
 })

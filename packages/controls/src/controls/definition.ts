@@ -25,6 +25,9 @@ export type Resolvable<T> = {
   subscribe(onUpdate: () => void): () => void
 }
 
+// workaround for TS type inference issues
+export type UndefinedOr<T> = T | undefined
+
 export abstract class ControlDefinition<
   ControlType extends string = string,
   Config = unknown,
@@ -49,22 +52,22 @@ export abstract class ControlDefinition<
 
   abstract safeParse(
     data: unknown | undefined,
-  ): ParseResult<DataType | undefined>
+  ): ParseResult<UndefinedOr<DataType>>
 
-  abstract fromData(data: DataType | undefined): ValueType | undefined
+  abstract fromData(data: UndefinedOr<DataType>): UndefinedOr<ValueType>
   abstract toData(value: ValueType): DataType
 
   abstract copyData(
-    data: DataType | undefined,
+    data: UndefinedOr<DataType>,
     context: CopyContext,
-  ): DataType | undefined
+  ): UndefinedOr<DataType>
 
   mergeData(
     base: DataType,
-    override: DataType = base,
+    override: UndefinedOr<DataType>,
     _context: MergeContext,
   ): DataType {
-    return override
+    return override ?? base
   }
 
   getTranslatableData(_data: DataType): Data {
@@ -80,8 +83,8 @@ export abstract class ControlDefinition<
   }
 
   resolveValue(
-    _data: DataType | undefined,
-  ): Resolvable<ResolvedValueType | undefined> {
+    _data: UndefinedOr<DataType>,
+  ): Resolvable<UndefinedOr<ResolvedValueType>> {
     console.assert(
       false,
       `${this.controlType}: 'resolveValue' is not implemented`,
@@ -98,7 +101,7 @@ export abstract class ControlDefinition<
   abstract serialize(): [SerializedRecord, Transferable[]]
 
   introspect<R>(
-    data: DataType | undefined,
+    data: UndefinedOr<DataType>,
     target: IntrospectionTarget<R>,
   ): R[] {
     return target.introspect(data)
