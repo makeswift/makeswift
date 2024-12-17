@@ -15,7 +15,7 @@ type Props = {
 export const Slot = ({ label, snapshot, fallback }: Props) => {
   const contextValue = useMemo(
     () =>
-      ({ fallback }),
+      ({ fallback: fallback ?? <></> }),
     [fallback]
   )
 
