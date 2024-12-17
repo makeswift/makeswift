@@ -9,6 +9,7 @@ import { registerComponent as registerFormComponent } from './Form/register'
 import { registerComponent as registerImageComponent } from './Image/register'
 import { registerComponent as registerNavigationComponent } from './Navigation/register'
 import { registerComponent as registerRootComponent } from './Root/register'
+import { registerComponent as registerSlotComponent } from './Slot/register'
 import { registerComponent as registerSocialLinksComponent } from './SocialLinks/register'
 import { registerComponent as registerTextComponent } from './Text/register'
 import { registerComponent as registerVideoComponent } from './Video/register'
@@ -24,6 +25,7 @@ export function registerBuiltinComponents(runtime: ReactRuntime) {
   const unregisterImageComponent = registerImageComponent(runtime)
   const unregisterNavigationComponent = registerNavigationComponent(runtime)
   const unregisterRootComponent = registerRootComponent(runtime)
+  const unregisterSlotComponent = registerSlotComponent(runtime)
   const unregisterSocialLinksComponent = registerSocialLinksComponent(runtime)
   const unregisterTextComponent = registerTextComponent(runtime)
   const unregisterVideoComponent = registerVideoComponent(runtime)
@@ -39,6 +41,7 @@ export function registerBuiltinComponents(runtime: ReactRuntime) {
     unregisterImageComponent()
     unregisterNavigationComponent()
     unregisterRootComponent()
+    unregisterSlotComponent()
     unregisterSocialLinksComponent()
     unregisterTextComponent()
     unregisterVideoComponent()
