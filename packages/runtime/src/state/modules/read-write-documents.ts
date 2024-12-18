@@ -1,8 +1,8 @@
-import { Operation } from 'ot-json0'
+import { type Operation } from 'ot-json0'
 import { removeIn, setIn } from 'immutable'
 
 import * as ReadOnlyDocuments from './read-only-documents'
-import { Action, ActionTypes } from '../actions'
+import { type Action, ActionTypes } from '../actions'
 
 export type { Document, Element, ElementData, ElementReference } from './read-only-documents'
 export { isElementReference } from './read-only-documents'

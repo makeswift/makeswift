@@ -1,8 +1,8 @@
 # @makeswift/runtime
 
-## 0.21.4-canary.0
+## 0.22.0
 
-### Patch Changes
+### Minor Changes
 
 - 11ae3c2: refactor: rewrite element tree rendering using "unified" controls interface
 
@@ -32,7 +32,7 @@
   })
   ```
 
-  This worked because the `slots` value was never actually passed as a _list_ of `ReactNode`s. Instead, it was passed as a single `ReactNode` representing a list component that rendered the list as a recursive [cons](https://en.wikipedia.org/wiki/Cons)-like structure.
+  This worked because the `slots` value was never actually passed as a _list_ of `ReactNode`s. Instead, it was passed as a single `ReactNode` representing an internal component rendering the list as a recursive [cons](https://en.wikipedia.org/wiki/Cons)-like structure.
 
   If you have registered components that expect a list of `ReactNode`s and rely on this undocumented behavior, you must update your code to wrap each node in a `React.Fragment` with a corresponding key:
 
@@ -43,14 +43,14 @@
   ) {
     return (
   -    <div ref={ref}>{slots}</div>
-  +    <div ref={ref}>{slots.map((slot, i) => (<Fragment key={index}>{slot}</Fragment>))}</div>
+  +    <div ref={ref}>{slots.map((slot, i) => (<Fragment key={i}>{slot}</Fragment>))}</div>
     )
   })
   ```
 
 - Updated dependencies [11ae3c2]
-  - @makeswift/controls@0.1.6-canary.0
-  - @makeswift/prop-controllers@0.3.7-canary.0
+  - @makeswift/controls@0.1.6
+  - @makeswift/prop-controllers@0.3.7
 
 ## 0.21.3
 

@@ -1,11 +1,11 @@
 # @makeswift/prop-controllers
 
-## 0.3.7-canary.0
+## 0.3.7
 
 ### Patch Changes
 
 - Updated dependencies [11ae3c2]
-  - @makeswift/controls@0.1.6-canary.0
+  - @makeswift/controls@0.1.6
 
 ## 0.3.6
 
