@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.22.1-canary.0
+
+### Patch Changes
+
+- 3a32698: fix(runtime): more efficient element lookup, fixes a performance regression introduced in 0.22.0
+
 ## 0.22.0
 
 ### Minor Changes
