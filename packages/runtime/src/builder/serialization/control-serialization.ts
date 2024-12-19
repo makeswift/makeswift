@@ -17,6 +17,7 @@ import {
   ControlDefinition as UnifiedControlDefinition,
   type SerializedRecord,
   type RichTextValue as RichTextControlValue,
+  ShapeV2Definition,
 } from '@makeswift/controls'
 
 import {
@@ -1027,6 +1028,8 @@ export function deserializeUnifiedControlDef(record: DeserializedRecord): Unifie
       RichTextV2Definition.deserialize(record, deserializeUnifiedControlDef),
     [unstable_TypographyDefinition.type]: unstable_TypographyDefinition.deserialize,
     [FontDefinition.type]: FontDefinition.deserialize,
+    [ShapeV2Definition.type]: (record: DeserializedRecord) =>
+      ShapeV2Definition.deserialize(record, deserializeUnifiedControlDef),
   } as const
 
   const deserialize = deserializeMethod[record.type] ?? null

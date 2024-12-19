@@ -26,6 +26,7 @@ import {
   TextInputDefinition,
   unstable_TypographyDefinition,
   FontDefinition,
+  ShapeV2Definition,
 } from '../../controls'
 
 import { isLegacyDescriptor } from '../../prop-controllers/descriptors'
@@ -91,6 +92,7 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
           case StyleV2Definition.type:
           case unstable_TypographyDefinition.type:
           case FontDefinition.type:
+          case ShapeV2Definition.type:
             return (
               <ControlValue
                 definition={descriptor}
