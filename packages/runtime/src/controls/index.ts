@@ -35,6 +35,9 @@ export {
   unstable_TypographyDefinition,
   Font,
   FontDefinition,
+  ShapeV2,
+  ShapeV2Control,
+  ShapeV2Definition,
 } from '@makeswift/controls'
 
 export { Link, LinkDefinition } from './link'
