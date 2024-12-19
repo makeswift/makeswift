@@ -16,7 +16,6 @@ export {
   List,
   ListDefinition,
   ListControl,
-  Shape,
   ShapeDefinition,
   ShapeControl,
   Number,
@@ -35,6 +34,9 @@ export {
   unstable_TypographyDefinition,
   Font,
   FontDefinition,
+  ShapeV2 as Shape,
+  ShapeV2Control,
+  ShapeV2Definition,
 } from '@makeswift/controls'
 
 export { Link, LinkDefinition } from './link'

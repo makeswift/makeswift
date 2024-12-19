@@ -4,6 +4,7 @@ import {
   type ResolvedValueType,
   type InstanceType,
   FontDefinition,
+  ShapeV2Definition,
 } from '@makeswift/controls'
 
 import {
@@ -41,6 +42,7 @@ import { useSlot } from './slot'
 import { useFormattedStyle } from './style'
 import { StyleV2ControlValue } from './style-v2'
 import { useTypographyValue } from './typography'
+import { ShapeV2ControlValue } from './shape-v2'
 
 type ControlValueProps = {
   definition: ControlDefinition
@@ -129,6 +131,17 @@ export function ControlValue({
         >
           {value => children(value)}
         </ShapeControlValue>
+      )
+
+    case ShapeV2Definition.type:
+      return (
+        <ShapeV2ControlValue
+          definition={definition as ShapeV2Definition}
+          data={data as DataType<ShapeV2Definition>}
+          control={control as InstanceType<ShapeV2Definition>}
+        >
+          {value => children(value)}
+        </ShapeV2ControlValue>
       )
 
     case ListDefinition.type:
