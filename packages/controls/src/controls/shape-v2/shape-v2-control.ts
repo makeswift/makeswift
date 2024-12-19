@@ -5,18 +5,18 @@ import {
   type SendMessage,
 } from '../instance'
 
-import { ShapeDefinition } from './shape'
+import { ShapeV2Definition } from './shape-v2'
 
 type Message = {
-  type: typeof ShapeControl.CHILD_CONTROL_MESSAGE
+  type: typeof ShapeV2Control.CHILD_CONTROL_MESSAGE
   payload: { message: ControlMessage; key: string }
 }
 
-export class ShapeControl<
-  Def extends ShapeDefinition = ShapeDefinition,
+export class ShapeV2Control<
+  Def extends ShapeV2Definition = ShapeV2Definition,
 > extends ControlInstance<Message> {
   static readonly CHILD_CONTROL_MESSAGE =
-    'makeswift::controls::shape::message::child-control-message'
+    'makeswift::controls::shape-v2::message::child-control-message'
 
   private readonly childControls: Map<string, ControlInstance> = new Map()
 
@@ -35,7 +35,7 @@ export class ShapeControl<
 
   recv = (message: Message) => {
     switch (message.type) {
-      case ShapeControl.CHILD_CONTROL_MESSAGE: {
+      case ShapeV2Control.CHILD_CONTROL_MESSAGE: {
         this.child(message.payload.key)?.recv(message.payload.message)
       }
     }
@@ -46,7 +46,7 @@ export class ShapeControl<
   createChildControl = (def: ControlDefinition, key: string) => {
     return def.createInstance((message) =>
       this.sendMessage({
-        type: ShapeControl.CHILD_CONTROL_MESSAGE,
+        type: ShapeV2Control.CHILD_CONTROL_MESSAGE,
         payload: { message, key },
       }),
     )

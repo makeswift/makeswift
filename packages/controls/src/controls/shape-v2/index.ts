@@ -1,2 +1,2 @@
-export * from './shape'
-export * from './shape-control'
+export * from './shape-v2'
+export * from './shape-v2-control'

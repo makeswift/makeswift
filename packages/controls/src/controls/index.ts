@@ -16,6 +16,7 @@ export * from './text-area'
 export * from './text-input'
 export * from './font'
 export * from './typography'
+export * from './shape-v2'
 
 export * from './associated-types'
 export * from './definition'
