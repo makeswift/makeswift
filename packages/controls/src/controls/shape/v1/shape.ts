@@ -1,27 +1,27 @@
 import { z } from 'zod'
 
-import { mapValues } from '../../lib/functional'
-import { safeParse, type ParseResult } from '../../lib/zod'
+import { mapValues } from '../../../lib/functional'
+import { safeParse, type ParseResult } from '../../../lib/zod'
 
-import { type Data } from '../../common'
+import { type Data } from '../../../common'
 import {
   type CopyContext,
   type MergeTranslatableDataContext,
-} from '../../context'
-import { type IntrospectionTarget } from '../../introspection'
+} from '../../../context'
+import { type IntrospectionTarget } from '../../../introspection'
 import {
   SerializationSchema,
   type DeserializedRecord,
   type SerializedRecord,
-} from '../../serialization'
+} from '../../../serialization'
 
 import {
   type DataType as DataType_,
   type ResolvedValueType as ResolvedValueType_,
   type ValueType as ValueType_,
-} from '../associated-types'
-import { ControlDefinition, serialize, type SchemaType } from '../definition'
-import { type SendMessage } from '../instance'
+} from '../../associated-types'
+import { ControlDefinition, serialize, type SchemaType } from '../../definition'
+import { type SendMessage } from '../../instance'
 
 import { ShapeControl } from './shape-control'
 

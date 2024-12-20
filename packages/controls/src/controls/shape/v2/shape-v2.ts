@@ -1,28 +1,31 @@
 import { z } from 'zod'
 
-import { mapValues } from '../../lib/functional'
-import { safeParse, type ParseResult } from '../../lib/zod'
+import { mapValues } from '../../../lib/functional'
+import { safeParse, type ParseResult } from '../../../lib/zod'
 
-import { ControlDataTypeKey, type Data } from '../../common'
+import {
+  ControlDataTypeKey,
+  type Data,
+} from '../../../common'
 import {
   type CopyContext,
   type MergeTranslatableDataContext,
-} from '../../context'
-import { type IntrospectionTarget } from '../../introspection'
+} from '../../../context'
+import { type IntrospectionTarget } from '../../../introspection'
 import {
   SerializationSchema,
   type DeserializedRecord,
   type SerializedRecord,
-} from '../../serialization'
+} from '../../../serialization'
 
 import {
   type DataType as DataType_,
   type ResolvedValueType as ResolvedValueType_,
   type ValueType as ValueType_,
-} from '../associated-types'
-import { ControlDefinition, serialize, type SchemaType } from '../definition'
-import { type SendMessage } from '../instance'
-import { ShapeDefinition } from '../shape/shape'
+} from '../../associated-types'
+import { ControlDefinition, serialize, type SchemaType } from '../../definition'
+import { type SendMessage } from '../../instance'
+import { ShapeDefinition } from '../v1/shape'
 
 import { ShapeV2Control } from './shape-v2-control'
 

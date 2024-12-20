@@ -1,6 +1,6 @@
-import { type BoxModel } from '../../common'
+import { type BoxModel } from '../../../common'
 
-import { ControlInstance } from '../instance'
+import { ControlInstance } from '../../instance'
 
 type Message = {
   type: typeof StyleControl.CHANGE_BOX_MODEL

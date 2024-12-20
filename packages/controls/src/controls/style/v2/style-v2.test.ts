@@ -1,5 +1,5 @@
-import { Checkbox } from '../checkbox'
-import { Select } from '../select'
+import { Checkbox } from '../../checkbox'
+import { Select } from '../../select'
 
 import { StyleV2, StyleV2Definition } from './testing'
 
