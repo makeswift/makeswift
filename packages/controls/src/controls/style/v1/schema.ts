@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { Schema } from '../../common'
+import { Schema } from '../../../common'
 
 /**
  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/length
