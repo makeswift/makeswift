@@ -1,4 +1,2 @@
-export * as StyleSchema from './schema'
-export * from './types'
-export * from './style'
-export * from './style-control'
+export * from './v1'
+export * from './v2'

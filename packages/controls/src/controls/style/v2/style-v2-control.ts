@@ -1,7 +1,7 @@
-import { type BoxModel } from '../../common'
+import { type BoxModel } from '../../../common'
 
-import { ControlDefinition } from '../definition'
-import { ControlInstance, ControlMessage, SendMessage } from '../instance'
+import { ControlDefinition } from '../../definition'
+import { ControlInstance, ControlMessage, SendMessage } from '../../instance'
 
 type ItemBoxModelChangeMessage = {
   type: typeof StyleV2Control.CHANGE_BOX_MODEL

@@ -1,19 +1,21 @@
-import { ControlDataTypeKey } from '../../common'
-import { createReplacementContext } from '../../context'
-import { Targets } from '../../introspection'
-import { deserializeRecord, type DeserializedRecord } from '../../serialization'
-
-import { type DataType, type ValueType } from '../associated-types'
-import { Checkbox, CheckboxDefinition } from '../checkbox'
-import { Color, ColorDefinition } from '../color'
-import { Combobox } from '../combobox'
-import { ControlDefinition } from '../definition'
-import { Image } from '../image'
-import { GenericLink as Link } from '../link'
-import { List } from '../list'
-import { Number } from '../number'
-import { TextArea } from '../text-area'
-import { TextInput } from '../text-input'
+import { ControlDataTypeKey } from '../../../common'
+import { createReplacementContext } from '../../../context'
+import { Targets } from '../../../introspection'
+import {
+  deserializeRecord,
+  type DeserializedRecord,
+} from '../../../serialization'
+import { type DataType, type ValueType } from '../../associated-types'
+import { Checkbox, CheckboxDefinition } from '../../checkbox'
+import { Color, ColorDefinition } from '../../color'
+import { Combobox } from '../../combobox'
+import { ControlDefinition } from '../../definition'
+import { Image } from '../../image'
+import { GenericLink as Link } from '../../link'
+import { List } from '../../list'
+import { Number } from '../../number'
+import { TextArea } from '../../text-area'
+import { TextInput } from '../../text-input'
 
 import { ShapeV2, ShapeV2Definition } from './shape-v2'
 

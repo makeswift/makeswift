@@ -1,34 +1,33 @@
 import { match, P } from 'ts-pattern'
 import { z } from 'zod'
 
-import { mapValues, nullToUndefined } from '../../lib/functional'
-import { StableValue } from '../../lib/stable-value'
-import { safeParse, type ParseResult } from '../../lib/zod'
+import { mapValues, nullToUndefined } from '../../../lib/functional'
+import { StableValue } from '../../../lib/stable-value'
+import { safeParse, type ParseResult } from '../../../lib/zod'
 
-import { type ResponsiveValue } from '../../common'
-import { responsiveValue } from '../../common/schema'
-import { type CopyContext } from '../../context'
-import { Targets, type IntrospectionTarget } from '../../introspection'
+import { type ResponsiveValue } from '../../../common'
+import { responsiveValue } from '../../../common/schema'
+import { type CopyContext } from '../../../context'
+import { Targets, type IntrospectionTarget } from '../../../introspection'
 import {
   ResourceSchema,
   type ColorData,
   type ResolvedColorData,
-} from '../../resources'
-import { type ResourceResolver } from '../../resources/resolver'
+} from '../../../resources'
+import { type ResourceResolver } from '../../../resources/resolver'
 import {
   type DeserializedRecord,
   type SerializedRecord,
-} from '../../serialization'
-import { type Stylesheet } from '../../stylesheet'
-
-import { Color } from '../color'
+} from '../../../serialization'
+import { type Stylesheet } from '../../../stylesheet'
+import { Color } from '../../color'
 import {
   ControlDefinition,
   serialize,
   type Resolvable,
   type SchemaType,
-} from '../definition'
-import { type SendMessage } from '../instance'
+} from '../../definition'
+import { type SendMessage } from '../../instance'
 
 import * as StyleSchema from './schema'
 import { StyleControl } from './style-control'

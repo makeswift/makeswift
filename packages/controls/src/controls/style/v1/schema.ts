@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { ResourceSchema } from '../../resources'
+import { ResourceSchema } from '../../../resources'
 
 /**
  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/length
