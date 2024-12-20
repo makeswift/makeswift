@@ -59,12 +59,12 @@ describe('ShapeV2 Types', () => {
       type ConfigWithoutType = Omit<Config, 'type'>
       expectTypeOf<ConfigWithoutType>().toEqualTypeOf<{
         label?: string | undefined
-        layout: typeof ShapeV2.Layout.Popover
+        layout?: typeof ShapeV2.Layout.Popover | typeof ShapeV2.Layout.Inline
       }>()
 
       type ConfigWithoutLabel = Omit<Config, 'label'>
       expectTypeOf<ConfigWithoutLabel>().toEqualTypeOf<{
-        layout: typeof ShapeV2.Layout.Popover
+        layout?: typeof ShapeV2.Layout.Popover | typeof ShapeV2.Layout.Inline
         readonly type: {
           color: ReturnType<typeof colorFn>
           list: ReturnType<typeof listFn>
