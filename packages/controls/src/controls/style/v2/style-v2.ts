@@ -1,25 +1,24 @@
 import { z } from 'zod'
 
-import { safeParse, type ParseResult } from '../../lib/zod'
+import { safeParse, type ParseResult } from '../../../lib/zod'
 
-import { type ResponsiveValue } from '../../common'
-import { responsiveValue } from '../../common/schema'
-import { type CopyContext } from '../../context'
-import { type IntrospectionTarget } from '../../introspection'
-import { type SerializedRecord } from '../../serialization'
-
+import { type ResponsiveValue } from '../../../common'
+import { responsiveValue } from '../../../common/schema'
+import { type CopyContext } from '../../../context'
+import { type IntrospectionTarget } from '../../../introspection'
+import { type SerializedRecord } from '../../../serialization'
 import {
   type DataType as DataType_,
   type ResolvedValueType as ResolvedValueType_,
   type ValueType as ValueType_,
-} from '../associated-types'
+} from '../../associated-types'
 import {
   ControlDefinition,
   serialize,
   type SchemaType,
   type SchemaTypeAny,
-} from '../definition'
-import { type SendMessage } from '../instance'
+} from '../../definition'
+import { type SendMessage } from '../../instance'
 
 import { StyleV2Control } from './style-v2-control'
 

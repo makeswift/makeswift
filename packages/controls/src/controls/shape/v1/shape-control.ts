@@ -1,9 +1,9 @@
-import { ControlDefinition } from '../definition'
+import { ControlDefinition } from '../../definition'
 import {
   ControlInstance,
   type ControlMessage,
   type SendMessage,
-} from '../instance'
+} from '../../instance'
 
 import { ShapeDefinition } from './shape'
 
