@@ -22,6 +22,7 @@ import {
 } from '../associated-types'
 import { ControlDefinition, serialize, type SchemaType } from '../definition'
 import { type SendMessage } from '../instance'
+import { ShapeDefinition } from '../shape/shape'
 
 import { ShapeV2Control } from './shape-v2-control'
 
@@ -34,14 +35,10 @@ export type Config<Defs extends KeyDefinitions = KeyDefinitions> = {
   readonly type: Defs
 }
 
-export type ShapeV2DataTypeV0<C extends Config> = {
-  [K in keyof C['type']]?: DataType_<C['type'][K]>
-}
-
-export const ShapeV2DataTypeV1VersionId = 'shape-v2::v1' as const
+export type ShapeV2DataTypeV0<C extends Config> = DataType_<ShapeDefinition<C>>
 
 export type ShapeV2DataTypeV1<C extends Config> = {
-  [ControlDataTypeKey]: typeof ShapeV2DataTypeV1VersionId
+  [ControlDataTypeKey]: typeof Definition.v1DataType
   value: {
     [K in keyof C['type']]?: DataType_<C['type'][K]>
   }
@@ -56,7 +53,6 @@ type ValueType<C extends Config> = {
 type ResolvedValueType<C extends Config> = {
   [K in keyof C['type']]: ResolvedValueType_<C['type'][K]>
 }
-
 type InstanceType<C extends Config> = ShapeV2Control<Definition<C>>
 
 class Definition<C extends Config> extends ControlDefinition<
@@ -67,7 +63,7 @@ class Definition<C extends Config> extends ControlDefinition<
   ResolvedValueType<C>,
   InstanceType<C>
 > {
-  private static readonly v1DataType = ShapeV2DataTypeV1VersionId
+  static readonly v1DataType = 'shape-v2::v1' as const
   private static readonly dataSignature = {
     v1: { [ControlDataTypeKey]: this.v1DataType },
   } as const
@@ -171,17 +167,10 @@ class Definition<C extends Config> extends ControlDefinition<
   fromData(data: DataType<C> | undefined): ValueType<C> | undefined {
     if (data == null) return undefined
 
-    if (
-      ControlDataTypeKey in data &&
-      data[ControlDataTypeKey] === Definition.v1DataType
-    ) {
-      return mapValues(this.keyDefs, (def, key) =>
-        def.fromData((data as ShapeV2DataTypeV1<C>).value[key]),
-      )
-    }
+    const versionedData = Definition.versionData(data)
 
     return mapValues(this.keyDefs, (def, key) =>
-      def.fromData((data as ShapeV2DataTypeV0<C>)[key]),
+      def.fromData(versionedData.value[key]),
     )
   }
 
@@ -198,34 +187,20 @@ class Definition<C extends Config> extends ControlDefinition<
   ): DataType<C> | undefined {
     if (data == null) return undefined
 
-    if (
-      ControlDataTypeKey in data &&
-      data[ControlDataTypeKey] === Definition.v1DataType
-    ) {
-      return mapValues(this.keyDefs, (def, key) =>
-        def.copyData((data as ShapeV2DataTypeV1<C>).value[key], context),
-      )
-    }
+    const versionedData = Definition.versionData(data)
 
     return mapValues(this.keyDefs, (def, key) =>
-      def.copyData((data as ShapeV2DataTypeV0<C>)[key], context),
+      def.copyData(versionedData.value[key], context),
     )
   }
 
   getTranslatableData(data: DataType<C>): Data {
     if (data == null) return null
 
-    if (
-      ControlDataTypeKey in data &&
-      data[ControlDataTypeKey] === Definition.v1DataType
-    ) {
-      return mapValues(this.keyDefs, (def, key) =>
-        def.getTranslatableData((data as ShapeV2DataTypeV1<C>).value[key]),
-      )
-    }
+    const versionedData = Definition.versionData(data)
 
     return mapValues(this.keyDefs, (def, key) =>
-      def.getTranslatableData((data as ShapeV2DataTypeV0<C>)[key]),
+      def.getTranslatableData(versionedData.value[key]),
     )
   }
 
@@ -236,26 +211,28 @@ class Definition<C extends Config> extends ControlDefinition<
   ): Data {
     if (translatedData == null) return data
 
-    if (
-      ControlDataTypeKey in data &&
-      data[ControlDataTypeKey] === Definition.v1DataType
-    ) {
-      return mapValues(this.keyDefs, (def, key) =>
-        def.mergeTranslatedData(
-          (data as ShapeV2DataTypeV1<C>).value[key],
-          translatedData[key],
-          context,
-        ),
-      )
-    }
+    const versionedData = Definition.versionData(data)
 
     return mapValues(this.keyDefs, (def, key) =>
       def.mergeTranslatedData(
-        (data as ShapeV2DataTypeV0<C>)[key],
+        versionedData.value[key],
         translatedData[key],
         context,
       ),
     )
+  }
+
+  static versionData<C extends Config>(
+    data: DataType<C>,
+  ): ShapeV2DataTypeV1<C> {
+    if (data == null) return data
+    if (!(ControlDataTypeKey in data)) {
+      return {
+        [ControlDataTypeKey]: Definition.v1DataType,
+        value: data,
+      }
+    }
+    return data as ShapeV2DataTypeV1<C>
   }
 
   createInstance(sendMessage: SendMessage): InstanceType<C> {
@@ -271,51 +248,25 @@ class Definition<C extends Config> extends ControlDefinition<
   introspect<R>(data: DataType<C> | undefined, target: IntrospectionTarget<R>) {
     if (data == null) return []
 
-    if (
-      ControlDataTypeKey in data &&
-      data[ControlDataTypeKey] === Definition.v1DataType
-    ) {
-      return Object.entries(this.keyDefs).flatMap(
-        ([key, def]) =>
-          def.introspect((data as ShapeV2DataTypeV1<C>).value[key], target) ??
-          [],
-      )
-    }
+    const versionedData = Definition.versionData(data)
 
     return Object.entries(this.keyDefs).flatMap(
-      ([key, def]) =>
-        def.introspect((data as ShapeV2DataTypeV0<C>)[key], target) ?? [],
+      ([key, def]) => def.introspect(versionedData.value[key], target) ?? [],
     )
   }
 }
-
-type UserConfig<
-  D extends KeyDefinitions,
-  L extends Config['layout'],
-> = Config<D> & {
-  layout?: L
-}
-
-type NormedConfig<
-  D extends KeyDefinitions,
-  L extends Config['layout'] = Config['layout'],
-> = undefined extends L
-  ? Config<D>
-  : Pick<Config<D>, 'label' | 'type'> & {
-      layout: L
-    }
 
 export class ShapeV2Definition<
   C extends Config = Config,
 > extends Definition<C> {}
 
-export function ShapeV2<D extends KeyDefinitions, L extends Config['layout']>(
-  config: UserConfig<D, L>,
-): ShapeV2Definition<NormedConfig<D, L>> {
-  return new ShapeV2Definition<NormedConfig<D, L>>(
-    (config?.layout == null
+export function ShapeV2<D extends KeyDefinitions>(
+  config: Config<D>,
+): ShapeV2Definition<Config<D>> {
+  return new ShapeV2Definition<Config<D>>(
+    config?.layout == null
       ? { layout: Definition.Layout.Inline, ...config }
-      : config) as NormedConfig<D, L>,
+      : config,
   )
 }
 
