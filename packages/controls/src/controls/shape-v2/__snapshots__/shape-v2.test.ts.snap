@@ -2,13 +2,16 @@
 
 exports[`ShapeV2 Shape data is gracefully handles missing/extra props copyData 1`] = `
 {
-  "color": {
-    "alpha": 1,
-    "swatchId": "[swatch-id]",
+  "@@makeswift/type": "shape-v2::v1",
+  "value": {
+    "color": {
+      "alpha": 1,
+      "swatchId": "[swatch-id]",
+    },
+    "link": undefined,
+    "list": undefined,
+    "text": "Hello world",
   },
-  "link": undefined,
-  "list": undefined,
-  "text": "Hello world",
 }
 `;
 
@@ -81,13 +84,16 @@ exports[`ShapeV2 Shape data is gracefully handles missing/extra props toData 1`]
 
 exports[`ShapeV2 ShapeV2 versioned data is gracefully handles missing/extra props copyData 1`] = `
 {
-  "color": {
-    "alpha": 1,
-    "swatchId": "[swatch-id]",
+  "@@makeswift/type": "shape-v2::v1",
+  "value": {
+    "color": {
+      "alpha": 1,
+      "swatchId": "[swatch-id]",
+    },
+    "link": undefined,
+    "list": undefined,
+    "text": "Hello world",
   },
-  "link": undefined,
-  "list": undefined,
-  "text": "Hello world",
 }
 `;
 

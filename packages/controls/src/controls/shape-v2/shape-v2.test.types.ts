@@ -14,12 +14,12 @@ import { Number } from '../number'
 import { ShapeV2, ShapeV2Definition } from './shape-v2'
 
 type ExpectedShapeDataType = {
-  color?: {
+  color: {
     swatchId: string
     alpha: number
     [ControlDataTypeKey]?: 'color::v1'
   }
-  list?: {
+  list: {
     id: string
     type?: string
     value:
@@ -59,12 +59,12 @@ describe('ShapeV2 Types', () => {
       type ConfigWithoutType = Omit<Config, 'type'>
       expectTypeOf<ConfigWithoutType>().toEqualTypeOf<{
         label?: string | undefined
-        layout: typeof ShapeV2.Layout.Popover
+        layout?: typeof ShapeV2.Layout.Popover | typeof ShapeV2.Layout.Inline
       }>()
 
       type ConfigWithoutLabel = Omit<Config, 'label'>
       expectTypeOf<ConfigWithoutLabel>().toEqualTypeOf<{
-        layout: typeof ShapeV2.Layout.Popover
+        layout?: typeof ShapeV2.Layout.Popover | typeof ShapeV2.Layout.Inline
         readonly type: {
           color: ReturnType<typeof colorFn>
           list: ReturnType<typeof listFn>
@@ -83,8 +83,8 @@ describe('ShapeV2 Types', () => {
 
       type Value = ValueType<typeof def>
       expectTypeOf<Value>().toEqualTypeOf<{
-        color?: { swatchId: string; alpha: number }
-        list?: number[]
+        color: { swatchId: string; alpha: number }
+        list: number[]
       }>()
 
       type Resolved = ResolvedValueType<typeof def>
