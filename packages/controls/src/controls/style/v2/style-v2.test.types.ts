@@ -4,8 +4,8 @@ import {
   type DataType,
   type ResolvedValueType,
   type ValueType,
-} from '../associated-types'
-import { Checkbox, CheckboxDefinition } from '../checkbox'
+} from '../../associated-types'
+import { Checkbox, CheckboxDefinition } from '../../checkbox'
 
 import { StylesObject, StyleV2 } from './testing'
 

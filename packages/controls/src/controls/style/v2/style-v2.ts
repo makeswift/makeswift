@@ -1,34 +1,33 @@
 import { z } from 'zod'
 
-import { StableValue } from '../../lib/stable-value'
-import { safeParse, type ParseResult } from '../../lib/zod'
+import { StableValue } from '../../../lib/stable-value'
+import { safeParse, type ParseResult } from '../../../lib/zod'
 
 import {
   findBreakpointOverride,
   mergeOrCoalesceFallbacks,
   type Breakpoint,
-} from '../../breakpoints'
-import { type ResponsiveValue } from '../../common'
-import { responsiveValue } from '../../common/schema'
-import { type CopyContext } from '../../context'
-import { type IntrospectionTarget } from '../../introspection'
-import { type ResourceResolver } from '../../resources/resolver'
-import { type SerializedRecord } from '../../serialization'
-import { type Stylesheet } from '../../stylesheet'
-
+} from '../../../breakpoints'
+import { type ResponsiveValue } from '../../../common'
+import { responsiveValue } from '../../../common/schema'
+import { type CopyContext } from '../../../context'
+import { type IntrospectionTarget } from '../../../introspection'
+import { type ResourceResolver } from '../../../resources/resolver'
+import { type SerializedRecord } from '../../../serialization'
+import { type Stylesheet } from '../../../stylesheet'
 import {
   type DataType as DataType_,
   type ResolvedValueType as ResolvedValueType_,
   type ValueType as ValueType_,
-} from '../associated-types'
+} from '../../associated-types'
 import {
   ControlDefinition,
   serialize,
   type Resolvable,
   type SchemaType,
   type SchemaTypeAny,
-} from '../definition'
-import { type SendMessage } from '../instance'
+} from '../../definition'
+import { type SendMessage } from '../../instance'
 
 import { StyleV2Control } from './style-v2-control'
 

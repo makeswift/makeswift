@@ -1,15 +1,15 @@
 import { expectTypeOf } from 'expect-type'
 
-import { ControlDataTypeKey } from '../../common'
+import { ControlDataTypeKey } from '../../../common'
 
 import {
   type DataType,
   type ResolvedValueType,
   type ValueType,
-} from '../associated-types'
-import { Color } from '../color'
-import { List } from '../list'
-import { Number } from '../number'
+} from '../../associated-types'
+import { Color } from '../../color'
+import { List } from '../../list'
+import { Number } from '../../number'
 
 import { Shape } from './shape'
 

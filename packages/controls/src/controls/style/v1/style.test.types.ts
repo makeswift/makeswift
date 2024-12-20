@@ -4,7 +4,7 @@ import {
   type DataType,
   type ResolvedValueType,
   type ValueType,
-} from '../associated-types'
+} from '../../associated-types'
 
 import { Style } from './style'
 
