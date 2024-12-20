@@ -315,7 +315,7 @@ describe('ShapeV2', () => {
       color: { swatchId: '[swatch-id]', alpha: 1 },
       text: 'Hello world',
       extraProp: 'extra',
-    } as DataType<typeof shape>
+    } as any as DataType<typeof shape>
 
     const value = {
       color: { swatchId: '[swatch-id]', alpha: 1 },
@@ -376,7 +376,7 @@ describe('ShapeV2', () => {
         text: 'Hello world',
         extraProp: 'extra',
       },
-    } as DataType<typeof shape>
+    } as any as DataType<typeof shape>
 
     const value = {
       color: { swatchId: '[swatch-id]', alpha: 1 },
