@@ -51,6 +51,7 @@ function createMakeswiftComponentSnapshot(
   return {
     document,
     cacheData,
+    key: '00000000-0000-0000-0000-000000000000',
   }
 }
 

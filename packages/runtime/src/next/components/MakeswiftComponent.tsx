@@ -19,6 +19,7 @@ export const MakeswiftComponent = memo(({ snapshot, label, type }: Props) => {
     () =>
       componentDocumentToRootEmbeddedDocument({
         document: snapshot.document,
+        documentKey: snapshot.key,
         name: label,
         type,
       }),
