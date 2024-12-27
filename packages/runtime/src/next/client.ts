@@ -43,7 +43,6 @@ import {
 import { getMakeswiftSiteVersion, MakeswiftSiteVersion } from './preview-mode'
 import { toIterablePaginationResult } from './utils/pagination'
 import { deterministicUUID } from '../utils/deterministic-uuid'
-import { v4 as uuid } from 'uuid'
 import { Schema } from '@makeswift/controls'
 import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-only-documents'
 import { MAKESWIFT_CACHE_TAG } from './api-handler/handlers/webhook/site-published'
@@ -153,7 +152,6 @@ const makeswiftComponentDocumentFallbackSchema = z.object({
   id: z.string(),
   locale: z.string().nullable(),
   data: z.null(),
-  seed: z.string(),
 })
 
 export type MakeswiftComponentDocumentFallback = z.infer<
@@ -162,15 +160,18 @@ export type MakeswiftComponentDocumentFallback = z.infer<
 
 export type MakeswiftComponentSnapshot = {
   document: MakeswiftComponentDocument | MakeswiftComponentDocumentFallback
+  key: string
   cacheData: CacheData
 }
 
 export function componentDocumentToRootEmbeddedDocument({
   document,
+  documentKey,
   name,
   type,
 }: {
   document: MakeswiftComponentDocument | MakeswiftComponentDocumentFallback
+  documentKey: string
   name: string
   type: string
 }): EmbeddedDocument {
@@ -183,12 +184,12 @@ export function componentDocumentToRootEmbeddedDocument({
   }
 
   const rootDocument: EmbeddedDocument = {
-    key: uuid(),
+    key: documentKey,
     rootElement: rootElement ?? {
       // Fallback rootElement
       // Create a stable uuid so two different clients will have the same empty element data.
       // This is needed to make presence feature work for an element that is not yet created.
-      key: deterministicUUID({ id, locale, seed: document.seed }),
+      key: deterministicUUID({ id, locale, seed: documentKey }),
       type,
       props: {},
     },
@@ -668,18 +669,17 @@ export class Makeswift {
       siteVersion,
     )
 
+    const key = deterministicUUID({ id, locale, seed: this.apiKey.split('-').at(0) })
+
     // If the element tree is not found, we generate a document with null data
     if (response.status === 404) {
-      const apiKeyPrefix = z.string().parse(this.apiKey.split('-').at(0))
-
       return {
         document: {
           id,
           locale: locale ?? null,
           data: null,
-          // We pass the seed to generate the elementKey to make sure it's unique for each site.
-          seed: apiKeyPrefix,
         },
+        key,
         cacheData: CacheData.empty(),
       }
     }
@@ -694,7 +694,7 @@ export class Makeswift {
     const document = makeswiftComponentDocumentSchema.parse(json)
     const cacheData = await this.introspect(document.data, siteVersion, locale)
 
-    return { document, cacheData }
+    return { document, cacheData, key }
   }
 
   async getSwatch(swatchId: string, siteVersion: MakeswiftSiteVersion): Promise<Swatch | null> {
