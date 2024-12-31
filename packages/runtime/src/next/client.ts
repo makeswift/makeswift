@@ -144,6 +144,7 @@ const makeswiftComponentDocumentSchema = z.object({
   locale: z.string().nullable(),
   data: Schema.element,
   siteId: z.string(),
+  inheritsFromParent: z.boolean(),
 })
 
 export type MakeswiftComponentDocument = z.infer<typeof makeswiftComponentDocumentSchema>
@@ -158,10 +159,16 @@ export type MakeswiftComponentDocumentFallback = z.infer<
   typeof makeswiftComponentDocumentFallbackSchema
 >
 
+export type MakeswiftComponentSnapshotMetadata = {
+  allowLocaleFallback: boolean
+  requestedLocale: string | null
+}
+
 export type MakeswiftComponentSnapshot = {
   document: MakeswiftComponentDocument | MakeswiftComponentDocumentFallback
   key: string
   cacheData: CacheData
+  meta: MakeswiftComponentSnapshotMetadata
 }
 
 export function componentDocumentToRootEmbeddedDocument({
@@ -169,11 +176,13 @@ export function componentDocumentToRootEmbeddedDocument({
   documentKey,
   name,
   type,
+  meta,
 }: {
   document: MakeswiftComponentDocument | MakeswiftComponentDocumentFallback
   documentKey: string
   name: string
   type: string
+  meta: MakeswiftComponentSnapshotMetadata
 }): EmbeddedDocument {
   const { data: rootElement, locale, id } = document
 
@@ -197,6 +206,7 @@ export function componentDocumentToRootEmbeddedDocument({
     id,
     type,
     name,
+    meta,
     __type: EMBEDDED_DOCUMENT_TYPE,
   }
 
@@ -658,20 +668,33 @@ export class Makeswift {
     {
       siteVersion: siteVersionPromise,
       locale,
-    }: { siteVersion: MakeswiftSiteVersion | Promise<MakeswiftSiteVersion>; locale?: string },
+      allowLocaleFallback = true,
+    }: {
+      siteVersion: MakeswiftSiteVersion | Promise<MakeswiftSiteVersion>
+      locale?: string
+      allowLocaleFallback?: boolean
+    },
   ): Promise<MakeswiftComponentSnapshot> {
     const searchParams = new URLSearchParams()
     if (locale) searchParams.set('locale', locale)
 
     const siteVersion = await siteVersionPromise
-    const response = await this.fetch(
+    const key = deterministicUUID({ id, locale, seed: this.apiKey.split('-').at(0) })
+    const baseLocaleWasRequested = locale == null
+    const canAttemptLocaleFallback = !baseLocaleWasRequested && allowLocaleFallback
+
+    let response
+    const responseForRequestedLocale = await this.fetch(
       `v1/element-trees/${id}?${searchParams.toString()}`,
       siteVersion,
     )
 
-    const key = deterministicUUID({ id, locale, seed: this.apiKey.split('-').at(0) })
+    if (responseForRequestedLocale.status === 404 && canAttemptLocaleFallback) {
+      response = await this.fetch(`v1/element-trees/${id}`, siteVersion)
+    } else {
+      response = responseForRequestedLocale
+    }
 
-    // If the element tree is not found, we generate a document with null data
     if (response.status === 404) {
       return {
         document: {
@@ -681,11 +704,14 @@ export class Makeswift {
         },
         key,
         cacheData: CacheData.empty(),
+        meta: {
+          allowLocaleFallback,
+          requestedLocale: locale ?? null,
+        },
       }
     }
 
     const json = await response.json()
-
     if (!response.ok) {
       console.error('Failed to get page snapshot', json)
       throw new Error(`Failed to get page snapshot with error: "${response.statusText}"`)
@@ -694,7 +720,15 @@ export class Makeswift {
     const document = makeswiftComponentDocumentSchema.parse(json)
     const cacheData = await this.introspect(document.data, siteVersion, locale)
 
-    return { document, cacheData, key }
+    return {
+      document,
+      cacheData,
+      key,
+      meta: {
+        allowLocaleFallback,
+        requestedLocale: locale ?? null,
+      },
+    }
   }
 
   async getSwatch(swatchId: string, siteVersion: MakeswiftSiteVersion): Promise<Swatch | null> {
