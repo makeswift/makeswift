@@ -106,6 +106,7 @@ type DocumentPayloadEmbeddedDocument = {
   type: string
   name: string
   rootElement: Element
+  meta: { allowLocaleFallback: boolean; requestedLocale: string | null }
   __type: typeof EMBEDDED_DOCUMENT_TYPE
 }
 
