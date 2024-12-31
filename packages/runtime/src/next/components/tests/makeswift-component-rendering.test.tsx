@@ -7,6 +7,7 @@ import { ReactRuntime } from '../../../react'
 import { ReactRuntimeProvider } from '../../../runtimes/react'
 import { MakeswiftComponent } from '../MakeswiftComponent'
 import {
+  type MakeswiftComponentSnapshotMetadata,
   type MakeswiftComponentDocument,
   type MakeswiftComponentDocumentFallback,
   type MakeswiftComponentSnapshot,
@@ -39,19 +40,22 @@ const existingDocumentFixture = {
   locale: null,
   name: 'Custom Component',
   siteId: '1111-1111-1111-1111',
+  inheritsFromParent: false,
 }
 
 function createMakeswiftComponentSnapshot(
   document: MakeswiftComponentDocumentFallback | MakeswiftComponentDocument,
+  meta: MakeswiftComponentSnapshotMetadata,
   cacheData: CacheData = {
     apiResources: {},
     localizedResourcesMap: {},
   },
-) {
+): MakeswiftComponentSnapshot {
   return {
     document,
     cacheData,
     key: '00000000-0000-0000-0000-000000000000',
+    meta,
   }
 }
 
@@ -81,14 +85,20 @@ async function testMakeswiftComponentRendering(snapshot: MakeswiftComponentSnaps
 
 describe('MakeswiftComponent', () => {
   test('empty snapshot renders component with default props', async () => {
-    const snapshot = createMakeswiftComponentSnapshot(emptyDocumentFixture)
+    const snapshot = createMakeswiftComponentSnapshot(emptyDocumentFixture, {
+      allowLocaleFallback: false,
+      requestedLocale: null,
+    })
     await testMakeswiftComponentRendering(snapshot)
 
     expect(screen.queryByTestId(customComponentContentTestId)).toHaveTextContent('Default Text')
   })
 
   test('existing snapshot renders component with saved props', async () => {
-    const snapshot = createMakeswiftComponentSnapshot(existingDocumentFixture)
+    const snapshot = createMakeswiftComponentSnapshot(existingDocumentFixture, {
+      allowLocaleFallback: false,
+      requestedLocale: null,
+    })
     await testMakeswiftComponentRendering(snapshot)
 
     expect(screen.queryByTestId(customComponentContentTestId)).toHaveTextContent('Hello World')
