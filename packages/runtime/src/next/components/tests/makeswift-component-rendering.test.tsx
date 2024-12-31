@@ -43,15 +43,17 @@ const existingDocumentFixture = {
 
 function createMakeswiftComponentSnapshot(
   document: MakeswiftComponentDocumentFallback | MakeswiftComponentDocument,
+  localeFallbackOccurred: boolean,
   cacheData: CacheData = {
     apiResources: {},
     localizedResourcesMap: {},
   },
-) {
+): MakeswiftComponentSnapshot {
   return {
     document,
     cacheData,
     key: '00000000-0000-0000-0000-000000000000',
+    localeFallbackOccurred
   }
 }
 
@@ -81,14 +83,14 @@ async function testMakeswiftComponentRendering(snapshot: MakeswiftComponentSnaps
 
 describe('MakeswiftComponent', () => {
   test('empty snapshot renders component with default props', async () => {
-    const snapshot = createMakeswiftComponentSnapshot(emptyDocumentFixture)
+    const snapshot = createMakeswiftComponentSnapshot(emptyDocumentFixture, false)
     await testMakeswiftComponentRendering(snapshot)
 
     expect(screen.queryByTestId(customComponentContentTestId)).toHaveTextContent('Default Text')
   })
 
   test('existing snapshot renders component with saved props', async () => {
-    const snapshot = createMakeswiftComponentSnapshot(existingDocumentFixture)
+    const snapshot = createMakeswiftComponentSnapshot(existingDocumentFixture, false)
     await testMakeswiftComponentRendering(snapshot)
 
     expect(screen.queryByTestId(customComponentContentTestId)).toHaveTextContent('Hello World')

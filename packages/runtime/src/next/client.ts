@@ -162,6 +162,7 @@ export type MakeswiftComponentSnapshot = {
   document: MakeswiftComponentDocument | MakeswiftComponentDocumentFallback
   key: string
   cacheData: CacheData
+  localeFallbackOccurred: boolean
 }
 
 export function componentDocumentToRootEmbeddedDocument({
@@ -658,18 +659,36 @@ export class Makeswift {
     {
       siteVersion: siteVersionPromise,
       locale,
-    }: { siteVersion: MakeswiftSiteVersion | Promise<MakeswiftSiteVersion>; locale?: string },
+      allowLocaleFallback = true,
+    }: {
+      siteVersion: MakeswiftSiteVersion | Promise<MakeswiftSiteVersion>
+      locale?: string
+      allowLocaleFallback?: boolean
+    },
   ): Promise<MakeswiftComponentSnapshot> {
     const searchParams = new URLSearchParams()
     if (locale) searchParams.set('locale', locale)
 
     const siteVersion = await siteVersionPromise
-    const response = await this.fetch(
-      `v1/element-trees/${id}?${searchParams.toString()}`,
-      siteVersion,
-    )
-
     const key = deterministicUUID({ id, locale, seed: this.apiKey.split('-').at(0) })
+    const baseLocaleWasRequested = locale == null
+    const canAttemptLocaleFallback = !baseLocaleWasRequested && allowLocaleFallback
+    let localeFallbackOccurred = false
+
+    const getResponse = async () => {
+      const responseForRequestedLocale = await this.fetch(
+        `v1/element-trees/${id}?${searchParams.toString()}`,
+        siteVersion,
+      )
+      if (responseForRequestedLocale.status !== 404 || !canAttemptLocaleFallback) {
+        return responseForRequestedLocale
+      }
+      const fallbackLocaleResponse = await this.fetch(`v1/element-trees/${id}`, siteVersion)
+      localeFallbackOccurred = true
+      return fallbackLocaleResponse
+    }
+
+    const response = await getResponse()
 
     // If the element tree is not found, we generate a document with null data
     if (response.status === 404) {
@@ -681,6 +700,7 @@ export class Makeswift {
         },
         key,
         cacheData: CacheData.empty(),
+        localeFallbackOccurred: false
       }
     }
 
@@ -694,7 +714,7 @@ export class Makeswift {
     const document = makeswiftComponentDocumentSchema.parse(json)
     const cacheData = await this.introspect(document.data, siteVersion, locale)
 
-    return { document, cacheData, key }
+    return { document, cacheData, key, localeFallbackOccurred }
   }
 
   async getSwatch(swatchId: string, siteVersion: MakeswiftSiteVersion): Promise<Swatch | null> {
