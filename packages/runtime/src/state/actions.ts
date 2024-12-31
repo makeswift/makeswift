@@ -106,6 +106,7 @@ type DocumentPayloadEmbeddedDocument = {
   type: string
   name: string
   rootElement: Element
+  usingInheritedData: boolean
   __type: typeof EMBEDDED_DOCUMENT_TYPE
 }
 

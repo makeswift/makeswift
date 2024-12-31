@@ -39,19 +39,22 @@ const existingDocumentFixture = {
   locale: null,
   name: 'Custom Component',
   siteId: '1111-1111-1111-1111',
+  inheritsFromParent: false
 }
 
 function createMakeswiftComponentSnapshot(
   document: MakeswiftComponentDocumentFallback | MakeswiftComponentDocument,
+  usingInheritedData: boolean,
   cacheData: CacheData = {
     apiResources: {},
     localizedResourcesMap: {},
   },
-) {
+): MakeswiftComponentSnapshot {
   return {
     document,
     cacheData,
     key: '00000000-0000-0000-0000-000000000000',
+    usingInheritedData,
   }
 }
 
@@ -81,14 +84,14 @@ async function testMakeswiftComponentRendering(snapshot: MakeswiftComponentSnaps
 
 describe('MakeswiftComponent', () => {
   test('empty snapshot renders component with default props', async () => {
-    const snapshot = createMakeswiftComponentSnapshot(emptyDocumentFixture)
+    const snapshot = createMakeswiftComponentSnapshot(emptyDocumentFixture, false)
     await testMakeswiftComponentRendering(snapshot)
 
     expect(screen.queryByTestId(customComponentContentTestId)).toHaveTextContent('Default Text')
   })
 
   test('existing snapshot renders component with saved props', async () => {
-    const snapshot = createMakeswiftComponentSnapshot(existingDocumentFixture)
+    const snapshot = createMakeswiftComponentSnapshot(existingDocumentFixture, false)
     await testMakeswiftComponentRendering(snapshot)
 
     expect(screen.queryByTestId(customComponentContentTestId)).toHaveTextContent('Hello World')
