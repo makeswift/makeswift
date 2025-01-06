@@ -3,10 +3,7 @@ import { z } from 'zod'
 import { mapValues } from '../../../lib/functional'
 import { safeParse, type ParseResult } from '../../../lib/zod'
 
-import {
-  ControlDataTypeKey,
-  type Data,
-} from '../../../common'
+import { ControlDataTypeKey, type Data } from '../../../common'
 import {
   type CopyContext,
   type MergeTranslatableDataContext,
@@ -17,7 +14,6 @@ import {
   type DeserializedRecord,
   type SerializedRecord,
 } from '../../../serialization'
-
 import {
   type DataType as DataType_,
   type ResolvedValueType as ResolvedValueType_,
@@ -25,6 +21,7 @@ import {
 } from '../../associated-types'
 import { ControlDefinition, serialize, type SchemaType } from '../../definition'
 import { type SendMessage } from '../../instance'
+
 import { ShapeDefinition } from '../v1/shape'
 
 import { ShapeV2Control } from './shape-v2-control'
@@ -66,11 +63,11 @@ class Definition<C extends Config> extends ControlDefinition<
   ResolvedValueType<C>,
   InstanceType<C>
 > {
+  static readonly type = 'makeswift::controls::shape-v2' as const
   static readonly v1DataType = 'shape-v2::v1' as const
   private static readonly dataSignature = {
     v1: { [ControlDataTypeKey]: this.v1DataType },
   } as const
-  static readonly type = 'makeswift::controls::shape-v2' as const
 
   static readonly Layout = {
     Inline: `${this.type}::layout::inline`,
@@ -170,11 +167,9 @@ class Definition<C extends Config> extends ControlDefinition<
   fromData(data: DataType<C> | undefined): ValueType<C> | undefined {
     if (data == null) return undefined
 
-    const versionedData = Definition.versionData(data)
+    const itemsData = Definition.itemsData(data)
 
-    return mapValues(this.keyDefs, (def, key) =>
-      def.fromData(versionedData.value[key]),
-    )
+    return mapValues(this.keyDefs, (def, key) => def.fromData(itemsData[key]))
   }
 
   toData(value: ValueType<C>): DataType<C> {
@@ -190,20 +185,20 @@ class Definition<C extends Config> extends ControlDefinition<
   ): DataType<C> | undefined {
     if (data == null) return undefined
 
-    const versionedData = Definition.versionData(data)
+    const itemsData = Definition.itemsData(data)
 
     return mapValues(this.keyDefs, (def, key) =>
-      def.copyData(versionedData.value[key], context),
+      def.copyData(itemsData[key], context),
     )
   }
 
   getTranslatableData(data: DataType<C>): Data {
     if (data == null) return null
 
-    const versionedData = Definition.versionData(data)
+    const itemsData = Definition.itemsData(data)
 
     return mapValues(this.keyDefs, (def, key) =>
-      def.getTranslatableData(versionedData.value[key]),
+      def.getTranslatableData(itemsData[key]),
     )
   }
 
@@ -214,28 +209,50 @@ class Definition<C extends Config> extends ControlDefinition<
   ): Data {
     if (translatedData == null) return data
 
-    const versionedData = Definition.versionData(data)
+    const itemsData = Definition.itemsData(data)
 
     return mapValues(this.keyDefs, (def, key) =>
-      def.mergeTranslatedData(
-        versionedData.value[key],
-        translatedData[key],
-        context,
-      ),
+      def.mergeTranslatedData(itemsData[key], translatedData[key], context),
     )
   }
 
-  static versionData<C extends Config>(
+  static isShapeV2Data<C extends Config>(
+    data: DataType<C>,
+  ): data is ShapeV2DataTypeV1<C> {
+    return (
+      data != null &&
+      ControlDataTypeKey in data &&
+      data[ControlDataTypeKey] === this.v1DataType
+    )
+  }
+
+  static itemsData<C extends Config>(
+    data: DataType<C>,
+  ): ShapeV2DataTypeV1<C>['value'] {
+    if (Definition.isShapeV2Data(data)) {
+      return data.value
+    }
+
+    return data
+  }
+
+  static itemDataPath<C extends Config>(
+    data: DataType<C>,
+    key: string,
+  ): string[] {
+    return Definition.isShapeV2Data(data) ? ['value', key] : [key]
+  }
+
+  static toVersionedData<C extends Config>(
     data: DataType<C>,
   ): ShapeV2DataTypeV1<C> {
     if (data == null) return data
-    if (!(ControlDataTypeKey in data)) {
-      return {
-        [ControlDataTypeKey]: Definition.v1DataType,
-        value: data,
-      }
+    if (Definition.isShapeV2Data(data)) return data
+
+    return {
+      ...Definition.dataSignature.v1,
+      value: data,
     }
-    return data as ShapeV2DataTypeV1<C>
   }
 
   createInstance(sendMessage: SendMessage): InstanceType<C> {
@@ -251,10 +268,10 @@ class Definition<C extends Config> extends ControlDefinition<
   introspect<R>(data: DataType<C> | undefined, target: IntrospectionTarget<R>) {
     if (data == null) return []
 
-    const versionedData = Definition.versionData(data)
+    const itemsData = Definition.itemsData(data)
 
     return Object.entries(this.keyDefs).flatMap(
-      ([key, def]) => def.introspect(versionedData.value[key], target) ?? [],
+      ([key, def]) => def.introspect(itemsData[key], target) ?? [],
     )
   }
 }
