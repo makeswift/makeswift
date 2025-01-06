@@ -13,7 +13,7 @@ import '@/makeswift/components'
 export function MakeswiftProvider({
   children,
   locale = undefined,
-  previewMode = false,
+  previewMode,
 }: {
   children: ReactNode
   locale?: string

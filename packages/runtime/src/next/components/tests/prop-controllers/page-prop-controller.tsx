@@ -66,7 +66,7 @@ export const pagePropControllerTest = <
 
       await act(async () =>
         render(
-          <ReactRuntimeProvider runtime={runtime}>
+          <ReactRuntimeProvider runtime={runtime} previewMode={false}>
             <Page snapshot={snapshot} />
           </ReactRuntimeProvider>,
         ),
@@ -107,7 +107,7 @@ export const pagePropControllerTest = <
 
       await act(async () =>
         render(
-          <ReactRuntimeProvider runtime={runtime}>
+          <ReactRuntimeProvider runtime={runtime} previewMode={false}>
             <Page snapshot={snapshot} />
           </ReactRuntimeProvider>,
         ),
