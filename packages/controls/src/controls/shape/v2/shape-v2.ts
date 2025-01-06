@@ -71,11 +71,11 @@ class Definition<C extends Config> extends ControlDefinition<
   ResolvedValueType<C>,
   InstanceType<C>
 > {
+  static readonly type = 'makeswift::controls::shape-v2' as const
   static readonly v1DataType = 'shape-v2::v1' as const
   private static readonly dataSignature = {
     v1: { [ControlDataTypeKey]: this.v1DataType },
   } as const
-  static readonly type = 'makeswift::controls::shape-v2' as const
 
   static readonly Layout = {
     Inline: `${this.type}::layout::inline`,
@@ -298,6 +298,13 @@ class Definition<C extends Config> extends ControlDefinition<
     }
 
     return data
+  }
+
+  static propDataPath<C extends Config>(
+    data: DataType<C>,
+    key: string,
+  ): string[] {
+    return Definition.isVersionedData(data) ? ['value', key] : [key]
   }
 
   private static isVersionedData<C extends Config>(
