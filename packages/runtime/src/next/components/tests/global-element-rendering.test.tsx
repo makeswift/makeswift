@@ -206,7 +206,7 @@ async function testGlobalElementRendering({ locale }: { locale: string | null })
   // Assert
   await act(async () =>
     render(
-      <ReactRuntimeProvider runtime={runtime}>
+      <ReactRuntimeProvider runtime={runtime} previewMode={false}>
         <Page snapshot={snapshot} />
       </ReactRuntimeProvider>,
     ),
