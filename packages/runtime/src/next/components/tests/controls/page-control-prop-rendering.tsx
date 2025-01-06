@@ -101,7 +101,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
   // Assert
   await act(async () =>
     render(
-      <ReactRuntimeProvider runtime={runtime}>
+      <ReactRuntimeProvider runtime={runtime} previewMode={false}>
         <Page snapshot={snapshot} />
       </ReactRuntimeProvider>,
     ),

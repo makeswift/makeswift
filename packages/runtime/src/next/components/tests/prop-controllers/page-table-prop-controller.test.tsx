@@ -62,7 +62,7 @@ describe('Page', () => {
 
     await act(async () =>
       render(
-        <ReactRuntimeProvider runtime={runtime}>
+        <ReactRuntimeProvider runtime={runtime} previewMode={false}>
           <Page snapshot={snapshot} />
         </ReactRuntimeProvider>,
       ),
@@ -112,7 +112,7 @@ describe('Page', () => {
 
     await act(async () =>
       render(
-        <ReactRuntimeProvider runtime={runtime}>
+        <ReactRuntimeProvider runtime={runtime} previewMode={false}>
           <Page snapshot={snapshot} />
         </ReactRuntimeProvider>,
       ),
