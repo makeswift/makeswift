@@ -13,13 +13,13 @@ const PreviewProvider = lazy(() => import('./PreviewProvider'))
 export function ReactRuntimeProvider({
   children,
   runtime,
-  previewMode = false,
+  previewMode,
   apiOrigin = 'https://api.makeswift.com',
   locale = undefined,
 }: {
   children: ReactNode
   runtime: ReactRuntime
-  previewMode?: boolean
+  previewMode: boolean
   apiOrigin?: string
   locale?: string
 }) {
