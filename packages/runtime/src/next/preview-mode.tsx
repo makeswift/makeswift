@@ -56,10 +56,13 @@ if (window.parent !== window) {
           if (new URL(request.url).origin !== window.location.origin) {
             return originalFetch.call(this, resource, options)
           }
+          
+          const newHeaders = new Headers(request.headers)
+          newHeaders.set(headerName, secret)
 
           return originalFetch.call(
             this,
-            new Request(request, { headers: { [headerName]: secret } }),
+            new Request(request, { headers: newHeaders })
           )
         }
       }
