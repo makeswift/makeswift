@@ -7,6 +7,7 @@ import { ReactRuntime } from '../../../react'
 import { ReactRuntimeProvider } from '../../../runtimes/react'
 import { MakeswiftComponent } from '../MakeswiftComponent'
 import {
+  MakeswiftComponentSnapshotConfig,
   type MakeswiftComponentDocument,
   type MakeswiftComponentDocumentFallback,
   type MakeswiftComponentSnapshot,
@@ -39,12 +40,12 @@ const existingDocumentFixture = {
   locale: null,
   name: 'Custom Component',
   siteId: '1111-1111-1111-1111',
-  inheritsFromParent: false
+  inheritsFromParent: false,
 }
 
 function createMakeswiftComponentSnapshot(
   document: MakeswiftComponentDocumentFallback | MakeswiftComponentDocument,
-  usingInheritedData: boolean,
+  config: MakeswiftComponentSnapshotConfig,
   cacheData: CacheData = {
     apiResources: {},
     localizedResourcesMap: {},
@@ -54,7 +55,7 @@ function createMakeswiftComponentSnapshot(
     document,
     cacheData,
     key: '00000000-0000-0000-0000-000000000000',
-    usingInheritedData,
+    config,
   }
 }
 
@@ -84,14 +85,20 @@ async function testMakeswiftComponentRendering(snapshot: MakeswiftComponentSnaps
 
 describe('MakeswiftComponent', () => {
   test('empty snapshot renders component with default props', async () => {
-    const snapshot = createMakeswiftComponentSnapshot(emptyDocumentFixture, false)
+    const snapshot = createMakeswiftComponentSnapshot(emptyDocumentFixture, {
+      allowLocaleFallback: false,
+      requestedLocale: null,
+    })
     await testMakeswiftComponentRendering(snapshot)
 
     expect(screen.queryByTestId(customComponentContentTestId)).toHaveTextContent('Default Text')
   })
 
   test('existing snapshot renders component with saved props', async () => {
-    const snapshot = createMakeswiftComponentSnapshot(existingDocumentFixture, false)
+    const snapshot = createMakeswiftComponentSnapshot(existingDocumentFixture, {
+      allowLocaleFallback: false,
+      requestedLocale: null,
+    })
     await testMakeswiftComponentRendering(snapshot)
 
     expect(screen.queryByTestId(customComponentContentTestId)).toHaveTextContent('Hello World')

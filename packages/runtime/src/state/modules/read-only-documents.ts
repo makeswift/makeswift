@@ -1,5 +1,6 @@
 import { type Element } from '@makeswift/controls'
 import { Action, ActionTypes } from '../actions'
+import { MakeswiftComponentSnapshotConfig } from '../../next/client'
 
 export {
   type Data,
@@ -32,7 +33,7 @@ export type EmbeddedDocument = {
   type: string
   name: string
   rootElement: Element
-  usingInheritedData: boolean
+  config: MakeswiftComponentSnapshotConfig
   __type: typeof EMBEDDED_DOCUMENT_TYPE
 }
 

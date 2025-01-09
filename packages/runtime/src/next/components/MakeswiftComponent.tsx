@@ -22,7 +22,7 @@ export const MakeswiftComponent = memo(({ snapshot, label, type }: Props) => {
         documentKey: snapshot.key,
         name: label,
         type,
-        usingInheritedData: snapshot.usingInheritedData,
+        config: snapshot.config,
       }),
     [snapshot, label, type],
   )

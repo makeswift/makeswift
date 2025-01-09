@@ -144,7 +144,7 @@ const makeswiftComponentDocumentSchema = z.object({
   locale: z.string().nullable(),
   data: Schema.element,
   siteId: z.string(),
-  inheritsFromParent: z.boolean()
+  inheritsFromParent: z.boolean(),
 })
 
 export type MakeswiftComponentDocument = z.infer<typeof makeswiftComponentDocumentSchema>
@@ -159,11 +159,16 @@ export type MakeswiftComponentDocumentFallback = z.infer<
   typeof makeswiftComponentDocumentFallbackSchema
 >
 
+export type MakeswiftComponentSnapshotConfig = {
+  allowLocaleFallback: boolean
+  requestedLocale: string | null
+}
+
 export type MakeswiftComponentSnapshot = {
   document: MakeswiftComponentDocument | MakeswiftComponentDocumentFallback
   key: string
   cacheData: CacheData
-  usingInheritedData: boolean
+  config: MakeswiftComponentSnapshotConfig
 }
 
 export function componentDocumentToRootEmbeddedDocument({
@@ -171,13 +176,13 @@ export function componentDocumentToRootEmbeddedDocument({
   documentKey,
   name,
   type,
-  usingInheritedData,
+  config,
 }: {
   document: MakeswiftComponentDocument | MakeswiftComponentDocumentFallback
   documentKey: string
   name: string
   type: string
-  usingInheritedData: boolean
+  config: MakeswiftComponentSnapshotConfig
 }): EmbeddedDocument {
   const { data: rootElement, locale, id } = document
 
@@ -201,7 +206,7 @@ export function componentDocumentToRootEmbeddedDocument({
     id,
     type,
     name,
-    usingInheritedData,
+    config,
     __type: EMBEDDED_DOCUMENT_TYPE,
   }
 
@@ -677,24 +682,19 @@ export class Makeswift {
     const key = deterministicUUID({ id, locale, seed: this.apiKey.split('-').at(0) })
     const baseLocaleWasRequested = locale == null
     const canAttemptLocaleFallback = !baseLocaleWasRequested && allowLocaleFallback
-    let localeFallbackOccurred = false
 
-    const getResponse = async () => {
-      const responseForRequestedLocale = await this.fetch(
-        `v1/element-trees/${id}?${searchParams.toString()}`,
-        siteVersion,
-      )
-      if (responseForRequestedLocale.status !== 404 || !canAttemptLocaleFallback) {
-        return responseForRequestedLocale
-      }
-      const fallbackLocaleResponse = await this.fetch(`v1/element-trees/${id}`, siteVersion)
-      localeFallbackOccurred = true
-      return fallbackLocaleResponse
+    let response
+    const responseForRequestedLocale = await this.fetch(
+      `v1/element-trees/${id}?${searchParams.toString()}`,
+      siteVersion,
+    )
+
+    if (responseForRequestedLocale.status === 404 && canAttemptLocaleFallback) {
+      response = await this.fetch(`v1/element-trees/${id}`, siteVersion)
+    } else {
+      response = responseForRequestedLocale
     }
 
-    const response = await getResponse()
-
-    // If no element tree was found, we generate a document with null data
     if (response.status === 404) {
       return {
         document: {
@@ -704,12 +704,14 @@ export class Makeswift {
         },
         key,
         cacheData: CacheData.empty(),
-        usingInheritedData: false,
+        config: {
+          allowLocaleFallback,
+          requestedLocale: locale ?? null,
+        },
       }
     }
 
     const json = await response.json()
-
     if (!response.ok) {
       console.error('Failed to get page snapshot', json)
       throw new Error(`Failed to get page snapshot with error: "${response.statusText}"`)
@@ -718,14 +720,15 @@ export class Makeswift {
     const document = makeswiftComponentDocumentSchema.parse(json)
     const cacheData = await this.introspect(document.data, siteVersion, locale)
 
-    /*
-      There are two cases when 'usingInheritedData' should be true:
-      - when the requested tree did not exist for the requested locale, so we sent a subsequent request for the base locale's tree
-      - when the requested tree exists for the requested locale, and is marked in the db as inheriting
-    */
-    const usingInheritedData = (localeFallbackOccurred || document.inheritsFromParent)
-
-    return { document: {...document, locale: locale ?? null}, cacheData, key, usingInheritedData }
+    return {
+      document,
+      cacheData,
+      key,
+      config: {
+        allowLocaleFallback,
+        requestedLocale: locale ?? null,
+      },
+    }
   }
 
   async getSwatch(swatchId: string, siteVersion: MakeswiftSiteVersion): Promise<Swatch | null> {

@@ -83,7 +83,7 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
       },
       locale: baseLocale,
       siteId: 'mySiteId',
-      inheritsFromParent: false
+      inheritsFromParent: false,
     }
 
     /*
@@ -118,7 +118,7 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
     expect(result.document).not.toBeNull()
     expect(result.document.data).not.toBeNull()
     expect(result.document.data?.key).toBe(elementTreeKey)
-    expect(result.document.locale).toBe(localeToTest)
+    expect(result.document.locale).toBeNull()
   }),
     test('does not perform locale fallback after receiving a 404 response for a locale variant tree, when allowFallback is false', async () => {
       // Arrange
@@ -140,7 +140,7 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
         },
         locale: baseLocale,
         siteId: 'mySiteId',
-        inheritsFromParent: false
+        inheritsFromParent: false,
       }
 
       /*
@@ -197,7 +197,7 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
         },
         locale: localeToTest,
         siteId: 'mySiteId',
-        inheritsFromParent: false
+        inheritsFromParent: false,
       }
 
       /*
