@@ -33,7 +33,7 @@ export type EmbeddedDocument = {
   type: string
   name: string
   rootElement: Element
-  config: MakeswiftComponentSnapshotRequestConfig
+  meta: MakeswiftComponentSnapshotRequestConfig
   __type: typeof EMBEDDED_DOCUMENT_TYPE
 }
 

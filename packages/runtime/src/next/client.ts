@@ -168,7 +168,7 @@ export type MakeswiftComponentSnapshot = {
   document: MakeswiftComponentDocument | MakeswiftComponentDocumentFallback
   key: string
   cacheData: CacheData
-  requestConfig: MakeswiftComponentSnapshotRequestConfig
+  meta: MakeswiftComponentSnapshotRequestConfig
 }
 
 export function componentDocumentToRootEmbeddedDocument({
@@ -176,13 +176,13 @@ export function componentDocumentToRootEmbeddedDocument({
   documentKey,
   name,
   type,
-  config,
+  meta,
 }: {
   document: MakeswiftComponentDocument | MakeswiftComponentDocumentFallback
   documentKey: string
   name: string
   type: string
-  config: MakeswiftComponentSnapshotRequestConfig
+  meta: MakeswiftComponentSnapshotRequestConfig
 }): EmbeddedDocument {
   const { data: rootElement, locale, id } = document
 
@@ -206,7 +206,7 @@ export function componentDocumentToRootEmbeddedDocument({
     id,
     type,
     name,
-    config,
+    meta,
     __type: EMBEDDED_DOCUMENT_TYPE,
   }
 
@@ -704,7 +704,7 @@ export class Makeswift {
         },
         key,
         cacheData: CacheData.empty(),
-        requestConfig: {
+        meta: {
           allowLocaleFallback,
           requestedLocale: locale ?? null,
         },
@@ -724,7 +724,7 @@ export class Makeswift {
       document,
       cacheData,
       key,
-      requestConfig: {
+      meta: {
         allowLocaleFallback,
         requestedLocale: locale ?? null,
       },

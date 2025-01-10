@@ -45,7 +45,7 @@ const existingDocumentFixture = {
 
 function createMakeswiftComponentSnapshot(
   document: MakeswiftComponentDocumentFallback | MakeswiftComponentDocument,
-  requestConfig: MakeswiftComponentSnapshotRequestConfig,
+  meta: MakeswiftComponentSnapshotRequestConfig,
   cacheData: CacheData = {
     apiResources: {},
     localizedResourcesMap: {},
@@ -55,7 +55,7 @@ function createMakeswiftComponentSnapshot(
     document,
     cacheData,
     key: '00000000-0000-0000-0000-000000000000',
-    requestConfig,
+    meta,
   }
 }
 
