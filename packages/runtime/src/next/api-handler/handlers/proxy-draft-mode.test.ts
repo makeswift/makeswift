@@ -2,11 +2,65 @@ import { NextRequest } from 'next/server'
 import { http, HttpResponse } from 'msw'
 import { server } from '../../../mocks/server'
 import proxyDraftMode from './proxy-draft-mode'
+import { env } from 'process';
 
 jest.mock('next/headers', () => ({
   draftMode: jest.fn().mockReturnValue({ enable: jest.fn(), disable: jest.fn() }),
   cookies: jest.fn().mockReturnValue({ get: jest.fn() }),
 }))
+
+describe('ForceHTTP proxyDraftMode URL handling', () => {
+  const mockApiKey = 'test-api-key'
+  
+  server.use(
+    http.all('*', () => {
+      return new HttpResponse()
+    })
+  )
+
+  beforeAll(() => {
+    server.listen()
+  })
+
+  afterAll(() => {
+    server.close()
+  })
+
+  afterEach(() => {
+    server.resetHandlers()
+    jest.clearAllMocks()
+  })
+
+  it('should force protocol to http and use host from `host` from headers instead of `x-forwarded-host`', async () => {
+    const originalUrl = new URL(`https://example.com?x-makeswift-draft-mode=${mockApiKey}&keep=this`)
+    
+    const request = new NextRequest(originalUrl)
+    request.headers.append("X-Makeswift-Draft-Mode",mockApiKey )
+    request.headers.append("x-forwarded-host", "localhost:3000")
+
+    const originalProtocol = request.nextUrl.protocol
+    await proxyDraftMode(request, { params: {} }, { apiKey: mockApiKey })
+
+
+    // Make sure original request is not changed.
+    expect(request.nextUrl.protocol).toBe(originalProtocol)
+
+    // Verify fetch was called with modified URL
+    expect(global.fetch).toHaveBeenCalled()
+    const fetchCall = (global.fetch as jest.Mock).mock.calls[0][0] as NextRequest
+    
+    // Verify host is same as original host.
+    expect(fetchCall.headers.get('host')).toBe(request.headers.get('host'))
+    
+    // Verify https was replaced with http after force_http
+    expect(fetchCall.nextUrl.protocol).toBe('http:')
+    expect(fetchCall.headers.has('X-Makeswift-Draft-Mode')).toBe(false)
+    expect(fetchCall.nextUrl.searchParams.has('x-makeswift-draft-mode')).toBe(false)
+    expect(fetchCall.nextUrl.searchParams.get('keep')).toBe('this')
+    
+  })
+
+})
 
 describe('proxyDraftMode URL handling', () => {
   const mockApiKey = 'test-api-key'
