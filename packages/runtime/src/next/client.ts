@@ -159,7 +159,7 @@ export type MakeswiftComponentDocumentFallback = z.infer<
   typeof makeswiftComponentDocumentFallbackSchema
 >
 
-export type MakeswiftComponentSnapshotRequestConfig = {
+export type MakeswiftComponentSnapshotMetadata = {
   allowLocaleFallback: boolean
   requestedLocale: string | null
 }
@@ -168,7 +168,7 @@ export type MakeswiftComponentSnapshot = {
   document: MakeswiftComponentDocument | MakeswiftComponentDocumentFallback
   key: string
   cacheData: CacheData
-  meta: MakeswiftComponentSnapshotRequestConfig
+  meta: MakeswiftComponentSnapshotMetadata
 }
 
 export function componentDocumentToRootEmbeddedDocument({
@@ -182,7 +182,7 @@ export function componentDocumentToRootEmbeddedDocument({
   documentKey: string
   name: string
   type: string
-  meta: MakeswiftComponentSnapshotRequestConfig
+  meta: MakeswiftComponentSnapshotMetadata
 }): EmbeddedDocument {
   const { data: rootElement, locale, id } = document
 

@@ -7,7 +7,7 @@ import { ReactRuntime } from '../../../react'
 import { ReactRuntimeProvider } from '../../../runtimes/react'
 import { MakeswiftComponent } from '../MakeswiftComponent'
 import {
-  type MakeswiftComponentSnapshotRequestConfig,
+  type MakeswiftComponentSnapshotMetadata,
   type MakeswiftComponentDocument,
   type MakeswiftComponentDocumentFallback,
   type MakeswiftComponentSnapshot,
@@ -45,7 +45,7 @@ const existingDocumentFixture = {
 
 function createMakeswiftComponentSnapshot(
   document: MakeswiftComponentDocumentFallback | MakeswiftComponentDocument,
-  meta: MakeswiftComponentSnapshotRequestConfig,
+  meta: MakeswiftComponentSnapshotMetadata,
   cacheData: CacheData = {
     apiResources: {},
     localizedResourcesMap: {},
