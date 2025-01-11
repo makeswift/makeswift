@@ -9,6 +9,8 @@ import {
   RichTextV2Control,
   ColorDefinition,
   ComboboxDefinition,
+  GroupDefinition,
+  FontDefinition,
   IconRadioGroupDefinition,
   ImageDefinition,
   LinkDefinition,
@@ -25,8 +27,6 @@ import {
   TextAreaDefinition,
   TextInputDefinition,
   unstable_TypographyDefinition,
-  FontDefinition,
-  ShapeV2Definition,
 } from '../../controls'
 
 import { isLegacyDescriptor } from '../../prop-controllers/descriptors'
@@ -78,21 +78,21 @@ export function PropsValue({ element, children }: PropsValueProps): JSX.Element 
 
         switch (descriptor.controlType) {
           case CheckboxDefinition.type:
-          case NumberDefinition.type:
-          case TextInputDefinition.type:
-          case TextAreaDefinition.type:
-          case SelectDefinition.type:
           case ColorDefinition.type:
+          case ComboboxDefinition.type:
+          case FontDefinition.type:
+          case GroupDefinition.type:
           case IconRadioGroupDefinition.type:
           case ImageDefinition.type:
-          case ComboboxDefinition.type:
-          case ShapeDefinition.type:
-          case ListDefinition.type:
           case LinkDefinition.type:
+          case ListDefinition.type:
+          case NumberDefinition.type:
+          case SelectDefinition.type:
+          case ShapeDefinition.type:
           case StyleV2Definition.type:
+          case TextAreaDefinition.type:
+          case TextInputDefinition.type:
           case unstable_TypographyDefinition.type:
-          case FontDefinition.type:
-          case ShapeV2Definition.type:
             return (
               <ControlValue
                 definition={descriptor}

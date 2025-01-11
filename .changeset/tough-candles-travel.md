@@ -70,6 +70,10 @@ const handler = MakeswiftApiHandler(MAKESWIFT_SITE_API_KEY, {
             weight: '700',
             style: 'normal',
           },
+          {
+            weight: '900',
+            style: 'normal',
+          },
         ],
       },
     ]

@@ -2,20 +2,20 @@ import { Ref, forwardRef } from 'react'
 
 type Props = {
   className?: string
-  shapev2: {
+  group: {
     text?: string
     checkbox?: boolean
     color?: string
   }
-  shapev2popover: {
+  groupPopover: {
     text?: string
     checkbox?: boolean
     color?: string
   }
 }
 
-export const FontControlDemo = forwardRef(function FontControlDemo(
-  { className, shapev2, shapev2popover }: Props,
+export const GroupDemo = forwardRef(function FontControlDemo(
+  { className, group, groupPopover }: Props,
   ref: Ref<HTMLDivElement>,
 ) {
   return (
@@ -23,31 +23,31 @@ export const FontControlDemo = forwardRef(function FontControlDemo(
       className={'flex flex-col p-3 gap-3 w-full text-xl' + ' ' + className}
       ref={ref}
     >
-      <div>Text: {shapev2.text}</div>
-      <div>Checkbox: {shapev2.checkbox + ''}</div>
+      <div>Text: {group.text}</div>
+      <div>Checkbox: {group.checkbox + ''}</div>
       <div className="flex flex-row gap-2">
         Color:{' '}
         <div
           className="w-10 h-10"
-          style={{ backgroundColor: shapev2.color }}
+          style={{ backgroundColor: group.color }}
         ></div>
       </div>
 
-      <div>Text: {shapev2popover.text}</div>
-      <div>Checkbox: {shapev2popover.checkbox + ''}</div>
+      <div>Text: {groupPopover.text}</div>
+      <div>Checkbox: {groupPopover.checkbox + ''}</div>
       <div className="flex flex-row gap-2">
         Color:{' '}
         <div
           className="w-10 h-10"
-          style={{ backgroundColor: shapev2popover.color }}
+          style={{ backgroundColor: groupPopover.color }}
         ></div>
       </div>
 
       <pre className="text-sm">
         {JSON.stringify(
           {
-            shapev2,
-            shapev2popover,
+            group,
+            groupPopover,
           },
           null,
           2,
@@ -57,4 +57,4 @@ export const FontControlDemo = forwardRef(function FontControlDemo(
   )
 })
 
-export default FontControlDemo
+export default GroupDemo

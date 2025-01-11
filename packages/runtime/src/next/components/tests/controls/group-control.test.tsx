@@ -1,5 +1,5 @@
 /** @jest-environment jsdom */
-import { Checkbox, Color, Image, List, ShapeV2 } from '@makeswift/controls'
+import { Checkbox, Color, Image, List, Group } from '@makeswift/controls'
 import { testPageControlPropRendering } from './page-control-prop-rendering'
 import { APIResourceType } from '../../../../api'
 
@@ -7,10 +7,10 @@ const swatchId = '[swatch-test-id]'
 const fileId = '[file-test-id]'
 
 describe('Page', () => {
-  test('ShapeV2 (heterogenous properties)', async () => {
+  test('Group (heterogenous properties)', async () => {
     await testPageControlPropRendering(
-      ShapeV2({
-        type: {
+      Group({
+        props: {
           checkbox: Checkbox({ defaultValue: true }),
           color: Color({ defaultValue: 'rgb(255,0,0)' }),
           image: Image({ format: Image.Format.WithDimensions }),
@@ -18,8 +18,8 @@ describe('Page', () => {
           list: List({
             type: Checkbox({ defaultValue: true }),
           }),
-          shape: ShapeV2({
-            type: {
+          shape: Group({
+            props: {
               checkbox: Checkbox({ defaultValue: true }),
             },
           }),
