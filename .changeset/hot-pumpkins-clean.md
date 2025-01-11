@@ -1,26 +1,40 @@
 ---
-'@makeswift/controls': minor
-'@makeswift/runtime': minor
+'@makeswift/controls': patch
+'@makeswift/runtime': patch
 ---
 
-## Breaking change
+### New `Group` control
 
-### Updated `Shape` control
+We are introducing a new control called `Group`, designed to be a more versatile replacement for the `Shape` control, which has been deprecated and will be removed in a future release.
 
-The `Shape` control has been updated with two new params `label` and `layout`.
+The `Group` control offers an improved visual hierarchy for grouped controls when rendered in the Makeswift builder, along with new options for specifying the group label and preferred layout.
+
+The `Group` control options are:
 
 - `label?: string = "Group"`
-  - Text for the panel label in the Makeswift builder.
-  - This `label` defaults to "Group."
-- `layout?: Shape.Layout.Inline | Shape.Layout.Popover = Shape.Layout.Popover`
-  - The configuration for how panels are rendered in the Properties Sidebar.
-  - The `Inline` option is the default and it is similar to the current rendering style of the `Shape` popover.
-  - The `Popover` option is a new rendering style that only shows your label with a button in the current context. When this button is clicked a popover opens to the left revealing the controls within your `Shape`.
 
-### How to migrate
+  - The label for the group panel in the Makeswift builder. Defaults to `"Group"`.
 
-This change is listed as breaking change because it visually changes how your panels are rendered and we no longer support the old version. Upgrading `@makeswift/runtime` to this version will update how the Properties Sidebar looks for a `Shape` control to include a `label` and have a better visual hierarchy.
+- `preferredLayout?: Group.Layout.Inline | Group.Layout.Popover = Group.Layout.Popover`
 
-This breaking change doesn't require any code changes, but we do suggest adding descriptive labels since the `Shape` control's `label` will default to `"Group"`.
+  - The preferred layout for the group in the Makeswift builder. Note that the builder may override this preference to optimize the user experience. Possible values include:
 
-For more details on this change read [the docs](https://docs.makeswift.com/developer/reference/controls/shape) on our `Shape` control.
+    - `Group.Layout.Inline`: Renders the group properties within the parent panel, visually grouping them to reflect the hierarchy. This is the default if no explicit value is provided.
+
+    - `Group.Layout.Popover`: Renders the group properties in a standalone popover panel.
+
+- `props: Record<string, ControlDefinition>`
+
+  - An object record defining the controls being grouped. This can include any of the Makeswift controls, including other groups. For example:
+
+  ```typescript
+  Group({
+    props: {
+      text: Color({ label: 'Text' }),
+      background: Color({ label: 'Background' }),
+      dismissable: Checkbox({ label: 'Can be dismissed?' }),
+    },
+  })
+  ```
+
+For full documentation, visit the [`Group` control reference page](https://docs.makeswift.com/developer/reference/controls/group).

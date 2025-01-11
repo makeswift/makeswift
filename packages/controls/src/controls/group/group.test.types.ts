@@ -1,19 +1,19 @@
 import { expectTypeOf } from 'expect-type'
 
-import { ControlDataTypeKey } from '../../../common'
+import { ControlDataTypeKey } from '../../common'
 
 import {
   type DataType,
   type ResolvedValueType,
   type ValueType,
-} from '../../associated-types'
-import { Color } from '../../color'
-import { List } from '../../list'
-import { Number } from '../../number'
+} from '../associated-types'
+import { Color } from '../color'
+import { List } from '../list'
+import { Number } from '../number'
 
-import { ShapeV2, ShapeV2Definition } from './shape-v2'
+import { Group, GroupDefinition } from './group'
 
-type ExpectedShapeDataType = {
+type ExpectedPropsDataType = {
   color?: {
     swatchId: string
     alpha: number
@@ -31,19 +31,19 @@ type ExpectedShapeDataType = {
   }[]
 }
 
-describe('ShapeV2 Types', () => {
+describe('Group Types', () => {
   describe('infers types from control function', () => {
-    test('ShapeV2 {Color, List<Number>}', () => {
+    test('Group {Color, List<Number>}', () => {
       const colorDef = Color()
       const numberListDef = List({ type: Number({ defaultValue: 0 }) })
 
       const colorFn = () => colorDef
       const listFn = () => numberListDef
 
-      const def = ShapeV2({
+      const def = Group({
         label: 'Group',
-        layout: ShapeV2.Layout.Popover,
-        type: {
+        preferredLayout: Group.Layout.Popover,
+        props: {
           color: Color(),
           list: List({
             type: Number({ defaultValue: 0 }),
@@ -56,16 +56,20 @@ describe('ShapeV2 Types', () => {
       // Something about using expectTypeOf on the entire config causes a strange typescript error.
       // The type of `label` changes when `type` is included.
       // We are individually testing different overlapping subsets to work around this.
-      type ConfigWithoutType = Omit<Config, 'type'>
+      type ConfigWithoutType = Omit<Config, 'props'>
       expectTypeOf<ConfigWithoutType>().toEqualTypeOf<{
-        label?: string | undefined
-        layout?: typeof ShapeV2.Layout.Popover | typeof ShapeV2.Layout.Inline
+        readonly label?: string | undefined
+        readonly preferredLayout?:
+          | typeof Group.Layout.Popover
+          | typeof Group.Layout.Inline
       }>()
 
       type ConfigWithoutLabel = Omit<Config, 'label'>
       expectTypeOf<ConfigWithoutLabel>().toEqualTypeOf<{
-        layout?: typeof ShapeV2.Layout.Popover | typeof ShapeV2.Layout.Inline
-        readonly type: {
+        readonly preferredLayout?:
+          | typeof Group.Layout.Popover
+          | typeof Group.Layout.Inline
+        readonly props: {
           color: ReturnType<typeof colorFn>
           list: ReturnType<typeof listFn>
         }
@@ -75,10 +79,10 @@ describe('ShapeV2 Types', () => {
 
       expectTypeOf<Data>().toEqualTypeOf<
         | {
-            [ControlDataTypeKey]: 'shape-v2::v1'
-            value: ExpectedShapeDataType
+            [ControlDataTypeKey]: 'group::v1' | 'shape-v2::v1'
+            value: ExpectedPropsDataType
           }
-        | ExpectedShapeDataType
+        | ExpectedPropsDataType
       >()
 
       type Value = ValueType<typeof def>
@@ -96,12 +100,12 @@ describe('ShapeV2 Types', () => {
   })
 
   test('infers types from control definition', () => {
-    type def = ShapeV2Definition
+    type def = GroupDefinition
 
     type Data = DataType<def>
     expectTypeOf<Data>().toEqualTypeOf<
       | {
-          [ControlDataTypeKey]: 'shape-v2::v1'
+          [ControlDataTypeKey]: 'group::v1' | 'shape-v2::v1'
           value: { [key: string]: any }
         }
       | { [key: string]: any }

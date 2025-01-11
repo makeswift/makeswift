@@ -3,8 +3,6 @@ import {
   type DataType,
   type ResolvedValueType,
   type InstanceType,
-  FontDefinition,
-  ShapeV2Definition,
 } from '@makeswift/controls'
 
 import {
@@ -13,6 +11,8 @@ import {
   RichTextV2Definition,
   ColorDefinition,
   ComboboxDefinition,
+  FontDefinition,
+  GroupDefinition,
   IconRadioGroupDefinition,
   ImageDefinition,
   LinkDefinition,
@@ -42,7 +42,7 @@ import { useSlot } from './slot'
 import { useFormattedStyle } from './style'
 import { StyleV2ControlValue } from './style-v2'
 import { useTypographyValue } from './typography'
-import { ShapeV2ControlValue } from './shape-v2'
+import { GroupControlValue } from './group'
 
 type ControlValueProps = {
   definition: ControlDefinition
@@ -133,15 +133,15 @@ export function ControlValue({
         </ShapeControlValue>
       )
 
-    case ShapeV2Definition.type:
+    case GroupDefinition.type:
       return (
-        <ShapeV2ControlValue
-          definition={definition as ShapeV2Definition}
-          data={data as DataType<ShapeV2Definition>}
-          control={control as InstanceType<ShapeV2Definition>}
+        <GroupControlValue
+          definition={definition as GroupDefinition}
+          data={data as DataType<GroupDefinition>}
+          control={control as InstanceType<GroupDefinition>}
         >
           {value => children(value)}
-        </ShapeV2ControlValue>
+        </GroupControlValue>
       )
 
     case ListDefinition.type:
