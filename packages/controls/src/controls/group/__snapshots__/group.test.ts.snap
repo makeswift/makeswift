@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ShapeV2 Shape data is gracefully handles missing/extra props copyData 1`] = `
+exports[`Group Group data gracefully handles missing/extra props copyData 1`] = `
 {
-  "@@makeswift/type": "shape-v2::v1",
+  "@@makeswift/type": "group::v1",
   "value": {
     "color": {
       "alpha": 1,
@@ -15,7 +15,7 @@ exports[`ShapeV2 Shape data is gracefully handles missing/extra props copyData 1
 }
 `;
 
-exports[`ShapeV2 Shape data is gracefully handles missing/extra props fromData 1`] = `
+exports[`Group Group data gracefully handles missing/extra props fromData 1`] = `
 {
   "color": {
     "alpha": 1,
@@ -27,7 +27,7 @@ exports[`ShapeV2 Shape data is gracefully handles missing/extra props fromData 1
 }
 `;
 
-exports[`ShapeV2 Shape data is gracefully handles missing/extra props getTranslatableData 1`] = `
+exports[`Group Group data gracefully handles missing/extra props getTranslatableData 1`] = `
 {
   "color": null,
   "link": null,
@@ -36,7 +36,7 @@ exports[`ShapeV2 Shape data is gracefully handles missing/extra props getTransla
 }
 `;
 
-exports[`ShapeV2 Shape data is gracefully handles missing/extra props mergeTranslatedData 1`] = `
+exports[`Group Group data gracefully handles missing/extra props mergeTranslatedData 1`] = `
 {
   "color": {
     "alpha": 1,
@@ -48,9 +48,9 @@ exports[`ShapeV2 Shape data is gracefully handles missing/extra props mergeTrans
 }
 `;
 
-exports[`ShapeV2 Shape data is gracefully handles missing/extra props toData 1`] = `
+exports[`Group Group data gracefully handles missing/extra props toData 1`] = `
 {
-  "@@makeswift/type": "shape-v2::v1",
+  "@@makeswift/type": "group::v1",
   "value": {
     "color": {
       "@@makeswift/type": "color::v1",
@@ -82,9 +82,9 @@ exports[`ShapeV2 Shape data is gracefully handles missing/extra props toData 1`]
 }
 `;
 
-exports[`ShapeV2 ShapeV2 versioned data is gracefully handles missing/extra props copyData 1`] = `
+exports[`Group Group versioned data is gracefully handles missing/extra props copyData 1`] = `
 {
-  "@@makeswift/type": "shape-v2::v1",
+  "@@makeswift/type": "group::v1",
   "value": {
     "color": {
       "alpha": 1,
@@ -97,7 +97,7 @@ exports[`ShapeV2 ShapeV2 versioned data is gracefully handles missing/extra prop
 }
 `;
 
-exports[`ShapeV2 ShapeV2 versioned data is gracefully handles missing/extra props fromData 1`] = `
+exports[`Group Group versioned data is gracefully handles missing/extra props fromData 1`] = `
 {
   "color": {
     "alpha": 1,
@@ -109,7 +109,7 @@ exports[`ShapeV2 ShapeV2 versioned data is gracefully handles missing/extra prop
 }
 `;
 
-exports[`ShapeV2 ShapeV2 versioned data is gracefully handles missing/extra props getTranslatableData 1`] = `
+exports[`Group Group versioned data is gracefully handles missing/extra props getTranslatableData 1`] = `
 {
   "color": null,
   "link": null,
@@ -118,7 +118,7 @@ exports[`ShapeV2 ShapeV2 versioned data is gracefully handles missing/extra prop
 }
 `;
 
-exports[`ShapeV2 ShapeV2 versioned data is gracefully handles missing/extra props mergeTranslatedData 1`] = `
+exports[`Group Group versioned data is gracefully handles missing/extra props mergeTranslatedData 1`] = `
 {
   "color": {
     "alpha": 1,
@@ -130,9 +130,9 @@ exports[`ShapeV2 ShapeV2 versioned data is gracefully handles missing/extra prop
 }
 `;
 
-exports[`ShapeV2 ShapeV2 versioned data is gracefully handles missing/extra props toData 1`] = `
+exports[`Group Group versioned data is gracefully handles missing/extra props toData 1`] = `
 {
-  "@@makeswift/type": "shape-v2::v1",
+  "@@makeswift/type": "group::v1",
   "value": {
     "color": {
       "@@makeswift/type": "color::v1",
@@ -164,11 +164,11 @@ exports[`ShapeV2 ShapeV2 versioned data is gracefully handles missing/extra prop
 }
 `;
 
-exports[`ShapeV2 constructor heterogenous controls 1`] = `
-ShapeV2Definition {
+exports[`Group constructor heterogenous controls 1`] = `
+GroupDefinition {
   "config": {
-    "layout": "makeswift::controls::shape-v2::layout::inline",
-    "type": {
+    "preferredLayout": "makeswift::controls::group::layout::inline",
+    "props": {
       "num": CheckboxDefinition {
         "config": {},
         "version": 1,
@@ -181,18 +181,19 @@ ShapeV2Definition {
       },
     },
   },
+  "dataType": "group::v1",
 }
 `;
 
-exports[`ShapeV2 serialization serialize/deserialize composable shape of controls 1`] = `
+exports[`Group serialization serialize/deserialize composable group of controls 1`] = `
 {
   "config": {
-    "layout": "makeswift::controls::shape-v2::layout::inline",
-    "type": {
-      "shape": {
+    "preferredLayout": "makeswift::controls::group::layout::inline",
+    "props": {
+      "group": {
         "config": {
-          "layout": "makeswift::controls::shape-v2::layout::inline",
-          "type": {
+          "preferredLayout": "makeswift::controls::group::layout::inline",
+          "props": {
             "checkbox": {
               "config": {},
               "type": "makeswift::controls::checkbox",
@@ -207,40 +208,19 @@ exports[`ShapeV2 serialization serialize/deserialize composable shape of control
             },
           },
         },
-        "type": "makeswift::controls::shape-v2",
+        "type": "makeswift::controls::group",
       },
     },
   },
-  "type": "makeswift::controls::shape-v2",
+  "type": "makeswift::controls::group",
 }
 `;
 
-exports[`ShapeV2 serialization serialize/deserialize label of controls 1`] = `
+exports[`Group serialization serialize/deserialize group of controls 1`] = `
 {
   "config": {
-    "label": "Shape",
-    "layout": "makeswift::controls::shape-v2::layout::inline",
-    "type": {},
-  },
-  "type": "makeswift::controls::shape-v2",
-}
-`;
-
-exports[`ShapeV2 serialization serialize/deserialize layout of controls 1`] = `
-{
-  "config": {
-    "layout": "makeswift::controls::shape-v2::layout::popover",
-    "type": {},
-  },
-  "type": "makeswift::controls::shape-v2",
-}
-`;
-
-exports[`ShapeV2 serialization serialize/deserialize shape of controls 1`] = `
-{
-  "config": {
-    "layout": "makeswift::controls::shape-v2::layout::inline",
-    "type": {
+    "preferredLayout": "makeswift::controls::group::layout::inline",
+    "props": {
       "checkbox": {
         "config": {},
         "type": "makeswift::controls::checkbox",
@@ -255,6 +235,27 @@ exports[`ShapeV2 serialization serialize/deserialize shape of controls 1`] = `
       },
     },
   },
-  "type": "makeswift::controls::shape-v2",
+  "type": "makeswift::controls::group",
+}
+`;
+
+exports[`Group serialization serialize/deserialize label of controls 1`] = `
+{
+  "config": {
+    "label": "Group",
+    "preferredLayout": "makeswift::controls::group::layout::inline",
+    "props": {},
+  },
+  "type": "makeswift::controls::group",
+}
+`;
+
+exports[`Group serialization serialize/deserialize layout of controls 1`] = `
+{
+  "config": {
+    "preferredLayout": "makeswift::controls::group::layout::popover",
+    "props": {},
+  },
+  "type": "makeswift::controls::group",
 }
 `;

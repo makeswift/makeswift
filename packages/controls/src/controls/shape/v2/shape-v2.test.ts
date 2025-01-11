@@ -1,23 +1,17 @@
 import { ControlDataTypeKey } from '../../../common'
-import { createReplacementContext } from '../../../context'
-import { Targets } from '../../../introspection'
+import { createReplacementContext, type CopyContext } from '../../../context'
 import {
   deserializeRecord,
   type DeserializedRecord,
+  type SerializedRecord,
 } from '../../../serialization'
-import { type DataType, type ValueType } from '../../associated-types'
+import { type DataType } from '../../associated-types'
 import { Checkbox, CheckboxDefinition } from '../../checkbox'
 import { Color, ColorDefinition } from '../../color'
-import { Combobox } from '../../combobox'
-import { ControlDefinition } from '../../definition'
-import { Image } from '../../image'
-import { GenericLink as Link } from '../../link'
-import { List } from '../../list'
-import { Number } from '../../number'
-import { TextArea } from '../../text-area'
-import { TextInput } from '../../text-input'
+import { type ControlDefinition } from '../../definition'
+import { Group, GroupDefinition } from '../../group'
 
-import { ShapeV2, ShapeV2Definition } from './shape-v2'
+import { ShapeV2Definition } from './shape-v2'
 
 function deserializer(record: DeserializedRecord): ControlDefinition {
   switch (record.type) {
@@ -36,388 +30,152 @@ function deserializer(record: DeserializedRecord): ControlDefinition {
 }
 
 describe('ShapeV2', () => {
-  describe('constructor', () => {
-    test('heterogenous controls', () => {
-      const shape = ShapeV2({
-        type: {
-          val: Color({ defaultValue: 'red' }),
-          num: Checkbox(),
-        },
-      })
-      expect(shape).toMatchSnapshot()
-    })
-
-    test('disallows extraneous properties', () => {
-      ShapeV2({
-        type: {
-          toggle: Checkbox(),
-        },
-        // @ts-expect-error
-        extra: 'extra',
-      })
-    })
-  })
-
-  describe('assignability', () => {
-    function assignTest(_def: ShapeV2Definition) {}
-    assignTest(
-      ShapeV2({
-        type: {},
-        label: 'Shape',
-      }),
-    )
-
-    assignTest(
-      ShapeV2({
-        type: {},
-      }),
-    )
-
-    assignTest(
-      ShapeV2({
-        type: {
-          toggle: Checkbox(),
-          color: Color({ defaultValue: 'red' }),
-        },
-      }),
-    )
-
-    assignTest(
-      ShapeV2({
-        type: {
-          combo: Combobox({
-            getOptions: () => [{ id: '0', value: 'a', label: 'Alpha' }],
-          }),
-          link: Link({ label: 'Link' }),
-        },
-      }),
-    )
-  })
-
-  describe('serialization', () => {
-    test('serialize/deserialize layout of controls', () => {
-      const shape = ShapeV2({
-        type: {},
+  test('deserializes to `Group` with `shape-v2::v1` data type', () => {
+    const serializedRecord = {
+      type: 'makeswift::controls::shape-v2',
+      config: {
+        label: 'Shape popover',
         layout: 'makeswift::controls::shape-v2::layout::popover',
-      })
-
-      const [serialized, _] = shape.serialize()
-      expect(serialized).toMatchSnapshot()
-
-      const deserialized = ShapeV2Definition.deserialize(
-        deserializeRecord(serialized),
-        deserializer,
-      )
-
-      expect(deserialized).toEqual(shape)
-    })
-
-    test('serialize/deserialize label of controls', () => {
-      const shape = ShapeV2({
-        type: {},
-        label: 'Shape',
-      })
-
-      const [serialized, _] = shape.serialize()
-      expect(serialized).toMatchSnapshot()
-
-      const deserialized = ShapeV2Definition.deserialize(
-        deserializeRecord(serialized),
-        deserializer,
-      )
-
-      expect(deserialized).toEqual(shape)
-    })
-
-    test('serialize/deserialize shape of controls', () => {
-      const shape = ShapeV2({
         type: {
-          color: Color({ defaultValue: 'red' }),
-          checkbox: Checkbox(),
-        },
-      })
-
-      const [serialized, _] = shape.serialize()
-      expect(serialized).toMatchSnapshot()
-
-      const deserialized = ShapeV2Definition.deserialize(
-        deserializeRecord(serialized),
-        deserializer,
-      )
-
-      expect(deserialized).toEqual(shape)
-    })
-
-    test('serialize/deserialize composable shape of controls', () => {
-      const shape = ShapeV2({
-        type: {
-          shape: ShapeV2({
-            type: {
-              color: Color({ defaultValue: 'red' }),
-              checkbox: Checkbox(),
+          background: {
+            config: {
+              label: 'Background color',
             },
+            type: 'makeswift::controls::color',
+            version: 1,
+          },
+          shape: {
+            type: 'makeswift::controls::shape-v2',
+            config: {
+              label: 'Inline shape',
+              layout: 'makeswift::controls::shape-v2::layout::inline',
+              type: {
+                checkbox: {
+                  config: {
+                    label: 'Checkbox',
+                  },
+                  type: 'makeswift::controls::checkbox',
+                  version: 1,
+                },
+                color: {
+                  config: {
+                    label: 'Color',
+                    defaultValue: 'red',
+                  },
+                  type: 'makeswift::controls::color',
+                  version: 1,
+                },
+              },
+            },
+          },
+        },
+      },
+    }
+
+    const group = new GroupDefinition(
+      {
+        label: 'Shape popover',
+        preferredLayout: Group.Layout.Popover,
+        props: {
+          background: Color({ label: 'Background color' }),
+          shape: new GroupDefinition(
+            {
+              label: 'Inline shape',
+              preferredLayout: Group.Layout.Inline,
+              props: {
+                checkbox: Checkbox({
+                  label: 'Checkbox',
+                }),
+                color: Color({ label: 'Color', defaultValue: 'red' }),
+              },
+            },
+            ShapeV2Definition.v1DataType,
+          ),
+        },
+      },
+      ShapeV2Definition.v1DataType,
+    )
+
+    const deserialized = ShapeV2Definition.deserialize(
+      deserializeRecord(serializedRecord as any as SerializedRecord),
+      deserializer,
+    )
+
+    expect(deserialized).toStrictEqual(group)
+  })
+
+  describe('deserialized `Group` with `shape-v2::v1` data type', () => {
+    const shapeV2 = new GroupDefinition(
+      {
+        label: 'Inline shape',
+        preferredLayout: Group.Layout.Inline,
+        props: {
+          checkbox: Checkbox({
+            label: 'Checkbox',
           }),
+          color: Color({ label: 'Color', defaultValue: 'red' }),
         },
-      })
-
-      const [serialized, _] = shape.serialize()
-      expect(serialized).toMatchSnapshot()
-
-      const deserialized = ShapeV2Definition.deserialize(
-        deserializeRecord(serialized),
-        deserializer,
-      )
-
-      expect(deserialized).toEqual(shape)
-    })
-  })
-
-  describe('introspection', () => {
-    test('Shape data is correctly delegated to subcontrols', () => {
-      const shape = ShapeV2({
-        type: {
-          color: Color({ defaultValue: 'red' }),
-          link: Link(),
-          image: Image(),
-        },
-      })
-
-      const shapeData = {
-        color: {
-          swatchId: 'swatch-id',
-          alpha: 1,
-        },
-        link: {
-          type: 'OPEN_PAGE' as const,
-          payload: {
-            pageId: 'page-id',
-            openInNewTab: false,
-          },
-        },
-        image: 'file-id',
-      }
-
-      const swatchIds = shape.introspect(shapeData, Targets.Swatch)
-      expect(swatchIds).toEqual(['swatch-id'])
-
-      const pageIds = shape.introspect(shapeData, Targets.Page)
-      expect(pageIds).toEqual(['page-id'])
-
-      const fileIds = shape.introspect(shapeData, Targets.File)
-      expect(fileIds).toEqual(['file-id'])
-    })
-
-    test('ShapeV2 versioned data is correctly delegated to subcontrols', () => {
-      const shape = ShapeV2({
-        type: {
-          color: Color({ defaultValue: 'red' }),
-          link: Link(),
-          image: Image(),
-        },
-      })
-
-      const shapeData = {
-        [ControlDataTypeKey]: 'shape-v2::v1' as const,
-        value: {
-          color: {
-            swatchId: 'swatch-id',
-            alpha: 1,
-          },
-          link: {
-            type: 'OPEN_PAGE' as const,
-            payload: {
-              pageId: 'page-id',
-              openInNewTab: false,
-            },
-          },
-          image: 'file-id',
-        },
-      }
-
-      const swatchIds = shape.introspect(shapeData, Targets.Swatch)
-      expect(swatchIds).toEqual(['swatch-id'])
-
-      const pageIds = shape.introspect(shapeData, Targets.Page)
-      expect(pageIds).toEqual(['page-id'])
-
-      const fileIds = shape.introspect(shapeData, Targets.File)
-      expect(fileIds).toEqual(['file-id'])
-    })
-  })
-
-  describe('getTranslatableData', () => {
-    test('Shape data is correctly delegated to subcontrols', () => {
-      const shape = ShapeV2({
-        type: {
-          textArea: TextArea(),
-          textInput: TextInput(),
-          color: Color({ defaultValue: 'red' }),
-        },
-      })
-
-      const shapeData = {
-        textArea: 'alpha',
-        textInput: 'beta',
-        color: {
-          swatchId: 'swatch-id',
-          alpha: 1,
-        },
-      }
-
-      const translatableData = shape.getTranslatableData(shapeData)
-      expect(translatableData).toEqual({
-        textArea: 'alpha',
-        textInput: 'beta',
-        color: null,
-      })
-    })
-
-    test('ShapeV2 versioned data is correctly delegated to subcontrols', () => {
-      const shape = ShapeV2({
-        type: {
-          textArea: TextArea(),
-          textInput: TextInput(),
-          color: Color({ defaultValue: 'red' }),
-        },
-      })
-
-      const shapeData = {
-        [ControlDataTypeKey]: 'shape-v2::v1' as const,
-        value: {
-          textArea: 'alpha',
-          textInput: 'beta',
-          color: {
-            swatchId: 'swatch-id',
-            alpha: 1,
-          },
-        },
-      }
-
-      const translatableData = shape.getTranslatableData(shapeData)
-      expect(translatableData).toEqual({
-        textArea: 'alpha',
-        textInput: 'beta',
-        color: null,
-      })
-    })
-  })
-
-  describe('Shape data is gracefully handles missing/extra props', () => {
-    const shape = ShapeV2({
-      type: {
-        color: Color({ defaultValue: 'red' }),
-        list: List({ type: Number() }),
-        link: Link(),
-        text: TextArea(),
       },
-    })
+      ShapeV2Definition.v1DataType,
+    )
 
-    const data = {
-      // missing props + extra prop that should be ignored
-      color: { swatchId: '[swatch-id]', alpha: 1 },
-      text: 'Hello world',
-      extraProp: 'extra',
-    } as any as DataType<typeof shape>
-
-    const value = {
-      color: { swatchId: '[swatch-id]', alpha: 1 },
-      list: [17],
-      link: {
-        type: 'OPEN_PAGE',
-        payload: { pageId: '[page-id]', openInNewTab: false },
-      },
-      text: 'Hello world',
-      // extra prop only, `toData` doesn't handle missing props
-      extraProp: 'extra',
-    } as ValueType<typeof shape>
-
-    test('fromData', () => expect(shape.fromData(data)).toMatchSnapshot())
-    test('toData', () => expect(shape.toData(value)).toMatchSnapshot())
-    test('copyData', () =>
-      expect(
-        shape.copyData(data, {
-          replacementContext: createReplacementContext({}),
-          copyElement: (node) => node,
-        }),
-      ).toMatchSnapshot())
-
-    test('getTranslatableData', () =>
-      expect(shape.getTranslatableData(data)).toMatchSnapshot())
-
-    test('mergeTranslatedData', () =>
-      expect(
-        shape.mergeTranslatedData(
-          data,
-          {},
-          {
-            translatedData: {},
-            mergeTranslatedData: (node) => node,
-          },
-        ),
-      ).toMatchSnapshot())
-
-    test('introspect', () =>
-      expect(shape.introspect(data, Targets.ChildrenElement)).toStrictEqual([]))
-  })
-
-  describe('ShapeV2 versioned data is gracefully handles missing/extra props', () => {
-    const shape = ShapeV2({
-      type: {
-        color: Color({ defaultValue: 'red' }),
-        list: List({ type: Number() }),
-        link: Link(),
-        text: TextArea(),
-      },
-    })
-
-    const data = {
-      [ControlDataTypeKey]: 'shape-v2::v1' as const,
-      // missing props + extra prop that should be ignored
+    const data: DataType<typeof shapeV2> = {
+      [ControlDataTypeKey]: ShapeV2Definition.v1DataType,
       value: {
-        color: { swatchId: '[swatch-id]', alpha: 1 },
-        text: 'Hello world',
-        extraProp: 'extra',
+        checkbox: {
+          [ControlDataTypeKey]: 'checkbox::v1',
+          value: true,
+        },
+        color: {
+          [ControlDataTypeKey]: 'color::v1',
+          swatchId: '[swatchId]',
+          alpha: 1,
+        },
       },
-    } as any as DataType<typeof shape>
+    }
 
-    const value = {
-      color: { swatchId: '[swatch-id]', alpha: 1 },
-      list: [17],
-      link: {
-        type: 'OPEN_PAGE',
-        payload: { pageId: '[page-id]', openInNewTab: false },
-      },
-      text: 'Hello world',
-      // extra prop only, `toData` doesn't handle missing props
-      extraProp: 'extra',
-    } as ValueType<typeof shape>
+    test('safeParse', () => {
+      const result = shapeV2.safeParse(data)
 
-    test('fromData', () => expect(shape.fromData(data)).toMatchSnapshot())
-    test('toData', () => expect(shape.toData(value)).toMatchSnapshot())
-    test('copyData', () =>
-      expect(
-        shape.copyData(data, {
-          replacementContext: createReplacementContext({}),
-          copyElement: (node) => node,
+      expect(result.success).toBe(true)
+      expect(result.success ? result.data : null).toStrictEqual(data)
+    })
+
+    test('fromData', () => {
+      const value = shapeV2.fromData(data)
+
+      expect(value).toStrictEqual({
+        checkbox: true,
+        color: {
+          swatchId: '[swatchId]',
+          alpha: 1,
+        },
+      })
+    })
+
+    test('toData', () => {
+      const result = shapeV2.toData({
+        checkbox: true,
+        color: {
+          swatchId: '[swatchId]',
+          alpha: 1,
+        },
+      })
+
+      expect(result).toStrictEqual(data)
+    })
+
+    test('copyData', () => {
+      const context: CopyContext = {
+        replacementContext: createReplacementContext({
+          swatchIds: { '[swatch-id-1]': '[swatch-id-replaced]' },
         }),
-      ).toMatchSnapshot())
+        copyElement: (node) => node,
+      }
 
-    test('getTranslatableData', () =>
-      expect(shape.getTranslatableData(data)).toMatchSnapshot())
+      const copy = shapeV2.copyData(data, context)
 
-    test('mergeTranslatedData', () =>
-      expect(
-        shape.mergeTranslatedData(
-          data,
-          {},
-          {
-            translatedData: {},
-            mergeTranslatedData: (node) => node,
-          },
-        ),
-      ).toMatchSnapshot())
-
-    test('introspect', () =>
-      expect(shape.introspect(data, Targets.ChildrenElement)).toStrictEqual([]))
+      expect(copy).toStrictEqual(data)
+    })
   })
 })
