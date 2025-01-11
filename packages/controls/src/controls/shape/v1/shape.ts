@@ -226,6 +226,10 @@ class Definition<C extends Config> extends ControlDefinition<
 
 export class ShapeDefinition<C extends Config = Config> extends Definition<C> {}
 
+/**
+ * @deprecated `Shape` control is deprecated and will be removed in a future release.
+ * Use the new `Group` control instead.
+ */
 export function Shape<Defs extends KeyDefinitions>(
   config: Config<Defs>,
 ): ShapeDefinition<Config<Defs>> {

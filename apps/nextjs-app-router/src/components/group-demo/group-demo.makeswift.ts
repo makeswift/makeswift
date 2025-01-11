@@ -4,31 +4,31 @@ import { lazy } from 'react'
 import {
   Style,
   TextInput,
-  Shape,
+  Group,
   Checkbox,
   Color,
 } from '@makeswift/runtime/controls'
 
 runtime.registerComponent(
-  lazy(() => import('./shape-v2-control-demo')),
+  lazy(() => import('./group-demo')),
   {
-    type: 'ShapeV2 Control Demo',
-    label: 'Custom /ShapeV2 Control Demo',
+    type: 'Group Control Demo',
+    label: 'Custom / Group Control Demo',
     props: {
       className: Style(),
 
-
-      shapev2: Shape({
-        type: {
+      group: Group({
+        props: {
           color: Color(),
           checkbox: Checkbox(),
           text: TextInput(),
         },
       }),
-      shapev2popover: Shape({
-        label: 'ShapeV2 in Popover',
-        layout: Shape.Layout.Popover,
-        type: {
+
+      groupPopover: Group({
+        label: 'Group Popover',
+        preferredLayout: Group.Layout.Popover,
+        props: {
           color: Color(),
           checkbox: Checkbox(),
           text: TextInput(),
