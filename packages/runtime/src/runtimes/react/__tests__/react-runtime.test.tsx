@@ -43,9 +43,11 @@ function Sandbox(props: {
   return <div>{JSON.stringify(props)}</div>
 }
 
+const runtime = new ReactRuntime()
+
 describe('registerComponent', () => {
   test("correctly deduces control definitions' resolved value types", () => {
-    ReactRuntime.registerComponent(Sandbox, {
+    runtime.registerComponent(Sandbox, {
       type: 'sandbox',
       label: 'Sandbox',
       props: {

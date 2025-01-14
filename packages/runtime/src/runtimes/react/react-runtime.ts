@@ -20,41 +20,6 @@ function validateComponentType(type: string, component?: ComponentType): void {
 }
 
 export class ReactRuntime extends RuntimeCore {
-  // TODO: the static methods here are deprecated and only keep here for backward-compatibility purpose.
-  // We will remove them when we release a new breaking change.
-  // ------------------ Deprecated API ------------------ //
-  static registerComponent<
-    ControlDef extends UnifiedControlDefinition,
-    P extends Record<string, LegacyDescriptor | ControlDef>,
-    C extends ComponentType<{ [K in keyof P]: DescriptorValueType<P[K]> }>,
-  >(
-    component: C,
-    {
-      type,
-      label,
-      icon = ComponentIcon.Code,
-      hidden = false,
-      props,
-    }: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P },
-  ): () => void {
-    validateComponentType(type, component as unknown as ComponentType)
-
-    const unregisterComponent = this.store.dispatch(
-      registerComponentEffect(type, { label, icon, hidden }, props ?? {}),
-    )
-
-    const unregisterReactComponent = this.store.dispatch(
-      registerReactComponentEffect(type, component as unknown as ComponentType),
-    )
-
-    return () => {
-      unregisterComponent()
-      unregisterReactComponent()
-    }
-  }
-
-  // ------------------ Deprecated API ends here ------------------ //
-
   registerComponent<
     ControlDef extends UnifiedControlDefinition,
     P extends Record<string, LegacyDescriptor | ControlDef>,
@@ -91,6 +56,3 @@ export class ReactRuntime extends RuntimeCore {
     registerBuiltinComponents(this)
   }
 }
-
-// TODO: We should delete this once we remove the static methods in ReactRuntime.
-registerBuiltinComponents(ReactRuntime)
