@@ -2,6 +2,8 @@ import { Makeswift } from '../client'
 import { http, HttpResponse } from 'msw'
 import { randomUUID } from 'crypto'
 
+import { ReactRuntime } from '../../runtimes/react'
+
 import { server } from '../../mocks/server'
 
 function createRandomPageV4() {
@@ -28,11 +30,16 @@ function createRandomPageV4() {
 const TEST_API_KEY = 'xxx'
 const apiOrigin = 'https://api.fakeswift.com'
 const baseUrl = `${apiOrigin}/v4/pages`
+const runtime = new ReactRuntime()
+
+function createTestClient() {
+  return new Makeswift(TEST_API_KEY, { runtime, apiOrigin })
+}
 
 describe('getPages v4', () => {
   test('empty', async () => {
     // Arrange
-    const client = new Makeswift(TEST_API_KEY, { apiOrigin })
+    const client = createTestClient()
     server.use(
       http.get(baseUrl, () => HttpResponse.json({ data: [], hasMore: false }), { once: true }),
     )
@@ -49,7 +56,7 @@ describe('getPages v4', () => {
 
   test('throws on unexpected data', async () => {
     // Arrange
-    const client = new Makeswift(TEST_API_KEY, { apiOrigin })
+    const client = createTestClient()
 
     server.use(
       http.get(baseUrl, () => HttpResponse.json({ data: { test: 'test' }, hasMore: false }), {
@@ -66,7 +73,7 @@ describe('getPages v4', () => {
 
   test('can get many pages', async () => {
     // Arrange
-    const client = new Makeswift(TEST_API_KEY, { apiOrigin })
+    const client = createTestClient()
     const mockPages = Array.from({ length: 10 }, createRandomPageV4)
     server.use(
       http.get(baseUrl, () => HttpResponse.json({ data: mockPages, hasMore: false }), {
@@ -86,7 +93,7 @@ describe('getPages v4', () => {
 
   test('toArray gets all pages', async () => {
     // Arrange
-    const client = new Makeswift(TEST_API_KEY, { apiOrigin })
+    const client = createTestClient()
     const [page1, page2, page3] = Array.from({ length: 3 }, createRandomPageV4)
     server.use(
       http.get(baseUrl, () => HttpResponse.json({ data: [page1], hasMore: true }), { once: true }),
@@ -103,7 +110,7 @@ describe('getPages v4', () => {
 
   test('async iterable gets all pages', async () => {
     // Arrange
-    const client = new Makeswift(TEST_API_KEY, { apiOrigin })
+    const client = createTestClient()
     const [page1, page2, page3] = Array.from({ length: 3 }, createRandomPageV4)
     server.use(
       http.get(baseUrl, () => HttpResponse.json({ data: [page1], hasMore: true }), { once: true }),
@@ -124,7 +131,7 @@ describe('getPages v4', () => {
 
   test('async iterable methods are chainable', async () => {
     // Arrange
-    const client = new Makeswift(TEST_API_KEY, { apiOrigin })
+    const client = createTestClient()
     const [page1, page2, page3] = Array.from({ length: 3 }, createRandomPageV4)
     server.use(
       http.get(baseUrl, () => HttpResponse.json({ data: [page1, page2, page3], hasMore: false }), {

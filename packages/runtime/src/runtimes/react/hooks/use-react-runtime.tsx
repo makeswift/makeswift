@@ -3,8 +3,13 @@
 import { createContext, useContext } from 'react'
 import { ReactRuntime } from '../react-runtime'
 
-export const ReactRuntimeContext = createContext<ReactRuntime>(ReactRuntime)
+export const ReactRuntimeContext = createContext<ReactRuntime | null>(null)
 
 export function useReactRuntime(): ReactRuntime {
-  return useContext(ReactRuntimeContext)
+  const runtime = useContext(ReactRuntimeContext)
+  if (runtime === null) {
+    throw new Error('`useReactRuntime` must be used within a `ReactRuntimeProvider`')
+  }
+
+  return runtime
 }

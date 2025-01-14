@@ -254,7 +254,7 @@ type LocalizedPage = {
 
 type MakeswiftConfig = {
   apiOrigin?: string
-  runtime?: ReactRuntime
+  runtime: ReactRuntime
 }
 
 export type Sitemap = {
@@ -310,7 +310,7 @@ export class Makeswift {
 
   constructor(
     apiKey: string,
-    { apiOrigin = 'https://api.makeswift.com', runtime = ReactRuntime }: MakeswiftConfig = {},
+    { apiOrigin = 'https://api.makeswift.com', runtime }: MakeswiftConfig,
   ) {
     if (typeof apiKey !== 'string') {
       throw new Error(

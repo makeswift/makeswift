@@ -1,17 +1,24 @@
 import { Makeswift, MakeswiftComponentDocument } from '../client'
 import { http, HttpResponse, graphql } from 'msw'
 
+import { ReactRuntime } from '../../runtimes/react'
+
 import { server } from '../../mocks/server'
 import { MakeswiftSiteVersion } from '../preview-mode'
 
 const TEST_API_KEY = 'myApiKey'
 const apiOrigin = 'https://api.fakeswift.com'
 const baseUrl = `${apiOrigin}/v1/element-trees`
+const runtime = new ReactRuntime()
+
+function createTestClient() {
+  return new Makeswift(TEST_API_KEY, { runtime, apiOrigin })
+}
 
 describe('getComponentSnapshot using v1 element tree endpoint', () => {
   test('return null document data on 404', async () => {
     // Arrange
-    const client = new Makeswift(TEST_API_KEY, { apiOrigin })
+    const client = createTestClient()
     const treeId = 'myTree'
     server.use(
       http.get(`${baseUrl}/${treeId}`, () => HttpResponse.text('', { status: 404 }), {
@@ -32,7 +39,7 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
 
   test('successfully performs locale fallback by requesting base locale tree after receiving a 404 response for a locale variant tree', async () => {
     // Arrange
-    const client = new Makeswift(TEST_API_KEY, { apiOrigin })
+    const client = createTestClient()
     const localeToTest = 'fr-FR'
     const baseLocale = null
 
@@ -90,7 +97,7 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
 
   test('does not perform locale fallback after receiving a 404 response for a locale variant tree, when allowFallback is false', async () => {
     // Arrange
-    const client = new Makeswift(TEST_API_KEY, { apiOrigin })
+    const client = createTestClient()
     const localeToTest = 'fr-FR'
     const baseLocale = null
 
@@ -149,7 +156,7 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
 
   test('does not perform locale fallback after receiving a 200 response for the requested locale variant tree', async () => {
     // Arrange
-    const client = new Makeswift(TEST_API_KEY, { apiOrigin })
+    const client = createTestClient()
     const localeToTest = 'fr-FR'
 
     // mock locale variant tree document
