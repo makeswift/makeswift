@@ -62,12 +62,12 @@ async function proxyDraftModeRouteHandler(
   const forwardingHost = request.headers.get('x-forwarded-host') ?? request.headers.get('host') 
   const forwardingProto = request.headers.get('x-forwarded-proto') ?? request.nextUrl.protocol
 
-  const searchParams = request.nextUrl.searchParams
+  const searchParams = new URLSearchParams(request.nextUrl.searchParams)
   searchParams.delete('x-makeswift-draft-mode')
-  const headers = request.headers
+  const headers = new Headers(request.headers)
   headers.delete('X-Makeswift-Draft-Mode')
 
-  const proxyUrl = `${forwardingProto}://${forwardingHost}${request.nextUrl.pathname}?${searchParams}`
+  const proxyUrl = `${forwardingProto}//${forwardingHost}${request.nextUrl.pathname}?${searchParams}`
   const proxyRequest = new NextRequest(proxyUrl, { headers: headers })
 
   const draftModeCookie = (await cookies()).get('__prerender_bypass')
