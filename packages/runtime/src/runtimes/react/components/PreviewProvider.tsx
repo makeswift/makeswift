@@ -7,7 +7,6 @@ import * as ReactBuilderPreview from '../../../state/react-builder-preview'
 import { useReactRuntime } from '../hooks/use-react-runtime'
 import { StoreContext } from '../hooks/use-store'
 import { useMakeswiftHostApiClient } from '../host-api-client'
-import { ReactRuntime } from '../react-runtime'
 
 export default function PreviewProvider({ children }: PropsWithChildren): JSX.Element {
   const runtime = useReactRuntime()
@@ -15,7 +14,7 @@ export default function PreviewProvider({ children }: PropsWithChildren): JSX.El
   const store = useMemo(
     () =>
       ReactBuilderPreview.configureStore({
-        preloadedState: runtime ? runtime.store.getState() : ReactRuntime.store.getState(),
+        preloadedState: runtime.store.getState(),
         client,
       }),
     [client, runtime],

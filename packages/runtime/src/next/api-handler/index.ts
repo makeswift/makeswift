@@ -27,7 +27,7 @@ type MakeswiftApiHandlerConfig = {
   appOrigin?: string
   apiOrigin?: string
   getFonts?: GetFonts
-  runtime?: ReactRuntime
+  runtime: ReactRuntime
 }
 
 type NotFoundError = { message: string }
@@ -61,8 +61,8 @@ export function MakeswiftApiHandler(
     appOrigin = 'https://app.makeswift.com',
     apiOrigin = 'https://api.makeswift.com',
     getFonts,
-    runtime = ReactRuntime,
-  }: MakeswiftApiHandlerConfig = {},
+    runtime,
+  }: MakeswiftApiHandlerConfig,
 ): (...args: MakeswiftApiHandlerArgs) => Promise<NextResponse<MakeswiftApiHandlerResponse> | void> {
   const cors = Cors({ origin: appOrigin })
 
