@@ -10,4 +10,5 @@ export {
   ControlDefinition,
   ControlInstance,
   DefaultControlInstance,
+  ShapeV2Control,
 } from '@makeswift/controls'
