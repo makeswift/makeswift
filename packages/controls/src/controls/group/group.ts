@@ -30,7 +30,7 @@ import { GroupControl } from './group-control'
 type ItemDefinition = ControlDefinition<string, unknown, any, any, any>
 type KeyDefinitions = Record<string, ItemDefinition>
 
-export type Config<Defs extends KeyDefinitions = KeyDefinitions> = {
+type Config<Defs extends KeyDefinitions = KeyDefinitions> = {
   readonly label?: string
   readonly preferredLayout?:
     | typeof Definition.Layout.Inline
