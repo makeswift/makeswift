@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.22.2-canary.0
+
+### Patch Changes
+
+- 112463b: fix: update `@types/{react,react-dom}` peer deps to 19.0.0
+
 ## 0.22.1
 
 ### Patch Changes
