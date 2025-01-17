@@ -12,6 +12,7 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
-    "famous-clocks-relate"
+    "famous-clocks-relate",
+    "great-crabs-prove"
   ]
 }
