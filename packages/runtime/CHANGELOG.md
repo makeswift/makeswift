@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.22.2
+
+### Patch Changes
+
+- 112463b: fix: update `@types/{react,react-dom}` peer deps to 19.0.0
+- 2e72dad: Fallback to default value for prop if prop resolution fails
+
 ## 0.22.1
 
 ### Patch Changes
