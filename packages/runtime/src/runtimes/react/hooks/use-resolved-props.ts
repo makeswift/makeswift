@@ -16,6 +16,28 @@ import { useStylesheetFactory } from './use-stylesheet-factory'
 
 import { resolvableRecord } from '../resolvable-record'
 
+function propErrorHandlingProxy(
+  resolvable: Resolvable<unknown>,
+  def: ControlDefinition,
+  propName: string,
+): Resolvable<unknown> {
+  return {
+    ...resolvable,
+    readStable: () => {
+      try {
+        return resolvable.readStable()
+      } catch (err) {
+        const defaultValue = (def.config as any)?.defaultValue
+        console.error(
+          `Error reading value for prop "${propName}", falling back to \`${defaultValue}\`.`,
+          { control: def, error: err },
+        )
+        return defaultValue
+      }
+    },
+  }
+}
+
 function useControlInstances(elementKey: string): Record<string, ControlInstance> | null {
   const documentKey = useDocumentKey()
 
@@ -68,7 +90,14 @@ export function useResolvedProps(
     [controls, elementData, resourceResolver, stylesheetFactory],
   )
 
-  const resolvables = useMemo(() => mapValues(propDefs, resolveProp), [propDefs, resolveProp])
+  const resolvables = useMemo(
+    () =>
+      mapValues(propDefs, (def, propName) =>
+        propErrorHandlingProxy(resolveProp(def, propName), def, propName),
+      ),
+    [propDefs, resolveProp],
+  )
+
   const props = useMemo(() => resolvableRecord(resolvables), [resolvables])
 
   stylesheetFactory.useDefinedStyles()
