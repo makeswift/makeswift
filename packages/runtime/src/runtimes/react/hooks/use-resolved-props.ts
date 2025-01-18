@@ -15,28 +15,7 @@ import { useSelector } from './use-selector'
 import { useStylesheetFactory } from './use-stylesheet-factory'
 
 import { resolvableRecord } from '../resolvable-record'
-
-function propErrorHandlingProxy(
-  resolvable: Resolvable<unknown>,
-  def: ControlDefinition,
-  propName: string,
-): Resolvable<unknown> {
-  return {
-    ...resolvable,
-    readStable: () => {
-      try {
-        return resolvable.readStable()
-      } catch (err) {
-        const defaultValue = (def.config as any)?.defaultValue
-        console.error(
-          `Error reading value for prop "${propName}", falling back to \`${defaultValue}\`.`,
-          { control: def, error: err },
-        )
-        return defaultValue
-      }
-    },
-  }
-}
+import { propErrorHandlingProxy } from '../utils/prop-error-handling-proxy'
 
 function useControlInstances(elementKey: string): Record<string, ControlInstance> | null {
   const documentKey = useDocumentKey()
@@ -92,9 +71,15 @@ export function useResolvedProps(
 
   const resolvables = useMemo(
     () =>
-      mapValues(propDefs, (def, propName) =>
-        propErrorHandlingProxy(resolveProp(def, propName), def, propName),
-      ),
+      mapValues(propDefs, (def, propName) => {
+        const defaultValue = (def.config as any)?.defaultValue
+        return propErrorHandlingProxy(resolveProp(def, propName), defaultValue, error => {
+          console.warn(
+            `Error reading value for prop "${propName}", falling back to \`${defaultValue}\`.`,
+            { control: def, error },
+          )
+        })
+      }),
     [propDefs, resolveProp],
   )
 
