@@ -27,8 +27,11 @@ export function ControlValue({
   const stylesheetFactory = useStylesheetFactory()
   const id = `cv-${useCssId()}`
 
-  const value = useResolvedValue(data, (data, resourceResolver) =>
-    definition.resolveValue(data, resourceResolver, stylesheetFactory.get(id), control),
+  const value = useResolvedValue(
+    data,
+    (data, resourceResolver) =>
+      definition.resolveValue(data, resourceResolver, stylesheetFactory.get(id), control),
+    (definition.config as any)?.defaultValue,
   )
 
   stylesheetFactory.useDefinedStyles()
