@@ -104,7 +104,7 @@ export function getResponsiveColorDataSwatchIds(
   return data.map((override) => override.value.swatchId)
 }
 
-export function getResponsiveColorPropControllerDataSawtchIds(
+export function getResponsiveColorPropControllerDataSwatchIds(
   data: ResponsiveColorPropControllerData | undefined | null,
 ): string[] {
   if (data == null) return []
