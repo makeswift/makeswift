@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.22.3-canary.0
+
+### Patch Changes
+
+- 307fc29: fix: fallback to default value when individual prop resolution fails
+
 ## 0.22.2
 
 ### Patch Changes
