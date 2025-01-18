@@ -223,7 +223,7 @@ export {
   createResponsiveColorPropControllerDataFromResponsiveColorData,
   getResponsiveColorDataSwatchIds,
   getResponsiveColorPropControllerDataResponsiveColorData,
-  getResponsiveColorPropControllerDataSawtchIds,
+  getResponsiveColorPropControllerDataSwatchIds,
   responsiveColorPropControllerDataSchema,
 } from './responsive-color'
 export type {
