@@ -1,5 +1,11 @@
 # @makeswift/next-plugin
 
+## 0.3.1
+
+### Patch Changes
+
+- 5051cc0: fix: update `@makeswift/next-plugin`'s peer deps to include Next 15
+
 ## 0.3.0
 
 ### Minor Changes
