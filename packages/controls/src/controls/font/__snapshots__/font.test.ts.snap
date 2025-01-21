@@ -1,0 +1,110 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Font constructor returns correct definition 1`] = `
+FontDefinition {
+  "config": {
+    "defaultValue": undefined,
+    "variant": undefined,
+  },
+  "version": 1,
+}
+`;
+
+exports[`Font constructor returns correct definition 2`] = `
+FontDefinition {
+  "config": {
+    "defaultValue": undefined,
+    "variant": true,
+  },
+  "version": 1,
+}
+`;
+
+exports[`Font constructor returns correct definition 3`] = `
+FontDefinition {
+  "config": {
+    "defaultValue": {
+      "fontFamily": "comic sans",
+      "fontStyle": "normal",
+      "fontWeight": 500,
+    },
+    "variant": undefined,
+  },
+  "version": 1,
+}
+`;
+
+exports[`Font constructor returns correct definition 4`] = `
+FontDefinition {
+  "config": {
+    "defaultValue": {
+      "fontFamily": "comic sans",
+      "fontStyle": "normal",
+      "fontWeight": 500,
+    },
+    "variant": true,
+  },
+  "version": 1,
+}
+`;
+
+exports[`Font constructor returns correct definition 5`] = `
+FontDefinition {
+  "config": {
+    "defaultValue": undefined,
+    "variant": false,
+  },
+  "version": 1,
+}
+`;
+
+exports[`Font constructor returns correct definition 6`] = `
+FontDefinition {
+  "config": {
+    "defaultValue": {
+      "fontFamily": "comic sans",
+    },
+    "variant": false,
+  },
+  "version": 1,
+}
+`;
+
+exports[`Font toData \`{ config: [Object], value: [Object] }\` 1`] = `
+{
+  "@@makeswift/type": "font::v1",
+  "value": {
+    "fontFamily": "comic sans",
+    "fontStyle": "normal",
+    "fontWeight": 400,
+  },
+}
+`;
+
+exports[`Font toData \`{ config: [Object], value: [Object] }\` 2`] = `
+{
+  "@@makeswift/type": "font::v1",
+  "value": {
+    "fontFamily": "comic sans",
+  },
+}
+`;
+
+exports[`Font toData \`{ config: {}, value: [Object] }\` 1`] = `
+{
+  "@@makeswift/type": "font::v1",
+  "value": {
+    "fontFamily": "comic sans",
+    "fontStyle": "normal",
+    "fontWeight": 400,
+  },
+}
+`;
+
+exports[`Font toData gracefully handle undefined \`{ variant: false }\` 1`] = `undefined`;
+
+exports[`Font toData gracefully handle undefined \`{ variant: false, defaultValue: [Object] }\` 1`] = `undefined`;
+
+exports[`Font toData gracefully handle undefined \`{ variant: true }\` 1`] = `undefined`;
+
+exports[`Font toData gracefully handle undefined \`{ variant: true, defaultValue: [Object] }\` 1`] = `undefined`;

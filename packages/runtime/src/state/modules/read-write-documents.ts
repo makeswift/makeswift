@@ -31,11 +31,9 @@ function apply(data: ReadOnlyDocuments.Element, operation: Operation): ReadOnlyD
 export type State = ReadOnlyDocuments.State
 
 export function getInitialState({
-  rootElements,
-}: {
-  rootElements?: Map<string, ReadOnlyDocuments.Element>
-} = {}): State {
-  return ReadOnlyDocuments.getInitialState({ rootElements })
+  documents = [],
+}: { documents?: ReadOnlyDocuments.Document[] } = {}): State {
+  return ReadOnlyDocuments.getInitialState({ documents })
 }
 
 function getReadOnlyDocumentsStateSlice(state: State): ReadOnlyDocuments.State {
@@ -55,18 +53,19 @@ export function reducer(state: State = getInitialState(), action: Action): State
 
   switch (action.type) {
     case ActionTypes.CHANGE_DOCUMENT: {
-      const currentRootElement = getDocument(nextState, action.payload.documentKey)?.rootElement
+      const document = getDocument(nextState, action.payload.documentKey)
+      if (document == null) return nextState
 
-      if (currentRootElement == null) return nextState
+      const currentRootElement = ReadOnlyDocuments.getRootElement(document)
 
       const nextRootElement = apply(currentRootElement, action.payload.operation)
 
       return currentRootElement === nextRootElement
         ? nextState
-        : new Map(nextState).set(
-            action.payload.documentKey,
-            ReadOnlyDocuments.createDocument(action.payload.documentKey, nextRootElement),
-          )
+        : new Map(nextState).set(action.payload.documentKey, {
+            ...document,
+            rootElement: nextRootElement,
+          })
     }
 
     default:

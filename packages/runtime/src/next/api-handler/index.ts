@@ -13,6 +13,8 @@ import proxyDraftMode, { ProxyDraftModeResponse } from './handlers/proxy-draft-m
 import { revalidate, RevalidationResponse } from './handlers/revalidate'
 import translatableData, { TranslatableDataResponse } from './handlers/translatable-data'
 import mergeTranslatedData, { TranslatedDataResponse } from './handlers/merge-translated-data'
+import webhook from './handlers/webhook'
+import { WebhookResponseBody } from './handlers/webhook/types'
 import { ReactRuntime } from '../../react'
 import { P, match } from 'ts-pattern'
 import { getSiteVersion } from '../draft-mode'
@@ -25,7 +27,7 @@ type MakeswiftApiHandlerConfig = {
   appOrigin?: string
   apiOrigin?: string
   getFonts?: GetFonts
-  runtime?: ReactRuntime
+  runtime: ReactRuntime
 }
 
 type NotFoundError = { message: string }
@@ -41,6 +43,7 @@ export type MakeswiftApiHandlerResponse =
   | TranslatedDataResponse
   | APIResource
   | NotFoundError
+  | WebhookResponseBody
 
 type MakeswiftApiHandlerArgs =
   | [NextRequest, Context]
@@ -58,8 +61,8 @@ export function MakeswiftApiHandler(
     appOrigin = 'https://app.makeswift.com',
     apiOrigin = 'https://api.makeswift.com',
     getFonts,
-    runtime = ReactRuntime,
-  }: MakeswiftApiHandlerConfig = {},
+    runtime,
+  }: MakeswiftApiHandlerConfig,
 ): (...args: MakeswiftApiHandlerArgs) => Promise<NextResponse<MakeswiftApiHandlerResponse> | void> {
   const cors = Cors({ origin: appOrigin })
 
@@ -195,6 +198,13 @@ export function MakeswiftApiHandler(
         .exhaustive()
     }
 
+    if (matches('/webhook')) {
+      return match(args)
+        .with(routeHandlerPattern, args => webhook(...args, { apiKey }))
+        .with(apiRoutePattern, args => webhook(...args, { apiKey }))
+        .exhaustive()
+    }
+
     const handleResource = <T extends APIResource>(
       resource: T | null,
     ): NextResponse<MakeswiftApiHandlerResponse> | void => {
@@ -230,15 +240,7 @@ export function MakeswiftApiHandler(
     ) {
       return client
         .getLocalizedGlobalElement(m.params.globalElementId, m.params.locale, siteVersion)
-        .then(resource => {
-          const body = resource === null ? { message: 'Not Found' } : resource
-
-          // We're not returning 404 if it's null because localized global element is nullable.
-          return match(args)
-            .with(routeHandlerPattern, () => NextResponse.json(body))
-            .with(apiRoutePattern, ([, res]) => res.json(body))
-            .exhaustive()
-        })
+        .then(handleResource)
     }
 
     if ((m = matches<{ id: string }>('/page-pathname-slices/:id'))) {

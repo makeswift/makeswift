@@ -1,4 +1,5 @@
 export {
+  type ConfigType,
   type Data,
   type DataType,
   type ValueType,
@@ -9,4 +10,5 @@ export {
   ControlDefinition,
   ControlInstance,
   DefaultControlInstance,
+  ShapeV2Control,
 } from '@makeswift/controls'

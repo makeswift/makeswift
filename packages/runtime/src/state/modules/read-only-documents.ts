@@ -1,5 +1,6 @@
 import { type Element } from '@makeswift/controls'
-import { Action, ActionTypes } from '../actions'
+
+import { type Action, type DocumentPayload, ActionTypes } from '../actions'
 
 export {
   type Data,
@@ -17,27 +18,43 @@ export function createDocumentReference(key: string): DocumentReference {
   return { key }
 }
 
-export type Document = {
+type BaseDocument = {
   key: string
   rootElement: Element
+  locale: string | null
 }
 
-export function createDocument(key: string, rootElement: Element): Document {
-  return { key, rootElement }
+export const EMBEDDED_DOCUMENT_TYPE = 'EMBEDDED_DOCUMENT' as const
+
+export type EmbeddedDocument = {
+  key: string
+  locale: string | null
+  id: string
+  type: string
+  name: string
+  rootElement: Element
+  meta: { allowLocaleFallback: boolean; requestedLocale: string | null }
+  __type: typeof EMBEDDED_DOCUMENT_TYPE
+}
+
+export type Document = BaseDocument | EmbeddedDocument
+
+export function getRootElement(document: Document | DocumentPayload): Element {
+  return document.rootElement
+}
+
+export function createBaseDocument(
+  key: string,
+  rootElement: Element,
+  locale: string | null,
+): Document {
+  return { key, rootElement, locale }
 }
 
 export type State = Map<string, Document>
 
-export function getInitialState({
-  rootElements = new Map(),
-}: { rootElements?: Map<string, Element> } = {}): State {
-  const initialState = new Map()
-
-  rootElements.forEach((rootElement, documentKey) => {
-    initialState.set(documentKey, createDocument(documentKey, rootElement))
-  })
-
-  return initialState
+export function getInitialState({ documents = [] }: { documents?: Document[] } = {}): State {
+  return new Map(documents.map(document => [document.key, document]))
 }
 
 export function getDocuments(state: State): State {
@@ -51,7 +68,8 @@ export function getDocument(state: State, documentKey: string): Document | null 
 export function reducer(state: State = getInitialState(), action: Action): State {
   switch (action.type) {
     case ActionTypes.REGISTER_DOCUMENT:
-      return new Map(state).set(action.payload.documentKey, action.payload.document)
+      const { documentKey, document } = action.payload
+      return new Map(state).set(documentKey, { ...document, locale: document.locale ?? null })
 
     case ActionTypes.UNREGISTER_DOCUMENT: {
       const nextState = new Map(state)

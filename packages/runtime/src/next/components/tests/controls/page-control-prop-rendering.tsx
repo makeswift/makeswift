@@ -9,7 +9,7 @@ import { type Data, type ValueType, type DataType, ControlDefinition } from '@ma
 
 import { ElementData } from '../../../../state/react-page'
 import { Page } from '../../page'
-import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntimeProvider } from '../../../../runtimes/react'
 import { ReactRuntime } from '../../../../react'
 
 import {
@@ -35,6 +35,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
   {
     toData,
     value,
+    locale,
     cacheData,
     expectedRenders,
     registerComponents,
@@ -43,7 +44,8 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
   }: {
     toData?: (value: ValueType<D>) => DataType<D>
     value: ValueType<D> | undefined
-    cacheData?: MakeswiftPageSnapshot['cacheData']
+    locale?: string | null
+    cacheData?: Partial<MakeswiftPageSnapshot['cacheData']>
     expectedRenders?: number
     registerComponents?: (runtime: ReactRuntime) => void
     action?: (element: HTMLElement) => Promise<void>
@@ -70,7 +72,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
     ],
     ROOT_ID,
   )
-  const snapshot = createMakeswiftPageSnapshot(elementData, {}, cacheData)
+  const snapshot = createMakeswiftPageSnapshot(elementData, { locale, cacheData })
   const runtime = new ReactRuntime()
   registerComponents?.(runtime)
 
@@ -99,7 +101,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
   // Assert
   await act(async () =>
     render(
-      <ReactRuntimeProvider runtime={runtime}>
+      <ReactRuntimeProvider runtime={runtime} previewMode={false}>
         <Page snapshot={snapshot} />
       </ReactRuntimeProvider>,
     ),

@@ -48,7 +48,9 @@ describe('Page', () => {
             },
             expectedRenders: 1,
             cacheData: {
-              File: [{ id: imageId, value: fileResource }],
+              apiResources: {
+                File: [{ id: imageId, value: fileResource }],
+              },
             },
             toData: val => ('id' in val ? val.id : 'undefined'),
           })
@@ -81,7 +83,9 @@ describe('Page', () => {
             },
             expectedRenders: 1,
             cacheData: {
-              File: [{ id: imageId, value: fileResource }],
+              apiResources: {
+                File: [{ id: imageId, value: fileResource }],
+              },
             },
           })
         })
@@ -119,7 +123,9 @@ describe('Page', () => {
               value,
               expectedRenders: 1,
               cacheData: {
-                File: [{ id: value.id, value: fileResource }],
+                apiResources: {
+                  File: [{ id: value.id, value: fileResource }],
+                },
               },
             })
           })

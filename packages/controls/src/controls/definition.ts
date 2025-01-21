@@ -35,6 +35,16 @@ export abstract class ControlDefinition<
   ResolvedValueType = Data | unknown,
   InstanceType extends ControlInstance<any> = ControlInstance<any>,
 > extends Serializable {
+  // workaround for TypeScript type inference issues: https://bit.ly/4g2RvOQ
+  __associatedTypes(_: {
+    ControlType: ControlType
+    Config: Config
+    DataType: DataType
+    ValueType: ValueType
+    ResolvedValueType: ResolvedValueType
+    InstanceType: InstanceType
+  }) {}
+
   constructor(readonly config: Config) {
     super()
   }
@@ -63,10 +73,10 @@ export abstract class ControlDefinition<
 
   mergeData(
     base: DataType,
-    override: DataType = base,
+    override: DataType | undefined,
     _context: MergeContext,
   ): DataType {
-    return override
+    return override ?? base
   }
 
   getTranslatableData(_data: DataType): Data {

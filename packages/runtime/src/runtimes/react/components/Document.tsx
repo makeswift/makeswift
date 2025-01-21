@@ -1,7 +1,7 @@
 import { Ref, forwardRef, memo } from 'react'
-import { Document as ReactPageDocument } from '../../../state/react-page'
+import { type Document as ReactPageDocument, getRootElement } from '../../../state/react-page'
 import { ElementImperativeHandle } from '../element-imperative-handle'
-import { DocumentContext } from '../hooks/use-document-key'
+import { DocumentContext } from '../hooks/use-document-context'
 import { Element } from './Element'
 
 type DocumentProps = {
@@ -14,8 +14,8 @@ export const Document = memo(
     ref: Ref<ElementImperativeHandle>,
   ): JSX.Element {
     return (
-      <DocumentContext.Provider value={document.key}>
-        <Element ref={ref} element={document.rootElement} />
+      <DocumentContext.Provider value={document}>
+        <Element ref={ref} element={getRootElement(document)} />
       </DocumentContext.Provider>
     )
   }),

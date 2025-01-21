@@ -20,7 +20,8 @@ import {
   TableQueryResult,
   TableQueryVariables,
 } from '../api/graphql/generated/types'
-import { CacheData, SerializedLocalizedResourcesMap } from '../api/react'
+
+import { CacheData } from '../api/react'
 import { Descriptor as PropControllerDescriptor } from '../prop-controllers/descriptors'
 import {
   getElementChildren,
@@ -32,14 +33,19 @@ import {
 } from '../prop-controllers/introspection'
 import { ReactRuntime } from '../runtimes/react'
 import {
-  Element,
-  ElementData,
+  type Element,
+  type ElementData,
+  type Data,
+  type Document,
   getPropControllerDescriptors,
   isElementReference,
-  Data,
 } from '../state/react-page'
 import { getMakeswiftSiteVersion, MakeswiftSiteVersion } from './preview-mode'
 import { toIterablePaginationResult } from './utils/pagination'
+import { deterministicUUID } from '../utils/deterministic-uuid'
+import { Schema } from '@makeswift/controls'
+import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-only-documents'
+import { MAKESWIFT_CACHE_TAG } from './api-handler/handlers/webhook/site-published'
 
 const makeswiftPageResultSchema = z.object({
   id: z.string(),
@@ -119,13 +125,92 @@ export type MakeswiftPageDocument = {
   locale: string | null
 }
 
+export function pageToRootDocument(pageDocument: MakeswiftPageDocument): Document {
+  const { locale, localizedPages, id, data } = pageDocument
+  const localizedPage = localizedPages.find(({ parentId }) => parentId == null)
+  return localizedPage
+    ? { key: localizedPage.elementTreeId, rootElement: localizedPage.data, locale }
+    : { key: id, rootElement: data, locale }
+}
+
 export type MakeswiftPageSnapshot = {
   document: MakeswiftPageDocument
-  apiOrigin: string
   cacheData: CacheData
-  preview: boolean
-  localizedResourcesMap: SerializedLocalizedResourcesMap
-  locale: string | null
+}
+
+const makeswiftComponentDocumentSchema = z.object({
+  id: z.string(),
+  name: z.string().nullable(),
+  locale: z.string().nullable(),
+  data: Schema.element,
+  siteId: z.string(),
+  inheritsFromParent: z.boolean(),
+})
+
+export type MakeswiftComponentDocument = z.infer<typeof makeswiftComponentDocumentSchema>
+
+const makeswiftComponentDocumentFallbackSchema = z.object({
+  id: z.string(),
+  locale: z.string().nullable(),
+  data: z.null(),
+})
+
+export type MakeswiftComponentDocumentFallback = z.infer<
+  typeof makeswiftComponentDocumentFallbackSchema
+>
+
+export type MakeswiftComponentSnapshotMetadata = {
+  allowLocaleFallback: boolean
+  requestedLocale: string | null
+}
+
+export type MakeswiftComponentSnapshot = {
+  document: MakeswiftComponentDocument | MakeswiftComponentDocumentFallback
+  key: string
+  cacheData: CacheData
+  meta: MakeswiftComponentSnapshotMetadata
+}
+
+export function componentDocumentToRootEmbeddedDocument({
+  document,
+  documentKey,
+  name,
+  type,
+  meta,
+}: {
+  document: MakeswiftComponentDocument | MakeswiftComponentDocumentFallback
+  documentKey: string
+  name: string
+  type: string
+  meta: MakeswiftComponentSnapshotMetadata
+}): EmbeddedDocument {
+  const { data: rootElement, locale, id } = document
+
+  if (rootElement != null && rootElement.type !== type) {
+    throw new Error(
+      `Type "${rootElement.type}" does not match the expected type "${type}" from the snapshot`,
+    )
+  }
+
+  const rootDocument: EmbeddedDocument = {
+    key: documentKey,
+    rootElement: rootElement ?? {
+      // Fallback rootElement
+      // Create a stable uuid so two different clients will have the same empty element data.
+      // This is needed to make presence feature work for an element that is not yet created.
+      key: deterministicUUID({ id, locale, seed: documentKey }),
+      type,
+      props: {},
+    },
+    locale,
+    id,
+    type,
+    name,
+    meta,
+    __type: EMBEDDED_DOCUMENT_TYPE,
+  }
+
+  return rootDocument
 }
 
 type Snippet = {
@@ -169,7 +254,7 @@ type LocalizedPage = {
 
 type MakeswiftConfig = {
   apiOrigin?: string
-  runtime?: ReactRuntime
+  runtime: ReactRuntime
 }
 
 export type Sitemap = {
@@ -219,9 +304,13 @@ export class Makeswift {
     return getMakeswiftSiteVersion(previewData) ?? MakeswiftSiteVersion.Live
   }
 
+  static getPreviewMode(previewData: PreviewData): boolean {
+    return getMakeswiftSiteVersion(previewData) === MakeswiftSiteVersion.Working
+  }
+
   constructor(
     apiKey: string,
-    { apiOrigin = 'https://api.makeswift.com', runtime = ReactRuntime }: MakeswiftConfig = {},
+    { apiOrigin = 'https://api.makeswift.com', runtime }: MakeswiftConfig,
   ) {
     if (typeof apiKey !== 'string') {
       throw new Error(
@@ -257,6 +346,11 @@ export class Makeswift {
         'Makeswift-Site-API-Key': this.apiKey,
         'Makeswift-Site-Version': siteVersion,
         ...init?.headers,
+      },
+      ...(siteVersion === MakeswiftSiteVersion.Working ? { cache: 'no-store' } : {}),
+      next: {
+        ...init?.next,
+        tags: [...(init?.next?.tags ?? []), MAKESWIFT_CACHE_TAG],
       },
     })
 
@@ -381,7 +475,7 @@ export class Makeswift {
     element: Element,
     siteVersion: MakeswiftSiteVersion,
     locale?: string,
-  ): Promise<{ cacheData: CacheData; localizedResourcesMap: SerializedLocalizedResourcesMap }> {
+  ): Promise<CacheData> {
     const runtime = this.runtime
     const descriptors = getPropControllerDescriptors(runtime.store.getState())
     const swatchIds = new Set<string>()
@@ -412,12 +506,11 @@ export class Makeswift {
             siteVersion,
           )
 
-          localizedResourcesMap.set(globalElementId, localizedGlobalElement?.id ?? null)
-
           if (localizedGlobalElement) {
             // Update the logic here when we can merge element trees
             elementData = localizedGlobalElement.data
 
+            localizedResourcesMap.set(globalElementId, localizedGlobalElement.id)
             localizedGlobalElements.set(localizedGlobalElement.id, localizedGlobalElement)
           }
         }
@@ -488,7 +581,7 @@ export class Makeswift {
       siteVersion,
     )
 
-    const cacheData = {
+    const apiResources = {
       [APIResourceType.Swatch]: [...swatchIds].map(id => ({
         id,
         value: swatches.find(swatch => swatch?.id === id) ?? null,
@@ -508,6 +601,7 @@ export class Makeswift {
       [APIResourceType.PagePathnameSlice]: [...pageIds].map(id => ({
         id,
         value: pagePathnames.find(pagePathnameSlice => pagePathnameSlice?.id === id) ?? null,
+        locale,
       })),
       [APIResourceType.GlobalElement]: [...globalElements.entries()].map(([id, value]) => ({
         id,
@@ -517,11 +611,16 @@ export class Makeswift {
         ([id, value]) => ({
           id,
           value,
+          locale,
         }),
       ),
     }
 
-    return { cacheData, localizedResourcesMap: Object.fromEntries(localizedResourcesMap.entries()) }
+    return {
+      apiResources,
+      localizedResourcesMap:
+        locale != null ? { [locale]: Object.fromEntries(localizedResourcesMap.entries()) } : {},
+    }
   }
 
   async getPageSnapshot(
@@ -551,25 +650,84 @@ export class Makeswift {
 
     const document: MakeswiftPageDocument = await response.json()
     const baseLocalizedPage = document.localizedPages.find(({ parentId }) => parentId == null)
-    // We're using the locale from the response instead from the arg because in the server
-    // we make the locale null if the locale === defaultLocale.
-    const locale = document.locale
 
-    const { cacheData, localizedResourcesMap } = await this.introspect(
+    const cacheData = await this.introspect(
       baseLocalizedPage?.data ?? document.data,
       siteVersion,
-      locale ?? undefined,
+      localeInput,
     )
-    const apiOrigin = this.apiOrigin.href
-    const preview = siteVersion === MakeswiftSiteVersion.Working
 
     return {
       document,
       cacheData,
-      apiOrigin,
-      preview,
-      localizedResourcesMap,
+    }
+  }
+
+  async getComponentSnapshot(
+    id: string,
+    {
+      siteVersion: siteVersionPromise,
       locale,
+      allowLocaleFallback = true,
+    }: {
+      siteVersion: MakeswiftSiteVersion | Promise<MakeswiftSiteVersion>
+      locale?: string
+      allowLocaleFallback?: boolean
+    },
+  ): Promise<MakeswiftComponentSnapshot> {
+    const searchParams = new URLSearchParams()
+    if (locale) searchParams.set('locale', locale)
+
+    const siteVersion = await siteVersionPromise
+    const key = deterministicUUID({ id, locale, seed: this.apiKey.split('-').at(0) })
+    const baseLocaleWasRequested = locale == null
+    const canAttemptLocaleFallback = !baseLocaleWasRequested && allowLocaleFallback
+
+    let response
+    const responseForRequestedLocale = await this.fetch(
+      `v1/element-trees/${id}?${searchParams.toString()}`,
+      siteVersion,
+    )
+
+    if (responseForRequestedLocale.status === 404 && canAttemptLocaleFallback) {
+      response = await this.fetch(`v1/element-trees/${id}`, siteVersion)
+    } else {
+      response = responseForRequestedLocale
+    }
+
+    if (response.status === 404) {
+      return {
+        document: {
+          id,
+          locale: locale ?? null,
+          data: null,
+        },
+        key,
+        cacheData: CacheData.empty(),
+        meta: {
+          allowLocaleFallback,
+          requestedLocale: locale ?? null,
+        },
+      }
+    }
+
+    const json = await response.json()
+    if (!response.ok) {
+      console.error('Failed to get page snapshot', json)
+      throw new Error(`Failed to get page snapshot with error: "${response.statusText}"`)
+    }
+
+    const document = makeswiftComponentDocumentSchema.parse(json)
+    const cacheData = await this.introspect(document.data, siteVersion, locale)
+
+    return {
+      document,
+      cacheData,
+      key,
+      meta: {
+        allowLocaleFallback,
+        requestedLocale: locale ?? null,
+      },
     }
   }
 

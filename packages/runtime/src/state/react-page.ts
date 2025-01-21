@@ -1,8 +1,17 @@
-import { type Store as ReduxStore, applyMiddleware, createStore, combineReducers } from 'redux'
-
-import { createSelector } from 'reselect'
+import {
+  applyMiddleware,
+  combineReducers,
+  createStore,
+  type Dispatch as ReduxDispatch,
+  type Middleware,
+  type MiddlewareAPI,
+  type Store as ReduxStore,
+} from 'redux'
 
 import thunk, { ThunkDispatch } from 'redux-thunk'
+import { createSelector } from 'reselect'
+
+import { composeWithDevToolsDevelopmentOnly } from '@redux-devtools/extension'
 
 import {
   createReplacementContext,
@@ -12,6 +21,8 @@ import {
   type MergeTranslatableDataContext,
   type MergeContext,
 } from '@makeswift/controls'
+
+import { serializeState } from '../utils/serializeState'
 
 import * as Documents from './modules/read-only-documents'
 import * as ElementTrees from './modules/element-trees'
@@ -23,7 +34,14 @@ import * as IsInBuilder from './modules/is-in-builder'
 import * as IsPreview from './modules/is-preview'
 import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Breakpoints from './modules/breakpoints'
-import { type Action } from './actions'
+import {
+  type Action,
+  ActionTypes,
+  changeElementTree,
+  createElementTree,
+  deleteElementTree,
+} from './actions'
+
 import { copyElementReference } from '../prop-controllers/copy'
 import {
   copy as copyFromControl,
@@ -31,6 +49,8 @@ import {
   merge,
   mergeTranslatedData,
 } from '../controls/control'
+
+import { type SetupTeardownMixin, withSetupTeardown } from './mixins/setup-teardown'
 
 export type {
   Data,
@@ -42,8 +62,9 @@ export type {
 } from './modules/read-only-documents'
 
 export {
-  createDocument,
+  createBaseDocument,
   createDocumentReference,
+  getRootElement,
   isElementReference,
 } from './modules/read-only-documents'
 
@@ -334,25 +355,80 @@ export function getBreakpoints(state: State): Breakpoints.State {
 
 export type Dispatch = ThunkDispatch<State, unknown, Action>
 
-export type Store = ReduxStore<State, Action> & { dispatch: Dispatch }
+export type Store = ReduxStore<State, Action> & { dispatch: Dispatch } & SetupTeardownMixin
+
+export function elementTreeMiddleware(): Middleware<Dispatch, State, Dispatch> {
+  return ({ dispatch, getState }: MiddlewareAPI<Dispatch, State>) =>
+    (next: ReduxDispatch<Action>) => {
+      return (action: Action): Action => {
+        switch (action.type) {
+          case ActionTypes.REGISTER_DOCUMENT:
+            dispatch(
+              createElementTree({
+                document: action.payload.document,
+                descriptors: getPropControllerDescriptors(getState()),
+              }),
+            )
+            break
+
+          case ActionTypes.CHANGE_DOCUMENT: {
+            const { documentKey, operation } = action.payload
+
+            const oldDocument = getDocument(getState(), documentKey)
+            const result = next(action)
+            const newDocument = getDocument(getState(), documentKey)
+
+            if (oldDocument != null && newDocument != null && newDocument !== oldDocument) {
+              dispatch(
+                changeElementTree({
+                  oldDocument,
+                  newDocument,
+                  descriptors: getPropControllerDescriptors(getState()),
+                  operation,
+                }),
+              )
+            }
+
+            return result
+          }
+
+          case ActionTypes.UNREGISTER_DOCUMENT:
+            dispatch(deleteElementTree(action.payload))
+            break
+        }
+
+        return next(action)
+      }
+    }
+}
 
 export function configureStore({
-  rootElements,
+  name,
   preloadedState,
   breakpoints,
 }: {
-  rootElements?: Map<string, Documents.Element>
-  preloadedState?: Partial<State>
+  name: string
+  preloadedState: Partial<State> | null
   breakpoints?: Breakpoints.State
-} = {}): Store {
+}): Store {
+  const composeEnhancers = composeWithDevToolsDevelopmentOnly({
+    name: `${name} (${new Date().toISOString()})`,
+    serialize: true,
+    stateSanitizer: (state: any) => serializeState(state),
+  })
+
   return createStore(
     reducer,
     {
       ...preloadedState,
-      documents: Documents.getInitialState({ rootElements }),
-      elementTrees: ElementTrees.getInitialState(rootElements, preloadedState?.propControllers),
       breakpoints: Breakpoints.getInitialState(breakpoints ?? preloadedState?.breakpoints),
     },
-    applyMiddleware(thunk),
+    composeEnhancers(
+      withSetupTeardown(
+        () => {},
+        () => {},
+      ),
+      applyMiddleware(thunk, elementTreeMiddleware()),
+    ),
   )
 }

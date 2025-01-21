@@ -10,11 +10,7 @@ import {
   registerDocument,
   unregisterDocument,
 } from '../actions'
-import {
-  propControllerHandlesMiddleware,
-  elementTreeMiddleware,
-  reducer,
-} from '../react-builder-preview'
+import { propControllerHandlesMiddleware, reducer } from '../react-builder-preview'
 
 import * as ReactPage from '../react-page'
 
@@ -29,14 +25,14 @@ describe('propControllerHandlesMiddleware', () => {
     const element: ReactPage.Element = { key: 'elementKey', type: 'type', props: {} }
     const store = createStore(
       reducer,
-      applyMiddleware(thunk, elementTreeMiddleware(), propControllerHandlesMiddleware()),
+      applyMiddleware(thunk, ReactPage.elementTreeMiddleware(), propControllerHandlesMiddleware()),
     )
     const setPropControllers = jest.fn()
     const handle = new ElementImperativeHandle()
 
     handle.callback(() => ({ setPropControllers }))
 
-    store.dispatch(registerDocument(ReactPage.createDocument(documentKey, element)))
+    store.dispatch(registerDocument(ReactPage.createBaseDocument(documentKey, element, null)))
 
     // Act
     store.dispatch(registerComponentHandle(documentKey, element.key, handle))
@@ -55,7 +51,7 @@ describe('propControllerHandlesMiddleware', () => {
 
     handle.callback(() => ({ setPropControllers }))
 
-    store.dispatch(registerDocument(ReactPage.createDocument(documentKey, element)))
+    store.dispatch(registerDocument(ReactPage.createBaseDocument(documentKey, element, null)))
 
     // Act
     store.dispatch(registerComponentHandle(documentKey, element.key, handle))
@@ -73,7 +69,7 @@ describe('elementTreeMiddleware', () => {
     const store = createStore(
       reducer,
       runtime.store.getState(),
-      applyMiddleware(thunk, elementTreeMiddleware()),
+      applyMiddleware(thunk, ReactPage.elementTreeMiddleware()),
     )
 
     const getElements = () => ReactPage.getElements(store.getState(), documentKey)
@@ -86,7 +82,9 @@ describe('elementTreeMiddleware', () => {
 
     // Act / Assert
     store.dispatch(
-      registerDocument(ReactPage.createDocument(documentKey, RootElementFixtures.productOfTheYear)),
+      registerDocument(
+        ReactPage.createBaseDocument(documentKey, RootElementFixtures.productOfTheYear, null),
+      ),
     )
     expect(getElements()).toMatchSnapshot('initial elements')
     expect(getElementIds()).toMatchSnapshot('initial element ids')
@@ -120,7 +118,7 @@ describe('elementTreeMiddleware', () => {
     store.dispatch(unregisterDocument(documentKey))
     store.dispatch(
       registerDocument(
-        ReactPage.createDocument(documentKey, RootElementFixtures.productOfTheYearFinal),
+        ReactPage.createBaseDocument(documentKey, RootElementFixtures.productOfTheYearFinal, null),
       ),
     )
 

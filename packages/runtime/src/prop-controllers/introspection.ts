@@ -9,7 +9,7 @@ import {
 
 import {
   getLinkPropControllerPageIds,
-  getResponsiveColorPropControllerDataSawtchIds,
+  getResponsiveColorPropControllerDataSwatchIds,
   getShadowsPropControllerDataSwatchIds,
   LinkPropControllerData,
   Types as PropControllerTypes,
@@ -97,7 +97,7 @@ export function getSwatchIds<T extends Data>(
     }
 
     case PropControllerTypes.ResponsiveColor:
-      return getResponsiveColorPropControllerDataSawtchIds(prop as ResponsiveColorData)
+      return getResponsiveColorPropControllerDataSwatchIds(prop as ResponsiveColorData)
 
     case PropControllerTypes.Shadows:
       return getShadowsPropControllerDataSwatchIds(prop as ShadowsPropControllerData)

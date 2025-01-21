@@ -1,0 +1,261 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Group Group data gracefully handles missing/extra props copyData 1`] = `
+{
+  "@@makeswift/type": "group::v1",
+  "value": {
+    "color": {
+      "alpha": 1,
+      "swatchId": "[swatch-id]",
+    },
+    "link": undefined,
+    "list": undefined,
+    "text": "Hello world",
+  },
+}
+`;
+
+exports[`Group Group data gracefully handles missing/extra props fromData 1`] = `
+{
+  "color": {
+    "alpha": 1,
+    "swatchId": "[swatch-id]",
+  },
+  "link": undefined,
+  "list": undefined,
+  "text": "Hello world",
+}
+`;
+
+exports[`Group Group data gracefully handles missing/extra props getTranslatableData 1`] = `
+{
+  "color": null,
+  "link": null,
+  "list": null,
+  "text": "Hello world",
+}
+`;
+
+exports[`Group Group data gracefully handles missing/extra props mergeTranslatedData 1`] = `
+{
+  "color": {
+    "alpha": 1,
+    "swatchId": "[swatch-id]",
+  },
+  "link": undefined,
+  "list": undefined,
+  "text": "Hello world",
+}
+`;
+
+exports[`Group Group data gracefully handles missing/extra props toData 1`] = `
+{
+  "@@makeswift/type": "group::v1",
+  "value": {
+    "color": {
+      "@@makeswift/type": "color::v1",
+      "alpha": 1,
+      "swatchId": "[swatch-id]",
+    },
+    "link": {
+      "payload": {
+        "openInNewTab": false,
+        "pageId": "[page-id]",
+      },
+      "type": "OPEN_PAGE",
+    },
+    "list": [
+      {
+        "id": "xxxxxxxx-xxxx-xxxx-xxxx-100000000000",
+        "type": "makeswift::controls::number",
+        "value": {
+          "@@makeswift/type": "number::v1",
+          "value": 17,
+        },
+      },
+    ],
+    "text": {
+      "@@makeswift/type": "text-area::v1",
+      "value": "Hello world",
+    },
+  },
+}
+`;
+
+exports[`Group Group versioned data is gracefully handles missing/extra props copyData 1`] = `
+{
+  "@@makeswift/type": "group::v1",
+  "value": {
+    "color": {
+      "alpha": 1,
+      "swatchId": "[swatch-id]",
+    },
+    "link": undefined,
+    "list": undefined,
+    "text": "Hello world",
+  },
+}
+`;
+
+exports[`Group Group versioned data is gracefully handles missing/extra props fromData 1`] = `
+{
+  "color": {
+    "alpha": 1,
+    "swatchId": "[swatch-id]",
+  },
+  "link": undefined,
+  "list": undefined,
+  "text": "Hello world",
+}
+`;
+
+exports[`Group Group versioned data is gracefully handles missing/extra props getTranslatableData 1`] = `
+{
+  "color": null,
+  "link": null,
+  "list": null,
+  "text": "Hello world",
+}
+`;
+
+exports[`Group Group versioned data is gracefully handles missing/extra props mergeTranslatedData 1`] = `
+{
+  "color": {
+    "alpha": 1,
+    "swatchId": "[swatch-id]",
+  },
+  "link": undefined,
+  "list": undefined,
+  "text": "Hello world",
+}
+`;
+
+exports[`Group Group versioned data is gracefully handles missing/extra props toData 1`] = `
+{
+  "@@makeswift/type": "group::v1",
+  "value": {
+    "color": {
+      "@@makeswift/type": "color::v1",
+      "alpha": 1,
+      "swatchId": "[swatch-id]",
+    },
+    "link": {
+      "payload": {
+        "openInNewTab": false,
+        "pageId": "[page-id]",
+      },
+      "type": "OPEN_PAGE",
+    },
+    "list": [
+      {
+        "id": "xxxxxxxx-xxxx-xxxx-xxxx-100000000001",
+        "type": "makeswift::controls::number",
+        "value": {
+          "@@makeswift/type": "number::v1",
+          "value": 17,
+        },
+      },
+    ],
+    "text": {
+      "@@makeswift/type": "text-area::v1",
+      "value": "Hello world",
+    },
+  },
+}
+`;
+
+exports[`Group constructor heterogenous controls 1`] = `
+GroupDefinition {
+  "config": {
+    "preferredLayout": "makeswift::controls::group::layout::inline",
+    "props": {
+      "num": CheckboxDefinition {
+        "config": {},
+        "version": 1,
+      },
+      "val": ColorDefinition {
+        "config": {
+          "defaultValue": "red",
+        },
+        "version": 1,
+      },
+    },
+  },
+  "dataType": "group::v1",
+}
+`;
+
+exports[`Group serialization serialize/deserialize composable group of controls 1`] = `
+{
+  "config": {
+    "preferredLayout": "makeswift::controls::group::layout::inline",
+    "props": {
+      "group": {
+        "config": {
+          "preferredLayout": "makeswift::controls::group::layout::inline",
+          "props": {
+            "checkbox": {
+              "config": {},
+              "type": "makeswift::controls::checkbox",
+              "version": 1,
+            },
+            "color": {
+              "config": {
+                "defaultValue": "red",
+              },
+              "type": "makeswift::controls::color",
+              "version": 1,
+            },
+          },
+        },
+        "type": "makeswift::controls::group",
+      },
+    },
+  },
+  "type": "makeswift::controls::group",
+}
+`;
+
+exports[`Group serialization serialize/deserialize group of controls 1`] = `
+{
+  "config": {
+    "preferredLayout": "makeswift::controls::group::layout::inline",
+    "props": {
+      "checkbox": {
+        "config": {},
+        "type": "makeswift::controls::checkbox",
+        "version": 1,
+      },
+      "color": {
+        "config": {
+          "defaultValue": "red",
+        },
+        "type": "makeswift::controls::color",
+        "version": 1,
+      },
+    },
+  },
+  "type": "makeswift::controls::group",
+}
+`;
+
+exports[`Group serialization serialize/deserialize label of controls 1`] = `
+{
+  "config": {
+    "label": "Group",
+    "preferredLayout": "makeswift::controls::group::layout::inline",
+    "props": {},
+  },
+  "type": "makeswift::controls::group",
+}
+`;
+
+exports[`Group serialization serialize/deserialize layout of controls 1`] = `
+{
+  "config": {
+    "preferredLayout": "makeswift::controls::group::layout::popover",
+    "props": {},
+  },
+  "type": "makeswift::controls::group",
+}
+`;

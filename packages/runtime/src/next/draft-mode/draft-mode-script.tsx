@@ -1,4 +1,5 @@
 import { draftMode } from 'next/headers'
+import Script from 'next/script'
 import { ActionTypes } from '../../react'
 
 type Props = {
@@ -35,9 +36,12 @@ if (window.parent !== window) {
             return originalFetch.call(this, resource, options)
           }
 
+          const newHeaders = new Headers(request.headers)
+          newHeaders.set(headerName, secret)
+
           return originalFetch.call(
             this,
-            new Request(request, { headers: { [headerName]: secret } }),
+            new Request(request, { headers: newHeaders })
           )
         }
       }
@@ -82,12 +86,12 @@ if (window.parent !== window) {
 
   return (
     <>
-      <script
+      <Script
         id="makeswift-draft-mode"
         type="module"
         dangerouslySetInnerHTML={{ __html: draftModeScript }}
       />
-      <script
+      <Script
         id="makeswift-connection-check"
         type="module"
         dangerouslySetInnerHTML={{ __html: makeswiftConnectionCheckScript }}

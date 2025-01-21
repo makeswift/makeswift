@@ -10,8 +10,10 @@ exports[`Page List of checkboxes when value is [true, false, undefined]: resolve
 
 exports[`Page List of checkboxes when value is [true, false, undefined]: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -76,9 +78,6 @@ exports[`Page List of checkboxes when value is [true, false, undefined]: snapsho
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;
 
@@ -90,8 +89,10 @@ exports[`Page List of colors when value is {"value":[{"swatchId":"[swatch-test-i
 
 exports[`Page List of colors when value is {"value":[{"swatchId":"[swatch-test-id]","alpha":0.5}],"swatch":{"__typename":"Swatch","hue":238,"saturation":87,"lightness":49},"defaultValue":"rgb(255,0,0)"}: snapshot 1`] = `
 {
-  "apiOrigin": "https://test-api-origin.com",
-  "cacheData": {},
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
   "document": {
     "data": {
       "key": "00000000-0000-0000-0000-000000000000",
@@ -144,8 +145,5 @@ exports[`Page List of colors when value is {"value":[{"swatchId":"[swatch-test-i
     },
     "snippets": [],
   },
-  "locale": null,
-  "localizedResourcesMap": {},
-  "preview": false,
 }
 `;

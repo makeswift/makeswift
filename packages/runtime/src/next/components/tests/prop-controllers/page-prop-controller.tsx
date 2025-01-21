@@ -16,7 +16,7 @@ import { randomUUID } from 'crypto'
 
 import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../../context/react-runtime'
+import { ReactRuntimeProvider } from '../../../../runtimes/react'
 import { ReactRuntime } from '../../../../react'
 import {
   createMakeswiftPageSnapshot,
@@ -66,7 +66,7 @@ export const pagePropControllerTest = <
 
       await act(async () =>
         render(
-          <ReactRuntimeProvider runtime={runtime}>
+          <ReactRuntimeProvider runtime={runtime} previewMode={false}>
             <Page snapshot={snapshot} />
           </ReactRuntimeProvider>,
         ),
@@ -107,7 +107,7 @@ export const pagePropControllerTest = <
 
       await act(async () =>
         render(
-          <ReactRuntimeProvider runtime={runtime}>
+          <ReactRuntimeProvider runtime={runtime} previewMode={false}>
             <Page snapshot={snapshot} />
           </ReactRuntimeProvider>,
         ),

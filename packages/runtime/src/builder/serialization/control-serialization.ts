@@ -17,16 +17,19 @@ import {
   ControlDefinition as UnifiedControlDefinition,
   type SerializedRecord,
   type RichTextValue as RichTextControlValue,
+  ShapeV2Definition,
 } from '@makeswift/controls'
 
 import {
   CheckboxDefinition,
   ColorDefinition,
   ComboboxDefinition,
-  ImageDefinition,
+  FontDefinition,
+  GroupDefinition,
   IconRadioGroupDefinition,
-  ListDefinition,
+  ImageDefinition,
   LinkDefinition,
+  ListDefinition,
   NumberDefinition,
   RichTextV1Definition,
   RichTextV2Definition,
@@ -1005,25 +1008,30 @@ export function deserializeUnifiedControlDef(record: DeserializedRecord): Unifie
   const deserializeMethod: Record<string, DeserializeMethod> = {
     [CheckboxDefinition.type]: CheckboxDefinition.deserialize,
     [ColorDefinition.type]: ColorDefinition.deserialize,
-    [NumberDefinition.type]: NumberDefinition.deserialize,
-    [SelectDefinition.type]: SelectDefinition.deserialize,
     [ComboboxDefinition.type]: ComboboxDefinition.deserialize,
+    [FontDefinition.type]: FontDefinition.deserialize,
+    [GroupDefinition.type]: record =>
+      GroupDefinition.deserialize(record, deserializeUnifiedControlDef),
+    [IconRadioGroupDefinition.type]: IconRadioGroupDefinition.deserialize,
     [ImageDefinition.type]: ImageDefinition.deserialize,
+    [LinkDefinition.type]: LinkDefinition.deserialize,
+    [ListDefinition.type]: record =>
+      ListDefinition.deserialize(record, deserializeUnifiedControlDef),
+    [NumberDefinition.type]: NumberDefinition.deserialize,
+    [RichTextV1Definition.type]: RichTextV1Definition.deserialize,
+    [RichTextV2Definition.type]: record =>
+      RichTextV2Definition.deserialize(record, deserializeUnifiedControlDef),
+    [SelectDefinition.type]: SelectDefinition.deserialize,
+    [ShapeDefinition.type]: record =>
+      ShapeDefinition.deserialize(record, deserializeUnifiedControlDef),
+    [ShapeV2Definition.type]: record =>
+      ShapeV2Definition.deserialize(record, deserializeUnifiedControlDef),
     [SlotDefinition.type]: SlotDefinition.deserialize,
+    [StyleDefinition.type]: StyleDefinition.deserialize,
+    [StyleV2Definition.type]: record =>
+      StyleV2Definition.deserialize(record, deserializeUnifiedControlDef),
     [TextAreaDefinition.type]: TextAreaDefinition.deserialize,
     [TextInputDefinition.type]: TextInputDefinition.deserialize,
-    [IconRadioGroupDefinition.type]: IconRadioGroupDefinition.deserialize,
-    [LinkDefinition.type]: LinkDefinition.deserialize,
-    [StyleDefinition.type]: StyleDefinition.deserialize,
-    [ListDefinition.type]: (record: DeserializedRecord) =>
-      ListDefinition.deserialize(record, deserializeUnifiedControlDef),
-    [ShapeDefinition.type]: (record: DeserializedRecord) =>
-      ShapeDefinition.deserialize(record, deserializeUnifiedControlDef),
-    [StyleV2Definition.type]: (record: DeserializedRecord) =>
-      StyleV2Definition.deserialize(record, deserializeUnifiedControlDef),
-    [RichTextV1Definition.type]: RichTextV1Definition.deserialize,
-    [RichTextV2Definition.type]: (record: DeserializedRecord) =>
-      RichTextV2Definition.deserialize(record, deserializeUnifiedControlDef),
     [unstable_TypographyDefinition.type]: unstable_TypographyDefinition.deserialize,
   } as const
 

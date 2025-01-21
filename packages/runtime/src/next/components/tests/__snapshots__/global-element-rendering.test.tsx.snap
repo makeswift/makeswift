@@ -1,0 +1,212 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Page correctly renders a global element 1`] = `
+.emotion-0 {
+  max-width: 100%;
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-0 {
+    width: 700px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-0 {
+    width: 700px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-0 {
+    width: 700px;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-0 {
+    margin-top: 40px;
+    margin-right: auto;
+    margin-bottom: 20px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-0 {
+    margin-top: 40px;
+    margin-right: auto;
+    margin-bottom: 20px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-0 {
+    margin-top: 40px;
+    margin-right: auto;
+    margin-bottom: 20px;
+    margin-left: auto;
+  }
+}
+
+.emotion-1 {
+  margin: 0;
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-2 {
+    font-family: Lato;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.5;
+    font-style: initial;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-2 {
+    font-family: Lato;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.5;
+    font-style: initial;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-2 {
+    font-family: Lato;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.5;
+    font-style: initial;
+  }
+}
+
+<div
+  class="emotion-0"
+  id="title"
+>
+  <div
+    style="position: relative; white-space: pre-wrap; word-wrap: break-word;"
+  >
+    <p
+      class="emotion-1"
+    >
+      <span
+        class="emotion-2"
+      >
+        About Us
+      </span>
+    </p>
+  </div>
+</div>
+`;
+
+exports[`Page correctly renders a localized global element 1`] = `
+.emotion-0 {
+  max-width: 100%;
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-0 {
+    width: 700px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-0 {
+    width: 700px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-0 {
+    width: 700px;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-0 {
+    margin-top: 40px;
+    margin-right: auto;
+    margin-bottom: 20px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-0 {
+    margin-top: 40px;
+    margin-right: auto;
+    margin-bottom: 20px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-0 {
+    margin-top: 40px;
+    margin-right: auto;
+    margin-bottom: 20px;
+    margin-left: auto;
+  }
+}
+
+.emotion-1 {
+  margin: 0;
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-2 {
+    color: hsla(238,87%,49%,1);
+    font-family: Lato;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.5;
+    font-style: initial;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-2 {
+    color: hsla(238,87%,49%,1);
+    font-family: Lato;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.5;
+    font-style: initial;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-2 {
+    color: hsla(238,87%,49%,1);
+    font-family: Lato;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.5;
+    font-style: initial;
+  }
+}
+
+<div
+  class="emotion-0"
+  id="title"
+>
+  <div
+    style="position: relative; white-space: pre-wrap; word-wrap: break-word;"
+  >
+    <p
+      class="emotion-1"
+    >
+      <span
+        class="emotion-2"
+      >
+        À propos de nous
+      </span>
+    </p>
+  </div>
+</div>
+`;

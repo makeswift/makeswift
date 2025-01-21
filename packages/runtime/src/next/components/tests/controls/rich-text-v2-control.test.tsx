@@ -24,46 +24,48 @@ describe('Page', () => {
       await testPageControlPropRendering(RichText(), {
         value: Fixture.data,
         cacheData: {
-          Swatch: [
-            {
-              id: swatchId,
-              value: {
-                __typename: APIResourceType.Swatch,
+          apiResources: {
+            Swatch: [
+              {
                 id: swatchId,
-                hue: 238,
-                saturation: 87,
-                lightness: 49,
+                value: {
+                  __typename: APIResourceType.Swatch,
+                  id: swatchId,
+                  hue: 238,
+                  saturation: 87,
+                  lightness: 49,
+                },
               },
-            },
-          ],
-          Typography: [
-            {
-              id: typographyId,
-              value: {
-                __typename: APIResourceType.Typography,
+            ],
+            Typography: [
+              {
                 id: typographyId,
-                name: 'Body',
-                style: [
-                  {
-                    deviceId: 'desktop',
-                    value: {
-                      fontFamily: 'Lato',
-                      fontSize: { value: 16, unit: 'px' },
-                      color: null,
-                      lineHeight: null,
-                      letterSpacing: null,
-                      fontWeight: null,
-                      textAlign: null,
-                      uppercase: null,
-                      underline: null,
-                      strikethrough: null,
-                      italic: null,
+                value: {
+                  __typename: APIResourceType.Typography,
+                  id: typographyId,
+                  name: 'Body',
+                  style: [
+                    {
+                      deviceId: 'desktop',
+                      value: {
+                        fontFamily: 'Lato',
+                        fontSize: { value: 16, unit: 'px' },
+                        color: null,
+                        lineHeight: null,
+                        letterSpacing: null,
+                        fontWeight: null,
+                        textAlign: null,
+                        uppercase: null,
+                        underline: null,
+                        strikethrough: null,
+                        italic: null,
+                      },
                     },
-                  },
-                ],
+                  ],
+                },
               },
-            },
-          ],
+            ],
+          },
         },
         expectedRenders: 1,
       })

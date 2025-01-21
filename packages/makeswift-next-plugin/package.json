@@ -15,7 +15,7 @@
     "plugin"
   ],
   "peerDependencies": {
-    "next": "^13.4.0 || ^14.0.0"
+    "next": "^13.4.0 || ^14.0.0 || ^15.0.0"
   },
   "dependencies": {
     "enhanced-resolve": "5.10.0",

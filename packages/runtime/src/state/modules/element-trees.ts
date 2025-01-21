@@ -1,11 +1,13 @@
 import { type Operation } from 'ot-json0'
 import { getIn } from 'immutable'
 
-import { type Element, ElementData, isElementReference } from '@makeswift/controls'
+import { type Element, type ElementData, isElementReference } from '@makeswift/controls'
 
-import { type Action, ActionTypes } from '../actions'
 import { Introspection } from '../../prop-controllers'
 
+import { type Action, ActionTypes } from '../actions'
+
+import { getRootElement, type Document } from './read-only-documents'
 import { type DescriptorsByComponentType } from './prop-controllers'
 
 export type ElementTree = {
@@ -16,14 +18,14 @@ export type ElementTree = {
 export type State = Map<string, ElementTree>
 
 export function getInitialState(
-  rootElements?: Map<string, Element>,
+  documents?: Map<string, Document>,
   descriptors?: DescriptorsByComponentType,
 ): State {
   const state = new Map<string, ElementTree>()
-  if (rootElements == null || descriptors == null) return state
+  if (documents == null || descriptors == null) return state
 
-  for (const [documentKey, rootElement] of rootElements) {
-    state.set(documentKey, buildElementTree(rootElement, descriptors))
+  for (const [documentKey, document] of documents) {
+    state.set(documentKey, buildElementTree(getRootElement(document), descriptors))
   }
 
   return state
@@ -53,7 +55,10 @@ export function reducer(state: State = getInitialState(), action: Action): State
   switch (action.type) {
     case ActionTypes.CREATE_ELEMENT_TREE: {
       const { document, descriptors } = action.payload
-      return new Map(state).set(document.key, buildElementTree(document.rootElement, descriptors))
+      return new Map(state).set(
+        document.key,
+        buildElementTree(getRootElement(document), descriptors),
+      )
     }
 
     case ActionTypes.DELETE_ELEMENT_TREE: {
@@ -76,7 +81,10 @@ export function reducer(state: State = getInitialState(), action: Action): State
       const updatedElementTree = applyChanges(
         elementTree,
         descriptors,
-        { old: oldDocument.rootElement, new: newDocument.rootElement },
+        {
+          old: getRootElement(oldDocument),
+          new: getRootElement(newDocument),
+        },
         operation,
       )
 

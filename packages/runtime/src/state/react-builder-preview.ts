@@ -2,17 +2,18 @@ import {
   applyMiddleware,
   combineReducers,
   createStore,
-  compose,
   type Dispatch as ReduxDispatch,
   type Middleware,
   type MiddlewareAPI,
   type Store as ReduxStore,
-  type StoreEnhancer,
 } from 'redux'
-import thunk, { type ThunkAction, type ThunkDispatch } from 'redux-thunk'
+import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk'
+import { composeWithDevToolsDevelopmentOnly } from '@redux-devtools/extension'
+
 import { ControlInstance } from '@makeswift/controls'
 
 import deepEqual from '../utils/deepEqual'
+import { serializeState } from '../utils/serializeState'
 
 import * as Documents from './modules/read-write-documents'
 import * as ElementTrees from './modules/element-trees'
@@ -27,19 +28,20 @@ import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Pointer from './modules/pointer'
 import * as ElementImperativeHandles from './modules/element-imperative-handles'
 import * as Breakpoints from './modules/breakpoints'
+
+import { type SetupTeardownMixin, withSetupTeardown } from './mixins/setup-teardown'
+
 import * as ReactPage from './react-page'
 import {
   type Action,
   ActionTypes,
   changeDocumentElementSize,
   changeElementBoxModels,
-  changeElementTree,
   elementFromPointChange,
   handleWheel,
   handlePointerMove,
   messageBuilderPropController,
   registerBuilderComponent,
-  createElementTree,
   registerMeasurable,
   registerPropControllers,
   registerPropControllersHandle,
@@ -47,7 +49,6 @@ import {
   setIsInBuilder,
   unregisterBuilderComponent,
   unregisterBuilderDocument,
-  deleteElementTree,
   unregisterMeasurable,
   unregisterPropControllers,
   registerBuilderDocument,
@@ -82,10 +83,6 @@ export type State = ReturnType<typeof reducer>
 
 function getDocumentsStateSlice(state: State): Documents.State {
   return state.documents
-}
-
-function getDocument(state: State, documentKey: string): Documents.Document | null {
-  return Documents.getDocument(getDocumentsStateSlice(state), documentKey)
 }
 
 function getBoxModelsStateSlice(state: State): BoxModels.State {
@@ -525,7 +522,6 @@ function measureBoxModelsMiddleware(): Middleware<Dispatch, State, Dispatch> {
 }
 
 export function messageChannelMiddleware(
-  client: MakeswiftHostApiClient,
   channel: IMessageChannel,
 ): Middleware<Dispatch, State, Dispatch> {
   return ({ dispatch }: MiddlewareAPI<Dispatch, State>) =>
@@ -572,11 +568,6 @@ export function messageChannelMiddleware(
             channel.postMessage(action)
             window.getSelection()?.removeAllRanges()
             break
-
-          case ActionTypes.SET_LOCALIZED_RESOURCE_ID: {
-            client.setLocalizedResourceId(action.payload)
-            break
-          }
 
           case ActionTypes.INIT:
             // dispatched by the parent window after establishing the connection
@@ -680,51 +671,6 @@ export function propControllerHandlesMiddleware(): Middleware<Dispatch, State, D
     }
 }
 
-export function elementTreeMiddleware(): Middleware<Dispatch, State, Dispatch> {
-  return ({ dispatch, getState }: MiddlewareAPI<Dispatch, State>) =>
-    (next: ReduxDispatch<Action>) => {
-      return (action: Action): Action => {
-        switch (action.type) {
-          case ActionTypes.REGISTER_DOCUMENT:
-            dispatch(
-              createElementTree({
-                document: action.payload.document,
-                descriptors: ReactPage.getPropControllerDescriptors(getState()),
-              }),
-            )
-            break
-
-          case ActionTypes.CHANGE_DOCUMENT: {
-            const { documentKey, operation } = action.payload
-
-            const oldDocument = getDocument(getState(), documentKey)
-            const result = next(action)
-            const newDocument = getDocument(getState(), documentKey)
-
-            if (oldDocument != null && newDocument != null && newDocument !== oldDocument) {
-              dispatch(
-                changeElementTree({
-                  oldDocument,
-                  newDocument,
-                  descriptors: ReactPage.getPropControllerDescriptors(getState()),
-                  operation,
-                }),
-              )
-            }
-
-            return result
-          }
-
-          case ActionTypes.UNREGISTER_DOCUMENT:
-            dispatch(deleteElementTree(action.payload))
-            break
-        }
-
-        return next(action)
-      }
-    }
-}
-
 function makeswiftApiClientSyncMiddleware(
   client: MakeswiftHostApiClient,
 ): Middleware<Dispatch, State, Dispatch> {
@@ -784,45 +730,36 @@ function setupMessageChannel(channel: MessageChannel): ThunkAction<void, State, 
   }
 }
 
-interface SetupTeardownMixin {
-  setup: () => void
-  teardown: () => void
-}
-
 export type Store = ReduxStore<State, Action> & { dispatch: Dispatch } & SetupTeardownMixin
 
-function withSetupTeardown(
-  setup: () => void,
-  teardown: () => void,
-): StoreEnhancer<SetupTeardownMixin> {
-  return next => (reducer, preloadedState?) => ({
-    ...next(reducer, preloadedState),
-    setup,
-    teardown,
-  })
-}
-
 export function configureStore({
-  rootElements,
   preloadedState,
   client,
 }: {
-  rootElements?: Map<string, Documents.Element>
-  preloadedState?: Partial<State>
+  preloadedState: Partial<State>
   client: MakeswiftHostApiClient
 }): Store {
   const initialState: Partial<State> = {
     ...preloadedState,
-    documents: Documents.getInitialState({ rootElements }),
-    elementTrees: ElementTrees.getInitialState(rootElements, preloadedState?.propControllers),
     isPreview: IsPreview.getInitialState(true),
   }
+
+  const composeEnhancers = composeWithDevToolsDevelopmentOnly({
+    name: `Host store (${new Date().toISOString()})`,
+    serialize: true,
+    stateSanitizer: (state: any) => serializeState(state),
+    actionsDenylist: [
+      ActionTypes.BUILDER_POINTER_MOVE,
+      ActionTypes.HANDLE_POINTER_MOVE,
+      ActionTypes.ELEMENT_FROM_POINT_CHANGE,
+    ],
+  })
 
   const channel = new MessageChannel()
   const store = createStore(
     reducer,
     initialState,
-    compose(
+    composeEnhancers(
       withSetupTeardown(
         () => {
           const dispatch = store.dispatch as Dispatch
@@ -832,9 +769,9 @@ export function configureStore({
       ),
       applyMiddleware(
         thunk,
-        elementTreeMiddleware(),
+        ReactPage.elementTreeMiddleware(),
         measureBoxModelsMiddleware(),
-        messageChannelMiddleware(client, channel),
+        messageChannelMiddleware(channel),
         propControllerHandlesMiddleware(),
         makeswiftApiClientSyncMiddleware(client),
       ),
