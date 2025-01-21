@@ -1,5 +1,17 @@
 # @makeswift/prop-controllers
 
+## 0.4.0
+
+### Minor Changes
+
+- 691be81: fix: correct typo in introspection method: `getResponsiveColorPropControllerDataSawtchIds` -> `getResponsiveColorPropControllerDataSwatchIds`
+
+### Patch Changes
+
+- Updated dependencies [0e503bb]
+- Updated dependencies [8d9a47b]
+  - @makeswift/controls@0.1.7
+
 ## 0.3.7
 
 ### Patch Changes
