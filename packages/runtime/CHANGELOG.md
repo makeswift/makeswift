@@ -1,6 +1,6 @@
 # @makeswift/runtime
 
-## 0.23.0-canary.0
+## 0.23.0
 
 ### Minor Changes
 
@@ -17,7 +17,9 @@
 
 - e9f5f60: fix: not found localized global components saved as `null` (previouly saved "not found" payload)
 - 5f32bd4: Add fallback prop to MakeswiftComponent, restructure element data rendering primitives.
-- 0e503bb: ### New `Group` control
+- 0e503bb: New `Group` control:
+
+  ### New `Group` control
 
   We are introducing a new control called `Group`, designed to be a more versatile replacement for the `Shape` control, which has been deprecated and will be removed in a future release.
 
@@ -60,7 +62,9 @@
 - 1ad6d2a: Prevent default styles from overriding resolved props styles based on injection
   order. Default styles are now conditionally applied if resolved styles are not
   provided.
-- 8d9a47b: ### New `Font` control
+- 8d9a47b: New `Font` control:
+
+  ### New `Font` control
 
   We now have a `Font` control. This control let's you select a `fontFamily`, `fontStyle`, and `fontWeight`.
   The values available are sourced from our Google Fonts integration within Makeswift and from the variants you pass to `getFonts` in your [`MakeswiftApiHandler`](https://docs.makeswift.com/developer/reference/makeswift-api-handler).
@@ -217,9 +221,9 @@
 - Updated dependencies [0e503bb]
 - Updated dependencies [691be81]
 - Updated dependencies [8d9a47b]
-  - @makeswift/next-plugin@0.3.1-canary.0
-  - @makeswift/controls@0.1.7-canary.0
-  - @makeswift/prop-controllers@0.4.0-canary.0
+  - @makeswift/next-plugin@0.3.1
+  - @makeswift/controls@0.1.7
+  - @makeswift/prop-controllers@0.4.0
 
 ## 0.22.3
 

@@ -1,10 +1,12 @@
 # @makeswift/controls
 
-## 0.1.7-canary.0
+## 0.1.7
 
 ### Patch Changes
 
-- 0e503bb: ### New `Group` control
+- 0e503bb: New `Group` control:
+
+  ### New `Group` control
 
   We are introducing a new control called `Group`, designed to be a more versatile replacement for the `Shape` control, which has been deprecated and will be removed in a future release.
 
@@ -39,7 +41,9 @@
 
   For full documentation, visit the [`Group` control reference page](https://docs.makeswift.com/developer/reference/controls/group).
 
-- 8d9a47b: ### New `Font` control
+- 8d9a47b: New `Font` control:
+
+  ### New `Font` control
 
   We now have a `Font` control. This control let's you select a `fontFamily`, `fontStyle`, and `fontWeight`.
   The values available are sourced from our Google Fonts integration within Makeswift and from the variants you pass to `getFonts` in your [`MakeswiftApiHandler`](https://docs.makeswift.com/developer/reference/makeswift-api-handler).
