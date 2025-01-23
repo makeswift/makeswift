@@ -5,7 +5,7 @@ import { Descendant, Text } from 'slate'
 import { Slate, RichTextValue, richTextDTOtoDAO } from '@makeswift/controls'
 
 import { useResponsiveStyle } from '../../../../components/utils/responsive-style'
-import { InlineType, BlockType } from '../../../../slate'
+import { InlineType, BlockType } from '../../../../slate/types'
 import { useStyle } from '../../use-style'
 import useEnhancedTypography, { useTypographyClassName } from '../typography'
 import { Link } from '../../../../components/shared/Link'

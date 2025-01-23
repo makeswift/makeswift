@@ -1,13 +1,14 @@
 import { ForwardedRef, forwardRef } from 'react'
+import { Descendant, Element, Text } from 'slate'
+import { RenderElementProps, RenderLeafProps } from 'slate-react'
 
 import { RichTextV2Definition, RichText } from '../../../../controls/rich-text-v2'
 import { useStyle } from '../../use-style'
-import { Descendant, Element, Text } from 'slate'
-import { toText } from '../../../../slate'
-import { ControlValue } from '../control'
-import { RenderElementProps, RenderLeafProps } from 'slate-react'
+import { toText } from '../../../../slate/utils'
 import { RichTextV2Plugin } from '../../../../controls/rich-text-v2/plugin'
 import { RichTextDataV2 } from '../../../../controls/rich-text-v2'
+
+import { ControlValue } from '../control'
 
 type Props = {
   text: RichTextDataV2 | undefined
