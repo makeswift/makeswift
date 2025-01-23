@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.1
+
+### Patch Changes
+
+- 5882618: fix: "attempted import" errors on registering components in server-side code
+
 ## 0.23.0
 
 ### Minor Changes
