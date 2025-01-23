@@ -2,38 +2,84 @@ import { NextRequest } from 'next/server'
 import { http, HttpResponse } from 'msw'
 import { server } from '../../../mocks/server'
 import proxyDraftMode from './proxy-draft-mode'
+import { env } from 'process'
 
 jest.mock('next/headers', () => ({
   draftMode: jest.fn().mockReturnValue({ enable: jest.fn(), disable: jest.fn() }),
   cookies: jest.fn().mockReturnValue({ get: jest.fn() }),
 }))
 
-describe('proxyDraftMode URL handling', () => {
-  const mockApiKey = 'test-api-key'
+const mockApiKey = 'test-api-key'
   
-  server.use(
-    http.all('*', () => {
-      return new HttpResponse()
-    })
-  )
+beforeAll(() => {
+  server.listen()
+})
 
+afterAll(() => {
+  console.log('afterAll')
+  server.close()
+})
+
+afterEach(() => {
+  console.log('afterEach')
+  server.resetHandlers()
+  jest.clearAllMocks()
+})
+
+describe('ForceHTTP proxyDraftMode URL handling', () => {
   beforeAll(() => {
-    server.listen()
+    env.FORCE_HTTP = 'true'
   })
 
   afterAll(() => {
-    server.close()
+    env.FORCE_HTTP = 'false'
   })
 
-  afterEach(() => {
-    server.resetHandlers()
-    jest.clearAllMocks()
+  it('should force protocol to http and use host from `host` from headers instead of `x-forwarded-host`', async () => {
+    const originalUrl = new URL(`https://example.com?x-makeswift-draft-mode=${mockApiKey}&keep=this`)
+    
+    let capturedRequest: NextRequest | null = null
+      server.use(
+        http.all('*', ({ request }) => {
+          capturedRequest = new NextRequest(request)
+          return new HttpResponse()
+        })
+      )
+
+    const request = new NextRequest(originalUrl)
+    request.headers.append("X-Makeswift-Draft-Mode",mockApiKey )
+    request.headers.append("x-forwarded-host", "localhost:3000")
+
+    const originalProtocol = request.nextUrl.protocol
+    
+    await proxyDraftMode(request, { params: {} }, { apiKey: mockApiKey })
+
+
+    // Make sure original request is not changed.
+    expect(request.nextUrl.protocol).toBe(originalProtocol)
+    expect(capturedRequest).not.toBeNull()
+
+    // Verify host is same as original host.
+    expect(capturedRequest!.headers.get('host')).toBe(request.headers.get('host'))
+    expect(capturedRequest!.headers.has('X-Makeswift-Draft-Mode')).toBe(false)
+
+    // Verify https was replaced with http after force_http
+    expect(capturedRequest!.nextUrl.protocol).toBe('http:')
+    expect(capturedRequest!.nextUrl.searchParams.has('x-makeswift-draft-mode')).toBe(false)
+    expect(capturedRequest!.nextUrl.searchParams.get('keep')).toBe('this')
+    
   })
 
-  describe('URL mutation safety', () => {
+})
+
+describe('proxyDraftMode URL mutation safety', () => {
     it('should not modify the original request URL when removing search params', async () => {
       const originalUrl = new URL(`https://example.com?x-makeswift-draft-mode=${mockApiKey}&keep=this`)
-      
+      server.use(
+        http.all('*', () => {
+          return new HttpResponse()
+        })
+      )
       const request = new NextRequest(originalUrl)
       request.headers.append("X-Makeswift-Draft-Mode", mockApiKey)
 
@@ -70,5 +116,4 @@ describe('proxyDraftMode URL handling', () => {
       expect(url.searchParams.has('x-makeswift-draft-mode')).toBe(false)
       expect(url.searchParams.get('keep')).toBe('this')
     })
-  })
 })
