@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.24.0-canary.0
+
+### Minor Changes
+
+- 68922c3: feat(runtime): Use headers to create proxied url
+  feat(runtime): Add FORCE_HTTP env variable to force http protocol
+
 ## 0.23.1
 
 ### Patch Changes
