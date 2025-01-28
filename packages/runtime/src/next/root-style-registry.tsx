@@ -7,26 +7,32 @@ import { ReactNode, createContext, useContext, useState } from 'react'
 
 const CacheContext = createContext(cache)
 
+const createRootStyleCache = () => {
+  const cache = createCache({ key: 'css' })
+  cache.compat = true
+
+  const prevInsert = cache.insert
+  let inserted: string[] = []
+
+  cache.insert = (...args) => {
+    const serialized = args[1]
+    if (cache.inserted[serialized.name] === undefined) {
+      inserted.push(serialized.name)
+    }
+    return prevInsert(...args)
+  }
+
+  const flush = () => {
+    const prevInserted = inserted
+    inserted = []
+    return prevInserted
+  }
+
+  return { cache, flush }
+}
+
 export function RootStyleRegistry({ children }: { children: ReactNode }) {
-  const [{ cache, flush }] = useState(() => {
-    const cache = createCache({ key: 'css' })
-    cache.compat = true
-    const prevInsert = cache.insert
-    let inserted: string[] = []
-    cache.insert = (...args) => {
-      const serialized = args[1]
-      if (cache.inserted[serialized.name] === undefined) {
-        inserted.push(serialized.name)
-      }
-      return prevInsert(...args)
-    }
-    const flush = () => {
-      const prevInserted = inserted
-      inserted = []
-      return prevInserted
-    }
-    return { cache, flush }
-  })
+  const [{ cache, flush }] = useState(() => createRootStyleCache())
 
   useServerInsertedHTML(() => {
     const names = flush()
@@ -35,6 +41,7 @@ export function RootStyleRegistry({ children }: { children: ReactNode }) {
     for (const name of names) {
       styles += cache.inserted[name]
     }
+
     return (
       <style
         data-emotion={`${cache.key} ${names.join(' ')}`}

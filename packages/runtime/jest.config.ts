@@ -1,6 +1,9 @@
 import type { Config } from 'jest'
 
 const config: Config = {
+  moduleNameMapper: {
+    'react-dom/server': '<rootDir>/node_modules/react-dom/server.browser.js',
+  },
   modulePathIgnorePatterns: ['<rootDir>/dist'],
   moduleDirectories: ['node_modules', 'src'],
   testMatch: [

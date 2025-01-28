@@ -85,11 +85,17 @@ export function useResolvedProps(
 
   const props = useMemo(() => resolvableRecord(resolvables), [resolvables])
 
-  stylesheetFactory.useDefinedStyles()
-
+  // no need to call `triggerResolve` on the server, all the resources should already be in
+  // the host API client's cache (populated from the snapshot's cache)
   useEffect(() => {
     props.triggerResolve()
   }, [])
 
-  return useSyncExternalStore(props.subscribe, props.readStable, props.readStable)
+  // the order is important here, the styles are defined in the process of the props resolution,
+  // calling `useDefinedStyles` before the props are resolved would effectively be a noop
+  const resolvedProps = useSyncExternalStore(props.subscribe, props.readStable, props.readStable)
+
+  stylesheetFactory.useDefinedStyles()
+
+  return resolvedProps
 }
