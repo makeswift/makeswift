@@ -14,14 +14,9 @@ import {
 } from '@makeswift/prop-controllers'
 import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../../../runtimes/react'
 import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
-import {
-  createMakeswiftPageSnapshot,
-  createRootComponent,
-} from '../../../../utils/tests/element-data-test-test'
-import { DESKTOP_MEDIA_QUERY } from '../../../../utils/tests/breakpoint-test-util'
+import * as Testing from '../../../../runtimes/react/testing'
 
 describe('Page', () => {
   test('can render MarginPropController v0 data', async () => {
@@ -43,7 +38,7 @@ describe('Page', () => {
     ]
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
-    const elementData: ElementData = createRootComponent([
+    const elementData: ElementData = Testing.createRootComponent([
       {
         key: randomUUID(),
         type: TestComponentType,
@@ -55,7 +50,7 @@ describe('Page', () => {
         },
       },
     ])
-    const snapshot = createMakeswiftPageSnapshot(elementData)
+    const snapshot = Testing.createMakeswiftPageSnapshot(elementData)
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
@@ -73,14 +68,14 @@ describe('Page', () => {
 
     await act(async () =>
       render(
-        <ReactRuntimeProvider runtime={runtime} previewMode={false}>
+        <Testing.ReactProvider runtime={runtime}>
           <Page snapshot={snapshot} />
-        </ReactRuntimeProvider>,
+        </Testing.ReactProvider>,
       ),
     )
 
     expect(screen.getByTestId(testId)).toHaveStyleRule('margin-top', 'auto', {
-      media: DESKTOP_MEDIA_QUERY,
+      media: Testing.DESKTOP_MEDIA_QUERY,
     })
   })
 
@@ -104,7 +99,7 @@ describe('Page', () => {
     ]
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
-    const elementData: ElementData = createRootComponent([
+    const elementData: ElementData = Testing.createRootComponent([
       {
         key: randomUUID(),
         type: TestComponentType,
@@ -116,7 +111,7 @@ describe('Page', () => {
         },
       },
     ])
-    const snapshot = createMakeswiftPageSnapshot(elementData)
+    const snapshot = Testing.createMakeswiftPageSnapshot(elementData)
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
@@ -134,14 +129,14 @@ describe('Page', () => {
 
     await act(async () =>
       render(
-        <ReactRuntimeProvider runtime={runtime} previewMode={false}>
+        <Testing.ReactProvider runtime={runtime}>
           <Page snapshot={snapshot} />
-        </ReactRuntimeProvider>,
+        </Testing.ReactProvider>,
       ),
     )
 
     expect(screen.getByTestId(testId)).toHaveStyleRule('margin-top', 'auto', {
-      media: DESKTOP_MEDIA_QUERY,
+      media: Testing.DESKTOP_MEDIA_QUERY,
     })
   })
 })

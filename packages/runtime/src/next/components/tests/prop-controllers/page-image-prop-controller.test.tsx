@@ -14,13 +14,9 @@ import {
 } from '@makeswift/prop-controllers'
 import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../../../runtimes/react'
 import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
-import {
-  createMakeswiftPageSnapshot,
-  createRootComponent,
-} from '../../../../utils/tests/element-data-test-test'
+import * as Testing from '../../../../runtimes/react/testing'
 
 describe('Page', () => {
   test('can render ImagePropController v0 data', async () => {
@@ -32,7 +28,7 @@ describe('Page', () => {
     const imageData: ImageData = 'fileId'
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
-    const elementData: ElementData = createRootComponent([
+    const elementData: ElementData = Testing.createRootComponent([
       {
         key: randomUUID(),
         type: TestComponentType,
@@ -41,7 +37,7 @@ describe('Page', () => {
         },
       },
     ])
-    const snapshot = createMakeswiftPageSnapshot(elementData)
+    const snapshot = Testing.createMakeswiftPageSnapshot(elementData)
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
@@ -67,9 +63,9 @@ describe('Page', () => {
 
     await act(async () =>
       render(
-        <ReactRuntimeProvider runtime={runtime} previewMode={false}>
+        <Testing.ReactProvider runtime={runtime}>
           <Page snapshot={snapshot} />
-        </ReactRuntimeProvider>,
+        </Testing.ReactProvider>,
       ),
     )
 
@@ -91,7 +87,7 @@ describe('Page', () => {
     }
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
-    const elementData: ElementData = createRootComponent([
+    const elementData: ElementData = Testing.createRootComponent([
       {
         key: randomUUID(),
         type: TestComponentType,
@@ -100,7 +96,7 @@ describe('Page', () => {
         },
       },
     ])
-    const snapshot = createMakeswiftPageSnapshot(elementData)
+    const snapshot = Testing.createMakeswiftPageSnapshot(elementData)
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
@@ -126,9 +122,9 @@ describe('Page', () => {
 
     await act(async () =>
       render(
-        <ReactRuntimeProvider runtime={runtime} previewMode={false}>
+        <Testing.ReactProvider runtime={runtime}>
           <Page snapshot={snapshot} />
-        </ReactRuntimeProvider>,
+        </Testing.ReactProvider>,
       ),
     )
 
@@ -150,7 +146,7 @@ describe('Page', () => {
     }
     const TestComponentType = 'TestComponent'
     const testId = 'test-id'
-    const elementData: ElementData = createRootComponent([
+    const elementData: ElementData = Testing.createRootComponent([
       {
         key: randomUUID(),
         type: TestComponentType,
@@ -159,7 +155,7 @@ describe('Page', () => {
         },
       },
     ])
-    const snapshot = createMakeswiftPageSnapshot(elementData)
+    const snapshot = Testing.createMakeswiftPageSnapshot(elementData)
     const runtime = new ReactRuntime()
 
     runtime.registerComponent(
@@ -185,9 +181,9 @@ describe('Page', () => {
 
     await act(async () =>
       render(
-        <ReactRuntimeProvider runtime={runtime} previewMode={false}>
+        <Testing.ReactProvider runtime={runtime}>
           <Page snapshot={snapshot} />
-        </ReactRuntimeProvider>,
+        </Testing.ReactProvider>,
       ),
     )
 
