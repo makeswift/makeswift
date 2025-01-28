@@ -4,7 +4,7 @@ import '@testing-library/jest-dom'
 import { act } from 'react-dom/test-utils'
 import { render, screen } from '@testing-library/react'
 import { ReactRuntime } from '../../../react'
-import { ReactRuntimeProvider } from '../../../runtimes/react'
+import * as Testing from '../../../runtimes/react/testing'
 import { MakeswiftComponent } from '../MakeswiftComponent'
 import {
   type MakeswiftComponentSnapshotMetadata,
@@ -72,13 +72,13 @@ async function testMakeswiftComponentRendering(snapshot: MakeswiftComponentSnaps
 
   await act(async () =>
     render(
-      <ReactRuntimeProvider runtime={runtime} previewMode={false}>
+      <Testing.ReactProvider runtime={runtime} previewMode={false}>
         <MakeswiftComponent
           label="Embedded Component"
           type={CustomComponentType}
           snapshot={snapshot}
         />
-      </ReactRuntimeProvider>,
+      </Testing.ReactProvider>,
     ),
   )
 }
