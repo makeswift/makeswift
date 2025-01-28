@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a style: component styles 1`] = `
+[
+  ".css-1cny9vj{max-width:100%;}@media only screen and (min-width: 769px){.css-1cny9vj{width:80%;margin-top:4px;margin-right:auto;margin-bottom:0px;margin-left:auto;}}@media only screen and (min-width: 576px) and (max-width: 768px){.css-1cny9vj{width:80%;margin-top:4px;margin-right:auto;margin-bottom:0px;margin-left:auto;}}@media only screen and (max-width: 575px){.css-1cny9vj{width:80%;margin-top:4px;margin-right:auto;margin-bottom:0px;margin-left:auto;}}",
+]
+`;
+
+exports[`renders a style: resolvedValue 1`] = `"css-1cny9vj u-R0-propKey"`;
