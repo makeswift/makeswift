@@ -11,6 +11,15 @@ NodeList [
   vertical-align: text-top;
 }
 
+.emotion-0 {
+  display: inline-block;
+  width: 0;
+  max-width: 100%;
+  white-space: nowrap;
+  opacity: 0.333;
+  vertical-align: text-top;
+}
+
 <div
     style="position: relative; white-space: pre-wrap; word-wrap: break-word;"
   >
@@ -154,13 +163,13 @@ NodeList [
   margin: 0;
 }
 
-.emotion-2 {
+.emotion-3 {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
 @media only screen and (min-width: 769px) {
-  .emotion-3 {
+  .emotion-4 {
     color: hsla(238,87%,49%,1);
     font-family: Lato;
     font-size: 16px;
@@ -168,7 +177,7 @@ NodeList [
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-3 {
+  .emotion-4 {
     color: hsla(238,87%,49%,1);
     font-family: Lato;
     font-size: 16px;
@@ -176,7 +185,7 @@ NodeList [
 }
 
 @media only screen and (max-width: 575px) {
-  .emotion-3 {
+  .emotion-4 {
     color: hsla(238,87%,49%,1);
     font-family: Lato;
     font-size: 16px;
@@ -187,7 +196,7 @@ NodeList [
     style="position: relative; white-space: pre-wrap; word-wrap: break-word;"
   >
     <p
-      class="emotion-0"
+      class="emotion-0 emotion-1"
     >
       <span
         class="emotion-1"
@@ -195,12 +204,12 @@ NodeList [
         ﻿
       </span>
       <a
-        class="emotion-2"
+        class="emotion-3"
         href="https://www.bigcommerce.com/adyen"
         target="_blank"
       >
         <span
-          class="emotion-3"
+          class="emotion-4"
         >
           Adyen
         </span>
@@ -212,7 +221,7 @@ NodeList [
       </span>
     </p>
     <p
-      class="emotion-0"
+      class="emotion-0 emotion-1"
     >
       <span
         class="emotion-1"
@@ -220,12 +229,12 @@ NodeList [
         ﻿
       </span>
       <a
-        class="emotion-2"
+        class="emotion-3"
         href="http://www.authorize.net/"
         target="_blank"
       >
         <span
-          class="emotion-3"
+          class="emotion-4"
         >
           Authorize.net
         </span>
@@ -237,7 +246,7 @@ NodeList [
       </span>
     </p>
     <p
-      class="emotion-0"
+      class="emotion-0 emotion-1"
     >
       <span
         class="emotion-1"
@@ -245,12 +254,12 @@ NodeList [
         ﻿
       </span>
       <a
-        class="emotion-2"
+        class="emotion-3"
         href="https://www.bigcommerce.com/bluesnap/"
         target="_blank"
       >
         <span
-          class="emotion-3"
+          class="emotion-4"
         >
           BlueSnap
         </span>
@@ -262,7 +271,7 @@ NodeList [
       </span>
     </p>
     <p
-      class="emotion-0"
+      class="emotion-0 emotion-1"
     >
       <span
         class="emotion-1"
@@ -270,12 +279,12 @@ NodeList [
         ﻿
       </span>
       <a
-        class="emotion-2"
+        class="emotion-3"
         href="https://support.bigcommerce.com/s/article/Connecting-with-Checkoutcom/"
         target="_blank"
       >
         <span
-          class="emotion-3"
+          class="emotion-4"
         >
           Checkout.com
         </span>
@@ -287,7 +296,7 @@ NodeList [
       </span>
     </p>
     <p
-      class="emotion-0"
+      class="emotion-0 emotion-1"
     >
       <span
         class="emotion-1"
@@ -295,12 +304,12 @@ NodeList [
         ﻿
       </span>
       <a
-        class="emotion-2"
+        class="emotion-3"
         href="http://www.cybersource.com/"
         target="_blank"
       >
         <span
-          class="emotion-3"
+          class="emotion-4"
         >
           CyberSource Direct
         </span>

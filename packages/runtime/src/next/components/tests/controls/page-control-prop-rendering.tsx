@@ -9,13 +9,9 @@ import { type Data, type ValueType, type DataType, ControlDefinition } from '@ma
 
 import { ElementData } from '../../../../state/react-page'
 import { Page } from '../../page'
-import { ReactRuntimeProvider } from '../../../../runtimes/react'
 import { ReactRuntime } from '../../../../react'
 
-import {
-  createMakeswiftPageSnapshot,
-  createRootComponent,
-} from '../../../../utils/tests/element-data-test-test'
+import * as Testing from '../../../../runtimes/react/testing'
 
 import { type MakeswiftPageSnapshot } from '../../../../next'
 
@@ -59,7 +55,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
   const TestComponentType = 'TestComponent'
   const testId = 'test-id'
   const renderCountTestId = 'render-count-test-id'
-  const elementData: ElementData = createRootComponent(
+  const elementData: ElementData = Testing.createRootComponent(
     [
       {
         key: ELEMENT_ID,
@@ -72,7 +68,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
     ],
     ROOT_ID,
   )
-  const snapshot = createMakeswiftPageSnapshot(elementData, { locale, cacheData })
+  const snapshot = Testing.createMakeswiftPageSnapshot(elementData, { locale, cacheData })
   const runtime = new ReactRuntime()
   registerComponents?.(runtime)
 
@@ -101,9 +97,9 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
   // Assert
   await act(async () =>
     render(
-      <ReactRuntimeProvider runtime={runtime} previewMode={false}>
+      <Testing.ReactProvider runtime={runtime}>
         <Page snapshot={snapshot} />
-      </ReactRuntimeProvider>,
+      </Testing.ReactProvider>,
     ),
   )
 

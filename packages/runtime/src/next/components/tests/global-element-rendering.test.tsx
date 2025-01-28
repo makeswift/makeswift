@@ -6,8 +6,7 @@ import '@testing-library/jest-dom'
 
 import { APIResourceType, type LocalizedGlobalElement, type GlobalElement } from '../../../api'
 import { ReactRuntime } from '../../../react'
-import { ReactRuntimeProvider } from '../../../runtimes/react'
-import { createMakeswiftPageSnapshot } from '../../../utils/tests/element-data-test-test'
+import * as Testing from '../../../runtimes/react/testing'
 
 import { Page } from '../page'
 
@@ -157,7 +156,7 @@ const localizedGlobalElementData = {
 
 async function testGlobalElementRendering({ locale }: { locale: string | null }) {
   const runtime = new ReactRuntime()
-  const snapshot = createMakeswiftPageSnapshot(pageElementData, {
+  const snapshot = Testing.createMakeswiftPageSnapshot(pageElementData, {
     locale,
     cacheData: {
       apiResources: {
@@ -206,9 +205,9 @@ async function testGlobalElementRendering({ locale }: { locale: string | null })
   // Assert
   await act(async () =>
     render(
-      <ReactRuntimeProvider runtime={runtime} previewMode={false}>
+      <Testing.ReactProvider runtime={runtime}>
         <Page snapshot={snapshot} />
-      </ReactRuntimeProvider>,
+      </Testing.ReactProvider>,
     ),
   )
 

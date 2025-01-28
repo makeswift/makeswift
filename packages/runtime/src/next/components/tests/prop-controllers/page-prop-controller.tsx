@@ -16,12 +16,8 @@ import { randomUUID } from 'crypto'
 
 import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import { ReactRuntimeProvider } from '../../../../runtimes/react'
 import { ReactRuntime } from '../../../../react'
-import {
-  createMakeswiftPageSnapshot,
-  createRootComponent,
-} from '../../../../utils/tests/element-data-test-test'
+import * as Testing from '../../../../runtimes/react/testing'
 
 export const pagePropControllerTest = <
   P extends PropDef & ((options?: any) => any),
@@ -44,7 +40,7 @@ export const pagePropControllerTest = <
       const TestComponentType = 'TestComponent'
       const testId = 'test-id'
 
-      const elementData: ElementData = createRootComponent([
+      const elementData: ElementData = Testing.createRootComponent([
         {
           key: randomUUID(),
           type: TestComponentType,
@@ -53,7 +49,7 @@ export const pagePropControllerTest = <
           },
         },
       ])
-      const snapshot = createMakeswiftPageSnapshot(elementData)
+      const snapshot = Testing.createMakeswiftPageSnapshot(elementData)
       const runtime = new ReactRuntime()
 
       runtime.registerComponent(component(testId), {
@@ -66,9 +62,9 @@ export const pagePropControllerTest = <
 
       await act(async () =>
         render(
-          <ReactRuntimeProvider runtime={runtime} previewMode={false}>
+          <Testing.ReactProvider runtime={runtime}>
             <Page snapshot={snapshot} />
-          </ReactRuntimeProvider>,
+          </Testing.ReactProvider>,
         ),
       )
 
@@ -85,7 +81,7 @@ export const pagePropControllerTest = <
 
       const TestComponentType = 'TestComponent'
       const testId = 'test-id'
-      const elementData: ElementData = createRootComponent([
+      const elementData: ElementData = Testing.createRootComponent([
         {
           key: randomUUID(),
           type: TestComponentType,
@@ -94,7 +90,7 @@ export const pagePropControllerTest = <
           },
         },
       ])
-      const snapshot = createMakeswiftPageSnapshot(elementData)
+      const snapshot = Testing.createMakeswiftPageSnapshot(elementData)
       const runtime = new ReactRuntime()
 
       runtime.registerComponent(component(testId), {
@@ -107,9 +103,9 @@ export const pagePropControllerTest = <
 
       await act(async () =>
         render(
-          <ReactRuntimeProvider runtime={runtime} previewMode={false}>
+          <Testing.ReactProvider runtime={runtime}>
             <Page snapshot={snapshot} />
-          </ReactRuntimeProvider>,
+          </Testing.ReactProvider>,
         ),
       )
 
