@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.3-canary.0
+
+### Patch Changes
+
+- e21267f: chore: log missing components' types
+
 ## 0.23.2
 
 ### Patch Changes
