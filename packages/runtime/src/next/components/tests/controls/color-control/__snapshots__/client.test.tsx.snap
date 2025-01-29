@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87}, default value: rgb(255,0,0) fetching swatch: resolvedValue 1`] = `"rgba(16, 24, 234, 0.5)"`;
+exports[`color data v0 with swatch {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87} fetching swatch: resolvedValue 1`] = `"rgba(16, 24, 234, 0.5)"`;
 
-exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87}, default value: rgb(255,0,0) fetching swatch: snapshot 1`] = `
+exports[`color data v0 with swatch {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87} fetching swatch: snapshot 1`] = `
 {
   "cacheData": {
     "apiResources": {},
@@ -56,9 +56,9 @@ exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swa
 }
 `;
 
-exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87}, default value: rgb(255,0,0) reading swatch from cache: resolvedValue 1`] = `"rgba(16, 24, 234, 0.5)"`;
+exports[`color data v0 with swatch {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87} reading swatch from cache: resolvedValue 1`] = `"rgba(16, 24, 234, 0.5)"`;
 
-exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87}, default value: rgb(255,0,0) reading swatch from cache: snapshot 1`] = `
+exports[`color data v0 with swatch {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87} reading swatch from cache: snapshot 1`] = `
 {
   "cacheData": {
     "apiResources": {
@@ -125,9 +125,9 @@ exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swa
 }
 `;
 
-exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: null, default value: rgb(255,0,0) fetching swatch: resolvedValue 1`] = `"rgb(255, 0, 0)"`;
+exports[`color data v0 with swatch null fetching swatch: resolvedValue 1`] = `"rgb(255, 0, 0)"`;
 
-exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: null, default value: rgb(255,0,0) fetching swatch: snapshot 1`] = `
+exports[`color data v0 with swatch null fetching swatch: snapshot 1`] = `
 {
   "cacheData": {
     "apiResources": {},
@@ -181,9 +181,9 @@ exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swa
 }
 `;
 
-exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: null, default value: rgb(255,0,0) reading swatch from cache: resolvedValue 1`] = `"rgb(255, 0, 0)"`;
+exports[`color data v0 with swatch null reading swatch from cache: resolvedValue 1`] = `"rgb(255, 0, 0)"`;
 
-exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: null, default value: rgb(255,0,0) reading swatch from cache: snapshot 1`] = `
+exports[`color data v0 with swatch null reading swatch from cache: snapshot 1`] = `
 {
   "cacheData": {
     "apiResources": {
@@ -244,9 +244,9 @@ exports[`Page Color control data v0 with value: {"alpha": 0.5, "swatchId": "[swa
 }
 `;
 
-exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87}, default value: rgb(255,0,0) fetching swatch: resolvedValue 1`] = `"rgba(16, 24, 234, 0.5)"`;
+exports[`color data v1 with swatch {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87} fetching swatch: resolvedValue 1`] = `"rgba(16, 24, 234, 0.5)"`;
 
-exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87}, default value: rgb(255,0,0) fetching swatch: snapshot 1`] = `
+exports[`color data v1 with swatch {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87} fetching swatch: snapshot 1`] = `
 {
   "cacheData": {
     "apiResources": {},
@@ -301,9 +301,9 @@ exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swa
 }
 `;
 
-exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87}, default value: rgb(255,0,0) reading swatch from cache: resolvedValue 1`] = `"rgba(16, 24, 234, 0.5)"`;
+exports[`color data v1 with swatch {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87} reading swatch from cache: resolvedValue 1`] = `"rgba(16, 24, 234, 0.5)"`;
 
-exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87}, default value: rgb(255,0,0) reading swatch from cache: snapshot 1`] = `
+exports[`color data v1 with swatch {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87} reading swatch from cache: snapshot 1`] = `
 {
   "cacheData": {
     "apiResources": {
@@ -371,9 +371,9 @@ exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swa
 }
 `;
 
-exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: null, default value: rgb(255,0,0) fetching swatch: resolvedValue 1`] = `"rgb(255, 0, 0)"`;
+exports[`color data v1 with swatch null fetching swatch: resolvedValue 1`] = `"rgb(255, 0, 0)"`;
 
-exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: null, default value: rgb(255,0,0) fetching swatch: snapshot 1`] = `
+exports[`color data v1 with swatch null fetching swatch: snapshot 1`] = `
 {
   "cacheData": {
     "apiResources": {},
@@ -428,9 +428,9 @@ exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swa
 }
 `;
 
-exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: null, default value: rgb(255,0,0) reading swatch from cache: resolvedValue 1`] = `"rgb(255, 0, 0)"`;
+exports[`color data v1 with swatch null reading swatch from cache: resolvedValue 1`] = `"rgb(255, 0, 0)"`;
 
-exports[`Page Color control data v1 with value: {"alpha": 0.5, "swatchId": "[swatch-test-id]"}, swatch: null, default value: rgb(255,0,0) reading swatch from cache: snapshot 1`] = `
+exports[`color data v1 with swatch null reading swatch from cache: snapshot 1`] = `
 {
   "cacheData": {
     "apiResources": {
