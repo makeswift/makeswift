@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto'
-import { type MakeswiftPageSnapshot } from '../../../next'
+import { type MakeswiftPageSnapshot, type MakeswiftComponentSnapshot } from '../../../next/client'
 import { type ElementData } from '../../../state/react-page'
+import { CacheData } from '../../../api/react'
 import { MakeswiftComponentType } from '../../../components'
 
 export function createRootComponent(elements: ElementData[], rootId?: string) {
@@ -44,8 +45,35 @@ export function createMakeswiftPageSnapshot(
       locale,
     },
     cacheData: {
-      apiResources: {},
-      localizedResourcesMap: {},
+      ...CacheData.empty(),
+      ...cacheData,
+    },
+  }
+}
+
+export function createMakeswiftComponentSnapshot(
+  elementData: ElementData,
+  {
+    cacheData = {},
+    locale = null,
+  }: { cacheData?: Partial<MakeswiftComponentSnapshot['cacheData']>; locale?: string | null } = {},
+): MakeswiftComponentSnapshot {
+  return {
+    key: randomUUID(),
+    document: {
+      id: 'test-component-id',
+      name: 'Test Component Document',
+      siteId: 'test-site-id',
+      data: elementData,
+      inheritsFromParent: false,
+      locale,
+    },
+    meta: {
+      allowLocaleFallback: false,
+      requestedLocale: locale,
+    },
+    cacheData: {
+      ...CacheData.empty(),
       ...cacheData,
     },
   }

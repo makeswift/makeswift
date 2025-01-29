@@ -5,8 +5,8 @@ import { serializeStyles } from '@emotion/serialize'
 import { registerStyles, insertStyles, type SerializedStyles } from '@emotion/utils'
 
 import { useCache } from '../../next/root-style-registry'
+import { isServer } from '../../utils/is-server'
 
-const isServer = typeof window === 'undefined'
 const useInsertionEffectSpecifier = 'useInsertionEffect'
 const useInsertionEffect = React[useInsertionEffectSpecifier] ?? React.useLayoutEffect
 
@@ -33,7 +33,7 @@ export function useStyles(cache: EmotionCache, styles: SerializedStyles[]) {
 
 function useUniversalInsertionEffect(effect: () => void) {
   useInsertionEffect(effect)
-  if (isServer) effect()
+  if (isServer()) effect()
 }
 
 export function serializedStyleClassName(
