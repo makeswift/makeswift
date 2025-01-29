@@ -1,17 +1,11 @@
 # @makeswift/runtime
 
-## 0.24.0-canary.1
+## 0.23.2
 
 ### Patch Changes
 
 - 6a92c99: fix: missing styles in server-rendered HTML
-
-## 0.24.0-canary.0
-
-### Minor Changes
-
-- 68922c3: feat(runtime): Use headers to create proxied url
-  feat(runtime): Add FORCE_HTTP env variable to force http protocol
+- 68922c3: feat(runtime): Use headers to create proxied url, add FORCE_HTTP env variable to force http protocol
 
 ## 0.23.1
 
