@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Page RichTextV2 renders a makeswift::controls::rich-text-v2::mode::block placeholder when empty: resolvedValue 1`] = `
+exports[`renders a makeswift::controls::rich-text-v2::mode::block placeholder when empty: resolvedValue 1`] = `
 NodeList [
   .emotion-0 {
   display: inline-block;
@@ -32,7 +32,7 @@ NodeList [
 ]
 `;
 
-exports[`Page RichTextV2 renders a makeswift::controls::rich-text-v2::mode::block placeholder when empty: snapshot 1`] = `
+exports[`renders a makeswift::controls::rich-text-v2::mode::block placeholder when empty: snapshot 1`] = `
 {
   "cacheData": {
     "apiResources": {},
@@ -83,7 +83,7 @@ exports[`Page RichTextV2 renders a makeswift::controls::rich-text-v2::mode::bloc
 }
 `;
 
-exports[`Page RichTextV2 renders a makeswift::controls::rich-text-v2::mode::inline placeholder when empty: resolvedValue 1`] = `
+exports[`renders a makeswift::controls::rich-text-v2::mode::inline placeholder when empty: resolvedValue 1`] = `
 NodeList [
   .emotion-0 {
   display: inline-block;
@@ -106,7 +106,7 @@ NodeList [
 ]
 `;
 
-exports[`Page RichTextV2 renders a makeswift::controls::rich-text-v2::mode::inline placeholder when empty: snapshot 1`] = `
+exports[`renders a makeswift::controls::rich-text-v2::mode::inline placeholder when empty: snapshot 1`] = `
 {
   "cacheData": {
     "apiResources": {},
@@ -157,7 +157,7 @@ exports[`Page RichTextV2 renders a makeswift::controls::rich-text-v2::mode::inli
 }
 `;
 
-exports[`Page RichTextV2 renders provided text content: resolvedValue 1`] = `
+exports[`renders provided text content: resolvedValue 1`] = `
 NodeList [
   .emotion-0 {
   margin: 0;
@@ -324,7 +324,7 @@ NodeList [
 ]
 `;
 
-exports[`Page RichTextV2 renders provided text content: snapshot 1`] = `
+exports[`renders provided text content: snapshot 1`] = `
 {
   "cacheData": {
     "apiResources": {
