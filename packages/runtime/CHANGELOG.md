@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.24.0-canary.1
+
+### Patch Changes
+
+- 6a92c99: fix: missing styles in server-rendered HTML
+
 ## 0.24.0-canary.0
 
 ### Minor Changes
