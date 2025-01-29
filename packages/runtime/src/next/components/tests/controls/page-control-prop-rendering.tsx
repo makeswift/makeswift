@@ -67,6 +67,9 @@ async function serverSideRender(children: ReactNode) {
 
   const dom = new JSDOM(
     `<!DOCTYPE html><head>${headHTML}</head><body><div id="root">${elementsHTML}</div></body></div>`,
+    {
+      runScripts: 'dangerously',
+    },
   )
 
   return dom.window.document

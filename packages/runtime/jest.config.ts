@@ -28,7 +28,6 @@ const config: Config = {
       },
     ],
   },
-  snapshotSerializers: ['@emotion/jest/serializer'],
 }
 
 export default config

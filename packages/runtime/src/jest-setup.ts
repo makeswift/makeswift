@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom'
-import { matchers } from '@emotion/jest'
+import { matchers, createSerializer } from '@emotion/jest'
 import { server } from './mocks/server'
 
 beforeAll(() => server.listen())
@@ -7,6 +7,10 @@ afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
 expect.extend(matchers)
+if (typeof window !== 'undefined') {
+  // jest-environment jsdom
+  expect.addSnapshotSerializer(createSerializer())
+}
 
 jest.mock('uuid', () => ({
   v4: jest.fn(() => 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'),
