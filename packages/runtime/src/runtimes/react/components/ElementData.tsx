@@ -17,6 +17,7 @@ export const ElementData = memo(
     const Component = useComponent(elementData.type)
 
     if (Component == null) {
+      console.warn(`Unknown component '${elementData.type}'`, { elementData })
       return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Component not found" />
     }
 
