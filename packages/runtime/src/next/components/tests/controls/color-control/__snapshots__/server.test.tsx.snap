@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`color data v0 reading swatch {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87} from cache: component styles 1`] = `[]`;
+
+exports[`color data v0 reading swatch {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87} from cache: resolvedValue 1`] = `"rgba(16, 24, 234, 0.5)"`;
+
+exports[`color data v0 reading swatch null from cache: component styles 1`] = `[]`;
+
+exports[`color data v0 reading swatch null from cache: resolvedValue 1`] = `"rgb(255, 0, 0)"`;
+
+exports[`color data v1 reading swatch {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87} from cache: component styles 1`] = `[]`;
+
+exports[`color data v1 reading swatch {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87} from cache: resolvedValue 1`] = `"rgba(16, 24, 234, 0.5)"`;
+
+exports[`color data v1 reading swatch null from cache: component styles 1`] = `[]`;
+
+exports[`color data v1 reading swatch null from cache: resolvedValue 1`] = `"rgb(255, 0, 0)"`;
