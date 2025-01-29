@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.23.2
+
+### Patch Changes
+
+- 6a92c99: fix: missing styles in server-rendered HTML
+- 68922c3: feat(runtime): Use headers to create proxied url, add FORCE_HTTP env variable to force http protocol
+
 ## 0.23.1
 
 ### Patch Changes
