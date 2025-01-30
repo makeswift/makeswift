@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.3-canary.1
+
+### Patch Changes
+
+- 19517d8: feat(runtime): introduce `metadata` prop on `Page` component to allow selectively rendering head tags with data from Makeswift
+
 ## 0.23.3-canary.0
 
 ### Patch Changes
