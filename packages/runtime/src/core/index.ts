@@ -1,9 +1,14 @@
 export {
+  type Breakpoint,
+  type BreakpointId,
+  type Breakpoints,
   type ConfigType,
   type Data,
   type DataType,
+  type DeviceOverride,
   type ValueType,
   type ResolvedValueType,
+  type ResponsiveValue,
   type ControlMessage,
   type ReplacementContext,
   type SendMessageType,
@@ -11,4 +16,8 @@ export {
   ControlInstance,
   DefaultControlInstance,
   ShapeV2Control,
+  findBreakpointOverride,
+  mergeOrCoalesceFallbacks,
+  mergeResponsiveValues,
+  shallowMergeFallbacks,
 } from '@makeswift/controls'
