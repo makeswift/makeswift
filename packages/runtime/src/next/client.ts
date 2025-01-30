@@ -685,12 +685,12 @@ export class Makeswift {
 
     let response
     const responseForRequestedLocale = await this.fetch(
-      `v1/element-trees/${id}?${searchParams.toString()}`,
+      `v1/element-trees/${encodeURIComponent(id)}?${searchParams.toString()}`,
       siteVersion,
     )
 
     if (responseForRequestedLocale.status === 404 && canAttemptLocaleFallback) {
-      response = await this.fetch(`v1/element-trees/${id}`, siteVersion)
+      response = await this.fetch(`v1/element-trees/${encodeURIComponent(id)}`, siteVersion)
     } else {
       response = responseForRequestedLocale
     }
