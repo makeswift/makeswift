@@ -9,6 +9,7 @@ import { useSyncExternalStore } from 'use-sync-external-store/shim'
 import { Site } from '../../api'
 import { PageTitle, PageMeta, PageLink, PageStyle } from '../../next/components/head-tags'
 import { HeadSnippet } from './HeadSnippet'
+import { type PageMetadataSettings } from './page-seo-settings'
 
 const defaultFavicon = {
   id: 'default-favicon',
@@ -19,9 +20,20 @@ const defaultFavicon = {
 
 type Props = {
   document: MakeswiftPageDocument
+  metadata?: PageMetadataSettings
 }
 
-export function PageHead({ document: page }: Props): JSX.Element {
+export function PageHead({ document: page, metadata = {} }: Props): JSX.Element {
+  const {
+    title: useTitle = false,
+    favicon: useFavicon = false,
+    canonicalUrl: useCanonicalUrl = false,
+    indexingBlocked: useIndexingBlocked = false,
+    description: useDescription = false,
+    keywords: useKeywords = false,
+    socialImage: useSocialImage = false,
+  } = metadata
+
   const { headSnippets } = usePageSnippets({ page })
 
   const isInBuilder = useIsInBuilder()
@@ -73,19 +85,21 @@ export function PageHead({ document: page }: Props): JSX.Element {
         }
         `}
       </PageStyle>
-      {title && <PageTitle>{title}</PageTitle>}
-      {favicon && <PageLink rel="icon" type={favicon.mimetype} href={favicon.publicUrl} />}
-      {canonicalUrl && <PageLink rel="canonical" href={canonicalUrl} />}
-      {isIndexingBlocked && <PageMeta name="robots" content="noindex" />}
-      {description && (
+      {useTitle && title && <PageTitle>{title}</PageTitle>}
+      {useFavicon && favicon && (
+        <PageLink rel="icon" type={favicon.mimetype} href={favicon.publicUrl} />
+      )}
+      {useCanonicalUrl && canonicalUrl && <PageLink rel="canonical" href={canonicalUrl} />}
+      {useIndexingBlocked && isIndexingBlocked && <PageMeta name="robots" content="noindex" />}
+      {useDescription && description && (
         <>
           <PageMeta name="description" content={description} />
           <PageMeta property="og:description" content={description} />
           <PageMeta name="twitter:description" content={description} />
         </>
       )}
-      {keywords && <PageMeta name="keywords" content={keywords} />}
-      {socialImage && (
+      {useKeywords && keywords && <PageMeta name="keywords" content={keywords} />}
+      {useSocialImage && socialImage && (
         <>
           <PageMeta property="og:image" content={socialImage.publicUrl} />
           <PageMeta property="og:image:type" content={socialImage.mimetype} />
