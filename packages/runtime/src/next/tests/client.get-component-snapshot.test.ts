@@ -37,63 +37,73 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
     expect(result.document.data).toBeNull()
   })
 
-  test('successfully performs locale fallback by requesting base locale tree after receiving a 404 response for a locale variant tree', async () => {
-    // Arrange
-    const client = createTestClient()
-    const localeToTest = 'fr-FR'
-    const baseLocale = null
+  test.each([
+    { treeId: 'myTree123', locale: 'fr-FR' },
+    { treeId: 'unsafe:url;chars=@&?❔🤷', locale: 'fr-FR' },
+    { treeId: '/blog/slug', locale: 'en-US' },
+  ])(
+    "successfully performs locale fallback by requesting base locale tree after receiving a 404 response for the element tree '$treeId' with the '$locale' locale",
+    async ({ treeId, locale }) => {
+      // Arrange
+      const client = createTestClient()
+      const localeToTest = locale
+      const baseLocale = null
 
-    // mock base locale tree document
-    const treeId = 'myTree123'
-    const elementTreeName = 'myElementTree'
-    const elementTreeKey = 'abc123'
-    const document: MakeswiftComponentDocument = {
-      id: treeId,
-      name: elementTreeName,
-      data: {
-        type: 'myType',
-        key: elementTreeKey,
-        props: {},
-      },
-      locale: baseLocale,
-      siteId: 'mySiteId',
-      inheritsFromParent: false,
-    }
+      // mock base locale tree document
+      const elementTreeName = 'myElementTree'
+      const elementTreeKey = 'abc123'
+      const document: MakeswiftComponentDocument = {
+        id: treeId,
+        name: elementTreeName,
+        data: {
+          type: 'myType',
+          key: elementTreeKey,
+          props: {},
+        },
+        locale: baseLocale,
+        siteId: 'mySiteId',
+        inheritsFromParent: false,
+      }
 
-    /*
+      /*
         Intercept:
         (1) initial request to v1 endpoint for the locale variant tree
         (2) subsequent request to v1 endpoint for the base locale tree
             - this is the step that we're really testing here - we want the logic in getComponentSnapshot to execute this subsequent request
         (3) graphql query for introspection
     */
-    server.use(
-      http.get(
-        `${baseUrl}/${treeId}?locale=${localeToTest}`,
-        () => HttpResponse.text('', { status: 404 }),
-        { once: true },
-      ),
-      http.get(`${baseUrl}/${treeId}`, () => HttpResponse.json(document, { status: 200 }), {
-        once: true,
-      }),
-      graphql.operation(() => {
-        return HttpResponse.json({})
-      }),
-    )
+      server.use(
+        http.get(
+          `${baseUrl}/${encodeURIComponent(treeId)}?locale=${localeToTest}`,
+          () => HttpResponse.text('', { status: 404 }),
+          { once: true },
+        ),
+        http.get(
+          `${baseUrl}/${encodeURIComponent(treeId)}`,
+          () => HttpResponse.json(document, { status: 200 }),
+          {
+            once: true,
+          },
+        ),
+        graphql.operation(() => {
+          return HttpResponse.json({})
+        }),
+      )
 
-    // Act
-    const result = await client.getComponentSnapshot(treeId, {
-      siteVersion: MakeswiftSiteVersion.Working,
-      locale: localeToTest,
-    })
+      // Act
+      const result = await client.getComponentSnapshot(treeId, {
+        siteVersion: MakeswiftSiteVersion.Working,
+        locale: localeToTest,
+      })
 
-    // Assert
-    expect(result).not.toBeNull()
-    expect(result.document).not.toBeNull()
-    expect(result.document.data).not.toBeNull()
-    expect(result.document.data?.key).toBe(elementTreeKey)
-    expect(result.document.locale).toBeNull()
-  })
+      // Assert
+      expect(result).not.toBeNull()
+      expect(result.document).not.toBeNull()
+      expect(result.document.data).not.toBeNull()
+      expect(result.document.data?.key).toBe(elementTreeKey)
+      expect(result.document.locale).toBeNull()
+    },
+  )
 
   test('does not perform locale fallback after receiving a 404 response for a locale variant tree, when allowFallback is false', async () => {
     // Arrange
@@ -154,60 +164,65 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
     expect(result.document.locale).toBe(localeToTest)
   })
 
-  test('does not perform locale fallback after receiving a 200 response for the requested locale variant tree', async () => {
-    // Arrange
-    const client = createTestClient()
-    const localeToTest = 'fr-FR'
+  test.each([
+    { treeId: 'myTree123', locale: null },
+    { treeId: 'unsafe:url;chars=@&?❔🤷', locale: 'fr-FR' },
+    { treeId: '/blog/slug', locale: 'en-US' },
+  ])(
+    "does not perform locale fallback after receiving a 200 response for the element tree '$treeId' with the requested locale '$locale'",
+    async ({ treeId, locale }) => {
+      // Arrange
+      const client = createTestClient()
 
-    // mock locale variant tree document
-    const treeId = 'myTree123'
-    const elementTreeName = 'myElementTree'
-    const elementTreeKey = 'abc123'
-    const document: MakeswiftComponentDocument = {
-      id: treeId,
-      name: elementTreeName,
-      data: {
-        type: 'myType',
-        key: elementTreeKey,
-        props: {},
-      },
-      locale: localeToTest,
-      siteId: 'mySiteId',
-      inheritsFromParent: false,
-    }
+      // mock locale variant tree document
+      const elementTreeName = 'myElementTree'
+      const elementTreeKey = 'abc123'
+      const document: MakeswiftComponentDocument = {
+        id: treeId,
+        name: elementTreeName,
+        data: {
+          type: 'myType',
+          key: elementTreeKey,
+          props: {},
+        },
+        locale,
+        siteId: 'mySiteId',
+        inheritsFromParent: false,
+      }
 
-    /*
+      /*
         Intercept:
         (1) initial request to v1 endpoint for the locale variant tree
         (2) subsequent request to v1 endpoint for the base locale tree
             - should not happen for this test
         (3) graphql query for introspection
       */
-    server.use(
-      http.get(
-        `${baseUrl}/${treeId}?locale=${localeToTest}`,
-        () => HttpResponse.json(document, { status: 200 }),
-        { once: true },
-      ),
-      http.get(`${baseUrl}/${treeId}`, () => HttpResponse.text('', { status: 404 }), {
-        once: true,
-      }),
-      graphql.operation(() => {
-        return HttpResponse.json({})
-      }),
-    )
+      server.use(
+        http.get(
+          `${baseUrl}/${encodeURIComponent(treeId)}?locale=${locale}`,
+          () => HttpResponse.json(document, { status: 200 }),
+          { once: true },
+        ),
+        http.get(`${baseUrl}/${treeId}`, () => HttpResponse.text('', { status: 404 }), {
+          once: true,
+        }),
+        graphql.operation(() => {
+          return HttpResponse.json({})
+        }),
+      )
 
-    // Act
-    const result = await client.getComponentSnapshot(treeId, {
-      siteVersion: MakeswiftSiteVersion.Working,
-      locale: localeToTest,
-    })
+      // Act
+      const result = await client.getComponentSnapshot(treeId, {
+        siteVersion: MakeswiftSiteVersion.Working,
+        locale: locale ?? undefined,
+      })
 
-    // Assert
-    expect(result).not.toBeNull()
-    expect(result.document).not.toBeNull()
-    expect(result.document.id).toBe(treeId)
-    expect(result.document.locale).toBe(localeToTest)
-    expect(result.document.data).not.toBeNull()
-  })
+      // Assert
+      expect(result).not.toBeNull()
+      expect(result.document).not.toBeNull()
+      expect(result.document.id).toBe(treeId)
+      expect(result.document.locale).toBe(locale)
+      expect(result.document.data).not.toBeNull()
+    },
+  )
 })
