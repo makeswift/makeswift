@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.3-canary.2
+
+### Patch Changes
+
+- a561c76: fix: "lost" edits to slots/embedded components with slashes in their IDs
+
 ## 0.23.3-canary.1
 
 ### Patch Changes

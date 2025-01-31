@@ -12,6 +12,7 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
+    "curvy-forks-give",
     "nervous-badgers-lay",
     "sweet-days-return"
   ]
