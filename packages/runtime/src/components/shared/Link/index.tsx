@@ -6,6 +6,8 @@ import NextLink from 'next/link'
 import { LinkData } from '@makeswift/prop-controllers'
 
 import { Link as LinkDef } from '../../../controls/link'
+
+import { useIsPagesRouter } from '../../../next/hooks/use-is-pages-router'
 import { useResolvedValue } from '../../../runtimes/react/hooks/use-resolved-value'
 
 type BaseProps = {
@@ -62,6 +64,8 @@ export const Link = forwardRef<HTMLAnchorElement, Props>(function Link(
     link &&
     (link.type === 'OPEN_PAGE' || (link.type === 'OPEN_URL' && isValidHref(link.payload.url)))
 
+  const isPagesRouter = useIsPagesRouter()
+
   if (useNextLink) {
     return (
       <NextLink
@@ -70,7 +74,7 @@ export const Link = forwardRef<HTMLAnchorElement, Props>(function Link(
         target={target}
         onClick={handleClick}
         href={href}
-        locale={false}
+        {...(isPagesRouter ? { locale: false } : {})}
         // Next.js v12 has legacyBehavior set to true by default
         legacyBehavior={false}
       />
