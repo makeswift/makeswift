@@ -1,22 +1,12 @@
 # @makeswift/runtime
 
-## 0.23.3-canary.2
+## 0.23.3
 
 ### Patch Changes
 
 - a561c76: fix: "lost" edits to slots/embedded components with slashes in their IDs
-
-## 0.23.3-canary.1
-
-### Patch Changes
-
-- 19517d8: feat(runtime): introduce `metadata` prop on `Page` component to allow selectively rendering head tags with data from Makeswift
-
-## 0.23.3-canary.0
-
-### Patch Changes
-
 - e21267f: chore: log missing components' types
+- 19517d8: feat(runtime): introduce `metadata` prop on `Page` component to allow selectively rendering head tags with data from Makeswift
 
 ## 0.23.2
 
