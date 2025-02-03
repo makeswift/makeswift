@@ -61,7 +61,7 @@ async function proxyDraftModeRouteHandler(
 
   const proxyUrl = request.nextUrl.clone()  
   
-  if (process.env.FORCE_HTTP == null) {
+  if (process.env.MAKESWIFT_DRAFT_MODE_PROXY_FORCE_HTTP == null) {
     proxyUrl.protocol = request.headers.get('x-forwarded-proto') ?? request.nextUrl.protocol
   } else {
     proxyUrl.protocol = 'http'
