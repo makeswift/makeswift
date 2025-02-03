@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.4-canary.0
+
+### Patch Changes
+
+- f641355: fix: don't pass `locale` prop to `NextLink` when running under App Router
+
 ## 0.23.3
 
 ### Patch Changes
