@@ -158,7 +158,7 @@
     "parse5": "^7.1.2",
     "path-to-regexp": "^6.2.1",
     "polished": "3.0.3",
-    "react-player": "^1.12.0",
+    "react-player": "^2.16.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "reselect": "^5.1.1",
