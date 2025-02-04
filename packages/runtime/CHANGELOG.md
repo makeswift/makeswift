@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.4-canary.2
+
+### Patch Changes
+
+- 72b3c98: fix: missing padding, arrow hover styles on `Carousel` when running under the App Router
+
 ## 0.23.4-canary.1
 
 ### Patch Changes
