@@ -78,6 +78,10 @@ type Props = {
 const SWIPE_THRESHOLD = 20
 const swipePower = (dx: number, velocity: number) => dx * (1 + velocity)
 
+// constructs a CSS [class selector](https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors),
+// returns a compound class selector if the `classname` string includes multiple class names
+const classSelector = (classname: string) => `.${classname.split(' ').join('.')}`
+
 const Carousel = forwardRef(function Carousel(
   {
     images = [],
@@ -174,17 +178,19 @@ const Carousel = forwardRef(function Carousel(
       useResponsiveStyle([slideAlignment] as const, ([alignItems = 'center']) => ({ alignItems })),
     ),
   )
+
   const reelClassName = cx(
     useStyle({ display: 'flex', position: 'relative', flexWrap: 'nowrap' }),
     useStyle(
       useResponsiveStyle([gap] as const, ([gap = { value: 0, unit: 'px' }]) => ({
         margin: `0 ${`${-gap.value / 2}${gap.unit}`}`,
-        [`& > .${slideClassName}`]: {
+        [`& > ${classSelector(slideClassName)}`]: {
           padding: `0 ${`${gap.value / 2}${gap.unit}`}`,
         },
       })),
     ),
   )
+
   const arrowClassName = cx(
     useStyle({
       padding: 10,
@@ -209,6 +215,7 @@ const Carousel = forwardRef(function Carousel(
     ),
     useStyle({ svg: { transition: 'transform 0.15s', stroke: 'currentcolor' } }),
   )
+
   const slopClassName = cx(
     useStyle({
       position: 'absolute',
@@ -233,6 +240,7 @@ const Carousel = forwardRef(function Carousel(
       ),
     ),
   )
+
   const leftSlopClassName = cx(
     slopClassName,
     useStyle(
@@ -252,13 +260,14 @@ const Carousel = forwardRef(function Carousel(
     useStyle({
       left: 0,
 
-      [`&:hover > .${arrowClassName}`]: {
+      [`&:hover > ${classSelector(arrowClassName)}`]: {
         '& > svg': {
           transform: 'translateX(-2px)',
         },
       },
     }),
   )
+
   const rightSlopClassName = cx(
     slopClassName,
     useStyle(
@@ -277,14 +286,14 @@ const Carousel = forwardRef(function Carousel(
     ),
     useStyle({
       right: 0,
-
-      [`&:hover > .${arrowClassName}`]: {
+      [`&:hover > ${classSelector(arrowClassName)}`]: {
         '& > svg': {
           transform: 'translateX(2px)',
         },
       },
     }),
   )
+
   const dotsClassName = cx(
     useStyle({ display: showDots ? 'flex' : 'none', justifyContent: 'center', marginTop: 20 }),
     useStyle(
