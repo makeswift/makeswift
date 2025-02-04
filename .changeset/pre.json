@@ -12,6 +12,7 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
-    "famous-dingos-talk"
+    "famous-dingos-talk",
+    "fresh-baboons-poke"
   ]
 }

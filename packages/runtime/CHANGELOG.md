@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.4-canary.1
+
+### Patch Changes
+
+- 698f2ee: fix: console warnings from the `Video` component
+
 ## 0.23.4-canary.0
 
 ### Patch Changes
