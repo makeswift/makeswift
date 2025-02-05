@@ -11,10 +11,10 @@ jest.mock('next/headers', () => ({
 
 const mockApiKey = 'test-api-key'
 
-describe('ForceHTTP proxyDraftMode URL handling', () => {
+describe('proxyDraftMode w/ MAKESWIFT_DRAFT_MODE_PROXY_FORCE_HTTP=true', () => {
   it('should force protocol to http and use host from `host` from headers instead of `x-forwarded-host`', async () => {
     try {
-      env.FORCE_HTTP = 'true'
+      env.MAKESWIFT_DRAFT_MODE_PROXY_FORCE_HTTP = 'true'
       const originalUrl = new URL(
         `https://example.com?x-makeswift-draft-mode=${mockApiKey}&keep=this`,
       )
@@ -48,7 +48,7 @@ describe('ForceHTTP proxyDraftMode URL handling', () => {
       expect(capturedRequest!.nextUrl.searchParams.has('x-makeswift-draft-mode')).toBe(false)
       expect(capturedRequest!.nextUrl.searchParams.get('keep')).toBe('this')
     } finally {
-      env.FORCE_HTTP = undefined
+      env.MAKESWIFT_DRAFT_MODE_PROXY_FORCE_HTTP = undefined
     }
   })
 })
