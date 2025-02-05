@@ -59,19 +59,19 @@ async function proxyDraftModeRouteHandler(
   const draft = await draftMode()
   draft.enable()
 
-  const proxyUrl = request.nextUrl.clone()  
-  
-  if (process.env.FORCE_HTTP == null) {
+  const proxyUrl = request.nextUrl.clone()
+
+  if (process.env.MAKESWIFT_DRAFT_MODE_PROXY_FORCE_HTTP == null) {
     proxyUrl.protocol = request.headers.get('x-forwarded-proto') ?? request.nextUrl.protocol
   } else {
     proxyUrl.protocol = 'http'
   }
 
-  const forwardingHost = request.headers.get('x-forwarded-host') ?? request.headers.get('host') 
+  const forwardingHost = request.headers.get('x-forwarded-host') ?? request.headers.get('host')
   if (forwardingHost) {
     proxyUrl.host = forwardingHost
   }
-  
+
   proxyUrl.searchParams.delete('x-makeswift-draft-mode')
 
   const proxyHeaders = new Headers(request.headers)
