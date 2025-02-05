@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.23.4
+
+### Patch Changes
+
+- f641355: fix: don't pass `locale` prop to `NextLink` when running under App Router
+- 698f2ee: fix: console warnings from the `Video` component
+- 72b3c98: fix: missing padding, arrow hover styles on `Carousel` when running under the App Router
+- db87b52: fix: `FORCE_HTTP` -> `MAKESWIFT_DRAFT_MODE_PROXY_FORCE_HTTP`
+
 ## 0.23.3
 
 ### Patch Changes
