@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.4-canary.3
+
+### Patch Changes
+
+- db87b52: fix: `FORCE_HTTP` -> `MAKESWIFT_DRAFT_MODE_PROXY_FORCE_HTTP`
+
 ## 0.23.4-canary.2
 
 ### Patch Changes
