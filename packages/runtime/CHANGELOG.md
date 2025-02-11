@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.5
+
+### Patch Changes
+
+- 8bcba31: fix: ensure host API client cache is hydrated on render, ahead of prop resolution
+
 ## 0.23.4
 
 ### Patch Changes
