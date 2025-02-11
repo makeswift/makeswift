@@ -12,9 +12,6 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
-    "famous-dingos-talk",
-    "fresh-baboons-poke",
-    "good-turtles-compare",
-    "kind-garlics-tease"
+    "odd-crabs-prove"
   ]
 }
