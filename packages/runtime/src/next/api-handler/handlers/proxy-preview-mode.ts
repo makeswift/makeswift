@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { MakeswiftPreviewData, MakeswiftSiteVersion } from '../../preview-mode'
 import { NextRequest, NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
+import { attachCookieRiskHeadersToResponse } from './cookie-risk-headers'
 
 type Context = { params: { [key: string]: string | string[] } }
 
@@ -142,6 +143,8 @@ async function proxyPreviewModeApiRouteHandler(
   response.headers.forEach((value, name) => {
     res.setHeader(name, value)
   })
+
+  attachCookieRiskHeadersToResponse(response)
 
   res.statusCode = response.status
   res.statusMessage = response.statusText
