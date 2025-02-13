@@ -1,5 +1,5 @@
 import { ReactRuntime } from '../../../runtimes/react'
-import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
+import { getBaseBreakpoint } from '@makeswift/controls'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'

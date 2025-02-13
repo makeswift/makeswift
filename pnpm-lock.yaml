@@ -127,6 +127,9 @@ importers:
       css-box-model:
         specifier: ^1.2.1
         version: 1.2.1
+      csstype:
+        specifier: ^2.6.5
+        version: 2.6.20
       slate:
         specifier: 0.91.4
         version: 0.91.4

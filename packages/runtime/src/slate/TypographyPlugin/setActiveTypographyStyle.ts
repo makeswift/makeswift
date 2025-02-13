@@ -1,7 +1,10 @@
 import { Editor, Transforms, Text, Range } from 'slate'
-import { RichTextTypography } from '@makeswift/controls'
-
-import { Breakpoints, findBreakpointOverride, BreakpointId } from '../../state/modules/breakpoints'
+import {
+  type Breakpoints,
+  type BreakpointId,
+  findBreakpointOverride,
+  RichTextTypography,
+} from '@makeswift/controls'
 
 type SetActiveTypographyStyleOptions = {
   at?: Range

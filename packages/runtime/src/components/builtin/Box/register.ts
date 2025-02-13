@@ -16,8 +16,9 @@ import {
   Width,
   type PropData,
 } from '@makeswift/prop-controllers'
+import { findBreakpointOverride, getBaseBreakpoint } from '@makeswift/controls'
+
 import { ReactRuntime } from '../../../runtimes/react'
-import { findBreakpointOverride, getBaseBreakpoint } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 import {
   BoxAnimateIn,
