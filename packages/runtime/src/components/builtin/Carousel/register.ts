@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid'
 
 import { ReactRuntime } from '../../../runtimes/react'
-import { findBreakpointOverride } from '../../../state/modules/breakpoints'
+import { findBreakpointOverride } from '@makeswift/controls'
 import {
   BorderRadius,
   ElementID,

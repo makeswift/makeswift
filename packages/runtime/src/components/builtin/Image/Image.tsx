@@ -10,7 +10,8 @@ import {
   ImageData,
   ResponsiveOpacityValue,
 } from '@makeswift/prop-controllers'
-import { Breakpoints, findBreakpointOverride } from '../../../state/modules/breakpoints'
+import { type Breakpoints, findBreakpointOverride } from '@makeswift/controls'
+
 import { placeholders } from '../../utils/placeholders'
 import { Link } from '../../shared/Link'
 import { cx } from '@emotion/css'

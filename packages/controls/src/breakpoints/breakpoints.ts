@@ -1,3 +1,5 @@
+import { type Viewport } from 'csstype'
+
 import { coalesce } from '../lib/coalesce'
 import { shallowMerge } from '../lib/shallow-merge'
 
@@ -18,6 +20,18 @@ export const getBaseBreakpoint = (breakpoints: Breakpoints): Breakpoint => {
   const breakpoint = sortBreakpoints(breakpoints)[0]
 
   if (breakpoint == null) throw new Error(`Cannot get base breakpoint.`)
+
+  return breakpoint
+}
+
+export const getBreakpoint = (
+  breakpoints: Breakpoints,
+  breakpointId: Breakpoint['id'],
+): Breakpoint => {
+  const breakpoint = breakpoints.find(({ id }) => id === breakpointId)
+
+  if (breakpoint == null)
+    throw new Error(`Unrecognized breakpoint ID: "${breakpointId}".`)
 
   return breakpoint
 }
@@ -160,4 +174,49 @@ export function mergeResponsiveValues<A>(
       ).value,
     },
   })) as DeviceOverride<A>[]
+}
+
+export function findNextFallback<V>(
+  breakpoints: Breakpoints,
+  value: ResponsiveValue<V>,
+  deviceId: Breakpoint['id'],
+  activeDeviceId: Breakpoint['id'],
+  fallbackStrategy?: FallbackStrategy<V>,
+): Breakpoint | null {
+  const deviceOverride = findBreakpointOverride(
+    breakpoints,
+    value.filter((v) => v.deviceId !== activeDeviceId),
+    deviceId,
+    fallbackStrategy,
+  )
+
+  return deviceOverride != null
+    ? getBreakpoint(breakpoints, deviceOverride.deviceId)
+    : null
+}
+
+export const getBreakpointMediaQuery = (breakpoint: Breakpoint): string => {
+  const parts = ['@media only screen']
+
+  if (breakpoint.minWidth != null) {
+    parts.push(`(min-width: ${breakpoint.minWidth}px)`)
+  }
+
+  if (breakpoint.maxWidth != null) {
+    parts.push(`(max-width: ${breakpoint.maxWidth}px)`)
+  }
+
+  return parts.join(' and ')
+}
+
+export const getViewportStyle = (
+  breakpoints: Breakpoints,
+  deviceId: Breakpoint['id'],
+): Viewport<string | number> => {
+  const device = getBreakpoint(breakpoints, deviceId)
+
+  return {
+    width: device.viewportWidth != null ? device.viewportWidth : '100%',
+    minWidth: device.minWidth,
+  }
 }

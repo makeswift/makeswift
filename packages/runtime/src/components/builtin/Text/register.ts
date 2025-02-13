@@ -1,6 +1,6 @@
 import { type ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
-import { getBaseBreakpoint } from '../../../state/modules/breakpoints'
+import { getBaseBreakpoint } from '@makeswift/controls'
 import { RichText } from '../../../controls/rich-text-v2/rich-text-v2'
 import { lazy } from 'react'
 import { ElementID, Margin, Width } from '@makeswift/prop-controllers'

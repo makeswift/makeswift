@@ -14,12 +14,12 @@ import type {
 } from '@makeswift/prop-controllers'
 
 import {
-  FallbackStrategy,
-  join as joinResponsiveValues,
   type Breakpoints,
+  type FallbackStrategy,
+  join as joinResponsiveValues,
+  getBreakpoint,
+  getBreakpointMediaQuery,
 } from '@makeswift/controls'
-
-import { getBreakpoint, getBreakpointMediaQuery } from '../../state/modules/breakpoints'
 
 import { useBreakpoints } from '../../runtimes/react/hooks/use-breakpoints'
 

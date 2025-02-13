@@ -12,10 +12,10 @@ import {
   type ResolvedTypographyStyle,
   isNotNil,
   getBaseBreakpoint,
+  getBreakpointMediaQuery,
 } from '@makeswift/controls'
 
 import { useCache } from '../../../next/root-style-registry'
-import { getBreakpointMediaQuery } from '../../../state/modules/breakpoints'
 
 import { styleV1Css } from '../controls/style'
 import { typographyCss } from '../controls/typography'

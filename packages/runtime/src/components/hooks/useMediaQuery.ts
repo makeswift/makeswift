@@ -1,13 +1,14 @@
 import { useSyncExternalStore } from 'use-sync-external-store/shim'
 import { useCallback } from 'react'
 
-import { DeviceOverride } from '../../prop-controllers'
 import {
-  Breakpoints,
+  type Breakpoints,
+  type DeviceOverride,
   findBreakpointOverride,
   getBaseBreakpoint,
   getBreakpointMediaQuery,
-} from '../../state/modules/breakpoints'
+} from '@makeswift/controls'
+
 import { useBreakpoints } from '../../runtimes/react/hooks/use-breakpoints'
 
 const getDeviceQueries = (breakpoints: Breakpoints) =>
