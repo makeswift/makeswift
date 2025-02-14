@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.23.6-canary.0
+
+### Patch Changes
+
+- 0988af6: chore: move the rest of breakpoint algorithms to the `@makeswift/controls` package
+- Updated dependencies [0988af6]
+  - @makeswift/controls@0.1.8-canary.0
+  - @makeswift/prop-controllers@0.4.1-canary.0
+
 ## 0.23.5
 
 ### Patch Changes

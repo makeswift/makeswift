@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.8-canary.0
+
+### Patch Changes
+
+- 0988af6: chore: move the rest of breakpoint algorithms to the `@makeswift/controls` package
+
 ## 0.1.7
 
 ### Patch Changes
