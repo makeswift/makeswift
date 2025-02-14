@@ -10,8 +10,9 @@ import {
   Width,
   type PropData,
 } from '@makeswift/prop-controllers'
+import { findBreakpointOverride } from '@makeswift/controls'
+
 import { ReactRuntime } from '../../../runtimes/react'
-import { findBreakpointOverride } from '../../../state/modules/breakpoints'
 import { MakeswiftComponentType } from '../constants'
 import { ButtonVariant } from './contants'
 import { lazy } from 'react'

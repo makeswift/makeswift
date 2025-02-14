@@ -1,25 +1,12 @@
-import { Viewport } from 'csstype'
-
-import {
-  findBreakpointOverride,
-  type ResponsiveValue,
-  type BreakpointId,
-  type Breakpoint,
-  type Breakpoints,
-  type FallbackStrategy,
-} from '@makeswift/controls'
+import { type Breakpoint, type Breakpoints } from '@makeswift/controls'
 
 import { Action, ActionTypes } from '../actions'
 
 export {
-  findBreakpointOverride,
-  getBaseBreakpoint,
-  type ResponsiveValue,
-  type DeviceOverride,
+  getBreakpoint,
   type Breakpoint,
   type BreakpointId,
   type Breakpoints,
-  type FallbackStrategy,
 } from '@makeswift/controls'
 
 export type State = Breakpoints
@@ -143,57 +130,4 @@ function validateBreakpointsInput(input: BreakpointsInput) {
       )
     }
   })
-}
-
-export const getBreakpoint = (state: State, breakpointId: Breakpoint['id']): Breakpoint => {
-  const breakpoint = state.find(({ id }) => id === breakpointId)
-
-  if (breakpoint == null) throw new Error(`Unrecognized breakpoint ID: "${breakpointId}".`)
-
-  return breakpoint
-}
-
-export const getBreakpointMediaQuery = (breakpoint: Breakpoint): string => {
-  const parts = ['@media only screen']
-
-  if (breakpoint.minWidth != null) {
-    parts.push(`(min-width: ${breakpoint.minWidth}px)`)
-  }
-
-  if (breakpoint.maxWidth != null) {
-    parts.push(`(max-width: ${breakpoint.maxWidth}px)`)
-  }
-
-  return parts.join(' and ')
-}
-
-export const getViewportStyle = (
-  state: State,
-  deviceId: string,
-): Viewport<string | number> | null | undefined => {
-  const device = getBreakpoint(state, deviceId)
-
-  return (
-    device && {
-      width: device.viewportWidth != null ? device.viewportWidth : '100%',
-      minWidth: device.minWidth,
-    }
-  )
-}
-
-export function findNextFallback<V>(
-  breakpoints: Breakpoints,
-  value: ResponsiveValue<V>,
-  deviceId: BreakpointId,
-  activeDeviceId: BreakpointId,
-  fallbackStrategy?: FallbackStrategy<V>,
-): Breakpoint | null {
-  const deviceOverride = findBreakpointOverride(
-    breakpoints,
-    value.filter(v => v.deviceId !== activeDeviceId),
-    deviceId,
-    fallbackStrategy,
-  )
-
-  return (deviceOverride && getBreakpoint(breakpoints, deviceOverride.deviceId)) ?? null
 }

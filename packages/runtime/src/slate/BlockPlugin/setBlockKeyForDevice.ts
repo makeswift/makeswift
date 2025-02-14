@@ -1,9 +1,13 @@
 import { Editor, Transforms, Location } from 'slate'
-import { Slate } from '@makeswift/controls'
+import {
+  type Breakpoints,
+  type BreakpointId,
+  findBreakpointOverride,
+  Slate,
+} from '@makeswift/controls'
 
 import { getBlocksInSelection } from '../selectors'
 import { EditableBlockKey, EditableBlockValue } from './types'
-import { Breakpoints, BreakpointId, findBreakpointOverride } from '../../state/modules/breakpoints'
 
 type SetBlockKeyForDeviceOptions = {
   at?: Location

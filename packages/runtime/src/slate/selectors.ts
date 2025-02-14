@@ -1,5 +1,10 @@
 import { Editor, NodeEntry, Range, Text } from 'slate'
-import { Slate } from '@makeswift/controls'
+import {
+  type Breakpoints,
+  type BreakpointId,
+  findBreakpointOverride,
+  Slate,
+} from '@makeswift/controls'
 
 import { EditableBlockKey } from './BlockPlugin/types'
 
@@ -7,7 +12,6 @@ import unhangRange from './utils/unhangRange'
 import shallowEqual from '../utils/shallowEqual'
 import { isNonNullable } from '../utils/isNonNullable'
 
-import { Breakpoints, BreakpointId, findBreakpointOverride } from '../state/modules/breakpoints'
 import deepEqual from '../utils/deepEqual'
 import keys from '../utils/keys'
 

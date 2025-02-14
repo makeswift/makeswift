@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { Descendant } from 'slate'
-import { Slate } from '@makeswift/controls'
+import { Slate, getBaseBreakpoint } from '@makeswift/controls'
 
-import { getBaseBreakpoint, DefaultBreakpointID } from '../../../../../state/modules/breakpoints'
+import { DefaultBreakpointID } from '../../../../../state/modules/breakpoints'
 import { useBreakpoints } from '../../../hooks/use-breakpoints'
 import { RichTextV2Definition, RichText } from '../../../../../controls'
 
