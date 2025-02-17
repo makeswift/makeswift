@@ -1,5 +1,12 @@
 # @makeswift/prop-controllers
 
+## 0.4.1
+
+### Patch Changes
+
+- Updated dependencies [0988af6]
+  - @makeswift/controls@0.1.8
+
 ## 0.4.0
 
 ### Minor Changes
