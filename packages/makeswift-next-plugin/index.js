@@ -29,11 +29,7 @@ const NEXT_IMAGE_REVIEW_APP_REMOTE_PATTERNS = [
 
 /** @type {(options: MakeswiftNextPluginOptions) => (nextConfig: NextConfig) => NextConfig} */
 module.exports =
-  ({
-    resolveSymlinks,
-    appOrigin = 'https://app.makeswift.com',
-    previewMode = true,
-  } = {}) =>
+  ({ resolveSymlinks, appOrigin = 'https://app.makeswift.com' } = {}) =>
   (nextConfig = {}) => {
     /** @type {NextConfig} */
     let enhancedConfig = {
@@ -45,68 +41,6 @@ module.exports =
           ...NEXT_IMAGE_REMOTE_PATTERNS,
           ...NEXT_IMAGE_REVIEW_APP_REMOTE_PATTERNS,
         ],
-      },
-      async rewrites() {
-        const rewrites = await nextConfig.rewrites?.()
-        const previewModeRewrites = [
-          {
-            has: [
-              {
-                type: 'query',
-                key: 'x-makeswift-draft-mode',
-                value: '(?<secret>.+)',
-              },
-            ],
-            source: '/:path(.*)',
-            destination: '/api/makeswift/proxy-draft-mode',
-          },
-          {
-            has: [
-              {
-                type: 'header',
-                key: 'X-Makeswift-Draft-Mode',
-                value: '(?<secret>.+)',
-              },
-            ],
-            source: '/:path(.*)',
-            destination: '/api/makeswift/proxy-draft-mode',
-          },
-          {
-            has: [
-              {
-                type: 'query',
-                key: 'x-makeswift-preview-mode',
-                value: '(?<secret>.+)',
-              },
-            ],
-            source: '/:path(.*)',
-            destination: '/api/makeswift/proxy-preview-mode',
-            locale: false,
-          },
-          {
-            has: [
-              {
-                type: 'header',
-                key: 'X-Makeswift-Preview-Mode',
-                value: '(?<secret>.+)',
-              },
-            ],
-            source: '/:path(.*)',
-            destination: '/api/makeswift/proxy-preview-mode',
-            locale: false,
-          },
-        ]
-
-        return {
-          beforeFiles: [
-            ...(previewMode ? previewModeRewrites : []),
-            ...(Array.isArray(rewrites) ? [] : rewrites?.beforeFiles ?? []),
-          ],
-          afterFiles: Array.isArray(rewrites)
-            ? rewrites
-            : rewrites?.afterFiles ?? [],
-          fallback: Array.isArray(rewrites) ? [] : rewrites?.fallback ?? [],
-        }
       },
       async headers() {
         const headers = (await nextConfig.headers?.()) ?? []
