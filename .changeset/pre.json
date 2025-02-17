@@ -12,6 +12,7 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
-    "good-worms-crash"
+    "good-worms-crash",
+    "new-sheep-matter"
   ]
 }
