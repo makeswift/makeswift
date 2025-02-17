@@ -474,7 +474,7 @@ export class Makeswift {
   private async introspect(
     element: Element,
     siteVersion: MakeswiftSiteVersion,
-    locale?: string,
+    locale: string | null,
   ): Promise<CacheData> {
     const runtime = this.runtime
     const descriptors = getPropControllerDescriptors(runtime.store.getState())
@@ -654,7 +654,10 @@ export class Makeswift {
     const cacheData = await this.introspect(
       baseLocalizedPage?.data ?? document.data,
       siteVersion,
-      localeInput,
+      // The /v3/pages endpoint returns null for document.locale when the requested locale is the default.
+      // This legacy behavior is set to change with the upcoming /v4/pages endpoint.
+      // We rely on document.locale when reading from the API cache, so ensure the cache is built during introspection using the same value.
+      document.locale,
     )
 
     return {
@@ -718,7 +721,7 @@ export class Makeswift {
     }
 
     const document = makeswiftComponentDocumentSchema.parse(json)
-    const cacheData = await this.introspect(document.data, siteVersion, locale)
+    const cacheData = await this.introspect(document.data, siteVersion, locale ?? null)
 
     return {
       document,
@@ -814,7 +817,7 @@ export class Makeswift {
   async getPagePathnameSlices(
     pageIds: string[],
     siteVersion: MakeswiftSiteVersion,
-    { locale }: { locale?: string },
+    { locale }: { locale?: string | null },
   ): Promise<(PagePathnameSlice | null)[]> {
     if (pageIds.length === 0) return []
 
