@@ -8,8 +8,12 @@ import { Makeswift } from '../client'
 import elementTree, { ElementTreeResponse } from './handlers/element-tree'
 import fonts, { Font, FontsResponse, GetFonts } from './handlers/fonts'
 import manifest, { Manifest, ManifestResponse } from './handlers/manifest'
-import proxyPreviewMode, { ProxyPreviewModeResponse } from './handlers/proxy-preview-mode'
-import proxyDraftMode, { ProxyDraftModeResponse } from './handlers/proxy-draft-mode'
+import draftModeCookiesHandler, {
+  type DraftModeCookiesResponse,
+} from './handlers/draft-mode-cookies'
+import previewModeCookiesHandler, {
+  type PreviewModeCookiesResponse,
+} from './handlers/preview-mode-cookies'
 import { revalidate, RevalidationResponse } from './handlers/revalidate'
 import translatableData, { TranslatableDataResponse } from './handlers/translatable-data'
 import mergeTranslatedData, { TranslatedDataResponse } from './handlers/merge-translated-data'
@@ -35,8 +39,8 @@ type NotFoundError = { message: string }
 export type MakeswiftApiHandlerResponse =
   | ManifestResponse
   | RevalidationResponse
-  | ProxyPreviewModeResponse
-  | ProxyDraftModeResponse
+  | DraftModeCookiesResponse
+  | PreviewModeCookiesResponse
   | FontsResponse
   | ElementTreeResponse
   | TranslatableDataResponse
@@ -156,17 +160,17 @@ export function MakeswiftApiHandler(
         .exhaustive()
     }
 
-    if (matches('/proxy-preview-mode')) {
+    if (matches('/draft-mode-cookies')) {
       return match(args)
-        .with(routeHandlerPattern, args => proxyPreviewMode(...args, { apiKey }))
-        .with(apiRoutePattern, args => proxyPreviewMode(...args, { apiKey }))
+        .with(routeHandlerPattern, args => draftModeCookiesHandler(...args, { apiKey }))
+        .with(apiRoutePattern, args => draftModeCookiesHandler(...args, { apiKey }))
         .exhaustive()
     }
 
-    if (matches('/proxy-draft-mode')) {
+    if (matches('/preview-mode-cookies')) {
       return match(args)
-        .with(routeHandlerPattern, args => proxyDraftMode(...args, { apiKey }))
-        .with(apiRoutePattern, args => proxyDraftMode(...args, { apiKey }))
+        .with(routeHandlerPattern, args => previewModeCookiesHandler(...args, { apiKey }))
+        .with(apiRoutePattern, args => previewModeCookiesHandler(...args, { apiKey }))
         .exhaustive()
     }
 
