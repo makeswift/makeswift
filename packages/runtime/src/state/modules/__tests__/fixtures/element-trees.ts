@@ -4008,3 +4008,282 @@ export const homePage = {
   },
   type: './components/Root/index.js',
 }
+
+export const resetElementTree = {
+  beforeReset: {
+    type: 'Demo',
+    key: 'e4e70b30-af46-5f25-93ee-2c550ec4a5f4',
+    props: {
+      left: {
+        columns: [
+          {
+            value: {
+              count: 12,
+              spans: [[12]],
+            },
+            deviceId: 'desktop',
+          },
+        ],
+        elements: [
+          {
+            key: '51115f2a-12ac-4a0f-8be3-7e4006cf7c09',
+            type: './components/Box/index.js',
+            props: {
+              padding: [
+                {
+                  value: {
+                    paddingTop: {
+                      unit: 'px',
+                      value: 10,
+                    },
+                    paddingLeft: {
+                      unit: 'px',
+                      value: 10,
+                    },
+                    paddingRight: {
+                      unit: 'px',
+                      value: 10,
+                    },
+                    paddingBottom: {
+                      unit: 'px',
+                      value: 10,
+                    },
+                  },
+                  deviceId: 'desktop',
+                },
+              ],
+              children: {
+                value: {
+                  columns: [
+                    {
+                      value: {
+                        count: 12,
+                        spans: [[6, 6]],
+                      },
+                      deviceId: 'desktop',
+                    },
+                  ],
+                  elements: [
+                    {
+                      key: 'f46bb567-8964-4606-b544-295b4b7d05fd',
+                      type: './components/Box/index.js',
+                      props: {
+                        padding: [
+                          {
+                            value: {
+                              paddingTop: {
+                                unit: 'px',
+                                value: 10,
+                              },
+                              paddingLeft: {
+                                unit: 'px',
+                                value: 10,
+                              },
+                              paddingRight: {
+                                unit: 'px',
+                                value: 10,
+                              },
+                              paddingBottom: {
+                                unit: 'px',
+                                value: 10,
+                              },
+                            },
+                            deviceId: 'desktop',
+                          },
+                        ],
+                        children: {
+                          value: {
+                            columns: [
+                              {
+                                value: {
+                                  count: 12,
+                                  spans: [[12]],
+                                },
+                                deviceId: 'desktop',
+                              },
+                            ],
+                            elements: [
+                              {
+                                key: 'c5010c7f-2eec-4042-abc8-be48836f8aef',
+                                type: './components/Button/index.js',
+                                props: {},
+                              },
+                            ],
+                          },
+                          '@@makeswift/type': 'prop-controllers::grid::v1',
+                        },
+                      },
+                    },
+                    {
+                      key: '7039524a-c2a1-42be-9988-a799c21fe734',
+                      type: './components/Box/index.js',
+                      props: {
+                        padding: [
+                          {
+                            value: {
+                              paddingTop: {
+                                unit: 'px',
+                                value: 10,
+                              },
+                              paddingLeft: {
+                                unit: 'px',
+                                value: 10,
+                              },
+                              paddingRight: {
+                                unit: 'px',
+                                value: 10,
+                              },
+                              paddingBottom: {
+                                unit: 'px',
+                                value: 10,
+                              },
+                            },
+                            deviceId: 'desktop',
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+                '@@makeswift/type': 'prop-controllers::grid::v1',
+              },
+            },
+          },
+        ],
+      },
+      right: {
+        columns: [
+          {
+            value: {
+              count: 12,
+              spans: [[12]],
+            },
+            deviceId: 'desktop',
+          },
+        ],
+        elements: [
+          {
+            key: '618f069e-9515-4546-8abc-75cec6d33af4',
+            type: './components/Box/index.js',
+            props: {
+              padding: [
+                {
+                  value: {
+                    paddingTop: {
+                      unit: 'px',
+                      value: 10,
+                    },
+                    paddingLeft: {
+                      unit: 'px',
+                      value: 10,
+                    },
+                    paddingRight: {
+                      unit: 'px',
+                      value: 10,
+                    },
+                    paddingBottom: {
+                      unit: 'px',
+                      value: 10,
+                    },
+                  },
+                  deviceId: 'desktop',
+                },
+              ],
+              children: {
+                value: {
+                  columns: [
+                    {
+                      value: {
+                        count: 12,
+                        spans: [[12]],
+                      },
+                      deviceId: 'desktop',
+                    },
+                  ],
+                  elements: [
+                    {
+                      key: '9745df8d-1589-46fd-8320-f3238bb94cbe',
+                      type: './components/Box/index.js',
+                      props: {
+                        padding: [
+                          {
+                            value: {
+                              paddingTop: {
+                                unit: 'px',
+                                value: 10,
+                              },
+                              paddingLeft: {
+                                unit: 'px',
+                                value: 10,
+                              },
+                              paddingRight: {
+                                unit: 'px',
+                                value: 10,
+                              },
+                              paddingBottom: {
+                                unit: 'px',
+                                value: 10,
+                              },
+                            },
+                            deviceId: 'desktop',
+                          },
+                        ],
+                        children: {
+                          value: {
+                            columns: [
+                              {
+                                value: {
+                                  count: 12,
+                                  spans: [[12]],
+                                },
+                                deviceId: 'desktop',
+                              },
+                            ],
+                            elements: [
+                              {
+                                key: '92fd0115-ff8f-4218-b23f-9f861166ef35',
+                                type: './components/Image/index.js',
+                                props: {},
+                              },
+                            ],
+                          },
+                          '@@makeswift/type': 'prop-controllers::grid::v1',
+                        },
+                      },
+                    },
+                  ],
+                },
+                '@@makeswift/type': 'prop-controllers::grid::v1',
+              },
+            },
+          },
+        ],
+      },
+    },
+  },
+
+  afterReset: {
+    type: 'Demo',
+    key: '38bf059f-9a17-4626-bec4-e286130fd9da',
+    props: {
+      left: {
+        columns: [
+          {
+            value: {
+              count: 12,
+              spans: [[12]],
+            },
+            deviceId: 'desktop',
+          },
+        ],
+        elements: [
+          {
+            key: '6ddc735a-3098-410a-b3b6-801f4ae1a0be',
+            type: './components/Button/index.js',
+            props: {},
+          },
+        ],
+      },
+    },
+  },
+}

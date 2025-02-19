@@ -1,5 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`resetting an element tree garbage collects all elements that were removed on reset 1`] = `
+[
+  "e4e70b30-af46-5f25-93ee-2c550ec4a5f4",
+  "51115f2a-12ac-4a0f-8be3-7e4006cf7c09",
+  "f46bb567-8964-4606-b544-295b4b7d05fd",
+  "c5010c7f-2eec-4042-abc8-be48836f8aef",
+  "7039524a-c2a1-42be-9988-a799c21fe734",
+  "618f069e-9515-4546-8abc-75cec6d33af4",
+  "9745df8d-1589-46fd-8320-f3238bb94cbe",
+  "92fd0115-ff8f-4218-b23f-9f861166ef35",
+]
+`;
+
+exports[`resetting an element tree garbage collects all elements that were removed on reset 2`] = `
+[
+  "38bf059f-9a17-4626-bec4-e286130fd9da",
+  "6ddc735a-3098-410a-b3b6-801f4ae1a0be",
+]
+`;
+
 exports[`traverseElementTree walks the tree in the correct order 1`] = `
 [
   {
