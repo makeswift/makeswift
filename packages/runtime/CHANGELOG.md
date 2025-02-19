@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.7-canary.0
+
+### Patch Changes
+
+- 3cf4d7f: fix: on empty path operations, don't show error messages and properly cleanup removed elements.
+
 ## 0.23.6
 
 ### Patch Changes
