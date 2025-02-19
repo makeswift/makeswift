@@ -31,8 +31,8 @@ export function getInitialState(
   return state
 }
 
-function getElementTree(state: State, id: string): ElementTree | null {
-  return state.get(id) ?? null
+function getElementTree(state: State, documentKey: string): ElementTree | null {
+  return state.get(documentKey) ?? null
 }
 
 export function getElements(state: State, documentKey: string): Map<string, Element> {
@@ -164,17 +164,21 @@ function isElement(item: unknown): item is Element {
   )
 }
 
-type ElementOperationPath = { elementPath: OperationPath; propName: string }
+type ElementOperationPath = { elementPath: OperationPath; propName: string | null }
 
 function getElementOperationPath(path: OperationPath): ElementOperationPath {
+  if (path.length === 0) {
+    return { elementPath: [], propName: null }
+  }
+
   const i = path.findLastIndex(
     (fragment, i) =>
       typeof fragment === 'number' && (i === path.length - 1 || path[i + 1] === 'props'),
   )
 
-  if (path.length === 0 || (i === -1 && path[0] !== 'props') || path.length - i < 3) {
+  if ((i === -1 && path[0] !== 'props') || path.length - i < 3) {
     console.error('Operation path does not point to an element property', { path })
-    return { elementPath: [], propName: 'children' }
+    return { elementPath: [], propName: null }
   }
 
   return { elementPath: path.slice(0, i + 1), propName: `${path.slice(i + 1).at(1)}` }
@@ -210,9 +214,9 @@ function getElementByPath(rootElement: Element, elementPath: OperationPath): Ele
 function getElementAndPropName(
   rootElement: Element,
   { elementPath, propName }: ElementOperationPath,
-): [Element, string] {
+): [Element, string | null] {
   const element = getElementByPath(rootElement, elementPath)
-  return element != null ? [element, propName] : [rootElement, 'children']
+  return element != null ? [element, propName] : [rootElement, null]
 }
 
 function updateParentElements(
@@ -243,10 +247,10 @@ function hasChildren(
 function deleteElement(
   { elements, elementIds }: ElementTree,
   deletedElement: Element,
-  propName: string,
+  propName: string | null,
   descriptors: DescriptorsByComponentType,
 ) {
-  if (hasChildren(deletedElement, propName, descriptors)) {
+  if (propName == null || hasChildren(deletedElement, propName, descriptors)) {
     for (const element of traverseElementTree(deletedElement, descriptors)) {
       elements.delete(element.key)
       elementIds.delete(element.key)
@@ -281,10 +285,10 @@ function applyDelete(
 function insertElement(
   { elements, elementIds }: ElementTree,
   insertedElement: Element,
-  propName: string,
+  propName: string | null,
   descriptors: DescriptorsByComponentType,
 ) {
-  if (hasChildren(insertedElement, propName, descriptors)) {
+  if (propName == null || hasChildren(insertedElement, propName, descriptors)) {
     for (const element of traverseElementTree(insertedElement, descriptors)) {
       elements.set(element.key, element)
       if (!isElementReference(element)) {
