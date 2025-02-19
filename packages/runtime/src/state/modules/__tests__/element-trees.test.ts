@@ -1,20 +1,31 @@
-import { traverseElementTree, getChangedElementsPaths } from '../element-trees'
+import * as ElementTrees from '../element-trees'
+import * as Fixtures from './fixtures/element-trees'
+import {
+  ELEMENT_TREE_DEMO_COMPONENT_TYPE,
+  ElementTreesDemo,
+} from './fixtures/element-trees-demo-component'
+
 import { getPropControllerDescriptors } from '../../react-page'
 import { ReactRuntime } from '../../../runtimes/react'
-
-import * as Fixtures from './fixtures/element-trees'
-
-const runtime = new ReactRuntime()
+import { Slot } from '../../../controls'
+import * as Actions from '../../actions'
 
 describe('traverseElementTree', () => {
+  const runtime = new ReactRuntime()
+
   test('walks the tree in the correct order', () => {
     const descriptors = getPropControllerDescriptors(runtime.store.getState())
-    const elements = traverseElementTree(Fixtures.homePage, descriptors)
+    const elements = ElementTrees.traverseElementTree(Fixtures.homePage, descriptors)
     expect([...elements].map(({ key, type }) => ({ key, type }))).toMatchSnapshot()
   })
 })
 
 describe('getChangedElementsPaths', () => {
+  test('gracefully handles empty path', () => {
+    const changedPaths = ElementTrees.getChangedElementsPaths([])
+    expect(changedPaths).toStrictEqual([{ elementPath: [], propName: null }])
+  })
+
   describe('gracefully handles incorrect paths', () => {
     let consoleError: jest.SpyInstance
     beforeEach(() => {
@@ -27,47 +38,56 @@ describe('getChangedElementsPaths', () => {
     })
 
     test.each([
-      { path: [] },
       { path: [0] },
       { path: ['foo', 0] },
       { path: ['foo', 0, 'props'] },
       { path: ['props', 'background', 7] },
     ])('$path', ({ path }) => {
-      expect(getChangedElementsPaths(path)).toStrictEqual([
-        { elementPath: [], propName: 'children' },
+      expect(ElementTrees.getChangedElementsPaths(path)).toStrictEqual([
+        { elementPath: [], propName: null },
       ])
     })
 
     test("['foo', 0, 'props', 'background']", () => {
-      expect(getChangedElementsPaths(['foo', 0, 'props', 'background'])).toStrictEqual([
-        { elementPath: ['foo', 0], propName: 'background' },
-        { elementPath: [], propName: 'children' },
-      ])
+      expect(ElementTrees.getChangedElementsPaths(['foo', 0, 'props', 'background'])).toStrictEqual(
+        [
+          { elementPath: ['foo', 0], propName: 'background' },
+          { elementPath: [], propName: null },
+        ],
+      )
     })
   })
 
   test('correctly partitions operation path', () => {
-    expect(getChangedElementsPaths(['props', 'margin'])).toStrictEqual([
+    expect(ElementTrees.getChangedElementsPaths(['props', 'margin'])).toStrictEqual([
       { elementPath: [], propName: 'margin' },
     ])
 
-    expect(getChangedElementsPaths(['props', 'margin', 0, 'foo'])).toStrictEqual([
+    expect(ElementTrees.getChangedElementsPaths(['props', 'margin', 0, 'foo'])).toStrictEqual([
       { elementPath: [], propName: 'margin' },
     ])
 
     expect(
-      getChangedElementsPaths(['props', 'children', 'value', 'elements', 4, 'foo']),
+      ElementTrees.getChangedElementsPaths(['props', 'children', 'value', 'elements', 4, 'foo']),
     ).toStrictEqual([{ elementPath: [], propName: 'children' }])
 
     expect(
-      getChangedElementsPaths(['props', 'columns', 'value', 'elements', 4, 'props', 'foo']),
+      ElementTrees.getChangedElementsPaths([
+        'props',
+        'columns',
+        'value',
+        'elements',
+        4,
+        'props',
+        'foo',
+      ]),
     ).toStrictEqual([
       { elementPath: ['props', 'columns', 'value', 'elements', 4], propName: 'foo' },
       { elementPath: [], propName: 'columns' },
     ])
 
     expect(
-      getChangedElementsPaths([
+      ElementTrees.getChangedElementsPaths([
         'props',
         'children',
         'value',
@@ -100,5 +120,67 @@ describe('getChangedElementsPaths', () => {
       { elementPath: ['props', 'children', 'value', 'elements', 1], propName: 'children' },
       { elementPath: [], propName: 'children' },
     ])
+  })
+})
+
+describe('resetting an element tree', () => {
+  const runtime = new ReactRuntime()
+  runtime.registerComponent(ElementTreesDemo, {
+    type: ELEMENT_TREE_DEMO_COMPONENT_TYPE,
+    label: 'Demo',
+    props: {
+      left: Slot(),
+      right: Slot(),
+    },
+  })
+
+  test('garbage collects all elements that were removed on reset', () => {
+    const descriptors = getPropControllerDescriptors(runtime.store.getState())
+    const documentKey = '0f567942-3ef5-4e66-abb0-969044145606'
+
+    const oldDocument = {
+      key: documentKey,
+      rootElement: Fixtures.resetElementTree.beforeReset,
+    }
+
+    const initialState = ElementTrees.reducer(
+      ElementTrees.getInitialState(),
+      Actions.createElementTree({
+        document: oldDocument,
+        descriptors,
+      }),
+    )
+
+    const initialElementKeys = Array.from(
+      ElementTrees.getElements(initialState, documentKey).keys(),
+    )
+    expect(initialElementKeys).toMatchSnapshot()
+
+    const newDocument = {
+      key: documentKey,
+      rootElement: Fixtures.resetElementTree.afterReset,
+    }
+
+    const resetOp = [{ p: [], od: oldDocument.rootElement, oi: newDocument.rootElement }]
+
+    const updatedState = ElementTrees.reducer(
+      initialState,
+      Actions.changeElementTree({
+        oldDocument,
+        newDocument,
+        descriptors,
+        operation: resetOp,
+      }),
+    )
+
+    const elementKeysAfterReset = Array.from(
+      ElementTrees.getElements(updatedState, documentKey).keys(),
+    )
+    expect(elementKeysAfterReset).toMatchSnapshot()
+
+    // The before/after fixtures are composed of entirely unique elements, so
+    // they should share no common keys
+    expect(initialElementKeys.some(key => elementKeysAfterReset.includes(key))).toBe(false)
+    expect(elementKeysAfterReset.some(key => initialElementKeys.includes(key))).toBe(false)
   })
 })

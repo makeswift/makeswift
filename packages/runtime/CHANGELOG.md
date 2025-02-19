@@ -1,19 +1,14 @@
 # @makeswift/runtime
 
-## 0.23.6-canary.1
-
-### Patch Changes
-
-- 9f079f6: Fix cache data mismatch that causes resources to be fetched on the client side when the default locale is passed to `getPageSnapshot`.
-
-## 0.23.6-canary.0
+## 0.23.6
 
 ### Patch Changes
 
 - 0988af6: chore: move the rest of breakpoint algorithms to the `@makeswift/controls` package
+- 9f079f6: Fix cache data mismatch that causes resources to be fetched on the client side when the default locale is passed to `getPageSnapshot`.
 - Updated dependencies [0988af6]
-  - @makeswift/controls@0.1.8-canary.0
-  - @makeswift/prop-controllers@0.4.1-canary.0
+  - @makeswift/controls@0.1.8
+  - @makeswift/prop-controllers@0.4.1
 
 ## 0.23.5
 
