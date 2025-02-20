@@ -5,6 +5,7 @@ import { cookies, draftMode } from 'next/headers'
 
 import { MAKESWIFT_DRAFT_MODE_DATA_COOKIE, MakeswiftDraftData } from '../../draft-mode'
 import { MakeswiftSiteVersion } from '../../preview-mode'
+import { attachCookieRiskHeadersToResponse } from './cookie-risk-headers'
 
 type Context = { params: { [key: string]: string | string[] } }
 
@@ -92,6 +93,8 @@ async function proxyDraftModeRouteHandler(
     headers: proxyResponse.headers,
     status: proxyResponse.status,
   })
+
+  attachCookieRiskHeadersToResponse(response)
 
   // `fetch` automatically decompresses the response, but the response headers will keep the
   // `content-encoding` and `content-length` headers. This will cause decoding issues if the client
