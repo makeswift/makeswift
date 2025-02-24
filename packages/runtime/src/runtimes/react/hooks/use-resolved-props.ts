@@ -14,7 +14,7 @@ import { useSelector } from './use-selector'
 
 import { useStylesheetFactory } from './use-stylesheet-factory'
 
-import { resolvableRecord } from '../resolvable-record'
+import { useResolvableRecord } from './use-resolvable-record'
 import { propErrorHandlingProxy } from '../utils/prop-error-handling-proxy'
 
 function useControlInstances(elementKey: string): Record<string, ControlInstance> | null {
@@ -69,7 +69,7 @@ export function useResolvedProps(
     [controls, elementData, resourceResolver, stylesheetFactory],
   )
 
-  const resolvables = useMemo(
+  const resolvables = useMemo<Record<string, Resolvable<unknown>>>(
     () =>
       mapValues(propDefs, (def, propName) => {
         const defaultValue = (def.config as any)?.defaultValue
@@ -83,13 +83,13 @@ export function useResolvedProps(
     [propDefs, resolveProp],
   )
 
-  const props = useMemo(() => resolvableRecord(resolvables), [resolvables])
+  const props = useResolvableRecord(resolvables)
 
   // no need to call `triggerResolve` on the server, all the resources should already be in
   // the host API client's cache (populated from the snapshot's cache)
   useEffect(() => {
     props.triggerResolve()
-  }, [])
+  }, [props])
 
   // the order is important here, the styles are defined in the process of the props resolution,
   // calling `useDefinedStyles` before the props are resolved would effectively be a noop
