@@ -58,6 +58,11 @@
       "import": "./dist/esm/next/index.js",
       "types": "./dist/types/next/index.d.ts"
     },
+    "./next/middleware": {
+      "require": "./dist/cjs/next/middleware/index.js",
+      "import": "./dist/esm/next/middleware/index.js",
+      "types": "./dist/types/next/middleware/index.d.ts"
+    },
     "./next/document": {
       "require": "./dist/cjs/next/document.js",
       "module": "./dist/esm/next/document.js",
@@ -163,6 +168,7 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^5.1.1",
     "scroll-into-view-if-needed": "^2.2.20",
+    "set-cookie-parser": "^2.7.1",
     "slate": "^0.91.4",
     "slate-hyperscript": "^0.77.0",
     "slate-react": "^0.91.7",
@@ -189,6 +195,7 @@
     "@types/node": "^17.0.21",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
+    "@types/set-cookie-parser": "^2.4.10",
     "concurrently": "^5.3.0",
     "expect-type": "^0.19.0",
     "jest": "^29.7.0",
