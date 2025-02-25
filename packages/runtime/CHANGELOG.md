@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.7-canary.1
+
+### Patch Changes
+
+- 95c7c21: fix: trigger resolution whenever a prop changes, resolving an issue where resources may not appear when a prop changes.
+
 ## 0.23.7-canary.0
 
 ### Patch Changes
