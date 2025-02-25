@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.23.7
+
+### Patch Changes
+
+- 3cf4d7f: fix: on empty path operations, don't show error messages and properly cleanup removed elements.
+- 95c7c21: fix: trigger resolution whenever a prop changes, resolving an issue where resources may not appear when a prop changes.
+
 ## 0.23.6
 
 ### Patch Changes
