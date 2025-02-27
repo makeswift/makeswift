@@ -4,7 +4,7 @@ import { P, match } from 'ts-pattern'
 import { cookies, draftMode } from 'next/headers'
 
 import { MAKESWIFT_DRAFT_MODE_DATA_COOKIE, MakeswiftDraftData } from '../../draft-mode'
-import { MakeswiftSiteVersion } from '../../preview-mode'
+import { MakeswiftSiteVersion } from '../../../api/site-version'
 
 type Context = { params: { [key: string]: string | string[] } }
 

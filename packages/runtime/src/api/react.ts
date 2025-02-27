@@ -19,6 +19,7 @@ import {
   CreateTableRecordMutationResult,
   CreateTableRecordMutationVariables,
 } from './graphql/generated/types'
+import { MakeswiftSiteVersion } from './site-version'
 
 export type CacheData = MakeswiftApiClient.SerializedState
 
@@ -51,17 +52,28 @@ export const CacheData = {
  * snapshot for use in the builder, not the lives pages.
  */
 export class MakeswiftHostApiClient {
+  siteVersion: MakeswiftSiteVersion
   graphqlClient: GraphQLClient
   makeswiftApiClient: MakeswiftApiClient.Store
   subscribe: MakeswiftApiClient.Store['subscribe']
 
-  constructor({ uri, cacheData, locale }: { uri: string; cacheData?: CacheData; locale?: string }) {
+  constructor({
+    uri,
+    siteVersion,
+    cacheData,
+    locale,
+  }: {
+    uri: string
+    siteVersion: MakeswiftSiteVersion
+    cacheData?: CacheData
+    locale?: string
+  }) {
     this.graphqlClient = new GraphQLClient(uri)
     this.makeswiftApiClient = MakeswiftApiClient.configureStore({
       serializedState: cacheData,
       defaultLocale: locale,
     })
-
+    this.siteVersion = siteVersion
     this.subscribe = this.makeswiftApiClient.subscribe
   }
 
@@ -75,7 +87,7 @@ export class MakeswiftHostApiClient {
 
   async fetchSwatch(swatchId: string): Promise<Swatch | null> {
     return await this.makeswiftApiClient.dispatch(
-      MakeswiftApiClient.fetchAPIResource(APIResourceType.Swatch, swatchId),
+      MakeswiftApiClient.fetchAPIResource(APIResourceType.Swatch, swatchId, this.siteVersion),
     )
   }
 
@@ -97,7 +109,7 @@ export class MakeswiftHostApiClient {
 
   async fetchFile(fileId: string): Promise<File | null> {
     return await this.makeswiftApiClient.dispatch(
-      MakeswiftApiClient.fetchAPIResource(APIResourceType.File, fileId),
+      MakeswiftApiClient.fetchAPIResource(APIResourceType.File, fileId, this.siteVersion),
     )
   }
 
@@ -119,7 +131,11 @@ export class MakeswiftHostApiClient {
 
   async fetchTypography(typographyId: string): Promise<Typography | null> {
     return await this.makeswiftApiClient.dispatch(
-      MakeswiftApiClient.fetchAPIResource(APIResourceType.Typography, typographyId),
+      MakeswiftApiClient.fetchAPIResource(
+        APIResourceType.Typography,
+        typographyId,
+        this.siteVersion,
+      ),
     )
   }
 
@@ -141,7 +157,11 @@ export class MakeswiftHostApiClient {
 
   async fetchGlobalElement(globalElementId: string): Promise<GlobalElement | null> {
     return await this.makeswiftApiClient.dispatch(
-      MakeswiftApiClient.fetchAPIResource(APIResourceType.GlobalElement, globalElementId),
+      MakeswiftApiClient.fetchAPIResource(
+        APIResourceType.GlobalElement,
+        globalElementId,
+        this.siteVersion,
+      ),
     )
   }
 
@@ -171,6 +191,7 @@ export class MakeswiftHostApiClient {
       MakeswiftApiClient.fetchAPIResource(
         APIResourceType.LocalizedGlobalElement,
         globalElementId,
+        this.siteVersion,
         locale,
       ),
     )
@@ -199,7 +220,12 @@ export class MakeswiftHostApiClient {
     locale: string | null
   }): Promise<PagePathnameSlice | null> {
     return await this.makeswiftApiClient.dispatch(
-      MakeswiftApiClient.fetchAPIResource(APIResourceType.PagePathnameSlice, pageId, locale),
+      MakeswiftApiClient.fetchAPIResource(
+        APIResourceType.PagePathnameSlice,
+        pageId,
+        this.siteVersion,
+        locale,
+      ),
     )
   }
 
@@ -252,7 +278,7 @@ export class MakeswiftHostApiClient {
 
   async fetchTable(tableId: string): Promise<Table | null> {
     return await this.makeswiftApiClient.dispatch(
-      MakeswiftApiClient.fetchAPIResource(APIResourceType.Table, tableId),
+      MakeswiftApiClient.fetchAPIResource(APIResourceType.Table, tableId, this.siteVersion),
     )
   }
 

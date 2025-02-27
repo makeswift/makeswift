@@ -17,7 +17,11 @@ import webhook from './handlers/webhook'
 import { WebhookResponseBody } from './handlers/webhook/types'
 import { ReactRuntime } from '../../react'
 import { P, match } from 'ts-pattern'
-import { getSiteVersion } from '../draft-mode'
+import {
+  API_HANDLER_SITE_VERSION_HEADER,
+  MakeswiftSiteVersion,
+  makeswiftSiteVersionSchema,
+} from '../../api/site-version'
 
 export type { Manifest, Font }
 
@@ -105,6 +109,19 @@ export function MakeswiftApiHandler(
       .exhaustive()
   }
 
+  function getSiteVersionFromRequest(args: MakeswiftApiHandlerArgs): MakeswiftSiteVersion {
+    const header = match(args)
+      .with(routeHandlerPattern, ([request]) =>
+        request.headers.get(API_HANDLER_SITE_VERSION_HEADER),
+      )
+      .with(apiRoutePattern, ([req]) => req.headers[API_HANDLER_SITE_VERSION_HEADER.toLowerCase()])
+      .exhaustive()
+
+    const parsed = makeswiftSiteVersionSchema.safeParse(header)
+    if (!parsed.success) return MakeswiftSiteVersion.Live
+    return parsed.data
+  }
+
   async function makeswiftApiHandler(
     request: NextRequest,
     context: Context,
@@ -132,10 +149,7 @@ export function MakeswiftApiHandler(
     }
 
     const client = new Makeswift(apiKey, { apiOrigin, runtime })
-    const siteVersion = await match(args)
-      .with(routeHandlerPattern, () => getSiteVersion())
-      .with(apiRoutePattern, ([req]) => Makeswift.getSiteVersion(req.previewData))
-      .exhaustive()
+    const siteVersion = getSiteVersionFromRequest(args)
     const action = '/' + makeswift.join('/')
     const matches = <T extends object>(pattern: string): Match<T> =>
       matchPattern<T>(pattern, { decode: decodeURIComponent })(action)
