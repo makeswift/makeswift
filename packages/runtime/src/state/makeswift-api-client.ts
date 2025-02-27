@@ -28,6 +28,7 @@ import {
   type APIResourceLocale,
 } from '../api'
 import { MAKESWIFT_CACHE_TAG } from '../next/api-handler/handlers/webhook/site-published'
+import { API_HANDLER_SITE_VERSION_HEADER, MakeswiftSiteVersion } from '../api/site-version'
 
 const reducer = combineReducers({
   apiResources: APIResources.reducer,
@@ -102,9 +103,12 @@ export function getAPIResource<T extends APIResourceType>(
 
 type Thunk<ReturnType> = ThunkAction<ReturnType, State, unknown, Action>
 
-async function fetchJson<T>(url: string): Promise<T | null> {
+async function fetchJson<T>(url: string, siteVersion: MakeswiftSiteVersion): Promise<T | null> {
   const response = await fetch(url, {
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      [API_HANDLER_SITE_VERSION_HEADER]: siteVersion,
+    },
     next: { tags: [MAKESWIFT_CACHE_TAG] },
   })
 
@@ -124,6 +128,7 @@ async function fetchJson<T>(url: string): Promise<T | null> {
 export function fetchAPIResource<T extends APIResourceType>(
   resourceType: T,
   resourceId: string,
+  siteVersion: MakeswiftSiteVersion,
   locale?: APIResourceLocale<T>,
 ): Thunk<Promise<Extract<APIResource, { __typename: T }> | null>> {
   return async (dispatch, getState) => {
@@ -137,19 +142,25 @@ export function fetchAPIResource<T extends APIResourceType>(
 
     switch (resourceType) {
       case APIResourceType.Swatch:
-        resource = await fetchJson<Swatch>(`/api/makeswift/swatches/${resourceId}`)
+        resource = await fetchJson<Swatch>(`/api/makeswift/swatches/${resourceId}`, siteVersion)
         break
 
       case APIResourceType.File:
-        resource = await fetchJson<File>(`/api/makeswift/files/${resourceId}`)
+        resource = await fetchJson<File>(`/api/makeswift/files/${resourceId}`, siteVersion)
         break
 
       case APIResourceType.Typography:
-        resource = await fetchJson<Typography>(`/api/makeswift/typographies/${resourceId}`)
+        resource = await fetchJson<Typography>(
+          `/api/makeswift/typographies/${resourceId}`,
+          siteVersion,
+        )
         break
 
       case APIResourceType.GlobalElement:
-        resource = await fetchJson<GlobalElement>(`/api/makeswift/global-elements/${resourceId}`)
+        resource = await fetchJson<GlobalElement>(
+          `/api/makeswift/global-elements/${resourceId}`,
+          siteVersion,
+        )
         break
 
       case APIResourceType.LocalizedGlobalElement: {
@@ -163,6 +174,7 @@ export function fetchAPIResource<T extends APIResourceType>(
 
         resource = await fetchJson<LocalizedGlobalElement>(
           `/api/makeswift/localized-global-elements/${resourceId}/${locale}`,
+          siteVersion,
         )
 
         dispatch(
@@ -181,12 +193,12 @@ export function fetchAPIResource<T extends APIResourceType>(
 
         if (locale != null) url.searchParams.set('locale', locale)
 
-        resource = await fetchJson<PagePathnameSlice>(url.pathname + url.search)
+        resource = await fetchJson<PagePathnameSlice>(url.pathname + url.search, siteVersion)
         break
       }
 
       case APIResourceType.Table:
-        resource = await fetchJson<Table>(`/api/makeswift/tables/${resourceId}`)
+        resource = await fetchJson<Table>(`/api/makeswift/tables/${resourceId}`, siteVersion)
         break
 
       default:

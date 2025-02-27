@@ -4,7 +4,7 @@ import { http, HttpResponse, graphql } from 'msw'
 import { ReactRuntime } from '../../runtimes/react'
 
 import { server } from '../../mocks/server'
-import { MakeswiftSiteVersion } from '../preview-mode'
+import { MakeswiftSiteVersion } from '../../api/site-version'
 
 const TEST_API_KEY = 'myApiKey'
 const apiOrigin = 'https://api.fakeswift.com'

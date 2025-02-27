@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { MakeswiftPreviewData, MakeswiftSiteVersion } from '../../preview-mode'
+import { MakeswiftPreviewData } from '../../preview-mode'
 import { NextRequest, NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
+import { MakeswiftSiteVersion } from '../../../api/site-version'
 
 type Context = { params: { [key: string]: string | string[] } }
 
