@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { cookies, draftMode } from 'next/headers'
-import { makeswiftSiteVersionSchema, MakeswiftSiteVersion } from '../preview-mode'
+import { MakeswiftSiteVersion, makeswiftSiteVersionSchema } from '../../api/site-version'
 
 export const MAKESWIFT_DRAFT_MODE_DATA_COOKIE = 'x-makeswift-draft-data'
 

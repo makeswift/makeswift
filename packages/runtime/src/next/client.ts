@@ -40,7 +40,8 @@ import {
   getPropControllerDescriptors,
   isElementReference,
 } from '../state/react-page'
-import { getMakeswiftSiteVersion, MakeswiftSiteVersion } from './preview-mode'
+import { getMakeswiftSiteVersion } from './preview-mode'
+import { MakeswiftSiteVersion } from '../api/site-version'
 import { toIterablePaginationResult } from './utils/pagination'
 import { deterministicUUID } from '../utils/deterministic-uuid'
 import { Schema } from '@makeswift/controls'

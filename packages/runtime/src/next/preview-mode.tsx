@@ -1,10 +1,7 @@
 import { PreviewData } from 'next'
 import { z } from 'zod'
 import { ActionTypes } from '../react'
-
-export const makeswiftSiteVersionSchema = z.enum(['Live', 'Working'])
-export const MakeswiftSiteVersion = makeswiftSiteVersionSchema.Enum
-export type MakeswiftSiteVersion = z.infer<typeof makeswiftSiteVersionSchema>
+import { type MakeswiftSiteVersion, makeswiftSiteVersionSchema } from '../api/site-version'
 
 const makeswiftPreviewDataSchema = z.object({
   makeswift: z.literal(true),

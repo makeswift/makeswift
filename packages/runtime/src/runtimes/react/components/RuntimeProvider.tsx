@@ -6,6 +6,7 @@ import { MakeswiftHostApiClient } from '../../../api/react'
 import { ReactRuntimeContext } from '../hooks/use-react-runtime'
 import { ReactRuntime } from '../react-runtime'
 import { MakeswiftHostApiClientProvider } from '../host-api-client'
+import { MakeswiftSiteVersion } from '../../../api/site-version'
 
 const LiveProvider = lazy(() => import('./LiveProvider'))
 const PreviewProvider = lazy(() => import('./PreviewProvider'))
@@ -28,8 +29,9 @@ export function ReactRuntimeProvider({
       new MakeswiftHostApiClient({
         uri: new URL('graphql', apiOrigin).href,
         locale,
+        siteVersion: previewMode ? MakeswiftSiteVersion.Working : MakeswiftSiteVersion.Live,
       }),
-    [apiOrigin, locale],
+    [apiOrigin, locale, previewMode],
   )
 
   const StoreProvider = previewMode ? PreviewProvider : LiveProvider
