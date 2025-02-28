@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.8-canary.0
+
+### Patch Changes
+
+- de7f271: refactor: reconfigure `MakeswiftAPIHandler` endpoints to not rely on Next.js's draft mode, and instead request resource versions using an explicit header
+
 ## 0.23.7
 
 ### Patch Changes
