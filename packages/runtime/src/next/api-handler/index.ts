@@ -10,6 +10,8 @@ import fonts, { Font, FontsResponse, GetFonts } from './handlers/fonts'
 import manifest, { Manifest, ManifestResponse } from './handlers/manifest'
 import proxyPreviewMode, { ProxyPreviewModeResponse } from './handlers/proxy-preview-mode'
 import proxyDraftMode, { ProxyDraftModeResponse } from './handlers/proxy-draft-mode'
+import draftMode, { type DraftModeResponse } from './handlers/draft-mode'
+import previewMode, { type PreviewModeResponse } from './handlers/preview-mode'
 import { revalidate, RevalidationResponse } from './handlers/revalidate'
 import translatableData, { TranslatableDataResponse } from './handlers/translatable-data'
 import mergeTranslatedData, { TranslatedDataResponse } from './handlers/merge-translated-data'
@@ -41,6 +43,8 @@ export type MakeswiftApiHandlerResponse =
   | RevalidationResponse
   | ProxyPreviewModeResponse
   | ProxyDraftModeResponse
+  | DraftModeResponse
+  | PreviewModeResponse
   | FontsResponse
   | ElementTreeResponse
   | TranslatableDataResponse
@@ -181,6 +185,20 @@ export function MakeswiftApiHandler(
       return match(args)
         .with(routeHandlerPattern, args => proxyDraftMode(...args, { apiKey }))
         .with(apiRoutePattern, args => proxyDraftMode(...args, { apiKey }))
+        .exhaustive()
+    }
+
+    if (matches('/draft-mode')) {
+      return match(args)
+        .with(routeHandlerPattern, args => draftMode(...args, { apiKey }))
+        .with(apiRoutePattern, args => draftMode(...args, { apiKey }))
+        .exhaustive()
+    }
+
+    if (matches('/preview-mode')) {
+      return match(args)
+        .with(routeHandlerPattern, args => previewMode(...args, { apiKey }))
+        .with(apiRoutePattern, args => previewMode(...args, { apiKey }))
         .exhaustive()
     }
 
