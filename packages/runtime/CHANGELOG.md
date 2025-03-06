@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.8-canary.1
+
+### Patch Changes
+
+- be88d52: feat: introduces experimental APIs for replacing the proxy rewrite endpoint with middleware
+
 ## 0.23.8-canary.0
 
 ### Patch Changes

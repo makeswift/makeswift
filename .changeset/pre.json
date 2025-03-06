@@ -12,6 +12,7 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
+    "kind-dryers-beam",
     "tidy-dragons-sing"
   ]
 }
