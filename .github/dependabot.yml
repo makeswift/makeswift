@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: 'pnpm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    # Lets reduce the noise from Dependabot PRs (we can decrease/increase it over time)
+    open-pull-requests-limit: 5
+    # Need engineering thoughts on what we should ignore
+    #ignore:
+      #- dependency-name: '@types/node'
