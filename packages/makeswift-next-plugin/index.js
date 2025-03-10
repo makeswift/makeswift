@@ -27,6 +27,8 @@ const NEXT_IMAGE_REVIEW_APP_REMOTE_PATTERNS = [
   },
 ]
 
+const DraftRedirectPath = '/api/makeswift/draft'
+
 /** @type {(options: MakeswiftNextPluginOptions) => (nextConfig: NextConfig) => NextConfig} */
 module.exports =
   ({
@@ -50,6 +52,7 @@ module.exports =
         const rewrites = await nextConfig.rewrites?.()
         const previewModeRewrites = [
           {
+            source: '/:path(.*)',
             has: [
               {
                 type: 'query',
@@ -57,21 +60,10 @@ module.exports =
                 value: '(?<secret>.+)',
               },
             ],
-            source: '/:path(.*)',
-            destination: '/api/makeswift/proxy-draft-mode',
+            destination: DraftRedirectPath,
           },
           {
-            has: [
-              {
-                type: 'header',
-                key: 'X-Makeswift-Draft-Mode',
-                value: '(?<secret>.+)',
-              },
-            ],
             source: '/:path(.*)',
-            destination: '/api/makeswift/proxy-draft-mode',
-          },
-          {
             has: [
               {
                 type: 'query',
@@ -79,24 +71,9 @@ module.exports =
                 value: '(?<secret>.+)',
               },
             ],
-            source: '/:path(.*)',
-            destination: '/api/makeswift/proxy-preview-mode',
-            locale: false,
-          },
-          {
-            has: [
-              {
-                type: 'header',
-                key: 'X-Makeswift-Preview-Mode',
-                value: '(?<secret>.+)',
-              },
-            ],
-            source: '/:path(.*)',
-            destination: '/api/makeswift/proxy-preview-mode',
-            locale: false,
+            destination: DraftRedirectPath,
           },
         ]
-
         return {
           beforeFiles: [
             ...(previewMode ? previewModeRewrites : []),
