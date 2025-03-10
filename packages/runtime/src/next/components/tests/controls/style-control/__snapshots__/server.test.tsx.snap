@@ -6,4 +6,4 @@ exports[`renders a style: component styles 1`] = `
 ]
 `;
 
-exports[`renders a style: resolvedValue 1`] = `"mswft-1cny9vj u-R0-propKey"`;
+exports[`renders a style: resolvedValue 1`] = `"mswft-1cny9vj u-R1-propKey"`;
