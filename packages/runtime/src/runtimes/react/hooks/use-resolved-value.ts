@@ -18,7 +18,7 @@ export function useResolvedValue<D, T>(
 
   useEffect(() => {
     resolvable.triggerResolve()
-  }, [])
+  }, [resolvable])
 
   return useSyncExternalStore(resolvable.subscribe, resolvable.readStable, resolvable.readStable)
 }
