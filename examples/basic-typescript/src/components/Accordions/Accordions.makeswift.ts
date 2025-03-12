@@ -16,7 +16,6 @@ runtime.registerComponent(
         type: Group({
           props: {
             title: Slot(),
-            subtitle: TextInput(),
             body: Slot(),
           },
         }),
