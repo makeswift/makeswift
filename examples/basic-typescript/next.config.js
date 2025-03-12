@@ -1,4 +1,6 @@
-const withMakeswift = require('@makeswift/runtime/next/plugin')()
+const createWithMakeswift = require('@makeswift/runtime/next/plugin')
+
+const withMakeswift = createWithMakeswift()
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
