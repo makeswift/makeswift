@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.9
+
+### Patch Changes
+
+- 5db0d31: fix: resolve issue with `Link` prop controller not updating when changed
+
 ## 0.23.8
 
 ### Patch Changes
