@@ -16,7 +16,10 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/generated/*": ["generated/*"],
+      "@/components/*": ["components/*"],
+      "@/lib/*": ["lib/*"],
+      "@/styles/*": ["styles/*"]
     },
     "plugins": [
       {
