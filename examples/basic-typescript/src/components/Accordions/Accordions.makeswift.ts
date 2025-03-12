@@ -1,6 +1,6 @@
 import { lazy } from 'react'
 
-import { Group, List, Select, Slot, Style, TextInput } from '@makeswift/runtime/controls'
+import { Group, List, Select, Slot, Style } from '@makeswift/runtime/controls'
 
 import { runtime } from '@/makeswift/runtime'
 
