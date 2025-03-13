@@ -5,8 +5,6 @@ import { getSiteVersion } from '@makeswift/runtime/next/server'
 
 import { client } from '@/lib/makeswift/client'
 
-type ParsedUrlQuery = { path?: string[] }
-
 export async function generateStaticParams() {
   const pages = await client.getPages().toArray()
 
