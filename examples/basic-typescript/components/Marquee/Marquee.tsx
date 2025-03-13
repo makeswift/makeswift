@@ -32,7 +32,7 @@ export const Marquee = forwardRef(function Marquee(
             key={index}
             src={logoImage.url}
             alt={logoAlt}
-            width={logoImage.dimensions.width}
+            width={logoWidth}
             height={logoWidth / (logoImage.dimensions.width / logoImage.dimensions.height)}
           />
         )

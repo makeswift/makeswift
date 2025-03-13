@@ -1,8 +1,7 @@
 import { lazy } from 'react'
 
-import { Checkbox, Image, List, Number, Shape, Style, TextInput } from '@makeswift/runtime/controls'
-
-import { runtime } from '@/lib/makeswift/runtime'
+import { Checkbox, Group, Image, List, Number, Style, TextInput } from '@makeswift/runtime/controls'
+import { runtime } from 'lib/makeswift/runtime'
 
 runtime.registerComponent(
   lazy(() => import('./Marquee')),
@@ -13,8 +12,8 @@ runtime.registerComponent(
       className: Style(),
       logos: List({
         label: 'Logos',
-        type: Shape({
-          type: {
+        type: Group({
+          props: {
             logoImage: Image({
               label: 'Logo',
               format: Image.Format.WithDimensions,

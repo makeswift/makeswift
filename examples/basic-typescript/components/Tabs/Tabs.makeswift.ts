@@ -1,6 +1,6 @@
 import { lazy } from 'react'
 
-import { List, Shape, Slot, Style, TextInput } from '@makeswift/runtime/controls'
+import { Group, List, Slot, Style, TextInput } from '@makeswift/runtime/controls'
 
 import { runtime } from '@/lib/makeswift/runtime'
 
@@ -13,8 +13,8 @@ runtime.registerComponent(
       className: Style(),
       tabs: List({
         label: 'Tabs',
-        type: Shape({
-          type: {
+        type: Group({
+          props: {
             children: Slot(),
             title: TextInput({ label: 'Title', defaultValue: 'Tab' }),
           },

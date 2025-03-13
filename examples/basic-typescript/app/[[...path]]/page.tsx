@@ -8,16 +8,15 @@ import { client } from '@/lib/makeswift/client'
 type ParsedUrlQuery = { path?: string[] }
 
 export async function generateStaticParams() {
-  return await client
-    .getPages()
-    .map(page => ({
-      path: page.path.split('/').filter(segment => segment !== ''),
-    }))
-    .toArray()
+  const pages = await client.getPages().toArray()
+
+  return pages.map(page => ({
+    path: page.path.split('/').filter(segment => segment !== ''),
+  }))
 }
 
-export default async function Page({ params }: { params: ParsedUrlQuery }) {
-  const path = '/' + (params?.path ?? []).join('/')
+export default async function Page({ params }: { params: Promise<{ path?: string[] }> }) {
+  const path = '/' + ((await params)?.path ?? []).join('/')
   const snapshot = await client.getPageSnapshot(path, {
     siteVersion: getSiteVersion(),
   })
