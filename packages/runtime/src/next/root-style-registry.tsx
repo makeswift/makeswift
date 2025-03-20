@@ -7,10 +7,10 @@ import { ReactNode, createContext, useContext, useState } from 'react'
 
 const CacheContext = createContext(cache)
 
-const createRootStyleCache = (cacheKeyPrefix?: string) => {
+const createRootStyleCache = ({ cacheKey }: { cacheKey?: string }) => {
   let key = 'makeswift-css'
 
-  if (typeof cacheKeyPrefix === 'string') key = `${cacheKeyPrefix}-css`
+  if (typeof cacheKey === 'string') key = cacheKey
 
   const cache = createCache({ key })
   cache.compat = true
@@ -35,8 +35,8 @@ const createRootStyleCache = (cacheKeyPrefix?: string) => {
   return { cache, flush }
 }
 
-export function RootStyleRegistry({ children, cacheKeyPrefix }: { children: ReactNode, cacheKeyPrefix?: string }) {
-  const [{ cache, flush }] = useState(() => createRootStyleCache(cacheKeyPrefix))
+export function RootStyleRegistry({ children, cacheKey }: { children: ReactNode, cacheKey?: string }) {
+  const [{ cache, flush }] = useState(() => createRootStyleCache({ cacheKey }))
 
   useServerInsertedHTML(() => {
     const names = flush()

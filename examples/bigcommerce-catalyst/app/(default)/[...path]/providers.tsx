@@ -22,7 +22,7 @@ export function Providers({ children, bcData }: PropsWithChildren<{ bcData: BcDa
 
   return (
     <ReactRuntimeProvider runtime={runtime}>
-      <RootStyleRegistry cacheKeyPrefix='example-prefix'>
+      <RootStyleRegistry cacheKey='example-cache-key'>
         <QueryClientProvider client={queryClient}>
           <BcDataProvider value={bcData}>
             {children}
