@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- 79a6e22: fix: change the default Emotion cache key from `css` to `mswft` to reduce the risk of conflicts with the host's code; allow overriding the key by passing the `cacheKey` prop to `<RootStyleRegistry />`.
+- 79a6e22: fix: change the default Emotion cache key from `css` to `mswft` to reduce the risk of conflicts with the host's code; allow overriding the key by passing the `cacheKey` prop to `<RootStyleRegistry />`. Resolves https://github.com/makeswift/makeswift/issues/964.
 
 ## 0.23.9
 
