@@ -31,8 +31,14 @@ const createRootStyleCache = ({ key }: { key: string }) => {
   return { cache, flush }
 }
 
-export function RootStyleRegistry({ children, cacheKey }: { children: ReactNode, cacheKey?: string }) {
-  const [{ cache, flush }] = useState(() => createRootStyleCache({ key: cacheKey ?? 'css' }))
+export function RootStyleRegistry({
+  children,
+  cacheKey,
+}: {
+  children: ReactNode
+  cacheKey?: string
+}) {
+  const [{ cache, flush }] = useState(() => createRootStyleCache({ key: cacheKey ?? 'mswft' }))
 
   useServerInsertedHTML(() => {
     const names = flush()
