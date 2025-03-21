@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.10-canary.0
+
+### Patch Changes
+
+- 1979628: Default emotion cache key update and RootStyleRegistry optional prop to set emotion cache key
+
 ## 0.23.9
 
 ### Patch Changes
