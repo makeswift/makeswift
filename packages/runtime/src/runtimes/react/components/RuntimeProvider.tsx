@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useMemo, lazy } from 'react'
+import { ReactNode, useMemo } from 'react'
 
 import { MakeswiftHostApiClient } from '../../../api/react'
 import { ReactRuntimeContext } from '../hooks/use-react-runtime'
@@ -8,8 +8,8 @@ import { ReactRuntime } from '../react-runtime'
 import { MakeswiftHostApiClientProvider } from '../host-api-client'
 import { MakeswiftSiteVersion } from '../../../api/site-version'
 
-const LiveProvider = lazy(() => import('./LiveProvider'))
-const PreviewProvider = lazy(() => import('./PreviewProvider'))
+import PreviewProvider from './PreviewProvider'
+import LiveProvider from './LiveProvider'
 
 export function ReactRuntimeProvider({
   children,

@@ -20,7 +20,8 @@ import {
 
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
-import { lazy } from 'react'
+import Carousel from './'
+
 import {
   Border,
   Checkbox,
@@ -30,7 +31,7 @@ import {
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
-    lazy(() => import('./Carousel')),
+    Carousel,
     {
       type: MakeswiftComponentType.Carousel,
       label: 'Carousel',

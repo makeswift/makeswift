@@ -1,4 +1,4 @@
-import { ReactNode, lazy } from 'react'
+import { ReactNode } from 'react'
 
 import { type DataType } from '@makeswift/controls'
 import {
@@ -7,15 +7,13 @@ import {
   RichTextDataV2,
 } from '../../../../controls/rich-text-v2'
 import { useIsPreview } from '../../../react/hooks/use-is-preview'
+import EditableText from './EditableTextV2'
+import ReadOnlyText from './ReadOnlyTextV2'
+import ReadOnlyTextV1 from '../rich-text/ReadOnlyText'
 
 export type RichTextV2ControlValue = ReactNode
 
 export type Descriptors = { text?: RichTextV2Definition }
-
-const EditableText = lazy(() => import('./EditableTextV2'))
-const ReadOnlyText = lazy(() => import('./ReadOnlyTextV2'))
-
-const ReadOnlyTextV1 = lazy(() => import('../rich-text/ReadOnlyText'))
 
 export function renderRichTextV2(
   data: DataType<RichTextV2Definition> | undefined,
