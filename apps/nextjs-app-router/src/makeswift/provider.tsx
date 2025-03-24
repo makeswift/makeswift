@@ -20,7 +20,11 @@ export function MakeswiftProvider({
   previewMode: boolean
 }) {
   return (
-    <ReactRuntimeProvider {...{ runtime, previewMode, locale }}>
+    <ReactRuntimeProvider
+      {...{ runtime, previewMode, locale }}
+      apiOrigin={process.env.NEXT_PUBLIC_MAKESWIFT_API_ORIGIN}
+      appOrigin={process.env.NEXT_PUBLIC_MAKESWIFT_APP_ORIGIN}
+    >
       <RootStyleRegistry>{children}</RootStyleRegistry>
     </ReactRuntimeProvider>
   )
