@@ -1,5 +1,4 @@
 import { MakeswiftProvider } from '@/makeswift/provider'
-import { DraftModeScript } from '@makeswift/runtime/next/server'
 import { draftMode } from 'next/headers'
 import { Grenze_Gotisch, Grenze } from 'next/font/google'
 
@@ -33,9 +32,6 @@ export default async function RootLayout({
       lang={lang}
       className={`${GrenzeGotischFont.variable} ${GrenzeFont.variable}`}
     >
-      <head>
-        <DraftModeScript appOrigin={process.env.MAKESWIFT_APP_ORIGIN} />
-      </head>
       <body>
         <MakeswiftProvider
           previewMode={(await draftMode()).isEnabled}

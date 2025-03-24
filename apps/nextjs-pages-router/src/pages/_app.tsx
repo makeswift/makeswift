@@ -25,7 +25,8 @@ export default function App({
   return (
     <main className={`${GrenzeGotischFont.variable} ${GrenzeFont.variable}`}>
       <ReactRuntimeProvider
-        apiOrigin={process.env.MAKESWIFT_API_ORIGIN}
+        apiOrigin={process.env.NEXT_PUBLIC_MAKESWIFT_API_ORIGIN}
+        appOrigin={process.env.NEXT_PUBLIC_MAKESWIFT_APP_ORIGIN}
         runtime={runtime}
         previewMode={previewMode}
         locale={locale}
