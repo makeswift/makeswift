@@ -7,8 +7,8 @@ import { ReactNode, createContext, useContext, useState } from 'react'
 
 const CacheContext = createContext(cache)
 
-const createRootStyleCache = () => {
-  const cache = createCache({ key: 'css' })
+const createRootStyleCache = ({ key }: { key: string }) => {
+  const cache = createCache({ key })
   cache.compat = true
 
   const prevInsert = cache.insert
@@ -31,8 +31,14 @@ const createRootStyleCache = () => {
   return { cache, flush }
 }
 
-export function RootStyleRegistry({ children }: { children: ReactNode }) {
-  const [{ cache, flush }] = useState(() => createRootStyleCache())
+export function RootStyleRegistry({
+  children,
+  cacheKey,
+}: {
+  children: ReactNode
+  cacheKey?: string
+}) {
+  const [{ cache, flush }] = useState(() => createRootStyleCache({ key: cacheKey ?? 'mswft' }))
 
   useServerInsertedHTML(() => {
     const names = flush()
