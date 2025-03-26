@@ -7,15 +7,14 @@ import {
   RichTextDataV2,
 } from '../../../../controls/rich-text-v2'
 import { useIsPreview } from '../../../react/hooks/use-is-preview'
+import ReadOnlyTextV2 from './ReadOnlyTextV2'
+import ReadOnlyTextV1 from '../rich-text/ReadOnlyText'
 
 export type RichTextV2ControlValue = ReactNode
 
 export type Descriptors = { text?: RichTextV2Definition }
 
 const EditableText = lazy(() => import('./EditableTextV2'))
-const ReadOnlyText = lazy(() => import('./ReadOnlyTextV2'))
-
-const ReadOnlyTextV1 = lazy(() => import('../rich-text/ReadOnlyText'))
 
 export function renderRichTextV2(
   data: DataType<RichTextV2Definition> | undefined,
@@ -41,6 +40,6 @@ function RichTextV2({
   return useIsPreview() ? (
     <EditableText text={data} definition={definition} control={control} />
   ) : (
-    <ReadOnlyText text={data} definition={definition} />
+    <ReadOnlyTextV2 text={data} definition={definition} />
   )
 }

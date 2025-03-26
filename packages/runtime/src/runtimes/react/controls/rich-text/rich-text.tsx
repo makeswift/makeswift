@@ -9,9 +9,9 @@ import {
 } from '../../../../state/modules/prop-controller-handles'
 
 import { useIsPreview } from '../../hooks/use-is-preview'
+import ReadOnlyText from './ReadOnlyText'
 
 const EditableText = lazy(() => import('./EditableText'))
-const ReadOnlyText = lazy(() => import('./ReadOnlyText'))
 
 export type RichTextControlValue = ReactNode
 
