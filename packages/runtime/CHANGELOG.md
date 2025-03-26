@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.11
+
+### Patch Changes
+
+- 546868b: Fixes a prop editing performance regression introduced in `v0.23.0`.
+
 ## 0.23.10
 
 ### Patch Changes
