@@ -1,5 +1,5 @@
 import { List, Image, Shape, Style, TextInput, Link } from '@makeswift/runtime/controls';
-import { lazy } from 'react';
+import dynamic from 'next/dynamic';
 
 import { runtime } from '~/lib/makeswift/runtime';
 
@@ -34,6 +34,6 @@ export const props = {
 };
 
 runtime.registerComponent(
-  lazy(() => import('./carousel-static')),
+  dynamic(() => import('./carousel-static')),
   { type: 'CarouselStatic', label: 'Carousel Static', icon: 'carousel', props },
 );

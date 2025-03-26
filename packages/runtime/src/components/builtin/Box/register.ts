@@ -27,7 +27,7 @@ import {
   DEFAULT_ITEM_ANIMATE_DELAY,
   DEFAULT_ITEM_STAGGER_DURATION,
 } from './constants'
-import { lazy } from 'react'
+import dynamic from 'next/dynamic'
 
 export function registerComponent(runtime: ReactRuntime) {
   function isHiddenBasedOnAnimationType(
@@ -49,7 +49,7 @@ export function registerComponent(runtime: ReactRuntime) {
     isHiddenBasedOnAnimationType(props, deviceId, 'itemAnimateType')
 
   return runtime.registerComponent(
-    lazy(() => import('./Box')),
+    dynamic(() => import('./Box')),
     {
       type: MakeswiftComponentType.Box,
       label: 'Box',

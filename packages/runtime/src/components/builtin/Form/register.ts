@@ -3,7 +3,7 @@ import { findBreakpointOverride, getBaseBreakpoint } from '@makeswift/controls'
 import { MakeswiftComponentType } from '../constants'
 import { Alignments, Contrast, Contrasts, Shapes, Sizes } from './context/FormContext'
 import { ComponentIcon } from '../../../state/modules/components-meta'
-import { lazy } from 'react'
+import dynamic from 'next/dynamic'
 import {
   ElementID,
   GapY,
@@ -23,7 +23,7 @@ import {
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
-    lazy(() => import('./Form')),
+    dynamic(() => import('./Form')),
     {
       type: MakeswiftComponentType.Form,
       label: 'Form',

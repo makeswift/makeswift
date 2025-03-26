@@ -1,7 +1,7 @@
 import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
-import { lazy } from 'react'
+import dynamic from 'next/dynamic'
 import {
   ElementID,
   Margin,
@@ -13,7 +13,7 @@ import {
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
-    lazy(() => import('./Divider')),
+    dynamic(() => import('./Divider')),
     {
       type: MakeswiftComponentType.Divider,
       label: 'Divider',
