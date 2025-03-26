@@ -4,12 +4,14 @@ import { type ResourceResolver } from '@makeswift/controls'
 import * as ReactPage from '../../../state/react-page'
 import { useMakeswiftHostApiClient } from '../host-api-client'
 import { useStore } from './use-store'
-import { useDocumentContext } from './use-document-context'
+import { useDocumentKey, useDocumentLocale } from './use-document-context'
 
 export function useResourceResolver(): ResourceResolver {
   const store = useStore()
   const client = useMakeswiftHostApiClient()
-  const { key: documentKey, locale } = useDocumentContext()
+
+  const documentKey = useDocumentKey()
+  const locale = useDocumentLocale()
 
   return useMemo<ResourceResolver>(() => {
     return {

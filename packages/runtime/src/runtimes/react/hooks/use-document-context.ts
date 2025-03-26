@@ -2,24 +2,13 @@
 
 import { createContext, useContext } from 'react'
 
-type ContextValue = {
-  key: string | null
-  locale: string | null
-}
-
-export const DocumentContext = createContext<ContextValue>({
-  key: null,
-  locale: null,
-})
-
-export function useDocumentContext(): ContextValue {
-  return useContext(DocumentContext)
-}
+export const DocumentKeyContext = createContext<string | null>(null)
+export const DocumentLocaleContext = createContext<string | null>(null)
 
 export function useDocumentKey(): string | null {
-  return useDocumentContext().key
+  return useContext(DocumentKeyContext)
 }
 
 export function useDocumentLocale(): string | null {
-  return useDocumentContext().locale
+  return useContext(DocumentLocaleContext)
 }
