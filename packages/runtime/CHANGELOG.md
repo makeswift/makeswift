@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.12
+
+### Patch Changes
+
+- c6459b2: feat: support additional locales for Pages Router hosts
+
 ## 0.23.11
 
 ### Patch Changes
