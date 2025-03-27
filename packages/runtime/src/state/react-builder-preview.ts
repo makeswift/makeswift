@@ -353,6 +353,18 @@ function startMeasuringDocumentElement(): ThunkAction<() => void, unknown, unkno
   }
 }
 
+export function createAndRegisterPropControllersEffect(
+  documents: ReactPage.Document[],
+): ThunkAction<() => void, State, unknown, Action> {
+  return dispatch => {
+    documents.forEach(document => dispatch(createAndRegisterPropControllers(document.key, document.rootElement.key)))
+
+    return () => {
+      documents.forEach(document => dispatch(unregisterPropControllers(document.key, document.rootElement.key)))
+    }
+  }
+}
+
 function elementKeysFromElementFromPoint(
   elementFromPoint: Element | null,
 ): ThunkAction<{ documentKey: string; elementKey: string } | null, State, unknown, Action> {

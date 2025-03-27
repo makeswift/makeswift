@@ -4,7 +4,7 @@ import { memo, Suspense, useMemo } from 'react'
 import { componentDocumentToRootEmbeddedDocument, MakeswiftComponentSnapshot } from '../client'
 import { DocumentRoot } from '../../runtimes/react/components/DocumentRoot'
 import { useCacheData } from '../../runtimes/react/hooks/use-cache-data'
-import { useRegisterDocument } from '../../runtimes/react/hooks/use-register-document'
+import { useHandleRegistrationsForDocument } from '../../runtimes/react/hooks/use-handle-registrations-for-document'
 
 type Props = {
   snapshot: MakeswiftComponentSnapshot
@@ -27,7 +27,7 @@ export const MakeswiftComponent = memo(({ snapshot, label, type }: Props) => {
     [snapshot, label, type],
   )
 
-  useRegisterDocument(rootDocument)
+  useHandleRegistrationsForDocument(rootDocument)
 
   return (
     <Suspense>
