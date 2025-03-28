@@ -16,6 +16,7 @@ import { useStylesheetFactory } from './use-stylesheet-factory'
 
 import { useResolvableRecord } from './use-resolvable-record'
 import { propErrorHandlingProxy } from '../utils/prop-error-handling-proxy'
+import { useIsPreview } from './use-is-preview'
 
 function useControlInstances(elementKey: string): Record<string, ControlInstance> | null {
   const documentKey = useDocumentKey()
@@ -41,6 +42,7 @@ export function useResolvedProps(
   const stylesheetFactory = useStylesheetFactory()
   const resourceResolver = useResourceResolver()
   const controls = useControlInstances(elementKey)
+  const isPreview = useIsPreview()
 
   const cache = useRef<Record<string, CacheItem>>({}).current
   const resolveProp = useCallback(
@@ -88,8 +90,10 @@ export function useResolvedProps(
   // no need to call `triggerResolve` on the server, all the resources should already be in
   // the host API client's cache (populated from the snapshot's cache)
   useEffect(() => {
-    props.triggerResolve()
-  }, [props])
+    if (isPreview) {
+      props.triggerResolve()
+    }
+  }, [isPreview, props])
 
   // the order is important here, the styles are defined in the process of the props resolution,
   // calling `useDefinedStyles` before the props are resolved would effectively be a noop

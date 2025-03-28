@@ -7,8 +7,8 @@ import { ReactRuntimeContext } from '../hooks/use-react-runtime'
 import { ReactRuntime } from '../react-runtime'
 import { MakeswiftHostApiClientProvider } from '../host-api-client'
 import { MakeswiftSiteVersion } from '../../../api/site-version'
+import LiveProvider from './LiveProvider'
 
-const LiveProvider = lazy(() => import('./LiveProvider'))
 const PreviewProvider = lazy(() => import('./PreviewProvider'))
 
 export function ReactRuntimeProvider({
