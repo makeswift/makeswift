@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.12-canary.1
+
+### Patch Changes
+
+- c6db2c8: Fixes prop controller creation for documents that are registered after the initial builder connection is established.
+
 ## 0.23.12-canary.0
 
 ### Patch Changes
