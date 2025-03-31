@@ -1,9 +1,10 @@
-import { useEffect, useLayoutEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { type Document } from '../../../state/react-page'
 import { useDispatch } from './use-dispatch'
 import { useIsInBuilder } from './use-is-in-builder'
 import { registerBuilderDocumentsEffect, registerDocumentsEffect } from '../../../state/actions'
 import { isServer } from '../../../utils/is-server'
+import { useIsomorphicLayoutEffect } from '../../../components/hooks/useIsomorphicLayoutEffect'
 
 /**
  * @param document Document to register
@@ -22,7 +23,7 @@ export function useRegisterDocument(document: Document): void {
     Layout effect is to ensure that the document registration happens prior to the
     attempted creation/registration of prop controllers in child components.
   */
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     return dispatch(registerDocumentsEffect(documentArray))
   }, [dispatch, documentArray])
 
