@@ -12,6 +12,7 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
+    "flat-nails-mate",
     "orange-gorillas-approve",
     "shy-candles-float"
   ]

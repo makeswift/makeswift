@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.12-canary.2
+
+### Patch Changes
+
+- 8f99513: chore: refactor use-register-document
+
 ## 0.23.12-canary.1
 
 ### Patch Changes
