@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.23.12
+
+### Patch Changes
+
+- 8f99513: chore: refactor use-register-document
+- c6459b2: feat: support additional locales for Pages Router hosts
+- c6db2c8: Fixes prop controller creation for documents that are registered after the initial builder connection is established.
+
 ## 0.23.11
 
 ### Patch Changes
