@@ -32,3 +32,5 @@ export type WebhookHandlerResult = {
   body: WebhookResponseBody
   status: 200
 }
+
+export type OnPublish = () => void | Promise<void>
