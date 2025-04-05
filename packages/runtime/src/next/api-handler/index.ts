@@ -12,7 +12,7 @@ import proxyPreviewMode, { ProxyPreviewModeResponse } from './handlers/proxy-pre
 import proxyDraftMode, { ProxyDraftModeResponse } from './handlers/proxy-draft-mode'
 import draftMode, { type DraftModeResponse } from './handlers/draft-mode'
 import previewMode, { type PreviewModeResponse } from './handlers/preview-mode'
-import { revalidate, RevalidationResponse } from './handlers/revalidate'
+import { OnPublish, revalidate, RevalidationResponse } from './handlers/revalidate'
 import translatableData, { TranslatableDataResponse } from './handlers/translatable-data'
 import mergeTranslatedData, { TranslatedDataResponse } from './handlers/merge-translated-data'
 import webhook from './handlers/webhook'
@@ -33,6 +33,7 @@ type MakeswiftApiHandlerConfig = {
   appOrigin?: string
   apiOrigin?: string
   getFonts?: GetFonts
+  onPublish?: OnPublish
   runtime: ReactRuntime
 }
 
@@ -69,6 +70,7 @@ export function MakeswiftApiHandler(
     appOrigin = 'https://app.makeswift.com',
     apiOrigin = 'https://api.makeswift.com',
     getFonts,
+    onPublish,
     runtime,
   }: MakeswiftApiHandlerConfig,
 ): (...args: MakeswiftApiHandlerArgs) => Promise<NextResponse<MakeswiftApiHandlerResponse> | void> {
@@ -169,8 +171,8 @@ export function MakeswiftApiHandler(
 
     if (matches('/revalidate')) {
       return match(args)
-        .with(routeHandlerPattern, args => revalidate(...args, { apiKey }))
-        .with(apiRoutePattern, args => revalidate(...args, { apiKey }))
+        .with(routeHandlerPattern, args => revalidate(...args, { apiKey, onPublish }))
+        .with(apiRoutePattern, args => revalidate(...args, { apiKey, onPublish }))
         .exhaustive()
     }
 

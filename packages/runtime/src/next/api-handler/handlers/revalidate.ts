@@ -10,11 +10,18 @@ type RevalidationResult = { revalidated: boolean }
 
 type RevalidationError = { message: string }
 
+export type OnPublish = (path: string) => void | Promise<void>
+
 export type RevalidationResponse = RevalidationResult | RevalidationError
 
+type RevalidateParams = {
+  apiKey: string
+  onPublish?: OnPublish
+}
+
 type RevalidateHandlerArgs =
-  | [request: NextRequest, context: Context, params: { apiKey: string }]
-  | [req: NextApiRequest, res: NextApiResponse<RevalidationResponse>, params: { apiKey: string }]
+  | [request: NextRequest, context: Context, params: RevalidateParams]
+  | [req: NextApiRequest, res: NextApiResponse<RevalidationResponse>, params: RevalidateParams]
 
 const routeHandlerPattern = [P.instanceOf(Request), P.any, P.any] as const
 const apiRoutePattern = [P.any, P.any, P.any] as const
@@ -22,17 +29,17 @@ const apiRoutePattern = [P.any, P.any, P.any] as const
 export async function revalidate(
   request: NextRequest,
   context: Context,
-  { apiKey }: { apiKey: string },
+  { apiKey, onPublish }: RevalidateParams,
 ): Promise<NextResponse<RevalidationResponse>>
 export async function revalidate(
   req: NextApiRequest,
   res: NextApiResponse<RevalidationResponse>,
-  { apiKey }: { apiKey: string },
+  { apiKey, onPublish }: RevalidateParams,
 ): Promise<void>
 export async function revalidate(
   ...args: RevalidateHandlerArgs
 ): Promise<NextResponse<RevalidationResponse> | void> {
-  const [, , { apiKey }] = args
+  const [, , { apiKey, onPublish }] = args
 
   const secret = match(args)
     .with(routeHandlerPattern, ([request]) => request.nextUrl.searchParams.get('secret'))
@@ -71,6 +78,12 @@ export async function revalidate(
 
   try {
     await revalidate(path)
+
+    try {
+      await onPublish?.(path)
+    } catch {
+      // ignore any error in user-provided onPublish
+    }
 
     const body = { revalidated: true }
 
