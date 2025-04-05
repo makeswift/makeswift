@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.12-canary.3
+
+### Patch Changes
+
+- 0db5a33: chore: improve error messages/logging in Makeswift client
+
 ## 0.23.12-canary.2
 
 ### Patch Changes
