@@ -214,6 +214,23 @@ export function componentDocumentToRootEmbeddedDocument({
   return rootDocument
 }
 
+export async function failedResponseBody(response: Response): Promise<unknown> {
+  try {
+    const text = await response.text()
+    try {
+      return JSON.parse(text)
+    } catch {
+      return text
+    }
+  } catch (e) {
+    return `Failed to extract response body: ${e}`
+  }
+}
+
+function responseError(response: Response): string {
+  return `${response.status} ${response.statusText}`
+}
+
 type Snippet = {
   id: string
   code: string
@@ -368,15 +385,20 @@ export class Makeswift {
 
     const response = await this.fetch(`v4/pages?${queryParams.toString()}`, siteVersion)
     if (!response.ok) {
-      console.error('Failed to get pages', await response.json())
-      throw new Error(`Failed to get pages with error: "${response.statusText}"`)
+      console.error('Failed to get pages', {
+        response: await failedResponseBody(response),
+        siteVersion,
+        params,
+      })
+
+      throw new Error(`Failed to get pages: ${responseError(response)}`)
     }
 
     const result = await response.json()
     const parsedResponse = makeswiftGetPagesResultAPISchema.safeParse(result)
     if (!parsedResponse.success) {
       throw new Error(
-        `Failed to parse getPages response: ${parsedResponse.error.errors.join(', ')}`,
+        `Failed to parse 'getPages' response: ${parsedResponse.error.errors.map(e => e.message).join('; ')}`,
       )
     }
     return parsedResponse.data
@@ -388,19 +410,24 @@ export class Makeswift {
     pathname: string,
     {
       siteVersion = MakeswiftSiteVersion.Live,
-      locale: localeInput,
+      locale,
     }: { siteVersion?: MakeswiftSiteVersion; locale?: string } = {},
   ): Promise<GetPageAPI | null> {
     const url = new URL(`v2/pages/${encodeURIComponent(pathname)}`, this.apiOrigin)
-    if (localeInput) url.searchParams.set('locale', localeInput)
+    if (locale) url.searchParams.set('locale', locale)
 
     const response = await this.fetch(url.pathname + url.search, siteVersion)
 
     if (!response.ok) {
       if (response.status === 404) return null
 
-      console.error('Failed to get page snapshot', await response.json())
-      throw new Error(`Failed to get page snapshot with error: "${response.statusText}"`)
+      console.error(`Failed to get page snapshot for '${pathname}'`, {
+        response: await failedResponseBody(response),
+        siteVersion,
+        locale,
+      })
+
+      throw new Error(`Failed to get page snapshot for '${pathname}': ${responseError(response)}`)
     }
 
     const json = await response.json()
@@ -423,7 +450,10 @@ export class Makeswift {
     const response = await this.fetch(url.pathname + url.search, siteVersion)
 
     if (!response.ok) {
-      console.error('Failed to get typographies', await response.json())
+      console.error(`Failed to get typographies for [${typographyIds.join(', ')}]`, {
+        response: await failedResponseBody(response),
+        siteVersion,
+      })
 
       return []
     }
@@ -448,7 +478,10 @@ export class Makeswift {
     const response = await this.fetch(url.pathname + url.search, siteVersion)
 
     if (!response.ok) {
-      console.error('Failed to get swatches', await response.json())
+      console.error(`Failed to get swatches for ${ids.join(', ')}`, {
+        response: await failedResponseBody(response),
+        siteVersion,
+      })
 
       return []
     }
@@ -628,12 +661,12 @@ export class Makeswift {
     pathname: string,
     {
       siteVersion: siteVersionPromise,
-      locale: localeInput,
+      locale,
     }: { siteVersion: MakeswiftSiteVersion | Promise<MakeswiftSiteVersion>; locale?: string },
   ): Promise<MakeswiftPageSnapshot | null> {
     const searchParams = new URLSearchParams()
-    if (localeInput) {
-      searchParams.set('locale', localeInput)
+    if (locale) {
+      searchParams.set('locale', locale)
     }
 
     const siteVersion = await siteVersionPromise
@@ -645,8 +678,13 @@ export class Makeswift {
     if (!response.ok) {
       if (response.status === 404) return null
 
-      console.error('Failed to get page snapshot', await response.json())
-      throw new Error(`Failed to get page snapshot with error: "${response.statusText}"`)
+      console.error(`Failed to get page snapshot for '${pathname}'`, {
+        response: await failedResponseBody(response),
+        siteVersion,
+        locale,
+      })
+
+      throw new Error(`Failed to get page snapshot for '${pathname}': ${responseError(response)}`)
     }
 
     const document: MakeswiftPageDocument = await response.json()
@@ -657,7 +695,8 @@ export class Makeswift {
       siteVersion,
       // The /v3/pages endpoint returns null for document.locale when the requested locale is the default.
       // This legacy behavior is set to change with the upcoming /v4/pages endpoint.
-      // We rely on document.locale when reading from the API cache, so ensure the cache is built during introspection using the same value.
+      // We rely on document.locale when reading from the API cache, so ensure the cache is built during
+      // introspection using the same value.
       document.locale,
     )
 
@@ -699,29 +738,33 @@ export class Makeswift {
       response = responseForRequestedLocale
     }
 
-    if (response.status === 404) {
-      return {
-        document: {
-          id,
-          locale: locale ?? null,
-          data: null,
-        },
-        key,
-        cacheData: CacheData.empty(),
-        meta: {
-          allowLocaleFallback,
-          requestedLocale: locale ?? null,
-        },
-      }
-    }
-
-    const json = await response.json()
     if (!response.ok) {
-      console.error('Failed to get page snapshot', json)
-      throw new Error(`Failed to get page snapshot with error: "${response.statusText}"`)
+      if (response.status === 404) {
+        return {
+          document: {
+            id,
+            locale: locale ?? null,
+            data: null,
+          },
+          key,
+          cacheData: CacheData.empty(),
+          meta: {
+            allowLocaleFallback,
+            requestedLocale: locale ?? null,
+          },
+        }
+      }
+
+      console.error(`Failed to get component snapshot for '${id}':`, {
+        response: await failedResponseBody(response),
+        siteVersion,
+        locale,
+      })
+
+      throw new Error(`Failed to get component snapshot for '${id}': ${responseError(response)}`)
     }
 
-    const document = makeswiftComponentDocumentSchema.parse(json)
+    const document = makeswiftComponentDocumentSchema.parse(await response.json())
     const cacheData = await this.introspect(document.data, siteVersion, locale ?? null)
 
     return {
@@ -739,7 +782,12 @@ export class Makeswift {
     const response = await this.fetch(`v2/swatches/${swatchId}`, siteVersion)
 
     if (!response.ok) {
-      if (response.status !== 404) console.error('Failed to get swatch', await response.json())
+      if (response.status !== 404) {
+        console.error(`Failed to get swatch '${swatchId}'`, {
+          response: await failedResponseBody(response),
+          siteVersion,
+        })
+      }
 
       return null
     }
@@ -765,7 +813,12 @@ export class Makeswift {
     const response = await this.fetch(`v2/typographies/${typographyId}`, siteVersion)
 
     if (!response.ok) {
-      if (response.status !== 404) console.error('Failed to get typography', await response.json())
+      if (response.status !== 404) {
+        console.error(`Failed to get typography '${typographyId}'`, {
+          response: await failedResponseBody(response),
+          siteVersion,
+        })
+      }
 
       return null
     }
@@ -782,8 +835,12 @@ export class Makeswift {
     const response = await this.fetch(`v2/global-elements/${globalElementId}`, siteVersion)
 
     if (!response.ok) {
-      if (response.status !== 404)
-        console.error('Failed to get global element', await response.json())
+      if (response.status !== 404) {
+        console.error(`Failed to get global element '${globalElementId}'`, {
+          response: await failedResponseBody(response),
+          siteVersion,
+        })
+      }
 
       return null
     }
@@ -804,8 +861,13 @@ export class Makeswift {
     )
 
     if (!response.ok) {
-      if (response.status !== 404)
-        console.error('Failed to get localized global element', await response.json())
+      if (response.status !== 404) {
+        console.error(`Failed to get localized global element '${globalElementId}'`, {
+          response: await failedResponseBody(response),
+          siteVersion,
+          locale,
+        })
+      }
 
       return null
     }
@@ -830,7 +892,11 @@ export class Makeswift {
     const response = await this.fetch(url.pathname + url.search, siteVersion)
 
     if (!response.ok) {
-      console.error('Failed to get page pathname slices', await response.json())
+      console.error(`Failed to get page pathname slice(s) for ${pageIds.join(', ')}`, {
+        response: await failedResponseBody(response),
+        siteVersion,
+        locale,
+      })
 
       return []
     }
@@ -898,8 +964,15 @@ export class Makeswift {
     const response = await this.fetch(url.pathname + url.search)
 
     if (!response.ok) {
-      console.error('Failed to get sitemap', await response.json())
-      throw new Error(`Failed to get sitemap with error: "${response.statusText}"`)
+      console.error('Failed to get sitemap ', {
+        response: await failedResponseBody(response),
+        limit,
+        after,
+        pathnamePrefix,
+        locale,
+      })
+
+      throw new Error(`Failed to get sitemap with error: ${responseError(response)}`)
     }
 
     const sitemap = await response.json()
