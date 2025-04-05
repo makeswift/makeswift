@@ -37,6 +37,27 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
     expect(result.document.data).toBeNull()
   })
 
+  test('throws on errors other than 404', async () => {
+    // Arrange
+    const client = createTestClient()
+    const treeId = 'myTree'
+    server.use(
+      http.get(`${baseUrl}/${treeId}`, () => HttpResponse.text('', { status: 400 }), {
+        once: true,
+      }),
+    )
+
+    // Act
+    const resultPromise = client.getComponentSnapshot(treeId, {
+      siteVersion: MakeswiftSiteVersion.Working,
+    })
+
+    // Assert
+    expect(resultPromise).rejects.toThrow(
+      "Failed to get component snapshot for 'myTree': 400 Bad Request",
+    )
+  })
+
   test.each([
     { treeId: 'myTree123', locale: 'fr-FR' },
     { treeId: 'unsafe:url;chars=@&?❔🤷', locale: 'fr-FR' },
