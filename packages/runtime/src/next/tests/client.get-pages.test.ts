@@ -68,7 +68,7 @@ describe('getPages v4', () => {
     const getPagesPromise = client.getPages()
 
     // Assert
-    expect(getPagesPromise).rejects.toThrow('Failed to parse getPages response')
+    expect(getPagesPromise).rejects.toThrow("Failed to parse 'getPages' response")
   })
 
   test('can get many pages', async () => {
