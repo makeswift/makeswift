@@ -1,0 +1,30 @@
+query BlogFeed(
+  $limit: IntType
+  $skip: IntType
+  $filter: BlogModelFilter
+  $orderBy: [BlogModelOrderBy]
+) {
+  allBlogs(first: $limit, skip: $skip, filter: $filter, orderBy: $orderBy) {
+    id
+    title
+    slug
+    feedDate
+    description
+    _publishedAt
+    _createdAt
+    banner {
+      responsiveImage(imgixParams: { fit: crop, w: 300, h: 200, auto: format }) {
+        sizes
+        src
+        width
+        height
+        alt
+        title
+        base64
+      }
+    }
+  }
+  _allBlogsMeta {
+    count
+  }
+}

@@ -1,0 +1,62 @@
+fragment SingleImage on ImageBlockRecord {
+  id
+  asset {
+    id
+    url
+    alt
+    responsiveImage(imgixParams: { fit: fill, auto: format }) {
+      __typename
+      sizes
+      src
+      width
+      height
+      alt
+      title
+      base64
+      webpSrcSet
+      srcSet
+    }
+  }
+}
+
+fragment RichText on BlogModelBodyField {
+  __typename
+  blocks {
+    __typename
+    ...SingleImage
+    # ...Table
+  }
+  value
+  links
+}
+
+fragment BlogPostInfo on BlogRecord {
+  id
+  title
+  slug
+  _publishedAt
+  _createdAt
+  banner {
+    responsiveImage(imgixParams: { fit: fill, auto: format }) {
+      __typename
+      sizes
+      src
+      width
+      height
+      alt
+      title
+      base64
+      webpSrcSet
+      srcSet
+    }
+  }
+  body {
+    ...RichText
+  }
+}
+
+query BlogPost($slug: String) {
+  blog(filter: { slug: { eq: $slug } }) {
+    ...BlogPostInfo
+  }
+}
