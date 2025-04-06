@@ -50,6 +50,7 @@ module.exports =
         const rewrites = await nextConfig.rewrites?.()
         const previewModeRewrites = [
           {
+            source: '/:path(.*)',
             has: [
               {
                 type: 'query',
@@ -57,21 +58,10 @@ module.exports =
                 value: '(?<secret>.+)',
               },
             ],
-            source: '/:path(.*)',
-            destination: '/api/makeswift/proxy-draft-mode',
+            destination: '/api/makeswift/draft',
           },
           {
-            has: [
-              {
-                type: 'header',
-                key: 'X-Makeswift-Draft-Mode',
-                value: '(?<secret>.+)',
-              },
-            ],
             source: '/:path(.*)',
-            destination: '/api/makeswift/proxy-draft-mode',
-          },
-          {
             has: [
               {
                 type: 'query',
@@ -79,24 +69,9 @@ module.exports =
                 value: '(?<secret>.+)',
               },
             ],
-            source: '/:path(.*)',
-            destination: '/api/makeswift/proxy-preview-mode',
-            locale: false,
-          },
-          {
-            has: [
-              {
-                type: 'header',
-                key: 'X-Makeswift-Preview-Mode',
-                value: '(?<secret>.+)',
-              },
-            ],
-            source: '/:path(.*)',
-            destination: '/api/makeswift/proxy-preview-mode',
-            locale: false,
+            destination: '/api/makeswift/preview',
           },
         ]
-
         return {
           beforeFiles: [
             ...(previewMode ? previewModeRewrites : []),
