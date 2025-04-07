@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import {
   InvalidProxyRequestInputError,
   InvariantDraftRequestError,
-  MiddlewareError,
   MissingDraftEndpointError,
   UnauthorizedDraftRequestError,
   UnknownDraftFetchRequestError,
@@ -70,27 +69,30 @@ async function fetchCookies(url: URL, draftSecret: string): Promise<Cookie[]> {
   requestUrl.searchParams.set('secret', draftSecret)
 
   const response = await fetch(requestUrl)
-    .then(res => {
-      if (res.ok) return res
-      if (res.status === 401) {
-        throw new UnauthorizedDraftRequestError(`Unauthorized draft request to ${url}`)
-      }
-      if (res.status === 404) {
-        throw new MissingDraftEndpointError(
-          `Could not find draft endpoint at ${url}. Please make sure you properly registered a \`MakeswiftApiHandler\``,
-        )
-      }
-      throw new UnknownDraftFetchRequestError(
-        'Encountered unknown error while fetching draft cookies',
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new MissingDraftEndpointError(
+        `Could not find draft endpoint at ${url}. Please make sure you properly registered a \`MakeswiftApiHandler\``,
       )
-    })
-    .catch((err: unknown) => {
-      if (err instanceof MiddlewareError) throw err
-      throw new UnknownDraftFetchRequestError(
-        'Encountered unknown error while fetching draft cookies',
-        { cause: err },
-      )
-    })
+    }
+
+    let responseText = ''
+    try {
+      responseText = await response.text()
+    } catch (err) {
+      console.error('Failed to read draft response body:', err)
+      responseText = 'Could not read response body'
+    }
+
+    if (response.status === 401) {
+      throw new UnauthorizedDraftRequestError(`Unauthorized request to ${url}: ${responseText}`)
+    }
+
+    throw new UnknownDraftFetchRequestError(
+      `Encountered error (${response.status} - ${response.statusText}) while fetching draft cookies from ${url}: ${responseText}`,
+    )
+  }
 
   const setCookieHeader = response.headers.getSetCookie()
 
