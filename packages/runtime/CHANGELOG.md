@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.12-canary.5
+
+### Patch Changes
+
+- 9b78c7e: feat: add `onPublish` callback to `MakeswiftApiHandler`
+
 ## 0.23.12-canary.4
 
 ### Patch Changes

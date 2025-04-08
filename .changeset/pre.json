@@ -12,6 +12,7 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
+    "dirty-kiwis-search",
     "flat-nails-mate",
     "gold-items-remain",
     "new-maps-kick",
