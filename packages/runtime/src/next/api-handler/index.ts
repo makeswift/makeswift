@@ -16,7 +16,7 @@ import { revalidate, RevalidationResponse } from './handlers/revalidate'
 import translatableData, { TranslatableDataResponse } from './handlers/translatable-data'
 import mergeTranslatedData, { TranslatedDataResponse } from './handlers/merge-translated-data'
 import webhook from './handlers/webhook'
-import { WebhookResponseBody } from './handlers/webhook/types'
+import { OnPublish, WebhookResponseBody } from './handlers/webhook/types'
 import { ReactRuntime } from '../../react'
 import { P, match } from 'ts-pattern'
 import {
@@ -29,10 +29,13 @@ export type { Manifest, Font }
 
 type Context = { params: { [key: string]: string | string[] } }
 
+type Events = { onPublish: OnPublish }
+
 type MakeswiftApiHandlerConfig = {
   appOrigin?: string
   apiOrigin?: string
   getFonts?: GetFonts
+  events?: Events
   runtime: ReactRuntime
 }
 
@@ -69,6 +72,7 @@ export function MakeswiftApiHandler(
     appOrigin = 'https://app.makeswift.com',
     apiOrigin = 'https://api.makeswift.com',
     getFonts,
+    events,
     runtime,
   }: MakeswiftApiHandlerConfig,
 ): (...args: MakeswiftApiHandlerArgs) => Promise<NextResponse<MakeswiftApiHandlerResponse> | void> {
@@ -232,8 +236,8 @@ export function MakeswiftApiHandler(
 
     if (matches('/webhook')) {
       return match(args)
-        .with(routeHandlerPattern, args => webhook(...args, { apiKey }))
-        .with(apiRoutePattern, args => webhook(...args, { apiKey }))
+        .with(routeHandlerPattern, args => webhook(...args, { apiKey, events }))
+        .with(apiRoutePattern, args => webhook(...args, { apiKey, events }))
         .exhaustive()
     }
 
