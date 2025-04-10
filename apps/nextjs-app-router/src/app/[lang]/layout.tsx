@@ -4,7 +4,6 @@ import { draftMode } from 'next/headers'
 import { Grenze_Gotisch, Grenze } from 'next/font/google'
 
 import '@/app/global.css'
-import '@/makeswift/components'
 
 type Params = Promise<{ lang: string; path?: string[] }>
 
