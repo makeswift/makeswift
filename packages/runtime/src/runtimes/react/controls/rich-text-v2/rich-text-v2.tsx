@@ -1,4 +1,5 @@
-import { ReactNode, lazy } from 'react'
+import { ReactNode } from 'react'
+import dynamic from 'next/dynamic'
 
 import { type DataType } from '@makeswift/controls'
 import {
@@ -12,10 +13,10 @@ export type RichTextV2ControlValue = ReactNode
 
 export type Descriptors = { text?: RichTextV2Definition }
 
-const EditableText = lazy(() => import('./EditableTextV2'))
-const ReadOnlyText = lazy(() => import('./ReadOnlyTextV2'))
+const EditableText = dynamic(() => import('./EditableTextV2'))
+const ReadOnlyText = dynamic(() => import('./ReadOnlyTextV2'))
 
-const ReadOnlyTextV1 = lazy(() => import('../rich-text/ReadOnlyText'))
+const ReadOnlyTextV1 = dynamic(() => import('../rich-text/ReadOnlyText'))
 
 export function renderRichTextV2(
   data: DataType<RichTextV2Definition> | undefined,

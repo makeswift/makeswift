@@ -1,4 +1,5 @@
-import { ReactNode, lazy, useCallback } from 'react'
+import { ReactNode, useCallback } from 'react'
+import dynamic from 'next/dynamic'
 
 import { type DataType } from '@makeswift/controls'
 import { RichTextV1Control, RichTextV1Definition } from '../../../../controls/rich-text'
@@ -10,8 +11,8 @@ import {
 
 import { useIsPreview } from '../../hooks/use-is-preview'
 
-const EditableText = lazy(() => import('./EditableText'))
-const ReadOnlyText = lazy(() => import('./ReadOnlyText'))
+const EditableText = dynamic(() => import('./EditableText'))
+const ReadOnlyText = dynamic(() => import('./ReadOnlyText'))
 
 export type RichTextControlValue = ReactNode
 

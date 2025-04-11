@@ -1,11 +1,12 @@
 import { Backgrounds, GapX, GapY, Grid } from '@makeswift/prop-controllers'
 import { ReactRuntime } from '../../../react'
 import { MakeswiftComponentType } from '../constants'
-import { lazy } from 'react'
+import dynamic from 'next/dynamic'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
-    lazy(() => import('./Root')),
+    // @ts-expect-error: fix optional prop error
+    dynamic(() => import('./Root')),
     {
       type: MakeswiftComponentType.Root,
       label: 'Page',

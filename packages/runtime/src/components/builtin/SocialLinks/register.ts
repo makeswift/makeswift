@@ -2,7 +2,7 @@ import { ReactRuntime } from '../../../runtimes/react'
 import { getBaseBreakpoint } from '@makeswift/controls'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
-import { lazy } from 'react'
+import dynamic from 'next/dynamic'
 import {
   ElementID,
   GapX,
@@ -18,7 +18,8 @@ import {
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
-    lazy(() => import('./SocialLinks')),
+    // @ts-expect-error: fix optional prop error
+    dynamic(() => import('./SocialLinks')),
     {
       type: MakeswiftComponentType.SocialLinks,
       label: 'Social Links',

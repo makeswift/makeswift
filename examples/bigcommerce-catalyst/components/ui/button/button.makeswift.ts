@@ -1,7 +1,7 @@
 import { runtime } from '~/lib/makeswift/runtime';
 import { MakeswiftComponentType } from '@makeswift/runtime';
 import { Link, Select, Style, TextInput } from '@makeswift/runtime/controls';
-import { lazy } from 'react';
+import dynamic from 'next/dynamic';
 
 export const props = {
   className: Style({ properties: [Style.Margin] }),
@@ -19,6 +19,6 @@ export const props = {
 };
 
 runtime.registerComponent(
-    lazy(() => import('./button')),
+    dynamic(() => import('./button')),
   { type: MakeswiftComponentType.Button, label: 'Button', props },
 );

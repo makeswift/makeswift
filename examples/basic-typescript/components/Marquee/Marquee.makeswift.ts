@@ -1,10 +1,10 @@
-import { lazy } from 'react'
+import dynamic from 'next/dynamic'
 
 import { Checkbox, Group, Image, List, Number, Style, TextInput } from '@makeswift/runtime/controls'
 import { runtime } from 'lib/makeswift/runtime'
 
 runtime.registerComponent(
-  lazy(() => import('./Marquee')),
+  dynamic(() => import('./Marquee')),
   {
     type: 'Marquee',
     label: 'Custom / Marquee',
