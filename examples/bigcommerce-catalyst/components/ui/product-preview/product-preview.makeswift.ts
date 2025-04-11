@@ -1,6 +1,6 @@
 import { runtime } from '~/lib/makeswift/runtime';
 import { Image, Link, Style, TextInput } from '@makeswift/runtime/controls';
-import { lazy } from 'react';
+import dynamic from 'next/dynamic';
 
 export const props = {
   className: Style(),
@@ -18,6 +18,6 @@ export const props = {
 };
 
 runtime.registerComponent(
-  lazy(() => import('./product-preview')),
+  dynamic(() => import('./product-preview')),
   { type: 'product-preview', label: 'Product Preview', props },
 );

@@ -1,10 +1,10 @@
 import { runtime } from '@/makeswift/runtime'
-import { lazy } from 'react'
+import dynamic from 'next/dynamic'
 
 import { Style, Font, TextInput } from '@makeswift/runtime/controls'
 
 runtime.registerComponent(
-  lazy(() => import('./font-control-demo')),
+  dynamic(() => import('./font-control-demo')),
   {
     type: 'Font Control Demo',
     label: 'Custom / Font Control Demo',

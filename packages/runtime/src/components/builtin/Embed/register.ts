@@ -1,12 +1,13 @@
 import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
-import { lazy } from 'react'
+import dynamic from 'next/dynamic'
 import { ElementID, Margin, TextArea, Width } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
-    lazy(() => import('./Embed')),
+    // @ts-expect-error: fix optional prop error
+    dynamic(() => import('./Embed')),
     {
       type: MakeswiftComponentType.Embed,
       label: 'Embed',

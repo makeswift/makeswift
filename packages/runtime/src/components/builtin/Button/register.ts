@@ -15,11 +15,12 @@ import { findBreakpointOverride } from '@makeswift/controls'
 import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 import { ButtonVariant } from './contants'
-import { lazy } from 'react'
+import dynamic from 'next/dynamic'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
-    lazy(() => import('./Button')),
+    // @ts-expect-error: fix optional prop error
+    dynamic(() => import('./Button')),
     {
       type: MakeswiftComponentType.Button,
       label: 'Button',

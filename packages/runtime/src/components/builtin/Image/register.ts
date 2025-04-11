@@ -1,4 +1,4 @@
-import { lazy } from 'react'
+import dynamic from 'next/dynamic'
 import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 import {
@@ -18,7 +18,8 @@ import {
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
-    lazy(() => import('./Image')),
+    // @ts-expect-error: fix optional prop error
+    dynamic(() => import('./Image')),
     {
       type: MakeswiftComponentType.Image,
       label: 'Image',
