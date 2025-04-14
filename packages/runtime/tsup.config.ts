@@ -16,6 +16,7 @@ export default defineConfig(() => {
     define: {
       PACKAGE_VERSION: JSON.stringify(version),
     },
+    external: ['./.makeswift.config'],
     esbuildOptions(options, { format }) {
       if (format === 'cjs') options.supported = { ...options.supported, 'dynamic-import': false }
     },
