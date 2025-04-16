@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, memo, useMemo } from 'react'
+import { memo, useMemo } from 'react'
 
 import { useDispatch } from '../../runtimes/react/hooks/use-dispatch'
 import { useUniversalDispatch } from '../../runtimes/react/hooks/use-universal-dispatch'
@@ -64,14 +64,12 @@ See our docs for more information on what's changed and instructions to migrate:
   const rootDocument = useRegisterPageDocument(snapshot.document)
 
   return (
-    <Suspense>
-      {/* We use a key here to reset the Snippets state in the PageMeta component */}
-      <PageComponent
-        key={snapshot.document.data.key}
-        page={snapshot.document}
-        rootDocument={rootDocument}
-        metadata={metadata}
-      />
-    </Suspense>
+    // We use a key here to reset the Snippets state in the PageMeta component
+    <PageComponent
+      key={snapshot.document.data.key}
+      page={snapshot.document}
+      rootDocument={rootDocument}
+      metadata={metadata}
+    />
   )
 })
