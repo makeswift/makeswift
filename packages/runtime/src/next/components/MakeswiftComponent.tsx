@@ -1,6 +1,6 @@
 'use client'
 
-import { memo, Suspense, useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { componentDocumentToRootEmbeddedDocument, MakeswiftComponentSnapshot } from '../client'
 import { DocumentRoot } from '../../runtimes/react/components/DocumentRoot'
 import { useCacheData } from '../../runtimes/react/hooks/use-cache-data'
@@ -29,9 +29,5 @@ export const MakeswiftComponent = memo(({ snapshot, label, type }: Props) => {
 
   useRegisterDocument(rootDocument)
 
-  return (
-    <Suspense>
-      <DocumentRoot rootDocument={rootDocument} />
-    </Suspense>
-  )
+  return <DocumentRoot rootDocument={rootDocument} />
 })
