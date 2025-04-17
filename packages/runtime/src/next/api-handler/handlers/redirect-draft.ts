@@ -84,13 +84,29 @@ async function redirectDraftRouteHandler(
     },
   ]
 
-  const destinationUrl = new URL(request.nextUrl)
-  destinationUrl.searchParams.delete(SearchParams.DraftMode)
+  //const destinationUrl = request.nextUrl.clone()
+
+  const redirectProtocol =
+    request.headers.get('x-forwarded-proto') ?? request.nextUrl.protocol.replace(':', '')
+
+  const redirectHost =
+    request.headers.get('x-forwarded-host') ?? request.headers.get('host') ?? request.nextUrl.host
+
+  const redirectSearchParams = new URLSearchParams(request.nextUrl.searchParams)
+  redirectSearchParams.delete(SearchParams.DraftMode)
+
+  const destinationUrl = new URL(
+    `${redirectProtocol}://${redirectHost}${request.nextUrl.pathname}${redirectSearchParams.toString()}`,
+  )
 
   const headers = new Headers()
   draftCookies.forEach(({ name, value }) => {
     headers.append(SET_COOKIE_HEADER, serializeCookie(name, value, { ...cookieSettingOptions }))
   })
+
+  console.log('Inbound headers', new Map(request.headers))
+  console.log('Inbound Next URL', { ...request.nextUrl })
+  console.log('REDIRECTING TO:', destinationUrl.toString())
 
   return NextResponse.redirect(destinationUrl, { headers })
 }

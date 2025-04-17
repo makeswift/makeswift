@@ -100,6 +100,9 @@ async function redirectPreviewApiRouteHandler(
   res.setHeader(SET_COOKIE_HEADER, patchedCookies)
 
   const destinationUrl = new URL(req.url, 'http://test.com')
+
+  console.log(req.headers)
+
   destinationUrl.searchParams.delete(SearchParams.PreviewMode)
 
   res.redirect(`${destinationUrl.pathname}?${destinationUrl.searchParams.toString()}`)
