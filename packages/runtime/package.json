@@ -1,6 +1,6 @@
 {
   "name": "@makeswift/runtime",
-  "version": "0.23.12-canary.5",
+  "version": "0.23.12",
   "license": "MIT",
   "files": [
     "dist",
@@ -57,11 +57,6 @@
       "require": "./dist/cjs/next/index.js",
       "import": "./dist/esm/next/index.js",
       "types": "./dist/types/next/index.d.ts"
-    },
-    "./next/middleware": {
-      "require": "./dist/cjs/next/middleware/index.js",
-      "import": "./dist/esm/next/middleware/index.js",
-      "types": "./dist/types/next/middleware/index.d.ts"
     },
     "./next/document": {
       "require": "./dist/cjs/next/document.js",

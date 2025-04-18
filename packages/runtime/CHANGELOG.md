@@ -1,40 +1,15 @@
 # @makeswift/runtime
 
-## 0.23.12-canary.5
+## 0.23.12
 
 ### Patch Changes
 
 - 9b78c7e: feat: add `onPublish` callback to `MakeswiftApiHandler`
-
-## 0.23.12-canary.4
-
-### Patch Changes
-
-- dababda: chore: improve error messages/logging for experimental draft request creation utilities
-
-## 0.23.12-canary.3
-
-### Patch Changes
-
-- 0db5a33: chore: improve error messages/logging in Makeswift client
-
-## 0.23.12-canary.2
-
-### Patch Changes
-
 - 8f99513: chore: refactor use-register-document
-
-## 0.23.12-canary.1
-
-### Patch Changes
-
-- c6db2c8: Fixes prop controller creation for documents that are registered after the initial builder connection is established.
-
-## 0.23.12-canary.0
-
-### Patch Changes
-
+- dababda: chore: improve error messages/logging for experimental draft request creation utilities
+- 0db5a33: chore: improve error messages/logging in Makeswift client
 - c6459b2: feat: support additional locales for Pages Router hosts
+- c6db2c8: Fixes prop controller creation for documents that are registered after the initial builder connection is established.
 
 ## 0.23.11
 
