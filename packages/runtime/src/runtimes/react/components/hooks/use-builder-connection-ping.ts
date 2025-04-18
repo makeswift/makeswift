@@ -9,7 +9,10 @@ export function useBuilderConnectionPing({ appOrigin }: { appOrigin: string }) {
 
     if (window.parent !== window) {
       window.addEventListener('message', messageHandler)
-      window.parent.postMessage({ type: ActionTypes.MAKESWIFT_CONNECTION_INIT }, appOrigin)
+      window.parent.postMessage(
+        { type: ActionTypes.MAKESWIFT_CONNECTION_INIT },
+        { targetOrigin: appOrigin },
+      )
     }
 
     return () => {
@@ -33,7 +36,7 @@ export function useBuilderConnectionPing({ appOrigin }: { appOrigin: string }) {
               type: ActionTypes.MAKESWIFT_CONNECTION_CHECK,
               payload: { currentUrl: window.location.href },
             },
-            appOrigin,
+            { targetOrigin: appOrigin },
           )
         }, CONNECTION_PING_INTERVAL_MS)
       }
