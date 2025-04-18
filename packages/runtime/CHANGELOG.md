@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.24.0-canary.1
+
+### Patch Changes
+
+- bc0a2bf: chore: pass app origin as named param in builder connection hooks
+
 ## 0.24.0-canary.0
 
 ### Minor Changes
