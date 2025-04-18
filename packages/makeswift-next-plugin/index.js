@@ -5,6 +5,8 @@
 /** @typedef {NonNullable<import('next').NextConfig['images']>} ImageConfig */
 /** @typedef {ImageConfig['remotePatterns']} ImageConfigRemotePatterns */
 
+const path = require('path')
+const fs = require('fs')
 const { satisfies } = require('semver')
 
 const GOOGLE_STORAGE_BUCKETS = [
@@ -26,6 +28,83 @@ const NEXT_IMAGE_REVIEW_APP_REMOTE_PATTERNS = [
     pathname: '/s-*.cd.mkswft.com/**',
   },
 ]
+
+// Heavily borrowed from https://github.com/amannn/next-intl/blob/main/packages/next-intl/src/plugin/getNextConfig.tsx
+
+/** @type {(localPath: string) => string[]} */
+function withExtensions(localPath) {
+  return [
+    `${localPath}.ts`,
+    `${localPath}.tsx`,
+    `${localPath}.js`,
+    `${localPath}.jsx`,
+  ]
+}
+
+/** @type {(cdw?: string) => string | undefined} */
+function resolveConfigPath(cwd) {
+  function resolvePath(pathname) {
+    return path.resolve(...(cwd ? [cwd, pathname] : [pathname]))
+  }
+
+  function pathExists(pathname) {
+    return fs.existsSync(resolvePath(pathname))
+  }
+
+  for (const candidate of [...withExtensions('.')]) {
+    if (pathExists(candidate)) {
+      return candidate
+    }
+  }
+
+  return undefined
+}
+
+/** @type {(nextConfig: NextConfig | undefined, runtimeConfigModule: string) => NextConfig} */
+export function resolveRuntimeConfig(nextConfig, runtimeConfigModule) {
+  const useTurbo = process.env.TURBOPACK != null
+  const moduleResolutionConfig = {}
+
+  // Assign alias for `next-intl/config`
+  if (useTurbo) {
+    const configPath = resolveConfigPath()
+    if (configPath != null) {
+      // `NextConfig['turbo']` is stable in Next.js 15. In case the
+      // experimental feature is removed in the future, we should
+      // replace this accordingly in a future major version.
+      moduleResolutionConfig.experimental = {
+        ...nextConfig?.experimental,
+        turbo: {
+          ...nextConfig?.experimental?.turbo,
+          resolveAlias: {
+            ...nextConfig?.experimental?.turbo?.resolveAlias,
+            [runtimeConfigModule]: configPath,
+          },
+        },
+      }
+    }
+  } else {
+    /** @type {(...[config, options]: Parameters<NonNullable<NextConfig['webpack']>>) => void} */
+    moduleResolutionConfig.webpack = function webpack(...[config, options]) {
+      // Webpack requires absolute paths
+      const configPath = resolveConfigPath(config.context)
+      if (configPath != null) {
+        config.resolve.alias[runtimeConfigModule] = path.resolve(
+          config.context,
+          configPath,
+        )
+      }
+
+      if (typeof nextConfig?.webpack === 'function') {
+        return nextConfig.webpack(config, options)
+      }
+
+      return config
+    }
+  }
+
+  return Object.assign({}, nextConfig, moduleResolutionConfig)
+}
 
 /** @type {(options: MakeswiftNextPluginOptions) => (nextConfig: NextConfig) => NextConfig} */
 module.exports =
@@ -114,14 +193,17 @@ module.exports =
       throw new Error('Makeswift requires a minimum Next.js version of 13.4.0.')
     }
 
-    return {
-      ...enhancedConfig,
-      webpack(config, options) {
-        config = enhancedConfig.webpack?.(config, options) ?? config
+    return resolveRuntimeConfig(
+      {
+        ...enhancedConfig,
+        webpack(config, options) {
+          config = enhancedConfig.webpack?.(config, options) ?? config
 
-        if (resolveSymlinks != null) config.resolve.symlinks = resolveSymlinks
+          if (resolveSymlinks != null) config.resolve.symlinks = resolveSymlinks
 
-        return config
+          return config
+        },
       },
-    }
+      'runtime/.makeswift.config',
+    )
   }

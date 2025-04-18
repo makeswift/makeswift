@@ -2,6 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { NextRequest, NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
 
+import { getConfig } from '../../../config'
+
 type Context = { params: { [key: string]: string | string[] } }
 
 export type Manifest = {
@@ -15,6 +17,7 @@ export type Manifest = {
   unstable_siteVersions: boolean
   localizedPageSSR: boolean
   webhook: boolean
+  localizedPagesOnlineByDefault: boolean
 }
 
 type ManifestError = { message: string }
@@ -73,6 +76,8 @@ export default async function handler(
     .with(apiRoutePattern, () => false)
     .exhaustive()
 
+  const { localizedPagesOnlineByDefault } = getConfig()
+
   const body = {
     version: PACKAGE_VERSION,
     previewMode: supportsPreviewMode,
@@ -85,6 +90,7 @@ export default async function handler(
     unstable_siteVersions: true,
     localizedPageSSR: true,
     webhook: supportsWebhook,
+    localizedPagesOnlineByDefault,
   }
 
   return match(args)
