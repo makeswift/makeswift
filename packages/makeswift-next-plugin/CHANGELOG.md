@@ -1,5 +1,11 @@
 # @makeswift/next-plugin
 
+## 0.4.0-canary.0
+
+### Minor Changes
+
+- 8241d49: feat: introduces native draft mode for site version switching, including a new toolbar for exiting draft mode on live pages. Removes all previous proxying related rewrites and endpoints.
+
 ## 0.3.1
 
 ### Patch Changes
