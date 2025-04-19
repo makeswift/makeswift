@@ -1,5 +1,5 @@
 import { runtime } from '@/makeswift/runtime'
-import { lazy } from 'react'
+import dynamic from 'next/dynamic'
 
 import {
   Style,
@@ -10,7 +10,7 @@ import {
 } from '@makeswift/runtime/controls'
 
 runtime.registerComponent(
-  lazy(() => import('./group-demo')),
+  dynamic(() => import('./group-demo')),
   {
     type: 'Group Control Demo',
     label: 'Custom / Group Control Demo',

@@ -1,5 +1,5 @@
 import { Combobox, TextInput } from '@makeswift/runtime/controls';
-import { lazy } from 'react';
+import dynamic from 'next/dynamic';
 
 import { runtime } from '~/lib/makeswift/runtime';
 
@@ -40,6 +40,6 @@ export const props = {
 };
 
 runtime.registerComponent(
-  lazy(() => import('./product-carousel')),
+  dynamic(() => import('./product-carousel')),
   { type: 'ProductCarousel', label: 'Product Carousel', icon: 'carousel', props },
 );

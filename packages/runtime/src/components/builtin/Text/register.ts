@@ -2,12 +2,13 @@ import { type ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 import { getBaseBreakpoint } from '@makeswift/controls'
 import { RichText } from '../../../controls/rich-text-v2/rich-text-v2'
-import { lazy } from 'react'
+import dynamic from 'next/dynamic'
 import { ElementID, Margin, Width } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
-    lazy(() => import('./Text')),
+    // @ts-expect-error: fix optional prop error
+    dynamic(() => import('./Text')),
     {
       type: MakeswiftComponentType.Text,
       label: 'Text',
