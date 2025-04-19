@@ -662,16 +662,23 @@ export class Makeswift {
     {
       siteVersion: siteVersionPromise,
       locale,
-    }: { siteVersion: MakeswiftSiteVersion | Promise<MakeswiftSiteVersion>; locale?: string },
+      allowLocaleFallback = true,
+    }: {
+      siteVersion: MakeswiftSiteVersion | Promise<MakeswiftSiteVersion>
+      locale?: string
+      allowLocaleFallback?: boolean
+    },
   ): Promise<MakeswiftPageSnapshot | null> {
-    const searchParams = new URLSearchParams()
-    if (locale) {
-      searchParams.set('locale', locale)
+    const queryParams = (): string => {
+      const params = new URLSearchParams()
+      if (locale) params.set('locale', locale)
+      if (allowLocaleFallback != null) params.set('allowLocaleFallback', `${allowLocaleFallback}`)
+      return params.toString()
     }
 
     const siteVersion = await siteVersionPromise
     const response = await this.fetch(
-      `v3/pages/${encodeURIComponent(pathname)}/document?${searchParams.toString()}`,
+      `v3/pages/${encodeURIComponent(pathname)}/document?${queryParams()}`,
       siteVersion,
     )
 
