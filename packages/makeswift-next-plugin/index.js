@@ -46,11 +46,11 @@ module.exports =
           ...NEXT_IMAGE_REVIEW_APP_REMOTE_PATTERNS,
         ],
       },
-      async rewrites() {
-        const rewrites = await nextConfig.rewrites?.()
-        const previewModeRewrites = [
+      async redirects() {
+        const redirects = await nextConfig.redirects?.()
+        const draftRedirects = [
           {
-            source: '/:path(.*)',
+            source: '/:path((?!api/makeswift/draft$).*)',
             has: [
               {
                 type: 'query',
@@ -58,10 +58,11 @@ module.exports =
                 value: '(?<secret>.+)',
               },
             ],
-            destination: '/api/makeswift/draft',
+            permanent: false,
+            destination: '/api/makeswift/draft?redirect_to=/:path*',
           },
           {
-            source: '/:path(.*)',
+            source: '/:path((?!api/makeswift/preview$).*)',
             has: [
               {
                 type: 'query',
@@ -69,19 +70,11 @@ module.exports =
                 value: '(?<secret>.+)',
               },
             ],
-            destination: '/api/makeswift/preview',
+            permanent: false,
+            destination: '/api/makeswift/preview?redirect_to=/:path*',
           },
         ]
-        return {
-          beforeFiles: [
-            ...(previewMode ? previewModeRewrites : []),
-            ...(Array.isArray(rewrites) ? [] : rewrites?.beforeFiles ?? []),
-          ],
-          afterFiles: Array.isArray(rewrites)
-            ? rewrites
-            : rewrites?.afterFiles ?? [],
-          fallback: Array.isArray(rewrites) ? [] : rewrites?.fallback ?? [],
-        }
+        return [...(redirects ?? []), ...(previewMode ? draftRedirects : [])]
       },
       async headers() {
         const headers = (await nextConfig.headers?.()) ?? []
