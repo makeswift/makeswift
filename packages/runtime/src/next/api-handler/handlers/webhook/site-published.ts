@@ -1,5 +1,11 @@
 import { revalidateTag } from 'next/cache'
-import { OnPublish, SitePublishedWebhookPayload, WebhookHandlerResult } from './types'
+import {
+  type OnPublish,
+  type SitePublishedWebhookPayload,
+  type WebhookHandlerResult,
+} from './types'
+
+import { MAKESWIFT_CACHE_TAG } from '../../../cache'
 
 type SitePublishedParams = {
   onPublish?: OnPublish
@@ -7,7 +13,7 @@ type SitePublishedParams = {
 
 export async function handleSitePublished(
   _payload: SitePublishedWebhookPayload,
-  { onPublish }: SitePublishedParams
+  { onPublish }: SitePublishedParams,
 ): Promise<WebhookHandlerResult> {
   revalidateTag(MAKESWIFT_CACHE_TAG)
 
@@ -20,5 +26,3 @@ export async function handleSitePublished(
 
   return { body: { success: true }, status: 200 }
 }
-
-export const MAKESWIFT_CACHE_TAG = '@@makeswift'

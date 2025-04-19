@@ -27,7 +27,7 @@ import {
   type LocalizedGlobalElement,
   type APIResourceLocale,
 } from '../api'
-import { MAKESWIFT_CACHE_TAG } from '../next/api-handler/handlers/webhook/site-published'
+import { MAKESWIFT_CACHE_TAG } from '../next/cache'
 import { API_HANDLER_SITE_VERSION_HEADER, MakeswiftSiteVersion } from '../api/site-version'
 
 const reducer = combineReducers({
