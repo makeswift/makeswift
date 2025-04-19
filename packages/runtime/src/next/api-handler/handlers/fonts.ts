@@ -1,22 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { NextRequest, NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
+import { type GetFonts } from '../../../config'
 
 type Context = { params: { [key: string]: string | string[] } }
 
-type FontVariant = { weight: string; style: 'italic' | 'normal'; src?: string }
-
-export type Font = {
-  family: string
-  label?: string
-  variants: FontVariant[]
-}
-
-type Fonts = Font[]
-
-export type GetFonts = () => Fonts | Promise<Fonts>
-
-export type FontsResponse = Fonts
+export type FontsResponse = Awaited<ReturnType<GetFonts>>
 
 type FontsHandlerArgs =
   | [request: NextRequest, context: Context, params: { getFonts?: GetFonts }]

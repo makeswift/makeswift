@@ -47,6 +47,7 @@ import { deterministicUUID } from '../utils/deterministic-uuid'
 import { Schema } from '@makeswift/controls'
 import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-only-documents'
 import { MAKESWIFT_CACHE_TAG } from './api-handler/handlers/webhook/site-published'
+import { type MakeswiftConfig, resolveConfig, configFromArgs } from '../config'
 
 const makeswiftPageResultSchema = z.object({
   id: z.string(),
@@ -270,7 +271,7 @@ type LocalizedPage = {
   seo: Seo
 }
 
-type MakeswiftConfig = {
+type MakeswiftClientConfig = {
   apiOrigin?: string
   runtime: ReactRuntime
 }
@@ -326,10 +327,14 @@ export class Makeswift {
     return getMakeswiftSiteVersion(previewData) === MakeswiftSiteVersion.Working
   }
 
-  constructor(
-    apiKey: string,
-    { apiOrigin = 'https://api.makeswift.com', runtime }: MakeswiftConfig,
-  ) {
+  constructor(config: MakeswiftConfig)
+  constructor(apiKey: string, apiHandlerConfig: MakeswiftClientConfig)
+
+  constructor(apiKeyOrConfig: string | MakeswiftConfig, clientConfig?: MakeswiftClientConfig) {
+    const { apiKey, apiOrigin, runtime } = resolveConfig(
+      configFromArgs(apiKeyOrConfig, clientConfig),
+    )
+
     if (typeof apiKey !== 'string') {
       throw new Error(
         'The Makeswift client must be passed a valid Makeswift site API key: ' +

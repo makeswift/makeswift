@@ -2,13 +2,13 @@
 
 import { ReactNode } from 'react'
 
-import { runtime } from '@/makeswift/runtime'
+import { config } from '@/lib/makeswift/config'
 import {
   ReactRuntimeProvider,
   RootStyleRegistry,
 } from '@makeswift/runtime/next'
 
-import '@/makeswift/components'
+import '@/lib/makeswift/components'
 
 export function MakeswiftProvider({
   children,
@@ -19,11 +19,10 @@ export function MakeswiftProvider({
   locale?: string
   previewMode: boolean
 }) {
+  const { runtime, apiOrigin, appOrigin } = config
   return (
     <ReactRuntimeProvider
-      {...{ runtime, previewMode, locale }}
-      apiOrigin={process.env.NEXT_PUBLIC_MAKESWIFT_API_ORIGIN}
-      appOrigin={process.env.NEXT_PUBLIC_MAKESWIFT_APP_ORIGIN}
+      {...{ runtime, apiOrigin, appOrigin, previewMode, locale }}
     >
       <RootStyleRegistry>{children}</RootStyleRegistry>
     </ReactRuntimeProvider>
