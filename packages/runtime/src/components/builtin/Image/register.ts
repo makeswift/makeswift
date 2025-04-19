@@ -1,4 +1,5 @@
-import { lazy } from 'react'
+import ImageComponent from './'
+
 import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 import {
@@ -18,7 +19,7 @@ import {
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
-    lazy(() => import('./Image')),
+    ImageComponent,
     {
       type: MakeswiftComponentType.Image,
       label: 'Image',
