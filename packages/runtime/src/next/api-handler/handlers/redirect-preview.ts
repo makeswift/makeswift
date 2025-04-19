@@ -10,6 +10,7 @@ import {
   cookieSettingOptions,
   PRERENDER_BYPASS_COOKIE,
   PREVIEW_DATA_COOKIE,
+  REDIRECT_PATH_QUERY_PARAM,
   SearchParams,
   SET_COOKIE_HEADER,
 } from './utils/draft'
@@ -73,8 +74,9 @@ async function redirectPreviewApiRouteHandler(
     return res.status(401).send('Unauthorized to enable preview mode: secret is incorrect')
   }
 
-  if (req.url == null) {
-    return res.status(400).send('Bad request: incoming request does not have URL property')
+  const redirectPath = req.query[REDIRECT_PATH_QUERY_PARAM]
+  if (typeof redirectPath !== 'string') {
+    return res.status(400).send(`Bad request: invalid redirect path provided: ${redirectPath}`)
   }
 
   const setCookie = res
@@ -99,8 +101,13 @@ async function redirectPreviewApiRouteHandler(
 
   res.setHeader(SET_COOKIE_HEADER, patchedCookies)
 
-  const destinationUrl = new URL(req.url, 'http://test.com')
+  const destinationUrl = new URL(redirectPath, 'http://test.com')
+  Object.entries(req.query).forEach(([key, value]) => {
+    if (typeof value !== 'string') return
+    destinationUrl.searchParams.set(key, value)
+  })
   destinationUrl.searchParams.delete(SearchParams.PreviewMode)
+  destinationUrl.searchParams.delete(REDIRECT_PATH_QUERY_PARAM)
 
   res.redirect(`${destinationUrl.pathname}?${destinationUrl.searchParams.toString()}`)
 }
