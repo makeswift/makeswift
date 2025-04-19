@@ -1,4 +1,4 @@
-import { runtime } from '@/makeswift/runtime'
+import { runtime } from '@/lib/makeswift/runtime'
 import { lazy } from 'react'
 
 import { Style, Font, TextInput } from '@makeswift/runtime/controls'

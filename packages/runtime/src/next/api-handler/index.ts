@@ -6,7 +6,7 @@ import { APIResource } from '../../api'
 import { Makeswift } from '../client'
 
 import elementTree, { ElementTreeResponse } from './handlers/element-tree'
-import fonts, { Font, FontsResponse, GetFonts } from './handlers/fonts'
+import fonts, { type FontsResponse } from './handlers/fonts'
 import manifest, { Manifest, ManifestResponse } from './handlers/manifest'
 import redirectDraft, { type RedirectDraftResponse } from './handlers/redirect-draft'
 import redirectPreview, { type RedirectPreviewResponse } from './handlers/redirect-preview'
@@ -15,8 +15,8 @@ import { revalidate, RevalidationResponse } from './handlers/revalidate'
 import translatableData, { TranslatableDataResponse } from './handlers/translatable-data'
 import mergeTranslatedData, { TranslatedDataResponse } from './handlers/merge-translated-data'
 import webhook from './handlers/webhook'
-import { OnPublish, WebhookResponseBody } from './handlers/webhook/types'
-import { ReactRuntime } from '../../react'
+import { WebhookResponseBody } from './handlers/webhook/types'
+import { type Font, type MakeswiftConfig, resolveConfig, configFromArgs } from '../../config'
 import { P, match } from 'ts-pattern'
 import {
   API_HANDLER_SITE_VERSION_HEADER,
@@ -28,15 +28,10 @@ export type { Manifest, Font }
 
 type Context = { params: { [key: string]: string | string[] } }
 
-type Events = { onPublish: OnPublish }
-
-type MakeswiftApiHandlerConfig = {
-  appOrigin?: string
-  apiOrigin?: string
-  getFonts?: GetFonts
-  events?: Events
-  runtime: ReactRuntime
-}
+type MakeswiftApiHandlerConfig = Pick<
+  MakeswiftConfig,
+  'appOrigin' | 'apiOrigin' | 'getFonts' | 'events' | 'runtime'
+>
 
 type NotFoundError = { message: string }
 
@@ -64,16 +59,24 @@ function apiRequestParams(request: NextApiRequest): Promise<NextApiRequest['quer
   return Promise.resolve(request.query)
 }
 
+type ApiHandler = (
+  ...args: MakeswiftApiHandlerArgs
+) => Promise<NextResponse<MakeswiftApiHandlerResponse> | void>
+
+export function MakeswiftApiHandler(config: MakeswiftConfig): ApiHandler
 export function MakeswiftApiHandler(
   apiKey: string,
-  {
-    appOrigin = 'https://app.makeswift.com',
-    apiOrigin = 'https://api.makeswift.com',
-    getFonts,
-    events,
-    runtime,
-  }: MakeswiftApiHandlerConfig,
-): (...args: MakeswiftApiHandlerArgs) => Promise<NextResponse<MakeswiftApiHandlerResponse> | void> {
+  apiHandlerConfig: MakeswiftApiHandlerConfig,
+): ApiHandler
+
+export function MakeswiftApiHandler(
+  apiKeyOrConfig: string | MakeswiftConfig,
+  apiHandlerConfig?: MakeswiftApiHandlerConfig,
+): ApiHandler {
+  const { apiKey, appOrigin, apiOrigin, getFonts, events, runtime } = resolveConfig(
+    configFromArgs(apiKeyOrConfig, apiHandlerConfig),
+  )
+
   const cors = Cors({ origin: appOrigin })
 
   if (typeof apiKey !== 'string') {

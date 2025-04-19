@@ -27,3 +27,4 @@ export type {
 export type { Element } from './state/react-page'
 export { createBaseDocument } from './state/react-page'
 export { MakeswiftComponentType } from './components/builtin/constants'
+export type { MakeswiftConfig } from './config'
