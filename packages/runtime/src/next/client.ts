@@ -46,7 +46,7 @@ import { toIterablePaginationResult } from './utils/pagination'
 import { deterministicUUID } from '../utils/deterministic-uuid'
 import { Schema } from '@makeswift/controls'
 import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-only-documents'
-import { MAKESWIFT_CACHE_TAG } from './api-handler/handlers/webhook/site-published'
+import { MAKESWIFT_CACHE_TAG } from './cache'
 
 const makeswiftPageResultSchema = z.object({
   id: z.string(),
