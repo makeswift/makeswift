@@ -1,65 +1,70 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { NextRequest, NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
+
 import { parse as parseSetCookie } from 'set-cookie-parser'
 import { serialize as serializeCookie } from 'cookie'
-import { MakeswiftSiteVersion } from '../../../api/site-version'
 
-const SET_COOKIE_HEADER = 'set-cookie'
-const PRERENDER_BYPASS_COOKIE = '__prerender_bypass'
-const PREVIEW_DATA_COOKIE = '__next_preview_data'
+import { MakeswiftSiteVersion } from '../../../api/site-version'
+import {
+  cookieSettingOptions,
+  PRERENDER_BYPASS_COOKIE,
+  PREVIEW_DATA_COOKIE,
+  SearchParams,
+  SET_COOKIE_HEADER,
+} from './utils/draft'
 
 type Context = { params: { [key: string]: string | string[] } }
 
-type PreviewModeError = string
+type RedirectPreviewError = string
 
-type Response = { __brand: 'PreviewModeResponse' }
+type Response = unknown
 
-export type PreviewModeResponse = PreviewModeError | Response
+export type RedirectPreviewResponse = RedirectPreviewError | Response
 
-type PreviewModeHandlerArgs =
+type RedirectPreviewHandlerArgs =
   | [request: NextRequest, context: Context, params: { apiKey: string }]
-  | [req: NextApiRequest, res: NextApiResponse<PreviewModeResponse>, params: { apiKey: string }]
+  | [req: NextApiRequest, res: NextApiResponse<RedirectPreviewResponse>, params: { apiKey: string }]
 
 const routeHandlerPattern = [P.instanceOf(Request), P.any, P.any] as const
 const apiRoutePattern = [P.any, P.any, P.any] as const
 
-export default async function previewModeHandler(
+export default async function redirectPreviewHandler(
   request: NextRequest,
   context: Context,
   { apiKey }: { apiKey: string },
-): Promise<NextResponse<PreviewModeResponse>>
-export default async function previewModeHandler(
+): Promise<NextResponse<RedirectPreviewResponse>>
+export default async function redirectPreviewHandler(
   req: NextApiRequest,
-  res: NextApiResponse<PreviewModeResponse>,
+  res: NextApiResponse<RedirectPreviewResponse>,
   { apiKey }: { apiKey: string },
 ): Promise<void>
-export default async function previewModeHandler(
-  ...args: PreviewModeHandlerArgs
-): Promise<NextResponse<PreviewModeResponse> | void> {
+export default async function redirectPreviewHandler(
+  ...args: RedirectPreviewHandlerArgs
+): Promise<NextResponse<RedirectPreviewResponse> | void> {
   return match(args)
-    .with(routeHandlerPattern, args => previewModeRouteHandler(...args))
-    .with(apiRoutePattern, args => previewModeApiRouteHandler(...args))
+    .with(routeHandlerPattern, args => redirectPreviewRouteHandler(...args))
+    .with(apiRoutePattern, args => redirectPreviewApiRouteHandler(...args))
     .exhaustive()
 }
 
-async function previewModeRouteHandler(
+async function redirectPreviewRouteHandler(
   _request: NextRequest,
   _context: Context,
   {}: { apiKey: string },
-): Promise<NextResponse<PreviewModeResponse>> {
+): Promise<NextResponse<RedirectPreviewResponse>> {
   const message =
     'Cannot request preview endpoint from an API handler registered in `app`. Move your Makeswift API handler to the `pages/api` directory'
   console.error(message)
   return NextResponse.json(message, { status: 500 })
 }
 
-async function previewModeApiRouteHandler(
+async function redirectPreviewApiRouteHandler(
   req: NextApiRequest,
-  res: NextApiResponse<PreviewModeResponse>,
+  res: NextApiResponse<RedirectPreviewResponse>,
   { apiKey }: { apiKey: string },
 ): Promise<void> {
-  const secret = req.query.secret
+  const secret = req.query[SearchParams.PreviewMode]
 
   if (secret == null) {
     return res.status(401).send('Unauthorized to enable preview mode: no secret provided')
@@ -68,8 +73,12 @@ async function previewModeApiRouteHandler(
     return res.status(401).send('Unauthorized to enable preview mode: secret is incorrect')
   }
 
-  // Eventually, we can make the preview data value dynamic using the request
+  if (req.url == null) {
+    return res.status(400).send('Bad request: incoming request does not have URL property')
+  }
+
   const setCookie = res
+    // Eventually, we can make the preview data value dynamic using the request
     .setPreviewData({ makeswift: true, siteVersion: MakeswiftSiteVersion.Working })
     .getHeader(SET_COOKIE_HEADER)
 
@@ -84,18 +93,14 @@ async function previewModeApiRouteHandler(
     return res.status(500).send('Could not retrieve preview mode cookies')
   }
 
-  const patchedCookies = [prerenderBypassCookie, previewDataCookie].map(
-    ({ name, value, ...options }) => {
-      return serializeCookie(name, value, {
-        ...options,
-        sameSite: 'none',
-        secure: true,
-        partitioned: true,
-      })
-    },
-  )
+  const patchedCookies = [prerenderBypassCookie, previewDataCookie].map(({ name, value }) => {
+    return serializeCookie(name, value, { ...cookieSettingOptions })
+  })
 
   res.setHeader(SET_COOKIE_HEADER, patchedCookies)
 
-  return res.json({ __brand: 'PreviewModeResponse' })
+  const destinationUrl = new URL(req.url, 'http://test.com')
+  destinationUrl.searchParams.delete(SearchParams.PreviewMode)
+
+  res.redirect(`${destinationUrl.pathname}?${destinationUrl.searchParams.toString()}`)
 }

@@ -8,10 +8,9 @@ import { Makeswift } from '../client'
 import elementTree, { ElementTreeResponse } from './handlers/element-tree'
 import fonts, { Font, FontsResponse, GetFonts } from './handlers/fonts'
 import manifest, { Manifest, ManifestResponse } from './handlers/manifest'
-import proxyPreviewMode, { ProxyPreviewModeResponse } from './handlers/proxy-preview-mode'
-import proxyDraftMode, { ProxyDraftModeResponse } from './handlers/proxy-draft-mode'
-import draftMode, { type DraftModeResponse } from './handlers/draft-mode'
-import previewMode, { type PreviewModeResponse } from './handlers/preview-mode'
+import redirectDraft, { type RedirectDraftResponse } from './handlers/redirect-draft'
+import redirectPreview, { type RedirectPreviewResponse } from './handlers/redirect-preview'
+import clearDraft, { type ClearDraftResponse } from './handlers/clear-draft'
 import { revalidate, RevalidationResponse } from './handlers/revalidate'
 import translatableData, { TranslatableDataResponse } from './handlers/translatable-data'
 import mergeTranslatedData, { TranslatedDataResponse } from './handlers/merge-translated-data'
@@ -44,10 +43,9 @@ type NotFoundError = { message: string }
 export type MakeswiftApiHandlerResponse =
   | ManifestResponse
   | RevalidationResponse
-  | ProxyPreviewModeResponse
-  | ProxyDraftModeResponse
-  | DraftModeResponse
-  | PreviewModeResponse
+  | RedirectDraftResponse
+  | RedirectPreviewResponse
+  | ClearDraftResponse
   | FontsResponse
   | ElementTreeResponse
   | TranslatableDataResponse
@@ -178,31 +176,24 @@ export function MakeswiftApiHandler(
         .exhaustive()
     }
 
-    if (matches('/proxy-preview-mode')) {
+    if (matches('/draft')) {
       return match(args)
-        .with(routeHandlerPattern, args => proxyPreviewMode(...args, { apiKey }))
-        .with(apiRoutePattern, args => proxyPreviewMode(...args, { apiKey }))
+        .with(routeHandlerPattern, args => redirectDraft(...args, { apiKey }))
+        .with(apiRoutePattern, args => redirectDraft(...args, { apiKey }))
         .exhaustive()
     }
 
-    if (matches('/proxy-draft-mode')) {
+    if (matches('/preview')) {
       return match(args)
-        .with(routeHandlerPattern, args => proxyDraftMode(...args, { apiKey }))
-        .with(apiRoutePattern, args => proxyDraftMode(...args, { apiKey }))
+        .with(routeHandlerPattern, args => redirectPreview(...args, { apiKey }))
+        .with(apiRoutePattern, args => redirectPreview(...args, { apiKey }))
         .exhaustive()
     }
 
-    if (matches('/draft-mode')) {
+    if (matches('/clear-draft')) {
       return match(args)
-        .with(routeHandlerPattern, args => draftMode(...args, { apiKey }))
-        .with(apiRoutePattern, args => draftMode(...args, { apiKey }))
-        .exhaustive()
-    }
-
-    if (matches('/preview-mode')) {
-      return match(args)
-        .with(routeHandlerPattern, args => previewMode(...args, { apiKey }))
-        .with(apiRoutePattern, args => previewMode(...args, { apiKey }))
+        .with(routeHandlerPattern, args => clearDraft(...args, { apiKey }))
+        .with(apiRoutePattern, args => clearDraft(...args, { apiKey }))
         .exhaustive()
     }
 
