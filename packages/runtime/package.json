@@ -63,6 +63,11 @@
       "module": "./dist/esm/next/document.js",
       "types": "./dist/types/next/document.d.ts"
     },
+    "./next/middleware": {
+      "require": "./dist/cjs/next/middleware/index.js",
+      "import": "./dist/esm/next/middleware/index.js",
+      "types": "./dist/types/next/middleware/index.d.ts"
+    },
     "./next/server": {
       "require": "./dist/cjs/next/server.js",
       "module": "./dist/esm/next/server.js",
