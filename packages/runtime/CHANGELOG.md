@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.24.0-canary.1
+
+### Patch Changes
+
+- e169955: feat: reinstate experimental middleware utility function for detecting draft requests from the builder, but updated to handle requests where draft related cookies are directly attached.
+
 ## 0.24.0-canary.0
 
 ### Minor Changes
