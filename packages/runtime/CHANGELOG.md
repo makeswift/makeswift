@@ -1,5 +1,90 @@
 # @makeswift/runtime
 
+## 0.24.0
+
+### Minor Changes
+
+- 8241d49: feat: sets draft cookies directly on the client instead of proxying. Includes a new toolbar for exiting draft state outside of the builder. Removes all previous proxying related rewrites and endpoints.
+- 0e512b2: BREAKING: Upgrading to this runtime version will opt your site into the new localized pages behavior, both in the builder and on the live site.
+
+  Localized pages are no longer silently created when navigated to in the builder. Instead, they now automatically fall back to the base locale by default. To create a localized page, users must take explicit action in the builder.
+
+  Localized pages that are explicitly marked as Offline will remain offline.
+
+  You can disable fallback behavior on a per-page basis by passing `allowLocaleFallback: false` to the `client.getPageSnapshot` call:
+
+  ```typescript
+  const snapshot = await client.getPageSnapshot(path, {
+    siteVersion: await getSiteVersion(),
+    locale,
+    allowLocaleFallback: false,
+  });
+  ```
+
+- 6ba02bb: BREAKING: Removes the `DraftModeScript` and `PreviewModeScript` from the runtime. These components are no longer needed for integrating a site with Makeswift, and can be safely removed from any existing code.
+
+  If you're using App Router, you can remove the import and use of `DraftModeScript` from your layouts:
+
+  ```diff src/app/layout.tsx
+  import { draftMode } from "next/headers";
+  - import { DraftModeScript } from "@makeswift/runtime/next/server";
+  import { MakeswiftProvider } from "@/makeswift/provider";
+  import "@/makeswift/components";
+
+  export default async function RootLayout({
+    children,
+  }: Readonly<{
+    children: React.ReactNode;
+  }>) {
+    return (
+      <html lang="en">
+  -      <head>
+  -         <DraftModeScript />
+  -       </head>
+        <body>
+          <MakeswiftProvider previewMode={(await draftMode()).isEnabled}>
+            {children}
+          </MakeswiftProvider>
+        </body>
+      </html>
+    );
+  }
+  ```
+
+  If you're using Pages Router, can you remove the import and use of `PreviewModeScript` from your documents:
+
+  ```diff src/pages/_document.tsx
+  import { Html, Head, Main, NextScript } from "next/document";
+  - import { PreviewModeScript } from "@makeswift/runtime/next";
+  import { Document } from "@makeswift/runtime/next/document";
+
+  export default class MyDocument extends Document {
+    render() {
+      return (
+        <Html>
+          <Head>
+  -          <PreviewModeScript isPreview={this.props.__NEXT_DATA__.isPreview} />
+          </Head>
+          <body>
+            <Main />
+            <NextScript />
+          </body>
+        </Html>
+      );
+    }
+  }
+  ```
+
+  If your Makeswift site is [deployed with Docker](/developer/guides/deploying/docker), the `MAKESWIFT_DRAFT_MODE_PROXY_FORCE_HTTP` environment variable is no longer used. You can safely remove it from your Docker build.
+
+### Patch Changes
+
+- a645d1e: chore: remove experimental APIs for middleware request patching
+- bc0a2bf: chore: pass app origin as named param in builder connection hooks
+- e169955: feat: reinstate experimental middleware utility function for detecting draft requests from the builder, but updated to handle requests where draft related cookies are directly attached.
+- Updated dependencies [8241d49]
+  - @makeswift/next-plugin@0.4.0
+
 ## 0.23.13
 
 ### Patch Changes
