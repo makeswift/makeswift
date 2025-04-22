@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Unstructured Introspection identifies and returns IDs for resource types relevant to cross-site resource copy/paste: Resources relevant to cross-site copy/paste 1`] = `
+{
+  "fileIds": Set {
+    "RmlsZTpjNzc2MjI3ZC1iNmZjLTQ3MGYtYTY1OC00NWQ4NzA2NDVkMDM=",
+  },
+  "globalElementIds": Set {
+    "R2xvYmFsRWxlbWVudDphOTRjYjM3ZS02OWM2LTQ1OGQtODIxNS1mZTA2NGQ3OWZmNjI=",
+  },
+  "pageIds": Set {
+    "UGFnZToxZWU1YmNjNi1mMGI1LTQxMGUtOWIzMy0wZTJjZTNkYTIwMzE=",
+  },
+  "swatchIds": Set {
+    "U3dhdGNoOmQ1ZWU3MmY1LThmMTQtNDQzZC05YmQ1LTJiMDA1MTIyYTA5NQ==",
+  },
+  "tableIds": Set {
+    "VGFibGU6MDI2OTUwMDQtOThkMi00NDU1LThjNDAtYmFiMDU5YTY3NDQy",
+  },
+  "typographyIds": Set {
+    "VHlwb2dyYXBoeTo1ODVkMGE1ZS0zYmUyLTQyNzEtOTczYS1mNWNjN2UzMzk4ODg=",
+  },
+}
+`;
