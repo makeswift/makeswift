@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.24.1-canary.0
+
+### Patch Changes
+
+- e151a7d: Add `enableCssReset` prop to `RootStyleRegistry` (default `true`). Set it to `false` when using a `@layer`-based CSS framework such as Tailwind v4.
+
 ## 0.24.0
 
 ### Minor Changes
