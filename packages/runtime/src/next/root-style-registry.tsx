@@ -7,6 +7,9 @@ import { ReactNode, createContext, useContext, useState } from 'react'
 
 const CacheContext = createContext(cache)
 
+const DEFAULT_CSS_RESET_ENABLED = true
+const CSSResetEnabledContext = createContext(DEFAULT_CSS_RESET_ENABLED)
+
 const createRootStyleCache = ({ key }: { key: string }) => {
   const cache = createCache({ key })
   cache.compat = true
@@ -31,13 +34,21 @@ const createRootStyleCache = ({ key }: { key: string }) => {
   return { cache, flush }
 }
 
+type Props = {
+  children: ReactNode
+  cacheKey?: string
+  /**
+   * Toggle the built-in CSS reset.
+   * Set to `false` when using `@layer`-based CSS frameworks like Tailwind.
+   */
+  enableCssReset?: boolean
+}
+
 export function RootStyleRegistry({
   children,
   cacheKey,
-}: {
-  children: ReactNode
-  cacheKey?: string
-}) {
+  enableCssReset = DEFAULT_CSS_RESET_ENABLED,
+}: Props) {
   const [{ cache, flush }] = useState(() => createRootStyleCache({ key: cacheKey ?? 'mswft' }))
 
   useServerInsertedHTML(() => {
@@ -58,9 +69,19 @@ export function RootStyleRegistry({
     )
   })
 
-  return <CacheContext.Provider value={cache}>{children}</CacheContext.Provider>
+  return (
+    <CacheContext.Provider value={cache}>
+      <CSSResetEnabledContext.Provider value={enableCssReset}>
+        {children}
+      </CSSResetEnabledContext.Provider>
+    </CacheContext.Provider>
+  )
 }
 
 export function useCache(): EmotionCache {
   return useContext(CacheContext)
+}
+
+export function useCSSResetEnabled(): boolean {
+  return useContext(CSSResetEnabledContext)
 }
