@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.24.2-canary.0
+
+### Patch Changes
+
+- 1e3bf16: Add helper function for introspecting without utilizing controls
+
 ## 0.24.1
 
 ### Patch Changes
