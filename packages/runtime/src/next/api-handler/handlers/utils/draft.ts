@@ -3,6 +3,7 @@ export const PREVIEW_DATA_COOKIE = '__next_preview_data'
 
 export const MAKESWIFT_DRAFT_DATA_COOKIE = 'x-makeswift-draft-data'
 export const SET_COOKIE_HEADER = 'set-cookie'
+export const REDIRECT_PATH_QUERY_PARAM = 'redirect_to'
 
 export const SearchParams = {
   DraftMode: 'x-makeswift-draft-mode',

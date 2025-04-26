@@ -10,6 +10,7 @@ import {
   cookieSettingOptions,
   MAKESWIFT_DRAFT_DATA_COOKIE,
   PRERENDER_BYPASS_COOKIE,
+  REDIRECT_PATH_QUERY_PARAM,
   SearchParams,
   SET_COOKIE_HEADER,
 } from './utils/draft'
@@ -64,6 +65,14 @@ async function redirectDraftRouteHandler(
     return new NextResponse('Unauthorized to enable draft mode: incorrect secret', { status: 401 })
   }
 
+  const destinationPath = request.nextUrl.searchParams.get(REDIRECT_PATH_QUERY_PARAM)
+
+  if (destinationPath == null) {
+    return new NextResponse('Bad request: no redirect path provided', {
+      status: 400,
+    })
+  }
+
   const draft = await draftMode()
   const cookieStore = await cookies()
 
@@ -91,10 +100,11 @@ async function redirectDraftRouteHandler(
     request.headers.get('x-forwarded-host') ?? request.headers.get('host') ?? request.nextUrl.host
 
   const redirectUrl = new URL(
-    `${redirectProtocol}://${redirectHost}${request.nextUrl.pathname}${request.nextUrl.search}`,
+    `${redirectProtocol}://${redirectHost}${destinationPath}${request.nextUrl.search}`,
   )
 
   redirectUrl.searchParams.delete(SearchParams.DraftMode)
+  redirectUrl.searchParams.delete(REDIRECT_PATH_QUERY_PARAM)
 
   const headers = new Headers()
   draftCookies.forEach(({ name, value }) => {
