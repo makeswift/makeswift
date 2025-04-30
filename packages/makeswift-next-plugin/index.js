@@ -70,6 +70,7 @@ module.exports =
                 },
               ],
               destination: '/api/makeswift/preview',
+              locale: false,
             },
           ]
           return {
