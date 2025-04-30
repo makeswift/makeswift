@@ -1,0 +1,21 @@
+fragment Type on __Type {
+  name
+  fields {
+    name
+    type {
+      name
+      fields {
+        name
+        type {
+          name
+        }
+      }
+    }
+  }
+}
+
+query Types($name: String = "BlogPost") {
+  __type(name: $name) {
+    ...Type
+  }
+}
