@@ -52,7 +52,7 @@ export const Marquee = forwardRef(function Marquee(
         <div
           className={clsx(
             fadeEdges &&
-              '[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_15%,black_85%,transparent_100%)] [mask-image:linear-gradient(to_right,transparent_0%,black_15%,black_85%,transparent_100%)]',
+              '[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_15%,black_85%,transparent_100%)] mask-[linear-gradient(to_right,transparent_0%,black_15%,black_85%,transparent_100%)]',
             'relative flex w-full flex-row items-center overflow-hidden'
           )}
         >

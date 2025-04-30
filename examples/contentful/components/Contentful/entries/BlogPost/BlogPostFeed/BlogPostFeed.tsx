@@ -47,7 +47,7 @@ export function BlogPostFeed({ className, itemsPerPage = 3 }: Props) {
             href={`/blog/${post?.slug}`}
             aria-label={`Read more about ${post?.title}`}
           >
-            <div className="relative aspect-[16/9] w-full overflow-hidden">
+            <div className="relative aspect-video w-full overflow-hidden">
               {post?.banner?.url && post.banner.width && post.banner.height && (
                 <Image
                   alt={post.banner.description ?? `Hero image for blog post: ${post?.title}`}
