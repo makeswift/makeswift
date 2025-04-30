@@ -8,7 +8,7 @@ import { getAllBlogs } from '@/lib/contentful/fetchers'
 import { ContentfulProvider } from '@/lib/contentful/provider'
 import { client as MakeswiftClient } from '@/lib/makeswift/client'
 
-export default async function Page({ params }: { params: { slug: string } }) {
+export default async function Page() {
   const blogs = await getAllBlogs()
 
   const componentSnapshot = await MakeswiftClient.getComponentSnapshot('blog-component', {

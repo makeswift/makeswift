@@ -11,7 +11,7 @@ type BaseProps = {
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<typeof ContentfulImage>, 'field' | 'key'>
 
 export function BlogPostImage({ fieldPath, ...rest }: Props) {
-  const field = useEntryField({ fieldPath })
+  const field = useEntryField({ fieldPath, type: 'BlogPost' })
 
   return <ContentfulImage {...rest} field={field} data-testid="blog_featured_image" />
 }

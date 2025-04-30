@@ -2,7 +2,7 @@ import { BlogPostOrder, GetBlogsDocument } from '@/generated/contentful'
 
 import { client } from './client'
 
-const PAGINATION_LIMIT = 1000 // Contentful's max items per page
+const PAGINATION_LIMIT = 100 // Contentful's max items per page
 
 export async function getAllBlogs() {
   let allBlogs = []

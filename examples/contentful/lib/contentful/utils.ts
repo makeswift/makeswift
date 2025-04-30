@@ -1,6 +1,13 @@
 import { Document } from '@contentful/rich-text-types'
 
-import { Asset, BlogPostBodyLinks, TypeFragment, TypesDocument } from '@/generated/contentful'
+import {
+  Asset,
+  Author,
+  BlogPost,
+  BlogPostBodyLinks,
+  TypeFragment,
+  TypesDocument,
+} from '@/generated/contentful'
 import { client } from '@/lib/contentful/client'
 import { useContentfulData } from '@/lib/contentful/provider'
 
@@ -69,12 +76,31 @@ export function resolvePath<T extends string>(
   return properties.reduce((prev, curr) => prev?.[curr], obj ?? {})
 }
 
-export function useEntryField({ fieldPath }: { fieldPath?: string }): ResolvedField {
+type ContentfulEntry = ({ __typename: 'BlogPost' } & BlogPost) | ({ __typename: 'Author' } & Author)
+type EntryType = 'BlogPost' | 'Author'
+
+function isEntryType(data: unknown, type: EntryType): data is ContentfulEntry {
+  if (typeof data !== 'object' || data === null) return false
+
+  return '__typename' in data && data.__typename === type
+}
+
+export function useEntryField({
+  fieldPath,
+  type,
+}: {
+  fieldPath?: string
+  type: EntryType
+}): ResolvedField {
   const { data, error } = useContentfulData()
 
   if (error) return { error: 'No entry found.' }
 
   if (!fieldPath) return { error: 'Field path is not set.' }
+
+  if (!isEntryType(data, type)) {
+    return { error: `Invalid ${type} data structure.` }
+  }
 
   const field = resolvePath(fieldPath, data)
 

@@ -23,6 +23,11 @@ contentful/
 │   ├── api/               # API endpoints
 │   └── [[...path]]/       # Dynamic Makeswift routes
 ├── components/            # Reusable React components
+│   └── Contentful/        # Contentful-specific components
+│       ├── common/        # Common scalar components
+│       ├── entries/       # Entry-specific components
+│       │   └── BlogPost/  # BlogPost entry components
+│       └── queries/       # GraphQL queries
 ├── lib/                   # Utility functions and configs
 └── generated/             # Auto-generated types from Contentful
 ```
@@ -62,11 +67,11 @@ The deploy link below includes integrations with Contentful and Makeswift:
 
 Create a new content type called "Author" with the following fields:
 
-- **Name | Short text [Entry title]** - A short text field for the post title
-- **Slug | Short text** - A URL-friendly identifier (e.g. "my-first-blog-post")
-- **Job Title | Date & time** - When the post should appear in feed
+- **Name | Short text [Entry title]** - The name of the author
+- **Slug | Short text** - A URL-friendly identifier (e.g. "author-name")
+- **Job Title | Short text** - The author's job title
 - **Description | Rich text** - The main content as rich text
-- **Avatar | Media type** - An optional hero image for the post
+- **Avatar | Media type** - An optional avatar image representing the author
 
 Create a new content type called "BlogPost" with the following fields:
 
@@ -148,11 +153,7 @@ For example, to display a blog post's text:
 2. In the component controls, select the appropriate text field from the GraphQL query
 3. The component will render the selected field's content
 
-To display Author information:
-
-1. Drag the `AuthorImage` component onto the page
-2. Select from the combobox the appropriate GraphQL field
-3. The component should now display the corresponding image
+To display Author information, simply select the field labeled `name < author` from the component's dropdown.
 
 ## Troubleshooting
 

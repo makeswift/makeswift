@@ -11,7 +11,7 @@ type BaseProps = {
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<typeof ContentfulText>, 'field'>
 
 export function BlogPostText({ fieldPath, ...rest }: Props) {
-  const field = useEntryField({ fieldPath })
+  const field = useEntryField({ fieldPath, type: 'BlogPost' })
 
   return <ContentfulText {...rest} field={field} />
 }
