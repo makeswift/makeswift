@@ -16,8 +16,9 @@
     "@next/env": "^15.0.4",
     "@radix-ui/react-accordion": "^1.2.1",
     "@radix-ui/react-tabs": "^1.1.1",
-    "@tailwindcss/postcss": "^4.1.4",
-    "@tailwindcss/vite": "^4.1.4",
+    "@t3-oss/env-nextjs": "^0.13.7",
+    "@tailwindcss/postcss": "^4.1.8",
+    "@tailwindcss/vite": "^4.1.8",
     "clsx": "^2.1.1",
     "contentful": "^11.3.1",
     "graphql": "^16.10.0",
@@ -25,7 +26,8 @@
     "next": "^14.2.20",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "swr": "^2.2.5"
+    "swr": "^2.2.5",
+    "zod": "^3.25.56"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.2",
@@ -46,8 +48,8 @@
     "eslint-config-next": "^14.2.20",
     "postcss": "^8.4.49",
     "prettier": "^3.4.2",
-    "prettier-plugin-tailwindcss": "^0.5.14",
-    "tailwindcss": "^4.1.4",
+    "prettier-plugin-tailwindcss": "^0.6.12",
+    "tailwindcss": "^4.1.8",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   },

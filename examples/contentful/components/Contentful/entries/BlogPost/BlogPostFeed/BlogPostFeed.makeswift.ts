@@ -10,6 +10,7 @@ runtime.registerComponent(BlogPostFeed, {
   props: {
     className: Style(),
     itemsPerPage: Number({
+      label: 'Items per page',
       defaultValue: 3,
       min: 1,
     }),
