@@ -1,5 +1,11 @@
 # @makeswift/next-plugin
 
+## 0.4.1
+
+### Patch Changes
+
+- 461fe75: fix: Pages Router regression, localized pages redirect to the base locale in the builder
+
 ## 0.4.0
 
 ### Minor Changes
