@@ -1,9 +1,9 @@
-import { runtime } from '@/makeswift/runtime'
+import { ReactRuntime } from '@makeswift/runtime/react'
 import { lazy } from 'react'
 
 import { Style, Font, TextInput } from '@makeswift/runtime/controls'
 
-runtime.registerComponent(
+export const MakeswiftFontControlDemo = ReactRuntime.connect(
   lazy(() => import('./font-control-demo')),
   {
     type: 'Font Control Demo',
