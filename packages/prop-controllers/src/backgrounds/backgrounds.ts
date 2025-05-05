@@ -8,6 +8,7 @@ import {
 } from '../prop-controllers'
 import { P, match } from 'ts-pattern'
 import { colorDataSchema, imageDataV0Schema, imageDataV1Schema } from '../data'
+import { copyColorData } from '../utils/utils'
 
 const colorBackgroundDataSchema = z.object({
   type: z.literal('color'),
@@ -278,28 +279,16 @@ export function getBackgroundsPropControllerSwatchIds(
 function copyResponsiveBackgroundsData(
   descriptor: BackgroundsDescriptor,
   data: ResponsiveBackgroundsData | undefined,
-  context: CopyContext,
+  ctx: CopyContext,
 ): ResponsiveBackgroundsData | undefined {
   if (data == null) return data
 
   return data.map((override) => ({
     ...override,
-    value: override.value.map((backgroundItem) => {
+    value: override.value.flatMap((backgroundItem) => {
       return match([descriptor, backgroundItem])
         .with([P.any, { type: 'color' }], ([, item]) => {
-          return {
-            ...item,
-            payload:
-              item.payload === null
-                ? null
-                : {
-                    ...item.payload,
-                    swatchId:
-                      context.replacementContext.swatchIds.get(
-                        item.payload.swatchId,
-                      ) ?? item.payload.swatchId,
-                  },
-          }
+          return { ...item, payload: copyColorData(item.payload, ctx) }
         })
         .with([P.any, { type: 'gradient' }], ([, item]) => {
           return {
@@ -308,16 +297,7 @@ function copyResponsiveBackgroundsData(
               ...item.payload,
               stops: item.payload.stops.map((stop) => ({
                 ...stop,
-                color:
-                  stop.color == null
-                    ? null
-                    : {
-                        ...stop.color,
-                        swatchId:
-                          context.replacementContext.swatchIds.get(
-                            stop.color.swatchId,
-                          ) ?? stop.color.swatchId,
-                      },
+                color: copyColorData(stop.color, ctx),
               })),
             },
           }
@@ -327,13 +307,11 @@ function copyResponsiveBackgroundsData(
             { version: P.when((v) => v && v >= 1) },
             {
               type: 'image-v1',
-              payload: {
-                version: 1,
-                image: { type: 'makeswift-file' },
-              },
+              payload: { version: 1, image: { type: 'makeswift-file' } },
             },
           ],
           ([, item]) => {
+            if (ctx.clearContext.fileIds.has(item.payload.image.id)) return []
             return {
               ...item,
               payload: {
@@ -341,9 +319,8 @@ function copyResponsiveBackgroundsData(
                 image: {
                   ...item.payload.image,
                   id:
-                    context.replacementContext.fileIds.get(
-                      item.payload.image.id,
-                    ) ?? item.payload.image.id,
+                    ctx.replacementContext.fileIds.get(item.payload.image.id) ??
+                    item.payload.image.id,
                 },
               },
             }
@@ -352,14 +329,14 @@ function copyResponsiveBackgroundsData(
         .with(
           [P.any, { type: 'image', payload: { imageId: P.string } }],
           ([, item]) => {
+            if (ctx.clearContext.fileIds.has(item.payload.imageId)) return []
             return {
               ...item,
               payload: {
                 ...item.payload,
                 imageId:
-                  context.replacementContext.fileIds.get(
-                    item.payload.imageId,
-                  ) ?? item.payload.imageId,
+                  ctx.replacementContext.fileIds.get(item.payload.imageId) ??
+                  item.payload.imageId,
               },
             }
           },

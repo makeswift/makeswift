@@ -1,9 +1,9 @@
 import {
-  ControlDataTypeKey,
-  ReplacementContext,
-  Types,
-} from '../prop-controllers'
-import { createReplacementContext } from '../utils/utils'
+  createClearContext,
+  createReplacementContext,
+} from '@makeswift/controls'
+import { ControlDataTypeKey, Types } from '../prop-controllers'
+
 import {
   TableDescriptor,
   TablePropControllerDataV0,
@@ -134,13 +134,13 @@ describe('TablePropController', () => {
       const expected = JSON.parse(
         JSON.stringify(data).replaceAll(tableId, 'testing'),
       )
-      const replacementContext = createReplacementContext({
-        tableIds: new Map([[tableId, 'testing']]),
-      })
 
       // Act
       const result = copyTablePropControllerData(data, {
-        replacementContext: replacementContext as ReplacementContext,
+        replacementContext: createReplacementContext({
+          tableIds: { [tableId]: 'testing' },
+        }),
+        clearContext: createClearContext(),
         copyElement: (node) => node,
       })
 
@@ -159,13 +159,13 @@ describe('TablePropController', () => {
       const expected = JSON.parse(
         JSON.stringify(data).replaceAll(tableId, 'testing'),
       )
-      const replacementContext = createReplacementContext({
-        tableIds: new Map([[tableId, 'testing']]),
-      })
 
       // Act
       const result = copyTablePropControllerData(data, {
-        replacementContext: replacementContext as ReplacementContext,
+        replacementContext: createReplacementContext({
+          tableIds: { [tableId]: 'testing' },
+        }),
+        clearContext: createClearContext(),
         copyElement: (node) => node,
       })
 

@@ -1,5 +1,9 @@
 import { ControlDataTypeKey } from '../../../common'
-import { createReplacementContext, type CopyContext } from '../../../context'
+import {
+  createClearContext,
+  createReplacementContext,
+  type CopyContext,
+} from '../../../context'
 import {
   deserializeRecord,
   type DeserializedRecord,
@@ -170,6 +174,7 @@ describe('ShapeV2', () => {
         replacementContext: createReplacementContext({
           swatchIds: { '[swatch-id-1]': '[swatch-id-replaced]' },
         }),
+        clearContext: createClearContext({}),
         copyElement: (node) => node,
       }
 

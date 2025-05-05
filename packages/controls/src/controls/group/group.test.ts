@@ -1,5 +1,5 @@
 import { ControlDataTypeKey } from '../../common'
-import { createReplacementContext } from '../../context'
+import { createClearContext, createReplacementContext } from '../../context'
 import { Targets } from '../../introspection'
 import { deserializeRecord, type DeserializedRecord } from '../../serialization'
 
@@ -335,6 +335,7 @@ describe('Group', () => {
       expect(
         group.copyData(data, {
           replacementContext: createReplacementContext({}),
+          clearContext: createClearContext({}),
           copyElement: (node) => node,
         }),
       ).toMatchSnapshot())
@@ -396,6 +397,7 @@ describe('Group', () => {
       expect(
         group.copyData(data, {
           replacementContext: createReplacementContext({}),
+          clearContext: createClearContext({}),
           copyElement: (node) => node,
         }),
       ).toMatchSnapshot())

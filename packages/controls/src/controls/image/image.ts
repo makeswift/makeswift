@@ -253,9 +253,18 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
 
   copyData(
     data: DataType<C> | undefined,
-    { replacementContext }: CopyContext,
+    { clearContext, replacementContext }: CopyContext,
   ): DataType<C> | undefined {
     if (data == null) return data
+
+    const fileResourceId = match(data satisfies z.infer<typeof this.dataSchema>)
+      .with(P.string, (id) => id)
+      .with(Definition.dataSignature.makeswiftFile, ({ id }) => id)
+      .otherwise(() => undefined)
+
+    if (fileResourceId != null && clearContext.fileIds.has(fileResourceId)) {
+      return undefined
+    }
 
     const replaceFileId = (fileId: string) =>
       replacementContext.fileIds.get(fileId) ?? fileId

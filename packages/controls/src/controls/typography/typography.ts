@@ -109,6 +109,18 @@ class Definition extends ControlDefinition<
   ): DataType | undefined {
     if (data == null) return data
 
+    function replaceOverrideSwatchId(swatchId: string | null): string | null {
+      if (swatchId == null) return null
+      if (context.clearContext.swatchIds.has(swatchId)) {
+        return null
+      }
+      return context.replacementContext.swatchIds.get(swatchId) ?? swatchId
+    }
+
+    if (data.id != null && context.clearContext.typographyIds.has(data.id)) {
+      return undefined
+    }
+
     return {
       id:
         context.replacementContext.typographyIds.get(data.id ?? '') ?? data.id,
@@ -125,12 +137,9 @@ class Definition extends ControlDefinition<
                 color: {
                   ...override.value.color,
                   alpha: override.value.color.alpha ?? null,
-                  swatchId:
-                    context.replacementContext.swatchIds.get(
-                      override.value.color.swatchId ?? '',
-                    ) ??
-                    override.value.color.swatchId ??
-                    null,
+                  swatchId: replaceOverrideSwatchId(
+                    override.value.color.swatchId,
+                  ),
                 },
               }),
         },

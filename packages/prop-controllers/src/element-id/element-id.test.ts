@@ -1,5 +1,8 @@
 import { ControlDataTypeKey, CopyContext, Types } from '../prop-controllers'
-import { createReplacementContext } from '../utils/utils'
+import {
+  createClearContext,
+  createReplacementContext,
+} from '@makeswift/controls'
 import {
   ElementIDDescriptor,
   ElementIDPropControllerDataV0,
@@ -90,8 +93,9 @@ describe('ElementIDPropController', () => {
       }
       const context: CopyContext = {
         replacementContext: createReplacementContext({
-          elementHtmlIds: new Set(['test-id']),
+          elementHtmlIds: ['test-id'],
         }),
+        clearContext: createClearContext(),
         copyElement: (el) => el,
       }
 
@@ -110,6 +114,7 @@ describe('ElementIDPropController', () => {
       }
       const context: CopyContext = {
         replacementContext: createReplacementContext(),
+        clearContext: createClearContext(),
         copyElement: (el) => el,
       }
 
@@ -125,8 +130,9 @@ describe('ElementIDPropController', () => {
       const data: ElementIDPropControllerDataV0 = 'test-id'
       const context: CopyContext = {
         replacementContext: createReplacementContext({
-          elementHtmlIds: new Set(['test-id']),
+          elementHtmlIds: ['test-id'],
         }),
+        clearContext: createClearContext(),
         copyElement: (el) => el,
       }
 
@@ -142,6 +148,7 @@ describe('ElementIDPropController', () => {
       const data: ElementIDPropControllerDataV0 = 'test-id'
       const context: CopyContext = {
         replacementContext: createReplacementContext(),
+        clearContext: createClearContext(),
         copyElement: (el) => el,
       }
 

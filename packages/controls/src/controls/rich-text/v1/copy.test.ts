@@ -1,4 +1,4 @@
-import { createReplacementContext } from '../../../context'
+import { createClearContext, createReplacementContext } from '../../../context'
 
 import * as Fixtures from '../__fixtures__'
 
@@ -19,6 +19,7 @@ describe('GIVEN copying RichText', () => {
         typographyIds: { [Fixtures.TYPOGRAPHY_ID]: 'replaced-typography-id' },
         pageIds: { [Fixtures.PAGE_ID]: 'replaced-page-id' },
       }),
+      clearContext: createClearContext({}),
       copyElement: (node) => node,
     })
 

@@ -2,7 +2,11 @@ import { noOpResourceResolver } from '../../testing/mocks/resource-resolver'
 import { testDefinition } from '../../testing/test-definition'
 
 import { ControlDataTypeKey } from '../../common'
-import { createReplacementContext, type CopyContext } from '../../context'
+import {
+  createClearContext,
+  createReplacementContext,
+  type CopyContext,
+} from '../../context'
 import { Targets } from '../../introspection'
 import { Swatch } from '../../resources'
 import {
@@ -44,6 +48,7 @@ function testColorDefinition<Def extends ControlDefinition>(
       replacementContext: createReplacementContext({
         swatchIds: { '[swatch-id-1]': '[swatch-id-replaced]' },
       }),
+      clearContext: createClearContext({}),
       copyElement: (node) => node,
     }
 

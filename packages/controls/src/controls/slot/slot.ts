@@ -99,7 +99,15 @@ abstract class Definition<RuntimeNode> extends ControlDefinition<
 
     return {
       ...data,
-      elements: data.elements.map((element) => context.copyElement(element)),
+      elements: data.elements.flatMap((element) => {
+        if (
+          isElementReference(element) &&
+          context.clearContext.globalElementIds.has(element.value)
+        ) {
+          return []
+        }
+        return context.copyElement(element)
+      }),
     }
   }
 

@@ -166,6 +166,9 @@ function copyResponsiveShadowsData(
       const { color } = item.payload
 
       if (color == null) return item
+      if (context.clearContext.swatchIds.has(color.swatchId)) {
+        return { ...item, color: undefined }
+      }
 
       return {
         ...item,

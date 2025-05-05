@@ -6,6 +6,16 @@ export type MergeTranslatableDataContext = {
   mergeTranslatedData: (node: Element) => Element
 }
 
+export type ClearContext = {
+  swatchIds: Set<string>
+  fileIds: Set<string>
+  typographyIds: Set<string>
+  tableIds: Set<string>
+  tableColumnIds: Set<string>
+  pageIds: Set<string>
+  globalElementIds: Set<string>
+}
+
 export type ReplacementContext = {
   elementHtmlIds: Set<string>
   elementKeys: Map<string, string>
@@ -32,8 +42,18 @@ export type SerializableReplacementContext = {
   globalElementData?: Record<string, ElementData>
 }
 
+export type SerializableClearContext = {
+  swatchIds?: string[]
+  fileIds?: string[]
+  typographyIds?: string[]
+  tableIds?: string[]
+  tableColumnIds?: string[]
+  pageIds?: string[]
+  globalElementIds?: string[]
+}
+
 export function createReplacementContext(
-  context: SerializableReplacementContext,
+  context: SerializableReplacementContext = {},
 ): ReplacementContext {
   const toMap = <V>(record?: Record<string, V>) =>
     new Map(Object.entries(record ?? {}))
@@ -52,8 +72,23 @@ export function createReplacementContext(
   }
 }
 
+export function createClearContext(
+  context: SerializableClearContext = {},
+): ClearContext {
+  return {
+    swatchIds: new Set(context.swatchIds),
+    fileIds: new Set(context.fileIds),
+    typographyIds: new Set(context.typographyIds),
+    tableIds: new Set(context.tableIds),
+    tableColumnIds: new Set(context.tableColumnIds),
+    pageIds: new Set(context.pageIds),
+    globalElementIds: new Set(context.globalElementIds),
+  }
+}
+
 export type CopyContext = {
   replacementContext: ReplacementContext
+  clearContext: ClearContext
   copyElement: (node: Element) => Element
 }
 

@@ -93,7 +93,7 @@ export function createTablePropControllerDataFromTableId(
         ({
           [ControlDataTypeKey]: TablePropControllerDataV1Type,
           value,
-        } as const),
+        }) as const,
     )
     .otherwise(() => value)
 }
@@ -106,8 +106,13 @@ function copyTableId(data: TableId, context: CopyContext): TableId {
 
 export function copyTablePropControllerData(
   data: TablePropControllerData | undefined,
-  context: CopyContext,
+  ctx: CopyContext,
 ): TablePropControllerData | undefined {
+  const currentTableId = getTablePropControllerDataTableId(data)
+  if (currentTableId != null && ctx.clearContext.tableIds.has(currentTableId)) {
+    return undefined
+  }
+
   return match(data)
     .with(undefined, () => undefined)
     .with(
@@ -115,10 +120,10 @@ export function copyTablePropControllerData(
       (v1) =>
         ({
           [ControlDataTypeKey]: TablePropControllerDataV1Type,
-          value: copyTableId(v1.value, context),
-        } as const),
+          value: copyTableId(v1.value, ctx),
+        }) as const,
     )
-    .otherwise((v0) => copyTableId(v0, context))
+    .otherwise((v0) => copyTableId(v0, ctx))
 }
 
 export function getTablePropControllerDataTableIds(

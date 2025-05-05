@@ -129,7 +129,7 @@ export function createImagesPropControllerDataFromImagesData(
         ({
           [ControlDataTypeKey]: ImagesPropControllerDataV2Type,
           value: data,
-        } as const),
+        }) as const,
     )
     .otherwise(() => data)
 }
@@ -181,10 +181,10 @@ function copyImagesData(
         props: {
           ...imagesPanelItem.props,
           file: match(imagesPanelItem.props.file)
-            .with(
-              P.string,
-              (f) => context.replacementContext.fileIds.get(f) ?? f,
-            )
+            .with(P.string, (f) => {
+              if (context.clearContext.fileIds.has(f)) return undefined
+              return context.replacementContext.fileIds.get(f) ?? f
+            })
             .otherwise((f) => f),
         },
       }

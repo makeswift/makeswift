@@ -167,9 +167,14 @@ class Definition<C extends Config> extends ControlDefinition<
 
   copyData(
     data: DataType<C> | undefined,
-    { replacementContext }: CopyContext,
+    { clearContext, replacementContext }: CopyContext,
   ): DataType<C> | undefined {
     if (data == null) return data
+
+    const currentSwatchId = data.swatchId
+    if (clearContext.swatchIds.has(currentSwatchId)) {
+      return undefined
+    }
 
     const replaceSwatchId = (swatchId: string) =>
       replacementContext.swatchIds.get(swatchId) ?? swatchId

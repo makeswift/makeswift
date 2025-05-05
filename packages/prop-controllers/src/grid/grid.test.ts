@@ -1,10 +1,13 @@
 import {
+  createClearContext,
+  createReplacementContext,
+} from '@makeswift/controls'
+import {
   ControlDataTypeKey,
   CopyContext,
   MergeTranslatableDataContext,
   Types,
 } from '../prop-controllers'
-import { createReplacementContext } from '../utils/utils'
 import {
   GridDescriptor,
   GridPropControllerDataV0,
@@ -238,6 +241,7 @@ describe('GridPropController', () => {
       }
       const context: CopyContext = {
         replacementContext: createReplacementContext(),
+        clearContext: createClearContext(),
         copyElement: (el) => ({ ...el, key: 'copiedElement' }),
       }
 
@@ -262,6 +266,7 @@ describe('GridPropController', () => {
       }
       const context: CopyContext = {
         replacementContext: createReplacementContext(),
+        clearContext: createClearContext(),
         copyElement: (el) => ({ ...el, key: 'copiedElement' }),
       }
 

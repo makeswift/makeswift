@@ -1,5 +1,8 @@
 import { ControlDataTypeKey, CopyContext, Types } from '../prop-controllers'
-import { createReplacementContext } from '../utils/utils'
+import {
+  createClearContext,
+  createReplacementContext,
+} from '@makeswift/controls'
 import {
   NavigationLinksDescriptor,
   NavigationLinksPropControllerDataV0,
@@ -520,6 +523,7 @@ describe('NavigationLinksPropController', () => {
       const data = undefined
       const context: CopyContext = {
         replacementContext: createReplacementContext(),
+        clearContext: createClearContext(),
         copyElement: (el) => el,
       }
 
@@ -588,8 +592,9 @@ describe('NavigationLinksPropController', () => {
         }
         const context: CopyContext = {
           replacementContext: createReplacementContext({
-            swatchIds: new Map([['swatch1', 'newSwatch1']]),
+            swatchIds: { swatch1: 'newSwatch1' },
           }),
+          clearContext: createClearContext(),
           copyElement: (el) => el,
         }
         const expected = JSON.parse(
@@ -648,8 +653,9 @@ describe('NavigationLinksPropController', () => {
         }
         const context: CopyContext = {
           replacementContext: createReplacementContext({
-            pageIds: new Map([['page1', 'newPage1']]),
+            pageIds: { page1: 'newPage1' },
           }),
+          clearContext: createClearContext(),
           copyElement: (el) => el,
         }
         const expected = JSON.parse(
@@ -719,8 +725,9 @@ describe('NavigationLinksPropController', () => {
         ]
         const context: CopyContext = {
           replacementContext: createReplacementContext({
-            swatchIds: new Map([['swatch1', 'newSwatch1']]),
+            swatchIds: { swatch1: 'newSwatch1' },
           }),
+          clearContext: createClearContext(),
           copyElement: (el) => el,
         }
         const expected = JSON.parse(
@@ -776,8 +783,9 @@ describe('NavigationLinksPropController', () => {
         ]
         const context: CopyContext = {
           replacementContext: createReplacementContext({
-            pageIds: new Map([['page1', 'newPage1']]),
+            pageIds: { page1: 'newPage1' },
           }),
+          clearContext: createClearContext(),
           copyElement: (el) => el,
         }
         const expected = JSON.parse(

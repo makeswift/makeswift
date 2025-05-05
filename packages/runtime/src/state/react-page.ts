@@ -20,6 +20,7 @@ import {
   type TranslationDto,
   type MergeTranslatableDataContext,
   type MergeContext,
+  createClearContext,
 } from '@makeswift/controls'
 
 import { serializeState } from '../utils/serializeState'
@@ -206,6 +207,7 @@ export function copyElementTree(
     return function (node: Documents.Element) {
       const context = {
         replacementContext,
+        clearContext: createClearContext({}),
         copyElement: copyElementTreeNode(state, replacementContext),
       }
 

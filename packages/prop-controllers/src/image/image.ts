@@ -95,7 +95,7 @@ export function createImagePropControllerDataFromImageData(
         ({
           [ControlDataTypeKey]: ImagePropControllerDataV2Type,
           value: data,
-        } as const),
+        }) as const,
     )
     .otherwise(() => data)
 }
@@ -115,13 +115,22 @@ export function getImagePropControllerFileIds(
 
 function copyImageData(
   data: ImageData | undefined,
-  context: CopyContext,
+  { clearContext, replacementContext }: CopyContext,
 ): ImageData | undefined {
+  const existingFileId = match(data)
+    .with(P.string, (v) => v)
+    .with({ type: 'makeswift-file', version: 1 }, (v) => v.id)
+    .otherwise(() => undefined)
+
+  if (existingFileId != null && clearContext.fileIds.has(existingFileId)) {
+    return undefined
+  }
+
   return match(data)
-    .with(P.string, (v) => context.replacementContext.fileIds.get(v) ?? v)
+    .with(P.string, (v) => replacementContext.fileIds.get(v) ?? v)
     .with({ type: 'makeswift-file', version: 1 }, (v) => ({
       ...v,
-      id: context.replacementContext.fileIds.get(v.id) ?? v.id,
+      id: replacementContext.fileIds.get(v.id) ?? v.id,
     }))
     .otherwise((v) => v)
 }

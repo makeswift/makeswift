@@ -11,7 +11,11 @@ import {
   createLinkPropControllerDataFromLinkData,
   LinkData,
 } from './link'
-import { createReplacementContext } from '../utils/utils'
+
+import {
+  createClearContext,
+  createReplacementContext,
+} from '@makeswift/controls'
 
 describe('LinkPropController', () => {
   describe('getLinkPropControllerDataLinkData', () => {
@@ -153,7 +157,8 @@ describe('LinkPropController', () => {
     test('returns undefined when data is undefined', () => {
       expect(
         copyLinkPropControllerData(undefined, {
-          replacementContext: createReplacementContext({}),
+          replacementContext: createReplacementContext(),
+          clearContext: createClearContext(),
           copyElement: (node) => node,
         }),
       ).toEqual(undefined)
@@ -176,13 +181,12 @@ describe('LinkPropController', () => {
         JSON.stringify(data).replace(pageId, 'testing'),
       )
 
-      const replacementContext = createReplacementContext({
-        pageIds: new Map([[pageId, 'testing']]),
-      })
-
       // Act
       const result = copyLinkPropControllerData(data, {
-        replacementContext: replacementContext,
+        replacementContext: createReplacementContext({
+          pageIds: { [pageId]: 'testing' },
+        }),
+        clearContext: createClearContext(),
         copyElement: (node) => node,
       })
 
@@ -204,13 +208,12 @@ describe('LinkPropController', () => {
         JSON.stringify(data).replace(pageId, 'testing'),
       )
 
-      const replacementContext = createReplacementContext({
-        pageIds: new Map([[pageId, 'testing']]),
-      })
-
       // Act
       const result = copyLinkPropControllerData(data, {
-        replacementContext: replacementContext,
+        replacementContext: createReplacementContext({
+          pageIds: { [pageId]: 'testing' },
+        }),
+        clearContext: createClearContext(),
         copyElement: (node) => node,
       })
 
@@ -237,13 +240,12 @@ describe('LinkPropController', () => {
         JSON.stringify(data).replace('element-key', 'new-element-key'),
       )
 
-      const replacementContext = createReplacementContext({
-        elementKeys: new Map([['element-key', 'new-element-key']]),
-      })
-
       // Act
       const result = copyLinkPropControllerData(data, {
-        replacementContext: replacementContext,
+        replacementContext: createReplacementContext({
+          elementKeys: { 'element-key': 'new-element-key' },
+        }),
+        clearContext: createClearContext(),
         copyElement: (node) => node,
       })
 
@@ -267,13 +269,12 @@ describe('LinkPropController', () => {
         JSON.stringify(data).replace('element-key', 'new-element-key'),
       )
 
-      const replacementContext = createReplacementContext({
-        elementKeys: new Map([['element-key', 'new-element-key']]),
-      })
-
       // Act
       const result = copyLinkPropControllerData(data, {
-        replacementContext: replacementContext,
+        replacementContext: createReplacementContext({
+          elementKeys: { 'element-key': 'new-element-key' },
+        }),
+        clearContext: createClearContext(),
         copyElement: (node) => node,
       })
 
@@ -292,11 +293,10 @@ describe('LinkPropController', () => {
       },
     }
 
-    const replacementContext = createReplacementContext()
-
     // Act
     const result = copyLinkPropControllerData(data, {
-      replacementContext: replacementContext,
+      replacementContext: createReplacementContext(),
+      clearContext: createClearContext(),
       copyElement: (node) => node,
     })
 
@@ -316,11 +316,11 @@ describe('LinkPropController', () => {
         },
       },
     }
-    const replacementContext = createReplacementContext()
 
     // Act
     const result = copyLinkPropControllerData(data, {
-      replacementContext: replacementContext,
+      replacementContext: createReplacementContext(),
+      clearContext: createClearContext(),
       copyElement: (node) => node,
     })
 

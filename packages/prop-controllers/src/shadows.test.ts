@@ -1,4 +1,7 @@
-import { ReplacementContext } from './prop-controllers'
+import {
+  createClearContext,
+  createReplacementContext,
+} from '@makeswift/controls'
 import {
   ShadowsPropControllerData,
   copyShadowsPropControllerData,
@@ -35,27 +38,15 @@ describe('shadow copy', () => {
       ),
     )
 
-    const replacementContext = {
-      elementHtmlIds: new Set(),
-      elementKeys: new Map(),
-      swatchIds: new Map([
-        [
-          'U3dhdGNoOjgwMmNmZGMyLTc5ZDgtNDkyNy1hMDUwLWE1NmM1M2EzYzE0Mg==',
-          'testing',
-        ],
-      ]),
-      fileIds: new Map(),
-      typographyIds: new Map(),
-      tableIds: new Map(),
-      tableColumnIds: new Map(),
-      pageIds: new Map(),
-      globalElementIds: new Map(),
-      globalElementData: new Map(),
-    }
-
     // Act
     const result = copyShadowsPropControllerData(data, {
-      replacementContext: replacementContext as ReplacementContext,
+      replacementContext: createReplacementContext({
+        swatchIds: {
+          'U3dhdGNoOjgwMmNmZGMyLTc5ZDgtNDkyNy1hMDUwLWE1NmM1M2EzYzE0Mg==':
+            'testing',
+        },
+      }),
+      clearContext: createClearContext(),
       copyElement: (node) => node,
     })
 

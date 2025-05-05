@@ -125,7 +125,7 @@ export function getLinkPropControllerPageIds(
 
 export function copyLinkData(
   data: LinkData | undefined,
-  context: CopyContext,
+  { replacementContext, clearContext }: CopyContext,
 ): LinkData | undefined {
   let value = data
 
@@ -135,12 +135,13 @@ export function copyLinkData(
         const pageId = value.payload.pageId
 
         if (pageId == null) return value
+        if (clearContext.pageIds.has(pageId)) return undefined
 
         value = {
           ...value,
           payload: {
             ...value.payload,
-            pageId: context.replacementContext.pageIds.get(pageId) ?? pageId,
+            pageId: replacementContext.pageIds.get(pageId) ?? pageId,
           },
         }
       }
@@ -158,9 +159,8 @@ export function copyLinkData(
           elementIdConfig: {
             ...elementIdConfig,
             elementKey:
-              context.replacementContext.elementKeys.get(
-                elementIdConfig.elementKey,
-              ) ?? elementIdConfig.elementKey,
+              replacementContext.elementKeys.get(elementIdConfig.elementKey) ??
+              elementIdConfig.elementKey,
           },
         },
       }

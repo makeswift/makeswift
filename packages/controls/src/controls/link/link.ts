@@ -120,9 +120,15 @@ class Definition<
 
   copyData(
     data: DataType<C> | undefined,
-    { replacementContext }: CopyContext,
+    { clearContext, replacementContext }: CopyContext,
   ): DataType<C> | undefined {
     if (data == null) return data
+
+    function replacePageId(pageId: string): string | null {
+      if (pageId == null) return null
+      if (clearContext.pageIds.has(pageId)) return null
+      return replacementContext.pageIds.get(pageId) ?? pageId
+    }
 
     if (data.type === 'OPEN_PAGE') {
       const { pageId } = data.payload
@@ -131,7 +137,7 @@ class Definition<
           ...data,
           payload: {
             ...data.payload,
-            pageId: replacementContext.pageIds.get(pageId) ?? pageId,
+            pageId: replacePageId(pageId),
           },
         }
       }

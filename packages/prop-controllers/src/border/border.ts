@@ -175,6 +175,7 @@ function copyResponsiveBorderData(
     const { color } = borderSide
 
     if (color == null) return borderSide
+    if (context.clearContext.swatchIds.has(color.swatchId)) return undefined
 
     return {
       ...borderSide,
