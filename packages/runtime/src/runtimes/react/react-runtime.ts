@@ -9,6 +9,7 @@ import { ComponentIcon } from '../../state/modules/components-meta'
 import type { ComponentType } from '../../state/react-page'
 
 import { RuntimeCore } from './runtime-core'
+import { isClientReference } from './utils/is-client-reference'
 
 function validateComponentType(type: string, component?: ComponentType): void {
   const componentName = component?.name ?? 'Component'
@@ -29,11 +30,12 @@ type ComponentRegistrationMeta<
   props?: P
 }
 
-type ComponentRegistration<P extends Record<string, LegacyDescriptor | UnifiedControlDefinition>> =
-  {
-    component: ComponentType<{ [K in keyof P]: DescriptorValueType<P[K]> }>
-    meta: ComponentRegistrationMeta<P>
-  }
+export type ComponentRegistration<
+  P extends Record<string, LegacyDescriptor | UnifiedControlDefinition>,
+> = {
+  component: ComponentType<{ [K in keyof P]: DescriptorValueType<P[K]> }>
+  meta: ComponentRegistrationMeta<P>
+}
 
 export class ReactRuntime extends RuntimeCore {
   static connect<
@@ -95,7 +97,16 @@ export class ReactRuntime extends RuntimeCore {
     registerBuiltinComponents(this)
 
     if (components) {
-      for (const [, registration] of Object.entries(components)) {
+      for (const [key, registration] of Object.entries(components)) {
+        if (isClientReference(registration)) {
+          throw new Error(
+            `ReactRuntime: failed to register component "${key}".\n` +
+              `This component was imported from a file that begins with "use client". ` +
+              `Move the "${key}" export from ReactRuntime.connect into a module without "use client".\n` +
+              `Read more at https://docs.makeswift.com/developer/reference/runtime`,
+          )
+        }
+
         this.registerComponent(registration.component, registration.meta)
       }
     }
