@@ -12,6 +12,7 @@ import {
   imageDataSchema,
   imageDataV0Schema,
 } from '../data'
+import { getReplacementFileId, shouldRemoveFile } from '@makeswift/controls'
 
 const imagePropControllerDataV0Schema = imageDataV0Schema
 
@@ -115,22 +116,22 @@ export function getImagePropControllerFileIds(
 
 function copyImageData(
   data: ImageData | undefined,
-  { clearContext, replacementContext }: CopyContext,
+  ctx: CopyContext,
 ): ImageData | undefined {
   const existingFileId = match(data)
     .with(P.string, (v) => v)
     .with({ type: 'makeswift-file', version: 1 }, (v) => v.id)
     .otherwise(() => undefined)
 
-  if (existingFileId != null && clearContext.fileIds.has(existingFileId)) {
+  if (existingFileId != null && shouldRemoveFile(existingFileId, ctx)) {
     return undefined
   }
 
   return match(data)
-    .with(P.string, (v) => replacementContext.fileIds.get(v) ?? v)
+    .with(P.string, (v) => getReplacementFileId(v, ctx) ?? v)
     .with({ type: 'makeswift-file', version: 1 }, (v) => ({
       ...v,
-      id: replacementContext.fileIds.get(v.id) ?? v.id,
+      id: getReplacementFileId(v.id, ctx) ?? v.id,
     }))
     .otherwise((v) => v)
 }

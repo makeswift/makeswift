@@ -1,7 +1,4 @@
-import {
-  createClearContext,
-  createReplacementContext,
-} from '@makeswift/controls'
+import { createReplacementContext } from '@makeswift/controls'
 import {
   ShadowsPropControllerData,
   copyShadowsPropControllerData,
@@ -46,7 +43,6 @@ describe('shadow copy', () => {
             'testing',
         },
       }),
-      clearContext: createClearContext(),
       copyElement: (node) => node,
     })
 

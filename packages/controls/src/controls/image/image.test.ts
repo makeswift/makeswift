@@ -1,8 +1,4 @@
-import {
-  createClearContext,
-  createReplacementContext,
-  type CopyContext,
-} from '../../context'
+import { createReplacementContext, type CopyContext } from '../../context'
 import { Targets } from '../../introspection'
 
 import { Image, ImageDefinition } from './image'
@@ -41,7 +37,6 @@ describe('Image', () => {
       replacementContext: createReplacementContext({
         fileIds: { 'fake-file-id': '[fake-file-id-replaced]' },
       }),
-      clearContext: createClearContext({}),
       copyElement: (node) => node,
     }
 

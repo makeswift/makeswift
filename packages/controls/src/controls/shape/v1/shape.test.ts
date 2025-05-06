@@ -1,4 +1,4 @@
-import { createClearContext, createReplacementContext } from '../../../context'
+import { createReplacementContext } from '../../../context'
 import { Targets } from '../../../introspection'
 import {
   deserializeRecord,
@@ -229,7 +229,6 @@ describe('Shape', () => {
       expect(
         shape.copyData(data, {
           replacementContext: createReplacementContext({}),
-          clearContext: createClearContext({}),
           copyElement: (node) => node,
         }),
       ).toMatchSnapshot())

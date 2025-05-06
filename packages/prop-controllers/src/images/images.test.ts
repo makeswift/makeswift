@@ -1,7 +1,4 @@
-import {
-  createClearContext,
-  createReplacementContext,
-} from '@makeswift/controls'
+import { createReplacementContext } from '@makeswift/controls'
 import { ControlDataTypeKey, CopyContext, Types } from '../prop-controllers'
 
 import {
@@ -289,7 +286,6 @@ describe('copyImagesPropControllerData', () => {
     const data = undefined
     const context: CopyContext = {
       replacementContext: createReplacementContext(),
-      clearContext: createClearContext(),
       copyElement: (el) => el,
     }
 
@@ -322,7 +318,6 @@ describe('copyImagesPropControllerData', () => {
       replacementContext: createReplacementContext({
         fileIds: { testId: 'copiedTestId' },
       }),
-      clearContext: createClearContext(),
       copyElement: (el) => el,
     }
 
@@ -367,7 +362,6 @@ describe('copyImagesPropControllerData', () => {
       replacementContext: createReplacementContext({
         fileIds: { testId: 'copiedTestId' },
       }),
-      clearContext: createClearContext(),
       copyElement: (el) => el,
     }
 
@@ -404,7 +398,6 @@ describe('copyImagesPropControllerData', () => {
       replacementContext: createReplacementContext({
         fileIds: { testId: 'copiedTestId' },
       }),
-      clearContext: createClearContext(),
       copyElement: (el) => el,
     }
 

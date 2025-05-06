@@ -1,3 +1,4 @@
+import { getReplacementSwatchId, shouldRemoveSwatch } from '@makeswift/controls'
 import { ColorData } from '../data'
 import { CopyContext } from '../prop-controllers'
 
@@ -6,12 +7,9 @@ export function copyColorData(
   context: CopyContext,
 ): ColorData | null {
   if (data == null) return data
-  if (context.clearContext.swatchIds.has(data.swatchId)) {
-    return null
-  }
+  if (shouldRemoveSwatch(data.swatchId, context)) return null
   return {
     ...data,
-    swatchId:
-      context.replacementContext.swatchIds.get(data.swatchId) ?? data.swatchId,
+    swatchId: getReplacementSwatchId(data.swatchId, context) ?? data.swatchId,
   }
 }

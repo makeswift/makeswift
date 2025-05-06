@@ -4,7 +4,13 @@ import { isNotNil, mapValues } from '../../lib/functional'
 import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
-import { type CopyContext } from '../../context'
+import {
+  getReplacementSwatchId,
+  getReplacementTypographyId,
+  shouldRemoveSwatch,
+  shouldRemoveTypography,
+  type CopyContext,
+} from '../../context'
 import { Targets, type IntrospectionTarget } from '../../introspection'
 import { type ResourceResolver } from '../../resources/resolver'
 import {
@@ -110,20 +116,16 @@ class Definition extends ControlDefinition<
     if (data == null) return data
 
     function replaceOverrideSwatchId(swatchId: string | null): string | null {
-      if (swatchId == null) return null
-      if (context.clearContext.swatchIds.has(swatchId)) {
-        return null
-      }
-      return context.replacementContext.swatchIds.get(swatchId) ?? swatchId
+      if (swatchId == null || shouldRemoveSwatch(swatchId, context)) return null
+      return getReplacementSwatchId(swatchId, context) ?? swatchId
     }
 
-    if (data.id != null && context.clearContext.typographyIds.has(data.id)) {
+    if (data.id != null && shouldRemoveTypography(data.id, context)) {
       return undefined
     }
 
     return {
-      id:
-        context.replacementContext.typographyIds.get(data.id ?? '') ?? data.id,
+      id: getReplacementTypographyId(data.id ?? '', context) ?? data.id,
       style: data.style.map((override) => ({
         ...override,
         value: {

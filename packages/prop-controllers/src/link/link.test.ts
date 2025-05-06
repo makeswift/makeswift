@@ -1,4 +1,8 @@
-import { ControlDataTypeKey, Types } from '../prop-controllers'
+import {
+  ControlDataTypeKey,
+  Types,
+  createReplacementContext,
+} from '../prop-controllers'
 import {
   LinkPropControllerData,
   LinkPropControllerDataV0,
@@ -11,11 +15,6 @@ import {
   createLinkPropControllerDataFromLinkData,
   LinkData,
 } from './link'
-
-import {
-  createClearContext,
-  createReplacementContext,
-} from '@makeswift/controls'
 
 describe('LinkPropController', () => {
   describe('getLinkPropControllerDataLinkData', () => {
@@ -158,7 +157,6 @@ describe('LinkPropController', () => {
       expect(
         copyLinkPropControllerData(undefined, {
           replacementContext: createReplacementContext(),
-          clearContext: createClearContext(),
           copyElement: (node) => node,
         }),
       ).toEqual(undefined)
@@ -186,7 +184,6 @@ describe('LinkPropController', () => {
         replacementContext: createReplacementContext({
           pageIds: { [pageId]: 'testing' },
         }),
-        clearContext: createClearContext(),
         copyElement: (node) => node,
       })
 
@@ -213,7 +210,6 @@ describe('LinkPropController', () => {
         replacementContext: createReplacementContext({
           pageIds: { [pageId]: 'testing' },
         }),
-        clearContext: createClearContext(),
         copyElement: (node) => node,
       })
 
@@ -245,7 +241,6 @@ describe('LinkPropController', () => {
         replacementContext: createReplacementContext({
           elementKeys: { 'element-key': 'new-element-key' },
         }),
-        clearContext: createClearContext(),
         copyElement: (node) => node,
       })
 
@@ -274,7 +269,6 @@ describe('LinkPropController', () => {
         replacementContext: createReplacementContext({
           elementKeys: { 'element-key': 'new-element-key' },
         }),
-        clearContext: createClearContext(),
         copyElement: (node) => node,
       })
 
@@ -296,7 +290,6 @@ describe('LinkPropController', () => {
     // Act
     const result = copyLinkPropControllerData(data, {
       replacementContext: createReplacementContext(),
-      clearContext: createClearContext(),
       copyElement: (node) => node,
     })
 
@@ -320,7 +313,6 @@ describe('LinkPropController', () => {
     // Act
     const result = copyLinkPropControllerData(data, {
       replacementContext: createReplacementContext(),
-      clearContext: createClearContext(),
       copyElement: (node) => node,
     })
 

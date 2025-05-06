@@ -9,6 +9,7 @@ import {
 import { P, match } from 'ts-pattern'
 import { colorDataSchema, imageDataV0Schema, imageDataV1Schema } from '../data'
 import { copyColorData } from '../utils/utils'
+import { getReplacementFileId, shouldRemoveFile } from '@makeswift/controls'
 
 const colorBackgroundDataSchema = z.object({
   type: z.literal('color'),
@@ -311,7 +312,7 @@ function copyResponsiveBackgroundsData(
             },
           ],
           ([, item]) => {
-            if (ctx.clearContext.fileIds.has(item.payload.image.id)) return []
+            if (shouldRemoveFile(item.payload.image.id, ctx)) return []
             return {
               ...item,
               payload: {
@@ -319,7 +320,7 @@ function copyResponsiveBackgroundsData(
                 image: {
                   ...item.payload.image,
                   id:
-                    ctx.replacementContext.fileIds.get(item.payload.image.id) ??
+                    getReplacementFileId(item.payload.image.id, ctx) ??
                     item.payload.image.id,
                 },
               },
@@ -329,13 +330,13 @@ function copyResponsiveBackgroundsData(
         .with(
           [P.any, { type: 'image', payload: { imageId: P.string } }],
           ([, item]) => {
-            if (ctx.clearContext.fileIds.has(item.payload.imageId)) return []
+            if (shouldRemoveFile(item.payload.imageId, ctx)) return []
             return {
               ...item,
               payload: {
                 ...item.payload,
                 imageId:
-                  ctx.replacementContext.fileIds.get(item.payload.imageId) ??
+                  getReplacementFileId(item.payload.imageId, ctx) ??
                   item.payload.imageId,
               },
             }

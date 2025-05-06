@@ -1,7 +1,4 @@
-import {
-  createClearContext,
-  createReplacementContext,
-} from '@makeswift/controls'
+import { createReplacementContext } from '@makeswift/controls'
 import {
   ControlDataTypeKey,
   CopyContext,
@@ -241,7 +238,6 @@ describe('GridPropController', () => {
       }
       const context: CopyContext = {
         replacementContext: createReplacementContext(),
-        clearContext: createClearContext(),
         copyElement: (el) => ({ ...el, key: 'copiedElement' }),
       }
 
@@ -266,7 +262,6 @@ describe('GridPropController', () => {
       }
       const context: CopyContext = {
         replacementContext: createReplacementContext(),
-        clearContext: createClearContext(),
         copyElement: (el) => ({ ...el, key: 'copiedElement' }),
       }
 

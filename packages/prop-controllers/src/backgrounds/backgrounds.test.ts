@@ -1,7 +1,4 @@
-import {
-  createClearContext,
-  createReplacementContext,
-} from '@makeswift/controls'
+import { createReplacementContext } from '@makeswift/controls'
 import { ControlDataTypeKey, CopyContext, Types } from '../prop-controllers'
 
 import {
@@ -306,7 +303,6 @@ describe('BackgroundsPropController', () => {
         replacementContext: createReplacementContext({
           fileIds: { [fileId]: copiedId },
         }),
-        clearContext: createClearContext({}),
         copyElement: (el) => el,
       }
 
@@ -353,7 +349,6 @@ describe('BackgroundsPropController', () => {
         replacementContext: createReplacementContext({
           fileIds: { [fileId]: copiedId },
         }),
-        clearContext: createClearContext({}),
         copyElement: (el) => el,
       }
 

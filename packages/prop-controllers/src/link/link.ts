@@ -6,7 +6,11 @@ import {
   Types,
 } from '../prop-controllers'
 
-import { LinkDefinition } from '@makeswift/controls'
+import {
+  getReplacementPageId,
+  LinkDefinition,
+  shouldRemovePage,
+} from '@makeswift/controls'
 
 import { z } from 'zod'
 
@@ -125,7 +129,7 @@ export function getLinkPropControllerPageIds(
 
 export function copyLinkData(
   data: LinkData | undefined,
-  { replacementContext, clearContext }: CopyContext,
+  ctx: CopyContext,
 ): LinkData | undefined {
   let value = data
 
@@ -135,13 +139,13 @@ export function copyLinkData(
         const pageId = value.payload.pageId
 
         if (pageId == null) return value
-        if (clearContext.pageIds.has(pageId)) return undefined
+        if (shouldRemovePage(pageId, ctx)) return undefined
 
         value = {
           ...value,
           payload: {
             ...value.payload,
-            pageId: replacementContext.pageIds.get(pageId) ?? pageId,
+            pageId: getReplacementPageId(pageId, ctx) ?? pageId,
           },
         }
       }
@@ -159,8 +163,9 @@ export function copyLinkData(
           elementIdConfig: {
             ...elementIdConfig,
             elementKey:
-              replacementContext.elementKeys.get(elementIdConfig.elementKey) ??
-              elementIdConfig.elementKey,
+              ctx.replacementContext.elementKeys.get(
+                elementIdConfig.elementKey,
+              ) ?? elementIdConfig.elementKey,
           },
         },
       }

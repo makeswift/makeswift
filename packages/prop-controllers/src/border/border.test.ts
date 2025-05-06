@@ -7,10 +7,7 @@ import {
   getBorderPropControllerDataResponsiveBorderData,
   getBorderPropControllerDataSwatchIds,
 } from './border'
-import {
-  createReplacementContext,
-  createClearContext,
-} from '@makeswift/controls'
+import { createReplacementContext } from '@makeswift/controls'
 
 describe('BorderPropController', () => {
   describe('getBorderPropControllerDataResponsiveBorderData', () => {
@@ -169,7 +166,6 @@ describe('BorderPropController', () => {
         replacementContext: createReplacementContext({
           swatchIds: { [swatchId]: 'testing' },
         }),
-        clearContext: createClearContext({}),
         copyElement: (node) => node,
       })
 
@@ -213,7 +209,6 @@ describe('BorderPropController', () => {
         replacementContext: createReplacementContext({
           swatchIds: { [swatchId]: 'testing' },
         }),
-        clearContext: createClearContext({}),
         copyElement: (node) => node,
       })
 

@@ -6,6 +6,7 @@ import {
   Types,
 } from '../prop-controllers'
 import { P, match } from 'ts-pattern'
+import { getReplacementTableId, shouldRemoveTable } from '@makeswift/controls'
 
 const tableIdSchema = z.string()
 
@@ -101,7 +102,7 @@ export function createTablePropControllerDataFromTableId(
 function copyTableId(data: TableId, context: CopyContext): TableId {
   if (data == null) return data
 
-  return context.replacementContext.tableIds.get(data) ?? data
+  return getReplacementTableId(data, context) ?? data
 }
 
 export function copyTablePropControllerData(
@@ -109,7 +110,7 @@ export function copyTablePropControllerData(
   ctx: CopyContext,
 ): TablePropControllerData | undefined {
   const currentTableId = getTablePropControllerDataTableId(data)
-  if (currentTableId != null && ctx.clearContext.tableIds.has(currentTableId)) {
+  if (currentTableId != null && shouldRemoveTable(currentTableId, ctx)) {
     return undefined
   }
 

@@ -1,7 +1,4 @@
-import {
-  createClearContext,
-  createReplacementContext,
-} from '@makeswift/controls'
+import { createReplacementContext } from '@makeswift/controls'
 import { ControlDataTypeKey, CopyContext, Types } from '../prop-controllers'
 
 import {
@@ -117,7 +114,6 @@ describe('copyTableFormFieldsPropControllerData', () => {
       replacementContext: createReplacementContext({
         tableColumnIds: { oldTableColumnId: 'newTableColumnId' },
       }),
-      clearContext: createClearContext(),
       copyElement: (el) => el,
     }
     const expected = JSON.parse(
@@ -142,7 +138,6 @@ describe('copyTableFormFieldsPropControllerData', () => {
       replacementContext: createReplacementContext({
         tableColumnIds: { oldTableColumnId: 'newTableColumnId' },
       }),
-      clearContext: createClearContext(),
       copyElement: (el) => el,
     }
     const expected = JSON.parse(

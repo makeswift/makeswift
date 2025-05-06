@@ -1,5 +1,9 @@
 import { match } from 'ts-pattern'
-import { StyleSchema } from '@makeswift/controls'
+import {
+  getReplacementSwatchId,
+  shouldRemoveSwatch,
+  StyleSchema,
+} from '@makeswift/controls'
 
 import {
   ControlDataTypeKey,
@@ -175,15 +179,14 @@ function copyResponsiveBorderData(
     const { color } = borderSide
 
     if (color == null) return borderSide
-    if (context.clearContext.swatchIds.has(color.swatchId)) return undefined
+    if (shouldRemoveSwatch(color.swatchId, context)) return undefined
 
     return {
       ...borderSide,
       color: {
         ...color,
         swatchId:
-          context.replacementContext.swatchIds.get(color.swatchId) ??
-          color.swatchId,
+          getReplacementSwatchId(color.swatchId, context) ?? color.swatchId,
       },
     }
   }

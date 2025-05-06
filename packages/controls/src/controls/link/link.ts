@@ -3,7 +3,11 @@ import { z } from 'zod'
 import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
-import { type CopyContext } from '../../context'
+import {
+  getReplacementPageId,
+  shouldRemovePage,
+  type CopyContext,
+} from '../../context'
 import { Targets, type IntrospectionTarget } from '../../introspection'
 import { type ResourceResolver } from '../../resources/resolver'
 import { type SerializedRecord } from '../../serialization'
@@ -120,15 +124,9 @@ class Definition<
 
   copyData(
     data: DataType<C> | undefined,
-    { clearContext, replacementContext }: CopyContext,
+    ctx: CopyContext,
   ): DataType<C> | undefined {
     if (data == null) return data
-
-    function replacePageId(pageId: string): string | null {
-      if (pageId == null) return null
-      if (clearContext.pageIds.has(pageId)) return null
-      return replacementContext.pageIds.get(pageId) ?? pageId
-    }
 
     if (data.type === 'OPEN_PAGE') {
       const { pageId } = data.payload
@@ -137,7 +135,9 @@ class Definition<
           ...data,
           payload: {
             ...data.payload,
-            pageId: replacePageId(pageId),
+            pageId: shouldRemovePage(pageId, ctx)
+              ? null
+              : getReplacementPageId(pageId, ctx) ?? pageId,
           },
         }
       }
@@ -155,7 +155,7 @@ class Definition<
           elementIdConfig: {
             ...elementIdConfig,
             elementKey:
-              replacementContext.elementKeys.get(elementKey) ?? elementKey,
+              ctx.replacementContext.elementKeys.get(elementKey) ?? elementKey,
           },
         },
       }

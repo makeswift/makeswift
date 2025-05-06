@@ -1,10 +1,6 @@
 import { testDefinition } from '../../testing/test-definition'
 
-import {
-  createClearContext,
-  createReplacementContext,
-  type CopyContext,
-} from '../../context'
+import { createReplacementContext, type CopyContext } from '../../context'
 import { Targets } from '../../introspection'
 
 import { type ValueType } from '../associated-types'
@@ -71,7 +67,6 @@ describe('Link', () => {
         pageIds: { 'fake-page-id': '[fake-page-id-replaced]' },
         elementKeys: { 'element-key': '[element-key-replaced]' },
       }),
-      clearContext: createClearContext({}),
       copyElement: (node) => node,
     }
 

@@ -20,7 +20,8 @@ import {
   type TranslationDto,
   type MergeTranslatableDataContext,
   type MergeContext,
-  createClearContext,
+  CopyContext,
+  getReplacementGlobalElementId,
 } from '@makeswift/controls'
 
 import { serializeState } from '../utils/serializeState'
@@ -42,8 +43,6 @@ import {
   createElementTree,
   deleteElementTree,
 } from './actions'
-
-import { copyElementReference } from '../prop-controllers/copy'
 import {
   copy as copyFromControl,
   getTranslatableData,
@@ -205,14 +204,13 @@ export function copyElementTree(
    */
   function copyElementTreeNode(state: State, replacementContext: ReplacementContext) {
     return function (node: Documents.Element) {
-      const context = {
+      const context: CopyContext = {
         replacementContext,
-        clearContext: createClearContext({}),
         copyElement: copyElementTreeNode(state, replacementContext),
       }
 
       if (Documents.isElementReference(node)) {
-        return { ...node, value: copyElementReference(node.value, context) }
+        return { ...node, value: getReplacementGlobalElementId(node.value, context) ?? node.value }
       }
 
       const descriptors = getComponentPropControllerDescriptors(state, node.type)

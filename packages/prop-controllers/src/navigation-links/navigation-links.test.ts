@@ -1,8 +1,5 @@
 import { ControlDataTypeKey, CopyContext, Types } from '../prop-controllers'
-import {
-  createClearContext,
-  createReplacementContext,
-} from '@makeswift/controls'
+import { createReplacementContext } from '@makeswift/controls'
 import {
   NavigationLinksDescriptor,
   NavigationLinksPropControllerDataV0,
@@ -523,7 +520,6 @@ describe('NavigationLinksPropController', () => {
       const data = undefined
       const context: CopyContext = {
         replacementContext: createReplacementContext(),
-        clearContext: createClearContext(),
         copyElement: (el) => el,
       }
 
@@ -594,7 +590,6 @@ describe('NavigationLinksPropController', () => {
           replacementContext: createReplacementContext({
             swatchIds: { swatch1: 'newSwatch1' },
           }),
-          clearContext: createClearContext(),
           copyElement: (el) => el,
         }
         const expected = JSON.parse(
@@ -655,7 +650,6 @@ describe('NavigationLinksPropController', () => {
           replacementContext: createReplacementContext({
             pageIds: { page1: 'newPage1' },
           }),
-          clearContext: createClearContext(),
           copyElement: (el) => el,
         }
         const expected = JSON.parse(
@@ -727,7 +721,6 @@ describe('NavigationLinksPropController', () => {
           replacementContext: createReplacementContext({
             swatchIds: { swatch1: 'newSwatch1' },
           }),
-          clearContext: createClearContext(),
           copyElement: (el) => el,
         }
         const expected = JSON.parse(
@@ -785,7 +778,6 @@ describe('NavigationLinksPropController', () => {
           replacementContext: createReplacementContext({
             pageIds: { page1: 'newPage1' },
           }),
-          clearContext: createClearContext(),
           copyElement: (el) => el,
         }
         const expected = JSON.parse(

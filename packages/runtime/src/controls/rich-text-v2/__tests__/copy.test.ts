@@ -1,4 +1,4 @@
-import { createClearContext, createReplacementContext } from '@makeswift/controls'
+import { createReplacementContext } from '@makeswift/controls'
 import { type DataType } from '@makeswift/controls'
 import { RichText, RichTextV2Definition } from '../../rich-text-v2'
 
@@ -103,7 +103,6 @@ describe('GIVEN copying RichTextV2', () => {
         typographyIds: { [TYPOGRAPHY_ID_FROM]: TYPOGRAPHY_ID_TO },
         pageIds: { [PAGE_ID_FROM]: PAGE_ID_TO },
       }),
-      clearContext: createClearContext({}),
       copyElement: node => node,
     })
 

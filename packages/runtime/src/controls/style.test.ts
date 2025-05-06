@@ -4,7 +4,6 @@ import {
   type DataType,
   createReplacementContext,
   Targets,
-  createClearContext,
 } from '@makeswift/controls'
 
 describe('Style', () => {
@@ -111,7 +110,6 @@ describe('Style', () => {
             [swatchId]: 'testing',
           },
         }),
-        clearContext: createClearContext({}),
         copyElement: node => node,
       })
 

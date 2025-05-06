@@ -1,7 +1,4 @@
-import {
-  createClearContext,
-  createReplacementContext,
-} from '@makeswift/controls'
+import { createReplacementContext } from '@makeswift/controls'
 import { ControlDataTypeKey, Types } from '../prop-controllers'
 
 import {
@@ -140,7 +137,6 @@ describe('TablePropController', () => {
         replacementContext: createReplacementContext({
           tableIds: { [tableId]: 'testing' },
         }),
-        clearContext: createClearContext(),
         copyElement: (node) => node,
       })
 
@@ -165,7 +161,6 @@ describe('TablePropController', () => {
         replacementContext: createReplacementContext({
           tableIds: { [tableId]: 'testing' },
         }),
-        clearContext: createClearContext(),
         copyElement: (node) => node,
       })
 
