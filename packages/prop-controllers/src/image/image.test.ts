@@ -1,4 +1,4 @@
-import { createRemoveTag, createReplacementContext } from '@makeswift/controls'
+import { RemoveResourceTag, createReplacementContext } from '@makeswift/controls'
 import { ImageData, ImageDataV0, ImageDataV1 } from '../data'
 import { ControlDataTypeKey, CopyContext, Types } from '../prop-controllers'
 import {
@@ -282,7 +282,7 @@ describe('copyImagePropControllerData', () => {
       }
       const context: CopyContext = {
         replacementContext: createReplacementContext({
-          fileIds: { testId: createRemoveTag() },
+          fileIds: { testId: RemoveResourceTag },
         }),
         copyElement: (el) => el,
       }
@@ -318,7 +318,7 @@ describe('copyImagePropControllerData', () => {
       const data: ImageDataV0 = 'testId'
       const context: CopyContext = {
         replacementContext: createReplacementContext({
-          fileIds: { testId: createRemoveTag() },
+          fileIds: { testId: RemoveResourceTag },
         }),
         copyElement: (el) => el,
       }

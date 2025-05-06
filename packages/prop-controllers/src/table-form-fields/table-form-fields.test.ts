@@ -1,4 +1,4 @@
-import { createRemoveTag, createReplacementContext } from '@makeswift/controls'
+import { RemoveResourceTag, createReplacementContext } from '@makeswift/controls'
 import { ControlDataTypeKey, CopyContext, Types } from '../prop-controllers'
 
 import {
@@ -143,7 +143,7 @@ describe('copyTableFormFieldsPropControllerData', () => {
       }
       const context: CopyContext = {
         replacementContext: createReplacementContext({
-          tableColumnIds: { tableColumnId1: createRemoveTag() },
+          tableColumnIds: { tableColumnId1: RemoveResourceTag },
         }),
         copyElement: (el) => el,
       }
@@ -200,7 +200,7 @@ describe('copyTableFormFieldsPropControllerData', () => {
       const data: TableFormFieldsPropControllerDataV0 = tableFormFields
       const context: CopyContext = {
         replacementContext: createReplacementContext({
-          tableColumnIds: { tableColumnId1: createRemoveTag() },
+          tableColumnIds: { tableColumnId1: RemoveResourceTag },
         }),
         copyElement: (el) => el,
       }

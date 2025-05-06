@@ -1,4 +1,4 @@
-import { createRemoveTag, createReplacementContext } from '../../../context'
+import { RemoveResourceTag, createReplacementContext } from '../../../context'
 
 import * as Fixtures from '../__fixtures__'
 
@@ -67,9 +67,9 @@ describe('RichText v2', () => {
 
     const result = definition.copyData(Fixtures.introspection, {
       replacementContext: createReplacementContext({
-        swatchIds: { [Fixtures.SWATCH_ID]: createRemoveTag() },
-        typographyIds: { [Fixtures.TYPOGRAPHY_ID]: createRemoveTag() },
-        pageIds: { [Fixtures.PAGE_ID]: createRemoveTag() },
+        swatchIds: { [Fixtures.SWATCH_ID]: RemoveResourceTag },
+        typographyIds: { [Fixtures.TYPOGRAPHY_ID]: RemoveResourceTag },
+        pageIds: { [Fixtures.PAGE_ID]: RemoveResourceTag },
       }),
       copyElement: (node) => node,
     })

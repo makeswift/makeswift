@@ -1,4 +1,4 @@
-import { createRemoveTag, createReplacementContext } from '@makeswift/controls'
+import { RemoveResourceTag, createReplacementContext } from '@makeswift/controls'
 import { ControlDataTypeKey, Types } from '../prop-controllers'
 
 import {
@@ -152,7 +152,7 @@ describe('TablePropController', () => {
         // Act
         const result = copyTablePropControllerData(data, {
           replacementContext: createReplacementContext({
-            tableIds: { [tableId]: createRemoveTag() },
+            tableIds: { [tableId]: RemoveResourceTag },
           }),
           copyElement: (node) => node,
         })
@@ -195,7 +195,7 @@ describe('TablePropController', () => {
         // Act
         const result = copyTablePropControllerData(data, {
           replacementContext: createReplacementContext({
-            tableIds: { [tableId]: createRemoveTag() },
+            tableIds: { [tableId]: RemoveResourceTag },
           }),
           copyElement: (node) => node,
         })

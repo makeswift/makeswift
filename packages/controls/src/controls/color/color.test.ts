@@ -3,7 +3,7 @@ import { testDefinition } from '../../testing/test-definition'
 
 import { ControlDataTypeKey } from '../../common'
 import {
-  createRemoveTag,
+  RemoveResourceTag,
   createReplacementContext,
   type CopyContext,
 } from '../../context'
@@ -76,7 +76,7 @@ function testColorDefinition<Def extends ControlDefinition>(
     test('returns `undefined` when swatch is marked for removal', () => {
       const context: CopyContext = {
         replacementContext: createReplacementContext({
-          swatchIds: { '[swatch-id-3]': createRemoveTag() },
+          swatchIds: { '[swatch-id-3]': RemoveResourceTag },
         }),
         copyElement: (node) => node,
       }

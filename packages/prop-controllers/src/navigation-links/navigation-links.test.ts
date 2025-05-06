@@ -1,5 +1,5 @@
 import { ControlDataTypeKey, CopyContext, Types } from '../prop-controllers'
-import { createRemoveTag, createReplacementContext } from '@makeswift/controls'
+import { RemoveResourceTag, createReplacementContext } from '@makeswift/controls'
 import {
   NavigationLinksDescriptor,
   NavigationLinksPropControllerDataV0,
@@ -709,7 +709,7 @@ describe('NavigationLinksPropController', () => {
 
         const context: CopyContext = {
           replacementContext: createReplacementContext({
-            pageIds: { page1: createRemoveTag() },
+            pageIds: { page1: RemoveResourceTag },
           }),
           copyElement: (el) => el,
         }
@@ -922,7 +922,7 @@ describe('NavigationLinksPropController', () => {
 
         const context: CopyContext = {
           replacementContext: createReplacementContext({
-            pageIds: { page1: createRemoveTag() },
+            pageIds: { page1: RemoveResourceTag },
           }),
           copyElement: (el) => el,
         }

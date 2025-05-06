@@ -1,5 +1,5 @@
 import {
-  createRemoveTag,
+  RemoveResourceTag,
   createReplacementContext,
   type CopyContext,
 } from '../../context'
@@ -99,7 +99,7 @@ describe('Image', () => {
     test('returns `undefined` when file marked for removal', () => {
       const context: CopyContext = {
         replacementContext: createReplacementContext({
-          fileIds: { 'fake-file-id-3': createRemoveTag() },
+          fileIds: { 'fake-file-id-3': RemoveResourceTag },
         }),
         copyElement: (node) => node,
       }

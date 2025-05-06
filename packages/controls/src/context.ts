@@ -12,17 +12,9 @@ const removeResourceTagSchema = z.object({
   __type: z.literal('remove'),
 })
 
-type RemoveResourceTag = z.infer<typeof removeResourceTagSchema>
+export const RemoveResourceTag = { __type: 'remove' } as const
 
-export function createRemoveTag(): RemoveResourceTag {
-  return { __type: 'remove' } as const
-}
-
-function isRemoveResourceTag(value: unknown): value is RemoveResourceTag {
-  return removeResourceTagSchema.safeParse(value).success
-}
-
-type ResourceMapping = Map<string, string | RemoveResourceTag>
+type ResourceMapping = Map<string, string | { __type: 'remove' }>
 
 export type ReplacementContext = {
   elementHtmlIds: Set<string>
@@ -37,7 +29,7 @@ export type ReplacementContext = {
   globalElementData: Map<string, ElementData>
 }
 
-type SerializableResourceMapping = Record<string, string | RemoveResourceTag>
+type SerializableResourceMapping = Record<string, string | { __type: 'remove' }>
 
 export type SerializableReplacementContext = {
   elementHtmlIds?: string[]
@@ -100,7 +92,7 @@ export function shouldRemoveResource(
   ctx: CopyContext,
 ): boolean {
   function hasRemoveTag(id: string, map: ResourceMapping): boolean {
-    return isRemoveResourceTag(map.get(id))
+    return removeResourceTagSchema.safeParse(map.get(id)).success
   }
 
   switch (type) {

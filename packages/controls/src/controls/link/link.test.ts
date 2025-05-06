@@ -1,7 +1,7 @@
 import { testDefinition } from '../../testing/test-definition'
 
 import {
-  createRemoveTag,
+  RemoveResourceTag,
   createReplacementContext,
   type CopyContext,
 } from '../../context'
@@ -115,7 +115,7 @@ describe('Link', () => {
     test('[OPEN_PAGE] link sets `pageId` to `null` if tagged in replacement context', () => {
       const context: CopyContext = {
         replacementContext: createReplacementContext({
-          pageIds: { 'fake-page-id': createRemoveTag() },
+          pageIds: { 'fake-page-id': RemoveResourceTag },
         }),
         copyElement: (node) => node,
       }

@@ -1,4 +1,4 @@
-import { createRemoveTag, createReplacementContext } from '@makeswift/controls'
+import { RemoveResourceTag, createReplacementContext } from '@makeswift/controls'
 import {
   ControlDataTypeKey,
   CopyContext,
@@ -274,7 +274,7 @@ describe('GridPropController', () => {
         }
         const context: CopyContext = {
           replacementContext: createReplacementContext({
-            globalElementIds: { '[global-element-id]': createRemoveTag() },
+            globalElementIds: { '[global-element-id]': RemoveResourceTag },
           }),
           copyElement: (el) => el,
         }
@@ -334,7 +334,7 @@ describe('GridPropController', () => {
         }
         const context: CopyContext = {
           replacementContext: createReplacementContext({
-            globalElementIds: { '[global-element-id]': createRemoveTag() },
+            globalElementIds: { '[global-element-id]': RemoveResourceTag },
           }),
           copyElement: (el) => el,
         }

@@ -1,4 +1,4 @@
-import { createRemoveTag } from '@makeswift/controls'
+import { RemoveResourceTag } from '@makeswift/controls'
 import {
   ControlDataTypeKey,
   Types,
@@ -237,7 +237,7 @@ describe('LinkPropController', () => {
       // Act
       const result = copyLinkPropControllerData(data, {
         replacementContext: createReplacementContext({
-          pageIds: { [pageId]: createRemoveTag() },
+          pageIds: { [pageId]: RemoveResourceTag },
         }),
         copyElement: (node) => node,
       })
@@ -266,7 +266,7 @@ describe('LinkPropController', () => {
       // Act
       const result = copyLinkPropControllerData(data, {
         replacementContext: createReplacementContext({
-          pageIds: { [pageId]: createRemoveTag() },
+          pageIds: { [pageId]: RemoveResourceTag },
         }),
         copyElement: (node) => node,
       })
