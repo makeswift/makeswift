@@ -8,7 +8,7 @@ export type MergeTranslatableDataContext = {
   mergeTranslatedData: (node: Element) => Element
 }
 
-export const removeResourceTagSchema = z.object({
+const removeResourceTagSchema = z.object({
   __type: z.literal('remove'),
 })
 
@@ -127,7 +127,7 @@ export function getReplacementResourceId(
   ctx: CopyContext,
 ): string | null {
   function getReplacementId(id: string, map: ResourceMapping): string | null {
-    const replacement = map.get(id)
+    const replacement = map.get(id) ?? null
     return typeof replacement === 'string' ? replacement : null
   }
 

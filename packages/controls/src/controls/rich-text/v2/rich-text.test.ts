@@ -1,4 +1,4 @@
-import { createReplacementContext } from '../../../context'
+import { createRemoveTag, createReplacementContext } from '../../../context'
 
 import * as Fixtures from '../__fixtures__'
 
@@ -60,5 +60,20 @@ describe('RichText v2', () => {
       ...expected,
       key: expect.any(String),
     })
+  })
+
+  test('copyData removes swatch, typographies, and page IDs that are marked for removal', () => {
+    const definition = RichText()
+
+    const result = definition.copyData(Fixtures.introspection, {
+      replacementContext: createReplacementContext({
+        swatchIds: { [Fixtures.SWATCH_ID]: createRemoveTag() },
+        typographyIds: { [Fixtures.TYPOGRAPHY_ID]: createRemoveTag() },
+        pageIds: { [Fixtures.PAGE_ID]: createRemoveTag() },
+      }),
+      copyElement: (node) => node,
+    })
+
+    expect({ ...result, key: expect.any(String) }).toMatchSnapshot()
   })
 })

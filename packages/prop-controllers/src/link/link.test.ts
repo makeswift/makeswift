@@ -1,3 +1,4 @@
+import { createRemoveTag } from '@makeswift/controls'
 import {
   ControlDataTypeKey,
   Types,
@@ -191,7 +192,7 @@ describe('LinkPropController', () => {
       expect(result).toMatchObject(expected)
     })
 
-    test('replaces page id from replacement context for v0 OPEN_PAGE link', () => {
+    test('replaces page ID from replacement context for v0 OPEN_PAGE link', () => {
       // Arrange
       const pageId = 'UGFnZTpmNTdmMjQ2MS0wMGY3LTQzZWUtYmIwOS03ODdiNTUyYzUyYWQ='
       const data: LinkPropControllerDataV0 = {
@@ -209,6 +210,63 @@ describe('LinkPropController', () => {
       const result = copyLinkPropControllerData(data, {
         replacementContext: createReplacementContext({
           pageIds: { [pageId]: 'testing' },
+        }),
+        copyElement: (node) => node,
+      })
+
+      // Assert
+      expect(result).toMatchObject(expected)
+    })
+
+    test('removes page ID marked for removal in v0 OPEN_PAGE link', () => {
+      // Arrange
+      const pageId = 'UGFnZTpmNTdmMjQ2MS0wMGY3LTQzZWUtYmIwOS03ODdiNTUyYzUyYWQ='
+      const data: LinkPropControllerDataV0 = {
+        type: 'OPEN_PAGE',
+        payload: {
+          pageId,
+          openInNewTab: false,
+        },
+      }
+
+      const expected = {
+        ...data,
+        payload: { ...data.payload, pageId: undefined },
+      }
+
+      // Act
+      const result = copyLinkPropControllerData(data, {
+        replacementContext: createReplacementContext({
+          pageIds: { [pageId]: createRemoveTag() },
+        }),
+        copyElement: (node) => node,
+      })
+
+      // Assert
+      expect(result).toMatchObject(expected)
+    })
+
+    test('removes page id when marked for removal in v1 OPEN_PAGE link', () => {
+      // Arrange
+      const pageId = 'UGFnZTpmNTdmMjQ2MS0wMGY3LTQzZWUtYmIwOS03ODdiNTUyYzUyYWQ='
+      const data: LinkPropControllerDataV1 = {
+        [ControlDataTypeKey]: LinkPropControllerDataV1Type,
+        value: {
+          type: 'OPEN_PAGE',
+          payload: { pageId, openInNewTab: false },
+        },
+      }
+      const expected = {
+        ...data,
+        value: {
+          ...data.value,
+          payload: { ...data.value.payload, pageId: undefined },
+        },
+      }
+      // Act
+      const result = copyLinkPropControllerData(data, {
+        replacementContext: createReplacementContext({
+          pageIds: { [pageId]: createRemoveTag() },
         }),
         copyElement: (node) => node,
       })

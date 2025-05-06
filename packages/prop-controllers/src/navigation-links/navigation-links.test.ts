@@ -1,5 +1,5 @@
 import { ControlDataTypeKey, CopyContext, Types } from '../prop-controllers'
-import { createReplacementContext } from '@makeswift/controls'
+import { createRemoveTag, createReplacementContext } from '@makeswift/controls'
 import {
   NavigationLinksDescriptor,
   NavigationLinksPropControllerDataV0,
@@ -662,6 +662,100 @@ describe('NavigationLinksPropController', () => {
         // Assert
         expect(result).toEqual(expected)
       })
+
+      test('removes pageIds marked for removal', () => {
+        // Arrange
+        const data: NavigationLinksPropControllerDataV1 = {
+          [ControlDataTypeKey]: NavigationLinksPropControllerDataV1Type,
+          value: [
+            {
+              id: '1',
+              type: 'button',
+              payload: {
+                label: 'link',
+                link: {
+                  type: 'OPEN_PAGE',
+                  payload: {
+                    pageId: 'page1',
+                    openInNewTab: false,
+                  },
+                },
+              },
+            },
+            {
+              id: '2',
+              type: 'dropdown',
+              payload: {
+                label: 'dropdown',
+                links: [
+                  {
+                    id: '2-1',
+                    payload: {
+                      label: 'button',
+                      link: {
+                        type: 'OPEN_PAGE',
+                        payload: {
+                          pageId: 'page2',
+                          openInNewTab: false,
+                        },
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        }
+
+        const context: CopyContext = {
+          replacementContext: createReplacementContext({
+            pageIds: { page1: createRemoveTag() },
+          }),
+          copyElement: (el) => el,
+        }
+
+        const expected = {
+          [ControlDataTypeKey]: NavigationLinksPropControllerDataV1Type,
+          value: [
+            {
+              id: '1',
+              type: 'button',
+              payload: {
+                label: 'link',
+                link: {
+                  type: 'OPEN_PAGE',
+                  payload: { pageId: undefined, openInNewTab: false },
+                },
+              },
+            },
+            {
+              id: '2',
+              type: 'dropdown',
+              payload: {
+                label: 'dropdown',
+                links: [
+                  {
+                    id: '2-1',
+                    payload: {
+                      label: 'button',
+                      link: {
+                        type: 'OPEN_PAGE',
+                        payload: { pageId: 'page2', openInNewTab: false },
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        }
+
+        // Act
+        const result = copyNavigationLinksPropControllerData(data, context)
+
+        // Assert
+        expect(result).toEqual(expected)
+      })
     })
 
     describe('v0 data', () => {
@@ -783,6 +877,88 @@ describe('NavigationLinksPropController', () => {
         const expected = JSON.parse(
           JSON.stringify(data).replaceAll('page1', 'newPage1'),
         )
+
+        // Act
+        const result = copyNavigationLinksPropControllerData(data, context)
+
+        // Assert
+        expect(result).toEqual(expected)
+      })
+
+      test('removes pageIds marked for removal', () => {
+        // Arrange
+        const data: NavigationLinksPropControllerDataV0 = [
+          {
+            id: '1',
+            type: 'button',
+            payload: {
+              label: 'link',
+              link: {
+                type: 'OPEN_PAGE',
+                payload: { pageId: 'page1', openInNewTab: false },
+              },
+            },
+          },
+          {
+            id: '2',
+            type: 'dropdown',
+            payload: {
+              label: 'dropdown',
+              links: [
+                {
+                  id: '2-1',
+                  payload: {
+                    label: 'button',
+                    link: {
+                      type: 'OPEN_PAGE',
+                      payload: { pageId: 'page2', openInNewTab: false },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        ]
+
+        const context: CopyContext = {
+          replacementContext: createReplacementContext({
+            pageIds: { page1: createRemoveTag() },
+          }),
+          copyElement: (el) => el,
+        }
+
+        const expected = [
+          {
+            id: '1',
+            type: 'button',
+            payload: {
+              label: 'link',
+              link: {
+                type: 'OPEN_PAGE',
+                payload: { pageId: undefined, openInNewTab: false },
+              },
+            },
+          },
+          {
+            id: '2',
+            type: 'dropdown',
+            payload: {
+              label: 'dropdown',
+              links: [
+                {
+                  id: '2-1',
+                  payload: {
+                    label: 'button',
+                    link: {
+                      type: 'OPEN_PAGE',
+                      payload: { pageId: 'page2', openInNewTab: false },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        ]
 
         // Act
         const result = copyNavigationLinksPropControllerData(data, context)

@@ -137,7 +137,7 @@ class Definition<
           payload: {
             ...data.payload,
             pageId: shouldRemoveResource(ContextResource.Page, pageId, ctx)
-              ? null
+              ? undefined
               : getReplacementResourceId(ContextResource.Page, pageId, ctx) ??
                 pageId,
           },

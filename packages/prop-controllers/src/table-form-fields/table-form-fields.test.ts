@@ -1,4 +1,4 @@
-import { createReplacementContext } from '@makeswift/controls'
+import { createRemoveTag, createReplacementContext } from '@makeswift/controls'
 import { ControlDataTypeKey, CopyContext, Types } from '../prop-controllers'
 
 import {
@@ -100,54 +100,120 @@ describe('TableFormFieldsPropController', () => {
 })
 
 describe('copyTableFormFieldsPropControllerData', () => {
-  test('returns copied TableFormFieldsPropControllerDataV1 when data is TableFormFieldsPropControllerDataV1', () => {
-    // Arrange
-    const tableFormFields = {
-      fields: [{ id: '1', tableColumnId: 'oldTableColumnId' }],
-      grid: [],
-    }
-    const data: TableFormFieldsPropControllerDataV1 = {
-      [ControlDataTypeKey]: TableFormFieldsPropControllerDataV1Type,
-      value: tableFormFields,
-    }
-    const context: CopyContext = {
-      replacementContext: createReplacementContext({
-        tableColumnIds: { oldTableColumnId: 'newTableColumnId' },
-      }),
-      copyElement: (el) => el,
-    }
-    const expected = JSON.parse(
-      JSON.stringify(data).replaceAll('oldTableColumnId', 'newTableColumnId'),
-    )
+  describe('data is TableFormFieldsPropControllerDataV1', () => {
+    test('replaces table column IDs', () => {
+      // Arrange
+      const tableFormFields = {
+        fields: [{ id: '1', tableColumnId: 'oldTableColumnId' }],
+        grid: [],
+      }
+      const data: TableFormFieldsPropControllerDataV1 = {
+        [ControlDataTypeKey]: TableFormFieldsPropControllerDataV1Type,
+        value: tableFormFields,
+      }
+      const context: CopyContext = {
+        replacementContext: createReplacementContext({
+          tableColumnIds: { oldTableColumnId: 'newTableColumnId' },
+        }),
+        copyElement: (el) => el,
+      }
+      const expected = JSON.parse(
+        JSON.stringify(data).replaceAll('oldTableColumnId', 'newTableColumnId'),
+      )
 
-    // Act
-    const result = copyTableFormFieldsPropControllerData(data, context)
+      // Act
+      const result = copyTableFormFieldsPropControllerData(data, context)
 
-    // Assert
-    expect(result).toEqual(expected)
+      // Assert
+      expect(result).toEqual(expected)
+    })
+
+    test('removes table column IDs marked for removal', () => {
+      // Arrange
+      const tableFormFields = {
+        fields: [
+          { id: '1', tableColumnId: 'tableColumnId1' },
+          { id: '2', tableColumnId: 'tableColumnId2' },
+        ],
+        grid: [],
+      }
+      const data: TableFormFieldsPropControllerDataV1 = {
+        [ControlDataTypeKey]: TableFormFieldsPropControllerDataV1Type,
+        value: tableFormFields,
+      }
+      const context: CopyContext = {
+        replacementContext: createReplacementContext({
+          tableColumnIds: { tableColumnId1: createRemoveTag() },
+        }),
+        copyElement: (el) => el,
+      }
+      const expected = {
+        [ControlDataTypeKey]: TableFormFieldsPropControllerDataV1Type,
+        value: {
+          fields: [{ id: '2', tableColumnId: 'tableColumnId2' }],
+          grid: [],
+        },
+      }
+
+      // Act
+      const result = copyTableFormFieldsPropControllerData(data, context)
+
+      // Assert
+      expect(result).toEqual(expected)
+    })
   })
 
-  test('returns copied TableFormFieldsPropControllerDataV0 when data is TableFormFieldsPropControllerDataV0', () => {
-    // Arrange
-    const tableFormFields = {
-      fields: [{ id: '1', tableColumnId: 'oldTableColumnId' }],
-      grid: [],
-    }
-    const data: TableFormFieldsPropControllerDataV0 = tableFormFields
-    const context: CopyContext = {
-      replacementContext: createReplacementContext({
-        tableColumnIds: { oldTableColumnId: 'newTableColumnId' },
-      }),
-      copyElement: (el) => el,
-    }
-    const expected = JSON.parse(
-      JSON.stringify(data).replaceAll('oldTableColumnId', 'newTableColumnId'),
-    )
+  describe('data is TableFormFieldsPropControllerDataV0', () => {
+    test('replaces table column IDs', () => {
+      // Arrange
+      const tableFormFields = {
+        fields: [{ id: '1', tableColumnId: 'oldTableColumnId' }],
+        grid: [],
+      }
+      const data: TableFormFieldsPropControllerDataV0 = tableFormFields
+      const context: CopyContext = {
+        replacementContext: createReplacementContext({
+          tableColumnIds: { oldTableColumnId: 'newTableColumnId' },
+        }),
+        copyElement: (el) => el,
+      }
+      const expected = JSON.parse(
+        JSON.stringify(data).replaceAll('oldTableColumnId', 'newTableColumnId'),
+      )
 
-    // Act
-    const result = copyTableFormFieldsPropControllerData(data, context)
+      // Act
+      const result = copyTableFormFieldsPropControllerData(data, context)
 
-    // Assert
-    expect(result).toEqual(expected)
+      // Assert
+      expect(result).toEqual(expected)
+    })
+
+    test('removes table column IDs marked for removal', () => {
+      // Arrange
+      const tableFormFields = {
+        fields: [
+          { id: '1', tableColumnId: 'tableColumnId1' },
+          { id: '2', tableColumnId: 'tableColumnId2' },
+        ],
+        grid: [],
+      }
+      const data: TableFormFieldsPropControllerDataV0 = tableFormFields
+      const context: CopyContext = {
+        replacementContext: createReplacementContext({
+          tableColumnIds: { tableColumnId1: createRemoveTag() },
+        }),
+        copyElement: (el) => el,
+      }
+      const expected = {
+        fields: [{ id: '2', tableColumnId: 'tableColumnId2' }],
+        grid: [],
+      }
+
+      // Act
+      const result = copyTableFormFieldsPropControllerData(data, context)
+
+      // Assert
+      expect(result).toEqual(expected)
+    })
   })
 })

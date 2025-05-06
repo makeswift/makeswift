@@ -132,23 +132,23 @@ export function copyLinkData(
 ): LinkData | undefined {
   let value = data
 
+  function replacePageId(pageId: string): string | undefined {
+    if (shouldRemoveResource(ContextResource.Page, pageId, ctx)) {
+      return undefined
+    }
+    return getReplacementResourceId(ContextResource.Page, pageId, ctx) ?? pageId
+  }
+
   switch (value?.type) {
     case 'OPEN_PAGE':
       {
         const pageId = value.payload.pageId
 
         if (pageId == null) return value
-        if (shouldRemoveResource(ContextResource.Page, pageId, ctx))
-          return undefined
 
         value = {
           ...value,
-          payload: {
-            ...value.payload,
-            pageId:
-              getReplacementResourceId(ContextResource.Page, pageId, ctx) ??
-              pageId,
-          },
+          payload: { ...value.payload, pageId: replacePageId(pageId) },
         }
       }
       break

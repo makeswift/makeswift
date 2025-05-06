@@ -1,4 +1,4 @@
-import { createReplacementContext } from '@makeswift/controls'
+import { createRemoveTag, createReplacementContext } from '@makeswift/controls'
 import { ControlDataTypeKey, Types } from '../prop-controllers'
 
 import {
@@ -123,49 +123,86 @@ describe('TablePropController', () => {
   })
 
   describe('copyTablePropControllerData', () => {
-    test('replaces the table id for v0 data', () => {
-      // Arrange
-      const tableId = 'VGFibGU6MTM5NDhlYzMtMjgwNS00Nzk0LTliNzctNDJkN2RhNmQxZWEy'
+    const tableId = 'VGFibGU6MTM5NDhlYzMtMjgwNS00Nzk0LTliNzctNDJkN2RhNmQxZWEy'
 
-      const data: TablePropControllerDataV0 = tableId
-      const expected = JSON.parse(
-        JSON.stringify(data).replaceAll(tableId, 'testing'),
-      )
+    describe('v0 data', () => {
+      test('replaces table id', () => {
+        // Arrange
+        const data: TablePropControllerDataV0 = tableId
+        const expected = JSON.parse(
+          JSON.stringify(data).replaceAll(tableId, 'testing'),
+        )
 
-      // Act
-      const result = copyTablePropControllerData(data, {
-        replacementContext: createReplacementContext({
-          tableIds: { [tableId]: 'testing' },
-        }),
-        copyElement: (node) => node,
+        // Act
+        const result = copyTablePropControllerData(data, {
+          replacementContext: createReplacementContext({
+            tableIds: { [tableId]: 'testing' },
+          }),
+          copyElement: (node) => node,
+        })
+
+        // Assert
+        expect(result).toEqual(expected)
       })
 
-      // Assert
-      expect(result).toEqual(expected)
+      test('removes table ID marked for removal', () => {
+        // Arrange
+        const data: TablePropControllerDataV0 = tableId
+
+        // Act
+        const result = copyTablePropControllerData(data, {
+          replacementContext: createReplacementContext({
+            tableIds: { [tableId]: createRemoveTag() },
+          }),
+          copyElement: (node) => node,
+        })
+
+        // Assert
+        expect(result).toEqual(undefined)
+      })
     })
 
-    test('replaces the table id for v1 data', () => {
-      // Arrange
-      const tableId = 'VGFibGU6MTM5NDhlYzMtMjgwNS00Nzk0LTliNzctNDJkN2RhNmQxZWEy'
+    describe('v1 data', () => {
+      test('replaces the table id for v1 data', () => {
+        // Arrange
+        const data: TablePropControllerDataV1 = {
+          [ControlDataTypeKey]: TablePropControllerDataV1Type,
+          value: tableId,
+        }
+        const expected = JSON.parse(
+          JSON.stringify(data).replaceAll(tableId, 'testing'),
+        )
 
-      const data: TablePropControllerDataV1 = {
-        [ControlDataTypeKey]: TablePropControllerDataV1Type,
-        value: tableId,
-      }
-      const expected = JSON.parse(
-        JSON.stringify(data).replaceAll(tableId, 'testing'),
-      )
+        // Act
+        const result = copyTablePropControllerData(data, {
+          replacementContext: createReplacementContext({
+            tableIds: { [tableId]: 'testing' },
+          }),
+          copyElement: (node) => node,
+        })
 
-      // Act
-      const result = copyTablePropControllerData(data, {
-        replacementContext: createReplacementContext({
-          tableIds: { [tableId]: 'testing' },
-        }),
-        copyElement: (node) => node,
+        // Assert
+        expect(result).toEqual(expected)
       })
 
-      // Assert
-      expect(result).toEqual(expected)
+      test('removes table ID marked for removal', () => {
+        // Arrange
+        const data: TablePropControllerDataV1 = {
+          [ControlDataTypeKey]: TablePropControllerDataV1Type,
+          value: tableId,
+        }
+
+        // Act
+        const result = copyTablePropControllerData(data, {
+          replacementContext: createReplacementContext({
+            tableIds: { [tableId]: createRemoveTag() },
+          }),
+          copyElement: (node) => node,
+        })
+
+        // Assert
+        expect(result).toEqual(undefined)
+      })
     })
   })
 })
