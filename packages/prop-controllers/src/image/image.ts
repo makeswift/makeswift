@@ -4,6 +4,9 @@ import {
   CopyContext,
   Options,
   Types,
+  getReplacementResourceId,
+  shouldRemoveResource,
+  ContextResource,
 } from '../prop-controllers'
 import { P, match } from 'ts-pattern'
 import {
@@ -12,7 +15,6 @@ import {
   imageDataSchema,
   imageDataV0Schema,
 } from '../data'
-import { getReplacementFileId, shouldRemoveFile } from '@makeswift/controls'
 
 const imagePropControllerDataV0Schema = imageDataV0Schema
 
@@ -123,15 +125,21 @@ function copyImageData(
     .with({ type: 'makeswift-file', version: 1 }, (v) => v.id)
     .otherwise(() => undefined)
 
-  if (existingFileId != null && shouldRemoveFile(existingFileId, ctx)) {
+  if (
+    existingFileId != null &&
+    shouldRemoveResource(ContextResource.File, existingFileId, ctx)
+  ) {
     return undefined
   }
 
   return match(data)
-    .with(P.string, (v) => getReplacementFileId(v, ctx) ?? v)
+    .with(
+      P.string,
+      (v) => getReplacementResourceId(ContextResource.File, v, ctx) ?? v,
+    )
     .with({ type: 'makeswift-file', version: 1 }, (v) => ({
       ...v,
-      id: getReplacementFileId(v.id, ctx) ?? v.id,
+      id: getReplacementResourceId(ContextResource.File, v.id, ctx) ?? v.id,
     }))
     .otherwise((v) => v)
 }

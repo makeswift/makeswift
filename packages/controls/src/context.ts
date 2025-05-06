@@ -9,22 +9,16 @@ export type MergeTranslatableDataContext = {
 }
 
 export const removeResourceTagSchema = z.object({
-  __type: z.literal('ReplacementContextAction'),
-  action: z.literal('remove'),
+  __type: z.literal('remove'),
 })
 
 type RemoveResourceTag = z.infer<typeof removeResourceTagSchema>
 
 export function createRemoveTag(): RemoveResourceTag {
-  return {
-    __type: 'ReplacementContextAction',
-    action: 'remove',
-  } as const
+  return { __type: 'remove' } as const
 }
 
-function isRemoveResourceTag(
-  value: string | RemoveResourceTag | null | undefined,
-): value is RemoveResourceTag {
+function isRemoveResourceTag(value: unknown): value is RemoveResourceTag {
   return removeResourceTagSchema.safeParse(value).success
 }
 
@@ -87,121 +81,70 @@ export type MergeContext = {
   mergeElement(a: Element, b: Element): Element
 }
 
-function shouldRemoveResource(id: string, map: ResourceMapping): boolean {
-  return isRemoveResourceTag(map.get(id))
-}
+export const ContextResource = {
+  Swatch: 'Swatch',
+  File: 'File',
+  Typography: 'Typography',
+  Table: 'Table',
+  TableColumn: 'TableColumn',
+  Page: 'Page',
+  GlobalElement: 'GlobalElement',
+} as const
 
-function getReplacementResourceId(
+export type ContextResource =
+  (typeof ContextResource)[keyof typeof ContextResource]
+
+export function shouldRemoveResource(
+  type: ContextResource,
   id: string,
-  map: Map<string, string | RemoveResourceTag>,
-): string | null {
-  const replacement = map.get(id)
-  return typeof replacement === 'string' ? replacement : null
-}
-
-export function shouldRemoveSwatch(
-  swatchId: string,
   ctx: CopyContext,
 ): boolean {
-  return shouldRemoveResource(swatchId, ctx.replacementContext.swatchIds)
+  function hasRemoveTag(id: string, map: ResourceMapping): boolean {
+    return isRemoveResourceTag(map.get(id))
+  }
+
+  switch (type) {
+    case ContextResource.Swatch:
+      return hasRemoveTag(id, ctx.replacementContext.swatchIds)
+    case ContextResource.File:
+      return hasRemoveTag(id, ctx.replacementContext.fileIds)
+    case ContextResource.Typography:
+      return hasRemoveTag(id, ctx.replacementContext.typographyIds)
+    case ContextResource.Table:
+      return hasRemoveTag(id, ctx.replacementContext.tableIds)
+    case ContextResource.TableColumn:
+      return hasRemoveTag(id, ctx.replacementContext.tableColumnIds)
+    case ContextResource.Page:
+      return hasRemoveTag(id, ctx.replacementContext.pageIds)
+    case ContextResource.GlobalElement:
+      return hasRemoveTag(id, ctx.replacementContext.globalElementIds)
+  }
 }
 
-export function getReplacementSwatchId(
-  swatchId: string,
+export function getReplacementResourceId(
+  resourceType: ContextResource,
+  id: string,
   ctx: CopyContext,
 ): string | null {
-  return getReplacementResourceId(swatchId, ctx.replacementContext.swatchIds)
-}
+  function getReplacementId(id: string, map: ResourceMapping): string | null {
+    const replacement = map.get(id)
+    return typeof replacement === 'string' ? replacement : null
+  }
 
-export function shouldRemoveFile(fileId: string, ctx: CopyContext): boolean {
-  return shouldRemoveResource(fileId, ctx.replacementContext.fileIds)
-}
-
-export function getReplacementFileId(
-  fileId: string,
-  ctx: CopyContext,
-): string | null {
-  return getReplacementResourceId(fileId, ctx.replacementContext.fileIds)
-}
-
-export function shouldRemoveTypography(
-  typographyId: string,
-  ctx: CopyContext,
-): boolean {
-  return shouldRemoveResource(
-    typographyId,
-    ctx.replacementContext.typographyIds,
-  )
-}
-
-export function getReplacementTypographyId(
-  typographyId: string,
-  ctx: CopyContext,
-): string | null {
-  return getReplacementResourceId(
-    typographyId,
-    ctx.replacementContext.typographyIds,
-  )
-}
-
-export function shouldRemoveTable(tableId: string, ctx: CopyContext): boolean {
-  return shouldRemoveResource(tableId, ctx.replacementContext.tableIds)
-}
-
-export function getReplacementTableId(
-  tableId: string,
-  ctx: CopyContext,
-): string | null {
-  return getReplacementResourceId(tableId, ctx.replacementContext.tableIds)
-}
-
-export function shouldRemoveTableColumn(
-  tableColumnId: string,
-  ctx: CopyContext,
-): boolean {
-  return shouldRemoveResource(
-    tableColumnId,
-    ctx.replacementContext.tableColumnIds,
-  )
-}
-
-export function getReplacementTableColumnId(
-  tableColumnId: string,
-  ctx: CopyContext,
-): string | null {
-  return getReplacementResourceId(
-    tableColumnId,
-    ctx.replacementContext.tableColumnIds,
-  )
-}
-
-export function shouldRemovePage(pageId: string, ctx: CopyContext): boolean {
-  return shouldRemoveResource(pageId, ctx.replacementContext.pageIds)
-}
-
-export function getReplacementPageId(
-  pageId: string,
-  ctx: CopyContext,
-): string | null {
-  return getReplacementResourceId(pageId, ctx.replacementContext.pageIds)
-}
-
-export function shouldRemoveGlobalElement(
-  globalElementId: string,
-  ctx: CopyContext,
-): boolean {
-  return shouldRemoveResource(
-    globalElementId,
-    ctx.replacementContext.globalElementIds,
-  )
-}
-
-export function getReplacementGlobalElementId(
-  globalElementId: string,
-  ctx: CopyContext,
-): string | null {
-  return getReplacementResourceId(
-    globalElementId,
-    ctx.replacementContext.globalElementIds,
-  )
+  switch (resourceType) {
+    case ContextResource.Swatch:
+      return getReplacementId(id, ctx.replacementContext.swatchIds)
+    case ContextResource.File:
+      return getReplacementId(id, ctx.replacementContext.fileIds)
+    case ContextResource.Typography:
+      return getReplacementId(id, ctx.replacementContext.typographyIds)
+    case ContextResource.Table:
+      return getReplacementId(id, ctx.replacementContext.tableIds)
+    case ContextResource.TableColumn:
+      return getReplacementId(id, ctx.replacementContext.tableColumnIds)
+    case ContextResource.Page:
+      return getReplacementId(id, ctx.replacementContext.pageIds)
+    case ContextResource.GlobalElement:
+      return getReplacementId(id, ctx.replacementContext.globalElementIds)
+  }
 }

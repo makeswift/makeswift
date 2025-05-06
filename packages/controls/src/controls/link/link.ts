@@ -4,8 +4,9 @@ import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
 import {
-  getReplacementPageId,
-  shouldRemovePage,
+  ContextResource,
+  getReplacementResourceId,
+  shouldRemoveResource,
   type CopyContext,
 } from '../../context'
 import { Targets, type IntrospectionTarget } from '../../introspection'
@@ -135,9 +136,10 @@ class Definition<
           ...data,
           payload: {
             ...data.payload,
-            pageId: shouldRemovePage(pageId, ctx)
+            pageId: shouldRemoveResource(ContextResource.Page, pageId, ctx)
               ? null
-              : getReplacementPageId(pageId, ctx) ?? pageId,
+              : getReplacementResourceId(ContextResource.Page, pageId, ctx) ??
+                pageId,
           },
         }
       }

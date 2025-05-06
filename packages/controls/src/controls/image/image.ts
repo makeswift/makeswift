@@ -5,8 +5,9 @@ import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
 import {
-  getReplacementFileId,
-  shouldRemoveFile,
+  ContextResource,
+  getReplacementResourceId,
+  shouldRemoveResource,
   type CopyContext,
 } from '../../context'
 import { IntrospectionTarget, Targets } from '../../introspection'
@@ -266,17 +267,25 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
       .with(Definition.dataSignature.makeswiftFile, ({ id }) => id)
       .otherwise(() => undefined)
 
-    if (fileResourceId != null && shouldRemoveFile(fileResourceId, ctx)) {
+    if (
+      fileResourceId != null &&
+      shouldRemoveResource(ContextResource.File, fileResourceId, ctx)
+    ) {
       return undefined
     }
 
     const inputSchema = this.dataSchema.optional()
 
     return match(data satisfies z.infer<typeof inputSchema>)
-      .with(P.string, (id) => getReplacementFileId(id, ctx) ?? id)
+      .with(
+        P.string,
+        (id) => getReplacementResourceId(ContextResource.File, id, ctx) ?? id,
+      )
       .with(Definition.dataSignature.makeswiftFile, (data) => ({
         ...data,
-        id: getReplacementFileId(data.id, ctx) ?? data.id,
+        id:
+          getReplacementResourceId(ContextResource.File, data.id, ctx) ??
+          data.id,
       }))
       .otherwise((val) => val)
   }

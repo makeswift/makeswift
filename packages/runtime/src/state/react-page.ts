@@ -21,7 +21,8 @@ import {
   type MergeTranslatableDataContext,
   type MergeContext,
   CopyContext,
-  getReplacementGlobalElementId,
+  getReplacementResourceId,
+  ContextResource,
 } from '@makeswift/controls'
 
 import { serializeState } from '../utils/serializeState'
@@ -210,7 +211,12 @@ export function copyElementTree(
       }
 
       if (Documents.isElementReference(node)) {
-        return { ...node, value: getReplacementGlobalElementId(node.value, context) ?? node.value }
+        return {
+          ...node,
+          value:
+            getReplacementResourceId(ContextResource.GlobalElement, node.value, context) ??
+            node.value,
+        }
       }
 
       const descriptors = getComponentPropControllerDescriptors(state, node.type)

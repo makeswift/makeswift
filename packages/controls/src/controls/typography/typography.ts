@@ -5,10 +5,9 @@ import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
 import {
-  getReplacementSwatchId,
-  getReplacementTypographyId,
-  shouldRemoveSwatch,
-  shouldRemoveTypography,
+  ContextResource,
+  getReplacementResourceId,
+  shouldRemoveResource,
   type CopyContext,
 } from '../../context'
 import { Targets, type IntrospectionTarget } from '../../introspection'
@@ -116,16 +115,32 @@ class Definition extends ControlDefinition<
     if (data == null) return data
 
     function replaceOverrideSwatchId(swatchId: string | null): string | null {
-      if (swatchId == null || shouldRemoveSwatch(swatchId, context)) return null
-      return getReplacementSwatchId(swatchId, context) ?? swatchId
+      if (
+        swatchId == null ||
+        shouldRemoveResource(ContextResource.Swatch, swatchId, context)
+      ) {
+        return null
+      }
+      return (
+        getReplacementResourceId(ContextResource.Swatch, swatchId, context) ??
+        swatchId
+      )
     }
 
-    if (data.id != null && shouldRemoveTypography(data.id, context)) {
+    if (
+      data.id != null &&
+      shouldRemoveResource(ContextResource.Typography, data.id, context)
+    ) {
       return undefined
     }
 
     return {
-      id: getReplacementTypographyId(data.id ?? '', context) ?? data.id,
+      id:
+        getReplacementResourceId(
+          ContextResource.Typography,
+          data.id ?? '',
+          context,
+        ) ?? data.id,
       style: data.style.map((override) => ({
         ...override,
         value: {

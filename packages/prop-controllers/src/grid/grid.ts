@@ -7,12 +7,11 @@ import {
   Options,
   Types,
   Schema,
+  shouldRemoveResource,
+  ContextResource,
 } from '../prop-controllers'
 import { P, match } from 'ts-pattern'
-import {
-  isElementReference,
-  shouldRemoveGlobalElement,
-} from '@makeswift/controls'
+import { isElementReference } from '@makeswift/controls'
 
 const gridColumnSchema = z.object({
   count: z.number(),
@@ -151,7 +150,11 @@ function copyGridData(data: GridData, context: CopyContext): GridData {
     elements: data.elements.flatMap((element) => {
       if (
         isElementReference(element) &&
-        shouldRemoveGlobalElement(element.value, context)
+        shouldRemoveResource(
+          ContextResource.GlobalElement,
+          element.value,
+          context,
+        )
       ) {
         return []
       }

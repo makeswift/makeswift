@@ -5,11 +5,36 @@ import {
   Options,
   Types,
   Schema,
+  getReplacementResourceId,
+  shouldRemoveResource,
+  ContextResource,
 } from '../prop-controllers'
 import { P, match } from 'ts-pattern'
-import { colorDataSchema, imageDataV0Schema, imageDataV1Schema } from '../data'
-import { copyColorData } from '../utils/utils'
-import { getReplacementFileId, shouldRemoveFile } from '@makeswift/controls'
+import {
+  ColorData,
+  colorDataSchema,
+  imageDataV0Schema,
+  imageDataV1Schema,
+} from '../data'
+
+function copyColorData(
+  data: ColorData | null,
+  context: CopyContext,
+): ColorData | null {
+  if (data == null) return data
+  if (shouldRemoveResource(ContextResource.Swatch, data.swatchId, context)) {
+    return null
+  }
+  return {
+    ...data,
+    swatchId:
+      getReplacementResourceId(
+        ContextResource.Swatch,
+        data.swatchId,
+        context,
+      ) ?? data.swatchId,
+  }
+}
 
 const colorBackgroundDataSchema = z.object({
   type: z.literal('color'),
@@ -312,7 +337,16 @@ function copyResponsiveBackgroundsData(
             },
           ],
           ([, item]) => {
-            if (shouldRemoveFile(item.payload.image.id, ctx)) return []
+            if (
+              shouldRemoveResource(
+                ContextResource.File,
+                item.payload.image.id,
+                ctx,
+              )
+            ) {
+              return []
+            }
+
             return {
               ...item,
               payload: {
@@ -320,8 +354,11 @@ function copyResponsiveBackgroundsData(
                 image: {
                   ...item.payload.image,
                   id:
-                    getReplacementFileId(item.payload.image.id, ctx) ??
-                    item.payload.image.id,
+                    getReplacementResourceId(
+                      ContextResource.File,
+                      item.payload.image.id,
+                      ctx,
+                    ) ?? item.payload.image.id,
                 },
               },
             }
@@ -330,14 +367,26 @@ function copyResponsiveBackgroundsData(
         .with(
           [P.any, { type: 'image', payload: { imageId: P.string } }],
           ([, item]) => {
-            if (shouldRemoveFile(item.payload.imageId, ctx)) return []
+            if (
+              shouldRemoveResource(
+                ContextResource.File,
+                item.payload.imageId,
+                ctx,
+              )
+            ) {
+              return []
+            }
+
             return {
               ...item,
               payload: {
                 ...item.payload,
                 imageId:
-                  getReplacementFileId(item.payload.imageId, ctx) ??
-                  item.payload.imageId,
+                  getReplacementResourceId(
+                    ContextResource.File,
+                    item.payload.imageId,
+                    ctx,
+                  ) ?? item.payload.imageId,
               },
             }
           },

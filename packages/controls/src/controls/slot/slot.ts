@@ -4,7 +4,8 @@ import { safeParse, type ParseResult } from '../../lib/zod'
 
 import { isElementReference, Schema, type Data } from '../../common'
 import {
-  shouldRemoveGlobalElement,
+  ContextResource,
+  shouldRemoveResource,
   type CopyContext,
   type MergeContext,
   type MergeTranslatableDataContext,
@@ -103,7 +104,11 @@ abstract class Definition<RuntimeNode> extends ControlDefinition<
       elements: data.elements.flatMap((element) => {
         if (
           isElementReference(element) &&
-          shouldRemoveGlobalElement(element.value, context)
+          shouldRemoveResource(
+            ContextResource.GlobalElement,
+            element.value,
+            context,
+          )
         ) {
           return []
         }

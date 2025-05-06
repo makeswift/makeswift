@@ -4,9 +4,11 @@ import {
   CopyContext,
   Options,
   Types,
+  shouldRemoveResource,
+  getReplacementResourceId,
+  ContextResource,
 } from '../prop-controllers'
 import { P, match } from 'ts-pattern'
-import { getReplacementTableId, shouldRemoveTable } from '@makeswift/controls'
 
 const tableIdSchema = z.string()
 
@@ -102,7 +104,7 @@ export function createTablePropControllerDataFromTableId(
 function copyTableId(data: TableId, context: CopyContext): TableId {
   if (data == null) return data
 
-  return getReplacementTableId(data, context) ?? data
+  return getReplacementResourceId(ContextResource.Table, data, context) ?? data
 }
 
 export function copyTablePropControllerData(
@@ -110,7 +112,10 @@ export function copyTablePropControllerData(
   ctx: CopyContext,
 ): TablePropControllerData | undefined {
   const currentTableId = getTablePropControllerDataTableId(data)
-  if (currentTableId != null && shouldRemoveTable(currentTableId, ctx)) {
+  if (
+    currentTableId != null &&
+    shouldRemoveResource(ContextResource.Table, currentTableId, ctx)
+  ) {
     return undefined
   }
 

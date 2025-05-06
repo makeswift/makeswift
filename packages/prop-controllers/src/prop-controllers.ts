@@ -13,6 +13,9 @@ export {
   Schema,
   ControlDataTypeKey,
   createReplacementContext,
+  ContextResource,
+  shouldRemoveResource,
+  getReplacementResourceId,
 } from '@makeswift/controls'
 
 export const Types = {

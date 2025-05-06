@@ -4,13 +4,12 @@ import {
   CopyContext,
   Options,
   Types,
+  shouldRemoveResource,
+  getReplacementResourceId,
+  ContextResource,
 } from '../prop-controllers'
 
-import {
-  getReplacementPageId,
-  LinkDefinition,
-  shouldRemovePage,
-} from '@makeswift/controls'
+import { LinkDefinition } from '@makeswift/controls'
 
 import { z } from 'zod'
 
@@ -139,13 +138,16 @@ export function copyLinkData(
         const pageId = value.payload.pageId
 
         if (pageId == null) return value
-        if (shouldRemovePage(pageId, ctx)) return undefined
+        if (shouldRemoveResource(ContextResource.Page, pageId, ctx))
+          return undefined
 
         value = {
           ...value,
           payload: {
             ...value.payload,
-            pageId: getReplacementPageId(pageId, ctx) ?? pageId,
+            pageId:
+              getReplacementResourceId(ContextResource.Page, pageId, ctx) ??
+              pageId,
           },
         }
       }

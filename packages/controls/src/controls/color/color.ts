@@ -6,8 +6,9 @@ import { safeParse, type ParseResult } from '../../lib/zod'
 
 import { ControlDataTypeKey } from '../../common'
 import {
-  getReplacementSwatchId,
-  shouldRemoveSwatch,
+  ContextResource,
+  getReplacementResourceId,
+  shouldRemoveResource,
   type CopyContext,
 } from '../../context'
 import { ResourceSchema } from '../../resources'
@@ -176,17 +177,23 @@ class Definition<C extends Config> extends ControlDefinition<
     if (data == null) return data
 
     const currentSwatchId = data.swatchId
-    if (shouldRemoveSwatch(currentSwatchId, ctx)) return undefined
+    if (shouldRemoveResource(ContextResource.Swatch, currentSwatchId, ctx)) {
+      return undefined
+    }
 
     const inputSchema = this.dataSchema.optional()
     return match(data satisfies z.infer<typeof inputSchema>)
       .with(Definition.dataSignature.v1, (val) => ({
         ...val,
-        swatchId: getReplacementSwatchId(val.swatchId, ctx) ?? val.swatchId,
+        swatchId:
+          getReplacementResourceId(ContextResource.Swatch, val.swatchId, ctx) ??
+          val.swatchId,
       }))
       .otherwise((val) => ({
         ...val,
-        swatchId: getReplacementSwatchId(val.swatchId, ctx) ?? val.swatchId,
+        swatchId:
+          getReplacementResourceId(ContextResource.Swatch, val.swatchId, ctx) ??
+          val.swatchId,
       }))
   }
 
