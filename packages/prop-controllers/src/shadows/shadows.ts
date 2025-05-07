@@ -1,12 +1,12 @@
 import { match } from 'ts-pattern'
-import { colorDataSchema } from './data'
+import { colorDataSchema } from '../data'
 import {
   ControlDataTypeKey,
   CopyContext,
   ResolveOptions,
   Types,
   Schema,
-} from './prop-controllers'
+} from '../prop-controllers'
 import { z } from 'zod'
 import {
   ContextResource,

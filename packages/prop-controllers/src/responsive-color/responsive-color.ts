@@ -1,12 +1,12 @@
 import { z } from 'zod'
-import { colorDataSchema } from './data'
+import { colorDataSchema } from '../data'
 import {
   ControlDataTypeKey,
   CopyContext,
   Options,
   Types,
   Schema,
-} from './prop-controllers'
+} from '../prop-controllers'
 import { match } from 'ts-pattern'
 import {
   ColorData,
