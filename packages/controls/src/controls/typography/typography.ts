@@ -4,7 +4,12 @@ import { isNotNil, mapValues } from '../../lib/functional'
 import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
-import { type CopyContext } from '../../context'
+import {
+  ContextResource,
+  replaceResourceIfNeeded,
+  shouldRemoveResource,
+  type CopyContext,
+} from '../../context'
 import { Targets, type IntrospectionTarget } from '../../introspection'
 import { type ResourceResolver } from '../../resources/resolver'
 import {
@@ -109,9 +114,29 @@ class Definition extends ControlDefinition<
   ): DataType | undefined {
     if (data == null) return data
 
+    function replaceOverrideSwatchId(swatchId: string | null): string | null {
+      if (
+        swatchId == null ||
+        shouldRemoveResource(ContextResource.Swatch, swatchId, context)
+      ) {
+        return null
+      }
+      return replaceResourceIfNeeded(ContextResource.Swatch, swatchId, context)
+    }
+
+    if (
+      data.id != null &&
+      shouldRemoveResource(ContextResource.Typography, data.id, context)
+    ) {
+      return undefined
+    }
+
     return {
-      id:
-        context.replacementContext.typographyIds.get(data.id ?? '') ?? data.id,
+      id: replaceResourceIfNeeded(
+        ContextResource.Typography,
+        data.id ?? '',
+        context,
+      ),
       style: data.style.map((override) => ({
         ...override,
         value: {
@@ -125,12 +150,15 @@ class Definition extends ControlDefinition<
                 color: {
                   ...override.value.color,
                   alpha: override.value.color.alpha ?? null,
-                  swatchId:
-                    context.replacementContext.swatchIds.get(
-                      override.value.color.swatchId ?? '',
-                    ) ??
-                    override.value.color.swatchId ??
-                    null,
+                  // We remove/replace resource references at the finest
+                  // granularity permitted by the data. In the case of
+                  // typography, the data does permit for a nullish swatch ID,
+                  // so we keep the other information (alpha) and only clear the
+                  // swatch ID. For other cases (ex: Color() data(), we have to
+                  // clear the entire data since swatch IDs can't be null.
+                  swatchId: replaceOverrideSwatchId(
+                    override.value.color.swatchId,
+                  ),
                 },
               }),
         },

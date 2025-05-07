@@ -12,6 +12,7 @@ export {
   type ResponsiveValue,
   Schema,
   ControlDataTypeKey,
+  createReplacementContext,
 } from '@makeswift/controls'
 
 export const Types = {

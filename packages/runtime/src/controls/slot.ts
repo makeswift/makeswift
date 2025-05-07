@@ -13,7 +13,7 @@ import {
 import { renderSlot } from '../runtimes/react/controls/slot'
 
 abstract class BaseDefinition extends BaseSlotDefinition<ReactNode> {}
-
+ 
 export class SlotDefinition extends BaseDefinition {
   static deserialize(data: DeserializedRecord): SlotDefinition {
     if (data.type !== SlotDefinition.type) {
