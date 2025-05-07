@@ -1,10 +1,10 @@
+import { createReplacementContext } from '@makeswift/controls'
 import {
   ControlDataTypeKey,
   CopyContext,
   MergeTranslatableDataContext,
   Types,
 } from '../prop-controllers'
-import { createReplacementContext } from '../utils/utils'
 import {
   GridDescriptor,
   GridPropControllerDataV0,
@@ -227,51 +227,129 @@ describe('GridPropController', () => {
   })
 
   describe('copyGridPropControllerData', () => {
-    test('copies GridPropControllerDataV1 data', () => {
-      // Arrange
-      const data: GridPropControllerDataV1 = {
-        [ControlDataTypeKey]: GridPropControllerDataV1Type,
-        value: {
-          elements: [{ key: 'element1', type: 'element1', props: {} }],
-          columns: [],
-        },
-      }
-      const context: CopyContext = {
-        replacementContext: createReplacementContext(),
-        copyElement: (el) => ({ ...el, key: 'copiedElement' }),
-      }
+    describe('GridPropControllerDataV1 data', () => {
+      test('copies data', () => {
+        // Arrange
+        const data: GridPropControllerDataV1 = {
+          [ControlDataTypeKey]: GridPropControllerDataV1Type,
+          value: {
+            elements: [{ key: 'element1', type: 'element1', props: {} }],
+            columns: [],
+          },
+        }
+        const context: CopyContext = {
+          replacementContext: createReplacementContext(),
+          copyElement: (el) => ({ ...el, key: 'copiedElement' }),
+        }
 
-      // Act
-      const result = copyGridPropControllerData(data, context)
+        // Act
+        const result = copyGridPropControllerData(data, context)
 
-      // Assert
-      expect(result).toEqual({
-        [ControlDataTypeKey]: GridPropControllerDataV1Type,
-        value: {
-          elements: [{ key: 'copiedElement', type: 'element1', props: {} }],
-          columns: [],
-        },
+        // Assert
+        expect(result).toEqual({
+          [ControlDataTypeKey]: GridPropControllerDataV1Type,
+          value: {
+            elements: [{ key: 'copiedElement', type: 'element1', props: {} }],
+            columns: [],
+          },
+        })
+      })
+
+      test('removes element references marked for removal', () => {
+        // Arrange
+        const data: GridPropControllerDataV1 = {
+          [ControlDataTypeKey]: GridPropControllerDataV1Type,
+          value: {
+            elements: [
+              { key: 'element1', type: 'element1', props: {} },
+              {
+                key: 'element2',
+                type: 'reference',
+                value: '[global-element-id]',
+              },
+              { key: 'element3', type: 'element1', props: {} },
+            ],
+            columns: [],
+          },
+        }
+        const context: CopyContext = {
+          replacementContext: createReplacementContext({
+            globalElementIds: { '[global-element-id]': null },
+          }),
+          copyElement: (el) => el,
+        }
+
+        // Act
+        const result = copyGridPropControllerData(data, context)
+
+        // Assert
+        expect(result).toEqual({
+          [ControlDataTypeKey]: GridPropControllerDataV1Type,
+          value: {
+            elements: [
+              { key: 'element1', type: 'element1', props: {} },
+              { key: 'element3', type: 'element1', props: {} },
+            ],
+            columns: [],
+          },
+        })
       })
     })
 
-    test('copies GridPropControllerDataV0 data', () => {
-      // Arrange
-      const data: GridPropControllerDataV0 = {
-        elements: [{ key: 'element1', type: 'element1', props: {} }],
-        columns: [],
-      }
-      const context: CopyContext = {
-        replacementContext: createReplacementContext(),
-        copyElement: (el) => ({ ...el, key: 'copiedElement' }),
-      }
+    describe('GridPropControllerDataV0 data', () => {
+      test('copies data', () => {
+        // Arrange
+        const data: GridPropControllerDataV0 = {
+          elements: [{ key: 'element1', type: 'element1', props: {} }],
+          columns: [],
+        }
+        const context: CopyContext = {
+          replacementContext: createReplacementContext(),
+          copyElement: (el) => ({ ...el, key: 'copiedElement' }),
+        }
 
-      // Act
-      const result = copyGridPropControllerData(data, context)
+        // Act
+        const result = copyGridPropControllerData(data, context)
 
-      // Assert
-      expect(result).toEqual({
-        elements: [{ key: 'copiedElement', type: 'element1', props: {} }],
-        columns: [],
+        // Assert
+        expect(result).toEqual({
+          elements: [{ key: 'copiedElement', type: 'element1', props: {} }],
+          columns: [],
+        })
+      })
+
+      test('removes element references marked for removal', () => {
+        // Arrange
+        const data: GridPropControllerDataV0 = {
+          elements: [
+            { key: 'element1', type: 'element1', props: {} },
+            {
+              key: 'element2',
+              type: 'reference',
+              value: '[global-element-id]',
+            },
+            { key: 'element3', type: 'element1', props: {} },
+          ],
+          columns: [],
+        }
+        const context: CopyContext = {
+          replacementContext: createReplacementContext({
+            globalElementIds: { '[global-element-id]': null },
+          }),
+          copyElement: (el) => el,
+        }
+
+        // Act
+        const result = copyGridPropControllerData(data, context)
+
+        // Assert
+        expect(result).toEqual({
+          elements: [
+            { key: 'element1', type: 'element1', props: {} },
+            { key: 'element3', type: 'element1', props: {} },
+          ],
+          columns: [],
+        })
       })
     })
   })
