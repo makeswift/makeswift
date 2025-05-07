@@ -1,13 +1,16 @@
 import { z } from 'zod'
 import {
+  ContextResource,
+  getReplacementResourceId,
+  shouldRemoveResource,
+} from '@makeswift/controls'
+
+import {
   ControlDataTypeKey,
   CopyContext,
   Options,
   Types,
   Schema,
-  getReplacementResourceId,
-  shouldRemoveResource,
-  ContextResource,
 } from '../prop-controllers'
 import { P, match } from 'ts-pattern'
 import {

@@ -4,10 +4,12 @@ import {
   CopyContext,
   Options,
   Types,
-  shouldRemoveResource,
-  getReplacementResourceId,
-  ContextResource,
 } from '../prop-controllers'
+import {
+  ContextResource,
+  getReplacementResourceId,
+  shouldRemoveResource,
+} from '@makeswift/controls'
 import { P, match } from 'ts-pattern'
 
 const tableIdSchema = z.string()

@@ -7,11 +7,13 @@ import {
   Options,
   Types,
   Schema,
-  shouldRemoveResource,
-  ContextResource,
 } from '../prop-controllers'
 import { P, match } from 'ts-pattern'
-import { isElementReference } from '@makeswift/controls'
+import {
+  isElementReference,
+  ContextResource,
+  shouldRemoveResource,
+} from '@makeswift/controls'
 
 const gridColumnSchema = z.object({
   count: z.number(),

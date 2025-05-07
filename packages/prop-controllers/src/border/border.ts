@@ -1,5 +1,12 @@
 import { match } from 'ts-pattern'
-import { StyleSchema } from '@makeswift/controls'
+import {
+  BorderData,
+  BorderSideData,
+  StyleSchema,
+  shouldRemoveResource,
+  getReplacementResourceId,
+  ContextResource,
+} from '@makeswift/controls'
 
 import {
   ControlDataTypeKey,
@@ -7,9 +14,6 @@ import {
   ResolveOptions,
   Types,
   Schema,
-  shouldRemoveResource,
-  getReplacementResourceId,
-  ContextResource,
 } from '../prop-controllers'
 
 import { z } from 'zod'
@@ -165,7 +169,7 @@ function copyResponsiveBorderData(
     borderRight,
     borderBottom,
     borderLeft,
-  }: any): any {
+  }: BorderData): BorderData {
     return {
       borderTop: borderTop && copyBorderSide(borderTop),
       borderRight: borderRight && copyBorderSide(borderRight),
@@ -174,7 +178,9 @@ function copyResponsiveBorderData(
     }
   }
 
-  function copyBorderSide(borderSide: any): any {
+  function copyBorderSide(
+    borderSide: BorderSideData,
+  ): BorderSideData | undefined {
     const { color } = borderSide
 
     if (color == null) return borderSide

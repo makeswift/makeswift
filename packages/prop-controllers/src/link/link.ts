@@ -4,12 +4,14 @@ import {
   CopyContext,
   Options,
   Types,
-  shouldRemoveResource,
-  getReplacementResourceId,
-  ContextResource,
 } from '../prop-controllers'
 
-import { LinkDefinition } from '@makeswift/controls'
+import {
+  LinkDefinition,
+  ContextResource,
+  getReplacementResourceId,
+  shouldRemoveResource,
+} from '@makeswift/controls'
 
 import { z } from 'zod'
 
