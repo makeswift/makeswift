@@ -2,7 +2,11 @@ import { noOpResourceResolver } from '../../testing/mocks/resource-resolver'
 import { testDefinition } from '../../testing/test-definition'
 
 import { ControlDataTypeKey } from '../../common'
-import { createReplacementContext, type CopyContext } from '../../context'
+import {
+  RemoveResourceTag,
+  createReplacementContext,
+  type CopyContext,
+} from '../../context'
 import { Targets } from '../../introspection'
 import { Swatch } from '../../resources'
 import {
@@ -67,6 +71,24 @@ function testColorDefinition<Def extends ControlDefinition>(
 
       // Assert
       expect(result).toEqual({ swatchId: '[swatch-id-2]', alpha: 1 })
+    })
+
+    test('returns `undefined` when swatch is marked for removal', () => {
+      const context: CopyContext = {
+        replacementContext: createReplacementContext({
+          swatchIds: { '[swatch-id-3]': RemoveResourceTag },
+        }),
+        copyElement: (node) => node,
+      }
+
+      // Act
+      const result = definition.copyData(
+        { swatchId: '[swatch-id-3]', alpha: 1 },
+        context,
+      )
+
+      // Assert
+      expect(result).toBeUndefined()
     })
 
     test.each([null, undefined])('gracefully handles %s', (value) => {

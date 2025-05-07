@@ -1,6 +1,10 @@
 import { testDefinition } from '../../testing/test-definition'
 
-import { createReplacementContext, type CopyContext } from '../../context'
+import {
+  RemoveResourceTag,
+  createReplacementContext,
+  type CopyContext,
+} from '../../context'
 import { Targets } from '../../introspection'
 
 import { type ValueType } from '../associated-types'
@@ -105,6 +109,30 @@ describe('Link', () => {
       expect(result).toEqual({
         type: 'OPEN_PAGE',
         payload: { pageId: 'fake-page-id-2', openInNewTab: false },
+      })
+    })
+
+    test('[OPEN_PAGE] link sets `pageId` to `null` if tagged in replacement context', () => {
+      const context: CopyContext = {
+        replacementContext: createReplacementContext({
+          pageIds: { 'fake-page-id': RemoveResourceTag },
+        }),
+        copyElement: (node) => node,
+      }
+
+      // Act
+      const result = Link().copyData(
+        {
+          type: 'OPEN_PAGE',
+          payload: { pageId: 'fake-page-id', openInNewTab: false },
+        },
+        context,
+      )
+
+      // Assert
+      expect(result).toEqual({
+        type: 'OPEN_PAGE',
+        payload: { pageId: undefined, openInNewTab: false },
       })
     })
 

@@ -1,4 +1,8 @@
-import { createReplacementContext, type CopyContext } from '../../context'
+import {
+  RemoveResourceTag,
+  createReplacementContext,
+  type CopyContext,
+} from '../../context'
 import { Targets } from '../../introspection'
 
 import { Image, ImageDefinition } from './image'
@@ -90,6 +94,27 @@ describe('Image', () => {
         url: 'https://example.com',
         version: 1,
       })
+    })
+
+    test('returns `undefined` when file marked for removal', () => {
+      const context: CopyContext = {
+        replacementContext: createReplacementContext({
+          fileIds: { 'fake-file-id-3': RemoveResourceTag },
+        }),
+        copyElement: (node) => node,
+      }
+
+      // Act
+      const v1result = Image().copyData(
+        { type: 'makeswift-file', id: 'fake-file-id-3', version: 1 },
+        context,
+      )
+
+      const v0result = Image().copyData('fake-file-id-3', context)
+
+      // Assert
+      expect(v1result).toBeUndefined()
+      expect(v0result).toBeUndefined()
     })
 
     test.each([undefined])('gracefully handles %s', (value) => {
