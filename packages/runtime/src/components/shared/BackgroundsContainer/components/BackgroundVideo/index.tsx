@@ -122,6 +122,7 @@ export default function BackgroundVideo({
           playing
           loop
           muted
+          playsinline={true}
           controls={false}
           onReady={() => setReady(true)}
           style={{
