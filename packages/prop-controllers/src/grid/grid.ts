@@ -9,6 +9,11 @@ import {
   Schema,
 } from '../prop-controllers'
 import { P, match } from 'ts-pattern'
+import {
+  isElementReference,
+  ContextResource,
+  shouldRemoveResource,
+} from '@makeswift/controls'
 
 const gridColumnSchema = z.object({
   count: z.number(),
@@ -144,7 +149,19 @@ export function getGridPropControllerElementChildren(
 function copyGridData(data: GridData, context: CopyContext): GridData {
   return {
     ...data,
-    elements: data.elements.map((element) => context.copyElement(element)),
+    elements: data.elements
+      .filter(
+        (el) =>
+          !(
+            isElementReference(el) &&
+            shouldRemoveResource(
+              ContextResource.GlobalElement,
+              el.value,
+              context,
+            )
+          ),
+      )
+      .map((el) => context.copyElement(el)),
   }
 }
 

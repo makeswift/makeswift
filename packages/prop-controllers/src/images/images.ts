@@ -5,6 +5,11 @@ import {
   Options,
   Types,
 } from '../prop-controllers'
+import {
+  ContextResource,
+  replaceResourceIfNeeded,
+  shouldRemoveResource,
+} from '@makeswift/controls'
 import { P, match } from 'ts-pattern'
 import { imageDataV0Schema, imageDataV1Schema } from '../data'
 import { linkDataSchema } from '../link'
@@ -129,7 +134,7 @@ export function createImagesPropControllerDataFromImagesData(
         ({
           [ControlDataTypeKey]: ImagesPropControllerDataV2Type,
           value: data,
-        } as const),
+        }) as const,
     )
     .otherwise(() => data)
 }
@@ -168,10 +173,19 @@ function copyImagesData(
         props: {
           ...imagesPanelItem.props,
           file: match(imagesPanelItem.props.file)
-            .with({ type: 'makeswift-file', version: 1 }, (f) => ({
-              ...f,
-              id: context.replacementContext.fileIds.get(f.id) ?? f.id,
-            }))
+            .with({ type: 'makeswift-file', version: 1 }, (f) => {
+              if (shouldRemoveResource(ContextResource.File, f.id, context)) {
+                return undefined
+              }
+              return {
+                ...f,
+                id: replaceResourceIfNeeded(
+                  ContextResource.File,
+                  f.id,
+                  context,
+                ),
+              }
+            })
             .otherwise((f) => f),
         },
       }
@@ -181,10 +195,12 @@ function copyImagesData(
         props: {
           ...imagesPanelItem.props,
           file: match(imagesPanelItem.props.file)
-            .with(
-              P.string,
-              (f) => context.replacementContext.fileIds.get(f) ?? f,
-            )
+            .with(P.string, (f) => {
+              if (shouldRemoveResource(ContextResource.File, f, context)) {
+                return undefined
+              }
+              return replaceResourceIfNeeded(ContextResource.File, f, context)
+            })
             .otherwise((f) => f),
         },
       }
