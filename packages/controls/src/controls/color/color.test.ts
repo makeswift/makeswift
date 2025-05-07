@@ -69,6 +69,24 @@ function testColorDefinition<Def extends ControlDefinition>(
       expect(result).toEqual({ swatchId: '[swatch-id-2]', alpha: 1 })
     })
 
+    test('returns `undefined` when swatch is marked for removal', () => {
+      const context: CopyContext = {
+        replacementContext: createReplacementContext({
+          swatchIds: { '[swatch-id-3]': null },
+        }),
+        copyElement: (node) => node,
+      }
+
+      // Act
+      const result = definition.copyData(
+        { swatchId: '[swatch-id-3]', alpha: 1 },
+        context,
+      )
+
+      // Assert
+      expect(result).toBeUndefined()
+    })
+
     test.each([null, undefined])('gracefully handles %s', (value) => {
       expect(definition.copyData(value, context)).toBe(value)
     })

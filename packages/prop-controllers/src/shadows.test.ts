@@ -1,10 +1,10 @@
-import { ReplacementContext } from './prop-controllers'
+import { createReplacementContext } from '@makeswift/controls'
 import {
   ShadowsPropControllerData,
   copyShadowsPropControllerData,
 } from './shadows'
 
-describe('shadow copy', () => {
+describe('copyShadowsPropControllerData', () => {
   test('replaces the swatch id', () => {
     // Arrange
     const data: ShadowsPropControllerData = [
@@ -35,31 +35,95 @@ describe('shadow copy', () => {
       ),
     )
 
-    const replacementContext = {
-      elementHtmlIds: new Set(),
-      elementKeys: new Map(),
-      swatchIds: new Map([
-        [
-          'U3dhdGNoOjgwMmNmZGMyLTc5ZDgtNDkyNy1hMDUwLWE1NmM1M2EzYzE0Mg==',
-          'testing',
-        ],
-      ]),
-      fileIds: new Map(),
-      typographyIds: new Map(),
-      tableIds: new Map(),
-      tableColumnIds: new Map(),
-      pageIds: new Map(),
-      globalElementIds: new Map(),
-      globalElementData: new Map(),
-    }
-
     // Act
     const result = copyShadowsPropControllerData(data, {
-      replacementContext: replacementContext as ReplacementContext,
+      replacementContext: createReplacementContext({
+        swatchIds: {
+          'U3dhdGNoOjgwMmNmZGMyLTc5ZDgtNDkyNy1hMDUwLWE1NmM1M2EzYzE0Mg==':
+            'testing',
+        },
+      }),
       copyElement: (node) => node,
     })
 
     // // Assert
     expect(result).toMatchObject(expected)
+  })
+
+  test('removes color where swatchId is marked for removal', () => {
+    const data: ShadowsPropControllerData = [
+      {
+        value: [
+          {
+            id: '00000000-0000-0000-0000-000000000001',
+            payload: {
+              color: { alpha: 1, swatchId: 'swatch-id-1' },
+              offsetX: 4,
+              offsetY: 4,
+              blurRadius: 4,
+              spreadRadius: 4,
+            },
+          },
+        ],
+        deviceId: 'desktop',
+      },
+      {
+        value: [
+          {
+            id: '00000000-0000-0000-0000-000000000002',
+            payload: {
+              color: { alpha: 1, swatchId: 'swatch-id-2' },
+              offsetX: 0,
+              offsetY: 0,
+              blurRadius: 0,
+              spreadRadius: 0,
+            },
+          },
+        ],
+        deviceId: 'tablet',
+      },
+    ]
+
+    // Act
+    const result = copyShadowsPropControllerData(data, {
+      replacementContext: createReplacementContext({
+        swatchIds: { 'swatch-id-1': null },
+      }),
+      copyElement: (node) => node,
+    })
+
+    // // Assert
+    expect(result).toMatchObject([
+      {
+        value: [
+          {
+            id: '00000000-0000-0000-0000-000000000001',
+            payload: {
+              color: undefined,
+              offsetX: 4,
+              offsetY: 4,
+              blurRadius: 4,
+              spreadRadius: 4,
+            },
+          },
+        ],
+        deviceId: 'desktop',
+      },
+      {
+        value: [
+          {
+            id: '00000000-0000-0000-0000-000000000002',
+            payload: {
+              color: { alpha: 1, swatchId: 'swatch-id-2' },
+              offsetX: 0,
+              offsetY: 0,
+              blurRadius: 0,
+              spreadRadius: 0,
+            },
+          },
+        ],
+        deviceId: 'tablet',
+      },
+    ])
   })
 })
