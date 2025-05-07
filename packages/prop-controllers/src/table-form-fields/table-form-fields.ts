@@ -7,6 +7,11 @@ import {
   Schema,
 } from '../prop-controllers'
 import { P, match } from 'ts-pattern'
+import {
+  ContextResource,
+  getReplacementResourceId,
+  shouldRemoveResource,
+} from '@makeswift/controls'
 
 const tableFormFieldSchema = z.object({
   id: z.string(),
@@ -136,12 +141,27 @@ function copyTableFormFieldsData(
 
   return {
     ...data,
-    fields: data.fields.map((field) => ({
-      ...field,
-      tableColumnId:
-        context.replacementContext.tableColumnIds.get(field.tableColumnId) ??
-        field.tableColumnId,
-    })),
+    fields: data.fields.flatMap((field) => {
+      if (
+        shouldRemoveResource(
+          ContextResource.TableColumn,
+          field.tableColumnId,
+          context,
+        )
+      ) {
+        return []
+      }
+
+      return {
+        ...field,
+        tableColumnId:
+          getReplacementResourceId(
+            ContextResource.TableColumn,
+            field.tableColumnId,
+            context,
+          ) ?? field.tableColumnId,
+      }
+    }),
   }
 }
 

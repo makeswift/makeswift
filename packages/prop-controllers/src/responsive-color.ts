@@ -8,6 +8,12 @@ import {
   Schema,
 } from './prop-controllers'
 import { match } from 'ts-pattern'
+import {
+  ColorData,
+  ContextResource,
+  getReplacementResourceId,
+  shouldRemoveResource,
+} from '@makeswift/controls'
 
 const responsiveColorDataSchema = Schema.responsiveValue(colorDataSchema)
 
@@ -118,17 +124,28 @@ export function copyResponsiveColorData(
   data: ResponsiveColorData,
   context: CopyContext,
 ): ResponsiveColorData {
-  return data.map((override) => ({
-    ...override,
-    value: copyColorValue(override.value),
-  }))
+  return data.flatMap((override) => {
+    const swatchId = override.value.swatchId
 
-  function copyColorValue(colorValue: any): any {
+    if (shouldRemoveResource(ContextResource.Swatch, swatchId, context)) {
+      return []
+    }
+
+    return {
+      ...override,
+      value: copyColorValue(override.value),
+    }
+  })
+
+  function copyColorValue(colorValue: ColorData): ColorData {
     return {
       ...colorValue,
       swatchId:
-        context.replacementContext.swatchIds.get(colorValue.swatchId) ??
-        colorValue.swatchId,
+        getReplacementResourceId(
+          ContextResource.Swatch,
+          colorValue.swatchId,
+          context,
+        ) ?? colorValue.swatchId,
     }
   }
 }

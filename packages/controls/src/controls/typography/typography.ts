@@ -4,7 +4,12 @@ import { isNotNil, mapValues } from '../../lib/functional'
 import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
-import { type CopyContext } from '../../context'
+import {
+  ContextResource,
+  getReplacementResourceId,
+  shouldRemoveResource,
+  type CopyContext,
+} from '../../context'
 import { Targets, type IntrospectionTarget } from '../../introspection'
 import { type ResourceResolver } from '../../resources/resolver'
 import {
@@ -109,9 +114,33 @@ class Definition extends ControlDefinition<
   ): DataType | undefined {
     if (data == null) return data
 
+    function replaceOverrideSwatchId(swatchId: string | null): string | null {
+      if (
+        swatchId == null ||
+        shouldRemoveResource(ContextResource.Swatch, swatchId, context)
+      ) {
+        return null
+      }
+      return (
+        getReplacementResourceId(ContextResource.Swatch, swatchId, context) ??
+        swatchId
+      )
+    }
+
+    if (
+      data.id != null &&
+      shouldRemoveResource(ContextResource.Typography, data.id, context)
+    ) {
+      return undefined
+    }
+
     return {
       id:
-        context.replacementContext.typographyIds.get(data.id ?? '') ?? data.id,
+        getReplacementResourceId(
+          ContextResource.Typography,
+          data.id ?? '',
+          context,
+        ) ?? data.id,
       style: data.style.map((override) => ({
         ...override,
         value: {
@@ -125,12 +154,9 @@ class Definition extends ControlDefinition<
                 color: {
                   ...override.value.color,
                   alpha: override.value.color.alpha ?? null,
-                  swatchId:
-                    context.replacementContext.swatchIds.get(
-                      override.value.color.swatchId ?? '',
-                    ) ??
-                    override.value.color.swatchId ??
-                    null,
+                  swatchId: replaceOverrideSwatchId(
+                    override.value.color.swatchId,
+                  ),
                 },
               }),
         },

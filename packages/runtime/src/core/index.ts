@@ -25,4 +25,7 @@ export {
   mergeResponsiveValues,
   shallowMergeFallbacks,
   getViewportStyle,
+  getReplacementResourceId,
+  shouldRemoveResource,
+  ContextResource,
 } from '@makeswift/controls'

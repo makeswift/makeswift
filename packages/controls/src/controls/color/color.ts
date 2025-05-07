@@ -5,7 +5,12 @@ import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
 import { ControlDataTypeKey } from '../../common'
-import { type CopyContext } from '../../context'
+import {
+  ContextResource,
+  getReplacementResourceId,
+  shouldRemoveResource,
+  type CopyContext,
+} from '../../context'
 import { ResourceSchema } from '../../resources'
 import { type ResourceResolver } from '../../resources/resolver'
 import {
@@ -167,22 +172,28 @@ class Definition<C extends Config> extends ControlDefinition<
 
   copyData(
     data: DataType<C> | undefined,
-    { replacementContext }: CopyContext,
+    ctx: CopyContext,
   ): DataType<C> | undefined {
     if (data == null) return data
 
-    const replaceSwatchId = (swatchId: string) =>
-      replacementContext.swatchIds.get(swatchId) ?? swatchId
+    const currentSwatchId = data.swatchId
+    if (shouldRemoveResource(ContextResource.Swatch, currentSwatchId, ctx)) {
+      return undefined
+    }
 
     const inputSchema = this.dataSchema.optional()
     return match(data satisfies z.infer<typeof inputSchema>)
       .with(Definition.dataSignature.v1, (val) => ({
         ...val,
-        swatchId: replaceSwatchId(val.swatchId),
+        swatchId:
+          getReplacementResourceId(ContextResource.Swatch, val.swatchId, ctx) ??
+          val.swatchId,
       }))
       .otherwise((val) => ({
         ...val,
-        swatchId: replaceSwatchId(val.swatchId),
+        swatchId:
+          getReplacementResourceId(ContextResource.Swatch, val.swatchId, ctx) ??
+          val.swatchId,
       }))
   }
 

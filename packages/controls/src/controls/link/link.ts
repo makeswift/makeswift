@@ -3,7 +3,12 @@ import { z } from 'zod'
 import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
-import { type CopyContext } from '../../context'
+import {
+  ContextResource,
+  getReplacementResourceId,
+  shouldRemoveResource,
+  type CopyContext,
+} from '../../context'
 import { Targets, type IntrospectionTarget } from '../../introspection'
 import { type ResourceResolver } from '../../resources/resolver'
 import { type SerializedRecord } from '../../serialization'
@@ -120,7 +125,7 @@ class Definition<
 
   copyData(
     data: DataType<C> | undefined,
-    { replacementContext }: CopyContext,
+    ctx: CopyContext,
   ): DataType<C> | undefined {
     if (data == null) return data
 
@@ -131,7 +136,10 @@ class Definition<
           ...data,
           payload: {
             ...data.payload,
-            pageId: replacementContext.pageIds.get(pageId) ?? pageId,
+            pageId: shouldRemoveResource(ContextResource.Page, pageId, ctx)
+              ? undefined
+              : getReplacementResourceId(ContextResource.Page, pageId, ctx) ??
+                pageId,
           },
         }
       }
@@ -149,7 +157,7 @@ class Definition<
           elementIdConfig: {
             ...elementIdConfig,
             elementKey:
-              replacementContext.elementKeys.get(elementKey) ?? elementKey,
+              ctx.replacementContext.elementKeys.get(elementKey) ?? elementKey,
           },
         },
       }

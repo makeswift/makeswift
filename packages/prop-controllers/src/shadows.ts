@@ -8,6 +8,11 @@ import {
   Schema,
 } from './prop-controllers'
 import { z } from 'zod'
+import {
+  ContextResource,
+  getReplacementResourceId,
+  shouldRemoveResource,
+} from '@makeswift/controls'
 
 const shadowDataSchema = z.object({
   color: colorDataSchema.nullable().optional(),
@@ -167,6 +172,12 @@ function copyResponsiveShadowsData(
 
       if (color == null) return item
 
+      if (
+        shouldRemoveResource(ContextResource.Swatch, color.swatchId, context)
+      ) {
+        return { ...item, payload: { ...item.payload, color: undefined } }
+      }
+
       return {
         ...item,
         payload: {
@@ -174,8 +185,11 @@ function copyResponsiveShadowsData(
           color: {
             ...color,
             swatchId:
-              context.replacementContext.swatchIds.get(color.swatchId) ??
-              color.swatchId,
+              getReplacementResourceId(
+                ContextResource.Swatch,
+                color.swatchId,
+                context,
+              ) ?? color.swatchId,
           },
         },
       }

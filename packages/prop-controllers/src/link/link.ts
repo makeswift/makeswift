@@ -6,7 +6,12 @@ import {
   Types,
 } from '../prop-controllers'
 
-import { LinkDefinition } from '@makeswift/controls'
+import {
+  LinkDefinition,
+  ContextResource,
+  getReplacementResourceId,
+  shouldRemoveResource,
+} from '@makeswift/controls'
 
 import { z } from 'zod'
 
@@ -125,9 +130,16 @@ export function getLinkPropControllerPageIds(
 
 export function copyLinkData(
   data: LinkData | undefined,
-  context: CopyContext,
+  ctx: CopyContext,
 ): LinkData | undefined {
   let value = data
+
+  function replacePageId(pageId: string): string | undefined {
+    if (shouldRemoveResource(ContextResource.Page, pageId, ctx)) {
+      return undefined
+    }
+    return getReplacementResourceId(ContextResource.Page, pageId, ctx) ?? pageId
+  }
 
   switch (value?.type) {
     case 'OPEN_PAGE':
@@ -138,10 +150,7 @@ export function copyLinkData(
 
         value = {
           ...value,
-          payload: {
-            ...value.payload,
-            pageId: context.replacementContext.pageIds.get(pageId) ?? pageId,
-          },
+          payload: { ...value.payload, pageId: replacePageId(pageId) },
         }
       }
       break
@@ -158,7 +167,7 @@ export function copyLinkData(
           elementIdConfig: {
             ...elementIdConfig,
             elementKey:
-              context.replacementContext.elementKeys.get(
+              ctx.replacementContext.elementKeys.get(
                 elementIdConfig.elementKey,
               ) ?? elementIdConfig.elementKey,
           },
