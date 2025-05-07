@@ -14,3 +14,35 @@ Definition {
   },
 }
 `;
+
+exports[`RichText v2 copyData removes swatch, typographies, and page IDs that are marked for removal 1`] = `
+{
+  "descendants": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "text": "Credibly implement global synergy, then collaboratively implement goal-oriented sprints. Rapidiously initiate standards compliant clouds. ",
+              "typography": undefined,
+            },
+          ],
+          "link": {
+            "payload": {
+              "openInNewTab": false,
+              "pageId": undefined,
+            },
+            "type": "OPEN_PAGE",
+          },
+          "type": "link",
+        },
+      ],
+      "textAlign": undefined,
+      "type": "blockquote",
+    },
+  ],
+  "key": Any<String>,
+  "type": "makeswift::controls::rich-text-v2",
+  "version": 2,
+}
+`;

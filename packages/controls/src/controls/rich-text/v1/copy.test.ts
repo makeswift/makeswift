@@ -24,4 +24,17 @@ describe('GIVEN copying RichText', () => {
 
     expect(result).toMatchObject(expected)
   })
+
+  test('removes any swatch, typography and page ids marked for removal', () => {
+    const result = copyRichTextData(Fixtures.introspection, {
+      replacementContext: createReplacementContext({
+        swatchIds: { [Fixtures.SWATCH_ID]: null },
+        typographyIds: { [Fixtures.TYPOGRAPHY_ID]: null },
+        pageIds: { [Fixtures.PAGE_ID]: null },
+      }),
+      copyElement: (node) => node,
+    })
+
+    expect(result).toMatchSnapshot()
+  })
 })

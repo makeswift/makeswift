@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GIVEN copying RichText removes any swatch, typography and page ids marked for removal 1`] = `
+{
+  "annotations": undefined,
+  "data": undefined,
+  "document": {
+    "data": undefined,
+    "nodes": [
+      {
+        "data": {},
+        "nodes": [
+          {
+            "data": {
+              "payload": {
+                "openInNewTab": false,
+                "pageId": undefined,
+              },
+              "type": "OPEN_PAGE",
+            },
+            "nodes": [
+              {
+                "marks": [
+                  {
+                    "data": {
+                      "value": undefined,
+                    },
+                    "object": "mark",
+                    "type": "typography",
+                  },
+                ],
+                "object": "text",
+                "text": "Credibly implement global synergy, then collaboratively implement goal-oriented sprints. Rapidiously initiate standards compliant clouds. ",
+              },
+            ],
+            "object": "inline",
+            "type": "link",
+          },
+        ],
+        "object": "block",
+        "type": "blockquote",
+      },
+    ],
+    "object": "document",
+  },
+  "object": "value",
+  "selection": {
+    "anchor": {
+      "object": "point",
+      "offset": 0,
+      "path": [
+        0,
+        0,
+      ],
+    },
+    "focus": {
+      "object": "point",
+      "offset": 0,
+      "path": [
+        1,
+        2,
+      ],
+    },
+    "isFocused": false,
+    "marks": undefined,
+    "object": "selection",
+  },
+}
+`;

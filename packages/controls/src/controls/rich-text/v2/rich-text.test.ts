@@ -61,4 +61,19 @@ describe('RichText v2', () => {
       key: expect.any(String),
     })
   })
+
+  test('copyData removes swatch, typographies, and page IDs that are marked for removal', () => {
+    const definition = RichText()
+
+    const result = definition.copyData(Fixtures.introspection, {
+      replacementContext: createReplacementContext({
+        swatchIds: { [Fixtures.SWATCH_ID]: null },
+        typographyIds: { [Fixtures.TYPOGRAPHY_ID]: null },
+        pageIds: { [Fixtures.PAGE_ID]: null },
+      }),
+      copyElement: (node) => node,
+    })
+
+    expect({ ...result, key: expect.any(String) }).toMatchSnapshot()
+  })
 })
