@@ -105,6 +105,12 @@
 - Updated dependencies [8241d49]
   - @makeswift/next-plugin@0.4.0
 
+## 0.23.14
+
+### Patch Changes
+
+- fix: Box background videos do not play correctly in iOS
+
 ## 0.23.13
 
 ### Patch Changes
