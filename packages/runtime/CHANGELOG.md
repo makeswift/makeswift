@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.23.14
+
+### Patch Changes
+
+- fix: Videos do not play correctly in iOS
+
 ## 0.23.13
 
 ### Patch Changes
