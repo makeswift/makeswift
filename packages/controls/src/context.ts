@@ -6,34 +6,51 @@ export type MergeTranslatableDataContext = {
   mergeTranslatedData: (node: Element) => Element
 }
 
+type ResourceMapping = Map<string, string | null>
+
+export const ContextResource = {
+  Swatch: 'Swatch',
+  File: 'File',
+  Typography: 'Typography',
+  Table: 'Table',
+  TableColumn: 'TableColumn',
+  Page: 'Page',
+  GlobalElement: 'GlobalElement',
+} as const
+
+const resourceFields = {
+  [ContextResource.Swatch]: 'swatchIds',
+  [ContextResource.File]: 'fileIds',
+  [ContextResource.Typography]: 'typographyIds',
+  [ContextResource.Table]: 'tableIds',
+  [ContextResource.TableColumn]: 'tableColumnIds',
+  [ContextResource.Page]: 'pageIds',
+  [ContextResource.GlobalElement]: 'globalElementIds',
+} as const
+
+type ResourceType = keyof typeof ContextResource
+type ResourceField = (typeof resourceFields)[ResourceType]
+
 export type ReplacementContext = {
+  [K in ResourceField]: ResourceMapping
+} & {
   elementHtmlIds: Set<string>
   elementKeys: Map<string, string>
-  swatchIds: Map<string, string>
-  fileIds: Map<string, string>
-  typographyIds: Map<string, string>
-  tableIds: Map<string, string>
-  tableColumnIds: Map<string, string>
-  pageIds: Map<string, string>
-  globalElementIds: Map<string, string>
   globalElementData: Map<string, ElementData>
 }
 
+type SerializableResourceMapping = Record<string, string | null>
+
 export type SerializableReplacementContext = {
+  [K in ResourceField]?: SerializableResourceMapping
+} & {
   elementHtmlIds?: string[]
   elementKeys?: Record<string, string>
-  swatchIds?: Record<string, string>
-  fileIds?: Record<string, string>
-  typographyIds?: Record<string, string>
-  tableIds?: Record<string, string>
-  tableColumnIds?: Record<string, string>
-  pageIds?: Record<string, string>
-  globalElementIds?: Record<string, string>
   globalElementData?: Record<string, ElementData>
 }
 
 export function createReplacementContext(
-  context: SerializableReplacementContext,
+  context: SerializableReplacementContext = {},
 ): ReplacementContext {
   const toMap = <V>(record?: Record<string, V>) =>
     new Map(Object.entries(record ?? {}))
@@ -59,4 +76,35 @@ export type CopyContext = {
 
 export type MergeContext = {
   mergeElement(a: Element, b: Element): Element
+}
+
+export type ContextResource =
+  (typeof ContextResource)[keyof typeof ContextResource]
+
+function getResourceMapping(
+  resourceType: ContextResource,
+  ctx: CopyContext,
+): ResourceMapping {
+  const mapping = ctx.replacementContext[resourceFields[resourceType]]
+  if (mapping == null) {
+    throw new Error(`Invalid resource type: ${resourceType}`)
+  }
+  return mapping
+}
+
+export function shouldRemoveResource(
+  resourceType: ContextResource,
+  id: string,
+  ctx: CopyContext,
+): boolean {
+  const mapping = getResourceMapping(resourceType, ctx)
+  return mapping.has(id) && mapping.get(id) === null
+}
+
+export function replaceResourceIfNeeded(
+  resourceType: ContextResource,
+  id: string,
+  ctx: CopyContext,
+): string {
+  return getResourceMapping(resourceType, ctx).get(id) ?? id
 }
