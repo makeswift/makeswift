@@ -14,33 +14,46 @@ const removeResourceTagSchema = z.object({
 
 export const RemoveResourceTag = { __type: 'remove' } as const
 
-type ResourceMapping = Map<string, string | { __type: 'remove' }>
+type ResourceMapping = Map<string, string | typeof RemoveResourceTag>
+
+export const ContextResource = {
+  Swatch: 'Swatch',
+  File: 'File',
+  Typography: 'Typography',
+  Table: 'Table',
+  TableColumn: 'TableColumn',
+  Page: 'Page',
+  GlobalElement: 'GlobalElement',
+} as const
+
+const resourceFields = {
+  [ContextResource.Swatch]: 'swatchIds',
+  [ContextResource.File]: 'fileIds',
+  [ContextResource.Typography]: 'typographyIds',
+  [ContextResource.Table]: 'tableIds',
+  [ContextResource.TableColumn]: 'tableColumnIds',
+  [ContextResource.Page]: 'pageIds',
+  [ContextResource.GlobalElement]: 'globalElementIds',
+} as const
+
+type ResourceType = keyof typeof ContextResource
+type ResourceField = typeof resourceFields[ResourceType]
 
 export type ReplacementContext = {
+  [K in ResourceField]: ResourceMapping
+} & {
   elementHtmlIds: Set<string>
   elementKeys: Map<string, string>
-  swatchIds: ResourceMapping
-  fileIds: ResourceMapping
-  typographyIds: ResourceMapping
-  tableIds: ResourceMapping
-  tableColumnIds: ResourceMapping
-  pageIds: ResourceMapping
-  globalElementIds: ResourceMapping
   globalElementData: Map<string, ElementData>
 }
 
-type SerializableResourceMapping = Record<string, string | { __type: 'remove' }>
+type SerializableResourceMapping = Record<string, string | typeof RemoveResourceTag>
 
 export type SerializableReplacementContext = {
+  [K in ResourceField]?: SerializableResourceMapping
+} & {
   elementHtmlIds?: string[]
   elementKeys?: Record<string, string>
-  swatchIds?: SerializableResourceMapping
-  fileIds?: SerializableResourceMapping
-  typographyIds?: SerializableResourceMapping
-  tableIds?: SerializableResourceMapping
-  tableColumnIds?: SerializableResourceMapping
-  pageIds?: SerializableResourceMapping
-  globalElementIds?: SerializableResourceMapping
   globalElementData?: Record<string, ElementData>
 }
 
@@ -73,21 +86,12 @@ export type MergeContext = {
   mergeElement(a: Element, b: Element): Element
 }
 
-export const ContextResource = {
-  Swatch: 'Swatch',
-  File: 'File',
-  Typography: 'Typography',
-  Table: 'Table',
-  TableColumn: 'TableColumn',
-  Page: 'Page',
-  GlobalElement: 'GlobalElement',
-} as const
 
 export type ContextResource =
   (typeof ContextResource)[keyof typeof ContextResource]
 
 export function shouldRemoveResource(
-  type: ContextResource,
+  resourceType: ContextResource,
   id: string,
   ctx: CopyContext,
 ): boolean {
@@ -95,22 +99,7 @@ export function shouldRemoveResource(
     return removeResourceTagSchema.safeParse(map.get(id)).success
   }
 
-  switch (type) {
-    case ContextResource.Swatch:
-      return hasRemoveTag(id, ctx.replacementContext.swatchIds)
-    case ContextResource.File:
-      return hasRemoveTag(id, ctx.replacementContext.fileIds)
-    case ContextResource.Typography:
-      return hasRemoveTag(id, ctx.replacementContext.typographyIds)
-    case ContextResource.Table:
-      return hasRemoveTag(id, ctx.replacementContext.tableIds)
-    case ContextResource.TableColumn:
-      return hasRemoveTag(id, ctx.replacementContext.tableColumnIds)
-    case ContextResource.Page:
-      return hasRemoveTag(id, ctx.replacementContext.pageIds)
-    case ContextResource.GlobalElement:
-      return hasRemoveTag(id, ctx.replacementContext.globalElementIds)
-  }
+  return hasRemoveTag(id, ctx.replacementContext[resourceFields[resourceType]])
 }
 
 export function getReplacementResourceId(
@@ -123,20 +112,5 @@ export function getReplacementResourceId(
     return typeof replacement === 'string' ? replacement : null
   }
 
-  switch (resourceType) {
-    case ContextResource.Swatch:
-      return getReplacementId(id, ctx.replacementContext.swatchIds)
-    case ContextResource.File:
-      return getReplacementId(id, ctx.replacementContext.fileIds)
-    case ContextResource.Typography:
-      return getReplacementId(id, ctx.replacementContext.typographyIds)
-    case ContextResource.Table:
-      return getReplacementId(id, ctx.replacementContext.tableIds)
-    case ContextResource.TableColumn:
-      return getReplacementId(id, ctx.replacementContext.tableColumnIds)
-    case ContextResource.Page:
-      return getReplacementId(id, ctx.replacementContext.pageIds)
-    case ContextResource.GlobalElement:
-      return getReplacementId(id, ctx.replacementContext.globalElementIds)
-  }
+  return getReplacementId(id, ctx.replacementContext[resourceFields[resourceType]])
 }
