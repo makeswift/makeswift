@@ -1,13 +1,18 @@
 import { match } from 'ts-pattern'
-import { colorDataSchema } from './data'
+import { colorDataSchema } from '../data'
 import {
   ControlDataTypeKey,
   CopyContext,
   ResolveOptions,
   Types,
   Schema,
-} from './prop-controllers'
+} from '../prop-controllers'
 import { z } from 'zod'
+import {
+  ContextResource,
+  replaceResourceIfNeeded,
+  shouldRemoveResource,
+} from '@makeswift/controls'
 
 const shadowDataSchema = z.object({
   color: colorDataSchema.nullable().optional(),
@@ -167,15 +172,23 @@ function copyResponsiveShadowsData(
 
       if (color == null) return item
 
+      if (
+        shouldRemoveResource(ContextResource.Swatch, color.swatchId, context)
+      ) {
+        return { ...item, payload: { ...item.payload, color: undefined } }
+      }
+
       return {
         ...item,
         payload: {
           ...item.payload,
           color: {
             ...color,
-            swatchId:
-              context.replacementContext.swatchIds.get(color.swatchId) ??
+            swatchId: replaceResourceIfNeeded(
+              ContextResource.Swatch,
               color.swatchId,
+              context,
+            ),
           },
         },
       }

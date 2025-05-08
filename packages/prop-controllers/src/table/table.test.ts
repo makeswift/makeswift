@@ -1,9 +1,6 @@
-import {
-  ControlDataTypeKey,
-  ReplacementContext,
-  Types,
-} from '../prop-controllers'
-import { createReplacementContext } from '../utils/utils'
+import { createReplacementContext } from '@makeswift/controls'
+import { ControlDataTypeKey, Types } from '../prop-controllers'
+
 import {
   TableDescriptor,
   TablePropControllerDataV0,
@@ -126,51 +123,86 @@ describe('TablePropController', () => {
   })
 
   describe('copyTablePropControllerData', () => {
-    test('replaces the table id for v0 data', () => {
-      // Arrange
-      const tableId = 'VGFibGU6MTM5NDhlYzMtMjgwNS00Nzk0LTliNzctNDJkN2RhNmQxZWEy'
+    const tableId = 'VGFibGU6MTM5NDhlYzMtMjgwNS00Nzk0LTliNzctNDJkN2RhNmQxZWEy'
 
-      const data: TablePropControllerDataV0 = tableId
-      const expected = JSON.parse(
-        JSON.stringify(data).replaceAll(tableId, 'testing'),
-      )
-      const replacementContext = createReplacementContext({
-        tableIds: new Map([[tableId, 'testing']]),
+    describe('v0 data', () => {
+      test('replaces table id', () => {
+        // Arrange
+        const data: TablePropControllerDataV0 = tableId
+        const expected = JSON.parse(
+          JSON.stringify(data).replaceAll(tableId, 'testing'),
+        )
+
+        // Act
+        const result = copyTablePropControllerData(data, {
+          replacementContext: createReplacementContext({
+            tableIds: { [tableId]: 'testing' },
+          }),
+          copyElement: (node) => node,
+        })
+
+        // Assert
+        expect(result).toEqual(expected)
       })
 
-      // Act
-      const result = copyTablePropControllerData(data, {
-        replacementContext: replacementContext as ReplacementContext,
-        copyElement: (node) => node,
-      })
+      test('removes table ID marked for removal', () => {
+        // Arrange
+        const data: TablePropControllerDataV0 = tableId
 
-      // Assert
-      expect(result).toEqual(expected)
+        // Act
+        const result = copyTablePropControllerData(data, {
+          replacementContext: createReplacementContext({
+            tableIds: { [tableId]: null },
+          }),
+          copyElement: (node) => node,
+        })
+
+        // Assert
+        expect(result).toEqual(undefined)
+      })
     })
 
-    test('replaces the table id for v1 data', () => {
-      // Arrange
-      const tableId = 'VGFibGU6MTM5NDhlYzMtMjgwNS00Nzk0LTliNzctNDJkN2RhNmQxZWEy'
+    describe('v1 data', () => {
+      test('replaces the table id for v1 data', () => {
+        // Arrange
+        const data: TablePropControllerDataV1 = {
+          [ControlDataTypeKey]: TablePropControllerDataV1Type,
+          value: tableId,
+        }
+        const expected = JSON.parse(
+          JSON.stringify(data).replaceAll(tableId, 'testing'),
+        )
 
-      const data: TablePropControllerDataV1 = {
-        [ControlDataTypeKey]: TablePropControllerDataV1Type,
-        value: tableId,
-      }
-      const expected = JSON.parse(
-        JSON.stringify(data).replaceAll(tableId, 'testing'),
-      )
-      const replacementContext = createReplacementContext({
-        tableIds: new Map([[tableId, 'testing']]),
+        // Act
+        const result = copyTablePropControllerData(data, {
+          replacementContext: createReplacementContext({
+            tableIds: { [tableId]: 'testing' },
+          }),
+          copyElement: (node) => node,
+        })
+
+        // Assert
+        expect(result).toEqual(expected)
       })
 
-      // Act
-      const result = copyTablePropControllerData(data, {
-        replacementContext: replacementContext as ReplacementContext,
-        copyElement: (node) => node,
-      })
+      test('removes table ID marked for removal', () => {
+        // Arrange
+        const data: TablePropControllerDataV1 = {
+          [ControlDataTypeKey]: TablePropControllerDataV1Type,
+          value: tableId,
+        }
 
-      // Assert
-      expect(result).toEqual(expected)
+        // Act
+        const result = copyTablePropControllerData(data, {
+          replacementContext: createReplacementContext({
+            tableIds: { [tableId]: null },
+          }),
+          copyElement: (node) => node,
+        })
+
+        // Assert
+        expect(result).toEqual(undefined)
+      })
     })
   })
 })

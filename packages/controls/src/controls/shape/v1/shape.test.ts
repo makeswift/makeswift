@@ -1,7 +1,9 @@
 import { createReplacementContext } from '../../../context'
 import { Targets } from '../../../introspection'
-import { deserializeRecord, type DeserializedRecord } from '../../../serialization'
-
+import {
+  deserializeRecord,
+  type DeserializedRecord,
+} from '../../../serialization'
 import { type DataType, type ValueType } from '../../associated-types'
 import { Checkbox, CheckboxDefinition } from '../../checkbox'
 import { Color, ColorDefinition } from '../../color'

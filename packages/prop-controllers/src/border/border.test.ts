@@ -1,4 +1,4 @@
-import { ControlDataTypeKey, ReplacementContext } from '../prop-controllers'
+import { ControlDataTypeKey } from '../prop-controllers'
 import {
   BorderPropControllerDataV0,
   BorderPropControllerDataV1,
@@ -7,7 +7,7 @@ import {
   getBorderPropControllerDataResponsiveBorderData,
   getBorderPropControllerDataSwatchIds,
 } from './border'
-import { createReplacementContext } from '../utils/utils'
+import { createReplacementContext } from '@makeswift/controls'
 
 describe('BorderPropController', () => {
   describe('getBorderPropControllerDataResponsiveBorderData', () => {
@@ -160,13 +160,12 @@ describe('BorderPropController', () => {
       const expected = JSON.parse(
         JSON.stringify(data).replaceAll(swatchId, 'testing'),
       )
-      const replacementContext = createReplacementContext({
-        swatchIds: new Map([[swatchId, 'testing']]),
-      })
 
       // Act
       const result = copyBorderPropControllerData(data, {
-        replacementContext: replacementContext as ReplacementContext,
+        replacementContext: createReplacementContext({
+          swatchIds: { [swatchId]: 'testing' },
+        }),
         copyElement: (node) => node,
       })
 
@@ -204,13 +203,12 @@ describe('BorderPropController', () => {
       const expected = JSON.parse(
         JSON.stringify(data).replaceAll(swatchId, 'testing'),
       )
-      const replacementContext = createReplacementContext({
-        swatchIds: new Map([[swatchId, 'testing']]),
-      })
 
       // Act
       const result = copyBorderPropControllerData(data, {
-        replacementContext: replacementContext as ReplacementContext,
+        replacementContext: createReplacementContext({
+          swatchIds: { [swatchId]: 'testing' },
+        }),
         copyElement: (node) => node,
       })
 

@@ -108,6 +108,30 @@ describe('Link', () => {
       })
     })
 
+    test('[OPEN_PAGE] link sets `pageId` to `null` if tagged in replacement context', () => {
+      const context: CopyContext = {
+        replacementContext: createReplacementContext({
+          pageIds: { 'fake-page-id': null },
+        }),
+        copyElement: (node) => node,
+      }
+
+      // Act
+      const result = Link().copyData(
+        {
+          type: 'OPEN_PAGE',
+          payload: { pageId: 'fake-page-id', openInNewTab: false },
+        },
+        context,
+      )
+
+      // Assert
+      expect(result).toEqual({
+        type: 'OPEN_PAGE',
+        payload: { pageId: undefined, openInNewTab: false },
+      })
+    })
+
     test('[SCROLL_TO_ELEMENT] links replace `elementKey` if found in replacement context', () => {
       // Act
       const result = Link().copyData(

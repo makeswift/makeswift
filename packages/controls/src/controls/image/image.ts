@@ -4,7 +4,12 @@ import { z } from 'zod'
 import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
-import { type CopyContext } from '../../context'
+import {
+  ContextResource,
+  replaceResourceIfNeeded,
+  shouldRemoveResource,
+  type CopyContext,
+} from '../../context'
 import { IntrospectionTarget, Targets } from '../../introspection'
 import { type ResourceResolver } from '../../resources/resolver'
 import {
@@ -253,20 +258,31 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
 
   copyData(
     data: DataType<C> | undefined,
-    { replacementContext }: CopyContext,
+    ctx: CopyContext,
   ): DataType<C> | undefined {
     if (data == null) return data
 
-    const replaceFileId = (fileId: string) =>
-      replacementContext.fileIds.get(fileId) ?? fileId
+    const fileResourceId = match(data satisfies z.infer<typeof this.dataSchema>)
+      .with(P.string, (id) => id)
+      .with(Definition.dataSignature.makeswiftFile, ({ id }) => id)
+      .otherwise(() => undefined)
+
+    if (
+      fileResourceId != null &&
+      shouldRemoveResource(ContextResource.File, fileResourceId, ctx)
+    ) {
+      return undefined
+    }
 
     const inputSchema = this.dataSchema.optional()
 
     return match(data satisfies z.infer<typeof inputSchema>)
-      .with(P.string, (id) => replaceFileId(id))
+      .with(P.string, (id) =>
+        replaceResourceIfNeeded(ContextResource.File, id, ctx),
+      )
       .with(Definition.dataSignature.makeswiftFile, (data) => ({
         ...data,
-        id: replaceFileId(data.id),
+        id: replaceResourceIfNeeded(ContextResource.File, data.id, ctx),
       }))
       .otherwise((val) => val)
   }
