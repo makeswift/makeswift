@@ -1,11 +1,11 @@
 # @makeswift/runtime
 
-## 0.24.3-canary.0
+## 0.24.3
 
 ### Patch Changes
 
 - Updated dependencies [461fe75]
-  - @makeswift/next-plugin@0.4.1-canary.0
+  - @makeswift/next-plugin@0.4.1
 
 ## 0.24.2
 
@@ -104,6 +104,12 @@
 - e169955: feat: reinstate experimental middleware utility function for detecting draft requests from the builder, but updated to handle requests where draft related cookies are directly attached.
 - Updated dependencies [8241d49]
   - @makeswift/next-plugin@0.4.0
+
+## 0.23.14
+
+### Patch Changes
+
+- fix: Box background videos do not play correctly in iOS
 
 ## 0.23.13
 

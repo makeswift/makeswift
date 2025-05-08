@@ -1,6 +1,6 @@
 # @makeswift/next-plugin
 
-## 0.4.1-canary.0
+## 0.4.1
 
 ### Patch Changes
 
