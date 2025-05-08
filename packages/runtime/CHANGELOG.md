@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.24.4-canary.0
+
+### Patch Changes
+
+- 7fd272b: fix: Box background videos do not play correctly in iOS
+
 ## 0.24.3
 
 ### Patch Changes
