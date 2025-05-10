@@ -1,0 +1,24 @@
+query GetBlogs($limit: Int! = 8, $skip: Int! = 0, $order: [BlogOrder], $filter: BlogFilter) {
+  blogCollection(limit: $limit, skip: $skip, order: $order, where: $filter) {
+    total
+    items {
+      _id
+      slug
+      title
+      description
+      body {
+        json
+      }
+      banner {
+        title
+        description
+        contentType
+        fileName
+        url
+        width
+        height
+      }
+      feedDate
+    }
+  }
+}
