@@ -1,0 +1,84 @@
+{
+  "name": "@makeswift/next",
+  "version": "0.1.0",
+  "description": "Next.js adapter for Makeswift",
+  "license": "MIT",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist",
+    "server",
+    "client",
+    "document",
+    "middleware"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./server": {
+      "import": "./dist/esm/server/index.js",
+      "require": "./dist/cjs/server/index.js",
+      "types": "./dist/types/server/index.d.ts"
+    },
+    "./client": {
+      "import": "./dist/esm/client/index.js",
+      "require": "./dist/cjs/client/index.js",
+      "types": "./dist/types/client/index.d.ts"
+    },
+    "./document": {
+      "import": "./dist/esm/document.js",
+      "require": "./dist/cjs/document.js",
+      "types": "./dist/types/document.d.ts"
+    },
+    "./middleware": {
+      "import": "./dist/esm/middleware/index.js",
+      "require": "./dist/cjs/middleware/index.js",
+      "types": "./dist/types/middleware/index.d.ts"
+    }
+  },
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "jest",
+    "lint": "eslint src --ext .ts,.tsx"
+  },
+  "dependencies": {
+    "@makeswift/core": "workspace:*",
+    "@makeswift/react": "workspace:*",
+    "@emotion/server": "^11.4.0"
+  },
+  "peerDependencies": {
+    "@types/react": "^18.0.0 || ^19.0.0",
+    "@types/react-dom": "^18.0.0 || ^19.0.0",
+    "next": "^13.4.0 || ^14.0.0 || ^15.0.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    },
+    "@types/react-dom": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.28",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6",
+    "eslint": "^9.0.0",
+    "jest": "^29.7.0",
+    "next": "^15.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.1.6"
+  }
+}
