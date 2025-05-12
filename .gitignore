@@ -59,3 +59,5 @@ storybook-static
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+**/.claude/settings.local.json
