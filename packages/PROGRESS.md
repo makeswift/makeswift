@@ -33,10 +33,9 @@ This document tracks the progress of the Makeswift runtime decoupling project. I
 
 #### Next Steps:
 
-- [ ] Set up testing infrastructure
+- [x] Set up testing infrastructure
 - [ ] Extract more functionality from existing implementation
   - [ ] State management
-  - [ ] Element rendering
   - [ ] Controls
 - [ ] Implement adapter pattern for head management
 - [ ] Implement adapter pattern for site version detection
@@ -45,6 +44,24 @@ This document tracks the progress of the Makeswift runtime decoupling project. I
   - [ ] API route handlers
   - [ ] SSR style and head integration
 - [ ] Create example apps for both Next.js and Remix
+
+### Check-in #3: Testing Infrastructure (DATE: 2024-05-12)
+
+#### Accomplished:
+
+- ✅ Set up Jest for all packages
+- ✅ Added tests for core element types
+- ✅ Added tests for site version functionality
+- ✅ Added tests for React element renderer
+- ✅ Added tests for Page component
+- ✅ Configured testing environment and dependencies
+
+#### Next Steps:
+
+- [ ] Implement state management
+- [ ] Implement controls
+- [ ] Create more comprehensive adapter tests
+- [ ] Set up integration tests for end-to-end functionality
 
 #### Issues/Blockers:
 
