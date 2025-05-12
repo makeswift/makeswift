@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.24.4-canary.1
+
+### Patch Changes
+
+- 97ef1e9: fix: `Invalid URL` error on attempt to open a reverse-proxied site in the builder
+
 ## 0.24.4-canary.0
 
 ### Patch Changes

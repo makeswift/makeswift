@@ -12,6 +12,7 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
-    "hip-deer-rescue"
+    "hip-deer-rescue",
+    "strange-colts-arrive"
   ]
 }
