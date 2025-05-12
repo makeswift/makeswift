@@ -22,6 +22,15 @@ This document tracks the progress of the Makeswift runtime decoupling project. I
 - ✅ Created initial Next.js and Remix adapter implementations
 - ✅ Added README files for all packages
 
+### Check-in #2: Element Rendering System (DATE: 2024-05-12)
+
+#### Accomplished:
+
+- ✅ Defined core element types
+- ✅ Implemented React element renderer
+- ✅ Created Page component for rendering documents
+- ✅ Added framework-specific Page components for Next.js and Remix
+
 #### Next Steps:
 
 - [ ] Set up testing infrastructure
