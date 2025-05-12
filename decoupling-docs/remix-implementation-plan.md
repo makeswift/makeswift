@@ -34,9 +34,12 @@ The Makeswift runtime decoupling project aims to separate the core functionality
     tsconfig.json
 
 /packages/
-  /runtime-core/            # Framework-agnostic core
-  /runtime-next-adapter/    # Next.js adapter
-  /runtime-remix-adapter/   # New Remix adapter
+  /runtime/                 # Core and React functionality
+    /src/
+      /core/                # Framework-agnostic functionality
+      /react/               # React-specific functionality
+  /next/                    # Next.js adapter
+  /remix/                   # Remix adapter
 ```
 
 ## Implementation Phases
@@ -52,8 +55,8 @@ The Makeswift runtime decoupling project aims to separate the core functionality
    ```json
    {
      "dependencies": {
-       "@makeswift/runtime-core": "workspace:*",
-       "@makeswift/runtime-remix-adapter": "workspace:*",
+       "@makeswift/runtime": "workspace:*",
+       "@makeswift/remix": "workspace:*",
        "@remix-run/node": "^2.8.0",
        "@remix-run/react": "^2.8.0",
        "react": "^18.2.0",
@@ -72,8 +75,8 @@ The Makeswift runtime decoupling project aims to separate the core functionality
 1. **Makeswift Client Setup**
    ```typescript
    // app/makeswift/client.ts
-   import { Makeswift } from '@makeswift/runtime-core';
-   import { createRemixAdapter } from '@makeswift/runtime-remix-adapter';
+   import { Makeswift } from '@makeswift/runtime/core';
+   import { createRemixAdapter } from '@makeswift/remix';
    import { runtime } from './runtime';
    import { MAKESWIFT_SITE_API_KEY } from './env';
 
@@ -89,7 +92,7 @@ The Makeswift runtime decoupling project aims to separate the core functionality
 2. **Makeswift Runtime Configuration**
    ```typescript
    // app/makeswift/runtime.ts
-   import { ReactRuntime } from '@makeswift/runtime-core/react';
+   import { ReactRuntime } from '@makeswift/runtime/react';
 
    export const runtime = new ReactRuntime({
      breakpoints: {
@@ -104,8 +107,8 @@ The Makeswift runtime decoupling project aims to separate the core functionality
 3. **Provider Component**
    ```typescript
    // app/makeswift/provider.tsx
-   import { ReactRuntimeProvider } from '@makeswift/runtime-core/react';
-   import { RemixRuntimeProvider } from '@makeswift/runtime-remix-adapter';
+   import { ReactRuntimeProvider } from '@makeswift/runtime/react';
+   import { RemixRuntimeProvider } from '@makeswift/remix';
    import { runtime } from './runtime';
    import { useRouteLoaderData } from '@remix-run/react';
    
@@ -135,7 +138,7 @@ The Makeswift runtime decoupling project aims to separate the core functionality
    // app/routes/$lang.$path.tsx
    import { json, LoaderFunctionArgs } from '@remix-run/node';
    import { useLoaderData } from '@remix-run/react';
-   import { MakeswiftPage } from '@makeswift/runtime-remix-adapter';
+   import { MakeswiftPage } from '@makeswift/remix';
    import { client } from '~/makeswift/client';
    import { getSiteVersion } from '~/utils/draft-mode';
 
@@ -186,7 +189,7 @@ The Makeswift runtime decoupling project aims to separate the core functionality
      ScrollRestoration 
    } from '@remix-run/react';
    import { MakeswiftProvider } from '~/makeswift/provider';
-   import { MakeswiftStyles } from '@makeswift/runtime-remix-adapter';
+   import { MakeswiftStyles } from '@makeswift/remix';
    import styles from './styles/app.css';
 
    export function links() {
@@ -306,8 +309,8 @@ The Makeswift runtime decoupling project aims to separate the core functionality
 2. **Demo Component Implementation**
    ```typescript
    // app/components/font-control-demo/font-control-demo.makeswift.ts
-   import { ReactRuntime } from '@makeswift/runtime-core/react';
-   import { Style } from '@makeswift/runtime-core/controls';
+   import { ReactRuntime } from '@makeswift/runtime/react';
+   import { Style } from '@makeswift/runtime/controls';
    import { runtime } from '~/makeswift/runtime';
    import { FontControlDemo } from './font-control-demo';
 
@@ -342,7 +345,7 @@ The Makeswift runtime decoupling project aims to separate the core functionality
    ```typescript
    // app/utils/draft-mode.ts
    import { createDraftCookie } from './cookies';
-   import { MakeswiftSiteVersion } from '@makeswift/runtime-core';
+   import { MakeswiftSiteVersion } from '@makeswift/runtime/core';
 
    export async function getSiteVersion(request: Request): Promise<MakeswiftSiteVersion> {
      const cookie = createDraftCookie();
@@ -356,7 +359,7 @@ The Makeswift runtime decoupling project aims to separate the core functionality
 
 ## Adapter Implementation
 
-The `@makeswift/runtime-remix-adapter` package will implement the following key features:
+The `@makeswift/remix` package will implement the following key features:
 
 1. **Page Component**
    - Handles rendering of Makeswift page snapshots

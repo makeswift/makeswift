@@ -10,27 +10,39 @@ The Makeswift runtime needs to be decoupled from Next.js to support multiple fra
 
 ```
 ┌───────────────────────────────────────────────────────────┐
-│                 @makeswift/runtime-core                   │
+│                 @makeswift/runtime                        │
 │                                                           │
-│  ┌─────────────┐  ┌────────────────┐  ┌───────────────┐   │
-│  │ API Client  │  │ Component Base │  │ State Manager │   │
-│  └─────────────┘  └────────────────┘  └───────────────┘   │
+│  ┌─────────────────────────────────────────────────────┐  │
+│  │                      /src/core                      │  │
+│  │                                                     │  │
+│  │  ┌─────────────┐  ┌────────────────┐  ┌───────────┐ │  │
+│  │  │ API Client  │  │ Component Base │  │   State   │ │  │
+│  │  └─────────────┘  └────────────────┘  └───────────┘ │  │
+│  │                                                     │  │
+│  │  ┌─────────────┐  ┌────────────────┐  ┌───────────┐ │  │
+│  │  │  Controls   │  │    Adapters    │  │  Builder  │ │  │
+│  │  └─────────────┘  └────────────────┘  └───────────┘ │  │
+│  └─────────────────────────────────────────────────────┘  │
 │                                                           │
-│  ┌─────────────┐  ┌────────────────┐  ┌───────────────┐   │
-│  │  Controls   │  │  Page Renderer │  │    Builder    │   │
-│  └─────────────┘  └────────────────┘  └───────────────┘   │
+│  ┌─────────────────────────────────────────────────────┐  │
+│  │                     /src/react                      │  │
+│  │                                                     │  │
+│  │  ┌─────────────┐  ┌────────────────┐  ┌───────────┐ │  │
+│  │  │ Components  │  │     Hooks      │  │ Providers │ │  │
+│  │  └─────────────┘  └────────────────┘  └───────────┘ │  │
+│  │                                                     │  │
+│  │  ┌─────────────┐  ┌────────────────┐  ┌───────────┐ │  │
+│  │  │  Renderers  │  │ Control Impls  │  │  Runtime  │ │  │
+│  │  └─────────────┘  └────────────────┘  └───────────┘ │  │
+│  └─────────────────────────────────────────────────────┘  │
 │                                                           │
 └───────────────────────────────────────────────────────────┘
-                          ▲
-                          │
-                          │ implements
-                          │
                           ▼
-┌─────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────┐
 │                     Framework Adapters                      │
 ├─────────────────────┬─────────────────────┬─────────────────┤
-│@makeswift/runtime-  │@makeswift/runtime-  │  Other Future   │
-│    next-adapter     │   remix-adapter     │    Adapters     │
+│  @makeswift/next    │  @makeswift/remix   │  Other Future   │
+│                     │                     │    Adapters     │
 │                     │                     │                 │
 │  - Next.js API      │  - Remix API        │                 │
 │    Routes           │    Routes           │                 │
@@ -52,9 +64,9 @@ The Makeswift runtime needs to be decoupled from Next.js to support multiple fra
 └─────────────────────┴─────────────────────┴─────────────────┘
 ```
 
-## Core Package: @makeswift/runtime-core
+## Main Package: @makeswift/runtime
 
-The core package will contain all framework-agnostic functionality, providing abstractions that can be implemented by framework-specific adapters.
+The `@makeswift/runtime` package contains both framework-agnostic core functionality and React-specific implementations, providing abstractions that can be implemented by framework-specific adapters. It is organized into two main subdirectories: `/src/core` for framework-agnostic functionality and `/src/react` for React-specific (but still framework-agnostic) functionality.
 
 ### Key Components
 
@@ -505,13 +517,13 @@ export { MakeswiftApiHandlerCore } from './core/api-handler';
 export { getSiteVersion } from './core/site-version';
 
 // client.ts - Client-side exports
-export { ReactRuntimeProvider } from './core/runtime-provider';
-export { PageRenderer } from './core/page-renderer';
+export { ReactRuntimeProvider } from './react/runtime-provider';
+export { PageRenderer } from './react/page-renderer';
 
 // index.ts - Common exports
 export { MakeswiftSiteVersion } from './core/types';
 export { type MakeswiftAdapter } from './core/adapter';
-export { ReactRuntime } from './core/runtime';
+export { ReactRuntime } from './react/runtime';
 ```
 
 ## Conclusion

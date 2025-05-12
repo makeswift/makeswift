@@ -6,8 +6,7 @@ This document provides a comprehensive checklist to track progress on the Makesw
 
 ### 1.1 Project Setup (Week 1)
 - [ ] Create repository structure for new packages
-  - [ ] `@makeswift/core` package scaffold
-  - [ ] `@makeswift/react` package scaffold
+  - [ ] Reorganize `@makeswift/runtime` with core and react subdirectories
   - [ ] `@makeswift/next` package scaffold
   - [ ] `@makeswift/remix` package scaffold
 - [ ] Configure build system for all packages
@@ -19,11 +18,11 @@ This document provides a comprehensive checklist to track progress on the Makesw
   - [ ] CI integration
 
 ### 1.2 Core Implementation - Foundation (Week 1-2)
-- [ ] Define core adapter interfaces
+- [ ] Define core adapter interfaces in `@makeswift/runtime/src/core`
   - [ ] `MakeswiftAdapter` interface
   - [ ] Site version management interface
   - [ ] Resource management interfaces
-- [ ] Create package organization
+- [ ] Create internal organization
   - [ ] Define public API boundaries
   - [ ] Separate server/client code
   - [ ] Set up type exports
@@ -47,7 +46,7 @@ This document provides a comprehensive checklist to track progress on the Makesw
   - [ ] Create hook abstractions
 
 ### 1.5 Component Base Classes (Week 4-5)
-- [ ] Create base component abstractions
+- [ ] Create base component abstractions in `@makeswift/runtime/src/react`
   - [ ] Base Image component
   - [ ] Base Link component
   - [ ] Base Head management
@@ -56,7 +55,7 @@ This document provides a comprehensive checklist to track progress on the Makesw
   - [ ] Component extension mechanism
 
 ### 1.6 React Implementation (Week 5-6)
-- [ ] Create React runtime in `@makeswift/react`
+- [ ] Create React runtime in `@makeswift/runtime/src/react`
   - [ ] Implement React-specific hooks
   - [ ] Create React context providers
   - [ ] Build React component bases
@@ -147,7 +146,7 @@ This document provides a comprehensive checklist to track progress on the Makesw
 - [ ] Create core documentation
   - [ ] API reference
   - [ ] Architecture overview
-  - [ ] Migration guide from legacy `@makeswift/runtime`
+  - [ ] Import organization guide
 - [ ] Implementation guides
   - [ ] Adapter implementation guide
   - [ ] Component extension guide
@@ -190,12 +189,11 @@ This document provides a comprehensive checklist to track progress on the Makesw
 - [ ] Final documentation updates
   - [ ] Incorporate feedback
   - [ ] Add examples from testing
-  - [ ] Complete migration guides
+  - [ ] Complete usage guides
 
 ### 5.3 Release Preparation (Week 3)
 - [ ] Package version strategy
   - [ ] Define initial versions
-  - [ ] Plan deprecation of legacy package
   - [ ] Establish upgrade path
 - [ ] Prepare release notes
   - [ ] Document breaking changes
@@ -242,12 +240,12 @@ This document provides a comprehensive checklist to track progress on the Makesw
 - [ ] **Milestone**: All tests passing
 - [ ] **Milestone**: Performance benchmarks acceptable
 - [ ] **Milestone**: Packages published
-- [ ] **Milestone**: Migration guide verified
+- [ ] **Milestone**: Documentation verified
 
 ## First Steps (Immediate Actions)
 
-1. [x] Create package repository structure
-2. [x] Define core adapter interfaces
-3. [x] Create initial API client code
+1. [x] Define core adapter interfaces
+2. [x] Create initial API client code
+3. [x] Create project structure with core/react subdirectories
 4. [x] Create first proof-of-concept with minimal functionality
 5. [ ] Establish regular progress check-ins

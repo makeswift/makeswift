@@ -2,63 +2,67 @@
 
 ## Overview
 
-This document explains the rationale behind the package naming convention adopted for the Makeswift runtime decoupling project. The chosen naming structure follows industry best practices and aims to create a clear, intuitive organization for the decoupled components.
+This document explains the rationale behind the package naming convention adopted for the Makeswift runtime decoupling project. The chosen naming structure follows industry best practices while prioritizing backward compatibility and aims to create a clear, intuitive organization for the decoupled components.
 
 ## Adopted Naming Convention
 
 The Makeswift decoupling project uses the following package naming convention:
 
 ```
-@makeswift/core        - Core framework-agnostic functionality
-@makeswift/react       - Base React implementation
-@makeswift/next        - Next.js adapter
-@makeswift/remix       - Remix adapter
-@makeswift/runtime     - Meta-package (for backward compatibility)
+@makeswift/runtime    - Core package containing framework-agnostic and React functionality
+@makeswift/next       - Next.js adapter
+@makeswift/remix      - Remix adapter
 ```
 
 ## Rationale
 
-### Why We Chose TanStack's Pattern
+### Why We Chose This Approach
 
-After researching package naming conventions across the ecosystem, we adopted TanStack's pattern for several reasons:
+After evaluating various options, we decided to maintain the existing `@makeswift/runtime` as the main package while creating separate adapter packages:
 
-1. **Clarity and Simplicity**: The naming structure is clean, concise, and immediately understandable.
+1. **Backward Compatibility**: Keeping core functionality in `@makeswift/runtime` minimizes migration effort for existing users.
 
-2. **Established Precedent**: TanStack (formerly React Query) is a highly respected and widely-used library family that follows this pattern for its multi-framework packages.
+2. **Familiarity**: Existing users are already familiar with the `runtime` package name.
 
-3. **Scalability**: The structure scales well as more framework adapters are added.
+3. **Reduced Package Overhead**: Fewer packages means less complexity in dependency management and versioning.
 
-4. **Organizational Hierarchy**: The naming clearly indicates the relationship between packages - core functionality, React implementation, and framework-specific adapters.
+4. **Clear Separation of Concerns**: Framework-specific code is isolated in dedicated adapter packages, while common logic remains in one place.
 
-5. **Developer Experience**: Package names are short and predictable, making them easier to remember and use.
+5. **Simplified Developer Experience**: Users need to install and manage fewer packages to get started.
 
-### Comparison with Other Conventions
+### Internal Organization
 
-| Convention | Example | Analysis | 
-|------------|---------|------------|
-| TanStack Style | `@tanstack/react-query` | Clean, framework as part of name, organized by scope |
-| Framework Suffix | `ui-core`, `ui-react` | Less clear ownership, possible namespace clashes |
-| Long Descriptive | `runtime-next-adapter` | More verbose, less aligned with modern libraries |
-| Feature Prefix | `next-makeswift` | Could be confused with third-party adaptations |
+Within the `@makeswift/runtime` package, we use directory structure to separate concerns:
+
+```
+@makeswift/runtime/
+  └── src/
+      ├── core/        - Framework-agnostic functionality
+      ├── react/       - React-specific (but framework-agnostic) functionality
+      └── index.ts     - Public API exports
+```
+
+This internal organization provides code separation without requiring multiple packages.
 
 ## Package Responsibilities
 
-### @makeswift/core
+### @makeswift/runtime
 
-Contains all framework-agnostic functionality:
+Contains both framework-agnostic core and React-specific functionality:
+
+#### In `/src/core`:
 - API client foundation
 - Core type definitions
 - Adapter interfaces
 - Content and resource models
 - Site version management
 
-### @makeswift/react
-
-Contains React-specific but framework-agnostic implementation:
+#### In `/src/react`:
 - React component base classes
 - React hooks
 - Context providers
 - React state management
+- Element renderers
 
 ### @makeswift/next
 
@@ -77,45 +81,54 @@ Implements the Remix adapter:
 - Draft mode using cookies
 - Loaders and actions
 
-### @makeswift/runtime
+## Advantages Over Multi-Package Approach
 
-Optional meta-package that re-exports from the other packages for backward compatibility.
+The chosen approach has several advantages compared to creating separate packages for core and React functionality:
 
-## Migration Strategy
+1. **Simpler Dependency Management**: Users only need to manage one core package version.
 
-For users of the existing `@makeswift/runtime` package, we provide a migration path:
+2. **Easier Upgrades**: No need to coordinate version updates across multiple packages.
 
-1. **Short-term**: The `@makeswift/runtime` package will be maintained as a meta-package that re-exports from the new packages, allowing gradual migration.
+3. **Reduced Bundle Size**: Less package overhead can lead to smaller overall bundle sizes.
 
-2. **Mid-term**: Documentation will guide users to migrate to the new package structure directly.
+4. **Clearer Documentation**: Documentation can focus on one core package with adapter extensions.
 
-3. **Long-term**: New features will be developed exclusively for the new package structure.
+5. **Simplified Publishing**: Fewer packages to publish and maintain release notes for.
 
-## Examples from Other Popular Libraries
+## Examples from Other Libraries
 
-### TanStack
-
-TanStack uses a consistent pattern of `@tanstack/[framework]-[library]`:
-- `@tanstack/react-query`
-- `@tanstack/vue-query`
-- `@tanstack/svelte-query`
+Many popular libraries use a similar approach of keeping core functionality in one package and offering separate adapters:
 
 ### Emotion
 
-Emotion uses a pattern of `@emotion/[feature]`:
-- `@emotion/react`
-- `@emotion/css`
-- `@emotion/styled`
+Emotion maintains core functionality in their main packages while offering framework integrations:
+- `@emotion/css` - Core package
+- `@emotion/react` - React integration
 
-### Tailwind
+### Prisma
 
-Tailwind uses direct and framework-specific packages:
-- `tailwindcss`
-- `@tailwindcss/forms`
-- `@tailwindcss/typography`
+Prisma keeps core functionality in one client package:
+- `@prisma/client` - Main package
+- Adapters are documented patterns rather than separate packages
+
+### React Hook Form
+
+React Hook Form has its core functionality in one package with resolver adapters:
+- `react-hook-form` - Main package
+- `@hookform/resolvers` - Validation library adapters
+
+## Migration Strategy
+
+For existing users, the migration path is straightforward:
+
+1. **No Change for Core Usage**: Existing imports from `@makeswift/runtime` continue to work the same way.
+
+2. **Framework Adapters**: When using a specific framework, install the appropriate adapter package.
+
+3. **Import Organization**: We'll maintain clear documentation about which imports come from which package.
 
 ## Conclusion
 
-The adopted package naming convention aligns with modern JavaScript library practices, particularly following TanStack's successful pattern. This structure provides a clear organization that scales well as more framework adapters are added while maintaining an intuitive developer experience.
+By maintaining the existing `@makeswift/runtime` package for core and React functionality while creating separate adapter packages, we achieve a balance between backward compatibility and clean architecture. This approach simplifies the developer experience while still providing clear separation between framework-specific code.
 
-By following this established pattern, we make it easier for developers familiar with other multi-framework libraries to understand and work with the Makeswift ecosystem.
+The structure gives us the flexibility to support multiple frameworks through dedicated adapters while keeping the core experience consistent and familiar for existing users.

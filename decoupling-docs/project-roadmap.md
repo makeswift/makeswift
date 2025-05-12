@@ -31,12 +31,15 @@ This document outlines the comprehensive roadmap for decoupling the Makeswift ru
 **Goal**: Create a clear separation between framework-agnostic code and framework-specific adapters.
 
 #### Package Structure
-Following TanStack's successful naming pattern:
-- `@makeswift/core`: Core functionality independent of any framework
-- `@makeswift/react`: Base React implementation
-- `@makeswift/next`: Next.js specific implementation
-- `@makeswift/remix`: Remix specific implementation
-- `@makeswift/runtime`: Meta-package for backward compatibility (optional)
+We'll maintain the existing `@makeswift/runtime` package for core functionality, while creating separate adapter packages for framework-specific implementations:
+
+- `@makeswift/runtime`: Main package with core, React-agnostic, and React-specific functionality
+  - `/src/core`: Framework-agnostic core functionality
+  - `/src/react`: React-specific (but framework-agnostic) functionality
+- `@makeswift/next`: Next.js specific adapter and functionality
+- `@makeswift/remix`: Remix specific adapter and functionality (to be added)
+
+This approach maintains backward compatibility for the core runtime while allowing for clean separation of framework-specific code.
 
 #### Key Tasks:
 1. **Week 1-2: Foundation Setup**
