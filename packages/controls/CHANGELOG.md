@@ -1,6 +1,6 @@
 # @makeswift/controls
 
-## 0.1.9-canary.0
+## 0.1.9
 
 ### Patch Changes
 

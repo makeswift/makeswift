@@ -1,12 +1,12 @@
 # @makeswift/prop-controllers
 
-## 0.4.2-canary.0
+## 0.4.2
 
 ### Patch Changes
 
 - f33c4d7: Add support for removing resources while copying control/prop-controller data with a replacement context
 - Updated dependencies [f33c4d7]
-  - @makeswift/controls@0.1.9-canary.0
+  - @makeswift/controls@0.1.9
 
 ## 0.4.1
 

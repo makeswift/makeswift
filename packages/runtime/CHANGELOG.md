@@ -1,25 +1,15 @@
 # @makeswift/runtime
 
-## 0.24.4-canary.2
-
-### Patch Changes
-
-- f33c4d7: Add support for removing resources while copying control/prop-controller data with a replacement context
-- Updated dependencies [f33c4d7]
-  - @makeswift/prop-controllers@0.4.2-canary.0
-  - @makeswift/controls@0.1.9-canary.0
-
-## 0.24.4-canary.1
-
-### Patch Changes
-
-- 97ef1e9: fix: `Invalid URL` error on attempt to open a reverse-proxied site in the builder
-
-## 0.24.4-canary.0
+## 0.24.4
 
 ### Patch Changes
 
 - 7fd272b: fix: Box background videos do not play correctly in iOS
+- f33c4d7: Add support for removing resources while copying control/prop-controller data with a replacement context
+- 97ef1e9: fix: `Invalid URL` error on attempt to open a reverse-proxied site in the builder
+- Updated dependencies [f33c4d7]
+  - @makeswift/prop-controllers@0.4.2
+  - @makeswift/controls@0.1.9
 
 ## 0.24.3
 
