@@ -6,25 +6,40 @@ import {
   LinkProps,
   StyleRegistry,
   MakeswiftSiteVersion
-} from '@makeswift/core';
+} from '@makeswift/runtime/core';
 import { RemixImage } from './components/remix-image';
 import { RemixLink } from './components/remix-link';
+import { getSiteVersion } from './server/site-version';
+import { createStyleRegistry } from './server/style-registry';
+import React from 'react';
 
 /**
  * Options for the Remix adapter
  */
 export interface RemixAdapterOptions {
-  /* Additional options specific to Remix */
+  /** Custom base path for API routes */
+  apiBasePath?: string;
+  
+  /** Options for the style registry */
+  styleOptions?: {
+    key?: string;
+  };
 }
 
 /**
- * Implementation of MakeswiftAdapter for Remix
+ * Implementation of MakeswiftAdapter for Remix/React Router v7
  */
 export class RemixAdapter implements MakeswiftAdapter {
-  private options?: RemixAdapterOptions;
+  private options: RemixAdapterOptions;
 
-  constructor(options?: RemixAdapterOptions) {
-    this.options = options;
+  constructor(options: RemixAdapterOptions = {}) {
+    this.options = {
+      apiBasePath: '/api/makeswift',
+      styleOptions: {
+        key: 'makeswift',
+      },
+      ...options,
+    };
   }
 
   /**
@@ -63,41 +78,71 @@ export class RemixAdapter implements MakeswiftAdapter {
   }
 
   /**
-   * Gets site version from Remix context (usually a request)
+   * Gets site version from a Request object or defaults to Live
    */
-  async getSiteVersion(request: Request): Promise<MakeswiftSiteVersion> {
-    // This is a stub - in a real implementation, this would
-    // extract site version from Remix cookies
+  async getSiteVersion(request: Request | unknown): Promise<MakeswiftSiteVersion> {
+    // If we received a Request, extract the site version from cookies
+    if (request instanceof Request) {
+      return getSiteVersion(request);
+    }
+    
+    // Default to Live for any other context
     return MakeswiftSiteVersion.Live;
   }
 
   /**
-   * Creates meta objects for Remix
+   * Renders head elements for React Router app
    */
   renderHead(headElements: HeadElement[]): React.ReactNode {
-    // This is a stub - in a real implementation, this would
-    // transform head elements into Remix meta exports
-    return null;
+    return (
+      <>
+        {headElements.map((element, index) => {
+          const { type, props, children } = element;
+          
+          // Create React element based on the type
+          switch (type) {
+            case 'title':
+              return <title key={index} {...props}>{children}</title>;
+              
+            case 'meta':
+              return <meta key={index} {...props} />;
+              
+            case 'link':
+              return <link key={index} {...props} />;
+              
+            case 'script':
+              return children
+                ? <script key={index} {...props} dangerouslySetInnerHTML={{ __html: children }} />
+                : <script key={index} {...props} />;
+                
+            case 'style':
+              return <style key={index} {...props} dangerouslySetInnerHTML={{ __html: children || '' }} />;
+              
+            default:
+              return null;
+          }
+        })}
+      </>
+    );
   }
 
   /**
-   * Creates a style registry for Remix
+   * Creates a style registry using emotion for Remix
    */
   createStyleRegistry(): StyleRegistry {
-    // This is a stub - in a real implementation, this would
-    // create an emotion style registry compatible with Remix
-    return {
-      extractStyles: () => ({ css: '', ids: [] }),
-      createCache: () => ({}),
-    };
+    return createStyleRegistry();
   }
 
   /**
-   * Resolves a page path within Remix
+   * Resolves a page path with locale support
    */
   resolvePagePath(path: string, locale?: string): string {
-    // This is a stub - in a real implementation, this would
-    // handle Remix specific path resolution
+    // Handle root path
+    if (path === '/') {
+      return locale ? `/${locale}` : '/';
+    }
+    
+    // Handle other paths with locale
     return locale ? `/${locale}${path}` : path;
   }
 }

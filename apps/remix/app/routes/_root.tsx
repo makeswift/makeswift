@@ -4,6 +4,7 @@
 import { 
   Outlet, 
   useLoaderData,
+  useRouteLoaderData,
   json,
   defer,
   type LoaderFunction,
@@ -15,6 +16,11 @@ import { getSiteVersion } from '~/makeswift/utils/site-version';
 
 // Import styles
 import '~/styles/app.css';
+
+/**
+ * Route ID for the root layout
+ */
+export const id = 'root';
 
 /**
  * Meta function for the root
@@ -53,7 +59,10 @@ export default function Root() {
         <MakeswiftStyles />
       </head>
       <body>
-        <MakeswiftProvider>
+        <MakeswiftProvider 
+          siteVersion={data.siteVersion}
+          locale={data.locale}
+        >
           <Outlet />
         </MakeswiftProvider>
       </body>

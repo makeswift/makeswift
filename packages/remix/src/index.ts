@@ -6,6 +6,9 @@
 export { RemixAdapter, type RemixAdapterOptions } from './adapter';
 export { createRemixAdapter } from './create-adapter';
 
+// Export client utilities
+export { createMakeswiftClient, type CreateMakeswiftClientOptions } from './client';
+
 // Export components
 export { MakeswiftPage } from './page';
 export { RemixImage } from './components/remix-image';
