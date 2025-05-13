@@ -1,0 +1,24 @@
+{
+  "name": "makeswift-framework-comparison-tests",
+  "version": "1.0.0",
+  "description": "E2E tests to compare Makeswift implementations across frameworks",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:chrome": "playwright test --project=nextjs-chrome,remix-chrome",
+    "test:mobile": "playwright test --project=nextjs-mobile,remix-mobile",
+    "test:visual": "playwright test basic-page.spec.ts",
+    "test:functional": "playwright test functional.spec.ts",
+    "report": "playwright show-report",
+    "install:browsers": "playwright install chromium firefox webkit"
+  },
+  "dependencies": {
+    "pixelmatch": "^5.3.0",
+    "pngjs": "^7.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.41.1",
+    "@types/pixelmatch": "^5.2.6",
+    "@types/pngjs": "^6.0.4"
+  }
+}
