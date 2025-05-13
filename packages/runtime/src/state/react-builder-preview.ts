@@ -7,7 +7,7 @@ import {
   type MiddlewareAPI,
   type Store as ReduxStore,
 } from 'redux'
-import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk'
+import { thunk, ThunkAction, ThunkDispatch } from 'redux-thunk'
 import { composeWithDevToolsDevelopmentOnly } from '@redux-devtools/extension'
 
 import { ControlInstance } from '@makeswift/controls'
