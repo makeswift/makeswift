@@ -167,7 +167,7 @@
     "polished": "3.0.3",
     "react-player": "^2.16.0",
     "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0",
+    "redux-thunk": "^3.1.0",
     "reselect": "^5.1.1",
     "scroll-into-view-if-needed": "^2.2.20",
     "set-cookie-parser": "^2.7.1",
