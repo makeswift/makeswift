@@ -9,6 +9,7 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@makeswift/remix": "workspace:^",
     "@makeswift/runtime": "workspace:^",
     "@react-router/node": "^7.5.3",
     "@react-router/serve": "^7.5.3",

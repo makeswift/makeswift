@@ -1,17 +1,19 @@
 import { LoaderFunctionArgs, json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { client } from '../makeswift/client'
-import { Page as MakeswiftPage } from '@makeswift/runtime/next'
+import { Page as MakeswiftPage, getSiteVersion } from '@makeswift/remix'
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
   // Get the path from the URL params
   const path = params.path ? `/${params.path}` : '/'
 
   try {
+    // Get the site version based on draft mode
+    const siteVersion = await getSiteVersion(request)
+    
     // Get the page snapshot from Makeswift
-    // In a real implementation, we'd pass the proper site version based on draft mode
     const snapshot = await client.getPageSnapshot(path, {
-      siteVersion: 'Live',
+      siteVersion,
     })
 
     if (!snapshot) {

@@ -1,5 +1,5 @@
 import { runtime } from './runtime'
-import { ReactRuntimeProvider } from '@makeswift/runtime/next'
+import { MakeswiftProvider as RemixMakeswiftProvider } from '@makeswift/remix'
 
 // Import components registration
 import './components'
@@ -15,14 +15,13 @@ export function MakeswiftProvider({
   previewMode?: boolean
 }) {
   return (
-    <ReactRuntimeProvider
-      runtime={runtime}
-      previewMode={previewMode}
+    <RemixMakeswiftProvider
       locale={locale}
+      previewMode={previewMode}
       apiOrigin={process.env.MAKESWIFT_API_ORIGIN}
       appOrigin={process.env.MAKESWIFT_APP_ORIGIN}
     >
       {children}
-    </ReactRuntimeProvider>
+    </RemixMakeswiftProvider>
   )
 }
