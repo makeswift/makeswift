@@ -46,7 +46,7 @@ echo -e "${YELLOW}Starting Next.js app on port ${NEXTJS_PORT}...${NC}"
 
 # Start Remix app in background
 echo -e "${YELLOW}Starting Remix app on port ${REMIX_PORT}...${NC}"
-(cd "$REMIX_DIR" && pnpm dev --port=$REMIX_PORT) & REMIX_PID=$!
+(cd "$REMIX_DIR" && PORT=$REMIX_PORT pnpm dev) & REMIX_PID=$!
 
 # Wait for both servers to be ready
 echo -e "${YELLOW}Waiting for servers to be ready...${NC}"

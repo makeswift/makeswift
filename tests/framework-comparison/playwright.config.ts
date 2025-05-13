@@ -2,8 +2,8 @@ import { defineConfig, devices } from '@playwright/test';
 import path from 'path';
 
 // Define paths to our applications
-const NEXTJS_APP_PATH = path.join(__dirname, '../../apps/nextjs-app-router');
-const REMIX_APP_PATH = path.join(__dirname, '../../apps/remix');
+const NEXTJS_APP_PATH = path.resolve(__dirname, '../../apps/nextjs-app-router');
+const REMIX_APP_PATH = path.resolve(__dirname, '../../apps/remix');
 
 // Define ports for our servers
 const NEXTJS_PORT = 3000;
@@ -102,14 +102,16 @@ export default defineConfig({
   // Start both development servers for testing
   webServer: [
     {
-      command: `cd ${NEXTJS_APP_PATH} && pnpm dev -- -p ${NEXTJS_PORT}`,
+      command: `cd ${NEXTJS_APP_PATH} && pnpm dev`,
+      env: { PORT: String(NEXTJS_PORT) },
       url: `http://localhost:${NEXTJS_PORT}`,
       reuseExistingServer: !process.env.CI,
       stdout: 'pipe',
       stderr: 'pipe',
     },
     {
-      command: `cd ${REMIX_APP_PATH} && pnpm dev -- --port=${REMIX_PORT}`,
+      command: `cd ${REMIX_APP_PATH} && pnpm dev`,
+      env: { PORT: String(REMIX_PORT) },
       url: `http://localhost:${REMIX_PORT}`,
       reuseExistingServer: !process.env.CI,
       stdout: 'pipe',
