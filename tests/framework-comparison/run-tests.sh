@@ -57,7 +57,15 @@ sleep 15
 
 # Run the tests
 echo -e "${YELLOW}Running Makeswift page comparison tests...${NC}"
-npx playwright test makeswift-page.spec.ts --headed
+
+# If this is the first run, we need to update snapshots
+if [ "$1" == "--update-snapshots" ]; then
+  echo -e "${YELLOW}Updating snapshots...${NC}"
+  npx playwright test makeswift-page.spec.ts --update-snapshots --headed
+else
+  # Regular test run
+  npx playwright test makeswift-page.spec.ts --headed
+fi
 
 # Capture exit code
 TEST_EXIT_CODE=$?
@@ -76,7 +84,12 @@ if [ $TEST_EXIT_CODE -eq 0 ]; then
 else
   echo -e "${RED}Tests failed with exit code: ${TEST_EXIT_CODE}${NC}"
   echo -e "${YELLOW}View the test report with:${NC} npx playwright show-report"
-  echo -e "${YELLOW}View screenshots in:${NC} test-results/framework-comparison/visual/"
 fi
+
+# Always provide location of the screenshots
+echo -e "${YELLOW}Screenshots saved in:${NC} test-results/screenshots/"
+echo -e "${YELLOW}Usage:${NC}"
+echo -e "  - Run with snapshots: ./run-tests.sh"
+echo -e "  - Update snapshots:   ./run-tests.sh --update-snapshots"
 
 exit $TEST_EXIT_CODE

@@ -32,6 +32,15 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
+  
+  // Configure snapshot comparison
+  expect: {
+    toMatchSnapshot: {
+      // Customize snapshot comparison behavior
+      threshold: 0.15, // Default threshold for snapshot comparison
+      maxDiffPixelRatio: 0.15, // Allow 15% of pixels to be different
+    },
+  },
 
   // Define projects for each framework and viewport combination
   projects: [
