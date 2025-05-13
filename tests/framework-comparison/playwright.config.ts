@@ -1,10 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
 import path from 'path';
-import { fileURLToPath } from 'url';
-
-// Get the directory name of the current module
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Define paths to our applications
 const NEXTJS_APP_PATH = path.join(__dirname, '../../apps/nextjs-app-router');

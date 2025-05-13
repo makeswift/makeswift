@@ -42,14 +42,11 @@ fi
 
 # Start Next.js app in background
 echo -e "${YELLOW}Starting Next.js app on port ${NEXTJS_PORT}...${NC}"
-cd "$NEXTJS_DIR" && PORT=$NEXTJS_PORT pnpm dev & NEXTJS_PID=$!
+(cd "$NEXTJS_DIR" && PORT=$NEXTJS_PORT pnpm dev) & NEXTJS_PID=$!
 
 # Start Remix app in background
 echo -e "${YELLOW}Starting Remix app on port ${REMIX_PORT}...${NC}"
-cd "../../$REMIX_DIR" && pnpm dev --port=$REMIX_PORT & REMIX_PID=$!
-
-# Return to test directory
-cd "../../tests/framework-comparison"
+(cd "$REMIX_DIR" && pnpm dev --port=$REMIX_PORT) & REMIX_PID=$!
 
 # Wait for both servers to be ready
 echo -e "${YELLOW}Waiting for servers to be ready...${NC}"
