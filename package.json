@@ -7,8 +7,17 @@
   "scripts": {
     "format": "prettier --write .",
     "build": "turbo run build --filter=!./apps/*",
+    "build:all": "turbo run build",
+    "dev": "turbo run dev",
+    "clean": "turbo run clean",
     "test": "turbo run test",
-    "madge": "turbo run madge"
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "madge": "turbo run madge",
+    "dev:runtime": "turbo run dev --filter=@makeswift/runtime",
+    "dev:remix": "turbo run dev --filter=@makeswift/remix",
+    "dev:apps": "turbo run dev --filter=./apps/*",
+    "dev:remix-app": "turbo run dev --filter=./apps/remix"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
