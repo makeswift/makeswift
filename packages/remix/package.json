@@ -37,8 +37,7 @@
     "lint": "eslint src --ext .ts,.tsx"
   },
   "dependencies": {
-    "@makeswift/core": "workspace:*",
-    "@makeswift/react": "workspace:*",
+    "@makeswift/runtime": "workspace:*",
     "@emotion/server": "^11.4.0"
   },
   "peerDependencies": {
