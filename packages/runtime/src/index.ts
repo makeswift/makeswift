@@ -1,3 +1,8 @@
+/**
+ * Main exports for @makeswift/runtime
+ */
+
+// Keep existing exports for backward compatibility
 export type { Action, SetBreakpointsAction } from './state/actions'
 export {
   ActionTypes,
@@ -27,3 +32,16 @@ export type {
 export type { Element } from './state/react-page'
 export { createBaseDocument } from './state/react-page'
 export { MakeswiftComponentType } from './components/builtin/constants'
+
+// Export new consolidated structure
+// Export core functionality
+export * from './core';
+
+// Export React functionality
+export * from './react';
+
+// Create convenience exports for common imports
+export { MakeswiftAdapter, MakeswiftSiteVersion } from './core/adapter';
+export { Makeswift } from './core/api';
+export { ReactRuntime } from './react/runtime';
+export { ReactRuntimeProvider } from './react/runtime-provider';
