@@ -16,6 +16,6 @@ export default defineConfig({
     include: ["react", "react-dom", "react-router-dom"],
   },
   server: {
-    port: 3000,
+    port: parseInt(process.env.PORT || '3000', 10),
   },
 });

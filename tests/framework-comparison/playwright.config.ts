@@ -104,7 +104,7 @@ export default defineConfig({
     {
       command: `cd ${NEXTJS_APP_PATH} && pnpm dev`,
       env: { PORT: String(NEXTJS_PORT) },
-      url: `http://localhost:${NEXTJS_PORT}`,
+      url: `http://localhost:${NEXTJS_PORT}/api/health`, // Health check endpoint for more reliable readiness check
       reuseExistingServer: !process.env.CI,
       stdout: 'pipe',
       stderr: 'pipe',
@@ -112,7 +112,7 @@ export default defineConfig({
     {
       command: `cd ${REMIX_APP_PATH} && pnpm dev`,
       env: { PORT: String(REMIX_PORT) },
-      url: `http://localhost:${REMIX_PORT}`,
+      url: `http://localhost:${REMIX_PORT}/api/health`, // Health check endpoint for more reliable readiness check
       reuseExistingServer: !process.env.CI,
       stdout: 'pipe',
       stderr: 'pipe',
