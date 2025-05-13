@@ -1,5 +1,5 @@
 {
-  "name": "remix-app",
+  "name": "remix",
   "private": true,
   "sideEffects": false,
   "type": "module",
