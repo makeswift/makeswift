@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.24.5-canary.0
+
+### Patch Changes
+
+- 7c74882: fix: `<script>` tag error in the console when a site is loaded in the builder
+
 ## 0.24.4
 
 ### Patch Changes
