@@ -26,6 +26,20 @@ pnpm install
 echo -e "${YELLOW}Installing browser binaries...${NC}"
 npx playwright install chromium
 
+# Make sure both apps have the Makeswift API key
+echo -e "${YELLOW}Checking for Makeswift API key...${NC}"
+if [ ! -f "$NEXTJS_DIR/.env.local" ]; then
+  echo -e "${RED}Error: $NEXTJS_DIR/.env.local not found${NC}"
+  echo "Please create this file with your MAKESWIFT_SITE_API_KEY"
+  exit 1
+fi
+
+# Copy API key to Remix app if needed
+if [ ! -f "$REMIX_DIR/.env.local" ]; then
+  echo -e "${YELLOW}Copying Makeswift API key to Remix app...${NC}"
+  cp "$NEXTJS_DIR/.env.local" "$REMIX_DIR/.env.local"
+fi
+
 # Start Next.js app in background
 echo -e "${YELLOW}Starting Next.js app on port ${NEXTJS_PORT}...${NC}"
 cd "$NEXTJS_DIR" && PORT=$NEXTJS_PORT pnpm dev & NEXTJS_PID=$!
@@ -39,11 +53,11 @@ cd "../../tests/framework-comparison"
 
 # Wait for both servers to be ready
 echo -e "${YELLOW}Waiting for servers to be ready...${NC}"
-sleep 10
+sleep 15
 
 # Run the tests
-echo -e "${YELLOW}Running visual comparison tests...${NC}"
-npx playwright test sample-page.spec.ts --headed
+echo -e "${YELLOW}Running Makeswift page comparison tests...${NC}"
+npx playwright test makeswift-page.spec.ts --headed
 
 # Capture exit code
 TEST_EXIT_CODE=$?
@@ -62,6 +76,7 @@ if [ $TEST_EXIT_CODE -eq 0 ]; then
 else
   echo -e "${RED}Tests failed with exit code: ${TEST_EXIT_CODE}${NC}"
   echo -e "${YELLOW}View the test report with:${NC} npx playwright show-report"
+  echo -e "${YELLOW}View screenshots in:${NC} test-results/framework-comparison/visual/"
 fi
 
 exit $TEST_EXIT_CODE
