@@ -121,6 +121,9 @@ importers:
 
   apps/remix:
     dependencies:
+      '@makeswift/runtime':
+        specifier: workspace:^
+        version: link:../../packages/runtime
       '@react-router/node':
         specifier: ^7.5.3
         version: 7.6.0(react-router@7.6.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(typescript@5.8.3)
