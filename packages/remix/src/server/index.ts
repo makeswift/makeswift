@@ -1,22 +1,6 @@
-import { MakeswiftSiteVersion } from '@makeswift/core';
-
 /**
- * Utility function to create a cookie for Remix draft mode
+ * Server-side utilities for Makeswift in Remix
  */
-export function createDraftCookie() {
-  // This is a stub - in a real implementation, this would
-  // create and return a Remix cookie object
-  return {
-    parse: () => Promise.resolve(null),
-    serialize: () => Promise.resolve(''),
-  };
-}
-
-/**
- * Gets the site version from a Remix request
- */
-export async function getSiteVersion(request: Request): Promise<MakeswiftSiteVersion> {
-  // This is a stub - in a real implementation, this would
-  // extract site version from Remix cookies
-  return MakeswiftSiteVersion.Live;
-}
+export { createDraftCookie, MAKESWIFT_SITE_VERSION_COOKIE } from './cookies';
+export { getSiteVersion } from './site-version';
+export { MakeswiftApiHandler, type MakeswiftApiHandlerConfig } from './api-handler';

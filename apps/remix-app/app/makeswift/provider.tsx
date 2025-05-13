@@ -3,7 +3,7 @@
  */
 import { ReactRuntimeProvider } from '@makeswift/runtime';
 import { RemixRuntimeProvider } from '@makeswift/remix';
-import { useRouteLoaderData } from '@remix-run/react';
+import { useRouteLoaderData } from 'react-router-dom';
 import { runtime } from './runtime';
 import type { MakeswiftSiteVersion } from '@makeswift/runtime';
 
@@ -19,7 +19,7 @@ interface MakeswiftProviderProps {
 
 export function MakeswiftProvider({ children }: MakeswiftProviderProps) {
   // Get site version and locale from the root loader
-  const data = useRouteLoaderData<RootLoaderData>('root');
+  const data = useRouteLoaderData('_root') as RootLoaderData;
   
   if (!data) {
     throw new Error('MakeswiftProvider must be used within a route with data');

@@ -1,12 +1,13 @@
 import React from 'react';
-import { MakeswiftPageSnapshot } from '@makeswift/core';
-import { PageFromSnapshot } from '@makeswift/react';
+import { ElementRenderer, PageFromSnapshot as CorePageFromSnapshot } from '@makeswift/runtime/react';
+import type { MakeswiftPageSnapshot } from '@makeswift/runtime';
 import { RemixAdapter } from './adapter';
+import { useRemixRuntime } from './components/runtime-provider';
 
 /**
- * Props for the RemixPage component
+ * Props for the MakeswiftPage component
  */
-interface RemixPageProps {
+interface MakeswiftPageProps {
   /** The page snapshot from the Makeswift API */
   snapshot: MakeswiftPageSnapshot;
   
@@ -20,12 +21,26 @@ interface RemixPageProps {
 /**
  * Remix specific Page component that renders a Makeswift page
  */
-export function Page({ snapshot, adapter = new RemixAdapter(), components }: RemixPageProps) {
+export function MakeswiftPage({ 
+  snapshot, 
+  adapter = new RemixAdapter(), 
+  components 
+}: MakeswiftPageProps) {
+  // Get runtime context
+  const { locale } = useRemixRuntime();
+  
   // Create component map with Remix specific components
   const remixComponents = {
+    // Add Image and Link components from the adapter
+    Image: adapter.getImageComponent(),
+    Link: adapter.getLinkComponent(),
     ...components,
-    // Add any Remix specific component overrides here
   };
   
-  return <PageFromSnapshot snapshot={snapshot} components={remixComponents} />;
+  return (
+    <CorePageFromSnapshot 
+      snapshot={snapshot} 
+      components={remixComponents}
+    />
+  );
 }
