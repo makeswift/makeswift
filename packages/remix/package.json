@@ -37,8 +37,10 @@
     "lint": "eslint src --ext .ts,.tsx"
   },
   "dependencies": {
+    "@emotion/cache": "^11.11.0",
+    "@emotion/server": "^11.4.0",
     "@makeswift/runtime": "workspace:*",
-    "@emotion/server": "^11.4.0"
+    "react-router-dom": "^7.0.0"
   },
   "peerDependencies": {
     "@remix-run/node": "^2.0.0",

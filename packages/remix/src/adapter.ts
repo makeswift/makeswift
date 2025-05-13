@@ -94,35 +94,46 @@ export class RemixAdapter implements MakeswiftAdapter {
    * Renders head elements for React Router app
    */
   renderHead(headElements: HeadElement[]): React.ReactNode {
-    return (
-      <>
-        {headElements.map((element, index) => {
-          const { type, props, children } = element;
-          
-          // Create React element based on the type
-          switch (type) {
-            case 'title':
-              return <title key={index} {...props}>{children}</title>;
+    // Import React here to be safe
+    const React = require('react');
+    
+    return React.createElement(
+      React.Fragment,
+      null,
+      headElements.map((element, index) => {
+        const { type, props, children } = element;
+        
+        // Create React element based on the type
+        switch (type) {
+          case 'title':
+            return React.createElement('title', { key: index, ...props }, children);
+            
+          case 'meta':
+            return React.createElement('meta', { key: index, ...props });
+            
+          case 'link':
+            return React.createElement('link', { key: index, ...props });
+            
+          case 'script':
+            return children
+              ? React.createElement('script', { 
+                  key: index, 
+                  ...props, 
+                  dangerouslySetInnerHTML: { __html: children } 
+                })
+              : React.createElement('script', { key: index, ...props });
               
-            case 'meta':
-              return <meta key={index} {...props} />;
-              
-            case 'link':
-              return <link key={index} {...props} />;
-              
-            case 'script':
-              return children
-                ? <script key={index} {...props} dangerouslySetInnerHTML={{ __html: children }} />
-                : <script key={index} {...props} />;
-                
-            case 'style':
-              return <style key={index} {...props} dangerouslySetInnerHTML={{ __html: children || '' }} />;
-              
-            default:
-              return null;
-          }
-        })}
-      </>
+          case 'style':
+            return React.createElement('style', { 
+              key: index, 
+              ...props, 
+              dangerouslySetInnerHTML: { __html: children || '' } 
+            });
+            
+          default:
+            return null;
+        }
+      })
     );
   }
 

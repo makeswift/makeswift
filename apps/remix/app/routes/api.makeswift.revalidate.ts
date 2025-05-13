@@ -20,7 +20,9 @@ export async function action({ request }: ActionFunctionArgs) {
   try {
     // Implementation depends on hosting platform
     // For Vercel, we can use their revalidation endpoint
-    if (process.env.VERCEL) {
+    const isVercel = typeof process !== 'undefined' && process.env && !!process.env.VERCEL;
+    
+    if (isVercel) {
       await fetch(`https://${request.headers.get('host')}/_vercel/purge?path=${path}`);
     }
     

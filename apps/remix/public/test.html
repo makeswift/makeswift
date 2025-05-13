@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Makeswift Direct Test</title>
+  <link rel="stylesheet" href="/app/styles/app.css">
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .container {
+      padding: 1rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .header {
+      background: #0c4a6e;
+      color: white;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .test-section {
+      padding: 1rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Makeswift Direct Test Page</h1>
+    <p>This page tests components directly without the full Remix app structure</p>
+  </div>
+  
+  <div id="root">
+    <div class="container">
+      <h2>Component Test</h2>
+      <div id="component-container"></div>
+    </div>
+    
+    <div class="container">
+      <h2>Debug Info</h2>
+      <div id="debug-info"></div>
+    </div>
+  </div>
+  
+  <script>
+    // Direct test script - no imports
+    document.addEventListener('DOMContentLoaded', function() {
+      const debugInfo = document.getElementById('debug-info');
+      const componentContainer = document.getElementById('component-container');
+      
+      // Display debug info
+      debugInfo.innerHTML = `
+        <p><strong>Page URL:</strong> ${window.location.href}</p>
+        <p><strong>Timestamp:</strong> ${new Date().toISOString()}</p>
+        <p><strong>Browser:</strong> ${navigator.userAgent}</p>
+      `;
+      
+      // Create a simplified text component
+      function createSimpleText(props) {
+        const { text = 'Default text', color = '#000000', fontSize = 16 } = props;
+        const div = document.createElement('div');
+        div.style.color = color;
+        div.style.fontSize = `${fontSize}px`;
+        div.style.padding = '1rem';
+        div.style.fontFamily = 'system-ui, sans-serif';
+        div.textContent = text;
+        return div;
+      }
+      
+      // Create a simplified content card
+      function createContentCard(props) {
+        const { 
+          title = 'Card Title',
+          description = 'Card description goes here. Add details about this card.',
+          backgroundColor = '#ffffff',
+          borderRadius = 8,
+          padding = 20,
+          textAlign = 'left'
+        } = props;
+        
+        const div = document.createElement('div');
+        div.style.backgroundColor = backgroundColor;
+        div.style.borderRadius = `${borderRadius}px`;
+        div.style.padding = `${padding}px`;
+        div.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+        div.style.textAlign = textAlign;
+        div.style.overflow = 'hidden';
+        div.style.maxWidth = '100%';
+        
+        const titleEl = document.createElement('h3');
+        titleEl.style.margin = '0 0 8px';
+        titleEl.style.fontWeight = 'bold';
+        titleEl.style.fontSize = '1.25rem';
+        titleEl.textContent = title;
+        
+        const descEl = document.createElement('p');
+        descEl.style.margin = 0;
+        descEl.style.color = '#4b5563';
+        descEl.style.fontSize = '1rem';
+        descEl.style.lineHeight = 1.5;
+        descEl.textContent = description;
+        
+        div.appendChild(titleEl);
+        div.appendChild(descEl);
+        
+        return div;
+      }
+      
+      // Create test content
+      try {
+        // Simple Text component
+        const simpleText = createSimpleText({
+          text: 'This is a test SimpleText component',
+          color: '#0c4a6e',
+          fontSize: 24
+        });
+        componentContainer.appendChild(simpleText);
+        
+        // Content Card component
+        const contentCard = createContentCard({
+          title: 'Test Content Card',
+          description: 'This is a test ContentCard component to verify direct DOM rendering.',
+          backgroundColor: '#f0f9ff',
+          borderRadius: 8,
+          padding: 24,
+          textAlign: 'center'
+        });
+        componentContainer.appendChild(contentCard);
+        
+        // Add success message
+        const successEl = document.createElement('div');
+        successEl.style.backgroundColor = '#f0fff4';
+        successEl.style.color = '#166534';
+        successEl.style.padding = '1rem';
+        successEl.style.marginTop = '1rem';
+        successEl.style.borderRadius = '0.5rem';
+        successEl.textContent = 'Components rendered successfully!';
+        componentContainer.appendChild(successEl);
+      } catch (error) {
+        // Display error
+        const errorEl = document.createElement('div');
+        errorEl.style.backgroundColor = '#fff1f2';
+        errorEl.style.color = '#be123c';
+        errorEl.style.padding = '1rem';
+        errorEl.style.marginTop = '1rem';
+        errorEl.style.borderRadius = '0.5rem';
+        errorEl.textContent = `Error rendering components: ${error.message}`;
+        componentContainer.appendChild(errorEl);
+      }
+    });
+  </script>
+</body>
+</html>

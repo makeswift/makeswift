@@ -1,0 +1,1 @@
+const html = require("fs").readFileSync("page_output.html", "utf-8"); console.log("HTML Length:", html.length); if (html.includes("Error")) { console.log("Error found in HTML:", html.match(/.{0,50}Error.{0,50}/g)); }

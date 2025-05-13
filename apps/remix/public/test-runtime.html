@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Makeswift Runtime Test</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      line-height: 1.5;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .container {
+      padding: 1rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    pre {
+      background: #f1f5f9;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      overflow: auto;
+      max-height: 200px;
+    }
+    
+    .success {
+      background: #ecfdf5;
+      color: #047857;
+      padding: 1rem;
+      border-radius: 0.5rem;
+    }
+    
+    .error {
+      background: #fef2f2;
+      color: #b91c1c;
+      padding: 1rem;
+      border-radius: 0.5rem;
+    }
+    
+    button {
+      padding: 0.5rem 1rem;
+      background: #0c4a6e;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+    }
+    
+    button:hover {
+      background: #0369a1;
+    }
+  </style>
+</head>
+<body>
+  <h1>Makeswift Runtime Test</h1>
+  <p>This page tests whether we can create React components without using require in the browser.</p>
+  
+  <div class="container">
+    <h2>Test 1: React createElement</h2>
+    <p>This test verifies that we can create React elements without JSX.</p>
+    <div id="test1-result"></div>
+    <button onclick="runTest1()">Run Test</button>
+  </div>
+  
+  <div class="container">
+    <h2>Test 2: Simple Component</h2>
+    <p>This test verifies we can define and render simple React components.</p>
+    <div id="test2-result"></div>
+    <button onclick="runTest2()">Run Test</button>
+  </div>
+  
+  <div class="container">
+    <h2>Test 3: Component with State</h2>
+    <p>This test verifies we can use hooks without requiring them directly.</p>
+    <div id="test3-result"></div>
+    <button onclick="runTest3()">Run Test</button>
+  </div>
+  
+  <h2>Results Log</h2>
+  <pre id="log"></pre>
+  
+  <!-- Load React and ReactDOM -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  
+  <script>
+    // Function to log messages
+    function log(message) {
+      const logEl = document.getElementById('log');
+      const timestamp = new Date().toLocaleTimeString();
+      logEl.textContent += `[${timestamp}] ${message}\n`;
+    }
+    
+    // Function to show test result
+    function showResult(testId, success, message) {
+      const resultEl = document.getElementById(`${testId}-result`);
+      resultEl.className = success ? 'success' : 'error';
+      resultEl.textContent = message;
+      log(`${testId}: ${success ? 'SUCCESS' : 'FAILED'} - ${message}`);
+    }
+    
+    // Test 1: Basic React createElement
+    function runTest1() {
+      try {
+        log('Running Test 1: React createElement');
+        
+        // Create a simple element
+        const element = React.createElement('div', { className: 'test-element' }, 'Hello from React!');
+        
+        // Render the element
+        const container = document.createElement('div');
+        ReactDOM.createRoot(container).render(element);
+        
+        // Check if the element was rendered correctly
+        if (container.querySelector('.test-element') && 
+            container.textContent.includes('Hello from React!')) {
+          showResult('test1', true, 'Successfully created and rendered a React element');
+        } else {
+          showResult('test1', false, 'Element was created but not rendered correctly');
+        }
+      } catch (error) {
+        showResult('test1', false, `Error: ${error.message}`);
+      }
+    }
+    
+    // Test 2: Simple Component
+    function runTest2() {
+      try {
+        log('Running Test 2: Simple Component');
+        
+        // Define a simple functional component
+        function SimpleComponent(props) {
+          return React.createElement('div', { className: 'simple-component' },
+            React.createElement('h3', null, props.title || 'Default Title'),
+            React.createElement('p', null, props.text || 'Default text content')
+          );
+        }
+        
+        // Render the component
+        const container = document.createElement('div');
+        ReactDOM.createRoot(container).render(
+          React.createElement(SimpleComponent, { 
+            title: 'Test Component', 
+            text: 'This is a test component created without JSX' 
+          })
+        );
+        
+        // Check if the component was rendered correctly
+        if (container.querySelector('.simple-component') && 
+            container.textContent.includes('Test Component') &&
+            container.textContent.includes('This is a test component created without JSX')) {
+          showResult('test2', true, 'Successfully created and rendered a functional component');
+        } else {
+          showResult('test2', false, 'Component was created but not rendered correctly');
+        }
+      } catch (error) {
+        showResult('test2', false, `Error: ${error.message}`);
+      }
+    }
+    
+    // Test 3: Component with State
+    function runTest3() {
+      try {
+        log('Running Test 3: Component with State');
+        
+        // Define a component with state
+        function CounterComponent() {
+          const [count, setCount] = React.useState(0);
+          
+          return React.createElement('div', { className: 'counter-component' },
+            React.createElement('p', null, `Count: ${count}`),
+            React.createElement('button', { 
+              onClick: () => setCount(count + 1),
+              className: 'increment-button'
+            }, 'Increment')
+          );
+        }
+        
+        // Render the component
+        const container = document.createElement('div');
+        document.getElementById('test3-result').appendChild(container);
+        ReactDOM.createRoot(container).render(
+          React.createElement(CounterComponent)
+        );
+        
+        // Check if the component was rendered correctly
+        if (container.querySelector('.counter-component') && 
+            container.textContent.includes('Count: 0')) {
+          showResult('test3', true, 'Successfully created and rendered a component with state');
+        } else {
+          showResult('test3', false, 'Component with state was created but not rendered correctly');
+        }
+      } catch (error) {
+        showResult('test3', false, `Error: ${error.message}`);
+      }
+    }
+    
+    // Initialize
+    log('Runtime test page loaded');
+  </script>
+</body>
+</html>

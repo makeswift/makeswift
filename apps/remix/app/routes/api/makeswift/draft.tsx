@@ -2,13 +2,13 @@
  * Draft mode API route for Makeswift
  */
 import { 
-  json, 
   redirect,
   type ActionFunction,
 } from 'react-router-dom';
 import { createDraftCookie } from '~/makeswift/utils/cookies';
 import { MAKESWIFT_PREVIEW_SECRET } from '~/makeswift/env';
-import { MakeswiftSiteVersion } from '@makeswift/runtime';
+// Using string literals directly to avoid import issues
+// const MakeswiftSiteVersion = { Working: 'current', Live: 'published' };
 
 /**
  * Action function to enable draft mode
@@ -20,7 +20,10 @@ export const action: ActionFunction = async ({ request }) => {
   
   // Validate preview secret
   if (secret !== MAKESWIFT_PREVIEW_SECRET) {
-    return json({ error: 'Invalid preview secret' }, { status: 401 });
+    return new Response(JSON.stringify({ error: 'Invalid preview secret' }), {
+      status: 401,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
   
   const draftCookie = createDraftCookie();
@@ -28,7 +31,7 @@ export const action: ActionFunction = async ({ request }) => {
   // Redirect to the requested page with draft mode enabled
   return redirect(pathname || '/', {
     headers: {
-      'Set-Cookie': await draftCookie.serialize(MakeswiftSiteVersion.Working)
+      'Set-Cookie': await draftCookie.serialize('current')
     }
   });
 };

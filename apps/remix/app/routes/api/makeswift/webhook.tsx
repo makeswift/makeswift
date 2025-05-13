@@ -2,10 +2,12 @@
  * Webhook handler for Makeswift
  */
 import { 
-  json,
   type ActionFunction,
 } from 'react-router-dom';
-import { MAKESWIFT_SITE_API_KEY } from '~/makeswift/env';
+import { 
+  MAKESWIFT_SITE_API_KEY,
+  MAKESWIFT_REVALIDATION_SECRET 
+} from '~/makeswift/env';
 
 interface WebhookPayload {
   type: string;
@@ -20,7 +22,10 @@ export const action: ActionFunction = async ({ request }) => {
   const apiKey = request.headers.get('x-makeswift-site-api-key');
   
   if (apiKey !== MAKESWIFT_SITE_API_KEY) {
-    return json({ error: 'Unauthorized' }, { status: 401 });
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
   
   try {
@@ -38,7 +43,7 @@ export const action: ActionFunction = async ({ request }) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            secret: process.env.MAKESWIFT_REVALIDATION_SECRET,
+            secret: MAKESWIFT_REVALIDATION_SECRET,
             path: '/*', // Revalidate all pages
           }),
         });
@@ -55,7 +60,7 @@ export const action: ActionFunction = async ({ request }) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            secret: process.env.MAKESWIFT_REVALIDATION_SECRET,
+            secret: MAKESWIFT_REVALIDATION_SECRET,
             path: pathname,
           }),
         });
@@ -67,10 +72,15 @@ export const action: ActionFunction = async ({ request }) => {
         console.log(`Received webhook of type: ${payload.type}`);
     }
     
-    return json({ success: true });
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { 'Content-Type': 'application/json' }
+    });
   } catch (error) {
     console.error('Error processing webhook:', error);
-    return json({ error: 'Webhook processing failed' }, { status: 500 });
+    return new Response(JSON.stringify({ error: 'Webhook processing failed' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 };
 

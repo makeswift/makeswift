@@ -1,8 +1,10 @@
 import React from 'react';
-import { ElementRenderer, PageFromSnapshot as CorePageFromSnapshot } from '@makeswift/runtime/react';
 import type { MakeswiftPageSnapshot } from '@makeswift/runtime';
 import { RemixAdapter } from './adapter';
 import { useRemixRuntime } from './components/runtime-provider';
+
+// Import the required components from the runtime package
+const { ReactRuntime } = require('@makeswift/runtime/react');
 
 /**
  * Props for the MakeswiftPage component
@@ -36,9 +38,11 @@ export function MakeswiftPage({
     Link: adapter.getLinkComponent(),
     ...components,
   };
+
+  const PageRenderer = ReactRuntime.PageRenderer;
   
   return (
-    <CorePageFromSnapshot 
+    <PageRenderer 
       snapshot={snapshot} 
       components={remixComponents}
     />

@@ -2,7 +2,10 @@
  * Webhook handler for Makeswift
  */
 import { json, type ActionFunctionArgs } from '@remix-run/node';
-import { MAKESWIFT_SITE_API_KEY } from '~/makeswift/env';
+import { 
+  MAKESWIFT_SITE_API_KEY,
+  MAKESWIFT_REVALIDATION_SECRET
+} from '~/makeswift/env';
 
 interface WebhookPayload {
   type: string;
@@ -35,7 +38,7 @@ export async function action({ request }: ActionFunctionArgs) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            secret: process.env.MAKESWIFT_REVALIDATION_SECRET,
+            secret: MAKESWIFT_REVALIDATION_SECRET,
             path: '/*', // Revalidate all pages
           }),
         });
@@ -52,7 +55,7 @@ export async function action({ request }: ActionFunctionArgs) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            secret: process.env.MAKESWIFT_REVALIDATION_SECRET,
+            secret: MAKESWIFT_REVALIDATION_SECRET,
             path: pathname,
           }),
         });

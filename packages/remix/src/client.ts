@@ -1,8 +1,10 @@
 /**
  * Client utilities for Makeswift in React Router v7 apps
  */
-import { MakeswiftClient } from '@makeswift/runtime/react';
 import { createRemixAdapter } from './create-adapter';
+
+// Import the client constructor from the runtime package
+const { ReactRuntime } = require('@makeswift/runtime/react');
 
 /**
  * Options for creating a Makeswift client
@@ -19,16 +21,16 @@ export interface CreateMakeswiftClientOptions {
  * Creates a Makeswift client for React Router v7 apps
  * 
  * @param options Client configuration options
- * @returns A configured MakeswiftClient
+ * @returns A configured Makeswift client
  */
-export function createMakeswiftClient(options: CreateMakeswiftClientOptions): MakeswiftClient {
+export function createMakeswiftClient(options: CreateMakeswiftClientOptions) {
   const { apiKey, apiOrigin = 'https://api.makeswift.com' } = options;
   
   // Create the adapter
   const adapter = createRemixAdapter();
   
   // Create and return the client
-  return new MakeswiftClient({
+  return new ReactRuntime.Client({
     apiKey,
     apiOrigin: new URL(apiOrigin),
     adapter,

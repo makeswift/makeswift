@@ -2,7 +2,6 @@
  * Revalidation API route for Makeswift
  */
 import { 
-  json,
   type ActionFunction,
 } from 'react-router-dom';
 import { MAKESWIFT_REVALIDATION_SECRET } from '~/makeswift/env';
@@ -17,22 +16,32 @@ export const action: ActionFunction = async ({ request }) => {
   
   // Validate revalidation secret
   if (secret !== MAKESWIFT_REVALIDATION_SECRET) {
-    return json({ error: 'Invalid secret' }, { status: 401 });
+    return new Response(JSON.stringify({ error: 'Invalid secret' }), {
+      status: 401,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
   
   try {
     // Implementation depends on hosting platform
     // For Vercel, we can use their revalidation endpoint
-    if (process.env.VERCEL) {
+    const isVercel = typeof process !== 'undefined' && process.env && !!process.env.VERCEL;
+    
+    if (isVercel) {
       await fetch(`https://${request.headers.get('host')}/_vercel/purge?path=${path}`);
     }
     
     // For other platforms, a custom implementation would be needed
     
-    return json({ revalidated: true, path });
+    return new Response(JSON.stringify({ revalidated: true, path }), {
+      headers: { 'Content-Type': 'application/json' }
+    });
   } catch (error) {
     console.error('Revalidation failed:', error);
-    return json({ error: 'Revalidation failed' }, { status: 500 });
+    return new Response(JSON.stringify({ error: 'Revalidation failed' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 };
 

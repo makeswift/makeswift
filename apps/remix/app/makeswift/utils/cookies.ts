@@ -11,7 +11,7 @@ export function createDraftCookie() {
     path: '/',
     httpOnly: true,
     sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    secure: false, // Set to true for production
     // 1 week expiration
     maxAge: 60 * 60 * 24 * 7,
   });
