@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
+import { PageMeta } from '../../../../next/components/head-tags'
 import { useIsInBuilder } from '../../hooks/use-is-in-builder'
 import { DraftToolbar } from './draft-toolbar'
 
@@ -35,8 +36,6 @@ export function DraftSwitcher({ isDraft }: { isDraft: boolean }) {
     }
   }, [showToolbar, shadowRoot, setShadowRoot])
 
-  if (!showToolbar) return null
-
   return (
     <>
       {showToolbar && (
@@ -46,13 +45,11 @@ export function DraftSwitcher({ isDraft }: { isDraft: boolean }) {
             : null}
         </span>
       )}
-      <script
-        type="application/json"
-        id="makeswift-draft-info"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({ draft: isDraft, inBuilder: isInBuilder }),
-        }}
-      />
+      {/* Insert draft mode information into the DOM to make it easier to debug draft mode-related 
+          issues on production sites */}
+      <PageMeta
+        name="makeswift-draft-info"
+        content={JSON.stringify({ draft: isDraft, inBuilder: isInBuilder })} />
     </>
   )
 }

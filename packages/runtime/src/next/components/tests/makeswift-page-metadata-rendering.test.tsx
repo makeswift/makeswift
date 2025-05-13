@@ -86,6 +86,13 @@ async function testMakeswiftPageMetadataRendering(
   )
 }
 
+function getPageMetaTags(
+  container: HTMLElement,
+): { name: string; content: string }[] {
+  const metaTags = container.getElementsByTagName('meta')
+  return Array.from(metaTags).filter(({ name }) => name !== 'makeswift-draft-info')
+}
+
 describe('MakeswiftPage', () => {
   describe('metadata and seo tag rendering', () => {
     test('renders all metadata by default (without passing prop)', async () => {
@@ -134,12 +141,12 @@ describe('MakeswiftPage', () => {
           indexingBlocked: false,
         },
       },
-    ])(`does NOT render any metadata when passing $label`, async ({ metadata }) => {
+    ])(`does NOT render any page metadata when passing $label`, async ({ metadata }) => {
       const snapshot = createMakeswiftPageSnapshot(pageDocumentFixture)
 
       const render = await testMakeswiftPageMetadataRendering({ snapshot, metadata })
       expect(render.container).toMatchSnapshot()
-      expect(render.container.getElementsByTagName('meta').length).toBe(0)
+      expect(getPageMetaTags(render.container).length).toBe(0)
       expect(render.container.getElementsByTagName('link').length).toBe(0)
     })
 
