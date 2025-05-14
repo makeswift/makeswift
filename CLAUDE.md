@@ -1,8 +1,4 @@
-Makeswift documentation: ./makeswift-docs
-
-Documentation for project that we're working on: ./decoupling-docs
-
-Documentation for remix (or it's called react router v7) framework: ./remix-or-react-router-docs - Please consult this document when making changes on the remix app implementation.
+The docs folder contain all three documentation for the project. The main doc is the decoupling-project, which contains the plan for the decoupling project. The makeswift docs, for the @makeswift/runtime package, and the remix docs for the remix or react router v7 docs.
 
 The packages folder contain the library/runtime that we're building.
 
