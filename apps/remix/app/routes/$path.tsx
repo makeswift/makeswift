@@ -1,16 +1,15 @@
-import { LoaderFunctionArgs, json } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { useLoaderData, type LoaderFunctionArgs } from 'react-router'
 import { client } from '../makeswift/client'
-import { Page as MakeswiftPage, getSiteVersion } from '@makeswift/remix'
+import { Page as MakeswiftPage } from '@makeswift/remix'
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
   // Get the path from the URL params
   const path = params.path ? `/${params.path}` : '/'
 
   try {
-    // Get the site version based on draft mode
-    const siteVersion = await getSiteVersion(request)
-    
+    // Always use 'Live' mode for now
+    const siteVersion = 'Live'
+
     // Get the page snapshot from Makeswift
     const snapshot = await client.getPageSnapshot(path, {
       siteVersion,
@@ -20,7 +19,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       throw new Response('Not Found', { status: 404 })
     }
 
-    return json({ snapshot })
+    return { snapshot }
   } catch (error) {
     console.error('Error fetching Makeswift page:', error)
     throw new Response('Error fetching Makeswift page', { status: 500 })
