@@ -49,7 +49,8 @@ export function ReactRuntimeProvider({
       <MakeswiftHostApiClientProvider client={client}>
         <StoreProvider>
           {children}
-          <DraftSwitcher isDraft={previewMode} />
+          {/* Enable this later */}
+          {/* <DraftSwitcher isDraft={previewMode} /> */}
         </StoreProvider>
       </MakeswiftHostApiClientProvider>
     </ReactRuntimeContext.Provider>
