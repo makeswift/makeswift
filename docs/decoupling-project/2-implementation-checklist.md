@@ -113,12 +113,15 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [ ] Create utilities for coordinating server and client data
   - [ ] Implement framework-agnostic hydration markers
   - [ ] Support both static and dynamic rendering patterns
+  - [ ] Address differences between Next.js RSC and Remix loader patterns
+  - [ ] Create abstractions for both getStaticProps/getServerSideProps and Remix loader patterns
 
 - [ ] Implement error boundary abstractions
   - [ ] Create core error boundary interfaces
   - [ ] Implement error serialization utilities
   - [ ] Create abstractions for error handling during SSR
   - [ ] Support both synchronous and asynchronous error handling
+  - [ ] Address differences between Next.js error.js and Remix ErrorBoundary
 
 ### 2.5. Internationalization and Localization
 
@@ -158,6 +161,20 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [ ] Define `LocaleProvider` interface
   - [ ] Create utilities for resolving localized paths
   - [ ] Extract locale detection logic from Next.js implementation
+
+### 3.3. Environment and Configuration Abstractions
+
+- [ ] Create framework-agnostic environment variable handling
+  - [ ] Abstract environment variable access for server-side code
+  - [ ] Create safe patterns for client-side environment variables
+  - [ ] Build validation utilities for required environment variables
+  - [ ] Document migration paths for environment configuration
+
+- [ ] Implement host URL configuration abstraction
+  - [ ] Create interface for configuring Makeswift host URLs
+  - [ ] Build utilities for detecting development vs production environments
+  - [ ] Support framework-specific URL handling requirements
+  - [ ] Ensure secure host verification
 
 ## Phase 4: Package Structure Implementation
 
@@ -298,6 +315,15 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [ ] Create MakeswiftProvider component
   - [ ] Handle initialization with Remix specific context
   - [ ] Implement style registry for Emotion
+  - [ ] Support both Remix v1 and v2 (React Router v7) APIs
+
+### 6.5. Caching and Optimization
+
+- [ ] Implement Remix-specific caching strategies
+  - [ ] Create headers utilities for CDN caching
+  - [ ] Implement alternatives to Next.js ISR patterns
+  - [ ] Build revalidation mechanisms compatible with Remix architecture
+  - [ ] Document performance considerations specific to Remix deployment patterns
 
 ## Phase 7: Sample Implementation
 
@@ -443,3 +469,11 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [ ] Document process for adding new framework adapters
   - [ ] Create evaluation criteria for new framework support
   - [ ] Develop roadmap for additional framework adapters
+
+### 9.4. Compatibility Verification
+
+- [ ] Perform long-term compatibility verification
+  - [ ] Create automated tests for new Next.js and Remix versions
+  - [ ] Develop compatibility matrices for supported frameworks and versions
+  - [ ] Implement continuous integration for adapter packages
+  - [ ] Document update and maintenance processes for framework changes
