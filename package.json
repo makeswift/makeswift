@@ -8,7 +8,8 @@
     "format": "prettier --write .",
     "build": "turbo run build --filter=!./apps/*",
     "test": "turbo run test",
-    "madge": "turbo run madge"
+    "madge": "turbo run madge",
+    "check-builds": "turbo run build typecheck --filter=@makeswift/runtime --filter=@makeswift/next --filter=@makeswift/remix"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",

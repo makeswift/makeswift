@@ -1,0 +1,33 @@
+{
+  "name": "@makeswift/remix",
+  "version": "0.0.0",
+  "description": "Remix adapter for Makeswift",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@makeswift/runtime": "workspace:*",
+    "@remix-run/react": ">=1.0.0",
+    "@remix-run/node": ">=1.0.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@makeswift/runtime": "workspace:*",
+    "@remix-run/react": "^1.0.0",
+    "@remix-run/node": "^1.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "tsup": "^7.2.0",
+    "typescript": "^5.0.0"
+  }
+}

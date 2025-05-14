@@ -6,15 +6,15 @@ This document provides a detailed, step-by-step checklist for implementing the d
 
 ### 1.1. Initial Project Setup and Analysis
 
-- [ ] Create empty package directories for future implementation
+- [x] Create empty package directories for future implementation
 
-  - [ ] Create `@makeswift/next` directory (placeholder only)
-  - [ ] Create `@makeswift/remix` directory (placeholder only)
-  - [ ] Add basic README files explaining the intent of these packages
+  - [x] Create `@makeswift/next` directory (placeholder only)
+  - [x] Create `@makeswift/remix` directory (placeholder only)
+  - [x] Add basic README files explaining the intent of these packages
 
-- [ ] Set up development environment
-  - [ ] Configure monorepo tools to recognize the new package structure
-  - [ ] Set up a single command that check whether the builds are failing on `@makeswift/runtime`, `@makeswift/next`, and `@makeswift/remix`.
+- [x] Set up development environment
+  - [x] Configure monorepo tools to recognize the new package structure
+  - [x] Set up a single command that check whether the builds are failing on `@makeswift/runtime`, `@makeswift/next`, and `@makeswift/remix`.
 
 ### 1.2. Next.js Dependency Analysis
 
