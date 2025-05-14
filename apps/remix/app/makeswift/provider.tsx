@@ -1,4 +1,5 @@
 import { runtime } from './runtime'
+import { MAKESWIFT_API_ORIGIN, MAKESWIFT_APP_ORIGIN } from './env'
 
 // Import components registration
 import './components'
@@ -19,8 +20,8 @@ export function MakeswiftProvider({
       runtime={runtime}
       locale={locale}
       previewMode={previewMode}
-      apiOrigin={process.env.MAKESWIFT_API_ORIGIN}
-      appOrigin={process.env.MAKESWIFT_APP_ORIGIN}
+      apiOrigin={MAKESWIFT_API_ORIGIN}
+      appOrigin={MAKESWIFT_APP_ORIGIN}
     >
       {children}
     </ReactRuntimeProvider>
