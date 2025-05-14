@@ -7,3 +7,5 @@ Documentation for remix (or it's called react router v7) framework: ./remix-or-r
 The packages folder contain the library/runtime that we're building.
 
 The apps folder contains the sample implementation using the runtime.
+
+No need to run the dev process, the remix app is already running on port 3001.
