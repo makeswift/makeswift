@@ -42,7 +42,13 @@ This document provides a detailed, step-by-step checklist for implementing the d
 
 - [ ] Design new package structure based on dependency analysis
   - [ ] Create detailed architecture diagram showing relationship between packages
-  - [ ] Define boundaries between core functionality and framework-specific code
+  - [ ] Define clear boundaries between core runtime/client functionality and framework-specific code
+  - [ ] Identify the key integration points from Makeswift documentation:
+     - [ ] Component registration system (ReactRuntime)
+     - [ ] Data fetching layer (Makeswift client)
+     - [ ] API handler (Preview mode, revalidation, fonts, webhooks)
+     - [ ] Provider component (Context and styling)
+     - [ ] Page rendering (Catch-all routes)
   - [ ] Document API surface that will remain stable during refactoring
   - [ ] Plan backward compatibility strategy for existing users
 
@@ -244,16 +250,22 @@ This document provides a detailed, step-by-step checklist for implementing the d
 ### 6.2. Remix API Routes
 
 - [ ] Implement Remix resource routes in `@makeswift/remix/src/routes/api/makeswift`
-  - [ ] Create route modules for all required endpoints
+  - [ ] Create resource route modules following Remix conventions:
+    - [ ] `routes/api/makeswift/$.tsx` (catch-all route that handles all Makeswift API requests)
+    - [ ] `routes/api/makeswift/draft.tsx` (handles draft mode activation)
+    - [ ] `routes/api/makeswift/clear-draft.tsx` (handles exiting draft mode)
+    - [ ] `routes/api/makeswift/revalidate.tsx` (handles on-demand revalidation)
+    - [ ] `routes/api/makeswift/webhook.tsx` (handles Makeswift webhooks)
   - [ ] Implement request/response adapters
-  - [ ] Add cookie-based site version detection
+  - [ ] Add cookie-based site version detection using Remix's cookie API
   - [ ] Ensure correct response headers for Remix's caching model
 
-- [ ] Implement Remix specific endpoints
-  - [ ] Create draft mode handlers using cookies and sessions
-  - [ ] Implement resource fetching routes with proper loader/action patterns
-  - [ ] Add cache management strategies compatible with Remix's approach
-  - [ ] Implement error boundary handling for API failures
+- [ ] Implement Remix specific endpoints adapters
+  - [ ] Create draft mode handlers using Remix cookie and session APIs
+  - [ ] Implement resource fetching routes with loader/action patterns 
+  - [ ] Add font handling that works with Remix's asset system
+  - [ ] Design cache management strategies using Remix's CDN-friendly caching headers
+  - [ ] Implement error boundary handling with Remix's ErrorBoundary pattern
 
 ### 6.3. Remix Components
 
@@ -305,18 +317,23 @@ This document provides a detailed, step-by-step checklist for implementing the d
 
 - [ ] Create basic Remix application
   - [ ] Set up project structure following Remix conventions
-  - [ ] Implement catch-all route for pages
-  - [ ] Create API route handlers
+  - [ ] Implement catch-all route at `routes/($lang)._index.tsx` and `routes/($lang).$path.tsx`
+  - [ ] Create resource route handlers at `routes/api/makeswift/`
 
-- [ ] Implement Makeswift integration
-  - [ ] Add MakeswiftProvider to root layout
-  - [ ] Configure preview mode
-  - [ ] Implement page rendering
+- [ ] Implement Makeswift integration paralleling the Next.js structure
+  - [ ] Create Makeswift runtime setup (`app/makeswift/runtime.ts`)
+  - [ ] Create Makeswift client (`app/makeswift/client.ts`) 
+  - [ ] Register components (`app/makeswift/components.ts`) and organize component registration
+  - [ ] Add MakeswiftProvider to root layout (`app/root.tsx`)
+  - [ ] Configure preview/draft mode using Remix sessions
+  - [ ] Implement page rendering with loaders and correct data flow
 
 - [ ] Verify functionality
+  - [ ] Test component registration in the Makeswift builder
   - [ ] Test page creation and editing
-  - [ ] Verify preview mode works correctly
-  - [ ] Test API endpoints
+  - [ ] Verify preview/draft mode works correctly
+  - [ ] Test on-demand revalidation via API endpoints
+  - [ ] Verify fonts are correctly loaded
 
 ## Phase 8: Testing and Documentation
 
