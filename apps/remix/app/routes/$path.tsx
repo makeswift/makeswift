@@ -4,7 +4,10 @@ import { Page as MakeswiftPage } from '@makeswift/remix'
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
   // Get the path from the URL params
+  // If params.path is undefined, we're at the root path
   const path = params.path ? `/${params.path}` : '/'
+
+  console.log(`Loading Makeswift page for path: ${path}`)
 
   try {
     // Always use 'Live' mode for now
@@ -16,24 +19,28 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     })
 
     if (!snapshot) {
+      console.error(`No Makeswift page found for path: ${path}`)
       throw new Response('Not Found', { status: 404 })
     }
 
-    return { snapshot }
+    return { snapshot, path }
   } catch (error) {
-    console.error('Error fetching Makeswift page:', error)
+    console.error(`Error fetching Makeswift page for path: ${path}`, error)
     throw new Response('Error fetching Makeswift page', { status: 500 })
   }
 }
 
 export default function Page() {
-  const { snapshot } = useLoaderData<typeof loader>()
+  const { snapshot, path } = useLoaderData<typeof loader>()
 
   if (!snapshot) {
     return <div>Page not found</div>
   }
 
-  console.log('snapshot', snapshot)
-
-  return <MakeswiftPage snapshot={snapshot} />
+  return (
+    <>
+      {/* Render the Makeswift page using the snapshot */}
+      <MakeswiftPage snapshot={snapshot} />
+    </>
+  )
 }
