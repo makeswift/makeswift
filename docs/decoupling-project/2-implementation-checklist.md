@@ -38,9 +38,9 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [x] Analyze backward compatibility requirements for existing users
   - [x] Identify potential breaking changes and mitigation strategies
 
-## Phase 2: Core Framework Abstraction
+## Phase 2: Package Structure and Adapter System
 
-### 2.0. Package Structure Planning
+### 2.1. Package Structure Planning
 
 - [ ] Design new package structure based on dependency analysis
   - [ ] Create detailed architecture diagram showing relationship between packages
@@ -54,7 +54,83 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [ ] Document API surface that will remain stable during refactoring
   - [ ] Plan backward compatibility strategy for existing users
 
-### 2.1. Client Abstraction
+### 2.2. API Structure Implementation
+
+- [ ] Implement chosen API structure approach
+  - [ ] Create bundle compatibility layer for existing users
+  - [ ] Set up package.json exports configuration
+  - [ ] Develop framework detection utilities
+  - [ ] Create deprecation warning system for future breaking changes
+
+### 2.3. Adapter Registration System
+
+- [ ] Create framework adapter registration system
+  - [ ] Define `FrameworkAdapter` interface in `src/core/adapter.ts`
+  - [ ] Implement adapter registry with registration/retrieval methods
+  - [ ] Create default adapter fallbacks for each abstraction area
+  - [ ] Implement automatic framework detection where possible
+  - [ ] Add type-safe adapter validation
+
+## Phase 3: Low-Complexity Component Abstractions
+
+### 3.1. Image Component Abstraction
+
+- [ ] Create image component abstraction
+
+  - [ ] Implement `BaseImageComponent` in `src/components/image/base.tsx`
+  - [ ] Extract core image properties and behaviors
+  - [ ] Create adapter interface for framework-specific image components
+  - [ ] Create responsive image utilities that work across frameworks
+  - [ ] Implement image dimension detection and aspect ratio preservation
+
+- [ ] Write unit tests for image abstraction
+  - [ ] Test core image component functionality
+  - [ ] Test responsive behavior and layout modes
+  - [ ] Test dimension calculations
+
+### 3.2. Link Component Abstraction
+
+- [ ] Create link component abstraction
+
+  - [ ] Implement `BaseLinkComponent` in `src/components/link/base.tsx`
+  - [ ] Extract core link properties and behaviors
+  - [ ] Create adapter interface for framework-specific link components
+  - [ ] Implement cross-framework URL normalization utilities
+
+- [ ] Write unit tests for link abstraction
+  - [ ] Test core link component functionality
+  - [ ] Test URL handling across different formats
+  - [ ] Test click behavior and event handling
+
+### 3.3. Create and Test Framework-Specific Implementations
+
+- [ ] Implement Next.js image component
+
+  - [ ] Create `NextImageComponent` using next/image
+  - [ ] Handle responsive images and optimization
+  - [ ] Support both legacy and modern image components
+  - [ ] Implement version detection for Next.js 12/13+
+
+- [ ] Implement Next.js link component
+
+  - [ ] Create `NextLinkComponent` using next/link
+  - [ ] Handle client-side navigation
+  - [ ] Support locale prefixing
+  - [ ] Handle Pages vs App Router differences
+
+- [ ] Create preliminary Remix implementations
+
+  - [ ] Basic `RemixImageComponent` implementation
+  - [ ] Basic `RemixLinkComponent` implementation using React Router
+
+- [ ] Test cross-framework compatibility
+  - [ ] Verify consistent behavior across implementations
+  - [ ] Test framework-specific optimizations
+  - [ ] Ensure feature parity with current implementation
+
+## Phase 4: Core Framework Abstraction
+
+### 4.1. Client Abstraction
 
 - [ ] Extract the core client functionality from Makeswift class
 
@@ -63,20 +139,41 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [ ] Create types for all parameters and return values
   - [ ] Ensure fetch implementations work across both server and client environments
 
-- [ ] Create preview/draft mode abstraction
-
-  - [ ] Define `SiteVersionProvider` interface in `src/core/site-version.ts`
-  - [ ] Extract preview detection logic from Next.js implementation
-  - [ ] Create framework-agnostic methods for site version determination
-  - [ ] Implement secure cookie handling utilities that work across frameworks
-
 - [ ] Implement abstract client factory
+
   - [ ] Create `createClient` function that takes framework adapter
   - [ ] Define interfaces for all required adapter methods
   - [ ] Ensure type safety across adapters
   - [ ] Create environment detection utilities (server vs client)
 
-### 2.2. API Handler Abstraction
+- [ ] Write unit tests for client abstraction
+  - [ ] Test framework-agnostic client functionality
+  - [ ] Test adapter integration points
+  - [ ] Test environment detection
+
+### 4.2. Head and Styling Abstraction
+
+- [ ] Create headless document management
+
+  - [ ] Define `HeadManager` interface in `src/core/head-manager.ts`
+  - [ ] Implement serializable head tag structure
+  - [ ] Create utilities for merging head tags
+  - [ ] Support both streaming and non-streaming SSR patterns
+
+- [ ] Extract Emotion styling logic
+
+  - [ ] Create framework-agnostic style registry interface
+  - [ ] Implement core utility for Emotion cache creation
+  - [ ] Create abstract SSR style extraction utilities
+  - [ ] Support hydration strategies for both frameworks
+  - [ ] Implement client-side fallback style injection
+
+- [ ] Write unit tests for head and styling abstractions
+  - [ ] Test head tag serialization and merging
+  - [ ] Test style extraction across SSR patterns
+  - [ ] Test hydration consistency
+
+### 4.3. API Handler Abstraction
 
 - [ ] Extract core API logic from handlers
 
@@ -93,27 +190,33 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [ ] Implement caching strategies that work across frameworks
 
 - [ ] Implement adapter interfaces for API handlers
+
   - [ ] Define `APIHandlerAdapter` interface for framework implementations
   - [ ] Create type definitions for all handler parameters
   - [ ] Define consistent error handling patterns
   - [ ] Create common status code and response format utilities
 
-### 2.3. Head and Styling Abstraction
+- [ ] Write unit tests for API handler abstractions
+  - [ ] Test core API handler logic
+  - [ ] Test request/response abstractions
+  - [ ] Test error handling patterns
 
-- [ ] Create headless document management
+### 4.4. Preview/Draft Mode Abstraction
 
-  - [ ] Define `HeadManager` interface in `src/core/head-manager.ts`
-  - [ ] Implement serializable head tag structure
-  - [ ] Create utilities for merging head tags
-  - [ ] Support both streaming and non-streaming SSR patterns
+- [ ] Create preview/draft mode abstraction
 
-- [ ] Extract Emotion styling logic
-  - [ ] Create framework-agnostic style registry interface
-  - [ ] Implement core utility for Emotion cache creation
-  - [ ] Create abstract SSR style extraction utilities
-  - [ ] Support hydration strategies for both frameworks
+  - [ ] Define `SiteVersionProvider` interface in `src/core/site-version.ts`
+  - [ ] Extract preview detection logic from Next.js implementation
+  - [ ] Create framework-agnostic methods for site version determination
+  - [ ] Implement secure cookie handling utilities that work across frameworks
+  - [ ] Create fallback query parameter mechanism for frameworks without built-in preview
 
-### 2.4. Data Fetching and SSR Abstraction
+- [ ] Write unit tests for preview/draft mode abstraction
+  - [ ] Test site version determination
+  - [ ] Test cookie and fallback mechanisms
+  - [ ] Test security aspects
+
+### 4.5. Data Fetching and SSR Abstraction
 
 - [ ] Create SSR data fetching abstractions
 
@@ -125,72 +228,49 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [ ] Create abstractions for both getStaticProps/getServerSideProps and Remix loader patterns
 
 - [ ] Implement error boundary abstractions
+
   - [ ] Create core error boundary interfaces
   - [ ] Implement error serialization utilities
   - [ ] Create abstractions for error handling during SSR
   - [ ] Support both synchronous and asynchronous error handling
   - [ ] Address differences between Next.js error.js and Remix ErrorBoundary
 
-### 2.5. Internationalization and Localization
+- [ ] Write unit tests for data fetching and SSR abstractions
+  - [ ] Test data loading interfaces
+  - [ ] Test hydration consistency
+  - [ ] Test error boundary functionality
+
+### 4.6. Internationalization and Localization
 
 - [ ] Abstract internationalization support
+
   - [ ] Create framework-agnostic locale detection interfaces
   - [ ] Implement utilities for managing translated content
   - [ ] Support path-based and domain-based locale strategies
   - [ ] Create abstract interfaces for locale switching
 
-## Phase 3: Component Abstraction
+- [ ] Write unit tests for internationalization abstractions
+  - [ ] Test locale detection
+  - [ ] Test translation content management
+  - [ ] Test locale switching
 
-### 3.1. Core Component Registry
+### 4.7. Revalidation Abstraction
 
-- [ ] Create component registration system
+- [ ] Create framework-agnostic revalidation system
 
-  - [ ] Implement `ComponentRegistry` in `src/core/component-registry.ts`
-  - [ ] Define interfaces for registerable components
-  - [ ] Create methods for registering and retrieving components
+  - [ ] Define `RevalidationAdapter` interface
+  - [ ] Implement core revalidation request processing
+  - [ ] Create time-based fallback for frameworks without fine-grained cache control
+  - [ ] Implement webhook handler abstraction
 
-- [ ] Create image component abstraction
+- [ ] Write unit tests for revalidation abstraction
+  - [ ] Test revalidation processing
+  - [ ] Test time-based fallback mechanism
+  - [ ] Test webhook handling
 
-  - [ ] Implement `BaseImageComponent` in `src/components/image/base.tsx`
-  - [ ] Extract core image properties and behaviors
-  - [ ] Create adapter interface for framework-specific image components
+## Phase 5: Package Structure Implementation
 
-- [ ] Create link component abstraction
-  - [ ] Implement `BaseLinkComponent` in `src/components/link/base.tsx`
-  - [ ] Extract core link properties and behaviors
-  - [ ] Create adapter interface for framework-specific link components
-
-### 3.2. Routing Abstraction
-
-- [ ] Create framework-agnostic route representation
-
-  - [ ] Define `Route` interface in `src/core/routing.ts`
-  - [ ] Implement path matching utilities
-  - [ ] Create localized route resolution utilities
-
-- [ ] Implement locale handling abstractions
-  - [ ] Define `LocaleProvider` interface
-  - [ ] Create utilities for resolving localized paths
-  - [ ] Extract locale detection logic from Next.js implementation
-
-### 3.3. Environment and Configuration Abstractions
-
-- [ ] Create framework-agnostic environment variable handling
-
-  - [ ] Abstract environment variable access for server-side code
-  - [ ] Create safe patterns for client-side environment variables
-  - [ ] Build validation utilities for required environment variables
-  - [ ] Document migration paths for environment configuration
-
-- [ ] Implement host URL configuration abstraction
-  - [ ] Create interface for configuring Makeswift host URLs
-  - [ ] Build utilities for detecting development vs production environments
-  - [ ] Support framework-specific URL handling requirements
-  - [ ] Ensure secure host verification
-
-## Phase 4: Package Structure Implementation
-
-### 4.0. Build Configuration Updates
+### 5.0. Build Configuration Updates
 
 - [ ] Update `@makeswift/runtime` build configuration
 
@@ -207,13 +287,19 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [ ] Setup correct imports from core package
 
 - [ ] Setup `@makeswift/remix` package
+
   - [ ] Initialize package.json with proper dependencies
   - [ ] Configure build system (tsup, tsconfig, etc.)
   - [ ] Setup correct imports from core package
 
-## Phase 5: Next.js Adapter Implementation
+- [ ] Create continuous integration setup
+  - [ ] Configure CI for all packages
+  - [ ] Set up cross-package testing
+  - [ ] Implement performance regression testing
 
-### 5.1. Next.js Client Adapter
+## Phase 6: Next.js Adapter Implementation
+
+### 6.1. Next.js Client Adapter
 
 - [ ] Implement Next.js client in `@makeswift/next/src/client.ts`
 
@@ -223,12 +309,18 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [ ] Support both Node.js and Edge runtime environments
 
 - [ ] Create Next.js site version provider
+
   - [ ] Implement `NextSiteVersionProvider` for App Router
   - [ ] Implement `NextSiteVersionProvider` for Pages Router
   - [ ] Create utilities for handling Next.js preview data
   - [ ] Support Next.js middleware integration for preview detection
 
-### 5.2. Next.js API Routes
+- [ ] Write tests for Next.js client adapter
+  - [ ] Test client functionality across router types
+  - [ ] Test preview detection accuracy
+  - [ ] Test runtime environment compatibility
+
+### 6.2. Next.js API Routes
 
 - [ ] Implement Next.js API handler in `@makeswift/next/src/api-handler.ts`
 
@@ -237,38 +329,45 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [ ] Support both Edge and Node.js runtimes
 
 - [ ] Implement Next.js specific API routes
+
   - [ ] Create draft/preview mode handlers
   - [ ] Implement revalidation endpoints
   - [ ] Add resource proxy handlers
 
-### 5.3. Next.js Components
+- [ ] Write tests for Next.js API routes
+  - [ ] Test API route functionality
+  - [ ] Test router compatibility
+  - [ ] Test runtime compatibility
 
-- [ ] Implement Next.js image component
-
-  - [ ] Create `NextImageComponent` using next/image
-  - [ ] Handle responsive images and optimization
-  - [ ] Support both legacy and modern image components
-
-- [ ] Implement Next.js link component
-
-  - [ ] Create `NextLinkComponent` using next/link
-  - [ ] Handle client-side navigation
-  - [ ] Support locale prefixing
+### 6.3. Next.js Head Management
 
 - [ ] Implement Next.js head management
+
   - [ ] Create head component for Pages Router using next/head
   - [ ] Create head component for App Router
+  - [ ] Implement style registry for Emotion
 
-### 5.4. Next.js Provider
+- [ ] Write tests for Next.js head management
+  - [ ] Test head component rendering
+  - [ ] Test style injection
+  - [ ] Test compatibility across router types
+
+### 6.4. Next.js Provider
 
 - [ ] Implement Next.js provider in `@makeswift/next/src/provider.tsx`
+
   - [ ] Create MakeswiftProvider component
   - [ ] Handle initialization with Next.js specific context
   - [ ] Implement style registry
 
-## Phase 6: Remix Adapter Implementation
+- [ ] Write tests for Next.js provider
+  - [ ] Test provider initialization
+  - [ ] Test context propagation
+  - [ ] Test compatibility with existing code
 
-### 6.1. Remix Client Adapter
+## Phase 7: Remix Adapter Implementation
+
+### 7.1. Remix Client Adapter
 
 - [ ] Implement Remix client in `@makeswift/remix/src/client.ts`
 
@@ -278,12 +377,18 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [ ] Support Remix's data loading patterns with loaders
 
 - [ ] Create Remix site version provider
+
   - [ ] Implement `RemixSiteVersionProvider`
   - [ ] Create cookie utilities for preview mode
   - [ ] Add session handling for secure state
   - [ ] Implement server/client coordination for draft mode
 
-### 6.2. Remix API Routes
+- [ ] Write tests for Remix client adapter
+  - [ ] Test client functionality
+  - [ ] Test preview mode implementation
+  - [ ] Test data loading integration
+
+### 7.2. Remix API Routes
 
 - [ ] Implement Remix resource routes in `@makeswift/remix/src/routes/api/makeswift`
 
@@ -298,24 +403,30 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [ ] Ensure correct response headers for Remix's caching model
 
 - [ ] Implement Remix specific endpoints adapters
+
   - [ ] Create draft mode handlers using Remix cookie and session APIs
   - [ ] Implement resource fetching routes with loader/action patterns
   - [ ] Add font handling that works with Remix's asset system
   - [ ] Design cache management strategies using Remix's CDN-friendly caching headers
   - [ ] Implement error boundary handling with Remix's ErrorBoundary pattern
 
-### 6.3. Remix Components
+- [ ] Write tests for Remix API routes
+  - [ ] Test resource route functionality
+  - [ ] Test cookie handling
+  - [ ] Test caching strategies
 
-- [ ] Implement Remix image component
+### 7.3. Remix Components
 
-  - [ ] Create `RemixImageComponent`
+- [ ] Finalize Remix image component
+
+  - [ ] Complete `RemixImageComponent` implementation
   - [ ] Implement responsive image handling
   - [ ] Create image optimization utilities
   - [ ] Support asset handling through Remix's public folder structure
 
-- [ ] Implement Remix link component
+- [ ] Finalize Remix link component
 
-  - [ ] Create `RemixLinkComponent` using React Router's Link
+  - [ ] Complete `RemixLinkComponent` using React Router's Link
   - [ ] Handle client-side navigation
   - [ ] Implement prefetching behavior
   - [ ] Support nested route transitions
@@ -328,29 +439,83 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [ ] Support nested route meta merging
 
 - [ ] Implement Remix-specific UI components
+
   - [ ] Create components that leverage Remix's nested routing
   - [ ] Implement components for handling pending UI states
   - [ ] Create error boundary components compatible with Remix's error handling
 
-### 6.4. Remix Provider
+- [ ] Write tests for Remix components
+  - [ ] Test component rendering
+  - [ ] Test navigation behavior
+  - [ ] Test head management
+
+### 7.4. Remix Provider
 
 - [ ] Implement Remix provider in `@makeswift/remix/src/provider.tsx`
+
   - [ ] Create MakeswiftProvider component
   - [ ] Handle initialization with Remix specific context
   - [ ] Implement style registry for Emotion
   - [ ] Support both Remix v1 and v2 (React Router v7) APIs
 
-### 6.5. Caching and Optimization
+- [ ] Write tests for Remix provider
+  - [ ] Test provider initialization
+  - [ ] Test context propagation
+  - [ ] Test version compatibility
+
+### 7.5. Caching and Optimization
 
 - [ ] Implement Remix-specific caching strategies
+
   - [ ] Create headers utilities for CDN caching
   - [ ] Implement alternatives to Next.js ISR patterns
   - [ ] Build revalidation mechanisms compatible with Remix architecture
   - [ ] Document performance considerations specific to Remix deployment patterns
 
-## Phase 7: Sample Implementation
+- [ ] Write tests for Remix caching
+  - [ ] Test caching behavior
+  - [ ] Test revalidation mechanisms
+  - [ ] Test performance optimizations
 
-### 7.1. Next.js Examples
+## Phase 8: Cross-Framework Verification
+
+### 8.1. Feature Parity Testing
+
+- [ ] Create feature matrix test suite
+
+  - [ ] Define core features that must work across frameworks
+  - [ ] Implement tests for each feature across frameworks
+  - [ ] Create automated comparison reporting
+
+- [ ] Test critical functionality across frameworks
+  - [ ] Preview/draft mode behavior
+  - [ ] Image and link component behavior
+  - [ ] Head management and SEO
+  - [ ] API route functionality
+  - [ ] Internationalization support
+
+### 8.2. Integration Testing
+
+- [ ] Create end-to-end tests for Next.js integration
+
+  - [ ] Test complete page rendering flow
+  - [ ] Test preview mode toggling
+  - [ ] Test API endpoints
+
+- [ ] Create end-to-end tests for Remix integration
+
+  - [ ] Test complete page rendering flow
+  - [ ] Test preview mode toggling
+  - [ ] Test API endpoints
+
+- [ ] Verify cross-framework behavior consistency
+  - [ ] Compare rendering outputs
+  - [ ] Compare network request patterns
+  - [ ] Compare performance metrics
+
+## Phase 9: Sample Implementation
+
+### 9.1. Next.js Examples
 
 - [ ] Update Next.js App Router example
 
@@ -363,7 +528,7 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [ ] Update \_app and \_document pages
   - [ ] Verify all existing functionality
 
-### 7.2. Remix Example
+### 9.2. Remix Example
 
 - [ ] Create basic Remix application
 
@@ -387,41 +552,9 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [ ] Test on-demand revalidation via API endpoints
   - [ ] Verify fonts are correctly loaded
 
-## Phase 8: Testing and Documentation
+## Phase 10: Documentation and Release Preparation
 
-### 8.1. Unit Tests
-
-- [ ] Write tests for core abstractions
-
-  - [ ] Test client functionality
-  - [ ] Test API handler logic
-  - [ ] Test component abstractions
-
-- [ ] Write tests for Next.js adapter
-
-  - [ ] Test Next.js specific functionality
-  - [ ] Test compatibility with both router types
-  - [ ] Test edge cases and error handling
-
-- [ ] Write tests for Remix adapter
-  - [ ] Test Remix specific functionality
-  - [ ] Test cookie handling and preview mode
-  - [ ] Test integration with React Router
-
-### 8.2. Integration Tests
-
-- [ ] Create end-to-end tests for Next.js integration
-
-  - [ ] Test complete page rendering flow
-  - [ ] Test preview mode toggling
-  - [ ] Test API endpoints
-
-- [ ] Create end-to-end tests for Remix integration
-  - [ ] Test complete page rendering flow
-  - [ ] Test preview mode toggling
-  - [ ] Test API endpoints
-
-### 8.3. Documentation
+### 10.1. Documentation
 
 - [ ] Update core API documentation
 
@@ -443,7 +576,7 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [ ] Create troubleshooting guide
   - [ ] Include deployment strategies for various hosting platforms
 
-### 8.4. Migration Tools
+### 10.2. Migration Tools
 
 - [ ] Create migration utilities
 
@@ -456,9 +589,7 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [ ] Implement automatic page structure conversion
   - [ ] Provide data fetching translation utilities
 
-## Phase 9: Finalization and Release
-
-### 9.1. Performance Optimization
+### 10.3. Performance Verification
 
 - [ ] Analyze and optimize bundle size
 
@@ -466,12 +597,15 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [ ] Optimize dependencies
   - [ ] Create production build configurations
 
-- [ ] Benchmark performance
+- [ ] Benchmark performance against baseline
   - [ ] Compare before/after page load metrics
   - [ ] Test server-side rendering performance
   - [ ] Optimize critical rendering paths
+  - [ ] Verify performance meets targets (≤10% degradation)
 
-### 9.2. Release Preparation
+## Phase 11: Finalization and Release
+
+### 11.1. Release Preparation
 
 - [ ] Finalize versioning strategy
 
@@ -493,7 +627,7 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [ ] Announce to users with migration guide
   - [ ] Provide rollback plan in case of issues
 
-### 9.3. Post-Release Support
+### 11.2. Post-Release Support
 
 - [ ] Implement monitoring and feedback systems
 
@@ -506,7 +640,7 @@ This document provides a detailed, step-by-step checklist for implementing the d
   - [ ] Create evaluation criteria for new framework support
   - [ ] Develop roadmap for additional framework adapters
 
-### 9.4. Compatibility Verification
+### 11.3. Compatibility Verification
 
 - [ ] Perform long-term compatibility verification
   - [ ] Create automated tests for new Next.js and Remix versions
