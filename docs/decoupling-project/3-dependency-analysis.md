@@ -1,6 +1,6 @@
 # Next.js Dependency Analysis
 
-This document provides a comprehensive analysis of Next.js dependencies in the Makeswift runtime package, building on the initial findings outlined in the introduction document. Rather than repeating information, this analysis focuses on specific details of the dependencies and provides additional insights for implementation.
+This document provides a comprehensive analysis of Next.js dependencies in the Makeswift runtime package, building on the initial findings outlined in the introduction document. This analysis focuses on identifying dependencies and providing insights for implementation planning.
 
 ## Table of Contents
 
@@ -10,10 +10,8 @@ This document provides a comprehensive analysis of Next.js dependencies in the M
 4. [Decoupling Considerations](#4-decoupling-considerations)
 5. [Critical Design Decisions](#5-critical-design-decisions)
 6. [Dependency Prioritization](#6-dependency-prioritization)
-7. [Testing Strategy](#7-testing-strategy)
-8. [Cross-Framework Implementation Examples](#8-cross-framework-implementation-examples) 
-9. [Risk Assessment](#9-risk-assessment)
-10. [Backward Compatibility](#10-backward-compatibility)
+7. [Risk Assessment](#7-risk-assessment)
+8. [Backward Compatibility](#8-backward-compatibility)
 
 ## 1. Next.js Dependencies
 
@@ -440,314 +438,26 @@ Based on the difficulty of decoupling and the potential for reuse across multipl
 
 This prioritization allows for iterative development with increasing complexity, building confidence and validating the approach before tackling the most challenging dependencies.
 
-## 7. Testing Strategy
-
-Testing a framework-agnostic core with multiple framework adapters requires a comprehensive approach:
-
-### Unit Testing
-
-- **Core Components**: Test core functionality in isolation with mocked framework adapters
-  ```typescript
-  // Example unit test for core image component
-  it('core image resolves correct props for adapters', () => {
-    const coreImage = new CoreImage({ src: 'test.jpg', width: 100, height: 100 });
-    const props = coreImage.getAdapterProps();
-    expect(props).toHaveProperty('src');
-    expect(props).toHaveProperty('width');
-    expect(props).toHaveProperty('height');
-  });
-  ```
-
-- **Adapter Implementation**: Test adapter-specific logic with framework testing tools
-  ```typescript
-  // Example Next.js adapter test
-  it('next image adapter renders with correct props', () => {
-    renderWithNextContext(<NextImageAdapter src="test.jpg" width={100} height={100} />);
-    expect(screen.getByRole('img')).toHaveAttribute('src', expect.stringContaining('test.jpg'));
-  });
-  ```
-
-### Integration Testing
-
-- **Framework-Specific Tests**: Test each adapter in its native framework environment
-  - For Next.js: Use Next.js testing utilities
-  - For Remix: Use Remix testing utilities
-  
-- **Cross-Adapter Compatibility**: Ensure identical behavior across frameworks
-  ```typescript
-  // Test consistent behavior across frameworks
-  function testImageBehavior(adapter) {
-    const { rerender } = render(
-      <adapter.Image src="test.jpg" width={100} height={100} />
-    );
-    expect(screen.getByRole('img')).toBeInTheDocument();
-    
-    // Test responsive behavior
-    rerender(<adapter.Image src="test.jpg" layout="responsive" />);
-    // Assertions should be identical regardless of framework
-  }
-  
-  it('should behave consistently in Next.js', () => {
-    testImageBehavior(nextAdapter);
-  });
-  
-  it('should behave consistently in Remix', () => {
-    testImageBehavior(remixAdapter);
-  });
-  ```
-
-### End-to-End Testing
-
-- **Sample Applications**: Create test applications for each supported framework
-  - Basic Next.js app (both Pages and App Router)
-  - Basic Remix app
-  
-- **Feature Matrix Testing**: Verify all features across frameworks
-  - Preview mode functionality
-  - Styling and head management
-  - Component rendering
-  - API functionality
-
-### Continuous Integration
-
-- **Matrix Builds**: Test against multiple versions of each framework
-  - Next.js: v12, v13, v14+
-  - Remix: v1, v2+
-  
-- **Shared Test Suite**: Core test specifications that run across all adapters
-  - Implementation details differ, but expected behaviors should be identical
-
-This testing strategy ensures both framework-specific correctness and cross-framework consistency, critical for a successful decoupling effort.
-
-## 8. Cross-Framework Implementation Examples
-
-The following examples illustrate how key components will be implemented across frameworks after decoupling:
-
-### Image Component
-
-**Core Implementation**:
-```typescript
-// @makeswift/runtime-core
-export interface ImageProps {
-  src: string;
-  alt?: string;
-  width?: number;
-  height?: number;
-  layout?: 'fixed' | 'responsive' | 'fill';
-  priority?: boolean;
-}
-
-export class CoreImage extends React.Component<ImageProps> {
-  render() {
-    // Delegate to current adapter's implementation
-    const ImageAdapter = getRegisteredAdapter('image');
-    return <ImageAdapter {...this.props} />;
-  }
-}
-```
-
-**Next.js Adapter**:
-```typescript
-// @makeswift/next
-import NextImage from 'next/image';
-import { major as nextMajorVersion } from './next-version';
-import type { ImageProps } from '@makeswift/runtime-core';
-
-export function NextImageAdapter(props: ImageProps) {
-  const { src, alt = '', width, height, layout, priority } = props;
-  
-  if (nextMajorVersion < 13) {
-    // Next.js 12 and below
-    return (
-      <NextLegacyImage
-        src={src}
-        alt={alt}
-        width={width}
-        height={height}
-        layout={layout}
-        priority={priority}
-      />
-    );
-  }
-  
-  // Next.js 13+
-  return (
-    <NextImage
-      src={src}
-      alt={alt}
-      width={width}
-      height={height}
-      priority={priority}
-      style={{ width: '100%', height: 'auto' }}
-    />
-  );
-}
-
-// Register the adapter with the core
-registerAdapter('image', NextImageAdapter);
-```
-
-**Remix Adapter**:
-```typescript
-// @makeswift/remix
-import type { ImageProps } from '@makeswift/runtime-core';
-
-export function RemixImageAdapter(props: ImageProps) {
-  const { src, alt = '', width, height, layout, priority } = props;
-  
-  // Generate responsive srcSet if needed
-  const srcSet = layout === 'responsive' ? generateSrcSet(src) : undefined;
-  
-  // Set loading priority
-  const loading = priority ? 'eager' : 'lazy';
-  
-  return (
-    <img
-      src={src}
-      alt={alt}
-      width={width}
-      height={height}
-      srcSet={srcSet}
-      loading={loading}
-      style={{
-        width: layout === 'fill' || layout === 'responsive' ? '100%' : undefined,
-        height: layout === 'fill' ? '100%' : 'auto',
-      }}
-    />
-  );
-}
-
-// Register the adapter with the core
-registerAdapter('image', RemixImageAdapter);
-```
-
-### Preview/Draft Mode
-
-**Core Implementation**:
-```typescript
-// @makeswift/runtime-core
-export enum SiteVersion {
-  Live = 'live',
-  Working = 'working',
-}
-
-export interface SiteVersionProvider {
-  getSiteVersion(): Promise<SiteVersion>;
-  enableDraftMode(key: string): Promise<void>;
-  disableDraftMode(): Promise<void>;
-}
-
-// Core client uses the provider
-export class MakeswiftClient {
-  constructor(private siteVersionProvider: SiteVersionProvider) {}
-  
-  async getPageData(pathname: string) {
-    const siteVersion = await this.siteVersionProvider.getSiteVersion();
-    // Use site version to fetch appropriate data
-  }
-}
-```
-
-**Next.js Adapter (App Router)**:
-```typescript
-// @makeswift/next
-import { cookies, draftMode } from 'next/headers';
-import { SiteVersion, SiteVersionProvider } from '@makeswift/runtime-core';
-
-export class NextAppRouterSiteVersionProvider implements SiteVersionProvider {
-  async getSiteVersion(): Promise<SiteVersion> {
-    const { isEnabled } = await draftMode();
-    if (!isEnabled) return SiteVersion.Live;
-    
-    const cookie = cookies().get(MAKESWIFT_DRAFT_MODE_DATA_COOKIE);
-    if (!cookie) return SiteVersion.Live;
-    
-    try {
-      const data = JSON.parse(cookie.value);
-      return data.siteVersion || SiteVersion.Live;
-    } catch {
-      return SiteVersion.Live;
-    }
-  }
-  
-  async enableDraftMode(key: string): Promise<void> {
-    // Implementation using Next.js App Router draft mode
-  }
-  
-  async disableDraftMode(): Promise<void> {
-    // Implementation using Next.js App Router cookies
-  }
-}
-```
-
-**Remix Adapter**:
-```typescript
-// @makeswift/remix
-import { createCookieSessionStorage } from '@remix-run/node';
-import { SiteVersion, SiteVersionProvider } from '@makeswift/runtime-core';
-
-const sessionStorage = createCookieSessionStorage({
-  cookie: {
-    name: 'makeswift_draft_mode',
-    httpOnly: true,
-    path: '/',
-    sameSite: 'lax',
-    secrets: [process.env.SESSION_SECRET || 'default-secret'],
-    secure: process.env.NODE_ENV === 'production',
-  },
-});
-
-export class RemixSiteVersionProvider implements SiteVersionProvider {
-  constructor(private request: Request) {}
-  
-  async getSiteVersion(): Promise<SiteVersion> {
-    const session = await sessionStorage.getSession(
-      this.request.headers.get('Cookie')
-    );
-    
-    return session.get('siteVersion') || SiteVersion.Live;
-  }
-  
-  async enableDraftMode(key: string): Promise<void> {
-    // Implementation using Remix sessions
-  }
-  
-  async disableDraftMode(): Promise<void> {
-    // Implementation using Remix sessions
-  }
-}
-```
-
-These examples demonstrate how the adapter pattern allows for framework-specific implementations while maintaining a consistent core API.
-
-## 9. Risk Assessment
+## 7. Risk Assessment
 
 The following matrix assesses the risks associated with each decoupling area:
 
-| Decoupling Area | Technical Risk | Performance Risk | User Migration Risk | Mitigation Strategy |
-|-----------------|---------------|------------------|---------------------|---------------------|
-| Image Component | ⭐⭐☆☆☆ | ⭐☆☆☆☆ | ⭐☆☆☆☆ | Ensure responsive image optimization is preserved across frameworks |
-| Link Component | ⭐☆☆☆☆ | ⭐☆☆☆☆ | ⭐☆☆☆☆ | Maintain prefetching behavior wherever possible |
-| Head Management | ⭐⭐⭐☆☆ | ⭐⭐☆☆☆ | ⭐⭐☆☆☆ | Ensure all SEO features work consistently, especially with streaming SSR |
-| API Handlers | ⭐⭐⭐⭐☆ | ⭐⭐⭐☆☆ | ⭐⭐⭐☆☆ | Maintain existing API URLs for backward compatibility |
-| Preview/Draft Mode | ⭐⭐⭐⭐⭐ | ⭐⭐⭐☆☆ | ⭐⭐⭐⭐☆ | Provide fallback mechanisms for frameworks without built-in preview |
-| SSR Styling | ⭐⭐⭐⭐☆ | ⭐⭐⭐⭐☆ | ⭐⭐⭐☆☆ | Address potential Flash of Unstyled Content (FOUC) across frameworks |
-| Revalidation | ⭐⭐⭐⭐☆ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐☆☆ | Create adapter-specific optimizations for each framework's cache system |
-| Locale Handling | ⭐⭐⭐☆☆ | ⭐⭐☆☆☆ | ⭐⭐☆☆☆ | Support multiple locale detection strategies |
+| Decoupling Area | Technical Risk | Performance Risk | User Migration Risk |
+|-----------------|---------------|------------------|---------------------|
+| Image Component | ⭐⭐☆☆☆ | ⭐☆☆☆☆ | ⭐☆☆☆☆ |
+| Link Component | ⭐☆☆☆☆ | ⭐☆☆☆☆ | ⭐☆☆☆☆ |
+| Head Management | ⭐⭐⭐☆☆ | ⭐⭐☆☆☆ | ⭐⭐☆☆☆ |
+| API Handlers | ⭐⭐⭐⭐☆ | ⭐⭐⭐☆☆ | ⭐⭐⭐☆☆ |
+| Preview/Draft Mode | ⭐⭐⭐⭐⭐ | ⭐⭐⭐☆☆ | ⭐⭐⭐⭐☆ |
+| SSR Styling | ⭐⭐⭐⭐☆ | ⭐⭐⭐⭐☆ | ⭐⭐⭐☆☆ |
+| Revalidation | ⭐⭐⭐⭐☆ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐☆☆ |
+| Locale Handling | ⭐⭐⭐☆☆ | ⭐⭐☆☆☆ | ⭐⭐☆☆☆ |
 
 ### Critical Risk Areas
 
 1. **Preview/Draft Mode**: Highest technical risk due to deep framework integration
-   - **Potential Failure Modes**: Secure cookie handling differences, server/client synchronization
-   - **Contingency Plan**: Implement query parameter fallback that works universally
-
 2. **Revalidation**: Highest performance risk due to framework-specific cache optimizations
-   - **Potential Failure Modes**: Inefficient cache invalidation, excessive rebuilds
-   - **Contingency Plan**: Time-based fallback for frameworks without fine-grained cache control
-
 3. **SSR Styling**: Critical for visual consistency across loading states
-   - **Potential Failure Modes**: FOUC, missing styles in SSR
-   - **Contingency Plan**: Client-side fallback style injection
 
 ### Performance Considerations
 
@@ -759,7 +469,7 @@ The abstraction layer will inevitably add some overhead. Key metrics to monitor:
 
 Recommended performance benchmarks should be established for each adapter, with a tolerance of no more than 10% degradation from framework-specific implementations.
 
-## 10. Backward Compatibility
+## 8. Backward Compatibility
 
 ### Breaking Changes
 
@@ -791,4 +501,4 @@ The dependency analysis reveals significant coupling to Next.js, but with a clea
 
 The implementation will require careful consideration of backward compatibility, but will ultimately provide a more flexible and maintainable architecture that can support multiple frameworks beyond Next.js.
 
-By following the prioritization strategy outlined in this document, the team can tackle decoupling incrementally, focusing first on low-risk, high-value components before addressing the more complex dependencies. The comprehensive testing strategy will ensure that functionality remains consistent across frameworks, while the risk assessment highlights areas requiring particular attention during implementation.
+By following the prioritization strategy outlined in this document, the team can tackle decoupling incrementally, focusing first on low-risk, high-value components before addressing the more complex dependencies.
