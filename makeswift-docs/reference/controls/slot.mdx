@@ -1,0 +1,68 @@
+---
+title: Slot
+description: Add a Slot in the Makeswift builder to visually drop in a `ReactNode`.
+icon: "square-dashed"
+---
+
+<Frame type="glass" caption="A slot inside of a Feature Card component">
+  <img src="/images/slot-control.png" />
+</Frame>
+
+## Params
+
+The Slot control currently doesn't take any parameters.
+
+## Prop type
+
+The Slot control passes a `ReactNode` to your component.
+
+## Example
+
+The following example adds a Slot control to the `media` prop of a Feature Card component.
+
+<CodeGroup>
+
+```tsx FeatureCard.makeswift.ts
+import { Slot, TextInput, Image } from "@makeswift/runtime/controls"
+
+import { runtime } from "@/makeswift/runtime"
+
+import { FeatureCard } from "./FeatureCard"
+
+runtime.registerComponent(FeatureCard, {
+  type: "feature-card",
+  label: "Feature Card",
+  props: {
+    icon: Image({ label: "Icon" }),
+    headline: TextInput({ label: "Headline" }),
+    body: TextInput({ label: "Body" }),
+    media: Slot(),
+  },
+})
+```
+
+```tsx FeatureCard.tsx
+interface Props {
+  icon?: string
+  headline?: string
+  body?: string
+  media: ReactNode
+}
+
+export function FeatureCard({ icon, headline, body, media }) {
+  return (
+    <div className="rounded-lg bg-black/20 shadow space-y-4">
+      <img src={icon} />
+      <h1>{headline}</h1>
+      <p>{body}</p>
+      <div>{media}</div>
+    </div>
+  )
+}
+```
+
+</CodeGroup>
+
+import NamingConventions from "/snippets/naming-conventions.mdx"
+
+<NamingConventions />

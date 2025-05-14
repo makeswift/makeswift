@@ -1,0 +1,69 @@
+---
+title: Vercel
+description: "Learn how to deploy your Makeswift application to Vercel."
+---
+
+<Info>
+  This guide uses the Vercel dashboard to deploy your Makeswift application.
+  Alternatively, you can use the [Vercel CLI](https://vercel.com/docs/cli).
+</Info>
+
+## Prerequisites
+
+You'll need a Makeswift site. If you don't already have one, you can follow the [developer quickstart](/developer/quickstart) or [installation guide](/developer/app-router/installation) to get started. You'll also need:
+
+- A Git repository ([full list of Vercel supported Git providers](https://vercel.com/docs/deployments/git))
+- Vercel account ([sign up](https://vercel.com/signup))
+
+## Create new project in Vercel
+
+Within the Vercel dashboard, choose **Add New... > Project** from the top right of the **Overview** page.
+
+<Frame>
+  <img
+    src="/images/developer/deploying/vercel/add-new-project.jpeg"
+    alt="Add new project in vercel dashboard"
+  />
+</Frame>
+## Connect to Git repo
+
+In the **Import Git Repository** section, choose your Git repository. If you haven't already, you may need to authorize Vercel to have the correct access to your Git provider.
+
+<Frame>
+  <img
+    src="/images/developer/deploying/vercel/connect-git-repo.jpeg"
+    alt="Connect to Git repository"
+  />
+</Frame>
+
+## Project settings
+
+Vercel will automatically attempt to generate the correct settings for your project. Ensure these settings match your project setup.
+
+<Frame>
+  <img
+    src="/images/developer/deploying/vercel/project-settings.jpeg"
+    alt="Configure project settings"
+  />
+</Frame>
+
+### Environment variables
+
+You'll need to include your Makeswift API key which you can find in the Makeswift Visual Builder under **Settings > Host**.
+
+<Frame>
+  <img src="/images/site-api-key.gif" alt="How to get the site API key" />
+</Frame>
+
+Add your API key to the **Environment Variables** section with a key of `MAKESWIFT_SITE_API_KEY`.
+
+<Frame>
+  <img
+    src="/images/developer/deploying/vercel/environment-variables.jpeg"
+    alt="Environment variables"
+  />
+</Frame>
+
+## Deploy
+
+After you finished configuring your settings, click the **Deploy** button. Vercel will build and deploy your Makeswift application. After the build has finished, you should see a success message with a link to your deployed site.

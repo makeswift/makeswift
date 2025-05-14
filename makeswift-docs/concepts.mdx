@@ -1,0 +1,79 @@
+---
+title: "Concepts"
+description: "To best understand Makeswift, there are a few core concepts for which to establish common vocabulary."
+---
+
+## Props
+
+Props are the primary way to pass data into a React component. They are one of the two types of data that control a component. The other type of data is state, which is used to control data within the component.
+
+Props are passed into the render function of a component as an object in the first argument position. The object contains all the props passed into the component.
+
+```jsx
+function MyComponent(props) {
+  return <div>{props.name}</div>
+}
+```
+
+You can read more about props in the [React documentation](https://react.dev/learn/passing-props-to-a-component).
+
+## Controls
+
+Controls describe the way users can pass data to your components props. Each control maps a [prop](#props) on your component to user interface elements such as <Tooltip tip="Form elements in the right sidebar of the Makeswift builder">panels</Tooltip> and <Tooltip tip="Interactive elements placed on the Makeswift builder preview">overlays</Tooltip>. Controls are defined when [registering components](/developer/reference/runtime/register-component).
+
+There are two types of controls: [basic](#basic-controls) and [composable](#composable-controls) controls.
+
+### Basic controls
+
+Basic controls cannot contain other controls. Multiple basic controls can provide the same type of data, but with different user interfaces. For example, you can provide a `string` to your component with a [`TextInput`](/developer/reference/controls/text-input), [`TextArea`](/developer/reference/controls/text-area), [`Select`](/developer/reference/controls/select), or [`Combobox`](/developer/reference/controls/combobox) control. Here are all of the basic controls:
+
+<CardGroup cols={3}>
+  <Card
+    title="Checkbox"
+    icon="square-check"
+    href="/developer/reference/controls/checkbox"
+  />
+  <Card title="Color" icon="palette" href="/developer/reference/controls/color" />
+  <Card
+    title="Combobox"
+    icon="input-pipe"
+    href="/developer/reference/controls/combobox"
+  />
+  <Card title="Image" icon="image" href="/developer/reference/controls/image" />
+  <Card title="Link" icon="link" href="/developer/reference/controls/link" />
+  <Card title="Number" icon="input-numeric" href="/developer/reference/controls/number" />
+  <Card title="Select" icon="list-dropdown" href="/developer/reference/controls/select" />
+  <Card
+    title="TextArea"
+    icon="align-left"
+    href="/developer/reference/controls/text-area"
+  />
+  <Card
+    title="TextInput"
+    icon="input-text"
+    href="/developer/reference/controls/text-input"
+  />
+</CardGroup>
+
+There are three special basic controls that are designed for specific types of props such as `className` and `children`:
+
+<CardGroup cols={3}>
+  <Card title="RichText" icon="text" href="/developer/reference/controls/rich-text" />
+  <Card title="Slot" icon="square-dashed" href="/developer/reference/controls/slot" />
+  <Card title="Style" icon="droplet" href="/developer/reference/controls/style" />
+</CardGroup>
+
+- The [`RichText`](/developer/reference/controls/rich-text) control provides a `ReactNode` to your component and then renders an inline rich text editor <Tooltip tip="Interactive elements placed on the Makeswift builder preview">overlay</Tooltip> wherever the builder renders the `ReactNode`.
+
+- The [`Slot`](/developer/reference/controls/slot) control provides a `ReactNode` to your component and places a drop zone <Tooltip tip="Interactive elements placed on the Makeswift builder preview">overlay</Tooltip> wherever the builder renders the prop. Users can then add components visually to that drop zone.
+
+- The [`Style`](/developer/reference/controls/style) control provides multiple <Tooltip tip="Form elements in the right sidebar of the Makeswift builder">panels</Tooltip> and <Tooltip tip="Interactive elements placed on the Makeswift builder preview">overlays</Tooltip> that modify various CSS properties. This data is then passed to your component as a `string` value.
+
+### Composable controls
+
+Composable controls provide an `array` or `object` to a prop of your component. Composable controls have a `type` property that can recursively contain any control. The [`List`](/developer/reference/controls/list) control is used to modify props that expect an `array`, and the [`Shape`](/developer/reference/controls/shape) control is used to modify props that expect an `object`.
+
+<CardGroup cols={2}>
+  <Card title="List" icon="list" href="/developer/reference/controls/list" />
+  <Card title="Shape" icon="brackets-curly" href="/developer/reference/controls/shape" />
+</CardGroup>

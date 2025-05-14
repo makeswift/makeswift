@@ -1,0 +1,122 @@
+---
+title: RichText
+description: Adds a Rich Text control in the Makeswift builder to visually edit a `ReactNode` of text.
+icon: "text"
+---
+
+<Tabs>
+  <Tab title="Block">
+    <Frame type="glass" caption="A block Rich Text node for a Text component">
+      <img src="/images/rich-text-block.png" />
+    </Frame>
+  </Tab>
+  <Tab title="Inline">
+    <Frame
+      type="glass"
+      caption="An inline Rich Text node for a Button component"
+    >
+      <img src="/images/rich-text-inline.png" />
+    </Frame>
+  </Tab>
+</Tabs>
+
+## Options
+
+<ParamField
+  query="mode"
+  type="RichText.Mode.Block | RichText.Mode.Inline"
+  default="RichText.Mode.Block"
+>
+Sets the `display` property of the `ReactNode` that is passed to the control. This is useful for visually editing buttons and links.
+
+| Mode                   | Description                                                                                                                                                                                                                                                                                              |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `RichText.Mode.Block`  | Use for creating editable full line blocks of your site. Passes a `ReactNode` that is `display: block`.                                                                                                                                                                                                  |
+| `RichText.Mode.Inline` | Use for visually editing buttons and links. Passes a `ReactNode` that is `display: inline`. Prevents [hydration mismatch errors](https://nextjs.org/messages/react-hydration-error) that can occur when placing block level elements into inline level elements. Only available for `v0.10.0` and above. |
+
+</ParamField>
+
+## Prop type
+
+The RichText control passes a `ReactNode` to your component.
+
+## Example
+
+### Block mode
+
+<CodeGroup>
+
+```tsx Hero.makeswift.ts
+import { RichText } from "@makeswift/runtime/controls"
+
+import { runtime } from "@/makeswift/runtime"
+
+import { Hero } from "./Hero"
+
+runtime.registerComponent(Hero, {
+  type: "hero",
+  label: "Hero",
+  props: {
+    headline: RichText(),
+  },
+})
+```
+
+```tsx Hero.tsx
+interface Props {
+  headline: ReactNode
+}
+
+export function Hero() {
+  return (
+    <div className="flex gap-4 justify-center">
+      <img src="https://placehold.it/500" />
+      <h1>{headline}</h1>
+    </div>
+  )
+}
+```
+
+</CodeGroup>
+
+### Inline mode
+
+<CodeGroup>
+
+```tsx Button.makeswift.ts
+import { RichText, Image } from "@makeswift/runtime/controls"
+import { runtime } from "@/lib/makeswift/runtime"
+
+import { Button } from "./Button"
+
+runtime.registerComponent(Button, {
+  type: "button",
+  label: "Button",
+  props: {
+    children: RichText({ mode: RichText.Mode.Inline }),
+  },
+})
+```
+
+```tsx Button.tsx
+interface Props {
+  children: ReactNode
+}
+
+export function Button({ children }) {
+  return <a className="px-4 py-3 rounded bg-black text-white">{children}</a>
+}
+```
+
+</CodeGroup>
+
+import NamingConventions from "/snippets/naming-conventions.mdx"
+
+<NamingConventions />
+
+## Changelog
+
+| Version                                                                                          | Changes                                                       |
+| ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------- |
+| [`v0.10.0`](https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.10.0) | Overhauled control architecture and introduced `Inline` mode. |
+| [`v0.6.3`](https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.6.3)   | Introduced `RichText` control.                                |

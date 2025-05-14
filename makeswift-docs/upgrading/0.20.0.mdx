@@ -1,0 +1,46 @@
+---
+title: Upgrading to 0.20.0
+---
+
+If you haven't upgraded to `0.19.0` please read the [upgrading guide](/developer/upgrading/0.19.0).
+
+`v0.20.0` of the runtime introduces several changes to the internals of the
+runtime, but the API changes are limited to unique cases when registering
+components that should not affect most users:
+
+1.  Attempting to create a control with arbitrary configuration options will now
+    result in a TypeScript compilation error:
+
+    ```typescript
+    import { Number } from "@makeswift/runtime/controls";
+    
+    const num = Number({ foo: "bar" }); // TS error, `foo` is not a valid `Number` param
+    ```
+
+    Prior to this version, the arbitrary options were silently ignored.
+
+2.  The `Select` control now requires `options` to be a readonly array with at
+    least one entry. If you are not defining your options inline, you may need
+    to declare the options `as const`.
+
+    ```typescript
+    import { Select } from "@makeswift/runtime/controls";
+
+    const sel = Select({
+      label: "Select",
+      options: [], // TS error, non-empty array is required
+    });
+    ```
+
+    Previously, the `options` array was allowed to be empty.
+
+Additionally, several undocumented internal types and functions are no longer
+being exported from the package, as they were not intended for our public API.
+
+Lastly, this version of the runtime now validates control configuration at
+runtime. If you were using the runtime without TypeScript, you may see errors in
+the console if you pass invalid options to a control. We recommend reading our
+[controls documentation](/developer/reference/controls) to ensure proper usage,
+or if possible, using TypeScript to catch these errors ahead of time.
+
+Here is the link to the [official release notes](https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.20.0).

@@ -1,0 +1,36 @@
+---
+title: Upgrading to 0.18.0
+---
+
+If you haven't upgraded to `0.15.0` please read the [upgrading guide](/developer/upgrading/0.15.0).
+
+## Migrate to @makeswift/runtime/controls
+
+<Warning>
+This upgrade guide is only necessary if you're using deprecated APIs from `@makeswift/runtime/prop-controllers`. If you're not using these APIs, you can safely skip this upgrade guide.
+</Warning>
+
+In version 0.0.7, we introduced a new `@makeswift/runtime/controls` module that replaces the deprecated `@makeswift/runtime/prop-controllers`. To upgrade, you'll need to update your components to use controls from the new module.
+
+### Updating Imports
+
+For most controls, you can simply update the import statement. Here's an example for migrating the `RichText` control:
+
+```diff
+- import { RichText } from '@makeswift/runtime/prop-controllers';
++ import { RichText } from '@makeswift/runtime/controls';
+```
+
+For detailed information on how to use each control, refer to the respective control's documentation. For example, here's the docs for the [RichText control](/developer/reference/controls/rich-text).
+
+### Special Cases
+
+Some controls, like `List` and `Shape`, require additional changes beyond updating the import statement. When using these controls, you'll also need to update the controls used to define their types.
+
+Refer to the documentation for each control to see if any special migration steps are necessary.
+
+### Learn More
+
+For more information about the available controls and how to use them, please refer to the [controls documentation](/developer/concepts#controls).
+
+Here is the link to the [official release notes](https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.18.0).

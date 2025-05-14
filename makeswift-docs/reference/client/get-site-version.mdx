@@ -1,0 +1,19 @@
+---
+title: "getSiteVersion"
+description: "A static method on the `Makeswift` class that returns the current version of the Makeswift site. This method is currently only used when calling `getPageSnapshot` and using **Pages Router** in Next.js."
+---
+
+import PagesCatchAllExample from "/snippets/pages-router/catch-all.mdx";
+
+## Arguments
+
+1. <ParamField query="previewData" type="PreviewData" required>
+     The preview data provided in
+     [`getStaticProps`](https://nextjs.org/docs/pages/api-reference/functions/get-static-props).
+   </ParamField>
+
+## Example
+
+The following example sets up a [catch all route](https://nextjs.org/docs/pages/building-your-application/routing/dynamic-routes#catch-all-segments) where page snapshots are fetched from Makeswift using `siteVersion` and rendered using the [`<Page>`](/developer/reference/components/page) component.
+
+<PagesCatchAllExample />

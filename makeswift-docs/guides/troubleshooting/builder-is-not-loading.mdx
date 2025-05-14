@@ -1,0 +1,37 @@
+---
+title: Builder isn't loading
+---
+
+## Builder isn't loading in Safari
+
+If you're using Safari and the builder isn't loading, it's likely that you're running into issues
+with [mixed content](https://developer.mozilla.org/en-US/Web/Security/Mixed_content).
+
+Safari blocks the loading of all mixed-content resources. This means that `https://app.makeswift.com`,
+which is loaded via **HTTPS**, can't load `http://localhost:3000`, since it is loaded via **HTTP**.
+
+The solution to this issue is to run your local Next.js app with **HTTPS**. You can do this in Next.js with the following command:
+
+```
+next dev --experimental-https
+```
+
+> The `--experimental-https` flag requires a Next.js version of `13.5.1` or higher.
+
+For full details, see their [How can I run Next.js on localhost through HTTPS?](https://vercel.com/guides/access-nextjs-localhost-https-certificate-self-signed) guide.
+
+## Builder isn't loading in Brave Browser
+
+If you're using Brave and the builder isn't loading, it's likely you're running into issues with
+Brave Shields and its restrictions on `localhost`.
+
+Since the [#463 release](https://github.com/brave/adblock-lists/pull/463), Brave blocks requests to
+`localhost` from non-`localhost` documents.
+
+To solve this issue, go to `brave://adblock` and add the following custom filter:
+
+```
+@@||localhost^$domain=app.makeswift.com
+```
+
+This prevents Brave Shields from blocking `localhost` requests from `app.makeswift.com`.

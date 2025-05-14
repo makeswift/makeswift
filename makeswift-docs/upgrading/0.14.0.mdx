@@ -1,0 +1,28 @@
+---
+title: Upgrading to 0.14.0
+---
+
+If you haven't upgraded to `0.13.0` please read the [upgrading guide](/developer/upgrading/0.13.0).
+
+### Update the API handler file
+
+Find your API handler at `/pages/api/[...makeswift].ts`
+
+```js
+-- import { MakeswiftApiHandler } from "@makeswift/runtime/next"
+++ import { MakeswiftApiHandler } from "@makeswift/runtime/next/server"
+
+export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY)
+```
+
+### Replace deprecated functions from `0.2.0`
+
+These exported functions from `@makeswift/runtime/next` were deprecated:
+
+- `getStaticPaths`
+- `getStaticProps`
+- `getServerSideProps`
+
+To replace these functions, please follow the [manual installation](/developer/pages-router/installation) guide.
+
+Here is the link to the [official release notes](https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.14.0).

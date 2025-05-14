@@ -1,0 +1,59 @@
+---
+title: "getPageSnapshot"
+description: "An instance method of the Makeswift [client](/developer/reference/client/constructor) that fetches a snapshot of a Makeswift page at a given path. This snapshot is only intended to be rendered by the `<Page>` component."
+---
+
+import PagesCatchAllExample from "/snippets/pages-router/catch-all.mdx";
+import PagesCatchAllLocalizedExample from "/snippets/pages-router/catch-all-localized.mdx";
+
+## Arguments
+
+1.  <ParamField query="pathname" type="string" required>
+      The path of the page.
+    </ParamField>
+2.  <ParamField query="options" type="object" required>
+      Options for site version and locale.
+      <Expandable>
+        <ParamField query="siteVersion" type="SiteVersion" required>
+          For **App Router**, this is the return value from calling
+          [getSiteVersion](/developer/reference/get-site-version). For **Pages
+          Router**, this is the return value from
+          [Makeswift.getSiteVersion](/developer/reference/client/get-site-version).
+        </ParamField>
+        <ParamField query="locale" type="string">
+          A valid locale string (ex. `"en-US"`).
+        </ParamField>
+        <ParamField query="allowLocaleFallback" type="boolean" default={true}>
+          Controls whether a request for a localized page should fallback to the default locale if the requested locale is not available.
+       </ParamField>
+      </Expandable>
+    </ParamField>
+
+## Return type
+
+<ResponseField name="snapshot" type="Promise<MakeswiftPageSnapshot | null>">
+  An opaque `Snapshot` object that is only intended to be rendered by the
+  [`<Page>`](/developer/reference/components/page) component.
+</ResponseField>
+
+## Examples
+
+### Basic usage
+
+The following example sets up a [catch all route](https://nextjs.org/docs/pages/building-your-application/routing/dynamic-routes#catch-all-segments) where page snapshots are fetched from Makeswift and rendered using the [`<Page>`](/developer/reference/components/page) component.
+
+<PagesCatchAllExample />
+
+### Localization
+
+The following example uses the `locale` param in `getStaticProps` to fetch a localized snapshot of a page.
+
+<PagesCatchAllLocalizedExample />
+
+## Changelog
+
+| Version                                                                                          | Changes                               |
+| ------------------------------------------------------------------------------------------------ | ------------------------------------- |
+| [`v0.24.0`](https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.24.0) | Adds `allowLocaleFallback` option |
+| [`v0.11.0`](https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.11.0) | Adds `locale` option |
+| [`v0.2.0`](https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.2.0) | `getPageSnapshot` method introduced |

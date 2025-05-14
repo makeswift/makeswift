@@ -1,0 +1,27 @@
+---
+title: "<Page>"
+description: The `<Page>` component takes a Makeswift snapshot and renders React elements using [components registered](/developer/reference/runtime/register-component) with the runtime.
+---
+
+import PagesCatchAllExample from "/snippets/pages-router/catch-all.mdx";
+import AppCatchAllExample from "/snippets/app-router/catch-all.mdx";
+
+## Props
+
+<ParamField query="snapshot" type="Snapshot" required>
+  The Makeswift snapshot to render.
+</ParamField>
+
+## Example
+
+### App Router
+
+The following example sets up a [catch all dynamic route](https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes#optional-catch-all-segments) in the app router under `[[...path]]/page.tsx`.
+
+<AppCatchAllExample />
+
+### Pages Router
+
+The following example sets up a [catch all dynamic route](https://nextjs.org/docs/pages/building-your-application/routing/dynamic-routes#optional-catch-all-segments) in the pages router under `[[...path]].tsx`.
+
+<PagesCatchAllExample />

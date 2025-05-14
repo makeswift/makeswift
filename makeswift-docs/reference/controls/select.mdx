@@ -1,0 +1,113 @@
+---
+title: Select
+description: Adds a Select option (dropdown) to a component in the Makeswift builder to visually select a `string` value.
+icon: "list-dropdown"
+---
+
+<Frame
+  type="glass"
+  caption="A Select panel for a Button component to change the style"
+>
+  <img src="/images/select-panel.png" />
+</Frame>
+
+## Params
+
+<ParamField query="label" type="string" default="Text">
+  Text for the panel label in the Makeswift builder.
+</ParamField>
+
+<ParamField
+  query="labelOrientation"
+  type='"vertical" | "horizontal"'
+  default="horizontal"
+>
+  Orientation of the dropdown label within the panel.
+</ParamField>
+
+<ParamField query="options" type="SelectOption<T>[]" required>
+  An array of objects of type `SelectOption<T>` that contains the options available in the panel input.
+
+```ts
+type SelectOption<T extends string> = {
+  value: T
+  label: string
+}
+```
+
+The `label` field is displayed in the Makeswift builder.
+
+</ParamField>
+
+<ParamField query="defaultValue" type="T">
+  The value passed to your component when nothing is set in the Makeswift
+  builder.
+</ParamField>
+
+## Prop type
+
+The Select control passes the generic type `T` from the selected `Option` to your component. If you don't set a `defaultValue` and no value is set in the builder, your component will receive `undefined`.
+
+## Example
+
+The following example adds a Select control to the `variant` prop of a Button component.
+
+<CodeGroup>
+
+```tsx Button.makeswift.ts
+import { Select } from "@makeswift/runtime/controls"
+
+import { runtime } from "@/makeswift/runtime"
+
+import { Button } from "./Button"
+
+runtime.registerComponent(Button, {
+  type: "button",
+  label: "Button",
+  props: {
+    variant: Select({
+      label: "Style",
+      labelOrientation: "horizontal",
+      options: [
+        { value: "floating", label: "Floating" },
+        { value: "outline", label: "Outline" },
+        { value: "clear", label: "Clear" },
+      ],
+      defaultValue: "floating",
+    }),
+  },
+})
+```
+
+```tsx Button.tsx
+import clsx from "clsx"
+
+interface Props {
+  variant?: "floating" | "outline" | "clear"
+}
+
+export function Button({ variant = "floating" }) {
+  return (
+    <a
+      className={clsx(
+        "px-4 py-3 rounded",
+        {
+          floating: "bg-primary text-white shadow",
+          outline: "bg-transparent border border-primary text-primary",
+          clear: "text-primary bg-transparent border-none",
+        }[variant]
+      )}
+      href={link.href}
+      target={link.target}
+    >
+      Click me
+    </a>
+  )
+}
+```
+
+</CodeGroup>
+
+import NamingConventions from "/snippets/naming-conventions.mdx"
+
+<NamingConventions />

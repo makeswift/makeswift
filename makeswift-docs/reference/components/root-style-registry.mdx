@@ -1,0 +1,40 @@
+---
+title: "<RootStyleRegistry>"
+description: The `<RootStyleRegistry>` component provides support for Makeswift's CSS-in-JS runtime in Next.js' App Router.
+---
+
+import AppProviders from "/snippets/app-router/providers.mdx";
+import AppLayout from "/snippets/app-router/layout.mdx";
+import PagesApp from "/snippets/pages-router/pages-app.mdx";
+
+## Props
+
+
+<ParamField query="cacheKey" type="string" default="mswft">
+  Optional key used when creating an [Emotion cache](https://emotion.sh/docs/@emotion/cache) for styles. Pass a unique value to avoid conflicts when multiple Emotion instances share the same key.
+</ParamField>
+
+<ParamField query="enableCssReset" type="boolean" default={true}>
+  Toggle the built-in CSS reset. Set to `false` when using `@layer`-based CSS frameworks like Tailwind. See this [guide](/developer/guides/troubleshooting/tailwind-styles-being-overridden) for more information.
+</ParamField>
+
+<ParamField query="children" type="React.Node">
+  The children components to render.
+</ParamField>
+
+## Example
+
+<Tabs>
+  <Tab title="App Router">
+    The following example shows how the `<RootStyleRegistry>` is used to implement the `<MakeswiftProvider>` client component as outlined in the [App Router Installation guide](/developer/app-router/installation). The `<MakeswiftProvider>` is subsequently utilized in the App Router's [root layout](https://nextjs.org/docs/app/api-reference/file-conventions/layout#root-layouts).
+
+    <CodeGroup>
+
+    <AppProviders />
+
+    <AppLayout />
+
+    </CodeGroup>
+
+  </Tab>
+</Tabs>

@@ -1,0 +1,69 @@
+---
+title: TextInput
+description: Adds a single-line Text Input panel in the Makeswift builder to visually edit a `string` prop.
+icon: "input-text"
+---
+
+<Frame
+  type="glass"
+  caption="A Text Input panel for a Button component to change the text"
+>
+  <img src="/images/text-input-panel.png" />
+</Frame>
+
+## Params
+
+<ParamField query="label" type="string" default="Text">
+  Text for the panel label in the Makeswift builder.
+</ParamField>
+
+<ParamField query="defaultValue" type="string">
+  The value passed to your component when nothing is set in the Makeswift
+  builder.
+</ParamField>
+
+## Prop type
+
+The TextInput control passes a `string` to your component. If you don't set a `defaultValue` and no value is set in the builder, your component receives `undefined`.
+
+## Example
+
+The following example adds a Text Input control to the `children` prop of a Link component.
+
+<CodeGroup>
+
+```tsx Button.makeswift.ts
+import { TextInput } from "@makeswift/runtime/controls"
+
+import { runtime } from "@/makeswift/runtime"
+
+import { Button } from "./Button"
+
+runtime.registerComponent(Button, {
+  type: "button",
+  label: "Button",
+  props: {
+    text: TextInput({ label: "Text", defaultValue: "Click me" }),
+  },
+})
+```
+
+```tsx Button.tsx
+interface Props {
+  text?: string
+}
+
+export function Button({ text = "Click me" }) {
+  return (
+    <button className="px-4 py-3 rounded bg-primary text-white shadow">
+      {text}
+    </button>
+  )
+}
+```
+
+</CodeGroup>
+
+import NamingConventions from "/snippets/naming-conventions.mdx"
+
+<NamingConventions />

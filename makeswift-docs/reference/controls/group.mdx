@@ -1,0 +1,110 @@
+---
+title: "Group"
+description: "The `Group` control allows you to define and visually edit a group of properties and replaces the deprecated [Shape](/developer/reference/controls/shape) control."
+icon: "brackets-curly"
+---
+
+<Frame>
+  <img
+    src="/images/controls/group/header.jpeg"
+    alt="A Group control for a banner within a Header component"
+  />
+</Frame>
+
+## Params
+
+<ParamField query="label" type="string" default="Group">
+  Text for the panel label in the Makeswift Visual Builder.
+</ParamField>
+
+<ParamField
+  query="preferredLayout"
+  type=" Group.Layout.Inline | Group.Layout.Popover"
+>
+<p>
+  The preferred layout for the group in the Makeswift Visual Builder. Note that the builder may override this preference to optimize the user experience. Possible values include:
+</p>
+  <ul>
+    <li>`Group.Layout.Inline`: Renders the group properties within the parent panel, visually grouping them to reflect the hierarchy. This is the default if no explicit value is provided.</li>
+
+    <li>`Group.Layout.Popover`: Renders the group properties in a standalone popover panel.</li>
+
+</ul>
+</ParamField>
+
+<ParamField query="props" type="Record<string, Control>" required>
+  An object mapping of prop names to Makeswift
+  [controls](/developer/concepts#controls) representing the properties being
+  grouped. This can include any of the Makeswift controls, including other
+  groups.
+</ParamField>
+
+## Prop type
+
+The `Group` control passes an `object` based on the controls defined in the `props` field. The keys of the object match the keys in the `props` field, and the values are based on the corresponding control's prop type.
+
+## Example
+
+This example adds a `Group` control to represent the properties of a banner within a Header component.
+
+<Frame>
+  <img
+    src="/images/controls/group/example.jpeg"
+    alt="A Group control for a banner within a Header component"
+  />
+</Frame>
+
+<CodeGroup>
+
+```tsx Header.makeswift.ts
+import { Group, Color, TextInput, Style } from "@makeswift/runtime/controls";
+
+import { runtime } from "@/makeswift/runtime";
+
+import { Header } from "./Header";
+
+runtime.registerComponent(Header, {
+  type: "header",
+  label: "Header",
+  props: {
+    className: Style(),
+    banner: Group({
+      label: "Banner properties",
+      preferredLayout: Group.Layout.Popover,
+      props: {
+        text: TextInput({ defaultValue: "Banner text" }),
+        background: Color({ label: "Background", defaultValue: "black" }),
+      },
+    }),
+    heading: TextInput({ label: "Heading", defaultValue: "Heading text" }),
+  },
+});
+```
+
+```tsx Header.tsx
+interface HeaderProps {
+  banner: {
+    text: string;
+    background: string;
+  };
+  heading: string;
+  className: string;
+}
+
+export function Header({ banner, heading, className }: HeaderProps) {
+  return (
+    <div className={className}>
+      <div className="p-20" style={{ backgroundColor: banner.background }}>
+        <p className="text-center">{banner.text}</p>
+      </div>
+      <h1>{heading}</h1>
+    </div>
+  );
+}
+```
+
+</CodeGroup>
+
+import NamingConventions from "/snippets/naming-conventions.mdx";
+
+<NamingConventions />

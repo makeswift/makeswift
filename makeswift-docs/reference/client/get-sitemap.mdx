@@ -1,0 +1,165 @@
+---
+title: "getSitemap"
+description: "An instance method that provides SEO information about the pages created within Makeswift. You can combine the results of `getSitemap` with SEO information for your hardcoded pages to create a sitemap."
+---
+
+<Warning> 
+  This method has been **deprecated** and will be removed in a future 
+  runtime release. Use the [`getPages`](/developer/reference/client/get-pages) method to create a sitemap instead,
+  [see the documentation here](/developer/reference/client/get-pages#generating-a-sitemap).
+</Warning>
+
+<Note>
+  A sitemap is a structured list of pages that enables web crawlers to find the
+  pages of a site.
+</Note>
+
+## Options
+
+<ParamField query="limit" type="number" default={50}>
+  Number of sitemap entries to fetch.
+</ParamField>
+
+<ParamField query="after" type="string">
+  Starting `id` cursor of the last sitemap entry fetched.
+</ParamField>
+
+<ParamField query="pathnamePrefix" type="string" default="/">
+  Only sitemap entries beginning with this
+  [pathname](https://developer.mozilla.org/en-US/Web/API/URL/pathname) will be
+  returned.
+</ParamField>
+
+<ParamField query="locale" type="string">
+  A valid locale string (ex. `"en-US"`).
+</ParamField>
+
+## Return type
+
+```ts
+type Sitemap = {
+  id: string
+  loc: string
+  lastmod?: string
+  changefreq?:
+    | "always"
+    | "hourly"
+    | "daily"
+    | "weekly"
+    | "monthly"
+    | "yearly"
+    | "never"
+  priority?: number
+  alternateRefs?: {
+    hreflang: string
+    href: string
+  }[]
+}[]
+```
+
+## Examples
+
+### Using `next-sitemap`
+
+The following example uses `getSitemap` with `next-sitemap`, a popular Next.js library for generating sitemaps.
+
+```ts pages/sitemap.xml.ts
+import { Makeswift } from "@makeswift/runtime/next"
+// Use `getServerSideSitemapLegacy` for sitemap entries in the pages directory.
+import { getServerSideSitemapLegacy } from "next-sitemap"
+
+import { client } from "makeswift/client"
+import { runtime } from "makeswift/runtime"
+import "makeswift/components"
+
+export async function getServerSideProps(context) {
+  const sitemap = await client.getSitemap()
+
+  return getServerSideSitemapLegacy(context, sitemap)
+}
+
+export default function Sitemap() {}
+```
+
+### Filtering by pathname
+
+The following example uses the `pathnamePrefix` option to filter results to only include pages with a pathname beginning with `/blog/`.
+
+```ts pages/sitemap.xml.ts
+import { Makeswift } from "@makeswift/runtime/next"
+import { getServerSideSitemapLegacy } from "next-sitemap"
+
+import { client } from "makeswift/client"
+import { runtime } from "makeswift/runtime"
+import "makeswift/components"
+
+export async function getServerSideProps(context) {
+  const blogSitemap = await client.getSitemap({ pathnamePrefix: "/blog/" })
+
+  return getServerSideSitemapLegacy(context, blogSitemap)
+}
+
+export default function BlogSitemap() {}
+```
+
+### Using pagination
+
+The following example uses the `limit` and `after` field to paginate the results of `getSitemap` 10 entries at a time.
+
+```ts pages/sitemap.xml.ts
+import { Makeswift, Sitemap } from "@makeswift/runtime/next"
+import { getServerSideSitemapLegacy } from "next-sitemap"
+
+import { client } from "makeswift/client"
+import { runtime } from "makeswift/runtime"
+import "makeswift/components"
+
+export async function getServerSideProps(context) {
+  const sitemap: Sitemap = []
+  let page: Sitemap = []
+  let after: string | undefined = undefined
+
+  do {
+    page = await client.getSitemap({ limit: 10, after })
+
+    sitemap.push(...page)
+    after = page.at(-1)?.id
+  } while (page.length > 0)
+
+  return getServerSideSitemapLegacy(context, sitemap)
+}
+
+export default function Sitemap() {}
+```
+
+### Localization
+
+The following example uses the `locale` option to fetch the sitemap for a specific locale.
+
+```ts pages/sitemap.xml.ts
+import { Makeswift } from "@makeswift/runtime/next"
+import { getServerSideSitemapLegacy } from "next-sitemap"
+
+import { client } from "makeswift/client"
+import { runtime } from "makeswift/runtime"
+import "makeswift/components"
+
+export async function getServerSideProps(context) {
+  const sitemap = await client.getSitemap({ locale: "es" })
+
+  return getServerSideSitemapLegacy(context, sitemap)
+}
+
+export default function Sitemap() {}
+```
+
+If a locale is using domain-based localization, passing the locale to `getSitemap` will return the sitemap for that particular domain.
+
+For example, if in the site settings there is an `es` locale with a domain of `foo.es`, then passing `es` to `getSitemap` will return the sitemap for `foo.es`.
+
+## Changelog
+
+| Version                                                                                          | Changes                               |
+| ------------------------------------------------------------------------------------------------ | ------------------------------------- |
+| [`v0.11.2`](https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.11.2) | Added `locale` option to `getSitemap` |
+| [`v0.10.7`](https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.10.7) | Released `getSitemap`                 |

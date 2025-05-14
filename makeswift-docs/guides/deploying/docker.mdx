@@ -1,0 +1,33 @@
+---
+title: Docker
+description: "Learn how to deploy your Makeswift application with Docker."
+---
+
+## Prerequisites
+
+You'll need a Makeswift site. If you don't already have one, you can follow the [developer quickstart](/developer/quickstart) or [installation guide](/developer/app-router/installation) to get started.
+
+You'll also need to use [Makeswift runtime](https://www.npmjs.com/package/@makeswift/runtime?activeTab=readme) **version `0.23.2` or higher.**
+
+## Deploying
+
+Vercel has already documented how to deploy a Next.js application with Docker. The only change you have to make when deploying your Makeswift site is to your environment variables ([details below](#environment-variables)).
+
+Otherwise, you can follow the [Next.js with Docker](https://github.com/vercel/next.js/tree/canary/examples/with-docker) documentation.
+
+### Environment variables
+
+You'll need to include the `MAKESWIFT_SITE_API_KEY` environment variable in your Docker build. This will need to be added in the `.env` file that is included in your Docker build, or in the dashboard of your hosting provider.
+
+```bash
+MAKESWIFT_SITE_API_KEY=<YOUR_API_KEY>
+```
+
+Your Makeswift API key can be found in the Makeswift Visual Builder under **Settings > Host**.
+
+## Changelog
+
+| Version                                                                                          | Changes                               |
+| ------------------------------------------------------------------------------------------------ | ------------------------------------- |
+| [`v0.24.0`](https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.24.0) | Removes proxy requests for draft mode. `MAKESWIFT_DRAFT_MODE_PROXY_FORCE_HTTP` environment variable is no longer needed in Docker builds. |
+| [`v0.23.2`](https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.23.2) | Added support for Docker deployments |

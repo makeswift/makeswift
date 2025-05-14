@@ -1,0 +1,68 @@
+---
+title: Style
+description: Add a Style control to your component in the Makeswift builder to visually edit a CSS class `string` prop.
+icon: "droplet"
+---
+
+<Frame type="glass" caption="Style controls for an Image component">
+  <img src="/images/style-control.png" />
+</Frame>
+
+The Style control is the only control that is responsive; its values can be changed at different viewport sizes without affecting the others. For example, you could set a width of 1200px in desktop and 100% in mobile.
+
+## Params
+
+<ParamField query="properties" type="StyleProperty[] | Style.All | Style.Default" default="Style.Default">
+  An array of style properties that can be visually edited. These values include:
+
+- `Style.Width`
+- `Style.Margin`
+- `Style.Padding`
+- `Style.Border`
+- `Style.BorderRadius`
+- `Style.TextStyle`
+
+The following presets are also available:
+
+- `Style.Default` which is equivalent to `[Style.Width, Style.Margin]`
+- `Style.All` which includes all properties.
+
+</ParamField>
+
+## Example
+
+The following example adds a Style control to the `className` prop of an Image component.
+
+<CodeGroup>
+
+```tsx Image.makeswift.ts
+import { Style } from "@makeswift/runtime/controls"
+
+import { runtime } from "@/makeswift/runtime"
+
+import { Image } from "./Image"
+
+runtime.registerComponent(Image, {
+  type: "image",
+  label: "Image",
+  props: {
+    className: Style({ properties: Style.All }),
+  },
+})
+```
+
+```tsx Image.tsx
+interface Props {
+  className?: string
+}
+
+export function Image({ className }: Props) {
+  return <img className={className} src="https://via.placeholder.com/150" />
+}
+```
+
+</CodeGroup>
+
+import NamingConventions from "/snippets/naming-conventions.mdx"
+
+<NamingConventions />

@@ -1,0 +1,140 @@
+---
+title: "Setting Cookies"
+description: Configuring cookies for use within the Makeswift Visual Builder
+---
+
+If your site relies on setting/reading cookies, you may experience some issues
+when interacting with your site within the Makeswift Visual Builder. This is
+because our builder loads your site within an `iframe`, so any cookies your site
+attempts to set are considered as [third-party
+cookies](https://developer.mozilla.org/en-US/docs/Web/Privacy/Guides/Third-party_cookies).
+
+In order for your site to be able to set cookies that are compatible with the
+Makeswift Visual Builder, you may need to include certain attributes.
+
+## Minimum Attributes
+
+In order for a third-party cookie to be set, you'll need to specify the
+`SameSite=None;` and `Secure;`
+[attributes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#controlling_third-party_cookies_with_samesite)
+on your cookie.
+
+For example, let's say your site attempts to set a cookie client-side using
+`document.cookie`:
+
+```typescript
+document.cookie = "myCookie=1234;";
+```
+
+While this may work on your live site, it will not work in the builder because
+of the third-party restrictions. Let's update this cookie to use
+`SameSite=None;` and `Secure;`:
+
+```typescript
+document.cookie = "myCookie=1234; SameSite=None; Secure;";
+```
+
+This will now be able to be set in most browsers, assuming the user has the
+appropriate browser settings.
+
+Similarly, you may be setting cookies in a server response using the
+`Set-Cookie` header. For example, you may be using the [`cookies()`](https://nextjs.org/docs/app/api-reference/functions/cookies) API from
+Next.js:
+
+```typescript
+import { cookies } from "next/headers";
+
+export async function setCustomCookies() {
+  const cookieStore = await cookies();
+  cookieStore.set({
+    name: "myCookie",
+    value: "1234",
+  });
+}
+```
+
+Again, the same attributes are necessary here:
+
+```typescript
+import { cookies } from "next/headers";
+
+export async function setCustomCookies() {
+  const cookieStore = await cookies();
+  cookieStore.set({
+    name: "myCookie",
+    value: "1234",
+    // Adding cross-site attribute below
+    sameSite: "none",
+    secure: true,
+  });
+}
+```
+
+If you're setting a raw `Set-Cookie` header string on your response header, you
+can follow the same conventions as the client-side cookie string.
+
+## Partitioned Cookies (CHIPS)
+
+Nearly all major browsers have plans to fully deprecate third-party cookies in
+the near future. As a workaround, the [**Cookies Having Independent Partitioned
+State**
+(CHIPS)](https://developer.mozilla.org/en-US/docs/Web/Privacy/Guides/Privacy_sandbox/Partitioned_cookies)
+spec was introduced. Partitioned cookies are keyed by both the domain of the
+third-party site that set them and the top-level site in which they were set. In
+Makeswift, your site is the one setting the cookie, and the top-level site would
+be the Visual Builder, `app.makeswift.com`. This means that any cookies set by
+your site within the builder are scoped to the builder!
+
+To achieve this functionality, simply add a `Partitioned;` attribute whenever
+you set your cookies. Using our client-side example from above:
+
+```typescript
+document.cookie = "myCookie=1234; SameSite=None; Secure; Partitioned;";
+```
+
+And our Next.js `cookies()` example:
+
+```typescript
+import { cookies } from "next/headers";
+
+export async function setCustomCookies() {
+  const cookieStore = await cookies();
+  cookieStore.set({
+    name: "myCookie",
+    value: "1234",
+    sameSite: "none",
+    secure: true,
+    partitioned: true,
+    // ^^^ Cookie will now be partitioned when set on the client
+  });
+}
+```
+
+Partitioned cookies [are currently
+supported](https://developer.mozilla.org/en-US/docs/Web/Privacy/Guides/Privacy_sandbox/Partitioned_cookies#browser_compatibility)
+by Chrome and Firefox. Safari support is still in development.
+
+### Safari
+
+Since Safari still does not currently support partitioned cookies, the
+recommended way to have full cookie functionality within the builder is to
+[follow our guide](/product/troubleshooting/cookies#safari) to disable
+cross-site tracking prevention when using our editor.
+
+## Cookies by other libraries
+
+It's also possible that you're using an external package that sets its own
+cookies. For example, middleware from the [`next-intl`](https://next-intl.dev/docs/routing/middleware) package will attempt to set
+cookies for detected locales. For such cases, we recommend checking the docs of
+these tools to see if they allow for cookie attribute configuration. Continuing
+the `next-intl` example, we see that their [APIs offer
+customization](https://next-intl.dev/docs/routing#locale-cookie) of their locale
+detection cookie.
+
+If the third-party package you're using does not permit modifying cookie
+attributes, you may still be able to patch them retroactively using the Next.js
+`cookies()` API (if the cookies are set server-side), or by manually writing
+cookies with the appropriate attributes client-side. Whenever you make changes
+to how external packages set cookies, make sure to test that the cookie
+attribute changes don't impact the security or functionality of your cookies on
+your live site.

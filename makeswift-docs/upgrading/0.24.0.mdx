@@ -1,0 +1,99 @@
+---
+title: Upgrading to 0.24.0
+---
+
+If you haven't yet upgraded to `0.23.0`, please review the [0.23.0 upgrade guide](/developer/upgrading/0.23.0) first.
+
+Version `0.24.0` of the runtime revises the handling of draft and preview modes, as well as the default behavior of localized pages.
+
+Refer to the [official release notes](https://github.com/makeswift/makeswift/releases/tag/%40makeswift/runtime%400.24.0)
+for the full list of changes.
+
+## Breaking Changes
+
+### Removed `<DraftModeScript />` and `<PreviewModeScript />`
+
+The `<DraftModeScript />` and `<PreviewModeScript />` components are no longer
+necessary to edit your pages within the Makeswift Visual Builder and have been
+removed from the runtime. You can safely remove any imports and usages of these
+components from your code.
+
+#### App Router
+
+```diff src/app/layout.tsx
+import { draftMode } from "next/headers";
+- import { DraftModeScript } from "@makeswift/runtime/next/server";
+import { MakeswiftProvider } from "@/makeswift/provider";
+import "@/makeswift/components";
+
+export default async function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+-      <head>
+-         <DraftModeScript />
+-       </head>
+      <body>
+        <MakeswiftProvider previewMode={(await draftMode()).isEnabled}>
+          {children}
+        </MakeswiftProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+
+
+#### Pages Router
+
+```diff src/pages/_document.tsx
+import { Html, Head, Main, NextScript } from "next/document";
+- import { PreviewModeScript } from "@makeswift/runtime/next";
+import { Document } from "@makeswift/runtime/next/document";
+
+export default class MyDocument extends Document {
+  render() {
+    return (
+      <Html>
+        <Head>
+-          <PreviewModeScript isPreview={this.props.__NEXT_DATA__.isPreview} />
+        </Head>
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
+  }
+}
+```
+
+### Removed `MAKESWIFT_DRAFT_MODE_PROXY_FORCE_HTTP` environment variable
+
+If your Makeswift site is [deployed with Docker](/developer/guides/deploying/docker), the
+`MAKESWIFT_DRAFT_MODE_PROXY_FORCE_HTTP` environment variable is no longer
+used or necessary. You can safely remove it from your Docker build.
+
+
+## Localized pages are online by default
+
+Localized pages now automatically fall back to the base locale by default and are no longer 
+silently created when navigated to in the builder. To create a localized page, users must 
+take explicit action in the builder.
+
+Localized pages explicitly marked as Offline will remain offline.
+
+You can disable fallback behavior on a per-page basis by passing `allowLocaleFallback: false` 
+to the `client.getPageSnapshot` call:
+
+```typescript
+const snapshot = await client.getPageSnapshot(path, {
+  siteVersion: await getSiteVersion(),
+  locale,
+  allowLocaleFallback: false,
+});
+```

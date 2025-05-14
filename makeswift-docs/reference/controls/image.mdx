@@ -1,0 +1,150 @@
+---
+title: Image
+description: Adds an Image panel in the Makeswift builder to visually edit an image prop.
+icon: "image"
+---
+
+<Frame
+  type="glass"
+  caption="An image panel on a feature card component to pick an icon"
+>
+  <img src="/images/image-panel.png" />
+</Frame>
+
+Clicking "Choose" opens the Makeswift files manager, where you can upload an image or select an existing one from your media library.
+
+<Frame type="glass" caption="The Makeswift files manager">
+  <img src="/images/image-panel-picker.png" />
+</Frame>
+
+## Params
+
+<ParamField query="label" type="string" default="Image">
+  Text for the panel label in the Makeswift builder.
+</ParamField>
+
+<ParamField query="format" type="Image.Format.URL | Image.Format.WithDimensions" default="Image.Format.URL">
+  Changes the prop type this component receives. If set to `Image.Format.URL`, your component receives a `string` value of the image url. If set to `Image.Format.WithDimensions`, your component receives an object of type `ImageWithDimensions`. This format is useful when using components like [`next/image`](https://nextjs.org/docs/pages/api-reference/components/image) that require you to pass the image dimensions as props.
+
+```ts
+type ImageWithDimensions = {
+  url: string
+  dimensions: {
+    width: number
+    height: number
+  }
+}
+```
+
+</ParamField>
+
+## Prop type
+
+If `format` is set to `Image.Format.URL`, the prop type is `string`.
+
+If `format` is set to `Image.Format.WithDimensions`, the prop type is `ImageWithDimensions`.
+
+## Example
+
+The following examples adds an Image control to the `icon` prop of a Feature Card component.
+
+### Using `Image.Format.URL`
+
+<CodeGroup>
+
+```tsx FeatureCard.makeswift.ts
+import { Image } from "@makeswift/runtime/controls"
+
+import { runtime } from "@/makeswift/runtime"
+
+import { FeatureCard } from "./FeatureCard"
+
+runtime.registerComponent(FeatureCard, {
+  type: "feature-card",
+  label: "Feature Card",
+  props: {
+    icon: ImageControl({
+      label: "icon",
+      format: Image.Format.URL,
+    }),
+  },
+})
+```
+
+```tsx FeatureCard.tsx
+interface Props {
+  icon?: string
+}
+
+function FeatureCard({ icon = "./default-icon.svg" }: Props) {
+  return (
+    <div className="p-4 rounded shadow">
+      <img src={icon} />
+    </div>
+  )
+}
+```
+
+</CodeGroup>
+
+### Using `Image.Format.WithDimensions`
+
+<CodeGroup>
+
+```tsx FeatureCard.makeswift.ts
+import { Image } from "@makeswift/runtime/controls"
+import { runtime } from "@/lib/makeswift/runtime"
+
+import { FeatureCard } from "./FeatureCard"
+
+runtime.registerComponent(FeatureCard, {
+  type: "feature-card",
+  label: "FeatureCard",
+  props: {
+    icon: Image({
+      label: "icon",
+      format: Image.Format.WithDimensions,
+    }),
+  },
+})
+```
+
+```tsx FeatureCard.tsx
+import Image from "next/image"
+
+interface Props {
+  icon?: {
+    url: string
+    dimensions: {
+      width: number
+      height: number
+    }
+  }
+}
+
+const defaultIcon = {
+  url: "/default-icon.png",
+  dimensions: {
+    width: 100,
+    height: 100,
+  },
+}
+
+function FeatureCard({ icon = defaultIcon }: Props) {
+  return (
+    <div className="p-4 rounded shadow">
+      <Image
+        src={icon.url}
+        width={icon.dimensions.width}
+        height={icon.dimensions.height}
+      />
+    </div>
+  )
+}
+```
+
+</CodeGroup>
+
+import NamingConventions from "/snippets/naming-conventions.mdx"
+
+<NamingConventions />

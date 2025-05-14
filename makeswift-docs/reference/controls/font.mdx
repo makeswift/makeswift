@@ -1,0 +1,59 @@
+---
+title: Font
+description: The `Font` control allows you select a `fontFamily`, `fontStyle`, and `fontWeight`.
+icon: "font"
+---
+
+<Frame type="glass">
+  <img
+    src="/images/controls/font/header.jpeg"
+    alt="Font control component in Makeswift Visual Builder"
+  />
+</Frame>
+
+## Params
+
+<ParamField query="label" type="string">
+  Text for the panel label in the Makeswift Visual Builder.
+</ParamField>
+
+<ParamField query="variant" type="boolean" default="true">
+  A boolean to determine whether `fontStyle` and `fontWeight` are included in
+  the final value. This value changes what panel inputs are shown in the
+  Makeswift builder, and changes the type of defaultValue.
+</ParamField>
+
+<ParamField query="defaultValue" type="object" default="false">
+  <p>The default value passed to your component when no value is available. This
+  object includes three properties: </p>
+
+<ul>
+  <li>`fontFamily` - `string`</li>
+  <li>`fontStyle` - `"normal" | "italic"`</li>
+  <li>`fontWeight` - `number`</li>
+</ul>
+<p>Without `defaultValue` the data passed to your component is optional.</p>
+
+### Example
+
+```ts
+defaultValue: {
+  fontFamily: 'var(--font-grenze-gotisch)',
+  fontStyle: 'italic',
+  fontWeight: 700,
+},
+```
+
+</ParamField>
+
+## Prop type
+
+The `Font` control passes an object with the following properties:
+
+```ts
+{
+  fontFamily: string;
+  fontStyle: string;
+  fontWeight: number;
+}
+```

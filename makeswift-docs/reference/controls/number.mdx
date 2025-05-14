@@ -1,0 +1,105 @@
+---
+title: Number
+description: Adds a Number input in the Makeswift builder to visually edit a `number` prop.
+icon: "input-numeric"
+---
+
+<Frame
+  type="glass"
+  caption="A Number panel on a Feed component to set the number of items shown"
+>
+  <img src="/images/number-panel.png" />
+</Frame>
+
+## Params
+
+<ParamField query="label" type="string" default="Number">
+  Text for the panel label in the Makeswift builder.
+</ParamField>
+
+<ParamField
+  query="labelOrientation"
+  type='"horizontal" | "vertical"'
+  default="horizontal"
+>
+  Orientation of the number label within the panel.
+</ParamField>
+
+<ParamField query="defaultValue" type="number">
+  The value passed to your component when nothing is set in the Makeswift
+  builder.
+</ParamField>
+
+<ParamField query="min" type="number" default={0}>
+  The smallest number that can be set in the panel input.
+</ParamField>
+
+<ParamField query="max" type="number" default={0}>
+  The largest number that can be set in the panel input.
+</ParamField>
+
+<ParamField query="step" type="number" default={1}>
+  The increment amount when using the ↑ ↓ arrows or dragging the panel input.
+</ParamField>
+
+<ParamField query="suffix" type="string">
+  Decorative text appended to the end of the panel input.
+</ParamField>
+
+## Prop type
+
+The Number control passes a `number` to your component. If you don't set a `defaultValue` and no value is set in the builder, your component receives `undefined`.
+
+## Example
+
+<CodeGroup>
+
+```tsx Feed.makeswift.ts
+import { Number } from "@makeswift/runtime/controls"
+
+import { runtime } from "@/makeswift/runtime"
+
+import { Feed } from "./Feed"
+
+runtime.registerComponent(Feed, {
+  type: "feed",
+  label: "Feed",
+  props: {
+    itemsShown: Number({
+      label: "Items shown",
+      defaultValue: 10,
+      min: 0,
+      max: 100,
+    }),
+  },
+})
+```
+
+```tsx Feed.tsx
+const items = [
+  { id: "1", name: "item 1" },
+  { id: "2", name: "item 2" },
+  { id: "3", name: "item 3" },
+  { id: "4", name: "item 4" },
+]
+
+interface Props {
+  itemsShown?: number
+}
+
+export function Feed({ itemsShown = 10 }: Props) {
+  return (
+    <div>
+      {items.slice(0, itemsShown).map((item) => (
+        <div key={item.id}>{item.name}</div>
+      ))}
+    </div>
+  )
+}
+```
+
+</CodeGroup>
+
+import NamingConventions from "/snippets/naming-conventions.mdx"
+
+<NamingConventions />

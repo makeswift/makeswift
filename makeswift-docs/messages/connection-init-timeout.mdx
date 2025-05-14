@@ -1,0 +1,83 @@
+---
+title: Your page did not connect to the builder in time.
+---
+
+Editing a page in the Makeswift Visual Builder requires your page to establish a
+connection with the builder. This message means that your page did not
+initialize this connection in time.
+
+## Possible ways to fix this
+
+### Runtime `v0.24` and later
+
+In `v0.24` and later, the connection is automatically initiated by the
+`ReactRuntimeProvider`. Make sure you have correctly rendered the
+`ReactRuntimeProvider` and are passing a correct value for the `previewMode`
+prop. For more details, see our installation guides:
+
+- [App Router installation guide](/developer/app-router/installation)
+- [Pages Router installation guide](/developer/pages-router/installation)
+
+### Runtime `v0.23` and earlier
+
+For `v0.23` and earlier, the connection is initiated by the `DraftModeScript` or
+`PreviewModeScript` components for App Router and Pages Router, respectively.
+This message indicates that these components are likely missing from your page.
+
+#### App Router
+
+Make sure you have added the `DraftModeScript` component to the `<head>` of your
+page by rendering it in the root layout.
+
+```diff src/app/layout.tsx
+import { draftMode } from "next/headers";
++ import { DraftModeScript } from "@makeswift/runtime/next/server";
+import { MakeswiftProvider } from "@/makeswift/provider";
+import "@/makeswift/components";
+
+export default async function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <head>
++       <DraftModeScript />
+      </head>
+      <body>
+        <MakeswiftProvider previewMode={(await draftMode()).isEnabled}>
+          {children}
+        </MakeswiftProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+#### Pages Router
+
+Make sure you have added the `PreviewModeScript` component to the `<Head>` of the
+page by extending the custom document.
+
+```diff src/pages/_document.tsx
+import { Html, Head, Main, NextScript } from "next/document";
++ import { PreviewModeScript } from "@makeswift/runtime/next";
+import { Document } from "@makeswift/runtime/next/document";
+
+export default class MyDocument extends Document {
+  render() {
+    return (
+      <Html>
+        <Head>
++         <PreviewModeScript isPreview={this.props.__NEXT_DATA__.isPreview} />
+        </Head>
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
+  }
+}
+```

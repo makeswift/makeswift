@@ -1,0 +1,71 @@
+---
+title: "<ReactRuntimeProvider>"
+description: The `<ReactRuntimeProvider>` component takes a Makeswift runtime and provides it to the [`<Page>`](/developer/reference/components/page) component for rendering snapshots.
+---
+
+import AppProviders from "/snippets/app-router/providers.mdx";
+import AppLayout from "/snippets/app-router/layout.mdx";
+import PagesApp from "/snippets/pages-router/pages-app.mdx";
+
+## Props
+
+<ParamField query="runtime" type="Runtime" required>
+  A Makeswift [runtime](/developer/reference/runtime/constructor).
+</ParamField>
+
+<ParamField query="previewMode" type="boolean" required>
+  When set to `true`, the preview version of a page will be rendered. See
+  [example](#example) below for usage.
+</ParamField>
+
+<ParamField query="children" type="React.Node">
+  The children components to render.
+</ParamField>
+
+<ParamField query="locale" type="string">
+  <p>A valid locale string (ex. `"en-US"`).</p>
+
+  <Note>This is required if your site supports
+  more than one locale.</Note>
+</ParamField>
+
+## Example
+
+<Tabs>
+  <Tab title="App Router">
+    The following example shows how the `<ReactRuntimeProvider>` is used to implement the `<MakeswiftProvider>` client component as outlined in step 9 of the [App Router Installation guide](/developer/app-router/installation). The `<MakeswiftProvider>` is subsequently utilized in the App Router's [root layout](https://nextjs.org/docs/app/api-reference/file-conventions/layout#root-layouts).
+
+    <CodeGroup>
+
+    <AppProviders />
+
+    <AppLayout />
+
+    </CodeGroup>
+
+  </Tab>
+  <Tab title="Pages Router">
+
+    The following example shows how to add a `<ReactRuntimeProvider>` to a [Custom App](https://nextjs.org/docs/pages/building-your-application/routing/custom-app) as outlined in step 10 of the [Pages Router Installation guide](/developer/pages-router/installation). The `previewMode` property is returned from `getStaticProps` in an optional catch-all route.
+
+    <CodeGroup>
+
+    <PagesApp />
+    ```tsx src/pages/[[...path]].tsx
+    import { Makeswift } from "@makeswift/runtime/next";
+
+    export async function getStaticProps({ params, previewData }) {
+      // ...
+
+      return {
+        props: {
+          // ...
+          previewMode: Makeswift.getPreviewMode(previewData),
+        },
+      };
+    }
+    ```
+    </CodeGroup>
+
+  </Tab>  
+</Tabs>

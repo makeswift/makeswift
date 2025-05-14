@@ -1,0 +1,95 @@
+---
+title: Upgrading to 0.23.0
+---
+
+If you haven't upgraded to `0.22.0` please read the [upgrading guide](/developer/upgrading/0.22.0).
+
+`v0.23.0` of the runtime introduces new runtime internals, new components, and a few breaking changes. Refer to the [official release notes](https://github.com/makeswift/makeswift/releases/tag/%40makeswift/runtime%400.23.0) for more details.
+
+## Breaking Changes
+
+### `MakeswiftApiHandler` requires instance of `ReactRuntime`
+
+To initialize an instance of the [MakeswiftApiHandler](/developer/reference/makeswift-api-handler), you must now pass an instance of the [ReactRuntime](/developer/reference/runtime/constructor). See [MakeswiftApiHandler](/developer/reference/makeswift-api-handler) for full details.
+
+```diff
+- const handler = MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY);
++ const handler = MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY, { runtime });
+```
+
+### New props for `ReactRuntimeProvider`
+
+In order to support the new [`<MakeswiftComponent>`](/developer/reference/components/makeswift-component) API (details [below](#built-in-elements)), which can be rendered multiple times on a Next.js page, we had to make some changes to the Makeswift provider. The [ReactRuntimeProvider](/developer/reference/components/react-runtime-provider) component now accepts two new props: `previewMode` and `locale`. `previewMode` is required in all cases, while `locale` is required if your site supports more than one locale.
+
+```diff
+- <ReactRuntimeProvider runtime={runtime}>
++ <ReactRuntimeProvider runtime={runtime} previewMode={previewMode} locale={locale}>
+```
+
+#### Pages Router
+
+If you're using the [Pages Router](https://nextjs.org/docs/pages), you'll need to update the `getStaticProps` function in your optional catch-all route to include `previewMode` in its returned data so that it becomes available in the `_app.tsx` file.
+
+```diff
+return {
+  props: {
+    snapshot,
++   previewMode: Makeswift.getPreviewMode(previewData),
+    locale,
+  },
+};
+```
+
+Then, you can consume this data in your `_app.tsx` file and pass it to the `<ReactRuntimeProvider>`.
+
+```tsx {3,8,9}
+export default function App({
+  Component,
+  pageProps: { previewMode, locale, ...pageProps },
+}: AppProps) {
+  return (
+    <ReactRuntimeProvider
+      runtime={runtime}
+      previewMode={previewMode}
+      locale={locale}
+    >
+      <Component {...pageProps} />
+    </ReactRuntimeProvider>
+  );
+}
+```
+
+Check out our updated [App Router](/developer/app-router/installation) and [Pages Router](/developer/pages-router/installation) installation guides to learn how to provide these props in both setups.
+
+## Deprecated items
+
+### `Shape` control
+
+The [Shape](/developer/reference/controls/shape) control has been deprecated and will be removed in a future release. We recommend using the new [Group](/developer/reference/controls/group) control going forward.
+
+## New controls
+
+### `Group` control
+
+We've added a new [Group](/developer/reference/controls/group) control which is designed to be a more versatile replacement for the [Shape](/developer/reference/controls/shape) control.
+
+### `Font` control
+
+We've added a new [Font](/developer/reference/controls/font) control which let's you select a `fontFamily`, `fontStyle`, and `fontWeight`.
+The available values are sourced from our Google Fonts integration within Makeswift and from the variants you pass to `getFonts` in your [MakeswiftApiHandler](/developer/reference/makeswift-api-handler).
+
+## New APIs
+
+### Built-in elements
+
+This release introduces support for **built-in elements** which allow developers to define editable regions within a page. These regions are hard-coded instances of components using the new [`<MakeswiftComponent>`](/developer/reference/components/makeswift-component) API. This means these can't elements can't be removed by users in the Visual Builder, but they can be edited based on the properties developers decide to expose.
+
+A good example of this would be a `<Header>` component that you want to be included on every page. Instead of the user having to drag and drop that component visually onto each page, the developer can make this a built-in element in the page template. This way, the `<Header>` will show up on every page without manually having to add it. More details in [this example](/developer/reference/components/makeswift-component#example).
+
+To support this, we've included to new components, [`<MakeswiftComponent>`](/developer/reference/components/makeswift-component) and [`<Slot>`](/developer/reference/components/slot), along with a corresponding Makeswift client method, [`getComponentSnapshot`](/developer/reference/client/get-component-snapshot).
+
+Check out our new [editable-regions example](https://github.com/makeswift/makeswift/tree/main/examples/editable-regions) to learn how to combine these APIs to create a set of dynamic pages with a visually editable header, footer, and a slot for the main content.
+
+```
+
+```

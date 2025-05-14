@@ -1,0 +1,73 @@
+---
+title: TextArea
+description: Adds a multiline Text Area to your component in the Makeswift builder to visually edit a `string` prop.
+icon: "align-left"
+---
+
+<Frame
+  type="glass"
+  caption="A Text Area panel for a Code Block component to change the code"
+>
+  <img src="/images/text-area-panel.png" />
+</Frame>
+
+## Params
+
+<ParamField query="label" type="string" default="Text">
+  Text for the panel label in the Makeswift builder.
+</ParamField>
+
+<ParamField query="defaultValue" type="string">
+  The value passed to your component when nothing is set in the Makeswift
+  builder.
+</ParamField>
+
+## Prop type
+
+The TextArea control passes a `string` to your component. If you don't set a `defaultValue` and no value is set in the builder, your component receives `undefined`.
+
+## Example
+
+The following example adds a Text Area control to the `Code` prop of a Code Block component.
+
+<CodeGroup>
+
+```tsx CodeBlock.makeswift.ts
+import { TextArea } from "@makeswift/runtime/controls"
+
+import { runtime } from "@/makeswift/runtime"
+
+import { CodeBlock } from "./CodeBlock"
+
+runtime.registerComponent(CodeBlock, {
+  type: "code-block",
+  label: "Code Block",
+  props: {
+    code: TextArea({ label: "Code" }),
+  },
+})
+```
+
+```tsx CodeBlock.tsx
+import { highlight, languages } from "prismjs"
+
+interface Props {
+  code?: string
+}
+
+export function CodeBlock({ code }) {
+  return (
+    <pre
+      dangerouslySetInnerHTML={{
+        __html: highlight(code, languages.js, "js"),
+      }}
+    />
+  )
+}
+```
+
+</CodeGroup>
+
+import NamingConventions from "/snippets/naming-conventions.mdx"
+
+<NamingConventions />

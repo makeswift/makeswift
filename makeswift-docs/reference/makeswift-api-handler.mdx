@@ -1,0 +1,79 @@
+---
+title: "MakeswiftApiHandler"
+description: An API route for Makeswift that adds support for [preview mode](https://nextjs.org/docs/pages/building-your-application/configuring/preview-mode), [on-demand revalidation](https://nextjs.org/docs/pages/building-your-application/data-fetching/incremental-static-regeneration#on-demand-revalidation), and other features that make Makeswift work seamlessly with your Next.js app.
+---
+
+import FontsExample from "/snippets/reference/fonts.mdx";
+import PagesApiHandlerExample from "/snippets/pages-router/api-handler.mdx";
+import AppApiHandlerExample from "/snippets/app-router/api-handler.mdx";
+import OnPublishExample from "/snippets/reference/on-publish.mdx";
+
+## Arguments
+
+1. <ParamField query="apiKey" type="string" required>
+     The API key for the Makeswift site.
+   </ParamField>
+2. <ParamField query="options" type="object" required>
+     Options for site version and locale.
+     <Expandable>
+       <ParamField query="runtime" type="ReactRuntime" required>
+         An instance of [ReactRuntime](/developer/reference/runtime/constructor)
+       </ParamField>
+       <ParamField query="getFonts" type="() => FontFamily[]">
+        This function is called when the builder requests the list of fonts available for the site. The function should return an array of `FontFamily` objects.
+
+        ```ts
+        type FontFamily {
+          family: string
+          variants: {
+            weight: string
+            style: "normal" | "italic"
+            src?: string
+          }[]
+        }
+        ```
+
+        The `src` field is used to preview the font in the builder. The `src` field can be either a relative or absolute URL. If the `src` field is omitted, the font is still selectable but uses a fallback font in the builder.
+       </ParamField>
+       <ParamField query="events" type="object">
+        <Note>New in [v0.23.12](https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.23.12)</Note>
+  
+        An object containing event handlers for the Makeswift site.
+
+        ### Available events
+
+        <ParamField query="events.onPublish" type="() => void | Promise<void>">
+          If defined, this function is called when the site is published.
+
+          #### Error handling
+          
+          Any errors thrown in the event handler will be logged and ignored.
+
+          #### Local development
+          
+          Since onPublish is powered by Makeswift webhooks, it's not possible to test them locally (e.g., localhost:3000) at this time. We have plans to enable this via tunneling by leveraging the Makeswift CLI but don't have that ready just yet.
+          
+        </ParamField>
+       </ParamField>
+     </Expandable>
+   </ParamField>
+
+## Examples
+
+### App Router
+
+<AppApiHandlerExample />
+
+### Pages router
+
+<PagesApiHandlerExample />
+
+### Adding fonts
+
+The following example adds Spline Sans and Spline Sans Mono fonts to the site using `next/font` and adds them to the `MakeswiftApiHandler`. Using a variable font reduces the number of font files requested.
+
+<FontsExample />
+
+### Using `onPublish` event
+
+<OnPublishExample />

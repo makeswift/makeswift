@@ -1,4 +1,4 @@
-Makeswift documentation: https://docs.makeswift.com/developer/app-router/installation
+Makeswift documentation: ./makeswift-docs
 
 Documentation for project that we're working on: ./decoupling-docs
 

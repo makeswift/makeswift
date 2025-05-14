@@ -1,0 +1,40 @@
+---
+title: "constructor"
+description: The `ReactRuntime` is the bridge between Makeswift and your app. It tells the Makeswift builder about the schema of your components and which breakpoints to use.
+---
+
+import RuntimeExample from "/snippets/reference/runtime.mdx"
+import BreakpointsExample from "/snippets/reference/breakpoints.mdx"
+
+## Options
+
+<ParamField query="breakpoints" type="Record<string, Breakpoint>">
+  An optional object with custom breakpoints for the Makeswift builder.
+
+```ts
+type Breakpoint = {
+  // max width for the CSS media query
+  width: number
+  // text displayed in the Makeswift builder
+  label?: string
+  // Makeswift builder preview width
+  viewport?: number
+}
+```
+
+  <Accordion title="Where are these breakpoints in the Makeswift builder?">
+    <Frame>
+      <img src="/images/custom-breakpoints.png" />
+    </Frame>
+  </Accordion>
+</ParamField>
+
+## Examples
+
+### Basic usage
+
+<RuntimeExample />
+
+### Custom breakpoints
+
+<BreakpointsExample />

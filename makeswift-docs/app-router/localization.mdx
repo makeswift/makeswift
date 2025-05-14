@@ -1,0 +1,139 @@
+---
+title: App Router
+description: "This guide walks you through setting up localization for your Makeswift site so you can visually customize your site for different locales."
+---
+
+If you don't already have a Next.js project using App Router set up with Makeswift, follow the [App Router Installation](/app-router/installation) guide.
+
+import AppCatchAllLocalizedExample from "/snippets/app-router/catch-all-localized.mdx";
+
+<Note>
+  This guide requires version `0.24.0` or higher of the Makeswift runtime. Refer
+  to our [Upgrading to 0.24.0](/developer/upgrading/0.24.0) guide for details on
+  how to update.
+</Note>
+
+## Add locales in the Visual Builder
+
+Open site settings and go to the **Locales** tab:
+
+<Note>
+  The number of locales you have access to is dependent upon your
+  [plan](/product/workspace/plans). Refer to the [pricing
+  page](https://makeswift.com/pricing) for full details.
+</Note>
+
+<Frame>
+  ![Makeswift dashboard showing the root settings page for
+  Locales](/images/developer/guides/localization/localization-settings.jpeg)
+</Frame>
+
+To add a new locale, click the **+ Add locale** button. In this case, we've added **es-ES**. You can then modify and delete a locale (except the default locale) by hovering over it and clicking the settings icon.
+
+<Frame>
+  <img
+    src="/images/developer/guides/localization/secondary-locale.jpeg"
+    alt="Localization settings showing a secondary locale"
+  />
+</Frame>
+
+## Configure next-intl for your application
+
+We recommend using the [next-intl](https://next-intl.dev/) package to handle localization. You can follow their [App Router setup](https://next-intl.dev/docs/getting-started/app-router/with-i18n-routing) documentation to configure your application. This guide will walk you through updating your file structure, configure language files, middleware, etc.
+
+After following this guide, there are a couple of things you'll want to double check to ensure everything works well with Makeswift.
+
+1. Make sure that the exported config in the `next.config.ts` file composes both `withMakeswift` and `withNextIntl`.
+
+```tsx
+import createWithMakeswift from "@makeswift/runtime/next/plugin";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withMakeswift = createWithMakeswift();
+const withNextIntl = createNextIntlPlugin();
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // your existing next config
+};
+
+export default withNextIntl(withMakeswift(nextConfig));
+```
+
+2. In your root layout, make sure that the newly added `NextIntlClientProvider` wraps the `MakeswiftProvider`.
+
+```tsx
+<NextIntlClientProvider>
+  <MakeswiftProvider previewMode={(await draftMode()).isEnabled}>
+    {children}
+  </MakeswiftProvider>
+</NextIntlClientProvider>
+```
+
+3. The locales that you configure in code should match exactly the locales as listed in Makeswift. In this case, we've used `en-US` and `es-ES`.
+
+4. Make sure all of your routing files are nested under `/app/[lang]` **except for the [Makeswift API handler](/developer/reference/makeswift-api-handler)**.
+
+## Fetch snapshots by locale
+
+Update your catch-all route to fetch the page snapshots by locale.
+
+<AppCatchAllLocalizedExample />
+
+## Edit your pages in the Visual Builder
+
+Once you've set everything up, you should be able to switch to the locale using the locale switcher in the Visual Builder.
+
+<Frame>
+  ![Locale switcher in the Visual
+  Builder](/images/developer/guides/localization/locale-switcher.jpeg)
+</Frame>
+
+The first time you switch to a new locale (in this case switching from `en-US` to `es-ES`), you'll notice a message that informs you that the localized page inherits from the default locale. To stop inheriting from the default locale and start customizing the content for the localized page, click the **Edit for this locale** button.
+
+<Frame>
+  ![Option in the Visual Builder to edit a localized
+  page.](/images/developer/guides/localization/edit-locale-message-2.jpeg)
+</Frame>
+
+Note that you will continue to see the message about inheriting from the base locale until you click that button. **This also means that until you decide to edit this localized page, it will continue to serve the page for the default locale.**
+
+After choosing to edit the localized page, content changes are only associated with this locale and do not affect the base locale.
+
+<Note>
+  You can also customize the path for each page in each locale in the page's
+  settings. For example, if you have a company page at `example.com/company`,
+  you can create the Spanish version of the page at `example.com/es/compania` or
+  `example.es/compania`.
+</Note>
+
+## Localized resources
+
+When making changes on a different locale you can override any property, including the page's pathname, metadata, and SEO tags.
+
+<Frame>
+  ![Edit page metadata for localized
+  page.](/images/developer/guides/localization/edit-page-metadata.jpeg)
+</Frame>
+
+You can also localize a visually created component. While in a localized page, select the component and click **Edit component**. Make your changes, and then click **Save**. The changes made will be saved for that specific locale and will not affect the component for the base locale.
+
+<Frame>
+  <iframe
+    className="w-full aspect-video"
+    src="https://www.youtube.com/embed/B7CbZnqjMQI"
+    title="Scheduled publishing"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen
+  />
+</Frame>
+
+## Publishing
+
+Remember that localized content (pages, components, etc.) needs to be published just like any other resource. After you're done making all of your changes, publish them for these changes to go live. In the publish dialog, you'll be able to see the locale attached to each resource.
+
+<Frame>
+  ![Publishing localized
+  content.](/images/developer/guides/localization/publishing.jpeg)
+</Frame>

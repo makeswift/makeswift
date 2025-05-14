@@ -1,0 +1,28 @@
+---
+title: Tailwind styles are being overridden
+description: Resolve issues with Tailwind v4 or other @layer-based CSS frameworks being overridden by CSS resets
+---
+
+## Problem
+
+Starting from [version 4](https://tailwindcss.com/blog/tailwindcss-v4-alpha#designed-for-the-modern-web), Tailwind CSS uses `@layer` rules to define its styles.
+
+Makeswift by default includes a CSS reset from [normalize.css](https://github.com/necolas/normalize.css/).
+Because the built-in CSS reset is unlayered, it'll override the Tailwind styles, even if the Tailwind styles are more specific.
+
+From [MDN @layer documentation](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer): "Styles that are not defined in a layer always override styles declared in named and anonymous layers."
+
+![Image: CSS layer cascade](/images/layer-cascade.svg)
+
+
+## Solution
+
+Disable the built-in CSS reset by setting `enableCssReset={false}` on the [RootStyleRegistry](/developer/reference/components/root-style-registry). If you followed the installation docs, this would be located in your `lib/makeswift/provider.tsx` or `src/makeswift/provider.tsx` file:
+
+```tsx
+<RootStyleRegistry enableCssReset={false}>
+  {children}
+</RootStyleRegistry>
+```
+
+Tailwind already ships with [its own reset](https://tailwindcss.com/docs/preflight), so disabling the built-in reset prevents conflicts and preserves Tailwind's styles.

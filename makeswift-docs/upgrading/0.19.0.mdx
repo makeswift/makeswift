@@ -1,0 +1,131 @@
+---
+title: Upgrading to 0.19.0
+---
+
+If you haven't upgraded to `0.18.0` please read the [upgrading guide](/developer/upgrading/0.18.0).
+
+<Warning>
+  This upgrade guide is only necessary if you're using the `getPages` Makeswift
+  client method. If you're not using this method, you can safely skip this upgrade
+  guide.
+
+We also recommend following this guide if you're using the `getSitemap` client
+method, which has been deprecated in this release.
+
+</Warning>
+
+### Updating usage of `getPages`
+
+In previous versions of the runtime, the Makeswift client provided a `getPages`
+method to retrieve a list of all Makeswift page paths and their `id`s in the site.
+
+In `v0.19.0`, the `getPages` method now has sorting, path filtering, and
+pagination. This method was not previously paginated - in order to get all your
+pages, you may now use our `.toArray` pagination helper method, which will
+automatically paginate through all results and aggregate them into an array:
+
+```tsx get-all-pages.ts
+import { client } from "@/makeswift/client";
+import { MakeswiftPage } from "@makeswift/runtime/next";
+
+async function getAllPages(): Promise<MakeswiftPage[]> {
+  return await client.getPages().toArray();
+}
+```
+
+`getPages` now returns an instance of `IterablePaginationResult`, a decorated
+async iterable which includes methods `.map` and `.filter`, in addition to
+`.toArray`, mentioned above. The `MakeswiftPage` type has also been updated to
+include several more data fields from the Makeswift page.
+
+For more information about the usage of the `getPages` client method, please
+refer to the [`getPages` documentation](/developer/reference/client/get-pages).
+
+### Deprecation of `getSitemap`
+
+`v0.19.0` of the runtime also deprecates the `getSitemap` client method. While
+`getSitemap` is still available in this version, **it will be removed in a
+future release.** We recommend using the `getPages` method to construct your
+sitemap instead.
+
+Note that the deprecation of `getSitemap` now involves the host
+being responsible for the construction of page URLs in the sitemap (either with
+domain or path based localization).
+
+Below is an example for pages router that uses path-based localization with the
+`next-sitemap` library:
+
+```ts pages/sitemap.xml.ts
+import { getServerSideSitemapLegacy } from "next-sitemap";
+import { MakeswiftPage } from "@makeswift/runtime/next";
+import { client } from "@/makeswift/client";
+
+const DOMAIN = "https://example.com";
+const DEFAULT_PRIORITY = 0.75;
+const DEFAULT_FREQUENCY = "hourly";
+
+function pageToSitemapItem(page: MakeswiftPage) {
+  const pageUrl = new URL(page.path, DOMAIN);
+  return {
+    loc: pageUrl.href,
+    lastmod: page.updatedAt,
+    changefreq: page.sitemapFrequency ?? DEFAULT_FREQUENCY,
+    priority: page.sitemapPriority ?? DEFAULT_PRIORITY,
+    alternateRefs: page.localizedVariants.map((variant) => {
+      const localizedPath = `/${variant.locale}/${variant.path}`;
+      const localizedPageUrl = new URL(localizedPath, DOMAIN);
+      return {
+        hreflang: variant.locale,
+        href: localizedPageUrl.href,
+      };
+    }),
+  };
+}
+
+export async function getServerSideProps(context) {
+  const sitemap = await client
+    .getPages()
+    .filter((page) => !page.excludedFromSearch)
+    .map((page) => pageToSitemapItem(page))
+    .toArray();
+
+  return getServerSideSitemapLegacy(context, sitemap);
+}
+
+export default function Sitemap() {}
+```
+
+Here's another example for Next.js's App Router [built-in support for
+sitemaps](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap):
+
+```ts app/sitemap.ts
+import { MetadataRoute } from "next";
+import { MakeswiftPage } from "@makeswift/runtime/dist/types/next";
+import { client } from "@/lib/makeswift/client";
+
+type NextSitemapItem = MetadataRoute.Sitemap[number];
+
+const DOMAIN = "https://example.com";
+const DEFAULT_PRIORITY = 0.75;
+const DEFAULT_FREQUENCY = "hourly";
+
+function pageToSitemapEntry(page: MakeswiftPage): NextSitemapItem {
+  const pageUrl = new URL(page.path, DOMAIN);
+  return {
+    url: pageUrl.href,
+    lastModified: page.updatedAt,
+    changeFrequency: page.sitemapFrequency ?? DEFAULT_FREQUENCY,
+    priority: page.sitemapPriority ?? DEFAULT_PRIORITY,
+  };
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  return client
+    .getPages()
+    .filter((page) => !page.excludedFromSearch)
+    .map((page) => pageToSitemapEntry(page))
+    .toArray();
+}
+```
+
+Here is the link to the [official release notes](https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.19.0).

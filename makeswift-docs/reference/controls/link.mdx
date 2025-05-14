@@ -1,0 +1,79 @@
+---
+title: Link
+description: Adds a Link panel in the Makeswift builder to visually edit a `LinkValue` prop.
+icon: "link"
+---
+
+<Frame type="glass" caption="">
+  <img src="/images/link-panel.png" />
+</Frame>
+
+## Params
+
+<ParamField query="label" type="string" default="On click">
+  Text for the panel label in the Makeswift builder.
+</ParamField>
+
+## Prop type
+
+The Link control passes an object of type `LinkValue` to your component.
+
+```ts
+type LinkValue = {
+  href: string
+  target?: "_blank" | "_self"
+}
+```
+
+If no value is set in the builder, your component receives `{ href: '#' }`.
+
+## Example
+
+The following example adds an Link control to the `link` prop of a Button component.
+
+<CodeGroup>
+
+```tsx Button.makeswift.ts
+import { Link } from "@makeswift/runtime/controls"
+
+import { runtime } from "@/makeswift/runtime"
+
+import { Button } from "./Button"
+
+runtime.registerComponent(Button, {
+  type: "button",
+  label: "Button",
+  props: {
+    link: Link(),
+  },
+})
+```
+
+```tsx Button.tsx
+import Link from "next/link"
+
+interface Props {
+  link: {
+    href: string
+    target?: "_blank" | "_self"
+  }
+}
+
+export function Button({ link }) {
+  return (
+    <Link
+      className="px-4 py-3 rounded bg-black text-white"
+      href={link.href}
+      target={link.target}
+    >
+      Click me
+    </Link>
+  )
+}
+```
+
+</CodeGroup>
+
+import NamingConventions from "/snippets/naming-conventions.mdx"
+
+<NamingConventions />

@@ -1,0 +1,360 @@
+---
+title: "getPages"
+description: "An instance method that provides data about the pages you've created within Makeswift"
+---
+
+## Options
+
+<ParamField query="limit" type="number" default={20}>
+  Number of pages to fetch. Must be between `1` and `100`.
+</ParamField>
+
+<ParamField query="after" type="string">
+  Starting `id` cursor of the last page entry that was fetched.
+</ParamField>
+
+<ParamField query="pathPrefix" type="string" default="/">
+  A filter to only retrieve pages with a pathname that begins with this value.
+</ParamField>
+
+<ParamField query="locale" type="string">
+  A valid locale string (ex. `"en-US"`).
+</ParamField>
+
+<ParamField query="sortBy" type="string" default="path"> 
+  The field to sort the result pages by. Can be any one of the following: `'title'`, `'path'`, `'description'`, `'createdAt'`, `'updatedAt'`.
+</ParamField>
+
+<ParamField query="sortDirection" type="string" default="asc">
+  The direction of how the result pages are sorted. Can be either `'asc'` or `'desc'`.
+</ParamField>
+
+<ParamField query="siteVersion" type="string" default={`Live`}>
+  Used to either retrieve the published version or working version of Makeswift
+  pages. Can either be `Live` or `Working` 
+</ParamField>
+
+<ParamField query="includeOffline" type="boolean" default={false}>
+  Whether the results should include pages that are offline in Makeswift.
+</ParamField>
+
+## Return Type
+
+```ts
+type MakeswiftPage = {
+  id: string,
+  path: string,
+  title: string | null,
+  description: string | null,
+  canonicalUrl: string | null,
+  socialImageUrl: string | null,
+  sitemapPriority: number | null,
+  sitemapFrequency: string | null,
+  createdAt: string,
+  updatedAt: string,
+  publishedAt: string | null,
+  isOnline: boolean | null,
+  excludedFromSearch: boolean | null,
+  locale: string,
+  localizedVariants: {
+    locale: string,
+    path: string
+  }[]
+}
+
+// Final return type
+type MakeswiftGetPagesResult = {
+  data: MakeswiftPage[],
+  hasMore: boolean
+}
+```
+
+## Concepts
+
+### Pagination & Async Iterables
+
+The requests made by `getPages` are paginated. A paginated request will only
+retrieve a portion of the total pages per request. If you have a large number of
+pages, you may need to paginate through the results to retrieve all of them.
+
+To make this easier, the returned value of `getPages` is an extension of a
+`Promise` and an `AsyncIterable`. This abstraction enables you to consume the
+pages in multiple ways, allowing you to easily retrieve all pages without
+worrying about the implementation details of pagination:
+
+```ts get-pages.ts
+import { MakeswiftPage } from "@makeswift/runtime/next"
+import { client } from "@/makeswift/client"
+
+export async function getAllPages() {
+  // The `toArray` method on the iterable will return all pages as an array
+  const pagesFromToArray = await client.getPages().toArray()
+
+  // You can also get all pages with a `for await` loop
+  const pagesFromForAwait: MakeswiftPage[] = []
+  for await (const page of client.getPages()) {
+    pagesFromForAwait.push(page)
+  }
+
+  // Get a single paginated result set 
+  const { data: pagesFromPagination } = await client.getPages({ limit: 5 })
+}
+```
+
+The custom async iterable returned by `getPages` includes the following methods:
+
+- `toArray(): Promise<T[]>`: Consumes all pages in the iterable and returns them as an array.
+
+- `map(callback: (item: T) => U)`: Maps over each page in the iterable to yield a new data
+  type. Returns another async iterable.
+
+- `filter(predicate: (item: T) => Boolean)`: Selectively yields pages based on a
+  predicate function. Returns another async iterable.
+
+Because `.map` and `.filter` return another iterable, you can chain these
+methods together:
+
+```ts
+const pages = await client.getPages()
+  .filter((page) => !page.excludedFromSearch)
+  .map((page) => ({ id: page.id, title: page.title }))
+  .toArray()
+```
+
+For more details on async iterables, see the [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols).
+
+The pagination for this method is cursor based, meaning that you can pass an
+`id` of a page to the `after` option to retrieve the next set of pages after
+that page. This can be used to manually implement paginating through all pages:
+
+```ts get-pages.ts
+import { MakeswiftPage } from "@makeswift/runtime/next"
+import { client } from "@/makeswift/client"
+
+export async function getAllPages() {
+  const pages: MakeswiftPages[] = []
+  let cursor: string | undefined = undefined
+  let hasMorePages = true
+
+  do {
+    const paginatedResults = await client.getPages({ limit: 5, after: cursor })
+    pages.push(...paginatedResults.data)
+    hasMorePages = paginatedResults.hasMore
+    cursor = paginatedResults.data.at(-1)?.id
+  } while (hasMorePages)
+
+  return pages
+}
+```
+
+### Site Versions
+
+By default, `getPages` will return data reflecting the state of published
+Makeswift pages. To specify which variant of your pages you want to retrieve,
+you can pass a value to the `siteVersion` option. If your site is using pages
+router, use the [`getSiteVersion` method](/developer/reference/client/get-site-version) to
+retrieve the current site version. If your site is using app router, use the
+`getSiteVersion` function.
+
+Note that the `publishedAt` field of a page will always be `null` when
+retrieving non-live versions of the site. This is because the page data has not
+been published yet.
+
+Similarly, if you need to retrieve information on pages that are not currently
+online (even if they have been published), you can pass `includeOffline: true`
+to the `getPages` method. By default, offline pages are excluded from results.
+
+## Usage
+
+### Path Prefix Filtering
+
+Path prefix filtering allows you to selectively retrieve your Makeswift pages
+based on if they start with a specific path. For example, suppose you have many
+pages organized under the path `/blog/`. You can use the `pathPrefix` option to
+retrieve all pages that start with `/blog/`:
+
+```ts
+import { client } from '@/makeswift/client'
+
+async function getBlogPages() {
+  return await client.getPages({ pathPrefix: '/blog/' }).toArray()
+}
+```
+
+### Static Path Generation
+
+Since Makeswift pages use dynamic routes with Next.js, you may want to
+statically generate paths for your pages at build time. In pages router, this
+can be done by defining
+[`getStaticPaths`](https://nextjs.org/docs/pages/building-your-application/routing/dynamic-routes)
+on your catch-all page:
+
+```ts src/pages/[[...path]].tsx
+import { GetStaticPathsResult } from 'next'
+import { Makeswift } from '@makeswift/runtime/next'
+import { client } from '@/makeswift/client'
+
+type ParsedUrlQuery = { path?: string[] }
+
+export async function getStaticPaths(): Promise<
+  GetStaticPathsResult<ParsedUrlQuery>
+> {
+  return {
+    paths: await client
+      .getPages()
+      .map((page) => ({
+        params: {
+          path: page.path.split("/").filter((segment) => segment !== ""),
+        },
+      }))
+      .toArray(),
+    fallback: "blocking",
+  };
+}
+```
+
+Similarly for app router, static generation is done by defining
+[`generateStaticParams`](https://nextjs.org/docs/app/api-reference/functions/generate-static-params#catch-all-dynamic-segment)
+on your dynamically routed page:
+
+```ts app/[[...path]]/page.tsx
+import { client } from '@/makeswift/client'
+
+type ParsedUrlQuery = { path?: string[] }
+
+export async function generateStaticParams() {
+  return await client.getPages().map(page => ({
+      path: page.path.split('/').filter(segment => segment !== '')
+    }))
+    .toArray()
+}
+```
+
+### Generating a Sitemap
+
+The data from `getPages` can be used to generate a `sitemap.xml` file for your
+site, allowing search engines to index your pages.
+
+Here's an example of how to use `getPages` with the `next-sitemap` library to
+generate a sitemap:
+
+```ts pages/sitemap.xml.ts
+import { getServerSideSitemapLegacy } from 'next-sitemap'
+import { MakeswiftPage } from '@makeswift/runtime/next'
+import { client } from '@/makeswift/client'
+
+const DOMAIN = 'https://example.com'
+const DEFAULT_PRIORITY = 0.75
+const DEFAULT_FREQUENCY = 'hourly'
+
+function pageToSitemapItem(page: MakeswiftPage) {
+  const pageUrl = new URL(page.path, DOMAIN)
+  return {
+    loc: pageUrl.href,
+    lastmod: page.createdAt,
+    changefreq: page.sitemapFrequency ?? DEFAULT_FREQUENCY,
+    priority: page.sitemapPriority ?? DEFAULT_PRIORITY,
+    alternateRefs: page.localizedVariants.map(variant => {
+      const localizedPath = `/${variant.locale}/${variant.path}`
+      const localizedPageUrl = new URL(localizedPath, DOMAIN)
+      return {
+        hreflang: variant.locale,
+        href: localizedPageUrl.href,
+      }
+    }),
+  }
+}
+
+export async function getServerSideProps(context) {
+  const sitemap = client
+    .getPages()
+    .filter(page => !page.excludedFromSearch)
+    .map(page => pageToSitemapItem(page))
+    .toArray()
+
+  return getServerSideSitemapLegacy(context, sitemap)
+}
+
+export default function Sitemap() {}
+```
+
+Next.js app router also has built-in support for [generating sitemaps](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap).
+We can use `getPages` to retrieve pages and map them to the format expected by Next.js:
+
+```ts app/sitemap.ts
+import { MetadataRoute } from 'next'
+import { MakeswiftPage } from '@makeswift/runtime/dist/types/next'
+import { client } from '@/makeswift/client'
+
+type NextSitemapItem = MetadataRoute.Sitemap[number]
+
+const DOMAIN = 'https://example.com'
+const DEFAULT_PRIORITY = 0.75
+const DEFAULT_FREQUENCY = 'hourly'
+
+function pageToSitemapEntry(page: MakeswiftPage): NextSitemapItem {
+  const pageUrl = new URL(page.path, DOMAIN)
+  return {
+    url: pageUrl.href,
+    lastModified: page.createdAt,
+    changeFrequency: page.sitemapFrequency ?? DEFAULT_FREQUENCY,
+    priority: page.sitemapPriority ?? DEFAULT_PRIORITY,
+  }
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  return client
+    .getPages()
+    .filter(page => !page.excludedFromSearch)
+    .map(page => pageToSitemapEntry(page))
+    .toArray()
+}
+```
+
+A few things to note:
+
+- By default, `getPages` will return pages that are excluded from search. You
+  can filter these pages out while constructing your sitemap based on the
+  `excludedFromSearch` property.
+
+- `getPages` will return the path of the page, which is relative to the root of
+  the site. Depending on whether your host is using path-based or domain-based
+  routing for localization, you may need to prepend the domain or locale to the
+  path.
+
+- If you did not explicitly set a `sitemapPriority` or `sitemapFrequency` for a
+  page in the Makeswift builder, these attributes will be `null` in the
+  response. You can specify default values for these fields in your sitemap
+  generation logic.
+
+### Localization
+
+To retrieve pages that you've created in one of your [registered
+locales](/developer/app-router/localization), you can pass the `locale` option to the
+`getPages` method. Each returned page will include any of its localized
+alternates in the `localizedVariants` field.
+
+```ts
+import { client } from '@/makeswift/client'
+
+async function getFrenchPages() {
+  return await client.getPages({ locale: 'fr-FR' }).toArray()
+}
+```
+
+If you do not pass a `locale` option, pages from your site's default locale will
+be returned. Each page will include any of its localized alternates in the
+`localizedVariants` field.
+
+For an example of how to use `getPages` with localization to statically generate
+paths in Next.js app router, [see
+here](/developer/app-router/localization#getting-started).
+
+## Changelog
+
+| Version                                                                                          | Changes                               |
+| ------------------------------------------------------------------------------------------------ | ------------------------------------- |
+| [`v0.19.0`](https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.19.0) | Adds pagination, sorting, path filtering, and new data fields to `getPages` response. `getPages` now returns an async iterable with `toArray`, `.map`, and `filter` methods. |
+| [`v0.13.0`](https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.13.0) | `getPages` can retrieve either live or working pages (live by default) |
+| [`v0.9.0`](https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.9.0) | `getPages` only returns live pages |
+| [`v0.2.0`](https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.2.0) | Released `getPages`                 |

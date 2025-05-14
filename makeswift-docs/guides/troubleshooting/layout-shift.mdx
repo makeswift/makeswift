@@ -1,0 +1,93 @@
+---
+title: Layout shift on initial page load
+description: Learn how to fix a layout shift on initial page load in your app
+---
+
+{/* @todo(sasha): Update with a correct link to the blog post once it is ready */}
+{/* <Note>
+For a deeper dive into diagnosing layout shifts, check out our blog post: [Diagnosing a Layout Shift](/blog/diagnosing-layout-shifts)
+</Note> */}
+
+## Rerender During Hydration
+
+Watch the example below to recognize a layout shift caused by a component update during hydration. If your app behaves similarly, follow the steps in this guide.
+
+<Frame>
+  <video
+    muted
+    loop
+    playsInline
+    controls
+    title="Layout shift example"
+    className="w-full aspect-video"
+    src="/images/developer/guides/troubleshooting/layout-shift/layout-shift.mp4"
+  ></video>
+</Frame>
+
+### Background
+
+Such shifts happen when a component's props, context, or state change mid-hydration, triggering a Suspense fallback and a visual jump.
+
+One potential cause is a context provider whose value changes between server-side rendering (SSR) and client-side rendering (CSR). This can happen if the provider's value is derived from a state or prop that is initialized differently on the server and client.
+
+Here is the summary of how this can happen:
+- The page is server-side rendered (SSR).
+- The server sends the HTML to the client, and React begins hydration.
+- While hydration is in progress, the client side receives a new update.
+- This update interrupts hydration, causing React to discard the in-progress hydration and re-render the components on the client with the updated session value.
+- While client side re-rendering is happening, React replaces the server rendered content with a client side fallback found in a closest `Suspense` boundary. The fallback happens to be `null` in this case. This effectively causes the layout shift.
+
+According to the React team's [comment](https://github.com/facebook/react/issues/24476#issuecomment-1127800350) in a GitHub issue, this is expected behavior and not considered a bug.
+
+<Info>
+Makeswift runtime library wraps all page components in a `Suspense` boundary when serving a page.
+</Info>
+
+<Note>
+React used to log a warning for this situation when using the Next.js Pages Router (though the App Router suppressed it). That warning [was removed](https://github.com/facebook/react/pull/25692) in later versions of React 18 and in React 19.
+</Note>
+
+### Troubleshooting Steps
+
+#### 1. Reproduce the Shift
+
+- Load your page fresh (SSR) and look for sudden collapses or reflows. E.g., headers, nav menus, or sections disappearing briefly—then snapping into place.
+- In Chrome DevTools → **Performance**, you'll see “layout-shift” entries aligned with two render passes.
+
+#### 2. Record with React DevTools Profiler
+
+- Open the **Profiler**, start recording, then reload the page.
+- Stop recording after the shift. In the flame chart, find two consecutive renders of the same component (hydration then update).
+
+#### 3. Pinpoint the Problematic Update
+
+- Examine which props, context values, or state differ between those renders.
+- Common culprits:
+  - Context providers whose value identity changes
+  - State initialized differently on client vs. server
+  - Data fetched in a `useEffect` (runs post-hydration)
+
+#### 4. Isolate the Component
+
+- Temporarily comment out or disable the suspected update (e.g., remove the provider or delay the state change).
+- Confirm that the shift disappears when that update is skipped.
+
+#### 5. Apply a Permanent Fix
+
+- **Match SSR & Client:** Ensure initial props/state are identical. For example, compute or fetch values during SSR so the client sees the same markup.
+- **Memoize Values:** Wrap dynamic context or prop values in [`useMemo`](https://react.dev/reference/react/useMemo) to avoid identity changes during hydration.
+- **Defer Non-Critical Updates:** Use React's [`startTransition`](https://react.dev/reference/react/startTransition) to mark updates as non-urgent, preventing fallback rendering.
+
+#### 6. Verify the Resolution
+
+- Re-run your Profiler trace: you should now see only one render with no fallback UI invoked during hydration.
+- Confirm that no “layout-shift” entries align with any component updates.
+
+---
+
+By following this reproduce → profile → isolate → fix workflow, you'll eliminate jumps caused by component updates during React hydration.
+
+### References
+
+- [New Suspense SSR Architecture in React 18](https://github.com/reactwg/react-18/discussions/37)
+- [React Developer Tools](https://react.dev/learn/react-developer-tools)

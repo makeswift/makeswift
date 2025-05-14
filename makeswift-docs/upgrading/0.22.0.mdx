@@ -1,0 +1,59 @@
+---
+title: Upgrading to 0.22.0
+---
+
+If you haven't upgraded to `0.21.0` please read the [upgrading guide](/developer/upgrading/0.21.0).
+
+`v0.22.0` of the runtime introduces some performance improvements to internal
+runtime rendering functions.
+
+## Breaking Changes
+
+### `ReactNode[]` props
+
+Previously, registered components that accepted a list of `ReactNode`s, like
+the example `Slots` component below, could render the list by simply
+interpolating its value in JSX:
+
+```typescript
+export const Slots = forwardRef(function Slots(
+  { slots }: { slots: ReactNode[] },
+  ref: Ref<HTMLDivElement>,
+) {
+  return (
+    <div ref={ref}>{slots}</div>
+    //             ^^^^^^^
+  )
+})
+
+runtime.registerComponent(Slots, {
+  type: '@acme/list-of-slots',
+  label: 'Slots',
+  props: {
+    slots: List({ label: 'Slots', type: Slot() }),
+  },
+})
+```
+
+This worked because the `slots` value was never actually passed as a _list_ of
+`ReactNode`s. Instead, it was passed as a single `ReactNode` representing an
+internal component rendering the list as a recursive
+[cons](https://en.wikipedia.org/wiki/Cons)-like structure.
+
+If you have registered components that expect a list of `ReactNode`s and rely
+on this undocumented behavior, you must update your code to wrap each node in
+a `React.Fragment` with a corresponding key:
+
+```diff
+export const Slots = forwardRef(function Slots(
+  { slots }: { slots: ReactNode[] },
+  ref: Ref<HTMLDivElement>,
+) {
+  return (
+-    <div ref={ref}>{slots}</div>
++    <div ref={ref}>{slots.map((slot, i) => (<Fragment key={i}>{slot}</Fragment>))}</div>
+  )
+})
+```
+
+Here is the link to the [official release notes](https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.22.0).

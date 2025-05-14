@@ -1,0 +1,227 @@
+---
+title: Pages Router
+---
+
+import RuntimeExample from "/snippets/reference/runtime.mdx";
+import ClientExample from "/snippets/reference/client.mdx";
+import ComponentsExample from "/snippets/reference/components.mdx";
+import NextConfigExample from "/snippets/reference/next-config.mdx";
+import PagesCatchAllExample from "/snippets/pages-router/catch-all.mdx";
+import DocumentExample from "/snippets/pages-router/document.mdx";
+import ApiHandlerExample from "/snippets/pages-router/api-handler.mdx";
+import PagesAppExample from "/snippets/pages-router/pages-app.mdx";
+import ProjectSetup from "/snippets/guides/project-setup.mdx";
+import SystemRequirements from "/snippets/guides/system-requirements.mdx";
+
+The fastest way to get started with Makeswift on a new Next.js project is to follow the
+[quickstart](/developer/quickstart) guide. If you have an existing Next.js application
+or want to set things up yourself, continue with the rest of this guide.
+
+<SystemRequirements />
+
+## Project Setup
+
+<ProjectSetup />
+
+## Getting started
+
+<Steps>
+  <Step title="Open your Next.js project">
+    First, open your Next.js project. If you don't already have one, head over to
+    the [Next.js](https://nextjs.org/docs/getting-started/installation)
+    documentation to get one set up. If you do have one, please verify you are
+    using [Next.js 13.4](https://nextjs.org/blog/next-12) or a later version.
+  </Step>
+  <Step title="Install dependencies">
+  Install the `@makeswift/runtime` package. This package contains all of the necessary
+  code to integrate Makeswift into your Next.js app.
+
+```bash
+npm install @makeswift/runtime
+```
+
+  </Step>
+  <Step title="Add API key to environment variables">
+  
+Requesting data through the `Makeswift` client requires a site API key from Makeswift. In the Makeswift builder, go to **Settings > Host** and copy the API key for the site.
+
+<Frame>
+  <img src="/images/site-api-key.gif" alt="How to get the site API key" />
+</Frame>
+
+Once the API key is in your clipboard, open your [`.env.local`](https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables) file and paste the snippet below.
+
+```sh
+MAKESWIFT_SITE_API_KEY=paste-your-api-key-here
+```
+
+  </Step>
+  <Step title="Add Makeswift runtime">
+  
+Create the Makeswift [runtime](/developer/reference/runtime/constructor) file in `src/makeswift`.
+
+<RuntimeExample />
+
+</Step>
+<Step title="Add Makeswift client">
+  
+Create the Makeswift [client](/developer/reference/client/constructor) file in `src/makeswift`.
+
+<ClientExample />
+
+</Step>
+  <Step title="Add the Makeswift API handler">
+  
+Similar to [NextAuth.js](https://next-auth.js.org/), Makeswift uses an API handler to communicate with your Next.js app. Create the file `src/pages/api/makeswift/[...makeswift].ts`.
+
+<Note>
+  It is important this file has that exact name and path. The extension can be
+  `.js` or `.ts`.
+</Note>
+
+<ApiHandlerExample />
+
+This API route adds support for
+[preview mode](https://nextjs.org/docs/pages/building-your-application/configuring/preview-mode),
+[on-demand revalidation](https://nextjs.org/docs/pages/building-your-application/data-fetching/incremental-static-regeneration#on-demand-revalidation),
+and other features that make Makeswift work seamlessly with your Next.js app.
+
+  </Step>
+  <Step title="Add the Next.js plugin">
+  
+Next.js plugins are configured in the project's next.config.js file by wrapping `nextConfig`. The Makeswift Next.js plugin whitelists Makeswift image domains and sets up rewrites to enable preview mode in the Makeswift builder.
+
+<NextConfigExample />
+
+  </Step>
+  <Step title="Set up a custom Document">
+  
+The Makeswift [custom Document](https://nextjs.org/docs/pages/building-your-application/routing/custom-document) handles styles during server-side rendering and using [Preview Mode](https://nextjs.org/docs/pages/building-your-application/configuring/preview-mode) when opening your pages in the Makeswift builder.
+
+Create the file `src/pages/_document.ts` and export `Document` from `@makeswift/runtime/next/document`:
+
+<DocumentExample />
+
+If you already have a `_document.ts`, you can extend the `Document` from `@makeswift/runtime/next/document` instead.
+
+<Accordion title="Example of extending an existing document">
+```tsx src/pages/_document.tsx
+import { Html, Head, Main, NextScript } from "next/document";
+import { Document } from "@makeswift/runtime/next/document";
+
+export default class MyDocument extends Document {
+  render() {
+    return (
+      <Html>
+        <Head />
+        <body>
+          <Main />
+          {/* Your custom code here */}
+          <NextScript />
+        </body>
+      </Html>
+    );
+  }
+}
+```
+</Accordion>
+
+  </Step>
+  <Step title="Register components with Makeswift">
+  
+Create a file for registered components called `src/makeswift/components.tsx`. In this example, only one component is registered. However, as you register more components, we recommend creating separate files for each component and rolling up the imports in the `src/makeswift/components.ts` file. Learn more about [registering components](/developer/reference/runtime/register-component).
+
+<ComponentsExample />
+
+  </Step>
+  <Step title="Provide the runtime to Custom App">
+
+If you don't have a [Custom App](https://nextjs.org/docs/pages/building-your-application/routing/custom-app) you'll need to create one. Then wrap your Custom App with the Makeswift `ReactRuntimeProvider` component.
+
+<PagesAppExample />
+
+  </Step>
+
+  <Step title="Add a route for Makeswift pages">
+  
+Create an [optional catch-all route](https://nextjs.org/docs/pages/building-your-application/routing/dynamic-routes#optional-catch-all-segments) named `[[...path]].tsx`. You will use this route to fetch page snapshots from the `Makeswift` client and render them using the [`Page`](/developer/reference/components/page) component.
+
+<PagesCatchAllExample />
+
+**Important notes**:
+
+1. If you already have a root `index.tsx` file inside of the `pages` directory and you'd like to manage that page in code (not in Makeswift), you will need to name the file `[...path].tsx` instead of `[[...path]].tsx`. Otherwise, you'll need to delete it to let the root page be managed in Makeswift. For more information about the differences between catch-all and optional catch-all segments, refer to the Next.js [Catch-all segments](https://nextjs.org/docs/pages/building-your-application/routing/dynamic-routes#catch-all-segments) documentation.
+
+2. The filename defines the `path` param. For example, if the filename is `[[...slug]].tsx` instead of `[[...path]].tsx`, then the param name is `slug`. Because this is an optional catch-all route, there are no params when visiting the index (i.e., `/`) path. The `path` param defaults to an empty array.
+
+3. [`fallback: 'blocking'`](https://nextjs.org/docs/pages/api-reference/functions/get-static-paths#fallback-blocking) is used here so that your Next.js app doesn't need to be re-deployed whenever a new Makeswift page is created.
+
+With this setup, your pages will be rendered using
+[incremental static regeneration](https://nextjs.org/docs/pages/building-your-application/data-fetching/incremental-static-regeneration).
+A `revalidate` field isn't added to the returned value of `getStaticProps` because
+Makeswift pages are automatically revalidated using
+[on-demand revalidation](https://nextjs.org/basic-features/data-fetching/incremental-static-regeneration#on-demand-revalidation)
+by leveraging the Makeswift API handler.
+
+  </Step>
+  
+  <Step title="Start the local dev server">
+  
+Run the local development script. This will start the Next.js app at `http://localhost:3000`.
+
+```bash
+npm run dev
+```
+
+If port `3000` is already in use, Next.js will try port `3001`, then `3002`, and so forth until it finds an
+unused port.
+
+<Note>Take note of this port for the next step.</Note>
+
+  </Step>
+  <Step title="Add your app's URL to Makeswift">
+  
+Finally, open the Makeswift builder, navigate to **Settings > Host**, and add your app's URL. If you haven't changed anything in the example and the server is running on port `3000`, the app's URL should be
+`http://localhost:3000`.
+
+<Frame>
+  <img src="/images/host-url.gif" alt="How to update the host url" />
+</Frame>
+
+When you're ready to deploy, set up a separate site and use your deployment URL
+instead of `http://localhost:3000`. You can keep this site for local development.
+
+  </Step>
+  <Step title="Start building">
+  
+Great job! You should be able to create a page in Makeswift and start dropping in registered
+components from the left toolbar.
+
+<Frame>
+  <img
+    src="/images/hello-world-registered.png"
+    alt="Hello world component registered"
+  />
+</Frame>
+
+</Step>
+</Steps>
+
+## Next Steps
+
+Here are a couple of ideas for what you might want to do next.
+
+<CardGroup cols={3}>
+  <Card title="Concepts" href="/developer/concepts">
+    Learn the core concepts behind how Makeswift works.
+  </Card>
+  <Card
+    title="Custom components"
+    href="/developer/guides/how-to/built-in-components"
+  >
+    Build custom components for use in the Visual Builder.
+  </Card>
+  <Card title="Localization" href="/developer/pages-router/localization">
+    Translate your content into multiple languages.
+  </Card>
+</CardGroup>

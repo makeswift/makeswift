@@ -1,0 +1,119 @@
+---
+title: Combobox
+description: Adds a Combobox panel in the Makeswift builder to visually edit a generic prop from a list of options.
+icon: "input-pipe"
+---
+
+<Frame
+  type="glass"
+  caption="A Combobox panel on a Product Card component to pick a product by name"
+>
+  <img src="/images/combobox-panel.png" />
+</Frame>
+
+## Params
+
+<ParamField query="label" type="string" default="Text">
+  Text for the panel label in the Makeswift builder.
+</ParamField>
+
+<ParamField
+  query="getOptions"
+  type="getComboboxOptions<T>"
+  required
+>
+  A function that receives a query string and returns an array of type `Option<T>`. This function may be async to fetch options asynchronously.
+
+```ts
+type getComboboxOptions<T> = (
+  query: string
+) => ComboboxOption<T>[] | Promise<ComboboxOption<T>[]>
+
+type ComboboxOption<T> = {
+  id: string
+  label: string
+  value: T
+}
+```
+
+The `label` field is displayed in the Makeswift builder and `id` must be unique.
+
+</ParamField>
+
+## Prop type
+
+The Combobox control passes the generic type `T` from the selected `Option` to your component, or `undefined` if there is no value set in the builder.
+
+## Example
+
+The following example adds a Combobox control to the `product` prop of a Product Card component.
+
+<CodeGroup>
+
+```tsx ProductCard.makeswift.ts
+import { Combobox } from "@makeswift/runtime/controls"
+
+import { fetchProducts } from "@/lib/fetchers"
+import { runtime } from "@/makeswift/runtime"
+
+import { ProductCard } from "./ProductCard"
+
+runtime.registerComponent(ProductCard, {
+  type: "product-card",
+  label: "Product Card",
+  props: {
+    product: Combobox({
+      label: "Product name",
+      async getOptions(query) {
+        const products = await fetchProducts()
+
+        return products
+          .map((product) => ({
+            id: product.id,
+            label: product.name,
+            value: product,
+          }))
+          .filter((option) =>
+            option.label.toLowerCase().includes(query.toLowerCase())
+          )
+      },
+    }),
+  },
+})
+```
+
+```tsx ProductCard.tsx
+interface Product {
+  id: string
+  name: string
+  price: number
+  image: string
+}
+
+interface Props {
+  product?: Product
+}
+
+const defaultProduct = {
+  id: "1",
+  name: "Default product",
+  price: 100,
+  image: "https://via.placeholder.com/150",
+}
+
+export function ProductsCarousel({ product = defaultProduct }: Props) {
+  return (
+    <div className="grid gap-4">
+      <img src={product.image}>
+      <h2>{product.name}</h2>
+      <p>{product.price}</p>
+    </div>
+  )
+}
+```
+
+</CodeGroup>
+
+import NamingConventions from "/snippets/naming-conventions.mdx"
+
+<NamingConventions />

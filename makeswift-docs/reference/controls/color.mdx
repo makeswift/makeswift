@@ -1,0 +1,152 @@
+---
+title: Color
+description: Adds a Color picker panel in the Makeswift builder to visually edit a RGBA `string` prop.
+icon: "palette"
+---
+
+<Frame
+  type="glass"
+  caption="Color panels on a Button component to edit the background and text colors"
+>
+  <img src="/images/color-panel.png" />
+</Frame>
+
+## Params
+
+<ParamField query="label" type="string" default="Text">
+  Text for the panel label in the Makeswift builder.
+</ParamField>
+
+<ParamField
+  query="labelOrientation"
+  type='"vertical" | "horizontal"'
+  default="horizontal"
+>
+  Position for the color label within the panel.
+</ParamField>
+
+<ParamField query="defaultValue" type="string">
+  The value passed to your component when nothing is set in the Makeswift
+  builder. Must be a valid CSS color string.
+</ParamField>
+
+<ParamField query="hideAlpha" type="boolean" default={false}>
+  Indicates whether to hide the alpha channel slider.
+  <Accordion title="What is the alpha channel slider?">
+    <Frame>
+      <img src="/images/color-panel-alpha.png" />
+    </Frame>
+  </Accordion>
+
+</ParamField>
+
+## Prop type
+
+The Color control passes a `string` RGBA value to your component. If you don't set a `defaultValue` and no value is set in the builder, your component will receive `undefined`.
+
+## Example
+
+The following examples adds two Color controls to the `backgroundColor` and `color` props of a Button component.
+
+### Using inline styles
+
+<CodeGroup>
+
+```tsx Button.makeswift.ts
+import { Color } from "@makeswift/runtime/controls"
+
+import { runtime } from "@/makeswift/runtime"
+
+import { Button } from "./Button"
+
+runtime.registerComponent(Button, {
+  type: "button",
+  label: "Button",
+  props: {
+    backgroundColor: Color({
+      label: "Background color",
+      defaultValue: "black",
+    }),
+    color: Color({
+      label: "Text color",
+      defaultValue: "white",
+    }),
+  },
+})
+```
+
+```tsx Button.tsx
+interface Props {
+  backgroundColor?: string
+  color?: string
+}
+
+export function Button({ backgroundColor, color }: Props) {
+  return (
+    <button className="px-4 py-2 rounded-md" style={{ backgroundColor, color }}>
+      Click me
+    </button>
+  )
+}
+```
+
+</CodeGroup>
+
+### Using CSS variables
+
+<CodeGroup>
+
+```tsx Button.makeswift.ts
+import { Color } from "@makeswift/runtime/controls"
+import { runtime } from "@/lib/makeswift/runtime"
+
+import { Button } from "./Button"
+
+runtime.registerComponent(Button, {
+  type: "button",
+  label: "Button",
+  props: {
+    backgroundColor: Color({
+      label: "Background color",
+      defaultValue: "black",
+    }),
+    color: Color({
+      label: "Text color",
+      defaultValue: "white",
+    }),
+  },
+})
+```
+
+```tsx Button.tsx
+import { CSSProperties } from "react"
+
+interface Props {
+  backgroundColor?: string
+  color?: string
+}
+
+export function Button({ backgroundColor, color }: Props) {
+  return (
+    <button
+      className="px-4 py-2 rounded-md 
+        bg-[var(--bg-color)] text-[var(--color)] 
+        hover:bg-[--color] hover:text-[var(--bg-color)]"
+      style={
+        {
+          "--bg-color": backgroundColor,
+          "--color": color,
+        } as CSSProperties
+      }
+    >
+      Click me
+    </button>
+  )
+}
+```
+
+</CodeGroup>
+
+import NamingConventions from "/snippets/naming-conventions.mdx"
+
+<NamingConventions />

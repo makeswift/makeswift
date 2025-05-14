@@ -1,0 +1,36 @@
+---
+title: "getSiteVersion"
+description: "A function that returns the current version of the Makeswift site. This function is currently only used when calling `getPageSnapshot` when using **App Router** in Next.js."
+---
+
+<Warning>
+  This function can only be called inside of a [React Server
+  Component](https://react.dev/reference/rsc/server-components) or [Route
+  Handler](https://nextjs.org/docs/app/building-your-application/routing/route-handlers).
+</Warning>
+
+## Arguments
+
+This function doesn't take any arguments.
+
+## Example
+
+The following example calls [getPageSnapshot](/developer/reference/client/get-page-snapshot) to query a page snapshot for the root route and passes the return value from `getSiteVersion` in its configuration options. It then renders the page using the [Page](/developer/reference/components/page) component.
+
+```tsx
+import { Page } from "@makeswift/runtime/next";
+import { client } from "@/makeswift/client";
+import { getSiteVersion } from "@makeswift/runtime/next/server";
+
+export default function Page() {
+  const snapshot = await client.getPageSnapshot("/", {
+    siteVersion: getSiteVersion(),
+  });
+
+  if (snapshot == null) notFound();
+
+  return <Page snapshot={snapshot} />;
+}
+```
+
+For a more detailed walkthrough, refer to the [App Router Installation guide](/developer/app-router/installation).

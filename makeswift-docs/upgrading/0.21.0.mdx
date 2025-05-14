@@ -1,0 +1,24 @@
+---
+title: Upgrading to 0.21.0
+---
+
+If you haven't upgraded to `0.20.0` please read the [upgrading guide](/developer/upgrading/0.20.0).
+
+`v0.21.0` of the runtime introduces some minor bug fixes/improvements, as well
+as adding compatibility for Next.js 15 and React 19.
+
+## Breaking Changes
+
+### Pages Router's custom `Document`
+
+If your site is using [Pages router](https://nextjs.org/docs/pages), the
+Makeswift custom `Document` export has been moved from `@makeswift/runtime/next`
+to `@makeswift/runtime/next/document`. To migrate, adjust the custom `Document`
+import in `src/pages/_document.ts` as follows:
+
+```diff
+- export { Document as default } from '@makeswift/runtime/next'
++ export { Document as default } from '@makeswift/runtime/next/document'
+```
+
+Here is the link to the [official release notes](https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.21.0).

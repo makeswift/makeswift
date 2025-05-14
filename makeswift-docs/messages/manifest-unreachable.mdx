@@ -1,0 +1,47 @@
+---
+title: The host manifest is unreachable
+---
+
+## What this message means
+
+Makeswift uses a host manifest to fetch metadata about your site. This metadata is used by the builder to determine
+what URL to use to route pages, what version of the runtime is running in the host, and what features are available
+in the host. If the host manifest is unreachable, the pages in the builder will not load properly.
+
+## Possible ways to fix this
+
+Here is a list of things to check to make sure the host manifest is reachable
+
+<Steps>
+  <Step title="Check that your Next.js app is running">
+    Makeswift can only fetch the host manifest if your Next.js app is running. Make sure your Next.js app is running.
+  </Step>
+
+  <Step title="Check that the host URL is correct in the Makeswift host settings">
+    If your Next.js app is running, check that the host URL including the host
+    name and port are correct in the Makeswift host settings. Update the host URL
+    if necessary.
+    <Accordion title="Show me how">
+      <Frame>
+        <img src="/images/host-url.gif" alt="How to update the host url" />
+      </Frame>
+    </Accordion>
+  </Step>
+
+  <Step title="Check that your API key is passed to the Makeswift API handler">
+    Makeswift fetches the manifest from an API handler in your Next.js app.
+    If you're using an environment variable for the Makeswift API key, make sure it's set properly.
+    Our installation guide explains how to set that up:
+
+    - [App Router installation guide](/developer/app-router/installation)
+    - [Pages Router installation guide](/developer/pages-router/installation)
+  </Step>
+  
+  <Step title="Check that the Makeswift API handler is set up">
+    Makeswift fetches the manifest from an API handler in your Next.js app. Make sure the API handler is set up correctly.
+    See the `Add the Makeswift API handler` step of the installation guide for how to set it up:
+
+    - [App Router installation guide](/developer/app-router/installation)
+    - [Pages Router installation guide](/developer/pages-router/installation)
+  </Step>
+</Steps>

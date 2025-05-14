@@ -1,0 +1,73 @@
+---
+title: Checkbox
+description: Adds a Checkbox panel in the Makeswift builder to visually edit a `boolean` prop.
+icon: "square-check"
+---
+
+<Frame
+  type="glass"
+  caption="A checkbox panel on a Navigation component to show the logo"
+>
+  <img src="/images/checkbox-panel.png" />
+</Frame>
+
+## Params
+
+<ParamField query="label" type="string" default="Label">
+  Text for the panel label in the Makeswift builder.
+</ParamField>
+
+<ParamField query="defaultValue" type="boolean">
+  The value passed to your component when nothing is set in the Makeswift
+  builder.
+</ParamField>
+
+## Prop type
+
+The Checkbox control passes a `boolean` to your component. If you don't set a `defaultValue` and no value is set in the builder, your component receives `undefined`.
+
+## Example
+
+The following example adds a Checkbox control to the `showLogo` prop of a Navigation component.
+
+<CodeGroup>
+
+```tsx Navigation.makeswift.ts
+import { Checkbox } from "@makeswift/runtime/controls"
+
+import { runtime } from "@/makeswift/runtime"
+
+import { Navigation } from "./Navigation"
+
+runtime.registerComponent(Navigation, {
+  type: "navigation",
+  label: "Navigation",
+  props: {
+    showLogo: Checkbox({
+      label: "Show Logo",
+      defaultValue: false,
+    }),
+  },
+})
+```
+
+```tsx Navigation.tsx
+interface Props {
+  showLogo: boolean
+}
+
+export function Navigation({ showLogo }: Props) {
+  return (
+    <nav>
+      {props.showLogo && <img src="/logo.png" />}
+      {/* ... */}
+    </nav>
+  )
+}
+```
+
+</CodeGroup>
+
+import NamingConventions from "/snippets/naming-conventions.mdx"
+
+<NamingConventions />

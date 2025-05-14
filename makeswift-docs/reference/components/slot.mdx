@@ -1,0 +1,65 @@
+---
+title: "<Slot>"
+description: The `<Slot>` component takes a `MakeswiftComponentSnapshot` (returned from calling [getComponentSnapshot](/developer/reference/client/get-component-snapshot)) and renders either a fallback or an editable slot.
+---
+
+## Props
+
+1. <ParamField query="snapshot" type="MakeswiftComponentSnapshot" required>
+     The Makeswift snapshot to render.
+   </ParamField>
+2. <ParamField query="label" type="string" required>
+     The label of the element in the Visual Builder.
+   </ParamField>
+3. <ParamField query="fallback" type="React.ReactNode">
+     The content to be rendered until the user opts in to making visual edits to
+     the editable slot.
+     <Note>
+       <p>
+         If `fallback` is not provided, it will be set to `null` by default. In
+         this case, the user will not be able to see the element in the Canvas,
+         but they will be able to select it from the Elements Panel.
+       </p>
+       <p>
+         One good use case for this default is with [Dynamic
+         Routes](https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes);
+         for example, product detail pages. If the route renders many pages, it
+         might be unreasonable to expect the user to visually edit each one
+         before publishing. Because the `null` default will not show any content
+         until the user opts in, the user could publish the site without
+         affecting any visual content. They could then update and publish
+         individual pages as they are ready.
+       </p>
+     </Note>
+   </ParamField>
+
+## Usage in the Visual Builder
+
+The `<Slot>` component will render its fallback by default until the user opts in to visual editing. Visually, this component provides a checkbox property that allows the user to toggle between displaying the fallback and the editable slot itself, including any user generated content within it.
+
+## Example
+
+### Basic Example
+
+The following example creates a home page with a header, a footer, and a main content section that can be edited in the Makeswift Visual Builder using the `<Slot>` component.
+
+```tsx @/app/page.tsx
+import { Slot } from "@makeswift/runtime/next";
+import { getSiteVersion } from "@makeswift/runtime/next/server";
+import { client } from "@/makeswift/client";
+
+export default async function Page() {
+  const mainContentSnapshot = await client.getComponentSnapshot(
+    `main-content`, //unique identifier of the component rendered on the page
+    { siteVersion: await getSiteVersion() }
+  );
+
+  return (
+    <>
+      <header />
+      <Slot snapshot={mainContentSnapshot} label={`Main Content`} />
+      <footer />
+    </>
+  );
+}
+```

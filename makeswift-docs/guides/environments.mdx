@@ -1,0 +1,98 @@
+---
+title: Environments
+---
+
+The primary design goal of Makeswift is to decouple the workflows of developers and marketers. That means building and maintaining a website in Makeswift is different than a traditional CMS, and will require you to think differently about environments. That means thinking about component code updates and content publishing as two independent workflows.
+
+To represent this, create two Makeswift sites in your workspace:
+
+1. **Local development**
+
+This site is where you will build and test new components and is **not** to be used for content publishing. The host URL for this site is `http://localhost:3000`.
+
+2. **Production**
+
+This site is where your pages and content live and is **not** to be used for component development. The host URL for this site is your production domain.
+
+<Warning>
+  You can think of these sites like database environments where you can copy
+  data from production into development, **but not the other way around**.
+</Warning>
+
+<Frame caption="Your workspace dropdown should look something like this">
+  <img
+    src="/images/environments-workspace.png"
+    alt="Two sites in the workspace dropdown"
+  />
+</Frame>
+
+## Initial launch
+
+### Component development
+
+The first step with any custom Makeswift integration is to identify the primitive components needed for the site design. This is where we often see the first misstep from developers new to Makeswift. Without understanding the builder, it's easy to assume that you need to build a component for every possible layout. This is not the case. The goal is to build a set of primitive components that can be combined in the builder to create any layout.
+
+We recommend familiarizing yourself with Makeswift's layout controls by creating a few pages in the builder. Once you understand the builder, it will be easier to distinguish between primitive components and layouts that can be composed visually.
+
+<Info>
+  Examples of primitive components include Buttons, Cards, Carousels, Feeds etc.
+</Info>
+
+Once you've identified and implemented your primitive components, the next step is to [register](/developer/reference/runtime/register-component) and test them in your local development site. The focus should be on testing the interface you are creating for your marketing team. Pages used here to test your components should be considered throwaway and not used for content publishing.
+
+### Content publishing
+
+Once you've stress tested your primitive components in your local development site, the next step is to set up your production site. To do this, deploy your local Next.js app and update the host URL of your production Makeswift site to point to the URL of the deployment.
+
+<Frame>
+  <img
+    src="/images/environments-production-host.png"
+    alt="Two sites in the workspace dropdown"
+  />
+</Frame>
+
+This site is where your marketing team builds pages and publishes content. Component updates will be pushed behind-the-scenes asynchronously, thus decoupling your marketing and development workflows.
+
+### Going live
+
+Once your site is ready to launch, the last step is to update your DNS to point your domain to the deployment URL.
+
+## Maintenance
+
+### Staging content changes
+
+Makeswift leverages [Next.js' Draft Mode](https://nextjs.org/docs/app/building-your-application/configuring/draft-mode) in the builder. This means you **do not** need a separate site for staging. All changes are versioned, and nothing will go into the live page until a publisher approves it.
+
+Our recommended workflow is that your marketing team makes all edits in the production site, publishing a batch of edits when ready to go live.
+
+### Shipping component updates
+
+For the most part, component updates should be shipped asynchronously. Things like style updates that don't affect component props can be tested locally and then pushed to a preview deployment using your production site's API key for testing. Once merged, your marketing team will see the updated component in the builder.
+
+If component props need to change, we recommend creating a new prop if possible so that the old prop can be deprecated over time. This will allow your marketing team to update pages at their own pace.
+
+In the case this is not possible, here is how you can handle breaking changes or changes where content and code need to be shipped simultaneously:
+
+<Steps>
+  <Step title="Duplicate your site">
+    The first step is to duplicate your production site. All content changes and
+    publishing should freeze on the existing production site. Rename the
+    duplicated site to your staging site.
+  </Step>
+  <Step title="Create a preview deployment">
+    Next, create a preview deployment with your component code changes. This
+    preview deployment should use the staging site's API key.
+  </Step>
+  <Step title="Update the host URL">
+    Update the host URL of your staging site to point to the URL of the new
+    preview deployment.
+  </Step>
+  <Step title="Publish changes to staging">
+    Make edits and publish content changes in the staging site.
+  </Step>
+  <Step title="Promote staging">
+    Once staging is looking good, update your DNS to point your domain to the
+    staging site. Then rename the staging site to your production site and
+    delete the old production site.
+  </Step>
+</Steps>
