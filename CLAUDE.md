@@ -2,8 +2,8 @@ Makeswift documentation: https://docs.makeswift.com/developer/app-router/install
 
 Documentation for project that we're working on: ./decoupling-docs
 
+Documentation for remix (or it's called react router v7) framework: ./remix-or-react-router-docs - Please consult this document when making changes on the remix app implementation.
+
 The packages folder contain the library/runtime that we're building.
 
 The apps folder contains the sample implementation using the runtime.
-
-Always look refer to the library documentation when implementing new things. For example, when implementing react router v7 library, please search the docs on the web to make sure we're using the latest pattern.
