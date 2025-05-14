@@ -1,4 +1,4 @@
-import { useRouter as usePagesRouter } from 'next/router'
+// import { useRouter as usePagesRouter } from 'next/router'
 import { P, match } from 'ts-pattern'
 import { useEffect } from 'react'
 
@@ -6,12 +6,13 @@ import { setLocale } from '../../state/actions'
 import { useDispatch } from '../../runtimes/react/hooks/use-dispatch'
 
 function useRouter() {
+  return
   try {
-    const router = usePagesRouter()
+    // const router = usePagesRouter()
 
     return router
   } catch (e) {
-    return;
+    return
   }
 }
 

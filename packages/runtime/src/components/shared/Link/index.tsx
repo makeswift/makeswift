@@ -1,7 +1,7 @@
 'use client'
 
 import { ComponentPropsWithoutRef, forwardRef, MouseEvent } from 'react'
-import NextLink from 'next/link'
+// import NextLink from 'next/link'
 
 import { LinkData } from '@makeswift/prop-controllers'
 
@@ -66,20 +66,20 @@ export const Link = forwardRef<HTMLAnchorElement, Props>(function Link(
 
   const isPagesRouter = useIsPagesRouter()
 
-  if (useNextLink) {
-    return (
-      <NextLink
-        {...restOfProps}
-        ref={ref}
-        target={target}
-        onClick={handleClick}
-        href={href}
-        {...(isPagesRouter ? { locale: false } : {})}
-        // Next.js v12 has legacyBehavior set to true by default
-        legacyBehavior={false}
-      />
-    )
-  }
+  // if (useNextLink) {
+  //   return (
+  //     <NextLink
+  //       {...restOfProps}
+  //       ref={ref}
+  //       target={target}
+  //       onClick={handleClick}
+  //       href={href}
+  //       {...(isPagesRouter ? { locale: false } : {})}
+  //       // Next.js v12 has legacyBehavior set to true by default
+  //       legacyBehavior={false}
+  //     />
+  //   )
+  // }
 
   // eslint-disable-next-line
   return <a {...restOfProps} ref={ref} href={href} target={target} onClick={handleClick} />

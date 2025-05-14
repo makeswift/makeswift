@@ -33,5 +33,7 @@ export default function Page() {
     return <div>Page not found</div>
   }
 
+  console.log('snapshot', snapshot)
+
   return <MakeswiftPage snapshot={snapshot} />
 }
