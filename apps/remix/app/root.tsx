@@ -10,7 +10,8 @@ import {
 
 import type { Route } from './+types/root'
 import './app.css'
-import { MakeswiftProvider } from './makeswift/provider'
+import { SimplifiedMakeswiftProvider } from './makeswift/components/simplified-provider'
+import { runtime } from './makeswift/runtime'
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -47,13 +48,16 @@ export default function App() {
   // In a real implementation, you would get these values from the route loader data
   // const { previewMode, locale } = useRouteLoaderData("root") || {};
 
-  console.log('root.tsx: App component loaded')
+  console.log('root.tsx: App component loaded with simplified provider')
 
   return (
-    <MakeswiftProvider previewMode={false}>
+    <SimplifiedMakeswiftProvider 
+      runtime={runtime}
+      previewMode={false}
+    >
       {/* The Outlet will render the $path route for both the homepage and other paths */}
       <Outlet />
-    </MakeswiftProvider>
+    </SimplifiedMakeswiftProvider>
   )
 }
 

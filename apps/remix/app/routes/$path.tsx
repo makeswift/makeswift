@@ -1,6 +1,6 @@
 import { useLoaderData, type LoaderFunctionArgs } from 'react-router'
 import { client } from '../makeswift/client'
-import { Page as MakeswiftPage } from '@makeswift/remix'
+import { RemixPage } from '../makeswift/components/page'
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
   // Get the path from the URL params
@@ -39,8 +39,8 @@ export default function Page() {
 
   return (
     <>
-      {/* Render the Makeswift page using the snapshot */}
-      <MakeswiftPage snapshot={snapshot} />
+      {/* Render the Makeswift page using the snapshot with our React 19 compatible component */}
+      <RemixPage snapshot={snapshot} />
     </>
   )
 }
