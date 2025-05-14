@@ -1,4 +1,4 @@
-The ./docs folder contain all three documentation for the project. The most important folder is the decoupling-project, which contains the plan for the decoupling project. The makeswift docs, for the @makeswift/runtime package, and the remix docs for the remix or react router v7 docs.
+The ./docs folder contain all three documentation for the project. The most important folder is the ./docs/decoupling-project, which contains the plan for the decoupling project. The ./docs/makeswift docs, for the @makeswift/runtime package, and the ./docs/remix-or-react-router for the remix or react router v7 docs.
 
 The packages folder contain the library/runtime that we're building.
 
