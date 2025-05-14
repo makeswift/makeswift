@@ -16,6 +16,7 @@ export function MakeswiftProvider({
 }) {
   return (
     <RemixMakeswiftProvider
+      runtime={runtime}
       locale={locale}
       previewMode={previewMode}
       apiOrigin={process.env.MAKESWIFT_API_ORIGIN}
