@@ -10,7 +10,7 @@ const CacheContext = createContext(cache)
 const DEFAULT_CSS_RESET_ENABLED = true
 const CSSResetEnabledContext = createContext(DEFAULT_CSS_RESET_ENABLED)
 
-const createRootStyleCache = ({ key }: { key: string }) => {
+export const createRootStyleCache = ({ key }: { key: string }) => {
   const cache = createCache({ key })
   cache.compat = true
 
@@ -36,6 +36,7 @@ const createRootStyleCache = ({ key }: { key: string }) => {
 
 type Props = {
   children: ReactNode
+  cache: EmotionCache
   cacheKey?: string
   /**
    * Toggle the built-in CSS reset.
@@ -46,12 +47,12 @@ type Props = {
 
 export function RootStyleRegistry({
   children,
-  cacheKey,
+  cache,
   enableCssReset = DEFAULT_CSS_RESET_ENABLED,
 }: Props) {
-  const [{ cache /* flush */ }] = useState(() => createRootStyleCache({ key: cacheKey ?? 'mswft' }))
+  // const [{ cache /* flush */ }] = useState(() => createRootStyleCache({ key: cacheKey ?? 'mswft' }))
 
-  // DECOUPLE_TODO:
+  // DECOUPLE_TODO: Refactor this so this is only called in Next.js server
   // useServerInsertedHTML(() => {
   //   const names = flush()
   //   if (names.length === 0) return null
@@ -69,7 +70,6 @@ export function RootStyleRegistry({
   //     />
   //   )
   // })
-
   return (
     <CacheContext.Provider value={cache}>
       <CSSResetEnabledContext.Provider value={enableCssReset}>

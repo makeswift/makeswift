@@ -10,5 +10,5 @@ export type {
 } from '../client'
 export { Makeswift } from './client'
 export type { MakeswiftPreviewData } from './preview-mode'
-export { RootStyleRegistry } from './root-style-registry'
+export { createRootStyleCache, RootStyleRegistry } from './root-style-registry'
 export { ReactRuntimeProvider } from '../runtimes/react/'
