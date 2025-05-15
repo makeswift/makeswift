@@ -49,9 +49,9 @@ export function RootStyleRegistry({
   cacheKey,
   enableCssReset = DEFAULT_CSS_RESET_ENABLED,
 }: Props) {
-  const [{ cache, flush }] = useState(() => createRootStyleCache({ key: cacheKey ?? 'mswft' }))
+  const [{ cache /* flush */ }] = useState(() => createRootStyleCache({ key: cacheKey ?? 'mswft' }))
 
-  // DECOUPLE_TODO: Cannot read properties of null (reading 'useContext')
+  // DECOUPLE_TODO:
   // useServerInsertedHTML(() => {
   //   const names = flush()
   //   if (names.length === 0) return null
