@@ -1,3 +1,4 @@
+import { MakeswiftProvider } from 'lib/makeswift/provider'
 import type { Route } from './+types/home'
 
 export function meta({}: Route.MetaArgs) {
@@ -8,5 +9,9 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  return <p>Test</p>
+  return (
+    <MakeswiftProvider previewMode={false}>
+      <p>Test</p>
+    </MakeswiftProvider>
+  )
 }
