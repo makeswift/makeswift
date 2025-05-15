@@ -18,8 +18,9 @@ export function MakeswiftProvider({
   return (
     <ReactRuntimeProvider
       {...{ runtime, previewMode, locale }}
-      apiOrigin={process.env.NEXT_PUBLIC_MAKESWIFT_API_ORIGIN}
-      appOrigin={process.env.NEXT_PUBLIC_MAKESWIFT_APP_ORIGIN}
+      // DECOUPLE_TODO:
+      // apiOrigin={process.env.NEXT_PUBLIC_MAKESWIFT_API_ORIGIN}
+      // appOrigin={process.env.NEXT_PUBLIC_MAKESWIFT_APP_ORIGIN}
     >
       <RootStyleRegistry>{children}</RootStyleRegistry>
     </ReactRuntimeProvider>

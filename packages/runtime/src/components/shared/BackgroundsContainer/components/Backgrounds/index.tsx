@@ -1,5 +1,5 @@
-import NextImage from 'next/image'
-import type NextLegacyImageType from 'next/legacy/image'
+// import NextImage from 'next/image'
+// import type NextLegacyImageType from 'next/legacy/image'
 
 import { BackgroundsPropControllerValue, BackgroundsData } from '../../../../hooks'
 import { ResponsiveValue } from '../../../../../prop-controllers'
@@ -12,7 +12,7 @@ import { useStyle } from '../../../../../runtimes/react/use-style'
 import { useResponsiveStyle } from '../../../../utils/responsive-style'
 import { major as nextMajorVersion } from '../../../../../next/next-version'
 
-const NextLegacyImage = NextImage as typeof NextLegacyImageType
+// const NextLegacyImage = NextImage as typeof NextLegacyImageType
 
 function getColor(color: Color | null | undefined) {
   if (color == null) return 'black'
@@ -158,7 +158,9 @@ function ImageBackground({
       <Parallax strength={parallax}>
         {getParallaxProps => (
           <div {...getParallaxProps({ style: { opacity, overflow: 'hidden' } })}>
-            {nextMajorVersion < 13 ? (
+            <img src={publicUrl} />
+            {/* DECOUPLE_TODO: */}
+            {/* {nextMajorVersion < 13 ? (
               <NextLegacyImage
                 src={publicUrl}
                 layout="fill"
@@ -178,7 +180,7 @@ function ImageBackground({
                 }}
                 priority={priority}
               />
-            )}
+            )} */}
           </div>
         )}
       </Parallax>
