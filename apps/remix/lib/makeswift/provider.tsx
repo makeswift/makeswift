@@ -4,7 +4,6 @@ import {
   RootStyleRegistry,
 } from '@makeswift/runtime/next'
 
-import '@/makeswift/components'
 import type { ReactNode } from 'react'
 
 export function MakeswiftProvider({
