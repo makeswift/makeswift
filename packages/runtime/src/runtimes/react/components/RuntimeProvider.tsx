@@ -7,7 +7,7 @@ import { ReactRuntimeContext } from '../hooks/use-react-runtime'
 import { ReactRuntime } from '../react-runtime'
 import { MakeswiftHostApiClientProvider } from '../host-api-client'
 import { MakeswiftSiteVersion } from '../../../api/site-version'
-// import { DraftSwitcher } from './draft-switcher/draft-switcher'
+import { DraftSwitcher } from './draft-switcher/draft-switcher'
 import { useBuilderHandshake } from './hooks/use-builder-handshake'
 import { useBuilderConnectionPing } from './hooks/use-builder-connection-ping'
 
@@ -49,14 +49,7 @@ export function ReactRuntimeProvider({
       <MakeswiftHostApiClientProvider client={client}>
         <StoreProvider>
           {children}
-          {/* DECOUPLE_TODO: TypeError: Cannot read properties of null (reading 'useRef')
-            at useRef (/Users/fikri.karim/workspace/makeswift/node_modules/.pnpm/react@18.2.0/node_modules/react/cjs/react.development.js:1630:21)
-            at useSyncExternalStoreWithSelector (/Users/fikri.karim/workspace/makeswift/node_modules/.pnpm/use-sync-external-store@1.0.0-rc.0_react@18.2.0/node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.development.js:50:17)
-            at useSelector (/Users/fikri.karim/workspace/makeswift/packages/runtime/src/runtimes/react/hooks/use-selector.ts:11:10)
-            at useIsInBuilder (/Users/fikri.karim/workspace/makeswift/packages/runtime/src/runtimes/react/hooks/use-is-in-builder.ts:5:10)
-            at DraftSwitcher (/Users/fikri.karim/workspace/makeswift/packages/runtime/src/runtimes/react/components/draft-switcher/draft-switcher.tsx:28:10) 
-          */}
-          {/* <DraftSwitcher isDraft={previewMode} /> */}
+          <DraftSwitcher isDraft={previewMode} />
         </StoreProvider>
       </MakeswiftHostApiClientProvider>
     </ReactRuntimeContext.Provider>

@@ -1,3 +1,5 @@
+'use client'
+
 import { runtime } from './runtime'
 import {
   ReactRuntimeProvider,
