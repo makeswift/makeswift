@@ -1,11 +1,10 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useSyncExternalStore } from 'react'
 import { MakeswiftPageDocument } from '../../next'
 import { usePageSnippets } from '../hooks/usePageSnippets'
 import { useIsInBuilder } from '../../react'
 import { useMakeswiftHostApiClient } from '../../runtimes/react/host-api-client'
-import { useSyncExternalStore } from 'use-sync-external-store/shim'
 import { Site } from '../../api'
 import { PageTitle, PageMeta, PageLink, PageStyle } from '../../next/components/head-tags'
 import { HeadSnippet } from './HeadSnippet'
