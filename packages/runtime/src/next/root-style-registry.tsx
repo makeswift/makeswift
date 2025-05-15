@@ -2,7 +2,7 @@
 
 import createCache, { EmotionCache } from '@emotion/cache'
 import { cache } from '@emotion/css'
-import { useServerInsertedHTML } from 'next/navigation'
+// import { useServerInsertedHTML } from 'next/navigation'
 import { ReactNode, createContext, useContext, useState } from 'react'
 
 const CacheContext = createContext(cache)
@@ -51,23 +51,24 @@ export function RootStyleRegistry({
 }: Props) {
   const [{ cache, flush }] = useState(() => createRootStyleCache({ key: cacheKey ?? 'mswft' }))
 
-  useServerInsertedHTML(() => {
-    const names = flush()
-    if (names.length === 0) return null
-    let styles = ''
-    for (const name of names) {
-      styles += cache.inserted[name]
-    }
+  // DECOUPLE_TODO: Cannot read properties of null (reading 'useContext')
+  // useServerInsertedHTML(() => {
+  //   const names = flush()
+  //   if (names.length === 0) return null
+  //   let styles = ''
+  //   for (const name of names) {
+  //     styles += cache.inserted[name]
+  //   }
 
-    return (
-      <style
-        data-emotion={`${cache.key} ${names.join(' ')}`}
-        dangerouslySetInnerHTML={{
-          __html: styles,
-        }}
-      />
-    )
-  })
+  //   return (
+  //     <style
+  //       data-emotion={`${cache.key} ${names.join(' ')}`}
+  //       dangerouslySetInnerHTML={{
+  //         __html: styles,
+  //       }}
+  //     />
+  //   )
+  // })
 
   return (
     <CacheContext.Provider value={cache}>
