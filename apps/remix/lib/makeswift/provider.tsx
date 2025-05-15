@@ -1,10 +1,7 @@
 'use client'
 
 import { runtime } from './runtime'
-import {
-  ReactRuntimeProvider,
-  RootStyleRegistry,
-} from '@makeswift/runtime/next'
+import { ReactRuntimeProvider } from '@makeswift/runtime/next'
 
 import type { ReactNode } from 'react'
 
@@ -24,7 +21,7 @@ export function MakeswiftProvider({
       // apiOrigin={process.env.NEXT_PUBLIC_MAKESWIFT_API_ORIGIN}
       // appOrigin={process.env.NEXT_PUBLIC_MAKESWIFT_APP_ORIGIN}
     >
-      <RootStyleRegistry>{children}</RootStyleRegistry>
+      {children}
     </ReactRuntimeProvider>
   )
 }
