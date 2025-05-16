@@ -11,7 +11,7 @@ export async function loader({ params }: Route.LoaderArgs) {
   // DECOUPLE_TODO: path
   const snapshot = await client.getPageSnapshot('/', {
     // DECOUPLE_TODO: siteVersion
-    siteVersion: 'Live',
+    siteVersion: 'Working',
     locale: params.lang,
   })
 
@@ -27,7 +27,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
   return (
     // DECOUPLE_TODO: previewMode
-    <MakeswiftProvider previewMode={false}>
+    <MakeswiftProvider previewMode={true}>
       <MakeswiftPage snapshot={snapshot} />
     </MakeswiftProvider>
   )
