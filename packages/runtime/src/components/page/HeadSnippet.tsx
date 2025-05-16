@@ -2,7 +2,7 @@ import { Children, createElement, useEffect, useRef } from 'react'
 import { Snippet } from '../hooks/usePageSnippets'
 import { useServerInsertedHTML } from 'next/navigation'
 import parse from 'html-react-parser'
-import Head from 'next/head'
+// import Head from 'next/head'
 import { useIsPagesRouter } from '../../next/hooks/use-is-pages-router'
 
 type Props = {
@@ -40,9 +40,10 @@ export function HeadSnippet({ snippet }: Props) {
     return headSnippetElement
   })
 
-  if (isPagesRouter) {
-    return <Head>{headSnippetElement}</Head>
-  }
+  // DECOUPLE_TODO:
+  // if (isPagesRouter) {
+  //   return <Head>{headSnippetElement}</Head>
+  // }
 
   return null
 }
