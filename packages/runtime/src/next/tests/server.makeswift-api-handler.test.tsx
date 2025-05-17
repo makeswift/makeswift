@@ -1,21 +1,21 @@
-import { createResponse } from "node-mocks-http"
-import { randomUUID } from "crypto"
+import { createResponse } from 'node-mocks-http'
+import { randomUUID } from 'crypto'
 import * as nextCache from 'next/cache'
 
-import { MakeswiftApiHandler } from "../api-handler"
+import { MakeswiftApiHandler } from '../api-handler'
 import { NextApiResponse } from 'next'
-import { ReactRuntime } from "../../react"
-import { createNextApiRequest } from "./test-utils"
+import { ReactRuntime } from '../../react'
+import { createNextApiRequest } from './test-utils'
+import { TextInput } from '@makeswift/controls'
 
 const apiKey = 'fake-api-key'
 
 type MakeswiftApiHandlerArgs = Partial<Parameters<typeof MakeswiftApiHandler>[1]>
 
 function createHandler(args: Partial<MakeswiftApiHandlerArgs> = {}) {
-  const runtime = new ReactRuntime()
   return MakeswiftApiHandler(apiKey, {
     ...args,
-    runtime,
+    runtime: args.runtime ?? new ReactRuntime(),
     apiOrigin: 'https://api.fakeswift.com',
     appOrigin: 'https://app.fakeswift.com',
   })
@@ -33,8 +33,8 @@ describe('MakeswiftApiHandler', () => {
   let consoleErrorSpy: jest.SpyInstance
 
   beforeEach(() => {
-    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
-  });
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+  })
 
   describe('/api/makeswift/revalidate', () => {
     function revalidateResponse({ revalidate }: { revalidate: (path: string) => Promise<void> }) {
@@ -57,7 +57,7 @@ describe('MakeswiftApiHandler', () => {
       // Act
       await handler(
         createNextApiRequest({ method: 'GET', path: '/makeswift/revalidate' }),
-        response
+        response,
       )
 
       // Assert
@@ -86,7 +86,10 @@ describe('MakeswiftApiHandler', () => {
 
       // Act
       await handler(
-        createNextApiRequest({ method: 'GET', path: `/makeswift/revalidate?secret=${apiKey}&path=/some-path` }),
+        createNextApiRequest({
+          method: 'GET',
+          path: `/makeswift/revalidate?secret=${apiKey}&path=/some-path`,
+        }),
         response,
       )
 
@@ -98,14 +101,15 @@ describe('MakeswiftApiHandler', () => {
 
   describe('/api/makeswift/webhook', () => {
     const webhookPayload = {
-      type: 'site.published', data: {
+      type: 'site.published',
+      data: {
         siteId: randomUUID(),
         publish: {
           from: null,
           to: randomUUID(),
         },
         at: 1234567890,
-      }
+      },
     }
 
     function createWebhookFixture(args: MakeswiftApiHandlerArgs = {}) {
@@ -122,7 +126,7 @@ describe('MakeswiftApiHandler', () => {
       // Act
       await handler(
         createNextApiRequest({ method: 'POST', path: '/makeswift/webhook', body: webhookPayload }),
-        response
+        response,
       )
 
       // Assert
@@ -140,7 +144,7 @@ describe('MakeswiftApiHandler', () => {
         createNextApiRequest({
           method: 'POST',
           path: `/makeswift/webhook?secret=${apiKey}`,
-          body: { type: 'invalid.type' }
+          body: { type: 'invalid.type' },
         }),
         response,
       )
@@ -150,9 +154,11 @@ describe('MakeswiftApiHandler', () => {
       expect(response._getJSONData()).toEqual({ message: 'Invalid request body' })
       expect(nextCache.revalidateTag).not.toHaveBeenCalled()
 
-      expect(consoleErrorSpy).toHaveBeenCalledWith(expect.objectContaining({
-        message: expect.stringContaining('Invalid literal value')
-      }))
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: expect.stringContaining('Invalid literal value'),
+        }),
+      )
     })
 
     test('200s and calls user-provided onPublish callback', async () => {
@@ -165,7 +171,7 @@ describe('MakeswiftApiHandler', () => {
         createNextApiRequest({
           method: 'POST',
           path: `/makeswift/webhook?secret=${apiKey}`,
-          body: webhookPayload
+          body: webhookPayload,
         }),
         response,
       )
@@ -177,7 +183,9 @@ describe('MakeswiftApiHandler', () => {
 
     test('200s and calls revalidateTag when user-provided onPublish callback fails', async () => {
       // Arrange
-      const onPublish = jest.fn(() => { throw new Error('Failed in user-provided onPublish') })
+      const onPublish = jest.fn(() => {
+        throw new Error('Failed in user-provided onPublish')
+      })
       const { handler, response } = createWebhookFixture({ events: { onPublish } })
 
       // Act
@@ -185,7 +193,7 @@ describe('MakeswiftApiHandler', () => {
         createNextApiRequest({
           method: 'POST',
           path: `/makeswift/webhook?secret=${apiKey}`,
-          body: webhookPayload
+          body: webhookPayload,
         }),
         response,
       )
@@ -195,10 +203,86 @@ describe('MakeswiftApiHandler', () => {
       expect(nextCache.revalidateTag).toHaveBeenCalledWith('@@makeswift')
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "Unhandled exception in the 'onPublish' callback:", expect.objectContaining({
+        "Unhandled exception in the 'onPublish' callback:",
+        expect.objectContaining({
           message: 'Failed in user-provided onPublish',
-        })
+        }),
       )
+    })
+  })
+
+  describe('/api/makeswift/translatable-data', () => {
+    const key = '00000000-0000-0000-0000-000000000000'
+    const type = 'component'
+    const prop = 'text'
+    const componentRegistration = ReactRuntime.connect(({ text }) => <p>{text}</p>, {
+      type,
+      label: 'Component',
+      props: {
+        [prop]: TextInput(),
+      },
+    })
+    const elementTree = {
+      key,
+      type,
+      props: {
+        [prop]: 'Hello world',
+      },
+    }
+    const translatableDataPayload = { elementTree }
+
+    function createTranslatableDataFixture(args: MakeswiftApiHandlerArgs = {}) {
+      const handler = createHandler(args)
+
+      const response = createResponse<NextApiResponse>()
+      return { handler, response }
+    }
+
+    test('200s and returns the translatable data when you pass the correct component', async () => {
+      // Arrange
+      const { handler, response } = createTranslatableDataFixture({
+        runtime: new ReactRuntime({
+          components: { componentRegistration },
+        }),
+      })
+
+      // Act
+      await handler(
+        createNextApiRequest({
+          method: 'POST',
+          path: `/makeswift/translatable-data`,
+          body: translatableDataPayload,
+        }),
+        response,
+      )
+
+      // Assert
+      expect(response._getJSONData()).toEqual({
+        translatableData: {
+          [`${elementTree.key}:${prop}`]: elementTree.props[prop],
+        },
+      })
+      expect(response.statusCode).toBe(200)
+    })
+
+    // TODO: Remove this test when we make the "components" prop required
+    test('200s and returns an empty translatable data when components are not passed', async () => {
+      // Arrange
+      const { handler, response } = createTranslatableDataFixture({ runtime: new ReactRuntime() })
+
+      // Act
+      await handler(
+        createNextApiRequest({
+          method: 'POST',
+          path: `/makeswift/translatable-data`,
+          body: translatableDataPayload,
+        }),
+        response,
+      )
+
+      // Assert
+      expect(response._getJSONData()).toEqual({ translatableData: {} })
+      expect(response.statusCode).toBe(200)
     })
   })
 })

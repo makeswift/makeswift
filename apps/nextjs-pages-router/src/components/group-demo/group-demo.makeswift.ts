@@ -1,4 +1,4 @@
-import { runtime } from '@/makeswift/runtime'
+import { ReactRuntime } from '@makeswift/runtime/react'
 import { lazy } from 'react'
 
 import {
@@ -9,7 +9,7 @@ import {
   Color,
 } from '@makeswift/runtime/controls'
 
-runtime.registerComponent(
+export const MakeswiftGroupDemo = ReactRuntime.connect(
   lazy(() => import('./group-demo')),
   {
     type: 'Group Control Demo',
