@@ -7,7 +7,7 @@ import { type Document } from '../../state/react-page'
 import { MakeswiftPageDocument } from '../../next'
 import { useRouterLocaleSync } from '../hooks/useRouterLocaleSync'
 import { usePageSnippets } from '../hooks/usePageSnippets'
-// import { PageHead } from './PageHead'
+import { PageHead } from './PageHead'
 import { flattenMetadataSettings, type PageMetadataSettings } from './page-seo-settings'
 
 type Props = {
@@ -25,7 +25,7 @@ export function Page({ page, rootDocument, metadata = true }: Props): JSX.Elemen
   return (
     <>
       {/* DECOUPLE_TODO: */}
-      {/* <PageHead document={page} metadata={pageMetadataSettings} /> */}
+      <PageHead document={page} metadata={pageMetadataSettings} />
 
       <DocumentRoot rootDocument={rootDocument} />
 

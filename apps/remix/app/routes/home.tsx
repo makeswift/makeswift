@@ -3,10 +3,6 @@ import type { Route } from './+types/home'
 import { Page as MakeswiftPage } from '@makeswift/runtime/next'
 import { client } from 'lib/makeswift/client'
 
-export function meta({}: Route.MetaArgs) {
-  return [{ title: 'Makeswift' }]
-}
-
 export async function loader({ params }: Route.LoaderArgs) {
   // DECOUPLE_TODO: path
   const snapshot = await client.getPageSnapshot('/', {
