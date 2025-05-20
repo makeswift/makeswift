@@ -11,7 +11,7 @@ import {
   useImperativeHandle,
   ForwardedRef,
 } from 'react'
-// import { Formik, getIn } from 'formik'
+import { Formik, getIn } from 'formik'
 
 import { Check12 } from '../../icons/Check12'
 
@@ -417,17 +417,7 @@ const Form = forwardRef(function Form(
         <Placeholder ref={setRefEl} width={width} margin={margin} />
       ) : (
         <>
-          {/* DECOUPLE_TODO: Cannot read properties of null (reading 'useRef')
-            at Object.React [as useRef] (:5173/Users/fikri.karim/workspace/makeswift/node_modules/.pnpm/react@18.2.0/node_modules/react/cjs/react.development.js:1630:21)
-            at useFormik (:5173/Users/fikri.karim/workspace/makeswift/node_modules/.pnpm/formik@2.2.9_react@18.2.0/node_modules/formik/src/Formik.tsx:148:25)
-            at Formik (:5173/Users/fikri.karim/workspace/makeswift/node_modules/.pnpm/formik@2.2.9_react@18.2.0/node_modules/formik/src/Formik.tsx:992:21)
-            at Object.react-stack-bottom-frame (:5173/Users/fikri.karim/workspace/makeswift/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server.node.development.js:9176:18)
-            at renderWithHooks (:5173/Users/fikri.karim/workspace/makeswift/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server.node.development.js:4797:19)
-            at renderElement (:5173/Users/fikri.karim/workspace/makeswift/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server.node.development.js:5232:23)
-            at retryNode (:5173/Users/fikri.karim/workspace/makeswift/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server.node.development.js:5991:31) 
-            */}
-          <p>Form is not implemented yet</p>
-          {/* <Formik
+          <Formik
             onSubmit={handleSubmit}
             initialValues={initialValues}
             initialStatus={{ error: null }}
@@ -518,7 +508,7 @@ const Form = forwardRef(function Form(
                 </>
               )
             }}
-          </Formik> */}
+          </Formik>
         </>
       )}
     </FormContextProvider>

@@ -10,7 +10,7 @@ import BackgroundVideo from '../BackgroundVideo'
 import { CSSObject } from '@emotion/css'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 import { useResponsiveStyle } from '../../../../utils/responsive-style'
-import { major as nextMajorVersion } from '../../../../../next/next-version'
+// import { major as nextMajorVersion } from '../../../../../next/next-version'
 
 // const NextLegacyImage = NextImage as typeof NextLegacyImageType
 
@@ -148,7 +148,7 @@ function ImageBackground({
   size = ImageBackgroundSize.Cover,
   opacity,
   parallax,
-  priority,
+  // priority,
 }: ImageBackgroundProps) {
   const backgroundPosition = `${position.x}% ${position.y}%`
   const containerClassName = useStyle(containerStyle)
