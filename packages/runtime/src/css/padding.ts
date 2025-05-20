@@ -1,4 +1,4 @@
-import { CSSObject } from '@emotion/css'
+import { CSSObject } from '@emotion/serialize'
 import { LengthData, lengthDataToString } from './length'
 import {
   PaddingTopProperty,
