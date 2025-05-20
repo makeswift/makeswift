@@ -3,7 +3,7 @@
 import createCache, { EmotionCache } from '@emotion/cache'
 import { cache } from '@emotion/css'
 // import { useServerInsertedHTML } from 'next/navigation'
-import { ReactNode, createContext, useContext, useState } from 'react'
+import { ReactNode, createContext, useContext } from 'react'
 
 const CacheContext = createContext(cache)
 
