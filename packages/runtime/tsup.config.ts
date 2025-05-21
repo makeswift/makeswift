@@ -13,12 +13,16 @@ export default defineConfig(() => {
     bundle: false,
     minify: false,
     sourcemap: true,
-    legacyOutput: true,
     define: {
       PACKAGE_VERSION: JSON.stringify(version),
     },
     esbuildOptions(options, { format }) {
       if (format === 'cjs') options.supported = { ...options.supported, 'dynamic-import': false }
+    },
+    outExtension({ format }) {
+      return {
+        js: format === 'esm' ? '.mjs' : '.cjs',
+      }
     },
   } satisfies Options
 
@@ -26,6 +30,7 @@ export default defineConfig(() => {
     ...commonOptions,
     entry: [...commonOptions.entry, '!src/next/plugin.ts'],
     format: 'esm',
+    outDir: 'dist/esm',
   }
 
   const cjsOptions: Options = {
