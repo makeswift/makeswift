@@ -189,8 +189,8 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       uuid:
-        specifier: ^9.0.0
-        version: 9.0.0
+        specifier: ^11.1.0
+        version: 11.1.0
       zod:
         specifier: ^3.21.4
         version: 3.21.4
@@ -207,9 +207,6 @@ importers:
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.12
-      '@types/uuid':
-        specifier: ^9.0.1
-        version: 9.0.1
       concurrently:
         specifier: ^8.2.2
         version: 8.2.2
@@ -399,9 +396,6 @@ importers:
       '@types/use-sync-external-store':
         specifier: ^0.0.3
         version: 0.0.3
-      '@types/uuid':
-        specifier: ^9.0.1
-        version: 9.0.1
       '@use-gesture/react':
         specifier: ^10.2.24
         version: 10.2.24(react@19.1.0)
@@ -493,8 +487,8 @@ importers:
         specifier: ^1.0.0-rc.0
         version: 1.0.0-rc.0(react@19.1.0)
       uuid:
-        specifier: ^9.0.0
-        version: 9.0.0
+        specifier: ^11.1.0
+        version: 11.1.0
       zod:
         specifier: ^3.21.4
         version: 3.21.4
@@ -3331,9 +3325,6 @@ packages:
 
   '@types/use-sync-external-store@0.0.3':
     resolution: {integrity: sha512-EwmlvuaxPNej9+T4v5AuBPJa2x2UOJVdjCtDHgcDqitUeOtjnJKJ+apYjVcAoBEMjKW1VVFGZLUb5+qqa09XFA==}
-
-  '@types/uuid@9.0.1':
-    resolution: {integrity: sha512-rFT3ak0/2trgvp4yYZo5iKFEPsET7vKydKF+VRCxlQ9bpheehyAJH89dAkaLEq/j/RZXJIqcgsmPJKUP1Z28HA==}
 
   '@types/web@0.0.208':
     resolution: {integrity: sha512-YG5w2+B3w+s2cQwTVC7LErJun7p3lrO66bzfoH1hXN/8WtTHaXSLx7QKxDLTw0QqlJYdeUR+zSlwCZQccb+Gxg==}
@@ -8614,8 +8605,8 @@ packages:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
 
-  uuid@9.0.0:
-    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+  uuid@11.1.0:
+    resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
     hasBin: true
 
   v8-to-istanbul@9.0.1:
@@ -12127,8 +12118,6 @@ snapshots:
   '@types/tough-cookie@4.0.5': {}
 
   '@types/use-sync-external-store@0.0.3': {}
-
-  '@types/uuid@9.0.1': {}
 
   '@types/web@0.0.208': {}
 
@@ -18780,7 +18769,7 @@ snapshots:
 
   utils-merge@1.0.1: {}
 
-  uuid@9.0.0: {}
+  uuid@11.1.0: {}
 
   v8-to-istanbul@9.0.1:
     dependencies:
