@@ -99,6 +99,11 @@
       "import": "./dist/esm/controls/index.mjs",
       "types": "./dist/types/controls/index.d.ts"
     },
+    "./remix": {
+      "require": "./dist/cjs/remix/index.cjs",
+      "import": "./dist/esm/remix/index.mjs",
+      "types": "./dist/types/remix/index.d.ts"
+    },
     "./slate": {
       "require": "./dist/cjs/slate/index.cjs",
       "import": "./dist/esm/slate/index.mjs",

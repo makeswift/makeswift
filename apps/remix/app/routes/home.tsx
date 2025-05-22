@@ -2,12 +2,13 @@ import { MakeswiftProvider } from 'lib/makeswift/provider'
 import type { Route } from './+types/home'
 import { Page as MakeswiftPage } from '@makeswift/runtime/next'
 import { client } from 'lib/makeswift/client'
+import { getSiteVersion } from '@makeswift/runtime/remix'
 
-export async function loader({ params }: Route.LoaderArgs) {
+export async function loader({ request, params }: Route.LoaderArgs) {
   // DECOUPLE_TODO: path
   const snapshot = await client.getPageSnapshot('/', {
     // DECOUPLE_TODO: siteVersion
-    siteVersion: 'Working',
+    siteVersion: getSiteVersion(request),
     locale: params.lang,
   })
 
