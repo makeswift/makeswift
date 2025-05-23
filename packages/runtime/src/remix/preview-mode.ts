@@ -1,24 +1,43 @@
 import { MakeswiftSiteVersion } from '../api/site-version'
+
+import { SearchParams, SET_COOKIE_HEADER, cookieSettingOptions } from '../next/api-handler/handlers/utils/draft'
+
 import { MakeswiftPreviewData, parseMakeswiftPreviewData } from '../next/preview-data'
-import { parse as parseCookieHeader } from 'cookie'
+import { redirect, createCookie } from 'react-router'
 
-export const MAKESWIFT_PREVIEW_MODE_DATA_COOKIE = 'x-makeswift-preview-data'
 
-function getPreviewData(request: Request): MakeswiftPreviewData | null {
-  const cookies = parseCookieHeader(request.headers.get('cookie') ?? '')
+const previewModeCookie = createCookie('x-makeswift-preview-data', cookieSettingOptions)
 
-  const serializedPreviewData = cookies[MAKESWIFT_PREVIEW_MODE_DATA_COOKIE]
-  if (serializedPreviewData == null) return null
-
-  try {
-    const previewData = JSON.parse(serializedPreviewData)
-    return parseMakeswiftPreviewData(previewData)
-  } catch (err) {
-    console.error('Failed to extract preview data from ', serializedPreviewData, err)
-    return null
-  }
+async function getPreviewData(request: Request): Promise<MakeswiftPreviewData | null> {
+  const previewData = await previewModeCookie.parse(request.headers.get('cookie'))
+  return previewData != null ? parseMakeswiftPreviewData(previewData) : null
 }
 
 export async function getSiteVersion(request: Request) {
-  return getPreviewData(request)?.siteVersion ?? MakeswiftSiteVersion.Live
+  return (await getPreviewData(request))?.siteVersion ?? MakeswiftSiteVersion.Live
+}
+
+export async function getPreviewMode(request: Request) {
+  return await getSiteVersion(request) === MakeswiftSiteVersion.Working
+}
+
+type LoaderArgs = { request: Request; }
+type Loader<T extends LoaderArgs, R> = (args: T) => Promise<Response | R>
+
+export function withMakeswift<T extends LoaderArgs, R>(loader: Loader<T, R>, { apiKey }: { apiKey: string }): Loader<T, R> {
+  return async function withMakeswiftLoader(args: T): Promise<Response | R> {
+    const { origin, pathname, searchParams } = new URL(args.request.url)
+
+    const secret = searchParams.get(SearchParams.PreviewMode)
+    if (secret !== apiKey) return loader(args)
+
+    return redirect(`${origin}${pathname}`, {
+      headers: {
+        [SET_COOKIE_HEADER]: await previewModeCookie.serialize({
+          makeswift: true,
+          siteVersion: MakeswiftSiteVersion.Working,
+        }),
+      }
+    })
+  }
 }
