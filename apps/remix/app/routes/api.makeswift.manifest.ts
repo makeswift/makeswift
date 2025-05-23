@@ -15,8 +15,8 @@ export async function loader({ request }: { request: Request }) {
   return new Response(
     JSON.stringify({
       version: '0.24.5',
-      previewMode: false,
-      draftMode: true,
+      previewMode: true,
+      draftMode: false,
       interactionMode: true,
       clientSideNavigation: false,
       elementFromPoint: false,

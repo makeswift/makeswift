@@ -1,1 +1,1 @@
-export { getSiteVersion } from './preview-mode'
+export { getSiteVersion, getPreviewMode, withMakeswift } from './preview-mode'
