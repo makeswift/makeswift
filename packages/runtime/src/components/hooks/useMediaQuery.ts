@@ -1,5 +1,4 @@
-import { useSyncExternalStore } from 'use-sync-external-store/shim'
-import { useCallback } from 'react'
+import { useCallback, useSyncExternalStore } from 'react'
 
 import {
   type Breakpoints,

@@ -8,7 +8,7 @@ import {
   type Store as ReduxStore,
 } from 'redux'
 
-import thunk, { ThunkDispatch } from 'redux-thunk'
+import { thunk, ThunkDispatch } from 'redux-thunk'
 import { createSelector } from 'reselect'
 
 import { composeWithDevToolsDevelopmentOnly } from '@redux-devtools/extension'

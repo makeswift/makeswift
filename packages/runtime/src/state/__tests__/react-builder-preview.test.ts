@@ -1,5 +1,5 @@
 import { applyMiddleware, createStore } from 'redux'
-import thunk from 'redux-thunk'
+import { thunk } from 'redux-thunk'
 
 import { ElementImperativeHandle } from '../../runtimes/react/element-imperative-handle'
 import { ReactRuntime } from '../../runtimes/react'

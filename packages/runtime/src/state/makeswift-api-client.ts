@@ -6,7 +6,7 @@ import {
   type Store as ReduxStore,
   type Middleware,
 } from 'redux'
-import thunk, { type ThunkAction, type ThunkDispatch } from 'redux-thunk'
+import { thunk, ThunkAction, ThunkDispatch } from 'redux-thunk'
 
 import { composeWithDevToolsDevelopmentOnly } from '@redux-devtools/extension'
 
