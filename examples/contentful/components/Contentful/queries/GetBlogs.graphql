@@ -1,0 +1,52 @@
+fragment AuthorInfo on Author {
+  name
+  avatar {
+    __typename
+    title
+    description
+    contentType
+    fileName
+    url
+    width
+    height
+  }
+  jobTitle
+  description {
+    json
+  }
+}
+
+query GetBlogs(
+  $limit: Int! = 8
+  $skip: Int! = 0
+  $order: [BlogPostOrder]
+  $filter: BlogPostFilter
+) {
+  blogPostCollection(limit: $limit, skip: $skip, order: $order, where: $filter) {
+    total
+    items {
+      __typename
+      _id
+      slug
+      title
+      description
+      body {
+        json
+      }
+      banner {
+        __typename
+        title
+        description
+        contentType
+        fileName
+        url
+        width
+        height
+      }
+      feedDate
+      author {
+        ...AuthorInfo
+      }
+    }
+  }
+}
