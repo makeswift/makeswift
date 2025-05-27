@@ -7,6 +7,8 @@ import { ElementReference } from './ElementReference'
 import { ElementData } from './ElementData'
 import { ElementImperativeHandle } from '../element-imperative-handle'
 import { FindDomNode } from '../find-dom-node'
+import { FallbackComponent } from '../../../components/shared/FallbackComponent'
+import { ErrorBoundary } from '../../../components/shared/ErrorBoundary'
 
 type Props = {
   element: ElementDataOrRef
@@ -37,17 +39,23 @@ export const Element = memo(
     return (
       <ElementRegistration componentHandle={imperativeHandleRef.current} elementKey={element.key}>
         <FindDomNode ref={findDomNodeCallbackRef}>
-          {isElementReference(element) ? (
-            <ElementReference
-              key={element.key}
-              ref={elementCallbackRef}
-              elementReference={element}
-            />
-          ) : (
-            <ElementData key={element.key} ref={elementCallbackRef} elementData={element} />
-          )}
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            {isElementReference(element) ? (
+              <ElementReference
+                key={element.key}
+                ref={elementCallbackRef}
+                elementReference={element}
+              />
+            ) : (
+              <ElementData key={element.key} ref={elementCallbackRef} elementData={element} />
+            )}
+          </ErrorBoundary>
         </FindDomNode>
       </ElementRegistration>
     )
   }),
 )
+
+function ErrorFallback() {
+  return <FallbackComponent text={`Error rendering component`} />
+}
