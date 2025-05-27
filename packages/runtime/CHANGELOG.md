@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.24.6-canary.0
+
+### Patch Changes
+
+- c47f0cb: Surround all elements with an error boundary to prevent rendering errors from causing page-wide failures.
+
 ## 0.24.5
 
 ### Patch Changes
