@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.24.6-canary.1
+
+### Patch Changes
+
+- Updated dependencies [f8720ba]
+  - @makeswift/controls@0.1.10-canary.0
+  - @makeswift/prop-controllers@0.4.3-canary.0
+
 ## 0.24.6-canary.0
 
 ### Patch Changes
