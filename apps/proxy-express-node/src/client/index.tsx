@@ -5,29 +5,31 @@ import {
   createRootStyleCache,
   RootStyleRegistry,
 } from '@makeswift/runtime/next'
-
-export const EDITOR_PROPS_NAMESPACE = '__EDITOR_PROPS__'
+import {
+  HYDRATION_PROPS_NAMESPACE,
+  TARGET_ELEMENT_SELECTOR,
+} from '../makeswift/constants'
 
 declare global {
   interface Window {
-    __EDITOR_PROPS__: ComponentPropsWithoutRef<typeof Region> & {
-      regionId: string
-    }
+    [HYDRATION_PROPS_NAMESPACE]: ComponentPropsWithoutRef<typeof Region>
   }
 }
 
 function hydrateEditor() {
-  const props = window[EDITOR_PROPS_NAMESPACE]
+  const props = window[HYDRATION_PROPS_NAMESPACE]
 
   if (!props) {
     console.error('No editor props found for hydration')
     return
   }
 
-  const targetElement = document.getElementById(props.regionId)
+  const targetElement = document.querySelector(TARGET_ELEMENT_SELECTOR)
 
   if (!targetElement) {
-    console.error(`Target element with id "${props.regionId}" not found`)
+    console.error(
+      `Target element with selector "${TARGET_ELEMENT_SELECTOR}" not found`,
+    )
     return
   }
 
@@ -46,7 +48,7 @@ function hydrateEditor() {
   console.log('Visual editor hydrated successfully')
 }
 
-if (typeof window !== 'undefined' && window.__EDITOR_PROPS__) {
+if (typeof window !== 'undefined' && window[HYDRATION_PROPS_NAMESPACE]) {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', hydrateEditor)
   } else {

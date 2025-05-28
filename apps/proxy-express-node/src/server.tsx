@@ -6,144 +6,86 @@ import { renderToPipeableStream } from 'react-dom/server'
 import path from 'path'
 import { Writable } from 'stream'
 import { Region } from './makeswift/Region'
-import { EDITOR_PROPS_NAMESPACE } from './client'
 import { client } from './makeswift/client'
 import {
   createRootStyleCache,
   RootStyleRegistry,
 } from '@makeswift/runtime/next'
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
+import { convertAllUrlsToHttpsAndAbsolute } from './utils/convert-urls-to-https-and-absolute'
+import {
+  getSiteVersion,
+  isDraftModeEnabled,
+  draftModeMiddleware,
+} from './makeswift/draft'
+import './makeswift/components'
+import { makeswiftApiHandlerMiddleware } from './makeswift/api-handler'
+import {
+  HOST,
+  HYDRATION_PROPS_NAMESPACE,
+  TARGET_ELEMENT_SELECTOR,
+} from './makeswift/constants'
+import {
+  extractMetadataFromHtml,
+  removeExistingMetaTags,
+} from './utils/metadata-extractor'
+import { flushAndBuildStyles } from './makeswift/emotion-styles'
+import { buildHydrationScript } from './utils/hydration-script'
+import { renderHtml } from './utils/render-html'
 
 const app = express()
-const PORT = 3000
 
 app.use(cors())
-
+app.use(cookieParser())
+app.use(express.json())
 app.use('/static', express.static(path.join(__dirname, '../dist')))
 
-app.get('/api/makeswift/manifest', (req, res) => {
-  res.json({
-    version: '0.24.5',
-    previewMode: true,
-    draftMode: false,
-    interactionMode: true,
-    clientSideNavigation: false,
-    elementFromPoint: false,
-    customBreakpoints: true,
-    siteVersions: true,
-    unstable_siteVersions: true,
-    localizedPageSSR: true,
-    webhook: true,
-    localizedPagesOnlineByDefault: true,
-  })
-})
+app.use(makeswiftApiHandlerMiddleware)
+app.use(draftModeMiddleware)
 
 app.get('*', async (req, res) => {
   try {
-    const targetUrl = `https://en.wikipedia.org${req.path}`
+    const [hostResponse, snapshot] = await Promise.all([
+      axios.get(`${HOST}${req.path}`),
+      client.getComponentSnapshot(req.path, {
+        siteVersion: getSiteVersion(req),
+      }),
+    ])
 
-    const response = await axios.get(targetUrl, {
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-      },
-    })
+    const $ = cheerio.load(hostResponse.data)
+    convertAllUrlsToHttpsAndAbsolute($, HOST)
+    let targetElement = $(TARGET_ELEMENT_SELECTOR)
+    if (targetElement.length === 0) return res.send($.html())
 
-    const $ = cheerio.load(response.data)
-
-    // Rewrite relative URLs to absolute URLs
-    const rewriteUrls = (selector: string, attr: string) => {
-      $(selector).each((_, elem) => {
-        const url = $(elem).attr(attr)
-        if (url?.startsWith('//')) {
-          $(elem).attr(attr, `https:${url}`)
-        } else if (url?.startsWith('/')) {
-          $(elem).attr(attr, `https://en.wikipedia.org${url}`)
-        }
-      })
+    const { cache, flush } = createRootStyleCache({ key: 'mswft' })
+    const props = {
+      snapshot,
+      label: `Region ${req.path}`,
+      previewMode: isDraftModeEnabled(req),
     }
+    const elementHtml = await renderHtml(
+      <RootStyleRegistry cache={cache}>
+        <Region {...props} />
+      </RootStyleRegistry>,
+    )
 
-    rewriteUrls('link[href]', 'href')
-    rewriteUrls('script[src]', 'src')
-    rewriteUrls('img[src]', 'src')
+    const {
+      metadataTags,
+      bodyHtml: elementBody,
+      headHtml: elementHead,
+    } = extractMetadataFromHtml(elementHtml)
+    const emotionStyles = flushAndBuildStyles(cache, flush)
+    const hydrationScript = buildHydrationScript(
+      HYDRATION_PROPS_NAMESPACE,
+      props,
+    )
+    removeExistingMetaTags($, metadataTags)
 
-    const editorRegionId = 'visual-editor-region'
-
-    // Replace the vector-body-before-content div
-    const targetDiv = $('.vector-body-before-content')
-    if (targetDiv.length) {
-      targetDiv.attr('id', editorRegionId)
-    }
-
-    let targetElement = $(`#${editorRegionId}`)
-
-    if (targetElement.length) {
-      const initialContent = targetElement.html() || ''
-
-      const snapshot = await client.getComponentSnapshot(req.path, {
-        siteVersion: 'Working',
-      })
-      const { cache, flush } = createRootStyleCache({ key: 'mswft' })
-
-      const editorProps = {
-        regionId: editorRegionId,
-        snapshot,
-        label: `Region ${req.path}`,
-        previewMode: true,
-      }
-
-      // Use renderToPipeableStream to handle Suspense and wait for all data
-      const editorHtml = await new Promise<string>((resolve, reject) => {
-        let html = ''
-        const { pipe } = renderToPipeableStream(
-          <RootStyleRegistry cache={cache}>
-            <Region {...editorProps} />
-          </RootStyleRegistry>,
-          {
-            onAllReady() {
-              // Create a writable stream to collect the HTML
-              const chunks: Buffer[] = []
-              const writable = new Writable({
-                write(chunk: Buffer, encoding: string, callback: () => void) {
-                  chunks.push(chunk)
-                  callback()
-                },
-              })
-
-              writable.on('finish', () => {
-                html = Buffer.concat(chunks).toString()
-                resolve(html)
-              })
-
-              pipe(writable)
-            },
-            onError(error) {
-              reject(error)
-            },
-          },
-        )
-      })
-
-      // Replace the target element with the rendered content
-      targetElement.html(editorHtml)
-
-      // Inject emotion styles into the head after rendering
-      const names = flush()
-      if (names.length > 0) {
-        let css = ''
-        for (const n of names) css += cache.inserted[n]
-        $('head').append(styleTag(cache.key, names, css))
-      }
-
-      const hydrationScript = `
-        <script>
-          window['${EDITOR_PROPS_NAMESPACE}'] = ${JSON.stringify(editorProps)};
-        </script>
-        <script src="/static/client.js"></script>
-      `
-
-      $('body').append(hydrationScript)
-    }
+    if (elementHead) $('head').append(elementHead)
+    if (emotionStyles) $('head').append(emotionStyles)
+    targetElement.empty().append(elementBody)
+    $('body').append(hydrationScript)
 
     res.send($.html())
   } catch (error) {
@@ -152,11 +94,8 @@ app.get('*', async (req, res) => {
   }
 })
 
+const PORT = 3000
+
 app.listen(PORT, () => {
   console.log(`Proxy server running at http://localhost:${PORT}`)
 })
-
-/* helper to build a <style> tag */
-function styleTag(key: string, names: string[], css: string) {
-  return `<style data-emotion="${key} ${names.join(' ')}">${css}</style>`
-}
