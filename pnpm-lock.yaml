@@ -119,7 +119,7 @@ importers:
         specifier: ^5
         version: 5.1.6
 
-  apps/proxy:
+  apps/proxy-express-node:
     dependencies:
       '@makeswift/runtime':
         specifier: workspace:^
