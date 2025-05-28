@@ -131,12 +131,14 @@ class Definition extends ControlDefinition<
       return undefined
     }
 
+    const replacementId = data.id != null ? replaceResourceIfNeeded(
+      ContextResource.Typography,
+      data.id,
+      context,
+    ): undefined
+
     return {
-      id: replaceResourceIfNeeded(
-        ContextResource.Typography,
-        data.id ?? '',
-        context,
-      ),
+      id: replacementId,
       style: data.style.map((override) => ({
         ...override,
         value: {
