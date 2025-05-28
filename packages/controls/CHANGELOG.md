@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.10
+
+### Patch Changes
+
+- f8720ba: Allow tree data from copying a typography to include an undefined id
+
 ## 0.1.9
 
 ### Patch Changes
