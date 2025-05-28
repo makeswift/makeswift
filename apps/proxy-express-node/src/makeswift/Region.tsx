@@ -8,6 +8,7 @@ import {
 } from '@makeswift/runtime/next'
 import { ComponentPropsWithoutRef } from 'react'
 import { MakeswiftComponentType } from '@makeswift/runtime'
+import './components'
 
 type Props = {
   snapshot: ComponentPropsWithoutRef<typeof MakeswiftComponent>['snapshot']
@@ -18,6 +19,7 @@ type Props = {
 export function Region({ snapshot, label, previewMode }: Props) {
   return (
     <ReactRuntimeProvider previewMode={previewMode} runtime={runtime}>
+      {/* Using MakeswiftComponent instead of Slot for easier debugging */}
       <MakeswiftComponent
         snapshot={snapshot}
         label={label}
