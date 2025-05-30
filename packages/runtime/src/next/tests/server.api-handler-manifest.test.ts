@@ -51,7 +51,7 @@ describe('MakeswiftApiHandler', () => {
         siteVersions: true,
         unstable_siteVersions: true,
         localizedPageSSR: true,
-        webhook: !pagesRouter,
+        webhook: true,
         localizedPagesOnlineByDefault: true,
       })
     })

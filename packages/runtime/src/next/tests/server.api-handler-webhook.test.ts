@@ -109,7 +109,7 @@ describe('MakeswiftApiHandler', () => {
 
       // Assert
       expect(statusCode).toBe(200)
-      if (router === 'app' || true) {
+      if (router === 'app') {
         expect(nextCache.revalidateTag).toHaveBeenCalledWith('@@makeswift')
       } else {
         expect(nextCache.revalidateTag).not.toHaveBeenCalled()
