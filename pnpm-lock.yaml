@@ -501,9 +501,9 @@ importers:
       '@types/set-cookie-parser':
         specifier: ^2.4.10
         version: 2.4.10
-      '@types/web':
-        specifier: ^0.0.208
-        version: 0.0.208
+      '@typescript/lib-dom':
+        specifier: npm:@types/web@^0.0.243
+        version: '@types/web@0.0.243'
       concurrently:
         specifier: ^5.3.0
         version: 5.3.0
@@ -2797,8 +2797,8 @@ packages:
   '@types/uuid@9.0.1':
     resolution: {integrity: sha512-rFT3ak0/2trgvp4yYZo5iKFEPsET7vKydKF+VRCxlQ9bpheehyAJH89dAkaLEq/j/RZXJIqcgsmPJKUP1Z28HA==}
 
-  '@types/web@0.0.208':
-    resolution: {integrity: sha512-YG5w2+B3w+s2cQwTVC7LErJun7p3lrO66bzfoH1hXN/8WtTHaXSLx7QKxDLTw0QqlJYdeUR+zSlwCZQccb+Gxg==}
+  '@types/web@0.0.243':
+    resolution: {integrity: sha512-fYVKx/7oxQTGNl0hkYO2N/cMdqrr41MWUZi2QavYIdK3ufiPr9nakCgQ4s+2kvdR0LflNKGcOvCUaHPGUAprtw==}
 
   '@types/websocket@1.0.5':
     resolution: {integrity: sha512-NbsqiNX9CnEfC1Z0Vf4mE1SgAJ07JnRYcNex7AJ9zAVzmiGHmjKFEk7O4TJIsgv2B1sLEb6owKFZrACwdYngsQ==}
@@ -10731,7 +10731,7 @@ snapshots:
 
   '@types/uuid@9.0.1': {}
 
-  '@types/web@0.0.208': {}
+  '@types/web@0.0.243': {}
 
   '@types/websocket@1.0.5':
     dependencies:
