@@ -1,8 +1,5 @@
 import { NextRequest } from 'next/server'
-import {
-  MAKESWIFT_DRAFT_DATA_COOKIE,
-  PRERENDER_BYPASS_COOKIE,
-} from '../api-handler/handlers/utils/draft'
+import { MAKESWIFT_DRAFT_DATA_COOKIE, PRERENDER_BYPASS_COOKIE } from '../api-handler/draft'
 
 const HeaderNames = {
   DraftMode: 'X-Makeswift-Draft-Mode',

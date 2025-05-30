@@ -5,7 +5,11 @@ import * as nextCache from 'next/cache'
 import { MakeswiftApiHandler } from '../api-handler'
 import { NextApiResponse } from 'next'
 import { ReactRuntime } from '../../react'
-import { createNextApiRequest } from './test-utils'
+import {
+  createNextApiRequest,
+  createNextRequestWithContext,
+  type RequestParams,
+} from './test-utils'
 
 const apiKey = 'fake-api-key'
 
@@ -22,6 +26,7 @@ function createHandler(args: Partial<MakeswiftApiHandlerArgs> = {}) {
 }
 
 jest.mock('next/cache', () => ({
+  revalidatePath: jest.fn(),
   revalidateTag: jest.fn(),
 }))
 
@@ -36,70 +41,107 @@ describe('MakeswiftApiHandler', () => {
     consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
   })
 
-  describe('/api/makeswift/revalidate', () => {
+  function pagesRouterRevalidateFixture(args: MakeswiftApiHandlerArgs = {}) {
     function revalidateResponse({ revalidate }: { revalidate: (path: string) => Promise<void> }) {
       const response = createResponse<NextApiResponse>()
       response.revalidate = revalidate
       return response
     }
 
-    function createRevalidateFixture(args: MakeswiftApiHandlerArgs = {}) {
-      const handler = createHandler(args)
-      const revalidate = jest.fn()
-      const response = revalidateResponse({ revalidate })
-      return { handler, revalidate, response }
+    const handler = createHandler(args)
+    const revalidate = jest.fn()
+    const response = revalidateResponse({ revalidate })
+    const testApiRequest = async (reqParams: RequestParams) => {
+      await handler(createNextApiRequest(reqParams), response)
+      return response.statusCode
     }
 
+    return { testApiRequest, revalidate }
+  }
+
+  function appRouterRevalidateFixture(args: MakeswiftApiHandlerArgs = {}) {
+    const handler = createHandler(args)
+    const testApiRequest = async (reqParams: RequestParams) => {
+      const response = await handler(...createNextRequestWithContext(reqParams))
+      return response?.status
+    }
+
+    return { testApiRequest, revalidate: nextCache.revalidatePath }
+  }
+
+  describe.each([
+    { fixture: pagesRouterRevalidateFixture, router: 'pages' },
+    { fixture: appRouterRevalidateFixture, router: 'app' },
+  ])('[$router router] /api/makeswift/revalidate', ({ fixture }) => {
     test('401s and does not call revalidate when no secret is provided', async () => {
       // Arrange
-      const { handler, revalidate, response } = createRevalidateFixture()
+      const { testApiRequest, revalidate } = fixture()
 
       // Act
-      await handler(
-        createNextApiRequest({ method: 'GET', path: '/makeswift/revalidate' }),
-        response,
-      )
+      const statusCode = await testApiRequest({ method: 'GET', path: '/makeswift/revalidate' })
 
       // Assert
-      expect(response.statusCode).toBe(401)
+      expect(statusCode).toBe(401)
       expect(revalidate).not.toHaveBeenCalled()
     })
 
     test('400s and does not call revalidate when no path is provided', async () => {
       // Arrange
-      const { handler, revalidate, response } = createRevalidateFixture()
+      const { testApiRequest, revalidate } = fixture()
 
       // Act
-      await handler(
-        createNextApiRequest({ method: 'GET', path: `/makeswift/revalidate?secret=${apiKey}` }),
-        response,
-      )
+      const statusCode = await testApiRequest({
+        method: 'GET',
+        path: `/makeswift/revalidate?secret=${apiKey}`,
+      })
 
       // Assert
-      expect(response.statusCode).toBe(400)
+      expect(statusCode).toBe(400)
       expect(revalidate).not.toHaveBeenCalled()
     })
 
     test('200s and calls revalidate when revalidating a path', async () => {
       // Arrange
-      const { handler, revalidate, response } = createRevalidateFixture()
+      const { testApiRequest, revalidate } = fixture()
 
       // Act
-      await handler(
-        createNextApiRequest({
-          method: 'GET',
-          path: `/makeswift/revalidate?secret=${apiKey}&path=/some-path`,
-        }),
-        response,
-      )
+      const statusCode = await testApiRequest({
+        method: 'GET',
+        path: `/makeswift/revalidate?secret=${apiKey}&path=/some-path`,
+      })
 
       // Assert
-      expect(response.statusCode).toBe(200)
+      expect(statusCode).toBe(200)
       expect(revalidate).toHaveBeenCalledWith('/some-path')
     })
   })
 
-  describe('/api/makeswift/webhook', () => {
+  function pagesRouterWebhookFixture(args: MakeswiftApiHandlerArgs = {}) {
+    const handler = createHandler(args)
+
+    const response = createResponse<NextApiResponse>()
+    const testApiRequest = async (reqParams: RequestParams) => {
+      await handler(createNextApiRequest(reqParams), response)
+      return { statusCode: response.statusCode, jsonBody: response._getJSONData() }
+    }
+
+    return { testApiRequest }
+  }
+
+  function appRouterWebhookFixture(args: MakeswiftApiHandlerArgs = {}) {
+    const handler = createHandler(args)
+    const testApiRequest = async (reqParams: RequestParams) => {
+      const response = await handler(...createNextRequestWithContext(reqParams))
+      return { statusCode: response?.status, jsonBody: await response?.json() }
+    }
+
+    return { testApiRequest, revalidate: nextCache.revalidatePath }
+  }
+
+  describe.each([
+    { fixture: pagesRouterWebhookFixture, router: 'pages' },
+    { fixture: appRouterWebhookFixture, router: 'app' },
+  ])('[$router router] /api/makeswift/webhook', ({ fixture, router }) => {
     const webhookPayload = {
       type: 'site.published',
       data: {
@@ -112,46 +154,37 @@ describe('MakeswiftApiHandler', () => {
       },
     }
 
-    function createWebhookFixture(args: MakeswiftApiHandlerArgs = {}) {
-      const handler = createHandler(args)
-
-      const response = createResponse<NextApiResponse>()
-      return { handler, response }
-    }
-
     test('401s and does not call revalidateTag when no secret is provided', async () => {
       // Arrange
-      const { handler, response } = createWebhookFixture()
+      const { testApiRequest } = fixture()
 
       // Act
-      await handler(
-        createNextApiRequest({ method: 'POST', path: '/makeswift/webhook', body: webhookPayload }),
-        response,
-      )
+      const { statusCode, jsonBody } = await testApiRequest({
+        method: 'POST',
+        path: '/makeswift/webhook',
+        body: webhookPayload,
+      })
 
       // Assert
-      expect(response.statusCode).toBe(401)
-      expect(response._getJSONData()).toEqual({ message: 'Unauthorized' })
+      expect(statusCode).toBe(401)
+      expect(jsonBody).toEqual({ message: 'Unauthorized' })
       expect(nextCache.revalidateTag).not.toHaveBeenCalled()
     })
 
     test('400s and does not call revalidateTag when payload is invalid', async () => {
       // Arrange
-      const { handler, response } = createWebhookFixture()
+      const { testApiRequest } = fixture()
 
       // Act
-      await handler(
-        createNextApiRequest({
-          method: 'POST',
-          path: `/makeswift/webhook?secret=${apiKey}`,
-          body: { type: 'invalid.type' },
-        }),
-        response,
-      )
+      const { statusCode, jsonBody } = await testApiRequest({
+        method: 'POST',
+        path: `/makeswift/webhook?secret=${apiKey}`,
+        body: { type: 'invalid.type' },
+      })
 
       // Assert
-      expect(response.statusCode).toBe(400)
-      expect(response._getJSONData()).toEqual({ message: 'Invalid request body' })
+      expect(statusCode).toBe(400)
+      expect(jsonBody).toEqual({ message: 'Invalid request body' })
       expect(nextCache.revalidateTag).not.toHaveBeenCalled()
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
@@ -164,20 +197,17 @@ describe('MakeswiftApiHandler', () => {
     test('200s and calls user-provided onPublish callback', async () => {
       // Arrange
       const onPublish = jest.fn()
-      const { handler, response } = createWebhookFixture({ events: { onPublish } })
+      const { testApiRequest } = fixture({ events: { onPublish } })
 
       // Act
-      await handler(
-        createNextApiRequest({
-          method: 'POST',
-          path: `/makeswift/webhook?secret=${apiKey}`,
-          body: webhookPayload,
-        }),
-        response,
-      )
+      const { statusCode } = await testApiRequest({
+        method: 'POST',
+        path: `/makeswift/webhook?secret=${apiKey}`,
+        body: webhookPayload,
+      })
 
       // Assert
-      expect(response.statusCode).toBe(200)
+      expect(statusCode).toBe(200)
       expect(onPublish).toHaveBeenCalled()
     })
 
@@ -186,21 +216,22 @@ describe('MakeswiftApiHandler', () => {
       const onPublish = jest.fn(() => {
         throw new Error('Failed in user-provided onPublish')
       })
-      const { handler, response } = createWebhookFixture({ events: { onPublish } })
+      const { testApiRequest } = fixture({ events: { onPublish } })
 
       // Act
-      await handler(
-        createNextApiRequest({
-          method: 'POST',
-          path: `/makeswift/webhook?secret=${apiKey}`,
-          body: webhookPayload,
-        }),
-        response,
-      )
+      const { statusCode } = await testApiRequest({
+        method: 'POST',
+        path: `/makeswift/webhook?secret=${apiKey}`,
+        body: webhookPayload,
+      })
 
       // Assert
-      expect(response.statusCode).toBe(200)
-      expect(nextCache.revalidateTag).toHaveBeenCalledWith('@@makeswift')
+      expect(statusCode).toBe(200)
+      if (router === 'app') {
+        expect(nextCache.revalidateTag).toHaveBeenCalledWith('@@makeswift')
+      } else {
+        expect(nextCache.revalidateTag).not.toHaveBeenCalled()
+      }
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         "Unhandled exception in the 'onPublish' callback:",
