@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { useSyncExternalStore } from 'use-sync-external-store/shim'
+import { useEffect, useRef, useSyncExternalStore } from 'react'
 import {
   File,
   GlobalElement,

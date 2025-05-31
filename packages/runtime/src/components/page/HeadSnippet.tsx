@@ -1,8 +1,8 @@
-import { Children, createElement, useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { Snippet } from '../hooks/usePageSnippets'
-import { useServerInsertedHTML } from 'next/navigation'
-import parse from 'html-react-parser'
-import Head from 'next/head'
+// import { useServerInsertedHTML } from 'next/navigation'
+// import parse from 'html-react-parser'
+// import Head from 'next/head'
 import { useIsPagesRouter } from '../../next/hooks/use-is-pages-router'
 
 type Props = {
@@ -29,52 +29,53 @@ export function HeadSnippet({ snippet }: Props) {
     return renderSnippetAndExecuteScripts(snippet, document.head)
   }, [isPagesRouter, snippet])
 
-  const headSnippetElement = snippetToElement(snippet)
-  const insertedServerHTML = useRef(false)
+  // const headSnippetElement = snippetToElement(snippet)
+  // const insertedServerHTML = useRef(false)
 
-  useServerInsertedHTML(() => {
-    if (isPagesRouter || insertedServerHTML.current) return
+  // useServerInsertedHTML(() => {
+  //   if (isPagesRouter || insertedServerHTML.current) return
 
-    insertedServerHTML.current = true
+  //   insertedServerHTML.current = true
 
-    return headSnippetElement
-  })
+  //   return headSnippetElement
+  // })
 
-  if (isPagesRouter) {
-    return <Head>{headSnippetElement}</Head>
-  }
+  // DECOUPLE_TODO:
+  // if (isPagesRouter) {
+  //   return <Head>{headSnippetElement}</Head>
+  // }
 
   return null
 }
 
 const SNIPPET_ID_ATRIBUTE_NAME = 'data-makeswift-snippet-id'
 
-const VALID_HEAD_ELEMENT_TYPES = [
-  'title',
-  'base',
-  'link',
-  'style',
-  'meta',
-  'script',
-  'noscript',
-  'template',
-]
+// const VALID_HEAD_ELEMENT_TYPES = [
+//   'title',
+//   'base',
+//   'link',
+//   'style',
+//   'meta',
+//   'script',
+//   'noscript',
+//   'template',
+// ]
 
-function snippetToElement(snippet: Pick<Snippet, 'id' | 'code'>): (string | JSX.Element)[] {
-  return Children.map(parse(snippet.code), element => {
-    if (typeof element === 'string') return element
+// function snippetToElement(snippet: Pick<Snippet, 'id' | 'code'>): (string | JSX.Element)[] {
+//   return Children.map(parse(snippet.code), element => {
+//     if (typeof element === 'string') return element
 
-    if (!VALID_HEAD_ELEMENT_TYPES.includes(element.type as string)) return null
+//     if (!VALID_HEAD_ELEMENT_TYPES.includes(element.type as string)) return null
 
-    const key = element.key ? `${snippet.id}:${element.key}` : snippet.id
+//     const key = element.key ? `${snippet.id}:${element.key}` : snippet.id
 
-    return createElement(element.type, {
-      ...element.props,
-      key,
-      [SNIPPET_ID_ATRIBUTE_NAME]: snippet.id,
-    })
-  })
-}
+//     return createElement(element.type, {
+//       ...element.props,
+//       key,
+//       [SNIPPET_ID_ATRIBUTE_NAME]: snippet.id,
+//     })
+//   })
+// }
 
 function renderSnippetAndExecuteScripts(snippet: Snippet, container: HTMLElement): () => void {
   const virtualContainer = container.ownerDocument.createElement(container.tagName)

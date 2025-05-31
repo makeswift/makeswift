@@ -1,3 +1,4 @@
+import { cache } from '@emotion/css'
 import { RootStyleRegistry } from '../../../next'
 import { ReactRuntimeProvider } from '../components/RuntimeProvider'
 import { ReactRuntime } from '../react-runtime'
@@ -13,7 +14,7 @@ export function ReactProvider({
 }) {
   return (
     <ReactRuntimeProvider previewMode={previewMode} runtime={runtime}>
-      <RootStyleRegistry>{children}</RootStyleRegistry>
+      <RootStyleRegistry cache={cache}>{children}</RootStyleRegistry>
     </ReactRuntimeProvider>
   )
 }
