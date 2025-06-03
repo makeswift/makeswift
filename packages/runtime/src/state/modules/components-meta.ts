@@ -27,7 +27,7 @@ export const ComponentIcon = {
 
 export type ComponentIcon = typeof ComponentIcon[keyof typeof ComponentIcon]
 
-export type ComponentMeta = { label: string; icon: ComponentIcon; hidden: boolean }
+export type ComponentMeta = { label: string; icon: ComponentIcon; hidden: boolean, description?: string }
 
 export type State = Map<string, ComponentMeta>
 
