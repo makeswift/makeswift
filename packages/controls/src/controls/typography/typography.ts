@@ -124,21 +124,18 @@ class Definition extends ControlDefinition<
       return replaceResourceIfNeeded(ContextResource.Swatch, swatchId, context)
     }
 
-    if (
-      data.id != null &&
-      shouldRemoveResource(ContextResource.Typography, data.id, context)
-    ) {
-      return undefined
+    function replaceTypographyId(id: string | null): string | undefined {
+      if (
+        id == null ||
+        shouldRemoveResource(ContextResource.Typography, id, context)
+      ) {
+        return undefined
+      }
+      return replaceResourceIfNeeded(ContextResource.Typography, id, context)
     }
 
-    const replacementId = data.id != null ? replaceResourceIfNeeded(
-      ContextResource.Typography,
-      data.id,
-      context,
-    ): undefined
-
     return {
-      id: replacementId,
+      id: replaceTypographyId(data.id ?? null),
       style: data.style.map((override) => ({
         ...override,
         value: {
