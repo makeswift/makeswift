@@ -62,7 +62,7 @@ describe('RichText v2', () => {
     })
   })
 
-  test('copyData removes swatch, typographies, and page IDs that are marked for removal', () => {
+  test('copyData removes swatch, typography, and page IDs that are marked for removal', () => {
     const definition = RichText()
 
     const result = definition.copyData(Fixtures.introspection, {

@@ -15,7 +15,7 @@ Definition {
 }
 `;
 
-exports[`RichText v2 copyData removes swatch, typographies, and page IDs that are marked for removal 1`] = `
+exports[`RichText v2 copyData removes swatch, typography, and page IDs that are marked for removal 1`] = `
 {
   "descendants": [
     {
@@ -24,7 +24,32 @@ exports[`RichText v2 copyData removes swatch, typographies, and page IDs that ar
           "children": [
             {
               "text": "Credibly implement global synergy, then collaboratively implement goal-oriented sprints. Rapidiously initiate standards compliant clouds. ",
-              "typography": undefined,
+              "typography": {
+                "id": undefined,
+                "style": [
+                  {
+                    "value": {
+                      "color": {
+                        "alpha": 1,
+                        "swatchId": null,
+                      },
+                    },
+                  },
+                  {
+                    "value": {
+                      "fontWeight": 500,
+                    },
+                  },
+                  {
+                    "value": {
+                      "color": {
+                        "alpha": 1,
+                        "swatchId": null,
+                      },
+                    },
+                  },
+                ],
+              },
             },
           ],
           "link": {
