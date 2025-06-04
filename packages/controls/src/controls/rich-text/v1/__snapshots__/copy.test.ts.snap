@@ -23,7 +23,32 @@ exports[`GIVEN copying RichText removes any swatch, typography and page ids mark
                 "marks": [
                   {
                     "data": {
-                      "value": undefined,
+                      "value": {
+                        "id": undefined,
+                        "style": [
+                          {
+                            "value": {
+                              "color": {
+                                "alpha": 1,
+                                "swatchId": null,
+                              },
+                            },
+                          },
+                          {
+                            "value": {
+                              "fontWeight": 500,
+                            },
+                          },
+                          {
+                            "value": {
+                              "color": {
+                                "alpha": 1,
+                                "swatchId": null,
+                              },
+                            },
+                          },
+                        ],
+                      },
                     },
                     "object": "mark",
                     "type": "typography",

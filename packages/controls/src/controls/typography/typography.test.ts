@@ -27,7 +27,7 @@ describe('Typography', () => {
   })
 
   describe('copyData', () => {
-    test('returns `undefined` if typography ID is marked for removal', () => {
+    test('returns `undefined` for `id` if typography ID is marked for removal', () => {
       const data: DataType<unstable_TypographyDefinition> = {
         id: 'typography-id',
         style: [
@@ -52,7 +52,7 @@ describe('Typography', () => {
       })
 
       // Assert
-      expect(copy).toBeUndefined()
+      expect(copy).toEqual({ ...data, id: undefined })
     })
 
     test('removes any swatch IDs marked for removal', () => {

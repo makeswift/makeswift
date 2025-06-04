@@ -1,6 +1,6 @@
 {
   "name": "@makeswift/prop-controllers",
-  "version": "0.4.3-canary.0",
+  "version": "0.4.3",
   "license": "MIT",
   "files": [
     "dist"
