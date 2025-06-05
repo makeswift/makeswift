@@ -34,95 +34,84 @@ module.exports =
     appOrigin = 'https://app.makeswift.com',
     previewMode = true,
   } = {}) =>
-    (nextConfig = {}) => {
-      /** @type {NextConfig} */
-      let enhancedConfig = {
-        ...nextConfig,
-        images: {
-          ...nextConfig.images,
-          remotePatterns: [
-            ...(nextConfig.images?.remotePatterns ?? []),
-            ...NEXT_IMAGE_REMOTE_PATTERNS,
-            ...NEXT_IMAGE_REVIEW_APP_REMOTE_PATTERNS,
-          ],
-        },
-        async rewrites() {
-          const rewrites = await nextConfig.rewrites?.()
-          const previewModeRewrites = [
-            {
-              source: '/:path(.*)',
-              has: [
-                {
-                  type: 'query',
-                  key: 'x-makeswift-draft-mode',
-                  value: '(?<secret>.+)',
-                },
-              ],
-              destination: '/api/makeswift/draft',
-            },
-            {
-              source: '/:path(.*)',
-              has: [
-                {
-                  type: 'query',
-                  key: 'x-makeswift-preview-mode',
-                  value: '(?<secret>.+)',
-                },
-              ],
-              destination: '/api/makeswift/preview',
-              locale: false,
-            },
-          ]
-          return {
-            beforeFiles: [
-              ...(previewMode ? previewModeRewrites : []),
-              ...(Array.isArray(rewrites) ? [] : rewrites?.beforeFiles ?? []),
+  (nextConfig = {}) => {
+    /** @type {NextConfig} */
+    let enhancedConfig = {
+      ...nextConfig,
+      images: {
+        ...nextConfig.images,
+        remotePatterns: [
+          ...(nextConfig.images?.remotePatterns ?? []),
+          ...NEXT_IMAGE_REMOTE_PATTERNS,
+          ...NEXT_IMAGE_REVIEW_APP_REMOTE_PATTERNS,
+        ],
+      },
+      async rewrites() {
+        const rewrites = await nextConfig.rewrites?.()
+        const previewModeRewrites = [
+          {
+            source: '/:path(.*)',
+            has: [
+              {
+                type: 'query',
+                key: 'x-makeswift-ref',
+                value: '(?<ref>.+)',
+              },
             ],
-            afterFiles: Array.isArray(rewrites)
-              ? rewrites
-              : rewrites?.afterFiles ?? [],
-            fallback: Array.isArray(rewrites) ? [] : rewrites?.fallback ?? [],
-          }
-        },
-        async headers() {
-          const headers = (await nextConfig.headers?.()) ?? []
+            // TODO: Should we use a different handler instead?
+            destination: '/api/makeswift/draft',
+          },
+        ]
+        return {
+          beforeFiles: [
+            ...(previewMode ? previewModeRewrites : []),
+            ...(Array.isArray(rewrites) ? [] : rewrites?.beforeFiles ?? []),
+          ],
+          afterFiles: Array.isArray(rewrites)
+            ? rewrites
+            : rewrites?.afterFiles ?? [],
+          fallback: Array.isArray(rewrites) ? [] : rewrites?.fallback ?? [],
+        }
+      },
+      async headers() {
+        const headers = (await nextConfig.headers?.()) ?? []
 
-          return [
-            ...headers,
-            {
-              source: '/:path*',
-              has: [
-                {
-                  type: 'query',
-                  key: 'x-makeswift-allow-origin',
-                  value: 'true',
-                },
-              ],
-              headers: [
-                {
-                  key: 'Access-Control-Allow-Origin',
-                  value: appOrigin,
-                },
-              ],
-            },
-          ]
-        },
-      }
-
-      const nextVersion = require('next/package.json').version
-
-      if (satisfies(nextVersion, '<13.4.0')) {
-        throw new Error('Makeswift requires a minimum Next.js version of 13.4.0.')
-      }
-
-      return {
-        ...enhancedConfig,
-        webpack(config, options) {
-          config = enhancedConfig.webpack?.(config, options) ?? config
-
-          if (resolveSymlinks != null) config.resolve.symlinks = resolveSymlinks
-
-          return config
-        },
-      }
+        return [
+          ...headers,
+          {
+            source: '/:path*',
+            has: [
+              {
+                type: 'query',
+                key: 'x-makeswift-allow-origin',
+                value: 'true',
+              },
+            ],
+            headers: [
+              {
+                key: 'Access-Control-Allow-Origin',
+                value: appOrigin,
+              },
+            ],
+          },
+        ]
+      },
     }
+
+    const nextVersion = require('next/package.json').version
+
+    if (satisfies(nextVersion, '<13.4.0')) {
+      throw new Error('Makeswift requires a minimum Next.js version of 13.4.0.')
+    }
+
+    return {
+      ...enhancedConfig,
+      webpack(config, options) {
+        config = enhancedConfig.webpack?.(config, options) ?? config
+
+        if (resolveSymlinks != null) config.resolve.symlinks = resolveSymlinks
+
+        return config
+      },
+    }
+  }

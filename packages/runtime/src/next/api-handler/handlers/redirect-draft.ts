@@ -5,14 +5,17 @@ import { cookies, draftMode } from 'next/headers'
 
 import { serialize as serializeCookie } from 'cookie'
 
-import { MakeswiftSiteVersion } from '../../../api/site-version'
 import {
   cookieSettingOptions,
+  jwtKeyFromUuid,
   MAKESWIFT_DRAFT_DATA_COOKIE,
   PRERENDER_BYPASS_COOKIE,
   SearchParams,
   SET_COOKIE_HEADER,
 } from './utils/draft'
+import { jwtVerify } from 'jose'
+import { createHash } from 'crypto'
+import { siteRefSchema } from '../../../api/site-version'
 
 type Context = { params: { [key: string]: string | string[] } }
 
@@ -57,20 +60,27 @@ export function originalRequestProtocol(request: NextRequest): string | null {
   return forwardedProto != null ? forwardedProto.split(',')[0].trim() : null
 }
 
+// TODO: Should we use a different handler instead?
 async function redirectDraftRouteHandler(
   request: NextRequest,
   _context: Context,
   { apiKey }: { apiKey: string },
 ): Promise<NextResponse<RedirectDraftResponse>> {
-  const secret = request.nextUrl.searchParams.get(SearchParams.DraftMode)
+  const jwt = request.nextUrl.searchParams.get(SearchParams.Ref)
 
-  if (secret == null) {
-    return new NextResponse('Unauthorized to enable draft mode: no secret provided', {
+  if (jwt == null) {
+    return new NextResponse('Unauthorized to enable draft mode: no ref provided', {
       status: 401,
     })
   }
-  if (secret !== apiKey) {
-    return new NextResponse('Unauthorized to enable draft mode: incorrect secret', { status: 401 })
+
+  try {
+    const { payload } = await jwtVerify(jwt, jwtKeyFromUuid(apiKey))
+    siteRefSchema.parse(payload)
+  } catch (error) {
+    return new NextResponse(`Unauthorized to enable draft mode: incorrect ref ${error}`, {
+      status: 401,
+    })
   }
 
   const draft = await draftMode()
@@ -89,7 +99,8 @@ async function redirectDraftRouteHandler(
     {
       name: MAKESWIFT_DRAFT_DATA_COOKIE,
       // Eventually, we can make this value dynamic using the request
-      value: JSON.stringify({ makeswift: true, siteVersion: MakeswiftSiteVersion.Working }),
+      // TODO: Should we store the jwt, or just the ref/payload?
+      value: JSON.stringify(jwt),
     },
   ]
 
@@ -103,7 +114,7 @@ async function redirectDraftRouteHandler(
     `${redirectProtocol}://${redirectHost}${request.nextUrl.pathname}${request.nextUrl.search}`,
   )
 
-  redirectUrl.searchParams.delete(SearchParams.DraftMode)
+  redirectUrl.searchParams.delete(SearchParams.Ref)
 
   const headers = new Headers()
   draftCookies.forEach(({ name, value }) => {
@@ -116,7 +127,7 @@ async function redirectDraftRouteHandler(
 async function redirectDraftApiRouteHandler(
   _req: NextApiRequest,
   res: NextApiResponse<RedirectDraftResponse>,
-  { }: { apiKey: string },
+  {}: { apiKey: string },
 ): Promise<void> {
   const message =
     'Cannot request draft endpoint from an API handler registered in `pages`. Move your Makeswift API handler to the `app` directory'

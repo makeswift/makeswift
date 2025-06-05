@@ -1,6 +1,6 @@
 import { client } from '@/makeswift/client'
 import '@/makeswift/components'
-import { getSiteVersion } from '@makeswift/runtime/next/server'
+import { getSiteVersion, getCommitId } from '@makeswift/runtime/next/server'
 import { notFound } from 'next/navigation'
 import { Page as MakeswiftPage } from '@makeswift/runtime/next'
 
@@ -29,7 +29,8 @@ export default async function Page(props: { params: ParsedUrlQuery }) {
   const params = await props.params
   const path = '/' + (params?.path ?? []).join('/')
   const snapshot = await client.getPageSnapshot(path, {
-    siteVersion: getSiteVersion(),
+    siteVersion: await getSiteVersion(),
+    commitId: await getCommitId(),
     locale: params.lang,
   })
 

@@ -7,6 +7,8 @@ type Context = { params: { [key: string]: string | string[] } }
 export type Manifest = {
   version: string
   previewMode: boolean
+  draftMode: boolean
+  refMode: boolean
   interactionMode: boolean
   clientSideNavigation: boolean
   elementFromPoint: boolean
@@ -59,16 +61,6 @@ export default async function handler(
       .exhaustive()
   }
 
-  const supportsPreviewMode = match(args)
-    .with(routeHandlerPattern, () => false)
-    .with(apiRoutePattern, () => true)
-    .exhaustive()
-
-  const supportsDraftMode = match(args)
-    .with(routeHandlerPattern, () => true)
-    .with(apiRoutePattern, () => false)
-    .exhaustive()
-
   const supportsWebhook = match(args)
     .with(routeHandlerPattern, () => true)
     .with(apiRoutePattern, () => false)
@@ -76,8 +68,9 @@ export default async function handler(
 
   const body = {
     version: PACKAGE_VERSION,
-    previewMode: supportsPreviewMode,
-    draftMode: supportsDraftMode,
+    previewMode: false,
+    draftMode: false,
+    refMode: true,
     interactionMode: true,
     clientSideNavigation: false,
     elementFromPoint: false,

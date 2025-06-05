@@ -4,6 +4,7 @@ import { Grenze_Gotisch, Grenze } from 'next/font/google'
 
 import '@/app/global.css'
 import '@/makeswift/components'
+import { getSiteVersion } from '@makeswift/runtime/next/server'
 
 type Params = Promise<{ lang: string; path?: string[] }>
 
@@ -27,6 +28,8 @@ export default async function RootLayout({
   params: Params
 }>) {
   const { lang } = await params
+  const siteVersion = await getSiteVersion()
+
   return (
     <html
       lang={lang}
@@ -34,7 +37,7 @@ export default async function RootLayout({
     >
       <body>
         <MakeswiftProvider
-          previewMode={(await draftMode()).isEnabled}
+          previewMode={siteVersion === 'Working'}
           locale={lang}
         >
           {children}

@@ -47,6 +47,7 @@ import { deterministicUUID } from '../utils/deterministic-uuid'
 import { Schema } from '@makeswift/controls'
 import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-only-documents'
 import { MAKESWIFT_CACHE_TAG } from './cache'
+import { getCommitId } from './draft-mode'
 
 const makeswiftPageResultSchema = z.object({
   id: z.string(),
@@ -661,10 +662,12 @@ export class Makeswift {
     pathname: string,
     {
       siteVersion: siteVersionPromise,
+      commitId,
       locale,
       allowLocaleFallback = true,
     }: {
       siteVersion: MakeswiftSiteVersion | Promise<MakeswiftSiteVersion>
+      commitId?: string | null
       locale?: string
       allowLocaleFallback?: boolean
     },
@@ -673,10 +676,12 @@ export class Makeswift {
       const params = new URLSearchParams()
       if (locale) params.set('locale', locale)
       if (allowLocaleFallback != null) params.set('allowLocaleFallback', `${allowLocaleFallback}`)
+      if (commitId) params.set('commitId', commitId)
       return params.toString()
     }
 
     const siteVersion = await siteVersionPromise
+    console.log({ siteVersion, commitId })
     const response = await this.fetch(
       `v3/pages/${encodeURIComponent(pathname)}/document?${queryParams()}`,
       siteVersion,
