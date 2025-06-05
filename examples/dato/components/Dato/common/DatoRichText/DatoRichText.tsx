@@ -1,0 +1,124 @@
+import Link from 'next/link'
+import { Ref, forwardRef } from 'react'
+import { StructuredText, renderNodeRule } from 'react-datocms'
+
+import clsx from 'clsx'
+import {
+  isBlockquote,
+  isCode,
+  isHeading,
+  isLink,
+  isList,
+  isParagraph,
+  isThematicBreak,
+} from 'datocms-structured-text-utils'
+
+import CodeBlock from '@/components/CodeBlock/CodeBlock'
+import { ResolvedField, isRichText } from '@/lib/dato/utils'
+
+import DatoImage from '../DatoImage/DatoImage'
+import styles from './richtext.module.css'
+
+type Props = {
+  className?: string
+  field: ResolvedField
+}
+
+const DynamicHeader = ({
+  id,
+  level,
+  children,
+}: {
+  id?: string
+  level: number | string
+  children: React.ReactNode
+}) => {
+  const HeadingTag = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+
+  const sizeClasses = {
+    1: 'text-4xl',
+    2: 'text-3xl',
+    3: 'text-2xl',
+    4: 'text-xl',
+    5: 'text-lg',
+    6: 'text-base',
+  }
+
+  const sizeClass = sizeClasses[Number(level) as keyof typeof sizeClasses] || 'text-xl'
+
+  return (
+    <HeadingTag id={id} className={`${sizeClass} mt-10 font-bold first:mt-0`}>
+      {children}
+    </HeadingTag>
+  )
+}
+
+const customNodes = [
+  renderNodeRule(isParagraph, ({ node, children, key }) => {
+    return (
+      <p className="mt-9 text-lg leading-8" key={key}>
+        {children}
+      </p>
+    )
+  }),
+  renderNodeRule(isList, ({ node, children, key }) => {
+    return node.style === 'numbered' ? (
+      <ol className={`list-decimal pl-12 text-lg ${styles.ordered}`} key={key}>
+        {children}
+      </ol>
+    ) : (
+      <ul className={`list-disc pl-4 text-lg ${styles.unordered}`} key={key}>
+        {children}
+      </ul>
+    )
+  }),
+  renderNodeRule(isLink, ({ node, children, key }) => {
+    return (
+      <Link href={node.url} className="text-blue-100 hover:underline" key={key}>
+        {children}
+      </Link>
+    )
+  }),
+  renderNodeRule(isBlockquote, ({ node, children, key }) => {
+    return (
+      <blockquote
+        className={`${styles.bquote} my-12 border-l-4 border-solid border-blue-100 px-10 py-2 italic text-blue-100`}
+        key={key}
+      >
+        {children}
+      </blockquote>
+    )
+  }),
+  renderNodeRule(isCode, ({ node, key }) => {
+    return <CodeBlock code={node.code} language={node.language} key={key} />
+  }),
+  renderNodeRule(isHeading, ({ node, children, key }) => {
+    return (
+      <DynamicHeader level={node.level} key={key}>
+        {children}
+      </DynamicHeader>
+    )
+  }),
+  renderNodeRule(isThematicBreak, ({ key }) => {
+    return <hr className="mt-10 max-w-[80%] border-gray-400" key={key} />
+  }),
+]
+
+export const DatoRichText = forwardRef(function DatoRichText(
+  { className, field }: Props,
+  ref: Ref<HTMLDivElement>
+) {
+  if ('error' in field) {
+    return <span>{field.error}</span>
+  }
+
+  if (!isRichText(field.data)) {
+    return <span>Data is not rich text.</span>
+  }
+
+  return (
+    <div ref={ref} className={className}>
+      <StructuredText data={field.data} customNodeRules={customNodes} />
+    </div>
+  )
+})
