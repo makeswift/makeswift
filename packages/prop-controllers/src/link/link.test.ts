@@ -1,3 +1,4 @@
+import { createReplacementContext } from '@makeswift/controls'
 import { ControlDataTypeKey, Types } from '../prop-controllers'
 import {
   LinkPropControllerData,
@@ -11,7 +12,6 @@ import {
   createLinkPropControllerDataFromLinkData,
   LinkData,
 } from './link'
-import { createReplacementContext } from '../utils/utils'
 
 describe('LinkPropController', () => {
   describe('getLinkPropControllerDataLinkData', () => {
@@ -153,7 +153,7 @@ describe('LinkPropController', () => {
     test('returns undefined when data is undefined', () => {
       expect(
         copyLinkPropControllerData(undefined, {
-          replacementContext: createReplacementContext({}),
+          replacementContext: createReplacementContext(),
           copyElement: (node) => node,
         }),
       ).toEqual(undefined)
@@ -176,13 +176,11 @@ describe('LinkPropController', () => {
         JSON.stringify(data).replace(pageId, 'testing'),
       )
 
-      const replacementContext = createReplacementContext({
-        pageIds: new Map([[pageId, 'testing']]),
-      })
-
       // Act
       const result = copyLinkPropControllerData(data, {
-        replacementContext: replacementContext,
+        replacementContext: createReplacementContext({
+          pageIds: { [pageId]: 'testing' },
+        }),
         copyElement: (node) => node,
       })
 
@@ -190,7 +188,7 @@ describe('LinkPropController', () => {
       expect(result).toMatchObject(expected)
     })
 
-    test('replaces page id from replacement context for v0 OPEN_PAGE link', () => {
+    test('replaces page ID from replacement context for v0 OPEN_PAGE link', () => {
       // Arrange
       const pageId = 'UGFnZTpmNTdmMjQ2MS0wMGY3LTQzZWUtYmIwOS03ODdiNTUyYzUyYWQ='
       const data: LinkPropControllerDataV0 = {
@@ -204,13 +202,68 @@ describe('LinkPropController', () => {
         JSON.stringify(data).replace(pageId, 'testing'),
       )
 
-      const replacementContext = createReplacementContext({
-        pageIds: new Map([[pageId, 'testing']]),
+      // Act
+      const result = copyLinkPropControllerData(data, {
+        replacementContext: createReplacementContext({
+          pageIds: { [pageId]: 'testing' },
+        }),
+        copyElement: (node) => node,
       })
+
+      // Assert
+      expect(result).toMatchObject(expected)
+    })
+
+    test('removes page ID marked for removal in v0 OPEN_PAGE link', () => {
+      // Arrange
+      const pageId = 'UGFnZTpmNTdmMjQ2MS0wMGY3LTQzZWUtYmIwOS03ODdiNTUyYzUyYWQ='
+      const data: LinkPropControllerDataV0 = {
+        type: 'OPEN_PAGE',
+        payload: {
+          pageId,
+          openInNewTab: false,
+        },
+      }
+
+      const expected = {
+        ...data,
+        payload: { ...data.payload, pageId: undefined },
+      }
 
       // Act
       const result = copyLinkPropControllerData(data, {
-        replacementContext: replacementContext,
+        replacementContext: createReplacementContext({
+          pageIds: { [pageId]: null },
+        }),
+        copyElement: (node) => node,
+      })
+
+      // Assert
+      expect(result).toMatchObject(expected)
+    })
+
+    test('removes page id when marked for removal in v1 OPEN_PAGE link', () => {
+      // Arrange
+      const pageId = 'UGFnZTpmNTdmMjQ2MS0wMGY3LTQzZWUtYmIwOS03ODdiNTUyYzUyYWQ='
+      const data: LinkPropControllerDataV1 = {
+        [ControlDataTypeKey]: LinkPropControllerDataV1Type,
+        value: {
+          type: 'OPEN_PAGE',
+          payload: { pageId, openInNewTab: false },
+        },
+      }
+      const expected = {
+        ...data,
+        value: {
+          ...data.value,
+          payload: { ...data.value.payload, pageId: undefined },
+        },
+      }
+      // Act
+      const result = copyLinkPropControllerData(data, {
+        replacementContext: createReplacementContext({
+          pageIds: { [pageId]: null },
+        }),
         copyElement: (node) => node,
       })
 
@@ -237,13 +290,11 @@ describe('LinkPropController', () => {
         JSON.stringify(data).replace('element-key', 'new-element-key'),
       )
 
-      const replacementContext = createReplacementContext({
-        elementKeys: new Map([['element-key', 'new-element-key']]),
-      })
-
       // Act
       const result = copyLinkPropControllerData(data, {
-        replacementContext: replacementContext,
+        replacementContext: createReplacementContext({
+          elementKeys: { 'element-key': 'new-element-key' },
+        }),
         copyElement: (node) => node,
       })
 
@@ -267,13 +318,11 @@ describe('LinkPropController', () => {
         JSON.stringify(data).replace('element-key', 'new-element-key'),
       )
 
-      const replacementContext = createReplacementContext({
-        elementKeys: new Map([['element-key', 'new-element-key']]),
-      })
-
       // Act
       const result = copyLinkPropControllerData(data, {
-        replacementContext: replacementContext,
+        replacementContext: createReplacementContext({
+          elementKeys: { 'element-key': 'new-element-key' },
+        }),
         copyElement: (node) => node,
       })
 
@@ -292,11 +341,9 @@ describe('LinkPropController', () => {
       },
     }
 
-    const replacementContext = createReplacementContext()
-
     // Act
     const result = copyLinkPropControllerData(data, {
-      replacementContext: replacementContext,
+      replacementContext: createReplacementContext(),
       copyElement: (node) => node,
     })
 
@@ -316,11 +363,10 @@ describe('LinkPropController', () => {
         },
       },
     }
-    const replacementContext = createReplacementContext()
 
     // Act
     const result = copyLinkPropControllerData(data, {
-      replacementContext: replacementContext,
+      replacementContext: createReplacementContext(),
       copyElement: (node) => node,
     })
 

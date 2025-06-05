@@ -1,5 +1,6 @@
+import { createReplacementContext } from '@makeswift/controls'
 import { ControlDataTypeKey, CopyContext, Types } from '../prop-controllers'
-import { createReplacementContext } from '../utils/utils'
+
 import {
   ImagesData,
   ImagesDataV0,
@@ -315,7 +316,7 @@ describe('copyImagesPropControllerData', () => {
     }
     const context: CopyContext = {
       replacementContext: createReplacementContext({
-        fileIds: new Map([['testId', 'copiedTestId']]),
+        fileIds: { testId: 'copiedTestId' },
       }),
       copyElement: (el) => el,
     }
@@ -359,7 +360,7 @@ describe('copyImagesPropControllerData', () => {
     ]
     const context: CopyContext = {
       replacementContext: createReplacementContext({
-        fileIds: new Map([['testId', 'copiedTestId']]),
+        fileIds: { testId: 'copiedTestId' },
       }),
       copyElement: (el) => el,
     }
@@ -395,7 +396,7 @@ describe('copyImagesPropControllerData', () => {
     ]
     const context: CopyContext = {
       replacementContext: createReplacementContext({
-        fileIds: new Map([['testId', 'copiedTestId']]),
+        fileIds: { testId: 'copiedTestId' },
       }),
       copyElement: (el) => el,
     }
@@ -412,5 +413,64 @@ describe('copyImagesPropControllerData', () => {
         },
       },
     ])
+  })
+
+  describe('does not copy image IDs marked for removal', () => {
+    test('v0 data', () => {
+      // Arrange
+      const dataV0: ImagesDataV0 = [
+        {
+          key: 'key',
+          props: {
+            file: 'testId',
+          },
+        },
+      ]
+
+      const context: CopyContext = {
+        replacementContext: createReplacementContext({
+          fileIds: { testId: null },
+        }),
+        copyElement: (el) => el,
+      }
+
+      // Act
+      const result = copyImagesPropControllerData(dataV0, context)
+
+      // Assert
+      expect(result).toEqual([{ key: 'key', props: { file: undefined } }])
+    })
+
+    test('v1 data', () => {
+      // Arrange
+      const dataV1: ImagesData = [
+        {
+          key: 'key',
+          version: 1,
+          props: {
+            file: {
+              version: 1,
+              type: 'makeswift-file',
+              id: 'testId',
+            },
+          },
+        },
+      ]
+
+      const context: CopyContext = {
+        replacementContext: createReplacementContext({
+          fileIds: { testId: null },
+        }),
+        copyElement: (el) => el,
+      }
+
+      // Act
+      const result = copyImagesPropControllerData(dataV1, context)
+
+      // Assert
+      expect(result).toEqual([
+        { key: 'key', version: 1, props: { file: undefined } },
+      ])
+    })
   })
 })

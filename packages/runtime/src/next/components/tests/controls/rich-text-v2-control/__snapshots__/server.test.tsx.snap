@@ -2,7 +2,7 @@
 
 exports[`renders a makeswift::controls::rich-text-v2::mode::block placeholder when empty: component styles 1`] = `
 [
-  ".css-112y3vj{display:inline-block;width:0;max-width:100%;white-space:nowrap;opacity:0.333;vertical-align:text-top;}",
+  ".mswft-112y3vj{display:inline-block;width:0;max-width:100%;white-space:nowrap;opacity:0.333;vertical-align:text-top;}",
 ]
 `;
 
@@ -12,7 +12,7 @@ NodeList [
     style="position:relative;white-space:pre-wrap;word-wrap:break-word"
   >
     <span
-      class="css-112y3vj"
+      class="mswft-112y3vj"
     >
       Write some text...
     </span>
@@ -22,7 +22,7 @@ NodeList [
 
 exports[`renders a makeswift::controls::rich-text-v2::mode::inline placeholder when empty: component styles 1`] = `
 [
-  ".css-112y3vj{display:inline-block;width:0;max-width:100%;white-space:nowrap;opacity:0.333;vertical-align:text-top;}",
+  ".mswft-112y3vj{display:inline-block;width:0;max-width:100%;white-space:nowrap;opacity:0.333;vertical-align:text-top;}",
 ]
 `;
 
@@ -32,7 +32,7 @@ NodeList [
     style="position:relative;white-space:pre-wrap;word-wrap:break-word"
   >
     <span
-      class="css-112y3vj"
+      class="mswft-112y3vj"
     >
       Write some text...
     </span>
@@ -42,7 +42,7 @@ NodeList [
 
 exports[`renders provided text content: component styles 1`] = `
 [
-  ".css-ytumd6{-webkit-text-decoration:none;text-decoration:none;}.css-1uk1gs8{margin:0;}.css-vz2etd{padding:0.5em 10px;font-size:1.25em;font-weight:300;border-left:5px solid rgba(0, 0, 0, 0.1);}.css-99zmsg{list-style-position:inside;-webkit-padding-start:20px;padding-inline-start:20px;list-style-type:disc;}.css-99zmsg ul{list-style-type:circle;}.css-99zmsg ul ul{list-style-type:square;}.css-dgqoak{list-style-position:inside;-webkit-padding-start:20px;padding-inline-start:20px;list-style-type:decimal;}@media only screen and (min-width: 769px){.css-144fjko{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.css-144fjko{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.css-144fjko{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}",
+  ".mswft-ytumd6{-webkit-text-decoration:none;text-decoration:none;}.mswft-1uk1gs8{margin:0;}.mswft-vz2etd{padding:0.5em 10px;font-size:1.25em;font-weight:300;border-left:5px solid rgba(0, 0, 0, 0.1);}.mswft-99zmsg{list-style-position:inside;-webkit-padding-start:20px;padding-inline-start:20px;list-style-type:disc;}.mswft-99zmsg ul{list-style-type:circle;}.mswft-99zmsg ul ul{list-style-type:square;}.mswft-dgqoak{list-style-position:inside;-webkit-padding-start:20px;padding-inline-start:20px;list-style-type:decimal;}@media only screen and (min-width: 769px){.mswft-144fjko{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.mswft-144fjko{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.mswft-144fjko{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}",
 ]
 `;
 
@@ -52,126 +52,126 @@ NodeList [
     style="position:relative;white-space:pre-wrap;word-wrap:break-word"
   >
     <p
-      class="css-1uk1gs8 css-1olq3mu"
+      class="mswft-1uk1gs8 mswft-1olq3mu"
     >
       <span
-        class="css-1olq3mu"
+        class="mswft-1olq3mu"
       >
         ﻿
       </span>
       <a
-        class="css-ytumd6"
+        class="mswft-ytumd6"
         href="https://www.bigcommerce.com/adyen"
         target="_blank"
       >
         <span
-          class="css-144fjko"
+          class="mswft-144fjko"
         >
           Adyen
         </span>
       </a>
       <span
-        class="css-1olq3mu"
+        class="mswft-1olq3mu"
       >
         ﻿
       </span>
     </p>
     <p
-      class="css-1uk1gs8 css-1olq3mu"
+      class="mswft-1uk1gs8 mswft-1olq3mu"
     >
       <span
-        class="css-1olq3mu"
+        class="mswft-1olq3mu"
       >
         ﻿
       </span>
       <a
-        class="css-ytumd6"
+        class="mswft-ytumd6"
         href="http://www.authorize.net/"
         target="_blank"
       >
         <span
-          class="css-144fjko"
+          class="mswft-144fjko"
         >
           Authorize.net
         </span>
       </a>
       <span
-        class="css-1olq3mu"
+        class="mswft-1olq3mu"
       >
         ﻿
       </span>
     </p>
     <p
-      class="css-1uk1gs8 css-1olq3mu"
+      class="mswft-1uk1gs8 mswft-1olq3mu"
     >
       <span
-        class="css-1olq3mu"
+        class="mswft-1olq3mu"
       >
         ﻿
       </span>
       <a
-        class="css-ytumd6"
+        class="mswft-ytumd6"
         href="https://www.bigcommerce.com/bluesnap/"
         target="_blank"
       >
         <span
-          class="css-144fjko"
+          class="mswft-144fjko"
         >
           BlueSnap
         </span>
       </a>
       <span
-        class="css-1olq3mu"
+        class="mswft-1olq3mu"
       >
         ﻿
       </span>
     </p>
     <p
-      class="css-1uk1gs8 css-1olq3mu"
+      class="mswft-1uk1gs8 mswft-1olq3mu"
     >
       <span
-        class="css-1olq3mu"
+        class="mswft-1olq3mu"
       >
         ﻿
       </span>
       <a
-        class="css-ytumd6"
+        class="mswft-ytumd6"
         href="https://support.bigcommerce.com/s/article/Connecting-with-Checkoutcom/"
         target="_blank"
       >
         <span
-          class="css-144fjko"
+          class="mswft-144fjko"
         >
           Checkout.com
         </span>
       </a>
       <span
-        class="css-1olq3mu"
+        class="mswft-1olq3mu"
       >
         ﻿
       </span>
     </p>
     <p
-      class="css-1uk1gs8 css-1olq3mu"
+      class="mswft-1uk1gs8 mswft-1olq3mu"
     >
       <span
-        class="css-1olq3mu"
+        class="mswft-1olq3mu"
       >
         ﻿
       </span>
       <a
-        class="css-ytumd6"
+        class="mswft-ytumd6"
         href="http://www.cybersource.com/"
         target="_blank"
       >
         <span
-          class="css-144fjko"
+          class="mswft-144fjko"
         >
           CyberSource Direct
         </span>
       </a>
       <span
-        class="css-1olq3mu"
+        class="mswft-1olq3mu"
       >
         ﻿
       </span>

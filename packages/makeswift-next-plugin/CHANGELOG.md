@@ -1,5 +1,17 @@
 # @makeswift/next-plugin
 
+## 0.4.1
+
+### Patch Changes
+
+- 461fe75: fix: Pages Router regression, localized pages redirect to the base locale in the builder
+
+## 0.4.0
+
+### Minor Changes
+
+- 8241d49: feat: sets draft cookies directly on the client instead of proxying. Includes a new toolbar for exiting draft state outside of the builder. Removes all previous proxying related rewrites and endpoints.
+
 ## 0.3.1
 
 ### Patch Changes

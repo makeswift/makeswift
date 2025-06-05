@@ -1,5 +1,10 @@
 import { z } from 'zod'
 import {
+  ContextResource,
+  replaceResourceIfNeeded,
+  shouldRemoveResource,
+} from '@makeswift/controls'
+import {
   ControlDataTypeKey,
   CopyContext,
   Options,
@@ -95,7 +100,7 @@ export function createImagePropControllerDataFromImageData(
         ({
           [ControlDataTypeKey]: ImagePropControllerDataV2Type,
           value: data,
-        } as const),
+        }) as const,
     )
     .otherwise(() => data)
 }
@@ -115,13 +120,27 @@ export function getImagePropControllerFileIds(
 
 function copyImageData(
   data: ImageData | undefined,
-  context: CopyContext,
+  ctx: CopyContext,
 ): ImageData | undefined {
+  const existingFileId = match(data)
+    .with(P.string, (v) => v)
+    .with({ type: 'makeswift-file', version: 1 }, (v) => v.id)
+    .otherwise(() => undefined)
+
+  if (
+    existingFileId != null &&
+    shouldRemoveResource(ContextResource.File, existingFileId, ctx)
+  ) {
+    return undefined
+  }
+
   return match(data)
-    .with(P.string, (v) => context.replacementContext.fileIds.get(v) ?? v)
+    .with(P.string, (v) =>
+      replaceResourceIfNeeded(ContextResource.File, v, ctx),
+    )
     .with({ type: 'makeswift-file', version: 1 }, (v) => ({
       ...v,
-      id: context.replacementContext.fileIds.get(v.id) ?? v.id,
+      id: replaceResourceIfNeeded(ContextResource.File, v.id, ctx),
     }))
     .otherwise((v) => v)
 }

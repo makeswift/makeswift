@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`MakeswiftPage metadata and seo tag rendering does NOT render any metadata when passing all options as false 1`] = `
+exports[`MakeswiftPage metadata and seo tag rendering does NOT render any page metadata when passing all options as false 1`] = `
 <head>
   <style
     href="makeswift-base-styles"
@@ -15,10 +15,14 @@ exports[`MakeswiftPage metadata and seo tag rendering does NOT render any metada
         }
         
   </style>
+  <meta
+    content="{"draft":false,"inBuilder":false}"
+    name="makeswift-draft-info"
+  />
 </head>
 `;
 
-exports[`MakeswiftPage metadata and seo tag rendering does NOT render any metadata when passing empty options 1`] = `
+exports[`MakeswiftPage metadata and seo tag rendering does NOT render any page metadata when passing empty options 1`] = `
 <head>
   <style
     href="makeswift-base-styles"
@@ -33,10 +37,14 @@ exports[`MakeswiftPage metadata and seo tag rendering does NOT render any metada
         }
         
   </style>
+  <meta
+    content="{"draft":false,"inBuilder":false}"
+    name="makeswift-draft-info"
+  />
 </head>
 `;
 
-exports[`MakeswiftPage metadata and seo tag rendering does NOT render any metadata when passing false 1`] = `
+exports[`MakeswiftPage metadata and seo tag rendering does NOT render any page metadata when passing false 1`] = `
 <head>
   <style
     href="makeswift-base-styles"
@@ -51,6 +59,10 @@ exports[`MakeswiftPage metadata and seo tag rendering does NOT render any metada
         }
         
   </style>
+  <meta
+    content="{"draft":false,"inBuilder":false}"
+    name="makeswift-draft-info"
+  />
 </head>
 `;
 
@@ -87,6 +99,10 @@ exports[`MakeswiftPage metadata and seo tag rendering only renders selective met
   <meta
     content="test, keywords"
     name="keywords"
+  />
+  <meta
+    content="{"draft":false,"inBuilder":false}"
+    name="makeswift-draft-info"
   />
 </head>
 `;
@@ -154,6 +170,10 @@ exports[`MakeswiftPage metadata and seo tag rendering renders all metadata by de
     content="summary_large_image"
     name="twitter:card"
   />
+  <meta
+    content="{"draft":false,"inBuilder":false}"
+    name="makeswift-draft-info"
+  />
 </head>
 `;
 
@@ -220,6 +240,10 @@ exports[`MakeswiftPage metadata and seo tag rendering renders all metadata when 
     content="summary_large_image"
     name="twitter:card"
   />
+  <meta
+    content="{"draft":false,"inBuilder":false}"
+    name="makeswift-draft-info"
+  />
 </head>
 `;
 
@@ -285,6 +309,10 @@ exports[`MakeswiftPage metadata and seo tag rendering renders all metadata when 
   <meta
     content="summary_large_image"
     name="twitter:card"
+  />
+  <meta
+    content="{"draft":false,"inBuilder":false}"
+    name="makeswift-draft-info"
   />
 </head>
 `;

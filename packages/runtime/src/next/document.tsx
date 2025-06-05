@@ -10,11 +10,8 @@ import NextDocument, {
   Main,
   NextScript,
 } from 'next/document'
-import { PreviewModeScript } from './preview-mode'
 
-type DocumentProps = { appOrigin?: string }
-
-export class Document extends NextDocument<DocumentProps> {
+export class Document extends NextDocument {
   static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
     const initialProps = await NextDocument.getInitialProps(ctx)
 
@@ -33,13 +30,9 @@ export class Document extends NextDocument<DocumentProps> {
   }
 
   render() {
-    const { isPreview } = this.props.__NEXT_DATA__
-
     return (
       <Html>
-        <Head>
-          <PreviewModeScript isPreview={isPreview} appOrigin={this.props.appOrigin} />
-        </Head>
+        <Head />
         <body>
           <Main />
           <NextScript />

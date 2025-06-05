@@ -5,6 +5,11 @@ import {
   Options,
   Types,
 } from '../prop-controllers'
+import {
+  ContextResource,
+  replaceResourceIfNeeded,
+  shouldRemoveResource,
+} from '@makeswift/controls'
 import { P, match } from 'ts-pattern'
 
 const tableIdSchema = z.string()
@@ -93,7 +98,7 @@ export function createTablePropControllerDataFromTableId(
         ({
           [ControlDataTypeKey]: TablePropControllerDataV1Type,
           value,
-        } as const),
+        }) as const,
     )
     .otherwise(() => value)
 }
@@ -101,13 +106,21 @@ export function createTablePropControllerDataFromTableId(
 function copyTableId(data: TableId, context: CopyContext): TableId {
   if (data == null) return data
 
-  return context.replacementContext.tableIds.get(data) ?? data
+  return replaceResourceIfNeeded(ContextResource.Table, data, context)
 }
 
 export function copyTablePropControllerData(
   data: TablePropControllerData | undefined,
-  context: CopyContext,
+  ctx: CopyContext,
 ): TablePropControllerData | undefined {
+  const currentTableId = getTablePropControllerDataTableId(data)
+  if (
+    currentTableId != null &&
+    shouldRemoveResource(ContextResource.Table, currentTableId, ctx)
+  ) {
+    return undefined
+  }
+
   return match(data)
     .with(undefined, () => undefined)
     .with(
@@ -115,10 +128,10 @@ export function copyTablePropControllerData(
       (v1) =>
         ({
           [ControlDataTypeKey]: TablePropControllerDataV1Type,
-          value: copyTableId(v1.value, context),
-        } as const),
+          value: copyTableId(v1.value, ctx),
+        }) as const,
     )
-    .otherwise((v0) => copyTableId(v0, context))
+    .otherwise((v0) => copyTableId(v0, ctx))
 }
 
 export function getTablePropControllerDataTableIds(

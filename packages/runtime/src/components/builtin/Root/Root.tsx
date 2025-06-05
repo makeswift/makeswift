@@ -8,6 +8,7 @@ import { useGlobalStyle } from '../../../runtimes/react/use-global-style'
 import { GridItem } from '../../shared/grid-item'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { GridData, ResponsiveBackgroundsData, ResponsiveGapData } from '@makeswift/prop-controllers'
+import { useCSSResetEnabled } from '../../../next/root-style-registry'
 
 type Props = {
   children?: GridData
@@ -20,16 +21,16 @@ const Root = forwardRef(function Page(
   { children, backgrounds, rowGap, columnGap }: Props,
   ref: Ref<HTMLDivElement>,
 ) {
-  useGlobalStyle({
-    html: {
-      boxSizing: 'border-box',
-    },
-    '*, *::before, *::after': {
-      boxSizing: 'inherit',
-    },
-  })
+  const cssResetEnabled = useCSSResetEnabled()
 
-  useGlobalStyle(normalize())
+  useGlobalStyle(
+    cssResetEnabled
+      ? [
+          { html: { boxSizing: 'border-box' }, '*, *::before, *::after': { boxSizing: 'inherit' } },
+          normalize(),
+        ]
+      : [],
+  )
 
   return (
     <BackgroundsContainer ref={ref} style={{ background: 'white' }} backgrounds={backgrounds}>

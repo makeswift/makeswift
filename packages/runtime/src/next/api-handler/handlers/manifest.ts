@@ -15,6 +15,7 @@ export type Manifest = {
   unstable_siteVersions: boolean
   localizedPageSSR: boolean
   webhook: boolean
+  localizedPagesOnlineByDefault: boolean
 }
 
 type ManifestError = { message: string }
@@ -85,6 +86,7 @@ export default async function handler(
     unstable_siteVersions: true,
     localizedPageSSR: true,
     webhook: supportsWebhook,
+    localizedPagesOnlineByDefault: true,
   }
 
   return match(args)

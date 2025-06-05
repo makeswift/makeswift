@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getPageSnapshot correctly passes \`locale\` parameter (es-MX) 1`] = `
+{
+  "apiResources": {
+    "File": [],
+    "GlobalElement": [],
+    "LocalizedGlobalElement": [],
+    "PagePathnameSlice": [],
+    "Swatch": [],
+    "Table": [],
+    "Typography": [],
+  },
+  "localizedResourcesMap": {
+    "es-MX": {},
+  },
+}
+`;
+
+exports[`getPageSnapshot correctly passes \`locale\` parameter (fr) 1`] = `
+{
+  "apiResources": {
+    "File": [],
+    "GlobalElement": [],
+    "LocalizedGlobalElement": [],
+    "PagePathnameSlice": [],
+    "Swatch": [],
+    "Table": [],
+    "Typography": [],
+  },
+  "localizedResourcesMap": {
+    "fr": {},
+  },
+}
+`;
+
+exports[`getPageSnapshot correctly passes \`locale\` parameter (undefined) 1`] = `
+{
+  "apiResources": {
+    "File": [],
+    "GlobalElement": [],
+    "LocalizedGlobalElement": [],
+    "PagePathnameSlice": [],
+    "Swatch": [],
+    "Table": [],
+    "Typography": [],
+  },
+  "localizedResourcesMap": {},
+}
+`;

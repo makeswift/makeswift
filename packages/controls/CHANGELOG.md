@@ -1,5 +1,17 @@
 # @makeswift/controls
 
+## 0.1.10
+
+### Patch Changes
+
+- f8720ba: Allow tree data from copying a typography to include an undefined id
+
+## 0.1.9
+
+### Patch Changes
+
+- f33c4d7: Add support for removing resources while copying control/prop-controller data with a replacement context
+
 ## 0.1.8
 
 ### Patch Changes

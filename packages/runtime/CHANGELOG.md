@@ -1,5 +1,171 @@
 # @makeswift/runtime
 
+## 0.24.6
+
+### Patch Changes
+
+- c47f0cb: Surround all elements with an error boundary to prevent rendering errors from causing page-wide failures.
+- Updated dependencies [f8720ba]
+  - @makeswift/controls@0.1.10
+  - @makeswift/prop-controllers@0.4.3
+
+## 0.24.5
+
+### Patch Changes
+
+- 7c74882: fix: `<script>` tag error in the console when a site is loaded in the builder
+
+## 0.24.4
+
+### Patch Changes
+
+- 7fd272b: fix: Box background videos do not play correctly in iOS
+- f33c4d7: Add support for removing resources while copying control/prop-controller data with a replacement context
+- 97ef1e9: fix: `Invalid URL` error on attempt to open a reverse-proxied site in the builder
+- Updated dependencies [f33c4d7]
+  - @makeswift/prop-controllers@0.4.2
+  - @makeswift/controls@0.1.9
+
+## 0.24.3
+
+### Patch Changes
+
+- Updated dependencies [461fe75]
+  - @makeswift/next-plugin@0.4.1
+
+## 0.24.2
+
+### Patch Changes
+
+- f6de5e9: fix: Pages Router regression, localized pages redirect to the base locale in the builder
+- 1e3bf16: Add helper function for introspecting without utilizing controls
+
+## 0.24.1
+
+### Patch Changes
+
+- e151a7d: Add `enableCssReset` prop to `RootStyleRegistry` (default `true`). Set it to `false` when using a `@layer`-based CSS framework such as Tailwind v4.
+
+## 0.24.0
+
+### Minor Changes
+
+- 8241d49: feat: sets draft cookies directly on the client instead of proxying. Includes a new toolbar for exiting draft state outside of the builder. Removes all previous proxying related rewrites and endpoints.
+- 0e512b2: BREAKING: Upgrading to this runtime version will opt your site into the new localized pages behavior, both in the builder and on the live site.
+
+  Localized pages are no longer silently created when navigated to in the builder. Instead, they now automatically fall back to the base locale by default. To create a localized page, users must take explicit action in the builder.
+
+  Localized pages that are explicitly marked as Offline will remain offline.
+
+  You can disable fallback behavior on a per-page basis by passing `allowLocaleFallback: false` to the `client.getPageSnapshot` call:
+
+  ```typescript
+  const snapshot = await client.getPageSnapshot(path, {
+    siteVersion: await getSiteVersion(),
+    locale,
+    allowLocaleFallback: false,
+  });
+  ```
+
+- 6ba02bb: BREAKING: Removes the `DraftModeScript` and `PreviewModeScript` from the runtime. These components are no longer needed for integrating a site with Makeswift, and can be safely removed from any existing code.
+
+  If you're using App Router, you can remove the import and use of `DraftModeScript` from your layouts:
+
+  ```diff src/app/layout.tsx
+  import { draftMode } from "next/headers";
+  - import { DraftModeScript } from "@makeswift/runtime/next/server";
+  import { MakeswiftProvider } from "@/makeswift/provider";
+  import "@/makeswift/components";
+
+  export default async function RootLayout({
+    children,
+  }: Readonly<{
+    children: React.ReactNode;
+  }>) {
+    return (
+      <html lang="en">
+  -      <head>
+  -         <DraftModeScript />
+  -       </head>
+        <body>
+          <MakeswiftProvider previewMode={(await draftMode()).isEnabled}>
+            {children}
+          </MakeswiftProvider>
+        </body>
+      </html>
+    );
+  }
+  ```
+
+  If you're using Pages Router, can you remove the import and use of `PreviewModeScript` from your documents:
+
+  ```diff src/pages/_document.tsx
+  import { Html, Head, Main, NextScript } from "next/document";
+  - import { PreviewModeScript } from "@makeswift/runtime/next";
+  import { Document } from "@makeswift/runtime/next/document";
+
+  export default class MyDocument extends Document {
+    render() {
+      return (
+        <Html>
+          <Head>
+  -          <PreviewModeScript isPreview={this.props.__NEXT_DATA__.isPreview} />
+          </Head>
+          <body>
+            <Main />
+            <NextScript />
+          </body>
+        </Html>
+      );
+    }
+  }
+  ```
+
+  If your Makeswift site is [deployed with Docker](/developer/guides/deploying/docker), the `MAKESWIFT_DRAFT_MODE_PROXY_FORCE_HTTP` environment variable is no longer used. You can safely remove it from your Docker build.
+
+### Patch Changes
+
+- a645d1e: chore: remove experimental APIs for middleware request patching
+- bc0a2bf: chore: pass app origin as named param in builder connection hooks
+- e169955: feat: reinstate experimental middleware utility function for detecting draft requests from the builder, but updated to handle requests where draft related cookies are directly attached.
+- Updated dependencies [8241d49]
+  - @makeswift/next-plugin@0.4.0
+
+## 0.23.14
+
+### Patch Changes
+
+- fix: Box background videos do not play correctly in iOS
+
+## 0.23.13
+
+### Patch Changes
+
+- 7934bce: fix: remove transitive `revalidateTag` import in the Makeswift client; resolves Next.js 15.3.1 error on attempt to render a page.
+
+## 0.23.12
+
+### Patch Changes
+
+- 9b78c7e: feat: add `onPublish` callback to `MakeswiftApiHandler`
+- 8f99513: chore: refactor use-register-document
+- dababda: chore: improve error messages/logging for experimental draft request creation utilities
+- 0db5a33: chore: improve error messages/logging in Makeswift client
+- c6459b2: feat: support additional locales for Pages Router hosts
+- c6db2c8: Fixes prop controller creation for documents that are registered after the initial builder connection is established.
+
+## 0.23.11
+
+### Patch Changes
+
+- 546868b: Fixes a prop editing performance regression introduced in `v0.23.0`.
+
+## 0.23.10
+
+### Patch Changes
+
+- 79a6e22: fix: change the default Emotion cache key from `css` to `mswft` to reduce the risk of conflicts with the host's code; allow overriding the key by passing the `cacheKey` prop to `<RootStyleRegistry />`. Resolves https://github.com/makeswift/makeswift/issues/964.
+
 ## 0.23.9
 
 ### Patch Changes

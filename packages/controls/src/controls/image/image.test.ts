@@ -92,6 +92,27 @@ describe('Image', () => {
       })
     })
 
+    test('returns `undefined` when file marked for removal', () => {
+      const context: CopyContext = {
+        replacementContext: createReplacementContext({
+          fileIds: { 'fake-file-id-3': null },
+        }),
+        copyElement: (node) => node,
+      }
+
+      // Act
+      const v1result = Image().copyData(
+        { type: 'makeswift-file', id: 'fake-file-id-3', version: 1 },
+        context,
+      )
+
+      const v0result = Image().copyData('fake-file-id-3', context)
+
+      // Assert
+      expect(v1result).toBeUndefined()
+      expect(v0result).toBeUndefined()
+    })
+
     test.each([undefined])('gracefully handles %s', (value) => {
       expect(Image().copyData(value, context)).toBe(value)
     })
