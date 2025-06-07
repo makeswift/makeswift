@@ -14,7 +14,9 @@ import {
   TextInput,
 } from '../../../controls'
 
-import { ReactRuntime } from '../react-runtime'
+import { ComponentRegistration, ReactRuntime } from '../react-runtime'
+import { getReactComponent } from '../../../state/react-page'
+import { CLIENT_REFERENCE_TAG } from '../utils/is-client-reference'
 
 type Card = {
   imageSrc?: string
@@ -43,10 +45,68 @@ function Sandbox(props: {
   return <div>{JSON.stringify(props)}</div>
 }
 
-const runtime = new ReactRuntime()
+// Fabricate the object React produces for `import X from './X'` when the file starts with "use client".
+function createClientReference() {
+  return { $$typeof: CLIENT_REFERENCE_TAG } as unknown as ComponentRegistration<any>
+}
+
+const Component = () => <p>Hello</p>
+
+describe('ReactRuntime.connect', () => {
+  it('returns the expected registration object', () => {
+    // Arrange
+    const meta = {
+      type: 'component',
+      label: 'Component',
+    }
+
+    // Act
+    const reg = ReactRuntime.connect(Component, meta)
+
+    // Assert
+    expect(reg).toEqual({
+      component: Component,
+      meta: expect.objectContaining(meta),
+    })
+  })
+})
+
+describe('ReactRuntime()', () => {
+  it('accepts components registration', () => {
+    // Arrange
+    const type = 'component'
+    const component = ReactRuntime.connect(Component, {
+      type,
+      label: 'Component',
+    })
+
+    // Act
+    const runtime = new ReactRuntime({
+      components: { component },
+    })
+
+    // Assert
+    const state = runtime.store.getState()
+    expect(getReactComponent(state, type)).toBeDefined()
+    expect(getReactComponent(state, 'random-type')).toBeNull()
+  })
+
+  it('throws an error when a component is a client reference', () => {
+    // Arrange
+    const clientRef = createClientReference()
+
+    // Act
+    // Assert
+    expect(() => {
+      new ReactRuntime({ components: { button: clientRef } })
+    }).toThrow('ReactRuntime: failed to register component')
+  })
+})
 
 describe('registerComponent', () => {
   test("correctly deduces control definitions' resolved value types", () => {
+    const runtime = new ReactRuntime()
+
     runtime.registerComponent(Sandbox, {
       type: 'sandbox',
       label: 'Sandbox',

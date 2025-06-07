@@ -11,7 +11,6 @@ import {
 } from '@makeswift/runtime/next'
 
 import { client } from '@/makeswift/client'
-import '@/makeswift/components'
 
 type ParsedUrlQuery = { path?: string[] }
 
