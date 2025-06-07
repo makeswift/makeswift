@@ -24,6 +24,7 @@ export function Page({ page, rootDocument, metadata = true }: Props): JSX.Elemen
 
   return (
     <>
+      {/* DECOUPLE_TODO: */}
       <PageHead document={page} metadata={pageMetadataSettings} />
 
       <DocumentRoot rootDocument={rootDocument} />
