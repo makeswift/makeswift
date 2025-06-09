@@ -113,6 +113,7 @@ describe('Color', () => {
         expect(
           Color({
             label: 'color',
+            description: 'A color control',
             defaultValue: value,
           }),
         ).toMatchSnapshot()
@@ -122,9 +123,19 @@ describe('Color', () => {
     test('disallows extraneous properties', () => {
       Color({
         label: 'background',
+        description: 'desc',
         // @ts-expect-error
         extra: 'extra',
       })
+    })
+
+    test('accepts description property', () => {
+      const def = Color({
+        label: 'background',
+        description: 'This is a color control',
+        defaultValue: '#fff',
+      })
+      expect(def.config.description).toBe('This is a color control')
     })
   })
 
@@ -139,6 +150,7 @@ describe('Color', () => {
         labelOrientation: undefined,
         hideAlpha: true,
         defaultValue: '#fff' as string,
+        description: 'desc',
       }),
     )
 
@@ -148,6 +160,7 @@ describe('Color', () => {
         labelOrientation: undefined,
         hideAlpha: undefined,
         defaultValue: undefined,
+        description: undefined,
       }),
     )
   })
