@@ -1,0 +1,28 @@
+fragment BlogPostFields on BlogpostConnectionConnection {
+  totalCount
+  pageInfo {
+    hasNextPage
+    hasPreviousPage
+  }
+  edges {
+    cursor
+    node {
+      title
+      feed_date
+      hero
+      _meta {
+        uid
+        type
+        tags
+        id
+        lastPublicationDate
+      }
+    }
+  }
+}
+
+query GetBlogs($first: Int, $after: String, $sortBy: SortBlogposty, $where: WhereBlogpost) {
+  allBlogposts(first: $first, after: $after, sortBy: $sortBy, where: $where) {
+    ...BlogPostFields
+  }
+}
