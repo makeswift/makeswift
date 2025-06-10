@@ -1,4 +1,4 @@
-import { Style, Color } from "@makeswift/runtime/controls";
+import { Style, Color, RichText, TextInput, List, Checkbox, Combobox } from "@makeswift/runtime/controls";
 
 import { runtime } from "@/makeswift/runtime";
 
@@ -37,5 +37,25 @@ runtime.registerComponent(Circle, {
       label: 'MyCirCol',
       defaultValue: '#ff0000',
     }),
+    check: Checkbox({
+      label: 'CircCheck',
+      description: 'This is a checkbox for the circle.',
+    }),
+    text: TextInput({
+      label: 'CircText',
+      description: 'This is a text input for the circle.',
+      defaultValue: 'Hello, Circle!',
+    }),
+    menu: Combobox({
+      label: 'CircMenu',
+      description: 'This is a combobox for the circle.',
+      getOptions() {
+        return [
+          { id:'1', label: 'Option 1', value: 'option1' },
+          { id:'2', label: 'Option 2', value: 'option2' },
+          { id:'3', label: 'Option 3', value: 'option3' },
+        ];
+      },
+    })
   }
 });

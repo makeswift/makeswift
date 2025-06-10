@@ -25,6 +25,7 @@ describe('Checkbox Types', () => {
 
     expectTypeOf<ConfigType>().toEqualTypeOf<{
       label?: string | undefined
+      description?: string | undefined
       defaultValue: boolean
     }>()
 
@@ -44,6 +45,7 @@ describe('Checkbox Types', () => {
     type ConfigType = typeof def.config
     expectTypeOf<ConfigType>().toEqualTypeOf<{
       label?: string | undefined
+      description?: string | undefined
       defaultValue?: boolean | undefined
     }>()
 
