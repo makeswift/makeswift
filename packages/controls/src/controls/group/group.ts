@@ -105,6 +105,7 @@ class Definition<C extends Config> extends ControlDefinition<
         type: z.literal(Definition.type),
         config: z.object({
           label: z.string().optional(),
+          description: z.string().optional(),
           preferredLayout: z
             .union([
               z.literal(Definition.Layout.Inline),
@@ -177,6 +178,7 @@ class Definition<C extends Config> extends ControlDefinition<
 
     const config = z.object({
       label: z.string().optional(),
+      description: z.string().optional(),
       preferredLayout: z.union([
         z.literal(Definition.Layout.Inline),
         z.literal(Definition.Layout.Popover),

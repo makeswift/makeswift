@@ -32,7 +32,7 @@ export class ReactRuntime extends RuntimeCore {
       icon = ComponentIcon.Cube,
       hidden = false,
       props,
-      description = '',
+      description,
     }: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P; description?: string },
   ): () => void {
     validateComponentType(type, component as unknown as ComponentType)

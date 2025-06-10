@@ -1,4 +1,4 @@
-import { Style, Color, RichText, TextInput, List, Checkbox, Combobox } from "@makeswift/runtime/controls";
+import { Style, Color, RichText, TextInput, Group, List, Checkbox, Combobox, Image } from "@makeswift/runtime/controls";
 
 import { runtime } from "@/makeswift/runtime";
 
@@ -56,6 +56,21 @@ runtime.registerComponent(Circle, {
           { id:'3', label: 'Option 3', value: 'option3' },
         ];
       },
-    })
+    }),
+    image: Image({
+      label: 'CircImage',
+      description: 'This is an image for the circle.',
+      format: Image.Format.WithDimensions,
+
+    }),
+    banner: Group({
+      label: "Banner properties",
+      description: 'My amazing banner descriptions!',
+      preferredLayout: Group.Layout.Popover,
+      props: {
+        text: TextInput({ defaultValue: "Banner text" }),
+        background: Color({ label: "Background", defaultValue: "black" }),
+      },
+    }),
   }
 });
