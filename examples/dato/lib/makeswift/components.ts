@@ -1,0 +1,6 @@
+import '@/components/builtins/BlogFeed/register'
+import '@/components/builtins/BlogPost/register'
+import '@/components/dato/entries/BlogPost/BlogPostFeed/BlogPostFeed.makeswift'
+import '@/components/dato/entries/BlogPost/BlogPostImage/BlogPostImage.makeswift'
+import '@/components/dato/entries/BlogPost/BlogPostRichText/BlogPostRichText.makeswift'
+import '@/components/dato/entries/BlogPost/BlogPostText/BlogPostText.makeswift'
