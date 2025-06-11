@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { MakeswiftComponent } from '@makeswift/runtime/next'
 import { getSiteVersion } from '@makeswift/runtime/next/server'
 
-import { BLOG_POST_EMBEDDED_COMPONENT_ID } from '@/components/Builtins/BlogPost/BlogPost.makeswift'
+import { BLOG_POST_EMBEDDED_COMPONENT_ID } from '@/components/builtins/BlogPost/BlogPost.makeswift'
 import { GetBlogsDocument } from '@/generated/contentful'
 import { client } from '@/lib/contentful/client'
 import { getAllBlogs } from '@/lib/contentful/fetchers'
