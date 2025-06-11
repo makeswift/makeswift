@@ -1,9 +1,7 @@
 import clsx from 'clsx'
-import { isDevelopment } from 'utils/isDevelopment'
 
 import { Warning } from '@/components/Warning'
-
-import { ResolvedField } from '../../../../lib/contentful/utils'
+import { type ResolvedField } from '@/lib/contentful/utils'
 
 type Props = {
   className?: string
@@ -24,13 +22,11 @@ export function ContentfulText({
   as: Component = 'p',
 }: Props) {
   if ('error' in field) {
-    if (isDevelopment()) return <Warning className={className}>{field.error}</Warning>
-    return null
+    return <Warning className={className}>{field.error}</Warning>
   }
 
   if (typeof field.data !== 'string') {
-    if (isDevelopment()) return <Warning className={className}>Text is not a string.</Warning>
-    return null
+    return <Warning className={className}>Text is not a string.</Warning>
   }
 
   return (

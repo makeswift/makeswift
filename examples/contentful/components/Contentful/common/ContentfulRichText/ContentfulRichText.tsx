@@ -1,10 +1,9 @@
 import { Options, documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { BLOCKS, INLINES } from '@contentful/rich-text-types'
 import clsx from 'clsx'
-import { isDevelopment } from 'utils/isDevelopment'
 
 import { Warning } from '@/components/Warning'
-import { ResolvedField, isRichText } from '@/lib/contentful/utils'
+import { type ResolvedField, isRichText } from '@/lib/contentful/utils'
 
 type Props = {
   className?: string
@@ -53,13 +52,11 @@ function proseRichTextColor(textColor: Props['textColor']) {
 
 export function ContentfulRichText({ className, textColor, field, alignment = 'left' }: Props) {
   if ('error' in field) {
-    if (isDevelopment()) return <Warning className={className}>{field.error}</Warning>
-    return null
+    return <Warning className={className}>{field.error}</Warning>
   }
 
   if (!isRichText(field.data)) {
-    if (isDevelopment()) return <Warning className={className}>Text is not a Document.</Warning>
-    return null
+    return <Warning className={className}>Text is not a Document.</Warning>
   }
 
   return (
