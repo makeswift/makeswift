@@ -4,6 +4,6 @@ type Props = {
   content?: React.ReactNode
 }
 
-export default function Blog({ content }: Props) {
+export function BlogFeed({ content }: Props) {
   return content
 }
