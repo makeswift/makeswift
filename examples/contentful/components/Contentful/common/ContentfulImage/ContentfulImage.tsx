@@ -1,11 +1,9 @@
 import Image, { ImageProps } from 'next/image'
 
 import clsx from 'clsx'
-import { isDevelopment } from 'utils/isDevelopment'
 
 import { Warning } from '@/components/Warning'
-
-import { ResolvedField, isAsset } from '../../../../lib/contentful/utils'
+import { type ResolvedField, isAsset } from '@/lib/contentful/utils'
 
 type Props = {
   className?: string
@@ -16,18 +14,15 @@ type Props = {
 
 export function ContentfulImage({ className, field, square, ...rest }: Props) {
   if ('error' in field) {
-    if (isDevelopment()) return <Warning className={className}>{field.error}</Warning>
-    return null
+    return <Warning className={className}>{field.error}</Warning>
   }
 
   if (!isAsset(field.data)) {
-    if (isDevelopment()) return <Warning className={className}>Field is not an asset.</Warning>
-    return null
+    return <Warning className={className}>Field is not an asset.</Warning>
   }
 
   if (!field.data.url) {
-    if (isDevelopment()) return <Warning className={className}>Asset is missing URL.</Warning>
-    return null
+    return <Warning className={className}>Asset is missing URL.</Warning>
   }
 
   return (
