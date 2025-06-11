@@ -8,10 +8,10 @@ const config: LoadCodegenConfigResult['config'] = {
     'generated/contentful.ts': {
       documents: './components/Contentful/**/*.graphql',
       schema: {
-        [`${`https://graphql.contentful.com/content/v1/spaces/${process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID}`}`]:
+        [`${`https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`}`]:
           {
             headers: {
-              Authorization: `Bearer ${process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN}`,
+              Authorization: `Bearer ${process.env.CONTENTFUL_ACCESS_TOKEN}`,
             },
           },
       },
