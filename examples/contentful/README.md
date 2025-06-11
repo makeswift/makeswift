@@ -1,0 +1,158 @@
+# Makeswift Contentful Integration
+
+This integration allows you to combine the power of Contentful's content management with Makeswift's visual page builder. Create dynamic, content-rich websites with a seamless development experience.
+
+For a detailed guide on setting up and using this integration, visit:
+https://www.makeswift.com/integrations/contentful
+
+## Prerequisites
+
+- Node.js 18.x or later
+- Makeswift account (for visual page building)
+- Contentful account (for content management)
+- Basic familiarity with Next.js App Router
+
+This guide assumes that you're familiar with Makeswift and setting up a custom host. Read here to learn more: https://docs.makeswift.com/developer/app-router/installation
+
+## Project Structure
+
+```
+contentful/
+├── app/                   # Next.js App Router pages
+│   ├── blog/              # Blog-related routes
+│   ├── api/               # API endpoints
+│   └── [[...path]]/       # Dynamic Makeswift routes
+├── components/            # Reusable React components
+│   └── Contentful/        # Contentful-specific components
+│       ├── common/        # Common scalar components
+│       ├── entries/       # Entry-specific components
+│       │   └── BlogPost/  # BlogPost entry components
+│       └── queries/       # GraphQL queries
+├── lib/                   # Utility functions and configs
+└── generated/             # Auto-generated types from Contentful
+```
+
+## Quick Start
+
+1. Set up the project:
+
+   ```bash
+   npx makeswift@latest init --example=contentful
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   pnpm install
+   ```
+
+3. Configure environment variables in `.env.local`:
+
+   ```
+   CONTENTFUL_SPACE_ID=your_space_id
+   CONTENTFUL_ACCESS_TOKEN=your_access_token
+   MAKESWIFT_SITE_API_KEY=your_makeswift_api_key
+   ```
+
+4. Setting up Contentful
+   To get started with blog posts, you'll need to set up a content model in Contentful. Here's what we recommend:
+
+Create a new content type called "Author" with the following fields:
+
+- **Name | Short text** - The name of the author. Make sure to check "This field represents the Entry title" in the field options.
+- **Slug | Short text** - A URL-friendly identifier (e.g. "author-name")
+- **Job Title | Short text** - The author's job title
+- **Description | Rich text** - The main content as rich text
+- **Avatar | Media** - An optional avatar image representing the author
+
+Create a new content type called "BlogPost" with the following fields:
+
+- **Title | Short text** - A short text field for the post title. Make sure to check "This field represents the Entry title" in the field options.
+- **Description | Long text** - A brief summary of the content
+- **Slug | Short text** - A URL-friendly identifier (e.g. "my-first-blog-post")
+- **Feed Date | Date & time** - When the post should appear in feed
+- **Body | Rich text** - The main content as rich text
+- **Author | Reference** - Which Author created the blog. Ensure that "Accept only specified entry type" is enabled in order to introspect this reference.
+- **Banner | Media** - An optional hero image for the post
+
+Be sure to add a few blog posts for testing purposes, and connect them to an Author.
+
+4. Generate Contentful types:
+
+   ```bash
+   pnpm codegen-ts
+   ```
+
+Note that the only query we are working with is in `/components/Contentful/GetBlogs.graphql`.
+
+5. Run the development server:
+   ```bash
+   pnpm dev
+   ```
+
+### Building Blog Post pages in Makeswift
+
+1. Publish your content in Contentful.
+2. In the Makeswift builder, navigate to your blog post page by entering the post's URL (e.g., `/blog/my-blog`) in the builder's URL bar.
+3. The first time you visit the page, you’ll see a blank canvas with a placeholder for content. Drag the desired blog component onto the page.
+4. Use the component’s "Field" dropdown to select the content field you want to render (e.g., `Description`).
+5. The component will fetch and display the selected content from Contentful.
+
+For example, to display a blog post’s text:
+
+1. Drag the Blog Post Text component onto your page -- make sure the route for your blog slug is correct.
+2. In the [properties sidebar](https://docs.makeswift.com/product/builder-basics#properties-sidebar), select the appropriate content field.
+3. The component will render the selected field’s content.
+
+## Development Guide
+
+### Blog Feed Component
+
+The `Blog/BlogFeed` component (`components/Blog/BlogFeed.tsx`):
+
+- Queries all blog posts from Contentful
+- Handles pagination
+- Can be embedded in any Makeswift page
+- This is usually placed in the parent route `/blog`
+
+### Contentful Components
+
+The integration includes several pre-built components for working with Contentful content. These components are located in the [`components/contentful/`](components/contentful/) directory and are organized into two main categories:
+
+#### Common Components (`components/contentful/common/`)
+
+These are utility components that provide shared functionality for working with Contentful content.
+
+#### Entry Components (`components/contentful/entries/`)
+
+These components are designed to work with specific Contentful content types:
+
+- [`BlogPostText`](components/contentful/entries/BlogPost/BlogPostText): Renders short text fields belonging to blog posts
+- [`BlogPostRichText`](components/contentful/entries/BlogPost/BlogPostRichText): Displays rich text content
+- [`BlogPostImage`](components/contentful/entries/BlogPost/BlogPostImage): Handles blog post images
+- [`BlogPostFeed`](components/contentful/entries/BlogPost/BlogPostFeed): Shows a list of blog posts
+
+## Troubleshooting
+
+Common issues and solutions:
+
+1. **Type generation fails**
+
+   - Ensure Contentful credentials are correct
+   - Check if content model is published and matches what's being queried
+
+2. **Blog posts not showing**
+
+   - Verify the slug format matches the route pattern
+   - Check if posts are published in Contentful
+
+3. **Makeswift builder issues**
+   - Clear browser cache
+   - Ensure API keys are correctly set
+
+## Learn More
+
+- [Makeswift Documentation](https://www.makeswift.com/docs/)
+- [Makeswift Runtime GitHub repository](https://github.com/makeswift/makeswift)
+- [Contentful API Reference](https://www.contentful.com/developers/docs/references/)
+- [GitHub Repository](https://github.com/makeswift/makeswift)
