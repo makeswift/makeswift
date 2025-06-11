@@ -1,4 +1,4 @@
-import { Makeswift } from '../client'
+import { MakeswiftClient } from '../../client'
 import { http, HttpResponse } from 'msw'
 import { randomUUID } from 'crypto'
 
@@ -33,7 +33,7 @@ const baseUrl = `${apiOrigin}/v4/pages`
 const runtime = new ReactRuntime()
 
 function createTestClient() {
-  return new Makeswift(TEST_API_KEY, { runtime, apiOrigin })
+  return new MakeswiftClient(TEST_API_KEY, { runtime, apiOrigin })
 }
 
 describe('getPages v4', () => {
