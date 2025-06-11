@@ -10,7 +10,7 @@ function isAPIResourceType(val: string): val is APIResourceType {
 
 const parseResourceIdSchema = z.string().transform((val, ctx) => {
   try {
-    const match = Base64.decode(val).match(/^([^:]+):([^:]+)$/)
+    const match = Base64.decode(val).match(/^([^:]+):(.+)$/)
     if (!match) throw new TypeError(`NodeID cannot represent value: ${String(val)}`)
     const [, typeName, key] = match
     if (isAPIResourceType(typeName)) {
