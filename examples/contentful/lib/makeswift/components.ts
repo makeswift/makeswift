@@ -1,6 +1,6 @@
-import '@/components/Builtins/Blog/Blog.makeswift'
-import '@/components/Builtins/BlogPost/BlogPost.makeswift'
 import '@/components/Contentful/entries/BlogPost/BlogPostFeed/BlogPostFeed.makeswift'
 import '@/components/Contentful/entries/BlogPost/BlogPostImage/BlogPostImage.makeswift'
 import '@/components/Contentful/entries/BlogPost/BlogPostRichText/BlogPostRichText.makeswift'
 import '@/components/Contentful/entries/BlogPost/BlogPostText/BlogPostText.makeswift'
+import '@/components/builtins/Blog/Blog.makeswift'
+import '@/components/builtins/BlogPost/BlogPost.makeswift'
