@@ -1,6 +1,6 @@
 import { ComponentPropsWithoutRef } from 'react'
 
-import { useEntryField } from '@/lib/contentful/utils'
+import { useEntryField } from '@/lib/contentful/hooks'
 
 import { ContentfulText } from '../../../common/ContentfulText'
 

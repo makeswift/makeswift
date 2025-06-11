@@ -1,6 +1,6 @@
 import { Combobox } from '@makeswift/runtime/controls'
 
-import { getFieldOptions } from '@/lib/contentful/utils'
+import { fetchFieldOptions } from '@/lib/contentful/fieldOptions'
 import { runtime } from '@/lib/makeswift/runtime'
 
 import { props } from '../../../common/ContentfulImage/ContentfulImage.makeswift'
@@ -14,9 +14,9 @@ runtime.registerComponent(BlogPostImage, {
     fieldPath: Combobox({
       label: 'Field',
       async getOptions(query) {
-        return getFieldOptions({
-          type: 'BlogPost',
-          filter: name => name === 'Asset',
+        return fetchFieldOptions({
+          contentType: 'BlogPost',
+          fieldType: 'Asset',
           query,
         })
       },
