@@ -40,21 +40,15 @@ contentful/
    npx makeswift@latest init --example=contentful
    ```
 
-### 2. Install dependencies
-
-   ```bash
-   pnpm install
-   ```
-
-### 3. Configure environment variables in `.env.local`
+### 2. Configure environment variables in `.env.local`
 
    ```
+   MAKESWIFT_SITE_API_KEY=your_makeswift_api_key
    CONTENTFUL_SPACE_ID=your_space_id
    CONTENTFUL_ACCESS_TOKEN=your_access_token
-   MAKESWIFT_SITE_API_KEY=your_makeswift_api_key
    ```
 
-### 4. Set up your content model
+### 3. Set up your content model
 
 To get started with blog posts, you'll need to set up a content model in Contentful. Here's what we recommend:
 
@@ -78,7 +72,7 @@ To get started with blog posts, you'll need to set up a content model in Content
    
 Be sure to add a few blog posts for testing purposes, and connect them to an Author.
 
-### 5. Generate Contentful types
+### 4. Generate Contentful types
 
    ```bash
    pnpm codegen-ts
@@ -86,7 +80,7 @@ Be sure to add a few blog posts for testing purposes, and connect them to an Aut
 
 Note that the only query we are working with is in `/components/Contentful/GetBlogs.graphql`.
 
-### 6. Run the development server
+### 5. Run the development server
    ```bash
    pnpm dev
    ```
@@ -94,20 +88,18 @@ Note that the only query we are working with is in `/components/Contentful/GetBl
 ## Building Blog Post pages in Makeswift
 
 1. Publish your content in Contentful.
-2. In the Makeswift builder, navigate to your blog post page by entering the post's URL (e.g., `/blog/my-blog`) in the builder's URL bar.
+2. In the [Makeswift builder](https://docs.makeswift.com/product/builder-basics), navigate to your blog post page by entering the post's URL (e.g., `/blog/welcome`) in the builder's URL bar.
 3. The first time you visit the page, you’ll see a blank canvas with a placeholder for content. Drag the desired blog component onto the page.
-4. Use the component’s "Field" dropdown to select the content field you want to render (e.g., `Description`).
+4. Use the component’s **Field** dropdown to select the content field you want to render (e.g., **Description**).
 5. The component will fetch and display the selected content from Contentful.
 
-For example, to display a blog post’s text:
+For example, to display a blog post’s title:
 
-1. Drag the Blog Post Text component onto your page -- make sure the route for your blog slug is correct.
-2. In the [properties sidebar](https://docs.makeswift.com/product/builder-basics#properties-sidebar), select the appropriate content field.
-3. The component will render the selected field’s content.
+1. Drag the **Blog Text** component from the [component toolbar](https://docs.makeswift.com/product/builder-basics#component-toolbar) onto your blog post page.
+2. In the [properties sidebar](https://docs.makeswift.com/product/builder-basics#properties-sidebar), find the **Field** dropdown and select the appropriate content field—in our case, **Title**.
+3. The component will render the blog post's title.
 
 ## Development Guide
-
-### Blog Feed Component
 
 ### Contentful Components
 
