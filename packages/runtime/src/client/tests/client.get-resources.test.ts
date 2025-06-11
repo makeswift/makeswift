@@ -1,4 +1,4 @@
-import { Makeswift } from '../client'
+import { MakeswiftClient } from '../../client'
 import { http, HttpResponse } from 'msw'
 
 import { ReactRuntime } from '../../runtimes/react'
@@ -11,7 +11,7 @@ const apiOrigin = 'https://api.fakeswift.com'
 const runtime = new ReactRuntime()
 
 function createTestClient() {
-  return new Makeswift(TEST_API_KEY, { runtime, apiOrigin })
+  return new MakeswiftClient(TEST_API_KEY, { runtime, apiOrigin })
 }
 
 let consoleErrorSpy: jest.SpyInstance

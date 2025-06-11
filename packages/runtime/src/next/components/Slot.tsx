@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactNode, useMemo } from 'react'
-import { MakeswiftComponentSnapshot } from '../client'
+import { MakeswiftComponentSnapshot } from '../../client'
 import { MakeswiftComponentType } from '../../components'
 import { MakeswiftComponent } from './MakeswiftComponent'
 import SlotProvider from './SlotProvider'
