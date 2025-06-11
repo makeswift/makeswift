@@ -141,4 +141,3 @@ Common issues and solutions:
 - [Makeswift Documentation](https://www.makeswift.com/docs/)
 - [Makeswift Runtime GitHub repository](https://github.com/makeswift/makeswift)
 - [Contentful API Reference](https://www.contentful.com/developers/docs/references/)
-- [GitHub Repository](https://github.com/makeswift/makeswift)
