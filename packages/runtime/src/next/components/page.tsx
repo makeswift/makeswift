@@ -11,7 +11,7 @@ import {
   type MakeswiftPageSnapshot,
   type MakeswiftPageDocument,
   pageToRootDocument,
-} from '../client'
+} from '../../client'
 import * as ReactPage from '../../state/react-page'
 import { registerDocumentsEffect } from '../../state/actions'
 import { type PageMetadataSettings } from '../../components/page/page-seo-settings'

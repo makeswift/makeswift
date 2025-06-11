@@ -1,4 +1,4 @@
-import { Makeswift, MakeswiftComponentDocument } from '../client'
+import { MakeswiftClient, MakeswiftComponentDocument } from '../../client'
 import { http, HttpResponse, graphql } from 'msw'
 
 import { ReactRuntime } from '../../runtimes/react'
@@ -12,7 +12,7 @@ const baseUrl = `${apiOrigin}/v1/element-trees`
 const runtime = new ReactRuntime()
 
 function createTestClient() {
-  return new Makeswift(TEST_API_KEY, { runtime, apiOrigin })
+  return new MakeswiftClient(TEST_API_KEY, { runtime, apiOrigin })
 }
 
 describe('getComponentSnapshot using v1 element tree endpoint', () => {
