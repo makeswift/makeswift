@@ -57,7 +57,8 @@ export default defineConfig({
 			name: 'remote_button_component',
 			filename: 'remoteEntry.js',
 			exposes: {
-				'./Button': './src/Button.tsx'
+				'./Button': './src/Button.tsx',
+				'./register': './src/Button.makeswift.ts'
 			},
 			shared: {
 				react: {
@@ -67,6 +68,9 @@ export default defineConfig({
 				'react-dom': {
 					singleton: true,
 					eager: true,
+				},
+				'@makeswift/runtime': {
+					singleton: true,
 				}
 			}
 		}),

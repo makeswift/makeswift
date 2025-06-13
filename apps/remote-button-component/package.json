@@ -10,6 +10,7 @@
     "preview": "rspack preview"
   },
   "dependencies": {
+    "@makeswift/runtime": "^0.24.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
