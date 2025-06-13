@@ -12,6 +12,7 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
-    "few-hornets-wink"
+    "few-hornets-wink",
+    "friendly-houses-play"
   ]
 }

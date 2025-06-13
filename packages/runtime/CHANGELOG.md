@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.24.7-canary.1
+
+### Patch Changes
+
+- 48d6537: Update unstructured introspection to handle node IDs with colons in their values
+
 ## 0.24.7-canary.0
 
 ### Patch Changes
