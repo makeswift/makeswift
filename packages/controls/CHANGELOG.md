@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.11
+
+### Patch Changes
+
+- ddb1450: Finetune clearing typography data on copy to only clear the resource reference, rather than any data.
+
 ## 0.1.10
 
 ### Patch Changes
