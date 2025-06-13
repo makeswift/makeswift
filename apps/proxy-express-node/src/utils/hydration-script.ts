@@ -3,6 +3,5 @@ export function buildHydrationScript(namespace: string, props: any): string {
     <script>
       window['${namespace}'] = ${JSON.stringify(props)};
     </script>
-    <script src="/static/client.js"></script>
   `
 }

@@ -4,10 +4,13 @@
   "description": "SSR proxy server for visual editor integration",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "concurrently \"tsx watch --env-file=.env src/server.tsx\" \"esbuild src/client/index.tsx --bundle --outfile=dist/client.js --platform=browser --format=iife --watch\"",
-    "build": "tsc && npm run build:client",
-    "build:client": "esbuild src/client/index.tsx --bundle --outfile=dist/client.js --platform=browser --format=iife",
-    "start": "node --env-file=.env dist/server.js"
+    "dev:client": "vite dev",
+    "dev:server": "node --env-file=.env dist/server",
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "vite build --outDir dist/client",
+    "build:server": "tsc",
+    "start": "node --env-file=.env dist/server"
   },
   "dependencies": {
     "@makeswift/runtime": "workspace:^",
@@ -26,9 +29,10 @@
     "@types/node": "^20.10.0",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
+    "@vitejs/plugin-react": "^4.5.2",
     "concurrently": "^8.2.2",
-    "esbuild": "^0.19.0",
     "tsx": "^4.6.0",
-    "typescript": "^5.3.0"
+    "typescript": "^5.3.0",
+    "vite": "npm:rolldown-vite@latest"
   }
 }
