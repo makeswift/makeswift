@@ -17,15 +17,17 @@ import {
   type Element,
   type ElementData,
 } from '../../state/react-page'
+import { Middleware } from 'redux';
 
 export class RuntimeCore {
   store: Store
 
-  constructor({ breakpoints }: { breakpoints?: BreakpointsInput }) {
+  constructor({ breakpoints, middleware }: { breakpoints?: BreakpointsInput; middleware?: Middleware[] }) {
     this.store = configureStore({
       name: 'Runtime store',
       preloadedState: null,
       breakpoints: breakpoints ? parseBreakpointsInput(breakpoints) : undefined,
+      middleware,
     })
   }
 

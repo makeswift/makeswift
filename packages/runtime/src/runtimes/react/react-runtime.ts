@@ -3,7 +3,7 @@ import { ControlDefinition as UnifiedControlDefinition } from '@makeswift/contro
 
 import { type LegacyDescriptor, type DescriptorValueType } from '../../prop-controllers/descriptors'
 
-import { registerComponentEffect, registerReactComponentEffect } from '../../state/actions'
+import { Action, registerComponentEffect, registerReactComponentEffect } from '../../state/actions'
 import { BreakpointsInput } from '../../state/modules/breakpoints'
 import { ComponentIcon } from '../../state/modules/components-meta'
 import type { ComponentType } from '../../state/react-page'
@@ -51,8 +51,21 @@ export class ReactRuntime extends RuntimeCore {
   }
 
   constructor({ breakpoints }: { breakpoints?: BreakpointsInput } = {}) {
-    super({ breakpoints })
+    super({
+      breakpoints,
+      middleware: [
+        () => (next) => (action) => {
+          this.dispatch(action)
+          
+          return next(action)
+        },
+      ],
+    })
 
     registerBuiltinComponents(this)
+  }
+
+  dispatch(action: Action) {
+    console.log('dispatching action', action)
   }
 }

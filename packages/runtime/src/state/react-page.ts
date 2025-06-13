@@ -410,10 +410,12 @@ export function configureStore({
   name,
   preloadedState,
   breakpoints,
+  middleware,
 }: {
   name: string
   preloadedState: Partial<State> | null
   breakpoints?: Breakpoints.State
+  middleware?: Middleware[]
 }): Store {
   const composeEnhancers = composeWithDevToolsDevelopmentOnly({
     name: `${name} (${new Date().toISOString()})`,
@@ -432,7 +434,7 @@ export function configureStore({
         () => {},
         () => {},
       ),
-      applyMiddleware(thunk, elementTreeMiddleware()),
+      applyMiddleware(thunk, elementTreeMiddleware(), ...(middleware ?? [])),
     ),
   )
 }

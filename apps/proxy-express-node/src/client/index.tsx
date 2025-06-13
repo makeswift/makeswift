@@ -9,6 +9,7 @@ import {
   HYDRATION_PROPS_NAMESPACE,
   TARGET_ELEMENT_SELECTOR,
 } from '../makeswift/constants'
+import { RemoteComponents } from '../makeswift/remote-components'
 
 declare global {
   interface Window {
@@ -41,6 +42,7 @@ function hydrateEditor() {
     <React.StrictMode>
       <RootStyleRegistry cache={cache}>
         <Region {...props} />
+        <RemoteComponents />
       </RootStyleRegistry>
     </React.StrictMode>,
   )

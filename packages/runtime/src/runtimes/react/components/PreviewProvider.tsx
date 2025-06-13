@@ -1,6 +1,6 @@
 'use client'
 
-import { type PropsWithChildren, useEffect, useMemo } from 'react'
+import { type PropsWithChildren, useEffect, useLayoutEffect, useMemo } from 'react'
 
 import * as ReactBuilderPreview from '../../../state/react-builder-preview'
 
@@ -19,6 +19,18 @@ export default function PreviewProvider({ children }: PropsWithChildren): JSX.El
       }),
     [client, runtime],
   )
+
+  useLayoutEffect(() => {
+    const originalDispatch = runtime.dispatch
+
+    runtime.dispatch = (action) => {
+      store.dispatch(action)
+    }
+
+    return () => {
+      runtime.dispatch = originalDispatch
+    }
+  }, [runtime, store])
 
   useEffect(() => {
     store.setup()

@@ -33,6 +33,7 @@ import {
 import { flushAndBuildStyles } from './makeswift/emotion-styles'
 import { buildHydrationScript } from './utils/hydration-script'
 import { renderHtml } from './utils/render-html'
+import { RemoteComponents } from './makeswift/remote-components'
 
 const app = express()
 
@@ -67,6 +68,7 @@ app.get('*', async (req, res) => {
     const elementHtml = await renderHtml(
       <RootStyleRegistry cache={cache}>
         <Region {...props} />
+        <RemoteComponents />
       </RootStyleRegistry>,
     )
 
