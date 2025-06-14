@@ -1,6 +1,9 @@
 import { ReactRuntime } from '@makeswift/runtime/react'
 
+import * as MakeswiftComponents from '@/makeswift/components'
+
 export const runtime = new ReactRuntime({
+  components: MakeswiftComponents,
   breakpoints: {
     mobile: { width: 575, viewport: 390, label: 'Mobile' },
     tablet: { width: 768, viewport: 765, label: 'Tablet' },
