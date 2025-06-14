@@ -8,7 +8,6 @@ import { ReactRuntime } from '../react-runtime'
 import { MakeswiftHostApiClientProvider } from '../host-api-client'
 import { MakeswiftSiteVersion } from '../../../api/site-version'
 import { DraftSwitcher } from './draft-switcher/draft-switcher'
-import { useBuilderHandshake } from './hooks/use-builder-handshake'
 import { useBuilderConnectionPing } from './hooks/use-builder-connection-ping'
 
 const LiveProvider = lazy(() => import('./LiveProvider'))
@@ -41,7 +40,6 @@ export function ReactRuntimeProvider({
 
   const StoreProvider = previewMode ? PreviewProvider : LiveProvider
 
-  useBuilderHandshake({ appOrigin })
   useBuilderConnectionPing({ appOrigin })
 
   return (
