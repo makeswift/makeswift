@@ -26,6 +26,7 @@ describe('List Types', () => {
       expectTypeOf<Config>().toEqualTypeOf<{
         type: ExpectedConfigTypeType
         label?: string
+        description?: string
         getItemLabel?: (
           item?:
             | {
@@ -76,6 +77,7 @@ describe('List Types', () => {
       expectTypeOf<Config>().toEqualTypeOf<{
         type: ExpectedConfigTypeType
         label?: string
+        description?: string
         getItemLabel?: (
           item?:
             | {

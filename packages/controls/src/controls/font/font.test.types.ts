@@ -33,6 +33,7 @@ describe('Font Types', () => {
     type Config = typeof def.config
     expectTypeOf<Config>().toEqualTypeOf<{
       label?: string
+      description?: string
       defaultValue: ExpectedValueWithoutVariantsType
       variant: false
     }>()
@@ -58,6 +59,7 @@ describe('Font Types', () => {
     type Config = typeof def.config
     expectTypeOf<Config>().toEqualTypeOf<{
       label?: string
+      description?: string
       defaultValue?: ExpectedValueWithoutVariantsType
       variant: false
     }>()
@@ -96,6 +98,7 @@ describe('Font Types', () => {
     type Config = typeof def.config
     expectTypeOf<Config>().toEqualTypeOf<{
       label?: string
+      description?: string
       defaultValue: ExpectedValueWithVariantsType
       variant: true
     }>()
@@ -119,6 +122,7 @@ describe('Font Types', () => {
     type Config = typeof def.config
     expectTypeOf<Config>().toEqualTypeOf<{
       label?: string
+      description?: string
       defaultValue?: ExpectedValueWithVariantsType
       variant: true
     }>()

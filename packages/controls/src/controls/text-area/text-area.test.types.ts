@@ -25,6 +25,7 @@ describe('TextArea Types', () => {
       type Config = typeof def.config
       expectTypeOf<Config>().toEqualTypeOf<{
         label?: string
+        description?: string
         defaultValue?: string
         rows?: number
       }>()
@@ -45,8 +46,9 @@ describe('TextArea Types', () => {
       type Config = typeof def.config
       expectTypeOf<Config>().toEqualTypeOf<{
         defaultValue: string
-        label?: string | undefined
-        rows?: number | undefined
+        label?: string
+        description?: string
+        rows?: number
       }>()
 
       type Data = DataType<typeof def>

@@ -84,6 +84,7 @@ class Definition<C extends Config> extends ControlDefinition<
         labelOrientation: z
           .union([z.literal('horizontal'), z.literal('vertical')])
           .optional(),
+        description: z.string().optional(),
         defaultValue: resolvedValue,
         hideAlpha: z.boolean().optional(),
       })

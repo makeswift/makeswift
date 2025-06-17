@@ -26,6 +26,7 @@ describe('Number Types', () => {
       expectTypeOf<Config>().toEqualTypeOf<{
         label?: string
         labelOrientation?: 'horizontal' | 'vertical'
+        description?: string
         defaultValue?: number
         min?: number
         max?: number
@@ -50,6 +51,7 @@ describe('Number Types', () => {
       expectTypeOf<Config>().toEqualTypeOf<{
         label?: string | undefined
         labelOrientation?: 'vertical' | 'horizontal' | undefined
+        description?: string
         defaultValue: number
         min?: number | undefined
         max?: number | undefined
