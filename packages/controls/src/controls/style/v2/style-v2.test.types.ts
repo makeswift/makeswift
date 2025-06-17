@@ -22,7 +22,8 @@ describe('StyleV2 Types', () => {
     expectTypeOf<Config>().toEqualTypeOf<{
       type: CheckboxDefinition<{
         defaultValue: boolean
-        label?: string | undefined
+        description?: string
+        label?: string
       }>
       getStyle: (item: boolean | undefined) => StylesObject
     }>()

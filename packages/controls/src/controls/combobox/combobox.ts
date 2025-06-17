@@ -24,6 +24,7 @@ type GetOptionsType<T extends Data> = (
 
 type Config<T extends Data = Data> = {
   label?: string
+  description?: string
   getOptions: GetOptionsType<T>
 }
 
@@ -63,6 +64,7 @@ class Definition<C extends Config> extends ControlDefinition<
         .args(z.string())
         .returns(z.union([options, z.promise(options)])),
       label: z.string().optional(),
+      description: z.string().optional(),
     })
 
     const definition = z.object({

@@ -32,6 +32,7 @@ describe('Select Types', () => {
         'a' | 'b' | undefined
       >()
       expectTypeOf<Config['label']>().toEqualTypeOf<string | undefined>()
+      expectTypeOf<Config['description']>().toEqualTypeOf<string | undefined>()
       expectTypeOf<Config['labelOrientation']>().toEqualTypeOf<
         'horizontal' | 'vertical' | undefined
       >()
