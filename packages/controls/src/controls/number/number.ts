@@ -66,6 +66,7 @@ class Definition<C extends Config> extends ControlDefinition<
       const config = z.object({
         label: z.string().optional(),
         labelOrientation: z.enum(['vertical', 'horizontal']).optional(),
+        description: z.string().optional(),
         defaultValue: value,
         min: z.number().optional(),
         max: z.number().optional(),

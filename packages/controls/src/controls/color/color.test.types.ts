@@ -17,10 +17,11 @@ describe('Color Types', () => {
 
       type ConfigType = typeof def.config
       expectTypeOf<ConfigType>().toEqualTypeOf<{
-        label?: string | undefined
-        defaultValue?: string | undefined
+        label?: string
+        defaultValue?: string
+        description?: string
         labelOrientation?: 'vertical' | 'horizontal'
-        hideAlpha?: boolean | undefined
+        hideAlpha?: boolean
       }>()
 
       type Data = DataType<typeof def>
@@ -43,9 +44,10 @@ describe('Color Types', () => {
       type ConfigType = typeof def.config
       expectTypeOf<ConfigType>().toEqualTypeOf<{
         defaultValue: string
-        label?: string | undefined
+        description?: string
+        label?: string
         labelOrientation?: 'vertical' | 'horizontal'
-        hideAlpha?: boolean | undefined
+        hideAlpha?: boolean
       }>()
 
       type Data = DataType<typeof def>

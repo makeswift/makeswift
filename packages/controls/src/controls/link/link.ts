@@ -69,6 +69,7 @@ class Definition<
 
     const config = z.object({
       label: z.string().optional(),
+      description: z.string().optional(),
     })
 
     const definition = z.object({

@@ -25,6 +25,7 @@ describe('TextInput Types', () => {
       type Config = typeof def.config
       expectTypeOf<Config>().toEqualTypeOf<{
         label?: string
+        description?: string
         defaultValue?: string
         selectAll?: boolean
       }>()
@@ -47,6 +48,7 @@ describe('TextInput Types', () => {
       type Config = typeof def.config
       expectTypeOf<Config>().toEqualTypeOf<{
         label?: string
+        description?: string
         defaultValue: string
         selectAll?: boolean
       }>()

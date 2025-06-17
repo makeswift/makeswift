@@ -58,7 +58,8 @@ describe('Group Types', () => {
       // We are individually testing different overlapping subsets to work around this.
       type ConfigWithoutType = Omit<Config, 'props'>
       expectTypeOf<ConfigWithoutType>().toEqualTypeOf<{
-        readonly label?: string | undefined
+        readonly label?: string
+        readonly description?: string
         readonly preferredLayout?:
           | typeof Group.Layout.Popover
           | typeof Group.Layout.Inline
@@ -66,6 +67,7 @@ describe('Group Types', () => {
 
       type ConfigWithoutLabel = Omit<Config, 'label'>
       expectTypeOf<ConfigWithoutLabel>().toEqualTypeOf<{
+        readonly description?: string
         readonly preferredLayout?:
           | typeof Group.Layout.Popover
           | typeof Group.Layout.Inline
