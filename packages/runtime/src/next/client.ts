@@ -177,11 +177,13 @@ export function componentDocumentToRootEmbeddedDocument({
   documentKey,
   name,
   type,
+  description,
   meta,
 }: {
   document: MakeswiftComponentDocument | MakeswiftComponentDocumentFallback
   documentKey: string
   name: string
+  description?: string
   type: string
   meta: MakeswiftComponentSnapshotMetadata
 }): EmbeddedDocument {
@@ -207,6 +209,7 @@ export function componentDocumentToRootEmbeddedDocument({
     id,
     type,
     name,
+    description,
     meta,
     __type: EMBEDDED_DOCUMENT_TYPE,
   }
