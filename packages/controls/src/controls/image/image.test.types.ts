@@ -64,6 +64,7 @@ describe('Image Types', () => {
       type Config = typeof def.config
       expectTypeOf<Config>().toEqualTypeOf<{
         label?: string
+        description?: string
         format?: typeof Image.Format.URL | typeof Image.Format.WithDimensions
       }>()
 
@@ -84,7 +85,8 @@ describe('Image Types', () => {
 
       type Config = typeof def.config
       expectTypeOf<Config>().toEqualTypeOf<{
-        label?: string | undefined
+        label?: string
+        description?: string
         format: typeof Image.Format.URL
       }>()
 
@@ -105,7 +107,8 @@ describe('Image Types', () => {
 
       type Config = typeof def.config
       expectTypeOf<Config>().toEqualTypeOf<{
-        label?: string | undefined
+        label?: string
+        description?: string
         format: typeof Image.Format.WithDimensions
       }>()
 

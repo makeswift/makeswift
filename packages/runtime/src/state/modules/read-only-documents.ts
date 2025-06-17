@@ -32,6 +32,7 @@ export type EmbeddedDocument = {
   id: string
   type: string
   name: string
+  description?: string
   rootElement: Element
   meta: { allowLocaleFallback: boolean; requestedLocale: string | null }
   __type: typeof EMBEDDED_DOCUMENT_TYPE

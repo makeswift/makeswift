@@ -67,6 +67,7 @@ class Definition<C extends Config> extends ControlDefinition<
 
       const config = z.object({
         label: z.string().optional(),
+        description: z.string().optional(),
         defaultValue: value,
         rows: z.number().optional(),
       })

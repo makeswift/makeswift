@@ -49,10 +49,12 @@ describe('Combobox Types', () => {
       type OptionListItem = { label: string; value: 'a' | 'b'; id: string }
 
       type Config = typeof def.config
-      expectTypeOf<Config['getOptions']>().branded.toEqualTypeOf<
-        (q: string) => OptionListItem[]
-      >()
-      expectTypeOf<Config['label']>().toEqualTypeOf<string | undefined>()
+
+      expectTypeOf<Config>().branded.toEqualTypeOf<{
+        label?: string
+        description?: string
+        getOptions: (q: string) => OptionListItem[]
+      }>
 
       type Data = DataType<typeof def>
       expectTypeOf<Data>().toEqualTypeOf<OptionListItem>()
