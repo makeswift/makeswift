@@ -1,5 +1,5 @@
 {
-  "main": "../dist/cjs/box-model.js",
-  "module": "../dist/esm/box-model.js",
+  "main": "../dist/cjs/box-model.cjs",
+  "module": "../dist/esm/box-model.mjs",
   "types": "../dist/types/box-model.d.ts"
 }

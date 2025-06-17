@@ -1,5 +1,5 @@
 {
-  "main": "../dist/cjs/builder/index.js",
-  "module": "../dist/esm/builder/index.js",
+  "main": "../dist/cjs/builder/index.cjs",
+  "module": "../dist/esm/builder/index.mjs",
   "types": "../dist/types/builder/index.d.ts"
 }
