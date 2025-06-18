@@ -1,5 +1,5 @@
 {
-  "main": "../../dist/cjs/state/modules/breakpoints.cjs",
-  "module": "../../dist/esm/state/modules/breakpoints.mjs",
+  "main": "../../dist/cjs/state/modules/breakpoints.js",
+  "module": "../../dist/esm/state/modules/breakpoints.js",
   "types": "../../dist/types/state/modules/breakpoints.d.ts"
 }
