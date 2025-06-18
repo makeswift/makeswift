@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.24.7-canary.2
+
+### Patch Changes
+
+- d2c7c57: feat: framework-independent `MakeswiftClient` implementation
+
 ## 0.24.7-canary.1
 
 ### Patch Changes
