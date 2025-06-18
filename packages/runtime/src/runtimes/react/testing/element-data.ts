@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto'
-import { type MakeswiftPageSnapshot, type MakeswiftComponentSnapshot } from '../../../next/client'
+import { type MakeswiftPageSnapshot, type MakeswiftComponentSnapshot } from '../../../client'
 import { type ElementData } from '../../../state/react-page'
 import { CacheData } from '../../../api/react'
 import { MakeswiftComponentType } from '../../../components'

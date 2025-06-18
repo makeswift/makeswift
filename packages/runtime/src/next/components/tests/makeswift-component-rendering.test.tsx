@@ -11,7 +11,7 @@ import {
   type MakeswiftComponentDocument,
   type MakeswiftComponentDocumentFallback,
   type MakeswiftComponentSnapshot,
-} from '../../client'
+} from '../../../client'
 import { type CacheData } from '../../../api/react'
 import { TextInput } from '@makeswift/controls'
 

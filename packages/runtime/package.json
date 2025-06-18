@@ -7,6 +7,7 @@
     "prop-controllers",
     "react",
     "box-model",
+    "client",
     "components",
     "core",
     "api",
@@ -37,6 +38,11 @@
       "require": "./dist/cjs/box-model.js",
       "import": "./dist/esm/box-model.js",
       "types": "./dist/types/box-model.d.ts"
+    },
+    "./client": {
+      "require": "./dist/cjs/client/index.cjs",
+      "import": "./dist/esm/client/index.mjs",
+      "types": "./dist/types/client/index.d.ts"
     },
     "./components": {
       "require": "./dist/cjs/components/index.js",
