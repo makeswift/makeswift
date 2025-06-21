@@ -1,5 +1,15 @@
 # @makeswift/runtime
 
+## 0.24.7
+
+### Patch Changes
+
+- 48d6537: Update unstructured introspection to handle node IDs with colons in their values
+- d2c7c57: feat: framework-independent `MakeswiftClient` implementation
+- Updated dependencies [ddb1450]
+  - @makeswift/controls@0.1.11
+  - @makeswift/prop-controllers@0.4.4
+
 ## 0.24.6
 
 ### Patch Changes
