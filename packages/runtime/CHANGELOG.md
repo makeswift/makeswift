@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.24.7-canary.3
+
+### Patch Changes
+
+- 2826416: Render Open Graph and Twitter meta tags for page title in `<Page />` component
+
 ## 0.24.7-canary.2
 
 ### Patch Changes
