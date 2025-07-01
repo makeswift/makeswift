@@ -2,9 +2,6 @@
 
 This integration allows you to combine the power of Contentful's content management with Makeswift's visual page building capabilities. Visually create dynamic, content-rich websites with a seamless development experience.
 
-For a detailed guide on setting up and using this integration, visit:
-https://www.makeswift.com/integrations/contentful
-
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) 18.x or later
