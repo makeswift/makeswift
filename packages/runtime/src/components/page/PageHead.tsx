@@ -85,7 +85,13 @@ export function PageHead({ document: page, metadata = {} }: Props): JSX.Element 
         }
         `}
       </PageStyle>
-      {useTitle && title && <PageTitle>{title}</PageTitle>}
+      {useTitle && title && (
+        <>
+          <PageTitle>{title}</PageTitle>
+          <PageMeta property="og:title" content={title} />
+          <PageMeta name="twitter:title" content={title} />
+        </>
+      )}
       {useFavicon && favicon && (
         <PageLink rel="icon" type={favicon.mimetype} href={favicon.publicUrl} />
       )}

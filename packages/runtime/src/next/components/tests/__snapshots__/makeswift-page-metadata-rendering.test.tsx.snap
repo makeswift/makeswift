@@ -85,6 +85,14 @@ exports[`MakeswiftPage metadata and seo tag rendering only renders selective met
     Test Title
   </title>
   <meta
+    content="Test Title"
+    property="og:title"
+  />
+  <meta
+    content="Test Title"
+    name="twitter:title"
+  />
+  <meta
     content="Test Description"
     name="description"
   />
@@ -125,6 +133,14 @@ exports[`MakeswiftPage metadata and seo tag rendering renders all metadata by de
   <title>
     Test Title
   </title>
+  <meta
+    content="Test Title"
+    property="og:title"
+  />
+  <meta
+    content="Test Title"
+    name="twitter:title"
+  />
   <link
     href="https://example.com/favicon.ico"
     rel="icon"
@@ -195,6 +211,14 @@ exports[`MakeswiftPage metadata and seo tag rendering renders all metadata when 
   <title>
     Test Title
   </title>
+  <meta
+    content="Test Title"
+    property="og:title"
+  />
+  <meta
+    content="Test Title"
+    name="twitter:title"
+  />
   <link
     href="https://example.com/favicon.ico"
     rel="icon"
@@ -265,6 +289,14 @@ exports[`MakeswiftPage metadata and seo tag rendering renders all metadata when 
   <title>
     Test Title
   </title>
+  <meta
+    content="Test Title"
+    property="og:title"
+  />
+  <meta
+    content="Test Title"
+    name="twitter:title"
+  />
   <link
     href="https://example.com/favicon.ico"
     rel="icon"
