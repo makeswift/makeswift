@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { type ErrorResponseBody } from '../../request-response'
+
 export const WebhookEventType = {
   SITE_PUBLISHED: 'site.published',
 } as const
@@ -24,9 +26,7 @@ export type WebhookPayloadSchema = z.infer<typeof webhookPayloadSchema>
 
 type WebhookSuccessBody = { success: true }
 
-type WebhookErrorBody = { message: string }
-
-export type WebhookResponseBody = WebhookSuccessBody | WebhookErrorBody
+export type WebhookResponseBody = WebhookSuccessBody | ErrorResponseBody
 
 export type WebhookHandlerResult = {
   body: WebhookResponseBody
