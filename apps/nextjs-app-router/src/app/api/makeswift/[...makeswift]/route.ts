@@ -56,4 +56,4 @@ const handler = MakeswiftApiHandler(MAKESWIFT_SITE_API_KEY, {
   },
 })
 
-export { handler as GET, handler as POST }
+export { handler as GET, handler as POST, handler as OPTIONS }
