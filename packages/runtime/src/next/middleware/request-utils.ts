@@ -1,8 +1,8 @@
 import { NextRequest } from 'next/server'
 import {
-  MAKESWIFT_DRAFT_DATA_COOKIE,
+  MAKESWIFT_VERSION_DATA_COOKIE,
   PRERENDER_BYPASS_COOKIE,
-} from '../api-handler/handlers/utils/draft'
+} from '../api-handler/handlers/utils/cookie'
 
 const HeaderNames = {
   DraftMode: 'X-Makeswift-Draft-Mode',
@@ -27,7 +27,8 @@ export function isDraftModeRequest(request: NextRequest): boolean {
   if (hasSecret) return true
 
   const hasDraftCookies =
-    request.cookies.has(PRERENDER_BYPASS_COOKIE) && request.cookies.has(MAKESWIFT_DRAFT_DATA_COOKIE)
+    request.cookies.has(PRERENDER_BYPASS_COOKIE) &&
+    request.cookies.has(MAKESWIFT_VERSION_DATA_COOKIE)
 
   if (hasDraftCookies) return true
 

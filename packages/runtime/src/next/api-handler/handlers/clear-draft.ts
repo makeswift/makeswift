@@ -2,12 +2,12 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { NextRequest, NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
 import {
-  MAKESWIFT_DRAFT_DATA_COOKIE,
+  MAKESWIFT_VERSION_DATA_COOKIE,
   PRERENDER_BYPASS_COOKIE,
   PREVIEW_DATA_COOKIE,
   SET_COOKIE_HEADER,
   cookieSettingOptions,
-} from './utils/draft'
+} from './utils/cookie'
 import { serialize as serializeCookie } from 'cookie'
 
 function clearCookiesHeader(cookieNames: string[]): string {
@@ -74,7 +74,7 @@ async function clearDraftRouteHandler(
 
   headers.append(
     SET_COOKIE_HEADER,
-    clearCookiesHeader([PRERENDER_BYPASS_COOKIE, MAKESWIFT_DRAFT_DATA_COOKIE]),
+    clearCookiesHeader([PRERENDER_BYPASS_COOKIE, MAKESWIFT_VERSION_DATA_COOKIE]),
   )
 
   return NextResponse.json({ __brand: 'ClearDraftResponse' }, { headers })

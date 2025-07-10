@@ -19,7 +19,7 @@ import {
   CreateTableRecordMutationResult,
   CreateTableRecordMutationVariables,
 } from './graphql/generated/types'
-import { MakeswiftSiteVersion } from './site-version'
+import { MakeswiftVersionData } from './site-version'
 
 export type CacheData = MakeswiftApiClient.SerializedState
 
@@ -52,7 +52,7 @@ export const CacheData = {
  * snapshot for use in the builder, not the lives pages.
  */
 export class MakeswiftHostApiClient {
-  siteVersion: MakeswiftSiteVersion
+  siteVersion: MakeswiftVersionData | null
   graphqlClient: GraphQLClient
   makeswiftApiClient: MakeswiftApiClient.Store
   subscribe: MakeswiftApiClient.Store['subscribe']
@@ -64,7 +64,7 @@ export class MakeswiftHostApiClient {
     locale,
   }: {
     uri: string
-    siteVersion: MakeswiftSiteVersion
+    siteVersion: MakeswiftVersionData | null
     cacheData?: CacheData
     locale?: string
   }) {
