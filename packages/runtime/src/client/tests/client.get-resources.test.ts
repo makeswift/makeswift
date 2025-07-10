@@ -2,7 +2,6 @@ import { MakeswiftClient } from '../../client'
 import { http, HttpResponse } from 'msw'
 
 import { ReactRuntime } from '../../runtimes/react'
-import { MakeswiftSiteVersion } from '../../api/site-version'
 
 import { server } from '../../mocks/server'
 
@@ -39,7 +38,7 @@ describe('getSwatch', () => {
     )
 
     // Act
-    const result = await client.getSwatch(swatchId, MakeswiftSiteVersion.Working)
+    const result = await client.getSwatch(swatchId, null)
 
     // Assert
     expect(result).toBeNull()
@@ -57,7 +56,7 @@ describe('getSwatch', () => {
     )
 
     // Act
-    const result = await client.getSwatch(swatchId, MakeswiftSiteVersion.Working)
+    const result = await client.getSwatch(swatchId, null)
 
     // Assert
     expect(result).toBeNull()
@@ -83,7 +82,7 @@ describe('getTypography', () => {
     )
 
     // Act
-    const result = await client.getTypography(typographyId, MakeswiftSiteVersion.Working)
+    const result = await client.getTypography(typographyId, null)
 
     // Assert
     expect(result).toBeNull()
@@ -101,7 +100,7 @@ describe('getTypography', () => {
     )
 
     // Act
-    const result = await client.getTypography(typographyId, MakeswiftSiteVersion.Working)
+    const result = await client.getTypography(typographyId, null)
 
     // Assert
     expect(result).toBeNull()
@@ -127,7 +126,7 @@ describe('getGlobalElement', () => {
     )
 
     // Act
-    const result = await client.getGlobalElement(globalElementId, MakeswiftSiteVersion.Working)
+    const result = await client.getGlobalElement(globalElementId, null)
 
     // Assert
     expect(result).toBeNull()
@@ -145,7 +144,7 @@ describe('getGlobalElement', () => {
     )
 
     // Act
-    const result = await client.getGlobalElement(globalElementId, MakeswiftSiteVersion.Live)
+    const result = await client.getGlobalElement(globalElementId, null)
 
     // Assert
     expect(result).toBeNull()
@@ -172,11 +171,7 @@ describe('getLocalizedGlobalElement', () => {
     )
 
     // Act
-    const result = await client.getLocalizedGlobalElement(
-      globalElementId,
-      locale,
-      MakeswiftSiteVersion.Working,
-    )
+    const result = await client.getLocalizedGlobalElement(globalElementId, locale, null)
 
     // Assert
     expect(result).toBeNull()
@@ -194,11 +189,7 @@ describe('getLocalizedGlobalElement', () => {
     )
 
     // Act
-    const result = await client.getLocalizedGlobalElement(
-      globalElementId,
-      locale,
-      MakeswiftSiteVersion.Live,
-    )
+    const result = await client.getLocalizedGlobalElement(globalElementId, locale, null)
 
     // Assert
     expect(result).toBeNull()
@@ -229,7 +220,7 @@ describe('getPagePathnameSlice', () => {
     )
 
     // Act
-    const result = await client.getPagePathnameSlice(pageId, MakeswiftSiteVersion.Live, { locale })
+    const result = await client.getPagePathnameSlice(pageId, null, { locale })
 
     // Assert
     expect(result).toBeNull()
