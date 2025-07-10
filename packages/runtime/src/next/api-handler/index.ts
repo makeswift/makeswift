@@ -92,6 +92,19 @@ export function MakeswiftApiHandler(
   ): Promise<NextResponse<MakeswiftApiHandlerResponse> | void> {
     return match(args)
       .with(routeHandlerPattern, async args => {
+        const [req] = args
+        if (req.method.toUpperCase() === 'OPTIONS') {
+          return new NextResponse(null, {
+            status: 204,
+            headers: new Headers({
+              'Content-Length': '0',
+              'Access-Control-Allow-Origin': appOrigin,
+              'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+              'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+            }),
+          })
+        }
+
         const response = await makeswiftApiHandler(...args)
 
         response.headers.append('Access-Control-Allow-Origin', appOrigin)
