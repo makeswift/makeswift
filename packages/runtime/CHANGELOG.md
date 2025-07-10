@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.24.8-canary.0
+
+### Patch Changes
+
+- 15e13a6: Update API handler to correctly support preflight `OPTIONS` requests for app router hosts
+
 ## 0.24.7
 
 ### Patch Changes
