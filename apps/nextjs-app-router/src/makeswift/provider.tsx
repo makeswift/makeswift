@@ -4,6 +4,7 @@ import { ReactNode } from 'react'
 
 import { runtime } from '@/makeswift/runtime'
 import {
+  MakeswiftVersionData,
   ReactRuntimeProvider,
   RootStyleRegistry,
 } from '@makeswift/runtime/next'
@@ -13,15 +14,15 @@ import '@/makeswift/components'
 export function MakeswiftProvider({
   children,
   locale = undefined,
-  previewMode,
+  siteVersion,
 }: {
   children: ReactNode
   locale?: string
-  previewMode: boolean
+  siteVersion: MakeswiftVersionData | null
 }) {
   return (
     <ReactRuntimeProvider
-      {...{ runtime, previewMode, locale }}
+      {...{ runtime, siteVersion, locale }}
       apiOrigin={process.env.NEXT_PUBLIC_MAKESWIFT_API_ORIGIN}
       appOrigin={process.env.NEXT_PUBLIC_MAKESWIFT_APP_ORIGIN}
     >

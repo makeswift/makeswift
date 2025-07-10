@@ -28,7 +28,7 @@ import {
   type APIResourceLocale,
 } from '../api'
 import { MAKESWIFT_CACHE_TAG } from '../next/cache'
-import { API_HANDLER_SITE_VERSION_HEADER, MakeswiftSiteVersion } from '../api/site-version'
+import { ApiHandlerHeaders, MakeswiftVersionData } from '../api/site-version'
 
 const reducer = combineReducers({
   apiResources: APIResources.reducer,
@@ -103,12 +103,21 @@ export function getAPIResource<T extends APIResourceType>(
 
 type Thunk<ReturnType> = ThunkAction<ReturnType, State, unknown, Action>
 
-async function fetchJson<T>(url: string, siteVersion: MakeswiftSiteVersion): Promise<T | null> {
+async function fetchJson<T>(
+  url: string,
+  siteVersion: MakeswiftVersionData | null,
+): Promise<T | null> {
+  const headers = new Headers({
+    'Content-Type': 'application/json',
+  })
+
+  if (siteVersion != null) {
+    headers.set(ApiHandlerHeaders.SiteVersion, siteVersion.version)
+    headers.set(ApiHandlerHeaders.PreviewToken, siteVersion.token)
+  }
+
   const response = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json',
-      [API_HANDLER_SITE_VERSION_HEADER]: siteVersion,
-    },
+    headers,
     next: { tags: [MAKESWIFT_CACHE_TAG] },
   })
 
@@ -128,7 +137,7 @@ async function fetchJson<T>(url: string, siteVersion: MakeswiftSiteVersion): Pro
 export function fetchAPIResource<T extends APIResourceType>(
   resourceType: T,
   resourceId: string,
-  siteVersion: MakeswiftSiteVersion,
+  siteVersion: MakeswiftVersionData | null,
   locale?: APIResourceLocale<T>,
 ): Thunk<Promise<Extract<APIResource, { __typename: T }> | null>> {
   return async (dispatch, getState) => {

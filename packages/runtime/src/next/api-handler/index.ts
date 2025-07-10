@@ -8,7 +8,6 @@ import { Makeswift } from '../client'
 import elementTree, { ElementTreeResponse } from './handlers/element-tree'
 import fonts, { Font, FontsResponse, GetFonts } from './handlers/fonts'
 import manifest, { Manifest, ManifestResponse } from './handlers/manifest'
-import redirectDraft, { type RedirectDraftResponse } from './handlers/redirect-draft'
 import redirectPreview, { type RedirectPreviewResponse } from './handlers/redirect-preview'
 import clearDraft, { type ClearDraftResponse } from './handlers/clear-draft'
 import { revalidate, RevalidationResponse } from './handlers/revalidate'
@@ -18,11 +17,7 @@ import webhook from './handlers/webhook'
 import { OnPublish, WebhookResponseBody } from './handlers/webhook/types'
 import { ReactRuntime } from '../../react'
 import { P, match } from 'ts-pattern'
-import {
-  API_HANDLER_SITE_VERSION_HEADER,
-  MakeswiftSiteVersion,
-  makeswiftSiteVersionSchema,
-} from '../../api/site-version'
+import { ApiHandlerHeaders, MakeswiftVersionData } from '../../api/site-version'
 
 export type { Manifest, Font }
 
@@ -43,7 +38,6 @@ type NotFoundError = { message: string }
 export type MakeswiftApiHandlerResponse =
   | ManifestResponse
   | RevalidationResponse
-  | RedirectDraftResponse
   | RedirectPreviewResponse
   | ClearDraftResponse
   | FontsResponse
@@ -115,17 +109,29 @@ export function MakeswiftApiHandler(
       .exhaustive()
   }
 
-  function getSiteVersionFromRequest(args: MakeswiftApiHandlerArgs): MakeswiftSiteVersion {
-    const header = match(args)
-      .with(routeHandlerPattern, ([request]) =>
-        request.headers.get(API_HANDLER_SITE_VERSION_HEADER),
-      )
-      .with(apiRoutePattern, ([req]) => req.headers[API_HANDLER_SITE_VERSION_HEADER.toLowerCase()])
+  function getSiteVersionFromRequest(args: MakeswiftApiHandlerArgs): MakeswiftVersionData | null {
+    const { version, token } = match(args)
+      .with(routeHandlerPattern, ([request]) => ({
+        version: request.headers.get(ApiHandlerHeaders.SiteVersion),
+        token: request.headers.get(ApiHandlerHeaders.PreviewToken),
+      }))
+      .with(apiRoutePattern, ([req]) => ({
+        version: req.headers[ApiHandlerHeaders.SiteVersion.toLowerCase()] ?? null,
+        token: req.headers[ApiHandlerHeaders.PreviewToken.toLowerCase()] ?? null,
+      }))
       .exhaustive()
 
-    const parsed = makeswiftSiteVersionSchema.safeParse(header)
-    if (!parsed.success) return MakeswiftSiteVersion.Live
-    return parsed.data
+    if (typeof version !== 'string') {
+      console.error(`Received an invalid Makeswift site version header: "${version}"`)
+      return null
+    }
+
+    if (typeof token !== 'string') {
+      console.error(`Received an invalid Makeswift preview token header: "${token}"`)
+      return null
+    }
+
+    return { makeswift: true, version, token }
   }
 
   async function makeswiftApiHandler(
@@ -176,17 +182,10 @@ export function MakeswiftApiHandler(
         .exhaustive()
     }
 
-    if (matches('/draft')) {
+    if (matches('/redirect-preview')) {
       return match(args)
-        .with(routeHandlerPattern, args => redirectDraft(...args, { apiKey }))
-        .with(apiRoutePattern, args => redirectDraft(...args, { apiKey }))
-        .exhaustive()
-    }
-
-    if (matches('/preview')) {
-      return match(args)
-        .with(routeHandlerPattern, args => redirectPreview(...args, { apiKey }))
-        .with(apiRoutePattern, args => redirectPreview(...args, { apiKey }))
+        .with(routeHandlerPattern, args => redirectPreview(...args, client))
+        .with(apiRoutePattern, args => redirectPreview(...args, client))
         .exhaustive()
     }
 

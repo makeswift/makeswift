@@ -4,7 +4,6 @@ import { http, HttpResponse, graphql } from 'msw'
 import { ReactRuntime } from '../../runtimes/react'
 
 import { server } from '../../mocks/server'
-import { MakeswiftSiteVersion } from '../../api/site-version'
 
 const TEST_API_KEY = 'myApiKey'
 const apiOrigin = 'https://api.fakeswift.com'
@@ -28,7 +27,7 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
 
     // Act
     const result = await client.getComponentSnapshot(treeId, {
-      siteVersion: MakeswiftSiteVersion.Working,
+      siteVersion: null,
     })
 
     // Assert
@@ -49,7 +48,7 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
 
     // Act
     const resultPromise = client.getComponentSnapshot(treeId, {
-      siteVersion: MakeswiftSiteVersion.Working,
+      siteVersion: null,
     })
 
     // Assert
@@ -113,7 +112,7 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
 
       // Act
       const result = await client.getComponentSnapshot(treeId, {
-        siteVersion: MakeswiftSiteVersion.Working,
+        siteVersion: null,
         locale: localeToTest,
       })
 
@@ -172,7 +171,7 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
 
     // Act
     const result = await client.getComponentSnapshot(treeId, {
-      siteVersion: MakeswiftSiteVersion.Working,
+      siteVersion: null,
       locale: localeToTest,
       allowLocaleFallback: false,
     })
@@ -234,7 +233,7 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
 
       // Act
       const result = await client.getComponentSnapshot(treeId, {
-        siteVersion: MakeswiftSiteVersion.Working,
+        siteVersion: null,
         locale: locale ?? undefined,
       })
 

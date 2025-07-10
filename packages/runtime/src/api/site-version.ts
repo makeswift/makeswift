@@ -1,7 +1,19 @@
 import { z } from 'zod'
 
-export const makeswiftSiteVersionSchema = z.enum(['Live', 'Working'])
-export const MakeswiftSiteVersion = makeswiftSiteVersionSchema.Enum
-export type MakeswiftSiteVersion = z.infer<typeof makeswiftSiteVersionSchema>
+export const MakeswiftVersionRefs = {
+  Live: 'ref:live',
+  Working: 'ref:draft',
+}
 
-export const API_HANDLER_SITE_VERSION_HEADER = 'X-Makeswift-Site-Version'
+export const versionDataPayloadSchema = z.object({
+  makeswift: z.literal(true),
+  version: z.string(),
+  token: z.string(),
+})
+
+export type MakeswiftVersionData = z.infer<typeof versionDataPayloadSchema>
+
+export const ApiHandlerHeaders = {
+  SiteVersion: 'X-Makeswift-Site-Version',
+  PreviewToken: 'X-Makeswift-Preview-Token',
+}

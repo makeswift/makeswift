@@ -1,17 +1,13 @@
 import { PreviewData } from 'next'
-import { z } from 'zod'
-import { type MakeswiftSiteVersion, makeswiftSiteVersionSchema } from '../api/site-version'
 
-const makeswiftPreviewDataSchema = z.object({
-  makeswift: z.literal(true),
-  siteVersion: makeswiftSiteVersionSchema,
-})
-export type MakeswiftPreviewData = z.infer<typeof makeswiftPreviewDataSchema>
+import { versionDataPayloadSchema, MakeswiftVersionData } from '../api/site-version'
 
-export function getMakeswiftSiteVersion(previewData: PreviewData): MakeswiftSiteVersion | null {
-  const result = makeswiftPreviewDataSchema.safeParse(previewData)
+export function getMakeswiftSiteVersion(previewData: PreviewData): MakeswiftVersionData | null {
+  const result = versionDataPayloadSchema.safeParse(previewData)
 
-  if (result.success) return result.data.siteVersion
+  if (result.success) return result.data
 
   return null
 }
+
+export { type MakeswiftVersionData } from '../api/site-version'
