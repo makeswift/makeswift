@@ -30,9 +30,7 @@ export async function config({
       },
     },
     route: validateApiRoute(await apiRequestParams(req)),
-    manifest: {
-      previewMode: true,
-    },
+    manifest: {},
     draftCookieNames: [PRERENDER_BYPASS_COOKIE, PREVIEW_DATA_COOKIE],
     sendResponse: async (apiResponse: ApiResponse): Promise<Response | void> => {
       const headers = responseHeaders(apiResponse.headers)
