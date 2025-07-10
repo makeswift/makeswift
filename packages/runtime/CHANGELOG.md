@@ -1,30 +1,15 @@
 # @makeswift/runtime
 
-## 0.24.7-canary.3
-
-### Patch Changes
-
-- 2826416: Render Open Graph and Twitter meta tags for page title in `<Page />` component
-
-## 0.24.7-canary.2
-
-### Patch Changes
-
-- d2c7c57: feat: framework-independent `MakeswiftClient` implementation
-
-## 0.24.7-canary.1
+## 0.24.7
 
 ### Patch Changes
 
 - 48d6537: Update unstructured introspection to handle node IDs with colons in their values
-
-## 0.24.7-canary.0
-
-### Patch Changes
-
+- d2c7c57: feat: framework-independent `MakeswiftClient` implementation
+- 2826416: Render Open Graph and Twitter meta tags for page title in `<Page />` component
 - Updated dependencies [ddb1450]
-  - @makeswift/controls@0.1.11-canary.0
-  - @makeswift/prop-controllers@0.4.4-canary.0
+  - @makeswift/controls@0.1.11
+  - @makeswift/prop-controllers@0.4.4
 
 ## 0.24.6
 
