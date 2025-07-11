@@ -16,6 +16,7 @@ export type Manifest = {
   localizedPageSSR: boolean
   webhook: boolean
   localizedPagesOnlineByDefault: boolean
+  previewToken: boolean
 }
 
 type ManifestError = { message: string }
@@ -59,16 +60,6 @@ export default async function handler(
       .exhaustive()
   }
 
-  const supportsPreviewMode = match(args)
-    .with(routeHandlerPattern, () => false)
-    .with(apiRoutePattern, () => true)
-    .exhaustive()
-
-  const supportsDraftMode = match(args)
-    .with(routeHandlerPattern, () => true)
-    .with(apiRoutePattern, () => false)
-    .exhaustive()
-
   const supportsWebhook = match(args)
     .with(routeHandlerPattern, () => true)
     .with(apiRoutePattern, () => false)
@@ -76,8 +67,8 @@ export default async function handler(
 
   const body = {
     version: PACKAGE_VERSION,
-    previewMode: supportsPreviewMode,
-    draftMode: supportsDraftMode,
+    previewMode: false,
+    draftMode: false,
     interactionMode: true,
     clientSideNavigation: false,
     elementFromPoint: false,
@@ -87,6 +78,7 @@ export default async function handler(
     localizedPageSSR: true,
     webhook: supportsWebhook,
     localizedPagesOnlineByDefault: true,
+    previewToken: true,
   }
 
   return match(args)
