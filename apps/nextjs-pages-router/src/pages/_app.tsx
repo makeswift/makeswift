@@ -3,7 +3,6 @@ import { ReactRuntimeProvider } from '@makeswift/runtime/next'
 import type { AppProps } from 'next/app'
 import { Grenze_Gotisch, Grenze } from 'next/font/google'
 
-import '@/makeswift/components'
 import '@/pages/global.css'
 
 const GrenzeGotischFont = Grenze_Gotisch({
