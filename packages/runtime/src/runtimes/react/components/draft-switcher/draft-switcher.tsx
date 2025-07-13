@@ -49,7 +49,8 @@ export function DraftSwitcher({ isDraft }: { isDraft: boolean }) {
           issues on production sites */}
       <PageMeta
         name="makeswift-draft-info"
-        content={JSON.stringify({ draft: isDraft, inBuilder: isInBuilder })} />
+        content={JSON.stringify({ draft: isDraft, inBuilder: isInBuilder })}
+      />
     </>
   )
 }

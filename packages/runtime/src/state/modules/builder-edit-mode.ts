@@ -6,7 +6,7 @@ export const BuilderEditMode = {
   INTERACT: 'interact',
 } as const
 
-export type BuilderEditMode = typeof BuilderEditMode[keyof typeof BuilderEditMode]
+export type BuilderEditMode = (typeof BuilderEditMode)[keyof typeof BuilderEditMode]
 
 export type State = BuilderEditMode | null
 

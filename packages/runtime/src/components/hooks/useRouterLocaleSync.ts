@@ -11,7 +11,7 @@ function useRouter() {
 
     return router
   } catch (e) {
-    return;
+    return
   }
 }
 

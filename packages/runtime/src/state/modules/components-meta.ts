@@ -25,7 +25,7 @@ export const ComponentIcon = {
   Video: 'video',
 } as const
 
-export type ComponentIcon = typeof ComponentIcon[keyof typeof ComponentIcon]
+export type ComponentIcon = (typeof ComponentIcon)[keyof typeof ComponentIcon]
 
 export type ComponentMeta = { label: string; icon: ComponentIcon; hidden: boolean }
 
