@@ -116,7 +116,7 @@ async function redirectDraftRouteHandler(
 async function redirectDraftApiRouteHandler(
   _req: NextApiRequest,
   res: NextApiResponse<RedirectDraftResponse>,
-  { }: { apiKey: string },
+  {}: { apiKey: string },
 ): Promise<void> {
   const message =
     'Cannot request draft endpoint from an API handler registered in `pages`. Move your Makeswift API handler to the `app` directory'

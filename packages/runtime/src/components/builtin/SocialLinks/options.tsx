@@ -52,4 +52,4 @@ export const SocialLinksOptions = [
   { type: 'youtube', label: 'YouTube', icon: <LogoYoutube20 />, brandColor: '#ff0000' },
 ] as const
 
-export type SocialLinksOptionType = typeof SocialLinksOptions[number]['type']
+export type SocialLinksOptionType = (typeof SocialLinksOptions)[number]['type']

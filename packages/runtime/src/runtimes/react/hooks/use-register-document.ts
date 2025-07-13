@@ -2,7 +2,11 @@ import { useEffect } from 'react'
 import { type Document } from '../../../state/react-page'
 import { useDispatch } from './use-dispatch'
 import { useIsInBuilder } from './use-is-in-builder'
-import { registerBuilderDocumentsEffect, registerDocument, registerDocumentsEffect } from '../../../state/actions'
+import {
+  registerBuilderDocumentsEffect,
+  registerDocument,
+  registerDocumentsEffect,
+} from '../../../state/actions'
 import { isServer } from '../../../utils/is-server'
 import { useIsomorphicLayoutEffect } from '../../../components/hooks/useIsomorphicLayoutEffect'
 

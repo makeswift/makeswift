@@ -51,14 +51,13 @@ export default async function redirectPreviewHandler(
 async function redirectPreviewRouteHandler(
   _request: NextRequest,
   _context: Context,
-  { }: { apiKey: string },
+  {}: { apiKey: string },
 ): Promise<NextResponse<RedirectPreviewResponse>> {
   const message =
     'Cannot request preview endpoint from an API handler registered in `app`. Move your Makeswift API handler to the `pages/api` directory'
   console.error(message)
   return NextResponse.json(message, { status: 500 })
 }
-
 
 async function redirectPreviewApiRouteHandler(
   req: NextApiRequest,
@@ -81,7 +80,9 @@ async function redirectPreviewApiRouteHandler(
   }
 
   if (pathname == null) {
-    return res.status(400).send('Bad request: incoming request does not have an associated pathname')
+    return res
+      .status(400)
+      .send('Bad request: incoming request does not have an associated pathname')
   }
 
   const setCookie = res

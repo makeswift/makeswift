@@ -121,7 +121,7 @@ const ImageBackgroundRepeat = {
   Repeat: 'repeat',
 } as const
 
-type ImageBackgroundRepeat = typeof ImageBackgroundRepeat[keyof typeof ImageBackgroundRepeat]
+type ImageBackgroundRepeat = (typeof ImageBackgroundRepeat)[keyof typeof ImageBackgroundRepeat]
 
 const ImageBackgroundSize = {
   Cover: 'cover',
@@ -129,7 +129,7 @@ const ImageBackgroundSize = {
   Auto: 'auto',
 } as const
 
-type ImageBackgroundSize = typeof ImageBackgroundSize[keyof typeof ImageBackgroundSize]
+type ImageBackgroundSize = (typeof ImageBackgroundSize)[keyof typeof ImageBackgroundSize]
 
 type ImageBackgroundProps = {
   publicUrl?: string
@@ -234,7 +234,7 @@ const BackgroundVideoAspectRatio = {
 } as const
 
 type BackgroundVideoAspectRatio =
-  typeof BackgroundVideoAspectRatio[keyof typeof BackgroundVideoAspectRatio]
+  (typeof BackgroundVideoAspectRatio)[keyof typeof BackgroundVideoAspectRatio]
 
 function getAspectRatio(aspectRatio: BackgroundVideoAspectRatio | null | undefined): number {
   switch (aspectRatio) {

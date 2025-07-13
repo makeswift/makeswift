@@ -9,9 +9,10 @@ type PaginationFunction<Options, R extends { id: any }> = Options extends {
   ? (options: Options) => Promise<PaginationResult<R>>
   : never
 
-type IterableMethod<Options, R> = Partial<Options> extends Options
-  ? (options?: Options) => IterablePaginationResult<R>
-  : (options: Options) => IterablePaginationResult<R>
+type IterableMethod<Options, R> =
+  Partial<Options> extends Options
+    ? (options?: Options) => IterablePaginationResult<R>
+    : (options: Options) => IterablePaginationResult<R>
 
 export function toIterablePaginationResult<Options, R extends { id: string }>(
   fn: PaginationFunction<Options, R>,

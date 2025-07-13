@@ -120,7 +120,9 @@
     "test": "jest",
     "test:updateSnapshot": "jest --updateSnapshot",
     "test:watch": "jest --watch",
-    "madge": "madge --circular --warning --extensions ts,tsx src/ --exclude \"dist/.+\""
+    "madge": "madge --circular --warning --extensions ts,tsx src/ --exclude \"dist/.+\"",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "peerDependencies": {
     "@types/react": "^18.0.0 || ^19.0.0",

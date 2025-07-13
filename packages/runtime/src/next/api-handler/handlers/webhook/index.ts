@@ -13,8 +13,8 @@ import {
 type Context = { params: { [key: string]: string | string[] } }
 
 type WebhookParams = {
-  apiKey: string,
-  events?: { onPublish?: OnPublish },
+  apiKey: string
+  events?: { onPublish?: OnPublish }
 }
 
 export type WebhookHandlerArgs =
@@ -74,7 +74,9 @@ export default async function handler(
   }
 
   const result = await match(payload.type)
-    .with(WebhookEventType.SITE_PUBLISHED, () => handleSitePublished(payload, { onPublish: events?.onPublish }))
+    .with(WebhookEventType.SITE_PUBLISHED, () =>
+      handleSitePublished(payload, { onPublish: events?.onPublish }),
+    )
     .exhaustive()
 
   return respond(args, result.body, result.status)
