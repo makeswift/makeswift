@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.24.8
+
+### Patch Changes
+
+- 2eaa492: test: fix MSW warnings about redundant usage of query parameters
+- 15e13a6: Update API handler to correctly support preflight `OPTIONS` requests for app router hosts
+
 ## 0.24.7
 
 ### Patch Changes
