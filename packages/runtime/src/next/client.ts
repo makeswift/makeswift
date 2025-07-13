@@ -122,6 +122,7 @@ export type MakeswiftPageDocument = {
   fonts: Font[]
   meta: Meta
   seo: Seo
+  href: string
   localizedPages: LocalizedPage[]
   locale: string | null
 }

@@ -41,6 +41,7 @@ export function createMakeswiftPageSnapshot(
       fonts: [],
       meta: {},
       seo: {},
+      href: 'test-page-href',
       localizedPages: [],
       locale,
     },

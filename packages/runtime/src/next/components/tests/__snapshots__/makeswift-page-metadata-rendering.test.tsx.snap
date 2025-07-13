@@ -107,6 +107,76 @@ exports[`MakeswiftPage metadata and seo tag rendering only renders selective met
 </head>
 `;
 
+exports[`MakeswiftPage metadata and seo tag rendering renders a self-referencing canonical tag when metadata.canonicalUrl is true but no user-specified canonical url was provided 1`] = `
+<head>
+  <style
+    href="makeswift-base-styles"
+    precedence="high"
+  >
+    
+        html {
+            font-family: sans-serif;
+        }
+        div#__next {
+            overflow: hidden;
+        }
+        
+  </style>
+  <title>
+    Test Title
+  </title>
+  <link
+    href="https://example.com/favicon.ico"
+    rel="icon"
+    type="image/x-icon"
+  />
+  <link
+    href="https://example.com/test-page-path"
+    rel="canonical"
+  />
+  <meta
+    content="noindex"
+    name="robots"
+  />
+  <meta
+    content="Test Description"
+    name="description"
+  />
+  <meta
+    content="Test Description"
+    property="og:description"
+  />
+  <meta
+    content="Test Description"
+    name="twitter:description"
+  />
+  <meta
+    content="test, keywords"
+    name="keywords"
+  />
+  <meta
+    content="https://example.com/image.jpg"
+    property="og:image"
+  />
+  <meta
+    content="image/jpeg"
+    property="og:image:type"
+  />
+  <meta
+    content="https://example.com/image.jpg"
+    name="twitter:image"
+  />
+  <meta
+    content="summary_large_image"
+    name="twitter:card"
+  />
+  <meta
+    content="{"draft":false,"inBuilder":false}"
+    name="makeswift-draft-info"
+  />
+</head>
+`;
+
 exports[`MakeswiftPage metadata and seo tag rendering renders all metadata by default (without passing prop) 1`] = `
 <head>
   <style
@@ -131,7 +201,7 @@ exports[`MakeswiftPage metadata and seo tag rendering renders all metadata by de
     type="image/x-icon"
   />
   <link
-    href="https://example.com"
+    href="https://example.com/user-specified-canonical-url-path"
     rel="canonical"
   />
   <meta
@@ -201,7 +271,7 @@ exports[`MakeswiftPage metadata and seo tag rendering renders all metadata when 
     type="image/x-icon"
   />
   <link
-    href="https://example.com"
+    href="https://example.com/user-specified-canonical-url-path"
     rel="canonical"
   />
   <meta
@@ -271,7 +341,7 @@ exports[`MakeswiftPage metadata and seo tag rendering renders all metadata when 
     type="image/x-icon"
   />
   <link
-    href="https://example.com"
+    href="https://example.com/user-specified-canonical-url-path"
     rel="canonical"
   />
   <meta

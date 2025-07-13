@@ -45,9 +45,10 @@ const pageDocumentFixture = {
     },
   },
   seo: {
-    canonicalUrl: 'https://example.com',
+    canonicalUrl: 'https://example.com/user-specified-canonical-url-path',
     isIndexingBlocked: true,
   },
+  href: 'https://example.com/test-page-path',
 }
 
 function createMakeswiftPageSnapshot(
@@ -162,6 +163,19 @@ describe('MakeswiftPage', () => {
           keywords: true,
         },
       })
+      expect(render.container).toMatchSnapshot()
+    })
+
+    test('renders a self-referencing canonical tag when metadata.canonicalUrl is true but no user-specified canonical url was provided', async () => {
+      const pageDocument = {
+        ...pageDocumentFixture,
+        seo: {
+          ...pageDocumentFixture.seo,
+          canonicalUrl: null,
+        }
+      }
+      const snapshot = createMakeswiftPageSnapshot(pageDocument)
+      const render = await testMakeswiftPageMetadataRendering({ snapshot, metadata: true })
       expect(render.container).toMatchSnapshot()
     })
   })

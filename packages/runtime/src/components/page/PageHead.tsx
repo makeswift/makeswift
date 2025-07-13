@@ -46,8 +46,10 @@ export function PageHead({ document: page, metadata = {} }: Props): JSX.Element 
   const description = baseLocalizedPage?.meta.description ?? page.meta.description
   const keywords = baseLocalizedPage?.meta.keywords ?? page.meta.keywords
   const socialImage = baseLocalizedPage?.meta.socialImage ?? page.meta.socialImage
-  const canonicalUrl = baseLocalizedPage?.seo.canonicalUrl ?? page.seo.canonicalUrl
+  const seoSettingsCanonicalUrl = baseLocalizedPage?.seo.canonicalUrl ?? page.seo.canonicalUrl
   const isIndexingBlocked = baseLocalizedPage?.seo.isIndexingBlocked ?? page.seo.isIndexingBlocked
+
+  const canonicalUrl = seoSettingsCanonicalUrl ?? page.href
 
   const fontFamilyParamValue = useMemo(() => {
     if (site == null) {
@@ -89,7 +91,7 @@ export function PageHead({ document: page, metadata = {} }: Props): JSX.Element 
       {useFavicon && favicon && (
         <PageLink rel="icon" type={favicon.mimetype} href={favicon.publicUrl} />
       )}
-      {useCanonicalUrl && canonicalUrl && <PageLink rel="canonical" href={canonicalUrl} />}
+      {useCanonicalUrl && <PageLink rel="canonical" href={canonicalUrl} />}
       {useIndexingBlocked && isIndexingBlocked && <PageMeta name="robots" content="noindex" />}
       {useDescription && description && (
         <>

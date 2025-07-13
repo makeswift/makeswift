@@ -64,6 +64,7 @@ exports[`renders a style: snapshot 1`] = `
       "type": "./components/Root/index.js",
     },
     "fonts": [],
+    "href": "test-page-href",
     "id": "test-page-id",
     "locale": null,
     "localizedPages": [],

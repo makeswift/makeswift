@@ -30,6 +30,7 @@ const pageDocument: MakeswiftPageDocument = {
   fonts: [],
   meta: {},
   seo: {},
+  href: '[page-href]',
   localizedPages: [],
   locale: null,
 }
