@@ -93,19 +93,18 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
             - this is the step that we're really testing here - we want the logic in getComponentSnapshot to execute this subsequent request
         (3) graphql query for introspection
     */
+      const httpHandler = jest.fn(({ request }) => {
+        const { searchParams } = new URL(request.url)
+        const locale = searchParams.get('locale')
+        if (locale === localeToTest) {
+          return HttpResponse.text('', { status: 404 })
+        }
+
+        return HttpResponse.json(document, { status: 200 })
+      })
+
       server.use(
-        http.get(
-          `${baseUrl}/${encodeURIComponent(treeId)}?locale=${localeToTest}`,
-          () => HttpResponse.text('', { status: 404 }),
-          { once: true },
-        ),
-        http.get(
-          `${baseUrl}/${encodeURIComponent(treeId)}`,
-          () => HttpResponse.json(document, { status: 200 }),
-          {
-            once: true,
-          },
-        ),
+        http.get(`${baseUrl}/${encodeURIComponent(treeId)}`, httpHandler),
         graphql.operation(() => {
           return HttpResponse.json({})
         }),
@@ -123,6 +122,9 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
       expect(result.document.data).not.toBeNull()
       expect(result.document.data?.key).toBe(elementTreeKey)
       expect(result.document.locale).toBeNull()
+
+      expect(httpHandler).toHaveBeenCalledTimes(2)
+      expect(httpHandler.mock.calls[0][0].request.url).toContain(`locale=${localeToTest}`)
     },
   )
 
@@ -156,15 +158,18 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
             - should not execute for this test
         (3) graphql query for introspection
       */
+    const httpHandler = jest.fn(({ request }) => {
+      const { searchParams } = new URL(request.url)
+      const locale = searchParams.get('locale')
+      if (locale === localeToTest) {
+        return HttpResponse.text('', { status: 404 })
+      }
+
+      return HttpResponse.json(document, { status: 200 })
+    })
+
     server.use(
-      http.get(
-        `${baseUrl}/${treeId}?locale=${localeToTest}`,
-        () => HttpResponse.text('', { status: 404 }),
-        { once: true },
-      ),
-      http.get(`${baseUrl}/${treeId}`, () => HttpResponse.json(document, { status: 200 }), {
-        once: true,
-      }),
+      http.get(`${baseUrl}/${encodeURIComponent(treeId)}`, httpHandler),
       graphql.operation(() => {
         return HttpResponse.json({})
       }),
@@ -183,6 +188,9 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
     expect(result.document.id).toBe(treeId)
     expect(result.document.data).toBeNull()
     expect(result.document.locale).toBe(localeToTest)
+
+    expect(httpHandler).toHaveBeenCalledTimes(1)
+    expect(httpHandler.mock.calls[0][0].request.url).toContain(`locale=${localeToTest}`)
   })
 
   test.each([
@@ -218,15 +226,18 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
             - should not happen for this test
         (3) graphql query for introspection
       */
+      const httpHandler = jest.fn(({ request }) => {
+        const { searchParams } = new URL(request.url)
+        const requestLocale = searchParams.get('locale')
+        if (requestLocale === locale) {
+          return HttpResponse.json(document, { status: 200 })
+        }
+
+        return HttpResponse.text('', { status: 404 })
+      })
+
       server.use(
-        http.get(
-          `${baseUrl}/${encodeURIComponent(treeId)}?locale=${locale}`,
-          () => HttpResponse.json(document, { status: 200 }),
-          { once: true },
-        ),
-        http.get(`${baseUrl}/${treeId}`, () => HttpResponse.text('', { status: 404 }), {
-          once: true,
-        }),
+        http.get(`${baseUrl}/${encodeURIComponent(treeId)}`, httpHandler),
         graphql.operation(() => {
           return HttpResponse.json({})
         }),
@@ -244,6 +255,14 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
       expect(result.document.id).toBe(treeId)
       expect(result.document.locale).toBe(locale)
       expect(result.document.data).not.toBeNull()
+
+      expect(httpHandler).toHaveBeenCalledTimes(1)
+      const requestUrl = httpHandler.mock.calls[0][0].request.url
+      if (locale !== null) {
+        expect(requestUrl).toContain(`locale=${locale}`)
+      } else {
+        expect(requestUrl).not.toContain('locale=')
+      }
     },
   )
 })
