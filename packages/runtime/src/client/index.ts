@@ -323,8 +323,8 @@ export class MakeswiftClient {
     if (typeof apiKey !== 'string') {
       throw new Error(
         'The Makeswift client must be passed a valid Makeswift site API key: ' +
-        "`new Makeswift('<makeswift_site_api_key>')`\n" +
-        `Received "${apiKey}" instead.`,
+          "`new Makeswift('<makeswift_site_api_key>')`\n" +
+          `Received "${apiKey}" instead.`,
       )
     }
 
@@ -342,10 +342,7 @@ export class MakeswiftClient {
     this.runtime = runtime
   }
 
-  private async fetch(
-    path: string,
-    siteVersion: MakeswiftSiteVersion,
-  ): Promise<Response> {
+  private async fetch(path: string, siteVersion: MakeswiftSiteVersion): Promise<Response> {
     const response = await fetch(new URL(path, this.apiOrigin).toString(), {
       headers: {
         ['X-API-Key']: this.apiKey,
@@ -362,9 +359,7 @@ export class MakeswiftClient {
   /**
    * Override this method to provide additional fetch options, e.g. revalidation, cache tags, etc.
    */
-  fetchOptions(
-    _siteVersion: MakeswiftSiteVersion,
-  ): Record<string, unknown> {
+  fetchOptions(_siteVersion: MakeswiftSiteVersion): Record<string, unknown> {
     return {}
   }
 

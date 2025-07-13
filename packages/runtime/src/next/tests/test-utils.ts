@@ -1,5 +1,5 @@
-import { NextApiRequest } from "next"
-import { createRequest, RequestMethod } from "node-mocks-http"
+import { NextApiRequest } from 'next'
+import { createRequest, RequestMethod } from 'node-mocks-http'
 
 type Query = { [key: string]: Query } | string[]
 
@@ -21,16 +21,14 @@ function urlToQuery(url: URL): Query {
 
   return {
     ...structure,
-    ...Object.fromEntries(
-      url.searchParams.entries(),
-    ),
+    ...Object.fromEntries(url.searchParams.entries()),
   }
 }
 
 export function createNextApiRequest({
   method,
   path,
-  body
+  body,
 }: {
   method: RequestMethod
   path: string
@@ -40,6 +38,6 @@ export function createNextApiRequest({
     method,
     url: path,
     query: urlToQuery(new URL(path, 'http://localhost')),
-    body
+    body,
   })
 }

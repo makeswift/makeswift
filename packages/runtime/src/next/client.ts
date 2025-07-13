@@ -7,7 +7,6 @@ import { MakeswiftClient } from '../client'
 import { MAKESWIFT_CACHE_TAG } from './cache'
 
 export class Makeswift extends MakeswiftClient {
-
   static getSiteVersion(previewData: PreviewData): MakeswiftSiteVersion {
     return getMakeswiftSiteVersion(previewData) ?? MakeswiftSiteVersion.Live
   }
@@ -16,9 +15,7 @@ export class Makeswift extends MakeswiftClient {
     return getMakeswiftSiteVersion(previewData) === MakeswiftSiteVersion.Working
   }
 
-  fetchOptions(
-    _siteVersion: MakeswiftSiteVersion,
-  ): Record<string, unknown> {
+  fetchOptions(_siteVersion: MakeswiftSiteVersion): Record<string, unknown> {
     return {
       next: {
         tags: [MAKESWIFT_CACHE_TAG],

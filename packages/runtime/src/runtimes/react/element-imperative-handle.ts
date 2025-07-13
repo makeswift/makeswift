@@ -8,8 +8,9 @@ import {
 } from '../../state/modules/prop-controller-handles'
 
 export class ElementImperativeHandle<
-  T extends Record<string, Descriptor> = Record<string, Descriptor>,
-> implements BoxModelHandle, PropControllersHandle<T>
+    T extends Record<string, Descriptor> = Record<string, Descriptor>,
+  >
+  implements BoxModelHandle, PropControllersHandle<T>
 {
   private getCurrent: () => unknown = () => null
   private lastPropControllers: DescriptorsPropControllers<T> | null = null
