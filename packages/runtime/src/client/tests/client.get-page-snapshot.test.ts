@@ -4,7 +4,6 @@ import { http, HttpResponse } from 'msw'
 import { ReactRuntime } from '../../runtimes/react'
 
 import { server } from '../../mocks/server'
-import { MakeswiftSiteVersion } from '../../api/site-version'
 
 const TEST_API_KEY = 'myApiKey'
 const apiOrigin = 'https://api.fakeswift.com'
@@ -78,7 +77,7 @@ describe('getPageSnapshot', () => {
       // Act
       const result = await client.getPageSnapshot(pathname, {
         locale,
-        siteVersion: MakeswiftSiteVersion.Working,
+        siteVersion: null,
       })
 
       // Assert
@@ -126,7 +125,7 @@ describe('getPageSnapshot', () => {
       const result = await client.getPageSnapshot(pathname, {
         locale,
         allowLocaleFallback,
-        siteVersion: MakeswiftSiteVersion.Working,
+        siteVersion: null,
       })
 
       // Assert
@@ -147,7 +146,7 @@ describe('getPageSnapshot', () => {
     // Act
     const result = await client.getPageSnapshot(pathname, {
       locale,
-      siteVersion: MakeswiftSiteVersion.Working,
+      siteVersion: null,
     })
 
     // Assert
@@ -167,7 +166,7 @@ describe('getPageSnapshot', () => {
 
     // Act
     const resultPromise = client.getPageSnapshot(pathname, {
-      siteVersion: MakeswiftSiteVersion.Live,
+      siteVersion: null,
       locale,
     })
 
