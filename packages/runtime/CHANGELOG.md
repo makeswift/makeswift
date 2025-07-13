@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.24.8-canary.1
+
+### Patch Changes
+
+- 2eaa492: test: fix MSW warnings about redundant usage of query parameters
+
 ## 0.24.8-canary.0
 
 ### Patch Changes
