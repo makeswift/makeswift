@@ -1,0 +1,21 @@
+query GetBlog($uid: String!) {
+  blogpost(uid: $uid, lang: "en-us") {
+    title
+    feed_date
+    hero
+    body
+    author {
+      __typename
+      ... on Author {
+        name
+      }
+    }
+    _meta {
+      uid
+      type
+      tags
+      id
+      lastPublicationDate
+    }
+  }
+}
