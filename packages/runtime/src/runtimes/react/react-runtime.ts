@@ -19,7 +19,40 @@ function validateComponentType(type: string, component?: ComponentType): void {
   }
 }
 
+type ComponentRegistrationMeta<
+  P extends Record<string, LegacyDescriptor | UnifiedControlDefinition>,
+> = {
+  type: string
+  label: string
+  icon: ComponentIcon
+  hidden: boolean
+  props?: P
+}
+
+type ComponentRegistration<P extends Record<string, LegacyDescriptor | UnifiedControlDefinition>> =
+  {
+    component: ComponentType<{ [K in keyof P]: DescriptorValueType<P[K]> }>
+    meta: ComponentRegistrationMeta<P>
+  }
+
 export class ReactRuntime extends RuntimeCore {
+  static connect<
+    ControlDef extends UnifiedControlDefinition,
+    P extends Record<string, LegacyDescriptor | ControlDef>,
+    C extends ComponentType<{ [K in keyof P]: DescriptorValueType<P[K]> }>,
+  >(
+    component: C,
+    {
+      type,
+      label,
+      icon = ComponentIcon.Cube,
+      hidden = false,
+      props,
+    }: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P },
+  ): ComponentRegistration<P> {
+    return { component, meta: { type, label, icon, hidden, props } }
+  }
+
   registerComponent<
     ControlDef extends UnifiedControlDefinition,
     P extends Record<string, LegacyDescriptor | ControlDef>,
@@ -50,9 +83,21 @@ export class ReactRuntime extends RuntimeCore {
     }
   }
 
-  constructor({ breakpoints }: { breakpoints?: BreakpointsInput } = {}) {
+  constructor({
+    breakpoints,
+    components,
+  }: {
+    breakpoints?: BreakpointsInput
+    components?: Record<string, ComponentRegistration<any>>
+  } = {}) {
     super({ breakpoints })
 
     registerBuiltinComponents(this)
+
+    if (components) {
+      for (const [, registration] of Object.entries(components)) {
+        this.registerComponent(registration.component, registration.meta)
+      }
+    }
   }
 }
