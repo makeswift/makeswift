@@ -1,0 +1,15 @@
+query GetBlogs {
+  articles {
+    title
+    publishedAt
+    cover {
+      url
+    }
+    body
+    slug
+    description
+    author {
+      name
+    }
+  }
+}
