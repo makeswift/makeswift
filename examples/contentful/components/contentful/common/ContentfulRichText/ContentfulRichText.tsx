@@ -72,7 +72,7 @@ export function ContentfulRichText({ className, textColor, field, alignment = 'l
         proseRichTextColor(textColor)
       )}
     >
-      <div className={className}>{documentToReactComponents(field.data.json, options)}</div>
+      {documentToReactComponents(field.data.json, options)}
     </div>
   )
 }
