@@ -6,7 +6,7 @@ loadEnvConfig(process.cwd())
 const config: LoadCodegenConfigResult['config'] = {
   generates: {
     'generated/contentful.ts': {
-      documents: './components/Contentful/**/*.graphql',
+      documents: './**/*.graphql',
       schema: {
         [`${`https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`}`]:
           {
