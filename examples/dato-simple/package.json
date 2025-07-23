@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run codegen-ts && next build",
     "start": "next start",
     "lint": "next lint",
     "icons": "npx @svgr/cli --typescript --replace-attr-values \"#000=currentColor\" --out-dir generated/icons -- public/icons",
@@ -11,6 +11,7 @@
   "dependencies": {
     "@conform-to/react": "^1.6.1",
     "@conform-to/zod": "^1.6.1",
+    "@graphql-typed-document-node/core": "^3.2.0",
     "@makeswift/runtime": "^0.24.6",
     "@next/env": "^15.3.4",
     "@radix-ui/react-accordion": "^1.2.3",
@@ -19,6 +20,7 @@
     "clsx": "^2.1.1",
     "datocms-structured-text-to-html-string": "^5.0.0",
     "datocms-structured-text-utils": "^5.0.0",
+    "graphql": "^16.3.0",
     "graphql-request": "^7.2.0",
     "lucide-react": "^0.511.0",
     "next": "^15.2.2",
@@ -27,6 +29,7 @@
     "react-dom": "^19.0.0",
     "swr": "^2.3.4",
     "tailwindcss": "^4.1.8",
+    "uuid": "^9.0.0",
     "zod": "^3.25.67"
   },
   "devDependencies": {
