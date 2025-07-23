@@ -1,5 +1,19 @@
 # @makeswift/runtime
 
+## 0.24.8
+
+### Patch Changes
+
+- a7d459d: Add optional description prop for `MakeswiftComponent`.
+- f8f5d9a: Add support for optional descriptions when creating controls.
+- 36c813c: Add support for optional descriptions when registering components with runtime.
+- 2eaa492: test: fix MSW warnings about redundant usage of query parameters
+- 15e13a6: Update API handler to correctly support preflight `OPTIONS` requests for app router hosts
+- Updated dependencies [a7d459d]
+- Updated dependencies [f8f5d9a]
+  - @makeswift/controls@0.1.12
+  - @makeswift/prop-controllers@0.4.5
+
 ## 0.24.7
 
 ### Patch Changes
