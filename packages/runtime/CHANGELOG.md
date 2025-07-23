@@ -1,5 +1,17 @@
 # @makeswift/runtime
 
+## 0.24.8-canary.2
+
+### Patch Changes
+
+- a7d459d: Add optional description prop for `MakeswiftComponent`.
+- f8f5d9a: Add support for optional descriptions when creating controls.
+- 36c813c: Add support for optional descriptions when registering components with runtime.
+- Updated dependencies [a7d459d]
+- Updated dependencies [f8f5d9a]
+  - @makeswift/controls@0.1.12-canary.0
+  - @makeswift/prop-controllers@0.4.5-canary.0
+
 ## 0.24.8-canary.1
 
 ### Patch Changes

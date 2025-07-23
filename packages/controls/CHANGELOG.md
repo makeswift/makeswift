@@ -1,5 +1,12 @@
 # @makeswift/controls
 
+## 0.1.12-canary.0
+
+### Patch Changes
+
+- a7d459d: Add optional description prop for `MakeswiftComponent`.
+- f8f5d9a: Add support for optional descriptions when creating controls.
+
 ## 0.1.11
 
 ### Patch Changes
