@@ -39,7 +39,7 @@ import {
   getPropControllerDescriptors,
   isElementReference,
 } from '../state/react-page'
-import { MakeswiftSiteVersion } from '../api/site-version'
+import { MakeswiftVersionData } from '../api/site-version'
 import { toIterablePaginationResult } from '../utils/pagination'
 import { deterministicUUID } from '../utils/deterministic-uuid'
 import { Schema } from '@makeswift/controls'
@@ -168,6 +168,16 @@ export type MakeswiftComponentSnapshot = {
   cacheData: CacheData
   meta: MakeswiftComponentSnapshotMetadata
 }
+
+export const previewTokenPayloadSchema = z.object({
+  payload: z.object({
+    siteId: z.string(),
+    version: z.string(),
+  }),
+  editable: z.boolean().optional(),
+})
+
+export type PreviewTokenPayload = z.infer<typeof previewTokenPayloadSchema>
 
 export function componentDocumentToRootEmbeddedDocument({
   document,
@@ -342,17 +352,22 @@ export class MakeswiftClient {
     this.runtime = runtime
   }
 
-  private async fetch(
-    path: string,
-    siteVersion: MakeswiftSiteVersion,
-  ): Promise<Response> {
-    const response = await fetch(new URL(path, this.apiOrigin).toString(), {
-      headers: {
-        ['X-API-Key']: this.apiKey,
-        'Makeswift-Site-API-Key': this.apiKey,
-        'Makeswift-Site-Version': siteVersion,
-      },
-      ...(siteVersion === MakeswiftSiteVersion.Working ? { cache: 'no-store' } : {}),
+  private async fetch(path: string, siteVersion: MakeswiftVersionData | null): Promise<Response> {
+    const requestUrl = new URL(path, this.apiOrigin)
+
+    const requestHeaders = new Headers({
+      'X-API-Key': this.apiKey,
+      'Makeswift-Site-API-Key': this.apiKey,
+    })
+
+    if (siteVersion?.token) {
+      requestUrl.searchParams.set('version', siteVersion.version)
+      requestHeaders.set('makeswift-preview-token', siteVersion.token)
+    }
+
+    const response = await fetch(requestUrl.toString(), {
+      headers: requestHeaders,
+      ...(siteVersion != null ? { cache: 'no-store' } : {}),
       ...this.fetchOptions(siteVersion),
     })
 
@@ -362,21 +377,19 @@ export class MakeswiftClient {
   /**
    * Override this method to provide additional fetch options, e.g. revalidation, cache tags, etc.
    */
-  fetchOptions(
-    _siteVersion: MakeswiftSiteVersion,
-  ): Record<string, unknown> {
+  fetchOptions(_siteVersion: MakeswiftVersionData | null): Record<string, unknown> {
     return {}
   }
 
   private getPagesInternal = async ({
-    siteVersion = MakeswiftSiteVersion.Live,
+    siteVersion = null,
     ...params
   }: {
-    siteVersion?: MakeswiftSiteVersion
+    siteVersion?: MakeswiftVersionData | null
   } & GetPagesParams = {}): Promise<MakeswiftGetPagesResult> => {
     const queryParams = getPagesQueryParams(params)
 
-    const response = await this.fetch(`v4/pages?${queryParams.toString()}`, siteVersion)
+    const response = await this.fetch(`v5_unstable/pages?${queryParams.toString()}`, siteVersion)
     if (!response.ok) {
       console.error('Failed to get pages', {
         response: await failedResponseBody(response),
@@ -402,11 +415,11 @@ export class MakeswiftClient {
   async getPage(
     pathname: string,
     {
-      siteVersion = MakeswiftSiteVersion.Live,
+      siteVersion = null,
       locale,
-    }: { siteVersion?: MakeswiftSiteVersion; locale?: string } = {},
+    }: { siteVersion?: MakeswiftVersionData | null; locale?: string } = {},
   ): Promise<GetPageAPI | null> {
-    const url = new URL(`v2/pages/${encodeURIComponent(pathname)}`, this.apiOrigin)
+    const url = new URL(`v3_unstable/pages/${encodeURIComponent(pathname)}`, this.apiOrigin)
     if (locale) url.searchParams.set('locale', locale)
 
     const response = await this.fetch(url.pathname + url.search, siteVersion)
@@ -430,11 +443,11 @@ export class MakeswiftClient {
 
   private async getTypographies(
     typographyIds: string[],
-    siteVersion: MakeswiftSiteVersion,
+    siteVersion: MakeswiftVersionData | null,
   ): Promise<(Typography | null)[]> {
     if (typographyIds.length === 0) return []
 
-    const url = new URL(`v2/typographies/bulk`, this.apiOrigin)
+    const url = new URL(`v3_unstable/typographies/bulk`, this.apiOrigin)
 
     typographyIds.forEach(id => {
       url.searchParams.append('ids', id)
@@ -458,11 +471,11 @@ export class MakeswiftClient {
 
   private async getSwatches(
     ids: string[],
-    siteVersion: MakeswiftSiteVersion,
+    siteVersion: MakeswiftVersionData | null,
   ): Promise<(Swatch | null)[]> {
     if (ids.length === 0) return []
 
-    const url = new URL(`v2/swatches/bulk`, this.apiOrigin)
+    const url = new URL(`v3_unstable/swatches/bulk`, this.apiOrigin)
 
     ids.forEach(id => {
       url.searchParams.append('ids', id)
@@ -487,7 +500,7 @@ export class MakeswiftClient {
       swatchIds,
       ...introspectedResourceIds
     }: IntrospectedResourcesQueryVariables & { swatchIds: string[] },
-    siteVersion: MakeswiftSiteVersion,
+    siteVersion: MakeswiftVersionData | null,
   ): Promise<IntrospectedResourcesQueryResult & { swatches: (Swatch | null)[] }> {
     const result = await this.graphqlClient.request<
       IntrospectedResourcesQueryResult,
@@ -500,7 +513,7 @@ export class MakeswiftClient {
 
   private async introspect(
     element: Element,
-    siteVersion: MakeswiftSiteVersion,
+    siteVersion: MakeswiftVersionData | null,
     locale: string | null,
   ): Promise<CacheData> {
     const runtime = this.runtime
@@ -657,7 +670,7 @@ export class MakeswiftClient {
       locale,
       allowLocaleFallback = true,
     }: {
-      siteVersion: MakeswiftSiteVersion | Promise<MakeswiftSiteVersion>
+      siteVersion: MakeswiftVersionData | null | Promise<MakeswiftVersionData | null>
       locale?: string
       allowLocaleFallback?: boolean
     },
@@ -671,7 +684,7 @@ export class MakeswiftClient {
 
     const siteVersion = await siteVersionPromise
     const response = await this.fetch(
-      `v3/pages/${encodeURIComponent(pathname)}/document?${queryParams()}`,
+      `v4_unstable/pages/${encodeURIComponent(pathname)}/document?${queryParams()}`,
       siteVersion,
     )
 
@@ -713,7 +726,7 @@ export class MakeswiftClient {
       locale,
       allowLocaleFallback = true,
     }: {
-      siteVersion: MakeswiftSiteVersion | Promise<MakeswiftSiteVersion>
+      siteVersion: MakeswiftVersionData | null | Promise<MakeswiftVersionData | null>
       locale?: string
       allowLocaleFallback?: boolean
     },
@@ -728,12 +741,15 @@ export class MakeswiftClient {
 
     let response
     const responseForRequestedLocale = await this.fetch(
-      `v1/element-trees/${encodeURIComponent(id)}?${searchParams.toString()}`,
+      `v2_unstable/element-trees/${encodeURIComponent(id)}?${searchParams.toString()}`,
       siteVersion,
     )
 
     if (responseForRequestedLocale.status === 404 && canAttemptLocaleFallback) {
-      response = await this.fetch(`v1/element-trees/${encodeURIComponent(id)}`, siteVersion)
+      response = await this.fetch(
+        `v2_unstable/element-trees/${encodeURIComponent(id)}`,
+        siteVersion,
+      )
     } else {
       response = responseForRequestedLocale
     }
@@ -778,8 +794,11 @@ export class MakeswiftClient {
     }
   }
 
-  async getSwatch(swatchId: string, siteVersion: MakeswiftSiteVersion): Promise<Swatch | null> {
-    const response = await this.fetch(`v2/swatches/${swatchId}`, siteVersion)
+  async getSwatch(
+    swatchId: string,
+    siteVersion: MakeswiftVersionData | null,
+  ): Promise<Swatch | null> {
+    const response = await this.fetch(`v3_unstable/swatches/${swatchId}`, siteVersion)
 
     if (!response.ok) {
       if (response.status !== 404) {
@@ -808,9 +827,9 @@ export class MakeswiftClient {
 
   async getTypography(
     typographyId: string,
-    siteVersion: MakeswiftSiteVersion,
+    siteVersion: MakeswiftVersionData | null,
   ): Promise<Typography | null> {
-    const response = await this.fetch(`v2/typographies/${typographyId}`, siteVersion)
+    const response = await this.fetch(`v3_unstable/typographies/${typographyId}`, siteVersion)
 
     if (!response.ok) {
       if (response.status !== 404) {
@@ -830,9 +849,9 @@ export class MakeswiftClient {
 
   async getGlobalElement(
     globalElementId: string,
-    siteVersion: MakeswiftSiteVersion,
+    siteVersion: MakeswiftVersionData | null,
   ): Promise<GlobalElement | null> {
-    const response = await this.fetch(`v2/global-elements/${globalElementId}`, siteVersion)
+    const response = await this.fetch(`v3_unstable/global-elements/${globalElementId}`, siteVersion)
 
     if (!response.ok) {
       if (response.status !== 404) {
@@ -853,10 +872,10 @@ export class MakeswiftClient {
   async getLocalizedGlobalElement(
     globalElementId: string,
     locale: string,
-    siteVersion: MakeswiftSiteVersion,
+    siteVersion: MakeswiftVersionData | null,
   ): Promise<LocalizedGlobalElement | null> {
     const response = await this.fetch(
-      `v2/localized-global-elements/${globalElementId}?locale=${locale}`,
+      `v3_unstable/localized-global-elements/${globalElementId}?locale=${locale}`,
       siteVersion,
     )
 
@@ -879,12 +898,12 @@ export class MakeswiftClient {
 
   async getPagePathnameSlices(
     pageIds: string[],
-    siteVersion: MakeswiftSiteVersion,
+    siteVersion: MakeswiftVersionData | null,
     { locale }: { locale?: string | null },
   ): Promise<(PagePathnameSlice | null)[]> {
     if (pageIds.length === 0) return []
 
-    const url = new URL(`v2/page-pathname-slices/bulk`, this.apiOrigin)
+    const url = new URL(`v3_unstable/page-pathname-slices/bulk`, this.apiOrigin)
 
     pageIds.forEach(id => url.searchParams.append('ids', id))
     if (locale != null) url.searchParams.set('locale', locale)
@@ -922,7 +941,7 @@ export class MakeswiftClient {
 
   async getPagePathnameSlice(
     pageId: string,
-    siteVersion: MakeswiftSiteVersion,
+    siteVersion: MakeswiftVersionData | null,
     { locale }: { locale?: string } = {},
   ): Promise<PagePathnameSlice | null> {
     const pagePathnameSlices = await this.getPagePathnameSlices([pageId], siteVersion, { locale })
@@ -945,5 +964,45 @@ export class MakeswiftClient {
 
   mergeTranslatedData(elementTree: ElementData, translatedData: Record<string, Data>): Element {
     return this.runtime.mergeTranslatedData(elementTree, translatedData)
+  }
+
+  async readPreviewToken(token: string): Promise<PreviewTokenPayload> {
+    const response = await fetch(new URL('v1/preview-tokens/reads', this.apiOrigin).toString(), {
+      method: 'POST',
+      headers: {
+        ['X-API-Key']: this.apiKey,
+        'Makeswift-Site-API-Key': this.apiKey,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token }),
+      cache: 'no-store',
+    })
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error(`Preview token verification endpoint not found.`)
+      }
+
+      if (response.status === 401) {
+        throw new Error(`Preview token '${token}' is invalid or expired.`)
+      }
+
+      console.error(`Failed to read preview token '${token}'`, {
+        response: await failedResponseBody(response),
+      })
+
+      throw new Error(`Failed to read preview token '${token}': ${responseError(response)}`)
+    }
+
+    const json = await response.json()
+
+    const parsed = previewTokenPayloadSchema.safeParse(json)
+    if (!parsed.success) {
+      throw new Error(
+        `Failed to parse preview token payload: ${parsed.error.errors.map(e => e.message).join('; ')}`,
+      )
+    }
+
+    return parsed.data
   }
 }

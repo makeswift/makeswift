@@ -1,18 +1,18 @@
-import { RootStyleRegistry } from '../../../next'
+import { MakeswiftVersionData, RootStyleRegistry } from '../../../next'
 import { ReactRuntimeProvider } from '../components/RuntimeProvider'
 import { ReactRuntime } from '../react-runtime'
 
 export function ReactProvider({
   children,
   runtime,
-  previewMode = false,
+  siteVersion = null,
 }: {
   children: React.ReactNode
   runtime: ReactRuntime
-  previewMode?: boolean
+  siteVersion?: MakeswiftVersionData | null
 }) {
   return (
-    <ReactRuntimeProvider previewMode={previewMode} runtime={runtime}>
+    <ReactRuntimeProvider siteVersion={siteVersion} runtime={runtime}>
       <RootStyleRegistry>{children}</RootStyleRegistry>
     </ReactRuntimeProvider>
   )

@@ -6,7 +6,7 @@ import { MakeswiftHostApiClient } from '../../../api/react'
 import { ReactRuntimeContext } from '../hooks/use-react-runtime'
 import { ReactRuntime } from '../react-runtime'
 import { MakeswiftHostApiClientProvider } from '../host-api-client'
-import { MakeswiftSiteVersion } from '../../../api/site-version'
+import { MakeswiftVersionData } from '../../../api/site-version'
 import { DraftSwitcher } from './draft-switcher/draft-switcher'
 import { useBuilderHandshake } from './hooks/use-builder-handshake'
 import { useBuilderConnectionPing } from './hooks/use-builder-connection-ping'
@@ -17,14 +17,14 @@ const PreviewProvider = lazy(() => import('./PreviewProvider'))
 export function ReactRuntimeProvider({
   children,
   runtime,
-  previewMode,
+  siteVersion,
   appOrigin = 'https://app.makeswift.com',
   apiOrigin = 'https://api.makeswift.com',
   locale = undefined,
 }: {
   children: ReactNode
   runtime: ReactRuntime
-  previewMode: boolean
+  siteVersion: MakeswiftVersionData | null
   apiOrigin?: string
   appOrigin?: string
   locale?: string
@@ -34,12 +34,14 @@ export function ReactRuntimeProvider({
       new MakeswiftHostApiClient({
         uri: new URL('graphql', apiOrigin).href,
         locale,
-        siteVersion: previewMode ? MakeswiftSiteVersion.Working : MakeswiftSiteVersion.Live,
+        siteVersion,
       }),
-    [apiOrigin, locale, previewMode],
+    [apiOrigin, locale, siteVersion],
   )
 
-  const StoreProvider = previewMode ? PreviewProvider : LiveProvider
+  const isPreview = siteVersion != null
+
+  const StoreProvider = isPreview ? PreviewProvider : LiveProvider
 
   useBuilderHandshake({ appOrigin })
   useBuilderConnectionPing({ appOrigin })
@@ -49,7 +51,7 @@ export function ReactRuntimeProvider({
       <MakeswiftHostApiClientProvider client={client}>
         <StoreProvider>
           {children}
-          <DraftSwitcher isDraft={previewMode} />
+          <DraftSwitcher isDraft={isPreview} />
         </StoreProvider>
       </MakeswiftHostApiClientProvider>
     </ReactRuntimeContext.Provider>
