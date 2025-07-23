@@ -40,6 +40,7 @@ type KeyDefinitions = Record<string, ItemDefinition>
 
 type Config<Defs extends KeyDefinitions = KeyDefinitions> = {
   readonly label?: string
+  readonly description?: string
   readonly preferredLayout?:
     | typeof Definition.Layout.Inline
     | typeof Definition.Layout.Popover
@@ -105,6 +106,7 @@ class Definition<C extends Config> extends ControlDefinition<
         type: z.literal(Definition.type),
         config: z.object({
           label: z.string().optional(),
+          description: z.string().optional(),
           preferredLayout: z
             .union([
               z.literal(Definition.Layout.Inline),
@@ -177,6 +179,7 @@ class Definition<C extends Config> extends ControlDefinition<
 
     const config = z.object({
       label: z.string().optional(),
+      description: z.string().optional(),
       preferredLayout: z.union([
         z.literal(Definition.Layout.Inline),
         z.literal(Definition.Layout.Popover),

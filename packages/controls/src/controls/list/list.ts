@@ -53,6 +53,7 @@ type Config<
 > = {
   type: Item
   label?: string
+  description?: string
   getItemLabel?: ItemLabel
 }
 
@@ -82,6 +83,7 @@ class Definition<C extends Config> extends ControlDefinition<
     const config = z.object({
       type: itemDef,
       label: z.string().optional(),
+      description: z.string().optional(),
       getItemLabel: z.function().args(z.any()).returns(z.any()).optional(),
     })
 

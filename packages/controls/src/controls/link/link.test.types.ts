@@ -61,6 +61,7 @@ describe('Link Types', () => {
       type Config = typeof def.config
       expectTypeOf<Config>().toEqualTypeOf<{
         label?: string
+        description?: string
       }>()
 
       type Data = DataType<typeof def>

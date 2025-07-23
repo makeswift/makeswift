@@ -10,9 +10,10 @@ type Props = {
   snapshot: MakeswiftComponentSnapshot
   label: string
   type: string
+  description?: string
 }
 
-export const MakeswiftComponent = memo(({ snapshot, label, type }: Props) => {
+export const MakeswiftComponent = memo(({ snapshot, label, type, description }: Props) => {
   useCacheData(snapshot.cacheData)
 
   const rootDocument = useMemo(
@@ -22,9 +23,10 @@ export const MakeswiftComponent = memo(({ snapshot, label, type }: Props) => {
         documentKey: snapshot.key,
         name: label,
         type,
+        description,
         meta: snapshot.meta,
       }),
-    [snapshot, label, type],
+    [snapshot, label, type, description],
   )
 
   useRegisterDocument(rootDocument)

@@ -25,6 +25,7 @@ type Config<T extends string = string> = {
   readonly defaultValue?: T
   readonly label?: string
   readonly labelOrientation?: 'horizontal' | 'vertical'
+  readonly description?: string
 }
 
 type ItemType<C extends Config> = C extends Config<infer Item> ? Item : never
@@ -61,6 +62,7 @@ class Definition<C extends Config> extends ControlDefinition<
       labelOrientation: z
         .union([z.literal('horizontal'), z.literal('vertical')])
         .optional(),
+      description: z.string().optional(),
     })
 
     const definition = z.object({

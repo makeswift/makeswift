@@ -107,6 +107,7 @@ class Definition<C extends Config> extends ControlDefinition<
     ) => {
       const config = z.object({
         label: z.string().optional(),
+        description: z.string().optional(),
         defaultValue: value,
         variant,
       })
@@ -279,12 +280,14 @@ type DefaultValueByVariant<V extends Config['variant']> = z.infer<
 
 type UserConfigRequiredDefault<V extends Config['variant']> = {
   label?: string
+  description?: string
   variant?: V
   defaultValue: DefaultValueByVariant<V>
 }
 
 type UserConfigOptionalDefault<V extends Config['variant']> = {
   label?: string
+  description?: string
   variant?: V
   defaultValue?: DefaultValueByVariant<V> | undefined
 }

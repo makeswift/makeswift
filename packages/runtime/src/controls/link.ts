@@ -63,6 +63,6 @@ export class LinkDefinition extends BaseLinkDefinition<MouseEventType> {
   }
 }
 
-export function Link(config?: { label?: string }): LinkDefinition {
+export function Link(config?: { description?: string, label?: string }): LinkDefinition {
   return new LinkDefinition(config ?? {})
 }

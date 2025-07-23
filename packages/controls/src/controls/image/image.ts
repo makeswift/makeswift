@@ -111,6 +111,7 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
 
     const config = z.object({
       label: z.string().optional(),
+      description: z.string().optional(),
       format: z
         .union([
           z.literal(this.Format.URL),
@@ -397,7 +398,7 @@ type UserConfig<F extends Config['format']> = Config & {
 
 type NormedConfig<F extends Config['format']> = undefined extends F
   ? Config
-  : { label?: string | undefined; format: F }
+  : { label?: string | undefined; description?: string; format: F }
 
 export function Image<F extends Config['format']>(
   config?: UserConfig<F>,
