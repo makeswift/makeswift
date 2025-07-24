@@ -1,0 +1,121 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for the given element tree: translatable data 1`] = `
+{
+  "translatableData": {
+    "270019c4-4a80-483a-b701-757d4f7956a2:children": {
+      "@@makeswift/type": "prop-controllers::text-input::v1",
+      "value": "Shop now",
+    },
+    "2d5509fc-ef28-44c2-a52d-11278d893e45:text": {
+      "0": "StyleMatch",
+    },
+    "4e25b048-88c4-4e2a-b74f-2161f2567ac3:text": {
+      "0": "Why Shop With Us?",
+    },
+    "5350c1a7-0cfb-48ba-94b3-43014b3a01f9:text": {
+      "0": "DropAlert Early Access",
+    },
+    "6b191363-f9c8-4988-9739-f74ca9cf7cee:text": {
+      "0": "HUGE Summer Sale",
+    },
+    "7581e32e-b699-4d95-80c5-af532cbeef1d:text": {
+      "0": "At our store, fashion meets innovation to create a shopping experience like no other. From our Virtual Try-On Studio that lets you preview outfits with precision, to StyleMatch that curates personalized looks just for you, we make finding your perfect fit effortless and fun. Our Fit Guarantee+ ensures every piece feels like it was made for you, while the Closet Companion App helps you build and style a wardrobe you’ll love. Plus, with our EcoEdit Filter, you can shop sustainably without compromising style. And with DropAlert Early Access, you’ll always stay one step ahead of the trends. It’s not just shopping—it’s styling made smart.",
+    },
+    "89ad1aad-73f7-4e99-962f-ebf7e05a6810:text": {
+      "0": "Build your dream wardrobe digitally. Our Closet Companion App keeps track of what you own, helps you style new outfits, and suggests what to buy next to complete your look.",
+    },
+    "988e445b-cc28-46e0-b43d-eab4ed868f1a:text": {
+      "0": "Be first in line for the hottest releases. With DropAlert™, you get exclusive early access to limited collections, back-in-stock alerts, and VIP-only styles—before anyone else.",
+    },
+    "9a55c845-b91b-4e65-a9bf-7647dff14836:text": {
+      "0": "Closet Companion App",
+    },
+    "a80a02b2-0b2a-4719-8aff-7674f894e182:text": {
+      "0": "Virtual Try-On Studio",
+    },
+    "aa3bb52a-350b-4bc3-9e80-aa6046f23472:altText": {
+      "@@makeswift/type": "prop-controllers::text-input::v1",
+      "value": "Night sky",
+    },
+    "bd59d14c-7d98-463f-8d8d-46ef53a765b5:text": {
+      "0": "Fashion meets sustainability. Shop guilt-free by filtering our collection for ethically made, recycled, or low-impact pieces—because looking good should also feel good.",
+    },
+    "c712307f-4605-4204-9c30-f325c5861170:text": {
+      "0": "Discover your perfect look in seconds. StyleMatch recommends pieces based on your taste, past purchases, and even your mood. It’s like having a personal stylist in your pocket.",
+    },
+    "cec3c603-3401-4b1b-8e2f-00d984f4ba71:text": {
+      "0": "Never worry about the wrong size again. Fit Guarantee+ uses data-driven sizing plus free exchanges to make sure every piece fits you perfectly—or we’ll make it right, no questions asked.",
+    },
+    "dc706501-3b06-403c-929d-34048393d8f9:text": {
+      "0": "EcoEdit Filter",
+    },
+    "e4c44cbd-8e06-4281-9a5a-a9c67998df1a:text": {
+      "0": "See it. Style it. Love it. Our Virtual Try-On Studio lets you preview outfits on a 3D model that matches your body type—so you can shop with confidence and skip the dressing room drama.",
+    },
+    "ef06e719-b526-4fd7-95f7-324a0393df43:text": {
+      "0": "Fit Guarantee+",
+    },
+  },
+}
+`;
+
+exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data for the given element tree: translatable data 1`] = `
+{
+  "translatableData": {
+    "270019c4-4a80-483a-b701-757d4f7956a2:children": {
+      "@@makeswift/type": "prop-controllers::text-input::v1",
+      "value": "Shop now",
+    },
+    "2d5509fc-ef28-44c2-a52d-11278d893e45:text": {
+      "0": "StyleMatch",
+    },
+    "4e25b048-88c4-4e2a-b74f-2161f2567ac3:text": {
+      "0": "Why Shop With Us?",
+    },
+    "5350c1a7-0cfb-48ba-94b3-43014b3a01f9:text": {
+      "0": "DropAlert Early Access",
+    },
+    "6b191363-f9c8-4988-9739-f74ca9cf7cee:text": {
+      "0": "HUGE Summer Sale",
+    },
+    "7581e32e-b699-4d95-80c5-af532cbeef1d:text": {
+      "0": "At our store, fashion meets innovation to create a shopping experience like no other. From our Virtual Try-On Studio that lets you preview outfits with precision, to StyleMatch that curates personalized looks just for you, we make finding your perfect fit effortless and fun. Our Fit Guarantee+ ensures every piece feels like it was made for you, while the Closet Companion App helps you build and style a wardrobe you’ll love. Plus, with our EcoEdit Filter, you can shop sustainably without compromising style. And with DropAlert Early Access, you’ll always stay one step ahead of the trends. It’s not just shopping—it’s styling made smart.",
+    },
+    "89ad1aad-73f7-4e99-962f-ebf7e05a6810:text": {
+      "0": "Build your dream wardrobe digitally. Our Closet Companion App keeps track of what you own, helps you style new outfits, and suggests what to buy next to complete your look.",
+    },
+    "988e445b-cc28-46e0-b43d-eab4ed868f1a:text": {
+      "0": "Be first in line for the hottest releases. With DropAlert™, you get exclusive early access to limited collections, back-in-stock alerts, and VIP-only styles—before anyone else.",
+    },
+    "9a55c845-b91b-4e65-a9bf-7647dff14836:text": {
+      "0": "Closet Companion App",
+    },
+    "a80a02b2-0b2a-4719-8aff-7674f894e182:text": {
+      "0": "Virtual Try-On Studio",
+    },
+    "aa3bb52a-350b-4bc3-9e80-aa6046f23472:altText": {
+      "@@makeswift/type": "prop-controllers::text-input::v1",
+      "value": "Night sky",
+    },
+    "bd59d14c-7d98-463f-8d8d-46ef53a765b5:text": {
+      "0": "Fashion meets sustainability. Shop guilt-free by filtering our collection for ethically made, recycled, or low-impact pieces—because looking good should also feel good.",
+    },
+    "c712307f-4605-4204-9c30-f325c5861170:text": {
+      "0": "Discover your perfect look in seconds. StyleMatch recommends pieces based on your taste, past purchases, and even your mood. It’s like having a personal stylist in your pocket.",
+    },
+    "cec3c603-3401-4b1b-8e2f-00d984f4ba71:text": {
+      "0": "Never worry about the wrong size again. Fit Guarantee+ uses data-driven sizing plus free exchanges to make sure every piece fits you perfectly—or we’ll make it right, no questions asked.",
+    },
+    "dc706501-3b06-403c-929d-34048393d8f9:text": {
+      "0": "EcoEdit Filter",
+    },
+    "e4c44cbd-8e06-4281-9a5a-a9c67998df1a:text": {
+      "0": "See it. Style it. Love it. Our Virtual Try-On Studio lets you preview outfits on a 3D model that matches your body type—so you can shop with confidence and skip the dressing room drama.",
+    },
+    "ef06e719-b526-4fd7-95f7-324a0393df43:text": {
+      "0": "Fit Guarantee+",
+    },
+  },
+}
+`;
