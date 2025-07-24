@@ -15,7 +15,15 @@ function createTestClient() {
   return new MakeswiftClient(TEST_API_KEY, { runtime, apiOrigin })
 }
 
+afterEach(() => {
+  jest.resetAllMocks()
+})
+
 describe('getComponentSnapshot using v1 element tree endpoint', () => {
+  beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {})
+  })
+
   test('return null document data on 404', async () => {
     // Arrange
     const client = createTestClient()
