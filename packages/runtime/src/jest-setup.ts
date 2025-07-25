@@ -12,9 +12,10 @@ if (typeof window !== 'undefined') {
   expect.addSnapshotSerializer(createSerializer())
 }
 
+let uidSuffix = 100000000000
 jest.mock('uuid', () => ({
-  v4: jest.fn(() => 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'),
-  v5: jest.fn(() => 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'),
+  v4: jest.fn(() => `xxxxxxxx-xxxx-xxxx-xxxx-${uidSuffix++}`),
+  v5: jest.fn(() => `xxxxxxxx-xxxx-xxxx-xxxx-${uidSuffix++}`),
 }))
 
 if (typeof window !== 'undefined') {

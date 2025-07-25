@@ -38,7 +38,7 @@ exports[`Page List of checkboxes when value is [true, false, undefined]: snapsho
               "props": {
                 "propKey": [
                   {
-                    "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                    "id": "xxxxxxxx-xxxx-xxxx-xxxx-100000000000",
                     "type": "makeswift::controls::checkbox",
                     "value": {
                       "@@makeswift/type": "checkbox::v1",
@@ -46,7 +46,7 @@ exports[`Page List of checkboxes when value is [true, false, undefined]: snapsho
                     },
                   },
                   {
-                    "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                    "id": "xxxxxxxx-xxxx-xxxx-xxxx-100000000001",
                     "type": "makeswift::controls::checkbox",
                     "value": {
                       "@@makeswift/type": "checkbox::v1",
@@ -54,7 +54,7 @@ exports[`Page List of checkboxes when value is [true, false, undefined]: snapsho
                     },
                   },
                   {
-                    "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                    "id": "xxxxxxxx-xxxx-xxxx-xxxx-100000000002",
                     "type": "makeswift::controls::checkbox",
                     "value": undefined,
                   },
@@ -117,7 +117,7 @@ exports[`Page List of colors when value is {"value":[{"swatchId":"[swatch-test-i
               "props": {
                 "propKey": [
                   {
-                    "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                    "id": "xxxxxxxx-xxxx-xxxx-xxxx-100000000006",
                     "type": "makeswift::controls::color",
                     "value": {
                       "@@makeswift/type": "color::v1",

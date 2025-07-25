@@ -104,7 +104,7 @@ exports[`Page Group (heterogenous properties): snapshot 1`] = `
                     },
                     "list": [
                       {
-                        "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                        "id": "xxxxxxxx-xxxx-xxxx-xxxx-100000000000",
                         "type": "makeswift::controls::checkbox",
                         "value": {
                           "@@makeswift/type": "checkbox::v1",
