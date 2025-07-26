@@ -12,10 +12,6 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
-    "curly-lemons-matter",
-    "famous-lemons-flash",
-    "few-apricots-wave",
-    "long-poets-listen",
-    "young-mangos-remember"
+    "old-spiders-flow"
   ]
 }

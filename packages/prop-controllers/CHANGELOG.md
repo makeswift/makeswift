@@ -1,5 +1,11 @@
 # @makeswift/prop-controllers
 
+## 0.4.6-canary.0
+
+### Patch Changes
+
+- 50eb563: fix: `navigation-links` control replaces/introspects all swatches
+
 ## 0.4.5
 
 ### Patch Changes
