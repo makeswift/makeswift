@@ -285,17 +285,18 @@ export function getBackgroundsPropControllerSwatchIds(
   return (
     value
       ?.flatMap((override) => override.value)
-      .flatMap((backgroundItem) => {
-        switch (backgroundItem.type) {
+      .flatMap(({ type, payload }) => {
+        switch (type) {
           case 'color':
-            return backgroundItem.payload?.swatchId == null
-              ? []
-              : [backgroundItem.payload.swatchId]
+            return payload == null ? [] : [payload.swatchId]
 
           case 'gradient':
-            return backgroundItem.payload.stops.flatMap((stop) =>
+            return payload.stops.flatMap((stop) =>
               stop.color == null ? [] : stop.color.swatchId,
             )
+
+          case 'video':
+            return payload.maskColor == null ? [] : [payload.maskColor.swatchId]
 
           default:
             return []
@@ -327,6 +328,18 @@ function copyResponsiveBackgroundsData(
                 ...stop,
                 color: copyColorData(stop.color, ctx),
               })),
+            },
+          }
+        })
+        .with([P.any, { type: 'video' }], ([, { payload, ...item }]) => {
+          return {
+            ...item,
+            payload: {
+              ...payload,
+              maskColor:
+                payload.maskColor === undefined
+                  ? undefined
+                  : copyColorData(payload.maskColor, ctx),
             },
           }
         })
