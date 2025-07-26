@@ -10,7 +10,10 @@ import { z } from 'zod'
 import { colorDataSchema } from '../data'
 import { textStyleDataSchema } from '../text-style'
 import { copyLinkData, linkDataSchema } from '../link'
-import { copyResponsiveColorData } from '../responsive-color'
+import {
+  copyResponsiveColorData,
+  type ResponsiveColorData,
+} from '../responsive-color'
 
 const buttonVariantSchema = z.enum([
   'flat',
@@ -230,19 +233,23 @@ export function getNavigationLinksPropControllerSwatchIds(
   if (data == null) return []
 
   const value = getNavigationLinksPropControllerDataNavigationLinksData(data)
+  const swatchIds = (color: ResponsiveColorData | undefined) =>
+    color?.map((override) => override.value).map((color) => color.swatchId) ??
+    []
 
   return (
-    value?.flatMap((item) => {
-      switch (item.type) {
+    value?.flatMap(({ type, payload }) => {
+      switch (type) {
         case 'button':
+          return [...swatchIds(payload.color), ...swatchIds(payload.textColor)]
+
         case 'dropdown':
           return [
-            ...(item.payload.color
-              ?.map((override) => override.value)
-              .map((color) => color.swatchId) ?? []),
-            ...(item.payload.textColor
-              ?.map((override) => override.value)
-              .map((color) => color.swatchId) ?? []),
+            ...swatchIds(payload.color),
+            ...swatchIds(payload.textColor),
+            ...(payload.links?.flatMap((link) =>
+              swatchIds(link.payload.color),
+            ) ?? []),
           ]
       }
     }) ?? []
@@ -253,26 +260,27 @@ function copyNavigationLinksData(
   data: NavigationLinksData,
   context: CopyContext,
 ): NavigationLinksData {
+  const copyColor = (color: ResponsiveColorData | undefined) =>
+    color != null ? copyResponsiveColorData(color, context) : undefined
+
   return data?.map((item) => {
     switch (item.type) {
       case 'button': {
-        const { color, link } = item.payload
+        const { color, textColor, link } = item.payload
 
         return {
           ...item,
           payload: {
             ...item.payload,
             link: copyLinkData(link, context),
-            color:
-              color != null
-                ? copyResponsiveColorData(color, context)
-                : undefined,
+            color: copyColor(color),
+            textColor: copyColor(textColor),
           },
         }
       }
 
       case 'dropdown': {
-        const { color, links } = item.payload
+        const { color, textColor, links } = item.payload
 
         return {
           ...item,
@@ -285,13 +293,12 @@ function copyNavigationLinksData(
                     payload: {
                       ...link.payload,
                       link: copyLinkData(link.payload.link, context),
+                      color: copyColor(link.payload.color),
                     },
                   }))
                 : undefined,
-            color:
-              color != null
-                ? copyResponsiveColorData(color, context)
-                : undefined,
+            color: copyColor(color),
+            textColor: copyColor(textColor),
           },
         }
       }

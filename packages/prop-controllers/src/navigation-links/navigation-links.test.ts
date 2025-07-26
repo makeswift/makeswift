@@ -331,13 +331,13 @@ describe('NavigationLinksPropController', () => {
                 color: [
                   {
                     deviceId: 'desktop',
-                    value: { swatchId: 'swatch1', alpha: 100 },
+                    value: { swatchId: '[swatch1]', alpha: 1 },
                   },
                 ],
                 textColor: [
                   {
                     deviceId: 'desktop',
-                    value: { swatchId: 'swatch2', alpha: 100 },
+                    value: { swatchId: '[swatch2]', alpha: 1 },
                   },
                 ],
               },
@@ -350,13 +350,13 @@ describe('NavigationLinksPropController', () => {
                 color: [
                   {
                     deviceId: 'desktop',
-                    value: { swatchId: 'swatch3', alpha: 100 },
+                    value: { swatchId: '[swatch3]', alpha: 1 },
                   },
                 ],
                 textColor: [
                   {
                     deviceId: 'desktop',
-                    value: { swatchId: 'swatch4', alpha: 100 },
+                    value: { swatchId: '[swatch4]', alpha: 1 },
                   },
                 ],
               },
@@ -368,7 +368,12 @@ describe('NavigationLinksPropController', () => {
         const result = getNavigationLinksPropControllerSwatchIds(data)
 
         // Assert
-        expect(result).toEqual(['swatch1', 'swatch2', 'swatch3', 'swatch4'])
+        expect(result).toEqual([
+          '[swatch1]',
+          '[swatch2]',
+          '[swatch3]',
+          '[swatch4]',
+        ])
       })
 
       test('returns swatch ids for dropdown links with color and textColor', () => {
@@ -384,16 +389,41 @@ describe('NavigationLinksPropController', () => {
                 color: [
                   {
                     deviceId: 'desktop',
-                    value: { swatchId: 'swatch1', alpha: 100 },
+                    value: { swatchId: '[swatch1]', alpha: 1 },
                   },
                 ],
                 textColor: [
                   {
                     deviceId: 'desktop',
-                    value: { swatchId: 'swatch2', alpha: 100 },
+                    value: { swatchId: '[swatch2]', alpha: 1 },
                   },
                 ],
-                links: [],
+                links: [
+                  {
+                    id: '1-1',
+                    payload: {
+                      label: 'link1',
+                      color: [
+                        {
+                          deviceId: 'desktop',
+                          value: { swatchId: '[swatch3]', alpha: 1 },
+                        },
+                      ],
+                    },
+                  },
+                  {
+                    id: '1-2',
+                    payload: {
+                      label: 'link2',
+                      color: [
+                        {
+                          deviceId: 'desktop',
+                          value: { swatchId: '[swatch4]', alpha: 1 },
+                        },
+                      ],
+                    },
+                  },
+                ],
               },
             },
           ],
@@ -403,7 +433,12 @@ describe('NavigationLinksPropController', () => {
         const result = getNavigationLinksPropControllerSwatchIds(data)
 
         // Assert
-        expect(result).toEqual(['swatch1', 'swatch2'])
+        expect(result).toEqual([
+          '[swatch1]',
+          '[swatch2]',
+          '[swatch3]',
+          '[swatch4]',
+        ])
       })
 
       test('returns empty array for links without color or textColor', () => {
@@ -441,13 +476,13 @@ describe('NavigationLinksPropController', () => {
               color: [
                 {
                   deviceId: 'desktop',
-                  value: { swatchId: 'swatch1', alpha: 100 },
+                  value: { swatchId: '[swatch1]', alpha: 1 },
                 },
               ],
               textColor: [
                 {
                   deviceId: 'desktop',
-                  value: { swatchId: 'swatch2', alpha: 100 },
+                  value: { swatchId: '[swatch2]', alpha: 1 },
                 },
               ],
             },
@@ -460,13 +495,13 @@ describe('NavigationLinksPropController', () => {
               color: [
                 {
                   deviceId: 'desktop',
-                  value: { swatchId: 'swatch3', alpha: 100 },
+                  value: { swatchId: '[swatch3]', alpha: 1 },
                 },
               ],
               textColor: [
                 {
                   deviceId: 'desktop',
-                  value: { swatchId: 'swatch4', alpha: 100 },
+                  value: { swatchId: '[swatch4]', alpha: 1 },
                 },
               ],
             },
@@ -477,7 +512,12 @@ describe('NavigationLinksPropController', () => {
         const result = getNavigationLinksPropControllerSwatchIds(data)
 
         // Assert
-        expect(result).toEqual(['swatch1', 'swatch2', 'swatch3', 'swatch4'])
+        expect(result).toEqual([
+          '[swatch1]',
+          '[swatch2]',
+          '[swatch3]',
+          '[swatch4]',
+        ])
       })
 
       test('returns swatch ids for dropdown links with color and textColor', () => {
@@ -491,13 +531,13 @@ describe('NavigationLinksPropController', () => {
               color: [
                 {
                   deviceId: 'desktop',
-                  value: { swatchId: 'swatch1', alpha: 100 },
+                  value: { swatchId: '[swatch1]', alpha: 1 },
                 },
               ],
               textColor: [
                 {
                   deviceId: 'desktop',
-                  value: { swatchId: 'swatch2', alpha: 100 },
+                  value: { swatchId: '[swatch2]', alpha: 1 },
                 },
               ],
               links: [],
@@ -509,7 +549,7 @@ describe('NavigationLinksPropController', () => {
         const result = getNavigationLinksPropControllerSwatchIds(data)
 
         // Assert
-        expect(result).toEqual(['swatch1', 'swatch2'])
+        expect(result).toEqual(['[swatch1]', '[swatch2]'])
       })
     })
   })
@@ -551,7 +591,13 @@ describe('NavigationLinksPropController', () => {
                 color: [
                   {
                     deviceId: 'desktop',
-                    value: { swatchId: 'swatch1', alpha: 100 },
+                    value: { swatchId: '[swatch1]', alpha: 1 },
+                  },
+                ],
+                textColor: [
+                  {
+                    deviceId: 'desktop',
+                    value: { swatchId: '[swatch2]', alpha: 1 },
                   },
                 ],
               },
@@ -564,7 +610,13 @@ describe('NavigationLinksPropController', () => {
                 color: [
                   {
                     deviceId: 'desktop',
-                    value: { swatchId: 'swatch1', alpha: 100 },
+                    value: { swatchId: '[swatch1]', alpha: 1 },
+                  },
+                ],
+                textColor: [
+                  {
+                    deviceId: 'desktop',
+                    value: { swatchId: '[swatch2]', alpha: 1 },
                   },
                 ],
                 links: [
@@ -579,6 +631,31 @@ describe('NavigationLinksPropController', () => {
                           openInNewTab: false,
                         },
                       },
+                      color: [
+                        {
+                          deviceId: 'desktop',
+                          value: { swatchId: '[swatch1]', alpha: 1 },
+                        },
+                      ],
+                    },
+                  },
+                  {
+                    id: '2-2',
+                    payload: {
+                      label: 'link',
+                      link: {
+                        type: 'OPEN_URL',
+                        payload: {
+                          url: 'https://example.com/link2',
+                          openInNewTab: false,
+                        },
+                      },
+                      color: [
+                        {
+                          deviceId: 'desktop',
+                          value: { swatchId: '[swatch2]', alpha: 1 },
+                        },
+                      ],
                     },
                   },
                 ],
@@ -588,12 +665,18 @@ describe('NavigationLinksPropController', () => {
         }
         const context: CopyContext = {
           replacementContext: createReplacementContext({
-            swatchIds: { swatch1: 'newSwatch1' },
+            swatchIds: {
+              '[swatch1]': '[newSwatch1]',
+              '[swatch2]': '[newSwatch2]',
+            },
           }),
           copyElement: (el) => el,
         }
+
         const expected = JSON.parse(
-          JSON.stringify(data).replaceAll('swatch1', 'newSwatch1'),
+          JSON.stringify(data)
+            .replaceAll('[swatch1]', '[newSwatch1]')
+            .replaceAll('[swatch2]', '[newSwatch2]'),
         )
 
         // Act
@@ -777,7 +860,13 @@ describe('NavigationLinksPropController', () => {
               color: [
                 {
                   deviceId: 'desktop',
-                  value: { swatchId: 'swatch1', alpha: 100 },
+                  value: { swatchId: '[swatch1]', alpha: 1 },
+                },
+              ],
+              textColor: [
+                {
+                  deviceId: 'desktop',
+                  value: { swatchId: '[swatch2]', alpha: 1 },
                 },
               ],
             },
@@ -790,7 +879,13 @@ describe('NavigationLinksPropController', () => {
               color: [
                 {
                   deviceId: 'desktop',
-                  value: { swatchId: 'swatch1', alpha: 100 },
+                  value: { swatchId: '[swatch1]', alpha: 1 },
+                },
+              ],
+              textColor: [
+                {
+                  deviceId: 'desktop',
+                  value: { swatchId: '[swatch2]', alpha: 1 },
                 },
               ],
               links: [
@@ -805,6 +900,31 @@ describe('NavigationLinksPropController', () => {
                         openInNewTab: false,
                       },
                     },
+                    color: [
+                      {
+                        deviceId: 'desktop',
+                        value: { swatchId: '[swatch1]', alpha: 1 },
+                      },
+                    ],
+                  },
+                },
+                {
+                  id: '2-2',
+                  payload: {
+                    label: 'link2',
+                    link: {
+                      type: 'OPEN_URL',
+                      payload: {
+                        url: 'https://example.com/link2',
+                        openInNewTab: false,
+                      },
+                    },
+                    color: [
+                      {
+                        deviceId: 'desktop',
+                        value: { swatchId: '[swatch2]', alpha: 1 },
+                      },
+                    ],
                   },
                 },
               ],
@@ -813,12 +933,18 @@ describe('NavigationLinksPropController', () => {
         ]
         const context: CopyContext = {
           replacementContext: createReplacementContext({
-            swatchIds: { swatch1: 'newSwatch1' },
+            swatchIds: {
+              '[swatch1]': '[newSwatch1]',
+              '[swatch2]': '[newSwatch2]',
+            },
           }),
           copyElement: (el) => el,
         }
+
         const expected = JSON.parse(
-          JSON.stringify(data).replaceAll('swatch1', 'newSwatch1'),
+          JSON.stringify(data)
+            .replaceAll('[swatch1]', '[newSwatch1]')
+            .replaceAll('[swatch2]', '[newSwatch2]'),
         )
 
         // Act
