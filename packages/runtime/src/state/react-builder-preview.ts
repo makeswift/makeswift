@@ -58,6 +58,7 @@ import { createPropController } from '../prop-controllers/instances'
 import { serializeControls } from '../builder'
 import { MakeswiftHostApiClient } from '../api/react'
 import { ElementImperativeHandle } from '../runtimes/react/element-imperative-handle'
+import { IMessageChannel, MessageChannel } from './message-channel'
 
 export type { Operation } from './modules/read-write-documents'
 export type { BoxModelHandle } from './modules/box-models'
@@ -453,15 +454,12 @@ function registerBuilderDocuments(): ThunkAction<() => void, State, unknown, Act
   }
 }
 
-export interface IMessageChannel {
-  postMessage(message: any, transferables?: Transferable[]): void
-  dispatchBuffered(): void
-}
-
 export function initialize(
   channel: IMessageChannel,
 ): ThunkAction<() => void, State, unknown, Action> {
   return (dispatch, getState) => {
+    console.log('Initializing Makeswift React Builder Preview')
+
     const unregisterBuilderDocuments = dispatch(registerBuilderDocuments())
     const stopMeasuringElements = dispatch(startMeasuringElements())
     const stopMeasuringDocumentElement = dispatch(startMeasuringDocumentElement())
@@ -528,7 +526,8 @@ export function messageChannelMiddleware(
     (next: ReduxDispatch<Action>) => {
       if (typeof window === 'undefined') return () => {}
 
-      let cleanUp = () => {}
+      const cleanUp = dispatch(initialize(channel))
+
       return (action: Action): Action => {
         switch (action.type) {
           case ActionTypes.CHANGE_ELEMENT_BOX_MODELS:
@@ -567,11 +566,6 @@ export function messageChannelMiddleware(
           case ActionTypes.SET_BUILDER_EDIT_MODE:
             channel.postMessage(action)
             window.getSelection()?.removeAllRanges()
-            break
-
-          case ActionTypes.INIT:
-            // dispatched by the parent window after establishing the connection
-            cleanUp = dispatch(initialize(channel))
             break
 
           case ActionTypes.CLEAN_UP:
@@ -683,61 +677,16 @@ function makeswiftApiClientSyncMiddleware(
   }
 }
 
-class MessageChannel {
-  private channel: MessagePort | null = null
-  private bufferedMessages: [Action, Transferable[]?][] = []
-
-  public postMessage(message: any, transferables?: Transferable[]) {
-    if (this.channel) {
-      this.channel.postMessage(message, transferables ?? [])
-    } else {
-      this.bufferedMessages.push([message, transferables])
-    }
-  }
-
-  public setup(onMessage: (event: MessageEvent<Action>) => void) {
-    const channel = new window.MessageChannel()
-    channel.port1.onmessage = onMessage
-
-    // connect channel to the parent window, see
-    // https://developer.mozilla.org/en-US/docs/Web/API/Channel_Messaging_API
-    window.parent.postMessage(channel.port2, '*', [channel.port2])
-
-    this.channel = channel.port1
-  }
-
-  public dispatchBuffered() {
-    console.assert(this.channel != null, 'channel is not setup')
-
-    this.bufferedMessages.forEach(([message, transferables]) => {
-      this.channel?.postMessage(message, transferables ?? [])
-    })
-
-    this.bufferedMessages = []
-  }
-
-  public teardown() {
-    if (this.channel) {
-      this.channel.onmessage = null
-      this.channel.close()
-    }
-  }
-}
-
-function setupMessageChannel(channel: MessageChannel): ThunkAction<void, State, unknown, Action> {
-  return dispatch => {
-    channel.setup((event: MessageEvent<Action>) => dispatch(event.data))
-  }
-}
-
 export type Store = ReduxStore<State, Action> & { dispatch: Dispatch } & SetupTeardownMixin
 
 export function configureStore({
   preloadedState,
   client,
+  channel,
 }: {
   preloadedState: Partial<State>
   client: MakeswiftHostApiClient
+  channel: MessageChannel
 }): Store {
   const initialState: Partial<State> = {
     ...preloadedState,
@@ -755,17 +704,17 @@ export function configureStore({
     ],
   })
 
-  const channel = new MessageChannel()
   const store = createStore(
     reducer,
     initialState,
     composeEnhancers(
       withSetupTeardown(
         () => {
-          const dispatch = store.dispatch as Dispatch
-          dispatch(setupMessageChannel(channel))
+          channel.listen(event => store.dispatch(event.data))
         },
-        () => channel.teardown(),
+        () => {
+          // TODO: Remove event listener when the store is destroyed
+        },
       ),
       applyMiddleware(
         thunk,
