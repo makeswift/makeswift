@@ -1,0 +1,23 @@
+query AllBlogs {
+  articles {
+    cover {
+      url
+    }
+    blocks {
+      ... on ComponentSharedRichText {
+        body
+      }
+      ... on ComponentSharedMedia {
+        id
+        file {
+          url
+        }
+      }
+    }
+    author {
+      name
+    }
+    slug
+    description
+  }
+}
