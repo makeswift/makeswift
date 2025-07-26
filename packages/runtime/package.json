@@ -206,7 +206,7 @@
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
     "@types/set-cookie-parser": "^2.4.10",
-    "@types/web": "^0.0.208",
+    "@typescript/lib-dom": "npm:@types/web@^0.0.243",
     "concurrently": "^5.3.0",
     "expect-type": "^0.19.0",
     "jest": "^29.7.0",
