@@ -14,6 +14,58 @@ import {
   getBackgroundsPropControllerSwatchIds,
 } from './backgrounds'
 
+const fileId = '[fileId]'
+const backgrounds: BackgroundsPropControllerDataV1 = [
+  {
+    deviceId: 'desktop',
+    value: [
+      {
+        id: 'id',
+        type: 'image-v1',
+        payload: {
+          version: 1,
+          image: { id: fileId, type: 'makeswift-file', version: 1 },
+          position: { x: 0, y: 0 },
+        },
+      },
+      {
+        id: '1',
+        type: 'color',
+        payload: { swatchId: '[swatch1]', alpha: 100 },
+      },
+      {
+        id: '2',
+        type: 'gradient',
+        payload: {
+          stops: [
+            {
+              id: 'stop1',
+              location: 0,
+              color: { swatchId: '[swatch2]', alpha: 100 },
+            },
+            {
+              id: 'stop2',
+              location: 100,
+              color: { swatchId: '[swatch3]', alpha: 100 },
+            },
+          ],
+        },
+      },
+      {
+        id: '3',
+        type: 'video',
+        payload: { maskColor: { swatchId: '[swatch4]', alpha: 100 } },
+      },
+    ],
+  },
+]
+
+const v1Data: BackgroundsPropControllerDataV1 = backgrounds
+const v2Data: BackgroundsPropControllerDataV2 = {
+  [ControlDataTypeKey]: BackgroundsPropControllerDataV2Type,
+  value: backgrounds,
+}
+
 describe('BackgroundsPropController', () => {
   describe('getBackgroundsPropControllerDataResponsiveBackgroundsData', () => {
     test('returns value for BackgroundsPropControllerDataV2Type', () => {
@@ -146,57 +198,10 @@ describe('BackgroundsPropController', () => {
       expect(result).toEqual([])
     })
 
-    test('returns array with id for v1 data', () => {
-      // Arrange
-      const fileId = 'fileId'
-      const data: ResponsiveBackgroundsData = [
-        {
-          deviceId: 'desktop',
-          value: [
-            {
-              id: 'id',
-              type: 'image-v1',
-              payload: {
-                version: 1,
-                image: { id: fileId, type: 'makeswift-file', version: 1 },
-                position: { x: 0, y: 0 },
-              },
-            },
-          ],
-        },
-      ]
-
-      // Act
-      const result = getBackgroundsPropControllerFileIds(data)
-
-      // Assert
-      expect(result).toEqual([fileId])
-    })
-
-    test('returns array with id for v2 data', () => {
-      // Arrange
-      const fileId = 'fileId'
-      const backgrounds: ResponsiveBackgroundsData = [
-        {
-          deviceId: 'desktop',
-          value: [
-            {
-              id: 'id',
-              type: 'image-v1',
-              payload: {
-                version: 1,
-                image: { id: fileId, type: 'makeswift-file', version: 1 },
-                position: { x: 0, y: 0 },
-              },
-            },
-          ],
-        },
-      ]
-      const data: BackgroundsPropControllerDataV2 = {
-        [ControlDataTypeKey]: BackgroundsPropControllerDataV2Type,
-        value: backgrounds,
-      }
-
+    test.each([
+      { version: 1, data: v1Data },
+      { version: 2, data: v2Data },
+    ])('returns array with id for v$version data', ({ data }) => {
       // Act
       const result = getBackgroundsPropControllerFileIds(data)
 
@@ -217,137 +222,57 @@ describe('BackgroundsPropController', () => {
       expect(result).toEqual([])
     })
 
-    test('returns array with swatch id for v2 color background', () => {
-      // Arrange
-      const swatchId = 'swatchId'
-      const data: BackgroundsPropControllerDataV2 = {
-        [ControlDataTypeKey]: BackgroundsPropControllerDataV2Type,
-        value: [
-          {
-            deviceId: 'desktop',
-            value: [
-              {
-                id: 'id',
-                type: 'color',
-                payload: { swatchId, alpha: 100 },
-              },
-            ],
-          },
-        ],
-      }
+    test.each([
+      { version: 1, data: v1Data },
+      { version: 2, data: v2Data },
+    ])(
+      'returns array with swatch ids for v$version color background',
+      ({ data }) => {
+        // Act
+        const result = getBackgroundsPropControllerSwatchIds(data)
 
-      // Act
-      const result = getBackgroundsPropControllerSwatchIds(data)
-
-      // Assert
-      expect(result).toEqual([swatchId])
-    })
-
-    test('returns array with swatch id for v1 color background', () => {
-      // Arrange
-      const swatchId = 'swatchId'
-      const data: BackgroundsPropControllerDataV1 = [
-        {
-          deviceId: 'desktop',
-          value: [
-            {
-              id: 'id',
-              type: 'color',
-              payload: { swatchId, alpha: 100 },
-            },
-          ],
-        },
-      ]
-
-      // Act
-      const result = getBackgroundsPropControllerSwatchIds(data)
-
-      // Assert
-      expect(result).toEqual([swatchId])
-    })
+        // Assert
+        expect(result).toEqual([
+          '[swatch1]',
+          '[swatch2]',
+          '[swatch3]',
+          '[swatch4]',
+        ])
+      },
+    )
   })
 
   describe('copyBackgroundsPropControllerData', () => {
-    test('returns copied BackgroundsPropControllerDataV2 when data is BackgroundsPropControllerDataV2', () => {
+    test.each([
+      { version: 1 as const, data: v1Data },
+      { version: 2 as const, data: v2Data },
+    ])('returns copied v$version when data', ({ data, version }) => {
       // Arrange
       const descriptor: BackgroundsDescriptor = {
         type: Types.Backgrounds,
-        version: 2,
+        version,
         options: {},
       }
-      const fileId = 'fileId'
-      const data: BackgroundsPropControllerDataV2 = {
-        [ControlDataTypeKey]: BackgroundsPropControllerDataV2Type,
-        value: [
-          {
-            deviceId: 'desktop',
-            value: [
-              {
-                id: 'id',
-                type: 'image-v1',
-                payload: {
-                  version: 1,
-                  image: { id: fileId, type: 'makeswift-file', version: 1 },
-                  position: { x: 0, y: 0 },
-                },
-              },
-            ],
+
+      const copiedFileId = '[newfileId]'
+      const expected = JSON.parse(
+        JSON.stringify(data)
+          .replaceAll(fileId, copiedFileId)
+          .replaceAll('[swatch1]', '[newSwatch1]')
+          .replaceAll('[swatch2]', '[newSwatch2]')
+          .replaceAll('[swatch3]', '[newSwatch3]')
+          .replaceAll('[swatch4]', '[newSwatch4]'),
+      )
+
+      const context: CopyContext = {
+        replacementContext: createReplacementContext({
+          swatchIds: {
+            '[swatch1]': '[newSwatch1]',
+            '[swatch2]': '[newSwatch2]',
+            '[swatch3]': '[newSwatch3]',
+            '[swatch4]': '[newSwatch4]',
           },
-        ],
-      }
-      const copiedId = 'copiedId'
-      const expected = JSON.parse(
-        JSON.stringify(data).replaceAll(fileId, copiedId),
-      )
-      const context: CopyContext = {
-        replacementContext: createReplacementContext({
-          fileIds: { [fileId]: copiedId },
-        }),
-        copyElement: (el) => el,
-      }
-
-      // Act
-      const result = copyBackgroundsPropControllerData(
-        descriptor,
-        data,
-        context,
-      )
-
-      // Assert
-      expect(result).toEqual(expected)
-    })
-
-    test('returns copied ResponsiveBackgroundsDataV1 when data is ResponsiveBackgroundsDataV1', () => {
-      // Arrange
-      const descriptor: BackgroundsDescriptor = {
-        type: Types.Backgrounds,
-        version: 1,
-        options: {},
-      }
-      const fileId = 'fileId'
-      const data: BackgroundsPropControllerDataV1 = [
-        {
-          deviceId: 'desktop',
-          value: [
-            {
-              id: 'id',
-              type: 'image-v1',
-              payload: {
-                version: 1,
-                image: { id: fileId, type: 'makeswift-file', version: 1 },
-                position: { x: 0, y: 0 },
-              },
-            },
-          ],
-        },
-      ]
-      const copiedId = 'copiedId'
-      const expected = JSON.parse(
-        JSON.stringify(data).replaceAll(fileId, copiedId),
-      )
-      const context: CopyContext = {
-        replacementContext: createReplacementContext({
-          fileIds: { [fileId]: copiedId },
+          fileIds: { [fileId]: copiedFileId },
         }),
         copyElement: (el) => el,
       }
