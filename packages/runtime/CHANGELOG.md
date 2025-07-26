@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.24.9
+
+### Patch Changes
+
+- Updated dependencies [50eb563]
+- Updated dependencies [2135f65]
+  - @makeswift/prop-controllers@0.4.6
+
 ## 0.24.8
 
 ### Patch Changes
