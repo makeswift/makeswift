@@ -1,5 +1,11 @@
 # @makeswift/prop-controllers
 
+## 0.4.6-canary.1
+
+### Patch Changes
+
+- 2135f65: fix: `backgrounds` control replaces/introspects video background swatch
+
 ## 0.4.6-canary.0
 
 ### Patch Changes

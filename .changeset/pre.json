@@ -12,6 +12,7 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
-    "old-spiders-flow"
+    "old-spiders-flow",
+    "tame-cougars-play"
   ]
 }
