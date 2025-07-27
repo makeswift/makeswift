@@ -42,3 +42,5 @@ if (typeof window !== 'undefined') {
     })),
   })
 }
+
+;(global as any).PACKAGE_VERSION = require('../package.json').version
