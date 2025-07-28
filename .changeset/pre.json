@@ -12,6 +12,9 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
+    "eight-carrots-stare",
+    "green-tomatoes-itch",
+    "nervous-pillows-tie",
     "old-spiders-flow",
     "tame-cougars-play"
   ]

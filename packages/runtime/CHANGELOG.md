@@ -1,5 +1,16 @@
 # @makeswift/runtime
 
+## 0.25.0-canary.2
+
+### Minor Changes
+
+- 635ce7b: feat: framework-independent API handlers implementation (requires Node.js 18+)
+
+### Patch Changes
+
+- 635ce7b: fix: hanging promise in CORS preflight handling in Pages Router
+- 635ce7b: fix: `onPublish` event not triggered in Pages Router
+
 ## 0.24.9-canary.1
 
 ### Patch Changes
