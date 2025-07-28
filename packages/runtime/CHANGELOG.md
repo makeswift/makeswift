@@ -1,5 +1,19 @@
 # @makeswift/runtime
 
+## 0.25.0
+
+### Minor Changes
+
+- 635ce7b: feat: framework-independent API handlers implementation (requires Node.js 18+)
+
+### Patch Changes
+
+- 635ce7b: fix: hanging promise in CORS preflight handling in Pages Router
+- 635ce7b: fix: `onPublish` event not triggered in Pages Router
+- Updated dependencies [50eb563]
+- Updated dependencies [2135f65]
+  - @makeswift/prop-controllers@0.4.6
+
 ## 0.24.8
 
 ### Patch Changes
