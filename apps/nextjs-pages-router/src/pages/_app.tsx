@@ -20,7 +20,7 @@ const GrenzeFont = Grenze({
 
 export default function App({
   Component,
-  pageProps: { previewMode, locale, ...pageProps },
+  pageProps: { locale, siteVersion, ...pageProps },
 }: AppProps) {
   return (
     <main className={`${GrenzeGotischFont.variable} ${GrenzeFont.variable}`}>
@@ -28,7 +28,7 @@ export default function App({
         apiOrigin={process.env.NEXT_PUBLIC_MAKESWIFT_API_ORIGIN}
         appOrigin={process.env.NEXT_PUBLIC_MAKESWIFT_APP_ORIGIN}
         runtime={runtime}
-        previewMode={previewMode}
+        siteVersion={siteVersion}
         locale={locale}
       >
         <Component {...pageProps} />
