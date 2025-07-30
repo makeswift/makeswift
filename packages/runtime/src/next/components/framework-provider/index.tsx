@@ -9,7 +9,7 @@ import {
   versionedFetch,
 } from '../../../runtimes/react/components/framework-context'
 
-import { MakeswiftSiteVersion } from '../../../api/site-version'
+import { type SiteVersion } from '../../../api/site-version'
 import { MAKESWIFT_CACHE_TAG } from '../../cache'
 
 import { context as appRouterContext } from './app-router'
@@ -26,7 +26,7 @@ export function FrameworkProvider({
       ...(isPagesRouter ? pagesRouterContext : appRouterContext),
       Image: NextImage,
       Link,
-      versionedFetch: (siteVersion: MakeswiftSiteVersion) => (url, init) =>
+      versionedFetch: (siteVersion: SiteVersion | null) => (url, init) =>
         versionedFetch(siteVersion)(url, { ...init, next: { tags: [MAKESWIFT_CACHE_TAG] } }),
     }),
     [isPagesRouter],
