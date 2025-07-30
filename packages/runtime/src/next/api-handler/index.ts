@@ -22,8 +22,12 @@ export function MakeswiftApiHandler(
 
   return async function handler(...args: ApiHandlerArgs): Promise<Response | void> {
     const { req, route, sendResponse, customRoutes, ...handlerConfig } = await match(args)
-      .with(AppRouter.argsPattern, ([req, context]) => AppRouter.config({ req, context, apiKey }))
-      .with(PagesRouter.argsPattern, ([req, res]) => PagesRouter.config({ req, res, apiKey }))
+      .with(AppRouter.argsPattern, ([req, context]) =>
+        AppRouter.config({ req, context, apiKey, client }),
+      )
+      .with(PagesRouter.argsPattern, ([req, res]) =>
+        PagesRouter.config({ req, res, apiKey, client }),
+      )
       .exhaustive()
 
     const apiHandler = createApiHandler(apiKey, {

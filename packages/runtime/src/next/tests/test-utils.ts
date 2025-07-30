@@ -9,6 +9,7 @@ import {
 
 import { MakeswiftApiHandler } from '../api-handler'
 import { ReactRuntime } from '../../react'
+import { TestOrigins } from '../../testing/fixtures'
 
 export type MakeswiftApiHandlerArgs = Partial<Parameters<typeof MakeswiftApiHandler>[1]>
 
@@ -17,8 +18,8 @@ function createHandler(apiKey: string, args: Partial<MakeswiftApiHandlerArgs> = 
   return MakeswiftApiHandler(apiKey, {
     ...args,
     runtime,
-    apiOrigin: 'https://api.fakeswift.com',
-    appOrigin: 'https://app.fakeswift.com',
+    apiOrigin: TestOrigins.apiOrigin,
+    appOrigin: TestOrigins.appOrigin,
   })
 }
 
