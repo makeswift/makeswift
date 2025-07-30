@@ -4,10 +4,10 @@ import { http, HttpResponse } from 'msw'
 import { ReactRuntime } from '../../runtimes/react'
 
 import { server } from '../../mocks/server'
-import { MakeswiftSiteVersion } from '../../api/site-version'
+import { TestOrigins, TestWorkingSiteVersion } from '../../testing/fixtures'
 
 const TEST_API_KEY = 'myApiKey'
-const apiOrigin = 'https://api.fakeswift.com'
+const { apiOrigin } = TestOrigins
 const runtime = new ReactRuntime()
 
 function createTestClient() {
@@ -44,7 +44,7 @@ afterEach(() => {
 
 describe('getPageSnapshot', () => {
   const pathname = 'blog/hello-world'
-  const snapshotUrl = `${apiOrigin}/v3/pages/${encodeURIComponent(pathname)}/document`
+  const snapshotUrl = `${apiOrigin}/v4/pages/${encodeURIComponent(pathname)}/document`
   const graphqlUrl = `${apiOrigin}/graphql`
   const locale = 'es-MX'
 
@@ -78,7 +78,7 @@ describe('getPageSnapshot', () => {
       // Act
       const result = await client.getPageSnapshot(pathname, {
         locale,
-        siteVersion: MakeswiftSiteVersion.Working,
+        siteVersion: TestWorkingSiteVersion,
       })
 
       // Assert
@@ -126,7 +126,7 @@ describe('getPageSnapshot', () => {
       const result = await client.getPageSnapshot(pathname, {
         locale,
         allowLocaleFallback,
-        siteVersion: MakeswiftSiteVersion.Working,
+        siteVersion: TestWorkingSiteVersion,
       })
 
       // Assert
@@ -147,7 +147,7 @@ describe('getPageSnapshot', () => {
     // Act
     const result = await client.getPageSnapshot(pathname, {
       locale,
-      siteVersion: MakeswiftSiteVersion.Working,
+      siteVersion: TestWorkingSiteVersion,
     })
 
     // Assert
@@ -167,7 +167,7 @@ describe('getPageSnapshot', () => {
 
     // Act
     const resultPromise = client.getPageSnapshot(pathname, {
-      siteVersion: MakeswiftSiteVersion.Live,
+      siteVersion: null,
       locale,
     })
 
@@ -184,7 +184,7 @@ describe('getPageSnapshot', () => {
       "Failed to get page snapshot for 'blog/hello-world'",
       {
         response: 'Internal server error',
-        siteVersion: 'Live',
+        siteVersion: null,
         locale: 'es-MX',
       },
     )
