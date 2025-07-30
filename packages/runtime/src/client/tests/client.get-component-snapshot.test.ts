@@ -4,22 +4,26 @@ import { http, HttpResponse, graphql } from 'msw'
 import { ReactRuntime } from '../../runtimes/react'
 
 import { server } from '../../mocks/server'
-import { MakeswiftSiteVersion } from '../../api/site-version'
+import { TestOrigins } from '../../next/tests/test-utils'
 
 const TEST_API_KEY = 'myApiKey'
-const apiOrigin = 'https://api.fakeswift.com'
-const baseUrl = `${apiOrigin}/v1/element-trees`
+const baseUrl = `${TestOrigins.apiOrigin}/v2_unstable/element-trees`
 const runtime = new ReactRuntime()
 
+const TestWorkingSiteVersion = {
+  version: 'ref:working',
+  token: 'test-preview-token',
+} as const
+
 function createTestClient() {
-  return new MakeswiftClient(TEST_API_KEY, { runtime, apiOrigin })
+  return new MakeswiftClient(TEST_API_KEY, { runtime, apiOrigin: TestOrigins.apiOrigin })
 }
 
 afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('getComponentSnapshot using v1 element tree endpoint', () => {
+describe('getComponentSnapshot using v2 element tree endpoint', () => {
   beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {})
   })
@@ -36,7 +40,7 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
 
     // Act
     const result = await client.getComponentSnapshot(treeId, {
-      siteVersion: MakeswiftSiteVersion.Working,
+      siteVersion: TestWorkingSiteVersion,
     })
 
     // Assert
@@ -57,7 +61,7 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
 
     // Act
     const resultPromise = client.getComponentSnapshot(treeId, {
-      siteVersion: MakeswiftSiteVersion.Working,
+      siteVersion: TestWorkingSiteVersion,
     })
 
     // Assert
@@ -120,7 +124,7 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
 
       // Act
       const result = await client.getComponentSnapshot(treeId, {
-        siteVersion: MakeswiftSiteVersion.Working,
+        siteVersion: TestWorkingSiteVersion,
         locale: localeToTest,
       })
 
@@ -185,7 +189,7 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
 
     // Act
     const result = await client.getComponentSnapshot(treeId, {
-      siteVersion: MakeswiftSiteVersion.Working,
+      siteVersion: TestWorkingSiteVersion,
       locale: localeToTest,
       allowLocaleFallback: false,
     })
@@ -253,7 +257,7 @@ describe('getComponentSnapshot using v1 element tree endpoint', () => {
 
       // Act
       const result = await client.getComponentSnapshot(treeId, {
-        siteVersion: MakeswiftSiteVersion.Working,
+        siteVersion: TestWorkingSiteVersion,
         locale: locale ?? undefined,
       })
 

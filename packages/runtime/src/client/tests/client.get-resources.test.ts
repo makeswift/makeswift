@@ -2,13 +2,17 @@ import { MakeswiftClient } from '../../client'
 import { http, HttpResponse } from 'msw'
 
 import { ReactRuntime } from '../../runtimes/react'
-import { MakeswiftSiteVersion } from '../../api/site-version'
 
 import { server } from '../../mocks/server'
 
 const TEST_API_KEY = 'xxx'
 const apiOrigin = 'https://api.fakeswift.com'
 const runtime = new ReactRuntime()
+
+const TestWorkingSiteVersion = {
+  version: 'ref:working',
+  token: 'test-preview-token',
+} as const
 
 function createTestClient() {
   return new MakeswiftClient(TEST_API_KEY, { runtime, apiOrigin })
@@ -26,7 +30,7 @@ afterEach(() => {
 
 describe('getSwatch', () => {
   const swatchId = 'mySwatch'
-  const resourceUrl = `${apiOrigin}/v2/swatches/${swatchId}`
+  const resourceUrl = `${apiOrigin}/v3_unstable/swatches/${swatchId}`
 
   test('returns null on 404', async () => {
     // Arrange
@@ -39,7 +43,7 @@ describe('getSwatch', () => {
     )
 
     // Act
-    const result = await client.getSwatch(swatchId, MakeswiftSiteVersion.Working)
+    const result = await client.getSwatch(swatchId, TestWorkingSiteVersion)
 
     // Assert
     expect(result).toBeNull()
@@ -57,20 +61,20 @@ describe('getSwatch', () => {
     )
 
     // Act
-    const result = await client.getSwatch(swatchId, MakeswiftSiteVersion.Working)
+    const result = await client.getSwatch(swatchId, TestWorkingSiteVersion)
 
     // Assert
     expect(result).toBeNull()
     expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to get swatch 'mySwatch'", {
       response: 'Internal server error',
-      siteVersion: 'Working',
+      siteVersion: TestWorkingSiteVersion,
     })
   })
 })
 
 describe('getTypography', () => {
   const typographyId = 'myTypography'
-  const resourceUrl = `${apiOrigin}/v2/typographies/${typographyId}`
+  const resourceUrl = `${apiOrigin}/v3_unstable/typographies/${typographyId}`
 
   test('returns null on 404', async () => {
     // Arrange
@@ -83,7 +87,7 @@ describe('getTypography', () => {
     )
 
     // Act
-    const result = await client.getTypography(typographyId, MakeswiftSiteVersion.Working)
+    const result = await client.getTypography(typographyId, TestWorkingSiteVersion)
 
     // Assert
     expect(result).toBeNull()
@@ -101,20 +105,20 @@ describe('getTypography', () => {
     )
 
     // Act
-    const result = await client.getTypography(typographyId, MakeswiftSiteVersion.Working)
+    const result = await client.getTypography(typographyId, TestWorkingSiteVersion)
 
     // Assert
     expect(result).toBeNull()
     expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to get typography 'myTypography'", {
       response: 'Unauthorized',
-      siteVersion: 'Working',
+      siteVersion: TestWorkingSiteVersion,
     })
   })
 })
 
 describe('getGlobalElement', () => {
   const globalElementId = 'myGlobalElement'
-  const resourceUrl = `${apiOrigin}/v2/global-elements/${globalElementId}`
+  const resourceUrl = `${apiOrigin}/v3_unstable/global-elements/${globalElementId}`
 
   test('returns null on 404', async () => {
     // Arrange
@@ -127,7 +131,7 @@ describe('getGlobalElement', () => {
     )
 
     // Act
-    const result = await client.getGlobalElement(globalElementId, MakeswiftSiteVersion.Working)
+    const result = await client.getGlobalElement(globalElementId, TestWorkingSiteVersion)
 
     // Assert
     expect(result).toBeNull()
@@ -145,13 +149,13 @@ describe('getGlobalElement', () => {
     )
 
     // Act
-    const result = await client.getGlobalElement(globalElementId, MakeswiftSiteVersion.Live)
+    const result = await client.getGlobalElement(globalElementId, null)
 
     // Assert
     expect(result).toBeNull()
     expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to get global element 'myGlobalElement'", {
       response: 'Bad request',
-      siteVersion: 'Live',
+      siteVersion: null,
     })
   })
 })
@@ -159,7 +163,7 @@ describe('getGlobalElement', () => {
 describe('getLocalizedGlobalElement', () => {
   const globalElementId = 'myGlobalElement'
   const locale = 'es-MX'
-  const resourceUrl = `${apiOrigin}/v2/localized-global-elements/${globalElementId}`
+  const resourceUrl = `${apiOrigin}/v3_unstable/localized-global-elements/${globalElementId}`
 
   test('returns null on 404', async () => {
     // Arrange
@@ -175,7 +179,7 @@ describe('getLocalizedGlobalElement', () => {
     const result = await client.getLocalizedGlobalElement(
       globalElementId,
       locale,
-      MakeswiftSiteVersion.Working,
+      TestWorkingSiteVersion,
     )
 
     // Assert
@@ -194,11 +198,7 @@ describe('getLocalizedGlobalElement', () => {
     )
 
     // Act
-    const result = await client.getLocalizedGlobalElement(
-      globalElementId,
-      locale,
-      MakeswiftSiteVersion.Live,
-    )
+    const result = await client.getLocalizedGlobalElement(globalElementId, locale, null)
 
     // Assert
     expect(result).toBeNull()
@@ -207,7 +207,7 @@ describe('getLocalizedGlobalElement', () => {
       {
         response: 'Request timeout',
         locale: 'es-MX',
-        siteVersion: 'Live',
+        siteVersion: null,
       },
     )
   })
@@ -216,7 +216,7 @@ describe('getLocalizedGlobalElement', () => {
 describe('getPagePathnameSlice', () => {
   const pageId = 'pageId'
   const locale = 'fr'
-  const resourceUrl = `${apiOrigin}/v2/page-pathname-slices/bulk`
+  const resourceUrl = `${apiOrigin}/v3_unstable/page-pathname-slices/bulk`
 
   test('returns null on all errors, logs details to the console', async () => {
     // Arrange
@@ -229,7 +229,7 @@ describe('getPagePathnameSlice', () => {
     )
 
     // Act
-    const result = await client.getPagePathnameSlice(pageId, MakeswiftSiteVersion.Live, { locale })
+    const result = await client.getPagePathnameSlice(pageId, null, { locale })
 
     // Assert
     expect(result).toBeNull()
@@ -238,7 +238,7 @@ describe('getPagePathnameSlice', () => {
       {
         response: 'Request timeout',
         locale: 'fr',
-        siteVersion: 'Live',
+        siteVersion: null,
       },
     )
   })

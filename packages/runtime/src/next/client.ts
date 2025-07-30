@@ -1,21 +1,24 @@
 import { PreviewData } from 'next'
 
-import { MakeswiftSiteVersion } from '../api/site-version'
-import { getMakeswiftSiteVersion } from './preview-mode'
+import { type SiteVersion, siteVersionSchema } from '../api/site-version'
 
 import { MakeswiftClient } from '../client'
 import { MAKESWIFT_CACHE_TAG } from './cache'
 
 export class Makeswift extends MakeswiftClient {
-  static getSiteVersion(previewData: PreviewData): MakeswiftSiteVersion {
-    return getMakeswiftSiteVersion(previewData) ?? MakeswiftSiteVersion.Live
+  static getSiteVersion(previewData: PreviewData): SiteVersion | null {
+    const result = siteVersionSchema.safeParse(previewData)
+
+    if (result.success) return result.data
+
+    return null
   }
 
   static getPreviewMode(previewData: PreviewData): boolean {
-    return getMakeswiftSiteVersion(previewData) === MakeswiftSiteVersion.Working
+    return this.getSiteVersion(previewData) != null
   }
 
-  fetchOptions(_siteVersion: MakeswiftSiteVersion): Record<string, unknown> {
+  fetchOptions(_siteVersion: SiteVersion): Record<string, unknown> {
     return {
       next: {
         tags: [MAKESWIFT_CACHE_TAG],

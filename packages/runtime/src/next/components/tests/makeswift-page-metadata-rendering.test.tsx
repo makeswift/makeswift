@@ -76,7 +76,7 @@ async function testMakeswiftPageMetadataRendering(
 
   return await act(async () =>
     render(
-      <Testing.ReactProvider runtime={runtime} previewMode={false}>
+      <Testing.ReactProvider runtime={runtime} siteVersion={null}>
         <MakeswiftPage {...props} />
       </Testing.ReactProvider>,
       {

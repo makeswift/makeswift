@@ -3,10 +3,11 @@ import { cookies, draftMode } from 'next/headers'
 
 import { serialize as serializeCookie } from 'cookie'
 
-import { MakeswiftSiteVersion } from '../../../api/site-version'
 import { cookieSettingOptions, SET_COOKIE_HEADER } from '../../../api-handler/cookies'
+import { serializeSiteVersion } from '../../../api/site-version'
 
-import { MAKESWIFT_DRAFT_DATA_COOKIE, PRERENDER_BYPASS_COOKIE, SearchParams } from '../draft'
+import { MAKESWIFT_SITE_VERSION_COOKIE, PRERENDER_BYPASS_COOKIE, SearchParams } from '../draft'
+import { MakeswiftClient } from '../../../client'
 
 export function originalRequestProtocol(request: NextRequest): string | null {
   // The `x-forwarded-proto` header is not formally standardized, but many proxies
@@ -17,22 +18,24 @@ export function originalRequestProtocol(request: NextRequest): string | null {
   return forwardedProto != null ? forwardedProto.split(',')[0].trim() : null
 }
 
-export async function redirectDraftHandler(
+export async function appRouterRedirectPreviewHandler(
   request: NextRequest,
   _context: any,
-  { apiKey }: { apiKey: string },
+  client: MakeswiftClient,
 ): Promise<NextResponse> {
-  const secret = request.nextUrl.searchParams.get(SearchParams.DraftMode)
+  const previewToken = request.nextUrl.searchParams.get(SearchParams.PreviewToken)
 
-  if (secret == null) {
-    return new NextResponse('Unauthorized to enable draft mode: no secret provided', {
-      status: 401,
-    })
+  if (previewToken == null) {
+    return new NextResponse('Bad request: no preview token provided', { status: 400 })
   }
 
-  if (secret !== apiKey) {
-    return new NextResponse('Unauthorized to enable draft mode: incorrect secret', { status: 401 })
+  const verificationResult = await client.readPreviewToken(previewToken)
+
+  if (verificationResult == null) {
+    return new NextResponse('Failed to verify preview token', { status: 401 })
   }
+
+  const { payload } = verificationResult
 
   const draft = await draftMode()
   const cookieStore = await cookies()
@@ -48,9 +51,8 @@ export async function redirectDraftHandler(
   const draftCookies: { name: string; value: string }[] = [
     prerenderBypassCookie,
     {
-      name: MAKESWIFT_DRAFT_DATA_COOKIE,
-      // Eventually, we can make this value dynamic using the request
-      value: JSON.stringify({ makeswift: true, siteVersion: MakeswiftSiteVersion.Working }),
+      name: MAKESWIFT_SITE_VERSION_COOKIE,
+      value: serializeSiteVersion({ version: payload.version, token: previewToken }),
     },
   ]
 
@@ -64,7 +66,7 @@ export async function redirectDraftHandler(
     `${redirectProtocol}://${redirectHost}${request.nextUrl.pathname}${request.nextUrl.search}`,
   )
 
-  redirectUrl.searchParams.delete(SearchParams.DraftMode)
+  redirectUrl.searchParams.delete(SearchParams.PreviewToken)
 
   const headers = new Headers()
   draftCookies.forEach(({ name, value }) => {

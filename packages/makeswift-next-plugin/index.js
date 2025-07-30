@@ -54,23 +54,11 @@ module.exports =
               has: [
                 {
                   type: 'query',
-                  key: 'x-makeswift-draft-mode',
-                  value: '(?<secret>.+)',
+                  key: 'x-makeswift-preview-token',
+                  value: '(?<token>.+)',
                 },
               ],
-              destination: '/api/makeswift/draft',
-            },
-            {
-              source: '/:path(.*)',
-              has: [
-                {
-                  type: 'query',
-                  key: 'x-makeswift-preview-mode',
-                  value: '(?<secret>.+)',
-                },
-              ],
-              destination: '/api/makeswift/preview',
-              locale: false,
+              destination: '/api/makeswift/redirect-preview',
             },
           ]
           return {
