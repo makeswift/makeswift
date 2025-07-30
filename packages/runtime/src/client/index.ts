@@ -936,47 +936,6 @@ export class MakeswiftClient {
     return result.table
   }
 
-  /**
-   * @deprecated `getSitemap` is deprecated. We recommend constructing a sitemap
-   * using data from `getPages` instead.
-   */
-  async getSitemap({
-    limit = 50,
-    after,
-    pathnamePrefix,
-    locale,
-  }: {
-    limit?: number
-    after?: string
-    pathnamePrefix?: string
-    locale?: string
-  } = {}): Promise<Sitemap> {
-    const url = new URL('v1/sitemap', this.apiOrigin)
-
-    url.searchParams.set('limit', limit.toString())
-    if (after != null) url.searchParams.set('after', after)
-    if (pathnamePrefix != null) url.searchParams.set('pathnamePrefix', pathnamePrefix)
-    if (locale != null) url.searchParams.set('locale', locale)
-
-    const response = await this.fetch(url.pathname + url.search, MakeswiftSiteVersion.Live)
-
-    if (!response.ok) {
-      console.error('Failed to get sitemap ', {
-        response: await failedResponseBody(response),
-        limit,
-        after,
-        pathnamePrefix,
-        locale,
-      })
-
-      throw new Error(`Failed to get sitemap with error: ${responseError(response)}`)
-    }
-
-    const sitemap = await response.json()
-
-    return sitemap
-  }
-
   getTranslatableData(elementTree: ElementData): Record<string, Data> {
     return this.runtime.getTranslatableData(elementTree)
   }

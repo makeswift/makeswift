@@ -43,6 +43,7 @@ export async function manifestHandler(
     localizedPageSSR: true,
     webhook: true,
     localizedPagesOnlineByDefault: true,
+    previewToken: true,
     ...manifest,
   })
 }
