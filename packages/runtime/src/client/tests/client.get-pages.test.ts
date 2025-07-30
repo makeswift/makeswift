@@ -29,14 +29,14 @@ function createRandomPageV4() {
 
 const TEST_API_KEY = 'xxx'
 const apiOrigin = 'https://api.fakeswift.com'
-const baseUrl = `${apiOrigin}/v4/pages`
+const baseUrl = `${apiOrigin}/v5_unstable/pages`
 const runtime = new ReactRuntime()
 
 function createTestClient() {
   return new MakeswiftClient(TEST_API_KEY, { runtime, apiOrigin })
 }
 
-describe('getPages v4', () => {
+describe('getPages v5', () => {
   test('empty', async () => {
     // Arrange
     const client = createTestClient()

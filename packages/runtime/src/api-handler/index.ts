@@ -1,7 +1,7 @@
 import { Match, match as matchPattern } from 'path-to-regexp'
 
 import { APIResource } from '../api'
-import { API_HANDLER_SITE_VERSION_HEADER, parseSiteVersion } from '../api/site-version'
+import { ApiHandlerHeaders, MakeswiftVersionData } from '../api/site-version'
 
 import { MakeswiftClient } from '../client'
 import { ReactRuntime } from '../react'
@@ -98,7 +98,14 @@ export function createApiHandler(
   }
 
   async function apiRouteHandler(req: ApiRequest, route: string): Promise<ResponseType> {
-    const siteVersion = parseSiteVersion(req.headers.get(API_HANDLER_SITE_VERSION_HEADER))
+    const versionHeader = req.headers.get(ApiHandlerHeaders.SiteVersion)
+    const tokenHeader = req.headers.get(ApiHandlerHeaders.PreviewToken)
+
+    const siteVersion: MakeswiftVersionData | null =
+      versionHeader != null && tokenHeader != null
+        ? { version: versionHeader, token: tokenHeader }
+        : null
+
     const matches = <T extends object>(pattern: string): Match<T> =>
       matchPattern<T>(pattern, { decode: decodeURIComponent })(route)
 
