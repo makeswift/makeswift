@@ -1,21 +1,28 @@
 import { PreviewData } from 'next'
+import { z } from 'zod'
 
-import { MakeswiftSiteVersion } from '../api/site-version'
-import { getMakeswiftSiteVersion } from './preview-mode'
+import { deserializeSiteVersion, type SiteVersion } from '../api/site-version'
 
 import { MakeswiftClient } from '../client'
 import { MAKESWIFT_CACHE_TAG } from './cache'
 
+const previewDataSchema = z.object({
+  siteVersion: z.string(),
+})
+
 export class Makeswift extends MakeswiftClient {
-  static getSiteVersion(previewData: PreviewData): MakeswiftSiteVersion {
-    return getMakeswiftSiteVersion(previewData) ?? MakeswiftSiteVersion.Live
+  static getSiteVersion(previewData: PreviewData): SiteVersion | null {
+    const parsedSiteVersion = previewDataSchema.safeParse(previewData)
+    if (!parsedSiteVersion.success) return null
+
+    return deserializeSiteVersion(parsedSiteVersion.data.siteVersion)
   }
 
   static getPreviewMode(previewData: PreviewData): boolean {
-    return getMakeswiftSiteVersion(previewData) === MakeswiftSiteVersion.Working
+    return this.getSiteVersion(previewData) != null
   }
 
-  fetchOptions(_siteVersion: MakeswiftSiteVersion): Record<string, unknown> {
+  fetchOptions(_siteVersion: SiteVersion): Record<string, unknown> {
     return {
       next: {
         tags: [MAKESWIFT_CACHE_TAG],

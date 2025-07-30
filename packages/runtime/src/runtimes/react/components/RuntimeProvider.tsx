@@ -6,8 +6,8 @@ import { MakeswiftHostApiClient } from '../../../api/react'
 import { ReactRuntimeContext } from '../hooks/use-react-runtime'
 import { ReactRuntime } from '../react-runtime'
 import { MakeswiftHostApiClientProvider } from '../host-api-client'
-import { MakeswiftSiteVersion } from '../../../api/site-version'
-import { DraftSwitcher } from './draft-switcher/draft-switcher'
+import { type SiteVersion } from '../../../api/site-version'
+import { PreviewSwitcher } from './preview-switcher/preview-switcher'
 import { useBuilderConnectionPing } from './hooks/use-builder-connection-ping'
 import { useFrameworkContext } from './hooks/use-framework-context'
 
@@ -17,14 +17,14 @@ const PreviewProvider = lazy(() => import('./PreviewProvider'))
 export function RuntimeProvider({
   children,
   runtime,
-  previewMode,
+  siteVersion,
   appOrigin = 'https://app.makeswift.com',
   apiOrigin = 'https://api.makeswift.com',
   locale = undefined,
 }: {
   children: ReactNode
   runtime: ReactRuntime
-  previewMode: boolean
+  siteVersion: SiteVersion | null
   apiOrigin?: string
   appOrigin?: string
   locale?: string
@@ -36,14 +36,13 @@ export function RuntimeProvider({
       new MakeswiftHostApiClient({
         uri: new URL('graphql', apiOrigin).href,
         locale,
-        fetch: versionedFetch(
-          previewMode ? MakeswiftSiteVersion.Working : MakeswiftSiteVersion.Live,
-        ),
+        fetch: versionedFetch(siteVersion),
       }),
-    [apiOrigin, locale, previewMode, versionedFetch],
+    [apiOrigin, locale, siteVersion, versionedFetch],
   )
 
-  const StoreProvider = previewMode ? PreviewProvider : LiveProvider
+  const isPreview = siteVersion != null
+  const StoreProvider = isPreview ? PreviewProvider : LiveProvider
 
   useBuilderConnectionPing({ appOrigin })
 
@@ -52,7 +51,7 @@ export function RuntimeProvider({
       <MakeswiftHostApiClientProvider client={client}>
         <StoreProvider>
           {children}
-          <DraftSwitcher isDraft={previewMode} />
+          <PreviewSwitcher isPreview={isPreview} />
         </StoreProvider>
       </MakeswiftHostApiClientProvider>
     </ReactRuntimeContext.Provider>

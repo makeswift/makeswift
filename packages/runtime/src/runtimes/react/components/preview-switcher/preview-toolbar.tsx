@@ -43,10 +43,10 @@ const styles = `
 `
 
 type Props = {
-  onExitDraft: () => void
+  onExitPreview: () => void
 }
 
-export function DraftToolbar({ onExitDraft }: Props) {
+export function PreviewToolbar({ onExitPreview: onExitDraft }: Props) {
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
