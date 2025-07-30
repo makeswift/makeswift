@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
-import { originalRequestProtocol } from './redirect-draft'
+import { originalRequestProtocol } from './app-router-redirect-preview'
 
-describe('redirectDraftRouteHandler', () => {
+describe('appRouterRedirectPreviewHandler', () => {
   describe("correctly extracts original request protocol from the 'x-forwarded-proto' header", () => {
     test.each([
       [undefined, null],

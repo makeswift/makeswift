@@ -1,6 +1,6 @@
 import { apiRequestFixtures } from './test-utils'
 
-const PATH = '/api/makeswift/clear-draft'
+const PATH = '/api/makeswift/exit-preview'
 
 afterEach(() => {
   jest.resetAllMocks()
@@ -42,7 +42,7 @@ describe('MakeswiftApiHandler', () => {
             ]
           : [
               '__prerender_bypass=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; Partitioned; SameSite=None',
-              'x-makeswift-draft-data=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; Partitioned; SameSite=None',
+              'makeswift-site-version=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; Partitioned; SameSite=None',
             ],
       )
     })
