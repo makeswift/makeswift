@@ -2,13 +2,18 @@ import { type APIResource, type LocalizedGlobalElement } from '../../api'
 
 import { apiRequestFixtures } from './test-utils'
 import * as makeswiftClient from '../client'
-import { MakeswiftSiteVersion, API_HANDLER_SITE_VERSION_HEADER } from '../../api/site-version'
+import { ApiHandlerHeaders } from '../../api/site-version'
 
 import * as fixtures from './__fixtures__/resources'
 
 jest.mock('../client', () => ({
   Makeswift: jest.fn(),
 }))
+
+const TestWorkingSiteVersion = {
+  version: 'ref:working',
+  token: 'test-preview-token',
+}
 
 const isEmptyQuery = (query: Record<string, any> | undefined) =>
   Object.entries(query ?? {}).filter(([_, v]) => v != null).length === 0
@@ -73,51 +78,33 @@ describe('MakeswiftApiHandler', () => {
         `/api/makeswift/${resource}/${id}${locale ? `/${locale}` : ''}` +
         `${query ? `?${new URLSearchParams(query).toString()}` : ''}`
 
-      describe.each(versioned ? [MakeswiftSiteVersion.Working, MakeswiftSiteVersion.Live] : [''])(
-        '%s',
-        version => {
-          const headers = versioned
-            ? {
-                [API_HANDLER_SITE_VERSION_HEADER]: version,
-              }
-            : undefined
+      describe.each(versioned ? [TestWorkingSiteVersion.version] : [''])('%s', version => {
+        const headers = versioned
+          ? {
+              [ApiHandlerHeaders.SiteVersion]: version,
+              [ApiHandlerHeaders.PreviewToken]: TestWorkingSiteVersion.token,
+            }
+          : undefined
 
-          describe(query ? `with ${new URLSearchParams(query).toString()}` : '', () => {
-            test('does not require authentication', async () => {
-              // Arrange
-              const { testApiRequest } = fixture()
+        describe(query ? `with ${new URLSearchParams(query).toString()}` : '', () => {
+          test('does not require authentication', async () => {
+            // Arrange
+            const { testApiRequest } = fixture()
 
-              // Act
-              const { statusCode } = await testApiRequest({
-                method: 'GET',
-                path: getEndpoint(id),
-                headers,
-              })
-
-              // Assert
-              expect(statusCode).toBe(200)
+            // Act
+            const { statusCode } = await testApiRequest({
+              method: 'GET',
+              path: getEndpoint(id),
+              headers,
             })
 
-            test.each([{ id: null }, { id: '[non-existing-id]' }])(
-              'returns 404 when resource is not found (id=$id)',
-              async ({ id }) => {
-                // Arrange
-                const { testApiRequest } = fixture()
+            // Assert
+            expect(statusCode).toBe(200)
+          })
 
-                // Act
-                const { statusCode, jsonBody } = await testApiRequest({
-                  method: 'GET',
-                  path: getEndpoint(id),
-                  headers,
-                })
-
-                // Assert
-                expect(statusCode).toBe(404)
-                expect(await jsonBody).toEqual({ message: 'Not Found' })
-              },
-            )
-
-            test('returns resource data when resource is found', async () => {
+          test.each([{ id: null }, { id: '[non-existing-id]' }])(
+            'returns 404 when resource is not found (id=$id)',
+            async ({ id }) => {
               // Arrange
               const { testApiRequest } = fixture()
 
@@ -129,21 +116,37 @@ describe('MakeswiftApiHandler', () => {
               })
 
               // Assert
-              expect(statusCode).toBe(200)
-              expect(await jsonBody).toEqual(
-                expect.objectContaining({
-                  id,
-                  __meta: {
-                    ...(versioned ? { version } : {}),
-                    ...(query ? { query } : {}),
-                    ...(locale ? { locale } : {}),
-                  },
-                }),
-              )
+              expect(statusCode).toBe(404)
+              expect(await jsonBody).toEqual({ message: 'Not Found' })
+            },
+          )
+
+          test('returns resource data when resource is found', async () => {
+            // Arrange
+            const { testApiRequest } = fixture()
+
+            // Act
+            const { statusCode, jsonBody } = await testApiRequest({
+              method: 'GET',
+              path: getEndpoint(id),
+              headers,
             })
+
+            // Assert
+            expect(statusCode).toBe(200)
+            expect(await jsonBody).toEqual(
+              expect.objectContaining({
+                id,
+                __meta: {
+                  ...(versioned ? { version: { ...TestWorkingSiteVersion } } : {}),
+                  ...(query ? { query } : {}),
+                  ...(locale ? { locale } : {}),
+                },
+              }),
+            )
           })
-        },
-      )
+        })
+      })
     })
   })
 })

@@ -1,13 +1,27 @@
 import { z } from 'zod'
 
-export const makeswiftSiteVersionSchema = z.enum(['Live', 'Working'])
+export const ApiHandlerHeaders = {
+  SiteVersion: 'X-Makeswift-Site-Version',
+  PreviewToken: 'X-Makeswift-Preview-Token',
+}
 
-export const MakeswiftSiteVersion = makeswiftSiteVersionSchema.Enum
-export type MakeswiftSiteVersion = z.infer<typeof makeswiftSiteVersionSchema>
+export const versionDataPayloadSchema = z.object({
+  version: z.string(),
+  token: z.string(),
+})
 
-export const API_HANDLER_SITE_VERSION_HEADER = 'X-Makeswift-Site-Version'
+export type MakeswiftVersionData = z.infer<typeof versionDataPayloadSchema>
 
-export function parseSiteVersion(version: unknown): MakeswiftSiteVersion {
-  const parsed = makeswiftSiteVersionSchema.safeParse(version)
-  return parsed.success ? parsed.data : MakeswiftSiteVersion.Live
+export function serializeSiteVersion(data: MakeswiftVersionData): string {
+  return JSON.stringify({ version: data.version, token: data.token })
+}
+
+export function deserializeSiteVersion(input: string): MakeswiftVersionData | null {
+  try {
+    const json = JSON.parse(input)
+    return versionDataPayloadSchema.parse(json)
+  } catch {
+    console.error('Failed to parse Makeswift site version data:', input)
+    return null
+  }
 }

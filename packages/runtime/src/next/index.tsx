@@ -9,6 +9,6 @@ export type {
   Sitemap,
 } from '../client'
 export { Makeswift } from './client'
-export type { MakeswiftPreviewData } from './preview-mode'
+export { type MakeswiftVersionData } from '../api/site-version'
 export { RootStyleRegistry } from './root-style-registry'
 export { ReactRuntimeProvider } from '../runtimes/react/'
