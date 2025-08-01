@@ -1,7 +1,7 @@
 import { createResponse } from 'node-mocks-http'
 import { NextApiResponse } from 'next'
 import { serialize, type SerializeOptions } from 'cookie'
-import { PRERENDER_BYPASS_COOKIE, PREVIEW_DATA_COOKIE } from '../api-handler/handlers/utils/draft'
+import { PRERENDER_BYPASS_COOKIE, PREVIEW_DATA_COOKIE } from '../api-handler/draft'
 
 import { pagesRouterApiRequestFixture, type MakeswiftApiHandlerArgs } from './test-utils'
 

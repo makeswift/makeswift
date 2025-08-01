@@ -36,9 +36,13 @@ describe('MakeswiftApiHandler', () => {
       expect(statusCode).toBe(200)
       expect(headers.getSetCookie()).toEqual(
         router == 'pages'
-          ? '__prerender_bypass=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; Partitioned; SameSite=None, __next_preview_data=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; Partitioned; SameSite=None'
+          ? [
+              '__prerender_bypass=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; Partitioned; SameSite=None',
+              '__next_preview_data=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; Partitioned; SameSite=None',
+            ]
           : [
-              '__prerender_bypass=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; Partitioned; SameSite=None, x-makeswift-draft-data=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; Partitioned; SameSite=None',
+              '__prerender_bypass=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; Partitioned; SameSite=None',
+              'x-makeswift-draft-data=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; Partitioned; SameSite=None',
             ],
       )
     })

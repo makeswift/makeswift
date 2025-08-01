@@ -1,4 +1,4 @@
-import { type Font } from '../api-handler/handlers/fonts'
+import { type Font } from '../../api-handler/handlers/fonts'
 import { apiRequestFixtures } from './test-utils'
 
 const PATH = '/api/makeswift/fonts'

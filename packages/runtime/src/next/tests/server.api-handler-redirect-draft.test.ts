@@ -1,5 +1,5 @@
 import * as nextHeaders from 'next/headers'
-import { PRERENDER_BYPASS_COOKIE } from '../api-handler/handlers/utils/draft'
+import { PRERENDER_BYPASS_COOKIE } from '../api-handler/draft'
 
 import { appRouterApiRequestFixture, hostUrl } from './test-utils'
 
