@@ -13,7 +13,7 @@
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
     "@playwright/test": "^1.41.1",
-    "@types/node": "^20.11.11",
+    "@types/node": "^20.14.8",
     "prettier": "^3.2.5",
     "turbo": "^1.13.3"
   }
