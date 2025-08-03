@@ -1,12 +1,15 @@
 import { MakeswiftSiteVersion } from '../api/site-version'
 
-import { SearchParams, SET_COOKIE_HEADER, cookieSettingOptions } from '../next/api-handler/handlers/utils/draft'
+import { SET_COOKIE_HEADER, cookieSettingOptions } from '../api-handler/cookies'
 
 import { MakeswiftPreviewData, parseMakeswiftPreviewData } from '../next/preview-data'
 import { redirect, createCookie } from 'react-router'
 
+export const previewModeCookie = createCookie('x-makeswift-preview-data', cookieSettingOptions)
 
-const previewModeCookie = createCookie('x-makeswift-preview-data', cookieSettingOptions)
+const SearchParams = {
+  PreviewMode: 'x-makeswift-preview-mode',
+} as const
 
 async function getPreviewData(request: Request): Promise<MakeswiftPreviewData | null> {
   const previewData = await previewModeCookie.parse(request.headers.get('cookie'))
@@ -18,13 +21,16 @@ export async function getSiteVersion(request: Request) {
 }
 
 export async function getPreviewMode(request: Request) {
-  return await getSiteVersion(request) === MakeswiftSiteVersion.Working
+  return (await getSiteVersion(request)) === MakeswiftSiteVersion.Working
 }
 
-type LoaderArgs = { request: Request; }
+type LoaderArgs = { request: Request }
 type Loader<T extends LoaderArgs, R> = (args: T) => Promise<Response | R>
 
-export function withMakeswift<T extends LoaderArgs, R>(loader: Loader<T, R>, { apiKey }: { apiKey: string }): Loader<T, R> {
+export function withMakeswift<T extends LoaderArgs, R>(
+  loader: Loader<T, R>,
+  { apiKey }: { apiKey: string },
+): Loader<T, R> {
   return async function withMakeswiftLoader(args: T): Promise<Response | R> {
     const { origin, pathname, searchParams } = new URL(args.request.url)
 
@@ -37,7 +43,7 @@ export function withMakeswift<T extends LoaderArgs, R>(loader: Loader<T, R>, { a
           makeswift: true,
           siteVersion: MakeswiftSiteVersion.Working,
         }),
-      }
+      },
     })
   }
 }
