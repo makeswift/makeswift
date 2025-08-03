@@ -20,10 +20,10 @@ jobs:
       - name: Set up pnpm
         uses: pnpm/action-setup@v2
 
-      - name: Set up Node.js 18.x
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: 20
           cache: pnpm
 
       - name: Install dependencies

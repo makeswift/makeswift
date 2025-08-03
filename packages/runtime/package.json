@@ -17,6 +17,9 @@
     "slate",
     "state"
   ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "sideEffects": false,
   "exports": {
     ".": {
@@ -202,7 +205,7 @@
     "@types/escape-html": "^1.0.2",
     "@types/jest": "^29.5.12",
     "@types/jsdom": "^21.1.7",
-    "@types/node": "^17.0.21",
+    "@types/node": "^20.14.8",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
     "@types/set-cookie-parser": "^2.4.10",
