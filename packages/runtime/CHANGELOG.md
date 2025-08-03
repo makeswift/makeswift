@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.25.0-canary.3
+
+### Minor Changes
+
+- 59349b9: chore!: require Node.js version 20 or higher
+
 ## 0.25.0-canary.2
 
 ### Minor Changes
