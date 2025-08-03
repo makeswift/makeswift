@@ -1,2 +1,5 @@
 export { getSiteVersion, getPreviewMode, withMakeswift } from './preview-mode'
+export { Makeswift } from './client'
 export { createApiHandler } from './api-handler'
+export { ReactRuntimeProvider } from '../runtimes/react'
+export { createRootStyleCache, RootStyleRegistry } from '../runtimes/react/root-style-registry'

@@ -1,31 +1,28 @@
-'use client'
-
 import { useMemo } from 'react'
+
+import { DocumentRoot } from '../DocumentRoot'
+import { type Document } from '../../../../state/react-page'
+import { MakeswiftPageDocument } from '../../../../client'
+import { usePageSnippets } from '../hooks/use-page-snippets'
+
 import { BodySnippet } from './BodySnippet'
-import { DocumentRoot } from '../../runtimes/react'
-import { type Document } from '../../state/react-page'
-import { MakeswiftPageDocument } from '../../next'
-import { useRouterLocaleSync } from '../hooks/useRouterLocaleSync'
-import { usePageSnippets } from '../hooks/usePageSnippets'
 import { PageHead } from './PageHead'
+import { type HeadComponentProp } from './head-tags'
 import { flattenMetadataSettings, type PageMetadataSettings } from './page-seo-settings'
 
 type Props = {
   page: MakeswiftPageDocument
   rootDocument: Document
   metadata?: boolean | PageMetadataSettings
-}
+} & HeadComponentProp
 
-export function Page({ page, rootDocument, metadata = true }: Props): JSX.Element {
+export function Page({ page, rootDocument, Head, metadata = true }: Props): JSX.Element {
   const { bodySnippets } = usePageSnippets({ page })
   const pageMetadataSettings = useMemo(() => flattenMetadataSettings(metadata), [metadata])
 
-  useRouterLocaleSync()
-
   return (
     <>
-      {/* DECOUPLE_TODO: */}
-      <PageHead document={page} metadata={pageMetadataSettings} />
+      <PageHead document={page} metadata={pageMetadataSettings} Head={Head} />
 
       <DocumentRoot rootDocument={rootDocument} />
 

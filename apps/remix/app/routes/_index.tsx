@@ -1,6 +1,4 @@
-import { MakeswiftProvider } from 'lib/makeswift/provider'
 import { Page as MakeswiftPage } from '@makeswift/runtime/next'
-import { client } from 'lib/makeswift/client'
 import {
   getSiteVersion,
   getPreviewMode,
@@ -8,7 +6,10 @@ import {
 } from '@makeswift/runtime/remix'
 
 import type { Route } from './+types/_index'
+
 import { MAKESWIFT_SITE_API_KEY } from 'lib/makeswift/env'
+import { MakeswiftProvider } from 'lib/makeswift/provider'
+import { client } from 'lib/makeswift/client'
 
 export const loader = withMakeswift(
   async ({ request, params }: Route.LoaderArgs) => {

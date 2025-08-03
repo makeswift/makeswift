@@ -1,4 +1,4 @@
-import { Makeswift } from '@makeswift/runtime/next'
+import { Makeswift } from '@makeswift/runtime/remix'
 
 import { runtime } from './runtime'
 import { MAKESWIFT_SITE_API_KEY } from './env'

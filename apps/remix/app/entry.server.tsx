@@ -8,7 +8,7 @@ import { renderToPipeableStream } from 'react-dom/server'
 import {
   createRootStyleCache,
   RootStyleRegistry,
-} from '@makeswift/runtime/next'
+} from '@makeswift/runtime/remix'
 
 export const streamTimeout = 5_000
 
@@ -21,7 +21,7 @@ export default function handleRequest(
 ) {
   return new Promise<Response>((resolve, reject) => {
     /* 1 ▸ Emotion cache ------------------------------------------------ */
-    const { cache, flush } = createRootStyleCache({ key: 'mswft' })
+    const { cache, flush } = createRootStyleCache()
 
     let shellRendered = false
     let didError = false

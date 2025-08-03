@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
-import { useIsInBuilder } from '../../react'
-import { MakeswiftPageDocument } from '../../next'
-import deepEqual from '../../utils/deepEqual'
-import { useMakeswiftHostApiClient } from '../../runtimes/react/host-api-client'
-import { Page as PageType } from '../../api'
+import { useIsInBuilder } from '../../../../react'
+import { MakeswiftPageDocument } from '../../../../client'
+import deepEqual from '../../../../utils/deepEqual'
+import { useMakeswiftHostApiClient } from '../../host-api-client'
+import { Page as PageType } from '../../../../api'
 
 const SnippetLocation = {
   Body: 'BODY',

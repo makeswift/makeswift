@@ -3,8 +3,7 @@ import {
   createApiHandler as createMakeswiftApiHandler,
 } from '../api-handler'
 
-import { MakeswiftClient } from '../client'
-
+import { Makeswift as MakeswiftClient } from './client'
 import { previewModeCookie } from './preview-mode'
 
 function validateApiRoute(params: Record<string, string>): string {

@@ -1,5 +1,5 @@
 import { cache } from '@emotion/css'
-import { RootStyleRegistry } from '../../../next'
+import { RootStyleRegistry } from '../root-style-registry'
 import { ReactRuntimeProvider } from '../components/RuntimeProvider'
 import { ReactRuntime } from '../react-runtime'
 

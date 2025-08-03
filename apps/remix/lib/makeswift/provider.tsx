@@ -1,7 +1,5 @@
-'use client'
-
 import { runtime } from './runtime'
-import { ReactRuntimeProvider } from '@makeswift/runtime/next'
+import { ReactRuntimeProvider } from '@makeswift/runtime/remix'
 
 import type { ReactNode } from 'react'
 
@@ -17,9 +15,8 @@ export function MakeswiftProvider({
   return (
     <ReactRuntimeProvider
       {...{ runtime, previewMode, locale }}
-      // DECOUPLE_TODO:
-      // apiOrigin={process.env.NEXT_PUBLIC_MAKESWIFT_API_ORIGIN}
-      // appOrigin={process.env.NEXT_PUBLIC_MAKESWIFT_APP_ORIGIN}
+      apiOrigin={import.meta.env.VITE_MAKESWIFT_API_ORIGIN}
+      appOrigin={import.meta.env.VITE_MAKESWIFT_APP_ORIGIN}
     >
       {children}
     </ReactRuntimeProvider>

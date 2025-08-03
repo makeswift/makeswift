@@ -1,12 +1,12 @@
 import {
   createRootStyleCache,
   RootStyleRegistry,
-} from '@makeswift/runtime/next'
+} from '@makeswift/runtime/remix'
 import { startTransition, StrictMode } from 'react'
 import { hydrateRoot } from 'react-dom/client'
 import { HydratedRouter } from 'react-router/dom'
 
-const { cache } = createRootStyleCache({ key: 'mswft' })
+const { cache, flush } = createRootStyleCache()
 
 startTransition(() => {
   hydrateRoot(

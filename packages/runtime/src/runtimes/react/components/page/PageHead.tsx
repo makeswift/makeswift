@@ -1,12 +1,14 @@
-'use client'
+import { type ComponentType, type PropsWithChildren, useMemo, useSyncExternalStore } from 'react'
 
-import { useMemo, useSyncExternalStore } from 'react'
-import { MakeswiftPageDocument } from '../../next'
-import { usePageSnippets } from '../hooks/usePageSnippets'
-import { useIsInBuilder } from '../../react'
-import { useMakeswiftHostApiClient } from '../../runtimes/react/host-api-client'
-import { Site } from '../../api'
-import { PageTitle, PageMeta, PageLink, PageStyle } from '../../next/components/head-tags'
+import { type MakeswiftPageDocument } from '../../../../client'
+import { type Site } from '../../../../api'
+
+import { useIsInBuilder } from '../../hooks/use-is-in-builder'
+import { useMakeswiftHostApiClient } from '../../host-api-client'
+
+import { usePageSnippets } from '../hooks/use-page-snippets'
+
+import { PageTitle, PageMeta, PageLink, PageStyle, type HeadComponentProp } from './head-tags'
 import { HeadSnippet } from './HeadSnippet'
 import { type PageMetadataSettings } from './page-seo-settings'
 
@@ -20,9 +22,9 @@ const defaultFavicon = {
 type Props = {
   document: MakeswiftPageDocument
   metadata?: PageMetadataSettings
-}
+} & HeadComponentProp
 
-export function PageHead({ document: page, metadata = {} }: Props): JSX.Element {
+export function PageHead({ document: page, metadata = {}, ...props }: Props): JSX.Element {
   const {
     title: useTitle = false,
     favicon: useFavicon = false,
@@ -74,7 +76,7 @@ export function PageHead({ document: page, metadata = {} }: Props): JSX.Element 
 
   return (
     <>
-      <PageStyle precedence="high" href="makeswift-base-styles">
+      <PageStyle precedence="high" href="makeswift-base-styles" {...props}>
         {`
         html {
             font-family: sans-serif;
@@ -86,30 +88,34 @@ export function PageHead({ document: page, metadata = {} }: Props): JSX.Element 
       </PageStyle>
       {useTitle && title && (
         <>
-          <PageTitle>{title}</PageTitle>
-          <PageMeta property="og:title" content={title} />
-          <PageMeta name="twitter:title" content={title} />
+          <PageTitle {...props}>{title}</PageTitle>
+          <PageMeta property="og:title" content={title} {...props} />
+          <PageMeta name="twitter:title" content={title} {...props} />
         </>
       )}
       {useFavicon && favicon && (
-        <PageLink rel="icon" type={favicon.mimetype} href={favicon.publicUrl} />
+        <PageLink rel="icon" type={favicon.mimetype} href={favicon.publicUrl} {...props} />
       )}
-      {useCanonicalUrl && canonicalUrl && <PageLink rel="canonical" href={canonicalUrl} />}
-      {useIndexingBlocked && isIndexingBlocked && <PageMeta name="robots" content="noindex" />}
+      {useCanonicalUrl && canonicalUrl && (
+        <PageLink rel="canonical" href={canonicalUrl} {...props} />
+      )}
+      {useIndexingBlocked && isIndexingBlocked && (
+        <PageMeta name="robots" content="noindex" {...props} />
+      )}
       {useDescription && description && (
         <>
-          <PageMeta name="description" content={description} />
-          <PageMeta property="og:description" content={description} />
-          <PageMeta name="twitter:description" content={description} />
+          <PageMeta name="description" content={description} {...props} />
+          <PageMeta property="og:description" content={description} {...props} />
+          <PageMeta name="twitter:description" content={description} {...props} />
         </>
       )}
-      {useKeywords && keywords && <PageMeta name="keywords" content={keywords} />}
+      {useKeywords && keywords && <PageMeta name="keywords" content={keywords} {...props} />}
       {useSocialImage && socialImage && (
         <>
-          <PageMeta property="og:image" content={socialImage.publicUrl} />
-          <PageMeta property="og:image:type" content={socialImage.mimetype} />
-          <PageMeta name="twitter:image" content={socialImage.publicUrl} />
-          <PageMeta name="twitter:card" content="summary_large_image" />
+          <PageMeta property="og:image" content={socialImage.publicUrl} {...props} />
+          <PageMeta property="og:image:type" content={socialImage.mimetype} {...props} />
+          <PageMeta name="twitter:image" content={socialImage.publicUrl} {...props} />
+          <PageMeta name="twitter:card" content="summary_large_image" {...props} />
         </>
       )}
       {fontFamilyParamValue !== '' && (
@@ -117,6 +123,7 @@ export function PageHead({ document: page, metadata = {} }: Props): JSX.Element 
           precedence="medium"
           rel="stylesheet"
           href={`https://fonts.googleapis.com/css?family=${fontFamilyParamValue}&display=swap`}
+          {...props}
         />
       )}
       {headSnippets.map(snippet => (
