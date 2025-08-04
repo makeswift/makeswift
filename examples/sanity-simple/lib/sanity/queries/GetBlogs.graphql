@@ -1,0 +1,28 @@
+query GetBlogs($limit: Int = 8, $offset: Int = 0, $sort: [PostSorting!], $where: PostFilter) {
+  allPost(limit: $limit, offset: $offset, sort: $sort, where: $where) {
+    slug {
+      current
+      source
+    }
+    title
+    publishedAt
+    description
+    bodyRaw
+    image {
+      asset {
+        title
+        label
+        size
+        url
+      }
+    }
+    author {
+      name
+      jobTitle
+      slug {
+        current
+        source
+      }
+    }
+  }
+}
