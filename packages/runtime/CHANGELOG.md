@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.25.0-canary.4
+
+### Patch Changes
+
+- 341b920: chore: remove unused `useBuilderHandshake` hook
+
 ## 0.25.0-canary.3
 
 ### Minor Changes
