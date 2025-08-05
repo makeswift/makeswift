@@ -15,7 +15,7 @@ import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
 import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
-import * as Testing from '../../../../runtimes/react/testing'
+import * as Testing from '../../../testing'
 
 describe('Page', () => {
   test('can render DatePropController v0 data', async () => {

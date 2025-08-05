@@ -4,7 +4,7 @@ import '@testing-library/jest-dom'
 import { act } from 'react-dom/test-utils'
 import { render, screen } from '@testing-library/react'
 import { ReactRuntime } from '../../../react'
-import * as Testing from '../../../runtimes/react/testing'
+import * as Testing from '../../testing'
 import { MakeswiftComponent } from '../MakeswiftComponent'
 import {
   type MakeswiftComponentSnapshotMetadata,

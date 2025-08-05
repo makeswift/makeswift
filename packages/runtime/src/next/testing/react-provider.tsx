@@ -1,6 +1,7 @@
-import { RootStyleRegistry } from '../../../next'
-import { ReactRuntimeProvider } from '../components/RuntimeProvider'
-import { ReactRuntime } from '../react-runtime'
+import { ReactRuntime } from '../../runtimes/react/react-runtime'
+
+import { RootStyleRegistry } from '../root-style-registry'
+import { ReactRuntimeProvider } from '../../runtimes/react'
 
 export function ReactProvider({
   children,

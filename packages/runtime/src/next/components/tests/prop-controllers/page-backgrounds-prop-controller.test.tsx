@@ -14,7 +14,7 @@ import {
 } from '@makeswift/prop-controllers'
 import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
-import * as Testing from '../../../../runtimes/react/testing'
+import * as Testing from '../../../testing'
 import { ReactRuntime } from '../../../../react'
 import { forwardRef } from 'react'
 

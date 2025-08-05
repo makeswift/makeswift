@@ -1,8 +1,9 @@
 import { randomUUID } from 'crypto'
-import { type MakeswiftPageSnapshot, type MakeswiftComponentSnapshot } from '../../../client'
-import { type ElementData } from '../../../state/react-page'
-import { CacheData } from '../../../api/react'
-import { MakeswiftComponentType } from '../../../components'
+
+import { type MakeswiftPageSnapshot, type MakeswiftComponentSnapshot } from '../../client'
+import { CacheData } from '../../api/react'
+import { type ElementData } from '../../state/react-page'
+import { MakeswiftComponentType } from '../../components'
 
 export function createRootComponent(elements: ElementData[], rootId?: string) {
   return {
