@@ -1,14 +1,18 @@
-import { useEffect } from 'react'
+import { type ReactElement, useEffect, isValidElement } from 'react'
 
 import Head from 'next/head'
+import Script from 'next/script'
 
 import { type Snippet } from '../../../../client'
 
 import {
-  snippetToElement,
+  snippetToElements,
   getSnippetElementsFromDOM,
   cleanUpSnippet,
 } from '../../../../runtimes/react/components/page/HeadSnippet'
+
+const isScriptElement = (element: string | JSX.Element): element is ReactElement<any, 'script'> =>
+  isValidElement(element) && element.type === 'script'
 
 export function HeadSnippet({ snippet }: { snippet: Snippet }) {
   useEffect(() => {
@@ -19,7 +23,17 @@ export function HeadSnippet({ snippet }: { snippet: Snippet }) {
     }
   }, [snippet])
 
-  const headSnippetElement = snippetToElement(snippet)
+  const headSnippetElements = snippetToElements(snippet)
 
-  return <Head>{headSnippetElement}</Head>
+  return (
+    <>
+      {headSnippetElements.map((element, i) =>
+        isScriptElement(element) ? (
+          <Script key={element.key} {...element.props} strategy="beforeInteractive" />
+        ) : (
+          <Head key={isValidElement(element) ? element.key : i}>{element}</Head>
+        ),
+      )}
+    </>
+  )
 }

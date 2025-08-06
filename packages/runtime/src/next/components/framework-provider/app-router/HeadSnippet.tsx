@@ -5,11 +5,11 @@ import { type Snippet } from '../../../../client'
 
 import {
   BaseHeadSnippet,
-  snippetToElement,
+  snippetToElements,
 } from '../../../../runtimes/react/components/page/HeadSnippet'
 
 export function HeadSnippet({ snippet }: { snippet: Snippet }) {
-  const headSnippetElement = snippetToElement(snippet)
+  const headSnippetElements = snippetToElements(snippet)
   const insertedServerHTML = useRef(false)
 
   useServerInsertedHTML(() => {
@@ -17,7 +17,7 @@ export function HeadSnippet({ snippet }: { snippet: Snippet }) {
 
     insertedServerHTML.current = true
 
-    return headSnippetElement
+    return headSnippetElements
   })
 
   return <BaseHeadSnippet snippet={snippet} />

@@ -1,0 +1,148 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Head snippet rendering renders allowed snippet tags <base href="https://www.example.com/" /> 1`] = `
+[
+  <base
+    data-makeswift-snippet-id="[test-snippet-1]"
+    href="https://www.example.com/"
+  />,
+]
+`;
+
+exports[`Head snippet rendering renders allowed snippet tags <link rel="icon" type="image/x-icon" href="/static/favicon.ico"> 1`] = `
+[
+  <link
+    data-makeswift-snippet-id="[test-snippet-1]"
+    href="/static/favicon.ico"
+    rel="icon"
+    type="image/x-icon"
+  />,
+]
+`;
+
+exports[`Head snippet rendering renders allowed snippet tags <meta name="viewport" content="width=device-width, initial-scale=1"> 1`] = `
+[
+  <meta
+    content="width=device-width, initial-scale=1"
+    data-makeswift-snippet-id="[test-snippet-1]"
+    name="viewport"
+  />,
+]
+`;
+
+exports[`Head snippet rendering renders allowed snippet tags <noscript>You need to enable JavaScript to run this app.</noscript> 1`] = `
+[
+  <noscript
+    data-makeswift-snippet-id="[test-snippet-1]"
+  >
+    You need to enable JavaScript to run this app.
+  </noscript>,
+]
+`;
+
+exports[`Head snippet rendering renders allowed snippet tags <script>console.log("Hello World");</script> 1`] = `
+[
+  <script
+    data-makeswift-snippet-id="[test-snippet-1]"
+    data-nscript="beforeInteractive"
+    strategy="beforeInteractive"
+  >
+    console.log("Hello World");
+  </script>,
+]
+`;
+
+exports[`Head snippet rendering renders allowed snippet tags <style>body { margin: 0; }</style> 1`] = `
+[
+  <style
+    data-makeswift-snippet-id="[test-snippet-1]"
+  >
+    body { margin: 0; }
+  </style>,
+]
+`;
+
+exports[`Head snippet rendering renders allowed snippet tags <template id="template-id"><span>content</span></template> 1`] = `
+[
+  <template
+    data-makeswift-snippet-id="[test-snippet-1]"
+    id="template-id"
+  >
+    <span>
+      content
+    </span>
+  </template>,
+]
+`;
+
+exports[`Head snippet rendering renders allowed snippet tags <title>Test Page</title> 1`] = `
+[
+  <title
+    data-makeswift-snippet-id="[test-snippet-1]"
+  >
+    Test Page
+  </title>,
+]
+`;
+
+exports[`Head snippet rendering renders mixed snippet content, skipping disallowed tags 1`] = `
+[
+  <meta
+    content="width=device-width, initial-scale=1"
+    data-makeswift-snippet-id="[test-snippet-1]"
+    name="viewport"
+  />,
+  <meta
+    content=""
+    data-makeswift-snippet-id="[test-snippet-1]"
+    name="snippet 1 before script"
+  />,
+  <script
+    data-makeswift-snippet-id="[test-snippet-1]"
+    data-nscript="beforeInteractive"
+    strategy="beforeInteractive"
+  >
+    console.log("Snippet 1");
+  </script>,
+  <meta
+    content=""
+    data-makeswift-snippet-id="[test-snippet-1]"
+    name="snippet 1 after script"
+  />,
+  <link
+    data-makeswift-snippet-id="[test-snippet-1]"
+    href="/static/favicon.ico"
+    rel="icon"
+    type="image/x-icon"
+  />,
+  <style
+    data-makeswift-snippet-id="[test-snippet-1]"
+  >
+    body { margin: 0; }
+  </style>,
+  <noscript
+    data-makeswift-snippet-id="[test-snippet-1]"
+  >
+    You need to enable JavaScript to run this app.
+  </noscript>,
+]
+`;
+
+exports[`Head snippet rendering renders multiple snippets in the order they are defined 1`] = `
+[
+  <script
+    data-makeswift-snippet-id="[test-snippet-1]"
+    data-nscript="beforeInteractive"
+    strategy="beforeInteractive"
+  >
+    console.log("Snippet 1");
+  </script>,
+  <script
+    data-makeswift-snippet-id="[test-snippet-2]"
+    data-nscript="beforeInteractive"
+    strategy="beforeInteractive"
+  >
+    console.log("Snippet 2");
+  </script>,
+]
+`;

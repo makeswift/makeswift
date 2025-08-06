@@ -1,20 +1,25 @@
 import { ReactRuntime } from '../../runtimes/react/react-runtime'
+import { RuntimeProvider } from '../../runtimes/react/components/RuntimeProvider'
 
+import { FrameworkProvider } from '../components/framework-provider'
 import { RootStyleRegistry } from '../root-style-registry'
-import { NextRuntimeProvider } from '../runtime-provider'
 
 export function ReactProvider({
   children,
   runtime,
   previewMode = false,
+  forcePagesRouter = false,
 }: {
   children: React.ReactNode
   runtime: ReactRuntime
   previewMode?: boolean
+  forcePagesRouter?: boolean
 }) {
   return (
-    <NextRuntimeProvider previewMode={previewMode} runtime={runtime}>
-      <RootStyleRegistry>{children}</RootStyleRegistry>
-    </NextRuntimeProvider>
+    <FrameworkProvider forcePagesRouter={forcePagesRouter}>
+      <RuntimeProvider previewMode={previewMode} runtime={runtime}>
+        <RootStyleRegistry>{children}</RootStyleRegistry>
+      </RuntimeProvider>
+    </FrameworkProvider>
   )
 }
