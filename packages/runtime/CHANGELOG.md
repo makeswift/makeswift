@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.25.0-canary.5
+
+### Patch Changes
+
+- 912b3fc: feat: framework-independent head tag management, built-in `Page` component
+
 ## 0.25.0-canary.4
 
 ### Patch Changes
