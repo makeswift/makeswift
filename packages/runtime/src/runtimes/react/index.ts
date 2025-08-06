@@ -3,7 +3,7 @@ export { ReactRuntime } from './react-runtime'
 export { Element } from './components/Element'
 export { DocumentRoot } from './components/DocumentRoot'
 export { PageProvider } from './components/PageProvider'
-export { ReactRuntimeProvider } from './components/RuntimeProvider'
+export { RuntimeProvider } from './components/RuntimeProvider'
 
 export { useBreakpoints } from './hooks/use-breakpoints'
 export { useBuilderEditMode } from './hooks/use-builder-edit-mode'
