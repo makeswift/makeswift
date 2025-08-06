@@ -6,7 +6,7 @@ import '@testing-library/jest-dom'
 
 import { APIResourceType, type LocalizedGlobalElement, type GlobalElement } from '../../../api'
 import { ReactRuntime } from '../../../react'
-import * as Testing from '../../../runtimes/react/testing'
+import * as Testing from '../../testing'
 
 import { Page } from '../page'
 

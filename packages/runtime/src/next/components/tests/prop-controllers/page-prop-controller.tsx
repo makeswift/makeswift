@@ -17,7 +17,7 @@ import { randomUUID } from 'crypto'
 import { Page } from '../../page'
 import { act } from 'react-dom/test-utils'
 import { ReactRuntime } from '../../../../react'
-import * as Testing from '../../../../runtimes/react/testing'
+import * as Testing from '../../../testing'
 
 export const pagePropControllerTest = <
   P extends PropDef & ((options?: any) => any),

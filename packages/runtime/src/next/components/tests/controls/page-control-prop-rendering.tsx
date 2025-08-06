@@ -14,7 +14,7 @@ import { ReactRuntime } from '../../../../react'
 import { MakeswiftComponent } from '../../MakeswiftComponent'
 import { Page } from '../../page'
 import { isServer } from '../../../../utils/is-server'
-import * as Testing from '../../../../runtimes/react/testing'
+import * as Testing from '../../../testing'
 
 const ROOT_ID = '00000000-0000-0000-0000-000000000000'
 const ELEMENT_ID = '11111111-1111-1111-1111-111111111111'
