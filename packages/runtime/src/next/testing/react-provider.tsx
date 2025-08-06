@@ -1,7 +1,7 @@
 import { ReactRuntime } from '../../runtimes/react/react-runtime'
 
 import { RootStyleRegistry } from '../root-style-registry'
-import { ReactRuntimeProvider } from '../../runtimes/react'
+import { NextRuntimeProvider } from '../runtime-provider'
 
 export function ReactProvider({
   children,
@@ -13,8 +13,8 @@ export function ReactProvider({
   previewMode?: boolean
 }) {
   return (
-    <ReactRuntimeProvider previewMode={previewMode} runtime={runtime}>
+    <NextRuntimeProvider previewMode={previewMode} runtime={runtime}>
       <RootStyleRegistry>{children}</RootStyleRegistry>
-    </ReactRuntimeProvider>
+    </NextRuntimeProvider>
   )
 }

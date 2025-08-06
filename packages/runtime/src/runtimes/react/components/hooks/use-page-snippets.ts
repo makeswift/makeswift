@@ -1,26 +1,12 @@
-import { useEffect, useMemo, useState } from 'react'
-import { useIsInBuilder } from '../../react'
-import { MakeswiftPageDocument } from '../../next'
-import deepEqual from '../../utils/deepEqual'
-import { useMakeswiftHostApiClient } from '../../runtimes/react/host-api-client'
-import { useSyncExternalStore } from 'use-sync-external-store/shim'
-import { Page as PageType } from '../../api'
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 
-const SnippetLocation = {
-  Body: 'BODY',
-  Head: 'HEAD',
-} as const
+import { type MakeswiftPageDocument, type Snippet, SnippetLocation } from '../../../../client'
+import { type Page as PageType } from '../../../../api'
 
-export type SnippetLocation = (typeof SnippetLocation)[keyof typeof SnippetLocation]
+import deepEqual from '../../../../utils/deepEqual'
 
-export type Snippet = {
-  builderEnabled: boolean
-  cleanup: string | null
-  code: string
-  id: string
-  liveEnabled: boolean
-  location: SnippetLocation
-}
+import { useIsInBuilder } from '../../hooks/use-is-in-builder'
+import { useMakeswiftHostApiClient } from '../../host-api-client'
 
 const filterUsedSnippetProperties = ({
   code,

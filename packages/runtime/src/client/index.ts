@@ -16,6 +16,7 @@ import {
   FileQueryVariables,
   IntrospectedResourcesQueryResult,
   IntrospectedResourcesQueryVariables,
+  SnippetLocation,
   TableQueryResult,
   TableQueryVariables,
 } from '../api/graphql/generated/types'
@@ -44,6 +45,8 @@ import { toIterablePaginationResult } from '../utils/pagination'
 import { deterministicUUID } from '../utils/deterministic-uuid'
 import { Schema } from '@makeswift/controls'
 import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-only-documents'
+
+export { SnippetLocation } from '../api/graphql/generated/types'
 
 const makeswiftPageResultSchema = z.object({
   id: z.string(),
@@ -230,14 +233,15 @@ function responseError(response: Response): string {
   return `${response.status} ${response.statusText}`
 }
 
-type Snippet = {
+export type Snippet = {
   id: string
   code: string
-  location: 'HEAD' | 'BODY'
+  location: SnippetLocation
   liveEnabled: boolean
   builderEnabled: boolean
   cleanup: string | null
 }
+
 type Font = { family: string; variants: string[] }
 
 type Meta = {

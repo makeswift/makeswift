@@ -1,14 +1,15 @@
-'use client'
+import { useMemo, useSyncExternalStore } from 'react'
 
-import { useMemo } from 'react'
-import { MakeswiftPageDocument } from '../../next'
-import { usePageSnippets } from '../hooks/usePageSnippets'
-import { useIsInBuilder } from '../../react'
-import { useMakeswiftHostApiClient } from '../../runtimes/react/host-api-client'
-import { useSyncExternalStore } from 'use-sync-external-store/shim'
-import { Site } from '../../api'
-import { PageTitle, PageMeta, PageLink, PageStyle } from '../../next/components/head-tags'
-import { HeadSnippet } from './HeadSnippet'
+import { type MakeswiftPageDocument } from '../../../../client'
+import { type Site } from '../../../../api'
+
+import { useMakeswiftHostApiClient } from '../../host-api-client'
+
+import { useFrameworkContext } from '../hooks/use-framework-context'
+import { useIsInBuilder } from '../../hooks/use-is-in-builder'
+import { usePageSnippets } from '../hooks/use-page-snippets'
+
+import { PageTitle, PageMeta, PageLink, PageStyle } from './head-tags'
 import { type PageMetadataSettings } from './page-seo-settings'
 
 const defaultFavicon = {
@@ -35,6 +36,7 @@ export function PageHead({ document: page, metadata = {} }: Props): JSX.Element 
   } = metadata
 
   const { headSnippets } = usePageSnippets({ page })
+  const { HeadSnippet } = useFrameworkContext()
 
   const isInBuilder = useIsInBuilder()
 
