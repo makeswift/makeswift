@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
-import { PageMeta } from '../../../../next/components/head-tags'
+import { PageMeta } from '../page/head-tags'
 import { useIsInBuilder } from '../../hooks/use-is-in-builder'
 import { DraftToolbar } from './draft-toolbar'
 
@@ -45,7 +45,7 @@ export function DraftSwitcher({ isDraft }: { isDraft: boolean }) {
             : null}
         </span>
       )}
-      {/* Insert draft mode information into the DOM to make it easier to debug draft mode-related 
+      {/* Insert draft mode information into the DOM to make it easier to debug draft mode-related
           issues on production sites */}
       <PageMeta
         name="makeswift-draft-info"

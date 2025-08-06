@@ -13,7 +13,7 @@ import { useBuilderConnectionPing } from './hooks/use-builder-connection-ping'
 const LiveProvider = lazy(() => import('./LiveProvider'))
 const PreviewProvider = lazy(() => import('./PreviewProvider'))
 
-export function ReactRuntimeProvider({
+export function RuntimeProvider({
   children,
   runtime,
   previewMode,

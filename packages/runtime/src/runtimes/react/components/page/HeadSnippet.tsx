@@ -1,48 +1,17 @@
-import { Children, createElement, useEffect, useRef } from 'react'
-import { Snippet } from '../hooks/usePageSnippets'
-import { useServerInsertedHTML } from 'next/navigation'
+import { Children, createElement, useEffect } from 'react'
 import parse from 'html-react-parser'
-import Head from 'next/head'
-import { useIsPagesRouter } from '../../next/hooks/use-is-pages-router'
 
-type Props = {
-  snippet: Snippet
-}
+import { type Snippet } from '../../../../client'
 
-export function HeadSnippet({ snippet }: Props) {
-  const isPagesRouter = useIsPagesRouter()
-
+export function BaseHeadSnippet({ snippet }: { snippet: Snippet }) {
   useEffect(() => {
-    if (isPagesRouter) {
-      return () => {
-        const snippetElements = getSnippetElementsFromDOM(snippet)
-        if (snippetElements.length > 0) return
-        cleanUpSnippet(snippet)
-      }
-    }
-
     const snippetElements = getSnippetElementsFromDOM(snippet)
     const isAlreadyInTheDOM = snippetElements.length > 0
 
     if (isAlreadyInTheDOM) return
 
-    return renderSnippetAndExecuteScripts(snippet, document.head)
-  }, [isPagesRouter, snippet])
-
-  const headSnippetElement = snippetToElement(snippet)
-  const insertedServerHTML = useRef(false)
-
-  useServerInsertedHTML(() => {
-    if (isPagesRouter || insertedServerHTML.current) return
-
-    insertedServerHTML.current = true
-
-    return headSnippetElement
-  })
-
-  if (isPagesRouter) {
-    return <Head>{headSnippetElement}</Head>
-  }
+    return renderSnippetAndExecuteScripts(snippet, window.document.head)
+  }, [snippet])
 
   return null
 }
@@ -60,7 +29,7 @@ const VALID_HEAD_ELEMENT_TYPES = [
   'template',
 ]
 
-function snippetToElement(snippet: Pick<Snippet, 'id' | 'code'>): (string | JSX.Element)[] {
+export function snippetToElement(snippet: Pick<Snippet, 'id' | 'code'>): (string | JSX.Element)[] {
   return Children.map(parse(snippet.code), element => {
     if (typeof element === 'string') return element
 
@@ -76,7 +45,10 @@ function snippetToElement(snippet: Pick<Snippet, 'id' | 'code'>): (string | JSX.
   })
 }
 
-function renderSnippetAndExecuteScripts(snippet: Snippet, container: HTMLElement): () => void {
+export function renderSnippetAndExecuteScripts(
+  snippet: Snippet,
+  container: HTMLElement,
+): () => void {
   const virtualContainer = container.ownerDocument.createElement(container.tagName)
 
   virtualContainer.innerHTML = snippet.code
@@ -107,7 +79,7 @@ function renderSnippetAndExecuteScripts(snippet: Snippet, container: HTMLElement
   }
 }
 
-function cleanUpSnippet(snippet: Snippet): void {
+export function cleanUpSnippet(snippet: Snippet): void {
   if (snippet.cleanup == null) return
   try {
     const cleanUp = new Function(snippet.cleanup)
@@ -117,6 +89,6 @@ function cleanUpSnippet(snippet: Snippet): void {
   }
 }
 
-function getSnippetElementsFromDOM(snippet: Snippet) {
+export function getSnippetElementsFromDOM(snippet: Snippet) {
   return document.head.querySelectorAll(`[${SNIPPET_ID_ATRIBUTE_NAME}="${snippet.id}"]`)
 }
