@@ -29,7 +29,7 @@ const VALID_HEAD_ELEMENT_TYPES = [
   'template',
 ]
 
-export function snippetToElement(snippet: Pick<Snippet, 'id' | 'code'>): (string | JSX.Element)[] {
+export function snippetToElements(snippet: Pick<Snippet, 'id' | 'code'>): (string | JSX.Element)[] {
   return Children.map(parse(snippet.code), element => {
     if (typeof element === 'string') return element
 
