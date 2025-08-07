@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.25.0-canary.6
+
+### Patch Changes
+
+- 7c7e114: fix: "Do not add <script> tags using next/head" warning when running in Pages Router
+
 ## 0.25.0-canary.5
 
 ### Patch Changes
