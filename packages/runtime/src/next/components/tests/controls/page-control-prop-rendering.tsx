@@ -11,7 +11,7 @@ import { type Data, type ValueType, type DataType, ControlDefinition } from '@ma
 import { type CacheData } from '../../../../api/react'
 import { ElementData } from '../../../../state/react-page'
 import { ReactRuntime } from '../../../../react'
-import { MakeswiftComponent } from '../../MakeswiftComponent'
+import { MakeswiftComponent } from '../../../../runtimes/react/components/MakeswiftComponent'
 import { Page } from '../../page'
 import { isServer } from '../../../../utils/is-server'
 import * as Testing from '../../../testing'
