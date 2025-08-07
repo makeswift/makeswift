@@ -2,7 +2,7 @@ import { ReactRuntime } from '../../runtimes/react/react-runtime'
 import { RuntimeProvider } from '../../runtimes/react/components/RuntimeProvider'
 
 import { FrameworkProvider } from '../components/framework-provider'
-import { RootStyleRegistry } from '../root-style-registry'
+import { NextRootStyleRegistry } from '../root-style-registry'
 
 export function ReactProvider({
   children,
@@ -18,7 +18,7 @@ export function ReactProvider({
   return (
     <FrameworkProvider forcePagesRouter={forcePagesRouter}>
       <RuntimeProvider previewMode={previewMode} runtime={runtime}>
-        <RootStyleRegistry>{children}</RootStyleRegistry>
+        <NextRootStyleRegistry>{children}</NextRootStyleRegistry>
       </RuntimeProvider>
     </FrameworkProvider>
   )
