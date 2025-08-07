@@ -6,7 +6,7 @@ export const PropsContext = createContext<{
   fallback: null,
 })
 
-function SlotProvider({
+export function SlotProvider({
   value,
   children,
 }: {
@@ -15,5 +15,3 @@ function SlotProvider({
 }) {
   return <PropsContext.Provider value={value}>{children}</PropsContext.Provider>
 }
-
-export default SlotProvider
