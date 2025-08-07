@@ -5,7 +5,7 @@ import { act } from 'react-dom/test-utils'
 import { render, screen } from '@testing-library/react'
 import { ReactRuntime } from '../../../react'
 import * as Testing from '../../testing'
-import { MakeswiftComponent } from '../MakeswiftComponent'
+import { MakeswiftComponent } from '../../../runtimes/react/components/MakeswiftComponent'
 import {
   type MakeswiftComponentSnapshotMetadata,
   type MakeswiftComponentDocument,

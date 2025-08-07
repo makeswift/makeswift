@@ -1,7 +1,7 @@
 export type { PageProps } from './components/page'
 export { Page } from './components/page'
-export { MakeswiftComponent } from './components/MakeswiftComponent'
-export { Slot } from './components/Slot'
+export { MakeswiftComponent } from '../runtimes/react/components/MakeswiftComponent'
+export { Slot } from '../runtimes/react/components/Slot'
 export type {
   MakeswiftPage,
   MakeswiftPageDocument,
