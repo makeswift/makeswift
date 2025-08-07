@@ -34,3 +34,21 @@ export async function testMakeswiftPageHeadRendering(
     ),
   )
 }
+
+export async function testMakeswiftPageRendering(
+  props: ComponentPropsWithoutRef<typeof MakeswiftPage>,
+  { forcePagesRouter = false }: { forcePagesRouter?: boolean } = {},
+) {
+  const runtime = new ReactRuntime()
+
+  return await act(async () =>
+    render(
+      <ReactProvider runtime={runtime} previewMode={false} forcePagesRouter={forcePagesRouter}>
+        <MakeswiftPage {...props} />
+      </ReactProvider>,
+      {
+        container: document.body.appendChild(document.createElement('div')),
+      },
+    ),
+  )
+}

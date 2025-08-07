@@ -1,0 +1,173 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`correctly renders image component 1`] = `
+.emotion-0 {
+  line-height: 0;
+  overflow: hidden;
+}
+
+.emotion-1 {
+  max-width: 100%;
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-1 {
+    width: 90%;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-1 {
+    width: 90%;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-1 {
+    width: 90%;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-2 {
+    opacity: 1;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-2 {
+    opacity: 1;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-2 {
+    opacity: 1;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-3 {
+    margin-top: 20px;
+    margin-right: auto;
+    margin-bottom: 25px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-3 {
+    margin-top: 20px;
+    margin-right: auto;
+    margin-bottom: 25px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-3 {
+    margin-top: 20px;
+    margin-right: auto;
+    margin-bottom: 25px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-4 {
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-4 {
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-4 {
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-5 {
+    border-top: 2px solid hsla(360,97.873924%,52.965%,1);
+    border-right: 2px solid hsla(360,97.873924%,52.965%,1);
+    border-bottom: 2px solid hsla(360,97.873924%,52.965%,1);
+    border-left: 2px solid hsla(360,97.873924%,52.965%,1);
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-5 {
+    border-top: 2px solid hsla(360,97.873924%,52.965%,1);
+    border-right: 2px solid hsla(360,97.873924%,52.965%,1);
+    border-bottom: 2px solid hsla(360,97.873924%,52.965%,1);
+    border-left: 2px solid hsla(360,97.873924%,52.965%,1);
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-5 {
+    border-top: 2px solid hsla(360,97.873924%,52.965%,1);
+    border-right: 2px solid hsla(360,97.873924%,52.965%,1);
+    border-bottom: 2px solid hsla(360,97.873924%,52.965%,1);
+    border-left: 2px solid hsla(360,97.873924%,52.965%,1);
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-6 {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-6 {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-6 {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+  }
+}
+
+<div
+  class="emotion-0 emotion-1 emotion-2 emotion-3 emotion-4 emotion-5 emotion-6 emotion-7"
+  id="test-image"
+>
+  <img
+    alt="Hill chart"
+    data-nimg="1"
+    decoding="async"
+    height="1119"
+    sizes="100vw"
+    src="/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=3840&q=75"
+    srcset="/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=640&q=75 640w, /_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=750&q=75 750w, /_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=828&q=75 828w, /_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=1080&q=75 1080w, /_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=1200&q=75 1200w, /_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=1920&q=75 1920w, /_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=2048&q=75 2048w, /_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=3840&q=75 3840w"
+    style="color: transparent; width: 100%; height: auto;"
+    width="2700"
+  />
+</div>
+`;
