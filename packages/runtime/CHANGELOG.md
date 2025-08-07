@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.25.0-canary.8
+
+### Minor Changes
+
+- e7ae1f8: [**BREAKING CHANGE**] remove obsolete `PageProvider` component, `usePageId` hook
+
 ## 0.25.0-canary.7
 
 ### Patch Changes
