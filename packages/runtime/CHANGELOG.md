@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.25.0-canary.7
+
+### Patch Changes
+
+- 0465c84: feat: framework-independent `RootStyleRegistry` implementation
+
 ## 0.25.0-canary.6
 
 ### Patch Changes
