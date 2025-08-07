@@ -1,6 +1,10 @@
 import { randomUUID } from 'crypto'
 
-import { type MakeswiftPageSnapshot, type MakeswiftComponentSnapshot } from '../../client'
+import {
+  type MakeswiftPageSnapshot,
+  type MakeswiftPageDocument,
+  type MakeswiftComponentSnapshot,
+} from '../../client'
 import { CacheData } from '../../api/react'
 import { type ElementData } from '../../state/react-page'
 import { MakeswiftComponentType } from '../../components'
@@ -26,25 +30,35 @@ export function createRootComponent(elements: ElementData[], rootId?: string) {
   }
 }
 
+const isDocument = (
+  elementDataOrDocument: ElementData | MakeswiftPageDocument,
+): elementDataOrDocument is MakeswiftPageDocument =>
+  'snippets' in elementDataOrDocument ||
+  'fonts' in elementDataOrDocument ||
+  'meta' in elementDataOrDocument ||
+  'seo' in elementDataOrDocument
+
 export function createMakeswiftPageSnapshot(
-  elementData: ElementData,
+  elementDataOrDocument: ElementData | MakeswiftPageDocument,
   {
     cacheData = {},
     locale = null,
   }: { cacheData?: Partial<MakeswiftPageSnapshot['cacheData']>; locale?: string | null } = {},
 ): MakeswiftPageSnapshot {
   return {
-    document: {
-      id: 'test-page-id',
-      site: { id: 'test-site-id' },
-      data: elementData,
-      snippets: [],
-      fonts: [],
-      meta: {},
-      seo: {},
-      localizedPages: [],
-      locale,
-    },
+    document: isDocument(elementDataOrDocument)
+      ? elementDataOrDocument
+      : {
+          id: 'test-page-id',
+          site: { id: 'test-site-id' },
+          data: elementDataOrDocument,
+          snippets: [],
+          fonts: [],
+          meta: {},
+          seo: {},
+          localizedPages: [],
+          locale,
+        },
     cacheData: {
       ...CacheData.empty(),
       ...cacheData,

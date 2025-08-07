@@ -1,34 +1,14 @@
 /** @jest-environment jsdom */
 
 import '@testing-library/jest-dom'
-import { act } from 'react-dom/test-utils'
-import { render } from '@testing-library/react'
-import { ReactRuntime } from '../../../react'
-import * as Testing from '../../testing'
-import { type MakeswiftPageSnapshot, type MakeswiftPageDocument } from '../../../client'
-import { type CacheData } from '../../../api/react'
-import { Page as MakeswiftPage } from '../page'
-import { ComponentPropsWithoutRef } from 'react'
+import { type MakeswiftPageDocument } from '../../../client'
 
-const NoOpComponentType = 'NoOpComponent'
-function NoOpComponent() {
-  return <></>
-}
+import { createMakeswiftPageSnapshot, testMakeswiftPageHeadRendering } from '../../testing'
 
-const pageDocumentFixture = {
-  id: '2222-2222-2222-2222',
-  site: {
-    id: '1111-1111-1111-1111',
-  },
-  data: {
-    type: NoOpComponentType,
-    key: '0000-0000-0000-0000',
-    props: {},
-  },
-  snippets: [],
-  fonts: [],
-  localizedPages: [],
-  locale: null,
+import { pageDocument } from './__fixtures__/page-document'
+
+const pageDocumentFixture: MakeswiftPageDocument = {
+  ...pageDocument,
   meta: {
     title: 'Test Title',
     description: 'Test Description',
@@ -50,42 +30,6 @@ const pageDocumentFixture = {
   },
 }
 
-function createMakeswiftPageSnapshot(
-  document: MakeswiftPageDocument,
-  cacheData: CacheData = {
-    apiResources: {},
-    localizedResourcesMap: {},
-  },
-): MakeswiftPageSnapshot {
-  return {
-    document,
-    cacheData,
-  }
-}
-
-async function testMakeswiftPageMetadataRendering(
-  props: ComponentPropsWithoutRef<typeof MakeswiftPage>,
-) {
-  const runtime = new ReactRuntime()
-
-  runtime.registerComponent(NoOpComponent, {
-    type: NoOpComponentType,
-    label: 'NoOp Component',
-    props: {},
-  })
-
-  return await act(async () =>
-    render(
-      <Testing.ReactProvider runtime={runtime} previewMode={false}>
-        <MakeswiftPage {...props} />
-      </Testing.ReactProvider>,
-      {
-        container: document.body.appendChild(document.createElement('head')),
-      },
-    ),
-  )
-}
-
 function getPageMetaTags(container: HTMLElement): { name: string; content: string }[] {
   const metaTags = container.getElementsByTagName('meta')
   return Array.from(metaTags).filter(({ name }) => name !== 'makeswift-draft-info')
@@ -96,7 +40,7 @@ describe('MakeswiftPage', () => {
     test('renders all metadata by default (without passing prop)', async () => {
       const snapshot = createMakeswiftPageSnapshot(pageDocumentFixture)
 
-      const render = await testMakeswiftPageMetadataRendering({ snapshot })
+      const render = await testMakeswiftPageHeadRendering({ snapshot })
       expect(render.container).toMatchSnapshot()
     })
 
@@ -117,7 +61,7 @@ describe('MakeswiftPage', () => {
     ])(`renders all metadata when passing $label`, async ({ metadata }) => {
       const snapshot = createMakeswiftPageSnapshot(pageDocumentFixture)
 
-      const render = await testMakeswiftPageMetadataRendering({ snapshot, metadata })
+      const render = await testMakeswiftPageHeadRendering({ snapshot, metadata })
       expect(render.container).toMatchSnapshot()
     })
 
@@ -142,7 +86,7 @@ describe('MakeswiftPage', () => {
     ])(`does NOT render any page metadata when passing $label`, async ({ metadata }) => {
       const snapshot = createMakeswiftPageSnapshot(pageDocumentFixture)
 
-      const render = await testMakeswiftPageMetadataRendering({ snapshot, metadata })
+      const render = await testMakeswiftPageHeadRendering({ snapshot, metadata })
       expect(render.container).toMatchSnapshot()
       expect(getPageMetaTags(render.container).length).toBe(0)
       expect(render.container.getElementsByTagName('link').length).toBe(0)
@@ -152,7 +96,7 @@ describe('MakeswiftPage', () => {
       const snapshot = createMakeswiftPageSnapshot(pageDocumentFixture)
 
       // Only render title, description, and keywords
-      const render = await testMakeswiftPageMetadataRendering({
+      const render = await testMakeswiftPageHeadRendering({
         snapshot,
         metadata: {
           title: true,

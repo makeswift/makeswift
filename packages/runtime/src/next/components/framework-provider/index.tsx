@@ -7,8 +7,11 @@ import { context as appRouterContext } from './app-router'
 import { context as pagesRouterContext } from './pages-router'
 import { FrameworkContext } from '../../../runtimes/react/components/framework-context'
 
-export function FrameworkProvider({ children }: PropsWithChildren) {
-  const isPagesRouter = useIsPagesRouter()
+export function FrameworkProvider({
+  children,
+  forcePagesRouter,
+}: PropsWithChildren<{ forcePagesRouter?: boolean }>) {
+  const isPagesRouter = useIsPagesRouter() || forcePagesRouter
   const context = useMemo(
     () => (isPagesRouter ? pagesRouterContext : appRouterContext),
     [isPagesRouter],
