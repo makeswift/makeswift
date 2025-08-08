@@ -1,0 +1,315 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`correctly renders box component with background image 1`] = `
+.emotion-0 {
+  position: relative;
+}
+
+.emotion-0>* {
+  border-radius: inherit;
+  height: inherit;
+}
+
+.emotion-0>:last-child {
+  position: relative;
+}
+
+.emotion-1 {
+  max-width: 100%;
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-1 {
+    width: 1160px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-1 {
+    width: 1160px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-1 {
+    width: 1160px;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-2 {
+    margin-top: 40px;
+    margin-right: auto;
+    margin-bottom: 60px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-2 {
+    margin-top: 40px;
+    margin-right: auto;
+    margin-bottom: 60px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-2 {
+    margin-top: 40px;
+    margin-right: auto;
+    margin-bottom: 60px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-3 {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-3 {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-3 {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+  }
+}
+
+.emotion-4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-5 {
+    -webkit-align-self: auto;
+    -ms-flex-item-align: auto;
+    align-self: auto;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-5 {
+    -webkit-align-self: auto;
+    -ms-flex-item-align: auto;
+    align-self: auto;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-5 {
+    -webkit-align-self: auto;
+    -ms-flex-item-align: auto;
+    align-self: auto;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .emotion-6 {
+    opacity: 1;
+    -webkit-transition: all 0ms;
+    transition: all 0ms;
+  }
+
+  .emotion-6>div>.grid-item {
+    opacity: 1;
+  }
+}
+
+.emotion-7 {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-7 {
+    display: block;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-7 {
+    display: block;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-7 {
+    display: block;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-8 {
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 470px;
+    padding-left: 10px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-8 {
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 470px;
+    padding-left: 10px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-8 {
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 470px;
+    padding-left: 10px;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-10 {
+    border-top: 0px solid black;
+    border-right: 0px solid black;
+    border-bottom: 0px solid black;
+    border-left: 0px solid black;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-10 {
+    border-top: 0px solid black;
+    border-right: 0px solid black;
+    border-bottom: 0px solid black;
+    border-left: 0px solid black;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-10 {
+    border-top: 0px solid black;
+    border-right: 0px solid black;
+    border-bottom: 0px solid black;
+    border-left: 0px solid black;
+  }
+}
+
+.emotion-11 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-12 {
+    -webkit-align-content: flex-start;
+    -ms-flex-line-pack: flex-start;
+    align-content: flex-start;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-12 {
+    -webkit-align-content: flex-start;
+    -ms-flex-line-pack: flex-start;
+    align-content: flex-start;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-12 {
+    -webkit-align-content: flex-start;
+    -ms-flex-line-pack: flex-start;
+    align-content: flex-start;
+  }
+}
+
+.emotion-13 {
+  width: 100%;
+  background: rgba(161, 168, 194, 0.18);
+  height: 80px;
+  padding: 8px;
+}
+
+<div
+  class="emotion-0 emotion-1 emotion-2 emotion-3 emotion-4 emotion-5 emotion-6"
+  id="test-box"
+>
+  <div
+    class="emotion-7"
+  >
+    <div
+      style="position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px;"
+    >
+      <div
+        style="opacity: 0.9; overflow: hidden; position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px;"
+      >
+        <img
+          alt=""
+          data-nimg="fill"
+          decoding="async"
+          sizes="100vw"
+          src="/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=3840&q=75"
+          srcset="/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=640&q=75 640w, /_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=750&q=75 750w, /_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=828&q=75 828w, /_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=1080&q=75 1080w, /_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=1200&q=75 1200w, /_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=1920&q=75 1920w, /_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=2048&q=75 2048w, /_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=3840&q=75 3840w"
+          style="position: absolute; height: 100%; width: 100%; left: 0px; top: 0px; right: 0px; bottom: 0px; object-fit: contain; object-position: 0% 0%; color: transparent;"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="emotion-8 emotion-9 emotion-10 emotion-11 emotion-12"
+  >
+    <div
+      class="emotion-13"
+      style="visibility: initial;"
+    >
+      <svg
+        height="100%"
+        style="overflow: visible;"
+        width="100%"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect
+          fill="none"
+          height="100%"
+          rx="4"
+          ry="4"
+          stroke="rgba(161, 168, 194, 0.40)"
+          stroke-dasharray="4 2"
+          stroke-width="2"
+          width="100%"
+          x="0"
+          y="0"
+        />
+      </svg>
+    </div>
+  </div>
+</div>
+`;
