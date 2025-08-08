@@ -1,6 +1,3 @@
-import NextImage from 'next/image'
-import type NextLegacyImageType from 'next/legacy/image'
-
 import { BackgroundsPropControllerValue, BackgroundsData } from '../../../../hooks'
 import { ResponsiveValue } from '../../../../../prop-controllers'
 import { ColorValue as Color } from '../../../../utils/types'
@@ -10,9 +7,7 @@ import BackgroundVideo from '../BackgroundVideo'
 import { CSSObject } from '@emotion/css'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 import { useResponsiveStyle } from '../../../../utils/responsive-style'
-import { major as nextMajorVersion } from '../../../../../next/next-version'
-
-const NextLegacyImage = NextImage as typeof NextLegacyImageType
+import { useFrameworkContext } from '../../../../../runtimes/react/components/hooks/use-framework-context'
 
 function getColor(color: Color | null | undefined) {
   if (color == null) return 'black'
@@ -152,33 +147,24 @@ function ImageBackground({
 }: ImageBackgroundProps) {
   const backgroundPosition = `${position.x}% ${position.y}%`
   const containerClassName = useStyle(containerStyle)
+  const { Image } = useFrameworkContext()
 
   if (repeat === 'no-repeat' && size !== 'auto' && publicUrl != null) {
     return (
       <Parallax strength={parallax}>
         {getParallaxProps => (
           <div {...getParallaxProps({ style: { opacity, overflow: 'hidden' } })}>
-            {nextMajorVersion < 13 ? (
-              <NextLegacyImage
-                src={publicUrl}
-                layout="fill"
-                objectPosition={backgroundPosition}
-                objectFit={size}
-                priority={priority}
-              />
-            ) : (
-              <NextImage
-                src={publicUrl}
-                alt={''}
-                fill
-                sizes="100vw"
-                style={{
-                  objectPosition: backgroundPosition,
-                  objectFit: size,
-                }}
-                priority={priority}
-              />
-            )}
+            <Image
+              src={publicUrl}
+              alt={''}
+              fill
+              sizes="100vw"
+              style={{
+                objectPosition: backgroundPosition,
+                objectFit: size,
+              }}
+              priority={priority}
+            />
           </div>
         )}
       </Parallax>
