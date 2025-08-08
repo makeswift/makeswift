@@ -1,8 +1,6 @@
 'use client'
 
 import { useState, useEffect, Ref, forwardRef } from 'react'
-import NextImage from 'next/image'
-import type NextLegacyImageType from 'next/legacy/image'
 
 import {
   LinkData,
@@ -18,11 +16,9 @@ import { cx } from '@emotion/css'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { useResponsiveStyle, useResponsiveWidth } from '../../utils/responsive-style'
 import { useFile } from '../../../runtimes/react/hooks/makeswift-api'
-import { major as nextMajorVersion } from '../../../next/next-version'
 import { useBreakpoints } from '../../../runtimes/react/hooks/use-breakpoints'
+import { useFrameworkContext } from '../../../runtimes/react/components/hooks/use-framework-context'
 import { match, P } from 'ts-pattern'
-
-const NextLegacyImage = NextImage as typeof NextLegacyImageType
 
 type Props = {
   id?: string
@@ -150,34 +146,24 @@ const ImageComponent = forwardRef(function Image(
     className,
   )
 
+  const { Image } = useFrameworkContext()
+
   if (!dimensions) return null
 
   return (
     <Container link={link} ref={ref} id={id} className={containerClassName}>
-      {nextMajorVersion < 13 ? (
-        <NextLegacyImage
-          layout="responsive"
-          src={imageSrc}
-          sizes={imageSizes(breakpoints, width)}
-          alt={altText}
-          width={dimensions.width}
-          height={dimensions.height}
-          priority={priority}
-        />
-      ) : (
-        <NextImage
-          src={imageSrc}
-          priority={priority}
-          sizes={imageSizes(breakpoints, width)}
-          alt={altText ?? ''}
-          width={dimensions.width}
-          height={dimensions.height}
-          style={{
-            width: '100%',
-            height: 'auto',
-          }}
-        />
-      )}
+      <Image
+        src={imageSrc}
+        priority={priority}
+        sizes={imageSizes(breakpoints, width)}
+        alt={altText ?? ''}
+        width={dimensions.width}
+        height={dimensions.height}
+        style={{
+          width: '100%',
+          height: 'auto',
+        }}
+      />
     </Container>
   )
 })
