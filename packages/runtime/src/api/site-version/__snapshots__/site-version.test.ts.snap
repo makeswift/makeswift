@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Site Version serializeSiteVersion returns base64 serialized site version 1`] = `"eyJ2ZXJzaW9uIjoidGVzdCIsInRva2VuIjoiZXlKMGVYQWlPaUpLVjFRaUxDSmhiR2NpT2lKSVV6STFOaUo5LmV5SnBjM01pT2lKdFlXdGxjM2RwWm5RdGNuVnVkR2x0WlNJc0ltbGhkQ0k2TVRjMU5EVTVPVEUwT1N3aVpYaHdJam8wTVRBeU5ETXlOelE1TENKaGRXUWlPaUowWlhOMElpd2ljM1ZpSWpvaWJXRnJaWE4zYVdaMExYSjFiblJwYldVaWZRLi0xQkRPbUVOMVExUWVLUDdxZmpQeUFrcktSamI0cTRxYXF5aFBCdk1uaGcifQ=="`;

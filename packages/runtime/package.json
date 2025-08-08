@@ -172,6 +172,7 @@
     "immutable": "^4.0.0-rc.12",
     "is-hotkey": "^0.1.4",
     "js-base64": "^3.7.7",
+    "jwt-decode": "^4.0.0",
     "ot-json0": "^1.1.0",
     "parse5": "^7.1.2",
     "path-to-regexp": "^6.2.1",

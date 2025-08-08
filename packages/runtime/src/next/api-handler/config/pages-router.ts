@@ -3,10 +3,11 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 import { type ApiResponse } from '../../../api-handler/request-response'
 
-import { redirectPreviewHandler } from '../handlers/redirect-preview'
+import { pagesRouterRedirectPreviewHandler } from '../handlers/pages-router-redirect-preview'
 import { PRERENDER_BYPASS_COOKIE, PREVIEW_DATA_COOKIE } from '../draft'
 
 import { validateApiRoute, type ApiHandlerConfig } from './base'
+import { MakeswiftClient } from '../../../client'
 
 export type ApiHandlerArgs = [NextApiRequest, NextApiResponse]
 export const argsPattern = [P.any, P.any] as const
@@ -14,11 +15,13 @@ export const argsPattern = [P.any, P.any] as const
 export async function config({
   req,
   res,
-  apiKey,
+  apiKey: _apiKey,
+  client,
 }: {
   req: NextApiRequest
   res: NextApiResponse
   apiKey: string
+  client: MakeswiftClient
 }): Promise<ApiHandlerConfig> {
   return {
     req: {
@@ -30,9 +33,7 @@ export async function config({
       },
     },
     route: validateApiRoute(await apiRequestParams(req)),
-    manifest: {
-      previewMode: true,
-    },
+    manifest: {},
     draftCookieNames: [PRERENDER_BYPASS_COOKIE, PREVIEW_DATA_COOKIE],
     sendResponse: async (apiResponse: ApiResponse): Promise<Response | void> => {
       const headers = responseHeaders(apiResponse.headers)
@@ -56,8 +57,8 @@ export async function config({
       }
     },
     customRoutes: async (route: string) => {
-      if (route === '/preview') {
-        return { res: await redirectPreviewHandler(req, res, { apiKey }) }
+      if (route === '/redirect-preview') {
+        return { res: await pagesRouterRedirectPreviewHandler(req, res, client) }
       }
 
       return null
