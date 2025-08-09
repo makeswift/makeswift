@@ -33,6 +33,7 @@ export default async function Page(props: { params: ParsedUrlQuery }) {
     locale: params.lang,
   })
 
+  console.log('Rendering page:', JSON.stringify(snapshot, null, 2))
   if (snapshot == null) return notFound()
 
   return <MakeswiftPage snapshot={snapshot} />
