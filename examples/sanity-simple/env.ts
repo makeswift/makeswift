@@ -2,6 +2,9 @@ import { createEnv } from '@t3-oss/env-nextjs'
 import { z } from 'zod'
 
 export const env = createEnv({
+  client: {
+    NEXT_PUBLIC_SITE_URL: z.string().url().default('https://example.com'),
+  },
   server: {
     MAKESWIFT_SITE_API_KEY: z.string().min(1),
     SANITY_ACCESS_TOKEN: z.string().min(1),
@@ -11,5 +14,6 @@ export const env = createEnv({
     MAKESWIFT_SITE_API_KEY: process.env.MAKESWIFT_SITE_API_KEY,
     SANITY_ACCESS_TOKEN: process.env.SANITY_ACCESS_TOKEN,
     SANITY_PROJECT_ID: process.env.SANITY_PROJECT_ID,
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
   },
 })
