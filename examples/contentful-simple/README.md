@@ -45,6 +45,7 @@ Create a `.env.local` file and add your credentials:
 MAKESWIFT_SITE_API_KEY=your_makeswift_api_key
 CONTENTFUL_SPACE_ID=your_space_id
 CONTENTFUL_ACCESS_TOKEN=your_access_token
+NEXT_PUBLIC_SITE_URL=your_site_url
 ```
 
 ### 3. Set up your content model in Contentful
