@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.25.0-canary.9
+
+### Patch Changes
+
+- daf11da: feat: decouple built-in `Image` and `Backgrounds` components from `next/image`
+
 ## 0.25.0-canary.8
 
 ### Minor Changes
