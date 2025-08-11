@@ -15,8 +15,7 @@ import {
   getBreakpointMediaQuery,
 } from '@makeswift/controls'
 
-import { useCache } from '../../../next/root-style-registry'
-
+import { useCache } from '../root-style-registry'
 import { styleV1Css } from '../controls/style'
 import { typographyCss } from '../controls/typography'
 

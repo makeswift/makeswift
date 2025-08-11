@@ -5,7 +5,8 @@ import { useRef } from 'react'
 import { CSSInterpolation, serializeStyles } from '@emotion/serialize'
 import { StyleSheet } from '@emotion/sheet'
 import { insertStyles } from '@emotion/utils'
-import { useCache } from '../../next/root-style-registry'
+
+import { useCache } from './root-style-registry'
 
 const isServer = typeof window === 'undefined'
 const useInsertionEffectSpecifier = 'useInsertionEffect'
