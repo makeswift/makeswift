@@ -53,7 +53,7 @@ export function DraftToolbar({ onExitDraft }: Props) {
       <div className="exit-preview-container">
         <button className="exit-preview-button" onClick={onExitDraft}>
           <img src={makeswiftIcon} alt="Makeswift Logo" width={18} height={18} />
-          <span className="label">Exit Preview</span>
+          <span className="label">Exit preview</span>
         </button>
       </div>
     </>
