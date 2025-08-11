@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import { BlogPost } from '@/components/blog-post'
+import { env } from '@/env'
 import { getAllBlogs, getBlogPost } from '@/lib/contentful/fetchers'
 import { Slot } from '@/lib/makeswift/slot'
 import { SectionLayout } from '@/vibes/soul/sections/section-layout'
@@ -26,52 +27,46 @@ export async function generateMetadata({
     }
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
-  const blogUrl = `${baseUrl}/blog/${slug}`
+  const blogUrl = `${env.NEXT_PUBLIC_SITE_URL}/blog/${slug}`
 
-  const plainTextDescription =
+  const { banner, title, author } = blog
+
+  const imageMetadata =
+    banner && banner.url
+      ? {
+          url: banner.url,
+          width: banner.width ?? undefined,
+          height: banner.height ?? undefined,
+          alt: banner.title || title || 'Blog post image',
+          type: banner.contentType ?? undefined,
+        }
+      : undefined
+
+  const description =
     blog.description || `Read ${blog.title} - A blog post by ${blog.author?.name || 'our team'}.`
 
-  const blogImage = blog.banner?.url
-  const imageMetadata = blogImage
-    ? {
-        url: blogImage,
-        width: blog.banner?.width || 1200,
-        height: blog.banner?.height || 630,
-        alt: blog.banner?.title || blog.title || 'Blog post image',
-        type: blog.banner?.contentType || 'image/jpeg',
-      }
-    : undefined
-
   return {
-    title: blog.title,
-    description: plainTextDescription,
+    title,
+    description,
     alternates: {
       canonical: blogUrl,
     },
-    keywords: [
-      'blog',
-      'article',
-      blog.title ?? '',
-      blog.author?.name || '',
-    ].filter(Boolean),
-    authors: blog.author?.name ? [{ name: blog.author.name }] : undefined,
+    authors: author?.name ? [{ name: author.name }] : undefined,
     openGraph: {
-      title: blog.title || '',
-      description: plainTextDescription,
+      title: title ?? undefined,
+      description,
       url: blogUrl,
-      siteName: 'Your Blog Site', // Replace with your actual site name
       type: 'article',
       locale: 'en_US',
       images: imageMetadata ? [imageMetadata] : undefined,
       publishedTime: blog.feedDate,
-      authors: blog.author?.name ? [blog.author.name] : undefined,
+      authors: author?.name ? [author.name] : undefined,
     },
     twitter: {
-      card: 'summary_large_image',
-      title: blog.title || '',
-      description: plainTextDescription,
-      images: imageMetadata ? [imageMetadata.url] : undefined,
+      card: imageMetadata ? 'summary_large_image' : 'summary',
+      title: title ?? undefined,
+      description,
+      images: imageMetadata ? [imageMetadata] : undefined,
     },
   }
 }
