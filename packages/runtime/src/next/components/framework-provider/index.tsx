@@ -1,6 +1,8 @@
 'use client'
 
 import { type PropsWithChildren, useMemo } from 'react'
+import NextImage from 'next/image'
+
 import { useIsPagesRouter } from '../../hooks/use-is-pages-router'
 
 import { context as appRouterContext } from './app-router'
@@ -13,7 +15,10 @@ export function FrameworkProvider({
 }: PropsWithChildren<{ forcePagesRouter?: boolean }>) {
   const isPagesRouter = useIsPagesRouter() || forcePagesRouter
   const context = useMemo(
-    () => (isPagesRouter ? pagesRouterContext : appRouterContext),
+    () => ({
+      ...(isPagesRouter ? pagesRouterContext : appRouterContext),
+      Image: NextImage,
+    }),
     [isPagesRouter],
   )
 

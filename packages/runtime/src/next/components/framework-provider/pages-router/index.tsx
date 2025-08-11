@@ -4,7 +4,7 @@ import { type FrameworkContext } from '../../../../runtimes/react/components/fra
 
 import { HeadSnippet } from './HeadSnippet'
 
-export const context: FrameworkContext = {
+export const context: Pick<FrameworkContext, 'Head' | 'HeadSnippet'> = {
   Head,
   HeadSnippet,
 }
