@@ -4,10 +4,11 @@ import { type PropsWithChildren, useMemo } from 'react'
 import NextImage from 'next/image'
 
 import { useIsPagesRouter } from '../../hooks/use-is-pages-router'
+import { FrameworkContext } from '../../../runtimes/react/components/framework-context'
 
 import { context as appRouterContext } from './app-router'
 import { context as pagesRouterContext } from './pages-router'
-import { FrameworkContext } from '../../../runtimes/react/components/framework-context'
+import { Link } from './link'
 
 export function FrameworkProvider({
   children,
@@ -18,6 +19,7 @@ export function FrameworkProvider({
     () => ({
       ...(isPagesRouter ? pagesRouterContext : appRouterContext),
       Image: NextImage,
+      Link,
     }),
     [isPagesRouter],
   )

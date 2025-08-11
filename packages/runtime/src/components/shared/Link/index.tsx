@@ -1,14 +1,13 @@
 'use client'
 
 import { ComponentPropsWithoutRef, forwardRef, MouseEvent } from 'react'
-import NextLink from 'next/link'
 
 import { LinkData } from '@makeswift/prop-controllers'
 
 import { Link as LinkDef } from '../../../controls/link'
 
-import { useIsPagesRouter } from '../../../next/hooks/use-is-pages-router'
 import { useResolvedValue } from '../../../runtimes/react/hooks/use-resolved-value'
+import { useFrameworkContext } from '../../../runtimes/react/components/hooks/use-framework-context'
 
 type BaseProps = {
   link?: LinkData
@@ -16,21 +15,6 @@ type BaseProps = {
 }
 
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'a'>, keyof BaseProps>
-
-// workaround for https://github.com/vercel/next.js/issues/66650
-const isValidHref = (href: string) => {
-  try {
-    const bases = ['http://n', 'https://n']
-    // - if `href` is a relative path, it will be resolved relative to the base URL
-    // - if `href` is a full URL, the base URL will be ignored, even if there is a mismatch of protocols
-    // - if `href` is an incomplete, protocol-only URL with a protocol that
-    //   conflicts with one of the base URL, this will throw
-    bases.forEach(base => new URL(href, base))
-  } catch (_) {
-    return false
-  }
-  return true
-}
 
 export const Link = forwardRef<HTMLAnchorElement, Props>(function Link(
   { link, onClick = () => {}, ...restOfProps }: Props,
@@ -59,28 +43,16 @@ export const Link = forwardRef<HTMLAnchorElement, Props>(function Link(
     return resolvedOnClick?.(event)
   }
 
-  const useNextLink =
-    href != null &&
-    link &&
-    (link.type === 'OPEN_PAGE' || (link.type === 'OPEN_URL' && isValidHref(link.payload.url)))
+  const { Link: LinkComponent } = useFrameworkContext()
 
-  const isPagesRouter = useIsPagesRouter()
-
-  if (useNextLink) {
-    return (
-      <NextLink
-        {...restOfProps}
-        ref={ref}
-        target={target}
-        onClick={handleClick}
-        href={href}
-        {...(isPagesRouter ? { locale: false } : {})}
-        // Next.js v12 has legacyBehavior set to true by default
-        legacyBehavior={false}
-      />
-    )
-  }
-
-  // eslint-disable-next-line
-  return <a {...restOfProps} ref={ref} href={href} target={target} onClick={handleClick} />
+  return (
+    <LinkComponent
+      {...restOfProps}
+      linkType={link?.type}
+      ref={ref}
+      href={href}
+      target={target}
+      onClick={handleClick}
+    />
+  )
 })
