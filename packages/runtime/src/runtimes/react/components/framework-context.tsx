@@ -1,4 +1,16 @@
-import { createContext, type ReactNode, type PropsWithChildren, type CSSProperties } from 'react'
+import {
+  createContext,
+  type ReactNode,
+  type PropsWithChildren,
+  type CSSProperties,
+  type ComponentPropsWithoutRef,
+  type MouseEvent,
+  type ForwardRefExoticComponent,
+  type RefAttributes,
+  forwardRef,
+} from 'react'
+
+import { type LinkData } from '@makeswift/prop-controllers'
 
 import { type Snippet } from '../../../client'
 
@@ -17,10 +29,18 @@ type ImageComponent = (props: {
   style?: CSSProperties
 }) => ReactNode
 
+type LinkProps = Omit<ComponentPropsWithoutRef<'a'>, 'onClick'> & {
+  linkType?: LinkData['type']
+  onClick?: (event: MouseEvent<HTMLAnchorElement>) => unknown
+}
+
+type LinkComponent = ForwardRefExoticComponent<RefAttributes<HTMLAnchorElement> & LinkProps>
+
 export type FrameworkContext = {
   Head: HeadComponent
   HeadSnippet: HeadSnippet
   Image: ImageComponent
+  Link: LinkComponent
 }
 
 // React 19 automatically hoists metadata tags to the <head>
@@ -43,8 +63,13 @@ export const DefaultImage: ImageComponent = ({ priority, fill, style, ...props }
   />
 )
 
+export const DefaultLink: LinkComponent = forwardRef<HTMLAnchorElement, LinkProps>(
+  ({ linkType, ...props }, ref) => <a {...props} ref={ref} />,
+)
+
 export const FrameworkContext = createContext<FrameworkContext>({
   Head: DefaultHead,
   HeadSnippet: BaseHeadSnippet,
   Image: DefaultImage,
+  Link: DefaultLink,
 })
