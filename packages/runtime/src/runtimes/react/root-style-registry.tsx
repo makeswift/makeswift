@@ -1,3 +1,5 @@
+'use client'
+
 import createCache, { EmotionCache } from '@emotion/cache'
 import { cache } from '@emotion/css'
 import { ReactNode, createContext, useContext } from 'react'
