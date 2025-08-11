@@ -4,8 +4,9 @@ import { EmotionCache } from '@emotion/cache'
 import { serializeStyles } from '@emotion/serialize'
 import { registerStyles, insertStyles, type SerializedStyles } from '@emotion/utils'
 
-import { useCache } from '../../next/root-style-registry'
 import { isServer } from '../../utils/is-server'
+
+import { useCache } from './root-style-registry'
 
 const useInsertionEffectSpecifier = 'useInsertionEffect'
 const useInsertionEffect = React[useInsertionEffectSpecifier] ?? React.useLayoutEffect
