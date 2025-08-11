@@ -1,0 +1,319 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`correctly renders button component with CALL_PHONE link 1`] = `
+<a
+  class="[redacted]"
+  href="tel:15551234567"
+  id="test-button"
+>
+  Button Text
+</a>
+`;
+
+exports[`correctly renders button component with OPEN_PAGE link 1`] = `
+<a
+  class="[redacted]"
+  data-next-link="true"
+  data-next-link-legacy-behavior="false"
+  href="/about"
+  id="test-button"
+  target="_self"
+>
+  Button Text
+</a>
+`;
+
+exports[`correctly renders button component with OPEN_URL link  1`] = `
+<a
+  class="[redacted]"
+  data-next-link="true"
+  data-next-link-legacy-behavior="false"
+  href=""
+  id="test-button"
+  target="_self"
+>
+  Button Text
+</a>
+`;
+
+exports[`correctly renders button component with OPEN_URL link 1`] = `
+<a
+  class="[redacted]"
+  data-next-link="true"
+  data-next-link-legacy-behavior="false"
+  href="https://www.makeswift.com/"
+  id="test-button"
+  target="_self"
+>
+  Button Text
+</a>
+`;
+
+exports[`correctly renders button component with OPEN_URL link file: 1`] = `
+<a
+  class="[redacted]"
+  data-next-link="true"
+  data-next-link-legacy-behavior="false"
+  href="file:"
+  id="test-button"
+  target="_self"
+>
+  Button Text
+</a>
+`;
+
+exports[`correctly renders button component with OPEN_URL link file:// 1`] = `
+<a
+  class="[redacted]"
+  data-next-link="true"
+  data-next-link-legacy-behavior="false"
+  href="file://"
+  id="test-button"
+  target="_self"
+>
+  Button Text
+</a>
+`;
+
+exports[`correctly renders button component with OPEN_URL link file://server/path 1`] = `
+<a
+  class="[redacted]"
+  data-next-link="true"
+  data-next-link-legacy-behavior="false"
+  href="file://server/path"
+  id="test-button"
+  target="_self"
+>
+  Button Text
+</a>
+`;
+
+exports[`correctly renders button component with OPEN_URL link http: 1`] = `
+<a
+  class="[redacted]"
+  href="http:"
+  id="test-button"
+  target="_self"
+>
+  Button Text
+</a>
+`;
+
+exports[`correctly renders button component with OPEN_URL link http:// 1`] = `
+<a
+  class="[redacted]"
+  href="http://"
+  id="test-button"
+  target="_self"
+>
+  Button Text
+</a>
+`;
+
+exports[`correctly renders button component with OPEN_URL link https: 1`] = `
+<a
+  class="[redacted]"
+  href="https:"
+  id="test-button"
+  target="_self"
+>
+  Button Text
+</a>
+`;
+
+exports[`correctly renders button component with OPEN_URL link https:// 1`] = `
+<a
+  class="[redacted]"
+  href="https://"
+  id="test-button"
+  target="_self"
+>
+  Button Text
+</a>
+`;
+
+exports[`correctly renders button component with OPEN_URL link mailto:alan@makeswift.com 1`] = `
+<a
+  class="[redacted]"
+  data-next-link="true"
+  data-next-link-legacy-behavior="false"
+  href="mailto:alan@makeswift.com"
+  id="test-button"
+  target="_self"
+>
+  Button Text
+</a>
+`;
+
+exports[`correctly renders button component with OPEN_URL link phone:+15551234567 1`] = `
+<a
+  class="[redacted]"
+  data-next-link="true"
+  data-next-link-legacy-behavior="false"
+  href="phone:+15551234567"
+  id="test-button"
+  target="_self"
+>
+  Button Text
+</a>
+`;
+
+exports[`correctly renders button component with SCROLL_TO_ELEMENT link 1`] = `
+<a
+  class="[redacted]"
+  href="#test-button"
+  id="test-button"
+>
+  Button Text
+</a>
+`;
+
+exports[`correctly renders button component with SEND_EMAIL link 1`] = `
+<a
+  class="[redacted]"
+  href="mailto:alan@makeswift.com?subject=Buttons&body="
+  id="test-button"
+>
+  Button Text
+</a>
+`;
+
+exports[`correctly renders button component with link 1`] = `
+.emotion-0 {
+  display: table;
+  border: 0;
+  outline: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  font-family: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  text-align: center;
+}
+
+.emotion-1 {
+  max-width: 100%;
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-1 {
+    width: auto;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-1 {
+    width: auto;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-1 {
+    width: auto;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-2 {
+    margin-top: 60px;
+    margin-right: auto;
+    margin-bottom: 80px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-2 {
+    margin-top: 60px;
+    margin-right: auto;
+    margin-bottom: 80px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-2 {
+    margin-top: 60px;
+    margin-right: auto;
+    margin-bottom: 80px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .emotion-3 {
+    color: hsla(0,0%,100%,1);
+    border-radius: 4px;
+    padding: 12px 16px;
+    font-size: 14px;
+    background: hsla(0,0%,0%,1);
+    border: none;
+    -webkit-transition: color 0.15s ease-in-out,background 0.15s ease-in-out,border 0.15s ease-in-out,box-shadow 0.15s ease-in-out;
+    transition: color 0.15s ease-in-out,background 0.15s ease-in-out,border 0.15s ease-in-out,box-shadow 0.15s ease-in-out;
+  }
+
+  .emotion-3:hover {
+    background: #000000;
+  }
+
+  .emotion-3:active {
+    background: #000000;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-3 {
+    color: hsla(0,0%,100%,1);
+    border-radius: 4px;
+    padding: 12px 16px;
+    font-size: 14px;
+    background: hsla(0,0%,0%,1);
+    border: none;
+    -webkit-transition: color 0.15s ease-in-out,background 0.15s ease-in-out,border 0.15s ease-in-out,box-shadow 0.15s ease-in-out;
+    transition: color 0.15s ease-in-out,background 0.15s ease-in-out,border 0.15s ease-in-out,box-shadow 0.15s ease-in-out;
+  }
+
+  .emotion-3:hover {
+    background: #000000;
+  }
+
+  .emotion-3:active {
+    background: #000000;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-3 {
+    color: hsla(0,0%,100%,1);
+    border-radius: 4px;
+    padding: 12px 16px;
+    font-size: 14px;
+    background: hsla(0,0%,0%,1);
+    border: none;
+    -webkit-transition: color 0.15s ease-in-out,background 0.15s ease-in-out,border 0.15s ease-in-out,box-shadow 0.15s ease-in-out;
+    transition: color 0.15s ease-in-out,background 0.15s ease-in-out,border 0.15s ease-in-out,box-shadow 0.15s ease-in-out;
+  }
+
+  .emotion-3:hover {
+    background: #000000;
+  }
+
+  .emotion-3:active {
+    background: #000000;
+  }
+}
+
+<a
+  class="emotion-0 emotion-1 emotion-2 emotion-3 emotion-4"
+  data-next-link="true"
+  data-next-link-legacy-behavior="false"
+  href="https://www.makeswift.com/"
+  id="test-button"
+  target="_self"
+>
+  Button Text
+</a>
+`;

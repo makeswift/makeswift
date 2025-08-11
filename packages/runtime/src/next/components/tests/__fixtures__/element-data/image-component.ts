@@ -97,6 +97,16 @@ export const imageComponentData = ({
       '@@makeswift/type': 'prop-controllers::element-id::v1',
       value: htmlId,
     },
+    link: {
+      '@@makeswift/type': 'prop-controllers::link::v1',
+      value: {
+        payload: {
+          openInNewTab: false,
+          url: 'https://www.makeswift.com/',
+        },
+        type: 'OPEN_URL',
+      },
+    },
     margin: {
       '@@makeswift/type': 'prop-controllers::margin::v1',
       value: [
