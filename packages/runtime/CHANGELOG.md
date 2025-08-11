@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.25.0-canary.10
+
+### Patch Changes
+
+- cd9ab15: feat: decouple built-in components from `next/link`
+
 ## 0.25.0-canary.9
 
 ### Patch Changes
