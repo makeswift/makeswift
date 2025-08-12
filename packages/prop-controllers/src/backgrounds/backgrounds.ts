@@ -13,21 +13,28 @@ import {
   Schema,
 } from '../prop-controllers'
 import { P, match } from 'ts-pattern'
-import {
-  ColorData,
-  colorDataSchema,
-  imageDataV0Schema,
-  imageDataV1Schema,
-} from '../data'
+import { imageDataV0Schema, imageDataV1Schema } from '../data'
 
-function copyColorData(
-  data: ColorData | null,
+const backgroundsColorDataSchema = z.object({
+  swatchId: z.string().nullable(),
+  alpha: z.number(),
+})
+
+type BackgroundsColorData = z.infer<typeof backgroundsColorDataSchema>
+
+function copyBackgroundsColorData(
+  data: BackgroundsColorData | null,
   context: CopyContext,
-): ColorData | null {
+): BackgroundsColorData | null {
   if (data == null) return data
+  if (data.swatchId == null) {
+    return { ...data }
+  }
+
   if (shouldRemoveResource(ContextResource.Swatch, data.swatchId, context)) {
     return null
   }
+
   return {
     ...data,
     swatchId: replaceResourceIfNeeded(
@@ -41,13 +48,13 @@ function copyColorData(
 const colorBackgroundDataSchema = z.object({
   type: z.literal('color'),
   id: z.string(),
-  payload: colorDataSchema.nullable(),
+  payload: backgroundsColorDataSchema.nullable(),
 })
 
 const gradientStopDataSchema = z.object({
   id: z.string(),
   location: z.number(),
-  color: colorDataSchema.nullable(),
+  color: backgroundsColorDataSchema.nullable(),
 })
 
 const gradientDataSchema = z.object({
@@ -134,7 +141,7 @@ const backgroundVideoAspectRatioDataSchema = z.union([
 
 const backgroundVideoDataSchema = z.object({
   url: z.string().optional(),
-  maskColor: colorDataSchema.nullable().optional(),
+  maskColor: backgroundsColorDataSchema.nullable().optional(),
   opacity: z.number().optional(),
   zoom: z.number().optional(),
   aspectRatio: backgroundVideoAspectRatioDataSchema.optional(),
@@ -288,15 +295,17 @@ export function getBackgroundsPropControllerSwatchIds(
       .flatMap(({ type, payload }) => {
         switch (type) {
           case 'color':
-            return payload == null ? [] : [payload.swatchId]
+            return payload?.swatchId == null ? [] : [payload.swatchId]
 
           case 'gradient':
             return payload.stops.flatMap((stop) =>
-              stop.color == null ? [] : stop.color.swatchId,
+              stop.color?.swatchId == null ? [] : stop.color.swatchId,
             )
 
           case 'video':
-            return payload.maskColor == null ? [] : [payload.maskColor.swatchId]
+            return payload.maskColor?.swatchId == null
+              ? []
+              : [payload.maskColor.swatchId]
 
           default:
             return []
@@ -317,7 +326,10 @@ function copyResponsiveBackgroundsData(
     value: override.value.flatMap((backgroundItem) => {
       return match([descriptor, backgroundItem])
         .with([P.any, { type: 'color' }], ([, item]) => {
-          return { ...item, payload: copyColorData(item.payload, ctx) }
+          return {
+            ...item,
+            payload: copyBackgroundsColorData(item.payload, ctx),
+          }
         })
         .with([P.any, { type: 'gradient' }], ([, item]) => {
           return {
@@ -326,7 +338,7 @@ function copyResponsiveBackgroundsData(
               ...item.payload,
               stops: item.payload.stops.map((stop) => ({
                 ...stop,
-                color: copyColorData(stop.color, ctx),
+                color: copyBackgroundsColorData(stop.color, ctx),
               })),
             },
           }
@@ -339,7 +351,7 @@ function copyResponsiveBackgroundsData(
               maskColor:
                 payload.maskColor === undefined
                   ? undefined
-                  : copyColorData(payload.maskColor, ctx),
+                  : copyBackgroundsColorData(payload.maskColor, ctx),
             },
           }
         })
