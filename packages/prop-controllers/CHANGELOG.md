@@ -1,5 +1,11 @@
 # @makeswift/prop-controllers
 
+## 0.4.6-canary.2
+
+### Patch Changes
+
+- 2ec2608: fix: support null swatch IDs for backgrounds prop controller color data
+
 ## 0.4.6-canary.1
 
 ### Patch Changes
