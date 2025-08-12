@@ -56,6 +56,29 @@ const backgrounds: BackgroundsPropControllerDataV1 = [
         type: 'video',
         payload: { maskColor: { swatchId: '[swatch4]', alpha: 100 } },
       },
+      {
+        id: '4',
+        type: 'color',
+        payload: { swatchId: null, alpha: 0.5 },
+      },
+      {
+        id: '5',
+        type: 'gradient',
+        payload: {
+          stops: [
+            {
+              id: 'stop1',
+              location: 0,
+              color: { swatchId: null, alpha: 0.6 },
+            },
+          ],
+        },
+      },
+      {
+        id: '6',
+        type: 'video',
+        payload: { maskColor: { swatchId: null, alpha: 0.07 } },
+      },
     ],
   },
 ]
