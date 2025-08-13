@@ -1,12 +1,12 @@
 fragment RichText on BlogpostModelBodyField {
   __typename
-  blocks
   value
   links
 }
 
 fragment BlogPostFields on BlogpostRecord {
   __typename
+  _publishedAt
   id
   title
   slug
