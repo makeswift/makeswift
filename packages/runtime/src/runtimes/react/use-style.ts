@@ -1,5 +1,5 @@
 import React from 'react'
-import { CSSObject } from '@emotion/css'
+import { type CSSObject } from '@emotion/serialize'
 import { EmotionCache } from '@emotion/cache'
 import { serializeStyles } from '@emotion/serialize'
 import { registerStyles, insertStyles, type SerializedStyles } from '@emotion/utils'

@@ -1,6 +1,6 @@
 'use client'
 
-import { CSSObject } from '@emotion/css'
+import { type CSSObject } from '@emotion/serialize'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { ResponsiveValue } from '../../../prop-controllers'
 import { useStyle } from '../../../runtimes/react/use-style'
