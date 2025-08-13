@@ -4,6 +4,10 @@ import { type BlogPost as FormattedBlogPost } from '@/vibes/soul/primitives/blog
 
 export type BlogPostFromQuery = NonNullable<NonNullable<GetBlogsQuery['articles']>[0]>
 
+const constructImageUrl = (url: string, domain: string): string => {
+  return url.startsWith('http') ? url : `${domain}${url}`
+}
+
 export const formatBlogs = (
   blogs: BlogPostFromQuery[],
   includeBody: boolean = true
@@ -31,9 +35,7 @@ export const formatBlog = (
     content: bodyContent,
     image: blog.cover
       ? {
-          src: blog.cover.url.startsWith('http')
-            ? blog.cover.url
-            : `${env.STRAPI_SERVER_DOMAIN}${blog.cover.url}`,
+          src: constructImageUrl(blog.cover.url, env.NEXT_PUBLIC_STRAPI_SERVER_URL),
           alt: blog.slug,
         }
       : null,

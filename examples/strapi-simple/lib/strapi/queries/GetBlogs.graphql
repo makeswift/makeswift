@@ -4,6 +4,10 @@ query GetBlogs {
     publishedAt
     cover {
       url
+      height
+      width
+      name
+      alternativeText
     }
     body
     slug
@@ -11,5 +15,6 @@ query GetBlogs {
     author {
       name
     }
+    feedDate
   }
 }
