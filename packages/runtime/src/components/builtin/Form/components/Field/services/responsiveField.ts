@@ -10,7 +10,7 @@ import {
   Value,
 } from '../../../context/FormContext'
 import { useResponsiveStyle } from '../../../../../utils/responsive-style'
-import { CSSObject } from '@emotion/css'
+import { type CSSObject } from '@emotion/serialize'
 
 export function getSizeHeight(size: Size): number {
   switch (size) {
