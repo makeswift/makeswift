@@ -40,20 +40,23 @@ strapi-simple/
 
 ### 2. Set up Strapi locally
 
-Create a new Strapi project (if you don't already have the `my-strapi-project` directory):
+Before jumping into Strapi with Makeswift, you'll need to create a new Strapi project. This will serve as your content management system, where you'll create and manage blog posts and authors.
+
+#### Install Strapi Server
+
+Before you begin, make sure you have Node.js version 20.19 or higher installed.
+
+For this guide, we’ll use the Strapi server as a standalone setup.
+
+In the desired parent directory, run the following command to create your Strapi project:
 
 ```bash
 npx create-strapi-app@latest my-strapi-project
 ```
 
-Navigate to the Strapi project directory and install dependencies:
+You can read the full guide on Strapi [here](https://docs.strapi.io/cms/quick-start)
 
-```bash
-cd ../my-strapi-project
-npm install
-```
-
-Start the Strapi development server:
+Navigate to the Strapi project directory and start the Strapi development server:
 
 ```bash
 npm run develop
@@ -75,18 +78,14 @@ This will:
 
 ### 4. Configure environment variables
 
-Navigate back to the Next.js project and create a `.env.local` file:
-
-```bash
-cd ../strapi-simple
-```
+Navigate back to the Makeswift project and create a `.env.local` file:
 
 Add your credentials to `.env.local`:
 
 ```
 MAKESWIFT_SITE_API_KEY=your_makeswift_api_key
 STRAPI_ACCESS_TOKEN=your_strapi_api_token_from_step_3
-STRAPI_SERVER_DOMAIN=http://localhost:1337
+NEXT_PUBLIC_STRAPI_SERVER_URL=http://localhost:1337
 ```
 
 ### 5. Generate TypeScript types
@@ -112,21 +111,35 @@ Your site will be available at `http://localhost:3000`. Ensure the strapi server
 
 The Strapi project comes pre-configured with all the necessary content types for a blog:
 
-#### Adding the Body Field
+#### Adding the `body` field
 
 Let's add a field called **body** to your Article content type so we can use rich text:
 
 1. In the Strapi admin panel, go to **Content-Type Builder**
 2. Select the **Article** content type
-3. Click **Add another field**
-4. Choose **Rich Text (Blocks)** as the field type
-5. Set the field name to `body`
+3. Click **Add another field in this collection type**
+4. Set the field name to `body`
+5. Choose **Rich Text (Blocks)** as the field type
 6. Configure the field settings:
    - Set as **Required** if desired
    - Enable **Blocks** for rich content formatting
-7. Click **Save**
+     Do not click "Finish", we will add another field.
 
-Publish a custom blog including the rich text body.
+#### Adding the `feedDate` field
+
+1. Click "Add another field"
+2. Set the field name to `feedDate`
+3. Choose **date (ex: 01/01/2025)** as the field type
+4. Click "Finish"
+
+Publish the changes by clicking "Save" on the top right.
+
+## Adding Entries
+
+1. Navigate to the **Content Manager**
+2. Select the **Article** collection type
+3. Click "Create new entry" on the top right
+4. Publish the blog with all the inserted information
 
 ## Building Blog Pages in Makeswift
 

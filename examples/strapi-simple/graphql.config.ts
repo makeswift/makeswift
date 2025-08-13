@@ -8,7 +8,7 @@ const config: LoadCodegenConfigResult['config'] = {
     'generated/strapi.ts': {
       documents: './**/*.graphql',
       schema: {
-        [`${process.env.STRAPI_SERVER_DOMAIN}/graphql`]: {
+        [`${process.env.NEXT_PUBLIC_STRAPI_SERVER_URL}/graphql`]: {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${process.env.STRAPI_ACCESS_TOKEN}`,
