@@ -96,9 +96,6 @@ exports[`Page Slot renders a placeholder when empty: snapshot 1`] = `
 exports[`Page Slot renders a slot with a clickable button: resolvedValue 1`] = `
 NodeList [
   .emotion-0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
@@ -108,9 +105,6 @@ NodeList [
 }
 
 .emotion-0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
@@ -120,9 +114,6 @@ NodeList [
 }
 
 .emotion-1 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
 }
 

@@ -1,5 +1,5 @@
 import { WidthProperty } from 'csstype'
-import { CSSObject } from '@emotion/css'
+import { type CSSObject } from '@emotion/serialize'
 
 import type { ResponsiveValueType as ExtractResponsiveValue } from '@makeswift/controls'
 
