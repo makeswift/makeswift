@@ -1,6 +1,6 @@
 import { type Breakpoint, type Breakpoints } from '@makeswift/controls'
 
-import { Action, ActionTypes } from '../actions'
+import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
 
 export {
   getBreakpoint,
@@ -44,7 +44,9 @@ export function getInitialState(breakpoints = DEFAULT_BREAKPOINTS): State {
   return breakpoints
 }
 
-export function reducer(state: State = getInitialState(), action: Action): State {
+export function reducer(state: State = getInitialState(), action: Action | UnknownAction): State {
+  if (!isKnownAction(action)) return state
+
   switch (action.type) {
     case ActionTypes.SET_BREAKPOINTS: {
       const breakpoints = action.payload.breakpoints
@@ -119,7 +121,7 @@ function validateBreakpointsInput(input: BreakpointsInput) {
 
     if (viewport && next && viewport < next.width) {
       throw new Error(
-        `Error on breakpoint "${id}". Viewport cannot be smaller than the next breakpoint's width. 
+        `Error on breakpoint "${id}". Viewport cannot be smaller than the next breakpoint's width.
         "${id}" has a viewport of ${viewport}px and the next breakpoint "${next.id}" has a width of ${next.width}px.`,
       )
     }

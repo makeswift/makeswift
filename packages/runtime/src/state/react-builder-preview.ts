@@ -1,19 +1,14 @@
 import {
-  applyMiddleware,
+  configureStore as configureReduxStore,
   combineReducers,
-  createStore,
-  type Dispatch as ReduxDispatch,
   type Middleware,
-  type MiddlewareAPI,
-  type Store as ReduxStore,
-} from 'redux'
-import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk'
-import { composeWithDevToolsDevelopmentOnly } from '@redux-devtools/extension'
+  type ThunkAction,
+  type ThunkDispatch,
+} from '@reduxjs/toolkit'
 
 import { ControlInstance } from '@makeswift/controls'
 
 import deepEqual from '../utils/deepEqual'
-import { serializeState } from '../utils/serializeState'
 
 import * as Documents from './modules/read-write-documents'
 import * as ElementTrees from './modules/element-trees'
@@ -29,7 +24,7 @@ import * as Pointer from './modules/pointer'
 import * as ElementImperativeHandles from './modules/element-imperative-handles'
 import * as Breakpoints from './modules/breakpoints'
 
-import { type SetupTeardownMixin, withSetupTeardown } from './mixins/setup-teardown'
+import { withSetupTeardown } from './mixins/setup-teardown'
 
 import * as ReactPage from './react-page'
 import {
@@ -53,6 +48,8 @@ import {
   unregisterPropControllers,
   registerBuilderDocument,
 } from './actions'
+
+import { actionMiddleware, middlewareOptions, devToolsConfig } from './toolkit'
 
 import { createPropController } from '../prop-controllers/instances'
 import { serializeControls } from '../builder'
@@ -80,6 +77,7 @@ export const reducer = combineReducers({
 })
 
 export type State = ReturnType<typeof reducer>
+export type Dispatch = ThunkDispatch<State, unknown, Action>
 
 function getDocumentsStateSlice(state: State): Documents.State {
   return state.documents
@@ -490,99 +488,95 @@ export function initialize(
   }
 }
 
-export type Dispatch = ThunkDispatch<State, unknown, Action>
-
 function measureBoxModelsMiddleware(): Middleware<Dispatch, State, Dispatch> {
-  return ({ dispatch }: MiddlewareAPI<Dispatch>) =>
-    (next: ReduxDispatch<Action>) => {
-      return (action: Action): Action => {
-        switch (action.type) {
-          case ActionTypes.REGISTER_COMPONENT_HANDLE: {
-            if (BoxModels.isMeasurable(action.payload.componentHandle)) {
-              dispatch(
-                registerMeasurable(
-                  action.payload.documentKey,
-                  action.payload.elementKey,
-                  action.payload.componentHandle,
-                ),
-              )
-            }
-
-            break
+  return actionMiddleware(({ dispatch }) => next => {
+    return (action: Action) => {
+      switch (action.type) {
+        case ActionTypes.REGISTER_COMPONENT_HANDLE: {
+          if (BoxModels.isMeasurable(action.payload.componentHandle)) {
+            dispatch(
+              registerMeasurable(
+                action.payload.documentKey,
+                action.payload.elementKey,
+                action.payload.componentHandle,
+              ),
+            )
           }
 
-          case ActionTypes.UNREGISTER_COMPONENT_HANDLE:
-            dispatch(unregisterMeasurable(action.payload.documentKey, action.payload.elementKey))
-            break
+          break
         }
 
-        return next(action)
+        case ActionTypes.UNREGISTER_COMPONENT_HANDLE:
+          dispatch(unregisterMeasurable(action.payload.documentKey, action.payload.elementKey))
+          break
       }
+
+      return next(action)
     }
+  })
 }
 
 export function messageChannelMiddleware(
   channel: IMessageChannel,
 ): Middleware<Dispatch, State, Dispatch> {
-  return ({ dispatch }: MiddlewareAPI<Dispatch, State>) =>
-    (next: ReduxDispatch<Action>) => {
-      if (typeof window === 'undefined') return () => {}
+  return actionMiddleware(({ dispatch }) => next => {
+    if (typeof window === 'undefined') return (action: Action) => next(action)
 
-      let cleanUp = () => {}
-      return (action: Action): Action => {
-        switch (action.type) {
-          case ActionTypes.CHANGE_ELEMENT_BOX_MODELS:
-          case ActionTypes.MOUNT_COMPONENT:
-          case ActionTypes.UNMOUNT_COMPONENT:
-          case ActionTypes.CHANGE_DOCUMENT_ELEMENT_SIZE:
-          case ActionTypes.MESSAGE_BUILDER_PROP_CONTROLLER:
-          case ActionTypes.HANDLE_WHEEL:
-          case ActionTypes.HANDLE_POINTER_MOVE:
-          case ActionTypes.ELEMENT_FROM_POINT_CHANGE:
-          case ActionTypes.SET_LOCALE:
-          case ActionTypes.SET_BREAKPOINTS:
-          case ActionTypes.REGISTER_BUILDER_DOCUMENT:
-          case ActionTypes.UNREGISTER_BUILDER_DOCUMENT:
-            channel.postMessage(action)
-            break
+    let cleanUp = () => {}
+    return (action: Action) => {
+      switch (action.type) {
+        case ActionTypes.CHANGE_ELEMENT_BOX_MODELS:
+        case ActionTypes.MOUNT_COMPONENT:
+        case ActionTypes.UNMOUNT_COMPONENT:
+        case ActionTypes.CHANGE_DOCUMENT_ELEMENT_SIZE:
+        case ActionTypes.MESSAGE_BUILDER_PROP_CONTROLLER:
+        case ActionTypes.HANDLE_WHEEL:
+        case ActionTypes.HANDLE_POINTER_MOVE:
+        case ActionTypes.ELEMENT_FROM_POINT_CHANGE:
+        case ActionTypes.SET_LOCALE:
+        case ActionTypes.SET_BREAKPOINTS:
+        case ActionTypes.REGISTER_BUILDER_DOCUMENT:
+        case ActionTypes.UNREGISTER_BUILDER_DOCUMENT:
+          channel.postMessage(action)
+          break
 
-          case ActionTypes.REGISTER_BUILDER_COMPONENT: {
-            const { transferables, ...forwardedAction } = action
-            channel.postMessage(forwardedAction, transferables)
-            break
-          }
-
-          case ActionTypes.UNREGISTER_BUILDER_COMPONENT:
-            channel.postMessage(action)
-            break
-
-          case ActionTypes.CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP:
-            window.document.documentElement.scrollTop = action.payload.scrollTop
-            break
-
-          case ActionTypes.SCROLL_DOCUMENT_ELEMENT:
-            window.document.documentElement.scrollTop += action.payload.scrollTopDelta
-            break
-
-          case ActionTypes.SET_BUILDER_EDIT_MODE:
-            channel.postMessage(action)
-            window.getSelection()?.removeAllRanges()
-            break
-
-          case ActionTypes.INIT:
-            // dispatched by the parent window after establishing the connection
-            cleanUp = dispatch(initialize(channel))
-            break
-
-          case ActionTypes.CLEAN_UP:
-            // dispatched by the parent window on disconnect
-            cleanUp()
-            break
+        case ActionTypes.REGISTER_BUILDER_COMPONENT: {
+          const { transferables, ...forwardedAction } = action
+          channel.postMessage(forwardedAction, transferables)
+          break
         }
 
-        return next(action)
+        case ActionTypes.UNREGISTER_BUILDER_COMPONENT:
+          channel.postMessage(action)
+          break
+
+        case ActionTypes.CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP:
+          window.document.documentElement.scrollTop = action.payload.scrollTop
+          break
+
+        case ActionTypes.SCROLL_DOCUMENT_ELEMENT:
+          window.document.documentElement.scrollTop += action.payload.scrollTopDelta
+          break
+
+        case ActionTypes.SET_BUILDER_EDIT_MODE:
+          channel.postMessage(action)
+          window.getSelection()?.removeAllRanges()
+          break
+
+        case ActionTypes.INIT:
+          // dispatched by the parent window after establishing the connection
+          cleanUp = dispatch(initialize(channel))
+          break
+
+        case ActionTypes.CLEAN_UP:
+          // dispatched by the parent window on disconnect
+          cleanUp()
+          break
       }
+
+      return next(action)
     }
+  })
 }
 
 function createAndRegisterPropControllers(
@@ -616,71 +610,70 @@ function createAndRegisterPropControllers(
 }
 
 export function propControllerHandlesMiddleware(): Middleware<Dispatch, State, Dispatch> {
-  return ({ dispatch, getState }: MiddlewareAPI<Dispatch, State>) =>
-    (next: ReduxDispatch<Action>) => {
-      return (action: Action): Action => {
-        switch (action.type) {
-          case ActionTypes.REGISTER_COMPONENT_HANDLE: {
-            const { documentKey, elementKey, componentHandle } = action.payload
-            const element = ReactPage.getElement(getState(), documentKey, elementKey)
-            const propControllers = dispatch(
-              createAndRegisterPropControllers(documentKey, elementKey),
-            )
+  return actionMiddleware(({ dispatch, getState }) => next => {
+    return (action: Action) => {
+      switch (action.type) {
+        case ActionTypes.REGISTER_COMPONENT_HANDLE: {
+          const { documentKey, elementKey, componentHandle } = action.payload
+          const element = ReactPage.getElement(getState(), documentKey, elementKey)
+          const propControllers = dispatch(
+            createAndRegisterPropControllers(documentKey, elementKey),
+          )
 
-            if (
-              element != null &&
-              !ReactPage.isElementReference(element) &&
-              PropControllerHandles.isPropControllersHandle(componentHandle)
-            ) {
-              dispatch(registerPropControllersHandle(documentKey, elementKey, componentHandle))
-              componentHandle.setPropControllers(propControllers)
-            }
-
-            break
+          if (
+            element != null &&
+            !ReactPage.isElementReference(element) &&
+            PropControllerHandles.isPropControllersHandle(componentHandle)
+          ) {
+            dispatch(registerPropControllersHandle(documentKey, elementKey, componentHandle))
+            componentHandle.setPropControllers(propControllers)
           }
 
-          case ActionTypes.UNREGISTER_COMPONENT_HANDLE: {
-            const { documentKey, elementKey } = action.payload
-            const handle = PropControllerHandles.getPropControllersHandle(
-              getPropControllerHandlesStateSlice(getState()),
-              documentKey,
-              elementKey,
-            )
-
-            handle?.setPropControllers(null)
-
-            dispatch(unregisterPropControllers(documentKey, elementKey))
-
-            break
-          }
-
-          case ActionTypes.MESSAGE_HOST_PROP_CONTROLLER: {
-            const propController = PropControllerHandles.getPropController(
-              getPropControllerHandlesStateSlice(getState()),
-              action.payload.documentKey,
-              action.payload.elementKey,
-              action.payload.propName,
-            )
-
-            if (propController) propController.recv(action.payload.message)
-          }
+          break
         }
 
-        return next(action)
+        case ActionTypes.UNREGISTER_COMPONENT_HANDLE: {
+          const { documentKey, elementKey } = action.payload
+          const handle = PropControllerHandles.getPropControllersHandle(
+            getPropControllerHandlesStateSlice(getState()),
+            documentKey,
+            elementKey,
+          )
+
+          handle?.setPropControllers(null)
+
+          dispatch(unregisterPropControllers(documentKey, elementKey))
+
+          break
+        }
+
+        case ActionTypes.MESSAGE_HOST_PROP_CONTROLLER: {
+          const propController = PropControllerHandles.getPropController(
+            getPropControllerHandlesStateSlice(getState()),
+            action.payload.documentKey,
+            action.payload.elementKey,
+            action.payload.propName,
+          )
+
+          if (propController) propController.recv(action.payload.message)
+        }
       }
+
+      return next(action)
     }
+  })
 }
 
 function makeswiftApiClientSyncMiddleware(
   client: MakeswiftHostApiClient,
 ): Middleware<Dispatch, State, Dispatch> {
-  return () => (next: ReduxDispatch<Action>) => {
-    return (action: Action): Action => {
+  return actionMiddleware(() => next => {
+    return (action: Action) => {
       client.makeswiftApiClient.dispatch(action)
 
       return next(action)
     }
-  }
+  })
 }
 
 class MessageChannel {
@@ -730,53 +723,54 @@ function setupMessageChannel(channel: MessageChannel): ThunkAction<void, State, 
   }
 }
 
-export type Store = ReduxStore<State, Action> & { dispatch: Dispatch } & SetupTeardownMixin
-
 export function configureStore({
   preloadedState,
   client,
 }: {
   preloadedState: Partial<State>
   client: MakeswiftHostApiClient
-}): Store {
+}) {
   const initialState: Partial<State> = {
     ...preloadedState,
     isPreview: IsPreview.getInitialState(true),
   }
 
-  const composeEnhancers = composeWithDevToolsDevelopmentOnly({
-    name: `Host store (${new Date().toISOString()})`,
-    serialize: true,
-    stateSanitizer: (state: any) => serializeState(state),
-    actionsDenylist: [
-      ActionTypes.BUILDER_POINTER_MOVE,
-      ActionTypes.HANDLE_POINTER_MOVE,
-      ActionTypes.ELEMENT_FROM_POINT_CHANGE,
-    ],
-  })
-
   const channel = new MessageChannel()
-  const store = createStore(
+  const store = configureReduxStore({
     reducer,
-    initialState,
-    composeEnhancers(
-      withSetupTeardown(
-        () => {
-          const dispatch = store.dispatch as Dispatch
-          dispatch(setupMessageChannel(channel))
-        },
-        () => channel.teardown(),
-      ),
-      applyMiddleware(
-        thunk,
+    preloadedState: initialState,
+
+    middleware: getDefaultMiddleware =>
+      getDefaultMiddleware(middlewareOptions).concat(
         ReactPage.elementTreeMiddleware(),
         measureBoxModelsMiddleware(),
         messageChannelMiddleware(channel),
         propControllerHandlesMiddleware(),
         makeswiftApiClientSyncMiddleware(client),
       ),
-    ),
-  )
+
+    enhancers: getDefaultEnhancers =>
+      getDefaultEnhancers().concat(
+        withSetupTeardown(
+          () => {
+            const dispatch = store.dispatch as Dispatch
+            dispatch(setupMessageChannel(channel))
+          },
+          () => channel.teardown(),
+        ),
+      ),
+
+    devTools: devToolsConfig({
+      name: `Host store (${new Date().toISOString()})`,
+      actionsDenylist: [
+        ActionTypes.BUILDER_POINTER_MOVE,
+        ActionTypes.HANDLE_POINTER_MOVE,
+        ActionTypes.ELEMENT_FROM_POINT_CHANGE,
+      ],
+    }),
+  })
 
   return store
 }
+
+export type Store = ReturnType<typeof configureStore>

@@ -1,6 +1,12 @@
 import { type Element } from '@makeswift/controls'
 
-import { type Action, type DocumentPayload, ActionTypes } from '../actions'
+import {
+  type Action,
+  type UnknownAction,
+  type DocumentPayload,
+  ActionTypes,
+  isKnownAction,
+} from '../actions'
 
 export {
   type Data,
@@ -65,7 +71,9 @@ export function getDocument(state: State, documentKey: string): Document | null 
   return getDocuments(state).get(documentKey) ?? null
 }
 
-export function reducer(state: State = getInitialState(), action: Action): State {
+export function reducer(state: State = getInitialState(), action: Action | UnknownAction): State {
+  if (!isKnownAction(action)) return state
+
   switch (action.type) {
     case ActionTypes.REGISTER_DOCUMENT:
       const { documentKey, document } = action.payload

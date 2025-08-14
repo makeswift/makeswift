@@ -1,8 +1,9 @@
-import { applyMiddleware, createStore } from 'redux'
-import thunk from 'redux-thunk'
+import { configureStore as configureReduxStore } from '@reduxjs/toolkit'
 
 import { ElementImperativeHandle } from '../../runtimes/react/element-imperative-handle'
 import { ReactRuntime } from '../../runtimes/react'
+
+import { middlewareOptions } from '../toolkit'
 
 import {
   changeDocument,
@@ -23,10 +24,15 @@ describe('propControllerHandlesMiddleware', () => {
     // Arrange
     const documentKey = 'documentKey'
     const element: ReactPage.Element = { key: 'elementKey', type: 'type', props: {} }
-    const store = createStore(
+    const store = configureReduxStore({
       reducer,
-      applyMiddleware(thunk, ReactPage.elementTreeMiddleware(), propControllerHandlesMiddleware()),
-    )
+      middleware: getDefaultMiddleware =>
+        getDefaultMiddleware(middlewareOptions).concat(
+          ReactPage.elementTreeMiddleware(),
+          propControllerHandlesMiddleware(),
+        ),
+    })
+
     const setPropControllers = jest.fn()
     const handle = new ElementImperativeHandle()
 
@@ -45,7 +51,12 @@ describe('propControllerHandlesMiddleware', () => {
     // Arrange
     const documentKey = 'documentKey'
     const element: ReactPage.Element = { type: 'reference', key: 'elementKey', value: 'value' }
-    const store = createStore(reducer, applyMiddleware(thunk, propControllerHandlesMiddleware()))
+    const store = configureReduxStore({
+      reducer,
+      middleware: getDefaultMiddleware =>
+        getDefaultMiddleware(middlewareOptions).concat(propControllerHandlesMiddleware()),
+    })
+
     const setPropControllers = jest.fn()
     const handle = new ElementImperativeHandle()
 
@@ -66,11 +77,12 @@ describe('elementTreeMiddleware', () => {
     // Arrange
     const documentKey = 'documentKey'
     const runtime = new ReactRuntime()
-    const store = createStore(
+    const store = configureReduxStore({
       reducer,
-      runtime.store.getState(),
-      applyMiddleware(thunk, ReactPage.elementTreeMiddleware()),
-    )
+      preloadedState: runtime.store.getState(),
+      middleware: getDefaultMiddleware =>
+        getDefaultMiddleware(middlewareOptions).concat(ReactPage.elementTreeMiddleware()),
+    })
 
     const getElements = () => ReactPage.getElements(store.getState(), documentKey)
     const getElementIds = () => ReactPage.getElementIds(store.getState(), documentKey)

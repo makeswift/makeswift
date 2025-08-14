@@ -1,5 +1,5 @@
 import { mapValues } from '@makeswift/controls'
-import { Action, ActionTypes } from '../actions'
+import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
 
 type State = Map<string, Map<string, string | null>>
 
@@ -29,7 +29,9 @@ export function getLocalizedResourceId(
   return state.get(locale)?.get(resourceId)
 }
 
-export function reducer(state: State = getInitialState(), action: Action): State {
+export function reducer(state: State = getInitialState(), action: Action | UnknownAction): State {
+  if (!isKnownAction(action)) return state
+
   switch (action.type) {
     case ActionTypes.SET_LOCALIZED_RESOURCE_ID: {
       const { resourceId, localizedResourceId, locale } = action.payload
