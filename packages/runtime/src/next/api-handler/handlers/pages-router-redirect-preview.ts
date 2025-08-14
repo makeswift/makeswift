@@ -7,7 +7,11 @@ import { cookieSettingOptions, SET_COOKIE_HEADER } from '../../../api-handler/co
 
 import { PRERENDER_BYPASS_COOKIE, PREVIEW_DATA_COOKIE, SearchParams } from '../preview'
 import { MakeswiftClient } from '../../../client'
-import { serializeSiteVersion } from '../../../api/site-version'
+import {
+  secondsUntilSiteVersionExpiration,
+  serializeSiteVersion,
+  type SiteVersion,
+} from '../../../api/site-version'
 
 export async function pagesRouterRedirectPreviewHandler(
   req: NextApiRequest,
@@ -40,8 +44,14 @@ export async function pagesRouterRedirectPreviewHandler(
 
   const { payload } = verificationResult
 
-  const siteVersion = serializeSiteVersion({ version: payload.version, token: previewToken })
-  const setCookie = res.setPreviewData({ siteVersion }).getHeader(SET_COOKIE_HEADER)
+  const siteVersion: SiteVersion = { version: payload.version, token: previewToken }
+  const secondsUntilExpiration = secondsUntilSiteVersionExpiration(siteVersion)
+  const serializedSiteVersion = serializeSiteVersion(siteVersion)
+
+  const setCookie = res
+    .setPreviewData({ siteVersion: serializedSiteVersion })
+    .getHeader(SET_COOKIE_HEADER)
+
   res.removeHeader(SET_COOKIE_HEADER)
 
   const parsedCookies = parseSetCookie(Array.isArray(setCookie) ? setCookie : '')
@@ -54,7 +64,7 @@ export async function pagesRouterRedirectPreviewHandler(
   }
 
   const patchedCookies = [prerenderBypassCookie, previewDataCookie].map(({ name, value }) => {
-    return serializeCookie(name, value, { ...cookieSettingOptions })
+    return serializeCookie(name, value, { ...cookieSettingOptions, maxAge: secondsUntilExpiration })
   })
   res.setHeader(SET_COOKIE_HEADER, patchedCookies)
 
