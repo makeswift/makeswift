@@ -11,3 +11,7 @@ Visit our [getting started guide](https://www.makeswift.com/docs/guides/getting-
 ## API Reference
 
 Visit our [API Reference](https://www.makeswift.com/docs/controls/checkbox) to learn more about Makeswift Code Components API.
+
+## Auto-generated wiki
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/makeswift/makeswift)
