@@ -46,19 +46,23 @@ function getSiteVersionTokenPayload(siteVersion: SiteVersion): DecodedTokenPaylo
   }
 }
 
-function isSiteVersionTokenExpired(tokenPayload: DecodedTokenPayload): boolean {
+function secondsUntilTokenExpiration(tokenPayload: DecodedTokenPayload): number {
   const currentTime = millisecondsToSeconds(Date.now())
-  return currentTime >= tokenPayload.exp
+  return Math.max(tokenPayload.exp - currentTime, 0)
 }
 
-export function isSiteVersionExpired(siteVersion: SiteVersion): boolean {
+export function secondsUntilSiteVersionExpiration(siteVersion: SiteVersion): number {
   try {
     const tokenPayload = getSiteVersionTokenPayload(siteVersion)
-    return isSiteVersionTokenExpired(tokenPayload)
+    return secondsUntilTokenExpiration(tokenPayload)
   } catch (error) {
     console.error('Failed to check site version expiration:', error)
-    return true
+    return 0
   }
+}
+
+function isSiteVersionExpired(siteVersion: SiteVersion): boolean {
+  return secondsUntilSiteVersionExpiration(siteVersion) <= 0
 }
 
 export function deserializeSiteVersion(input: string): SiteVersion | null {
