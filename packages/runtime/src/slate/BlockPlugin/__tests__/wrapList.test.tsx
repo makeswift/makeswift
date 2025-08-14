@@ -4,7 +4,6 @@
 import { ListActions } from '..'
 import { BlockType } from '../..'
 import {
-  // @ts-expect-error: 'jsx' is declared but its value is never read.
   jsx,
   Editor,
   Paragraph,
