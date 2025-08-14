@@ -1,5 +1,5 @@
 import { ElementImperativeHandle } from '../../runtimes/react/element-imperative-handle'
-import { Action, ActionTypes } from '../actions'
+import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
 
 type State = Map<string, Map<string, ElementImperativeHandle>>
 
@@ -13,7 +13,9 @@ function getInitialState(): State {
   return new Map()
 }
 
-export function reducer(state: State = getInitialState(), action: Action): State {
+export function reducer(state: State = getInitialState(), action: Action | UnknownAction): State {
+  if (!isKnownAction(action)) return state
+
   switch (action.type) {
     case ActionTypes.REGISTER_COMPONENT_HANDLE:
       return new Map(state).set(

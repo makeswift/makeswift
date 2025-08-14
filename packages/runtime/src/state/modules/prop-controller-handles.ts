@@ -1,5 +1,5 @@
 import { ControlInstance } from '@makeswift/controls'
-import { Action, ActionTypes } from '../actions'
+import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
 import type { DescriptorsPropControllers } from '../../prop-controllers/instances'
 import type { Descriptor } from '../../prop-controllers/descriptors'
 
@@ -56,7 +56,9 @@ export function getPropController(
   return getPropControllers(state, documentKey, elementKey)?.[propName] ?? null
 }
 
-export function reducer(state: State = getInitialState(), action: Action): State {
+export function reducer(state: State = getInitialState(), action: Action | UnknownAction): State {
+  if (!isKnownAction(action)) return state
+
   switch (action.type) {
     case ActionTypes.REGISTER_PROP_CONTROLLERS_HANDLE: {
       const { documentKey, elementKey, handle } = action.payload

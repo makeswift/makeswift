@@ -1,4 +1,4 @@
-import { Action, ActionTypes } from '../actions'
+import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
 import { PropControllerDescriptor } from '../../prop-controllers'
 
 export type { PropControllerDescriptor }
@@ -26,7 +26,9 @@ export function getComponentPropControllerDescriptors(
   return getPropControllerDescriptors(state).get(componentType) ?? null
 }
 
-export function reducer(state: State = getInitialState(), action: Action): State {
+export function reducer(state: State = getInitialState(), action: Action | UnknownAction): State {
+  if (!isKnownAction(action)) return state
+
   switch (action.type) {
     case ActionTypes.REGISTER_COMPONENT:
       return new Map(state).set(action.payload.type, action.payload.propControllerDescriptors)

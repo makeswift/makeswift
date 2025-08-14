@@ -1,20 +1,17 @@
 import {
-  applyMiddleware,
-  createStore,
+  configureStore as configureReduxStore,
   combineReducers,
-  type Dispatch as ReduxDispatch,
-  type Store as ReduxStore,
-  type Middleware,
-} from 'redux'
-import thunk, { type ThunkAction, type ThunkDispatch } from 'redux-thunk'
-
-import { composeWithDevToolsDevelopmentOnly } from '@redux-devtools/extension'
-
-import { serializeState } from '../utils/serializeState'
+  type ThunkAction,
+  type ThunkMiddleware,
+  type ThunkDispatch,
+  UnknownAction,
+} from '@reduxjs/toolkit'
 
 import * as APIResources from './modules/api-resources'
 import * as LocalizedResourcesMap from './modules/localized-resources-map'
 import { type Action, ActionTypes, apiResourceFulfilled, setLocalizedResourceId } from './actions'
+import { actionMiddleware, middlewareOptions, devToolsConfig } from './toolkit'
+
 import {
   APIResourceType,
   type APIResource,
@@ -36,6 +33,7 @@ const reducer = combineReducers({
 })
 
 export type State = ReturnType<typeof reducer>
+export type Dispatch = ThunkDispatch<State, unknown, Action>
 
 export type SerializedState = {
   apiResources: APIResources.SerializedState
@@ -211,17 +209,13 @@ export function fetchAPIResource<T extends APIResourceType>(
   }
 }
 
-export type Dispatch = ThunkDispatch<State, unknown, Action>
-
-export type Store = ReduxStore<State, Action> & { dispatch: Dispatch }
-
 // FIXME: this middleware can be removed once we've upgraded the builder
 // to always provide the locale when dispatching resource actions
 function defaultLocaleMiddleware(
   defaultLocale: string | undefined,
-): Middleware<Dispatch, State, Dispatch> {
-  return () => (next: ReduxDispatch<Action>) => {
-    return (action: Action): Action => {
+): ThunkMiddleware<State, UnknownAction> {
+  return actionMiddleware(() => next => {
+    return (action: Action) => {
       switch (action.type) {
         case ActionTypes.CHANGE_API_RESOURCE:
         case ActionTypes.EVICT_API_RESOURCE:
@@ -236,7 +230,7 @@ function defaultLocaleMiddleware(
 
       return next(action)
     }
-  }
+  })
 }
 
 export function configureStore({
@@ -245,26 +239,28 @@ export function configureStore({
 }: {
   defaultLocale: string | undefined
   serializedState?: SerializedState
-}): Store {
-  const composeEnhancers = composeWithDevToolsDevelopmentOnly({
-    name: `API client store (${new Date().toISOString()})`,
-    serialize: true,
-    stateSanitizer: (state: any) => serializeState(state),
-    actionsDenylist: [
-      ActionTypes.BUILDER_POINTER_MOVE,
-      ActionTypes.HANDLE_POINTER_MOVE,
-      ActionTypes.ELEMENT_FROM_POINT_CHANGE,
-    ],
-  })
-
-  return createStore(
+}) {
+  return configureReduxStore({
     reducer,
-    {
+    preloadedState: {
       apiResources: APIResources.getInitialState(serializedState?.apiResources),
       localizedResourcesMap: LocalizedResourcesMap.getInitialState(
         serializedState?.localizedResourcesMap,
       ),
     },
-    composeEnhancers(applyMiddleware(thunk, defaultLocaleMiddleware(defaultLocale))),
-  )
+
+    middleware: getDefaultMiddleware =>
+      getDefaultMiddleware(middlewareOptions).concat(defaultLocaleMiddleware(defaultLocale)),
+
+    devTools: devToolsConfig({
+      name: `API client store (${new Date().toISOString()})`,
+      actionsDenylist: [
+        ActionTypes.BUILDER_POINTER_MOVE,
+        ActionTypes.HANDLE_POINTER_MOVE,
+        ActionTypes.ELEMENT_FROM_POINT_CHANGE,
+      ],
+    }),
+  })
 }
+
+export type Store = ReturnType<typeof configureStore>

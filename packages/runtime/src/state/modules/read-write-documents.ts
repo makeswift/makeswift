@@ -2,7 +2,7 @@ import { type Operation } from 'ot-json0'
 import { removeIn, setIn } from 'immutable'
 
 import * as ReadOnlyDocuments from './read-only-documents'
-import { type Action, ActionTypes } from '../actions'
+import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
 
 export type { Document, Element, ElementData, ElementReference } from './read-only-documents'
 export { isElementReference } from './read-only-documents'
@@ -48,8 +48,10 @@ export function getDocuments(state: State): ReadOnlyDocuments.State {
   return ReadOnlyDocuments.getDocuments(getReadOnlyDocumentsStateSlice(state))
 }
 
-export function reducer(state: State = getInitialState(), action: Action): State {
+export function reducer(state: State = getInitialState(), action: Action | UnknownAction): State {
   const nextState = ReadOnlyDocuments.reducer(state, action)
+
+  if (!isKnownAction(action)) return state
 
   switch (action.type) {
     case ActionTypes.CHANGE_DOCUMENT: {

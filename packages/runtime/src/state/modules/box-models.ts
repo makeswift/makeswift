@@ -6,7 +6,7 @@ import {
   withScroll,
 } from 'css-box-model'
 
-import { Action, ActionTypes } from '../actions'
+import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
 
 export type { BoxModel }
 
@@ -76,7 +76,9 @@ export function getBoxModel(
   return getBoxModels(state).get(documentKey)?.get(elementKey) ?? null
 }
 
-export function reducer(state: State = getInitialState(), action: Action) {
+export function reducer(state: State = getInitialState(), action: Action | UnknownAction) {
+  if (!isKnownAction(action)) return state
+
   switch (action.type) {
     case ActionTypes.REGISTER_MEASURABLE: {
       const { documentKey, elementKey, measurable } = action.payload
