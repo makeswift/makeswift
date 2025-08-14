@@ -2,7 +2,6 @@
 /** @jsx jsx */
 
 import { BlockActions } from '../'
-// @ts-expect-error: 'jsx' is declared but its value is never read.
 import { jsx, Paragraph, Text, Editor, Cursor } from '../../test-helpers'
 
 describe('GIVEN clearBlockKeyForDevice', () => {

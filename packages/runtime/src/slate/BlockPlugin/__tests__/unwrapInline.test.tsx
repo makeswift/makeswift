@@ -3,7 +3,6 @@
 
 import { BlockActions } from '..'
 import { InlineType } from '../..'
-// @ts-expect-error: 'jsx' is declared but its value is never read.
 import { jsx, Paragraph, Code, Text, Editor, Sub, Super } from '../../test-helpers'
 
 describe('GIVEN unwrapInline', () => {

@@ -2,7 +2,6 @@
 /** @jsx jsx */
 
 import { TypographyActions } from '../'
-// @ts-expect-error: 'jsx' is declared but its value is never read.
 import { jsx, Paragraph, Text, Editor, Cursor, Anchor, Focus } from '../../test-helpers'
 
 describe('GIVEN clearActiveTypographyStyle', () => {
