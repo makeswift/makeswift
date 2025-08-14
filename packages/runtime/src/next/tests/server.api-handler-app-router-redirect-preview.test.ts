@@ -6,6 +6,7 @@ import { appRouterApiRequestFixture, hostUrl } from './test-utils'
 import { server } from '../../mocks/server'
 import { http, HttpResponse } from 'msw'
 import { TestOrigins } from '../../testing/fixtures'
+import { secondsUntilSiteVersionExpiration } from '../../api/site-version'
 
 const PATH = '/api/makeswift/redirect-preview'
 const ORIGINAL_PATH = '/about-us'
@@ -14,12 +15,16 @@ const TEST_PREVIEW_TOKEN = 'test-preview-token'
 const READ_PREVIEW_TOKEN_PATH = 'v1/preview-tokens/reads'
 const SUCCESS_TOKEN_VERIFICATION_RESPONSE = {
   payload: { siteId: 'test-site-id', version: 'ref:working' },
-  editable: true,
 } as const
 
 jest.mock('next/headers', () => ({
   cookies: jest.fn(),
   draftMode: jest.fn(),
+}))
+
+jest.mock('../../api/site-version', () => ({
+  ...jest.requireActual('../../api/site-version'),
+  secondsUntilSiteVersionExpiration: jest.fn(),
 }))
 
 afterEach(() => {
@@ -144,6 +149,8 @@ describe('MakeswiftApiHandler', () => {
           get: jest.fn(getCookie),
         } as any)
 
+        jest.mocked(secondsUntilSiteVersionExpiration).mockReturnValue(1000)
+
         server.use(
           http.post(
             `${TestOrigins.apiOrigin}/${READ_PREVIEW_TOKEN_PATH}`,
@@ -164,8 +171,8 @@ describe('MakeswiftApiHandler', () => {
         expect(headers.get('location')).toBe(hostUrl(ORIGINAL_PATH).toString())
 
         expect(headers.getSetCookie()).toEqual([
-          '__prerender_bypass=%5Bprerender-bypass-cookie-value%5D; Path=/; HttpOnly; Secure; Partitioned; SameSite=None',
-          'makeswift-site-version=%7B%22version%22%3A%22ref%3Aworking%22%2C%22token%22%3A%22test-preview-token%22%7D; Path=/; HttpOnly; Secure; Partitioned; SameSite=None',
+          '__prerender_bypass=%5Bprerender-bypass-cookie-value%5D; Max-Age=1000; Path=/; HttpOnly; Secure; Partitioned; SameSite=None',
+          'makeswift-site-version=%7B%22version%22%3A%22ref%3Aworking%22%2C%22token%22%3A%22test-preview-token%22%7D; Max-Age=1000; Path=/; HttpOnly; Secure; Partitioned; SameSite=None',
         ])
 
         expect(nextHeaders.cookies).toHaveBeenCalledTimes(1)
