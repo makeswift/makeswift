@@ -7,6 +7,7 @@ import { pagesRouterApiRequestFixture, type MakeswiftApiHandlerArgs } from './te
 import { http, HttpResponse } from 'msw'
 import { server } from '../../mocks/server'
 import { TestOrigins } from '../../testing/fixtures'
+import { secondsUntilSiteVersionExpiration } from '../../api/site-version'
 
 const PATH = '/api/makeswift/redirect-preview'
 const ORIGINAL_PATH = '/about-us'
@@ -15,12 +16,16 @@ const TEST_PREVIEW_TOKEN = 'test-preview-token'
 const READ_PREVIEW_TOKEN_PATH = 'v1/preview-tokens/reads'
 const SUCCESS_TOKEN_VERIFICATION_RESPONSE = {
   payload: { siteId: 'test-site-id', version: 'ref:working' },
-  editable: true,
 } as const
 
 afterEach(() => {
   jest.resetAllMocks()
 })
+
+jest.mock('../../api/site-version', () => ({
+  ...jest.requireActual('../../api/site-version'),
+  secondsUntilSiteVersionExpiration: jest.fn(),
+}))
 
 const authedUrl = ({
   path,
@@ -164,6 +169,8 @@ describe('MakeswiftApiHandler', () => {
           setResponsePreviewData,
         })
 
+        jest.mocked(secondsUntilSiteVersionExpiration).mockReturnValue(1000)
+
         server.use(
           http.post(
             `${TestOrigins.apiOrigin}/${READ_PREVIEW_TOKEN_PATH}`,
@@ -184,8 +191,8 @@ describe('MakeswiftApiHandler', () => {
         expect(headers.get('location')).toBe(`${ORIGINAL_PATH}?`)
 
         expect(headers.getSetCookie()).toEqual([
-          '__prerender_bypass=%5Bprerender-bypass-cookie-value%5D; Path=/; HttpOnly; Secure; Partitioned; SameSite=None',
-          '__next_preview_data=%7B%22siteVersion%22%3A%22%7B%5C%22version%5C%22%3A%5C%22ref%3Aworking%5C%22%2C%5C%22token%5C%22%3A%5C%22test-preview-token%5C%22%7D%22%7D; Path=/; HttpOnly; Secure; Partitioned; SameSite=None',
+          '__prerender_bypass=%5Bprerender-bypass-cookie-value%5D; Max-Age=1000; Path=/; HttpOnly; Secure; Partitioned; SameSite=None',
+          '__next_preview_data=%7B%22siteVersion%22%3A%22%7B%5C%22version%5C%22%3A%5C%22ref%3Aworking%5C%22%2C%5C%22token%5C%22%3A%5C%22test-preview-token%5C%22%7D%22%7D; Max-Age=1000; Path=/; HttpOnly; Secure; Partitioned; SameSite=None',
         ])
 
         expect(setPreviewData).toHaveBeenCalledTimes(1)

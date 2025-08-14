@@ -4,7 +4,11 @@ import { cookies, draftMode } from 'next/headers'
 import { serialize as serializeCookie } from 'cookie'
 
 import { cookieSettingOptions, SET_COOKIE_HEADER } from '../../../api-handler/cookies'
-import { serializeSiteVersion } from '../../../api/site-version'
+import {
+  secondsUntilSiteVersionExpiration,
+  serializeSiteVersion,
+  type SiteVersion,
+} from '../../../api/site-version'
 
 import {
   MAKESWIFT_SITE_VERSION_COOKIE,
@@ -53,12 +57,13 @@ export async function appRouterRedirectPreviewHandler(
     return new NextResponse('Could not retrieve draft mode bypass cookie', { status: 500 })
   }
 
+  const siteVersion: SiteVersion = { version: payload.version, token: previewToken }
+  const serializedSiteVersion = serializeSiteVersion(siteVersion)
+  const secondsUntilExpiration = secondsUntilSiteVersionExpiration(siteVersion)
+
   const draftCookies: { name: string; value: string }[] = [
     prerenderBypassCookie,
-    {
-      name: MAKESWIFT_SITE_VERSION_COOKIE,
-      value: serializeSiteVersion({ version: payload.version, token: previewToken }),
-    },
+    { name: MAKESWIFT_SITE_VERSION_COOKIE, value: serializedSiteVersion },
   ]
 
   const redirectProtocol =
@@ -77,7 +82,10 @@ export async function appRouterRedirectPreviewHandler(
 
   const headers = new Headers()
   draftCookies.forEach(({ name, value }) => {
-    headers.append(SET_COOKIE_HEADER, serializeCookie(name, value, { ...cookieSettingOptions }))
+    headers.append(
+      SET_COOKIE_HEADER,
+      serializeCookie(name, value, { ...cookieSettingOptions, maxAge: secondsUntilExpiration }),
+    )
   })
 
   return NextResponse.redirect(redirectUrl, { headers })

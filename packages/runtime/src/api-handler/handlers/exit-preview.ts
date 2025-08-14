@@ -11,7 +11,7 @@ export async function exitPreviewHandler(
   previewCookieNames.forEach(name => {
     headers.append(
       SET_COOKIE_HEADER,
-      serializeCookie(name, '', { ...cookieSettingOptions, expires: new Date(0) }),
+      serializeCookie(name, '', { ...cookieSettingOptions, expires: new Date(0), maxAge: 0 }),
     )
   })
 
