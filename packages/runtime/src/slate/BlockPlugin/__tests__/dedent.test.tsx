@@ -2,7 +2,6 @@
 /** @jsx jsx */
 
 import { ListActions } from '..'
-// @ts-expect-error: 'jsx' is declared but its value is never read.
 import { Editor, jsx, Cursor, ListItem, ListItemChild, Text, Unordered } from '../../test-helpers'
 
 describe('Dedent List', () => {

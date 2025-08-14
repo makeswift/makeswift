@@ -2,17 +2,7 @@
 /** @jsx jsx */
 
 import { Editor as SlateEditor } from 'slate'
-import {
-  Text,
-  Cursor,
-  EditorV2,
-  Paragraph,
-  // @ts-expect-error: 'jsx' is declared but its value is never read.
-  jsx,
-  Code,
-  Super,
-  Sub,
-} from '../../test-helpers'
+import { Text, Cursor, EditorV2, Paragraph, jsx, Code, Super, Sub } from '../../test-helpers'
 
 describe('GIVEN normalizing typography', () => {
   describe('GIVEN normalizing neutral', () => {

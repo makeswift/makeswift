@@ -3,7 +3,6 @@
 
 import { TypographyActions } from '../'
 import { DEFAULT_BREAKPOINTS } from '../../../state/modules/breakpoints'
-// @ts-expect-error: 'jsx' is declared but its value is never read.
 import { jsx, Editor, Paragraph, Text, Cursor, Focus, Anchor } from '../../test-helpers'
 
 describe('GIVEN setActiveTypographyStyle', () => {

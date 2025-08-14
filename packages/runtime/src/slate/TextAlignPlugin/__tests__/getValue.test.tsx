@@ -3,7 +3,6 @@
 
 import { Slate } from '@makeswift/controls'
 import { getValue } from '../getValue'
-// @ts-expect-error: 'jsx' is declared but its value is never read.
 import { jsx, Paragraph, Text, EditorV2, Focus, Anchor, Fragment } from '../../test-helpers'
 
 const DESKTOP_LEFT = { deviceId: 'desktop', value: Slate.BlockTextAlignment.Left }

@@ -4,7 +4,6 @@
 import { getSelectedListItems } from '../../utils/getSelectedListItems'
 import {
   Editor,
-  // @ts-expect-error: 'jsx' is declared but its value is never read.
   jsx,
   Unordered,
   ListItem,

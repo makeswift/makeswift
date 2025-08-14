@@ -3,7 +3,6 @@
 
 import { ComponentType } from 'react'
 import { Editor as SlateEditor } from 'slate'
-// @ts-expect-error: 'jsx' is declared but its value is never read.
 import { jsx } from './slate-test-helper'
 
 const EditorElement = 'editor' as any as ComponentType<{
