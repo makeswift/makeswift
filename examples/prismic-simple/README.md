@@ -80,6 +80,7 @@ Here is how your `.env.local` should look once setup is finished:
 MAKESWIFT_SITE_API_KEY=your_makeswift_api_key
 PRISMIC_REPOSITORY_NAME=your_repository_name
 PRISMIC_ACCESS_TOKEN=your_access_token
+NEXT_PUBLIC_SITE_URL=your_domain
 ```
 
 **MAKESWIFT_SITE_API_KEY**: Automatically applied, found in your Makeswift site settings
@@ -88,6 +89,7 @@ You will be prompted for:
 
 **PRISMIC_REPOSITORY_NAME**: Your Prismic repository name
 **PRISMIC_ACCESS_TOKEN**: Generate a permanent access token in your Prismic repository settings under **API & Security**
+**NEXT_PUBLIC_SITE_URL**: Your domain -- this will default to https://example.com if not provided.
 
 The CLI should start up your development environment automatically, but if you need to run the server manually, use:
 

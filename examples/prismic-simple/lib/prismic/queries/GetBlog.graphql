@@ -10,6 +10,8 @@ query GetBlog($uid: String!) {
         name
       }
     }
+    meta_description
+    meta_title
     _meta {
       uid
       type
