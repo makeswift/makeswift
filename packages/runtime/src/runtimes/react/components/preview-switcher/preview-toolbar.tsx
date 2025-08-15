@@ -1,3 +1,7 @@
+'use client'
+
+import { useMemo } from 'react'
+
 const makeswiftIcon =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAACXBIWXMAABcRAAAXEQHKJvM/AAABjElEQVRYhc2XzU3EMBCFB8TddAAXn6EE6GCpgNABZ1/IXnymBOgAOmA7YM8+ABVsXEHQQFaKQryeN3Yk3ilKJtEnv/nLUd/3pFG0riGi88yrnQn+UfJ5FUi0riWiB2H4nQn+KRd0DFP8agXEfkqCYJBoHdtxIQxfm+DfFgEhoith3NYE30o/qgGR2BJB+xY7kdYEL8oNFUi0jiFMJuxVWrJqEMFxsyUNCsE6AeNztvBp7aJ143vXksoRnwhYtmNdSoIQa6RlO9YXEWW7KgoCleOgxgTf1QZBT+RZ2lXFING6UxCCq+ceeUE8fYdknY599v9sJvzGBP+yCEgC7GPmETc0OJ+0awAlkhe2pAbIXAeFZ8xe2g2Nk3c3ub0xwWt6zY9qbmiqGVMbZK21ZC/YmhlbeBMTzZNDQqcvDb1kM1x32iqZSt1HaqukfKvq34BAOTLsrH+ETNmUkKHHA+428RgeclPVWozeSyAI2EdWB34jtqXNTAySOY3i/KgFIlqOa4GkFmBegorzg4joG07he/M7zl6jAAAAAElFTkSuQmCC'
 
@@ -11,6 +15,7 @@ const styles = `
 
 .exit-preview-button {
   background: #2e2e2e;
+  text-decoration: none;
   padding: 10px 18px 10px 14px;
   border: 0px;
   border-radius: 32px;
@@ -42,19 +47,21 @@ const styles = `
 }
 `
 
-type Props = {
-  onExitPreview: () => void
-}
+export function PreviewToolbar() {
+  const redirectLiveUrl = useMemo(() => {
+    const currentUrl = new URL(window.location.href)
+    currentUrl.searchParams.set('x-makeswift-redirect-live', 'true')
+    return currentUrl.toString()
+  }, [])
 
-export function PreviewToolbar({ onExitPreview: onExitDraft }: Props) {
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
       <div className="exit-preview-container">
-        <button className="exit-preview-button" onClick={onExitDraft}>
+        <a href={redirectLiveUrl} className="exit-preview-button">
           <img src={makeswiftIcon} alt="Makeswift Logo" width={18} height={18} />
           <span className="label">Exit preview</span>
-        </button>
+        </a>
       </div>
     </>
   )

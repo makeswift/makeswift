@@ -5,4 +5,5 @@ export const MAKESWIFT_SITE_VERSION_COOKIE = 'makeswift-site-version'
 
 export const SearchParams = {
   PreviewToken: 'x-makeswift-preview-token',
+  RedirectLive: 'x-makeswift-redirect-live'
 } as const

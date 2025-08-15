@@ -6,10 +6,10 @@ import { MAKESWIFT_CACHE_TAG } from '../../cache'
 import { type ApiResponse } from '../../../api-handler/request-response'
 
 import { appRouterRedirectPreviewHandler } from '../handlers/app-router-redirect-preview'
-import { MAKESWIFT_SITE_VERSION_COOKIE, PRERENDER_BYPASS_COOKIE } from '../preview'
 
 import { validateApiRoute, type ApiHandlerConfig } from './base'
 import { MakeswiftClient } from '../../../client'
+import { appRouterRedirectLiveHandler } from '../handlers/app-router-redirect-live'
 
 type Context = { params: { [key: string]: string | string[] } }
 
@@ -29,7 +29,6 @@ export async function config({
     req,
     route: validateApiRoute(await context.params),
     manifest: {},
-    previewCookieNames: [PRERENDER_BYPASS_COOKIE, MAKESWIFT_SITE_VERSION_COOKIE],
     sendResponse: async (res: ApiResponse): Promise<Response | void> => res,
     revalidationHandler: async (path?: string): Promise<void> => {
       if (path != null) {
@@ -41,6 +40,8 @@ export async function config({
     customRoutes: async (route: string) => {
       if (route === '/redirect-preview') {
         return { res: await appRouterRedirectPreviewHandler(req, context, client) }
+      } else if (route === '/redirect-live') {
+        return { res: await appRouterRedirectLiveHandler(req, context) }
       }
 
       return null

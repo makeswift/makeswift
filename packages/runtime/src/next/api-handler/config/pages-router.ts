@@ -4,10 +4,10 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { type ApiResponse } from '../../../api-handler/request-response'
 
 import { pagesRouterRedirectPreviewHandler } from '../handlers/pages-router-redirect-preview'
-import { PRERENDER_BYPASS_COOKIE, PREVIEW_DATA_COOKIE } from '../preview'
 
 import { validateApiRoute, type ApiHandlerConfig } from './base'
 import { MakeswiftClient } from '../../../client'
+import { pagesRouterRedirectLiveHandler } from '../handlers/pages-router-redirect-live'
 
 export type ApiHandlerArgs = [NextApiRequest, NextApiResponse]
 export const argsPattern = [P.any, P.any] as const
@@ -32,7 +32,6 @@ export async function config({
     },
     route: validateApiRoute(await apiRequestParams(req)),
     manifest: {},
-    previewCookieNames: [PRERENDER_BYPASS_COOKIE, PREVIEW_DATA_COOKIE],
     sendResponse: async (apiResponse: ApiResponse): Promise<Response | void> => {
       const headers = responseHeaders(apiResponse.headers)
       Object.entries(headers).forEach(([key, value]) => {
@@ -57,6 +56,8 @@ export async function config({
     customRoutes: async (route: string) => {
       if (route === '/redirect-preview') {
         return { res: await pagesRouterRedirectPreviewHandler(req, res, client) }
+      } else if (route === '/redirect-live') {
+        return { res: await pagesRouterRedirectLiveHandler(req, res) }
       }
 
       return null
