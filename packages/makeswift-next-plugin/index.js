@@ -60,6 +60,16 @@ module.exports =
               ],
               destination: '/api/makeswift/redirect-preview',
             },
+            {
+              source: '/:path(.*)',
+              has: [
+                {
+                  type: 'query',
+                  key: 'x-makeswift-redirect-live',
+                },
+              ],
+              destination: '/api/makeswift/redirect-live',
+            },
           ]
           return {
             beforeFiles: [

@@ -6,7 +6,6 @@ import { ApiHandlerHeaders, deserializeSiteVersion } from '../api/site-version'
 import { MakeswiftClient } from '../client'
 import { ReactRuntime } from '../react'
 
-import { exitPreviewHandler } from './handlers/exit-preview'
 import { elementTreeHandler } from './handlers/element-tree'
 import { fontsHandler, type Font, type GetFonts } from './handlers/fonts'
 import { manifestHandler, type Manifest } from './handlers/manifest'
@@ -41,14 +40,12 @@ export type ApiHandlerInternalConfig = {
   client: MakeswiftClient
   manifest: Partial<Manifest>
   revalidationHandler: (path?: string) => Promise<void>
-  previewCookieNames: string[]
 }
 
 type ApiHandlerConfig = ApiHandlerUserConfig & ApiHandlerInternalConfig
 
 type ResponseType =
   | Awaited<
-      | ReturnType<typeof exitPreviewHandler>
       | ReturnType<typeof elementTreeHandler>
       | ReturnType<typeof fontsHandler>
       | ReturnType<typeof manifestHandler>
@@ -73,7 +70,6 @@ export function createApiHandler(
     client,
     manifest,
     revalidationHandler,
-    previewCookieNames,
   }: ApiHandlerConfig,
 ): ApiHandler {
   if (typeof apiKey !== 'string') {
@@ -105,7 +101,6 @@ export function createApiHandler(
     const matches = <T extends object>(pattern: string): Match<T> =>
       matchPattern<T>(pattern, { decode: decodeURIComponent })(route)
 
-    if (matches('/exit-preview')) return exitPreviewHandler(req, { previewCookieNames })
     if (matches('/element-tree')) return elementTreeHandler(req, { runtime })
     if (matches('/fonts')) return fontsHandler(req, { getFonts })
     if (matches('/manifest')) return manifestHandler(req, { apiKey, manifest })

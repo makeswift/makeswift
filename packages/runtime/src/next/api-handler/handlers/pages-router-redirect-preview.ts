@@ -12,17 +12,14 @@ import {
   serializeSiteVersion,
   type SiteVersion,
 } from '../../../api/site-version'
+import { pagesRouterGetRequestPath } from './get-request-url'
 
 export async function pagesRouterRedirectPreviewHandler(
   req: NextApiRequest,
   res: NextApiResponse,
   client: MakeswiftClient,
 ): Promise<void> {
-  // Next.js automatically strips the locale prefix from rewritten request's URL, even when the
-  // rewrite's `locale` option is set to `false`: https://github.com/vercel/next.js/discussions/21798.
-  // At the same time, it also maps rewrite's URL segments (e.g. `:path`) to query parameters
-  // on the rewritten request, so we use `query.path` to recover the original request path.
-  const pathname = req.query.path as string | undefined
+  const pathname = pagesRouterGetRequestPath(req)
 
   if (pathname == null) {
     return res
