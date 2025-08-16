@@ -1,12 +1,13 @@
 import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
-import { lazy } from 'react'
+import Embed from './'
+
 import { ElementID, Margin, TextArea, Width } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
-    lazy(() => import('./Embed')),
+    Embed,
     {
       type: MakeswiftComponentType.Embed,
       label: 'Embed',
