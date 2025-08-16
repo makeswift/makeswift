@@ -1,5 +1,29 @@
 # @makeswift/runtime
 
+## 0.25.0
+
+### Minor Changes
+
+- 59349b9: chore!: require Node.js version 20 or higher
+- 635ce7b: feat: framework-independent API handlers implementation (requires Node.js 18+)
+- e7ae1f8: [**BREAKING CHANGE**] remove obsolete `PageProvider` component, `usePageId` hook
+
+### Patch Changes
+
+- 635ce7b: fix: hanging promise in CORS preflight handling in Pages Router
+- cd9ab15: feat: decouple built-in components from `next/link`
+- 7c7e114: fix: "Do not add <script> tags using next/head" warning when running in Pages Router
+- daf11da: feat: decouple built-in `Image` and `Backgrounds` components from `next/image`
+- 93780b4: chore: upgrade from `redux`/`redux-thunk` to `@reduxjs/toolkit`
+- 635ce7b: fix: `onPublish` event not triggered in Pages Router
+- 341b920: chore: remove unused `useBuilderHandshake` hook
+- 912b3fc: feat: framework-independent head tag management, built-in `Page` component
+- 0465c84: feat: framework-independent `RootStyleRegistry` implementation
+- Updated dependencies [50eb563]
+- Updated dependencies [2ec2608]
+- Updated dependencies [2135f65]
+  - @makeswift/prop-controllers@0.4.6
+
 ## 0.24.8
 
 ### Patch Changes
