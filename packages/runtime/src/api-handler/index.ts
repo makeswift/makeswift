@@ -6,7 +6,7 @@ import { ApiHandlerHeaders, deserializeSiteVersion } from '../api/site-version'
 import { MakeswiftClient } from '../client'
 import { ReactRuntime } from '../react'
 
-import { exitPreviewHandler } from './handlers/exit-preview'
+import { redirectLiveHandler } from './handlers/redirect-live'
 import { elementTreeHandler } from './handlers/element-tree'
 import { fontsHandler, type Font, type GetFonts } from './handlers/fonts'
 import { manifestHandler, type Manifest } from './handlers/manifest'
@@ -48,7 +48,7 @@ type ApiHandlerConfig = ApiHandlerUserConfig & ApiHandlerInternalConfig
 
 type ResponseType =
   | Awaited<
-      | ReturnType<typeof exitPreviewHandler>
+      | ReturnType<typeof redirectLiveHandler>
       | ReturnType<typeof elementTreeHandler>
       | ReturnType<typeof fontsHandler>
       | ReturnType<typeof manifestHandler>
@@ -105,7 +105,7 @@ export function createApiHandler(
     const matches = <T extends object>(pattern: string): Match<T> =>
       matchPattern<T>(pattern, { decode: decodeURIComponent })(route)
 
-    if (matches('/exit-preview')) return exitPreviewHandler(req, { previewCookieNames })
+    if (matches('/redirect-live')) return redirectLiveHandler(req, { previewCookieNames })
     if (matches('/element-tree')) return elementTreeHandler(req, { runtime })
     if (matches('/fonts')) return fontsHandler(req, { getFonts })
     if (matches('/manifest')) return manifestHandler(req, { apiKey, manifest })
