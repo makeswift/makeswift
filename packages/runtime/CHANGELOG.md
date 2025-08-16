@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.25.0-canary.12
+
+### Patch Changes
+
+- 93780b4: chore: upgrade from `redux`/`redux-thunk` to `@reduxjs/toolkit`
+
 ## 0.25.0-canary.11
 
 ### Patch Changes
