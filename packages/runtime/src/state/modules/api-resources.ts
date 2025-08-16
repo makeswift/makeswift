@@ -8,7 +8,7 @@ import {
 import deepEqual from '../../utils/deepEqual'
 import { Branded } from '../../utils/branded'
 
-import { type Action, ActionTypes } from '../actions'
+import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
 
 type CompositeResourceId = Branded<string, 'CompositeResourceId'>
 
@@ -134,7 +134,9 @@ export function getAPIResource<T extends APIResourceType>(
     : null
 }
 
-export function reducer(state: State = getInitialState(), action: Action): State {
+export function reducer(state: State = getInitialState(), action: Action | UnknownAction): State {
+  if (!isKnownAction(action)) return state
+
   switch (action.type) {
     case ActionTypes.UPDATE_API_CLIENT_CACHE: {
       const { apiResources } = action.payload

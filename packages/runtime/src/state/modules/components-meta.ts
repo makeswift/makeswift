@@ -1,4 +1,4 @@
-import { Action, ActionTypes } from '../actions'
+import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
 
 export const ComponentIcon = {
   Billing: 'billing',
@@ -27,7 +27,12 @@ export const ComponentIcon = {
 
 export type ComponentIcon = (typeof ComponentIcon)[keyof typeof ComponentIcon]
 
-export type ComponentMeta = { label: string; icon: ComponentIcon; hidden: boolean, description?: string }
+export type ComponentMeta = {
+  label: string
+  icon: ComponentIcon
+  hidden: boolean
+  description?: string
+}
 
 export type State = Map<string, ComponentMeta>
 
@@ -41,7 +46,9 @@ export function getComponentsMeta(state: State): Map<string, ComponentMeta> {
   return state
 }
 
-export function reducer(state: State = getInitialState(), action: Action): State {
+export function reducer(state: State = getInitialState(), action: Action | UnknownAction): State {
+  if (!isKnownAction(action)) return state
+
   switch (action.type) {
     case ActionTypes.REGISTER_COMPONENT:
       return new Map(state).set(action.payload.type, action.payload.meta)

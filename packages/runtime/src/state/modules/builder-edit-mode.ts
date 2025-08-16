@@ -1,4 +1,4 @@
-import { Action, ActionTypes } from '../actions'
+import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
 
 export const BuilderEditMode = {
   BUILD: 'build',
@@ -14,7 +14,9 @@ export function getInitialState(): State {
   return null
 }
 
-export function reducer(state: State = getInitialState(), action: Action): State {
+export function reducer(state: State = getInitialState(), action: Action | UnknownAction): State {
+  if (!isKnownAction(action)) return state
+
   switch (action.type) {
     case ActionTypes.SET_BUILDER_EDIT_MODE:
       return action.payload.editMode

@@ -1,17 +1,11 @@
 import {
-  applyMiddleware,
+  configureStore as configureReduxStore,
   combineReducers,
-  createStore,
-  type Dispatch as ReduxDispatch,
+  type ThunkDispatch,
   type Middleware,
-  type MiddlewareAPI,
-  type Store as ReduxStore,
-} from 'redux'
+} from '@reduxjs/toolkit'
 
-import thunk, { ThunkDispatch } from 'redux-thunk'
 import { createSelector } from 'reselect'
-
-import { composeWithDevToolsDevelopmentOnly } from '@redux-devtools/extension'
 
 import {
   createReplacementContext,
@@ -24,8 +18,6 @@ import {
   replaceResourceIfNeeded,
   ContextResource,
 } from '@makeswift/controls'
-
-import { serializeState } from '../utils/serializeState'
 
 import * as Documents from './modules/read-only-documents'
 import * as ElementTrees from './modules/element-trees'
@@ -51,7 +43,9 @@ import {
   mergeTranslatedData,
 } from '../controls/control'
 
-import { type SetupTeardownMixin, withSetupTeardown } from './mixins/setup-teardown'
+import { actionMiddleware, middlewareOptions, devToolsConfig } from './toolkit'
+
+import { withSetupTeardown } from './mixins/setup-teardown'
 
 export type {
   Data,
@@ -85,6 +79,7 @@ const reducer = combineReducers({
 })
 
 export type State = ReturnType<typeof reducer>
+export type Dispatch = ThunkDispatch<State, unknown, Action>
 
 function getDocumentsStateSlice(state: State): Documents.State {
   return state.documents
@@ -357,53 +352,48 @@ export function getBreakpoints(state: State): Breakpoints.State {
   return state.breakpoints
 }
 
-export type Dispatch = ThunkDispatch<State, unknown, Action>
-
-export type Store = ReduxStore<State, Action> & { dispatch: Dispatch } & SetupTeardownMixin
-
 export function elementTreeMiddleware(): Middleware<Dispatch, State, Dispatch> {
-  return ({ dispatch, getState }: MiddlewareAPI<Dispatch, State>) =>
-    (next: ReduxDispatch<Action>) => {
-      return (action: Action): Action => {
-        switch (action.type) {
-          case ActionTypes.REGISTER_DOCUMENT:
+  return actionMiddleware(({ dispatch, getState }) => next => {
+    return action => {
+      switch (action.type) {
+        case ActionTypes.REGISTER_DOCUMENT:
+          dispatch(
+            createElementTree({
+              document: action.payload.document,
+              descriptors: getPropControllerDescriptors(getState()),
+            }),
+          )
+          break
+
+        case ActionTypes.CHANGE_DOCUMENT: {
+          const { documentKey, operation } = action.payload
+
+          const oldDocument = getDocument(getState(), documentKey)
+          const result = next(action)
+          const newDocument = getDocument(getState(), documentKey)
+
+          if (oldDocument != null && newDocument != null && newDocument !== oldDocument) {
             dispatch(
-              createElementTree({
-                document: action.payload.document,
+              changeElementTree({
+                oldDocument,
+                newDocument,
                 descriptors: getPropControllerDescriptors(getState()),
+                operation,
               }),
             )
-            break
-
-          case ActionTypes.CHANGE_DOCUMENT: {
-            const { documentKey, operation } = action.payload
-
-            const oldDocument = getDocument(getState(), documentKey)
-            const result = next(action)
-            const newDocument = getDocument(getState(), documentKey)
-
-            if (oldDocument != null && newDocument != null && newDocument !== oldDocument) {
-              dispatch(
-                changeElementTree({
-                  oldDocument,
-                  newDocument,
-                  descriptors: getPropControllerDescriptors(getState()),
-                  operation,
-                }),
-              )
-            }
-
-            return result
           }
 
-          case ActionTypes.UNREGISTER_DOCUMENT:
-            dispatch(deleteElementTree(action.payload))
-            break
+          return result
         }
 
-        return next(action)
+        case ActionTypes.UNREGISTER_DOCUMENT:
+          dispatch(deleteElementTree(action.payload))
+          break
       }
+
+      return next(action)
     }
+  })
 }
 
 export function configureStore({
@@ -414,25 +404,29 @@ export function configureStore({
   name: string
   preloadedState: Partial<State> | null
   breakpoints?: Breakpoints.State
-}): Store {
-  const composeEnhancers = composeWithDevToolsDevelopmentOnly({
-    name: `${name} (${new Date().toISOString()})`,
-    serialize: true,
-    stateSanitizer: (state: any) => serializeState(state),
-  })
-
-  return createStore(
+}) {
+  return configureReduxStore({
     reducer,
-    {
+    preloadedState: {
       ...preloadedState,
       breakpoints: Breakpoints.getInitialState(breakpoints ?? preloadedState?.breakpoints),
     },
-    composeEnhancers(
-      withSetupTeardown(
-        () => {},
-        () => {},
+
+    middleware: getDefaultMiddleware =>
+      getDefaultMiddleware(middlewareOptions).concat(elementTreeMiddleware()),
+
+    enhancers: getDefaultEnhancers =>
+      getDefaultEnhancers().concat(
+        withSetupTeardown(
+          () => {},
+          () => {},
+        ),
       ),
-      applyMiddleware(thunk, elementTreeMiddleware()),
-    ),
-  )
+
+    devTools: devToolsConfig({
+      name: `${name} (${new Date().toISOString()})`,
+    }),
+  })
 }
+
+export type Store = ReturnType<typeof configureStore>

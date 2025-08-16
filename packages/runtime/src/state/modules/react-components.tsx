@@ -1,6 +1,6 @@
 import type { Component, PropsWithoutRef, ReactNode, RefAttributes } from 'react'
 
-import { Action, ActionTypes } from '../actions'
+import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
 
 export type ComponentType<P = Record<string, any>, T = any> =
   | { new (props: PropsWithoutRef<P> & RefAttributes<T>, context?: any): Component<P> }
@@ -22,7 +22,9 @@ export function getReactComponent(state: State, type: string): ComponentType | n
   return getReactComponents(state).get(type) ?? null
 }
 
-export function reducer(state: State = getInitialState(), action: Action) {
+export function reducer(state: State = getInitialState(), action: Action | UnknownAction) {
+  if (!isKnownAction(action)) return state
+
   switch (action.type) {
     case ActionTypes.REGISTER_REACT_COMPONENT:
       return new Map(state).set(action.payload.type, action.payload.component)

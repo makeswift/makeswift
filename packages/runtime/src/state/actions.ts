@@ -1,3 +1,4 @@
+import { type ThunkAction, isAction } from '@reduxjs/toolkit'
 import type { Operation } from 'ot-json0'
 
 import { ControlInstance } from '@makeswift/controls'
@@ -6,7 +7,6 @@ import { type Element, type Document, EMBEDDED_DOCUMENT_TYPE } from './modules/r
 import type { DescriptorsByComponentType } from './modules/prop-controllers'
 import type { ComponentType } from './modules/react-components'
 import type { Measurable, BoxModel } from './modules/box-models'
-import type { ThunkAction } from 'redux-thunk'
 import { ComponentMeta } from './modules/components-meta'
 import { PropControllerDescriptor } from '../prop-controllers'
 import type { Size } from './react-builder-preview'
@@ -20,6 +20,8 @@ import type { Point } from './modules/pointer'
 import { Breakpoints } from './modules/breakpoints'
 import { type SerializedState as APIClientCache } from './makeswift-api-client'
 import { LocaleString, localeStringSchema } from '../locale'
+
+export { type UnknownAction } from '@reduxjs/toolkit'
 
 export const ActionTypes = {
   INIT: 'INIT',
@@ -802,4 +804,8 @@ export function setLocalizedResourceId({
 
 export function updateAPIClientCache(payload: APIClientCache): UpdateAPIClientCache {
   return { type: ActionTypes.UPDATE_API_CLIENT_CACHE, payload }
+}
+
+export function isKnownAction(action: unknown): action is Action {
+  return isAction(action) && Object.hasOwn(ActionTypes, action.type)
 }

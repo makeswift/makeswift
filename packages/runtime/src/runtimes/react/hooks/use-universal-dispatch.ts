@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import type { ThunkAction } from 'redux-thunk'
+import type { ThunkAction } from '@reduxjs/toolkit'
 
 import { type Dispatch } from '../../../state/react-page'
 import { type Action } from '../../../state/actions'

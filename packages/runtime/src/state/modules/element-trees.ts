@@ -5,7 +5,7 @@ import { type Element, type ElementData, isElementReference } from '@makeswift/c
 
 import { Introspection } from '../../prop-controllers'
 
-import { type Action, ActionTypes } from '../actions'
+import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
 
 import { getRootElement, type Document } from './read-only-documents'
 import { type DescriptorsByComponentType } from './prop-controllers'
@@ -51,7 +51,9 @@ export function getElementId(state: State, documentKey: string, elementKey: stri
   return getElementIds(state, documentKey).get(elementKey) ?? null
 }
 
-export function reducer(state: State = getInitialState(), action: Action): State {
+export function reducer(state: State = getInitialState(), action: Action | UnknownAction): State {
+  if (!isKnownAction(action)) return state
+
   switch (action.type) {
     case ActionTypes.CREATE_ELEMENT_TREE: {
       const { document, descriptors } = action.payload

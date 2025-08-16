@@ -1,4 +1,4 @@
-import { StoreEnhancer } from 'redux'
+import { type StoreEnhancer } from '@reduxjs/toolkit'
 
 export interface SetupTeardownMixin {
   setup: () => void
