@@ -101,7 +101,7 @@ export function pagesRouterApiRequestFixture(
         },
         get(key: string) {
           return key.toLowerCase() === 'location'
-            ? response._getRedirectUrl()
+            ? response._getRedirectUrl() || response._getHeaders()['location']
             : response._getHeaders()[key]
         },
       },
