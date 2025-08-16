@@ -19,6 +19,21 @@ export const ApiResponse = {
       headers,
     }) as ApiResponse<T>
   },
+
+  redirect(location: string | URL, init?: ResponseInit): ApiResponse<null> {
+    const headers = new Headers(init?.headers)
+    headers.set('Location', location.toString())
+
+    // Manually constructing a redirect response. We can’t use the
+    // `Response.redirect` shorthand here, since it doesn’t allow passing custom
+    // headers; see
+    // https://community.cloudflare.com/t/make-redirect-with-additional-headers/249365
+    return new Response(null, {
+      status: 307,
+      ...init,
+      headers,
+    }) as ApiResponse<null>
+  },
 } as const
 
 export type ErrorResponseBody = { message: string }

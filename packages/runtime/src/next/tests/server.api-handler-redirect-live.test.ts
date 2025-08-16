@@ -1,6 +1,8 @@
 import { apiRequestFixtures } from './test-utils'
 
-const PATH = '/api/makeswift/exit-preview'
+const PATH = '/api/makeswift/redirect-live'
+
+const ORIGINAL_PATH = '/about-us'
 
 afterEach(() => {
   jest.resetAllMocks()
@@ -19,7 +21,7 @@ describe('MakeswiftApiHandler', () => {
       })
 
       // Assert
-      expect(statusCode).toBe(200)
+      expect(statusCode).toBe(307)
     })
 
     test('clears the corresponding draft/preview mode cookies', async () => {
@@ -30,12 +32,13 @@ describe('MakeswiftApiHandler', () => {
       const { statusCode, headers } = await testApiRequest({
         method: 'GET',
         path: PATH,
+        originalPath: `${ORIGINAL_PATH}?x-makeswift-redirect-live=/next-path`,
       })
 
       // Assert
-      expect(statusCode).toBe(200)
+      expect(statusCode).toBe(307)
       expect(headers.getSetCookie()).toEqual(
-        router == 'pages'
+        router === 'pages'
           ? [
               '__prerender_bypass=; Max-Age=0; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; Partitioned; SameSite=None',
               '__next_preview_data=; Max-Age=0; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; Partitioned; SameSite=None',
@@ -45,6 +48,11 @@ describe('MakeswiftApiHandler', () => {
               'makeswift-site-version=; Max-Age=0; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; Partitioned; SameSite=None',
             ],
       )
+
+      const redirectLocation = headers.get('Location')
+
+      expect(redirectLocation).toBe('/next-path')
+      expect(redirectLocation?.includes('x-makeswift-redirect-live')).toBe(false)
     })
   })
 })
