@@ -1,32 +1,24 @@
 import { NextRequest } from 'next/server'
-import { MAKESWIFT_DRAFT_DATA_COOKIE, PRERENDER_BYPASS_COOKIE } from '../api-handler/draft'
+import {
+  MAKESWIFT_SITE_VERSION_COOKIE,
+  PRERENDER_BYPASS_COOKIE,
+  SearchParams,
+} from '../api-handler/preview'
 
-const HeaderNames = {
-  DraftMode: 'X-Makeswift-Draft-Mode',
-  PreviewMode: 'X-Makeswift-Preview-Mode',
-} as const
+function getPreviewTokenParam(request: NextRequest): string | null {
+  return request.nextUrl.searchParams.get(SearchParams.PreviewToken) ?? null
+}
 
-const SearchParams = {
-  DraftMode: 'x-makeswift-draft-mode',
-  PreviewMode: 'x-makeswift-preview-mode',
-} as const
-
-function getDraftModeSecret(request: NextRequest): string | null {
+export function hasDraftModeCookies(request: NextRequest): boolean {
   return (
-    request.nextUrl.searchParams.get(SearchParams.DraftMode) ??
-    request.headers.get(HeaderNames.DraftMode) ??
-    null
+    request.cookies.has(PRERENDER_BYPASS_COOKIE) &&
+    request.cookies.has(MAKESWIFT_SITE_VERSION_COOKIE)
   )
 }
 
 export function isDraftModeRequest(request: NextRequest): boolean {
-  const hasSecret = getDraftModeSecret(request) != null
-  if (hasSecret) return true
+  const hasToken = getPreviewTokenParam(request) != null
+  if (hasToken) return true
 
-  const hasDraftCookies =
-    request.cookies.has(PRERENDER_BYPASS_COOKIE) && request.cookies.has(MAKESWIFT_DRAFT_DATA_COOKIE)
-
-  if (hasDraftCookies) return true
-
-  return false
+  return hasDraftModeCookies(request)
 }

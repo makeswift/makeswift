@@ -72,7 +72,7 @@ async function testMakeswiftComponentRendering(snapshot: MakeswiftComponentSnaps
 
   await act(async () =>
     render(
-      <Testing.ReactProvider runtime={runtime} previewMode={false}>
+      <Testing.ReactProvider runtime={runtime} siteVersion={null}>
         <MakeswiftComponent
           label="Embedded Component"
           type={CustomComponentType}

@@ -16,8 +16,8 @@ exports[`MakeswiftPage metadata and seo tag rendering does NOT render any page m
         
   </style>
   <meta
-    content="{"draft":false,"inBuilder":false}"
-    name="makeswift-draft-info"
+    content="{"isPreview":false,"inBuilder":false}"
+    name="makeswift-preview-info"
   />
 </head>
 `;
@@ -38,8 +38,8 @@ exports[`MakeswiftPage metadata and seo tag rendering does NOT render any page m
         
   </style>
   <meta
-    content="{"draft":false,"inBuilder":false}"
-    name="makeswift-draft-info"
+    content="{"isPreview":false,"inBuilder":false}"
+    name="makeswift-preview-info"
   />
 </head>
 `;
@@ -60,8 +60,8 @@ exports[`MakeswiftPage metadata and seo tag rendering does NOT render any page m
         
   </style>
   <meta
-    content="{"draft":false,"inBuilder":false}"
-    name="makeswift-draft-info"
+    content="{"isPreview":false,"inBuilder":false}"
+    name="makeswift-preview-info"
   />
 </head>
 `;
@@ -109,8 +109,8 @@ exports[`MakeswiftPage metadata and seo tag rendering only renders selective met
     name="keywords"
   />
   <meta
-    content="{"draft":false,"inBuilder":false}"
-    name="makeswift-draft-info"
+    content="{"isPreview":false,"inBuilder":false}"
+    name="makeswift-preview-info"
   />
 </head>
 `;
@@ -187,8 +187,8 @@ exports[`MakeswiftPage metadata and seo tag rendering renders all metadata by de
     name="twitter:card"
   />
   <meta
-    content="{"draft":false,"inBuilder":false}"
-    name="makeswift-draft-info"
+    content="{"isPreview":false,"inBuilder":false}"
+    name="makeswift-preview-info"
   />
 </head>
 `;
@@ -265,8 +265,8 @@ exports[`MakeswiftPage metadata and seo tag rendering renders all metadata when 
     name="twitter:card"
   />
   <meta
-    content="{"draft":false,"inBuilder":false}"
-    name="makeswift-draft-info"
+    content="{"isPreview":false,"inBuilder":false}"
+    name="makeswift-preview-info"
   />
 </head>
 `;
@@ -343,8 +343,8 @@ exports[`MakeswiftPage metadata and seo tag rendering renders all metadata when 
     name="twitter:card"
   />
   <meta
-    content="{"draft":false,"inBuilder":false}"
-    name="makeswift-draft-info"
+    content="{"isPreview":false,"inBuilder":false}"
+    name="makeswift-preview-info"
   />
 </head>
 `;

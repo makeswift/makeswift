@@ -32,7 +32,7 @@ const pageDocumentFixture: MakeswiftPageDocument = {
 
 function getPageMetaTags(container: HTMLElement): { name: string; content: string }[] {
   const metaTags = container.getElementsByTagName('meta')
-  return Array.from(metaTags).filter(({ name }) => name !== 'makeswift-draft-info')
+  return Array.from(metaTags).filter(({ name }) => name !== 'makeswift-preview-info')
 }
 
 describe('MakeswiftPage', () => {

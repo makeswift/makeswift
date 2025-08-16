@@ -25,7 +25,7 @@ export async function testMakeswiftPageHeadRendering(
 
   return await act(async () =>
     render(
-      <ReactProvider runtime={runtime} previewMode={false} forcePagesRouter={forcePagesRouter}>
+      <ReactProvider runtime={runtime} siteVersion={null} forcePagesRouter={forcePagesRouter}>
         <MakeswiftPage {...props} />
       </ReactProvider>,
       {
@@ -43,7 +43,7 @@ export async function testMakeswiftPageRendering(
 
   return await act(async () =>
     render(
-      <ReactProvider runtime={runtime} previewMode={false} forcePagesRouter={forcePagesRouter}>
+      <ReactProvider runtime={runtime} siteVersion={null} forcePagesRouter={forcePagesRouter}>
         <MakeswiftPage {...props} />
       </ReactProvider>,
       {

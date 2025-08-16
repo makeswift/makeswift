@@ -7,7 +7,7 @@ afterEach(() => {
 })
 
 describe('MakeswiftApiHandler', () => {
-  describe.each(apiRequestFixtures)('[$router router] ${PATH}', ({ fixture, router }) => {
+  describe.each(apiRequestFixtures)('[$router router] ${PATH}', ({ fixture }) => {
     test.each([{ apiKey: null }, { apiKey: 'incorrect-api-key' }])(
       'requires authentication ($apiKey)',
       async ({ apiKey }) => {
@@ -39,11 +39,8 @@ describe('MakeswiftApiHandler', () => {
       // Assert
       expect(statusCode).toBe(200)
 
-      const pagesRouter = router === 'pages'
       expect(await jsonBody).toEqual({
         version: PACKAGE_VERSION,
-        previewMode: pagesRouter,
-        draftMode: !pagesRouter,
         interactionMode: true,
         clientSideNavigation: false,
         elementFromPoint: false,
@@ -53,6 +50,7 @@ describe('MakeswiftApiHandler', () => {
         localizedPageSSR: true,
         webhook: true,
         localizedPagesOnlineByDefault: true,
+        previewToken: true,
       })
     })
   })

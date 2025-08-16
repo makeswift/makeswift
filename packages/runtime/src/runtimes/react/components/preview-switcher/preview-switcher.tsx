@@ -3,13 +3,13 @@ import { createPortal } from 'react-dom'
 
 import { PageMeta } from '../page/head-tags'
 import { useIsInBuilder } from '../../hooks/use-is-in-builder'
-import { DraftToolbar } from './draft-toolbar'
+import { PreviewToolbar } from './preview-toolbar'
 
-const ClearDraftModeRequestPath = '/api/makeswift/clear-draft'
+const ExitPreviewRequestPath = '/api/makeswift/exit-preview'
 
-async function exitDraftMode() {
+async function exitPreview() {
   try {
-    await fetch(ClearDraftModeRequestPath)
+    await fetch(ExitPreviewRequestPath)
     window.location.reload()
   } catch (err) {
     console.error('Could not clear Makeswift cookies. Please report this error to your developer.')
@@ -17,12 +17,12 @@ async function exitDraftMode() {
   }
 }
 
-export function DraftSwitcher({ isDraft }: { isDraft: boolean }) {
+export function PreviewSwitcher({ isPreview }: { isPreview: boolean }) {
   const shadowContainerRef = useRef<HTMLSpanElement | null>(null)
   const [shadowRoot, setShadowRoot] = useState<ShadowRoot | null>(null)
   const isInBuilder = useIsInBuilder()
 
-  const showToolbar = !isInBuilder && isDraft
+  const showToolbar = !isInBuilder && isPreview
 
   useEffect(() => {
     if (!showToolbar) return
@@ -39,17 +39,17 @@ export function DraftSwitcher({ isDraft }: { isDraft: boolean }) {
   return (
     <>
       {showToolbar && (
-        <span id="makeswift-draft-switcher" ref={shadowContainerRef}>
+        <span id="makeswift-preview-switcher" ref={shadowContainerRef}>
           {shadowRoot
-            ? createPortal(<DraftToolbar onExitDraft={exitDraftMode} />, shadowRoot)
+            ? createPortal(<PreviewToolbar onExitPreview={exitPreview} />, shadowRoot)
             : null}
         </span>
       )}
-      {/* Insert draft mode information into the DOM to make it easier to debug draft mode-related
+      {/* Insert preview mode information into the DOM to make it easier to debug preview mode-related
           issues on production sites */}
       <PageMeta
-        name="makeswift-draft-info"
-        content={JSON.stringify({ draft: isDraft, inBuilder: isInBuilder })}
+        name="makeswift-preview-info"
+        content={JSON.stringify({ isPreview: isPreview, inBuilder: isInBuilder })}
       />
     </>
   )
