@@ -2,19 +2,11 @@
 
 import { memo } from 'react'
 
-import { type MakeswiftPageSnapshot } from '../../client'
-
-import {
-  type PageMetadataSettings,
-  Page as BuiltinPage,
-} from '../../runtimes/react/components/page'
+import { Page as BuiltinPage, type PageProps } from '../../runtimes/react/components/page'
 
 import { useRouterLocaleSync } from '../hooks/use-router-locale-sync'
 
-export type PageProps = {
-  snapshot: MakeswiftPageSnapshot
-  metadata?: boolean | PageMetadataSettings
-}
+export { type PageProps } from '../../runtimes/react/components/page'
 
 /**
  * @param snapshot - The snapshot of the page to render, from
@@ -34,7 +26,7 @@ export type PageProps = {
  *
  * If a field is not provided, it will default to `false`.
  */
-export const Page = memo(({ snapshot, metadata = true, ...extras }: PageProps) => {
+export const Page = memo(({ snapshot, metadata, ...extras }: PageProps) => {
   if ('runtime' in extras) {
     throw new Error(
       `The \`runtime\` prop is no longer supported in the \`@makeswift/runtime\` \`Page\` component as of \`0.15.0\`.
