@@ -13,6 +13,8 @@ import {
 import { type LinkData } from '@makeswift/prop-controllers'
 
 import { type Snippet } from '../../../client'
+import { type HttpFetch } from '../../../state/makeswift-api-client'
+import { API_HANDLER_SITE_VERSION_HEADER, MakeswiftSiteVersion } from '../../../api/site-version'
 
 import { BaseHeadSnippet } from './page/HeadSnippet'
 
@@ -41,6 +43,7 @@ export type FrameworkContext = {
   HeadSnippet: HeadSnippet
   Image: ImageComponent
   Link: LinkComponent
+  versionedFetch: (siteVersion: MakeswiftSiteVersion) => HttpFetch
 }
 
 // React 19 automatically hoists metadata tags to the <head>
@@ -67,9 +70,19 @@ export const DefaultLink: LinkComponent = forwardRef<HTMLAnchorElement, LinkProp
   ({ linkType, ...props }, ref) => <a {...props} ref={ref} />,
 )
 
+export const versionedFetch: FrameworkContext['versionedFetch'] = siteVersion => (url, init) =>
+  fetch(url, {
+    ...init,
+    headers: {
+      ...init?.headers,
+      [API_HANDLER_SITE_VERSION_HEADER]: siteVersion,
+    },
+  })
+
 export const FrameworkContext = createContext<FrameworkContext>({
   Head: DefaultHead,
   HeadSnippet: BaseHeadSnippet,
   Image: DefaultImage,
   Link: DefaultLink,
+  versionedFetch,
 })
