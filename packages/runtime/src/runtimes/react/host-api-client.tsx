@@ -2,12 +2,17 @@
 
 import { ReactNode, createContext, useContext } from 'react'
 import { MakeswiftHostApiClient } from '../../api/react'
-import { MakeswiftSiteVersion } from '../../api/site-version'
 
 const Context = createContext(
   new MakeswiftHostApiClient({
     uri: 'https://api.makeswift.com/graphql',
-    siteVersion: MakeswiftSiteVersion.Live,
+    fetch: async (url, init) => {
+      console.warn(
+        'Using fallback `fetch` implementation, resource revalidation may not work as expected.',
+        { url },
+      )
+      return fetch(url, init)
+    },
   }),
 )
 
