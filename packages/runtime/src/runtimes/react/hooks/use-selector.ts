@@ -1,4 +1,5 @@
-import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector'
+import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector'
+
 import { useStore } from './use-store'
 import { State as ReactPageState } from '../../../state/react-page'
 import { State as ReactBuilderPreviewState } from '../../../state/react-builder-preview'
