@@ -1,14 +1,21 @@
 import { normalize } from 'polished'
-import { forwardRef, Ref } from 'react'
+import { forwardRef, type Ref } from 'react'
+
+import {
+  type GridData,
+  type ResponsiveBackgroundsData,
+  type ResponsiveGapData,
+} from '@makeswift/prop-controllers'
+
+import { Element } from '../../../runtimes/react'
+import { useGlobalStyle } from '../../../runtimes/react/use-global-style'
+import { useStyle } from '../../../runtimes/react/use-style'
+import { useCSSResetEnabled } from '../../../runtimes/react/root-style-registry'
+
+import { GridItem } from '../../shared/grid-item'
+import BackgroundsContainer from '../../shared/BackgroundsContainer'
 
 import Placeholder from './components/Placeholder'
-import { Element } from '../../../runtimes/react'
-import BackgroundsContainer from '../../shared/BackgroundsContainer'
-import { useGlobalStyle } from '../../../runtimes/react/use-global-style'
-import { GridItem } from '../../shared/grid-item'
-import { useStyle } from '../../../runtimes/react/use-style'
-import { GridData, ResponsiveBackgroundsData, ResponsiveGapData } from '@makeswift/prop-controllers'
-import { useCSSResetEnabled } from '../../../next/root-style-registry'
 
 type Props = {
   children?: GridData
