@@ -21,24 +21,19 @@ type Props = {
 }
 
 export function NextRootStyleRegistry({ children, cacheKey, enableCssReset }: Props) {
-  const [{ cache, flush }] = useState(() => createRootStyleCache({ key: cacheKey }))
+  const [cache] = useState(() => createRootStyleCache({ key: cacheKey }))
 
   useServerInsertedHTML(() => {
-    const names = flush()
-    if (names.length === 0) return null
-    let styles = ''
-    for (const name of names) {
-      styles += cache.inserted[name]
-    }
+    const { classNames, css } = cache.flush()
 
-    return (
+    return classNames.length > 0 ? (
       <style
-        data-emotion={`${cache.key} ${names.join(' ')}`}
+        data-emotion={`${cache.key} ${classNames.join(' ')}`}
         dangerouslySetInnerHTML={{
-          __html: styles,
+          __html: css,
         }}
       />
-    )
+    ) : null
   })
 
   return (
