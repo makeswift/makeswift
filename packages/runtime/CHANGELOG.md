@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.25.0-canary.13
+
+### Patch Changes
+
+- 36b0729: feat: framework-independent host API client
+
 ## 0.25.0-canary.12
 
 ### Patch Changes
