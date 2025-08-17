@@ -24,8 +24,6 @@ import {
   type LocalizedGlobalElement,
   type APIResourceLocale,
 } from '../api'
-import { MAKESWIFT_CACHE_TAG } from '../next/cache'
-import { API_HANDLER_SITE_VERSION_HEADER, MakeswiftSiteVersion } from '../api/site-version'
 
 const reducer = combineReducers({
   apiResources: APIResources.reducer,
@@ -34,6 +32,7 @@ const reducer = combineReducers({
 
 export type State = ReturnType<typeof reducer>
 export type Dispatch = ThunkDispatch<State, unknown, Action>
+export type HttpFetch = (url: string | URL, init?: RequestInit) => Promise<Response>
 
 export type SerializedState = {
   apiResources: APIResources.SerializedState
@@ -101,34 +100,31 @@ export function getAPIResource<T extends APIResourceType>(
 
 type Thunk<ReturnType> = ThunkAction<ReturnType, State, unknown, Action>
 
-async function fetchJson<T>(url: string, siteVersion: MakeswiftSiteVersion): Promise<T | null> {
-  const response = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json',
-      [API_HANDLER_SITE_VERSION_HEADER]: siteVersion,
-    },
-    next: { tags: [MAKESWIFT_CACHE_TAG] },
-  })
-
-  if (response.status === 404) return null
-
-  if (!response.ok) throw new Error(response.statusText)
-
-  if (response.headers.get('content-type')?.includes('application/json') !== true) {
-    throw new Error(
-      `Expected JSON response from "${url}" but got "${response.headers.get('content-type')}"`,
-    )
-  }
-
-  return response.json()
-}
-
 export function fetchAPIResource<T extends APIResourceType>(
   resourceType: T,
   resourceId: string,
-  siteVersion: MakeswiftSiteVersion,
+  fetch: HttpFetch,
   locale?: APIResourceLocale<T>,
 ): Thunk<Promise<Extract<APIResource, { __typename: T }> | null>> {
+  const fetchJson = async <T>(url: string): Promise<T | null> => {
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (response.status === 404) return null
+    if (!response.ok) throw new Error(response.statusText)
+
+    if (response.headers.get('content-type')?.includes('application/json') !== true) {
+      throw new Error(
+        `Expected JSON response from "${url}" but got "${response.headers.get('content-type')}"`,
+      )
+    }
+
+    return response.json()
+  }
+
   return async (dispatch, getState) => {
     const state = getState()
 
@@ -140,25 +136,19 @@ export function fetchAPIResource<T extends APIResourceType>(
 
     switch (resourceType) {
       case APIResourceType.Swatch:
-        resource = await fetchJson<Swatch>(`/api/makeswift/swatches/${resourceId}`, siteVersion)
+        resource = await fetchJson<Swatch>(`/api/makeswift/swatches/${resourceId}`)
         break
 
       case APIResourceType.File:
-        resource = await fetchJson<File>(`/api/makeswift/files/${resourceId}`, siteVersion)
+        resource = await fetchJson<File>(`/api/makeswift/files/${resourceId}`)
         break
 
       case APIResourceType.Typography:
-        resource = await fetchJson<Typography>(
-          `/api/makeswift/typographies/${resourceId}`,
-          siteVersion,
-        )
+        resource = await fetchJson<Typography>(`/api/makeswift/typographies/${resourceId}`)
         break
 
       case APIResourceType.GlobalElement:
-        resource = await fetchJson<GlobalElement>(
-          `/api/makeswift/global-elements/${resourceId}`,
-          siteVersion,
-        )
+        resource = await fetchJson<GlobalElement>(`/api/makeswift/global-elements/${resourceId}`)
         break
 
       case APIResourceType.LocalizedGlobalElement: {
@@ -172,7 +162,6 @@ export function fetchAPIResource<T extends APIResourceType>(
 
         resource = await fetchJson<LocalizedGlobalElement>(
           `/api/makeswift/localized-global-elements/${resourceId}/${locale}`,
-          siteVersion,
         )
 
         dispatch(
@@ -191,12 +180,12 @@ export function fetchAPIResource<T extends APIResourceType>(
 
         if (locale != null) url.searchParams.set('locale', locale)
 
-        resource = await fetchJson<PagePathnameSlice>(url.pathname + url.search, siteVersion)
+        resource = await fetchJson<PagePathnameSlice>(url.pathname + url.search)
         break
       }
 
       case APIResourceType.Table:
-        resource = await fetchJson<Table>(`/api/makeswift/tables/${resourceId}`, siteVersion)
+        resource = await fetchJson<Table>(`/api/makeswift/tables/${resourceId}`)
         break
 
       default:
