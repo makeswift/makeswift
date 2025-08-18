@@ -1,26 +1,19 @@
 'use client'
 
-import { type ReactNode, useState } from 'react'
+import { type PropsWithChildren, useState } from 'react'
 import { useServerInsertedHTML } from 'next/navigation'
 
 import {
   createRootStyleCache,
   RootStyleRegistry as ReactRootStyleRegistry,
+  type RootStyleProps,
 } from '../runtimes/react/root-style-registry'
 
-export { useCache, useCSSResetEnabled } from '../runtimes/react/root-style-registry'
-
-type Props = {
-  children: ReactNode
-  cacheKey?: string
-  /**
-   * Toggle the built-in CSS reset.
-   * Set to `false` when using `@layer`-based CSS frameworks like Tailwind.
-   */
-  enableCssReset?: boolean
-}
-
-export function NextRootStyleRegistry({ children, cacheKey, enableCssReset }: Props) {
+export function NextRootStyleRegistry({
+  children,
+  cacheKey,
+  enableCssReset,
+}: PropsWithChildren<RootStyleProps>) {
   const [cache] = useState(() => createRootStyleCache({ key: cacheKey }))
 
   useServerInsertedHTML(() => {
