@@ -2,7 +2,7 @@
 
 import createCache, { type EmotionCache } from '@emotion/cache'
 import { cache } from '@emotion/css'
-import { ReactNode, createContext, useContext } from 'react'
+import { type PropsWithChildren, createContext, useContext } from 'react'
 
 const CacheContext = createContext(cache)
 
@@ -51,9 +51,12 @@ export const createRootStyleCache = ({ key }: { key?: string } = {}): StyleCache
   }
 }
 
-type Props = {
-  children: ReactNode
-  cache: StyleCache
+export type RootStyleProps = {
+  /**
+   * The key used to prefix generated class names.
+   * If not provided, a default key will be used.
+   */
+  cacheKey?: string
   /**
    * Toggle the built-in CSS reset.
    * Set to `false` when using `@layer`-based CSS frameworks like Tailwind.
@@ -61,7 +64,14 @@ type Props = {
   enableCssReset?: boolean
 }
 
-export function RootStyleRegistry({ children, cache, enableCssReset }: Props) {
+export function RootStyleRegistry({
+  children,
+  cache,
+  enableCssReset,
+}: PropsWithChildren<{
+  cache: StyleCache
+  enableCssReset?: boolean
+}>) {
   return (
     <CacheContext.Provider value={cache}>
       <CSSResetEnabledContext.Provider value={enableCssReset ?? DEFAULT_CSS_RESET_ENABLED}>
