@@ -72,6 +72,10 @@ export async function appRouterRedirectPreviewHandler(
   )
 
   redirectUrl.searchParams.delete(SearchParams.PreviewToken)
+  redirectUrl.searchParams.delete(SearchParams.OriginalPathMatch)
+  redirectUrl.searchParams.delete(SearchParams.PreviewTokenMatch)
+
+  console.log('nextUrl', redirectUrl.toString())
 
   const headers = new Headers()
   draftCookies.forEach(({ name, value }) => {
