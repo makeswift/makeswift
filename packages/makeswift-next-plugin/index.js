@@ -50,24 +50,24 @@ module.exports =
           const rewrites = await nextConfig.rewrites?.()
           const previewModeRewrites = [
             {
-              source: '/:mswftOriginalPath(.*)',
+              source: '/:path(.*)',
               has: [
                 {
                   type: 'query',
                   key: 'x-makeswift-preview-token',
-                  value: '(?<mswftPreviewToken>.+)',
+                  value: '(?<token>.+)',
                 },
               ],
-              destination: '/api/makeswift/redirect-preview',
+              destination: '/api/makeswift/redirect-preview?x-makeswift-preview-token=:token',
               locale: false,
             },
             {
-              source: '/:mswftOriginalPath(.*)',
+              source: '/:path(.*)',
               has: [
                 {
                   type: 'query',
                   key: 'x-makeswift-redirect-live',
-                  value: '(?<mswftRedirectDestination>.+)',
+                  value: '(?<destination>.+)',
                 },
               ],
               destination: '/api/makeswift/redirect-live',

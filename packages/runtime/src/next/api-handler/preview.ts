@@ -5,11 +5,16 @@ export const MAKESWIFT_SITE_VERSION_COOKIE = 'makeswift-site-version'
 
 export const SearchParams = {
   PreviewToken: 'x-makeswift-preview-token',
+} as const
 
-  // Search params from rewrite-matching that are automatically added in Vercel.
-  // These are a quirk of next.config.ts rewrite rules in Next.js when deployed
-  // to Vercel.
-  PreviewTokenMatch: 'mswftPreviewToken',
-  OriginalPathMatch: 'mswftOriginalPath',
-  RedirectDestinationMatch: 'mswftRedirectDestination',
+// When there's a rewrite rule match, the matching values are included as query
+// parameters in the request URL, where the parameter name is the expression
+// used to match the value in the next.config. This behavior is only
+// consistently observed on projects deployed to Vercel.
+//
+// See:
+// https://nextjs.org/docs/app/api-reference/config/next-config-js/rewrites#rewrite-parameters
+export const RewriteRuleMatches = {
+  PreviewToken: 'mswftPreviewToken',
+  OriginalPath: 'mswftOriginalPath',
 } as const
