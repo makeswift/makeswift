@@ -1,6 +1,7 @@
 import { cx } from '@emotion/css'
 import { useState, useRef, ComponentPropsWithoutRef, ForwardedRef, forwardRef } from 'react'
-import ReactPlayer from 'react-player'
+
+import { ReactPlayer } from '../../../react-player'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 
 import { useIsomorphicLayoutEffect } from '../../../../hooks/useIsomorphicLayoutEffect'
