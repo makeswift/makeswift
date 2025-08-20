@@ -382,6 +382,9 @@ export class MakeswiftClient {
 
     const response = await fetch(requestUrl.toString(), fetchOptions)
 
+    console.log('[client] response status:', response.status)
+    console.log('[client] response headers:', new Map(response.headers))
+
     return response
   }
 
