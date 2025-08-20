@@ -1,0 +1,22 @@
+# Write your query or mutation here
+query GetBlogs($where: Post_where, $limit: Int, $page: Int, $sort: String) {
+  Posts(where: $where, limit: $limit, page: $page, sort: $sort) {
+    docs {
+      title
+      body
+      author {
+        name
+      }
+      description
+      slug
+      updatedAt
+      feedDate
+      banner {
+        url
+        width
+        height
+        alt
+      }
+    }
+  }
+}
