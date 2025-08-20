@@ -12,6 +12,7 @@ export async function revalidateHandler(
   req: ApiRequest,
   { apiKey, revalidatePath }: { apiKey: string; revalidatePath: (path: string) => Promise<void> },
 ): Promise<ApiResponse<RevalidationResult | ErrorResponseBody>> {
+  console.log('[Revalidation Handler] Called')
   const params = searchParams(req)
 
   const secret = params.get('secret')
@@ -20,11 +21,13 @@ export async function revalidateHandler(
   }
 
   const path = params.get('path')
+  console.log('[Revalidation Handler]', { requestPath: path })
   if (typeof path !== 'string') {
     return ApiResponse.json({ message: 'Bad Request' }, { status: 400 })
   }
 
   try {
+    console.log('[Revalidation Handler] Calling revalidate path', path)
     await revalidatePath(path)
     return ApiResponse.json({ revalidated: true })
   } catch (error) {

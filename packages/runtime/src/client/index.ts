@@ -359,6 +359,8 @@ export class MakeswiftClient {
   private async fetch(path: string, siteVersion: SiteVersion | null): Promise<Response> {
     const requestUrl = new URL(path, this.apiOrigin)
 
+    console.log('[client] site version', siteVersion)
+
     const requestHeaders = new Headers({
       'X-API-Key': this.apiKey,
       'Makeswift-Site-API-Key': this.apiKey,
@@ -369,11 +371,16 @@ export class MakeswiftClient {
       requestHeaders.set('makeswift-preview-token', siteVersion.token)
     }
 
-    const response = await fetch(requestUrl.toString(), {
+    const fetchOptions = {
       headers: requestHeaders,
-      ...(siteVersion != null ? { cache: 'no-store' } : {}),
+      ...(siteVersion != null ? ({ cache: 'no-store' } as const) : {}),
       ...this.fetchOptions(siteVersion),
-    })
+    }
+
+    console.log('[client] fetch options:', fetchOptions)
+    console.log('[client] fetching at', requestUrl.toString())
+
+    const response = await fetch(requestUrl.toString(), fetchOptions)
 
     return response
   }

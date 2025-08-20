@@ -32,9 +32,12 @@ export async function config({
     previewCookieNames: [PRERENDER_BYPASS_COOKIE, MAKESWIFT_SITE_VERSION_COOKIE],
     sendResponse: async (res: ApiResponse): Promise<Response | void> => res,
     revalidationHandler: async (path?: string): Promise<void> => {
+      console.log('[App router handler] called', path)
       if (path != null) {
+        console.log('[App router handler] calling revalidate path', path)
         revalidatePath(path)
       } else {
+        console.log('[App router handler] calling revalidate tag')
         revalidateTag(MAKESWIFT_CACHE_TAG)
       }
     },
