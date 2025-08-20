@@ -7,8 +7,6 @@ import {
 
 export type Manifest = {
   version: string
-  previewMode: boolean
-  draftMode: boolean
   interactionMode: boolean
   clientSideNavigation: boolean
   elementFromPoint: boolean
@@ -32,8 +30,6 @@ export async function manifestHandler(
 
   return ApiResponse.json({
     version: PACKAGE_VERSION,
-    previewMode: false,
-    draftMode: false,
     interactionMode: true,
     clientSideNavigation: false,
     elementFromPoint: false,
@@ -43,6 +39,7 @@ export async function manifestHandler(
     localizedPageSSR: true,
     webhook: true,
     localizedPagesOnlineByDefault: true,
+    previewToken: true,
     ...manifest,
   })
 }

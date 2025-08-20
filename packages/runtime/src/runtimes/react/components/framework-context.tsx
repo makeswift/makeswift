@@ -14,7 +14,11 @@ import { type LinkData } from '@makeswift/prop-controllers'
 
 import { type Snippet } from '../../../client'
 import { type HttpFetch } from '../../../state/makeswift-api-client'
-import { API_HANDLER_SITE_VERSION_HEADER, MakeswiftSiteVersion } from '../../../api/site-version'
+import {
+  ApiHandlerHeaders,
+  serializeSiteVersion,
+  type SiteVersion,
+} from '../../../api/site-version'
 
 import { BaseHeadSnippet } from './page/HeadSnippet'
 
@@ -43,7 +47,7 @@ export type FrameworkContext = {
   HeadSnippet: HeadSnippet
   Image: ImageComponent
   Link: LinkComponent
-  versionedFetch: (siteVersion: MakeswiftSiteVersion) => HttpFetch
+  versionedFetch: (siteVersion: SiteVersion | null) => HttpFetch
 }
 
 // React 19 automatically hoists metadata tags to the <head>
@@ -75,7 +79,9 @@ export const versionedFetch: FrameworkContext['versionedFetch'] = siteVersion =>
     ...init,
     headers: {
       ...init?.headers,
-      [API_HANDLER_SITE_VERSION_HEADER]: siteVersion,
+      ...(siteVersion != null
+        ? { [ApiHandlerHeaders.SiteVersion]: serializeSiteVersion(siteVersion) }
+        : {}),
     },
   })
 

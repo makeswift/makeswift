@@ -9,6 +9,8 @@ import {
 
 import { MakeswiftApiHandler } from '../api-handler'
 import { ReactRuntime } from '../../react'
+import { TestOrigins } from '../../testing/fixtures'
+import { RewriteRuleMatches } from '../api-handler/preview'
 
 export type MakeswiftApiHandlerArgs = Partial<Parameters<typeof MakeswiftApiHandler>[1]>
 
@@ -17,8 +19,8 @@ function createHandler(apiKey: string, args: Partial<MakeswiftApiHandlerArgs> = 
   return MakeswiftApiHandler(apiKey, {
     ...args,
     runtime,
-    apiOrigin: 'https://api.fakeswift.com',
-    appOrigin: 'https://app.fakeswift.com',
+    apiOrigin: TestOrigins.apiOrigin,
+    appOrigin: TestOrigins.appOrigin,
   })
 }
 
@@ -52,7 +54,7 @@ function createNextApiRequest({
     query: {
       ...routeParams(hostUrl(path)),
       ...Object.fromEntries(url.searchParams.entries()),
-      ...(originalPath ? { path: originalPath } : {}),
+      ...(originalPath ? { [RewriteRuleMatches.OriginalPath]: originalPath } : {}),
     },
     body,
     headers,
@@ -99,7 +101,7 @@ export function pagesRouterApiRequestFixture(
         },
         get(key: string) {
           return key.toLowerCase() === 'location'
-            ? response._getRedirectUrl()
+            ? response._getRedirectUrl() || response._getHeaders()['location']
             : response._getHeaders()[key]
         },
       },
