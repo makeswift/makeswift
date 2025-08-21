@@ -2,7 +2,7 @@ import { serialize as serializeCookie } from 'cookie'
 import { type ApiRequest, ApiResponse, searchParams } from '../request-response'
 import { SET_COOKIE_HEADER, cookieSettingOptions } from '../cookies'
 
-const REDIRECT_SEARCH_PARAM = 'makeswift-redirect-live'
+export const REDIRECT_SEARCH_PARAM = 'makeswift-redirect-live'
 
 export async function redirectLiveHandler(
   req: ApiRequest,
