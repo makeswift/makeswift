@@ -28,7 +28,6 @@ export async function config({
   return {
     req,
     route: validateApiRoute(await context.params),
-    manifest: {},
     previewCookieNames: [PRERENDER_BYPASS_COOKIE, MAKESWIFT_SITE_VERSION_COOKIE],
     sendResponse: async (res: ApiResponse): Promise<Response | void> => res,
     revalidationHandler: async (path?: string): Promise<void> => {

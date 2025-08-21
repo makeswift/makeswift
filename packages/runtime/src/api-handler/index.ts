@@ -39,7 +39,7 @@ export type ApiHandlerUserConfig = {
 
 export type ApiHandlerInternalConfig = {
   client: MakeswiftClient
-  manifest: Partial<Manifest>
+  manifest?: Partial<Manifest>
   revalidationHandler: (path?: string) => Promise<void>
   previewCookieNames: string[]
 }
