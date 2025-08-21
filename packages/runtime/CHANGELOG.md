@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.25.0-canary.15
+
+### Patch Changes
+
+- 06a2462: Rename query param for clearing preview cookies
+- Updated dependencies [06a2462]
+  - @makeswift/next-plugin@0.5.0-canary.1
+
 ## 0.25.0-canary.14
 
 ### Minor Changes
