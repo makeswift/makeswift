@@ -49,7 +49,7 @@ export function PreviewToolbar() {
   const redirectLiveUrl = useMemo(() => {
     const currentUrl = new URL(window.location.href)
     const destination = `${currentUrl.pathname}${currentUrl.search}${currentUrl.hash}`
-    currentUrl.searchParams.set('x-makeswift-redirect-live', encodeURIComponent(destination))
+    currentUrl.searchParams.set('makeswift-redirect-live', encodeURIComponent(destination))
     return currentUrl.toString()
   }, [])
 

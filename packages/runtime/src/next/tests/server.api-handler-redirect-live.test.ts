@@ -32,7 +32,7 @@ describe('MakeswiftApiHandler', () => {
       const { statusCode, headers } = await testApiRequest({
         method: 'GET',
         path: PATH,
-        originalPath: `${ORIGINAL_PATH}?x-makeswift-redirect-live=/next-path`,
+        originalPath: `${ORIGINAL_PATH}?makeswift-redirect-live=/next-path`,
       })
 
       // Assert
@@ -52,7 +52,7 @@ describe('MakeswiftApiHandler', () => {
       const redirectLocation = headers.get('Location')
 
       expect(redirectLocation).toBe('/next-path')
-      expect(redirectLocation?.includes('x-makeswift-redirect-live')).toBe(false)
+      expect(redirectLocation?.includes('makeswift-redirect-live')).toBe(false)
     })
   })
 })
