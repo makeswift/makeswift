@@ -51,6 +51,24 @@ export const createRootStyleCache = ({ key }: { key?: string } = {}): StyleCache
   }
 }
 
+type StyleTagProps = {
+  key: string
+  classNames: string[]
+  css: string
+}
+
+export const StyleTagSSR = ({ key, classNames, css }: StyleTagProps) => (
+  <style
+    data-emotion={`${key} ${classNames.join(' ')}`}
+    dangerouslySetInnerHTML={{
+      __html: css,
+    }}
+  />
+)
+
+export const styleTagHtml = ({ key, classNames, css }: StyleTagProps): string =>
+  `<style data-emotion="${key} ${classNames.join(' ')}">${css}</style>`
+
 export type RootStyleProps = {
   /**
    * The key used to prefix generated class names.
