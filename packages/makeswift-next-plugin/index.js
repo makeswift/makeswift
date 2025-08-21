@@ -50,7 +50,7 @@ module.exports =
           const rewrites = await nextConfig.rewrites?.()
           const previewModeRewrites = [
             {
-              source: '/:makeswiftRewriteOriginalPath(.*)',
+              source: '/:path(.*)',
               has: [
                 {
                   type: 'query',

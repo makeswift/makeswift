@@ -19,5 +19,5 @@ export const SearchParams = {
 // https://nextjs.org/docs/app/api-reference/config/next-config-js/rewrites#rewrite-parameters
 export const RewriteRuleMatches = {
   PreviewToken: 'makeswiftRewritePreviewToken',
-  OriginalPath: 'makeswiftRewriteOriginalPath',
+  OriginalPath: 'path',
 } as const
