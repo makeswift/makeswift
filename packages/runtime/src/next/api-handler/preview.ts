@@ -1,11 +1,7 @@
+export { MAKESWIFT_SITE_VERSION_COOKIE, SearchParams } from '../../api-handler/preview'
+
 export const PRERENDER_BYPASS_COOKIE = '__prerender_bypass'
 export const PREVIEW_DATA_COOKIE = '__next_preview_data'
-
-export const MAKESWIFT_SITE_VERSION_COOKIE = 'makeswift-site-version'
-
-export const SearchParams = {
-  PreviewToken: 'makeswift-preview-token',
-} as const
 
 // When there's a rewrite rule match, the matching values are included as query
 // parameters in the request URL, where the parameter name is the expression
