@@ -20,7 +20,7 @@ export type Manifest = {
 
 export async function manifestHandler(
   req: ApiRequest,
-  { apiKey, manifest }: { apiKey: string; manifest: Partial<Manifest> },
+  { apiKey, manifest }: { apiKey: string; manifest?: Partial<Manifest> },
 ): Promise<ApiResponse<Manifest | ErrorResponseBody>> {
   const secret = searchParams(req).get('secret')
 
@@ -40,6 +40,6 @@ export async function manifestHandler(
     webhook: true,
     localizedPagesOnlineByDefault: true,
     previewToken: true,
-    ...manifest,
+    ...(manifest ?? {}),
   })
 }
