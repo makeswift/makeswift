@@ -50,7 +50,7 @@ module.exports =
           const rewrites = await nextConfig.rewrites?.()
           const previewModeRewrites = [
             {
-              source: '/:path(.*)',
+              source: '/:makeswiftRewriteOriginalPath(.*)',
               has: [
                 {
                   type: 'query',
@@ -59,7 +59,6 @@ module.exports =
                 },
               ],
               destination: '/api/makeswift/redirect-preview',
-              locale: false,
             },
             {
               source: '/:path(.*)',
