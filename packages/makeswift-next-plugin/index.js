@@ -66,7 +66,7 @@ module.exports =
               has: [
                 {
                   type: 'query',
-                  key: 'x-makeswift-redirect-live',
+                  key: 'makeswift-redirect-live',
                   value: '(?<destination>.+)',
                 },
               ],
