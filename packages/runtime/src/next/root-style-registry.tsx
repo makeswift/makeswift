@@ -6,6 +6,7 @@ import { useServerInsertedHTML } from 'next/navigation'
 import {
   createRootStyleCache,
   RootStyleRegistry as ReactRootStyleRegistry,
+  StyleTagSSR,
   type RootStyleProps,
 } from '../runtimes/react/root-style-registry'
 
@@ -20,12 +21,7 @@ export function NextRootStyleRegistry({
     const { classNames, css } = cache.flush()
 
     return classNames.length > 0 ? (
-      <style
-        data-emotion={`${cache.key} ${classNames.join(' ')}`}
-        dangerouslySetInnerHTML={{
-          __html: css,
-        }}
-      />
+      <StyleTagSSR key={cache.key} classNames={classNames} css={css} />
     ) : null
   })
 
