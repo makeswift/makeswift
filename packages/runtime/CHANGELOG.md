@@ -1,5 +1,165 @@
 # @makeswift/runtime
 
+## 0.25.0
+
+### Minor Changes
+
+- 59349b9: BREAKING: require Node.js version 20 or higher
+- 635ce7b: feat: framework-independent API handlers implementation (requires Node.js 18+)
+- 0785045: Adds support for viewing various site versions with preview tokens.
+
+  ## Breaking Changes
+
+  ### `MakeswiftSiteVersion` replaced with `SiteVersion`
+
+  We've replaced the `MakeswiftSiteVersion` type with `SiteVersion`, which is now
+  the return type of the `getSiteVersion` function. Any client method that accepts
+  a `siteVersion` option (including `getPageSnapshot`, `getComponentSnapshot`, and
+  `getPages`) should only be using the value returned by `getSiteVersion`. If
+  you're already using `getSiteVersion` for these methods (as recommended by our
+  installation guides), no changes should be required.
+
+  ### `ReactRuntimeProvider` takes a `siteVersion` prop
+
+  The `<ReactRuntimeProvider>`'s `previewMode` prop has been replaced with the
+  required `siteVersion` prop. The value passed for this prop should be set
+  by the same `getSiteVersion` function.
+
+  #### App Router
+
+  If you're using App Router, use the `getSiteVersion` function to get the value
+  to be passed to the `siteVersion` prop of `<ReactRuntimeProvider>`. If you
+  followed our installation guide and created a `<MakeswiftProvider>` component in
+  `src/makeswift/provider.tsx`, you can update the props of this component:
+
+  ```diff
+  "use client";
+
+  import { runtime } from "@/makeswift/runtime";
+  import {
+    ReactRuntimeProvider,
+    RootStyleRegistry,
+  + type SiteVersion,
+  } from "@makeswift/runtime/next";
+  import "@/makeswift/components";
+
+  export function MakeswiftProvider({
+    children,
+  -  previewMode,
+  +  siteVersion,
+  }: {
+    children: React.ReactNode;
+  -  previewMode: boolean;
+  +  siteVersion: SiteVersion | null
+  }) {
+    return (
+      <ReactRuntimeProvider siteVersion={siteVersion} runtime={runtime}>
+        <RootStyleRegistry>{children}</RootStyleRegistry>
+      </ReactRuntimeProvider>
+    );
+  }
+  ```
+
+  Then, you can update the value being passed to the `siteVersion` prop in the
+  root layout (`layout.tsx`):
+
+  ```diff
+  import { MakeswiftProvider } from '@/makeswift/provider'
+  - import { draftMode } from 'next/headers'
+  + import { getSiteVersion } from '@makeswift/runtime/next/server'
+
+  export default async function RootLayout({
+    children,
+    params,
+  }: Readonly<{
+    children: React.ReactNode
+    params: Params
+  }>) {
+    const { lang } = await params
+    return (
+      <html lang={lang}>
+        <body>
+  -        <MakeswiftProvider previewMode={(await draftMode()).isEnabled} locale={lang}>
+  +        <MakeswiftProvider siteVersion={await getSiteVersion()} locale={lang}>
+            {children}
+          </MakeswiftProvider>
+        </body>
+      </html>
+    )
+  }
+  ```
+
+  #### Pages Router
+
+  If you’re using Pages Router, you’ll need to update the `getStaticProps`
+  function in your optional catch-all route to replace `previewMode` with
+  `siteVersion` in its returned data so that it becomes available in the
+  `_app.tsx` file:
+
+  ```diff
+  return {
+    props: {
+      snapshot,
+  -   previewMode: Makeswift.getPreviewMode(previewData),
+  +   siteVersion: Makeswift.getSiteVersion(previewData),
+      locale,
+    },
+  };
+  ```
+
+  Then, you can consume this data in your `_app.tsx` file and pass it to the
+  `<ReactRuntimeProvider>`.
+
+  ```diff
+  export default function App({
+    Component,
+  -  pageProps: { previewMode, locale, ...pageProps },
+  +  pageProps: { siteVersion, locale, ...pageProps },
+  }: AppProps) {
+    return (
+      <ReactRuntimeProvider
+        runtime={runtime}
+  -     previewMode={previewMode}
+  +     siteVersion={siteVersion}
+        locale={locale}
+      >
+        <Component {...pageProps} />
+      </ReactRuntimeProvider>
+    );
+  }
+  ```
+
+- 041927e: BREAKING: Removes the `getSitemap` client method, which was deprecated in
+  `v0.19.0`. See https://docs.makeswift.com/developer/upgrading/0.19.0 on how to
+  use the `client.getPages` method to create a sitemap instead.
+- e7ae1f8: BREAKING: remove obsolete `PageProvider` component, `usePageId` hook
+
+### Patch Changes
+
+- 36b0729: feat: framework-independent host API client
+- 06a2462: Rename query param for clearing preview cookies
+- 635ce7b: fix: hanging promise in CORS preflight handling in Pages Router
+- cd9ab15: feat: decouple built-in components from `next/link`
+- 7c7e114: fix: "Do not add <script> tags using next/head" warning when running in Pages Router
+- daf11da: feat: decouple built-in `Image` and `Backgrounds` components from `next/image`
+- 93780b4: chore: upgrade from `redux`/`redux-thunk` to `@reduxjs/toolkit`
+- 635ce7b: fix: `onPublish` event not triggered in Pages Router
+- e60fbfb: Update host manifest to add support for preview tokens and drop support for preview/draft mode
+- 1449417: fix: add max-age to preview related browser cookies
+- 341b920: chore: remove unused `useBuilderHandshake` hook
+- ee0b65b: feat: add query param to clear preview cookies on redirect
+- 912b3fc: feat: framework-independent head tag management, built-in `Page` component
+- 0465c84: feat: framework-independent `RootStyleRegistry` implementation
+- a3346a9: chore: remove title casing from exit preview toolbar button
+- Updated dependencies [06a2462]
+- Updated dependencies [67582a5]
+- Updated dependencies [50eb563]
+- Updated dependencies [ee0b65b]
+- Updated dependencies [2ec2608]
+- Updated dependencies [2135f65]
+  - @makeswift/next-plugin@0.5.0
+  - @makeswift/prop-controllers@0.4.6
+
 ## 0.24.8
 
 ### Patch Changes

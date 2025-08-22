@@ -1,5 +1,16 @@
 # @makeswift/next-plugin
 
+## 0.5.0
+
+### Minor Changes
+
+- 0785045: BREAKING: Replaces draft-mode and preview-mode query param rewrite rules with a single rewrite rule for preview tokens.
+
+### Patch Changes
+
+- 06a2462: Rename query param for clearing preview cookies
+- ee0b65b: feat: add query param to clear preview cookies on redirect
+
 ## 0.4.1
 
 ### Patch Changes
