@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
 
 import { parse as parseSetCookie } from 'set-cookie-parser'
@@ -13,8 +13,7 @@ import {
   SearchParams,
   SET_COOKIE_HEADER,
 } from './utils/draft'
-
-type Context = { params: { [key: string]: string | string[] } }
+import { type Context, type NextAppRouterRequest } from '../app-router-handler'
 
 type RedirectPreviewError = string
 
@@ -23,14 +22,14 @@ type Response = unknown
 export type RedirectPreviewResponse = RedirectPreviewError | Response
 
 type RedirectPreviewHandlerArgs =
-  | [request: NextRequest, context: Context, params: { apiKey: string }]
+  | [request: NextAppRouterRequest, context: Context, params: { apiKey: string }]
   | [req: NextApiRequest, res: NextApiResponse<RedirectPreviewResponse>, params: { apiKey: string }]
 
 const routeHandlerPattern = [P.instanceOf(Request), P.any, P.any] as const
 const apiRoutePattern = [P.any, P.any, P.any] as const
 
 export default async function redirectPreviewHandler(
-  request: NextRequest,
+  request: NextAppRouterRequest,
   context: Context,
   { apiKey }: { apiKey: string },
 ): Promise<NextResponse<RedirectPreviewResponse>>
@@ -49,7 +48,7 @@ export default async function redirectPreviewHandler(
 }
 
 async function redirectPreviewRouteHandler(
-  _request: NextRequest,
+  _request: NextAppRouterRequest,
   _context: Context,
   {}: { apiKey: string },
 ): Promise<NextResponse<RedirectPreviewResponse>> {

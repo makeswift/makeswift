@@ -13,8 +13,7 @@ import {
   SearchParams,
   SET_COOKIE_HEADER,
 } from './utils/draft'
-
-type Context = { params: { [key: string]: string | string[] } }
+import { type Context, type NextAppRouterRequest, normalizeRequest } from '../app-router-handler'
 
 type RedirectDraftError = string
 
@@ -23,14 +22,14 @@ type Response = unknown
 export type RedirectDraftResponse = RedirectDraftError | Response
 
 type RedirectDraftHandlerArgs =
-  | [request: NextRequest, context: Context, params: { apiKey: string }]
+  | [request: NextAppRouterRequest, context: Context, params: { apiKey: string }]
   | [req: NextApiRequest, res: NextApiResponse<RedirectDraftResponse>, params: { apiKey: string }]
 
 const routeHandlerPattern = [P.instanceOf(Request), P.any, P.any] as const
 const apiRoutePattern = [P.any, P.any, P.any] as const
 
 export default async function redirectDraftHandler(
-  request: NextRequest,
+  request: NextAppRouterRequest,
   context: Context,
   { apiKey }: { apiKey: string },
 ): Promise<NextResponse<RedirectDraftResponse>>
@@ -58,10 +57,11 @@ export function originalRequestProtocol(request: NextRequest): string | null {
 }
 
 async function redirectDraftRouteHandler(
-  request: NextRequest,
+  req: NextAppRouterRequest,
   _context: Context,
   { apiKey }: { apiKey: string },
 ): Promise<NextResponse<RedirectDraftResponse>> {
+  const request = normalizeRequest(req)
   const secret = request.nextUrl.searchParams.get(SearchParams.DraftMode)
 
   if (secret == null) {

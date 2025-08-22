@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
 import { handleSitePublished } from './site-published'
 import {
@@ -9,8 +9,7 @@ import {
   WebhookPayloadSchema,
   WebhookResponseBody,
 } from './types'
-
-type Context = { params: { [key: string]: string | string[] } }
+import { Context, NextAppRouterRequest, normalizeRequest } from '../../app-router-handler'
 
 type WebhookParams = {
   apiKey: string
@@ -18,7 +17,7 @@ type WebhookParams = {
 }
 
 export type WebhookHandlerArgs =
-  | [request: NextRequest, context: Context, params: WebhookParams]
+  | [request: NextAppRouterRequest, context: Context, params: WebhookParams]
   | [req: NextApiRequest, res: NextApiResponse<WebhookResponseBody>, params: WebhookParams]
 
 const routeHandlerPattern = [P.instanceOf(Request), P.any, P.any] as const
@@ -26,7 +25,9 @@ const apiRoutePattern = [P.any, P.any, P.any] as const
 
 function getSecret(args: WebhookHandlerArgs) {
   return match(args)
-    .with(routeHandlerPattern, ([request]) => request.nextUrl.searchParams.get('secret'))
+    .with(routeHandlerPattern, ([request]) =>
+      normalizeRequest(request).nextUrl.searchParams.get('secret'),
+    )
     .with(apiRoutePattern, ([req]) => req.query.secret)
     .exhaustive()
 }
@@ -46,7 +47,7 @@ function respond(args: WebhookHandlerArgs, response: WebhookResponseBody, status
 }
 
 export default async function handler(
-  request: NextRequest,
+  request: NextAppRouterRequest,
   context: Context,
   { apiKey, events }: WebhookParams,
 ): Promise<NextResponse<WebhookResponseBody>>

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
 import {
   MAKESWIFT_DRAFT_DATA_COOKIE,
@@ -9,6 +9,7 @@ import {
   cookieSettingOptions,
 } from './utils/draft'
 import { serialize as serializeCookie } from 'cookie'
+import { type Context, type NextAppRouterRequest } from '../app-router-handler'
 
 function clearCookiesHeader(cookieNames: string[]): string {
   const headers = new Headers()
@@ -31,8 +32,6 @@ function clearCookiesHeader(cookieNames: string[]): string {
   return setCookieHeader
 }
 
-type Context = { params: { [key: string]: string | string[] } }
-
 type ClearDraftError = string
 
 type Response = { __brand: 'ClearDraftResponse' }
@@ -40,14 +39,14 @@ type Response = { __brand: 'ClearDraftResponse' }
 export type ClearDraftResponse = ClearDraftError | Response
 
 type ClearDraftHandlerArgs =
-  | [request: NextRequest, context: Context, params: { apiKey: string }]
+  | [request: NextAppRouterRequest, context: Context, params: { apiKey: string }]
   | [req: NextApiRequest, res: NextApiResponse<ClearDraftResponse>, params: { apiKey: string }]
 
 const routeHandlerPattern = [P.instanceOf(Request), P.any, P.any] as const
 const apiRoutePattern = [P.any, P.any, P.any] as const
 
 export default async function clearDraftHandler(
-  request: NextRequest,
+  request: NextAppRouterRequest,
   context: Context,
   { apiKey }: { apiKey: string },
 ): Promise<NextResponse<ClearDraftResponse>>
@@ -66,7 +65,7 @@ export default async function clearDraftHandler(
 }
 
 async function clearDraftRouteHandler(
-  _request: NextRequest,
+  _request: NextAppRouterRequest,
   _context: Context,
   {}: { apiKey: string },
 ): Promise<NextResponse<ClearDraftResponse>> {

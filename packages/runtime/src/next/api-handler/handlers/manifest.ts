@@ -1,8 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
-
-type Context = { params: { [key: string]: string | string[] } }
+import { type Context, type NextAppRouterRequest, normalizeRequest } from '../app-router-handler'
 
 export type Manifest = {
   version: string
@@ -23,14 +22,14 @@ type ManifestError = { message: string }
 export type ManifestResponse = Manifest | ManifestError
 
 type ManifestHandlerArgs =
-  | [request: NextRequest, context: Context, params: { apiKey: string }]
+  | [request: NextAppRouterRequest, context: Context, params: { apiKey: string }]
   | [req: NextApiRequest, res: NextApiResponse<ManifestResponse>, params: { apiKey: string }]
 
 const routeHandlerPattern = [P.instanceOf(Request), P.any, P.any] as const
 const apiRoutePattern = [P.any, P.any, P.any] as const
 
 export default async function handler(
-  request: NextRequest,
+  request: NextAppRouterRequest,
   context: Context,
   { apiKey }: { apiKey: string },
 ): Promise<NextResponse<ManifestResponse>>
@@ -45,7 +44,9 @@ export default async function handler(
   const [, , { apiKey }] = args
 
   const secret = match(args)
-    .with(routeHandlerPattern, ([request]) => request.nextUrl.searchParams.get('secret'))
+    .with(routeHandlerPattern, ([request]) =>
+      normalizeRequest(request).nextUrl.searchParams.get('secret'),
+    )
     .with(apiRoutePattern, ([req]) => req.query.secret)
     .exhaustive()
 

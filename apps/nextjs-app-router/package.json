@@ -12,7 +12,7 @@
     "@formatjs/intl-localematcher": "^0.5.4",
     "@makeswift/runtime": "workspace:^",
     "negotiator": "^0.6.3",
-    "next": "15.3.1",
+    "next": "15.5.0",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },
@@ -23,7 +23,7 @@
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
     "eslint": "^9.13.0",
-    "eslint-config-next": "15.0.2",
+    "eslint-config-next": "15.5.0",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"

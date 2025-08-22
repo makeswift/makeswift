@@ -1,10 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { ReactRuntime } from '../../../react'
 import { Element } from '../../../state/react-page'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
-
-type Context = { params: { [key: string]: string | string[] } }
+import { type Context, type NextAppRouterRequest } from '../app-router-handler'
 
 type ElementTreeResult = { elementTree: Element }
 
@@ -13,14 +12,14 @@ type ElementTreeError = { message: string }
 export type ElementTreeResponse = ElementTreeResult | ElementTreeError
 
 type ElementTreeHandlerArgs =
-  | [request: NextRequest, context: Context, runtime: ReactRuntime]
+  | [request: NextAppRouterRequest, context: Context, runtime: ReactRuntime]
   | [req: NextApiRequest, res: NextApiResponse<ElementTreeResponse>, runtime: ReactRuntime]
 
 const routeHandlerPattern = [P.instanceOf(Request), P.any, P.any] as const
 const apiRoutePattern = [P.any, P.any, P.any] as const
 
 export default async function elementTree(
-  request: NextRequest,
+  request: NextAppRouterRequest,
   context: Context,
   runtime: ReactRuntime,
 ): Promise<NextResponse<ElementTreeResponse>>

@@ -1,8 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
-
-type Context = { params: { [key: string]: string | string[] } }
+import { type Context, type NextAppRouterRequest } from '../app-router-handler'
 
 type FontVariant = { weight: string; style: 'italic' | 'normal'; src?: string }
 
@@ -19,14 +18,14 @@ export type GetFonts = () => Fonts | Promise<Fonts>
 export type FontsResponse = Fonts
 
 type FontsHandlerArgs =
-  | [request: NextRequest, context: Context, params: { getFonts?: GetFonts }]
+  | [request: NextAppRouterRequest, context: Context, params: { getFonts?: GetFonts }]
   | [req: NextApiRequest, res: NextApiResponse<FontsResponse>, params: { getFonts?: GetFonts }]
 
 const routeHandlerPattern = [P.instanceOf(Request), P.any, P.any] as const
 const apiRoutePattern = [P.any, P.any, P.any] as const
 
 export default async function fonts(
-  request: NextRequest,
+  request: NextAppRouterRequest,
   context: Context,
   { getFonts }: { getFonts?: GetFonts },
 ): Promise<NextResponse<FontsResponse>>

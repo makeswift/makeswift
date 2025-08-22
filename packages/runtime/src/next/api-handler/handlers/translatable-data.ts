@@ -1,10 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { Data } from '../../../state/react-page'
 import { Makeswift } from '../../client'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
-
-type Context = { params: { [key: string]: string | string[] } }
+import { type NextAppRouterRequest, type Context } from '../app-router-handler'
 
 type TranslatableDataResult = { translatableData: Record<string, Data> }
 
@@ -13,14 +12,14 @@ type TranslatableDataError = { message: string }
 export type TranslatableDataResponse = TranslatableDataResult | TranslatableDataError
 
 type TranslatableDataHandlerArgs =
-  | [request: NextRequest, context: Context, client: Makeswift]
+  | [request: NextAppRouterRequest, context: Context, client: Makeswift]
   | [req: NextApiRequest, res: NextApiResponse<TranslatableDataResponse>, client: Makeswift]
 
 const routeHandlerPattern = [P.instanceOf(Request), P.any, P.any] as const
 const apiRoutePattern = [P.any, P.any, P.any] as const
 
 export default async function translatableData(
-  request: NextRequest,
+  request: NextAppRouterRequest,
   context: Context,
   client: Makeswift,
 ): Promise<NextResponse<TranslatableDataResponse>>

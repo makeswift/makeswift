@@ -1,10 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { Element } from '../../../state/react-page'
 import { Makeswift } from '../../client'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
-
-type Context = { params: { [key: string]: string | string[] } }
+import { type Context, type NextAppRouterRequest } from '../app-router-handler'
 
 type TranslatedDataResult = { elementTree: Element }
 
@@ -13,14 +12,14 @@ type TranslatedDataError = { message: string }
 export type TranslatedDataResponse = TranslatedDataResult | TranslatedDataError
 
 type MergeTranslatedDataHandlerArgs =
-  | [request: NextRequest, context: Context, client: Makeswift]
+  | [request: NextAppRouterRequest, context: Context, client: Makeswift]
   | [req: NextApiRequest, res: NextApiResponse<TranslatedDataResponse>, client: Makeswift]
 
 const routeHandlerPattern = [P.instanceOf(Request), P.any, P.any] as const
 const apiRoutePattern = [P.any, P.any, P.any] as const
 
 export default async function mergeTranslatedData(
-  request: NextRequest,
+  request: NextAppRouterRequest,
   context: Context,
   client: Makeswift,
 ): Promise<NextResponse<TranslatedDataResponse>>

@@ -1,6 +1,6 @@
 import Cors from 'cors'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { Match, match as matchPattern } from 'path-to-regexp'
 import { APIResource } from '../../api'
 import { Makeswift } from '../client'
@@ -23,10 +23,9 @@ import {
   MakeswiftSiteVersion,
   makeswiftSiteVersionSchema,
 } from '../../api/site-version'
+import { type Context, type NextAppRouterRequest, normalizeRequest } from './app-router-handler'
 
 export type { Manifest, Font }
-
-type Context = { params: { [key: string]: string | string[] } }
 
 type Events = { onPublish: OnPublish }
 
@@ -55,7 +54,7 @@ export type MakeswiftApiHandlerResponse =
   | WebhookResponseBody
 
 type MakeswiftApiHandlerArgs =
-  | [NextRequest, Context]
+  | [NextAppRouterRequest, Context]
   | [NextApiRequest, NextApiResponse<MakeswiftApiHandlerResponse>]
 
 function apiRequestParams(request: NextApiRequest): Promise<NextApiRequest['query']> {
@@ -73,7 +72,9 @@ export function MakeswiftApiHandler(
     events,
     runtime,
   }: MakeswiftApiHandlerConfig,
-): (...args: MakeswiftApiHandlerArgs) => Promise<NextResponse<MakeswiftApiHandlerResponse> | void> {
+): (
+  ...args: MakeswiftApiHandlerArgs
+) => Promise<NextResponse<MakeswiftApiHandlerResponse>> | Promise<void> {
   const cors = Cors({ origin: appOrigin })
 
   if (typeof apiKey !== 'string') {
@@ -87,7 +88,7 @@ export function MakeswiftApiHandler(
   const routeHandlerPattern = [P.instanceOf(Request), P.any] as const
   const apiRoutePattern = [P.any, P.any] as const
 
-  return function handler(
+  function handler(
     ...args: MakeswiftApiHandlerArgs
   ): Promise<NextResponse<MakeswiftApiHandlerResponse> | void> {
     return match(args)
@@ -128,6 +129,10 @@ export function MakeswiftApiHandler(
       .exhaustive()
   }
 
+  return handler as (
+    ...args: MakeswiftApiHandlerArgs
+  ) => Promise<NextResponse<MakeswiftApiHandlerResponse>> | Promise<void>
+
   function getSiteVersionFromRequest(args: MakeswiftApiHandlerArgs): MakeswiftSiteVersion {
     const header = match(args)
       .with(routeHandlerPattern, ([request]) =>
@@ -142,7 +147,7 @@ export function MakeswiftApiHandler(
   }
 
   async function makeswiftApiHandler(
-    request: NextRequest,
+    request: NextAppRouterRequest,
     context: Context,
   ): Promise<NextResponse<MakeswiftApiHandlerResponse>>
   async function makeswiftApiHandler(
@@ -285,7 +290,9 @@ export function MakeswiftApiHandler(
 
     if ((m = matches<{ id: string }>('/page-pathname-slices/:id'))) {
       const localeParam = match(args)
-        .with(routeHandlerPattern, ([request]) => request.nextUrl.searchParams.get('locale'))
+        .with(routeHandlerPattern, ([request]) =>
+          normalizeRequest(request).nextUrl.searchParams.get('locale'),
+        )
         .with(apiRoutePattern, ([req]) => req.query.locale)
         .exhaustive()
       const locale = typeof localeParam === 'string' ? localeParam : undefined

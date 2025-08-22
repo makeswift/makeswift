@@ -1,10 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import isErrorWithMessage from '../../../utils/isErrorWithMessage'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
 import { revalidatePath } from 'next/cache'
-
-type Context = { params: { [key: string]: string | string[] } }
+import { type Context, type NextAppRouterRequest, normalizeRequest } from '../app-router-handler'
 
 type RevalidationResult = { revalidated: boolean }
 
@@ -13,14 +12,14 @@ type RevalidationError = { message: string }
 export type RevalidationResponse = RevalidationResult | RevalidationError
 
 type RevalidateHandlerArgs =
-  | [request: NextRequest, context: Context, params: { apiKey: string }]
+  | [request: NextAppRouterRequest, context: Context, params: { apiKey: string }]
   | [req: NextApiRequest, res: NextApiResponse<RevalidationResponse>, params: { apiKey: string }]
 
 const routeHandlerPattern = [P.instanceOf(Request), P.any, P.any] as const
 const apiRoutePattern = [P.any, P.any, P.any] as const
 
 export async function revalidate(
-  request: NextRequest,
+  request: NextAppRouterRequest,
   context: Context,
   { apiKey }: { apiKey: string },
 ): Promise<NextResponse<RevalidationResponse>>
@@ -35,7 +34,9 @@ export async function revalidate(
   const [, , { apiKey }] = args
 
   const secret = match(args)
-    .with(routeHandlerPattern, ([request]) => request.nextUrl.searchParams.get('secret'))
+    .with(routeHandlerPattern, ([request]) =>
+      normalizeRequest(request).nextUrl.searchParams.get('secret'),
+    )
     .with(apiRoutePattern, ([req]) => req.query.secret)
     .exhaustive()
 
@@ -50,7 +51,9 @@ export async function revalidate(
   }
 
   const path = match(args)
-    .with(routeHandlerPattern, ([request]) => request.nextUrl.searchParams.get('path'))
+    .with(routeHandlerPattern, ([request]) =>
+      normalizeRequest(request).nextUrl.searchParams.get('path'),
+    )
     .with(apiRoutePattern, ([req]) => req.query.path)
     .exhaustive()
 
