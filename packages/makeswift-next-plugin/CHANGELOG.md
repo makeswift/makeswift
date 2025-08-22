@@ -1,5 +1,11 @@
 # @makeswift/next-plugin
 
+## 0.5.0-canary.2
+
+### Minor Changes
+
+- 67582a5: BREAKING: Replaces draft-mode and preview-mode query param rewrite rules with a single rewrite rule for preview tokens.
+
 ## 0.5.0-canary.1
 
 ### Patch Changes
