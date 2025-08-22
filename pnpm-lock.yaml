@@ -4,6 +4,12 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@makeswift/prop-controllers': file://~/dev/makeswift/packages/prop-controllers
+  '@makeswift/controls': file://~/dev/makeswift/packages/controls
+  '@makeswift/runtime': file://~/dev/makeswift/packages/runtime
+  '@makeswift/next-plugin': file://~/dev/makeswift/packages/makeswift-next-plugin
+
 importers:
 
   .:
@@ -30,8 +36,8 @@ importers:
         specifier: ^0.5.4
         version: 0.5.4
       '@makeswift/runtime':
-        specifier: workspace:^
-        version: link:../../packages/runtime
+        specifier: file://~/dev/makeswift/packages/runtime
+        version: file:packages/runtime(@types/react-dom@18.2.6)(@types/react@18.2.14)(next@15.5.0(@playwright/test@1.41.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       negotiator:
         specifier: ^0.6.3
         version: 0.6.3
@@ -79,8 +85,8 @@ importers:
   apps/nextjs-pages-router:
     dependencies:
       '@makeswift/runtime':
-        specifier: workspace:^
-        version: link:../../packages/runtime
+        specifier: file://~/dev/makeswift/packages/runtime
+        version: file:packages/runtime(@types/react-dom@18.2.6)(@types/react@18.2.14)(next@15.5.0(@playwright/test@1.41.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       next:
         specifier: 15.5.0
         version: 15.5.0(@playwright/test@1.41.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -278,7 +284,7 @@ importers:
   packages/prop-controllers:
     dependencies:
       '@makeswift/controls':
-        specifier: workspace:*
+        specifier: file://~/dev/makeswift/packages/controls
         version: link:../controls
       ts-pattern:
         specifier: ^5.0.8
@@ -327,13 +333,13 @@ importers:
         specifier: ^1.4.2
         version: 1.4.2
       '@makeswift/controls':
-        specifier: workspace:*
+        specifier: file://~/dev/makeswift/packages/controls
         version: link:../controls
       '@makeswift/next-plugin':
-        specifier: workspace:*
-        version: link:../makeswift-next-plugin
+        specifier: file://~/dev/makeswift/packages/makeswift-next-plugin
+        version: file:packages/makeswift-next-plugin(next@15.0.2(@babel/core@7.24.9)(@playwright/test@1.41.1)(babel-plugin-macros@3.1.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       '@makeswift/prop-controllers':
-        specifier: workspace:*
+        specifier: file://~/dev/makeswift/packages/prop-controllers
         version: link:../prop-controllers
       '@popmotion/popcorn':
         specifier: ^0.4.4
@@ -2052,6 +2058,32 @@ packages:
 
   '@juggle/resize-observer@3.4.0':
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
+
+  '@makeswift/controls@file:packages/controls':
+    resolution: {directory: packages/controls, type: directory}
+
+  '@makeswift/next-plugin@file:packages/makeswift-next-plugin':
+    resolution: {directory: packages/makeswift-next-plugin, type: directory}
+    peerDependencies:
+      next: ^13.4.0 || ^14.0.0 || ^15.0.0
+
+  '@makeswift/prop-controllers@file:packages/prop-controllers':
+    resolution: {directory: packages/prop-controllers, type: directory}
+
+  '@makeswift/runtime@file:packages/runtime':
+    resolution: {directory: packages/runtime, type: directory}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      '@types/react': ^18.0.0 || ^19.0.0
+      '@types/react-dom': ^18.0.0 || ^19.0.0
+      next: ^13.4.0 || ^14.0.0 || ^15.0.0
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
 
   '@manypkg/find-root@1.1.0':
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -10259,6 +10291,157 @@ snapshots:
 
   '@juggle/resize-observer@3.4.0': {}
 
+  '@makeswift/controls@file:packages/controls':
+    dependencies:
+      color: 3.2.1
+      css-box-model: 1.2.1
+      csstype: 2.6.20
+      slate: 0.91.4
+      ts-pattern: 5.0.8
+      uuid: 9.0.0
+      zod: 3.21.4
+
+  '@makeswift/next-plugin@file:packages/makeswift-next-plugin(next@15.0.2(@babel/core@7.24.9)(@playwright/test@1.41.1)(babel-plugin-macros@3.1.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
+    dependencies:
+      enhanced-resolve: 5.10.0
+      escalade: 3.1.1
+      next: 15.0.2(@babel/core@7.24.9)(@playwright/test@1.41.1)(babel-plugin-macros@3.1.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      semver: 7.7.2
+
+  '@makeswift/next-plugin@file:packages/makeswift-next-plugin(next@15.5.0(@playwright/test@1.41.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
+    dependencies:
+      enhanced-resolve: 5.10.0
+      escalade: 3.1.1
+      next: 15.5.0(@playwright/test@1.41.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      semver: 7.7.2
+
+  '@makeswift/next-plugin@file:packages/makeswift-next-plugin(next@15.5.0(@playwright/test@1.41.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))':
+    dependencies:
+      enhanced-resolve: 5.10.0
+      escalade: 3.1.1
+      next: 15.5.0(@playwright/test@1.41.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      semver: 7.7.2
+
+  '@makeswift/prop-controllers@file:packages/prop-controllers':
+    dependencies:
+      '@makeswift/controls': file:packages/controls
+      ts-pattern: 5.0.8
+      zod: 3.21.4
+
+  '@makeswift/runtime@file:packages/runtime(@types/react-dom@18.2.6)(@types/react@18.2.14)(next@15.5.0(@playwright/test@1.41.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@emotion/cache': 11.14.0
+      '@emotion/css': 11.13.5
+      '@emotion/serialize': 1.3.3
+      '@emotion/server': 11.11.0(@emotion/css@11.13.5)
+      '@emotion/sheet': 1.4.0
+      '@emotion/utils': 1.4.2
+      '@makeswift/controls': file:packages/controls
+      '@makeswift/next-plugin': file:packages/makeswift-next-plugin(next@15.5.0(@playwright/test@1.41.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+      '@makeswift/prop-controllers': file:packages/prop-controllers
+      '@popmotion/popcorn': 0.4.4
+      '@reduxjs/toolkit': 2.8.2(react@18.2.0)
+      '@types/is-hotkey': 0.1.7
+      '@types/use-sync-external-store': 0.0.3
+      '@types/uuid': 9.0.1
+      '@use-gesture/react': 10.2.24(react@18.2.0)
+      color: 3.2.1
+      cookie: 1.0.2
+      corporate-ipsum: 1.0.1
+      cors: 2.8.5
+      css-box-model: 1.2.1
+      csstype: 2.6.20
+      escape-html: 1.0.3
+      formik: 2.2.9(react@18.2.0)
+      framer-motion: 10.16.16(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      graphql: 16.8.2
+      html-react-parser: 5.0.10(react@18.2.0)
+      immutable: 4.0.0
+      is-hotkey: 0.1.8
+      js-base64: 3.7.7
+      jwt-decode: 4.0.0
+      next: 15.5.0(@playwright/test@1.41.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      ot-json0: 1.1.0
+      parse5: 7.2.1
+      path-to-regexp: 6.2.1
+      polished: 3.0.3
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      react-player: 2.16.1(react@18.2.0)
+      reselect: 5.1.1
+      scroll-into-view-if-needed: 2.2.29
+      set-cookie-parser: 2.7.1
+      slate: 0.91.4
+      slate-hyperscript: 0.77.0(slate@0.91.4)
+      slate-react: 0.91.7(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(slate@0.91.4)
+      ts-pattern: 5.0.8
+      use-sync-external-store: 1.0.0-rc.0(react@18.2.0)
+      uuid: 9.0.0
+      zod: 3.21.4
+    optionalDependencies:
+      '@types/react': 18.2.14
+      '@types/react-dom': 18.2.6
+    transitivePeerDependencies:
+      - react-redux
+      - supports-color
+
+  '@makeswift/runtime@file:packages/runtime(@types/react-dom@18.2.6)(@types/react@18.2.14)(next@15.5.0(@playwright/test@1.41.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@emotion/cache': 11.14.0
+      '@emotion/css': 11.13.5
+      '@emotion/serialize': 1.3.3
+      '@emotion/server': 11.11.0(@emotion/css@11.13.5)
+      '@emotion/sheet': 1.4.0
+      '@emotion/utils': 1.4.2
+      '@makeswift/controls': file:packages/controls
+      '@makeswift/next-plugin': file:packages/makeswift-next-plugin(next@15.5.0(@playwright/test@1.41.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
+      '@makeswift/prop-controllers': file:packages/prop-controllers
+      '@popmotion/popcorn': 0.4.4
+      '@reduxjs/toolkit': 2.8.2(react@19.1.0)
+      '@types/is-hotkey': 0.1.7
+      '@types/use-sync-external-store': 0.0.3
+      '@types/uuid': 9.0.1
+      '@use-gesture/react': 10.2.24(react@19.1.0)
+      color: 3.2.1
+      cookie: 1.0.2
+      corporate-ipsum: 1.0.1
+      cors: 2.8.5
+      css-box-model: 1.2.1
+      csstype: 2.6.20
+      escape-html: 1.0.3
+      formik: 2.2.9(react@19.1.0)
+      framer-motion: 10.16.16(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      graphql: 16.8.2
+      html-react-parser: 5.0.10(react@19.1.0)
+      immutable: 4.0.0
+      is-hotkey: 0.1.8
+      js-base64: 3.7.7
+      jwt-decode: 4.0.0
+      next: 15.5.0(@playwright/test@1.41.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      ot-json0: 1.1.0
+      parse5: 7.2.1
+      path-to-regexp: 6.2.1
+      polished: 3.0.3
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+      react-player: 2.16.1(react@19.1.0)
+      reselect: 5.1.1
+      scroll-into-view-if-needed: 2.2.29
+      set-cookie-parser: 2.7.1
+      slate: 0.91.4
+      slate-hyperscript: 0.77.0(slate@0.91.4)
+      slate-react: 0.91.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(slate@0.91.4)
+      ts-pattern: 5.0.8
+      use-sync-external-store: 1.0.0-rc.0(react@19.1.0)
+      uuid: 9.0.0
+      zod: 3.21.4
+    optionalDependencies:
+      '@types/react': 18.2.14
+      '@types/react-dom': 18.2.6
+    transitivePeerDependencies:
+      - react-redux
+      - supports-color
+
   '@manypkg/find-root@1.1.0':
     dependencies:
       '@babel/runtime': 7.23.9
@@ -10427,6 +10610,17 @@ snapshots:
       reselect: 5.1.1
     optionalDependencies:
       react: 18.2.0
+
+  '@reduxjs/toolkit@2.8.2(react@19.1.0)':
+    dependencies:
+      '@standard-schema/spec': 1.0.0
+      '@standard-schema/utils': 0.3.0
+      immer: 10.1.1
+      redux: 5.0.1
+      redux-thunk: 3.1.0(redux@5.0.1)
+      reselect: 5.1.1
+    optionalDependencies:
+      react: 19.1.0
 
   '@rollup/rollup-android-arm-eabi@4.13.0':
     optional: true
@@ -11093,6 +11287,11 @@ snapshots:
     dependencies:
       '@use-gesture/core': 10.2.24
       react: 18.2.0
+
+  '@use-gesture/react@10.2.24(react@19.1.0)':
+    dependencies:
+      '@use-gesture/core': 10.2.24
+      react: 19.1.0
 
   abab@2.0.6: {}
 
@@ -13210,6 +13409,17 @@ snapshots:
       tiny-warning: 1.0.3
       tslib: 1.14.1
 
+  formik@2.2.9(react@19.1.0):
+    dependencies:
+      deepmerge: 2.2.1
+      hoist-non-react-statics: 3.3.2
+      lodash: 4.17.21
+      lodash-es: 4.17.21
+      react: 19.1.0
+      react-fast-compare: 2.0.4
+      tiny-warning: 1.0.3
+      tslib: 1.14.1
+
   fraction.js@4.3.7: {}
 
   framer-motion@10.16.16(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
@@ -13219,6 +13429,14 @@ snapshots:
       '@emotion/is-prop-valid': 0.8.8
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  framer-motion@10.16.16(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+    dependencies:
+      tslib: 2.6.2
+    optionalDependencies:
+      '@emotion/is-prop-valid': 0.8.8
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
 
   framesync@4.1.0:
     dependencies:
@@ -13544,6 +13762,14 @@ snapshots:
       domhandler: 5.0.3
       html-dom-parser: 5.0.5
       react: 18.2.0
+      react-property: 2.0.2
+      style-to-js: 1.1.10
+
+  html-react-parser@5.0.10(react@19.1.0):
+    dependencies:
+      domhandler: 5.0.3
+      html-dom-parser: 5.0.5
+      react: 19.1.0
       react-property: 2.0.2
       style-to-js: 1.1.10
 
@@ -15880,6 +16106,15 @@ snapshots:
       react: 18.2.0
       react-fast-compare: 3.2.2
 
+  react-player@2.16.1(react@19.1.0):
+    dependencies:
+      deepmerge: 4.3.1
+      load-script: 1.0.0
+      memoize-one: 5.2.1
+      prop-types: 15.8.1
+      react: 19.1.0
+      react-fast-compare: 3.2.2
+
   react-property@2.0.2: {}
 
   react@18.2.0:
@@ -16201,8 +16436,7 @@ snapshots:
 
   semver@7.7.1: {}
 
-  semver@7.7.2:
-    optional: true
+  semver@7.7.2: {}
 
   sentence-case@3.0.4:
     dependencies:
@@ -16360,6 +16594,21 @@ snapshots:
       lodash: 4.17.21
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+      scroll-into-view-if-needed: 2.2.29
+      slate: 0.91.4
+      tiny-invariant: 1.0.6
+
+  slate-react@0.91.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(slate@0.91.4):
+    dependencies:
+      '@juggle/resize-observer': 3.4.0
+      '@types/is-hotkey': 0.1.7
+      '@types/lodash': 4.14.191
+      direction: 1.0.4
+      is-hotkey: 0.1.8
+      is-plain-object: 5.0.0
+      lodash: 4.17.21
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
       scroll-into-view-if-needed: 2.2.29
       slate: 0.91.4
       tiny-invariant: 1.0.6
@@ -17224,6 +17473,10 @@ snapshots:
   use-sync-external-store@1.0.0-rc.0(react@18.2.0):
     dependencies:
       react: 18.2.0
+
+  use-sync-external-store@1.0.0-rc.0(react@19.1.0):
+    dependencies:
+      react: 19.1.0
 
   util-deprecate@1.0.2: {}
 

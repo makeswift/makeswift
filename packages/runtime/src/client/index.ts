@@ -45,6 +45,7 @@ import { toIterablePaginationResult } from '../utils/pagination'
 import { deterministicUUID } from '../utils/deterministic-uuid'
 import { Schema } from '@makeswift/controls'
 import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-only-documents'
+import { Base64 } from 'js-base64'
 
 export { SnippetLocation } from '../api/graphql/generated/types'
 
@@ -86,6 +87,31 @@ const makeswiftGetPagesParamsSchema = z.object({
   includeOffline: z.boolean().optional(),
   pathPrefix: z.string().optional(),
   locale: z.string().optional(),
+})
+
+// TODO move
+// this is a copy of what we use for unstructured introspection in the builder
+function isAPIResourceType(val: string): val is APIResourceType {
+  return APIResourceType[val as keyof typeof APIResourceType] != null
+}
+// TODO move
+// this is a copy of what we use for unstructured introspection in the builder
+const parseResourceIdSchema = z.string().transform((val, ctx) => {
+  try {
+    const match = Base64.decode(val).match(/^([^:]+):(.+)$/)
+    if (!match) throw new TypeError(`NodeID cannot represent value: ${String(val)}`)
+    const [, typeName, key] = match
+    if (isAPIResourceType(typeName)) {
+      return { key, typeName }
+    }
+    throw new TypeError(`decoded type '${typeName}' is not a valid APIResourceType`)
+  } catch (error) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `${String(val)} is not a valid node resource ID`,
+    })
+    return z.NEVER
+  }
 })
 
 function getPagesQueryParams({
@@ -281,7 +307,7 @@ type LocalizedPage = {
   seo: Seo
 }
 
-type MakeswiftConfig = {
+export type MakeswiftConfig = {
   apiOrigin?: string
   runtime: ReactRuntime
 }
@@ -356,7 +382,7 @@ export class MakeswiftClient {
     this.runtime = runtime
   }
 
-  private async fetch(path: string, siteVersion: SiteVersion | null): Promise<Response> {
+  private async fetch(path: string, siteVersion: SiteVersion | null, cacheTags?: string[]): Promise<Response> {
     const requestUrl = new URL(path, this.apiOrigin)
 
     const requestHeaders = new Headers({
@@ -372,7 +398,7 @@ export class MakeswiftClient {
     const response = await fetch(requestUrl.toString(), {
       headers: requestHeaders,
       ...(siteVersion != null ? { cache: 'no-store' } : {}),
-      ...this.fetchOptions(siteVersion),
+      ...this.fetchOptions(siteVersion, cacheTags),
     })
 
     return response
@@ -381,7 +407,7 @@ export class MakeswiftClient {
   /**
    * Override this method to provide additional fetch options, e.g. revalidation, cache tags, etc.
    */
-  fetchOptions(_siteVersion: SiteVersion | null): Record<string, unknown> {
+  fetchOptions(_siteVersion: SiteVersion | null, _cacheTags?: string[]): Record<string, unknown> {
     return {}
   }
 
@@ -450,11 +476,18 @@ export class MakeswiftClient {
 
     const url = new URL(`v3/typographies/bulk`, this.apiOrigin)
 
+    const cacheTags: string[] = []
+
     typographyIds.forEach(id => {
       url.searchParams.append('ids', id)
+
+      const result = parseResourceIdSchema.safeParse(id)
+      if (result.success) {
+        cacheTags.push(result.data.key)
+      }
     })
 
-    const response = await this.fetch(url.pathname + url.search, siteVersion)
+    const response = await this.fetch(url.pathname + url.search, siteVersion, cacheTags)
 
     if (!response.ok) {
       console.error(`Failed to get typographies for [${typographyIds.join(', ')}]`, {

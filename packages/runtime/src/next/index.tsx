@@ -8,7 +8,7 @@ export type {
   MakeswiftPageSnapshot,
   Sitemap,
 } from '../client'
-export { Makeswift } from './client'
+export { Makeswift, RevalidationTagStrategy } from './client'
 export { type SiteVersion } from '../api/site-version'
 export { NextRootStyleRegistry as RootStyleRegistry } from './root-style-registry'
 export { NextRuntimeProvider as ReactRuntimeProvider } from './runtime-provider'

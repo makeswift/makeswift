@@ -37,10 +37,11 @@ export type ApiHandlerUserConfig = {
   events?: Events
 }
 
+// TODO type of revalidationHandler should always match what's in packages/runtime/src/next/api-handler/config revalidationHandler params, right?
 export type ApiHandlerInternalConfig = {
   client: MakeswiftClient
   manifest?: Partial<Manifest>
-  revalidationHandler: (path?: string) => Promise<void>
+  revalidationHandler: (path?: string, cacheTags?: string[]) => Promise<void>
   previewCookieNames: string[]
 }
 
