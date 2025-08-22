@@ -1,8 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { NextRequest, NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
-
-type Context = { params: { [key: string]: string | string[] } }
+import { type Context } from '../app-router-handler'
 
 type FontVariant = { weight: string; style: 'italic' | 'normal'; src?: string }
 

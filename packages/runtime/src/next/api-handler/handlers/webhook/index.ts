@@ -9,8 +9,7 @@ import {
   WebhookPayloadSchema,
   WebhookResponseBody,
 } from './types'
-
-type Context = { params: { [key: string]: string | string[] } }
+import { Context } from '../../app-router-handler'
 
 type WebhookParams = {
   apiKey: string

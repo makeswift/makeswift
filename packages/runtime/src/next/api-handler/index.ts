@@ -23,10 +23,9 @@ import {
   MakeswiftSiteVersion,
   makeswiftSiteVersionSchema,
 } from '../../api/site-version'
+import { type Context } from './app-router-handler'
 
 export type { Manifest, Font }
-
-type Context = { params: { [key: string]: string | string[] } }
 
 type Events = { onPublish: OnPublish }
 
@@ -73,7 +72,9 @@ export function MakeswiftApiHandler(
     events,
     runtime,
   }: MakeswiftApiHandlerConfig,
-): (...args: MakeswiftApiHandlerArgs) => Promise<NextResponse<MakeswiftApiHandlerResponse> | void> {
+): (
+  ...args: MakeswiftApiHandlerArgs
+) => Promise<NextResponse<MakeswiftApiHandlerResponse>> | Promise<void> {
   const cors = Cors({ origin: appOrigin })
 
   if (typeof apiKey !== 'string') {
@@ -87,7 +88,7 @@ export function MakeswiftApiHandler(
   const routeHandlerPattern = [P.instanceOf(Request), P.any] as const
   const apiRoutePattern = [P.any, P.any] as const
 
-  return function handler(
+  function handler(
     ...args: MakeswiftApiHandlerArgs
   ): Promise<NextResponse<MakeswiftApiHandlerResponse> | void> {
     return match(args)
@@ -127,6 +128,10 @@ export function MakeswiftApiHandler(
       })
       .exhaustive()
   }
+
+  return handler as (
+    ...args: MakeswiftApiHandlerArgs
+  ) => Promise<NextResponse<MakeswiftApiHandlerResponse>> | Promise<void>
 
   function getSiteVersionFromRequest(args: MakeswiftApiHandlerArgs): MakeswiftSiteVersion {
     const header = match(args)
