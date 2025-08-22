@@ -11,17 +11,21 @@ import { MAKESWIFT_SITE_VERSION_COOKIE, PRERENDER_BYPASS_COOKIE } from '../previ
 import { validateApiRoute, type ApiHandlerConfig } from './base'
 import { MakeswiftClient } from '../../../client'
 
-type Context = { params: { [key: string]: string | string[] } }
+type Params = { [key: string]: string | string[] }
+type Context = { params: Promise<Params> }
 
-export type ApiHandlerArgs = [NextRequest, Context]
-export const argsPattern = [P.instanceOf(Request), P.any] as const
+export type ApiHandlerArgs = [NextRequest | Request, Context]
+export const argsPattern = [
+  P.union(P.instanceOf(Request), P.instanceOf(NextRequest)),
+  P.any,
+] as const
 
 export async function config({
   req,
   context,
   client,
 }: {
-  req: NextRequest
+  req: NextRequest | Request
   context: Context
   client: MakeswiftClient
 }): Promise<ApiHandlerConfig> {
@@ -39,7 +43,12 @@ export async function config({
     },
     customRoutes: async (route: string) => {
       if (route === '/redirect-preview') {
-        return { res: await appRouterRedirectPreviewHandler(req, context, client) }
+        // Convert any Request to NextRequest, if necessary. Due to an issue in
+        // how NextRequests are instantiated, we have to pass the original
+        // request to the constructor twice. See
+        // https://github.com/vercel/next.js/issues/52967
+        const request = req instanceof NextRequest ? req : new NextRequest(req, req)
+        return { res: await appRouterRedirectPreviewHandler(request, context, client) }
       }
 
       return null

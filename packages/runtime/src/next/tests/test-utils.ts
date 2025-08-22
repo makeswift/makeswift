@@ -67,14 +67,14 @@ function createNextRequestWithContext({
   originalPath,
   body,
   headers,
-}: RequestParams): [NextRequest, { params: { [key: string]: string | string[] } }] {
+}: RequestParams): [NextRequest, { params: Promise<{ [key: string]: string | string[] }> }] {
   const request = new NextRequest(hostUrl(originalPath ?? path), {
     method,
     body: JSON.stringify(body),
     headers,
   })
 
-  return [request, { params: routeParams(hostUrl(path)) }]
+  return [request, { params: Promise.resolve(routeParams(hostUrl(path))) }]
 }
 
 export function pagesRouterApiRequestFixture(
