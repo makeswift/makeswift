@@ -52,22 +52,22 @@ export const createRootStyleCache = ({ key }: { key?: string } = {}): StyleCache
 }
 
 type StyleTagProps = {
-  key: string
+  cacheKey: string
   classNames: string[]
   css: string
 }
 
-export const StyleTagSSR = ({ key, classNames, css }: StyleTagProps) => (
+export const StyleTagSSR = ({ cacheKey, classNames, css }: StyleTagProps) => (
   <style
-    data-emotion={`${key} ${classNames.join(' ')}`}
+    data-emotion={`${cacheKey} ${classNames.join(' ')}`}
     dangerouslySetInnerHTML={{
       __html: css,
     }}
   />
 )
 
-export const styleTagHtml = ({ key, classNames, css }: StyleTagProps): string =>
-  `<style data-emotion="${key} ${classNames.join(' ')}">${css}</style>`
+export const styleTagHtml = ({ cacheKey, classNames, css }: StyleTagProps): string =>
+  `<style data-emotion="${cacheKey} ${classNames.join(' ')}">${css}</style>`
 
 export type RootStyleProps = {
   /**
