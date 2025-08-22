@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@makeswift/runtime": "workspace:^",
-    "next": "15.0.2",
+    "next": "15.5.0",
     "react": "^18",
     "react-dom": "^18"
   },
