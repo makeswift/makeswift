@@ -1,5 +1,4 @@
 ---
-'@makeswift/next-plugin': minor
 '@makeswift/runtime': minor
 ---
 
