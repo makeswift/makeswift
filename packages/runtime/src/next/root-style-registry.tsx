@@ -21,7 +21,7 @@ export function NextRootStyleRegistry({
     const { classNames, css } = cache.flush()
 
     return classNames.length > 0 ? (
-      <StyleTagSSR key={cache.key} classNames={classNames} css={css} />
+      <StyleTagSSR cacheKey={cache.key} classNames={classNames} css={css} />
     ) : null
   })
 

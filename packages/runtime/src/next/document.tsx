@@ -11,6 +11,8 @@ import NextDocument, {
   NextScript,
 } from 'next/document'
 
+import { StyleTagSSR } from '../runtimes/react/root-style-registry'
+
 export class Document extends NextDocument {
   static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
     const initialProps = await NextDocument.getInitialProps(ctx)
@@ -23,7 +25,7 @@ export class Document extends NextDocument {
       styles: (
         <>
           {initialProps.styles}
-          <style data-emotion={`css ${ids.join(' ')}`} dangerouslySetInnerHTML={{ __html: css }} />
+          <StyleTagSSR cacheKey={cache.key} classNames={ids} css={css} />
         </>
       ),
     }
