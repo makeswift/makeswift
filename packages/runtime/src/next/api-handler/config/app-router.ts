@@ -34,11 +34,15 @@ export async function config({
     route: validateApiRoute(await context.params),
     previewCookieNames: [PRERENDER_BYPASS_COOKIE, MAKESWIFT_SITE_VERSION_COOKIE],
     sendResponse: async (res: ApiResponse): Promise<Response | void> => res,
-    revalidationHandler: async (path?: string): Promise<void> => {
+    revalidationHandler: async (path?: string, cacheTags?: string[]): Promise<void> => {
       if (path != null) {
         revalidatePath(path)
       } else {
-        revalidateTag(MAKESWIFT_CACHE_TAG)
+        if (cacheTags) {
+          for (const cacheTag of cacheTags) {
+            revalidateTag(cacheTag)
+          }
+        }
       }
     },
     customRoutes: async (route: string) => {

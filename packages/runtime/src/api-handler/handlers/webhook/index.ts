@@ -14,7 +14,7 @@ import { handleSitePublished } from './site-published'
 type WebhookParams = {
   apiKey: string
   events?: { onPublish?: OnPublish }
-  revalidate: () => void
+  revalidate: (path?: string, cacheTags?: string[]) => Promise<void>
 }
 
 export async function webhookHandler(
@@ -36,9 +36,14 @@ export async function webhookHandler(
     return ApiResponse.json({ message: 'Invalid request body' }, { status: 400 })
   }
 
+  function handleRevalidate() {
+    // TODO be less ugly
+    revalidate(undefined, payload.data.revalidateTags)
+  }
+
   const result = await match(payload.type)
     .with(WebhookEventType.SITE_PUBLISHED, () =>
-      handleSitePublished(payload, { onPublish: events?.onPublish, revalidate }),
+      handleSitePublished(payload, { onPublish: events?.onPublish, revalidate: handleRevalidate }),
     )
     .exhaustive()
 

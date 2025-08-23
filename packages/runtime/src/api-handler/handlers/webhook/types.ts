@@ -14,6 +14,7 @@ export const sitePublishedWebhookPayloadSchema = z.object({
       from: z.string().uuid().nullable(),
       to: z.string().uuid(),
     }),
+    revalidateTags: z.array(z.string()).optional(),
     at: z.number(),
   }),
 })

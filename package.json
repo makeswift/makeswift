@@ -16,5 +16,13 @@
     "@types/node": "^20.14.8",
     "prettier": "^3.2.5",
     "turbo": "^1.13.3"
-  }
+  },
+  "pnpm": {
+    "overrides": {
+      "@makeswift/prop-controllers": "file://~/dev/makeswift/packages/prop-controllers",
+      "@makeswift/controls": "file://~/dev/makeswift/packages/controls",
+      "@makeswift/runtime": "file://~/dev/makeswift/packages/runtime",
+      "@makeswift/next-plugin": "file://~/dev/makeswift/packages/makeswift-next-plugin"
+    }
+}
 }
