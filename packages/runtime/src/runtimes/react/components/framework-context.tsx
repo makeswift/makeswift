@@ -53,6 +53,8 @@ export type FrameworkContext = {
 // React 19 automatically hoists metadata tags to the <head>
 export const DefaultHead = ({ children }: PropsWithChildren) => <>{children}</>
 
+export const DefaultHeadSnippet = BaseHeadSnippet
+
 export const DefaultImage: ImageComponent = ({ priority, fill, style, ...props }) => (
   <img
     {...props}
@@ -87,7 +89,7 @@ export const versionedFetch: FrameworkContext['versionedFetch'] = siteVersion =>
 
 export const FrameworkContext = createContext<FrameworkContext>({
   Head: DefaultHead,
-  HeadSnippet: BaseHeadSnippet,
+  HeadSnippet: DefaultHeadSnippet,
   Image: DefaultImage,
   Link: DefaultLink,
   versionedFetch,
