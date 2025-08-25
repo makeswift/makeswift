@@ -1,0 +1,5 @@
+{
+  "main": "../dist/cjs/framework-support/index.js",
+  "module": "../dist/esm/framework-support/index.js",
+  "types": "../dist/types/framework-support/index.d.ts"
+}
