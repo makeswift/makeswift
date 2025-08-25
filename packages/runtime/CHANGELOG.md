@@ -1,24 +1,11 @@
 # @makeswift/runtime
 
-## 0.25.0-canary.16
-
-### Patch Changes
-
-- Updated dependencies [67582a5]
-  - @makeswift/next-plugin@0.5.0-canary.2
-
-## 0.25.0-canary.15
-
-### Patch Changes
-
-- 06a2462: Rename query param for clearing preview cookies
-- Updated dependencies [06a2462]
-  - @makeswift/next-plugin@0.5.0-canary.1
-
-## 0.25.0-canary.14
+## 0.25.0
 
 ### Minor Changes
 
+- 59349b9: BREAKING: require Node.js version 20 or higher
+- 635ce7b: feat: framework-independent API handlers implementation (requires Node.js 18+)
 - 0785045: Adds support for viewing various site versions with preview tokens.
 
   ## Breaking Changes
@@ -145,108 +132,33 @@
 - 041927e: BREAKING: Removes the `getSitemap` client method, which was deprecated in
   `v0.19.0`. See https://docs.makeswift.com/developer/upgrading/0.19.0 on how to
   use the `client.getPages` method to create a sitemap instead.
-
-### Patch Changes
-
-- e60fbfb: Update host manifest to add support for preview tokens and drop support for preview/draft mode
-- 1449417: fix: add max-age to preview related browser cookies
-- ee0b65b: feat: add query param to clear preview cookies on redirect
-- a3346a9: chore: remove title casing from exit preview toolbar button
-- Updated dependencies [0785045]
-- Updated dependencies [ee0b65b]
-  - @makeswift/next-plugin@0.5.0-canary.0
-
-## 0.25.0-canary.13
+- e7ae1f8: BREAKING: remove obsolete `PageProvider` component, `usePageId` hook
 
 ### Patch Changes
 
 - 36b0729: feat: framework-independent host API client
-
-## 0.25.0-canary.12
-
-### Patch Changes
-
-- 93780b4: chore: upgrade from `redux`/`redux-thunk` to `@reduxjs/toolkit`
-
-## 0.25.0-canary.11
-
-### Patch Changes
-
-- Updated dependencies [2ec2608]
-  - @makeswift/prop-controllers@0.4.6-canary.2
-
-## 0.25.0-canary.10
-
-### Patch Changes
-
-- cd9ab15: feat: decouple built-in components from `next/link`
-
-## 0.25.0-canary.9
-
-### Patch Changes
-
-- daf11da: feat: decouple built-in `Image` and `Backgrounds` components from `next/image`
-
-## 0.25.0-canary.8
-
-### Minor Changes
-
-- e7ae1f8: [**BREAKING CHANGE**] remove obsolete `PageProvider` component, `usePageId` hook
-
-## 0.25.0-canary.7
-
-### Patch Changes
-
-- 0465c84: feat: framework-independent `RootStyleRegistry` implementation
-
-## 0.25.0-canary.6
-
-### Patch Changes
-
-- 7c7e114: fix: "Do not add <script> tags using next/head" warning when running in Pages Router
-
-## 0.25.0-canary.5
-
-### Patch Changes
-
-- 912b3fc: feat: framework-independent head tag management, built-in `Page` component
-
-## 0.25.0-canary.4
-
-### Patch Changes
-
-- 341b920: chore: remove unused `useBuilderHandshake` hook
-
-## 0.25.0-canary.3
-
-### Minor Changes
-
-- 59349b9: chore!: require Node.js version 20 or higher
-
-## 0.25.0-canary.2
-
-### Minor Changes
-
-- 635ce7b: feat: framework-independent API handlers implementation (requires Node.js 18+)
-
-### Patch Changes
-
+- 06a2462: Rename query param for clearing preview cookies
 - 635ce7b: fix: hanging promise in CORS preflight handling in Pages Router
+- cd9ab15: feat: decouple built-in components from `next/link`
+- 7c7e114: fix: "Do not add <script> tags using next/head" warning when running in Pages Router
+- daf11da: feat: decouple built-in `Image` and `Backgrounds` components from `next/image`
+- 93780b4: chore: upgrade from `redux`/`redux-thunk` to `@reduxjs/toolkit`
 - 635ce7b: fix: `onPublish` event not triggered in Pages Router
-
-## 0.24.9-canary.1
-
-### Patch Changes
-
-- Updated dependencies [2135f65]
-  - @makeswift/prop-controllers@0.4.6-canary.1
-
-## 0.24.9-canary.0
-
-### Patch Changes
-
+- e60fbfb: Update host manifest to add support for preview tokens and drop support for preview/draft mode
+- 1449417: fix: add max-age to preview related browser cookies
+- 341b920: chore: remove unused `useBuilderHandshake` hook
+- ee0b65b: feat: add query param to clear preview cookies on redirect
+- 912b3fc: feat: framework-independent head tag management, built-in `Page` component
+- 0465c84: feat: framework-independent `RootStyleRegistry` implementation
+- a3346a9: chore: remove title casing from exit preview toolbar button
+- Updated dependencies [06a2462]
+- Updated dependencies [67582a5]
 - Updated dependencies [50eb563]
-  - @makeswift/prop-controllers@0.4.6-canary.0
+- Updated dependencies [ee0b65b]
+- Updated dependencies [2ec2608]
+- Updated dependencies [2135f65]
+  - @makeswift/next-plugin@0.5.0
+  - @makeswift/prop-controllers@0.4.6
 
 ## 0.24.8
 

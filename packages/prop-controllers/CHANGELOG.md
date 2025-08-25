@@ -1,22 +1,12 @@
 # @makeswift/prop-controllers
 
-## 0.4.6-canary.2
-
-### Patch Changes
-
-- 2ec2608: fix: support null swatch IDs for backgrounds prop controller color data
-
-## 0.4.6-canary.1
-
-### Patch Changes
-
-- 2135f65: fix: `backgrounds` control replaces/introspects video background swatch
-
-## 0.4.6-canary.0
+## 0.4.6
 
 ### Patch Changes
 
 - 50eb563: fix: `navigation-links` control replaces/introspects all swatches
+- 2ec2608: fix: support null swatch IDs for backgrounds prop controller color data
+- 2135f65: fix: `backgrounds` control replaces/introspects video background swatch
 
 ## 0.4.5
 
