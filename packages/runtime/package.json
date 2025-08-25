@@ -14,6 +14,7 @@
     "next",
     "builder",
     "controls",
+    "framework-support",
     "slate",
     "state"
   ],
@@ -101,6 +102,11 @@
       "require": "./dist/cjs/controls/index.js",
       "import": "./dist/esm/controls/index.js",
       "types": "./dist/types/controls/index.d.ts"
+    },
+    "./framework-support": {
+      "require": "./dist/cjs/framework-support/index.js",
+      "import": "./dist/esm/framework-support/index.js",
+      "types": "./dist/types/framework-support/index.d.ts"
     },
     "./slate": {
       "require": "./dist/cjs/slate/index.js",
