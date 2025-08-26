@@ -3,25 +3,29 @@ import { createWidgetContext } from '@/lib/schema-transformer'
 import buttonWidgetTemplate from '@/lib/button-widget-template.json'
 import { PropsContextProvider } from './client'
 import { MakeswiftComponent } from '@makeswift/runtime/next'
-import { generateEmptyComponentSnapshot } from '@/makeswift/utils'
 import { ButtonKind } from './register'
+import { client } from '@/makeswift/client'
+import { getSiteVersion } from '@makeswift/runtime/next/server'
+import { resolveProps } from '@/makeswift/prop-resolution'
 
 interface TransformerProps {
   [key: string]: any
 }
 
-export async function Transformer(props: TransformerProps = {}) {
-  // Generate context automatically from widget schema and props
-  const context = createWidgetContext('button-widget-123', props, buttonWidgetTemplate)
-  
-  // Render the template on the server with BigCommerce helpers
+export async function Transformer(_props: TransformerProps = {}) {
+  const snapshot = await client.getComponentSnapshot('button', {
+    siteVersion: getSiteVersion(),
+  })
+  // @ts-expect-error
+  const props = resolveProps(snapshot.document.data.props)
+  const context = createWidgetContext('button', props, buttonWidgetTemplate)
   const html = await renderTemplate(buttonWidgetTemplate.template, context)
 
   return (
     <PropsContextProvider value={{ html }}>
       <MakeswiftComponent
         label={'Transformer'}
-        snapshot={generateEmptyComponentSnapshot()}
+        snapshot={snapshot}
         type={ButtonKind}
       />
     </PropsContextProvider>
