@@ -8,8 +8,6 @@ for (const widgetTemplate of WidgetTemplates) {
   // @ts-expect-error
   const controls = transformSchemaToControls(widgetTemplate)
 
-  console.log({ widgetTemplate })
-
   runtime.registerComponent(MakeswiftTransformer, {
     type: widgetTemplate.kind,
     label: widgetTemplate.name,
