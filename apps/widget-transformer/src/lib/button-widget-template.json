@@ -1,0 +1,281 @@
+{
+  "uuid": "ce9bbb4b-0625-4acc-a0e5-4ff9c8bb0615",
+  "name": "Button",
+  "schema": [
+    {
+      "type": "hidden",
+      "settings": [
+        {
+          "id": "buttonText",
+          "default": "Button label"
+        }
+      ]
+    },
+    {
+      "type": "tab",
+      "label": "Design",
+      "sections": [
+        {
+          "label": "Button",
+          "settings": [
+            {
+              "type": "input",
+              "id": "buttonLink",
+              "label": "Button link",
+              "default": "",
+              "typeMeta": {
+                "placeholder": "https://"
+              }
+            },
+            {
+              "type": "alignment",
+              "label": "Button align",
+              "id": "alignment",
+              "default": {
+                "horizontal": "center"
+              },
+              "typeMeta": {
+                "display": "horizontal"
+              }
+            },
+            {
+              "type": "boxModel",
+              "label": "Margin (px)",
+              "id": "buttonMargin",
+              "default": {
+                "top": {
+                  "value": "0",
+                  "type": "px"
+                },
+                "right": {
+                  "value": "0",
+                  "type": "px"
+                },
+                "bottom": {
+                  "value": "0",
+                  "type": "px"
+                },
+                "left": {
+                  "value": "0",
+                  "type": "px"
+                }
+              }
+            },
+            {
+              "type": "boxModel",
+              "label": "Padding (px)",
+              "id": "buttonPadding",
+              "default": {
+                "top": {
+                  "value": "8",
+                  "type": "px"
+                },
+                "right": {
+                  "value": "24",
+                  "type": "px"
+                },
+                "bottom": {
+                  "value": "8",
+                  "type": "px"
+                },
+                "left": {
+                  "value": "24",
+                  "type": "px"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "label": "Text",
+          "settings": [
+            {
+              "type": "select",
+              "label": "Font family",
+              "id": "fontFamily",
+              "default": "inherit",
+              "typeMeta": {
+                "selectOptions": [
+                  {
+                    "label": "Theme Default",
+                    "value": "inherit"
+                  },
+                  {
+                    "label": "Arial",
+                    "value": "Arial, sans-serif"
+                  },
+                  {
+                    "label": "Tahoma",
+                    "value": "Tahoma, sans-serif"
+                  },
+                  {
+                    "label": "Verdana",
+                    "value": "Verdana, sans-serif"
+                  },
+                  {
+                    "label": "Lucida",
+                    "value": "Lucida, sans-serif"
+                  },
+                  {
+                    "label": "Times New Roman",
+                    "value": "Times New Roman, serif"
+                  },
+                  {
+                    "label": "Courier",
+                    "value": "Courier, serif"
+                  },
+                  {
+                    "label": "Georgia",
+                    "value": "Georgia, serif"
+                  },
+                  {
+                    "label": "Palatino",
+                    "value": "Palatino, serif"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "select",
+              "label": "Font weight",
+              "id": "fontWeight",
+              "default": "400",
+              "typeMeta": {
+                "selectOptions": [
+                  {
+                    "label": "Thin",
+                    "value": "100"
+                  },
+                  {
+                    "label": "Extra Light (Ultra Light)",
+                    "value": "200"
+                  },
+                  {
+                    "label": "Light",
+                    "value": "300"
+                  },
+                  {
+                    "label": "Normal",
+                    "value": "400"
+                  },
+                  {
+                    "label": "Medium",
+                    "value": "500"
+                  },
+                  {
+                    "label": "Semi Bold (Demi Bold)",
+                    "value": "600"
+                  },
+                  {
+                    "label": "Bold",
+                    "value": "700"
+                  },
+                  {
+                    "label": "Extra Bold (Ultra Bold)",
+                    "value": "800"
+                  },
+                  {
+                    "label": "Black (Heavy)",
+                    "value": "900"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "number",
+              "label": "Font size",
+              "id": "textSize",
+              "default": {
+                "value": 21,
+                "type": "px"
+              },
+              "typeMeta": {
+                "parseType": "integer"
+              }
+            },
+            {
+              "type": "color",
+              "label": "Text color",
+              "id": "textColor",
+              "default": "#FFFFFF"
+            },
+            {
+              "type": "color",
+              "label": "Text color (hover)",
+              "id": "textColorHover",
+              "default": "#FFFFFF"
+            }
+          ]
+        },
+        {
+          "label": "Style",
+          "settings": [
+            {
+              "type": "color",
+              "label": "Button color",
+              "id": "backgroundColor",
+              "default": "#444444"
+            },
+            {
+              "type": "color",
+              "label": "Button color (hover)",
+              "id": "backgroundColorHover",
+              "default": "#666666"
+            },
+            {
+              "type": "color",
+              "label": "Border color",
+              "id": "borderColor",
+              "default": "#444444"
+            },
+            {
+              "type": "color",
+              "label": "Border color (hover)",
+              "id": "borderColorHover",
+              "default": "#666666"
+            },
+            {
+              "type": "range",
+              "label": "Border thickness",
+              "id": "buttonBorder",
+              "default": 1,
+              "typeMeta": {
+                "rangeValues": {
+                  "min": 0,
+                  "max": 10,
+                  "step": 1,
+                  "unit": "px"
+                }
+              }
+            },
+            {
+              "type": "range",
+              "label": "Border radius",
+              "id": "borderRadius",
+              "default": 4,
+              "typeMeta": {
+                "rangeValues": {
+                  "min": 0,
+                  "max": 100,
+                  "step": 1,
+                  "unit": "px"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "template": "<style>\n    .sd-button-{{_.id}} {\n        display: flex;\n        align-items: center;\n        {{#if alignment.horizontal '===' 'center'}}\n            justify-content: center;\n        {{else if alignment.horizontal '===' 'left'}}\n            justify-content: flex-start;\n        {{else if alignment.horizontal '===' 'right'}}\n            justify-content: flex-end;\n        {{/if}}\n    }\n\n    .sd-button-{{_.id}} .buttonLink > a {\n        text-decoration: none;\n        background-color: {{backgroundColor}};\n        border: {{buttonBorder}}px solid {{borderColor}};\n        border-radius: {{borderRadius}}px;\n        color: {{textColor}};\n        font-size: {{textSize.value}}{{textSize.type}};\n        font-family: {{fontFamily}};\n        font-weight: {{fontWeight}};\n        padding-top: {{buttonPadding.top.value}}{{buttonPadding.top.type}};\n        padding-right: {{buttonPadding.right.value}}{{buttonPadding.right.type}};\n        padding-bottom: {{buttonPadding.bottom.value}}{{buttonPadding.bottom.type}};\n        padding-left: {{buttonPadding.left.value}}{{buttonPadding.left.type}};\n        margin-top: {{buttonMargin.top.value}}{{buttonMargin.top.type}};\n        margin-right: {{buttonMargin.right.value}}{{buttonMargin.right.type}};\n        margin-bottom: {{buttonMargin.bottom.value}}{{buttonMargin.bottom.type}};\n        margin-left: {{buttonMargin.left.value}}{{buttonMargin.left.type}};\n        text-align: center;\n        cursor: pointer;\n    }\n\n    .sd-button-{{_.id}} .buttonLink > a:hover {\n        background-color: {{backgroundColorHover}};\n        border-color: {{borderColorHover}};\n        color: {{textColorHover}};\n    }\n\n    @media only screen and (max-width: 700px) {\n        .sd-button-{{_.id}} { }\n    }\n\n    #sd-simple-button-editable-{{_.id}} {\n        min-width: 14px;\n        line-height: 1.5;\n        display: inline-block;\n    }\n\n    #sd-simple-button-editable-{{_.id}} * {\n        margin: 0;\n        padding: 0;\n    }\n\n    #sd-simple-button-editable-{{_.id}}[data-edit-mode=\"true\"]:hover,\n    #sd-simple-button-editable-{{_.id}}[data-edit-mode=\"true\"]:active,\n    #sd-simple-button-editable-{{_.id}}[data-edit-mode=\"true\"]:focus {\n        outline: 1px dashed #3C64F4;\n    }\n\n    #sd-simple-button-editable-{{_.id}} strong,\n    #sd-simple-button-editable-{{_.id}} strong * {\n        font-weight: bold;\n    }\n</style>\n\n<div class=\"sd-button-{{_.id}}\">\n    <div class=\"buttonLink\" role=\"button\">\n        <a href=\"{{buttonLink}}\" target=\"_top\" id=\"sd-simple-button-editable-{{_.id}}\" data-edit-mode=\"{{_.pageBuilderData.previewState.editMode}}\">\n            {{{buttonText}}}\n        </a>\n    </div>\n</div>\n\n{{#if _.context.isEditorMode '===' true}}\n    <script type=\"text/javascript\">\n        (function () {\n            var editMode = false;\n            var selector = \"sd-simple-button-editable-{{_.id}}\";\n            var element = document.getElementById(selector);\n            if (!element) { return; }\n\n            var button = document.getElementsByClassName(\"sd-button-{{_.id}}\")[0]\n            button.addEventListener('click', () => {\n                element.focus()\n            });\n\n            function initializeContentEditableText() {\n                if (window.BigCommerce && window.BigCommerce.inlineEditor && window.BigCommerce.sendWidgetUpdate) {\n                    editMode = true;\n                    window.BigCommerce.inlineEditor.init({\n                        selector: \"#\" + selector,\n                        editMode: editMode,\n                        onBlur: function (content) {\n                          element.innerHtml = content;\n                          flushChanges(content);\n                        },\n                        onKeyup: flushChanges,\n                        toolbarItems: ['bold', 'italic', 'underline', 'strikethrough']\n                    });\n                }\n            }\n\n            function flushChanges(content) {\n              var props = {\n                \"buttonText\": content\n              };\n              window.BigCommerce.sendWidgetUpdate(props, \"{{_.id}}\");\n            }\n\n            function setEditMode(data) {\n                editMode = data.editMode;\n                element.dataset.editMode = editMode;\n\n                if (window.BigCommerce && window.BigCommerce.inlineEditor) {\n                    if (editMode) {\n                        initializeContentEditableText()\n                    } else {\n                        window.BigCommerce.inlineEditor.remove(\"#\" + selector);\n                    }\n                }\n            }\n\n            window.addEventListener('message', function (event) {\n                try {\n                    var data = JSON.parse(event.data);\n                } catch (error) {\n                    return;\n                }\n\n                [{\n                    action: 'sdk-loaded',\n                    initiator: 'PAGE_BUILDER',\n                    callback: initializeContentEditableText\n                },{\n                    action: 'toggle-edit-mode',\n                    initiator: 'PAGE_BUILDER',\n                    callback: setEditMode\n                }].forEach(function (handler) {\n                    if (data.action === handler.action && data.initiator === handler.initiator) {\n                        try { handler.callback(data); } catch (error) {}\n                    }\n                })\n            });\n\n            initializeContentEditableText();\n        })();\n    </script>\n{{/if}}\n",
+  "date_created": "2024-02-27T02:43:46.764Z",
+  "date_modified": "2024-02-27T02:43:46.764Z",
+  "kind": "sd-simple-button-v2",
+  "storefront_api_query": "",
+  "icon_name": "sd-button",
+  "template_engine": "handlebars_v3",
+  "client_rerender": false,
+  "current_version_uuid": "e0a82c10-b25f-40ea-94f2-ef8fac3e0ba9",
+  "channel_id": 0,
+  "schema_translations": {}
+}
