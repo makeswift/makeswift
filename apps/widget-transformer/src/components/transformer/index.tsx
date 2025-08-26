@@ -12,20 +12,27 @@ type Props = {
 }
 
 export async function Transformer({ widgetTemplate }: Props) {
-  // Debugging sd-product
-  if (widgetTemplate.kind !== 'sd-product') return <></>
-
   const snapshot = await client.getComponentSnapshot(widgetTemplate.kind, {
     siteVersion: getSiteVersion(),
   })
   // @ts-expect-error
   const makeswiftProps = resolveProps(snapshot.document.data?.props ?? {})
-  const context = createWidgetContext(
+
+  const queryVariables = {
+    productId: Number(makeswiftProps.productId || 111),
+    productIds: makeswiftProps.productIds?.map(Number) || [107, 104],
+    activeCurrencyCode: makeswiftProps.currency || 'USD',
+  }
+
+  const context = await createWidgetContext(
     widgetTemplate.kind,
     makeswiftProps,
     // @ts-expect-error
     widgetTemplate,
+    queryVariables,
   )
+
+  // Render the Handlebars template with the context
   const html = await renderTemplate(widgetTemplate.template, context)
 
   return (
