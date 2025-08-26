@@ -20,5 +20,13 @@ export const PropsContextProvider = ({
 export function MakeswiftTransformer() {
   const context = useContext(PropsContext)
 
-  return <div dangerouslySetInnerHTML={{ __html: context.html }} />
+  return (
+    // Double div to avoid hydration mismatch
+    <div>
+      <div
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: context.html }}
+      />
+    </div>
+  )
 }
