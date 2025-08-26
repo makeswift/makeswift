@@ -1,14 +1,18 @@
 import { runtime } from '@/makeswift/runtime'
 import { transformSchemaToControls } from '@/lib/schema-transformer'
-import buttonWidgetTemplate from '@/lib/button-widget-template.json'
 import { MakeswiftTransformer } from './client'
 
-export const ButtonKind = 'sd-simple-button-v2'
+import WidgetTemplates from '@/lib/widget-templates.json'
 
-const controls = transformSchemaToControls(buttonWidgetTemplate)
+for (const widgetTemplate of WidgetTemplates) {
+  // @ts-expect-error
+  const controls = transformSchemaToControls(widgetTemplate)
 
-runtime.registerComponent(MakeswiftTransformer, {
-  type: ButtonKind,
-  label: 'BigCommerce Button Widget',
-  props: controls,
-})
+  console.log({ widgetTemplate })
+
+  runtime.registerComponent(MakeswiftTransformer, {
+    type: widgetTemplate.kind,
+    label: widgetTemplate.name,
+    props: controls,
+  })
+}
