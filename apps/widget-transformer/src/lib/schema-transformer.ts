@@ -65,7 +65,7 @@ interface BigCommerceSchemaItem {
   }>
 }
 
-interface BigCommerceWidgetSchema {
+export interface BigCommerceWidgetSchema {
   schema: Array<{
     type: string
     label?: string
@@ -369,101 +369,4 @@ export function transformSchemaToControls(
   })
 
   return controls
-}
-
-/**
- * Create BigCommerce widget context from props and schema defaults
- */
-export function createWidgetContext(
-  widgetId: string,
-  props: Record<string, any>,
-  widgetSchema: BigCommerceWidgetSchema,
-) {
-  const context: any = {
-    _: {
-      id: widgetId,
-      context: {
-        isEditorMode: false,
-      },
-      pageBuilderData: {
-        previewState: {
-          editMode: false,
-        },
-      },
-    },
-  }
-
-  function extractDefaults(
-    settings: Array<{
-      id: string
-      type?: string
-      default?: any
-      settings?: any[]
-    }>,
-  ) {
-    settings.forEach((setting) => {
-      if (setting.type === 'hidden' && setting.settings) {
-        // Handle hidden settings with nested settings
-        setting.settings.forEach((hiddenSetting: any) => {
-          context[hiddenSetting.id] =
-            props[hiddenSetting.id] ?? hiddenSetting.default
-        })
-      } else if (setting.id) {
-        context[setting.id] = props[setting.id] ?? setting.default
-      }
-    })
-  }
-
-  widgetSchema.schema.forEach((section) => {
-    if (section.settings) {
-      extractDefaults(section.settings)
-    }
-    if (section.sections) {
-      section.sections.forEach((subsection) => {
-        if (subsection.settings) {
-          extractDefaults(subsection.settings as any)
-        }
-      })
-    }
-  })
-
-  return context
-}
-
-/**
- * Get all context variables needed for the widget template
- */
-export function extractContextVariables(
-  widgetSchema: BigCommerceWidgetSchema,
-): string[] {
-  const variables: string[] = []
-
-  function processSettings(
-    settings: Array<{ id: string; type?: string; settings?: any[] }>,
-  ) {
-    settings.forEach((setting) => {
-      if (setting.type === 'hidden' && setting.settings) {
-        setting.settings.forEach((hiddenSetting: any) => {
-          variables.push(hiddenSetting.id)
-        })
-      } else if (setting.id) {
-        variables.push(setting.id)
-      }
-    })
-  }
-
-  widgetSchema.schema.forEach((section) => {
-    if (section.settings) {
-      processSettings(section.settings)
-    }
-    if (section.sections) {
-      section.sections.forEach((subsection) => {
-        if (subsection.settings) {
-          processSettings(subsection.settings as any)
-        }
-      })
-    }
-  })
-
-  return variables
 }
