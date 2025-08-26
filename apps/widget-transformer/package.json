@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@bigcommerce/stencil-paper-handlebars": "^6.3.2",
     "@formatjs/intl-localematcher": "^0.5.4",
     "@makeswift/runtime": "workspace:^",
     "handlebars": "^4.7.8",
