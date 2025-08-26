@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { deserializeSiteVersion, type SiteVersion } from '../api/site-version'
 
 import { MakeswiftClient, MakeswiftConfig } from '../client'
-import { MAKESWIFT_CACHE_TAG } from './cache'
+import { MAKESWIFT_GLOBAL_CACHE_TAG } from './cache'
 
 const previewDataSchema = z.object({
   siteVersion: z.string(),
@@ -40,13 +40,13 @@ export class Makeswift extends MakeswiftClient {
       case RevalidationTagStrategy.GRANULAR:
         return {
           next: {
-            tags: cacheTags ? [...cacheTags] : [MAKESWIFT_CACHE_TAG],
+            tags: cacheTags ? [...cacheTags] : [MAKESWIFT_GLOBAL_CACHE_TAG],
           },
         }
       case RevalidationTagStrategy.GLOBAL:
         return {
           next: {
-            tags: [MAKESWIFT_CACHE_TAG],
+            tags: [MAKESWIFT_GLOBAL_CACHE_TAG],
           },
         }
       case RevalidationTagStrategy.NONE:

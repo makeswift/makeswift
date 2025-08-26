@@ -46,6 +46,7 @@ import { deterministicUUID } from '../utils/deterministic-uuid'
 import { Schema } from '@makeswift/controls'
 import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-only-documents'
 import { Base64 } from 'js-base64'
+import { MAKESWIFT_GLOBAL_CACHE_TAG, MAKESWIFT_PAGE_CHANGED_CACHE_TAG, MAKESWIFT_RESOURCE_CHANGED_CACHE_TAG } from '../next/cache'
 
 export { SnippetLocation } from '../api/graphql/generated/types'
 
@@ -349,6 +350,20 @@ const getPageAPISchema = z.object({
 
 type GetPageAPI = z.infer<typeof getPageAPISchema>
 
+// temporary slop for testing
+function convertNodeIdsToCacheTags(resourceIds: string[]): string[] {
+  const cacheTags: string[] = []
+  for (const id of resourceIds) {
+    const result = parseResourceIdSchema.safeParse(id)
+    if (result.success) {
+      cacheTags.push(result.data.key)
+    } else {
+      // TODO how do we want to handle?
+    }
+  }
+  return cacheTags
+}
+
 export class MakeswiftClient {
   private graphqlClient: GraphQLClient
   private runtime: ReactRuntime
@@ -395,10 +410,16 @@ export class MakeswiftClient {
       requestHeaders.set('makeswift-preview-token', siteVersion.token)
     }
 
+    console.log({ href: requestUrl.href, cacheTags})
+
+    // Below: all fetch requests should be responsive to the global cache tag
+    const cacheTagsWithGlobalTag = [...(cacheTags ?? []), MAKESWIFT_GLOBAL_CACHE_TAG]
+
+    // TODO: a problem we'd need to address is that Nextjs only allows up to 120 tags per request fetch options?
     const response = await fetch(requestUrl.toString(), {
       headers: requestHeaders,
       ...(siteVersion != null ? { cache: 'no-store' } : {}),
-      ...this.fetchOptions(siteVersion, cacheTags),
+      ...this.fetchOptions(siteVersion, cacheTagsWithGlobalTag),
     })
 
     return response
@@ -419,7 +440,7 @@ export class MakeswiftClient {
   } & GetPagesParams = {}): Promise<MakeswiftGetPagesResult> => {
     const queryParams = getPagesQueryParams(params)
 
-    const response = await this.fetch(`v5/pages?${queryParams.toString()}`, siteVersion)
+    const response = await this.fetch(`v5/pages?${queryParams.toString()}`, siteVersion, [MAKESWIFT_PAGE_CHANGED_CACHE_TAG])
     if (!response.ok) {
       console.error('Failed to get pages', {
         response: await failedResponseBody(response),
@@ -449,7 +470,8 @@ export class MakeswiftClient {
     const url = new URL(`v3/pages/${encodeURIComponent(pathname)}`, this.apiOrigin)
     if (locale) url.searchParams.set('locale', locale)
 
-    const response = await this.fetch(url.pathname + url.search, siteVersion)
+    const cacheTags = [MAKESWIFT_RESOURCE_CHANGED_CACHE_TAG, pathname]
+    const response = await this.fetch(url.pathname + url.search, siteVersion, cacheTags)
 
     if (!response.ok) {
       if (response.status === 404) return null
@@ -476,16 +498,7 @@ export class MakeswiftClient {
 
     const url = new URL(`v3/typographies/bulk`, this.apiOrigin)
 
-    const cacheTags: string[] = []
-
-    typographyIds.forEach(id => {
-      url.searchParams.append('ids', id)
-
-      const result = parseResourceIdSchema.safeParse(id)
-      if (result.success) {
-        cacheTags.push(result.data.key)
-      }
-    })
+    const cacheTags = convertNodeIdsToCacheTags(typographyIds)
 
     const response = await this.fetch(url.pathname + url.search, siteVersion, cacheTags)
 
@@ -511,11 +524,9 @@ export class MakeswiftClient {
 
     const url = new URL(`v3/swatches/bulk`, this.apiOrigin)
 
-    ids.forEach(id => {
-      url.searchParams.append('ids', id)
-    })
+    const cacheTags = convertNodeIdsToCacheTags(ids)
 
-    const response = await this.fetch(url.pathname + url.search, siteVersion)
+    const response = await this.fetch(url.pathname + url.search, siteVersion, cacheTags)
 
     if (!response.ok) {
       console.error(`Failed to get swatches for ${ids.join(', ')}`, {
@@ -720,6 +731,7 @@ export class MakeswiftClient {
     const response = await this.fetch(
       `v4/pages/${encodeURIComponent(pathname)}/document?${queryParams()}`,
       siteVersion,
+      [MAKESWIFT_RESOURCE_CHANGED_CACHE_TAG, pathname]
     )
 
     if (!response.ok) {
@@ -773,10 +785,15 @@ export class MakeswiftClient {
     const baseLocaleWasRequested = locale == null
     const canAttemptLocaleFallback = !baseLocaleWasRequested && allowLocaleFallback
 
+    // TODO assembling element tree cache tag... Need site ID? 
+    // TODO update cosmos element tree cache tag
+    // const cacheTag = `${id}-${siteVersion.}`
+
     let response
     const responseForRequestedLocale = await this.fetch(
       `v2/element-trees/${encodeURIComponent(id)}?${searchParams.toString()}`,
       siteVersion,
+      [MAKESWIFT_GLOBAL_CACHE_TAG]
     )
 
     if (responseForRequestedLocale.status === 404 && canAttemptLocaleFallback) {
@@ -826,7 +843,8 @@ export class MakeswiftClient {
   }
 
   async getSwatch(swatchId: string, siteVersion: SiteVersion | null): Promise<Swatch | null> {
-    const response = await this.fetch(`v3/swatches/${swatchId}`, siteVersion)
+    const cacheTags = convertNodeIdsToCacheTags([swatchId])
+    const response = await this.fetch(`v3/swatches/${swatchId}`, siteVersion, cacheTags)
 
     if (!response.ok) {
       if (response.status !== 404) {
@@ -857,7 +875,9 @@ export class MakeswiftClient {
     typographyId: string,
     siteVersion: SiteVersion | null,
   ): Promise<Typography | null> {
-    const response = await this.fetch(`v3/typographies/${typographyId}`, siteVersion)
+    const cacheTags = convertNodeIdsToCacheTags([typographyId])
+
+    const response = await this.fetch(`v3/typographies/${typographyId}`, siteVersion, cacheTags)
 
     if (!response.ok) {
       if (response.status !== 404) {
@@ -879,7 +899,8 @@ export class MakeswiftClient {
     globalElementId: string,
     siteVersion: SiteVersion | null,
   ): Promise<GlobalElement | null> {
-    const response = await this.fetch(`v3/global-elements/${globalElementId}`, siteVersion)
+    const cacheTags = convertNodeIdsToCacheTags([globalElementId])
+    const response = await this.fetch(`v3/global-elements/${globalElementId}`, siteVersion, cacheTags)
 
     if (!response.ok) {
       if (response.status !== 404) {
@@ -902,9 +923,11 @@ export class MakeswiftClient {
     locale: string,
     siteVersion: SiteVersion | null,
   ): Promise<LocalizedGlobalElement | null> {
+    const cacheTags = convertNodeIdsToCacheTags([globalElementId])
     const response = await this.fetch(
       `v3/localized-global-elements/${globalElementId}?locale=${locale}`,
       siteVersion,
+      cacheTags
     )
 
     if (!response.ok) {
@@ -933,10 +956,11 @@ export class MakeswiftClient {
 
     const url = new URL(`v3/page-pathname-slices/bulk`, this.apiOrigin)
 
+    const cacheTags = convertNodeIdsToCacheTags(pageIds)
     pageIds.forEach(id => url.searchParams.append('ids', id))
     if (locale != null) url.searchParams.set('locale', locale)
 
-    const response = await this.fetch(url.pathname + url.search, siteVersion)
+    const response = await this.fetch(url.pathname + url.search, siteVersion, cacheTags)
 
     if (!response.ok) {
       console.error(`Failed to get page pathname slice(s) for ${pageIds.join(', ')}`, {
