@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.25.1-canary.0
+
+### Patch Changes
+
+- f41b1f9: debug: add diagnostics for `dynamic = 'force-static'` on Makeswift routes
+
 ## 0.25.0
 
 ### Minor Changes
