@@ -46,7 +46,7 @@ import { deterministicUUID } from '../utils/deterministic-uuid'
 import { Schema } from '@makeswift/controls'
 import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-only-documents'
 import { Base64 } from 'js-base64'
-import { MAKESWIFT_GLOBAL_CACHE_TAG, MAKESWIFT_PAGE_CHANGED_CACHE_TAG, MAKESWIFT_RESOURCE_CHANGED_CACHE_TAG } from '../next/cache'
+import { MAKESWIFT_GLOBAL_CACHE_TAG, MAKESWIFT_PAGE_METADATA_CHANGED_CACHE_TAG, MAKESWIFT_RESOURCE_CHANGED_CACHE_TAG } from '../next/cache'
 
 export { SnippetLocation } from '../api/graphql/generated/types'
 
@@ -440,7 +440,7 @@ export class MakeswiftClient {
   } & GetPagesParams = {}): Promise<MakeswiftGetPagesResult> => {
     const queryParams = getPagesQueryParams(params)
 
-    const response = await this.fetch(`v5/pages?${queryParams.toString()}`, siteVersion, [MAKESWIFT_PAGE_CHANGED_CACHE_TAG])
+    const response = await this.fetch(`v5/pages?${queryParams.toString()}`, siteVersion, [MAKESWIFT_PAGE_METADATA_CHANGED_CACHE_TAG])
     if (!response.ok) {
       console.error('Failed to get pages', {
         response: await failedResponseBody(response),
