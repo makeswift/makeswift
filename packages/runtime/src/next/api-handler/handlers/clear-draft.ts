@@ -9,6 +9,7 @@ import {
   cookieSettingOptions,
 } from './utils/draft'
 import { serialize as serializeCookie } from 'cookie'
+import { type Context } from '../app-router-handler'
 
 function clearCookiesHeader(cookieNames: string[]): string {
   const headers = new Headers()
@@ -30,8 +31,6 @@ function clearCookiesHeader(cookieNames: string[]): string {
 
   return setCookieHeader
 }
-
-type Context = { params: { [key: string]: string | string[] } }
 
 type ClearDraftError = string
 

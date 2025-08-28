@@ -3,8 +3,7 @@ import isErrorWithMessage from '../../../utils/isErrorWithMessage'
 import { NextRequest, NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
 import { revalidatePath } from 'next/cache'
-
-type Context = { params: { [key: string]: string | string[] } }
+import { type Context } from '../app-router-handler'
 
 type RevalidationResult = { revalidated: boolean }
 

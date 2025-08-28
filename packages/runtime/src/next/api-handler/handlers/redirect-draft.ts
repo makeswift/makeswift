@@ -13,8 +13,7 @@ import {
   SearchParams,
   SET_COOKIE_HEADER,
 } from './utils/draft'
-
-type Context = { params: { [key: string]: string | string[] } }
+import { type Context } from '../app-router-handler'
 
 type RedirectDraftError = string
 

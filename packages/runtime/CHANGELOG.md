@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.24.9
+
+### Patch Changes
+
+- hotfix: update api handler type compatibility for Next 15.5.0
+
 ## 0.24.8
 
 ### Patch Changes

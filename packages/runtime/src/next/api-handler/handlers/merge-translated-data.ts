@@ -3,8 +3,7 @@ import { Element } from '../../../state/react-page'
 import { Makeswift } from '../../client'
 import { NextRequest, NextResponse } from 'next/server'
 import { P, match } from 'ts-pattern'
-
-type Context = { params: { [key: string]: string | string[] } }
+import { type Context } from '../app-router-handler'
 
 type TranslatedDataResult = { elementTree: Element }
 
