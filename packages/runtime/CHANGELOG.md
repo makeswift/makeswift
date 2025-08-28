@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.25.1-canary.1
+
+### Patch Changes
+
+- 5e3eb06: chore: relax `ApiHandlerArgs` definition back to expecting `NextRequest` as the first argument
+
 ## 0.25.1-canary.0
 
 ### Patch Changes

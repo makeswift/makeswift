@@ -12,6 +12,7 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
+    "kind-dolls-enjoy",
     "lazy-gorillas-cry"
   ]
 }
