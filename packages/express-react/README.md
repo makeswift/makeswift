@@ -1,3 +1,3 @@
 # @makeswift/express-react
 
-Experimental support for making Express + React sites editable in Makeswift.
+Experimental support for making [Express](https://expressjs.com/) + React sites editable in Makeswift.
