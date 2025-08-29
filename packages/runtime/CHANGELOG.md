@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.25.1-canary.2
+
+### Patch Changes
+
+- faa8c10: feat: expose experimental framework integration APIs
+
 ## 0.25.1-canary.1
 
 ### Patch Changes

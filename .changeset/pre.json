@@ -12,6 +12,7 @@
     "@makeswift/controls": "0.0.0"
   },
   "changesets": [
+    "khaki-boxes-shop",
     "kind-dolls-enjoy",
     "lazy-gorillas-cry"
   ]
