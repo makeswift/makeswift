@@ -10,9 +10,11 @@
     "@makeswift/runtime": "0.16.1",
     "tsconfig": "0.0.0",
     "@makeswift/controls": "0.0.0",
-    "@makeswift/express-react": "0.0.0-alpha"
+    "@makeswift/express-react": "0.0.0-alpha",
+    "@makeswift/react-router": "0.0.0"
   },
   "changesets": [
+    "gorgeous-seas-rest",
     "khaki-boxes-shop",
     "kind-dolls-enjoy",
     "lazy-gorillas-cry",
