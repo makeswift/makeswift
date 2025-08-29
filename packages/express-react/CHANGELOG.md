@@ -1,7 +1,11 @@
 # @makeswift/express-react
 
-## 0.0.0-canary.0
+## 0.0.1
 
 ### Patch Changes
 
 - 0722884: Initial alpha release, API are unstable and subject to change
+- Updated dependencies [faa8c10]
+- Updated dependencies [5e3eb06]
+- Updated dependencies [f41b1f9]
+  - @makeswift/runtime@0.25.1

@@ -1,21 +1,11 @@
 # @makeswift/runtime
 
-## 0.25.1-canary.2
+## 0.25.1
 
 ### Patch Changes
 
 - faa8c10: feat: expose experimental framework integration APIs
-
-## 0.25.1-canary.1
-
-### Patch Changes
-
 - 5e3eb06: chore: relax `ApiHandlerArgs` definition back to expecting `NextRequest` as the first argument
-
-## 0.25.1-canary.0
-
-### Patch Changes
-
 - f41b1f9: debug: add diagnostics for `dynamic = 'force-static'` on Makeswift routes
 
 ## 0.25.0
