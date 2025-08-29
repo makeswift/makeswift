@@ -15,7 +15,8 @@
     "builder",
     "controls",
     "slate",
-    "state"
+    "state",
+    "unstable-framework-support"
   ],
   "engines": {
     "node": ">=20.0.0"
@@ -111,6 +112,11 @@
       "require": "./dist/cjs/state/modules/breakpoints.js",
       "import": "./dist/esm/state/modules/breakpoints.js",
       "types": "./dist/types/state/modules/breakpoints.d.ts"
+    },
+    "./unstable-framework-support": {
+      "require": "./dist/cjs/unstable-framework-support/index.js",
+      "import": "./dist/esm/unstable-framework-support/index.js",
+      "types": "./dist/types/unstable-framework-support/index.d.ts"
     }
   },
   "types": "./dist/types/index.d.ts",

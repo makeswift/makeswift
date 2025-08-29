@@ -1,0 +1,5 @@
+{
+  "main": "../dist/cjs/unstable-framework-support/index.js",
+  "module": "../dist/esm/unstable-framework-support/index.js",
+  "types": "../dist/types/unstable-framework-support/index.d.ts"
+}
