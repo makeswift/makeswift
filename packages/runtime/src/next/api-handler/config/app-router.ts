@@ -2,7 +2,6 @@ import { P } from 'ts-pattern'
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { NextRequest } from 'next/server'
 
-import { MAKESWIFT_CACHE_TAG } from '../../cache'
 import { type ApiResponse } from '../../../api-handler/request-response'
 
 import { appRouterRedirectPreviewHandler } from '../handlers/app-router-redirect-preview'
@@ -31,11 +30,17 @@ export async function config({
     route: validateApiRoute(await context.params),
     previewCookieNames: [PRERENDER_BYPASS_COOKIE, MAKESWIFT_SITE_VERSION_COOKIE],
     sendResponse: async (res: ApiResponse): Promise<Response | void> => res,
-    revalidationHandler: async (path?: string): Promise<void> => {
+    revalidationHandler: async (path?: string, cacheTags?: string[]): Promise<void> => {
       if (path != null) {
+        console.log({ location: 'revalidatePath', path })
         revalidatePath(path)
       } else {
-        revalidateTag(MAKESWIFT_CACHE_TAG)
+        console.log({ location: 'revalidateTag', cacheTags })
+        if (cacheTags) {
+          for (const cacheTag of cacheTags) {
+            revalidateTag(cacheTag)
+          }
+        }
       }
     },
     customRoutes: async (route: string) => {
