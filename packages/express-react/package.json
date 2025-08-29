@@ -1,6 +1,6 @@
 {
   "name": "@makeswift/express-react",
-  "version": "0.0.0-alpha",
+  "version": "0.0.1",
   "license": "MIT",
   "files": [
     "dist",
