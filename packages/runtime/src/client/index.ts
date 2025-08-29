@@ -498,6 +498,10 @@ export class MakeswiftClient {
 
     const url = new URL(`v3/typographies/bulk`, this.apiOrigin)
 
+    typographyIds.forEach(id => {
+      url.searchParams.append('ids', id)
+    })
+
     const cacheTags = convertNodeIdsToCacheTags(typographyIds)
 
     const response = await this.fetch(url.pathname + url.search, siteVersion, cacheTags)
@@ -523,6 +527,10 @@ export class MakeswiftClient {
     if (ids.length === 0) return []
 
     const url = new URL(`v3/swatches/bulk`, this.apiOrigin)
+
+    ids.forEach(id => {
+      url.searchParams.append('ids', id)
+    })
 
     const cacheTags = convertNodeIdsToCacheTags(ids)
 
