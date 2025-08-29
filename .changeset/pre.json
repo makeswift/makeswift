@@ -14,10 +14,6 @@
     "@makeswift/react-router": "0.0.0"
   },
   "changesets": [
-    "gorgeous-seas-rest",
-    "khaki-boxes-shop",
-    "kind-dolls-enjoy",
-    "lazy-gorillas-cry",
-    "new-ligers-rhyme"
+    "little-parrots-shave"
   ]
 }
