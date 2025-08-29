@@ -1,5 +1,11 @@
 # @makeswift/express-react
 
+## 0.0.2
+
+### Patch Changes
+
+- d2d0fd9: chore: bump version to resolve incorrect `npm` dependency in 0.0.1
+
 ## 0.0.1
 
 ### Patch Changes
