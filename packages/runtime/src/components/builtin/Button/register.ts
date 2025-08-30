@@ -15,11 +15,11 @@ import { findBreakpointOverride } from '@makeswift/controls'
 import { ReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 import { ButtonVariant } from './contants'
-import { lazy } from 'react'
+import Button from './'
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
-    lazy(() => import('./Button')),
+    Button,
     {
       type: MakeswiftComponentType.Button,
       label: 'Button',
