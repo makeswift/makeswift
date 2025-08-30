@@ -22,9 +22,14 @@ type Schema = typeof Definition.schema
 type DataType = z.infer<Schema['data']>
 type ValueType = z.infer<Schema['value']>
 
+type Config = {
+  // Default grid column count for the Slot panel UI and runtime fallback
+  columnCount?: number
+}
+
 abstract class Definition<RuntimeNode> extends ControlDefinition<
   typeof Definition.type,
-  unknown,
+  Config,
   DataType,
   ValueType,
   RuntimeNode,
@@ -52,6 +57,11 @@ abstract class Definition<RuntimeNode> extends ControlDefinition<
 
     const definition = z.object({
       type,
+      config: z
+        .object({
+          columnCount: z.number().min(1).max(24).default(12).optional(),
+        })
+        .optional(),
     })
 
     return {
@@ -62,8 +72,8 @@ abstract class Definition<RuntimeNode> extends ControlDefinition<
     }
   }
 
-  constructor() {
-    super({})
+  constructor(config?: Config) {
+    super((config ?? {}) as Config)
   }
 
   get controlType() {
