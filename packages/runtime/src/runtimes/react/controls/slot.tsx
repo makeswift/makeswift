@@ -14,6 +14,7 @@ import { pollBoxModel } from '../poll-box-model'
 export function renderSlot(props: {
   data: DataType<SlotDefinition<ReactNode>> | undefined
   control: SlotControl | null
+  config?: { columnCount?: number }
 }): ReactNode {
   return <SlotValue {...props} />
 }
@@ -22,9 +23,11 @@ const SlotValue = memo(
   ({
     data,
     control,
+    config,
   }: {
     data: DataType<SlotDefinition<ReactNode>> | undefined
     control: SlotControl | null
+    config?: { columnCount?: number }
   }): ReactNode => {
     // TODO(miguel): While the UI shouldn't allow the state, we should probably check that at least
     // one element is visible.
@@ -35,7 +38,13 @@ const SlotValue = memo(
     return (
       <Slot control={control}>
         {data.elements.map((element, i) => (
-          <Slot.Item key={element.key} control={control} grid={data.columns} index={i}>
+          <Slot.Item
+            key={element.key}
+            control={control}
+            grid={data.columns}
+            defaultCount={config?.columnCount}
+            index={i}
+          >
             <Element element={element} />
           </Slot.Item>
         ))}
@@ -93,6 +102,7 @@ type SlotItemProps<T extends ElementType> = {
   grid: DataType<SlotDefinition<ReactNode>> extends undefined
     ? undefined
     : NonNullable<DataType<SlotDefinition<ReactNode>>>['columns']
+  defaultCount?: number
   index: number
   children?: ReactNode
   className?: string
@@ -102,6 +112,7 @@ function SlotItem<T extends ElementType = 'div'>({
   as,
   control,
   grid,
+  defaultCount,
   index,
   children,
   className,
@@ -111,7 +122,11 @@ function SlotItem<T extends ElementType = 'div'>({
   const [element, setElement] = useState<Element | null>(null)
   const baseClassName = useStyle({
     display: 'flex',
-    ...useResponsiveStyle([grid], ([{ count = 12, spans = [[12]] } = {}]) => {
+    ...useResponsiveStyle([grid], ([value]) => {
+      const fallbackCount = defaultCount ?? 12
+      const { count, spans } =
+        value ?? ({ count: fallbackCount, spans: [[fallbackCount]] } as NonNullable<typeof value>)
+
       const [rowIndex, columnIndex] = getIndexes(spans, index)
       const span = spans[rowIndex][columnIndex]
       const flexBasis = `calc(100% * ${(span / count).toFixed(5)})`
