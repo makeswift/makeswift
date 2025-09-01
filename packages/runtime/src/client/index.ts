@@ -410,16 +410,11 @@ export class MakeswiftClient {
       requestHeaders.set('makeswift-preview-token', siteVersion.token)
     }
 
-    console.log({ href: requestUrl.href, cacheTags})
-
-    // Below: all fetch requests should be responsive to the global cache tag
-    const cacheTagsWithGlobalTag = [...(cacheTags ?? []), MAKESWIFT_GLOBAL_CACHE_TAG]
-
     // TODO: a problem we'd need to address is that Nextjs only allows up to 120 tags per request fetch options?
     const response = await fetch(requestUrl.toString(), {
       headers: requestHeaders,
       ...(siteVersion != null ? { cache: 'no-store' } : {}),
-      ...this.fetchOptions(siteVersion, cacheTagsWithGlobalTag),
+      ...this.fetchOptions(siteVersion, cacheTags),
     })
 
     return response

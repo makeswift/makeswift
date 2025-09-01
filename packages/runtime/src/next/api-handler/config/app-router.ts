@@ -35,10 +35,8 @@ export async function config({
     sendResponse: async (res: ApiResponse): Promise<Response | void> => res,
     revalidationHandler: async (path?: string, cacheTags?: string[]): Promise<void> => {
       if (path != null) {
-        console.log({ location: 'revalidatePath', path })
         revalidatePath(path)
       } else {
-        console.log({ location: 'revalidateTag', cacheTags })
         if (cacheTags) {
           for (const cacheTag of cacheTags) {
             revalidateTag(cacheTag)
