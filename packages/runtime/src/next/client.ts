@@ -38,11 +38,7 @@ export class Makeswift extends MakeswiftClient {
   fetchOptions(_siteVersion: SiteVersion, cacheTags?: string[]): Record<string, unknown> {
     switch (this.revalidationTagStrategy) {
       case RevalidationTagStrategy.GRANULAR:
-        return {
-          next: {
-            tags: cacheTags ? [...cacheTags] : [MAKESWIFT_GLOBAL_CACHE_TAG],
-          },
-        }
+        return cacheTags ? { next: { tags: [...cacheTags] } } : {}
       case RevalidationTagStrategy.GLOBAL:
         return {
           next: {
