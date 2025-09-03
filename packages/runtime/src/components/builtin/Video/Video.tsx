@@ -3,7 +3,7 @@
 import { cx } from '@emotion/css'
 import { forwardRef, Ref, useEffect, useState } from 'react'
 
-import { ReactPlayer } from '../../shared/react-player'
+import ReactPlayer from 'react-player'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { placeholders } from '../../utils/placeholders'
 import { VideoData } from '@makeswift/prop-controllers'
@@ -22,7 +22,7 @@ const Video = forwardRef(function Video(
   { id, video, width, margin, borderRadius }: Props,
   ref: Ref<HTMLDivElement>,
 ) {
-  const canPlayUrl = video && video.url != null && ReactPlayer.canPlay(video.url)
+  const canPlayUrl = video && video.url != null && ReactPlayer.canPlay?.(video.url)
   /**
    * @see https://github.com/cookpete/react-player/issues/1428
    */
@@ -51,7 +51,6 @@ const Video = forwardRef(function Video(
               width="100%"
               height="100%"
               config={{
-                vimeo: { playerOptions: { background: video != null && !video.controls } },
                 wistia: {
                   options: {
                     endVideoBehavior: video != null && video.loop === true ? 'loop' : 'default',

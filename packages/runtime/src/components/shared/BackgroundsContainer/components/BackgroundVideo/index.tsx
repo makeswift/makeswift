@@ -1,7 +1,7 @@
 import { cx } from '@emotion/css'
 import { useState, useRef, ComponentPropsWithoutRef, ForwardedRef, forwardRef } from 'react'
 
-import { ReactPlayer } from '../../../react-player'
+import ReactPlayer from 'react-player'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 
 import { useIsomorphicLayoutEffect } from '../../../../hooks/useIsomorphicLayoutEffect'
@@ -94,20 +94,13 @@ export default function BackgroundVideo({
     return () => defaultView!.removeEventListener('resize', handleResize)
   }, [aspectRatio, zoom])
 
-  if (!ReactPlayer.canPlay(url)) return <></>
+  if (!ReactPlayer.canPlay?.(url)) return <></>
 
   return (
     <Container ref={container}>
       {container.current && (
         <ReactPlayer
-          url={url}
           config={{
-            vimeo: { playerOptions: { background: true } },
-            youtube: {
-              playerVars: {
-                origin: container.current.ownerDocument.defaultView?.location.origin,
-              },
-            },
             wistia: {
               options: {
                 endVideoBehavior: 'loop',
@@ -123,7 +116,6 @@ export default function BackgroundVideo({
           playing
           loop
           muted
-          playsinline={true}
           controls={false}
           onReady={() => setReady(true)}
           style={{
