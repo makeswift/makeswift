@@ -3,6 +3,8 @@ import viteLogo from '/vite.svg'
 import { getServerCounter, updateServerCounter } from './action.tsx'
 import reactLogo from './assets/react.svg'
 import { ClientCounter } from './client.tsx'
+import { EditableRegion } from './makeswift/editable-region.tsx'
+import { client } from './makeswift/client.ts'
 
 export function Root(props: { url: URL }) {
   return (
@@ -20,9 +22,20 @@ export function Root(props: { url: URL }) {
   )
 }
 
-function App(props: { url: URL }) {
+export async function App(props: { url: URL }) {
+  const pathname = props.url.pathname
+  const siteVersion = null
+  const snapshot = await client.getComponentSnapshot(pathname, {
+    siteVersion,
+  })
+
   return (
     <div id="root">
+      <EditableRegion
+        snapshot={snapshot}
+        label={pathname}
+        siteVersion={siteVersion}
+      />
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
