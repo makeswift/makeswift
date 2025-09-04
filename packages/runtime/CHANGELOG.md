@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.25.2-canary.0
+
+### Patch Changes
+
+- 1acf9c3: change `client.getPages` pagination limit to be 100 by default
+
 ## 0.25.1
 
 ### Patch Changes
