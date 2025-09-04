@@ -89,7 +89,7 @@ const makeswiftGetPagesParamsSchema = z.object({
 })
 
 function getPagesQueryParams({
-  limit = 20,
+  limit = 100,
   after,
   sortBy,
   sortDirection,
