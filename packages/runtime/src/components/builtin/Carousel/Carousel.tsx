@@ -348,7 +348,6 @@ const Carousel = forwardRef(function Carousel(
             >
               {images.map(({ props: imageProps, key }) => (
                 <motion.div
-                  id={key}
                   key={key}
                   className={slideClassName}
                   onMouseDown={e => e.preventDefault()}
