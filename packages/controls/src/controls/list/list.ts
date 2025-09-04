@@ -181,11 +181,11 @@ class Definition<C extends Config> extends ControlDefinition<
   }
 
   mergeTranslatedData(
-    data: DataType<C>,
+    data: DataType<C> | undefined,
     translatedData: Record<string, DataType<C>>,
     context: MergeTranslatableDataContext,
   ): Data {
-    if (translatedData == null) return data
+    if (data == null || translatedData == null) return data
     return data.map((item) => {
       return {
         ...item,
