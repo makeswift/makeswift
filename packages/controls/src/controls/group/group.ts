@@ -237,7 +237,7 @@ class Definition<C extends Config> extends ControlDefinition<
     )
   }
 
-  getTranslatableData(data: DataType<C>): Data {
+  getTranslatableData(data: DataType<C> | undefined): Data {
     if (data == null) return null
 
     const propsData = Definition.propsData(data)

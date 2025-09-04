@@ -154,7 +154,7 @@ class Definition<C extends Config> extends ControlDefinition<
     ) as DataType<C>
   }
 
-  getTranslatableData(data: DataType<C>): Data {
+  getTranslatableData(data: DataType<C> | undefined): Data {
     if (data == null) return null
     return mapValues(this.keyDefs, (def, key) => {
       return def.getTranslatableData(data[key])
