@@ -1,0 +1,66 @@
+{
+  "name": "@makeswift/hono-react",
+  "version": "0.0.0",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "server"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./server": {
+      "require": "./dist/cjs/server/index.js",
+      "import": "./dist/esm/server/index.js",
+      "types": "./dist/types/server/index.d.ts"
+    }
+  },
+  "scripts": {
+    "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'tsup --watch'",
+    "clean": "rm -rf dist",
+    "build": "tsc && tsup",
+    "prepublishOnly": "turbo run build",
+    "test": "jest --passWithNoTests",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "@makeswift/runtime": "workspace:*",
+    "cookie": "^1.0.2"
+  },
+  "peerDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "hono": "^4.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    },
+    "@types/react-dom": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@swc/jest": "^0.2.36",
+    "@types/jest": "^29.5.12",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6",
+    "concurrently": "^8.2.2",
+    "hono": "^4.0.0",
+    "jest": "^29.7.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "tsup": "^8.0.2",
+    "typescript": "^5.9.2"
+  }
+}
