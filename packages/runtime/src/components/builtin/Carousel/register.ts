@@ -1,5 +1,3 @@
-import { v4 as uuid } from 'uuid'
-
 import { ReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride } from '@makeswift/controls'
 import {
@@ -39,9 +37,9 @@ export function registerComponent(runtime: ReactRuntime) {
         id: ElementID(),
         images: Images({
           preset: [
-            { key: uuid(), props: {} },
-            { key: uuid(), props: {} },
-            { key: uuid(), props: {} },
+            { key: 'image-1', props: {} },
+            { key: 'image-2', props: {} },
+            { key: 'image-3', props: {} },
           ],
         }),
         width: Width({
