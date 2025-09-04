@@ -1,6 +1,6 @@
 # @makeswift/express-react
 
-## 0.0.2-canary.0
+## 0.0.2
 
 ### Patch Changes
 
