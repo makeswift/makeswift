@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.25.2-canary.1
+
+### Patch Changes
+
+- 6f5f31a: fix: Cloudflare workers compatibility
+
 ## 0.25.2-canary.0
 
 ### Patch Changes

@@ -14,6 +14,7 @@
     "@makeswift/react-router": "0.0.0"
   },
   "changesets": [
+    "little-shrimps-taste",
     "sharp-bears-notice"
   ]
 }
