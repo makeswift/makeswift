@@ -147,11 +147,11 @@ class Definition extends BaseRichTextDefinition<ReactNode, Config, InstanceType>
   }
 
   mergeTranslatedData(
-    data: DataType,
+    data: DataType | undefined,
     translatedData: Data,
     _context: MergeTranslatableDataContext,
   ): Data {
-    if (translatedData == null) return data as Data
+    if (data == null || translatedData == null) return data as Data
 
     const { descendants, ...rest } = Definition.normalizeData(data)
     return {
