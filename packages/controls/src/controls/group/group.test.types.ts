@@ -22,7 +22,7 @@ type ExpectedPropsDataType = {
   list: {
     id: string
     type?: string
-    value:
+    value?:
       | number
       | {
           [ControlDataTypeKey]: 'number::v1'

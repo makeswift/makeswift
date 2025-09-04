@@ -61,7 +61,7 @@ type ItemType<C extends Config> = C extends Config<infer Item> ? Item : never
 type DataType<C extends Config> = {
   id: string
   type?: string
-  value: DataType_<ItemType<C>>
+  value?: DataType_<ItemType<C>>
 }[]
 
 type ValueType<C extends Config> = ValueType_<ItemType<C>>[]
@@ -127,7 +127,7 @@ class Definition<C extends Config> extends ControlDefinition<
       z.object({
         id: z.string(),
         type: item.type.optional(),
-        value: item.data,
+        value: item.data.optional(),
       }),
     ) as SchemaType<DataType<C>>
 
