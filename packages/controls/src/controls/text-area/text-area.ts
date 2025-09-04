@@ -163,7 +163,7 @@ class Definition<C extends Config> extends ControlDefinition<
     return data
   }
 
-  getTranslatableData(data: DataType<C>): Data {
+  getTranslatableData(data: DataType<C> | undefined): Data {
     return data
   }
 

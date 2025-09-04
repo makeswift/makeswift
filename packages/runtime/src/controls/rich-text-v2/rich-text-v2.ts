@@ -142,7 +142,8 @@ class Definition extends BaseRichTextDefinition<ReactNode, Config, InstanceType>
     }
   }
 
-  getTranslatableData(data: DataType): Data {
+  getTranslatableData(data: DataType | undefined): Data {
+    if (data == null) return null
     return getTranslatableData(Definition.dataToNodes(data), this.config.plugins)
   }
 

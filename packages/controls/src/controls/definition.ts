@@ -79,12 +79,12 @@ export abstract class ControlDefinition<
     return override ?? base
   }
 
-  getTranslatableData(_data: DataType): Data {
+  getTranslatableData(_data: DataType | undefined): Data {
     return null
   }
 
   mergeTranslatedData(
-    data: DataType,
+    data: DataType | undefined,
     _translatedData: Data,
     _context: MergeTranslatableDataContext,
   ): Data {
