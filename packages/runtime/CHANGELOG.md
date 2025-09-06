@@ -1,22 +1,12 @@
 # @makeswift/runtime
 
-## 0.25.2-canary.2
-
-### Patch Changes
-
-- 951c9ea: fix: support matching Requests in API handler for Next.js versions < 15.5.0
-
-## 0.25.2-canary.1
+## 0.25.2
 
 ### Patch Changes
 
 - 6f5f31a: fix: Cloudflare workers compatibility
-
-## 0.25.2-canary.0
-
-### Patch Changes
-
 - 1acf9c3: change `client.getPages` pagination limit to be 100 by default
+- 951c9ea: fix: support matching Requests in API handler for Next.js versions < 15.5.0
 
 ## 0.25.1
 
