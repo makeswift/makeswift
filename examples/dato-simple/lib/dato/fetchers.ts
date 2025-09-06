@@ -34,9 +34,6 @@ export async function getPaginatedBlogs(
   })
 
   const blogs = allBlogposts ?? []
-
-  // For total count, we need to make a separate query or estimate
-  // DatoCMS doesn't return total in the same way as Contentful
   const total = blogs.length + skip + (blogs.length === limit ? 1 : 0)
   const hasMore = blogs.length === limit
 
