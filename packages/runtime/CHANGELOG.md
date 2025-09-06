@@ -1,5 +1,15 @@
 # @makeswift/runtime
 
+## 0.25.3
+
+### Patch Changes
+
+- 3eaad67: fix: check null data before attempting to merge translated data
+- Updated dependencies [3eaad67]
+- Updated dependencies [4c008a2]
+  - @makeswift/controls@0.1.13
+  - @makeswift/prop-controllers@0.4.7
+
 ## 0.25.2
 
 ### Patch Changes
