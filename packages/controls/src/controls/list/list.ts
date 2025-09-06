@@ -61,7 +61,7 @@ type ItemType<C extends Config> = C extends Config<infer Item> ? Item : never
 type DataType<C extends Config> = {
   id: string
   type?: string
-  value: DataType_<ItemType<C>>
+  value?: DataType_<ItemType<C>>
 }[]
 
 type ValueType<C extends Config> = ValueType_<ItemType<C>>[]
@@ -127,7 +127,7 @@ class Definition<C extends Config> extends ControlDefinition<
       z.object({
         id: z.string(),
         type: item.type.optional(),
-        value: item.data,
+        value: item.data.optional(),
       }),
     ) as SchemaType<DataType<C>>
 
@@ -170,7 +170,7 @@ class Definition<C extends Config> extends ControlDefinition<
     }))
   }
 
-  getTranslatableData(data: DataType<C>): Data {
+  getTranslatableData(data: DataType<C> | undefined): Data {
     if (data == null) return null
     return Object.fromEntries(
       data.map((item) => [
@@ -181,11 +181,11 @@ class Definition<C extends Config> extends ControlDefinition<
   }
 
   mergeTranslatedData(
-    data: DataType<C>,
+    data: DataType<C> | undefined,
     translatedData: Record<string, DataType<C>>,
     context: MergeTranslatableDataContext,
   ): Data {
-    if (translatedData == null) return data
+    if (data == null || translatedData == null) return data
     return data.map((item) => {
       return {
         ...item,

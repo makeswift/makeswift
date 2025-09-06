@@ -163,16 +163,16 @@ class Definition<C extends Config> extends ControlDefinition<
     return data
   }
 
-  getTranslatableData(data: DataType<C>): Data {
+  getTranslatableData(data: DataType<C> | undefined): Data {
     return data
   }
 
   mergeTranslatedData(
-    data: DataType<C>,
+    data: DataType<C> | undefined,
     translatedData: Data,
     _context: MergeTranslatableDataContext,
   ): Data {
-    if (translatedData == null) return data
+    if (data == null || translatedData == null) return data
     return translatedData
   }
 

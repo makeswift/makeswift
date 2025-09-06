@@ -140,10 +140,11 @@ abstract class Definition<RuntimeNode> extends ControlDefinition<
   }
 
   mergeTranslatedData(
-    data: DataType,
+    data: DataType | undefined,
     _translatedData: Data,
     context: MergeTranslatableDataContext,
-  ): DataType {
+  ): DataType | undefined {
+    if (data == null) return data
     return {
       ...data,
       elements: data.elements.map((element) =>

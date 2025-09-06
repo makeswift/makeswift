@@ -154,7 +154,7 @@ class Definition<C extends Config> extends ControlDefinition<
     ) as DataType<C>
   }
 
-  getTranslatableData(data: DataType<C>): Data {
+  getTranslatableData(data: DataType<C> | undefined): Data {
     if (data == null) return null
     return mapValues(this.keyDefs, (def, key) => {
       return def.getTranslatableData(data[key])
@@ -162,11 +162,11 @@ class Definition<C extends Config> extends ControlDefinition<
   }
 
   mergeTranslatedData(
-    data: DataType<C>,
+    data: DataType<C> | undefined,
     translatedData: Record<string, DataType<C>>,
     context: MergeTranslatableDataContext,
   ): Data {
-    if (translatedData == null) return data
+    if (data == null || translatedData == null) return data
     return mapValues(this.keyDefs, (def, key) =>
       def.mergeTranslatedData(data[key], translatedData[key], context),
     )
