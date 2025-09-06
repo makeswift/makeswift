@@ -1,17 +1,22 @@
 import { type Context, type MiddlewareHandler, type Next } from 'hono'
 import { setCookie } from 'hono/cookie'
+import { env } from 'hono/adapter'
 
 import {
   type SiteVersion,
   MAKESWIFT_SITE_VERSION_COOKIE,
   REDIRECT_SEARCH_PARAM,
   cookieSettingOptions,
-  MakeswiftClient,
   redirectLiveHandler,
   SearchParams,
   secondsUntilSiteVersionExpiration,
   serializeSiteVersion,
 } from '@makeswift/runtime/unstable-framework-support'
+
+import { ReactRuntime } from '@makeswift/runtime/react'
+
+import { Makeswift as MakeswiftClient } from '../client'
+import { type Env } from './env'
 
 async function requestedSiteVersion({
   searchParams,
@@ -31,12 +36,14 @@ async function requestedSiteVersion({
   return { version: payload.version, token: previewToken }
 }
 
-export function createPreviewMiddleware({
-  client,
+export function createPreviewMiddleware<E extends Env>({
+  apiOrigin,
+  runtime,
 }: {
-  client: MakeswiftClient
+  apiOrigin?: string
+  runtime: ReactRuntime
 }): MiddlewareHandler {
-  return async function apiHandler(c: Context, next: Next): Promise<Response | void> {
+  return async function apiHandler(c: Context<E>, next: Next): Promise<Response | void> {
     const { pathname, searchParams } = new URL(c.req.url, `https://example.com`)
 
     const redirectLive = searchParams.get(REDIRECT_SEARCH_PARAM)
@@ -45,6 +52,9 @@ export function createPreviewMiddleware({
         previewCookieNames: [MAKESWIFT_SITE_VERSION_COOKIE],
       })
     }
+
+    const apiKey = env(c).MAKESWIFT_SITE_API_KEY
+    const client = new MakeswiftClient(apiKey, { apiOrigin, runtime })
 
     const siteVersion = await requestedSiteVersion({ searchParams, client })
     if (siteVersion == null) return next()

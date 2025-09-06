@@ -1,4 +1,5 @@
 import { type Context, type MiddlewareHandler, type Next } from 'hono'
+import { env } from 'hono/adapter'
 
 import {
   type ApiHandlerUserConfig,
@@ -8,24 +9,28 @@ import {
 
 import { Makeswift as MakeswiftClient } from '../client'
 
+import { type Env } from './env'
+
 const API_PATH_PREFIX = '/api/makeswift/'
 
 type UserConfig = ApiHandlerUserConfig & {
   revalidationHandler?: (path?: string) => Promise<void>
 }
 
-export function createApiHandler(
-  apiKey: string,
-  { apiOrigin, runtime, revalidationHandler, ...userConfig }: UserConfig,
-): MiddlewareHandler {
-  const client = new MakeswiftClient(apiKey, { apiOrigin, runtime })
-
-  return async function apiHandler(c: Context, next: Next): Promise<Response | void> {
+export function createApiHandler<E extends Env>({
+  apiOrigin,
+  runtime,
+  revalidationHandler,
+  ...userConfig
+}: UserConfig): MiddlewareHandler {
+  return async function apiHandler(c: Context<E>, next: Next): Promise<Response | void> {
     if (!c.req.path.startsWith(API_PATH_PREFIX)) {
       return next()
     }
 
     const route = `/${c.req.path.replace(API_PATH_PREFIX, '')}`
+    const apiKey = env(c).MAKESWIFT_SITE_API_KEY
+    const client = new MakeswiftClient(apiKey, { apiOrigin, runtime })
 
     const apiHandler = createMakeswiftApiHandler(apiKey, {
       ...userConfig,
