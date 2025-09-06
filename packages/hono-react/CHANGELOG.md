@@ -1,5 +1,11 @@
 # @makeswift/hono-react
 
+## 0.0.1-canary.2
+
+### Patch Changes
+
+- b22a428: fix: extract API key from context
+
 ## 0.0.1-canary.1
 
 ### Patch Changes
