@@ -1,5 +1,12 @@
 # @makeswift/controls
 
+## 0.1.13-canary.0
+
+### Patch Changes
+
+- 3eaad67: fix: check null data before attempting to merge translated data
+- 4c008a2: fix: support optional values for list control item data type
+
 ## 0.1.12
 
 ### Patch Changes
