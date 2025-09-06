@@ -11,11 +11,10 @@
     "tsconfig": "0.0.0",
     "@makeswift/controls": "0.0.0",
     "@makeswift/express-react": "0.0.0-alpha",
-    "@makeswift/react-router": "0.0.0"
+    "@makeswift/react-router": "0.0.0",
+    "@makeswift/hono-react": "0.0.0"
   },
   "changesets": [
-    "little-shrimps-taste",
-    "sharp-bears-notice",
-    "young-ravens-greet"
+    "smooth-coats-enjoy"
   ]
 }
