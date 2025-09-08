@@ -15,7 +15,8 @@
     "negotiator": "^0.6.3",
     "next": "15.5.0",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "react-markdown": "^10.1.0"
   },
   "devDependencies": {
     "@types/negotiator": "^0.6.3",
