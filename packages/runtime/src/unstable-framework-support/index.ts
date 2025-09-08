@@ -27,9 +27,14 @@ export { RuntimeProvider } from '../runtimes/react/components/RuntimeProvider'
 export { Slot } from '../runtimes/react/components/Slot'
 
 export {
-  createRootStyleCache,
-  RootStyleRegistry,
+  createStyleCache,
+  createFlushableStyleCache,
+  createStreamingStyleCache,
   styleTagHtml,
+} from '../runtimes/react/lib/style-cache'
+
+export {
+  RootStyleRegistry,
   StyleTagSSR,
   type RootStyleProps,
 } from '../runtimes/react/root-style-registry'

@@ -4,7 +4,7 @@ import { Writable } from 'stream'
 import { type ReactNode } from 'react'
 
 import {
-  createRootStyleCache,
+  createFlushableStyleCache,
   RootStyleRegistry,
   styleTagHtml,
   type RootStyleProps,
@@ -14,7 +14,7 @@ export function renderHtml(
   children: ReactNode,
   { cacheKey, enableCssReset }: RootStyleProps = {},
 ): Promise<{ getStyles: () => string; html: string }> {
-  const cache = createRootStyleCache({ key: cacheKey })
+  const cache = createFlushableStyleCache({ key: cacheKey })
   const getStyles = () => styleTagHtml({ cacheKey: cache.key, ...cache.flush() })
 
   return new Promise((resolve, reject) => {
