@@ -1,8 +1,7 @@
 import escapeHtml from 'escape-html'
 import { Descendant, Editor, Element, Node, Text, Transforms, createEditor } from 'slate'
 import { jsx } from 'slate-hyperscript'
-import { parseFragment } from 'parse5'
-import { ChildNode, DocumentFragment } from 'parse5/dist/tree-adapters/default'
+import { parseFragment, DefaultTreeAdapterTypes } from 'parse5'
 
 import { type TranslationDto, Slate } from '@makeswift/controls'
 
@@ -102,7 +101,7 @@ export function getTranslatableData(
 }
 
 function deserializeTranslationHtmlString(
-  el: ChildNode | DocumentFragment,
+  el: DefaultTreeAdapterTypes.ChildNode | DefaultTreeAdapterTypes.DocumentFragment,
   translationKey?: string,
 ): Descendant[] {
   if (el.nodeName === '#document-fragment') {

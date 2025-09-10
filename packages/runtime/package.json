@@ -177,7 +177,7 @@
     "js-base64": "^3.7.7",
     "jwt-decode": "^4.0.0",
     "ot-json0": "^1.1.0",
-    "parse5": "^7.1.2",
+    "parse5": "^7.3.0",
     "path-to-regexp": "^6.2.1",
     "polished": "3.0.3",
     "react-player": "^2.16.1",
