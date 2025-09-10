@@ -7,8 +7,9 @@ import {
 import { type ReactNode } from 'react'
 
 import {
-  createStreamingStyleCache,
+  createFlushableStyleCache,
   RootStyleRegistry,
+  styleTagHtml,
   type RootStyleProps,
 } from '@makeswift/runtime/unstable-framework-support'
 
@@ -27,8 +28,10 @@ type RenderOptions = RootStyleProps &
 export async function renderHtml(
   children: ReactNode,
   { cacheKey, enableCssReset, ...renderOptions }: RenderOptions = {},
-): Promise<{ html: ReactDOMServerReadableStream; styles: ReadableStream<Uint8Array> }> {
-  const cache = createStreamingStyleCache({ key: cacheKey })
+): Promise<{ html: ReactDOMServerReadableStream; getStyles: () => string }> {
+  const cache = createFlushableStyleCache({ key: cacheKey })
+  const getStyles = () => styleTagHtml({ cacheKey: cache.key, ...cache.flush() })
+
   const html = await renderToReadableStream(
     <RootStyleRegistry cache={cache} enableCssReset={enableCssReset}>
       {children}
@@ -41,9 +44,5 @@ export async function renderHtml(
     },
   )
 
-  html.allReady.then(() => {
-    cache.closeStream()
-  })
-
-  return { html, styles: cache.stylesStream }
+  return { html, getStyles }
 }
