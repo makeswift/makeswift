@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.25.4
+
+### Patch Changes
+
+- d4834c4: fix: support dynamic page registration and unregistration with builder
+- 90a2683: chore: upgrade parse5 to latest minor version
+- 5afcff6: chore: move type dependencies to dev dependencies
+
 ## 0.25.3
 
 ### Patch Changes
