@@ -1,4 +1,4 @@
-import { registerBuiltinComponents } from '../../components/builtin/register'
+// import { registerBuiltinComponents } from '../../components/builtin/register'
 import { ControlDefinition as UnifiedControlDefinition } from '@makeswift/controls'
 
 import { type LegacyDescriptor, type DescriptorValueType } from '../../prop-controllers/descriptors'
@@ -54,6 +54,6 @@ export class ReactRuntime extends RuntimeCore {
   constructor({ breakpoints }: { breakpoints?: BreakpointsInput } = {}) {
     super({ breakpoints })
 
-    registerBuiltinComponents(this)
+    //registerBuiltinComponents(this)
   }
 }
