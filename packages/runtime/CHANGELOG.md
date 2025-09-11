@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.25.4-canary.1
+
+### Patch Changes
+
+- d4834c4: fix: support dynamic page registration and unregistration with builder
+
 ## 0.25.4-canary.0
 
 ### Patch Changes

@@ -15,6 +15,7 @@
     "@makeswift/hono-react": "0.0.0"
   },
   "changesets": [
+    "brave-peas-pump",
     "brown-pans-serve",
     "fair-grapes-check"
   ]
