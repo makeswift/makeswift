@@ -15,9 +15,7 @@
     "@makeswift/hono-react": "0.0.0"
   },
   "changesets": [
-    "pink-fishes-raise",
-    "polite-dancers-teach",
-    "smooth-coats-enjoy",
-    "twenty-tips-ring"
+    "brown-pans-serve",
+    "fair-grapes-check"
   ]
 }
