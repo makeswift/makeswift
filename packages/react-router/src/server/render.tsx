@@ -5,7 +5,7 @@ import { renderToPipeableStream } from 'react-dom/server'
 import { PassThrough, Transform } from 'node:stream'
 
 import {
-  createRootStyleCache,
+  createFlushableStyleCache,
   RootStyleRegistry,
   styleTagHtml,
   type RootStyleProps,
@@ -28,7 +28,7 @@ export function renderHtml(
     responseHeaders: Headers
   },
 ): Promise<Response> {
-  const cache = createRootStyleCache({ key: cacheKey })
+  const cache = createFlushableStyleCache({ key: cacheKey })
 
   return new Promise((resolve, reject) => {
     let didError = false
