@@ -199,7 +199,7 @@ export function getChangedElementsPaths(
   return result
 }
 
-function getElementByPath(rootElement: Element, elementPath: OperationPath): Element | null {
+export function getElementByPath(rootElement: Element, elementPath: OperationPath): Element | null {
   const item = getIn(rootElement, elementPath)
   if (!isElement(item)) {
     console.error('Expected an element, got', item, {

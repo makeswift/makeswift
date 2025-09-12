@@ -33,12 +33,21 @@ export class ReactRuntime extends RuntimeCore {
       hidden = false,
       props,
       description,
-    }: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P; description?: string },
+      server = false,
+    }: {
+      type: string
+      label: string
+      icon?: ComponentIcon
+      hidden?: boolean
+      props?: P
+      description?: string
+      server?: boolean
+    },
   ): () => void {
     validateComponentType(type, component as unknown as ComponentType)
 
     const unregisterComponent = this.store.dispatch(
-      registerComponentEffect(type, { label, icon, hidden, description }, props ?? {}),
+      registerComponentEffect(type, { label, icon, hidden, description, server }, props ?? {}),
     )
 
     const unregisterReactComponent = this.store.dispatch(
