@@ -9,7 +9,7 @@ import {
   type SiteVersion,
 } from '@makeswift/runtime/next'
 
-import '@/makeswift/components'
+import '@/makeswift/components.client'
 
 export function MakeswiftProvider({
   children,
