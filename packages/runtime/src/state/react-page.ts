@@ -19,6 +19,8 @@ import {
   ContextResource,
 } from '@makeswift/controls'
 
+import { type useRouter } from 'next/navigation'
+
 import * as Documents from './modules/read-only-documents'
 import * as ElementTrees from './modules/element-trees'
 import * as ReactComponents from './modules/react-components'
@@ -29,6 +31,7 @@ import * as IsInBuilder from './modules/is-in-builder'
 import * as IsPreview from './modules/is-preview'
 import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Breakpoints from './modules/breakpoints'
+import * as RSCElementKeys from './modules/rsc-element-keys'
 import {
   type Action,
   ActionTypes,
@@ -76,6 +79,7 @@ const reducer = combineReducers({
   isPreview: IsPreview.reducer,
   builderEditMode: BuilderEditMode.reducer,
   breakpoints: Breakpoints.reducer,
+  rscElementKeys: RSCElementKeys.reducer,
 })
 
 export type State = ReturnType<typeof reducer>
@@ -352,7 +356,13 @@ export function getBreakpoints(state: State): Breakpoints.State {
   return state.breakpoints
 }
 
-export function elementTreeMiddleware(): Middleware<Dispatch, State, Dispatch> {
+export function getRSCElementKeys(state: State): RSCElementKeys.State {
+  return state.rscElementKeys
+}
+
+export function elementTreeMiddleware(
+  router?: ReturnType<typeof useRouter>,
+): Middleware<Dispatch, State, Dispatch> {
   return actionMiddleware(({ dispatch, getState }) => next => {
     return action => {
       switch (action.type) {
@@ -367,6 +377,48 @@ export function elementTreeMiddleware(): Middleware<Dispatch, State, Dispatch> {
 
         case ActionTypes.CHANGE_DOCUMENT: {
           const { documentKey, operation } = action.payload
+
+          const document = getDocument(getState(), documentKey)
+          const componentsMeta = ComponentsMeta.getComponentsMeta(getState().componentsMeta)
+
+          for (const op of operation) {
+            const hasInsert = 'li' in op || 'oi' in op
+
+            if (hasInsert) {
+              // @ts-expect-error:
+              const insertedData = ('li' in op ? op.li : op.oi?.value) as any
+              const insertedElement = insertedData?.elements?.at(0)
+
+              if (insertedElement) {
+                const meta = componentsMeta.get(insertedElement?.type)
+
+                if (meta?.server) {
+                  console.log('RSC element added, refreshing page')
+                  router?.refresh()
+                  break
+                }
+              }
+            }
+
+            const changedElementsPaths = ElementTrees.getChangedElementsPaths(op.p)
+
+            for (const { elementPath } of changedElementsPaths) {
+              const changedElement = ElementTrees.getElementByPath(
+                document!.rootElement,
+                elementPath,
+              )
+
+              if (changedElement == null) continue
+
+              const meta = componentsMeta.get(changedElement.type)
+
+              if (meta?.server) {
+                console.log('RSC element changed, refreshing page')
+                router?.refresh()
+                break
+              }
+            }
+          }
 
           const oldDocument = getDocument(getState(), documentKey)
           const result = next(action)

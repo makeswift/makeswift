@@ -8,6 +8,8 @@ type Props = ComponentPropsWithoutRef<typeof Page>
 export function RscPage(props: Props) {
   const rscNodes = prerenderRSCNodes(props.snapshot.document.data)
 
+  console.log('rscNodes', rscNodes)
+
   return (
     <RSCNodesProvider value={rscNodes}>
       <Page {...props} />
