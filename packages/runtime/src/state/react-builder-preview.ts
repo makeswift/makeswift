@@ -23,6 +23,7 @@ import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Pointer from './modules/pointer'
 import * as ElementImperativeHandles from './modules/element-imperative-handles'
 import * as Breakpoints from './modules/breakpoints'
+import * as RSCElementKeys from './modules/rsc-element-keys'
 
 import { withSetupTeardown } from './mixins/setup-teardown'
 
@@ -55,6 +56,7 @@ import { createPropController } from '../prop-controllers/instances'
 import { serializeControls } from '../builder'
 import { MakeswiftHostApiClient } from '../api/react'
 import { ElementImperativeHandle } from '../runtimes/react/element-imperative-handle'
+import { useRouter } from 'next/navigation'
 
 export type { Operation } from './modules/read-write-documents'
 export type { BoxModelHandle } from './modules/box-models'
@@ -74,6 +76,7 @@ export const reducer = combineReducers({
   pointer: Pointer.reducer,
   elementImperativeHandles: ElementImperativeHandles.reducer,
   breakpoints: Breakpoints.reducer,
+  rscElementKeys: RSCElementKeys.reducer,
 })
 
 export type State = ReturnType<typeof reducer>
@@ -726,9 +729,11 @@ function setupMessageChannel(channel: MessageChannel): ThunkAction<void, State, 
 export function configureStore({
   preloadedState,
   client,
+  router,
 }: {
   preloadedState: Partial<State>
   client: MakeswiftHostApiClient
+  router: ReturnType<typeof useRouter>
 }) {
   const initialState: Partial<State> = {
     ...preloadedState,
@@ -742,7 +747,7 @@ export function configureStore({
 
     middleware: getDefaultMiddleware =>
       getDefaultMiddleware(middlewareOptions).concat(
-        ReactPage.elementTreeMiddleware(),
+        ReactPage.elementTreeMiddleware(router),
         measureBoxModelsMiddleware(),
         messageChannelMiddleware(channel),
         propControllerHandlesMiddleware(),
