@@ -1,0 +1,5 @@
+{
+  "main": "../dist/cjs/rsc/index.js",
+  "module": "../dist/esm/rsc/index.js",
+  "types": "../dist/types/rsc/index.d.ts"
+}
