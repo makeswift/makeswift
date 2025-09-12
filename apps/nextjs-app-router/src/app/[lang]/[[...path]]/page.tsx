@@ -1,8 +1,8 @@
 import { client } from '@/makeswift/client'
-import '@/makeswift/components'
+import '@/makeswift/components.server'
 import { getSiteVersion } from '@makeswift/runtime/next/server'
 import { notFound } from 'next/navigation'
-import { Page as MakeswiftPage } from '@makeswift/runtime/next'
+import { Page as MakeswiftPage } from '@makeswift/runtime/rsc'
 
 type ParsedUrlQuery = Promise<{ lang: string; path?: string[] }>
 
