@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.25.4-canary.2
+
+### Patch Changes
+
+- 542625e: Drop Carousel dependency on popmotion library
+
 ## 0.25.4-canary.1
 
 ### Patch Changes
