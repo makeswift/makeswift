@@ -11,7 +11,6 @@ import {
 } from 'react'
 import { motion, useAnimation } from 'framer-motion'
 import { useGesture } from '@use-gesture/react'
-import { wrap } from '@popmotion/popcorn'
 
 import { getBaseBreakpoint } from '@makeswift/controls'
 
@@ -30,6 +29,13 @@ import {
   type ResponsiveIconRadioGroupValue,
   type ImagesData,
 } from '@makeswift/prop-controllers'
+
+// Utility to wrap a value within a range. Pulled from:
+// https://github.com/Popmotion/popmotion/blob/adf681efd8568ada018ce68082dbd585f25c4c7d/packages/popmotion/src/utils/wrap.ts
+function wrap(min: number, max: number, v: number): number {
+  const rangeSize = max - min
+  return ((((v - min) % rangeSize) + rangeSize) % rangeSize) + min
+}
 
 const LeftChevron = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="10" height="14" viewBox="0 0 10 14">
