@@ -158,7 +158,6 @@
     "@makeswift/controls": "workspace:*",
     "@makeswift/next-plugin": "workspace:*",
     "@makeswift/prop-controllers": "workspace:*",
-    "@popmotion/popcorn": "^0.4.4",
     "@reduxjs/toolkit": "^2.8.2",
     "@use-gesture/react": "^10.2.24",
     "color": "^3.1.3",
