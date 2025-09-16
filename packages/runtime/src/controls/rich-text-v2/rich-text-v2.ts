@@ -36,11 +36,7 @@ import { renderRichTextV2 } from '../../runtimes/react/controls/rich-text-v2'
 
 import { RichTextV2Plugin, Plugin } from './plugin'
 import { RichTextV2Control } from './control'
-import {
-  getTranslatableData,
-  mergeTranslatedNodes,
-  type RichTextTranslationDto,
-} from './translation'
+import { getTranslatableData, type RichTextTranslationDto } from './translation'
 
 type DataType = z.infer<typeof Definition.schema.data>
 type DataV2Type = z.infer<typeof Definition.schema.dataV2>
@@ -150,18 +146,22 @@ class Definition extends BaseRichTextDefinition<ReactNode, Config, InstanceType>
   mergeTranslatedData(
     data: DataType | undefined,
     translatedData: Data,
-    _context: MergeTranslatableDataContext,
+    context: MergeTranslatableDataContext,
   ): Data {
     if (data == null || translatedData == null) return data as Data
 
     const { descendants, ...rest } = Definition.normalizeData(data)
-    return {
-      ...rest,
-      descendants: mergeTranslatedNodes(
+
+    const translatedDescendants =
+      context.mergeTranslatedNodes?.(
         descendants,
         translatedData as RichTextTranslationDto,
-        this.config.plugins,
-      ),
+        this.config.plugins as RichTextPluginControl[],
+      ) ?? descendants
+
+    return {
+      ...rest,
+      descendants: translatedDescendants,
     }
   }
 

@@ -1,4 +1,7 @@
-import { type SerializableReplacementContext } from '@makeswift/controls'
+import {
+  MergeTranslatableDataContext,
+  type SerializableReplacementContext,
+} from '@makeswift/controls'
 
 import {
   Breakpoints,
@@ -44,7 +47,16 @@ export class RuntimeCore {
     return getElementTreeTranslatableData(this.store.getState(), elementTree)
   }
 
-  mergeTranslatedData(elementTree: ElementData, translatedData: Record<string, Data>): Element {
-    return mergeElementTreeTranslatedData(this.store.getState(), elementTree, translatedData)
+  mergeTranslatedData(
+    elementTree: ElementData,
+    translatedData: Record<string, Data>,
+    context?: Partial<MergeTranslatableDataContext>,
+  ): Element {
+    return mergeElementTreeTranslatedData(
+      this.store.getState(),
+      elementTree,
+      translatedData,
+      context,
+    )
   }
 }

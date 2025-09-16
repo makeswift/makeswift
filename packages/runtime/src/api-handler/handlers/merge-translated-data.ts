@@ -1,6 +1,7 @@
 import { type Element } from '../../state/react-page'
 import { MakeswiftClient } from '../../client'
 import { type ApiRequest, ApiResponse, type ErrorResponseBody } from '../request-response'
+import { mergeTranslatedNodes } from '../../controls/rich-text-v2/merge-translation'
 
 type TranslatedData = { elementTree: Element }
 
@@ -19,6 +20,9 @@ export async function mergeTranslatedDataHandler(
     return ApiResponse.json({ message: 'elementTree must be defined' }, { status: 400 })
   }
 
-  const translatedElementTree = client.mergeTranslatedData(elementTree, translatedData)
+  const translatedElementTree = client.mergeTranslatedData(elementTree, translatedData, {
+    mergeTranslatedNodes,
+  })
+
   return ApiResponse.json({ elementTree: translatedElementTree })
 }

@@ -4,11 +4,13 @@ import { RichText } from '../rich-text-v2'
 import * as Simple from './fixtures/simple'
 import * as SubSupCode from './fixtures/rearranged'
 import * as NestedParagraphEdgeCase from './fixtures/nested-paragraph-edge-case-3728'
+import { mergeTranslatedNodes } from '../merge-translation'
 
 describe('GIVEN merging translations for RichTextV2', () => {
   const mergeContext: MergeTranslatableDataContext = {
     translatedData: {},
     mergeTranslatedData: element => element,
+    mergeTranslatedNodes: mergeTranslatedNodes,
   }
 
   test('WHEN merging simple strings THEN correct string is returned', () => {
