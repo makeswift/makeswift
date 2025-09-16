@@ -258,6 +258,7 @@ export function mergeElementTreeTranslatedData(
   state: State,
   elementTree: Documents.ElementData,
   translatedData: TranslationDto,
+  context: Partial<MergeTranslatableDataContext> = {},
 ): Documents.Element {
   function merge(state: State, translatedData: TranslationDto) {
     return function (node: Documents.Element): Documents.Element {
@@ -270,10 +271,12 @@ export function mergeElementTreeTranslatedData(
         throw new Error(`Can't merge element of type "${node.type}" because it has no descriptors`)
       }
 
-      const context: MergeTranslatableDataContext = {
+      const ctx: MergeTranslatableDataContext = {
         translatedData,
         mergeTranslatedData: merge(state, translatedData),
+        ...context,
       }
+
       const props = {} as Record<string, Documents.Data>
 
       for (const propName of Object.keys(descriptors)) {
@@ -283,7 +286,7 @@ export function mergeElementTreeTranslatedData(
           descriptor,
           node.props[propName],
           translatedData[`${node.key}:${propName}`],
-          context,
+          ctx,
         )
       }
 

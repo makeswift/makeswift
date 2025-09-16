@@ -1,9 +1,15 @@
 import { type Data, type Element, type ElementData } from './common/types'
+import { Slate } from './controls'
 
 export type TranslationDto = Record<string, Data>
 export type MergeTranslatableDataContext = {
   translatedData: TranslationDto
   mergeTranslatedData: (node: Element) => Element
+  mergeTranslatedNodes?: (
+    nodes: Slate.Descendant[],
+    translatedData: Record<string, string>,
+    plugins: any[],
+  ) => Slate.Descendant[]
 }
 
 type ResourceMapping = Map<string, string | null>

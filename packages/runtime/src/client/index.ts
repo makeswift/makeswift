@@ -43,7 +43,7 @@ import {
 import { type SiteVersion } from '../api/site-version'
 import { toIterablePaginationResult } from '../utils/pagination'
 import { deterministicUUID } from '../utils/deterministic-uuid'
-import { Schema } from '@makeswift/controls'
+import { MergeTranslatableDataContext, Schema } from '@makeswift/controls'
 import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-only-documents'
 
 export { SnippetLocation } from '../api/graphql/generated/types'
@@ -957,8 +957,12 @@ export class MakeswiftClient {
     return this.runtime.getTranslatableData(elementTree)
   }
 
-  mergeTranslatedData(elementTree: ElementData, translatedData: Record<string, Data>): Element {
-    return this.runtime.mergeTranslatedData(elementTree, translatedData)
+  mergeTranslatedData(
+    elementTree: ElementData,
+    translatedData: Record<string, Data>,
+    context: Partial<MergeTranslatableDataContext> = {},
+  ): Element {
+    return this.runtime.mergeTranslatedData(elementTree, translatedData, context)
   }
 
   async readPreviewToken(token: string): Promise<PreviewTokenPayload | null> {
