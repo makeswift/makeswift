@@ -1,4 +1,4 @@
-import { registerBuiltinComponents } from '../../components/builtin/register'
+import { registerCoreComponents } from '../../components/builtin/register/core'
 import { ControlDefinition as UnifiedControlDefinition } from '@makeswift/controls'
 
 import { type LegacyDescriptor, type DescriptorValueType } from '../../prop-controllers/descriptors'
@@ -33,7 +33,14 @@ export class ReactRuntime extends RuntimeCore {
       hidden = false,
       props,
       description,
-    }: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P; description?: string },
+    }: {
+      type: string
+      label: string
+      icon?: ComponentIcon
+      hidden?: boolean
+      props?: P
+      description?: string
+    },
   ): () => void {
     validateComponentType(type, component as unknown as ComponentType)
 
@@ -54,6 +61,6 @@ export class ReactRuntime extends RuntimeCore {
   constructor({ breakpoints }: { breakpoints?: BreakpointsInput } = {}) {
     super({ breakpoints })
 
-    registerBuiltinComponents(this)
+    registerCoreComponents(this)
   }
 }
