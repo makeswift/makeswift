@@ -1,4 +1,8 @@
-import { getReactComponent, ElementData as ReactPageElementData } from '../../state/react-page'
+import {
+  getReactComponent,
+  ElementData as ReactPageElementData,
+  getComponentPropControllerDescriptors,
+} from '../../state/react-page'
 import { FallbackComponent } from '../../components/shared/FallbackComponent'
 import { getRuntime } from '..'
 import { resolveProps } from '../functions/resolve-props'
@@ -12,7 +16,14 @@ export const ServerElementData = function ServerElementData({
 }: ElementDataProps): JSX.Element {
   const state = getRuntime().store.getState()
   const Component = getReactComponent(state, elementData.type)
-  const props = resolveProps(elementData.props)
+
+  let descriptors = getComponentPropControllerDescriptors(state, elementData.type)
+
+  if (descriptors == null) {
+    return <FallbackComponent text="Descriptors not found" />
+  }
+
+  const props = resolveProps(elementData.props, descriptors)
 
   if (Component == null) {
     console.warn(`Unknown component '${elementData.type}'`, { elementData })

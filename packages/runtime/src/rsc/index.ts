@@ -1,2 +1,2 @@
 export { setRuntime, getRuntime } from './context/server'
-export { RscPage } from './components/Page'
+export { RscPage } from './components/RscPage'
