@@ -192,6 +192,7 @@ Now that your Sanity project is set up and the GraphQL API is deployed, return t
 MAKESWIFT_SITE_API_KEY=your_makeswift_api_key
 SANITY_PROJECT_ID=your_sanity_project_id
 SANITY_ACCESS_TOKEN=your_sanity_access_token
+NEXT_PUBLIC_SITE_URL=your_site_url
 ```
 
 You can find your Sanity project ID and generate an API token in your project dashboard at sanity.io.
@@ -248,13 +249,11 @@ Blog posts are transformed from Sanity's structure to match the API expected by 
 Common issues and solutions:
 
 - **Type generation fails**
-
   - Ensure your Sanity credentials are correct in `.env.local`.
   - Verify your Sanity GraphQL endpoint is accessible.
   - Verify that the relevant content is published in Sanity.
 
 - **Pages not displaying content**
-
   - Check if blog posts exist in Sanity.
   - Confirm that the slug format matches your entries in Sanity.
   - Ensure posts have `publishedAt` dates and are not drafts.
