@@ -15,6 +15,7 @@ import {
 import { Descriptor, isLegacyDescriptor } from '../prop-controllers/descriptors'
 import { copy as propControllerCopy } from '../prop-controllers/copy'
 import { DELETED_PROP_CONTROLLER_TYPES, PropControllerDescriptor } from '../prop-controllers'
+import { ReactMergeTranslationsVisitor } from './visitors/merge-translations-visitor'
 
 export function copy(definition: Descriptor, value: any, context: CopyContext) {
   if (!isLegacyDescriptor(definition)) {
@@ -83,7 +84,8 @@ export function mergeTranslatedData(
 ): Data {
   if (data == null) return data
   if (!isLegacyDescriptor(definition)) {
-    return definition.mergeTranslatedData(data, translatedData, context)
+    const mergeTranslationsVisitor = new ReactMergeTranslationsVisitor(context)
+    return definition.accept(mergeTranslationsVisitor, data, translatedData)
   }
 
   switch (definition.type) {

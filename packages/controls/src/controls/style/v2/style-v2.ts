@@ -28,6 +28,7 @@ import {
   type SchemaTypeAny,
 } from '../../definition'
 import { type SendMessage } from '../../instance'
+import { ControlDefinitionVisitor } from '../../visitor'
 
 import { StyleV2Control } from './style-v2-control'
 
@@ -204,6 +205,10 @@ class Definition<
     return serialize(this.config, {
       type: Definition.type,
     })
+  }
+
+  accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
+    return visitor.visitStyleV2(this, ...args)
   }
 
   introspect<R>(
