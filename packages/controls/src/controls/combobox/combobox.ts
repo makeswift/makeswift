@@ -16,6 +16,7 @@ import {
   type SchemaType,
 } from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
+import { ControlDefinitionVisitor } from '../visitor'
 
 type Option<T extends Data> = { id: string; value: T; label: string }
 type GetOptionsType<T extends Data> = (
@@ -140,6 +141,10 @@ class Definition<C extends Config> extends ControlDefinition<
     return serialize(this.config, {
       type: Definition.type,
     })
+  }
+
+  accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
+    return visitor.visitCombobox(this, ...args)
   }
 }
 

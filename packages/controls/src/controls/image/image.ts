@@ -24,6 +24,7 @@ import {
   type SchemaType,
 } from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
+import { ControlDefinitionVisitor } from '../visitor'
 
 type Config = z.infer<typeof Definition.schema.config>
 type DefaultConfig = Config & {
@@ -374,6 +375,10 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
     })
   }
 
+  accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
+    return visitor.visitImage(this, ...args)
+  }
+
   introspect<R>(
     data: DataType<C> | undefined,
     target: IntrospectionTarget<R>,
@@ -387,6 +392,8 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
       .otherwise(() => []) as R[]
   }
 }
+
+export { type Config as ImageConfig }
 
 export class ImageDefinition<
   C extends Config = DefaultConfig,

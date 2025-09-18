@@ -4,10 +4,7 @@ import { z } from 'zod'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
 import { ControlDataTypeKey, type Data } from '../../common'
-import {
-  type CopyContext,
-  type MergeTranslatableDataContext,
-} from '../../context'
+import { type CopyContext } from '../../context'
 import {
   type DeserializedRecord,
   type SerializedRecord,
@@ -20,6 +17,7 @@ import {
   type SchemaType,
 } from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
+import { ControlDefinitionVisitor } from '../visitor'
 
 type Config = z.infer<typeof Definition.schema.relaxed.config>
 
@@ -167,15 +165,6 @@ class Definition<C extends Config> extends ControlDefinition<
     return data
   }
 
-  mergeTranslatedData(
-    data: DataType<C> | undefined,
-    translatedData: Data,
-    _context: MergeTranslatableDataContext,
-  ): Data {
-    if (data == null || translatedData == null) return data
-    return translatedData
-  }
-
   resolveValue(
     data: DataType<C> | undefined,
   ): Resolvable<ResolvedValueType<C> | undefined> {
@@ -196,6 +185,10 @@ class Definition<C extends Config> extends ControlDefinition<
       type: Definition.type,
       version: this.version,
     })
+  }
+
+  accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
+    return visitor.visitTextInput(this, ...args)
   }
 }
 

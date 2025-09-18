@@ -1,4 +1,5 @@
 import { testDefinition, testResolveValue } from '../../testing/test-definition'
+import { TestMergeTranslationsVisitor } from '../../testing/test-merge-translation-visitor'
 
 import { ControlDataTypeKey } from '../../common'
 import { MergeTranslatableDataContext, TranslationDto } from '../../context'
@@ -63,6 +64,8 @@ describe('TextArea', () => {
       mergeTranslatedData: (el) => el,
     }
 
+    const visitor = new TestMergeTranslationsVisitor(mergeContext)
+
     const def = TextArea({ label: 'TextArea' })
 
     test('returns translated data when translated data is non-nullish', () => {
@@ -72,12 +75,8 @@ describe('TextArea', () => {
         value: 'Finding Nemo',
       }
 
-      expect(
-        def.mergeTranslatedData(dataV1, translationData, mergeContext),
-      ).toBe(translationData)
-      expect(
-        def.mergeTranslatedData(dataV0, translationData, mergeContext),
-      ).toBe(translationData)
+      expect(def.accept(visitor, dataV1, translationData)).toBe(translationData)
+      expect(def.accept(visitor, dataV0, translationData)).toBe(translationData)
     })
 
     test('returns data when translated data is nullish', () => {
@@ -87,10 +86,8 @@ describe('TextArea', () => {
         value: 'Finding Nemo',
       }
 
-      expect(def.mergeTranslatedData(dataV1, undefined, mergeContext)).toBe(
-        dataV1,
-      )
-      expect(def.mergeTranslatedData(dataV0, null, mergeContext)).toBe(dataV0)
+      expect(def.accept(visitor, dataV1, undefined)).toBe(dataV1)
+      expect(def.accept(visitor, dataV0, null)).toBe(dataV0)
     })
   })
 })
