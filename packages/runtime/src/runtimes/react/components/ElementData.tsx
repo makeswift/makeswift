@@ -1,9 +1,10 @@
-import { Ref, Suspense, forwardRef, memo } from 'react'
+import { Ref, forwardRef, memo } from 'react'
 import { ElementData as ReactPageElementData } from '../../../state/react-page'
 import { useComponent } from '../hooks/use-component'
 import { canAcceptRef } from '../utils/can-accept-ref'
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'
 import { ResolveProps } from '../controls'
+import { ClientSuspense } from './ClientSuspense'
 
 type ElementDataProps = {
   elementData: ReactPageElementData
@@ -24,7 +25,7 @@ export const ElementData = memo(
     const forwardRef = canAcceptRef(Component)
 
     return (
-      <Suspense>
+      <ClientSuspense>
         <ResolveProps element={elementData}>
           {props =>
             forwardRef ? (
@@ -34,7 +35,7 @@ export const ElementData = memo(
             )
           }
         </ResolveProps>
-      </Suspense>
+      </ClientSuspense>
     )
   }),
 )
