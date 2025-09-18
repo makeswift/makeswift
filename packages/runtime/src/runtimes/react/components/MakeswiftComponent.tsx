@@ -1,6 +1,6 @@
 'use client'
 
-import { memo, Suspense, useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import {
   componentDocumentToRootEmbeddedDocument,
   MakeswiftComponentSnapshot,
@@ -34,9 +34,5 @@ export const MakeswiftComponent = memo(({ snapshot, label, type, description }: 
 
   useRegisterDocument(rootDocument)
 
-  return (
-    <Suspense>
-      <DocumentRoot rootDocument={rootDocument} />
-    </Suspense>
-  )
+  return <DocumentRoot rootDocument={rootDocument} />
 })
