@@ -1,7 +1,7 @@
 export * from './Box'
 export { default as Box } from './Box'
 export { default as Button } from './Button'
-export { default as Carousel } from './Carousel'
+export { Carousel } from './Carousel'
 export { default as Countdown } from './Countdown'
 export { default as Divider } from './Divider'
 export { default as Embed } from './Embed'

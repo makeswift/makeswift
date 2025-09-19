@@ -6,6 +6,8 @@ import { registerComponent as registerRootComponent } from '../Root/register'
 import { registerComponent as registerSlotComponent } from '../Slot/register'
 import { registerComponent as registerTextComponent } from '../Text/register'
 
+import { registerComponent as registerCarouselComponent } from '../Carousel/register'
+
 export function registerCoreComponents(runtime: ReactRuntime) {
   const unregisterBoxComponent = registerBoxComponent(runtime)
   const unregisterButtonComponent = registerButtonComponent(runtime)
@@ -13,6 +15,7 @@ export function registerCoreComponents(runtime: ReactRuntime) {
   const unregisterTextComponent = registerTextComponent(runtime)
   const unregisterRootComponent = registerRootComponent(runtime)
   const unregisterSlotComponent = registerSlotComponent(runtime)
+  const unregisterCarouselComponent = registerCarouselComponent(runtime)
 
   return () => {
     unregisterBoxComponent()
@@ -21,5 +24,6 @@ export function registerCoreComponents(runtime: ReactRuntime) {
     unregisterTextComponent()
     unregisterRootComponent()
     unregisterSlotComponent()
+    unregisterCarouselComponent()
   }
 }

@@ -28,7 +28,7 @@ import {
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
-    lazy(() => import('./Carousel')),
+    lazy(() => import('./Carousel').then(mod => ({ default: mod.Carousel }))),
     {
       type: MakeswiftComponentType.Carousel,
       label: 'Carousel',

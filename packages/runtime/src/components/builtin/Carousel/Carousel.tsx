@@ -89,7 +89,7 @@ const swipePower = (dx: number, velocity: number) => dx * (1 + velocity)
 // returns a compound class selector if the `classname` string includes multiple class names
 const classSelector = (classname: string) => `.${classname.split(' ').join('.')}`
 
-const Carousel = forwardRef(function Carousel(
+export const Carousel = forwardRef(function Carousel(
   {
     images = [],
     width,
@@ -406,8 +406,6 @@ const Carousel = forwardRef(function Carousel(
     </div>
   )
 })
-
-export default Carousel
 
 type DotBaseProps = {
   className?: string
