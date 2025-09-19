@@ -1,11 +1,10 @@
 import 'server-only'
 import { cache } from 'react'
 
-// CSS collector for RSC-generated styles
 export class CSSCollector {
   private styles = new Map<string, string>()
 
-  collect(className: string, css: string) {
+  collect(className: string, css: string, elementKey?: string, propName?: string) {
     if (!this.styles.has(className)) {
       this.styles.set(className, css)
     }

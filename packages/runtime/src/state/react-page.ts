@@ -413,8 +413,8 @@ export function elementTreeMiddleware(
               const meta = componentsMeta.get(changedElement.type)
 
               if (meta?.server) {
-                console.log('RSC element changed, refreshing page')
-                router?.refresh()
+                // Refreshed in RSCElementStyleEnhancer
+                // router?.refresh()
                 break
               }
             }

@@ -4,19 +4,18 @@ import { getBreakpoints } from '../../state/react-page'
 import { createServerStylesheet } from './server-stylesheet'
 import { isLegacyDescriptor } from '../../prop-controllers/descriptors'
 import { DescriptorsByProp } from '../../state/modules/prop-controllers'
-
-// resource resolver not implemented
-const mockResourceResolver = {} as any
+import { mockResourceResolver } from './resource-resolver'
 
 export function resolveProps(
   props: ElementData['props'],
   propDescriptors: DescriptorsByProp,
+  elementKey: string,
 ): Record<string, unknown> {
   const runtime = getRuntime()
   const state = runtime.store.getState()
   const breakpoints = getBreakpoints(state)
 
-  const stylesheet = createServerStylesheet(breakpoints)
+  const stylesheet = createServerStylesheet(breakpoints, elementKey)
 
   const resolvedProps: Record<string, unknown> = {}
 

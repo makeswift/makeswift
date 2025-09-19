@@ -3,6 +3,7 @@ import { Page } from '../../next'
 import { prerenderRSCNodes } from '../functions/prerender-rsc-nodes'
 import { RSCNodesProvider } from '../context/RSCNodesProvider'
 import { CSSInjector } from '../css/css-collector'
+import { RSCStyleProvider } from '../css/style-runtime'
 
 type Props = ComponentPropsWithoutRef<typeof Page>
 
@@ -11,9 +12,10 @@ export function RscPage(props: Props) {
 
   return (
     <RSCNodesProvider value={rscNodes}>
-      {/* Automatically inject all RSC-generated CSS */}
-      <CSSInjector />
-      <Page {...props} />
+      <RSCStyleProvider>
+        <CSSInjector />
+        <Page {...props} />
+      </RSCStyleProvider>
     </RSCNodesProvider>
   )
 }

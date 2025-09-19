@@ -23,10 +23,9 @@ export const ServerElementData = function ServerElementData({
     return <FallbackComponent text="Descriptors not found" />
   }
 
-  const props = resolveProps(elementData.props, descriptors)
+  const props = resolveProps(elementData.props, descriptors, elementData.key)
 
   if (Component == null) {
-    console.warn(`Unknown component '${elementData.type}'`, { elementData })
     return <FallbackComponent text="Component not found" />
   }
 
