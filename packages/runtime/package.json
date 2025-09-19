@@ -6,6 +6,7 @@
     "dist",
     "prop-controllers",
     "react",
+    "react-core",
     "box-model",
     "client",
     "components",
@@ -37,6 +38,11 @@
       "require": "./dist/cjs/react.js",
       "import": "./dist/esm/react.js",
       "types": "./dist/types/react.d.ts"
+    },
+    "./react-core": {
+      "require": "./dist/cjs/react-core.js",
+      "import": "./dist/esm/react-core.js",
+      "types": "./dist/types/react-core.d.ts"
     },
     "./box-model": {
       "require": "./dist/cjs/box-model.js",
