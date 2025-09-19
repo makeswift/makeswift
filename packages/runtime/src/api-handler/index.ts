@@ -4,7 +4,7 @@ import { APIResource } from '../api'
 import { ApiHandlerHeaders, deserializeSiteVersion } from '../api/site-version'
 
 import { MakeswiftClient } from '../client'
-import { type BasicReactRuntime } from '../react'
+import { type ReactRuntimeCore } from '../react'
 
 import { redirectLiveHandler } from './handlers/redirect-live'
 import { elementTreeHandler } from './handlers/element-tree'
@@ -30,7 +30,7 @@ export type { Manifest, Font }
 type Events = { onPublish: OnPublish }
 
 export type ApiHandlerUserConfig = {
-  runtime: BasicReactRuntime
+  runtime: ReactRuntimeCore
   appOrigin?: string
   apiOrigin?: string
   getFonts?: GetFonts

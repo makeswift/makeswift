@@ -3,6 +3,7 @@ export { ActionTypes, changeDocument } from './state/actions'
 export {
   Element,
   ReactRuntime,
+  ReactRuntimeCore,
   BasicReactRuntime,
   useIsInBuilder,
   DocumentRoot,

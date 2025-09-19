@@ -1,11 +1,11 @@
-import { type BasicReactRuntime } from '../../../runtimes/react'
+import { type ReactRuntimeCore } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 import { getBaseBreakpoint } from '@makeswift/controls'
 import { RichText } from '../../../controls/rich-text-v2/rich-text-v2'
 import { lazy } from 'react'
 import { ElementID, Margin, Width } from '@makeswift/prop-controllers'
 
-export function registerComponent(runtime: BasicReactRuntime) {
+export function registerComponent(runtime: ReactRuntimeCore) {
   return runtime.registerComponent(
     lazy(() => import('./Text')),
     {

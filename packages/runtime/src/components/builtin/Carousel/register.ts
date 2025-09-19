@@ -1,4 +1,4 @@
-import { type BasicReactRuntime } from '../../../runtimes/react'
+import { type ReactRuntimeCore } from '../../../runtimes/react'
 import { findBreakpointOverride } from '@makeswift/controls'
 import {
   BorderRadius,
@@ -26,7 +26,7 @@ import {
   getCheckboxPropControllerDataBoolean,
 } from '@makeswift/prop-controllers'
 
-export function registerComponent(runtime: BasicReactRuntime) {
+export function registerComponent(runtime: ReactRuntimeCore) {
   return runtime.registerComponent(
     lazy(() => import('./Carousel').then(mod => ({ default: mod.Carousel }))),
     {

@@ -1,10 +1,13 @@
-//import { registerDefaultComponents } from '../../components/builtin/register/defaults'
-import { BreakpointsInput } from '../../state/modules/breakpoints'
-import { BasicReactRuntime } from './basic-react-runtime'
+import { registerCoreComponents } from '../../components/builtin/register/core'
+import { registerDefaultComponents } from '../../components/builtin/register/defaults'
 
-export class ReactRuntime extends BasicReactRuntime {
+import { BreakpointsInput } from '../../state/modules/breakpoints'
+import { ReactRuntimeCore } from './react-runtime-core'
+
+export class ReactRuntime extends ReactRuntimeCore {
   constructor({ breakpoints }: { breakpoints?: BreakpointsInput } = {}) {
     super({ breakpoints })
-    //registerDefaultComponents(this)
+    registerCoreComponents(this)
+    registerDefaultComponents(this)
   }
 }

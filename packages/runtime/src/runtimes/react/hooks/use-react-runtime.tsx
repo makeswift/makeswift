@@ -1,11 +1,11 @@
 'use client'
 
 import { createContext, useContext } from 'react'
-import { BasicReactRuntime } from '../basic-react-runtime'
+import { ReactRuntimeCore } from '../react-runtime-core'
 
-export const ReactRuntimeContext = createContext<BasicReactRuntime | null>(null)
+export const ReactRuntimeContext = createContext<ReactRuntimeCore | null>(null)
 
-export function useReactRuntime(): BasicReactRuntime {
+export function useReactRuntime(): ReactRuntimeCore {
   const runtime = useContext(ReactRuntimeContext)
   if (runtime === null) {
     throw new Error('`useReactRuntime` must be used within a `ReactRuntimeProvider`')

@@ -1,4 +1,4 @@
-import { type BasicReactRuntime } from '../../../runtimes/react'
+import { ReactRuntimeCore } from '../../../runtimes/react/react-runtime-core'
 import { registerComponent as registerBoxComponent } from '../Box/register'
 import { registerComponent as registerButtonComponent } from '../Button/register'
 import { registerComponent as registerImageComponent } from '../Image/register'
@@ -6,7 +6,7 @@ import { registerComponent as registerRootComponent } from '../Root/register'
 import { registerComponent as registerSlotComponent } from '../Slot/register'
 import { registerComponent as registerTextComponent } from '../Text/register'
 
-export function registerCoreComponents(runtime: BasicReactRuntime) {
+export function registerCoreComponents(runtime: ReactRuntimeCore) {
   const unregisterBoxComponent = registerBoxComponent(runtime)
   const unregisterButtonComponent = registerButtonComponent(runtime)
   const unregisterImageComponent = registerImageComponent(runtime)
