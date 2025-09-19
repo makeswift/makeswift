@@ -1,6 +1,6 @@
-import { ReactRuntime } from '@makeswift/runtime/react'
+import { BasicReactRuntime } from '@makeswift/runtime/react'
 
-export const runtime = new ReactRuntime({
+export const runtime = new BasicReactRuntime({
   breakpoints: {
     mobile: { width: 575, viewport: 390, label: 'Mobile' },
     tablet: { width: 768, viewport: 765, label: 'Tablet' },
