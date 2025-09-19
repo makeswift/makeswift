@@ -1,4 +1,4 @@
-import { type ReactRuntimeCore } from '../../../runtimes/react'
+import { type ReactRuntimeCore } from '../../../runtimes/react/react-runtime-core'
 import { findBreakpointOverride } from '@makeswift/controls'
 import {
   BorderRadius,

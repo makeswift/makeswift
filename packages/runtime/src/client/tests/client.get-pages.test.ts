@@ -2,7 +2,7 @@ import { MakeswiftClient } from '../../client'
 import { http, HttpResponse } from 'msw'
 import { randomUUID } from 'crypto'
 
-import { ReactRuntime } from '../../runtimes/react'
+import { ReactRuntime } from '../../runtimes/react/react-runtime'
 
 import { server } from '../../mocks/server'
 import { TestOrigins } from '../../testing/fixtures'

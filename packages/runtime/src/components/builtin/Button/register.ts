@@ -12,7 +12,7 @@ import {
 } from '@makeswift/prop-controllers'
 import { findBreakpointOverride } from '@makeswift/controls'
 
-import { type ReactRuntimeCore } from '../../../runtimes/react'
+import { type ReactRuntimeCore } from '../../../runtimes/react/react-runtime-core'
 import { MakeswiftComponentType } from '../constants'
 import { ButtonVariant } from './contants'
 import { lazy } from 'react'

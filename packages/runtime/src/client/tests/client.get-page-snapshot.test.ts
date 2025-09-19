@@ -1,7 +1,7 @@
 import { MakeswiftClient, type MakeswiftPageDocument } from '../../client'
 import { http, HttpResponse } from 'msw'
 
-import { ReactRuntime } from '../../runtimes/react'
+import { ReactRuntime } from '../../runtimes/react/react-runtime'
 
 import { server } from '../../mocks/server'
 import { TestOrigins, TestWorkingSiteVersion } from '../../testing/fixtures'

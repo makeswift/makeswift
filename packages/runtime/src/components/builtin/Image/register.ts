@@ -1,5 +1,5 @@
 import { lazy } from 'react'
-import { type ReactRuntimeCore } from '../../../runtimes/react'
+import { type ReactRuntimeCore } from '../../../runtimes/react/react-runtime-core'
 import { MakeswiftComponentType } from '../constants'
 import {
   Border,

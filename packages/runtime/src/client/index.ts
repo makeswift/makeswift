@@ -31,7 +31,7 @@ import {
   getTableIds,
   getTypographyIds,
 } from '../prop-controllers/introspection'
-import { type ReactRuntimeCore } from '../runtimes/react'
+import { type ReactRuntimeCore } from '../runtimes/react/react-runtime-core'
 import {
   type Element,
   type ElementData,
