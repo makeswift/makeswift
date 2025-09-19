@@ -1,4 +1,5 @@
-export { ReactRuntime } from './react-runtime'
+// export { ReactRuntime } from './react-runtime'
+export { BasicReactRuntime as ReactRuntime } from './basic-react-runtime'
 export { BasicReactRuntime } from './basic-react-runtime'
 export { ReactRuntimeCore } from './react-runtime-core'
 
