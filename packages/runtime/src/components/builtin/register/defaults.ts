@@ -1,4 +1,4 @@
-import { type ReactRuntime } from '../../../runtimes/react'
+import { type BasicReactRuntime } from '../../../runtimes/react'
 import { registerComponent as registerCarouselComponent } from '../Carousel/register'
 import { registerComponent as registerCountdownComponent } from '../Countdown/register'
 import { registerComponent as registerDividerComponent } from '../Divider/register'
@@ -8,7 +8,7 @@ import { registerComponent as registerNavigationComponent } from '../Navigation/
 import { registerComponent as registerSocialLinksComponent } from '../SocialLinks/register'
 import { registerComponent as registerVideoComponent } from '../Video/register'
 
-export function registerDefaultComponents(runtime: ReactRuntime) {
+export function registerDefaultComponents(runtime: BasicReactRuntime) {
   const unregisterCarouselComponent = registerCarouselComponent(runtime)
   const unregisterCountdownComponent = registerCountdownComponent(runtime)
   const unregisterDividerComponent = registerDividerComponent(runtime)

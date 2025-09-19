@@ -31,7 +31,7 @@ import {
   getTableIds,
   getTypographyIds,
 } from '../prop-controllers/introspection'
-import { ReactRuntime } from '../runtimes/react'
+import { type BasicReactRuntime } from '../runtimes/react'
 import {
   type Element,
   type ElementData,
@@ -283,7 +283,7 @@ type LocalizedPage = {
 
 type MakeswiftConfig = {
   apiOrigin?: string
-  runtime: ReactRuntime
+  runtime: BasicReactRuntime
 }
 
 export type Sitemap = {
@@ -325,7 +325,7 @@ type GetPageAPI = z.infer<typeof getPageAPISchema>
 
 export class MakeswiftClient {
   private graphqlClient: GraphQLClient
-  private runtime: ReactRuntime
+  private runtime: BasicReactRuntime
 
   readonly apiKey: string
   readonly apiOrigin: URL

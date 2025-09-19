@@ -1,4 +1,4 @@
-import { ReactRuntime } from '../../../runtimes/react'
+import { type BasicReactRuntime } from '../../../runtimes/react'
 import { findBreakpointOverride, getBaseBreakpoint } from '@makeswift/controls'
 import { MakeswiftComponentType } from '../constants'
 import { Alignments, Contrast, Contrasts, Shapes, Sizes } from './context/FormContext'
@@ -21,7 +21,7 @@ import {
   type PropData,
 } from '@makeswift/prop-controllers'
 
-export function registerComponent(runtime: ReactRuntime) {
+export function registerComponent(runtime: BasicReactRuntime) {
   return runtime.registerComponent(
     lazy(() => import('./Form')),
     {

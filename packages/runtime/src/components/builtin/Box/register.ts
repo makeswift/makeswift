@@ -18,7 +18,7 @@ import {
 } from '@makeswift/prop-controllers'
 import { findBreakpointOverride, getBaseBreakpoint } from '@makeswift/controls'
 
-import { ReactRuntime } from '../../../runtimes/react'
+import { type BasicReactRuntime } from '../../../runtimes/react'
 import { MakeswiftComponentType } from '../constants'
 import {
   BoxAnimateIn,
@@ -29,7 +29,7 @@ import {
 } from './constants'
 import { lazy } from 'react'
 
-export function registerComponent(runtime: ReactRuntime) {
+export function registerComponent(runtime: BasicReactRuntime) {
   function isHiddenBasedOnAnimationType(
     props: Record<string, unknown>,
     deviceId: string,
