@@ -1,15 +1,14 @@
-import 'server-only'
+'use client'
 
 import { type Breakpoints, type Stylesheet, type ResolvedStyle } from '@makeswift/controls'
-import { getCSSCollector } from '../css/css-collector'
 import { resolvedStyleToCss } from '../../runtimes/react/resolve-style'
 import { cssObjectToString } from '../utils/css-string-utils'
 
-export function createServerStylesheet(
+export function createClientStylesheet(
   breakpoints: Breakpoints,
-  elementKey?: string
+  elementKey: string,
+  onStyleUpdate: (elementKey: string, propName: string, css: string) => void
 ): Stylesheet {
-  const cssCollector = getCSSCollector()
   let styleCounter = 0
 
   const generateClassName = (elementKey?: string, propName?: string, counter?: number): string => {
@@ -31,7 +30,8 @@ export function createServerStylesheet(
       try {
         const cssObject = resolvedStyleToCss(breakpoints, style)
         const cssString = cssObjectToString(cssObject, className)
-        cssCollector.collect(className, cssString, elementKey)
+        // For top-level styles, we could optionally notify the style runtime here
+        // but typically only child styles trigger updates
         return className
       } catch (error) {
         return 'makeswift-rsc-error'
@@ -52,7 +52,7 @@ export function createServerStylesheet(
           try {
             const cssObject = resolvedStyleToCss(breakpoints, style)
             const cssString = cssObjectToString(cssObject, className)
-            cssCollector.collect(className, cssString, elementKey, propName)
+            onStyleUpdate(elementKey, propName, cssString)
             return className
           } catch (error) {
             return 'makeswift-rsc-error'
@@ -61,7 +61,7 @@ export function createServerStylesheet(
 
         child(childPropName: string): Stylesheet {
           const nestedPropName = `${propName}.${childPropName}`
-          return createServerStylesheet(breakpoints, elementKey).child(nestedPropName)
+          return createClientStylesheet(breakpoints, elementKey, onStyleUpdate).child(nestedPropName)
         },
       }
     },
