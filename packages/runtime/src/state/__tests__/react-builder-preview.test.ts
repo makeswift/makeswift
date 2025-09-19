@@ -1,7 +1,7 @@
 import { configureStore as configureReduxStore } from '@reduxjs/toolkit'
 
 import { ElementImperativeHandle } from '../../runtimes/react/element-imperative-handle'
-import { ReactRuntime } from '../../runtimes/react'
+import { ReactRuntime } from '../../runtimes/react/react-runtime'
 
 import { middlewareOptions } from '../toolkit'
 

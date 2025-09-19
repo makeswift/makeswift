@@ -12,7 +12,7 @@ import {
 import { cx } from '@emotion/css'
 import { v4 as uuid } from 'uuid'
 
-import { Element } from '../../../runtimes/react'
+import { Element } from '../../../runtimes/react/components/Element'
 import Placeholder from './components/Placeholder'
 import { areBoxAnimationPropsEqual, BoxAnimationProps, useBoxAnimation } from './animations'
 import { BoxModelHandle, parse, createBox } from '../../../box-model'

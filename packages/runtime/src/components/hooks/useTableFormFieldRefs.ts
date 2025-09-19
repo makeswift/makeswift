@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { getBox } from '../../box-model'
 import { TableFormFieldsPropController } from '../../prop-controllers/instances'
-import { useIsInBuilder } from '../../runtimes/react'
+import { useIsInBuilder } from '../../runtimes/react/hooks/use-is-in-builder'
 
 export function useTableFormFieldRefs(
   propController: TableFormFieldsPropController | null | undefined,

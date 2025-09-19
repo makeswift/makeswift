@@ -1,0 +1,5 @@
+{
+  "main": "../dist/cjs/react-core.js",
+  "module": "../dist/esm/react-core.js",
+  "types": "../dist/types/react-core.d.ts"
+}

@@ -29,7 +29,7 @@ import {
   type RichTextDataV2,
 } from '../../../../../controls/rich-text-v2'
 
-import { useBuilderEditMode } from '../../..'
+import { useBuilderEditMode } from '../../../hooks/use-builder-edit-mode'
 import { BuilderEditMode } from '../../../../../state/modules/builder-edit-mode'
 import { pollBoxModel } from '../../../poll-box-model'
 import { withBuilder, withLocalChanges } from '../../../../../slate'

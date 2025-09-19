@@ -1,4 +1,4 @@
-import { ReactRuntime } from '../../../runtimes/react'
+import { type ReactRuntimeCore } from '../../../runtimes/react/react-runtime-core'
 import { findBreakpointOverride, getBaseBreakpoint } from '@makeswift/controls'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
@@ -26,7 +26,7 @@ import {
   type PropData,
 } from '@makeswift/prop-controllers'
 
-export function registerComponent(runtime: ReactRuntime) {
+export function registerComponent(runtime: ReactRuntimeCore) {
   function isHiddenBasedOnMenuAnimation(props: Record<string, unknown>, deviceId: string): boolean {
     const mobileMenuAnimation = ResponsiveSelect.fromPropData(
       props.mobileMenuAnimation as PropData<typeof ResponsiveSelect> | undefined,

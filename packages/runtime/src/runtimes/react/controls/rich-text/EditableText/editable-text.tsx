@@ -20,7 +20,7 @@ import { Slate as SlateReact, Editable, withReact, ReactEditor } from 'slate-rea
 
 import { Slate, richTextDTOtoDAO, type RichTextValue } from '@makeswift/controls'
 
-import { useBuilderEditMode } from '../../..'
+import { useBuilderEditMode } from '../../../hooks/use-builder-edit-mode'
 import { DescriptorsPropControllers } from '../../../../../prop-controllers/instances'
 import { withBlock, withTypography, withBuilder, onKeyDown } from '../../../../../slate'
 import { BuilderEditMode } from '../../../../../state/modules/builder-edit-mode'
