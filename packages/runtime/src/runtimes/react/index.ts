@@ -1,4 +1,5 @@
 export { ReactRuntime } from './react-runtime'
+export { BasicReactRuntime } from './basic-react-runtime'
 
 export { Element } from './components/Element'
 export { DocumentRoot } from './components/DocumentRoot'
