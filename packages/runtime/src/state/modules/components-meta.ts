@@ -32,6 +32,7 @@ export type ComponentMeta = {
   icon: ComponentIcon
   hidden: boolean
   description?: string
+  builtinSuspense?: boolean
 }
 
 export type State = Map<string, ComponentMeta>
@@ -44,6 +45,10 @@ export function getInitialState({
 
 export function getComponentsMeta(state: State): Map<string, ComponentMeta> {
   return state
+}
+
+export function getComponentMeta(state: State, type: string): ComponentMeta | null {
+  return getComponentsMeta(state).get(type) ?? null
 }
 
 export function reducer(state: State = getInitialState(), action: Action | UnknownAction): State {

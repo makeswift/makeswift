@@ -64,6 +64,7 @@ export {
 } from './modules/read-only-documents'
 
 export type { ComponentType } from './modules/react-components'
+export type { ComponentMeta } from './modules/components-meta'
 
 const reducer = combineReducers({
   documents: Documents.reducer,
@@ -116,6 +117,14 @@ export function getReactComponent(
   type: string,
 ): ReactComponents.ComponentType | null {
   return ReactComponents.getReactComponent(getReactComponentsStateSlice(state), type)
+}
+
+function getComponentsMetaStateSlice(state: State): ComponentsMeta.State {
+  return state.componentsMeta
+}
+
+export function getComponentMeta(state: State, type: string): ComponentsMeta.ComponentMeta | null {
+  return ComponentsMeta.getComponentMeta(getComponentsMetaStateSlice(state), type)
 }
 
 function getPropControllersStateSlice(state: State): PropControllers.State {

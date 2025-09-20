@@ -67,7 +67,7 @@ export function createMakeswiftPageSnapshot(
 }
 
 export function createMakeswiftComponentSnapshot(
-  elementData: ElementData,
+  elementData: ElementData | null,
   {
     cacheData = {},
     locale = null,

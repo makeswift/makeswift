@@ -31,14 +31,27 @@ export class ReactRuntime extends RuntimeCore {
       label,
       icon = ComponentIcon.Cube,
       hidden = false,
-      props,
       description,
-    }: { type: string; label: string; icon?: ComponentIcon; hidden?: boolean; props?: P; description?: string },
+      builtinSuspense,
+      props,
+    }: {
+      type: string
+      label: string
+      icon?: ComponentIcon
+      hidden?: boolean
+      description?: string
+      builtinSuspense?: boolean
+      props?: P
+    },
   ): () => void {
     validateComponentType(type, component as unknown as ComponentType)
 
     const unregisterComponent = this.store.dispatch(
-      registerComponentEffect(type, { label, icon, hidden, description }, props ?? {}),
+      registerComponentEffect(
+        type,
+        { label, icon, hidden, description, builtinSuspense },
+        props ?? {},
+      ),
     )
 
     const unregisterReactComponent = this.store.dispatch(
