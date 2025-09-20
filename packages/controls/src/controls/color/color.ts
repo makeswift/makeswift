@@ -25,6 +25,7 @@ import {
   type SchemaType,
 } from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
+import { ControlDefinitionVisitor } from '../visitor'
 
 import { swatchToColorString } from './conversion'
 
@@ -270,6 +271,10 @@ class Definition<C extends Config> extends ControlDefinition<
       type: Definition.type,
       version: this.version,
     })
+  }
+
+  accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
+    return visitor.visitColor(this, ...args)
   }
 }
 

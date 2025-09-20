@@ -1,3 +1,5 @@
+import { TestMergeTranslationsVisitor } from '../../testing/test-merge-translation-visitor'
+
 import { ControlDataTypeKey } from '../../common'
 import { createReplacementContext } from '../../context'
 import { Targets } from '../../introspection'
@@ -342,17 +344,13 @@ describe('Group', () => {
     test('getTranslatableData', () =>
       expect(group.getTranslatableData(data)).toMatchSnapshot())
 
-    test('mergeTranslatedData', () =>
-      expect(
-        group.mergeTranslatedData(
-          data,
-          {},
-          {
-            translatedData: {},
-            mergeTranslatedData: (node) => node,
-          },
-        ),
-      ).toMatchSnapshot())
+    test('mergeTranslatedData', () => {
+      const visitor = new TestMergeTranslationsVisitor({
+        translatedData: {},
+        mergeTranslatedData: (node) => node,
+      })
+      expect(group.accept(visitor, data, {})).toMatchSnapshot()
+    })
 
     test('introspect', () =>
       expect(group.introspect(data, Targets.ChildrenElement)).toStrictEqual([]))
@@ -403,17 +401,14 @@ describe('Group', () => {
     test('getTranslatableData', () =>
       expect(group.getTranslatableData(data)).toMatchSnapshot())
 
-    test('mergeTranslatedData', () =>
-      expect(
-        group.mergeTranslatedData(
-          data,
-          {},
-          {
-            translatedData: {},
-            mergeTranslatedData: (node) => node,
-          },
-        ),
-      ).toMatchSnapshot())
+    test('mergeTranslatedData', () => {
+      const visitor = new TestMergeTranslationsVisitor({
+        translatedData: {},
+        mergeTranslatedData: (node) => node,
+      })
+
+      expect(group.accept(visitor, data, {})).toMatchSnapshot()
+    })
 
     test('introspect', () =>
       expect(group.introspect(data, Targets.ChildrenElement)).toStrictEqual([]))

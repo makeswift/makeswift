@@ -5,10 +5,7 @@ import { StableValue } from '../../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../../lib/zod'
 
 import { type Data } from '../../../common'
-import {
-  type CopyContext,
-  type MergeTranslatableDataContext,
-} from '../../../context'
+import { type CopyContext } from '../../../context'
 import { type IntrospectionTarget } from '../../../introspection'
 import { type ResourceResolver } from '../../../resources/resolver'
 import {
@@ -29,6 +26,7 @@ import {
   type SchemaType,
 } from '../../definition'
 import { type SendMessage } from '../../instance'
+import { ControlDefinitionVisitor } from '../../visitor'
 
 import { ShapeControl } from './shape-control'
 
@@ -161,17 +159,6 @@ class Definition<C extends Config> extends ControlDefinition<
     })
   }
 
-  mergeTranslatedData(
-    data: DataType<C> | undefined,
-    translatedData: Record<string, DataType<C>>,
-    context: MergeTranslatableDataContext,
-  ): Data {
-    if (data == null || translatedData == null) return data
-    return mapValues(this.keyDefs, (def, key) =>
-      def.mergeTranslatedData(data[key], translatedData[key], context),
-    )
-  }
-
   resolveValue(
     data: DataType<C> | undefined,
     resolver: ResourceResolver,
@@ -221,6 +208,10 @@ class Definition<C extends Config> extends ControlDefinition<
     return Object.entries(this.keyDefs).flatMap(
       ([key, def]) => def.introspect(data[key], target) ?? [],
     )
+  }
+
+  accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
+    return visitor.visitShape(this, ...args)
   }
 }
 

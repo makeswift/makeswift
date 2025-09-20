@@ -1,3 +1,5 @@
+import { TestMergeTranslationsVisitor } from '../../../testing/test-merge-translation-visitor'
+
 import { createReplacementContext } from '../../../context'
 import { Targets } from '../../../introspection'
 import {
@@ -236,17 +238,14 @@ describe('Shape', () => {
     test('getTranslatableData', () =>
       expect(shape.getTranslatableData(data)).toMatchSnapshot())
 
-    test('mergeTranslatedData', () =>
-      expect(
-        shape.mergeTranslatedData(
-          data,
-          {},
-          {
-            translatedData: {},
-            mergeTranslatedData: (node) => node,
-          },
-        ),
-      ).toMatchSnapshot())
+    test('mergeTranslatedData', () => {
+      const visitor = new TestMergeTranslationsVisitor({
+        translatedData: {},
+        mergeTranslatedData: (node) => node,
+      })
+
+      expect(shape.accept(visitor, data, {})).toMatchSnapshot()
+    })
 
     test('introspect', () =>
       expect(shape.introspect(data, Targets.ChildrenElement)).toStrictEqual([]))

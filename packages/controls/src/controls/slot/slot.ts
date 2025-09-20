@@ -2,19 +2,19 @@ import { z } from 'zod'
 
 import { safeParse, type ParseResult } from '../../lib/zod'
 
-import { isElementReference, Schema, type Data } from '../../common'
+import { isElementReference, Schema } from '../../common'
 import {
   ContextResource,
   shouldRemoveResource,
   type CopyContext,
   type MergeContext,
-  type MergeTranslatableDataContext,
 } from '../../context'
 import { Targets, type IntrospectionTarget } from '../../introspection'
 import { type SerializedRecord } from '../../serialization'
 
 import { ControlDefinition, serialize, type SchemaType } from '../definition'
 import { type SendMessage } from '../instance'
+import { ControlDefinitionVisitor } from '../visitor'
 
 import { SlotControl } from './slot-control'
 
@@ -139,20 +139,6 @@ abstract class Definition<RuntimeNode> extends ControlDefinition<
     return { columns: mergedColumns, elements: mergedElements }
   }
 
-  mergeTranslatedData(
-    data: DataType | undefined,
-    _translatedData: Data,
-    context: MergeTranslatableDataContext,
-  ): DataType | undefined {
-    if (data == null) return data
-    return {
-      ...data,
-      elements: data.elements.map((element) =>
-        context.mergeTranslatedData(element),
-      ),
-    }
-  }
-
   createInstance(sendMessage: SendMessage) {
     return new SlotControl(sendMessage)
   }
@@ -161,6 +147,10 @@ abstract class Definition<RuntimeNode> extends ControlDefinition<
     return serialize(this.config, {
       type: Definition.type,
     })
+  }
+
+  accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
+    return visitor.visitSlot(this, ...args)
   }
 
   introspect<R>(

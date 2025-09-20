@@ -1,4 +1,5 @@
 import { testDefinition, testResolveValue } from '../../testing/test-definition'
+import { TestMergeTranslationsVisitor } from '../../testing/test-merge-translation-visitor'
 
 import { ControlDataTypeKey } from '../../common'
 import { MergeTranslatableDataContext, TranslationDto } from '../../context'
@@ -64,21 +65,19 @@ describe('TextInput', () => {
       mergeTranslatedData: (el) => el,
     }
 
+    const visitor = new TestMergeTranslationsVisitor(mergeContext)
+
     const def = TextInput({ label: 'TextInput' })
 
     test('returns translated data when translated data is non-nullish', () => {
       const dataV0 = 'cookie monster'
-      expect(
-        def.mergeTranslatedData(dataV0, translationData, mergeContext),
-      ).toBe(translationData)
+      expect(def.accept(visitor, dataV0, translationData)).toBe(translationData)
 
       const dataV1 = {
         [ControlDataTypeKey]: 'text-input::v1' as const,
         value: 'elmo',
       }
-      expect(
-        def.mergeTranslatedData(dataV1, translationData, mergeContext),
-      ).toBe(translationData)
+      expect(def.accept(visitor, dataV1, translationData)).toBe(translationData)
     })
 
     test('returns data when translated data is nullish', () => {
@@ -89,13 +88,8 @@ describe('TextInput', () => {
         value: 'elmo',
       }
 
-      expect(def.mergeTranslatedData(dataV0, undefined, mergeContext)).toBe(
-        dataV0,
-      )
-
-      expect(def.mergeTranslatedData(dataV1, undefined, mergeContext)).toBe(
-        dataV1,
-      )
+      expect(def.accept(visitor, dataV0, undefined)).toBe(dataV0)
+      expect(def.accept(visitor, dataV1, undefined)).toBe(dataV1)
     })
   })
 })
