@@ -16,6 +16,7 @@ import {
   type SchemaType,
 } from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
+import { ControlDefinitionVisitor } from '../visitor'
 
 type Option<T extends string> = { readonly value: T; readonly label: string }
 type OptionList<T extends string> = readonly [Option<T>, ...Option<T>[]]
@@ -169,6 +170,10 @@ class Definition<C extends Config> extends ControlDefinition<
       type: Definition.type,
     })
   }
+
+  accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
+    return visitor.visitSelect(this, ...args)
+  }
 }
 
 export class SelectDefinition<
@@ -200,3 +205,4 @@ export function Select<
 ): SelectDefinition<NormedConfig<T, D>> {
   return new SelectDefinition(config as NormedConfig<T, D>)
 }
+export { type Config as SelectConfig }

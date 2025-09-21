@@ -25,6 +25,7 @@ import { type Stylesheet } from '../../stylesheet'
 import { Color } from '../color'
 import { ControlDefinition, serialize, type Resolvable } from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
+import { ControlDefinitionVisitor } from '../visitor'
 
 import * as Schema from './schema'
 import { mergeStyles, type ResolvedStyle } from './style'
@@ -243,6 +244,10 @@ class Definition extends ControlDefinition<
     return serialize(this.config, {
       type: Definition.type,
     })
+  }
+
+  accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
+    return visitor.visitTypography(this, ...args)
   }
 
   introspect<R>(data: DataType | undefined, target: IntrospectionTarget<R>) {

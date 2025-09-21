@@ -17,6 +17,7 @@ import {
   type SchemaType,
 } from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
+import { ControlDefinitionVisitor } from '../visitor'
 
 type Config = z.infer<typeof Definition.schema.relaxed.config>
 
@@ -178,6 +179,10 @@ class Definition<C extends Config> extends ControlDefinition<
       type: Definition.type,
       version: this.version,
     })
+  }
+
+  accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
+    return visitor.visitCheckbox(this, ...args)
   }
 }
 
