@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.25.4-canary.3
+
+### Patch Changes
+
+- 6408396: Remove translatable data merging from controls in favor of visitor pattern
+- Updated dependencies [6408396]
+  - @makeswift/controls@0.1.14-canary.0
+  - @makeswift/prop-controllers@0.4.8-canary.0
+
 ## 0.25.4-canary.2
 
 ### Patch Changes
