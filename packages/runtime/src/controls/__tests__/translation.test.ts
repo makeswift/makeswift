@@ -1,7 +1,7 @@
-import { mergeTranslatedData } from '../control'
 import * as ShapeFixture from './fixtures/shape'
 import * as ListFixture from './fixtures/list'
 import { Element } from '../../state/modules/read-only-documents'
+import { mergeTranslatedData } from '../../state/translations/merge'
 
 describe('GIVEN merging translations', () => {
   test('WHEN merging shape control THEN valid translations are applied', () => {
