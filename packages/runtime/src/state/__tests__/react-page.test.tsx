@@ -1,10 +1,9 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { Group, List, Slot, TextInput } from '../../controls'
+import { Slot, TextInput } from '../../controls'
 
 import { registerComponent } from '../actions'
 import * as ReactPage from '../react-page'
-import * as TranslationFixtures from './fixtures/translations'
 import { ComponentIcon } from '../modules/components-meta'
 
 // @ts-ignore Used by JSX pragma
@@ -13,7 +12,7 @@ function jsx(type: Function, props: Record<string, unknown> = {}, ...children: J
     ...props,
     children:
       children.length === 0
-        ? props.children ?? []
+        ? (props.children ?? [])
         : children.length === 1
           ? children.at(0)
           : children,
@@ -23,8 +22,6 @@ function jsx(type: Function, props: Record<string, unknown> = {}, ...children: J
 const ElementType = {
   Box: 'box',
   Button: 'button',
-  Accordion: 'accordion',
-  SlotList: 'slot-list',
 } as const
 
 type ElementType = (typeof ElementType)[keyof typeof ElementType]
@@ -63,31 +60,6 @@ function createTestStore(): ReactPage.Store {
       ElementType.Button,
       { label: 'Button', icon: ComponentIcon.Cube, hidden: false },
       { children: TextInput() },
-    ),
-  )
-
-  store.dispatch(
-    registerComponent(
-      ElementType.Accordion,
-      { label: 'Accordion', icon: ComponentIcon.Cube, hidden: false },
-      {
-        items: List({
-          type: Group({
-            props: {
-              title: TextInput({ defaultValue: 'Default Title' }),
-              content: Slot(),
-            },
-          }),
-        }),
-      },
-    ),
-  )
-
-  store.dispatch(
-    registerComponent(
-      ElementType.SlotList,
-      { label: 'Slot List', icon: ComponentIcon.Cube, hidden: false },
-      { items: List({ type: Slot() }) },
     ),
   )
 
@@ -262,32 +234,6 @@ describe('ReactPage', () => {
 
       // Assert
       expect(result).toEqual(merged)
-    })
-  })
-
-  describe('mergeTranslatedData', () => {
-    test('Translates element tree with composable controls and slots', () => {
-      // Act
-      const result = ReactPage.mergeElementTreeTranslatedData(
-        store.getState(),
-        TranslationFixtures.accordionFullTree.preTranslation,
-        TranslationFixtures.accordionFullTree.translationDto,
-      )
-
-      // Assert
-      expect(result).toEqual(TranslationFixtures.accordionFullTree.postTranslation)
-    })
-
-    test('Translates element trees with partial values (unset list items)', () => {
-      // Act
-      const result = ReactPage.mergeElementTreeTranslatedData(
-        store.getState(),
-        TranslationFixtures.accordionPartialTree.preTranslation,
-        TranslationFixtures.accordionPartialTree.translationDto,
-      )
-
-      // Assert
-      expect(result).toEqual(TranslationFixtures.accordionPartialTree.postTranslation)
     })
   })
 })

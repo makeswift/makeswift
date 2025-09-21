@@ -11,7 +11,6 @@ import {
   copyElementTree,
   getBreakpoints,
   getElementTreeTranslatableData,
-  mergeElementTreeTranslatedData,
   type Store,
   type Data,
   type Element,
@@ -42,9 +41,5 @@ export class RuntimeCore {
 
   getTranslatableData(elementTree: ElementData): Record<string, Data> {
     return getElementTreeTranslatableData(this.store.getState(), elementTree)
-  }
-
-  mergeTranslatedData(elementTree: ElementData, translatedData: Record<string, Data>): Element {
-    return mergeElementTreeTranslatedData(this.store.getState(), elementTree, translatedData)
   }
 }

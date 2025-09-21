@@ -3,19 +3,13 @@ import {
   type CopyContext,
   type Data,
   type MergeContext,
-  type MergeTranslatableDataContext,
 } from '@makeswift/controls'
 
-import {
-  GridPropControllerData,
-  Types as PropControllerTypes,
-  mergeGridPropControllerTranslatedData,
-} from '@makeswift/prop-controllers'
+import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
 
 import { Descriptor, isLegacyDescriptor } from '../prop-controllers/descriptors'
 import { copy as propControllerCopy } from '../prop-controllers/copy'
 import { DELETED_PROP_CONTROLLER_TYPES, PropControllerDescriptor } from '../prop-controllers'
-import { ReactMergeTranslationsVisitor } from './visitors/merge-translations-visitor'
 
 export function copy(definition: Descriptor, value: any, context: CopyContext) {
   if (!isLegacyDescriptor(definition)) {
@@ -73,31 +67,5 @@ export function getTranslatableData(definition: Descriptor, data: Data): Data {
 
     default:
       return null
-  }
-}
-
-export function mergeTranslatedData(
-  definition: PropControllerDescriptor,
-  data: Data,
-  translatedData: Data,
-  context: MergeTranslatableDataContext,
-): Data {
-  if (data == null) return data
-  if (!isLegacyDescriptor(definition)) {
-    const mergeTranslationsVisitor = new ReactMergeTranslationsVisitor(context)
-    return definition.accept(mergeTranslationsVisitor, data, translatedData)
-  }
-
-  switch (definition.type) {
-    case PropControllerTypes.TextInput:
-    case PropControllerTypes.TextArea:
-      if (translatedData == null) return data
-      return translatedData
-
-    case PropControllerTypes.Grid:
-      return mergeGridPropControllerTranslatedData(data as GridPropControllerData, context)
-
-    default:
-      return data
   }
 }
