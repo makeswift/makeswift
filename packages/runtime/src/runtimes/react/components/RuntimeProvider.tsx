@@ -4,7 +4,7 @@ import { ReactNode, useMemo, lazy } from 'react'
 
 import { MakeswiftHostApiClient } from '../../../api/react'
 import { ReactRuntimeContext } from '../hooks/use-react-runtime'
-import { ReactRuntime } from '../react-runtime'
+import { type ReactRuntimeCore } from '../react-runtime-core'
 import { MakeswiftHostApiClientProvider } from '../host-api-client'
 import { type SiteVersion } from '../../../api/site-version'
 import { PreviewSwitcher } from './preview-switcher/preview-switcher'
@@ -23,7 +23,7 @@ export function RuntimeProvider({
   locale = undefined,
 }: {
   children: ReactNode
-  runtime: ReactRuntime
+  runtime: ReactRuntimeCore
   siteVersion: SiteVersion | null
   apiOrigin?: string
   appOrigin?: string
