@@ -1,0 +1,5 @@
+{
+  "main": "../../dist/cjs/react/builtins/embed.js",
+  "module": "../../dist/esm/react/builtins/embed.js",
+  "types": "../../dist/types/react/builtins/embed.d.ts"
+}

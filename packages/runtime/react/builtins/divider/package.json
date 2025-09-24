@@ -1,0 +1,5 @@
+{
+  "main": "../../dist/cjs/react/builtins/divider.js",
+  "module": "../../dist/esm/react/builtins/divider.js",
+  "types": "../../dist/types/react/builtins/divider.d.ts"
+}

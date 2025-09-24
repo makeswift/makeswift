@@ -1,0 +1,5 @@
+{
+  "main": "../../dist/cjs/react/builtins/countdown.js",
+  "module": "../../dist/esm/react/builtins/countdown.js",
+  "types": "../../dist/types/react/builtins/countdown.d.ts"
+}
