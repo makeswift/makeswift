@@ -3,6 +3,7 @@ import { Grenze_Gotisch, Grenze } from 'next/font/google'
 
 import '@/app/global.css'
 import '@/makeswift/components.server'
+import '@/makeswift/components.client'
 import { getSiteVersion } from '@makeswift/runtime/next/server'
 import { setRuntime } from '@makeswift/runtime/rsc'
 import { runtime } from '@/makeswift/runtime'
@@ -38,7 +39,11 @@ export default async function RootLayout({
       className={`${GrenzeGotischFont.variable} ${GrenzeFont.variable}`}
     >
       <body>
-        <MakeswiftProvider siteVersion={siteVersion} locale={lang}>
+        <MakeswiftProvider
+          serializedServerState={runtime.serializeServerState()}
+          siteVersion={siteVersion}
+          locale={lang}
+        >
           {children}
         </MakeswiftProvider>
       </body>
