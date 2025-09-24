@@ -34,7 +34,7 @@ import {
   createElementTree,
   deleteElementTree,
 } from './actions'
-import { copy as copyFromControl, getTranslatableData, merge } from '../controls/control'
+import { copy as copyFromControl, merge } from '../controls/control'
 
 import { actionMiddleware, middlewareOptions, devToolsConfig } from './toolkit'
 
@@ -220,31 +220,6 @@ export function copyElementTree(
   const copy = JSON.parse(JSON.stringify(elementTree)) as Documents.ElementData
 
   return copyElementTreeNode(state, createReplacementContext(replacementContext))(copy)
-}
-
-export function getElementTreeTranslatableData(
-  state: State,
-  elementTree: Documents.ElementData,
-): Record<string, Documents.Data> {
-  const translatableData: Record<string, Documents.Data> = {}
-  const descriptors = getPropControllerDescriptors(state)
-
-  for (const element of ElementTrees.traverseElementTree(elementTree, descriptors)) {
-    if (Documents.isElementReference(element)) continue
-
-    const elementPescriptors = descriptors.get(element.type)
-    if (elementPescriptors == null) continue
-
-    Object.entries(elementPescriptors).forEach(([propName, descriptor]) => {
-      const translatablePropData = getTranslatableData(descriptor, element.props[propName])
-
-      if (translatablePropData != null) {
-        translatableData[`${element.key}:${propName}`] = translatablePropData
-      }
-    })
-  }
-
-  return translatableData
 }
 
 export function mergeElement(
