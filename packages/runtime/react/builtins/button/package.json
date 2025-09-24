@@ -1,0 +1,5 @@
+{
+  "main": "../../dist/cjs/react/builtins/button.js",
+  "module": "../../dist/esm/react/builtins/button.js",
+  "types": "../../dist/types/react/builtins/button.d.ts"
+}

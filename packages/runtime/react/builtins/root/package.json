@@ -1,0 +1,5 @@
+{
+  "main": "../../dist/cjs/react/builtins/root.js",
+  "module": "../../dist/esm/react/builtins/root.js",
+  "types": "../../dist/types/react/builtins/root.d.ts"
+}

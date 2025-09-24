@@ -1,0 +1,5 @@
+{
+  "main": "../../dist/cjs/react/builtins/image.js",
+  "module": "../../dist/esm/react/builtins/image.js",
+  "types": "../../dist/types/react/builtins/image.d.ts"
+}
