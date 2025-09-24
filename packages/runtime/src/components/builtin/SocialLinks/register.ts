@@ -2,7 +2,8 @@ import { ReactRuntime } from '../../../runtimes/react'
 import { getBaseBreakpoint } from '@makeswift/controls'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
-import { lazy } from 'react'
+import SocialLinksComponent from './'
+
 import {
   ElementID,
   GapX,
@@ -18,7 +19,7 @@ import {
 
 export function registerComponent(runtime: ReactRuntime) {
   return runtime.registerComponent(
-    lazy(() => import('./SocialLinks')),
+    SocialLinksComponent,
     {
       type: MakeswiftComponentType.SocialLinks,
       label: 'Social Links',
