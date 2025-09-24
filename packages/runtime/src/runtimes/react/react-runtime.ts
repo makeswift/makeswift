@@ -6,9 +6,12 @@ import { type LegacyDescriptor, type DescriptorValueType } from '../../prop-cont
 import { registerComponentEffect, registerReactComponentEffect } from '../../state/actions'
 import { BreakpointsInput } from '../../state/modules/breakpoints'
 import { ComponentIcon } from '../../state/modules/components-meta'
-import type { ComponentType } from '../../state/react-page'
+import type { ComponentType, Data, State } from '../../state/react-page'
 
 import { RuntimeCore } from './runtime-core'
+import { serializeControls, deserializeControls, SerializedControl } from '../../builder'
+import { PropControllerDescriptor } from '../../state/modules/prop-controllers'
+import { MakeswiftComponentType } from '../../components/builtin/constants'
 
 function validateComponentType(type: string, component?: ComponentType): void {
   const componentName = component?.name ?? 'Component'
@@ -17,6 +20,11 @@ function validateComponentType(type: string, component?: ComponentType): void {
       `${componentName}: A non-empty string \`type\` is required for component registration, got ${type}`,
     )
   }
+}
+
+export type SerializedServerState = {
+  componentsMeta: State['componentsMeta']
+  propControllers: Map<string, Record<string, SerializedControl<Data>>>
 }
 
 export class ReactRuntime extends RuntimeCore {
@@ -60,9 +68,64 @@ export class ReactRuntime extends RuntimeCore {
     }
   }
 
-  constructor({ breakpoints }: { breakpoints?: BreakpointsInput } = {}) {
+  serializeServerState() {
+    const propControllersEntries = Array.from(
+      this.store
+        .getState()
+        .propControllers.entries()
+        .filter(
+          ([componentType]) =>
+            // Filter out built-in components since we can't serialize them because they contain functions.
+            // For example: GapY(props => ({ hidden: props.children == null }))
+            !Object.values(MakeswiftComponentType).includes(componentType as any),
+        ),
+    ).map(([componentType, descriptors]) => {
+      const [serializedControls] = serializeControls(descriptors)
+      return [componentType, serializedControls] as const
+    })
+
+    return {
+      componentsMeta: this.store.getState().componentsMeta,
+      propControllers: new Map(propControllersEntries),
+    }
+  }
+
+  loadServerState(serializedState: SerializedServerState) {
+    const deserializedState = deserializeServerState(serializedState)
+
+    // Register each component using the proper actions
+    if (deserializedState.componentsMeta && deserializedState.propControllers) {
+      for (const [componentType, propControllerDescriptors] of deserializedState.propControllers) {
+        const componentMeta = deserializedState.componentsMeta.get(componentType)
+        if (componentMeta) {
+          this.store.dispatch(
+            registerComponentEffect(componentType, componentMeta, propControllerDescriptors),
+          )
+        }
+      }
+    }
+  }
+
+  constructor({ breakpoints }: { breakpoints?: BreakpointsInput }) {
     super({ breakpoints })
 
     registerBuiltinComponents(this)
+  }
+}
+
+export function deserializeServerState(serializedState: SerializedServerState): Partial<State> {
+  const propControllersEntries = Array.from(serializedState.propControllers.entries()).map(
+    ([componentType, serializedControls]) => {
+      const deserializedControls = deserializeControls(serializedControls) as Record<
+        string,
+        PropControllerDescriptor
+      >
+      return [componentType, deserializedControls] as const
+    },
+  )
+
+  return {
+    componentsMeta: serializedState.componentsMeta,
+    propControllers: new Map(propControllersEntries),
   }
 }

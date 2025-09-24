@@ -1,1 +1,1 @@
-import '@/components/rsc-markdown/rsc-markdown.makeswift.client'
+import '@/components/group-demo/group-demo.makeswift'
