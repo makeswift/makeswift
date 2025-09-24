@@ -1,9 +1,23 @@
 // @ts-check
 
 /** @typedef {import('next').NextConfig} NextConfig */
-/** @typedef {{ resolveSymlinks?: boolean; appOrigin?: string; previewMode?: boolean }} MakeswiftNextPluginOptions */
 /** @typedef {NonNullable<import('next').NextConfig['images']>} ImageConfig */
 /** @typedef {ImageConfig['remotePatterns']} ImageConfigRemotePatterns */
+
+/**
+ * Configuration options for the Makeswift Next.js plugin
+ * @typedef {Object} MakeswiftNextPluginOptions
+ * 
+ * @property {boolean} [resolveSymlinks] - Whether to resolve symlinks in
+ * webpack.
+ * 
+ * @property {string} [appOrigin] - The origin of the Makeswift builder. Used
+ * for CORS headers to allow the builder to communicate with your site
+ * 
+ * @property {boolean} [disableBuiltInPreview] - Whether to disable Makeswift's
+ * built-in preview mode. When true, you must implement a custom preview mode
+ * for visual editing to work
+ */
 
 const { satisfies } = require('semver')
 
@@ -32,7 +46,7 @@ module.exports =
   ({
     resolveSymlinks,
     appOrigin = 'https://app.makeswift.com',
-    previewMode = true,
+    disableBuiltInPreview = false,
   } = {}) =>
     (nextConfig = {}) => {
       /** @type {NextConfig} */
@@ -76,7 +90,7 @@ module.exports =
           ]
           return {
             beforeFiles: [
-              ...(previewMode ? previewModeRewrites : []),
+              ...(!disableBuiltInPreview ? previewModeRewrites : []),
               ...(Array.isArray(rewrites) ? [] : rewrites?.beforeFiles ?? []),
             ],
             afterFiles: Array.isArray(rewrites)
@@ -114,6 +128,12 @@ module.exports =
 
       if (satisfies(nextVersion, '<13.4.0')) {
         throw new Error('Makeswift requires a minimum Next.js version of 13.4.0.')
+      }
+
+      if (disableBuiltInPreview) {
+        console.log(
+          "\nMakeswift's built-in preview mode is disabled. Check that a custom preview mode is implemented to enable visual editing.\n",
+        )
       }
 
       return {
