@@ -10,9 +10,7 @@ import {
   configureStore,
   copyElementTree,
   getBreakpoints,
-  getElementTreeTranslatableData,
   type Store,
-  type Data,
   type Element,
   type ElementData,
 } from '../../state/react-page'
@@ -37,9 +35,5 @@ export class RuntimeCore {
 
   getBreakpoints(): Breakpoints {
     return getBreakpoints(this.store.getState())
-  }
-
-  getTranslatableData(elementTree: ElementData): Record<string, Data> {
-    return getElementTreeTranslatableData(this.store.getState(), elementTree)
   }
 }
