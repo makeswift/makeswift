@@ -116,6 +116,12 @@ module.exports =
         throw new Error('Makeswift requires a minimum Next.js version of 13.4.0.')
       }
 
+      if (!previewMode) {
+        console.warn(
+          "\nWARNING: In your next.config, the Makeswift plugin's `previewMode` option is disabled. Disabling this option is NOT recommended, and is only intended for rare cases where you will be handling preview related functionality yourself. Are you sure you meant to do this?\n",
+        )
+      }
+
       return {
         ...enhancedConfig,
         webpack(config, options) {
