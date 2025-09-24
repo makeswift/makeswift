@@ -7,7 +7,7 @@ import {
   type ResponsiveGapData,
 } from '@makeswift/prop-controllers'
 
-import { Element } from '../../../runtimes/react'
+import { Element } from '../../../runtimes/react/components/Element'
 import { useGlobalStyle } from '../../../runtimes/react/use-global-style'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { useCSSResetEnabled } from '../../../runtimes/react/root-style-registry'

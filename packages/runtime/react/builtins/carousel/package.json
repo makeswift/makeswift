@@ -1,0 +1,5 @@
+{
+  "main": "../../dist/cjs/react/builtins/carousel.js",
+  "module": "../../dist/esm/react/builtins/carousel.js",
+  "types": "../../dist/types/react/builtins/carousel.d.ts"
+}

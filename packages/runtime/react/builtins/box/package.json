@@ -1,0 +1,5 @@
+{
+  "main": "../../dist/cjs/react/builtins/box.js",
+  "module": "../../dist/esm/react/builtins/box.js",
+  "types": "../../dist/types/react/builtins/box.d.ts"
+}

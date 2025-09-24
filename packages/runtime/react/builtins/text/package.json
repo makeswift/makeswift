@@ -1,0 +1,5 @@
+{
+  "main": "../../dist/cjs/react/builtins/text.js",
+  "module": "../../dist/esm/react/builtins/text.js",
+  "types": "../../dist/types/react/builtins/text.d.ts"
+}

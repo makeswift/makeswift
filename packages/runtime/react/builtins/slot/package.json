@@ -1,0 +1,5 @@
+{
+  "main": "../../dist/cjs/react/builtins/slot.js",
+  "module": "../../dist/esm/react/builtins/slot.js",
+  "types": "../../dist/types/react/builtins/slot.d.ts"
+}
