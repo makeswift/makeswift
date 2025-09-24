@@ -1,4 +1,4 @@
-import { ReactRuntime } from '../../../runtimes/react'
+import { type ReactRuntimeCore } from '../../../runtimes/react/react-runtime-core'
 import { getBaseBreakpoint } from '@makeswift/controls'
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
@@ -16,7 +16,7 @@ import {
   getSocialLinksPropControllerDataSocialLinksData,
 } from '@makeswift/prop-controllers'
 
-export function registerComponent(runtime: ReactRuntime) {
+export function registerComponent(runtime: ReactRuntimeCore) {
   return runtime.registerComponent(
     lazy(() => import('./SocialLinks')),
     {
