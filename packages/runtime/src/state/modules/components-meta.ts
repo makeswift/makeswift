@@ -32,6 +32,7 @@ export type ComponentMeta = {
   icon: ComponentIcon
   hidden: boolean
   description?: string
+  server: boolean
 }
 
 export type State = Map<string, ComponentMeta>
