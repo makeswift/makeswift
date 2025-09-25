@@ -45,8 +45,8 @@ jobs:
         continue-on-error: true
         run: pnpm run madge
 
-  app-router-bundle-analysis:
-    name: Analyze App Router Bundle
+  nextjs-bundle-analysis:
+    name: Analyze Next.js Bundle
     runs-on: ubuntu-latest
     steps:
       - name: Check out git repo
@@ -87,18 +87,34 @@ jobs:
           MAKESWIFT_SITE_API_KEY: ${{ secrets.MAKESWIFT_APP_ROUTER_BUNDLE_SITE_API_KEY }}
         working-directory: ./apps/nextjs-app-router
 
-      - name: Build Next.js app router app
+      - name: Create Next.js Pages Router .env.local
+        run: |
+          cat << EOF > .env.local
+          MAKESWIFT_SITE_API_KEY=$MAKESWIFT_SITE_API_KEY
+          EOF
+        env:
+          MAKESWIFT_SITE_API_KEY: ${{ secrets.MAKESWIFT_PAGES_ROUTER_BUNDLE_SITE_API_KEY }}
+        working-directory: ./apps/nextjs-pages-router
+
+      - name: Build Next.js App Router host
         run: pnpm --filter ./apps/nextjs-app-router build
 
-      - name: Analyze bundle
-        run: npx @makeswift/nextjs-bundle-diff analyze --rootDirectory=.
-        working-directory: ./apps/nextjs-app-router
+      - name: Build Next.js Pages Router host
+        run: pnpm --filter ./apps/nextjs-pages-router build
 
-      - name: Upload bundle analysis
+      - name: Analyze host bundles and prepare for upload
+        run: |
+          npx @makeswift/nextjs-bundle-diff analyze --rootDirectory=./apps/nextjs-app-router
+          npx @makeswift/nextjs-bundle-diff analyze --rootDirectory=./apps/nextjs-pages-router
+          mkdir -p ./bundle-analysis/
+          cp ./apps/nextjs-app-router/.next/analyze/__bundle_analysis.json ./bundle-analysis/current-nextjs-app-router.json
+          cp ./apps/nextjs-pages-router/.next/analyze/__bundle_analysis.json ./bundle-analysis/current-nextjs-pages-router.json
+
+      - name: Upload bundle analyses
         uses: actions/upload-artifact@v4
         with:
-          name: bundle
-          path: ./apps/nextjs-app-router/.next/analyze/__bundle_analysis.json
+          name: base
+          path: ./bundle-analysis
 
       - name: Download base branch bundle stats
         uses: dawidd6/action-download-artifact@v2
@@ -107,27 +123,35 @@ jobs:
           # this workflow key must match the name of this file
           workflow: ci.yml
           branch: ${{ github.event.pull_request.base.ref }}
-          path: ./apps/nextjs-app-router/.next/analyze/base
+          path: ./bundle-analysis/base
 
-      - name: Compare with base branch bundle
+      - name: Compare with base branch bundles
         if: success() && github.event.number
         run: |
-          ls -laR ./.next/analyze/base
+          ls -laR ./bundle-analysis/  
+          mv ./bundle-analysis/base/current-nextjs-app-router.json ./apps/nextjs-app-router/.next/analyze/base-nextjs-app-router.json
+          mv ./bundle-analysis/base/current-nextjs-pages-router.json ./apps/nextjs-pages-router/.next/analyze/base-nextjs-pages-router.json
           npx @makeswift/nextjs-bundle-diff compare \
-            --rootDirectory=. \
-            --fileA=.next/analyze/base/bundle/__bundle_analysis.json \
+            --rootDirectory=./apps/nextjs-app-router
+            --fileA=.next/analyze/base-nextjs-app-router.json \
             --fileB=.next/analyze/__bundle_analysis.json
-        working-directory: ./apps/nextjs-app-router
+          npx @makeswift/nextjs-bundle-diff compare \
+            --rootDirectory=./apps/nextjs-pages-router
+            --fileA=.next/analyze/base-nextjs-pages-router.json \
+            --fileB=.next/analyze/__bundle_analysis.json
 
       - name: Create comparison output report
         if: success() && github.event.number
         run: |
           cat << EOF > message.txt
-          # App Router Bundle Comparison
+          # Next.js Bundle Comparison
           > $(date +"Updated at %B %d, %Y, %H:%M:%S.")
 
-          Here is a comparison of the \`apps/nextjs-app-router\` host's client bundle for your commit (${GITHUB_SHA:0:7}) vs. \`main\`:
+          \`apps/nextjs-app-router\` host's client bundle for (${GITHUB_SHA:0:7}) vs. \`main\`:
           $(cat ./apps/nextjs-app-router/.next/analyze/__bundle_comparison_comment.txt)
+
+          \`apps/nextjs-pages-router\` host's client bundle for (${GITHUB_SHA:0:7}) vs. \`main\`:
+          $(cat ./apps/nextjs-pages-router/.next/analyze/__bundle_comparison_comment.txt)
           EOF
 
       - name: Write comparison comment
