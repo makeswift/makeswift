@@ -11,8 +11,6 @@ import {
   createReplacementContext,
   type SerializableReplacementContext,
   type ReplacementContext,
-  type TranslationDto,
-  type MergeTranslatableDataContext,
   type MergeContext,
   CopyContext,
   replaceResourceIfNeeded,
@@ -36,12 +34,7 @@ import {
   createElementTree,
   deleteElementTree,
 } from './actions'
-import {
-  copy as copyFromControl,
-  getTranslatableData,
-  merge,
-  mergeTranslatedData,
-} from '../controls/control'
+import { copy as copyFromControl, merge } from '../controls/control'
 
 import { actionMiddleware, middlewareOptions, devToolsConfig } from './toolkit'
 
@@ -227,70 +220,6 @@ export function copyElementTree(
   const copy = JSON.parse(JSON.stringify(elementTree)) as Documents.ElementData
 
   return copyElementTreeNode(state, createReplacementContext(replacementContext))(copy)
-}
-
-export function getElementTreeTranslatableData(
-  state: State,
-  elementTree: Documents.ElementData,
-): Record<string, Documents.Data> {
-  const translatableData: Record<string, Documents.Data> = {}
-  const descriptors = getPropControllerDescriptors(state)
-
-  for (const element of ElementTrees.traverseElementTree(elementTree, descriptors)) {
-    if (Documents.isElementReference(element)) continue
-
-    const elementPescriptors = descriptors.get(element.type)
-    if (elementPescriptors == null) continue
-
-    Object.entries(elementPescriptors).forEach(([propName, descriptor]) => {
-      const translatablePropData = getTranslatableData(descriptor, element.props[propName])
-
-      if (translatablePropData != null) {
-        translatableData[`${element.key}:${propName}`] = translatablePropData
-      }
-    })
-  }
-
-  return translatableData
-}
-
-export function mergeElementTreeTranslatedData(
-  state: State,
-  elementTree: Documents.ElementData,
-  translatedData: TranslationDto,
-): Documents.Element {
-  function merge(state: State, translatedData: TranslationDto) {
-    return function (node: Documents.Element): Documents.Element {
-      if (Documents.isElementReference(node)) return node
-
-      const elementDescriptors = getPropControllerDescriptors(state)
-      const descriptors = elementDescriptors.get(node.type)
-
-      if (descriptors == null) {
-        throw new Error(`Can't merge element of type "${node.type}" because it has no descriptors`)
-      }
-
-      const context: MergeTranslatableDataContext = {
-        translatedData,
-        mergeTranslatedData: merge(state, translatedData),
-      }
-      const props = {} as Record<string, Documents.Data>
-
-      for (const propName of Object.keys(descriptors)) {
-        const descriptor = descriptors[propName]
-
-        props[propName] = mergeTranslatedData(
-          descriptor,
-          node.props[propName],
-          translatedData[`${node.key}:${propName}`],
-          context,
-        )
-      }
-
-      return { ...node, props }
-    }
-  }
-  return merge(state, translatedData)(elementTree)
 }
 
 export function mergeElement(
