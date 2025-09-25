@@ -118,4 +118,5 @@ jobs:
         if: success() && github.event.number
         uses: mshick/add-pr-comment@v2
         with:
+          message-id: 'app-router-bundle-analysis'
           message-path: './apps/nextjs-app-router/.next/analyze/__bundle_comparison_comment.txt'

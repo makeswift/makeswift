@@ -69,4 +69,5 @@ jobs:
       - uses: mshick/add-pr-comment@v2
         if: steps.version_packages.outputs.SKIP_PUBLISH != 'true'
         with:
+          message-id: 'snapshot-release'
           message-path: message.txt
