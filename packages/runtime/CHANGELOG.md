@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.25.4-canary.4
+
+### Patch Changes
+
+- 1233f09: Rearrange type exports to be declared first in `package.json`
+
 ## 0.25.4-canary.3
 
 ### Patch Changes
