@@ -45,8 +45,8 @@
     },
     "./client": {
       "types": "./dist/types/client/index.d.ts",
-      "require": "./dist/cjs/client/index.cjs",
-      "import": "./dist/esm/client/index.mjs"
+      "require": "./dist/cjs/client/index.js",
+      "import": "./dist/esm/client/index.js"
     },
     "./components": {
       "types": "./dist/types/components/index.d.ts",
@@ -70,8 +70,8 @@
     },
     "./next/document": {
       "types": "./dist/types/next/document.d.ts",
-      "require": "./dist/cjs/next/document.js",
-      "module": "./dist/esm/next/document.js"
+      "module": "./dist/esm/next/document.js",
+      "require": "./dist/cjs/next/document.js"
     },
     "./next/middleware": {
       "types": "./dist/types/next/middleware/index.d.ts",
@@ -80,8 +80,8 @@
     },
     "./next/server": {
       "types": "./dist/types/next/server.d.ts",
-      "require": "./dist/cjs/next/server.js",
-      "module": "./dist/esm/next/server.js"
+      "module": "./dist/esm/next/server.js",
+      "require": "./dist/cjs/next/server.js"
     },
     "./next/plugin": {
       "types": "./next/plugin/index.d.ts",
