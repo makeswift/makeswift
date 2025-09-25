@@ -24,99 +24,99 @@
   "sideEffects": false,
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "require": "./dist/cjs/index.js",
-      "import": "./dist/esm/index.js",
-      "types": "./dist/types/index.d.ts"
+      "import": "./dist/esm/index.js"
     },
     "./prop-controllers": {
+      "types": "./dist/types/prop-controllers/index.d.ts",
       "require": "./dist/cjs/prop-controllers/index.js",
-      "import": "./dist/esm/prop-controllers/index.js",
-      "types": "./dist/types/prop-controllers/index.d.ts"
+      "import": "./dist/esm/prop-controllers/index.js"
     },
     "./react": {
+      "types": "./dist/types/react.d.ts",
       "require": "./dist/cjs/react.js",
-      "import": "./dist/esm/react.js",
-      "types": "./dist/types/react.d.ts"
+      "import": "./dist/esm/react.js"
     },
     "./box-model": {
+      "types": "./dist/types/box-model.d.ts",
       "require": "./dist/cjs/box-model.js",
-      "import": "./dist/esm/box-model.js",
-      "types": "./dist/types/box-model.d.ts"
+      "import": "./dist/esm/box-model.js"
     },
     "./client": {
+      "types": "./dist/types/client/index.d.ts",
       "require": "./dist/cjs/client/index.cjs",
-      "import": "./dist/esm/client/index.mjs",
-      "types": "./dist/types/client/index.d.ts"
+      "import": "./dist/esm/client/index.mjs"
     },
     "./components": {
+      "types": "./dist/types/components/index.d.ts",
       "require": "./dist/cjs/components/index.js",
-      "import": "./dist/esm/components/index.js",
-      "types": "./dist/types/components/index.d.ts"
+      "import": "./dist/esm/components/index.js"
     },
     "./core": {
+      "types": "./dist/types/core/index.d.ts",
       "require": "./dist/cjs/core/index.js",
-      "import": "./dist/esm/core/index.js",
-      "types": "./dist/types/core/index.d.ts"
+      "import": "./dist/esm/core/index.js"
     },
     "./api": {
+      "types": "./dist/types/api/index.d.ts",
       "require": "./dist/cjs/api/index.js",
-      "import": "./dist/esm/api/index.js",
-      "types": "./dist/types/api/index.d.ts"
+      "import": "./dist/esm/api/index.js"
     },
     "./next": {
+      "types": "./dist/types/next/index.d.ts",
       "require": "./dist/cjs/next/index.js",
-      "import": "./dist/esm/next/index.js",
-      "types": "./dist/types/next/index.d.ts"
+      "import": "./dist/esm/next/index.js"
     },
     "./next/document": {
+      "types": "./dist/types/next/document.d.ts",
       "require": "./dist/cjs/next/document.js",
-      "module": "./dist/esm/next/document.js",
-      "types": "./dist/types/next/document.d.ts"
+      "module": "./dist/esm/next/document.js"
     },
     "./next/middleware": {
+      "types": "./dist/types/next/middleware/index.d.ts",
       "require": "./dist/cjs/next/middleware/index.js",
-      "import": "./dist/esm/next/middleware/index.js",
-      "types": "./dist/types/next/middleware/index.d.ts"
+      "import": "./dist/esm/next/middleware/index.js"
     },
     "./next/server": {
+      "types": "./dist/types/next/server.d.ts",
       "require": "./dist/cjs/next/server.js",
-      "module": "./dist/esm/next/server.js",
-      "types": "./dist/types/next/server.d.ts"
+      "module": "./dist/esm/next/server.js"
     },
     "./next/plugin": {
+      "types": "./next/plugin/index.d.ts",
       "require": "./dist/cjs/next/plugin.js",
-      "import": "./dist/cjs/next/plugin.js",
-      "types": "./next/plugin/index.d.ts"
+      "import": "./dist/cjs/next/plugin.js"
     },
     "./builder": {
+      "types": "./dist/types/builder/index.d.ts",
       "require": "./dist/cjs/builder/index.js",
-      "import": "./dist/esm/builder/index.js",
-      "types": "./dist/types/builder/index.d.ts"
+      "import": "./dist/esm/builder/index.js"
     },
     "./builder/rich-text": {
+      "types": "./dist/types/builder/rich-text/index.d.ts",
       "require": "./dist/cjs/builder/rich-text/index.js",
-      "import": "./dist/esm/builder/rich-text/index.js",
-      "types": "./dist/types/builder/rich-text/index.d.ts"
+      "import": "./dist/esm/builder/rich-text/index.js"
     },
     "./controls": {
+      "types": "./dist/types/controls/index.d.ts",
       "require": "./dist/cjs/controls/index.js",
-      "import": "./dist/esm/controls/index.js",
-      "types": "./dist/types/controls/index.d.ts"
+      "import": "./dist/esm/controls/index.js"
     },
     "./slate": {
+      "types": "./dist/types/slate/index.d.ts",
       "require": "./dist/cjs/slate/index.js",
-      "import": "./dist/esm/slate/index.js",
-      "types": "./dist/types/slate/index.d.ts"
+      "import": "./dist/esm/slate/index.js"
     },
     "./state/breakpoints": {
+      "types": "./dist/types/state/modules/breakpoints.d.ts",
       "require": "./dist/cjs/state/modules/breakpoints.js",
-      "import": "./dist/esm/state/modules/breakpoints.js",
-      "types": "./dist/types/state/modules/breakpoints.d.ts"
+      "import": "./dist/esm/state/modules/breakpoints.js"
     },
     "./unstable-framework-support": {
+      "types": "./dist/types/unstable-framework-support/index.d.ts",
       "require": "./dist/cjs/unstable-framework-support/index.js",
-      "import": "./dist/esm/unstable-framework-support/index.js",
-      "types": "./dist/types/unstable-framework-support/index.d.ts"
+      "import": "./dist/esm/unstable-framework-support/index.js"
     }
   },
   "types": "./dist/types/index.d.ts",
