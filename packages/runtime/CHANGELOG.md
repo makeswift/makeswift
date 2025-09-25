@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.26.0-canary.6
+
+### Patch Changes
+
+- 2694de9: Fix incorrect file extension for client export
+- 7ae5129: Move module declarations ahead of require condition for `package.json` exports
+
 ## 0.26.0-canary.5
 
 ### Minor Changes
