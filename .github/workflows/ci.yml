@@ -71,7 +71,7 @@ jobs:
           EOF
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      
+
       - name: Install dependencies
         run: pnpm install --ignore-scripts --frozen-lockfile
 
@@ -111,11 +111,28 @@ jobs:
 
       - name: Compare with base branch bundle
         if: success() && github.event.number
-        run: ls -laR ./.next/analyze/base && npx @makeswift/nextjs-bundle-diff compare --rootDirectory=. --fileA=.next/analyze/base/bundle/__bundle_analysis.json --fileB=.next/analyze/__bundle_analysis.json
+        run: |
+          ls -laR ./.next/analyze/base
+          npx @makeswift/nextjs-bundle-diff compare \
+            --rootDirectory=. \
+            --fileA=.next/analyze/base/bundle/__bundle_analysis.json \
+            --fileB=.next/analyze/__bundle_analysis.json
         working-directory: ./apps/nextjs-app-router
+
+      - name: Create comparison output report
+        if: success() && github.event.number
+        run: |
+          cat << EOF > message.txt
+          # App Router Bundle Comparison
+          > $(date +"Updated at %B %d, %Y, %H:%M:%S.")
+
+          Here is a comparison of the \`apps/nextjs-app-router\` host's client bundle for your commit (${GITHUB_SHA:0:7}) vs. \`main\`:
+          $(cat ./apps/nextjs-app-router/.next/analyze/__bundle_comparison_comment.txt)
+          EOF
 
       - name: Write comparison comment
         if: success() && github.event.number
         uses: mshick/add-pr-comment@v2
         with:
-          message-path: './apps/nextjs-app-router/.next/analyze/__bundle_comparison_comment.txt'
+          message-id: 'app-router-bundle-analysis'
+          message-path: 'message.txt'
