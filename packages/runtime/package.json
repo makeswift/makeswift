@@ -45,8 +45,8 @@
     },
     "./client": {
       "types": "./dist/types/client/index.d.ts",
-      "require": "./dist/cjs/client/index.cjs",
-      "import": "./dist/esm/client/index.mjs"
+      "require": "./dist/cjs/client/index.js",
+      "import": "./dist/esm/client/index.js"
     },
     "./components": {
       "types": "./dist/types/components/index.d.ts",
