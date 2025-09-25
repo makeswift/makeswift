@@ -1,5 +1,15 @@
 # @makeswift/runtime
 
+## 0.26.0-canary.5
+
+### Minor Changes
+
+- 07b93df: Remove `getTranslatableData` method from the ReactRuntime
+
+### Patch Changes
+
+- 289a662: Remove `mergeTranslatedData` method from the ReactRuntime. Removes `parse5` from client bundles.
+
 ## 0.25.4-canary.4
 
 ### Patch Changes
