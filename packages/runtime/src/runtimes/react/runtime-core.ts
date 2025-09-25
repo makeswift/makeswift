@@ -16,15 +16,22 @@ import {
   type Data,
   type Element,
   type ElementData,
+  type State,
 } from '../../state/react-page'
 
 export class RuntimeCore {
   store: Store
 
-  constructor({ breakpoints }: { breakpoints?: BreakpointsInput }) {
+  constructor({
+    breakpoints,
+    preloadedState,
+  }: {
+    breakpoints?: BreakpointsInput
+    preloadedState?: Partial<State>
+  }) {
     this.store = configureStore({
       name: 'Runtime store',
-      preloadedState: null,
+      preloadedState: preloadedState ?? null,
       breakpoints: breakpoints ? parseBreakpointsInput(breakpoints) : undefined,
     })
   }

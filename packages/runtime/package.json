@@ -88,6 +88,11 @@
       "import": "./dist/cjs/next/plugin.js",
       "types": "./next/plugin/index.d.ts"
     },
+    "./next/rsc": {
+      "require": "./dist/cjs/next/rsc/index.js",
+      "module": "./dist/esm/next/rsc/index.js",
+      "types": "./dist/types/next/rsc/index.d.ts"
+    },
     "./builder": {
       "require": "./dist/cjs/builder/index.js",
       "import": "./dist/esm/builder/index.js",
@@ -117,6 +122,11 @@
       "require": "./dist/cjs/unstable-framework-support/index.js",
       "import": "./dist/esm/unstable-framework-support/index.js",
       "types": "./dist/types/unstable-framework-support/index.d.ts"
+    },
+    "./rsc-next": {
+      "require": "./dist/cjs/rsc-next/index.js",
+      "import": "./dist/esm/rsc-next/index.js",
+      "types": "./dist/types/rsc-next/index.d.ts"
     }
   },
   "types": "./dist/types/index.d.ts",

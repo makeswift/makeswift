@@ -6,7 +6,7 @@ import { type LegacyDescriptor, type DescriptorValueType } from '../../prop-cont
 import { registerComponentEffect, registerReactComponentEffect } from '../../state/actions'
 import { BreakpointsInput } from '../../state/modules/breakpoints'
 import { ComponentIcon } from '../../state/modules/components-meta'
-import type { ComponentType } from '../../state/react-page'
+import type { ComponentType, State } from '../../state/react-page'
 
 import { RuntimeCore } from './runtime-core'
 
@@ -51,8 +51,14 @@ export class ReactRuntime extends RuntimeCore {
     }
   }
 
-  constructor({ breakpoints }: { breakpoints?: BreakpointsInput } = {}) {
-    super({ breakpoints })
+  constructor({
+    breakpoints,
+    preloadedState,
+  }: {
+    breakpoints?: BreakpointsInput
+    preloadedState?: Partial<State>
+  } = {}) {
+    super({ breakpoints, preloadedState })
 
     registerBuiltinComponents(this)
   }
