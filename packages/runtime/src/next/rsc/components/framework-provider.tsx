@@ -21,7 +21,7 @@ export function NextRSCFrameworkProvider({
     () => ({
       ...appRouterContext,
       ...nextContext,
-      storeMiddlewares: [createRSCElementMiddleware(router)],
+      previewStoreMiddlewares: [createRSCElementMiddleware(router)],
     }),
     [isPagesRouter],
   )

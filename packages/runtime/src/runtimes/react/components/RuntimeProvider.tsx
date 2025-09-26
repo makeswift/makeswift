@@ -31,7 +31,7 @@ export function RuntimeProvider({
   appOrigin?: string
   locale?: string
 }) {
-  const { versionedFetch, storeMiddlewares = [] } = useFrameworkContext()
+  const { versionedFetch, previewStoreMiddlewares = [] } = useFrameworkContext()
 
   const client = useMemo(
     () =>
@@ -44,7 +44,6 @@ export function RuntimeProvider({
   )
 
   const isPreview = siteVersion != null
-  const StoreProvider = isPreview ? PreviewProvider : LiveProvider
 
   useBuilderConnectionPing({ appOrigin })
 
@@ -53,10 +52,17 @@ export function RuntimeProvider({
   return (
     <ReactRuntimeContext.Provider value={runtime}>
       <MakeswiftHostApiClientProvider client={client}>
-        <StoreProvider middlewares={storeMiddlewares}>
-          {children}
-          <PreviewSwitcher isPreview={isPreview} />
-        </StoreProvider>
+        {isPreview ? (
+          <PreviewProvider middlewares={previewStoreMiddlewares}>
+            {children}
+            <PreviewSwitcher isPreview={true} />
+          </PreviewProvider>
+        ) : (
+          <LiveProvider>
+            {children}
+            <PreviewSwitcher isPreview={false} />
+          </LiveProvider>
+        )}
       </MakeswiftHostApiClientProvider>
     </ReactRuntimeContext.Provider>
   )

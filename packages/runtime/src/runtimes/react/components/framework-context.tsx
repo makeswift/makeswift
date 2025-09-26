@@ -20,7 +20,7 @@ import {
   serializeSiteVersion,
   type SiteVersion,
 } from '../../../api/site-version'
-import { type State, type Dispatch } from '../../../state/react-page'
+import { type State, type Dispatch } from '../../../state/react-builder-preview'
 
 import { BaseHeadSnippet } from './page/HeadSnippet'
 
@@ -50,7 +50,7 @@ export type FrameworkContext = {
   Image: ImageComponent
   Link: LinkComponent
   versionedFetch: (siteVersion: SiteVersion | null) => HttpFetch
-  storeMiddlewares?: Middleware<Dispatch, State, Dispatch>[]
+  previewStoreMiddlewares?: Middleware<Dispatch, State, Dispatch>[]
 }
 
 // React 19 automatically hoists metadata tags to the <head>
