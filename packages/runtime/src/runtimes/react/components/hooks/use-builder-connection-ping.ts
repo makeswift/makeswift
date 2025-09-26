@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { ActionTypes } from '../../../../react'
+import { ActionTypes } from '../../../../state/actions'
 
 const CONNECTION_PING_INTERVAL_MS = 20
 

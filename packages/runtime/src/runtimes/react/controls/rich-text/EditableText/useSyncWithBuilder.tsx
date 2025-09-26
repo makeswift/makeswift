@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { Editor } from 'slate'
 import { type RichTextDTO, richTextDTOtoDAO, richTextDTOtoSelection } from '@makeswift/controls'
 
-import { useIsInBuilder } from '../../../../../react'
+import { useIsInBuilder } from '../../../hooks/use-is-in-builder'
 import deepEqual from '../../../../../utils/deepEqual'
 
 const COMMIT_DEBOUNCE_DELAY = 500
