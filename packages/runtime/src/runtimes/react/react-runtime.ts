@@ -40,7 +40,7 @@ export class ReactRuntime extends RuntimeCore {
       hidden = false,
       props,
       description,
-      server = false,
+      __experimental_server: server = false,
     }: {
       type: string
       label: string
@@ -48,7 +48,7 @@ export class ReactRuntime extends RuntimeCore {
       hidden?: boolean
       props?: P
       description?: string
-      server?: boolean
+      __experimental_server?: boolean
     },
   ): () => void {
     validateComponentType(type, component as unknown as ComponentType)
