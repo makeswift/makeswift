@@ -1,7 +1,7 @@
 import 'server-only'
 
 import { cache } from 'react'
-import { ReactRuntime } from '../../runtimes/react/react-runtime'
+import { ReactRuntime } from '../../../runtimes/react/react-runtime'
 
 const getRuntimeCache = cache((): { runtime: ReactRuntime | null } => ({ runtime: null }))
 

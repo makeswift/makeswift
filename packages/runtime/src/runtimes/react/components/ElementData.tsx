@@ -6,7 +6,7 @@ import { FallbackComponent } from '../../../components/shared/FallbackComponent'
 import { ResolveProps } from '../controls'
 import { getComponentsMeta } from '../../../state/modules/components-meta'
 import { useStore } from '../hooks/use-store'
-import { useRSCNodes } from '../../../rsc/context/RSCNodesProvider'
+import { useRSCNodes } from '../../../next/rsc/context/RSCNodesProvider'
 
 type ElementDataProps = {
   elementData: ReactPageElementData

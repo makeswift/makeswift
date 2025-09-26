@@ -1,8 +1,8 @@
 'use client'
 
 import { createContext, ReactNode, useContext, useEffect } from 'react'
-import { setRSCElementKeys } from '../../state/actions'
-import { useDispatch } from '../../runtimes/react/hooks/use-dispatch'
+import { setRSCElementKeys } from '../../../state/actions'
+import { useDispatch } from '../../../runtimes/react/hooks/use-dispatch'
 
 type RSCNodes = Record<string, JSX.Element>
 

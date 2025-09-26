@@ -2,12 +2,12 @@
 
 import { ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { useRSCStyleRuntime } from '../css/style-runtime'
-import { getElement } from '../../state/react-page'
-import { useControlDefs } from '../../runtimes/react/controls'
+import { getElement } from '../../../state/react-page'
+import { useControlDefs } from '../../../runtimes/react/controls'
 import { deepEqual, ElementData, isElementReference, StyleDefinition } from '@makeswift/controls'
-import { useDocumentKey, useSelector } from '../../runtimes/react'
+import { useDocumentKey, useSelector } from '../../../runtimes/react'
 import { createClientStylesheet } from '../css/client-stylesheet'
-import { getBreakpoints } from '../../state/react-page'
+import { getBreakpoints } from '../../../state/react-page'
 import { mockResourceResolver } from '../functions/resource-resolver'
 import { useRouter } from 'next/navigation'
 

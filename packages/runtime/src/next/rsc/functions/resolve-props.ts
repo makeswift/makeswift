@@ -1,9 +1,9 @@
 import { ElementData } from '@makeswift/controls'
 import { getRuntime } from '../context/server'
-import { getBreakpoints } from '../../state/react-page'
+import { getBreakpoints } from '../../../state/react-page'
 import { createServerStylesheet } from './server-stylesheet'
-import { isLegacyDescriptor } from '../../prop-controllers/descriptors'
-import { DescriptorsByProp } from '../../state/modules/prop-controllers'
+import { isLegacyDescriptor } from '../../../prop-controllers/descriptors'
+import { DescriptorsByProp } from '../../../state/modules/prop-controllers'
 import { mockResourceResolver } from './resource-resolver'
 
 export function resolveProps(

@@ -2,7 +2,7 @@ import 'server-only'
 
 import { type Breakpoints, type Stylesheet, type ResolvedStyle } from '@makeswift/controls'
 import { getCSSCollector } from '../css/css-collector'
-import { resolvedStyleToCss } from '../../runtimes/react/resolve-style'
+import { resolvedStyleToCss } from '../../../runtimes/react/resolve-style'
 import { cssObjectToString } from '../utils/css-string-utils'
 
 export function createServerStylesheet(

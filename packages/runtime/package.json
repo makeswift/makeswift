@@ -118,10 +118,10 @@
       "import": "./dist/esm/unstable-framework-support/index.js",
       "types": "./dist/types/unstable-framework-support/index.d.ts"
     },
-    "./rsc": {
-      "require": "./dist/cjs/rsc/index.js",
-      "import": "./dist/esm/rsc/index.js",
-      "types": "./dist/types/rsc/index.d.ts"
+    "./next/rsc": {
+      "require": "./dist/cjs/next/rsc/index.js",
+      "import": "./dist/esm/next/rsc/index.js",
+      "types": "./dist/types/next/rsc/index.d.ts"
     }
   },
   "types": "./dist/types/index.d.ts",
