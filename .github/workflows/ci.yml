@@ -123,22 +123,31 @@ jobs:
           # this workflow key must match the name of this file
           workflow: ci.yml
           branch: ${{ github.event.pull_request.base.ref }}
-          path: ./bundle-analysis/base
+          path: ./bundle-analysis
 
-      - name: Compare with base branch bundles
+      - name: Move base branch bundle stats
         if: success() && github.event.number
         run: |
-          ls -laR ./bundle-analysis/  
           mv ./bundle-analysis/base/current-nextjs-app-router.json ./apps/nextjs-app-router/.next/analyze/base-nextjs-app-router.json
           mv ./bundle-analysis/base/current-nextjs-pages-router.json ./apps/nextjs-pages-router/.next/analyze/base-nextjs-pages-router.json
+
+      - name: Compare App Router bundle
+        if: success() && github.event.number
+        run: |
           npx @makeswift/nextjs-bundle-diff compare \
-            --rootDirectory=./apps/nextjs-app-router
+            --rootDirectory=. \
             --fileA=.next/analyze/base-nextjs-app-router.json \
             --fileB=.next/analyze/__bundle_analysis.json
+        working-directory: ./apps/nextjs-app-router
+
+      - name: Compare Pages Router bundle
+        if: success() && github.event.number
+        run: |
           npx @makeswift/nextjs-bundle-diff compare \
-            --rootDirectory=./apps/nextjs-pages-router
+            --rootDirectory=. \
             --fileA=.next/analyze/base-nextjs-pages-router.json \
             --fileB=.next/analyze/__bundle_analysis.json
+        working-directory: ./apps/nextjs-pages-router
 
       - name: Create comparison output report
         if: success() && github.event.number
