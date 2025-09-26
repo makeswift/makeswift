@@ -20,3 +20,5 @@ export {
   setLocale,
   setLocalizedResourceId,
 } from '../state/actions'
+
+export { createBaseDocument } from '../state/react-page'
