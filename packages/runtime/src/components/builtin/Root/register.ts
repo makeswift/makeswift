@@ -1,9 +1,9 @@
 import { Backgrounds, GapX, GapY, Grid } from '@makeswift/prop-controllers'
-import { ReactRuntime } from '../../../react'
+import { type ReactRuntimeCore } from '../../../runtimes/react/react-runtime-core'
 import { MakeswiftComponentType } from '../constants'
 import { lazy } from 'react'
 
-export function registerComponent(runtime: ReactRuntime) {
+export function registerComponent(runtime: ReactRuntimeCore) {
   return runtime.registerComponent(
     lazy(() => import('./Root')),
     {

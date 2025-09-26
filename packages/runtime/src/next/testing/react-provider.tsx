@@ -1,4 +1,4 @@
-import { ReactRuntime } from '../../runtimes/react/react-runtime'
+import { type ReactRuntimeCore } from '../../runtimes/react/react-runtime-core'
 import { RuntimeProvider } from '../../runtimes/react/components/RuntimeProvider'
 
 import { FrameworkProvider } from '../components/framework-provider'
@@ -12,7 +12,7 @@ export function ReactProvider({
   forcePagesRouter = false,
 }: {
   children: React.ReactNode
-  runtime: ReactRuntime
+  runtime: ReactRuntimeCore
   siteVersion?: SiteVersion | null
   forcePagesRouter?: boolean
 }) {

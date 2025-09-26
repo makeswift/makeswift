@@ -1,5 +1,5 @@
 import { lazy } from 'react'
-import { ReactRuntime } from '../../../runtimes/react'
+import { type ReactRuntimeCore } from '../../../runtimes/react/react-runtime-core'
 import { MakeswiftComponentType } from '../constants'
 import {
   Border,
@@ -16,7 +16,7 @@ import {
   TextInput,
 } from '@makeswift/prop-controllers'
 
-export function registerComponent(runtime: ReactRuntime) {
+export function registerComponent(runtime: ReactRuntimeCore) {
   return runtime.registerComponent(
     lazy(() => import('./Image')),
     {

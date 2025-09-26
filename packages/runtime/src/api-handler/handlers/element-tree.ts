@@ -1,10 +1,10 @@
-import { ReactRuntime } from '../../react'
+import { ReactRuntimeCore } from '../../runtimes/react/react-runtime-core'
 import { type Element } from '../../state/react-page'
 import { type ApiRequest, ApiResponse, type ErrorResponseBody } from '../request-response'
 
 export async function elementTreeHandler(
   req: ApiRequest,
-  { runtime }: { runtime: ReactRuntime },
+  { runtime }: { runtime: ReactRuntimeCore },
 ): Promise<ApiResponse<{ elementTree: Element } | ErrorResponseBody>> {
   const body = await req.json()
   const { elementTree, replacementContext } = body

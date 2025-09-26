@@ -1,0 +1,5 @@
+{
+  "main": "../../dist/cjs/react/builtins/form.js",
+  "module": "../../dist/esm/react/builtins/form.js",
+  "types": "../../dist/types/react/builtins/form.d.ts"
+}

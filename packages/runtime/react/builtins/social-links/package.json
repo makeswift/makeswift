@@ -1,0 +1,5 @@
+{
+  "main": "../../dist/cjs/react/builtins/social-links.js",
+  "module": "../../dist/esm/react/builtins/social-links.js",
+  "types": "../../dist/types/react/builtins/social-links.d.ts"
+}
