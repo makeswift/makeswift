@@ -21,6 +21,7 @@ import {
   type SiteVersion,
 } from '../../../api/site-version'
 import { type State, type Dispatch } from '../../../state/react-builder-preview'
+import { ElementData } from './ElementData'
 
 import { BaseHeadSnippet } from './page/HeadSnippet'
 
@@ -44,12 +45,15 @@ type LinkProps = Omit<ComponentPropsWithoutRef<'a'>, 'onClick'> & {
 
 type LinkComponent = ForwardRefExoticComponent<RefAttributes<HTMLAnchorElement> & LinkProps>
 
+type ElementDataComponent = typeof ElementData
+
 export type FrameworkContext = {
   Head: HeadComponent
   HeadSnippet: HeadSnippet
   Image: ImageComponent
   Link: LinkComponent
   versionedFetch: (siteVersion: SiteVersion | null) => HttpFetch
+  ElementData: ElementDataComponent
   previewStoreMiddlewares?: Middleware<Dispatch, State, Dispatch>[]
 }
 
@@ -90,10 +94,13 @@ export const versionedFetch: FrameworkContext['versionedFetch'] = siteVersion =>
     },
   })
 
+export const DefaultElementData = ElementData
+
 export const FrameworkContext = createContext<FrameworkContext>({
   Head: DefaultHead,
   HeadSnippet: DefaultHeadSnippet,
   Image: DefaultImage,
   Link: DefaultLink,
+  ElementData: DefaultElementData,
   versionedFetch,
 })
