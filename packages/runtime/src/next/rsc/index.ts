@@ -1,2 +1,1 @@
-export { setRuntime, getRuntime } from './context/server'
-export { RscPage } from './components/RscPage'
+export { NextRSCRuntimeProvider as ExperimentalReactRuntimeProvider } from './components/runtime-provider'

@@ -4,7 +4,7 @@ import '@/app/global.css'
 import '@/makeswift/components.server'
 import '@/makeswift/components.client'
 import { getSiteVersion } from '@makeswift/runtime/next/server'
-import { setRuntime } from '@makeswift/runtime/next/rsc'
+import { setRuntime } from '@makeswift/runtime/next/rsc/server'
 import { runtime } from '@/makeswift/runtime'
 
 type Params = Promise<{ path?: string[] }>

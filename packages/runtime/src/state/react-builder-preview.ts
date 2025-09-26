@@ -56,7 +56,6 @@ import { createPropController } from '../prop-controllers/instances'
 import { serializeControls } from '../builder'
 import { MakeswiftHostApiClient } from '../api/react'
 import { ElementImperativeHandle } from '../runtimes/react/element-imperative-handle'
-import { useRouter } from 'next/navigation'
 
 export type { Operation } from './modules/read-write-documents'
 export type { BoxModelHandle } from './modules/box-models'
@@ -729,11 +728,11 @@ function setupMessageChannel(channel: MessageChannel): ThunkAction<void, State, 
 export function configureStore({
   preloadedState,
   client,
-  router,
+  middlewares = [],
 }: {
   preloadedState: Partial<State>
   client: MakeswiftHostApiClient
-  router: ReturnType<typeof useRouter>
+  middlewares?: Middleware<Dispatch, State, Dispatch>[]
 }) {
   const initialState: Partial<State> = {
     ...preloadedState,
@@ -747,11 +746,12 @@ export function configureStore({
 
     middleware: getDefaultMiddleware =>
       getDefaultMiddleware(middlewareOptions).concat(
-        ReactPage.elementTreeMiddleware(router),
+        ReactPage.elementTreeMiddleware(),
         measureBoxModelsMiddleware(),
         messageChannelMiddleware(channel),
         propControllerHandlesMiddleware(),
         makeswiftApiClientSyncMiddleware(client),
+        ...middlewares,
       ),
 
     enhancers: getDefaultEnhancers =>

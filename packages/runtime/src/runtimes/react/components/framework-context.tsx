@@ -9,6 +9,7 @@ import {
   type RefAttributes,
   forwardRef,
 } from 'react'
+import { type Middleware } from '@reduxjs/toolkit'
 
 import { type LinkData } from '@makeswift/prop-controllers'
 
@@ -19,6 +20,7 @@ import {
   serializeSiteVersion,
   type SiteVersion,
 } from '../../../api/site-version'
+import { type State, type Dispatch } from '../../../state/react-page'
 
 import { BaseHeadSnippet } from './page/HeadSnippet'
 
@@ -48,6 +50,7 @@ export type FrameworkContext = {
   Image: ImageComponent
   Link: LinkComponent
   versionedFetch: (siteVersion: SiteVersion | null) => HttpFetch
+  storeMiddlewares?: Middleware<Dispatch, State, Dispatch>[]
 }
 
 // React 19 automatically hoists metadata tags to the <head>

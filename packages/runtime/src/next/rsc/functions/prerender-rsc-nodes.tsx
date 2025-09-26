@@ -1,4 +1,4 @@
-import { getRuntime } from '..'
+import { getRuntime } from '../context/server'
 import { getComponentsMeta } from '../../../state/modules/components-meta'
 import { Element, getPropControllerDescriptors } from '../../../state/react-page'
 import { ServerElement } from '../components/ServerElement'

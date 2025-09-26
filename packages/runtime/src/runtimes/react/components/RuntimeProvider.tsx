@@ -31,7 +31,7 @@ export function RuntimeProvider({
   appOrigin?: string
   locale?: string
 }) {
-  const { versionedFetch } = useFrameworkContext()
+  const { versionedFetch, storeMiddlewares = [] } = useFrameworkContext()
 
   const client = useMemo(
     () =>
@@ -53,7 +53,7 @@ export function RuntimeProvider({
   return (
     <ReactRuntimeContext.Provider value={runtime}>
       <MakeswiftHostApiClientProvider client={client}>
-        <StoreProvider>
+        <StoreProvider middlewares={storeMiddlewares}>
           {children}
           <PreviewSwitcher isPreview={isPreview} />
         </StoreProvider>
