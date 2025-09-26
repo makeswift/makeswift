@@ -13,6 +13,7 @@ export {
   type ControlMessage,
   type ReplacementContext,
   type SendMessageType,
+  type Element,
   ControlDefinition,
   ControlInstance,
   DefaultControlInstance,
