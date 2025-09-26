@@ -23,7 +23,6 @@ import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Pointer from './modules/pointer'
 import * as ElementImperativeHandles from './modules/element-imperative-handles'
 import * as Breakpoints from './modules/breakpoints'
-import * as RSCElementKeys from './modules/rsc-element-keys'
 
 import { withSetupTeardown } from './mixins/setup-teardown'
 
@@ -75,7 +74,6 @@ export const reducer = combineReducers({
   pointer: Pointer.reducer,
   elementImperativeHandles: ElementImperativeHandles.reducer,
   breakpoints: Breakpoints.reducer,
-  rscElementKeys: RSCElementKeys.reducer,
 })
 
 export type State = ReturnType<typeof reducer>

@@ -93,8 +93,6 @@ export const ActionTypes = {
   SET_LOCALIZED_RESOURCE_ID: 'SET_LOCALIZED_RESOURCE_ID',
 
   UPDATE_API_CLIENT_CACHE: 'UPDATE_API_CLIENT_CACHE',
-
-  SET_RSC_ELEMENT_KEYS: 'SET_RSC_ELEMENT_KEYS',
 } as const
 
 type InitAction = { type: typeof ActionTypes.INIT }
@@ -359,11 +357,6 @@ type UpdateAPIClientCache = {
   payload: APIClientCache
 }
 
-type SetRSCElementKeysAction = {
-  type: typeof ActionTypes.SET_RSC_ELEMENT_KEYS
-  payload: { keys: string[] }
-}
-
 export type Action =
   | InitAction
   | CleanUpAction
@@ -410,7 +403,6 @@ export type Action =
   | SetLocaleAction
   | SetLocalizedResourceIdAction
   | UpdateAPIClientCache
-  | SetRSCElementKeysAction
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }
@@ -812,10 +804,6 @@ export function setLocalizedResourceId({
 
 export function updateAPIClientCache(payload: APIClientCache): UpdateAPIClientCache {
   return { type: ActionTypes.UPDATE_API_CLIENT_CACHE, payload }
-}
-
-export function setRSCElementKeys(keys: string[]): SetRSCElementKeysAction {
-  return { type: ActionTypes.SET_RSC_ELEMENT_KEYS, payload: { keys } }
 }
 
 export function isKnownAction(action: unknown): action is Action {
