@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.14
+
+### Patch Changes
+
+- 6408396: Remove translatable data merging from controls in favor of visitor pattern
+
 ## 0.1.13
 
 ### Patch Changes

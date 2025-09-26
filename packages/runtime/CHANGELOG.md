@@ -1,5 +1,26 @@
 # @makeswift/runtime
 
+## 0.26.0
+
+### Minor Changes
+
+- 07b93df: Remove `getTranslatableData` method from the ReactRuntime
+
+### Patch Changes
+
+- d4834c4: fix: support dynamic page registration and unregistration with builder
+- 2694de9: Fix incorrect file extension for client export
+- 90a2683: chore: upgrade parse5 to latest minor version
+- 5afcff6: chore: move type dependencies to dev dependencies
+- 1233f09: Rearrange type exports to be declared first in `package.json`
+- 7ae5129: Move module declarations ahead of require condition for `package.json` exports
+- 542625e: Drop Carousel dependency on popmotion library
+- 6408396: Remove translatable data merging from controls in favor of visitor pattern
+- 289a662: Remove `mergeTranslatedData` method from the ReactRuntime. Removes `parse5` from client bundles.
+- Updated dependencies [6408396]
+  - @makeswift/controls@0.1.14
+  - @makeswift/prop-controllers@0.4.8
+
 ## 0.25.3
 
 ### Patch Changes
