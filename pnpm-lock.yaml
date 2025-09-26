@@ -24,6 +24,52 @@ importers:
         specifier: ^1.13.3
         version: 1.13.3
 
+  apps/next-rsc:
+    dependencies:
+      '@makeswift/runtime':
+        specifier: workspace:^
+        version: link:../../packages/runtime
+      next:
+        specifier: 15.5.0
+        version: 15.5.0(@playwright/test@1.41.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react:
+        specifier: 19.1.0
+        version: 19.1.0
+      react-dom:
+        specifier: 19.1.0
+        version: 19.1.0(react@19.1.0)
+      react-markdown:
+        specifier: ^10.1.0
+        version: 10.1.0(@types/react@18.2.14)(react@19.1.0)
+    devDependencies:
+      '@types/node':
+        specifier: ^20
+        version: 20.14.11
+      '@types/react':
+        specifier: ^18
+        version: 18.2.14
+      '@types/react-dom':
+        specifier: ^18
+        version: 18.2.6
+      autoprefixer:
+        specifier: ^10.0.1
+        version: 10.4.17(postcss@8.5.3)
+      eslint:
+        specifier: ^9.13.0
+        version: 9.13.0(jiti@2.4.2)
+      eslint-config-next:
+        specifier: 15.0.2
+        version: 15.0.2(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2)
+      postcss:
+        specifier: ^8
+        version: 8.5.3
+      tailwindcss:
+        specifier: ^3.3.0
+        version: 3.4.1(ts-node@10.9.2(@swc/core@1.7.0(@swc/helpers@0.5.15))(@types/node@20.14.11)(typescript@5.9.2))
+      typescript:
+        specifier: ^5
+        version: 5.9.2
+
   apps/nextjs-app-router:
     dependencies:
       '@formatjs/intl-localematcher':
@@ -44,9 +90,6 @@ importers:
       react-dom:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
-      react-markdown:
-        specifier: ^10.1.0
-        version: 10.1.0(@types/react@18.2.14)(react@19.1.0)
     devDependencies:
       '@types/negotiator':
         specifier: ^0.6.3
@@ -6878,9 +6921,6 @@ packages:
   picocolors@1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
 
-  picocolors@1.0.1:
-    resolution: {integrity: sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==}
-
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
 
@@ -8721,12 +8761,12 @@ snapshots:
   '@babel/code-frame@7.24.2':
     dependencies:
       '@babel/highlight': 7.24.7
-      picocolors: 1.0.1
+      picocolors: 1.1.1
 
   '@babel/code-frame@7.24.7':
     dependencies:
       '@babel/highlight': 7.24.7
-      picocolors: 1.0.1
+      picocolors: 1.1.1
 
   '@babel/code-frame@7.27.1':
     dependencies:
@@ -8984,7 +9024,7 @@ snapshots:
       '@babel/helper-validator-identifier': 7.24.7
       chalk: 2.4.2
       js-tokens: 4.0.0
-      picocolors: 1.0.1
+      picocolors: 1.1.1
 
   '@babel/parser@7.21.9':
     dependencies:
@@ -9564,7 +9604,7 @@ snapshots:
 
   '@emnapi/runtime@1.3.1':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@emnapi/runtime@1.4.5':
@@ -9666,7 +9706,7 @@ snapshots:
       lodash.get: 4.4.2
       make-error: 1.3.6
       ts-node: 9.1.1(typescript@5.9.2)
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - typescript
 
@@ -10101,7 +10141,7 @@ snapshots:
   '@graphql-tools/optimize@1.3.1(graphql@16.3.0)':
     dependencies:
       graphql: 16.3.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@graphql-tools/prisma-loader@7.1.3(@types/node@20.14.11)(graphql@16.3.0)':
     dependencies:
@@ -10138,7 +10178,7 @@ snapshots:
       '@ardatan/relay-compiler': 12.0.0(graphql@16.3.0)
       '@graphql-tools/utils': 9.1.3(graphql@16.3.0)
       graphql: 16.3.0
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -10186,7 +10226,7 @@ snapshots:
   '@graphql-tools/utils@9.1.3(graphql@16.3.0)':
     dependencies:
       graphql: 16.3.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@graphql-tools/wrap@8.4.6(graphql@16.3.0)':
     dependencies:
@@ -11589,6 +11629,24 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@typescript-eslint/eslint-plugin@8.12.0(@typescript-eslint/parser@6.20.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2))(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2)':
+    dependencies:
+      '@eslint-community/regexpp': 4.10.0
+      '@typescript-eslint/parser': 6.20.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2)
+      '@typescript-eslint/scope-manager': 8.12.0
+      '@typescript-eslint/type-utils': 8.12.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2)
+      '@typescript-eslint/utils': 8.12.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2)
+      '@typescript-eslint/visitor-keys': 8.12.0
+      eslint: 9.13.0(jiti@2.4.2)
+      graphemer: 1.4.0
+      ignore: 5.3.2
+      natural-compare: 1.4.0
+      ts-api-utils: 1.3.0(typescript@5.9.2)
+    optionalDependencies:
+      typescript: 5.9.2
+    transitivePeerDependencies:
+      - supports-color
+
   '@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.1.6)':
     dependencies:
       '@typescript-eslint/scope-manager': 6.20.0
@@ -11615,6 +11673,19 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@typescript-eslint/parser@6.20.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2)':
+    dependencies:
+      '@typescript-eslint/scope-manager': 6.20.0
+      '@typescript-eslint/types': 6.20.0
+      '@typescript-eslint/typescript-estree': 6.20.0(typescript@5.9.2)
+      '@typescript-eslint/visitor-keys': 6.20.0
+      debug: 4.3.4
+      eslint: 9.13.0(jiti@2.4.2)
+    optionalDependencies:
+      typescript: 5.9.2
+    transitivePeerDependencies:
+      - supports-color
+
   '@typescript-eslint/scope-manager@6.20.0':
     dependencies:
       '@typescript-eslint/types': 6.20.0
@@ -11637,6 +11708,18 @@ snapshots:
       - eslint
       - supports-color
 
+  '@typescript-eslint/type-utils@8.12.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2)':
+    dependencies:
+      '@typescript-eslint/typescript-estree': 8.12.0(typescript@5.9.2)
+      '@typescript-eslint/utils': 8.12.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2)
+      debug: 4.4.1
+      ts-api-utils: 1.3.0(typescript@5.9.2)
+    optionalDependencies:
+      typescript: 5.9.2
+    transitivePeerDependencies:
+      - eslint
+      - supports-color
+
   '@typescript-eslint/types@4.33.0': {}
 
   '@typescript-eslint/types@5.59.7': {}
@@ -11652,7 +11735,7 @@ snapshots:
       debug: 4.4.1
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.7.1
+      semver: 7.7.2
       tsutils: 3.21.0(typescript@3.9.10)
     optionalDependencies:
       typescript: 3.9.10
@@ -11666,7 +11749,7 @@ snapshots:
       debug: 4.4.1
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.7.1
+      semver: 7.7.2
       tsutils: 3.21.0(typescript@4.9.5)
     optionalDependencies:
       typescript: 4.9.5
@@ -11688,6 +11771,21 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@typescript-eslint/typescript-estree@6.20.0(typescript@5.9.2)':
+    dependencies:
+      '@typescript-eslint/types': 6.20.0
+      '@typescript-eslint/visitor-keys': 6.20.0
+      debug: 4.4.1
+      globby: 11.1.0
+      is-glob: 4.0.3
+      minimatch: 9.0.3
+      semver: 7.7.1
+      ts-api-utils: 1.0.3(typescript@5.9.2)
+    optionalDependencies:
+      typescript: 5.9.2
+    transitivePeerDependencies:
+      - supports-color
+
   '@typescript-eslint/typescript-estree@8.12.0(typescript@5.1.6)':
     dependencies:
       '@typescript-eslint/types': 8.12.0
@@ -11696,10 +11794,25 @@ snapshots:
       fast-glob: 3.3.2
       is-glob: 4.0.3
       minimatch: 9.0.5
-      semver: 7.6.3
+      semver: 7.7.2
       ts-api-utils: 1.3.0(typescript@5.1.6)
     optionalDependencies:
       typescript: 5.1.6
+    transitivePeerDependencies:
+      - supports-color
+
+  '@typescript-eslint/typescript-estree@8.12.0(typescript@5.9.2)':
+    dependencies:
+      '@typescript-eslint/types': 8.12.0
+      '@typescript-eslint/visitor-keys': 8.12.0
+      debug: 4.4.1
+      fast-glob: 3.3.2
+      is-glob: 4.0.3
+      minimatch: 9.0.5
+      semver: 7.7.2
+      ts-api-utils: 1.3.0(typescript@5.9.2)
+    optionalDependencies:
+      typescript: 5.9.2
     transitivePeerDependencies:
       - supports-color
 
@@ -11709,6 +11822,17 @@ snapshots:
       '@typescript-eslint/scope-manager': 8.12.0
       '@typescript-eslint/types': 8.12.0
       '@typescript-eslint/typescript-estree': 8.12.0(typescript@5.1.6)
+      eslint: 9.13.0(jiti@2.4.2)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
+  '@typescript-eslint/utils@8.12.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2)':
+    dependencies:
+      '@eslint-community/eslint-utils': 4.4.0(eslint@9.13.0(jiti@2.4.2))
+      '@typescript-eslint/scope-manager': 8.12.0
+      '@typescript-eslint/types': 8.12.0
+      '@typescript-eslint/typescript-estree': 8.12.0(typescript@5.9.2)
       eslint: 9.13.0(jiti@2.4.2)
     transitivePeerDependencies:
       - supports-color
@@ -11994,6 +12118,16 @@ snapshots:
       normalize-range: 0.1.2
       picocolors: 1.0.0
       postcss: 8.4.33
+      postcss-value-parser: 4.2.0
+
+  autoprefixer@10.4.17(postcss@8.5.3):
+    dependencies:
+      browserslist: 4.22.2
+      caniuse-lite: 1.0.30001580
+      fraction.js: 4.3.7
+      normalize-range: 0.1.2
+      picocolors: 1.0.0
+      postcss: 8.5.3
       postcss-value-parser: 4.2.0
 
   available-typed-arrays@1.0.5: {}
@@ -13390,6 +13524,25 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
+  eslint-config-next@15.0.2(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2):
+    dependencies:
+      '@next/eslint-plugin-next': 15.0.2
+      '@rushstack/eslint-patch': 1.10.4
+      '@typescript-eslint/eslint-plugin': 8.12.0(@typescript-eslint/parser@6.20.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2))(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2)
+      '@typescript-eslint/parser': 6.20.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2)
+      eslint: 9.13.0(jiti@2.4.2)
+      eslint-import-resolver-node: 0.3.9
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.20.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@9.13.0(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@6.20.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2))(eslint-import-resolver-typescript@3.6.1)(eslint@9.13.0(jiti@2.4.2))
+      eslint-plugin-jsx-a11y: 6.10.2(eslint@9.13.0(jiti@2.4.2))
+      eslint-plugin-react: 7.37.2(eslint@9.13.0(jiti@2.4.2))
+      eslint-plugin-react-hooks: 5.0.0(eslint@9.13.0(jiti@2.4.2))
+    optionalDependencies:
+      typescript: 5.9.2
+    transitivePeerDependencies:
+      - eslint-import-resolver-webpack
+      - supports-color
+
   eslint-import-resolver-node@0.3.9:
     dependencies:
       debug: 3.2.7
@@ -13432,6 +13585,23 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
+  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.20.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@9.13.0(jiti@2.4.2)):
+    dependencies:
+      debug: 4.3.5
+      enhanced-resolve: 5.14.1
+      eslint: 9.13.0(jiti@2.4.2)
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@6.20.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@9.13.0(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@6.20.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2))(eslint-import-resolver-typescript@3.6.1)(eslint@9.13.0(jiti@2.4.2))
+      fast-glob: 3.3.2
+      get-tsconfig: 4.7.2
+      is-core-module: 2.15.1
+      is-glob: 4.0.3
+    transitivePeerDependencies:
+      - '@typescript-eslint/parser'
+      - eslint-import-resolver-node
+      - eslint-import-resolver-webpack
+      - supports-color
+
   eslint-module-utils@2.12.0(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.1.6))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.20.0(eslint@8.56.0)(typescript@5.1.6))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.56.0))(eslint@8.56.0))(eslint@8.56.0):
     dependencies:
       debug: 3.2.7
@@ -13451,6 +13621,17 @@ snapshots:
       eslint: 9.13.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.20.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.1.6))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@9.13.0(jiti@2.4.2))
+    transitivePeerDependencies:
+      - supports-color
+
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@6.20.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@9.13.0(jiti@2.4.2)):
+    dependencies:
+      debug: 3.2.7
+    optionalDependencies:
+      '@typescript-eslint/parser': 6.20.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2)
+      eslint: 9.13.0(jiti@2.4.2)
+      eslint-import-resolver-node: 0.3.9
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.20.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@9.13.0(jiti@2.4.2))
     transitivePeerDependencies:
       - supports-color
 
@@ -13516,6 +13697,35 @@ snapshots:
       tsconfig-paths: 3.15.0
     optionalDependencies:
       '@typescript-eslint/parser': 6.20.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.1.6)
+    transitivePeerDependencies:
+      - eslint-import-resolver-typescript
+      - eslint-import-resolver-webpack
+      - supports-color
+
+  eslint-plugin-import@2.31.0(@typescript-eslint/parser@6.20.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2))(eslint-import-resolver-typescript@3.6.1)(eslint@9.13.0(jiti@2.4.2)):
+    dependencies:
+      '@rtsao/scc': 1.1.0
+      array-includes: 3.1.8
+      array.prototype.findlastindex: 1.2.5
+      array.prototype.flat: 1.3.2
+      array.prototype.flatmap: 1.3.2
+      debug: 3.2.7
+      doctrine: 2.1.0
+      eslint: 9.13.0(jiti@2.4.2)
+      eslint-import-resolver-node: 0.3.9
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@6.20.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@9.13.0(jiti@2.4.2))
+      hasown: 2.0.2
+      is-core-module: 2.15.1
+      is-glob: 4.0.3
+      minimatch: 3.1.2
+      object.fromentries: 2.0.8
+      object.groupby: 1.0.3
+      object.values: 1.2.0
+      semver: 6.3.1
+      string.prototype.trimend: 1.0.8
+      tsconfig-paths: 3.15.0
+    optionalDependencies:
+      '@typescript-eslint/parser': 6.20.0(eslint@9.13.0(jiti@2.4.2))(typescript@5.9.2)
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
@@ -14260,7 +14470,7 @@ snapshots:
   graphql-tag@2.12.6(graphql@16.3.0):
     dependencies:
       graphql: 16.3.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   graphql-ws@5.6.3(graphql@16.3.0):
     dependencies:
@@ -14797,7 +15007,7 @@ snapshots:
       '@babel/parser': 7.24.8
       '@istanbuljs/schema': 0.1.3
       istanbul-lib-coverage: 3.2.0
-      semver: 7.6.3
+      semver: 7.7.2
     transitivePeerDependencies:
       - supports-color
 
@@ -16788,8 +16998,6 @@ snapshots:
 
   picocolors@1.0.0: {}
 
-  picocolors@1.0.1: {}
-
   picocolors@1.1.1: {}
 
   picomatch@2.3.1: {}
@@ -16822,25 +17030,17 @@ snapshots:
 
   possible-typed-array-names@1.0.0: {}
 
-  postcss-import@15.1.0(postcss@8.4.33):
+  postcss-import@15.1.0(postcss@8.5.3):
     dependencies:
-      postcss: 8.4.33
+      postcss: 8.5.3
       postcss-value-parser: 4.2.0
       read-cache: 1.0.0
       resolve: 1.22.8
 
-  postcss-js@4.0.1(postcss@8.4.33):
+  postcss-js@4.0.1(postcss@8.5.3):
     dependencies:
       camelcase-css: 2.0.1
-      postcss: 8.4.33
-
-  postcss-load-config@4.0.2(postcss@8.4.33)(ts-node@10.9.2(@swc/core@1.7.0(@swc/helpers@0.5.15))(@types/node@20.11.11)(typescript@5.1.6)):
-    dependencies:
-      lilconfig: 3.0.0
-      yaml: 2.3.4
-    optionalDependencies:
-      postcss: 8.4.33
-      ts-node: 10.9.2(@swc/core@1.7.0(@swc/helpers@0.5.15))(@types/node@20.11.11)(typescript@5.1.6)
+      postcss: 8.5.3
 
   postcss-load-config@4.0.2(postcss@8.5.3)(ts-node@10.9.2(@swc/core@1.4.15(@swc/helpers@0.5.15))(@types/node@20.14.11)(typescript@5.9.2)):
     dependencies:
@@ -16849,6 +17049,14 @@ snapshots:
     optionalDependencies:
       postcss: 8.5.3
       ts-node: 10.9.2(@swc/core@1.4.15(@swc/helpers@0.5.15))(@types/node@20.14.11)(typescript@5.9.2)
+
+  postcss-load-config@4.0.2(postcss@8.5.3)(ts-node@10.9.2(@swc/core@1.7.0(@swc/helpers@0.5.15))(@types/node@20.11.11)(typescript@5.1.6)):
+    dependencies:
+      lilconfig: 3.0.0
+      yaml: 2.3.4
+    optionalDependencies:
+      postcss: 8.5.3
+      ts-node: 10.9.2(@swc/core@1.7.0(@swc/helpers@0.5.15))(@types/node@20.11.11)(typescript@5.1.6)
 
   postcss-load-config@4.0.2(postcss@8.5.3)(ts-node@10.9.2(@swc/core@1.7.0(@swc/helpers@0.5.15))(@types/node@20.14.11)(typescript@5.1.6)):
     dependencies:
@@ -16866,9 +17074,9 @@ snapshots:
       postcss: 8.5.3
       ts-node: 10.9.2(@swc/core@1.7.0(@swc/helpers@0.5.15))(@types/node@20.14.11)(typescript@5.9.2)
 
-  postcss-nested@6.0.1(postcss@8.4.33):
+  postcss-nested@6.0.1(postcss@8.5.3):
     dependencies:
-      postcss: 8.4.33
+      postcss: 8.5.3
       postcss-selector-parser: 6.0.15
 
   postcss-selector-parser@6.0.15:
@@ -16893,9 +17101,9 @@ snapshots:
 
   postcss@8.4.31:
     dependencies:
-      nanoid: 3.3.7
-      picocolors: 1.0.1
-      source-map-js: 1.0.2
+      nanoid: 3.3.11
+      picocolors: 1.1.1
+      source-map-js: 1.2.1
 
   postcss@8.4.33:
     dependencies:
@@ -17455,8 +17663,7 @@ snapshots:
 
   semver@7.7.1: {}
 
-  semver@7.7.2:
-    optional: true
+  semver@7.7.2: {}
 
   send@1.2.0:
     dependencies:
@@ -18041,11 +18248,38 @@ snapshots:
       normalize-path: 3.0.0
       object-hash: 3.0.0
       picocolors: 1.0.0
-      postcss: 8.4.33
-      postcss-import: 15.1.0(postcss@8.4.33)
-      postcss-js: 4.0.1(postcss@8.4.33)
-      postcss-load-config: 4.0.2(postcss@8.4.33)(ts-node@10.9.2(@swc/core@1.7.0(@swc/helpers@0.5.15))(@types/node@20.11.11)(typescript@5.1.6))
-      postcss-nested: 6.0.1(postcss@8.4.33)
+      postcss: 8.5.3
+      postcss-import: 15.1.0(postcss@8.5.3)
+      postcss-js: 4.0.1(postcss@8.5.3)
+      postcss-load-config: 4.0.2(postcss@8.5.3)(ts-node@10.9.2(@swc/core@1.7.0(@swc/helpers@0.5.15))(@types/node@20.11.11)(typescript@5.1.6))
+      postcss-nested: 6.0.1(postcss@8.5.3)
+      postcss-selector-parser: 6.0.15
+      resolve: 1.22.8
+      sucrase: 3.35.0
+    transitivePeerDependencies:
+      - ts-node
+
+  tailwindcss@3.4.1(ts-node@10.9.2(@swc/core@1.7.0(@swc/helpers@0.5.15))(@types/node@20.14.11)(typescript@5.9.2)):
+    dependencies:
+      '@alloc/quick-lru': 5.2.0
+      arg: 5.0.2
+      chokidar: 3.5.3
+      didyoumean: 1.2.2
+      dlv: 1.1.3
+      fast-glob: 3.3.2
+      glob-parent: 6.0.2
+      is-glob: 4.0.3
+      jiti: 1.21.0
+      lilconfig: 2.1.0
+      micromatch: 4.0.5
+      normalize-path: 3.0.0
+      object-hash: 3.0.0
+      picocolors: 1.0.0
+      postcss: 8.5.3
+      postcss-import: 15.1.0(postcss@8.5.3)
+      postcss-js: 4.0.1(postcss@8.5.3)
+      postcss-load-config: 4.0.2(postcss@8.5.3)(ts-node@10.9.2(@swc/core@1.7.0(@swc/helpers@0.5.15))(@types/node@20.14.11)(typescript@5.9.2))
+      postcss-nested: 6.0.1(postcss@8.5.3)
       postcss-selector-parser: 6.0.15
       resolve: 1.22.8
       sucrase: 3.35.0
@@ -18153,9 +18387,17 @@ snapshots:
     dependencies:
       typescript: 5.1.6
 
+  ts-api-utils@1.0.3(typescript@5.9.2):
+    dependencies:
+      typescript: 5.9.2
+
   ts-api-utils@1.3.0(typescript@5.1.6):
     dependencies:
       typescript: 5.1.6
+
+  ts-api-utils@1.3.0(typescript@5.9.2):
+    dependencies:
+      typescript: 5.9.2
 
   ts-graphviz@1.7.0: {}
 
@@ -18589,13 +18831,13 @@ snapshots:
     dependencies:
       browserslist: 4.22.2
       escalade: 3.1.1
-      picocolors: 1.0.1
+      picocolors: 1.1.1
 
   update-browserslist-db@1.1.0(browserslist@4.23.2):
     dependencies:
       browserslist: 4.23.2
       escalade: 3.1.2
-      picocolors: 1.0.1
+      picocolors: 1.1.1
 
   upper-case-first@2.0.2:
     dependencies:

@@ -1,8 +1,8 @@
 import { client } from '@/makeswift/client'
-import '@/makeswift/components.server'
+import '@/makeswift/components'
 import { getSiteVersion } from '@makeswift/runtime/next/server'
 import { notFound } from 'next/navigation'
-import { RscPage } from '@makeswift/runtime/rsc'
+import { Page as MakeswiftPage } from '@makeswift/runtime/next'
 
 type ParsedUrlQuery = Promise<{ lang: string; path?: string[] }>
 
@@ -35,5 +35,5 @@ export default async function Page(props: { params: ParsedUrlQuery }) {
 
   if (snapshot == null) return notFound()
 
-  return <RscPage snapshot={snapshot} />
+  return <MakeswiftPage snapshot={snapshot} />
 }

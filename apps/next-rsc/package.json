@@ -1,5 +1,5 @@
 {
-  "name": "nextjs-app-router",
+  "name": "next-rsc",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,15 +10,13 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@formatjs/intl-localematcher": "^0.5.4",
     "@makeswift/runtime": "workspace:^",
-    "negotiator": "^0.6.3",
     "next": "15.5.0",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "react-markdown": "^10.1.0"
   },
   "devDependencies": {
-    "@types/negotiator": "^0.6.3",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

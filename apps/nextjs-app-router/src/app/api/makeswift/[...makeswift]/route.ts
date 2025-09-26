@@ -4,8 +4,7 @@ import { MakeswiftApiHandler } from '@makeswift/runtime/next/server'
 import { runtime } from '@/makeswift/runtime'
 
 // required to make custom components' data available for introspection
-import '@/makeswift/components.client'
-import '@/makeswift/components.server'
+import '@/makeswift/components'
 
 const handler = MakeswiftApiHandler(MAKESWIFT_SITE_API_KEY, {
   runtime,
