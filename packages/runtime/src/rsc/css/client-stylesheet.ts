@@ -7,7 +7,7 @@ import { cssObjectToString } from '../utils/css-string-utils'
 export function createClientStylesheet(
   breakpoints: Breakpoints,
   elementKey: string,
-  onStyleUpdate: (elementKey: string, propName: string, css: string) => void
+  onStyleUpdate: (elementKey: string, propName: string, css: string) => void,
 ): Stylesheet {
   let styleCounter = 0
 
@@ -24,12 +24,12 @@ export function createClientStylesheet(
       return breakpoints
     },
 
-    defineStyle(style: ResolvedStyle): string {
+    defineStyle(_style: ResolvedStyle): string {
       const className = generateClassName(elementKey, undefined, ++styleCounter)
 
       try {
-        const cssObject = resolvedStyleToCss(breakpoints, style)
-        const cssString = cssObjectToString(cssObject, className)
+        // const cssObject = resolvedStyleToCss(breakpoints, style)
+        // const cssString = cssObjectToString(cssObject, className)
         // For top-level styles, we could optionally notify the style runtime here
         // but typically only child styles trigger updates
         return className
@@ -61,7 +61,9 @@ export function createClientStylesheet(
 
         child(childPropName: string): Stylesheet {
           const nestedPropName = `${propName}.${childPropName}`
-          return createClientStylesheet(breakpoints, elementKey, onStyleUpdate).child(nestedPropName)
+          return createClientStylesheet(breakpoints, elementKey, onStyleUpdate).child(
+            nestedPropName,
+          )
         },
       }
     },

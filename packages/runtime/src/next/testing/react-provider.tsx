@@ -18,7 +18,11 @@ export function ReactProvider({
 }) {
   return (
     <FrameworkProvider forcePagesRouter={forcePagesRouter}>
-      <RuntimeProvider siteVersion={siteVersion} runtime={runtime}>
+      <RuntimeProvider
+        siteVersion={siteVersion}
+        runtime={runtime}
+        serializedServerState={{ componentsMeta: new Map(), propControllers: new Map() }}
+      >
         <NextRootStyleRegistry>{children}</NextRootStyleRegistry>
       </RuntimeProvider>
     </FrameworkProvider>

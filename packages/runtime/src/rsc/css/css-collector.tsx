@@ -4,7 +4,7 @@ import { cache } from 'react'
 export class CSSCollector {
   private styles = new Map<string, string>()
 
-  collect(className: string, css: string, elementKey?: string, propName?: string) {
+  collect(className: string, css: string, _elementKey?: string, _propName?: string) {
     if (!this.styles.has(className)) {
       this.styles.set(className, css)
     }

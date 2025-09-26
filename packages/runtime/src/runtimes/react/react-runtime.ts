@@ -106,7 +106,7 @@ export class ReactRuntime extends RuntimeCore {
     }
   }
 
-  constructor({ breakpoints }: { breakpoints?: BreakpointsInput }) {
+  constructor({ breakpoints }: { breakpoints?: BreakpointsInput } = {}) {
     super({ breakpoints })
 
     registerBuiltinComponents(this)
