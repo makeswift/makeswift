@@ -11,7 +11,6 @@ import type { ComponentType, Data, State } from '../../state/react-page'
 import { RuntimeCore } from './runtime-core'
 import { serializeControls, deserializeControls, SerializedControl } from '../../builder'
 import { PropControllerDescriptor } from '../../state/modules/prop-controllers'
-import { MakeswiftComponentType } from '../../components/builtin/constants'
 
 function validateComponentType(type: string, component?: ComponentType): void {
   const componentName = component?.name ?? 'Component'
@@ -69,24 +68,20 @@ export class ReactRuntime extends RuntimeCore {
   }
 
   serializeServerState() {
-    const propControllersEntries = Array.from(
-      this.store
-        .getState()
-        .propControllers.entries()
-        .filter(
-          ([componentType]) =>
-            // Filter out built-in components since we can't serialize them because they contain functions.
-            // For example: GapY(props => ({ hidden: props.children == null }))
-            !Object.values(MakeswiftComponentType).includes(componentType as any),
-        ),
-    ).map(([componentType, descriptors]) => {
-      const [serializedControls] = serializeControls(descriptors)
-      return [componentType, serializedControls] as const
-    })
+    const componentsMeta = this.store.getState().componentsMeta
+    const propControllers = new Map(
+      Array.from(this.store.getState().propControllers.entries())
+        // Only serialize server components. Client components will be imported again on the client bundle.
+        .filter(([componentType]) => componentsMeta.get(componentType)?.server === true)
+        .map(([componentType, descriptors]) => {
+          const [serializedControls] = serializeControls(descriptors)
+          return [componentType, serializedControls] as const
+        }),
+    )
 
     return {
       componentsMeta: this.store.getState().componentsMeta,
-      propControllers: new Map(propControllersEntries),
+      propControllers: propControllers,
     }
   }
 
