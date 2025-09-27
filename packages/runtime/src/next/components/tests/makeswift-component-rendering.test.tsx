@@ -1,83 +1,76 @@
 /** @jest-environment jsdom */
 
+import { Suspense, type ComponentType } from 'react'
 import '@testing-library/jest-dom'
 import { act } from 'react-dom/test-utils'
 import { render, screen } from '@testing-library/react'
+
 import { ReactRuntime } from '../../../react'
 import * as Testing from '../../testing'
 import { MakeswiftComponent } from '../../../runtimes/react/components/MakeswiftComponent'
-import {
-  type MakeswiftComponentSnapshotMetadata,
-  type MakeswiftComponentDocument,
-  type MakeswiftComponentDocumentFallback,
-  type MakeswiftComponentSnapshot,
-} from '../../../client'
-import { type CacheData } from '../../../api/react'
-import { TextInput } from '@makeswift/controls'
+import { type MakeswiftComponentSnapshot } from '../../../client'
+
+import { Checkbox, TextInput } from '@makeswift/controls'
 
 const CustomComponentType = 'CustomComponent'
-const customComponentContentTestId = 'custom'
-function CustomComponent({ text }: { text: string }) {
-  return <div data-testid={customComponentContentTestId}>{text}</div>
+const componentId = 'component-id'
+const containerId = 'container-id'
+const fallbackId = 'fallback-id'
+
+type ComponentProps = {
+  text: string
+  suspend: boolean
 }
 
-const emptyDocumentFixture = {
-  id: '0000-0000-0000-0000',
-  locale: null,
-  data: null,
-  seed: '1111-1111-1111-1111',
-}
-
-const existingDocumentFixture = {
-  id: '2222-2222-2222-2222',
-  data: {
-    type: CustomComponentType,
-    key: '0000-0000-0000-0000',
-    props: {
-      text: 'Hello World',
-    },
-  },
-  locale: null,
-  name: 'Custom Component',
-  siteId: '1111-1111-1111-1111',
-  inheritsFromParent: false,
-}
-
-function createMakeswiftComponentSnapshot(
-  document: MakeswiftComponentDocumentFallback | MakeswiftComponentDocument,
-  meta: MakeswiftComponentSnapshotMetadata,
-  cacheData: CacheData = {
-    apiResources: {},
-    localizedResourcesMap: {},
-  },
-): MakeswiftComponentSnapshot {
-  return {
-    document,
-    cacheData,
-    key: '00000000-0000-0000-0000-000000000000',
-    meta,
+function CustomComponent({ text, suspend }: ComponentProps) {
+  if (suspend) {
+    throw new Promise(() => {}) // suspend indefinitely
   }
+
+  return <div data-testid={componentId}>{text}</div>
 }
 
-async function testMakeswiftComponentRendering(snapshot: MakeswiftComponentSnapshot) {
+function CustomComponentWithFallback(props: ComponentProps) {
+  return (
+    <Suspense fallback={<div data-testid={fallbackId}>Loading...</div>}>
+      <CustomComponent {...props} />
+    </Suspense>
+  )
+}
+
+const elementData = (props: { text: string; suspend?: boolean }) => ({
+  type: CustomComponentType,
+  key: '0000-0000-0000-0000',
+  props,
+})
+
+async function renderComponentSnapshot(
+  snapshot: MakeswiftComponentSnapshot,
+  component: ComponentType<ComponentProps> = CustomComponent,
+  { builtinSuspense }: { builtinSuspense?: boolean } = {},
+) {
   const runtime = new ReactRuntime()
 
-  runtime.registerComponent(CustomComponent, {
+  runtime.registerComponent(component, {
     type: CustomComponentType,
     label: 'Custom Component',
+    builtinSuspense,
     props: {
       text: TextInput({ defaultValue: 'Default Text' }),
+      suspend: Checkbox({ defaultValue: false, label: 'Suspend' }),
     },
   })
 
   await act(async () =>
     render(
       <Testing.ReactProvider runtime={runtime} siteVersion={null}>
-        <MakeswiftComponent
-          label="Embedded Component"
-          type={CustomComponentType}
-          snapshot={snapshot}
-        />
+        <div data-testid={containerId}>
+          <MakeswiftComponent
+            label="Embedded Component"
+            type={CustomComponentType}
+            snapshot={snapshot}
+          />
+        </div>
       </Testing.ReactProvider>,
     ),
   )
@@ -85,22 +78,40 @@ async function testMakeswiftComponentRendering(snapshot: MakeswiftComponentSnaps
 
 describe('MakeswiftComponent', () => {
   test('empty snapshot renders component with default props', async () => {
-    const snapshot = createMakeswiftComponentSnapshot(emptyDocumentFixture, {
-      allowLocaleFallback: false,
-      requestedLocale: null,
-    })
-    await testMakeswiftComponentRendering(snapshot)
+    const snapshot = Testing.createMakeswiftComponentSnapshot(null)
 
-    expect(screen.queryByTestId(customComponentContentTestId)).toHaveTextContent('Default Text')
+    await renderComponentSnapshot(snapshot)
+
+    expect(screen.queryByTestId(componentId)).toHaveTextContent('Default Text')
   })
 
   test('existing snapshot renders component with saved props', async () => {
-    const snapshot = createMakeswiftComponentSnapshot(existingDocumentFixture, {
-      allowLocaleFallback: false,
-      requestedLocale: null,
-    })
-    await testMakeswiftComponentRendering(snapshot)
+    const snapshot = Testing.createMakeswiftComponentSnapshot(elementData({ text: 'Hello World' }))
 
-    expect(screen.queryByTestId(customComponentContentTestId)).toHaveTextContent('Hello World')
+    await renderComponentSnapshot(snapshot)
+
+    expect(screen.queryByTestId(componentId)).toHaveTextContent('Hello World')
+  })
+
+  test('suspended component renders a null fallback', async () => {
+    const snapshot = Testing.createMakeswiftComponentSnapshot(
+      elementData({ text: 'Hello World', suspend: true }),
+    )
+
+    await renderComponentSnapshot(snapshot)
+
+    expect(screen.queryByTestId(containerId)).toBeEmptyDOMElement()
+  })
+
+  test("suspended component registered with 'builtinSuspense: false' renders its own fallback", async () => {
+    const snapshot = Testing.createMakeswiftComponentSnapshot(
+      elementData({ text: 'Hello World', suspend: true }),
+    )
+
+    await renderComponentSnapshot(snapshot, CustomComponentWithFallback, {
+      builtinSuspense: false,
+    })
+
+    expect(screen.queryByTestId(fallbackId)).toHaveTextContent('Loading...')
   })
 })
