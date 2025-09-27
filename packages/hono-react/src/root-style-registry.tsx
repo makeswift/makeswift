@@ -1,7 +1,7 @@
 import { type PropsWithChildren, useState } from 'react'
 
 import {
-  createRootStyleCache,
+  createStyleCache,
   RootStyleRegistry,
   type RootStyleProps,
 } from '@makeswift/runtime/unstable-framework-support'
@@ -11,7 +11,7 @@ export function ReactRootStyleRegistry({
   cacheKey,
   enableCssReset,
 }: PropsWithChildren<RootStyleProps>) {
-  const [cache] = useState(createRootStyleCache({ key: cacheKey }))
+  const [cache] = useState(createStyleCache({ key: cacheKey }))
 
   return (
     <RootStyleRegistry cache={cache} enableCssReset={enableCssReset}>
