@@ -1,2 +1,2 @@
-export { NextRSCRuntime as ExperimentalReactRuntime } from './components/react-runtime'
-export { NextRSCRuntimeProvider as ExperimentalReactRuntimeProvider } from './components/runtime-provider'
+export { NextRSCRuntime as ExperimentalReactRuntime } from './shared/react-runtime'
+export { NextRSCRuntimeProvider as ExperimentalReactRuntimeProvider } from './client/runtime-provider'

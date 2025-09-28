@@ -5,7 +5,7 @@ import { ElementData as ReactPageElementData } from '../../../state/react-page'
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'
 import { getComponentsMeta } from '../../../state/modules/components-meta'
 import { useStore } from '../../../runtimes/react/hooks/use-store'
-import { useRSCNodes } from '../context/rsc-nodes'
+import { useRSCNodes } from './rsc-nodes-provider'
 import { ElementData } from '../../../runtimes/react/components/ElementData'
 
 type ElementDataProps = {

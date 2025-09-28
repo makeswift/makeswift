@@ -8,8 +8,8 @@ import { deepEqual, ElementData, isElementReference, StyleDefinition } from '@ma
 import { useDocumentKey, useSelector } from '../../../runtimes/react'
 import { createClientStylesheet } from '../css/client-stylesheet'
 import { getBreakpoints } from '../../../state/react-page'
-import { mockResourceResolver } from '../functions/resource-resolver'
 import { useRouter } from 'next/navigation'
+import { useResourceResolver } from '../../../runtimes/react/hooks/use-resource-resolver'
 
 type RSCElementStyleEnhancerProps = {
   initialElementData: ElementData
@@ -24,6 +24,7 @@ export function RSCElementStyleEnhancer({
   const documentKey = useDocumentKey()
   const breakpoints = useSelector(getBreakpoints)
   const router = useRouter()
+  const resourceResolver = useResourceResolver()
   const elementKey = initialElementData.key
 
   // Bug, element is null sometimes
@@ -62,7 +63,7 @@ export function RSCElementStyleEnhancer({
         if (data !== undefined) {
           const resolvable = def.resolveValue(
             data,
-            mockResourceResolver,
+            resourceResolver,
             clientStylesheet.child(propName),
           )
           resolvable.readStable()

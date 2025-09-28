@@ -4,8 +4,8 @@ import {
   getComponentPropControllerDescriptors,
 } from '../../../state/react-page'
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'
-import { getRuntime } from '../server/runtime'
-import { resolveProps } from '../functions/resolve-props'
+import { getRuntime } from './runtime'
+import { resolveProps } from './resolve-props'
 
 type ElementDataProps = {
   elementData: ReactPageElementData

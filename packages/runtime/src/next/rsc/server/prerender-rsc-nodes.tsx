@@ -1,7 +1,7 @@
-import { getRuntime } from '../server/runtime'
+import { getRuntime } from './runtime'
 import { getComponentsMeta } from '../../../state/modules/components-meta'
 import { Element, getPropControllerDescriptors } from '../../../state/react-page'
-import { ServerElement } from '../components/server-element'
+import { ServerElement } from './server-element'
 import { traverseElementTree } from '../../../state/modules/element-trees'
 
 export function prerenderRSCNodes(elementTree: Element): Record<string, JSX.Element> {

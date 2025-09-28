@@ -2,7 +2,7 @@
 
 import { type Breakpoints, type Stylesheet, type ResolvedStyle } from '@makeswift/controls'
 import { resolvedStyleToCss } from '../../../runtimes/react/resolve-style'
-import { cssObjectToString } from '../utils/css-string-utils'
+import { cssObjectToString } from './css-string-utils'
 
 export function createClientStylesheet(
   breakpoints: Breakpoints,

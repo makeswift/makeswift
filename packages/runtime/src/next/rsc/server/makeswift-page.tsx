@@ -1,7 +1,7 @@
 import { ComponentPropsWithoutRef } from 'react'
 import { Page } from '../..'
-import { prerenderRSCNodes } from '../functions/prerender-rsc-nodes'
-import { RSCNodesProvider } from '../context/rsc-nodes'
+import { prerenderRSCNodes } from './prerender-rsc-nodes'
+import { RSCNodesProvider } from '../client/rsc-nodes-provider'
 import { CSSInjector } from '../css/css-collector'
 import { RSCStyleProvider } from '../css/style-runtime'
 
