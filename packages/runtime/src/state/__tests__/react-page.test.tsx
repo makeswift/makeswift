@@ -53,7 +53,7 @@ function createTestStore(): ReactPage.Store {
   store.dispatch(
     registerComponent(
       ElementType.Box,
-      { label: 'Box', icon: ComponentIcon.Cube, hidden: false, server: false },
+      { label: 'Box', icon: ComponentIcon.Cube, hidden: false },
       { children: Slot() },
     ),
   )
@@ -61,7 +61,7 @@ function createTestStore(): ReactPage.Store {
   store.dispatch(
     registerComponent(
       ElementType.Button,
-      { label: 'Button', icon: ComponentIcon.Cube, hidden: false, server: false },
+      { label: 'Button', icon: ComponentIcon.Cube, hidden: false },
       { children: TextInput() },
     ),
   )
@@ -69,7 +69,7 @@ function createTestStore(): ReactPage.Store {
   store.dispatch(
     registerComponent(
       ElementType.Accordion,
-      { label: 'Accordion', icon: ComponentIcon.Cube, hidden: false, server: false },
+      { label: 'Accordion', icon: ComponentIcon.Cube, hidden: false },
       {
         items: List({
           type: Group({
@@ -86,7 +86,7 @@ function createTestStore(): ReactPage.Store {
   store.dispatch(
     registerComponent(
       ElementType.SlotList,
-      { label: 'Slot List', icon: ComponentIcon.Cube, hidden: false, server: false },
+      { label: 'Slot List', icon: ComponentIcon.Cube, hidden: false },
       { items: List({ type: Slot() }) },
     ),
   )
