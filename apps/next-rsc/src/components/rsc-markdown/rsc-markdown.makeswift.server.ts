@@ -21,5 +21,5 @@ runtime.registerComponent(RscMarkdown, {
       },
     }),
   },
-  __experimental_server: true,
+  server: true,
 })

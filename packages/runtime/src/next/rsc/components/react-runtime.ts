@@ -30,7 +30,7 @@ export class NextRSCRuntime extends ReactRuntime {
       hidden = false,
       props,
       description,
-      __experimental_server: server = false,
+      server = false,
     }: {
       type: string
       label: string
@@ -38,7 +38,7 @@ export class NextRSCRuntime extends ReactRuntime {
       hidden?: boolean
       props?: P
       description?: string
-      __experimental_server?: boolean
+      server?: boolean
     },
   ): () => void {
     validateComponentType(type, component as unknown as ComponentType)
