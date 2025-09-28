@@ -76,35 +76,27 @@ export class NextRSCRuntime extends ReactRuntime {
   }
 
   loadServerState(serializedState: SerializedServerState): void {
-    const deserializedState = deserializeServerState(serializedState)
+    const deserializedPropControllers = Array.from(serializedState.propControllers.entries()).map(
+      ([componentType, serializedControls]) => {
+        const deserializedControls = deserializeControls(serializedControls) as Record<
+          string,
+          PropControllerDescriptor
+        >
+        return [componentType, deserializedControls] as const
+      },
+    )
 
-    // Register each component using the proper actions
-    if (deserializedState.componentsMeta && deserializedState.propControllers) {
-      for (const [componentType, propControllerDescriptors] of deserializedState.propControllers) {
-        const componentMeta = deserializedState.componentsMeta.get(componentType)
-        if (componentMeta) {
-          this.store.dispatch(
-            registerComponentEffect(componentType, componentMeta, propControllerDescriptors),
-          )
-        }
+    for (const [componentType, propControllerDescriptors] of deserializedPropControllers) {
+      const componentMeta = serializedState.componentsMeta.get(componentType)
+
+      if (componentMeta == null) {
+        console.warn(`Component meta not found for ${componentType}`)
+        continue
       }
+
+      this.store.dispatch(
+        registerComponentEffect(componentType, componentMeta, propControllerDescriptors),
+      )
     }
-  }
-}
-
-export function deserializeServerState(serializedState: SerializedServerState): Partial<State> {
-  const propControllersEntries = Array.from(serializedState.propControllers.entries()).map(
-    ([componentType, serializedControls]) => {
-      const deserializedControls = deserializeControls(serializedControls) as Record<
-        string,
-        PropControllerDescriptor
-      >
-      return [componentType, deserializedControls] as const
-    },
-  )
-
-  return {
-    componentsMeta: serializedState.componentsMeta,
-    propControllers: new Map(propControllersEntries),
   }
 }
