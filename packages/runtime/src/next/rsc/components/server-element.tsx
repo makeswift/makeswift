@@ -1,10 +1,10 @@
 import { ReactNode } from 'react'
 import { isElementReference, type Element as ElementDataOrRef } from '../../../state/react-page'
-import { ServerElementData } from './ServerElementData'
-import { getRuntime } from '../context/server'
+import { ServerElementData } from './server-element-data'
+import { getRuntime } from '../server/runtime'
 import { Element } from '../../../react'
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'
-import { RSCElementStyleEnhancer } from './RSCElementStyleEnhancer'
+import { RSCElementStyleEnhancer } from './rsc-element-style-enhancer'
 
 type Props = {
   element: ElementDataOrRef

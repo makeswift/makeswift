@@ -1,5 +1,5 @@
 import { ElementData } from '@makeswift/controls'
-import { getRuntime } from '../context/server'
+import { getRuntime } from '../server/runtime'
 import { getBreakpoints } from '../../../state/react-page'
 import { createServerStylesheet } from './server-stylesheet'
 import { isLegacyDescriptor } from '../../../prop-controllers/descriptors'

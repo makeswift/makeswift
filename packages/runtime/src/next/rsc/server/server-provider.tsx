@@ -1,5 +1,5 @@
 import { NextRSCRuntime } from '../components/react-runtime'
-import { setRuntime } from '../context/server'
+import { setRuntime } from './runtime'
 
 type Props = {
   runtime: NextRSCRuntime
