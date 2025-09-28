@@ -1,11 +1,11 @@
-import { MakeswiftProvider } from '@/makeswift/provider'
+import { MakeswiftClientProvider } from '@/makeswift/provider'
 
 import '@/app/global.css'
 import '@/makeswift/components.server'
 import '@/makeswift/components.client'
 import { getSiteVersion } from '@makeswift/runtime/next/server'
-import { setRuntime } from '@makeswift/runtime/next/rsc/server'
 import { runtime } from '@/makeswift/runtime'
+import { ExperimentalServerProvider } from '@makeswift/runtime/next/rsc/server'
 
 type Params = Promise<{ path?: string[] }>
 
@@ -17,17 +17,18 @@ export default async function RootLayout({
   params: Params
 }>) {
   const siteVersion = await getSiteVersion()
-  setRuntime(runtime)
 
   return (
     <html>
       <body>
-        <MakeswiftProvider
-          serializedServerState={runtime.serializeServerState()}
-          siteVersion={siteVersion}
-        >
-          {children}
-        </MakeswiftProvider>
+        <ExperimentalServerProvider runtime={runtime}>
+          <MakeswiftClientProvider
+            serializedServerState={runtime.serializeServerState()}
+            siteVersion={siteVersion}
+          >
+            {children}
+          </MakeswiftClientProvider>
+        </ExperimentalServerProvider>
       </body>
     </html>
   )

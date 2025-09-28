@@ -9,7 +9,7 @@ import { RootStyleRegistry } from '@makeswift/runtime/next'
 
 import '@/makeswift/components.client'
 
-export function MakeswiftProvider({
+export function MakeswiftClientProvider({
   children,
   ...props
 }: Omit<

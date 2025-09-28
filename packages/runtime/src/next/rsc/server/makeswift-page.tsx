@@ -7,7 +7,7 @@ import { RSCStyleProvider } from '../css/style-runtime'
 
 type Props = ComponentPropsWithoutRef<typeof Page>
 
-export function RscPage(props: Props) {
+export function NextRSCMakeswiftPage(props: Props) {
   const rscNodes = prerenderRSCNodes(props.snapshot.document.data)
 
   return (
