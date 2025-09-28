@@ -4,7 +4,7 @@ import { ReactNode, useMemo, lazy } from 'react'
 
 import { MakeswiftHostApiClient } from '../../../api/react'
 import { ReactRuntimeContext } from '../hooks/use-react-runtime'
-import { ReactRuntime, SerializedServerState } from '../react-runtime'
+import { ReactRuntime } from '../react-runtime'
 import { MakeswiftHostApiClientProvider } from '../host-api-client'
 import { type SiteVersion } from '../../../api/site-version'
 import { PreviewSwitcher } from './preview-switcher/preview-switcher'
@@ -17,15 +17,13 @@ const PreviewProvider = lazy(() => import('./PreviewProvider'))
 export function RuntimeProvider({
   children,
   runtime,
-  serializedServerState,
   siteVersion,
   appOrigin = 'https://app.makeswift.com',
   apiOrigin = 'https://api.makeswift.com',
-  locale = undefined,
+  locale,
 }: {
   children: ReactNode
   runtime: ReactRuntime
-  serializedServerState: SerializedServerState
   siteVersion: SiteVersion | null
   apiOrigin?: string
   appOrigin?: string
@@ -46,8 +44,6 @@ export function RuntimeProvider({
   const isPreview = siteVersion != null
 
   useBuilderConnectionPing({ appOrigin })
-
-  runtime.loadServerState(serializedServerState)
 
   return (
     <ReactRuntimeContext.Provider value={runtime}>

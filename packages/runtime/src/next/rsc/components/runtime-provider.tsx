@@ -1,16 +1,24 @@
+'use client'
+
 import { ComponentProps } from 'react'
 
+import { NextRSCRuntime, SerializedServerState } from './react-runtime'
 import { RuntimeProvider } from '../../../runtimes/react/components/RuntimeProvider'
-
 import { NextRSCFrameworkProvider } from './framework-provider'
 
 export function NextRSCRuntimeProvider({
-  children,
+  runtime,
+  serializedServerState,
   ...props
-}: ComponentProps<typeof RuntimeProvider>) {
+}: Omit<ComponentProps<typeof RuntimeProvider>, 'runtime'> & {
+  runtime: NextRSCRuntime
+  serializedServerState: SerializedServerState
+}) {
+  runtime.loadServerState(serializedServerState)
+
   return (
     <NextRSCFrameworkProvider>
-      <RuntimeProvider {...props}>{children}</RuntimeProvider>
+      <RuntimeProvider runtime={runtime} {...props} />
     </NextRSCFrameworkProvider>
   )
 }

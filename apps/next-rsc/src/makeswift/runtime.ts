@@ -1,6 +1,6 @@
-import { ReactRuntime } from '@makeswift/runtime/react'
+import { ExperimentalReactRuntime } from '@makeswift/runtime/next/rsc'
 
-export const runtime = new ReactRuntime({
+export const runtime = new ExperimentalReactRuntime({
   breakpoints: {
     mobile: { width: 575, viewport: 390, label: 'Mobile' },
     tablet: { width: 768, viewport: 765, label: 'Tablet' },
