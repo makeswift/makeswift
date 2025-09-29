@@ -1,7 +1,7 @@
 import 'server-only'
 import { cache } from 'react'
 import { type Breakpoints, type Stylesheet } from '@makeswift/controls'
-import { createStylesheet } from './css-runtime'
+import { StylesheetEngine } from './css-runtime'
 
 export class ServerCSSCollector {
   private styles = new Map<string, string>()
@@ -30,11 +30,9 @@ export function createCollectingServerStylesheet(
 ): Stylesheet {
   const collector = getCSSCollector()
 
-  const handleStyleGenerated = (className: string, css: string) => {
+  return new StylesheetEngine(breakpoints, elementKey, undefined, (className, css) => {
     collector.collect(className, css)
-  }
-
-  return createStylesheet(breakpoints, elementKey, handleStyleGenerated)
+  })
 }
 
 export function CSSInjector() {

@@ -7,7 +7,7 @@ import { useControlDefs } from '../../../runtimes/react/controls'
 import { useBreakpoints, useDocumentKey, useSelector } from '../../../runtimes/react'
 import { useResourceResolver } from '../../../runtimes/react/hooks/use-resource-resolver'
 import { getElement } from '../../../state/react-page'
-import { createClientStylesheet } from './css-runtime'
+import { StylesheetEngine } from './css-runtime'
 import { useClientCSS } from './client-css'
 
 type RSCBuilderUpdaterProps = {
@@ -33,7 +33,15 @@ export function RSCBuilderUpdater({ initialElementData, children }: RSCBuilderUp
   })
 
   const clientStylesheet = useMemo(
-    () => createClientStylesheet(breakpoints, elementKey, updateStyle),
+    () =>
+      new StylesheetEngine(
+        breakpoints,
+        elementKey,
+        undefined,
+        (_className, css, elementKey, propName) => {
+          if (elementKey && propName) updateStyle(elementKey, propName, css)
+        },
+      ),
     [breakpoints, elementKey, updateStyle],
   )
 

@@ -58,28 +58,12 @@ function generateClassName(elementKey?: string, propName?: string, counter?: num
   return parts.join('-')
 }
 
-function processStyle(
-  style: ResolvedStyle,
-  breakpoints: Breakpoints,
+type OnStyleGenerated = (
   className: string,
-  onStyleGenerated?: (
-    className: string,
-    css: string,
-    elementKey?: string,
-    propName?: string,
-  ) => void,
+  css: string,
   elementKey?: string,
   propName?: string,
-): string {
-  const cssObject = resolvedStyleToCss(breakpoints, style)
-  const cssString = cssObjectToString(cssObject, className)
-
-  if (onStyleGenerated) {
-    onStyleGenerated(className, cssString, elementKey, propName)
-  }
-
-  return className
-}
+) => void
 
 // Unified stylesheet engine that handles both server and client modes
 export class StylesheetEngine implements Stylesheet {
@@ -89,12 +73,7 @@ export class StylesheetEngine implements Stylesheet {
     private breakpointsData: Breakpoints,
     private elementKey?: string,
     private basePropName?: string,
-    private onStyleGenerated?: (
-      className: string,
-      css: string,
-      elementKey?: string,
-      propName?: string,
-    ) => void,
+    private onStyleGenerated?: OnStyleGenerated,
   ) {}
 
   breakpoints(): Breakpoints {
@@ -103,14 +82,13 @@ export class StylesheetEngine implements Stylesheet {
 
   defineStyle(style: ResolvedStyle): string {
     const className = generateClassName(this.elementKey, this.basePropName, ++this.styleCounter)
-    return processStyle(
-      style,
-      this.breakpointsData,
-      className,
-      this.onStyleGenerated,
-      this.elementKey,
-      this.basePropName,
-    )
+
+    const cssObject = resolvedStyleToCss(this.breakpointsData, style)
+    const cssString = cssObjectToString(cssObject, className)
+
+    this.onStyleGenerated?.(className, cssString, this.elementKey, this.basePropName)
+
+    return className
   }
 
   child(propName: string): Stylesheet {
@@ -121,36 +99,4 @@ export class StylesheetEngine implements Stylesheet {
       this.onStyleGenerated,
     )
   }
-}
-
-export function createStylesheet(
-  breakpoints: Breakpoints,
-  elementKey?: string,
-  onStyleGenerated?: (
-    className: string,
-    css: string,
-    elementKey?: string,
-    propName?: string,
-  ) => void,
-): Stylesheet {
-  return new StylesheetEngine(breakpoints, elementKey, undefined, onStyleGenerated)
-}
-
-export function createClientStylesheet(
-  breakpoints: Breakpoints,
-  elementKey: string,
-  onStyleUpdate: (elementKey: string, propName: string, css: string) => void,
-): Stylesheet {
-  const handleStyleGenerated = (
-    _className: string,
-    css: string,
-    elementKey?: string,
-    propName?: string,
-  ) => {
-    if (elementKey && propName) {
-      onStyleUpdate(elementKey, propName, css)
-    }
-  }
-
-  return new StylesheetEngine(breakpoints, elementKey, undefined, handleStyleGenerated)
 }
