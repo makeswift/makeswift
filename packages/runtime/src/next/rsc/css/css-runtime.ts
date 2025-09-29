@@ -123,7 +123,6 @@ export class StylesheetEngine implements Stylesheet {
   }
 }
 
-// Factory functions for creating stylesheets
 export function createStylesheet(
   breakpoints: Breakpoints,
   elementKey?: string,
@@ -137,7 +136,6 @@ export function createStylesheet(
   return new StylesheetEngine(breakpoints, elementKey, undefined, onStyleGenerated)
 }
 
-// Client-specific stylesheet with style update callback
 export function createClientStylesheet(
   breakpoints: Breakpoints,
   elementKey: string,

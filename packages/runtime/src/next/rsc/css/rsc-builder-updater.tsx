@@ -1,12 +1,12 @@
 'use client'
 
-import { ReactNode, useCallback, useEffect, useMemo, useRef } from 'react'
+import { ReactNode, useEffect, useMemo, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { deepEqual, ElementData, isElementReference, StyleDefinition } from '@makeswift/controls'
 import { useControlDefs } from '../../../runtimes/react/controls'
-import { useDocumentKey, useSelector } from '../../../runtimes/react'
+import { useBreakpoints, useDocumentKey, useSelector } from '../../../runtimes/react'
 import { useResourceResolver } from '../../../runtimes/react/hooks/use-resource-resolver'
-import { getElement, getBreakpoints } from '../../../state/react-page'
+import { getElement } from '../../../state/react-page'
 import { createClientStylesheet } from './css-runtime'
 import { useClientCSS } from './client-css'
 
@@ -18,11 +18,12 @@ type RSCBuilderUpdaterProps = {
 export function RSCBuilderUpdater({ initialElementData, children }: RSCBuilderUpdaterProps) {
   const { updateStyle } = useClientCSS()
   const documentKey = useDocumentKey()
-  const breakpoints = useSelector(getBreakpoints)
+  const breakpoints = useBreakpoints()
   const router = useRouter()
   const resourceResolver = useResourceResolver()
   const elementKey = initialElementData.key
   const prevPropsRef = useRef(initialElementData.props)
+  const [, definitions] = useControlDefs(initialElementData.type)
 
   const element = useSelector(state => {
     if (documentKey == null) return null
@@ -31,30 +32,24 @@ export function RSCBuilderUpdater({ initialElementData, children }: RSCBuilderUp
     return element
   })
 
-  const [_legacyDescriptors, definitions] = useControlDefs(initialElementData.type)
-
-  const handleStyleUpdate = useCallback(
-    (elementKey: string, propName: string, css: string) => {
-      updateStyle(elementKey, propName, css)
-    },
-    [updateStyle],
+  const clientStylesheet = useMemo(
+    () => createClientStylesheet(breakpoints, elementKey, updateStyle),
+    [breakpoints, elementKey, updateStyle],
   )
-
-  const clientStylesheet = useMemo(() => {
-    return createClientStylesheet(breakpoints, elementKey, handleStyleUpdate)
-  }, [breakpoints, elementKey, handleStyleUpdate])
 
   useEffect(() => {
     if (!element) return
 
     const prevProps = prevPropsRef.current
 
+    if (prevProps === element.props) return
+
     Object.entries(definitions).forEach(([propName, def]) => {
       const currentValue = element.props[propName]
       const prevValue = prevProps[propName]
 
       if (def.controlType === StyleDefinition.type) {
-        if (currentValue !== undefined && !deepEqual(currentValue, prevValue)) {
+        if (currentValue != null && !deepEqual(currentValue, prevValue)) {
           const resolvable = def.resolveValue(
             currentValue,
             resourceResolver,
