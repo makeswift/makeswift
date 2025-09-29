@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.26.0-canary.7
+
+### Patch Changes
+
+- 7ba874e: feat: add `builtinSuspense` option in `registerComponent` to control whether the runtime wraps the component in a default `<Suspense>` boundary
+
 ## 0.26.0-canary.6
 
 ### Patch Changes

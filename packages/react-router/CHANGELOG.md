@@ -1,5 +1,12 @@
 # @makeswift/react-router
 
+## 0.0.4-canary.7
+
+### Patch Changes
+
+- Updated dependencies [7ba874e]
+  - @makeswift/runtime@0.26.0-canary.7
+
 ## 0.0.4-canary.6
 
 ### Patch Changes
