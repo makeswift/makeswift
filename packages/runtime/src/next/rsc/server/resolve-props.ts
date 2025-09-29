@@ -1,4 +1,4 @@
-import { ElementData } from '@makeswift/controls'
+import { ElementData, StyleDefinition } from '@makeswift/controls'
 import { getRuntime } from './runtime'
 import { getBreakpoints } from '../../../state/react-page'
 import { createCollectingServerStylesheet } from '../css/server-css'
@@ -17,25 +17,25 @@ export function resolveProps(
   const stylesheet = createCollectingServerStylesheet(breakpoints, elementKey)
   const resolvedProps: Record<string, unknown> = {}
 
-  Object.entries(props).forEach(([propName, propData]) => {
-    const descriptor = propDescriptors[propName]
-
-    if (!descriptor) {
-      console.warn(`[resolveProps] No descriptor found for prop: ${propName}`)
-      return
-    }
-
+  Object.entries(propDescriptors).forEach(([propName, descriptor]) => {
     if (isLegacyDescriptor(descriptor)) {
       console.warn(`[resolveProps] Cannot use legacy descriptor in RSC. Prop: ${propName}`)
       return
     }
 
-    const resolvedValue = descriptor.resolveValue(
-      propData,
-      mockResourceResolver,
-      stylesheet.child(propName),
-    )
-    resolvedProps[propName] = resolvedValue.readStable()
+    const propData = props[propName]
+    const isStyleControl = descriptor.controlType === StyleDefinition.type
+
+    // Always process style controls, even when they have no data
+    if (propData !== undefined || isStyleControl) {
+      const resolvedValue = descriptor.resolveValue(
+        propData,
+        mockResourceResolver,
+        stylesheet.child(propName),
+      )
+      const result = resolvedValue.readStable()
+      resolvedProps[propName] = result
+    }
   })
 
   return resolvedProps
