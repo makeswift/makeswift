@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useCallback, useEffect, useMemo } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useRSCStyleRuntime } from './style-runtime'
 import { getElement } from '../../../state/react-page'
 import { useControlDefs } from '../../../runtimes/react/controls'
@@ -26,16 +26,12 @@ export function RSCElementStyleEnhancer({
   const router = useRouter()
   const resourceResolver = useResourceResolver()
   const elementKey = initialElementData.key
+  const prevPropsRef = useRef(initialElementData.props)
 
-  // Bug, element is null sometimes
   const element = useSelector(state => {
     if (documentKey == null) return null
-
     const element = getElement(state, documentKey, elementKey)
-
-    if (element == null) return null
-    if (isElementReference(element)) return null
-
+    if (element == null || isElementReference(element)) return null
     return element
   })
 
@@ -48,34 +44,41 @@ export function RSCElementStyleEnhancer({
     [updateStyle],
   )
 
-  // This does not work if the RSC doesn't have any style initially.
   const clientStylesheet = useMemo(() => {
     return createClientStylesheet(breakpoints, elementKey, handleStyleUpdate)
   }, [breakpoints, elementKey, handleStyleUpdate])
 
-  // TODO: we should listen to op update instead of comparing the element props in a useEFfect
+  // TODO: Is it better to listen to op update instead of comparing the element props in a useEffect?
   useEffect(() => {
-    if (element == null) return
+    if (!element) return
 
+    const prevProps = prevPropsRef.current
+
+    // Process all prop changes in one pass
     Object.entries(definitions).forEach(([propName, def]) => {
+      const currentValue = element.props[propName]
+      const prevValue = prevProps[propName]
+
       if (def.controlType === StyleDefinition.type) {
-        const data = element.props[propName]
-        if (data !== undefined) {
+        // Handle style prop changes
+        if (currentValue !== undefined && !deepEqual(currentValue, prevValue)) {
           const resolvable = def.resolveValue(
-            data,
+            currentValue,
             resourceResolver,
             clientStylesheet.child(propName),
           )
           resolvable.readStable()
         }
       } else {
-        if (!deepEqual(element.props[propName], initialElementData.props[propName])) {
+        if (!deepEqual(currentValue, prevValue)) {
+          console.log('[RSC] Non-style prop changed, refreshing page')
           router.refresh()
         }
       }
     })
-    // Can't put clientStylesheet here, it'll cause infinite rerender
-  }, [definitions, element, initialElementData.props, router])
+
+    prevPropsRef.current = element.props
+  }, [element, definitions, resourceResolver, clientStylesheet, router])
 
   return <>{children}</>
 }
