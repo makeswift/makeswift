@@ -24,6 +24,16 @@ export abstract class Serializable {
   abstract serialize(): [SerializedRecord, Transferable[]]
 }
 
+// https://github.com/facebook/react/blob/f739642745577a8e4dcb9753836ac3589b9c590a/packages/react-server-dom-webpack/src/ReactFlightWebpackReferences.js#L26-L35
+const SERVER_REFERENCE_TAG = Symbol.for('react.server.reference')
+function isServerReference(reference: unknown): boolean {
+  return (
+    typeof reference === 'function' &&
+    '$$typeof' in reference &&
+    reference.$$typeof === SERVER_REFERENCE_TAG
+  )
+}
+
 export function serializeObject(object: unknown): [unknown, Transferable[]] {
   const transferables: Transferable[] = []
 
@@ -41,6 +51,12 @@ export function serializeObject(object: unknown): [unknown, Transferable[]] {
 
   function serialize(value: unknown): unknown {
     return match(value)
+      // This serializer is reused in two flows:
+      //   • server components → client components (RSC/Flight)
+      //   • host → builder
+      // In the RSC flow, Flight/Next handles encoding/decoding server references across the boundary.
+      // In non-RSC flows (host → builder) server references shouldn’t appear.
+      .with(P.when(isServerReference), () => value)
       .with(P.when(isFunction), serializeFunc)
       .with(P.instanceOf(Serializable), serializeSerializable)
       .with(P.array(), (arr) => arr.map(serialize))
