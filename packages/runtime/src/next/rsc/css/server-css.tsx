@@ -45,16 +45,6 @@ export function CSSInjector() {
   const collector = getCSSCollector()
   const css = collector.getAllStyles()
 
-  if (!css) return null
-
-  return (
-    <style
-      data-makeswift-rsc="true"
-      // @ts-expect-error `href` is a React 19 feature, but we haven't upgraded the type to React 19 yet.
-      href="makeswift-rsc"
-      precedence="makeswift-rsc"
-    >
-      {css}
-    </style>
-  )
+  // Always render the style element, even when empty, to ensure consistency between server and client
+  return <style data-makeswift-rsc="true">{css}</style>
 }

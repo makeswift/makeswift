@@ -17,14 +17,14 @@ export function ClientCSSProvider({ children }: { children: ReactNode }) {
 
   // Initialize style element and capture server styles
   useEffect(() => {
-    let styleElement = document.querySelector(
+    const styleElement = document.querySelector(
       'style[data-makeswift-rsc="true"]',
     ) as HTMLStyleElement
 
     if (!styleElement) {
-      styleElement = document.createElement('style')
-      styleElement.setAttribute('data-makeswift-rsc', 'true')
-      document.head.appendChild(styleElement)
+      throw new Error(
+        'Makeswift RSC style element not found. Ensure CSSInjector is rendered on the server.',
+      )
     }
 
     serverStylesRef.current = styleElement.textContent || ''
