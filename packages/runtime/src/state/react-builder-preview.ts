@@ -726,9 +726,11 @@ function setupMessageChannel(channel: MessageChannel): ThunkAction<void, State, 
 export function configureStore({
   preloadedState,
   client,
+  middlewares = [],
 }: {
   preloadedState: Partial<State>
   client: MakeswiftHostApiClient
+  middlewares?: Middleware<Dispatch, State, Dispatch>[]
 }) {
   const initialState: Partial<State> = {
     ...preloadedState,
@@ -747,6 +749,7 @@ export function configureStore({
         messageChannelMiddleware(channel),
         propControllerHandlesMiddleware(),
         makeswiftApiClientSyncMiddleware(client),
+        ...middlewares,
       ),
 
     enhancers: getDefaultEnhancers =>
