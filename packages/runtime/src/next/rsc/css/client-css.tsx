@@ -1,31 +1,16 @@
 'use client'
 
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useRef,
-  useCallback,
-} from 'react'
+import { createContext, ReactNode, useContext, useEffect, useRef, useCallback } from 'react'
 
-// Client-side style management context
 type ClientCSSContextValue = {
   updateStyle: (elementKey: string, propPath: string, cssString: string) => void
-  clearElementStyles: (elementKey: string) => void
 }
 
 const ClientCSSContext = createContext<ClientCSSContextValue>({
   updateStyle: () => {},
-  clearElementStyles: () => {},
 })
 
-type ClientCSSProviderProps = {
-  children: ReactNode
-}
-
-// Provider component that manages client-side CSS updates
-export function ClientCSSProvider({ children }: ClientCSSProviderProps) {
+export function ClientCSSProvider({ children }: { children: ReactNode }) {
   const styleElementRef = useRef<HTMLStyleElement | null>(null)
   const serverStylesRef = useRef<string>('')
   const dynamicStylesRef = useRef<Map<string, string>>(new Map())
@@ -60,25 +45,17 @@ export function ClientCSSProvider({ children }: ClientCSSProviderProps) {
     styleElementRef.current.textContent = combinedStyles
   }, [])
 
-  const updateStyle = useCallback((elementKey: string, propPath: string, cssString: string) => {
-    const styleKey = `${elementKey}:${propPath}`
-    dynamicStylesRef.current.set(styleKey, cssString)
-    updateStyleElement()
-  }, [updateStyleElement])
-
-  const clearElementStyles = useCallback((elementKey: string) => {
-    const keyPrefix = `${elementKey}:`
-    for (const key of dynamicStylesRef.current.keys()) {
-      if (key.startsWith(keyPrefix)) {
-        dynamicStylesRef.current.delete(key)
-      }
-    }
-    updateStyleElement()
-  }, [updateStyleElement])
+  const updateStyle = useCallback(
+    (elementKey: string, propPath: string, cssString: string) => {
+      const styleKey = `${elementKey}:${propPath}`
+      dynamicStylesRef.current.set(styleKey, cssString)
+      updateStyleElement()
+    },
+    [updateStyleElement],
+  )
 
   const contextValue: ClientCSSContextValue = {
     updateStyle,
-    clearElementStyles,
   }
 
   return <ClientCSSContext.Provider value={contextValue}>{children}</ClientCSSContext.Provider>

@@ -52,7 +52,7 @@ function kebabCase(str: string): string {
 }
 
 // Unified class name generation
-export function generateClassName(elementKey?: string, propPath?: string, counter?: number): string {
+function generateClassName(elementKey?: string, propPath?: string, counter?: number): string {
   const parts = ['makeswift-rsc']
   if (elementKey) parts.push(elementKey)
   if (propPath) parts.push(propPath.replace(/\./g, '-'))
@@ -61,7 +61,7 @@ export function generateClassName(elementKey?: string, propPath?: string, counte
 }
 
 // Style processing with callbacks
-export function processStyle(
+function processStyle(
   style: ResolvedStyle,
   breakpoints: Breakpoints,
   className: string,

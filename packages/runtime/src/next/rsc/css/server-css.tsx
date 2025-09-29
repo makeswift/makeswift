@@ -7,7 +7,7 @@ import { createStylesheet } from './css-runtime'
 export class ServerCSSCollector {
   private styles = new Map<string, string>()
 
-  collect(className: string, css: string, _elementKey?: string, _propPath?: string) {
+  collect(className: string, css: string) {
     if (this.styles.has(className)) return
     this.styles.set(className, css)
   }
@@ -30,8 +30,8 @@ export const getCSSCollector = cache((): ServerCSSCollector => {
 export function createCollectingServerStylesheet(breakpoints: Breakpoints, elementKey?: string): Stylesheet {
   const collector = getCSSCollector()
 
-  const handleStyleGenerated = (className: string, css: string, elementKey?: string, propPath?: string) => {
-    collector.collect(className, css, elementKey, propPath)
+  const handleStyleGenerated = (className: string, css: string) => {
+    collector.collect(className, css)
   }
 
   return createStylesheet(breakpoints, elementKey, handleStyleGenerated)
