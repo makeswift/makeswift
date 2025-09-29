@@ -4,7 +4,7 @@ import { ServerElementData } from './server-element-data'
 import { getRuntime } from './runtime'
 import { Element } from '../../../react'
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'
-import { RSCElementStyleEnhancer } from '../client/rsc-element-style-enhancer'
+import { RSCElementStyleEnhancer } from '../css/element-style-enhancer'
 
 type Props = {
   element: ElementDataOrRef
@@ -15,7 +15,6 @@ export function ServerElement({ element }: Props): ReactNode {
   const elementMeta = state.componentsMeta.get(element.type)
 
   if (elementMeta == null) {
-    console.warn(`Unknown component '${element.type}'`, { element })
     return <FallbackComponent text="Component not found" />
   }
 
@@ -26,7 +25,7 @@ export function ServerElement({ element }: Props): ReactNode {
   }
 
   if (isElementReference(element)) {
-    return <p>Element reference is not supported on server yet</p>
+    return <FallbackComponent text="Element reference is not supported on server yet" />
   }
 
   // TODO: Get this value from the context/props

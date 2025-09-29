@@ -20,7 +20,7 @@ export const ServerElementData = function ServerElementData({
   let descriptors = getComponentPropControllerDescriptors(state, elementData.type)
 
   if (descriptors == null) {
-    return <FallbackComponent text="Descriptors not found" />
+    return <FallbackComponent text={`Descriptors not found for ${elementData.type}`} />
   }
 
   const props = resolveProps(elementData.props, descriptors, elementData.key)

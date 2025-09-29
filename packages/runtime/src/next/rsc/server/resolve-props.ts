@@ -14,26 +14,21 @@ export function resolveProps(
   const runtime = getRuntime()
   const state = runtime.store.getState()
   const breakpoints = getBreakpoints(state)
-
   const stylesheet = createServerStylesheet(breakpoints, elementKey)
-
   const resolvedProps: Record<string, unknown> = {}
 
-  // Process each prop
   Object.entries(props).forEach(([propName, propData]) => {
     const descriptor = propDescriptors[propName]
 
     if (!descriptor) {
-      console.warn(`[RSC] No descriptor found for prop: ${propName}`)
+      console.warn(`[resolveProps] No descriptor found for prop: ${propName}`)
       return
     }
 
     if (isLegacyDescriptor(descriptor)) {
-      console.log(`[RSC] Skipping legacy descriptor for prop: ${propName}`)
+      console.warn(`[resolveProps] Cannot use legacy descriptor in RSC. Prop: ${propName}`)
       return
     }
-
-    console.log(`[RSC] Resolving unified control: ${propName}`)
 
     const resolvedValue = descriptor.resolveValue(
       propData,
@@ -41,8 +36,6 @@ export function resolveProps(
       stylesheet.child(propName),
     )
     resolvedProps[propName] = resolvedValue.readStable()
-
-    console.log(`[RSC] Resolved ${propName}:`, resolvedProps[propName])
   })
 
   return resolvedProps
