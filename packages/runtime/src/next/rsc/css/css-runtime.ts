@@ -2,7 +2,6 @@ import type { CSSObject } from '@emotion/serialize'
 import { type Breakpoints, type Stylesheet, type ResolvedStyle } from '@makeswift/controls'
 import { resolvedStyleToCss } from '../../../runtimes/react/resolve-style'
 
-// CSS object to string conversion
 function cssObjectToString(cssObject: CSSObject, className: string): string {
   const cssRules: string[] = []
   const mediaRules: string[] = []
@@ -51,7 +50,6 @@ function kebabCase(str: string): string {
   return str.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`)
 }
 
-// Unified class name generation
 function generateClassName(elementKey?: string, propName?: string, counter?: number): string {
   const parts = ['makeswift-rsc']
   if (elementKey) parts.push(elementKey)
@@ -60,28 +58,27 @@ function generateClassName(elementKey?: string, propName?: string, counter?: num
   return parts.join('-')
 }
 
-// Style processing with callbacks
 function processStyle(
   style: ResolvedStyle,
   breakpoints: Breakpoints,
   className: string,
-  onStyleGenerated?: (className: string, css: string, elementKey?: string, propName?: string) => void,
+  onStyleGenerated?: (
+    className: string,
+    css: string,
+    elementKey?: string,
+    propName?: string,
+  ) => void,
   elementKey?: string,
-  propName?: string
+  propName?: string,
 ): string {
-  try {
-    const cssObject = resolvedStyleToCss(breakpoints, style)
-    const cssString = cssObjectToString(cssObject, className)
+  const cssObject = resolvedStyleToCss(breakpoints, style)
+  const cssString = cssObjectToString(cssObject, className)
 
-    if (onStyleGenerated) {
-      onStyleGenerated(className, cssString, elementKey, propName)
-    }
-
-    return className
-  } catch (error) {
-    console.warn('[CSS Runtime] Error processing style:', error)
-    return 'makeswift-rsc-error'
+  if (onStyleGenerated) {
+    onStyleGenerated(className, cssString, elementKey, propName)
   }
+
+  return className
 }
 
 // Unified stylesheet engine that handles both server and client modes
@@ -92,7 +89,12 @@ export class StylesheetEngine implements Stylesheet {
     private breakpointsData: Breakpoints,
     private elementKey?: string,
     private basePropName?: string,
-    private onStyleGenerated?: (className: string, css: string, elementKey?: string, propName?: string) => void
+    private onStyleGenerated?: (
+      className: string,
+      css: string,
+      elementKey?: string,
+      propName?: string,
+    ) => void,
   ) {}
 
   breakpoints(): Breakpoints {
@@ -107,7 +109,7 @@ export class StylesheetEngine implements Stylesheet {
       className,
       this.onStyleGenerated,
       this.elementKey,
-      this.basePropName
+      this.basePropName,
     )
   }
 
@@ -116,7 +118,7 @@ export class StylesheetEngine implements Stylesheet {
       this.breakpointsData,
       this.elementKey,
       propName,
-      this.onStyleGenerated
+      this.onStyleGenerated,
     )
   }
 }
@@ -125,7 +127,12 @@ export class StylesheetEngine implements Stylesheet {
 export function createStylesheet(
   breakpoints: Breakpoints,
   elementKey?: string,
-  onStyleGenerated?: (className: string, css: string, elementKey?: string, propName?: string) => void
+  onStyleGenerated?: (
+    className: string,
+    css: string,
+    elementKey?: string,
+    propName?: string,
+  ) => void,
 ): Stylesheet {
   return new StylesheetEngine(breakpoints, elementKey, undefined, onStyleGenerated)
 }
@@ -134,9 +141,14 @@ export function createStylesheet(
 export function createClientStylesheet(
   breakpoints: Breakpoints,
   elementKey: string,
-  onStyleUpdate: (elementKey: string, propName: string, css: string) => void
+  onStyleUpdate: (elementKey: string, propName: string, css: string) => void,
 ): Stylesheet {
-  const handleStyleGenerated = (_className: string, css: string, elementKey?: string, propName?: string) => {
+  const handleStyleGenerated = (
+    _className: string,
+    css: string,
+    elementKey?: string,
+    propName?: string,
+  ) => {
     if (elementKey && propName) {
       onStyleUpdate(elementKey, propName, css)
     }

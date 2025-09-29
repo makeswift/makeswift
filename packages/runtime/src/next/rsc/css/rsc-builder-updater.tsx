@@ -10,15 +10,12 @@ import { getElement, getBreakpoints } from '../../../state/react-page'
 import { createClientStylesheet } from './css-runtime'
 import { useClientCSS } from './client-css'
 
-type ElementStyleEnhancerProps = {
+type RSCBuilderUpdaterProps = {
   initialElementData: ElementData
   children: ReactNode
 }
 
-export function ElementStyleEnhancer({
-  initialElementData,
-  children,
-}: ElementStyleEnhancerProps) {
+export function RSCBuilderUpdater({ initialElementData, children }: RSCBuilderUpdaterProps) {
   const { updateStyle } = useClientCSS()
   const documentKey = useDocumentKey()
   const breakpoints = useSelector(getBreakpoints)
@@ -76,8 +73,5 @@ export function ElementStyleEnhancer({
     prevPropsRef.current = element.props
   }, [element, definitions, resourceResolver, clientStylesheet, router])
 
-  return <>{children}</>
+  return children
 }
-
-// Re-export for backward compatibility
-export { ElementStyleEnhancer as RSCElementStyleEnhancer }

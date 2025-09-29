@@ -4,7 +4,7 @@ import { ServerElementData } from './server-element-data'
 import { getRuntime } from './runtime'
 import { Element } from '../../../react'
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'
-import { ElementStyleEnhancer } from '../css/element-style-enhancer'
+import { RSCBuilderUpdater } from '../css/rsc-builder-updater'
 
 type Props = {
   element: ElementDataOrRef
@@ -33,9 +33,9 @@ export function ServerElement({ element }: Props): ReactNode {
 
   if (isPreview) {
     return (
-      <ElementStyleEnhancer initialElementData={element}>
+      <RSCBuilderUpdater initialElementData={element}>
         <ServerElementData key={element.key} elementData={element} />
-      </ElementStyleEnhancer>
+      </RSCBuilderUpdater>
     )
   }
 

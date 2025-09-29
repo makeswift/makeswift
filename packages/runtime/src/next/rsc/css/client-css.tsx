@@ -17,9 +17,9 @@ export function ClientCSSProvider({ children }: { children: ReactNode }) {
 
   // Initialize style element and capture server styles
   useEffect(() => {
-    const styleElement = document.querySelector(
+    const styleElement = document.querySelector<HTMLStyleElement>(
       'style[data-makeswift-rsc="true"]',
-    ) as HTMLStyleElement
+    )
 
     if (!styleElement) {
       throw new Error(
@@ -27,7 +27,7 @@ export function ClientCSSProvider({ children }: { children: ReactNode }) {
       )
     }
 
-    serverStylesRef.current = styleElement.textContent || ''
+    serverStylesRef.current = styleElement.textContent
     styleElementRef.current = styleElement
 
     return () => {
@@ -54,22 +54,11 @@ export function ClientCSSProvider({ children }: { children: ReactNode }) {
     [updateStyleElement],
   )
 
-  const contextValue: ClientCSSContextValue = {
-    updateStyle,
-  }
-
-  return <ClientCSSContext.Provider value={contextValue}>{children}</ClientCSSContext.Provider>
+  return <ClientCSSContext.Provider value={{ updateStyle }}>{children}</ClientCSSContext.Provider>
 }
 
-// Hook to access client CSS runtime
 export function useClientCSS(): ClientCSSContextValue {
   const context = useContext(ClientCSSContext)
-  if (!context) {
-    throw new Error('useClientCSS must be used within ClientCSSProvider')
-  }
+  if (!context) throw new Error('useClientCSS must be used within ClientCSSProvider')
   return context
 }
-
-// Re-export for backward compatibility
-export { ClientCSSProvider as RSCStyleProvider }
-export { useClientCSS as useRSCStyleRuntime }
