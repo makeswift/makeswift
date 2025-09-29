@@ -101,6 +101,7 @@ import {
   ClientMessagePortSerializationVisitor,
   functionDeserializationPlugin,
 } from '../../controls/visitors/message-port-serializer'
+import { ServerSerializationVisitor } from '../../controls/visitors/server-serialization-visitor'
 
 type SerializedShapeControlConfig<T extends Record<string, SerializedPanelControl>> = {
   type: T
@@ -845,6 +846,17 @@ export type DeserializedPanelControl<T extends Data = Data> = Extract<
 type DeserializedPanelControlValueType<T extends DeserializedPanelControl> =
   T extends DeserializedPanelControl<infer U> ? U : never
 
+export function serializeServerControl<T extends Data>(
+  control: ControlDefinition<T>,
+): SerializedControl<T> {
+  if (isLegacyDescriptor(control)) {
+    throw new Error('Legacy controls are not supported for server serialization.')
+  }
+
+  const serverVisitor = new ServerSerializationVisitor()
+  return control.accept(serverVisitor)
+}
+
 export function serializeControl<T extends Data>(
   control: ControlDefinition<T>,
 ): [SerializedControl<T>, Transferable[]] {
@@ -1048,6 +1060,17 @@ export function deserializeUnifiedControlDef(record: DeserializedRecord): Unifie
   }
 
   return deserialize(record)
+}
+
+export function serializeServerControls(
+  controls: Record<string, ControlDefinition>,
+): Record<string, SerializedControl> {
+  return Object.entries(controls).reduce<Record<string, SerializedControl>>(
+    (acc, [key, control]) => {
+      return { ...acc, [key]: serializeServerControl(control) }
+    },
+    {},
+  )
 }
 
 export function serializeControls(

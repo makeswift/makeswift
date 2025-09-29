@@ -81,6 +81,16 @@
       "require": "./dist/cjs/next/plugin.js",
       "import": "./dist/cjs/next/plugin.js"
     },
+    "./next/rsc": {
+      "require": "./dist/cjs/next/rsc/index.js",
+      "import": "./dist/esm/next/rsc/index.js",
+      "types": "./dist/types/next/rsc/index.d.ts"
+    },
+    "./next/rsc/server": {
+      "require": "./dist/cjs/next/rsc/server/index.js",
+      "import": "./dist/esm/next/rsc/server/index.js",
+      "types": "./dist/types/next/rsc/server/index.d.ts"
+    },
     "./next/server": {
       "types": "./dist/types/next/server.d.ts",
       "module": "./dist/esm/next/server.js",
