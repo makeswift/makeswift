@@ -1004,24 +1004,18 @@ export type Mutation = {
   duplicateMedia?: Maybe<Media>;
   duplicatePayloadLockedDocument?: Maybe<PayloadLockedDocument>;
   duplicatePayloadPreference?: Maybe<PayloadPreference>;
-  forgotPasswordPost: Scalars['Boolean']['output'];
+  duplicatePost?: Maybe<Post>;
   forgotPasswordUser: Scalars['Boolean']['output'];
-  loginPost?: Maybe<PostsLoginResult>;
   loginUser?: Maybe<UsersLoginResult>;
-  logoutPost?: Maybe<Scalars['String']['output']>;
   logoutUser?: Maybe<Scalars['String']['output']>;
-  refreshTokenPost?: Maybe<PostsRefreshedPost>;
   refreshTokenUser?: Maybe<UsersRefreshedUser>;
-  resetPasswordPost?: Maybe<PostsResetPassword>;
   resetPasswordUser?: Maybe<UsersResetPassword>;
-  unlockPost: Scalars['Boolean']['output'];
   unlockUser: Scalars['Boolean']['output'];
   updateMedia?: Maybe<Media>;
   updatePayloadLockedDocument?: Maybe<PayloadLockedDocument>;
   updatePayloadPreference?: Maybe<PayloadPreference>;
   updatePost?: Maybe<Post>;
   updateUser?: Maybe<User>;
-  verifyEmailPost?: Maybe<Scalars['Boolean']['output']>;
   verifyEmailUser?: Maybe<Scalars['Boolean']['output']>;
 };
 
@@ -1104,10 +1098,9 @@ export type MutationDuplicatePayloadPreferenceArgs = {
 };
 
 
-export type MutationForgotPasswordPostArgs = {
-  disableEmail?: InputMaybe<Scalars['Boolean']['input']>;
-  email: Scalars['String']['input'];
-  expiration?: InputMaybe<Scalars['Int']['input']>;
+export type MutationDuplicatePostArgs = {
+  data: MutationPostInput;
+  id: Scalars['String']['input'];
 };
 
 
@@ -1118,20 +1111,9 @@ export type MutationForgotPasswordUserArgs = {
 };
 
 
-export type MutationLoginPostArgs = {
-  email: Scalars['String']['input'];
-  password?: InputMaybe<Scalars['String']['input']>;
-};
-
-
 export type MutationLoginUserArgs = {
   email: Scalars['String']['input'];
   password?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type MutationLogoutPostArgs = {
-  allSessions?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -1140,20 +1122,9 @@ export type MutationLogoutUserArgs = {
 };
 
 
-export type MutationResetPasswordPostArgs = {
-  password?: InputMaybe<Scalars['String']['input']>;
-  token?: InputMaybe<Scalars['String']['input']>;
-};
-
-
 export type MutationResetPasswordUserArgs = {
   password?: InputMaybe<Scalars['String']['input']>;
   token?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type MutationUnlockPostArgs = {
-  email: Scalars['String']['input'];
 };
 
 
@@ -1207,11 +1178,6 @@ export type MutationUpdateUserArgs = {
 };
 
 
-export type MutationVerifyEmailPostArgs = {
-  token?: InputMaybe<Scalars['String']['input']>;
-};
-
-
 export type MutationVerifyEmailUserArgs = {
   token?: InputMaybe<Scalars['String']['input']>;
 };
@@ -1243,7 +1209,6 @@ export type PayloadLockedDocumentUpdate_UserRelationshipInput = {
 };
 
 export enum PayloadLockedDocumentUpdate_UserRelationshipInputRelationTo {
-  Posts = 'posts',
   Users = 'users'
 }
 
@@ -1272,7 +1237,7 @@ export type PayloadLockedDocument_Document_Relationship = {
   value?: Maybe<PayloadLockedDocument_Document>;
 };
 
-export type PayloadLockedDocument_User = Post | User;
+export type PayloadLockedDocument_User = User;
 
 export type PayloadLockedDocument_UserRelationshipInput = {
   relationTo?: InputMaybe<PayloadLockedDocument_UserRelationshipInputRelationTo>;
@@ -1280,12 +1245,10 @@ export type PayloadLockedDocument_UserRelationshipInput = {
 };
 
 export enum PayloadLockedDocument_UserRelationshipInputRelationTo {
-  Posts = 'posts',
   Users = 'users'
 }
 
 export enum PayloadLockedDocument_User_RelationTo {
-  Posts = 'posts',
   Users = 'users'
 }
 
@@ -1356,7 +1319,6 @@ export type PayloadLockedDocument_User_Relation = {
 };
 
 export enum PayloadLockedDocument_User_Relation_RelationTo {
-  Posts = 'posts',
   Users = 'users'
 }
 
@@ -1770,11 +1732,10 @@ export type PayloadPreferenceUpdate_UserRelationshipInput = {
 };
 
 export enum PayloadPreferenceUpdate_UserRelationshipInputRelationTo {
-  Posts = 'posts',
   Users = 'users'
 }
 
-export type PayloadPreference_User = Post | User;
+export type PayloadPreference_User = User;
 
 export type PayloadPreference_UserRelationshipInput = {
   relationTo?: InputMaybe<PayloadPreference_UserRelationshipInputRelationTo>;
@@ -1782,12 +1743,10 @@ export type PayloadPreference_UserRelationshipInput = {
 };
 
 export enum PayloadPreference_UserRelationshipInputRelationTo {
-  Posts = 'posts',
   Users = 'users'
 }
 
 export enum PayloadPreference_User_RelationTo {
-  Posts = 'posts',
   Users = 'users'
 }
 
@@ -1847,7 +1806,6 @@ export type PayloadPreference_User_Relation = {
 };
 
 export enum PayloadPreference_User_Relation_RelationTo {
-  Posts = 'posts',
   Users = 'users'
 }
 
@@ -2257,24 +2215,13 @@ export type PayloadPreferencesUpdateDocAccess = {
 
 export type Post = {
   __typename?: 'Post';
-  apiKey?: Maybe<Scalars['String']['output']>;
-  apiKeyIndex?: Maybe<Scalars['String']['output']>;
   author?: Maybe<User>;
   banner: Media;
   body?: Maybe<Scalars['JSON']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   description?: Maybe<Scalars['String']['output']>;
-  email: Scalars['EmailAddress']['output'];
-  enableAPIKey?: Maybe<Scalars['Boolean']['output']>;
   feedDate: Scalars['DateTime']['output'];
-  hash?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
-  lockUntil?: Maybe<Scalars['DateTime']['output']>;
-  loginAttempts?: Maybe<Scalars['Float']['output']>;
-  resetPasswordExpiration?: Maybe<Scalars['DateTime']['output']>;
-  resetPasswordToken?: Maybe<Scalars['String']['output']>;
-  salt?: Maybe<Scalars['String']['output']>;
-  sessions?: Maybe<Array<Post_Sessions>>;
   slug: Scalars['String']['output'];
   title?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -2283,24 +2230,6 @@ export type Post = {
 
 export type PostBodyArgs = {
   depth?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type Post_Sessions = {
-  __typename?: 'Post_Sessions';
-  createdAt?: Maybe<Scalars['DateTime']['output']>;
-  expiresAt?: Maybe<Scalars['DateTime']['output']>;
-  id?: Maybe<Scalars['String']['output']>;
-};
-
-export type Post_ApiKey_Operator = {
-  all?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  contains?: InputMaybe<Scalars['String']['input']>;
-  equals?: InputMaybe<Scalars['String']['input']>;
-  exists?: InputMaybe<Scalars['Boolean']['input']>;
-  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  like?: InputMaybe<Scalars['String']['input']>;
-  not_equals?: InputMaybe<Scalars['String']['input']>;
-  not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 export type Post_Author_Operator = {
@@ -2350,22 +2279,6 @@ export type Post_Description_Operator = {
   not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
-export type Post_Email_Operator = {
-  all?: InputMaybe<Array<InputMaybe<Scalars['EmailAddress']['input']>>>;
-  contains?: InputMaybe<Scalars['EmailAddress']['input']>;
-  equals?: InputMaybe<Scalars['EmailAddress']['input']>;
-  in?: InputMaybe<Array<InputMaybe<Scalars['EmailAddress']['input']>>>;
-  like?: InputMaybe<Scalars['EmailAddress']['input']>;
-  not_equals?: InputMaybe<Scalars['EmailAddress']['input']>;
-  not_in?: InputMaybe<Array<InputMaybe<Scalars['EmailAddress']['input']>>>;
-};
-
-export type Post_EnableApiKey_Operator = {
-  equals?: InputMaybe<Scalars['Boolean']['input']>;
-  exists?: InputMaybe<Scalars['Boolean']['input']>;
-  not_equals?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
 export type Post_FeedDate_Operator = {
   equals?: InputMaybe<Scalars['DateTime']['input']>;
   greater_than?: InputMaybe<Scalars['DateTime']['input']>;
@@ -2381,37 +2294,6 @@ export type Post_Id_Operator = {
   contains?: InputMaybe<Scalars['String']['input']>;
   equals?: InputMaybe<Scalars['String']['input']>;
   exists?: InputMaybe<Scalars['Boolean']['input']>;
-  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  like?: InputMaybe<Scalars['String']['input']>;
-  not_equals?: InputMaybe<Scalars['String']['input']>;
-  not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-export type Post_Sessions__CreatedAt_Operator = {
-  equals?: InputMaybe<Scalars['DateTime']['input']>;
-  exists?: InputMaybe<Scalars['Boolean']['input']>;
-  greater_than?: InputMaybe<Scalars['DateTime']['input']>;
-  greater_than_equal?: InputMaybe<Scalars['DateTime']['input']>;
-  less_than?: InputMaybe<Scalars['DateTime']['input']>;
-  less_than_equal?: InputMaybe<Scalars['DateTime']['input']>;
-  like?: InputMaybe<Scalars['DateTime']['input']>;
-  not_equals?: InputMaybe<Scalars['DateTime']['input']>;
-};
-
-export type Post_Sessions__ExpiresAt_Operator = {
-  equals?: InputMaybe<Scalars['DateTime']['input']>;
-  greater_than?: InputMaybe<Scalars['DateTime']['input']>;
-  greater_than_equal?: InputMaybe<Scalars['DateTime']['input']>;
-  less_than?: InputMaybe<Scalars['DateTime']['input']>;
-  less_than_equal?: InputMaybe<Scalars['DateTime']['input']>;
-  like?: InputMaybe<Scalars['DateTime']['input']>;
-  not_equals?: InputMaybe<Scalars['DateTime']['input']>;
-};
-
-export type Post_Sessions__Id_Operator = {
-  all?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  contains?: InputMaybe<Scalars['String']['input']>;
-  equals?: InputMaybe<Scalars['String']['input']>;
   in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   like?: InputMaybe<Scalars['String']['input']>;
   not_equals?: InputMaybe<Scalars['String']['input']>;
@@ -2453,19 +2335,13 @@ export type Post_UpdatedAt_Operator = {
 export type Post_Where = {
   AND?: InputMaybe<Array<InputMaybe<Post_Where_And>>>;
   OR?: InputMaybe<Array<InputMaybe<Post_Where_Or>>>;
-  apiKey?: InputMaybe<Post_ApiKey_Operator>;
   author?: InputMaybe<Post_Author_Operator>;
   banner?: InputMaybe<Post_Banner_Operator>;
   body?: InputMaybe<Post_Body_Operator>;
   createdAt?: InputMaybe<Post_CreatedAt_Operator>;
   description?: InputMaybe<Post_Description_Operator>;
-  email?: InputMaybe<Post_Email_Operator>;
-  enableAPIKey?: InputMaybe<Post_EnableApiKey_Operator>;
   feedDate?: InputMaybe<Post_FeedDate_Operator>;
   id?: InputMaybe<Post_Id_Operator>;
-  sessions__createdAt?: InputMaybe<Post_Sessions__CreatedAt_Operator>;
-  sessions__expiresAt?: InputMaybe<Post_Sessions__ExpiresAt_Operator>;
-  sessions__id?: InputMaybe<Post_Sessions__Id_Operator>;
   slug?: InputMaybe<Post_Slug_Operator>;
   title?: InputMaybe<Post_Title_Operator>;
   updatedAt?: InputMaybe<Post_UpdatedAt_Operator>;
@@ -2474,19 +2350,13 @@ export type Post_Where = {
 export type Post_Where_And = {
   AND?: InputMaybe<Array<InputMaybe<Post_Where_And>>>;
   OR?: InputMaybe<Array<InputMaybe<Post_Where_Or>>>;
-  apiKey?: InputMaybe<Post_ApiKey_Operator>;
   author?: InputMaybe<Post_Author_Operator>;
   banner?: InputMaybe<Post_Banner_Operator>;
   body?: InputMaybe<Post_Body_Operator>;
   createdAt?: InputMaybe<Post_CreatedAt_Operator>;
   description?: InputMaybe<Post_Description_Operator>;
-  email?: InputMaybe<Post_Email_Operator>;
-  enableAPIKey?: InputMaybe<Post_EnableApiKey_Operator>;
   feedDate?: InputMaybe<Post_FeedDate_Operator>;
   id?: InputMaybe<Post_Id_Operator>;
-  sessions__createdAt?: InputMaybe<Post_Sessions__CreatedAt_Operator>;
-  sessions__expiresAt?: InputMaybe<Post_Sessions__ExpiresAt_Operator>;
-  sessions__id?: InputMaybe<Post_Sessions__Id_Operator>;
   slug?: InputMaybe<Post_Slug_Operator>;
   title?: InputMaybe<Post_Title_Operator>;
   updatedAt?: InputMaybe<Post_UpdatedAt_Operator>;
@@ -2495,19 +2365,13 @@ export type Post_Where_And = {
 export type Post_Where_Or = {
   AND?: InputMaybe<Array<InputMaybe<Post_Where_And>>>;
   OR?: InputMaybe<Array<InputMaybe<Post_Where_Or>>>;
-  apiKey?: InputMaybe<Post_ApiKey_Operator>;
   author?: InputMaybe<Post_Author_Operator>;
   banner?: InputMaybe<Post_Banner_Operator>;
   body?: InputMaybe<Post_Body_Operator>;
   createdAt?: InputMaybe<Post_CreatedAt_Operator>;
   description?: InputMaybe<Post_Description_Operator>;
-  email?: InputMaybe<Post_Email_Operator>;
-  enableAPIKey?: InputMaybe<Post_EnableApiKey_Operator>;
   feedDate?: InputMaybe<Post_FeedDate_Operator>;
   id?: InputMaybe<Post_Id_Operator>;
-  sessions__createdAt?: InputMaybe<Post_Sessions__CreatedAt_Operator>;
-  sessions__expiresAt?: InputMaybe<Post_Sessions__ExpiresAt_Operator>;
-  sessions__id?: InputMaybe<Post_Sessions__Id_Operator>;
   slug?: InputMaybe<Post_Slug_Operator>;
   title?: InputMaybe<Post_Title_Operator>;
   updatedAt?: InputMaybe<Post_UpdatedAt_Operator>;
@@ -2554,47 +2418,15 @@ export type PostsDeleteDocAccess = {
 
 export type PostsDocAccessFields = {
   __typename?: 'PostsDocAccessFields';
-  apiKey?: Maybe<PostsDocAccessFields_ApiKey>;
   author?: Maybe<PostsDocAccessFields_Author>;
   banner?: Maybe<PostsDocAccessFields_Banner>;
   body?: Maybe<PostsDocAccessFields_Body>;
   createdAt?: Maybe<PostsDocAccessFields_CreatedAt>;
   description?: Maybe<PostsDocAccessFields_Description>;
-  email?: Maybe<PostsDocAccessFields_Email>;
-  enableAPIKey?: Maybe<PostsDocAccessFields_EnableApiKey>;
   feedDate?: Maybe<PostsDocAccessFields_FeedDate>;
-  sessions?: Maybe<PostsDocAccessFields_Sessions>;
   slug?: Maybe<PostsDocAccessFields_Slug>;
   title?: Maybe<PostsDocAccessFields_Title>;
   updatedAt?: Maybe<PostsDocAccessFields_UpdatedAt>;
-};
-
-export type PostsDocAccessFields_ApiKey = {
-  __typename?: 'PostsDocAccessFields_apiKey';
-  create?: Maybe<PostsDocAccessFields_ApiKey_Create>;
-  delete?: Maybe<PostsDocAccessFields_ApiKey_Delete>;
-  read?: Maybe<PostsDocAccessFields_ApiKey_Read>;
-  update?: Maybe<PostsDocAccessFields_ApiKey_Update>;
-};
-
-export type PostsDocAccessFields_ApiKey_Create = {
-  __typename?: 'PostsDocAccessFields_apiKey_Create';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_ApiKey_Delete = {
-  __typename?: 'PostsDocAccessFields_apiKey_Delete';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_ApiKey_Read = {
-  __typename?: 'PostsDocAccessFields_apiKey_Read';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_ApiKey_Update = {
-  __typename?: 'PostsDocAccessFields_apiKey_Update';
-  permission: Scalars['Boolean']['output'];
 };
 
 export type PostsDocAccessFields_Author = {
@@ -2737,62 +2569,6 @@ export type PostsDocAccessFields_Description_Update = {
   permission: Scalars['Boolean']['output'];
 };
 
-export type PostsDocAccessFields_Email = {
-  __typename?: 'PostsDocAccessFields_email';
-  create?: Maybe<PostsDocAccessFields_Email_Create>;
-  delete?: Maybe<PostsDocAccessFields_Email_Delete>;
-  read?: Maybe<PostsDocAccessFields_Email_Read>;
-  update?: Maybe<PostsDocAccessFields_Email_Update>;
-};
-
-export type PostsDocAccessFields_Email_Create = {
-  __typename?: 'PostsDocAccessFields_email_Create';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_Email_Delete = {
-  __typename?: 'PostsDocAccessFields_email_Delete';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_Email_Read = {
-  __typename?: 'PostsDocAccessFields_email_Read';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_Email_Update = {
-  __typename?: 'PostsDocAccessFields_email_Update';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_EnableApiKey = {
-  __typename?: 'PostsDocAccessFields_enableAPIKey';
-  create?: Maybe<PostsDocAccessFields_EnableApiKey_Create>;
-  delete?: Maybe<PostsDocAccessFields_EnableApiKey_Delete>;
-  read?: Maybe<PostsDocAccessFields_EnableApiKey_Read>;
-  update?: Maybe<PostsDocAccessFields_EnableApiKey_Update>;
-};
-
-export type PostsDocAccessFields_EnableApiKey_Create = {
-  __typename?: 'PostsDocAccessFields_enableAPIKey_Create';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_EnableApiKey_Delete = {
-  __typename?: 'PostsDocAccessFields_enableAPIKey_Delete';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_EnableApiKey_Read = {
-  __typename?: 'PostsDocAccessFields_enableAPIKey_Read';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_EnableApiKey_Update = {
-  __typename?: 'PostsDocAccessFields_enableAPIKey_Update';
-  permission: Scalars['Boolean']['output'];
-};
-
 export type PostsDocAccessFields_FeedDate = {
   __typename?: 'PostsDocAccessFields_feedDate';
   create?: Maybe<PostsDocAccessFields_FeedDate_Create>;
@@ -2818,126 +2594,6 @@ export type PostsDocAccessFields_FeedDate_Read = {
 
 export type PostsDocAccessFields_FeedDate_Update = {
   __typename?: 'PostsDocAccessFields_feedDate_Update';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_Sessions = {
-  __typename?: 'PostsDocAccessFields_sessions';
-  create?: Maybe<PostsDocAccessFields_Sessions_Create>;
-  delete?: Maybe<PostsDocAccessFields_Sessions_Delete>;
-  fields?: Maybe<PostsDocAccessFields_Sessions_Fields>;
-  read?: Maybe<PostsDocAccessFields_Sessions_Read>;
-  update?: Maybe<PostsDocAccessFields_Sessions_Update>;
-};
-
-export type PostsDocAccessFields_Sessions_Create = {
-  __typename?: 'PostsDocAccessFields_sessions_Create';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_Sessions_Delete = {
-  __typename?: 'PostsDocAccessFields_sessions_Delete';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_Sessions_Fields = {
-  __typename?: 'PostsDocAccessFields_sessions_Fields';
-  createdAt?: Maybe<PostsDocAccessFields_Sessions_CreatedAt>;
-  expiresAt?: Maybe<PostsDocAccessFields_Sessions_ExpiresAt>;
-  id?: Maybe<PostsDocAccessFields_Sessions_Id>;
-};
-
-export type PostsDocAccessFields_Sessions_Read = {
-  __typename?: 'PostsDocAccessFields_sessions_Read';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_Sessions_Update = {
-  __typename?: 'PostsDocAccessFields_sessions_Update';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_Sessions_CreatedAt = {
-  __typename?: 'PostsDocAccessFields_sessions_createdAt';
-  create?: Maybe<PostsDocAccessFields_Sessions_CreatedAt_Create>;
-  delete?: Maybe<PostsDocAccessFields_Sessions_CreatedAt_Delete>;
-  read?: Maybe<PostsDocAccessFields_Sessions_CreatedAt_Read>;
-  update?: Maybe<PostsDocAccessFields_Sessions_CreatedAt_Update>;
-};
-
-export type PostsDocAccessFields_Sessions_CreatedAt_Create = {
-  __typename?: 'PostsDocAccessFields_sessions_createdAt_Create';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_Sessions_CreatedAt_Delete = {
-  __typename?: 'PostsDocAccessFields_sessions_createdAt_Delete';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_Sessions_CreatedAt_Read = {
-  __typename?: 'PostsDocAccessFields_sessions_createdAt_Read';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_Sessions_CreatedAt_Update = {
-  __typename?: 'PostsDocAccessFields_sessions_createdAt_Update';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_Sessions_ExpiresAt = {
-  __typename?: 'PostsDocAccessFields_sessions_expiresAt';
-  create?: Maybe<PostsDocAccessFields_Sessions_ExpiresAt_Create>;
-  delete?: Maybe<PostsDocAccessFields_Sessions_ExpiresAt_Delete>;
-  read?: Maybe<PostsDocAccessFields_Sessions_ExpiresAt_Read>;
-  update?: Maybe<PostsDocAccessFields_Sessions_ExpiresAt_Update>;
-};
-
-export type PostsDocAccessFields_Sessions_ExpiresAt_Create = {
-  __typename?: 'PostsDocAccessFields_sessions_expiresAt_Create';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_Sessions_ExpiresAt_Delete = {
-  __typename?: 'PostsDocAccessFields_sessions_expiresAt_Delete';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_Sessions_ExpiresAt_Read = {
-  __typename?: 'PostsDocAccessFields_sessions_expiresAt_Read';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_Sessions_ExpiresAt_Update = {
-  __typename?: 'PostsDocAccessFields_sessions_expiresAt_Update';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_Sessions_Id = {
-  __typename?: 'PostsDocAccessFields_sessions_id';
-  create?: Maybe<PostsDocAccessFields_Sessions_Id_Create>;
-  delete?: Maybe<PostsDocAccessFields_Sessions_Id_Delete>;
-  read?: Maybe<PostsDocAccessFields_Sessions_Id_Read>;
-  update?: Maybe<PostsDocAccessFields_Sessions_Id_Update>;
-};
-
-export type PostsDocAccessFields_Sessions_Id_Create = {
-  __typename?: 'PostsDocAccessFields_sessions_id_Create';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_Sessions_Id_Delete = {
-  __typename?: 'PostsDocAccessFields_sessions_id_Delete';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_Sessions_Id_Read = {
-  __typename?: 'PostsDocAccessFields_sessions_id_Read';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsDocAccessFields_Sessions_Id_Update = {
-  __typename?: 'PostsDocAccessFields_sessions_id_Update';
   permission: Scalars['Boolean']['output'];
 };
 
@@ -3027,47 +2683,15 @@ export type PostsDocAccessFields_UpdatedAt_Update = {
 
 export type PostsFields = {
   __typename?: 'PostsFields';
-  apiKey?: Maybe<PostsFields_ApiKey>;
   author?: Maybe<PostsFields_Author>;
   banner?: Maybe<PostsFields_Banner>;
   body?: Maybe<PostsFields_Body>;
   createdAt?: Maybe<PostsFields_CreatedAt>;
   description?: Maybe<PostsFields_Description>;
-  email?: Maybe<PostsFields_Email>;
-  enableAPIKey?: Maybe<PostsFields_EnableApiKey>;
   feedDate?: Maybe<PostsFields_FeedDate>;
-  sessions?: Maybe<PostsFields_Sessions>;
   slug?: Maybe<PostsFields_Slug>;
   title?: Maybe<PostsFields_Title>;
   updatedAt?: Maybe<PostsFields_UpdatedAt>;
-};
-
-export type PostsFields_ApiKey = {
-  __typename?: 'PostsFields_apiKey';
-  create?: Maybe<PostsFields_ApiKey_Create>;
-  delete?: Maybe<PostsFields_ApiKey_Delete>;
-  read?: Maybe<PostsFields_ApiKey_Read>;
-  update?: Maybe<PostsFields_ApiKey_Update>;
-};
-
-export type PostsFields_ApiKey_Create = {
-  __typename?: 'PostsFields_apiKey_Create';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_ApiKey_Delete = {
-  __typename?: 'PostsFields_apiKey_Delete';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_ApiKey_Read = {
-  __typename?: 'PostsFields_apiKey_Read';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_ApiKey_Update = {
-  __typename?: 'PostsFields_apiKey_Update';
-  permission: Scalars['Boolean']['output'];
 };
 
 export type PostsFields_Author = {
@@ -3210,62 +2834,6 @@ export type PostsFields_Description_Update = {
   permission: Scalars['Boolean']['output'];
 };
 
-export type PostsFields_Email = {
-  __typename?: 'PostsFields_email';
-  create?: Maybe<PostsFields_Email_Create>;
-  delete?: Maybe<PostsFields_Email_Delete>;
-  read?: Maybe<PostsFields_Email_Read>;
-  update?: Maybe<PostsFields_Email_Update>;
-};
-
-export type PostsFields_Email_Create = {
-  __typename?: 'PostsFields_email_Create';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_Email_Delete = {
-  __typename?: 'PostsFields_email_Delete';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_Email_Read = {
-  __typename?: 'PostsFields_email_Read';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_Email_Update = {
-  __typename?: 'PostsFields_email_Update';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_EnableApiKey = {
-  __typename?: 'PostsFields_enableAPIKey';
-  create?: Maybe<PostsFields_EnableApiKey_Create>;
-  delete?: Maybe<PostsFields_EnableApiKey_Delete>;
-  read?: Maybe<PostsFields_EnableApiKey_Read>;
-  update?: Maybe<PostsFields_EnableApiKey_Update>;
-};
-
-export type PostsFields_EnableApiKey_Create = {
-  __typename?: 'PostsFields_enableAPIKey_Create';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_EnableApiKey_Delete = {
-  __typename?: 'PostsFields_enableAPIKey_Delete';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_EnableApiKey_Read = {
-  __typename?: 'PostsFields_enableAPIKey_Read';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_EnableApiKey_Update = {
-  __typename?: 'PostsFields_enableAPIKey_Update';
-  permission: Scalars['Boolean']['output'];
-};
-
 export type PostsFields_FeedDate = {
   __typename?: 'PostsFields_feedDate';
   create?: Maybe<PostsFields_FeedDate_Create>;
@@ -3291,126 +2859,6 @@ export type PostsFields_FeedDate_Read = {
 
 export type PostsFields_FeedDate_Update = {
   __typename?: 'PostsFields_feedDate_Update';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_Sessions = {
-  __typename?: 'PostsFields_sessions';
-  create?: Maybe<PostsFields_Sessions_Create>;
-  delete?: Maybe<PostsFields_Sessions_Delete>;
-  fields?: Maybe<PostsFields_Sessions_Fields>;
-  read?: Maybe<PostsFields_Sessions_Read>;
-  update?: Maybe<PostsFields_Sessions_Update>;
-};
-
-export type PostsFields_Sessions_Create = {
-  __typename?: 'PostsFields_sessions_Create';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_Sessions_Delete = {
-  __typename?: 'PostsFields_sessions_Delete';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_Sessions_Fields = {
-  __typename?: 'PostsFields_sessions_Fields';
-  createdAt?: Maybe<PostsFields_Sessions_CreatedAt>;
-  expiresAt?: Maybe<PostsFields_Sessions_ExpiresAt>;
-  id?: Maybe<PostsFields_Sessions_Id>;
-};
-
-export type PostsFields_Sessions_Read = {
-  __typename?: 'PostsFields_sessions_Read';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_Sessions_Update = {
-  __typename?: 'PostsFields_sessions_Update';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_Sessions_CreatedAt = {
-  __typename?: 'PostsFields_sessions_createdAt';
-  create?: Maybe<PostsFields_Sessions_CreatedAt_Create>;
-  delete?: Maybe<PostsFields_Sessions_CreatedAt_Delete>;
-  read?: Maybe<PostsFields_Sessions_CreatedAt_Read>;
-  update?: Maybe<PostsFields_Sessions_CreatedAt_Update>;
-};
-
-export type PostsFields_Sessions_CreatedAt_Create = {
-  __typename?: 'PostsFields_sessions_createdAt_Create';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_Sessions_CreatedAt_Delete = {
-  __typename?: 'PostsFields_sessions_createdAt_Delete';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_Sessions_CreatedAt_Read = {
-  __typename?: 'PostsFields_sessions_createdAt_Read';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_Sessions_CreatedAt_Update = {
-  __typename?: 'PostsFields_sessions_createdAt_Update';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_Sessions_ExpiresAt = {
-  __typename?: 'PostsFields_sessions_expiresAt';
-  create?: Maybe<PostsFields_Sessions_ExpiresAt_Create>;
-  delete?: Maybe<PostsFields_Sessions_ExpiresAt_Delete>;
-  read?: Maybe<PostsFields_Sessions_ExpiresAt_Read>;
-  update?: Maybe<PostsFields_Sessions_ExpiresAt_Update>;
-};
-
-export type PostsFields_Sessions_ExpiresAt_Create = {
-  __typename?: 'PostsFields_sessions_expiresAt_Create';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_Sessions_ExpiresAt_Delete = {
-  __typename?: 'PostsFields_sessions_expiresAt_Delete';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_Sessions_ExpiresAt_Read = {
-  __typename?: 'PostsFields_sessions_expiresAt_Read';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_Sessions_ExpiresAt_Update = {
-  __typename?: 'PostsFields_sessions_expiresAt_Update';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_Sessions_Id = {
-  __typename?: 'PostsFields_sessions_id';
-  create?: Maybe<PostsFields_Sessions_Id_Create>;
-  delete?: Maybe<PostsFields_Sessions_Id_Delete>;
-  read?: Maybe<PostsFields_Sessions_Id_Read>;
-  update?: Maybe<PostsFields_Sessions_Id_Update>;
-};
-
-export type PostsFields_Sessions_Id_Create = {
-  __typename?: 'PostsFields_sessions_id_Create';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_Sessions_Id_Delete = {
-  __typename?: 'PostsFields_sessions_id_Delete';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_Sessions_Id_Read = {
-  __typename?: 'PostsFields_sessions_id_Read';
-  permission: Scalars['Boolean']['output'];
-};
-
-export type PostsFields_Sessions_Id_Update = {
-  __typename?: 'PostsFields_sessions_id_Update';
   permission: Scalars['Boolean']['output'];
 };
 
@@ -3510,18 +2958,6 @@ export type PostsReadDocAccess = {
   where?: Maybe<Scalars['JSONObject']['output']>;
 };
 
-export type PostsUnlockAccess = {
-  __typename?: 'PostsUnlockAccess';
-  permission: Scalars['Boolean']['output'];
-  where?: Maybe<Scalars['JSONObject']['output']>;
-};
-
-export type PostsUnlockDocAccess = {
-  __typename?: 'PostsUnlockDocAccess';
-  permission: Scalars['Boolean']['output'];
-  where?: Maybe<Scalars['JSONObject']['output']>;
-};
-
 export type PostsUpdateAccess = {
   __typename?: 'PostsUpdateAccess';
   permission: Scalars['Boolean']['output'];
@@ -3557,9 +2993,7 @@ export type Query = {
   docAccessPayloadPreference?: Maybe<Payload_PreferencesDocAccess>;
   docAccessPost?: Maybe<PostsDocAccess>;
   docAccessUser?: Maybe<UsersDocAccess>;
-  initializedPost?: Maybe<Scalars['Boolean']['output']>;
   initializedUser?: Maybe<Scalars['Boolean']['output']>;
-  mePost?: Maybe<PostsMe>;
   meUser?: Maybe<UsersMe>;
 };
 
@@ -4751,63 +4185,27 @@ export type MutationPayloadPreferenceUpdateInput = {
 };
 
 export type MutationPostInput = {
-  apiKey?: InputMaybe<Scalars['String']['input']>;
-  apiKeyIndex?: InputMaybe<Scalars['String']['input']>;
   author?: InputMaybe<Scalars['String']['input']>;
   banner?: InputMaybe<Scalars['String']['input']>;
   body?: InputMaybe<Scalars['JSON']['input']>;
   createdAt?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
-  email: Scalars['String']['input'];
-  enableAPIKey?: InputMaybe<Scalars['Boolean']['input']>;
   feedDate: Scalars['String']['input'];
-  hash?: InputMaybe<Scalars['String']['input']>;
-  lockUntil?: InputMaybe<Scalars['String']['input']>;
-  loginAttempts?: InputMaybe<Scalars['Float']['input']>;
-  password: Scalars['String']['input'];
-  resetPasswordExpiration?: InputMaybe<Scalars['String']['input']>;
-  resetPasswordToken?: InputMaybe<Scalars['String']['input']>;
-  salt?: InputMaybe<Scalars['String']['input']>;
-  sessions?: InputMaybe<Array<InputMaybe<MutationPost_SessionsInput>>>;
   slug: Scalars['String']['input'];
   title?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MutationPostUpdateInput = {
-  apiKey?: InputMaybe<Scalars['String']['input']>;
-  apiKeyIndex?: InputMaybe<Scalars['String']['input']>;
   author?: InputMaybe<Scalars['String']['input']>;
   banner?: InputMaybe<Scalars['String']['input']>;
   body?: InputMaybe<Scalars['JSON']['input']>;
   createdAt?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
-  email?: InputMaybe<Scalars['String']['input']>;
-  enableAPIKey?: InputMaybe<Scalars['Boolean']['input']>;
   feedDate?: InputMaybe<Scalars['String']['input']>;
-  hash?: InputMaybe<Scalars['String']['input']>;
-  lockUntil?: InputMaybe<Scalars['String']['input']>;
-  loginAttempts?: InputMaybe<Scalars['Float']['input']>;
-  password?: InputMaybe<Scalars['String']['input']>;
-  resetPasswordExpiration?: InputMaybe<Scalars['String']['input']>;
-  resetPasswordToken?: InputMaybe<Scalars['String']['input']>;
-  salt?: InputMaybe<Scalars['String']['input']>;
-  sessions?: InputMaybe<Array<InputMaybe<MutationPostUpdate_SessionsInput>>>;
   slug?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type MutationPostUpdate_SessionsInput = {
-  createdAt?: InputMaybe<Scalars['String']['input']>;
-  expiresAt: Scalars['String']['input'];
-  id: Scalars['String']['input'];
-};
-
-export type MutationPost_SessionsInput = {
-  createdAt?: InputMaybe<Scalars['String']['input']>;
-  expiresAt: Scalars['String']['input'];
-  id: Scalars['String']['input'];
 };
 
 export type MutationUserInput = {
@@ -4902,7 +4300,6 @@ export type PostsAccess = {
   delete?: Maybe<PostsDeleteAccess>;
   fields?: Maybe<PostsFields>;
   read?: Maybe<PostsReadAccess>;
-  unlock?: Maybe<PostsUnlockAccess>;
   update?: Maybe<PostsUpdateAccess>;
 };
 
@@ -4912,44 +4309,7 @@ export type PostsDocAccess = {
   delete?: Maybe<PostsDeleteDocAccess>;
   fields?: Maybe<PostsDocAccessFields>;
   read?: Maybe<PostsReadDocAccess>;
-  unlock?: Maybe<PostsUnlockDocAccess>;
   update?: Maybe<PostsUpdateDocAccess>;
-};
-
-export type PostsJwt = {
-  __typename?: 'postsJWT';
-  collection: Scalars['String']['output'];
-  email: Scalars['EmailAddress']['output'];
-};
-
-export type PostsLoginResult = {
-  __typename?: 'postsLoginResult';
-  exp?: Maybe<Scalars['Int']['output']>;
-  token?: Maybe<Scalars['String']['output']>;
-  user?: Maybe<Post>;
-};
-
-export type PostsMe = {
-  __typename?: 'postsMe';
-  collection?: Maybe<Scalars['String']['output']>;
-  exp?: Maybe<Scalars['Int']['output']>;
-  strategy?: Maybe<Scalars['String']['output']>;
-  token?: Maybe<Scalars['String']['output']>;
-  user?: Maybe<Post>;
-};
-
-export type PostsRefreshedPost = {
-  __typename?: 'postsRefreshedPost';
-  exp?: Maybe<Scalars['Int']['output']>;
-  refreshedToken?: Maybe<Scalars['String']['output']>;
-  strategy?: Maybe<Scalars['String']['output']>;
-  user?: Maybe<PostsJwt>;
-};
-
-export type PostsResetPassword = {
-  __typename?: 'postsResetPassword';
-  token?: Maybe<Scalars['String']['output']>;
-  user?: Maybe<Post>;
 };
 
 export type UsersAccess = {

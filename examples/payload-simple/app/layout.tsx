@@ -24,6 +24,11 @@ const mono = Roboto_Mono({
   variable: '--font-family-mono',
 })
 
+export const metadata: Metadata = {
+  title: 'Makeswift + Payload example',
+  description: 'Build visually stunning, editable blogs—managed in Payload, designed in Makeswift.',
+}
+
 export default async function RootLayout({
   children,
 }: Readonly<{

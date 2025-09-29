@@ -1,21 +1,20 @@
 # Makeswift + Payload Integration
 
-This integration demonstrates how to combine the power of Payload's content management with Makeswift's visual page building capabilities. Build visually editable blog websites where content is managed in a separate Payload CMS instance but layouts are designed in Makeswift.
+This integration demonstrates how to combine the power of Payload's content management with Makeswift's visual page building capabilities. Build visually stunning, editable blogs—managed in Payload, designed in Makeswift.
 
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) 20.x or later
-- [Makeswift](https://www.makeswift.com/) account (for visual page building) [Sign up for free](https://app.makeswift.com/signup)
-- A compatible database such as [MongoDB](https://www.mongodb.com/) (for content storage)
-- Separate [Payload CMS](https://payloadcms.com/) installation (see setup instructions below)
+- [Makeswift](https://www.makeswift.com/) account (for visual page building) → [Sign up for free](https://app.makeswift.com/signup)
+- A [Payload CMS](https://payloadcms.com/) installation and a local [Docker](https://www.docker.com/products/docker-desktop/) environment to run the content database (for content storage, see setup instructions below)
 - Basic familiarity with [Next.js App Router](https://nextjs.org/docs/app) and [Payload CMS](https://payloadcms.com/)
 
-This guide assumes that you're familiar with Makeswift and setting up a custom host. Read here to learn more: https://docs.makeswift.com/developer/app-router/installation
+This guide assumes you're familiar with Makeswift and setting up a custom host. To learn more, see https://docs.makeswift.com/developer/app-router/installation
 
 ## Project Structure
 
 ```
-payload-simple/                     # Makeswift frontend application
+payload-simple/                   # Makeswift-powered website
 ├── app/                          # Next.js App Router pages
 │   ├── blog/                     # Blog-related routes
 │   │   ├── [slug]/               # Dynamic blog post pages
@@ -29,7 +28,7 @@ payload-simple/                     # Makeswift frontend application
 ├── vibes/soul/                   # Pre-built UI components
 └── env.ts                        # Environment variable validation
 
-my-payload-cms/                   # Separate Payload CMS installation
+my-payload-cms/                   # Your Payload CMS instance
 ├── src/                          # Payload source code
 │   ├── collections/              # Payload collections (Posts, Users, Media)
 │   ├── app/                      # Payload admin and API routes
@@ -40,132 +39,35 @@ my-payload-cms/                   # Separate Payload CMS installation
 
 ## Quick Start
 
-### 1. Clone the repository
+### 1. Set up Payload CMS instance
+
+First, you'll need to create a new Payload CMS installation that will serve as your content management system.
+
+Payload can either be embedded as a route in your Next.js app or run as a standalone web app. In this guide, we’ll use the standalone setup with a local MongoDB instance running in a Docker container.
+
+#### Bootstrap Payload CMS
+
+In the desired parent directory, run the following command to create your Payload CMS project:
 
 ```bash
-   npx makeswift@latest init --example=payload-simple
-```
-
-### 2. Set up Payload CMS separately
-
-You'll need to create a separate Payload CMS installation that will serve as your content management system. This refers to the official Payload [installation guide](https://payloadcms.com/docs/getting-started/installation)
-
-#### Quick Payload setup
-
-Create a new Payload project in a separate directory:
-
-**Step 1: Navigate to your projects directory**
-
-```bash
-# Navigate to your projects directory (outside of payload-simple)
-cd ..
-```
-
-**Step 2: Create new Payload project**
-
-💡 **Tip:** Have your database connection string ready to paste when prompted.
-
-```bash
-# Create new Payload project (this will prompt for database selection)
 npx create-payload-app
 ```
 
-**Step 3: Navigate to the new project and install dependencies**
+The CLI will guide you through creating and setting up a new project. For any prompts with default values, we recommend accepting the defaults. When prompted for the MongoDB connection string, enter `mongodb://mongo/<your-payload-project-name>`.
+
+After the setup is complete, navigate to your Payload project directory and start MongoDB and the development server with:
 
 ```bash
-# Navigate to the new Payload project (replace 'my-payload-cms' with your chosen project name)
-cd my-payload-cms
-
-# Install dependencies
-pnpm install
+docker-compose up
 ```
 
-Start the Payload development server:
+Go to http://localhost:3000 to open the Payload app in your browser and create your admin user.
 
-```bash
-pnpm dev
-```
+#### Set up your content model
 
-A localhost environment will spin up where you can log into the admin page, and see the existing collections.
+To get started with blog posts, you’ll need to define a content model in Payload. We’ll create a Posts collection to represent individual blog entries, and update the existing Users collection to enable API key authentication and include author details:
 
-### 4. Generate your Payload API key
-
-Before you can generate an API key, you need to ensure your Users collection is configured to support API keys. You will need to ensure your `src/collections/Users.ts` file includes the field for auth with `useAPIKey: true`.
-
-```typescript
-export const Users: CollectionConfig = {
-  ...
-  auth: {
-    useAPIKey: true, // This enables API key authentication
-  },
-  ...
-}
-```
-
-Now generate your API key:
-
-1. In the Payload admin panel (`http://localhost:3000/admin`), go to **Users** and select your admin user
-2. Check the **Enable API Key** checkbox
-3. Copy the API key which you'll be using for the Makeswift app's `PAYLOAD_ACCESS_TOKEN`
-4. Note the user slug from the URL (e.g., if the URL is `/admin/collections/users/63f8b2a1c4d5e6f7g8h9i0j1`, then `63f8b2a1c4d5e6f7g8h9i0j1` is your user slug) - you'll use this for the Makeswift app's `PAYLOAD_USER_SLUG`
-
-### 5. Configure main project environment variables
-
-Navigate back to the Next.js project root and create a `.env.local` file:
-
-```bash
-cd ../payload-simple
-```
-
-Add your credentials to `.env.local`:
-
-```
-MAKESWIFT_SITE_API_KEY=your_makeswift_api_key
-PAYLOAD_ACCESS_TOKEN=your_payload_api_key_from_step_4
-PAYLOAD_USER_SLUG=your_payload_user_slug_from_step_4
-NEXT_PUBLIC_PAYLOAD_SERVER_DOMAIN=http://localhost:3000
-NEXT_PUBLIC_SITE_URL=http://localhost:3001
-```
-
-Note: The Payload server runs on port 3000, while your main Next.js app will run on port 3001.
-
-### 6. Configure Makeswift host URL
-
-In your Makeswift site settings, set your host URL to `http://localhost:3001/`. This is required for the Makeswift builder to properly connect to your development server.
-
-1. Go to your [Makeswift dashboard](https://app.makeswift.com/)
-2. Select your site
-3. Navigate to **Settings** → **Host**
-4. Set the host URL to `http://localhost:3001/`
-
-### 7. Generate TypeScript types
-
-Install dependencies and generate TypeScript types from your Payload GraphQL schema:
-
-```bash
-pnpm install
-pnpm run codegen-ts
-```
-
-This command watches for changes and regenerates types automatically.
-
-### 8. Run the development server
-
-```bash
-pnpm run dev
-```
-
-Your site will be available at `http://localhost:3001`. Ensure the Payload server continues running in your separate `my-payload-cms/` directory on port 3000.
-
-## Content Model
-
-You'll need to configure your separate Payload installation with the necessary collections for a blog. This project expects the following structure:
-
-### Collections Overview
-
-You'll need to have these collections in your separate Payload installation. Here are the exact collection configurations you need:
-
-#### Posts Collection (`src/collections/Posts.ts`)
+##### Posts Collection (`src/collections/Posts.ts`)
 
 ```typescript
 import type { CollectionConfig } from 'payload'
@@ -216,9 +118,9 @@ export const Posts: CollectionConfig = {
 }
 ```
 
-#### Users Collection (`src/collections/Users.ts`)
+##### Users Collection (`src/collections/Users.ts`)
 
-```typescript
+```diff
 import type { CollectionConfig } from 'payload'
 
 export const Users: CollectionConfig = {
@@ -226,71 +128,104 @@ export const Users: CollectionConfig = {
   admin: {
     useAsTitle: 'email',
   },
-  auth: {
-    useAPIKey: true,
-  },
+-  auth: true,
++  auth: {
++    useAPIKey: true, // enable API key authentication
++  },
   fields: [
     // Email added by default
     // Add more fields as needed
-    {
-      name: 'name',
-      type: 'text',
-    },
-    {
-      name: 'avatar',
-      type: 'upload',
-      relationTo: 'media',
-    },
++    {
++      name: 'name',
++      type: 'text',
++    },
++    {
++      name: 'avatar',
++      type: 'upload',
++      relationTo: 'media',
++    },
   ],
 }
 ```
 
-#### Media Collection (`src/collections/Media.ts`)
+As the last step, add the `Posts` collection to `src/payload.config.ts`:
 
-```typescript
-import type { CollectionConfig } from 'payload'
-
-export const Media: CollectionConfig = {
-  slug: 'media',
-  access: {
-    read: () => true,
-  },
-  fields: [
-    {
-      name: 'alt',
-      type: 'text',
-      required: true,
-    },
-  ],
-  upload: true,
-}
-```
-
-Don't forget to import and add these collections to your `payload.config.ts` file in your separate Payload installation:
-
-```typescript
+```diff
 import { Media } from './collections/Media'
-import { Posts } from './collections/Posts'
 import { Users } from './collections/Users'
++ import { Posts } from './collections/Posts'
 
 export default buildConfig({
   // ... other config
-  collections: [Posts, Users, Media],
+-  collections: [Users, Media],
++  collections: [Users, Media, Posts],
   // ... rest of config
 })
 ```
 
-## Creating a Blog Post
+When you refresh the Payload Admin dashboard, you should see the Posts collection listed alongside Users and Media.
+
+### 2. Clone this example
+
+Open a new terminal session in your desired parent directory and run the following command to create a Makeswift + Payload project:
+
+```bash
+   npx makeswift@latest init --example=payload-simple
+```
+
+> [!NOTE]
+> In this setup, the Payload server runs on port 3000, so your main Next.js app will run on port 3001.
+
+### 3. Configure environment variables
+
+Add the following credentials to the project's `.env.local` file:
+
+```
+MAKESWIFT_SITE_API_KEY=your_makeswift_api_key
+PAYLOAD_ACCESS_TOKEN=your_payload_api_key_from_step_1
+PAYLOAD_USER_SLUG=your_payload_user_slug_from_step_1
+NEXT_PUBLIC_PAYLOAD_SERVER_DOMAIN=http://localhost:3000
+NEXT_PUBLIC_SITE_URL=http://localhost:3001
+```
+
+To obtain the Payload credentials:
+
+1. In the Payload admin panel (http://localhost:3000/admin), go to Users and select your admin user.
+2. Check the _Enable API Key_ checkbox.
+3. Copy the API key; this is your `PAYLOAD_ACCESS_TOKEN`.
+4. Copy the user slug from the URL. For example, if the URL is `/admin/collections/users/63f8b2a1c4d5e6f7g8h9i0j1`, then `63f8b2a1c4d5e6f7g8h9i0j1` is your `PAYLOAD_USER_SLUG`.
+
+### 4. Generate TypeScript types
+
+From your project’s root directory, run:
+
+```bash
+npm run codegen-ts
+```
+
+This command watches for changes and regenerates types automatically.
+
+### 5. Run the development server
+
+```bash
+npm run dev
+```
+
+Your site will be available at http://localhost:3001. Make sure the Payload server continues running in a separate session on port 3000.
+
+## Adding Content
+
+Now it's time to create and publish a few sample blog posts.
 
 To create a new blog post in your Payload CMS:
 
-1. **Open your Payload Admin Panel**  
+1. **Open your Payload Admin Panel**
    Navigate to your Payload instance (e.g., [http://localhost:3000/admin](http://localhost:3000/admin)) and log in with your admin credentials.
 
-2. **Go to the Posts Collection**  
+2. **Go to the Posts Collection**
    In the sidebar, click on **Posts**.
 
-3. **Add a New Post**  
+3. **Add a New Post**
    Click the **Create New** button.
 
 4. **Fill in the Required Fields**
@@ -343,16 +278,16 @@ Blog posts are transformed from Payload's structure to match the API expected by
 Common issues and solutions:
 
 - **Type generation fails**
-  - Ensure your separate Payload instance is running on localhost:3000.
-  - Check that your Payload access token is correct in `.env.local`.
-  - Verify that the GraphQL endpoint is accessible at `http://localhost:3000/api/graphql`.
-  - Ensure that the relevant content is published in Payload and the collections are properly configured.
+  - Ensure your Payload CMS instance is running on http://localhost:3000.
+  - Confirm that your Payload access token is correctly set in `.env.local`.
+  - Verify that the GraphQL endpoint is accessible at http://localhost:3000/api/graphql.
+  - Check that Payload collections are properly configured.
 
 - **Payload admin access issues**
-  - Verify that MongoDB is running and accessible.
+  - Verify that the MongoDB instance in the Docker container is running and accessible.
   - Check that `DATABASE_URI` is correctly set in your Payload `.env` file.
   - Ensure `PAYLOAD_SECRET` is set and consistent.
-  - Try restarting the Payload development server.
+  - Try restarting the Payload and MongoDB Docker containers (`docker-compose up`).
 
 - **Makeswift builder issues**
   - Clear your browser cache and refresh the page.
@@ -363,7 +298,7 @@ Common issues and solutions:
 - **GraphQL errors**
   - Run `pnpm run codegen-ts` to regenerate types.
   - Check that your content model matches the structure expected by the GraphQL query.
-  - Ensure all referenced collections (e.g., **Users**, **Posts**, **Media**) exist and are properly configured.
+  - Ensure all referenced collections (e.g., **Users**, **Posts**, **Media**) exist and are correctly configured.
   - Verify API key authentication is working by testing the GraphQL endpoint directly.
 
 ## Learn More
