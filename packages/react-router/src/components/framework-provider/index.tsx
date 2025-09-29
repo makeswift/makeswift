@@ -5,6 +5,7 @@ import {
   DefaultHead,
   DefaultHeadSnippet,
   DefaultImage,
+  DefaultElementData,
 } from '@makeswift/runtime/unstable-framework-support'
 
 import { Link } from './link'
@@ -15,6 +16,7 @@ export function FrameworkProvider({ children }: PropsWithChildren) {
     HeadSnippet: DefaultHeadSnippet,
     Image: DefaultImage,
     Link,
+    ElementData: DefaultElementData,
   })
 
   return <FrameworkContext.Provider value={context}>{children}</FrameworkContext.Provider>
