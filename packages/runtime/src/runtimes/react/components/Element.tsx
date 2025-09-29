@@ -4,7 +4,7 @@ import { forwardRef, memo, Ref, useCallback, useImperativeHandle, useRef, ReactN
 import { isElementReference, type Element as ElementDataOrRef } from '../../../state/react-page'
 import { ElementRegistration } from './ElementRegistration'
 import { ElementReference } from './ElementReference'
-import { ElementData } from './ElementData'
+import { useFrameworkContext } from './hooks/use-framework-context'
 import { ElementImperativeHandle } from '../element-imperative-handle'
 import { FindDomNode } from '../find-dom-node'
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'
@@ -21,6 +21,7 @@ export const Element = memo(
   ): ReactNode | null {
     const useFindDomNodeRef = useRef(true)
     const imperativeHandleRef = useRef(new ElementImperativeHandle())
+    const { ElementData } = useFrameworkContext()
 
     const findDomNodeCallbackRef = useCallback((current: (() => Element | Text | null) | null) => {
       if (useFindDomNodeRef.current === true) {

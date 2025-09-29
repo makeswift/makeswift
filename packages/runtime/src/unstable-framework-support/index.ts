@@ -18,6 +18,7 @@ export {
   DefaultHead,
   DefaultHeadSnippet,
   DefaultImage,
+  DefaultElementData,
   versionedFetch,
 } from '../runtimes/react/components/framework-context'
 

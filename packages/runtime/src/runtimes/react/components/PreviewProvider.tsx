@@ -1,6 +1,7 @@
 'use client'
 
 import { type PropsWithChildren, useEffect, useMemo, ReactNode } from 'react'
+import { type Middleware } from '@reduxjs/toolkit'
 
 import * as ReactBuilderPreview from '../../../state/react-builder-preview'
 import { BuilderAPIProxy } from '../../../state/builder-api/proxy'
@@ -12,7 +13,15 @@ import { useMakeswiftHostApiClient } from '../host-api-client'
 export default function PreviewProvider({
   appOrigin,
   children,
-}: PropsWithChildren<{ appOrigin: string }>): ReactNode {
+  middlewares = [],
+}: PropsWithChildren<{
+  appOrigin: string
+  middlewares?: Middleware<
+    ReactBuilderPreview.Dispatch,
+    ReactBuilderPreview.State,
+    ReactBuilderPreview.Dispatch
+  >[]
+}>): ReactNode {
   const runtime = useReactRuntime()
   const client = useMakeswiftHostApiClient()
   const builderProxy = useMemo(() => new BuilderAPIProxy({ appOrigin }), [appOrigin])
@@ -23,8 +32,9 @@ export default function PreviewProvider({
         preloadedState: runtime.store.getState(),
         client,
         builderProxy,
+        middlewares,
       }),
-    [runtime, client, builderProxy],
+    [runtime, client, builderProxy, middlewares],
   )
 
   useEffect(() => {
