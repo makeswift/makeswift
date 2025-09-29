@@ -1,7 +1,7 @@
 import { ElementData } from '@makeswift/controls'
 import { getRuntime } from './runtime'
 import { getBreakpoints } from '../../../state/react-page'
-import { createServerStylesheet } from '../css/server-stylesheet'
+import { createCollectingServerStylesheet } from '../css/server-css'
 import { isLegacyDescriptor } from '../../../prop-controllers/descriptors'
 import { DescriptorsByProp } from '../../../state/modules/prop-controllers'
 import { mockResourceResolver } from './resource-resolver'
@@ -14,7 +14,7 @@ export function resolveProps(
   const runtime = getRuntime()
   const state = runtime.store.getState()
   const breakpoints = getBreakpoints(state)
-  const stylesheet = createServerStylesheet(breakpoints, elementKey)
+  const stylesheet = createCollectingServerStylesheet(breakpoints, elementKey)
   const resolvedProps: Record<string, unknown> = {}
 
   Object.entries(props).forEach(([propName, propData]) => {

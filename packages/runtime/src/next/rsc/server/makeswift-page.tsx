@@ -2,8 +2,8 @@ import { ComponentPropsWithoutRef } from 'react'
 import { Page } from '../..'
 import { prerenderRSCNodes } from './prerender-rsc-nodes'
 import { RSCNodesProvider } from '../client/rsc-nodes-provider'
-import { CSSInjector } from '../css/css-collector'
-import { RSCStyleProvider } from '../css/style-runtime'
+import { CSSInjector } from '../css/server-css'
+import { ClientCSSProvider } from '../css/client-css'
 
 type Props = ComponentPropsWithoutRef<typeof Page>
 
@@ -12,10 +12,10 @@ export function NextRSCMakeswiftPage(props: Props) {
 
   return (
     <RSCNodesProvider value={rscNodes}>
-      <RSCStyleProvider>
+      <ClientCSSProvider>
         <CSSInjector />
         <Page {...props} />
-      </RSCStyleProvider>
+      </ClientCSSProvider>
     </RSCNodesProvider>
   )
 }

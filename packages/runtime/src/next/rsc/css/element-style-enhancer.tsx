@@ -1,26 +1,25 @@
 'use client'
 
 import { ReactNode, useCallback, useEffect, useMemo, useRef } from 'react'
-import { useRSCStyleRuntime } from './style-runtime'
-import { getElement } from '../../../state/react-page'
-import { useControlDefs } from '../../../runtimes/react/controls'
-import { deepEqual, ElementData, isElementReference, StyleDefinition } from '@makeswift/controls'
-import { useDocumentKey, useSelector } from '../../../runtimes/react'
-import { createClientStylesheet } from './client-stylesheet'
-import { getBreakpoints } from '../../../state/react-page'
 import { useRouter } from 'next/navigation'
+import { deepEqual, ElementData, isElementReference, StyleDefinition } from '@makeswift/controls'
+import { useControlDefs } from '../../../runtimes/react/controls'
+import { useDocumentKey, useSelector } from '../../../runtimes/react'
 import { useResourceResolver } from '../../../runtimes/react/hooks/use-resource-resolver'
+import { getElement, getBreakpoints } from '../../../state/react-page'
+import { createClientStylesheet } from './stylesheet-factory'
+import { useClientCSS } from './client-css'
 
-type RSCElementStyleEnhancerProps = {
+type ElementStyleEnhancerProps = {
   initialElementData: ElementData
   children: ReactNode
 }
 
-export function RSCElementStyleEnhancer({
+export function ElementStyleEnhancer({
   initialElementData,
   children,
-}: RSCElementStyleEnhancerProps) {
-  const { updateStyle } = useRSCStyleRuntime()
+}: ElementStyleEnhancerProps) {
+  const { updateStyle } = useClientCSS()
   const documentKey = useDocumentKey()
   const breakpoints = useSelector(getBreakpoints)
   const router = useRouter()
@@ -48,19 +47,16 @@ export function RSCElementStyleEnhancer({
     return createClientStylesheet(breakpoints, elementKey, handleStyleUpdate)
   }, [breakpoints, elementKey, handleStyleUpdate])
 
-  // TODO: Is it better to listen to op update instead of comparing the element props in a useEffect?
   useEffect(() => {
     if (!element) return
 
     const prevProps = prevPropsRef.current
 
-    // Process all prop changes in one pass
     Object.entries(definitions).forEach(([propName, def]) => {
       const currentValue = element.props[propName]
       const prevValue = prevProps[propName]
 
       if (def.controlType === StyleDefinition.type) {
-        // Handle style prop changes
         if (currentValue !== undefined && !deepEqual(currentValue, prevValue)) {
           const resolvable = def.resolveValue(
             currentValue,
@@ -82,3 +78,6 @@ export function RSCElementStyleEnhancer({
 
   return <>{children}</>
 }
+
+// Re-export for backward compatibility
+export { ElementStyleEnhancer as RSCElementStyleEnhancer }

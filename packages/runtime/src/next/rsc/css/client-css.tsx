@@ -1,24 +1,32 @@
 'use client'
 
-import { createContext, ReactNode, useContext, useEffect, useRef, useState, useCallback } from 'react'
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+} from 'react'
 
-type StyleUpdateCallback = (elementKey: string, propName: string, cssString: string) => void
-
-type RSCStyleContextValue = {
-  updateStyle: StyleUpdateCallback
+// Client-side style management context
+type ClientCSSContextValue = {
+  updateStyle: (elementKey: string, propName: string, cssString: string) => void
   clearElementStyles: (elementKey: string) => void
 }
 
-const RSCStyleContext = createContext<RSCStyleContextValue>({
+const ClientCSSContext = createContext<ClientCSSContextValue>({
   updateStyle: () => {},
   clearElementStyles: () => {},
 })
 
-type RSCStyleProviderProps = {
+type ClientCSSProviderProps = {
   children: ReactNode
 }
 
-export function RSCStyleProvider({ children }: RSCStyleProviderProps) {
+// Provider component that manages client-side CSS updates
+export function ClientCSSProvider({ children }: ClientCSSProviderProps) {
   const [dynamicStyles, setDynamicStyles] = useState<Map<string, string>>(new Map())
   const styleElementRef = useRef<HTMLStyleElement | null>(null)
   const serverStylesRef = useRef<string>('')
@@ -35,7 +43,6 @@ export function RSCStyleProvider({ children }: RSCStyleProviderProps) {
       document.head.appendChild(styleElement)
     }
 
-    // Capture existing server styles
     serverStylesRef.current = styleElement.textContent || ''
     styleElementRef.current = styleElement
 
@@ -76,18 +83,23 @@ export function RSCStyleProvider({ children }: RSCStyleProviderProps) {
     })
   }, [])
 
-  const contextValue: RSCStyleContextValue = {
+  const contextValue: ClientCSSContextValue = {
     updateStyle,
     clearElementStyles,
   }
 
-  return <RSCStyleContext.Provider value={contextValue}>{children}</RSCStyleContext.Provider>
+  return <ClientCSSContext.Provider value={contextValue}>{children}</ClientCSSContext.Provider>
 }
 
-export function useRSCStyleRuntime(): RSCStyleContextValue {
-  const context = useContext(RSCStyleContext)
+// Hook to access client CSS runtime
+export function useClientCSS(): ClientCSSContextValue {
+  const context = useContext(ClientCSSContext)
   if (!context) {
-    throw new Error('useRSCStyleRuntime must be used within RSCStyleProvider')
+    throw new Error('useClientCSS must be used within ClientCSSProvider')
   }
   return context
 }
+
+// Re-export for backward compatibility
+export { ClientCSSProvider as RSCStyleProvider }
+export { useClientCSS as useRSCStyleRuntime }
