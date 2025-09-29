@@ -6,7 +6,7 @@ import { FrameworkContext } from '../../../runtimes/react/components/framework-c
 
 import { context as appRouterContext } from '../../components/framework-provider/app-router'
 import { context as nextContext } from '../../components/framework-provider/next'
-import { createRSCElementMiddleware } from './element-middleware'
+import { createRSCRefreshMiddleware } from './element-middleware'
 import { useRouter } from 'next/navigation'
 import { RSCElementData } from './element-data'
 
@@ -18,7 +18,7 @@ export function NextRSCFrameworkProvider({ children }: PropsWithChildren) {
       ...appRouterContext,
       ...nextContext,
       ElementData: RSCElementData,
-      previewStoreMiddlewares: [createRSCElementMiddleware(router)],
+      previewStoreMiddlewares: [createRSCRefreshMiddleware(router)],
     }),
     [router],
   )
