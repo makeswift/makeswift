@@ -7,7 +7,7 @@ export const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }
 
   if (relationTo === 'posts') {
     return `/blog/${slug}`
-  } else {
-    return `/${slug}`
   }
+
+  return `/${slug}`
 }
