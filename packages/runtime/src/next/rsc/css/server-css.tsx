@@ -1,43 +1,23 @@
 import 'server-only'
 import { cache } from 'react'
 import { type Breakpoints, type Stylesheet } from '@makeswift/controls'
-import { createServerStylesheet } from './stylesheet-factory'
+import { createStylesheet } from './css-runtime'
 
-// Server-side CSS collection and management
+// Simplified server-side CSS collection
 export class ServerCSSCollector {
   private styles = new Map<string, string>()
-  private elementStyles = new Map<string, Map<string, string>>()
 
-  collect(className: string, css: string, elementKey?: string, propName?: string) {
+  collect(className: string, css: string, _elementKey?: string, _propPath?: string) {
     if (this.styles.has(className)) return
-
     this.styles.set(className, css)
-
-    if (elementKey) {
-      if (!this.elementStyles.has(elementKey)) {
-        this.elementStyles.set(elementKey, new Map())
-      }
-      const elementMap = this.elementStyles.get(elementKey)!
-      elementMap.set(propName || 'root', className)
-    }
   }
 
   getAllStyles(): string {
     return Array.from(this.styles.values()).join('\n')
   }
 
-  getElementStyles(elementKey: string): Map<string, string> | undefined {
-    return this.elementStyles.get(elementKey)
-  }
-
-  clearElement(elementKey: string) {
-    const elementMap = this.elementStyles.get(elementKey)
-    if (elementMap) {
-      for (const className of elementMap.values()) {
-        this.styles.delete(className)
-      }
-      this.elementStyles.delete(elementKey)
-    }
+  clear() {
+    this.styles.clear()
   }
 }
 
@@ -50,11 +30,11 @@ export const getCSSCollector = cache((): ServerCSSCollector => {
 export function createCollectingServerStylesheet(breakpoints: Breakpoints, elementKey?: string): Stylesheet {
   const collector = getCSSCollector()
 
-  const handleStyleGenerated = (className: string, css: string, elementKey?: string, propName?: string) => {
-    collector.collect(className, css, elementKey, propName)
+  const handleStyleGenerated = (className: string, css: string, elementKey?: string, propPath?: string) => {
+    collector.collect(className, css, elementKey, propPath)
   }
 
-  return createServerStylesheet(breakpoints, elementKey, handleStyleGenerated)
+  return createStylesheet(breakpoints, elementKey, handleStyleGenerated)
 }
 
 // React component to inject collected CSS

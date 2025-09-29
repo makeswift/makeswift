@@ -6,13 +6,12 @@ import {
   useContext,
   useEffect,
   useRef,
-  useState,
   useCallback,
 } from 'react'
 
 // Client-side style management context
 type ClientCSSContextValue = {
-  updateStyle: (elementKey: string, propName: string, cssString: string) => void
+  updateStyle: (elementKey: string, propPath: string, cssString: string) => void
   clearElementStyles: (elementKey: string) => void
 }
 
@@ -27,9 +26,9 @@ type ClientCSSProviderProps = {
 
 // Provider component that manages client-side CSS updates
 export function ClientCSSProvider({ children }: ClientCSSProviderProps) {
-  const [dynamicStyles, setDynamicStyles] = useState<Map<string, string>>(new Map())
   const styleElementRef = useRef<HTMLStyleElement | null>(null)
   const serverStylesRef = useRef<string>('')
+  const dynamicStylesRef = useRef<Map<string, string>>(new Map())
 
   // Initialize style element and capture server styles
   useEffect(() => {
@@ -51,37 +50,31 @@ export function ClientCSSProvider({ children }: ClientCSSProviderProps) {
     }
   }, [])
 
-  // Update style element when dynamic styles change
-  useEffect(() => {
+  const updateStyleElement = useCallback(() => {
     if (!styleElementRef.current) return
 
-    const dynamicCss = Array.from(dynamicStyles.values()).join('\n')
+    const dynamicCss = Array.from(dynamicStylesRef.current.values()).join('\n')
     const separator = serverStylesRef.current && dynamicCss ? '\n' : ''
     const combinedStyles = serverStylesRef.current + separator + dynamicCss
 
     styleElementRef.current.textContent = combinedStyles
-  }, [dynamicStyles])
-
-  const updateStyle = useCallback((elementKey: string, propName: string, cssString: string) => {
-    const styleKey = `${elementKey}-${propName}`
-    setDynamicStyles(prev => {
-      const next = new Map(prev)
-      next.set(styleKey, cssString)
-      return next
-    })
   }, [])
+
+  const updateStyle = useCallback((elementKey: string, propPath: string, cssString: string) => {
+    const styleKey = `${elementKey}:${propPath}`
+    dynamicStylesRef.current.set(styleKey, cssString)
+    updateStyleElement()
+  }, [updateStyleElement])
 
   const clearElementStyles = useCallback((elementKey: string) => {
-    setDynamicStyles(prev => {
-      const next = new Map()
-      for (const [key, value] of prev) {
-        if (!key.startsWith(`${elementKey}-`)) {
-          next.set(key, value)
-        }
+    const keyPrefix = `${elementKey}:`
+    for (const key of dynamicStylesRef.current.keys()) {
+      if (key.startsWith(keyPrefix)) {
+        dynamicStylesRef.current.delete(key)
       }
-      return next
-    })
-  }, [])
+    }
+    updateStyleElement()
+  }, [updateStyleElement])
 
   const contextValue: ClientCSSContextValue = {
     updateStyle,

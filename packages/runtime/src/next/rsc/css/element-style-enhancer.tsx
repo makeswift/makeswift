@@ -7,7 +7,7 @@ import { useControlDefs } from '../../../runtimes/react/controls'
 import { useDocumentKey, useSelector } from '../../../runtimes/react'
 import { useResourceResolver } from '../../../runtimes/react/hooks/use-resource-resolver'
 import { getElement, getBreakpoints } from '../../../state/react-page'
-import { createClientStylesheet } from './stylesheet-factory'
+import { createClientStylesheet } from './css-runtime'
 import { useClientCSS } from './client-css'
 
 type ElementStyleEnhancerProps = {
@@ -37,8 +37,8 @@ export function ElementStyleEnhancer({
   const [_legacyDescriptors, definitions] = useControlDefs(initialElementData.type)
 
   const handleStyleUpdate = useCallback(
-    (elementKey: string, propName: string, css: string) => {
-      updateStyle(elementKey, propName, css)
+    (elementKey: string, propPath: string, css: string) => {
+      updateStyle(elementKey, propPath, css)
     },
     [updateStyle],
   )
