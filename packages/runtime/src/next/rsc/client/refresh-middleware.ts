@@ -24,7 +24,7 @@ export function createRSCRefreshMiddleware(
             const meta = componentsMeta.get(element.type)
 
             if (meta?.server) {
-              console.log(`RSC element "${element.type}" added, refreshing page`)
+              console.log(`[RSC] element "${element.type}" added, refreshing page`)
               router?.refresh()
               break
             }
