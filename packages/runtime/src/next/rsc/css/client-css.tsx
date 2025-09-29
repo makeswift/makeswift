@@ -3,7 +3,7 @@
 import { createContext, ReactNode, useContext, useEffect, useRef, useCallback } from 'react'
 
 type ClientCSSContextValue = {
-  updateStyle: (elementKey: string, propPath: string, cssString: string) => void
+  updateStyle: (elementKey: string, propName: string, cssString: string) => void
 }
 
 const ClientCSSContext = createContext<ClientCSSContextValue>({
@@ -46,8 +46,8 @@ export function ClientCSSProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const updateStyle = useCallback(
-    (elementKey: string, propPath: string, cssString: string) => {
-      const styleKey = `${elementKey}:${propPath}`
+    (elementKey: string, propName: string, cssString: string) => {
+      const styleKey = `${elementKey}:${propName}`
       dynamicStylesRef.current.set(styleKey, cssString)
       updateStyleElement()
     },

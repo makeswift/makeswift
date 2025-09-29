@@ -37,8 +37,8 @@ export function ElementStyleEnhancer({
   const [_legacyDescriptors, definitions] = useControlDefs(initialElementData.type)
 
   const handleStyleUpdate = useCallback(
-    (elementKey: string, propPath: string, css: string) => {
-      updateStyle(elementKey, propPath, css)
+    (elementKey: string, propName: string, css: string) => {
+      updateStyle(elementKey, propName, css)
     },
     [updateStyle],
   )

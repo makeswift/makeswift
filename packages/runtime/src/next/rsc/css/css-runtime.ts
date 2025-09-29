@@ -52,10 +52,10 @@ function kebabCase(str: string): string {
 }
 
 // Unified class name generation
-function generateClassName(elementKey?: string, propPath?: string, counter?: number): string {
+function generateClassName(elementKey?: string, propName?: string, counter?: number): string {
   const parts = ['makeswift-rsc']
   if (elementKey) parts.push(elementKey)
-  if (propPath) parts.push(propPath.replace(/\./g, '-'))
+  if (propName) parts.push(propName)
   if (counter !== undefined) parts.push(counter.toString())
   return parts.join('-')
 }
@@ -65,16 +65,16 @@ function processStyle(
   style: ResolvedStyle,
   breakpoints: Breakpoints,
   className: string,
-  onStyleGenerated?: (className: string, css: string, elementKey?: string, propPath?: string) => void,
+  onStyleGenerated?: (className: string, css: string, elementKey?: string, propName?: string) => void,
   elementKey?: string,
-  propPath?: string
+  propName?: string
 ): string {
   try {
     const cssObject = resolvedStyleToCss(breakpoints, style)
     const cssString = cssObjectToString(cssObject, className)
 
     if (onStyleGenerated) {
-      onStyleGenerated(className, cssString, elementKey, propPath)
+      onStyleGenerated(className, cssString, elementKey, propName)
     }
 
     return className
@@ -91,8 +91,8 @@ export class StylesheetEngine implements Stylesheet {
   constructor(
     private breakpointsData: Breakpoints,
     private elementKey?: string,
-    private basePropPath?: string,
-    private onStyleGenerated?: (className: string, css: string, elementKey?: string, propPath?: string) => void
+    private basePropName?: string,
+    private onStyleGenerated?: (className: string, css: string, elementKey?: string, propName?: string) => void
   ) {}
 
   breakpoints(): Breakpoints {
@@ -100,23 +100,22 @@ export class StylesheetEngine implements Stylesheet {
   }
 
   defineStyle(style: ResolvedStyle): string {
-    const className = generateClassName(this.elementKey, this.basePropPath, ++this.styleCounter)
+    const className = generateClassName(this.elementKey, this.basePropName, ++this.styleCounter)
     return processStyle(
       style,
       this.breakpointsData,
       className,
       this.onStyleGenerated,
       this.elementKey,
-      this.basePropPath
+      this.basePropName
     )
   }
 
   child(propName: string): Stylesheet {
-    const childPropPath = this.basePropPath ? `${this.basePropPath}.${propName}` : propName
     return new StylesheetEngine(
       this.breakpointsData,
       this.elementKey,
-      childPropPath,
+      propName,
       this.onStyleGenerated
     )
   }
@@ -126,7 +125,7 @@ export class StylesheetEngine implements Stylesheet {
 export function createStylesheet(
   breakpoints: Breakpoints,
   elementKey?: string,
-  onStyleGenerated?: (className: string, css: string, elementKey?: string, propPath?: string) => void
+  onStyleGenerated?: (className: string, css: string, elementKey?: string, propName?: string) => void
 ): Stylesheet {
   return new StylesheetEngine(breakpoints, elementKey, undefined, onStyleGenerated)
 }
@@ -135,11 +134,11 @@ export function createStylesheet(
 export function createClientStylesheet(
   breakpoints: Breakpoints,
   elementKey: string,
-  onStyleUpdate: (elementKey: string, propPath: string, css: string) => void
+  onStyleUpdate: (elementKey: string, propName: string, css: string) => void
 ): Stylesheet {
-  const handleStyleGenerated = (_className: string, css: string, elementKey?: string, propPath?: string) => {
-    if (elementKey && propPath) {
-      onStyleUpdate(elementKey, propPath, css)
+  const handleStyleGenerated = (_className: string, css: string, elementKey?: string, propName?: string) => {
+    if (elementKey && propName) {
+      onStyleUpdate(elementKey, propName, css)
     }
   }
 
