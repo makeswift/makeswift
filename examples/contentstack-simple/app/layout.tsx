@@ -1,0 +1,46 @@
+import type { Metadata } from 'next'
+import { DM_Serif_Text, Inter, Roboto_Mono } from 'next/font/google'
+
+import { getSiteVersion } from '@makeswift/runtime/next/server'
+
+import '@/lib/makeswift/components'
+import { MakeswiftProvider } from '@/lib/makeswift/provider'
+
+import './globals.css'
+
+const body = Inter({
+  display: 'swap',
+  subsets: ['latin'],
+  variable: '--font-family-body',
+})
+const heading = DM_Serif_Text({
+  display: 'swap',
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-family-heading',
+})
+const mono = Roboto_Mono({
+  display: 'swap',
+  subsets: ['latin'],
+  variable: '--font-family-mono',
+})
+
+export const metadata: Metadata = {
+  title: 'Makeswift + Contentstack example',
+  description:
+    'Build visually stunning, editable blogs—managed in Contentstack, designed in Makeswift.',
+}
+
+export default async function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <html lang="en">
+      <body className={`${body.variable} ${heading.variable} ${mono.variable}`}>
+        <MakeswiftProvider siteVersion={await getSiteVersion()}>{children}</MakeswiftProvider>
+      </body>
+    </html>
+  )
+}
