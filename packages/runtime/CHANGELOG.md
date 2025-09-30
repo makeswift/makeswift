@@ -1,5 +1,17 @@
 # @makeswift/runtime
 
+## 0.26.0-canary.9
+
+### Minor Changes
+
+- 517d9fe: Move `MakeswiftComponentType` to `react/builtins` entrypoint
+- 3f9110b: Remove `components` runtime entry point. Removes the exposure of internal only hooks and constants.
+
+### Patch Changes
+
+- c54171d: Separate builtin component registration from runtime instantiation
+- 69b27ad: Expose runtime without pre-registered builtins, as well as functions to register builtins given a runtime instance
+
 ## 0.26.0-canary.8
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@makeswift/hono-react",
-  "version": "0.0.2-canary.8",
+  "version": "0.0.2-canary.9",
   "license": "MIT",
   "files": [
     "dist",
