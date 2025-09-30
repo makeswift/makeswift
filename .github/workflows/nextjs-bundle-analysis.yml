@@ -3,11 +3,11 @@ name: Next.js Bundle Analysis
 on:
   push:
     branches: [main]
+  pull_request:
+    types: [opened, synchronize]
     paths-ignore:
       - examples/**
       - .changeset/**
-  pull_request:
-    types: [opened, synchronize]
 
 concurrency: ${{ github.workflow}}-${{ github.ref }}
 
