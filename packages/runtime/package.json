@@ -8,7 +8,6 @@
     "react",
     "box-model",
     "client",
-    "components",
     "core",
     "api",
     "next",
@@ -34,9 +33,89 @@
       "import": "./dist/esm/prop-controllers/index.js"
     },
     "./react": {
-      "types": "./dist/types/react.d.ts",
-      "require": "./dist/cjs/react.js",
-      "import": "./dist/esm/react.js"
+      "types": "./dist/types/react/index.d.ts",
+      "require": "./dist/cjs/react/index.js",
+      "import": "./dist/esm/react/index.js"
+    },
+    "./react/core": {
+      "types": "./dist/types/react/core/index.d.ts",
+      "require": "./dist/cjs/react/core/index.js",
+      "import": "./dist/esm/react/core/index.js"
+    },
+    "./react/builtins": {
+      "types": "./dist/types/react/builtins/index.d.ts",
+      "require": "./dist/cjs/react/builtins/index.js",
+      "import": "./dist/esm/react/builtins/index.js"
+    },
+    "./react/builtins/carousel": {
+      "types": "./dist/types/react/builtins/carousel.d.ts",
+      "require": "./dist/cjs/react/builtins/carousel.js",
+      "import": "./dist/esm/react/builtins/carousel.js"
+    },
+    "./react/builtins/box": {
+      "types": "./dist/types/react/builtins/box.d.ts",
+      "require": "./dist/cjs/react/builtins/box.js",
+      "import": "./dist/esm/react/builtins/box.js"
+    },
+    "./react/builtins/button": {
+      "types": "./dist/types/react/builtins/button.d.ts",
+      "require": "./dist/cjs/react/builtins/button.js",
+      "import": "./dist/esm/react/builtins/button.js"
+    },
+    "./react/builtins/countdown": {
+      "types": "./dist/types/react/builtins/countdown.d.ts",
+      "require": "./dist/cjs/react/builtins/countdown.js",
+      "import": "./dist/esm/react/builtins/countdown.js"
+    },
+    "./react/builtins/divider": {
+      "types": "./dist/types/react/builtins/divider.d.ts",
+      "require": "./dist/cjs/react/builtins/divider.js",
+      "import": "./dist/esm/react/builtins/divider.js"
+    },
+    "./react/builtins/embed": {
+      "types": "./dist/types/react/builtins/embed.d.ts",
+      "require": "./dist/cjs/react/builtins/embed.js",
+      "import": "./dist/esm/react/builtins/embed.js"
+    },
+    "./react/builtins/form": {
+      "types": "./dist/types/react/builtins/form.d.ts",
+      "require": "./dist/cjs/react/builtins/form.js",
+      "import": "./dist/esm/react/builtins/form.js"
+    },
+    "./react/builtins/image": {
+      "types": "./dist/types/react/builtins/image.d.ts",
+      "require": "./dist/cjs/react/builtins/image.js",
+      "import": "./dist/esm/react/builtins/image.js"
+    },
+    "./react/builtins/navigation": {
+      "types": "./dist/types/react/builtins/navigation.d.ts",
+      "require": "./dist/cjs/react/builtins/navigation.js",
+      "import": "./dist/esm/react/builtins/navigation.js"
+    },
+    "./react/builtins/root": {
+      "types": "./dist/types/react/builtins/root.d.ts",
+      "require": "./dist/cjs/react/builtins/root.js",
+      "import": "./dist/esm/react/builtins/root.js"
+    },
+    "./react/builtins/slot": {
+      "types": "./dist/types/react/builtins/slot.d.ts",
+      "require": "./dist/cjs/react/builtins/slot.js",
+      "import": "./dist/esm/react/builtins/slot.js"
+    },
+    "./react/builtins/social-links": {
+      "types": "./dist/types/react/builtins/social-links.d.ts",
+      "require": "./dist/cjs/react/builtins/social-links.js",
+      "import": "./dist/esm/react/builtins/social-links.js"
+    },
+    "./react/builtins/text": {
+      "types": "./dist/types/react/builtins/text.d.ts",
+      "require": "./dist/cjs/react/builtins/text.js",
+      "import": "./dist/esm/react/builtins/text.js"
+    },
+    "./react/builtins/video": {
+      "types": "./dist/types/react/builtins/video.d.ts",
+      "require": "./dist/cjs/react/builtins/video.js",
+      "import": "./dist/esm/react/builtins/video.js"
     },
     "./box-model": {
       "types": "./dist/types/box-model.d.ts",
@@ -47,11 +126,6 @@
       "types": "./dist/types/client/index.d.ts",
       "require": "./dist/cjs/client/index.js",
       "import": "./dist/esm/client/index.js"
-    },
-    "./components": {
-      "types": "./dist/types/components/index.d.ts",
-      "require": "./dist/cjs/components/index.js",
-      "import": "./dist/esm/components/index.js"
     },
     "./core": {
       "types": "./dist/types/core/index.d.ts",

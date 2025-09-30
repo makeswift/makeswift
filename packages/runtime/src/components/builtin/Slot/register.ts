@@ -1,10 +1,10 @@
 import { lazy } from 'react'
-import { ReactRuntime } from '../../../react'
+import { type ReactRuntimeCore } from '../../../runtimes/react/react-runtime-core'
 import { MakeswiftComponentType } from '../constants'
 import { Checkbox } from '@makeswift/controls'
 import { Slot } from '../../../controls'
 
-export function registerComponent(runtime: ReactRuntime) {
+export function registerComponent(runtime: ReactRuntimeCore) {
   return runtime.registerComponent(
     lazy(() => import('./Slot')),
     {

@@ -7,7 +7,7 @@ import {
 } from '../../client'
 import { CacheData } from '../../api/react'
 import { type ElementData } from '../../state/react-page'
-import { MakeswiftComponentType } from '../../components'
+import { MakeswiftComponentType } from '../../components/builtin/constants'
 
 export function createRootComponent(elements: ElementData[], rootId?: string) {
   return {

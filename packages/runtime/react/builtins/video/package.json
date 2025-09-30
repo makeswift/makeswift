@@ -1,0 +1,5 @@
+{
+  "main": "../../dist/cjs/react/builtins/video.js",
+  "module": "../../dist/esm/react/builtins/video.js",
+  "types": "../../dist/types/react/builtins/video.d.ts"
+}
