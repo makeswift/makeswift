@@ -1,5 +1,0 @@
-{
-  "main": "../dist/cjs/slate/index.js",
-  "module": "../dist/es/slate/index.js",
-  "types": "../dist/types/slate/index.d.ts"
-}
