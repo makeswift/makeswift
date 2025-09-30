@@ -103,11 +103,6 @@
       "require": "./dist/cjs/controls/index.js",
       "import": "./dist/esm/controls/index.js"
     },
-    "./slate": {
-      "types": "./dist/types/slate/index.d.ts",
-      "require": "./dist/cjs/slate/index.js",
-      "import": "./dist/esm/slate/index.js"
-    },
     "./state/breakpoints": {
       "types": "./dist/types/state/modules/breakpoints.d.ts",
       "require": "./dist/cjs/state/modules/breakpoints.js",
