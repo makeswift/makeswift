@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.26.0-canary.10
+
+### Patch Changes
+
+- b31a247: Remove old slate entry point from package.json
+
 ## 0.26.0-canary.9
 
 ### Minor Changes

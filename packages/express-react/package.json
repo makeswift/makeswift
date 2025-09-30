@@ -1,6 +1,6 @@
 {
   "name": "@makeswift/express-react",
-  "version": "0.0.5-canary.9",
+  "version": "0.0.5-canary.10",
   "license": "MIT",
   "files": [
     "dist",
