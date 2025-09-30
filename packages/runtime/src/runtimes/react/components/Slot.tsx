@@ -2,7 +2,7 @@
 
 import { ReactNode, useMemo } from 'react'
 import { MakeswiftComponentSnapshot } from '../../../client'
-import { MakeswiftComponentType } from '../../../components'
+import { MakeswiftComponentType } from '../../../components/builtin/constants'
 
 import { MakeswiftComponent } from './MakeswiftComponent'
 import { SlotProvider } from './SlotProvider'

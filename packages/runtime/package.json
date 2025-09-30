@@ -8,7 +8,6 @@
     "react",
     "box-model",
     "client",
-    "components",
     "core",
     "api",
     "next",
@@ -122,11 +121,6 @@
       "types": "./dist/types/client/index.d.ts",
       "require": "./dist/cjs/client/index.js",
       "import": "./dist/esm/client/index.js"
-    },
-    "./components": {
-      "types": "./dist/types/components/index.d.ts",
-      "require": "./dist/cjs/components/index.js",
-      "import": "./dist/esm/components/index.js"
     },
     "./core": {
       "types": "./dist/types/core/index.d.ts",

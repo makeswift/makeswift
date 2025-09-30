@@ -5,7 +5,7 @@ import { act } from 'react-dom/test-utils'
 import { render } from '@testing-library/react'
 
 import { ReactRuntime } from '../../runtimes/react/react-runtime'
-import { MakeswiftComponentType } from '../../components'
+import { MakeswiftComponentType } from '../../components/builtin/constants'
 
 import { Page as MakeswiftPage } from '../components/page'
 
