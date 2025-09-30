@@ -7,6 +7,7 @@ import MakeswiftError from './errors/MakeswiftError'
 import { getProjectName } from './utils/get-name'
 import { detectPackageManager, PM } from './utils/detect-package-manager'
 import { performHandshake } from './utils/handshake'
+import { promptForMissingEnvVars } from './utils/prompt-env-vars'
 
 const MAKESWIFT_APP_ORIGIN = process.env.MAKESWIFT_APP_ORIGIN || 'https://app.makeswift.com'
 
@@ -71,7 +72,10 @@ async function init(
     useBun,
   })
 
-  fs.writeFileSync(`${nextAppDir}/.env.local`, envLocal)
+  // Prompt for any missing environment variables required by the example
+  const finalEnvLocal = await promptForMissingEnvVars(nextAppDir, envLocal)
+
+  fs.writeFileSync(`${nextAppDir}/.env.local`, finalEnvLocal)
 
   let packageManager: PM
   if (useNpm) packageManager = 'npm'
