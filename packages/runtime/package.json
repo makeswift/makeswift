@@ -42,6 +42,11 @@
       "require": "./dist/cjs/react/core/index.js",
       "import": "./dist/esm/react/core/index.js"
     },
+    "./react/builtins": {
+      "types": "./dist/types/react/builtins/index.d.ts",
+      "require": "./dist/cjs/react/builtins/index.js",
+      "import": "./dist/esm/react/builtins/index.js"
+    },
     "./react/builtins/carousel": {
       "types": "./dist/types/react/builtins/carousel.d.ts",
       "require": "./dist/cjs/react/builtins/carousel.js",
