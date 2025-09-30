@@ -1,5 +1,17 @@
 # @makeswift/runtime
 
+## 0.26.0-canary.8
+
+### Minor Changes
+
+- d49a13c: Remove duplicate export of `PropControllerDescriptor` and `PropControllerDescriptorValueType`
+- 192dbe0: Remove `slate` entry point, which only contained internal functions
+- 868d21e: Move `createBaseDocument` to internal `builder` entry point
+- cc1c187: Move `Element` type export to `core` entry point
+- 9d66ac8: Move exports of builder actions to the runtime builder entry point
+- 0ed75cb: Remove exports for internal React primitives
+- 064408f: Remove export for internal `Operation` type
+
 ## 0.26.0-canary.7
 
 ### Patch Changes
