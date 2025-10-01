@@ -4,12 +4,12 @@
   "license": "MIT",
   "files": [
     "dist",
-    "react",
-    "client",
     "api",
-    "next",
     "builder",
+    "client",
     "controls",
+    "next",
+    "react",
     "unstable-framework-support"
   ],
   "engines": {
@@ -22,15 +22,70 @@
       "require": "./dist/cjs/index.js",
       "import": "./dist/esm/index.js"
     },
+    "./api": {
+      "types": "./dist/types/api/index.d.ts",
+      "require": "./dist/cjs/api/index.js",
+      "import": "./dist/esm/api/index.js"
+    },
+    "./builder": {
+      "types": "./dist/types/builder/index.d.ts",
+      "require": "./dist/cjs/builder/index.js",
+      "import": "./dist/esm/builder/index.js"
+    },
+    "./builder/breakpoints": {
+      "types": "./dist/types/builder/breakpoints/index.d.ts",
+      "require": "./dist/cjs/builder/breakpoints/index.js",
+      "import": "./dist/esm/builder/breakpoints/index.js"
+    },
+    "./builder/core": {
+      "types": "./dist/types/builder/core/index.d.ts",
+      "require": "./dist/cjs/builder/core/index.js",
+      "import": "./dist/esm/builder/core/index.js"
+    },
+    "./builder/rich-text": {
+      "types": "./dist/types/builder/rich-text/index.d.ts",
+      "require": "./dist/cjs/builder/rich-text/index.js",
+      "import": "./dist/esm/builder/rich-text/index.js"
+    },
+    "./client": {
+      "types": "./dist/types/client/index.d.ts",
+      "require": "./dist/cjs/client/index.js",
+      "import": "./dist/esm/client/index.js"
+    },
+    "./controls": {
+      "types": "./dist/types/controls/index.d.ts",
+      "require": "./dist/cjs/controls/index.js",
+      "import": "./dist/esm/controls/index.js"
+    },
+    "./next": {
+      "types": "./dist/types/next/index.d.ts",
+      "require": "./dist/cjs/next/index.js",
+      "import": "./dist/esm/next/index.js"
+    },
+    "./next/document": {
+      "types": "./dist/types/next/document.d.ts",
+      "module": "./dist/esm/next/document.js",
+      "require": "./dist/cjs/next/document.js"
+    },
+    "./next/middleware": {
+      "types": "./dist/types/next/middleware/index.d.ts",
+      "require": "./dist/cjs/next/middleware/index.js",
+      "import": "./dist/esm/next/middleware/index.js"
+    },
+    "./next/plugin": {
+      "types": "./next/plugin/index.d.ts",
+      "require": "./dist/cjs/next/plugin.js",
+      "import": "./dist/cjs/next/plugin.js"
+    },
+    "./next/server": {
+      "types": "./dist/types/next/server.d.ts",
+      "module": "./dist/esm/next/server.js",
+      "require": "./dist/cjs/next/server.js"
+    },
     "./react": {
       "types": "./dist/types/react/index.d.ts",
       "require": "./dist/cjs/react/index.js",
       "import": "./dist/esm/react/index.js"
-    },
-    "./react/core": {
-      "types": "./dist/types/react/core/index.d.ts",
-      "require": "./dist/cjs/react/core/index.js",
-      "import": "./dist/esm/react/core/index.js"
     },
     "./react/builtins": {
       "types": "./dist/types/react/builtins/index.d.ts",
@@ -107,65 +162,10 @@
       "require": "./dist/cjs/react/builtins/video.js",
       "import": "./dist/esm/react/builtins/video.js"
     },
-    "./client": {
-      "types": "./dist/types/client/index.d.ts",
-      "require": "./dist/cjs/client/index.js",
-      "import": "./dist/esm/client/index.js"
-    },
-    "./api": {
-      "types": "./dist/types/api/index.d.ts",
-      "require": "./dist/cjs/api/index.js",
-      "import": "./dist/esm/api/index.js"
-    },
-    "./next": {
-      "types": "./dist/types/next/index.d.ts",
-      "require": "./dist/cjs/next/index.js",
-      "import": "./dist/esm/next/index.js"
-    },
-    "./next/document": {
-      "types": "./dist/types/next/document.d.ts",
-      "module": "./dist/esm/next/document.js",
-      "require": "./dist/cjs/next/document.js"
-    },
-    "./next/middleware": {
-      "types": "./dist/types/next/middleware/index.d.ts",
-      "require": "./dist/cjs/next/middleware/index.js",
-      "import": "./dist/esm/next/middleware/index.js"
-    },
-    "./next/server": {
-      "types": "./dist/types/next/server.d.ts",
-      "module": "./dist/esm/next/server.js",
-      "require": "./dist/cjs/next/server.js"
-    },
-    "./next/plugin": {
-      "types": "./next/plugin/index.d.ts",
-      "require": "./dist/cjs/next/plugin.js",
-      "import": "./dist/cjs/next/plugin.js"
-    },
-    "./builder": {
-      "types": "./dist/types/builder/index.d.ts",
-      "require": "./dist/cjs/builder/index.js",
-      "import": "./dist/esm/builder/index.js"
-    },
-    "./builder/core": {
-      "types": "./dist/types/builder/core/index.d.ts",
-      "require": "./dist/cjs/builder/core/index.js",
-      "import": "./dist/esm/builder/core/index.js"
-    },
-    "./builder/breakpoints": {
-      "types": "./dist/types/builder/breakpoints/index.d.ts",
-      "require": "./dist/cjs/builder/breakpoints/index.js",
-      "import": "./dist/esm/builder/breakpoints/index.js"
-    },
-    "./builder/rich-text": {
-      "types": "./dist/types/builder/rich-text/index.d.ts",
-      "require": "./dist/cjs/builder/rich-text/index.js",
-      "import": "./dist/esm/builder/rich-text/index.js"
-    },
-    "./controls": {
-      "types": "./dist/types/controls/index.d.ts",
-      "require": "./dist/cjs/controls/index.js",
-      "import": "./dist/esm/controls/index.js"
+    "./react/core": {
+      "types": "./dist/types/react/core/index.d.ts",
+      "require": "./dist/cjs/react/core/index.js",
+      "import": "./dist/esm/react/core/index.js"
     },
     "./unstable-framework-support": {
       "types": "./dist/types/unstable-framework-support/index.d.ts",
