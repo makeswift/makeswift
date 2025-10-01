@@ -5,7 +5,6 @@
   "files": [
     "dist",
     "react",
-    "box-model",
     "client",
     "core",
     "api",
@@ -109,11 +108,6 @@
       "types": "./dist/types/react/builtins/video.d.ts",
       "require": "./dist/cjs/react/builtins/video.js",
       "import": "./dist/esm/react/builtins/video.js"
-    },
-    "./box-model": {
-      "types": "./dist/types/box-model.d.ts",
-      "require": "./dist/cjs/box-model.js",
-      "import": "./dist/esm/box-model.js"
     },
     "./client": {
       "types": "./dist/types/client/index.d.ts",

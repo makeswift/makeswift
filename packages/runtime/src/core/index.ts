@@ -1,4 +1,5 @@
 export {
+  type BoxModel,
   type Breakpoint,
   type BreakpointId,
   type Breakpoints,

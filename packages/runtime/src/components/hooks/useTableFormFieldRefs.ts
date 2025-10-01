@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { getBox } from '../../box-model'
+import { getBox } from '../../state/modules/box-models'
 import { TableFormFieldsPropController } from '../../prop-controllers/instances'
 import { useIsInBuilder } from '../../runtimes/react'
 
