@@ -1,0 +1,5 @@
+{
+  "main": "../../dist/cjs/builder/breakpoints/index.js",
+  "module": "../../dist/esm/builder/breakpoints/index.js",
+  "types": "../../dist/types/builder/breakpoints/index.d.ts"
+}

@@ -11,7 +11,6 @@
     "next",
     "builder",
     "controls",
-    "state",
     "unstable-framework-support"
   ],
   "engines": {
@@ -154,6 +153,11 @@
       "require": "./dist/cjs/builder/index.js",
       "import": "./dist/esm/builder/index.js"
     },
+    "./builder/breakpoints": {
+      "types": "./dist/types/builder/breakpoints/index.d.ts",
+      "require": "./dist/cjs/builder/breakpoints/index.js",
+      "import": "./dist/esm/builder/breakpoints/index.js"
+    },
     "./builder/rich-text": {
       "types": "./dist/types/builder/rich-text/index.d.ts",
       "require": "./dist/cjs/builder/rich-text/index.js",
@@ -163,11 +167,6 @@
       "types": "./dist/types/controls/index.d.ts",
       "require": "./dist/cjs/controls/index.js",
       "import": "./dist/esm/controls/index.js"
-    },
-    "./state/breakpoints": {
-      "types": "./dist/types/state/modules/breakpoints.d.ts",
-      "require": "./dist/cjs/state/modules/breakpoints.js",
-      "import": "./dist/esm/state/modules/breakpoints.js"
     },
     "./unstable-framework-support": {
       "types": "./dist/types/unstable-framework-support/index.d.ts",
