@@ -4,57 +4,31 @@ import * as fs from 'fs'
 import * as path from 'path'
 
 /**
- * Extracts environment variable names from a .env.example file.
+ * Parses environment variable content to extract variable names.
  * Looks for lines in the format: VARIABLE_NAME=value or VARIABLE_NAME=
+ * Skips empty lines and comments.
  */
-function parseEnvExampleFile(filePath: string): string[] {
-  try {
-    const content = fs.readFileSync(filePath, 'utf-8')
-    const lines = content.split('\n')
-    const envVars = new Set<string>()
-
-    for (const line of lines) {
-      const trimmed = line.trim()
-
-      // Skip empty lines and comments
-      if (!trimmed || trimmed.startsWith('#')) {
-        continue
-      }
-
-      // Parse variable line (KEY= or KEY=value)
-      const equalIndex = trimmed.indexOf('=')
-      if (equalIndex > 0) {
-        const varName = trimmed.substring(0, equalIndex).trim()
-
-        envVars.add(varName)
-      }
-    }
-
-    return Array.from(envVars)
-  } catch (error) {
-    return []
-  }
-}
-
-/**
- * Parses existing .env.local content to extract variable names
- */
-function parseExistingEnvVars(envContent: string): Set<string> {
+function parseEnvVarFromString(envContent: string): Set<string> {
   const lines = envContent.split('\n')
-  const existingVars = new Set<string>()
+  const envVars = new Set<string>()
 
   for (const line of lines) {
     const trimmed = line.trim()
-    if (trimmed && !trimmed.startsWith('#')) {
-      const equalIndex = trimmed.indexOf('=')
-      if (equalIndex > 0) {
-        const varName = trimmed.substring(0, equalIndex).trim()
-        existingVars.add(varName)
-      }
+
+    // Skip empty lines and comments
+    if (!trimmed || trimmed.startsWith('#')) {
+      continue
+    }
+
+    // Parse variable line (KEY= or KEY=value)
+    const equalIndex = trimmed.indexOf('=')
+    if (equalIndex > 0) {
+      const varName = trimmed.substring(0, equalIndex).trim()
+      envVars.add(varName)
     }
   }
 
-  return existingVars
+  return envVars
 }
 
 /**
@@ -74,8 +48,7 @@ async function promptForEnvVars(missingVars: string[]): Promise<Record<string, s
     default: '',
   }))
 
-  const answers = await inquirer.prompt(questions)
-  return answers as Record<string, string>
+  return inquirer.prompt<Record<string, string>>(questions)
 }
 
 /**
@@ -92,13 +65,19 @@ export async function promptForMissingEnvVars(
     return existingEnvContent
   }
 
-  const requiredVars = parseEnvExampleFile(envExamplePath)
+  let requiredVars: string[] = []
+  try {
+    const content = fs.readFileSync(envExamplePath, 'utf-8')
+    requiredVars = Array.from(parseEnvVarFromString(content))
+  } catch (error) {
+    console.warn(chalk.yellow(`Warning: Could not read ${envExamplePath}`))
+  }
 
   if (requiredVars.length === 0) {
     return existingEnvContent
   }
 
-  const existingVars = parseExistingEnvVars(existingEnvContent)
+  const existingVars = parseEnvVarFromString(existingEnvContent)
   const missingVars = requiredVars.filter(varName => !existingVars.has(varName))
 
   if (missingVars.length === 0) {
@@ -108,13 +87,22 @@ export async function promptForMissingEnvVars(
   const userProvidedVars = await promptForEnvVars(missingVars)
 
   // Build the additional env vars string
-  let additionalEnvVars = ''
-  for (const [key, value] of Object.entries(userProvidedVars)) {
-    if (value.trim()) {
-      additionalEnvVars += `${key}=${value}\n`
-    }
+  let additionalEnvVars = Object.entries(userProvidedVars)
+    .filter(([, value]) => value.trim())
+    .map(([key, value]) => `${key}=${value}`)
+    .join('\n')
+
+  // Add trailing newline if we have content
+  if (additionalEnvVars) {
+    additionalEnvVars += '\n'
   }
 
-  const allEnvVars = existingEnvContent + additionalEnvVars
+  // Ensure proper newline separation between existing and new content
+  let allEnvVars = existingEnvContent
+  if (allEnvVars && !allEnvVars.endsWith('\n')) {
+    allEnvVars += '\n'
+  }
+  allEnvVars += additionalEnvVars
+
   return allEnvVars
 }
