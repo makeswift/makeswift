@@ -9,7 +9,7 @@ import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
 
 import { Descriptor, isLegacyDescriptor } from '../prop-controllers/descriptors'
 import { copy as propControllerCopy } from '../prop-controllers/copy'
-import { DELETED_PROP_CONTROLLER_TYPES, PropControllerDescriptor } from '../prop-controllers'
+import { DELETED_PROP_CONTROLLER_TYPES } from '../prop-controllers/deleted'
 
 export function copy(definition: Descriptor, value: any, context: CopyContext) {
   if (!isLegacyDescriptor(definition)) {
@@ -39,12 +39,7 @@ export function copy(definition: Descriptor, value: any, context: CopyContext) {
   }
 }
 
-export function merge(
-  definition: PropControllerDescriptor,
-  a: Data,
-  b: Data = a,
-  context: MergeContext,
-): Data {
+export function merge(definition: Descriptor, a: Data, b: Data = a, context: MergeContext): Data {
   if (!isLegacyDescriptor(definition)) {
     return definition.mergeData(a, b, context)
   }

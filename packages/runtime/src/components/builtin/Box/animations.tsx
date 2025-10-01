@@ -2,7 +2,7 @@
 
 import { type CSSObject } from '@emotion/serialize'
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { ResponsiveValue } from '../../../prop-controllers'
+import { type ResponsiveValue } from '@makeswift/controls'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { useMediaQuery } from '../../hooks'
 import { gridItemIdentifierClassName } from '../../shared/grid-item'

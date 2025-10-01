@@ -1,6 +1,6 @@
 import { cx } from '@emotion/css'
 import { ComponentPropsWithoutRef } from 'react'
-import { ResponsiveValue } from '../../prop-controllers'
+import { type ResponsiveValue } from '@makeswift/controls'
 import { useStyle } from '../../runtimes/react/use-style'
 import { useItemAnimation } from '../builtin/Box/animations'
 import { useResponsiveGridItem } from '../utils/responsive-style'

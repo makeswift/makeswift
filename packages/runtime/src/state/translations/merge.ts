@@ -8,7 +8,7 @@ import {
 } from '@makeswift/prop-controllers'
 import { ReactMergeTranslationsVisitor } from '../../controls/visitors/merge-translations-visitor'
 import { isLegacyDescriptor } from '../../prop-controllers/descriptors'
-import { PropControllerDescriptor } from '../../prop-controllers'
+import { Descriptor as PropControllerDescriptor } from '../../prop-controllers/descriptors'
 
 export function mergeElementTreeTranslatedData(
   state: State,
