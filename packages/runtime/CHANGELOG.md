@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.26.0-canary.11
+
+### Minor Changes
+
+- b4fd580: Remove `prop-controllers` entry point from runtime, which contained internal only functionality and types
+
 ## 0.26.0-canary.10
 
 ### Patch Changes
