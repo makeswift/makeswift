@@ -6,7 +6,6 @@
     "dist",
     "react",
     "client",
-    "core",
     "api",
     "next",
     "builder",
@@ -113,11 +112,6 @@
       "require": "./dist/cjs/client/index.js",
       "import": "./dist/esm/client/index.js"
     },
-    "./core": {
-      "types": "./dist/types/core/index.d.ts",
-      "require": "./dist/cjs/core/index.js",
-      "import": "./dist/esm/core/index.js"
-    },
     "./api": {
       "types": "./dist/types/api/index.d.ts",
       "require": "./dist/cjs/api/index.js",
@@ -152,6 +146,11 @@
       "types": "./dist/types/builder/index.d.ts",
       "require": "./dist/cjs/builder/index.js",
       "import": "./dist/esm/builder/index.js"
+    },
+    "./builder/core": {
+      "types": "./dist/types/builder/core/index.d.ts",
+      "require": "./dist/cjs/builder/core/index.js",
+      "import": "./dist/esm/builder/core/index.js"
     },
     "./builder/breakpoints": {
       "types": "./dist/types/builder/breakpoints/index.d.ts",
