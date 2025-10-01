@@ -14,6 +14,8 @@ import {
 } from '@makeswift/prop-controllers'
 
 import {
+  type Data,
+  type Device,
   ControlDefinition as UnifiedControlDefinition,
   type SerializedRecord,
   type RichTextValue as RichTextControlValue,
@@ -44,13 +46,11 @@ import {
 } from '../../controls'
 
 import {
-  Data,
-  Device,
   PanelDescriptor as PanelControl,
   PanelDescriptorType as PanelControlType,
   PanelDescriptorValueType as PanelControlValueType,
-  PropControllerDescriptor as ControlDefinition,
-} from '../../prop-controllers'
+  Descriptor as ControlDefinition,
+} from '../../prop-controllers/descriptors'
 
 import {
   DELETED_PROP_CONTROLLER_TYPES,

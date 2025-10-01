@@ -3,7 +3,7 @@ import { getIn } from 'immutable'
 
 import { type Element, type ElementData, isElementReference } from '@makeswift/controls'
 
-import { Introspection } from '../../prop-controllers'
+import * as Introspection from '../../prop-controllers/introspection'
 
 import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
 

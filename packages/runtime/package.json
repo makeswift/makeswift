@@ -4,7 +4,6 @@
   "license": "MIT",
   "files": [
     "dist",
-    "prop-controllers",
     "react",
     "box-model",
     "client",
@@ -25,11 +24,6 @@
       "types": "./dist/types/index.d.ts",
       "require": "./dist/cjs/index.js",
       "import": "./dist/esm/index.js"
-    },
-    "./prop-controllers": {
-      "types": "./dist/types/prop-controllers/index.d.ts",
-      "require": "./dist/cjs/prop-controllers/index.js",
-      "import": "./dist/esm/prop-controllers/index.js"
     },
     "./react": {
       "types": "./dist/types/react/index.d.ts",
