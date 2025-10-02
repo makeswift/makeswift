@@ -1,5 +1,18 @@
 # @makeswift/runtime
 
+## 0.26.0-canary.12
+
+### Minor Changes
+
+- 8b83512: Remove `box-model` entry point. `BoxModel` type is now exported via the internal `core` entrypoint.
+- 10b9b91: Move `core` entry point within internal `builder` entry point
+- 30bf04d: Move `state/breakpoints` entry point to internal `builder` entry point
+
+### Patch Changes
+
+- 7f54667: Re-expose `useIsInBuilder` hook via the `react` entry point
+- b86d4bb: Alphabetize exports in runtime `package.json`
+
 ## 0.26.0-canary.11
 
 ### Minor Changes
