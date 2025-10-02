@@ -6,12 +6,11 @@ import {
   RichTextDefinition,
   ControlInstance,
   Slate,
+  type BoxModel,
   type DataType,
   type SendMessage,
   type Data,
 } from '@makeswift/controls'
-
-import { BoxModel } from '../../box-model'
 
 import { RichTextV2Definition } from './rich-text-v2'
 
