@@ -1,5 +1,11 @@
 # @makeswift/next-plugin
 
+## 0.6.0
+
+### Minor Changes
+
+- 8436c74: Replace `previewMode` config option with `disableBuiltInPreview`, which is set to `false` by default. Also adds logging when this option is enabled.
+
 ## 0.5.0
 
 ### Minor Changes
