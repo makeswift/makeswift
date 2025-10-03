@@ -1,6 +1,6 @@
 {
   "name": "@makeswift/runtime",
-  "version": "0.26.0-canary.12",
+  "version": "0.26.0-canary.13",
   "license": "MIT",
   "files": [
     "dist",

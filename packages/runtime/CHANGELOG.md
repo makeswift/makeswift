@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.26.0-canary.13
+
+### Patch Changes
+
+- Updated dependencies [8436c74]
+  - @makeswift/next-plugin@0.6.0-canary.0
+
 ## 0.26.0-canary.12
 
 ### Minor Changes
