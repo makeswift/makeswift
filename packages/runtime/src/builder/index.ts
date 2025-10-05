@@ -21,6 +21,8 @@ export {
   setLocalizedResourceId,
 } from '../state/actions'
 
+export { type Operation } from '../state/modules/read-write-documents'
+
 export { createBaseDocument } from '../state/react-page'
 
 export type {
