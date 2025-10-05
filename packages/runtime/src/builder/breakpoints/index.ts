@@ -5,4 +5,5 @@ export {
   type State,
   type BreakpointId,
   type Breakpoint,
+  type Breakpoints,
 } from '../../state/modules/breakpoints'
