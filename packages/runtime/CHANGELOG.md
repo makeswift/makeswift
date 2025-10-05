@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.26.0-canary.14
+
+### Patch Changes
+
+- 15d8726: Export builder-required types from internal `builder` entry point
+
 ## 0.26.0-canary.13
 
 ### Patch Changes
