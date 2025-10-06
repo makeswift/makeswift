@@ -12,16 +12,16 @@ export async function performHandshake({
   projectName,
   passedInExample,
   template,
-  env = [],
+  env = {},
   redirectUrl,
 }: {
   projectName: string
   passedInExample?: string
   template?: string
-  env?: string[]
+  env?: Record<string, string>
   redirectUrl: URL
 }): Promise<{
-  envLocal: string
+  envVars: Record<string, string>
   siteApiKey: string
   example: string | null
 }> {
@@ -35,8 +35,9 @@ export async function performHandshake({
   passedInExample && selectSiteUrl.searchParams.set('example', passedInExample)
   template && selectSiteUrl.searchParams.set('template', template)
 
-  if (env.length > 0) {
-    selectSiteUrl.searchParams.set('env_vars', env.join(','))
+  if (Object.keys(env).length > 0) {
+    // Encode env vars as JSON for safe URL transmission
+    selectSiteUrl.searchParams.set('env_vars', JSON.stringify(env))
   }
 
   const selectSiteUrlString = selectSiteUrl.toString()
@@ -51,7 +52,11 @@ export async function performHandshake({
   // Handshake Step 2 - the browser goes to `callbackUrl`
 
   // Handshake Step 3 - we redirect the browser to redirectUrl
-  const { siteApiKey, example, envVars } = await getSiteMetadata({
+  const {
+    siteApiKey,
+    example,
+    envVars: envVarsFromServer,
+  } = await getSiteMetadata({
     port: handshakePort,
     redirectUrl: redirectUrl.toString(),
   })
@@ -61,18 +66,20 @@ export async function performHandshake({
   // @todo: once we can define env vars in the browser, remove ...env.
   //        This is because we want the browser choices to override the
   //        ones passed in via the CLI.
-  const envLocal = buildLocalEnvFile(
-    {
-      MAKESWIFT_SITE_API_KEY: siteApiKey,
-      MAKESWIFT_API_ORIGIN,
-    },
-    envVars,
-  )
+  const combinedEnv: Record<string, string> = {
+    MAKESWIFT_SITE_API_KEY: siteApiKey,
+    ...env,
+    ...envVarsFromServer,
+  }
+
+  if (MAKESWIFT_API_ORIGIN) {
+    combinedEnv.MAKESWIFT_API_ORIGIN = MAKESWIFT_API_ORIGIN
+  }
 
   // Handshake Step 4 - Makeswift redirects to the builder with the site open,
   //                    with the host using `nextAppUrl` for the builder
 
-  return { siteApiKey, envLocal, example: example || passedInExample || null }
+  return { siteApiKey, envVars: combinedEnv, example: example || passedInExample || null }
 }
 
 export async function getSiteMetadata({
@@ -84,12 +91,12 @@ export async function getSiteMetadata({
 }): Promise<{
   siteApiKey: string
   example: string | null
-  envVars: string[]
+  envVars: Record<string, string>
 }> {
   return new Promise<{
     siteApiKey: string
     example: string | null
-    envVars: string[]
+    envVars: Record<string, string>
   }>((resolve, reject) => {
     const sockets: Socket[] = []
     const server = http
@@ -111,13 +118,15 @@ export async function getSiteMetadata({
 
         const example = queryParams.get('example')
 
-        const commaSeparatedEnvVars = queryParams.get('env_vars')
-        let envVars: string[] = []
+        const envVarsString = queryParams.get('env_vars')
+        let envVars: Record<string, string> = {}
 
-        if (commaSeparatedEnvVars != null && commaSeparatedEnvVars.length != 0) {
-          const pairs = commaSeparatedEnvVars.split(',')
-
-          envVars = pairs
+        if (envVarsString != null && envVarsString.length != 0) {
+          try {
+            envVars = JSON.parse(envVarsString)
+          } catch (error) {
+            console.warn('Warning: Could not parse env_vars from URL parameter')
+          }
         }
 
         // add the api key in the redirect URL
@@ -145,21 +154,4 @@ export async function getSiteMetadata({
       sockets.push(socket)
     })
   })
-}
-
-export function buildLocalEnvFile(
-  variables: { [key: string]: string | undefined },
-  predefinedValues?: string[],
-): string {
-  const envFile = Object.entries(variables)
-    .filter(([key, value]) => value != null)
-    .reduce((envFile, [key, value]) => {
-      return envFile + `${key}=${value}\n`
-    }, '')
-
-  if (predefinedValues != null) {
-    return envFile + predefinedValues.join('\n')
-  }
-
-  return envFile
 }
