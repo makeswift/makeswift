@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import { isElementReference, type Element as ElementDataOrRef } from '../../../state/react-page'
 import { ServerElementData } from './server-element-data'
-import { getRuntime } from './runtime'
+import { getRuntime, getSiteVersionFromCache } from './runtime'
 import { Element } from '../../../runtimes/react'
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'
 import { RSCBuilderUpdater } from '../client/rsc-builder-updater'
@@ -28,8 +28,8 @@ export function ServerElement({ element }: Props): ReactNode {
     return <FallbackComponent text="Element reference is not supported on server yet" />
   }
 
-  // TODO: Get this value from the context/props
-  const isPreview = true
+  const siteVersion = getSiteVersionFromCache()
+  const isPreview = siteVersion != null
 
   if (isPreview) {
     return (
