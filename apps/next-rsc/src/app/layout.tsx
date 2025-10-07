@@ -21,7 +21,7 @@ export default async function RootLayout({
   return (
     <html>
       <body>
-        <ExperimentalServerProvider runtime={runtime}>
+        <ExperimentalServerProvider siteVersion={siteVersion} runtime={runtime}>
           <MakeswiftClientProvider
             serializedServerState={runtime.serializeServerState()}
             siteVersion={siteVersion}
