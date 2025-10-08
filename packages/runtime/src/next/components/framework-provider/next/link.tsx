@@ -3,9 +3,9 @@
 import { type ComponentPropsWithoutRef, forwardRef } from 'react'
 import NextLink from 'next/link'
 
-import { type FrameworkContext } from '../../../runtimes/react/components/framework-context'
+import { type FrameworkContext } from '../../../../runtimes/react/components/framework-context'
 
-import { useIsPagesRouter } from '../../hooks/use-is-pages-router'
+import { useIsPagesRouter } from '../../../hooks/use-is-pages-router'
 
 // workaround for https://github.com/vercel/next.js/issues/66650
 const isValidHref = (href: string) => {
