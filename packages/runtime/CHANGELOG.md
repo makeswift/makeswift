@@ -1,123 +1,47 @@
 # @makeswift/runtime
 
-## 0.26.0-canary.14
-
-### Patch Changes
-
-- 15d8726: Export builder-required types from internal `builder` entry point
-
-## 0.26.0-canary.13
-
-### Patch Changes
-
-- Updated dependencies [8436c74]
-  - @makeswift/next-plugin@0.6.0-canary.0
-
-## 0.26.0-canary.12
-
-### Minor Changes
-
-- 8b83512: Remove `box-model` entry point. `BoxModel` type is now exported via the internal `core` entrypoint.
-- 10b9b91: Move `core` entry point within internal `builder` entry point
-- 30bf04d: Move `state/breakpoints` entry point to internal `builder` entry point
-
-### Patch Changes
-
-- 7f54667: Re-expose `useIsInBuilder` hook via the `react` entry point
-- b86d4bb: Alphabetize exports in runtime `package.json`
-
-## 0.26.0-canary.11
-
-### Minor Changes
-
-- b4fd580: Remove `prop-controllers` entry point from runtime, which contained internal only functionality and types
-
-## 0.26.0-canary.10
-
-### Patch Changes
-
-- b31a247: Remove old slate entry point from package.json
-
-## 0.26.0-canary.9
-
-### Minor Changes
-
-- 517d9fe: Move `MakeswiftComponentType` to `react/builtins` entrypoint
-- 3f9110b: Remove `components` runtime entry point. Removes the exposure of internal only hooks and constants.
-
-### Patch Changes
-
-- c54171d: Separate builtin component registration from runtime instantiation
-- 69b27ad: Expose runtime without pre-registered builtins, as well as functions to register builtins given a runtime instance
-
-## 0.26.0-canary.8
+## 0.26.0
 
 ### Minor Changes
 
 - d49a13c: Remove duplicate export of `PropControllerDescriptor` and `PropControllerDescriptorValueType`
+- 8b83512: Remove `box-model` entry point. `BoxModel` type is now exported via the internal `core` entrypoint.
 - 192dbe0: Remove `slate` entry point, which only contained internal functions
 - 868d21e: Move `createBaseDocument` to internal `builder` entry point
 - cc1c187: Move `Element` type export to `core` entry point
 - 9d66ac8: Move exports of builder actions to the runtime builder entry point
+- 10b9b91: Move `core` entry point within internal `builder` entry point
 - 0ed75cb: Remove exports for internal React primitives
+- b4fd580: Remove `prop-controllers` entry point from runtime, which contained internal only functionality and types
 - 064408f: Remove export for internal `Operation` type
-
-## 0.26.0-canary.7
-
-### Patch Changes
-
-- 7ba874e: feat: add `builtinSuspense` option in `registerComponent` to control whether the runtime wraps the component in a default `<Suspense>` boundary
-
-## 0.26.0-canary.6
-
-### Patch Changes
-
-- 2694de9: Fix incorrect file extension for client export
-- 7ae5129: Move module declarations ahead of require condition for `package.json` exports
-
-## 0.26.0-canary.5
-
-### Minor Changes
-
+- 517d9fe: Move `MakeswiftComponentType` to `react/builtins` entrypoint
 - 07b93df: Remove `getTranslatableData` method from the ReactRuntime
-
-### Patch Changes
-
-- 289a662: Remove `mergeTranslatedData` method from the ReactRuntime. Removes `parse5` from client bundles.
-
-## 0.25.4-canary.4
-
-### Patch Changes
-
-- 1233f09: Rearrange type exports to be declared first in `package.json`
-
-## 0.25.4-canary.3
-
-### Patch Changes
-
-- 6408396: Remove translatable data merging from controls in favor of visitor pattern
-- Updated dependencies [6408396]
-  - @makeswift/controls@0.1.14-canary.0
-  - @makeswift/prop-controllers@0.4.8-canary.0
-
-## 0.25.4-canary.2
-
-### Patch Changes
-
-- 542625e: Drop Carousel dependency on popmotion library
-
-## 0.25.4-canary.1
+- 3f9110b: Remove `components` runtime entry point. Removes the exposure of internal only hooks and constants.
+- 30bf04d: Move `state/breakpoints` entry point to internal `builder` entry point
 
 ### Patch Changes
 
 - d4834c4: fix: support dynamic page registration and unregistration with builder
-
-## 0.25.4-canary.0
-
-### Patch Changes
-
+- 2694de9: Fix incorrect file extension for client export
 - 90a2683: chore: upgrade parse5 to latest minor version
+- c54171d: Separate builtin component registration from runtime instantiation
+- 69b27ad: Expose runtime without pre-registered builtins, as well as functions to register builtins given a runtime instance
 - 5afcff6: chore: move type dependencies to dev dependencies
+- 1233f09: Rearrange type exports to be declared first in `package.json`
+- 7ae5129: Move module declarations ahead of require condition for `package.json` exports
+- 7ba874e: feat: add `builtinSuspense` option in `registerComponent` to control whether the runtime wraps the component in a default `<Suspense>` boundary
+- 15d8726: Export builder-required types from internal `builder` entry point
+- 7f54667: Re-expose `useIsInBuilder` hook via the `react` entry point
+- b86d4bb: Alphabetize exports in runtime `package.json`
+- 542625e: Drop Carousel dependency on popmotion library
+- b31a247: Remove old slate entry point from package.json
+- 6408396: Remove translatable data merging from controls in favor of visitor pattern
+- 289a662: Remove `mergeTranslatedData` method from the ReactRuntime. Removes `parse5` from client bundles.
+- Updated dependencies [8436c74]
+- Updated dependencies [6408396]
+  - @makeswift/next-plugin@0.6.0
+  - @makeswift/controls@0.1.14
+  - @makeswift/prop-controllers@0.4.8
 
 ## 0.25.3
 
