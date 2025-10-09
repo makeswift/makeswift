@@ -1,0 +1,1 @@
+export { DatoText } from './DatoText'

@@ -1,0 +1,97 @@
+fragment RichText on BlogpostModelBodyField {
+  __typename
+  blocks {
+    __typename
+    id
+    asset {
+      responsiveImage(imgixParams: { auto: format }) {
+        __typename
+        src
+        width
+        height
+        alt
+        title
+        base64
+        sizes
+        srcSet
+        webpSrcSet
+      }
+    }
+  }
+  value
+  links
+}
+
+fragment BlogPostFields on BlogpostRecord {
+  __typename
+  _publishedAt
+  id
+  title
+  slug
+  description
+  banner {
+    __typename
+    mimeType
+    responsiveImage(imgixParams: { fit: fill, w: 2000, h: 374, auto: format }) {
+      __typename
+      sizes
+      src
+      width
+      height
+      alt
+      title
+      base64
+      webpSrcSet
+      srcSet
+    }
+  }
+  body {
+    __typename
+    ...RichText
+  }
+  author {
+    __typename
+    name
+    slug
+    description {
+      __typename
+      value
+      blocks
+      links
+    }
+    jobTitle
+    avatar {
+      __typename
+      responsiveImage(imgixParams: { fit: fill, w: 48, h: 48, auto: format }) {
+        __typename
+        sizes
+        src
+        width
+        height
+        alt
+        title
+        base64
+        webpSrcSet
+        srcSet
+      }
+    }
+  }
+  feedDate
+}
+
+query GetBlogs(
+  $limit: IntType = 8
+  $skip: IntType!
+  $order: [BlogpostModelOrderBy]
+  $filter: BlogpostModelFilter
+) {
+  allBlogposts(first: $limit, skip: $skip, orderBy: $order, filter: $filter) {
+    ...BlogPostFields
+  }
+}
+
+query GetBlog($slug: String!) {
+  blogpost(filter: { slug: { eq: $slug } }) {
+    ...BlogPostFields
+  }
+}
