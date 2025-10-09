@@ -1,5 +1,11 @@
 # makeswift
 
+## 0.3.3-canary.0
+
+### Patch Changes
+
+- 5cfc787: CLI `init` will now prompt user for environment variables when `.env.example` is available in example
+
 ## 0.3.2
 
 ### Patch Changes
