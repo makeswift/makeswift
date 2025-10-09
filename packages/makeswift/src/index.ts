@@ -24,7 +24,7 @@ program
   .option('--use-bun', 'Explicitly tell the CLI to bootstrap the app using bun')
   .option(
     '--env <items...>',
-    "Provide environment variables as comma-separated key=value pairs to go into the Next app's .env file.",
+    "Provide environment variables as space-separated key=value pairs to go into the Next app's .env file. Example: --env FOO=BAR BAR=FOO",
   )
   .action(init)
 
