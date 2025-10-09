@@ -99,6 +99,7 @@ async function init(
   if (useNpm) packageManager = 'npm'
   else if (useYarn) packageManager = 'yarn'
   else if (usePnpm) packageManager = 'pnpm'
+  else if (useBun) packageManager = 'bun'
   else packageManager = detectPackageManager()
 
   let spawnArgs
