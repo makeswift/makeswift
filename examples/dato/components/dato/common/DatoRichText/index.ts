@@ -1,0 +1,1 @@
+export { DatoRichText } from './DatoRichText'

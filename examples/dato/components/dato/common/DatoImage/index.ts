@@ -1,0 +1,1 @@
+export { DatoImage } from './DatoImage'

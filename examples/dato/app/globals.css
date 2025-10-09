@@ -1,0 +1,412 @@
+@import 'tailwindcss';
+
+@plugin 'tailwindcss-animate';
+@plugin '@tailwindcss/typography';
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-highlight: var(--primary-highlight);
+  --color-primary-shadow: var(--primary-shadow);
+
+  --color-accent: var(--accent);
+  --color-accent-highlight: var(--accent-highlight);
+  --color-accent-shadow: var(--accent-shadow);
+
+  --color-success: var(--success);
+  --color-success-highlight: var(--success-highlight);
+  --color-success-shadow: var(--success-shadow);
+
+  --color-error: var(--error);
+  --color-error-highlight: var(--error-highlight);
+  --color-error-shadow: var(--error-shadow);
+
+  --color-warning: var(--warning);
+  --color-warning-highlight: var(--warning-highlight);
+  --color-warning-shadow: var(--warning-shadow);
+
+  --color-info: var(--info);
+  --color-info-highlight: var(--info-highlight);
+  --color-info-shadow: var(--info-shadow);
+
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+
+  --color-contrast-100: var(--contrast-100);
+  --color-contrast-200: var(--contrast-200);
+  --color-contrast-300: var(--contrast-300);
+  --color-contrast-400: var(--contrast-400);
+  --color-contrast-500: var(--contrast-500);
+
+  --text-xs: var(--font-size-xs);
+  --text-xs--line-height: var(--font-size-xs-line-height);
+  --text-xs--letter-spacing: var(--font-size-xs-letter-spacing);
+
+  --text-sm: var(--font-size-sm);
+  --text-sm-line-height: var(--font-size-sm-line-height);
+  --text-sm-letter-spacing: var(--font-size-sm-letter-spacing);
+
+  --text-base: var(--font-size-base);
+  --text-base--line-height: var(--font-size-base-line-height);
+  --text-base--letter-spacing: var(--font-size-base-letter-spacing);
+
+  --text-lg: var(--font-size-lg);
+  --text-lg--line-height: var(--font-size-lg-line-height);
+  --text-lg--letter-spacing: var(--font-size-lg-letter-spacing);
+
+  --text-xl: var(--font-size-xl);
+  --text-xl--line-height: var(--font-size-xl-line-height);
+  --text-xl--letter-spacing: var(--font-size-xl-letter-spacing);
+
+  --text-2xl: var(--font-size-2xl);
+  --text-2xl--line-height: var(--font-size-2xl-line-height);
+  --text-2xl--letter-spacing: var(--font-size-2xl-letter-spacing);
+
+  --text-3xl: var(--font-size-3xl);
+  --text-3xl--line-height: var(--font-size-3xl-line-height);
+  --text-3xl--letter-spacing: var(--font-size-3xl-letter-spacing);
+
+  --text-4xl: var(--font-size-4xl);
+  --text-4xl--line-height: var(--font-size-4xl-line-height);
+  --text-4xl--letter-spacing: var(--font-size-4xl-letter-spacing);
+
+  --text-5xl: var(--font-size-5xl);
+  --text-5xl--line-height: var(--font-size-5xl-line-height);
+  --text-5xl--letter-spacing: var(--font-size-5xl-letter-spacing);
+
+  --text-6xl: var(--font-size-6xl);
+  --text-6xl--line-height: var(--font-size-6xl-line-height);
+  --text-6xl--letter-spacing: var(--font-size-6xl-letter-spacing);
+
+  --text-7xl: var(--font-size-7xl);
+  --text-7xl--line-height: var(--font-size-7xl-line-height);
+  --text-7xl--letter-spacing: var(--font-size-7xl-letter-spacing);
+
+  --text-8xl: var(--font-size-8xl);
+  --text-8xl--line-height: var(--font-size-8xl-line-height);
+  --text-8xl--letter-spacing: var(--font-size-8xl-letter-spacing);
+
+  --text-9xl: var(--font-size-9xl);
+  --text-9xl--line-height: var(--font-size-9xl-line-height);
+  --text-9xl--letter-spacing: var(--font-size-9xl-letter-spacing);
+
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+
+  --font-heading: var(--font-family-heading);
+  --font-heading--font-feature-settings: var(--font-feature-settings-heading);
+  --font-heading--font-variation-settings: var(--font-variation-settings-heading);
+
+  --font-body: var(--font-family-body);
+  --font-body--font-feature-settings: var(--font-feature-settings-body);
+  --font-body--font-variation-settings: var(--font-variation-settings-body);
+
+  --font-mono: var(--font-family-mono);
+  --font-mono--font-feature-settings: var(--font-feature-settings-mono);
+  --font-mono--font-variation-settings: var(--font-variation-settings-mono);
+
+  --animate-collapse: collapse 400ms cubic-bezier(1, 0, 0.25, 1);
+  --animate-expand: expand 400ms cubic-bezier(1, 0, 0.25, 1);
+  --animate-marching: marching-ants 10s linear infinite;
+  --animate-rotate: rotate 2000ms linear infinite;
+  --animate-scroll: scroll 200ms infinite linear both;
+  --animate-scrollLeft: scrollLeft var(--marquee-duration) linear infinite;
+  --animate-shake: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  --animate-slideIn: slideIn 800ms cubic-bezier(0.25, 1, 0, 1);
+
+  @keyframes collapse {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+
+    to {
+      height: 0;
+    }
+  }
+
+  @keyframes expand {
+    from {
+      height: 0;
+    }
+
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+
+  @keyframes marching-ants {
+    to {
+      background-position:
+        0 0,
+        0 -1px,
+        calc(100% + 1px) 0,
+        100% calc(100% + 1px),
+        -1px 100%;
+    }
+  }
+
+  @keyframes rotateFade {
+    from {
+      opacity: 1;
+      transform: rotateZ(0deg) translate3d(-50%, -50%, 0);
+    }
+
+    35% {
+      opacity: 0;
+    }
+
+    70% {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+      transform: rotateZ(360deg) translate3d(-50%, -50%, 0);
+    }
+  }
+
+  @keyframes rotate {
+    from {
+      transform: rotateZ(0deg) translate3d(-50%, -50%, 0);
+    }
+
+    to {
+      transform: rotateZ(360deg) translate3d(-50%, -50%, 0);
+    }
+  }
+
+  @keyframes scroll {
+    to {
+      background-position: 5px 0;
+    }
+  }
+
+  @keyframes dotScrollSmall {
+    to {
+      background-position:
+        -6px -6px,
+        -12px -12px;
+    }
+  }
+
+  @keyframes dotScrollLarge {
+    to {
+      background-position:
+        -8px -8px,
+        -16px -16px;
+    }
+  }
+
+  @keyframes scrollLeft {
+    0% {
+      transform: translateX(0);
+    }
+
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  @keyframes shake {
+    10%,
+    90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+      transform: translate3d(1px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+      transform: translate3d(-2px, 0, 0);
+    }
+
+    40%,
+    60% {
+      transform: translate3d(2px, 0, 0);
+    }
+  }
+
+  @keyframes slideIn {
+    0% {
+      transform: translateX(-100%);
+    }
+
+    100% {
+      transform: translateX(0%);
+    }
+  }
+}
+
+@layer utilities {
+  .prose {
+    :where(h1):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+      color: var(--foreground);
+      font-family: var(--font-family-heading);
+    }
+
+    :where(h2):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+      color: var(--foreground);
+      font-family: var(--font-family-heading);
+    }
+
+    :where(h3):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+      color: var(--foreground);
+      font-family: var(--font-family-heading);
+    }
+
+    :where(h4):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+      color: var(--foreground);
+      font-family: var(--font-family-heading);
+    }
+
+    :where(h5):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+      color: var(--foreground);
+      font-family: var(--font-family-heading);
+    }
+
+    :where(h6):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+      color: var(--foreground);
+      font-family: var(--font-family-heading);
+    }
+
+    :where(p):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+      color: var(--foreground);
+      font-family: var(--font-family-body);
+    }
+
+    :where(a):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+      color: color-mix(in oklab, var(--primary), black 15%);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    :where(ul):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+      color: var(--contrast-500);
+      font-family: var(--font-family-body);
+    }
+
+    :where(ol):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+      color: var(--contrast-500);
+      font-family: var(--font-family-body);
+    }
+
+    :where(strong):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+      font-weight: 600;
+    }
+
+    :where(blockquote):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+      border-left-color: var(--contrast-300);
+
+      p {
+        color: var(--contrast-500);
+        font-style: normal;
+        font-weight: 400;
+      }
+    }
+
+    :where(code):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+      color: var(--contrast-500);
+      font-family: var(--font-family-mono);
+    }
+
+    :where(pre):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+      color: var(--background);
+      background-color: var(--foreground);
+      font-family: var(--font-family-mono);
+    }
+  }
+}
+
+@layer base {
+  :root {
+    --primary: oklch(90.35% 0.22 136.76);
+    --primary-highlight: color-mix(in oklab, var(--primary), white 75%);
+    --primary-shadow: color-mix(in oklab, var(--primary), black 75%);
+    --accent: oklch(95.86% 0.089 133.33);
+    --accent-highlight: color-mix(in oklab, var(--accent), white 75%);
+    --accent-shadow: color-mix(in oklab, var(--accent), black 75%);
+    --success: oklch(83.77% 0.214 142.31);
+    --success-highlight: color-mix(in oklab, var(--success), white 75%);
+    --success-shadow: color-mix(in oklab, var(--success), black 75%);
+    --error: oklch(64.89% 0.237 26.97);
+    --error-highlight: color-mix(in oklab, var(--error), white 75%);
+    --error-shadow: color-mix(in oklab, var(--error), black 75%);
+    --warning: oklch(83.42% 0.159 79.51);
+    --warning-highlight: color-mix(in oklab, var(--warning), white 75%);
+    --warning-shadow: color-mix(in oklab, var(--warning), black 75%);
+    --info: oklch(49.07% 0.177 262.04);
+    --info-highlight: color-mix(in oklab, var(--info), white 75%);
+    --info-shadow: color-mix(in oklab, var(--info), black 75%);
+    --background: oklch(100% 0 0);
+    --foreground: oklch(18.22% 0 0);
+    --contrast-100: oklch(94.61% 0 0);
+    --contrast-200: oklch(86.07% 0 0);
+    --contrast-300: oklch(76.68% 0 0);
+    --contrast-400: oklch(63.34% 0 0);
+    --contrast-500: oklch(45.68% 0 0);
+    --font-variation-settings-heading: 'slnt' 0;
+    --font-feature-settings-heading: normal;
+    --font-variation-settings-body: 'slnt' 0;
+    --font-feature-settings-body: normal;
+    --font-variation-settings-mono: 'slnt' 0;
+    --font-feature-settings-mono: normal;
+    --font-size-xs: 0.75rem;
+    --font-size-xs-line-height: calc(1.25 / 0.75);
+    --font-size-xs-letter-spacing: 0;
+    --font-size-sm: 0.875rem;
+    --font-size-sm-line-height: calc(1.5 / 0.875);
+    --font-size-sm-letter-spacing: 0;
+    --font-size-base: 1rem;
+    --font-size-base-line-height: calc(1.5 / 1);
+    --font-size-base-letter-spacing: -0.01em;
+    --font-size-lg: 1.125rem;
+    --font-size-lg-line-height: calc(1.75 / 1.125);
+    --font-size-lg-letter-spacing: -0.01em;
+    --font-size-xl: 1.25rem;
+    --font-size-xl-line-height: calc(1.75 / 1.25);
+    --font-size-xl-letter-spacing: -0.01em;
+    --font-size-2xl: 1.5rem;
+    --font-size-2xl-line-height: calc(1.75 / 1.5);
+    --font-size-2xl-letter-spacing: -0.01em;
+    --font-size-3xl: 1.875rem;
+    --font-size-3xl-line-height: calc(2 / 1.875);
+    --font-size-3xl-letter-spacing: -0.01em;
+    --font-size-4xl: 2.5rem;
+    --font-size-4xl-line-height: calc(2.75 / 2.5);
+    --font-size-4xl-letter-spacing: -0.02em;
+    --font-size-5xl: 3rem;
+    --font-size-5xl-line-height: 1;
+    --font-size-5xl-letter-spacing: -0.02em;
+    --font-size-6xl: 3.75rem;
+    --font-size-6xl-line-height: 1;
+    --font-size-6xl-letter-spacing: -0.02em;
+    --font-size-7xl: 4.5rem;
+    --font-size-7xl-line-height: 1;
+    --font-size-7xl-letter-spacing: -0.04em;
+    --font-size-8xl: 6rem;
+    --font-size-8xl-line-height: 1;
+    --font-size-8xl-letter-spacing: -0.04em;
+    --font-size-9xl: 7rem;
+    --font-size-9xl-line-height: 1;
+    --font-size-9xl-letter-spacing: -0.04em;
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+}
