@@ -1,20 +1,19 @@
-query GetBlogs {
-  articles {
-    title
-    publishedAt
-    cover {
+query GetBlogPosts {
+  blogPosts {
+    banner {
       url
       height
+      size
       width
-      name
-      alternativeText
     }
     body
-    slug
     description
+    feedDate
+    slug
+    publishedAt
+    title
     author {
       name
     }
-    feedDate
   }
 }
