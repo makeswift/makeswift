@@ -11,13 +11,28 @@ export default function BlockRendererClient({ content }: { readonly content: Blo
       content={content}
       blocks={{
         image: ({ image }) => {
+          const hasDimensions = image.width != null && image.height != null
+
+          if (hasDimensions) {
+            return (
+              <Image
+                src={image.url}
+                width={image.width}
+                height={image.height}
+                alt={image.alternativeText || ''}
+              />
+            )
+          }
+
           return (
-            <Image
-              src={image.url}
-              width={image.width}
-              height={image.height}
-              alt={image.alternativeText || ''}
-            />
+            <div className="relative aspect-video">
+              <Image
+                src={image.url}
+                fill
+                className="object-cover"
+                alt={image.alternativeText || ''}
+              />
+            </div>
           )
         },
       }}
