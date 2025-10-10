@@ -1,0 +1,19 @@
+query GetBlogPosts {
+  blogPosts {
+    banner {
+      url
+      height
+      size
+      width
+    }
+    body
+    description
+    feedDate
+    slug
+    publishedAt
+    title
+    author {
+      name
+    }
+  }
+}
