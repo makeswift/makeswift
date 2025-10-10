@@ -1,4 +1,4 @@
-import { GetBlogsDocument, GetBlogsQuery } from '@/generated/strapi'
+import { GetBlogPostsDocument, GetBlogPostsQuery } from '@/generated/strapi'
 
 import { client } from './client'
 import { type BlogPostFromQuery } from './format'
@@ -6,14 +6,14 @@ import { type BlogPostFromQuery } from './format'
 export const PAGINATION_LIMIT = 100 // Strapi's default pagination limit
 
 export async function getBlogPost(slug: string): Promise<BlogPostFromQuery | null> {
-  const { articles } = await client.request(GetBlogsDocument)
+  const { blogPosts } = await client.request(GetBlogPostsDocument)
 
-  if (!articles) {
+  if (!blogPosts) {
     return null
   }
 
-  const article = articles.find(article => article?.slug === slug)
-  return article ?? null
+  const post = blogPosts.find(post => post?.slug === slug)
+  return post ?? null
 }
 
 export async function getPaginatedBlogs(
@@ -24,9 +24,9 @@ export async function getPaginatedBlogs(
   total: number
   hasMore: boolean
 }> {
-  const { articles } = await client.request<GetBlogsQuery>(GetBlogsDocument)
+  const { blogPosts } = await client.request<GetBlogPostsQuery>(GetBlogPostsDocument)
 
-  const items = articles ?? []
+  const items = blogPosts ?? []
   const blogs = items.filter((item): item is BlogPostFromQuery => Boolean(item))
 
   const paginatedBlogs = blogs.slice(skip, skip + limit)
@@ -41,11 +41,11 @@ export async function getPaginatedBlogs(
 }
 
 export async function getAllBlogs(): Promise<BlogPostFromQuery[]> {
-  const { articles } = await client.request<GetBlogsQuery>(GetBlogsDocument)
+  const { blogPosts } = await client.request<GetBlogPostsQuery>(GetBlogPostsDocument)
 
-  if (!articles) {
+  if (!blogPosts) {
     return []
   }
 
-  return articles.filter((item): item is BlogPostFromQuery => Boolean(item))
+  return blogPosts.filter((item): item is BlogPostFromQuery => Boolean(item))
 }
