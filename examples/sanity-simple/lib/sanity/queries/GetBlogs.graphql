@@ -14,6 +14,12 @@ query GetBlogs($limit: Int = 8, $offset: Int = 0, $sort: [PostSorting!], $where:
         label
         size
         url
+        metadata {
+          dimensions {
+            height
+            width
+          }
+        }
       }
     }
     author {
