@@ -26,6 +26,10 @@ query GetBlogs(
     total
     items {
       __typename
+      sys {
+        firstPublishedAt
+        publishedAt
+      }
       _id
       slug
       title
