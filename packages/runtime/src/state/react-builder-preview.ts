@@ -735,7 +735,7 @@ export function configureStore({
     isPreview: IsPreview.getInitialState(true),
   }
 
-  const channel = new MessageChannel()
+  const channel = new MessageChannel() // FIXME turn into builder API client/proxy
   const store = configureReduxStore({
     reducer,
     preloadedState: initialState,
