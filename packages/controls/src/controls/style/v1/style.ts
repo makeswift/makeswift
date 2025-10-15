@@ -15,15 +15,11 @@ import {
   type ResolvedColorData,
 } from '../../../resources'
 import { type ResourceResolver } from '../../../resources/resolver'
-import {
-  type DeserializedRecord,
-  type SerializedRecord,
-} from '../../../serialization'
+import { type DeserializedRecord } from '../../../serialization'
 import { type Stylesheet } from '../../../stylesheet'
 import { Color } from '../../color'
 import {
   ControlDefinition,
-  serialize,
   type Resolvable,
   type SchemaType,
 } from '../../definition'
@@ -221,12 +217,6 @@ class Definition<C extends Config> extends ControlDefinition<
 
   createInstance(sendMessage: SendMessage) {
     return new StyleControl(sendMessage)
-  }
-
-  serialize(): [SerializedRecord, Transferable[]] {
-    return serialize(this.config, {
-      type: Definition.type,
-    })
   }
 
   accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {

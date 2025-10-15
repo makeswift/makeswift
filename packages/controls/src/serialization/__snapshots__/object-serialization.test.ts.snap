@@ -15,7 +15,7 @@ exports[`object serialization {
 } should handle function serialization 1`] = `
 {
   "arrayOfFunctions": [
-    [MessagePort],
+    "[SerializedFunction]",
   ],
 }
 `;
@@ -32,7 +32,7 @@ exports[`object serialization {
   getItemLabel: [Function: getItemLabel] { [length]: 1, [name]: 'getItemLabel' }
 } should handle function serialization 1`] = `
 {
-  "getItemLabel": [MessagePort],
+  "getItemLabel": "[SerializedFunction]",
 }
 `;
 
@@ -41,16 +41,16 @@ exports[`object serialization Deserialized 1`] = `[Function]`;
 exports[`object serialization should correctly serialize nested Serializables 1`] = `
 {
   "item": {
-    "getItemLabel": [MessagePort],
+    "getItemLabel": "[SerializedFunction]",
     "subitems": [
       {
         "arrayOfFunctions": [
-          [MessagePort],
+          "[SerializedFunction]",
         ],
         "type": "subitem 1",
       },
       {
-        "getItemLabel": [MessagePort],
+        "getItemLabel": "[SerializedFunction]",
         "type": "subitem 2",
       },
     ],

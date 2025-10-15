@@ -1,3 +1,5 @@
+import { TestSerializationVisitor } from '../../testing/test-serialization-visitor'
+
 import { ControlDataTypeKey } from '../../common'
 import { Targets } from '../../introspection'
 import { deserializeRecord } from '../../serialization'
@@ -92,7 +94,8 @@ describe('List', () => {
         label: 'Color list',
       })
 
-      const [serialized, _] = list.serialize()
+      const serializationVisitor = new TestSerializationVisitor()
+      const serialized = list.accept(serializationVisitor)
       expect(serialized).toMatchSnapshot()
 
       const deserialized = ListDefinition.deserialize(
@@ -111,7 +114,8 @@ describe('List', () => {
         label: 'Color list',
       })
 
-      const [serialized, _] = list.serialize()
+      const serializationVisitor = new TestSerializationVisitor()
+      const serialized = list.accept(serializationVisitor)
       expect(serialized).toMatchSnapshot()
 
       const deserialized = ListDefinition.deserialize(

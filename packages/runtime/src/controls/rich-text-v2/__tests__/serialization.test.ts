@@ -1,6 +1,7 @@
 import { deserializeRecord } from '@makeswift/controls'
 import { RichText, RichTextV2Definition } from '../rich-text-v2'
 import { deserializeUnifiedControlDef } from '../../../builder/serialization/control-serialization'
+import { ClientMessagePortSerializationVisitor } from '../../visitors/client-message-port-serialization-visitor'
 
 jest.mock('corporate-ipsum', () => {
   return {
@@ -19,7 +20,9 @@ describe('RichTextV2 serialization', () => {
     ['block', RichText()],
     ['inline', RichText({ mode: RichText.Mode.Inline })],
   ])('deserialized definition in %s mode contains correct plugins', (_mode, def) => {
-    const [serializedDefinition, transferables] = def.serialize()
+    const serializationVisitor = new ClientMessagePortSerializationVisitor()
+    const serializedDefinition = def.accept(serializationVisitor)
+    const transferables = serializationVisitor.getTransferables()
     expect(serializedDefinition).toMatchSnapshot('serialized definition')
     expect(transferables.length).toMatchSnapshot('transferables')
     transferables.forEach((port: any) => port.close())

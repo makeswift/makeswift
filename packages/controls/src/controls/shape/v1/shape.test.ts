@@ -1,4 +1,5 @@
 import { TestMergeTranslationsVisitor } from '../../../testing/test-merge-translation-visitor'
+import { TestSerializationVisitor } from '../../../testing/test-serialization-visitor'
 
 import { createReplacementContext } from '../../../context'
 import { Targets } from '../../../introspection'
@@ -97,7 +98,8 @@ describe('Shape', () => {
         },
       })
 
-      const [serialized, _] = shape.serialize()
+      const serializationVisitor = new TestSerializationVisitor()
+      const serialized = shape.accept(serializationVisitor)
       expect(serialized).toMatchSnapshot()
 
       const deserialized = ShapeDefinition.deserialize(
@@ -120,7 +122,8 @@ describe('Shape', () => {
         },
       })
 
-      const [serialized, _] = shape.serialize()
+      const serializationVisitor = new TestSerializationVisitor()
+      const serialized = shape.accept(serializationVisitor)
       expect(serialized).toMatchSnapshot()
 
       const deserialized = ShapeDefinition.deserialize(

@@ -1,8 +1,7 @@
 import { z } from 'zod'
 
-import { type SerializedRecord } from '../../../serialization'
 import { type DataType } from '../../associated-types'
-import { serialize, type Resolvable } from '../../definition'
+import { type Resolvable } from '../../definition'
 import {
   ControlInstance,
   DefaultControlInstance,
@@ -32,12 +31,6 @@ class Definition extends RichTextDefinition<RenderedNode> {
 
   createInstance(sendMessage: SendMessage<any>): ControlInstance<any> {
     return new DefaultControlInstance(sendMessage)
-  }
-
-  serialize(): [SerializedRecord, Transferable[]] {
-    return serialize(this.config, {
-      type: Definition.type,
-    })
   }
 
   toText(_data: DataType<RichTextDefinition<string>>): string {

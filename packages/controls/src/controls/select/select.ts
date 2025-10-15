@@ -4,14 +4,10 @@ import { map } from '../../lib/functional'
 import { safeParse, unionOfLiterals, type ParseResult } from '../../lib/zod'
 
 import { type CopyContext } from '../../context'
-import {
-  type DeserializedRecord,
-  type SerializedRecord,
-} from '../../serialization'
+import { type DeserializedRecord } from '../../serialization'
 
 import {
   ControlDefinition,
-  serialize,
   type Resolvable,
   type SchemaType,
 } from '../definition'
@@ -163,12 +159,6 @@ class Definition<C extends Config> extends ControlDefinition<
 
   createInstance(sendMessage: SendMessage) {
     return new DefaultControlInstance(sendMessage)
-  }
-
-  serialize(): [SerializedRecord, Transferable[]] {
-    return serialize(this.config, {
-      type: Definition.type,
-    })
   }
 
   accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
