@@ -93,6 +93,8 @@ export const ActionTypes = {
   SET_LOCALIZED_RESOURCE_ID: 'SET_LOCALIZED_RESOURCE_ID',
 
   UPDATE_API_CLIENT_CACHE: 'UPDATE_API_CLIENT_CACHE',
+
+  HANDLE_HOST_NAVIGATE: 'HANDLE_HOST_NAVIGATE',
 } as const
 
 type InitAction = { type: typeof ActionTypes.INIT }
@@ -357,6 +359,11 @@ type UpdateAPIClientCache = {
   payload: APIClientCache
 }
 
+type HandleHostNavigateAction = {
+  type: typeof ActionTypes.HANDLE_HOST_NAVIGATE
+  payload: { url: string | null }
+}
+
 export type Action =
   | InitAction
   | CleanUpAction
@@ -403,6 +410,7 @@ export type Action =
   | SetLocaleAction
   | SetLocalizedResourceIdAction
   | UpdateAPIClientCache
+  | HandleHostNavigateAction
 
 export function init(): InitAction {
   return { type: ActionTypes.INIT }
@@ -804,6 +812,10 @@ export function setLocalizedResourceId({
 
 export function updateAPIClientCache(payload: APIClientCache): UpdateAPIClientCache {
   return { type: ActionTypes.UPDATE_API_CLIENT_CACHE, payload }
+}
+
+export function handleHostNavigate(payload: { url: string | null }): HandleHostNavigateAction {
+  return { type: ActionTypes.HANDLE_HOST_NAVIGATE, payload }
 }
 
 export function isKnownAction(action: unknown): action is Action {

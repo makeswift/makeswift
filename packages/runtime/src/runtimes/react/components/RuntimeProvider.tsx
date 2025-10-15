@@ -10,6 +10,7 @@ import { type SiteVersion } from '../../../api/site-version'
 import { PreviewSwitcher } from './preview-switcher/preview-switcher'
 import { useBuilderConnectionPing } from './hooks/use-builder-connection-ping'
 import { useFrameworkContext } from './hooks/use-framework-context'
+import { useBuilderLocationSync } from './hooks/use-builder-location-sync'
 
 const LiveProvider = lazy(() => import('./LiveProvider'))
 const PreviewProvider = lazy(() => import('./PreviewProvider'))
@@ -45,6 +46,7 @@ export function RuntimeProvider({
   const StoreProvider = isPreview ? PreviewProvider : LiveProvider
 
   useBuilderConnectionPing({ appOrigin })
+  useBuilderLocationSync({ appOrigin })
 
   return (
     <ReactRuntimeContext.Provider value={runtime}>
