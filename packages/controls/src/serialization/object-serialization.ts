@@ -4,13 +4,10 @@ import { mapValues } from '../lib/functional'
 
 import {
   deserializeFunction,
-  isFunction,
   isSerializedFunction,
-  serializeFunction,
   type AnyFunction,
   type DeserializedFunction,
 } from './function-serialization'
-import { type SerializedRecord } from './types'
 
 export type Deserialized<T> = T extends AnyFunction
   ? DeserializedFunction<T>
@@ -19,35 +16,28 @@ export type Deserialized<T> = T extends AnyFunction
     : T extends Array<infer U>
       ? Array<Deserialized<U>>
       : T
-
-export abstract class Serializable {
-  abstract serialize(): [SerializedRecord, Transferable[]]
+export interface SerializationPlugin<R = unknown> {
+  match: (value: unknown) => boolean
+  serialize: (value: R) => unknown
 }
 
-export function serializeObject(object: unknown): [unknown, Transferable[]] {
-  const transferables: Transferable[] = []
-
-  const serializeFunc = (func: AnyFunction) => {
-    const r = serializeFunction(func)
-    transferables.push(r)
-    return r
-  }
-
-  const serializeSerializable = (obj: Serializable) => {
-    const [serialized, transferrables_] = obj.serialize()
-    transferables.push(...transferrables_)
-    return serialized
-  }
-
+export function serializeObject(
+  object: unknown,
+  plugins: SerializationPlugin<any>[] = [],
+): unknown {
   function serialize(value: unknown): unknown {
+    for (const plugin of plugins) {
+      if (plugin.match(value)) {
+        return plugin.serialize(value)
+      }
+    }
+
     return match(value)
-      .with(P.when(isFunction), serializeFunc)
-      .with(P.instanceOf(Serializable), serializeSerializable)
       .with(P.array(), (arr) => arr.map(serialize))
       .with({}, (obj) => mapValues(obj, (obj) => serialize(obj) as any))
       .otherwise(() => value)
   }
-  return [serialize(object), transferables]
+  return serialize(object)
 }
 
 export function deserializeObject(object: unknown): unknown {

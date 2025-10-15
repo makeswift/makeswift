@@ -8,12 +8,10 @@ import {
   isNotNil,
   ControlDefinition,
   SerializationSchema,
-  serialize,
   StableValue,
   type Data,
   type Resolvable,
   type SendMessage,
-  type SerializedRecord,
   type DeserializedRecord,
   type SchemaType,
   type SchemaTypeAny,
@@ -140,32 +138,6 @@ class Definition extends BaseRichTextDefinition<ReactNode, Config, InstanceType>
   getTranslatableData(data: DataType | undefined): Data {
     if (data == null) return null
     return getTranslatableData(Definition.dataToNodes(data), this.config.plugins)
-  }
-
-  serialize(): [SerializedRecord, Transferable[]] {
-    const { plugins, ...config } = this.config
-
-    // serialize only the plugin control definition, if any
-    const pluginDefs = plugins.map(({ control }) =>
-      control
-        ? {
-            control: {
-              definition: control.definition,
-              // FIXME: remove getValue/onChange stubs once we released a version of the builder
-              // built against the runtime where these can be optional
-              getValue: () => undefined,
-              onChange: () => {},
-            },
-          }
-        : {},
-    )
-
-    return serialize(
-      { ...config, plugins: pluginDefs },
-      {
-        type: Definition.type,
-      },
-    )
   }
 
   get pluginControls(): RichTextPluginControl[] {

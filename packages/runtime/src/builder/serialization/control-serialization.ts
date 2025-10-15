@@ -97,6 +97,7 @@ import {
 
 import { type LegacyDescriptor, isLegacyDescriptor } from '../../prop-controllers/descriptors'
 import { deserializeRecord, type DeserializedRecord } from '@makeswift/controls'
+import { ClientMessagePortSerializationVisitor } from '../../controls/visitors/client-message-port-serialization-visitor'
 
 type SerializedShapeControlConfig<T extends Record<string, SerializedPanelControl>> = {
   type: T
@@ -848,8 +849,9 @@ export function serializeControl<T extends Data>(
     return serializeLegacyControl(control)
   }
 
-  const [serializedControl, transferables] = control.serialize()
-  return [serializedControl, transferables]
+  const messagePortVisitor = new ClientMessagePortSerializationVisitor()
+  const serializedControl = control.accept(messagePortVisitor)
+  return [serializedControl, messagePortVisitor.getTransferables()]
 }
 
 export function isSerializedControl(control: unknown): control is SerializedControl {

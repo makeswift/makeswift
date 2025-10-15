@@ -11,7 +11,6 @@ import { type ResourceResolver } from '../../resources/resolver'
 import {
   SerializationSchema,
   type DeserializedRecord,
-  type SerializedRecord,
 } from '../../serialization'
 import { type Stylesheet } from '../../stylesheet'
 
@@ -22,7 +21,6 @@ import {
 } from '../associated-types'
 import {
   ControlDefinition,
-  serialize,
   type Resolvable,
   type SchemaType,
 } from '../definition'
@@ -283,12 +281,6 @@ class Definition<C extends Config> extends ControlDefinition<
 
   createInstance(sendMessage: SendMessage): InstanceType<C> {
     return new GroupControl(this, sendMessage)
-  }
-
-  serialize(): [SerializedRecord, Transferable[]] {
-    return serialize(this.config, {
-      type: Definition.type,
-    })
   }
 
   accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {

@@ -10,9 +10,8 @@ import {
   type MergeContext,
 } from '../../context'
 import { Targets, type IntrospectionTarget } from '../../introspection'
-import { type SerializedRecord } from '../../serialization'
 
-import { ControlDefinition, serialize, type SchemaType } from '../definition'
+import { ControlDefinition, type SchemaType } from '../definition'
 import { type SendMessage } from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
 
@@ -141,12 +140,6 @@ abstract class Definition<RuntimeNode> extends ControlDefinition<
 
   createInstance(sendMessage: SendMessage) {
     return new SlotControl(sendMessage)
-  }
-
-  serialize(): [SerializedRecord, Transferable[]] {
-    return serialize(this.config, {
-      type: Definition.type,
-    })
   }
 
   accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
