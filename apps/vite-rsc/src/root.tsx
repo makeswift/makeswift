@@ -8,10 +8,11 @@ import './makeswift/components.server'
 import './makeswift/components.client'
 import { runtime } from './makeswift/runtime'
 import { client } from './makeswift/client'
+import type { SiteVersion } from '@makeswift/express-react'
 
-export function Root(props: { url: URL }) {
-  const siteVersion = null
+type Props = { url: URL; siteVersion: SiteVersion | null }
 
+export async function Root(props: Props) {
   return (
     <html lang="en">
       <head>
@@ -23,12 +24,12 @@ export function Root(props: { url: URL }) {
       <body>
         <ExperimentalServerProvider
           client={client}
-          siteVersion={siteVersion}
+          siteVersion={props.siteVersion}
           runtime={runtime}
         >
           <MakeswiftClientProvider
             serializedServerState={runtime.serializeServerState()}
-            siteVersion={siteVersion}
+            siteVersion={props.siteVersion}
           >
             <App {...props} />
           </MakeswiftClientProvider>
@@ -38,9 +39,9 @@ export function Root(props: { url: URL }) {
   )
 }
 
-async function App(props: { url: URL }) {
+async function App(props: Props) {
   const snapshot = await client.getPageSnapshot(props.url.pathname, {
-    siteVersion: null,
+    siteVersion: props.siteVersion,
   })
 
   if (snapshot == null) return <p>Page not found</p>

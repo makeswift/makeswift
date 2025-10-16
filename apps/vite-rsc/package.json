@@ -9,8 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@makeswift/runtime": "workspace:^",
     "@makeswift/express-react": "workspace:^",
+    "@makeswift/runtime": "workspace:^",
+    "cookie": "^1.0.2",
     "express": "^5.1.0",
     "react": "19.2.0",
     "react-dom": "19.2.0",

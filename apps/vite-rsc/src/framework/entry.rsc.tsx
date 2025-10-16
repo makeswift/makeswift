@@ -9,6 +9,7 @@ import {
 
 import type { ReactFormState } from 'react-dom/client'
 import { Root } from '../root.tsx'
+import { getSiteVersion } from '../makeswift/get-site-version.ts'
 // import { MakeswiftApiHandler, API_PATH_PREFIX } from '../makeswift/api-handler'
 
 // The schema of payload which is serialized into RSC stream on rsc environment
@@ -63,13 +64,14 @@ export default async function handler(request: Request): Promise<Response> {
       formState = await decodeFormState(result, formData)
     }
   }
+  const siteVersion = await getSiteVersion(request)
 
   // serialization from React VDOM tree to RSC stream.
   // we render RSC stream after handling server function request
   // so that new render reflects updated state from server function call
   // to achieve single round trip to mutate and fetch from server.
   const rscPayload: RscPayload = {
-    root: <Root url={url} />,
+    root: <Root url={url} siteVersion={siteVersion} />,
     formState,
     returnValue,
   }
