@@ -27,9 +27,9 @@ import * as Breakpoints from './modules/breakpoints'
 import { withSetupTeardown } from './mixins/setup-teardown'
 
 import * as ReactPage from './react-page'
+import { type Action, ActionTypes } from './actions'
+
 import {
-  type Action,
-  ActionTypes,
   changeDocumentElementSize,
   changeElementBoxModels,
   elementFromPointChange,
@@ -37,17 +37,21 @@ import {
   handlePointerMove,
   messageBuilderPropController,
   registerBuilderComponent,
-  registerMeasurable,
-  registerPropControllers,
-  registerPropControllersHandle,
-  setBreakpoints,
   setIsInBuilder,
   unregisterBuilderComponent,
   unregisterBuilderDocument,
+  registerBuilderDocument,
+} from './builder-api'
+
+import { setBreakpoints } from './shared-api'
+
+import {
+  registerMeasurable,
+  registerPropControllers,
+  registerPropControllersHandle,
   unregisterMeasurable,
   unregisterPropControllers,
-  registerBuilderDocument,
-} from './actions'
+} from './actions/internal'
 
 import { actionMiddleware, middlewareOptions, devToolsConfig } from './toolkit'
 

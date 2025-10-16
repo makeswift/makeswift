@@ -1,9 +1,18 @@
 export * from './serialization'
 export * from './unstructured-introspection'
 
-export type { Action, SetBreakpointsAction } from '../state/actions'
+export { type BuilderAction, BuilderActionTypes } from '../state/builder-api'
 export {
-  ActionTypes,
+  type SetBreakpointsAction,
+  makeswiftConnectionInit,
+  registerDocument,
+  unregisterDocument,
+  setBreakpoints,
+  setLocale,
+  setLocalizedResourceId,
+} from '../state/shared-api'
+
+export {
   changeDocument,
   changeDocumentElementScrollTop,
   cleanUp,
@@ -11,15 +20,10 @@ export {
   messageHostPropController,
   changeApiResource,
   evictApiResource,
-  registerDocument,
   scrollDocumentElement,
-  unregisterDocument,
   setBuilderEditMode,
   builderPointerMove,
-  setBreakpoints,
-  setLocale,
-  setLocalizedResourceId,
-} from '../state/actions'
+} from '../state/host-api'
 
 export { type Operation } from '../state/modules/read-write-documents'
 

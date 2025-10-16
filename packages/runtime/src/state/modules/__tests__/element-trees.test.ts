@@ -8,7 +8,7 @@ import {
 import { getPropControllerDescriptors } from '../../react-page'
 import { ReactRuntime } from '../../../runtimes/react'
 import { Slot } from '../../../controls'
-import * as Actions from '../../actions'
+import * as Actions from '../../actions/internal'
 
 describe('traverseElementTree', () => {
   const runtime = new ReactRuntime()

@@ -1,5 +1,6 @@
 import * as APIResources from '../api-resources'
-import * as Actions from '../../actions'
+import * as Actions from '../../actions/internal'
+import * as Host from '../../host-api'
 import {
   APIResourceType,
   type Swatch,
@@ -224,7 +225,7 @@ describe('state / APIResources', () => {
       ] as [APIResource, string][]
     ).reduce(
       (state, [resource, locale]) =>
-        APIResources.reducer(state, Actions.changeApiResource(resource, locale)),
+        APIResources.reducer(state, Host.changeApiResource(resource, locale)),
       state,
     )
 
@@ -258,7 +259,7 @@ describe('state / APIResources', () => {
         [`${APIResourceType.LocalizedGlobalElement}:${localizedGlobalElement_it_IT.id}`, 'it-IT'],
       ] as [string, string][]
     ).reduce(
-      (state, [id, locale]) => APIResources.reducer(state, Actions.evictApiResource(id, locale)),
+      (state, [id, locale]) => APIResources.reducer(state, Host.evictApiResource(id, locale)),
       state,
     )
 
