@@ -1,7 +1,7 @@
 import { Clock } from './clock'
 
 import { Combobox, Style } from '@makeswift/runtime/controls'
-import { runtime } from '@/makeswift/runtime'
+import { runtime } from '../../runtime'
 
 runtime.registerComponent(Clock, {
   type: 'clock',

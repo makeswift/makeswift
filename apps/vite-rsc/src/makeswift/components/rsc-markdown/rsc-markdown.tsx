@@ -16,7 +16,9 @@ export async function RscMarkdown({
   filename = 'README.md',
   link,
 }: Props) {
-  const markdown = (await readFile(filename)).toString()
+  const markdown = (
+    await readFile(filename).catch(() => 'File not found')
+  ).toString()
 
   return (
     <div

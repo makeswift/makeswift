@@ -8,7 +8,6 @@ import './makeswift/components.server'
 import './makeswift/components.client'
 import { runtime } from './makeswift/runtime'
 import { client } from './makeswift/client'
-import { getSiteVersion } from '@makeswift/runtime/next/server'
 
 export function Root(props: { url: URL }) {
   const siteVersion = null
@@ -41,7 +40,7 @@ export function Root(props: { url: URL }) {
 
 async function App(props: { url: URL }) {
   const snapshot = await client.getPageSnapshot(props.url.pathname, {
-    siteVersion: getSiteVersion(),
+    siteVersion: null,
   })
 
   if (snapshot == null) return <p>Page not found</p>

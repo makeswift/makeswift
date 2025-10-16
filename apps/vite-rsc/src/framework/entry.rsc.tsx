@@ -6,8 +6,10 @@ import {
   decodeAction,
   decodeFormState,
 } from '@vitejs/plugin-rsc/rsc'
+
 import type { ReactFormState } from 'react-dom/client'
 import { Root } from '../root.tsx'
+// import { MakeswiftApiHandler, API_PATH_PREFIX } from '../makeswift/api-handler'
 
 // The schema of payload which is serialized into RSC stream on rsc environment
 // and deserialized on ssr/client environments.
@@ -22,21 +24,17 @@ export type RscPayload = {
   formState?: ReactFormState
 }
 
-const API_PATH_PREFIX = '/api/makeswift/'
-
-function MakeswiftApiHandler(request: Request): Promise<Response> {
-  return new Response('Hello, world!')
-}
-
 // the plugin by default assumes `rsc` entry having default export of request handler.
 // however, how server entries are executed can be customized by registering
 // own server handler e.g. `@cloudflare/vite-plugin`.
 export default async function handler(request: Request): Promise<Response> {
   const url = new URL(request.url)
+  // const siteVersion = await getSiteVersion(request)
+  // console.log({ siteVersion })
 
-  if (!url.pathname.startsWith(API_PATH_PREFIX)) {
-    return MakeswiftApiHandler(request)
-  }
+  // if (url.pathname.startsWith(API_PATH_PREFIX)) {
+  //   return MakeswiftApiHandler(request)
+  // }
 
   // handle server function request
   const isAction = request.method === 'POST'

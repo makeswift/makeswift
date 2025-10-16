@@ -1,9 +1,9 @@
-import { Makeswift } from '@makeswift/runtime/next'
+import { Makeswift } from '@makeswift/express-react'
 
-import { runtime } from '@/makeswift/runtime'
-import { MAKESWIFT_SITE_API_KEY } from '@/makeswift/env'
+import { runtime } from './runtime'
+import { MAKESWIFT_SITE_API_KEY } from './env'
 
-export const client = new Makeswift(MAKESWIFT_SITE_API_KEY, {
+export const client = new Makeswift(MAKESWIFT_SITE_API_KEY!, {
   runtime,
-  apiOrigin: process.env.NEXT_PUBLIC_MAKESWIFT_API_ORIGIN,
+  apiOrigin: process.env.VITE_MAKESWIFT_API_ORIGIN,
 })

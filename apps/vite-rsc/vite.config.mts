@@ -6,12 +6,8 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [
     rsc({
-      // `entries` option is only a shorthand for specifying each `rollupOptions.input` below
-      // > entries: { rsc, ssr, client },
-      //
-      // by default, the plugin setup request handler based on `default export` of `rsc` environment `rollupOptions.input.index`.
-      // This can be disabled when setting up own server handler e.g. `@cloudflare/vite-plugin`.
-      // > serverHandler: false
+      // Disable automatic server handler - we'll set it up manually in server.ts
+      serverHandler: { environmentName: 'rsc', entryName: 'index' },
     }),
 
     // use any of react plugins https://github.com/vitejs/vite-plugin-react

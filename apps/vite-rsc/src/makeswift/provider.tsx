@@ -2,12 +2,12 @@
 
 import { ComponentPropsWithoutRef } from 'react'
 
-import { runtime } from '@/makeswift/runtime'
+import { runtime } from './runtime'
 
 import { ExperimentalReactRuntimeProvider } from '@makeswift/runtime/next/rsc'
-import { RootStyleRegistry } from '@makeswift/runtime/next'
+// import { RootStyleRegistry } from '@makeswift/express-react'
 
-import '@/makeswift/components.client'
+import './components.client'
 
 export function MakeswiftClientProvider({
   children,
@@ -20,10 +20,12 @@ export function MakeswiftClientProvider({
     <ExperimentalReactRuntimeProvider
       {...props}
       runtime={runtime}
-      apiOrigin={process.env.NEXT_PUBLIC_MAKESWIFT_API_ORIGIN}
-      appOrigin={process.env.NEXT_PUBLIC_MAKESWIFT_APP_ORIGIN}
+      apiOrigin={import.meta.env.VITE_MAKESWIFT_API_ORIGIN}
+      appOrigin={import.meta.env.VITE_MAKESWIFT_APP_ORIGIN}
     >
-      <RootStyleRegistry>{children}</RootStyleRegistry>
+      {/* <RootStyleRegistry> */}
+      {children}
+      {/* </RootStyleRegistry> */}
     </ExperimentalReactRuntimeProvider>
   )
 }

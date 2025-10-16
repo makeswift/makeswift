@@ -2,7 +2,7 @@ import { RscMarkdown } from './rsc-markdown'
 
 import { Style, Combobox, Color, Link } from '@makeswift/runtime/controls'
 import { readdir } from 'fs/promises'
-import { runtime } from '@/makeswift/runtime'
+import { runtime } from '../../runtime'
 
 runtime.registerComponent(RscMarkdown, {
   type: 'rsc-markdown',

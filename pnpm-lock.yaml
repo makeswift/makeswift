@@ -167,16 +167,28 @@ importers:
 
   apps/vite-rsc:
     dependencies:
+      '@makeswift/express-react':
+        specifier: workspace:^
+        version: link:../../packages/express-react
       '@makeswift/runtime':
         specifier: workspace:^
         version: link:../../packages/runtime
+      express:
+        specifier: ^5.1.0
+        version: 5.1.0
       react:
-        specifier: ^19.1.0
+        specifier: 19.1.0
         version: 19.1.0
       react-dom:
-        specifier: ^19.1.0
+        specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
+      react-markdown:
+        specifier: ^10.1.0
+        version: 10.1.0(@types/react@18.2.14)(react@19.1.0)
     devDependencies:
+      '@types/express':
+        specifier: ^5.0.3
+        version: 5.0.3
       '@types/react':
         specifier: ^18
         version: 18.2.14
@@ -185,16 +197,19 @@ importers:
         version: 18.2.6
       '@vitejs/plugin-react':
         specifier: latest
-        version: 5.0.4(vite@7.1.10(@types/node@20.14.11)(jiti@2.4.2))
+        version: 5.0.4(vite@7.1.10(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.20.6))
       '@vitejs/plugin-rsc':
         specifier: latest
-        version: 0.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(vite@7.1.10(@types/node@20.14.11)(jiti@2.4.2))
+        version: 0.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(vite@7.1.10(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.20.6))
       rsc-html-stream:
         specifier: ^0.0.7
         version: 0.0.7
+      tsx:
+        specifier: ^4.19.2
+        version: 4.20.6
       vite:
         specifier: ^7.1.9
-        version: 7.1.10(@types/node@20.14.11)(jiti@2.4.2)
+        version: 7.1.10(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.20.6)
 
   packages/controls:
     dependencies:
@@ -5427,6 +5442,9 @@ packages:
     resolution: {integrity: sha512-g0QYk1dZBxGwk+Ngc+ltRH2IBp2f7zBkBMBJZCDerh6EhlhSR6+9irMCuT/09zD6qkarHUSn529sK/yL4S27mg==}
     engines: {node: '>= 0.4'}
 
+  get-tsconfig@4.12.0:
+    resolution: {integrity: sha512-LScr2aNr2FbjAjZh2C6X6BxRx1/x+aTDExct/xyq2XKbYOiG5c0aK7pMsSuyc0brz3ibr/lbQiHD9jzt4lccJw==}
+
   get-tsconfig@4.7.2:
     resolution: {integrity: sha512-wuMsz4leaj5hbGgg4IvDU0bqJagpftG5l5cXIAvo8uZrqn0NJqwtfupTN00VnkQJPcIRrxYrm1Ue24btpCha2A==}
 
@@ -8647,6 +8665,11 @@ packages:
     engines: {node: '>= 6'}
     peerDependencies:
       typescript: '>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta'
+
+  tsx@4.20.6:
+    resolution: {integrity: sha512-ytQKuwgmrrkDTFP4LjR0ToE2nqgy886GpvRSpU0JAnrdBYppuY5rLkRUYPU1yCryb24SsKBTL/hlDQAEFVwtZg==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
 
   tty-table@4.2.3:
     resolution: {integrity: sha512-Fs15mu0vGzCrj8fmJNP7Ynxt5J7praPXqFN0leZeZBXJwkMxv9cb2D454k1ltrtUSJbZ4yH4e0CynsHLxmUfFA==}
@@ -12652,7 +12675,7 @@ snapshots:
       '@use-gesture/core': 10.2.24
       react: 18.2.0
 
-  '@vitejs/plugin-react@5.0.4(vite@7.1.10(@types/node@20.14.11)(jiti@2.4.2))':
+  '@vitejs/plugin-react@5.0.4(vite@7.1.10(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.20.6))':
     dependencies:
       '@babel/core': 7.28.4
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.28.4)
@@ -12660,11 +12683,11 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-beta.38
       '@types/babel__core': 7.20.5
       react-refresh: 0.17.0
-      vite: 7.1.10(@types/node@20.14.11)(jiti@2.4.2)
+      vite: 7.1.10(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.20.6)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitejs/plugin-rsc@0.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(vite@7.1.10(@types/node@20.14.11)(jiti@2.4.2))':
+  '@vitejs/plugin-rsc@0.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(vite@7.1.10(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.20.6))':
     dependencies:
       '@remix-run/node-fetch-server': 0.10.0
       es-module-lexer: 1.7.0
@@ -12674,8 +12697,8 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
       turbo-stream: 3.1.0
-      vite: 7.1.10(@types/node@20.14.11)(jiti@2.4.2)
-      vitefu: 1.1.1(vite@7.1.10(@types/node@20.14.11)(jiti@2.4.2))
+      vite: 7.1.10(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.20.6)
+      vitefu: 1.1.1(vite@7.1.10(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.20.6))
 
   abab@2.0.6: {}
 
@@ -15198,6 +15221,10 @@ snapshots:
       call-bind: 1.0.7
       es-errors: 1.3.0
       get-intrinsic: 1.2.4
+
+  get-tsconfig@4.12.0:
+    dependencies:
+      resolve-pkg-maps: 1.0.0
 
   get-tsconfig@4.7.2:
     dependencies:
@@ -19569,6 +19596,13 @@ snapshots:
       tslib: 1.14.1
       typescript: 4.9.5
 
+  tsx@4.20.6:
+    dependencies:
+      esbuild: 0.25.11
+      get-tsconfig: 4.12.0
+    optionalDependencies:
+      fsevents: 2.3.3
+
   tty-table@4.2.3:
     dependencies:
       chalk: 4.1.2
@@ -19849,7 +19883,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  vite@7.1.10(@types/node@20.14.11)(jiti@2.4.2):
+  vite@7.1.10(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.20.6):
     dependencies:
       esbuild: 0.25.11
       fdir: 6.5.0(picomatch@4.0.3)
@@ -19861,10 +19895,11 @@ snapshots:
       '@types/node': 20.14.11
       fsevents: 2.3.3
       jiti: 2.4.2
+      tsx: 4.20.6
 
-  vitefu@1.1.1(vite@7.1.10(@types/node@20.14.11)(jiti@2.4.2)):
+  vitefu@1.1.1(vite@7.1.10(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.20.6)):
     optionalDependencies:
-      vite: 7.1.10(@types/node@20.14.11)(jiti@2.4.2)
+      vite: 7.1.10(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.20.6)
 
   w3c-xmlserializer@4.0.0:
     dependencies:

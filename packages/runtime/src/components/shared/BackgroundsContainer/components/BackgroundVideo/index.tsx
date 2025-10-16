@@ -1,7 +1,6 @@
 import { cx } from '@emotion/css'
 import { useState, useRef, ComponentPropsWithoutRef, ForwardedRef, forwardRef } from 'react'
 
-import { ReactPlayer } from '../../../react-player'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 
 import { useIsomorphicLayoutEffect } from '../../../../hooks/useIsomorphicLayoutEffect'
@@ -69,14 +68,14 @@ type Props = {
 }
 
 export default function BackgroundVideo({
-  url = '',
+  // url = '',
   aspectRatio = 16 / 9,
   zoom = 1,
   maskColor,
-  opacity,
+  // opacity,
 }: Props): JSX.Element {
-  const [ready, setReady] = useState(false)
-  const [scale, setScale] = useState(1)
+  const [ready, _setReady] = useState(false)
+  const [_scale, setScale] = useState(1)
   const container = useRef<HTMLDivElement>(null)
 
   useIsomorphicLayoutEffect(() => {
@@ -94,46 +93,11 @@ export default function BackgroundVideo({
     return () => defaultView!.removeEventListener('resize', handleResize)
   }, [aspectRatio, zoom])
 
-  if (!ReactPlayer.canPlay(url)) return <></>
+  // if (!ReactPlayer.canPlay(url)) return <></>
 
   return (
     <Container ref={container}>
-      {container.current && (
-        <ReactPlayer
-          url={url}
-          config={{
-            vimeo: { playerOptions: { background: true } },
-            youtube: {
-              playerVars: {
-                origin: container.current.ownerDocument.defaultView?.location.origin,
-              },
-            },
-            wistia: {
-              options: {
-                endVideoBehavior: 'loop',
-                playbackRateControl: false,
-                playbar: false,
-                playButton: false,
-                volumeControl: false,
-                fullscreenButton: false,
-                muted: true,
-              },
-            },
-          }}
-          playing
-          loop
-          muted
-          playsinline={true}
-          controls={false}
-          onReady={() => setReady(true)}
-          style={{
-            transform: `scale3d(${scale}, ${scale}, 1)`,
-            opacity,
-          }}
-          width="100%"
-          height="100%"
-        />
-      )}
+      <p>BackgroundVideo not implemented</p>
       <Mask backgroundColor={maskColor} visible={!ready} />
     </Container>
   )

@@ -14,13 +14,13 @@ export { MAKESWIFT_SITE_VERSION_COOKIE, SearchParams } from '../api-handler/prev
 export { MakeswiftClient } from '../client'
 
 export {
-  FrameworkContext,
   DefaultHead,
   DefaultHeadSnippet,
   DefaultImage,
   DefaultElementData,
   versionedFetch,
 } from '../runtimes/react/components/framework-context'
+export type { FrameworkContext } from '../runtimes/react/components/framework-context'
 
 export { MakeswiftComponent } from '../runtimes/react/components/MakeswiftComponent'
 export { Page } from '../runtimes/react/components/page'

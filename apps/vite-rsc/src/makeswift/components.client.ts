@@ -1,1 +1,1 @@
-import '@/makeswift/components/clock/clock.makeswift'
+import './components/clock/clock.makeswift'

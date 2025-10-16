@@ -3,23 +3,27 @@
   "version": "0.0.0",
   "private": true,
   "license": "MIT",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "tsx watch --env-file=.env server.ts",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
     "@makeswift/runtime": "workspace:^",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "@makeswift/express-react": "workspace:^",
+    "express": "^5.1.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-markdown": "^10.1.0"
   },
   "devDependencies": {
+    "@types/express": "^5.0.3",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@vitejs/plugin-react": "latest",
     "@vitejs/plugin-rsc": "latest",
     "rsc-html-stream": "^0.0.7",
+    "tsx": "^4.19.2",
     "vite": "^7.1.9"
   }
 }
