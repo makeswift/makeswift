@@ -1,3 +1,5 @@
+'use client'
+
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector'
 
 import { useStore } from './use-store'

@@ -19,6 +19,11 @@ export default defineConfig({
     // inspect(),
   ],
 
+  // Deduplicate React packages to ensure single instance
+  resolve: {
+    dedupe: ['react', 'react-dom', 'use-sync-external-store'],
+  },
+
   // specify entry point for each environment.
   // (currently the plugin assumes `rollupOptions.input.index` for some features.)
   environments: {
