@@ -2,7 +2,7 @@ import { useRouter as usePagesRouter } from 'next/router'
 import { P, match } from 'ts-pattern'
 import { useEffect } from 'react'
 
-import { setLocale } from '../../state/actions'
+import { setLocale } from '../../state/shared-api'
 import { useDispatch } from '../../runtimes/react/hooks/use-dispatch'
 
 function useRouter() {

@@ -1,5 +1,6 @@
 import * as LocalizedResourcesMap from '../localized-resources-map'
-import * as Actions from '../../actions'
+import * as SharedActions from '../../shared-api'
+import * as InternalActions from '../../actions/internal'
 
 describe('state / LocalizedResourcesMap', () => {
   test('`getInitialState` w/o arguments returns an empty state', () => {
@@ -43,7 +44,7 @@ describe('state / LocalizedResourcesMap', () => {
       (state, [resourceId, localizedResourceId, locale]) =>
         LocalizedResourcesMap.reducer(
           state,
-          Actions.setLocalizedResourceId({ resourceId, localizedResourceId, locale }),
+          SharedActions.setLocalizedResourceId({ resourceId, localizedResourceId, locale }),
         ),
       state,
     )
@@ -79,7 +80,7 @@ describe('state / LocalizedResourcesMap', () => {
       (state, localizedResourcesMap) =>
         LocalizedResourcesMap.reducer(
           state,
-          Actions.updateAPIClientCache({ apiResources: {}, localizedResourcesMap }),
+          InternalActions.updateAPIClientCache({ apiResources: {}, localizedResourcesMap }),
         ),
       state,
     )

@@ -9,7 +9,9 @@ import {
 
 import * as APIResources from './modules/api-resources'
 import * as LocalizedResourcesMap from './modules/localized-resources-map'
-import { type Action, ActionTypes, apiResourceFulfilled, setLocalizedResourceId } from './actions'
+import { type Action, ActionTypes } from './actions'
+import { apiResourceFulfilled } from './actions/internal'
+import { setLocalizedResourceId } from './shared-api'
 import { actionMiddleware, middlewareOptions, devToolsConfig } from './toolkit'
 
 import {
