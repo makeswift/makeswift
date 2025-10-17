@@ -30,24 +30,9 @@ dato-simple/
 └── env.ts                        # Environment variable validation
 ```
 
-## Quick Start
+## Getting started
 
-### 1. Clone the repository
-
-```bash
-   npx makeswift@latest init --example=dato-simple
-```
-
-### 2. Configure environment variables
-
-Create a `.env.local` file and add your credentials. Ensure that your DatoCMS token has permission to access the Content Delivery API.
-
-```
-MAKESWIFT_SITE_API_KEY=your_makeswift_api_key
-DATO_CMS_API_TOKEN=your_dato_api_token
-```
-
-### 3. Set up your content model in DatoCMS
+### 1. Set up your content model in DatoCMS
 
 To get started with blog posts, you'll need to set up a content schema in DatoCMS. Here's how we did it:
 
@@ -66,24 +51,47 @@ To get started with blog posts, you'll need to set up a content schema in DatoCM
 - **Slug** (SEO > Slug) – A URL-friendly identifier. Set **Title** as the reference field, and mark it unique and required.
 - **Feed Date** (Date) – The date the post should appear in the feed. Mark this field as required.
 - **Body** (Structured text) – The main content as structured text.
-- **Author** (Single link) – The author of the blog post. In the _Validations_ tab, select "Author" in the “Accept only specified model” input.
+- **Author** (Single link) – The author of the blog post. In the **Validations** tab, select "Author" in the "Accept only specified model" input.
 - **Banner** (Media > Single Asset) – An optional hero image for the post
 
 Be sure to add a few blog posts for testing purposes, and connect them to an author.
 
-### 4. Generate TypeScript types
+### 2. Clone our example with the Makeswift CLI
 
 ```bash
-npm run codegen-ts
+npx makeswift@latest init --example=dato-simple
 ```
 
-This command watches for changes and regenerates types automatically.
+### 3. Configure environment variables
 
-### 5. Run the development server
+Here is what your `.env.local` should look like:
+
+```
+MAKESWIFT_SITE_API_KEY=your_makeswift_api_key
+DATO_CMS_API_TOKEN=your_dato_api_token
+```
+
+**MAKESWIFT_SITE_API_KEY**: Automatically applied from web form -- can be found in your Makeswift site settings
+
+You will be prompted for:
+
+**DATO_CMS_API_TOKEN**: Your DatoCMS API token with Content Delivery API permissions (found in your DatoCMS project settings under **API tokens**)
+
+The CLI should start up your development environment automatically, but if you need to run the server manually, use:
 
 ```bash
 npm run dev
 ```
+
+Once your development server is running, go back to your Makeswift site settings and set the **Host URL** to the URL your dev host is running on (ex:`http://localhost:3000`).
+
+If you modify the GraphQL queries in the future, run the following command to regenerate types:
+
+```bash
+npm run codegen-ts-watch
+```
+
+This will regenerate the GraphQL types and watch for changes.
 
 ## Building Blog Pages in Makeswift
 
@@ -121,24 +129,28 @@ Blog posts are transformed from DatoCMS's structure to match the API expected by
 Common issues and solutions:
 
 - **Type generation fails**
+
   - Ensure your DatoCMS credentials are correct in `.env.local`.
   - Check that your content model matches the GraphQL query.
   - Verify that the relevant content is published in DatoCMS.
 
 - **Blog posts not showing**
+
   - Confirm that the slug format matches your entries in DatoCMS.
   - Make sure the posts are published.
   - Ensure required fields—**Title**, **Slug**, **Feed Date**, **Body**, and **Banner**—are populated.
 
 - **Makeswift builder issues**
+
   - Clear your browser cache and refresh the page.
   - Make sure the `MAKESWIFT_SITE_API_KEY` is correctly set.
-  - Verify that your host URL is set to http://localhost:3000/ in your Makeswift site settings.
+  - Verify that your host URL is set to the same URL as your dev server (ex: `http://localhost:3000`) in your Makeswift site settings.
 
 - **GraphQL errors**
-  - Run `npm codegen-ts` to regenerate types.
+
+  - Run `npm run codegen-ts` to regenerate types.
   - Check that your content model matches the structure expected by the GraphQL query.
-  - Ensure all referenced content types (e.g., **Author**, **Blogpost**) exist and are published.
+  - Ensure all referenced content types (e.g., **Author**, **BlogPost**) exist and are published.
 
 ## Learn More
 
