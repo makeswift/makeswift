@@ -6,7 +6,8 @@
     "start": "next start",
     "lint": "next lint",
     "icons": "npx @svgr/cli --typescript --replace-attr-values \"#000=currentColor\" --out-dir generated/icons -- public/icons",
-    "codegen-ts": "graphql-codegen --config graphql.config.ts --watch"
+    "codegen-ts": "graphql-codegen --config graphql.config.ts",
+    "codegen-ts-watch": "graphql-codegen --config graphql.config.ts --watch"
   },
   "dependencies": {
     "@conform-to/react": "^1.6.1",
