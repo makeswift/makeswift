@@ -2,12 +2,7 @@ import { match, P } from 'ts-pattern'
 
 import { mapValues } from '../lib/functional'
 
-import {
-  deserializeFunction,
-  isSerializedFunction,
-  type AnyFunction,
-  type DeserializedFunction,
-} from './function-serialization'
+import { type AnyFunction, type DeserializedFunction } from './function'
 
 export type Deserialized<T> = T extends AnyFunction
   ? DeserializedFunction<T>
@@ -19,6 +14,11 @@ export type Deserialized<T> = T extends AnyFunction
 export interface SerializationPlugin<R = unknown> {
   match: (value: unknown) => boolean
   serialize: (value: R) => unknown
+}
+
+export interface DeserializationPlugin<V = unknown, R = unknown> {
+  match: (value: unknown) => boolean
+  deserialize: (value: V) => R
 }
 
 export function serializeObject(
@@ -40,13 +40,22 @@ export function serializeObject(
   return serialize(object)
 }
 
-export function deserializeObject(object: unknown): unknown {
-  const deserialize = (value: unknown): unknown =>
-    match(value)
-      .with(P.when(isSerializedFunction), deserializeFunction)
+export function deserializeObject(
+  object: unknown,
+  plugins: DeserializationPlugin<any>[] = [],
+): unknown {
+  function deserialize(value: unknown): unknown {
+    for (const plugin of plugins) {
+      if (plugin.match(value)) {
+        return plugin.deserialize(value)
+      }
+    }
+
+    return match(value)
       .with(P.array(), (arr) => arr.map(deserialize))
       .with({}, (obj) => mapValues(obj, (obj) => deserialize(obj) as any))
       .otherwise(() => value)
+  }
 
   return deserialize(object)
 }

@@ -2,14 +2,15 @@ import {
   AnyFunction,
   ControlDefinition,
   SerializedRecord,
-  serializeFunction,
   serializeObject,
   SerializationPlugin,
   ControlSerializationVisitor,
   isFunction,
 } from '@makeswift/controls'
 
-import { RichTextV2Definition } from '../rich-text-v2'
+import { RichTextV2Definition } from '../../rich-text-v2'
+
+import { serializeFunction } from './function-serialization'
 
 export class ClientMessagePortSerializationVisitor extends ControlSerializationVisitor {
   private transferables: Transferable[] = []
@@ -26,9 +27,7 @@ export class ClientMessagePortSerializationVisitor extends ControlSerializationV
 
     const serializeDefinitionPlugin: SerializationPlugin<ControlDefinition> = {
       match: (val: unknown) => val instanceof ControlDefinition,
-      serialize: (val: ControlDefinition) => {
-        return val.accept(this)
-      },
+      serialize: (val: ControlDefinition) => val.accept(this),
     }
 
     super([serializeFunctionPlugin, serializeDefinitionPlugin])
