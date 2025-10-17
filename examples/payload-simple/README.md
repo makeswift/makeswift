@@ -37,7 +37,7 @@ my-payload-cms/                   # Your Payload CMS instance
 └── docker-compose.yml            # Docker setup for MongoDB
 ```
 
-## Quick Start
+## Getting started
 
 ### 1. Set up Payload CMS instance
 
@@ -165,12 +165,21 @@ export default buildConfig({
 
 When you refresh the Payload Admin dashboard, you should see the Posts collection listed alongside Users and Media.
 
-### 2. Clone this example
+#### Get your API credentials
+
+To obtain the Payload credentials for the next steps:
+
+1. In the Payload admin panel (http://localhost:3000/admin), go to **Users** and select your admin user.
+2. Check the **Enable API Key** checkbox.
+3. Copy the API key—you'll need this as your `PAYLOAD_ACCESS_TOKEN`.
+4. Copy the user slug from the URL. For example, if the URL is `/admin/collections/users/63f8b2a1c4d5e6f7g8h9i0j1`, then `63f8b2a1c4d5e6f7g8h9i0j1` is your `PAYLOAD_USER_SLUG`.
+
+### 2. Clone the repository
 
 Open a new terminal session in your desired parent directory and run the following command to create a Makeswift + Payload project:
 
 ```bash
-   npx makeswift@latest init --example=payload-simple
+npx makeswift@latest init --example=payload-simple
 ```
 
 > [!NOTE]
@@ -178,34 +187,26 @@ Open a new terminal session in your desired parent directory and run the followi
 
 ### 3. Configure environment variables
 
-Add the following credentials to the project's `.env.local` file:
+Here is how your `.env.local` should look once setup is finished:
 
 ```
 MAKESWIFT_SITE_API_KEY=your_makeswift_api_key
-PAYLOAD_ACCESS_TOKEN=your_payload_api_key_from_step_1
-PAYLOAD_USER_SLUG=your_payload_user_slug_from_step_1
+PAYLOAD_ACCESS_TOKEN=your_payload_api_key
+PAYLOAD_USER_SLUG=your_payload_user_slug
 NEXT_PUBLIC_PAYLOAD_SERVER_DOMAIN=http://localhost:3000
 NEXT_PUBLIC_SITE_URL=http://localhost:3001
 ```
 
-To obtain the Payload credentials:
+**MAKESWIFT_SITE_API_KEY**: Automatically applied, found in your Makeswift site settings
 
-1. In the Payload admin panel (http://localhost:3000/admin), go to Users and select your admin user.
-2. Check the _Enable API Key_ checkbox.
-3. Copy the API key; this is your `PAYLOAD_ACCESS_TOKEN`.
-4. Copy the user slug from the URL. For example, if the URL is `/admin/collections/users/63f8b2a1c4d5e6f7g8h9i0j1`, then `63f8b2a1c4d5e6f7g8h9i0j1` is your `PAYLOAD_USER_SLUG`.
+You will be prompted for:
 
-### 4. Generate TypeScript types
+**PAYLOAD_ACCESS_TOKEN**: The API key you generated in step 1
+**PAYLOAD_USER_SLUG**: The user slug from step 1
+**NEXT_PUBLIC_PAYLOAD_SERVER_DOMAIN**: Your Payload server URL (ex: `http://localhost:3000`)
+**NEXT_PUBLIC_SITE_URL**: Your Next.js app URL (ex: `http://localhost:3001`)
 
-From your project’s root directory, run:
-
-```bash
-npm run codegen-ts
-```
-
-This command watches for changes and regenerates types automatically.
-
-### 5. Run the development server
+The CLI should start up your development environment automatically, but if you need to run the server manually, use:
 
 ```bash
 npm run dev
@@ -213,7 +214,17 @@ npm run dev
 
 Your site will be available at http://localhost:3001. Make sure the Payload server continues running in a separate session on port 3000.
 
-## Adding Content
+Once your development server is running, go back to your Makeswift site settings and set the **Host URL** to `http://localhost:3001`.
+
+If you modify the GraphQL queries in the future, run the following command to regenerate types:
+
+```bash
+npm run codegen-ts-watch
+```
+
+This will regenerate the GraphQL types and watch for changes.
+
+### 4. Add content to Payload
 
 Now it's time to create and publish a few sample blog posts.
 
@@ -278,9 +289,9 @@ Blog posts are transformed from Payload's structure to match the API expected by
 Common issues and solutions:
 
 - **Type generation fails**
-  - Ensure your Payload CMS instance is running on http://localhost:3000.
+  - Ensure your Payload CMS instance is running on `http://localhost:3000`.
   - Confirm that your Payload access token is correctly set in `.env.local`.
-  - Verify that the GraphQL endpoint is accessible at http://localhost:3000/api/graphql.
+  - Verify that the GraphQL endpoint is accessible at `http://localhost:3000/api/graphql`.
   - Check that Payload collections are properly configured.
 
 - **Payload admin access issues**
@@ -292,11 +303,11 @@ Common issues and solutions:
 - **Makeswift builder issues**
   - Clear your browser cache and refresh the page.
   - Make sure the `MAKESWIFT_SITE_API_KEY` is correctly set.
-  - Verify that your host URL is set to http://localhost:3001/ in your Makeswift site settings.
+  - Verify that your host URL is set to `http://localhost:3001` in your Makeswift site settings.
   - Ensure your Payload instance is running and accessible from the main app.
 
 - **GraphQL errors**
-  - Run `pnpm run codegen-ts` to regenerate types.
+  - Run `npm run codegen-ts` to regenerate types.
   - Check that your content model matches the structure expected by the GraphQL query.
   - Ensure all referenced collections (e.g., **Users**, **Posts**, **Media**) exist and are correctly configured.
   - Verify API key authentication is working by testing the GraphQL endpoint directly.
