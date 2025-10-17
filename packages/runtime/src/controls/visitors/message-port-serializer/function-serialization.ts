@@ -1,14 +1,13 @@
+import {
+  DeserializationPlugin,
+  type AnyFunction,
+  type SerializedFunctionReturnType,
+  type DeserializedFunction,
+} from '@makeswift/controls'
+
 declare const SerializedFunctionTag: unique symbol
 
-export type AnyFunction = (...args: any) => any
-
-export function isFunction(value: any): value is AnyFunction {
-  return typeof value === 'function'
-}
-
-type ResolveCallPromise<T extends AnyFunction> = (
-  value: SerializedFunctionReturnType<T>,
-) => void
+type ResolveCallPromise<T extends AnyFunction> = (value: SerializedFunctionReturnType<T>) => void
 
 type OnMessageHandler<T extends AnyFunction> = MessagePort['onmessage'] & {
   newCall?(resolve: ResolveCallPromise<T>): number
@@ -19,50 +18,32 @@ export type SerializedFunction<T extends AnyFunction> = MessagePort & {
   readonly [SerializedFunctionTag]: T
 }
 
-type SerializedFunctionReturnType<T extends AnyFunction> = Awaited<
-  ReturnType<T>
->
-
-export type DeserializedFunction<T extends AnyFunction> = (
-  ...args: Parameters<T>
-) => Promise<SerializedFunctionReturnType<T>>
-
-export function isSerializedFunction(
-  value: any,
-): value is SerializedFunction<AnyFunction> {
+export function isSerializedFunction(value: any): value is SerializedFunction<AnyFunction> {
   return value instanceof MessagePort
 }
 
 type CallID = number
 
-export function serializeFunction<T extends AnyFunction>(
-  func: T,
-): SerializedFunction<T> {
+export function serializeFunction<T extends AnyFunction>(func: T): SerializedFunction<T> {
   type CallMessageEvent = MessageEvent<[CallID, Parameters<T>]>
 
   const messageChannel = new MessageChannel()
 
-  messageChannel.port1.onmessage = ({
-    data: [callId, args],
-  }: CallMessageEvent) => {
+  messageChannel.port1.onmessage = ({ data: [callId, args] }: CallMessageEvent) => {
     Promise.resolve()
       .then(() => func.apply(null, args))
-      .then((result) => messageChannel.port1.postMessage([callId, result]))
+      .then(result => messageChannel.port1.postMessage([callId, result]))
   }
 
   return messageChannel.port2 as SerializedFunction<T>
 }
 
 function onmessageHandler<T extends AnyFunction>(): OnMessageHandler<T> {
-  type ResultMessageEvent = MessageEvent<
-    [CallID, SerializedFunctionReturnType<T>]
-  >
+  type ResultMessageEvent = MessageEvent<[CallID, SerializedFunctionReturnType<T>]>
   let nextCallId = 0
   const calls = new Map<CallID, ResolveCallPromise<T>>()
 
-  const result: OnMessageHandler<T> = ({
-    data: [callId, result],
-  }: ResultMessageEvent) => {
+  const result: OnMessageHandler<T> = ({ data: [callId, result] }: ResultMessageEvent) => {
     calls.get(callId)?.(result)
     calls.delete(callId)
   }
@@ -84,7 +65,7 @@ export function deserializeFunction<T extends AnyFunction>(
   }
 
   return function deserializedFunction(...args) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const { newCall } = serializedFunction.onmessage
       if (newCall == null) {
         throw new Error(
@@ -96,4 +77,12 @@ export function deserializeFunction<T extends AnyFunction>(
       serializedFunction.postMessage([callId, args])
     })
   }
+}
+
+export const functionDeserializationPlugin: DeserializationPlugin<
+  SerializedFunction<AnyFunction>,
+  DeserializedFunction<AnyFunction>
+> = {
+  match: isSerializedFunction,
+  deserialize: value => deserializeFunction(value),
 }

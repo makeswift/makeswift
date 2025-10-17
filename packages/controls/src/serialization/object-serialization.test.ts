@@ -1,4 +1,4 @@
-import { AnyFunction } from './function-serialization'
+import { AnyFunction } from './function'
 import {
   deserializeObject,
   SerializationPlugin,

@@ -1,7 +1,10 @@
 import { deserializeRecord } from '@makeswift/controls'
 import { RichText, RichTextV2Definition } from '../rich-text-v2'
 import { deserializeUnifiedControlDef } from '../../../builder/serialization/control-serialization'
-import { ClientMessagePortSerializationVisitor } from '../../visitors/client-message-port-serialization-visitor'
+import {
+  ClientMessagePortSerializationVisitor,
+  functionDeserializationPlugin,
+} from '../../visitors/message-port-serializer'
 
 jest.mock('corporate-ipsum', () => {
   return {
@@ -29,7 +32,7 @@ describe('RichTextV2 serialization', () => {
 
     RichTextV2Definition.generateParagraph = jest.fn(() => 'generated paragraph')
     const deserializedDefinition = RichTextV2Definition.deserialize(
-      deserializeRecord(serializedDefinition),
+      deserializeRecord(serializedDefinition, [functionDeserializationPlugin]),
       deserializeUnifiedControlDef,
     )
 

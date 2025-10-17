@@ -1,5 +1,5 @@
 export * as SerializationSchema from './schema'
 export * from './types'
-export * from './function-serialization'
+export * from './function'
 export * from './object-serialization'
 export * from './serialization'
