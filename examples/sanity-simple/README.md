@@ -29,15 +29,9 @@ sanity-simple/
 └── env.ts                        # Environment variable validation
 ```
 
-## Quick Start
+## Getting started
 
-### 1. Clone this example
-
-```bash
-   npx makeswift@latest init --example=sanity-simple
-```
-
-### 2. Set up Sanity Studio
+### 1. Set up Sanity Studio
 
 First, you'll need to create a new Sanity Studio project. This will serve as your content management system, where you'll create and manage blog posts and authors.
 
@@ -184,9 +178,17 @@ This command will:
 
 In your local Sanity Studio app (`http://localhost:3333`), create and publish a few sample blog posts, linking each to an author. Ensure that all posts include a published date and are marked as published.
 
+Note your project ID and generate an API token in your project dashboard at [sanity.io](https://www.sanity.io/manage).
+
+### 2. Clone the repository
+
+```bash
+npx makeswift@latest init --example=sanity-simple
+```
+
 ### 3. Configure environment variables
 
-Now that your Sanity project is set up and the GraphQL API is deployed, return to your example project's root directory and update the Sanity-related values in the `.env.local` file:
+You will be prompted to fill in each required variable:
 
 ```
 MAKESWIFT_SITE_API_KEY=your_makeswift_api_key
@@ -194,23 +196,25 @@ SANITY_PROJECT_ID=your_sanity_project_id
 SANITY_ACCESS_TOKEN=your_sanity_access_token
 ```
 
-You can find your Sanity project ID and generate an API token in your project dashboard at sanity.io.
+1. **MAKESWIFT_SITE_API_KEY**: Automatically applied, found in your Makeswift site settings
+2. **SANITY_PROJECT_ID**: Your Sanity project ID
+3. **SANITY_ACCESS_TOKEN**: Generate an API token in your Sanity project dashboard at [sanity.io](https://www.sanity.io/manage)
 
-### 4. Generate TypeScript types
-
-From your project’s root directory, run:
-
-```bash
-npm run codegen-ts
-```
-
-This command watches for changes and regenerates types automatically.
-
-### 5. Run the development server
+The development environment should start up automatically, but if you need to run the server manually, use:
 
 ```bash
-npm dev
+npm run dev
 ```
+
+Once your development server is running, go back to your Makeswift site settings and set the **Host URL** to `http://localhost:3000`.
+
+If you modify the GraphQL queries in the future, run the following command to regenerate types:
+
+```bash
+npm run codegen-ts-watch
+```
+
+This will regenerate the GraphQL types and watch for changes.
 
 ## Building Blog Pages in Makeswift
 
