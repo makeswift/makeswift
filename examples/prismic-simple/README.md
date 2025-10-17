@@ -30,25 +30,9 @@ prismic-simple/
 └── env.ts                        # Environment variable validation
 ```
 
-## Quick Start
+## Getting started
 
-### 1. Set up the project
-
-```bash
-   npx makeswift@latest init --example=prismic-simple
-```
-
-### 2. Configure environment variables
-
-Create a `.env.local` file and add your credentials:
-
-```
-MAKESWIFT_SITE_API_KEY=your_makeswift_api_key
-PRISMIC_REPOSITORY_NAME=your_repository_name
-PRISMIC_ACCESS_TOKEN=your_access_token
-```
-
-### 3. Set up your content model in Prismic
+### 1. Set up your content model in Prismic
 
 To get started with blog posts, you'll need to set up a content model in Prismic. Here's how we did it:
 
@@ -58,7 +42,7 @@ To get started with blog posts, you'll need to set up a content model in Prismic
 npx @slicemachine/init@latest --repository your_prismic_repository_name
 ```
 
-This configures and starts [Slice Machine](https://prismic.io/docs/slice-machine), Prismic’s local content modeling tool. Once it's running, open http://localhost:9999 in your browser.
+This configures and starts [Slice Machine](https://prismic.io/docs/slice-machine), Prismic's local content modeling tool. Once it's running, open http://localhost:9999 in your browser.
 
 In Slice Machine:
 
@@ -75,26 +59,48 @@ In Slice Machine:
 - **Description** (Text) - A brief summary
 - **Feed Date** (Date) - The publication date
 - **Body** (Rich Text) - The main content
-- **Author** (Content Relationship) - A reference to the Author type (set the allowed type to Author and include all fields)
+- **Author** (Content Relationship) - A reference to the Author type (set the allowed type to **Author** and include all fields)
 - **Hero** (Image) - A hero image for the post
 
 Note: **BlogPost** must be a custom type, _not_ a page type.
 
 When you're done, click "Review changes", then "Push" to push your schema changes to Prismic. Click "Create content in the Page Builder" and add a few sample blog posts, linking each to an author for testing. The UID fields in BlogPost and Author will be used as their slugs—make sure to set them appropriately.
 
-### 4. Generate TypeScript types
+### 2. Clone the repository
 
 ```bash
-npm run codegen-ts
+npx makeswift@latest init --example=prismic-simple
 ```
 
-This command watches for changes and regenerates types automatically.
+### 3. Configure environment variables
 
-### 5. Run the development server
+You will be prompted to fill in each required variable:
+
+```
+MAKESWIFT_SITE_API_KEY=your_makeswift_api_key
+PRISMIC_REPOSITORY_NAME=your_repository_name
+PRISMIC_ACCESS_TOKEN=your_access_token
+```
+
+1. **MAKESWIFT_SITE_API_KEY**: Automatically applied, found in your Makeswift site settings
+2. **PRISMIC_REPOSITORY_NAME**: Your Prismic repository name
+3. **PRISMIC_ACCESS_TOKEN**: Generate a permanent access token in your Prismic repository settings under **API & Security**
+
+The development environment should start up automatically, but if you need to run the server manually, use:
 
 ```bash
 npm run dev
 ```
+
+Once your development server is running, go back to your Makeswift site settings and set the **Host URL** to `http://localhost:3000`.
+
+If you modify the GraphQL queries in the future, run the following command to regenerate types:
+
+```bash
+npm run codegen-ts-watch
+```
+
+This will regenerate the GraphQL types and watch for changes.
 
 ## Building Blog Pages in Makeswift
 
@@ -132,24 +138,27 @@ Blog posts are transformed from Prismic's structure to match the API expected by
 Common issues and solutions:
 
 - **Type generation fails**
+
   - Ensure your Prismic credentials are correct in `.env.local`.
   - Check that your content model matches the GraphQL query.
   - Verify that the relevant content is published in Prismic.
 
 - **Blog posts not showing**
+
   - Confirm that the UID format matches your entries in Prismic.
   - Make sure the posts are published.
   - Ensure required fields—**Title**, **Feed Date**, **Body**, and **Hero**—are populated.
 
 - **Makeswift builder issues**
+
   - Clear your browser cache and refresh the page.
   - Make sure the `MAKESWIFT_SITE_API_KEY` is correctly set.
-  - Verify that your host URL is set to http://localhost:3000/ in your Makeswift site settings.
+  - Verify that your host URL is set to `http://localhost:3000` in your Makeswift site settings.
 
 - **GraphQL errors**
-  - Run `npm codegen-ts` to regenerate types.
+  - Run `npm run codegen-ts` to regenerate types.
   - Check that your content model matches the structure expected by the GraphQL query.
-  - Ensure all referenced content types (e.g., **BlogPost**) exist and are published.
+  - Ensure all referenced content types (e.g., **Author**, **BlogPost**) exist and are published.
 
 ## Learn More
 
