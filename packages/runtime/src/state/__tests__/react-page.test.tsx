@@ -2,7 +2,7 @@
 /** @jsx jsx */
 import { Slot, TextInput } from '../../controls'
 
-import { registerComponent } from '../actions'
+import { registerComponent } from '../shared-api'
 import * as ReactPage from '../react-page'
 import { ComponentIcon } from '../modules/components-meta'
 
@@ -12,7 +12,7 @@ function jsx(type: Function, props: Record<string, unknown> = {}, ...children: J
     ...props,
     children:
       children.length === 0
-        ? (props.children ?? [])
+        ? props.children ?? []
         : children.length === 1
           ? children.at(0)
           : children,

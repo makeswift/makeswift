@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
-import { ActionTypes } from '../../../../state/actions'
+import { makeswiftConnectionCheck } from '../../../../state/builder-api'
+import { SharedActionTypes, makeswiftConnectionInit } from '../../../../state/shared-api'
 
 const CONNECTION_PING_INTERVAL_MS = 20
 
@@ -9,10 +10,7 @@ export function useBuilderConnectionPing({ appOrigin }: { appOrigin: string }) {
 
     if (window.parent !== window) {
       window.addEventListener('message', messageHandler)
-      window.parent.postMessage(
-        { type: ActionTypes.MAKESWIFT_CONNECTION_INIT },
-        { targetOrigin: appOrigin },
-      )
+      window.parent.postMessage(makeswiftConnectionInit(), { targetOrigin: appOrigin })
     }
 
     return () => {
@@ -24,7 +22,10 @@ export function useBuilderConnectionPing({ appOrigin }: { appOrigin: string }) {
     }
 
     function messageHandler(event: MessageEvent): void {
-      if (event.origin === appOrigin && event.data.type === ActionTypes.MAKESWIFT_CONNECTION_INIT) {
+      if (
+        event.origin === appOrigin &&
+        event.data.type === SharedActionTypes.MAKESWIFT_CONNECTION_INIT
+      ) {
         if (connectionInterval != null) {
           window.clearInterval(connectionInterval)
           connectionInterval = null
@@ -32,10 +33,7 @@ export function useBuilderConnectionPing({ appOrigin }: { appOrigin: string }) {
 
         connectionInterval = window.setInterval(() => {
           window.parent.postMessage(
-            {
-              type: ActionTypes.MAKESWIFT_CONNECTION_CHECK,
-              payload: { currentUrl: window.location.href },
-            },
+            makeswiftConnectionCheck({ currentUrl: window.location.href }),
             { targetOrigin: appOrigin },
           )
         }, CONNECTION_PING_INTERVAL_MS)

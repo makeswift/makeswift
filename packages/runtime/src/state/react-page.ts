@@ -17,6 +17,8 @@ import {
   ContextResource,
 } from '@makeswift/controls'
 
+import { copy as copyFromControl, merge } from '../controls/control'
+
 import * as Documents from './modules/read-only-documents'
 import * as ElementTrees from './modules/element-trees'
 import * as ReactComponents from './modules/react-components'
@@ -27,14 +29,9 @@ import * as IsInBuilder from './modules/is-in-builder'
 import * as IsPreview from './modules/is-preview'
 import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Breakpoints from './modules/breakpoints'
-import {
-  type Action,
-  ActionTypes,
-  changeElementTree,
-  createElementTree,
-  deleteElementTree,
-} from './actions'
-import { copy as copyFromControl, merge } from '../controls/control'
+
+import { type Action, ActionTypes } from './actions'
+import { changeElementTree, createElementTree, deleteElementTree } from './actions/internal'
 
 import { actionMiddleware, middlewareOptions, devToolsConfig } from './toolkit'
 
