@@ -1,6 +1,6 @@
 {
   "name": "@makeswift/controls",
-  "version": "0.1.14",
+  "version": "0.1.15-canary.0",
   "license": "MIT",
   "files": [
     "dist"

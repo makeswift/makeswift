@@ -15,6 +15,10 @@
     "@makeswift/hono-react": "0.0.0"
   },
   "changesets": [
+    "bright-camels-talk",
+    "shaggy-dots-fry",
+    "silly-dancers-explain",
+    "silver-days-prove",
     "spicy-cherries-allow"
   ]
 }
