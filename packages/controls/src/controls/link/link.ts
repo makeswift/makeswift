@@ -11,11 +11,9 @@ import {
 } from '../../context'
 import { Targets, type IntrospectionTarget } from '../../introspection'
 import { type ResourceResolver } from '../../resources/resolver'
-import { type SerializedRecord } from '../../serialization'
 
 import {
   ControlDefinition,
-  serialize,
   type Resolvable,
   type SchemaType,
 } from '../definition'
@@ -259,12 +257,6 @@ class Definition<
 
   createInstance(sendMessage: SendMessage<any>) {
     return new DefaultControlInstance(sendMessage)
-  }
-
-  serialize(): [SerializedRecord, Transferable[]] {
-    return serialize(this.config, {
-      type: Definition.type,
-    })
   }
 
   accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {

@@ -5,14 +5,10 @@ import { safeParse, type ParseResult } from '../../lib/zod'
 
 import { ControlDataTypeKey, type Data } from '../../common'
 import { type CopyContext } from '../../context'
-import {
-  type DeserializedRecord,
-  type SerializedRecord,
-} from '../../serialization'
+import { type DeserializedRecord } from '../../serialization'
 
 import {
   ControlDefinition,
-  serialize,
   type Resolvable,
   type SchemaType,
 } from '../definition'
@@ -178,13 +174,6 @@ class Definition<C extends Config> extends ControlDefinition<
 
   createInstance(sendMessage: SendMessage) {
     return new DefaultControlInstance(sendMessage)
-  }
-
-  serialize(): [SerializedRecord, Transferable[]] {
-    return serialize(this.config, {
-      type: Definition.type,
-      version: this.version,
-    })
   }
 
   accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {

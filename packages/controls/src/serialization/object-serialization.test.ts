@@ -1,25 +1,36 @@
+import { AnyFunction } from './function'
 import {
   deserializeObject,
-  Serializable,
+  SerializationPlugin,
   serializeObject,
   type Deserialized,
 } from './object-serialization'
-import { type SerializedRecord } from './types'
 
-expect.addSnapshotSerializer({
-  serialize: () => '[MessagePort]',
-  test: (value) => value instanceof MessagePort,
-})
+const mockSerializeFunctionPlugin: SerializationPlugin<AnyFunction> = {
+  match: (val: unknown) => typeof val === 'function',
+  serialize: jest.fn(() => `[SerializedFunction]`),
+}
 
-class SerializableObject extends Serializable {
-  constructor(private readonly obj: { type: string; [key: string]: any }) {
-    super()
+const mockSerializeSerializableObjectPlugin: SerializationPlugin<SerializableObject> =
+  {
+    match: (val: unknown) => val instanceof SerializableObject,
+    serialize: jest.fn((def) => def.serialize()),
   }
 
-  serialize(): [SerializedRecord, Transferable[]] {
-    return serializeObject(this.obj) as [SerializedRecord, Transferable[]]
+class SerializableObject {
+  constructor(private readonly obj: { type: string; [key: string]: any }) {}
+
+  serialize(): unknown {
+    return serializeObject(this.obj, [
+      mockSerializeFunctionPlugin,
+      mockSerializeSerializableObjectPlugin,
+    ])
   }
 }
+
+afterEach(() => {
+  jest.clearAllMocks()
+})
 
 describe('object serialization', () => {
   test('Deserialized', () => {
@@ -43,11 +54,11 @@ describe('object serialization', () => {
     { label: 'visible', options: [{ label: 'one', value: 1 }] },
   ])('%o', (object) => {
     test('should serialize to itself', () => {
-      expect(serializeObject(object)).toEqual([object, []])
+      expect(serializeObject(object)).toEqual(object)
     })
 
     test('should deserialize to itself', () => {
-      const [serialized, _] = serializeObject(object)
+      const serialized = serializeObject(object)
       expect(deserializeObject(serialized)).toEqual(object)
     })
   })
@@ -70,11 +81,11 @@ describe('object serialization', () => {
       }),
     }
 
-    const [serialized, transferables] = serializeObject(object)
-    expect(transferables).toHaveLength(3)
-    expect(transferables[0]).toBeInstanceOf(MessagePort)
-    transferables.forEach((port: any) => port.close())
-
+    const serialized = serializeObject(object, [
+      mockSerializeFunctionPlugin,
+      mockSerializeSerializableObjectPlugin,
+    ])
+    expect(mockSerializeFunctionPlugin.serialize).toHaveBeenCalledTimes(3)
     expect(serialized).toMatchSnapshot()
   })
 
@@ -83,17 +94,15 @@ describe('object serialization', () => {
     { arrayOfFunctions: [(item: any) => item.label] },
   ])('%o', (object) => {
     test('should handle function serialization', async () => {
-      const [serialized, transferables] = serializeObject(object)
-      expect(transferables).toHaveLength(1)
-      expect(transferables[0]).toBeInstanceOf(MessagePort)
-      transferables.forEach((port: any) => port.close())
-
+      const serialized = serializeObject(object, [
+        mockSerializeFunctionPlugin,
+        mockSerializeSerializableObjectPlugin,
+      ])
       expect(serialized).toMatchSnapshot()
     })
 
     test('should deserialize serialized functions', () => {
-      const [serialized, transferables] = serializeObject(object)
-      transferables.forEach((port: any) => port.close())
+      const serialized = serializeObject(object)
       expect(deserializeObject(serialized)).toMatchSnapshot()
     })
   })

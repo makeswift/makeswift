@@ -1,14 +1,12 @@
-import { deserializeObject, serializeObject } from './object-serialization'
+import {
+  DeserializationPlugin,
+  deserializeObject,
+} from './object-serialization'
 import { type DeserializedRecord, type SerializedRecord } from './types'
-
-export function serializeRecord(record: {
-  type: string
-}): [SerializedRecord, Transferable[]] {
-  return serializeObject(record) as [SerializedRecord, Transferable[]]
-}
 
 export function deserializeRecord(
   record: SerializedRecord,
+  plugins: DeserializationPlugin<any>[] = [],
 ): DeserializedRecord {
-  return deserializeObject(record) as DeserializedRecord
+  return deserializeObject(record, plugins) as DeserializedRecord
 }
