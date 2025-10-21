@@ -563,7 +563,6 @@ export function messageChannelMiddleware(
           break
 
         case ActionTypes.SET_BUILDER_EDIT_MODE:
-          channel.postMessage(action)
           window.getSelection()?.removeAllRanges()
           break
 
