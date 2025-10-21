@@ -1,7 +1,11 @@
 export * from './serialization'
 export * from './unstructured-introspection'
 
-export { type BuilderAction, BuilderActionTypes } from '../state/builder-api'
+export {
+  type BuilderAction as HostToBuilderAction,
+  BuilderActionTypes as HostToBuilderActionTypes,
+} from '../state/builder-api'
+
 export {
   type SetBreakpointsAction,
   makeswiftConnectionInit,
