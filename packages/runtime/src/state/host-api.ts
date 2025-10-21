@@ -1,7 +1,5 @@
 import { type Operation } from 'ot-json0'
 
-import { ControlInstance } from '@makeswift/controls'
-
 import { type PropControllerMessage } from '../prop-controllers/instances'
 import { type APIResource, APIResourceLocale } from '../api/types'
 
@@ -17,8 +15,6 @@ export const HostActionTypes = {
   CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP: 'CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP',
   SCROLL_DOCUMENT_ELEMENT: 'SCROLL_DOCUMENT_ELEMENT',
 
-  REGISTER_PROP_CONTROLLERS: 'REGISTER_PROP_CONTROLLERS',
-  UNREGISTER_PROP_CONTROLLERS: 'UNREGISTER_PROP_CONTROLLERS',
   MESSAGE_HOST_PROP_CONTROLLER: 'MESSAGE_HOST_PROP_CONTROLLER',
 
   CHANGE_API_RESOURCE: 'CHANGE_API_RESOURCE',
@@ -46,20 +42,6 @@ type ChangeDocumentElementScrollTopAction = {
 type ScrollDocumentElementAction = {
   type: typeof HostActionTypes.SCROLL_DOCUMENT_ELEMENT
   payload: { scrollTopDelta: number }
-}
-
-type RegisterPropControllersAction = {
-  type: typeof HostActionTypes.REGISTER_PROP_CONTROLLERS
-  payload: {
-    documentKey: string
-    elementKey: string
-    propControllers: Record<string, ControlInstance>
-  }
-}
-
-type UnregisterPropControllersAction = {
-  type: typeof HostActionTypes.UNREGISTER_PROP_CONTROLLERS
-  payload: { documentKey: string; elementKey: string }
 }
 
 type MessageHostPropControllerAction<T = PropControllerMessage> = {
@@ -93,8 +75,6 @@ export type HostAction =
   | ChangeDocumentAction
   | ChangeDocumentElementScrollTopAction
   | ScrollDocumentElementAction
-  | RegisterPropControllersAction
-  | UnregisterPropControllersAction
   | MessageHostPropControllerAction
   | ChangeAPIResourceAction
   | EvictAPIResourceAction
@@ -121,14 +101,6 @@ export function changeDocumentElementScrollTop(
 
 export function scrollDocumentElement(scrollTopDelta: number): ScrollDocumentElementAction {
   return { type: HostActionTypes.SCROLL_DOCUMENT_ELEMENT, payload: { scrollTopDelta } }
-}
-
-
-export function unregisterPropControllers(
-  documentKey: string,
-  elementKey: string,
-): UnregisterPropControllersAction {
-  return { type: HostActionTypes.UNREGISTER_PROP_CONTROLLERS, payload: { documentKey, elementKey } }
 }
 
 export function messageHostPropController<T>(
