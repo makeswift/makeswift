@@ -1,5 +1,5 @@
 import { useMemo, useEffect, useRef } from 'react'
-import { type CSSObject, serializeStyles } from '@emotion/serialize'
+import { serializeStyles } from '@emotion/serialize'
 import { type EmotionCache } from '@emotion/cache'
 import { type SerializedStyles } from '@emotion/utils'
 
@@ -8,21 +8,16 @@ import {
   type BoxModel,
   type Stylesheet,
   type ResolvedStyle,
-  type ResolvedStyleV2,
-  type ResolvedTypographyStyle,
   isNotNil,
-  getBaseBreakpoint,
-  getBreakpointMediaQuery,
 } from '@makeswift/controls'
 
 import { useCache } from '../root-style-registry'
-import { styleV1Css } from '../controls/style'
-import { typographyCss } from '../controls/typography'
 
 import { useBreakpoints } from './use-breakpoints'
 import { useCssId } from './use-css-id'
 import { useStyles, serializedStyleClassName } from '../use-style'
 import { pollBoxModel } from '../poll-box-model'
+import { resolvedStyleToCss } from '../resolve-style'
 
 export type StylesheetFactory = {
   get(propName: string): Stylesheet
@@ -88,40 +83,6 @@ export function useStylesheetFactory(): StylesheetFactory {
       },
     }
   }, [breakpoints, cache, componentUid])
-}
-
-function isTypographyStyle(style: ResolvedStyle): style is ResolvedTypographyStyle {
-  return Array.isArray(style)
-}
-
-function isStyleV2(style: ResolvedStyle): style is ResolvedStyleV2 {
-  return typeof style === 'object' && 'getStyle' in style && typeof style.getStyle === 'function'
-}
-
-function styleV2Css(breakpoints: Breakpoints, style: ResolvedStyleV2<CSSObject>): CSSObject {
-  return {
-    ...style.getStyle(getBaseBreakpoint(breakpoints)),
-    ...breakpoints.reduce(
-      (styles, breakpoint) => ({
-        ...styles,
-        [getBreakpointMediaQuery(breakpoint)]: style.getStyle(breakpoint),
-      }),
-      {},
-    ),
-  }
-}
-
-function resolvedStyleToCss(breakpoints: Breakpoints, style: ResolvedStyle) {
-  if (isTypographyStyle(style)) {
-    return typographyCss(breakpoints, style)
-  }
-
-  if (isStyleV2(style)) {
-    return styleV2Css(breakpoints, style as ResolvedStyleV2<CSSObject>)
-  }
-
-  const { properties, styleData } = style
-  return styleV1Css(breakpoints, styleData, properties)
 }
 
 function serializeStyle(
