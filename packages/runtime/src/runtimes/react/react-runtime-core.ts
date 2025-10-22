@@ -2,8 +2,7 @@ import { ControlDefinition as UnifiedControlDefinition } from '@makeswift/contro
 
 import { type LegacyDescriptor, type DescriptorValueType } from '../../prop-controllers/descriptors'
 
-import { registerComponentEffect } from '../../state/shared-api'
-import { registerReactComponentEffect } from '../../state/actions/internal'
+import { registerComponentEffect, registerReactComponentEffect } from '../../state/actions/internal'
 
 import { BreakpointsInput } from '../../state/modules/breakpoints'
 import { ComponentIcon } from '../../state/modules/components-meta'

@@ -1,3 +1,5 @@
+import { isAction } from '@reduxjs/toolkit'
+
 import { type Operation } from 'ot-json0'
 
 import { type PropControllerMessage } from '../prop-controllers/instances'
@@ -6,7 +8,11 @@ import { type APIResource, APIResourceLocale } from '../api/types'
 import { BuilderEditMode } from './modules/builder-edit-mode'
 import { type Point } from './modules/pointer'
 
+import { type SharedAction, SharedActionTypes } from './shared-api'
+
 export const HostActionTypes = {
+  ...SharedActionTypes,
+
   INIT: 'INIT',
   CLEAN_UP: 'CLEAN_UP',
 
@@ -21,6 +27,7 @@ export const HostActionTypes = {
   EVICT_API_RESOURCE: 'EVICT_API_RESOURCE',
 
   SET_BUILDER_EDIT_MODE: 'SET_BUILDER_EDIT_MODE',
+  SET_LOCALIZED_RESOURCE_ID: 'SET_LOCALIZED_RESOURCE_ID',
 
   BUILDER_POINTER_MOVE: 'BUILDER_POINTER_MOVE',
 } as const
@@ -64,12 +71,19 @@ type SetBuilderEditModeAction = {
   payload: { editMode: BuilderEditMode }
 }
 
+type SetLocalizedResourceIdAction = {
+  type: typeof HostActionTypes.SET_LOCALIZED_RESOURCE_ID
+  // TODO: make `locale` required once we've upgraded the builder to always provide it
+  payload: { locale?: string; resourceId: string; localizedResourceId: string | null }
+}
+
 type BuilderPointerMoveAction = {
   type: typeof HostActionTypes.BUILDER_POINTER_MOVE
   payload: { pointer: Point | null }
 }
 
 export type HostAction =
+  | SharedAction
   | InitAction
   | CleanUpAction
   | ChangeDocumentAction
@@ -79,6 +93,7 @@ export type HostAction =
   | ChangeAPIResourceAction
   | EvictAPIResourceAction
   | SetBuilderEditModeAction
+  | SetLocalizedResourceIdAction
   | BuilderPointerMoveAction
 
 export function init(): InitAction {
@@ -133,6 +148,25 @@ export function setBuilderEditMode(editMode: BuilderEditMode): SetBuilderEditMod
   }
 }
 
+export function setLocalizedResourceId({
+  resourceId,
+  localizedResourceId,
+  locale,
+}: {
+  resourceId: string
+  localizedResourceId: string | null
+  locale?: string
+}): SetLocalizedResourceIdAction {
+  return {
+    type: HostActionTypes.SET_LOCALIZED_RESOURCE_ID,
+    payload: { resourceId, localizedResourceId, locale },
+  }
+}
+
 export function builderPointerMove(pointer: Point | null): BuilderPointerMoveAction {
   return { type: HostActionTypes.BUILDER_POINTER_MOVE, payload: { pointer } }
+}
+
+export function isHostAction(action: unknown): action is HostAction {
+  return isAction(action) && Object.hasOwn(HostActionTypes, action.type)
 }

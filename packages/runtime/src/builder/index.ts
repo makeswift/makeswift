@@ -13,7 +13,6 @@ export {
   unregisterDocument,
   setBreakpoints,
   setLocale,
-  setLocalizedResourceId,
 } from '../state/shared-api'
 
 export {
@@ -26,6 +25,7 @@ export {
   evictApiResource,
   scrollDocumentElement,
   setBuilderEditMode,
+  setLocalizedResourceId,
   builderPointerMove,
 } from '../state/host-api'
 

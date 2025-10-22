@@ -2,7 +2,7 @@
 /** @jsx jsx */
 import { Slot, TextInput } from '../../controls'
 
-import { registerComponent } from '../shared-api'
+import { registerComponent } from '../actions/internal'
 import * as ReactPage from '../react-page'
 import { ComponentIcon } from '../modules/components-meta'
 
