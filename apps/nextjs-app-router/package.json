@@ -5,7 +5,7 @@
   "scripts": {
     "clean": "rm -rf .next",
     "dev": "next dev --webpack",
-    "build": "next build --webpack",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },

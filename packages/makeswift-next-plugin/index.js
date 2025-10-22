@@ -138,12 +138,14 @@ module.exports =
 
       return {
         ...enhancedConfig,
-        webpack(config, options) {
-          config = enhancedConfig.webpack?.(config, options) ?? config
+        ...(resolveSymlinks != null && {
+          webpack(config, options) {
+            config = enhancedConfig.webpack?.(config, options) ?? config
 
-          if (resolveSymlinks != null) config.resolve.symlinks = resolveSymlinks
+            config.resolve.symlinks = resolveSymlinks
 
-          return config
-        },
+            return config
+          },
+        }),
       }
     }
