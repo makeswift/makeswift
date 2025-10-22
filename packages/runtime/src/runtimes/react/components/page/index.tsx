@@ -1,4 +1,4 @@
-import { Suspense, useMemo, memo, type ComponentProps } from 'react'
+import { useMemo, memo, type ComponentProps, Fragment } from 'react'
 
 import { useCacheData } from '../../hooks/use-cache-data'
 
@@ -42,7 +42,7 @@ export const Page = memo(
     useRegisterDocument(rootDocument)
 
     return (
-      <Suspense>
+      <Fragment>
         {/* We use a key here to reset the Snippets state in the PageMeta component */}
         <PageComponent
           key={snapshot.document.data.key}
@@ -50,7 +50,7 @@ export const Page = memo(
           rootDocument={rootDocument}
           metadata={metadata}
         />
-      </Suspense>
+      </Fragment>
     )
   },
 )
