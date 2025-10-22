@@ -1,5 +1,5 @@
 import * as LocalizedResourcesMap from '../localized-resources-map'
-import * as SharedActions from '../../shared-api'
+import * as HostAPI from '../../host-api'
 import * as InternalActions from '../../actions/internal'
 
 describe('state / LocalizedResourcesMap', () => {
@@ -44,7 +44,7 @@ describe('state / LocalizedResourcesMap', () => {
       (state, [resourceId, localizedResourceId, locale]) =>
         LocalizedResourcesMap.reducer(
           state,
-          SharedActions.setLocalizedResourceId({ resourceId, localizedResourceId, locale }),
+          HostAPI.setLocalizedResourceId({ resourceId, localizedResourceId, locale }),
         ),
       state,
     )
