@@ -6,8 +6,10 @@ import { ControlInstance } from '@makeswift/controls'
 import { ElementImperativeHandle } from '../../runtimes/react/element-imperative-handle'
 
 import { type APIResource, APIResourceType, APIResourceLocale } from '../../api/types'
+import { type Descriptor as PropControllerDescriptor } from '../../prop-controllers/descriptors'
 
 import { type Measurable } from '../modules/box-models'
+import { type ComponentMeta } from '../modules/components-meta'
 import { type PropControllersHandle } from '../modules/prop-controller-handles'
 import { type ComponentType } from '../modules/react-components'
 import { type DescriptorsByComponentType } from '../modules/prop-controllers'
@@ -21,6 +23,9 @@ export const InternalActionTypes = {
   CREATE_ELEMENT_TREE: 'CREATE_ELEMENT_TREE',
   DELETE_ELEMENT_TREE: 'DELETE_ELEMENT_TREE',
   CHANGE_ELEMENT_TREE: 'CHANGE_ELEMENT_TREE',
+
+  REGISTER_COMPONENT: 'REGISTER_COMPONENT',
+  UNREGISTER_COMPONENT: 'UNREGISTER_COMPONENT',
 
   REGISTER_COMPONENT_HANDLE: 'REGISTER_COMPONENT_HANDLE',
   UNREGISTER_COMPONENT_HANDLE: 'UNREGISTER_COMPONENT_HANDLE',
@@ -37,6 +42,8 @@ export const InternalActionTypes = {
   REGISTER_REACT_COMPONENT: 'REGISTER_REACT_COMPONENT',
   UNREGISTER_REACT_COMPONENT: 'UNREGISTER_REACT_COMPONENT',
 
+  SET_IS_IN_BUILDER: 'SET_IS_IN_BUILDER',
+
   UPDATE_API_CLIENT_CACHE: 'UPDATE_API_CLIENT_CACHE',
 } as const
 
@@ -47,18 +54,6 @@ type APIResourceFulfilledAction = {
     resourceId: string
     resource: APIResource | null
     locale?: string | null
-  }
-}
-
-export function apiResourceFulfilled<T extends APIResourceType>(
-  resourceType: T,
-  resourceId: string,
-  resource: APIResource | null,
-  locale?: APIResourceLocale<T>,
-): APIResourceFulfilledAction {
-  return {
-    type: InternalActionTypes.API_RESOURCE_FULFILLED,
-    payload: { resourceType, resourceId, resource, locale },
   }
 }
 
@@ -80,6 +75,20 @@ type ChangeElementTreeAction = {
     descriptors: DescriptorsByComponentType
     operation: Operation
   }
+}
+
+type RegisterComponentAction = {
+  type: typeof InternalActionTypes.REGISTER_COMPONENT
+  payload: {
+    type: string
+    meta: ComponentMeta
+    propControllerDescriptors: Record<string, PropControllerDescriptor>
+  }
+}
+
+type UnregisterComponentAction = {
+  type: typeof InternalActionTypes.UNREGISTER_COMPONENT
+  payload: { type: string }
 }
 
 type RegisterComponentHandleAction = {
@@ -135,6 +144,12 @@ type UnregisterReactComponentAction = {
   type: typeof InternalActionTypes.UNREGISTER_REACT_COMPONENT
   payload: { type: string }
 }
+
+type SetIsInBuilderAction = {
+  type: typeof InternalActionTypes.SET_IS_IN_BUILDER
+  payload: boolean
+}
+
 type UpdateAPIClientCache = {
   type: typeof InternalActionTypes.UPDATE_API_CLIENT_CACHE
   payload: APIClientCache
@@ -145,6 +160,8 @@ export type InternalAction =
   | CreateElementTreeAction
   | DeleteElementTreeAction
   | ChangeElementTreeAction
+  | RegisterComponentAction
+  | UnregisterComponentAction
   | RegisterComponentHandleAction
   | UnregisterComponentHandleAction
   | RegisterMeasurableAction
@@ -155,7 +172,20 @@ export type InternalAction =
   | UnregisterPropControllersAction
   | RegisterReactComponentAction
   | UnregisterReactComponentAction
+  | SetIsInBuilderAction
   | UpdateAPIClientCache
+
+export function apiResourceFulfilled<T extends APIResourceType>(
+  resourceType: T,
+  resourceId: string,
+  resource: APIResource | null,
+  locale?: APIResourceLocale<T>,
+): APIResourceFulfilledAction {
+  return {
+    type: InternalActionTypes.API_RESOURCE_FULFILLED,
+    payload: { resourceType, resourceId, resource, locale },
+  }
+}
 
 export function createElementTree(
   payload: CreateElementTreeAction['payload'],
@@ -178,6 +208,35 @@ export function changeElementTree(
   return {
     type: InternalActionTypes.CHANGE_ELEMENT_TREE,
     payload,
+  }
+}
+
+export function registerComponent(
+  type: string,
+  meta: ComponentMeta,
+  propControllerDescriptors: Record<string, PropControllerDescriptor>,
+): RegisterComponentAction {
+  return {
+    type: InternalActionTypes.REGISTER_COMPONENT,
+    payload: { type, meta, propControllerDescriptors },
+  }
+}
+
+export function unregisterComponent(type: string): UnregisterComponentAction {
+  return { type: InternalActionTypes.UNREGISTER_COMPONENT, payload: { type } }
+}
+
+export function registerComponentEffect(
+  type: string,
+  meta: ComponentMeta,
+  propControllerDescriptors: Record<string, PropControllerDescriptor>,
+): ThunkAction<() => void, unknown, unknown, InternalAction> {
+  return dispatch => {
+    dispatch(registerComponent(type, meta, propControllerDescriptors))
+
+    return () => {
+      dispatch(unregisterComponent(type))
+    }
   }
 }
 
@@ -312,6 +371,10 @@ export function registerReactComponentEffect(
       dispatch(unregisterReactComponent(type))
     }
   }
+}
+
+export function setIsInBuilder(isInBuilder: boolean): SetIsInBuilderAction {
+  return { type: InternalActionTypes.SET_IS_IN_BUILDER, payload: isInBuilder }
 }
 
 export function updateAPIClientCache(payload: APIClientCache): UpdateAPIClientCache {

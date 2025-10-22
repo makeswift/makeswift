@@ -37,7 +37,6 @@ import {
   handlePointerMove,
   messageBuilderPropController,
   registerBuilderComponent,
-  setIsInBuilder,
   unregisterBuilderComponent,
   unregisterBuilderDocument,
   registerBuilderDocument,
@@ -49,6 +48,7 @@ import {
   registerMeasurable,
   registerPropControllers,
   registerPropControllersHandle,
+  setIsInBuilder,
   unregisterMeasurable,
   unregisterPropControllers,
 } from './actions/internal'

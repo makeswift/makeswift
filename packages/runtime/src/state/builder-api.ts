@@ -28,8 +28,6 @@ export const BuilderActionTypes = {
 
   ELEMENT_FROM_POINT_CHANGE: 'ELEMENT_FROM_POINT_CHANGE',
 
-  SET_IS_IN_BUILDER: 'SET_IS_IN_BUILDER',
-
   REGISTER_BUILDER_DOCUMENT: 'REGISTER_BUILDER_DOCUMENT',
   UNREGISTER_BUILDER_DOCUMENT: 'UNREGISTER_BUILDER_DOCUMENT',
 
@@ -84,11 +82,6 @@ type ElementFromPointChangeAction = {
   payload: { keys: { documentKey: string; elementKey: string } | null }
 }
 
-type SetIsInBuilderAction = {
-  type: typeof BuilderActionTypes.SET_IS_IN_BUILDER
-  payload: boolean
-}
-
 type RegisterBuilderDocumentAction = {
   type: typeof BuilderActionTypes.REGISTER_BUILDER_DOCUMENT
   payload: { documentKey: string; document: DocumentPayload }
@@ -130,7 +123,6 @@ export type BuilderAction =
   | HandleWheelAction
   | HandlePointerMoveAction
   | ElementFromPointChangeAction
-  | SetIsInBuilderAction
   | RegisterBuilderDocumentAction
   | UnregisterBuilderDocumentAction
   | RegisterBuilderComponentAction
@@ -207,10 +199,6 @@ export function elementFromPointChange(
   } | null,
 ): ElementFromPointChangeAction {
   return { type: BuilderActionTypes.ELEMENT_FROM_POINT_CHANGE, payload: { keys } }
-}
-
-export function setIsInBuilder(isInBuilder: boolean): SetIsInBuilderAction {
-  return { type: BuilderActionTypes.SET_IS_IN_BUILDER, payload: isInBuilder }
 }
 
 export function registerBuilderDocument(document: Document): RegisterBuilderDocumentAction {
