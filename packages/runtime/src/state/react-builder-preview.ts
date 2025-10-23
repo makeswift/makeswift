@@ -27,31 +27,15 @@ import * as Breakpoints from './modules/breakpoints'
 import { withSetupTeardown } from './mixins/setup-teardown'
 
 import * as ReactPage from './react-page'
-import { type Action, ActionTypes } from './actions'
+import { type Action } from './actions'
 
-import {
-  changeDocumentElementSize,
-  changeElementBoxModels,
-  elementFromPointChange,
-  handleWheel,
-  handlePointerMove,
-  messageBuilderPropController,
-  registerBuilderComponent,
-  unregisterBuilderComponent,
-  unregisterBuilderDocument,
-  registerBuilderDocument,
-} from './builder-api'
+import * as Shared from './shared-api'
 
-import { setBreakpoints } from './shared-api'
+import { BuilderActionTypes } from './builder-api/actions'
+import * as Builder from './builder-api/actions'
 
-import {
-  registerMeasurable,
-  registerPropControllers,
-  registerPropControllersHandle,
-  setIsInBuilder,
-  unregisterMeasurable,
-  unregisterPropControllers,
-} from './actions/internal'
+import { InternalActionTypes } from './actions/internal'
+import * as Internal from './actions/internal'
 
 import { actionMiddleware, middlewareOptions, devToolsConfig } from './toolkit'
 
@@ -59,6 +43,8 @@ import { createPropController } from '../prop-controllers/instances'
 import { serializeControls } from '../builder'
 import { MakeswiftHostApiClient } from '../api/react'
 import { ElementImperativeHandle } from '../runtimes/react/element-imperative-handle'
+import { type BuilderAPIProxy } from './builder-api/proxy'
+import { HostActionTypes } from './host-api'
 
 export type { Operation } from './modules/read-write-documents'
 export type { BoxModelHandle } from './modules/box-models'
@@ -221,7 +207,7 @@ function measureElements(): ThunkAction<void, State, unknown, Action> {
       }
     })
 
-    if (changedBoxModels.size > 0) dispatch(changeElementBoxModels(changedBoxModels))
+    if (changedBoxModels.size > 0) dispatch(Builder.changeElementBoxModels(changedBoxModels))
   }
 }
 
@@ -278,7 +264,7 @@ function lockDocumentScroll(): ThunkAction<() => void, State, unknown, Action> {
     }
 
     function handleWheelEvent({ deltaX, deltaY }: WheelEvent) {
-      dispatch(handleWheel({ deltaX, deltaY }))
+      dispatch(Builder.handleWheel({ deltaX, deltaY }))
     }
   }
 }
@@ -292,7 +278,7 @@ function startHandlingPointerMoveEvent(): ThunkAction<() => void, State, unknown
     }
 
     function handlePointerMoveEvent({ clientX, clientY }: PointerEvent) {
-      dispatch(handlePointerMove({ clientX, clientY }))
+      dispatch(Builder.handlePointerMove({ clientX, clientY }))
     }
   }
 }
@@ -347,7 +333,7 @@ function startMeasuringDocumentElement(): ThunkAction<() => void, unknown, unkno
       if (!deepEqual(lastSize, nextSize)) {
         lastSize = nextSize
 
-        dispatch(changeDocumentElementSize(nextSize))
+        dispatch(Builder.changeDocumentElementSize(nextSize))
       }
 
       animationFrameHandle = requestAnimationFrame(handleAnimationFrameRequest)
@@ -410,7 +396,7 @@ function startPollingElementFromPoint(): ThunkAction<() => void, State, unknown,
 
         const keys = dispatch(elementKeysFromElementFromPoint(elementFromPoint))
 
-        dispatch(elementFromPointChange(keys))
+        dispatch(Builder.elementFromPointChange(keys))
       }
 
       animationFrameRequestId = requestAnimationFrame(handleAnimationFrameRequest)
@@ -427,13 +413,15 @@ function registerBuilderComponents(): ThunkAction<() => void, State, unknown, Ac
       const descriptors = getComponentPropControllerDescriptors(state, type)
       if (descriptors != null) {
         const [serializedControls, transferables] = serializeControls(descriptors)
-        dispatch(registerBuilderComponent({ type, meta, serializedControls }, transferables))
+        dispatch(
+          Builder.registerBuilderComponent({ type, meta, serializedControls }, transferables),
+        )
       }
     })
 
     return () => {
       componentsMeta.forEach((_, type) => {
-        dispatch(unregisterBuilderComponent({ type }))
+        dispatch(Builder.unregisterBuilderComponent({ type }))
       })
     }
   }
@@ -444,24 +432,19 @@ function registerBuilderDocuments(): ThunkAction<() => void, State, unknown, Act
     const documents = Documents.getDocuments(getDocumentsStateSlice(getState()))
 
     documents.forEach(document => {
-      dispatch(registerBuilderDocument(document))
+      dispatch(Builder.registerBuilderDocument(document))
     })
 
     return () => {
       documents.forEach((_document, documentKey) => {
-        dispatch(unregisterBuilderDocument(documentKey))
+        dispatch(Builder.unregisterBuilderDocument(documentKey))
       })
     }
   }
 }
 
-export interface IMessageChannel {
-  postMessage(message: any, transferables?: Transferable[]): void
-  dispatchBuffered(): void
-}
-
 export function initialize(
-  channel: IMessageChannel,
+  builderProxy: BuilderAPIProxy,
 ): ThunkAction<() => void, State, unknown, Action> {
   return (dispatch, getState) => {
     const unregisterBuilderDocuments = dispatch(registerBuilderDocuments())
@@ -474,9 +457,9 @@ export function initialize(
     const unregisterBuilderComponents = dispatch(registerBuilderComponents())
 
     const breakpoints = ReactPage.getBreakpoints(getState())
-    dispatch(setBreakpoints(breakpoints))
-    dispatch(setIsInBuilder(true))
-    channel.dispatchBuffered()
+    dispatch(Shared.setBreakpoints(breakpoints))
+    dispatch(Internal.setIsInBuilder(true))
+    builderProxy.dispatchBuffered()
 
     return () => {
       unregisterBuilderDocuments()
@@ -487,7 +470,7 @@ export function initialize(
       stopHandlingPointerMoveEvent()
       stopPollingElementFromPoint()
       unregisterBuilderComponents()
-      dispatch(setIsInBuilder(false))
+      dispatch(Internal.setIsInBuilder(false))
     }
   }
 }
@@ -496,10 +479,10 @@ function measureBoxModelsMiddleware(): Middleware<Dispatch, State, Dispatch> {
   return actionMiddleware(({ dispatch }) => next => {
     return (action: Action) => {
       switch (action.type) {
-        case ActionTypes.REGISTER_COMPONENT_HANDLE: {
+        case InternalActionTypes.REGISTER_COMPONENT_HANDLE: {
           if (BoxModels.isMeasurable(action.payload.componentHandle)) {
             dispatch(
-              registerMeasurable(
+              Internal.registerMeasurable(
                 action.payload.documentKey,
                 action.payload.elementKey,
                 action.payload.componentHandle,
@@ -510,8 +493,10 @@ function measureBoxModelsMiddleware(): Middleware<Dispatch, State, Dispatch> {
           break
         }
 
-        case ActionTypes.UNREGISTER_COMPONENT_HANDLE:
-          dispatch(unregisterMeasurable(action.payload.documentKey, action.payload.elementKey))
+        case InternalActionTypes.UNREGISTER_COMPONENT_HANDLE:
+          dispatch(
+            Internal.unregisterMeasurable(action.payload.documentKey, action.payload.elementKey),
+          )
           break
       }
 
@@ -520,8 +505,8 @@ function measureBoxModelsMiddleware(): Middleware<Dispatch, State, Dispatch> {
   })
 }
 
-export function messageChannelMiddleware(
-  channel: IMessageChannel,
+export function builderAPIMiddleware(
+  builderProxy: BuilderAPIProxy,
 ): Middleware<Dispatch, State, Dispatch> {
   return actionMiddleware(({ dispatch }) => next => {
     if (typeof window === 'undefined') return (action: Action) => next(action)
@@ -529,49 +514,41 @@ export function messageChannelMiddleware(
     let cleanUp = () => {}
     return (action: Action) => {
       switch (action.type) {
-        case ActionTypes.CHANGE_ELEMENT_BOX_MODELS:
-        case ActionTypes.MOUNT_COMPONENT:
-        case ActionTypes.UNMOUNT_COMPONENT:
-        case ActionTypes.CHANGE_DOCUMENT_ELEMENT_SIZE:
-        case ActionTypes.MESSAGE_BUILDER_PROP_CONTROLLER:
-        case ActionTypes.HANDLE_WHEEL:
-        case ActionTypes.HANDLE_POINTER_MOVE:
-        case ActionTypes.ELEMENT_FROM_POINT_CHANGE:
-        case ActionTypes.SET_LOCALE:
-        case ActionTypes.SET_BREAKPOINTS:
-        case ActionTypes.REGISTER_BUILDER_DOCUMENT:
-        case ActionTypes.UNREGISTER_BUILDER_DOCUMENT:
-          channel.postMessage(action)
+        case BuilderActionTypes.CHANGE_ELEMENT_BOX_MODELS:
+        case BuilderActionTypes.MOUNT_COMPONENT:
+        case BuilderActionTypes.UNMOUNT_COMPONENT:
+        case BuilderActionTypes.CHANGE_DOCUMENT_ELEMENT_SIZE:
+        case BuilderActionTypes.MESSAGE_BUILDER_PROP_CONTROLLER:
+        case BuilderActionTypes.HANDLE_WHEEL:
+        case BuilderActionTypes.HANDLE_POINTER_MOVE:
+        case BuilderActionTypes.ELEMENT_FROM_POINT_CHANGE:
+        case BuilderActionTypes.SET_LOCALE:
+        case BuilderActionTypes.SET_BREAKPOINTS:
+        case BuilderActionTypes.REGISTER_BUILDER_DOCUMENT:
+        case BuilderActionTypes.UNREGISTER_BUILDER_DOCUMENT:
+        case BuilderActionTypes.REGISTER_BUILDER_COMPONENT:
+        case BuilderActionTypes.UNREGISTER_BUILDER_COMPONENT:
+          builderProxy.execute(action)
           break
 
-        case ActionTypes.REGISTER_BUILDER_COMPONENT: {
-          const { transferables, ...forwardedAction } = action
-          channel.postMessage(forwardedAction, transferables)
-          break
-        }
-
-        case ActionTypes.UNREGISTER_BUILDER_COMPONENT:
-          channel.postMessage(action)
-          break
-
-        case ActionTypes.CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP:
+        case HostActionTypes.CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP:
           window.document.documentElement.scrollTop = action.payload.scrollTop
           break
 
-        case ActionTypes.SCROLL_DOCUMENT_ELEMENT:
+        case HostActionTypes.SCROLL_DOCUMENT_ELEMENT:
           window.document.documentElement.scrollTop += action.payload.scrollTopDelta
           break
 
-        case ActionTypes.SET_BUILDER_EDIT_MODE:
+        case HostActionTypes.SET_BUILDER_EDIT_MODE:
           window.getSelection()?.removeAllRanges()
           break
 
-        case ActionTypes.INIT:
+        case HostActionTypes.INIT:
           // dispatched by the parent window after establishing the connection
-          cleanUp = dispatch(initialize(channel))
+          cleanUp = dispatch(initialize(builderProxy))
           break
 
-        case ActionTypes.CLEAN_UP:
+        case HostActionTypes.CLEAN_UP:
           // dispatched by the parent window on disconnect
           cleanUp()
           break
@@ -598,7 +575,9 @@ function createAndRegisterPropControllers(
     const propControllers = Object.entries(descriptors).reduce(
       (acc, [propName, descriptor]) => {
         const propController = createPropController(descriptor, message =>
-          dispatch(messageBuilderPropController(documentKey, elementKey, propName, message)),
+          dispatch(
+            Builder.messageBuilderPropController(documentKey, elementKey, propName, message),
+          ),
         ) as ControlInstance
 
         return { ...acc, [propName]: propController }
@@ -606,7 +585,7 @@ function createAndRegisterPropControllers(
       {} as Record<string, ControlInstance>,
     )
 
-    dispatch(registerPropControllers(documentKey, elementKey, propControllers))
+    dispatch(Internal.registerPropControllers(documentKey, elementKey, propControllers))
 
     return propControllers
   }
@@ -616,7 +595,7 @@ export function propControllerHandlesMiddleware(): Middleware<Dispatch, State, D
   return actionMiddleware(({ dispatch, getState }) => next => {
     return (action: Action) => {
       switch (action.type) {
-        case ActionTypes.REGISTER_COMPONENT_HANDLE: {
+        case InternalActionTypes.REGISTER_COMPONENT_HANDLE: {
           const { documentKey, elementKey, componentHandle } = action.payload
           const element = ReactPage.getElement(getState(), documentKey, elementKey)
           const propControllers = dispatch(
@@ -628,14 +607,16 @@ export function propControllerHandlesMiddleware(): Middleware<Dispatch, State, D
             !ReactPage.isElementReference(element) &&
             PropControllerHandles.isPropControllersHandle(componentHandle)
           ) {
-            dispatch(registerPropControllersHandle(documentKey, elementKey, componentHandle))
+            dispatch(
+              Internal.registerPropControllersHandle(documentKey, elementKey, componentHandle),
+            )
             componentHandle.setPropControllers(propControllers)
           }
 
           break
         }
 
-        case ActionTypes.UNREGISTER_COMPONENT_HANDLE: {
+        case InternalActionTypes.UNREGISTER_COMPONENT_HANDLE: {
           const { documentKey, elementKey } = action.payload
           const handle = PropControllerHandles.getPropControllersHandle(
             getPropControllerHandlesStateSlice(getState()),
@@ -645,12 +626,12 @@ export function propControllerHandlesMiddleware(): Middleware<Dispatch, State, D
 
           handle?.setPropControllers(null)
 
-          dispatch(unregisterPropControllers(documentKey, elementKey))
+          dispatch(Internal.unregisterPropControllers(documentKey, elementKey))
 
           break
         }
 
-        case ActionTypes.MESSAGE_HOST_PROP_CONTROLLER: {
+        case HostActionTypes.MESSAGE_HOST_PROP_CONTROLLER: {
           const propController = PropControllerHandles.getPropController(
             getPropControllerHandlesStateSlice(getState()),
             action.payload.documentKey,
@@ -679,66 +660,28 @@ function makeswiftApiClientSyncMiddleware(
   })
 }
 
-class MessageChannel {
-  private channel: MessagePort | null = null
-  private bufferedMessages: [Action, Transferable[]?][] = []
-
-  public postMessage(message: any, transferables?: Transferable[]) {
-    if (this.channel) {
-      this.channel.postMessage(message, transferables ?? [])
-    } else {
-      this.bufferedMessages.push([message, transferables])
-    }
-  }
-
-  public setup(onMessage: (event: MessageEvent<Action>) => void) {
-    const channel = new window.MessageChannel()
-    channel.port1.onmessage = onMessage
-
-    // connect channel to the parent window, see
-    // https://developer.mozilla.org/en-US/docs/Web/API/Channel_Messaging_API
-    window.parent.postMessage(channel.port2, '*', [channel.port2])
-
-    this.channel = channel.port1
-  }
-
-  public dispatchBuffered() {
-    console.assert(this.channel != null, 'channel is not setup')
-
-    this.bufferedMessages.forEach(([message, transferables]) => {
-      this.channel?.postMessage(message, transferables ?? [])
-    })
-
-    this.bufferedMessages = []
-  }
-
-  public teardown() {
-    if (this.channel) {
-      this.channel.onmessage = null
-      this.channel.close()
-    }
-  }
-}
-
-function setupMessageChannel(channel: MessageChannel): ThunkAction<void, State, unknown, Action> {
+function setupBuilderProxy(
+  builderProxy: BuilderAPIProxy,
+): ThunkAction<void, State, unknown, Action> {
   return dispatch => {
-    channel.setup((event: MessageEvent<Action>) => dispatch(event.data))
+    builderProxy.setup({ onHostAction: action => dispatch(action) })
   }
 }
 
 export function configureStore({
   preloadedState,
   client,
+  builderProxy,
 }: {
   preloadedState: Partial<State>
   client: MakeswiftHostApiClient
+  builderProxy: BuilderAPIProxy
 }) {
   const initialState: Partial<State> = {
     ...preloadedState,
     isPreview: IsPreview.getInitialState(true),
   }
 
-  const channel = new MessageChannel()
   const store = configureReduxStore({
     reducer,
     preloadedState: initialState,
@@ -747,7 +690,7 @@ export function configureStore({
       getDefaultMiddleware(middlewareOptions).concat(
         ReactPage.elementTreeMiddleware(),
         measureBoxModelsMiddleware(),
-        messageChannelMiddleware(channel),
+        builderAPIMiddleware(builderProxy),
         propControllerHandlesMiddleware(),
         makeswiftApiClientSyncMiddleware(client),
       ),
@@ -757,18 +700,18 @@ export function configureStore({
         withSetupTeardown(
           () => {
             const dispatch = store.dispatch as Dispatch
-            dispatch(setupMessageChannel(channel))
+            dispatch(setupBuilderProxy(builderProxy))
           },
-          () => channel.teardown(),
+          () => builderProxy.teardown(),
         ),
       ),
 
     devTools: devToolsConfig({
       name: `Host store (${new Date().toISOString()})`,
       actionsDenylist: [
-        ActionTypes.BUILDER_POINTER_MOVE,
-        ActionTypes.HANDLE_POINTER_MOVE,
-        ActionTypes.ELEMENT_FROM_POINT_CHANGE,
+        HostActionTypes.BUILDER_POINTER_MOVE,
+        BuilderActionTypes.HANDLE_POINTER_MOVE,
+        BuilderActionTypes.ELEMENT_FROM_POINT_CHANGE,
       ],
     }),
   })

@@ -3,7 +3,7 @@ import { type Document } from '../../../state/react-page'
 import { useDispatch } from './use-dispatch'
 import { useIsInBuilder } from './use-is-in-builder'
 import { registerDocument, registerDocumentsEffect } from '../../../state/shared-api'
-import { registerBuilderDocumentsEffect } from '../../../state/builder-api'
+import { registerBuilderDocumentsEffect } from '../../../state/builder-api/actions'
 
 import { isServer } from '../../../utils/is-server'
 import { useIsomorphicLayoutEffect } from '../../../components/hooks/useIsomorphicLayoutEffect'

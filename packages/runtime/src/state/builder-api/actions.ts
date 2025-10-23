@@ -1,14 +1,14 @@
 import { type ThunkAction } from '@reduxjs/toolkit'
 
-import { type SerializedControl } from '../builder'
-import { type PropControllerMessage } from '../prop-controllers/instances'
+import { type SerializedControl } from '../../builder'
+import { type PropControllerMessage } from '../../prop-controllers/instances'
 
-import { type Document } from './modules/read-only-documents'
-import { type BoxModel } from './modules/box-models'
-import { type ComponentMeta } from './modules/components-meta'
+import { type Document } from '../modules/read-only-documents'
+import { type BoxModel } from '../modules/box-models'
+import { type ComponentMeta } from '../modules/components-meta'
 
-import { type Size } from './react-builder-preview'
-import { type DocumentPayload, type SharedAction, SharedActionTypes } from './shared-api'
+import { type Size } from '../react-builder-preview'
+import { type DocumentPayload, type SharedAction, SharedActionTypes } from '../shared-api'
 
 export const BuilderActionTypes = {
   ...SharedActionTypes,
@@ -36,6 +36,10 @@ export const BuilderActionTypes = {
 
   HANDLE_HOST_NAVIGATE: 'HANDLE_HOST_NAVIGATE',
 } as const
+
+type ActionWithTransferables<A> = A & {
+  transferables?: Transferable[]
+}
 
 type MakeswiftConnectionCheckAction = {
   type: typeof BuilderActionTypes.MAKESWIFT_CONNECTION_CHECK
@@ -99,7 +103,6 @@ type RegisterBuilderComponentAction = {
     meta: ComponentMeta
     serializedControls: Record<string, SerializedControl>
   }
-  transferables?: Transferable[]
 }
 
 type UnregisterBuilderComponentAction = {
@@ -227,7 +230,7 @@ export function registerBuilderDocumentsEffect(
 export function registerBuilderComponent(
   payload: RegisterBuilderComponentAction['payload'],
   transferables?: Transferable[],
-): RegisterBuilderComponentAction {
+): ActionWithTransferables<RegisterBuilderComponentAction> {
   return {
     type: BuilderActionTypes.REGISTER_BUILDER_COMPONENT,
     payload,
@@ -239,4 +242,10 @@ export function unregisterBuilderComponent(
   payload: UnregisterBuilderComponentAction['payload'],
 ): UnregisterBuilderComponentAction {
   return { type: BuilderActionTypes.UNREGISTER_BUILDER_COMPONENT, payload }
+}
+
+export function hasTransferables<A extends BuilderAction>(
+  action: A,
+): action is ActionWithTransferables<A> {
+  return 'transferables' in action && Array.isArray(action.transferables)
 }
