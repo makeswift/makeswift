@@ -1,6 +1,6 @@
 import { isAction } from '@reduxjs/toolkit'
 
-import { type BuilderAction, BuilderActionTypes } from '../builder-api'
+import { type BuilderAction, BuilderActionTypes } from '../builder-api/actions'
 import { type HostAction, HostActionTypes } from '../host-api'
 
 import { type InternalAction, InternalActionTypes } from './internal'

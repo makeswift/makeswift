@@ -4,7 +4,7 @@ export * from './unstructured-introspection'
 export {
   type BuilderAction as HostToBuilderAction,
   BuilderActionTypes as HostToBuilderActionTypes,
-} from '../state/builder-api'
+} from '../state/builder-api/actions'
 
 export {
   type SetBreakpointsAction,
