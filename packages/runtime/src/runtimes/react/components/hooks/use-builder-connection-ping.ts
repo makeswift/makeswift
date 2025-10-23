@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { makeswiftConnectionCheck } from '../../../../state/builder-api'
+import { makeswiftConnectionCheck } from '../../../../state/builder-api/actions'
 import { SharedActionTypes, makeswiftConnectionInit } from '../../../../state/shared-api'
 
 const CONNECTION_PING_INTERVAL_MS = 20

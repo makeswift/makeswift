@@ -49,7 +49,7 @@ export function RuntimeProvider({
   return (
     <ReactRuntimeContext.Provider value={runtime}>
       <MakeswiftHostApiClientProvider client={client}>
-        <StoreProvider>
+        <StoreProvider appOrigin={appOrigin}>
           {children}
           <PreviewSwitcher isPreview={isPreview} />
         </StoreProvider>
