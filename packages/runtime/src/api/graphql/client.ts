@@ -1,8 +1,10 @@
 export class GraphQLClient {
   private endpoint: string
+  private headers: Record<string, string>
 
-  constructor(endpoint: string) {
+  constructor(endpoint: string, headers: Record<string, string> = {}) {
     this.endpoint = endpoint
+    this.headers = headers
   }
 
   async request<TData, TVariables = Record<string, never>>(
@@ -11,7 +13,10 @@ export class GraphQLClient {
   ): Promise<TData> {
     const response = await fetch(this.endpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...this.headers,
+      },
       body: JSON.stringify({ query, variables }),
     })
 
