@@ -1,0 +1,20 @@
+query GetBlogPosts {
+  blogPosts {
+    cover {
+      url
+      height
+      size
+      width
+      alternativeText
+    }
+    body
+    description
+    feedDate
+    slug
+    publishedAt
+    title
+    author {
+      name
+    }
+  }
+}
