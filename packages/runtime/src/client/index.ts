@@ -354,7 +354,9 @@ export class MakeswiftClient {
       )
     }
 
-    this.graphqlClient = new GraphQLClient(new URL('graphql', apiOrigin).href)
+    this.graphqlClient = new GraphQLClient(new URL('graphql', apiOrigin).href, {
+      'Makeswift-Runtime-Version': PACKAGE_VERSION,
+    })
     this.runtime = runtime
   }
 
@@ -364,6 +366,7 @@ export class MakeswiftClient {
     const requestHeaders = new Headers({
       'X-API-Key': this.apiKey,
       'Makeswift-Site-API-Key': this.apiKey,
+      'Makeswift-Runtime-Version': PACKAGE_VERSION,
     })
 
     if (siteVersion?.token) {
@@ -973,6 +976,7 @@ export class MakeswiftClient {
       headers: {
         ['X-API-Key']: this.apiKey,
         'Makeswift-Site-API-Key': this.apiKey,
+        'Makeswift-Runtime-Version': PACKAGE_VERSION,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ token }),
