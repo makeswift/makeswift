@@ -29,65 +29,78 @@ contentful/
 └── generated/             # Auto-generated types from Contentful
 ```
 
-## Quick Start
+## Getting started
 
-### 1. Set up the project
-
-   ```bash
-   npx makeswift@latest init --example=contentful
-   ```
-
-### 2. Configure environment variables in `.env.local`
-
-   ```
-   MAKESWIFT_SITE_API_KEY=your_makeswift_api_key
-   CONTENTFUL_SPACE_ID=your_space_id
-   CONTENTFUL_ACCESS_TOKEN=your_access_token
-   ```
-
-### 3. Set up your content model
+### 1. Set up your content model
 
 To get started with blog posts, you'll need to set up a content model in Contentful. Here's what we recommend:
 
 - Create a new content type called "Author" with the following fields:
 
-   - **Name** (Short text) - The name of the author. Make sure to check "This field represents the Entry title" in the field options.
-   - **Slug** (Short text) - A URL-friendly identifier (e.g. "author-name")
-   - **Job Title** (Short text) - The author's job title
-   - **Description** (Rich text) - The main content as rich text
-   - **Avatar** (Media) - An optional avatar image representing the author
+  - **Name** (Short text) - The name of the author. Make sure to check "This field represents the Entry title" in the field options.
+  - **Slug** (Short text) - A URL-friendly identifier (e.g. "author-name")
+  - **Job Title** (Short text) - The author's job title
+  - **Description** (Rich text) - The main content as rich text
+  - **Avatar** (Media) - An optional avatar image representing the author
 
 - Create a new content type called "BlogPost" with the following fields:
 
-   - **Title** (Short text) - A short text field for the post title. Make sure to check "This field represents the Entry title" in the field options.
-   - **Description** (Long text) - A brief summary of the content
-   - **Slug** (Short text) - A URL-friendly identifier (e.g. "my-first-blog-post")
-   - **Feed Date** (Date & time) - When the post should appear in feed
-   - **Body** (Rich text) - The main content as rich text
-   - **Author** (Reference) - Which Author created the blog. Ensure that "Accept only specified entry type" is enabled in order to introspect this reference.
-   - **Banner** (Media) - An optional hero image for the post
-   
+  - **Title** (Short text) - A short text field for the post title. Make sure to check "This field represents the Entry title" in the field options.
+  - **Description** (Long text) - A brief summary of the content
+  - **Slug** (Short text) - A URL-friendly identifier (e.g. "my-first-blog-post")
+  - **Feed Date** (Date & time) - When the post should appear in feed
+  - **Body** (Rich text) - The main content as rich text
+  - **Author** (Reference) - Which Author created the blog. Ensure that "Accept only specified entry type" is enabled in order to introspect this reference.
+  - **Banner** (Media) - An optional hero image for the post
+
 Be sure to add a few blog posts for testing purposes, and connect them to an Author.
 
-### 4. Generate Contentful types
+### 2. Clone our example with the Makeswift CLI
 
-   ```bash
-   pnpm codegen-ts
-   ```
+```bash
+npx makeswift@latest init --example=contentful
+```
 
-Note that the only query we are working with is in `/components/Contentful/GetBlogs.graphql`.
+### 3. Configure environment variables
 
-### 5. Run the development server
-   ```bash
-   pnpm dev
-   ```
+Here is how your `.env.local` should look once setup is finished:
+
+```
+MAKESWIFT_SITE_API_KEY=your_makeswift_api_key
+CONTENTFUL_SPACE_ID=your_space_id
+CONTENTFUL_ACCESS_TOKEN=your_access_token
+```
+
+1. **MAKESWIFT_SITE_API_KEY**: Automatically applied, found in your Makeswift site settings
+2. **CONTENTFUL_SPACE_ID**: Your Contentful space ID (found in your space settings)
+3. **CONTENTFUL_ACCESS_TOKEN**: Content Delivery API access token (found in **Settings** → **API keys** in your Contentful space)
+
+The CLI should start up your development environment automatically, but if you need to run the server manually, use:
+
+```bash
+pnpm dev
+```
+
+Once your development server is running, go back to your Makeswift site settings and set the **Host URL** to the URL your dev host is running on (ex:`http://localhost:3000`).
+
+If you modify the GraphQL queries in the future, run the following command to regenerate types:
+
+```bash
+pnpm codegen-ts-watch
+```
+
+This will regenerate the GraphQL types and watch for changes.
+
+Note that the only query we are working with is in `/components/contentful/GetBlogs.graphql`.
 
 ## Building Blog Post pages in Makeswift
 
+The blog posts you created in step 1 are now available to use in Makeswift.
+
 1. Publish your content in Contentful.
 2. In the [Makeswift builder](https://docs.makeswift.com/product/builder-basics), navigate to your blog post page by entering the post's URL (e.g., `/blog/welcome`) in the builder's URL bar.
-3. The first time you visit the page, you’ll see a blank canvas with a placeholder for content. Drag the desired blog component onto the page.
-4. Use the component’s **Field** dropdown to select the content field you want to render (e.g., **Description**).
+3. The first time you visit the page, you'll see a blank canvas with a placeholder for content. Drag the desired blog component onto the page.
+4. Use the component's **Field** dropdown to select the content field you want to render (e.g., **Description**).
 5. The component will fetch and display the selected content from Contentful.
 
 For example, to display a blog post’s title:
@@ -121,17 +134,26 @@ Common issues and solutions:
 
 - **Type generation fails**
 
-   - Ensure Contentful credentials are correct
-   - Check if content model is published and matches what's being queried
+  - Ensure your Contentful credentials are correct in `.env.local`.
+  - Check that your content model matches the GraphQL query.
+  - Verify that the relevant content is published in Contentful.
 
 - **Blog posts not showing**
 
-   - Verify the slug format matches the route pattern
-   - Check if posts are published in Contentful
+  - Confirm that the slug format matches your entries in Contentful.
+  - Make sure the posts are published.
+  - Ensure required fields—**Title**, **Slug**, **Feed Date**, **Body**, and **Banner**—are populated.
 
 - **Makeswift builder issues**
-   - Clear browser cache
-   - Ensure API keys are correctly set
+
+  - Clear your browser cache and refresh the page.
+  - Make sure the `MAKESWIFT_SITE_API_KEY` is correctly set.
+  - Verify that your host URL is set to the same URL as your dev server (ex: `http://localhost:3000`) in your Makeswift site settings.
+
+- **GraphQL errors**
+  - Run `pnpm codegen-ts` to regenerate types.
+  - Check that your content model matches the structure expected by the GraphQL query.
+  - Ensure all referenced content types (e.g., **Author**, **BlogPost**) exist and are published.
 
 ## Learn More
 
