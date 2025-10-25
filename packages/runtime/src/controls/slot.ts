@@ -12,6 +12,10 @@ import {
 
 import { renderSlot } from '../runtimes/react/controls/slot'
 
+type Config = {
+  columnCount?: number
+}
+
 abstract class BaseDefinition extends BaseSlotDefinition<ReactNode> {}
 
 export class SlotDefinition extends BaseDefinition {
@@ -20,7 +24,8 @@ export class SlotDefinition extends BaseDefinition {
       throw new Error(`Slot: expected type ${SlotDefinition.type}, got ${data.type}`)
     }
 
-    return Slot()
+    const { config } = data
+    return Slot(typeof config === 'object' && config != null ? (config as Config) : undefined)
   }
 
   resolveValue(
@@ -31,7 +36,7 @@ export class SlotDefinition extends BaseDefinition {
   ): Resolvable<ReactNode | undefined> {
     const stableValue = StableValue({
       name: SlotDefinition.type,
-      read: () => renderSlot({ data, control: control ?? null }),
+      read: () => renderSlot({ data, control: control ?? null, config: this.config as Config }),
     })
 
     return {
@@ -41,8 +46,8 @@ export class SlotDefinition extends BaseDefinition {
   }
 }
 
-export function Slot(): SlotDefinition {
-  return new SlotDefinition()
+export function Slot(config?: Config): SlotDefinition {
+  return new SlotDefinition(config as unknown as never)
 }
 
 export { SlotControl }
