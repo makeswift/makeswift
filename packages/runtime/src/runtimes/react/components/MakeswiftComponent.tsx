@@ -1,18 +1,17 @@
 'use client'
 
-import { Suspense, Fragment, memo, useMemo } from 'react'
+import { memo, useMemo } from 'react'
 
 import {
   componentDocumentToRootEmbeddedDocument,
   MakeswiftComponentSnapshot,
 } from '../../../client'
-import { getRootElement } from '../../../state/react-page'
 
 import { useCacheData } from '../hooks/use-cache-data'
 import { useRegisterDocument } from '../hooks/use-register-document'
-import { useBuiltinSuspense } from '../hooks/use-builtin-suspense'
 
 import { DocumentRoot } from './DocumentRoot'
+import { ActivityOrSuspense } from './activity-or-suspense'
 
 type Props = {
   snapshot: MakeswiftComponentSnapshot
@@ -39,12 +38,9 @@ export const MakeswiftComponent = memo(({ snapshot, label, type, description }: 
 
   useRegisterDocument(rootDocument)
 
-  const builtinSuspense = useBuiltinSuspense(getRootElement(rootDocument).type)
-  const SuspenseOrFragment = builtinSuspense ? Suspense : Fragment
-
   return (
-    <SuspenseOrFragment>
+    <ActivityOrSuspense>
       <DocumentRoot rootDocument={rootDocument} />
-    </SuspenseOrFragment>
+    </ActivityOrSuspense>
   )
 })
