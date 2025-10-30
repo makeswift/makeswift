@@ -40,6 +40,12 @@ export class ReactRuntimeCore extends RuntimeCore {
       icon?: ComponentIcon
       hidden?: boolean
       description?: string
+      /**
+       * In React <= 19.1, controls the default `<Suspense>` boundary.
+       * Defaults to `true`.
+       *
+       * @deprecated Ignored in React >= 19.2; components are always wrapped in `<Activity>`.
+       */
       builtinSuspense?: boolean
       props?: P
     },
