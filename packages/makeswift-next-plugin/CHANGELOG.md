@@ -1,5 +1,13 @@
 # @makeswift/next-plugin
 
+## 0.6.1
+
+### Patch Changes
+
+- cf24d94: fix: only add webpack config if `resolveSymlinks` is not null
+
+  Next.js v16 uses Turbopack by default, which throws an error when a webpack config is present and no Turbopack config is present.
+
 ## 0.6.0
 
 ### Minor Changes
