@@ -1,7 +1,6 @@
-import { type ReactNode, Fragment, forwardRef, useRef, isValidElement } from 'react'
+import { type ReactNode, Fragment, forwardRef, useRef, isValidElement, act } from 'react';
 import { renderToReadableStream } from 'react-dom/server'
 import { JSDOM } from 'jsdom'
-import { act } from 'react-dom/test-utils'
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { ServerInsertedHTMLContext } from 'next/navigation'
