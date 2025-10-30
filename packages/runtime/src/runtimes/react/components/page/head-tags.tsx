@@ -33,7 +33,6 @@ export function PageLink({ precedence, ...props }: PageLinkProps) {
   const { Head } = useFrameworkContext()
   return (
     <Head>
-      {/* @ts-expect-error `precedence` is a React 19 feature */}
       <link {...props} precedence={precedence} />
     </Head>
   )
@@ -49,7 +48,6 @@ export function PageStyle({ children, precedence, href, ...props }: PageStylePro
   const { Head } = useFrameworkContext()
   return (
     <Head>
-      {/* @ts-expect-error `precedence` and `href` are React 19 features */}
       <style {...props} precedence={precedence} href={href}>
         {children}
       </style>

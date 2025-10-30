@@ -1,4 +1,4 @@
-import { ComponentType } from 'react'
+import { ComponentType, type JSX } from 'react'
 import { Slate, type RichTextTypography, type DataType } from '@makeswift/controls'
 
 import { LinkDefinition } from '../../controls'
