@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.26.1-canary.2
+
+### Patch Changes
+
+- 955cd53: Add runtime version into request headers to Makeswift API
+
 ## 0.26.1-canary.1
 
 ### Patch Changes
