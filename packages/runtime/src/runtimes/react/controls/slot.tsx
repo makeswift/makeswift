@@ -106,7 +106,7 @@ function SlotItem<T extends ElementType = 'div'>({
   children,
   className,
   ...restOfProps
-}: SlotItemProps<T> & Omit<ComponentPropsWithoutRef<T>, keyof SlotItemProps<T>>): JSX.Element {
+}: SlotItemProps<T> & Omit<ComponentPropsWithoutRef<T>, keyof SlotItemProps<T>>): ReactNode {
   const As = as ?? 'div'
   const [element, setElement] = useState<Element | null>(null)
   const baseClassName = useStyle({
@@ -140,7 +140,7 @@ type SlotPlaceholderProps = {
   control: SlotControl | null
 }
 
-function SlotPlaceholder({ control }: SlotPlaceholderProps): JSX.Element {
+function SlotPlaceholder({ control }: SlotPlaceholderProps): ReactNode {
   const [element, setElement] = useState<Element | null>(null)
 
   useEffect(() => {

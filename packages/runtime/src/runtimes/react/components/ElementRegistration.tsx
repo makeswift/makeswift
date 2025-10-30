@@ -18,7 +18,7 @@ export const ElementRegistration = memo(function ElementRegistration({
   elementKey,
   componentHandle,
   children,
-}: RegisterChildrenAsElementProps): JSX.Element {
+}: RegisterChildrenAsElementProps): ReactNode {
   const dispatch = useDispatch()
   const documentKey = useDocumentKey()
 

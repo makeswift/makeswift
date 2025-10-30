@@ -1,10 +1,10 @@
-import { type KeyboardEvent } from 'react'
+import { type KeyboardEvent, ReactNode } from 'react'
 import { type Editor } from 'slate'
 import { type RenderElementProps, type RenderLeafProps } from 'slate-react'
 import { ControlDefinition, type Data, type RichTextPluginControl } from '@makeswift/controls'
 
-export type RenderElement = (props: RenderElementProps) => JSX.Element
-export type RenderLeaf = (props: RenderLeafProps) => JSX.Element
+export type RenderElement = (props: RenderElementProps) => ReactNode
+export type RenderLeaf = (props: RenderLeafProps) => ReactNode
 
 export type RichTextV2Plugin<C extends RichTextPluginControl = RichTextPluginControl> = {
   control?: C
@@ -13,8 +13,8 @@ export type RichTextV2Plugin<C extends RichTextPluginControl = RichTextPluginCon
   renderElement?: (
     renderElement: RenderElement,
     value: any,
-  ) => (props: RenderElementProps) => JSX.Element
-  renderLeaf?: (renderLeaf: RenderLeaf, value: any) => (props: RenderLeafProps) => JSX.Element
+  ) => (props: RenderElementProps) => ReactNode
+  renderLeaf?: (renderLeaf: RenderLeaf, value: any) => (props: RenderLeafProps) => ReactNode
 }
 
 export function Plugin<Def extends ControlDefinition, ValueType extends Data>({

@@ -1,4 +1,4 @@
-import { Ref, forwardRef, memo } from 'react'
+import { Ref, forwardRef, memo, ReactNode } from 'react'
 import { type Document as ReactPageDocument, getRootElement } from '../../../state/react-page'
 import { ElementImperativeHandle } from '../element-imperative-handle'
 import { DocumentKeyContext, DocumentLocaleContext } from '../hooks/use-document-context'
@@ -12,7 +12,7 @@ export const Document = memo(
   forwardRef(function Document(
     { document }: DocumentProps,
     ref: Ref<ElementImperativeHandle>,
-  ): JSX.Element {
+  ): ReactNode {
     return (
       <DocumentKeyContext.Provider value={document.key}>
         <DocumentLocaleContext.Provider value={document.locale}>
