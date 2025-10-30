@@ -1,8 +1,7 @@
 /** @jest-environment jsdom */
 
-import { Suspense, type ComponentType } from 'react'
+import { Suspense, type ComponentType, act } from 'react';
 import '@testing-library/jest-dom'
-import { act } from 'react-dom/test-utils'
 import { render, screen } from '@testing-library/react'
 
 import { ReactRuntime } from '../../../react'

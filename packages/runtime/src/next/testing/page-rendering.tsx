@@ -1,7 +1,6 @@
-import { type ComponentPropsWithoutRef } from 'react'
+import { type ComponentPropsWithoutRef, act } from 'react';
 
 import '@testing-library/jest-dom'
-import { act } from 'react-dom/test-utils'
 import { render } from '@testing-library/react'
 
 import { ReactRuntime } from '../../runtimes/react/react-runtime'
