@@ -1,5 +1,5 @@
 import { cx } from '@emotion/css'
-import { forwardRef, Ref } from 'react'
+import { forwardRef, Ref, ReactNode } from 'react'
 
 import { useStyle } from '../../../../../runtimes/react/use-style'
 
@@ -58,7 +58,7 @@ type Props = {
 export default forwardRef(function Placeholder(
   { className, width, margin }: Props,
   ref: Ref<HTMLDivElement>,
-): JSX.Element {
+): ReactNode {
   return (
     <div
       ref={ref}

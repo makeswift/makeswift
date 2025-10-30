@@ -1,4 +1,4 @@
-import { Ref, forwardRef, memo } from 'react'
+import { Ref, forwardRef, memo, ReactNode } from 'react'
 import { type Document } from '../../../state/react-page'
 import { ElementImperativeHandle } from '../element-imperative-handle'
 import { useDocument } from '../hooks/use-document'
@@ -13,7 +13,7 @@ export const DocumentRoot = memo(
   forwardRef(function DocumentRoot(
     { rootDocument }: Props,
     ref: Ref<ElementImperativeHandle>,
-  ): JSX.Element {
+  ): ReactNode {
     const document = useDocument(rootDocument.key) ?? rootDocument
 
     if (document == null) {

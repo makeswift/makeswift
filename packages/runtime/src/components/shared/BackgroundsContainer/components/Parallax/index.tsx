@@ -26,7 +26,7 @@ type Props = {
   ) => ReactNode
 }
 
-export default function Parallax({ strength, children, ...rest }: Props): JSX.Element {
+export default function Parallax({ strength, children, ...rest }: Props): ReactNode {
   const container = useRef<HTMLDivElement>(null)
   const [containerScrollTop, setContainerScrollTop] = useState(strength == null ? 0 : strength)
   const lastScrollParentScrollTop = useRef(0)

@@ -1,4 +1,4 @@
-import { Children, createElement, useEffect } from 'react'
+import { Children, createElement, useEffect, ReactNode } from 'react'
 import parse from 'html-react-parser'
 
 import { type Snippet } from '../../../../client'
@@ -29,7 +29,7 @@ const VALID_HEAD_ELEMENT_TYPES = [
   'template',
 ]
 
-export function snippetToElements(snippet: Pick<Snippet, 'id' | 'code'>): (string | JSX.Element)[] {
+export function snippetToElements(snippet: Pick<Snippet, 'id' | 'code'>): (string | ReactNode)[] {
   return Children.map(parse(snippet.code), element => {
     if (typeof element === 'string') return element
 

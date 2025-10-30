@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import { keyframes } from '@emotion/css'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 import { Spinner20 } from '../../../../icons/Spinner20'
@@ -11,7 +12,7 @@ const spin = keyframes`
   }
 `
 
-export default function Spinner(): JSX.Element {
+export default function Spinner(): ReactNode {
   return (
     <Spinner20
       className={useStyle({
