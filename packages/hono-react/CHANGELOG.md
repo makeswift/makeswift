@@ -1,5 +1,11 @@
 # @makeswift/hono-react
 
+## 0.0.3-canary.1
+
+### Patch Changes
+
+- @makeswift/runtime@0.26.1-canary.1
+
 ## 0.0.3-canary.0
 
 ### Patch Changes
