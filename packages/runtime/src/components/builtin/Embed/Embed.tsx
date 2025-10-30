@@ -51,6 +51,7 @@ const Embed = forwardRef(function Embed(
     setShouldRender(true)
   }, [])
 
+  // @ts-expect-error: Type error when upgrading to @types/react@19.2.2 and @types/react-dom@19.2.2
   useImperativeHandle(ref, () => container, [container])
 
   useEffect(() => {
