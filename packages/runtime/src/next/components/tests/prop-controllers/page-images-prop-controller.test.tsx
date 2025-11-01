@@ -13,9 +13,8 @@ import {
   ImagesData,
 } from '@makeswift/prop-controllers'
 import { Page } from '../../page'
-import { act } from 'react-dom/test-utils'
 import { ReactRuntime } from '../../../../react'
-import { forwardRef } from 'react'
+import { forwardRef, act } from 'react';
 import * as Testing from '../../../testing'
 import { ImagesDataV0 } from '@makeswift/prop-controllers/dist/types/images'
 

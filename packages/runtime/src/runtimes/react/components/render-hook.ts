@@ -1,3 +1,5 @@
+import { ReactNode } from 'react'
+
 type Props<H extends (...args: any[]) => any> = {
   /**
    * `<RenderHook>` requires key that changes whenever the `hook` prop changes to ensure the rules of
@@ -7,7 +9,7 @@ type Props<H extends (...args: any[]) => any> = {
 
   hook: H
   parameters: Parameters<H>
-  children(result: ReturnType<H>): JSX.Element
+  children(result: ReturnType<H>): ReactNode
 }
 
 export function RenderHook<H extends (...args: any[]) => any>({

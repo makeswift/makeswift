@@ -13,10 +13,9 @@ import {
   NavigationLinksData,
 } from '@makeswift/prop-controllers'
 import { Page } from '../../page'
-import { act } from 'react-dom/test-utils'
 import * as Testing from '../../../testing'
 import { ReactRuntime } from '../../../../react'
-import { forwardRef } from 'react'
+import { forwardRef, act } from 'react';
 
 describe('Page', () => {
   test('can render NavigationLinksPropController v0 data', async () => {

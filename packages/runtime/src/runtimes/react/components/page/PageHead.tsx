@@ -1,4 +1,4 @@
-import { useMemo, useSyncExternalStore } from 'react'
+import { useMemo, useSyncExternalStore, ReactNode } from 'react'
 
 import { type MakeswiftPageDocument } from '../../../../client'
 import { type Site } from '../../../../api'
@@ -24,7 +24,7 @@ type Props = {
   metadata?: PageMetadataSettings
 }
 
-export function PageHead({ document: page, metadata = {} }: Props): JSX.Element {
+export function PageHead({ document: page, metadata = {} }: Props): ReactNode {
   const {
     title: useTitle = false,
     favicon: useFavicon = false,

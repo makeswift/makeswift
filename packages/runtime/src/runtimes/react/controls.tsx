@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, ReactNode } from 'react'
 
 import { ControlDefinition } from '@makeswift/controls'
 
@@ -14,7 +14,7 @@ import { useResolvedProps } from './hooks/use-resolved-props'
 
 type PropsValueProps = {
   element: ReactPage.ElementData
-  children(props: Record<string, unknown>): JSX.Element
+  children(props: Record<string, unknown>): ReactNode
 }
 
 function useControlDefs(
@@ -25,7 +25,7 @@ function useControlDefs(
   return useRef(partitionRecord(all, isLegacyDescriptor)).current
 }
 
-export function ResolveProps({ element, children: renderComponent }: PropsValueProps): JSX.Element {
+export function ResolveProps({ element, children: renderComponent }: PropsValueProps): ReactNode {
   const [legacyDescriptors, definitions] = useControlDefs(element.type)
 
   const resolvedProps = useResolvedProps(definitions, element.props, element.key)

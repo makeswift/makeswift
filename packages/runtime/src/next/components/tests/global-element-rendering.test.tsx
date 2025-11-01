@@ -1,6 +1,4 @@
-/** @jest-environment jsdom */
-
-import { act } from 'react-dom/test-utils'
+import { act } from "react";
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom'
 

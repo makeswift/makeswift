@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, ElementType } from 'react'
+import { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react'
 import { colorToString } from '../../../../../../utils/colorToString'
 
 import { useFormContext, Size, Sizes, Contrast, Contrasts } from '../../../../context/FormContext'
@@ -49,7 +49,7 @@ export default function Label<T extends ElementType = 'label'>({
   as,
   className,
   ...restOfProps
-}: Props<T>): JSX.Element {
+}: Props<T>): ReactNode {
   const Component = as ?? 'label'
   const { contrast, size, labelTextStyle, labelTextColor } = useFormContext()
 

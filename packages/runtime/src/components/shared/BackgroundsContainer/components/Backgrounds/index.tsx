@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import { BackgroundsPropControllerValue, BackgroundsData } from '../../../../hooks'
 import { type ResponsiveValue } from '@makeswift/controls'
 import { ColorValue as Color } from '../../../../utils/types'
@@ -39,7 +40,7 @@ const containerStyle: CSSObject = {
 
 type Props = { backgrounds: BackgroundsPropControllerValue | null | undefined }
 
-export default function Backgrounds({ backgrounds }: Props): JSX.Element {
+export default function Backgrounds({ backgrounds }: Props): ReactNode {
   if (backgrounds == null) return <></>
 
   return (

@@ -1,6 +1,6 @@
 import {
   ComponentPropsWithoutRef,
-  ElementRef,
+  Ref,
   ElementType,
   ForwardedRef,
   forwardRef,
@@ -62,7 +62,7 @@ const Button = forwardRef(function Button<T extends ElementType = 'button'>(
     className,
     ...restOfProps
   }: Props<T>,
-  ref: ForwardedRef<ElementRef<T>>,
+  ref: ForwardedRef<Ref<T>>,
 ) {
   const Component = as ?? Link
 

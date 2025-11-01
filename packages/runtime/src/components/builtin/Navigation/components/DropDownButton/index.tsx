@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, ForwardedRef, forwardRef, useRef, useState } from 'react'
+import { ComponentPropsWithoutRef, ForwardedRef, forwardRef, useRef, useState, ReactNode } from 'react'
 
 import { CaretDown8 } from '../../../../icons/CaretDown8'
 import { Plus8 } from '../../../../icons/Plus8'
@@ -170,7 +170,7 @@ export default function DropDownButton({
   textColor,
   color,
   ...restOfProps
-}: Props): JSX.Element {
+}: Props): ReactNode {
   const container = useRef<HTMLDivElement>(null)
   const [position, setPosition] = useState<Position>('left')
 

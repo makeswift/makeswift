@@ -1,6 +1,6 @@
 'use client'
 
-import { type PropsWithChildren, useEffect, useMemo } from 'react'
+import { type PropsWithChildren, useEffect, useMemo, ReactNode } from 'react'
 
 import * as ReactBuilderPreview from '../../../state/react-builder-preview'
 import { BuilderAPIProxy } from '../../../state/builder-api/proxy'
@@ -12,7 +12,7 @@ import { useMakeswiftHostApiClient } from '../host-api-client'
 export default function PreviewProvider({
   appOrigin,
   children,
-}: PropsWithChildren<{ appOrigin: string }>): JSX.Element {
+}: PropsWithChildren<{ appOrigin: string }>): ReactNode {
   const runtime = useReactRuntime()
   const client = useMakeswiftHostApiClient()
   const builderProxy = useMemo(() => new BuilderAPIProxy({ appOrigin }), [appOrigin])

@@ -15,7 +15,7 @@ import { type ElementData, type ComponentType } from '../../../../state/react-pa
 import { randomUUID } from 'crypto'
 
 import { Page } from '../../page'
-import { act } from 'react-dom/test-utils'
+import { act } from "react";
 import { ReactRuntime } from '../../../../react'
 import * as Testing from '../../../testing'
 

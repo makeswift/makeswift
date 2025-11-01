@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import {
   useBoxShadow,
   useBorder as useBorderData,
@@ -116,7 +117,7 @@ export function resolveLegacyDescriptorProp(
   propName: string,
   propData: any,
   props: Record<string, any>,
-  renderFn: (props: Record<string, unknown>) => JSX.Element,
+  renderFn: (props: Record<string, unknown>) => ReactNode,
 ) {
   switch (descriptor.type) {
     case PropControllerTypes.Width:

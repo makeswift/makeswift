@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import { LengthData, ResponsiveValue } from '@makeswift/prop-controllers'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 
@@ -7,7 +8,7 @@ const links = [{ id: '1' }, { id: '2' }, { id: '3' }]
 
 type Props = { gutter?: ResponsiveValue<LengthData> }
 
-export default function SocialLinksPlaceholder({ gutter }: Props): JSX.Element {
+export default function SocialLinksPlaceholder({ gutter }: Props): ReactNode {
   return (
     <>
       {links.map((link, i) => (

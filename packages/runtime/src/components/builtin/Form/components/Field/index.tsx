@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, ReactNode } from 'react'
 import { Field as FormikField, getIn } from 'formik'
 
 import SingleLineTextTableField from './components/SingleLineTextTableField'
@@ -101,7 +101,7 @@ export default function Field({
     type = 'radio',
     hideLabel = false,
   },
-}: Props): JSX.Element {
+}: Props): ReactNode {
   const TableColumnField = getTableColumnField(tableColumn)
   const input = useRef<
     | {
