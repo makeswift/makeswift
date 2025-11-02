@@ -1,61 +1,14 @@
 'use client'
 
-import createCache, { type EmotionCache } from '@emotion/cache'
-import { cache } from '@emotion/css'
 import { type PropsWithChildren, createContext, useContext } from 'react'
 
-const CacheContext = createContext(cache)
+import { type BaseStyleCache, type StyleTagProps, createStyleCache } from './lib/style-cache/base'
+
+// default cache context with a sentinel key signaling misconfiguration
+const CacheContext = createContext(createStyleCache({ key: 'msft-err' }))
 
 const DEFAULT_CSS_RESET_ENABLED = true
 const CSSResetEnabledContext = createContext(DEFAULT_CSS_RESET_ENABLED)
-
-export type StyleCache = EmotionCache & {
-  /**
-   * Flush the inserted styles.
-   * @returns A list of class names and the corresponding CSS rules that were flushed.
-   */
-  flush: () => { classNames: string[]; css: string }
-}
-
-export const createRootStyleCache = ({ key }: { key?: string } = {}): StyleCache => {
-  const cache = createCache({ key: key ?? 'mswft' })
-  cache.compat = true
-
-  // additional state to track inserted style names
-  let inserted: string[] = []
-
-  return {
-    ...cache,
-
-    // override the `insert` method to track inserted names
-    insert(...args) {
-      const serialized = args[1]
-      if (cache.inserted[serialized.name] === undefined) {
-        inserted.push(serialized.name)
-      }
-      return cache.insert(...args)
-    },
-
-    flush() {
-      const classNames = inserted
-      // reset our own state, leave `cache.inserted` intact
-      inserted = []
-
-      return {
-        classNames,
-        css: classNames.reduce((css, name) => {
-          return css + cache.inserted[name]
-        }, ''),
-      }
-    },
-  }
-}
-
-type StyleTagProps = {
-  cacheKey: string
-  classNames: string[]
-  css: string
-}
 
 export const StyleTagSSR = ({ cacheKey, classNames, css }: StyleTagProps) => (
   <style
@@ -65,9 +18,6 @@ export const StyleTagSSR = ({ cacheKey, classNames, css }: StyleTagProps) => (
     }}
   />
 )
-
-export const styleTagHtml = ({ cacheKey, classNames, css }: StyleTagProps): string =>
-  `<style data-emotion="${cacheKey} ${classNames.join(' ')}">${css}</style>`
 
 export type RootStyleProps = {
   /**
@@ -87,7 +37,7 @@ export function RootStyleRegistry({
   cache,
   enableCssReset,
 }: PropsWithChildren<{
-  cache: StyleCache
+  cache: BaseStyleCache
   enableCssReset?: boolean
 }>) {
   return (
@@ -99,7 +49,7 @@ export function RootStyleRegistry({
   )
 }
 
-export function useCache(): EmotionCache {
+export function useCache(): BaseStyleCache {
   return useContext(CacheContext)
 }
 
