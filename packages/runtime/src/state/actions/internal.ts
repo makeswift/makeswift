@@ -77,7 +77,7 @@ type ChangeElementTreeAction = {
   }
 }
 
-type RegisterComponentAction = {
+export type RegisterComponentAction = {
   type: typeof InternalActionTypes.REGISTER_COMPONENT
   payload: {
     type: string
@@ -86,7 +86,7 @@ type RegisterComponentAction = {
   }
 }
 
-type UnregisterComponentAction = {
+export type UnregisterComponentAction = {
   type: typeof InternalActionTypes.UNREGISTER_COMPONENT
   payload: { type: string }
 }
