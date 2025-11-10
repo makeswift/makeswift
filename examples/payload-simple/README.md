@@ -212,7 +212,7 @@ The CLI should start up your development environment automatically, but if you n
 npm run dev
 ```
 
-Your site will be available at http://localhost:3001. Make sure the Payload server continues running in a separate session on port 3000.
+Your site will be available at http://localhost:3001. Make sure the Payload server continues running in a separate process on port 3000.
 
 Once your development server is running, go back to your Makeswift site settings and set the **Host URL** to `http://localhost:3001`.
 
