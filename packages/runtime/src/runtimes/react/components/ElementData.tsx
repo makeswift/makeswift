@@ -5,6 +5,7 @@ import { useComponent } from '../hooks/use-component'
 import { canAcceptRef } from '../utils/can-accept-ref'
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'
 import { ResolveProps } from '../controls'
+import { ActivityWithFallback } from './activity-with-fallback'
 
 type ElementDataProps = {
   elementData: ReactPageElementData
@@ -27,7 +28,7 @@ export const ElementData = memo(
     const SuspenseOrFragment = builtinSuspense ? Suspense : Fragment
 
     return (
-      <SuspenseOrFragment>
+      <ActivityWithFallback fallback={SuspenseOrFragment}>
         <ResolveProps element={elementData}>
           {props =>
             forwardRef ? (
@@ -37,7 +38,7 @@ export const ElementData = memo(
             )
           }
         </ResolveProps>
-      </SuspenseOrFragment>
+      </ActivityWithFallback>
     )
   }),
 )
