@@ -11,6 +11,7 @@ import { getRootElement } from '../../../state/react-page'
 import { useCacheData } from '../hooks/use-cache-data'
 import { useRegisterDocument } from '../hooks/use-register-document'
 import { useBuiltinSuspense } from '../hooks/use-builtin-suspense'
+import { ActivityWithFallback } from './activity-with-fallback'
 
 import { DocumentRoot } from './DocumentRoot'
 
@@ -43,8 +44,8 @@ export const MakeswiftComponent = memo(({ snapshot, label, type, description }: 
   const SuspenseOrFragment = builtinSuspense ? Suspense : Fragment
 
   return (
-    <SuspenseOrFragment>
+    <ActivityWithFallback fallback={SuspenseOrFragment}>
       <DocumentRoot rootDocument={rootDocument} />
-    </SuspenseOrFragment>
+    </ActivityWithFallback>
   )
 })
