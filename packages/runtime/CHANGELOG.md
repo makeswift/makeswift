@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.26.1-canary.3
+
+### Patch Changes
+
+- 4b1d108: Added error handling to the API handler for merging element tree data so that failures still flow through our logic for setting CORS headers.
+
 ## 0.26.1-canary.2
 
 ### Patch Changes
