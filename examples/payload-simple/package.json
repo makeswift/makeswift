@@ -23,7 +23,7 @@
     "clsx": "^2.1.1",
     "graphql-request": "^7.2.0",
     "lucide-react": "^0.511.0",
-    "next": "^15.2.2",
+    "next": "15.2.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "swr": "^2.3.4",
