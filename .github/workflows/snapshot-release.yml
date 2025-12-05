@@ -60,7 +60,7 @@ jobs:
           # Snapshot Release
           > $(date +"Updated at %B %d, %Y, %H:%M:%S.")
 
-          I've published a snapshot release for your commit, ${GITHUB_SHA:0:7}. To use it, go to a Next.js app with \`@makeswift/runtime\` installed and run:
+          I've published a snapshot release for your commit, ${{ github.event.pull_request.head.sha }}. To use it, go to a Next.js app with \`@makeswift/runtime\` installed and run:
           \`\`\`bash
           pnpm up @makeswift/runtime@$(cat version.txt)
           \`\`\`
