@@ -25,49 +25,11 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
-      - name: Creating .npmrc
-        run: |
-          cat << EOF > "$HOME/.npmrc"
-            //registry.npmjs.org/:_authToken=$NPM_TOKEN
-          EOF
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Install dependencies
         run: pnpm install --ignore-scripts --frozen-lockfile
 
-      # Now we do the snapshot release
-      - name: Version Packages
-        id: version_packages
-        run: |
-          output=$(pnpm exec changeset version --snapshot snapshot 2>&1)
-          echo "$output"
-          if echo "$output" | grep -q " warn "; then
-            echo "Warning detected, skipping publishing"
-            echo "SKIP_PUBLISH=true" >> "$GITHUB_OUTPUT"
-          fi
-
-          cat packages/runtime/package.json | jq -r .version >> version.txt
+      - name: Build
+        run: pnpm run build
 
       - name: Publish Packages
-        if: steps.version_packages.outputs.SKIP_PUBLISH != 'true'
-        run: pnpm exec changeset publish --tag snapshot
-
-      # Let the developer know
-      - name: Write Message
-        if: steps.version_packages.outputs.SKIP_PUBLISH != 'true'
-        run: |
-          cat << EOF > message.txt
-          # Snapshot Release
-          > $(date +"Updated at %B %d, %Y, %H:%M:%S.")
-
-          I've published a snapshot release for your commit, ${GITHUB_SHA:0:7}. To use it, go to a Next.js app with \`@makeswift/runtime\` installed and run:
-          \`\`\`bash
-          pnpm up @makeswift/runtime@$(cat version.txt)
-          \`\`\`
-          EOF
-
-      - uses: mshick/add-pr-comment@v2
-        if: steps.version_packages.outputs.SKIP_PUBLISH != 'true'
-        with:
-          message-id: 'snapshot-release'
-          message-path: message.txt
+        run: pnpm dlx pkg-pr-new publish './packages/*'
