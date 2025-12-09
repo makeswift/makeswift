@@ -7,6 +7,11 @@ on:
 
 concurrency: ${{ github.workflow}}-${{ github.ref }}
 
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
 jobs:
   release:
     name: Release
@@ -28,6 +33,10 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --ignore-scripts --frozen-lockfile
+
+        # npm trusted publishing requires npm 11.5.1 or higher.
+      - name: Update npm
+        run: npm install -g npm@latest
 
       - name: Create release pull request or publish to NPM
         uses: changesets/action@v1
