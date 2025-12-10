@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.15-canary.1
+
+### Patch Changes
+
+- 846a8bf: Fix missing source maps for controls package
+
 ## 0.1.15-canary.0
 
 ### Patch Changes
