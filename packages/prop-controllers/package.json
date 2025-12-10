@@ -16,7 +16,7 @@
     "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'tsup --watch'",
     "clean": "rm -rf dist",
     "build": "tsc && tsup",
-    "prepublishOnly": "turbo run build",
+    "prepublishOnly": "turbo run build --force",
     "test": "jest"
   },
   "dependencies": {

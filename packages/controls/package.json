@@ -17,7 +17,8 @@
     "clean": "rm -rf dist",
     "build": "tsc && tsup",
     "format": "prettier --write .",
-    "prepublishOnly": "turbo run build",
+    "checkEmptyFiles": "EMPTY=$(find dist -type f -empty); if [ -n \"$EMPTY\" ]; then echo \"Error: Empty files found in dist:\"; echo \"$EMPTY\"; exit 1; else echo \"No empty files in dist\"; fi",
+    "prepublishOnly": "turbo run build --force && pnpm checkEmptyFiles",
     "test": "jest",
     "test:updateSnapshot": "jest --updateSnapshot"
   },

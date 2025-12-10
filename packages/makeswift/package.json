@@ -24,7 +24,7 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "test": "jest --passWithNoTests",
-    "prepublishOnly": "turbo run build"
+    "prepublishOnly": "turbo run build --force"
   },
   "dependencies": {
     "@babel/core": "^7.18.13",
