@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.16-canary.0
+
+### Patch Changes
+
+- dac927f: Force build in prepublishing step to ignore any stale build outputs
+
 ## 0.1.15
 
 ### Patch Changes

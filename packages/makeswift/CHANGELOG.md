@@ -1,5 +1,11 @@
 # makeswift
 
+## 0.3.4-canary.0
+
+### Patch Changes
+
+- dac927f: Force build in prepublishing step to ignore any stale build outputs
+
 ## 0.3.3
 
 ### Patch Changes

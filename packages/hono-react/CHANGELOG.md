@@ -1,5 +1,13 @@
 # @makeswift/hono-react
 
+## 0.0.4-canary.0
+
+### Patch Changes
+
+- dac927f: Force build in prepublishing step to ignore any stale build outputs
+- Updated dependencies [dac927f]
+  - @makeswift/runtime@0.26.2-canary.0
+
 ## 0.0.3
 
 ### Patch Changes
