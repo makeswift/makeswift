@@ -1,5 +1,11 @@
 # makeswift
 
+## 0.3.4
+
+### Patch Changes
+
+- dac927f: Force build in prepublishing step to ignore any stale build outputs
+
 ## 0.3.3
 
 ### Patch Changes
