@@ -2,6 +2,10 @@
   "name": "@makeswift/runtime",
   "version": "0.26.1",
   "license": "MIT",
+  "repository": {
+    "url": "makeswift/makeswift",
+    "directory": "packages/runtime"
+  },
   "files": [
     "dist",
     "api",
