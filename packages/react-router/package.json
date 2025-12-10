@@ -1,7 +1,11 @@
 {
   "name": "@makeswift/react-router",
-  "version": "0.0.5-canary.4",
+  "version": "0.0.5",
   "license": "MIT",
+  "repository": {
+    "url": "makeswift/makeswift",
+    "directory": "packages/react-router"
+  },
   "files": [
     "dist",
     "server"

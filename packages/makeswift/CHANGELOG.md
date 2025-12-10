@@ -1,6 +1,6 @@
 # makeswift
 
-## 0.3.3-canary.0
+## 0.3.3
 
 ### Patch Changes
 

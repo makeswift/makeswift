@@ -30,6 +30,7 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: pnpm install --ignore-scripts --frozen-lockfile
@@ -61,3 +62,66 @@ jobs:
         with:
           commit_message: 'chore: update lock file'
           branch: changeset-release/main
+
+  canary-release:
+    name: Canary Release
+    if: "github.event.head_commit.message != 'chore: version packages'"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out git repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Git User
+        uses: fregante/setup-git-user@v2
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install --ignore-scripts --frozen-lockfile
+
+        # npm trusted publishing requires npm 11.5.1 or higher.
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Merge To Canary Branch
+        run: |
+          git checkout canary
+          git merge origin/main --strategy-option=theirs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Now we pre-release
+      - name: Enter Pre-Release Mode (Idempotently)
+        run: |
+          pnpm exec changeset pre enter canary || true
+          pnpm exec changeset version
+
+      - name: Commit Change To Pre-Release Mode
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'Enter prerelease mode and version packages'
+          branch: canary
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish Canary Release
+        run: |
+          pnpm exec changeset publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Push Changes To Branch
+        run: git push origin canary --follow-tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

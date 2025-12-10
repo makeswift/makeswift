@@ -1,17 +1,12 @@
 # @makeswift/controls
 
-## 0.1.15-canary.1
-
-### Patch Changes
-
-- 846a8bf: Fix missing source maps for controls package
-
-## 0.1.15-canary.0
+## 0.1.15
 
 ### Patch Changes
 
 - 6f2a4e7: Remove control serialization from the control definition interface, move towards supporting serialization via a visitor
 - f7e8365: Supports plugins for deserialization. Also relocates function serialization/deserialization utilities to the runtime package.
+- 846a8bf: Fix missing source maps for controls package
 
 ## 0.1.14
 

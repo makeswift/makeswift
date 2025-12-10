@@ -1,7 +1,11 @@
 {
   "name": "@makeswift/controls",
-  "version": "0.1.15-canary.1",
+  "version": "0.1.15",
   "license": "MIT",
+  "repository": {
+    "url": "makeswift/makeswift",
+    "directory": "packages/controls"
+  },
   "files": [
     "dist"
   ],

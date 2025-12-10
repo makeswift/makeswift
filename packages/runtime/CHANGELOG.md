@@ -1,42 +1,20 @@
 # @makeswift/runtime
 
-## 0.26.1-canary.4
-
-### Patch Changes
-
-- Updated dependencies [846a8bf]
-  - @makeswift/controls@0.1.15-canary.1
-  - @makeswift/prop-controllers@0.4.9-canary.1
-
-## 0.26.1-canary.3
+## 0.26.1
 
 ### Patch Changes
 
 - 4b1d108: Added error handling to the API handler for merging element tree data so that failures still flow through our logic for setting CORS headers.
-
-## 0.26.1-canary.2
-
-### Patch Changes
-
 - 955cd53: Add runtime version into request headers to Makeswift API
-
-## 0.26.1-canary.1
-
-### Patch Changes
-
-- Updated dependencies [cf24d94]
-  - @makeswift/next-plugin@0.6.1-canary.0
-
-## 0.26.1-canary.0
-
-### Patch Changes
-
 - 6f2a4e7: Serialize controls for builder using a visitor with MessagePort compatibility
 - f7e8365: Use function deserialization plugin for deserializing control functions
 - Updated dependencies [6f2a4e7]
+- Updated dependencies [cf24d94]
 - Updated dependencies [f7e8365]
-  - @makeswift/controls@0.1.15-canary.0
-  - @makeswift/prop-controllers@0.4.9-canary.0
+- Updated dependencies [846a8bf]
+  - @makeswift/controls@0.1.15
+  - @makeswift/next-plugin@0.6.1
+  - @makeswift/prop-controllers@0.4.9
 
 ## 0.26.0
 

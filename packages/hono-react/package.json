@@ -1,7 +1,11 @@
 {
   "name": "@makeswift/hono-react",
-  "version": "0.0.3-canary.4",
+  "version": "0.0.3",
   "license": "MIT",
+  "repository": {
+    "url": "makeswift/makeswift",
+    "directory": "packages/hono-react"
+  },
   "files": [
     "dist",
     "server"
