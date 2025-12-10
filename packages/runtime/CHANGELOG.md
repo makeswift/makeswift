@@ -1,5 +1,21 @@
 # @makeswift/runtime
 
+## 0.26.1
+
+### Patch Changes
+
+- 4b1d108: Added error handling to the API handler for merging element tree data so that failures still flow through our logic for setting CORS headers.
+- 955cd53: Add runtime version into request headers to Makeswift API
+- 6f2a4e7: Serialize controls for builder using a visitor with MessagePort compatibility
+- f7e8365: Use function deserialization plugin for deserializing control functions
+- Updated dependencies [6f2a4e7]
+- Updated dependencies [cf24d94]
+- Updated dependencies [f7e8365]
+- Updated dependencies [846a8bf]
+  - @makeswift/controls@0.1.15
+  - @makeswift/next-plugin@0.6.1
+  - @makeswift/prop-controllers@0.4.9
+
 ## 0.26.0
 
 ### Minor Changes
@@ -512,20 +528,15 @@
   The `Group` control offers an improved visual hierarchy for grouped controls when rendered in the Makeswift builder, along with new options for specifying the group label and preferred layout.
 
   The `Group` control options are:
-
   - `label?: string = "Group"`
-
     - The label for the group panel in the Makeswift builder. Defaults to `"Group"`.
 
   - `preferredLayout?: Group.Layout.Inline | Group.Layout.Popover = Group.Layout.Popover`
-
     - The preferred layout for the group in the Makeswift builder. Note that the builder may override this preference to optimize the user experience. Possible values include:
-
       - `Group.Layout.Inline`: Renders the group properties within the parent panel, visually grouping them to reflect the hierarchy. This is the default if no explicit value is provided.
       - `Group.Layout.Popover`: Renders the group properties in a standalone popover panel.
 
   - `props: Record<string, ControlDefinition>`
-
     - An object record defining the controls being grouped. This can include any of the Makeswift controls, including other groups. For example:
 
     ```typescript
@@ -556,7 +567,6 @@
   The values available are sourced from our Google Fonts integration within Makeswift and from the variants you pass to `getFonts` in your [`MakeswiftApiHandler`](https://docs.makeswift.com/developer/reference/makeswift-api-handler).
 
   Available params for the Font control include:
-
   - `label?: string`
     - Text for the panel label in the Makeswift builder.
   - `variant?: boolean = true`
@@ -882,7 +892,6 @@
   exposing internal data types and functions associated with our controls.
 
   ## BREAKING:
-
   1. Attempting to create a control with arbitrary configuration options will
      now result in a TypeScript compilation error:
 
@@ -1392,7 +1401,6 @@
 - 2e59c52: Starting from version `0.13.0`, **versioning is now enabled by default**. With versioning, users can easily publish all changes to their website with just a few clicks. Published changes are saved so you can revert to previous versions if needed.
 
   Upgrade guide from version `0.12.x` to `0.13.x`:
-
   1. Update `getPageSnapshot` Parameters:
 
      a. Remove the `preview` parameter.
@@ -1412,7 +1420,6 @@
      ```
 
   2. For users who have **never used versioning**:
-
      - No further actions are required.
 
   3. For users who have used versioning:
@@ -1627,7 +1634,6 @@
   With this feature, you can create different variations of a page. For example, if you have a `/pricing` page that you want to localize for Spanish-speaking countries, you can add an `es` locale, and create a `/es/pricing` page.
 
   If you have used the unstable version before, here are the steps required to migrate to the stable version:
-
   - Remove `unstable_i18n` on the `ReactRuntime`.
   - Rename `unstable_locale` to `locale` on the `getPageSnapshot`.
 
@@ -2034,7 +2040,6 @@
 - 6d468d1: Remove snapshotting code. We've re-architected versioning and won't be using snapshots anymore.
 - 78ff346: Remove unused GraphQL queries.
 - d08eb8d: Add API endpoints to the Makeswift Next.js API handler for Makeswift API resources. The following endpoints were added:
-
   - /api/makeswift/swatches/:id
   - /api/makeswift/files/:id
   - /api/makeswift/typographies/:id
@@ -2497,7 +2502,6 @@ This version is a BREAKING change. No public APIs have changed but there was a m
   follow the migration steps below.
 
   Here's how to migrate:
-
   - Create a new file at `pages/api/makeswift/[...makeswift].js` with the following contents:
 
     ```js
@@ -2603,7 +2607,6 @@ This version is a BREAKING change. No public APIs have changed but there was a m
   `getStaticProps` and `getServerSideProps` exports. You can now instantiate a Makeswift client
   using your site API key and see your data flow from the Makeswift API, though your Next.js app, to
   your pages. The new APIs are:
-
   - `Makeswift.getPages` to retrieve all Makeswift pages and use in `getStaticPaths`
   - `Makeswift.getPageSnapshot` to retrieve a page's layout data and render the Makeswift `Page`
     component
@@ -2708,7 +2711,6 @@ This version is a BREAKING change. No public APIs have changed but there was a m
   ```
 
   There's a lot more you can do with the Slot. Here's some ideas:
-
   - Custom animations for elements passed via Slot
   - Passing data between components using React context and Slot (i.e., a component with Slot provides
     a context value and any component dropped inside it can read that context)
