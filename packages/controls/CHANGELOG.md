@@ -1,5 +1,13 @@
 # @makeswift/controls
 
+## 0.1.15
+
+### Patch Changes
+
+- 6f2a4e7: Remove control serialization from the control definition interface, move towards supporting serialization via a visitor
+- f7e8365: Supports plugins for deserialization. Also relocates function serialization/deserialization utilities to the runtime package.
+- 846a8bf: Fix missing source maps for controls package
+
 ## 0.1.14
 
 ### Patch Changes
@@ -57,20 +65,15 @@
   The `Group` control offers an improved visual hierarchy for grouped controls when rendered in the Makeswift builder, along with new options for specifying the group label and preferred layout.
 
   The `Group` control options are:
-
   - `label?: string = "Group"`
-
     - The label for the group panel in the Makeswift builder. Defaults to `"Group"`.
 
   - `preferredLayout?: Group.Layout.Inline | Group.Layout.Popover = Group.Layout.Popover`
-
     - The preferred layout for the group in the Makeswift builder. Note that the builder may override this preference to optimize the user experience. Possible values include:
-
       - `Group.Layout.Inline`: Renders the group properties within the parent panel, visually grouping them to reflect the hierarchy. This is the default if no explicit value is provided.
       - `Group.Layout.Popover`: Renders the group properties in a standalone popover panel.
 
   - `props: Record<string, ControlDefinition>`
-
     - An object record defining the controls being grouped. This can include any of the Makeswift controls, including other groups. For example:
 
     ```typescript
@@ -93,7 +96,6 @@
   The values available are sourced from our Google Fonts integration within Makeswift and from the variants you pass to `getFonts` in your [`MakeswiftApiHandler`](https://docs.makeswift.com/developer/reference/makeswift-api-handler).
 
   Available params for the Font control include:
-
   - `label?: string`
     - Text for the panel label in the Makeswift builder.
   - `variant?: boolean = true`
@@ -288,12 +290,10 @@
   types/schemas, have now been defined in this package.
 
   ## BREAKING:
-
   1. Several types and utilities associated with controls have been removed as part of
      this change. As an example, let's look over the types/functions associated with
      the `Color` control (keep in mind that this applies to all controls, not just
      `Color`):
-
      - `ColorControlType`: a string literal identifying the `Color` control
      - `ColorControlDataTypeValueV1` - a string literal identifying V1 Color control
        data.
