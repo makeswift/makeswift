@@ -11,7 +11,7 @@
   "dependencies": {
     "@headlessui/react": "1.6.6",
     "@makeswift/runtime": "^0.19.1",
-    "next": "^14.2.3",
+    "next": "^14.2.34",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tiny-invariant": "1.2.0"
