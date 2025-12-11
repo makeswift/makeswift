@@ -1,6 +1,6 @@
 {
   "name": "@makeswift/runtime",
-  "version": "0.26.2-canary.0",
+  "version": "0.26.2",
   "license": "MIT",
   "repository": {
     "url": "makeswift/makeswift",
@@ -279,7 +279,7 @@
     "jsdom": "^26.0.0",
     "madge": "^6.0.0",
     "msw": "^2.3.1",
-    "next": "15.0.5",
+    "next": "15.0.6",
     "node-mocks-http": "^1.16.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",

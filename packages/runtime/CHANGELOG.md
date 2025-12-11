@@ -1,13 +1,13 @@
 # @makeswift/runtime
 
-## 0.26.2-canary.0
+## 0.26.2
 
 ### Patch Changes
 
 - dac927f: Force build in prepublishing step to ignore any stale build outputs
 - Updated dependencies [dac927f]
-  - @makeswift/prop-controllers@0.4.10-canary.0
-  - @makeswift/controls@0.1.16-canary.0
+  - @makeswift/prop-controllers@0.4.10
+  - @makeswift/controls@0.1.16
 
 ## 0.26.1
 
