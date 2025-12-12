@@ -12,7 +12,7 @@
     "@headlessui/react": "1.6.6",
     "@makeswift/runtime": "^0.19.1",
     "i18next": "22.1.4",
-    "next": "^14.2.34",
+    "next": "14.2.35",
     "next-i18next": "13.0.0",
     "next-pwa": "5.6.0",
     "react": "^18.3.1",
