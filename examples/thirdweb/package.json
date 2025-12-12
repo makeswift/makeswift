@@ -19,7 +19,7 @@
     "classnames": "2.3.1",
     "ethers": "^5.7.2",
     "framer-motion": "6",
-    "next": "^14.2.34",
+    "next": "14.2.35",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
