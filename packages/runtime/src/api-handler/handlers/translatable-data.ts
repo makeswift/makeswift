@@ -1,4 +1,4 @@
-import { type Data } from '../../state/react-page'
+import { type Data } from '../../state/read-only-state'
 import { MakeswiftClient } from '../../client'
 import { type ApiRequest, ApiResponse } from '../request-response'
 

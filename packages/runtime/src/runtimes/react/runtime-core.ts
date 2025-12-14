@@ -6,14 +6,10 @@ import {
   parseBreakpointsInput,
 } from '../../state/modules/breakpoints'
 
-import {
-  configureStore,
-  copyElementTree,
-  getBreakpoints,
-  type Store,
-  type Element,
-  type ElementData,
-} from '../../state/react-page'
+import { copyElementTree } from '../../state/ops/copy-element-tree'
+
+import { getBreakpoints, type Element, type ElementData } from '../../state/read-only-state'
+import { configureStore, type Store } from '../../state/react-page'
 
 export class RuntimeCore {
   store: Store

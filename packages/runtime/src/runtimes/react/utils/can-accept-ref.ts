@@ -1,5 +1,5 @@
 import type { Component, PropsWithoutRef, RefAttributes } from 'react'
-import { type ComponentType } from '../../../state/react-page'
+import { type ComponentType } from '../../../state/read-only-state'
 
 type WrapperComponent = {
   $$typeof: string

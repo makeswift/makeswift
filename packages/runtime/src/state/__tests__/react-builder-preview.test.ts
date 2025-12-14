@@ -9,9 +9,11 @@ import { registerDocument, unregisterDocument } from '../shared-api'
 import { changeDocument } from '../host-api'
 import { registerComponentHandle } from '../actions/internal'
 
-import { propControllerHandlesMiddleware, createRootReducer } from '../react-builder-preview'
+import { createRootReducer } from '../read-write-state'
+import { propControllerHandlesMiddleware } from '../middleware/prop-controller-handles'
+import { readWriteElementTreeMiddleware } from '../middleware/read-write-element-tree'
 
-import * as ReactPage from '../react-page'
+import * as State from '../read-only-state'
 
 import * as RootElementFixtures from './fixtures/root-elements'
 import * as OperationFixtures from './fixtures/operations'
@@ -21,12 +23,12 @@ describe('propControllerHandlesMiddleware', () => {
   it('registers prop controllers for element data', () => {
     // Arrange
     const documentKey = 'documentKey'
-    const element: ReactPage.Element = { key: 'elementKey', type: 'type', props: {} }
+    const element: State.Element = { key: 'elementKey', type: 'type', props: {} }
     const store = configureReduxStore({
       reducer: createRootReducer(),
       middleware: getDefaultMiddleware =>
         getDefaultMiddleware(middlewareOptions).concat(
-          ReactPage.elementTreeMiddleware(),
+          readWriteElementTreeMiddleware(),
           propControllerHandlesMiddleware(),
         ),
     })
@@ -36,7 +38,7 @@ describe('propControllerHandlesMiddleware', () => {
 
     handle.callback(() => ({ setPropControllers }))
 
-    store.dispatch(registerDocument(ReactPage.createBaseDocument(documentKey, element, null)))
+    store.dispatch(registerDocument(State.createBaseDocument(documentKey, element, null)))
 
     // Act
     store.dispatch(registerComponentHandle(documentKey, element.key, handle))
@@ -48,7 +50,7 @@ describe('propControllerHandlesMiddleware', () => {
   it("doesn't register prop controllers for element references", () => {
     // Arrange
     const documentKey = 'documentKey'
-    const element: ReactPage.Element = { type: 'reference', key: 'elementKey', value: 'value' }
+    const element: State.Element = { type: 'reference', key: 'elementKey', value: 'value' }
     const store = configureReduxStore({
       reducer: createRootReducer(),
       middleware: getDefaultMiddleware =>
@@ -60,7 +62,7 @@ describe('propControllerHandlesMiddleware', () => {
 
     handle.callback(() => ({ setPropControllers }))
 
-    store.dispatch(registerDocument(ReactPage.createBaseDocument(documentKey, element, null)))
+    store.dispatch(registerDocument(State.createBaseDocument(documentKey, element, null)))
 
     // Act
     store.dispatch(registerComponentHandle(documentKey, element.key, handle))
@@ -79,21 +81,21 @@ describe('elementTreeMiddleware', () => {
       reducer: createRootReducer(),
       preloadedState: runtime.store.getState(),
       middleware: getDefaultMiddleware =>
-        getDefaultMiddleware(middlewareOptions).concat(ReactPage.elementTreeMiddleware()),
+        getDefaultMiddleware(middlewareOptions).concat(readWriteElementTreeMiddleware()),
     })
 
-    const getElements = () => ReactPage.getElements(store.getState(), documentKey)
-    const getElementIds = () => ReactPage.getElementIds(store.getState(), documentKey)
+    const getElements = () => State.getElements(store.getState(), documentKey)
+    const getElementIds = () => State.getElementIds(store.getState(), documentKey)
     const newElementTree = () =>
       buildElementTree(
-        ReactPage.getDocument(store.getState(), documentKey)?.rootElement!,
-        ReactPage.getPropControllerDescriptors(runtime.store.getState()),
+        State.getDocument(store.getState(), documentKey)?.rootElement!,
+        State.getPropControllerDescriptors(runtime.store.getState()),
       )
 
     // Act / Assert
     store.dispatch(
       registerDocument(
-        ReactPage.createBaseDocument(documentKey, RootElementFixtures.productOfTheYear, null),
+        State.createBaseDocument(documentKey, RootElementFixtures.productOfTheYear, null),
       ),
     )
     expect(getElements()).toMatchSnapshot('initial elements')
@@ -128,7 +130,7 @@ describe('elementTreeMiddleware', () => {
     store.dispatch(unregisterDocument(documentKey))
     store.dispatch(
       registerDocument(
-        ReactPage.createBaseDocument(documentKey, RootElementFixtures.productOfTheYearFinal, null),
+        State.createBaseDocument(documentKey, RootElementFixtures.productOfTheYearFinal, null),
       ),
     )
 

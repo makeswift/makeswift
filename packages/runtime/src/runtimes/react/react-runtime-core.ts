@@ -6,7 +6,7 @@ import { registerComponentEffect, registerReactComponentEffect } from '../../sta
 
 import { BreakpointsInput } from '../../state/modules/breakpoints'
 import { ComponentIcon } from '../../state/modules/components-meta'
-import type { ComponentType } from '../../state/react-page'
+import type { ComponentType } from '../../state/read-only-state'
 
 import { RuntimeCore } from './runtime-core'
 

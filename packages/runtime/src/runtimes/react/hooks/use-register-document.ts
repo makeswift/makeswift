@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { type Document } from '../../../state/react-page'
+import { type Document } from '../../../state/read-only-state'
 import { useDispatch } from './use-dispatch'
 import { useIsInBuilder } from './use-is-in-builder'
 import { registerDocument, registerDocumentsEffect } from '../../../state/shared-api'

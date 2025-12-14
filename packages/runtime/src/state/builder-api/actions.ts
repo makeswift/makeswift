@@ -7,7 +7,7 @@ import { type Document } from '../modules/read-only-documents'
 import { type BoxModel } from '../modules/box-models'
 import { type ComponentMeta } from '../modules/components-meta'
 
-import { type Size } from '../react-builder-preview'
+import { type ElementSize } from '../builder-preview/element-size'
 import { type DocumentPayload, type SharedAction, SharedActionTypes } from '../shared-api'
 
 export const BuilderActionTypes = {
@@ -63,7 +63,7 @@ type UnmountComponentAction = {
 
 type ChangeDocumentElementSizeAction = {
   type: typeof BuilderActionTypes.CHANGE_DOCUMENT_ELEMENT_SIZE
-  payload: { size: Size }
+  payload: { size: ElementSize }
 }
 
 type MessageBuilderPropControllerAction<T = PropControllerMessage> = {
@@ -168,7 +168,7 @@ export function mountComponentEffect(
   }
 }
 
-export function changeDocumentElementSize(size: Size): ChangeDocumentElementSizeAction {
+export function changeDocumentElementSize(size: ElementSize): ChangeDocumentElementSizeAction {
   return { type: BuilderActionTypes.CHANGE_DOCUMENT_ELEMENT_SIZE, payload: { size } }
 }
 

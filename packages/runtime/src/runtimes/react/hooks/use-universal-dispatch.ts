@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import type { ThunkAction } from '@reduxjs/toolkit'
 
-import { type Dispatch } from '../../../state/react-page'
+import { type Dispatch } from '../../../state/read-only-state'
 import { type Action } from '../../../state/actions'
 
 import { isServer } from '../../../utils/is-server'

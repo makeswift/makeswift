@@ -1,5 +1,5 @@
 import { Ref, forwardRef, memo } from 'react'
-import { type Document } from '../../../state/react-page'
+import { type Document } from '../../../state/read-only-state'
 import { ElementImperativeHandle } from '../element-imperative-handle'
 import { useDocument } from '../hooks/use-document'
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'

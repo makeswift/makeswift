@@ -7,7 +7,7 @@ import {
   type Resolvable,
 } from '@makeswift/controls'
 
-import * as ReactPage from '../../../state/react-page'
+import * as ReactPage from '../../../state/read-only-state'
 import { useResourceResolver } from './use-resource-resolver'
 import { useDocumentKey } from './use-document-context'
 import { useSelector } from './use-selector'
