@@ -1,4 +1,4 @@
-import { type Element } from '../../state/react-page'
+import { type Element } from '../../state/read-only-state'
 import { MakeswiftClient } from '../../client'
 import { type ApiRequest, ApiResponse, type ErrorResponseBody } from '../request-response'
 import isErrorWithMessage from '../../utils/isErrorWithMessage'

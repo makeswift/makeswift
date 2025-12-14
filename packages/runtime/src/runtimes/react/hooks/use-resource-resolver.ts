@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { type ResourceResolver } from '@makeswift/controls'
 
-import * as ReactPage from '../../../state/react-page'
+import * as ReactPage from '../../../state/read-only-state'
 import { useMakeswiftHostApiClient } from '../host-api-client'
 import { useStore } from './use-store'
 import { useDocumentKey, useDocumentLocale } from './use-document-context'

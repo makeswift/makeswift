@@ -1,6 +1,7 @@
 import type { Component, PropsWithoutRef, ReactNode, RefAttributes } from 'react'
 
-import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
+import { type Action, type UnknownAction, isKnownAction } from '../actions'
+import { ReadOnlyActionTypes } from '../actions/internal/read-only-actions'
 
 export type ComponentType<P = Record<string, any>, T = any> =
   | { new (props: PropsWithoutRef<P> & RefAttributes<T>, context?: any): Component<P> }
@@ -26,10 +27,10 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
   if (!isKnownAction(action)) return state
 
   switch (action.type) {
-    case ActionTypes.REGISTER_REACT_COMPONENT:
+    case ReadOnlyActionTypes.REGISTER_REACT_COMPONENT:
       return new Map(state).set(action.payload.type, action.payload.component)
 
-    case ActionTypes.UNREGISTER_REACT_COMPONENT: {
+    case ReadOnlyActionTypes.UNREGISTER_REACT_COMPONENT: {
       const nextState = new Map(state)
 
       const deleted = nextState.delete(action.payload.type)

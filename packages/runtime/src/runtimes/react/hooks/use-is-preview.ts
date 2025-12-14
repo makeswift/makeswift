@@ -1,4 +1,4 @@
-import { getIsPreview } from '../../../state/react-page'
+import { getIsPreview } from '../../../state/read-only-state'
 import { useSelector } from './use-selector'
 
 export function useIsPreview(): boolean {

@@ -6,7 +6,7 @@ import { useDispatch } from '../hooks/use-dispatch'
 import { useDocumentKey } from '../hooks/use-document-context'
 import { useDisableRegisterElement } from '../hooks/use-disable-register-element'
 import { mountComponentEffect } from '../../../state/builder-api/actions'
-import { registerComponentHandleEffect } from '../../../state/actions/internal'
+import { registerComponentHandleEffect } from '../../../state/actions/internal/read-only-actions'
 
 type RegisterChildrenAsElementProps = {
   elementKey: string

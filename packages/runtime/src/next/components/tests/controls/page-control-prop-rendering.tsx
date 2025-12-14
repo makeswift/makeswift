@@ -8,7 +8,7 @@ import { ServerInsertedHTMLContext } from 'next/navigation'
 import { type Data, type ValueType, type DataType, ControlDefinition } from '@makeswift/controls'
 
 import { type CacheData } from '../../../../api/react'
-import { ElementData } from '../../../../state/react-page'
+import { ElementData } from '../../../../state/read-only-state'
 import { ReactRuntime } from '../../../../react'
 import { MakeswiftComponent } from '../../../../runtimes/react/components/MakeswiftComponent'
 import { Page } from '../../page'

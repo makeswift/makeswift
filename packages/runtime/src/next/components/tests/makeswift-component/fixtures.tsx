@@ -7,7 +7,7 @@ import { MakeswiftComponent } from '../../../../runtimes/react/components/Makesw
 import { type MakeswiftComponentSnapshot } from '../../../../client'
 
 import { Checkbox, TextInput } from '@makeswift/controls'
-import { ComponentType } from '../../../../state/react-page'
+import { type ComponentType } from '../../../../state/read-only-state'
 
 export const CustomComponentType = 'CustomComponent'
 export const componentId = 'component-id'

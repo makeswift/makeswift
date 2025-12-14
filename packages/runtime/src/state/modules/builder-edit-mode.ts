@@ -1,4 +1,5 @@
-import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
+import { type Action, type UnknownAction, isKnownAction } from '../actions'
+import { HostActionTypes } from '../host-api'
 
 export const BuilderEditMode = {
   BUILD: 'build',
@@ -18,7 +19,7 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
   if (!isKnownAction(action)) return state
 
   switch (action.type) {
-    case ActionTypes.SET_BUILDER_EDIT_MODE:
+    case HostActionTypes.SET_BUILDER_EDIT_MODE:
       return action.payload.editMode
 
     default:

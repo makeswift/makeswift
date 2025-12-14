@@ -39,7 +39,7 @@ import {
   type Document,
   getPropControllerDescriptors,
   isElementReference,
-} from '../state/react-page'
+} from '../state/read-only-state'
 import { type SiteVersion } from '../api/site-version'
 import { toIterablePaginationResult } from '../utils/pagination'
 import { deterministicUUID } from '../utils/deterministic-uuid'
