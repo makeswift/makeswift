@@ -11,18 +11,12 @@ import { ControlInstance } from '@makeswift/controls'
 import deepEqual from '../utils/deepEqual'
 
 import * as Documents from './modules/read-write-documents'
-import * as ElementTrees from './modules/element-trees'
-import * as ReactComponents from './modules/react-components'
 import * as BoxModels from './modules/box-models'
-import * as ComponentsMeta from './modules/components-meta'
-import * as PropControllers from './modules/prop-controllers'
 import * as PropControllerHandles from './modules/prop-controller-handles'
-import * as IsInBuilder from './modules/is-in-builder'
 import * as IsPreview from './modules/is-preview'
 import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Pointer from './modules/pointer'
 import * as ElementImperativeHandles from './modules/element-imperative-handles'
-import * as Breakpoints from './modules/breakpoints'
 
 import { withSetupTeardown } from './mixins/setup-teardown'
 
@@ -46,27 +40,31 @@ import { ElementImperativeHandle } from '../runtimes/react/element-imperative-ha
 import { type BuilderAPIProxy } from './builder-api/proxy'
 import { HostActionTypes } from './host-api'
 
+import * as ReadOnlyPage from './react-page'
+
 export type { Operation } from './modules/read-write-documents'
 export type { BoxModelHandle } from './modules/box-models'
 export { createBox, getBox, parse } from './modules/box-models'
 
-export const reducer = combineReducers({
+const reducers = {
+  ...ReadOnlyPage.reducers,
   documents: Documents.reducer,
-  elementTrees: ElementTrees.reducer,
-  reactComponents: ReactComponents.reducer,
   boxModels: BoxModels.reducer,
-  componentsMeta: ComponentsMeta.reducer,
-  propControllers: PropControllers.reducer,
-  propControllerHandles: PropControllerHandles.reducer,
-  isInBuilder: IsInBuilder.reducer,
-  isPreview: IsPreview.reducer,
-  builderEditMode: BuilderEditMode.reducer,
   pointer: Pointer.reducer,
   elementImperativeHandles: ElementImperativeHandles.reducer,
-  breakpoints: Breakpoints.reducer,
-})
+}
 
-export type State = ReturnType<typeof reducer>
+export function createRootReducer() {
+  return combineReducers(reducers)
+}
+
+export type State = ReadOnlyPage.State & {
+  documents: Documents.State
+  boxModels: BoxModels.State
+  pointer: Pointer.State
+  elementImperativeHandles: ElementImperativeHandles.State
+}
+
 export type Dispatch = ThunkDispatch<State, unknown, Action>
 
 function getDocumentsStateSlice(state: State): Documents.State {
@@ -91,32 +89,6 @@ function getBoxModel(
   elementKey: string,
 ): BoxModels.BoxModel | null {
   return BoxModels.getBoxModel(getBoxModelsStateSlice(state), documentKey, elementKey)
-}
-
-function getComponentsMetaStateSlice(state: State): ComponentsMeta.State {
-  return state.componentsMeta
-}
-
-function getComponentsMeta(state: State): Map<string, ComponentsMeta.ComponentMeta> {
-  return ComponentsMeta.getComponentsMeta(getComponentsMetaStateSlice(state))
-}
-
-function getPropControllersStateSlice(state: State): PropControllers.State {
-  return state.propControllers
-}
-
-function getComponentPropControllerDescriptors(
-  state: State,
-  componentType: string,
-): Record<string, PropControllers.PropControllerDescriptor> | null {
-  return PropControllers.getComponentPropControllerDescriptors(
-    getPropControllersStateSlice(state),
-    componentType,
-  )
-}
-
-function getPropControllerHandlesStateSlice(state: State): PropControllerHandles.State {
-  return state.propControllerHandles
 }
 
 function getPointer(state: State): Pointer.Point | null {
@@ -407,10 +379,10 @@ function startPollingElementFromPoint(): ThunkAction<() => void, State, unknown,
 function registerBuilderComponents(): ThunkAction<() => void, State, unknown, Action> {
   return (dispatch, getState) => {
     const state = getState()
-    const componentsMeta = getComponentsMeta(state)
+    const componentsMeta = ReadOnlyPage.getComponentsMeta(state)
 
     componentsMeta.forEach((meta, type) => {
-      const descriptors = getComponentPropControllerDescriptors(state, type)
+      const descriptors = ReadOnlyPage.getComponentPropControllerDescriptors(state, type)
       if (descriptors != null) {
         const [serializedControls, transferables] = serializeControls(descriptors)
         dispatch(
@@ -618,11 +590,10 @@ export function propControllerHandlesMiddleware(): Middleware<Dispatch, State, D
 
         case InternalActionTypes.UNREGISTER_COMPONENT_HANDLE: {
           const { documentKey, elementKey } = action.payload
-          const handle = PropControllerHandles.getPropControllersHandle(
-            getPropControllerHandlesStateSlice(getState()),
+          const handle = ReadOnlyPage.getPropControllersHandle(getState(), {
             documentKey,
             elementKey,
-          )
+          })
 
           handle?.setPropControllers(null)
 
@@ -632,14 +603,14 @@ export function propControllerHandlesMiddleware(): Middleware<Dispatch, State, D
         }
 
         case HostActionTypes.MESSAGE_HOST_PROP_CONTROLLER: {
-          const propController = PropControllerHandles.getPropController(
-            getPropControllerHandlesStateSlice(getState()),
-            action.payload.documentKey,
-            action.payload.elementKey,
-            action.payload.propName,
-          )
+          const { documentKey, elementKey, propName, message } = action.payload
+          const propController = ReadOnlyPage.getPropController(getState(), {
+            documentKey,
+            elementKey,
+            propName,
+          })
 
-          if (propController) propController.recv(action.payload.message)
+          if (propController) propController.recv(message)
         }
       }
 
@@ -683,7 +654,7 @@ export function configureStore({
   }
 
   const store = configureReduxStore({
-    reducer,
+    reducer: createRootReducer(),
     preloadedState: initialState,
 
     middleware: getDefaultMiddleware =>

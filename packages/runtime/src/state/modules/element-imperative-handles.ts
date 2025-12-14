@@ -1,7 +1,7 @@
 import { ElementImperativeHandle } from '../../runtimes/react/element-imperative-handle'
 import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
 
-type State = Map<string, Map<string, ElementImperativeHandle>>
+export type State = Map<string, Map<string, ElementImperativeHandle>>
 
 export function getElementImperativeHandles(
   state: State,
