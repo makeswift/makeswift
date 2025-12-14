@@ -6,7 +6,9 @@ import {
   withScroll,
 } from 'css-box-model'
 
-import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
+import { type Action, type UnknownAction, isKnownAction } from '../../actions'
+import { ReadWriteActionTypes } from '../../actions/internal/read-write-actions'
+import { BuilderActionTypes } from '../../builder-api/actions'
 
 export type { BoxModel }
 
@@ -80,7 +82,7 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
   if (!isKnownAction(action)) return state
 
   switch (action.type) {
-    case ActionTypes.REGISTER_MEASURABLE: {
+    case ReadWriteActionTypes.REGISTER_MEASURABLE: {
       const { documentKey, elementKey, measurable } = action.payload
 
       return {
@@ -92,7 +94,7 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
       }
     }
 
-    case ActionTypes.UNREGISTER_MEASURABLE: {
+    case ReadWriteActionTypes.UNREGISTER_MEASURABLE: {
       const { documentKey, elementKey } = action.payload
       const nextMeasurables = new Map(state.measurables.get(documentKey) ?? [])
 
@@ -103,7 +105,7 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
         : state
     }
 
-    case ActionTypes.CHANGE_ELEMENT_BOX_MODELS: {
+    case BuilderActionTypes.CHANGE_ELEMENT_BOX_MODELS: {
       const { changedElementBoxModels } = action.payload
 
       if (changedElementBoxModels.size === 0) return state

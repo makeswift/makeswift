@@ -6,7 +6,7 @@ import { DocumentCyclesContext, useDocumentCycles } from '../hooks/use-document-
 import {
   ElementData as ReactPageElementData,
   ElementReference as ReactPageElementReference,
-} from '../../../state/react-page'
+} from '../../../state/read-only-state'
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'
 import { Element } from './Element'
 import { Document } from './Document'

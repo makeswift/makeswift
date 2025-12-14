@@ -1,6 +1,7 @@
 import { type Breakpoint, type Breakpoints } from '@makeswift/controls'
 
-import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
+import { type Action, type UnknownAction, isKnownAction } from '../actions'
+import { BuilderActionTypes } from '../builder-api/actions'
 
 export {
   getBreakpoint,
@@ -48,7 +49,7 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
   if (!isKnownAction(action)) return state
 
   switch (action.type) {
-    case ActionTypes.SET_BREAKPOINTS: {
+    case BuilderActionTypes.SET_BREAKPOINTS: {
       const breakpoints = action.payload.breakpoints
 
       if (breakpoints.length === 0) throw new Error('Breakpoints cannot be empty.')

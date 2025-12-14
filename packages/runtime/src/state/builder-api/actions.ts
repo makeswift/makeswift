@@ -4,23 +4,29 @@ import { type SerializedControl } from '../../builder'
 import { type PropControllerMessage } from '../../prop-controllers/instances'
 
 import { type Document } from '../modules/read-only-documents'
-import { type BoxModel } from '../modules/box-models'
 import { type ComponentMeta } from '../modules/components-meta'
+import { type BoxModel } from '../modules/read-write/box-models'
 
-import { type Size } from '../react-builder-preview'
+import { type ElementSize } from '../middleware/read-write/builder-api/element-size'
 import { type DocumentPayload, type SharedAction, SharedActionTypes } from '../shared-api'
 
+export * from '../shared-api'
+
+// actions dispatched by the host to the builder ("Builder API")
+// note that some of these actions, in addition to being dispatched to the builder,
+// might also be internally intercepted by the host as a part of maintaining the
+// runtime's "read-write" state
 export const BuilderActionTypes = {
   ...SharedActionTypes,
 
   MAKESWIFT_CONNECTION_CHECK: 'MAKESWIFT_CONNECTION_CHECK',
 
-  CHANGE_ELEMENT_BOX_MODELS: 'CHANGE_ELEMENT_BOX_MODELS',
-
   MOUNT_COMPONENT: 'MOUNT_COMPONENT',
   UNMOUNT_COMPONENT: 'UNMOUNT_COMPONENT',
 
   CHANGE_DOCUMENT_ELEMENT_SIZE: 'CHANGE_DOCUMENT_ELEMENT_SIZE',
+  CHANGE_ELEMENT_BOX_MODELS: 'CHANGE_ELEMENT_BOX_MODELS',
+
   MESSAGE_BUILDER_PROP_CONTROLLER: 'MESSAGE_BUILDER_PROP_CONTROLLER',
 
   HANDLE_WHEEL: 'HANDLE_WHEEL',
@@ -46,11 +52,6 @@ type MakeswiftConnectionCheckAction = {
   payload: { currentUrl: string }
 }
 
-type ChangeElementBoxModelsAction = {
-  type: typeof BuilderActionTypes.CHANGE_ELEMENT_BOX_MODELS
-  payload: { changedElementBoxModels: Map<string, Map<string, BoxModel | null>> }
-}
-
 type MountComponentAction = {
   type: typeof BuilderActionTypes.MOUNT_COMPONENT
   payload: { documentKey: string; elementKey: string }
@@ -63,7 +64,12 @@ type UnmountComponentAction = {
 
 type ChangeDocumentElementSizeAction = {
   type: typeof BuilderActionTypes.CHANGE_DOCUMENT_ELEMENT_SIZE
-  payload: { size: Size }
+  payload: { size: ElementSize }
+}
+
+type ChangeElementBoxModelsAction = {
+  type: typeof BuilderActionTypes.CHANGE_ELEMENT_BOX_MODELS
+  payload: { changedElementBoxModels: Map<string, Map<string, BoxModel | null>> }
 }
 
 type MessageBuilderPropControllerAction<T = PropControllerMessage> = {
@@ -118,10 +124,10 @@ type HandleHostNavigateAction = {
 export type BuilderAction =
   | SharedAction
   | MakeswiftConnectionCheckAction
-  | ChangeElementBoxModelsAction
   | MountComponentAction
   | UnmountComponentAction
   | ChangeDocumentElementSizeAction
+  | ChangeElementBoxModelsAction
   | MessageBuilderPropControllerAction
   | HandleWheelAction
   | HandlePointerMoveAction
@@ -136,15 +142,6 @@ export function makeswiftConnectionCheck(
   payload: MakeswiftConnectionCheckAction['payload'],
 ): MakeswiftConnectionCheckAction {
   return { type: BuilderActionTypes.MAKESWIFT_CONNECTION_CHECK, payload }
-}
-
-export function changeElementBoxModels(
-  changedElementBoxModels: Map<string, Map<string, BoxModel | null>>,
-): ChangeElementBoxModelsAction {
-  return {
-    type: BuilderActionTypes.CHANGE_ELEMENT_BOX_MODELS,
-    payload: { changedElementBoxModels },
-  }
 }
 
 export function mountComponent(documentKey: string, elementKey: string): MountComponentAction {
@@ -168,8 +165,17 @@ export function mountComponentEffect(
   }
 }
 
-export function changeDocumentElementSize(size: Size): ChangeDocumentElementSizeAction {
+export function changeDocumentElementSize(size: ElementSize): ChangeDocumentElementSizeAction {
   return { type: BuilderActionTypes.CHANGE_DOCUMENT_ELEMENT_SIZE, payload: { size } }
+}
+
+export function changeElementBoxModels(
+  changedElementBoxModels: Map<string, Map<string, BoxModel | null>>,
+): ChangeElementBoxModelsAction {
+  return {
+    type: BuilderActionTypes.CHANGE_ELEMENT_BOX_MODELS,
+    payload: { changedElementBoxModels },
+  }
 }
 
 export function messageBuilderPropController<T>(

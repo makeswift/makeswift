@@ -1,5 +1,5 @@
 import { MergeTranslatableDataContext, type TranslationDto, type Data } from '@makeswift/controls'
-import { getPropControllerDescriptors, type State } from '../react-page'
+import { getPropControllerDescriptors, type State } from '../read-only-state'
 import * as Documents from '../modules/read-only-documents'
 import {
   GridPropControllerData,

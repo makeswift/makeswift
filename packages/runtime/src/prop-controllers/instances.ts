@@ -1,5 +1,5 @@
 import { type Descriptor, isLegacyDescriptor } from './descriptors'
-import { type BoxModel } from '../state/modules/box-models'
+import { type BoxModel } from '../state/modules/read-write/box-models'
 import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
 
 import {

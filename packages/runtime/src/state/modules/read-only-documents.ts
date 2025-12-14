@@ -1,12 +1,8 @@
 import { type Element } from '@makeswift/controls'
 
-import {
-  type Action,
-  type UnknownAction,
-  type DocumentPayload,
-  ActionTypes,
-  isKnownAction,
-} from '../actions'
+import { type Action, type UnknownAction, type DocumentPayload, isKnownAction } from '../actions'
+
+import { SharedActionTypes } from '../shared-api'
 
 export {
   type Data,
@@ -75,11 +71,11 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
   if (!isKnownAction(action)) return state
 
   switch (action.type) {
-    case ActionTypes.REGISTER_DOCUMENT:
+    case SharedActionTypes.REGISTER_DOCUMENT:
       const { documentKey, document } = action.payload
       return new Map(state).set(documentKey, { ...document, locale: document.locale ?? null })
 
-    case ActionTypes.UNREGISTER_DOCUMENT: {
+    case SharedActionTypes.UNREGISTER_DOCUMENT: {
       const nextState = new Map(state)
 
       const deleted = nextState.delete(action.payload.documentKey)

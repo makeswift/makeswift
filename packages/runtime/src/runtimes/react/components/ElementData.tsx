@@ -1,5 +1,6 @@
 import { Ref, forwardRef, memo, ReactNode } from 'react'
-import { ElementData as ReactPageElementData } from '../../../state/react-page'
+
+import { ElementData as ReactPageElementData } from '../../../state/read-only-state'
 import { useBuiltinSuspense } from '../hooks/use-builtin-suspense'
 import { useComponent } from '../hooks/use-component'
 import { canAcceptRef } from '../utils/can-accept-ref'

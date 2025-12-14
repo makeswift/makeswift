@@ -3,8 +3,11 @@
 import { type JSX } from 'react'
 import { Slot, TextInput } from '../../controls'
 
-import { registerComponent } from '../actions/internal'
+import * as State from '../read-only-state'
 import * as ReactPage from '../react-page'
+
+import { registerComponent } from '../actions/internal/read-only-actions'
+import { mergeElement } from '../ops/merge-element'
 import { ComponentIcon } from '../modules/components-meta'
 
 // @ts-ignore Used by JSX pragma
@@ -41,8 +44,8 @@ function SlotTombstone({ type, key }: { type: ElementType; key: string }) {
   return { type, key, props: {}, deleted: true }
 }
 
-function render(element: JSX.Element): ReactPage.ElementData {
-  return element as ReactPage.ElementData
+function render(element: JSX.Element): State.ElementData {
+  return element as State.ElementData
 }
 
 function createTestStore(): ReactPage.Store {
@@ -108,7 +111,7 @@ describe('ReactPage', () => {
       )
 
       // Act
-      const result = ReactPage.mergeElement(store.getState(), base, override)
+      const result = mergeElement(store.getState(), base, override)
 
       // Assert
       expect(result).toEqual(merged)
@@ -149,7 +152,7 @@ describe('ReactPage', () => {
       )
 
       // Act
-      const result = ReactPage.mergeElement(store.getState(), base, override)
+      const result = mergeElement(store.getState(), base, override)
 
       // Assert
       expect(result).toEqual(merged)
@@ -187,7 +190,7 @@ describe('ReactPage', () => {
       )
 
       // Act
-      const result = ReactPage.mergeElement(store.getState(), base, override)
+      const result = mergeElement(store.getState(), base, override)
 
       // Assert
       expect(result).toEqual(merged)
@@ -231,7 +234,7 @@ describe('ReactPage', () => {
       )
 
       // Act
-      const result = ReactPage.mergeElement(store.getState(), base, override)
+      const result = mergeElement(store.getState(), base, override)
 
       // Assert
       expect(result).toEqual(merged)

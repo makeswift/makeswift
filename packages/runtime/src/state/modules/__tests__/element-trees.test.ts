@@ -5,10 +5,11 @@ import {
   ElementTreesDemo,
 } from './fixtures/element-trees-demo-component'
 
-import { getPropControllerDescriptors } from '../../react-page'
+import { getPropControllerDescriptors } from '../../read-only-state'
 import { ReactRuntime } from '../../../runtimes/react'
 import { Slot } from '../../../controls'
-import * as Actions from '../../actions/internal'
+import { createElementTree } from '../../actions/internal/read-only-actions'
+import { changeElementTree } from '../../actions/internal/read-write-actions'
 
 describe('traverseElementTree', () => {
   const runtime = new ReactRuntime()
@@ -145,7 +146,7 @@ describe('resetting an element tree', () => {
 
     const initialState = ElementTrees.reducer(
       ElementTrees.getInitialState(),
-      Actions.createElementTree({
+      createElementTree({
         document: oldDocument,
         descriptors,
       }),
@@ -165,7 +166,7 @@ describe('resetting an element tree', () => {
 
     const updatedState = ElementTrees.reducer(
       initialState,
-      Actions.changeElementTree({
+      changeElementTree({
         oldDocument,
         newDocument,
         descriptors,

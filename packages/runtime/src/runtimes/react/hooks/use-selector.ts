@@ -1,10 +1,10 @@
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector'
 
 import { useStore } from './use-store'
-import { State as ReactPageState } from '../../../state/react-page'
-import { State as ReactBuilderPreviewState } from '../../../state/react-builder-preview'
+import { type State as ReadOnlyState } from '../../../state/read-only-state'
+import { type State as ReadWriteState } from '../../../state/read-write-state'
 
-type State = ReactPageState | ReactBuilderPreviewState
+type State = ReadOnlyState | ReadWriteState
 
 export function useSelector<R>(selector: (state: State) => R): R {
   const store = useStore()

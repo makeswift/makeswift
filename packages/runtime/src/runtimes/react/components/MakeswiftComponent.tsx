@@ -6,7 +6,7 @@ import {
   componentDocumentToRootEmbeddedDocument,
   MakeswiftComponentSnapshot,
 } from '../../../client'
-import { getRootElement } from '../../../state/react-page'
+import { getRootElement } from '../../../state/read-only-state'
 
 import { useCacheData } from '../hooks/use-cache-data'
 import { useRegisterDocument } from '../hooks/use-register-document'

@@ -1,8 +1,8 @@
 import { useStore } from './use-store'
-import { Dispatch as ReactPageDispatch } from '../../../state/react-page'
-import { Dispatch as ReactBuilderPreviewDispatch } from '../../../state/react-builder-preview'
+import { type Dispatch as ReadOnlyDispatch } from '../../../state/read-only-state'
+import { type Dispatch as ReadWriteDispatch } from '../../../state/read-write-state'
 
-type Dispatch = ReactPageDispatch & ReactBuilderPreviewDispatch
+type Dispatch = ReadOnlyDispatch & ReadWriteDispatch
 
 export function useDispatch(): Dispatch {
   const store = useStore()

@@ -1,5 +1,6 @@
-import { ElementImperativeHandle } from '../../runtimes/react/element-imperative-handle'
-import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
+import { ElementImperativeHandle } from '../../../runtimes/react/element-imperative-handle'
+import { type Action, type UnknownAction, isKnownAction } from '../../actions'
+import { ReadOnlyActionTypes } from '../../actions/internal/read-only-actions'
 
 export type State = Map<string, Map<string, ElementImperativeHandle>>
 
@@ -17,7 +18,7 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
   if (!isKnownAction(action)) return state
 
   switch (action.type) {
-    case ActionTypes.REGISTER_COMPONENT_HANDLE:
+    case ReadOnlyActionTypes.REGISTER_COMPONENT_HANDLE:
       return new Map(state).set(
         action.payload.documentKey,
         new Map(new Map(state.get(action.payload.documentKey) ?? [])).set(
@@ -26,7 +27,7 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
         ),
       )
 
-    case ActionTypes.UNREGISTER_COMPONENT_HANDLE: {
+    case ReadOnlyActionTypes.UNREGISTER_COMPONENT_HANDLE: {
       const byElementKey = new Map(state.get(action.payload.documentKey) ?? [])
 
       const deleted = byElementKey.delete(action.payload.elementKey)

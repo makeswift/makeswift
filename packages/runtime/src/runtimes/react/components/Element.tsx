@@ -1,7 +1,10 @@
 'use client'
 
 import { forwardRef, memo, Ref, useCallback, useImperativeHandle, useRef, ReactNode } from 'react'
-import { isElementReference, type Element as ElementDataOrRef } from '../../../state/react-page'
+import {
+  isElementReference,
+  type Element as ElementDataOrRef,
+} from '../../../state/read-only-state'
 import { ElementRegistration } from './ElementRegistration'
 import { ElementReference } from './ElementReference'
 import { ElementData } from './ElementData'

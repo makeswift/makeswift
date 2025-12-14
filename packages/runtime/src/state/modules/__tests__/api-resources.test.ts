@@ -1,5 +1,6 @@
 import * as APIResources from '../api-resources'
-import * as Actions from '../../actions/internal'
+import * as Actions from '../../actions/internal/read-only-actions'
+import * as ReadWriteActions from '../../actions/internal/read-write-actions'
 import * as Host from '../../host-api'
 import {
   APIResourceType,
@@ -362,7 +363,7 @@ describe('state / APIResources', () => {
 
     const updatedState = APIResources.reducer(
       state,
-      Actions.updateAPIClientCache({ apiResources, localizedResourcesMap: {} }),
+      ReadWriteActions.updateAPIClientCache({ apiResources, localizedResourcesMap: {} }),
     )
 
     expect(APIResources.getSerializedState(updatedState)).toMatchSnapshot()

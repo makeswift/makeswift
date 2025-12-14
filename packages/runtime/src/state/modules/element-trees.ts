@@ -5,7 +5,10 @@ import { type Element, type ElementData, isElementReference } from '@makeswift/c
 
 import * as Introspection from '../../prop-controllers/introspection'
 
-import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
+import { type Action, type UnknownAction, isKnownAction } from '../actions'
+
+import { ReadOnlyActionTypes } from '../actions/internal/read-only-actions'
+import { ReadWriteActionTypes } from '../actions/internal/read-write-actions'
 
 import { getRootElement, type Document } from './read-only-documents'
 import { type DescriptorsByComponentType } from './prop-controllers'
@@ -55,7 +58,7 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
   if (!isKnownAction(action)) return state
 
   switch (action.type) {
-    case ActionTypes.CREATE_ELEMENT_TREE: {
+    case ReadOnlyActionTypes.CREATE_ELEMENT_TREE: {
       const { document, descriptors } = action.payload
       return new Map(state).set(
         document.key,
@@ -63,13 +66,13 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
       )
     }
 
-    case ActionTypes.DELETE_ELEMENT_TREE: {
+    case ReadOnlyActionTypes.DELETE_ELEMENT_TREE: {
       const nextState = new Map(state)
       const deleted = nextState.delete(action.payload.documentKey)
       return deleted ? nextState : state
     }
 
-    case ActionTypes.CHANGE_ELEMENT_TREE: {
+    case ReadWriteActionTypes.CHANGE_ELEMENT_TREE: {
       const { oldDocument, newDocument, descriptors, operation } = action.payload
       const documentKey = oldDocument.key
       console.assert(
