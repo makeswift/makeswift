@@ -1,4 +1,4 @@
-import { Document, getDocument } from '../../../state/react-page'
+import { Document, getDocument } from '../../../state/read-only-state'
 import { useSelector } from './use-selector'
 
 export function useDocument(documentKey: string): Document | null {

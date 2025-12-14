@@ -1,5 +1,5 @@
 import { ReactRuntimeCore } from '../../runtimes/react/react-runtime-core'
-import { type Element } from '../../state/react-page'
+import { type Element } from '../../state/read-only-state'
 import { type ApiRequest, ApiResponse, type ErrorResponseBody } from '../request-response'
 
 export async function elementTreeHandler(

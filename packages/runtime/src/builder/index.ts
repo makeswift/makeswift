@@ -5,7 +5,7 @@ export * from './host-api'
 
 export { type Operation } from '../state/modules/read-write-documents'
 
-export { createBaseDocument } from '../state/react-page'
+export { createBaseDocument } from '../state/read-only-state'
 
 export type {
   Descriptor as PropControllerDescriptor,

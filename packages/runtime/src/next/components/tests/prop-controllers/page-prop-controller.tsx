@@ -11,7 +11,7 @@ import {
   type Value,
 } from '@makeswift/prop-controllers'
 
-import { type ElementData, type ComponentType } from '../../../../state/react-page'
+import { type ElementData, type ComponentType } from '../../../../state/read-only-state'
 import { randomUUID } from 'crypto'
 
 import { Page } from '../../page'

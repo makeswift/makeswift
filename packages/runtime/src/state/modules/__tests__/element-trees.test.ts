@@ -5,7 +5,7 @@ import {
   ElementTreesDemo,
 } from './fixtures/element-trees-demo-component'
 
-import { getPropControllerDescriptors } from '../../react-page'
+import { getPropControllerDescriptors } from '../../read-only-state'
 import { ReactRuntime } from '../../../runtimes/react'
 import { Slot } from '../../../controls'
 import * as Actions from '../../actions/internal'

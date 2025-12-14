@@ -1,5 +1,5 @@
 import { Ref, forwardRef, memo } from 'react'
-import { type Document as ReactPageDocument, getRootElement } from '../../../state/react-page'
+import { type Document as ReactPageDocument, getRootElement } from '../../../state/read-only-state'
 import { ElementImperativeHandle } from '../element-imperative-handle'
 import { DocumentKeyContext, DocumentLocaleContext } from '../hooks/use-document-context'
 import { Element } from './Element'

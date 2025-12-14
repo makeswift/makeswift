@@ -3,7 +3,7 @@ import {
   type ComponentMeta,
   getReactComponent,
   getComponentMeta,
-} from '../../../state/react-page'
+} from '../../../state/read-only-state'
 import { useSelector } from './use-selector'
 
 export function useComponent(type: string): ComponentType | null {
