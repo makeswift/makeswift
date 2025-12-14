@@ -2,7 +2,7 @@ import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../
 
 export type Point = { x: number; y: number }
 
-type State = {
+export type State = {
   pointer: Point | null
 }
 
