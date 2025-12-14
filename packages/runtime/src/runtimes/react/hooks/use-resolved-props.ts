@@ -23,7 +23,7 @@ function useControlInstances(elementKey: string): Record<string, ControlInstance
   return useSelector(state => {
     if (documentKey == null) return null
 
-    return ReactPage.getPropControllers(state, documentKey, elementKey)
+    return ReactPage.getPropControllers(state, { documentKey, elementKey })
   })
 }
 
