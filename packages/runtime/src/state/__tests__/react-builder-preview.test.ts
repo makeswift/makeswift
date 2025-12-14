@@ -9,7 +9,7 @@ import { registerDocument, unregisterDocument } from '../shared-api'
 import { changeDocument } from '../host-api'
 import { registerComponentHandle } from '../actions/internal'
 
-import { propControllerHandlesMiddleware, reducer } from '../react-builder-preview'
+import { propControllerHandlesMiddleware, createRootReducer } from '../react-builder-preview'
 
 import * as ReactPage from '../react-page'
 
@@ -23,7 +23,7 @@ describe('propControllerHandlesMiddleware', () => {
     const documentKey = 'documentKey'
     const element: ReactPage.Element = { key: 'elementKey', type: 'type', props: {} }
     const store = configureReduxStore({
-      reducer,
+      reducer: createRootReducer(),
       middleware: getDefaultMiddleware =>
         getDefaultMiddleware(middlewareOptions).concat(
           ReactPage.elementTreeMiddleware(),
@@ -50,7 +50,7 @@ describe('propControllerHandlesMiddleware', () => {
     const documentKey = 'documentKey'
     const element: ReactPage.Element = { type: 'reference', key: 'elementKey', value: 'value' }
     const store = configureReduxStore({
-      reducer,
+      reducer: createRootReducer(),
       middleware: getDefaultMiddleware =>
         getDefaultMiddleware(middlewareOptions).concat(propControllerHandlesMiddleware()),
     })
@@ -76,7 +76,7 @@ describe('elementTreeMiddleware', () => {
     const documentKey = 'documentKey'
     const runtime = new ReactRuntime()
     const store = configureReduxStore({
-      reducer,
+      reducer: createRootReducer(),
       preloadedState: runtime.store.getState(),
       middleware: getDefaultMiddleware =>
         getDefaultMiddleware(middlewareOptions).concat(ReactPage.elementTreeMiddleware()),
