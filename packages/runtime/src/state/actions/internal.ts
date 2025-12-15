@@ -6,6 +6,7 @@ import { ControlInstance } from '@makeswift/controls'
 import { ElementImperativeHandle } from '../../runtimes/react/element-imperative-handle'
 
 import { type APIResource, APIResourceType, APIResourceLocale } from '../../api/types'
+import { type SiteVersion } from '../../api/site-version'
 import { type Descriptor as PropControllerDescriptor } from '../../prop-controllers/descriptors'
 
 import { type Measurable } from '../modules/box-models'
@@ -43,6 +44,10 @@ export const InternalActionTypes = {
   UNREGISTER_REACT_COMPONENT: 'UNREGISTER_REACT_COMPONENT',
 
   SET_IS_IN_BUILDER: 'SET_IS_IN_BUILDER',
+  SET_IS_READ_ONLY: 'SET_IS_READ_ONLY',
+  SET_SITE_VERSION: 'SET_SITE_VERSION',
+
+  RESET_LOCALE_STATE: 'RESET_LOCALE_STATE',
 
   UPDATE_API_CLIENT_CACHE: 'UPDATE_API_CLIENT_CACHE',
 } as const
@@ -150,6 +155,20 @@ type SetIsInBuilderAction = {
   payload: boolean
 }
 
+type SetIsReadOnlyAction = {
+  type: typeof InternalActionTypes.SET_IS_READ_ONLY
+  payload: boolean
+}
+
+type SetSiteVersionAction = {
+  type: typeof InternalActionTypes.SET_SITE_VERSION
+  payload: SiteVersion | null
+}
+
+type ResetLocaleStateAction = {
+  type: typeof InternalActionTypes.RESET_LOCALE_STATE
+}
+
 type UpdateAPIClientCache = {
   type: typeof InternalActionTypes.UPDATE_API_CLIENT_CACHE
   payload: APIClientCache
@@ -173,6 +192,9 @@ export type InternalAction =
   | RegisterReactComponentAction
   | UnregisterReactComponentAction
   | SetIsInBuilderAction
+  | SetIsReadOnlyAction
+  | SetSiteVersionAction
+  | ResetLocaleStateAction
   | UpdateAPIClientCache
 
 export function apiResourceFulfilled<T extends APIResourceType>(
@@ -375,6 +397,18 @@ export function registerReactComponentEffect(
 
 export function setIsInBuilder(isInBuilder: boolean): SetIsInBuilderAction {
   return { type: InternalActionTypes.SET_IS_IN_BUILDER, payload: isInBuilder }
+}
+
+export function setIsReadOnly(isReadOnly: boolean): SetIsReadOnlyAction {
+  return { type: InternalActionTypes.SET_IS_READ_ONLY, payload: isReadOnly }
+}
+
+export function setSiteVersion(siteVersion: SiteVersion | null): SetSiteVersionAction {
+  return { type: InternalActionTypes.SET_SITE_VERSION, payload: siteVersion }
+}
+
+export function resetLocaleState(): ResetLocaleStateAction {
+  return { type: InternalActionTypes.RESET_LOCALE_STATE }
 }
 
 export function updateAPIClientCache(payload: APIClientCache): UpdateAPIClientCache {

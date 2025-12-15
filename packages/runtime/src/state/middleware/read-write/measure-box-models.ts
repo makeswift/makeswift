@@ -1,14 +1,14 @@
 import { type Middleware } from '@reduxjs/toolkit'
 
-import * as BoxModels from '../modules/box-models'
-import { type Action } from '../actions'
+import * as BoxModels from '../../modules/box-models'
+import { type Action } from '../../actions'
 
-import { InternalActionTypes } from '../actions/internal'
-import * as Internal from '../actions/internal'
+import { InternalActionTypes } from '../../actions/internal'
+import * as Internal from '../../actions/internal'
 
-import { actionMiddleware } from '../toolkit'
+import { actionMiddleware } from '../../toolkit'
 
-import { type State, type Dispatch } from '../read-write-state'
+import { type State, type Dispatch } from '../../read-write-state'
 
 export function measureBoxModelsMiddleware(): Middleware<Dispatch, State, Dispatch> {
   return actionMiddleware(({ dispatch }) => next => {
