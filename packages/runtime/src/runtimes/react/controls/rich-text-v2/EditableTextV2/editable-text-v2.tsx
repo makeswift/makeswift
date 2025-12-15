@@ -30,7 +30,7 @@ import {
 } from '../../../../../controls/rich-text-v2'
 
 import { useBuilderEditMode } from '../../..'
-import { BuilderEditMode } from '../../../../../state/modules/builder-edit-mode'
+import { BuilderEditMode } from '../../../../../state/modules/read-write/builder-edit-mode'
 import { pollBoxModel } from '../../../poll-box-model'
 import { withBuilder, withLocalChanges } from '../../../../../slate'
 import { useSyncDOMSelection } from './useSyncDOMSelection'

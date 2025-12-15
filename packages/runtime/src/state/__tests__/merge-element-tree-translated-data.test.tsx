@@ -1,6 +1,6 @@
 import { Group, List, Slot, TextInput } from '../../controls'
 
-import { registerComponent } from '../actions/internal'
+import { registerComponent } from '../actions/internal/read-write-actions'
 import * as ReactPage from '../react-page'
 import * as TranslationFixtures from './fixtures/translations'
 import { ComponentIcon } from '../modules/components-meta'

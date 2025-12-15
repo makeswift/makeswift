@@ -1,6 +1,6 @@
 import { Editor } from 'slate'
 
-import { BuilderEditMode } from '../../state/modules/builder-edit-mode'
+import { BuilderEditMode } from '../../state/modules/read-write/builder-edit-mode'
 
 import {
   ControlInstance,

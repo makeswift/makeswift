@@ -1,26 +1,18 @@
 import { type Middleware } from '@reduxjs/toolkit'
 
-import { ActionTypes } from '../actions'
-import { changeElementTree } from '../actions/internal'
+import { HostActionTypes } from '../../host-api'
+import { changeElementTree } from '../../actions/internal/read-write-actions'
 
-import { actionMiddleware } from '../toolkit'
+import { actionMiddleware } from '../../toolkit'
 
-import {
-  type Dispatch,
-  type State,
-  getDocument,
-  getPropControllerDescriptors,
-} from '../read-only-state'
-
-import { readlOnlyElementTreeMiddleware } from './read-only-element-tree'
+import { type Dispatch, type State, getDocument } from '../../read-write-state'
+import { getPropControllerDescriptors } from '../../read-only-state'
 
 export function readWriteElementTreeMiddleware(): Middleware<Dispatch, State, Dispatch> {
-  const readOnlyMiddleware = readlOnlyElementTreeMiddleware()
-
   return actionMiddleware(({ dispatch, getState }) => next => {
     return action => {
       switch (action.type) {
-        case ActionTypes.CHANGE_DOCUMENT: {
+        case HostActionTypes.CHANGE_DOCUMENT: {
           const { documentKey, operation } = action.payload
 
           const oldDocument = getDocument(getState(), documentKey)
@@ -42,7 +34,7 @@ export function readWriteElementTreeMiddleware(): Middleware<Dispatch, State, Di
         }
       }
 
-      return readOnlyMiddleware({ dispatch, getState })(next)(action)
+      return next(action)
     }
   })
 }

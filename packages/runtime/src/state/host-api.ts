@@ -5,8 +5,8 @@ import { type Operation } from 'ot-json0'
 import { type PropControllerMessage } from '../prop-controllers/instances'
 import { type APIResource, APIResourceLocale } from '../api/types'
 
-import { BuilderEditMode } from './modules/builder-edit-mode'
-import { type Point } from './modules/pointer'
+import { BuilderEditMode } from './modules/read-write/builder-edit-mode'
+import { type Point } from './modules/read-write/pointer'
 
 import { type SharedAction, SharedActionTypes } from './shared-api'
 
@@ -73,8 +73,7 @@ type SetBuilderEditModeAction = {
 
 type SetLocalizedResourceIdAction = {
   type: typeof HostActionTypes.SET_LOCALIZED_RESOURCE_ID
-  // TODO: make `locale` required once we've upgraded the builder to always provide it
-  payload: { locale?: string; resourceId: string; localizedResourceId: string | null }
+  payload: { locale: string; resourceId: string; localizedResourceId: string | null }
 }
 
 type BuilderPointerMoveAction = {
@@ -132,12 +131,12 @@ export function messageHostPropController<T>(
 
 export function changeApiResource<R extends APIResource>(
   resource: R,
-  locale?: APIResourceLocale<R>,
+  locale: APIResourceLocale<R>,
 ): ChangeAPIResourceAction {
   return { type: HostActionTypes.CHANGE_API_RESOURCE, payload: { resource, locale } }
 }
 
-export function evictApiResource(id: string, locale?: string | null): EvictAPIResourceAction {
+export function evictApiResource(id: string, locale: string | null): EvictAPIResourceAction {
   return { type: HostActionTypes.EVICT_API_RESOURCE, payload: { id, locale } }
 }
 
@@ -155,7 +154,7 @@ export function setLocalizedResourceId({
 }: {
   resourceId: string
   localizedResourceId: string | null
-  locale?: string
+  locale: string
 }): SetLocalizedResourceIdAction {
   return {
     type: HostActionTypes.SET_LOCALIZED_RESOURCE_ID,

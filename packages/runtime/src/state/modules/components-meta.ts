@@ -1,4 +1,5 @@
-import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
+import { type Action, type UnknownAction, isKnownAction } from '../actions'
+import { ReadOnlyActionTypes } from '../actions/internal/read-only-actions'
 
 export const ComponentIcon = {
   Billing: 'billing',
@@ -55,10 +56,10 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
   if (!isKnownAction(action)) return state
 
   switch (action.type) {
-    case ActionTypes.REGISTER_COMPONENT:
+    case ReadOnlyActionTypes.REGISTER_COMPONENT:
       return new Map(state).set(action.payload.type, action.payload.meta)
 
-    case ActionTypes.UNREGISTER_COMPONENT: {
+    case ReadOnlyActionTypes.UNREGISTER_COMPONENT: {
       const nextState = new Map(state)
 
       const deleted = nextState.delete(action.payload.type)

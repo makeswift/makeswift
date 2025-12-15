@@ -8,7 +8,10 @@ import {
 import deepEqual from '../../utils/deepEqual'
 import { Branded } from '../../utils/branded'
 
-import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
+import { type Action, type UnknownAction, isKnownAction } from '../actions'
+import { ReadOnlyActionTypes } from '../actions/internal/read-only-actions'
+import { ReadWriteActionTypes } from '../actions/internal/read-write-actions'
+import { HostActionTypes } from '../host-api'
 
 type CompositeResourceId = Branded<string, 'CompositeResourceId'>
 
@@ -138,7 +141,7 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
   if (!isKnownAction(action)) return state
 
   switch (action.type) {
-    case ActionTypes.UPDATE_API_CLIENT_CACHE: {
+    case ReadWriteActionTypes.UPDATE_API_CLIENT_CACHE: {
       const { apiResources } = action.payload
 
       return Object.entries(apiResources).reduce((state, [resourceType, cachedResources]) => {
@@ -159,7 +162,7 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
       }, state)
     }
 
-    case ActionTypes.API_RESOURCE_FULFILLED: {
+    case ReadOnlyActionTypes.API_RESOURCE_FULFILLED: {
       const { resourceType, resourceId, resource, locale } = action.payload
       return new Map(state).set(
         resourceType,
@@ -170,7 +173,7 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
       )
     }
 
-    case ActionTypes.CHANGE_API_RESOURCE: {
+    case HostActionTypes.CHANGE_API_RESOURCE: {
       const { resource, locale } = action.payload
       const existingApiResource = getAPIResource(state, resource.__typename, resource.id, locale)
 
@@ -185,7 +188,7 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
       )
     }
 
-    case ActionTypes.EVICT_API_RESOURCE: {
+    case HostActionTypes.EVICT_API_RESOURCE: {
       const { id, locale } = action.payload
       const [resourceType, resourceId] = id.split(':')
 

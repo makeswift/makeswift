@@ -60,17 +60,14 @@ export class MakeswiftHostApiClient {
     uri,
     fetch,
     cacheData,
-    locale,
   }: {
     uri: string
     fetch: MakeswiftApiClient.HttpFetch
     cacheData?: CacheData
-    locale?: string
   }) {
     this.graphqlClient = new GraphQLClient(uri)
     this.makeswiftApiClient = MakeswiftApiClient.configureStore({
       serializedState: cacheData,
-      defaultLocale: locale,
     })
     this.fetch = fetch
     this.subscribe = this.makeswiftApiClient.subscribe

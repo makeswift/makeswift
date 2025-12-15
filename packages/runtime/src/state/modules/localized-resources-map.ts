@@ -1,5 +1,7 @@
 import { mapValues } from '@makeswift/controls'
-import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
+import { type Action, type UnknownAction, isKnownAction } from '../actions'
+import { ReadWriteActionTypes } from '../actions/internal/read-write-actions'
+import { HostActionTypes } from '../host-api'
 
 type State = Map<string, Map<string, string | null>>
 
@@ -33,7 +35,7 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
   if (!isKnownAction(action)) return state
 
   switch (action.type) {
-    case ActionTypes.SET_LOCALIZED_RESOURCE_ID: {
+    case HostActionTypes.SET_LOCALIZED_RESOURCE_ID: {
       const { resourceId, localizedResourceId, locale } = action.payload
 
       if (locale == null) {
@@ -51,7 +53,7 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
       )
     }
 
-    case ActionTypes.UPDATE_API_CLIENT_CACHE: {
+    case ReadWriteActionTypes.UPDATE_API_CLIENT_CACHE: {
       const { localizedResourcesMap } = action.payload
 
       return Object.entries(localizedResourcesMap).reduce((state, [locale, resources]) => {

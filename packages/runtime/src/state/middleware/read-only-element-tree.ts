@@ -1,13 +1,13 @@
 import { type Middleware } from '@reduxjs/toolkit'
 
 import { ActionTypes } from '../actions'
-import { createElementTree, deleteElementTree } from '../actions/internal'
+import { createElementTree, deleteElementTree } from '../actions/internal/read-only-actions'
 
 import { actionMiddleware } from '../toolkit'
 
 import { type Dispatch, type State, getPropControllerDescriptors } from '../read-only-state'
 
-export function readlOnlyElementTreeMiddleware(): Middleware<Dispatch, State, Dispatch> {
+export function readOnlyElementTreeMiddleware(): Middleware<Dispatch, State, Dispatch> {
   return actionMiddleware(({ dispatch, getState }) => next => {
     return action => {
       switch (action.type) {

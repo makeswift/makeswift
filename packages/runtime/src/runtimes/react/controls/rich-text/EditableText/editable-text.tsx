@@ -23,7 +23,7 @@ import { Slate, richTextDTOtoDAO, type RichTextValue } from '@makeswift/controls
 import { useBuilderEditMode } from '../../..'
 import { DescriptorsPropControllers } from '../../../../../prop-controllers/instances'
 import { withBlock, withTypography, withBuilder, onKeyDown } from '../../../../../slate'
-import { BuilderEditMode } from '../../../../../state/modules/builder-edit-mode'
+import { BuilderEditMode } from '../../../../../state/modules/read-write/builder-edit-mode'
 import { PropControllersHandle } from '../../../../../state/modules/prop-controller-handles'
 import { pollBoxModel } from '../../../poll-box-model'
 import { Element, Leaf } from '../components'

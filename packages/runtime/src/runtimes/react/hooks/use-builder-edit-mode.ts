@@ -1,4 +1,4 @@
-import { BuilderEditMode } from '../../../state/modules/builder-edit-mode'
+import { BuilderEditMode } from '../../../state/modules/read-write/builder-edit-mode'
 import { getBuilderEditMode } from '../../../state/read-only-state'
 import { useSelector } from './use-selector'
 

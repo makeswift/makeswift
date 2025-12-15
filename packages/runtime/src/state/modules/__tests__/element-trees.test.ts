@@ -8,7 +8,7 @@ import {
 import { getPropControllerDescriptors } from '../../read-only-state'
 import { ReactRuntime } from '../../../runtimes/react'
 import { Slot } from '../../../controls'
-import * as Actions from '../../actions/internal'
+import * as Actions from '../../actions/internal/read-write-actions'
 
 describe('traverseElementTree', () => {
   const runtime = new ReactRuntime()

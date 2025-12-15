@@ -8,8 +8,8 @@ import { type Action } from '../actions'
 
 import * as Builder from '../builder-api/actions'
 
-import { InternalActionTypes } from '../actions/internal'
-import * as Internal from '../actions/internal'
+import { ReadOnlyActionTypes } from '../actions/internal/read-only-actions'
+import * as ReadOnly from '../actions/internal/read-only-actions'
 
 import { actionMiddleware } from '../toolkit'
 
@@ -45,7 +45,7 @@ function createAndRegisterPropControllers(
       {} as Record<string, ControlInstance>,
     )
 
-    dispatch(Internal.registerPropControllers(documentKey, elementKey, propControllers))
+    dispatch(ReadOnly.registerPropControllers(documentKey, elementKey, propControllers))
 
     return propControllers
   }
@@ -55,7 +55,7 @@ export function propControllerHandlesMiddleware(): Middleware<Dispatch, State, D
   return actionMiddleware(({ dispatch, getState }) => next => {
     return (action: Action) => {
       switch (action.type) {
-        case InternalActionTypes.REGISTER_COMPONENT_HANDLE: {
+        case ReadOnlyActionTypes.REGISTER_COMPONENT_HANDLE: {
           const { documentKey, elementKey, componentHandle } = action.payload
           const element = ReadOnlyState.getElement(getState(), documentKey, elementKey)
           const propControllers = dispatch(
@@ -68,7 +68,7 @@ export function propControllerHandlesMiddleware(): Middleware<Dispatch, State, D
             PropControllerHandles.isPropControllersHandle(componentHandle)
           ) {
             dispatch(
-              Internal.registerPropControllersHandle(documentKey, elementKey, componentHandle),
+              ReadOnly.registerPropControllersHandle(documentKey, elementKey, componentHandle),
             )
             componentHandle.setPropControllers(propControllers)
           }
@@ -76,7 +76,7 @@ export function propControllerHandlesMiddleware(): Middleware<Dispatch, State, D
           break
         }
 
-        case InternalActionTypes.UNREGISTER_COMPONENT_HANDLE: {
+        case ReadOnlyActionTypes.UNREGISTER_COMPONENT_HANDLE: {
           const { documentKey, elementKey } = action.payload
           const handle = ReadOnlyState.getPropControllersHandle(getState(), {
             documentKey,
@@ -85,7 +85,7 @@ export function propControllerHandlesMiddleware(): Middleware<Dispatch, State, D
 
           handle?.setPropControllers(null)
 
-          dispatch(Internal.unregisterPropControllers(documentKey, elementKey))
+          dispatch(ReadOnly.unregisterPropControllers(documentKey, elementKey))
 
           break
         }

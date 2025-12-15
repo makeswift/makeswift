@@ -7,11 +7,11 @@ import { middlewareOptions } from '../toolkit'
 
 import { registerDocument, unregisterDocument } from '../shared-api'
 import { changeDocument } from '../host-api'
-import { registerComponentHandle } from '../actions/internal'
+import { registerComponentHandle } from '../actions/internal/read-write-actions'
 
 import { createRootReducer } from '../read-write-state'
 import { propControllerHandlesMiddleware } from '../middleware/prop-controller-handles'
-import { readWriteElementTreeMiddleware } from '../middleware/read-write-element-tree'
+import { readWriteElementTreeMiddleware } from '../middleware/read-write/read-write-element-tree'
 
 import * as State from '../read-only-state'
 

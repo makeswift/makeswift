@@ -1,8 +1,8 @@
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector'
 
 import { useStore } from './use-store'
-import { State as ReadOnlyState } from '../../../state/read-only-state'
-import { State as ReadWriteState } from '../../../state/read-write-state'
+import { type State as ReadOnlyState } from '../../../state/read-only-state'
+import { type State as ReadWriteState } from '../../../state/read-write-state'
 
 type State = ReadOnlyState | ReadWriteState
 

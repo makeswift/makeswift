@@ -5,6 +5,8 @@ import { type LocaleString, localeStringSchema } from '../locale'
 import { type Breakpoints } from './modules/breakpoints'
 import { type Element, type Document, EMBEDDED_DOCUMENT_TYPE } from './modules/read-only-documents'
 
+import { type BoxModel } from './modules/read-write/box-models'
+
 type DocumentPayloadBaseDocument = {
   key: string
   rootElement: Element
@@ -30,6 +32,8 @@ export const SharedActionTypes = {
   REGISTER_DOCUMENT: 'REGISTER_DOCUMENT',
   UNREGISTER_DOCUMENT: 'UNREGISTER_DOCUMENT',
 
+  CHANGE_ELEMENT_BOX_MODELS: 'CHANGE_ELEMENT_BOX_MODELS',
+
   SET_BREAKPOINTS: 'SET_BREAKPOINTS',
   SET_LOCALE: 'SET_LOCALE',
 } as const
@@ -46,6 +50,11 @@ type UnregisterDocumentAction = {
   payload: { documentKey: string }
 }
 
+type ChangeElementBoxModelsAction = {
+  type: typeof SharedActionTypes.CHANGE_ELEMENT_BOX_MODELS
+  payload: { changedElementBoxModels: Map<string, Map<string, BoxModel | null>> }
+}
+
 export type SetBreakpointsAction = {
   type: typeof SharedActionTypes.SET_BREAKPOINTS
   payload: { breakpoints: Breakpoints }
@@ -60,6 +69,7 @@ export type SharedAction =
   | MakeswiftConnectionInitAction
   | RegisterDocumentAction
   | UnregisterDocumentAction
+  | ChangeElementBoxModelsAction
   | SetBreakpointsAction
   | SetLocaleAction
 
@@ -78,6 +88,15 @@ export function registerDocument(document: Document): RegisterDocumentAction {
 
 export function unregisterDocument(documentKey: string): UnregisterDocumentAction {
   return { type: SharedActionTypes.UNREGISTER_DOCUMENT, payload: { documentKey } }
+}
+
+export function changeElementBoxModels(
+  changedElementBoxModels: Map<string, Map<string, BoxModel | null>>,
+): ChangeElementBoxModelsAction {
+  return {
+    type: SharedActionTypes.CHANGE_ELEMENT_BOX_MODELS,
+    payload: { changedElementBoxModels },
+  }
 }
 
 export function registerDocumentsEffect(

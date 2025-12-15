@@ -37,10 +37,8 @@ async function requestedSiteVersion({
 }
 
 export function createPreviewMiddleware<E extends Env>({
-  apiOrigin,
   runtime,
 }: {
-  apiOrigin?: string
   runtime: ReactRuntime
 }): MiddlewareHandler {
   return async function apiHandler(c: Context<E>, next: Next): Promise<Response | void> {
@@ -54,7 +52,7 @@ export function createPreviewMiddleware<E extends Env>({
     }
 
     const apiKey = env(c).MAKESWIFT_SITE_API_KEY
-    const client = new MakeswiftClient(apiKey, { apiOrigin, runtime })
+    const client = new MakeswiftClient(apiKey, { runtime })
 
     const siteVersion = await requestedSiteVersion({ searchParams, client })
     if (siteVersion == null) return next()
