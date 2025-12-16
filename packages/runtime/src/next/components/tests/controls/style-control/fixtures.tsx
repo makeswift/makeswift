@@ -22,6 +22,40 @@ export const value: ValueType<StyleDefinition> = {
   ],
 }
 
+export const valueWithFontFamily: ValueType<StyleDefinition> = {
+  width: [{ deviceId: 'desktop', value: { value: 100, unit: '%' } }],
+  textStyle: [
+    {
+      deviceId: 'desktop',
+      value: {
+        fontFamily: 'Arial',
+        letterSpacing: null,
+        fontSize: null,
+        fontWeight: null,
+        textTransform: [],
+        fontStyle: [],
+      },
+    },
+  ],
+}
+
+export const valueWithCSSVariableFontFamily: ValueType<StyleDefinition> = {
+  width: [{ deviceId: 'desktop', value: { value: 100, unit: '%' } }],
+  textStyle: [
+    {
+      deviceId: 'desktop',
+      value: {
+        fontFamily: 'var(--font-heading)',
+        letterSpacing: null,
+        fontSize: null,
+        fontWeight: null,
+        textTransform: [],
+        fontStyle: [],
+      },
+    },
+  ],
+}
+
 export const registerComponents = (runtime: ReactRuntime) => {
   runtime.registerComponent(Button, {
     type: MakeswiftComponentType.Button,
