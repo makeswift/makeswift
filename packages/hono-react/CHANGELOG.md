@@ -1,5 +1,11 @@
 # @makeswift/hono-react
 
+## 0.0.5-canary.0
+
+### Patch Changes
+
+- 9b9f80d: Add `apiKey` as parameter to API handler and preview middleware.
+
 ## 0.0.4
 
 ### Patch Changes
