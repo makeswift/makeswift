@@ -1,6 +1,5 @@
 import { type Context, type MiddlewareHandler, type Next } from 'hono'
 import { setCookie } from 'hono/cookie'
-import { env } from 'hono/adapter'
 
 import {
   type SiteVersion,
@@ -37,11 +36,13 @@ async function requestedSiteVersion({
 }
 
 export function createPreviewMiddleware<E extends Env>({
-  apiOrigin,
+  apiKey,
   runtime,
+  apiOrigin,
 }: {
-  apiOrigin?: string
+  apiKey: string
   runtime: ReactRuntime
+  apiOrigin?: string
 }): MiddlewareHandler {
   return async function apiHandler(c: Context<E>, next: Next): Promise<Response | void> {
     const { pathname, searchParams } = new URL(c.req.url, `https://example.com`)
@@ -53,7 +54,6 @@ export function createPreviewMiddleware<E extends Env>({
       })
     }
 
-    const apiKey = env(c).MAKESWIFT_SITE_API_KEY
     const client = new MakeswiftClient(apiKey, { apiOrigin, runtime })
 
     const siteVersion = await requestedSiteVersion({ searchParams, client })
