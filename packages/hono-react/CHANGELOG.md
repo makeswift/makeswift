@@ -1,6 +1,6 @@
 # @makeswift/hono-react
 
-## 0.0.5-canary.0
+## 0.0.5
 
 ### Patch Changes
 
