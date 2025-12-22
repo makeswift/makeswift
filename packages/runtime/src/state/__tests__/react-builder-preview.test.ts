@@ -10,8 +10,8 @@ import { changeDocument } from '../host-api'
 import { registerComponentHandle } from '../actions/internal'
 
 import { createRootReducer } from '../read-write-state'
-import { propControllerHandlesMiddleware } from '../middleware/prop-controller-handles'
-import { readWriteElementTreeMiddleware } from '../middleware/read-write-element-tree'
+import { propControllerHandlesMiddleware } from '../middleware/read-write/prop-controller-handles'
+import { readWriteElementTreeMiddleware } from '../middleware/read-write/read-write-element-tree'
 
 import * as State from '../read-only-state'
 

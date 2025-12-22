@@ -6,7 +6,7 @@ import {
   RichTextV2Definition,
   RichTextDataV2,
 } from '../../../../controls/rich-text-v2'
-import { useIsPreview } from '../../../react/hooks/use-is-preview'
+import { useIsReadOnly } from '../../hooks/use-is-read-only'
 
 export type RichTextV2ControlValue = ReactNode
 
@@ -38,9 +38,9 @@ function RichTextV2({
   definition: RichTextV2Definition
   control: RichTextV2Control | null
 }) {
-  return useIsPreview() ? (
-    <EditableText text={data} definition={definition} control={control} />
-  ) : (
+  return useIsReadOnly() ? (
     <ReadOnlyText text={data} definition={definition} />
+  ) : (
+    <EditableText text={data} definition={definition} control={control} />
   )
 }

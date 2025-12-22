@@ -18,7 +18,6 @@ type UserConfig = ApiHandlerUserConfig & {
 }
 
 export function createApiHandler<E extends Env>({
-  apiOrigin,
   runtime,
   revalidationHandler,
   ...userConfig
@@ -30,7 +29,7 @@ export function createApiHandler<E extends Env>({
 
     const route = `/${c.req.path.replace(API_PATH_PREFIX, '')}`
     const apiKey = env(c).MAKESWIFT_SITE_API_KEY
-    const client = new MakeswiftClient(apiKey, { apiOrigin, runtime })
+    const client = new MakeswiftClient(apiKey, { runtime })
 
     const apiHandler = createMakeswiftApiHandler(apiKey, {
       ...userConfig,

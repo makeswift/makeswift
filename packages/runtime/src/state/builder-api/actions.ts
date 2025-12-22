@@ -7,7 +7,7 @@ import { type Document } from '../modules/read-only-documents'
 import { type BoxModel } from '../modules/box-models'
 import { type ComponentMeta } from '../modules/components-meta'
 
-import { type ElementSize } from '../builder-preview/element-size'
+import { type ElementSize } from '../middleware/read-write/builder-api/element-size'
 import { type DocumentPayload, type SharedAction, SharedActionTypes } from '../shared-api'
 
 export const BuilderActionTypes = {

@@ -2,22 +2,22 @@ import { type Middleware, type ThunkAction } from '@reduxjs/toolkit'
 
 import { ControlInstance } from '@makeswift/controls'
 
-import * as PropControllerHandles from '../modules/prop-controller-handles'
+import * as PropControllerHandles from '../../modules/prop-controller-handles'
 
-import { type Action } from '../actions'
+import { type Action } from '../../actions'
 
-import * as Builder from '../builder-api/actions'
+import * as Builder from '../../builder-api/actions'
 
-import { InternalActionTypes } from '../actions/internal'
-import * as Internal from '../actions/internal'
+import { InternalActionTypes } from '../../actions/internal'
+import * as Internal from '../../actions/internal'
 
-import { actionMiddleware } from '../toolkit'
+import { actionMiddleware } from '../../toolkit'
 
-import { createPropController } from '../../prop-controllers/instances'
-import { HostActionTypes } from '../host-api'
+import { createPropController } from '../../../prop-controllers/instances'
+import { HostActionTypes } from '../../host-api'
 
-import * as ReadOnlyState from '../read-only-state'
-import { type State, type Dispatch } from '../read-write-state'
+import * as ReadOnlyState from '../../read-only-state'
+import { type State, type Dispatch } from '../../read-write-state'
 
 function createAndRegisterPropControllers(
   documentKey: string,

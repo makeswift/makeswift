@@ -1,20 +1,20 @@
 import { type ThunkAction } from '@reduxjs/toolkit'
 
-import deepEqual from '../../utils/deepEqual'
+import deepEqual from '../../../../utils/deepEqual'
 
-import * as BoxModels from '../modules/box-models'
-import * as BuilderEditMode from '../modules/builder-edit-mode'
+import * as BoxModels from '../../../modules/box-models'
+import * as BuilderEditMode from '../../../modules/builder-edit-mode'
 
-import { type Action } from '../actions'
+import { type Action } from '../../../actions'
 
-import * as Internal from '../actions/internal'
-import * as Builder from '../builder-api/actions'
-import * as Shared from '../shared-api'
+import * as Internal from '../../../actions/internal'
+import * as Builder from '../../../builder-api/actions'
+import * as Shared from '../../../shared-api'
 
-import { serializeControls } from '../../builder'
-import { type BuilderAPIProxy } from '../builder-api/proxy'
+import { serializeControls } from '../../../../builder'
+import { type BuilderAPIProxy } from '../../../builder-api/proxy'
 
-import * as ReadOnlyState from '../read-only-state'
+import * as ReadOnlyState from '../../../read-only-state'
 import {
   type State,
   getDocuments,
@@ -23,7 +23,7 @@ import {
   getBoxModel,
   getElementImperativeHandlesContainingElement,
   getPointer,
-} from '../read-write-state'
+} from '../../../read-write-state'
 
 import { type ElementSize, getElementSize } from './element-size'
 
@@ -295,7 +295,7 @@ function registerBuilderDocuments(): ThunkAction<() => void, State, unknown, Act
   }
 }
 
-export function initializeBuilderPreview(
+export function initializeBuilderConnection(
   builderProxy: BuilderAPIProxy,
 ): ThunkAction<() => void, State, unknown, Action> {
   return (dispatch, getState) => {

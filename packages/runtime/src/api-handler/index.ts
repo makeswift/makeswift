@@ -67,7 +67,6 @@ export function createApiHandler(
   apiKey: string,
   {
     runtime,
-    appOrigin = 'https://app.makeswift.com',
     getFonts,
     events,
     client,
@@ -90,7 +89,7 @@ export function createApiHandler(
         : new Response(null, { status: 204, headers: [['Content-Length', '0']] })
 
     applyCorsHeaders(res.headers, {
-      origin: appOrigin,
+      origin: runtime.appOrigin.toString(),
       allowedHeaders: ['Content-Type', 'Authorization'],
     })
 

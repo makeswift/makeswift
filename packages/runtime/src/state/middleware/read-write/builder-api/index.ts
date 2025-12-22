@@ -1,16 +1,16 @@
 import { type Middleware } from '@reduxjs/toolkit'
 
-import { type Action } from '../actions'
+import { type Action } from '../../../actions'
 
-import { BuilderActionTypes } from '../builder-api/actions'
+import { BuilderActionTypes } from '../../../builder-api/actions'
 
-import { actionMiddleware } from '../toolkit'
+import { actionMiddleware } from '../../../toolkit'
 
-import { type BuilderAPIProxy } from '../builder-api/proxy'
-import { HostActionTypes } from '../host-api'
+import { type BuilderAPIProxy } from '../../../builder-api/proxy'
+import { HostActionTypes } from '../../../host-api'
 
-import { type State, type Dispatch } from '../read-write-state'
-import { initializeBuilderPreview } from '../builder-preview/initialize-preview'
+import { type State, type Dispatch } from '../../../read-write-state'
+import { initializeBuilderConnection } from './initialize-connection'
 
 export function builderAPIMiddleware(
   builderProxy: BuilderAPIProxy,
@@ -52,7 +52,7 @@ export function builderAPIMiddleware(
 
         case HostActionTypes.INIT:
           // dispatched by the parent window after establishing the connection
-          cleanUp = dispatch(initializeBuilderPreview(builderProxy))
+          cleanUp = dispatch(initializeBuilderConnection(builderProxy))
           break
 
         case HostActionTypes.CLEAN_UP:
