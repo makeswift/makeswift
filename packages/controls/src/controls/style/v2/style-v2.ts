@@ -13,7 +13,6 @@ import { responsiveValue } from '../../../common/schema'
 import { type CopyContext } from '../../../context'
 import { type IntrospectionTarget } from '../../../introspection'
 import { type ResourceResolver } from '../../../resources/resolver'
-import { type SerializedRecord } from '../../../serialization'
 import { type Stylesheet } from '../../../stylesheet'
 import {
   type DataType as DataType_,
@@ -22,12 +21,12 @@ import {
 } from '../../associated-types'
 import {
   ControlDefinition,
-  serialize,
   type Resolvable,
   type SchemaType,
   type SchemaTypeAny,
 } from '../../definition'
 import { type SendMessage } from '../../instance'
+import { ControlDefinitionVisitor } from '../../visitor'
 
 import { StyleV2Control } from './style-v2-control'
 
@@ -200,10 +199,8 @@ class Definition<
     return new StyleV2Control(this.typeDef, sendMessage)
   }
 
-  serialize(): [SerializedRecord, Transferable[]] {
-    return serialize(this.config, {
-      type: Definition.type,
-    })
+  accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
+    return visitor.visitStyleV2(this, ...args)
   }
 
   introspect<R>(

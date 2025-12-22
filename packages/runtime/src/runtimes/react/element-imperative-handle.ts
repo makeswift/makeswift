@@ -1,4 +1,5 @@
-import { BoxModel, BoxModelHandle } from '../../box-model'
+import { BoxModel } from '@makeswift/controls'
+import { BoxModelHandle } from '../../state/modules/box-models'
 import { Descriptor } from '../../prop-controllers/descriptors'
 import { DescriptorsPropControllers } from '../../prop-controllers/instances'
 import { isMeasurable, measure } from '../../state/modules/box-models'

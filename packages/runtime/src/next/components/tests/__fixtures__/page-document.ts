@@ -1,5 +1,5 @@
 import { type MakeswiftPageDocument } from '../../../../client'
-import { MakeswiftComponentType } from '../../../../components'
+import { MakeswiftComponentType } from '../../../../components/builtin/constants'
 
 export const pageDocument: MakeswiftPageDocument = {
   id: '2222-2222-2222-2222',

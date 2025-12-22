@@ -4,6 +4,7 @@ import { RichText } from '../rich-text-v2'
 import * as Simple from './fixtures/simple'
 import * as SubSupCode from './fixtures/rearranged'
 import * as NestedParagraphEdgeCase from './fixtures/nested-paragraph-edge-case-3728'
+import { ReactMergeTranslationsVisitor } from '../../visitors/merge-translations-visitor'
 
 describe('GIVEN merging translations for RichTextV2', () => {
   const mergeContext: MergeTranslatableDataContext = {
@@ -11,21 +12,19 @@ describe('GIVEN merging translations for RichTextV2', () => {
     mergeTranslatedData: element => element,
   }
 
+  const visitor = new ReactMergeTranslationsVisitor(mergeContext)
+
   test('WHEN merging simple strings THEN correct string is returned', () => {
-    const result = RichText().mergeTranslatedData(
-      Simple.sourceElementTree,
-      Simple.translatedData,
-      mergeContext,
-    )
+    const result = RichText().accept(visitor, Simple.sourceElementTree, Simple.translatedData)
 
     expect(result).toEqual(Simple.targetElementTree)
   })
 
   test('WHEN merging rearranged strings THEN correct string is returned', () => {
-    const result = RichText().mergeTranslatedData(
+    const result = RichText().accept(
+      visitor,
       SubSupCode.sourceElementTree,
       SubSupCode.translatedData,
-      mergeContext,
     )
 
     expect(result).toEqual(SubSupCode.targetElementTree)

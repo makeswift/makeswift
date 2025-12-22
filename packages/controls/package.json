@@ -1,7 +1,11 @@
 {
   "name": "@makeswift/controls",
-  "version": "0.1.12",
+  "version": "0.1.16",
   "license": "MIT",
+  "repository": {
+    "url": "makeswift/makeswift",
+    "directory": "packages/controls"
+  },
   "files": [
     "dist"
   ],
@@ -13,7 +17,8 @@
     "clean": "rm -rf dist",
     "build": "tsc && tsup",
     "format": "prettier --write .",
-    "prepublishOnly": "turbo run build",
+    "checkEmptyFiles": "EMPTY=$(find dist -type f -empty); if [ -n \"$EMPTY\" ]; then echo \"Error: Empty files found in dist:\"; echo \"$EMPTY\"; exit 1; else echo \"No empty files in dist\"; fi",
+    "prepublishOnly": "turbo run build --force && pnpm checkEmptyFiles",
     "test": "jest",
     "test:updateSnapshot": "jest --updateSnapshot"
   },

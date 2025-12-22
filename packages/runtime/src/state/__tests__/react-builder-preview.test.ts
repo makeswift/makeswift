@@ -5,12 +5,10 @@ import { ReactRuntime } from '../../runtimes/react'
 
 import { middlewareOptions } from '../toolkit'
 
-import {
-  changeDocument,
-  registerComponentHandle,
-  registerDocument,
-  unregisterDocument,
-} from '../actions'
+import { registerDocument, unregisterDocument } from '../shared-api'
+import { changeDocument } from '../host-api'
+import { registerComponentHandle } from '../actions/internal'
+
 import { propControllerHandlesMiddleware, reducer } from '../react-builder-preview'
 
 import * as ReactPage from '../react-page'

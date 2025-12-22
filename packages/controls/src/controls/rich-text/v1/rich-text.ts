@@ -1,12 +1,13 @@
 import { Selection } from 'slate'
 import { z } from 'zod'
 
+import { safeParse, type ParseResult } from '../../../lib/zod'
+
 import { type CopyContext } from '../../../context'
 import { type IntrospectionTarget } from '../../../introspection'
-import { safeParse, type ParseResult } from '../../../lib/zod'
-import { type SerializedRecord } from '../../../serialization'
-import { ControlDefinition, serialize, type SchemaType } from '../../definition'
+import { ControlDefinition, type SchemaType } from '../../definition'
 import { ControlInstance } from '../../instance'
+import { ControlDefinitionVisitor } from '../../visitor'
 
 import {
   DTOSchema,
@@ -90,10 +91,8 @@ abstract class Definition<
     return copyRichTextData(data, context)
   }
 
-  serialize(): [SerializedRecord, Transferable[]] {
-    return serialize(this.config, {
-      type: Definition.type,
-    })
+  accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
+    return visitor.visitRichTextV1(this, ...args)
   }
 
   introspect<R>(

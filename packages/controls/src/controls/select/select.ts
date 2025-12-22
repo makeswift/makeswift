@@ -4,18 +4,15 @@ import { map } from '../../lib/functional'
 import { safeParse, unionOfLiterals, type ParseResult } from '../../lib/zod'
 
 import { type CopyContext } from '../../context'
-import {
-  type DeserializedRecord,
-  type SerializedRecord,
-} from '../../serialization'
+import { type DeserializedRecord } from '../../serialization'
 
 import {
   ControlDefinition,
-  serialize,
   type Resolvable,
   type SchemaType,
 } from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
+import { ControlDefinitionVisitor } from '../visitor'
 
 type Option<T extends string> = { readonly value: T; readonly label: string }
 type OptionList<T extends string> = readonly [Option<T>, ...Option<T>[]]
@@ -164,10 +161,8 @@ class Definition<C extends Config> extends ControlDefinition<
     return new DefaultControlInstance(sendMessage)
   }
 
-  serialize(): [SerializedRecord, Transferable[]] {
-    return serialize(this.config, {
-      type: Definition.type,
-    })
+  accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
+    return visitor.visitSelect(this, ...args)
   }
 }
 
@@ -200,3 +195,4 @@ export function Select<
 ): SelectDefinition<NormedConfig<T, D>> {
   return new SelectDefinition(config as NormedConfig<T, D>)
 }
+export { type Config as SelectConfig }

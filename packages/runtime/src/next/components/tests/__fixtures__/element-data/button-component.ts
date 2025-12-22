@@ -1,7 +1,7 @@
 import { type ElementData } from '@makeswift/controls'
 import { LinkData } from '@makeswift/prop-controllers'
 
-import { MakeswiftComponentType } from '../../../../../components'
+import { MakeswiftComponentType } from '../../../../../components/builtin/constants'
 
 export const buttonComponentData = ({
   htmlId,

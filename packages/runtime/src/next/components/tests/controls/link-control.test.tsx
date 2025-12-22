@@ -4,7 +4,7 @@ import { testPageControlPropRendering } from './page-control-prop-rendering'
 import { APIResourceType } from '../../../../api'
 import { http, HttpResponse } from 'msw'
 import { server } from '../../../../mocks/server'
-import { MakeswiftComponentType } from '../../../../components'
+import { MakeswiftComponentType } from '../../../../components/builtin/constants'
 import { ElementID } from '@makeswift/prop-controllers'
 import { ReactRuntime } from '../../../../react'
 

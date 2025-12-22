@@ -1,34 +1,14 @@
 import { Suspense, useMemo, memo, type ComponentProps } from 'react'
 
-import { useDispatch } from '../../hooks/use-dispatch'
-import { useUniversalDispatch } from '../../hooks/use-universal-dispatch'
 import { useCacheData } from '../../hooks/use-cache-data'
 
-import {
-  type MakeswiftPageSnapshot,
-  type MakeswiftPageDocument,
-  pageToRootDocument,
-} from '../../../../client'
-
-import * as ReactPage from '../../../../state/react-page'
-import { registerDocumentsEffect } from '../../../../state/actions'
+import { type MakeswiftPageSnapshot, pageToRootDocument } from '../../../../client'
 
 import { type PageMetadataSettings } from './page-seo-settings'
 import { Page as PageComponent } from './Page'
+import { useRegisterDocument } from '../../hooks/use-register-document'
 
 export { type PageMetadataSettings } from './page-seo-settings'
-
-function useRegisterPageDocument(pageDocument: MakeswiftPageDocument): ReactPage.Document {
-  const dispatch = useDispatch()
-  const rootDocuments: [ReactPage.Document] = useMemo(
-    () => [pageToRootDocument(pageDocument)],
-    [pageDocument],
-  )
-
-  useUniversalDispatch(dispatch, registerDocumentsEffect, [rootDocuments])
-
-  return rootDocuments[0]
-}
 
 /**
  * @param snapshot - The snapshot of the page to render, from
@@ -58,7 +38,8 @@ export const Page = memo(
   }) => {
     useCacheData(snapshot.cacheData)
 
-    const rootDocument = useRegisterPageDocument(snapshot.document)
+    const rootDocument = useMemo(() => pageToRootDocument(snapshot.document), [snapshot.document])
+    useRegisterDocument(rootDocument)
 
     return (
       <Suspense>

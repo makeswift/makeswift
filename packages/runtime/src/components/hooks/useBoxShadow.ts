@@ -1,6 +1,6 @@
 import { isNonNullable } from '../utils/isNonNullable'
 import type { ColorValue as Color } from '../utils/types'
-import type { ResponsiveValue } from '../../prop-controllers'
+import { type ResponsiveValue } from '@makeswift/controls'
 import { useSwatches } from '../../runtimes/react/hooks/makeswift-api'
 import {
   ShadowsPropControllerData,

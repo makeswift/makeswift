@@ -6,16 +6,12 @@ import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
 import { type Data } from '../../common'
-import {
-  type CopyContext,
-  type MergeTranslatableDataContext,
-} from '../../context'
+import { type CopyContext } from '../../context'
 import { type IntrospectionTarget } from '../../introspection'
 import { type ResourceResolver } from '../../resources/resolver'
 import {
   SerializationSchema,
   type DeserializedRecord,
-  type SerializedRecord,
 } from '../../serialization'
 import { type Stylesheet } from '../../stylesheet'
 
@@ -26,12 +22,12 @@ import {
 } from '../associated-types'
 import {
   ControlDefinition,
-  serialize,
   type Resolvable,
   type SchemaType,
   type SchemaTypeAny,
 } from '../definition'
 import { type SendMessage } from '../instance'
+import { ControlDefinitionVisitor } from '../visitor'
 
 import { ListControl } from './list-control'
 
@@ -61,7 +57,7 @@ type ItemType<C extends Config> = C extends Config<infer Item> ? Item : never
 type DataType<C extends Config> = {
   id: string
   type?: string
-  value: DataType_<ItemType<C>>
+  value?: DataType_<ItemType<C>>
 }[]
 
 type ValueType<C extends Config> = ValueType_<ItemType<C>>[]
@@ -127,7 +123,7 @@ class Definition<C extends Config> extends ControlDefinition<
       z.object({
         id: z.string(),
         type: item.type.optional(),
-        value: item.data,
+        value: item.data.optional(),
       }),
     ) as SchemaType<DataType<C>>
 
@@ -170,7 +166,7 @@ class Definition<C extends Config> extends ControlDefinition<
     }))
   }
 
-  getTranslatableData(data: DataType<C>): Data {
+  getTranslatableData(data: DataType<C> | undefined): Data {
     if (data == null) return null
     return Object.fromEntries(
       data.map((item) => [
@@ -178,24 +174,6 @@ class Definition<C extends Config> extends ControlDefinition<
         this.itemDef.getTranslatableData(item.value),
       ]),
     )
-  }
-
-  mergeTranslatedData(
-    data: DataType<C>,
-    translatedData: Record<string, DataType<C>>,
-    context: MergeTranslatableDataContext,
-  ): Data {
-    if (translatedData == null) return data
-    return data.map((item) => {
-      return {
-        ...item,
-        value: this.itemDef.mergeTranslatedData(
-          item.value,
-          translatedData[item.id],
-          context,
-        ),
-      }
-    })
   }
 
   resolveValue(
@@ -242,16 +220,14 @@ class Definition<C extends Config> extends ControlDefinition<
     return new ListControl(this, sendMessage)
   }
 
-  serialize(): [SerializedRecord, Transferable[]] {
-    return serialize(this.config, {
-      type: Definition.type,
-    })
-  }
-
   introspect<R>(data: DataType<C> | undefined, target: IntrospectionTarget<R>) {
     return (
       data?.flatMap((item) => this.itemDef.introspect(item.value, target)) ?? []
     )
+  }
+
+  accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
+    return visitor.visitList(this, ...args)
   }
 }
 

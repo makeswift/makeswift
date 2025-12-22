@@ -1,0 +1,5 @@
+{
+  "main": "../../dist/cjs/react/builtins/navigation.js",
+  "module": "../../dist/esm/react/builtins/navigation.js",
+  "types": "../../dist/types/react/builtins/navigation.d.ts"
+}

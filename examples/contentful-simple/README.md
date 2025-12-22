@@ -29,28 +29,11 @@ contentful-simple/
 └── env.ts                        # Environment variable validation
 ```
 
-## Quick Start
+## Getting started
 
-### 1. Clone the repository
+### 1. Set up your content model in Contentful
 
-```bash
-   npx makeswift@latest init --example=contentful-simple
-```
-
-### 2. Configure environment variables
-
-Create a `.env.local` file and add your credentials:
-
-```
-MAKESWIFT_SITE_API_KEY=your_makeswift_api_key
-CONTENTFUL_SPACE_ID=your_space_id
-CONTENTFUL_ACCESS_TOKEN=your_access_token
-NEXT_PUBLIC_SITE_URL=your_site_url
-```
-
-### 3. Set up your content model in Contentful
-
-To get started with blog posts, you'll need to set up a content model in Contentful. Here's what how we did it:
+To get started with blog posts, you'll need to set up a content model in Contentful. Here's how we did it:
 
 **Create a new content type called "Author" with the following fields:**
 
@@ -72,19 +55,46 @@ To get started with blog posts, you'll need to set up a content model in Content
 
 Be sure to add a few blog posts for testing purposes, and connect them to an author.
 
-### 4. Generate TypeScript types
+### 2. Clone our example with the Makeswift CLI
 
 ```bash
-npm run codegen-ts
+npx makeswift@latest init --example=contentful-simple
 ```
 
-This command watches for changes and regenerates types automatically.
+### 3. Configure environment variables
 
-### 6. Run the development server
+Here is how your `.env.local` should look once setup is finished:
+
+```
+MAKESWIFT_SITE_API_KEY=your_makeswift_api_key
+CONTENTFUL_SPACE_ID=your_space_id
+CONTENTFUL_ACCESS_TOKEN=your_access_token
+NEXT_PUBLIC_SITE_URL=your_site_url
+```
+
+**MAKESWIFT_SITE_API_KEY**: Automatically applied, found in your Makeswift site settings
+
+You will be prompted for:
+
+**CONTENTFUL_SPACE_ID**: Your Contentful space ID (found in your space settings)
+**CONTENTFUL_ACCESS_TOKEN**: Content Delivery API access token (found in **Settings** → **API keys** in your Contentful space)
+**NEXT_PUBLIC_SITE_URL**: Your site's base URL used for generating links (e.g., `http://localhost:3000` for local development)
+
+The CLI should start up your development environment automatically, but if you need to run the server manually use:
 
 ```bash
-npm dev
+npm run dev
 ```
+
+Once your development server is running, go back to your Makeswift site settings and set the **Host URL** to the URL your dev host is running on (ex:`http://localhost:3000`).
+
+If you modify the GraphQL queries in the future, run the following command to regenerate types:
+
+```bash
+npm run codegen-ts-watch
+```
+
+This will regenerate the GraphQL types and watch for changes.
 
 ## Building Blog Pages in Makeswift
 
@@ -122,25 +132,22 @@ Blog posts are transformed from Contentful’s structure to match the API expect
 Common issues and solutions:
 
 - **Type generation fails**
-
   - Ensure your Contentful credentials are correct in `.env.local`.
   - Check that your content model matches the GraphQL query.
   - Verify that the relevant content is published in Contentful.
 
 - **Blog posts not showing**
-
   - Confirm that the slug format matches your entries in Contentful.
   - Make sure the posts are published.
   - Ensure required fields—**Title**, **Slug**, **Feed Date**, **Body**, and **Banner**—are populated.
 
 - **Makeswift builder issues**
-
   - Clear your browser cache and refresh the page.
   - Make sure the `MAKESWIFT_SITE_API_KEY` is correctly set.
-  - Verify that your host URL is set to http://localhost:3000/ in your Makeswift site settings.
+  - Verify that your host URL is set to the same URL as your dev server (ex: `http://localhost:3000`) in your Makeswift site settings.
 
 - **GraphQL errors**
-  - Run `npm codegen-ts` to regenerate types.
+  - Run `npm run codegen-ts` to regenerate types.
   - Check that your content model matches the structure expected by the GraphQL query.
   - Ensure all referenced content types (e.g., **Author**, **BlogPost**) exist and are published.
 

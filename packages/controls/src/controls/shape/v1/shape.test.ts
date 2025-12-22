@@ -1,3 +1,6 @@
+import { TestMergeTranslationsVisitor } from '../../../testing/test-merge-translation-visitor'
+import { TestSerializationVisitor } from '../../../testing/test-serialization-visitor'
+
 import { createReplacementContext } from '../../../context'
 import { Targets } from '../../../introspection'
 import {
@@ -95,7 +98,8 @@ describe('Shape', () => {
         },
       })
 
-      const [serialized, _] = shape.serialize()
+      const serializationVisitor = new TestSerializationVisitor()
+      const serialized = shape.accept(serializationVisitor)
       expect(serialized).toMatchSnapshot()
 
       const deserialized = ShapeDefinition.deserialize(
@@ -118,7 +122,8 @@ describe('Shape', () => {
         },
       })
 
-      const [serialized, _] = shape.serialize()
+      const serializationVisitor = new TestSerializationVisitor()
+      const serialized = shape.accept(serializationVisitor)
       expect(serialized).toMatchSnapshot()
 
       const deserialized = ShapeDefinition.deserialize(
@@ -236,17 +241,14 @@ describe('Shape', () => {
     test('getTranslatableData', () =>
       expect(shape.getTranslatableData(data)).toMatchSnapshot())
 
-    test('mergeTranslatedData', () =>
-      expect(
-        shape.mergeTranslatedData(
-          data,
-          {},
-          {
-            translatedData: {},
-            mergeTranslatedData: (node) => node,
-          },
-        ),
-      ).toMatchSnapshot())
+    test('mergeTranslatedData', () => {
+      const visitor = new TestMergeTranslationsVisitor({
+        translatedData: {},
+        mergeTranslatedData: (node) => node,
+      })
+
+      expect(shape.accept(visitor, data, {})).toMatchSnapshot()
+    })
 
     test('introspect', () =>
       expect(shape.introspect(data, Targets.ChildrenElement)).toStrictEqual([]))

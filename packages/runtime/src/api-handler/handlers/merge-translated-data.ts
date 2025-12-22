@@ -1,6 +1,7 @@
 import { type Element } from '../../state/react-page'
 import { MakeswiftClient } from '../../client'
 import { type ApiRequest, ApiResponse, type ErrorResponseBody } from '../request-response'
+import isErrorWithMessage from '../../utils/isErrorWithMessage'
 
 type TranslatedData = { elementTree: Element }
 
@@ -19,6 +20,13 @@ export async function mergeTranslatedDataHandler(
     return ApiResponse.json({ message: 'elementTree must be defined' }, { status: 400 })
   }
 
-  const translatedElementTree = client.mergeTranslatedData(elementTree, translatedData)
-  return ApiResponse.json({ elementTree: translatedElementTree })
+  try {
+    const translatedElementTree = client.mergeTranslatedData(elementTree, translatedData)
+    return ApiResponse.json({ elementTree: translatedElementTree })
+  } catch (error) {
+    if (isErrorWithMessage(error)) {
+      return ApiResponse.json({ message: error.message }, { status: 500 })
+    }
+    return ApiResponse.json({ message: 'Error merging translated data' }, { status: 500 })
+  }
 }

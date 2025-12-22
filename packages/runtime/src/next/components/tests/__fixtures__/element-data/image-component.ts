@@ -1,6 +1,6 @@
 import { type ElementData } from '@makeswift/controls'
 
-import { MakeswiftComponentType } from '../../../../../components'
+import { MakeswiftComponentType } from '../../../../../components/builtin/constants'
 
 export const imageComponentData = ({
   htmlId,

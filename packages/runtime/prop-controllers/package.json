@@ -1,5 +1,0 @@
-{
-  "main": "../dist/cjs/prop-controllers/index.js",
-  "module": "../dist/esm/prop-controllers/index.js",
-  "types": "../dist/types/prop-controllers/index.d.ts"
-}

@@ -1,5 +1,5 @@
 import { BackgroundsPropControllerValue, BackgroundsData } from '../../../../hooks'
-import { ResponsiveValue } from '../../../../../prop-controllers'
+import { type ResponsiveValue } from '@makeswift/controls'
 import { ColorValue as Color } from '../../../../utils/types'
 import { colorToString } from '../../../../utils/colorToString'
 import Parallax from '../Parallax'

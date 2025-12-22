@@ -3,18 +3,13 @@ import {
   type CopyContext,
   type Data,
   type MergeContext,
-  type MergeTranslatableDataContext,
 } from '@makeswift/controls'
 
-import {
-  GridPropControllerData,
-  Types as PropControllerTypes,
-  mergeGridPropControllerTranslatedData,
-} from '@makeswift/prop-controllers'
+import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
 
 import { Descriptor, isLegacyDescriptor } from '../prop-controllers/descriptors'
 import { copy as propControllerCopy } from '../prop-controllers/copy'
-import { DELETED_PROP_CONTROLLER_TYPES, PropControllerDescriptor } from '../prop-controllers'
+import { DELETED_PROP_CONTROLLER_TYPES } from '../prop-controllers/deleted'
 
 export function copy(definition: Descriptor, value: any, context: CopyContext) {
   if (!isLegacyDescriptor(definition)) {
@@ -44,12 +39,7 @@ export function copy(definition: Descriptor, value: any, context: CopyContext) {
   }
 }
 
-export function merge(
-  definition: PropControllerDescriptor,
-  a: Data,
-  b: Data = a,
-  context: MergeContext,
-): Data {
+export function merge(definition: Descriptor, a: Data, b: Data = a, context: MergeContext): Data {
   if (!isLegacyDescriptor(definition)) {
     return definition.mergeData(a, b, context)
   }
@@ -72,30 +62,5 @@ export function getTranslatableData(definition: Descriptor, data: Data): Data {
 
     default:
       return null
-  }
-}
-
-export function mergeTranslatedData(
-  definition: PropControllerDescriptor,
-  data: Data,
-  translatedData: Data,
-  context: MergeTranslatableDataContext,
-): Data {
-  if (data == null) return data
-  if (!isLegacyDescriptor(definition)) {
-    return definition.mergeTranslatedData(data, translatedData, context)
-  }
-
-  switch (definition.type) {
-    case PropControllerTypes.TextInput:
-    case PropControllerTypes.TextArea:
-      if (translatedData == null) return data
-      return translatedData
-
-    case PropControllerTypes.Grid:
-      return mergeGridPropControllerTranslatedData(data as GridPropControllerData, context)
-
-    default:
-      return data
   }
 }

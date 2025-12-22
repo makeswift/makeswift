@@ -1,5 +1,17 @@
 # makeswift
 
+## 0.3.4
+
+### Patch Changes
+
+- dac927f: Force build in prepublishing step to ignore any stale build outputs
+
+## 0.3.3
+
+### Patch Changes
+
+- 5cfc787: CLI `init` will now prompt user for environment variables when `.env.example` is available in example
+
 ## 0.3.2
 
 ### Patch Changes

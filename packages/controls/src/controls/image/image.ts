@@ -12,18 +12,15 @@ import {
 } from '../../context'
 import { IntrospectionTarget, Targets } from '../../introspection'
 import { type ResourceResolver } from '../../resources/resolver'
-import {
-  type DeserializedRecord,
-  type SerializedRecord,
-} from '../../serialization'
+import { type DeserializedRecord } from '../../serialization'
 
 import {
   ControlDefinition,
-  serialize,
   type Resolvable,
   type SchemaType,
 } from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
+import { ControlDefinitionVisitor } from '../visitor'
 
 type Config = z.infer<typeof Definition.schema.config>
 type DefaultConfig = Config & {
@@ -367,11 +364,8 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
     return new DefaultControlInstance(sendMessage)
   }
 
-  serialize(): [SerializedRecord, Transferable[]] {
-    return serialize(this.config, {
-      type: Definition.type,
-      version: this.version,
-    })
+  accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
+    return visitor.visitImage(this, ...args)
   }
 
   introspect<R>(
@@ -387,6 +381,8 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
       .otherwise(() => []) as R[]
   }
 }
+
+export { type Config as ImageConfig }
 
 export class ImageDefinition<
   C extends Config = DefaultConfig,

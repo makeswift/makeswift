@@ -4,21 +4,13 @@ import { type ValueSubscription } from '../lib/value-subscription'
 import { type ParseResult } from '../lib/zod'
 
 import { type Data } from '../common/types'
-import {
-  type CopyContext,
-  type MergeContext,
-  type MergeTranslatableDataContext,
-} from '../context'
+import { type CopyContext, type MergeContext } from '../context'
 import { type IntrospectionTarget } from '../introspection'
 import { type ResourceResolver } from '../resources/resolver'
-import {
-  Serializable,
-  serializeObject,
-  type SerializedRecord,
-} from '../serialization'
 import { type Stylesheet } from '../stylesheet'
 
 import { ControlInstance, type SendMessage } from './instance'
+import { ControlDefinitionVisitor } from './visitor'
 
 export type SchemaType<T> = z.ZodType<T>
 export type SchemaTypeAny = SchemaType<any> | z.ZodBranded<SchemaType<any>, any>
@@ -34,7 +26,7 @@ export abstract class ControlDefinition<
   ValueType extends Data = Data,
   ResolvedValueType = Data | unknown,
   InstanceType extends ControlInstance<any> = ControlInstance<any>,
-> extends Serializable {
+> {
   // workaround for TypeScript type inference issues: https://bit.ly/4g2RvOQ
   __associatedTypes(_: {
     ControlType: ControlType
@@ -45,9 +37,7 @@ export abstract class ControlDefinition<
     InstanceType: InstanceType
   }) {}
 
-  constructor(readonly config: Config) {
-    super()
-  }
+  constructor(readonly config: Config) {}
 
   abstract get controlType(): ControlType
 
@@ -79,16 +69,8 @@ export abstract class ControlDefinition<
     return override ?? base
   }
 
-  getTranslatableData(_data: DataType): Data {
+  getTranslatableData(_data: DataType | undefined): Data {
     return null
-  }
-
-  mergeTranslatedData(
-    data: DataType,
-    _translatedData: Data,
-    _context: MergeTranslatableDataContext,
-  ): Data {
-    return data as Data
   }
 
   abstract resolveValue(
@@ -100,7 +82,10 @@ export abstract class ControlDefinition<
 
   abstract createInstance(sendMessage: SendMessage<any>): InstanceType
 
-  abstract serialize(): [SerializedRecord, Transferable[]]
+  abstract accept<R>(
+    visitor: ControlDefinitionVisitor<R>,
+    ...args: unknown[]
+  ): R
 
   introspect<R>(
     data: DataType | undefined,
@@ -108,18 +93,4 @@ export abstract class ControlDefinition<
   ): R[] {
     return target.introspect(data)
   }
-}
-
-export function serialize(
-  config: unknown,
-  rest: { type: string } & Record<string, unknown>,
-): [SerializedRecord, Transferable[]] {
-  const [serializedConfig, transferables] = serializeObject(config)
-  return [
-    {
-      config: serializedConfig,
-      ...rest,
-    } as unknown as SerializedRecord,
-    transferables,
-  ]
 }

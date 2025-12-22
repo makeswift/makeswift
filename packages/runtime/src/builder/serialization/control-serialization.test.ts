@@ -68,9 +68,9 @@ describe('isSerializedControl', () => {
   )
 
   test.each([
-    Checkbox({ label: 'Checkbox', defaultValue: true }).serialize(),
-    Number({ label: 'Number', defaultValue: 42 }).serialize(),
-    Select({ label: 'Select', options: [{ value: 'red', label: 'Red' }] }).serialize(),
+    serializeControl(Checkbox({ label: 'Checkbox', defaultValue: true })),
+    serializeControl(Number({ label: 'Number', defaultValue: 42 })),
+    serializeControl(Select({ label: 'Select', options: [{ value: 'red', label: 'Red' }] })),
   ])(`returns true for serialized controls: %p`, value => {
     // Assert
     expect(isSerializedControl(value)).toBe(true)

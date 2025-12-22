@@ -1,5 +1,37 @@
 # @makeswift/prop-controllers
 
+## 0.4.10
+
+### Patch Changes
+
+- dac927f: Force build in prepublishing step to ignore any stale build outputs
+- Updated dependencies [dac927f]
+  - @makeswift/controls@0.1.16
+
+## 0.4.9
+
+### Patch Changes
+
+- Updated dependencies [6f2a4e7]
+- Updated dependencies [f7e8365]
+- Updated dependencies [846a8bf]
+  - @makeswift/controls@0.1.15
+
+## 0.4.8
+
+### Patch Changes
+
+- Updated dependencies [6408396]
+  - @makeswift/controls@0.1.14
+
+## 0.4.7
+
+### Patch Changes
+
+- Updated dependencies [3eaad67]
+- Updated dependencies [4c008a2]
+  - @makeswift/controls@0.1.13
+
 ## 0.4.6
 
 ### Patch Changes

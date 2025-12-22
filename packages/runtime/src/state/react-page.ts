@@ -11,13 +11,13 @@ import {
   createReplacementContext,
   type SerializableReplacementContext,
   type ReplacementContext,
-  type TranslationDto,
-  type MergeTranslatableDataContext,
   type MergeContext,
   CopyContext,
   replaceResourceIfNeeded,
   ContextResource,
 } from '@makeswift/controls'
+
+import { copy as copyFromControl, merge } from '../controls/control'
 
 import * as Documents from './modules/read-only-documents'
 import * as ElementTrees from './modules/element-trees'
@@ -29,19 +29,9 @@ import * as IsInBuilder from './modules/is-in-builder'
 import * as IsPreview from './modules/is-preview'
 import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Breakpoints from './modules/breakpoints'
-import {
-  type Action,
-  ActionTypes,
-  changeElementTree,
-  createElementTree,
-  deleteElementTree,
-} from './actions'
-import {
-  copy as copyFromControl,
-  getTranslatableData,
-  merge,
-  mergeTranslatedData,
-} from '../controls/control'
+
+import { type Action, ActionTypes } from './actions'
+import { changeElementTree, createElementTree, deleteElementTree } from './actions/internal'
 
 import { actionMiddleware, middlewareOptions, devToolsConfig } from './toolkit'
 
@@ -64,6 +54,7 @@ export {
 } from './modules/read-only-documents'
 
 export type { ComponentType } from './modules/react-components'
+export type { ComponentMeta } from './modules/components-meta'
 
 const reducer = combineReducers({
   documents: Documents.reducer,
@@ -116,6 +107,14 @@ export function getReactComponent(
   type: string,
 ): ReactComponents.ComponentType | null {
   return ReactComponents.getReactComponent(getReactComponentsStateSlice(state), type)
+}
+
+function getComponentsMetaStateSlice(state: State): ComponentsMeta.State {
+  return state.componentsMeta
+}
+
+export function getComponentMeta(state: State, type: string): ComponentsMeta.ComponentMeta | null {
+  return ComponentsMeta.getComponentMeta(getComponentsMetaStateSlice(state), type)
 }
 
 function getPropControllersStateSlice(state: State): PropControllers.State {
@@ -227,70 +226,6 @@ export function copyElementTree(
   const copy = JSON.parse(JSON.stringify(elementTree)) as Documents.ElementData
 
   return copyElementTreeNode(state, createReplacementContext(replacementContext))(copy)
-}
-
-export function getElementTreeTranslatableData(
-  state: State,
-  elementTree: Documents.ElementData,
-): Record<string, Documents.Data> {
-  const translatableData: Record<string, Documents.Data> = {}
-  const descriptors = getPropControllerDescriptors(state)
-
-  for (const element of ElementTrees.traverseElementTree(elementTree, descriptors)) {
-    if (Documents.isElementReference(element)) continue
-
-    const elementPescriptors = descriptors.get(element.type)
-    if (elementPescriptors == null) continue
-
-    Object.entries(elementPescriptors).forEach(([propName, descriptor]) => {
-      const translatablePropData = getTranslatableData(descriptor, element.props[propName])
-
-      if (translatablePropData != null) {
-        translatableData[`${element.key}:${propName}`] = translatablePropData
-      }
-    })
-  }
-
-  return translatableData
-}
-
-export function mergeElementTreeTranslatedData(
-  state: State,
-  elementTree: Documents.ElementData,
-  translatedData: TranslationDto,
-): Documents.Element {
-  function merge(state: State, translatedData: TranslationDto) {
-    return function (node: Documents.Element): Documents.Element {
-      if (Documents.isElementReference(node)) return node
-
-      const elementDescriptors = getPropControllerDescriptors(state)
-      const descriptors = elementDescriptors.get(node.type)
-
-      if (descriptors == null) {
-        throw new Error(`Can't merge element of type "${node.type}" because it has no descriptors`)
-      }
-
-      const context: MergeTranslatableDataContext = {
-        translatedData,
-        mergeTranslatedData: merge(state, translatedData),
-      }
-      const props = {} as Record<string, Documents.Data>
-
-      for (const propName of Object.keys(descriptors)) {
-        const descriptor = descriptors[propName]
-
-        props[propName] = mergeTranslatedData(
-          descriptor,
-          node.props[propName],
-          translatedData[`${node.key}:${propName}`],
-          context,
-        )
-      }
-
-      return { ...node, props }
-    }
-  }
-  return merge(state, translatedData)(elementTree)
 }
 
 export function mergeElement(

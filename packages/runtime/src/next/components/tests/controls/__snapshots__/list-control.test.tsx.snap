@@ -117,7 +117,7 @@ exports[`Page List of colors when value is {"value":[{"swatchId":"[swatch-test-i
               "props": {
                 "propKey": [
                   {
-                    "id": "xxxxxxxx-xxxx-xxxx-xxxx-100000000006",
+                    "id": "xxxxxxxx-xxxx-xxxx-xxxx-100000000003",
                     "type": "makeswift::controls::color",
                     "value": {
                       "@@makeswift/type": "color::v1",

@@ -1,5 +1,91 @@
 # @makeswift/runtime
 
+## 0.26.2
+
+### Patch Changes
+
+- dac927f: Force build in prepublishing step to ignore any stale build outputs
+- Updated dependencies [dac927f]
+  - @makeswift/prop-controllers@0.4.10
+  - @makeswift/controls@0.1.16
+
+## 0.26.1
+
+### Patch Changes
+
+- 4b1d108: Added error handling to the API handler for merging element tree data so that failures still flow through our logic for setting CORS headers.
+- 955cd53: Add runtime version into request headers to Makeswift API
+- 6f2a4e7: Serialize controls for builder using a visitor with MessagePort compatibility
+- f7e8365: Use function deserialization plugin for deserializing control functions
+- Updated dependencies [6f2a4e7]
+- Updated dependencies [cf24d94]
+- Updated dependencies [f7e8365]
+- Updated dependencies [846a8bf]
+  - @makeswift/controls@0.1.15
+  - @makeswift/next-plugin@0.6.1
+  - @makeswift/prop-controllers@0.4.9
+
+## 0.26.0
+
+### Minor Changes
+
+- d49a13c: Remove duplicate export of `PropControllerDescriptor` and `PropControllerDescriptorValueType`
+- 8b83512: Remove `box-model` entry point. `BoxModel` type is now exported via the internal `core` entrypoint.
+- 192dbe0: Remove `slate` entry point, which only contained internal functions
+- 868d21e: Move `createBaseDocument` to internal `builder` entry point
+- cc1c187: Move `Element` type export to `core` entry point
+- 9d66ac8: Move exports of builder actions to the runtime builder entry point
+- 10b9b91: Move `core` entry point within internal `builder` entry point
+- 0ed75cb: Remove exports for internal React primitives
+- b4fd580: Remove `prop-controllers` entry point from runtime, which contained internal only functionality and types
+- 064408f: Remove export for internal `Operation` type
+- 517d9fe: Move `MakeswiftComponentType` to `react/builtins` entrypoint
+- 07b93df: Remove `getTranslatableData` method from the ReactRuntime
+- 3f9110b: Remove `components` runtime entry point. Removes the exposure of internal only hooks and constants.
+- 30bf04d: Move `state/breakpoints` entry point to internal `builder` entry point
+
+### Patch Changes
+
+- d4834c4: fix: support dynamic page registration and unregistration with builder
+- 2694de9: Fix incorrect file extension for client export
+- 90a2683: chore: upgrade parse5 to latest minor version
+- c54171d: Separate builtin component registration from runtime instantiation
+- 69b27ad: Expose runtime without pre-registered builtins, as well as functions to register builtins given a runtime instance
+- 5afcff6: chore: move type dependencies to dev dependencies
+- 1233f09: Rearrange type exports to be declared first in `package.json`
+- 7ae5129: Move module declarations ahead of require condition for `package.json` exports
+- 7ba874e: feat: add `builtinSuspense` option in `registerComponent` to control whether the runtime wraps the component in a default `<Suspense>` boundary
+- 15d8726: Export builder-required types from internal `builder` entry point
+- 7f54667: Re-expose `useIsInBuilder` hook via the `react` entry point
+- b86d4bb: Alphabetize exports in runtime `package.json`
+- 542625e: Drop Carousel dependency on popmotion library
+- b31a247: Remove old slate entry point from package.json
+- 6408396: Remove translatable data merging from controls in favor of visitor pattern
+- 289a662: Remove `mergeTranslatedData` method from the ReactRuntime. Removes `parse5` from client bundles.
+- Updated dependencies [8436c74]
+- Updated dependencies [6408396]
+  - @makeswift/next-plugin@0.6.0
+  - @makeswift/controls@0.1.14
+  - @makeswift/prop-controllers@0.4.8
+
+## 0.25.3
+
+### Patch Changes
+
+- 3eaad67: fix: check null data before attempting to merge translated data
+- Updated dependencies [3eaad67]
+- Updated dependencies [4c008a2]
+  - @makeswift/controls@0.1.13
+  - @makeswift/prop-controllers@0.4.7
+
+## 0.25.2
+
+### Patch Changes
+
+- 6f5f31a: fix: Cloudflare workers compatibility
+- 1acf9c3: change `client.getPages` pagination limit to be 100 by default
+- 951c9ea: fix: support matching Requests in API handler for Next.js versions < 15.5.0
+
 ## 0.25.1
 
 ### Patch Changes
@@ -451,20 +537,15 @@
   The `Group` control offers an improved visual hierarchy for grouped controls when rendered in the Makeswift builder, along with new options for specifying the group label and preferred layout.
 
   The `Group` control options are:
-
   - `label?: string = "Group"`
-
     - The label for the group panel in the Makeswift builder. Defaults to `"Group"`.
 
   - `preferredLayout?: Group.Layout.Inline | Group.Layout.Popover = Group.Layout.Popover`
-
     - The preferred layout for the group in the Makeswift builder. Note that the builder may override this preference to optimize the user experience. Possible values include:
-
       - `Group.Layout.Inline`: Renders the group properties within the parent panel, visually grouping them to reflect the hierarchy. This is the default if no explicit value is provided.
       - `Group.Layout.Popover`: Renders the group properties in a standalone popover panel.
 
   - `props: Record<string, ControlDefinition>`
-
     - An object record defining the controls being grouped. This can include any of the Makeswift controls, including other groups. For example:
 
     ```typescript
@@ -495,7 +576,6 @@
   The values available are sourced from our Google Fonts integration within Makeswift and from the variants you pass to `getFonts` in your [`MakeswiftApiHandler`](https://docs.makeswift.com/developer/reference/makeswift-api-handler).
 
   Available params for the Font control include:
-
   - `label?: string`
     - Text for the panel label in the Makeswift builder.
   - `variant?: boolean = true`
@@ -821,7 +901,6 @@
   exposing internal data types and functions associated with our controls.
 
   ## BREAKING:
-
   1. Attempting to create a control with arbitrary configuration options will
      now result in a TypeScript compilation error:
 
@@ -1331,7 +1410,6 @@
 - 2e59c52: Starting from version `0.13.0`, **versioning is now enabled by default**. With versioning, users can easily publish all changes to their website with just a few clicks. Published changes are saved so you can revert to previous versions if needed.
 
   Upgrade guide from version `0.12.x` to `0.13.x`:
-
   1. Update `getPageSnapshot` Parameters:
 
      a. Remove the `preview` parameter.
@@ -1351,7 +1429,6 @@
      ```
 
   2. For users who have **never used versioning**:
-
      - No further actions are required.
 
   3. For users who have used versioning:
@@ -1566,7 +1643,6 @@
   With this feature, you can create different variations of a page. For example, if you have a `/pricing` page that you want to localize for Spanish-speaking countries, you can add an `es` locale, and create a `/es/pricing` page.
 
   If you have used the unstable version before, here are the steps required to migrate to the stable version:
-
   - Remove `unstable_i18n` on the `ReactRuntime`.
   - Rename `unstable_locale` to `locale` on the `getPageSnapshot`.
 
@@ -1973,7 +2049,6 @@
 - 6d468d1: Remove snapshotting code. We've re-architected versioning and won't be using snapshots anymore.
 - 78ff346: Remove unused GraphQL queries.
 - d08eb8d: Add API endpoints to the Makeswift Next.js API handler for Makeswift API resources. The following endpoints were added:
-
   - /api/makeswift/swatches/:id
   - /api/makeswift/files/:id
   - /api/makeswift/typographies/:id
@@ -2436,7 +2511,6 @@ This version is a BREAKING change. No public APIs have changed but there was a m
   follow the migration steps below.
 
   Here's how to migrate:
-
   - Create a new file at `pages/api/makeswift/[...makeswift].js` with the following contents:
 
     ```js
@@ -2542,7 +2616,6 @@ This version is a BREAKING change. No public APIs have changed but there was a m
   `getStaticProps` and `getServerSideProps` exports. You can now instantiate a Makeswift client
   using your site API key and see your data flow from the Makeswift API, though your Next.js app, to
   your pages. The new APIs are:
-
   - `Makeswift.getPages` to retrieve all Makeswift pages and use in `getStaticPaths`
   - `Makeswift.getPageSnapshot` to retrieve a page's layout data and render the Makeswift `Page`
     component
@@ -2647,7 +2720,6 @@ This version is a BREAKING change. No public APIs have changed but there was a m
   ```
 
   There's a lot more you can do with the Slot. Here's some ideas:
-
   - Custom animations for elements passed via Slot
   - Passing data between components using React context and Slot (i.e., a component with Slot provides
     a context value and any component dropped inside it can read that context)

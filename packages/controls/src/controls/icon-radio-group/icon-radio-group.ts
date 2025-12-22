@@ -4,18 +4,15 @@ import { map } from '../../lib/functional'
 import { safeParse, unionOfLiterals, type ParseResult } from '../../lib/zod'
 
 import { type CopyContext } from '../../context'
-import {
-  type DeserializedRecord,
-  type SerializedRecord,
-} from '../../serialization'
+import { type DeserializedRecord } from '../../serialization'
 
 import {
   ControlDefinition,
-  serialize,
   type Resolvable,
   type SchemaType,
 } from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
+import { ControlDefinitionVisitor } from '../visitor'
 
 type IconType = (typeof Definition.Icon)[keyof typeof Definition.Icon]
 
@@ -189,10 +186,8 @@ class Definition<C extends Config> extends ControlDefinition<
     return new DefaultControlInstance(sendMessage)
   }
 
-  serialize(): [SerializedRecord, Transferable[]] {
-    return serialize(this.config, {
-      type: Definition.type,
-    })
+  accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
+    return visitor.visitIconRadioGroup(this, ...args)
   }
 }
 
@@ -228,4 +223,7 @@ export function unstable_IconRadioGroup<
 
 unstable_IconRadioGroup.Icon = Definition.Icon
 
-export { type IconType as IconRadioGroupIcon }
+export {
+  type IconType as IconRadioGroupIcon,
+  type Config as IconRadioGroupConfig,
+}

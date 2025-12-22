@@ -5,16 +5,12 @@ import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
 import { ControlDataTypeKey, type Data } from '../../common'
-import {
-  type CopyContext,
-  type MergeTranslatableDataContext,
-} from '../../context'
+import { type CopyContext } from '../../context'
 import { type IntrospectionTarget } from '../../introspection'
 import { type ResourceResolver } from '../../resources/resolver'
 import {
   SerializationSchema,
   type DeserializedRecord,
-  type SerializedRecord,
 } from '../../serialization'
 import { type Stylesheet } from '../../stylesheet'
 
@@ -25,13 +21,13 @@ import {
 } from '../associated-types'
 import {
   ControlDefinition,
-  serialize,
   type Resolvable,
   type SchemaType,
 } from '../definition'
 import { type SendMessage } from '../instance'
 import { ShapeDefinition } from '../shape/v1'
 import { ShapeV2Definition } from '../shape/v2'
+import { ControlDefinitionVisitor } from '../visitor'
 
 import { GroupControl } from './group-control'
 
@@ -237,27 +233,13 @@ class Definition<C extends Config> extends ControlDefinition<
     )
   }
 
-  getTranslatableData(data: DataType<C>): Data {
+  getTranslatableData(data: DataType<C> | undefined): Data {
     if (data == null) return null
 
     const propsData = Definition.propsData(data)
 
     return mapValues(this.propDefs, (def, key) =>
       def.getTranslatableData(propsData[key]),
-    )
-  }
-
-  mergeTranslatedData(
-    data: DataType<C>,
-    translatedData: Record<string, DataType<C>>,
-    context: MergeTranslatableDataContext,
-  ): Data {
-    if (translatedData == null) return data
-
-    const propsData = Definition.propsData(data)
-
-    return mapValues(this.propDefs, (def, key) =>
-      def.mergeTranslatedData(propsData[key], translatedData[key], context),
     )
   }
 
@@ -301,10 +283,8 @@ class Definition<C extends Config> extends ControlDefinition<
     return new GroupControl(this, sendMessage)
   }
 
-  serialize(): [SerializedRecord, Transferable[]] {
-    return serialize(this.config, {
-      type: Definition.type,
-    })
+  accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
+    return visitor.visitGroup(this, ...args)
   }
 
   introspect<R>(data: DataType<C> | undefined, target: IntrospectionTarget<R>) {

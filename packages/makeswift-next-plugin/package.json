@@ -1,6 +1,6 @@
 {
   "name": "@makeswift/next-plugin",
-  "version": "0.5.0",
+  "version": "0.6.1",
   "description": "Makeswift Next.js plugin",
   "main": "index.js",
   "types": "index.d.ts",
@@ -23,6 +23,6 @@
     "semver": "^7.3.8"
   },
   "devDependencies": {
-    "next": "14.1.0"
+    "next": "14.2.35"
   }
 }

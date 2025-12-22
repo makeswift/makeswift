@@ -11,21 +11,31 @@ import {
 } from '../../context'
 import { Targets, type IntrospectionTarget } from '../../introspection'
 import { type ResourceResolver } from '../../resources/resolver'
-import { type SerializedRecord } from '../../serialization'
 
 import {
   ControlDefinition,
-  serialize,
   type Resolvable,
   type SchemaType,
 } from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
+import { ControlDefinitionVisitor } from '../visitor'
 
 import { type GenericMouseEvent } from './mouse-event'
 import { resolveLink } from './resolve-link'
 import * as LinkSchema from './schema'
 
-type Config = z.infer<typeof Definition.schema.config>
+/**
+ * Defining the config schema out of the Definition class to avoid a `Type alias
+ * 'Config' circularly references itself` error from TS. Given that we use this
+ * pattern of defining the config schema in the class itself in other controls,
+ * this may be a case of the compiler reaching some limit.
+ */
+const configSchema = z.object({
+  label: z.string().optional(),
+  description: z.string().optional(),
+})
+
+type Config = z.infer<typeof configSchema>
 
 type Schema<_C extends Config> = typeof Definition.schema
 type LinkTarget<C extends Config> = z.infer<Schema<C>['linkTarget']>
@@ -67,10 +77,7 @@ class Definition<
     const data = LinkSchema.data
     const value = data
 
-    const config = z.object({
-      label: z.string().optional(),
-      description: z.string().optional(),
-    })
+    const config = configSchema
 
     const definition = z.object({
       type,
@@ -252,10 +259,8 @@ class Definition<
     return new DefaultControlInstance(sendMessage)
   }
 
-  serialize(): [SerializedRecord, Transferable[]] {
-    return serialize(this.config, {
-      type: Definition.type,
-    })
+  accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
+    return visitor.visitLink(this, ...args)
   }
 }
 

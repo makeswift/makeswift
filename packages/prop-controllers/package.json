@@ -1,7 +1,11 @@
 {
   "name": "@makeswift/prop-controllers",
-  "version": "0.4.6",
+  "version": "0.4.10",
   "license": "MIT",
+  "repository": {
+    "url": "makeswift/makeswift",
+    "directory": "packages/prop-controllers"
+  },
   "files": [
     "dist"
   ],
@@ -12,7 +16,7 @@
     "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'tsup --watch'",
     "clean": "rm -rf dist",
     "build": "tsc && tsup",
-    "prepublishOnly": "turbo run build",
+    "prepublishOnly": "turbo run build --force",
     "test": "jest"
   },
   "dependencies": {

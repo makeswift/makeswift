@@ -4,22 +4,16 @@ import { z } from 'zod'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
 import { ControlDataTypeKey, type Data } from '../../common'
-import {
-  type CopyContext,
-  type MergeTranslatableDataContext,
-} from '../../context'
-import {
-  type DeserializedRecord,
-  type SerializedRecord,
-} from '../../serialization'
+import { type CopyContext } from '../../context'
+import { type DeserializedRecord } from '../../serialization'
 
 import {
   ControlDefinition,
-  serialize,
   type Resolvable,
   type SchemaType,
 } from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
+import { ControlDefinitionVisitor } from '../visitor'
 
 type Config = z.infer<typeof Definition.schema.relaxed.config>
 
@@ -163,17 +157,8 @@ class Definition<C extends Config> extends ControlDefinition<
     return data
   }
 
-  getTranslatableData(data: DataType<C>): Data {
+  getTranslatableData(data: DataType<C> | undefined): Data {
     return data
-  }
-
-  mergeTranslatedData(
-    data: DataType<C>,
-    translatedData: Data,
-    _context: MergeTranslatableDataContext,
-  ): Data {
-    if (translatedData == null) return data
-    return translatedData
   }
 
   resolveValue(
@@ -191,11 +176,8 @@ class Definition<C extends Config> extends ControlDefinition<
     return new DefaultControlInstance(sendMessage)
   }
 
-  serialize(): [SerializedRecord, Transferable[]] {
-    return serialize(this.config, {
-      type: Definition.type,
-      version: this.version,
-    })
+  accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
+    return visitor.visitTextInput(this, ...args)
   }
 }
 

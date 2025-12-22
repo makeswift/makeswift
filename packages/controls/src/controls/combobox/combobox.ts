@@ -4,18 +4,15 @@ import { safeParse, type ParseResult } from '../../lib/zod'
 
 import { Schema, type Data } from '../../common'
 import { type CopyContext } from '../../context'
-import {
-  type DeserializedRecord,
-  type SerializedRecord,
-} from '../../serialization'
+import { type DeserializedRecord } from '../../serialization'
 
 import {
   ControlDefinition,
-  serialize,
   type Resolvable,
   type SchemaType,
 } from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
+import { ControlDefinitionVisitor } from '../visitor'
 
 type Option<T extends Data> = { id: string; value: T; label: string }
 type GetOptionsType<T extends Data> = (
@@ -136,10 +133,8 @@ class Definition<C extends Config> extends ControlDefinition<
     return new DefaultControlInstance(sendMessage)
   }
 
-  serialize(): [SerializedRecord, Transferable[]] {
-    return serialize(this.config, {
-      type: Definition.type,
-    })
+  accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
+    return visitor.visitCombobox(this, ...args)
   }
 }
 

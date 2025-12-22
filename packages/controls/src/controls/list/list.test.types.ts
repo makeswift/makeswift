@@ -42,7 +42,7 @@ describe('List Types', () => {
         {
           id: string
           type?: string
-          value: {
+          value?: {
             swatchId: string
             alpha: number
             [ControlDataTypeKey]?: 'color::v1'
@@ -93,10 +93,10 @@ describe('List Types', () => {
         {
           id: string
           type?: string
-          value: {
+          value?: {
             id: string
             type?: string
-            value: {
+            value?: {
               swatchId: string
               alpha: number
               [ControlDataTypeKey]?: 'color::v1'

@@ -8,16 +8,13 @@ import {
   isNotNil,
   ControlDefinition,
   SerializationSchema,
-  serialize,
   StableValue,
   type Data,
   type Resolvable,
   type SendMessage,
-  type SerializedRecord,
   type DeserializedRecord,
   type SchemaType,
   type SchemaTypeAny,
-  type MergeTranslatableDataContext,
   type RichTextPluginControl,
   type ResourceResolver,
   type Stylesheet,
@@ -36,11 +33,7 @@ import { renderRichTextV2 } from '../../runtimes/react/controls/rich-text-v2'
 
 import { RichTextV2Plugin, Plugin } from './plugin'
 import { RichTextV2Control } from './control'
-import {
-  getTranslatableData,
-  mergeTranslatedNodes,
-  type RichTextTranslationDto,
-} from './translation'
+import { getTranslatableData } from './translations/get-translations'
 
 type DataType = z.infer<typeof Definition.schema.data>
 type DataV2Type = z.infer<typeof Definition.schema.dataV2>
@@ -142,52 +135,9 @@ class Definition extends BaseRichTextDefinition<ReactNode, Config, InstanceType>
     }
   }
 
-  getTranslatableData(data: DataType): Data {
+  getTranslatableData(data: DataType | undefined): Data {
+    if (data == null) return null
     return getTranslatableData(Definition.dataToNodes(data), this.config.plugins)
-  }
-
-  mergeTranslatedData(
-    data: DataType,
-    translatedData: Data,
-    _context: MergeTranslatableDataContext,
-  ): Data {
-    if (translatedData == null) return data as Data
-
-    const { descendants, ...rest } = Definition.normalizeData(data)
-    return {
-      ...rest,
-      descendants: mergeTranslatedNodes(
-        descendants,
-        translatedData as RichTextTranslationDto,
-        this.config.plugins,
-      ),
-    }
-  }
-
-  serialize(): [SerializedRecord, Transferable[]] {
-    const { plugins, ...config } = this.config
-
-    // serialize only the plugin control definition, if any
-    const pluginDefs = plugins.map(({ control }) =>
-      control
-        ? {
-            control: {
-              definition: control.definition,
-              // FIXME: remove getValue/onChange stubs once we released a version of the builder
-              // built against the runtime where these can be optional
-              getValue: () => undefined,
-              onChange: () => {},
-            },
-          }
-        : {},
-    )
-
-    return serialize(
-      { ...config, plugins: pluginDefs },
-      {
-        type: Definition.type,
-      },
-    )
   }
 
   get pluginControls(): RichTextPluginControl[] {

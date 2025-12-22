@@ -1,11 +1,13 @@
 import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
 
+import { safeParse, type ParseResult } from '../../../lib/zod'
+
 import { type CopyContext } from '../../../context'
 import { type IntrospectionTarget } from '../../../introspection'
-import { safeParse, type ParseResult } from '../../../lib/zod'
 import { ControlDefinition, type SchemaType } from '../../definition'
 import { ControlInstance } from '../../instance'
+import { ControlDefinitionVisitor } from '../../visitor'
 
 import { DTOSchema, isRichTextDTO, richTextDTOtoDAO } from '../dto'
 import * as Slate from '../slate'
@@ -126,6 +128,10 @@ abstract class Definition<
 
     const nodes = Definition.dataToNodes(data)
     return introspectNodes(nodes, target, this.pluginControls)
+  }
+
+  accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
+    return visitor.visitRichTextV2(this, ...args)
   }
 
   static isV1Data(data: DataType | undefined): data is DataV1Type {

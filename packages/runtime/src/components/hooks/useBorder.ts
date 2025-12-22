@@ -1,7 +1,7 @@
 import { BorderStyleProperty } from 'csstype'
 
 import type { ColorValue as Color } from '../utils/types'
-import { ResponsiveValue } from '../../prop-controllers'
+import { type ResponsiveValue } from '@makeswift/controls'
 import {
   ResponsiveBorderData,
   BorderSideData,

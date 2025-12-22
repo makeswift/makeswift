@@ -7,7 +7,7 @@ import {
 } from '../../client'
 import { CacheData } from '../../api/react'
 import { type ElementData } from '../../state/react-page'
-import { MakeswiftComponentType } from '../../components'
+import { MakeswiftComponentType } from '../../components/builtin/constants'
 
 export function createRootComponent(elements: ElementData[], rootId?: string) {
   return {
@@ -67,7 +67,7 @@ export function createMakeswiftPageSnapshot(
 }
 
 export function createMakeswiftComponentSnapshot(
-  elementData: ElementData,
+  elementData: ElementData | null,
   {
     cacheData = {},
     locale = null,

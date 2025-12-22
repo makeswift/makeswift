@@ -6,11 +6,11 @@
 
 ## Getting Started
 
-Visit our [getting started guide](https://www.makeswift.com/docs/guides/getting-started) to get started with Makeswift Code Components.
+Visit our [getting started guide](https://docs.makeswift.com/developer/quickstart) to get started with Makeswift Code Components.
 
 ## API Reference
 
-Visit our [API Reference](https://www.makeswift.com/docs/controls/checkbox) to learn more about Makeswift Code Components API.
+Visit our [API Reference](https://docs.makeswift.com/developer/reference/controls/checkbox) to learn more about Makeswift Code Components API.
 
 ## Auto-generated wiki
 

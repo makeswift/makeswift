@@ -1,7 +1,7 @@
 import { type ElementData } from '@makeswift/controls'
 import { type BackgroundData } from '@makeswift/prop-controllers'
 
-import { MakeswiftComponentType } from '../../../../../components'
+import { MakeswiftComponentType } from '../../../../../components/builtin/constants'
 
 export const boxComponentData = ({
   htmlId,

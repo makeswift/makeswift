@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
 import { ColorValue as Color } from '../utils/types'
-import { ResponsiveValue } from '../../prop-controllers'
+import { type ResponsiveValue } from '@makeswift/controls'
 import { isNonNullable } from '../utils/isNonNullable'
 import { useFiles, useSwatches } from '../../runtimes/react/hooks/makeswift-api'
 import { match, P } from 'ts-pattern'

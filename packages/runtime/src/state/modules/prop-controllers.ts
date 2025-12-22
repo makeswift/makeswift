@@ -1,5 +1,5 @@
 import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
-import { PropControllerDescriptor } from '../../prop-controllers'
+import { Descriptor as PropControllerDescriptor } from '../../prop-controllers/descriptors'
 
 export type { PropControllerDescriptor }
 

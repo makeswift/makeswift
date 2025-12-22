@@ -31,7 +31,7 @@ import {
   getTableIds,
   getTypographyIds,
 } from '../prop-controllers/introspection'
-import { ReactRuntime } from '../runtimes/react'
+import { type ReactRuntimeCore } from '../runtimes/react/react-runtime-core'
 import {
   type Element,
   type ElementData,
@@ -45,6 +45,8 @@ import { toIterablePaginationResult } from '../utils/pagination'
 import { deterministicUUID } from '../utils/deterministic-uuid'
 import { Schema } from '@makeswift/controls'
 import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-only-documents'
+import { mergeElementTreeTranslatedData } from '../state/translations/merge'
+import { getElementTreeTranslatableData } from '../state/translations/get'
 
 export { SnippetLocation } from '../api/graphql/generated/types'
 
@@ -89,7 +91,7 @@ const makeswiftGetPagesParamsSchema = z.object({
 })
 
 function getPagesQueryParams({
-  limit = 20,
+  limit = 100,
   after,
   sortBy,
   sortDirection,
@@ -283,7 +285,7 @@ type LocalizedPage = {
 
 type MakeswiftConfig = {
   apiOrigin?: string
-  runtime: ReactRuntime
+  runtime: ReactRuntimeCore
 }
 
 export type Sitemap = {
@@ -325,7 +327,7 @@ type GetPageAPI = z.infer<typeof getPageAPISchema>
 
 export class MakeswiftClient {
   private graphqlClient: GraphQLClient
-  private runtime: ReactRuntime
+  private runtime: ReactRuntimeCore
 
   readonly apiKey: string
   readonly apiOrigin: URL
@@ -352,7 +354,9 @@ export class MakeswiftClient {
       )
     }
 
-    this.graphqlClient = new GraphQLClient(new URL('graphql', apiOrigin).href)
+    this.graphqlClient = new GraphQLClient(new URL('graphql', apiOrigin).href, {
+      'makeswift-runtime-version': PACKAGE_VERSION,
+    })
     this.runtime = runtime
   }
 
@@ -360,8 +364,9 @@ export class MakeswiftClient {
     const requestUrl = new URL(path, this.apiOrigin)
 
     const requestHeaders = new Headers({
-      'X-API-Key': this.apiKey,
-      'Makeswift-Site-API-Key': this.apiKey,
+      'x-api-key': this.apiKey,
+      'makeswift-site-api-key': this.apiKey,
+      'makeswift-runtime-version': PACKAGE_VERSION,
     })
 
     if (siteVersion?.token) {
@@ -954,20 +959,25 @@ export class MakeswiftClient {
   }
 
   getTranslatableData(elementTree: ElementData): Record<string, Data> {
-    return this.runtime.getTranslatableData(elementTree)
+    return getElementTreeTranslatableData(this.runtime.store.getState(), elementTree)
   }
 
   mergeTranslatedData(elementTree: ElementData, translatedData: Record<string, Data>): Element {
-    return this.runtime.mergeTranslatedData(elementTree, translatedData)
+    return mergeElementTreeTranslatedData(
+      this.runtime.store.getState(),
+      elementTree,
+      translatedData,
+    )
   }
 
   async readPreviewToken(token: string): Promise<PreviewTokenPayload | null> {
     const response = await fetch(new URL('v1/preview-tokens/reads', this.apiOrigin).toString(), {
       method: 'POST',
       headers: {
-        ['X-API-Key']: this.apiKey,
-        'Makeswift-Site-API-Key': this.apiKey,
-        'Content-Type': 'application/json',
+        'x-api-key': this.apiKey,
+        'makeswift-site-api-key': this.apiKey,
+        'makeswift-runtime-version': PACKAGE_VERSION,
+        'content-type': 'application/json',
       },
       body: JSON.stringify({ token }),
       cache: 'no-store',
