@@ -194,6 +194,7 @@ Here is how your `.env.local` should look once setup is finished:
 MAKESWIFT_SITE_API_KEY=your_makeswift_api_key
 SANITY_PROJECT_ID=your_sanity_project_id
 SANITY_ACCESS_TOKEN=your_sanity_access_token
+NEXT_PUBLIC_SITE_URL=your_site_url
 ```
 
 **MAKESWIFT_SITE_API_KEY**: Automatically applied, found in your Makeswift site settings
