@@ -7,7 +7,7 @@ import {
 import { type ReactNode } from 'react'
 
 import {
-  createRootStyleCache,
+  createFlushableStyleCache,
   RootStyleRegistry,
   styleTagHtml,
   type RootStyleProps,
@@ -28,8 +28,8 @@ type RenderOptions = RootStyleProps &
 export async function renderHtml(
   children: ReactNode,
   { cacheKey, enableCssReset, ...renderOptions }: RenderOptions = {},
-): Promise<{ getStyles: () => string; html: ReactDOMServerReadableStream }> {
-  const cache = createRootStyleCache({ key: cacheKey })
+): Promise<{ html: ReactDOMServerReadableStream; getStyles: () => string }> {
+  const cache = createFlushableStyleCache({ key: cacheKey })
   const getStyles = () => styleTagHtml({ cacheKey: cache.key, ...cache.flush() })
 
   const html = await renderToReadableStream(
