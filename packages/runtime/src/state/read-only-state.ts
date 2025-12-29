@@ -2,6 +2,7 @@ import { type ThunkDispatch } from '@reduxjs/toolkit'
 
 import { createSelector } from 'reselect'
 
+import * as SiteVersion from './modules/site-version'
 import * as Documents from './modules/read-only-documents'
 import * as ElementTrees from './modules/element-trees'
 import * as ReactComponents from './modules/react-components'
@@ -9,8 +10,8 @@ import * as ComponentsMeta from './modules/components-meta'
 import * as PropControllers from './modules/prop-controllers'
 import * as PropControllerHandles from './modules/prop-controller-handles'
 import * as IsInBuilder from './modules/is-in-builder'
-import * as IsPreview from './modules/is-preview'
-import * as BuilderEditMode from './modules/builder-edit-mode'
+import * as IsReadOnly from './modules/is-read-only'
+import * as BuilderEditMode from './modules/read-write/builder-edit-mode'
 import * as Breakpoints from './modules/breakpoints'
 
 import { type Action } from './actions'
@@ -35,6 +36,8 @@ export type { ComponentType } from './modules/react-components'
 export type { ComponentMeta } from './modules/components-meta'
 
 export const reducers = {
+  isReadOnly: IsReadOnly.reducer,
+  siteVersion: SiteVersion.reducer,
   documents: Documents.reducer,
   elementTrees: ElementTrees.reducer,
   reactComponents: ReactComponents.reducer,
@@ -42,12 +45,13 @@ export const reducers = {
   propControllers: PropControllers.reducer,
   propControllerHandles: PropControllerHandles.reducer,
   isInBuilder: IsInBuilder.reducer,
-  isPreview: IsPreview.reducer,
   builderEditMode: BuilderEditMode.reducer,
   breakpoints: Breakpoints.reducer,
 }
 
 export type State = {
+  isReadOnly: IsReadOnly.State
+  siteVersion: SiteVersion.State
   documents: Documents.State
   elementTrees: ElementTrees.State
   reactComponents: ReactComponents.State
@@ -55,7 +59,6 @@ export type State = {
   propControllers: PropControllers.State
   propControllerHandles: PropControllerHandles.State
   isInBuilder: IsInBuilder.State
-  isPreview: IsPreview.State
   builderEditMode: BuilderEditMode.State
   breakpoints: Breakpoints.State
 }
@@ -209,8 +212,8 @@ export function getIsInBuilder(state: State): boolean {
   return state.isInBuilder
 }
 
-export function getIsPreview(state: State): boolean {
-  return IsPreview.getIsPreview(state.isPreview)
+export function getIsReadOnly(state: State): boolean {
+  return state.isReadOnly && state.siteVersion == null // FIXME
 }
 
 export function getBuilderEditMode(state: State): BuilderEditMode.State {

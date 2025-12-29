@@ -8,7 +8,7 @@ import {
   PropControllersHandle,
 } from '../../../../state/modules/prop-controller-handles'
 
-import { useIsPreview } from '../../hooks/use-is-preview'
+import { useIsReadOnly } from '../../hooks/use-is-read-only'
 
 const EditableText = lazy(() => import('./EditableText'))
 const ReadOnlyText = lazy(() => import('./ReadOnlyText'))
@@ -39,11 +39,9 @@ function RichText({
     [control],
   )
 
-  const isPreview = useIsPreview()
-
-  return isPreview ? (
-    <EditableText text={data} ref={textCallbackRef} />
-  ) : (
+  return useIsReadOnly() ? (
     <ReadOnlyText text={data} ref={textCallbackRef} />
+  ) : (
+    <EditableText text={data} ref={textCallbackRef} />
   )
 }

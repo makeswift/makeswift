@@ -1,6 +1,6 @@
 import * as LocalizedResourcesMap from '../localized-resources-map'
 import * as HostAPI from '../../host-api'
-import * as InternalActions from '../../actions/internal'
+import * as InternalActions from '../../actions/internal/read-write-actions'
 
 describe('state / LocalizedResourcesMap', () => {
   test('`getInitialState` w/o arguments returns an empty state', () => {

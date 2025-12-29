@@ -1,5 +1,5 @@
 import * as APIResources from '../api-resources'
-import * as Actions from '../../actions/internal'
+import * as Actions from '../../actions/internal/read-write-actions'
 import * as Host from '../../host-api'
 import {
   APIResourceType,

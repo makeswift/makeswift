@@ -1,40 +1,40 @@
-import { combineReducers, type ThunkDispatch } from '@reduxjs/toolkit'
+import { combineReducers, type ThunkAction, type ThunkDispatch } from '@reduxjs/toolkit'
 
-import * as Documents from './modules/read-write-documents'
-import * as BoxModels from './modules/box-models'
-import * as Pointer from './modules/pointer'
-import * as ElementImperativeHandles from './modules/element-imperative-handles'
-import * as Breakpoints from './modules/breakpoints'
+import * as Documents from './modules/read-write/read-write-documents'
+import * as BoxModels from './modules/read-write/box-models'
+import * as Pointer from './modules/read-write/pointer'
+import * as ElementImperativeHandles from './modules/read-write/element-imperative-handles'
 
 import { type Action } from './actions'
 
 import { ElementImperativeHandle } from '../runtimes/react/element-imperative-handle'
 
 import * as ReadOnlyState from './read-only-state'
+import { BuilderAPIProxy } from './builder-api/proxy'
 
-export type { Operation } from './modules/read-write-documents'
-export type { BoxModelHandle } from './modules/box-models'
-export { createBox, getBox, parse } from './modules/box-models'
+export type { Operation } from './modules/read-write/read-write-documents'
+export type { BoxModelHandle } from './modules/read-write/box-models'
+export { createBox, getBox, parse } from './modules/read-write/box-models'
 
 const reducers = {
   ...ReadOnlyState.reducers,
+  isReadOnly: () => false,
   documents: Documents.reducer,
   boxModels: BoxModels.reducer,
   pointer: Pointer.reducer,
   elementImperativeHandles: ElementImperativeHandles.reducer,
-  breakpoints: Breakpoints.reducer,
 }
 
 export function createRootReducer() {
   return combineReducers(reducers)
 }
 
-export type State = ReadOnlyState.State & {
+export type State = Omit<ReadOnlyState.State, 'isReadOnly' | 'documents'> & {
+  isReadOnly: false
   documents: Documents.State
   boxModels: BoxModels.State
   pointer: Pointer.State
   elementImperativeHandles: ElementImperativeHandles.State
-  breakpoints: Breakpoints.State
 }
 
 export type Dispatch = ThunkDispatch<State, unknown, Action>
@@ -45,6 +45,10 @@ function getDocumentsStateSlice(state: State): Documents.State {
 
 export function getDocuments(state: State): Documents.State {
   return Documents.getDocuments(getDocumentsStateSlice(state))
+}
+
+export function getDocument(state: State, documentKey: string): Documents.Document | null {
+  return Documents.getDocument(getDocumentsStateSlice(state), documentKey)
 }
 
 function getBoxModelsStateSlice(state: State): BoxModels.State {
@@ -101,4 +105,12 @@ export function getElementImperativeHandlesContainingElement(
   }
 
   return filteredElementImperativeHandles
+}
+
+export function setupBuilderProxy(
+  builderProxy: BuilderAPIProxy,
+): ThunkAction<void, State, unknown, Action> {
+  return dispatch => {
+    builderProxy.setup({ onHostAction: action => dispatch(action) })
+  }
 }

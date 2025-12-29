@@ -1,4 +1,4 @@
-import { BoxModel, getBox } from '../../state/modules/box-models'
+import { BoxModel, getBox } from '../../state/modules/read-write/box-models'
 import deepEqual from '../../utils/deepEqual'
 
 export function pollBoxModel({

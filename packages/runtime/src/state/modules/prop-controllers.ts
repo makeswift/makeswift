@@ -1,4 +1,6 @@
-import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
+import { type Action, type UnknownAction, isKnownAction } from '../actions'
+import { ReadOnlyActionTypes } from '../actions/internal/read-only-actions'
+
 import { Descriptor as PropControllerDescriptor } from '../../prop-controllers/descriptors'
 
 export type { PropControllerDescriptor }
@@ -30,10 +32,10 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
   if (!isKnownAction(action)) return state
 
   switch (action.type) {
-    case ActionTypes.REGISTER_COMPONENT:
+    case ReadOnlyActionTypes.REGISTER_COMPONENT:
       return new Map(state).set(action.payload.type, action.payload.propControllerDescriptors)
 
-    case ActionTypes.UNREGISTER_COMPONENT: {
+    case ReadOnlyActionTypes.UNREGISTER_COMPONENT: {
       const nextState = new Map(state)
       const deleted = nextState.delete(action.payload.type)
       return deleted ? nextState : state

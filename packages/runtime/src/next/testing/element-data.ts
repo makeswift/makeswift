@@ -5,7 +5,7 @@ import {
   type MakeswiftPageDocument,
   type MakeswiftComponentSnapshot,
 } from '../../client'
-import { CacheData } from '../../api/react'
+import { CacheData } from '../../api/client'
 import { type ElementData } from '../../state/read-only-state'
 import { MakeswiftComponentType } from '../../components/builtin/constants'
 

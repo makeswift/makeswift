@@ -1,4 +1,5 @@
-import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
+import { type Action, type UnknownAction, isKnownAction } from '../../actions'
+import { HostActionTypes } from '../../host-api'
 
 export type Point = { x: number; y: number }
 
@@ -18,7 +19,7 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
   if (!isKnownAction(action)) return state
 
   switch (action.type) {
-    case ActionTypes.BUILDER_POINTER_MOVE:
+    case HostActionTypes.BUILDER_POINTER_MOVE:
       return { ...state, pointer: action.payload.pointer }
 
     default:

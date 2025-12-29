@@ -2,7 +2,7 @@
 /** @jsx jsx */
 import { Slot, TextInput } from '../../controls'
 
-import { registerComponent } from '../actions/internal'
+import { registerComponent } from '../actions/internal/read-write-actions'
 import * as ReactPage from '../react-page'
 import * as State from '../read-only-state'
 import { mergeElement } from '../ops/merge-element'

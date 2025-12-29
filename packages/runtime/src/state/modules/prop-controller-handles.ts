@@ -1,4 +1,5 @@
 import { ControlInstance } from '@makeswift/controls'
+
 import { type Action, type UnknownAction, ActionTypes, isKnownAction } from '../actions'
 import type { DescriptorsPropControllers } from '../../prop-controllers/instances'
 import type { Descriptor } from '../../prop-controllers/descriptors'

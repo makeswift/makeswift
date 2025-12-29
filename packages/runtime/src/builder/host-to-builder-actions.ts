@@ -7,15 +7,15 @@ import { isAction } from '@reduxjs/toolkit'
 import {
   type RegisterComponentAction,
   type UnregisterComponentAction,
-  InternalActionTypes,
-} from '../state/actions/internal'
+  ReadOnlyActionTypes,
+} from '../state/actions/internal/read-only-actions'
 
 import { type BuilderAction, BuilderActionTypes } from '../state/builder-api/actions'
 
 export const HostToBuilderActionTypes = {
   ...BuilderActionTypes,
-  REGISTER_COMPONENT: InternalActionTypes.REGISTER_COMPONENT,
-  UNREGISTER_COMPONENT: InternalActionTypes.UNREGISTER_COMPONENT,
+  REGISTER_COMPONENT: ReadOnlyActionTypes.REGISTER_COMPONENT,
+  UNREGISTER_COMPONENT: ReadOnlyActionTypes.UNREGISTER_COMPONENT,
 } as const
 
 export type HostToBuilderAction =
