@@ -19,6 +19,8 @@ fragment BlogPostFields on BlogpostConnectionConnection {
           name
         }
       }
+      meta_description
+      meta_title
       _meta {
         uid
         type
