@@ -17,7 +17,7 @@
     "lodash.debounce": "^4.0.8",
     "next": "15.2.8",
     "react": "^19.0.3",
-    "react-dom": "^19.0.0",
+    "react-dom": "^19.0.3",
     "react-instantsearch": "^7.16.2",
     "react-instantsearch-nextjs": "^1.0.1",
     "zod": "^4.0.15"
