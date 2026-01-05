@@ -3,8 +3,8 @@
 exports[`MakeswiftPage metadata and seo tag rendering does NOT render any page metadata when passing all options as false 1`] = `
 <head>
   <style
-    href="makeswift-base-styles"
-    precedence="high"
+    data-href="makeswift-base-styles"
+    data-precedence="high"
   >
     
         html {
@@ -25,8 +25,8 @@ exports[`MakeswiftPage metadata and seo tag rendering does NOT render any page m
 exports[`MakeswiftPage metadata and seo tag rendering does NOT render any page metadata when passing empty options 1`] = `
 <head>
   <style
-    href="makeswift-base-styles"
-    precedence="high"
+    data-href="makeswift-base-styles"
+    data-precedence="high"
   >
     
         html {
@@ -47,8 +47,8 @@ exports[`MakeswiftPage metadata and seo tag rendering does NOT render any page m
 exports[`MakeswiftPage metadata and seo tag rendering does NOT render any page metadata when passing false 1`] = `
 <head>
   <style
-    href="makeswift-base-styles"
-    precedence="high"
+    data-href="makeswift-base-styles"
+    data-precedence="high"
   >
     
         html {
@@ -69,8 +69,8 @@ exports[`MakeswiftPage metadata and seo tag rendering does NOT render any page m
 exports[`MakeswiftPage metadata and seo tag rendering only renders selective metadata when passing options 1`] = `
 <head>
   <style
-    href="makeswift-base-styles"
-    precedence="high"
+    data-href="makeswift-base-styles"
+    data-precedence="high"
   >
     
         html {
@@ -118,8 +118,8 @@ exports[`MakeswiftPage metadata and seo tag rendering only renders selective met
 exports[`MakeswiftPage metadata and seo tag rendering renders all metadata by default (without passing prop) 1`] = `
 <head>
   <style
-    href="makeswift-base-styles"
-    precedence="high"
+    data-href="makeswift-base-styles"
+    data-precedence="high"
   >
     
         html {
@@ -196,8 +196,8 @@ exports[`MakeswiftPage metadata and seo tag rendering renders all metadata by de
 exports[`MakeswiftPage metadata and seo tag rendering renders all metadata when passing all options as true 1`] = `
 <head>
   <style
-    href="makeswift-base-styles"
-    precedence="high"
+    data-href="makeswift-base-styles"
+    data-precedence="high"
   >
     
         html {
@@ -274,8 +274,8 @@ exports[`MakeswiftPage metadata and seo tag rendering renders all metadata when 
 exports[`MakeswiftPage metadata and seo tag rendering renders all metadata when passing true 1`] = `
 <head>
   <style
-    href="makeswift-base-styles"
-    precedence="high"
+    data-href="makeswift-base-styles"
+    data-precedence="high"
   >
     
         html {

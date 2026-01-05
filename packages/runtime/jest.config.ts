@@ -2,7 +2,10 @@ import type { Config } from 'jest'
 
 const config: Config = {
   moduleNameMapper: {
-    'react-dom/server': '<rootDir>/node_modules/react-dom/server.browser.js',
+    // Jest/JSDOM resolves react-dom/server to server.browser.js via the "browser"
+    // export condition, but it uses MessageChannel which isn't available in Node.js.
+    // https://github.com/facebook/react/issues/31827
+    'react-dom/server': 'react-dom/server.node',
   },
   modulePathIgnorePatterns: ['<rootDir>/dist'],
   moduleDirectories: ['node_modules', 'src'],
