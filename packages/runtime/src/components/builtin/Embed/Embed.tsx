@@ -51,7 +51,9 @@ const Embed = forwardRef(function Embed(
     setShouldRender(true)
   }, [])
 
-  useImperativeHandle(ref, () => container, [container])
+  useImperativeHandle<HTMLDivElement | null, HTMLDivElement | null>(ref, () => container, [
+    container,
+  ])
 
   useEffect(() => {
     // TODO: When we SSR the editor, we can remove the editor check

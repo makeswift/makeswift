@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef } from 'react'
+import { ForwardedRef, forwardRef, ReactNode } from 'react'
 import { Descendant, Element, Text } from 'slate'
 import { RenderElementProps, RenderLeafProps } from 'slate-react'
 
@@ -75,7 +75,7 @@ type LeafProps = {
 }
 
 export function LeafComponent({ plugins, ...props }: LeafProps) {
-  function initialRenderLeaf({ leaf }: RenderLeafProps) {
+  function initialRenderLeaf({ leaf }: RenderLeafProps): ReactNode {
     return <span className={leaf.className}>{leaf.text === '' ? '\uFEFF' : leaf.text}</span>
   }
 
@@ -105,7 +105,7 @@ type ElementProps = {
 }
 
 function ElementComponent({ plugins, ...props }: ElementProps) {
-  function initialRenderElement(props: RenderElementProps) {
+  function initialRenderElement(props: RenderElementProps): ReactNode {
     return <Descendants descendants={props.element.children} plugins={plugins} />
   }
 
