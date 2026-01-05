@@ -1,0 +1,39 @@
+query GetBlogs($skip: Int = 0, $limit: Int = 8, $where: BlogPostWhere) {
+  all_blog_post(skip: $skip, limit: $limit, where: $where) {
+    items {
+      body
+      description
+      feed_date
+      slug
+      title
+      bannerConnection {
+        edges {
+          node {
+            dimension {
+              height
+              width
+            }
+            url
+            description
+          }
+        }
+      }
+      system {
+        updated_at
+      }
+      authorConnection {
+        edges {
+          node {
+            ... on Author {
+              title
+              slug
+              job_title
+              description
+            }
+          }
+        }
+      }
+    }
+    total
+  }
+}
