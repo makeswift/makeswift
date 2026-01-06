@@ -1,8 +1,7 @@
 /** @jest-environment jsdom */
 
-import { Suspense, type ComponentType } from 'react'
+import { Suspense, act } from 'react'
 import '@testing-library/jest-dom'
-import { act } from 'react-dom/test-utils'
 import { render, screen } from '@testing-library/react'
 
 import { ReactRuntime } from '../../../react'
@@ -11,6 +10,7 @@ import { MakeswiftComponent } from '../../../runtimes/react/components/Makeswift
 import { type MakeswiftComponentSnapshot } from '../../../client'
 
 import { Checkbox, TextInput } from '@makeswift/controls'
+import { ComponentType } from '../../../state/react-page'
 
 const CustomComponentType = 'CustomComponent'
 const componentId = 'component-id'

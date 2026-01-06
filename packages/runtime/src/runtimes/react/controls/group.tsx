@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import {
   GroupControl,
   GroupDefinition,
@@ -10,7 +11,7 @@ import { ControlValue } from './control'
 type GroupControlValueProps = {
   definition: GroupDefinition
   data: DataType<GroupDefinition> | undefined
-  children(value: ResolvedValueType<GroupDefinition>): JSX.Element
+  children(value: ResolvedValueType<GroupDefinition>): ReactNode
   control: GroupControl
 }
 

@@ -342,6 +342,8 @@ const Carousel = forwardRef(function Carousel(
           {/* @ts-expect-error: React HTMLElement typings conflict with motion components */}
           <motion.div {...bindPage()} className={pageClassName} animate={animation}>
             <motion.div
+              // @ts-expect-error: Type error when upgrading to @types/react@19.2.7 and @types/react-dom@19.2.3
+              // Upgrade framer-motion package to fix type error
               className={reelClassName}
               animate={{ x: `${-(100 / pageSize) * startIndex}%` }}
               transition={{
@@ -355,9 +357,11 @@ const Carousel = forwardRef(function Carousel(
               {images.map(({ props: imageProps, key }) => (
                 <motion.div
                   key={key}
+                  // @ts-expect-error: Type error when upgrading to @types/react@19.2.7 and @types/react-dom@19.2.3
+                  // Upgrade framer-motion package to fix type error
                   className={slideClassName}
-                  onMouseDown={e => e.preventDefault()}
-                  onClick={e => {
+                  onMouseDown={(e: MouseEvent) => e.preventDefault()}
+                  onClick={(e: MouseEvent) => {
                     if (swipe.current !== 0) e.preventDefault()
                   }}
                 >

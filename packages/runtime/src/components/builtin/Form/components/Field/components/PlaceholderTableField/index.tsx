@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import { useFormContext, Sizes, Shapes, Value } from '../../../../context/FormContext'
 import { getSizeHeight as getLabelSizeHeight } from '../Label'
 import { getSizeHeight as getInputSizeHeight } from '../Input'
@@ -57,7 +58,7 @@ function Input({ shape, size }: Pick<Value, 'shape' | 'size'>) {
   )
 }
 
-export default function PlaceholderTableField(): JSX.Element {
+export default function PlaceholderTableField(): ReactNode {
   const { size, shape } = useFormContext()
 
   return (

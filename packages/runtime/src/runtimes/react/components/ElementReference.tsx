@@ -1,4 +1,4 @@
-import { Ref, forwardRef, memo, useMemo } from 'react'
+import { Ref, forwardRef, memo, useMemo, ReactNode } from 'react'
 import { ElementImperativeHandle } from '../element-imperative-handle'
 import { useGlobalElement, useLocalizedGlobalElement } from '../hooks/makeswift-api'
 import { useDocument } from '../hooks/use-document'
@@ -21,7 +21,7 @@ export const ElementReference = memo(
   forwardRef(function ElementReference(
     { elementReference }: ElementRefereceProps,
     ref: Ref<ElementImperativeHandle>,
-  ): JSX.Element {
+  ): ReactNode {
     const globalElement = useGlobalElement(elementReference.value)
     const locale = useDocumentLocale()
     // Update the logic here when we can merge element trees

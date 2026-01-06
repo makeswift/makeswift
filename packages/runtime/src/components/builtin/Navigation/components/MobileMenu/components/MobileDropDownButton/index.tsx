@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, useState } from 'react'
+import { ComponentPropsWithoutRef, useState, ReactNode } from 'react'
 
 import { LinkData, ResponsiveColorData, ResponsiveTextStyleData } from '@makeswift/prop-controllers'
 
@@ -107,7 +107,7 @@ export default function MobileDropDownButton({
   color,
   textColor,
   ...restOfProps
-}: Props): JSX.Element {
+}: Props): ReactNode {
   const [isOpen, setIsOpen] = useState(false)
   return (
     <>

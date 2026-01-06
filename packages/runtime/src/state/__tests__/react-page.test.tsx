@@ -1,5 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { type JSX } from 'react'
 import { Slot, TextInput } from '../../controls'
 
 import { registerComponent } from '../actions/internal'
@@ -12,7 +13,7 @@ function jsx(type: Function, props: Record<string, unknown> = {}, ...children: J
     ...props,
     children:
       children.length === 0
-        ? props.children ?? []
+        ? (props.children ?? [])
         : children.length === 1
           ? children.at(0)
           : children,

@@ -28,7 +28,7 @@ export function useSwatch(swatchId: string | null): Swatch | null {
 
 export function useSwatches(swatchIds: string[]): (Swatch | null)[] {
   const client = useMakeswiftHostApiClient()
-  const lastSnapshot = useRef<(Swatch | null)[]>()
+  const lastSnapshot = useRef<(Swatch | null)[] | null>(null)
 
   function getSnapshot() {
     const swatches = swatchIds.map(swatchId => client.readSwatch(swatchId))
@@ -67,7 +67,7 @@ export function useFile(fileId: string | null): File | null {
 
 export function useFiles(fileIds: string[]): (File | null)[] {
   const client = useMakeswiftHostApiClient()
-  const lastSnapshot = useRef<(File | null)[]>()
+  const lastSnapshot = useRef<(File | null)[] | null>(null)
 
   function getSnapshot() {
     const files = fileIds.map(fileId => client.readFile(fileId))

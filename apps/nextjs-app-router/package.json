@@ -14,14 +14,14 @@
     "@makeswift/runtime": "workspace:^",
     "negotiator": "^0.6.3",
     "next": "15.5.9",
-    "react": "19.1.4",
-    "react-dom": "19.1.4"
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
   },
   "devDependencies": {
     "@types/negotiator": "^0.6.3",
     "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.0.1",
     "eslint": "^9.13.0",
     "eslint-config-next": "15.0.2",
