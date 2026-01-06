@@ -6,6 +6,7 @@ import {
   type DataType,
   type ResolvedValueType,
 } from '@makeswift/controls'
+import { ReactNode } from 'react'
 
 import { useResolvedValue } from '../hooks/use-resolved-value'
 import { useStylesheetFactory } from '../hooks/use-stylesheet-factory'
@@ -14,7 +15,7 @@ import { useCssId } from '../hooks/use-css-id'
 type ControlValueProps = {
   definition: ControlDefinition
   data: DataType<ControlDefinition> | undefined
-  children(value: ResolvedValueType<ControlDefinition>): JSX.Element
+  children(value: ResolvedValueType<ControlDefinition>): ReactNode
   control?: InstanceType<ControlDefinition>
 }
 
@@ -23,7 +24,7 @@ export function ControlValue({
   definition,
   children,
   control,
-}: ControlValueProps): JSX.Element {
+}: ControlValueProps): ReactNode {
   const stylesheetFactory = useStylesheetFactory()
   const id = `cv-${useCssId()}`
 

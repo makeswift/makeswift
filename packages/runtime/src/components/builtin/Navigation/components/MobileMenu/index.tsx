@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, Fragment } from 'react'
+import { ComponentPropsWithoutRef, Fragment, ReactNode } from 'react'
 
 import { ColorValue as Color } from '../../../../utils/types'
 import { colorToString } from '../../../../utils/colorToString'
@@ -25,7 +25,7 @@ function ButtonLink({
   textColor,
   color,
   ...restOfProps
-}: NavigationButtonProps): JSX.Element {
+}: NavigationButtonProps): ReactNode {
   return (
     <Button
       {...restOfProps}
@@ -143,7 +143,7 @@ export default function MobileMenu({
   closeIconColor,
   links = [],
   onClose = () => {},
-}: Props): JSX.Element {
+}: Props): ReactNode {
   return (
     <Container animation={animation} backgroundColor={backgroundColor} open={open}>
       <CloseIconContainer color={closeIconColor} onClick={onClose}>

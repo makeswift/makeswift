@@ -1,6 +1,6 @@
 'use client'
 
-import { ComponentPropsWithoutRef, ForwardedRef, forwardRef, useState } from 'react'
+import { ComponentPropsWithoutRef, ForwardedRef, forwardRef, useState, ReactNode } from 'react'
 
 import { MobileMenu28 } from '../../icons/MobileMenu28'
 
@@ -170,7 +170,7 @@ function OpenIconContainer({
 type NavigationButtonProps = NavigationButtonData['payload'] &
   Omit<ComponentPropsWithoutRef<typeof Button>, 'color' | 'textColor'>
 
-function NavigationButton(props: NavigationButtonProps): JSX.Element {
+function NavigationButton(props: NavigationButtonProps): ReactNode {
   const { textColor, color, ...restOfProps } = props
 
   return (

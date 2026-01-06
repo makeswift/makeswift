@@ -1,6 +1,6 @@
 'use client'
 
-import { forwardRef, memo, Ref, useCallback, useImperativeHandle, useRef } from 'react'
+import { forwardRef, memo, Ref, useCallback, useImperativeHandle, useRef, ReactNode } from 'react'
 import { isElementReference, type Element as ElementDataOrRef } from '../../../state/react-page'
 import { ElementRegistration } from './ElementRegistration'
 import { ElementReference } from './ElementReference'
@@ -18,7 +18,7 @@ export const Element = memo(
   forwardRef(function Element(
     { element }: Props,
     ref: Ref<ElementImperativeHandle>,
-  ): JSX.Element | null {
+  ): ReactNode | null {
     const useFindDomNodeRef = useRef(true)
     const imperativeHandleRef = useRef(new ElementImperativeHandle())
 

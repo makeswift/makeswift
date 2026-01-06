@@ -1,4 +1,4 @@
-import { type ReactElement, useEffect, isValidElement } from 'react'
+import { type ReactElement, useEffect, isValidElement, ReactNode } from 'react'
 
 import Head from 'next/head'
 import Script from 'next/script'
@@ -11,7 +11,7 @@ import {
   cleanUpSnippet,
 } from '../../../../runtimes/react/components/page/HeadSnippet'
 
-const isScriptElement = (element: string | JSX.Element): element is ReactElement<any, 'script'> =>
+const isScriptElement = (element: string | ReactNode): element is ReactElement<any, 'script'> =>
   isValidElement(element) && element.type === 'script'
 
 export function HeadSnippet({ snippet }: { snippet: Snippet }) {

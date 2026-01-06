@@ -40,8 +40,9 @@ describe('MakeswiftPage', () => {
     test('renders all metadata by default (without passing prop)', async () => {
       const snapshot = createMakeswiftPageSnapshot(pageDocumentFixture)
 
-      const render = await testMakeswiftPageHeadRendering({ snapshot })
-      expect(render.container).toMatchSnapshot()
+      await testMakeswiftPageHeadRendering({ snapshot })
+      // React 19 hoists metadata elements to document.head
+      expect(document.head).toMatchSnapshot()
     })
 
     test.each([
@@ -61,8 +62,9 @@ describe('MakeswiftPage', () => {
     ])(`renders all metadata when passing $label`, async ({ metadata }) => {
       const snapshot = createMakeswiftPageSnapshot(pageDocumentFixture)
 
-      const render = await testMakeswiftPageHeadRendering({ snapshot, metadata })
-      expect(render.container).toMatchSnapshot()
+      await testMakeswiftPageHeadRendering({ snapshot, metadata })
+      // React 19 hoists metadata elements to document.head
+      expect(document.head).toMatchSnapshot()
     })
 
     test.each([
@@ -86,17 +88,18 @@ describe('MakeswiftPage', () => {
     ])(`does NOT render any page metadata when passing $label`, async ({ metadata }) => {
       const snapshot = createMakeswiftPageSnapshot(pageDocumentFixture)
 
-      const render = await testMakeswiftPageHeadRendering({ snapshot, metadata })
-      expect(render.container).toMatchSnapshot()
-      expect(getPageMetaTags(render.container).length).toBe(0)
-      expect(render.container.getElementsByTagName('link').length).toBe(0)
+      await testMakeswiftPageHeadRendering({ snapshot, metadata })
+      // React 19 hoists metadata elements to document.head
+      expect(document.head).toMatchSnapshot()
+      expect(getPageMetaTags(document.head).length).toBe(0)
+      expect(document.head.getElementsByTagName('link').length).toBe(0)
     })
 
     test('only renders selective metadata when passing options', async () => {
       const snapshot = createMakeswiftPageSnapshot(pageDocumentFixture)
 
       // Only render title, description, and keywords
-      const render = await testMakeswiftPageHeadRendering({
+      await testMakeswiftPageHeadRendering({
         snapshot,
         metadata: {
           title: true,
@@ -104,7 +107,8 @@ describe('MakeswiftPage', () => {
           keywords: true,
         },
       })
-      expect(render.container).toMatchSnapshot()
+      // React 19 hoists metadata elements to document.head
+      expect(document.head).toMatchSnapshot()
     })
   })
 })

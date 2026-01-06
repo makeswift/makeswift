@@ -1,5 +1,5 @@
 import { cx } from '@emotion/css'
-import { useState, useRef, ComponentPropsWithoutRef, ForwardedRef, forwardRef } from 'react'
+import { useState, useRef, ComponentPropsWithoutRef, ForwardedRef, forwardRef, ReactNode } from 'react'
 
 import { ReactPlayer } from '../../../react-player'
 import { useStyle } from '../../../../../runtimes/react/use-style'
@@ -74,7 +74,7 @@ export default function BackgroundVideo({
   zoom = 1,
   maskColor,
   opacity,
-}: Props): JSX.Element {
+}: Props): ReactNode {
   const [ready, setReady] = useState(false)
   const [scale, setScale] = useState(1)
   const container = useRef<HTMLDivElement>(null)

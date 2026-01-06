@@ -1,4 +1,4 @@
-import { Ref, Suspense, Fragment, forwardRef, memo } from 'react'
+import { Ref, Suspense, Fragment, forwardRef, memo, ReactNode } from 'react'
 import { ElementData as ReactPageElementData } from '../../../state/react-page'
 import { useBuiltinSuspense } from '../hooks/use-builtin-suspense'
 import { useComponent } from '../hooks/use-component'
@@ -14,7 +14,7 @@ export const ElementData = memo(
   forwardRef(function ElementData(
     { elementData }: ElementDataProps,
     ref: Ref<unknown>,
-  ): JSX.Element {
+  ): ReactNode {
     const Component = useComponent(elementData.type)
     const builtinSuspense = useBuiltinSuspense(elementData.type)
 
