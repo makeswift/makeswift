@@ -22,7 +22,7 @@ export function useGlobalStyle(...args: CSSInterpolation[]): void {
     }
   }
 
-  const sheetRef = useRef<[StyleSheet, boolean]>()
+  const sheetRef = useRef<[StyleSheet, boolean] | null>(null)
 
   // Hydration
   useInsertionEffect(() => {

@@ -87,6 +87,28 @@ exports[`Head snippet rendering renders allowed snippet tags <title>Test Page</t
 
 exports[`Head snippet rendering renders mixed snippet content, skipping disallowed tags 1`] = `
 [
+  <script
+    data-makeswift-snippet-id="[test-snippet-1]"
+    data-nscript="beforeInteractive"
+    strategy="beforeInteractive"
+  >
+    console.log("Snippet 1");
+  </script>,
+  <style
+    data-makeswift-snippet-id="[test-snippet-1]"
+  >
+    body { margin: 0; }
+  </style>,
+  <noscript
+    data-makeswift-snippet-id="[test-snippet-1]"
+  >
+    You need to enable JavaScript to run this app.
+  </noscript>,
+]
+`;
+
+exports[`Head snippet rendering renders mixed snippet content, skipping disallowed tags 2`] = `
+[
   <meta
     content="width=device-width, initial-scale=1"
     data-makeswift-snippet-id="[test-snippet-1]"
@@ -97,13 +119,6 @@ exports[`Head snippet rendering renders mixed snippet content, skipping disallow
     data-makeswift-snippet-id="[test-snippet-1]"
     name="snippet 1 before script"
   />,
-  <script
-    data-makeswift-snippet-id="[test-snippet-1]"
-    data-nscript="beforeInteractive"
-    strategy="beforeInteractive"
-  >
-    console.log("Snippet 1");
-  </script>,
   <meta
     content=""
     data-makeswift-snippet-id="[test-snippet-1]"
@@ -115,16 +130,6 @@ exports[`Head snippet rendering renders mixed snippet content, skipping disallow
     rel="icon"
     type="image/x-icon"
   />,
-  <style
-    data-makeswift-snippet-id="[test-snippet-1]"
-  >
-    body { margin: 0; }
-  </style>,
-  <noscript
-    data-makeswift-snippet-id="[test-snippet-1]"
-  >
-    You need to enable JavaScript to run this app.
-  </noscript>,
 ]
 `;
 

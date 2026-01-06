@@ -40,10 +40,22 @@ describe('Head snippet rendering', () => {
   describe('renders allowed snippet tags', () => {
     test.each([
       '<title>Test Page</title>',
-      '<base href="https://www.example.com/" />',
       '<link rel="icon" type="image/x-icon" href="/static/favicon.ico">',
-      '<style>body { margin: 0; }</style>',
       '<meta name="viewport" content="width=device-width, initial-scale=1">',
+    ])('%s', async tag => {
+      const snapshot = createMakeswiftPageSnapshot({
+        ...pageDocument,
+        snippets: [createSnippet({ id: '[test-snippet-1]', code: tag })],
+      })
+
+      await renderPageSnapshot(snapshot)
+      // React 19 hoists metadata elements to document.head
+      expect(getPageSnippetTags(document.head)).toMatchSnapshot()
+    })
+
+    test.each([
+      '<base href="https://www.example.com/" />',
+      '<style>body { margin: 0; }</style>',
       '<script>console.log("Hello World");</script>',
       '<noscript>You need to enable JavaScript to run this app.</noscript>',
       '<template id="template-id"><span>content</span></template>',
@@ -100,6 +112,8 @@ describe('Head snippet rendering', () => {
 
     const render = await renderPageSnapshot(snapshot)
     expect(getPageSnippetTags(render.container)).toMatchSnapshot()
+    // React 19 hoists metadata elements to document.head
+    expect(getPageSnippetTags(document.head)).toMatchSnapshot()
   })
 
   test('renders multiple snippets in the order they are defined', async () => {

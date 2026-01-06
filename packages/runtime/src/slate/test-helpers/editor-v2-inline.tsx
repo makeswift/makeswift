@@ -1,7 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsxWithV2InlineEditor */
 
-import { ComponentType } from 'react'
+import { ComponentType, type JSX } from 'react'
 import { Editor as SlateEditor } from 'slate'
 import { jsxWithV2InlineEditor } from './slate-test-helper'
 

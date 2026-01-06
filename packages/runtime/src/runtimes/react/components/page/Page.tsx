@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, ReactNode } from 'react'
 
 import { DocumentRoot } from '../DocumentRoot'
 import { type Document } from '../../../../state/react-page'
@@ -15,7 +15,7 @@ type Props = {
   metadata?: boolean | PageMetadataSettings
 }
 
-export function Page({ page, rootDocument, metadata = true }: Props): JSX.Element {
+export function Page({ page, rootDocument, metadata = true }: Props): ReactNode {
   const { bodySnippets } = usePageSnippets({ page })
   const pageMetadataSettings = useMemo(() => flattenMetadataSettings(metadata), [metadata])
 
