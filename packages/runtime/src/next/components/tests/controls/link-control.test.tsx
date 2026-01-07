@@ -120,7 +120,15 @@ describe('Page', () => {
     test('resolves scroll target when element key is on screen', async () => {
       await testPageControlPropRendering(Link(), {
         value: scrollToElementLink,
-        expectedRenders: 1,
+        // When using Activity in tests, there are two renders because the elementId
+        // value is derived from document registration (via useIsomorphicLayoutEffect)
+        // rather than from cache data like other resources. In the test environment,
+        // this effect runs after the first component render, causing:
+        // 1st render: href='#' (element ID not yet registered)
+        // 2nd render: href='#test-element-id' (after document registration completes)
+        // With Suspense, document registration runs before rendering, so only 1 render.
+        // https://github.com/makeswift/makeswift/pull/1189#discussion_r2661099425
+        expectedRenders: 2,
         registerComponents: (runtime: ReactRuntime) => {
           runtime.registerComponent(Button, {
             type: MakeswiftComponentType.Button,

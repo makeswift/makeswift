@@ -1,12 +1,6 @@
 import type { Config } from 'jest'
 
-const config: Config = {
-  moduleNameMapper: {
-    // Jest/JSDOM resolves react-dom/server to server.browser.js via the "browser"
-    // export condition, but it uses MessageChannel which isn't available in Node.js.
-    // https://github.com/facebook/react/issues/31827
-    'react-dom/server': 'react-dom/server.node',
-  },
+const baseConfig: Config = {
   modulePathIgnorePatterns: ['<rootDir>/dist'],
   moduleDirectories: ['node_modules', 'src'],
   testMatch: [
@@ -31,6 +25,35 @@ const config: Config = {
       },
     ],
   },
+}
+
+const config: Config = {
+  projects: [
+    {
+      ...baseConfig,
+      displayName: 'react-latest',
+      testPathIgnorePatterns: ['\\.react18\\.test\\.'],
+      moduleNameMapper: {
+        // Jest/JSDOM resolves react-dom/server to server.browser.js via the "browser"
+        // export condition, but it uses MessageChannel which isn't available in Node.js.
+        // https://github.com/facebook/react/issues/31827
+        'react-dom/server': 'react-dom/server.node',
+      },
+    },
+    {
+      ...baseConfig,
+      displayName: 'react-18',
+      testMatch: ['**/*.react18.test.[tj]s?(x)'],
+      testPathIgnorePatterns: [],
+      moduleNameMapper: {
+        '^react$': '<rootDir>/node_modules/react-18',
+        '^react/(.*)$': '<rootDir>/node_modules/react-18/$1',
+        '^react-dom$': '<rootDir>/node_modules/react-dom-18',
+        '^react-dom/(.*)$': '<rootDir>/node_modules/react-dom-18/$1',
+        'react-dom/server': '<rootDir>/node_modules/react-dom-18/server.node.js',
+      },
+    },
+  ],
 }
 
 export default config
