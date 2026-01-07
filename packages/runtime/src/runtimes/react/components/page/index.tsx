@@ -1,4 +1,4 @@
-import { Suspense, useMemo, memo, type ComponentProps } from 'react'
+import { useMemo, memo, type ComponentProps } from 'react'
 
 import { useCacheData } from '../../hooks/use-cache-data'
 
@@ -7,6 +7,7 @@ import { type MakeswiftPageSnapshot, pageToRootDocument } from '../../../../clie
 import { type PageMetadataSettings } from './page-seo-settings'
 import { Page as PageComponent } from './Page'
 import { useRegisterDocument } from '../../hooks/use-register-document'
+import { ActivityOrFallback } from '../activity-with-fallback'
 
 export { type PageMetadataSettings } from './page-seo-settings'
 
@@ -42,7 +43,7 @@ export const Page = memo(
     useRegisterDocument(rootDocument)
 
     return (
-      <Suspense>
+      <ActivityOrFallback>
         {/* We use a key here to reset the Snippets state in the PageMeta component */}
         <PageComponent
           key={snapshot.document.data.key}
@@ -50,7 +51,7 @@ export const Page = memo(
           rootDocument={rootDocument}
           metadata={metadata}
         />
-      </Suspense>
+      </ActivityOrFallback>
     )
   },
 )

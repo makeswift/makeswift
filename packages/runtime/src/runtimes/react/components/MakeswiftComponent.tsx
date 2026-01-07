@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, Fragment, memo, useMemo } from 'react'
+import { memo, useMemo } from 'react'
 
 import {
   componentDocumentToRootEmbeddedDocument,
@@ -11,6 +11,7 @@ import { getRootElement } from '../../../state/react-page'
 import { useCacheData } from '../hooks/use-cache-data'
 import { useRegisterDocument } from '../hooks/use-register-document'
 import { useBuiltinSuspense } from '../hooks/use-builtin-suspense'
+import { ActivityOrFallback } from './activity-with-fallback'
 
 import { DocumentRoot } from './DocumentRoot'
 
@@ -40,11 +41,10 @@ export const MakeswiftComponent = memo(({ snapshot, label, type, description }: 
   useRegisterDocument(rootDocument)
 
   const builtinSuspense = useBuiltinSuspense(getRootElement(rootDocument).type)
-  const SuspenseOrFragment = builtinSuspense ? Suspense : Fragment
 
   return (
-    <SuspenseOrFragment>
+    <ActivityOrFallback suspenseFallback={builtinSuspense}>
       <DocumentRoot rootDocument={rootDocument} />
-    </SuspenseOrFragment>
+    </ActivityOrFallback>
   )
 })
