@@ -11,6 +11,7 @@ import { findDOMNode } from './lib/react-dom'
 
 /**
  * @see https://github.com/facebook/react/blob/a2505792ed17fd4d7ddc69561053c3ac90899491/packages/react-reconciler/src/ReactFiberReconciler.new.js#L179-L244
+ * @see https://github.com/facebook/react/commit/c3b283964108b0e8dbcf1f9eb2e7e67815e39dfb
  */
 function suppressWarningAndFindDomNode(
   instance: Component | null | undefined,
@@ -19,6 +20,7 @@ function suppressWarningAndFindDomNode(
 
   console.error = (...args) => {
     if (typeof args[0] === 'string' && args[0].includes('%s is deprecated in StrictMode.')) return
+    if (typeof args[0] === 'string' && args[0].includes('findDOMNode is deprecated')) return
 
     return error.apply(console, args)
   }
