@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders a style with CSS variable fontFamily: resolvedValue 1`] = `"mswft-ezpn2f u-r8-propKey"`;
+exports[`renders a style with CSS variable fontFamily: resolvedValue 1`] = `"mswft-ezpn2f u-_r_b_-propKey"`;
 
 exports[`renders a style with CSS variable fontFamily: snapshot 1`] = `
 {
@@ -76,7 +76,7 @@ exports[`renders a style with CSS variable fontFamily: snapshot 1`] = `
 }
 `;
 
-exports[`renders a style with fontFamily: resolvedValue 1`] = `"mswft-1rtsrrx u-r5-propKey"`;
+exports[`renders a style with fontFamily: resolvedValue 1`] = `"mswft-1rtsrrx u-_r_7_-propKey"`;
 
 exports[`renders a style with fontFamily: snapshot 1`] = `
 {
@@ -152,7 +152,7 @@ exports[`renders a style with fontFamily: snapshot 1`] = `
 }
 `;
 
-exports[`renders a style: resolvedValue 1`] = `"mswft-1cny9vj u-r2-propKey"`;
+exports[`renders a style: resolvedValue 1`] = `"mswft-1cny9vj u-_r_3_-propKey"`;
 
 exports[`renders a style: snapshot 1`] = `
 {
