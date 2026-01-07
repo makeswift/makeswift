@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.26.3-canary.0
+
+### Patch Changes
+
+- 72be9b5: Use React 19.2+ `<Activity>` boundaries instead of `<Suspense>` to prevent layout shift. Fallback to `<Suspense>` on older React versions. `builtinSuspense` option in `registerComponent()` is now ignored in React >= 19.2.
+
 ## 0.26.2
 
 ### Patch Changes
