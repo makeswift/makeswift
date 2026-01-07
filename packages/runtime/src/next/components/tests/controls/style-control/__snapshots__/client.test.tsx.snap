@@ -1,5 +1,157 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`renders a style with CSS variable fontFamily: resolvedValue 1`] = `"mswft-ezpn2f u-_r_b_-propKey"`;
+
+exports[`renders a style with CSS variable fontFamily: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "textStyle": [
+                    {
+                      "deviceId": "desktop",
+                      "value": {
+                        "fontFamily": "var(--font-heading)",
+                        "fontSize": null,
+                        "fontStyle": [],
+                        "fontWeight": null,
+                        "letterSpacing": null,
+                        "textTransform": [],
+                      },
+                    },
+                  ],
+                  "width": [
+                    {
+                      "deviceId": "desktop",
+                      "value": {
+                        "unit": "%",
+                        "value": 100,
+                      },
+                    },
+                  ],
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`renders a style with fontFamily: resolvedValue 1`] = `"mswft-1rtsrrx u-_r_7_-propKey"`;
+
+exports[`renders a style with fontFamily: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "textStyle": [
+                    {
+                      "deviceId": "desktop",
+                      "value": {
+                        "fontFamily": "Arial",
+                        "fontSize": null,
+                        "fontStyle": [],
+                        "fontWeight": null,
+                        "letterSpacing": null,
+                        "textTransform": [],
+                      },
+                    },
+                  ],
+                  "width": [
+                    {
+                      "deviceId": "desktop",
+                      "value": {
+                        "unit": "%",
+                        "value": 100,
+                      },
+                    },
+                  ],
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
 exports[`renders a style: resolvedValue 1`] = `"mswft-1cny9vj u-_r_3_-propKey"`;
 
 exports[`renders a style: snapshot 1`] = `

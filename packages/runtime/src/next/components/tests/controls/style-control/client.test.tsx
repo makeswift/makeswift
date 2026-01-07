@@ -3,11 +3,32 @@
  */
 import { Style } from '../../../../../controls'
 import { testPageControlPropRendering } from '../page-control-prop-rendering'
-import { value, registerComponents } from './fixtures'
+import {
+  value,
+  valueWithFontFamily,
+  valueWithCSSVariableFontFamily,
+  registerComponents,
+} from './fixtures'
 
 test(`renders a style`, async () => {
   await testPageControlPropRendering(Style(), {
     value,
+    registerComponents,
+    expectedRenders: 1,
+  })
+})
+
+test(`renders a style with fontFamily`, async () => {
+  await testPageControlPropRendering(Style({ properties: Style.All }), {
+    value: valueWithFontFamily,
+    registerComponents,
+    expectedRenders: 1,
+  })
+})
+
+test(`renders a style with CSS variable fontFamily`, async () => {
+  await testPageControlPropRendering(Style({ properties: Style.All }), {
+    value: valueWithCSSVariableFontFamily,
     registerComponents,
     expectedRenders: 1,
   })
