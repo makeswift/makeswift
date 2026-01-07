@@ -2,6 +2,8 @@ import { ControlDefinition as UnifiedControlDefinition } from '@makeswift/contro
 
 import { type LegacyDescriptor, type DescriptorValueType } from '../../prop-controllers/descriptors'
 
+import { supportsActivity } from './components/activity-with-fallback'
+
 import { registerComponentEffect, registerReactComponentEffect } from '../../state/actions/internal'
 
 import { BreakpointsInput } from '../../state/modules/breakpoints'
@@ -40,6 +42,11 @@ export class ReactRuntimeCore extends RuntimeCore {
       icon?: ComponentIcon
       hidden?: boolean
       description?: string
+      /**
+       * In React <= 19.1, controls the default `<Suspense>` boundary.
+       * Ignored in React >= 19.2; components are always wrapped in `<Activity>`.
+       * Defaults to `true`.
+       */
       builtinSuspense?: boolean
       props?: P
     },
@@ -53,6 +60,12 @@ export class ReactRuntimeCore extends RuntimeCore {
         props ?? {},
       ),
     )
+
+    if (supportsActivity() && builtinSuspense !== undefined) {
+      console.warn(
+        'builtinSuspense is ignored in React >= 19.2; components are always wrapped in <Activity>.',
+      )
+    }
 
     const unregisterReactComponent = this.store.dispatch(
       registerReactComponentEffect(type, component as unknown as ComponentType),
