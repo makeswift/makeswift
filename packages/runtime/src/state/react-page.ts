@@ -56,7 +56,7 @@ export {
 export type { ComponentType } from './modules/react-components'
 export type { ComponentMeta } from './modules/components-meta'
 
-const reducer = combineReducers({
+export const reducers = {
   documents: Documents.reducer,
   elementTrees: ElementTrees.reducer,
   reactComponents: ReactComponents.reducer,
@@ -67,9 +67,21 @@ const reducer = combineReducers({
   isPreview: IsPreview.reducer,
   builderEditMode: BuilderEditMode.reducer,
   breakpoints: Breakpoints.reducer,
-})
+}
 
-export type State = ReturnType<typeof reducer>
+export type State = {
+  documents: Documents.State
+  elementTrees: ElementTrees.State
+  reactComponents: ReactComponents.State
+  componentsMeta: ComponentsMeta.State
+  propControllers: PropControllers.State
+  propControllerHandles: PropControllerHandles.State
+  isInBuilder: IsInBuilder.State
+  isPreview: IsPreview.State
+  builderEditMode: BuilderEditMode.State
+  breakpoints: Breakpoints.State
+}
+
 export type Dispatch = ThunkDispatch<State, unknown, Action>
 
 function getDocumentsStateSlice(state: State): Documents.State {
@@ -113,6 +125,10 @@ function getComponentsMetaStateSlice(state: State): ComponentsMeta.State {
   return state.componentsMeta
 }
 
+export function getComponentsMeta(state: State): Map<string, ComponentsMeta.ComponentMeta> {
+  return ComponentsMeta.getComponentsMeta(getComponentsMetaStateSlice(state))
+}
+
 export function getComponentMeta(state: State, type: string): ComponentsMeta.ComponentMeta | null {
   return ComponentsMeta.getComponentMeta(getComponentsMetaStateSlice(state), type)
 }
@@ -139,11 +155,41 @@ function getPropControllerHandlesStateSlice(state: State): PropControllerHandles
   return state.propControllerHandles
 }
 
-export function getPropControllers(state: State, documentKey: string, elementKey: string) {
+export function getPropControllers(
+  state: State,
+  { documentKey, elementKey }: { documentKey: string; elementKey: string },
+) {
   return PropControllerHandles.getPropControllers(
     getPropControllerHandlesStateSlice(state),
     documentKey,
     elementKey,
+  )
+}
+
+export function getPropControllersHandle(
+  state: State,
+  { documentKey, elementKey }: { documentKey: string; elementKey: string },
+) {
+  return PropControllerHandles.getPropControllersHandle(
+    getPropControllerHandlesStateSlice(state),
+    documentKey,
+    elementKey,
+  )
+}
+
+export function getPropController(
+  state: State,
+  {
+    documentKey,
+    elementKey,
+    propName,
+  }: { documentKey: string; elementKey: string; propName: string },
+) {
+  return PropControllerHandles.getPropController(
+    getPropControllerHandlesStateSlice(state),
+    documentKey,
+    elementKey,
+    propName,
   )
 }
 
@@ -341,7 +387,7 @@ export function configureStore({
   breakpoints?: Breakpoints.State
 }) {
   return configureReduxStore({
-    reducer,
+    reducer: combineReducers(reducers),
     preloadedState: {
       ...preloadedState,
       breakpoints: Breakpoints.getInitialState(breakpoints ?? preloadedState?.breakpoints),
