@@ -198,13 +198,13 @@ exports[`correctly renders button component with link 1`] = `
   max-width: 100%;
 }
 
-@media only screen and (min-width: 769px) {
+@media only screen {
   .emotion-1 {
     width: auto;
   }
 }
 
-@media only screen and (min-width: 576px) and (max-width: 768px) {
+@media only screen and (max-width: 768px) {
   .emotion-1 {
     width: auto;
   }
@@ -216,7 +216,7 @@ exports[`correctly renders button component with link 1`] = `
   }
 }
 
-@media only screen and (min-width: 769px) {
+@media only screen {
   .emotion-2 {
     margin-top: 60px;
     margin-right: auto;
@@ -225,7 +225,7 @@ exports[`correctly renders button component with link 1`] = `
   }
 }
 
-@media only screen and (min-width: 576px) and (max-width: 768px) {
+@media only screen and (max-width: 768px) {
   .emotion-2 {
     margin-top: 60px;
     margin-right: auto;
@@ -243,7 +243,7 @@ exports[`correctly renders button component with link 1`] = `
   }
 }
 
-@media only screen and (min-width: 769px) {
+@media only screen {
   .emotion-3 {
     color: hsla(0,0%,100%,1);
     border-radius: 4px;
@@ -264,7 +264,7 @@ exports[`correctly renders button component with link 1`] = `
   }
 }
 
-@media only screen and (min-width: 576px) and (max-width: 768px) {
+@media only screen and (max-width: 768px) {
   .emotion-3 {
     color: hsla(0,0%,100%,1);
     border-radius: 4px;

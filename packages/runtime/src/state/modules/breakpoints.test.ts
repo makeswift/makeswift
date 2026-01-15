@@ -1,6 +1,9 @@
 import { parseBreakpointsInput } from './breakpoints'
 
 describe('parseBreakpointsInput', () => {
+  // Desktop-first cascading: base breakpoint (Desktop) has no maxWidth,
+  // other breakpoints use only maxWidth for proper CSS cascading without gaps.
+  // Desktop's minWidth is for display/canvas purposes only, NOT used in media queries.
   test('adds the base breakpoint', async () => {
     // Arrange
     const input = {
@@ -13,8 +16,8 @@ describe('parseBreakpointsInput', () => {
 
     // Assert
     expect(result).toEqual([
-      { id: 'desktop', label: 'Desktop', minWidth: 769 },
-      { id: 'tablet', minWidth: 576, maxWidth: 768, viewportWidth: 768 },
+      { id: 'desktop', label: 'Desktop', minWidth: 768 },
+      { id: 'tablet', maxWidth: 768, viewportWidth: 768 },
       { id: 'mobile', maxWidth: 575, viewportWidth: 575 },
     ])
   })
@@ -31,8 +34,8 @@ describe('parseBreakpointsInput', () => {
 
     // Assert
     expect(result).toEqual([
-      { id: 'desktop', label: 'Desktop', minWidth: 769 },
-      { id: 'tablet', minWidth: 576, maxWidth: 768, viewportWidth: 768 },
+      { id: 'desktop', label: 'Desktop', minWidth: 768 },
+      { id: 'tablet', maxWidth: 768, viewportWidth: 768 },
       { id: 'mobile', maxWidth: 575, viewportWidth: 575 },
     ])
   })
@@ -51,10 +54,10 @@ describe('parseBreakpointsInput', () => {
 
     // Assert
     expect(result).toEqual([
-      { id: 'desktop', label: 'Desktop', minWidth: 769 },
-      { id: 'tablet', minWidth: 576, maxWidth: 768, viewportWidth: 768 },
-      { id: 'mobile', minWidth: 301, maxWidth: 575, viewportWidth: 575 },
-      { id: 'pager', minWidth: 101, maxWidth: 300, viewportWidth: 300 },
+      { id: 'desktop', label: 'Desktop', minWidth: 768 },
+      { id: 'tablet', maxWidth: 768, viewportWidth: 768 },
+      { id: 'mobile', maxWidth: 575, viewportWidth: 575 },
+      { id: 'pager', maxWidth: 300, viewportWidth: 300 },
       { id: 'ant', maxWidth: 100, viewportWidth: 100 },
     ])
   })
@@ -71,8 +74,8 @@ describe('parseBreakpointsInput', () => {
 
     // Assert
     expect(result).toEqual([
-      { id: 'desktop', label: 'Desktop', minWidth: 769 },
-      { id: 'tablet', label: 'iPad', minWidth: 576, maxWidth: 768, viewportWidth: 768 },
+      { id: 'desktop', label: 'Desktop', minWidth: 768 },
+      { id: 'tablet', label: 'iPad', maxWidth: 768, viewportWidth: 768 },
       { id: 'mobile', label: 'iPhone 76', maxWidth: 575, viewportWidth: 575 },
     ])
   })
@@ -89,8 +92,8 @@ describe('parseBreakpointsInput', () => {
 
     // Assert
     expect(result).toEqual([
-      { id: 'desktop', label: 'Desktop', minWidth: 769 },
-      { id: 'tablet', minWidth: 576, maxWidth: 768, viewportWidth: 700 },
+      { id: 'desktop', label: 'Desktop', minWidth: 768 },
+      { id: 'tablet', maxWidth: 768, viewportWidth: 700 },
       { id: 'mobile', maxWidth: 575, viewportWidth: 300 },
     ])
   })
