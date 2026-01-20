@@ -1,6 +1,6 @@
 import { RscMarkdown } from './rsc-markdown'
 
-import { Style, Combobox } from '@makeswift/runtime/controls'
+import { Style, Combobox, Color, Link } from '@makeswift/runtime/controls'
 import { readdir } from 'fs/promises'
 import { runtime } from '@/makeswift/runtime'
 
@@ -9,6 +9,8 @@ runtime.registerComponent(RscMarkdown, {
   label: 'Custom / RSC Markdown',
   props: {
     className: Style(),
+    color: Color(),
+    link: Link(),
     filename: Combobox({
       label: 'Markdown File',
       getOptions: async (query: string) => {

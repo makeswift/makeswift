@@ -6,6 +6,7 @@ import '@/makeswift/components.client'
 import { getSiteVersion } from '@makeswift/runtime/next/server'
 import { runtime } from '@/makeswift/runtime'
 import { ExperimentalServerProvider } from '@makeswift/runtime/next/rsc/server'
+import { client } from '@/makeswift/client'
 
 type Params = Promise<{ path?: string[] }>
 
@@ -21,7 +22,11 @@ export default async function RootLayout({
   return (
     <html>
       <body>
-        <ExperimentalServerProvider siteVersion={siteVersion} runtime={runtime}>
+        <ExperimentalServerProvider
+          client={client}
+          siteVersion={siteVersion}
+          runtime={runtime}
+        >
           <MakeswiftClientProvider
             serializedServerState={runtime.serializeServerState()}
             siteVersion={siteVersion}
