@@ -1,42 +1,63 @@
 import { ElementData, StyleDefinition } from '@makeswift/controls'
-import { getRuntime } from './runtime'
+import {
+  getDocumentFromCache,
+  getMakeswiftClient,
+  getRuntime,
+  getSiteVersionFromCache,
+} from './runtime'
 import { getBreakpoints } from '../../../state/react-page'
 import { createCollectingServerStylesheet } from '../css/server-css'
 import { isLegacyDescriptor } from '../../../prop-controllers/descriptors'
 import { DescriptorsByProp } from '../../../state/modules/prop-controllers'
-import { mockResourceResolver } from './resource-resolver'
+import { serverResourceResolver } from './resource-resolver'
 
-export function resolveProps(
-  props: ElementData['props'],
+export async function resolveProps(
+  element: ElementData,
   propDescriptors: DescriptorsByProp,
-  elementKey: string,
-): Record<string, unknown> {
+): Promise<Record<string, unknown>> {
   const runtime = getRuntime()
+  const siteVersion = getSiteVersionFromCache()
+  const document = getDocumentFromCache()
+  const client = getMakeswiftClient()
+
   const state = runtime.store.getState()
   const breakpoints = getBreakpoints(state)
-  const stylesheet = createCollectingServerStylesheet(breakpoints, elementKey)
-  const resolvedProps: Record<string, unknown> = {}
+  const stylesheet = createCollectingServerStylesheet(breakpoints, element.key)
 
-  Object.entries(propDescriptors).forEach(([propName, descriptor]) => {
-    if (isLegacyDescriptor(descriptor)) {
-      console.warn(`[resolveProps] Cannot use legacy descriptor in RSC. Prop: ${propName}`)
-      return
-    }
+  const serverResolver = serverResourceResolver(runtime, client, siteVersion, document)
 
-    const propData = props[propName]
-    const isStyleControl = descriptor.controlType === StyleDefinition.type
+  const resolvedProps = await Promise.all(
+    Array.from(Object.entries(propDescriptors)).map(async ([propName, descriptor]) => {
+      if (isLegacyDescriptor(descriptor)) {
+        console.warn(`[resolveProps] Cannot use legacy descriptor in RSC. Prop: ${propName}`)
+        return [propName, undefined] as const
+      }
 
-    // Always process style controls, even when they have no data
-    if (propData !== undefined || isStyleControl) {
-      const resolvedValue = descriptor.resolveValue(
-        propData,
-        mockResourceResolver,
-        stylesheet.child(propName),
-      )
-      const result = resolvedValue.readStable()
-      resolvedProps[propName] = result
-    }
-  })
+      const propData = element.props[propName]
+      const isStyleControl = descriptor.controlType === StyleDefinition.type
 
-  return resolvedProps
+      // Always process style controls, even when they have no data
+      if (propData !== undefined || isStyleControl) {
+        const resolvedValue = descriptor.resolveValue(
+          propData,
+          serverResolver,
+          stylesheet.child(propName),
+        )
+        // TODO: This is a hack for style controls to have their styles injected
+        // on the server. CSS injection on the server appears to have broken
+        // when introducing the await resolvedValue.triggerResolve() ahead of
+        // the `readStable` call — for proof, comment out the triggerResolve and
+        // observe that styles are correct on load.
+        resolvedValue.readStable()
+        await resolvedValue.triggerResolve()
+        const result = resolvedValue.readStable()
+        return [propName, result] as const
+      }
+
+      return [propName, undefined] as const
+    }),
+  )
+
+  const resolvedPropsRecord: Record<string, unknown> = Object.fromEntries(resolvedProps)
+  return resolvedPropsRecord
 }
