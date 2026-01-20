@@ -15,7 +15,7 @@
     "plugin"
   ],
   "peerDependencies": {
-    "next": "^13.4.0 || ^14.0.0 || ^15.0.0"
+    "next": "^13.4.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
   },
   "dependencies": {
     "enhanced-resolve": "5.10.0",
@@ -23,6 +23,6 @@
     "semver": "^7.3.8"
   },
   "devDependencies": {
-    "next": "14.2.35"
+    "next": "16.1.4"
   }
 }
