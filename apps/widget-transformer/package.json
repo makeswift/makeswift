@@ -1,0 +1,33 @@
+{
+  "name": "nextjs-app-router",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@bigcommerce/stencil-paper-handlebars": "^6.3.2",
+    "@formatjs/intl-localematcher": "^0.5.4",
+    "@makeswift/runtime": "workspace:^",
+    "handlebars": "^4.7.8",
+    "negotiator": "^0.6.3",
+    "next": "15.3.1",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@types/negotiator": "^0.6.3",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^9.13.0",
+    "eslint-config-next": "15.0.2",
+    "postcss": "^8",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5"
+  }
+}
