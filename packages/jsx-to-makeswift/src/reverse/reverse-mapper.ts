@@ -6,18 +6,13 @@
  */
 
 import type { DeviceId } from '../types'
+import { addDevicePrefix } from '../utils/device-prefixes'
 
 type TailwindClass = string
 
 type ReverseMapResult = {
   classes: TailwindClass[]
   unmapped: string[]
-}
-
-const DEVICE_TO_PREFIX: Record<DeviceId, string> = {
-  mobile: '',
-  tablet: 'sm:',
-  desktop: 'lg:',
 }
 
 const SPACING_SCALE: Record<string, string> = {
@@ -560,13 +555,10 @@ export function addResponsivePrefix(
   cls: TailwindClass,
   deviceId: DeviceId,
 ): TailwindClass {
-  const prefix = DEVICE_TO_PREFIX[deviceId]
-  return `${prefix}${cls}`
+  return addDevicePrefix(cls, deviceId)
 }
 
 /**
  * Gets the responsive prefix for a device ID.
  */
-export function getResponsivePrefix(deviceId: DeviceId): string {
-  return DEVICE_TO_PREFIX[deviceId]
-}
+export { DEVICE_TO_PREFIX, getDevicePrefix as getResponsivePrefix } from '../utils/device-prefixes'

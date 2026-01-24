@@ -219,14 +219,5 @@ export function parseJSX(
 
 export function parseJSXFragment(source: string): ParseResult {
   const wrapped = `<>${source}</>`
-  const result = parseJSX(wrapped)
-
-  if (result.elements.length === 1 && result.elements[0].tagName === '') {
-    return {
-      elements: result.elements[0].children,
-      errors: result.errors,
-    }
-  }
-
-  return result
+  return parseJSX(wrapped)
 }

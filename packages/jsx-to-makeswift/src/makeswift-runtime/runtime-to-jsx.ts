@@ -5,6 +5,7 @@
  * to JSX source code with Tailwind CSS classes.
  */
 
+import { addDevicePrefix } from '../utils/device-prefixes'
 import type {
   MakeswiftChildren,
   MakeswiftDeviceValue,
@@ -125,23 +126,12 @@ const LINE_HEIGHT_TO_TAILWIND: Record<number, string> = {
   2: 'loose',
 }
 
-const DEVICE_TO_PREFIX: Record<string, string> = {
-  mobile: '',
-  tablet: 'sm:',
-  desktop: 'lg:',
-}
-
 function pxToSpacingClass(px: number, prefix: string): string {
   const scale = SPACING_PX_TO_TAILWIND[px]
   if (scale) {
     return `${prefix}${scale}`
   }
   return `${prefix}[${px}px]`
-}
-
-function addDevicePrefix(cls: string, deviceId: string): string {
-  const prefix = DEVICE_TO_PREFIX[deviceId] || ''
-  return `${prefix}${cls}`
 }
 
 function processPadding(
