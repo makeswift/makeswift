@@ -5,10 +5,10 @@ import {
   getRuntime,
   getSiteVersionFromCache,
 } from './runtime'
-import { getBreakpoints } from '../../../state/react-page'
+import { getBreakpoints } from '../../state/react-page'
 import { createCollectingServerStylesheet } from '../css/server-css'
-import { isLegacyDescriptor } from '../../../prop-controllers/descriptors'
-import { DescriptorsByProp } from '../../../state/modules/prop-controllers'
+import { isLegacyDescriptor } from '../../prop-controllers/descriptors'
+import { DescriptorsByProp } from '../../state/modules/prop-controllers'
 import { serverResourceResolver } from './resource-resolver'
 
 export async function resolveProps(

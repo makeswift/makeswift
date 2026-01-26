@@ -1,10 +1,10 @@
 import { getRuntime, setDocument } from './runtime'
-import { getComponentsMeta } from '../../../state/modules/components-meta'
-import { Document, getPropControllerDescriptors } from '../../../state/react-page'
+import { getComponentsMeta } from '../../state/modules/components-meta'
+import { Document, getPropControllerDescriptors } from '../../state/react-page'
 import { ServerElement } from './server-element'
-import { traverseElementTree } from '../../../state/modules/element-trees'
+import { traverseElementTree } from '../../state/modules/element-trees'
 import { RSCNodes } from '../client/rsc-nodes-provider'
-import { registerDocument } from '../../../state/shared-api'
+import { registerDocument } from '../../state/shared-api'
 
 export function prerenderRSCNodes(document: Document): RSCNodes {
   setDocument(document)

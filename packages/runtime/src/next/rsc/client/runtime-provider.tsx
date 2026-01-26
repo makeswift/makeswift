@@ -2,7 +2,7 @@
 
 import { ComponentProps } from 'react'
 
-import { NextRSCRuntime, SerializedServerState } from '../shared/react-runtime'
+import { RSCRuntime, SerializedServerState } from '../../../rsc/shared/react-runtime'
 import { RuntimeProvider } from '../../../runtimes/react/components/RuntimeProvider'
 import { NextRSCFrameworkProvider } from './framework-provider'
 
@@ -11,7 +11,7 @@ export function NextRSCRuntimeProvider({
   serializedServerState,
   ...props
 }: Omit<ComponentProps<typeof RuntimeProvider>, 'runtime'> & {
-  runtime: NextRSCRuntime
+  runtime: RSCRuntime
   serializedServerState: SerializedServerState
 }) {
   runtime.loadServerState(serializedServerState)

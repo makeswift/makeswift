@@ -1,26 +1,20 @@
 import { type ControlDefinition as UnifiedControlDefinition } from '@makeswift/controls'
 
-import { ReactRuntimeCore, validateComponentType } from '../../../runtimes/react/react-runtime-core'
-import {
-  type LegacyDescriptor,
-  type DescriptorValueType,
-} from '../../../prop-controllers/descriptors'
-import {
-  registerComponentEffect,
-  registerReactComponentEffect,
-} from '../../../state/actions/internal'
-import { ComponentIcon } from '../../../state/modules/components-meta'
-import type { ComponentType, Data, State } from '../../../state/react-page'
-import { deserializeControls, SerializedControl, serializeServerControls } from '../../../builder'
-import { PropControllerDescriptor } from '../../../state/modules/prop-controllers'
-import { registerBuiltinComponents } from '../../../components/builtin/register'
+import { ReactRuntimeCore, validateComponentType } from '../../runtimes/react/react-runtime-core'
+import { type LegacyDescriptor, type DescriptorValueType } from '../../prop-controllers/descriptors'
+import { registerComponentEffect, registerReactComponentEffect } from '../../state/actions/internal'
+import { ComponentIcon } from '../../state/modules/components-meta'
+import type { ComponentType, Data, State } from '../../state/react-page'
+import { PropControllerDescriptor } from '../../state/modules/prop-controllers'
+import { registerBuiltinComponents } from '../../components/builtin/register'
+import { deserializeControls, SerializedControl, serializeServerControls } from '../../builder'
 
 export type SerializedServerState = {
   componentsMeta: State['componentsMeta']
   propControllers: Map<string, Record<string, SerializedControl<Data>>>
 }
 
-export class NextRSCRuntime extends ReactRuntimeCore {
+export class RSCRuntime extends ReactRuntimeCore {
   constructor() {
     super()
     // todo: we may want to remove this

@@ -2,8 +2,8 @@ import {
   getReactComponent,
   ElementData,
   getComponentPropControllerDescriptors,
-} from '../../../state/react-page'
-import { FallbackComponent } from '../../../components/shared/FallbackComponent'
+} from '../../state/react-page'
+import { FallbackComponent } from '../../components/shared/FallbackComponent'
 import { getRuntime } from './runtime'
 import { resolveProps } from './resolve-props'
 import { ReactNode } from 'react'

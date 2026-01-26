@@ -8,7 +8,7 @@ import { context as appRouterContext } from '../../components/framework-provider
 import { context as nextContext } from '../../components/framework-provider/next'
 import { createRSCRefreshMiddleware } from './refresh-middleware'
 import { useRouter } from 'next/navigation'
-import { RSCElementData } from './element-data'
+import { RSCElementData } from '../../../rsc/client/element-data'
 
 export function NextRSCFrameworkProvider({ children }: PropsWithChildren) {
   const router = useRouter()

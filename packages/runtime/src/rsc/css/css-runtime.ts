@@ -1,6 +1,6 @@
 import type { CSSObject } from '@emotion/serialize'
 import { type Breakpoints, type Stylesheet, type ResolvedStyle } from '@makeswift/controls'
-import { resolvedStyleToCss } from '../../../runtimes/react/resolve-style'
+import { resolvedStyleToCss } from '../../runtimes/react/resolve-style'
 
 function cssObjectToString(cssObject: CSSObject, className: string): string {
   const cssRules: string[] = []

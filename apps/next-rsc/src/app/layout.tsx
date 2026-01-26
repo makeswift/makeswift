@@ -5,7 +5,7 @@ import '@/makeswift/components.server'
 import '@/makeswift/components.client'
 import { getSiteVersion } from '@makeswift/runtime/next/server'
 import { runtime } from '@/makeswift/runtime'
-import { ExperimentalServerProvider } from '@makeswift/runtime/next/rsc/server'
+import { RSCServerProvider } from '@makeswift/runtime/rsc/server'
 import { client } from '@/makeswift/client'
 
 type Params = Promise<{ path?: string[] }>
@@ -22,7 +22,7 @@ export default async function RootLayout({
   return (
     <html>
       <body>
-        <ExperimentalServerProvider
+        <RSCServerProvider
           client={client}
           siteVersion={siteVersion}
           runtime={runtime}
@@ -33,7 +33,7 @@ export default async function RootLayout({
           >
             {children}
           </MakeswiftClientProvider>
-        </ExperimentalServerProvider>
+        </RSCServerProvider>
       </body>
     </html>
   )

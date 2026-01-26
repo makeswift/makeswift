@@ -1,8 +1,8 @@
 import { FetchableValue, ResourceResolver } from '@makeswift/controls'
-import { type SiteVersion } from '../../../api/site-version'
-import { ReactRuntimeCore } from '../../../runtimes/react/react-runtime-core'
-import { Document, getElementId } from '../../../state/react-page'
-import { MakeswiftClient } from '../../../client'
+import { type SiteVersion } from '../../api/site-version'
+import { ReactRuntimeCore } from '../../runtimes/react/react-runtime-core'
+import { Document, getElementId } from '../../state/react-page'
+import { MakeswiftClient } from '../../client'
 
 function createFetchable<T>(
   name: string,

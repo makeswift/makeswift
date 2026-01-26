@@ -1,11 +1,11 @@
 'use client'
 
 import { Ref, forwardRef, memo, type ReactNode } from 'react'
-import { ElementData as ReactPageElementData } from '../../../state/react-page'
-import { FallbackComponent } from '../../../components/shared/FallbackComponent'
+import { ElementData as ReactPageElementData } from '../../state/react-page'
+import { FallbackComponent } from '../../components/shared/FallbackComponent'
 import { useRSCNode } from './rsc-nodes-provider'
-import { ElementData } from '../../../runtimes/react/components/ElementData'
-import { useComponentMeta } from '../../../runtimes/react/hooks/use-component-meta'
+import { ElementData } from '../../runtimes/react/components/ElementData'
+import { useComponentMeta } from '../../runtimes/react/hooks/use-component-meta'
 
 type ElementDataProps = {
   elementData: ReactPageElementData

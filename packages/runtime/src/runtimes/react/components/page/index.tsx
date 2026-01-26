@@ -1,3 +1,5 @@
+'use client'
+
 import { useMemo, memo, type ComponentProps } from 'react'
 
 import { useCacheData } from '../../hooks/use-cache-data'
