@@ -1,9 +1,9 @@
 import 'server-only'
 
 import { cache } from 'react'
-import { ReactRuntime } from '../../../runtimes/react/react-runtime'
-import { MakeswiftClient, SiteVersion } from '../../../unstable-framework-support'
-import { Document } from '../../../state/read-only-state'
+import { ReactRuntime } from '../../runtimes/react/react-runtime'
+import { MakeswiftClient, SiteVersion } from '../../unstable-framework-support'
+import { Document } from '../../state/read-only-state'
 
 const getRuntimeCache = cache((): { runtime: ReactRuntime | null } => ({ runtime: null }))
 

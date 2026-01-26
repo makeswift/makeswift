@@ -1,12 +1,9 @@
 import { ReactNode } from 'react'
-import {
-  isElementReference,
-  type Element as ElementDataOrRef,
-} from '../../../state/read-only-state'
+import { isElementReference, type Element as ElementDataOrRef } from '../../state/read-only-state'
 import { ServerElementData } from './server-element-data'
 import { getRuntime, getSiteVersionFromCache } from './runtime'
-import { Element } from '../../../runtimes/react'
-import { FallbackComponent } from '../../../components/shared/FallbackComponent'
+import { Element } from '../../runtimes/react'
+import { FallbackComponent } from '../../components/shared/FallbackComponent'
 import { RSCBuilderUpdater } from '../client/rsc-builder-updater'
 
 type Props = {
