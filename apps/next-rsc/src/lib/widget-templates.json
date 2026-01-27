@@ -1,0 +1,3254 @@
+[
+  {
+    "uuid": "27739fcd-ec84-4300-b850-21bf122a012b",
+    "name": "Text",
+    "schema": [
+      {
+        "type": "hidden",
+        "settings": [
+          {
+            "id": "textContent",
+            "default": "You can use this widget to input text into the page."
+          }
+        ]
+      },
+      {
+        "type": "tab",
+        "label": "Design",
+        "sections": [
+          {
+            "settings": [
+              {
+                "type": "typography",
+                "label": "Text style",
+                "id": "textStyle",
+                "default": "custom",
+                "typeMeta": {
+                  "conditionalSettings": [
+                    {
+                      "condition": "custom",
+                      "settings": [
+                        {
+                          "type": "select",
+                          "label": "Font family",
+                          "id": "fontFamily",
+                          "default": "inherit",
+                          "typeMeta": {
+                            "selectOptions": [
+                              {
+                                "label": "Theme Default",
+                                "value": "inherit"
+                              },
+                              {
+                                "label": "Arial",
+                                "value": "Arial, sans-serif"
+                              },
+                              {
+                                "label": "Tahoma",
+                                "value": "Tahoma, sans-serif"
+                              },
+                              {
+                                "label": "Verdana",
+                                "value": "Verdana, sans-serif"
+                              },
+                              {
+                                "label": "Lucida",
+                                "value": "Lucida, sans-serif"
+                              },
+                              {
+                                "label": "Times New Roman",
+                                "value": "Times New Roman, serif"
+                              },
+                              {
+                                "label": "Courier",
+                                "value": "Courier, serif"
+                              },
+                              {
+                                "label": "Georgia",
+                                "value": "Georgia, serif"
+                              },
+                              {
+                                "label": "Palatino",
+                                "value": "Palatino, serif"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "type": "select",
+                          "label": "Font weight",
+                          "id": "fontWeight",
+                          "default": "500",
+                          "typeMeta": {
+                            "selectOptions": [
+                              {
+                                "label": "Thin",
+                                "value": "100"
+                              },
+                              {
+                                "label": "Extra Light (Ultra Light)",
+                                "value": "200"
+                              },
+                              {
+                                "label": "Light",
+                                "value": "300"
+                              },
+                              {
+                                "label": "Normal",
+                                "value": "400"
+                              },
+                              {
+                                "label": "Medium",
+                                "value": "500"
+                              },
+                              {
+                                "label": "Semi Bold (Demi Bold)",
+                                "value": "600"
+                              },
+                              {
+                                "label": "Bold",
+                                "value": "700"
+                              },
+                              {
+                                "label": "Extra Bold (Ultra Bold)",
+                                "value": "800"
+                              },
+                              {
+                                "label": "Black (Heavy)",
+                                "value": "900"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "type": "number",
+                          "label": "Font size",
+                          "id": "fontSize",
+                          "default": {
+                            "value": 24,
+                            "type": "px"
+                          },
+                          "typeMeta": {
+                            "parseType": "integer"
+                          }
+                        },
+                        {
+                          "type": "color",
+                          "label": "Text color",
+                          "id": "fontColor",
+                          "default": "#333333"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "alignment",
+                "label": "Alignment",
+                "id": "alignment",
+                "default": {
+                  "horizontal": "center",
+                  "vertical": "middle"
+                },
+                "typeMeta": {
+                  "display": "horizontal"
+                }
+              },
+              {
+                "type": "boxModel",
+                "label": "Margin",
+                "id": "margin",
+                "default": {
+                  "top": {
+                    "value": "0",
+                    "type": "px"
+                  },
+                  "right": {
+                    "value": "0",
+                    "type": "px"
+                  },
+                  "bottom": {
+                    "value": "0",
+                    "type": "px"
+                  },
+                  "left": {
+                    "value": "0",
+                    "type": "px"
+                  }
+                }
+              },
+              {
+                "type": "boxModel",
+                "label": "Padding",
+                "id": "padding",
+                "default": {
+                  "top": {
+                    "value": "0",
+                    "type": "px"
+                  },
+                  "right": {
+                    "value": "0",
+                    "type": "px"
+                  },
+                  "bottom": {
+                    "value": "0",
+                    "type": "px"
+                  },
+                  "left": {
+                    "value": "0",
+                    "type": "px"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "template": "<style>\n    .sd-simple-text-{{_.id}} {\n      padding-top: {{padding.top.value}}{{padding.top.type}};\n      padding-right: {{padding.right.value}}{{padding.right.type}};\n      padding-bottom: {{padding.bottom.value}}{{padding.bottom.type}};\n      padding-left: {{padding.left.value}}{{padding.left.type}};\n\n      margin-top: {{margin.top.value}}{{margin.top.type}};\n      margin-right: {{margin.right.value}}{{margin.right.type}};\n      margin-bottom: {{margin.bottom.value}}{{margin.bottom.type}};\n      margin-left: {{margin.left.value}}{{margin.left.type}};\n\n      {{#if textStyle '===' undefined}}\n        color: {{fontColor}};\n        font-family: {{fontFamily}};\n        font-weight: {{fontWeight}};\n        font-size: {{fontSize.value}}{{fontSize.type}};\n        min-height: {{fontSize.value}}{{fontSize.type}};\n      {{/if}}\n    }\n\n    .sd-simple-text-{{_.id}} * {\n      margin: 0;\n      padding: 0;\n\n      {{#unless textStyle '!==' 'custom'}}\n        color: {{fontColor}};\n        font-family: {{fontFamily}};\n        font-weight: {{fontWeight}};\n        font-size: {{fontSize.value}}{{fontSize.type}};\n        min-height: {{fontSize.value}}{{fontSize.type}};\n      {{/unless}}\n\n      {{#if textStyle '===' 'default'}}\n        color: #333333;\n        font-family: Montserrat;\n        font-weight: 500;\n        font-size: 24px;\n      {{/if}}\n    }\n\n    .sd-simple-text-{{_.id}} {\n      {{#if alignment.horizontal '===' 'center'}}\n        text-align: center;\n      {{else if alignment.horizontal '===' 'left'}}\n        text-align: left;\n      {{else if alignment.horizontal '===' 'right'}}\n        text-align: right;\n      {{/if}}\n    }\n\n    #sd-simple-text-editable-{{_.id}} {\n      min-width: 14px;\n      line-height: 1.5;\n      display: inline-block;\n    }\n\n    #sd-simple-text-editable-{{_.id}}[data-edit-mode=\"true\"]:hover,\n    #sd-simple-text-editable-{{_.id}}[data-edit-mode=\"true\"]:active,\n    #sd-simple-text-editable-{{_.id}}[data-edit-mode=\"true\"]:focus {\n      outline: 1px dashed #3C64F4;\n    }\n\n    #sd-simple-text-editable-{{_.id}} strong,\n    #sd-simple-text-editable-{{_.id}} strong * {\n      font-weight: bold;\n    }\n</style>\n\n<div class=\"sd-simple-text-{{_.id}} {{#if textStyle}}{{#if textStyle '!==' 'custom'}} {{textStyle}}{{/if}}{{/if}}\">\n  <div id=\"sd-simple-text-editable-{{_.id}}\" data-edit-mode=\"{{_.pageBuilderData.previewState.editMode}}\">\n    {{{textContent}}}\n  </div>\n</div>\n\n{{#if _.context.isEditorMode '===' true}}\n    <script type=\"text/javascript\">\n        (function () {\n            var editMode = false;\n            var selector = \"sd-simple-text-editable-{{_.id}}\";\n            var element = document.getElementById(selector);\n            if (!element) { return; }\n\n            function initializeContentEditableText () {\n                if (window.BigCommerce && window.BigCommerce.inlineEditor && window.BigCommerce.sendWidgetUpdate) {\n                    editMode = true;\n                    window.BigCommerce.inlineEditor.init({\n                        selector: \"#\" + selector,\n                        editMode: editMode,\n                        onBlur: function (content) {\n                            element.innerHtml = content;\n                            flushChanges(content);\n                        },\n                        onKeyup: flushChanges,\n                        toolbarItems: ['bold', 'italic', 'underline', 'strikethrough', 'link']\n                    });\n                }\n            };\n\n            function flushChanges(content) {\n                var props = {\n                    \"textContent\": content\n                };\n                window.BigCommerce.sendWidgetUpdate(props, \"{{_.id}}\");\n            }\n\n            function setEditMode(data) {\n                editMode = data.editMode;\n                element.dataset.editMode = editMode;\n\n                if (window.BigCommerce && window.BigCommerce.inlineEditor) {\n                    if (editMode) {\n                        initializeContentEditableText()\n                    } else {\n                        window.BigCommerce.inlineEditor.remove(\"#\" + selector);\n                    }\n                }\n            }\n\n            window.addEventListener('message', function (event) {\n                try {\n                    var data = JSON.parse(event.data);\n                } catch (error) {\n                    return;\n                }\n\n                [{\n                    action: 'sdk-loaded',\n                    initiator: 'PAGE_BUILDER',\n                    callback: initializeContentEditableText\n                },{\n                    action: 'toggle-edit-mode',\n                    initiator: 'PAGE_BUILDER',\n                    callback: setEditMode\n                }].forEach(function (handler) {\n                    if (data.action === handler.action && data.initiator === handler.initiator) {\n                        try { handler.callback(data); } catch (error) {}\n                    }\n                })\n            });\n\n            initializeContentEditableText();\n        })();\n    </script>\n{{/if}}\n",
+    "date_created": "2024-02-27T02:43:46.594Z",
+    "date_modified": "2024-02-27T02:43:46.594Z",
+    "kind": "sd-simple-text",
+    "storefront_api_query": "",
+    "icon_name": "sd-text",
+    "template_engine": "handlebars_v3",
+    "client_rerender": false,
+    "current_version_uuid": "34ab422f-26ed-473a-bbb1-6a672eaeca49",
+    "channel_id": 0,
+    "schema_translations": {}
+  },
+  {
+    "uuid": "e78c7709-1d09-4144-9313-8d951b158bb5",
+    "name": "Image",
+    "schema": [
+      {
+        "type": "tab",
+        "label": "Design",
+        "sections": [
+          {
+            "label": "Image",
+            "settings": [
+              {
+                "type": "imageManager",
+                "id": "imageUrl",
+                "default": {
+                  "src": "https://images.unsplash.com/photo-1487700160041-babef9c3cb55?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80",
+                  "type": "IMAGE_MANAGER"
+                }
+              },
+              {
+                "type": "select",
+                "label": "Image dimensions",
+                "id": "imageDimensionType",
+                "default": "auto",
+                "typeMeta": {
+                  "selectOptions": [
+                    {
+                      "label": "Auto",
+                      "value": "auto"
+                    },
+                    {
+                      "label": "Custom",
+                      "value": "custom"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "number",
+                "label": "Image height",
+                "id": "imageHeight",
+                "default": {
+                  "value": 300,
+                  "type": "px"
+                },
+                "typeMeta": {
+                  "parseType": "integer"
+                },
+                "conditional": {
+                  "key": "imageDimensionType",
+                  "operator": "IN",
+                  "value": ["custom"]
+                }
+              },
+              {
+                "type": "select",
+                "label": "Image fit",
+                "id": "imageFit",
+                "default": "fit",
+                "typeMeta": {
+                  "selectOptions": [
+                    {
+                      "label": "Fill to box",
+                      "value": "fill"
+                    },
+                    {
+                      "label": "Fit to box",
+                      "value": "fit"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "select",
+                "label": "Image parallax",
+                "id": "imageParallax",
+                "default": "off",
+                "typeMeta": {
+                  "selectOptions": [
+                    {
+                      "label": "Off",
+                      "value": "off"
+                    },
+                    {
+                      "label": "On",
+                      "value": "on"
+                    }
+                  ]
+                },
+                "conditional": {
+                  "key": "imageFit",
+                  "operator": "IN",
+                  "value": ["fill"]
+                }
+              },
+              {
+                "type": "range",
+                "label": "Image opacity",
+                "id": "imageOpacity",
+                "default": 100,
+                "typeMeta": {
+                  "rangeValues": {
+                    "min": 0,
+                    "max": 100,
+                    "step": 1,
+                    "unit": "%"
+                  }
+                }
+              },
+              {
+                "type": "alignment",
+                "label": "Image align",
+                "id": "imageAlignment",
+                "default": {
+                  "horizontal": "center",
+                  "vertical": "middle"
+                },
+                "typeMeta": {
+                  "display": "both"
+                }
+              },
+              {
+                "type": "boxModel",
+                "label": "Margin (px)",
+                "id": "containerMargin",
+                "default": {
+                  "top": {
+                    "value": "0",
+                    "type": "px"
+                  },
+                  "right": {
+                    "value": "0",
+                    "type": "px"
+                  },
+                  "bottom": {
+                    "value": "0",
+                    "type": "px"
+                  },
+                  "left": {
+                    "value": "0",
+                    "type": "px"
+                  }
+                }
+              },
+              {
+                "type": "boxModel",
+                "label": "Padding (px)",
+                "id": "containerPadding",
+                "default": {
+                  "top": {
+                    "value": "0",
+                    "type": "px"
+                  },
+                  "right": {
+                    "value": "0",
+                    "type": "px"
+                  },
+                  "bottom": {
+                    "value": "0",
+                    "type": "px"
+                  },
+                  "left": {
+                    "value": "0",
+                    "type": "px"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "label": "Border",
+            "settings": [
+              {
+                "type": "select",
+                "label": "Border style",
+                "id": "borderStyle",
+                "default": "none",
+                "typeMeta": {
+                  "selectOptions": [
+                    {
+                      "label": "None",
+                      "value": "none"
+                    },
+                    {
+                      "label": "Solid",
+                      "value": "solid"
+                    },
+                    {
+                      "label": "Dotted",
+                      "value": "dotted"
+                    },
+                    {
+                      "label": "Dashed",
+                      "value": "dashed"
+                    },
+                    {
+                      "label": "Double",
+                      "value": "double"
+                    },
+                    {
+                      "label": "Groove",
+                      "value": "groove"
+                    },
+                    {
+                      "label": "Ridge",
+                      "value": "ridge"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "color",
+                "label": "Border color",
+                "id": "borderColor",
+                "default": "#000000"
+              },
+              {
+                "type": "range",
+                "label": "Border thickness",
+                "id": "borderThickness",
+                "default": 1,
+                "typeMeta": {
+                  "rangeValues": {
+                    "min": 0,
+                    "max": 10,
+                    "step": 1,
+                    "unit": "px"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "label": "Link",
+            "settings": [
+              {
+                "type": "select",
+                "label": "Image link",
+                "id": "imageUrlType",
+                "default": "none",
+                "typeMeta": {
+                  "selectOptions": [
+                    {
+                      "label": "None",
+                      "value": "none"
+                    },
+                    {
+                      "label": "Link to URL",
+                      "value": "url"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "input",
+                "id": "imageLink",
+                "typeMeta": {
+                  "placeholder": "https://"
+                },
+                "conditional": {
+                  "key": "imageUrlType",
+                  "operator": "IN",
+                  "value": ["url"]
+                }
+              }
+            ]
+          },
+          {
+            "label": "Seo",
+            "settings": [
+              {
+                "type": "input",
+                "label": "Alt text",
+                "id": "altText",
+                "default": ""
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "template": "<style>\n    #sd-image-{{_.id}} {\n        display: flex;\n        align-items: center;\n        background: url('{{{imageUrl.src}}}') no-repeat;\n        opacity: calc({{imageOpacity}} / 100);\n\n        {{#if imageUrlType '!==' 'none'}}\n            cursor: pointer;\n        {{/if}}\n\n        {{#if imageFit '===' 'fill'}}\n            background-size: cover;\n            {{#if imageParallax '===' 'on'}}\n                background-attachment: fixed;\n            {{/if}}\n        {{else}}\n            background-size: contain;\n        {{/if}}\n\n        {{#if imageDimensionType '===' 'auto'}}\n            height: auto;\n        {{else}}\n            height: {{imageHeight.value}}{{imageHeight.type}};\n        {{/if}}\n\n        background-position:\n            {{#if imageAlignment.horizontal '===' 'center'}}\n                center\n            {{else if imageAlignment.horizontal '===' 'left'}}\n                left\n            {{else if imageAlignment.horizontal '===' 'right'}}\n                right\n            {{/if}}\n            {{#if imageAlignment.vertical '===' 'middle'}}\n                center\n            {{else if imageAlignment.vertical '===' 'top'}}\n                top\n            {{else if imageAlignment.vertical '===' 'bottom'}}\n                bottom\n            {{/if}};\n\n        {{#if borderStyle '!==' 'none'}}\n            border: {{borderThickness}}px {{borderStyle}} {{borderColor}};\n        {{/if}}\n\n        padding-top: {{containerPadding.top.value}}{{containerPadding.top.type}};\n        padding-right: {{containerPadding.right.value}}{{containerPadding.right.type}};\n        padding-bottom: {{containerPadding.bottom.value}}{{containerPadding.bottom.type}};\n        padding-left: {{containerPadding.left.value}}{{containerPadding.left.type}};\n\n        margin-top: {{containerMargin.top.value}}{{containerMargin.top.type}};\n        margin-right: {{containerMargin.right.value}}{{containerMargin.right.type}};\n        margin-bottom: {{containerMargin.bottom.value}}{{containerMargin.bottom.type}};\n        margin-left: {{containerMargin.left.value}}{{containerMargin.left.type}};\n    }\n\n    #sd-image-{{_.id}} * {\n        margin: 0px;\n    }\n\n    #sd-image-{{_.id}} img {\n        width: auto;\n        opacity: 0;\n\n        {{#if imageDimensionType '===' 'auto'}}\n            height: auto;\n        {{else}}\n            height: 100%;\n        {{/if}}\n    }\n\n    @media only screen and (max-width: 700px) {\n        #sd-image-{{_.id}} {\n            {{#if imageFit '===' 'fill'}}\n                {{#if imageParallax '===' 'on'}}\n                    background-attachment: scroll;\n                {{/if}}\n            {{/if}}\n        }\n    }\n</style>\n\n<div>\n    {{#if imageUrlType '!==' 'none'}}<a href=\"{{imageLink}}\" role=\"button\">{{/if}}\n    <div id=\"sd-image-{{_.id}}\" data-edit-mode=\"{{_.pageBuilderData.previewState.editMode}}\">\n        <img src=\"{{imageUrl.src}}\" alt=\"{{altText}}\">\n    </div>\n    {{#if imageUrlType '!==' 'none'}}</a>{{/if}}\n</div>\n\n\n{{#if _.context.isEditorMode '===' true}}\n    <script type=\"text/javascript\">\n        (function () {\n            var editMode = false;\n            var selector = \"sd-image-{{_.id}}\";\n            var element = document.getElementById(selector);\n            if (!element) { return; }\n\n            function initializeEditMode() {\n                if (window.BigCommerce && window.BigCommerce.inlineEditor) {\n                    editMode = true;\n                }\n            }\n\n            function setEditMode(data) {\n                editMode = data.editMode;\n                element.dataset.editMode = editMode;\n\n                initializeEditMode();\n            }\n\n            window.addEventListener('message', function (event) {\n                try {\n                    var data = JSON.parse(event.data);\n                } catch (error) {\n                    return;\n                }\n\n                [{\n                    action: 'sdk-loaded',\n                    initiator: 'PAGE_BUILDER',\n                    callback: initializeEditMode\n                },{\n                    action: 'toggle-edit-mode',\n                    initiator: 'PAGE_BUILDER',\n                    callback: setEditMode\n                }].forEach(function (handler) {\n                    if (data.action === handler.action && data.initiator === handler.initiator) {\n                        try { handler.callback(data); } catch (error) {}\n                    }\n                })\n            });\n\n            initializeEditMode();\n        })();\n    </script>\n{{/if}}\n",
+    "date_created": "2024-02-27T02:43:46.614Z",
+    "date_modified": "2024-02-27T02:43:46.614Z",
+    "kind": "sd-simple-image-v2",
+    "storefront_api_query": "",
+    "icon_name": "sd-image",
+    "template_engine": "handlebars_v3",
+    "client_rerender": false,
+    "current_version_uuid": "e15d5665-a3ab-442a-90e3-7dda0de178a4",
+    "channel_id": 0,
+    "schema_translations": {}
+  },
+  {
+    "uuid": "ceee1550-ddb7-4dac-81ef-b53545035ad3",
+    "name": "Hero Banner",
+    "schema": [
+      {
+        "type": "hidden",
+        "settings": [
+          {
+            "id": "title",
+            "default": "Hero Banner Title"
+          },
+          {
+            "id": "subtitle",
+            "default": "Add a description for this hero banner. This is a great place to highlight a promotion."
+          },
+          {
+            "id": "buttonText",
+            "default": "Shop now"
+          }
+        ]
+      },
+      {
+        "type": "tab",
+        "label": "Design",
+        "sections": [
+          {
+            "label": "Banner",
+            "settings": [
+              {
+                "type": "input",
+                "label": "Banner link",
+                "id": "bannerLink",
+                "default": "",
+                "typeMeta": {
+                  "placeholder": "https://"
+                }
+              },
+              {
+                "type": "alignment",
+                "label": "Content align",
+                "id": "contentAlignment",
+                "default": {
+                  "horizontal": "left"
+                },
+                "typeMeta": {
+                  "display": "horizontal"
+                }
+              },
+              {
+                "type": "select",
+                "label": "Banner size",
+                "id": "containerHeight",
+                "default": "small",
+                "typeMeta": {
+                  "selectOptions": [
+                    {
+                      "label": "Small",
+                      "value": "small"
+                    },
+                    {
+                      "label": "Medium",
+                      "value": "medium"
+                    },
+                    {
+                      "label": "Large",
+                      "value": "large"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "select",
+                "label": "Background",
+                "id": "backgroundType",
+                "default": "image",
+                "typeMeta": {
+                  "selectOptions": [
+                    {
+                      "label": "Image",
+                      "value": "image"
+                    },
+                    {
+                      "label": "Color",
+                      "value": "color"
+                    },
+                    {
+                      "label": "Video",
+                      "value": "video"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "color",
+                "label": "Background color",
+                "id": "backgroundColor",
+                "default": "#444444",
+                "conditional": {
+                  "key": "backgroundType",
+                  "operator": "IN",
+                  "value": ["color"]
+                }
+              },
+              {
+                "type": "imageManager",
+                "id": "imageUrl",
+                "default": {
+                  "src": "https://images.unsplash.com/photo-1533038590840-1cde6e668a91?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=100",
+                  "type": "IMAGE_MANAGER"
+                },
+                "conditional": {
+                  "key": "backgroundType",
+                  "operator": "IN",
+                  "value": ["image"]
+                }
+              },
+              {
+                "type": "select",
+                "label": "Image fit",
+                "id": "imageFit",
+                "default": "fill",
+                "typeMeta": {
+                  "selectOptions": [
+                    {
+                      "label": "Fill to box",
+                      "value": "fill"
+                    },
+                    {
+                      "label": "Fit to box",
+                      "value": "fit"
+                    }
+                  ]
+                },
+                "conditional": {
+                  "key": "backgroundType",
+                  "operator": "IN",
+                  "value": ["image"]
+                }
+              },
+              {
+                "type": "select",
+                "label": "Image parallax",
+                "id": "imageParallax",
+                "default": "off",
+                "typeMeta": {
+                  "selectOptions": [
+                    {
+                      "label": "On",
+                      "value": "on"
+                    },
+                    {
+                      "label": "Off",
+                      "value": "off"
+                    }
+                  ]
+                },
+                "conditional": {
+                  "key": "backgroundType",
+                  "operator": "IN",
+                  "value": ["image"]
+                }
+              },
+              {
+                "type": "alignment",
+                "label": "Image align",
+                "id": "imageAlignment",
+                "default": {
+                  "horizontal": "center",
+                  "vertical": "middle"
+                },
+                "typeMeta": {
+                  "display": "both"
+                },
+                "conditional": {
+                  "key": "backgroundType",
+                  "operator": "IN",
+                  "value": ["image"]
+                }
+              },
+              {
+                "type": "range",
+                "label": "Image opacity",
+                "id": "imageOpacity",
+                "default": 100,
+                "typeMeta": {
+                  "rangeValues": {
+                    "min": 0,
+                    "max": 100,
+                    "step": 1,
+                    "unit": "%"
+                  }
+                },
+                "conditional": {
+                  "key": "backgroundType",
+                  "operator": "IN",
+                  "value": ["image"]
+                }
+              },
+              {
+                "type": "input",
+                "label": "Video URL (mp4)",
+                "id": "videoUrl",
+                "default": "",
+                "typeMeta": {
+                  "placeholder": "https://"
+                },
+                "conditional": {
+                  "key": "backgroundType",
+                  "operator": "IN",
+                  "value": ["video"]
+                }
+              }
+            ]
+          },
+          {
+            "label": "Text",
+            "settings": [
+              {
+                "type": "visibility",
+                "label": "Title",
+                "id": "titleVisible",
+                "default": "show"
+              },
+              {
+                "type": "typography",
+                "label": "Title style",
+                "id": "titleStyle",
+                "default": "default"
+              },
+              {
+                "type": "select",
+                "label": "Font family",
+                "id": "titleFontFamily",
+                "default": "inherit",
+                "typeMeta": {
+                  "selectOptions": [
+                    {
+                      "label": "Theme Default",
+                      "value": "inherit"
+                    },
+                    {
+                      "label": "Arial",
+                      "value": "Arial, sans-serif"
+                    },
+                    {
+                      "label": "Tahoma",
+                      "value": "Tahoma, sans-serif"
+                    },
+                    {
+                      "label": "Verdana",
+                      "value": "Verdana, sans-serif"
+                    },
+                    {
+                      "label": "Lucida",
+                      "value": "Lucida, sans-serif"
+                    },
+                    {
+                      "label": "Times New Roman",
+                      "value": "Times New Roman, serif"
+                    },
+                    {
+                      "label": "Courier",
+                      "value": "Courier, serif"
+                    },
+                    {
+                      "label": "Georgia",
+                      "value": "Georgia, serif"
+                    },
+                    {
+                      "label": "Palatino",
+                      "value": "Palatino, serif"
+                    }
+                  ]
+                },
+                "conditional": {
+                  "key": "titleStyle",
+                  "operator": "IN",
+                  "value": ["custom"]
+                }
+              },
+              {
+                "type": "select",
+                "label": "Font weight",
+                "id": "titleFontWeight",
+                "default": "400",
+                "typeMeta": {
+                  "selectOptions": [
+                    {
+                      "label": "Thin",
+                      "value": "100"
+                    },
+                    {
+                      "label": "Extra Light (Ultra Light)",
+                      "value": "200"
+                    },
+                    {
+                      "label": "Light",
+                      "value": "300"
+                    },
+                    {
+                      "label": "Normal",
+                      "value": "400"
+                    },
+                    {
+                      "label": "Medium",
+                      "value": "500"
+                    },
+                    {
+                      "label": "Semi Bold (Demi Bold)",
+                      "value": "600"
+                    },
+                    {
+                      "label": "Bold",
+                      "value": "700"
+                    },
+                    {
+                      "label": "Extra Bold (Ultra Bold)",
+                      "value": "800"
+                    },
+                    {
+                      "label": "Black (Heavy)",
+                      "value": "900"
+                    }
+                  ]
+                },
+                "conditional": {
+                  "key": "titleStyle",
+                  "operator": "IN",
+                  "value": ["custom"]
+                }
+              },
+              {
+                "type": "number",
+                "label": "Font size",
+                "id": "titleFontSize",
+                "default": {
+                  "value": 36,
+                  "type": "px"
+                },
+                "typeMeta": {
+                  "parseType": "integer"
+                },
+                "conditional": {
+                  "key": "titleStyle",
+                  "operator": "IN",
+                  "value": ["custom"]
+                }
+              },
+              {
+                "type": "visibility",
+                "label": "Description",
+                "id": "descriptionVisible",
+                "default": "show"
+              },
+              {
+                "type": "typography",
+                "label": "Description style",
+                "id": "descriptionStyle",
+                "default": "default"
+              },
+              {
+                "type": "select",
+                "label": "Font family",
+                "id": "descriptionFontFamily",
+                "default": "inherit",
+                "typeMeta": {
+                  "selectOptions": [
+                    {
+                      "label": "Theme Default",
+                      "value": "inherit"
+                    },
+                    {
+                      "label": "Arial",
+                      "value": "Arial, sans-serif"
+                    },
+                    {
+                      "label": "Tahoma",
+                      "value": "Tahoma, sans-serif"
+                    },
+                    {
+                      "label": "Verdana",
+                      "value": "Verdana, sans-serif"
+                    },
+                    {
+                      "label": "Lucida",
+                      "value": "Lucida, sans-serif"
+                    },
+                    {
+                      "label": "Times New Roman",
+                      "value": "Times New Roman, serif"
+                    },
+                    {
+                      "label": "Courier",
+                      "value": "Courier, serif"
+                    },
+                    {
+                      "label": "Georgia",
+                      "value": "Georgia, serif"
+                    },
+                    {
+                      "label": "Palatino",
+                      "value": "Palatino, serif"
+                    }
+                  ]
+                },
+                "conditional": {
+                  "key": "descriptionStyle",
+                  "operator": "IN",
+                  "value": ["custom"]
+                }
+              },
+              {
+                "type": "select",
+                "label": "Font weight",
+                "id": "descriptionFontWeight",
+                "default": "400",
+                "typeMeta": {
+                  "selectOptions": [
+                    {
+                      "label": "Thin",
+                      "value": "100"
+                    },
+                    {
+                      "label": "Extra Light (Ultra Light)",
+                      "value": "200"
+                    },
+                    {
+                      "label": "Light",
+                      "value": "300"
+                    },
+                    {
+                      "label": "Normal",
+                      "value": "400"
+                    },
+                    {
+                      "label": "Medium",
+                      "value": "500"
+                    },
+                    {
+                      "label": "Semi Bold (Demi Bold)",
+                      "value": "600"
+                    },
+                    {
+                      "label": "Bold",
+                      "value": "700"
+                    },
+                    {
+                      "label": "Extra Bold (Ultra Bold)",
+                      "value": "800"
+                    },
+                    {
+                      "label": "Black (Heavy)",
+                      "value": "900"
+                    }
+                  ]
+                },
+                "conditional": {
+                  "key": "descriptionStyle",
+                  "operator": "IN",
+                  "value": ["custom"]
+                }
+              },
+              {
+                "type": "number",
+                "label": "Font size",
+                "id": "descriptionFontSize",
+                "default": {
+                  "value": 21,
+                  "type": "px"
+                },
+                "typeMeta": {
+                  "parseType": "integer"
+                },
+                "conditional": {
+                  "key": "descriptionStyle",
+                  "operator": "IN",
+                  "value": ["custom"]
+                }
+              },
+              {
+                "type": "color",
+                "label": "Text color",
+                "id": "textColor",
+                "default": "#444444"
+              },
+              {
+                "type": "color",
+                "label": "Text color (mobile)",
+                "id": "mobileTextColor",
+                "default": "#444444"
+              }
+            ]
+          },
+          {
+            "label": "Button",
+            "settings": [
+              {
+                "type": "visibility",
+                "label": "Button",
+                "id": "buttonVisible",
+                "default": "show"
+              },
+              {
+                "type": "typography",
+                "label": "Button font",
+                "id": "buttonFont",
+                "default": "default"
+              },
+              {
+                "type": "select",
+                "label": "Font family",
+                "id": "buttonFontFamily",
+                "default": "inherit",
+                "typeMeta": {
+                  "selectOptions": [
+                    {
+                      "label": "Theme Default",
+                      "value": "inherit"
+                    },
+                    {
+                      "label": "Arial",
+                      "value": "Arial, sans-serif"
+                    },
+                    {
+                      "label": "Tahoma",
+                      "value": "Tahoma, sans-serif"
+                    },
+                    {
+                      "label": "Verdana",
+                      "value": "Verdana, sans-serif"
+                    },
+                    {
+                      "label": "Lucida",
+                      "value": "Lucida, sans-serif"
+                    },
+                    {
+                      "label": "Times New Roman",
+                      "value": "Times New Roman, serif"
+                    },
+                    {
+                      "label": "Courier",
+                      "value": "Courier, serif"
+                    },
+                    {
+                      "label": "Georgia",
+                      "value": "Georgia, serif"
+                    },
+                    {
+                      "label": "Palatino",
+                      "value": "Palatino, serif"
+                    }
+                  ]
+                },
+                "conditional": {
+                  "key": "buttonFont",
+                  "operator": "IN",
+                  "value": ["custom"]
+                }
+              },
+              {
+                "type": "select",
+                "label": "Button style",
+                "id": "buttonStyle",
+                "default": "round",
+                "typeMeta": {
+                  "selectOptions": [
+                    {
+                      "label": "Round",
+                      "value": "round"
+                    },
+                    {
+                      "label": "Square",
+                      "value": "square"
+                    },
+                    {
+                      "label": "Pill",
+                      "value": "pill"
+                    }
+                  ]
+                },
+                "conditional": {
+                  "key": "buttonVisible",
+                  "operator": "IN",
+                  "value": ["show"]
+                }
+              },
+              {
+                "type": "color",
+                "label": "Button color",
+                "id": "buttonColor",
+                "default": "#444444",
+                "conditional": {
+                  "key": "buttonVisible",
+                  "operator": "IN",
+                  "value": ["show"]
+                }
+              },
+              {
+                "type": "color",
+                "label": "Button color (mobile)",
+                "id": "mobileButtonColor",
+                "default": "#444444",
+                "conditional": {
+                  "key": "buttonVisible",
+                  "operator": "IN",
+                  "value": ["show"]
+                }
+              },
+              {
+                "type": "color",
+                "label": "Button text color",
+                "id": "buttonTextColor",
+                "default": "rgba(255,255,255,1)",
+                "conditional": {
+                  "key": "buttonVisible",
+                  "operator": "IN",
+                  "value": ["show"]
+                }
+              },
+              {
+                "type": "color",
+                "label": "Button text (mobile)",
+                "id": "mobileButtonTextColor",
+                "default": "rgba(255,255,255,1)",
+                "conditional": {
+                  "key": "buttonVisible",
+                  "operator": "IN",
+                  "value": ["show"]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "template": "<div id=\"sd-hero-image-{{_.id}}\"></div>\n\n<script type=\"text/javascript\" nonce=\"{{nonce}}\">\n    (function() {\n        const storefrontSRI = 'sha512-Coygf98lwr+It9LwvozxvqEt0D8WwMJ1AVzU1P67jdTOtw2Tymlqx7kGuCyCIlwoBn/iTXxZZ+BhPpn0NeVS3w==';\n        const pageBuilderSRI = 'sha512-Bjn2m/S6TpaUvyTA57wLaJyblfqrf6jvQYjTgrBQ7C7oFKwmlQq5VhxhlQGOQh0o9gLb8lbmFbTUjMvK8qzThg=='\n        const scriptPath = (build) => `https://microapps.bigcommerce.com/hero-image-widget-js/81aa85e9af30b1a25a734aa760e40ccd980d9383/${build}-bundle.js`;\n\n        function loadScript(src, sri, onload) {\n            const scriptTag = document.createElement('script');\n            scriptTag.type = 'text/javascript';\n            scriptTag.defer = true;\n            scriptTag.src = src;\n            scriptTag.integrity = sri;\n            scriptTag.crossOrigin = 'anonymous';\n            scriptTag.nonce = '{{nonce}}';\n            if (onload) {\n                scriptTag.onload = onload;\n            }\n            document.head.appendChild(scriptTag);\n        }\n\n        var widgetConfiguration = {{{json .}}};\n\n        {{#if _.context.isEditorMode '===' true}}\n            if (window.BigCommerce\n                    && window.BigCommerce.initializeHeroImage\n                    && typeof window.BigCommerce.initializeHeroImage === 'function'\n                    && window.BigCommerce.initializeHeroImagePageBuilderComm\n                    && typeof window.BigCommerce.initializeHeroImagePageBuilderComm === 'function') {\n                const heroImage = window.BigCommerce.initializeHeroImage(widgetConfiguration);\n                window.BigCommerce.initializeHeroImagePageBuilderComm(heroImage);\n            } else {\n                loadScript(scriptPath('storefront'), storefrontSRI, () => {\n                    const heroImage = window.BigCommerce.initializeHeroImage(widgetConfiguration);\n                    loadScript(scriptPath('pageBuilder'), pageBuilderSRI, () => {\n                        window.BigCommerce.initializeHeroImagePageBuilderComm(heroImage);\n                    });\n                });\n            }\n        {{else}}\n            if (window.BigCommerce && window.BigCommerce.initializeHeroImage && typeof window.BigCommerce.initializeHeroImage === 'function' ) {\n                window.BigCommerce.initializeHeroImage(widgetConfiguration).render();\n            } else {\n                loadScript(scriptPath('storefront'), storefrontSRI, () => window.BigCommerce.initializeHeroImage(widgetConfiguration).render());\n            }\n        {{/if}}\n    })();\n</script>\n",
+    "date_created": "2024-02-27T02:43:46.639Z",
+    "date_modified": "2024-02-27T02:43:46.639Z",
+    "kind": "sd-hero-image-v2",
+    "storefront_api_query": "",
+    "icon_name": "sd-hero-image",
+    "template_engine": "handlebars_v3",
+    "client_rerender": true,
+    "current_version_uuid": "a6cd8211-df37-4b72-a9ae-cd344f8cb28a",
+    "channel_id": 0,
+    "schema_translations": {}
+  },
+  {
+    "uuid": "5ff18a25-ff75-42cc-a561-311d9b46f763",
+    "name": "Carousel",
+    "schema": [
+      {
+        "type": "array",
+        "label": "Carousel",
+        "id": "slides",
+        "defaultCount": 2,
+        "entryLabel": "Slide",
+        "thumbnail": {
+          "conditionKey": "background.type",
+          "thumbnailConditions": {
+            "image": {
+              "type": "image",
+              "valueKey": "background.imageUrl.src"
+            },
+            "color": {
+              "type": "color",
+              "valueKey": "background.color"
+            }
+          }
+        },
+        "schema": [
+          {
+            "type": "hidden",
+            "settings": [
+              {
+                "id": "displayTitle",
+                "default": "Carousel Title"
+              },
+              {
+                "id": "displaySubtitle",
+                "default": "Add a description for your carousel slide. You can use this to promote multiple sales."
+              },
+              {
+                "id": "displayButtonText",
+                "default": "Shop now"
+              }
+            ]
+          },
+          {
+            "type": "tab",
+            "label": "Content",
+            "sections": [
+              {
+                "settings": [
+                  {
+                    "type": "input",
+                    "id": "slideLink",
+                    "label": "Slide link",
+                    "default": "",
+                    "typeMeta": {
+                      "placeholder": "https://"
+                    }
+                  },
+                  {
+                    "type": "alignment",
+                    "label": "Content align",
+                    "id": "contentAlignment",
+                    "default": {
+                      "horizontal": "center",
+                      "vertical": "middle"
+                    },
+                    "typeMeta": {
+                      "display": "horizontal"
+                    }
+                  },
+                  {
+                    "type": "color",
+                    "label": "Text color",
+                    "id": "textColor",
+                    "default": "#444444"
+                  },
+                  {
+                    "type": "element",
+                    "label": "Background",
+                    "id": "background",
+                    "typeMeta": {
+                      "controls": {
+                        "advanced": {
+                          "label": "Background",
+                          "settings": [
+                            {
+                              "type": "select",
+                              "label": "Background",
+                              "id": "type",
+                              "default": "image",
+                              "typeMeta": {
+                                "selectOptions": [
+                                  {
+                                    "label": "Image",
+                                    "value": "image"
+                                  },
+                                  {
+                                    "label": "Color",
+                                    "value": "color"
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "type": "color",
+                              "label": "Background color",
+                              "id": "color",
+                              "default": "#444444",
+                              "conditional": {
+                                "key": "type",
+                                "operator": "IN",
+                                "value": ["color"]
+                              }
+                            },
+                            {
+                              "type": "imageManager",
+                              "id": "imageUrl",
+                              "default": {
+                                "src": "https://images.unsplash.com/photo-1517840600399-c7c2ff4c0fb5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
+                                "type": "IMAGE_MANAGER"
+                              },
+                              "conditional": {
+                                "key": "type",
+                                "operator": "IN",
+                                "value": ["image"]
+                              }
+                            },
+                            {
+                              "type": "select",
+                              "label": "Image fit",
+                              "id": "imageFit",
+                              "default": "fill",
+                              "typeMeta": {
+                                "selectOptions": [
+                                  {
+                                    "label": "Fill to box",
+                                    "value": "fill"
+                                  },
+                                  {
+                                    "label": "Fit to box",
+                                    "value": "fit"
+                                  }
+                                ]
+                              },
+                              "conditional": {
+                                "key": "type",
+                                "operator": "IN",
+                                "value": ["image"]
+                              }
+                            },
+                            {
+                              "type": "alignment",
+                              "label": "Image align",
+                              "id": "imageAlignment",
+                              "default": {
+                                "horizontal": "center",
+                                "vertical": "middle"
+                              },
+                              "typeMeta": {
+                                "display": "both"
+                              },
+                              "conditional": {
+                                "key": "type",
+                                "operator": "IN",
+                                "value": ["image"]
+                              }
+                            },
+                            {
+                              "type": "range",
+                              "label": "Image opacity",
+                              "id": "imageOpacity",
+                              "default": 100,
+                              "typeMeta": {
+                                "rangeValues": {
+                                  "min": 0,
+                                  "max": 100,
+                                  "step": 1,
+                                  "unit": "%"
+                                }
+                              },
+                              "conditional": {
+                                "key": "type",
+                                "operator": "IN",
+                                "value": ["image"]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "element",
+                    "label": "Box",
+                    "id": "textBox",
+                    "typeMeta": {
+                      "controls": {
+                        "visibility": {
+                          "default": "show"
+                        },
+                        "advanced": {
+                          "label": "Box style",
+                          "settings": [
+                            {
+                              "type": "color",
+                              "label": "Box color",
+                              "id": "backgroundColor",
+                              "default": "#FFFFFF"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "element",
+                    "label": "Title",
+                    "id": "title",
+                    "typeMeta": {
+                      "controls": {
+                        "visibility": {
+                          "default": "show"
+                        },
+                        "advanced": {
+                          "label": "Title style",
+                          "settings": [
+                            {
+                              "type": "typography",
+                              "label": "Title",
+                              "id": "textStyle",
+                              "default": "default"
+                            },
+                            {
+                              "type": "select",
+                              "label": "Font family",
+                              "id": "fontFamily",
+                              "default": "inherit",
+                              "typeMeta": {
+                                "selectOptions": [
+                                  {
+                                    "label": "Theme Default",
+                                    "value": "inherit"
+                                  },
+                                  {
+                                    "label": "Arial",
+                                    "value": "Arial, sans-serif"
+                                  },
+                                  {
+                                    "label": "Tahoma",
+                                    "value": "Tahoma, sans-serif"
+                                  },
+                                  {
+                                    "label": "Verdana",
+                                    "value": "Verdana, sans-serif"
+                                  },
+                                  {
+                                    "label": "Lucida",
+                                    "value": "Lucida, sans-serif"
+                                  },
+                                  {
+                                    "label": "Times New Roman",
+                                    "value": "Times New Roman, serif"
+                                  },
+                                  {
+                                    "label": "Courier",
+                                    "value": "Courier, serif"
+                                  },
+                                  {
+                                    "label": "Georgia",
+                                    "value": "Georgia, serif"
+                                  },
+                                  {
+                                    "label": "Palatino",
+                                    "value": "Palatino, serif"
+                                  }
+                                ]
+                              },
+                              "conditional": {
+                                "key": "textStyle",
+                                "operator": "IN",
+                                "value": ["custom"]
+                              }
+                            },
+                            {
+                              "type": "select",
+                              "label": "Font weight",
+                              "id": "fontWeight",
+                              "default": "400",
+                              "typeMeta": {
+                                "selectOptions": [
+                                  {
+                                    "label": "Thin",
+                                    "value": "100"
+                                  },
+                                  {
+                                    "label": "Extra Light (Ultra Light)",
+                                    "value": "200"
+                                  },
+                                  {
+                                    "label": "Light",
+                                    "value": "300"
+                                  },
+                                  {
+                                    "label": "Normal",
+                                    "value": "400"
+                                  },
+                                  {
+                                    "label": "Medium",
+                                    "value": "500"
+                                  },
+                                  {
+                                    "label": "Semi Bold (Demi Bold)",
+                                    "value": "600"
+                                  },
+                                  {
+                                    "label": "Bold",
+                                    "value": "700"
+                                  },
+                                  {
+                                    "label": "Extra Bold (Ultra Bold)",
+                                    "value": "800"
+                                  },
+                                  {
+                                    "label": "Black (Heavy)",
+                                    "value": "900"
+                                  }
+                                ]
+                              },
+                              "conditional": {
+                                "key": "textStyle",
+                                "operator": "IN",
+                                "value": ["custom"]
+                              }
+                            },
+                            {
+                              "type": "number",
+                              "label": "Font size",
+                              "id": "fontSize",
+                              "default": {
+                                "value": 36,
+                                "type": "px"
+                              },
+                              "typeMeta": {
+                                "parseType": "integer"
+                              },
+                              "conditional": {
+                                "key": "textStyle",
+                                "operator": "IN",
+                                "value": ["custom"]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "element",
+                    "label": "Description",
+                    "id": "description",
+                    "typeMeta": {
+                      "controls": {
+                        "visibility": {
+                          "default": "show"
+                        },
+                        "advanced": {
+                          "label": "Description style",
+                          "settings": [
+                            {
+                              "type": "typography",
+                              "label": "Description",
+                              "id": "textStyle",
+                              "default": "default"
+                            },
+                            {
+                              "type": "select",
+                              "label": "Font family",
+                              "id": "fontFamily",
+                              "default": "inherit",
+                              "typeMeta": {
+                                "selectOptions": [
+                                  {
+                                    "label": "Theme Default",
+                                    "value": "inherit"
+                                  },
+                                  {
+                                    "label": "Arial",
+                                    "value": "Arial, sans-serif"
+                                  },
+                                  {
+                                    "label": "Tahoma",
+                                    "value": "Tahoma, sans-serif"
+                                  },
+                                  {
+                                    "label": "Verdana",
+                                    "value": "Verdana, sans-serif"
+                                  },
+                                  {
+                                    "label": "Lucida",
+                                    "value": "Lucida, sans-serif"
+                                  },
+                                  {
+                                    "label": "Times New Roman",
+                                    "value": "Times New Roman, serif"
+                                  },
+                                  {
+                                    "label": "Courier",
+                                    "value": "Courier, serif"
+                                  },
+                                  {
+                                    "label": "Georgia",
+                                    "value": "Georgia, serif"
+                                  },
+                                  {
+                                    "label": "Palatino",
+                                    "value": "Palatino, serif"
+                                  }
+                                ]
+                              },
+                              "conditional": {
+                                "key": "textStyle",
+                                "operator": "IN",
+                                "value": ["custom"]
+                              }
+                            },
+                            {
+                              "type": "select",
+                              "label": "Font weight",
+                              "id": "fontWeight",
+                              "default": "400",
+                              "typeMeta": {
+                                "selectOptions": [
+                                  {
+                                    "label": "Thin",
+                                    "value": "100"
+                                  },
+                                  {
+                                    "label": "Extra Light (Ultra Light)",
+                                    "value": "200"
+                                  },
+                                  {
+                                    "label": "Light",
+                                    "value": "300"
+                                  },
+                                  {
+                                    "label": "Normal",
+                                    "value": "400"
+                                  },
+                                  {
+                                    "label": "Medium",
+                                    "value": "500"
+                                  },
+                                  {
+                                    "label": "Semi Bold (Demi Bold)",
+                                    "value": "600"
+                                  },
+                                  {
+                                    "label": "Bold",
+                                    "value": "700"
+                                  },
+                                  {
+                                    "label": "Extra Bold (Ultra Bold)",
+                                    "value": "800"
+                                  },
+                                  {
+                                    "label": "Black (Heavy)",
+                                    "value": "900"
+                                  }
+                                ]
+                              },
+                              "conditional": {
+                                "key": "textStyle",
+                                "operator": "IN",
+                                "value": ["custom"]
+                              }
+                            },
+                            {
+                              "type": "number",
+                              "label": "Font size",
+                              "id": "fontSize",
+                              "default": {
+                                "value": 21,
+                                "type": "px"
+                              },
+                              "typeMeta": {
+                                "parseType": "integer"
+                              },
+                              "conditional": {
+                                "key": "textStyle",
+                                "operator": "IN",
+                                "value": ["custom"]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "element",
+                    "label": "Button",
+                    "id": "button",
+                    "typeMeta": {
+                      "controls": {
+                        "visibility": {
+                          "default": "show"
+                        },
+                        "advanced": {
+                          "label": "Button style",
+                          "settings": [
+                            {
+                              "type": "select",
+                              "label": "Button shape",
+                              "id": "shape",
+                              "default": "round",
+                              "typeMeta": {
+                                "selectOptions": [
+                                  {
+                                    "label": "Round",
+                                    "value": "round"
+                                  },
+                                  {
+                                    "label": "Square",
+                                    "value": "square"
+                                  },
+                                  {
+                                    "label": "Pill",
+                                    "value": "pill"
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "type": "color",
+                              "label": "Button color",
+                              "id": "buttonColor",
+                              "default": "#444444"
+                            },
+                            {
+                              "type": "color",
+                              "label": "Button text color",
+                              "id": "buttonTextColor",
+                              "default": "#FFFFFF"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "template": "<div id=\"sd-carousel-{{_.id}}\"></div>\n<script type=\"text/javascript\">\n  (function() {\n    const storefrontSRI = 'sha512-BbGuatgSwaX40tvu/XSbAUdPnRs/hpApC9vpxcayKfX6Zw0hyBlHXk2Wt+bWMqIgiyzb7/UkrVxmdgN0gHQcFg==';\n    const pageBuilderSRI = 'sha512-EpDq2X1ykYhLr5I4+csf0gDX6WedsYHjCrscqZZh/Y5aYkcoJ1R0QcXLzcDxsjXHcJvkCimmtVkCq6RsBrjbzg==';\n    const scriptPath = (build) => `https://microapps.bigcommerce.com/carousel-widget-v2-js/8fdf96db7173ca6e46533e7196c77d5fe6888777/${build}-bundle.js`;\n\n    function loadScript(src, sri, onload) {\n      const scriptTag = document.createElement('script');\n      scriptTag.type = 'text/javascript';\n      scriptTag.defer = true;\n      scriptTag.src = src;\n      scriptTag.integrity = sri;\n      scriptTag.crossOrigin = 'anonymous';\n      if (onload) {\n        scriptTag.onload = onload;\n      }\n      document.head.appendChild(scriptTag);\n    }\n\n    var widgetOptions = {{{json .}}};\n\n    {{#if _.context.isEditorMode '===' true}}\n      if (window.BigCommerce && window.BigCommerce.initializeCarouselV2 && typeof window.BigCommerce.initializeCarouselV2 === 'function' && window.BigCommerce.initializeCarouselPageBuilderComm && typeof window.BigCommerce.initializeCarouselPageBuilderComm === 'function') {\n        const carousel = window.BigCommerce.initializeCarouselV2(widgetOptions);\n        window.BigCommerce.initializeCarouselPageBuilderComm(carousel);\n      } else {\n        loadScript(scriptPath('storefront'), storefrontSRI, () => {\n          const carousel = window.BigCommerce.initializeCarouselV2(widgetOptions);\n          loadScript(scriptPath('pageBuilder'), pageBuilderSRI, () => {\n            window.BigCommerce.initializeCarouselPageBuilderComm(carousel);\n          });\n        });\n      }\n    {{else}}\n      if (window.BigCommerce && window.BigCommerce.initializeCarouselV2 && typeof window.BigCommerce.initializeCarouselV2 === 'function') {\n        window.BigCommerce.initializeCarouselV2(widgetOptions).setup();\n      } else {\n        loadScript(scriptPath('storefront'), storefrontSRI, () => window.BigCommerce.initializeCarouselV2(widgetOptions).setup());\n      }\n    {{/if}}\n  })();\n</script>\n",
+    "date_created": "2024-02-27T02:43:46.667Z",
+    "date_modified": "2024-02-27T02:43:46.667Z",
+    "kind": "sd-carousel-v2",
+    "storefront_api_query": "",
+    "icon_name": "sd-carousel",
+    "template_engine": "handlebars_v3",
+    "client_rerender": true,
+    "current_version_uuid": "894ed2cb-f52c-4423-a00c-8d8638e89ab8",
+    "channel_id": 0,
+    "schema_translations": {}
+  },
+  {
+    "uuid": "ee808371-2043-42e1-9edb-f63b94a325e0",
+    "name": "Video",
+    "schema": [
+      {
+        "type": "tab",
+        "label": "Content",
+        "sections": [
+          {
+            "settings": [
+              {
+                "type": "regexInput",
+                "label": "Video URL (YouTube or Vimeo)",
+                "id": "videoUrl",
+                "default": "",
+                "typeMeta": {
+                  "placeholder": "https://",
+                  "regExPatterns": [
+                    {
+                      "pattern": "(http:|https:|)\\/\\/(player.|www.)?(vimeo\\.com|youtu(be\\.com|\\.be|be\\.googleapis\\.com))\\/(video\\/|embed\\/|watch\\?v=|v\\/)?([A-Za-z0-9._%-]*)(\\&\\S+)?",
+                      "matchIndex": 6,
+                      "configKey": "id"
+                    },
+                    {
+                      "pattern": "(vimeo|youtube|youtu)",
+                      "matchIndex": 0,
+                      "configKey": "type"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "boolean",
+                "label": "Autoplay video",
+                "id": "autoplay",
+                "default": false,
+                "conditional": {
+                  "key": "videoUrl.parts.type",
+                  "operator": "IN",
+                  "value": ["youtube", "youtu"]
+                }
+              },
+              {
+                "type": "boolean",
+                "label": "Loop video",
+                "id": "loop",
+                "default": false,
+                "conditional": {
+                  "key": "videoUrl.parts.type",
+                  "operator": "IN",
+                  "value": ["vimeo", "youtube", "youtu"]
+                }
+              },
+              {
+                "type": "boolean",
+                "label": "Display video controls",
+                "id": "controls",
+                "default": true,
+                "conditional": {
+                  "key": "videoUrl.parts.type",
+                  "operator": "IN",
+                  "value": ["youtube", "youtu"]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "template": "<style>\n    .container-{{_.id}} {\n        position: relative;\n        width: 100%;\n        height: 0;\n        padding-bottom: 56.25%;\n    }\n    #player-{{_.id}} {\n        position: absolute;\n        top: 0;\n        left: 0;\n        width: 100%;\n        height: 100%;\n    }\n</style>\n<div class=\"container-{{_.id}}\">\n    {{#if videoUrl.value '===' ''}}\n        <style>\n            .invalid-input-{{_.id}} {\n                height: 100%;\n                width: 100%;\n                display: flex;\n                align-items: center;\n                background: #F6F7FC;\n                justify-content: center;\n                position: absolute;\n            }\n\n            .invalid-input-{{_.id}} > svg {\n                height: 100%;\n                width: 20%;\n            }\n\n            .invalid-input-{{_.id}} > svg > rect {\n                fill: #D9DCE9;\n            }\n\n            .invalid-input-{{_.id}} > svg > path {\n                fill: #FFFFFF;\n            }\n        </style>\n        <div class=\"invalid-input-{{_.id}}\">\n            <!-- Waiting for input from user -->\n            <svg viewBox=\"0 0 182 115\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <rect width=\"182\" height=\"114.947\" rx=\"10\"/>\n                <path d=\"M120.952 53.2903C122.425 54.0275 122.425 56.1302 120.952 56.8674L73.5397 80.591C72.2099 81.2564\n                 70.6448 80.2895 70.6448 78.8024V31.3552C70.6448 29.8682 72.2099 28.9012 73.5397 29.5667L120.952 53.2903Z\"\n                />\n            </svg>\n        </div>\n    {{else}}\n        {{#unless videoUrl.parts.type}}\n            <style>\n                .invalid-input-{{_.id}} {\n                    text-align: center;\n                }\n            </style>\n            <div class=\"invalid-input-{{_.id}}\">\n                <h3>Invalid URL entered</h3>\n            </div>\n        {{else}}\n            {{#unless videoUrl.parts.id}}\n            <style>\n                .invalid-input-{{_.id}} {\n                    text-align: center;\n                }\n            </style>\n            <div class=\"invalid-input-{{_.id}}\">\n                <h3>Invalid URL entered</h3>\n            </div>\n            {{/unless}}\n        {{/unless}}\n    {{/if}}\n\n    {{#contains 'youtube' videoUrl.parts.type}}\n        {{#if videoUrl.parts.id}}\n            <iframe\n                    id=\"player-{{_.id}}\"\n                    type=\"text/html\"\n                    src=\"https://www.youtube.com/embed/{{videoUrl.parts.id}}?enablejsapi=1&autoplay={{#if autoplay}}1{{else}}0{{/if}}&controls={{#if controls}}1{{else}}0{{/if}}&fs=1&loop={{#if loop}}1&playlist={{videoUrl.parts.id}}{{else}}0{{/if}}&rel=0&mute={{#if autoplay}}1{{else}}0{{/if}}\"\n                    frameborder=\"0\"\n                    webkitallowfullscreen\n                    mozallowfullscreen\n                    allowfullscreen\n                    {{#if _.pageBuilderData.previewState.editMode}}onload=\"initDevMode(this)\"{{/if}}\n            ></iframe>\n        {{/if}}\n    {{/contains}}\n    {{#if videoUrl.parts.type '===' 'vimeo'}}\n        {{#if videoUrl.parts.id}}\n            <iframe\n                    id=\"player-{{_.id}}\"\n                    src=\"https://player.vimeo.com/video/{{videoUrl.parts.id}}?api=1&autoplay={{#if autoplay}}1{{else}}0{{/if}}&loop={{#if loop}}1{{else}}0{{/if}}\"\n                    frameborder=\"0\"\n                    webkitallowfullscreen\n                    mozallowfullscreen\n                    allowfullscreen\n                    {{#if _.pageBuilderData.previewState.editMode}}onload=\"initDevMode(this)\"{{/if}}\n            ></iframe>\n        {{/if}}\n    {{/if}}\n</div>\n\n<script type=\"text/javascript\">\n    function devVideoPlayModes(iframe, data) {\n        if (data.editMode) {\n            iframe.contentWindow.postMessage('{\"event\":\"command\",\"func\":\"pauseVideo\",\"method\":\"pause\"}', '*');\n        } else {\n            var src = iframe.getAttribute('src');\n            var url = new URL(src);\n            var autoplay = new URLSearchParams(url.search).get('autoplay');\n            \n            if (autoplay === '1') {\n                iframe.contentWindow.postMessage('{\"event\":\"command\",\"func\":\"playVideo\",\"method\":\"play\"}', '*');\n            }\n\n        }\n    }\n\n    function initDevMode(iframe) {\n        iframe.contentWindow.postMessage('{\"event\":\"command\",\"func\":\"stopVideo\",\"method\":\"end\"}', '*');\n    }\n\n    window.addEventListener('message', function load(event) {\n        try {\n            var data = JSON.parse(event.data);\n        } catch (e) { return; }\n\n        var iframe = document.querySelector('#player-{{_.id}}');\n        if (!iframe) {\n            window.removeEventListener('message', load);\n            return;\n        }\n\n        [{\n            action: 'toggle-edit-mode',\n            initiator: 'PAGE_BUILDER',\n            callback: devVideoPlayModes\n        }, {\n            action: 'sdk-loaded',\n            initiator: 'PAGE_BUILDER',\n            callback: initDevMode\n        }].forEach(function(handler) {\n            if (data.action === handler.action && data.initiator === handler.initiator) {\n                try { handler.callback(iframe, data); } catch (error) {}\n            }\n        })\n    });\n</script>\n",
+    "date_created": "2024-02-27T02:43:46.691Z",
+    "date_modified": "2024-02-27T02:43:46.691Z",
+    "kind": "sd-video",
+    "storefront_api_query": "",
+    "icon_name": "sd-video",
+    "template_engine": "handlebars_v3",
+    "client_rerender": false,
+    "current_version_uuid": "cb2a9b34-face-4101-bc1f-1f13ab9885d5",
+    "channel_id": 0,
+    "schema_translations": {}
+  },
+  {
+    "uuid": "56c01cc3-4e64-4d83-9b5b-1a4ecd717f10",
+    "name": "Product",
+    "schema": [
+      {
+        "type": "hidden",
+        "settings": [
+          {
+            "type": "graphQl",
+            "id": "graphQueries",
+            "typeMeta": {
+              "mappings": {
+                "productId": {
+                  "reads": "productId",
+                  "type": "Int"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "type": "tab",
+        "label": "Content",
+        "sections": [
+          {
+            "label": "Product",
+            "settings": [
+              {
+                "type": "productId",
+                "label": "Product",
+                "id": "productId",
+                "default": "",
+                "typeMeta": {
+                  "placeholder": "Search by name or SKU"
+                }
+              }
+            ]
+          },
+          {
+            "label": "Elements",
+            "settings": [
+              {
+                "type": "alignment",
+                "label": "Content alignment",
+                "id": "productCardContentAlignment",
+                "default": {
+                  "horizontal": "center"
+                },
+                "typeMeta": {
+                  "display": "horizontal"
+                }
+              },
+              {
+                "type": "element",
+                "label": "Product image",
+                "id": "productImage",
+                "typeMeta": {
+                  "controls": {
+                    "visibility": {
+                      "default": "show"
+                    },
+                    "advanced": {
+                      "label": "Product image style",
+                      "settings": [
+                        {
+                          "type": "select",
+                          "label": "Image fit",
+                          "id": "imageFit",
+                          "default": "fill",
+                          "typeMeta": {
+                            "selectOptions": [
+                              {
+                                "label": "Scale to fill box",
+                                "value": "fill"
+                              },
+                              {
+                                "label": "Scale to fit box",
+                                "value": "fit"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "type": "element",
+                "label": "Brand",
+                "id": "brand",
+                "typeMeta": {
+                  "controls": {
+                    "visibility": {
+                      "default": "show"
+                    },
+                    "advanced": {
+                      "label": "Brand style",
+                      "settings": [
+                        {
+                          "type": "typography",
+                          "label": "Text",
+                          "id": "textStyle",
+                          "default": "default"
+                        },
+                        {
+                          "type": "color",
+                          "label": "Text color",
+                          "id": "color",
+                          "default": "#444444"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "type": "element",
+                "label": "Product name",
+                "id": "productName",
+                "typeMeta": {
+                  "controls": {
+                    "visibility": {
+                      "default": "show"
+                    },
+                    "advanced": {
+                      "label": "Product name style",
+                      "settings": [
+                        {
+                          "type": "typography",
+                          "label": "Text",
+                          "id": "textStyle",
+                          "default": "default"
+                        },
+                        {
+                          "type": "color",
+                          "label": "Text color",
+                          "id": "color",
+                          "default": "#444444"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "type": "element",
+                "label": "Price",
+                "id": "price",
+                "typeMeta": {
+                  "controls": {
+                    "visibility": {
+                      "default": "show"
+                    },
+                    "advanced": {
+                      "label": "Price style",
+                      "settings": [
+                        {
+                          "type": "typography",
+                          "label": "Text",
+                          "id": "textStyle",
+                          "default": "default"
+                        },
+                        {
+                          "type": "color",
+                          "label": "Text color",
+                          "id": "color",
+                          "default": "#444444"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "type": "element",
+                "label": "Product rating",
+                "id": "productRating",
+                "typeMeta": {
+                  "controls": {
+                    "visibility": {
+                      "default": "hide"
+                    },
+                    "advanced": {
+                      "label": "Product rating style",
+                      "settings": [
+                        {
+                          "type": "color",
+                          "label": "Star color (filled)",
+                          "id": "starColorFilled",
+                          "default": "#3C64F4"
+                        },
+                        {
+                          "type": "color",
+                          "label": "Star color (empty)",
+                          "id": "starColorEmpty",
+                          "default": "#ECEEF5"
+                        },
+                        {
+                          "type": "color",
+                          "label": "Reviews text color",
+                          "id": "reviewsColor",
+                          "default": "#8C93AD"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "type": "element",
+                "label": "Button",
+                "id": "button",
+                "typeMeta": {
+                  "controls": {
+                    "visibility": {
+                      "default": "hide"
+                    },
+                    "advanced": {
+                      "label": "Button style",
+                      "settings": [
+                        {
+                          "type": "select",
+                          "label": "Button shape",
+                          "id": "shape",
+                          "default": "round",
+                          "typeMeta": {
+                            "selectOptions": [
+                              {
+                                "label": "Round",
+                                "value": "round"
+                              },
+                              {
+                                "label": "Square",
+                                "value": "square"
+                              },
+                              {
+                                "label": "Pill",
+                                "value": "pill"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "type": "color",
+                          "label": "Button color",
+                          "id": "buttonColor",
+                          "default": "rgba(68,68,68,1)"
+                        },
+                        {
+                          "type": "typography",
+                          "label": "Button text",
+                          "id": "textStyle",
+                          "default": "default"
+                        },
+                        {
+                          "type": "color",
+                          "label": "Button text color",
+                          "id": "buttonTextColor",
+                          "default": "rgba(255,255,255,1)"
+                        },
+                        {
+                          "type": "select",
+                          "label": "Button action",
+                          "id": "buttonActionType",
+                          "default": "addToCart",
+                          "typeMeta": {
+                            "selectOptions": [
+                              {
+                                "label": "Add to Cart",
+                                "value": "addToCart"
+                              },
+                              {
+                                "label": "Add to Wishlist",
+                                "value": "addToWishlist"
+                              },
+                              {
+                                "label": "Go to Product Page",
+                                "value": "goToProduct"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "template": "<div id=\"bc-product-{{_.id}}\"></div>\n\n{{#with ../_.data.site.product as | productResource |}}\n  {{#if productResource.entityId \"==\" productId}}\n    <script type=\"application/ld+json\" nonce=\"{{nonce}}\">\n      {\n        \"@context\": \"https://schema.org/\",\n        \"@type\": \"Product\",\n        \"name\": \"{{productResource.name}}\",\n        \"image\": \"{{productResource.defaultImage.url}}\",\n        \"brand\": \"{{productResource.brand.name}}\",\n        \"sku\": \"{{productResource.sku}}\",\n        \"aggregateRating\": {\n          \"@type\": \"AggregateRating\",\n          {{#if productResource.reviewSummary.summationOfRatings \"==\" 0}}\n          \"ratingValue\": \"0\",\n          {{else}}\n          \"ratingValue\": \"{{divide productResource.reviewSummary.summationOfRatings productResource.reviewSummary.numberOfReviews}}\",\n          {{/if}}\n          \"reviewCount\": \"{{productResource.reviewSummary.numberOfReviews}}\"\n        },\n        \"offers\": {\n          \"@type\": \"Offer\",\n          \"priceCurrency\": \"{{productResource.prices.price.currencyCode}}\",\n          \"price\": \"{{productResource.prices.price.value}}\",\n          \"seller\": {\n            \"@type\": \"Organization\",\n            \"name\": \"{{../../../_.data.site.settings.storeName}}\"\n          }\n        }\n      }\n    </script>\n  {{/if}}\n{{/with}}\n\n<script type=\"text/javascript\" nonce=\"{{nonce}}\">\n  (function() {\n    var widgetConfiguration = {{{json .}}};\n    var dataIsNotPresent = typeof widgetConfiguration._.data === 'undefined' || Object.keys(widgetConfiguration._.data || {}).length === 0;\n    var storefrontApiQueryData = widgetConfiguration._.queryData;\n\n    function executeStorefrontApiQuery(queryData, callback) {\n      // Fetch data from the GraphQL Storefront API\n      var storefrontApiRequest = new XMLHttpRequest(); // IE compatible\n      storefrontApiRequest.onreadystatechange = function() {\n        if (this.readyState == 4 && this.status == 200) {\n          callback(JSON.parse(this.response).data);\n        }\n      };\n\n      storefrontApiRequest.open('POST', `/graphql`, true);\n      storefrontApiRequest.setRequestHeader('Authorization', `Bearer ${queryData.storefrontApiToken}`);\n      storefrontApiRequest.setRequestHeader('Content-type', 'application/json');\n      storefrontApiRequest.send(JSON.stringify({ query: queryData.storefrontApiQuery, variables: JSON.parse(queryData.storefrontApiQueryParamsJson) }));\n    }\n\n    function executeWidget(configuration, storefrontApiData) {\n      if (storefrontApiData) {\n        configuration._.data = storefrontApiData;\n      }\n\n      if (window.BigCommerce && window.BigCommerce.initializeProduct && typeof window.BigCommerce.initializeProduct === 'function') {\n        window.BigCommerce.initializeProduct(configuration);\n      } else {\n        var scriptTag = document.createElement('script');\n        scriptTag.type = 'text/javascript';\n        scriptTag.src = 'https://microapps.bigcommerce.com/product-widget/dab8b491d2f9685813bdbf7635bdbe7614df7f41/bundle.js';\n        scriptTag.integrity = 'sha512-PDHgWqo35khUfkIfk/4FfUGhGGzLwJl8HRrznKXCUdcJqoh2SipYhKCYPjKquydSz1tUPWkKD/YwOMM9JhS1fA=='\n        scriptTag.crossOrigin = 'anonymous';\n        scriptTag.defer = true;\n        scriptTag.onload = function () { window.BigCommerce.initializeProduct(configuration) };\n        scriptTag.nonce = '{{nonce}}';\n        document.head.appendChild(scriptTag);\n      }\n    }\n\n    if (dataIsNotPresent && storefrontApiQueryData) {\n      executeStorefrontApiQuery(storefrontApiQueryData, function(storefrontApiData) { executeWidget(widgetConfiguration, storefrontApiData) });\n    } else {\n      executeWidget(widgetConfiguration);\n    }\n  })();\n</script>\n",
+    "date_created": "2024-02-27T02:43:46.715Z",
+    "date_modified": "2024-02-27T02:43:46.715Z",
+    "kind": "sd-product",
+    "storefront_api_query": "query Product($productId: Int, $activeCurrencyCode: currencyCode!) {\n  site {\n    settings {\n      storeName\n      tax {\n        plp\n      }\n    }\n    currency(currencyCode: $activeCurrencyCode) {\n      display {\n        symbol\n        symbolPlacement\n        decimalToken\n        decimalPlaces\n        thousandsToken\n      }\n    }\n    product(entityId: $productId) {\n      name\n      entityId\n      addToCartUrl\n      addToWishlistUrl\n      brand {\n        name\n      }\n      path\n      sku\n      priceWithTax: prices(includeTax: true, currencyCode: $activeCurrencyCode) {\n        price {\n          currencyCode\n          value\n        }\n      }\n      priceWithoutTax: prices(includeTax: false, currencyCode: $activeCurrencyCode) {\n        price {\n          currencyCode\n          value\n        }\n      }\n      reviewSummary {\n        summationOfRatings\n        numberOfReviews\n      }\n      defaultImage {\n        url(width: 1500, height: 1500)\n      }\n    }\n  }\n}\n\n",
+    "icon_name": "sd-product",
+    "template_engine": "handlebars_v3",
+    "client_rerender": false,
+    "current_version_uuid": "0237468b-16f7-491e-98c2-61905cca2e3c",
+    "channel_id": 0,
+    "schema_translations": {}
+  },
+  {
+    "uuid": "930bc10e-3836-45e8-827c-604bee6a3680",
+    "name": "Product set",
+    "schema": [
+      {
+        "type": "hidden",
+        "settings": [
+          {
+            "type": "graphQl",
+            "id": "graphQueries",
+            "typeMeta": {
+              "mappings": {
+                "productIds": {
+                  "reads": "product.value.*.productId",
+                  "type": "Int!"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "type": "tab",
+        "label": "Content",
+        "sections": [
+          {
+            "label": "Products",
+            "settings": [
+              {
+                "type": "productSet",
+                "label": "Product Set",
+                "id": "product",
+                "entryLabel": "Product",
+                "default": {
+                  "type": "manual",
+                  "value": []
+                }
+              }
+            ],
+            "typeMeta": {
+              "type": "setSection"
+            }
+          },
+          {
+            "label": "Elements",
+            "settings": [
+              {
+                "type": "alignment",
+                "label": "Content alignment",
+                "id": "productCardContentAlignment",
+                "default": {
+                  "horizontal": "center"
+                },
+                "typeMeta": {
+                  "display": "horizontal"
+                }
+              },
+              {
+                "type": "select",
+                "label": "Products per slide",
+                "default": 4,
+                "id": "productsPerSlide",
+                "typeMeta": {
+                  "selectOptions": [
+                    {
+                      "label": "1",
+                      "value": 1
+                    },
+                    {
+                      "label": "2",
+                      "value": 2
+                    },
+                    {
+                      "label": "3",
+                      "value": 3
+                    },
+                    {
+                      "label": "4",
+                      "value": 4
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "element",
+                "label": "Product image",
+                "id": "productImage",
+                "typeMeta": {
+                  "controls": {
+                    "visibility": {
+                      "default": "show"
+                    },
+                    "advanced": {
+                      "label": "Product image style",
+                      "settings": [
+                        {
+                          "type": "select",
+                          "label": "Image fit",
+                          "id": "imageFit",
+                          "default": "fill",
+                          "typeMeta": {
+                            "selectOptions": [
+                              {
+                                "label": "Scale to fill box",
+                                "value": "fill"
+                              },
+                              {
+                                "label": "Scale to fit box",
+                                "value": "fit"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "type": "element",
+                "label": "Brand",
+                "id": "brand",
+                "typeMeta": {
+                  "controls": {
+                    "visibility": {
+                      "default": "show"
+                    },
+                    "advanced": {
+                      "label": "Brand style",
+                      "settings": [
+                        {
+                          "type": "typography",
+                          "label": "Text",
+                          "id": "textStyle",
+                          "default": "default"
+                        },
+                        {
+                          "type": "color",
+                          "label": "Text color",
+                          "id": "color",
+                          "default": "#444444"
+                        },
+                        {
+                          "type": "select",
+                          "label": "Font family",
+                          "id": "fontFamily",
+                          "default": "inherit",
+                          "typeMeta": {
+                            "selectOptions": [
+                              {
+                                "label": "Theme Default",
+                                "value": "inherit"
+                              },
+                              {
+                                "label": "Arial",
+                                "value": "Arial, sans-serif"
+                              },
+                              {
+                                "label": "Tahoma",
+                                "value": "Tahoma, sans-serif"
+                              },
+                              {
+                                "label": "Verdana",
+                                "value": "Verdana, sans-serif"
+                              },
+                              {
+                                "label": "Lucida",
+                                "value": "Lucida, sans-serif"
+                              },
+                              {
+                                "label": "Times New Roman",
+                                "value": "Times New Roman, serif"
+                              },
+                              {
+                                "label": "Courier",
+                                "value": "Courier, serif"
+                              },
+                              {
+                                "label": "Georgia",
+                                "value": "Georgia, serif"
+                              },
+                              {
+                                "label": "Palatino",
+                                "value": "Palatino, serif"
+                              }
+                            ]
+                          },
+                          "conditional": {
+                            "key": "textStyle",
+                            "operator": "IN",
+                            "value": ["custom"]
+                          }
+                        },
+                        {
+                          "type": "select",
+                          "label": "Font weight",
+                          "id": "fontWeight",
+                          "default": "400",
+                          "typeMeta": {
+                            "selectOptions": [
+                              {
+                                "label": "Thin",
+                                "value": "100"
+                              },
+                              {
+                                "label": "Extra Light (Ultra Light)",
+                                "value": "200"
+                              },
+                              {
+                                "label": "Light",
+                                "value": "300"
+                              },
+                              {
+                                "label": "Normal",
+                                "value": "400"
+                              },
+                              {
+                                "label": "Medium",
+                                "value": "500"
+                              },
+                              {
+                                "label": "Semi Bold (Demi Bold)",
+                                "value": "600"
+                              },
+                              {
+                                "label": "Bold",
+                                "value": "700"
+                              },
+                              {
+                                "label": "Extra Bold (Ultra Bold)",
+                                "value": "800"
+                              },
+                              {
+                                "label": "Black (Heavy)",
+                                "value": "900"
+                              }
+                            ]
+                          },
+                          "conditional": {
+                            "key": "textStyle",
+                            "operator": "IN",
+                            "value": ["custom"]
+                          }
+                        },
+                        {
+                          "type": "number",
+                          "label": "Font size",
+                          "id": "fontSize",
+                          "default": {
+                            "value": 36,
+                            "type": "px"
+                          },
+                          "typeMeta": {
+                            "parseType": "integer"
+                          },
+                          "conditional": {
+                            "key": "textStyle",
+                            "operator": "IN",
+                            "value": ["custom"]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "type": "element",
+                "label": "Product name",
+                "id": "productName",
+                "typeMeta": {
+                  "controls": {
+                    "visibility": {
+                      "default": "show"
+                    },
+                    "advanced": {
+                      "label": "Product name style",
+                      "settings": [
+                        {
+                          "type": "typography",
+                          "label": "Text",
+                          "id": "textStyle",
+                          "default": "default"
+                        },
+                        {
+                          "type": "color",
+                          "label": "Text color",
+                          "id": "color",
+                          "default": "#444444"
+                        },
+                        {
+                          "type": "select",
+                          "label": "Font family",
+                          "id": "fontFamily",
+                          "default": "inherit",
+                          "typeMeta": {
+                            "selectOptions": [
+                              {
+                                "label": "Theme Default",
+                                "value": "inherit"
+                              },
+                              {
+                                "label": "Arial",
+                                "value": "Arial, sans-serif"
+                              },
+                              {
+                                "label": "Tahoma",
+                                "value": "Tahoma, sans-serif"
+                              },
+                              {
+                                "label": "Verdana",
+                                "value": "Verdana, sans-serif"
+                              },
+                              {
+                                "label": "Lucida",
+                                "value": "Lucida, sans-serif"
+                              },
+                              {
+                                "label": "Times New Roman",
+                                "value": "Times New Roman, serif"
+                              },
+                              {
+                                "label": "Courier",
+                                "value": "Courier, serif"
+                              },
+                              {
+                                "label": "Georgia",
+                                "value": "Georgia, serif"
+                              },
+                              {
+                                "label": "Palatino",
+                                "value": "Palatino, serif"
+                              }
+                            ]
+                          },
+                          "conditional": {
+                            "key": "textStyle",
+                            "operator": "IN",
+                            "value": ["custom"]
+                          }
+                        },
+                        {
+                          "type": "select",
+                          "label": "Font weight",
+                          "id": "fontWeight",
+                          "default": "400",
+                          "typeMeta": {
+                            "selectOptions": [
+                              {
+                                "label": "Thin",
+                                "value": "100"
+                              },
+                              {
+                                "label": "Extra Light (Ultra Light)",
+                                "value": "200"
+                              },
+                              {
+                                "label": "Light",
+                                "value": "300"
+                              },
+                              {
+                                "label": "Normal",
+                                "value": "400"
+                              },
+                              {
+                                "label": "Medium",
+                                "value": "500"
+                              },
+                              {
+                                "label": "Semi Bold (Demi Bold)",
+                                "value": "600"
+                              },
+                              {
+                                "label": "Bold",
+                                "value": "700"
+                              },
+                              {
+                                "label": "Extra Bold (Ultra Bold)",
+                                "value": "800"
+                              },
+                              {
+                                "label": "Black (Heavy)",
+                                "value": "900"
+                              }
+                            ]
+                          },
+                          "conditional": {
+                            "key": "textStyle",
+                            "operator": "IN",
+                            "value": ["custom"]
+                          }
+                        },
+                        {
+                          "type": "number",
+                          "label": "Font size",
+                          "id": "fontSize",
+                          "default": {
+                            "value": 36,
+                            "type": "px"
+                          },
+                          "typeMeta": {
+                            "parseType": "integer"
+                          },
+                          "conditional": {
+                            "key": "textStyle",
+                            "operator": "IN",
+                            "value": ["custom"]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "type": "element",
+                "label": "Price",
+                "id": "price",
+                "typeMeta": {
+                  "controls": {
+                    "visibility": {
+                      "default": "show"
+                    },
+                    "advanced": {
+                      "label": "Price style",
+                      "settings": [
+                        {
+                          "type": "typography",
+                          "label": "Text",
+                          "id": "textStyle",
+                          "default": "default"
+                        },
+                        {
+                          "type": "color",
+                          "label": "Text color",
+                          "id": "color",
+                          "default": "#444444"
+                        },
+                        {
+                          "type": "select",
+                          "label": "Font family",
+                          "id": "fontFamily",
+                          "default": "inherit",
+                          "typeMeta": {
+                            "selectOptions": [
+                              {
+                                "label": "Theme Default",
+                                "value": "inherit"
+                              },
+                              {
+                                "label": "Arial",
+                                "value": "Arial, sans-serif"
+                              },
+                              {
+                                "label": "Tahoma",
+                                "value": "Tahoma, sans-serif"
+                              },
+                              {
+                                "label": "Verdana",
+                                "value": "Verdana, sans-serif"
+                              },
+                              {
+                                "label": "Lucida",
+                                "value": "Lucida, sans-serif"
+                              },
+                              {
+                                "label": "Times New Roman",
+                                "value": "Times New Roman, serif"
+                              },
+                              {
+                                "label": "Courier",
+                                "value": "Courier, serif"
+                              },
+                              {
+                                "label": "Georgia",
+                                "value": "Georgia, serif"
+                              },
+                              {
+                                "label": "Palatino",
+                                "value": "Palatino, serif"
+                              }
+                            ]
+                          },
+                          "conditional": {
+                            "key": "textStyle",
+                            "operator": "IN",
+                            "value": ["custom"]
+                          }
+                        },
+                        {
+                          "type": "select",
+                          "label": "Font weight",
+                          "id": "fontWeight",
+                          "default": "400",
+                          "typeMeta": {
+                            "selectOptions": [
+                              {
+                                "label": "Thin",
+                                "value": "100"
+                              },
+                              {
+                                "label": "Extra Light (Ultra Light)",
+                                "value": "200"
+                              },
+                              {
+                                "label": "Light",
+                                "value": "300"
+                              },
+                              {
+                                "label": "Normal",
+                                "value": "400"
+                              },
+                              {
+                                "label": "Medium",
+                                "value": "500"
+                              },
+                              {
+                                "label": "Semi Bold (Demi Bold)",
+                                "value": "600"
+                              },
+                              {
+                                "label": "Bold",
+                                "value": "700"
+                              },
+                              {
+                                "label": "Extra Bold (Ultra Bold)",
+                                "value": "800"
+                              },
+                              {
+                                "label": "Black (Heavy)",
+                                "value": "900"
+                              }
+                            ]
+                          },
+                          "conditional": {
+                            "key": "textStyle",
+                            "operator": "IN",
+                            "value": ["custom"]
+                          }
+                        },
+                        {
+                          "type": "number",
+                          "label": "Font size",
+                          "id": "fontSize",
+                          "default": {
+                            "value": 36,
+                            "type": "px"
+                          },
+                          "typeMeta": {
+                            "parseType": "integer"
+                          },
+                          "conditional": {
+                            "key": "textStyle",
+                            "operator": "IN",
+                            "value": ["custom"]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "type": "element",
+                "label": "Product rating",
+                "id": "productRating",
+                "typeMeta": {
+                  "controls": {
+                    "visibility": {
+                      "default": "hide"
+                    },
+                    "advanced": {
+                      "label": "Product rating style",
+                      "settings": [
+                        {
+                          "type": "color",
+                          "label": "Star color (filled)",
+                          "id": "starColorFilled",
+                          "default": "#3C64F4"
+                        },
+                        {
+                          "type": "color",
+                          "label": "Star color (empty)",
+                          "id": "starColorEmpty",
+                          "default": "#ECEEF5"
+                        },
+                        {
+                          "type": "color",
+                          "label": "Reviews text color",
+                          "id": "reviewsColor",
+                          "default": "#8C93AD"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "type": "element",
+                "label": "Button",
+                "id": "button",
+                "typeMeta": {
+                  "controls": {
+                    "visibility": {
+                      "default": "hide"
+                    },
+                    "advanced": {
+                      "label": "Button style",
+                      "settings": [
+                        {
+                          "type": "select",
+                          "label": "Button shape",
+                          "id": "shape",
+                          "default": "round",
+                          "typeMeta": {
+                            "selectOptions": [
+                              {
+                                "label": "Round",
+                                "value": "round"
+                              },
+                              {
+                                "label": "Square",
+                                "value": "square"
+                              },
+                              {
+                                "label": "Pill",
+                                "value": "pill"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "type": "color",
+                          "label": "Button color",
+                          "id": "buttonColor",
+                          "default": "rgba(68,68,68,1)"
+                        },
+                        {
+                          "type": "color",
+                          "label": "Button text color",
+                          "id": "buttonTextColor",
+                          "default": "rgba(255,255,255,1)"
+                        },
+                        {
+                          "type": "select",
+                          "label": "Button action",
+                          "id": "buttonActionType",
+                          "default": "addToCart",
+                          "typeMeta": {
+                            "selectOptions": [
+                              {
+                                "label": "Add to Cart",
+                                "value": "addToCart"
+                              },
+                              {
+                                "label": "Add to Wishlist",
+                                "value": "addToWishlist"
+                              },
+                              {
+                                "label": "Go to Product Page",
+                                "value": "goToProduct"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "template": "<div id=\"sd-product-set-{{_.id}}\"></div>\n\n{{#each products as |product|}}\n  {{#each ../_.data.site.products.edges as |productResource|}}\n    {{#if productResource.node.entityId \"==\" product.productId}}\n      <script type=\"application/ld+json\" nonce=\"{{nonce}}\">\n        {\n          \"@context\": \"https://schema.org/\",\n          \"@type\": \"Product\",\n          \"name\": \"{{productResource.node.name}}\",\n          \"image\": \"{{productResource.node.defaultImage.url}}\",\n          \"description\": \"{{product.productDescription}}\",\n          \"sku\": \"{{productResource.node.sku}}\",\n          \"aggregateRating\": {\n            \"@type\": \"AggregateRating\",\n            {{#if productResource.node.reviewSummary.summationOfRatings \"==\" 0}}\n            \"ratingValue\": \"0\",\n            {{else}}\n            \"ratingValue\": \"{{divide productResource.node.reviewSummary.summationOfRatings productResource.node.reviewSummary.numberOfReviews}}\",\n            {{/if}}\n            \"reviewCount\": \"{{productResource.node.reviewSummary.numberOfReviews}}\"\n          },\n          \"offers\": {\n            \"@type\": \"Offer\",\n            \"priceCurrency\": \"{{productResource.node.prices.price.currencyCode}}\",\n            \"price\": \"{{productResource.node.prices.price.value}}\",\n            \"seller\": {\n              \"@type\": \"Organization\",\n              \"name\": \"{{../../../_.data.site.settings.storeName}}\"\n            }\n          }\n        }\n      </script>\n    {{/if}}\n  {{/each}}\n{{/each}}\n\n<script type=\"text/javascript\" nonce=\"{{nonce}}\">\n  (function() {\n    const storefrontSRI = 'sha512-PNLKymbMDMT5J7TxhLhyCwalnowXRuXsXznAL3N2XjvENv3HYFVTWSaFYYZGgWQQWFcBsuG/MMN4oF8ro1Qxsw==';\n    const pageBuilderSRI = 'sha512-F6LP2My9MC0QjpH4eYA1hxwNB8wutmKJaxdhE+PoOuN5264DCYgOsuINxFLq7A+vOEBSL9hGX/LSmQAkP/qYWQ==';\n    const scriptPath = (build) => `https://microapps.bigcommerce.com/product-set-widget/8d8f8421e73ee762e8b30438715f6233f0a7eb8b/${build}-bundle.js`;\n\n    var widgetConfiguration = {{{json .}}};\n    var dataIsNotPresent = typeof widgetConfiguration._.data === 'undefined' || Object.keys(widgetConfiguration._.data || {}).length === 0;\n    var storefrontApiQueryData = widgetConfiguration._.queryData;\n\n    function executeStorefrontApiQuery(queryData, callback) {\n      // Fetch data from the GraphQL Storefront API\n      var storefrontApiRequest = new XMLHttpRequest(); // IE compatible\n      storefrontApiRequest.onreadystatechange = function() {\n        if (this.readyState == 4 && this.status == 200) {\n          callback(JSON.parse(this.response).data);\n        }\n      };\n\n      storefrontApiRequest.open('POST', `/graphql`, true);\n      storefrontApiRequest.setRequestHeader('Authorization', `Bearer ${queryData.storefrontApiToken}`);\n      storefrontApiRequest.setRequestHeader('Content-type', 'application/json');\n      storefrontApiRequest.send(JSON.stringify({ query: queryData.storefrontApiQuery, variables: JSON.parse(queryData.storefrontApiQueryParamsJson) }));\n    }\n\n    function loadScript(src, sri, onload) {\n        const scriptTag = document.createElement('script');\n        scriptTag.type = 'text/javascript';\n        scriptTag.defer = true;\n        scriptTag.src = src;\n        scriptTag.integrity = sri;\n        scriptTag.crossOrigin = 'anonymous';\n        scriptTag.nonce = '{{nonce}}';\n        if (onload) {\n            scriptTag.onload = onload;\n        }\n        document.head.appendChild(scriptTag);\n    }\n\n    function executeWidget(configuration, storefrontApiData) {\n      if (storefrontApiData) {\n        configuration._.data = storefrontApiData;\n      }\n      {{#if _.context.isEditorMode '===' true}}\n        if (window.BigCommerce\n                && window.BigCommerce.initializeProductSet\n                && typeof window.BigCommerce.initializeProductSet === 'function'\n                && window.BigCommerce.initializeProductSetPageBuilderComm\n                && typeof window.BigCommerce.initializeProductSetPageBuilderComm === 'function') {\n            const productSet = window.BigCommerce.initializeProductSet(configuration);\n            window.BigCommerce.initializeProductSetPageBuilderComm(productSet);\n        } else {\n            loadScript(scriptPath('storefront'), storefrontSRI, () => {\n                const productSet = window.BigCommerce.initializeProductSet(configuration);\n                loadScript(scriptPath('pageBuilder'), pageBuilderSRI, () => {\n                    window.BigCommerce.initializeProductSetPageBuilderComm(productSet);\n                });\n            });\n        }\n      {{else}}\n        if (window.BigCommerce && window.BigCommerce.initializeProductSet && typeof window.BigCommerce.initializeProductSet === 'function') {\n            window.BigCommerce.initializeProductSet(configuration).setup();\n        } else {\n            loadScript(scriptPath('storefront'), storefrontSRI, () => window.BigCommerce.initializeProductSet(configuration).setup());\n        }\n      {{/if}}\n    }\n\n    if (dataIsNotPresent && storefrontApiQueryData) {\n      executeStorefrontApiQuery(storefrontApiQueryData, function(storefrontApiData) { executeWidget(widgetConfiguration, storefrontApiData) });\n    } else {\n      executeWidget(widgetConfiguration);\n    }\n  })();\n</script>\n",
+    "date_created": "2024-02-27T02:43:46.742Z",
+    "date_modified": "2024-02-27T02:43:46.742Z",
+    "kind": "sd-product-set",
+    "storefront_api_query": "query ProductSet($productIds: [Int!], $activeCurrencyCode: currencyCode!) {\n  site {\n    settings {\n      storeName\n      tax {\n        plp\n      }\n    }\n    currency(currencyCode: $activeCurrencyCode) {\n      display {\n        symbol\n        symbolPlacement\n        decimalToken\n        decimalPlaces\n        thousandsToken\n      }\n    }\n    products(entityIds: $productIds) {\n      edges {\n        node {\n          brand {\n            name\n          }\n          name\n          entityId\n          addToCartUrl\n          addToWishlistUrl\n          path\n          sku\n          priceWithTax: prices(includeTax: true, currencyCode: $activeCurrencyCode)  {\n            price {\n              currencyCode\n              value\n            }\n          }\n          priceWithoutTax: prices(includeTax: false, currencyCode: $activeCurrencyCode)  {\n            price {\n              currencyCode\n              value\n            }\n          }\n          reviewSummary {\n            summationOfRatings\n            numberOfReviews\n          }\n          defaultImage {\n            url80wide: url(width: 80)\n            url160wide: url(width: 160)\n            url320wide: url(width: 320)\n            url640wide: url(width: 640)\n            url960wide: url(width: 960)\n            url1280wide: url(width: 1280)\n            url1920wide: url(width: 1920)\n          }\n        }\n      }\n    }\n  }\n}\n",
+    "icon_name": "sd-product-set",
+    "template_engine": "handlebars_v3",
+    "client_rerender": false,
+    "current_version_uuid": "b2619639-70b7-4a1a-bb64-67e147286f79",
+    "channel_id": 0,
+    "schema_translations": {}
+  },
+  {
+    "uuid": "ce9bbb4b-0625-4acc-a0e5-4ff9c8bb0615",
+    "name": "Button",
+    "schema": [
+      {
+        "type": "hidden",
+        "settings": [
+          {
+            "id": "buttonText",
+            "default": "Button label"
+          }
+        ]
+      },
+      {
+        "type": "tab",
+        "label": "Design",
+        "sections": [
+          {
+            "label": "Button",
+            "settings": [
+              {
+                "type": "input",
+                "id": "buttonLink",
+                "label": "Button link",
+                "default": "",
+                "typeMeta": {
+                  "placeholder": "https://"
+                }
+              },
+              {
+                "type": "alignment",
+                "label": "Button align",
+                "id": "alignment",
+                "default": {
+                  "horizontal": "center"
+                },
+                "typeMeta": {
+                  "display": "horizontal"
+                }
+              },
+              {
+                "type": "boxModel",
+                "label": "Margin (px)",
+                "id": "buttonMargin",
+                "default": {
+                  "top": {
+                    "value": "0",
+                    "type": "px"
+                  },
+                  "right": {
+                    "value": "0",
+                    "type": "px"
+                  },
+                  "bottom": {
+                    "value": "0",
+                    "type": "px"
+                  },
+                  "left": {
+                    "value": "0",
+                    "type": "px"
+                  }
+                }
+              },
+              {
+                "type": "boxModel",
+                "label": "Padding (px)",
+                "id": "buttonPadding",
+                "default": {
+                  "top": {
+                    "value": "8",
+                    "type": "px"
+                  },
+                  "right": {
+                    "value": "24",
+                    "type": "px"
+                  },
+                  "bottom": {
+                    "value": "8",
+                    "type": "px"
+                  },
+                  "left": {
+                    "value": "24",
+                    "type": "px"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "label": "Text",
+            "settings": [
+              {
+                "type": "select",
+                "label": "Font family",
+                "id": "fontFamily",
+                "default": "inherit",
+                "typeMeta": {
+                  "selectOptions": [
+                    {
+                      "label": "Theme Default",
+                      "value": "inherit"
+                    },
+                    {
+                      "label": "Arial",
+                      "value": "Arial, sans-serif"
+                    },
+                    {
+                      "label": "Tahoma",
+                      "value": "Tahoma, sans-serif"
+                    },
+                    {
+                      "label": "Verdana",
+                      "value": "Verdana, sans-serif"
+                    },
+                    {
+                      "label": "Lucida",
+                      "value": "Lucida, sans-serif"
+                    },
+                    {
+                      "label": "Times New Roman",
+                      "value": "Times New Roman, serif"
+                    },
+                    {
+                      "label": "Courier",
+                      "value": "Courier, serif"
+                    },
+                    {
+                      "label": "Georgia",
+                      "value": "Georgia, serif"
+                    },
+                    {
+                      "label": "Palatino",
+                      "value": "Palatino, serif"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "select",
+                "label": "Font weight",
+                "id": "fontWeight",
+                "default": "400",
+                "typeMeta": {
+                  "selectOptions": [
+                    {
+                      "label": "Thin",
+                      "value": "100"
+                    },
+                    {
+                      "label": "Extra Light (Ultra Light)",
+                      "value": "200"
+                    },
+                    {
+                      "label": "Light",
+                      "value": "300"
+                    },
+                    {
+                      "label": "Normal",
+                      "value": "400"
+                    },
+                    {
+                      "label": "Medium",
+                      "value": "500"
+                    },
+                    {
+                      "label": "Semi Bold (Demi Bold)",
+                      "value": "600"
+                    },
+                    {
+                      "label": "Bold",
+                      "value": "700"
+                    },
+                    {
+                      "label": "Extra Bold (Ultra Bold)",
+                      "value": "800"
+                    },
+                    {
+                      "label": "Black (Heavy)",
+                      "value": "900"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "number",
+                "label": "Font size",
+                "id": "textSize",
+                "default": {
+                  "value": 21,
+                  "type": "px"
+                },
+                "typeMeta": {
+                  "parseType": "integer"
+                }
+              },
+              {
+                "type": "color",
+                "label": "Text color",
+                "id": "textColor",
+                "default": "#FFFFFF"
+              },
+              {
+                "type": "color",
+                "label": "Text color (hover)",
+                "id": "textColorHover",
+                "default": "#FFFFFF"
+              }
+            ]
+          },
+          {
+            "label": "Style",
+            "settings": [
+              {
+                "type": "color",
+                "label": "Button color",
+                "id": "backgroundColor",
+                "default": "#444444"
+              },
+              {
+                "type": "color",
+                "label": "Button color (hover)",
+                "id": "backgroundColorHover",
+                "default": "#666666"
+              },
+              {
+                "type": "color",
+                "label": "Border color",
+                "id": "borderColor",
+                "default": "#444444"
+              },
+              {
+                "type": "color",
+                "label": "Border color (hover)",
+                "id": "borderColorHover",
+                "default": "#666666"
+              },
+              {
+                "type": "range",
+                "label": "Border thickness",
+                "id": "buttonBorder",
+                "default": 1,
+                "typeMeta": {
+                  "rangeValues": {
+                    "min": 0,
+                    "max": 10,
+                    "step": 1,
+                    "unit": "px"
+                  }
+                }
+              },
+              {
+                "type": "range",
+                "label": "Border radius",
+                "id": "borderRadius",
+                "default": 4,
+                "typeMeta": {
+                  "rangeValues": {
+                    "min": 0,
+                    "max": 100,
+                    "step": 1,
+                    "unit": "px"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "template": "<style>\n    .sd-button-{{_.id}} {\n        display: flex;\n        align-items: center;\n        {{#if alignment.horizontal '===' 'center'}}\n            justify-content: center;\n        {{else if alignment.horizontal '===' 'left'}}\n            justify-content: flex-start;\n        {{else if alignment.horizontal '===' 'right'}}\n            justify-content: flex-end;\n        {{/if}}\n    }\n\n    .sd-button-{{_.id}} .buttonLink > a {\n        text-decoration: none;\n        background-color: {{backgroundColor}};\n        border: {{buttonBorder}}px solid {{borderColor}};\n        border-radius: {{borderRadius}}px;\n        color: {{textColor}};\n        font-size: {{textSize.value}}{{textSize.type}};\n        font-family: {{fontFamily}};\n        font-weight: {{fontWeight}};\n        padding-top: {{buttonPadding.top.value}}{{buttonPadding.top.type}};\n        padding-right: {{buttonPadding.right.value}}{{buttonPadding.right.type}};\n        padding-bottom: {{buttonPadding.bottom.value}}{{buttonPadding.bottom.type}};\n        padding-left: {{buttonPadding.left.value}}{{buttonPadding.left.type}};\n        margin-top: {{buttonMargin.top.value}}{{buttonMargin.top.type}};\n        margin-right: {{buttonMargin.right.value}}{{buttonMargin.right.type}};\n        margin-bottom: {{buttonMargin.bottom.value}}{{buttonMargin.bottom.type}};\n        margin-left: {{buttonMargin.left.value}}{{buttonMargin.left.type}};\n        text-align: center;\n        cursor: pointer;\n    }\n\n    .sd-button-{{_.id}} .buttonLink > a:hover {\n        background-color: {{backgroundColorHover}};\n        border-color: {{borderColorHover}};\n        color: {{textColorHover}};\n    }\n\n    @media only screen and (max-width: 700px) {\n        .sd-button-{{_.id}} { }\n    }\n\n    #sd-simple-button-editable-{{_.id}} {\n        min-width: 14px;\n        line-height: 1.5;\n        display: inline-block;\n    }\n\n    #sd-simple-button-editable-{{_.id}} * {\n        margin: 0;\n        padding: 0;\n    }\n\n    #sd-simple-button-editable-{{_.id}}[data-edit-mode=\"true\"]:hover,\n    #sd-simple-button-editable-{{_.id}}[data-edit-mode=\"true\"]:active,\n    #sd-simple-button-editable-{{_.id}}[data-edit-mode=\"true\"]:focus {\n        outline: 1px dashed #3C64F4;\n    }\n\n    #sd-simple-button-editable-{{_.id}} strong,\n    #sd-simple-button-editable-{{_.id}} strong * {\n        font-weight: bold;\n    }\n</style>\n\n<div class=\"sd-button-{{_.id}}\">\n    <div class=\"buttonLink\" role=\"button\">\n        <a href=\"{{buttonLink}}\" target=\"_top\" id=\"sd-simple-button-editable-{{_.id}}\" data-edit-mode=\"{{_.pageBuilderData.previewState.editMode}}\">\n            {{{buttonText}}}\n        </a>\n    </div>\n</div>\n\n{{#if _.context.isEditorMode '===' true}}\n    <script type=\"text/javascript\">\n        (function () {\n            var editMode = false;\n            var selector = \"sd-simple-button-editable-{{_.id}}\";\n            var element = document.getElementById(selector);\n            if (!element) { return; }\n\n            var button = document.getElementsByClassName(\"sd-button-{{_.id}}\")[0]\n            button.addEventListener('click', () => {\n                element.focus()\n            });\n\n            function initializeContentEditableText() {\n                if (window.BigCommerce && window.BigCommerce.inlineEditor && window.BigCommerce.sendWidgetUpdate) {\n                    editMode = true;\n                    window.BigCommerce.inlineEditor.init({\n                        selector: \"#\" + selector,\n                        editMode: editMode,\n                        onBlur: function (content) {\n                          element.innerHtml = content;\n                          flushChanges(content);\n                        },\n                        onKeyup: flushChanges,\n                        toolbarItems: ['bold', 'italic', 'underline', 'strikethrough']\n                    });\n                }\n            }\n\n            function flushChanges(content) {\n              var props = {\n                \"buttonText\": content\n              };\n              window.BigCommerce.sendWidgetUpdate(props, \"{{_.id}}\");\n            }\n\n            function setEditMode(data) {\n                editMode = data.editMode;\n                element.dataset.editMode = editMode;\n\n                if (window.BigCommerce && window.BigCommerce.inlineEditor) {\n                    if (editMode) {\n                        initializeContentEditableText()\n                    } else {\n                        window.BigCommerce.inlineEditor.remove(\"#\" + selector);\n                    }\n                }\n            }\n\n            window.addEventListener('message', function (event) {\n                try {\n                    var data = JSON.parse(event.data);\n                } catch (error) {\n                    return;\n                }\n\n                [{\n                    action: 'sdk-loaded',\n                    initiator: 'PAGE_BUILDER',\n                    callback: initializeContentEditableText\n                },{\n                    action: 'toggle-edit-mode',\n                    initiator: 'PAGE_BUILDER',\n                    callback: setEditMode\n                }].forEach(function (handler) {\n                    if (data.action === handler.action && data.initiator === handler.initiator) {\n                        try { handler.callback(data); } catch (error) {}\n                    }\n                })\n            });\n\n            initializeContentEditableText();\n        })();\n    </script>\n{{/if}}\n",
+    "date_created": "2024-02-27T02:43:46.764Z",
+    "date_modified": "2024-02-27T02:43:46.764Z",
+    "kind": "sd-simple-button-v2",
+    "storefront_api_query": "",
+    "icon_name": "sd-button",
+    "template_engine": "handlebars_v3",
+    "client_rerender": false,
+    "current_version_uuid": "e0a82c10-b25f-40ea-94f2-ef8fac3e0ba9",
+    "channel_id": 0,
+    "schema_translations": {}
+  },
+  {
+    "uuid": "8cc96950-8a15-4f3b-8129-087aa2a78248",
+    "name": "HTML",
+    "schema": [
+      {
+        "label": "Content",
+        "type": "tab",
+        "sections": [
+          {
+            "settings": [
+              {
+                "id": "htmlCode",
+                "label": "HTML Code",
+                "default": "<p style=\"\n  border: 1px dashed #8C93AD;\n  color: #313440;\n  font-family: arial;\n  margin: 0;\n  padding: 1rem;\n  text-align: center;\n\">\n  You can use this widget to input arbitrary HTML code into the page. Invalid HTML code may cause issues with the preview pane.\n</p>",
+                "type": "code",
+                "typeMeta": {
+                  "language": "html",
+                  "placeholder": "Insert HTML code here"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "template": "{{{htmlCode}}}\n",
+    "date_created": "2024-02-27T02:43:46.778Z",
+    "date_modified": "2024-02-27T02:43:46.778Z",
+    "kind": "sd-simple-html",
+    "storefront_api_query": "",
+    "icon_name": "sd-html",
+    "template_engine": "handlebars_v3",
+    "client_rerender": false,
+    "current_version_uuid": "29a485e4-327c-42f5-80cc-e91becc00347",
+    "channel_id": 0,
+    "schema_translations": {}
+  },
+  {
+    "uuid": "7f7e85d0-259a-4412-b8e9-d4b03ec71975",
+    "name": "Spacer",
+    "schema": [
+      {
+        "type": "tab",
+        "label": "Design",
+        "sections": [
+          {
+            "settings": [
+              {
+                "type": "range",
+                "id": "spaceSize",
+                "default": 50,
+                "typeMeta": {
+                  "rangeValues": {
+                    "min": 0,
+                    "max": 200,
+                    "step": 1,
+                    "unit": "px"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "template": "<style>\n  .sd-spacer-{{_.id}} {\n    height: {{spaceSize}}px;\n  }\n</style>\n\n<div class=\"sd-spacer-{{_.id}}\">\n</div>\n",
+    "date_created": "2024-02-27T02:43:46.794Z",
+    "date_modified": "2024-02-27T02:43:46.794Z",
+    "kind": "sd-spacer",
+    "storefront_api_query": "",
+    "icon_name": "sd-spacer",
+    "template_engine": "handlebars_v3",
+    "client_rerender": false,
+    "current_version_uuid": "f19afefc-4720-4ef7-b28c-c1727f4db27e",
+    "channel_id": 0,
+    "schema_translations": {}
+  },
+  {
+    "uuid": "d5163e7b-b6e3-4adc-bac1-d7d740cedd0f",
+    "name": "Divider",
+    "schema": [
+      {
+        "type": "tab",
+        "label": "Design",
+        "sections": [
+          {
+            "settings": [
+              {
+                "type": "color",
+                "label": "Line color",
+                "id": "color",
+                "default": "rgba(180, 186, 209, 1)"
+              },
+              {
+                "type": "select",
+                "label": "Line style",
+                "id": "style",
+                "default": "solid",
+                "typeMeta": {
+                  "selectOptions": [
+                    {
+                      "label": "Solid",
+                      "value": "solid"
+                    },
+                    {
+                      "label": "Dashed",
+                      "value": "dashed"
+                    },
+                    {
+                      "label": "Dotted",
+                      "value": "dotted"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "range",
+                "label": "Line width",
+                "id": "width",
+                "default": 100,
+                "typeMeta": {
+                  "rangeValues": {
+                    "min": 1,
+                    "max": 100,
+                    "step": 1,
+                    "unit": "%"
+                  }
+                }
+              },
+              {
+                "type": "range",
+                "label": "Line thickness",
+                "id": "thickness",
+                "default": 1,
+                "typeMeta": {
+                  "rangeValues": {
+                    "min": 1,
+                    "max": 10,
+                    "step": 1,
+                    "unit": "px"
+                  }
+                }
+              },
+              {
+                "type": "alignment",
+                "label": "Alignment",
+                "id": "alignment",
+                "default": {
+                  "horizontal": "center",
+                  "vertical": "middle"
+                },
+                "typeMeta": {
+                  "display": "both"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "template": "<style>\n  .sd-divider-wrapper-{{_.id}} {\n    display: flex;\n    height: 20px;\n    {{#if alignment.vertical '===' 'middle'}}\n      align-items: center;\n    {{else if alignment.vertical '===' 'top'}}\n      align-items: flex-start;\n    {{else if alignment.vertical '===' 'bottom'}}\n      align-items: flex-end;\n    {{/if}}\n    {{#if alignment.horizontal '===' 'center'}}\n      justify-content: center;\n      text-align: center;\n    {{else if alignment.horizontal '===' 'left'}}\n      justify-content: flex-start;\n      text-align: left;\n    {{else if alignment.horizontal '===' 'right'}}\n      justify-content: flex-end;\n      text-align: right;\n    {{/if}}\n  }\n\n  .sd-divider-{{_.id}} {\n    height: 0;\n    border-top: {{thickness}}px;\n    border-color: {{color}};\n    border-style: {{style}};\n    width: {{width}}%;\n    margin: 0;\n  }\n</style>\n\n<div class=\"sd-divider-wrapper-{{_.id}}\">\n  <hr class=\"sd-divider-{{_.id}}\"/>\n</div>\n",
+    "date_created": "2024-02-27T02:43:46.811Z",
+    "date_modified": "2024-02-27T02:43:46.811Z",
+    "kind": "sd-divider",
+    "storefront_api_query": "",
+    "icon_name": "sd-divider",
+    "template_engine": "handlebars_v3",
+    "client_rerender": false,
+    "current_version_uuid": "46ae4c9f-a1ab-4bcf-bef2-a7ae74711b69",
+    "channel_id": 0,
+    "schema_translations": {}
+  }
+]

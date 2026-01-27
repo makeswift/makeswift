@@ -10,7 +10,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@bigcommerce/stencil-paper-handlebars": "^6.3.2",
     "@makeswift/runtime": "workspace:^",
+    "html-react-parser": "^5.0.10",
     "next": "15.5.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
