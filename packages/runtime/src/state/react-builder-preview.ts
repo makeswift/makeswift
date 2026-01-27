@@ -643,10 +643,12 @@ export function configureStore({
   preloadedState,
   client,
   builderProxy,
+  middlewares = [],
 }: {
   preloadedState: Partial<State>
   client: MakeswiftHostApiClient
   builderProxy: BuilderAPIProxy
+  middlewares?: Middleware<Dispatch, State, Dispatch>[]
 }) {
   const initialState: Partial<State> = {
     ...preloadedState,
@@ -664,6 +666,7 @@ export function configureStore({
         builderAPIMiddleware(builderProxy),
         propControllerHandlesMiddleware(),
         makeswiftApiClientSyncMiddleware(client),
+        ...middlewares,
       ),
 
     enhancers: getDefaultEnhancers =>

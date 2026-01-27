@@ -12,7 +12,7 @@ import type { ComponentType } from '../../state/react-page'
 
 import { RuntimeCore } from './runtime-core'
 
-function validateComponentType(type: string, component?: ComponentType): void {
+export function validateComponentType(type: string, component?: ComponentType): void {
   const componentName = component?.name ?? 'Component'
   if (typeof type !== 'string' || type === '') {
     throw new Error(

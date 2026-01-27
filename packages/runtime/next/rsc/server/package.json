@@ -1,0 +1,5 @@
+{
+  "main": "../../../dist/cjs/next/rsc/server/index.js",
+  "module": "../../../dist/esm/next/rsc/server/index.js",
+  "types": "../../../dist/types/next/rsc/server/index.d.ts"
+}

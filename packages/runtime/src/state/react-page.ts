@@ -381,10 +381,12 @@ export function configureStore({
   name,
   preloadedState,
   breakpoints,
+  middlewares = [],
 }: {
   name: string
   preloadedState: Partial<State> | null
   breakpoints?: Breakpoints.State
+  middlewares?: Middleware<Dispatch, State, Dispatch>[]
 }) {
   return configureReduxStore({
     reducer: combineReducers(reducers),
@@ -394,7 +396,7 @@ export function configureStore({
     },
 
     middleware: getDefaultMiddleware =>
-      getDefaultMiddleware(middlewareOptions).concat(elementTreeMiddleware()),
+      getDefaultMiddleware(middlewareOptions).concat(elementTreeMiddleware(), ...middlewares),
 
     enhancers: getDefaultEnhancers =>
       getDefaultEnhancers().concat(
