@@ -57,6 +57,11 @@ export type FrameworkContext = {
   versionedFetch: (siteVersion: SiteVersion | null) => HttpFetch
   ElementData: ElementDataComponent
   previewStoreMiddlewares?: Middleware<Dispatch, State, Dispatch>[]
+  /**
+   * Callback to trigger an RSC refresh (re-fetch RSC payload from server).
+   * Used when non-style props change on RSC elements in the builder.
+   */
+  refreshRSC?: () => void
 }
 
 // React 19 automatically hoists metadata tags to the <head>

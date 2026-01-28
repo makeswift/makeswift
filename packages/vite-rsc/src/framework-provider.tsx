@@ -12,6 +12,8 @@ import {
   RSCElementData,
 } from '@makeswift/runtime/unstable-framework-support'
 
+import { createViteRSCRefreshMiddleware, refreshRSC } from './refresh-middleware'
+
 export function ViteRSCFrameworkProvider({ children }: PropsWithChildren) {
   const context = useMemo<FrameworkContext>(
     () => ({
@@ -21,7 +23,8 @@ export function ViteRSCFrameworkProvider({ children }: PropsWithChildren) {
       Link: DefaultLink,
       versionedFetch,
       ElementData: RSCElementData,
-      // previewStoreMiddlewares: [createRSCRefreshMiddleware()],
+      previewStoreMiddlewares: [createViteRSCRefreshMiddleware()],
+      refreshRSC,
     }),
     [],
   )

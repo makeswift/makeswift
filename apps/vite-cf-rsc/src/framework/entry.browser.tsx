@@ -48,20 +48,20 @@ async function main() {
 
   // register a handler which will be internally called by React
   // on server function request after hydration.
-  // setServerCallback(async (id, args) => {
-  //   const temporaryReferences = createTemporaryReferenceSet()
-  //   const renderRequest = createRscRenderRequest(window.location.href, {
-  //     id,
-  //     body: await encodeReply(args, { temporaryReferences }),
-  //   })
-  //   const payload = await createFromFetch<RscPayload>(fetch(renderRequest), {
-  //     temporaryReferences,
-  //   })
-  //   setPayload(payload)
-  //   const { ok, data } = payload.returnValue!
-  //   if (!ok) throw data
-  //   return data
-  // })
+  setServerCallback(async (id, args) => {
+    const temporaryReferences = createTemporaryReferenceSet()
+    const renderRequest = createRscRenderRequest(window.location.href, {
+      id,
+      body: await encodeReply(args, { temporaryReferences }),
+    })
+    const payload = await createFromFetch<RscPayload>(fetch(renderRequest), {
+      temporaryReferences,
+    })
+    // setPayload(payload)
+    const { ok, data } = payload.returnValue!
+    if (!ok) throw data
+    return data
+  })
 
   // hydration
   const browserRoot = (
@@ -85,6 +85,11 @@ async function main() {
       fetchRscPayload()
     })
   }
+
+  // listen for RSC refresh requests from outside (e.g. builder preview)
+  window.addEventListener('makeswift:rsc-refresh', () => {
+    fetchRscPayload()
+  })
 }
 
 // a little helper to setup events interception for client side navigation

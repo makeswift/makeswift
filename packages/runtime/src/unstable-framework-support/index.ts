@@ -41,3 +41,4 @@ export { ReactRuntime } from '../runtimes/react/react-runtime'
 // RSC
 export { RSCElementData } from '../rsc/client/element-data'
 export type { SerializedServerState, RSCRuntime } from '../rsc/shared/react-runtime'
+export { createRSCRefreshMiddleware } from '../rsc/client/refresh-middleware'
