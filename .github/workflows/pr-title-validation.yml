@@ -13,17 +13,17 @@ jobs:
           script: |
             const title = context.payload.pull_request.title;
 
-            // Format: <type>[<linear ticket number(s)>]: <description> or <type>: <description>
-            // Examples: feat[ABC-123]: add new feature, fix[TEAM-456, DEV-789]: resolve bug, chore: update deps
-            const conventionalCommitRegex = /^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\[[A-Z]+-\d+(,\s*[A-Z]+-\d+)*\])?: .+$/;
+            // Format: <type>: <description>
+            // Examples: feat: add new feature, fix: resolve bug, chore: update deps
+            const conventionalCommitRegex = /^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert): .+$/;
 
             if (!conventionalCommitRegex.test(title)) {
               core.setFailed(
                 `PR title "${title}" does not follow the conventional commits format.\n\n` +
-                `Expected format: <type>[<ticket(s)>]: <description> or <type>: <description>\n` +
+                `Expected format: <type>: <description>\n` +
                 `Examples:\n` +
-                `  feat[ABC-123]: add new feature\n` +
-                `  fix[TEAM-456, DEV-789]: resolve multiple issues\n` +
+                `  feat: add new feature\n` +
+                `  fix: resolve bug\n` +
                 `  chore: update dependencies\n\n` +
                 `Valid types: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert`
               );
