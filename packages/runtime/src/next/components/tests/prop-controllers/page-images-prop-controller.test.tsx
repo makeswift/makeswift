@@ -3,7 +3,7 @@
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import { ElementData } from '../../../../state/react-page'
+import { ElementData } from '../../../../state/read-only-state'
 import { randomUUID } from 'crypto'
 import {
   Images,

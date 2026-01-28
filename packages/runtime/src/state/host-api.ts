@@ -6,10 +6,11 @@ import { type PropControllerMessage } from '../prop-controllers/instances'
 import { type APIResource, APIResourceLocale } from '../api/types'
 
 import { BuilderEditMode } from './modules/builder-edit-mode'
-import { type Point } from './modules/pointer'
+import { type Point } from './modules/read-write/pointer'
 
 import { type SharedAction, SharedActionTypes } from './shared-api'
 
+// actions dispatched by the builder to the host ("Host API")
 export const HostActionTypes = {
   ...SharedActionTypes,
 

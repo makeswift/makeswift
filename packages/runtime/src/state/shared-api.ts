@@ -24,6 +24,7 @@ type DocumentPayloadEmbeddedDocument = {
 
 export type DocumentPayload = DocumentPayloadBaseDocument | DocumentPayloadEmbeddedDocument
 
+// bidirectional action types, both the host and the builder can dispatch these actions
 export const SharedActionTypes = {
   MAKESWIFT_CONNECTION_INIT: 'MAKESWIFT_CONNECTION_INIT',
 

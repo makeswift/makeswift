@@ -1,4 +1,4 @@
-import { getPropControllerDescriptors, type State } from '../react-page'
+import { getPropControllerDescriptors, type State } from '../read-only-state'
 import * as Documents from '../modules/read-only-documents'
 import * as ElementTrees from '../modules/element-trees'
 import { getTranslatableData } from '../../controls/control'

@@ -4,11 +4,14 @@ import { type LegacyDescriptor, type DescriptorValueType } from '../../prop-cont
 
 import { supportsActivity } from './components/activity-with-fallback'
 
-import { registerComponentEffect, registerReactComponentEffect } from '../../state/actions/internal'
+import {
+  registerComponentEffect,
+  registerReactComponentEffect,
+} from '../../state/actions/internal/read-only-actions'
 
 import { BreakpointsInput } from '../../state/modules/breakpoints'
 import { ComponentIcon } from '../../state/modules/components-meta'
-import type { ComponentType } from '../../state/react-page'
+import type { ComponentType } from '../../state/read-only-state'
 
 import { RuntimeCore } from './runtime-core'
 

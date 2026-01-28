@@ -1,7 +1,7 @@
 import { useMemo, ReactNode } from 'react'
 
 import { DocumentRoot } from '../DocumentRoot'
-import { type Document } from '../../../../state/react-page'
+import { type Document } from '../../../../state/read-only-state'
 import { MakeswiftPageDocument } from '../../../../client'
 import { usePageSnippets } from '../hooks/use-page-snippets'
 

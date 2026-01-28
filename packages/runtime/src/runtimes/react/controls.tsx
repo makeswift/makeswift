@@ -4,7 +4,7 @@ import { ControlDefinition } from '@makeswift/controls'
 
 import { partitionRecord } from '../../utils/partition'
 
-import * as ReactPage from '../../state/react-page'
+import * as State from '../../state/read-only-state'
 import { isLegacyDescriptor, LegacyDescriptor } from '../../prop-controllers/descriptors'
 
 import { useStore } from './hooks/use-store'
@@ -13,7 +13,7 @@ import { resolveLegacyDescriptorProp } from './legacy-controls'
 import { useResolvedProps } from './hooks/use-resolved-props'
 
 type PropsValueProps = {
-  element: ReactPage.ElementData
+  element: State.ElementData
   children(props: Record<string, unknown>): ReactNode
 }
 
@@ -21,7 +21,7 @@ function useControlDefs(
   elementType: string,
 ): readonly [Record<string, LegacyDescriptor>, Record<string, ControlDefinition>] {
   const store = useStore()
-  const all = ReactPage.getComponentPropControllerDescriptors(store.getState(), elementType) ?? {}
+  const all = State.getComponentPropControllerDescriptors(store.getState(), elementType) ?? {}
   return useRef(partitionRecord(all, isLegacyDescriptor)).current
 }
 
