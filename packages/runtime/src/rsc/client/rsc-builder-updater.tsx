@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactNode, useEffect, useMemo, useRef } from 'react'
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation'
 import { deepEqual, ElementData, isElementReference, StyleDefinition } from '@makeswift/controls'
 import { useControlDefs } from '../../runtimes/react/controls'
 import { useBreakpoints, useDocumentKey, useSelector } from '../../runtimes/react'
@@ -19,7 +19,7 @@ export function RSCBuilderUpdater({ initialElementData, children }: RSCBuilderUp
   const { updateStyle } = useClientCSS()
   const documentKey = useDocumentKey()
   const breakpoints = useBreakpoints()
-  const router = useRouter()
+  // const router = useRouter()
   const resourceResolver = useResourceResolver()
   const elementKey = initialElementData.key
   const prevPropsRef = useRef(initialElementData.props)
@@ -68,13 +68,13 @@ export function RSCBuilderUpdater({ initialElementData, children }: RSCBuilderUp
       } else {
         if (!deepEqual(currentValue, prevValue)) {
           console.log('[RSC] Non-style prop changed, refreshing page')
-          router.refresh()
+          // router.refresh()
         }
       }
     })
 
     prevPropsRef.current = element.props
-  }, [element, definitions, resourceResolver, clientStylesheet, router])
+  }, [element, definitions, resourceResolver, clientStylesheet])
 
   return children
 }

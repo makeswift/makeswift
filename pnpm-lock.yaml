@@ -167,12 +167,18 @@ importers:
 
   apps/vite-cf-rsc:
     dependencies:
+      '@makeswift/hono-react':
+        specifier: workspace:*
+        version: link:../../packages/hono-react
       '@makeswift/runtime':
         specifier: workspace:*
         version: link:../../packages/runtime
       '@makeswift/vite-rsc':
         specifier: workspace:*
         version: link:../../packages/vite-rsc
+      hono:
+        specifier: ^4.11.7
+        version: 4.11.7
       react:
         specifier: ^19.2.3
         version: 19.2.3
@@ -6145,6 +6151,10 @@ packages:
 
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
+
+  hono@4.11.7:
+    resolution: {integrity: sha512-l7qMiNee7t82bH3SeyUCt9UF15EVmaBvsppY2zQtrbIhl/yzBTny+YUxsVjSjQ6gaqaeVtZmGocom8TzBlA4Yw==}
+    engines: {node: '>=16.9.0'}
 
   hono@4.9.6:
     resolution: {integrity: sha512-doVjXhSFvYZ7y0dNokjwwSahcrAfdz+/BCLvAMa/vHLzjj8+CFyV5xteThGUsKdkaasgN+gF2mUxao+SGLpUeA==}
@@ -16353,6 +16363,8 @@ snapshots:
   hoist-non-react-statics@3.3.2:
     dependencies:
       react-is: 16.13.1
+
+  hono@4.11.7: {}
 
   hono@4.9.6: {}
 

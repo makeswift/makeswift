@@ -11,8 +11,10 @@
     "release": "wrangler deploy"
   },
   "dependencies": {
+    "@makeswift/hono-react": "workspace:*",
     "@makeswift/runtime": "workspace:*",
     "@makeswift/vite-rsc": "workspace:*",
+    "hono": "^4.11.7",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-markdown": "^10.1.0"

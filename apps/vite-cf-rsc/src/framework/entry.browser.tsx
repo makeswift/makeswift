@@ -48,20 +48,20 @@ async function main() {
 
   // register a handler which will be internally called by React
   // on server function request after hydration.
-  setServerCallback(async (id, args) => {
-    const temporaryReferences = createTemporaryReferenceSet()
-    const renderRequest = createRscRenderRequest(window.location.href, {
-      id,
-      body: await encodeReply(args, { temporaryReferences }),
-    })
-    const payload = await createFromFetch<RscPayload>(fetch(renderRequest), {
-      temporaryReferences,
-    })
-    setPayload(payload)
-    const { ok, data } = payload.returnValue!
-    if (!ok) throw data
-    return data
-  })
+  // setServerCallback(async (id, args) => {
+  //   const temporaryReferences = createTemporaryReferenceSet()
+  //   const renderRequest = createRscRenderRequest(window.location.href, {
+  //     id,
+  //     body: await encodeReply(args, { temporaryReferences }),
+  //   })
+  //   const payload = await createFromFetch<RscPayload>(fetch(renderRequest), {
+  //     temporaryReferences,
+  //   })
+  //   setPayload(payload)
+  //   const { ok, data } = payload.returnValue!
+  //   if (!ok) throw data
+  //   return data
+  // })
 
   // hydration
   const browserRoot = (

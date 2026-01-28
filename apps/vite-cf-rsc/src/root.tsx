@@ -7,44 +7,30 @@ import './lib/makeswift/components.client'
 import { runtime } from './lib/makeswift/runtime.ts'
 import { client } from './lib/makeswift/client.ts'
 import { MakeswiftClientProvider } from './lib/makeswift/provider.tsx'
+import type { ComponentProps } from 'react'
 
-export async function Root() {
-  // const siteVersion = await getSiteVersion()
-  const siteVersion = null
+type Props = {
+  snapshot: ComponentProps<typeof RSCMakeswiftPage>['snapshot']
+  siteVersion: ComponentProps<typeof RSCServerProvider>['siteVersion']
+}
 
+export async function Root(props: Props) {
   return (
     <html>
       <body>
         <RSCServerProvider
           client={client}
-          siteVersion={siteVersion}
+          siteVersion={props.siteVersion}
           runtime={runtime}
         >
           <MakeswiftClientProvider
             serializedServerState={runtime.serializeServerState()}
-            siteVersion={siteVersion}
+            siteVersion={props.siteVersion}
           >
-            <App />
+            <RSCMakeswiftPage snapshot={props.snapshot} />
           </MakeswiftClientProvider>
         </RSCServerProvider>
       </body>
     </html>
   )
-}
-
-async function App() {
-  // const params = await props.params
-  // const path = '/' + (params?.path ?? []).join('/')
-  const siteVersion = null
-  const path = '/'
-  const snapshot = await client.getPageSnapshot(path, {
-    siteVersion,
-    // siteVersion: await getSiteVersion(),
-  })
-
-  // console.log('snapshot', snapshot)
-
-  if (snapshot == null) return <p>Not found</p>
-
-  return <RSCMakeswiftPage snapshot={snapshot} />
 }
