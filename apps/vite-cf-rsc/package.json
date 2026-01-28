@@ -11,8 +11,11 @@
     "release": "wrangler deploy"
   },
   "dependencies": {
+    "@makeswift/runtime": "workspace:*",
+    "@makeswift/vite-rsc": "workspace:*",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "react-markdown": "^10.1.0"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.21.0",

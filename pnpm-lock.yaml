@@ -167,12 +167,21 @@ importers:
 
   apps/vite-cf-rsc:
     dependencies:
+      '@makeswift/runtime':
+        specifier: workspace:*
+        version: link:../../packages/runtime
+      '@makeswift/vite-rsc':
+        specifier: workspace:*
+        version: link:../../packages/vite-rsc
       react:
         specifier: ^19.2.3
         version: 19.2.3
       react-dom:
         specifier: ^19.2.3
         version: 19.2.3(react@19.2.3)
+      react-markdown:
+        specifier: ^10.1.0
+        version: 10.1.0(@types/react@19.2.9)(react@19.2.3)
     devDependencies:
       '@cloudflare/vite-plugin':
         specifier: ^1.21.0
@@ -188,7 +197,7 @@ importers:
         version: 5.1.2(vite@7.3.1(@types/node@20.14.11)(jiti@2.4.2))
       '@vitejs/plugin-rsc':
         specifier: latest
-        version: 0.5.16(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vite@7.3.1(@types/node@20.14.11)(jiti@2.4.2))
+        version: 0.5.17(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vite@7.3.1(@types/node@20.14.11)(jiti@2.4.2))
       rsc-html-stream:
         specifier: ^0.0.7
         version: 0.0.7
@@ -766,6 +775,49 @@ importers:
         version: 6.19.2
 
   packages/tsconfig: {}
+
+  packages/vite-rsc:
+    dependencies:
+      '@makeswift/runtime':
+        specifier: workspace:*
+        version: link:../runtime
+      cookie:
+        specifier: ^1.0.2
+        version: 1.0.2
+    devDependencies:
+      '@swc/jest':
+        specifier: ^0.2.36
+        version: 0.2.36(@swc/core@1.7.0(@swc/helpers@0.5.15))
+      '@types/jest':
+        specifier: ^29.5.12
+        version: 29.5.12
+      '@types/react':
+        specifier: ^19.2.7
+        version: 19.2.9
+      '@types/react-dom':
+        specifier: ^19.2.3
+        version: 19.2.3(@types/react@19.2.9)
+      '@vitejs/plugin-rsc':
+        specifier: latest
+        version: 0.5.17(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vite@7.3.1(@types/node@20.14.11)(jiti@2.4.2))
+      concurrently:
+        specifier: ^8.2.2
+        version: 8.2.2
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.14.11)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.7.0(@swc/helpers@0.5.15))(@types/node@20.14.11)(typescript@5.9.2))
+      react:
+        specifier: 19.2.3
+        version: 19.2.3
+      react-dom:
+        specifier: 19.2.3
+        version: 19.2.3(react@19.2.3)
+      tsup:
+        specifier: ^8.0.2
+        version: 8.0.2(@swc/core@1.7.0(@swc/helpers@0.5.15))(postcss@8.5.6)(ts-node@10.9.2(@swc/core@1.7.0(@swc/helpers@0.5.15))(@types/node@20.14.11)(typescript@5.9.2))(typescript@5.9.2)
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.2
 
 packages:
 
@@ -4041,8 +4093,8 @@ packages:
     peerDependencies:
       vite: ^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
 
-  '@vitejs/plugin-rsc@0.5.16':
-    resolution: {integrity: sha512-BopxxopgDQjKIikc6VW1BeC1uRJgY0HOi2uJnF3L+J44oQVjmHIunHEaO85InW6FnFtaMpBeLQ/OJ/sbnwhiEA==}
+  '@vitejs/plugin-rsc@0.5.17':
+    resolution: {integrity: sha512-AYRle2qfSQim1eyTAs0MM+u2kXWJwG95fU75BUhSXwVAwcx0rS6oLRWUU3QbiNTf69JfgUfaZMFUxo/JJTbsOg==}
     peerDependencies:
       react: '*'
       react-dom: '*'
@@ -13026,7 +13078,7 @@ snapshots:
 
   '@types/estree-jsx@1.0.5':
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.8
 
   '@types/estree@1.0.5': {}
 
@@ -13505,7 +13557,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vitejs/plugin-rsc@0.5.16(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vite@7.3.1(@types/node@20.14.11)(jiti@2.4.2))':
+  '@vitejs/plugin-rsc@0.5.17(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vite@7.3.1(@types/node@20.14.11)(jiti@2.4.2))':
     dependencies:
       es-module-lexer: 2.0.0
       estree-walker: 3.0.3
@@ -16269,7 +16321,7 @@ snapshots:
 
   hast-util-to-jsx-runtime@2.3.6:
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.8
       '@types/hast': 3.0.4
       '@types/unist': 3.0.3
       comma-separated-tokens: 2.0.3
@@ -19084,6 +19136,24 @@ snapshots:
       html-url-attributes: 3.0.1
       mdast-util-to-hast: 13.2.0
       react: 19.1.0
+      remark-parse: 11.0.0
+      remark-rehype: 11.1.2
+      unified: 11.0.5
+      unist-util-visit: 5.0.0
+      vfile: 6.0.3
+    transitivePeerDependencies:
+      - supports-color
+
+  react-markdown@10.1.0(@types/react@19.2.9)(react@19.2.3):
+    dependencies:
+      '@types/hast': 3.0.4
+      '@types/mdast': 4.0.4
+      '@types/react': 19.2.9
+      devlop: 1.1.0
+      hast-util-to-jsx-runtime: 2.3.6
+      html-url-attributes: 3.0.1
+      mdast-util-to-hast: 13.2.0
+      react: 19.2.3
       remark-parse: 11.0.0
       remark-rehype: 11.1.2
       unified: 11.0.5
