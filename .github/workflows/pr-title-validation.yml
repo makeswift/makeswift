@@ -13,19 +13,20 @@ jobs:
           script: |
             const title = context.payload.pull_request.title;
 
-            // Format: <type>: <description>
-            // Examples: feat: add new feature, fix: resolve bug, chore: update deps
-            const conventionalCommitRegex = /^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert): .+$/;
+            // Format: <type>[(scope)][!]: <description> or BREAKING CHANGE: <description>
+            // Examples: feat(api): add new feature, fix!: resolve bug, hotfix(ui)!: urgent fix, BREAKING CHANGE: drop node 12
+            const conventionalCommitRegex = /^((feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert|example|debug|hotfix)(\s?\([^)]+\))?!?|BREAKING CHANGE): .+$/;
 
             if (!conventionalCommitRegex.test(title)) {
               core.setFailed(
                 `PR title "${title}" does not follow the conventional commits format.\n\n` +
-                `Expected format: <type>: <description>\n` +
+                `Expected format: <type>[(scope)][!]: <description> or BREAKING CHANGE: <description>\n` +
                 `Examples:\n` +
-                `  feat: add new feature\n` +
-                `  fix: resolve bug\n` +
-                `  chore: update dependencies\n\n` +
-                `Valid types: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert`
+                `  feat(ui): add new button\n` +
+                `  fix!: resolve critical bug\n` +
+                `  hotfix(api)!: urgent fix\n` +
+                `  BREAKING CHANGE: change API response format\n\n` +
+                `Valid types: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert, example, debug, hotfix`
               );
             } else {
               core.info(`PR title "${title}" follows the conventional commits format.`);
