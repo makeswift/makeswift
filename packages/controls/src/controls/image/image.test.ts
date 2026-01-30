@@ -145,25 +145,11 @@ describe('Image', () => {
         id: 'fake-file-id',
       },
       {
-        type: 'makeswift-file',
-        version: 1,
-        id: 'fake-file-id',
-        altText: 'A beautiful image',
-      },
-      {
         type: 'external-file',
         url: fakeImageUrl,
         version: 1,
         width: 100,
         height: 100,
-      },
-      {
-        type: 'external-file',
-        url: fakeImageUrl,
-        version: 1,
-        width: 100,
-        height: 100,
-        altText: 'External image alt',
       },
       { type: 'external-file', url: fakeImageUrl, version: 1 },
     ] as const)('v1 `%s`', (rawData) => {
@@ -238,22 +224,10 @@ describe('Image', () => {
         id: 'fake-file-id',
       },
       {
-        type: 'makeswift-file',
-        id: 'fake-file-id',
-        altText: 'A beautiful image',
-      },
-      {
         type: 'external-file',
         url: fakeImageUrl,
         width: 100,
         height: 100,
-      },
-      {
-        type: 'external-file',
-        url: fakeImageUrl,
-        width: 100,
-        height: 100,
-        altText: 'External image alt',
       },
       { type: 'external-file', url: fakeImageUrl },
     ] as const)(
@@ -316,25 +290,11 @@ describe('Image', () => {
           id: 'fake-file-id',
         },
         {
-          type: 'makeswift-file',
-          version: 1,
-          id: 'fake-file-id',
-          altText: 'A beautiful image',
-        },
-        {
           type: 'external-file',
           url: fakeImageUrl,
           version: 1,
           width: 100,
           height: 100,
-        },
-        {
-          type: 'external-file',
-          url: fakeImageUrl,
-          version: 1,
-          width: 100,
-          height: 100,
-          altText: 'External image alt',
         },
       ])('parses `%s`', (value) => {
         expect(definition.safeParse(value)).toEqual({

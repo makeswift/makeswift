@@ -14,7 +14,6 @@ type ExpectedDataType =
       type: 'makeswift-file'
       id: string
       version: 1
-      altText?: string
     }
   | {
       type: 'external-file'
@@ -22,21 +21,20 @@ type ExpectedDataType =
       url: string
       width?: number | null | undefined
       height?: number | null | undefined
-      altText?: string
+      description?: string
     }
 
 type ExpectedValueType =
   | {
       type: 'makeswift-file'
       id: string
-      altText?: string
     }
   | {
       type: 'external-file'
       url: string
       width?: number | null | undefined
       height?: number | null | undefined
-      altText?: string
+      description?: string
     }
 
 describe('Image Types', () => {

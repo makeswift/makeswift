@@ -85,7 +85,6 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
     const makeswiftFileValue = z.object({
       type: z.literal(this.dataSignature.makeswiftFile.type),
       id: z.string(),
-      altText: z.string().optional(),
     })
 
     const externalFileValue = z.object({
@@ -93,7 +92,7 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
       url: z.string(),
       width: z.number().nullable().optional(),
       height: z.number().nullable().optional(),
-      altText: z.string().optional(),
+      description: z.string().optional(),
     })
 
     const makeswiftFileData = makeswiftFileValue.merge(
@@ -325,7 +324,7 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
             url: externalFile.url,
             width: externalFile.width,
             height: externalFile.height,
-            altText: externalFile.altText,
+            altText: externalFile.description,
           }),
       })
 
@@ -335,15 +334,12 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
       }
     }
 
-    const makeswiftFile = match(data satisfies z.infer<typeof dataSchema>)
-      .with(P.string, (id) => ({ id, altText: undefined }))
-      .with(Definition.dataSignature.makeswiftFile, ({ id, altText }) => ({
-        id,
-        altText,
-      }))
+    const fileId = match(data satisfies z.infer<typeof dataSchema>)
+      .with(P.string, (id) => id)
+      .with(Definition.dataSignature.makeswiftFile, ({ id }) => id)
       .otherwise(() => undefined)
 
-    const fileSub = resolver.resolveFile(makeswiftFile?.id)
+    const fileSub = resolver.resolveFile(fileId)
     const stableValue = StableValue({
       name: Definition.type,
       read: () => {
@@ -353,8 +349,8 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
               url: file.publicUrl,
               width: file.dimensions?.width,
               height: file.dimensions?.height,
-              // User-provided altText takes priority, file description is fallback
-              altText: makeswiftFile?.altText ?? file.description ?? undefined,
+              // Alt text comes from the File resource's description
+              altText: file.description ?? undefined,
             })
           : undefined
       },
