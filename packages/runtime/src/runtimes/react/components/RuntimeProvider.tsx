@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useMemo, lazy } from 'react'
+import { ReactNode, useMemo, useRef, lazy } from 'react'
 
 import { MakeswiftHostApiClient } from '../../../api/react'
 import { ReactRuntimeContext } from '../hooks/use-react-runtime'
@@ -14,10 +14,18 @@ import { useFrameworkContext } from './hooks/use-framework-context'
 const LiveProvider = lazy(() => import('./LiveProvider'))
 const PreviewProvider = lazy(() => import('./PreviewProvider'))
 
+function useStableSiteVersion(siteVersion: SiteVersion | null): SiteVersion | null {
+  const ref = useRef(siteVersion)
+  if (ref.current?.version !== siteVersion?.version || ref.current?.token !== siteVersion?.token) {
+    ref.current = siteVersion
+  }
+  return ref.current
+}
+
 export function RuntimeProvider({
   children,
   runtime,
-  siteVersion,
+  siteVersion: siteVersionProp,
   appOrigin = 'https://app.makeswift.com',
   apiOrigin = 'https://api.makeswift.com',
   locale = undefined,
@@ -30,6 +38,7 @@ export function RuntimeProvider({
   locale?: string
 }) {
   const { versionedFetch, previewStoreMiddlewares = [] } = useFrameworkContext()
+  const siteVersion = useStableSiteVersion(siteVersionProp)
 
   const client = useMemo(
     () =>
