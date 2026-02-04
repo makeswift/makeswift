@@ -13,8 +13,7 @@ import {
   ResponsiveTextStyleData,
 } from '@makeswift/prop-controllers'
 import { Page } from '../../page'
-import { ReactRuntime } from '../../../../react'
-import { forwardRef, act } from 'react';
+import { forwardRef, act } from 'react'
 import * as Testing from '../../../testing'
 
 describe('Page', () => {
@@ -52,7 +51,7 @@ describe('Page', () => {
       },
     ])
     const snapshot = Testing.createMakeswiftPageSnapshot(elementData)
-    const runtime = new ReactRuntime()
+    const runtime = Testing.createReactRuntime()
 
     runtime.registerComponent(
       forwardRef<HTMLDivElement, { textStyle?: ResponsiveTextStyleData }>(({ textStyle }, ref) => {
@@ -117,7 +116,7 @@ describe('Page', () => {
       },
     ])
     const snapshot = Testing.createMakeswiftPageSnapshot(elementData)
-    const runtime = new ReactRuntime()
+    const runtime = Testing.createReactRuntime()
 
     runtime.registerComponent(
       forwardRef<HTMLDivElement, { textStyle?: ResponsiveTextStyleData }>(({ textStyle }, ref) => {

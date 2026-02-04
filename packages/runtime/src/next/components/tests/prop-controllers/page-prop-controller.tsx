@@ -15,8 +15,7 @@ import { type ElementData, type ComponentType } from '../../../../state/read-onl
 import { randomUUID } from 'crypto'
 
 import { Page } from '../../page'
-import { act } from "react";
-import { ReactRuntime } from '../../../../react'
+import { act } from 'react'
 import * as Testing from '../../../testing'
 
 export const pagePropControllerTest = <
@@ -50,7 +49,7 @@ export const pagePropControllerTest = <
         },
       ])
       const snapshot = Testing.createMakeswiftPageSnapshot(elementData)
-      const runtime = new ReactRuntime()
+      const runtime = Testing.createReactRuntime()
 
       runtime.registerComponent(component(testId), {
         type: TestComponentType,
@@ -91,7 +90,7 @@ export const pagePropControllerTest = <
         },
       ])
       const snapshot = Testing.createMakeswiftPageSnapshot(elementData)
-      const runtime = new ReactRuntime()
+      const runtime = Testing.createReactRuntime()
 
       runtime.registerComponent(component(testId), {
         type: TestComponentType,

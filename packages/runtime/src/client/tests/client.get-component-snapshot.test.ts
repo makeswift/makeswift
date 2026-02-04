@@ -1,14 +1,14 @@
 import { MakeswiftClient, MakeswiftComponentDocument } from '../../client'
 import { http, HttpResponse, graphql } from 'msw'
 
-import { ReactRuntime } from '../../runtimes/react'
+import { createReactRuntime } from '../../runtimes/react/testing/react-runtime'
 
 import { server } from '../../mocks/server'
 import { TestWorkingSiteVersion, TestOrigins } from '../../testing/fixtures'
 
 const TEST_API_KEY = 'myApiKey'
 const baseUrl = `${TestOrigins.apiOrigin}/v2/element-trees`
-const runtime = new ReactRuntime()
+const runtime = createReactRuntime()
 
 function createTestClient() {
   return new MakeswiftClient(TEST_API_KEY, { runtime, apiOrigin: TestOrigins.apiOrigin })
