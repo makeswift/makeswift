@@ -13,8 +13,7 @@ import {
   ResponsiveGapData,
 } from '@makeswift/prop-controllers'
 import { Page } from '../../page'
-import { ReactRuntime } from '../../../../react'
-import { forwardRef, act } from 'react';
+import { forwardRef, act } from 'react'
 import * as Testing from '../../../testing'
 
 describe('Page', () => {
@@ -42,7 +41,7 @@ describe('Page', () => {
       },
     ])
     const snapshot = Testing.createMakeswiftPageSnapshot(elementData)
-    const runtime = new ReactRuntime()
+    const runtime = Testing.createReactRuntime()
 
     runtime.registerComponent(
       forwardRef<HTMLDivElement, { gapY?: ResponsiveGapData }>(({ gapY }, ref) => {
@@ -97,7 +96,7 @@ describe('Page', () => {
       },
     ])
     const snapshot = Testing.createMakeswiftPageSnapshot(elementData)
-    const runtime = new ReactRuntime()
+    const runtime = Testing.createReactRuntime()
 
     runtime.registerComponent(
       forwardRef<HTMLDivElement, { gapY?: ResponsiveGapData }>(({ gapY }, ref) => {

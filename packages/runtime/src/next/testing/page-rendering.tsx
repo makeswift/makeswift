@@ -1,20 +1,20 @@
-import { type ComponentPropsWithoutRef, act } from 'react';
+import { type ComponentPropsWithoutRef, act } from 'react'
 
 import '@testing-library/jest-dom'
 import { render } from '@testing-library/react'
 
-import { ReactRuntime } from '../../runtimes/react/react-runtime'
 import { MakeswiftComponentType } from '../../components/builtin/constants'
 
 import { Page as MakeswiftPage } from '../components/page'
 
 import { ReactProvider } from './react-provider'
+import { createReactRuntime } from './react-runtime'
 
 export async function testMakeswiftPageHeadRendering(
   props: ComponentPropsWithoutRef<typeof MakeswiftPage>,
   { forcePagesRouter = false }: { forcePagesRouter?: boolean } = {},
 ) {
-  const runtime = new ReactRuntime()
+  const runtime = createReactRuntime()
 
   runtime.registerComponent(() => <></>, {
     type: MakeswiftComponentType.Root,
@@ -38,7 +38,7 @@ export async function testMakeswiftPageRendering(
   props: ComponentPropsWithoutRef<typeof MakeswiftPage>,
   { forcePagesRouter = false }: { forcePagesRouter?: boolean } = {},
 ) {
-  const runtime = new ReactRuntime()
+  const runtime = createReactRuntime()
 
   return await act(async () =>
     render(
