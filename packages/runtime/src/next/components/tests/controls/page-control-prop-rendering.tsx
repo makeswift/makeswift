@@ -1,4 +1,4 @@
-import { type ReactNode, Fragment, forwardRef, useRef, isValidElement, act } from 'react';
+import { type ReactNode, Fragment, forwardRef, useRef, isValidElement, act } from 'react'
 import { renderToReadableStream } from 'react-dom/server'
 import { JSDOM } from 'jsdom'
 import { render, screen } from '@testing-library/react'
@@ -9,7 +9,7 @@ import { type Data, type ValueType, type DataType, ControlDefinition } from '@ma
 
 import { type CacheData } from '../../../../api/react'
 import { ElementData } from '../../../../state/read-only-state'
-import { ReactRuntime } from '../../../../react'
+import { ReactRuntime } from '../../../../runtimes/react/react-runtime'
 import { MakeswiftComponent } from '../../../../runtimes/react/components/MakeswiftComponent'
 import { Page } from '../../page'
 import { isServer } from '../../../../utils/is-server'
@@ -115,7 +115,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
     },
   }
 
-  const runtime = new ReactRuntime()
+  const runtime = Testing.createReactRuntime()
   registerComponents?.(runtime)
 
   // Act

@@ -1,7 +1,6 @@
 import { Suspense, act } from 'react'
 import { render } from '@testing-library/react'
 
-import { ReactRuntime } from '../../../../react'
 import * as Testing from '../../../testing'
 import { MakeswiftComponent } from '../../../../runtimes/react/components/MakeswiftComponent'
 import { type MakeswiftComponentSnapshot } from '../../../../client'
@@ -46,7 +45,7 @@ export async function renderComponentSnapshot(
   component: ComponentType<ComponentProps> = CustomComponent,
   { builtinSuspense }: { builtinSuspense?: boolean } = {},
 ) {
-  const runtime = new ReactRuntime()
+  const runtime = Testing.createReactRuntime()
 
   runtime.registerComponent(component, {
     type: CustomComponentType,

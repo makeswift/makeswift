@@ -1,14 +1,14 @@
 import { MakeswiftClient, type MakeswiftPageDocument } from '../../client'
 import { http, HttpResponse } from 'msw'
 
-import { ReactRuntime } from '../../runtimes/react'
+import { createReactRuntime } from '../../runtimes/react/testing/react-runtime'
 
 import { server } from '../../mocks/server'
 import { TestOrigins, TestWorkingSiteVersion } from '../../testing/fixtures'
 
 const TEST_API_KEY = 'myApiKey'
 const { apiOrigin } = TestOrigins
-const runtime = new ReactRuntime()
+const runtime = createReactRuntime()
 
 function createTestClient() {
   return new MakeswiftClient(TEST_API_KEY, { runtime, apiOrigin })

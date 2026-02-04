@@ -13,8 +13,7 @@ import {
   ImagesData,
 } from '@makeswift/prop-controllers'
 import { Page } from '../../page'
-import { ReactRuntime } from '../../../../react'
-import { forwardRef, act } from 'react';
+import { forwardRef, act } from 'react'
 import * as Testing from '../../../testing'
 import { ImagesDataV0 } from '@makeswift/prop-controllers/dist/types/images'
 
@@ -46,7 +45,7 @@ describe('Page', () => {
       },
     ])
     const snapshot = Testing.createMakeswiftPageSnapshot(elementData)
-    const runtime = new ReactRuntime()
+    const runtime = Testing.createReactRuntime()
 
     runtime.registerComponent(
       forwardRef<HTMLDivElement, { images?: ImagesData }>(({ images }, ref) => {
@@ -117,7 +116,7 @@ describe('Page', () => {
       },
     ])
     const snapshot = Testing.createMakeswiftPageSnapshot(elementData)
-    const runtime = new ReactRuntime()
+    const runtime = Testing.createReactRuntime()
 
     runtime.registerComponent(
       forwardRef<HTMLDivElement, { images?: ImagesData }>(({ images }, ref) => {
@@ -188,7 +187,7 @@ describe('Page', () => {
       },
     ])
     const snapshot = Testing.createMakeswiftPageSnapshot(elementData)
-    const runtime = new ReactRuntime()
+    const runtime = Testing.createReactRuntime()
 
     runtime.registerComponent(
       forwardRef<HTMLDivElement, { images?: ImagesData }>(({ images }, ref) => {

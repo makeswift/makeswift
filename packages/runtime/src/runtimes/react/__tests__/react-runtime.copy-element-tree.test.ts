@@ -1,9 +1,9 @@
 /** @jest-environment jsdom */
-import { ReactRuntime } from '../react-runtime'
+import { createReactRuntime } from '../testing/react-runtime'
 
 import { elementTree } from './__fixtures__/element-tree'
 
-const runtime = new ReactRuntime()
+const runtime = createReactRuntime()
 
 describe('copyElementTree', () => {
   test('creates a copy of the tree with no value replacements when context is empty', () => {

@@ -4,7 +4,6 @@ import { act } from 'react'
 import { render } from '@testing-library/react'
 
 import { APIResourceType, type LocalizedGlobalElement, type GlobalElement } from '../../../api'
-import { ReactRuntime } from '../../../react'
 import * as Testing from '../../testing'
 
 import { Page } from '../page'
@@ -154,7 +153,7 @@ const localizedGlobalElementData = {
 } as LocalizedGlobalElement['data']
 
 async function testGlobalElementRendering({ locale }: { locale: string | null }) {
-  const runtime = new ReactRuntime()
+  const runtime = Testing.createReactRuntime()
   const snapshot = Testing.createMakeswiftPageSnapshot(pageElementData, {
     locale,
     cacheData: {

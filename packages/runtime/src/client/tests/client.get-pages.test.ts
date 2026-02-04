@@ -2,7 +2,7 @@ import { MakeswiftClient } from '../../client'
 import { http, HttpResponse } from 'msw'
 import { randomUUID } from 'crypto'
 
-import { ReactRuntime } from '../../runtimes/react'
+import { createReactRuntime } from '../../runtimes/react/testing/react-runtime'
 
 import { server } from '../../mocks/server'
 import { TestOrigins } from '../../testing/fixtures'
@@ -31,7 +31,7 @@ function createRandomPageV4() {
 const TEST_API_KEY = 'xxx'
 const { apiOrigin } = TestOrigins
 const baseUrl = `${apiOrigin}/v5/pages`
-const runtime = new ReactRuntime()
+const runtime = createReactRuntime()
 
 function createTestClient() {
   return new MakeswiftClient(TEST_API_KEY, { runtime, apiOrigin })

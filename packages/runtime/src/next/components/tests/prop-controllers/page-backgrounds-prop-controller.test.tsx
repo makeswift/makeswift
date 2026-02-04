@@ -14,8 +14,7 @@ import {
 } from '@makeswift/prop-controllers'
 import { Page } from '../../page'
 import * as Testing from '../../../testing'
-import { ReactRuntime } from '../../../../react'
-import { forwardRef, act } from 'react';
+import { forwardRef, act } from 'react'
 
 describe('Page', () => {
   test('can render BackgroundsPropController v1 data', async () => {
@@ -53,7 +52,7 @@ describe('Page', () => {
       },
     ])
     const snapshot = Testing.createMakeswiftPageSnapshot(elementData)
-    const runtime = new ReactRuntime()
+    const runtime = Testing.createReactRuntime()
 
     runtime.registerComponent(
       forwardRef<HTMLDivElement, { backgrounds?: ResponsiveBackgroundsData }>(
@@ -120,7 +119,7 @@ describe('Page', () => {
       },
     ])
     const snapshot = Testing.createMakeswiftPageSnapshot(elementData)
-    const runtime = new ReactRuntime()
+    const runtime = Testing.createReactRuntime()
 
     runtime.registerComponent(
       forwardRef<HTMLDivElement, { backgrounds?: ResponsiveBackgroundsData }>(

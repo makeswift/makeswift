@@ -14,7 +14,7 @@ import {
   TextInput,
 } from '../../../controls'
 
-import { ReactRuntime } from '../react-runtime'
+import { createReactRuntime } from '../testing/react-runtime'
 
 type Card = {
   imageSrc?: string
@@ -43,7 +43,7 @@ function Sandbox(props: {
   return <div>{JSON.stringify(props)}</div>
 }
 
-const runtime = new ReactRuntime()
+const runtime = createReactRuntime()
 
 describe('registerComponent', () => {
   test("correctly deduces control definitions' resolved value types", () => {
