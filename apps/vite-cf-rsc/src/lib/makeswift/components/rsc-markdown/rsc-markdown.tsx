@@ -15,10 +15,17 @@ type Props = {
   className?: string
   filename?: string
   color?: string
+  red?: boolean
   link: object
 }
 
-export async function RscMarkdown({ className, color, filename, link }: Props) {
+export async function RscMarkdown({
+  className,
+  color,
+  filename,
+  link,
+  red,
+}: Props) {
   const files = Object.keys(markdownFiles)
   const filePath = filename ?? files[0]
 
@@ -30,7 +37,10 @@ export async function RscMarkdown({ className, color, filename, link }: Props) {
   return (
     <div
       className={className}
-      style={{ backgroundColor: color ?? 'transparent' }}
+      style={{
+        backgroundColor: color ?? 'transparent',
+        color: red ? 'red' : 'black',
+      }}
     >
       Resolve link: {JSON.stringify(link)}
       <MarkdownAsync>{markdown}</MarkdownAsync>
