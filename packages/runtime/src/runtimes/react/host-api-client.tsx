@@ -13,6 +13,7 @@ const Context = createContext(
       )
       return fetch(url, init)
     },
+    siteVersion: null,
   }),
 )
 
