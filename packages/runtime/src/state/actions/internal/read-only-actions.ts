@@ -36,6 +36,7 @@ export const ReadOnlyActionTypes = {
   UNREGISTER_REACT_COMPONENT: 'UNREGISTER_REACT_COMPONENT',
 
   SET_IS_IN_BUILDER: 'SET_IS_IN_BUILDER',
+  SET_IS_READ_ONLY: 'SET_IS_READ_ONLY',
 } as const
 
 type APIResourceFulfilledAction = {
@@ -121,6 +122,10 @@ type SetIsInBuilderAction = {
   payload: boolean
 }
 
+type SetIsReadOnlyAction = {
+  type: typeof ReadOnlyActionTypes.SET_IS_READ_ONLY
+  payload: boolean
+}
 export type ReadOnlyAction =
   | APIResourceFulfilledAction
   | CreateElementTreeAction
@@ -136,6 +141,7 @@ export type ReadOnlyAction =
   | RegisterReactComponentAction
   | UnregisterReactComponentAction
   | SetIsInBuilderAction
+  | SetIsReadOnlyAction
 
 export function apiResourceFulfilled<T extends APIResourceType>(
   resourceType: T,
@@ -296,4 +302,8 @@ export function registerReactComponentEffect(
 
 export function setIsInBuilder(isInBuilder: boolean): SetIsInBuilderAction {
   return { type: ReadOnlyActionTypes.SET_IS_IN_BUILDER, payload: isInBuilder }
+}
+
+export function setIsReadOnly(isReadOnly: boolean): SetIsReadOnlyAction {
+  return { type: ReadOnlyActionTypes.SET_IS_READ_ONLY, payload: isReadOnly }
 }

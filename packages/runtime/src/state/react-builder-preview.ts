@@ -12,7 +12,7 @@ import { type BuilderAPIProxy } from './builder-api/proxy'
 import { HostActionTypes } from './host-api'
 
 import { type State, type Dispatch, createRootReducer } from './read-write-state'
-import * as IsPreview from './modules/is-preview'
+import * as IsReadOnly from './modules/is-read-only'
 
 import { propControllerHandlesMiddleware } from './middleware/prop-controller-handles'
 import { readOnlyElementTreeMiddleware } from './middleware/read-only-element-tree'
@@ -41,7 +41,7 @@ export function configureStore({
 }) {
   const initialState: Partial<State> = {
     ...preloadedState,
-    isPreview: IsPreview.getInitialState(true),
+    isReadOnly: IsReadOnly.getInitialState(false),
   }
 
   const store = configureReduxStore({
