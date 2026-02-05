@@ -21,7 +21,7 @@ import {
   TableQueryVariables,
 } from '../api/graphql/generated/types'
 
-import { CacheData } from '../api/react'
+import { CacheData } from '../api/client'
 import { Descriptor as PropControllerDescriptor } from '../prop-controllers/descriptors'
 import {
   getElementChildren,

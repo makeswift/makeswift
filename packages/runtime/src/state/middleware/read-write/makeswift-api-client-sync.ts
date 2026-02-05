@@ -1,6 +1,6 @@
 import { type Middleware } from '@reduxjs/toolkit'
 
-import { MakeswiftHostApiClient } from '../../../api/react'
+import { MakeswiftHostApiClient } from '../../../api/client'
 
 import { type Action } from '../../actions'
 import { actionMiddleware } from '../../toolkit'
