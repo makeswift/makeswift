@@ -18,7 +18,6 @@ export {
   DefaultHead,
   DefaultHeadSnippet,
   DefaultImage,
-  versionedFetch,
 } from '../runtimes/react/components/framework-context'
 
 export { MakeswiftComponent } from '../runtimes/react/components/MakeswiftComponent'

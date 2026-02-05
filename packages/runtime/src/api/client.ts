@@ -1,5 +1,10 @@
 import { type FetchableValue } from '@makeswift/controls'
+
 import * as MakeswiftApiClient from '../state/makeswift-api-client'
+import { setLocale } from '../state/shared-api'
+import { resetLocaleState } from '../state/actions/internal/read-only-actions'
+import { setSiteVersion } from '../state/actions/internal/read-only-actions'
+
 import {
   APIResourceType,
   File,
@@ -19,6 +24,7 @@ import {
   CreateTableRecordMutationResult,
   CreateTableRecordMutationVariables,
 } from './graphql/generated/types'
+import { SiteVersion } from './site-version'
 
 export type CacheData = MakeswiftApiClient.SerializedState
 
@@ -61,19 +67,26 @@ export class MakeswiftHostApiClient {
     fetch,
     cacheData,
     locale,
+    siteVersion,
   }: {
     uri: string
     fetch: MakeswiftApiClient.HttpFetch
     cacheData?: CacheData
     locale?: string
+    siteVersion: SiteVersion | null
   }) {
     this.graphqlClient = new GraphQLClient(uri)
     this.makeswiftApiClient = MakeswiftApiClient.configureStore({
       serializedState: cacheData,
-      defaultLocale: locale,
     })
     this.fetch = fetch
     this.subscribe = this.makeswiftApiClient.subscribe
+
+    this.makeswiftApiClient.dispatch(
+      locale != null ? setLocale(new Intl.Locale(locale)) : resetLocaleState(),
+    )
+
+    this.makeswiftApiClient.dispatch(setSiteVersion(siteVersion))
   }
 
   readSwatch(swatchId: string): Swatch | null {

@@ -5,6 +5,7 @@ import { ControlInstance } from '@makeswift/controls'
 import { ElementImperativeHandle } from '../../../runtimes/react/element-imperative-handle'
 
 import { type APIResource, APIResourceType, APIResourceLocale } from '../../../api/types'
+import { type SiteVersion } from '../../../api/site-version'
 import { type Descriptor as PropControllerDescriptor } from '../../../prop-controllers/descriptors'
 
 import { type ComponentMeta } from '../../modules/components-meta'
@@ -37,6 +38,11 @@ export const ReadOnlyActionTypes = {
 
   SET_IS_IN_BUILDER: 'SET_IS_IN_BUILDER',
   SET_IS_READ_ONLY: 'SET_IS_READ_ONLY',
+  SET_SITE_VERSION: 'SET_SITE_VERSION',
+
+  // TODO: consolidate with `SET_LOCALE` action in `shared-api.ts`
+  // (requires changes to the builder to handle null locales)
+  RESET_LOCALE_STATE: 'RESET_LOCALE_STATE',
 } as const
 
 type APIResourceFulfilledAction = {
@@ -126,6 +132,16 @@ type SetIsReadOnlyAction = {
   type: typeof ReadOnlyActionTypes.SET_IS_READ_ONLY
   payload: boolean
 }
+
+type SetSiteVersionAction = {
+  type: typeof ReadOnlyActionTypes.SET_SITE_VERSION
+  payload: SiteVersion | null
+}
+
+type ResetLocaleStateAction = {
+  type: typeof ReadOnlyActionTypes.RESET_LOCALE_STATE
+}
+
 export type ReadOnlyAction =
   | APIResourceFulfilledAction
   | CreateElementTreeAction
@@ -142,6 +158,8 @@ export type ReadOnlyAction =
   | UnregisterReactComponentAction
   | SetIsInBuilderAction
   | SetIsReadOnlyAction
+  | SetSiteVersionAction
+  | ResetLocaleStateAction
 
 export function apiResourceFulfilled<T extends APIResourceType>(
   resourceType: T,
@@ -306,4 +324,12 @@ export function setIsInBuilder(isInBuilder: boolean): SetIsInBuilderAction {
 
 export function setIsReadOnly(isReadOnly: boolean): SetIsReadOnlyAction {
   return { type: ReadOnlyActionTypes.SET_IS_READ_ONLY, payload: isReadOnly }
+}
+
+export function setSiteVersion(siteVersion: SiteVersion | null): SetSiteVersionAction {
+  return { type: ReadOnlyActionTypes.SET_SITE_VERSION, payload: siteVersion }
+}
+
+export function resetLocaleState(): ResetLocaleStateAction {
+  return { type: ReadOnlyActionTypes.RESET_LOCALE_STATE }
 }

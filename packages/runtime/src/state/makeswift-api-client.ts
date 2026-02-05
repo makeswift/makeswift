@@ -7,8 +7,13 @@ import {
   UnknownAction,
 } from '@reduxjs/toolkit'
 
+import { type SiteVersion, ApiHandlerHeaders, serializeSiteVersion } from '../api/site-version'
+
+import * as SiteVersionState from './modules/site-version'
+import * as LocaleState from './modules/locale'
 import * as APIResources from './modules/api-resources'
 import * as LocalizedResourcesMap from './modules/localized-resources-map'
+
 import { type Action, ActionTypes } from './actions'
 import { apiResourceFulfilled } from './actions/internal/read-only-actions'
 import { setLocalizedResourceId } from './host-api'
@@ -28,6 +33,8 @@ import {
 } from '../api'
 
 const reducer = combineReducers({
+  siteVersion: SiteVersionState.reducer,
+  locale: LocaleState.reducer,
   apiResources: APIResources.reducer,
   localizedResourcesMap: LocalizedResourcesMap.reducer,
 })
@@ -108,10 +115,13 @@ export function fetchAPIResource<T extends APIResourceType>(
   fetch: HttpFetch,
   locale?: APIResourceLocale<T>,
 ): Thunk<Promise<Extract<APIResource, { __typename: T }> | null>> {
-  const fetchJson = async <T>(url: string): Promise<T | null> => {
+  const fetchVersioned = async <T>(url: string, version: SiteVersion | null): Promise<T | null> => {
     const response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
+        ...(version != null
+          ? { [ApiHandlerHeaders.SiteVersion]: serializeSiteVersion(version) }
+          : {}),
       },
     })
 
@@ -129,6 +139,7 @@ export function fetchAPIResource<T extends APIResourceType>(
 
   return async (dispatch, getState) => {
     const state = getState()
+    const version = SiteVersionState.getSiteVersion(state.siteVersion)
 
     if (getHasAPIResource(state, resourceType, resourceId, locale)) {
       return getAPIResource(state, resourceType, resourceId, locale)
@@ -138,19 +149,25 @@ export function fetchAPIResource<T extends APIResourceType>(
 
     switch (resourceType) {
       case APIResourceType.Swatch:
-        resource = await fetchJson<Swatch>(`/api/makeswift/swatches/${resourceId}`)
+        resource = await fetchVersioned<Swatch>(`/api/makeswift/swatches/${resourceId}`, version)
         break
 
       case APIResourceType.File:
-        resource = await fetchJson<File>(`/api/makeswift/files/${resourceId}`)
+        resource = await fetchVersioned<File>(`/api/makeswift/files/${resourceId}`, version)
         break
 
       case APIResourceType.Typography:
-        resource = await fetchJson<Typography>(`/api/makeswift/typographies/${resourceId}`)
+        resource = await fetchVersioned<Typography>(
+          `/api/makeswift/typographies/${resourceId}`,
+          version,
+        )
         break
 
       case APIResourceType.GlobalElement:
-        resource = await fetchJson<GlobalElement>(`/api/makeswift/global-elements/${resourceId}`)
+        resource = await fetchVersioned<GlobalElement>(
+          `/api/makeswift/global-elements/${resourceId}`,
+          version,
+        )
         break
 
       case APIResourceType.LocalizedGlobalElement: {
@@ -162,8 +179,9 @@ export function fetchAPIResource<T extends APIResourceType>(
           return null
         }
 
-        resource = await fetchJson<LocalizedGlobalElement>(
+        resource = await fetchVersioned<LocalizedGlobalElement>(
           `/api/makeswift/localized-global-elements/${resourceId}/${locale}`,
+          version,
         )
 
         dispatch(
@@ -182,12 +200,12 @@ export function fetchAPIResource<T extends APIResourceType>(
 
         if (locale != null) url.searchParams.set('locale', locale)
 
-        resource = await fetchJson<PagePathnameSlice>(url.pathname + url.search)
+        resource = await fetchVersioned<PagePathnameSlice>(url.pathname + url.search, version)
         break
       }
 
       case APIResourceType.Table:
-        resource = await fetchJson<Table>(`/api/makeswift/tables/${resourceId}`)
+        resource = await fetchVersioned<Table>(`/api/makeswift/tables/${resourceId}`, version)
         break
 
       default:
@@ -202,10 +220,8 @@ export function fetchAPIResource<T extends APIResourceType>(
 
 // FIXME: this middleware can be removed once we've upgraded the builder
 // to always provide the locale when dispatching resource actions
-function defaultLocaleMiddleware(
-  defaultLocale: string | undefined,
-): ThunkMiddleware<State, UnknownAction> {
-  return actionMiddleware(() => next => {
+function defaultLocaleMiddleware(): ThunkMiddleware<State, UnknownAction> {
+  return actionMiddleware(({ getState }) => next => {
     return (action: Action) => {
       switch (action.type) {
         case ActionTypes.CHANGE_API_RESOURCE:
@@ -214,7 +230,10 @@ function defaultLocaleMiddleware(
           const { locale } = action.payload
           return next({
             ...action,
-            payload: { ...action.payload, locale: locale ?? defaultLocale },
+            payload: {
+              ...action.payload,
+              locale: locale ?? LocaleState.getLocale(getState().locale),
+            },
           } as Action)
         }
       }
@@ -224,13 +243,7 @@ function defaultLocaleMiddleware(
   })
 }
 
-export function configureStore({
-  defaultLocale,
-  serializedState,
-}: {
-  defaultLocale: string | undefined
-  serializedState?: SerializedState
-}) {
+export function configureStore({ serializedState }: { serializedState?: SerializedState }) {
   return configureReduxStore({
     reducer,
     preloadedState: {
@@ -241,7 +254,7 @@ export function configureStore({
     },
 
     middleware: getDefaultMiddleware =>
-      getDefaultMiddleware(middlewareOptions).concat(defaultLocaleMiddleware(defaultLocale)),
+      getDefaultMiddleware(middlewareOptions).concat(defaultLocaleMiddleware()),
 
     devTools: devToolsConfig({
       name: `API client store (${new Date().toISOString()})`,

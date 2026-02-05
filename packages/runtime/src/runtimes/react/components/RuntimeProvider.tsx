@@ -29,16 +29,17 @@ export function RuntimeProvider({
   appOrigin?: string
   locale?: string
 }) {
-  const { versionedFetch } = useFrameworkContext()
+  const { fetch } = useFrameworkContext()
 
   const client = useMemo(
     () =>
       new MakeswiftHostApiClient({
         uri: new URL('graphql', apiOrigin).href,
         locale,
-        fetch: versionedFetch(siteVersion ?? null),
+        fetch,
+        siteVersion: siteVersion ?? null,
       }),
-    [apiOrigin, locale, siteVersion, versionedFetch],
+    [apiOrigin, locale, siteVersion, fetch],
   )
 
   const isPreview = siteVersion != null
