@@ -9,7 +9,7 @@ import * as ComponentsMeta from './modules/components-meta'
 import * as PropControllers from './modules/prop-controllers'
 import * as PropControllerHandles from './modules/prop-controller-handles'
 import * as IsInBuilder from './modules/is-in-builder'
-import * as IsPreview from './modules/is-preview'
+import * as IsReadOnly from './modules/is-read-only'
 import * as BuilderEditMode from './modules/builder-edit-mode'
 import * as Breakpoints from './modules/breakpoints'
 
@@ -35,6 +35,7 @@ export type { ComponentType } from './modules/react-components'
 export type { ComponentMeta } from './modules/components-meta'
 
 export const reducers = {
+  isReadOnly: IsReadOnly.reducer,
   documents: Documents.reducer,
   elementTrees: ElementTrees.reducer,
   reactComponents: ReactComponents.reducer,
@@ -42,12 +43,12 @@ export const reducers = {
   propControllers: PropControllers.reducer,
   propControllerHandles: PropControllerHandles.reducer,
   isInBuilder: IsInBuilder.reducer,
-  isPreview: IsPreview.reducer,
   builderEditMode: BuilderEditMode.reducer,
   breakpoints: Breakpoints.reducer,
 }
 
 export type State = {
+  isReadOnly: IsReadOnly.State
   documents: Documents.State
   elementTrees: ElementTrees.State
   reactComponents: ReactComponents.State
@@ -55,7 +56,6 @@ export type State = {
   propControllers: PropControllers.State
   propControllerHandles: PropControllerHandles.State
   isInBuilder: IsInBuilder.State
-  isPreview: IsPreview.State
   builderEditMode: BuilderEditMode.State
   breakpoints: Breakpoints.State
 }
@@ -209,8 +209,8 @@ export function getIsInBuilder(state: State): boolean {
   return state.isInBuilder
 }
 
-export function getIsPreview(state: State): boolean {
-  return IsPreview.getIsPreview(state.isPreview)
+export function getIsReadOnly(state: State): boolean {
+  return state.isReadOnly
 }
 
 export function getBuilderEditMode(state: State): BuilderEditMode.State {
