@@ -7,7 +7,7 @@ import { type Action } from './actions'
 import { BuilderActionTypes } from './builder-api/actions'
 import { middlewareOptions, devToolsConfig } from './toolkit'
 
-import { MakeswiftHostApiClient } from '../api/react'
+import { MakeswiftHostApiClient } from '../api/client'
 import { type BuilderAPIProxy } from './builder-api/proxy'
 import { HostActionTypes } from './host-api'
 

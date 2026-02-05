@@ -2,7 +2,7 @@
 
 import { ReactNode, useMemo, lazy } from 'react'
 
-import { MakeswiftHostApiClient } from '../../../api/react'
+import { MakeswiftHostApiClient } from '../../../api/client'
 import { ReactRuntimeContext } from '../hooks/use-react-runtime'
 import { type ReactRuntimeCore } from '../react-runtime-core'
 import { MakeswiftHostApiClientProvider } from '../host-api-client'

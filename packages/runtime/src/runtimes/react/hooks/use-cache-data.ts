@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { type CacheData } from '../../../api/react'
+import { type CacheData } from '../../../api/client'
 import { updateAPIClientCache } from '../../../state/actions/internal/read-write-actions'
 
 import { useMakeswiftHostApiClient } from '../host-api-client'
