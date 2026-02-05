@@ -14,6 +14,7 @@ import { useBuiltinSuspense } from '../hooks/use-builtin-suspense'
 import { ActivityOrFallback } from './activity-with-fallback'
 
 import { DocumentRoot } from './DocumentRoot'
+import { FontLink } from './FontLink'
 
 type Props = {
   snapshot: MakeswiftComponentSnapshot
@@ -42,9 +43,14 @@ export const MakeswiftComponent = memo(({ snapshot, label, type, description }: 
 
   const builtinSuspense = useBuiltinSuspense(getRootElement(rootDocument).type)
 
+  const siteId = 'siteId' in snapshot.document ? snapshot.document.siteId : null
+
   return (
-    <ActivityOrFallback suspenseFallback={builtinSuspense}>
-      <DocumentRoot rootDocument={rootDocument} />
-    </ActivityOrFallback>
+    <>
+      <FontLink fonts={snapshot.fonts} siteId={siteId} />
+      <ActivityOrFallback suspenseFallback={builtinSuspense}>
+        <DocumentRoot rootDocument={rootDocument} />
+      </ActivityOrFallback>
+    </>
   )
 })
