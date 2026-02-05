@@ -41,6 +41,7 @@ import {
   isElementReference,
 } from '../state/read-only-state'
 import { type SiteVersion } from '../api/site-version'
+import { type Font } from '../runtimes/react/utils/google-fonts-url'
 import { toIterablePaginationResult } from '../utils/pagination'
 import { deterministicUUID } from '../utils/deterministic-uuid'
 import { Schema } from '@makeswift/controls'
@@ -262,8 +263,6 @@ export type Snippet = {
   cleanup: string | null
 }
 
-type Font = { family: string; variants: string[] }
-
 type Meta = {
   title?: string | null
   description?: string | null
@@ -333,6 +332,13 @@ const getPageAPISchema = z.object({
 })
 
 type GetPageAPI = z.infer<typeof getPageAPISchema>
+
+const googleFontSchema = z.object({
+  family: z.string(),
+  variants: z.array(z.string()),
+})
+
+const googleFontsSchema = z.array(googleFontSchema)
 
 export class MakeswiftClient {
   private graphqlClient: GraphQLClient
@@ -1016,6 +1022,35 @@ export class MakeswiftClient {
       throw new Error(
         `Failed to parse preview token payload: ${parsed.error.errors.map(e => e.message).join('; ')}`,
       )
+    }
+
+    return parsed.data
+  }
+
+  async getSiteGoogleFonts(
+    siteVersion: SiteVersion | null = null,
+  ): Promise<Font[]> {
+    const response = await this.fetch('v1/google-fonts', siteVersion)
+
+    if (!response.ok) {
+      console.error('Failed to get Google fonts', {
+        response: await failedResponseBody(response),
+        siteVersion,
+      })
+
+      return []
+    }
+
+    const json = await response.json()
+
+    const parsed = googleFontsSchema.safeParse(json)
+    if (!parsed.success) {
+      console.error('Failed to parse site Google fonts response', {
+        response: json,
+        siteVersion,
+      })
+
+      return []
     }
 
     return parsed.data
