@@ -8,6 +8,7 @@ import { type ReactRuntimeCore } from '../react-runtime-core'
 import { MakeswiftHostApiClientProvider } from '../host-api-client'
 import { type SiteVersion } from '../../../api/site-version'
 import { PreviewSwitcher } from './preview-switcher/preview-switcher'
+import { MakeswiftFonts } from './MakeswiftFonts'
 import { useBuilderConnectionPing } from './hooks/use-builder-connection-ping'
 import { useFrameworkContext } from './hooks/use-framework-context'
 
@@ -51,6 +52,7 @@ export function RuntimeProvider({
       <MakeswiftHostApiClientProvider client={client}>
         <StoreProvider appOrigin={appOrigin}>
           {children}
+          <MakeswiftFonts siteVersion={siteVersion} />
           <PreviewSwitcher isPreview={isPreview} />
         </StoreProvider>
       </MakeswiftHostApiClientProvider>

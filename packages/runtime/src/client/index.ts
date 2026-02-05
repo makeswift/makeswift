@@ -254,6 +254,8 @@ export type Snippet = {
 
 type Font = { family: string; variants: string[] }
 
+export type GoogleFont = { family: string; variants: string[] }
+
 type Meta = {
   title?: string | null
   description?: string | null
@@ -956,6 +958,22 @@ export class MakeswiftClient {
     )
 
     return result.table
+  }
+
+  async getGoogleFonts(siteVersion: SiteVersion | null): Promise<GoogleFont[]> {
+    const response = await this.fetch('v1/google-fonts', siteVersion)
+
+    if (!response.ok) {
+      console.error('Failed to fetch Google Fonts', {
+        response: await failedResponseBody(response),
+        siteVersion,
+      })
+
+      return []
+    }
+
+    const fonts: GoogleFont[] = await response.json()
+    return fonts
   }
 
   getTranslatableData(elementTree: ElementData): Record<string, Data> {

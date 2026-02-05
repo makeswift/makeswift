@@ -9,6 +9,8 @@ import { type ReactRuntimeCore } from '../runtimes/react/react-runtime-core'
 import { redirectLiveHandler } from './handlers/redirect-live'
 import { elementTreeHandler } from './handlers/element-tree'
 import { fontsHandler, type Font, type GetFonts } from './handlers/fonts'
+import { googleFontsHandler } from './handlers/google-fonts'
+import { type GoogleFont } from '../client'
 import { manifestHandler, type Manifest } from './handlers/manifest'
 import { mergeTranslatedDataHandler } from './handlers/merge-translated-data'
 import { revalidateHandler } from './handlers/revalidate'
@@ -25,7 +27,7 @@ import {
 
 import { applyCorsHeaders } from './cors'
 
-export type { Manifest, Font }
+export type { Manifest, Font, GoogleFont }
 
 type Events = { onPublish: OnPublish }
 
@@ -51,6 +53,7 @@ type ResponseType =
       | ReturnType<typeof redirectLiveHandler>
       | ReturnType<typeof elementTreeHandler>
       | ReturnType<typeof fontsHandler>
+      | ReturnType<typeof googleFontsHandler>
       | ReturnType<typeof manifestHandler>
       | ReturnType<typeof mergeTranslatedDataHandler>
       | ReturnType<typeof revalidateHandler>
@@ -108,6 +111,7 @@ export function createApiHandler(
     if (matches('/redirect-live')) return redirectLiveHandler(req, { previewCookieNames })
     if (matches('/element-tree')) return elementTreeHandler(req, { runtime })
     if (matches('/fonts')) return fontsHandler(req, { getFonts })
+    if (matches('/google-fonts')) return googleFontsHandler(req, { client, siteVersion })
     if (matches('/manifest')) return manifestHandler(req, { apiKey, manifest })
     if (matches('/merge-translated-data')) return mergeTranslatedDataHandler(req, { client })
     if (matches('/revalidate')) {
