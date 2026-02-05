@@ -1,4 +1,6 @@
-import { useMemo, memo, type ComponentProps } from 'react'
+'use client'
+
+import { useMemo, type ComponentProps } from 'react'
 
 import { useCacheData } from '../../hooks/use-cache-data'
 
@@ -29,31 +31,29 @@ export { type PageMetadataSettings } from './page-seo-settings'
  *
  * If a field is not provided, it will default to `false`.
  */
-export const Page = memo(
-  ({
-    snapshot,
-    metadata = true,
-  }: {
-    snapshot: MakeswiftPageSnapshot
-    metadata?: boolean | PageMetadataSettings
-  }) => {
-    useCacheData(snapshot.cacheData)
+export function Page({
+  snapshot,
+  metadata = true,
+}: {
+  snapshot: MakeswiftPageSnapshot
+  metadata?: boolean | PageMetadataSettings
+}) {
+  useCacheData(snapshot.cacheData)
 
-    const rootDocument = useMemo(() => pageToRootDocument(snapshot.document), [snapshot.document])
-    useRegisterDocument(rootDocument)
+  const rootDocument = useMemo(() => pageToRootDocument(snapshot.document), [snapshot.document])
+  useRegisterDocument(rootDocument)
 
-    return (
-      <ActivityOrFallback>
-        {/* We use a key here to reset the Snippets state in the PageMeta component */}
-        <PageComponent
-          key={snapshot.document.data.key}
-          page={snapshot.document}
-          rootDocument={rootDocument}
-          metadata={metadata}
-        />
-      </ActivityOrFallback>
-    )
-  },
-)
+  return (
+    <ActivityOrFallback>
+      {/* We use a key here to reset the Snippets state in the PageMeta component */}
+      <PageComponent
+        key={snapshot.document.data.key}
+        page={snapshot.document}
+        rootDocument={rootDocument}
+        metadata={metadata}
+      />
+    </ActivityOrFallback>
+  )
+}
 
 export type PageProps = ComponentProps<typeof Page>
