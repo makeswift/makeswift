@@ -41,6 +41,7 @@ import {
   isElementReference,
 } from '../state/read-only-state'
 import { type SiteVersion } from '../api/site-version'
+import { type Font } from '../runtimes/react/utils/google-fonts-url'
 import { toIterablePaginationResult } from '../utils/pagination'
 import { deterministicUUID } from '../utils/deterministic-uuid'
 import { Schema } from '@makeswift/controls'
@@ -261,8 +262,6 @@ export type Snippet = {
   builderEnabled: boolean
   cleanup: string | null
 }
-
-type Font = { family: string; variants: string[] }
 
 type Meta = {
   title?: string | null

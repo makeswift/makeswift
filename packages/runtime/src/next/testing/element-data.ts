@@ -71,7 +71,10 @@ export function createMakeswiftComponentSnapshot(
   {
     cacheData = {},
     locale = null,
-  }: { cacheData?: Partial<MakeswiftComponentSnapshot['cacheData']>; locale?: string | null } = {},
+  }: {
+    cacheData?: Partial<MakeswiftComponentSnapshot['cacheData']>
+    locale?: string | null
+  } = {},
 ): MakeswiftComponentSnapshot {
   return {
     key: randomUUID(),

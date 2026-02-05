@@ -4,6 +4,8 @@ export {
   Page,
   Slot,
   RuntimeProvider as ReactRuntimeProvider,
+  FontLink,
+  type Font,
 } from '@makeswift/runtime/unstable-framework-support'
 
 export { Makeswift } from './client'
