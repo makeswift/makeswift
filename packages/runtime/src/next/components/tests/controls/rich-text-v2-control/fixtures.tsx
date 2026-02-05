@@ -1,7 +1,7 @@
 import { APIResourceType, type Swatch, type Typography } from '../../../../../api'
 
 import * as Fixture from '../fixtures/rich-text-v2'
-import { type CacheData } from '../../../../../api/react'
+import { type CacheData } from '../../../../../api/client'
 
 const swatchId = 'U3dhdGNoOmJkODYxMWM5LTNiZjItNDM3MS1iMmU4LTBmMmNlMDZjNDE1OA=='
 const swatch: Swatch = {

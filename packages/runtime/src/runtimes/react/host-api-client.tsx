@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactNode, createContext, useContext } from 'react'
-import { MakeswiftHostApiClient } from '../../api/react'
+import { MakeswiftHostApiClient } from '../../api/client'
 
 const Context = createContext(
   new MakeswiftHostApiClient({
