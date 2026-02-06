@@ -24,7 +24,7 @@ export function RuntimeProvider({
 }: {
   children: ReactNode
   runtime: ReactRuntimeCore
-  siteVersion: SiteVersion | null
+  siteVersion: SiteVersion | null | undefined
   apiOrigin?: string
   appOrigin?: string
   locale?: string
@@ -36,7 +36,7 @@ export function RuntimeProvider({
       new MakeswiftHostApiClient({
         uri: new URL('graphql', apiOrigin).href,
         locale,
-        fetch: versionedFetch(siteVersion),
+        fetch: versionedFetch(siteVersion ?? null),
       }),
     [apiOrigin, locale, siteVersion, versionedFetch],
   )
