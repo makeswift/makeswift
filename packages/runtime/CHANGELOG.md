@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.26.4-canary.0
+
+### Patch Changes
+
+- 7b22b08: fix: adjust `ReactRuntimeProvider`'s `siteVersion` type to reflect it may be `undefined` when running under the standard Pages Router setup
+
 ## 0.26.3
 
 ### Patch Changes
