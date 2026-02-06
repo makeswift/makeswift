@@ -2,6 +2,7 @@ import { runtime } from '@/makeswift/runtime'
 import { ReactRuntimeProvider } from '@makeswift/runtime/next'
 import type { AppProps } from 'next/app'
 import { Grenze_Gotisch, Grenze } from 'next/font/google'
+import { type PageProps } from './[[...path]]'
 
 import '@/makeswift/components'
 import '@/pages/global.css'
@@ -21,7 +22,7 @@ const GrenzeFont = Grenze({
 export default function App({
   Component,
   pageProps: { locale, siteVersion, ...pageProps },
-}: AppProps) {
+}: AppProps<Partial<PageProps>>) {
   return (
     <main className={`${GrenzeGotischFont.variable} ${GrenzeFont.variable}`}>
       <ReactRuntimeProvider
