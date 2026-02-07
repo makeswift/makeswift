@@ -1,60 +1,50 @@
 'use client'
 
-import { ReactNode, useMemo, lazy } from 'react'
+import { ReactNode, useMemo } from 'react'
 
-import { MakeswiftHostApiClient } from '../../../api/client'
-import { ReactRuntimeContext } from '../hooks/use-react-runtime'
-import { type ReactRuntimeCore } from '../react-runtime-core'
-import { MakeswiftHostApiClientProvider } from '../host-api-client'
 import { type SiteVersion } from '../../../api/site-version'
-import { PreviewSwitcher } from './preview-switcher/preview-switcher'
-import { useBuilderConnectionPing } from './hooks/use-builder-connection-ping'
-import { useFrameworkContext } from './hooks/use-framework-context'
 
-const LiveProvider = lazy(() => import('./LiveProvider'))
-const PreviewProvider = lazy(() => import('./PreviewProvider'))
+import { ReactRuntimeContext } from '../hooks/use-react-runtime'
+import { useAsyncEffect } from '../hooks/use-async-effect'
+import { type ReactRuntimeCore } from '../react-runtime-core'
+
+import { useBuilderConnectionPing } from './hooks/use-builder-connection-ping'
+import { PreviewSwitcher } from './preview-switcher/preview-switcher'
 
 export function RuntimeProvider({
   children,
   runtime,
-  siteVersion,
-  appOrigin = 'https://app.makeswift.com',
-  apiOrigin = 'https://api.makeswift.com',
+  siteVersion: siteVersionProp,
   locale = undefined,
 }: {
   children: ReactNode
   runtime: ReactRuntimeCore
   siteVersion: SiteVersion | null | undefined
-  apiOrigin?: string
-  appOrigin?: string
   locale?: string
 }) {
-  const { fetch } = useFrameworkContext()
+  const siteVersion = siteVersionProp ?? null
+  const isPreview = siteVersion != null
+  // TODO: we need to decouple editability from the site version; specifically, previewing
+  // a draft version of the site should not lead to switching to the read-write state
+  const isReadOnly = siteVersion == null
 
-  const client = useMemo(
-    () =>
-      new MakeswiftHostApiClient({
-        uri: new URL('graphql', apiOrigin).href,
-        locale,
-        fetch,
-        siteVersion: siteVersion ?? null,
-      }),
-    [apiOrigin, locale, siteVersion, fetch],
+  // setting idempotent part of the state on render to have parity between server-side and
+  // client-side rendering depending on this state; `useMemo` here is purely a performance
+  // optimization; prior art for performing idempotent side effects on render:
+  // https://github.com/TanStack/query/blob/8f9f183f11df3709a1a38c4efce1452788041f88/packages/react-query/src/HydrationBoundary.tsx#L41
+  useMemo(
+    () => runtime.setIdempotent({ siteVersion, isReadOnly, locale }),
+    [runtime, siteVersion, isReadOnly, locale],
   )
 
-  const isPreview = siteVersion != null
-  const StoreProvider = isPreview ? PreviewProvider : LiveProvider
+  useBuilderConnectionPing({ appOrigin: runtime.appOrigin })
 
-  useBuilderConnectionPing({ appOrigin })
+  useAsyncEffect(() => runtime.setupStore({ isReadOnly }), [runtime, isReadOnly])
 
   return (
     <ReactRuntimeContext.Provider value={runtime}>
-      <MakeswiftHostApiClientProvider client={client}>
-        <StoreProvider appOrigin={appOrigin}>
-          {children}
-          <PreviewSwitcher isPreview={isPreview} />
-        </StoreProvider>
-      </MakeswiftHostApiClientProvider>
+      {children}
+      <PreviewSwitcher isPreview={isPreview} />
     </ReactRuntimeContext.Provider>
   )
 }
