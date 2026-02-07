@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.26.4-canary.1
+
+### Patch Changes
+
+- 558629d: Decouple `FrameworkContext` from (framework-independent) resource versioning implementation, rename `versionedFetch` option to `fetch`.
+
 ## 0.26.4-canary.0
 
 ### Patch Changes
