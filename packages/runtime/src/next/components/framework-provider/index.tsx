@@ -4,12 +4,7 @@ import { type PropsWithChildren, useMemo } from 'react'
 import NextImage from 'next/image'
 
 import { useIsPagesRouter } from '../../hooks/use-is-pages-router'
-import {
-  FrameworkContext,
-  versionedFetch,
-} from '../../../runtimes/react/components/framework-context'
-
-import { type SiteVersion } from '../../../api/site-version'
+import { FrameworkContext } from '../../../runtimes/react/components/framework-context'
 import { MAKESWIFT_CACHE_TAG } from '../../cache'
 
 import { context as appRouterContext } from './app-router'
@@ -26,8 +21,7 @@ export function FrameworkProvider({
       ...(isPagesRouter ? pagesRouterContext : appRouterContext),
       Image: NextImage,
       Link,
-      versionedFetch: (siteVersion: SiteVersion | null) => (url, init) =>
-        versionedFetch(siteVersion)(url, { ...init, next: { tags: [MAKESWIFT_CACHE_TAG] } }),
+      fetch: (url, init) => fetch(url, { ...init, next: { tags: [MAKESWIFT_CACHE_TAG] } }),
     }),
     [isPagesRouter],
   )
