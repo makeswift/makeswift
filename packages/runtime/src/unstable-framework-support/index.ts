@@ -13,6 +13,8 @@ export { MAKESWIFT_SITE_VERSION_COOKIE, SearchParams } from '../api-handler/prev
 
 export { MakeswiftClient } from '../client'
 
+export { type BreakpointsInput as Breakpoints } from '../state/modules/breakpoints'
+
 export {
   FrameworkContext,
   DefaultHead,

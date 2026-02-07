@@ -12,7 +12,6 @@ import {
 
 import { type LinkData } from '@makeswift/prop-controllers'
 
-import { type HttpFetch } from '../../../state/makeswift-api-client'
 import { type Snippet } from '../../../client'
 
 import { BaseHeadSnippet } from './page/HeadSnippet'
@@ -42,7 +41,6 @@ export type FrameworkContext = {
   HeadSnippet: HeadSnippet
   Image: ImageComponent
   Link: LinkComponent
-  fetch: HttpFetch
 }
 
 // React 19 automatically hoists metadata tags to the <head>
@@ -76,5 +74,4 @@ export const FrameworkContext = createContext<FrameworkContext>({
   HeadSnippet: DefaultHeadSnippet,
   Image: DefaultImage,
   Link: DefaultLink,
-  fetch: globalThis.fetch,
 })

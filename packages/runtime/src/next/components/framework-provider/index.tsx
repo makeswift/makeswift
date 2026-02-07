@@ -5,7 +5,6 @@ import NextImage from 'next/image'
 
 import { useIsPagesRouter } from '../../hooks/use-is-pages-router'
 import { FrameworkContext } from '../../../runtimes/react/components/framework-context'
-import { MAKESWIFT_CACHE_TAG } from '../../cache'
 
 import { context as appRouterContext } from './app-router'
 import { context as pagesRouterContext } from './pages-router'
@@ -21,7 +20,6 @@ export function FrameworkProvider({
       ...(isPagesRouter ? pagesRouterContext : appRouterContext),
       Image: NextImage,
       Link,
-      fetch: (url, init) => fetch(url, { ...init, next: { tags: [MAKESWIFT_CACHE_TAG] } }),
     }),
     [isPagesRouter],
   )
