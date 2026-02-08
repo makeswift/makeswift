@@ -23,9 +23,9 @@ type UserConfig = ApiHandlerUserConfig & {
 
 export function createApiHandler(
   apiKey: string,
-  { apiOrigin, runtime, revalidationHandler, ...userConfig }: UserConfig,
+  { runtime, revalidationHandler, ...userConfig }: UserConfig,
 ): RequestHandler {
-  const client = new MakeswiftClient(apiKey, { apiOrigin, runtime })
+  const client = new MakeswiftClient(apiKey, { runtime })
 
   return async function apiHandler(req: ExpressRequest, res: ExpressResponse, next: NextFunction) {
     if (!req.path.startsWith(API_PATH_PREFIX)) {
