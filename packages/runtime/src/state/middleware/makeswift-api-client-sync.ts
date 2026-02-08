@@ -1,10 +1,10 @@
 import { type Middleware } from '@reduxjs/toolkit'
 
-import { MakeswiftHostApiClient } from '../../../api/client'
+import { MakeswiftHostApiClient } from '../../api/client'
 
-import { type Action } from '../../actions'
-import { actionMiddleware } from '../../toolkit'
-import { type State, type Dispatch } from '../../read-write-state'
+import { type Action } from '../actions'
+import { actionMiddleware } from '../toolkit'
+import { type State, type Dispatch } from '../unified-state'
 
 export function makeswiftApiClientSyncMiddleware(
   client: MakeswiftHostApiClient,

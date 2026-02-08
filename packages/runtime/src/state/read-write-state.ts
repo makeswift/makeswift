@@ -1,4 +1,4 @@
-import { combineReducers, type ThunkDispatch } from '@reduxjs/toolkit'
+import { combineReducers, type ThunkAction, type ThunkDispatch } from '@reduxjs/toolkit'
 
 import * as Documents from './modules/read-write/read-write-documents'
 import * as BoxModels from './modules/read-write/box-models'
@@ -9,6 +9,7 @@ import { type Action } from './actions'
 
 import { ElementImperativeHandle } from '../runtimes/react/element-imperative-handle'
 
+import { BuilderAPIProxy } from './builder-api/proxy'
 import * as ReadOnlyState from './read-only-state'
 
 export type { Operation } from './modules/read-write/read-write-documents'
@@ -102,4 +103,12 @@ export function getElementImperativeHandlesContainingElement(
   }
 
   return filteredElementImperativeHandles
+}
+
+export function setupBuilderProxy(
+  builderProxy: BuilderAPIProxy,
+): ThunkAction<void, State, unknown, Action> {
+  return dispatch => {
+    builderProxy.setup({ onHostAction: action => dispatch(action) })
+  }
 }

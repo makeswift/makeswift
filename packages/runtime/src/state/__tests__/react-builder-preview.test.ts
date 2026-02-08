@@ -1,7 +1,7 @@
 import { configureStore as configureReduxStore } from '@reduxjs/toolkit'
 
 import { ElementImperativeHandle } from '../../runtimes/react/element-imperative-handle'
-import { ReactRuntime } from '../../runtimes/react'
+import { createReactRuntime } from '../../runtimes/react/testing/react-runtime'
 
 import { middlewareOptions } from '../toolkit'
 
@@ -10,8 +10,8 @@ import { changeDocument } from '../host-api'
 import { registerComponentHandle } from '../actions/internal/read-only-actions'
 
 import { createRootReducer } from '../read-write-state'
-import { propControllerHandlesMiddleware } from '../middleware/prop-controller-handles'
 import { readOnlyElementTreeMiddleware } from '../middleware/read-only-element-tree'
+import { propControllerHandlesMiddleware } from '../middleware/read-write/prop-controller-handles'
 import { updateElementTreeMiddleware } from '../middleware/read-write/update-element-tree'
 
 import * as State from '../read-only-state'
@@ -78,7 +78,7 @@ describe('elementTreeMiddleware', () => {
   it('correctly tracks document changes', () => {
     // Arrange
     const documentKey = 'documentKey'
-    const runtime = new ReactRuntime()
+    const runtime = createReactRuntime()
     const store = configureReduxStore({
       reducer: createRootReducer(),
       preloadedState: runtime.store.getState(),

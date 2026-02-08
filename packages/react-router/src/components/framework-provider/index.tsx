@@ -15,7 +15,6 @@ export function FrameworkProvider({ children }: PropsWithChildren) {
     HeadSnippet: DefaultHeadSnippet,
     Image: DefaultImage,
     Link,
-    fetch: globalThis.fetch,
   })
 
   return <FrameworkContext.Provider value={context}>{children}</FrameworkContext.Provider>

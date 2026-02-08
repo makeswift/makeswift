@@ -16,9 +16,9 @@ type ApiHandlerArgs = AppRouter.ApiHandlerArgs | PagesRouter.ApiHandlerArgs
 
 export function MakeswiftApiHandler(
   apiKey: string,
-  { apiOrigin, runtime, ...userConfig }: ApiHandlerUserConfig,
+  { runtime, ...userConfig }: ApiHandlerUserConfig,
 ): (...args: ApiHandlerArgs) => Promise<Response> | Promise<void> {
-  const client = new MakeswiftClient(apiKey, { apiOrigin, runtime })
+  const client = new MakeswiftClient(apiKey, { runtime })
 
   async function handler(...args: ApiHandlerArgs): Promise<Response | void> {
     const { req, route, sendResponse, customRoutes, ...handlerConfig } = await match(args)

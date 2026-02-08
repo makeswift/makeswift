@@ -10,11 +10,11 @@ import {
   SearchParams,
   secondsUntilSiteVersionExpiration,
   serializeSiteVersion,
+  ReactRuntime,
 } from '@makeswift/runtime/unstable-framework-support'
 
-import { ReactRuntime } from '@makeswift/runtime/react'
-
 import { Makeswift as MakeswiftClient } from '../client'
+
 import { type Env } from './env'
 
 async function requestedSiteVersion({
@@ -38,11 +38,9 @@ async function requestedSiteVersion({
 export function createPreviewMiddleware<E extends Env>({
   apiKey,
   runtime,
-  apiOrigin,
 }: {
   apiKey: string
   runtime: ReactRuntime
-  apiOrigin?: string
 }): MiddlewareHandler {
   return async function apiHandler(c: Context<E>, next: Next): Promise<Response | void> {
     const { pathname, searchParams } = new URL(c.req.url, `https://example.com`)
@@ -54,7 +52,7 @@ export function createPreviewMiddleware<E extends Env>({
       })
     }
 
-    const client = new MakeswiftClient(apiKey, { apiOrigin, runtime })
+    const client = new MakeswiftClient(apiKey, { runtime })
 
     const siteVersion = await requestedSiteVersion({ searchParams, client })
     if (siteVersion == null) return next()

@@ -31,8 +31,6 @@ type Events = { onPublish: OnPublish }
 
 export type ApiHandlerUserConfig = {
   runtime: ReactRuntimeCore
-  appOrigin?: string
-  apiOrigin?: string
   getFonts?: GetFonts
   events?: Events
 }
@@ -67,7 +65,6 @@ export function createApiHandler(
   apiKey: string,
   {
     runtime,
-    appOrigin = 'https://app.makeswift.com',
     getFonts,
     events,
     client,
@@ -90,7 +87,7 @@ export function createApiHandler(
         : new Response(null, { status: 204, headers: [['Content-Length', '0']] })
 
     applyCorsHeaders(res.headers, {
-      origin: appOrigin,
+      origin: runtime.appOrigin,
       allowedHeaders: ['Content-Type', 'Authorization'],
     })
 
