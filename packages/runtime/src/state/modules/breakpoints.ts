@@ -20,16 +20,20 @@ export const DefaultBreakpointID = {
 
 type DefaultBreakpointID = (typeof DefaultBreakpointID)[keyof typeof DefaultBreakpointID]
 
+// Desktop-first cascading breakpoints: base breakpoint (Desktop) has no maxWidth,
+// smaller breakpoints use only maxWidth for proper CSS cascading without gaps.
+// Desktop's minWidth is for display (">768px") and canvas width only, NOT used in media queries.
 export const DEFAULT_BREAKPOINTS: Breakpoints = [
   {
     id: DefaultBreakpointID.Desktop,
     label: 'Desktop',
-    minWidth: 769,
+    // No maxWidth = base breakpoint, styles always apply
+    // minWidth matches Tablet for display purposes only
+    minWidth: 768,
   },
   {
     id: DefaultBreakpointID.Tablet,
     label: 'Tablet',
-    minWidth: 576,
     maxWidth: 768,
     viewportWidth: 760,
   },
@@ -71,15 +75,17 @@ export function parseBreakpointsInput(input: BreakpointsInput): Breakpoints {
     .map(([id, value]) => ({ ...value, id }))
     .sort((a, b) => b.width - a.width) // Sort by width in descending order
 
+  // Desktop-first cascading: base breakpoint has no maxWidth,
+  // other breakpoints use only maxWidth for proper CSS cascading without gaps.
+  // Note: minWidth on Desktop is for display/canvas purposes only - NOT used in media queries.
   const transformed = sorted.reduce(
-    (prev, curr, index, array) => {
+    (prev, curr) => {
       const { width, viewport, id, label } = curr
-      const next = array[index + 1]
 
       const breakpoint: Breakpoint = {
         id,
         ...(label && { label }),
-        ...(next && { minWidth: next.width + 1 }),
+        // Only maxWidth for cascading - no minWidth to avoid dead zones in media queries
         maxWidth: width,
         viewportWidth: viewport ?? width,
       }
@@ -87,7 +93,13 @@ export function parseBreakpointsInput(input: BreakpointsInput): Breakpoints {
       return [...prev, breakpoint]
     },
     [
-      { id: DefaultBreakpointID.Desktop, label: 'Desktop', minWidth: sorted[0].width + 1 },
+      // Base breakpoint (Desktop) has no maxWidth - styles always apply.
+      // minWidth is for display (">Npx") and builder canvas width only, NOT used in media queries.
+      {
+        id: DefaultBreakpointID.Desktop,
+        label: 'Desktop',
+        minWidth: sorted[0].width,
+      },
     ] as Breakpoints,
   )
 

@@ -168,7 +168,7 @@ NodeList [
   text-decoration: none;
 }
 
-@media only screen and (min-width: 769px) {
+@media only screen {
   .emotion-4 {
     color: hsla(238,87%,49%,1);
     font-family: Lato;
@@ -176,7 +176,7 @@ NodeList [
   }
 }
 
-@media only screen and (min-width: 576px) and (max-width: 768px) {
+@media only screen and (max-width: 768px) {
   .emotion-4 {
     color: hsla(238,87%,49%,1);
     font-family: Lato;

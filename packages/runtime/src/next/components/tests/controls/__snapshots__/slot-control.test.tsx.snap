@@ -117,7 +117,7 @@ NodeList [
   display: flex;
 }
 
-@media only screen and (min-width: 769px) {
+@media only screen {
   .emotion-1 {
     -webkit-flex-basis: calc(100% * 1.00000);
     -ms-flex-preferred-size: calc(100% * 1.00000);
@@ -126,7 +126,7 @@ NodeList [
   }
 }
 
-@media only screen and (min-width: 576px) and (max-width: 768px) {
+@media only screen and (max-width: 768px) {
   .emotion-1 {
     -webkit-flex-basis: calc(100% * 1.00000);
     -ms-flex-preferred-size: calc(100% * 1.00000);

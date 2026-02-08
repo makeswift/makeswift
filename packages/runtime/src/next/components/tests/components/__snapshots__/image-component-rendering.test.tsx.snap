@@ -10,13 +10,13 @@ exports[`correctly renders image component 1`] = `
   max-width: 100%;
 }
 
-@media only screen and (min-width: 769px) {
+@media only screen {
   .emotion-1 {
     width: 90%;
   }
 }
 
-@media only screen and (min-width: 576px) and (max-width: 768px) {
+@media only screen and (max-width: 768px) {
   .emotion-1 {
     width: 90%;
   }
@@ -28,13 +28,13 @@ exports[`correctly renders image component 1`] = `
   }
 }
 
-@media only screen and (min-width: 769px) {
+@media only screen {
   .emotion-2 {
     opacity: 1;
   }
 }
 
-@media only screen and (min-width: 576px) and (max-width: 768px) {
+@media only screen and (max-width: 768px) {
   .emotion-2 {
     opacity: 1;
   }
@@ -46,7 +46,7 @@ exports[`correctly renders image component 1`] = `
   }
 }
 
-@media only screen and (min-width: 769px) {
+@media only screen {
   .emotion-3 {
     margin-top: 20px;
     margin-right: auto;
@@ -55,7 +55,7 @@ exports[`correctly renders image component 1`] = `
   }
 }
 
-@media only screen and (min-width: 576px) and (max-width: 768px) {
+@media only screen and (max-width: 768px) {
   .emotion-3 {
     margin-top: 20px;
     margin-right: auto;
@@ -73,7 +73,7 @@ exports[`correctly renders image component 1`] = `
   }
 }
 
-@media only screen and (min-width: 769px) {
+@media only screen {
   .emotion-4 {
     padding-top: 5px;
     padding-right: 5px;
@@ -82,7 +82,7 @@ exports[`correctly renders image component 1`] = `
   }
 }
 
-@media only screen and (min-width: 576px) and (max-width: 768px) {
+@media only screen and (max-width: 768px) {
   .emotion-4 {
     padding-top: 5px;
     padding-right: 5px;
@@ -100,7 +100,7 @@ exports[`correctly renders image component 1`] = `
   }
 }
 
-@media only screen and (min-width: 769px) {
+@media only screen {
   .emotion-5 {
     border-top: 2px solid hsla(360,97.873924%,52.965%,1);
     border-right: 2px solid hsla(360,97.873924%,52.965%,1);
@@ -109,7 +109,7 @@ exports[`correctly renders image component 1`] = `
   }
 }
 
-@media only screen and (min-width: 576px) and (max-width: 768px) {
+@media only screen and (max-width: 768px) {
   .emotion-5 {
     border-top: 2px solid hsla(360,97.873924%,52.965%,1);
     border-right: 2px solid hsla(360,97.873924%,52.965%,1);
@@ -127,7 +127,7 @@ exports[`correctly renders image component 1`] = `
   }
 }
 
-@media only screen and (min-width: 769px) {
+@media only screen {
   .emotion-6 {
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
@@ -136,7 +136,7 @@ exports[`correctly renders image component 1`] = `
   }
 }
 
-@media only screen and (min-width: 576px) and (max-width: 768px) {
+@media only screen and (max-width: 768px) {
   .emotion-6 {
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
