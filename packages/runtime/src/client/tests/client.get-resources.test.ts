@@ -4,14 +4,14 @@ import { http, HttpResponse } from 'msw'
 import { createReactRuntime } from '../../runtimes/react/testing/react-runtime'
 
 import { server } from '../../mocks/server'
-import { TestWorkingSiteVersion, TestOrigins } from '../../testing/fixtures'
+import { TestWorkingSiteVersion } from '../../testing/fixtures'
 
 const TEST_API_KEY = 'xxx'
-const { apiOrigin } = TestOrigins
 const runtime = createReactRuntime()
+const baseUrl = `${runtime.apiOrigin}/v3`
 
 function createTestClient() {
-  return new MakeswiftClient(TEST_API_KEY, { runtime, apiOrigin })
+  return new MakeswiftClient(TEST_API_KEY, { runtime })
 }
 
 let consoleErrorSpy: jest.SpyInstance
@@ -26,7 +26,7 @@ afterEach(() => {
 
 describe('getSwatch', () => {
   const swatchId = 'mySwatch'
-  const resourceUrl = `${apiOrigin}/v3/swatches/${swatchId}`
+  const resourceUrl = `${baseUrl}/swatches/${swatchId}`
 
   test('returns null on 404', async () => {
     // Arrange
@@ -70,7 +70,7 @@ describe('getSwatch', () => {
 
 describe('getTypography', () => {
   const typographyId = 'myTypography'
-  const resourceUrl = `${apiOrigin}/v3/typographies/${typographyId}`
+  const resourceUrl = `${baseUrl}/typographies/${typographyId}`
 
   test('returns null on 404', async () => {
     // Arrange
@@ -114,7 +114,7 @@ describe('getTypography', () => {
 
 describe('getGlobalElement', () => {
   const globalElementId = 'myGlobalElement'
-  const resourceUrl = `${apiOrigin}/v3/global-elements/${globalElementId}`
+  const resourceUrl = `${baseUrl}/global-elements/${globalElementId}`
 
   test('returns null on 404', async () => {
     // Arrange
@@ -159,7 +159,7 @@ describe('getGlobalElement', () => {
 describe('getLocalizedGlobalElement', () => {
   const globalElementId = 'myGlobalElement'
   const locale = 'es-MX'
-  const resourceUrl = `${apiOrigin}/v3/localized-global-elements/${globalElementId}`
+  const resourceUrl = `${baseUrl}/localized-global-elements/${globalElementId}`
 
   test('returns null on 404', async () => {
     // Arrange
@@ -212,7 +212,7 @@ describe('getLocalizedGlobalElement', () => {
 describe('getPagePathnameSlice', () => {
   const pageId = 'pageId'
   const locale = 'fr'
-  const resourceUrl = `${apiOrigin}/v3/page-pathname-slices/bulk`
+  const resourceUrl = `${baseUrl}/page-pathname-slices/bulk`
 
   test('returns null on all errors, logs details to the console', async () => {
     // Arrange

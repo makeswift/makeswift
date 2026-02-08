@@ -6,7 +6,7 @@ import { http, HttpResponse } from 'msw'
 import { server } from '../../../../mocks/server'
 import { MakeswiftComponentType } from '../../../../components/builtin/constants'
 import { ElementID } from '@makeswift/prop-controllers'
-import { ReactRuntime } from '../../../../react'
+import { ReactRuntime } from '../../../../runtimes/react/react-runtime'
 
 function Button({ id }: { id?: string }) {
   return <button id={id} />
