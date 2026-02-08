@@ -1,9 +1,6 @@
-import { MakeswiftProvider } from '@/makeswift/provider'
 import { Grenze_Gotisch, Grenze } from 'next/font/google'
 
 import '@/app/global.css'
-import '@/makeswift/components'
-import { getSiteVersion } from '@makeswift/runtime/next/server'
 
 type Params = Promise<{ lang: string; path?: string[] }>
 
@@ -32,11 +29,7 @@ export default async function RootLayout({
       lang={lang}
       className={`${GrenzeGotischFont.variable} ${GrenzeFont.variable}`}
     >
-      <body>
-        <MakeswiftProvider siteVersion={await getSiteVersion()} locale={lang}>
-          {children}
-        </MakeswiftProvider>
-      </body>
+      <body>{children}</body>
     </html>
   )
 }
