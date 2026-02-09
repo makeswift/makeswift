@@ -6,31 +6,11 @@ import { useIsInBuilder } from '../../hooks/use-is-in-builder'
 import { PreviewToolbar } from './preview-toolbar'
 
 export function PreviewSwitcher({ isPreview }: { isPreview: boolean }) {
-  const shadowContainerRef = useRef<HTMLSpanElement | null>(null)
-  const [shadowRoot, setShadowRoot] = useState<ShadowRoot | null>(null)
   const isInBuilder = useIsInBuilder()
-
   const showToolbar = !isInBuilder && isPreview
-
-  useEffect(() => {
-    if (!showToolbar) return
-    if (
-      shadowContainerRef.current &&
-      shadowContainerRef.current.shadowRoot == null &&
-      shadowRoot == null
-    ) {
-      const root = shadowContainerRef.current.attachShadow({ mode: 'open' })
-      setShadowRoot(root)
-    }
-  }, [showToolbar, shadowRoot, setShadowRoot])
-
   return (
     <>
-      {showToolbar && (
-        <span id="makeswift-preview-switcher" ref={shadowContainerRef}>
-          {shadowRoot ? createPortal(<PreviewToolbar />, shadowRoot) : null}
-        </span>
-      )}
+      {showToolbar && <PreviewToolbarSingleton id="makeswift-preview-switcher" />}
       {/* Insert preview mode information into the DOM to make it easier to debug preview mode-related
           issues on production sites */}
       <PageMeta
@@ -39,4 +19,29 @@ export function PreviewSwitcher({ isPreview }: { isPreview: boolean }) {
       />
     </>
   )
+}
+
+function PreviewToolbarSingleton({ id }: { id: string }) {
+  const [shadowRoot, setShadowRoot] = useState<ShadowRoot | null>(null)
+  const containerRef = useRef<HTMLSpanElement | null>(null)
+
+  useEffect(() => {
+    if (document.getElementById(id) != null) {
+      return
+    }
+
+    const container = document.createElement('span')
+    container.id = id
+    document.body.appendChild(container)
+
+    containerRef.current = container
+    setShadowRoot(container.shadowRoot ?? container.attachShadow({ mode: 'open' }))
+
+    return () => {
+      containerRef.current?.remove()
+      containerRef.current = null
+    }
+  }, [id])
+
+  return shadowRoot != null ? createPortal(<PreviewToolbar />, shadowRoot) : null
 }
