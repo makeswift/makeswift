@@ -4,14 +4,13 @@ import { http, HttpResponse } from 'msw'
 import { createReactRuntime } from '../../runtimes/react/testing/react-runtime'
 
 import { server } from '../../mocks/server'
-import { TestOrigins, TestWorkingSiteVersion } from '../../testing/fixtures'
+import { TestWorkingSiteVersion } from '../../testing/fixtures'
 
 const TEST_API_KEY = 'myApiKey'
-const { apiOrigin } = TestOrigins
 const runtime = createReactRuntime()
 
 function createTestClient() {
-  return new MakeswiftClient(TEST_API_KEY, { runtime, apiOrigin })
+  return new MakeswiftClient(TEST_API_KEY, { runtime })
 }
 
 let consoleErrorSpy: jest.SpyInstance
@@ -44,8 +43,8 @@ afterEach(() => {
 
 describe('getPageSnapshot', () => {
   const pathname = 'blog/hello-world'
-  const snapshotUrl = `${apiOrigin}/v4/pages/${encodeURIComponent(pathname)}/document`
-  const graphqlUrl = `${apiOrigin}/graphql`
+  const snapshotUrl = `${runtime.apiOrigin}/v4/pages/${encodeURIComponent(pathname)}/document`
+  const graphqlUrl = `${runtime.apiOrigin}/graphql`
   const locale = 'es-MX'
 
   test.each([undefined, 'fr', 'es-MX'])(

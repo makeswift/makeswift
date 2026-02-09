@@ -8,19 +8,17 @@ import {
 } from 'node-mocks-http'
 
 import { MakeswiftApiHandler } from '../api-handler'
-import { ReactRuntime } from '../../react'
-import { TestOrigins } from '../../testing/fixtures'
 import { RewriteRuleMatches } from '../api-handler/preview'
+import { createReactRuntime } from '../testing'
 
 export type MakeswiftApiHandlerArgs = Partial<Parameters<typeof MakeswiftApiHandler>[1]>
 
 function createHandler(apiKey: string, args: Partial<MakeswiftApiHandlerArgs> = {}) {
-  const runtime = new ReactRuntime()
+  const runtime = createReactRuntime()
+
   return MakeswiftApiHandler(apiKey, {
     ...args,
     runtime,
-    apiOrigin: TestOrigins.apiOrigin,
-    appOrigin: TestOrigins.appOrigin,
   })
 }
 

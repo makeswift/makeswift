@@ -8,8 +8,6 @@ import '@/makeswift/components'
 
 const handler = MakeswiftApiHandler(MAKESWIFT_SITE_API_KEY, {
   runtime,
-  apiOrigin: process.env.NEXT_PUBLIC_MAKESWIFT_API_ORIGIN,
-  appOrigin: process.env.NEXT_PUBLIC_MAKESWIFT_APP_ORIGIN,
   getFonts() {
     return [
       {

@@ -1,5 +1,4 @@
 import { client } from '@/makeswift/client'
-import '@/makeswift/components'
 import { getSiteVersion } from '@makeswift/runtime/next/server'
 import { notFound } from 'next/navigation'
 import { Page as MakeswiftPage } from '@makeswift/runtime/next'

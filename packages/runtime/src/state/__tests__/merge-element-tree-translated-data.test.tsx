@@ -1,4 +1,5 @@
-import * as ReactPage from '../react-page'
+import { createReadOnlyTestStore } from './test-store'
+
 import { Group, List, Slot, TextInput } from '../../controls'
 import { registerComponent } from '../actions/internal/read-only-actions'
 import * as TranslationFixtures from './fixtures/translations'
@@ -14,8 +15,8 @@ const ElementType = {
 
 type ElementType = (typeof ElementType)[keyof typeof ElementType]
 
-function createTestStore(): ReactPage.Store {
-  const store = ReactPage.configureStore({ name: 'Test store', preloadedState: null })
+function createTestStore() {
+  const store = createReadOnlyTestStore()
 
   store.dispatch(
     registerComponent(
