@@ -1,5 +1,16 @@
 # @makeswift/hono-react
 
+## 0.1.0-canary.2
+
+### Minor Changes
+
+- 027c52b: feat: implement support for multiple isolated Makeswift-enabled React regions on a page.
+
+### Patch Changes
+
+- Updated dependencies [027c52b]
+  - @makeswift/runtime@0.27.0-canary.2
+
 ## 0.0.7-canary.1
 
 ### Patch Changes
