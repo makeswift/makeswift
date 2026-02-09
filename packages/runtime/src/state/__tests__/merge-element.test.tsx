@@ -1,10 +1,12 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { type JSX } from 'react'
+
+import { createReadOnlyTestStore } from './test-store'
+
 import { Slot, TextInput } from '../../controls'
 
 import * as State from '../read-only-state'
-import * as ReactPage from '../react-page'
 
 import { registerComponent } from '../actions/internal/read-only-actions'
 import { mergeElement } from '../ops/merge-element'
@@ -48,8 +50,8 @@ function render(element: JSX.Element): State.ElementData {
   return element as State.ElementData
 }
 
-function createTestStore(): ReactPage.Store {
-  const store = ReactPage.configureStore({ name: 'Test store', preloadedState: null })
+function createTestStore() {
+  const store = createReadOnlyTestStore()
 
   store.dispatch(
     registerComponent(

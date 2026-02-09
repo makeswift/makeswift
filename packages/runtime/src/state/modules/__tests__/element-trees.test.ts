@@ -5,14 +5,14 @@ import {
   ElementTreesDemo,
 } from './fixtures/element-trees-demo-component'
 
+import { createReactRuntime } from '../../../runtimes/react/testing/react-runtime'
 import { getPropControllerDescriptors } from '../../read-only-state'
-import { ReactRuntime } from '../../../runtimes/react'
 import { Slot } from '../../../controls'
 import { createElementTree } from '../../actions/internal/read-only-actions'
 import { changeElementTree } from '../../actions/internal/read-write-actions'
 
 describe('traverseElementTree', () => {
-  const runtime = new ReactRuntime()
+  const runtime = createReactRuntime()
 
   test('walks the tree in the correct order', () => {
     const descriptors = getPropControllerDescriptors(runtime.store.getState())
@@ -125,7 +125,7 @@ describe('getChangedElementsPaths', () => {
 })
 
 describe('resetting an element tree', () => {
-  const runtime = new ReactRuntime()
+  const runtime = createReactRuntime()
   runtime.registerComponent(ElementTreesDemo, {
     type: ELEMENT_TREE_DEMO_COMPONENT_TYPE,
     label: 'Demo',

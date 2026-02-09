@@ -5,7 +5,6 @@ import { randomUUID } from 'crypto'
 import { createReactRuntime } from '../../runtimes/react/testing/react-runtime'
 
 import { server } from '../../mocks/server'
-import { TestOrigins } from '../../testing/fixtures'
 
 function createRandomPageV4() {
   const id = randomUUID()
@@ -29,12 +28,11 @@ function createRandomPageV4() {
 }
 
 const TEST_API_KEY = 'xxx'
-const { apiOrigin } = TestOrigins
-const baseUrl = `${apiOrigin}/v5/pages`
 const runtime = createReactRuntime()
+const baseUrl = `${runtime.apiOrigin}/v5/pages`
 
 function createTestClient() {
-  return new MakeswiftClient(TEST_API_KEY, { runtime, apiOrigin })
+  return new MakeswiftClient(TEST_API_KEY, { runtime })
 }
 
 describe('getPages v5', () => {

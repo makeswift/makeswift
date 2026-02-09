@@ -1,7 +1,7 @@
 import { type ValueType } from '@makeswift/controls'
 import { Style, StyleDefinition, TextInput } from '../../../../../controls'
 import { MakeswiftComponentType } from '../../../../../components/builtin/constants'
-import { ReactRuntime } from '../../../../../react'
+import { ReactRuntime } from '../../../../../runtimes/react/react-runtime'
 
 function Button({ className, title }: { className: string; title: string }) {
   return <button className={className}>{title}</button>

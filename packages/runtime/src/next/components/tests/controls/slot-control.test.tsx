@@ -5,7 +5,7 @@ import { fireEvent, screen } from '@testing-library/react'
 import { Slot, TextInput } from '../../../../controls'
 import { testPageControlPropRendering } from './page-control-prop-rendering'
 import { MakeswiftComponentType } from '../../../../components/builtin/constants'
-import { ReactRuntime } from '../../../../react'
+import { ReactRuntime } from '../../../../runtimes/react/react-runtime'
 
 function Button({ title }: { title: string }) {
   const [count, setCount] = useState(0)

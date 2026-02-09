@@ -284,7 +284,6 @@ type LocalizedPage = {
 }
 
 type MakeswiftConfig = {
-  apiOrigin?: string
   runtime: ReactRuntimeCore
 }
 
@@ -330,12 +329,8 @@ export class MakeswiftClient {
   private runtime: ReactRuntimeCore
 
   readonly apiKey: string
-  readonly apiOrigin: URL
 
-  constructor(
-    apiKey: string,
-    { apiOrigin = 'https://api.makeswift.com', runtime }: MakeswiftConfig,
-  ) {
+  constructor(apiKey: string, { runtime }: MakeswiftConfig) {
     if (typeof apiKey !== 'string') {
       throw new Error(
         'The Makeswift client must be passed a valid Makeswift site API key: ' +
@@ -346,18 +341,14 @@ export class MakeswiftClient {
 
     this.apiKey = apiKey
 
-    try {
-      this.apiOrigin = new URL(apiOrigin)
-    } catch {
-      throw new Error(
-        `The Makeswift client received an invalid \`apiOrigin\` parameter: "${apiOrigin}".`,
-      )
-    }
-
-    this.graphqlClient = new GraphQLClient(new URL('graphql', apiOrigin).href, {
+    this.graphqlClient = new GraphQLClient(new URL('graphql', runtime.apiOrigin).href, {
       'makeswift-runtime-version': PACKAGE_VERSION,
     })
     this.runtime = runtime
+  }
+
+  get apiOrigin(): string {
+    return this.runtime.apiOrigin
   }
 
   private async fetch(path: string, siteVersion: SiteVersion | null): Promise<Response> {

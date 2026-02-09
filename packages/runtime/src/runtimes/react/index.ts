@@ -1,5 +1,3 @@
-export { ReactRuntime } from './react-runtime'
-
 export { Element } from './components/Element'
 export { DocumentRoot } from './components/DocumentRoot'
 export { RuntimeProvider } from './components/RuntimeProvider'
@@ -11,4 +9,4 @@ export { useElementId } from './hooks/use-element-id'
 export { useIsInBuilder } from './hooks/use-is-in-builder'
 export { useIsReadOnly } from './hooks/use-is-read-only'
 export { useSelector } from './hooks/use-selector'
-export { StoreContext, useStore } from './hooks/use-store'
+export { useStore } from './hooks/use-store'

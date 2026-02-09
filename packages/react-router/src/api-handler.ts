@@ -23,9 +23,9 @@ type UserConfig = ApiHandlerUserConfig & {
 
 export function createApiHandler(
   apiKey: string,
-  { apiOrigin, runtime, revalidationHandler, ...userConfig }: UserConfig,
+  { runtime, revalidationHandler, ...userConfig }: UserConfig,
 ) {
-  const client = new MakeswiftClient(apiKey, { apiOrigin, runtime })
+  const client = new MakeswiftClient(apiKey, { runtime })
 
   return {
     async loader({ request, params }: { request: Request; params: Record<string, string> }) {
