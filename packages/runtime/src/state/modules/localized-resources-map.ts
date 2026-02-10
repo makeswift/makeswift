@@ -66,6 +66,10 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
       }, state)
     }
 
+    case ReadWriteActionTypes.CLEAR_API_CLIENT_CACHE: {
+      return getInitialState()
+    }
+
     default:
       return state
   }
