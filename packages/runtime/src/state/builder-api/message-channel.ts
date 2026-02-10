@@ -1,7 +1,13 @@
+import { SharedActionTypes, makeswiftConnectionInit } from '../shared-api'
+import { makeswiftConnectionCheck } from './actions'
+
+const CONNECTION_PING_INTERVAL_MS = 20
+
 export class MessageChannel {
   private readonly appOrigin: string
   private channel: MessagePort | null = null
   private bufferedMessages: [any, Transferable[]?][] = []
+  private connectionCheckIntervalID: number | null = null
 
   constructor({ appOrigin }: { appOrigin: string }) {
     this.appOrigin = appOrigin
@@ -16,6 +22,8 @@ export class MessageChannel {
   }
 
   public setup(onMessage: (event: MessageEvent) => void) {
+    this.setupConnectionCheck()
+
     const channel = new window.MessageChannel()
     channel.port1.onmessage = onMessage
 
@@ -37,9 +45,44 @@ export class MessageChannel {
   }
 
   public teardown() {
+    this.teardownConnectionCheck()
+
     if (this.channel) {
       this.channel.onmessage = null
       this.channel.close()
+    }
+  }
+
+  private setupConnectionCheck() {
+    window.addEventListener('message', this.connectionCheckHandler)
+    window.parent.postMessage(makeswiftConnectionInit(), { targetOrigin: this.appOrigin })
+  }
+
+  private teardownConnectionCheck() {
+    window.removeEventListener('message', this.connectionCheckHandler)
+    if (this.connectionCheckIntervalID != null) {
+      window.clearInterval(this.connectionCheckIntervalID)
+      this.connectionCheckIntervalID = null
+    }
+  }
+
+  // use class field syntax to preserve the identity of the handler
+  // for adding and removing the event listener
+  private connectionCheckHandler = (event: MessageEvent) => {
+    if (
+      event.origin === this.appOrigin &&
+      event.data.type === SharedActionTypes.MAKESWIFT_CONNECTION_INIT
+    ) {
+      if (this.connectionCheckIntervalID != null) {
+        window.clearInterval(this.connectionCheckIntervalID)
+        this.connectionCheckIntervalID = null
+      }
+
+      this.connectionCheckIntervalID = window.setInterval(() => {
+        window.parent.postMessage(makeswiftConnectionCheck({ currentUrl: window.location.href }), {
+          targetOrigin: this.appOrigin,
+        })
+      }, CONNECTION_PING_INTERVAL_MS)
     }
   }
 }
