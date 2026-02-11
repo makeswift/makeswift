@@ -162,6 +162,10 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
       }, state)
     }
 
+    case ReadWriteActionTypes.CLEAR_API_CLIENT_CACHE: {
+      return getInitialState()
+    }
+
     case ReadOnlyActionTypes.API_RESOURCE_FULFILLED: {
       const { resourceType, resourceId, resource, locale } = action.payload
       return new Map(state).set(

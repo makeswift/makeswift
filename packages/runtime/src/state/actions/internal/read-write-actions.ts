@@ -13,6 +13,7 @@ export const ReadWriteActionTypes = {
   UNREGISTER_MEASURABLE: 'UNREGISTER_MEASURABLE',
 
   UPDATE_API_CLIENT_CACHE: 'UPDATE_API_CLIENT_CACHE',
+  CLEAR_API_CLIENT_CACHE: 'CLEAR_API_CLIENT_CACHE',
 } as const
 
 type ChangeElementTreeAction = {
@@ -40,11 +41,16 @@ type UpdateAPIClientCache = {
   payload: APIClientCache
 }
 
+type ClearAPIClientCache = {
+  type: typeof ReadWriteActionTypes.CLEAR_API_CLIENT_CACHE
+}
+
 export type ReadWriteAction =
   | ChangeElementTreeAction
   | RegisterMeasurableAction
   | UnregisterMeasurableAction
   | UpdateAPIClientCache
+  | ClearAPIClientCache
 
 export function changeElementTree(
   payload: ChangeElementTreeAction['payload'],
@@ -89,4 +95,8 @@ export function registerMeasurableEffect(
 
 export function updateAPIClientCache(payload: APIClientCache): UpdateAPIClientCache {
   return { type: ReadWriteActionTypes.UPDATE_API_CLIENT_CACHE, payload }
+}
+
+export function clearAPIClientCache(): ClearAPIClientCache {
+  return { type: ReadWriteActionTypes.CLEAR_API_CLIENT_CACHE }
 }
