@@ -1,5 +1,19 @@
 # @makeswift/express-react
 
+## 0.1.0
+
+### Minor Changes
+
+- 027c52b: feat: implement support for multiple isolated Makeswift-enabled React regions on a page.
+
+### Patch Changes
+
+- Updated dependencies [558629d]
+- Updated dependencies [3b03cbd]
+- Updated dependencies [7b22b08]
+- Updated dependencies [027c52b]
+  - @makeswift/runtime@0.27.0
+
 ## 0.0.8
 
 ### Patch Changes

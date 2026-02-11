@@ -1,5 +1,34 @@
 # @makeswift/runtime
 
+## 0.27.0
+
+### Minor Changes
+
+- 027c52b: feat!: implement support for multiple isolated Makeswift-enabled React regions on a page.
+
+  ## Breaking Changes
+
+  ### `ReactRuntime` import
+
+  `ReactRuntime` import for Next.js has been moved from `@makeswift/runtime/react` to `@makeswift/runtime/next`:
+
+  ```diff
+  - import { ReactRuntime } from '@makeswift/runtime/react';
+  + import { ReactRuntime } from '@makeswift/runtime/next';
+
+  export const runtime = new ReactRuntime();
+  ```
+
+  ### (internal) `appOrigin` and `apiOrigin` params
+
+  Undocumented `appOrigin` and `apiOrigin` params are now passed directly to the `ReactRuntime` constructor. See [internal apps](/apps/) for details.
+
+### Patch Changes
+
+- 558629d: Decouple `FrameworkContext` from (framework-independent) resource versioning implementation, rename `versionedFetch` option to `fetch`.
+- 3b03cbd: chore: force canary release with the latest fixes
+- 7b22b08: fix: adjust `ReactRuntimeProvider`'s `siteVersion` type to reflect it may be `undefined` when running under the standard Pages Router setup
+
 ## 0.26.3
 
 ### Patch Changes
