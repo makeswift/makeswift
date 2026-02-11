@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.27.0-canary.3
+
+### Patch Changes
+
+- 3b03cbd: chore: force canary release with the latest fixes
+
 ## 0.27.0-canary.2
 
 ### Minor Changes
