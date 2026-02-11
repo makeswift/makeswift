@@ -13,6 +13,7 @@ import {
   createPreviewMiddleware,
   getSiteVersion,
 } from '@makeswift/hono-react/server'
+import { RenderElementContext } from '@makeswift/runtime/rsc/server'
 import { Hono, type Context } from 'hono'
 import type { ReactFormState } from 'react-dom/client'
 import { Root } from '../root.tsx'
@@ -38,6 +39,31 @@ app.use((c, next) =>
     apiKey: import.meta.env.VITE_MAKESWIFT_SITE_API_KEY,
   })(c, next),
 )
+
+// V2 subtree replacement: render a single server element on demand.
+// Called by RSCBuilderUpdater and RSCRefreshCoordinator on the client
+// when an individual RSC element needs to be re-rendered.
+app.post('/__rsc-element', async (c) => {
+  const { elementData, documentContext } = await c.req.json()
+  const siteVersion = await getSiteVersion(c)
+
+  const rscStream = renderToReadableStream(
+    <RenderElementContext
+      runtime={runtime}
+      client={client}
+      siteVersion={siteVersion}
+      documentKey={documentContext.key}
+      locale={documentContext.locale}
+      elementData={elementData}
+    />,
+  )
+
+  return new Response(rscStream, {
+    headers: {
+      'content-type': 'text/x-component;charset=utf-8',
+    },
+  })
+})
 
 app.all('*', async (c) => {
   return handler(c)
@@ -99,7 +125,8 @@ async function handler(c: Context): Promise<Response> {
   }
 
   const siteVersion = await getSiteVersion(c)
-  const snapshot = await client.getPageSnapshot('/', {
+
+  const snapshot = await client.getComponentSnapshot('/', {
     siteVersion,
   })
 

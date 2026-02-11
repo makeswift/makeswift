@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useEffect, useMemo, useRef } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useRef } from 'react'
 import { deepEqual, ElementData, isElementReference, StyleDefinition } from '@makeswift/controls'
 import { useControlDefs } from '../../runtimes/react/controls'
 import { useBreakpoints, useDocumentKey, useSelector } from '../../runtimes/react'
@@ -9,6 +9,8 @@ import { useFrameworkContext } from '../../runtimes/react/components/hooks/use-f
 import { getElement } from '../../state/react-page'
 import { StylesheetEngine } from '../css/css-runtime'
 import { useClientCSS } from '../css/client-css'
+import { useUpdateRSCNode } from './rsc-nodes-provider'
+import { useDocumentLocale } from '../../runtimes/react/hooks/use-document-context'
 
 type RSCBuilderUpdaterProps = {
   initialElementData: ElementData
@@ -18,9 +20,11 @@ type RSCBuilderUpdaterProps = {
 export function RSCBuilderUpdater({ initialElementData, children }: RSCBuilderUpdaterProps) {
   const { updateStyle } = useClientCSS()
   const documentKey = useDocumentKey()
+  const documentLocale = useDocumentLocale()
   const breakpoints = useBreakpoints()
-  const { refreshRSC } = useFrameworkContext()
+  const { refreshRSCElement } = useFrameworkContext()
   const resourceResolver = useResourceResolver()
+  const updateRSCNode = useUpdateRSCNode()
   const elementKey = initialElementData.key
   const prevPropsRef = useRef(initialElementData.props)
   const [, definitions] = useControlDefs(initialElementData.type)
@@ -45,12 +49,32 @@ export function RSCBuilderUpdater({ initialElementData, children }: RSCBuilderUp
     [breakpoints, elementKey, updateStyle],
   )
 
+  const refreshSingleElement = useCallback(
+    async (elementData: ElementData) => {
+      if (!refreshRSCElement || !documentKey) return
+
+      try {
+        const node = await refreshRSCElement(elementData, {
+          key: documentKey,
+          locale: documentLocale,
+        })
+        updateRSCNode(elementKey, node)
+      } catch (error) {
+        console.error('[RSC] Failed to refresh element', elementKey, error)
+      }
+    },
+    [refreshRSCElement, documentKey, documentLocale, elementKey, updateRSCNode],
+  )
+
+  // Handle prop changes: style props update CSS directly, non-style props re-render on server
   useEffect(() => {
     if (!element) return
 
     const prevProps = prevPropsRef.current
 
     if (prevProps === element.props) return
+
+    let needsServerRefresh = false
 
     Object.entries(definitions).forEach(([propName, def]) => {
       const currentValue = element.props[propName]
@@ -67,14 +91,31 @@ export function RSCBuilderUpdater({ initialElementData, children }: RSCBuilderUp
         }
       } else {
         if (!deepEqual(currentValue, prevValue)) {
-          console.log('[RSC] Non-style prop changed, refreshing page')
-          refreshRSC?.()
+          needsServerRefresh = true
         }
       }
     })
 
+    if (needsServerRefresh) {
+      console.log('[RSC] Non-style prop changed, refreshing element', elementKey)
+      refreshSingleElement(element)
+    }
+
     prevPropsRef.current = element.props
-  }, [element, definitions, resourceResolver, clientStylesheet, refreshRSC])
+  }, [element, definitions, resourceResolver, clientStylesheet, refreshSingleElement, elementKey])
+
+  // Handle API resource changes: re-render this element when any resource changes
+  useEffect(() => {
+    const handler = () => {
+      if (element) {
+        console.log('[RSC] API resource changed, refreshing element', elementKey)
+        refreshSingleElement(element)
+      }
+    }
+
+    window.addEventListener('makeswift:rsc-resource-changed', handler)
+    return () => window.removeEventListener('makeswift:rsc-resource-changed', handler)
+  }, [element, elementKey, refreshSingleElement])
 
   return children
 }

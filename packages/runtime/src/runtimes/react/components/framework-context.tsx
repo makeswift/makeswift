@@ -12,6 +12,7 @@ import {
   forwardRef,
 } from 'react'
 import { type Middleware } from '@reduxjs/toolkit'
+import { type ElementData as ElementDataValue } from '@makeswift/controls'
 
 import { type LinkData } from '@makeswift/prop-controllers'
 
@@ -62,6 +63,15 @@ export type FrameworkContext = {
    * Used when non-style props change on RSC elements in the builder.
    */
   refreshRSC?: () => void
+  /**
+   * Callback to render a single RSC element on the server and return the result.
+   * Used by V2 subtree replacement to update individual server components
+   * without re-rendering the entire RSC tree.
+   */
+  refreshRSCElement?: (
+    elementData: ElementDataValue,
+    documentContext: { key: string; locale: string | null },
+  ) => Promise<ReactNode>
 }
 
 // React 19 automatically hoists metadata tags to the <head>
