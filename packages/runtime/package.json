@@ -86,10 +86,15 @@
       "import": "./dist/esm/next/rsc/index.js",
       "types": "./dist/types/next/rsc/index.d.ts"
     },
-    "./next/rsc/server": {
-      "require": "./dist/cjs/next/rsc/server/index.js",
-      "import": "./dist/esm/next/rsc/server/index.js",
-      "types": "./dist/types/next/rsc/server/index.d.ts"
+    "./rsc": {
+      "require": "./dist/cjs/rsc/index.js",
+      "import": "./dist/esm/rsc/index.js",
+      "types": "./dist/types/rsc/index.d.ts"
+    },
+    "./rsc/server": {
+      "require": "./dist/cjs/rsc/server/index.js",
+      "import": "./dist/esm/rsc/server/index.js",
+      "types": "./dist/types/rsc/server/index.d.ts"
     },
     "./next/server": {
       "types": "./dist/types/next/server.d.ts",

@@ -1,0 +1,66 @@
+{
+  "name": "@makeswift/vite-rsc",
+  "version": "0.0.0",
+  "license": "MIT",
+  "repository": {
+    "url": "makeswift/makeswift",
+    "directory": "packages/vite-rsc"
+  },
+  "files": [
+    "dist",
+    "server"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "scripts": {
+    "dev": "concurrently -k 'tsc --watch --preserveWatchOutput' 'tsup --watch'",
+    "clean": "rm -rf dist",
+    "build": "tsc && tsup",
+    "prepublishOnly": "turbo run build --force",
+    "test": "jest --passWithNoTests",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "@makeswift/runtime": "workspace:*",
+    "@reduxjs/toolkit": "^2.8.2",
+    "cookie": "^1.0.2"
+  },
+  "peerDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-rsc": "latest",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    },
+    "@types/react-dom": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@swc/jest": "^0.2.36",
+    "@types/jest": "^29.5.12",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-rsc": "latest",
+    "concurrently": "^8.2.2",
+    "jest": "^29.7.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "tsup": "^8.0.2",
+    "typescript": "^5.9.2"
+  }
+}
