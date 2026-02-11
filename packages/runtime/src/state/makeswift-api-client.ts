@@ -15,7 +15,8 @@ import * as APIResources from './modules/api-resources'
 import * as LocalizedResourcesMap from './modules/localized-resources-map'
 
 import { type Action, ActionTypes } from './actions'
-import { apiResourceFulfilled } from './actions/internal/read-only-actions'
+import { apiResourceFulfilled, ReadOnlyActionTypes } from './actions/internal/read-only-actions'
+import { clearAPIClientCache } from './actions/internal/read-write-actions'
 import { setLocalizedResourceId } from './host-api'
 import { actionMiddleware, middlewareOptions, devToolsConfig } from './toolkit'
 
@@ -243,6 +244,23 @@ function defaultLocaleMiddleware(): ThunkMiddleware<State, UnknownAction> {
   })
 }
 
+function cacheVersioningMiddleware(): ThunkMiddleware<State, UnknownAction> {
+  return actionMiddleware(({ getState, dispatch }) => next => {
+    return (action: Action) => {
+      switch (action.type) {
+        case ReadOnlyActionTypes.SET_SITE_VERSION: {
+          const cacheVersion = SiteVersionState.getSiteVersion(getState().siteVersion)
+          if (cacheVersion?.version !== action.payload?.version) {
+            dispatch(clearAPIClientCache())
+          }
+        }
+      }
+
+      return next(action)
+    }
+  })
+}
+
 export function configureStore({ serializedState }: { serializedState?: SerializedState }) {
   return configureReduxStore({
     reducer,
@@ -254,7 +272,10 @@ export function configureStore({ serializedState }: { serializedState?: Serializ
     },
 
     middleware: getDefaultMiddleware =>
-      getDefaultMiddleware(middlewareOptions).concat(defaultLocaleMiddleware()),
+      getDefaultMiddleware(middlewareOptions).concat(
+        defaultLocaleMiddleware(),
+        cacheVersioningMiddleware(),
+      ),
 
     devTools: devToolsConfig({
       name: `API client store (${new Date().toISOString()})`,
