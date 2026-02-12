@@ -18,6 +18,7 @@ import { BaseHeadSnippet } from './page/HeadSnippet'
 
 type HeadComponent = (props: { children: ReactNode }) => ReactNode
 type HeadSnippet = (props: { snippet: Snippet }) => ReactNode
+type GoogleFontComponent = (props: { fonts: Font[]; siteId: string | null }) => ReactNode
 type ImageComponent = (props: {
   src: string
   alt: string

@@ -7,7 +7,6 @@ import { usePageSnippets } from '../hooks/use-page-snippets'
 
 import { PageTitle, PageMeta, PageLink, PageStyle } from './head-tags'
 import { type PageMetadataSettings } from './page-seo-settings'
-import { FontLink } from '../FontLink'
 
 const defaultFavicon = {
   id: 'default-favicon',
@@ -33,7 +32,7 @@ export function PageHead({ document: page, metadata = {} }: Props): ReactNode {
   } = metadata
 
   const { headSnippets } = usePageSnippets({ page })
-  const { HeadSnippet } = useFrameworkContext()
+  const { HeadSnippet, GoogleFont } = useFrameworkContext()
 
   const baseLocalizedPage = page.localizedPages.find(({ parentId }) => parentId == null)
 
@@ -85,7 +84,7 @@ export function PageHead({ document: page, metadata = {} }: Props): ReactNode {
           <PageMeta name="twitter:card" content="summary_large_image" />
         </>
       )}
-      <FontLink fonts={page.fonts} siteId={page.site.id} />
+      <GoogleFont fonts={page.fonts} siteId={page.site.id} />
       {headSnippets.map(snippet => (
         <HeadSnippet key={snippet.id} snippet={snippet} />
       ))}
