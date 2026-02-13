@@ -204,12 +204,12 @@ exports[`Slider (single value) definition w/ config {"label":"opacity"} toData r
 
 exports[`Slider (single value) definition w/ config {"label":"opacity"} toData returns v1 data for \`undefined\` when definition version is 1 1`] = `undefined`;
 
-exports[`Slider constructor range mode (range: true) call with default value \`{ min: 0, max: 100 }\` returns versioned definition 1`] = `
+exports[`Slider constructor range mode (range: true) call with default value \`{ start: 0, end: 100 }\` returns versioned definition 1`] = `
 SliderDefinition {
   "config": {
     "defaultValue": {
-      "max": 100,
-      "min": 0,
+      "end": 100,
+      "start": 0,
     },
     "label": "price range",
     "max": 100,
@@ -220,12 +220,12 @@ SliderDefinition {
 }
 `;
 
-exports[`Slider constructor range mode (range: true) call with default value \`{ min: 25, max: 75 }\` returns versioned definition 1`] = `
+exports[`Slider constructor range mode (range: true) call with default value \`{ start: 25, end: 75 }\` returns versioned definition 1`] = `
 SliderDefinition {
   "config": {
     "defaultValue": {
-      "max": 75,
-      "min": 25,
+      "end": 75,
+      "start": 25,
     },
     "label": "price range",
     "max": 100,
@@ -253,8 +253,8 @@ exports[`Slider constructor range mode (range: true) creates range slider with s
 SliderDefinition {
   "config": {
     "defaultValue": {
-      "max": 0.8,
-      "min": 0.2,
+      "end": 0.8,
+      "start": 0.2,
     },
     "label": "opacity range",
     "max": 1,
