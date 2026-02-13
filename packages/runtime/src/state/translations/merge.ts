@@ -9,36 +9,48 @@ import {
 import { ReactMergeTranslationsVisitor } from '../../controls/visitors/merge-translations-visitor'
 import { isLegacyDescriptor } from '../../prop-controllers/descriptors'
 import { Descriptor as PropControllerDescriptor } from '../../prop-controllers/descriptors'
+import type { DescriptorsByComponentType } from '../modules/prop-controllers'
 
 export function mergeElementTreeTranslatedData(
   state: State,
   elementTree: Documents.ElementData,
   translatedData: TranslationDto,
 ): Documents.Element {
-  function merge(state: State, translatedData: TranslationDto) {
+  return mergeElementTreeTranslatedDataFromDescriptors(
+    getPropControllerDescriptors(state),
+    elementTree,
+    translatedData,
+  )
+}
+
+export function mergeElementTreeTranslatedDataFromDescriptors(
+  descriptors: DescriptorsByComponentType,
+  elementTree: Documents.ElementData,
+  translatedData: TranslationDto,
+): Documents.Element {
+  function merge(descriptorsMap: DescriptorsByComponentType, translatedDataMap: TranslationDto) {
     return function (node: Documents.Element): Documents.Element {
       if (Documents.isElementReference(node)) return node
 
-      const elementDescriptors = getPropControllerDescriptors(state)
-      const descriptors = elementDescriptors.get(node.type)
+      const elementDescriptors = descriptorsMap.get(node.type)
 
-      if (descriptors == null) {
+      if (elementDescriptors == null) {
         throw new Error(`Can't merge element of type "${node.type}" because it has no descriptors`)
       }
 
       const context: MergeTranslatableDataContext = {
-        translatedData,
-        mergeTranslatedData: merge(state, translatedData),
+        translatedData: translatedDataMap,
+        mergeTranslatedData: merge(descriptorsMap, translatedDataMap),
       }
       const props = {} as Record<string, Documents.Data>
 
-      for (const propName of Object.keys(descriptors)) {
-        const descriptor = descriptors[propName]
+      for (const propName of Object.keys(elementDescriptors)) {
+        const descriptor = elementDescriptors[propName]
 
         props[propName] = mergeTranslatedData(
           descriptor,
           node.props[propName],
-          translatedData[`${node.key}:${propName}`],
+          translatedDataMap[`${node.key}:${propName}`],
           context,
         )
       }
@@ -46,7 +58,7 @@ export function mergeElementTreeTranslatedData(
       return { ...node, props }
     }
   }
-  return merge(state, translatedData)(elementTree)
+  return merge(descriptors, translatedData)(elementTree)
 }
 
 export function mergeTranslatedData(
