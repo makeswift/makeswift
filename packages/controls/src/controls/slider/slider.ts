@@ -142,7 +142,15 @@ class Definition<C extends Config> extends ControlDefinition<
     return match(data)
       .with(Definition.dataSignature.v1Single, ({ value }) => value)
       .with(Definition.dataSignature.v1Range, ({ value }) => value)
-      .otherwise((value) => value) as ValueType | undefined
+      .otherwise((unversioned) => {
+        if (unversioned === undefined) return undefined
+        const isRange = this.config.range === true
+        if (isRange) {
+          const parsed = rangeValue.safeParse(unversioned)
+          return parsed.success ? (parsed.data as ValueType) : undefined
+        }
+        return typeof unversioned === 'number' ? unversioned : undefined
+      }) as ValueType | undefined
   }
 
   toData(value: ValueType): DataType {
