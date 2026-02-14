@@ -1,5 +1,4 @@
 import { MergeTranslatableDataContext, type TranslationDto, type Data } from '@makeswift/controls'
-import { getPropControllerDescriptors, type State } from '../read-only-state'
 import * as Documents from '../modules/read-only-documents'
 import {
   GridPropControllerData,
@@ -12,35 +11,23 @@ import { Descriptor as PropControllerDescriptor } from '../../prop-controllers/d
 import type { DescriptorsByComponentType } from '../modules/prop-controllers'
 
 export function mergeElementTreeTranslatedData(
-  state: State,
-  elementTree: Documents.ElementData,
-  translatedData: TranslationDto,
-): Documents.Element {
-  return mergeElementTreeTranslatedDataFromDescriptors(
-    getPropControllerDescriptors(state),
-    elementTree,
-    translatedData,
-  )
-}
-
-export function mergeElementTreeTranslatedDataFromDescriptors(
   descriptors: DescriptorsByComponentType,
   elementTree: Documents.ElementData,
   translatedData: TranslationDto,
 ): Documents.Element {
-  function merge(descriptorsMap: DescriptorsByComponentType, translatedDataMap: TranslationDto) {
+  function merge(descriptorsByType: DescriptorsByComponentType, translatedData: TranslationDto) {
     return function (node: Documents.Element): Documents.Element {
       if (Documents.isElementReference(node)) return node
 
-      const elementDescriptors = descriptorsMap.get(node.type)
+      const elementDescriptors = descriptorsByType.get(node.type)
 
       if (elementDescriptors == null) {
         throw new Error(`Can't merge element of type "${node.type}" because it has no descriptors`)
       }
 
       const context: MergeTranslatableDataContext = {
-        translatedData: translatedDataMap,
-        mergeTranslatedData: merge(descriptorsMap, translatedDataMap),
+        translatedData: translatedData,
+        mergeTranslatedData: merge(descriptorsByType, translatedData),
       }
       const props = {} as Record<string, Documents.Data>
 
@@ -50,7 +37,7 @@ export function mergeElementTreeTranslatedDataFromDescriptors(
         props[propName] = mergeTranslatedData(
           descriptor,
           node.props[propName],
-          translatedDataMap[`${node.key}:${propName}`],
+          translatedData[`${node.key}:${propName}`],
           context,
         )
       }

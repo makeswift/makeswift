@@ -66,11 +66,6 @@
       "require": "./dist/cjs/translations/index.js",
       "import": "./dist/esm/translations/index.js"
     },
-    "./prop-controller-descriptors": {
-      "types": "./dist/types/prop-controller-descriptors/index.d.ts",
-      "require": "./dist/cjs/prop-controller-descriptors/index.js",
-      "import": "./dist/esm/prop-controller-descriptors/index.js"
-    },
     "./next": {
       "types": "./dist/types/next/index.d.ts",
       "require": "./dist/cjs/next/index.js",

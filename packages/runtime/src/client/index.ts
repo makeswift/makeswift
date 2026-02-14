@@ -950,12 +950,15 @@ export class MakeswiftClient {
   }
 
   getTranslatableData(elementTree: ElementData): Record<string, Data> {
-    return getElementTreeTranslatableData(this.runtime.store.getState(), elementTree)
+    return getElementTreeTranslatableData(
+      getPropControllerDescriptors(this.runtime.store.getState()),
+      elementTree,
+    )
   }
 
   mergeTranslatedData(elementTree: ElementData, translatedData: Record<string, Data>): Element {
     return mergeElementTreeTranslatedData(
-      this.runtime.store.getState(),
+      getPropControllerDescriptors(this.runtime.store.getState()),
       elementTree,
       translatedData,
     )
