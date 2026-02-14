@@ -8,7 +8,6 @@ import { ReactRuntimeContext } from '../hooks/use-react-runtime'
 import { useAsyncEffect } from '../hooks/use-async-effect'
 import { type ReactRuntimeCore } from '../react-runtime-core'
 
-import { useBuilderConnectionPing } from './hooks/use-builder-connection-ping'
 import { PreviewSwitcher } from './preview-switcher/preview-switcher'
 
 export function RuntimeProvider({
@@ -36,8 +35,6 @@ export function RuntimeProvider({
     () => runtime.setIdempotent({ siteVersion, isReadOnly, locale }),
     [runtime, siteVersion, isReadOnly, locale],
   )
-
-  useBuilderConnectionPing({ appOrigin: runtime.appOrigin })
 
   useAsyncEffect(() => runtime.setupStore({ isReadOnly }), [runtime, isReadOnly])
 

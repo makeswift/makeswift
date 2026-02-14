@@ -226,6 +226,16 @@ export function componentDocumentToRootEmbeddedDocument({
   return rootDocument
 }
 
+// This function attempts to consume the response body of a failed response, and
+// returns either the parsed JSON or raw text. This is useful for logging more
+// detailed error information when an API request fails.
+//
+// Cloudflare Worker Note: The Cloudflare Worker runtime has automatic deadlock
+// prevention (in the form of auto-cancelling responses) that triggers when too
+// many response bodies are unconsumed. This applies for error responses as
+// well. As such, in this client we use this function to consume the response
+// body whenever the request fails, even if we don't end up logging the body
+// itself, to avoid hitting the deadlock prevention.
 export async function failedResponseBody(response: Response): Promise<unknown> {
   try {
     const text = await response.text()
@@ -422,10 +432,11 @@ export class MakeswiftClient {
     const response = await this.fetch(url.pathname + url.search, siteVersion)
 
     if (!response.ok) {
+      const failedBody = await failedResponseBody(response)
       if (response.status === 404) return null
 
       console.error(`Failed to get page snapshot for '${pathname}'`, {
-        response: await failedResponseBody(response),
+        response: failedBody,
         siteVersion,
         locale,
       })
@@ -686,10 +697,11 @@ export class MakeswiftClient {
     )
 
     if (!response.ok) {
+      const failedBody = await failedResponseBody(response)
       if (response.status === 404) return null
 
       console.error(`Failed to get page snapshot for '${pathname}'`, {
-        response: await failedResponseBody(response),
+        response: failedBody,
         siteVersion,
         locale,
       })
@@ -743,12 +755,16 @@ export class MakeswiftClient {
     )
 
     if (responseForRequestedLocale.status === 404 && canAttemptLocaleFallback) {
+      await failedResponseBody(responseForRequestedLocale)
       response = await this.fetch(`v2/element-trees/${encodeURIComponent(id)}`, siteVersion)
     } else {
       response = responseForRequestedLocale
     }
 
     if (!response.ok) {
+      // See comment on `failedResponseBody` for why we always consume the
+      // response body of failed responses.
+      const failedBody = await failedResponseBody(response)
       if (response.status === 404) {
         return {
           document: {
@@ -766,7 +782,7 @@ export class MakeswiftClient {
       }
 
       console.error(`Failed to get component snapshot for '${id}':`, {
-        response: await failedResponseBody(response),
+        response: failedBody,
         siteVersion,
         locale,
       })
@@ -792,9 +808,10 @@ export class MakeswiftClient {
     const response = await this.fetch(`v3/swatches/${swatchId}`, siteVersion)
 
     if (!response.ok) {
+      const failedBody = await failedResponseBody(response)
       if (response.status !== 404) {
         console.error(`Failed to get swatch '${swatchId}'`, {
-          response: await failedResponseBody(response),
+          response: failedBody,
           siteVersion,
         })
       }
@@ -823,9 +840,10 @@ export class MakeswiftClient {
     const response = await this.fetch(`v3/typographies/${typographyId}`, siteVersion)
 
     if (!response.ok) {
+      const failedBody = await failedResponseBody(response)
       if (response.status !== 404) {
         console.error(`Failed to get typography '${typographyId}'`, {
-          response: await failedResponseBody(response),
+          response: failedBody,
           siteVersion,
         })
       }
@@ -845,9 +863,10 @@ export class MakeswiftClient {
     const response = await this.fetch(`v3/global-elements/${globalElementId}`, siteVersion)
 
     if (!response.ok) {
+      const failedBody = await failedResponseBody(response)
       if (response.status !== 404) {
         console.error(`Failed to get global element '${globalElementId}'`, {
-          response: await failedResponseBody(response),
+          response: failedBody,
           siteVersion,
         })
       }
@@ -871,9 +890,10 @@ export class MakeswiftClient {
     )
 
     if (!response.ok) {
+      const failedBody = await failedResponseBody(response)
       if (response.status !== 404) {
         console.error(`Failed to get localized global element '${globalElementId}'`, {
-          response: await failedResponseBody(response),
+          response: failedBody,
           siteVersion,
           locale,
         })
@@ -978,13 +998,14 @@ export class MakeswiftClient {
     })
 
     if (!response.ok) {
+      const failedBody = await failedResponseBody(response)
       if (response.status === 401) {
         console.error(`Preview token is invalid or expired`, {
-          response: await failedResponseBody(response),
+          response: failedBody,
         })
       } else if (response.status !== 404) {
         console.error(`Failed to verify preview token`, {
-          response: await failedResponseBody(response),
+          response: failedBody,
         })
       }
 
