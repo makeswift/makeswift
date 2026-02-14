@@ -1,12 +1,6 @@
 # @makeswift/runtime
 
-## 0.27.0-canary.3
-
-### Patch Changes
-
-- 3b03cbd: chore: force canary release with the latest fixes
-
-## 0.27.0-canary.2
+## 0.27.0
 
 ### Minor Changes
 
@@ -29,16 +23,10 @@
 
   Undocumented `appOrigin` and `apiOrigin` params are now passed directly to the `ReactRuntime` constructor. See [internal apps](/apps/) for details.
 
-## 0.26.4-canary.1
-
 ### Patch Changes
 
 - 558629d: Decouple `FrameworkContext` from (framework-independent) resource versioning implementation, rename `versionedFetch` option to `fetch`.
-
-## 0.26.4-canary.0
-
-### Patch Changes
-
+- 3b03cbd: chore: force canary release with the latest fixes
 - 7b22b08: fix: adjust `ReactRuntimeProvider`'s `siteVersion` type to reflect it may be `undefined` when running under the standard Pages Router setup
 
 ## 0.26.3
