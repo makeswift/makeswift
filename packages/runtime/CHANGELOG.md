@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.27.1-canary.0
+
+### Patch Changes
+
+- 648f0c8: Client now consumes response bodies on failed requests. Required for Cloudflare Worker compatibility.
+
 ## 0.27.0
 
 ### Minor Changes
