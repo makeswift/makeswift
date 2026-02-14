@@ -1,8 +1,12 @@
-import { ReactNode } from 'react'
+import { useMemo, useSyncExternalStore, ReactNode } from 'react'
 
 import { type MakeswiftPageDocument } from '../../../../client'
+import { type Site } from '../../../../api'
+
+import { useMakeswiftHostApiClient } from '../../host-api-client'
 
 import { useFrameworkContext } from '../hooks/use-framework-context'
+import { useIsInBuilder } from '../../hooks/use-is-in-builder'
 import { usePageSnippets } from '../hooks/use-page-snippets'
 
 import { PageTitle, PageMeta, PageLink, PageStyle } from './head-tags'
@@ -32,8 +36,11 @@ export function PageHead({ document: page, metadata = {} }: Props): ReactNode {
   } = metadata
 
   const { headSnippets } = usePageSnippets({ page })
-  const { HeadSnippet, GoogleFont } = useFrameworkContext()
+  const { HeadSnippet } = useFrameworkContext()
 
+  const isInBuilder = useIsInBuilder()
+
+  const site = useCachedSite(isInBuilder ? page.site.id : null)
   const baseLocalizedPage = page.localizedPages.find(({ parentId }) => parentId == null)
 
   const favicon = page.meta.favicon ?? defaultFavicon
@@ -43,6 +50,30 @@ export function PageHead({ document: page, metadata = {} }: Props): ReactNode {
   const socialImage = baseLocalizedPage?.meta.socialImage ?? page.meta.socialImage
   const canonicalUrl = baseLocalizedPage?.seo.canonicalUrl ?? page.seo.canonicalUrl
   const isIndexingBlocked = baseLocalizedPage?.seo.isIndexingBlocked ?? page.seo.isIndexingBlocked
+
+  const fontFamilyParamValue = useMemo(() => {
+    if (site == null) {
+      return page.fonts
+        .map(({ family, variants }) => {
+          return `${family.replace(/ /g, '+')}:${variants.join()}`
+        })
+        .join('|')
+    }
+
+    return site.googleFonts.edges
+      .filter((edge): edge is NonNullable<typeof edge> => edge != null)
+      .map(({ activeVariants, node: { family, variants } }) => {
+        const activeVariantSpecifiers = variants
+          .filter(variant =>
+            activeVariants.some(activeVariant => activeVariant.specifier === variant.specifier),
+          )
+          .map(variant => variant.specifier)
+          .join()
+
+        return `${family.replace(/ /g, '+')}:${activeVariantSpecifiers}`
+      })
+      .join('|')
+  }, [site, page])
 
   return (
     <>
@@ -84,7 +115,13 @@ export function PageHead({ document: page, metadata = {} }: Props): ReactNode {
           <PageMeta name="twitter:card" content="summary_large_image" />
         </>
       )}
-      <GoogleFont fonts={page.fonts} siteId={page.site.id} />
+      {fontFamilyParamValue !== '' && (
+        <PageLink
+          precedence="medium"
+          rel="stylesheet"
+          href={`https://fonts.googleapis.com/css?family=${fontFamilyParamValue}&display=swap`}
+        />
+      )}
       {headSnippets.map(snippet => (
         <HeadSnippet key={snippet.id} snippet={snippet} />
       ))}
@@ -92,3 +129,11 @@ export function PageHead({ document: page, metadata = {} }: Props): ReactNode {
   )
 }
 
+function useCachedSite(siteId: string | null): Site | null {
+  const client = useMakeswiftHostApiClient()
+  const getSnapshot = () => (siteId == null ? null : client.readSite(siteId))
+
+  const site = useSyncExternalStore(client.subscribe, getSnapshot, getSnapshot)
+
+  return site
+}

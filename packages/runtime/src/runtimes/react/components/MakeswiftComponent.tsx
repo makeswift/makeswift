@@ -11,7 +11,6 @@ import { getRootElement } from '../../../state/read-only-state'
 import { useCacheData } from '../hooks/use-cache-data'
 import { useRegisterDocument } from '../hooks/use-register-document'
 import { useBuiltinSuspense } from '../hooks/use-builtin-suspense'
-import { useFrameworkContext } from './hooks/use-framework-context'
 import { ActivityOrFallback } from './activity-with-fallback'
 
 import { DocumentRoot } from './DocumentRoot'
@@ -43,15 +42,9 @@ export const MakeswiftComponent = memo(({ snapshot, label, type, description }: 
 
   const builtinSuspense = useBuiltinSuspense(getRootElement(rootDocument).type)
 
-  const siteId = 'siteId' in snapshot.document ? snapshot.document.siteId : null
-  const { GoogleFont } = useFrameworkContext()
-
   return (
-    <>
-      <GoogleFont fonts={snapshot.fonts} siteId={siteId} />
-      <ActivityOrFallback suspenseFallback={builtinSuspense}>
-        <DocumentRoot rootDocument={rootDocument} />
-      </ActivityOrFallback>
-    </>
+    <ActivityOrFallback suspenseFallback={builtinSuspense}>
+      <DocumentRoot rootDocument={rootDocument} />
+    </ActivityOrFallback>
   )
 })
