@@ -141,11 +141,6 @@ export type MakeswiftPageSnapshot = {
   cacheData: CacheData
 }
 
-const fontSchema = z.object({
-  family: z.string(),
-  variants: z.array(z.string()),
-})
-
 const makeswiftComponentDocumentSchema = z.object({
   id: z.string(),
   name: z.string().nullable(),
@@ -153,7 +148,6 @@ const makeswiftComponentDocumentSchema = z.object({
   data: Schema.element,
   siteId: z.string(),
   inheritsFromParent: z.boolean(),
-  fonts: z.array(fontSchema),
 })
 
 export type MakeswiftComponentDocument = z.infer<typeof makeswiftComponentDocumentSchema>
@@ -178,7 +172,6 @@ export type MakeswiftComponentSnapshot = {
   key: string
   cacheData: CacheData
   meta: MakeswiftComponentSnapshotMetadata
-  fonts: Font[]
 }
 
 export const previewTokenPayloadSchema = z.object({
@@ -785,7 +778,6 @@ export class MakeswiftClient {
             allowLocaleFallback,
             requestedLocale: locale ?? null,
           },
-          fonts: [],
         }
       }
 
@@ -809,7 +801,6 @@ export class MakeswiftClient {
         allowLocaleFallback,
         requestedLocale: locale ?? null,
       },
-      fonts: document.fonts,
     }
   }
 

@@ -36,3 +36,12 @@ export {
 } from '../runtimes/react/root-style-registry'
 
 export { ReactRuntime } from '../runtimes/react/react-runtime'
+
+export { FontLink } from '../runtimes/react/components/FontLink'
+
+export {
+  getGoogleFontsParamFromFonts,
+  getGoogleFontsUrl,
+} from '../runtimes/react/utils/google-fonts-url'
+
+export type { Font } from '../client'

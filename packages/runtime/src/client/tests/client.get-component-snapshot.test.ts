@@ -91,7 +91,6 @@ describe('getComponentSnapshot using v2 element tree endpoint', () => {
         locale: baseLocale,
         siteId: 'mySiteId',
         inheritsFromParent: false,
-        fonts: [],
       }
 
       /*
@@ -157,7 +156,6 @@ describe('getComponentSnapshot using v2 element tree endpoint', () => {
       locale: baseLocale,
       siteId: 'mySiteId',
       inheritsFromParent: false,
-      fonts: [],
     }
 
     /*
@@ -226,7 +224,6 @@ describe('getComponentSnapshot using v2 element tree endpoint', () => {
         locale,
         siteId: 'mySiteId',
         inheritsFromParent: false,
-        fonts: [],
       }
 
       /*
