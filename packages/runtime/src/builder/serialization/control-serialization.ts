@@ -100,7 +100,7 @@ import { deserializeRecord, type DeserializedRecord } from '@makeswift/controls'
 import {
   ClientMessagePortSerializationVisitor,
   functionDeserializationPlugin,
-  stubEmptyObjectAsNoopFunctionPlugin,
+  stubEmptyObjectFunctionSlots,
 } from '../../controls/visitors/message-port-serializer'
 
 type SerializedShapeControlConfig<T extends Record<string, SerializedPanelControl>> = {
@@ -1007,10 +1007,9 @@ export function deserializeControl<T extends Data>(
   }
 
   return deserializeUnifiedControlDef(
-    deserializeRecord(serializedControl, [
-      functionDeserializationPlugin,
-      stubEmptyObjectAsNoopFunctionPlugin,
-    ]),
+    stubEmptyObjectFunctionSlots(
+      deserializeRecord(serializedControl, [functionDeserializationPlugin]),
+    ),
   )
 }
 

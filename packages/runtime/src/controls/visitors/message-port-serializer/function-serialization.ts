@@ -99,13 +99,25 @@ function isEmptyObject(value: unknown): value is Record<string, never> {
 
 const noopAsyncFunction = async (): Promise<undefined> => undefined
 
-// NOTE: for db persisted descriptors (e.g. the ones stored by Orion/API) store function slots (getValue,
-// onChange, getStyle) as empty objects {} instead of MessagePorts. This plugin lets those deserialize so
-// controls like RichText/StyleV2 parse successfully when used for translation extraction only.
-export const stubEmptyObjectAsNoopFunctionPlugin: DeserializationPlugin<
-  Record<string, never>,
-  DeserializedFunction<AnyFunction>
-> = {
-  match: isEmptyObject,
-  deserialize: () => noopAsyncFunction as DeserializedFunction<AnyFunction>,
+const FUNCTION_SLOT_KEYS = new Set(['getValue', 'onChange', 'getStyle'])
+
+function stubEmptyObjectFunctionSlotsRec(value: unknown): unknown {
+  if (value === null || typeof value !== 'object') return value
+  if (Array.isArray(value)) return value.map(stubEmptyObjectFunctionSlotsRec)
+  if (isSerializedFunction(value)) return value
+  const obj = value as Record<string, unknown>
+  return Object.fromEntries(
+    Object.entries(obj).map(([key, v]) => {
+      if (FUNCTION_SLOT_KEYS.has(key) && isEmptyObject(v)) {
+        return [key, noopAsyncFunction as DeserializedFunction<AnyFunction>]
+      }
+      return [key, stubEmptyObjectFunctionSlotsRec(v)]
+    }),
+  )
+}
+
+export function stubEmptyObjectFunctionSlots<T extends Record<string, unknown>>(
+  record: T,
+): T {
+  return stubEmptyObjectFunctionSlotsRec(record) as T
 }
