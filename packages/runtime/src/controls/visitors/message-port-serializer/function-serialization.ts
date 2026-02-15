@@ -86,3 +86,26 @@ export const functionDeserializationPlugin: DeserializationPlugin<
   match: isSerializedFunction,
   deserialize: value => deserializeFunction(value),
 }
+
+function isEmptyObject(value: unknown): value is Record<string, never> {
+  return (
+    value !== null &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    !(value instanceof MessagePort) &&
+    Object.keys(value).length === 0
+  )
+}
+
+const noopAsyncFunction = async (): Promise<undefined> => undefined
+
+// NOTE: for db persisted descriptors (e.g. the ones stored by Orion/API) store function slots (getValue,
+// onChange, getStyle) as empty objects {} instead of MessagePorts. This plugin lets those deserialize so
+// controls like RichText/StyleV2 parse successfully when used for translation extraction only.
+export const stubEmptyObjectAsNoopFunctionPlugin: DeserializationPlugin<
+  Record<string, never>,
+  DeserializedFunction<AnyFunction>
+> = {
+  match: isEmptyObject,
+  deserialize: () => noopAsyncFunction as DeserializedFunction<AnyFunction>,
+}

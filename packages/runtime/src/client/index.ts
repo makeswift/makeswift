@@ -46,7 +46,7 @@ import { deterministicUUID } from '../utils/deterministic-uuid'
 import { Schema } from '@makeswift/controls'
 import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-only-documents'
 import { mergeElementTreeTranslatedData } from '../state/translations/merge'
-import { getElementTreeTranslatableData } from '../state/translations/get'
+import { getTranslatableContent } from '../state/translations/get'
 
 export { SnippetLocation } from '../api/graphql/generated/types'
 
@@ -970,7 +970,7 @@ export class MakeswiftClient {
   }
 
   getTranslatableData(elementTree: ElementData): Record<string, Data> {
-    return getElementTreeTranslatableData(
+    return getTranslatableContent(
       getPropControllerDescriptors(this.runtime.store.getState()),
       elementTree,
     )

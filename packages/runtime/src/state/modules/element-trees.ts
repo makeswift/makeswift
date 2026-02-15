@@ -3,6 +3,8 @@ import { getIn } from 'immutable'
 
 import { type Element, type ElementData, isElementReference } from '@makeswift/controls'
 
+import { getGridPropControllerElementChildren } from '@makeswift/prop-controllers'
+
 import * as Introspection from '../../prop-controllers/introspection'
 
 import { type Action, type UnknownAction, isKnownAction } from '../actions'
@@ -101,6 +103,22 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
   }
 }
 
+function isElementLike(value: unknown): value is Element {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'key' in value &&
+    'type' in value &&
+    'props' in value
+  )
+}
+
+function getElementChildrenFromPropValue(value: unknown): Element[] {
+  if (value == null) return []
+  if (Array.isArray(value) && value.every(isElementLike)) return value
+  return getGridPropControllerElementChildren(value as Parameters<typeof getGridPropControllerElementChildren>[0])
+}
+
 export function* traverseElementTree(
   element: Element,
   descriptors: DescriptorsByComponentType,
@@ -108,14 +126,33 @@ export function* traverseElementTree(
   yield element
   if (isElementReference(element)) return
 
-  const elementDescriptors = descriptors.get(element.type)
-  if (elementDescriptors == null) return
-
-  for (const [propKey, descriptor] of Object.entries(elementDescriptors)) {
-    const children = Introspection.getElementChildren(descriptor, element.props[propKey])
-    for (const child of children) {
-      yield* traverseElementTree(child, descriptors)
+  const seenChildKeys = new Set<string>()
+  const collectChildren = (): Element[] => {
+    const byKey = new Map<string, Element>()
+    const add = (child: Element) => {
+      if (!seenChildKeys.has(child.key)) {
+        seenChildKeys.add(child.key)
+        byKey.set(child.key, child)
+      }
     }
+    const elementDescriptors = descriptors.get(element.type)
+    if (elementDescriptors != null) {
+      for (const [propKey, descriptor] of Object.entries(elementDescriptors)) {
+        for (const child of Introspection.getElementChildren(descriptor, element.props[propKey])) {
+          add(child)
+        }
+      }
+    }
+    for (const propValue of Object.values(element.props)) {
+      for (const child of getElementChildrenFromPropValue(propValue)) {
+        add(child)
+      }
+    }
+    return [...byKey.values()]
+  }
+
+  for (const child of collectChildren()) {
+    yield* traverseElementTree(child, descriptors)
   }
 }
 
