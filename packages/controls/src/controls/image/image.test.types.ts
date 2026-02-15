@@ -21,6 +21,7 @@ type ExpectedDataType =
       url: string
       width?: number | null | undefined
       height?: number | null | undefined
+      description?: string
     }
 
 type ExpectedValueType =
@@ -33,6 +34,7 @@ type ExpectedValueType =
       url: string
       width?: number | null | undefined
       height?: number | null | undefined
+      description?: string
     }
 
 describe('Image Types', () => {
@@ -54,6 +56,14 @@ describe('Image Types', () => {
               width: number
             }
           }
+        | {
+            url: string
+            dimensions: {
+              height: number
+              width: number
+            }
+            altText?: string
+          }
         | undefined
       >()
     })
@@ -65,7 +75,10 @@ describe('Image Types', () => {
       expectTypeOf<Config>().toEqualTypeOf<{
         label?: string
         description?: string
-        format?: typeof Image.Format.URL | typeof Image.Format.WithDimensions
+        format?:
+          | typeof Image.Format.URL
+          | typeof Image.Format.WithDimensions
+          | typeof Image.Format.WithMetadata
       }>()
 
       type Data = DataType<typeof def>
@@ -126,6 +139,38 @@ describe('Image Types', () => {
               height: number
               width: number
             }
+          }
+        | undefined
+      >
+    })
+
+    test('Metadata Format', () => {
+      const def = Image({
+        format: Image.Format.WithMetadata,
+      })
+
+      type Config = typeof def.config
+      expectTypeOf<Config>().toEqualTypeOf<{
+        label?: string
+        description?: string
+        format: typeof Image.Format.WithMetadata
+      }>()
+
+      type Data = DataType<typeof def>
+      expectTypeOf<Data>().toEqualTypeOf<ExpectedDataType>()
+
+      type Value = ValueType<typeof def>
+      expectTypeOf<Value>().toEqualTypeOf<ExpectedValueType>
+
+      type Resolved = ResolvedValueType<typeof def>
+      expectTypeOf<Resolved>().toEqualTypeOf<
+        | {
+            url: string
+            dimensions: {
+              height: number
+              width: number
+            }
+            altText?: string
           }
         | undefined
       >

@@ -24,7 +24,10 @@ import { ControlDefinitionVisitor } from '../visitor'
 
 type Config = z.infer<typeof Definition.schema.config>
 type DefaultConfig = Config & {
-  format: typeof Definition.Format.WithDimensions | typeof Definition.Format.URL
+  format:
+    | typeof Definition.Format.WithDimensions
+    | typeof Definition.Format.URL
+    | typeof Definition.Format.WithMetadata
 }
 
 type BaseSchema = typeof Definition.schema
@@ -32,13 +35,16 @@ type SchemaByFormat<F extends Config['format']> = undefined extends F
   ? BaseSchema['url']
   :
         | typeof Definition.Format.WithDimensions
-        | typeof Definition.Format.URL extends F
-    ? BaseSchema['withDimensions'] | BaseSchema['url']
-    : F extends typeof Definition.Format.WithDimensions
-      ? BaseSchema['withDimensions']
-      : F extends typeof Definition.Format.URL
-        ? BaseSchema['url']
-        : never
+        | typeof Definition.Format.URL
+        | typeof Definition.Format.WithMetadata extends F
+    ? BaseSchema['withDimensions'] | BaseSchema['url'] | BaseSchema['withMetadata']
+    : F extends typeof Definition.Format.WithMetadata
+      ? BaseSchema['withMetadata']
+      : F extends typeof Definition.Format.WithDimensions
+        ? BaseSchema['withDimensions']
+        : F extends typeof Definition.Format.URL
+          ? BaseSchema['url']
+          : never
 
 type Schema<C extends Config> = SchemaByFormat<C['format']>
 type DataType<C extends Config> = z.infer<Schema<C>['data']>
@@ -69,6 +75,7 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
   static readonly Format = {
     URL: `${this.type}::format::url`,
     WithDimensions: `${this.type}::format::with-dimensions`,
+    WithMetadata: `${this.type}::format::with-metadata`,
   } as const
 
   static get schema() {
@@ -85,6 +92,7 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
       url: z.string(),
       width: z.number().nullable().optional(),
       height: z.number().nullable().optional(),
+      description: z.string().optional(),
     })
 
     const makeswiftFileData = makeswiftFileValue.merge(
@@ -113,6 +121,7 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
         .union([
           z.literal(this.Format.URL),
           z.literal(this.Format.WithDimensions),
+          z.literal(this.Format.WithMetadata),
         ])
         .optional(),
     })
@@ -141,6 +150,9 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
         height: z.number(),
       }),
     })
+    const urlWithMetadata = urlWithDimensions.extend({
+      altText: z.string().optional(),
+    })
 
     return {
       type,
@@ -149,6 +161,7 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
       definition,
       url: schemas(url.optional()),
       withDimensions: schemas(urlWithDimensions.optional()),
+      withMetadata: schemas(urlWithMetadata.optional()),
     }
   }
 
@@ -174,12 +187,16 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
   }
 
   get schema(): ReturnedSchemaType<C> {
-    const { url, withDimensions, ...baseSchema } = Definition.schema
+    const { url, withDimensions, withMetadata, ...baseSchema } = Definition.schema
     return {
       ...baseSchema,
-      value: z.union([url.value, withDimensions.value]),
-      data: z.union([url.data, withDimensions.data]),
-      resolvedValue: z.union([url.resolvedValue, withDimensions.resolvedValue]),
+      value: z.union([url.value, withDimensions.value, withMetadata.value]),
+      data: z.union([url.data, withDimensions.data, withMetadata.data]),
+      resolvedValue: z.union([
+        url.resolvedValue,
+        withDimensions.resolvedValue,
+        withMetadata.resolvedValue,
+      ]),
     }
   }
 
@@ -189,6 +206,10 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
       .with(
         Definition.Format.WithDimensions,
         () => Definition.schema.withDimensions,
+      )
+      .with(
+        Definition.Format.WithMetadata,
+        () => Definition.schema.withMetadata,
       )
       .with(undefined, () => Definition.schema.url)
       .exhaustive() as Schema<C>
@@ -298,7 +319,13 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
     if (externalFile != null) {
       const stableValue = StableValue({
         name: Definition.type,
-        read: () => this.resolveImage(externalFile),
+        read: () =>
+          this.resolveImage({
+            url: externalFile.url,
+            width: externalFile.width,
+            height: externalFile.height,
+            altText: externalFile.description,
+          }),
       })
 
       return {
@@ -322,6 +349,8 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
               url: file.publicUrl,
               width: file.dimensions?.width,
               height: file.dimensions?.height,
+              // Alt text comes from the File resource's description
+              altText: file.description ?? undefined,
             })
           : undefined
       },
@@ -342,14 +371,26 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
     url,
     width,
     height,
+    altText,
   }: {
     url: string
     width?: number | null
     height?: number | null
+    altText?: string
   }): ResolvedValueType<C> {
     const format = this.config.format
     if (format === Definition.Format.URL || format == null) {
       return url
+    }
+
+    if (format === Definition.Format.WithMetadata) {
+      return width != null && height != null
+        ? {
+            url,
+            dimensions: { width, height },
+            altText,
+          }
+        : undefined
     }
 
     return width != null && height != null
