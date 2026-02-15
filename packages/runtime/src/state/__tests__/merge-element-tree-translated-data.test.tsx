@@ -4,6 +4,7 @@ import { Group, List, Slot, TextInput } from '../../controls'
 import { registerComponent } from '../actions/internal/read-only-actions'
 import * as TranslationFixtures from './fixtures/translations'
 import { ComponentIcon } from '../modules/components-meta'
+import { getPropControllerDescriptors } from '../read-only-state'
 import { mergeElementTreeTranslatedData } from '../translations/merge'
 
 const ElementType = {
@@ -68,7 +69,7 @@ describe('mergeTranslatedData', () => {
   test('Translates element tree with composable controls and slots', () => {
     // Act
     const result = mergeElementTreeTranslatedData(
-      store.getState(),
+      getPropControllerDescriptors(store.getState()),
       TranslationFixtures.accordionFullTree.preTranslation,
       TranslationFixtures.accordionFullTree.translationDto,
     )
@@ -80,7 +81,7 @@ describe('mergeTranslatedData', () => {
   test('Translates element trees with partial values (unset list items)', () => {
     // Act
     const result = mergeElementTreeTranslatedData(
-      store.getState(),
+      getPropControllerDescriptors(store.getState()),
       TranslationFixtures.accordionPartialTree.preTranslation,
       TranslationFixtures.accordionPartialTree.translationDto,
     )
