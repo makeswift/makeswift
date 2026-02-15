@@ -71,7 +71,12 @@ export function createMakeswiftComponentSnapshot(
   {
     cacheData = {},
     locale = null,
-  }: { cacheData?: Partial<MakeswiftComponentSnapshot['cacheData']>; locale?: string | null } = {},
+    fonts = [],
+  }: {
+    cacheData?: Partial<MakeswiftComponentSnapshot['cacheData']>
+    locale?: string | null
+    fonts?: MakeswiftComponentSnapshot['fonts']
+  } = {},
 ): MakeswiftComponentSnapshot {
   return {
     key: randomUUID(),
@@ -82,6 +87,7 @@ export function createMakeswiftComponentSnapshot(
       data: elementData,
       inheritsFromParent: false,
       locale,
+      fonts,
     },
     meta: {
       allowLocaleFallback: false,
@@ -91,5 +97,6 @@ export function createMakeswiftComponentSnapshot(
       ...CacheData.empty(),
       ...cacheData,
     },
+    fonts,
   }
 }
