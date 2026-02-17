@@ -27,9 +27,7 @@ export const serializedDescriptorsFromDb: Record<string, Record<string, unknown>
       type: 'Width',
       options: {
         format: 'makeswift::prop-controllers::width::format::class-name',
-        preset: [
-          { value: { unit: 'px', value: 550 }, deviceId: 'desktop' },
-        ],
+        preset: [{ value: { unit: 'px', value: 550 }, deviceId: 'desktop' }],
         defaultValue: { unit: '%', value: 100 },
       },
       version: 1,
@@ -387,7 +385,10 @@ export const serializedDescriptorsFromDb: Record<string, Record<string, unknown>
               },
               logoImage: {
                 type: 'makeswift::controls::image',
-                config: { label: 'Logo', format: 'makeswift::controls::image::format::with-dimensions' },
+                config: {
+                  label: 'Logo',
+                  format: 'makeswift::controls::image::format::with-dimensions',
+                },
                 version: 1,
               },
               logoWidth: {

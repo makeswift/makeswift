@@ -1,6 +1,8 @@
 import { getTranslatableContent } from '../translations/get'
 import { translatableContentSampleElementTree } from './fixtures/translatable-content-sample'
 import { serializedDescriptorsFromDb } from './fixtures/serialized-descriptors-from-db'
+import { DescriptorsByComponentType, DescriptorsByProp } from '../modules/prop-controllers'
+import { deserializeControls } from '../../builder/serialization/control-serialization'
 
 const descriptors = serializedDescriptorsFromDb;
 
@@ -9,12 +11,22 @@ const textElementKey2 = '10529c61-6d2c-4724-966a-c8ae579df487'
 const buttonReadMoreKey = 'beef2474-13dd-4df5-8b63-89a79b3e59f6'
 const buttonBuyNowKey = 'a254c640-ff21-406b-bffc-b9e95157a538'
 
+const deserializeDescriptors = (
+  descriptors: Record<string, Record<string, unknown>>,
+): DescriptorsByComponentType => {
+  const serialized = descriptors
+  const resolved: DescriptorsByComponentType = new Map()
+  for (const [componentType, propSerialized] of Object.entries(serialized)) {
+    resolved.set(componentType, deserializeControls(propSerialized) as DescriptorsByProp)
+  }
+  return resolved
+}
+
 describe('getTranslatableContent', () => {
   test('extracts translatable data from an element tree using persisted descriptors', () => {
     const result = getTranslatableContent(
-      descriptors,
+      deserializeDescriptors(descriptors),
       translatableContentSampleElementTree,
-      { serialized: true },
     )
 
     expect(result[`${textElementKey1}:text`]).toBeDefined()
