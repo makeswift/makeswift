@@ -10,7 +10,7 @@ import { isLegacyDescriptor } from '../../prop-controllers/descriptors'
 import { Descriptor as PropControllerDescriptor } from '../../prop-controllers/descriptors'
 import type { DescriptorsByComponentType } from '../modules/prop-controllers'
 
-export function mergeElementTreeTranslatedData(
+export function mergeTranslatedContent(
   descriptors: DescriptorsByComponentType,
   elementTree: Documents.ElementData,
   translatedData: TranslationDto,
