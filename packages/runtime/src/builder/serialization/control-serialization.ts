@@ -998,16 +998,25 @@ export function deserializeLegacyControl<T extends Data>(
   }
 }
 
+export type DeserializationPreProcessor = (
+  record: DeserializedRecord,
+) => DeserializedRecord
+
+export type DeserializeControlOptions = {
+  recordPreprocessor?: DeserializationPreProcessor
+}
+
 export function deserializeControl<T extends Data>(
   serializedControl: SerializedControl<T>,
+  options?: DeserializeControlOptions,
 ): DeserializedControl<T> {
   if (isSerializedLegacyControl(serializedControl)) {
     return deserializeLegacyControl(serializedControl)
   }
 
-  return deserializeUnifiedControlDef(
-    deserializeRecord(serializedControl, [functionDeserializationPlugin])
-  )
+  const record = deserializeRecord(serializedControl, [functionDeserializationPlugin])
+  const recordForDef = options?.recordPreprocessor?.(record) ?? record
+  return deserializeUnifiedControlDef(recordForDef)
 }
 
 export function deserializeUnifiedControlDef(record: DeserializedRecord): UnifiedControlDefinition {
@@ -1063,12 +1072,16 @@ export function serializeControls(
   )
 }
 
+export type DeserializeControlsOptions = {
+  onError?: (err: Error, context: { key: string; serializedControl: unknown }) => void
+  recordPreprocessor?: DeserializationPreProcessor
+}
+
 export function deserializeControls(
   serializedControls: Record<string, unknown>,
-  {
-    onError,
-  }: { onError?: (err: Error, context: { key: string; serializedControl: unknown }) => void } = {},
+  options: DeserializeControlsOptions = {},
 ): Record<string, DeserializedControl> {
+  const { onError, recordPreprocessor } = options
   return Object.entries(serializedControls).reduce(
     (deserializedControls, [key, serializedControl]) => {
       try {
@@ -1077,7 +1090,9 @@ export function deserializeControls(
             `Expected serialized control data, got ${JSON.stringify(serializedControl)}`,
           )
         }
-        const deserializedControl = deserializeControl(serializedControl)
+        const deserializedControl = deserializeControl(serializedControl, {
+          recordPreprocessor,
+        })
         return { ...deserializedControls, [key]: deserializedControl }
       } catch (err: unknown) {
         const error =
