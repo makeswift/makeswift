@@ -6,8 +6,6 @@ import { deserializeControls } from '../../builder/serialization/control-seriali
 
 const descriptors = serializedDescriptorsFromDb;
 
-const textElementKey1 = 'd9cb4bc3-9a21-43cc-b300-9aa896c3672d'
-const textElementKey2 = '10529c61-6d2c-4724-966a-c8ae579df487'
 const buttonReadMoreKey = 'beef2474-13dd-4df5-8b63-89a79b3e59f6'
 const buttonBuyNowKey = 'a254c640-ff21-406b-bffc-b9e95157a538'
 
@@ -28,16 +26,6 @@ describe('getTranslatableContent', () => {
       deserializeDescriptors(descriptors),
       translatableContentSampleElementTree,
     )
-
-    // NOTE: commenting this out for now since there will be another PR to address the transformation of MessagePOrts before deserialization
-    // expect(result[`${textElementKey1}:text`]).toBeDefined()
-    // expect(JSON.stringify(result[`${textElementKey1}:text`])).toContain('D A K A R')
-
-    // expect(result[`${textElementKey2}:text`]).toBeDefined()
-    // expect(JSON.stringify(result[`${textElementKey2}:text`])).toContain(
-    //   'Introducing the New Land Rover Defender Dakar',
-    // )
-
     const readMoreData = result[`${buttonReadMoreKey}:children`] as { value?: string } | undefined
     const buyNowData = result[`${buttonBuyNowKey}:children`] as { value?: string } | undefined
     expect(readMoreData).toBeDefined()
@@ -45,7 +33,6 @@ describe('getTranslatableContent', () => {
     expect(buyNowData).toBeDefined()
     expect(buyNowData?.value).toBe('Buy now')
 
-    // NOTE: increase this to 4 when the fix from the note above is introduced
     expect(Object.keys(result)).toHaveLength(2)
   })
 })
