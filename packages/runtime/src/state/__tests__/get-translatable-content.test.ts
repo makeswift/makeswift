@@ -52,7 +52,7 @@ const deserializeDescriptors = (
   const resolved: DescriptorsByComponentType = new Map()
   for (const [componentType, propSerialized] of Object.entries(serialized)) {
     resolved.set(componentType, deserializeControls(propSerialized, {
-      recordPreprocessor: stubEmptyObjectFunctionSlotsForBackend,
+      plugins: [stubEmptyObjectFunctionSlotsForBackend],
     }) as DescriptorsByProp)
   }
   return resolved
