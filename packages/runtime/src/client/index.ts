@@ -334,6 +334,15 @@ const getPageAPISchema = z.object({
 
 type GetPageAPI = z.infer<typeof getPageAPISchema>
 
+const getFontsAPISchema = z.object({
+  googleFonts: z.array(z.object({
+    family: z.string(),
+    variants: z.array(z.string()),
+  })),
+})
+
+export type GetFontsAPI = z.infer<typeof getFontsAPISchema>
+
 export class MakeswiftClient {
   private graphqlClient: GraphQLClient
   private runtime: ReactRuntimeCore
@@ -1016,6 +1025,35 @@ export class MakeswiftClient {
       throw new Error(
         `Failed to parse preview token payload: ${parsed.error.errors.map(e => e.message).join('; ')}`,
       )
+    }
+
+    return parsed.data
+  }
+
+  async unstable_getFonts(
+    siteVersion: SiteVersion | null = null,
+  ): Promise<GetFontsAPI | null> {
+    const response = await this.fetch('v1_unstable/fonts', siteVersion)
+
+    if (!response.ok) {
+      console.error('Failed to fetch fonts', {
+        response: await failedResponseBody(response),
+        siteVersion,
+      })
+
+      return null
+    }
+
+    const json = await response.json()
+
+    const parsed = getFontsAPISchema.safeParse(json)
+    if (!parsed.success) {
+      console.error('Failed to parse fonts API response', {
+        response: json,
+        siteVersion,
+      })
+
+      return null
     }
 
     return parsed.data
