@@ -998,16 +998,28 @@ export function deserializeLegacyControl<T extends Data>(
   }
 }
 
+export type DeserializationPlugin = (
+  record: DeserializedRecord,
+) => DeserializedRecord
+
+export type DeserializeControlOptions = {
+  plugins?: DeserializationPlugin[]
+}
+
 export function deserializeControl<T extends Data>(
   serializedControl: SerializedControl<T>,
+  options?: DeserializeControlOptions,
 ): DeserializedControl<T> {
   if (isSerializedLegacyControl(serializedControl)) {
     return deserializeLegacyControl(serializedControl)
   }
 
-  return deserializeUnifiedControlDef(
-    deserializeRecord(serializedControl, [functionDeserializationPlugin])
-  )
+  const record = deserializeRecord(serializedControl, [functionDeserializationPlugin])
+  const recordForDef = options?.plugins?.reduce<DeserializedRecord>(
+    (acc, plugin) => plugin(acc),
+    record,
+  ) ?? record
+  return deserializeUnifiedControlDef(recordForDef)
 }
 
 export function deserializeUnifiedControlDef(record: DeserializedRecord): UnifiedControlDefinition {
@@ -1063,12 +1075,16 @@ export function serializeControls(
   )
 }
 
+export type DeserializeControlsOptions = {
+  onError?: (err: Error, context: { key: string; serializedControl: unknown }) => void
+  plugins?: DeserializationPlugin[]
+}
+
 export function deserializeControls(
   serializedControls: Record<string, unknown>,
-  {
-    onError,
-  }: { onError?: (err: Error, context: { key: string; serializedControl: unknown }) => void } = {},
+  options: DeserializeControlsOptions = {},
 ): Record<string, DeserializedControl> {
+  const { onError, plugins } = options
   return Object.entries(serializedControls).reduce(
     (deserializedControls, [key, serializedControl]) => {
       try {
@@ -1077,7 +1093,9 @@ export function deserializeControls(
             `Expected serialized control data, got ${JSON.stringify(serializedControl)}`,
           )
         }
-        const deserializedControl = deserializeControl(serializedControl)
+        const deserializedControl = deserializeControl(serializedControl, {
+          plugins,
+        })
         return { ...deserializedControls, [key]: deserializedControl }
       } catch (err: unknown) {
         const error =
