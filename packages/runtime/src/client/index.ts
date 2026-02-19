@@ -262,7 +262,7 @@ export type Snippet = {
   cleanup: string | null
 }
 
-type Font = { family: string; variants: string[] }
+export type Font = { family: string; variants: string[] }
 
 type Meta = {
   title?: string | null
