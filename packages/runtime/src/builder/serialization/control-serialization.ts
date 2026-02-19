@@ -998,12 +998,12 @@ export function deserializeLegacyControl<T extends Data>(
   }
 }
 
-export type DeserializationPreProcessor = (
+export type DeserializationPlugin = (
   record: DeserializedRecord,
 ) => DeserializedRecord
 
 export type DeserializeControlOptions = {
-  recordPreprocessor?: DeserializationPreProcessor
+  plugins?: DeserializationPlugin[]
 }
 
 export function deserializeControl<T extends Data>(
@@ -1015,7 +1015,10 @@ export function deserializeControl<T extends Data>(
   }
 
   const record = deserializeRecord(serializedControl, [functionDeserializationPlugin])
-  const recordForDef = options?.recordPreprocessor?.(record) ?? record
+  const recordForDef = options?.plugins?.reduce<DeserializedRecord>(
+    (acc, plugin) => plugin(acc),
+    record,
+  ) ?? record
   return deserializeUnifiedControlDef(recordForDef)
 }
 
@@ -1074,14 +1077,14 @@ export function serializeControls(
 
 export type DeserializeControlsOptions = {
   onError?: (err: Error, context: { key: string; serializedControl: unknown }) => void
-  recordPreprocessor?: DeserializationPreProcessor
+  plugins?: DeserializationPlugin[]
 }
 
 export function deserializeControls(
   serializedControls: Record<string, unknown>,
   options: DeserializeControlsOptions = {},
 ): Record<string, DeserializedControl> {
-  const { onError, recordPreprocessor } = options
+  const { onError, plugins } = options
   return Object.entries(serializedControls).reduce(
     (deserializedControls, [key, serializedControl]) => {
       try {
@@ -1091,7 +1094,7 @@ export function deserializeControls(
           )
         }
         const deserializedControl = deserializeControl(serializedControl, {
-          recordPreprocessor,
+          plugins,
         })
         return { ...deserializedControls, [key]: deserializedControl }
       } catch (err: unknown) {
