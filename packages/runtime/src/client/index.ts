@@ -45,7 +45,7 @@ import { toIterablePaginationResult } from '../utils/pagination'
 import { deterministicUUID } from '../utils/deterministic-uuid'
 import { Schema } from '@makeswift/controls'
 import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-only-documents'
-import { mergeElementTreeTranslatedData } from '../state/translations/merge'
+import { mergeTranslatedContent } from '../state/translations/merge'
 import { getTranslatableContent } from '../state/translations/get'
 
 export { SnippetLocation } from '../api/graphql/generated/types'
@@ -977,7 +977,7 @@ export class MakeswiftClient {
   }
 
   mergeTranslatedData(elementTree: ElementData, translatedData: Record<string, Data>): Element {
-    return mergeElementTreeTranslatedData(
+    return mergeTranslatedContent(
       getPropControllerDescriptors(this.runtime.store.getState()),
       elementTree,
       translatedData,
