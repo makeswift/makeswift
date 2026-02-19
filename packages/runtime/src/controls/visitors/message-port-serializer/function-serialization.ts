@@ -86,38 +86,3 @@ export const functionDeserializationPlugin: DeserializationPlugin<
   match: isSerializedFunction,
   deserialize: value => deserializeFunction(value),
 }
-
-function isEmptyObject(value: unknown): value is Record<string, never> {
-  return (
-    value !== null &&
-    typeof value === 'object' &&
-    !Array.isArray(value) &&
-    !(value instanceof MessagePort) &&
-    Object.keys(value).length === 0
-  )
-}
-
-const noopAsyncFunction = async (): Promise<undefined> => undefined
-
-const FUNCTION_SLOT_KEYS = new Set(['getValue', 'onChange', 'getStyle'])
-
-function stubEmptyObjectFunctionSlotsRec(value: unknown): unknown {
-  if (value === null || typeof value !== 'object') return value
-  if (Array.isArray(value)) return value.map(stubEmptyObjectFunctionSlotsRec)
-  if (isSerializedFunction(value)) return value
-  const obj = value as Record<string, unknown>
-  return Object.fromEntries(
-    Object.entries(obj).map(([key, v]) => {
-      if (FUNCTION_SLOT_KEYS.has(key) && isEmptyObject(v)) {
-        return [key, noopAsyncFunction as DeserializedFunction<AnyFunction>]
-      }
-      return [key, stubEmptyObjectFunctionSlotsRec(v)]
-    }),
-  )
-}
-
-export function stubEmptyObjectFunctionSlots<T extends Record<string, unknown>>(
-  record: T,
-): T {
-  return stubEmptyObjectFunctionSlotsRec(record) as T
-}

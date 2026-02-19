@@ -3,5 +3,4 @@ export {
   serializeFunction,
   deserializeFunction,
   functionDeserializationPlugin,
-  stubEmptyObjectFunctionSlots,
 } from './function-serialization'
