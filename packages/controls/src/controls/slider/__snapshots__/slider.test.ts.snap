@@ -1,272 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Slider (range mode) definition w/ config {"defaultValue":{"start":0,"end":100},"label":"price","min":0,"max":100,"range":true} toData returns v1 data for \`{ start: 0, end: 100 }\` when definition version is 1 1`] = `
-{
-  "@@makeswift/type": "slider::v1::range",
-  "value": {
-    "end": 100,
-    "start": 0,
-  },
-}
-`;
-
-exports[`Slider (range mode) definition w/ config {"defaultValue":{"start":0,"end":100},"label":"price","min":0,"max":100,"range":true} toData returns v1 data for \`{ start: 25, end: 75 }\` when definition version is 1 1`] = `
-{
-  "@@makeswift/type": "slider::v1::range",
-  "value": {
-    "end": 75,
-    "start": 25,
-  },
-}
-`;
-
-exports[`Slider (range mode) definition w/ config {"defaultValue":{"start":0,"end":100},"label":"price","min":0,"max":100,"range":true} toData returns v1 data for \`{ start: 50, end: 50 }\` when definition version is 1 1`] = `
-{
-  "@@makeswift/type": "slider::v1::range",
-  "value": {
-    "end": 50,
-    "start": 50,
-  },
-}
-`;
-
-exports[`Slider (range mode) definition w/ config {"label":"opacity","range":true} toData returns v1 data for \`{ start: 0, end: 100 }\` when definition version is 1 1`] = `
-{
-  "@@makeswift/type": "slider::v1::range",
-  "value": {
-    "end": 100,
-    "start": 0,
-  },
-}
-`;
-
-exports[`Slider (range mode) definition w/ config {"label":"opacity","range":true} toData returns v1 data for \`{ start: 25, end: 75 }\` when definition version is 1 1`] = `
-{
-  "@@makeswift/type": "slider::v1::range",
-  "value": {
-    "end": 75,
-    "start": 25,
-  },
-}
-`;
-
-exports[`Slider (range mode) definition w/ config {"label":"opacity","range":true} toData returns v1 data for \`{ start: 50, end: 50 }\` when definition version is 1 1`] = `
-{
-  "@@makeswift/type": "slider::v1::range",
-  "value": {
-    "end": 50,
-    "start": 50,
-  },
-}
-`;
-
-exports[`Slider (range mode) definition w/ config {"label":"opacity","range":true} toData returns v1 data for \`undefined\` when definition version is 1 1`] = `undefined`;
-
-exports[`Slider (range mode) resolveValue w/ config {"defaultValue":{"start":0,"end":100},"label":"price","min":0,"max":100,"range":true} resolves data ({ start: 0, end: 100 }) 1`] = `
-{
-  "end": 100,
-  "start": 0,
-}
-`;
-
-exports[`Slider (range mode) resolveValue w/ config {"defaultValue":{"start":0,"end":100},"label":"price","min":0,"max":100,"range":true} resolves data ({ start: 25, end: 75 }) 1`] = `
-{
-  "end": 75,
-  "start": 25,
-}
-`;
-
-exports[`Slider (range mode) resolveValue w/ config {"defaultValue":{"start":0,"end":100},"label":"price","min":0,"max":100,"range":true} resolves data ({ start: 50, end: 50 }) 1`] = `
-{
-  "end": 50,
-  "start": 50,
-}
-`;
-
-exports[`Slider (range mode) resolveValue w/ config {"defaultValue":{"start":0,"end":100},"label":"price","min":0,"max":100,"range":true} resolves unversioned data ({ start: 0, end: 100 }) 1`] = `
-{
-  "end": 100,
-  "start": 0,
-}
-`;
-
-exports[`Slider (range mode) resolveValue w/ config {"defaultValue":{"start":0,"end":100},"label":"price","min":0,"max":100,"range":true} resolves unversioned data ({ start: 25, end: 75 }) 1`] = `
-{
-  "end": 75,
-  "start": 25,
-}
-`;
-
-exports[`Slider (range mode) resolveValue w/ config {"defaultValue":{"start":0,"end":100},"label":"price","min":0,"max":100,"range":true} resolves unversioned data ({ start: 50, end: 50 }) 1`] = `
-{
-  "end": 50,
-  "start": 50,
-}
-`;
-
-exports[`Slider (range mode) resolveValue w/ config {"label":"opacity","range":true} resolves data ({ start: 0, end: 100 }) 1`] = `
-{
-  "end": 100,
-  "start": 0,
-}
-`;
-
-exports[`Slider (range mode) resolveValue w/ config {"label":"opacity","range":true} resolves data ({ start: 25, end: 75 }) 1`] = `
-{
-  "end": 75,
-  "start": 25,
-}
-`;
-
-exports[`Slider (range mode) resolveValue w/ config {"label":"opacity","range":true} resolves data ({ start: 50, end: 50 }) 1`] = `
-{
-  "end": 50,
-  "start": 50,
-}
-`;
-
-exports[`Slider (range mode) resolveValue w/ config {"label":"opacity","range":true} resolves unversioned data ({ start: 0, end: 100 }) 1`] = `
-{
-  "end": 100,
-  "start": 0,
-}
-`;
-
-exports[`Slider (range mode) resolveValue w/ config {"label":"opacity","range":true} resolves unversioned data ({ start: 25, end: 75 }) 1`] = `
-{
-  "end": 75,
-  "start": 25,
-}
-`;
-
-exports[`Slider (range mode) resolveValue w/ config {"label":"opacity","range":true} resolves unversioned data ({ start: 50, end: 50 }) 1`] = `
-{
-  "end": 50,
-  "start": 50,
-}
-`;
-
-exports[`Slider (single value) definition w/ config {"defaultValue":50,"label":"volume","min":0,"max":100} toData returns v1 data for \`0\` when definition version is 1 1`] = `
-{
-  "@@makeswift/type": "slider::v1::single",
-  "value": 0,
-}
-`;
-
-exports[`Slider (single value) definition w/ config {"defaultValue":50,"label":"volume","min":0,"max":100} toData returns v1 data for \`25\` when definition version is 1 1`] = `
-{
-  "@@makeswift/type": "slider::v1::single",
-  "value": 25,
-}
-`;
-
-exports[`Slider (single value) definition w/ config {"defaultValue":50,"label":"volume","min":0,"max":100} toData returns v1 data for \`50\` when definition version is 1 1`] = `
-{
-  "@@makeswift/type": "slider::v1::single",
-  "value": 50,
-}
-`;
-
-exports[`Slider (single value) definition w/ config {"defaultValue":50,"label":"volume","min":0,"max":100} toData returns v1 data for \`75\` when definition version is 1 1`] = `
-{
-  "@@makeswift/type": "slider::v1::single",
-  "value": 75,
-}
-`;
-
-exports[`Slider (single value) definition w/ config {"defaultValue":50,"label":"volume","min":0,"max":100} toData returns v1 data for \`100\` when definition version is 1 1`] = `
-{
-  "@@makeswift/type": "slider::v1::single",
-  "value": 100,
-}
-`;
-
-exports[`Slider (single value) definition w/ config {"label":"opacity"} toData returns v1 data for \`0.5\` when definition version is 1 1`] = `
-{
-  "@@makeswift/type": "slider::v1::single",
-  "value": 0.5,
-}
-`;
-
-exports[`Slider (single value) definition w/ config {"label":"opacity"} toData returns v1 data for \`0\` when definition version is 1 1`] = `
-{
-  "@@makeswift/type": "slider::v1::single",
-  "value": 0,
-}
-`;
-
-exports[`Slider (single value) definition w/ config {"label":"opacity"} toData returns v1 data for \`1\` when definition version is 1 1`] = `
-{
-  "@@makeswift/type": "slider::v1::single",
-  "value": 1,
-}
-`;
-
-exports[`Slider (single value) definition w/ config {"label":"opacity"} toData returns v1 data for \`undefined\` when definition version is 1 1`] = `undefined`;
-
-exports[`Slider constructor range mode (range: true) call with default value \`{ start: 0, end: 100 }\` returns versioned definition 1`] = `
-SliderDefinition {
-  "config": {
-    "defaultValue": {
-      "end": 100,
-      "start": 0,
-    },
-    "label": "price range",
-    "max": 100,
-    "min": 0,
-    "range": true,
-  },
-  "version": 1,
-}
-`;
-
-exports[`Slider constructor range mode (range: true) call with default value \`{ start: 25, end: 75 }\` returns versioned definition 1`] = `
-SliderDefinition {
-  "config": {
-    "defaultValue": {
-      "end": 75,
-      "start": 25,
-    },
-    "label": "price range",
-    "max": 100,
-    "min": 0,
-    "range": true,
-  },
-  "version": 1,
-}
-`;
-
-exports[`Slider constructor range mode (range: true) call with default value \`undefined\` returns versioned definition 1`] = `
-SliderDefinition {
-  "config": {
-    "defaultValue": undefined,
-    "label": "price range",
-    "max": 100,
-    "min": 0,
-    "range": true,
-  },
-  "version": 1,
-}
-`;
-
-exports[`Slider constructor range mode (range: true) creates range slider with step 1`] = `
-SliderDefinition {
-  "config": {
-    "defaultValue": {
-      "end": 0.8,
-      "start": 0.2,
-    },
-    "label": "opacity range",
-    "max": 1,
-    "min": 0,
-    "range": true,
-    "step": 0.1,
-  },
-  "version": 1,
-}
-`;
-
-exports[`Slider constructor single value mode (default) call with default value \`0\` returns versioned definition 1`] = `
+exports[`Slider constructor call with default value \`0\` returns versioned definition 1`] = `
 SliderDefinition {
   "config": {
     "defaultValue": 0,
@@ -278,7 +12,7 @@ SliderDefinition {
 }
 `;
 
-exports[`Slider constructor single value mode (default) call with default value \`50\` returns versioned definition 1`] = `
+exports[`Slider constructor call with default value \`50\` returns versioned definition 1`] = `
 SliderDefinition {
   "config": {
     "defaultValue": 50,
@@ -290,7 +24,7 @@ SliderDefinition {
 }
 `;
 
-exports[`Slider constructor single value mode (default) call with default value \`100\` returns versioned definition 1`] = `
+exports[`Slider constructor call with default value \`100\` returns versioned definition 1`] = `
 SliderDefinition {
   "config": {
     "defaultValue": 100,
@@ -302,7 +36,7 @@ SliderDefinition {
 }
 `;
 
-exports[`Slider constructor single value mode (default) call with default value \`undefined\` returns versioned definition 1`] = `
+exports[`Slider constructor call with default value \`undefined\` returns versioned definition 1`] = `
 SliderDefinition {
   "config": {
     "defaultValue": undefined,
@@ -314,7 +48,7 @@ SliderDefinition {
 }
 `;
 
-exports[`Slider constructor single value mode (default) creates slider with step 1`] = `
+exports[`Slider constructor creates slider with step 1`] = `
 SliderDefinition {
   "config": {
     "defaultValue": 1,
@@ -326,3 +60,61 @@ SliderDefinition {
   "version": 1,
 }
 `;
+
+exports[`Slider definition w/ config {"defaultValue":50,"label":"volume","min":0,"max":100} toData returns v1 data for \`0\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "slider::v1",
+  "value": 0,
+}
+`;
+
+exports[`Slider definition w/ config {"defaultValue":50,"label":"volume","min":0,"max":100} toData returns v1 data for \`25\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "slider::v1",
+  "value": 25,
+}
+`;
+
+exports[`Slider definition w/ config {"defaultValue":50,"label":"volume","min":0,"max":100} toData returns v1 data for \`50\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "slider::v1",
+  "value": 50,
+}
+`;
+
+exports[`Slider definition w/ config {"defaultValue":50,"label":"volume","min":0,"max":100} toData returns v1 data for \`75\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "slider::v1",
+  "value": 75,
+}
+`;
+
+exports[`Slider definition w/ config {"defaultValue":50,"label":"volume","min":0,"max":100} toData returns v1 data for \`100\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "slider::v1",
+  "value": 100,
+}
+`;
+
+exports[`Slider definition w/ config {"label":"opacity"} toData returns v1 data for \`0.5\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "slider::v1",
+  "value": 0.5,
+}
+`;
+
+exports[`Slider definition w/ config {"label":"opacity"} toData returns v1 data for \`0\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "slider::v1",
+  "value": 0,
+}
+`;
+
+exports[`Slider definition w/ config {"label":"opacity"} toData returns v1 data for \`1\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "slider::v1",
+  "value": 1,
+}
+`;
+
+exports[`Slider definition w/ config {"label":"opacity"} toData returns v1 data for \`undefined\` when definition version is 1 1`] = `undefined`;

@@ -11,14 +11,6 @@ import { ControlDefinition, type Resolvable } from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
 
-// Selected range (the two handles)
-const rangeValue = z.object({
-  start: z.number(),
-  end: z.number(),
-})
-
-type RangeValue = z.infer<typeof rangeValue>
-
 type Config = z.infer<typeof Definition.schema.config>
 
 class Definition<C extends Config> extends ControlDefinition<
@@ -28,11 +20,9 @@ class Definition<C extends Config> extends ControlDefinition<
   ValueType,
   ResolvedValueType
 > {
-  private static readonly v1SingleDataType = 'slider::v1::single' as const
-  private static readonly v1RangeDataType = 'slider::v1::range' as const
+  private static readonly v1DataType = 'slider::v1' as const
   private static readonly dataSignature = {
-    v1Single: { [ControlDataTypeKey]: this.v1SingleDataType },
-    v1Range: { [ControlDataTypeKey]: this.v1RangeDataType },
+    v1: { [ControlDataTypeKey]: this.v1DataType },
   } as const
 
   static readonly type = 'makeswift::controls::slider' as const
@@ -41,26 +31,19 @@ class Definition<C extends Config> extends ControlDefinition<
     const type = z.literal(this.type)
     const version = z.literal(1).optional()
 
-    // Versioned data for single value
-    const v1SingleData = z.object({
-      [ControlDataTypeKey]: z.literal(this.v1SingleDataType),
+    const v1Data = z.object({
+      [ControlDataTypeKey]: z.literal(this.v1DataType),
       value: z.number(),
-    })
-
-    // Versioned data for range value
-    const v1RangeData = z.object({
-      [ControlDataTypeKey]: z.literal(this.v1RangeDataType),
-      value: rangeValue,
     })
 
     const config = z.object({
       label: z.string().optional(),
       description: z.string().optional(),
-      defaultValue: z.union([z.number(), rangeValue]).optional(),
+      defaultValue: z.number().optional(),
       min: z.number().optional(),
       max: z.number().optional(),
       step: z.number().optional(),
-      range: z.boolean().optional(),
+      showNumber: z.boolean().optional(),
     })
 
     const definition = z.object({
@@ -69,14 +52,8 @@ class Definition<C extends Config> extends ControlDefinition<
       version,
     })
 
-    const value = z.union([z.number(), rangeValue]).optional()
-    const data = z.union([
-      z.number(),
-      rangeValue,
-      v1SingleData,
-      v1RangeData,
-      z.undefined(),
-    ])
+    const value = z.number().optional()
+    const data = z.union([z.number(), v1Data, z.undefined()])
 
     return {
       type,
@@ -86,8 +63,7 @@ class Definition<C extends Config> extends ControlDefinition<
       resolvedValue: value,
       data,
       version,
-      v1SingleData,
-      v1RangeData,
+      v1Data,
     }
   }
 
@@ -124,14 +100,7 @@ class Definition<C extends Config> extends ControlDefinition<
   }
 
   get dataSchema() {
-    const isRange = this.config.range === true
-
-    if (isRange) {
-      // Range mode: only accept range values
-      return z.union([rangeValue, Definition.schema.v1RangeData, z.undefined()])
-    }
-    // Single value mode: only accept numbers
-    return z.union([z.number(), Definition.schema.v1SingleData, z.undefined()])
+    return z.union([z.number(), Definition.schema.v1Data, z.undefined()])
   }
 
   safeParse(data: unknown | undefined): ParseResult<DataType | undefined> {
@@ -140,15 +109,9 @@ class Definition<C extends Config> extends ControlDefinition<
 
   fromData(data: DataType | undefined): ValueType | undefined {
     return match(data)
-      .with(Definition.dataSignature.v1Single, ({ value }) => value)
-      .with(Definition.dataSignature.v1Range, ({ value }) => value)
+      .with(Definition.dataSignature.v1, ({ value }) => value)
       .otherwise((unversioned) => {
         if (unversioned === undefined) return undefined
-        const isRange = this.config.range === true
-        if (isRange) {
-          const parsed = rangeValue.safeParse(unversioned)
-          return parsed.success ? (parsed.data as ValueType) : undefined
-        }
         return typeof unversioned === 'number' ? unversioned : undefined
       }) as ValueType | undefined
   }
@@ -158,20 +121,11 @@ class Definition<C extends Config> extends ControlDefinition<
       return undefined as DataType
     }
 
-    const isRange = this.config.range === true
-
     return match(this.version)
-      .with(1, () =>
-        isRange
-          ? {
-              ...Definition.dataSignature.v1Range,
-              value: value as RangeValue,
-            }
-          : {
-              ...Definition.dataSignature.v1Single,
-              value: value as number,
-            },
-      )
+      .with(1, () => ({
+        ...Definition.dataSignature.v1,
+        value: value as number,
+      }))
       .with(undefined, () => value)
       .exhaustive() as DataType
   }
@@ -214,32 +168,16 @@ export class SliderDefinition<
   C extends Config = Config,
 > extends Definition<C> {}
 
-type SingleConfig = {
+type SliderConfig = {
   label?: string
   description?: string
   defaultValue?: number
   min?: number
   max?: number
   step?: number
-  range?: false
+  showNumber?: boolean
 }
 
-type RangeConfig = {
-  label?: string
-  description?: string
-  defaultValue?: RangeValue
-  min?: number
-  max?: number
-  step?: number
-  range: true
-}
-
-export function Slider(config?: SingleConfig): SliderDefinition<SingleConfig>
-export function Slider(config: RangeConfig): SliderDefinition<RangeConfig>
-export function Slider(
-  config?: SingleConfig | RangeConfig,
-): SliderDefinition<Config> {
+export function Slider(config?: SliderConfig): SliderDefinition<SliderConfig> {
   return new SliderDefinition((config ?? {}) as Config, 1)
 }
-
-export type { RangeValue as SliderRangeValue }
