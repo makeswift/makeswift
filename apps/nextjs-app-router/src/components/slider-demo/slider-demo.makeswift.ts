@@ -17,6 +17,7 @@ runtime.registerComponent(
         min: 0,
         max: 100,
         step: 1,
+        showNumber: false,
       }),
 
       opacity: Slider({
