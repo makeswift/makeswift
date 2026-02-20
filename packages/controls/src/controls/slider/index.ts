@@ -1,1 +1,1 @@
-export { Slider, SliderDefinition, type SliderRangeValue } from './slider'
+export { Slider, SliderDefinition } from './slider'

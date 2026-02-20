@@ -30,7 +30,6 @@ export {
   ShapeControl,
   Slider,
   SliderDefinition,
-  type SliderRangeValue,
   Style,
   StyleDefinition,
   type StyleProperty,
