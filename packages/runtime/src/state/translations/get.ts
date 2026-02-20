@@ -1,22 +1,24 @@
-import { getPropControllerDescriptors, type State } from '../read-only-state'
 import * as Documents from '../modules/read-only-documents'
 import * as ElementTrees from '../modules/element-trees'
 import { getTranslatableData } from '../../controls/control'
+import type {DescriptorsByComponentType} from '../modules/prop-controllers'
 
-export function getElementTreeTranslatableData(
-  state: State,
+export function getTranslatableContent(
+  descriptors: DescriptorsByComponentType,
   elementTree: Documents.ElementData,
 ): Record<string, Documents.Data> {
   const translatableData: Record<string, Documents.Data> = {}
-  const descriptors = getPropControllerDescriptors(state)
 
-  for (const element of ElementTrees.traverseElementTree(elementTree, descriptors)) {
+  for (const element of ElementTrees.traverseElementTree(
+    elementTree,
+    descriptors,
+  )) {
     if (Documents.isElementReference(element)) continue
 
-    const elementPescriptors = descriptors.get(element.type)
-    if (elementPescriptors == null) continue
+    const elementDescriptors = descriptors.get(element.type)
+    if (elementDescriptors == null) continue
 
-    Object.entries(elementPescriptors).forEach(([propName, descriptor]) => {
+    Object.entries(elementDescriptors).forEach(([propName, descriptor]) => {
       const translatablePropData = getTranslatableData(descriptor, element.props[propName])
 
       if (translatablePropData != null) {
