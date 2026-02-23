@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.0-canary.1
+
+### Minor Changes
+
+- aab138c: Expose translation capabilities to extract translatable content from a raw snapshot and merge translated content back into an element tree using backend persisted descriptors.
+
 ## 0.27.1-canary.0
 
 ### Patch Changes

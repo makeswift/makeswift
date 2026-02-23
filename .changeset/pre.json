@@ -15,6 +15,7 @@
     "@makeswift/hono-react": "0.0.0"
   },
   "changesets": [
-    "big-pianos-flash"
+    "big-pianos-flash",
+    "gold-grapes-collect"
   ]
 }
