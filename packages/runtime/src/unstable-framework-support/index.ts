@@ -27,6 +27,8 @@ export { Page } from '../runtimes/react/components/page'
 export { RuntimeProvider } from '../runtimes/react/components/RuntimeProvider'
 export { Slot } from '../runtimes/react/components/Slot'
 
+export { GoogleFontLink } from '../runtimes/react/components/GoogleFontLink'
+
 export {
   createRootStyleCache,
   RootStyleRegistry,
