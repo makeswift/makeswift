@@ -20,6 +20,8 @@ import {
   type SerializedRecord,
   type RichTextValue as RichTextControlValue,
   ShapeV2Definition,
+  DeserializationPlugin,
+  deserializeObject,
 } from '@makeswift/controls'
 
 import {
@@ -189,7 +191,7 @@ type SerializedListControlConfig<T extends Data> = {
   defaultValue?: ListControlValue<T>
 }
 
-type SerializedListControl<T extends ListControlValue = ListControlValue> = {
+export type SerializedListControl<T extends ListControlValue = ListControlValue> = {
   type: typeof DELETED_PROP_CONTROLLER_TYPES.List
   options: SerializedListControlConfig<T extends ListControlValue<infer U> ? U : never>
 }
@@ -238,7 +240,7 @@ function deserializeListControl<T extends Data>(
   const { type, getItemLabel } = serializedControl.options
 
   const deserializedType = deserializeControl(type) as DeserializedPanelControl
-  const deserializedGetItemLabel = getItemLabel && deserializeFunction(getItemLabel)
+  const deserializedGetItemLabel = isSerializedFunction(getItemLabel) ? deserializeFunction(getItemLabel) : getItemLabel
 
   return {
     ...serializedControl,
@@ -257,7 +259,7 @@ type SerializedTypeaheadControlConfig<T extends Data> = {
   defaultValue?: TypeaheadControlValue<T>
 }
 
-type SerializedTypeaheadControl<T extends TypeaheadControlValue = TypeaheadControlValue> = {
+export type SerializedTypeaheadControl<T extends TypeaheadControlValue = TypeaheadControlValue> = {
   type: typeof DELETED_PROP_CONTROLLER_TYPES.Typeahead
   options: SerializedTypeaheadControlConfig<T['value']>
 }
@@ -292,7 +294,7 @@ function deserializeTypeaheadControl<T extends Data>(
 ): DeserializedTypeaheadControl<TypeaheadControlValue<T>> {
   const { getItems } = serializedControl.options
 
-  const deserializedGetItems = getItems && deserializeFunction(getItems)
+  const deserializedGetItems = isSerializedFunction(getItems) ? deserializeFunction(getItems) : getItems
 
   return {
     ...serializedControl,
@@ -998,15 +1000,26 @@ export function deserializeLegacyControl<T extends Data>(
   }
 }
 
+export type DeserializeControlOptions = {
+  plugins?: DeserializationPlugin<any>[]
+}
+
+
 export function deserializeControl<T extends Data>(
   serializedControl: SerializedControl<T>,
+  options?: DeserializeControlOptions,
 ): DeserializedControl<T> {
   if (isSerializedLegacyControl(serializedControl)) {
-    return deserializeLegacyControl(serializedControl)
+    // Parity with controls deserialization logic below: "preprocess" serialized 
+    // legacy controls if the caller provided custom deserialization plugins
+    const record = options?.plugins ? deserializeObject(serializedControl, options?.plugins) : serializedControl
+    return deserializeLegacyControl(record as SerializedLegacyControl<T>)
   }
 
+  const plugins = options?.plugins ?? [functionDeserializationPlugin]
+
   return deserializeUnifiedControlDef(
-    deserializeRecord(serializedControl, [functionDeserializationPlugin])
+    deserializeRecord(serializedControl, plugins)
   )
 }
 
@@ -1063,11 +1076,14 @@ export function serializeControls(
   )
 }
 
+export type DeserializeControlsOptions = { onError?: (err: Error, context: { key: string; serializedControl: unknown }) => void } & Pick<DeserializeControlOptions, 'plugins'>
+
 export function deserializeControls(
   serializedControls: Record<string, unknown>,
   {
     onError,
-  }: { onError?: (err: Error, context: { key: string; serializedControl: unknown }) => void } = {},
+    plugins,
+  }: DeserializeControlsOptions = {},
 ): Record<string, DeserializedControl> {
   return Object.entries(serializedControls).reduce(
     (deserializedControls, [key, serializedControl]) => {
@@ -1077,7 +1093,7 @@ export function deserializeControls(
             `Expected serialized control data, got ${JSON.stringify(serializedControl)}`,
           )
         }
-        const deserializedControl = deserializeControl(serializedControl)
+        const deserializedControl = deserializeControl(serializedControl, { plugins })
         return { ...deserializedControls, [key]: deserializedControl }
       } catch (err: unknown) {
         const error =
