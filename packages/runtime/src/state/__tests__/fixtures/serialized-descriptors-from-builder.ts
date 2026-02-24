@@ -1,7 +1,12 @@
 /**
  * Sample of the descriptors object that lives in the builder state, some objects are left purposely empty
  */
-const createMessagePort = () => new MessageChannel().port1
+const messagePortPlaceholder = { __serializedType: 'MessagePort' as const }
+const MockMessageChannel = jest.fn().mockImplementation(() => ({
+  port1: messagePortPlaceholder,
+  port2: messagePortPlaceholder,
+}))
+const createMessagePort = () => new (MockMessageChannel as unknown as new () => { port1: typeof messagePortPlaceholder })().port1
 
 export const mockedSerializedDescriptorsFromBuilder: Record<string, Record<string, unknown>> = {
   'makeswift::components::slot::v1': {
