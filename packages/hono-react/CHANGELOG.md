@@ -1,5 +1,15 @@
 # @makeswift/hono-react
 
+## 0.1.1-canary.2
+
+### Patch Changes
+
+- c13c772: chore: reexport experimental GoogleFontLink from hono-react
+- Updated dependencies [a99b24e]
+- Updated dependencies [1223e34]
+- Updated dependencies [9e8f8d7]
+  - @makeswift/runtime@0.28.0-canary.2
+
 ## 0.1.1-canary.1
 
 ### Patch Changes

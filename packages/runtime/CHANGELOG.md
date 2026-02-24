@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.28.0-canary.2
+
+### Patch Changes
+
+- a99b24e: chore: expose GoogleFontLink via experimental framework integration APIs
+- 1223e34: feat: unstable client method for fetching site fonts
+- 9e8f8d7: feat: add GoogleFontLink component
+
 ## 0.28.0-canary.1
 
 ### Minor Changes
