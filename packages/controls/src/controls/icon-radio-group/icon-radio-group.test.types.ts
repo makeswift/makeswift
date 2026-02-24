@@ -6,12 +6,9 @@ import {
   type ValueType,
 } from '../associated-types'
 
-import {
-  unstable_IconRadioGroup as IconRadioGroup,
-  IconRadioGroupIcon,
-} from './icon-radio-group'
+import { IconRadioGroup, IconRadioGroupIcon } from './icon-radio-group'
 
-describe('unstable_IconRadioGroup Types', () => {
+describe('IconRadioGroup Types', () => {
   describe('infers types from control definition', () => {
     test('default value not provided', () => {
       const def = IconRadioGroup({
