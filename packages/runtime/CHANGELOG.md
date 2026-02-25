@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.0-canary.3
+
+### Patch Changes
+
+- c7a5b1a: Allow for control deserialization plugin overrides
+
 ## 0.28.0-canary.2
 
 ### Patch Changes
