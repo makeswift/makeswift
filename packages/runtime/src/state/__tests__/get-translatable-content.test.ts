@@ -1,6 +1,6 @@
 import { getTranslatableContent } from '../translations/get'
 import { translatableContentSampleElementTree } from './fixtures/translatable-content-sample'
-import { mockedSerializedDescriptorsFromBuilder  as descriptors} from './fixtures/serialized-descriptors-from-builder'
+import { getMockedSerializedDescriptorsFromBuilder } from './fixtures/serialized-descriptors-from-builder'
 import { DescriptorsByComponentType, DescriptorsByProp } from '../modules/prop-controllers'
 import { deserializeControls } from '../../builder/serialization/control-serialization'
 import { DeserializationPlugin, SerializationPlugin, serializeObject, AnyFunction } from '@makeswift/controls'
@@ -34,9 +34,17 @@ const deserializeDescriptors = (
   return resolved
 }
 
+const messageChannel = new MessageChannel()
+
 describe('getTranslatableContent', () => {
+  afterAll(() => {
+    messageChannel.port1.close();
+    messageChannel.port2.close();
+  });
+
   test('extracts translatable data from an element tree using persisted descriptors', () => {
     // NOTE: this is mocking the behavior that should happen in ORION to properly serialize the descriptors
+    const descriptors = getMockedSerializedDescriptorsFromBuilder(messageChannel.port1);
     const serializedDescriptors = serializeObject(descriptors, [serializeMessagePort]) as Record<string, any>
 
     const serializedControl = serializedDescriptors["./components/Text/index.js"].text.config.plugins[0].control;

@@ -1016,7 +1016,7 @@ export function deserializeControl<T extends Data>(
     return deserializeLegacyControl(record as SerializedLegacyControl<T>)
   }
 
-  const plugins = options?.plugins ?? [functionDeserializationPlugin]
+  const plugins = [functionDeserializationPlugin, ...(options?.plugins ?? [])]
 
   return deserializeUnifiedControlDef(
     deserializeRecord(serializedControl, plugins)

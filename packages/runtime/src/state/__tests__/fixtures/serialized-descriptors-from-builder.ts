@@ -1,14 +1,8 @@
 /**
  * Sample of the descriptors object that lives in the builder state, some objects are left purposely empty
  */
-const messagePortPlaceholder = { __serializedType: 'MessagePort' as const }
-const MockMessageChannel = jest.fn().mockImplementation(() => ({
-  port1: messagePortPlaceholder,
-  port2: messagePortPlaceholder,
-}))
-const createMessagePort = () => new (MockMessageChannel as unknown as new () => { port1: typeof messagePortPlaceholder })().port1
 
-export const mockedSerializedDescriptorsFromBuilder: Record<string, Record<string, unknown>> = {
+export const getMockedSerializedDescriptorsFromBuilder: (messagePort: MessagePort) => Record<string, Record<string, unknown>> = (messagePort) => ({
   'makeswift::components::slot::v1': {
     children: {
       type: 'makeswift::controls::slot',
@@ -259,8 +253,8 @@ export const mockedSerializedDescriptorsFromBuilder: Record<string, Record<strin
         plugins: [
           {
             control: {
-              getValue: createMessagePort(),
-              onChange: createMessagePort(),
+              getValue: messagePort,
+              onChange: messagePort,
               definition: {
                 type: 'makeswift::controls::select',
                 config: {
@@ -285,15 +279,15 @@ export const mockedSerializedDescriptorsFromBuilder: Record<string, Record<strin
           },
           {
             control: {
-              getValue: createMessagePort(),
-              onChange: createMessagePort(),
+              getValue: messagePort,
+              onChange: messagePort,
               definition: { type: 'makeswift::controls::typography', config: {} },
             },
           },
           {
             control: {
-              getValue: createMessagePort(),
-              onChange: createMessagePort(),
+              getValue: messagePort,
+              onChange: messagePort,
               definition: {
                 type: 'makeswift::controls::style-v2',
                 config: {
@@ -310,15 +304,15 @@ export const mockedSerializedDescriptorsFromBuilder: Record<string, Record<strin
                       defaultValue: 'left',
                     },
                   },
-                  getStyle: createMessagePort(),
+                  getStyle: messagePort,
                 },
               },
             },
           },
           {
             control: {
-              getValue: createMessagePort(),
-              onChange: createMessagePort(),
+              getValue: messagePort,
+              onChange: messagePort,
               definition: {
                 type: 'makeswift::controls::icon-radio-group',
                 config: {
@@ -334,8 +328,8 @@ export const mockedSerializedDescriptorsFromBuilder: Record<string, Record<strin
           },
           {
             control: {
-              getValue: createMessagePort(),
-              onChange: createMessagePort(),
+              getValue: messagePort,
+              onChange: messagePort,
               definition: {
                 type: 'makeswift::controls::link',
                 config: { label: 'On Click' },
@@ -1034,4 +1028,4 @@ export const mockedSerializedDescriptorsFromBuilder: Record<string, Record<strin
       },
     },
   },
-}
+})
