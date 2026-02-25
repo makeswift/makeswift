@@ -15,6 +15,7 @@ import { NumberDefinition } from '../number'
 import { RichTextDefinition, RichTextV1Definition } from '../rich-text'
 import { SelectConfig, SelectDefinition } from '../select'
 import { ShapeDefinition } from '../shape'
+import { SliderDefinition } from '../slider'
 import { SlotDefinition } from '../slot'
 import { StyleDefinition, StyleV2Definition } from '../style'
 import { TextAreaDefinition } from '../text-area'
@@ -40,6 +41,7 @@ abstract class ControlDefinitionVisitor<R> {
   abstract visitLink(def: LinkDefinition<any>, ...args: unknown[]): R
   abstract visitList(def: ListDefinition, ...args: unknown[]): R
   abstract visitNumber(def: NumberDefinition, ...args: unknown[]): R
+  abstract visitSlider(def: SliderDefinition, ...args: unknown[]): R
   abstract visitRichTextV1(
     def: RichTextV1Definition<unknown, any>,
     ...args: unknown[]
