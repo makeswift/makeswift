@@ -24,6 +24,7 @@ import {
 
 import {
   CheckboxDefinition,
+  CodeDefinition,
   ColorDefinition,
   ComboboxDefinition,
   FontDefinition,
@@ -1006,7 +1007,7 @@ export function deserializeControl<T extends Data>(
   }
 
   return deserializeUnifiedControlDef(
-    deserializeRecord(serializedControl, [functionDeserializationPlugin])
+    deserializeRecord(serializedControl, [functionDeserializationPlugin]),
   )
 }
 
@@ -1014,6 +1015,7 @@ export function deserializeUnifiedControlDef(record: DeserializedRecord): Unifie
   type DeserializeMethod = (data: DeserializedRecord) => UnifiedControlDefinition
   const deserializeMethod: Record<string, DeserializeMethod> = {
     [CheckboxDefinition.type]: CheckboxDefinition.deserialize,
+    [CodeDefinition.type]: CodeDefinition.deserialize,
     [ColorDefinition.type]: ColorDefinition.deserialize,
     [ComboboxDefinition.type]: ComboboxDefinition.deserialize,
     [FontDefinition.type]: FontDefinition.deserialize,
