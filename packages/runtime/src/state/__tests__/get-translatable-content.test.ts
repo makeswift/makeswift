@@ -34,18 +34,25 @@ const deserializeDescriptors = (
   return resolved
 }
 
-const messageChannel = new MessageChannel()
+
 
 describe('getTranslatableContent', () => {
-  afterAll(() => {
-    messageChannel.port1.close();
-    messageChannel.port2.close();
-  });
-
   test('extracts translatable data from an element tree using persisted descriptors', () => {
-    // NOTE: this is mocking the behavior that should happen in ORION to properly serialize the descriptors
-    const descriptors = getMockedSerializedDescriptorsFromBuilder(messageChannel.port1);
+    const messageChannels: MessageChannel[] = []
+    const createMessagePort = () => {
+      const messageChannel = new MessageChannel()
+      messageChannels.push(messageChannel)
+      return messageChannel.port1
+    }
+    
+    // NOTE: this is mocking the behavior that should happen in the builder to properly serialize the descriptors
+    const descriptors = getMockedSerializedDescriptorsFromBuilder(createMessagePort);
     const serializedDescriptors = serializeObject(descriptors, [serializeMessagePort]) as Record<string, any>
+
+    for (const messageChannel of messageChannels) {
+      messageChannel.port1.close();
+      messageChannel.port2.close();
+    }
 
     const serializedControl = serializedDescriptors["./components/Text/index.js"].text.config.plugins[0].control;
     expect(serializedControl.getValue.__serializedType).toBe('MessagePort')

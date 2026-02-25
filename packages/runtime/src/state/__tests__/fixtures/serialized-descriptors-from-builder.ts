@@ -2,7 +2,7 @@
  * Sample of the descriptors object that lives in the builder state, some objects are left purposely empty
  */
 
-export const getMockedSerializedDescriptorsFromBuilder: (messagePort: MessagePort) => Record<string, Record<string, unknown>> = (messagePort) => ({
+export const getMockedSerializedDescriptorsFromBuilder: (createMessagePort: () => MessagePort) => Record<string, Record<string, unknown>> = (createMessagePort) => ({
   'makeswift::components::slot::v1': {
     children: {
       type: 'makeswift::controls::slot',
@@ -253,8 +253,8 @@ export const getMockedSerializedDescriptorsFromBuilder: (messagePort: MessagePor
         plugins: [
           {
             control: {
-              getValue: messagePort,
-              onChange: messagePort,
+              getValue: createMessagePort(),
+              onChange: createMessagePort(),
               definition: {
                 type: 'makeswift::controls::select',
                 config: {
@@ -279,15 +279,15 @@ export const getMockedSerializedDescriptorsFromBuilder: (messagePort: MessagePor
           },
           {
             control: {
-              getValue: messagePort,
-              onChange: messagePort,
+              getValue: createMessagePort(),
+              onChange: createMessagePort(),
               definition: { type: 'makeswift::controls::typography', config: {} },
             },
           },
           {
             control: {
-              getValue: messagePort,
-              onChange: messagePort,
+              getValue: createMessagePort(),
+              onChange: createMessagePort(),
               definition: {
                 type: 'makeswift::controls::style-v2',
                 config: {
@@ -304,15 +304,15 @@ export const getMockedSerializedDescriptorsFromBuilder: (messagePort: MessagePor
                       defaultValue: 'left',
                     },
                   },
-                  getStyle: messagePort,
+                  getStyle: createMessagePort(),
                 },
               },
             },
           },
           {
             control: {
-              getValue: messagePort,
-              onChange: messagePort,
+              getValue: createMessagePort(),
+              onChange: createMessagePort(),
               definition: {
                 type: 'makeswift::controls::icon-radio-group',
                 config: {
@@ -328,8 +328,8 @@ export const getMockedSerializedDescriptorsFromBuilder: (messagePort: MessagePor
           },
           {
             control: {
-              getValue: messagePort,
-              onChange: messagePort,
+              getValue: createMessagePort(),
+              onChange: createMessagePort(),
               definition: {
                 type: 'makeswift::controls::link',
                 config: { label: 'On Click' },
