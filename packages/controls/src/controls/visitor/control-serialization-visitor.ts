@@ -5,6 +5,7 @@ import {
 } from '../../serialization'
 
 import { CheckboxDefinition } from '../checkbox'
+import { CodeDefinition } from '../code'
 import { ColorDefinition } from '../color'
 import { ComboboxDefinition } from '../combobox'
 import { ControlDefinition } from '../definition'
@@ -48,6 +49,9 @@ export abstract class ControlSerializationVisitor extends ControlDefinitionVisit
     } as unknown as SerializedRecord
   }
 
+  visitCode(def: CodeDefinition): SerializedRecord {
+    return this.serializeConfig(def, { version: def.version })
+  }
   visitCheckbox(def: CheckboxDefinition): SerializedRecord {
     return this.serializeConfig(def, { version: def.version })
   }
