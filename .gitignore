@@ -59,3 +59,4 @@ storybook-static
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+.cursor/rules/ticket-context.mdc

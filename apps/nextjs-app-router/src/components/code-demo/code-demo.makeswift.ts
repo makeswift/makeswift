@@ -1,7 +1,20 @@
 import { runtime } from '@/makeswift/runtime'
 import { lazy } from 'react'
 
-import { Style, Code } from '@makeswift/runtime/controls'
+import {
+  Style,
+  unstable_Code as Code,
+  type CodeLanguage,
+} from '@makeswift/runtime/controls'
+
+const webLanguages: CodeLanguage[] = ['html', 'css']
+const backendLanguages: CodeLanguage[] = [
+  'typescript',
+  'python',
+  'go',
+  'java',
+  'cpp',
+]
 
 runtime.registerComponent(
   lazy(() => import('./code-demo')),
@@ -12,52 +25,21 @@ runtime.registerComponent(
       className: Style(),
       htmlCode: Code({
         label: 'HTML',
-        languages: ['html'],
+        languages: webLanguages,
         defaultValue: '<div>Hello, world!</div>',
       }),
       cssCode: Code({
         label: 'CSS',
         languages: ['css'],
       }),
-      jsCode: Code({
-        label: 'Multi-language',
-        languages: ['javascript', 'typescript', 'json'],
+      tsCode: Code({
+        label: 'TypeScript',
+        languages: ['typescript'],
+        defaultValue: 'const greeting: string = "hello"',
       }),
-      jsCode1: Code({
+      multiCode: Code({
         label: 'Multi-language',
-        languages: ['javascript', 'typescript', 'json'],
-      }),
-      jsCode2: Code({
-        label: 'Multi-language',
-        languages: ['javascript', 'typescript', 'json'],
-      }),
-      jsCode3: Code({
-        label: 'Multi-language',
-        languages: ['javascript', 'typescript', 'json'],
-      }),
-      jsCode4: Code({
-        label: 'Multi-language',
-        languages: ['javascript', 'typescript', 'json'],
-      }),
-      jsCode5: Code({
-        label: 'Multi-language',
-        languages: ['javascript', 'typescript', 'json'],
-      }),
-      jsCode6: Code({
-        label: 'Multi-language',
-        languages: ['javascript', 'typescript', 'json'],
-      }),
-      jsCode7: Code({
-        label: 'Multi-language',
-        languages: ['javascript', 'typescript', 'json'],
-      }),
-      jsCode8: Code({
-        label: 'Multi-language',
-        languages: ['javascript', 'typescript', 'json'],
-      }),
-      jsCode9: Code({
-        label: 'Multi-language',
-        languages: ['javascript', 'typescript', 'json'],
+        languages: backendLanguages,
       }),
     },
   },
