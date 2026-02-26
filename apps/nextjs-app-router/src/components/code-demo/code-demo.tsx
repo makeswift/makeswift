@@ -4,11 +4,12 @@ type Props = {
   className?: string
   htmlCode?: string
   cssCode?: string
-  jsCode?: string
+  tsCode?: string
+  multiCode?: string
 }
 
 export const CodeDemo = forwardRef(function CodeDemo(
-  { className, htmlCode, cssCode, jsCode }: Props,
+  { className, htmlCode, cssCode, tsCode, multiCode }: Props,
   ref: Ref<HTMLDivElement>,
 ) {
   return (
@@ -18,22 +19,29 @@ export const CodeDemo = forwardRef(function CodeDemo(
     >
       <section>
         <h3 className="text-sm font-semibold mb-1">HTML</h3>
-        <pre className="rounded bg-gray-100 p-3 text-sm overflow-auto">
+        <pre className="rounded bg-gray-100 p-3 text-sm whitespace-pre-wrap break-words">
           <code>{htmlCode ?? '(empty)'}</code>
         </pre>
       </section>
 
       <section>
         <h3 className="text-sm font-semibold mb-1">CSS</h3>
-        <pre className="rounded bg-gray-100 p-3 text-sm overflow-auto">
+        <pre className="rounded bg-gray-100 p-3 text-sm whitespace-pre-wrap break-words">
           <code>{cssCode ?? '(empty)'}</code>
         </pre>
       </section>
 
       <section>
-        <h3 className="text-sm font-semibold mb-1">JavaScript</h3>
-        <pre className="rounded bg-gray-100 p-3 text-sm overflow-auto">
-          <code>{jsCode ?? '(empty)'}</code>
+        <h3 className="text-sm font-semibold mb-1">TypeScript</h3>
+        <pre className="rounded bg-gray-100 p-3 text-sm whitespace-pre-wrap break-words">
+          <code>{tsCode ?? '(empty)'}</code>
+        </pre>
+      </section>
+
+      <section>
+        <h3 className="text-sm font-semibold mb-1">Multi-language</h3>
+        <pre className="rounded bg-gray-100 p-3 text-sm whitespace-pre-wrap break-words">
+          <code>{multiCode ?? '(empty)'}</code>
         </pre>
       </section>
     </div>
