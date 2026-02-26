@@ -1,5 +1,5 @@
 import { Editor, Element, NodeEntry } from 'slate'
-import { unstable_IconRadioGroup, Slate } from '@makeswift/controls'
+import { IconRadioGroup, Slate } from '@makeswift/controls'
 
 import { unstable_StyleV2 } from '../../controls/style-v2/style-v2'
 import { normalizeResponsiveValue, setResponsiveValue } from '../utils/responsive'
@@ -28,26 +28,26 @@ export function TextAlignPlugin() {
   return Plugin({
     control: {
       definition: unstable_StyleV2({
-        type: unstable_IconRadioGroup({
+        type: IconRadioGroup({
           label: 'Alignment',
           options: [
             {
-              icon: unstable_IconRadioGroup.Icon.TextAlignLeft,
+              icon: IconRadioGroup.Icon.TextAlignLeft,
               label: 'Left Align',
               value: 'left',
             },
             {
-              icon: unstable_IconRadioGroup.Icon.TextAlignCenter,
+              icon: IconRadioGroup.Icon.TextAlignCenter,
               label: 'Center Align',
               value: 'center',
             },
             {
-              icon: unstable_IconRadioGroup.Icon.TextAlignRight,
+              icon: IconRadioGroup.Icon.TextAlignRight,
               label: 'Right Align',
               value: 'right',
             },
             {
-              icon: unstable_IconRadioGroup.Icon.TextAlignJustify,
+              icon: IconRadioGroup.Icon.TextAlignJustify,
               label: 'Justify',
               value: 'justify',
             },

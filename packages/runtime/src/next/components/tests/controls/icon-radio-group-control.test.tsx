@@ -1,5 +1,5 @@
 /** @jest-environment jsdom */
-import { unstable_IconRadioGroup } from '@makeswift/controls'
+import { IconRadioGroup } from '@makeswift/controls'
 import { testPageControlPropRendering } from './page-control-prop-rendering'
 
 describe('Page', () => {
@@ -8,17 +8,17 @@ describe('Page', () => {
       `resolves when value is %s`,
       async value => {
         await testPageControlPropRendering(
-          unstable_IconRadioGroup({
+          IconRadioGroup({
             options: [
               {
                 label: 'Subscript',
                 value: 'subscript',
-                icon: unstable_IconRadioGroup.Icon.Subscript,
+                icon: IconRadioGroup.Icon.Subscript,
               },
               {
                 label: 'Superscript',
                 value: 'superscript',
-                icon: unstable_IconRadioGroup.Icon.Superscript,
+                icon: IconRadioGroup.Icon.Superscript,
               },
             ],
           }),
@@ -30,17 +30,17 @@ describe('Page', () => {
 
   test(`resolves value when defaultValue is set`, async () => {
     await testPageControlPropRendering(
-      unstable_IconRadioGroup({
+      IconRadioGroup({
         options: [
           {
             label: 'Subscript',
             value: 'subscript',
-            icon: unstable_IconRadioGroup.Icon.Subscript,
+            icon: IconRadioGroup.Icon.Subscript,
           },
           {
             label: 'Superscript',
             value: 'superscript',
-            icon: unstable_IconRadioGroup.Icon.Superscript,
+            icon: IconRadioGroup.Icon.Superscript,
           },
         ],
         defaultValue: 'superscript',

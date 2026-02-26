@@ -1,4 +1,4 @@
-import { unstable_IconRadioGroup, deserializeRecord } from '@makeswift/controls'
+import { IconRadioGroup, deserializeRecord } from '@makeswift/controls'
 
 import { unstable_StyleV2, StyleV2Definition } from './style-v2'
 import { deserializeUnifiedControlDef } from '../../builder'
@@ -10,26 +10,26 @@ import {
 describe('StyleV2', () => {
   test('serialization', () => {
     const definition = unstable_StyleV2({
-      type: unstable_IconRadioGroup({
+      type: IconRadioGroup({
         label: 'Alignment',
         options: [
           {
-            icon: unstable_IconRadioGroup.Icon.TextAlignLeft,
+            icon: IconRadioGroup.Icon.TextAlignLeft,
             label: 'Left Align',
             value: 'left',
           },
           {
-            icon: unstable_IconRadioGroup.Icon.TextAlignCenter,
+            icon: IconRadioGroup.Icon.TextAlignCenter,
             label: 'Center Align',
             value: 'center',
           },
           {
-            icon: unstable_IconRadioGroup.Icon.TextAlignRight,
+            icon: IconRadioGroup.Icon.TextAlignRight,
             label: 'Right Align',
             value: 'right',
           },
           {
-            icon: unstable_IconRadioGroup.Icon.TextAlignJustify,
+            icon: IconRadioGroup.Icon.TextAlignJustify,
             label: 'Justify',
             value: 'justify',
           },

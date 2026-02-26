@@ -1,6 +1,6 @@
 import { type Editor, type Element } from 'slate'
 import { type RenderElementProps } from 'slate-react'
-import { unstable_IconRadioGroup, Slate } from '@makeswift/controls'
+import { IconRadioGroup, Slate } from '@makeswift/controls'
 
 import { type RenderElement, Plugin } from '../../controls/rich-text-v2/plugin'
 
@@ -21,7 +21,7 @@ export const withInline = (editor: Editor) => {
 export function InlinePlugin() {
   return Plugin({
     control: {
-      definition: unstable_IconRadioGroup({
+      definition: IconRadioGroup({
         label: 'Inline',
         options: supportedInlineOptions,
       }),
