@@ -1,6 +1,6 @@
 import { testDefinition, testResolveValue } from '../../testing/test-definition'
 
-import { Code, CodeDefinition } from './code'
+import { unstable_Code, CodeDefinition } from './code'
 
 describe('Code', () => {
   describe('constructor', () => {
@@ -8,7 +8,7 @@ describe('Code', () => {
       'call with default value `%s` returns versioned definition',
       (value) => {
         expect(
-          Code({
+          unstable_Code({
             label: 'Code',
             defaultValue: value,
           }),
@@ -18,7 +18,7 @@ describe('Code', () => {
 
     test('supports languages config', () => {
       expect(
-        Code({
+        unstable_Code({
           label: 'CSS Code',
           languages: ['css', 'html'],
           defaultValue: 'body { color: red; }',
@@ -27,7 +27,7 @@ describe('Code', () => {
     })
 
     test('disallows extraneous properties', () => {
-      Code({
+      unstable_Code({
         label: undefined,
         defaultValue: undefined,
         // @ts-expect-error
@@ -38,23 +38,23 @@ describe('Code', () => {
 
   describe('assignability', () => {
     function assignTest(_def: CodeDefinition) {}
-    assignTest(Code())
-    assignTest(Code({ label: 'Code' }))
-    assignTest(Code({ defaultValue: '<div>hello</div>' }))
-    assignTest(Code({ defaultValue: 'text' as string }))
-    assignTest(Code({ label: 'Code', defaultValue: undefined }))
-    assignTest(Code({ label: undefined, defaultValue: undefined }))
-    assignTest(Code({ languages: ['javascript', 'typescript'] }))
+    assignTest(unstable_Code())
+    assignTest(unstable_Code({ label: 'Code' }))
+    assignTest(unstable_Code({ defaultValue: '<div>hello</div>' }))
+    assignTest(unstable_Code({ defaultValue: 'text' }))
+    assignTest(unstable_Code({ label: 'Code', defaultValue: undefined }))
+    assignTest(unstable_Code({ label: undefined, defaultValue: undefined }))
+    assignTest(unstable_Code({ languages: ['typescript', 'python'] }))
   })
 })
 
 describe.each([
   [
-    Code({ defaultValue: 'console.log("hi")', label: 'visible' }),
+    unstable_Code({ defaultValue: 'console.log("hi")', label: 'visible' }),
     ['const x = 1', 'body { color: red; }'],
   ],
   [
-    Code({ label: 'Code' }),
+    unstable_Code({ label: 'Code' }),
     ['<div>hello</div>', '.class { margin: 0; }', undefined],
   ],
 ])('Code', (def, values) => {
