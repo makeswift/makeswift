@@ -15,6 +15,19 @@ import {
 import { DefaultControlInstance, type SendMessage } from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
 
+export const CODE_LANGUAGES = [
+  'typescript',
+  'python',
+  'go',
+  'java',
+  'csharp',
+  'cpp',
+  'css',
+  'html',
+] as const
+
+export type CodeLanguage = (typeof CODE_LANGUAGES)[number]
+
 type Config = z.infer<typeof Definition.schema.relaxed.config>
 
 type SchemaByDefaultValue<D extends Config['defaultValue']> =
@@ -63,7 +76,7 @@ class Definition<C extends Config> extends ControlDefinition<
         label: z.string().optional(),
         description: z.string().optional(),
         defaultValue: value,
-        languages: z.array(z.string()).optional(),
+        languages: z.array(z.enum(CODE_LANGUAGES)).optional(),
       })
 
       const definition = z.object({
@@ -187,7 +200,7 @@ type NormedConfig<D extends Config['defaultValue']> = z.infer<
   SchemaByDefaultValue<D>['config']
 >
 
-export function Code<D extends Config['defaultValue']>(
+export function unstable_Code<D extends Config['defaultValue']>(
   config?: UserConfig<D>,
 ): CodeDefinition<NormedConfig<D>> {
   return new CodeDefinition((config ?? {}) as NormedConfig<D>, 1)
