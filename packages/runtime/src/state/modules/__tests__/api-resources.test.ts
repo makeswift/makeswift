@@ -31,6 +31,7 @@ const file: File = {
   name: 'test-file-name',
   extension: 'png',
   publicUrl: 'https://example.com/test-file.png',
+  altText: null,
   dimensions: { width: 1024, height: 1024 },
 }
 

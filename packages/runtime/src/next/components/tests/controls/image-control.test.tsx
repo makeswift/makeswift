@@ -16,6 +16,7 @@ const fileResource = {
   name: 'image',
   extension: 'jpg',
   publicUrl: 'https://example.com/image.jpg',
+  altText: null,
   dimensions: {
     width: 100,
     height: 100,
