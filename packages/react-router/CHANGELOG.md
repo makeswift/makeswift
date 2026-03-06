@@ -1,5 +1,17 @@
 # @makeswift/react-router
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [648f0c8]
+- Updated dependencies [aab138c]
+- Updated dependencies [a99b24e]
+- Updated dependencies [1223e34]
+- Updated dependencies [9e8f8d7]
+- Updated dependencies [c7a5b1a]
+  - @makeswift/runtime@0.27.1
+
 ## 0.1.0
 
 ### Minor Changes
