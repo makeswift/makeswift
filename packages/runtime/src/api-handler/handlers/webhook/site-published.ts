@@ -10,13 +10,13 @@ type SitePublishedParams = {
 }
 
 export async function handleSitePublished(
-  _payload: SitePublishedWebhookPayload,
+  payload: SitePublishedWebhookPayload,
   { onPublish, revalidate }: SitePublishedParams,
 ): Promise<WebhookHandlerResult> {
   revalidate()
 
   try {
-    await onPublish?.()
+    await onPublish?.(payload.data)
   } catch (error) {
     // log and ignore any error in user-provided onPublish
     console.error("Unhandled exception in the 'onPublish' callback:", error)
