@@ -90,7 +90,7 @@ describe('MakeswiftApiHandler', () => {
 
       // Assert
       expect(statusCode).toBe(200)
-      expect(onPublish).toHaveBeenCalled()
+      expect(onPublish).toHaveBeenCalledWith(webhookPayload.data)
     })
 
     test('200s and calls revalidateTag when user-provided onPublish callback fails', async () => {
