@@ -107,8 +107,8 @@ export function getElementImperativeHandlesContainingElement(
 
 export function setupBuilderProxy(
   builderProxy: BuilderAPIProxy,
-): ThunkAction<void, State, unknown, Action> {
+): ThunkAction<VoidFunction, State, unknown, Action> {
   return dispatch => {
-    builderProxy.setup({ onHostAction: action => dispatch(action) })
+    return builderProxy.setup({ onHostAction: action => dispatch(action) })
   }
 }

@@ -7,7 +7,6 @@ export class MessageChannel {
   private readonly appOrigin: string
   private channel: MessagePort | null = null
   private bufferedMessages: [any, Transferable[]?][] = []
-  private connectionCheckIntervalID: number | null = null
 
   constructor({ appOrigin }: { appOrigin: string }) {
     this.appOrigin = appOrigin
@@ -21,8 +20,8 @@ export class MessageChannel {
     }
   }
 
-  public setup(onMessage: (event: MessageEvent) => void) {
-    this.setupConnectionCheck()
+  public setup({ onMessage }: { onMessage: (event: MessageEvent) => void }): VoidFunction {
+    const cleanupConnectionCheck = setupConnectionCheck(this.appOrigin)
 
     const channel = new window.MessageChannel()
     channel.port1.onmessage = onMessage
@@ -32,6 +31,16 @@ export class MessageChannel {
     window.parent.postMessage(channel.port2, this.appOrigin, [channel.port2])
 
     this.channel = channel.port1
+
+    return () => {
+      cleanupConnectionCheck()
+
+      if (this.channel) {
+        this.channel.onmessage = null
+        this.channel.close()
+        this.channel = null
+      }
+    }
   }
 
   public dispatchBuffered() {
@@ -43,46 +52,51 @@ export class MessageChannel {
 
     this.bufferedMessages = []
   }
+}
 
-  public teardown() {
-    this.teardownConnectionCheck()
+// FIXME: instead of `window.parent.postMessage`, the connection check should
+// probably use the message channel itself: after all, it's meant to check
+// the health of the builder <> host connection, and whether we can reach the
+// builder through `window.parent.postMessage` is not indicative of the health
+// of the message channel itself, which is what the builder <> host
+// communication relies on.
+function setupConnectionCheck(appOrigin: string): VoidFunction {
+  class Interval {
+    private id: number | null = null
 
-    if (this.channel) {
-      this.channel.onmessage = null
-      this.channel.close()
+    setInterval(callback: () => void, delay: number) {
+      this.clear()
+      this.id = window.setInterval(callback, delay)
+    }
+
+    clear() {
+      if (this.id != null) {
+        window.clearInterval(this.id)
+        this.id = null
+      }
     }
   }
 
-  private setupConnectionCheck() {
-    window.addEventListener('message', this.connectionCheckHandler)
-    window.parent.postMessage(makeswiftConnectionInit(), { targetOrigin: this.appOrigin })
-  }
+  const connectionCheckInterval = new Interval()
 
-  private teardownConnectionCheck() {
-    window.removeEventListener('message', this.connectionCheckHandler)
-    if (this.connectionCheckIntervalID != null) {
-      window.clearInterval(this.connectionCheckIntervalID)
-      this.connectionCheckIntervalID = null
-    }
-  }
-
-  // use class field syntax to preserve the identity of the handler
-  // for adding and removing the event listener
-  private connectionCheckHandler = (event: MessageEvent) => {
+  function connectionCheckHandler(event: MessageEvent) {
     if (
-      event.origin === this.appOrigin &&
+      event.origin === appOrigin &&
       event.data.type === SharedActionTypes.MAKESWIFT_CONNECTION_INIT
     ) {
-      if (this.connectionCheckIntervalID != null) {
-        window.clearInterval(this.connectionCheckIntervalID)
-        this.connectionCheckIntervalID = null
-      }
-
-      this.connectionCheckIntervalID = window.setInterval(() => {
+      connectionCheckInterval.setInterval(() => {
         window.parent.postMessage(makeswiftConnectionCheck({ currentUrl: window.location.href }), {
-          targetOrigin: this.appOrigin,
+          targetOrigin: appOrigin,
         })
       }, CONNECTION_PING_INTERVAL_MS)
     }
+  }
+
+  window.addEventListener('message', connectionCheckHandler)
+  window.parent.postMessage(makeswiftConnectionInit(), { targetOrigin: appOrigin })
+
+  return () => {
+    window.removeEventListener('message', connectionCheckHandler)
+    connectionCheckInterval.clear()
   }
 }

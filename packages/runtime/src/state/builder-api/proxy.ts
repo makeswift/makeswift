@@ -12,17 +12,23 @@ export class BuilderAPIProxy {
 
   // low-level, action-based API
 
-  setup({ onHostAction }: { onHostAction: (action: HostAction) => void }): void {
-    this.messageChannel.setup((event: MessageEvent) => {
-      const action = event.data
+  setup({ onHostAction }: { onHostAction: (action: HostAction) => void }): VoidFunction {
+    const channelCleanup = this.messageChannel.setup({
+      onMessage: (event: MessageEvent) => {
+        const action = event.data
 
-      if (!isHostAction(action)) {
-        console.warn('Unexpected host action', action)
-        return
-      }
+        if (!isHostAction(action)) {
+          console.warn('Unexpected host action', action)
+          return
+        }
 
-      onHostAction(action)
+        onHostAction(action)
+      },
     })
+
+    return () => {
+      channelCleanup()
+    }
   }
 
   execute(action: BuilderAction): void {
@@ -37,9 +43,5 @@ export class BuilderAPIProxy {
 
   dispatchBuffered(): void {
     this.messageChannel.dispatchBuffered()
-  }
-
-  teardown(): void {
-    this.messageChannel.teardown()
   }
 }
