@@ -164,11 +164,11 @@ export function configureStore({
       readWriteMiddlewareRef.current = createReadWriteMiddleware({ builderProxy })
 
       const dispatch = store.dispatch as ReadWriteDispatch
-      dispatch(setupBuilderProxy(builderProxy))
+      const builderProxyCleanup = dispatch(setupBuilderProxy(builderProxy))
 
       readWriteCleanup = () => {
         readWriteMiddlewareRef.current = null
-        builderProxy.teardown()
+        builderProxyCleanup()
       }
     })()
 

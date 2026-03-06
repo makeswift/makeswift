@@ -2,9 +2,10 @@ import { TestOrigins } from '../../testing/fixtures'
 import { configureStore } from '../store'
 
 const teardownSpy = jest.fn()
-const builderProxyMock = jest.fn(() => ({ teardown: teardownSpy }))
+const builderProxyMock = jest.fn(() => ({}))
 const createReadWriteMiddlewareMock = jest.fn(() => [])
-const setupBuilderProxyMock = jest.fn(() => ({ type: 'test/setup-builder-proxy' }))
+const setupBuilderProxyMock = jest.fn(() => () => teardownSpy)
+
 const createRootReducerMock = jest.fn(
   () =>
     (state = {}) =>
