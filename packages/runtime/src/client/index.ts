@@ -339,6 +339,7 @@ const getFontsAPISchema = z.object({
     family: z.string(),
     variants: z.array(z.string()),
   })),
+  siteId: z.string(),
 })
 
 export type GetFontsAPI = z.infer<typeof getFontsAPISchema>
