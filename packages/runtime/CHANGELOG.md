@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.0-canary.0
+
+### Minor Changes
+
+- e4320c4: feat: client-side navigation support for the builder
+
 ## 0.27.1
 
 ### Patch Changes

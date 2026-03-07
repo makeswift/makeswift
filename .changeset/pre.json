@@ -15,12 +15,6 @@
     "@makeswift/hono-react": "0.0.0"
   },
   "changesets": [
-    "big-pianos-flash",
-    "bright-dogs-approve",
-    "gold-grapes-collect",
-    "hot-birds-help",
-    "mighty-waves-act",
-    "nice-lies-refuse",
-    "wet-paws-bow"
+    "rotten-cars-fold"
   ]
 }
