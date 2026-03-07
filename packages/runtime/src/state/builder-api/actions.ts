@@ -10,6 +10,8 @@ import { type BoxModel } from '../modules/read-write/box-models'
 import { type ElementSize } from '../middleware/read-write/builder-api/element-size'
 import { type DocumentPayload, type SharedAction, SharedActionTypes } from '../shared-api'
 
+import { type HostNavigationEvent } from './api'
+
 export * from '../shared-api'
 
 // actions dispatched by the host to the builder ("Builder API")
@@ -49,7 +51,6 @@ type ActionWithTransferables<A> = A & {
 
 type MakeswiftConnectionCheckAction = {
   type: typeof BuilderActionTypes.MAKESWIFT_CONNECTION_CHECK
-  payload: { currentUrl: string }
 }
 
 type MountComponentAction = {
@@ -118,7 +119,7 @@ type UnregisterBuilderComponentAction = {
 
 type HandleHostNavigateAction = {
   type: typeof BuilderActionTypes.HANDLE_HOST_NAVIGATE
-  payload: { url: string | null }
+  payload: HostNavigationEvent
 }
 
 export type BuilderAction =
@@ -138,10 +139,8 @@ export type BuilderAction =
   | UnregisterBuilderComponentAction
   | HandleHostNavigateAction
 
-export function makeswiftConnectionCheck(
-  payload: MakeswiftConnectionCheckAction['payload'],
-): MakeswiftConnectionCheckAction {
-  return { type: BuilderActionTypes.MAKESWIFT_CONNECTION_CHECK, payload }
+export function makeswiftConnectionCheck(): MakeswiftConnectionCheckAction {
+  return { type: BuilderActionTypes.MAKESWIFT_CONNECTION_CHECK }
 }
 
 export function mountComponent(documentKey: string, elementKey: string): MountComponentAction {

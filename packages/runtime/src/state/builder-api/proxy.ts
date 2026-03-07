@@ -1,13 +1,19 @@
 import { type HostAction, isHostAction } from '../host-api'
 
-import { type BuilderAction, hasTransferables } from './actions'
+import { type BuilderAction, BuilderActionTypes, hasTransferables } from './actions'
 import { MessageChannel } from './message-channel'
+import { setupNavigationListener } from './navigation-listener'
+import { type BuilderApi, type HostNavigationEvent } from './api'
 
-export class BuilderAPIProxy {
+export class BuilderAPIProxy implements BuilderApi {
   private messageChannel: MessageChannel
 
   constructor({ appOrigin }: { appOrigin: string }) {
     this.messageChannel = new MessageChannel({ appOrigin })
+  }
+
+  handleHostNavigate(event: HostNavigationEvent) {
+    this.execute({ type: BuilderActionTypes.HANDLE_HOST_NAVIGATE, payload: event })
   }
 
   // low-level, action-based API
@@ -26,8 +32,13 @@ export class BuilderAPIProxy {
       },
     })
 
+    const navigationListenerCleanup = setupNavigationListener(event =>
+      this.handleHostNavigate(event),
+    )
+
     return () => {
       channelCleanup()
+      navigationListenerCleanup()
     }
   }
 
