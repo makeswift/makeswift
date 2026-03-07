@@ -84,11 +84,10 @@ function setupConnectionCheck(appOrigin: string): VoidFunction {
       event.origin === appOrigin &&
       event.data.type === SharedActionTypes.MAKESWIFT_CONNECTION_INIT
     ) {
-      connectionCheckInterval.setInterval(() => {
-        window.parent.postMessage(makeswiftConnectionCheck({ currentUrl: window.location.href }), {
-          targetOrigin: appOrigin,
-        })
-      }, CONNECTION_PING_INTERVAL_MS)
+      connectionCheckInterval.setInterval(
+        () => window.parent.postMessage(makeswiftConnectionCheck(), { targetOrigin: appOrigin }),
+        CONNECTION_PING_INTERVAL_MS,
+      )
     }
   }
 

@@ -52,12 +52,15 @@ export function builderAPIMiddleware(
 
         case HostActionTypes.INIT:
           // dispatched by the parent window after establishing the connection
+          // and in response to host's client-side navigation
+          cleanUp() // cleanup existing connection setup, if any
           cleanUp = dispatch(initializeBuilderConnection(builderProxy))
           break
 
         case HostActionTypes.CLEAN_UP:
           // dispatched by the parent window on disconnect
           cleanUp()
+          cleanUp = () => {}
           break
       }
 

@@ -1,30 +1,15 @@
 # @makeswift/runtime
 
-## 0.28.0-canary.3
-
-### Patch Changes
-
-- c7a5b1a: Allow for control deserialization plugin overrides
-
-## 0.28.0-canary.2
-
-### Patch Changes
-
-- a99b24e: chore: expose GoogleFontLink via experimental framework integration APIs
-- 1223e34: feat: unstable client method for fetching site fonts
-- 9e8f8d7: feat: add GoogleFontLink component
-
-## 0.28.0-canary.1
-
-### Minor Changes
-
-- aab138c: Expose translation capabilities to extract translatable content from a raw snapshot and merge translated content back into an element tree using backend persisted descriptors.
-
-## 0.27.1-canary.0
+## 0.27.1
 
 ### Patch Changes
 
 - 648f0c8: Client now consumes response bodies on failed requests. Required for Cloudflare Worker compatibility.
+- aab138c: Expose translation capabilities to extract translatable content from a raw snapshot and merge translated content back into an element tree using backend persisted descriptors.
+- a99b24e: chore: expose GoogleFontLink via experimental framework integration APIs
+- 1223e34: feat: unstable client method for fetching site fonts
+- 9e8f8d7: feat: add GoogleFontLink component
+- c7a5b1a: Allow for control deserialization plugin overrides
 
 ## 0.27.0
 
