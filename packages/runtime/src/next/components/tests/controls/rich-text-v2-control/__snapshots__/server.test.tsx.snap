@@ -42,7 +42,7 @@ NodeList [
 
 exports[`renders provided text content: component styles 1`] = `
 [
-  ".mswft-ytumd6{-webkit-text-decoration:none;text-decoration:none;}.mswft-1uk1gs8{margin:0;}.mswft-vz2etd{padding:0.5em 10px;font-size:1.25em;font-weight:300;border-left:5px solid rgba(0, 0, 0, 0.1);}.mswft-99zmsg{list-style-position:inside;-webkit-padding-start:20px;padding-inline-start:20px;list-style-type:disc;}.mswft-99zmsg ul{list-style-type:circle;}.mswft-99zmsg ul ul{list-style-type:square;}.mswft-dgqoak{list-style-position:inside;-webkit-padding-start:20px;padding-inline-start:20px;list-style-type:decimal;}@media only screen and (min-width: 769px){.mswft-144fjko{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.mswft-144fjko{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.mswft-144fjko{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}",
+  ".mswft-ytumd6{-webkit-text-decoration:none;text-decoration:none;}.mswft-1uk1gs8{margin:0;}.mswft-vz2etd{padding:0.5em 10px;font-size:1.25em;font-weight:300;border-left:5px solid rgba(0, 0, 0, 0.1);}.mswft-99zmsg{list-style-position:inside;-webkit-padding-start:20px;padding-inline-start:20px;list-style-type:disc;}.mswft-99zmsg ul{list-style-type:circle;}.mswft-99zmsg ul ul{list-style-type:square;}.mswft-dgqoak{list-style-position:inside;-webkit-padding-start:20px;padding-inline-start:20px;list-style-type:decimal;}@media only screen{.mswft-1tp2dn6{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 768px){.mswft-1tp2dn6{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.mswft-1tp2dn6{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}",
 ]
 `;
 
@@ -52,10 +52,10 @@ NodeList [
     style="position:relative;white-space:pre-wrap;word-wrap:break-word"
   >
     <p
-      class="mswft-1uk1gs8 mswft-1olq3mu"
+      class="mswft-1uk1gs8 mswft-1defts5"
     >
       <span
-        class="mswft-1olq3mu"
+        class="mswft-1defts5"
       >
         ﻿
       </span>
@@ -65,22 +65,22 @@ NodeList [
         target="_blank"
       >
         <span
-          class="mswft-144fjko"
+          class="mswft-1tp2dn6"
         >
           Adyen
         </span>
       </a>
       <span
-        class="mswft-1olq3mu"
+        class="mswft-1defts5"
       >
         ﻿
       </span>
     </p>
     <p
-      class="mswft-1uk1gs8 mswft-1olq3mu"
+      class="mswft-1uk1gs8 mswft-1defts5"
     >
       <span
-        class="mswft-1olq3mu"
+        class="mswft-1defts5"
       >
         ﻿
       </span>
@@ -90,22 +90,22 @@ NodeList [
         target="_blank"
       >
         <span
-          class="mswft-144fjko"
+          class="mswft-1tp2dn6"
         >
           Authorize.net
         </span>
       </a>
       <span
-        class="mswft-1olq3mu"
+        class="mswft-1defts5"
       >
         ﻿
       </span>
     </p>
     <p
-      class="mswft-1uk1gs8 mswft-1olq3mu"
+      class="mswft-1uk1gs8 mswft-1defts5"
     >
       <span
-        class="mswft-1olq3mu"
+        class="mswft-1defts5"
       >
         ﻿
       </span>
@@ -115,22 +115,22 @@ NodeList [
         target="_blank"
       >
         <span
-          class="mswft-144fjko"
+          class="mswft-1tp2dn6"
         >
           BlueSnap
         </span>
       </a>
       <span
-        class="mswft-1olq3mu"
+        class="mswft-1defts5"
       >
         ﻿
       </span>
     </p>
     <p
-      class="mswft-1uk1gs8 mswft-1olq3mu"
+      class="mswft-1uk1gs8 mswft-1defts5"
     >
       <span
-        class="mswft-1olq3mu"
+        class="mswft-1defts5"
       >
         ﻿
       </span>
@@ -140,22 +140,22 @@ NodeList [
         target="_blank"
       >
         <span
-          class="mswft-144fjko"
+          class="mswft-1tp2dn6"
         >
           Checkout.com
         </span>
       </a>
       <span
-        class="mswft-1olq3mu"
+        class="mswft-1defts5"
       >
         ﻿
       </span>
     </p>
     <p
-      class="mswft-1uk1gs8 mswft-1olq3mu"
+      class="mswft-1uk1gs8 mswft-1defts5"
     >
       <span
-        class="mswft-1olq3mu"
+        class="mswft-1defts5"
       >
         ﻿
       </span>
@@ -165,13 +165,13 @@ NodeList [
         target="_blank"
       >
         <span
-          class="mswft-144fjko"
+          class="mswft-1tp2dn6"
         >
           CyberSource Direct
         </span>
       </a>
       <span
-        class="mswft-1olq3mu"
+        class="mswft-1defts5"
       >
         ﻿
       </span>

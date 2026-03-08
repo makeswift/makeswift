@@ -2,8 +2,8 @@
 
 exports[`renders a style: component styles 1`] = `
 [
-  ".mswft-1cny9vj{max-width:100%;}@media only screen and (min-width: 769px){.mswft-1cny9vj{width:80%;margin-top:4px;margin-right:auto;margin-bottom:0px;margin-left:auto;}}@media only screen and (min-width: 576px) and (max-width: 768px){.mswft-1cny9vj{width:80%;margin-top:4px;margin-right:auto;margin-bottom:0px;margin-left:auto;}}@media only screen and (max-width: 575px){.mswft-1cny9vj{width:80%;margin-top:4px;margin-right:auto;margin-bottom:0px;margin-left:auto;}}",
+  ".mswft-cndtt2{max-width:100%;}@media only screen{.mswft-cndtt2{width:80%;margin-top:4px;margin-right:auto;margin-bottom:0px;margin-left:auto;}}@media only screen and (max-width: 768px){.mswft-cndtt2{width:80%;margin-top:4px;margin-right:auto;margin-bottom:0px;margin-left:auto;}}@media only screen and (max-width: 575px){.mswft-cndtt2{width:80%;margin-top:4px;margin-right:auto;margin-bottom:0px;margin-left:auto;}}",
 ]
 `;
 
-exports[`renders a style: resolvedValue 1`] = `"mswft-1cny9vj u-_R_1_-propKey"`;
+exports[`renders a style: resolvedValue 1`] = `"mswft-cndtt2 u-_R_1_-propKey"`;

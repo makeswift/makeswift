@@ -11,9 +11,16 @@ import {
 
 import { type Breakpoint, type Breakpoints } from './types'
 
-// Sort breakpoints by minWidth in descending order
+// Sort breakpoints for desktop-first cascading: base breakpoint (no maxWidth) comes first,
+// then other breakpoints sorted by maxWidth in descending order.
 function sortBreakpoints(breakpoints: Breakpoints): Breakpoints {
-  return breakpoints.sort((a, b) => (b?.minWidth ?? 0) - (a?.minWidth ?? 0))
+  return breakpoints.sort((a, b) => {
+    // Base breakpoint (no maxWidth) should come first
+    if (a.maxWidth == null) return -1
+    if (b.maxWidth == null) return 1
+    // Sort remaining breakpoints by maxWidth descending (larger breakpoints first)
+    return b.maxWidth - a.maxWidth
+  })
 }
 
 export const getBaseBreakpoint = (breakpoints: Breakpoints): Breakpoint => {
@@ -196,17 +203,16 @@ export function findNextFallback<V>(
 }
 
 export const getBreakpointMediaQuery = (breakpoint: Breakpoint): string => {
-  const parts = ['@media only screen']
-
-  if (breakpoint.minWidth != null) {
-    parts.push(`(min-width: ${breakpoint.minWidth}px)`)
+  // Desktop-first cascading approach: base breakpoint has no media query condition,
+  // smaller breakpoints use only max-width to cascade styles properly.
+  // This eliminates dead zones caused by fractional pixels when browser zoom changes.
+  if (breakpoint.maxWidth == null) {
+    // Base breakpoint (e.g., Desktop) - styles always apply
+    return '@media only screen'
   }
 
-  if (breakpoint.maxWidth != null) {
-    parts.push(`(max-width: ${breakpoint.maxWidth}px)`)
-  }
-
-  return parts.join(' and ')
+  // Non-base breakpoints use only max-width for proper cascading
+  return `@media only screen and (max-width: ${breakpoint.maxWidth}px)`
 }
 
 export const getViewportStyle = (
@@ -214,9 +220,21 @@ export const getViewportStyle = (
   deviceId: Breakpoint['id'],
 ): Viewport<string | number> => {
   const device = getBreakpoint(breakpoints, deviceId)
+  const sorted = sortBreakpoints([...breakpoints])
+
+  // For base breakpoint (no maxWidth), derive minWidth from next smaller breakpoint.
+  // This enables the builder canvas horizontal scrolling and ">Npx" display for Desktop.
+  let minWidth = device.minWidth
+  if (minWidth == null && device.maxWidth == null) {
+    const deviceIndex = sorted.findIndex((b) => b.id === deviceId)
+    const nextBreakpoint = sorted[deviceIndex + 1]
+    if (nextBreakpoint?.maxWidth != null) {
+      minWidth = nextBreakpoint.maxWidth
+    }
+  }
 
   return {
     width: device.viewportWidth != null ? device.viewportWidth : '100%',
-    minWidth: device.minWidth,
+    minWidth,
   }
 }
