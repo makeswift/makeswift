@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.0-canary.2
+
+### Patch Changes
+
+- 5bd5222: feat: expose revalidation-aware `fetch` primitive for advanced Next.js integrations
+
 ## 0.28.0-canary.1
 
 ### Patch Changes
