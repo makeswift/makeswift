@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.28.0-canary.1
+
+### Patch Changes
+
+- 72160ba: Remove logic for encoding site IDs from the experimental `GoogleFontLink` component. The expectation is that the `siteId` prop used by `GoogleFontLink` will come from the host API and already be in the expected format such that no transformation is necessary.
+- 4c03c45: Adds an experimental `MakeswiftFonts` component.
+
 ## 0.28.0-canary.0
 
 ### Minor Changes

@@ -1,5 +1,14 @@
 # @makeswift/hono-react
 
+## 0.1.2-canary.1
+
+### Patch Changes
+
+- 4c03c45: Adds an experimental `MakeswiftFonts` component.
+- Updated dependencies [72160ba]
+- Updated dependencies [4c03c45]
+  - @makeswift/runtime@0.28.0-canary.1
+
 ## 0.1.2-canary.0
 
 ### Patch Changes
