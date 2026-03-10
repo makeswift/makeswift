@@ -1,5 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`renders a style with CSS variable fontFamily: component styles 1`] = `
+[
+  ".mswft-ezpn2f{max-width:100%;}@media only screen and (min-width: 769px){.mswft-ezpn2f{width:100%;margin-top:0px;margin-right:auto;margin-bottom:0px;margin-left:auto;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;border-top:0 solid black;border-right:0 solid black;border-bottom:0 solid black;border-left:0 solid black;border-top-left-radius:0;border-top-right-radius:0;border-bottom-right-radius:0;border-bottom-left-radius:0;font-family:var(--font-heading);}}@media only screen and (min-width: 576px) and (max-width: 768px){.mswft-ezpn2f{width:100%;margin-top:0px;margin-right:auto;margin-bottom:0px;margin-left:auto;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;border-top:0 solid black;border-right:0 solid black;border-bottom:0 solid black;border-left:0 solid black;border-top-left-radius:0;border-top-right-radius:0;border-bottom-right-radius:0;border-bottom-left-radius:0;font-family:var(--font-heading);}}@media only screen and (max-width: 575px){.mswft-ezpn2f{width:100%;margin-top:0px;margin-right:auto;margin-bottom:0px;margin-left:auto;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;border-top:0 solid black;border-right:0 solid black;border-bottom:0 solid black;border-left:0 solid black;border-top-left-radius:0;border-top-right-radius:0;border-bottom-right-radius:0;border-bottom-left-radius:0;font-family:var(--font-heading);}}",
+]
+`;
+
+exports[`renders a style with CSS variable fontFamily: resolvedValue 1`] = `"mswft-ezpn2f u-_R_1_-propKey"`;
+
+exports[`renders a style with fontFamily: component styles 1`] = `
+[
+  ".mswft-1rtsrrx{max-width:100%;}@media only screen and (min-width: 769px){.mswft-1rtsrrx{width:100%;margin-top:0px;margin-right:auto;margin-bottom:0px;margin-left:auto;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;border-top:0 solid black;border-right:0 solid black;border-bottom:0 solid black;border-left:0 solid black;border-top-left-radius:0;border-top-right-radius:0;border-bottom-right-radius:0;border-bottom-left-radius:0;font-family:"Arial";}}@media only screen and (min-width: 576px) and (max-width: 768px){.mswft-1rtsrrx{width:100%;margin-top:0px;margin-right:auto;margin-bottom:0px;margin-left:auto;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;border-top:0 solid black;border-right:0 solid black;border-bottom:0 solid black;border-left:0 solid black;border-top-left-radius:0;border-top-right-radius:0;border-bottom-right-radius:0;border-bottom-left-radius:0;font-family:"Arial";}}@media only screen and (max-width: 575px){.mswft-1rtsrrx{width:100%;margin-top:0px;margin-right:auto;margin-bottom:0px;margin-left:auto;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;border-top:0 solid black;border-right:0 solid black;border-bottom:0 solid black;border-left:0 solid black;border-top-left-radius:0;border-top-right-radius:0;border-bottom-right-radius:0;border-bottom-left-radius:0;font-family:"Arial";}}",
+]
+`;
+
+exports[`renders a style with fontFamily: resolvedValue 1`] = `"mswft-1rtsrrx u-_R_1_-propKey"`;
+
 exports[`renders a style: component styles 1`] = `
 [
   ".mswft-1cny9vj{max-width:100%;}@media only screen and (min-width: 769px){.mswft-1cny9vj{width:80%;margin-top:4px;margin-right:auto;margin-bottom:0px;margin-left:auto;}}@media only screen and (min-width: 576px) and (max-width: 768px){.mswft-1cny9vj{width:80%;margin-top:4px;margin-right:auto;margin-bottom:0px;margin-left:auto;}}@media only screen and (max-width: 575px){.mswft-1cny9vj{width:80%;margin-top:4px;margin-right:auto;margin-bottom:0px;margin-left:auto;}}",
