@@ -40,6 +40,15 @@ export {
   unstable_TypographyDefinition,
 } from '@makeswift/controls'
 
+export type {
+  SerializationPlugin,
+  DeserializationPlugin,
+  AnyFunction,
+  Deserialized,
+} from '@makeswift/controls'
+
+export { serializeObject, deserializeObject } from '@makeswift/controls'
+
 export { Link, LinkDefinition } from './link'
 export { RichTextV1Definition, RichTextV1Control } from './rich-text'
 export { RichText, RichTextV2Definition, RichTextV2Control } from './rich-text-v2'
