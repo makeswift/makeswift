@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.1-canary.0
+
+### Patch Changes
+
+- 6fb12ba: Expose internal serialization/deserialization utils and types for the builder
+
 ## 0.28.0
 
 ### Minor Changes
