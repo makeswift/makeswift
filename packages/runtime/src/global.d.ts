@@ -19,9 +19,21 @@ declare global {
     readonly userInitiated: boolean
   }
 
+  interface NavigationHistoryEntry {
+    readonly id: string
+    readonly index: number
+    readonly key: string
+    readonly sameDocument: boolean
+    readonly url: string | null
+  }
+
   interface Navigation {
     addEventListener(type: 'navigate', listener: (event: NavigateEvent) => void): void
     removeEventListener(type: 'navigate', listener: (event: NavigateEvent) => void): void
+    addEventListener(type: 'navigatesuccess', listener: (event: Event) => void): void
+    removeEventListener(type: 'navigatesuccess', listener: (event: Event) => void): void
+
+    readonly currentEntry: NavigationHistoryEntry
   }
 
   interface Window {

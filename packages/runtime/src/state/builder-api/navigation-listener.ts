@@ -1,7 +1,4 @@
-export type SiteNavigationEvent = {
-  url: string | null
-  initialPageLoad: boolean
-}
+import { type HostNavigationEvent } from './api'
 
 type ClickEvent = {
   href: string
@@ -9,22 +6,23 @@ type ClickEvent = {
 }
 
 const CLICK_NAVIGATION_THRESHOLD_MS = 100
-const LOCATION_CHECK_DELAY_MS = 700 // give the host generous time to perform the navigation
+const CLICK_NAVIGATION_CHECK_INTERVAL_MS = 200
+const CLICK_NAVIGATION_MAX_CHECKS = 20
 
 export function setupNavigationListener(
-  callback: (args: SiteNavigationEvent) => void,
+  callback: (args: HostNavigationEvent) => void,
 ): VoidFunction {
   let previousLocation: string | null = null
 
-  const handleNavigate = (event: SiteNavigationEvent) => {
-    if (event.url === previousLocation) return
+  const handleNavigate = (event: HostNavigationEvent) => {
+    if (!event.navigationCompleted && event.url === previousLocation) return
 
     callback(event)
     previousLocation = event.url
   }
 
   // trigger navigation callback on initial page load
-  handleNavigate({ url: windowLocation(), initialPageLoad: true })
+  handleNavigate({ url: windowLocation(), navigationCompleted: 'initial-page-load' })
 
   if (typeof window === 'undefined') {
     return () => {}
@@ -37,14 +35,25 @@ export function setupNavigationListener(
   if ('navigation' in window && window.navigation) {
     const navigation = window.navigation
 
-    const handler = ({ destination }: NavigateEvent) =>
-      handleNavigate({ url: destination.url, initialPageLoad: false })
+    const navigateHandler = ({ destination }: NavigateEvent) =>
+      handleNavigate({ url: destination.url })
+
+    const navigateSuccessHandler = () => {
+      handleNavigate({
+        url: navigation.currentEntry.url,
+        navigationCompleted: 'client-side-navigation',
+      })
+    }
 
     // note that in order to capture destination URLs that might not be Makeswift-enabled,
     // we send a `SiteNavigationEvent` at the start of navigation, but do not track whether
     // the navigation was successful or not (possible future improvement)
-    navigation.addEventListener('navigate', handler)
-    unsubscribes.push(() => navigation.removeEventListener('navigate', handler))
+    navigation.addEventListener('navigate', navigateHandler)
+    navigation.addEventListener('navigatesuccess', navigateSuccessHandler)
+    unsubscribes.push(() => navigation.removeEventListener('navigate', navigateHandler))
+    unsubscribes.push(() =>
+      navigation.removeEventListener('navigatesuccess', navigateSuccessHandler),
+    )
 
     return () => {
       unsubscribes.forEach(u => u())
@@ -54,6 +63,9 @@ export function setupNavigationListener(
   // for browsers lacking Navigation API support, we manually track:
   //  - link clicks to capture destination URLs
   //  - page unload events to detect cross-page navigation
+  //
+  // this works well enough to keep this polyfill in place for now, but not nearly as
+  // reliably as the Navigation API
   let lastClickEvent: ClickEvent | null = null
 
   const clickHandler = (e: MouseEvent) => {
@@ -65,12 +77,27 @@ export function setupNavigationListener(
 
     lastClickEvent = { href: a.href, timestamp: Date.now() }
 
+    const pageUrlBeforeClick = windowLocation()
+    let navigationCheckCounter = 0
+
     // handle navigation between pages in the host; note that we intentionally are
     // not cancelling the timer on cleanup to ensure we report the navigation
-    window.setTimeout(
-      () => handleNavigate({ url: windowLocation(), initialPageLoad: false }),
-      LOCATION_CHECK_DELAY_MS,
-    )
+    const checkIfNavigationOccurred = () => {
+      const url = windowLocation()
+
+      if (url !== pageUrlBeforeClick) {
+        // the host navigated to a different page, report the new URL to the builder
+        handleNavigate({ url, polyfilled: true })
+        return
+      }
+
+      // we're still on the same page, recheck until the max number of checks is reached
+      if (++navigationCheckCounter < CLICK_NAVIGATION_MAX_CHECKS) {
+        window.setTimeout(checkIfNavigationOccurred, CLICK_NAVIGATION_CHECK_INTERVAL_MS)
+      }
+    }
+
+    window.setTimeout(checkIfNavigationOccurred, CLICK_NAVIGATION_CHECK_INTERVAL_MS)
   }
 
   window.document.addEventListener(
@@ -90,7 +117,7 @@ export function setupNavigationListener(
     const msSinceLastClick = Date.now() - lastClickEvent.timestamp
     handleNavigate({
       url: msSinceLastClick < CLICK_NAVIGATION_THRESHOLD_MS ? (lastClickEvent.href ?? null) : null,
-      initialPageLoad: false,
+      polyfilled: true,
     })
 
     lastClickEvent = null
