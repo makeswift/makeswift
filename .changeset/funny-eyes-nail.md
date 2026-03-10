@@ -2,4 +2,4 @@
 "@makeswift/runtime": patch
 ---
 
-Expose control serialization/deserialization utils and types
+Expose internal serialization/deserialization utils and types for the builder
