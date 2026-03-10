@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.0-canary.3
+
+### Patch Changes
+
+- 8bcb107: Fix style control font family breaking when the value is a CSS variable (e.g., `var(...)`)
+
 ## 0.28.0-canary.2
 
 ### Patch Changes
