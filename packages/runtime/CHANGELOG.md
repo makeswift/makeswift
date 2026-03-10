@@ -1,5 +1,18 @@
 # @makeswift/runtime
 
+## 0.28.0
+
+### Minor Changes
+
+- e4320c4: feat: client-side navigation support for the builder
+
+### Patch Changes
+
+- 8bcb107: Fix style control font family breaking when the value is a CSS variable (e.g., `var(...)`)
+- 72160ba: Remove logic for encoding site IDs from the experimental `GoogleFontLink` component. The expectation is that the `siteId` prop used by `GoogleFontLink` will come from the host API and already be in the expected format such that no transformation is necessary.
+- 5bd5222: feat: expose revalidation-aware `fetch` primitive for advanced Next.js integrations
+- 4c03c45: Adds an experimental `MakeswiftFonts` component.
+
 ## 0.27.1
 
 ### Patch Changes
