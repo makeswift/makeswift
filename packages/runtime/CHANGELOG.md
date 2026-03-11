@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.28.1
+
+### Patch Changes
+
+- 6fb12ba: Expose internal serialization/deserialization utils and types for the builder
+- 1b1912d: feat: improve fidelity of host navigation events
+- a43480e: Pass webhook payload data to `onPublish` callback.
+
 ## 0.28.0
 
 ### Minor Changes
