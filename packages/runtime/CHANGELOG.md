@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.1-canary.1
+
+### Patch Changes
+
+- a43480e: Pass webhook payload data to `onPublish` callback.
+
 ## 0.28.1-canary.0
 
 ### Patch Changes
