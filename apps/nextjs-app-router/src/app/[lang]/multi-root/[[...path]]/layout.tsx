@@ -17,6 +17,7 @@ export default async function PageLayout({
 }>) {
   const { lang } = await params
   const siteVersion = await getSiteVersion()
+  console.log('siteVersion', siteVersion)
 
   return (
     <>
