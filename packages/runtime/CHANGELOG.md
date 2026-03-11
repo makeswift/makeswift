@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.1-canary.2
+
+### Patch Changes
+
+- 1b1912d: feat: improve fidelity of host navigation events
+
 ## 0.28.1-canary.1
 
 ### Patch Changes
