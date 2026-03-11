@@ -19,10 +19,13 @@ function Button({ title }: { title: string }) {
 describe('Page', () => {
   describe('Slot', () => {
     test(`renders a placeholder when empty`, async () => {
-      await testPageControlPropRendering(Slot(), {
-        value: { elements: [], columns: [] },
-        expectedRenders: 1,
-      })
+      await testPageControlPropRendering(
+        Slot({ placeholder: { builderOnly: false } }),
+        {
+          value: { elements: [], columns: [] },
+          expectedRenders: 1,
+        },
+      )
     })
 
     test(`renders a slot with a clickable button`, async () => {
