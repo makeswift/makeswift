@@ -3,9 +3,16 @@
 import { ComponentPropsWithoutRef, ElementType, ReactNode, useEffect, useState, memo } from 'react'
 import { cx } from '@emotion/css'
 
-import { SlotDefinition, SlotControl, type DataType } from '@makeswift/controls'
+import {
+  SlotDefinition,
+  SlotControl,
+  type DataType,
+  type SlotConfig,
+  type SlotPlaceholderConfig,
+} from '@makeswift/controls'
 
 import { Element } from '../components/Element'
+import { useIsInBuilder } from '../hooks/use-is-in-builder'
 import { getIndexes } from '../../../components/utils/columns'
 import { useResponsiveStyle } from '../../../components/utils/responsive-style'
 import { useStyle } from '../use-style'
@@ -14,6 +21,7 @@ import { pollBoxModel } from '../poll-box-model'
 export function renderSlot(props: {
   data: DataType<SlotDefinition<ReactNode>> | undefined
   control: SlotControl | null
+  config: SlotConfig
 }): ReactNode {
   return <SlotValue {...props} />
 }
@@ -22,14 +30,16 @@ const SlotValue = memo(
   ({
     data,
     control,
+    config,
   }: {
     data: DataType<SlotDefinition<ReactNode>> | undefined
     control: SlotControl | null
+    config: SlotConfig
   }): ReactNode => {
     // TODO(miguel): While the UI shouldn't allow the state, we should probably check that at least
     // one element is visible.
     if (data == null || data.elements.length === 0) {
-      return <Slot.Placeholder control={control} />
+      return <Slot.Placeholder control={control} placeholder={config.placeholder} />
     }
 
     return (
@@ -138,9 +148,23 @@ function SlotItem<T extends ElementType = 'div'>({
 
 type SlotPlaceholderProps = {
   control: SlotControl | null
+  placeholder?: SlotPlaceholderConfig
 }
 
-function SlotPlaceholder({ control }: SlotPlaceholderProps): ReactNode {
+function SlotPlaceholder({ control, placeholder }: SlotPlaceholderProps): ReactNode {
+  const isInBuilder = useIsInBuilder()
+  const builderOnly = placeholder?.builderOnly ?? true
+  if (builderOnly && !isInBuilder) return null
+
+  return <SlotPlaceholderContent control={control} text={placeholder?.text} />
+}
+
+type SlotPlaceholderContentProps = {
+  control: SlotControl | null
+  text?: string
+}
+
+function SlotPlaceholderContent({ control, text }: SlotPlaceholderContentProps): ReactNode {
   const [element, setElement] = useState<Element | null>(null)
 
   useEffect(() => {
@@ -179,6 +203,20 @@ function SlotPlaceholder({ control }: SlotPlaceholderProps): ReactNode {
           rx="4"
           ry="4"
         />
+        {text != null && (
+          <text
+            x="50%"
+            y="50%"
+            dominantBaseline="central"
+            textAnchor="middle"
+            fill="rgba(161, 168, 194, 0.80)"
+            fontSize="16px"
+            fontFamily="sans-serif"
+            style={{ userSelect: 'none' }}
+          >
+            {text}
+          </text>
+        )}
       </svg>
     </div>
   )

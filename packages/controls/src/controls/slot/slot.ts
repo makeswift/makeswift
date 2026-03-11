@@ -17,13 +17,22 @@ import { ControlDefinitionVisitor } from '../visitor'
 
 import { SlotControl } from './slot-control'
 
+export type SlotPlaceholderConfig = {
+  builderOnly?: boolean
+  text?: string
+}
+
+export type SlotConfig = {
+  placeholder?: SlotPlaceholderConfig
+}
+
 type Schema = typeof Definition.schema
 type DataType = z.infer<Schema['data']>
 type ValueType = z.infer<Schema['value']>
 
 abstract class Definition<RuntimeNode> extends ControlDefinition<
   typeof Definition.type,
-  unknown,
+  SlotConfig,
   DataType,
   ValueType,
   RuntimeNode,
@@ -49,8 +58,22 @@ abstract class Definition<RuntimeNode> extends ControlDefinition<
 
     const value = data
 
+    const placeholderConfig = z
+      .object({
+        builderOnly: z.boolean().optional(),
+        text: z.string().optional(),
+      })
+      .optional()
+
+    const config = z
+      .object({
+        placeholder: placeholderConfig,
+      })
+      .optional()
+
     const definition = z.object({
       type,
+      config,
     })
 
     return {
@@ -61,8 +84,8 @@ abstract class Definition<RuntimeNode> extends ControlDefinition<
     }
   }
 
-  constructor() {
-    super({})
+  constructor(config: SlotConfig = {}) {
+    super(config)
   }
 
   get controlType() {

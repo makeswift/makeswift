@@ -3,6 +3,7 @@ import {
   SlotDefinition as BaseSlotDefinition,
   SlotControl,
   StableValue,
+  type SlotConfig,
   type DeserializedRecord,
   type ResourceResolver,
   type Stylesheet,
@@ -20,7 +21,7 @@ export class SlotDefinition extends BaseDefinition {
       throw new Error(`Slot: expected type ${SlotDefinition.type}, got ${data.type}`)
     }
 
-    return Slot()
+    return Slot(data.config ?? {})
   }
 
   resolveValue(
@@ -31,7 +32,7 @@ export class SlotDefinition extends BaseDefinition {
   ): Resolvable<ReactNode | undefined> {
     const stableValue = StableValue({
       name: SlotDefinition.type,
-      read: () => renderSlot({ data, control: control ?? null }),
+      read: () => renderSlot({ data, control: control ?? null, config: this.config }),
     })
 
     return {
@@ -41,8 +42,8 @@ export class SlotDefinition extends BaseDefinition {
   }
 }
 
-export function Slot(): SlotDefinition {
-  return new SlotDefinition()
+export function Slot(config: SlotConfig = {}): SlotDefinition {
+  return new SlotDefinition(config)
 }
 
 export { SlotControl }

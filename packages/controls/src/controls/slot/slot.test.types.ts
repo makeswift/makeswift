@@ -6,6 +6,7 @@ import {
   type ValueType,
 } from '../associated-types'
 
+import { type SlotConfig } from './slot'
 import { Slot, type RenderedNode } from './testing'
 
 describe('Slot Types', () => {
@@ -13,7 +14,7 @@ describe('Slot Types', () => {
     const def = Slot()
 
     type Config = typeof def.config
-    expectTypeOf<Config>().toEqualTypeOf<unknown>()
+    expectTypeOf<Config>().toEqualTypeOf<SlotConfig>()
 
     type Data = Exclude<DataType<typeof def>, undefined>
     type Value = Exclude<ValueType<typeof def>, undefined>
