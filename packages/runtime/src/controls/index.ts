@@ -28,6 +28,8 @@ export {
   Shape,
   ShapeDefinition,
   ShapeControl,
+  Slider,
+  SliderDefinition,
   Style,
   StyleDefinition,
   type StyleProperty,
