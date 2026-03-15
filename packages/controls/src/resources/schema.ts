@@ -24,6 +24,7 @@ export const file = z.object({
   name: z.string(),
   extension: z.string().nullable(),
   publicUrl: z.string(),
+  altText: z.string().nullable(),
   dimensions: z
     .object({
       width: z.number(),

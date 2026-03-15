@@ -67,6 +67,7 @@ describe('Page', () => {
                   publicUrl: 'https://example.com/image.png',
                   name: 'image',
                   extension: 'png',
+                  altText: null,
                   dimensions: {
                     width: 100,
                     height: 100,
