@@ -212,7 +212,7 @@ type NormedConfig<
       }
     : { readonly defaultValue: T })
 
-export function unstable_IconRadioGroup<
+export function IconRadioGroup<
   const T extends string,
   D extends Config<T>['defaultValue'],
 >(
@@ -221,7 +221,10 @@ export function unstable_IconRadioGroup<
   return new IconRadioGroupDefinition(config as NormedConfig<T, D>)
 }
 
-unstable_IconRadioGroup.Icon = Definition.Icon
+IconRadioGroup.Icon = Definition.Icon
+
+/** @deprecated Use `IconRadioGroup` instead. */
+export const unstable_IconRadioGroup = IconRadioGroup
 
 export {
   type IconType as IconRadioGroupIcon,
