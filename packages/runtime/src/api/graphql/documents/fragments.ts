@@ -26,6 +26,7 @@ export const FileFragment = /* GraphQL */ `
       width
       height
     }
+    description
   }
 `
 
