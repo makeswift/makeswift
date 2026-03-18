@@ -9,6 +9,7 @@ import { type Data, type ValueType, type DataType, ControlDefinition } from '@ma
 
 import { type CacheData } from '../../../../api/client'
 import { ElementData } from '../../../../state/read-only-state'
+import { setIsInBuilder } from '../../../../state/actions/internal/read-only-actions'
 import { ReactRuntime } from '../../../../runtimes/react/react-runtime'
 import { MakeswiftComponent } from '../../../../runtimes/react/components/MakeswiftComponent'
 import { Page } from '../../page'
@@ -85,6 +86,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
     registerComponents,
     action,
     rootElements = [],
+    isInBuilder = false,
   }: {
     toData?: (value: ValueType<D>) => DataType<D>
     value: ValueType<D> | undefined
@@ -94,6 +96,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
     registerComponents?: (runtime: ReactRuntime) => void
     action?: (element: HTMLElement) => Promise<void>
     rootElements?: ElementData[]
+    isInBuilder?: boolean
   },
 ) {
   // Arrange
@@ -116,6 +119,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
   }
 
   const runtime = Testing.createReactRuntime()
+  runtime.store.dispatch(setIsInBuilder(isInBuilder))
   registerComponents?.(runtime)
 
   // Act
