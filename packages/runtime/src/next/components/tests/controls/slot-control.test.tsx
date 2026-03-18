@@ -18,10 +18,67 @@ function Button({ title }: { title: string }) {
 
 describe('Page', () => {
   describe('Slot', () => {
-    test(`renders a placeholder when empty`, async () => {
-      await testPageControlPropRendering(Slot(), {
-        value: { elements: [], columns: [] },
-        expectedRenders: 1,
+    describe('placeholder rendering', () => {
+      test(`renders a placeholder when empty slot is not in the builder`, async () => {
+        await testPageControlPropRendering(Slot(), {
+          value: { elements: [], columns: [] },
+          expectedRenders: 1,
+          isInBuilder: false,
+        })
+      })
+
+      test(`renders a placeholder when empty slot is in the builder`, async () => {
+        await testPageControlPropRendering(Slot(), {
+          value: { elements: [], columns: [] },
+          expectedRenders: 1,
+          isInBuilder: true,
+        })
+      })
+
+      describe('builderOnly config', () => {
+        test(`shows placeholder when builderOnly is false and not in builder`, async () => {
+          await testPageControlPropRendering(
+            Slot({ unstable_placeholder: { builderOnly: false } }),
+            {
+              value: { elements: [], columns: [] },
+              expectedRenders: 1,
+              isInBuilder: false,
+            },
+          )
+        })
+
+        test(`shows placeholder when builderOnly is false and in builder`, async () => {
+          await testPageControlPropRendering(
+            Slot({ unstable_placeholder: { builderOnly: false } }),
+            {
+              value: { elements: [], columns: [] },
+              expectedRenders: 1,
+              isInBuilder: true,
+            },
+          )
+        })
+
+        test(`hides placeholder when builderOnly is true and not in builder`, async () => {
+          await testPageControlPropRendering(
+            Slot({ unstable_placeholder: { builderOnly: true } }),
+            {
+              value: { elements: [], columns: [] },
+              expectedRenders: 1,
+              isInBuilder: false,
+            },
+          )
+        })
+
+        test(`shows placeholder when builderOnly is true and in builder`, async () => {
+          await testPageControlPropRendering(
+            Slot({ unstable_placeholder: { builderOnly: true } }),
+            {
+              value: { elements: [], columns: [] },
+              expectedRenders: 1,
+              isInBuilder: true,
+            },
+          )
+        })
       })
     })
 
