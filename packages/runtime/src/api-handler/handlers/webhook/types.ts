@@ -20,6 +20,7 @@ export const sitePublishedWebhookPayloadSchema = z.object({
     // webhook handler — if parsing fails, unstable_diff degrades to undefined
     // and the consumer falls back to full revalidation.
     unstable_diff: diffProjectionSchema.nullable().optional().catch(undefined),
+    unstable_defaultLocale: z.string().nullable().optional().catch(undefined),
   }),
 })
 
