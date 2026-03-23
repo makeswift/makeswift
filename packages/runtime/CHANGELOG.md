@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.2-canary.0
+
+### Patch Changes
+
+- a53c0a7: Adds an experimental field to the webhook payload type for site publish events which contains a site's default locale.
+
 ## 0.28.1
 
 ### Patch Changes

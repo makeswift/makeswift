@@ -1,6 +1,6 @@
 {
   "name": "@makeswift/runtime",
-  "version": "0.28.1",
+  "version": "0.28.2-canary.0",
   "license": "MIT",
   "repository": {
     "url": "makeswift/makeswift",
