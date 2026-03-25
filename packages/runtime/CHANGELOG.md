@@ -1,5 +1,12 @@
 # @makeswift/runtime
 
+## 0.28.2
+
+### Patch Changes
+
+- 4332f17: fix: Next.js 16 / Node 24+ compatibility; resolves `TypeError: Cannot read private member #state`.
+- a53c0a7: Adds an experimental field to the webhook payload type for site publish events which contains a site's default locale.
+
 ## 0.28.1
 
 ### Patch Changes
