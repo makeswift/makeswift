@@ -48,15 +48,36 @@ export async function config({
     },
     customRoutes: async (route: string) => {
       if (route === '/redirect-preview') {
-        // Convert any Request to NextRequest, if necessary. Due to an issue in
-        // how NextRequests are instantiated, we have to pass the original
-        // request to the constructor twice. See
-        // https://github.com/vercel/next.js/issues/52967
-        const request = req instanceof NextRequest ? req : new NextRequest(req, req)
+        // Convert any `Request` to `NextRequest` for consumption by the `appRouterRedirectPreviewHandler` call below
+        const request = req instanceof NextRequest ? req : requestToNextRequest(req)
         return { res: await appRouterRedirectPreviewHandler(request, context, client) }
       }
 
       return null
     },
   }
+}
+
+const requestToNextRequest = (req: Request): NextRequest => {
+  // Because we're supporting multiple versions of Next.js, we have to account for two issues here:
+  //
+  // 1. https://github.com/vercel/next.js/issues/52967 for Next prior to v13.4.17 (see
+  //    https://github.com/vercel/next.js/commit/e1133cf0970e80d8f88e6c3516881780703eb7f5
+  //    and https://github.com/vercel/next.js/commit/af97755e3c62a6b786b98b98ef8e91bf3d595957),
+  //    which requires us to pass two arguments to the `NextRequest` constructor in order to
+  //    fully copy the request
+  //
+  // 2. https://github.com/better-auth/better-auth/issues/8194#issuecomment-3975332346 for Next 16
+  //    when running on Node.js 24+, which prevents us from simply passing the original request
+  //    as the second argument to the `NextRequest` constructor, thus the manual copying of the
+  //    relevant server-side properties
+
+  const hasBody = req.method !== 'GET' && req.method !== 'HEAD'
+
+  return new NextRequest(req.url, {
+    method: req.method,
+    headers: req.headers,
+    signal: req.signal,
+    ...(hasBody && { body: req.body, duplex: 'half' }),
+  })
 }
