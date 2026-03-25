@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.26.4
+
+### Patch Changes
+
+- 8347eb8: fix: Next.js 16 / Node 24+ compatibility; resolves `TypeError: Cannot read private member #state`.
+
 ## 0.26.3
 
 ### Patch Changes
