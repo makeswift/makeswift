@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.3-canary.0
+
+### Patch Changes
+
+- ea5136a: Fix hydration mismatch error when SSRing components with `useIsInBuilder` across multiple React trees
+
 ## 0.28.2
 
 ### Patch Changes

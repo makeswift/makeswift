@@ -15,7 +15,6 @@
     "@makeswift/hono-react": "0.0.0"
   },
   "changesets": [
-    "gentle-pans-cheat",
-    "quick-readers-yawn"
+    "fuzzy-tools-brush"
   ]
 }
