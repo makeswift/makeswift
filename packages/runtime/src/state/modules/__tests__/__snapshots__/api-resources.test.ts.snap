@@ -293,7 +293,7 @@ exports[`state / APIResources \`Actions.evictApiResource\` correctly removes the
 }
 `;
 
-exports[`state / APIResources \`Actions.updateAPIClientCache\` fills in the state from cache w/o overriding existing resources 1`] = `
+exports[`state / APIResources \`Actions.updateAPIClientCache\` fills in the state from cache, updates existing resources 1`] = `
 {
   "File": [],
   "GlobalElement": [
@@ -316,6 +316,7 @@ exports[`state / APIResources \`Actions.updateAPIClientCache\` fills in the stat
           "prompt": "ciao mondo",
         },
         "id": "[test-localized-global-element-id]",
+        "localizedPathname": "test/new-localized-pathname-it-IT",
       },
     },
     {
@@ -337,7 +338,7 @@ exports[`state / APIResources \`Actions.updateAPIClientCache\` fills in the stat
       "value": {
         "__typename": "PagePathnameSlice",
         "id": "[test-page-pathname-slice-id]",
-        "pathname": "test/pathname",
+        "pathname": "test/new-pathname",
       },
     },
     {
@@ -347,7 +348,7 @@ exports[`state / APIResources \`Actions.updateAPIClientCache\` fills in the stat
         "__typename": "PagePathnameSlice",
         "basePageId": "[test-base-page-id]",
         "id": "[test-page-pathname-slice-id]",
-        "localizedPathname": "fr-FR/test/localized-pathname",
+        "localizedPathname": "test/new-localized-pathname-fr-FR",
         "pathname": "test-pathname",
       },
     },
@@ -385,7 +386,7 @@ exports[`state / APIResources \`Actions.updateAPIClientCache\` fills in the stat
       "id": "[test-swatch-id]",
       "value": {
         "__typename": "Swatch",
-        "hue": 100,
+        "hue": 17,
         "id": "[test-swatch-id]",
         "lightness": 90,
         "saturation": 70,
