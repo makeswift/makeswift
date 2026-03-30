@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.3-canary.2
+
+### Patch Changes
+
+- 99959b2: fix: publishing a color has no effect on live pages until server restart
+
 ## 0.28.3-canary.1
 
 ### Patch Changes
