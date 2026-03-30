@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.17-canary.0
+
+### Patch Changes
+
+- 646fc36: Introduce base Slot control config
+
 ## 0.1.16
 
 ### Patch Changes

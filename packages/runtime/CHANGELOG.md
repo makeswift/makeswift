@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.28.3-canary.1
+
+### Patch Changes
+
+- 646fc36: Introduce unstable placeholder configuration for Slot control
+- Updated dependencies [646fc36]
+  - @makeswift/controls@0.1.17-canary.0
+  - @makeswift/prop-controllers@0.4.11-canary.0
+
 ## 0.28.3-canary.0
 
 ### Patch Changes
