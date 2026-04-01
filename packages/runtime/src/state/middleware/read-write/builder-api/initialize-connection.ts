@@ -309,6 +309,10 @@ export function initializeBuilderConnection(
 
     const breakpoints = ReadOnlyState.getBreakpoints(getState())
     dispatch(Builder.setBreakpoints(breakpoints))
+
+    const locale = ReadOnlyState.getLocale(getState())
+    if (locale != null) dispatch(Builder.setLocale(new Intl.Locale(locale)))
+
     dispatch(ReadOnly.setIsInBuilder(true))
     builderProxy.dispatchBuffered()
 

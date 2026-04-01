@@ -2,6 +2,7 @@ import {
   type Middleware,
   type StoreEnhancer,
   type MiddlewareAPI,
+  Tuple,
   configureStore as configureReduxStore,
   combineReducers,
   compose,
@@ -16,18 +17,74 @@ import { HostActionTypes } from './host-api'
 import * as Breakpoints from './modules/breakpoints'
 
 import { readOnlyElementTreeMiddleware } from './middleware/read-only-element-tree'
+import { makeswiftApiClientSyncMiddleware } from './middleware/makeswift-api-client-sync'
 
 import { type Action } from './actions'
+
 import { type State as ReadWriteState } from './read-write-state'
 import * as ReadOnlyState from './read-only-state'
-
 import {
   type State,
   type Dispatch,
   type ReadOnlyReducer,
   type ReadWriteDispatch,
 } from './unified-state'
-import { makeswiftApiClientSyncMiddleware } from './middleware/makeswift-api-client-sync'
+
+export { type State } from './unified-state'
+
+const configureStore = <Items extends readonly StoreEnhancer[] = []>({
+  name,
+  preloadedState,
+  enhancers,
+  middleware,
+}: {
+  name: string
+  preloadedState: Partial<State>
+  enhancers: () => Tuple<Items>
+  middleware?: () => Middleware[]
+}) => {
+  const store = configureReduxStore({
+    reducer: combineReducers(ReadOnlyState.reducers),
+    preloadedState,
+
+    middleware: getDefaultMiddleware =>
+      getDefaultMiddleware(middlewareOptions).concat([
+        readOnlyElementTreeMiddleware(),
+        ...(middleware ? middleware() : []),
+      ]),
+
+    enhancers: getDefaultEnhancers => getDefaultEnhancers().concat(enhancers()),
+
+    devTools: devToolsConfig({
+      name: `${name} (${new Date().toISOString()})`,
+      actionsDenylist: [
+        HostActionTypes.BUILDER_POINTER_MOVE,
+        BuilderActionTypes.HANDLE_POINTER_MOVE,
+        BuilderActionTypes.ELEMENT_FROM_POINT_CHANGE,
+      ],
+    }),
+  })
+
+  return store
+}
+
+export function configureProtoStore({
+  name,
+  breakpoints,
+}: {
+  name: string
+  breakpoints: Breakpoints.State | undefined
+}) {
+  return configureStore({
+    name,
+    preloadedState: {
+      breakpoints: Breakpoints.getInitialState(breakpoints),
+    },
+    enhancers: () => new Tuple(),
+  })
+}
+
+export type ProtoStore = ReturnType<typeof configureProtoStore>
 
 type ReadWriteMiddleware = ReturnType<
   typeof import('./middleware/read-write').createReadWriteMiddleware
@@ -98,31 +155,29 @@ export function conditionalReadWriteMiddleware(
   })
 }
 
-interface ReadWriteStateMixin {
-  loadReadWriteState: ({ isReadOnly }: { isReadOnly: boolean }) => Promise<() => void>
+export interface ReadWriteStateMixin {
+  readonly hostApiClient: MakeswiftHostApiClient
+
+  loadReadWriteStateIfNeeded(): Promise<() => void>
 }
 
-function withReadWriteState(
-  loadReadWriteState: ReadWriteStateMixin['loadReadWriteState'],
-): StoreEnhancer<ReadWriteStateMixin> {
+function withMixin<M extends {}>(mixin: M): StoreEnhancer<M> {
   return next => (reducer, preloadedState?) => ({
     ...next(reducer, preloadedState),
-    loadReadWriteState,
+    ...mixin,
   })
 }
 
-export function configureStore({
+export function configureReadWriteStore({
   name,
   appOrigin,
   hostApiClient,
   preloadedState,
-  breakpoints,
 }: {
   name: string
   appOrigin: string
   hostApiClient: MakeswiftHostApiClient
-  preloadedState: Partial<State> | null
-  breakpoints?: Breakpoints.State
+  preloadedState: Partial<State>
 }) {
   const readWriteMiddlewareRef: ReadWriteMiddlewareRef = {
     current: null,
@@ -179,65 +234,52 @@ export function configureStore({
     }
   }
 
-  const store = configureReduxStore({
-    reducer: combineReducers(ReadOnlyState.reducers),
+  const store = configureStore({
+    name,
+    preloadedState,
 
-    preloadedState: {
-      ...preloadedState,
-      breakpoints: Breakpoints.getInitialState(breakpoints ?? preloadedState?.breakpoints),
-    },
+    middleware: () => [
+      makeswiftApiClientSyncMiddleware(hostApiClient),
+      conditionalReadWriteMiddleware(readWriteMiddlewareRef),
+    ],
 
-    middleware: getDefaultMiddleware =>
-      getDefaultMiddleware(middlewareOptions).concat([
-        readOnlyElementTreeMiddleware(),
-        makeswiftApiClientSyncMiddleware(hostApiClient),
-        conditionalReadWriteMiddleware(readWriteMiddlewareRef),
-      ]),
+    enhancers: () =>
+      new Tuple(
+        withMixin<ReadWriteStateMixin>({
+          hostApiClient,
+          loadReadWriteStateIfNeeded: async () => {
+            const { isReadOnly } = store.getState()
 
-    enhancers: getDefaultEnhancers =>
-      getDefaultEnhancers().concat(
-        withReadWriteState(async ({ isReadOnly }) => {
-          if (isReadOnly) {
-            if (refCount > 0) {
-              console.error('Read-write state mismatch', {
-                isReadOnly,
-                refCount,
-              })
+            if (isReadOnly) {
+              if (refCount > 0) {
+                console.error('Read-write state mismatch', { isReadOnly, refCount })
+              }
+
+              return () => {}
             }
 
-            return () => {}
-          }
+            await loadReadWriteState()
+            refCount += 1
 
-          await loadReadWriteState()
-          refCount += 1
+            let didCleanup = false
+            return () => {
+              if (didCleanup) {
+                return
+              }
 
-          let didCleanup = false
-          return () => {
-            if (didCleanup) {
-              return
+              didCleanup = true
+              refCount -= 1
+              if (refCount === 0 && readWriteCleanup != null) {
+                readWriteCleanup()
+                readWriteCleanup = null
+              }
             }
-
-            didCleanup = true
-            refCount -= 1
-            if (refCount === 0 && readWriteCleanup != null) {
-              readWriteCleanup()
-              readWriteCleanup = null
-            }
-          }
+          },
         }),
       ),
-
-    devTools: devToolsConfig({
-      name: `${name} (${new Date().toISOString()})`,
-      actionsDenylist: [
-        HostActionTypes.BUILDER_POINTER_MOVE,
-        BuilderActionTypes.HANDLE_POINTER_MOVE,
-        BuilderActionTypes.ELEMENT_FROM_POINT_CHANGE,
-      ],
-    }),
   })
 
   return store
 }
 
-export type Store = ReturnType<typeof configureStore>
+export type Store = ReturnType<typeof configureReadWriteStore>

@@ -261,15 +261,10 @@ function cacheVersioningMiddleware(): ThunkMiddleware<State, UnknownAction> {
   })
 }
 
-export function configureStore({ serializedState }: { serializedState?: SerializedState }) {
+export function configureStore({ preloadedState }: { preloadedState: Partial<State> }) {
   return configureReduxStore({
     reducer,
-    preloadedState: {
-      apiResources: APIResources.getInitialState(serializedState?.apiResources),
-      localizedResourcesMap: LocalizedResourcesMap.getInitialState(
-        serializedState?.localizedResourcesMap,
-      ),
-    },
+    preloadedState,
 
     middleware: getDefaultMiddleware =>
       getDefaultMiddleware(middlewareOptions).concat(
