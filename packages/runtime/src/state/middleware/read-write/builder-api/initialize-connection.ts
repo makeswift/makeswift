@@ -98,15 +98,22 @@ function startMeasuringElements(): ThunkAction<() => void, State, unknown, Actio
   }
 }
 
-function lockDocumentScroll(): ThunkAction<() => void, State, unknown, Action> {
+function setDocumentScroll(): ThunkAction<() => void, State, unknown, Action> {
   return dispatch => {
     const lastDocumentOverflow = window.document.documentElement.style.overflow
     window.document.documentElement.style.overflow = 'hidden'
+
+    // Override scroll behavior to prevent scroll jank/lag when in the builder.
+    const styleTag = window.document.createElement('style')
+    styleTag.setAttribute('data-makeswift-scroll-override', '')
+    styleTag.textContent = 'html, body { scroll-behavior: auto !important; }'
+    window.document.head.appendChild(styleTag)
 
     window.document.documentElement.addEventListener('wheel', handleWheelEvent)
 
     return () => {
       window.document.documentElement.style.overflow = lastDocumentOverflow
+      styleTag.remove()
       window.document.documentElement.removeEventListener('wheel', handleWheelEvent)
     }
 
@@ -302,7 +309,7 @@ export function initializeBuilderConnection(
     const stopMeasuringElements = dispatch(startMeasuringElements())
     const stopMeasuringDocumentElement = dispatch(startMeasuringDocumentElement())
     const stopHandlingFocusEvent = dispatch(startHandlingFocusEvents())
-    const unlockDocumentScroll = dispatch(lockDocumentScroll())
+    const unsetDocumentScroll = dispatch(setDocumentScroll())
     const stopHandlingPointerMoveEvent = dispatch(startHandlingPointerMoveEvent())
     const stopPollingElementFromPoint = dispatch(startPollingElementFromPoint())
     const unregisterBuilderComponents = dispatch(registerBuilderComponents())
@@ -317,7 +324,7 @@ export function initializeBuilderConnection(
       stopMeasuringElements()
       stopMeasuringDocumentElement()
       stopHandlingFocusEvent()
-      unlockDocumentScroll()
+      unsetDocumentScroll()
       stopHandlingPointerMoveEvent()
       stopPollingElementFromPoint()
       unregisterBuilderComponents()
