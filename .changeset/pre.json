@@ -15,6 +15,7 @@
     "@makeswift/hono-react": "0.0.0"
   },
   "changesets": [
+    "brave-beers-glow",
     "fuzzy-tools-brush",
     "ninety-lobsters-wonder",
     "old-kings-agree",

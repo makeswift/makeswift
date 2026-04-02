@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.3-canary.3
+
+### Patch Changes
+
+- 3cb90ee: Fixes an issue where pages with `scroll-behavior:smooth` are not scrollable within the builder
+
 ## 0.28.3-canary.2
 
 ### Patch Changes
