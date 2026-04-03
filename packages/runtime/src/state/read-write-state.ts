@@ -57,7 +57,7 @@ export function getMeasurables(state: State): Map<string, Map<string, BoxModels.
   return BoxModels.getMeasurables(getBoxModelsStateSlice(state))
 }
 
-export function getBoxModels(state: State): Map<string, Map<string, BoxModels.BoxModel>> {
+export function getBoxModels(state: State): Map<string, Map<string, BoxModels.BoxDisplayModel>> {
   return BoxModels.getBoxModels(getBoxModelsStateSlice(state))
 }
 
@@ -65,7 +65,7 @@ export function getBoxModel(
   state: State,
   documentKey: string,
   elementKey: string,
-): BoxModels.BoxModel | null {
+): BoxModels.BoxDisplayModel | null {
   return BoxModels.getBoxModel(getBoxModelsStateSlice(state), documentKey, elementKey)
 }
 

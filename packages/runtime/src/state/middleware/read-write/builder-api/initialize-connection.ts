@@ -30,10 +30,10 @@ function measureElements(): ThunkAction<void, State, unknown, Action> {
   return (dispatch, getState) => {
     const measurables = getMeasurables(getState())
     const currentBoxModels = getBoxModels(getState())
-    const measuredBoxModels = new Map<string, Map<string, BoxModels.BoxModel>>()
+    const measuredBoxModels = new Map<string, Map<string, BoxModels.BoxDisplayModel>>()
 
     measurables.forEach((documentMeasurables, documentKey) => {
-      const measuredDocumentBoxModels = new Map<string, BoxModels.BoxModel>()
+      const measuredDocumentBoxModels = new Map<string, BoxModels.BoxDisplayModel>()
 
       documentMeasurables.forEach((measurable, elementKey) => {
         const boxModel = BoxModels.measure(measurable)
@@ -46,10 +46,10 @@ function measureElements(): ThunkAction<void, State, unknown, Action> {
       }
     })
 
-    const changedBoxModels = new Map<string, Map<string, BoxModels.BoxModel | null>>()
+    const changedBoxModels = new Map<string, Map<string, BoxModels.BoxDisplayModel | null>>()
 
     currentBoxModels.forEach((currentDocumentBoxModels, documentKey) => {
-      const changedDocumentBoxModels = new Map<string, BoxModels.BoxModel | null>()
+      const changedDocumentBoxModels = new Map<string, BoxModels.BoxDisplayModel | null>()
 
       currentDocumentBoxModels.forEach((_boxModel, elementKey) => {
         if (!measuredBoxModels.get(documentKey)?.has(elementKey)) {
@@ -63,7 +63,7 @@ function measureElements(): ThunkAction<void, State, unknown, Action> {
     })
 
     measuredBoxModels.forEach((measuredDocumentBoxModels, documentKey) => {
-      const changedDocumentBoxModels = new Map<string, BoxModels.BoxModel | null>()
+      const changedDocumentBoxModels = new Map<string, BoxModels.BoxDisplayModel | null>()
 
       measuredDocumentBoxModels.forEach((measuredBoxModel, elementKey) => {
         const currentBoxModel = getBoxModel(getState(), documentKey, elementKey)

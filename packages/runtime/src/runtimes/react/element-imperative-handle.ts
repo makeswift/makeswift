@@ -1,5 +1,4 @@
-import { BoxModel } from '@makeswift/controls'
-import { BoxModelHandle } from '../../state/modules/read-write/box-models'
+import { BoxModelHandle, type BoxDisplayModel } from '../../state/modules/read-write/box-models'
 import { Descriptor } from '../../prop-controllers/descriptors'
 import { DescriptorsPropControllers } from '../../prop-controllers/instances'
 import { isMeasurable, measure } from '../../state/modules/read-write/box-models'
@@ -26,7 +25,7 @@ export class ElementImperativeHandle<
     if (this.lastPropControllers !== null) this.setPropControllers(this.lastPropControllers)
   }
 
-  getBoxModel(): BoxModel | null {
+  getBoxModel(): BoxDisplayModel | null {
     const current = this.getCurrent()
 
     return isMeasurable(current) ? measure(current) : null
