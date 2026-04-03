@@ -1,4 +1,4 @@
-import { type BoxModel } from '@makeswift/controls'
+import { type BoxDisplayModel } from '@makeswift/controls'
 import {
   createBox as createBoxWithoutScroll,
   CreateBoxArgs,
@@ -10,7 +10,7 @@ import { type Action, type UnknownAction, isKnownAction } from '../../actions'
 import { ReadWriteActionTypes } from '../../actions/internal/read-write-actions'
 import { BuilderActionTypes } from '../../builder-api/actions'
 
-export type { BoxModel }
+export type { BoxDisplayModel }
 
 export function parse(rawString: string): number {
   const value = Number(rawString.replace(/px$/, ''))
@@ -18,16 +18,35 @@ export function parse(rawString: string): number {
   return Number.isFinite(value) ? value : 0
 }
 
-export function createBox(boxArgs: CreateBoxArgs): BoxModel {
-  return withScroll(createBoxWithoutScroll(boxArgs))
+export function createBox(boxArgs: CreateBoxArgs & { visible?: boolean }): BoxDisplayModel {
+  const box = withScroll(createBoxWithoutScroll(boxArgs))
+  return { ...box, visible: boxArgs.visible }
 }
 
-export function getBox(element: Element): BoxModel {
-  return withScroll(getBoxWithoutScroll(element))
+export function isElementVisible(element: Element): boolean {
+  // checkVisibility is widely supported as of March 2024, but we're adding this
+  // check as a precaution for browsers where it may not be available.
+  // https://developer.mozilla.org/en-US/docs/Web/API/Element/checkVisibility
+  if (element.checkVisibility == null) {
+    return true
+  }
+
+  return element.checkVisibility({
+    visibilityProperty: true,
+    contentVisibilityAuto: true,
+    opacityProperty: true,
+  })
+}
+
+export function getBox(element: Element): BoxDisplayModel {
+  const visible = isElementVisible(element)
+  const boxModel = withScroll(getBoxWithoutScroll(element))
+
+  return { ...boxModel, visible }
 }
 
 export interface BoxModelHandle {
-  getBoxModel(): BoxModel | null
+  getBoxModel(): BoxDisplayModel | null
 }
 
 export type Measurable = Element | BoxModelHandle
@@ -47,7 +66,7 @@ export function isMeasurable(value: unknown): value is Measurable {
   return false
 }
 
-export function measure(measurable: Measurable): BoxModel | null {
+export function measure(measurable: Measurable): BoxDisplayModel | null {
   if (measurable instanceof Element) return getBox(measurable)
 
   return measurable.getBoxModel()
@@ -55,7 +74,7 @@ export function measure(measurable: Measurable): BoxModel | null {
 
 export type State = {
   measurables: Map<string, Map<string, Measurable>>
-  boxModels: Map<string, Map<string, BoxModel>>
+  boxModels: Map<string, Map<string, BoxDisplayModel>>
 }
 
 export function getInitialState(): State {
@@ -66,7 +85,7 @@ export function getMeasurables(state: State): Map<string, Map<string, Measurable
   return state.measurables
 }
 
-export function getBoxModels(state: State): Map<string, Map<string, BoxModel>> {
+export function getBoxModels(state: State): Map<string, Map<string, BoxDisplayModel>> {
   return state.boxModels
 }
 
@@ -74,7 +93,7 @@ export function getBoxModel(
   state: State,
   documentKey: string,
   elementKey: string,
-): BoxModel | null {
+): BoxDisplayModel | null {
   return getBoxModels(state).get(documentKey)?.get(elementKey) ?? null
 }
 

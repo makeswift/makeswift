@@ -6,7 +6,7 @@ import {
   RichTextDefinition,
   ControlInstance,
   Slate,
-  type BoxModel,
+  type BoxDisplayModel,
   type DataType,
   type SendMessage,
   type Data,
@@ -47,7 +47,7 @@ type SwitchToBuildModeMessage = {
 
 type ChangeBoxModelMessage = {
   type: typeof RichTextV2Control.CHANGE_BOX_MODEL
-  payload: { boxModel: BoxModel | null }
+  payload: { boxModel: BoxDisplayModel | null }
 }
 
 type UndoMessage = { type: typeof RichTextV2Control.UNDO }
@@ -190,7 +190,7 @@ export class RichTextV2Control extends ControlInstance<Message> {
     this.sendMessage({ type: RichTextV2Control.REDO })
   }
 
-  changeBoxModel(boxModel: BoxModel | null): void {
+  changeBoxModel(boxModel: BoxDisplayModel | null): void {
     this.sendMessage({
       type: RichTextV2Control.CHANGE_BOX_MODEL,
       payload: { boxModel },
