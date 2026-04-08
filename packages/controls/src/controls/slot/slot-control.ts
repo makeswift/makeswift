@@ -1,15 +1,15 @@
-import { type BoxModel } from '../../common'
+import { type BoxDisplayModel } from '../../common'
 
 import { ControlInstance } from '../instance'
 
 type BoxModelChangeMessage = {
   type: typeof SlotControl.CONTAINER_BOX_MODEL_CHANGE
-  payload: { boxModel: BoxModel | null }
+  payload: { boxModel: BoxDisplayModel | null }
 }
 
 type ItemBoxModelChangeMessage = {
   type: typeof SlotControl.ITEM_BOX_MODEL_CHANGE
-  payload: { index: number; boxModel: BoxModel | null }
+  payload: { index: number; boxModel: BoxDisplayModel | null }
 }
 
 type Message = BoxModelChangeMessage | ItemBoxModelChangeMessage
@@ -26,14 +26,14 @@ export class SlotControl extends ControlInstance<Message> {
     return undefined
   }
 
-  changeContainerBoxModel(boxModel: BoxModel | null): void {
+  changeContainerBoxModel(boxModel: BoxDisplayModel | null): void {
     this.sendMessage({
       type: SlotControl.CONTAINER_BOX_MODEL_CHANGE,
       payload: { boxModel },
     })
   }
 
-  changeItemBoxModel(index: number, boxModel: BoxModel | null): void {
+  changeItemBoxModel(index: number, boxModel: BoxDisplayModel | null): void {
     this.sendMessage({
       type: SlotControl.ITEM_BOX_MODEL_CHANGE,
       payload: { index, boxModel },

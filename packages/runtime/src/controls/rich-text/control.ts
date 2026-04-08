@@ -5,7 +5,7 @@ import { BuilderEditMode } from '../../state/modules/builder-edit-mode'
 import {
   ControlInstance,
   richTextDAOToDTO,
-  type BoxModel,
+  type BoxDisplayModel,
   type RichTextValue,
 } from '@makeswift/controls'
 
@@ -42,7 +42,7 @@ type RedoMessage = {
 
 type BoxModelChangeMessage = {
   type: typeof RichTextControl.CHANGE_BOX_MODEL
-  payload: { boxModel: BoxModel | null }
+  payload: { boxModel: BoxDisplayModel | null }
 }
 
 type Message =
@@ -131,7 +131,7 @@ export class RichTextControl extends ControlInstance<Message> {
     this.sendMessage({ type: RichTextControl.REDO })
   }
 
-  changeBoxModel(boxModel: BoxModel | null): void {
+  changeBoxModel(boxModel: BoxDisplayModel | null): void {
     this.sendMessage({
       type: RichTextControl.CHANGE_BOX_MODEL,
       payload: { boxModel },
