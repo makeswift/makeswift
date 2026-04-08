@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.17-canary.1
+
+### Patch Changes
+
+- 7bce3bd: Expose `BoxDisplayModel` type to augment `BoxModel` with visibility data
+
 ## 0.1.17-canary.0
 
 ### Patch Changes

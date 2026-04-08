@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.28.3-canary.4
+
+### Patch Changes
+
+- 7bce3bd: Measure element visibility as part of box model data
+- Updated dependencies [7bce3bd]
+  - @makeswift/controls@0.1.17-canary.1
+  - @makeswift/prop-controllers@0.4.11-canary.1
+
 ## 0.28.3-canary.3
 
 ### Patch Changes
