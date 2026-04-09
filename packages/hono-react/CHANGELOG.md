@@ -1,5 +1,11 @@
 # @makeswift/hono-react
 
+## 0.1.5-canary.5
+
+### Patch Changes
+
+- d2f821f: Allow providing a custom `onError` handler to `renderToReadableStream`.
+
 ## 0.1.5-canary.4
 
 ### Patch Changes
