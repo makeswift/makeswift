@@ -571,6 +571,10 @@ export class MakeswiftClient {
 
             localizedResourcesMap.set(globalElementId, localizedGlobalElement.id)
             localizedGlobalElements.set(localizedGlobalElement.id, localizedGlobalElement)
+          } else {
+            // Record that this localized global element doesn't exist so the
+            // client won't try to fetch it again (which would result in a 404).
+            localizedResourcesMap.set(globalElementId, null)
           }
         }
 
