@@ -1,6 +1,5 @@
 import { type Action, type UnknownAction, isKnownAction } from '../actions'
 import { SharedActionTypes } from '../shared-api'
-import { ReadOnlyActionTypes } from '../actions/internal/read-only-actions'
 
 export type State = string | null
 
@@ -18,9 +17,6 @@ export function reducer(state = getInitialState(), action: Action | UnknownActio
   switch (action.type) {
     case SharedActionTypes.SET_LOCALE:
       return action.payload.locale
-
-    case ReadOnlyActionTypes.RESET_LOCALE_STATE:
-      return getInitialState()
 
     default:
       return state
