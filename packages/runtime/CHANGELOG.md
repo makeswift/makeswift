@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.3-canary.5
+
+### Patch Changes
+
+- 41acb6e: fix: global resource cache is shared across draft and live requests
+
 ## 0.28.3-canary.4
 
 ### Patch Changes

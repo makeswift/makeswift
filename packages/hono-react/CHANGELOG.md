@@ -1,5 +1,13 @@
 # @makeswift/hono-react
 
+## 0.1.5-canary.6
+
+### Patch Changes
+
+- 41acb6e: Add an option to scope runtime instance by request key
+- Updated dependencies [41acb6e]
+  - @makeswift/runtime@0.28.3-canary.5
+
 ## 0.1.5-canary.5
 
 ### Patch Changes
