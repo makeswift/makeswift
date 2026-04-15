@@ -1,5 +1,5 @@
 import { TestOrigins } from '../../testing/fixtures'
-import { configureStore } from '../store'
+import { configureReadWriteStore } from '../store'
 
 const teardownSpy = jest.fn()
 const builderProxyMock = jest.fn(() => ({}))
@@ -25,8 +25,14 @@ jest.mock('../read-write-state', () => ({
   setupBuilderProxy: setupBuilderProxyMock,
 }))
 
-const createStore = () =>
-  configureStore({
+const createStore = ({
+  isReadOnly,
+  locale = null,
+}: {
+  isReadOnly: boolean
+  locale?: string | null
+}) =>
+  configureReadWriteStore({
     name: 'test-store',
     appOrigin: TestOrigins.appOrigin,
     hostApiClient: {
@@ -34,10 +40,13 @@ const createStore = () =>
         dispatch: jest.fn(),
       },
     } as any,
-    preloadedState: null,
+    preloadedState: {
+      isReadOnly,
+      locale,
+    },
   })
 
-describe('loadReadWriteState', () => {
+describe('read-write store state', () => {
   let consoleError: jest.SpyInstance
   beforeEach(() => {
     consoleError = jest.spyOn(console, 'error').mockImplementation(jest.fn())
@@ -55,12 +64,12 @@ describe('loadReadWriteState', () => {
     createRootReducerMock.mockClear()
   })
 
-  it('calling `loadReadWriteState` with isReadOnly=true has no effect', async () => {
-    const store = createStore()
+  it('calling `loadReadWriteStateIfNeeded` on a read-only store has no effect', async () => {
+    const store = createStore({ isReadOnly: true })
 
     const [unloadA, unloadB] = await Promise.all([
-      store.loadReadWriteState({ isReadOnly: true }),
-      store.loadReadWriteState({ isReadOnly: true }),
+      store.loadReadWriteStateIfNeeded(),
+      store.loadReadWriteStateIfNeeded(),
     ])
 
     unloadA()
@@ -72,29 +81,12 @@ describe('loadReadWriteState', () => {
     expect(consoleError).not.toHaveBeenCalled()
   })
 
-  it('cleanly switches from read-only to read=write state', async () => {
-    const store = createStore()
-
-    const unloadA = await store.loadReadWriteState({ isReadOnly: true })
-    unloadA()
-
-    const unloadB = await store.loadReadWriteState({ isReadOnly: false })
-
-    expect(builderProxyMock).toHaveBeenCalledTimes(1)
-    expect(createReadWriteMiddlewareMock).toHaveBeenCalledTimes(1)
-    expect(teardownSpy).not.toHaveBeenCalled()
-
-    unloadB()
-    expect(teardownSpy).toHaveBeenCalledTimes(1)
-    expect(consoleError).not.toHaveBeenCalled()
-  })
-
   it('read-write state is not unloaded until all providers have unmounted', async () => {
-    const store = createStore()
+    const store = createStore({ isReadOnly: false })
 
     const [unloadA, unloadB] = await Promise.all([
-      store.loadReadWriteState({ isReadOnly: false }),
-      store.loadReadWriteState({ isReadOnly: false }),
+      store.loadReadWriteStateIfNeeded(),
+      store.loadReadWriteStateIfNeeded(),
     ])
 
     expect(builderProxyMock).toHaveBeenCalledTimes(1)
@@ -108,20 +100,5 @@ describe('loadReadWriteState', () => {
 
     expect(teardownSpy).toHaveBeenCalledTimes(1)
     expect(consoleError).not.toHaveBeenCalled()
-  })
-
-  it('read-write state inconsistencies are detected and logged', async () => {
-    const store = createStore()
-
-    const unloadA = await store.loadReadWriteState({ isReadOnly: false })
-    const unloadB = await store.loadReadWriteState({ isReadOnly: true })
-
-    expect(consoleError).toHaveBeenCalledWith('Read-write state mismatch', {
-      isReadOnly: true,
-      refCount: 1,
-    })
-
-    unloadA()
-    unloadB()
   })
 })

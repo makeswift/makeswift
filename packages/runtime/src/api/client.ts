@@ -61,16 +61,14 @@ export class MakeswiftHostApiClient {
   constructor({
     uri,
     fetch,
-    cacheData,
+    preloadedState,
   }: {
     uri: string
     fetch: MakeswiftApiClient.HttpFetch
-    cacheData?: CacheData
+    preloadedState: Partial<MakeswiftApiClient.State>
   }) {
     this.graphqlClient = new GraphQLClient(uri)
-    this.makeswiftApiClient = MakeswiftApiClient.configureStore({
-      serializedState: cacheData,
-    })
+    this.makeswiftApiClient = MakeswiftApiClient.configureStore({ preloadedState })
     this.fetch = fetch
     this.subscribe = this.makeswiftApiClient.subscribe
   }

@@ -55,7 +55,7 @@ export class ReactRuntimeCore extends RuntimeCore {
   ): () => void {
     validateComponentType(type, component as unknown as ComponentType)
 
-    const unregisterComponent = this.store.dispatch(
+    const unregisterComponent = this.protoStore.dispatch(
       registerComponentEffect(
         type,
         { label, icon, hidden, description, builtinSuspense },
@@ -69,7 +69,7 @@ export class ReactRuntimeCore extends RuntimeCore {
       )
     }
 
-    const unregisterReactComponent = this.store.dispatch(
+    const unregisterReactComponent = this.protoStore.dispatch(
       registerReactComponentEffect(type, component as unknown as ComponentType),
     )
 

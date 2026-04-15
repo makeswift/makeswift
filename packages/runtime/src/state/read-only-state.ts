@@ -3,6 +3,7 @@ import { type ThunkDispatch } from '@reduxjs/toolkit'
 import { createSelector } from 'reselect'
 
 import * as SiteVersion from './modules/site-version'
+import * as Locale from './modules/locale'
 import * as Documents from './modules/read-only-documents'
 import * as ElementTrees from './modules/element-trees'
 import * as ReactComponents from './modules/react-components'
@@ -36,8 +37,9 @@ export type { ComponentType } from './modules/react-components'
 export type { ComponentMeta } from './modules/components-meta'
 
 export const reducers = {
-  isReadOnly: IsReadOnly.reducer,
   siteVersion: SiteVersion.reducer,
+  isReadOnly: IsReadOnly.reducer,
+  locale: Locale.reducer,
   documents: Documents.reducer,
   elementTrees: ElementTrees.reducer,
   reactComponents: ReactComponents.reducer,
@@ -50,8 +52,9 @@ export const reducers = {
 }
 
 export type State = {
-  isReadOnly: IsReadOnly.State
   siteVersion: SiteVersion.State
+  isReadOnly: IsReadOnly.State
+  locale: Locale.State
   documents: Documents.State
   elementTrees: ElementTrees.State
   reactComponents: ReactComponents.State
@@ -222,4 +225,8 @@ export function getBuilderEditMode(state: State): BuilderEditMode.State {
 
 export function getBreakpoints(state: State): Breakpoints.State {
   return state.breakpoints
+}
+
+export function getLocale(state: State): string | null {
+  return state.locale
 }

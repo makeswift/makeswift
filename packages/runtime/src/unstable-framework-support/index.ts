@@ -42,4 +42,4 @@ export {
   type RootStyleProps,
 } from '../runtimes/react/root-style-registry'
 
-export { ReactRuntime } from '../runtimes/react/react-runtime'
+export { ReactRuntime, type StoreKey } from '../runtimes/react/react-runtime'

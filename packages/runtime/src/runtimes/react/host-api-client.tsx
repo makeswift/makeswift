@@ -2,8 +2,8 @@
 
 import { MakeswiftHostApiClient } from '../../api/client'
 
-import { useReactRuntime } from './hooks/use-react-runtime'
+import { useStore } from './hooks/use-store'
 
 export function useMakeswiftHostApiClient(): MakeswiftHostApiClient {
-  return useReactRuntime().hostApiClient
+  return useStore().hostApiClient
 }
