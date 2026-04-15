@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.3-canary.6
+
+### Patch Changes
+
+- d7b7035: Fix client-side localized global element requests when on non-null locale.
+
 ## 0.28.3-canary.5
 
 ### Patch Changes
