@@ -1,8 +1,15 @@
 'use client'
 
+import { createContext, useContext } from 'react'
 import { type Store } from '../../../state/store'
-import { useReactRuntime } from './use-react-runtime'
+
+export const StoreContext = createContext<Store | null>(null)
 
 export function useStore(): Store {
-  return useReactRuntime().store
+  const store = useContext(StoreContext)
+  if (store == null) {
+    throw new Error('`useStore` must be used within a `StoreProvider`')
+  }
+
+  return store
 }

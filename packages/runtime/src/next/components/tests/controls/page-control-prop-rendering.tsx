@@ -119,7 +119,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
   }
 
   const runtime = Testing.createReactRuntime()
-  runtime.store.dispatch(setIsInBuilder(isInBuilder))
+  runtime.protoStore.dispatch(setIsInBuilder(isInBuilder))
   registerComponents?.(runtime)
 
   // Act

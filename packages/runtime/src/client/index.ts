@@ -335,10 +335,12 @@ const getPageAPISchema = z.object({
 type GetPageAPI = z.infer<typeof getPageAPISchema>
 
 const getFontsAPISchema = z.object({
-  googleFonts: z.array(z.object({
-    family: z.string(),
-    variants: z.array(z.string()),
-  })),
+  googleFonts: z.array(
+    z.object({
+      family: z.string(),
+      variants: z.array(z.string()),
+    }),
+  ),
   siteId: z.string(),
 })
 
@@ -534,8 +536,7 @@ export class MakeswiftClient {
     siteVersion: SiteVersion | null,
     locale: string | null,
   ): Promise<CacheData> {
-    const runtime = this.runtime
-    const descriptors = getPropControllerDescriptors(runtime.store.getState())
+    const descriptors = this.getElementDescriptors()
     const swatchIds = new Set<string>()
     const fileIds = new Set<string>()
     const typographyIds = new Set<string>()
@@ -980,18 +981,11 @@ export class MakeswiftClient {
   }
 
   getTranslatableData(elementTree: ElementData): Record<string, Data> {
-    return getTranslatableContent(
-      getPropControllerDescriptors(this.runtime.store.getState()),
-      elementTree,
-    )
+    return getTranslatableContent(this.getElementDescriptors(), elementTree)
   }
 
   mergeTranslatedData(elementTree: ElementData, translatedData: Record<string, Data>): Element {
-    return mergeTranslatedContent(
-      getPropControllerDescriptors(this.runtime.store.getState()),
-      elementTree,
-      translatedData,
-    )
+    return mergeTranslatedContent(this.getElementDescriptors(), elementTree, translatedData)
   }
 
   async readPreviewToken(token: string): Promise<PreviewTokenPayload | null> {
@@ -1034,9 +1028,7 @@ export class MakeswiftClient {
     return parsed.data
   }
 
-  async unstable_getFonts(
-    siteVersion: SiteVersion | null = null,
-  ): Promise<GetFontsAPI | null> {
+  async unstable_getFonts(siteVersion: SiteVersion | null = null): Promise<GetFontsAPI | null> {
     const response = await this.fetch('v1_unstable/fonts', siteVersion)
 
     if (!response.ok) {
@@ -1061,5 +1053,9 @@ export class MakeswiftClient {
     }
 
     return parsed.data
+  }
+
+  private getElementDescriptors() {
+    return getPropControllerDescriptors(this.runtime.protoStore.getState())
   }
 }

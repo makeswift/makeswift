@@ -15,7 +15,7 @@ describe('traverseElementTree', () => {
   const runtime = createReactRuntime()
 
   test('walks the tree in the correct order', () => {
-    const descriptors = getPropControllerDescriptors(runtime.store.getState())
+    const descriptors = getPropControllerDescriptors(runtime.protoStore.getState())
     const elements = ElementTrees.traverseElementTree(Fixtures.homePage, descriptors)
     expect([...elements].map(({ key, type }) => ({ key, type }))).toMatchSnapshot()
   })
@@ -136,7 +136,7 @@ describe('resetting an element tree', () => {
   })
 
   test('garbage collects all elements that were removed on reset', () => {
-    const descriptors = getPropControllerDescriptors(runtime.store.getState())
+    const descriptors = getPropControllerDescriptors(runtime.protoStore.getState())
     const documentKey = '0f567942-3ef5-4e66-abb0-969044145606'
 
     const oldDocument = {

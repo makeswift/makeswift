@@ -81,7 +81,7 @@ describe('elementTreeMiddleware', () => {
     const runtime = createReactRuntime()
     const store = configureReduxStore({
       reducer: createRootReducer(),
-      preloadedState: runtime.store.getState(),
+      preloadedState: runtime.protoStore.getState(),
       middleware: getDefaultMiddleware =>
         getDefaultMiddleware(middlewareOptions).concat(
           readOnlyElementTreeMiddleware(),
@@ -94,7 +94,7 @@ describe('elementTreeMiddleware', () => {
     const newElementTree = () =>
       buildElementTree(
         State.getDocument(store.getState(), documentKey)?.rootElement!,
-        State.getPropControllerDescriptors(runtime.store.getState()),
+        State.getPropControllerDescriptors(runtime.protoStore.getState()),
       )
 
     // Act / Assert
