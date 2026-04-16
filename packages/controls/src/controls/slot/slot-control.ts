@@ -4,7 +4,7 @@ import { ControlInstance } from '../instance'
 
 type BoxModelChangeMessage = {
   type: typeof SlotControl.CONTAINER_BOX_MODEL_CHANGE
-  payload: { boxModel: BoxDisplayModel | null }
+  payload: { boxModel: BoxDisplayModel | null; timestamp?: number }
 }
 
 type ItemBoxModelChangeMessage = {
@@ -29,7 +29,7 @@ export class SlotControl extends ControlInstance<Message> {
   changeContainerBoxModel(boxModel: BoxDisplayModel | null): void {
     this.sendMessage({
       type: SlotControl.CONTAINER_BOX_MODEL_CHANGE,
-      payload: { boxModel },
+      payload: { boxModel, timestamp: Date.now() },
     })
   }
 
