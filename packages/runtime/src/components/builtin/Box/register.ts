@@ -100,12 +100,8 @@ export function registerComponent(runtime: ReactRuntimeCore) {
         border: Border({ format: Border.Format.ClassName }),
         borderRadius: BorderRadius({ format: BorderRadius.Format.ClassName }),
         boxShadow: Shadows({ format: Shadows.Format.ClassName }),
-        rowGap: GapY(props => ({
-          hidden: props.children == null,
-        })),
-        columnGap: GapX(props => ({
-          hidden: props.children == null,
-        })),
+        rowGap: GapY(),
+        columnGap: GapX(),
         boxAnimateType: ResponsiveSelect({
           label: 'Animate box in',
           labelOrientation: 'vertical',
