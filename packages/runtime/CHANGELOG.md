@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.3-canary.7
+
+### Patch Changes
+
+- 1c1ec96: Add `unstable_getComponentSnapshots` method for bulk fetching and introspecting multiple component snapshots in a single request.
+
 ## 0.28.3-canary.6
 
 ### Patch Changes
