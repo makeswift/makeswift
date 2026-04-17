@@ -47,6 +47,7 @@ import { Schema } from '@makeswift/controls'
 import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-only-documents'
 import { mergeTranslatedContent } from '../state/translations/merge'
 import { getTranslatableContent } from '../state/translations/get'
+import { isNonNullable } from '../utils/isNonNullable'
 
 export { SnippetLocation } from '../api/graphql/generated/types'
 
@@ -373,7 +374,11 @@ export class MakeswiftClient {
     return this.runtime.apiOrigin
   }
 
-  private async fetch(path: string, siteVersion: SiteVersion | null): Promise<Response> {
+  private async fetch(
+    path: string,
+    siteVersion: SiteVersion | null,
+    init?: RequestInit,
+  ): Promise<Response> {
     const requestUrl = new URL(path, this.apiOrigin)
 
     const requestHeaders = new Headers({
@@ -387,7 +392,14 @@ export class MakeswiftClient {
       requestHeaders.set('makeswift-preview-token', siteVersion.token)
     }
 
+    if (init?.headers) {
+      new Headers(init.headers).forEach((value, key) => {
+        requestHeaders.set(key, value)
+      })
+    }
+
     const response = await fetch(requestUrl.toString(), {
+      ...init,
       headers: requestHeaders,
       ...(siteVersion != null ? { cache: 'no-store' } : {}),
       ...this.fetchOptions(siteVersion),
@@ -515,6 +527,41 @@ export class MakeswiftClient {
     return await response.json()
   }
 
+  private async getElementTreesBulk(
+    ids: string[],
+    siteVersion: SiteVersion | null,
+    locale?: string,
+  ): Promise<(MakeswiftComponentDocument | null)[]> {
+    if (ids.length === 0) return []
+
+    const requestBody: { ids: string[]; locale?: string } = { ids }
+    if (locale != null) requestBody.locale = locale
+
+    const response = await this.fetch('v0/element-trees/bulk', siteVersion, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestBody),
+    })
+
+    if (!response.ok) {
+      const failedBody = await failedResponseBody(response)
+
+      console.error(`Failed to get element trees for [${ids.join(', ')}]`, {
+        response: failedBody,
+        siteVersion,
+        locale,
+      })
+
+      throw new Error(`Failed to get element trees: ${responseError(response)}`)
+    }
+
+    const responseBody = await response.json()
+
+    return responseBody.map((item: unknown) =>
+      item != null ? makeswiftComponentDocumentSchema.parse(item) : null,
+    )
+  }
+
   private async getIntrospectedResources(
     {
       swatchIds,
@@ -531,6 +578,8 @@ export class MakeswiftClient {
     return { ...result, swatches }
   }
 
+  // TODO: Consolidate this method with the introspectMany method once the
+  // unstable_getComponentSnapshots method is stable and tested in production.
   private async introspect(
     element: Element,
     siteVersion: SiteVersion | null,
@@ -686,6 +735,249 @@ export class MakeswiftClient {
     }
   }
 
+  private async introspectMany(
+    trees: { id: string; data: Element }[],
+    siteVersion: SiteVersion | null,
+    locale: string | null,
+  ): Promise<Map<string, CacheData>> {
+    if (trees.length === 0) return new Map()
+
+    const descriptors = this.getElementDescriptors()
+
+    // Shared caches for global elements (deduplication across trees)
+    const globalElementCache = new Map<string, GlobalElement | null>()
+    const localizedGlobalElementCache = new Map<string, LocalizedGlobalElement | null>()
+
+    // Per-tree tracking, keyed by tree ID
+    const treeCaches = new Map(
+      trees.map(tree => [
+        tree.id,
+        {
+          data: tree.data,
+          swatchIds: new Set<string>(),
+          fileIds: new Set<string>(),
+          typographyIds: new Set<string>(),
+          tableIds: new Set<string>(),
+          pageIds: new Set<string>(),
+          globalElements: new Map<string, GlobalElement | null>(),
+          localizedGlobalElements: new Map<string, LocalizedGlobalElement | null>(),
+          localizedResourcesMap: new Map<string, string | null>(),
+        },
+      ]),
+    )
+
+    // DFS traversal per tree
+    for (const currentTreeCache of treeCaches.values()) {
+      const remaining = [currentTreeCache.data]
+      const seen = new Set<string>()
+      let current: Element | undefined
+
+      while ((current = remaining.pop())) {
+        let element: ElementData
+
+        if (isElementReference(current)) {
+          const globalElementId = current.value
+
+          // Fetch global element, using cache if already fetched for another tree
+          let globalElement: GlobalElement | null
+          if (globalElementCache.has(globalElementId)) {
+            globalElement = globalElementCache.get(globalElementId)!
+          } else {
+            globalElement = await this.getGlobalElement(globalElementId, siteVersion)
+            globalElementCache.set(globalElementId, globalElement)
+          }
+
+          let elementData = globalElement?.data
+
+          if (locale) {
+            let localizedGlobalElement: LocalizedGlobalElement | null
+            if (localizedGlobalElementCache.has(globalElementId)) {
+              localizedGlobalElement = localizedGlobalElementCache.get(globalElementId)!
+            } else {
+              localizedGlobalElement = await this.getLocalizedGlobalElement(
+                globalElementId,
+                locale,
+                siteVersion,
+              )
+              localizedGlobalElementCache.set(globalElementId, localizedGlobalElement)
+            }
+
+            if (localizedGlobalElement) {
+              // Update the logic here when we can merge element trees
+              elementData = localizedGlobalElement.data
+
+              currentTreeCache.localizedResourcesMap.set(globalElementId, localizedGlobalElement.id)
+              currentTreeCache.localizedGlobalElements.set(
+                localizedGlobalElement.id,
+                localizedGlobalElement,
+              )
+            } else {
+              // Record that this localized global element doesn't exist so the
+              // client won't try to fetch it again (which would result in a 404).
+              currentTreeCache.localizedResourcesMap.set(globalElementId, null)
+            }
+          }
+
+          currentTreeCache.globalElements.set(globalElementId, globalElement)
+
+          if (elementData == null) continue
+
+          element = elementData as ElementData
+        } else {
+          element = current
+        }
+
+        const elementDescriptors = descriptors.get(element.type)
+
+        if (elementDescriptors == null) continue
+
+        getResourcesFromElementDescriptors(elementDescriptors, element.props)
+
+        function getResourcesFromElementDescriptors(
+          elementDescriptors: Record<string, PropControllerDescriptor>,
+          props: ElementData['props'],
+        ) {
+          Object.entries(elementDescriptors).forEach(([propName, descriptor]) => {
+            getSwatchIds(descriptor, props[propName]).forEach(swatchId => {
+              currentTreeCache.swatchIds.add(swatchId)
+            })
+
+            getFileIds(descriptor, props[propName]).forEach(fileId => {
+              currentTreeCache.fileIds.add(fileId)
+            })
+
+            getTypographyIds(descriptor, props[propName]).forEach(typographyId => {
+              currentTreeCache.typographyIds.add(typographyId)
+            })
+
+            getTableIds(descriptor, props[propName]).forEach(tableId => {
+              currentTreeCache.tableIds.add(tableId)
+            })
+
+            getPageIds(descriptor, props[propName]).forEach(pageId => {
+              currentTreeCache.pageIds.add(pageId)
+            })
+
+            getElementChildren(descriptor, props[propName]).forEach(child => {
+              if (!seen.has(child.key)) {
+                seen.add(child.key)
+                remaining.push(child)
+              }
+            })
+          })
+        }
+      }
+    }
+
+    // Accumulate shared sets from per-tree state for bulk calls
+    const allSwatchIds = new Set<string>()
+    const allFileIds = new Set<string>()
+    const allTypographyIds = new Set<string>()
+    const allTableIds = new Set<string>()
+    const allPageIds = new Set<string>()
+
+    for (const currentTreeCache of treeCaches.values()) {
+      currentTreeCache.swatchIds.forEach(id => allSwatchIds.add(id))
+      currentTreeCache.fileIds.forEach(id => allFileIds.add(id))
+      currentTreeCache.typographyIds.forEach(id => allTypographyIds.add(id))
+      currentTreeCache.tableIds.forEach(id => allTableIds.add(id))
+      currentTreeCache.pageIds.forEach(id => allPageIds.add(id))
+    }
+
+    // One combined round of bulk sub-resource calls
+
+    // 1. Fetch typographies first (needed for secondary swatch discovery)
+    const typographies = await this.getTypographies([...allTypographyIds], siteVersion)
+
+    // 2. Secondary discovery: check for additional swatch IDs in typography styles
+    typographies.forEach(typography => {
+      if (typography == null) return
+
+      const secondarySwatchIds: string[] = []
+      typography.style.forEach(style => {
+        const swatchId = style.value.color?.swatchId
+        if (swatchId != null) {
+          secondarySwatchIds.push(swatchId)
+          allSwatchIds.add(swatchId)
+        }
+      })
+
+      if (secondarySwatchIds.length > 0) {
+        // Add discovered swatches to per-tree sets for trees that reference this typography
+        for (const currentTreeCache of treeCaches.values()) {
+          if (currentTreeCache.typographyIds.has(typography.id)) {
+            secondarySwatchIds.forEach(id => currentTreeCache.swatchIds.add(id))
+          }
+        }
+      }
+    })
+
+    // 3. Fetch remaining resources in parallel
+    const [pagePathnames, { swatches, files, tables }] = await Promise.all([
+      this.getPagePathnameSlices([...allPageIds], siteVersion, { locale }),
+      this.getIntrospectedResources(
+        {
+          swatchIds: [...allSwatchIds],
+          fileIds: [...allFileIds],
+          tableIds: [...allTableIds],
+        },
+        siteVersion,
+      ),
+    ])
+
+    // Build per-tree CacheData using only the resources that tree references
+    const result = new Map<string, CacheData>()
+
+    for (const [treeId, currentTreeCache] of treeCaches) {
+      const apiResources = {
+        [APIResourceType.Swatch]: [...currentTreeCache.swatchIds].map(id => ({
+          id,
+          value: swatches.find(swatch => swatch?.id === id) ?? null,
+        })),
+        [APIResourceType.File]: [...currentTreeCache.fileIds].map(id => ({
+          id,
+          value: files.find(file => file?.id === id) ?? null,
+        })),
+        [APIResourceType.Typography]: [...currentTreeCache.typographyIds].map(id => ({
+          id,
+          value: typographies.find(typography => typography?.id === id) ?? null,
+        })),
+        [APIResourceType.Table]: [...currentTreeCache.tableIds].map(id => ({
+          id,
+          value: tables.find(table => table?.id === id) ?? null,
+        })),
+        [APIResourceType.PagePathnameSlice]: [...currentTreeCache.pageIds].map(id => ({
+          id,
+          value: pagePathnames.find(pagePathnameSlice => pagePathnameSlice?.id === id) ?? null,
+          locale,
+        })),
+        [APIResourceType.GlobalElement]: [...currentTreeCache.globalElements.entries()].map(
+          ([id, value]) => ({
+            id,
+            value,
+          }),
+        ),
+        [APIResourceType.LocalizedGlobalElement]: [
+          ...currentTreeCache.localizedGlobalElements.entries(),
+        ].map(([id, value]) => ({
+          id,
+          value,
+          locale,
+        })),
+      }
+
+      result.set(treeId, {
+        apiResources,
+        localizedResourcesMap:
+          locale != null
+            ? { [locale]: Object.fromEntries(currentTreeCache.localizedResourcesMap.entries()) }
+            : {},
+      })
+    }
+
+    return result
+  }
+
   async getPageSnapshot(
     pathname: string,
     {
@@ -817,6 +1109,80 @@ export class MakeswiftClient {
         requestedLocale: locale ?? null,
       },
     }
+  }
+
+  /**
+   * Fetches multiple component snapshots in a single bulk request with unified introspection.
+   *
+   * @param ids - Element tree IDs to fetch. Maximum 100 IDs per call.
+   */
+  // TODO: Make getComponentSnapshot use this method under the hood once the v0 bulk endpoint is stable.
+  async unstable_getComponentSnapshots(
+    ids: string[],
+    {
+      siteVersion: siteVersionPromise,
+      locale,
+      allowLocaleFallback = true,
+    }: {
+      siteVersion: SiteVersion | null | Promise<SiteVersion | null>
+      locale?: string
+      allowLocaleFallback?: boolean
+    },
+  ): Promise<MakeswiftComponentSnapshot[]> {
+    if (ids.length === 0) return []
+    const siteVersion = await siteVersionPromise
+
+    // Step 1: Bulk fetch
+    let documents = await this.getElementTreesBulk(ids, siteVersion, locale)
+
+    // Step 2: Locale fallback — second-pass for IDs that returned null
+    const baseLocaleWasRequested = locale == null
+    const canAttemptLocaleFallback = !baseLocaleWasRequested && allowLocaleFallback
+    const fallbackIndices: number[] = []
+
+    if (canAttemptLocaleFallback) {
+      documents.forEach((doc, i) => {
+        if (doc == null) fallbackIndices.push(i)
+      })
+
+      if (fallbackIndices.length > 0) {
+        const fallbackIds = fallbackIndices.map(i => ids[i])
+        const fallbackDocuments = await this.getElementTreesBulk(fallbackIds, siteVersion)
+
+        fallbackIndices.forEach((originalIndex, fallbackIndex) => {
+          documents[originalIndex] = fallbackDocuments[fallbackIndex]
+        })
+      }
+    }
+
+    // Step 3: Unified introspection for all trees that have data
+    const treesToIntrospect = documents
+      .map(doc => (doc?.data != null ? { id: doc.id, data: doc.data } : null))
+      .filter(isNonNullable)
+
+    const cacheDataMap = await this.introspectMany(treesToIntrospect, siteVersion, locale ?? null)
+
+    // Step 4: Build per-component results
+    return ids.map((id, i) => {
+      const document = documents[i]
+      const key = deterministicUUID({ id, locale, seed: this.apiKey.split('-').at(0) })
+
+      if (document == null || document.data == null) {
+        return {
+          document: { id, locale: locale ?? null, data: null },
+          key,
+          cacheData: CacheData.empty(),
+          meta: { allowLocaleFallback, requestedLocale: locale ?? null },
+        }
+      }
+
+      return {
+        document,
+        key,
+        cacheData: cacheDataMap.get(id) ?? CacheData.empty(),
+        meta: { allowLocaleFallback, requestedLocale: locale ?? null },
+      }
+    })
   }
 
   async getSwatch(swatchId: string, siteVersion: SiteVersion | null): Promise<Swatch | null> {
