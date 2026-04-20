@@ -39,6 +39,7 @@ import {
   RichTextV2Definition,
   SelectDefinition,
   ShapeDefinition,
+  SliderDefinition,
   SlotDefinition,
   StyleDefinition,
   StyleV2Definition,
@@ -1038,6 +1039,7 @@ export function deserializeUnifiedControlDef(record: DeserializedRecord): Unifie
     [ListDefinition.type]: record =>
       ListDefinition.deserialize(record, deserializeUnifiedControlDef),
     [NumberDefinition.type]: NumberDefinition.deserialize,
+    [SliderDefinition.type]: SliderDefinition.deserialize,
     [RichTextV1Definition.type]: RichTextV1Definition.deserialize,
     [RichTextV2Definition.type]: record =>
       RichTextV2Definition.deserialize(record, deserializeUnifiedControlDef),
