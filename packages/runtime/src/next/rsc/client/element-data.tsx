@@ -1,7 +1,7 @@
 'use client'
 
 import { Ref, forwardRef, memo, type ReactNode } from 'react'
-import { ElementData as ReactPageElementData } from '../../../state/react-page'
+import { ElementData as ReactPageElementData } from '../../../state/read-only-state'
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'
 import { useRSCNode } from './rsc-nodes-provider'
 import { ElementData } from '../../../runtimes/react/components/ElementData'

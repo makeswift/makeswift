@@ -6,7 +6,7 @@ import { deepEqual, ElementData, isElementReference, StyleDefinition } from '@ma
 import { useControlDefs } from '../../../runtimes/react/controls'
 import { useBreakpoints, useDocumentKey, useSelector } from '../../../runtimes/react'
 import { useResourceResolver } from '../../../runtimes/react/hooks/use-resource-resolver'
-import { getElement } from '../../../state/react-page'
+import { getElement } from '../../../state/read-only-state'
 import { StylesheetEngine } from '../css/css-runtime'
 import { useClientCSS } from '../css/client-css'
 

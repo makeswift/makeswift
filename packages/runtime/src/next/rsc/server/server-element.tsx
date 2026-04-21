@@ -1,5 +1,8 @@
 import { ReactNode } from 'react'
-import { isElementReference, type Element as ElementDataOrRef } from '../../../state/react-page'
+import {
+  isElementReference,
+  type Element as ElementDataOrRef,
+} from '../../../state/read-only-state'
 import { ServerElementData } from './server-element-data'
 import { getRuntime, getSiteVersionFromCache } from './runtime'
 import { Element } from '../../../runtimes/react'
@@ -11,7 +14,7 @@ type Props = {
 }
 
 export function ServerElement({ element }: Props): ReactNode {
-  const state = getRuntime().store.getState()
+  const state = getRuntime().protoStore.getState()
   const elementMeta = state.componentsMeta.get(element.type)
 
   if (elementMeta == null) {

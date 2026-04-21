@@ -5,7 +5,7 @@ import {
   getRuntime,
   getSiteVersionFromCache,
 } from './runtime'
-import { getBreakpoints } from '../../../state/react-page'
+import { getBreakpoints } from '../../../state/read-only-state'
 import { createCollectingServerStylesheet } from '../css/server-css'
 import { isLegacyDescriptor } from '../../../prop-controllers/descriptors'
 import { DescriptorsByProp } from '../../../state/modules/prop-controllers'
@@ -20,7 +20,7 @@ export async function resolveProps(
   const document = getDocumentFromCache()
   const client = getMakeswiftClient()
 
-  const state = runtime.store.getState()
+  const state = runtime.protoStore.getState()
   const breakpoints = getBreakpoints(state)
   const stylesheet = createCollectingServerStylesheet(breakpoints, element.key)
 
