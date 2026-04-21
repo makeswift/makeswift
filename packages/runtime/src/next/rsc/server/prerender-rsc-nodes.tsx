@@ -1,6 +1,6 @@
 import { getRuntime, setDocument } from './runtime'
 import { getComponentsMeta } from '../../../state/modules/components-meta'
-import { Document, getPropControllerDescriptors } from '../../../state/react-page'
+import { Document, getPropControllerDescriptors } from '../../../state/read-only-state'
 import { ServerElement } from './server-element'
 import { traverseElementTree } from '../../../state/modules/element-trees'
 import { RSCNodes } from '../client/rsc-nodes-provider'
@@ -10,8 +10,8 @@ export function prerenderRSCNodes(document: Document): RSCNodes {
   setDocument(document)
 
   const runtime = getRuntime()
-  runtime.store.dispatch(registerDocument(document))
-  const state = runtime.store.getState()
+  runtime.protoStore.dispatch(registerDocument(document))
+  const state = runtime.protoStore.getState()
 
   const descriptors = getPropControllerDescriptors(state)
   const rscNodes: RSCNodes = new Map()

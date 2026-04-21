@@ -1,7 +1,7 @@
 import { type Middleware } from '@reduxjs/toolkit'
 import { type useRouter } from 'next/navigation'
 
-import { type State, type Dispatch, Element } from '../../../state/react-page'
+import { type State, type Dispatch, Element } from '../../../state/read-only-state'
 import * as ComponentsMeta from '../../../state/modules/components-meta'
 import { ActionTypes, type Action, type DocumentPayload } from '../../../state/actions'
 import { actionMiddleware } from '../../../state/toolkit'

@@ -8,12 +8,13 @@ import {
 import {
   registerComponentEffect,
   registerReactComponentEffect,
-} from '../../../state/actions/internal'
+} from '../../../state/actions/internal/read-only-actions'
 import { ComponentIcon } from '../../../state/modules/components-meta'
-import type { ComponentType, Data, State } from '../../../state/react-page'
+import type { ComponentType, Data, State } from '../../../state/read-only-state'
 import { deserializeControls, SerializedControl, serializeServerControls } from '../../../builder'
 import { PropControllerDescriptor } from '../../../state/modules/prop-controllers'
 import { registerBuiltinComponents } from '../../../components/builtin/register'
+import { supportsActivity } from '../../../runtimes/react/components/activity-with-fallback'
 
 export type SerializedServerState = {
   componentsMeta: State['componentsMeta']
@@ -21,9 +22,8 @@ export type SerializedServerState = {
 }
 
 export class NextRSCRuntime extends ReactRuntimeCore {
-  constructor() {
-    super()
-    // todo: we may want to remove this
+  constructor(...args: ConstructorParameters<typeof ReactRuntimeCore>) {
+    super(...args)
     registerBuiltinComponents(this)
   }
 
@@ -40,6 +40,7 @@ export class NextRSCRuntime extends ReactRuntimeCore {
       hidden = false,
       props,
       description,
+      builtinSuspense,
       server = false,
     }: {
       type: string
@@ -48,16 +49,28 @@ export class NextRSCRuntime extends ReactRuntimeCore {
       hidden?: boolean
       props?: P
       description?: string
+      /**
+       * In React <= 19.1, controls the default `<Suspense>` boundary.
+       * Ignored in React >= 19.2; components are always wrapped in `<Activity>`.
+       * Defaults to `true`.
+       */
+      builtinSuspense?: boolean
       server?: boolean
     },
   ): () => void {
     validateComponentType(type, component as unknown as ComponentType)
 
-    const unregisterComponent = this.store.dispatch(
+    const unregisterComponent = this.protoStore.dispatch(
       registerComponentEffect(type, { label, icon, hidden, description, server }, props ?? {}),
     )
 
-    const unregisterReactComponent = this.store.dispatch(
+    if (supportsActivity() && builtinSuspense !== undefined) {
+      console.warn(
+        'builtinSuspense is ignored in React >= 19.2; components are always wrapped in <Activity>.',
+      )
+    }
+
+    const unregisterReactComponent = this.protoStore.dispatch(
       registerReactComponentEffect(type, component as unknown as ComponentType),
     )
 
@@ -68,9 +81,9 @@ export class NextRSCRuntime extends ReactRuntimeCore {
   }
 
   serializeServerState(): SerializedServerState {
-    const componentsMeta = this.store.getState().componentsMeta
+    const componentsMeta = this.protoStore.getState().componentsMeta
     const propControllers = new Map(
-      Array.from(this.store.getState().propControllers.entries())
+      Array.from(this.protoStore.getState().propControllers.entries())
         // Only serialize server components. Client components will be imported again on the client bundle.
         .filter(([componentType]) => componentsMeta.get(componentType)?.server === true)
         .map(([componentType, descriptors]) => {
@@ -80,7 +93,7 @@ export class NextRSCRuntime extends ReactRuntimeCore {
     )
 
     return {
-      componentsMeta: this.store.getState().componentsMeta,
+      componentsMeta: this.protoStore.getState().componentsMeta,
       propControllers: propControllers,
     }
   }
@@ -104,7 +117,7 @@ export class NextRSCRuntime extends ReactRuntimeCore {
         continue
       }
 
-      this.store.dispatch(
+      this.protoStore.dispatch(
         registerComponentEffect(componentType, componentMeta, propControllerDescriptors),
       )
     }

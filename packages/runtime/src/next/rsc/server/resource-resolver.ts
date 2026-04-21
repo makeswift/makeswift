@@ -1,7 +1,7 @@
 import { FetchableValue, ResourceResolver } from '@makeswift/controls'
 import { type SiteVersion } from '../../../api/site-version'
 import { ReactRuntimeCore } from '../../../runtimes/react/react-runtime-core'
-import { Document, getElementId } from '../../../state/react-page'
+import { Document, getElementId } from '../../../state/read-only-state'
 import { MakeswiftClient } from '../../../client'
 
 function createFetchable<T>(
@@ -63,7 +63,7 @@ export function serverResourceResolver(
       return {
         name: `elementId:${documentKey}:${elementKey}`,
         subscribe: () => () => {},
-        readStable: () => getElementId(runtime.store.getState(), documentKey, elementKey),
+        readStable: () => getElementId(runtime.protoStore.getState(), documentKey, elementKey),
         fetch: async () => null,
       }
     },

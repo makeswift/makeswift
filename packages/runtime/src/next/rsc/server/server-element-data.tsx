@@ -2,7 +2,7 @@ import {
   getReactComponent,
   ElementData,
   getComponentPropControllerDescriptors,
-} from '../../../state/react-page'
+} from '../../../state/read-only-state'
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'
 import { getRuntime } from './runtime'
 import { resolveProps } from './resolve-props'
@@ -13,7 +13,7 @@ type Props = {
 }
 
 export async function ServerElementData({ elementData }: Props): Promise<ReactNode> {
-  const state = getRuntime().store.getState()
+  const state = getRuntime().protoStore.getState()
   const Component = getReactComponent(state, elementData.type)
 
   let descriptors = getComponentPropControllerDescriptors(state, elementData.type)
