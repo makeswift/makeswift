@@ -1,5 +1,23 @@
 # @makeswift/runtime
 
+## 0.28.3
+
+### Patch Changes
+
+- 3cb90ee: Fixes an issue where pages with `scroll-behavior:smooth` have laggy scrolling within the builder.
+- 41acb6e: fix: global resource cache is shared across draft and live requests
+- ea5136a: Fix hydration mismatch error when SSRing components with `useIsInBuilder` across multiple React trees
+- 7bce3bd: Measure element visibility as part of box model data
+- 99959b2: fix: publishing a color has no effect on live pages until server restart
+- 1c1ec96: Add `unstable_getComponentSnapshots` method for bulk fetching and introspecting multiple component snapshots in a single request.
+- d7b7035: Fix client-side localized global element requests when on non-null locale.
+- ca9082e: Always show row and column gap controls for box elements
+- 646fc36: Introduce unstable placeholder configuration for Slot control
+- Updated dependencies [646fc36]
+- Updated dependencies [7bce3bd]
+  - @makeswift/controls@0.1.17
+  - @makeswift/prop-controllers@0.4.11
+
 ## 0.28.2
 
 ### Patch Changes
