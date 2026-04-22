@@ -1,6 +1,6 @@
 'use client'
 
-import { type PropsWithChildren, useMemo } from 'react'
+import { type PropsWithChildren, useMemo, useCallback } from 'react'
 
 import { FrameworkContext } from '../../../runtimes/react/components/framework-context'
 
@@ -13,14 +13,19 @@ import { RSCElementData } from '../../../rsc/client/element-data'
 export function NextRSCFrameworkProvider({ children }: PropsWithChildren) {
   const router = useRouter()
 
+  const refreshRSC = useCallback(() => {
+    router.refresh()
+  }, [router])
+
   const context = useMemo<FrameworkContext>(
     () => ({
       ...appRouterContext,
       ...nextContext,
       ElementData: RSCElementData,
       previewStoreMiddlewares: [createRSCRefreshMiddleware(router)],
+      refreshRSC,
     }),
-    [router],
+    [router, refreshRSC],
   )
 
   return <FrameworkContext.Provider value={context}>{children}</FrameworkContext.Provider>

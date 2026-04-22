@@ -1,3 +1,5 @@
+'server-only'
+
 import {
   renderToReadableStream,
   createTemporaryReferenceSet,
@@ -6,9 +8,65 @@ import {
   decodeAction,
   decodeFormState,
 } from '@vitejs/plugin-rsc/rsc'
+import {
+  createApiHandler,
+  createPreviewMiddleware,
+  getSiteVersion,
+} from '@makeswift/hono-react/server'
+import { RenderElementContext } from '@makeswift/runtime/rsc/server'
+import { Hono, type Context } from 'hono'
 import type { ReactFormState } from 'react-dom/client'
 import { Root } from '../root.tsx'
 import { parseRenderRequest } from './request.tsx'
+import { runtime } from '../lib/makeswift/runtime'
+import { client } from '../lib/makeswift/client.ts'
+
+const app = new Hono()
+
+app.use('/api/makeswift/*', (c, next) =>
+  createApiHandler({
+    runtime,
+    apiKey: import.meta.env.VITE_MAKESWIFT_SITE_API_KEY,
+  })(c, next),
+)
+
+app.use((c, next) =>
+  createPreviewMiddleware({
+    runtime,
+    apiKey: import.meta.env.VITE_MAKESWIFT_SITE_API_KEY,
+  })(c, next),
+)
+
+// V2 subtree replacement: render a single server element on demand.
+// Called by RSCBuilderUpdater and RSCRefreshCoordinator on the client
+// when an individual RSC element needs to be re-rendered.
+app.post('/__rsc-element', async (c) => {
+  const { elementData, documentContext } = await c.req.json()
+  const siteVersion = await getSiteVersion(c)
+
+  const rscStream = renderToReadableStream(
+    <RenderElementContext
+      runtime={runtime}
+      client={client}
+      siteVersion={siteVersion}
+      documentKey={documentContext.key}
+      locale={documentContext.locale}
+      elementData={elementData}
+    />,
+  )
+
+  return new Response(rscStream, {
+    headers: {
+      'content-type': 'text/x-component;charset=utf-8',
+    },
+  })
+})
+
+app.all('*', async (c) => {
+  return handler(c)
+})
+
+export default app
 
 export type RscPayload = {
   root: React.ReactNode
@@ -16,8 +74,9 @@ export type RscPayload = {
   formState?: ReactFormState
 }
 
-async function handler(request: Request): Promise<Response> {
+async function handler(c: Context): Promise<Response> {
   // differentiate RSC, SSR, action, etc.
+  let request = c.req.raw
   const renderRequest = parseRenderRequest(request)
   request = renderRequest.request
 
@@ -62,11 +121,25 @@ async function handler(request: Request): Promise<Response> {
     }
   }
 
+  const siteVersion = await getSiteVersion(c)
+
+  const snapshot = await client.getComponentSnapshot('/', {
+    siteVersion,
+  })
+
+  if (snapshot == null) {
+    return new Response('Snapshot not found', { status: 404 })
+  }
+
   // serialization from React VDOM tree to RSC stream.
   // we render RSC stream after handling server function request
   // so that new render reflects updated state from server function call
   // to achieve single round trip to mutate and fetch from server.
-  const rscPayload: RscPayload = { root: <Root />, formState, returnValue }
+  const rscPayload: RscPayload = {
+    root: <Root snapshot={snapshot} siteVersion={siteVersion} />,
+    formState,
+    returnValue,
+  }
   const rscOptions = { temporaryReferences }
   const rscStream = renderToReadableStream<RscPayload>(rscPayload, rscOptions)
 
@@ -89,12 +162,6 @@ async function handler(request: Request): Promise<Response> {
     // allow quick simulation of javascript disabled browser
     debugNojs: renderRequest.url.searchParams.has('__nojs'),
   })
-}
-
-export default {
-  fetch(request: Request) {
-    return handler(request)
-  },
 }
 
 if (import.meta.hot) {

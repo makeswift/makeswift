@@ -57,7 +57,7 @@ async function main() {
     const payload = await createFromFetch<RscPayload>(fetch(renderRequest), {
       temporaryReferences,
     })
-    setPayload(payload)
+    // setPayload(payload)
     const { ok, data } = payload.returnValue!
     if (!ok) throw data
     return data
@@ -85,6 +85,11 @@ async function main() {
       fetchRscPayload()
     })
   }
+
+  // listen for RSC refresh requests from outside (e.g. builder preview)
+  window.addEventListener('makeswift:rsc-refresh', () => {
+    fetchRscPayload()
+  })
 }
 
 // a little helper to setup events interception for client side navigation

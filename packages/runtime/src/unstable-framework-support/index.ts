@@ -24,6 +24,7 @@ export {
   DefaultHead,
   DefaultHeadSnippet,
   DefaultImage,
+  DefaultLink,
   DefaultElementData,
 } from '../runtimes/react/components/framework-context'
 
@@ -44,3 +45,10 @@ export {
 } from '../runtimes/react/root-style-registry'
 
 export { ReactRuntime, type StoreKey } from '../runtimes/react/react-runtime'
+
+// RSC
+export { RSCElementData } from '../rsc/client/element-data'
+export { useUpdateRSCNode, useRemoveRSCNode } from '../rsc/client/rsc-nodes-provider'
+export { RSCRefreshCoordinator } from '../rsc/client/rsc-refresh-coordinator'
+export type { SerializedServerState, RSCRuntime } from '../rsc/shared/react-runtime'
+export { createRSCRefreshMiddleware } from '../rsc/client/refresh-middleware'
