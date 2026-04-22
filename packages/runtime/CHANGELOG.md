@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.3-canary.8
+
+### Patch Changes
+
+- ca9082e: Always show row and column gap controls for box elements
+
 ## 0.28.3-canary.7
 
 ### Patch Changes
