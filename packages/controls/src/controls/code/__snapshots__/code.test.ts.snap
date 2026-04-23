@@ -30,15 +30,12 @@ CodeDefinition {
 }
 `;
 
-exports[`Code constructor supports languages config 1`] = `
+exports[`Code constructor supports language config 1`] = `
 CodeDefinition {
   "config": {
     "defaultValue": "body { color: red; }",
     "label": "CSS Code",
-    "languages": [
-      "css",
-      "html",
-    ],
+    "language": "css",
   },
   "version": 1,
 }

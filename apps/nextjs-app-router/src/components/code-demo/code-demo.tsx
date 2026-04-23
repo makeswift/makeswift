@@ -5,11 +5,10 @@ type Props = {
   htmlCode?: string
   cssCode?: string
   tsCode?: string
-  multiCode?: string
 }
 
 export const CodeDemo = forwardRef(function CodeDemo(
-  { className, htmlCode, cssCode, tsCode, multiCode }: Props,
+  { className, htmlCode, cssCode, tsCode }: Props,
   ref: Ref<HTMLDivElement>,
 ) {
   return (
@@ -35,13 +34,6 @@ export const CodeDemo = forwardRef(function CodeDemo(
         <h3 className="text-sm font-semibold mb-1">TypeScript</h3>
         <pre className="rounded bg-gray-100 p-3 text-sm whitespace-pre-wrap break-words">
           <code>{tsCode ?? '(empty)'}</code>
-        </pre>
-      </section>
-
-      <section>
-        <h3 className="text-sm font-semibold mb-1">Multi-language</h3>
-        <pre className="rounded bg-gray-100 p-3 text-sm whitespace-pre-wrap break-words">
-          <code>{multiCode ?? '(empty)'}</code>
         </pre>
       </section>
     </div>
