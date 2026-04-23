@@ -13,6 +13,7 @@ export {
   Group,
   GroupDefinition,
   GroupControl,
+  IconRadioGroup,
   IconRadioGroupDefinition,
   type IconRadioGroupIcon,
   unstable_IconRadioGroup,

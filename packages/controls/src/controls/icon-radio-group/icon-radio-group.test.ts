@@ -1,6 +1,6 @@
 import { testDefinition, testResolveValue } from '../../testing/test-definition'
 
-import { unstable_IconRadioGroup as IconRadioGroup } from './icon-radio-group'
+import { IconRadioGroup } from './icon-radio-group'
 
 const options = [
   {
@@ -15,7 +15,7 @@ const options = [
   },
 ] as const
 
-describe('unstable_IconRadioGroup', () => {
+describe('IconRadioGroup', () => {
   describe('constructor', () => {
     test('returns correct definition', () => {
       const def = IconRadioGroup({
@@ -69,7 +69,7 @@ describe.each([
     IconRadioGroup({ options, defaultValue: 'code' }),
     ['code', 'superscript'] as const,
   ],
-])('unstable_IconRadioGroup', (def, values) => {
+])('IconRadioGroup', (def, values) => {
   const invalidValues = [null, 17, 'random', { swatchId: 42 }]
   testDefinition(def, values, invalidValues)
   testResolveValue(def, values)

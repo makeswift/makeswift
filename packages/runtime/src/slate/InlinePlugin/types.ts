@@ -1,4 +1,4 @@
-import { Slate, unstable_IconRadioGroup } from '@makeswift/controls'
+import { Slate, IconRadioGroup } from '@makeswift/controls'
 import { Node, NodeEntry } from 'slate'
 
 export type SupportedInlineType = Exclude<Slate.InlineType, 'link'>
@@ -6,17 +6,17 @@ export type SupportedInline = Exclude<Slate.Inline, Slate.LinkElement>
 
 export const supportedInlineOptions = [
   {
-    icon: unstable_IconRadioGroup.Icon.Superscript,
+    icon: IconRadioGroup.Icon.Superscript,
     label: 'Superscript',
     value: 'superscript',
   },
   {
-    icon: unstable_IconRadioGroup.Icon.Subscript,
+    icon: IconRadioGroup.Icon.Subscript,
     label: 'Subscript',
     value: 'subscript',
   },
   {
-    icon: unstable_IconRadioGroup.Icon.Code,
+    icon: IconRadioGroup.Icon.Code,
     label: 'Code',
     value: 'code',
   },
