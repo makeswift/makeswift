@@ -1,10 +1,7 @@
 import { runtime } from '@/makeswift/runtime'
 import { lazy } from 'react'
 
-import {
-  Style,
-  unstable_Code as Code,
-} from '@makeswift/runtime/controls'
+import { Style, unstable_Code as Code } from '@makeswift/runtime/controls'
 
 runtime.registerComponent(
   lazy(() => import('./code-demo')),
@@ -15,17 +12,22 @@ runtime.registerComponent(
       className: Style(),
       htmlCode: Code({
         label: 'HTML',
-        language: 'html',
+        languages: ['html'],
         defaultValue: '<div>Hello, world!</div>',
       }),
       cssCode: Code({
         label: 'CSS',
-        language: 'css',
+        languages: ['css'],
       }),
       tsCode: Code({
         label: 'TypeScript',
-        language: 'typescript',
+        languages: ['typescript', 'javascript'],
         defaultValue: 'const greeting: string = "hello"',
+      }),
+      bashCode: Code({
+        label: 'Bash',
+        languages: ['bash'],
+        defaultValue: 'echo "Hello, world!"',
       }),
     },
   },
