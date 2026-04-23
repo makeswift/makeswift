@@ -82,7 +82,7 @@ class Definition<C extends Config> extends ControlDefinition<
         label: z.string().optional(),
         description: z.string().optional(),
         defaultValue: value,
-        languages: z.array(z.enum(CODE_LANGUAGES)).optional(),
+        language: z.enum(CODE_LANGUAGES).optional(),
       })
 
       const definition = z.object({

@@ -12,21 +12,21 @@ runtime.registerComponent(
       className: Style(),
       htmlCode: Code({
         label: 'HTML',
-        languages: ['html'],
+        language: 'html',
         defaultValue: '<div>Hello, world!</div>',
       }),
       cssCode: Code({
         label: 'CSS',
-        languages: ['css'],
+        language: 'css',
       }),
       tsCode: Code({
         label: 'TypeScript',
-        languages: ['typescript', 'javascript'],
+        language: 'typescript',
         defaultValue: 'const greeting: string = "hello"',
       }),
       bashCode: Code({
         label: 'Bash',
-        languages: ['bash'],
+        language: 'bash',
         defaultValue: 'echo "Hello, world!"',
       }),
     },
