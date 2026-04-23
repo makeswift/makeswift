@@ -76,7 +76,7 @@ class Definition<C extends Config> extends ControlDefinition<
         label: z.string().optional(),
         description: z.string().optional(),
         defaultValue: value,
-        languages: z.array(z.enum(CODE_LANGUAGES)).optional(),
+        language: z.enum(CODE_LANGUAGES).optional(),
       })
 
       const definition = z.object({
@@ -159,7 +159,6 @@ class Definition<C extends Config> extends ControlDefinition<
         value,
       }))
       .with({ version: 1, value: undefined }, () => undefined)
-      .with({ version: undefined }, ({ value }) => value)
       .otherwise(() => value)
   }
 
