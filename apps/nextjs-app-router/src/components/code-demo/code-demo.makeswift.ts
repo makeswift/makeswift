@@ -4,17 +4,7 @@ import { lazy } from 'react'
 import {
   Style,
   unstable_Code as Code,
-  type CodeLanguage,
 } from '@makeswift/runtime/controls'
-
-const webLanguages: CodeLanguage[] = ['html', 'css']
-const backendLanguages: CodeLanguage[] = [
-  'typescript',
-  'python',
-  'go',
-  'java',
-  'cpp',
-]
 
 runtime.registerComponent(
   lazy(() => import('./code-demo')),
@@ -25,21 +15,17 @@ runtime.registerComponent(
       className: Style(),
       htmlCode: Code({
         label: 'HTML',
-        languages: webLanguages,
+        language: 'html',
         defaultValue: '<div>Hello, world!</div>',
       }),
       cssCode: Code({
         label: 'CSS',
-        languages: ['css'],
+        language: 'css',
       }),
       tsCode: Code({
         label: 'TypeScript',
-        languages: ['typescript'],
+        language: 'typescript',
         defaultValue: 'const greeting: string = "hello"',
-      }),
-      multiCode: Code({
-        label: 'Multi-language',
-        languages: backendLanguages,
       }),
     },
   },

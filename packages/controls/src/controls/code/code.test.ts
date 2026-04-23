@@ -16,11 +16,11 @@ describe('Code', () => {
       },
     )
 
-    test('supports languages config', () => {
+    test('supports language config', () => {
       expect(
         unstable_Code({
           label: 'CSS Code',
-          languages: ['css', 'html'],
+          language: 'css',
           defaultValue: 'body { color: red; }',
         }),
       ).toMatchSnapshot()
@@ -44,7 +44,7 @@ describe('Code', () => {
     assignTest(unstable_Code({ defaultValue: 'text' }))
     assignTest(unstable_Code({ label: 'Code', defaultValue: undefined }))
     assignTest(unstable_Code({ label: undefined, defaultValue: undefined }))
-    assignTest(unstable_Code({ languages: ['typescript', 'python'] }))
+    assignTest(unstable_Code({ language: 'typescript' }))
   })
 })
 
