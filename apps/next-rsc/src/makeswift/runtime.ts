@@ -1,7 +1,7 @@
 import { fetch } from '@makeswift/runtime/next'
-import { ExperimentalReactRuntime } from '@makeswift/runtime/next/rsc'
+import { RSCRuntime } from '@makeswift/runtime/rsc'
 
-export const runtime = new ExperimentalReactRuntime({
+export const runtime = new RSCRuntime({
   apiOrigin: process.env.NEXT_PUBLIC_MAKESWIFT_API_ORIGIN,
   appOrigin: process.env.NEXT_PUBLIC_MAKESWIFT_APP_ORIGIN,
   breakpoints: {

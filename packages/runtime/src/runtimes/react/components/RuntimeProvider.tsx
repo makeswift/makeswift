@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useEffect, useMemo } from 'react'
+import { ReactNode, useEffect, useMemo, useRef } from 'react'
 
 import { type SiteVersion } from '../../../api/site-version'
 
@@ -11,6 +11,14 @@ import { type ReactRuntimeCore } from '../react-runtime-core'
 
 import { PreviewSwitcher } from './preview-switcher/preview-switcher'
 import { useFrameworkContext } from './hooks/use-framework-context'
+
+function useStableSiteVersion(siteVersion: SiteVersion | null): SiteVersion | null {
+  const ref = useRef(siteVersion)
+  if (ref.current?.version !== siteVersion?.version || ref.current?.token !== siteVersion?.token) {
+    ref.current = siteVersion
+  }
+  return ref.current
+}
 
 export function RuntimeProvider({
   children,
@@ -23,7 +31,7 @@ export function RuntimeProvider({
   siteVersion: SiteVersion | null | undefined
   locale?: string
 }) {
-  const siteVersion = siteVersionProp ?? null
+  const siteVersion = useStableSiteVersion(siteVersionProp ?? null)
   const isPreview = siteVersion != null
   const { previewStoreMiddlewares } = useFrameworkContext()
   const middlewares = useMemo(
