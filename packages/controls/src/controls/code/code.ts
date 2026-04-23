@@ -16,14 +16,20 @@ import { DefaultControlInstance, type SendMessage } from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
 
 export const CODE_LANGUAGES = [
-  'typescript',
-  'python',
-  'go',
-  'java',
-  'csharp',
+  'bash',
   'cpp',
+  'csharp',
   'css',
+  'go',
   'html',
+  'java',
+  'javascript',
+  'json',
+  'markdown',
+  'python',
+  'sql',
+  'typescript',
+  'yaml',
 ] as const
 
 export type CodeLanguage = (typeof CODE_LANGUAGES)[number]
