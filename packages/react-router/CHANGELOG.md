@@ -1,67 +1,19 @@
 # @makeswift/react-router
 
-## 0.1.5-canary.8
-
-### Patch Changes
-
-- Updated dependencies [ca9082e]
-  - @makeswift/runtime@0.28.3-canary.8
-
-## 0.1.5-canary.7
-
-### Patch Changes
-
-- Updated dependencies [1c1ec96]
-  - @makeswift/runtime@0.28.3-canary.7
-
-## 0.1.5-canary.6
-
-### Patch Changes
-
-- Updated dependencies [d7b7035]
-  - @makeswift/runtime@0.28.3-canary.6
-
-## 0.1.5-canary.5
-
-### Patch Changes
-
-- Updated dependencies [41acb6e]
-  - @makeswift/runtime@0.28.3-canary.5
-
-## 0.1.5-canary.4
-
-### Patch Changes
-
-- Updated dependencies [7bce3bd]
-  - @makeswift/runtime@0.28.3-canary.4
-
-## 0.1.5-canary.3
+## 0.1.5
 
 ### Patch Changes
 
 - Updated dependencies [3cb90ee]
-  - @makeswift/runtime@0.28.3-canary.3
-
-## 0.1.5-canary.2
-
-### Patch Changes
-
-- Updated dependencies [99959b2]
-  - @makeswift/runtime@0.28.3-canary.2
-
-## 0.1.5-canary.1
-
-### Patch Changes
-
-- Updated dependencies [646fc36]
-  - @makeswift/runtime@0.28.3-canary.1
-
-## 0.1.5-canary.0
-
-### Patch Changes
-
+- Updated dependencies [41acb6e]
 - Updated dependencies [ea5136a]
-  - @makeswift/runtime@0.28.3-canary.0
+- Updated dependencies [7bce3bd]
+- Updated dependencies [99959b2]
+- Updated dependencies [1c1ec96]
+- Updated dependencies [d7b7035]
+- Updated dependencies [ca9082e]
+- Updated dependencies [646fc36]
+  - @makeswift/runtime@0.28.3
 
 ## 0.1.4
 

@@ -1,14 +1,15 @@
-import { ReactNode } from 'react'
+import { lazy, ReactNode, Suspense } from 'react'
 import { BackgroundsPropControllerValue, BackgroundsData } from '../../../../hooks'
 import { type ResponsiveValue } from '@makeswift/controls'
 import { ColorValue as Color } from '../../../../utils/types'
 import { colorToString } from '../../../../utils/colorToString'
 import Parallax from '../Parallax'
-import BackgroundVideo from '../BackgroundVideo'
 import { type CSSObject } from '@emotion/serialize'
 import { useStyle } from '../../../../../runtimes/react/use-style'
 import { useResponsiveStyle } from '../../../../utils/responsive-style'
 import { useFrameworkContext } from '../../../../../runtimes/react/components/hooks/use-framework-context'
+
+const BackgroundVideo = lazy(() => import('../BackgroundVideo'))
 
 function getColor(color: Color | null | undefined) {
   if (color == null) return 'black'
@@ -257,13 +258,15 @@ function VideoBackground({
     <Parallax strength={parallax}>
       {getParallaxProps => (
         <div {...getParallaxProps({ className: useStyle(containerStyle) })}>
-          <BackgroundVideo
-            url={url}
-            zoom={zoom}
-            opacity={opacity}
-            aspectRatio={getAspectRatio(aspectRatio)}
-            maskColor={maskColor}
-          />
+          <Suspense>
+            <BackgroundVideo
+              url={url}
+              zoom={zoom}
+              opacity={opacity}
+              aspectRatio={getAspectRatio(aspectRatio)}
+              maskColor={maskColor}
+            />
+          </Suspense>
         </div>
       )}
     </Parallax>

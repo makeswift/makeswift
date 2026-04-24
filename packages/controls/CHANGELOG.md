@@ -1,16 +1,11 @@
 # @makeswift/controls
 
-## 0.1.17-canary.1
-
-### Patch Changes
-
-- 7bce3bd: Expose `BoxDisplayModel` type to augment `BoxModel` with visibility data
-
-## 0.1.17-canary.0
+## 0.1.17
 
 ### Patch Changes
 
 - 646fc36: Introduce base Slot control config
+- 7bce3bd: Expose `BoxDisplayModel` type to augment `BoxModel` with visibility data
 
 ## 0.1.16
 
