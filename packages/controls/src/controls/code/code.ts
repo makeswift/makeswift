@@ -75,7 +75,16 @@ class Definition<C extends Config> extends ControlDefinition<
       value: z.string(),
     })
 
-    const schemas = <V, D>(value: SchemaType<V>, data: SchemaType<D>) => {
+    const resolvedInner = z.object({
+      value: z.string(),
+      language: z.enum(CODE_LANGUAGES).optional(),
+    })
+
+    const schemas = <V, D, R>(
+      value: SchemaType<V>,
+      data: SchemaType<D>,
+      resolvedValue: SchemaType<R>,
+    ) => {
       const type = z.literal(this.type)
 
       const config = z.object({
@@ -95,7 +104,7 @@ class Definition<C extends Config> extends ControlDefinition<
         type,
         data,
         value,
-        resolvedValue: value,
+        resolvedValue,
         config,
         definition,
         versionedData,
@@ -108,8 +117,13 @@ class Definition<C extends Config> extends ControlDefinition<
       relaxed: schemas(
         z.string().optional(),
         z.union([z.string(), versionedData, z.undefined()]),
+        resolvedInner.optional(),
       ),
-      strict: schemas(z.string(), z.union([z.string(), versionedData])),
+      strict: schemas(
+        z.string(),
+        z.union([z.string(), versionedData]),
+        resolvedInner,
+      ),
     }
   }
 
@@ -180,7 +194,11 @@ class Definition<C extends Config> extends ControlDefinition<
   ): Resolvable<ResolvedValueType<C> | undefined> {
     return {
       name: Definition.type,
-      readStable: () => this.fromData(data) ?? this.config.defaultValue,
+      readStable: () => {
+        const value = this.fromData(data) ?? this.config.defaultValue
+        if (value === undefined) return undefined
+        return { value, language: this.config.language } as ResolvedValueType<C>
+      },
       subscribe: () => () => {},
       triggerResolve: async () => {},
     }

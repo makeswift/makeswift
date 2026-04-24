@@ -1,4 +1,4 @@
-import { testDefinition, testResolveValue } from '../../testing/test-definition'
+import { testDefinition } from '../../testing/test-definition'
 
 import { unstable_Code, CodeDefinition } from './code'
 
@@ -60,5 +60,44 @@ describe.each([
 ])('Code', (def, values) => {
   const invalidValues = [null, false, 5, []]
   testDefinition(def, values, invalidValues)
-  testResolveValue(def, values)
+})
+
+describe('Code resolveValue', () => {
+  test('resolves v1 data to { value, language } using config language', () => {
+    const def = unstable_Code({ label: 'Code', language: 'typescript' })
+    const data = def.toData('const x = 1')
+    expect(def.resolveValue(data).readStable()).toEqual({
+      value: 'const x = 1',
+      language: 'typescript',
+    })
+  })
+
+  test('resolves unversioned (plain string) data with the config language', () => {
+    const def = unstable_Code({ label: 'Code', language: 'python' })
+    expect(def.resolveValue('print("hi")').readStable()).toEqual({
+      value: 'print("hi")',
+      language: 'python',
+    })
+  })
+
+  test('resolves undefined data to the default value wrapped with language', () => {
+    const def = unstable_Code({ defaultValue: 'fallback', language: 'bash' })
+    expect(def.resolveValue(undefined).readStable()).toEqual({
+      value: 'fallback',
+      language: 'bash',
+    })
+  })
+
+  test('resolves undefined data to undefined when no default is set', () => {
+    const def = unstable_Code({ language: 'css' })
+    expect(def.resolveValue(undefined).readStable()).toBeUndefined()
+  })
+
+  test('resolves with language: undefined when config has no language', () => {
+    const def = unstable_Code({ defaultValue: 'hello' })
+    expect(def.resolveValue(undefined).readStable()).toEqual({
+      value: 'hello',
+      language: undefined,
+    })
+  })
 })
