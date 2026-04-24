@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.4-canary.0
+
+### Patch Changes
+
+- 9a1a56d: Lazy load the builtin box component's video player to avoid automatically loading `react-player`
+
 ## 0.28.3
 
 ### Patch Changes
