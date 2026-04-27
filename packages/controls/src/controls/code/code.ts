@@ -192,13 +192,14 @@ class Definition<C extends Config> extends ControlDefinition<
   resolveValue(
     data: DataType<C> | undefined,
   ): Resolvable<ResolvedValueType<C> | undefined> {
+    const value = this.fromData(data) ?? this.config.defaultValue
+    const resolved =
+      value === undefined
+        ? undefined
+        : ({ value, language: this.config.language } as ResolvedValueType<C>)
     return {
       name: Definition.type,
-      readStable: () => {
-        const value = this.fromData(data) ?? this.config.defaultValue
-        if (value === undefined) return undefined
-        return { value, language: this.config.language } as ResolvedValueType<C>
-      },
+      readStable: () => resolved,
       subscribe: () => () => {},
       triggerResolve: async () => {},
     }
