@@ -100,4 +100,10 @@ describe('Code resolveValue', () => {
       language: undefined,
     })
   })
+
+  test('readStable returns the same reference across repeated calls', () => {
+    const def = unstable_Code({ defaultValue: 'hello', language: 'bash' })
+    const resolvable = def.resolveValue(undefined)
+    expect(resolvable.readStable()).toBe(resolvable.readStable())
+  })
 })
