@@ -7,7 +7,12 @@ const fakeImageUrl = 'https://example.com/image.jpg'
 
 describe('Image', () => {
   describe('constructor', () => {
-    test.each([Image.Format.URL, Image.Format.WithDimensions, undefined])(
+    test.each([
+      Image.Format.URL,
+      Image.Format.WithDimensions,
+      Image.Format.WithMetadata,
+      undefined,
+    ])(
       'call with format `%s` returns versioned definition',
       (value) => {
         expect(Image({ label: 'Image', format: value })).toMatchSnapshot()
