@@ -13,21 +13,41 @@ runtime.registerComponent(
       htmlCode: Code({
         label: 'HTML',
         language: 'html',
-        defaultValue: '<div>Hello, world!</div>',
+        defaultValue: `<article class="card">
+  <h2>Hello, world!</h2>
+  <p>A small demo of the Code control.</p>
+  <button type="button">Click me</button>
+</article>`,
       }),
       cssCode: Code({
         label: 'CSS',
         language: 'css',
+        defaultValue: `.card {
+  padding: 1rem 1.25rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #4f46e5, #ec4899);
+  color: white;
+}`,
       }),
       tsCode: Code({
         label: 'TypeScript',
         language: 'typescript',
-        defaultValue: 'const greeting: string = "hello"',
+        defaultValue: `type Greeting = { name: string; lang: 'en' | 'es' }
+
+function greet({ name, lang }: Greeting): string {
+  const hello = lang === 'es' ? 'Hola' : 'Hello'
+  return \`\${hello}, \${name}!\`
+}`,
       }),
       bashCode: Code({
         label: 'Bash',
         language: 'bash',
-        defaultValue: 'echo "Hello, world!"',
+        defaultValue: `#!/usr/bin/env bash
+set -euo pipefail
+
+for file in *.md; do
+  echo "Processing $file..."
+done`,
       }),
     },
   },
