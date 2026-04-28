@@ -12,15 +12,17 @@ import { MakeswiftClientProvider } from './lib/makeswift/provider.tsx'
 import type { ComponentProps } from 'react'
 
 type Props = {
-  snapshot: MakeswiftComponentSnapshot
-  siteVersion: ComponentProps<typeof RSCServerProvider>['siteVersion']
+  // snapshot: MakeswiftComponentSnapshot
+  // siteVersion: ComponentProps<typeof RSCServerProvider>['siteVersion']
 }
 
 export async function Root(props: Props) {
+  console.log('@@@ render Root', { props })
   return (
     <html>
       <body>
-        <RSCServerProvider
+        <div id="root">
+          {/* <RSCServerProvider
           client={client}
           siteVersion={props.siteVersion}
           runtime={runtime}
@@ -28,14 +30,16 @@ export async function Root(props: Props) {
           <MakeswiftClientProvider
             serializedServerState={runtime.serializeServerState()}
             siteVersion={props.siteVersion}
-          >
-            <RSCMakeswiftComponent
+          > */}
+          <div>Well, well, well</div>
+          {/* <RSCMakeswiftComponent
               snapshot={props.snapshot}
               label="/"
               type={MakeswiftComponentType.Box}
-            />
-          </MakeswiftClientProvider>
-        </RSCServerProvider>
+            /> */}
+          {/* </MakeswiftClientProvider>
+        </RSCServerProvider> */}
+        </div>
       </body>
     </html>
   )

@@ -20,7 +20,7 @@
   "devDependencies": {
     "@types/negotiator": "^0.6.3",
     "@types/node": "^20",
-    "@types/react": "^19.2.7",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.0.1",
     "eslint": "^9.13.0",

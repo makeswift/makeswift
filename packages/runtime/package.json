@@ -288,7 +288,7 @@
     "@types/jest": "^29.5.12",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^20.14.8",
-    "@types/react": "^19.2.7",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/set-cookie-parser": "^2.4.10",
     "@types/use-sync-external-store": "^1.5.0",
