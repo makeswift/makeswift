@@ -62,7 +62,7 @@
     "@swc/jest": "^0.2.36",
     "@types/express": "^5.0.3",
     "@types/jest": "^29.5.12",
-    "@types/react": "^19.2.7",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "concurrently": "^8.2.2",
     "express": "^5.1.0",

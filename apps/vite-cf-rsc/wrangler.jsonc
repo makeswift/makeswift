@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "vite-rsc-starter",
-  "main": "./src/framework/entry.rsc.tsx",
+  "name": "vite-cf-rsc",
+  "main": "./src/index.ts",
   "workers_dev": true,
   "compatibility_date": "2025-10-01",
   "compatibility_flags": ["nodejs_als", "nodejs_compat"],
