@@ -15,7 +15,7 @@ import {
 import { DefaultControlInstance, type SendMessage } from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
 
-export const CODE_LANGUAGES = [
+export const unstable_CODE_LANGUAGES = [
   'bash',
   'cpp',
   'csharp',
@@ -32,7 +32,7 @@ export const CODE_LANGUAGES = [
   'yaml',
 ] as const
 
-export type CodeLanguage = (typeof CODE_LANGUAGES)[number]
+export type unstable_CodeLanguage = (typeof unstable_CODE_LANGUAGES)[number]
 
 type Config = z.infer<typeof Definition.schema.relaxed.config>
 
@@ -77,7 +77,7 @@ class Definition<C extends Config> extends ControlDefinition<
 
     const resolvedInner = z.object({
       value: z.string(),
-      language: z.enum(CODE_LANGUAGES).optional(),
+      language: z.enum(unstable_CODE_LANGUAGES).optional(),
     })
 
     const schemas = <V, D, R>(
@@ -91,7 +91,7 @@ class Definition<C extends Config> extends ControlDefinition<
         label: z.string().optional(),
         description: z.string().optional(),
         defaultValue: value,
-        language: z.enum(CODE_LANGUAGES).optional(),
+        language: z.enum(unstable_CODE_LANGUAGES).optional(),
       })
 
       const definition = z.object({
@@ -127,7 +127,7 @@ class Definition<C extends Config> extends ControlDefinition<
     }
   }
 
-  static deserialize(data: DeserializedRecord): CodeDefinition {
+  static deserialize(data: DeserializedRecord): unstable_CodeDefinition {
     if (data.type !== Definition.type) {
       throw new Error(
         `Code: expected type ${Definition.type}, got ${data.type}`,
@@ -135,7 +135,7 @@ class Definition<C extends Config> extends ControlDefinition<
     }
 
     const { version, config } = Definition.schema.relaxed.definition.parse(data)
-    return new CodeDefinition(config, version)
+    return new unstable_CodeDefinition(config, version)
   }
 
   constructor(
@@ -214,7 +214,7 @@ class Definition<C extends Config> extends ControlDefinition<
   }
 }
 
-export class CodeDefinition<C extends Config = Config> extends Definition<C> {}
+export class unstable_CodeDefinition<C extends Config = Config> extends Definition<C> {}
 
 type UserConfig<D extends Config['defaultValue']> = Config & {
   defaultValue?: D
@@ -226,6 +226,6 @@ type NormedConfig<D extends Config['defaultValue']> = z.infer<
 
 export function unstable_Code<D extends Config['defaultValue']>(
   config?: UserConfig<D>,
-): CodeDefinition<NormedConfig<D>> {
-  return new CodeDefinition((config ?? {}) as NormedConfig<D>, 1)
+): unstable_CodeDefinition<NormedConfig<D>> {
+  return new unstable_CodeDefinition((config ?? {}) as NormedConfig<D>, 1)
 }

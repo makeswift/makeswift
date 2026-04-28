@@ -1,5 +1,5 @@
 import { CheckboxDefinition } from '../checkbox'
-import { CodeDefinition } from '../code'
+import { unstable_CodeDefinition } from '../code'
 import { ColorDefinition } from '../color'
 import { ComboboxDefinition } from '../combobox'
 import { ControlDefinition } from '../definition'
@@ -23,7 +23,7 @@ import { TextInputDefinition } from '../text-input'
 import { unstable_TypographyDefinition } from '../typography'
 
 abstract class ControlDefinitionVisitor<R> {
-  abstract visitCode(def: CodeDefinition, ...args: unknown[]): R
+  abstract visitCode(def: unstable_CodeDefinition, ...args: unknown[]): R
   abstract visitCheckbox(def: CheckboxDefinition, ...args: unknown[]): R
   abstract visitColor(def: ColorDefinition, ...args: unknown[]): R
   abstract visitCombobox(def: ComboboxDefinition, ...args: unknown[]): R
