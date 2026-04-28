@@ -9,14 +9,23 @@ function createFetchable<T>(
   fetcher: () => Promise<T | null>,
 ): FetchableValue<T | null> {
   let lastValue: T | null = null
+  let onUpdate: (() => void) | undefined
 
   return {
     name,
-    subscribe: () => () => {},
+    subscribe: (callback) => {
+      onUpdate = callback
+      const unsubscribe = () => {
+        if (onUpdate === callback) onUpdate = undefined
+      }
+      return unsubscribe
+    },
     readStable: () => lastValue,
     fetch: async () => {
       const res = await fetcher()
+      const didChange = res !== lastValue
       lastValue = res
+      if (didChange) onUpdate?.()
       return res
     },
   }
