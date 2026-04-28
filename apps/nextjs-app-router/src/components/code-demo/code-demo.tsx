@@ -1,8 +1,8 @@
 import { Ref, forwardRef } from 'react'
-import { type CodeLanguage } from '@makeswift/runtime/controls'
+import { type unstable_CodeLanguage } from '@makeswift/runtime/controls'
 
 type CodeProp =
-  | { value: string; language?: CodeLanguage }
+  | { value: string; language?: unstable_CodeLanguage }
   | undefined
 
 type Props = {
