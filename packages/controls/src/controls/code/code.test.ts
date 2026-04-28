@@ -1,6 +1,6 @@
 import { testDefinition } from '../../testing/test-definition'
 
-import { unstable_Code, CodeDefinition } from './code'
+import { unstable_Code, unstable_CodeDefinition } from './code'
 
 describe('Code', () => {
   describe('constructor', () => {
@@ -37,7 +37,7 @@ describe('Code', () => {
   })
 
   describe('assignability', () => {
-    function assignTest(_def: CodeDefinition) {}
+    function assignTest(_def: unstable_CodeDefinition) {}
     assignTest(unstable_Code())
     assignTest(unstable_Code({ label: 'Code' }))
     assignTest(unstable_Code({ defaultValue: '<div>hello</div>' }))

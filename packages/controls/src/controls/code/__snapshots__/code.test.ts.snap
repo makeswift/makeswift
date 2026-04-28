@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Code constructor call with default value \`<div>hi</div>\` returns versioned definition 1`] = `
-CodeDefinition {
+unstable_CodeDefinition {
   "config": {
     "defaultValue": "<div>hi</div>",
     "label": "Code",
@@ -11,7 +11,7 @@ CodeDefinition {
 `;
 
 exports[`Code constructor call with default value \`console.log("hello")\` returns versioned definition 1`] = `
-CodeDefinition {
+unstable_CodeDefinition {
   "config": {
     "defaultValue": "console.log("hello")",
     "label": "Code",
@@ -21,7 +21,7 @@ CodeDefinition {
 `;
 
 exports[`Code constructor call with default value \`undefined\` returns versioned definition 1`] = `
-CodeDefinition {
+unstable_CodeDefinition {
   "config": {
     "defaultValue": undefined,
     "label": "Code",
@@ -31,7 +31,7 @@ CodeDefinition {
 `;
 
 exports[`Code constructor supports language config 1`] = `
-CodeDefinition {
+unstable_CodeDefinition {
   "config": {
     "defaultValue": "body { color: red; }",
     "label": "CSS Code",
