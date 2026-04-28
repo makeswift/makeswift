@@ -1,4 +1,4 @@
-import { match, P } from 'ts-pattern'
+import { match } from 'ts-pattern'
 import { z } from 'zod'
 
 import { safeParse, type ParseResult } from '../../lib/zod'
@@ -69,7 +69,7 @@ class Definition<C extends Config> extends ControlDefinition<
   static readonly type = 'makeswift::controls::code' as const
 
   static get schema() {
-    const version = z.literal(1).optional()
+    const version = z.literal(1)
     const versionedData = z.object({
       [ControlDataTypeKey]: z.literal(this.v1DataType),
       value: z.string(),
@@ -140,7 +140,7 @@ class Definition<C extends Config> extends ControlDefinition<
 
   constructor(
     config: C,
-    readonly version: z.infer<typeof Definition.schema.relaxed.version>,
+    readonly version: z.infer<typeof Definition.schema.relaxed.version> = 1,
   ) {
     super(config)
   }
@@ -173,13 +173,9 @@ class Definition<C extends Config> extends ControlDefinition<
   }
 
   toData(value: ValueType<C>): DataType<C> {
-    return match({ version: this.version, value })
-      .with({ version: 1, value: P.string }, ({ value }) => ({
-        ...Definition.dataSignature.v1,
-        value,
-      }))
-      .with({ version: 1, value: undefined }, () => undefined)
-      .otherwise(() => value)
+    return (value === undefined
+      ? undefined
+      : { ...Definition.dataSignature.v1, value }) as DataType<C>
   }
 
   copyData(
@@ -214,7 +210,9 @@ class Definition<C extends Config> extends ControlDefinition<
   }
 }
 
-export class unstable_CodeDefinition<C extends Config = Config> extends Definition<C> {}
+export class unstable_CodeDefinition<
+  C extends Config = Config,
+> extends Definition<C> {}
 
 type UserConfig<D extends Config['defaultValue']> = Config & {
   defaultValue?: D
