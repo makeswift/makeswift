@@ -24,6 +24,7 @@ export {
   DefaultHead,
   DefaultHeadSnippet,
   DefaultImage,
+  DefaultElementData,
 } from '../runtimes/react/components/framework-context'
 
 export { MakeswiftComponent } from '../runtimes/react/components/MakeswiftComponent'

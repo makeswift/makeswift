@@ -17,7 +17,7 @@ type PropsValueProps = {
   children(props: Record<string, unknown>): ReactNode
 }
 
-function useControlDefs(
+export function useControlDefs(
   elementType: string,
 ): readonly [Record<string, LegacyDescriptor>, Record<string, ControlDefinition>] {
   const store = useStore()

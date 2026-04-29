@@ -9,12 +9,15 @@ import {
   type RefAttributes,
   forwardRef,
 } from 'react'
+import { type Middleware } from '@reduxjs/toolkit'
 
 import { type LinkData } from '@makeswift/prop-controllers'
 
 import { type Snippet } from '../../../client'
+import { ElementData } from './ElementData'
 
 import { BaseHeadSnippet } from './page/HeadSnippet'
+import { type Dispatch, type State } from '../../../state/read-write-state'
 
 type HeadComponent = (props: { children: ReactNode }) => ReactNode
 type HeadSnippet = (props: { snippet: Snippet }) => ReactNode
@@ -36,11 +39,15 @@ type LinkProps = Omit<ComponentPropsWithoutRef<'a'>, 'onClick'> & {
 
 type LinkComponent = ForwardRefExoticComponent<RefAttributes<HTMLAnchorElement> & LinkProps>
 
+type ElementDataComponent = typeof ElementData
+
 export type FrameworkContext = {
   Head: HeadComponent
   HeadSnippet: HeadSnippet
   Image: ImageComponent
   Link: LinkComponent
+  ElementData: ElementDataComponent
+  previewStoreMiddlewares?: Middleware<Dispatch, State, Dispatch>[]
 }
 
 // React 19 automatically hoists metadata tags to the <head>
@@ -69,9 +76,12 @@ export const DefaultLink: LinkComponent = forwardRef<HTMLAnchorElement, LinkProp
   ({ linkType, ...props }, ref) => <a {...props} ref={ref} />,
 )
 
+export const DefaultElementData = ElementData
+
 export const FrameworkContext = createContext<FrameworkContext>({
   Head: DefaultHead,
   HeadSnippet: DefaultHeadSnippet,
   Image: DefaultImage,
   Link: DefaultLink,
+  ElementData: DefaultElementData,
 })

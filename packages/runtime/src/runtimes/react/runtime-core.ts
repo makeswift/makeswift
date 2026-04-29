@@ -1,4 +1,5 @@
 import { type SerializableReplacementContext } from '@makeswift/controls'
+import { type Middleware } from '@reduxjs/toolkit'
 
 import { MakeswiftHostApiClient } from '../../api/client'
 import * as MakeswiftApiClient from '../../state/makeswift-api-client'
@@ -73,7 +74,10 @@ export class RuntimeCore {
     })
   }
 
-  getOrCreateStore({ siteVersion, locale }: StoreKey): Store {
+  getOrCreateStore(
+    { siteVersion, locale }: StoreKey,
+    { middlewares }: { middlewares?: Middleware[] },
+  ): Store {
     const key = storeCacheKey({ siteVersion, locale })
 
     const createStore = () => {
@@ -93,6 +97,7 @@ export class RuntimeCore {
         appOrigin: this.appOrigin,
         hostApiClient,
         preloadedState: { ...this.protoStore.getState(), siteVersion, isReadOnly, locale },
+        middlewares,
       })
     }
 
