@@ -6,8 +6,6 @@ export {
   CheckboxDefinition,
   unstable_Code,
   unstable_CodeDefinition,
-  unstable_CODE_LANGUAGES,
-  type unstable_CodeLanguage,
   Color,
   ColorDefinition,
   Combobox,
