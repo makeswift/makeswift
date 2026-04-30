@@ -16,16 +16,6 @@ describe('Code', () => {
       },
     )
 
-    test('supports language config', () => {
-      expect(
-        unstable_Code({
-          label: 'CSS Code',
-          language: 'css',
-          defaultValue: 'body { color: red; }',
-        }),
-      ).toMatchSnapshot()
-    })
-
     test('disallows extraneous properties', () => {
       unstable_Code({
         label: undefined,
@@ -44,7 +34,6 @@ describe('Code', () => {
     assignTest(unstable_Code({ defaultValue: 'text' }))
     assignTest(unstable_Code({ label: 'Code', defaultValue: undefined }))
     assignTest(unstable_Code({ label: undefined, defaultValue: undefined }))
-    assignTest(unstable_Code({ language: 'typescript' }))
   })
 })
 
@@ -63,46 +52,35 @@ describe.each([
 })
 
 describe('Code resolveValue', () => {
-  test('resolves v1 data to { value, language } using config language', () => {
-    const def = unstable_Code({ label: 'Code', language: 'typescript' })
+  test('resolves v1 data to { value }', () => {
+    const def = unstable_Code({ label: 'Code' })
     const data = def.toData('const x = 1')
     expect(def.resolveValue(data).readStable()).toEqual({
       value: 'const x = 1',
-      language: 'typescript',
     })
   })
 
-  test('resolves unversioned (plain string) data with the config language', () => {
-    const def = unstable_Code({ label: 'Code', language: 'python' })
+  test('resolves unversioned (plain string) data', () => {
+    const def = unstable_Code({ label: 'Code' })
     expect(def.resolveValue('print("hi")').readStable()).toEqual({
       value: 'print("hi")',
-      language: 'python',
     })
   })
 
-  test('resolves undefined data to the default value wrapped with language', () => {
-    const def = unstable_Code({ defaultValue: 'fallback', language: 'bash' })
+  test('resolves undefined data to the default value', () => {
+    const def = unstable_Code({ defaultValue: 'fallback' })
     expect(def.resolveValue(undefined).readStable()).toEqual({
       value: 'fallback',
-      language: 'bash',
     })
   })
 
   test('resolves undefined data to undefined when no default is set', () => {
-    const def = unstable_Code({ language: 'css' })
+    const def = unstable_Code()
     expect(def.resolveValue(undefined).readStable()).toBeUndefined()
   })
 
-  test('resolves with language: undefined when config has no language', () => {
-    const def = unstable_Code({ defaultValue: 'hello' })
-    expect(def.resolveValue(undefined).readStable()).toEqual({
-      value: 'hello',
-      language: undefined,
-    })
-  })
-
   test('readStable returns the same reference across repeated calls', () => {
-    const def = unstable_Code({ defaultValue: 'hello', language: 'bash' })
+    const def = unstable_Code({ defaultValue: 'hello' })
     const resolvable = def.resolveValue(undefined)
     expect(resolvable.readStable()).toBe(resolvable.readStable())
   })
