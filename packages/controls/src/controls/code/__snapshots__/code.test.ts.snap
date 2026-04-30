@@ -30,17 +30,6 @@ unstable_CodeDefinition {
 }
 `;
 
-exports[`Code constructor supports language config 1`] = `
-unstable_CodeDefinition {
-  "config": {
-    "defaultValue": "body { color: red; }",
-    "label": "CSS Code",
-    "language": "css",
-  },
-  "version": 1,
-}
-`;
-
 exports[`Code definition w/ config {"defaultValue":"console.log(\\"hi\\")","label":"visible"} toData returns v1 data for \`body { color: red; }\` when definition version is 1 1`] = `
 {
   "@@makeswift/type": "code::v1",

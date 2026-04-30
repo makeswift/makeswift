@@ -1,4 +1,4 @@
-import { match } from 'ts-pattern'
+import { match, P } from 'ts-pattern'
 import { z } from 'zod'
 
 import { safeParse, type ParseResult } from '../../lib/zod'
@@ -14,25 +14,6 @@ import {
 } from '../definition'
 import { DefaultControlInstance, type SendMessage } from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
-
-export const unstable_CODE_LANGUAGES = [
-  'bash',
-  'cpp',
-  'csharp',
-  'css',
-  'go',
-  'html',
-  'java',
-  'javascript',
-  'json',
-  'markdown',
-  'python',
-  'sql',
-  'typescript',
-  'yaml',
-] as const
-
-export type unstable_CodeLanguage = (typeof unstable_CODE_LANGUAGES)[number]
 
 type Config = z.infer<typeof Definition.schema.relaxed.config>
 
@@ -69,7 +50,7 @@ class Definition<C extends Config> extends ControlDefinition<
   static readonly type = 'makeswift::controls::code' as const
 
   static get schema() {
-    const version = z.literal(1)
+    const version = z.literal(1).optional()
     const versionedData = z.object({
       [ControlDataTypeKey]: z.literal(this.v1DataType),
       value: z.string(),
@@ -77,7 +58,6 @@ class Definition<C extends Config> extends ControlDefinition<
 
     const resolvedInner = z.object({
       value: z.string(),
-      language: z.enum(unstable_CODE_LANGUAGES).optional(),
     })
 
     const schemas = <V, D, R>(
@@ -91,7 +71,6 @@ class Definition<C extends Config> extends ControlDefinition<
         label: z.string().optional(),
         description: z.string().optional(),
         defaultValue: value,
-        language: z.enum(unstable_CODE_LANGUAGES).optional(),
       })
 
       const definition = z.object({
@@ -140,7 +119,7 @@ class Definition<C extends Config> extends ControlDefinition<
 
   constructor(
     config: C,
-    readonly version: z.infer<typeof Definition.schema.relaxed.version> = 1,
+    readonly version: z.infer<typeof Definition.schema.relaxed.version>,
   ) {
     super(config)
   }
@@ -173,9 +152,14 @@ class Definition<C extends Config> extends ControlDefinition<
   }
 
   toData(value: ValueType<C>): DataType<C> {
-    return (value === undefined
-      ? undefined
-      : { ...Definition.dataSignature.v1, value }) as DataType<C>
+    return match({ version: this.version, value })
+      .with({ version: 1, value: P.string }, ({ value }) => ({
+        ...Definition.dataSignature.v1,
+        value,
+      }))
+      .with({ version: 1, value: undefined }, () => undefined)
+      .with({ version: undefined }, ({ value }) => value)
+      .otherwise(() => value) as DataType<C>
   }
 
   copyData(
@@ -192,7 +176,7 @@ class Definition<C extends Config> extends ControlDefinition<
     const resolved =
       value === undefined
         ? undefined
-        : ({ value, language: this.config.language } as ResolvedValueType<C>)
+        : ({ value } as ResolvedValueType<C>)
     return {
       name: Definition.type,
       readStable: () => resolved,
