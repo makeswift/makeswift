@@ -1,4 +1,4 @@
-import { match, P } from 'ts-pattern'
+import { match } from 'ts-pattern'
 import { z } from 'zod'
 
 import { safeParse, type ParseResult } from '../../lib/zod'
@@ -50,7 +50,7 @@ class Definition<C extends Config> extends ControlDefinition<
   static readonly type = 'makeswift::controls::code' as const
 
   static get schema() {
-    const version = z.literal(1).optional()
+    const version = z.literal(1)
     const versionedData = z.object({
       [ControlDataTypeKey]: z.literal(this.v1DataType),
       value: z.string(),
@@ -152,14 +152,11 @@ class Definition<C extends Config> extends ControlDefinition<
   }
 
   toData(value: ValueType<C>): DataType<C> {
-    return match({ version: this.version, value })
-      .with({ version: 1, value: P.string }, ({ value }) => ({
-        ...Definition.dataSignature.v1,
-        value,
-      }))
-      .with({ version: 1, value: undefined }, () => undefined)
-      .with({ version: undefined }, ({ value }) => value)
-      .otherwise(() => value) as DataType<C>
+    if (value === undefined) return undefined as DataType<C>
+    return {
+      ...Definition.dataSignature.v1,
+      value,
+    } as DataType<C>
   }
 
   copyData(

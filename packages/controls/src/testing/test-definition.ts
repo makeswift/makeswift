@@ -17,6 +17,7 @@ export function testDefinition<Def extends ControlDefinition>(
   definition: Def,
   values: readonly ValueType<Def>[],
   invalidValues: readonly unknown[],
+  options: { skipV0Definition?: boolean } = {},
 ) {
   describe(`definition w/ config ${JSON.stringify(definition.config)}`, () => {
     describe('safeParse', () => {
@@ -133,20 +134,22 @@ export function testDefinition<Def extends ControlDefinition>(
         },
       )
 
-      test.each(values)(
-        'returns v0 value for `%s` when definition is unversioned',
-        (value) => {
-          // Arrange
-          const v0Definition = toV0(definition)
+      if (!options.skipV0Definition) {
+        test.each(values)(
+          'returns v0 value for `%s` when definition is unversioned',
+          (value) => {
+            // Arrange
+            const v0Definition = toV0(definition)
 
-          // Act
-          const result = v0Definition.toData(value as any)
+            // Act
+            const result = v0Definition.toData(value as any)
 
-          // Assert
-          expect(v0Definition.version).toBe(undefined)
-          expect(result).toBe(value)
-        },
-      )
+            // Assert
+            expect(v0Definition.version).toBe(undefined)
+            expect(result).toBe(value)
+          },
+        )
+      }
     })
   })
 }
