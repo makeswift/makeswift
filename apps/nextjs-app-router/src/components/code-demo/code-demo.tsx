@@ -1,9 +1,6 @@
 import { Ref, forwardRef } from 'react'
-import { type unstable_CodeLanguage } from '@makeswift/runtime/controls'
 
-type CodeProp =
-  | { value: string; language?: unstable_CodeLanguage }
-  | undefined
+type CodeProp = { value: string } | undefined
 
 type Props = {
   className?: string
@@ -16,10 +13,7 @@ type Props = {
 function Section({ title, code }: { title: string; code: CodeProp }) {
   return (
     <section>
-      <h3 className="text-sm font-semibold mb-1">
-        {title}
-        {code?.language ? ` (${code.language})` : ''}
-      </h3>
+      <h3 className="text-sm font-semibold mb-1">{title}</h3>
       <pre className="rounded bg-gray-100 p-3 text-sm whitespace-pre-wrap break-words">
         <code>{code?.value ?? '(empty)'}</code>
       </pre>

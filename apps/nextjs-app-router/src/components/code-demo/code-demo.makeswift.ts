@@ -12,7 +12,6 @@ runtime.registerComponent(
       className: Style(),
       htmlCode: Code({
         label: 'HTML',
-        language: 'html',
         defaultValue: `<article class="card">
   <h2>Hello, world!</h2>
   <p>A small demo of the Code control.</p>
@@ -21,7 +20,6 @@ runtime.registerComponent(
       }),
       cssCode: Code({
         label: 'CSS',
-        language: 'css',
         defaultValue: `.card {
   padding: 1rem 1.25rem;
   border-radius: 0.5rem;
@@ -31,7 +29,6 @@ runtime.registerComponent(
       }),
       tsCode: Code({
         label: 'TypeScript',
-        language: 'typescript',
         defaultValue: `type Greeting = { name: string; lang: 'en' | 'es' }
 
 function greet({ name, lang }: Greeting): string {
@@ -41,7 +38,6 @@ function greet({ name, lang }: Greeting): string {
       }),
       bashCode: Code({
         label: 'Bash',
-        language: 'bash',
         defaultValue: `#!/usr/bin/env bash
 set -euo pipefail
 
