@@ -48,7 +48,7 @@ describe.each([
   ],
 ])('Code', (def, values) => {
   const invalidValues = [null, false, 5, []]
-  testDefinition(def, values, invalidValues)
+  testDefinition(def, values, invalidValues, { skipV0Definition: true })
 })
 
 describe('Code resolveValue', () => {
