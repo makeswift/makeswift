@@ -1,58 +1,56 @@
 import {
+  type Data,
+  type Device,
+  type RichTextValue as RichTextControlValue,
+} from '@makeswift/controls'
+
+import {
+  type Descriptor,
+  type PropDef,
+  type OptionsType,
+  CheckboxDescriptor as CheckboxControl,
+  CheckboxPropControllerData,
+  DateDescriptor as DateControl,
+  DatePropControllerData,
+  ImageDescriptor as ImageControl,
+  ImageData as ImageControlValue,
   GapData,
   GapX,
   GapYDescriptor,
   GapYPropControllerData,
+  LinkData,
+  LinkDescriptor as LinkControl,
+  LinkPropControllerData,
+  NumberDescriptor,
+  NumberOptions,
+  NumberPropControllerData,
+  ResponsiveColorDescriptor,
+  ResponsiveColorPropControllerData,
+  ResponsiveIconRadioGroup,
+  ResponsiveLengthDescriptor,
   ResponsiveLengthOptions,
   ResponsiveLengthPropControllerData,
-  ResponsiveIconRadioGroup,
   ResponsiveNumber,
   ResponsiveSelect,
-  type Descriptor,
-  type PropDef,
-  type OptionsType,
+  Types as PropControllerTypes,
+  TextStyleDescriptor as TextStyleControl,
+  TextStylePropControllerData,
+  TextInputDescriptor as TextInputControl,
 } from '@makeswift/prop-controllers'
 
 import {
-  type Data,
-  type Device,
-  ControlDefinition as UnifiedControlDefinition,
-  type SerializedRecord,
-  type RichTextValue as RichTextControlValue,
-  ShapeV2Definition,
-  DeserializationPlugin,
-  deserializeObject,
-} from '@makeswift/controls'
-
-import {
-  CheckboxDefinition,
-  ColorDefinition,
-  ComboboxDefinition,
-  FontDefinition,
-  GroupDefinition,
-  IconRadioGroupDefinition,
-  ImageDefinition,
-  LinkDefinition,
-  ListDefinition,
-  NumberDefinition,
-  RichTextV1Definition,
-  RichTextV2Definition,
-  SelectDefinition,
-  ShapeDefinition,
-  SlotDefinition,
-  StyleDefinition,
-  StyleV2Definition,
-  TextAreaDefinition,
-  TextInputDefinition,
-  unstable_TypographyDefinition,
-} from '../../controls'
+  type DeserializedFunction,
+  type SerializedFunction,
+  deserializeFunction,
+  isSerializedFunction,
+  serializeFunction,
+} from '../controls/serialization/message-port/function-serialization'
 
 import {
   PanelDescriptor as PanelControl,
   PanelDescriptorType as PanelControlType,
   PanelDescriptorValueType as PanelControlValueType,
-  Descriptor as ControlDefinition,
-} from '../../prop-controllers/descriptors'
+} from './descriptors'
 
 import {
   DELETED_PROP_CONTROLLER_TYPES,
@@ -65,44 +63,9 @@ import {
   TypeaheadOptions as TypeaheadControlConfig,
   TypeaheadValue as TypeaheadControlValue,
   RichTextDescriptor as RichTextControl,
-} from '../../prop-controllers/deleted'
+} from './deleted'
 
-import {
-  DeserializedFunction,
-  deserializeFunction,
-  isSerializedFunction,
-  SerializedFunction,
-  serializeFunction,
-} from './function-serialization'
-
-import {
-  LinkData,
-  DateDescriptor as DateControl,
-  DatePropControllerData,
-  Types as PropControllerTypes,
-  ImageDescriptor as ImageControl,
-  ImageData as ImageControlValue,
-  LinkDescriptor as LinkControl,
-  LinkPropControllerData,
-  ResponsiveLengthDescriptor,
-  NumberOptions,
-  NumberPropControllerData,
-  NumberDescriptor,
-  ResponsiveColorPropControllerData,
-  ResponsiveColorDescriptor,
-  CheckboxPropControllerData,
-  CheckboxDescriptor as CheckboxControl,
-  TextStyleDescriptor as TextStyleControl,
-  TextStylePropControllerData,
-  TextInputDescriptor as TextInputControl,
-} from '@makeswift/prop-controllers'
-
-import { type LegacyDescriptor, isLegacyDescriptor } from '../../prop-controllers/descriptors'
-import { deserializeRecord, type DeserializedRecord } from '@makeswift/controls'
-import {
-  ClientMessagePortSerializationVisitor,
-  functionDeserializationPlugin,
-} from '../../controls/visitors/message-port-serializer'
+import { type LegacyDescriptor } from './descriptors'
 
 type SerializedShapeControlConfig<T extends Record<string, SerializedPanelControl>> = {
   type: T
@@ -136,7 +99,7 @@ function serializeShapeControl<
   }
 
   Object.entries(type).forEach(([key, control]) => {
-    const [serializedControl, serializedControlTransferables] = serializeControl(control)
+    const [serializedControl, serializedControlTransferables] = serializeLegacyControl(control)
 
     serializedType[key as keyof typeof type] = serializedControl as SerializedPanelControl
     transferables.push(...serializedControlTransferables)
@@ -174,7 +137,7 @@ function deserializeShapeControl<
   }
 
   Object.entries(type).forEach(([key, control]) => {
-    deserializedType[key as keyof typeof type] = deserializeControl(
+    deserializedType[key as keyof typeof type] = deserializeLegacyControl(
       control,
     ) as DeserializedPanelControl
   })
@@ -202,7 +165,7 @@ function serializeListControl<T extends Data>(
   const { type, getItemLabel } = control.options
   const transferables: Transferable[] = []
 
-  const [serializedType, serializedTypeTransferables] = serializeControl(type)
+  const [serializedType, serializedTypeTransferables] = serializeLegacyControl(type)
   const serializedGetItemLabel = getItemLabel && serializeFunction(getItemLabel)
 
   transferables.push(...serializedTypeTransferables)
@@ -239,8 +202,10 @@ function deserializeListControl<T extends Data>(
 ): DeserializedListControl<ListControlValue<T>> {
   const { type, getItemLabel } = serializedControl.options
 
-  const deserializedType = deserializeControl(type) as DeserializedPanelControl
-  const deserializedGetItemLabel = isSerializedFunction(getItemLabel) ? deserializeFunction(getItemLabel) : getItemLabel
+  const deserializedType = deserializeLegacyControl(type) as DeserializedPanelControl
+  const deserializedGetItemLabel = isSerializedFunction(getItemLabel)
+    ? deserializeFunction(getItemLabel)
+    : getItemLabel
 
   return {
     ...serializedControl,
@@ -294,7 +259,9 @@ function deserializeTypeaheadControl<T extends Data>(
 ): DeserializedTypeaheadControl<TypeaheadControlValue<T>> {
   const { getItems } = serializedControl.options
 
-  const deserializedGetItems = isSerializedFunction(getItems) ? deserializeFunction(getItems) : getItems
+  const deserializedGetItems = isSerializedFunction(getItems)
+    ? deserializeFunction(getItems)
+    : getItems
 
   return {
     ...serializedControl,
@@ -784,10 +751,8 @@ export type SerializedLegacyControl<T extends Data = Data> =
   | SerializedImageControl<T>
   | SerializedRichTextControl<T>
 
-export type SerializedControl<T extends Data = Data> = SerializedLegacyControl<T> | SerializedRecord
-
 type SerializedPanelControl<T extends Data = Data> = Extract<
-  SerializedControl<T>,
+  SerializedLegacyControl<T>,
   { type: PanelControlType }
 >
 
@@ -835,42 +800,17 @@ export type DeserializedLegacyControl<T extends Data = Data> =
   | DeserializedImageControl<T>
   | DeserializedRichTextControl<T>
 
-export type DeserializedControl<T extends Data = Data> =
-  | DeserializedLegacyControl<T>
-  | UnifiedControlDefinition
-
 export type DeserializedPanelControl<T extends Data = Data> = Extract<
-  DeserializedControl<T>,
+  DeserializedLegacyControl<T>,
   { type: PanelControlType }
 >
 
 type DeserializedPanelControlValueType<T extends DeserializedPanelControl> =
   T extends DeserializedPanelControl<infer U> ? U : never
 
-export function serializeControl<T extends Data>(
-  control: ControlDefinition<T>,
-): [SerializedControl<T>, Transferable[]] {
-  if (isLegacyDescriptor(control)) {
-    return serializeLegacyControl(control)
-  }
-
-  const messagePortVisitor = new ClientMessagePortSerializationVisitor()
-  const serializedControl = control.accept(messagePortVisitor)
-  return [serializedControl, messagePortVisitor.getTransferables()]
-}
-
-export function isSerializedControl(control: unknown): control is SerializedControl {
-  return (
-    control != null &&
-    typeof control === 'object' &&
-    'type' in control &&
-    typeof control.type === 'string'
-  )
-}
-
-function serializeLegacyControl<T extends Data>(
+export function serializeLegacyControl<T extends Data>(
   control: LegacyDescriptor<T>,
-): [SerializedControl<T>, Transferable[]] {
+): [SerializedLegacyControl<T>, Transferable[]] {
   switch (control.type) {
     case PropControllerTypes.Checkbox:
       return serializeCheckboxControl(control)
@@ -882,7 +822,7 @@ function serializeLegacyControl<T extends Data>(
       return serializeShapeControl(control)
 
     case DELETED_PROP_CONTROLLER_TYPES.Typeahead:
-      return serializeTypeaheadControl(control) as [SerializedControl<T>, Transferable[]]
+      return serializeTypeaheadControl(control)
 
     case PropControllerTypes.GapX:
       return serializeControlDef<typeof GapX>(control)
@@ -931,15 +871,9 @@ function serializeLegacyControl<T extends Data>(
   }
 }
 
-function isSerializedLegacyControl<T extends Data>(
-  control: SerializedControl<T>,
-): control is SerializedLegacyControl<T> {
-  return 'options' in control
-}
-
 export function deserializeLegacyControl<T extends Data>(
   serializedControl: SerializedLegacyControl<T>,
-): DeserializedControl<T> {
+): DeserializedLegacyControl<T> {
   switch (serializedControl.type) {
     case PropControllerTypes.Checkbox:
       return deserializeCheckboxControl(serializedControl)
@@ -998,116 +932,4 @@ export function deserializeLegacyControl<T extends Data>(
     default:
       return serializedControl
   }
-}
-
-export type DeserializeControlOptions = {
-  plugins?: DeserializationPlugin<any>[]
-}
-
-
-export function deserializeControl<T extends Data>(
-  serializedControl: SerializedControl<T>,
-  options?: DeserializeControlOptions,
-): DeserializedControl<T> {
-  if (isSerializedLegacyControl(serializedControl)) {
-    // Parity with controls deserialization logic below: "preprocess" serialized 
-    // legacy controls if the caller provided custom deserialization plugins
-    const record = options?.plugins ? deserializeObject(serializedControl, options?.plugins) : serializedControl
-    return deserializeLegacyControl(record as SerializedLegacyControl<T>)
-  }
-
-  const plugins = [functionDeserializationPlugin, ...(options?.plugins ?? [])]
-
-  return deserializeUnifiedControlDef(
-    deserializeRecord(serializedControl, plugins)
-  )
-}
-
-export function deserializeUnifiedControlDef(record: DeserializedRecord): UnifiedControlDefinition {
-  type DeserializeMethod = (data: DeserializedRecord) => UnifiedControlDefinition
-  const deserializeMethod: Record<string, DeserializeMethod> = {
-    [CheckboxDefinition.type]: CheckboxDefinition.deserialize,
-    [ColorDefinition.type]: ColorDefinition.deserialize,
-    [ComboboxDefinition.type]: ComboboxDefinition.deserialize,
-    [FontDefinition.type]: FontDefinition.deserialize,
-    [GroupDefinition.type]: record =>
-      GroupDefinition.deserialize(record, deserializeUnifiedControlDef),
-    [IconRadioGroupDefinition.type]: IconRadioGroupDefinition.deserialize,
-    [ImageDefinition.type]: ImageDefinition.deserialize,
-    [LinkDefinition.type]: LinkDefinition.deserialize,
-    [ListDefinition.type]: record =>
-      ListDefinition.deserialize(record, deserializeUnifiedControlDef),
-    [NumberDefinition.type]: NumberDefinition.deserialize,
-    [RichTextV1Definition.type]: RichTextV1Definition.deserialize,
-    [RichTextV2Definition.type]: record =>
-      RichTextV2Definition.deserialize(record, deserializeUnifiedControlDef),
-    [SelectDefinition.type]: SelectDefinition.deserialize,
-    [ShapeDefinition.type]: record =>
-      ShapeDefinition.deserialize(record, deserializeUnifiedControlDef),
-    [ShapeV2Definition.type]: record =>
-      ShapeV2Definition.deserialize(record, deserializeUnifiedControlDef),
-    [SlotDefinition.type]: SlotDefinition.deserialize,
-    [StyleDefinition.type]: StyleDefinition.deserialize,
-    [StyleV2Definition.type]: record =>
-      StyleV2Definition.deserialize(record, deserializeUnifiedControlDef),
-    [TextAreaDefinition.type]: TextAreaDefinition.deserialize,
-    [TextInputDefinition.type]: TextInputDefinition.deserialize,
-    [unstable_TypographyDefinition.type]: unstable_TypographyDefinition.deserialize,
-  } as const
-
-  const deserialize = deserializeMethod[record.type] ?? null
-  if (deserialize == null) {
-    throw new Error(`Unknown control type: ${record.type}`)
-  }
-
-  return deserialize(record)
-}
-
-export function serializeControls(
-  controls: Record<string, ControlDefinition>,
-): [Record<string, SerializedControl>, Transferable[]] {
-  return Object.entries(controls).reduce(
-    ([accControls, accTransferables], [key, control]) => {
-      const [serializedControl, transferables] = serializeControl(control)
-
-      return [{ ...accControls, [key]: serializedControl }, [...accTransferables, ...transferables]]
-    },
-    [{}, []] as [Record<string, SerializedControl>, Transferable[]],
-  )
-}
-
-export type DeserializeControlsOptions = { onError?: (err: Error, context: { key: string; serializedControl: unknown }) => void } & Pick<DeserializeControlOptions, 'plugins'>
-
-export function deserializeControls(
-  serializedControls: Record<string, unknown>,
-  {
-    onError,
-    plugins,
-  }: DeserializeControlsOptions = {},
-): Record<string, DeserializedControl> {
-  return Object.entries(serializedControls).reduce(
-    (deserializedControls, [key, serializedControl]) => {
-      try {
-        if (!isSerializedControl(serializedControl)) {
-          throw new Error(
-            `Expected serialized control data, got ${JSON.stringify(serializedControl)}`,
-          )
-        }
-        const deserializedControl = deserializeControl(serializedControl, { plugins })
-        return { ...deserializedControls, [key]: deserializedControl }
-      } catch (err: unknown) {
-        const error =
-          err instanceof Error
-            ? new Error(`Could not deserialize control for "${key}": ${err.message}`, {
-                cause: err,
-              })
-            : new Error(`Could not deserialize control for "${key}", unknown error: ${err}`)
-
-        onError?.(error, { key, serializedControl })
-
-        return deserializedControls
-      }
-    },
-    {} as Record<string, DeserializedControl>,
-  )
 }
