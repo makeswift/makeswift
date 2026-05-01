@@ -1,10 +1,21 @@
+import {
+  type DeserializationPlugin,
+  type SerializationPlugin,
+  serializeObject,
+  type AnyFunction,
+} from '@makeswift/controls'
+
 import { getTranslatableContent } from '../translations/get'
+import { DescriptorsByComponentType, DescriptorsByProp } from '../modules/prop-controllers'
+
+import { deserializeControls } from '../../builder/serialization'
+import {
+  type SerializedFunction,
+  type DeserializedFunction,
+} from '../../controls/serialization/message-port/function-serialization'
+
 import { translatableContentSampleElementTree } from './fixtures/translatable-content-sample'
 import { getMockedSerializedDescriptorsFromBuilder } from './fixtures/serialized-descriptors-from-builder'
-import { DescriptorsByComponentType, DescriptorsByProp } from '../modules/prop-controllers'
-import { deserializeControls } from '../../builder/serialization/control-serialization'
-import { DeserializationPlugin, SerializationPlugin, serializeObject, AnyFunction } from '@makeswift/controls'
-import { SerializedFunction, DeserializedFunction } from '../../builder/serialization/function-serialization'
 
 const textElementKey1 = 'd9cb4bc3-9a21-43cc-b300-9aa896c3672d'
 const textElementKey2 = '10529c61-6d2c-4724-966a-c8ae579df487'
@@ -20,8 +31,8 @@ const messagePortToNoopAsyncFunction: DeserializationPlugin<
 }
 
 const serializeMessagePort: SerializationPlugin<any> = {
-  match: (value: any) => (value instanceof MessagePort),
-  serialize: (_value: any) => ({__serializedType: 'MessagePort'}),
+  match: (value: any) => value instanceof MessagePort,
+  serialize: (_value: any) => ({ __serializedType: 'MessagePort' }),
 }
 
 const deserializeDescriptors = (
@@ -29,12 +40,15 @@ const deserializeDescriptors = (
 ): DescriptorsByComponentType => {
   const resolved: DescriptorsByComponentType = new Map()
   for (const [componentType, propSerialized] of Object.entries(descriptors)) {
-    resolved.set(componentType, deserializeControls(propSerialized, { plugins: [messagePortToNoopAsyncFunction]}) as DescriptorsByProp)
+    resolved.set(
+      componentType,
+      deserializeControls(propSerialized, {
+        plugins: [messagePortToNoopAsyncFunction],
+      }) as DescriptorsByProp,
+    )
   }
   return resolved
 }
-
-
 
 describe('getTranslatableContent', () => {
   test('extracts translatable data from an element tree using persisted descriptors', () => {
@@ -44,17 +58,21 @@ describe('getTranslatableContent', () => {
       messageChannels.push(messageChannel)
       return messageChannel.port1
     }
-    
+
     // NOTE: this is mocking the behavior that should happen in the builder to properly serialize the descriptors
-    const descriptors = getMockedSerializedDescriptorsFromBuilder(createMessagePort);
-    const serializedDescriptors = serializeObject(descriptors, [serializeMessagePort]) as Record<string, any>
+    const descriptors = getMockedSerializedDescriptorsFromBuilder(createMessagePort)
+    const serializedDescriptors = serializeObject(descriptors, [serializeMessagePort]) as Record<
+      string,
+      any
+    >
 
     for (const messageChannel of messageChannels) {
-      messageChannel.port1.close();
-      messageChannel.port2.close();
+      messageChannel.port1.close()
+      messageChannel.port2.close()
     }
 
-    const serializedControl = serializedDescriptors["./components/Text/index.js"].text.config.plugins[0].control;
+    const serializedControl =
+      serializedDescriptors['./components/Text/index.js'].text.config.plugins[0].control
     expect(serializedControl.getValue.__serializedType).toBe('MessagePort')
     expect(serializedControl.onChange.__serializedType).toBe('MessagePort')
 
