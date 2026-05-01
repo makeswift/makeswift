@@ -8,9 +8,9 @@ import { pageToRootDocument } from '../../../client'
 
 type Props = ComponentPropsWithoutRef<typeof Page>
 
-export function NextRSCMakeswiftPage(props: Props) {
+export async function NextRSCMakeswiftPage(props: Props) {
   const rootDocument = pageToRootDocument(props.snapshot.document)
-  const rscNodes = prerenderRSCNodes(rootDocument)
+  const rscNodes = await prerenderRSCNodes(rootDocument)
 
   return (
     <RSCNodesProvider value={rscNodes}>

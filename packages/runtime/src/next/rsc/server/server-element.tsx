@@ -11,9 +11,10 @@ import { RSCBuilderUpdater } from '../client/rsc-builder-updater'
 
 type Props = {
   element: ElementDataOrRef
+  resolvedProps: Record<string, unknown> | null
 }
 
-export function ServerElement({ element }: Props): ReactNode {
+export function ServerElement({ element, resolvedProps }: Props): ReactNode {
   const state = getRuntime().protoStore.getState()
   const elementMeta = state.componentsMeta.get(element.type)
 
@@ -31,16 +32,20 @@ export function ServerElement({ element }: Props): ReactNode {
     return <FallbackComponent text="Element reference is not supported on server yet" />
   }
 
+  if (resolvedProps == null) {
+    return <FallbackComponent text={`Props not resolved for ${element.type}`} />
+  }
+
   const siteVersion = getSiteVersionFromCache()
   const isPreview = siteVersion != null
 
   if (isPreview) {
     return (
       <RSCBuilderUpdater initialElementData={element}>
-        <ServerElementData key={element.key} elementData={element} />
+        <ServerElementData key={element.key} elementData={element} resolvedProps={resolvedProps} />
       </RSCBuilderUpdater>
     )
   }
 
-  return <ServerElementData key={element.key} elementData={element} />
+  return <ServerElementData key={element.key} elementData={element} resolvedProps={resolvedProps} />
 }

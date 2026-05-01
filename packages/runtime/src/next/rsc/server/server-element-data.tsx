@@ -1,32 +1,20 @@
-import {
-  getReactComponent,
-  ElementData,
-  getComponentPropControllerDescriptors,
-} from '../../../state/read-only-state'
+import { getReactComponent, ElementData } from '../../../state/read-only-state'
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'
 import { getRuntime } from './runtime'
-import { resolveProps } from './resolve-props'
 import { ReactNode } from 'react'
 
 type Props = {
   elementData: ElementData
+  resolvedProps: Record<string, unknown>
 }
 
-export async function ServerElementData({ elementData }: Props): Promise<ReactNode> {
+export function ServerElementData({ elementData, resolvedProps }: Props): ReactNode {
   const state = getRuntime().protoStore.getState()
   const Component = getReactComponent(state, elementData.type)
-
-  let descriptors = getComponentPropControllerDescriptors(state, elementData.type)
-
-  if (descriptors == null) {
-    return <FallbackComponent text={`Descriptors not found for ${elementData.type}`} />
-  }
-
-  const props = await resolveProps(elementData, descriptors)
 
   if (Component == null) {
     return <FallbackComponent text="Component not found" />
   }
 
-  return <Component {...props} key={elementData.key} />
+  return <Component {...resolvedProps} key={elementData.key} />
 }
