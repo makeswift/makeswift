@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.4-canary.1
+
+### Patch Changes
+
+- 34bebe9: Fixes an issue where during updating the element tree cache, we use an element path that's only valid during an intermediate state to read into the final element tree.
+
 ## 0.28.4-canary.0
 
 ### Patch Changes
