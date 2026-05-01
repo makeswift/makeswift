@@ -8,7 +8,7 @@ import {
 import React from 'react'
 import { createRoot, hydrateRoot } from 'react-dom/client'
 import { rscStream } from 'rsc-html-stream/client'
-import type { RscPayload } from './entry.rsc'
+import type { RscPayload } from './rsc'
 import { GlobalErrorBoundary } from './error-boundary'
 import { createRscRenderRequest } from './request'
 
@@ -23,6 +23,7 @@ async function main() {
     rscStream,
   )
 
+  console.log('@@ initialPayload', initialPayload)
   // browser root component to (re-)render RSC payload as state
   function BrowserRoot() {
     const [payload, setPayload_] = React.useState(initialPayload)
@@ -32,10 +33,11 @@ async function main() {
     }, [setPayload_])
 
     // re-fetch/render on client side navigation
-    React.useEffect(() => {
-      return listenNavigation(() => fetchRscPayload())
-    }, [])
+    // React.useEffect(() => {
+    //   return listenNavigation(() => fetchRscPayload())
+    // }, [])
 
+    return
     return payload.root
   }
 
@@ -49,14 +51,18 @@ async function main() {
   // register a handler which will be internally called by React
   // on server function request after hydration.
   setServerCallback(async (id, args) => {
+    console.log('@@ server callback called', { id, args })
     const temporaryReferences = createTemporaryReferenceSet()
     const renderRequest = createRscRenderRequest(window.location.href, {
       id,
       body: await encodeReply(args, { temporaryReferences }),
     })
+
     const payload = await createFromFetch<RscPayload>(fetch(renderRequest), {
       temporaryReferences,
     })
+
+    console.log('@@ server callback payload', payload)
     // setPayload(payload)
     const { ok, data } = payload.returnValue!
     if (!ok) throw data
@@ -71,27 +77,31 @@ async function main() {
       </GlobalErrorBoundary>
     </React.StrictMode>
   )
+
   if ('__NO_HYDRATE' in globalThis) {
+    console.log('@@ no hydrate, rendering from scratch', initialPayload)
     createRoot(document).render(browserRoot)
   } else {
+    console.log('@@ hydrate with initialPayload', initialPayload)
     hydrateRoot(document, browserRoot, {
       formState: initialPayload.formState,
     })
   }
 
   // implement server HMR by triggering re-fetch/render of RSC upon server code change
-  if (import.meta.hot) {
-    import.meta.hot.on('rsc:update', () => {
-      fetchRscPayload()
-    })
-  }
+  // if (import.meta.hot) {
+  //   import.meta.hot.on('rsc:update', () => {
+  //     fetchRscPayload()
+  //   })
+  // }
 
-  // listen for RSC refresh requests from outside (e.g. builder preview)
-  window.addEventListener('makeswift:rsc-refresh', () => {
-    fetchRscPayload()
-  })
+  // // listen for RSC refresh requests from outside (e.g. builder preview)
+  // window.addEventListener('makeswift:rsc-refresh', () => {
+  //   fetchRscPayload()
+  // })
 }
 
+/*
 // a little helper to setup events interception for client side navigation
 function listenNavigation(onNavigation: () => void) {
   window.addEventListener('popstate', onNavigation)
@@ -139,5 +149,6 @@ function listenNavigation(onNavigation: () => void) {
     window.history.replaceState = oldReplaceState
   }
 }
+*/
 
 main()
