@@ -1,7 +1,6 @@
 'use client'
 
 import { type PropsWithChildren, type ReactNode, useCallback, useMemo } from 'react'
-import { createFromFetch } from '@vitejs/plugin-rsc/browser'
 
 import {
   FrameworkContext,
@@ -25,6 +24,9 @@ export function ViteRSCFrameworkProvider({ children }: PropsWithChildren) {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ elementData, documentContext }),
       })
+      // Dynamic import: `@vitejs/plugin-rsc/browser` has client-only side effects on load
+      // and must not run during the SSR pass of this `'use client'` module.
+      const { createFromFetch } = await import('@vitejs/plugin-rsc/browser')
       return createFromFetch<ReactNode>(response)
     },
     [],
