@@ -1,3 +1,6 @@
+import { type Operation } from 'ot-json0'
+import { type ElementData } from '@makeswift/controls'
+
 export const homePage = {
   key: '1cbb8e34-bf1c-4449-a002-71177d2f61ab',
   props: {
@@ -4286,4 +4289,333 @@ export const resetElementTree = {
       },
     },
   },
+}
+
+// Testing fixture that demonstrates reparenting an image from a deeply nested
+// position in the element tree to the top level of the tree.
+export const reparentingElementTree: {
+  before: ElementData
+  after: ElementData
+  op: Operation
+} = {
+  before: {
+    key: 'c18ae419-b096-46f0-8411-3a5af9e0ef50',
+    props: {
+      children: {
+        '@@makeswift/type': 'prop-controllers::grid::v1',
+        value: {
+          columns: [
+            {
+              deviceId: 'desktop',
+              value: {
+                count: 12,
+                spans: [[12]],
+              },
+            },
+          ],
+          elements: [
+            {
+              key: 'ecd818e4-a909-4349-a9d3-52ac7e48b040',
+              props: {
+                children: {
+                  columns: [
+                    {
+                      deviceId: 'desktop',
+                      value: {
+                        count: 12,
+                        spans: [[12]],
+                      },
+                    },
+                  ],
+                  elements: [
+                    {
+                      key: 'a0ea33d7-a220-4876-81dc-d43d06c0e4df',
+                      props: {
+                        children: {
+                          columns: [
+                            {
+                              deviceId: 'desktop',
+                              value: {
+                                count: 12,
+                                spans: [[12]],
+                              },
+                            },
+                          ],
+                          elements: [
+                            {
+                              key: 'f3dc7f9f-62c3-4bd8-8e8f-3028100dc396',
+                              props: {
+                                children: {
+                                  columns: [
+                                    {
+                                      deviceId: 'desktop',
+                                      value: {
+                                        count: 12,
+                                        spans: [[12]],
+                                      },
+                                    },
+                                  ],
+                                  elements: [
+                                    {
+                                      key: '32da0440-21bb-4b89-841d-4217bacb7ab8',
+                                      props: {},
+                                      type: './components/Image/index.js',
+                                    },
+                                  ],
+                                },
+                              },
+                              type: 'SlotDemo',
+                            },
+                          ],
+                        },
+                      },
+                      type: 'SlotDemo',
+                    },
+                  ],
+                },
+              },
+              type: 'SlotDemo',
+            },
+          ],
+        },
+      },
+    },
+    type: './components/Root/index.js',
+  },
+  after: {
+    key: 'c18ae419-b096-46f0-8411-3a5af9e0ef50',
+    props: {
+      children: {
+        '@@makeswift/type': 'prop-controllers::grid::v1',
+        value: {
+          columns: [
+            {
+              deviceId: 'desktop',
+              value: {
+                spans: [[12], [12]],
+                count: 12,
+              },
+            },
+          ],
+          elements: [
+            {
+              key: '32da0440-21bb-4b89-841d-4217bacb7ab8',
+              props: {},
+              type: './components/Image/index.js',
+            },
+            {
+              key: 'ecd818e4-a909-4349-a9d3-52ac7e48b040',
+              props: {
+                children: {
+                  columns: [
+                    {
+                      deviceId: 'desktop',
+                      value: {
+                        count: 12,
+                        spans: [[12]],
+                      },
+                    },
+                  ],
+                  elements: [
+                    {
+                      key: 'a0ea33d7-a220-4876-81dc-d43d06c0e4df',
+                      props: {
+                        children: {
+                          columns: [
+                            {
+                              deviceId: 'desktop',
+                              value: {
+                                count: 12,
+                                spans: [[12]],
+                              },
+                            },
+                          ],
+                          elements: [
+                            {
+                              key: 'f3dc7f9f-62c3-4bd8-8e8f-3028100dc396',
+                              props: {},
+                              type: 'SlotDemo',
+                            },
+                          ],
+                        },
+                      },
+                      type: 'SlotDemo',
+                    },
+                  ],
+                },
+              },
+              type: 'SlotDemo',
+            },
+          ],
+        },
+      },
+    },
+    type: './components/Root/index.js',
+  },
+
+  op: [
+    {
+      p: [
+        'props',
+        'children',
+        'value',
+        'elements',
+        0,
+        'props',
+        'children',
+        'elements',
+        0,
+        'props',
+        'children',
+        'elements',
+        0,
+        'props',
+        'children',
+      ],
+      od: {
+        columns: [
+          {
+            deviceId: 'desktop',
+            value: {
+              count: 12,
+              spans: [[12]],
+            },
+          },
+        ],
+        elements: [
+          {
+            key: '32da0440-21bb-4b89-841d-4217bacb7ab8',
+            props: {},
+            type: './components/Image/index.js',
+          },
+        ],
+      },
+    },
+    {
+      p: ['props', 'children'],
+      od: {
+        '@@makeswift/type': 'prop-controllers::grid::v1',
+        value: {
+          columns: [
+            {
+              deviceId: 'desktop',
+              value: {
+                spans: [[12]],
+                count: 12,
+              },
+            },
+          ],
+          elements: [
+            {
+              key: 'ecd818e4-a909-4349-a9d3-52ac7e48b040',
+              props: {
+                children: {
+                  columns: [
+                    {
+                      deviceId: 'desktop',
+                      value: {
+                        count: 12,
+                        spans: [[12]],
+                      },
+                    },
+                  ],
+                  elements: [
+                    {
+                      key: 'a0ea33d7-a220-4876-81dc-d43d06c0e4df',
+                      props: {
+                        children: {
+                          columns: [
+                            {
+                              deviceId: 'desktop',
+                              value: {
+                                count: 12,
+                                spans: [[12]],
+                              },
+                            },
+                          ],
+                          elements: [
+                            {
+                              key: 'f3dc7f9f-62c3-4bd8-8e8f-3028100dc396',
+                              props: {},
+                              type: 'SlotDemo',
+                            },
+                          ],
+                        },
+                      },
+                      type: 'SlotDemo',
+                    },
+                  ],
+                },
+              },
+              type: 'SlotDemo',
+            },
+          ],
+        },
+      },
+      oi: {
+        '@@makeswift/type': 'prop-controllers::grid::v1',
+        value: {
+          columns: [
+            {
+              deviceId: 'desktop',
+              value: {
+                spans: [[12], [12]],
+                count: 12,
+              },
+            },
+          ],
+          elements: [
+            {
+              key: '32da0440-21bb-4b89-841d-4217bacb7ab8',
+              props: {},
+              type: './components/Image/index.js',
+            },
+            {
+              key: 'ecd818e4-a909-4349-a9d3-52ac7e48b040',
+              props: {
+                children: {
+                  columns: [
+                    {
+                      deviceId: 'desktop',
+                      value: {
+                        count: 12,
+                        spans: [[12]],
+                      },
+                    },
+                  ],
+                  elements: [
+                    {
+                      key: 'a0ea33d7-a220-4876-81dc-d43d06c0e4df',
+                      props: {
+                        children: {
+                          columns: [
+                            {
+                              deviceId: 'desktop',
+                              value: {
+                                count: 12,
+                                spans: [[12]],
+                              },
+                            },
+                          ],
+                          elements: [
+                            {
+                              key: 'f3dc7f9f-62c3-4bd8-8e8f-3028100dc396',
+                              props: {},
+                              type: 'SlotDemo',
+                            },
+                          ],
+                        },
+                      },
+                      type: 'SlotDemo',
+                    },
+                  ],
+                },
+              },
+              type: 'SlotDemo',
+            },
+          ],
+        },
+      },
+    },
+  ],
 }
