@@ -1,40 +1,21 @@
 import {
-  AnyFunction,
   ControlDefinition,
   SerializedRecord,
   serializeObject,
   SerializationPlugin,
   ControlSerializationVisitor,
-  isFunction,
 } from '@makeswift/controls'
 
 import { RichTextV2Definition } from '../../rich-text-v2'
 
-import { serializeFunction } from './function-serialization'
-
-export class ClientMessagePortSerializationVisitor extends ControlSerializationVisitor {
-  private transferables: Transferable[] = []
-
-  constructor() {
-    const serializeFunctionPlugin: SerializationPlugin<AnyFunction> = {
-      match: isFunction,
-      serialize: (val: AnyFunction) => {
-        const r = serializeFunction(val)
-        this.transferables.push(r)
-        return r
-      },
-    }
-
+export class BaseControlSerializationVisitor extends ControlSerializationVisitor {
+  constructor(plugins: SerializationPlugin<any>[]) {
     const serializeDefinitionPlugin: SerializationPlugin<ControlDefinition> = {
       match: (val: unknown) => val instanceof ControlDefinition,
       serialize: (val: ControlDefinition) => val.accept(this),
     }
 
-    super([serializeFunctionPlugin, serializeDefinitionPlugin])
-  }
-
-  getTransferables(): Transferable[] {
-    return [...this.transferables]
+    super([serializeDefinitionPlugin, ...plugins])
   }
 
   visitRichTextV2(def: RichTextV2Definition): SerializedRecord {
