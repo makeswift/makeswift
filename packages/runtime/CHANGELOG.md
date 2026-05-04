@@ -1,5 +1,17 @@
 # @makeswift/runtime
 
+## 0.28.4
+
+### Patch Changes
+
+- 34bebe9: Fixes an issue where during updating the element tree cache, we use an element path that's only valid during an intermediate state to read into the final element tree.
+- c488efd: Restructure control serialization code, replace prop controllers' copy of the functions serialization with a newer version that includes a fix for stalled calls/memory leaks on repeated deserialization.
+- e036d1a: Add `unstable_Code` control for authoring code snippets
+- 9a1a56d: Lazy load the builtin box component's video player to avoid automatically loading `react-player`
+- Updated dependencies [e036d1a]
+  - @makeswift/controls@0.1.18
+  - @makeswift/prop-controllers@0.4.12
+
 ## 0.28.3
 
 ### Patch Changes
