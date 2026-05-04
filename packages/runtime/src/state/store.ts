@@ -173,11 +173,13 @@ export function configureReadWriteStore({
   appOrigin,
   hostApiClient,
   preloadedState,
+  middlewares,
 }: {
   name: string
   appOrigin: string
   hostApiClient: MakeswiftHostApiClient
   preloadedState: Partial<State>
+  middlewares?: Middleware[]
 }) {
   const readWriteMiddlewareRef: ReadWriteMiddlewareRef = {
     current: null,
@@ -241,6 +243,7 @@ export function configureReadWriteStore({
     middleware: () => [
       makeswiftApiClientSyncMiddleware(hostApiClient),
       conditionalReadWriteMiddleware(readWriteMiddlewareRef),
+      ...(middlewares ?? []),
     ],
 
     enhancers: () =>

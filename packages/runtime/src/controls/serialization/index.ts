@@ -1,5 +1,7 @@
 import { type SerializedRecord, type DeserializeControlOptions } from './base'
 
+export { type SerializedRecord, serializeControls } from './base'
+
 export function isSerializedRecord(r: unknown): r is SerializedRecord {
   return r != null && typeof r === 'object' && 'type' in r && typeof r.type === 'string'
 }

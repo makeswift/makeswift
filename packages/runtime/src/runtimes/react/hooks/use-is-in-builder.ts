@@ -1,3 +1,5 @@
+'use client'
+
 import { useStore } from './use-store'
 import { getIsInBuilder } from '../../../state/read-only-state'
 import { useSyncExternalStore } from 'react'

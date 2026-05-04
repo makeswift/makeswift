@@ -10,6 +10,7 @@ import { StoreContext } from '../hooks/use-store'
 import { type ReactRuntimeCore } from '../react-runtime-core'
 
 import { PreviewSwitcher } from './preview-switcher/preview-switcher'
+import { useFrameworkContext } from './hooks/use-framework-context'
 
 export function RuntimeProvider({
   children,
@@ -24,11 +25,16 @@ export function RuntimeProvider({
 }) {
   const siteVersion = siteVersionProp ?? null
   const isPreview = siteVersion != null
+  const { previewStoreMiddlewares } = useFrameworkContext()
+  const middlewares = useMemo(
+    () => (siteVersion != null ? (previewStoreMiddlewares ?? []) : []),
+    [previewStoreMiddlewares, siteVersion],
+  )
 
   // see `getOrCreateStore` for the description of the stores' lifecycle
   const store = useMemo(
-    () => runtime.getOrCreateStore({ siteVersion, locale }),
-    [runtime, siteVersion, locale],
+    () => runtime.getOrCreateStore({ siteVersion, locale }, { middlewares }),
+    [runtime, siteVersion, locale, middlewares],
   )
 
   useEffect(() => {
