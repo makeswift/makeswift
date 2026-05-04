@@ -27,7 +27,7 @@ export const CodeDemo = forwardRef(function CodeDemo(
 ) {
   return (
     <div
-      className={'flex flex-col gap-4 p-4 w-full' + ' ' + className}
+      className={`flex flex-col gap-4 p-4 w-full ${className ?? ''}`}
       ref={ref}
     >
       <Section title="HTML" code={htmlCode} />
