@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.18
+
+### Patch Changes
+
+- e036d1a: Add `unstable_Code` control for authoring code snippets
+
 ## 0.1.17
 
 ### Patch Changes
