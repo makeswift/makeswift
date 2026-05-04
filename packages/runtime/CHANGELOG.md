@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.4-canary.2
+
+### Patch Changes
+
+- c488efd: Restructure control serialization code, replace prop controllers' copy of the functions serialization with a newer version that includes a fix for stalled calls/memory leaks on repeated deserialization.
+
 ## 0.28.4-canary.1
 
 ### Patch Changes
