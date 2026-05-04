@@ -10,48 +10,49 @@ const ClientCSSContext = createContext<ClientCSSContextValue>({
   updateStyle: () => {},
 })
 
-export function ClientCSSProvider({ children }: { children: ReactNode }) {
-  const styleElementRef = useRef<HTMLStyleElement | null>(null)
-  const serverStylesRef = useRef<string>('')
-  const dynamicStylesRef = useRef<Map<string, string>>(new Map())
+function toMapKey({elementKey, propName}: {elementKey: string, propName: string}): string {
+  return `${elementKey}:${propName}`
+}
 
-  // Initialize style element and capture server styles
+export function ClientCSSProvider({ children }: { children: ReactNode }) {
+  // keyed by `{elementKey}:{propName}`
+  const styleElementRefs = useRef<Map<string, HTMLStyleElement | null>>(new Map())
+
   useEffect(() => {
-    const styleElement = document.querySelector<HTMLStyleElement>(
-      'style[data-makeswift-rsc="true"]',
+    const styleElements = document.querySelectorAll<HTMLStyleElement>(
+      'style[data-makeswift-rsc-element-key][data-makeswift-rsc-prop-name]',
     )
 
-    if (!styleElement) {
-      throw new Error(
-        'Makeswift RSC style element not found. Ensure CSSInjector is rendered on the server.',
-      )
+    for (const styleElement of styleElements) {
+      const elementKey = styleElement.getAttribute('data-makeswift-rsc-element-key')
+      const propName = styleElement.getAttribute('data-makeswift-rsc-prop-name')
+      if (elementKey == null || propName == null) {
+        // TODO ?
+        console.error('[ClientCSSProvider] TODO address null elementKey or propName')
+        continue
+      }
+      const mapKey = toMapKey({elementKey, propName})
+      styleElementRefs.current.set(mapKey, styleElement)
     }
 
-    serverStylesRef.current = styleElement.textContent
-    styleElementRef.current = styleElement
 
     return () => {
-      styleElementRef.current = null
+      styleElementRefs.current.clear()
     }
-  }, [])
-
-  const updateStyleElement = useCallback(() => {
-    if (!styleElementRef.current) return
-
-    const dynamicCss = Array.from(dynamicStylesRef.current.values()).join('\n')
-    const separator = serverStylesRef.current && dynamicCss ? '\n' : ''
-    const combinedStyles = serverStylesRef.current + separator + dynamicCss
-
-    styleElementRef.current.textContent = combinedStyles
   }, [])
 
   const updateStyle = useCallback(
     (elementKey: string, propName: string, cssString: string) => {
-      const styleKey = `${elementKey}:${propName}`
-      dynamicStylesRef.current.set(styleKey, cssString)
-      updateStyleElement()
+      const mapKey = toMapKey({ elementKey, propName })
+      const styleElement = styleElementRefs.current.get(mapKey)
+      if (styleElement == null) {
+        // TODO ?
+        console.error('[ClientCSSProvider] TODO address null styleElement during updateStyle')
+        return
+      }
+      styleElement.textContent = cssString
     },
-    [updateStyleElement],
+    [],
   )
 
   return <ClientCSSContext.Provider value={{ updateStyle }}>{children}</ClientCSSContext.Provider>

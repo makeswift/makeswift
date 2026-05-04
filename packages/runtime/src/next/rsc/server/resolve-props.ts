@@ -43,16 +43,8 @@ export async function resolveProps(
           serverResolver,
           stylesheet.child(propName),
         )
-        // TODO: This is a hack for style controls to have their styles injected
-        // on the server. CSS injection on the server appears to have broken
-        // when introducing the await resolvedValue.triggerResolve() ahead of
-        // the `readStable` call — for proof, comment out the triggerResolve and
-        // observe that styles are correct on load.
-        resolvedValue.readStable()
-        const unsubscribe = resolvedValue.subscribe?.(() => {})
         await resolvedValue.triggerResolve()
         const result = resolvedValue.readStable()
-        unsubscribe?.()
         return [propName, result] as const
       }
 

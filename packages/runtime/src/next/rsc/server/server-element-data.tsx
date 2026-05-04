@@ -7,6 +7,7 @@ import { FallbackComponent } from '../../../components/shared/FallbackComponent'
 import { getRuntime } from './runtime'
 import { resolveProps } from './resolve-props'
 import { ReactNode } from 'react'
+import { ElementCSSInjector } from '../css/server-css'
 
 type Props = {
   elementData: ElementData
@@ -28,5 +29,10 @@ export async function ServerElementData({ elementData }: Props): Promise<ReactNo
     return <FallbackComponent text="Component not found" />
   }
 
-  return <Component {...props} key={elementData.key} />
+  return (
+    <>
+      <Component {...props} key={elementData.key} />
+      <ElementCSSInjector elementKey={elementData.key} />
+    </>
+  )
 }
