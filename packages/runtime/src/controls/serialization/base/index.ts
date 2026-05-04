@@ -32,7 +32,11 @@ import {
 
 import { BaseControlSerializationVisitor } from './visitor'
 
-export { type SerializedRecord, type DeserializedRecord } from '@makeswift/controls'
+export {
+  type SerializedRecord,
+  type DeserializedRecord,
+  ControlDefinition,
+} from '@makeswift/controls'
 
 export function serializeControls(
   controls: Record<string, ControlDefinition>,

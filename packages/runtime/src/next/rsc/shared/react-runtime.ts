@@ -1,4 +1,7 @@
-import { type ControlDefinition as UnifiedControlDefinition } from '@makeswift/controls'
+import {
+  ControlDefinition,
+  type ControlDefinition as UnifiedControlDefinition,
+} from '@makeswift/controls'
 
 import { ReactRuntimeCore, validateComponentType } from '../../../runtimes/react/react-runtime-core'
 import {
@@ -10,15 +13,20 @@ import {
   registerReactComponentEffect,
 } from '../../../state/actions/internal/read-only-actions'
 import { ComponentIcon } from '../../../state/modules/components-meta'
-import type { ComponentType, Data, State } from '../../../state/read-only-state'
-import { deserializeControls, SerializedControl, serializeServerControls } from '../../../builder'
-import { PropControllerDescriptor } from '../../../state/modules/prop-controllers'
+import type { ComponentType, State } from '../../../state/read-only-state'
+import {
+  type SerializedRecord,
+  serializeRSCControls,
+  deserializeRSCControl,
+} from '../../../controls/serialization/rsc'
+import { deserializeControlRecords } from '../../../controls/serialization'
+import { type Descriptor, isLegacyDescriptor } from '../../../prop-controllers/descriptors'
 import { registerBuiltinComponents } from '../../../components/builtin/register'
 import { supportsActivity } from '../../../runtimes/react/components/activity-with-fallback'
 
 export type SerializedServerState = {
   componentsMeta: State['componentsMeta']
-  propControllers: Map<string, Record<string, SerializedControl<Data>>>
+  propControllers: Map<string, Record<string, SerializedRecord>>
 }
 
 export class NextRSCRuntime extends ReactRuntimeCore {
@@ -87,7 +95,8 @@ export class NextRSCRuntime extends ReactRuntimeCore {
         // Only serialize server components. Client components will be imported again on the client bundle.
         .filter(([componentType]) => componentsMeta.get(componentType)?.server === true)
         .map(([componentType, descriptors]) => {
-          const serializedControls = serializeServerControls(descriptors)
+          assertNoLegacyDescriptors(descriptors, componentType)
+          const serializedControls = serializeRSCControls(descriptors)
           return [componentType, serializedControls] as const
         }),
     )
@@ -101,10 +110,10 @@ export class NextRSCRuntime extends ReactRuntimeCore {
   loadServerState(serializedState: SerializedServerState): void {
     const deserializedPropControllers = Array.from(serializedState.propControllers.entries()).map(
       ([componentType, serializedControls]) => {
-        const deserializedControls = deserializeControls(serializedControls) as Record<
-          string,
-          PropControllerDescriptor
-        >
+        const deserializedControls = deserializeControlRecords(
+          serializedControls,
+          (serializedControl, options) => deserializeRSCControl(serializedControl, options),
+        )
         return [componentType, deserializedControls] as const
       },
     )
@@ -121,5 +130,20 @@ export class NextRSCRuntime extends ReactRuntimeCore {
         registerComponentEffect(componentType, componentMeta, propControllerDescriptors),
       )
     }
+  }
+}
+
+function assertNoLegacyDescriptors(
+  descriptors: Record<string, Descriptor>,
+  componentType: string,
+): asserts descriptors is Record<string, ControlDefinition> {
+  const propControllers = Object.entries(descriptors).filter(([_, desc]) =>
+    isLegacyDescriptor(desc),
+  )
+
+  if (propControllers.length > 0) {
+    throw Error(
+      `Legacy prop controllers are disallowed in server component registrations (${componentType} / ${[...propControllers.keys()].join(', ')})`,
+    )
   }
 }
