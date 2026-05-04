@@ -4,6 +4,8 @@ export {
   ControlDefinition,
   Checkbox,
   CheckboxDefinition,
+  unstable_Code,
+  unstable_CodeDefinition,
   Color,
   ColorDefinition,
   Combobox,

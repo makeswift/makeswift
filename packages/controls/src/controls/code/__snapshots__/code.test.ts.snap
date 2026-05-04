@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Code constructor call with default value \`<div>hi</div>\` returns versioned definition 1`] = `
+unstable_CodeDefinition {
+  "config": {
+    "defaultValue": "<div>hi</div>",
+    "label": "Code",
+  },
+  "version": 1,
+}
+`;
+
+exports[`Code constructor call with default value \`console.log("hello")\` returns versioned definition 1`] = `
+unstable_CodeDefinition {
+  "config": {
+    "defaultValue": "console.log("hello")",
+    "label": "Code",
+  },
+  "version": 1,
+}
+`;
+
+exports[`Code constructor call with default value \`undefined\` returns versioned definition 1`] = `
+unstable_CodeDefinition {
+  "config": {
+    "defaultValue": undefined,
+    "label": "Code",
+  },
+  "version": 1,
+}
+`;
+
+exports[`Code definition w/ config {"defaultValue":"console.log(\\"hi\\")","label":"visible"} toData returns v1 data for \`body { color: red; }\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "code::v1",
+  "value": "body { color: red; }",
+}
+`;
+
+exports[`Code definition w/ config {"defaultValue":"console.log(\\"hi\\")","label":"visible"} toData returns v1 data for \`const x = 1\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "code::v1",
+  "value": "const x = 1",
+}
+`;
+
+exports[`Code definition w/ config {"label":"Code"} toData returns v1 data for \`.class { margin: 0; }\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "code::v1",
+  "value": ".class { margin: 0; }",
+}
+`;
+
+exports[`Code definition w/ config {"label":"Code"} toData returns v1 data for \`<div>hello</div>\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "code::v1",
+  "value": "<div>hello</div>",
+}
+`;
+
+exports[`Code definition w/ config {"label":"Code"} toData returns v1 data for \`undefined\` when definition version is 1 1`] = `undefined`;
