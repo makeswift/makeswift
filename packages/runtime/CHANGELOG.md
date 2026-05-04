@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.28.4-canary.3
+
+### Patch Changes
+
+- e036d1a: Add `unstable_Code` control for authoring code snippets
+- Updated dependencies [e036d1a]
+  - @makeswift/controls@0.1.18-canary.0
+  - @makeswift/prop-controllers@0.4.12-canary.0
+
 ## 0.28.4-canary.2
 
 ### Patch Changes
