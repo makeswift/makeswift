@@ -33,6 +33,7 @@ import { useBuilderEditMode } from '../../..'
 import { BuilderEditMode } from '../../../../../state/modules/builder-edit-mode'
 import { pollBoxModel } from '../../../poll-box-model'
 import { withBuilder, withLocalChanges } from '../../../../../slate'
+import { withSelection } from '../../../../../slate/SelectionPlugin/with-selection'
 import { useSyncDOMSelection } from './useSyncDOMSelection'
 import { RichTextV2Element } from './render-element'
 import { RichTextV2Leaf } from './render-leaf'
@@ -55,7 +56,7 @@ export function EditableTextV2({ text, definition, control }: Props) {
   const [editor] = useState(() =>
     plugins.reduceRight(
       (editor, plugin) => plugin?.withPlugin?.(editor) ?? editor,
-      withLocalChanges(withBuilder(withReact(createEditor()))),
+      withSelection(withLocalChanges(withBuilder(withReact(createEditor())))),
     ),
   )
 
