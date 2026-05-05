@@ -44,10 +44,16 @@ export function ClientCSSProvider({ children }: { children: ReactNode }) {
   const updateStyle = useCallback(
     (elementKey: string, propName: string, cssString: string) => {
       const mapKey = toMapKey({ elementKey, propName })
+      if (!styleElementRefs.current.has(mapKey)) {
+        // Can hit this case if we drag/drop an RSC in after initial page load
+        const styleElement = document.querySelector<HTMLStyleElement>(`style[data-makeswift-rsc-element-key="${elementKey}"][data-makeswift-rsc-prop-name="${propName}"]`)
+        if (styleElement != null) {
+          styleElementRefs.current.set(mapKey, styleElement)
+        }
+      }
       const styleElement = styleElementRefs.current.get(mapKey)
       if (styleElement == null) {
-        // TODO ?
-        console.error('[ClientCSSProvider] TODO address null styleElement during updateStyle')
+        console.error(`Expected to find a server-rendered <style> for element key: ${elementKey} and prop name: ${propName}`)
         return
       }
       styleElement.textContent = cssString
