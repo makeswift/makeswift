@@ -27,6 +27,8 @@ import { TextAlignPlugin } from '../../slate/TextAlignPlugin'
 import { BlockPlugin } from '../../slate/BlockPlugin'
 import { TypographyPlugin } from '../../slate/TypographyPlugin'
 import { InlineModePlugin } from '../../slate/InlineModePlugin'
+import { SelectionPlugin } from '../../slate/SelectionPlugin'
+
 import { toText } from '../../slate/utils'
 
 import { renderRichTextV2 } from '../../runtimes/react/controls/rich-text-v2'
@@ -54,8 +56,15 @@ class Definition extends BaseRichTextDefinition<ReactNode, Config, InstanceType>
       plugins:
         plugins ??
         (mode === Definition.Mode.Inline
-          ? [InlineModePlugin()]
-          : [BlockPlugin(), TypographyPlugin(), TextAlignPlugin(), InlinePlugin(), LinkPlugin()]),
+          ? [InlineModePlugin(), SelectionPlugin()]
+          : [
+              BlockPlugin(),
+              TypographyPlugin(),
+              TextAlignPlugin(),
+              InlinePlugin(),
+              LinkPlugin(),
+              SelectionPlugin(),
+            ]),
     })
   }
 
