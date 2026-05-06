@@ -6,9 +6,10 @@ import { deepEqual, ElementData, isElementReference, StyleDefinition } from '@ma
 import { useControlDefs } from '../../../runtimes/react/controls'
 import { useBreakpoints, useDocumentKey, useSelector } from '../../../runtimes/react'
 import { useResourceResolver } from '../../../runtimes/react/hooks/use-resource-resolver'
-import { getElement } from '../../../state/read-only-state'
+import { getElement, getPropControllers } from '../../../state/read-only-state'
 import { StylesheetEngine } from '../css/css-runtime'
 import { useClientCSS } from '../css/client-css'
+import { pollBoxModel } from '../../../runtimes/react/poll-box-model'
 
 type RSCBuilderUpdaterProps = {
   initialElementData: ElementData
@@ -24,6 +25,27 @@ export function RSCBuilderUpdater({ initialElementData, children }: RSCBuilderUp
   const elementKey = initialElementData.key
   const prevPropsRef = useRef(initialElementData.props)
   const [, definitions] = useControlDefs(initialElementData.type)
+
+  /*
+    (spike)
+    Why is this here? It's part of an effort to replace the old css runtime's box model polling behavior.
+
+    The old implementation dealt with box model callbacks by feeding them through from a Control
+    definition into the stylesheet *along the path of resolving props*:
+      - Control definition calls `defineStyle`, passing along a box model callback
+      - `defineStyle` finishes producing css, then stores the callback (if passed in) in a ref alongside other box model callbacks
+
+    then, with box model callbacks for an element accumulating into a ref, the actual polling could be done as part of a
+    useEffect (in use-stylesheet-factory.ts)
+
+    The problem with this flow for RSCs: the "right" place to register box model callbacks can't be "along the path of
+    resolving props" because prop resolution happens on the server (and doesn't happen via RSCBuilderUpdater on the client
+    until you modify a style value). So we need a way to set up box model callbacks on the client in the absence of prop resolution
+  */
+  const propControllers = useSelector((state) => {
+    if (documentKey == null) return null
+    return getPropControllers(state, { documentKey, elementKey})
+  })
 
   const element = useSelector(state => {
     if (documentKey == null) return null
@@ -44,6 +66,38 @@ export function RSCBuilderUpdater({ initialElementData, children }: RSCBuilderUp
       ),
     [breakpoints, elementKey, updateStyle],
   )
+
+  // TODO other consideration: what about when we "merge" the non-RSC path and RSC path such that client components are also using the new StylesheetFactory? Isn't that more justification to put the box model callback logic in client-css.tsx
+  useEffect(() => {
+    if (propControllers == null) return
+    const cleanupFunctions: Array<() => void> = []
+    for (const [propName, controller] of Object.entries(propControllers)) {
+      /*
+        TODO I know this is "wrong", need an alternative
+      */
+      if (typeof controller.changeBoxModel !== 'function') {
+        continue
+      }
+
+      // TODO use helper for building the classname
+      const styledElement = document.querySelector(
+        `[class*="makeswift-rsc-${elementKey}-${propName}-"]`,
+      )
+
+      if (styledElement == null) {
+        console.warn(`[RSC] No styled element found for prop ${propName} on element ${elementKey}`)
+        continue
+      }
+
+      cleanupFunctions.push(
+        pollBoxModel({
+          element: styledElement,
+          onBoxModelChange: boxModel => controller.changeBoxModel(boxModel)
+        })
+      )
+    }
+    return () => cleanupFunctions.forEach(fn => fn())
+  }, [propControllers, elementKey])
 
   useEffect(() => {
     if (!element) return
