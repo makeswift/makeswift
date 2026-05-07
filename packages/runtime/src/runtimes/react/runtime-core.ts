@@ -48,6 +48,7 @@ export class RuntimeCore {
   readonly apiOrigin: string
   readonly requestKey: StoreKey | undefined
   readonly fetch: MakeswiftApiClient.HttpFetch
+  readonly forwardClientLogs: boolean
 
   constructor({
     appOrigin = 'https://app.makeswift.com',
@@ -55,17 +56,20 @@ export class RuntimeCore {
     breakpoints,
     requestKey,
     fetch,
+    forwardClientLogs = true,
   }: {
     appOrigin?: string
     apiOrigin?: string
     breakpoints?: BreakpointsInput
     requestKey?: StoreKey
     fetch: MakeswiftApiClient.HttpFetch
+    forwardClientLogs?: boolean
   }) {
     this.appOrigin = validateOrigin(appOrigin, 'appOrigin')
     this.apiOrigin = validateOrigin(apiOrigin, 'apiOrigin')
     this.requestKey = requestKey
     this.fetch = fetch
+    this.forwardClientLogs = forwardClientLogs
 
     this.protoStore = configureProtoStore({
       name: 'Runtime proto-store',
@@ -92,6 +96,7 @@ export class RuntimeCore {
         name: `Runtime read-write store (site version: ${key})`,
         appOrigin: this.appOrigin,
         hostApiClient,
+        forwardClientLogs: this.forwardClientLogs,
         preloadedState: { ...this.protoStore.getState(), siteVersion, isReadOnly, locale },
       })
     }

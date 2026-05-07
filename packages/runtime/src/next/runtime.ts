@@ -5,7 +5,12 @@ import { fetch } from './fetch'
 
 export class NextReactRuntime extends ReactRuntime {
   constructor(
-    args: { appOrigin?: string; apiOrigin?: string; breakpoints?: BreakpointsInput } = {},
+    args: {
+      appOrigin?: string
+      apiOrigin?: string
+      breakpoints?: BreakpointsInput
+      forwardClientLogs?: boolean
+    } = {},
   ) {
     super({ ...args, fetch })
   }

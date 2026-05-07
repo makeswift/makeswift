@@ -14,3 +14,7 @@ export { NextRootStyleRegistry as RootStyleRegistry } from './root-style-registr
 export { NextRuntimeProvider as ReactRuntimeProvider } from './runtime-provider'
 export { NextReactRuntime as ReactRuntime } from './runtime'
 export { fetch } from './fetch'
+export {
+  setupServerLogCapture,
+  recordRequestError,
+} from '../api-handler/server-log-relay'
