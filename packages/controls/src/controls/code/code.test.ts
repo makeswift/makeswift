@@ -1,6 +1,6 @@
 import { testDefinition } from '../../testing/test-definition'
 
-import { unstable_Code, unstable_CodeDefinition } from './code'
+import { Code, CodeDefinition } from './code'
 
 describe('Code', () => {
   describe('constructor', () => {
@@ -8,7 +8,7 @@ describe('Code', () => {
       'call with default value `%s` returns versioned definition',
       (value) => {
         expect(
-          unstable_Code({
+          Code({
             label: 'Code',
             defaultValue: value,
           }),
@@ -17,7 +17,7 @@ describe('Code', () => {
     )
 
     test('disallows extraneous properties', () => {
-      unstable_Code({
+      Code({
         label: undefined,
         defaultValue: undefined,
         // @ts-expect-error
@@ -27,23 +27,23 @@ describe('Code', () => {
   })
 
   describe('assignability', () => {
-    function assignTest(_def: unstable_CodeDefinition) {}
-    assignTest(unstable_Code())
-    assignTest(unstable_Code({ label: 'Code' }))
-    assignTest(unstable_Code({ defaultValue: '<div>hello</div>' }))
-    assignTest(unstable_Code({ defaultValue: 'text' }))
-    assignTest(unstable_Code({ label: 'Code', defaultValue: undefined }))
-    assignTest(unstable_Code({ label: undefined, defaultValue: undefined }))
+    function assignTest(_def: CodeDefinition) {}
+    assignTest(Code())
+    assignTest(Code({ label: 'Code' }))
+    assignTest(Code({ defaultValue: '<div>hello</div>' }))
+    assignTest(Code({ defaultValue: 'text' }))
+    assignTest(Code({ label: 'Code', defaultValue: undefined }))
+    assignTest(Code({ label: undefined, defaultValue: undefined }))
   })
 })
 
 describe.each([
   [
-    unstable_Code({ defaultValue: 'console.log("hi")', label: 'visible' }),
+    Code({ defaultValue: 'console.log("hi")', label: 'visible' }),
     ['const x = 1', 'body { color: red; }'],
   ],
   [
-    unstable_Code({ label: 'Code' }),
+    Code({ label: 'Code' }),
     ['<div>hello</div>', '.class { margin: 0; }', undefined],
   ],
 ])('Code', (def, values) => {
@@ -53,7 +53,7 @@ describe.each([
 
 describe('Code resolveValue', () => {
   test('resolves v1 data to { value }', () => {
-    const def = unstable_Code({ label: 'Code' })
+    const def = Code({ label: 'Code' })
     const data = def.toData('const x = 1')
     expect(def.resolveValue(data).readStable()).toEqual({
       value: 'const x = 1',
@@ -61,26 +61,26 @@ describe('Code resolveValue', () => {
   })
 
   test('resolves unversioned (plain string) data', () => {
-    const def = unstable_Code({ label: 'Code' })
+    const def = Code({ label: 'Code' })
     expect(def.resolveValue('print("hi")').readStable()).toEqual({
       value: 'print("hi")',
     })
   })
 
   test('resolves undefined data to the default value', () => {
-    const def = unstable_Code({ defaultValue: 'fallback' })
+    const def = Code({ defaultValue: 'fallback' })
     expect(def.resolveValue(undefined).readStable()).toEqual({
       value: 'fallback',
     })
   })
 
   test('resolves undefined data to undefined when no default is set', () => {
-    const def = unstable_Code()
+    const def = Code()
     expect(def.resolveValue(undefined).readStable()).toBeUndefined()
   })
 
   test('readStable returns the same reference across repeated calls', () => {
-    const def = unstable_Code({ defaultValue: 'hello' })
+    const def = Code({ defaultValue: 'hello' })
     const resolvable = def.resolveValue(undefined)
     expect(resolvable.readStable()).toBe(resolvable.readStable())
   })

@@ -1,5 +1,5 @@
 /** @jest-environment jsdom */
-import { unstable_Code } from '@makeswift/controls'
+import { Code } from '@makeswift/controls'
 import { testPageControlPropRendering } from './page-control-prop-rendering'
 
 describe('Page', () => {
@@ -15,13 +15,13 @@ describe('Page', () => {
     test.each(['console.log("hello")', '<div>hi</div>', undefined])(
       `when value is %s`,
       async value => {
-        await testPageControlPropRendering(unstable_Code(), { toData, value })
+        await testPageControlPropRendering(Code(), { toData, value })
       },
     )
   })
 
   test(`when defaultValue is set`, async () => {
-    await testPageControlPropRendering(unstable_Code({ defaultValue: 'fallback' }), {
+    await testPageControlPropRendering(Code({ defaultValue: 'fallback' }), {
       value: undefined,
     })
   })

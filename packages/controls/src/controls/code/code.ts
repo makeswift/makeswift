@@ -106,7 +106,7 @@ class Definition<C extends Config> extends ControlDefinition<
     }
   }
 
-  static deserialize(data: DeserializedRecord): unstable_CodeDefinition {
+  static deserialize(data: DeserializedRecord): CodeDefinition {
     if (data.type !== Definition.type) {
       throw new Error(
         `Code: expected type ${Definition.type}, got ${data.type}`,
@@ -114,7 +114,7 @@ class Definition<C extends Config> extends ControlDefinition<
     }
 
     const { version, config } = Definition.schema.relaxed.definition.parse(data)
-    return new unstable_CodeDefinition(config, version)
+    return new CodeDefinition(config, version)
   }
 
   constructor(
@@ -191,7 +191,7 @@ class Definition<C extends Config> extends ControlDefinition<
   }
 }
 
-export class unstable_CodeDefinition<
+export class CodeDefinition<
   C extends Config = Config,
 > extends Definition<C> {}
 
@@ -203,8 +203,8 @@ type NormedConfig<D extends Config['defaultValue']> = z.infer<
   SchemaByDefaultValue<D>['config']
 >
 
-export function unstable_Code<D extends Config['defaultValue']>(
+export function Code<D extends Config['defaultValue']>(
   config?: UserConfig<D>,
-): unstable_CodeDefinition<NormedConfig<D>> {
-  return new unstable_CodeDefinition((config ?? {}) as NormedConfig<D>, 1)
+): CodeDefinition<NormedConfig<D>> {
+  return new CodeDefinition((config ?? {}) as NormedConfig<D>, 1)
 }
