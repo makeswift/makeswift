@@ -8,7 +8,7 @@ import {
   type ValueType,
 } from '../associated-types'
 
-import { unstable_Code } from './code'
+import { Code } from './code'
 
 type ExpectedCodeDataType =
   | string
@@ -20,7 +20,7 @@ type ExpectedCodeDataType =
 describe('Code Types', () => {
   describe('infers types from control definitions', () => {
     test('empty config', () => {
-      const def = unstable_Code()
+      const def = Code()
 
       type Config = typeof def.config
       expectTypeOf<Config>().toEqualTypeOf<{
@@ -40,7 +40,7 @@ describe('Code Types', () => {
     })
 
     test('defaultValue provided', () => {
-      const def = unstable_Code({ defaultValue: 'console.log("hi")' })
+      const def = Code({ defaultValue: 'console.log("hi")' })
 
       type Config = typeof def.config
       expectTypeOf<Config>().toEqualTypeOf<{

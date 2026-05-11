@@ -5,7 +5,7 @@ import { MergeTranslatableDataContext } from '../../context'
 
 import { DataType } from '../associated-types'
 import { CheckboxDefinition } from '../checkbox'
-import { unstable_CodeDefinition } from '../code'
+import { CodeDefinition } from '../code'
 import { ColorDefinition } from '../color'
 import { ComboboxDefinition } from '../combobox'
 import { ControlDefinition } from '../definition'
@@ -48,8 +48,8 @@ abstract class MergeTranslationsVisitor extends ControlDefinitionVisitor<Data> {
   }
 
   visitCode(
-    _def: unstable_CodeDefinition,
-    data: DataType<unstable_CodeDefinition> | undefined,
+    _def: CodeDefinition,
+    data: DataType<CodeDefinition> | undefined,
     translatedData: Data,
   ): Data {
     return this.noOpMerge(data, translatedData)
