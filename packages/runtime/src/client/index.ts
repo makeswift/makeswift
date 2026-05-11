@@ -546,6 +546,9 @@ export class MakeswiftClient {
     if (!response.ok) {
       const failedBody = await failedResponseBody(response)
 
+      // 404 can mean the requested version has no commit (e.g., site never published)
+      if (response.status === 404) return ids.map(() => null)
+
       console.error(`Failed to get element trees for [${ids.join(', ')}]`, {
         response: failedBody,
         siteVersion,
