@@ -134,17 +134,25 @@ export async function getSiteMetadata({
         destinationURL.searchParams.set('api_key', siteApiKey)
         res.writeHead(302, {
           Location: destinationURL.toString(),
+          Connection: 'close',
         })
         res.end(() => {
+          // Destroy any keep-alive sockets the browser may be holding open;
+          // otherwise `server.close()` waits for them and never resolves.
+          sockets.forEach(socket => socket.destroy())
+
+          let settled = false
+          const settle = (err?: Error | null) => {
+            if (settled) return
+            settled = true
+            if (err != null) reject(err)
+            else resolve({ siteApiKey, example, envVars })
+          }
+
+          const closeTimeout = setTimeout(() => settle(), 5000)
           server.close(err => {
-            if (err != null) {
-              reject(err)
-            }
-            resolve({
-              siteApiKey,
-              example,
-              envVars,
-            })
+            clearTimeout(closeTimeout)
+            settle(err)
           })
         })
       })
