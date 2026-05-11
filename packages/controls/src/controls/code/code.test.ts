@@ -1,3 +1,4 @@
+import { ControlDataTypeKey } from '../../common'
 import { testDefinition } from '../../testing/test-definition'
 
 import { Code, CodeDefinition } from './code'
@@ -65,6 +66,26 @@ describe('Code resolveValue', () => {
     expect(def.resolveValue('print("hi")').readStable()).toEqual({
       value: 'print("hi")',
     })
+  })
+
+  test('resolves legacy TextArea v1 envelope to its inner string', () => {
+    const def = Code({ label: 'Code' })
+    const legacyData = {
+      [ControlDataTypeKey]: 'prop-controllers::text-area::v1' as const,
+      value: '<p>hello from TextArea</p>',
+    }
+    expect(def.resolveValue(legacyData).readStable()).toEqual({
+      value: '<p>hello from TextArea</p>',
+    })
+  })
+
+  test('safeParse accepts legacy TextArea v1 envelope', () => {
+    const def = Code({ label: 'Code' })
+    const legacyData = {
+      [ControlDataTypeKey]: 'prop-controllers::text-area::v1' as const,
+      value: '<p>hello</p>',
+    }
+    expect(def.safeParse(legacyData).success).toBe(true)
   })
 
   test('resolves undefined data to the default value', () => {

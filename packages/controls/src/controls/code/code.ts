@@ -43,8 +43,11 @@ class Definition<C extends Config> extends ControlDefinition<
   ResolvedValueType<C>
 > {
   private static readonly v1DataType = 'code::v1' as const
+  private static readonly legacyTextAreaV1DataType =
+    'prop-controllers::text-area::v1' as const
   private static readonly dataSignature = {
     v1: { [ControlDataTypeKey]: this.v1DataType },
+    legacyTextAreaV1: { [ControlDataTypeKey]: this.legacyTextAreaV1DataType },
   } as const
 
   static readonly type = 'makeswift::controls::code' as const
@@ -53,6 +56,13 @@ class Definition<C extends Config> extends ControlDefinition<
     const version = z.literal(1)
     const versionedData = z.object({
       [ControlDataTypeKey]: z.literal(this.v1DataType),
+      value: z.string(),
+    })
+    // Legacy `TextArea` v1 envelope, accepted so existing data from
+    // components migrated off of `TextArea` (e.g. the builtin Embed) reads
+    // through transparently.
+    const legacyTextAreaV1Data = z.object({
+      [ControlDataTypeKey]: z.literal(this.legacyTextAreaV1DataType),
       value: z.string(),
     })
 
@@ -95,12 +105,17 @@ class Definition<C extends Config> extends ControlDefinition<
       version,
       relaxed: schemas(
         z.string().optional(),
-        z.union([z.string(), versionedData, z.undefined()]),
+        z.union([
+          z.string(),
+          versionedData,
+          legacyTextAreaV1Data,
+          z.undefined(),
+        ]),
         resolvedInner.optional(),
       ),
       strict: schemas(
         z.string(),
-        z.union([z.string(), versionedData]),
+        z.union([z.string(), versionedData, legacyTextAreaV1Data]),
         resolvedInner,
       ),
     }
@@ -148,6 +163,7 @@ class Definition<C extends Config> extends ControlDefinition<
     const inputSchema = this.dataSchema.optional()
     return match(data satisfies z.infer<typeof inputSchema>)
       .with(Definition.dataSignature.v1, ({ value }) => value)
+      .with(Definition.dataSignature.legacyTextAreaV1, ({ value }) => value)
       .otherwise((val) => val)
   }
 
