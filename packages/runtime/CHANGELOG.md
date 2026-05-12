@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.4-canary.4
+
+### Patch Changes
+
+- 7abc737: fix: `unstable_getComponentSnapshots` now treats bulk 404s as `null` documents instead of logging and throwing.
+
 ## 0.28.4-canary.3
 
 ### Patch Changes

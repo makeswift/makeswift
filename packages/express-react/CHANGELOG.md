@@ -1,5 +1,12 @@
 # @makeswift/express-react
 
+## 0.1.6-canary.4
+
+### Patch Changes
+
+- Updated dependencies [7abc737]
+  - @makeswift/runtime@0.28.4-canary.4
+
 ## 0.1.6-canary.3
 
 ### Patch Changes
