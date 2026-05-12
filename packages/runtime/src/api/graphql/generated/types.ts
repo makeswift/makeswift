@@ -44,6 +44,7 @@ export type FileFragment = {
   id: string
   name: string
   extension: string | null
+  altText: string | null
   publicUrl: string
   dimensions: { width: number; height: number } | null
 }
@@ -161,6 +162,7 @@ export type IntrospectedResourcesQueryResult = {
     id: string
     name: string
     extension: string | null
+    altText: string | null
     publicUrl: string
     dimensions: { width: number; height: number } | null
   } | null>
@@ -216,6 +218,7 @@ export type FileQueryResult = {
     id: string
     name: string
     extension: string | null
+    altText: string | null
     publicUrl: string
     dimensions: { width: number; height: number } | null
   } | null

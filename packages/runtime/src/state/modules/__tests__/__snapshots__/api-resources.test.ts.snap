@@ -7,6 +7,7 @@ exports[`state / APIResources \`Actions.apiResourceFulfilled\` correctly populat
       "id": "[test-file-id]",
       "value": {
         "__typename": "File",
+        "altText": null,
         "dimensions": {
           "height": 1024,
           "width": 1024,

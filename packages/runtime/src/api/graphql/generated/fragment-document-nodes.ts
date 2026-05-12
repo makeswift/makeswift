@@ -49,6 +49,7 @@ export const File = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'altText' } },
         ],
       },
     },
