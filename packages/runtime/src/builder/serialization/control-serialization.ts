@@ -1007,7 +1007,7 @@ export function deserializeControl<T extends Data>(
   }
 
   return deserializeUnifiedControlDef(
-    deserializeRecord(serializedControl, [functionDeserializationPlugin]),
+    deserializeRecord(serializedControl, [functionDeserializationPlugin])
   )
 }
 

@@ -1,0 +1,5 @@
+{
+  "main": "../dist/cjs/translations/index.js",
+  "module": "../dist/esm/translations/index.js",
+  "types": "../dist/types/translations/index.d.ts"
+}

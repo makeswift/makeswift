@@ -45,8 +45,8 @@ import { toIterablePaginationResult } from '../utils/pagination'
 import { deterministicUUID } from '../utils/deterministic-uuid'
 import { Schema } from '@makeswift/controls'
 import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-only-documents'
-import { mergeElementTreeTranslatedData } from '../state/translations/merge'
-import { getElementTreeTranslatableData } from '../state/translations/get'
+import { mergeTranslatedContent } from '../state/translations/merge'
+import { getTranslatableContent } from '../state/translations/get'
 
 export { SnippetLocation } from '../api/graphql/generated/types'
 
@@ -262,7 +262,7 @@ export type Snippet = {
   cleanup: string | null
 }
 
-type Font = { family: string; variants: string[] }
+export type Font = { family: string; variants: string[] }
 
 type Meta = {
   title?: string | null
@@ -333,6 +333,15 @@ const getPageAPISchema = z.object({
 })
 
 type GetPageAPI = z.infer<typeof getPageAPISchema>
+
+const getFontsAPISchema = z.object({
+  googleFonts: z.array(z.object({
+    family: z.string(),
+    variants: z.array(z.string()),
+  })),
+})
+
+export type GetFontsAPI = z.infer<typeof getFontsAPISchema>
 
 export class MakeswiftClient {
   private graphqlClient: GraphQLClient
@@ -970,12 +979,15 @@ export class MakeswiftClient {
   }
 
   getTranslatableData(elementTree: ElementData): Record<string, Data> {
-    return getElementTreeTranslatableData(this.runtime.store.getState(), elementTree)
+    return getTranslatableContent(
+      getPropControllerDescriptors(this.runtime.store.getState()),
+      elementTree,
+    )
   }
 
   mergeTranslatedData(elementTree: ElementData, translatedData: Record<string, Data>): Element {
-    return mergeElementTreeTranslatedData(
-      this.runtime.store.getState(),
+    return mergeTranslatedContent(
+      getPropControllerDescriptors(this.runtime.store.getState()),
       elementTree,
       translatedData,
     )
@@ -1016,6 +1028,35 @@ export class MakeswiftClient {
       throw new Error(
         `Failed to parse preview token payload: ${parsed.error.errors.map(e => e.message).join('; ')}`,
       )
+    }
+
+    return parsed.data
+  }
+
+  async unstable_getFonts(
+    siteVersion: SiteVersion | null = null,
+  ): Promise<GetFontsAPI | null> {
+    const response = await this.fetch('v1_unstable/fonts', siteVersion)
+
+    if (!response.ok) {
+      console.error('Failed to fetch fonts', {
+        response: await failedResponseBody(response),
+        siteVersion,
+      })
+
+      return null
+    }
+
+    const json = await response.json()
+
+    const parsed = getFontsAPISchema.safeParse(json)
+    if (!parsed.success) {
+      console.error('Failed to parse fonts API response', {
+        response: json,
+        siteVersion,
+      })
+
+      return null
     }
 
     return parsed.data
