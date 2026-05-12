@@ -1,8 +1,11 @@
+import { type BoxModel } from 'css-box-model'
 import { z } from 'zod'
 
 import * as Schema from './schema'
 
 export { type BoxModel } from 'css-box-model'
+
+export type BoxDisplayModel = BoxModel & { visible?: boolean }
 
 export type Data = z.infer<typeof Schema.data>
 export type Device = z.infer<typeof Schema.deviceId>

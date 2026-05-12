@@ -303,7 +303,7 @@ describe('state / APIResources', () => {
     )
   })
 
-  test('`Actions.updateAPIClientCache` fills in the state from cache w/o overriding existing resources', () => {
+  test('`Actions.updateAPIClientCache` fills in the state from cache, updates existing resources', () => {
     const state = (
       [
         [swatch, null],
@@ -367,5 +367,57 @@ describe('state / APIResources', () => {
     )
 
     expect(APIResources.getSerializedState(updatedState)).toMatchSnapshot()
+  })
+
+  test('`Actions.updateAPIClientCache` does not update the state if resources are unchanged', () => {
+    const state = (
+      [
+        [swatch, null],
+        [pagePathnameSlice, null],
+        [localizedPagePathnameSlice_fr_FR, 'fr-FR'],
+        [globalElement, null],
+        [localizedGlobalElement_it_IT, 'it-IT'],
+        [table, null],
+        [snippet, null],
+      ] as [APIResource, string][]
+    ).reduce(
+      (state, [resource, locale]) =>
+        APIResources.reducer(
+          state,
+          Actions.apiResourceFulfilled(resource.__typename, resource.id, resource, locale),
+        ),
+      APIResources.getInitialState(),
+    )
+
+    const apiResources = {
+      Swatch: [{ id: swatch.id, value: { ...swatch } }],
+      PagePathnameSlice: [
+        {
+          id: pagePathnameSlice.id,
+          value: { ...pagePathnameSlice },
+        },
+        {
+          id: localizedPagePathnameSlice_fr_FR.id,
+          value: { ...localizedPagePathnameSlice_fr_FR },
+          locale: 'fr-FR',
+        },
+      ],
+      LocalizedGlobalElement: [
+        {
+          id: localizedGlobalElement_it_IT.id,
+          value: { ...localizedGlobalElement_it_IT },
+          locale: 'it-IT',
+        },
+      ],
+      Table: [{ id: table.id, value: table }],
+      Snippet: [{ id: snippet.id, value: snippet }],
+    }
+
+    const updatedState = APIResources.reducer(
+      state,
+      ReadWriteActions.updateAPIClientCache({ apiResources, localizedResourcesMap: {} }),
+    )
+
+    expect(updatedState).toBe(state)
   })
 })

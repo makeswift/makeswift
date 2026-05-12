@@ -15,7 +15,12 @@ import { v4 as uuid } from 'uuid'
 import { Element } from '../../../runtimes/react'
 import Placeholder from './components/Placeholder'
 import { areBoxAnimationPropsEqual, BoxAnimationProps, useBoxAnimation } from './animations'
-import { parse, createBox, type BoxModelHandle } from '../../../state/modules/read-write/box-models'
+import {
+  parse,
+  createBox,
+  isElementVisible,
+  type BoxModelHandle,
+} from '../../../state/modules/read-write/box-models'
 import BackgroundsContainer from '../../shared/BackgroundsContainer'
 import { useResponsiveStyle } from '../../utils/responsive-style'
 import { GridItem } from '../../shared/grid-item'
@@ -122,7 +127,9 @@ const Box = forwardRef(function Box(
           left: parse(marginBoxComputedStyle.marginLeft),
         }
 
-        return borderBox ? createBox({ borderBox, padding, border, margin }) : null
+        const visible = marginBoxElement ? isElementVisible(marginBoxElement) : undefined
+
+        return borderBox ? createBox({ borderBox, padding, border, margin, visible }) : null
       },
     }),
     [],

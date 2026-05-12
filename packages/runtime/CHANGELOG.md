@@ -1,5 +1,62 @@
 # @makeswift/runtime
 
+## 0.28.3
+
+### Patch Changes
+
+- 3cb90ee: Fixes an issue where pages with `scroll-behavior:smooth` have laggy scrolling within the builder.
+- 41acb6e: fix: global resource cache is shared across draft and live requests
+- ea5136a: Fix hydration mismatch error when SSRing components with `useIsInBuilder` across multiple React trees
+- 7bce3bd: Measure element visibility as part of box model data
+- 99959b2: fix: publishing a color has no effect on live pages until server restart
+- 1c1ec96: Add `unstable_getComponentSnapshots` method for bulk fetching and introspecting multiple component snapshots in a single request.
+- d7b7035: Fix client-side localized global element requests when on non-null locale.
+- ca9082e: Always show row and column gap controls for box elements
+- 646fc36: Introduce unstable placeholder configuration for Slot control
+- Updated dependencies [646fc36]
+- Updated dependencies [7bce3bd]
+  - @makeswift/controls@0.1.17
+  - @makeswift/prop-controllers@0.4.11
+
+## 0.28.2
+
+### Patch Changes
+
+- 4332f17: fix: Next.js 16 / Node 24+ compatibility; resolves `TypeError: Cannot read private member #state`.
+- a53c0a7: Adds an experimental field to the webhook payload type for site publish events which contains a site's default locale.
+
+## 0.28.1
+
+### Patch Changes
+
+- 6fb12ba: Expose internal serialization/deserialization utils and types for the builder
+- 1b1912d: feat: improve fidelity of host navigation events
+- a43480e: Pass webhook payload data to `onPublish` callback.
+
+## 0.28.0
+
+### Minor Changes
+
+- e4320c4: feat: client-side navigation support for the builder
+
+### Patch Changes
+
+- 8bcb107: Fix style control font family breaking when the value is a CSS variable (e.g., `var(...)`)
+- 72160ba: Remove logic for encoding site IDs from the experimental `GoogleFontLink` component. The expectation is that the `siteId` prop used by `GoogleFontLink` will come from the host API and already be in the expected format such that no transformation is necessary.
+- 5bd5222: feat: expose revalidation-aware `fetch` primitive for advanced Next.js integrations
+- 4c03c45: Adds an experimental `MakeswiftFonts` component.
+
+## 0.27.1
+
+### Patch Changes
+
+- 648f0c8: Client now consumes response bodies on failed requests. Required for Cloudflare Worker compatibility.
+- aab138c: Expose translation capabilities to extract translatable content from a raw snapshot and merge translated content back into an element tree using backend persisted descriptors.
+- a99b24e: chore: expose GoogleFontLink via experimental framework integration APIs
+- 1223e34: feat: unstable client method for fetching site fonts
+- 9e8f8d7: feat: add GoogleFontLink component
+- c7a5b1a: Allow for control deserialization plugin overrides
+
 ## 0.27.0
 
 ### Minor Changes

@@ -20,3 +20,12 @@ export type { PropControllerMessage, TableFormFieldsMessage } from '../prop-cont
 export { TableFormFieldsMessageType } from '../prop-controllers/instances'
 export * as Introspection from '../prop-controllers/introspection'
 export { DELETED_PROP_CONTROLLER_TYPES } from '../prop-controllers/deleted'
+
+export type {
+  SerializationPlugin,
+  DeserializationPlugin,
+  AnyFunction,
+  Deserialized,
+} from '@makeswift/controls'
+
+export { serializeObject, deserializeObject } from '@makeswift/controls'

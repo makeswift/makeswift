@@ -13,7 +13,7 @@ describe('Slot Types', () => {
     const def = Slot()
 
     type Config = typeof def.config
-    expectTypeOf<Config>().toEqualTypeOf<unknown>()
+    expectTypeOf<Config>().toEqualTypeOf<Record<string, unknown>>()
 
     type Data = Exclude<DataType<typeof def>, undefined>
     type Value = Exclude<ValueType<typeof def>, undefined>

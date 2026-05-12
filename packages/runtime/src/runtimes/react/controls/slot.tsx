@@ -5,7 +5,9 @@ import { cx } from '@emotion/css'
 
 import { SlotDefinition, SlotControl, type DataType } from '@makeswift/controls'
 
+import { type SlotConfig, type SlotPlaceholderConfig } from '../../../controls/slot'
 import { Element } from '../components/Element'
+import { useIsInBuilder } from '../hooks/use-is-in-builder'
 import { getIndexes } from '../../../components/utils/columns'
 import { useResponsiveStyle } from '../../../components/utils/responsive-style'
 import { useStyle } from '../use-style'
@@ -14,6 +16,7 @@ import { pollBoxModel } from '../poll-box-model'
 export function renderSlot(props: {
   data: DataType<SlotDefinition<ReactNode>> | undefined
   control: SlotControl | null
+  config: SlotConfig
 }): ReactNode {
   return <SlotValue {...props} />
 }
@@ -22,14 +25,16 @@ const SlotValue = memo(
   ({
     data,
     control,
+    config,
   }: {
     data: DataType<SlotDefinition<ReactNode>> | undefined
     control: SlotControl | null
+    config: SlotConfig
   }): ReactNode => {
     // TODO(miguel): While the UI shouldn't allow the state, we should probably check that at least
     // one element is visible.
     if (data == null || data.elements.length === 0) {
-      return <Slot.Placeholder control={control} />
+      return <Slot.Placeholder control={control} placeholder={config.unstable_placeholder} />
     }
 
     return (
@@ -138,10 +143,23 @@ function SlotItem<T extends ElementType = 'div'>({
 
 type SlotPlaceholderProps = {
   control: SlotControl | null
+  placeholder?: SlotPlaceholderConfig
 }
 
-function SlotPlaceholder({ control }: SlotPlaceholderProps): ReactNode {
+const DEFAULT_SHOW_PLACEHOLDER_IN_BUILDER_ONLY = false
+const DEFAULT_PLACEHOLDER_HEIGHT_PX = 80
+
+function SlotPlaceholder({ control, placeholder }: SlotPlaceholderProps): ReactNode {
+  const isInBuilder = useIsInBuilder()
   const [element, setElement] = useState<Element | null>(null)
+
+  // TODO: When ready, we can default to only showing the slot placeholder in
+  // the builder
+  const showInBuilderOnly = placeholder?.builderOnly ?? DEFAULT_SHOW_PLACEHOLDER_IN_BUILDER_ONLY
+  const placeholderHeight = placeholder?.height ?? DEFAULT_PLACEHOLDER_HEIGHT_PX
+  const text = placeholder?.text
+
+  const hidePlaceholder = showInBuilderOnly && !isInBuilder
 
   useEffect(() => {
     if (element == null || control == null) return
@@ -158,8 +176,11 @@ function SlotPlaceholder({ control }: SlotPlaceholderProps): ReactNode {
       className={useStyle({
         width: '100%',
         background: 'rgba(161, 168, 194, 0.18)',
-        height: '80px',
       })}
+      style={{
+        height: hidePlaceholder ? 0 : placeholderHeight,
+        visibility: hidePlaceholder ? 'hidden' : undefined,
+      }}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -179,6 +200,20 @@ function SlotPlaceholder({ control }: SlotPlaceholderProps): ReactNode {
           rx="4"
           ry="4"
         />
+        {text != null && (
+          <text
+            x="50%"
+            y="50%"
+            dominantBaseline="central"
+            textAnchor="middle"
+            fill="rgba(161, 168, 194, 0.80)"
+            fontSize="14px"
+            fontFamily="sans-serif"
+            style={{ userSelect: 'none' }}
+          >
+            {text}
+          </text>
+        )}
       </svg>
     </div>
   )

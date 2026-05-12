@@ -21,9 +21,12 @@ type Schema = typeof Definition.schema
 type DataType = z.infer<Schema['data']>
 type ValueType = z.infer<Schema['value']>
 
-abstract class Definition<RuntimeNode> extends ControlDefinition<
+abstract class Definition<
+  RuntimeNode,
+  Config extends Record<string, unknown> = Record<string, unknown>,
+> extends ControlDefinition<
   typeof Definition.type,
-  unknown,
+  Config,
   DataType,
   ValueType,
   RuntimeNode,
@@ -61,8 +64,8 @@ abstract class Definition<RuntimeNode> extends ControlDefinition<
     }
   }
 
-  constructor() {
-    super({})
+  constructor(config: Config = {} as Config) {
+    super(config)
   }
 
   get controlType() {

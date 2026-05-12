@@ -39,11 +39,17 @@ export function builderAPIMiddleware(
           break
 
         case HostActionTypes.CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP:
-          window.document.documentElement.scrollTop = action.payload.scrollTop
+          window.document.documentElement.scrollTo({
+            top: action.payload.scrollTop,
+            behavior: 'instant',
+          })
           break
 
         case HostActionTypes.SCROLL_DOCUMENT_ELEMENT:
-          window.document.documentElement.scrollTop += action.payload.scrollTopDelta
+          window.document.documentElement.scrollBy({
+            top: action.payload.scrollTopDelta,
+            behavior: 'instant',
+          })
           break
 
         case HostActionTypes.SET_BUILDER_EDIT_MODE:
@@ -52,12 +58,15 @@ export function builderAPIMiddleware(
 
         case HostActionTypes.INIT:
           // dispatched by the parent window after establishing the connection
+          // and in response to host's client-side navigation
+          cleanUp() // cleanup existing connection setup, if any
           cleanUp = dispatch(initializeBuilderConnection(builderProxy))
           break
 
         case HostActionTypes.CLEAN_UP:
           // dispatched by the parent window on disconnect
           cleanUp()
+          cleanUp = () => {}
           break
       }
 

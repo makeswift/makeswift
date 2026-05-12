@@ -1,11 +1,12 @@
 'use client'
 
-import { ReactNode, useMemo } from 'react'
+import { ReactNode, useEffect, useMemo } from 'react'
 
 import { type SiteVersion } from '../../../api/site-version'
 
 import { ReactRuntimeContext } from '../hooks/use-react-runtime'
 import { useAsyncEffect } from '../hooks/use-async-effect'
+import { StoreContext } from '../hooks/use-store'
 import { type ReactRuntimeCore } from '../react-runtime-core'
 
 import { PreviewSwitcher } from './preview-switcher/preview-switcher'
@@ -23,25 +24,28 @@ export function RuntimeProvider({
 }) {
   const siteVersion = siteVersionProp ?? null
   const isPreview = siteVersion != null
-  // TODO: we need to decouple editability from the site version; specifically, previewing
-  // a draft version of the site should not lead to switching to the read-write state
-  const isReadOnly = siteVersion == null
 
-  // setting idempotent part of the state on render to have parity between server-side and
-  // client-side rendering depending on this state; `useMemo` here is purely a performance
-  // optimization; prior art for performing idempotent side effects on render:
-  // https://github.com/TanStack/query/blob/8f9f183f11df3709a1a38c4efce1452788041f88/packages/react-query/src/HydrationBoundary.tsx#L41
-  useMemo(
-    () => runtime.setIdempotent({ siteVersion, isReadOnly, locale }),
-    [runtime, siteVersion, isReadOnly, locale],
+  // see `getOrCreateStore` for the description of the stores' lifecycle
+  const store = useMemo(
+    () => runtime.getOrCreateStore({ siteVersion, locale }),
+    [runtime, siteVersion, locale],
   )
 
-  useAsyncEffect(() => runtime.setupStore({ isReadOnly }), [runtime, isReadOnly])
+  useEffect(() => {
+    runtime.retainStore({ siteVersion, locale }, store)
+    return () => runtime.releaseStore({ siteVersion, locale }, store)
+  }, [runtime, siteVersion, locale, store])
+
+  // if we're in the read-write mode, the reducers & middleware required for builder
+  // interactions are loaded only on client side, lazily and asynchronously
+  useAsyncEffect(() => store.loadReadWriteStateIfNeeded(), [store])
 
   return (
     <ReactRuntimeContext.Provider value={runtime}>
-      {children}
-      <PreviewSwitcher isPreview={isPreview} />
+      <StoreContext.Provider value={store}>
+        {children}
+        <PreviewSwitcher isPreview={isPreview} />
+      </StoreContext.Provider>
     </ReactRuntimeContext.Provider>
   )
 }

@@ -1,5 +1,6 @@
 export {
   type BoxModel,
+  type BoxDisplayModel,
   type Breakpoint,
   type BreakpointId,
   type Breakpoints,

@@ -1,9 +1,8 @@
 /**
- * Sample of the descriptors object as stored in the DB and passed by Orion to
- * getTranslatableContent(descriptors, elementTree, { serialized: true }).
- * Keys are component_type, values are the serialized controls row from site_component_descriptors.
+ * Sample of the descriptors object that lives in the builder state, some objects are left purposely empty
  */
-export const serializedDescriptorsFromDb: Record<string, Record<string, unknown>> = {
+
+export const getMockedSerializedDescriptorsFromBuilder: (createMessagePort: () => MessagePort) => Record<string, Record<string, unknown>> = (createMessagePort) => ({
   'makeswift::components::slot::v1': {
     children: {
       type: 'makeswift::controls::slot',
@@ -254,8 +253,8 @@ export const serializedDescriptorsFromDb: Record<string, Record<string, unknown>
         plugins: [
           {
             control: {
-              getValue: {},
-              onChange: {},
+              getValue: createMessagePort(),
+              onChange: createMessagePort(),
               definition: {
                 type: 'makeswift::controls::select',
                 config: {
@@ -280,15 +279,15 @@ export const serializedDescriptorsFromDb: Record<string, Record<string, unknown>
           },
           {
             control: {
-              getValue: {},
-              onChange: {},
+              getValue: createMessagePort(),
+              onChange: createMessagePort(),
               definition: { type: 'makeswift::controls::typography', config: {} },
             },
           },
           {
             control: {
-              getValue: {},
-              onChange: {},
+              getValue: createMessagePort(),
+              onChange: createMessagePort(),
               definition: {
                 type: 'makeswift::controls::style-v2',
                 config: {
@@ -305,15 +304,15 @@ export const serializedDescriptorsFromDb: Record<string, Record<string, unknown>
                       defaultValue: 'left',
                     },
                   },
-                  getStyle: {},
+                  getStyle: createMessagePort(),
                 },
               },
             },
           },
           {
             control: {
-              getValue: {},
-              onChange: {},
+              getValue: createMessagePort(),
+              onChange: createMessagePort(),
               definition: {
                 type: 'makeswift::controls::icon-radio-group',
                 config: {
@@ -329,8 +328,8 @@ export const serializedDescriptorsFromDb: Record<string, Record<string, unknown>
           },
           {
             control: {
-              getValue: {},
-              onChange: {},
+              getValue: createMessagePort(),
+              onChange: createMessagePort(),
               definition: {
                 type: 'makeswift::controls::link',
                 config: { label: 'On Click' },
@@ -1029,4 +1028,4 @@ export const serializedDescriptorsFromDb: Record<string, Record<string, unknown>
       },
     },
   },
-}
+})

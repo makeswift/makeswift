@@ -28,8 +28,7 @@ type Props = {
 export function GoogleFontLink({ fonts, siteId }: Props) {
   const isInBuilder = useIsInBuilder()
 
-  const siteNodeId = siteId != null ? btoa(`Site:${siteId}`) : null
-  const site = useCachedSite(isInBuilder ? siteNodeId : null)
+  const site = useCachedSite(isInBuilder ? siteId : null)
 
   const fontFamilyParamValue = useMemo(() => {
     if (isInBuilder && site != null) {

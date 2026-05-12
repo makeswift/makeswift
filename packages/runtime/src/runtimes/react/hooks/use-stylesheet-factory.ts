@@ -4,8 +4,8 @@ import { type EmotionCache } from '@emotion/cache'
 import { type SerializedStyles } from '@emotion/utils'
 
 import {
+  type BoxDisplayModel,
   type Breakpoints,
-  type BoxModel,
   type Stylesheet,
   type ResolvedStyle,
   type ResolvedStyleV2,
@@ -35,7 +35,7 @@ export function useStylesheetFactory(): StylesheetFactory {
   const componentUid = useCssId()
 
   const computedStyles = useRef<Record<string, SerializedStyles>>({}).current
-  const boxModelCallbacks = useRef<Record<string, (boxModel: BoxModel | null) => void>>({}).current
+  const boxModelCallbacks = useRef<Record<string, (boxModel: BoxDisplayModel | null) => void>>({}).current
 
   return useMemo(() => {
     const getStylesheet = (styleSheetId: string): Stylesheet => ({
@@ -45,7 +45,7 @@ export function useStylesheetFactory(): StylesheetFactory {
 
       defineStyle(
         style: ResolvedStyle,
-        onBoxModelChange?: (boxModel: BoxModel | null) => void,
+        onBoxModelChange?: (boxModel: BoxDisplayModel | null) => void,
       ): string {
         const serialized = serializeStyle(breakpoints, style, cache)
         const uid = `u-${componentUid}-${styleSheetId}`

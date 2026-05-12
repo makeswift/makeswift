@@ -14,7 +14,7 @@ import { mergeTranslatedDataHandler } from './handlers/merge-translated-data'
 import { revalidateHandler } from './handlers/revalidate'
 import { translatableDataHandler } from './handlers/translatable-data'
 import { webhookHandler } from './handlers/webhook'
-import { type OnPublish } from './handlers/webhook/types'
+import { type OnPublish, type SitePublishedWebhookPayloadData } from './handlers/webhook/types'
 
 import {
   type ApiRequest,
@@ -25,7 +25,7 @@ import {
 
 import { applyCorsHeaders } from './cors'
 
-export type { Manifest, Font }
+export type { Manifest, Font, SitePublishedWebhookPayloadData }
 
 type Events = { onPublish: OnPublish }
 

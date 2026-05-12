@@ -1,4 +1,4 @@
-import { BoxModel, getBox } from '../../state/modules/read-write/box-models'
+import { BoxDisplayModel, getBox } from '../../state/modules/read-write/box-models'
 import deepEqual from '../../utils/deepEqual'
 
 export function pollBoxModel({
@@ -6,9 +6,9 @@ export function pollBoxModel({
   onBoxModelChange,
 }: {
   element: Element | null
-  onBoxModelChange(boxModel: BoxModel | null): void
+  onBoxModelChange(boxModel: BoxDisplayModel | null): void
 }): () => void {
-  let currentBoxModel: BoxModel | null = null
+  let currentBoxModel: BoxDisplayModel | null = null
 
   const handleAnimationFrameRequest = () => {
     const measuredBoxModel = element == null ? null : getBox(element)

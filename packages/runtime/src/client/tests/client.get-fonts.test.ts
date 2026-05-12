@@ -7,6 +7,10 @@ import { server } from '../../mocks/server'
 import { TestWorkingSiteVersion } from '../../testing/fixtures'
 
 const TEST_API_KEY = 'xxx'
+
+// base64 encoding of 'Site:00000000-0000-0000-0000-000000000000'
+const TEST_SITE_ID = 'U2l0ZTowMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDA='
+
 const runtime = createReactRuntime()
 const baseUrl = `${runtime.apiOrigin}/v1_unstable/fonts`
 
@@ -28,7 +32,7 @@ describe('getFonts', () => {
   test('successfully parses response containing no fonts', async () => {
     // Arrange
     const client = createTestClient()
-    const payload: GetFontsAPI = { googleFonts: [] }
+    const payload: GetFontsAPI = { googleFonts: [], siteId: TEST_SITE_ID }
 
     server.use(
       http.get(baseUrl, () => HttpResponse.json(payload), {
@@ -51,6 +55,7 @@ describe('getFonts', () => {
         { family: 'Roboto', variants: ['400', '700'] },
         { family: 'Open Sans', variants: ['400', '400italic', '700'] },
       ],
+      siteId: TEST_SITE_ID,
     }
 
     server.use(

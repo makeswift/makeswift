@@ -1,8 +1,8 @@
 import { type Descriptor, isLegacyDescriptor } from './descriptors'
-import { type BoxModel } from '../state/modules/read-write/box-models'
 import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
 
 import {
+  type BoxDisplayModel,
   type ControlMessage,
   type SendMessage,
   type InstanceType,
@@ -19,12 +19,12 @@ export const TableFormFieldsMessageType = {
 
 type TableLayoutTableFormFieldsMessage = {
   type: typeof TableFormFieldsMessageType.TABLE_FORM_LAYOUT_CHANGE
-  payload: { layout: BoxModel }
+  payload: { layout: BoxDisplayModel }
 }
 
 type TableFieldLayoutTableFormFieldsMessage = {
   type: typeof TableFormFieldsMessageType.TABLE_FORM_FIELD_LAYOUT_CHANGE
-  payload: { layout: BoxModel; index: number }
+  payload: { layout: BoxDisplayModel; index: number }
 }
 
 export type TableFormFieldsMessage =
@@ -37,11 +37,11 @@ export class TableFormFieldsPropController extends ControlInstance<TableFormFiel
     return undefined
   }
 
-  tableFormLayoutChange(payload: { layout: BoxModel }) {
+  tableFormLayoutChange(payload: { layout: BoxDisplayModel }) {
     this.sendMessage({ type: TableFormFieldsMessageType.TABLE_FORM_LAYOUT_CHANGE, payload })
   }
 
-  tableFormFieldLayoutChange(payload: { layout: BoxModel; index: number }) {
+  tableFormFieldLayoutChange(payload: { layout: BoxDisplayModel; index: number }) {
     this.sendMessage({ type: TableFormFieldsMessageType.TABLE_FORM_FIELD_LAYOUT_CHANGE, payload })
   }
 }

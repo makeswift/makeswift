@@ -1,10 +1,10 @@
-import { type BoxModel } from '../../../common'
+import { type BoxDisplayModel } from '../../../common'
 
 import { ControlInstance } from '../../instance'
 
 type Message = {
   type: typeof StyleControl.CHANGE_BOX_MODEL
-  payload: { boxModel: BoxModel | null }
+  payload: { boxModel: BoxDisplayModel | null }
 }
 
 export class StyleControl extends ControlInstance<Message> {
@@ -17,7 +17,7 @@ export class StyleControl extends ControlInstance<Message> {
     return undefined
   }
 
-  changeBoxModel(boxModel: BoxModel | null): void {
+  changeBoxModel(boxModel: BoxDisplayModel | null): void {
     this.sendMessage({
       type: StyleControl.CHANGE_BOX_MODEL,
       payload: { boxModel },

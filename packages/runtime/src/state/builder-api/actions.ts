@@ -5,10 +5,12 @@ import { type PropControllerMessage } from '../../prop-controllers/instances'
 
 import { type Document } from '../modules/read-only-documents'
 import { type ComponentMeta } from '../modules/components-meta'
-import { type BoxModel } from '../modules/read-write/box-models'
+import { type BoxDisplayModel } from '../modules/read-write/box-models'
 
 import { type ElementSize } from '../middleware/read-write/builder-api/element-size'
 import { type DocumentPayload, type SharedAction, SharedActionTypes } from '../shared-api'
+
+import { type HostNavigationEvent } from './api'
 
 export * from '../shared-api'
 
@@ -49,7 +51,6 @@ type ActionWithTransferables<A> = A & {
 
 type MakeswiftConnectionCheckAction = {
   type: typeof BuilderActionTypes.MAKESWIFT_CONNECTION_CHECK
-  payload: { currentUrl: string }
 }
 
 type MountComponentAction = {
@@ -69,7 +70,7 @@ type ChangeDocumentElementSizeAction = {
 
 type ChangeElementBoxModelsAction = {
   type: typeof BuilderActionTypes.CHANGE_ELEMENT_BOX_MODELS
-  payload: { changedElementBoxModels: Map<string, Map<string, BoxModel | null>> }
+  payload: { changedElementBoxModels: Map<string, Map<string, BoxDisplayModel | null>> }
 }
 
 type MessageBuilderPropControllerAction<T = PropControllerMessage> = {
@@ -118,7 +119,7 @@ type UnregisterBuilderComponentAction = {
 
 type HandleHostNavigateAction = {
   type: typeof BuilderActionTypes.HANDLE_HOST_NAVIGATE
-  payload: { url: string | null }
+  payload: HostNavigationEvent
 }
 
 export type BuilderAction =
@@ -138,10 +139,8 @@ export type BuilderAction =
   | UnregisterBuilderComponentAction
   | HandleHostNavigateAction
 
-export function makeswiftConnectionCheck(
-  payload: MakeswiftConnectionCheckAction['payload'],
-): MakeswiftConnectionCheckAction {
-  return { type: BuilderActionTypes.MAKESWIFT_CONNECTION_CHECK, payload }
+export function makeswiftConnectionCheck(): MakeswiftConnectionCheckAction {
+  return { type: BuilderActionTypes.MAKESWIFT_CONNECTION_CHECK }
 }
 
 export function mountComponent(documentKey: string, elementKey: string): MountComponentAction {
@@ -170,7 +169,7 @@ export function changeDocumentElementSize(size: ElementSize): ChangeDocumentElem
 }
 
 export function changeElementBoxModels(
-  changedElementBoxModels: Map<string, Map<string, BoxModel | null>>,
+  changedElementBoxModels: Map<string, Map<string, BoxDisplayModel | null>>,
 ): ChangeElementBoxModelsAction {
   return {
     type: BuilderActionTypes.CHANGE_ELEMENT_BOX_MODELS,

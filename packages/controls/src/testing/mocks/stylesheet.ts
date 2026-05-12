@@ -1,5 +1,5 @@
 import { type Breakpoints } from '../../breakpoints'
-import { type BoxModel, type ResponsiveValue } from '../../common/types'
+import { type BoxDisplayModel, type ResponsiveValue } from '../../common/types'
 import { type ResolvedStyleV1, type Stylesheet } from '../../stylesheet'
 
 export const noOpStylesheet: Stylesheet = {
@@ -9,7 +9,7 @@ export const noOpStylesheet: Stylesheet = {
 
   defineStyle(
     _style: ResolvedStyleV1 | ResponsiveValue<any>,
-    _onBoxModelChange?: (boxModel: BoxModel | null) => void,
+    _onBoxModelChange?: (boxModel: BoxDisplayModel | null) => void,
   ): string {
     return ''
   },

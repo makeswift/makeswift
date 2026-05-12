@@ -1,11 +1,11 @@
-import { type BoxModel } from '../../../common'
+import { type BoxDisplayModel } from '../../../common'
 
 import { ControlDefinition } from '../../definition'
 import { ControlInstance, ControlMessage, SendMessage } from '../../instance'
 
 type ItemBoxModelChangeMessage = {
   type: typeof StyleV2Control.CHANGE_BOX_MODEL
-  payload: { boxModel: BoxModel | null }
+  payload: { boxModel: BoxDisplayModel | null }
 }
 
 type ChildControlMessage = {
@@ -46,7 +46,7 @@ export class StyleV2Control extends ControlInstance<Message> {
     }
   }
 
-  changeBoxModel(boxModel: BoxModel | null): void {
+  changeBoxModel(boxModel: BoxDisplayModel | null): void {
     this.sendMessage({
       type: StyleV2Control.CHANGE_BOX_MODEL,
       payload: { boxModel },

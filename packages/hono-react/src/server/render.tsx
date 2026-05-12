@@ -23,6 +23,7 @@ type RenderOptions = RootStyleProps &
     | 'bootstrapScripts'
     | 'bootstrapModules'
     | 'progressiveChunkSize'
+    | 'onError'
   >
 
 export async function renderHtml(
@@ -36,12 +37,7 @@ export async function renderHtml(
     <RootStyleRegistry cache={cache} enableCssReset={enableCssReset}>
       {children}
     </RootStyleRegistry>,
-    {
-      ...renderOptions,
-      onError(error: unknown) {
-        throw Error(`Server-side rendering error: ${error}`)
-      },
-    },
+    { ...renderOptions },
   )
 
   return { html, getStyles }

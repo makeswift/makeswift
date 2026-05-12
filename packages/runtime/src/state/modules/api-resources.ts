@@ -153,7 +153,7 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
         const existing = state.get(resType) ?? new Map<CompositeResourceId, APIResource | null>()
         const updated = cached?.reduce((r, { id, value, locale }) => {
           const cid = compositeId(id, resType, locale)
-          return r.get(cid) != null ? r : new Map(r).set(cid, value)
+          return deepEqual(r.get(cid), value) ? r : new Map(r).set(cid, value)
         }, existing)
 
         return updated == null || updated === existing
