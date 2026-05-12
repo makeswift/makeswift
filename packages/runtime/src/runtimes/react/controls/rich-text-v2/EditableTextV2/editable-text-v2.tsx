@@ -33,11 +33,14 @@ import { useBuilderEditMode } from '../../..'
 import { BuilderEditMode } from '../../../../../state/modules/builder-edit-mode'
 import { pollBoxModel } from '../../../poll-box-model'
 import { withBuilder, withLocalChanges } from '../../../../../slate'
+import { withSelection } from '../../../../../slate/SelectionPlugin/with-selection'
 import { useSyncDOMSelection } from './useSyncDOMSelection'
 import { RichTextV2Element } from './render-element'
 import { RichTextV2Leaf } from './render-leaf'
 import { useSyncRemoteChanges } from './useRemoteChanges'
 import { defaultValue, usePresetValue } from './usePresetValue'
+import { useTrackMouseSelection } from './use-track-mouse-selection'
+import { getHTMLElement } from './utils'
 
 export type RichTextV2ControlValue = ReactNode
 
@@ -55,14 +58,14 @@ export function EditableTextV2({ text, definition, control }: Props) {
   const [editor] = useState(() =>
     plugins.reduceRight(
       (editor, plugin) => plugin?.withPlugin?.(editor) ?? editor,
-      withLocalChanges(withBuilder(withReact(createEditor()))),
+      withSelection(withLocalChanges(withBuilder(withReact(createEditor())))),
     ),
   )
 
   useEffect(() => {
     if (control == null) return
 
-    const element = ReactEditor.toDOMNode(editor, editor)
+    const element = getHTMLElement(editor)
     return pollBoxModel({
       element,
       onBoxModelChange: boxModel => control.changeBoxModel(boxModel),
@@ -194,6 +197,7 @@ export function EditableTextV2({ text, definition, control }: Props) {
         onKeyUp={handleKeyUp}
         onClick={handleClick}
         onBlur={handleBlur}
+        {...useTrackMouseSelection(editor)}
         readOnly={editMode !== BuilderEditMode.CONTENT}
         placeholder="Write some text..."
       />
