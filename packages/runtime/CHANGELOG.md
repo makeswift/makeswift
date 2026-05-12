@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.28.4-canary.5
+
+### Patch Changes
+
+- 22fb10f: Renamed `unstable_Code` to `Code` and `unstable_CodeDefinition` to `CodeDefinition`.
+- Updated dependencies [22fb10f]
+  - @makeswift/controls@0.1.18-canary.1
+  - @makeswift/prop-controllers@0.4.12-canary.1
+
 ## 0.28.4-canary.4
 
 ### Patch Changes

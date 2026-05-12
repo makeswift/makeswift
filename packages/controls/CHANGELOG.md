@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.18-canary.1
+
+### Patch Changes
+
+- 22fb10f: Renamed `unstable_Code` to `Code` and `unstable_CodeDefinition` to `CodeDefinition`.
+
 ## 0.1.18-canary.0
 
 ### Patch Changes
