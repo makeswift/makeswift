@@ -105,7 +105,7 @@ describe('unstable_getComponentSnapshots', () => {
     expect(results[2].document.data).not.toBeNull()
   })
 
-  test('throws when bulk fetch fails', async () => {
+  test('throws when bulk fetch fails with non-404', async () => {
     // Arrange
     const client = createTestClient()
 
@@ -121,6 +121,63 @@ describe('unstable_getComponentSnapshots', () => {
         siteVersion: TestWorkingSiteVersion,
       }),
     ).rejects.toThrow('Failed to get element trees')
+  })
+
+  test('returns fallback documents silently when bulk fetch returns 404', async () => {
+    // Arrange
+    const client = createTestClient()
+    const consoleErrorSpy = jest.spyOn(console, 'error')
+    setupGraphqlMock()
+
+    server.use(
+      http.post(
+        baseUrl,
+        () =>
+          HttpResponse.json(
+            { object: 'error', code: 'not_found', message: 'Element trees for requested version not found' },
+            { status: 404 },
+          ),
+        { once: true },
+      ),
+    )
+
+    // Act
+    const results = await client.unstable_getComponentSnapshots(['comp-1', 'comp-2'], {
+      siteVersion: TestWorkingSiteVersion,
+    })
+
+    // Assert
+    expect(results).toHaveLength(2)
+    expect(results[0].document.data).toBeNull()
+    expect(results[1].document.data).toBeNull()
+    expect(consoleErrorSpy).not.toHaveBeenCalled()
+  })
+
+  test('returns fallback documents silently when bulk fetch returns 404 with a locale', async () => {
+    // Arrange
+    const client = createTestClient()
+    const consoleErrorSpy = jest.spyOn(console, 'error')
+    setupGraphqlMock()
+
+    const httpHandler = jest.fn(() =>
+      HttpResponse.json(
+        { object: 'error', code: 'not_found', message: 'Element trees for requested version not found' },
+        { status: 404 },
+      ),
+    )
+    server.use(http.post(baseUrl, httpHandler))
+
+    // Act
+    const results = await client.unstable_getComponentSnapshots(['comp-1', 'comp-2'], {
+      siteVersion: TestWorkingSiteVersion,
+      locale: 'fr-FR',
+    })
+
+    // Assert
+    expect(results).toHaveLength(2)
+    expect(results[0].document.data).toBeNull()
+    expect(results[1].document.data).toBeNull()
+    expect(consoleErrorSpy).not.toHaveBeenCalled()
   })
 
   test('locale fallback — second-pass: first call with locale returns some nulls, second call without locale fills them in', async () => {
