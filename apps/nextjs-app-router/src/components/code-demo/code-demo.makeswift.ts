@@ -1,7 +1,7 @@
 import { runtime } from '@/makeswift/runtime'
 import { lazy } from 'react'
 
-import { Style, unstable_Code as Code } from '@makeswift/runtime/controls'
+import { Style, Code } from '@makeswift/runtime/controls'
 
 runtime.registerComponent(
   lazy(() => import('./code-demo')),

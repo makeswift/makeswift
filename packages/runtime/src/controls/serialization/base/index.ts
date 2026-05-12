@@ -9,7 +9,7 @@ import {
 
 import {
   CheckboxDefinition,
-  unstable_CodeDefinition,
+  CodeDefinition,
   ColorDefinition,
   ComboboxDefinition,
   FontDefinition,
@@ -64,7 +64,7 @@ export function deserializeUnifiedControlDef(record: DeserializedRecord): Contro
   type DeserializeMethod = (data: DeserializedRecord) => ControlDefinition
   const deserializeMethod: Record<string, DeserializeMethod> = {
     [CheckboxDefinition.type]: CheckboxDefinition.deserialize,
-    [unstable_CodeDefinition.type]: unstable_CodeDefinition.deserialize,
+    [CodeDefinition.type]: CodeDefinition.deserialize,
     [ColorDefinition.type]: ColorDefinition.deserialize,
     [ComboboxDefinition.type]: ComboboxDefinition.deserialize,
     [FontDefinition.type]: FontDefinition.deserialize,
