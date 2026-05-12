@@ -1,5 +1,11 @@
 # makeswift
 
+## 0.3.5
+
+### Patch Changes
+
+- 49ed20f: Fix `npx makeswift@latest init` from stalling on first redirect.
+
 ## 0.3.4
 
 ### Patch Changes
