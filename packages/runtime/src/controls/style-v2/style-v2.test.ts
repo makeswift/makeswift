@@ -1,11 +1,11 @@
 import { unstable_IconRadioGroup, deserializeRecord } from '@makeswift/controls'
 
 import { unstable_StyleV2, StyleV2Definition } from './style-v2'
-import { deserializeUnifiedControlDef } from '../../builder'
+import { deserializeUnifiedControlDef } from '../serialization/base'
 import {
   ClientMessagePortSerializationVisitor,
   functionDeserializationPlugin,
-} from '../visitors/message-port-serializer'
+} from '../serialization/message-port'
 
 describe('StyleV2', () => {
   test('serialization', () => {

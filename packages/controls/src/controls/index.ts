@@ -1,4 +1,5 @@
 export * from './checkbox'
+export * from './code'
 export * from './color'
 export * from './combobox'
 export * from './font'

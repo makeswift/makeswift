@@ -1,10 +1,10 @@
 import { deserializeRecord } from '@makeswift/controls'
+
+import { deserializeUnifiedControlDef } from '../../serialization/base'
+import { ClientMessagePortSerializationVisitor } from '../../serialization/message-port/visitor'
+import { functionDeserializationPlugin } from '../../serialization/message-port/function-serialization'
+
 import { RichText, RichTextV2Definition } from '../rich-text-v2'
-import { deserializeUnifiedControlDef } from '../../../builder/serialization/control-serialization'
-import {
-  ClientMessagePortSerializationVisitor,
-  functionDeserializationPlugin,
-} from '../../visitors/message-port-serializer'
 
 jest.mock('corporate-ipsum', () => {
   return {

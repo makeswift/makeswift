@@ -1,0 +1,398 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Page Code control data v0 when value is <div>hi</div>: resolvedValue 1`] = `
+{
+  "value": "<div>hi</div>",
+}
+`;
+
+exports[`Page Code control data v0 when value is <div>hi</div>: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": "<div>hi</div>",
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`Page Code control data v0 when value is console.log("hello"): resolvedValue 1`] = `
+{
+  "value": "console.log("hello")",
+}
+`;
+
+exports[`Page Code control data v0 when value is console.log("hello"): snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": "console.log("hello")",
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`Page Code control data v0 when value is undefined: resolvedValue 1`] = `undefined`;
+
+exports[`Page Code control data v0 when value is undefined: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": undefined,
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`Page Code control data v1 when value is <div>hi</div>: resolvedValue 1`] = `
+{
+  "value": "<div>hi</div>",
+}
+`;
+
+exports[`Page Code control data v1 when value is <div>hi</div>: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "@@makeswift/type": "code::v1",
+                  "value": "<div>hi</div>",
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`Page Code control data v1 when value is console.log("hello"): resolvedValue 1`] = `
+{
+  "value": "console.log("hello")",
+}
+`;
+
+exports[`Page Code control data v1 when value is console.log("hello"): snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "@@makeswift/type": "code::v1",
+                  "value": "console.log("hello")",
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`Page Code control data v1 when value is undefined: resolvedValue 1`] = `undefined`;
+
+exports[`Page Code control data v1 when value is undefined: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": undefined,
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`Page when defaultValue is set: resolvedValue 1`] = `
+{
+  "value": "fallback",
+}
+`;
+
+exports[`Page when defaultValue is set: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": undefined,
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;

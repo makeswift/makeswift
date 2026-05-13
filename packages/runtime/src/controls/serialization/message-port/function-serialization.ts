@@ -5,6 +5,8 @@ import {
   type DeserializedFunction,
 } from '@makeswift/controls'
 
+export { type DeserializedFunction } from '@makeswift/controls'
+
 declare const SerializedFunctionTag: unique symbol
 
 type ResolveCallPromise<T extends AnyFunction> = (value: SerializedFunctionReturnType<T>) => void

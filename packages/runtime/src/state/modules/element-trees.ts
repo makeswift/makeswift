@@ -1,5 +1,5 @@
 import { type Operation } from 'ot-json0'
-import { getIn } from 'immutable'
+import { getIn, removeIn, setIn } from 'immutable'
 
 import { type Element, type ElementData, isElementReference } from '@makeswift/controls'
 
@@ -269,17 +269,19 @@ function deleteElement(
 function applyDelete(
   elementTree: ElementTree,
   descriptors: DescriptorsByComponentType,
-  rootElements: { old: Element; new: Element },
+  rootElements: { before: Element; after: Element },
   path: OperationPath,
 ): ElementTree {
   const [deleteElementPath, ...parentElementPaths] = getChangedElementsPaths(path)
-  const [deletedElement, propName] = getElementAndPropName(rootElements.old, deleteElementPath)
+  const [deletedElement, propName] = getElementAndPropName(rootElements.before, deleteElementPath)
 
   const elements = new Map(elementTree.elements)
   const elementIds = new Map(elementTree.elementIds)
 
   deleteElement({ elements, elementIds }, deletedElement, propName, descriptors)
-  updateParentElements(elements, parentElementPaths, rootElements.new)
+
+  // Use the "after" state to efficiently update all of parent subtrees in the state
+  updateParentElements(elements, parentElementPaths, rootElements.after)
 
   return {
     elements,
@@ -313,17 +315,19 @@ function insertElement(
 function applyInsert(
   elementTree: ElementTree,
   descriptors: DescriptorsByComponentType,
-  rootElements: { old: Element; new: Element },
+  rootElements: { before: Element; after: Element },
   path: OperationPath,
 ): ElementTree {
   const [insertedElementPath, ...parentElementPaths] = getChangedElementsPaths(path)
-  const [insertedElement, propName] = getElementAndPropName(rootElements.new, insertedElementPath)
+  const [insertedElement, propName] = getElementAndPropName(rootElements.after, insertedElementPath)
 
   const elements = new Map(elementTree.elements)
   const elementIds = new Map(elementTree.elementIds)
 
   insertElement({ elements, elementIds }, insertedElement, propName, descriptors)
-  updateParentElements(elements, parentElementPaths, rootElements.new)
+
+  // Use the "after" state to efficiently update all of parent subtrees in the state
+  updateParentElements(elements, parentElementPaths, rootElements.after)
 
   return {
     elements,
@@ -334,12 +338,12 @@ function applyInsert(
 function applyUpdate(
   elementTree: ElementTree,
   descriptors: DescriptorsByComponentType,
-  rootElements: { old: Element; new: Element },
+  rootElements: { before: Element; after: Element },
   path: OperationPath,
 ): ElementTree {
   const [updateElementPath, ...parentElementPaths] = getChangedElementsPaths(path)
-  const [deletedElement, propName] = getElementAndPropName(rootElements.old, updateElementPath)
-  const [insertedElement, _] = getElementAndPropName(rootElements.new, updateElementPath)
+  const [deletedElement, propName] = getElementAndPropName(rootElements.before, updateElementPath)
+  const [insertedElement, _] = getElementAndPropName(rootElements.after, updateElementPath)
 
   const elements = new Map(elementTree.elements)
   const elementIds = new Map(elementTree.elementIds)
@@ -347,12 +351,42 @@ function applyUpdate(
   deleteElement({ elements, elementIds }, deletedElement, propName, descriptors)
   insertElement({ elements, elementIds }, insertedElement, propName, descriptors)
 
-  updateParentElements(elements, parentElementPaths, rootElements.new)
+  // Use the "after" state to efficiently update all of parent subtrees in the state
+  updateParentElements(elements, parentElementPaths, rootElements.after)
 
   return {
     elements,
     elementIds,
   }
+}
+
+function applyOpComponent(root: Element, component: Operation[number]): Element {
+  let applied: Element = root
+
+  if ('ld' in component || 'od' in component) {
+    applied = removeIn(applied, component.p)
+  }
+
+  if ('li' in component) {
+    applied = setIn(applied, component.p, component.li)
+  }
+
+  if ('oi' in component) {
+    applied = setIn(applied, component.p, component.oi)
+  }
+
+  return applied
+}
+
+function selectTreeTransform(op: Operation[number]): typeof applyUpdate {
+  const hasDelete = 'ld' in op || 'od' in op
+  const hasInsert = 'li' in op || 'oi' in op
+
+  if (hasDelete && hasInsert) return applyUpdate
+  if (hasDelete) return applyDelete
+  if (hasInsert) return applyInsert
+
+  return elementTree => elementTree
 }
 
 function applyChanges(
@@ -361,15 +395,29 @@ function applyChanges(
   rootElements: { old: Element; new: Element },
   operation: Operation,
 ): ElementTree {
-  return operation.reduce((tree, op) => {
-    const hasDelete = 'ld' in op || 'od' in op
-    const hasInsert = 'li' in op || 'oi' in op
-    if (hasDelete && hasInsert) {
-      return applyUpdate(tree, descriptors, rootElements, op.p)
-    }
+  // Updates the element tree "cache" based on the provided operation, which can
+  // be composed of 1-n component ops. We apply each component op sequentially
+  // to the 'old' root element to determine the changed elements and update the
+  // cache accordingly at each intermediate step.
+  const result = operation.reduce(
+    (acc, op) => {
+      const rootBefore = acc.rootBefore
 
-    if (hasDelete) return applyDelete(tree, descriptors, rootElements, op.p)
-    if (hasInsert) return applyInsert(tree, descriptors, rootElements, op.p)
-    return tree
-  }, elementTree)
+      // If there's only one component op, we can skip the application of the op
+      // and assume that the result will be the 'new' root element provided to
+      // us by the builder.
+      const rootAfter = operation.length > 1 ? applyOpComponent(rootBefore, op) : rootElements.new
+
+      const roots = { before: rootBefore, after: rootAfter }
+      const applyChange = selectTreeTransform(op)
+
+      return {
+        elementTree: applyChange(acc.elementTree, descriptors, roots, op.p),
+        rootBefore: rootAfter,
+      }
+    },
+    { elementTree, rootBefore: rootElements.old },
+  )
+
+  return result.elementTree
 }

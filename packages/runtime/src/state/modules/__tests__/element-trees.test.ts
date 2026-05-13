@@ -3,6 +3,8 @@ import * as Fixtures from './fixtures/element-trees'
 import {
   ELEMENT_TREE_DEMO_COMPONENT_TYPE,
   ElementTreesDemo,
+  SLOT_DEMO_COMPONENT_TYPE,
+  SlotDemo,
 } from './fixtures/element-trees-demo-component'
 
 import { createReactRuntime } from '../../../runtimes/react/testing/react-runtime'
@@ -183,5 +185,63 @@ describe('resetting an element tree', () => {
     // they should share no common keys
     expect(initialElementKeys.some(key => elementKeysAfterReset.includes(key))).toBe(false)
     expect(elementKeysAfterReset.some(key => initialElementKeys.includes(key))).toBe(false)
+  })
+})
+
+describe('applyChanges', () => {
+  const runtime = createReactRuntime()
+  runtime.registerComponent(SlotDemo, {
+    type: SLOT_DEMO_COMPONENT_TYPE,
+    label: 'Slot Demo',
+    props: {
+      children: Slot(),
+    },
+  })
+
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
+  test('handle element reparenting op', () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(jest.fn())
+
+    const descriptors = getPropControllerDescriptors(runtime.protoStore.getState())
+    const documentKey = '11111111-1111-1111-111111111111'
+
+    const oldDocument = {
+      key: documentKey,
+      rootElement: Fixtures.reparentingElementTree.before,
+    }
+
+    const initialState = ElementTrees.reducer(
+      ElementTrees.getInitialState(),
+      createElementTree({
+        document: oldDocument,
+        descriptors,
+      }),
+    )
+
+    const newDocument = {
+      key: documentKey,
+      rootElement: Fixtures.reparentingElementTree.after,
+    }
+
+    const reparentOp = Fixtures.reparentingElementTree.op
+
+    const updatedState = ElementTrees.reducer(
+      initialState,
+      changeElementTree({
+        oldDocument,
+        newDocument,
+        descriptors,
+        operation: reparentOp,
+      }),
+    )
+
+    expect(consoleError).not.toHaveBeenCalled()
+
+    const elements = ElementTrees.getElements(updatedState, documentKey)
+    const rootKey = Fixtures.reparentingElementTree.before.key
+    expect(elements.get(rootKey)).toEqual(Fixtures.reparentingElementTree.after)
   })
 })

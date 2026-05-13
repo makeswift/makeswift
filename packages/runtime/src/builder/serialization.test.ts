@@ -1,16 +1,25 @@
+import { type DeserializationPlugin, Checkbox, Number, Select } from '@makeswift/controls'
 import { Grid, Image, Width } from '@makeswift/prop-controllers'
+
 import {
   serializeControls,
   deserializeControls,
-  isSerializedControl,
   serializeControl,
   deserializeControl,
-  SerializedListControl,
-  SerializedTypeaheadControl,
-} from './control-serialization'
-import { Checkbox, Number, Select } from '@makeswift/controls'
-import type { DeserializationPlugin } from '@makeswift/controls'
-import { DELETED_PROP_CONTROLLER_TYPES, ListValue, TypeaheadValue } from '../../prop-controllers/deleted'
+} from './serialization'
+
+import { isSerializedRecord } from '../controls/serialization'
+
+import {
+  type SerializedListControl,
+  type SerializedTypeaheadControl,
+} from '../prop-controllers/serialization'
+
+import {
+  DELETED_PROP_CONTROLLER_TYPES,
+  ListValue,
+  TypeaheadValue,
+} from '../prop-controllers/deleted'
 
 describe('deserializeControls', () => {
   test('deserializes record of serialized controls', () => {
@@ -63,12 +72,12 @@ describe('deserializeControls', () => {
   })
 })
 
-describe('isSerializedControl', () => {
+describe('isSerializedRecord', () => {
   test.each([serializeControl(Grid()), serializeControl(Width()), serializeControl(Image())])(
     `returns true for serialized prop-controllers: %p`,
     value => {
       // Assert
-      expect(isSerializedControl(value)).toBe(true)
+      expect(isSerializedRecord(value)).toBe(true)
     },
   )
 
@@ -78,21 +87,27 @@ describe('isSerializedControl', () => {
     serializeControl(Select({ label: 'Select', options: [{ value: 'red', label: 'Red' }] })),
   ])(`returns true for serialized controls: %p`, value => {
     // Assert
-    expect(isSerializedControl(value)).toBe(true)
+    expect(isSerializedRecord(value)).toBe(true)
   })
 
   test.each(['string', 1, true, null, undefined, { key: 'value' }, [{ key: 'value' }]])(
     'returns false for invalid serialized data: %p',
     value => {
       // Assert
-      expect(isSerializedControl(value)).toBe(false)
+      expect(isSerializedRecord(value)).toBe(false)
     },
   )
 })
 
-const messagePortToNoopAsyncFunction: DeserializationPlugin<unknown, (...args: unknown[]) => Promise<unknown>> = {
+const messagePortToNoopAsyncFunction: DeserializationPlugin<
+  unknown,
+  (...args: unknown[]) => Promise<unknown>
+> = {
   match: (value: unknown) =>
-    typeof value === 'object' && value !== null && (value as { __serializedType?: string }).__serializedType === 'MessagePort',
+    typeof value === 'object' &&
+    value !== null &&
+    '__serializedType' in value &&
+    value.__serializedType === 'MessagePort',
   deserialize: () => async (): Promise<undefined> => undefined,
 }
 
@@ -106,9 +121,12 @@ describe('deserializeControl with plugins (legacy List and Typeahead)', () => {
       },
     }
 
-    const deserialized = deserializeControl(serializedList as unknown as SerializedListControl<ListValue>, {
-      plugins: [messagePortToNoopAsyncFunction],
-    }) as { type: string; options: { getItemLabel?: (...args: unknown[]) => Promise<unknown> } }
+    const deserialized = deserializeControl(
+      serializedList as unknown as SerializedListControl<ListValue>,
+      {
+        plugins: [messagePortToNoopAsyncFunction],
+      },
+    ) as { type: string; options: { getItemLabel?: (...args: unknown[]) => Promise<unknown> } }
 
     expect(deserialized.type).toBe(DELETED_PROP_CONTROLLER_TYPES.List)
     expect(typeof deserialized.options.getItemLabel).toBe('function')
@@ -123,9 +141,12 @@ describe('deserializeControl with plugins (legacy List and Typeahead)', () => {
       },
     }
 
-    const deserialized = deserializeControl(serializedTypeahead as unknown as SerializedTypeaheadControl<TypeaheadValue>, {
-      plugins: [messagePortToNoopAsyncFunction],
-    }) as { type: string; options: { getItems?: (query: string) => Promise<unknown> } }
+    const deserialized = deserializeControl(
+      serializedTypeahead as unknown as SerializedTypeaheadControl<TypeaheadValue>,
+      {
+        plugins: [messagePortToNoopAsyncFunction],
+      },
+    ) as { type: string; options: { getItems?: (query: string) => Promise<unknown> } }
 
     expect(deserialized.type).toBe(DELETED_PROP_CONTROLLER_TYPES.Typeahead)
     expect(typeof deserialized.options.getItems).toBe('function')

@@ -10,3 +10,9 @@ export function ElementTreesDemo({ left, right }: { left: ReactNode; right: Reac
     </div>
   )
 }
+
+export const SLOT_DEMO_COMPONENT_TYPE = 'SlotDemo'
+
+export function SlotDemo({ children }: { children: ReactNode }) {
+  return <div>{children}</div>
+}
