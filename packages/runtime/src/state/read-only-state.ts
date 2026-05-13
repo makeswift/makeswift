@@ -223,8 +223,20 @@ export function getBuilderEditMode(state: State): BuilderEditMode.State {
   return state.builderEditMode
 }
 
-export function getBreakpoints(state: State): Breakpoints.State {
+function getBreakpointsStateSlice(state: State): Breakpoints.State {
   return state.breakpoints
+}
+
+export function getBreakpoints(state: State): Breakpoints.Breakpoints {
+  return getBreakpointsStateSlice(state).breakpoints
+}
+
+export function getBaseBreakpoint(state: State): Breakpoints.BreakpointId {
+  return getBreakpointsStateSlice(state).baseBreakpoint
+}
+
+export function getClientBreakpoint(state: State): Breakpoints.BreakpointId {
+  return getBreakpointsStateSlice(state).clientBreakpoint
 }
 
 export function getLocale(state: State): string | null {

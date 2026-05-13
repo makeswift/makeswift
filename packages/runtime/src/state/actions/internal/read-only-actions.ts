@@ -35,6 +35,8 @@ export const ReadOnlyActionTypes = {
   REGISTER_REACT_COMPONENT: 'REGISTER_REACT_COMPONENT',
   UNREGISTER_REACT_COMPONENT: 'UNREGISTER_REACT_COMPONENT',
 
+  UPDATE_CLIENT_BREAKPOINT: 'UPDATE_CLIENT_BREAKPOINT',
+
   SET_IS_IN_BUILDER: 'SET_IS_IN_BUILDER',
   SET_IS_READ_ONLY: 'SET_IS_READ_ONLY',
 } as const
@@ -117,6 +119,10 @@ type UnregisterReactComponentAction = {
   payload: { type: string }
 }
 
+type UpdateClientBreakpointAction = {
+  type: typeof ReadOnlyActionTypes.UPDATE_CLIENT_BREAKPOINT
+}
+
 type SetIsInBuilderAction = {
   type: typeof ReadOnlyActionTypes.SET_IS_IN_BUILDER
   payload: boolean
@@ -141,6 +147,7 @@ export type ReadOnlyAction =
   | UnregisterPropControllersAction
   | RegisterReactComponentAction
   | UnregisterReactComponentAction
+  | UpdateClientBreakpointAction
   | SetIsInBuilderAction
   | SetIsReadOnlyAction
 
@@ -299,6 +306,10 @@ export function registerReactComponentEffect(
       dispatch(unregisterReactComponent(type))
     }
   }
+}
+
+export function updateClientBreakpoint(): UpdateClientBreakpointAction {
+  return { type: ReadOnlyActionTypes.UPDATE_CLIENT_BREAKPOINT }
 }
 
 export function setIsInBuilder(isInBuilder: boolean): SetIsInBuilderAction {
