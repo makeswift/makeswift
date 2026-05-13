@@ -116,7 +116,9 @@ export class RuntimeCore {
       return
     }
 
-    this.activeStores.retain(key, store)
+    if (this.activeStores.retain(key, store)) {
+      store.startBreakpointWatch()
+    }
   }
 
   releaseStore({ siteVersion, locale }: StoreKey, store: Store): void {
@@ -127,7 +129,9 @@ export class RuntimeCore {
       return
     }
 
-    this.activeStores.release(key, store)
+    if (this.activeStores.release(key, store)) {
+      store.stopBreakpointWatch()
+    }
   }
 
   copyElementTree(

@@ -1,7 +1,15 @@
-import { type Breakpoint, type Breakpoints } from '@makeswift/controls'
+import {
+  type Breakpoint,
+  type BreakpointId,
+  type Breakpoints,
+  getBaseBreakpoint,
+  getBreakpointMediaQuery,
+} from '@makeswift/controls'
 
 import { type Action, type UnknownAction, isKnownAction } from '../actions'
+import { InternalActionTypes } from '../actions/internal'
 import { BuilderActionTypes } from '../builder-api/actions'
+import { isServer } from '../../utils/is-server'
 
 export {
   getBreakpoint,
@@ -10,7 +18,11 @@ export {
   type Breakpoints,
 } from '@makeswift/controls'
 
-export type State = Breakpoints
+export type State = {
+  breakpoints: Breakpoints
+  baseBreakpoint: BreakpointId
+  clientBreakpoint: BreakpointId
+}
 
 export const DefaultBreakpointID = {
   Desktop: 'desktop',
@@ -41,8 +53,33 @@ export const DEFAULT_BREAKPOINTS: Breakpoints = [
   },
 ]
 
+export const getDeviceQueries = (breakpoints: Breakpoints) =>
+  breakpoints.map(device => ({
+    id: device.id,
+    query: getBreakpointMediaQuery(device).replace('@media', ''),
+  }))
+
+const getBaseBreakpointId = (breakpoints: Breakpoints): BreakpointId =>
+  getBaseBreakpoint(breakpoints).id
+
+export function getMatchingMediaBreakpointId(breakpoints: Breakpoints): BreakpointId {
+  const baseBreakpoint = getBaseBreakpointId(breakpoints)
+  if (isServer()) return baseBreakpoint
+
+  // using `findLast` to preserve the legacy behavior; might not be necessary
+  const matchingBreakpoint = getDeviceQueries(breakpoints).findLast(
+    ({ query }) => window.matchMedia(query).matches,
+  )
+
+  return matchingBreakpoint?.id ?? baseBreakpoint
+}
+
 export function getInitialState(breakpoints = DEFAULT_BREAKPOINTS): State {
-  return breakpoints
+  return {
+    breakpoints,
+    baseBreakpoint: getBaseBreakpointId(breakpoints),
+    clientBreakpoint: getMatchingMediaBreakpointId(breakpoints),
+  }
 }
 
 export function reducer(state: State = getInitialState(), action: Action | UnknownAction): State {
@@ -54,7 +91,18 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
 
       if (breakpoints.length === 0) throw new Error('Breakpoints cannot be empty.')
 
-      return breakpoints
+      return {
+        breakpoints,
+        baseBreakpoint: getBaseBreakpointId(breakpoints),
+        clientBreakpoint: getMatchingMediaBreakpointId(breakpoints),
+      }
+    }
+
+    case InternalActionTypes.UPDATE_CLIENT_BREAKPOINT: {
+      const clientBreakpoint = getMatchingMediaBreakpointId(state.breakpoints)
+      if (clientBreakpoint === state.clientBreakpoint) return state
+
+      return { ...state, clientBreakpoint }
     }
 
     default:
