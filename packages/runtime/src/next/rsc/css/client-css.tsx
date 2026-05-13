@@ -27,7 +27,7 @@ export function ClientCSSProvider({ children }: { children: ReactNode }) {
       const elementKey = styleElement.getAttribute('data-makeswift-rsc-element-key')
       const propName = styleElement.getAttribute('data-makeswift-rsc-prop-name')
       if (elementKey == null || propName == null) {
-        // TODO ?
+        // TODO
         console.error('[ClientCSSProvider] TODO address null elementKey or propName')
         continue
       }

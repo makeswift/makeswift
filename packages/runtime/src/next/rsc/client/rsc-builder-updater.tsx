@@ -25,7 +25,7 @@ export function RSCBuilderUpdater({ initialElementData, children }: RSCBuilderUp
   const elementKey = initialElementData.key
   const prevPropsRef = useRef(initialElementData.props)
   const [, definitions] = useControlDefs(initialElementData.type)
-  usePollStyledElementBoxModels(initialElementData)
+  usePollStyledElementBoxModels(elementKey)
 
   const element = useSelector(state => {
     if (documentKey == null) return null

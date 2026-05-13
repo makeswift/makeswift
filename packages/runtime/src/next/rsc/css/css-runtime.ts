@@ -1,5 +1,5 @@
 import type { CSSObject } from '@emotion/serialize'
-import { type Breakpoints, type Stylesheet, type ResolvedStyle } from '@makeswift/controls'
+import { type Breakpoints, type Stylesheet, type ResolvedStyle, BoxDisplayModel } from '@makeswift/controls'
 import { resolvedStyleToCss } from '../../../runtimes/react/resolve-style'
 
 function cssObjectToString(cssObject: CSSObject, className: string): string {
@@ -50,19 +50,22 @@ function kebabCase(str: string): string {
   return str.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`)
 }
 
-function generateClassName(elementKey?: string, propName?: string, counter?: number): string {
-  const parts = ['makeswift-rsc']
-  if (elementKey) parts.push(elementKey)
-  if (propName) parts.push(propName)
+// TODO look into shortening
+// TODO break this up in a way that some construction logic can be shared with client-css for polling box models
+export function generateClassName(elementKey?: string, propName?: string, counter?: number): string {
+  const parts = ['makeswift-styled-element']
+  if (elementKey) parts.push(`-key-${elementKey}`)
+  if (propName) parts.push(`-prop-name-${propName}`)
   if (counter !== undefined) parts.push(counter.toString())
   return parts.join('-')
 }
 
-type OnStyleGenerated = (
+export type OnStyleGenerated = (
   className: string,
   css: string,
   elementKey?: string,
   propName?: string,
+  onBoxModelChange?: (boxModel: BoxDisplayModel | null) => void,
 ) => void
 
 // Unified stylesheet engine that handles both server and client modes
@@ -80,13 +83,13 @@ export class StylesheetEngine implements Stylesheet {
     return this.breakpointsData
   }
 
-  defineStyle(style: ResolvedStyle): string {
+  defineStyle(style: ResolvedStyle, onBoxModelChange?: (boxModel: BoxDisplayModel | null) => void): string {
     const className = generateClassName(this.elementKey, this.basePropName, ++this.styleCounter)
 
     const cssObject = resolvedStyleToCss(this.breakpointsData, style)
     const cssString = cssObjectToString(cssObject, className)
 
-    this.onStyleGenerated?.(className, cssString, this.elementKey, this.basePropName)
+    this.onStyleGenerated?.(className, cssString, this.elementKey, this.basePropName, onBoxModelChange)
 
     return className
   }

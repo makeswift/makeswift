@@ -28,7 +28,9 @@ export function useControlDefs(
 export function ResolveProps({ element, children: renderComponent }: PropsValueProps): ReactNode {
   const [legacyDescriptors, definitions] = useControlDefs(element.type)
 
-  const resolvedProps = useResolvedProps(definitions, element.props, element.key)
+  const { props: resolvedProps, emitted } = useResolvedProps(definitions, element.props, element.key)
+
+  emitted.styles.usePollStyledElementBoxModels()
 
   const renderFn = Object.entries(legacyDescriptors).reduceRight(
     (renderFn, [propName, descriptor]) =>
@@ -37,5 +39,10 @@ export function ResolveProps({ element, children: renderComponent }: PropsValueP
     renderComponent,
   )
 
-  return renderFn(resolvedProps)
+  return (
+    <>
+      {renderFn(resolvedProps)}
+      {emitted.styles.renderStyles()}
+    </>
+  )
 }

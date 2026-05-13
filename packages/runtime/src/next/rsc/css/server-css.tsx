@@ -3,20 +3,11 @@ import { cache } from 'react'
 import { type Breakpoints, type Stylesheet } from '@makeswift/controls'
 import { StylesheetEngine } from './css-runtime'
 
-type StyleData = {
+export type StyleData = {
   css: string
   propName: string | undefined
-  key: string
 }
 
-
-/*
-  Current spike considerations:
-  - we probably want `updateStyle` in `client-css.tsx` to be as simple as possible. This means it should able to replace <style> textContent with a newly
-  resolved value, rather than concatenating a series of styles. This is what drove having one <style> per prop
-  - while classname currently includes both the element key and the prop name, I'm not using className as a way for the client to
-    identify <style> tags because we're probably going to encode/shorten className in the future
-*/
 export class ServerCSSCollector {
   /*
     Maps an element key to a mapping of className to StyleData
@@ -30,7 +21,6 @@ export class ServerCSSCollector {
     stylesMap.set(className, {
       css,
       propName,
-      key: `${elementKey}:${propName}`
     })
     this.elementToStylesMap.set(elementKey, stylesMap)
   }
@@ -55,13 +45,15 @@ export function createCollectingServerStylesheet(
   })
 }
 
+// TODO export pieces of this to be used by 
 export function ElementCSSInjector({ elementKey }: { elementKey: string }) {
   const collector = getCSSCollector()
   const classnameToStylesMap = collector.getStylesMapForElement(elementKey)
 
-  const styleTags = Array.from(classnameToStylesMap?.entries() ?? []).map(([_, perClassnameData]) => (
+  // Note to self: different from client component <style> tags in that these need to be able to be queried so that their content can be updated
+  const styleTags = Array.from(classnameToStylesMap?.entries() ?? []).map(([className, perClassnameData]) => (
     <style
-      key={perClassnameData.key}
+      key={className}
       data-makeswift-rsc-element-key={elementKey}
       data-makeswift-rsc-prop-name={perClassnameData.propName}
     >
