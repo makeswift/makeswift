@@ -173,11 +173,13 @@ export function configureReadWriteStore({
   appOrigin,
   hostApiClient,
   preloadedState,
+  forwardClientLogs = true,
 }: {
   name: string
   appOrigin: string
   hostApiClient: MakeswiftHostApiClient
   preloadedState: Partial<State>
+  forwardClientLogs?: boolean
 }) {
   const readWriteMiddlewareRef: ReadWriteMiddlewareRef = {
     current: null,
@@ -202,6 +204,7 @@ export function configureReadWriteStore({
       // the setup to avoid race conditions when `setup` is called concurrently
       // in two different page regions
       const { BuilderAPIProxy } = await import('./builder-api/proxy')
+      const { setupClientLogCapture } = await import('./builder-api/client-log-relay')
       const { createRootReducer, setupBuilderProxy } = await import('./read-write-state')
       const { createReadWriteMiddleware } = await import('./middleware/read-write')
 
@@ -220,10 +223,14 @@ export function configureReadWriteStore({
 
       const dispatch = store.dispatch as ReadWriteDispatch
       const builderProxyCleanup = dispatch(setupBuilderProxy(builderProxy))
+      const clientLogCleanup = forwardClientLogs
+        ? setupClientLogCapture({ appOrigin })
+        : () => {}
 
       readWriteCleanup = () => {
         readWriteMiddlewareRef.current = null
         builderProxyCleanup()
+        clientLogCleanup()
       }
     })()
 

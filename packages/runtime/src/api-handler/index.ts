@@ -9,6 +9,7 @@ import { type ReactRuntimeCore } from '../runtimes/react/react-runtime-core'
 import { redirectLiveHandler } from './handlers/redirect-live'
 import { elementTreeHandler } from './handlers/element-tree'
 import { fontsHandler, type Font, type GetFonts } from './handlers/fonts'
+import { logsStreamHandler } from './handlers/logs'
 import { manifestHandler, type Manifest } from './handlers/manifest'
 import { mergeTranslatedDataHandler } from './handlers/merge-translated-data'
 import { revalidateHandler } from './handlers/revalidate'
@@ -81,6 +82,12 @@ export function createApiHandler(
   }
 
   return async function (req: ApiRequest, route: string): Promise<ResponseType> {
+    // The SSE log stream owns its own response lifecycle (long-lived
+    // ReadableStream) and must not be passed through `applyCorsHeaders`,
+    // which would duplicate `Access-Control-*` headers and could conflict
+    // with the streaming `Cache-Control` directives.
+    if (route === '/logs') return logsStreamHandler(req, runtime.appOrigin)
+
     const res =
       req.method.toUpperCase() !== 'OPTIONS'
         ? await apiRouteHandler(req, route)
