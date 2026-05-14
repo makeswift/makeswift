@@ -26,6 +26,12 @@ importers:
 
   apps/next-rsc:
     dependencies:
+      '@makeswift/controls':
+        specifier: workspace:^
+        version: link:../../packages/controls
+      '@makeswift/prop-controllers':
+        specifier: workspace:^
+        version: link:../../packages/prop-controllers
       '@makeswift/runtime':
         specifier: workspace:^
         version: link:../../packages/runtime
