@@ -1,4 +1,4 @@
-import { Ref, forwardRef, memo, ReactNode } from 'react'
+import { Ref, forwardRef, memo, ReactNode, useCallback } from 'react'
 
 import { ElementData as ReactPageElementData } from '../../../state/read-only-state'
 import { useBuiltinSuspense } from '../hooks/use-builtin-suspense'
@@ -24,16 +24,20 @@ export const ElementData = memo(
 
     const forwardRef = canAcceptRef(Component)
 
+    const renderChildren = useCallback((props: Record<string, unknown>) => {
+      return (
+        forwardRef ? (
+          <Component {...props} key={elementData.key} ref={ref} />
+        ) : (
+          <Component {...props} key={elementData.key} />
+        )
+      )
+    }, [forwardRef, elementData.key, ref, Component])
+
     return (
       <ActivityOrFallback suspenseFallback={builtinSuspense}>
         <ResolveProps element={elementData}>
-          {props =>
-            forwardRef ? (
-              <Component {...props} key={elementData.key} ref={ref} />
-            ) : (
-              <Component {...props} key={elementData.key} />
-            )
-          }
+          {renderChildren}
         </ResolveProps>
       </ActivityOrFallback>
     )
