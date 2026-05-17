@@ -24,8 +24,10 @@ function useElementOnScreen(
 
   const setElement = useCallback((element: HTMLElement | null) => {
     if (element != null) {
-      const observer = new IntersectionObserver(([entry]) => {
-        if (entry?.isIntersecting) setIsVisible(true)
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry?.isIntersecting) setIsVisible(true)
+        })
       }, options)
 
       observer.observe(element)
@@ -130,8 +132,8 @@ export function useBoxAnimation(
 ): [string, () => void, (element: HTMLElement | null) => void] {
   const [isVisible, setElement] = useElementOnScreen({
     root: null,
-    rootMargin: `0px 0px -10% 0px`,
-    threshold: 0.2,
+    rootMargin: `0px 0px -20% 0px`,
+    threshold: 0,
   })
   const animationType = useMediaQuery(responsiveAnimationType) || DEFAULT_BOX_ANIMATE_TYPE
   const itemAnimationType = useMediaQuery(itemResponsiveAnimationType) || DEFAULT_ITEM_ANIMATE_TYPE
