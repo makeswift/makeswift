@@ -5,7 +5,7 @@ import { useDocumentKey } from "./use-document-context";
 import { pollBoxModel } from "../poll-box-model";
 
 
-export function usePollStyledElementBoxModels(elementKey: string) {
+export function usePollRSCStyledElementBoxModels(elementKey: string) {
   const documentKey = useDocumentKey()
 
     /*
@@ -45,13 +45,43 @@ export function usePollStyledElementBoxModels(elementKey: string) {
         continue
       }
 
-      // TODO use helper for building the classname, be careful (considerations about if we encode the generated stable classnames)
-      const styledElement = document.querySelector(
-        `[class*="makeswift-styled-element--key-${elementKey}--prop-name-${propName}"]`,
+      /*
+        Note to self:
+        What's happening below is we're finding the <style> tag in order to be able to pull the class name from,
+        so that we can find the styled element itself.
+
+        This is in contrast to what I had before, which was trying to rebuild the class name here based on the element key and prop
+        name and ____. The latter is undesirable because it requires having the same class name construction logic in both places.
+        And the class name construction logic is about to become more complicated as we start thinking about encoding + _____.
+
+        This still feels bad. I don't know how this is going to work (or not) when we're dealing with nested controls?
+        If we have two Group's that each have a 'myClassname' prop, how are they distinguishable with this logic?
+      */
+
+      // TODO helper for building parts of this?
+      const stylesTagForElement = document.querySelectorAll<HTMLStyleElement>(
+        `style[data-makeswift-rsc-element-key="${elementKey}"][data-makeswift-rsc-prop-name="${propName}"]`
       )
+      if (stylesTagForElement.length === 0) {
+        console.warn(`No <style> tag found for element ${elementKey} and prop ${propName}`)
+        continue
+      }
+      if (stylesTagForElement.length > 1) {
+        // TODO I think this case is currently possible for Group-nested styled props
+        console.error(`Expected to find at most one <style> tag for element ${elementKey} and prop ${propName}`)
+        continue
+      }
+      const styleTagForElement = stylesTagForElement[0]
+      const className = styleTagForElement.getAttribute('data-makeswift-rsc-classname')
+      if (className == null) {
+        console.error(`No class name found for style tag for element ${elementKey} and prop ${propName}`)
+        continue
+      }
+
+      const styledElement = document.querySelector(`.${className}`)
 
       if (styledElement == null) {
-        console.warn(`[RSC] No styled element found for prop ${propName} on element ${elementKey}`)
+        console.warn(`No styled element found for prop ${propName} on element ${elementKey}`)
         continue
       }
 

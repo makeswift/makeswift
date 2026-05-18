@@ -45,7 +45,6 @@ export function createCollectingServerStylesheet(
   })
 }
 
-// TODO export pieces of this to be used by 
 export function ElementCSSInjector({ elementKey }: { elementKey: string }) {
   const collector = getCSSCollector()
   const classnameToStylesMap = collector.getStylesMapForElement(elementKey)
@@ -56,6 +55,7 @@ export function ElementCSSInjector({ elementKey }: { elementKey: string }) {
       key={className}
       data-makeswift-rsc-element-key={elementKey}
       data-makeswift-rsc-prop-name={perClassnameData.propName}
+      data-makeswift-rsc-classname={className}
     >
         {perClassnameData.css}
     </style>

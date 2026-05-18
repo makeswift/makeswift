@@ -9,7 +9,7 @@ import { useResourceResolver } from '../../../runtimes/react/hooks/use-resource-
 import { getElement } from '../../../state/read-only-state'
 import { StylesheetEngine } from '../css/css-runtime'
 import { useClientCSS } from '../css/client-css'
-import { usePollStyledElementBoxModels } from '../../../runtimes/react/hooks/use-poll-styled-element-box-models'
+import { usePollRSCStyledElementBoxModels } from '../../../runtimes/react/hooks/use-poll-styled-element-box-models'
 
 type RSCBuilderUpdaterProps = {
   initialElementData: ElementData
@@ -25,7 +25,7 @@ export function RSCBuilderUpdater({ initialElementData, children }: RSCBuilderUp
   const elementKey = initialElementData.key
   const prevPropsRef = useRef(initialElementData.props)
   const [, definitions] = useControlDefs(initialElementData.type)
-  usePollStyledElementBoxModels(elementKey)
+  usePollRSCStyledElementBoxModels(elementKey)
 
   const element = useSelector(state => {
     if (documentKey == null) return null

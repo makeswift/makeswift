@@ -1,6 +1,7 @@
 import type { CSSObject } from '@emotion/serialize'
 import { type Breakpoints, type Stylesheet, type ResolvedStyle, BoxDisplayModel } from '@makeswift/controls'
 import { resolvedStyleToCss } from '../../../runtimes/react/resolve-style'
+import { murmur3 } from 'murmurhash-js'
 
 function cssObjectToString(cssObject: CSSObject, className: string): string {
   const cssRules: string[] = []
@@ -50,14 +51,14 @@ function kebabCase(str: string): string {
   return str.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`)
 }
 
-// TODO look into shortening
-// TODO break this up in a way that some construction logic can be shared with client-css for polling box models
 export function generateClassName(elementKey?: string, propName?: string, counter?: number): string {
-  const parts = ['makeswift-styled-element']
-  if (elementKey) parts.push(`-key-${elementKey}`)
-  if (propName) parts.push(`-prop-name-${propName}`)
-  if (counter !== undefined) parts.push(counter.toString())
-  return parts.join('-')
+  // const parts = ['makeswift-styled-element']
+  // if (elementKey) parts.push(`-key-${elementKey}`)
+  // if (propName) parts.push(`-prop-name-${propName}`)
+  // if (counter !== undefined) parts.push(counter.toString())
+  // return parts.join('-')
+
+  return `ms-${murmur3(`${elementKey}-${propName}-${counter}`).toString(32)}`
 }
 
 export type OnStyleGenerated = (
