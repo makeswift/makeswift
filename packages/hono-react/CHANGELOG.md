@@ -1,5 +1,12 @@
 # @makeswift/hono-react
 
+## 0.1.7
+
+### Patch Changes
+
+- Updated dependencies [6b0fc71]
+  - @makeswift/runtime@0.28.5
+
 ## 0.1.6
 
 ### Patch Changes

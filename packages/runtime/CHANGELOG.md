@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.5
+
+### Patch Changes
+
+- 6b0fc71: Improve Safari rendering performance (`window.matchMedia` refactoring)
+
 ## 0.28.4
 
 ### Patch Changes
