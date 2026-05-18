@@ -52,7 +52,7 @@ describe('RefCountedMap', () => {
     const key = 'whiskers'
 
     const whiskers = map.getOrCreate(key, () => ({ name: 'Whiskers' }))
-    map.retain(key, whiskers)
+    expect(map.retain(key, whiskers)).toBe(true)
 
     jest.advanceTimersByTime(101)
 
@@ -64,16 +64,16 @@ describe('RefCountedMap', () => {
 
     // returns the existing instance of 'whiskers' entry
     const whiskers2 = map.getOrCreate(key, () => ({ name: 'Whiskers' }))
-    map.retain(key, whiskers)
+    expect(map.retain(key, whiskers)).toBe(false)
     expect(whiskers2).toBe(whiskers)
 
     // 'whiskers' should still be in the map
-    map.release(key, whiskers)
+    expect(map.release(key, whiskers)).toBe(false)
     expect(map.get(key)).toBe(whiskers)
     expect(map.size).toBe(2)
 
     // this should remove 'whiskers' from the map
-    map.release(key, whiskers)
+    expect(map.release(key, whiskers)).toBe(true)
     expect(map.get(key)).toBeUndefined()
     expect(map.size).toBe(1)
   })
@@ -92,14 +92,14 @@ describe('RefCountedMap', () => {
     map.getOrCreate('mittens', () => ({ name: 'Mittens' }))
     expect(map.get(key)).toBeUndefined()
 
-    map.retain(key, whiskers)
+    expect(map.retain(key, whiskers)).toBe(true)
 
     // 'whiskers' entry should be added back to the map
     expect(map.get(key)).toBe(whiskers)
     expect(map.size).toBe(2)
 
     // ... and cleaned up properly on release
-    map.release(key, whiskers)
+    expect(map.release(key, whiskers)).toBe(true)
     expect(map.get(key)).toBeUndefined()
     expect(map.size).toBe(1)
   })
@@ -120,11 +120,11 @@ describe('RefCountedMap', () => {
     expect(map.get(key)).toBe(otherWhiskers)
 
     // should have no effect
-    map.retain(key, whiskers)
+    expect(map.retain(key, whiskers)).toBe(false)
 
     jest.advanceTimersByTime(101)
     // should have no effect, trigger 'otherWhiskers' eviction
-    map.retain(key, whiskers)
+    expect(map.retain(key, whiskers)).toBe(false)
     expect(map.get(key)).toBeUndefined()
     expect(map.size).toBe(0)
   })
@@ -144,7 +144,7 @@ describe('RefCountedMap', () => {
       expect(map.get(key)).toBeUndefined()
 
       // should have no effect
-      map.release(key, whiskers)
+      expect(map.release(key, whiskers)).toBe(false)
       expect(map.get(key)).toBeUndefined()
       expect(map.size).toBe(1)
     })
@@ -158,7 +158,7 @@ describe('RefCountedMap', () => {
       expect(map.size).toBe(1)
 
       // should have no effect
-      map.release(key, whiskers)
+      expect(map.release(key, whiskers)).toBe(false)
       expect(map.get(key)).toBe(whiskers)
       expect(map.size).toBe(1)
     })
@@ -180,7 +180,7 @@ describe('RefCountedMap', () => {
       expect(map.get(key)).toBe(otherWhiskers)
 
       // should have no effect
-      map.release(key, whiskers)
+      expect(map.release(key, whiskers)).toBe(false)
       expect(map.get(key)).toBe(otherWhiskers)
     })
   })

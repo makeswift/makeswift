@@ -65,38 +65,51 @@ export class RefCountedMap<K, V> {
     }
   }
 
-  retain(key: K, value: V): void {
+  /**
+   * Returns true on transition from unowned to owned
+   */
+  retain(key: K, value: V): boolean {
     try {
       const existing = this.map.get(key)
 
+      if (existing == null) {
+        this.map.set(key, { value, count: 1 })
+        return true
+      }
+
       // `retain` might be called on a unowned entry that has already been evicted from the map due to TTL expiration
       // *and* possibly replaced by a new unowned entry with the same key; handle this gracefully
-      if (existing != null) {
-        if (existing.value !== value) return
+      if (existing.value === value) {
         existing.count = (existing.count ?? 0) + 1
-      } else {
-        this.map.set(key, { value, count: 1 })
+        return existing.count === 1
       }
+
+      return false
     } finally {
       if (this.ttlCheck & TTLCheck.ON_RETAIN) this.removeExpired()
     }
   }
 
-  release(key: K, value: V): void {
+  /**
+   * Returns true on transition from owned to unowned
+   */
+  release(key: K, value: V): boolean {
     try {
       const existing = this.map.get(key)
 
       // `release` might be called on an entry that remained unowned due being superseded by a new entry with the same
       // key after TTL expiration of the original entry; handle this gracefully
-      if (existing == null) return
-      if (isUnowned(existing)) return
-      if (existing.value !== value) return
+      if (existing == null) return false
+      if (isUnowned(existing)) return false
+      if (existing.value !== value) return false
 
-      if (existing.count > 1) {
-        existing.count -= 1
-      } else {
+      if (existing.count === 1) {
         this.map.delete(key)
+        return true
       }
+
+      existing.count -= 1
+      return false
     } finally {
       if (this.ttlCheck & TTLCheck.ON_RELEASE) this.removeExpired()
     }

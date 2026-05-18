@@ -1,18 +1,12 @@
 # @makeswift/prop-controllers
 
-## 0.4.12-canary.1
-
-### Patch Changes
-
-- Updated dependencies [22fb10f]
-  - @makeswift/controls@0.1.18-canary.1
-
-## 0.4.12-canary.0
+## 0.4.12
 
 ### Patch Changes
 
 - Updated dependencies [e036d1a]
-  - @makeswift/controls@0.1.18-canary.0
+- Updated dependencies [22fb10f]
+  - @makeswift/controls@0.1.18
 
 ## 0.4.11
 

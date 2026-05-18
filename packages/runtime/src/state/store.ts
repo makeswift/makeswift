@@ -18,6 +18,7 @@ import * as Breakpoints from './modules/breakpoints'
 
 import { readOnlyElementTreeMiddleware } from './middleware/read-only-element-tree'
 import { makeswiftApiClientSyncMiddleware } from './middleware/makeswift-api-client-sync'
+import { type BreakpointWatch, breakpointWatchMixin } from './mixins/breakpoint-watch'
 
 import { type Action } from './actions'
 
@@ -73,7 +74,7 @@ export function configureProtoStore({
   breakpoints,
 }: {
   name: string
-  breakpoints: Breakpoints.State | undefined
+  breakpoints: Breakpoints.Breakpoints | undefined
 }) {
   return configureStore({
     name,
@@ -245,6 +246,14 @@ export function configureReadWriteStore({
 
     enhancers: () =>
       new Tuple(
+        withMixin<BreakpointWatch>(
+          breakpointWatchMixin({
+            dispatch: (...args: Parameters<Dispatch>) => store.dispatch(...args),
+            getState: (): State => store.getState(),
+            subscribe: (listener): VoidFunction => store.subscribe(listener),
+          }),
+        ),
+
         withMixin<ReadWriteStateMixin>({
           hostApiClient,
           loadReadWriteStateIfNeeded: async () => {

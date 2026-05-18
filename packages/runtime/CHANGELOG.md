@@ -1,46 +1,19 @@
 # @makeswift/runtime
 
-## 0.28.4-canary.5
-
-### Patch Changes
-
-- 22fb10f: Renamed `unstable_Code` to `Code` and `unstable_CodeDefinition` to `CodeDefinition`.
-- Updated dependencies [22fb10f]
-  - @makeswift/controls@0.1.18-canary.1
-  - @makeswift/prop-controllers@0.4.12-canary.1
-
-## 0.28.4-canary.4
+## 0.28.4
 
 ### Patch Changes
 
 - 7abc737: fix: `unstable_getComponentSnapshots` now treats bulk 404s as `null` documents instead of logging and throwing.
-
-## 0.28.4-canary.3
-
-### Patch Changes
-
-- e036d1a: Add `unstable_Code` control for authoring code snippets
-- Updated dependencies [e036d1a]
-  - @makeswift/controls@0.1.18-canary.0
-  - @makeswift/prop-controllers@0.4.12-canary.0
-
-## 0.28.4-canary.2
-
-### Patch Changes
-
-- c488efd: Restructure control serialization code, replace prop controllers' copy of the functions serialization with a newer version that includes a fix for stalled calls/memory leaks on repeated deserialization.
-
-## 0.28.4-canary.1
-
-### Patch Changes
-
 - 34bebe9: Fixes an issue where during updating the element tree cache, we use an element path that's only valid during an intermediate state to read into the final element tree.
-
-## 0.28.4-canary.0
-
-### Patch Changes
-
+- c488efd: Restructure control serialization code, replace prop controllers' copy of the functions serialization with a newer version that includes a fix for stalled calls/memory leaks on repeated deserialization.
+- e036d1a: Add `unstable_Code` control for authoring code snippets
+- 22fb10f: Renamed `unstable_Code` to `Code` and `unstable_CodeDefinition` to `CodeDefinition`.
 - 9a1a56d: Lazy load the builtin box component's video player to avoid automatically loading `react-player`
+- Updated dependencies [e036d1a]
+- Updated dependencies [22fb10f]
+  - @makeswift/controls@0.1.18
+  - @makeswift/prop-controllers@0.4.12
 
 ## 0.28.3
 
