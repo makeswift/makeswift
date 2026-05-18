@@ -2077,6 +2077,96 @@ exports[`copyElementTree creates a copy of the tree with no value replacements w
             },
             "type": "./components/Button/index.js",
           },
+          {
+            "key": "043cc49e-92ec-4f48-9706-409d7eb2c879",
+            "props": {
+              "brandColor": undefined,
+              "contrast": undefined,
+              "fields": {
+                "@@makeswift/type": "prop-controllers::table-form-fields::v1",
+                "value": {
+                  "fields": [
+                    {
+                      "id": "1e79bf60-24b7-468b-b9e7-b121777c96c0",
+                      "label": "Name",
+                      "required": true,
+                      "tableColumnId": "U2luZ2xlTGluZVRleHRUYWJsZUNvbHVtbjo2MDZhY2E0NC1iYmVjLTQ4NzMtYTdiOC1kYTEwZWNjZTQ4OTQ=",
+                    },
+                    {
+                      "id": "ab14c611-e2cc-421d-9f19-0f57a3395200",
+                      "label": "Description",
+                      "required": true,
+                      "tableColumnId": "TG9uZ1RleHRUYWJsZUNvbHVtbjpjYjMwOWMyMi04Njc3LTQ1OTctYTI2ZC1mZWY3NGU4MGY5YTM=",
+                    },
+                    {
+                      "id": "bfc7207a-38be-47f1-a2f9-3eba1cb79c85",
+                      "label": "Number",
+                      "required": true,
+                      "tableColumnId": "TnVtYmVyVGFibGVDb2x1bW46OGJiZDAzZmMtYmZlMi00OTEzLTlkMGItNWZhNDAzMzhlZTBh",
+                    },
+                  ],
+                  "grid": [
+                    {
+                      "deviceId": "desktop",
+                      "value": {
+                        "count": 12,
+                        "spans": [
+                          [
+                            12,
+                          ],
+                          [
+                            12,
+                          ],
+                          [
+                            12,
+                          ],
+                          [
+                            12,
+                          ],
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+              "gap": [
+                {
+                  "deviceId": "desktop",
+                  "value": {
+                    "unit": "px",
+                    "value": 10,
+                  },
+                },
+              ],
+              "id": undefined,
+              "labelTextColor": undefined,
+              "labelTextStyle": undefined,
+              "margin": undefined,
+              "shape": undefined,
+              "size": undefined,
+              "submitAlignment": undefined,
+              "submitLabel": undefined,
+              "submitLink": undefined,
+              "submitTextColor": undefined,
+              "submitTextStyle": undefined,
+              "submitVariant": undefined,
+              "submitWidth": undefined,
+              "tableId": {
+                "@@makeswift/type": "prop-controllers::table::v1",
+                "value": "VGFibGU6YzFjMmRkYWUtOGY2ZC00YTNjLWFjMzItMzExNmUwMWEwZDg2",
+              },
+              "width": [
+                {
+                  "deviceId": "desktop",
+                  "value": {
+                    "unit": "px",
+                    "value": 550,
+                  },
+                },
+              ],
+            },
+            "type": "./components/Form/index.js",
+          },
         ],
       },
     },
@@ -4163,6 +4253,96 @@ exports[`copyElementTree returns a copy of the tree with replaced IDs: replaced 
               },
             },
             "type": "./components/Button/index.js",
+          },
+          {
+            "key": "043cc49e-92ec-4f48-9706-409d7eb2c879",
+            "props": {
+              "brandColor": undefined,
+              "contrast": undefined,
+              "fields": {
+                "@@makeswift/type": "prop-controllers::table-form-fields::v1",
+                "value": {
+                  "fields": [
+                    {
+                      "id": "1e79bf60-24b7-468b-b9e7-b121777c96c0",
+                      "label": "Name",
+                      "required": true,
+                      "tableColumnId": "[replaced-table-column-id-1]",
+                    },
+                    {
+                      "id": "ab14c611-e2cc-421d-9f19-0f57a3395200",
+                      "label": "Description",
+                      "required": true,
+                      "tableColumnId": "[replaced-table-column-id-2]",
+                    },
+                    {
+                      "id": "bfc7207a-38be-47f1-a2f9-3eba1cb79c85",
+                      "label": "Number",
+                      "required": true,
+                      "tableColumnId": "[replaced-table-column-id-3]",
+                    },
+                  ],
+                  "grid": [
+                    {
+                      "deviceId": "desktop",
+                      "value": {
+                        "count": 12,
+                        "spans": [
+                          [
+                            12,
+                          ],
+                          [
+                            12,
+                          ],
+                          [
+                            12,
+                          ],
+                          [
+                            12,
+                          ],
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+              "gap": [
+                {
+                  "deviceId": "desktop",
+                  "value": {
+                    "unit": "px",
+                    "value": 10,
+                  },
+                },
+              ],
+              "id": undefined,
+              "labelTextColor": undefined,
+              "labelTextStyle": undefined,
+              "margin": undefined,
+              "shape": undefined,
+              "size": undefined,
+              "submitAlignment": undefined,
+              "submitLabel": undefined,
+              "submitLink": undefined,
+              "submitTextColor": undefined,
+              "submitTextStyle": undefined,
+              "submitVariant": undefined,
+              "submitWidth": undefined,
+              "tableId": {
+                "@@makeswift/type": "prop-controllers::table::v1",
+                "value": "[replaced-table-id-1]",
+              },
+              "width": [
+                {
+                  "deviceId": "desktop",
+                  "value": {
+                    "unit": "px",
+                    "value": 550,
+                  },
+                },
+              ],
+            },
+            "type": "./components/Form/index.js",
           },
         ],
       },

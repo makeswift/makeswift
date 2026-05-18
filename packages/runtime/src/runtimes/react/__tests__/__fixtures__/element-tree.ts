@@ -1751,6 +1751,71 @@ export const elementTree: ElementData = {
             },
             type: './components/Button/index.js',
           },
+          {
+            key: '043cc49e-92ec-4f48-9706-409d7eb2c879',
+            props: {
+              gap: [
+                {
+                  deviceId: 'desktop',
+                  value: {
+                    unit: 'px',
+                    value: 10,
+                  },
+                },
+              ],
+              tableId: {
+                '@@makeswift/type': 'prop-controllers::table::v1',
+                value: 'VGFibGU6YzFjMmRkYWUtOGY2ZC00YTNjLWFjMzItMzExNmUwMWEwZDg2',
+              },
+              width: [
+                {
+                  deviceId: 'desktop',
+                  value: {
+                    unit: 'px',
+                    value: 550,
+                  },
+                },
+              ],
+              fields: {
+                '@@makeswift/type': 'prop-controllers::table-form-fields::v1',
+                value: {
+                  fields: [
+                    {
+                      id: '1e79bf60-24b7-468b-b9e7-b121777c96c0',
+                      tableColumnId:
+                        'U2luZ2xlTGluZVRleHRUYWJsZUNvbHVtbjo2MDZhY2E0NC1iYmVjLTQ4NzMtYTdiOC1kYTEwZWNjZTQ4OTQ=',
+                      label: 'Name',
+                      required: true,
+                    },
+                    {
+                      id: 'ab14c611-e2cc-421d-9f19-0f57a3395200',
+                      tableColumnId:
+                        'TG9uZ1RleHRUYWJsZUNvbHVtbjpjYjMwOWMyMi04Njc3LTQ1OTctYTI2ZC1mZWY3NGU4MGY5YTM=',
+                      label: 'Description',
+                      required: true,
+                    },
+                    {
+                      id: 'bfc7207a-38be-47f1-a2f9-3eba1cb79c85',
+                      tableColumnId:
+                        'TnVtYmVyVGFibGVDb2x1bW46OGJiZDAzZmMtYmZlMi00OTEzLTlkMGItNWZhNDAzMzhlZTBh',
+                      label: 'Number',
+                      required: true,
+                    },
+                  ],
+                  grid: [
+                    {
+                      deviceId: 'desktop',
+                      value: {
+                        spans: [[12], [12], [12], [12]],
+                        count: 12,
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+            type: './components/Form/index.js',
+          },
         ],
       },
     },
