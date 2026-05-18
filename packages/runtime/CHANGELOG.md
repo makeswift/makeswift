@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.6-canary.0
+
+### Patch Changes
+
+- 6f9cd78: Correctly copy over table form field data
+
 ## 0.28.5
 
 ### Patch Changes
