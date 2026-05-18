@@ -11,6 +11,7 @@ import {
   copyBackgroundsPropControllerData,
   copyResponsiveColorPropControllerData,
   copyTablePropControllerData,
+  copyTableFormFieldsPropControllerData,
   copyNavigationLinksPropControllerData,
   Types as PropControllerTypes,
 } from '@makeswift/prop-controllers'
@@ -49,7 +50,7 @@ export function copy(descriptor: Descriptor, value: any, context: CopyContext) {
       return copyResponsiveColorPropControllerData(value, context)
 
     case PropControllerTypes.TableFormFields:
-      return copyTablePropControllerData(value, context)
+      return copyTableFormFieldsPropControllerData(value, context)
 
     case PropControllerTypes.Table:
       return copyTablePropControllerData(value, context)
