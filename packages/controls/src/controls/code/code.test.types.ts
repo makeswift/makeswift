@@ -16,6 +16,10 @@ type ExpectedCodeDataType =
       [ControlDataTypeKey]: 'code::v1'
       value: string
     }
+  | {
+      [ControlDataTypeKey]: 'prop-controllers::text-area::v1'
+      value: string
+    }
 
 describe('Code Types', () => {
   describe('infers types from control definitions', () => {

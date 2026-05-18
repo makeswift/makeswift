@@ -2,7 +2,8 @@ import { type ReactRuntimeCore } from '../../../runtimes/react/react-runtime-cor
 import { MakeswiftComponentType } from '../constants'
 import { ComponentIcon } from '../../../state/modules/components-meta'
 import { lazy } from 'react'
-import { ElementID, Margin, TextArea, Width } from '@makeswift/prop-controllers'
+import { Code } from '@makeswift/controls'
+import { ElementID, Margin, Width } from '@makeswift/prop-controllers'
 
 export function registerComponent(runtime: ReactRuntimeCore) {
   return runtime.registerComponent(
@@ -13,7 +14,7 @@ export function registerComponent(runtime: ReactRuntimeCore) {
       icon: ComponentIcon.Code,
       props: {
         id: ElementID(),
-        html: TextArea({ label: 'Code', rows: 20 }),
+        html: Code({ label: 'Code' }),
         width: Width({ format: Width.Format.ClassName }),
         margin: Margin({ format: Margin.Format.ClassName }),
       },

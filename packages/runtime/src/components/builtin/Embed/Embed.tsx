@@ -10,7 +10,7 @@ import { cx } from '@emotion/css'
 
 type Props = {
   id?: string
-  html?: string
+  html?: { value: string }
   width?: string
   margin?: string
 }
@@ -41,9 +41,10 @@ const defaultHtml = `<div style="padding: 24px; background-color: rgba(161, 168,
 const SCRIPT_TAG = 'script'
 
 const Embed = forwardRef(function Embed(
-  { id, width, margin, html = defaultHtml }: Props,
+  { id, width, margin, html }: Props,
   ref: Ref<HTMLDivElement | null>,
 ) {
+  const htmlValue = html?.value ?? defaultHtml
   const [container, setContainer] = useState<HTMLDivElement | null>(null)
   const [shouldRender, setShouldRender] = useState(false)
 
@@ -103,7 +104,7 @@ const Embed = forwardRef(function Embed(
       // Ignore errors from user-provided code
       console.error(error)
     })
-  }, [container, html])
+  }, [container, htmlValue])
 
   const className = useStyle({ minHeight: 15 })
 
@@ -114,7 +115,7 @@ const Embed = forwardRef(function Embed(
       ref={setContainer}
       id={id}
       className={cx(className, width, margin)}
-      dangerouslySetInnerHTML={{ __html: html }}
+      dangerouslySetInnerHTML={{ __html: htmlValue }}
     />
   )
 })
