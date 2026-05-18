@@ -1,6 +1,6 @@
 import { expectTypeOf } from 'expect-type'
 
-import { ControlDataTypeKey } from '../../common'
+import { AcceptedNumberDataTypes, ControlDataTypeKey } from '../../common'
 
 import {
   type DataType,
@@ -25,7 +25,7 @@ type ExpectedPropsDataType = {
     value?:
       | number
       | {
-          [ControlDataTypeKey]: 'number::v1'
+          [ControlDataTypeKey]: (typeof AcceptedNumberDataTypes)[number]
           value: number
         }
   }[]

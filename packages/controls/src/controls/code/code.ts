@@ -1,9 +1,13 @@
-import { match } from 'ts-pattern'
+import { match, P } from 'ts-pattern'
 import { z } from 'zod'
 
 import { safeParse, type ParseResult } from '../../lib/zod'
 
-import { ControlDataTypeKey } from '../../common'
+import {
+  AcceptedTextDataTypes,
+  ControlDataTypeKey,
+  TextDataType,
+} from '../../common'
 import { type CopyContext } from '../../context'
 import { type DeserializedRecord } from '../../serialization'
 
@@ -42,7 +46,7 @@ class Definition<C extends Config> extends ControlDefinition<
   ValueType<C>,
   ResolvedValueType<C>
 > {
-  private static readonly v1DataType = 'code::v1' as const
+  private static readonly v1DataType = TextDataType
   private static readonly dataSignature = {
     v1: { [ControlDataTypeKey]: this.v1DataType },
   } as const
@@ -52,7 +56,7 @@ class Definition<C extends Config> extends ControlDefinition<
   static get schema() {
     const version = z.literal(1)
     const versionedData = z.object({
-      [ControlDataTypeKey]: z.literal(this.v1DataType),
+      [ControlDataTypeKey]: z.enum(AcceptedTextDataTypes),
       value: z.string(),
     })
 
@@ -147,7 +151,10 @@ class Definition<C extends Config> extends ControlDefinition<
   fromData(data: DataType<C> | undefined): ValueType<C> | undefined {
     const inputSchema = this.dataSchema.optional()
     return match(data satisfies z.infer<typeof inputSchema>)
-      .with(Definition.dataSignature.v1, ({ value }) => value)
+      .with(
+        { [ControlDataTypeKey]: P.union(...AcceptedTextDataTypes) },
+        ({ value }) => value,
+      )
       .otherwise((val) => val)
   }
 
