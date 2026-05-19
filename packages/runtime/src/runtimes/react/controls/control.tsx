@@ -42,11 +42,11 @@ export function ControlValue({
   const stylesMap = useRef<Map<string, StyleData>>(new Map()).current
   const boxModelCallbacks = useRef<Record<string, (boxModel: BoxDisplayModel | null) => void>>({}).current
 
-  const stylesheet = new StylesheetEngine(breakpoints, id, undefined, (classname, css, elementKey, propName, onBoxModelChange) => {
-    stylesMap.set(classname, { css, propName })
+  const stylesheet = new StylesheetEngine(breakpoints, id, [], ({ className, css, joinedPropPath, onBoxModelChange }) => {
+    stylesMap.set(className, { css, joinedPropPath })
 
     if (onBoxModelChange) {
-      boxModelCallbacks[classname] = onBoxModelChange
+      boxModelCallbacks[className] = onBoxModelChange
     }
   })
 

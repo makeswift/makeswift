@@ -10,28 +10,28 @@ const ClientCSSContext = createContext<ClientCSSContextValue>({
   updateStyle: () => {},
 })
 
-function toMapKey({elementKey, propName}: {elementKey: string, propName: string}): string {
-  return `${elementKey}:${propName}`
+function toMapKey({elementKey, joinedPropPath}: {elementKey: string, joinedPropPath: string}): string {
+  return `${elementKey}:${joinedPropPath}`
 }
 
 export function ClientCSSProvider({ children }: { children: ReactNode }) {
-  // keyed by `{elementKey}:{propName}`
+  // keyed by `{elementKey}:{joinedPropPath}`
   const styleElementRefs = useRef<Map<string, HTMLStyleElement | null>>(new Map())
 
   useEffect(() => {
     const styleElements = document.querySelectorAll<HTMLStyleElement>(
-      'style[data-makeswift-rsc-element-key][data-makeswift-rsc-prop-name]',
+      'style[data-makeswift-rsc-element-key][data-makeswift-rsc-prop-path]',
     )
 
     for (const styleElement of styleElements) {
       const elementKey = styleElement.getAttribute('data-makeswift-rsc-element-key')
-      const propName = styleElement.getAttribute('data-makeswift-rsc-prop-name')
-      if (elementKey == null || propName == null) {
+      const joinedPropPath = styleElement.getAttribute('data-makeswift-rsc-prop-path')
+      if (elementKey == null || joinedPropPath == null) {
         // TODO
-        console.error('[ClientCSSProvider] TODO address null elementKey or propName')
+        console.error('[ClientCSSProvider] TODO address null elementKey or prop path')
         continue
       }
-      const mapKey = toMapKey({elementKey, propName})
+      const mapKey = toMapKey({elementKey, joinedPropPath})
       styleElementRefs.current.set(mapKey, styleElement)
     }
 
@@ -42,18 +42,18 @@ export function ClientCSSProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const updateStyle = useCallback(
-    (elementKey: string, propName: string, cssString: string) => {
-      const mapKey = toMapKey({ elementKey, propName })
+    (elementKey: string, joinedPropPath: string, cssString: string) => {
+      const mapKey = toMapKey({ elementKey, joinedPropPath })
       if (!styleElementRefs.current.has(mapKey)) {
         // Can hit this case if we drag/drop an RSC in after initial page load
-        const styleElement = document.querySelector<HTMLStyleElement>(`style[data-makeswift-rsc-element-key="${elementKey}"][data-makeswift-rsc-prop-name="${propName}"]`)
+        const styleElement = document.querySelector<HTMLStyleElement>(`style[data-makeswift-rsc-element-key="${elementKey}"][data-makeswift-rsc-prop-path="${joinedPropPath}"]`)
         if (styleElement != null) {
           styleElementRefs.current.set(mapKey, styleElement)
         }
       }
       const styleElement = styleElementRefs.current.get(mapKey)
       if (styleElement == null) {
-        console.error(`Expected to find a server-rendered <style> for element key: ${elementKey} and prop name: ${propName}`)
+        console.error(`Expected to find a server-rendered <style> for element key: ${elementKey} and prop path: ${joinedPropPath}`)
         return
       }
       styleElement.textContent = cssString

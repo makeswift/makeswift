@@ -1,11 +1,15 @@
 import 'server-only'
 import { cache } from 'react'
-import { type Breakpoints, type Stylesheet } from '@makeswift/controls'
+import { BoxDisplayModel, type Breakpoints, type Stylesheet } from '@makeswift/controls'
 import { StylesheetEngine } from './css-runtime'
 
 export type StyleData = {
   css: string
-  propName: string | undefined
+  joinedPropPath: string | undefined
+}
+
+export type RSCStyleData = StyleData & {
+  shouldPollBoxModel: boolean
 }
 
 export class ServerCSSCollector {
@@ -14,18 +18,19 @@ export class ServerCSSCollector {
 
     TODO this is a weird type
   */
-  private elementToStylesMap = new Map<string, Map<string, StyleData>>()
+  private elementToStylesMap = new Map<string, Map<string, RSCStyleData>>()
 
-  collect(elementKey: string, className: string, css: string, propName?: string) {
-    const stylesMap = this.elementToStylesMap.get(elementKey) ?? new Map<string, StyleData>()
+  collect(elementKey: string, className: string, css: string, joinedPropPath?: string, onBoxModelChange?: (boxModel: BoxDisplayModel | null) => void) {
+    const stylesMap = this.elementToStylesMap.get(elementKey) ?? new Map<string, RSCStyleData>()
     stylesMap.set(className, {
       css,
-      propName,
+      joinedPropPath,
+      shouldPollBoxModel: onBoxModelChange != null,
     })
     this.elementToStylesMap.set(elementKey, stylesMap)
   }
 
-  getStylesMapForElement(elementKey: string): Map<string, StyleData> | null {
+  getStylesMapForElement(elementKey: string): Map<string, RSCStyleData> | null {
     return this.elementToStylesMap.get(elementKey) ?? null
   }
 }
@@ -40,8 +45,8 @@ export function createCollectingServerStylesheet(
 ): Stylesheet {
   const collector = getCSSCollector()
 
-  return new StylesheetEngine(breakpoints, elementKey, undefined, (className, css, _, propName) => {
-    collector.collect(elementKey, className, css, propName)
+  return new StylesheetEngine(breakpoints, elementKey, [], ({ className, css, joinedPropPath, onBoxModelChange }) => {
+    collector.collect(elementKey, className, css, joinedPropPath, onBoxModelChange)
   })
 }
 
@@ -54,8 +59,9 @@ export function ElementCSSInjector({ elementKey }: { elementKey: string }) {
     <style
       key={className}
       data-makeswift-rsc-element-key={elementKey}
-      data-makeswift-rsc-prop-name={perClassnameData.propName}
+      data-makeswift-rsc-prop-path={perClassnameData.joinedPropPath}
       data-makeswift-rsc-classname={className}
+      data-makeswift-rsc-should-poll-box-model={perClassnameData.shouldPollBoxModel }
     >
         {perClassnameData.css}
     </style>

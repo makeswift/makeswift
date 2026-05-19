@@ -61,13 +61,19 @@ export function generateClassName(elementKey?: string, propName?: string, counte
   return `ms-${murmur3(`${elementKey}-${propName}-${counter}`).toString(32)}`
 }
 
-export type OnStyleGenerated = (
+export type OnStyleGenerated = ({
+  className,
+  css,
+  elementKey,
+  joinedPropPath,
+  onBoxModelChange,
+}: {
   className: string,
   css: string,
   elementKey?: string,
-  propName?: string,
+  joinedPropPath?: string,
   onBoxModelChange?: (boxModel: BoxDisplayModel | null) => void,
-) => void
+}) => void
 
 // Unified stylesheet engine that handles both server and client modes
 export class StylesheetEngine implements Stylesheet {
@@ -76,7 +82,7 @@ export class StylesheetEngine implements Stylesheet {
   constructor(
     private breakpointsData: Breakpoints,
     private elementKey?: string,
-    private basePropName?: string,
+    private propPath: readonly string[] = [],
     private onStyleGenerated?: OnStyleGenerated,
   ) {}
 
@@ -85,12 +91,13 @@ export class StylesheetEngine implements Stylesheet {
   }
 
   defineStyle(style: ResolvedStyle, onBoxModelChange?: (boxModel: BoxDisplayModel | null) => void): string {
-    const className = generateClassName(this.elementKey, this.basePropName, ++this.styleCounter)
+    const joinedPropPath = this.propPath.length > 0 ? this.propPath.join('.') : undefined
+    const className = generateClassName(this.elementKey, joinedPropPath, ++this.styleCounter)
 
     const cssObject = resolvedStyleToCss(this.breakpointsData, style)
     const cssString = cssObjectToString(cssObject, className)
 
-    this.onStyleGenerated?.(className, cssString, this.elementKey, this.basePropName, onBoxModelChange)
+    this.onStyleGenerated?.({ className, css: cssString, elementKey: this.elementKey, joinedPropPath, onBoxModelChange })
 
     return className
   }
@@ -99,7 +106,7 @@ export class StylesheetEngine implements Stylesheet {
     return new StylesheetEngine(
       this.breakpointsData,
       this.elementKey,
-      propName,
+      [...this.propPath, propName],
       this.onStyleGenerated,
     )
   }

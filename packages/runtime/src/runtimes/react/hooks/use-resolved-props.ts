@@ -92,8 +92,8 @@ export function useResolvedProps(
       const data = elementData[propName]
       const control = controls?.[propName]
 
-      const stylesheet = new StylesheetEngine(breakpoints, elementKey, propName, (className, css, _elementKey, _propName, onBoxModelChange) => {
-        stylesMap.set(className, { css, propName })
+      const stylesheet = new StylesheetEngine(breakpoints, elementKey, [propName], ({ className, css, joinedPropPath, onBoxModelChange }) => {
+        stylesMap.set(className, { css, joinedPropPath })
 
         // Controls pass box model callbacks to `defineStyle`, which passes them along via `onStyleGenerated`
         if (onBoxModelChange) {

@@ -39,9 +39,9 @@ export function RSCBuilderUpdater({ initialElementData, children }: RSCBuilderUp
       new StylesheetEngine(
         breakpoints,
         elementKey,
-        undefined,
-        (_className, css, elementKey, propName) => {
-          if (elementKey && propName) updateStyle(elementKey, propName, css)
+        [],
+        ({ css, elementKey, joinedPropPath }) => {
+          if (elementKey && joinedPropPath) updateStyle(elementKey, joinedPropPath, css)
         },
       ),
     [breakpoints, elementKey, updateStyle],
