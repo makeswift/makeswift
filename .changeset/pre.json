@@ -15,6 +15,7 @@
     "@makeswift/hono-react": "0.0.0"
   },
   "changesets": [
-    "bright-humans-boil"
+    "bright-humans-boil",
+    "eight-bees-argue"
   ]
 }

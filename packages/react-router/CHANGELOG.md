@@ -1,5 +1,13 @@
 # @makeswift/react-router
 
+## 0.1.8-canary.1
+
+### Patch Changes
+
+- 7af9f6a: chore: upgrade/normalize @types/react dev dependencies to 19.2.15
+- Updated dependencies [7af9f6a]
+  - @makeswift/runtime@0.28.6-canary.1
+
 ## 0.1.8-canary.0
 
 ### Patch Changes
