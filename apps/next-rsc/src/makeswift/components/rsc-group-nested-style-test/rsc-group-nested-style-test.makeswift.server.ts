@@ -1,10 +1,10 @@
 import { runtime } from "@/makeswift/runtime"
 import { Group, Style } from "@makeswift/runtime/controls"
-import { ClientGroupNestedStyleTest } from "./client-group-nested-style-test"
+import { RSCGroupNestedStyleTest } from "./rsc-group-nested-style-test"
 
-runtime.registerComponent(ClientGroupNestedStyleTest, {
-  type: 'client-group-nested-style-test',
-  label: 'Custom / Client Group Nested Style Test',
+runtime.registerComponent(RSCGroupNestedStyleTest, {
+  type: 'rsc-group-nested-style-test',
+  label: 'Custom / RSC Group Nested Style Test',
   props: {
     groupA: Group({
       props: {
@@ -16,5 +16,6 @@ runtime.registerComponent(ClientGroupNestedStyleTest, {
         className: Style({ properties: Style.All}),
       }
     })
-  }
+  },
+  server: true,
 })

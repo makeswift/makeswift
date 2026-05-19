@@ -1,17 +1,17 @@
 type Props = {
   groupA: {
-    classNameA: string
+    className: string
   },
   groupB: {
-    classNameB: string
+    className: string
   }
 }
 
 export function ClientGroupNestedStyleTest({ groupA, groupB }: Props) {
   return (
     <>
-      <div className={groupA.classNameA} style={{ backgroundColor: 'red' }}>Div A</div>
-      <div className={groupB.classNameB} style={{ backgroundColor: 'blue' }}>Div B</div>
+      <div className={groupA.className} style={{ backgroundColor: 'red' }}>Div A</div>
+      <div className={groupB.className} style={{ backgroundColor: 'blue' }}>Div B</div>
     </>
   )
 }
