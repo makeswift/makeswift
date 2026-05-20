@@ -1,6 +1,6 @@
 import { expectTypeOf } from 'expect-type'
 
-import { ControlDataTypeKey } from '../../common'
+import { AcceptedTextDataTypes, ControlDataTypeKey } from '../../common'
 
 import {
   type DataType,
@@ -13,7 +13,7 @@ import { TextArea } from './text-area'
 type ExpectedTextAreaDataType =
   | string
   | {
-      [ControlDataTypeKey]: 'text-area::v1'
+      [ControlDataTypeKey]: (typeof AcceptedTextDataTypes)[number]
       value: string
     }
 

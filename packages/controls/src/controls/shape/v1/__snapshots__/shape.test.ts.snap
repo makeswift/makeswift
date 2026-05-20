@@ -83,13 +83,13 @@ exports[`Shape gracefully handles missing/extra props toData 1`] = `
       "id": "xxxxxxxx-xxxx-xxxx-xxxx-100000000000",
       "type": "makeswift::controls::number",
       "value": {
-        "@@makeswift/type": "number::v1",
+        "@@makeswift/type": "number",
         "value": 17,
       },
     },
   ],
   "text": {
-    "@@makeswift/type": "text-area::v1",
+    "@@makeswift/type": "text",
     "value": "Hello world",
   },
 }
