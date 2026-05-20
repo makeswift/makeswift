@@ -23,6 +23,7 @@ import {
   RichTextV2Definition,
   SelectDefinition,
   ShapeDefinition,
+  SliderDefinition,
   SlotDefinition,
   StyleDefinition,
   StyleV2Definition,
@@ -84,6 +85,7 @@ export function deserializeUnifiedControlDef(record: DeserializedRecord): Contro
       ShapeDefinition.deserialize(record, deserializeUnifiedControlDef),
     [ShapeV2Definition.type]: record =>
       ShapeV2Definition.deserialize(record, deserializeUnifiedControlDef),
+    [SliderDefinition.type]: SliderDefinition.deserialize,
     [SlotDefinition.type]: SlotDefinition.deserialize,
     [StyleDefinition.type]: StyleDefinition.deserialize,
     [StyleV2Definition.type]: record =>
