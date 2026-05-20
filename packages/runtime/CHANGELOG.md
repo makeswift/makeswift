@@ -1,5 +1,13 @@
 # @makeswift/runtime
 
+## 0.28.6
+
+### Patch Changes
+
+- 6f9cd78: Correctly copy over table form field data
+- 7af9f6a: chore: upgrade/normalize @types/react dev dependencies to 19.2.15
+- 9ebb3e2: chore: stop exposing internal actions/state/reducer to the builder
+
 ## 0.28.5
 
 ### Patch Changes
