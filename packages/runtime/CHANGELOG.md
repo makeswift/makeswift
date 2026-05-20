@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.6-canary.2
+
+### Patch Changes
+
+- 9ebb3e2: chore: stop exposing internal actions/state/reducer to the builder
+
 ## 0.28.6-canary.1
 
 ### Patch Changes
