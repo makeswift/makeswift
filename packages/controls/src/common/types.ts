@@ -23,37 +23,3 @@ export function isElementReference(
 ): element is ElementReference {
   return !('props' in element)
 }
-
-export const ControlDataTypeKey = '@@makeswift/type'
-
-export const TextDataType = 'text' as const
-export const NumberDataType = 'number' as const
-
-export const LegacyTextDataTypes = [
-  'text-input::v1',
-  'text-area::v1',
-  'code::v1',
-] as const
-
-export const LegacyPropControllerTextDataTypes = [
-  'prop-controllers::text-input::v1',
-  'prop-controllers::text-area::v1',
-] as const
-
-export const AcceptedTextDataTypes = [
-  TextDataType,
-  ...LegacyTextDataTypes,
-  ...LegacyPropControllerTextDataTypes,
-] as const
-
-export const LegacyNumberDataTypes = ['number::v1'] as const
-
-export const LegacyPropControllerNumberDataTypes = [
-  'prop-controllers::number::v1',
-] as const
-
-export const AcceptedNumberDataTypes = [
-  NumberDataType,
-  ...LegacyNumberDataTypes,
-  ...LegacyPropControllerNumberDataTypes,
-] as const

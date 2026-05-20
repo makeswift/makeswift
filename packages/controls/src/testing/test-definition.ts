@@ -1,4 +1,4 @@
-import { ControlDataTypeKey } from '../common/types'
+import { ControlDataTypeKey } from '../common/data-types'
 import { type ValueType } from '../controls/associated-types'
 import { ControlDefinition } from '../controls/definition'
 
