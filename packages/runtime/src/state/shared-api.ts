@@ -1,8 +1,5 @@
 import { type ThunkAction } from '@reduxjs/toolkit'
 
-import { type LocaleString, localeStringSchema } from '../locale'
-
-import { type Breakpoints } from './modules/breakpoints'
 import { type Element, type Document, EMBEDDED_DOCUMENT_TYPE } from './modules/read-only-documents'
 
 type DocumentPayloadBaseDocument = {
@@ -30,9 +27,6 @@ export const SharedActionTypes = {
 
   REGISTER_DOCUMENT: 'REGISTER_DOCUMENT',
   UNREGISTER_DOCUMENT: 'UNREGISTER_DOCUMENT',
-
-  SET_BREAKPOINTS: 'SET_BREAKPOINTS',
-  SET_LOCALE: 'SET_LOCALE',
 } as const
 
 type MakeswiftConnectionInitAction = { type: typeof SharedActionTypes.MAKESWIFT_CONNECTION_INIT }
@@ -47,22 +41,10 @@ type UnregisterDocumentAction = {
   payload: { documentKey: string }
 }
 
-export type SetBreakpointsAction = {
-  type: typeof SharedActionTypes.SET_BREAKPOINTS
-  payload: { breakpoints: Breakpoints }
-}
-
-type SetLocaleAction = {
-  type: typeof SharedActionTypes.SET_LOCALE
-  payload: { locale: LocaleString; pathname?: string }
-}
-
 export type SharedAction =
   | MakeswiftConnectionInitAction
   | RegisterDocumentAction
   | UnregisterDocumentAction
-  | SetBreakpointsAction
-  | SetLocaleAction
 
 export function makeswiftConnectionInit(): MakeswiftConnectionInitAction {
   return {
@@ -90,16 +72,5 @@ export function registerDocumentsEffect(
     return () => {
       documents.forEach(document => dispatch(unregisterDocument(document.key)))
     }
-  }
-}
-
-export function setBreakpoints(breakpoints: Breakpoints): SetBreakpointsAction {
-  return { type: SharedActionTypes.SET_BREAKPOINTS, payload: { breakpoints } }
-}
-
-export function setLocale(locale: Intl.Locale, pathname?: string): SetLocaleAction {
-  return {
-    type: SharedActionTypes.SET_LOCALE,
-    payload: { locale: localeStringSchema.parse(locale.toString()), pathname },
   }
 }

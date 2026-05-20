@@ -11,15 +11,24 @@ import { type ElementSize } from '../middleware/read-write/builder-api/element-s
 import { type DocumentPayload, type SharedAction, SharedActionTypes } from '../shared-api'
 
 import { type HostNavigationEvent } from './api'
+import {
+  type SetBreakpointsAction,
+  type SetLocaleAction,
+  ReadOnlyActionTypes,
+} from '../actions/internal/read-only-actions'
 
 export * from '../shared-api'
+export { setBreakpoints } from '../actions/internal/read-only-actions'
+export { setLocale } from '../actions/internal/read-only-actions'
 
 // actions dispatched by the host to the builder ("Builder API")
-// note that some of these actions, in addition to being dispatched to the builder,
-// might also be internally intercepted by the host as a part of maintaining the
-// runtime's "read-write" state
+// note that some of these actions (SET_BREAKPOINTS, SET_LOCALE), in addition to
+// being dispatched to the builder, are also internally intercepted by the host
+// as a part of maintaining the runtime's own state
 export const BuilderActionTypes = {
   ...SharedActionTypes,
+  SET_BREAKPOINTS: ReadOnlyActionTypes.SET_BREAKPOINTS,
+  SET_LOCALE: ReadOnlyActionTypes.SET_LOCALE,
 
   MAKESWIFT_CONNECTION_CHECK: 'MAKESWIFT_CONNECTION_CHECK',
 
@@ -124,6 +133,8 @@ type HandleHostNavigateAction = {
 
 export type BuilderAction =
   | SharedAction
+  | SetBreakpointsAction
+  | SetLocaleAction
   | MakeswiftConnectionCheckAction
   | MountComponentAction
   | UnmountComponentAction

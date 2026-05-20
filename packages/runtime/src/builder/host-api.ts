@@ -1,11 +1,4 @@
-export {
-  type SetBreakpointsAction,
-  makeswiftConnectionInit,
-  registerDocument,
-  unregisterDocument,
-  setBreakpoints,
-  setLocale,
-} from '../state/shared-api'
+export { makeswiftConnectionInit, registerDocument, unregisterDocument } from '../state/shared-api'
 
 export {
   changeDocument,
