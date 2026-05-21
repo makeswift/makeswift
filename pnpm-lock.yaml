@@ -245,8 +245,8 @@ importers:
         specifier: ^8.2.2
         version: 8.2.2
       hono:
-        specifier: ^4.0.0
-        version: 4.9.6
+        specifier: ^4.12.21
+        version: 4.12.21
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.14.11)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.7.0(@swc/helpers@0.5.15))(@types/node@20.14.11)(typescript@5.9.2))
@@ -4882,8 +4882,8 @@ packages:
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
 
-  hono@4.9.6:
-    resolution: {integrity: sha512-doVjXhSFvYZ7y0dNokjwwSahcrAfdz+/BCLvAMa/vHLzjj8+CFyV5xteThGUsKdkaasgN+gF2mUxao+SGLpUeA==}
+  hono@4.12.21:
+    resolution: {integrity: sha512-uV63apnb0kyPtAUwoWgaGh9HyIFcv8lgmzPZSiTBQAFOFGIzka5EZ1dZocmGnn0XdX0+XTqJ6Tqv7selMuGLRQ==}
     engines: {node: '>=16.9.0'}
 
   hosted-git-info@2.8.9:
@@ -13629,7 +13629,7 @@ snapshots:
     dependencies:
       react-is: 16.13.1
 
-  hono@4.9.6: {}
+  hono@4.12.21: {}
 
   hosted-git-info@2.8.9: {}
 
