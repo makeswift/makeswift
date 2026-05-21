@@ -1,5 +1,11 @@
 # @makeswift/hono-react
 
+## 0.1.8-canary.3
+
+### Patch Changes
+
+- fb8ec2a: fix: remove `MAKESWIFT_SITE_API_KEY` binding requirement from Hono env
+
 ## 0.1.8-canary.2
 
 ### Patch Changes
