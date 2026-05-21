@@ -401,7 +401,7 @@ export class MakeswiftClient {
     const response = await fetch(requestUrl.toString(), {
       ...init,
       headers: requestHeaders,
-      ...(siteVersion != null ? { cache: 'no-store' } : {}),
+      cache: siteVersion != null ? 'no-cache' : 'force-cache',
       ...this.fetchOptions(siteVersion),
     })
 
