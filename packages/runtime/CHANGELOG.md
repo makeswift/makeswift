@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.6-canary.3
+
+### Patch Changes
+
+- f2c8c8a: Add new icons for component registration: Accordion, Audio, Card, Cards, Grid, Marker, Palette, Table, and Tabs
+
 ## 0.28.6-canary.2
 
 ### Patch Changes
