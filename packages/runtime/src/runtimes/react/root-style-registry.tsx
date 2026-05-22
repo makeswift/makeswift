@@ -2,7 +2,7 @@
 
 import createCache, { type EmotionCache } from '@emotion/cache'
 import { cache } from '@emotion/css'
-import { type PropsWithChildren, createContext, useContext } from 'react'
+import { type PropsWithChildren, createContext, useContext, useState } from 'react'
 
 const CacheContext = createContext(cache)
 
@@ -96,6 +96,20 @@ export function RootStyleRegistry({
         {children}
       </CSSResetEnabledContext.Provider>
     </CacheContext.Provider>
+  )
+}
+
+export function DefaultRootStyleRegistry({
+  children,
+  cacheKey,
+  enableCssReset,
+}: PropsWithChildren<RootStyleProps>) {
+  const [cache] = useState(() => createRootStyleCache({ key: cacheKey }))
+
+  return (
+    <RootStyleRegistry cache={cache} enableCssReset={enableCssReset}>
+      {children}
+    </RootStyleRegistry>
   )
 }
 

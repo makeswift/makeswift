@@ -37,6 +37,7 @@ export { MakeswiftFonts } from '../runtimes/react/components/MakeswiftFonts'
 export {
   createRootStyleCache,
   RootStyleRegistry,
+  DefaultRootStyleRegistry,
   styleTagHtml,
   StyleTagSSR,
   type RootStyleProps,
