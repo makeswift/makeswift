@@ -398,7 +398,7 @@ export class MakeswiftClient {
       })
     }
 
-    const response = await fetch(requestUrl.toString(), {
+    const response = await this.runtime.fetch(requestUrl.toString(), {
       ...init,
       headers: requestHeaders,
       ...(siteVersion != null ? { cache: 'no-store' } : {}),
