@@ -7,11 +7,13 @@ import { ElementImperativeHandle } from '../../../runtimes/react/element-imperat
 import { type APIResource, APIResourceType, APIResourceLocale } from '../../../api/types'
 import { type Descriptor as PropControllerDescriptor } from '../../../prop-controllers/descriptors'
 
+import { type Breakpoints } from '../../modules/breakpoints'
 import { type ComponentMeta } from '../../modules/components-meta'
 import { type PropControllersHandle } from '../../modules/prop-controller-handles'
 import { type ComponentType } from '../../modules/react-components'
 import { type DescriptorsByComponentType } from '../../modules/prop-controllers'
 
+import { type LocaleString, localeStringSchema } from '../../../locale'
 import { type DocumentPayload } from '../../shared-api'
 
 export const ReadOnlyActionTypes = {
@@ -35,7 +37,10 @@ export const ReadOnlyActionTypes = {
   REGISTER_REACT_COMPONENT: 'REGISTER_REACT_COMPONENT',
   UNREGISTER_REACT_COMPONENT: 'UNREGISTER_REACT_COMPONENT',
 
+  SET_BREAKPOINTS: 'SET_BREAKPOINTS',
   UPDATE_CLIENT_BREAKPOINT: 'UPDATE_CLIENT_BREAKPOINT',
+
+  SET_LOCALE: 'SET_LOCALE',
 
   SET_IS_IN_BUILDER: 'SET_IS_IN_BUILDER',
   SET_IS_READ_ONLY: 'SET_IS_READ_ONLY',
@@ -119,8 +124,18 @@ type UnregisterReactComponentAction = {
   payload: { type: string }
 }
 
+export type SetBreakpointsAction = {
+  type: typeof ReadOnlyActionTypes.SET_BREAKPOINTS
+  payload: { breakpoints: Breakpoints }
+}
+
 type UpdateClientBreakpointAction = {
   type: typeof ReadOnlyActionTypes.UPDATE_CLIENT_BREAKPOINT
+}
+
+export type SetLocaleAction = {
+  type: typeof ReadOnlyActionTypes.SET_LOCALE
+  payload: { locale: LocaleString; pathname?: string }
 }
 
 type SetIsInBuilderAction = {
@@ -147,7 +162,9 @@ export type ReadOnlyAction =
   | UnregisterPropControllersAction
   | RegisterReactComponentAction
   | UnregisterReactComponentAction
+  | SetBreakpointsAction
   | UpdateClientBreakpointAction
+  | SetLocaleAction
   | SetIsInBuilderAction
   | SetIsReadOnlyAction
 
@@ -308,8 +325,19 @@ export function registerReactComponentEffect(
   }
 }
 
+export function setBreakpoints(breakpoints: Breakpoints): SetBreakpointsAction {
+  return { type: ReadOnlyActionTypes.SET_BREAKPOINTS, payload: { breakpoints } }
+}
+
 export function updateClientBreakpoint(): UpdateClientBreakpointAction {
   return { type: ReadOnlyActionTypes.UPDATE_CLIENT_BREAKPOINT }
+}
+
+export function setLocale(locale: Intl.Locale, pathname?: string): SetLocaleAction {
+  return {
+    type: ReadOnlyActionTypes.SET_LOCALE,
+    payload: { locale: localeStringSchema.parse(locale.toString()), pathname },
+  }
 }
 
 export function setIsInBuilder(isInBuilder: boolean): SetIsInBuilderAction {
