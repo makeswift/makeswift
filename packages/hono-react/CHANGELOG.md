@@ -1,5 +1,13 @@
 # @makeswift/hono-react
 
+## 0.1.8-canary.7
+
+### Patch Changes
+
+- 45dd9c6: Provide the most common default `RootStyleRegistry` implementation from the runtime package
+- Updated dependencies [45dd9c6]
+  - @makeswift/runtime@0.28.6-canary.5
+
 ## 0.1.8-canary.6
 
 ### Patch Changes

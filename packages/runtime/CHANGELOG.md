@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.6-canary.5
+
+### Patch Changes
+
+- 45dd9c6: Provide the most common default `RootStyleRegistry` implementation from the runtime package
+
 ## 0.28.6-canary.4
 
 ### Patch Changes
