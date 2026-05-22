@@ -1,5 +1,11 @@
 # @makeswift/hono-react
 
+## 0.1.8-canary.4
+
+### Patch Changes
+
+- 06ce964: chore(hono-react): upgrade hono dev dependency requirement to ^4.12.21
+
 ## 0.1.8-canary.3
 
 ### Patch Changes
