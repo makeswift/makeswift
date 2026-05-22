@@ -22,6 +22,7 @@ import { NumberDefinition } from '../number'
 import { RichTextV1Definition } from '../rich-text'
 import { SelectConfig, SelectDefinition } from '../select'
 import { ShapeDefinition } from '../shape'
+import { SliderDefinition } from '../slider'
 import { SlotDefinition } from '../slot'
 import { StyleDefinition, StyleV2Definition } from '../style'
 import { TextAreaDefinition } from '../text-area'
@@ -142,6 +143,14 @@ abstract class MergeTranslationsVisitor extends ControlDefinitionVisitor<Data> {
   visitNumber(
     _def: NumberDefinition,
     data: DataType<NumberDefinition> | undefined,
+    translatedData: Data,
+  ): Data {
+    return this.noOpMerge(data, translatedData)
+  }
+
+  visitSlider(
+    _def: SliderDefinition,
+    data: DataType<SliderDefinition> | undefined,
     translatedData: Data,
   ): Data {
     return this.noOpMerge(data, translatedData)
