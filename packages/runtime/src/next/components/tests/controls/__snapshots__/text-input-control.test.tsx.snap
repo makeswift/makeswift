@@ -137,7 +137,7 @@ exports[`Page TextInput control data v1 when value is The Blueprint: snapshot 1`
               "key": "11111111-1111-1111-1111-111111111111",
               "props": {
                 "propKey": {
-                  "@@makeswift/type": "text-input::v1",
+                  "@@makeswift/type": "text",
                   "value": "The Blueprint",
                 },
               },

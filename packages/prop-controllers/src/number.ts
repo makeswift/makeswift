@@ -1,3 +1,4 @@
+import { AcceptedNumberDataTypes } from '@makeswift/controls'
 import { z } from 'zod'
 import { ControlDataTypeKey, Options, Types } from './prop-controllers'
 import { P, match } from 'ts-pattern'
@@ -19,9 +20,15 @@ type NumberPropControllerDataV1 = z.infer<
   typeof numberPropControllerDataV1Schema
 >
 
+const numberInteropDataSchema = z.object({
+  [ControlDataTypeKey]: z.enum(AcceptedNumberDataTypes),
+  value: z.number(),
+})
+
 export const numberPropControllerDataSchema = z.union([
   numberPropControllerDataV0Schema,
   numberPropControllerDataV1Schema,
+  numberInteropDataSchema,
 ])
 
 export type NumberPropControllerData = z.infer<
@@ -70,8 +77,8 @@ export function getNumberPropControllerDataNumber(
 ): number {
   return match(data)
     .with(
-      { [ControlDataTypeKey]: NumberPropControllerDataV1Type },
-      (v1) => v1.value,
+      { [ControlDataTypeKey]: P.union(...AcceptedNumberDataTypes) },
+      (versioned) => versioned.value,
     )
     .otherwise((v0) => v0)
 }
@@ -88,7 +95,7 @@ export function createNumberPropControllerDataFromNumber(
         ({
           [ControlDataTypeKey]: NumberPropControllerDataV1Type,
           value,
-        } as const),
+        }) as const,
     )
     .otherwise(() => value)
 }

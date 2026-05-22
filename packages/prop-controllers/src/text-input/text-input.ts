@@ -1,6 +1,7 @@
+import { AcceptedTextDataTypes } from '@makeswift/controls'
 import { z } from 'zod'
 import { ControlDataTypeKey, Options, Types } from '../prop-controllers'
-import { match } from 'ts-pattern'
+import { P, match } from 'ts-pattern'
 
 const textInputPropControllerDataV0Schema = z.string()
 
@@ -20,9 +21,15 @@ export type TextInputPropControllerDataV1 = z.infer<
   typeof textInputPropControllerDataV1Schema
 >
 
+const textInputInteropDataSchema = z.object({
+  [ControlDataTypeKey]: z.enum(AcceptedTextDataTypes),
+  value: z.string(),
+})
+
 export const textInputPropControllerDataSchema = z.union([
   textInputPropControllerDataV0Schema,
   textInputPropControllerDataV1Schema,
+  textInputInteropDataSchema,
 ])
 
 export type TextInputPropControllerData = z.infer<
@@ -71,8 +78,8 @@ export function getTextInputPropControllerDataString(
 ): string | undefined {
   return match(data)
     .with(
-      { [ControlDataTypeKey]: TextInputPropControllerDataV1Type },
-      (v1) => v1.value,
+      { [ControlDataTypeKey]: P.union(...AcceptedTextDataTypes) },
+      (versioned) => versioned.value,
     )
     .otherwise((v0) => v0)
 }
@@ -88,7 +95,7 @@ export function createTextInputPropControllerDataFromString(
         ({
           [ControlDataTypeKey]: TextInputPropControllerDataV1Type,
           value,
-        } as const),
+        }) as const,
     )
     .otherwise(() => value)
 }
