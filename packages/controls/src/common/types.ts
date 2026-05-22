@@ -23,5 +23,3 @@ export function isElementReference(
 ): element is ElementReference {
   return !('props' in element)
 }
-
-export const ControlDataTypeKey = '@@makeswift/type'
