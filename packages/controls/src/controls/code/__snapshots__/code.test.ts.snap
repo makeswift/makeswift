@@ -32,28 +32,28 @@ CodeDefinition {
 
 exports[`Code definition w/ config {"defaultValue":"console.log(\\"hi\\")","label":"visible"} toData returns v1 data for \`body { color: red; }\` when definition version is 1 1`] = `
 {
-  "@@makeswift/type": "code::v1",
+  "@@makeswift/type": "text",
   "value": "body { color: red; }",
 }
 `;
 
 exports[`Code definition w/ config {"defaultValue":"console.log(\\"hi\\")","label":"visible"} toData returns v1 data for \`const x = 1\` when definition version is 1 1`] = `
 {
-  "@@makeswift/type": "code::v1",
+  "@@makeswift/type": "text",
   "value": "const x = 1",
 }
 `;
 
 exports[`Code definition w/ config {"label":"Code"} toData returns v1 data for \`.class { margin: 0; }\` when definition version is 1 1`] = `
 {
-  "@@makeswift/type": "code::v1",
+  "@@makeswift/type": "text",
   "value": ".class { margin: 0; }",
 }
 `;
 
 exports[`Code definition w/ config {"label":"Code"} toData returns v1 data for \`<div>hello</div>\` when definition version is 1 1`] = `
 {
-  "@@makeswift/type": "code::v1",
+  "@@makeswift/type": "text",
   "value": "<div>hello</div>",
 }
 `;

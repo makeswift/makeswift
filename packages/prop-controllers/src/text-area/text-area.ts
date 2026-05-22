@@ -1,6 +1,7 @@
+import { AcceptedTextDataTypes } from '@makeswift/controls'
 import { z } from 'zod'
 import { ControlDataTypeKey, Options, Types } from '../prop-controllers'
-import { match } from 'ts-pattern'
+import { P, match } from 'ts-pattern'
 
 const textAreaPropControllerDataV0Schema = z.string()
 
@@ -20,9 +21,15 @@ export type TextAreaPropControllerDataV1 = z.infer<
   typeof textAreaPropControllerDataV1Schema
 >
 
+const textAreaInteropDataSchema = z.object({
+  [ControlDataTypeKey]: z.enum(AcceptedTextDataTypes),
+  value: z.string(),
+})
+
 export const textAreaPropControllerDataSchema = z.union([
   textAreaPropControllerDataV0Schema,
   textAreaPropControllerDataV1Schema,
+  textAreaInteropDataSchema,
 ])
 
 export type TextAreaPropControllerData = z.infer<
@@ -69,8 +76,8 @@ export function getTextAreaPropControllerDataString(
 ): string | undefined {
   return match(data)
     .with(
-      { [ControlDataTypeKey]: TextAreaPropControllerDataV1Type },
-      (v1) => v1.value,
+      { [ControlDataTypeKey]: P.union(...AcceptedTextDataTypes) },
+      (versioned) => versioned.value,
     )
     .otherwise((v0) => v0)
 }
@@ -86,7 +93,7 @@ export function createTextAreaPropControllerDataFromString(
         ({
           [ControlDataTypeKey]: TextAreaPropControllerDataV1Type,
           value,
-        } as const),
+        }) as const,
     )
     .otherwise(() => value)
 }
