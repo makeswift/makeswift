@@ -2,39 +2,30 @@ import type { CSSObject } from '@emotion/serialize'
 import { type Breakpoints, type Stylesheet, type ResolvedStyle, BoxDisplayModel } from '@makeswift/controls'
 import { resolvedStyleToCss } from '../../../runtimes/react/resolve-style'
 import { murmur3 } from 'murmurhash-js'
+import { serialize, compile, stringify } from 'stylis'
 
-function cssObjectToString(cssObject: CSSObject, className: string): string {
-  const cssRules: string[] = []
-  const mediaRules: string[] = []
-  const baseStyles: Record<string, any> = {}
-
-  Object.entries(cssObject).forEach(([property, value]) => {
-    if (property.startsWith('@media')) {
-      const mediaQueryStyles = value as CSSObject
-      const mediaCSS = Object.entries(mediaQueryStyles)
-        .map(([prop, val]) => formatCSSProperty(prop, val))
-        .filter(Boolean)
-        .join(' ')
-
-      if (mediaCSS) {
-        mediaRules.push(`${property} { .${className} { ${mediaCSS} } }`)
+function formatForStylis(cssObject: CSSObject): string {
+  const parts: string[] = []
+  for (const [key, value] of Object.entries(cssObject)) {
+    if (value == null || value === '') continue
+    if (typeof value === 'object' && !Array.isArray(value)) {
+      const selector = key.startsWith('@') || key.startsWith('&') ? key : `&${key}`
+      parts.push(`${selector} { ${formatForStylis(value as CSSObject)} }`)
+    } else if (Array.isArray(value)) {
+      if (value.length > 0) {
+        parts.push(`${kebabCase(key)}: ${value.join(' ')};`)
       }
     } else {
-      baseStyles[property] = value
+      parts.push(`${kebabCase(key)}: ${value};`)
     }
-  })
-
-  const baseCSS = Object.entries(baseStyles)
-    .map(([prop, val]) => formatCSSProperty(prop, val))
-    .filter(Boolean)
-    .join(' ')
-
-  if (baseCSS) {
-    cssRules.push(`.${className} { ${baseCSS} }`)
   }
+  return parts.join(' ')
+}
 
-  cssRules.push(...mediaRules)
-  return cssRules.join('\n')
+function cssObjectToString(cssObject: CSSObject, className: string): string {
+  const preformattedCss = formatForStylis(cssObject)
+  const cssElementTree = compile(`.${className} { ${preformattedCss}}`)
+  return serialize(cssElementTree, stringify)
 }
 
 function formatCSSProperty(property: string, value: any): string {

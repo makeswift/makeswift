@@ -37,7 +37,7 @@ importers:
         version: link:../../packages/runtime
       next:
         specifier: 15.5.15
-        version: 15.5.15(@playwright/test@1.41.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 15.5.15(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -531,6 +531,9 @@ importers:
       '@types/murmurhash-js':
         specifier: ^1.0.7
         version: 1.0.7
+      '@types/stylis':
+        specifier: ^4.2.7
+        version: 4.2.7
       '@use-gesture/react':
         specifier: ^10.2.24
         version: 10.2.24(react@19.2.3)
@@ -615,6 +618,9 @@ importers:
       slate-react:
         specifier: ^0.91.7
         version: 0.91.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(slate@0.91.4)
+      stylis:
+        specifier: ^4.4.0
+        version: 4.4.0
       ts-pattern:
         specifier: ^5.0.5
         version: 5.0.5
@@ -3124,6 +3130,9 @@ packages:
 
   '@types/statuses@2.0.5':
     resolution: {integrity: sha512-jmIUGWrAiwu3dZpxntxieC+1n/5c3mjrImkmOSQ2NC5uP6cYO4aAZDdSmRcI5C1oiTmqlZGHC+/NmJrKogbP5A==}
+
+  '@types/stylis@4.2.7':
+    resolution: {integrity: sha512-VgDNokpBoKF+wrdvhAAfS55OMQpL6QRglwTwNC3kIgBrzZxA4WsFj+2eLfEA/uMUDzBcEhYmjSbwQakn/i3ajA==}
 
   '@types/through@0.0.30':
     resolution: {integrity: sha512-FvnCJljyxhPM3gkRgWmxmDZyAQSiBQQWLI0A0VFL0K7W1oRUrPJSqNO0NvTnLkBcotdlp3lKvaT0JrnyRDkzOg==}
@@ -7967,6 +7976,9 @@ packages:
   stylis@4.2.0:
     resolution: {integrity: sha512-Orov6g6BB1sDfYgzWfTHDOxamtX1bE/zo104Dh9e6fqJ3PooipYyfJ0pUmrZO2wAvO8YbEyeFrkV91XTsGMSrw==}
 
+  stylis@4.4.0:
+    resolution: {integrity: sha512-5Z9ZpRzfuH6l/UAvCPAPUo3665Nk2wLaZU3x+TLHKVzIz33+sbJqbtrYoC3KD4/uVOr2Zp+L0LySezP9OHV9yA==}
+
   stylus-lookup@3.0.2:
     resolution: {integrity: sha512-oEQGHSjg/AMaWlKe7gqsnYzan8DLcGIHe0dUaFkucZZ14z4zjENRlQMCHT4FNsiWnJf17YN9OvrCfCoi7VvOyg==}
     engines: {node: '>=6.0.0'}
@@ -11709,6 +11721,8 @@ snapshots:
   '@types/stack-utils@2.0.1': {}
 
   '@types/statuses@2.0.5': {}
+
+  '@types/stylis@4.2.7': {}
 
   '@types/through@0.0.30':
     dependencies:
@@ -16749,7 +16763,7 @@ snapshots:
       - '@babel/core'
       - babel-plugin-macros
 
-  next@15.5.15(@playwright/test@1.41.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+  next@15.5.15(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
       '@next/env': 15.5.15
       '@swc/helpers': 0.5.15
@@ -16767,7 +16781,6 @@ snapshots:
       '@next/swc-linux-x64-musl': 15.5.15
       '@next/swc-win32-arm64-msvc': 15.5.15
       '@next/swc-win32-x64-msvc': 15.5.15
-      '@playwright/test': 1.41.1
       sharp: 0.34.3
     transitivePeerDependencies:
       - '@babel/core'
@@ -18294,6 +18307,8 @@ snapshots:
       react: 19.1.0
 
   stylis@4.2.0: {}
+
+  stylis@4.4.0: {}
 
   stylus-lookup@3.0.2:
     dependencies:
