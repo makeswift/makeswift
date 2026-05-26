@@ -23,7 +23,7 @@ import {
 import { DefaultControlInstance, type SendMessage } from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
 
-import { swatchToColorString } from './conversion'
+import { safeColorString, swatchToColorString } from './conversion'
 
 type Config = z.infer<typeof Definition.schema.relaxed.config>
 
@@ -269,16 +269,38 @@ class Definition<C extends Config> extends ControlDefinition<
 
 export class ColorDefinition<C extends Config = Config> extends Definition<C> {}
 
-type UserConfig<D extends Config['defaultValue']> = Config & {
-  defaultValue?: D
+type ColorDefaultValueInput = string | { color: string; opacity: number }
+
+type NormalizedDefaultValue<D extends ColorDefaultValueInput | undefined> =
+  D extends undefined ? undefined : string
+
+type UserConfig = Omit<Config, 'defaultValue'> & {
+  defaultValue?: ColorDefaultValueInput
 }
 
-type NormedConfig<D extends Config['defaultValue']> = z.infer<
-  SchemaByDefaultValue<D>['config']
+type NormedConfig<D extends ColorDefaultValueInput | undefined> = z.infer<
+  SchemaByDefaultValue<NormalizedDefaultValue<D>>['config']
 >
 
-export function Color<D extends Config['defaultValue']>(
-  config?: UserConfig<D>,
+function normalizeDefaultValue(
+  defaultValue: ColorDefaultValueInput | undefined,
+): string | undefined {
+  if (defaultValue == null) return undefined
+  if (typeof defaultValue === 'string') return defaultValue
+  return safeColorString(defaultValue.color, defaultValue.opacity)
+}
+
+export function Color<D extends ColorDefaultValueInput | undefined = undefined>(
+  config?: UserConfig & { defaultValue?: D },
 ): ColorDefinition<NormedConfig<D>> {
-  return new ColorDefinition<NormedConfig<D>>(config ?? {}, 1)
+  if (!config) {
+    return new ColorDefinition<NormedConfig<D>>({} as any, 1)
+  }
+
+  const { defaultValue, ...rest } = config
+  const normalized = normalizeDefaultValue(defaultValue)
+  const normalizedConfig =
+    normalized !== undefined ? { ...rest, defaultValue: normalized } : rest
+
+  return new ColorDefinition<NormedConfig<D>>(normalizedConfig as any, 1)
 }

@@ -132,6 +132,7 @@ describe('Color', () => {
     function assignTest(_def: ColorDefinition) {}
     assignTest(Color({ label: 'background' }))
     assignTest(Color({ defaultValue: 'red' }))
+    assignTest(Color({ defaultValue: { color: '#4f46e5', opacity: 0.25 } }))
     assignTest(Color({ label: 'background', labelOrientation: 'horizontal' }))
     assignTest(
       Color({
@@ -176,6 +177,25 @@ describe('Color', () => {
           .resolveValue(data, colorResolver)
           .readStable(),
       ).toBe('rgba(0, 0, 0, 0.5)')
+    })
+
+    test('resolves object defaultValue with opacity when no data', () => {
+      expect(
+        Color({
+          label: 'Color',
+          defaultValue: { color: '#4f46e5', opacity: 0.25 },
+        })
+          .resolveValue(undefined, noOpResourceResolver)
+          .readStable(),
+      ).toBe('rgba(79, 70, 229, 0.25)')
+    })
+
+    test('resolves string defaultValue when no data', () => {
+      expect(
+        Color({ label: 'Color', defaultValue: '#4f46e5' })
+          .resolveValue(undefined, noOpResourceResolver)
+          .readStable(),
+      ).toBe('rgb(79, 70, 229)')
     })
   })
 

@@ -8,6 +8,7 @@ type Props = {
   cssCode?: CodeProp
   tsCode?: CodeProp
   bashCode?: CodeProp
+  color?: string
 }
 
 function Section({ title, code }: { title: string; code: CodeProp }) {
@@ -22,13 +23,14 @@ function Section({ title, code }: { title: string; code: CodeProp }) {
 }
 
 export const CodeDemo = forwardRef(function CodeDemo(
-  { className, htmlCode, cssCode, tsCode, bashCode }: Props,
+  { className, htmlCode, cssCode, tsCode, bashCode, color }: Props,
   ref: Ref<HTMLDivElement>,
 ) {
   return (
     <div
       className={`flex flex-col gap-4 p-4 w-full ${className ?? ''}`}
       ref={ref}
+       style={{ backgroundColor: color }}
     >
       <Section title="HTML" code={htmlCode} />
       <Section title="CSS" code={cssCode} />

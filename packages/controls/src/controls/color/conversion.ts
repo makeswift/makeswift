@@ -23,6 +23,10 @@ export function swatchToColorString(
     .string()
 }
 
+export function safeColorString(color: string, opacity: number): string {
+  return safeParseColor(color).alpha(opacity).rgb().string()
+}
+
 function safeParseColor(value: string) {
   try {
     return parseColor(value)
