@@ -38,8 +38,10 @@ runtime.registerComponent(ClientStyleV2Test, {
 function getHoverStyle(useFunHover: boolean) {
   return {
     transition: 'background 0.15s ease-in-out',
-    '&:hover': {
+    ':hover': {
       background: useFunHover ? 'purple' : 'white',
     },
+    padding: 32, // intentionally omitting unit to demo css serialization + preprocessor behavior
+    margin: ['8px', '64px']
   }
 }

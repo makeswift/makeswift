@@ -8,14 +8,12 @@ export function ClientStyleV2Test({ className, text }: Props) {
     <div
       className={className}
       style={{
-        padding: 24,
         border: '1px solid #99c',
-        fontFamily: 'monospace',
-        cursor: 'pointer',
-        userSelect: 'none',
       }}
     >
       {text}
     </div>
   )
 }
+
+
