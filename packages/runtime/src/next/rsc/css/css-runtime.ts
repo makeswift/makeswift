@@ -3,44 +3,63 @@ import { type Breakpoints, type Stylesheet, type ResolvedStyle, BoxDisplayModel 
 import { resolvedStyleToCss } from '../../../runtimes/react/resolve-style'
 import { murmur3 } from 'murmurhash-js'
 import { serialize, compile, stringify } from 'stylis'
+import { serializeStyles as serializeEmotionStyles } from '@emotion/serialize'
 
-function formatForStylis(cssObject: CSSObject): string {
-  const parts: string[] = []
-  for (const [key, value] of Object.entries(cssObject)) {
-    if (value == null || value === '') continue
-    if (typeof value === 'object' && !Array.isArray(value)) {
-      const selector = key.startsWith('@') || key.startsWith('&') ? key : `&${key}`
-      parts.push(`${selector} { ${formatForStylis(value as CSSObject)} }`)
-    } else if (Array.isArray(value)) {
-      if (value.length > 0) {
-        parts.push(`${kebabCase(key)}: ${value.join(' ')};`)
-      }
-    } else {
-      parts.push(`${kebabCase(key)}: ${value};`)
-    }
-  }
-  return parts.join(' ')
+/*
+  Converts a styles object to a string, applying various transformations in the process.
+
+  The output of this function is not a css string that is fit for being inserted into a style tag.
+  Rather, it is a string that is fit for being handed off to a css preprocessor
+*/
+function serializeToIntermediateCSS(cssObject: CSSObject): string {
+  /*
+    If we decide to roll our own implementation, we'll need to handle some of the things
+    that @emotion/serialize handled behind the scenes:
+      - inserting units when required and missing (for example, if the CSS object contains { width: 100 })
+      - handling logic for whether to comma-join certain values
+      - decision of whether to support "implicit" ampersand prefixes for nested pseudoselectors (something
+      that Emotion handles via a Stylis plugin passed to its cache, see: https://github.com/thysultan/stylis/issues/323#issuecomment-1870429099)
+  */
+  // const parts: string[] = []
+  // for (const [key, value] of Object.entries(cssObject)) {
+  //   if (value == null || value === '') continue
+  //   if (typeof value === 'object' && !Array.isArray(value)) {
+  //     const selector = key.startsWith('@') || key.startsWith('&') ? key : `&${key}`
+  //     parts.push(`${selector} { ${serializeToIntermediateCSS(value as CSSObject)} }`)
+  //   } else if (Array.isArray(value)) {
+  //     if (value.length > 0) {
+  //       parts.push(`${kebabCase(key)}: ${value.join(' ')};`)
+  //     }
+  //   } else {
+  //     parts.push(`${kebabCase(key)}: ${value};`)
+  //   }
+  // }
+  // return parts.join(' ')
+
+  // Just utilizing `@emotion/serialize` for now
+  return serializeEmotionStyles([cssObject]).styles
 }
 
 function cssObjectToString(cssObject: CSSObject, className: string): string {
-  const preformattedCss = formatForStylis(cssObject)
-  const cssElementTree = compile(`.${className} { ${preformattedCss}}`)
-  return serialize(cssElementTree, stringify)
+  const intermediateCSS = serializeToIntermediateCSS(cssObject)
+  const cssElementTree = compile(`.${className} { ${intermediateCSS}}`)
+  const css = serialize(cssElementTree, stringify)
+  return css
 }
 
-function formatCSSProperty(property: string, value: any): string {
-  if (value == null || value === '') return ''
+// function formatCSSProperty(property: string, value: any): string {
+//   if (value == null || value === '') return ''
 
-  if (Array.isArray(value)) {
-    return value.length > 0 ? `${kebabCase(property)}: ${value.join(' ')};` : ''
-  }
+//   if (Array.isArray(value)) {
+//     return value.length > 0 ? `${kebabCase(property)}: ${value.join(' ')};` : ''
+//   }
 
-  return `${kebabCase(property)}: ${value};`
-}
+//   return `${kebabCase(property)}: ${value};`
+// }
 
-function kebabCase(str: string): string {
-  return str.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`)
-}
+// function kebabCase(str: string): string {
+//   return str.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`)
+// }
 
 export function generateClassName(elementKey?: string, propName?: string, counter?: number): string {
   // const parts = ['makeswift-styled-element']
