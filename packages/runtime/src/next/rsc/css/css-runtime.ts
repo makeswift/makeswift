@@ -15,8 +15,12 @@ function serializeToIntermediateCSS(cssObject: CSSObject): string {
   /*
     If we decide to roll our own implementation, we'll need to handle some of the things
     that @emotion/serialize handled behind the scenes:
-      - inserting units when required and missing (for example, if the CSS object contains { width: 100 })
-      - handling logic for whether to comma-join certain values
+      - inserting units when required and missing (for example, if the CSS object contains { padding: 32 }),
+      then `@emotion/serialize` would go ahead and insert 'px' after '32'
+      - handling arrays. If a style object has 'margin' such as: { margin: ['8px', '64px'] },
+      then `@emotion/serialize` would create two declarations:
+      `margin: 8px; margin: 64px;`. But another possible way of interpreting this could be that this is
+      intended to produce a shorthand rule: `margin: 8px 64px;`.`
       - decision of whether to support "implicit" ampersand prefixes for nested pseudoselectors (something
       that Emotion handles via a Stylis plugin passed to its cache, see: https://github.com/thysultan/stylis/issues/323#issuecomment-1870429099)
   */
