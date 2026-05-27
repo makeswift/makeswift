@@ -16,6 +16,7 @@
   },
   "changesets": [
     "bright-humans-boil",
+    "color-default-opacity",
     "control-interop-shared-markers",
     "eight-bees-argue",
     "good-trees-exercise",
