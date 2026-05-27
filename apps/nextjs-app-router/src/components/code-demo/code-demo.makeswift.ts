@@ -1,7 +1,7 @@
 import { runtime } from '@/makeswift/runtime'
 import { lazy } from 'react'
 
-import { Style, Code } from '@makeswift/runtime/controls'
+import { Style, Code, Color } from '@makeswift/runtime/controls'
 
 runtime.registerComponent(
   lazy(() => import('./code-demo')),
@@ -10,6 +10,7 @@ runtime.registerComponent(
     label: 'Custom / Code Control Demo',
     props: {
       className: Style(),
+      color: Color({ label: 'Color', defaultValue: '#4f46e5' }),
       htmlCode: Code({
         label: 'HTML',
         defaultValue: `<article class="card">

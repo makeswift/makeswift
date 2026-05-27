@@ -23,7 +23,7 @@ import {
 import { DefaultControlInstance, type SendMessage } from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
 
-import { swatchToColorString } from './conversion'
+import { safeColorString, swatchToColorString } from './conversion'
 
 type Config = z.infer<typeof Definition.schema.relaxed.config>
 
@@ -269,16 +269,48 @@ class Definition<C extends Config> extends ControlDefinition<
 
 export class ColorDefinition<C extends Config = Config> extends Definition<C> {}
 
-type UserConfig<D extends Config['defaultValue']> = Config & {
+type ColorDefaultValueInput =
+  | string
+  | { color: string; opacity: number }
+  | undefined
+
+type UserConfig<D extends ColorDefaultValueInput = undefined> = Omit<
+  Config,
+  'defaultValue'
+> & {
   defaultValue?: D
 }
 
-type NormedConfig<D extends Config['defaultValue']> = z.infer<
-  SchemaByDefaultValue<D>['config']
+type NormalizedDefaultValue<D extends ColorDefaultValueInput> =
+  D extends undefined ? undefined : string
+
+type NormedConfig<D extends ColorDefaultValueInput> = z.infer<
+  SchemaByDefaultValue<NormalizedDefaultValue<D>>['config']
 >
 
-export function Color<D extends Config['defaultValue']>(
+function normalizeDefaultValue(
+  defaultValue: ColorDefaultValueInput,
+): Config['defaultValue'] {
+  if (defaultValue == null || typeof defaultValue === 'string')
+    return defaultValue
+
+  return safeColorString(defaultValue.color, defaultValue.opacity)
+}
+
+function normalizeConfig<D extends ColorDefaultValueInput>(
+  config: UserConfig<D>,
+) {
+  const { defaultValue, ...rest } = config
+  return defaultValue == null
+    ? config
+    : { ...rest, defaultValue: normalizeDefaultValue(defaultValue) }
+}
+
+export function Color<D extends ColorDefaultValueInput = undefined>(
   config?: UserConfig<D>,
 ): ColorDefinition<NormedConfig<D>> {
-  return new ColorDefinition<NormedConfig<D>>(config ?? {}, 1)
+  return new ColorDefinition<NormedConfig<D>>(
+    config ? normalizeConfig(config) : {},
+    1,
+  )
 }

@@ -63,5 +63,34 @@ describe('Color Types', () => {
       type Resolved = ResolvedValueType<typeof def>
       expectTypeOf<Resolved>().toEqualTypeOf<string>()
     })
+
+    test('with default opacity', () => {
+      const def = Color({
+        defaultValue: { color: 'red', opacity: 0.25 },
+        label: 'color',
+      })
+
+      type ConfigType = typeof def.config
+      expectTypeOf<ConfigType>().toEqualTypeOf<{
+        defaultValue: string
+        description?: string
+        label?: string
+        labelOrientation?: 'vertical' | 'horizontal'
+        hideAlpha?: boolean
+      }>()
+
+      type Data = DataType<typeof def>
+      expectTypeOf<Data>().toEqualTypeOf<{
+        swatchId: string
+        alpha: number
+        [ControlDataTypeKey]?: 'color::v1' | undefined
+      }>()
+
+      type Value = ValueType<typeof def>
+      expectTypeOf<Value>().toEqualTypeOf<{ swatchId: string; alpha: number }>()
+
+      type Resolved = ResolvedValueType<typeof def>
+      expectTypeOf<Resolved>().toEqualTypeOf<string>()
+    })
   })
 })
