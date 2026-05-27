@@ -13,6 +13,7 @@ ColorDefinition {
 exports[`Color constructor call with default value \`undefined\` returns versioned definition 1`] = `
 ColorDefinition {
   "config": {
+    "defaultValue": undefined,
     "label": "color",
   },
   "version": 1,
