@@ -1,7 +1,9 @@
 import { client} from '@/makeswift/client'
 import { MakeswiftComponentSnapshot } from '@makeswift/runtime/client';
 import { Slot } from '@makeswift/runtime/next'
+import { ExperimentalMakeswiftComponent } from '@makeswift/runtime/next/rsc/server';
 import { getSiteVersion } from '@makeswift/runtime/next/server';
+import { MakeswiftComponentType } from '@makeswift/runtime/react/builtins';
 
 type ParsedUrlQuery = Promise<{ lang: string; path?: string[] }>
 
@@ -37,9 +39,10 @@ export default async function Page(props: { params: ParsedUrlQuery }) {
 
   return (
     <div className="flex flex-col">
-      <Slot snapshot={snapshotA} fallback={<></>} label="My Basic Header" />
+      <ExperimentalMakeswiftComponent snapshot={snapshotA} label="My Basic Header" type={MakeswiftComponentType.Slot} />
+      <ExperimentalMakeswiftComponent snapshot={snapshotA} label="My (Duplicated) Basic Header" type={MakeswiftComponentType.Slot} />
       <MockPage contentSnapshot={snapshotC} />
-      <Slot snapshot={snapshotB} fallback={<></>} label="My Basic Footer" />
+      <ExperimentalMakeswiftComponent snapshot={snapshotB} label="My Basic Footer" type={MakeswiftComponentType.Slot} />
     </div>
   )
 }
@@ -67,7 +70,7 @@ const MockPage = ({ contentSnapshot }: { contentSnapshot: MakeswiftComponentSnap
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
               Welcome to Our Platform
             </h1>
-            <Slot snapshot={contentSnapshot} fallback={<></>} label="My Basic Content Slot" />
+            <ExperimentalMakeswiftComponent snapshot={contentSnapshot} label="My Basic Content Slot" type={MakeswiftComponentType.Slot} />
             <p className="text-xl text-gray-600 mb-8">
               Discover amazing features and solutions for your business needs
             </p>
