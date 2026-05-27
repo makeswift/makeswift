@@ -269,38 +269,48 @@ class Definition<C extends Config> extends ControlDefinition<
 
 export class ColorDefinition<C extends Config = Config> extends Definition<C> {}
 
-type ColorDefaultValueInput = string | { color: string; opacity: number }
+type ColorDefaultValueInput =
+  | string
+  | { color: string; opacity: number }
+  | undefined
 
-type NormalizedDefaultValue<D extends ColorDefaultValueInput | undefined> =
-  D extends undefined ? undefined : string
-
-type UserConfig = Omit<Config, 'defaultValue'> & {
-  defaultValue?: ColorDefaultValueInput
+type UserConfig<D extends ColorDefaultValueInput = undefined> = Omit<
+  Config,
+  'defaultValue'
+> & {
+  defaultValue?: D
 }
 
-type NormedConfig<D extends ColorDefaultValueInput | undefined> = z.infer<
+type NormalizedDefaultValue<D extends ColorDefaultValueInput> =
+  D extends undefined ? undefined : string
+
+type NormedConfig<D extends ColorDefaultValueInput> = z.infer<
   SchemaByDefaultValue<NormalizedDefaultValue<D>>['config']
 >
 
 function normalizeDefaultValue(
-  defaultValue: ColorDefaultValueInput | undefined,
-): string | undefined {
-  if (defaultValue == null) return undefined
-  if (typeof defaultValue === 'string') return defaultValue
+  defaultValue: ColorDefaultValueInput,
+): Config['defaultValue'] {
+  if (defaultValue == null || typeof defaultValue === 'string')
+    return defaultValue
+
   return safeColorString(defaultValue.color, defaultValue.opacity)
 }
 
-export function Color<D extends ColorDefaultValueInput | undefined = undefined>(
-  config?: UserConfig & { defaultValue?: D },
-): ColorDefinition<NormedConfig<D>> {
-  if (!config) {
-    return new ColorDefinition<NormedConfig<D>>({} as any, 1)
-  }
-
+function normalizeConfig<D extends ColorDefaultValueInput>(
+  config: UserConfig<D>,
+) {
   const { defaultValue, ...rest } = config
-  const normalized = normalizeDefaultValue(defaultValue)
-  const normalizedConfig =
-    normalized !== undefined ? { ...rest, defaultValue: normalized } : rest
+  return defaultValue == null
+    ? config
+    : { ...rest, defaultValue: normalizeDefaultValue(defaultValue) }
+}
 
-  return new ColorDefinition<NormedConfig<D>>(normalizedConfig as any, 1)
+export function Color<D extends ColorDefaultValueInput = undefined>(
+  config?: UserConfig<D>,
+): ColorDefinition<NormedConfig<D>> {
+  return new ColorDefinition<NormedConfig<D>>(
+    config ? normalizeConfig(config) : {},
+    1,
+  )
 }
