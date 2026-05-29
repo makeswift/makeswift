@@ -1,5 +1,12 @@
 # @makeswift/controls
 
+## 0.1.19
+
+### Patch Changes
+
+- a3768a3: Support object form `{ color, opacity }` for Color control defaultValue
+- 2a650fa: Text and number primitives now read shared markers across `@makeswift/controls` and `@makeswift/prop-controllers`, so swapping a prop's control type — or overriding a built-in component and reverting — preserves the saved value. Modern controls write the canonical `'text'` / `'number'` marker on next edit.
+
 ## 0.1.18
 
 ### Patch Changes

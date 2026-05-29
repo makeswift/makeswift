@@ -1,5 +1,18 @@
 # @makeswift/express-react
 
+## 0.1.8
+
+### Patch Changes
+
+- 7af9f6a: chore: upgrade/normalize @types/react dev dependencies to 19.2.15
+- 45dd9c6: Provide the most common default `RootStyleRegistry` implementation from the runtime package
+- Updated dependencies [6f9cd78]
+- Updated dependencies [7af9f6a]
+- Updated dependencies [9ebb3e2]
+- Updated dependencies [45dd9c6]
+- Updated dependencies [f2c8c8a]
+  - @makeswift/runtime@0.28.6
+
 ## 0.1.7
 
 ### Patch Changes
