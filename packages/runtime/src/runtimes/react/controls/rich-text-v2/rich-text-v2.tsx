@@ -1,6 +1,6 @@
 import { ReactNode, lazy } from 'react'
 
-import { type DataType } from '@makeswift/controls'
+import { Stylesheet, type DataType } from '@makeswift/controls'
 import {
   RichTextV2Control,
   RichTextV2Definition,
@@ -21,11 +21,12 @@ export function renderRichTextV2(
   data: DataType<RichTextV2Definition> | undefined,
   definition: RichTextV2Definition,
   control: RichTextV2Control | null,
+  stylesheet: Stylesheet
 ): ReactNode {
   return RichTextV2Definition.isV1Data(data) ? (
     <ReadOnlyTextV1 text={data} />
   ) : (
-    <RichTextV2 data={data} definition={definition} control={control} />
+    <RichTextV2 data={data} definition={definition} control={control} parentStylesheet={stylesheet} />
   )
 }
 
@@ -33,14 +34,16 @@ function RichTextV2({
   data,
   definition,
   control,
+  parentStylesheet
 }: {
   data: RichTextDataV2 | undefined
   definition: RichTextV2Definition
   control: RichTextV2Control | null
+  parentStylesheet: Stylesheet
 }) {
   return useIsReadOnly() ? (
-    <ReadOnlyText text={data} definition={definition} />
+    <ReadOnlyText text={data} definition={definition} parentStylesheet={parentStylesheet} />
   ) : (
-    <EditableText text={data} definition={definition} control={control} />
+    <EditableText text={data} definition={definition} control={control} parentStylesheet={parentStylesheet} />
   )
 }

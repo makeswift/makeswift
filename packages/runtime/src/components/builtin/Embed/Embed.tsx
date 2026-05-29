@@ -5,8 +5,7 @@
 import { useState, useEffect, useMemo, forwardRef, Ref, useImperativeHandle } from 'react'
 
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect'
-import { useStyle } from '../../../runtimes/react/use-style'
-import { cx } from '@emotion/css'
+import { composeStyles, useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
 
 type Props = {
   id?: string
@@ -105,7 +104,11 @@ const Embed = forwardRef(function Embed(
     })
   }, [container, html])
 
-  const className = useStyle({ minHeight: 15 })
+  const styles = composeStyles(
+    useStyle({ minHeight: 15 }),
+    width,
+    margin
+  )
 
   // React 19+ resets `innerHTML` whenever the `dangerouslySetInnerHTML`
   // object's identity changes, even if `__html` is the same string. Memoize
@@ -117,12 +120,15 @@ const Embed = forwardRef(function Embed(
   if (shouldRender === false) return null
 
   return (
-    <div
-      ref={setContainer}
-      id={id}
-      className={cx(className, width, margin)}
-      dangerouslySetInnerHTML={dangerouslySetInnerHTML}
-    />
+    <>
+      {styles.styleElements}
+      <div
+        ref={setContainer}
+        id={id}
+        className={styles.className}
+        dangerouslySetInnerHTML={dangerouslySetInnerHTML}
+      />
+    </>
   )
 })
 

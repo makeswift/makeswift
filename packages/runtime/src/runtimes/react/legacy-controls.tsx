@@ -20,7 +20,6 @@ import {
 } from '../../components/utils/responsive-style'
 
 import { RenderHook } from './components'
-import { useStyle } from './use-style'
 
 import {
   Types as PropControllerTypes,
@@ -29,7 +28,6 @@ import {
   Shadows,
   ResponsiveValue,
   BorderPropControllerFormat,
-  ResponsiveBorderData,
   BorderPropControllerData,
   getBorderPropControllerDataResponsiveBorderData,
   getBorderRadiusPropControllerDataResponsiveBorderRadiusData,
@@ -69,52 +67,98 @@ import { useImagePropControllerData } from '../../components/hooks/useImagePropC
 import { useImagesPropControllerData } from '../../components/hooks/useImagesPropControllerData'
 import { useBackgroundsPropControllerData } from '../../components/hooks/useBackgroundsPropControllerData'
 import { useTextInputPropControllerData } from '../../components/hooks/useTextInputPropControllerData'
+import { useLegacyControlledStyle } from './css-runtime/hooks/use-legacy-controlled-style'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
 function useWidthStyle(
+  elementKey: string,
+  propName: string,
   data: WidthPropControllerData | undefined,
   descriptor: WidthDescriptor,
-): string {
+): { className: string; styleElement: ReactNode} {
   const value = getWidthPropControllerDataResponsiveLengthData(data)
 
-  return useStyle(useResponsiveWidth(value, descriptor.options.defaultValue))
+  return useLegacyControlledStyle(
+    useResponsiveWidth(value, descriptor.options.defaultValue),
+    elementKey,
+    propName
+  )
 }
 
-function usePaddingStyle(data: PaddingPropControllerData | undefined): string {
+function usePaddingStyle(
+  elementKey: string,
+  propName: string,
+  data: PaddingPropControllerData | undefined
+): { className: string; styleElement: ReactNode} {
   const value = getPaddingPropControllerDataResponsivePaddingData(data)
 
-  return useStyle(useResponsivePadding(value))
+  return useLegacyControlledStyle(
+    useResponsivePadding(value),
+    elementKey,
+    propName
+  )
 }
 
-function useMarginStyle(data: MarginPropControllerData | undefined): string {
+function useMarginStyle(
+  elementKey: string,
+  propName: string,
+  data: MarginPropControllerData | undefined
+): { className: string; styleElement: ReactNode} {
   const value = getMarginPropControllerDataResponsiveMarginData(data)
 
-  return useStyle(useResponsiveMargin(value))
+  return useLegacyControlledStyle(
+    useResponsiveMargin(value),
+    elementKey,
+    propName
+  )
 }
 
-function useBorderRadiusStyle(data: BorderRadiusPropControllerData | undefined): string {
+function useBorderRadiusStyle(
+  elementKey: string,
+  propName: string,
+  data: BorderRadiusPropControllerData | undefined
+): { className: string; styleElement: ReactNode} {
   const value = getBorderRadiusPropControllerDataResponsiveBorderRadiusData(data)
 
-  return useStyle(useResponsiveBorderRadius(value))
+  return useLegacyControlledStyle(
+    useResponsiveBorderRadius(value),
+    elementKey,
+    propName
+  )
 }
 
-function useShadowsStyle(data: ShadowsPropControllerData | undefined): string {
-  return useStyle(useResponsiveShadow(useBoxShadow(data) ?? undefined))
+function useShadowsStyle(
+  elementKey: string,
+  propName: string,
+  data: ShadowsPropControllerData | undefined
+): { className: string; styleElement: ReactNode} {
+  return useLegacyControlledStyle(
+    useResponsiveShadow(useBoxShadow(data) ?? undefined),
+    elementKey,
+    propName
+  )
 }
 
 function useBorderStyle(
+  elementKey: string,
+  propName: string,
   data: BorderPropControllerData | undefined,
-): string | ResponsiveBorderData | undefined {
+): { className: string; styleElement: ReactNode} {
   const value = getBorderPropControllerDataResponsiveBorderData(data)
   const borderData = useBorderData(value)
 
-  return useStyle(useResponsiveBorder(borderData ?? undefined))
+  return useLegacyControlledStyle(
+    useResponsiveBorder(borderData ?? undefined),
+    elementKey,
+    propName
+  )
 }
 
 export function resolveLegacyDescriptorProp(
   descriptor: LegacyDescriptor,
   propName: string,
+  elementKey: string,
   propData: any,
   props: Record<string, any>,
   renderFn: (props: Record<string, unknown>) => ReactNode,
@@ -127,9 +171,14 @@ export function resolveLegacyDescriptorProp(
             <RenderHook
               key={descriptor.type}
               hook={useWidthStyle}
-              parameters={[propData, descriptor]}
+              parameters={[elementKey, propName, propData, descriptor]}
             >
-              {value => renderFn({ ...props, [propName]: value })}
+              {({ className, styleElement }) => (
+                <>
+                  {styleElement}
+                  {renderFn({ ...props, [propName]: className })}
+                </>
+              )}
             </RenderHook>
           )
 
@@ -145,8 +194,13 @@ export function resolveLegacyDescriptorProp(
       switch (descriptor.options.format) {
         case PaddingPropControllerFormat.ClassName:
           return (
-            <RenderHook key={descriptor.type} hook={usePaddingStyle} parameters={[propData]}>
-              {value => renderFn({ ...props, [propName]: value })}
+            <RenderHook key={descriptor.type} hook={usePaddingStyle} parameters={[elementKey, propName, propData]}>
+              {({ className, styleElement }) => (
+                <>
+                  {styleElement}
+                  {renderFn({ ...props, [propName]: className })}
+                </>
+              )}
             </RenderHook>
           )
 
@@ -162,8 +216,13 @@ export function resolveLegacyDescriptorProp(
       switch (descriptor.options.format) {
         case MarginPropControllerFormat.ClassName:
           return (
-            <RenderHook key={descriptor.type} hook={useMarginStyle} parameters={[propData]}>
-              {value => renderFn({ ...props, [propName]: value })}
+            <RenderHook key={descriptor.type} hook={useMarginStyle} parameters={[elementKey, propName, propData]}>
+              {({ className, styleElement }) => (
+                <>
+                  {styleElement}
+                  {renderFn({ ...props, [propName]: className })}
+                </>
+              )}
             </RenderHook>
           )
 
@@ -179,8 +238,13 @@ export function resolveLegacyDescriptorProp(
       switch (descriptor.options.format) {
         case BorderRadiusPropControllerFormat.ClassName:
           return (
-            <RenderHook key={descriptor.type} hook={useBorderRadiusStyle} parameters={[propData]}>
-              {value => renderFn({ ...props, [propName]: value })}
+            <RenderHook key={descriptor.type} hook={useBorderRadiusStyle} parameters={[elementKey, propName, propData]}>
+              {({ className, styleElement }) => (
+                <>
+                  {styleElement}
+                  {renderFn({ ...props, [propName]: className })}
+                </>
+              )}
             </RenderHook>
           )
 
@@ -291,8 +355,13 @@ export function resolveLegacyDescriptorProp(
       switch (descriptor.options.format) {
         case Shadows.Format.ClassName:
           return (
-            <RenderHook key={descriptor.type} hook={useShadowsStyle} parameters={[propData]}>
-              {value => renderFn({ ...props, [propName]: value })}
+            <RenderHook key={descriptor.type} hook={useShadowsStyle} parameters={[elementKey, propName, propData]}>
+              {({ className, styleElement }) => (
+                <>
+                  {styleElement}
+                  {renderFn({ ...props, [propName]: className })}
+                </>
+              )}
             </RenderHook>
           )
 
@@ -308,8 +377,13 @@ export function resolveLegacyDescriptorProp(
       switch (descriptor.options.format) {
         case BorderPropControllerFormat.ClassName:
           return (
-            <RenderHook key={descriptor.type} hook={useBorderStyle} parameters={[propData]}>
-              {value => renderFn({ ...props, [propName]: value })}
+            <RenderHook key={descriptor.type} hook={useBorderStyle} parameters={[elementKey, propName, propData]}>
+              {({ className, styleElement }) => (
+                <>
+                  {styleElement}
+                  {renderFn({ ...props, [propName]: className })}
+                </>
+              )}
             </RenderHook>
           )
 

@@ -4,19 +4,22 @@ import { RichTextV2Definition } from '../../../../../controls/rich-text-v2'
 import { RichTextV2Plugin } from '../../../../../controls/rich-text-v2/plugin'
 
 import { ControlValue } from '../../control'
+import { Stylesheet } from '@makeswift/controls'
 
 type RichTextV2ElementProps = RenderElementProps & {
   definition: RichTextV2Definition
   plugins: RichTextV2Plugin[]
+  pathComponents: string[]
+  parentStylesheet: Stylesheet
 }
 
-export function RichTextV2Element({ definition, plugins, ...props }: RichTextV2ElementProps) {
+export function RichTextV2Element({ definition, plugins, pathComponents, parentStylesheet, ...props }: RichTextV2ElementProps) {
   function initialRenderElement(props: RenderElementProps) {
     return props.children
   }
 
   const renderElement = plugins.reduce(
-    (renderFn, plugin) => (props: RenderElementProps) => {
+    (renderFn, plugin, index) => (props: RenderElementProps) => {
       const { control, renderElement } = plugin
 
       if (renderElement == null) return renderFn(props)
@@ -24,8 +27,11 @@ export function RichTextV2Element({ definition, plugins, ...props }: RichTextV2E
       if (control == null || control.getElementValue == null)
         return renderElement(renderFn, undefined)(props)
 
+      const pseudoElementKey = parentStylesheet.key()
+      const elementPathComponents = [...pathComponents, `editable`, `plugins`, `${index}`, `element`]
+
       return (
-        <ControlValue definition={control.definition} data={control.getElementValue(props.element)}>
+        <ControlValue definition={control.definition} data={control.getElementValue(props.element)} elementKey={pseudoElementKey} propPathComponents={elementPathComponents}>
           {value => renderElement(renderFn, value)(props)}
         </ControlValue>
       )

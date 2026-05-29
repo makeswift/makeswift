@@ -1,6 +1,6 @@
-import { cx } from '@emotion/css'
 import { forwardRef } from 'react'
 import { RichTextV2ControlValue } from '../../../runtimes/react/controls/rich-text-v2'
+import clsx from 'clsx'
 
 type Props = {
   id?: string
@@ -11,7 +11,7 @@ type Props = {
 
 const Text = forwardRef<HTMLDivElement, Props>(({ id, text, width, margin }, ref) => {
   return (
-    <div id={id} ref={ref} className={cx(width, margin)}>
+    <div id={id} ref={ref} className={clsx(width, margin)}>
       {text}
     </div>
   )

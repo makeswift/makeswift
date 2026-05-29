@@ -17,4 +17,8 @@ export const noOpStylesheet: Stylesheet = {
   child(_id: string): Stylesheet {
     return noOpStylesheet
   },
+
+  key(): string {
+    return ''
+  },
 }

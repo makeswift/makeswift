@@ -1,25 +1,29 @@
 import { ReactNode } from 'react'
-import { keyframes } from '@emotion/css'
-import { useStyle } from '../../../../../runtimes/react/use-style'
 import { Spinner20 } from '../../../../icons/Spinner20'
-
-const spin = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-`
+import { useKeyframes } from '../../../../../runtimes/react/css-runtime/hooks/use-keyframes'
+import { useStyle } from '../../../../../runtimes/react/css-runtime/hooks/use-style'
 
 export default function Spinner(): ReactNode {
+  const keyframesStyle = useKeyframes(`
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  `)
+  const spinnerStyle = useStyle({
+    display: 'inline-flex',
+    animation: `${keyframesStyle.keyframesName} 1s linear infinite`,
+    stroke: 'currentColor',
+  })
   return (
-    <Spinner20
-      className={useStyle({
-        display: 'inline-flex',
-        animation: `${spin} 1s linear infinite`,
-        stroke: 'currentColor',
-      })}
-    />
+    <>
+      {keyframesStyle.styleElement}
+      {spinnerStyle.styleElement}
+      <Spinner20
+        className={spinnerStyle.className}
+      />
+    </>
   )
 }

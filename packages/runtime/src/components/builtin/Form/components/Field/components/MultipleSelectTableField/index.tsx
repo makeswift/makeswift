@@ -8,32 +8,50 @@ import {
 
 import Label from '../Label'
 import Checkbox from '../Checkbox'
-import { cx } from '@emotion/css'
-import { useStyle } from '../../../../../../../runtimes/react/use-style'
+import { composeStyles, useStyle } from '../../../../../../../runtimes/react/css-runtime/hooks/use-style'
 
 function MainLabel({ className, ...restOfProps }: ComponentPropsWithoutRef<typeof Label>) {
-  return <Label {...restOfProps} className={cx(useStyle({ margin: '0 0 4px 0' }), className)} />
+  const styles = composeStyles(
+    useStyle({ margin: '0 0 4px 0' }),
+    className
+  )
+  return (
+    <>
+      {styles.styleElements}
+      <Label {...restOfProps} className={styles.className} />
+    </>
+  )
 }
 
 function StyledLabel({ className, ...restOfProps }: ComponentPropsWithoutRef<typeof Label>) {
+  const styles = composeStyles(
+    useStyle({
+      display: 'flex',
+      alignItems: 'center',
+      margin: '8px 0',
+      '&:last-of-type': { marginBottom: 0 },
+    }),
+    className
+  )
   return (
-    <Label
-      {...restOfProps}
-      className={cx(
-        useStyle({
-          display: 'flex',
-          alignItems: 'center',
-          margin: '8px 0',
-          '&:last-of-type': { marginBottom: 0 },
-        }),
-        className,
-      )}
-    />
+    <>
+      {styles.styleElements}
+      <Label
+        {...restOfProps}
+        className={styles.className}
+      />
+    </>
   )
 }
 
 function CheckboxContainer({ className, ...restOfProps }: ComponentPropsWithoutRef<'span'>) {
-  return <span {...restOfProps} className={cx(useStyle({ marginRight: 8 }), className)} />
+  const styles = composeStyles(useStyle({ marginRight: 8 }), className)
+  return (
+    <>
+      {styles.styleElements}
+      <span {...restOfProps} className={styles.className} />
+    </>
+  )
 }
 
 type Props = {

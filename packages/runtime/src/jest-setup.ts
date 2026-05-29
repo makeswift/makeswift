@@ -1,15 +1,14 @@
 import '@testing-library/jest-dom'
-import { matchers, createSerializer } from '@emotion/jest'
 import { server } from './mocks/server'
+import { createMakeswiftStylesSnapshotSerializer } from './testing/jest-snapshot-serializer'
 
 beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
-expect.extend(matchers)
 if (typeof window !== 'undefined') {
   // jest-environment jsdom
-  expect.addSnapshotSerializer(createSerializer())
+  expect.addSnapshotSerializer(createMakeswiftStylesSnapshotSerializer())
 }
 
 let uidSuffix = 100000000000
