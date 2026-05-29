@@ -12,10 +12,10 @@ import { useResourceResolver } from './use-resource-resolver'
 import { useDocumentKey } from './use-document-context'
 import { useSelector } from './use-selector'
 
-import { useStylesheetFactory } from './use-stylesheet-factory'
-
 import { useResolvableRecord } from './use-resolvable-record'
 import { propErrorHandlingProxy } from '../utils/prop-error-handling-proxy'
+import { useStylesheetEngine } from '../css-runtime/css-runtime'
+import { useBreakpoints } from './use-breakpoints'
 
 function useControlInstances(elementKey: string): Record<string, ControlInstance> | null {
   const documentKey = useDocumentKey()
@@ -33,14 +33,19 @@ type CacheItem = {
   resolvedValue: Resolvable<unknown>
 }
 
+type Emitted = {
+  renderDefinedStyles: () => React.ReactNode
+}
+
 export function useResolvedProps(
   propDefs: Record<string, ControlDefinition>,
   elementData: Record<string, Data>,
   elementKey: string,
-): Record<string, unknown> {
-  const stylesheetFactory = useStylesheetFactory()
+): { props: Record<string, unknown>, emitted: Emitted } {
+  const breakpoints = useBreakpoints()
   const resourceResolver = useResourceResolver()
   const controls = useControlInstances(elementKey)
+  const { getStylesheet, renderDefinedStyles } = useStylesheetEngine()
 
   const cache = useRef<Record<string, CacheItem>>({}).current
   const resolveProp = useCallback(
@@ -56,17 +61,23 @@ export function useResolvedProps(
         return cache[propName].resolvedValue
       }
 
+      const stylesheet = getStylesheet({
+        breakpointsData: breakpoints,
+        elementKey,
+        propPathComponents: [propName]
+      })
+
       const resolvedValue = def.resolveValue(
         data,
         resourceResolver,
-        stylesheetFactory.get(propName),
+        stylesheet,
         control,
       )
 
       cache[propName] = { data, control, resolvedValue }
       return resolvedValue
     },
-    [controls, elementData, resourceResolver, stylesheetFactory],
+    [controls, elementData, resourceResolver, breakpoints, elementKey, getStylesheet],
   )
 
   const resolvables = useMemo<Record<string, Resolvable<unknown>>>(
@@ -91,11 +102,12 @@ export function useResolvedProps(
     props.triggerResolve()
   }, [props])
 
-  // the order is important here, the styles are defined in the process of the props resolution,
-  // calling `useDefinedStyles` before the props are resolved would effectively be a noop
   const resolvedProps = useSyncExternalStore(props.subscribe, props.readStable, props.readStable)
 
-  stylesheetFactory.useDefinedStyles()
-
-  return resolvedProps
+  return {
+    props: resolvedProps,
+    emitted: {
+      renderDefinedStyles,
+    }
+  }
 }

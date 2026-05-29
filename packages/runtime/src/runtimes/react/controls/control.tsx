@@ -9,8 +9,9 @@ import {
 import { ReactNode } from 'react'
 
 import { useResolvedValue } from '../hooks/use-resolved-value'
-import { useStylesheetFactory } from '../hooks/use-stylesheet-factory'
 import { useCssId } from '../hooks/use-css-id'
+import { useBreakpoints } from '../hooks/use-breakpoints'
+import { useStylesheetEngine } from '../css-runtime/css-runtime'
 
 type ControlValueProps = {
   definition: ControlDefinition
@@ -25,17 +26,27 @@ export function ControlValue({
   children,
   control,
 }: ControlValueProps): ReactNode {
-  const stylesheetFactory = useStylesheetFactory()
+  const breakpoints = useBreakpoints()
   const id = `cv-${useCssId()}`
+  const { getStylesheet, renderDefinedStyles } = useStylesheetEngine()
+
+  const stylesheet = getStylesheet({
+    breakpointsData: breakpoints,
+    elementKey: id,
+    propPathComponents: [],
+  })
 
   const value = useResolvedValue(
     data,
     (data, resourceResolver) =>
-      definition.resolveValue(data, resourceResolver, stylesheetFactory.get(id), control),
+      definition.resolveValue(data, resourceResolver, stylesheet, control),
     (definition.config as any)?.defaultValue,
   )
 
-  stylesheetFactory.useDefinedStyles()
-
-  return children(value)
+  return (
+    <>
+      {children(value)}
+      {renderDefinedStyles()}
+    </>
+  )
 }
