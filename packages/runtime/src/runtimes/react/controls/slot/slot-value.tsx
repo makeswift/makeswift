@@ -9,8 +9,6 @@ import {
   memo,
 } from 'react'
 
-import { cx } from '@emotion/css'
-
 import {
   SlotDefinition,
   SlotControl,
@@ -27,8 +25,9 @@ import { useResponsiveStyle } from '../../../../components/utils/responsive-styl
 import { useIsInBuilder } from '../../hooks/use-is-in-builder'
 import { useControlInstance } from '../../hooks/use-control-instance'
 
-import { useStyle } from '../../use-style'
 import { pollBoxModel } from '../../poll-box-model'
+import { useStyle } from '../../css-runtime/hooks/use-style'
+import clsx from 'clsx'
 
 import { NodeValue } from '../node-value'
 
@@ -91,7 +90,7 @@ export function Slot<T extends ElementType = 'div'>({
 }: SlotProps<T> & Omit<ComponentPropsWithoutRef<T>, keyof SlotProps<T>>) {
   const As = as ?? 'div'
   const [element, setElement] = useState<Element | null>(null)
-  const baseClassName = useStyle({
+  const { className: baseClassName, styleElement: baseStyleElement } = useStyle({
     display: 'flex',
     flexWrap: 'wrap',
     width: '100%',
@@ -107,9 +106,12 @@ export function Slot<T extends ElementType = 'div'>({
   }, [element, control])
 
   return (
-    <As {...restOfProps} ref={setElement} className={cx(baseClassName, className)}>
-      {children}
-    </As>
+    <>
+      {baseStyleElement}
+      <As {...restOfProps} ref={setElement} className={clsx(baseClassName, className)}>
+        {children}
+      </As>
+    </>
   )
 }
 
@@ -140,7 +142,7 @@ function SlotItem<T extends ElementType = 'div'>({
 }: SlotItemProps<T> & Omit<ComponentPropsWithoutRef<T>, keyof SlotItemProps<T>>): ReactNode {
   const As = as ?? 'div'
   const [element, setElement] = useState<Element | null>(null)
-  const baseClassName = useStyle({
+  const { className: baseClassName, styleElement: baseStyleElement } = useStyle({
     display: 'flex',
     ...useResponsiveStyle([grid], ([{ count = 12, spans = [[12]] } = {}]) => {
       const [rowIndex, columnIndex] = getIndexes(spans, index)
@@ -161,9 +163,12 @@ function SlotItem<T extends ElementType = 'div'>({
   }, [element, control, index])
 
   return (
-    <As {...restOfProps} ref={setElement} className={cx(baseClassName, className)}>
-      {children}
-    </As>
+    <>
+      {baseStyleElement}
+      <As {...restOfProps} ref={setElement} className={clsx(baseClassName, className)}>
+        {children}
+      </As>
+    </>
   )
 }
 
@@ -196,51 +201,56 @@ function SlotPlaceholder({ control, placeholder }: SlotPlaceholderProps): ReactN
     })
   }, [element, control])
 
+  const { className: placeholderClassName, styleElement: placeholderStyleElement } = useStyle({
+    width: '100%',
+    background: 'rgba(161, 168, 194, 0.18)',
+  })
+  const { className: svgClassName, styleElement: svgStyleElement } = useStyle({
+    overflow: 'visible',
+    padding: 8,
+  })
+
   return (
-    <div
-      ref={setElement}
-      className={useStyle({
-        width: '100%',
-        background: 'rgba(161, 168, 194, 0.18)',
-      })}
-      style={{
-        height: hidePlaceholder ? 0 : placeholderHeight,
-        visibility: hidePlaceholder ? 'hidden' : undefined,
-      }}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="100%"
-        height="100%"
-        className={useStyle({ overflow: 'visible', padding: 8 })}
+    <>
+      {placeholderStyleElement}
+      <div
+        ref={setElement}
+        className={placeholderClassName}
+        style={{
+          height: hidePlaceholder ? 0 : placeholderHeight,
+          visibility: hidePlaceholder ? 'hidden' : undefined,
+        }}
       >
-        <rect
-          x={0}
-          y={0}
-          width="100%"
-          height="100%"
-          strokeWidth={2}
-          strokeDasharray="4 2"
-          fill="none"
-          stroke="rgba(161, 168, 194, 0.40)"
-          rx="4"
-          ry="4"
-        />
-        {text != null && (
-          <text
-            x="50%"
-            y="50%"
-            dominantBaseline="central"
-            textAnchor="middle"
-            fill="rgba(161, 168, 194, 0.80)"
-            fontSize="14px"
-            fontFamily="sans-serif"
-            style={{ userSelect: 'none' }}
-          >
-            {text}
-          </text>
-        )}
-      </svg>
-    </div>
+        {svgStyleElement}
+        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" className={svgClassName}>
+          <rect
+            x={0}
+            y={0}
+            width="100%"
+            height="100%"
+            strokeWidth={2}
+            strokeDasharray="4 2"
+            fill="none"
+            stroke="rgba(161, 168, 194, 0.40)"
+            rx="4"
+            ry="4"
+          />
+          {text != null && (
+            <text
+              x="50%"
+              y="50%"
+              dominantBaseline="central"
+              textAnchor="middle"
+              fill="rgba(161, 168, 194, 0.80)"
+              fontSize="14px"
+              fontFamily="sans-serif"
+              style={{ userSelect: 'none' }}
+            >
+              {text}
+            </text>
+          )}
+        </svg>
+      </div>
+    </>
   )
 }

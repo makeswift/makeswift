@@ -1,7 +1,5 @@
 'use client'
 
-import { cache } from '@emotion/css'
-import createEmotionServer from '@emotion/server/create-instance'
 import NextDocument, {
   DocumentContext,
   DocumentInitialProps,
@@ -10,24 +8,50 @@ import NextDocument, {
   Main,
   NextScript,
 } from 'next/document'
+import { createMakeswiftStylesRegistry, RootStyleRegistry } from '../unstable-framework-support'
 
-import { StyleTagSSR } from '../runtimes/react/root-style-registry'
-
-export class Document extends NextDocument {
+class PagesRouterDocument extends NextDocument {
   static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
-    const initialProps = await NextDocument.getInitialProps(ctx)
+    const originalRenderPage = ctx.renderPage
+    const stylesRegistry = createMakeswiftStylesRegistry()
 
-    const { extractCritical } = createEmotionServer(cache)
-    const { ids, css } = extractCritical(initialProps.html)
+    /*
+      This runs only on the server and configures a `RootStyleRegistry` which disables
+      rendering Makeswift-generated `<style>`s alongside components, opting instead to
+      pull them from the styles registry and place them in the `<head>` manually.
+      This is a special case for pages router, where React hoisting will not work during
+      SSR.
+    */
+    ctx.renderPage = () => {
+      return originalRenderPage({
+        enhanceComponent: Component => props => (
+          <RootStyleRegistry stylesRegistry={stylesRegistry} shouldRenderStyleElements={false}>
+            <Component {...props}></Component>
+          </RootStyleRegistry>
+        ),
+      })
+    }
+
+    const initialProps = await super.getInitialProps(ctx)
+    const perPrecedenceStyleProps = stylesRegistry.serializeToStyleProps()
+    const makeswiftStyleElements = perPrecedenceStyleProps.map(props => {
+      return (
+        <style key={props.precedence} data-href={props.href} data-precedence={props.precedence}>
+          {props.css}
+        </style>
+      )
+    })
+
+    const combinedStyles = (
+      <>
+        {initialProps.styles}
+        {makeswiftStyleElements}
+      </>
+    )
 
     return {
       ...initialProps,
-      styles: (
-        <>
-          {initialProps.styles}
-          <StyleTagSSR cacheKey={cache.key} classNames={ids} css={css} />
-        </>
-      ),
+      styles: combinedStyles,
     }
   }
 
@@ -43,3 +67,5 @@ export class Document extends NextDocument {
     )
   }
 }
+
+export const Document = PagesRouterDocument
