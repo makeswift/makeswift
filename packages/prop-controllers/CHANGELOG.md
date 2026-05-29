@@ -1,5 +1,14 @@
 # @makeswift/prop-controllers
 
+## 0.4.13
+
+### Patch Changes
+
+- 2a650fa: Text and number primitives now read shared markers across `@makeswift/controls` and `@makeswift/prop-controllers`, so swapping a prop's control type — or overriding a built-in component and reverting — preserves the saved value. Modern controls write the canonical `'text'` / `'number'` marker on next edit.
+- Updated dependencies [a3768a3]
+- Updated dependencies [2a650fa]
+  - @makeswift/controls@0.1.19
+
 ## 0.4.12
 
 ### Patch Changes

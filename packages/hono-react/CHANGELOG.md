@@ -1,5 +1,20 @@
 # @makeswift/hono-react
 
+## 0.1.8
+
+### Patch Changes
+
+- 7af9f6a: chore: upgrade/normalize @types/react dev dependencies to 19.2.15
+- 06ce964: chore(hono-react): upgrade hono dev dependency requirement to ^4.12.21
+- 45dd9c6: Provide the most common default `RootStyleRegistry` implementation from the runtime package
+- fb8ec2a: fix: remove `MAKESWIFT_SITE_API_KEY` binding requirement from Hono env
+- Updated dependencies [6f9cd78]
+- Updated dependencies [7af9f6a]
+- Updated dependencies [9ebb3e2]
+- Updated dependencies [45dd9c6]
+- Updated dependencies [f2c8c8a]
+  - @makeswift/runtime@0.28.6
+
 ## 0.1.7
 
 ### Patch Changes
