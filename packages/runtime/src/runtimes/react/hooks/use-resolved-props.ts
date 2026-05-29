@@ -9,8 +9,9 @@ import {
 
 import { useResourceResolver } from './use-resource-resolver'
 
-import { type StylesheetFactory } from '../stylesheet-factory'
 import { propErrorHandlingProxy } from '../utils/prop-error-handling-proxy'
+import { GetStylesheet } from '../css-runtime/hooks/use-controlled-styles'
+import { useBreakpoints } from './use-breakpoints'
 
 import { useControlInstances } from './use-control-instances'
 import { useResolvableRecord } from './use-resolvable-record'
@@ -25,13 +26,14 @@ export function useResolvedProps({
   propDefs,
   propData,
   elementKey,
-  stylesheetFactory,
+  getStylesheet,
 }: {
   propDefs: Record<string, ControlDefinition>
   propData: Record<string, Data>
   elementKey: string
-  stylesheetFactory: StylesheetFactory
+  getStylesheet: GetStylesheet
 }): Record<string, unknown> {
+  const breakpoints = useBreakpoints()
   const resourceResolver = useResourceResolver()
   const controls = useControlInstances(elementKey)
 
@@ -49,17 +51,23 @@ export function useResolvedProps({
         return cache[propName].resolvedValue
       }
 
+      const stylesheet = getStylesheet({
+        breakpointsData: breakpoints,
+        elementKey,
+        propPathComponents: [propName]
+      })
+
       const resolvedValue = def.resolveValue(
         data,
         resourceResolver,
-        stylesheetFactory.get(propName),
+        stylesheet,
         control,
       )
 
       cache[propName] = { data, control, resolvedValue }
       return resolvedValue
     },
-    [controls, propData, resourceResolver, stylesheetFactory],
+    [controls, propData, resourceResolver, breakpoints, elementKey, getStylesheet],
   )
 
   const resolvables = useMemo<Record<string, Resolvable<unknown>>>(
@@ -84,11 +92,7 @@ export function useResolvedProps({
     props.triggerResolve()
   }, [props])
 
-  // the order is important here, the styles are defined in the process of the props resolution,
-  // calling `useDefinedStyles` before the props are resolved would effectively be a noop
   const resolvedProps = useSyncExternalStore(props.subscribe, props.readStable, props.readStable)
-
-  stylesheetFactory.useDefinedStyles()
 
   return resolvedProps
 }

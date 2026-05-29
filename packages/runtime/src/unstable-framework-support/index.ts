@@ -33,11 +33,7 @@ export { GoogleFontLink } from '../runtimes/react/components/GoogleFontLink'
 export { MakeswiftFonts } from '../runtimes/react/components/MakeswiftFonts'
 
 export {
-  createRootStyleCache,
   RootStyleRegistry,
-  DefaultRootStyleRegistry,
-  styleTagHtml,
-  StyleTagSSR,
   type RootStyleProps,
 } from '../runtimes/react/root-style-registry'
 

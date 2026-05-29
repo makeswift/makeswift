@@ -1,4 +1,3 @@
-import { cx } from '@emotion/css'
 import {
   forwardRef,
   useRef,
@@ -6,33 +5,44 @@ import {
   SyntheticEvent,
   ComponentPropsWithoutRef,
 } from 'react'
-import { useStyle } from '../../../../../../../../../runtimes/react/use-style'
 
 import Label from '../../../Label'
 import RadioButton from '../../../RadioButton'
+import { composeStyles, useStyle } from '../../../../../../../../../runtimes/react/css-runtime/hooks/use-style'
 
 function StyledLabel({ className, ...restOfProps }: ComponentPropsWithoutRef<typeof Label>) {
-  return (
-    <Label
-      {...restOfProps}
-      className={cx(
-        useStyle({
-          display: 'flex',
-          alignItems: 'center',
-          margin: '8px 0',
+  const styles = composeStyles(
+    useStyle({
+      display: 'flex',
+      alignItems: 'center',
+      margin: '8px 0',
 
-          '&:last-of-type': {
-            marginBottom: 0,
-          },
-        }),
-        className,
-      )}
-    />
+      '&:last-of-type': {
+        marginBottom: 0,
+      },
+    }),
+    className
+  )
+
+  return (
+    <>
+      {styles.styleElements}
+      <Label
+        {...restOfProps}
+        className={styles.className}
+      />
+    </>
   )
 }
 
 function RadioButtonContainer({ className, ...restOfProps }: ComponentPropsWithoutRef<'span'>) {
-  return <span {...restOfProps} className={cx(useStyle({ marginRight: 8 }), className)} />
+  const styles = composeStyles(useStyle({ marginRight: 8 }), className)
+  return (
+    <>
+      {styles.styleElements}
+      <span {...restOfProps} className={styles.className} />
+    </>
+  )
 }
 
 type Props = {

@@ -188,6 +188,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
     expect([...document.querySelectorAll('style')].map(n => n.textContent)).toMatchSnapshot(
       'component styles',
     )
+
     expect(Number(getByTestId(renderCountTestId)?.textContent)).toBe(1)
   }
 }

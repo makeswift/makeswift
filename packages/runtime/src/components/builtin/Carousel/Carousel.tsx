@@ -19,8 +19,6 @@ import { type ResponsiveColor } from '../../utils/types'
 import { useMediaQuery } from '../../hooks'
 
 import Image from '../Image'
-import { useStyle } from '../../../runtimes/react/use-style'
-import { cx } from '@emotion/css'
 import { useResponsiveStyle } from '../../utils/responsive-style'
 import { useBreakpoints } from '../../../runtimes/react/hooks/use-breakpoints'
 import {
@@ -29,6 +27,7 @@ import {
   type ResponsiveIconRadioGroupValue,
   type ImagesData,
 } from '@makeswift/prop-controllers'
+import { composeStyles, useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
 
 // Utility to wrap a value within a range. Pulled from:
 // https://github.com/Popmotion/popmotion/blob/adf681efd8568ada018ce68082dbd585f25c4c7d/packages/popmotion/src/utils/wrap.ts
@@ -170,9 +169,9 @@ const Carousel = forwardRef(function Carousel(
     return () => clearInterval(intervalId)
   }, [autoplay, delay, paginate, isLastPage])
 
-  const clipMaskClassName = useStyle({ overflow: 'hidden' })
-  const pageClassName = useStyle({ position: 'relative', width: '100%' })
-  const slideClassName = cx(
+  const clipMaskStyle = useStyle({ overflow: 'hidden' })
+  const pageStyle = useStyle({ position: 'relative', width: '100%' })
+  const slideStyles = composeStyles(
     useStyle({ display: 'flex' }),
     useStyle(
       useResponsiveStyle([responsivePageSize] as const, ([pageSize = 1]) => ({
@@ -186,19 +185,19 @@ const Carousel = forwardRef(function Carousel(
     ),
   )
 
-  const reelClassName = cx(
+  const reelStyles = composeStyles(
     useStyle({ display: 'flex', position: 'relative', flexWrap: 'nowrap' }),
     useStyle(
       useResponsiveStyle([gap] as const, ([gap = { value: 0, unit: 'px' }]) => ({
         margin: `0 ${`${-gap.value / 2}${gap.unit}`}`,
-        [`& > ${classSelector(slideClassName)}`]: {
+        [`& > ${classSelector(slideStyles.className)}`]: {
           padding: `0 ${`${gap.value / 2}${gap.unit}`}`,
         },
       })),
     ),
   )
 
-  const arrowClassName = cx(
+  const { className: arrowClassName, styleElements: arrowStyleElements } = composeStyles(
     useStyle({
       padding: 10,
       borderRadius: '50%',
@@ -223,7 +222,7 @@ const Carousel = forwardRef(function Carousel(
     useStyle({ svg: { transition: 'transform 0.15s', stroke: 'currentcolor' } }),
   )
 
-  const slopClassName = cx(
+  const { className: sharedSlopClassName, styleElements: sharedSlopStyleElements } = composeStyles(
     useStyle({
       position: 'absolute',
       top: 0,
@@ -248,8 +247,8 @@ const Carousel = forwardRef(function Carousel(
     ),
   )
 
-  const leftSlopClassName = cx(
-    slopClassName,
+  const { className: leftSlopClassName, styleElements: leftSlopStyleElements } = composeStyles(
+    sharedSlopClassName,
     useStyle(
       useResponsiveStyle([arrowPosition] as const, ([position = 'inside']) => {
         switch (position) {
@@ -275,8 +274,8 @@ const Carousel = forwardRef(function Carousel(
     }),
   )
 
-  const rightSlopClassName = cx(
-    slopClassName,
+  const { className: rightSlopClassName, styleElements: rightSlopStyleElements } = composeStyles(
+    sharedSlopClassName,
     useStyle(
       useResponsiveStyle([arrowPosition] as const, ([position = 'inside']) => {
         switch (position) {
@@ -301,7 +300,7 @@ const Carousel = forwardRef(function Carousel(
     }),
   )
 
-  const dotsClassName = cx(
+  const { className: dotsClassName, styleElements: dotsStyleElements } = composeStyles(
     useStyle({ display: showDots ? 'flex' : 'none', justifyContent: 'center', marginTop: 20 }),
     useStyle(
       useResponsiveStyle(
@@ -313,101 +312,121 @@ const Carousel = forwardRef(function Carousel(
     ),
   )
 
+  const { className: containerClassName, styleElements: containerStyleElements } = composeStyles(
+    useStyle({ position: 'relative', display: 'flex', flexDirection: 'column' }),
+    width,
+    margin,
+    useStyle({ '&:focus': { outline: 0 } })
+  )
+  const { className: relativePositionDivClassName, styleElement: relativePositionDivStyleElement } = useStyle({
+    position: 'relative',
+    height: '100%'
+  })
+
   return (
-    <div
-      ref={ref}
-      className={cx(
-        useStyle({ position: 'relative', display: 'flex', flexDirection: 'column' }),
-        width,
-        margin,
-        useStyle({ '&:focus': { outline: 0 } }),
-      )}
-      tabIndex={-1}
-      onKeyDown={e => {
-        switch (e.key) {
-          case 'ArrowRight':
-            paginate(1)
-            break
-          case 'ArrowLeft':
-            paginate(-1)
-            break
-          default:
-        }
-      }}
-    >
-      {/* NOTE: We set height to 100% here to fix an issue on IE11 where the child height of a flex column extends too far */}
-      <div className={useStyle({ position: 'relative', height: '100%' })}>
-        <div className={clipMaskClassName}>
-          {/* https://github.com/framer/motion/issues/1723 */}
-          {/* @ts-expect-error: React HTMLElement typings conflict with motion components */}
-          <motion.div {...bindPage()} className={pageClassName} animate={animation}>
-            <motion.div
-              // @ts-expect-error: Type error when upgrading to @types/react@19.2.7 and @types/react-dom@19.2.3
-              // Upgrade framer-motion package to fix type error
-              className={reelClassName}
-              animate={{ x: `${-(100 / pageSize) * startIndex}%` }}
-              transition={{
-                x: {
-                  type: 'tween',
-                  ease: [0.165, 0.84, 0.44, 1],
-                  duration: 0.5,
-                },
-              }}
-            >
-              {images.map(({ props: imageProps, key }) => (
-                <motion.div
-                  key={key}
-                  // @ts-expect-error: Type error when upgrading to @types/react@19.2.7 and @types/react-dom@19.2.3
-                  // Upgrade framer-motion package to fix type error
-                  className={slideClassName}
-                  onMouseDown={(e: MouseEvent) => e.preventDefault()}
-                  onClick={(e: MouseEvent) => {
-                    if (swipe.current !== 0) e.preventDefault()
-                  }}
-                >
-                  <Image
-                    width={[
-                      {
-                        deviceId: getBaseBreakpoint(breakpoints).id,
-                        value: { value: 100, unit: '%' },
-                      },
-                    ]}
-                    file={imageProps.file}
-                    altText={imageProps.altText}
-                    link={imageProps.link}
-                    border={slideBorder}
-                    borderRadius={slideBorderRadius}
-                  />
-                </motion.div>
-              ))}
+    <>
+      {containerStyleElements}
+      <div
+        ref={ref}
+        className={containerClassName}
+        tabIndex={-1}
+        onKeyDown={e => {
+          switch (e.key) {
+            case 'ArrowRight':
+              paginate(1)
+              break
+            case 'ArrowLeft':
+              paginate(-1)
+              break
+            default:
+          }
+        }}
+      >
+        {relativePositionDivStyleElement}
+        {/* NOTE: We set height to 100% here to fix an issue on IE11 where the child height of a flex column extends too far */}
+        <div className={relativePositionDivClassName}>
+          {sharedSlopStyleElements}
+          {clipMaskStyle.styleElement}
+          <div className={clipMaskStyle.className}>
+            {pageStyle.styleElement}
+            {/* https://github.com/framer/motion/issues/1723 */}
+            {/* @ts-expect-error: React HTMLElement typings conflict with motion components */}
+            <motion.div {...bindPage()} className={pageStyle.className} animate={animation}>
+              {reelStyles.styleElements}
+              <motion.div
+                // @ts-expect-error: Type error when upgrading to @types/react@19.2.7 and @types/react-dom@19.2.3
+                // Upgrade framer-motion package to fix type error
+                className={reelStyles.className}
+                animate={{ x: `${-(100 / pageSize) * startIndex}%` }}
+                transition={{
+                  x: {
+                    type: 'tween',
+                    ease: [0.165, 0.84, 0.44, 1],
+                    duration: 0.5,
+                  },
+                }}
+              >
+                {slideStyles.styleElements}
+                {images.map(({ props: imageProps, key }) => (
+                  <motion.div
+                    key={key}
+                    // @ts-expect-error: Type error when upgrading to @types/react@19.2.7 and @types/react-dom@19.2.3
+                    // Upgrade framer-motion package to fix type error
+                    className={slideStyles.className}
+                    onMouseDown={(e: MouseEvent) => e.preventDefault()}
+                    onClick={(e: MouseEvent) => {
+                      if (swipe.current !== 0) e.preventDefault()
+                    }}
+                  >
+                    <Image
+                      width={[
+                        {
+                          deviceId: getBaseBreakpoint(breakpoints).id,
+                          value: { value: 100, unit: '%' },
+                        },
+                      ]}
+                      file={imageProps.file}
+                      altText={imageProps.altText}
+                      link={imageProps.link}
+                      border={slideBorder}
+                      borderRadius={slideBorderRadius}
+                    />
+                  </motion.div>
+                ))}
+              </motion.div>
             </motion.div>
-          </motion.div>
-        </div>
-        <div
-          onClick={() => paginate(-1)}
-          className={leftSlopClassName}
-          hidden={!showArrows || isFirstPage}
-        >
-          <div className={arrowClassName}>
-            <LeftChevron />
+          </div>
+          {leftSlopStyleElements}
+          <div
+            onClick={() => paginate(-1)}
+            className={leftSlopClassName}
+            hidden={!showArrows || isFirstPage}
+          >
+            {arrowStyleElements}
+            <div className={arrowClassName}>
+              <LeftChevron />
+            </div>
+          </div>
+          {rightSlopStyleElements}
+          <div
+            onClick={() => paginate(1)}
+            className={rightSlopClassName}
+            hidden={!showArrows || isLastPage}
+          >
+            {arrowStyleElements}
+            <div className={arrowClassName}>
+              <RightChevron />
+            </div>
           </div>
         </div>
-        <div
-          onClick={() => paginate(1)}
-          className={rightSlopClassName}
-          hidden={!showArrows || isLastPage}
-        >
-          <div className={arrowClassName}>
-            <RightChevron />
-          </div>
+        {dotsStyleElements}
+        <div className={dotsClassName}>
+          {Array.from({ length: pageCount }).map((_, i) => (
+            <Dot key={i} active={i === pageIndex} onClick={() => paginate(i - pageIndex)} />
+          ))}
         </div>
       </div>
-      <div className={dotsClassName}>
-        {Array.from({ length: pageCount }).map((_, i) => (
-          <Dot key={i} active={i === pageIndex} onClick={() => paginate(i - pageIndex)} />
-        ))}
-      </div>
-    </div>
+    </>
   )
 })
 
@@ -421,48 +440,52 @@ type DotBaseProps = {
 type DotProps = DotBaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof DotBaseProps>
 
 function Dot({ className, active, ...restOfProps }: DotProps) {
+  const styles = composeStyles(
+    useStyle({
+      position: 'relative',
+      margin: '0 6px',
+      borderRadius: '50%',
+      cursor: 'pointer',
+      width: 16,
+      height: 16,
+
+      '&::before, &::after': {
+        content: '""',
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        display: 'block',
+        borderRadius: '50%',
+        transition: 'all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+      },
+
+      '&::before': {
+        boxShadow: '0 0 0 2px currentColor',
+        transform: 'translate3d(-50%, -50%, 0)',
+        width: active ? 16 : 10,
+        height: active ? 16 : 10,
+      },
+
+      '&::after': {
+        background: 'currentColor',
+        transform: `translate3d(-50%, -50%, 0) scale(${active ? 1 : 0})`,
+        width: 10,
+        height: 10,
+      },
+
+      '&:hover::after': {
+        transform: `translate3d(-50%, -50%, 0) scale(${active ? 1 : 0})`,
+      },
+    }),
+    className
+  )
   return (
-    <div
-      {...restOfProps}
-      className={cx(
-        useStyle({
-          position: 'relative',
-          margin: '0 6px',
-          borderRadius: '50%',
-          cursor: 'pointer',
-          width: 16,
-          height: 16,
-
-          '&::before, &::after': {
-            content: '""',
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            display: 'block',
-            borderRadius: '50%',
-            transition: 'all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-          },
-
-          '&::before': {
-            boxShadow: '0 0 0 2px currentColor',
-            transform: 'translate3d(-50%, -50%, 0)',
-            width: active ? 16 : 10,
-            height: active ? 16 : 10,
-          },
-
-          '&::after': {
-            background: 'currentColor',
-            transform: `translate3d(-50%, -50%, 0) scale(${active ? 1 : 0})`,
-            width: 10,
-            height: 10,
-          },
-
-          '&:hover::after': {
-            transform: `translate3d(-50%, -50%, 0) scale(${active ? 1 : 0})`,
-          },
-        }),
-        className,
-      )}
-    />
+    <>
+      {styles.styleElements}
+      <div
+        {...restOfProps}
+        className={styles.className}
+      />
+    </>
   )
 }

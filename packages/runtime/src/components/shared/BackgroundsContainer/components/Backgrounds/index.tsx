@@ -5,9 +5,9 @@ import { ColorValue as Color } from '../../../../utils/types'
 import { colorToString } from '../../../../utils/colorToString'
 import Parallax from '../Parallax'
 import { type CSSObject } from '@emotion/serialize'
-import { useStyle } from '../../../../../runtimes/react/use-style'
 import { useResponsiveStyle } from '../../../../utils/responsive-style'
 import { useFrameworkContext } from '../../../../../runtimes/react/components/hooks/use-framework-context'
+import { useStyle } from '../../../../../runtimes/react/css-runtime/hooks/use-style'
 
 const BackgroundVideo = lazy(() => import('../BackgroundVideo'))
 
@@ -67,48 +67,58 @@ function BackgroundDeviceLayer({ layer, visibility }: BackgroundLayerProps) {
   const visibilityStyle = useResponsiveStyle([visibility], ([v]) => ({
     display: v === true ? 'block' : 'none',
   }))
+  const { className, styleElement } = useStyle({ ...containerStyle, ...visibilityStyle, overflow: 'hidden' })
 
   return (
-    <div className={useStyle({ ...containerStyle, ...visibilityStyle, overflow: 'hidden' })}>
-      {[...layer].reverse().map(bg => {
-        if (bg.type === 'color') {
-          return <ColorBackground key={bg.id} color={getColor(bg.payload)} />
-        }
+    <>
+      {styleElement}
+      <div className={className}>
+        {[...layer].reverse().map(bg => {
+          if (bg.type === 'color') {
+            return <ColorBackground key={bg.id} color={getColor(bg.payload)} />
+          }
 
-        if (bg.type === 'image' && bg.payload) {
-          return <ImageBackground {...bg.payload} key={bg.id} />
-        }
+          if (bg.type === 'image' && bg.payload) {
+            return <ImageBackground {...bg.payload} key={bg.id} />
+          }
 
-        if (bg.type === 'gradient' && bg.payload) {
-          return (
-            <GradientBackground
-              {...bg.payload}
-              key={bg.id}
-              gradient={getStopsStyle(bg.payload.stops)}
-            />
-          )
-        }
+          if (bg.type === 'gradient' && bg.payload) {
+            return (
+              <GradientBackground
+                {...bg.payload}
+                key={bg.id}
+                gradient={getStopsStyle(bg.payload.stops)}
+              />
+            )
+          }
 
-        if (bg.type === 'video' && bg.payload) {
-          return (
-            <VideoBackground
-              {...bg.payload}
-              key={bg.id}
-              maskColor={getColor(bg.payload.maskColor)}
-            />
-          )
-        }
+          if (bg.type === 'video' && bg.payload) {
+            return (
+              <VideoBackground
+                {...bg.payload}
+                key={bg.id}
+                maskColor={getColor(bg.payload.maskColor)}
+              />
+            )
+          }
 
-        return null
-      })}
-    </div>
+          return null
+        })}
+      </div>
+    </>
   )
 }
 
 type ColorBackgroundProps = { color: string }
 
 function ColorBackground({ color }: ColorBackgroundProps) {
-  return <div className={useStyle({ ...containerStyle, backgroundColor: color })} />
+  const { className, styleElement } = useStyle({ ...containerStyle, backgroundColor: color })
+  return (
+    <>
+      {styleElement}
+      <div className={className} />
+    </>
+  )
 }
 
 const ImageBackgroundRepeat = {
@@ -148,7 +158,7 @@ function ImageBackground({
   priority,
 }: ImageBackgroundProps) {
   const backgroundPosition = `${position.x}% ${position.y}%`
-  const containerClassName = useStyle(containerStyle)
+  const { className: containerClassName, styleElement: containerStyleElement } = useStyle(containerStyle)
   const { Image } = useFrameworkContext()
 
   if (repeat === 'no-repeat' && size !== 'auto' && publicUrl != null) {
@@ -176,18 +186,21 @@ function ImageBackground({
   return (
     <Parallax strength={parallax}>
       {getParallaxProps => (
-        <div
-          className={containerClassName}
-          {...getParallaxProps({
-            style: {
-              backgroundImage: publicUrl != null ? `url('${publicUrl}')` : undefined,
-              backgroundPosition,
-              backgroundRepeat: repeat,
-              backgroundSize: size,
-              opacity,
-            },
-          })}
-        />
+        <>
+          {containerStyleElement}
+          <div
+            className={containerClassName}
+            {...getParallaxProps({
+              style: {
+                backgroundImage: publicUrl != null ? `url('${publicUrl}')` : undefined,
+                backgroundPosition,
+                backgroundRepeat: repeat,
+                backgroundSize: size,
+                opacity,
+              },
+              })}
+            />
+        </>
       )}
     </Parallax>
   )
@@ -204,15 +217,17 @@ function GradientBackground({
   isRadial = false,
   angle = Math.PI,
 }: GradientBackgroundProps) {
+  const { className, styleElement } = useStyle({
+    ...containerStyle,
+    background: isRadial
+      ? `radial-gradient(${gradient})`
+      : `linear-gradient(${angle}rad, ${gradient})`,
+  })
   return (
-    <div
-      className={useStyle({
-        ...containerStyle,
-        background: isRadial
-          ? `radial-gradient(${gradient})`
-          : `linear-gradient(${angle}rad, ${gradient})`,
-      })}
-    />
+    <>
+      {styleElement}
+      <div className={className} />
+    </>
   )
 }
 
@@ -254,10 +269,13 @@ function VideoBackground({
   opacity,
   parallax,
 }: VideoBackgroundProps) {
+  const { className: containerClassName, styleElement: containerStyleElement } = useStyle(containerStyle)
   return (
     <Parallax strength={parallax}>
       {getParallaxProps => (
-        <div {...getParallaxProps({ className: useStyle(containerStyle) })}>
+        <>
+          {containerStyleElement}
+          <div {...getParallaxProps({ className: containerClassName })}>
           <Suspense>
             <BackgroundVideo
               url={url}
@@ -267,7 +285,8 @@ function VideoBackground({
               maskColor={maskColor}
             />
           </Suspense>
-        </div>
+          </div>
+        </>
       )}
     </Parallax>
   )
