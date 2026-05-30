@@ -4,10 +4,11 @@ import { Warning20 } from '../../icons/Warning20'
 
 type Props = {
   text: string
+  details?: string
 }
 
 export const FallbackComponent = forwardRef(function FallbackComponent(
-  { text }: Props,
+  { text, details }: Props,
   ref: Ref<HTMLDivElement>,
 ) {
   return (
@@ -30,6 +31,7 @@ export const FallbackComponent = forwardRef(function FallbackComponent(
     >
       <Warning20 />
       <span>{text}</span>
+      <span className={useStyle({ display: 'none' })}>{details}</span>
     </div>
   )
 })
