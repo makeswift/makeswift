@@ -1,65 +1,19 @@
 # @makeswift/hono-react
 
-## 0.1.8-canary.8
-
-### Patch Changes
-
-- @makeswift/runtime@0.28.6-canary.6
-
-## 0.1.8-canary.7
-
-### Patch Changes
-
-- 45dd9c6: Provide the most common default `RootStyleRegistry` implementation from the runtime package
-- Updated dependencies [45dd9c6]
-  - @makeswift/runtime@0.28.6-canary.5
-
-## 0.1.8-canary.6
-
-### Patch Changes
-
-- @makeswift/runtime@0.28.6-canary.4
-
-## 0.1.8-canary.5
-
-### Patch Changes
-
-- Updated dependencies [f2c8c8a]
-  - @makeswift/runtime@0.28.6-canary.3
-
-## 0.1.8-canary.4
-
-### Patch Changes
-
-- 06ce964: chore(hono-react): upgrade hono dev dependency requirement to ^4.12.21
-
-## 0.1.8-canary.3
-
-### Patch Changes
-
-- fb8ec2a: fix: remove `MAKESWIFT_SITE_API_KEY` binding requirement from Hono env
-
-## 0.1.8-canary.2
-
-### Patch Changes
-
-- Updated dependencies [9ebb3e2]
-  - @makeswift/runtime@0.28.6-canary.2
-
-## 0.1.8-canary.1
+## 0.1.8
 
 ### Patch Changes
 
 - 7af9f6a: chore: upgrade/normalize @types/react dev dependencies to 19.2.15
-- Updated dependencies [7af9f6a]
-  - @makeswift/runtime@0.28.6-canary.1
-
-## 0.1.8-canary.0
-
-### Patch Changes
-
+- 06ce964: chore(hono-react): upgrade hono dev dependency requirement to ^4.12.21
+- 45dd9c6: Provide the most common default `RootStyleRegistry` implementation from the runtime package
+- fb8ec2a: fix: remove `MAKESWIFT_SITE_API_KEY` binding requirement from Hono env
 - Updated dependencies [6f9cd78]
-  - @makeswift/runtime@0.28.6-canary.0
+- Updated dependencies [7af9f6a]
+- Updated dependencies [9ebb3e2]
+- Updated dependencies [45dd9c6]
+- Updated dependencies [f2c8c8a]
+  - @makeswift/runtime@0.28.6
 
 ## 0.1.7
 

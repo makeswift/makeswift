@@ -1,50 +1,18 @@
 # @makeswift/runtime
 
-## 0.28.6-canary.6
-
-### Patch Changes
-
-- Updated dependencies [a3768a3]
-  - @makeswift/controls@0.2.0-canary.1
-  - @makeswift/prop-controllers@0.4.13-canary.1
-
-## 0.28.6-canary.5
-
-### Patch Changes
-
-- 45dd9c6: Provide the most common default `RootStyleRegistry` implementation from the runtime package
-
-## 0.28.6-canary.4
-
-### Patch Changes
-
-- Updated dependencies [2a650fa]
-  - @makeswift/controls@0.1.19-canary.0
-  - @makeswift/prop-controllers@0.4.13-canary.0
-
-## 0.28.6-canary.3
-
-### Patch Changes
-
-- f2c8c8a: Add new icons for component registration: Accordion, Audio, Card, Cards, Grid, Marker, Palette, Table, and Tabs
-
-## 0.28.6-canary.2
-
-### Patch Changes
-
-- 9ebb3e2: chore: stop exposing internal actions/state/reducer to the builder
-
-## 0.28.6-canary.1
-
-### Patch Changes
-
-- 7af9f6a: chore: upgrade/normalize @types/react dev dependencies to 19.2.15
-
-## 0.28.6-canary.0
+## 0.28.6
 
 ### Patch Changes
 
 - 6f9cd78: Correctly copy over table form field data
+- 7af9f6a: chore: upgrade/normalize @types/react dev dependencies to 19.2.15
+- 9ebb3e2: chore: stop exposing internal actions/state/reducer to the builder
+- 45dd9c6: Provide the most common default `RootStyleRegistry` implementation from the runtime package
+- f2c8c8a: Add new icons for component registration: Accordion, Audio, Card, Cards, Grid, Marker, Palette, Table, and Tabs
+- Updated dependencies [a3768a3]
+- Updated dependencies [2a650fa]
+  - @makeswift/controls@0.1.19
+  - @makeswift/prop-controllers@0.4.13
 
 ## 0.28.5
 
