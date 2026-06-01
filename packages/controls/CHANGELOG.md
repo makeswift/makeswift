@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.20-canary.0
+
+### Patch Changes
+
+- 02a6d2a: Introduce `Slider` control, a numeric input with `min`/`max`/`step` and an optional `defaultValue`, rendered as a slider in the builder property panels.
+
 ## 0.1.19
 
 ### Patch Changes

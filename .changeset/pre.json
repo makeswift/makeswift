@@ -15,14 +15,6 @@
     "@makeswift/hono-react": "0.0.0"
   },
   "changesets": [
-    "bright-humans-boil",
-    "color-default-opacity",
-    "control-interop-shared-markers",
-    "eight-bees-argue",
-    "good-trees-exercise",
-    "grumpy-poets-compare",
-    "itchy-tomatoes-knock",
-    "metal-cups-crash",
-    "new-component-icons"
+    "add-slider-control"
   ]
 }
