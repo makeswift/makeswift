@@ -22,6 +22,7 @@ import { NumberDefinition } from '../number'
 import { RichTextDefinition, RichTextV1Definition } from '../rich-text'
 import { SelectConfig, SelectDefinition } from '../select'
 import { ShapeDefinition } from '../shape'
+import { SliderDefinition } from '../slider'
 import { SlotDefinition } from '../slot'
 import { StyleDefinition, StyleV2Definition } from '../style'
 import { TextAreaDefinition } from '../text-area'
@@ -82,6 +83,9 @@ export abstract class ControlSerializationVisitor extends ControlDefinitionVisit
     return this.serializeConfig(def)
   }
   visitNumber(def: NumberDefinition): SerializedRecord {
+    return this.serializeConfig(def, { version: def.version })
+  }
+  visitSlider(def: SliderDefinition): SerializedRecord {
     return this.serializeConfig(def, { version: def.version })
   }
   visitRichTextV1(def: RichTextV1Definition<unknown, any>): SerializedRecord {
