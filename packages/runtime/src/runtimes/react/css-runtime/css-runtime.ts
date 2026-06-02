@@ -43,6 +43,7 @@ type OnCssGenerated = ({
 
 export type DefinedStyleData = {
   css: string
+  counter: number
   joinedPropPath: string | undefined
   onBoxModelChange?: (boxModel: BoxDisplayModel | null) => void
 }
@@ -100,7 +101,14 @@ export function useStylesheetEngine() {
       propPathComponents: readonly string[],
     }): Stylesheet => {
       return new StylesheetEngine(breakpointsData, elementKey, propPathComponents, ({ className, css, joinedPropPath, onBoxModelChange}) => {
-        stylesMap.set(className, { css, joinedPropPath, onBoxModelChange })
+        const existingEntry = stylesMap.get(className)
+        const counter = (existingEntry?.counter ?? 0) + 1
+        stylesMap.set(className, {
+          css,
+          counter,
+          joinedPropPath,
+          onBoxModelChange
+        })
       })
     }, [])
 

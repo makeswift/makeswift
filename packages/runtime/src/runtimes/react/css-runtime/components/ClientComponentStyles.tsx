@@ -9,21 +9,40 @@ type Props = {
 }
 
 export function ClientComponentStyles({ classNameToStyles }: Props): ReactNode {
-  const keysSignature = Array.from(classNameToStyles.keys()).sort().join('|')
-  useEffect(() => {
-    const unsubscribes: Array<() => void> = []
-    for (const [className, styleData] of classNameToStyles.entries()) {
-      const element = document.querySelector(`.${className}`)
-      if (styleData.onBoxModelChange != null) {
-        unsubscribes.push(pollBoxModel({ element, onBoxModelChange: styleData.onBoxModelChange }))
-      }
-    }
-    return () => unsubscribes.forEach(fn => fn())
-  }, [keysSignature])
+  return (
+    <>
+      {Array.from(classNameToStyles.entries()).map(([className, styleData]) => {
+        return (
+          <ClientComponentStyle
+            className={className}
+            styleData={styleData}
+            key={className}
+          />
+        )
+      })}
+    </>
+  )
+}
 
-  return <>
-    {Array.from(classNameToStyles.entries()).map(([className, styleData]) => (
-      <style key={className}>{styleData.css}</style>
-    ))}
-  </>
+function ClientComponentStyle({
+  className,
+  styleData,
+}: {
+  className: string,
+  styleData: DefinedStyleData,
+}): ReactNode {
+  const href = `${className}-${styleData.counter}`
+
+  useEffect(() => {
+    const onBoxModelChange = styleData.onBoxModelChange
+    if (onBoxModelChange == null) return
+    const element = document.querySelector(`.${className}`)
+    return pollBoxModel({ element, onBoxModelChange})
+  }, [className])
+
+  return (
+    <style href={href} precedence="default">
+      {styleData.css}
+    </style>
+  )
 }
