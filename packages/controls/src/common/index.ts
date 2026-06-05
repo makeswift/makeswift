@@ -5,6 +5,8 @@ export * from './types'
 // package root. Internal consumers import it directly from './data-types'.
 export {
   ControlDataTypeKey,
+  TextDataTypes,
+  NumberDataTypes,
   AcceptedTextDataTypes,
   AcceptedNumberDataTypes,
 } from './data-types'

@@ -3,6 +3,7 @@ import {
   AcceptedTextDataTypes,
   ControlDataTypeKey,
 } from '../../common'
+import { NumberDataTypes, TextDataTypes } from '../../common/data-types'
 
 import { Code, CodeDefinition } from '../code'
 import { Number, NumberDefinition } from '../number'
@@ -15,9 +16,21 @@ const textControls = {
   Code: Code(),
 } as const
 
+// Each text control writes its own legacy marker. They remain interoperable
+// because every control accepts all `AcceptedTextDataTypes` on read.
+const textMarkers: Record<string, string> = {
+  TextInput: TextDataTypes.textInput,
+  TextArea: TextDataTypes.textArea,
+  Code: TextDataTypes.code,
+}
+
 const numberControls = {
   Number: Number(),
 } as const
+
+const numberMarkers: Record<string, string> = {
+  Number: NumberDataTypes.number,
+}
 
 describe('cross-control interop', () => {
   describe('text group', () => {
@@ -27,10 +40,10 @@ describe('cross-control interop', () => {
         const value = `hello from ${writerName}`
         const written = writer.toData(value)
 
-        describe('writes the shared text marker', () => {
-          test('toData uses the shared "text" marker', () => {
+        describe('writes its own legacy text marker', () => {
+          test('toData uses the control-specific legacy marker', () => {
             expect(written).toEqual({
-              [ControlDataTypeKey]: 'text',
+              [ControlDataTypeKey]: textMarkers[writerName],
               value,
             })
           })
@@ -86,14 +99,14 @@ describe('cross-control interop', () => {
   describe('number group', () => {
     describe.each(Object.entries(numberControls))(
       'data written by %s',
-      (_writerName, writer) => {
+      (writerName, writer) => {
         const value = 42
         const written = writer.toData(value)
 
-        describe('writes the shared number marker', () => {
-          test('toData uses the shared "number" marker', () => {
+        describe('writes its own legacy number marker', () => {
+          test('toData uses the control-specific legacy marker', () => {
             expect(written).toEqual({
-              [ControlDataTypeKey]: 'number',
+              [ControlDataTypeKey]: numberMarkers[writerName],
               value,
             })
           })
@@ -217,16 +230,16 @@ describe('cross-control interop', () => {
       expect(Number().fromData(legacy as never)).toBe(99)
     })
 
-    test('next edit through a modern control rewrites the marker to the canonical text marker', () => {
+    test('next edit through a modern control rewrites the marker to its own legacy text marker', () => {
       expect(TextInput().toData('after edit')).toEqual({
-        [ControlDataTypeKey]: 'text',
+        [ControlDataTypeKey]: TextDataTypes.textInput,
         value: 'after edit',
       })
     })
 
-    test('next edit through Number rewrites the marker to the canonical number marker', () => {
+    test('next edit through Number rewrites the marker to its own legacy number marker', () => {
       expect(Number().toData(7)).toEqual({
-        [ControlDataTypeKey]: 'number',
+        [ControlDataTypeKey]: NumberDataTypes.number,
         value: 7,
       })
     })

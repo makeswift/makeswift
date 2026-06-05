@@ -63,56 +63,56 @@ SliderDefinition {
 
 exports[`Slider definition w/ config {"defaultValue":50,"label":"volume","min":0,"max":100} toData returns v1 data for \`0\` when definition version is 1 1`] = `
 {
-  "@@makeswift/type": "number",
+  "@@makeswift/type": "number::v1",
   "value": 0,
 }
 `;
 
 exports[`Slider definition w/ config {"defaultValue":50,"label":"volume","min":0,"max":100} toData returns v1 data for \`25\` when definition version is 1 1`] = `
 {
-  "@@makeswift/type": "number",
+  "@@makeswift/type": "number::v1",
   "value": 25,
 }
 `;
 
 exports[`Slider definition w/ config {"defaultValue":50,"label":"volume","min":0,"max":100} toData returns v1 data for \`50\` when definition version is 1 1`] = `
 {
-  "@@makeswift/type": "number",
+  "@@makeswift/type": "number::v1",
   "value": 50,
 }
 `;
 
 exports[`Slider definition w/ config {"defaultValue":50,"label":"volume","min":0,"max":100} toData returns v1 data for \`75\` when definition version is 1 1`] = `
 {
-  "@@makeswift/type": "number",
+  "@@makeswift/type": "number::v1",
   "value": 75,
 }
 `;
 
 exports[`Slider definition w/ config {"defaultValue":50,"label":"volume","min":0,"max":100} toData returns v1 data for \`100\` when definition version is 1 1`] = `
 {
-  "@@makeswift/type": "number",
+  "@@makeswift/type": "number::v1",
   "value": 100,
 }
 `;
 
 exports[`Slider definition w/ config {"label":"opacity"} toData returns v1 data for \`0.5\` when definition version is 1 1`] = `
 {
-  "@@makeswift/type": "number",
+  "@@makeswift/type": "number::v1",
   "value": 0.5,
 }
 `;
 
 exports[`Slider definition w/ config {"label":"opacity"} toData returns v1 data for \`0\` when definition version is 1 1`] = `
 {
-  "@@makeswift/type": "number",
+  "@@makeswift/type": "number::v1",
   "value": 0,
 }
 `;
 
 exports[`Slider definition w/ config {"label":"opacity"} toData returns v1 data for \`1\` when definition version is 1 1`] = `
 {
-  "@@makeswift/type": "number",
+  "@@makeswift/type": "number::v1",
   "value": 1,
 }
 `;
