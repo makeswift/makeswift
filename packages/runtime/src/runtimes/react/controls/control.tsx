@@ -11,7 +11,7 @@ import { ReactNode } from 'react'
 import { useResolvedValue } from '../hooks/use-resolved-value'
 import { useCssId } from '../hooks/use-css-id'
 import { useBreakpoints } from '../hooks/use-breakpoints'
-import { useControlledStyles } from '../css-runtime/css-runtime'
+import { useControlledStyles } from '../css-runtime/hooks/use-controlled-styles'
 
 type ControlValueProps = {
   definition: ControlDefinition

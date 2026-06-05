@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactNode, useEffect } from "react"
-import { ControlledStyleData } from "../css-runtime"
+import { ControlledStyleData } from "../hooks/use-controlled-styles"
 import { pollBoxModel } from "../../poll-box-model"
 import { HoistedStyle } from "./HoistedStyle"
 

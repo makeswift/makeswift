@@ -14,7 +14,7 @@ import { useSelector } from './use-selector'
 
 import { useResolvableRecord } from './use-resolvable-record'
 import { propErrorHandlingProxy } from '../utils/prop-error-handling-proxy'
-import { useControlledStyles } from '../css-runtime/css-runtime'
+import { useControlledStyles } from '../css-runtime/hooks/use-controlled-styles'
 import { useBreakpoints } from './use-breakpoints'
 
 function useControlInstances(elementKey: string): Record<string, ControlInstance> | null {
