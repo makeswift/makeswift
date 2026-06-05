@@ -1,19 +1,20 @@
 'use client'
 
 import { ReactNode, useEffect } from "react"
-import { DefinedStyleData } from "../css-runtime"
+import { ControlledStyleData } from "../css-runtime"
 import { pollBoxModel } from "../../poll-box-model"
+import { HoistedStyle } from "./HoistedStyle"
 
 type Props = {
-  classNameToStyles: Map<string, DefinedStyleData>
+  classNameToStyles: Map<string, ControlledStyleData>
 }
 
-export function ClientComponentStyles({ classNameToStyles }: Props): ReactNode {
+export function ControlledStyles({ classNameToStyles }: Props): ReactNode {
   return (
     <>
       {Array.from(classNameToStyles.entries()).map(([className, styleData]) => {
         return (
-          <ClientComponentStyle
+          <ControlledStyle
             className={className}
             styleData={styleData}
             key={className}
@@ -24,12 +25,12 @@ export function ClientComponentStyles({ classNameToStyles }: Props): ReactNode {
   )
 }
 
-function ClientComponentStyle({
+function ControlledStyle({
   className,
   styleData,
 }: {
   className: string,
-  styleData: DefinedStyleData,
+  styleData: ControlledStyleData,
 }): ReactNode {
   const href = `${className}-${styleData.counter}`
 
@@ -40,9 +41,5 @@ function ClientComponentStyle({
     return pollBoxModel({ element, onBoxModelChange})
   }, [className])
 
-  return (
-    <style href={href} precedence="default">
-      {styleData.css}
-    </style>
-  )
+  return <HoistedStyle href={href} css={styleData.css} />
 }

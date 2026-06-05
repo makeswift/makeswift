@@ -14,7 +14,7 @@ import { useSelector } from './use-selector'
 
 import { useResolvableRecord } from './use-resolvable-record'
 import { propErrorHandlingProxy } from '../utils/prop-error-handling-proxy'
-import { useStylesheetEngine } from '../css-runtime/css-runtime'
+import { useControlledStyles } from '../css-runtime/css-runtime'
 import { useBreakpoints } from './use-breakpoints'
 
 function useControlInstances(elementKey: string): Record<string, ControlInstance> | null {
@@ -34,7 +34,7 @@ type CacheItem = {
 }
 
 type Emitted = {
-  renderDefinedStyles: () => React.ReactNode
+  renderControlledStyles: () => React.ReactNode
 }
 
 export function useResolvedProps(
@@ -45,7 +45,7 @@ export function useResolvedProps(
   const breakpoints = useBreakpoints()
   const resourceResolver = useResourceResolver()
   const controls = useControlInstances(elementKey)
-  const { getStylesheet, renderDefinedStyles } = useStylesheetEngine()
+  const { getStylesheet, renderControlledStyles } = useControlledStyles()
 
   const cache = useRef<Record<string, CacheItem>>({}).current
   const resolveProp = useCallback(
@@ -107,7 +107,7 @@ export function useResolvedProps(
   return {
     props: resolvedProps,
     emitted: {
-      renderDefinedStyles,
+      renderControlledStyles,
     }
   }
 }

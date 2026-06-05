@@ -40,7 +40,7 @@ export function ResolveProps({ element, children: renderComponent }: PropsValueP
   return (
     <>
       <MemoizedConsumer renderFn={renderFn} resolvedProps={resolvedProps} />
-      {emitted.renderDefinedStyles()}
+      {emitted.renderControlledStyles()}
     </>
   )
 }

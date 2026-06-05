@@ -2,10 +2,12 @@ import { CSSObject, serializeStyles } from "@emotion/serialize";
 import { serialize, compile, stringify, prefixer, middleware } from 'stylis'
 import { murmur3 } from 'murmurhash-js'
 import { BoxDisplayModel, Breakpoints, ResolvedStyle, Stylesheet } from "@makeswift/controls";
-import { useCallback, useRef } from "react";
-import { ClientComponentStyles } from "./components/ClientComponentStyles";
+import { ReactNode, useCallback, useId, useRef } from "react";
+import { ControlledStyles } from "./components/ControlledStyles";
 import React from "react";
 import { resolvedStyleToCss } from "../lib/resolved-style-to-css";
+import { StaticStyle } from "./components/StaticStyle";
+import { useCssId } from "../hooks/use-css-id";
 
 /**
  * Converts a styles object into a string which is fit for use as input to a css preprocessor.
@@ -41,7 +43,7 @@ type OnCssGenerated = ({
   onBoxModelChange?: (boxModel: BoxDisplayModel | null) => void
 }) => void
 
-export type DefinedStyleData = {
+export type ControlledStyleData = {
   css: string
   counter: number
   joinedPropPath: string | undefined
@@ -88,8 +90,8 @@ export class StylesheetEngine implements Stylesheet {
   }
 }
 
-export function useStylesheetEngine() {
-    const stylesMap = useRef<Map<string, DefinedStyleData>>(new Map()).current
+export function useControlledStyles() {
+    const stylesMap = useRef<Map<string, ControlledStyleData>>(new Map()).current
 
     const getStylesheet = useCallback(({
       breakpointsData,
@@ -112,13 +114,25 @@ export function useStylesheetEngine() {
       })
     }, [])
 
-    const renderDefinedStyles = useCallback(() => {
-      return React.createElement(ClientComponentStyles, { classNameToStyles: stylesMap })
+    const renderControlledStyles = useCallback(() => {
+      return React.createElement(ControlledStyles, { classNameToStyles: stylesMap })
     }, [])
 
     return {
       getStylesheet,
-      renderDefinedStyles,
+      renderControlledStyles,
     }
+}
 
+export function useStaticStyle(style: CSSObject): { className: string, renderStaticStyle: () => ReactNode } {
+  const id = useCssId()
+  const className = generateClassName(undefined, id)
+  const css = toCss(style, className)
+  const renderStaticStyle = useCallback(() => {
+    return React.createElement(StaticStyle, { className, css })
+  }, [className, css])
+  return {
+    className,
+    renderStaticStyle,
+  }
 }

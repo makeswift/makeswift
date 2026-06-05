@@ -11,7 +11,7 @@ import { ReactNode } from 'react'
 import { useResolvedValue } from '../hooks/use-resolved-value'
 import { useCssId } from '../hooks/use-css-id'
 import { useBreakpoints } from '../hooks/use-breakpoints'
-import { useStylesheetEngine } from '../css-runtime/css-runtime'
+import { useControlledStyles } from '../css-runtime/css-runtime'
 
 type ControlValueProps = {
   definition: ControlDefinition
@@ -28,7 +28,7 @@ export function ControlValue({
 }: ControlValueProps): ReactNode {
   const breakpoints = useBreakpoints()
   const id = `cv-${useCssId()}`
-  const { getStylesheet, renderDefinedStyles } = useStylesheetEngine()
+  const { getStylesheet, renderControlledStyles } = useControlledStyles()
 
   const stylesheet = getStylesheet({
     breakpointsData: breakpoints,
@@ -46,7 +46,7 @@ export function ControlValue({
   return (
     <>
       {children(value)}
-      {renderDefinedStyles()}
+      {renderControlledStyles()}
     </>
   )
 }
