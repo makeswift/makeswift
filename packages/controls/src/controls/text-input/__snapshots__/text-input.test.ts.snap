@@ -32,28 +32,28 @@ TextInputDefinition {
 
 exports[`TextInput definition w/ config {"defaultValue":"elmo","label":"visible"} toData returns v1 data for \`bert\` when definition version is 1 1`] = `
 {
-  "@@makeswift/type": "text",
+  "@@makeswift/type": "text-input::v1",
   "value": "bert",
 }
 `;
 
 exports[`TextInput definition w/ config {"defaultValue":"elmo","label":"visible"} toData returns v1 data for \`ernie\` when definition version is 1 1`] = `
 {
-  "@@makeswift/type": "text",
+  "@@makeswift/type": "text-input::v1",
   "value": "ernie",
 }
 `;
 
 exports[`TextInput definition w/ config {"label":"TextInput"} toData returns v1 data for \`big bird\` when definition version is 1 1`] = `
 {
-  "@@makeswift/type": "text",
+  "@@makeswift/type": "text-input::v1",
   "value": "big bird",
 }
 `;
 
 exports[`TextInput definition w/ config {"label":"TextInput"} toData returns v1 data for \`cookie monster\` when definition version is 1 1`] = `
 {
-  "@@makeswift/type": "text",
+  "@@makeswift/type": "text-input::v1",
   "value": "cookie monster",
 }
 `;

@@ -137,7 +137,7 @@ exports[`Page TextArea control data v1 when value is The Prizoner of Azkaban: sn
               "key": "11111111-1111-1111-1111-111111111111",
               "props": {
                 "propKey": {
-                  "@@makeswift/type": "text",
+                  "@@makeswift/type": "text-area::v1",
                   "value": "The Prizoner of Azkaban",
                 },
               },

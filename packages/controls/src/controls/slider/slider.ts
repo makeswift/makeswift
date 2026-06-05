@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
 import { AcceptedNumberDataTypes, ControlDataTypeKey } from '../../common'
-import { DataType } from '../../common/data-types'
+import { NumberDataTypes } from '../../common/data-types'
 import { type CopyContext } from '../../context'
 import { type DeserializedRecord } from '../../serialization'
 
@@ -46,7 +46,7 @@ class Definition<C extends Config> extends ControlDefinition<
   ValueType<C>,
   ResolvedValueType<C>
 > {
-  private static readonly v1DataType = DataType.Number
+  private static readonly v1DataType = NumberDataTypes.number
   private static readonly dataSignature = {
     v1: { [ControlDataTypeKey]: this.v1DataType },
   } as const
