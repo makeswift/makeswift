@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Page Font control data resolves to {"fontFamily":"comic sans","fontStyle":"normal","fontWeight":400} when config === {"variant":true}: Makeswift styles 1`] = `[]`;
+
 exports[`Page Font control data resolves to {"fontFamily":"comic sans","fontStyle":"normal","fontWeight":400} when config === {"variant":true}: resolvedValue 1`] = `
 {
   "fontFamily": "comic sans",
@@ -65,6 +67,8 @@ exports[`Page Font control data resolves to {"fontFamily":"comic sans","fontStyl
   },
 }
 `;
+
+exports[`Page Font control data resolves to {"fontFamily":"comic sans","fontStyle":"normal","fontWeight":400} when config === undefined: Makeswift styles 1`] = `[]`;
 
 exports[`Page Font control data resolves to {"fontFamily":"comic sans","fontStyle":"normal","fontWeight":400} when config === undefined: resolvedValue 1`] = `
 {
@@ -132,6 +136,8 @@ exports[`Page Font control data resolves to {"fontFamily":"comic sans","fontStyl
 }
 `;
 
+exports[`Page Font control data resolves to {"fontFamily":"comic sans"} when config === {"variant":false}: Makeswift styles 1`] = `[]`;
+
 exports[`Page Font control data resolves to {"fontFamily":"comic sans"} when config === {"variant":false}: resolvedValue 1`] = `
 {
   "fontFamily": "comic sans",
@@ -194,6 +200,8 @@ exports[`Page Font control data resolves to {"fontFamily":"comic sans"} when con
 }
 `;
 
+exports[`Page Font control data resolves to defaultValue when config is {"defaultValue":{"fontFamily":"comic sans","fontStyle":"normal","fontWeight":400}}: Makeswift styles 1`] = `[]`;
+
 exports[`Page Font control data resolves to defaultValue when config is {"defaultValue":{"fontFamily":"comic sans","fontStyle":"normal","fontWeight":400}}: resolvedValue 1`] = `
 {
   "fontFamily": "comic sans",
@@ -253,6 +261,8 @@ exports[`Page Font control data resolves to defaultValue when config is {"defaul
 }
 `;
 
+exports[`Page Font control data resolves to defaultValue when config is {"variant":false,"defaultValue":{"fontFamily":"comic sans"}}: Makeswift styles 1`] = `[]`;
+
 exports[`Page Font control data resolves to defaultValue when config is {"variant":false,"defaultValue":{"fontFamily":"comic sans"}}: resolvedValue 1`] = `
 {
   "fontFamily": "comic sans",
@@ -309,6 +319,8 @@ exports[`Page Font control data resolves to defaultValue when config is {"varian
   },
 }
 `;
+
+exports[`Page Font control data resolves to defaultValue when config is {"variant":true,"defaultValue":{"fontFamily":"comic sans","fontStyle":"normal","fontWeight":400}}: Makeswift styles 1`] = `[]`;
 
 exports[`Page Font control data resolves to defaultValue when config is {"variant":true,"defaultValue":{"fontFamily":"comic sans","fontStyle":"normal","fontWeight":400}}: resolvedValue 1`] = `
 {
@@ -369,6 +381,8 @@ exports[`Page Font control data resolves to defaultValue when config is {"varian
 }
 `;
 
+exports[`Page Font control data resolves to undefined when config === {"variant":false}: Makeswift styles 1`] = `[]`;
+
 exports[`Page Font control data resolves to undefined when config === {"variant":false}: resolvedValue 1`] = `undefined`;
 
 exports[`Page Font control data resolves to undefined when config === {"variant":false}: snapshot 1`] = `
@@ -422,6 +436,8 @@ exports[`Page Font control data resolves to undefined when config === {"variant"
 }
 `;
 
+exports[`Page Font control data resolves to undefined when config === {"variant":true}: Makeswift styles 1`] = `[]`;
+
 exports[`Page Font control data resolves to undefined when config === {"variant":true}: resolvedValue 1`] = `undefined`;
 
 exports[`Page Font control data resolves to undefined when config === {"variant":true}: snapshot 1`] = `
@@ -474,6 +490,8 @@ exports[`Page Font control data resolves to undefined when config === {"variant"
   },
 }
 `;
+
+exports[`Page Font control data resolves to undefined when config === undefined: Makeswift styles 1`] = `[]`;
 
 exports[`Page Font control data resolves to undefined when config === undefined: resolvedValue 1`] = `undefined`;
 

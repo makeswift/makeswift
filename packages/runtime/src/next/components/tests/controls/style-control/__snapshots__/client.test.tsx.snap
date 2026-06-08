@@ -1,6 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders a style with CSS variable fontFamily: resolvedValue 1`] = `"mswft-ezpn2f u-_r_8_-propKey"`;
+exports[`renders a style with CSS variable fontFamily: Makeswift styles 1`] = `
+[
+  ".ms-1cifws9{max-width:100%;}@media only screen and (min-width: 769px){.ms-1cifws9{width:80%;margin-top:4px;margin-right:auto;margin-bottom:0px;margin-left:auto;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-1cifws9{width:80%;margin-top:4px;margin-right:auto;margin-bottom:0px;margin-left:auto;}}@media only screen and (max-width: 575px){.ms-1cifws9{width:80%;margin-top:4px;margin-right:auto;margin-bottom:0px;margin-left:auto;}}",
+]
+`;
+
+exports[`renders a style with CSS variable fontFamily: resolvedValue 1`] = `"ms-1cifws9"`;
 
 exports[`renders a style with CSS variable fontFamily: snapshot 1`] = `
 {
@@ -76,7 +82,13 @@ exports[`renders a style with CSS variable fontFamily: snapshot 1`] = `
 }
 `;
 
-exports[`renders a style with fontFamily: resolvedValue 1`] = `"mswft-1rtsrrx u-_r_5_-propKey"`;
+exports[`renders a style with fontFamily: Makeswift styles 1`] = `
+[
+  ".ms-1cifws9{max-width:100%;}@media only screen and (min-width: 769px){.ms-1cifws9{width:80%;margin-top:4px;margin-right:auto;margin-bottom:0px;margin-left:auto;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-1cifws9{width:80%;margin-top:4px;margin-right:auto;margin-bottom:0px;margin-left:auto;}}@media only screen and (max-width: 575px){.ms-1cifws9{width:80%;margin-top:4px;margin-right:auto;margin-bottom:0px;margin-left:auto;}}",
+]
+`;
+
+exports[`renders a style with fontFamily: resolvedValue 1`] = `"ms-1cifws9"`;
 
 exports[`renders a style with fontFamily: snapshot 1`] = `
 {
@@ -152,7 +164,13 @@ exports[`renders a style with fontFamily: snapshot 1`] = `
 }
 `;
 
-exports[`renders a style: resolvedValue 1`] = `"mswft-1cny9vj u-_r_2_-propKey"`;
+exports[`renders a style: Makeswift styles 1`] = `
+[
+  ".ms-1cifws9{max-width:100%;}@media only screen and (min-width: 769px){.ms-1cifws9{width:80%;margin-top:4px;margin-right:auto;margin-bottom:0px;margin-left:auto;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-1cifws9{width:80%;margin-top:4px;margin-right:auto;margin-bottom:0px;margin-left:auto;}}@media only screen and (max-width: 575px){.ms-1cifws9{width:80%;margin-top:4px;margin-right:auto;margin-bottom:0px;margin-left:auto;}}",
+]
+`;
+
+exports[`renders a style: resolvedValue 1`] = `"ms-1cifws9"`;
 
 exports[`renders a style: snapshot 1`] = `
 {

@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Page Combobox control data async getOptions resolves when value is { id: '1', label: 'One', value: [Object] }: Makeswift styles 1`] = `[]`;
+
 exports[`Page Combobox control data async getOptions resolves when value is { id: '1', label: 'One', value: [Object] }: resolvedValue 1`] = `
 {
   "id": "1",
@@ -64,6 +66,8 @@ exports[`Page Combobox control data async getOptions resolves when value is { id
   },
 }
 `;
+
+exports[`Page Combobox control data async getOptions resolves when value is { id: '2', label: 'Two', value: [Object] }: Makeswift styles 1`] = `[]`;
 
 exports[`Page Combobox control data async getOptions resolves when value is { id: '2', label: 'Two', value: [Object] }: resolvedValue 1`] = `
 {
@@ -130,6 +134,8 @@ exports[`Page Combobox control data async getOptions resolves when value is { id
 }
 `;
 
+exports[`Page Combobox control data async getOptions resolves when value is { id: '3', label: 'Three', value: [Object] }: Makeswift styles 1`] = `[]`;
+
 exports[`Page Combobox control data async getOptions resolves when value is { id: '3', label: 'Three', value: [Object] }: resolvedValue 1`] = `
 {
   "id": "3",
@@ -195,6 +201,8 @@ exports[`Page Combobox control data async getOptions resolves when value is { id
 }
 `;
 
+exports[`Page Combobox control data async getOptions resolves when value is undefined: Makeswift styles 1`] = `[]`;
+
 exports[`Page Combobox control data async getOptions resolves when value is undefined: resolvedValue 1`] = `undefined`;
 
 exports[`Page Combobox control data async getOptions resolves when value is undefined: snapshot 1`] = `
@@ -247,6 +255,8 @@ exports[`Page Combobox control data async getOptions resolves when value is unde
   },
 }
 `;
+
+exports[`Page Combobox control data object values resolves when value is { id: '1', label: 'One', value: [Object] }: Makeswift styles 1`] = `[]`;
 
 exports[`Page Combobox control data object values resolves when value is { id: '1', label: 'One', value: [Object] }: resolvedValue 1`] = `
 {
@@ -313,6 +323,8 @@ exports[`Page Combobox control data object values resolves when value is { id: '
 }
 `;
 
+exports[`Page Combobox control data object values resolves when value is { id: '2', label: 'Two', value: [Object] }: Makeswift styles 1`] = `[]`;
+
 exports[`Page Combobox control data object values resolves when value is { id: '2', label: 'Two', value: [Object] }: resolvedValue 1`] = `
 {
   "id": "2",
@@ -377,6 +389,8 @@ exports[`Page Combobox control data object values resolves when value is { id: '
   },
 }
 `;
+
+exports[`Page Combobox control data object values resolves when value is { id: '3', label: 'Three', value: [Object] }: Makeswift styles 1`] = `[]`;
 
 exports[`Page Combobox control data object values resolves when value is { id: '3', label: 'Three', value: [Object] }: resolvedValue 1`] = `
 {
@@ -443,6 +457,8 @@ exports[`Page Combobox control data object values resolves when value is { id: '
 }
 `;
 
+exports[`Page Combobox control data object values resolves when value is undefined: Makeswift styles 1`] = `[]`;
+
 exports[`Page Combobox control data object values resolves when value is undefined: resolvedValue 1`] = `undefined`;
 
 exports[`Page Combobox control data object values resolves when value is undefined: snapshot 1`] = `
@@ -495,6 +511,8 @@ exports[`Page Combobox control data object values resolves when value is undefin
   },
 }
 `;
+
+exports[`Page Combobox control data primitive values resolves when value is { id: '1', label: 'One', value: 'one' }: Makeswift styles 1`] = `[]`;
 
 exports[`Page Combobox control data primitive values resolves when value is { id: '1', label: 'One', value: 'one' }: resolvedValue 1`] = `"one"`;
 
@@ -553,6 +571,8 @@ exports[`Page Combobox control data primitive values resolves when value is { id
 }
 `;
 
+exports[`Page Combobox control data primitive values resolves when value is { id: '2', label: 'Two', value: 'two' }: Makeswift styles 1`] = `[]`;
+
 exports[`Page Combobox control data primitive values resolves when value is { id: '2', label: 'Two', value: 'two' }: resolvedValue 1`] = `"two"`;
 
 exports[`Page Combobox control data primitive values resolves when value is { id: '2', label: 'Two', value: 'two' }: snapshot 1`] = `
@@ -610,6 +630,8 @@ exports[`Page Combobox control data primitive values resolves when value is { id
 }
 `;
 
+exports[`Page Combobox control data primitive values resolves when value is { id: '3', label: 'Three', value: 'three' }: Makeswift styles 1`] = `[]`;
+
 exports[`Page Combobox control data primitive values resolves when value is { id: '3', label: 'Three', value: 'three' }: resolvedValue 1`] = `"three"`;
 
 exports[`Page Combobox control data primitive values resolves when value is { id: '3', label: 'Three', value: 'three' }: snapshot 1`] = `
@@ -666,6 +688,8 @@ exports[`Page Combobox control data primitive values resolves when value is { id
   },
 }
 `;
+
+exports[`Page Combobox control data primitive values resolves when value is undefined: Makeswift styles 1`] = `[]`;
 
 exports[`Page Combobox control data primitive values resolves when value is undefined: resolvedValue 1`] = `undefined`;
 

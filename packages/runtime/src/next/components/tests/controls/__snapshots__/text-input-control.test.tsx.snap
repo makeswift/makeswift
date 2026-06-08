@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Page TextInput control data v0 when value is The Blueprint: Makeswift styles 1`] = `[]`;
+
 exports[`Page TextInput control data v0 when value is The Blueprint: resolvedValue 1`] = `"The Blueprint"`;
 
 exports[`Page TextInput control data v0 when value is The Blueprint: snapshot 1`] = `
@@ -53,6 +55,8 @@ exports[`Page TextInput control data v0 when value is The Blueprint: snapshot 1`
 }
 `;
 
+exports[`Page TextInput control data v0 when value is undefined: Makeswift styles 1`] = `[]`;
+
 exports[`Page TextInput control data v0 when value is undefined: resolvedValue 1`] = `undefined`;
 
 exports[`Page TextInput control data v0 when value is undefined: snapshot 1`] = `
@@ -105,6 +109,8 @@ exports[`Page TextInput control data v0 when value is undefined: snapshot 1`] = 
   },
 }
 `;
+
+exports[`Page TextInput control data v1 when value is The Blueprint: Makeswift styles 1`] = `[]`;
 
 exports[`Page TextInput control data v1 when value is The Blueprint: resolvedValue 1`] = `"The Blueprint"`;
 
@@ -162,6 +168,8 @@ exports[`Page TextInput control data v1 when value is The Blueprint: snapshot 1`
 }
 `;
 
+exports[`Page TextInput control data v1 when value is undefined: Makeswift styles 1`] = `[]`;
+
 exports[`Page TextInput control data v1 when value is undefined: resolvedValue 1`] = `undefined`;
 
 exports[`Page TextInput control data v1 when value is undefined: snapshot 1`] = `
@@ -214,6 +222,8 @@ exports[`Page TextInput control data v1 when value is undefined: snapshot 1`] = 
   },
 }
 `;
+
+exports[`Page when defaultValue is set: Makeswift styles 1`] = `[]`;
 
 exports[`Page when defaultValue is set: resolvedValue 1`] = `"Magna Carta Holy Grail"`;
 

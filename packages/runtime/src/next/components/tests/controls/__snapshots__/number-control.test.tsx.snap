@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Page Number control data v0 when value is 42: Makeswift styles 1`] = `[]`;
+
 exports[`Page Number control data v0 when value is 42: resolvedValue 1`] = `42`;
 
 exports[`Page Number control data v0 when value is 42: snapshot 1`] = `
@@ -53,6 +55,8 @@ exports[`Page Number control data v0 when value is 42: snapshot 1`] = `
 }
 `;
 
+exports[`Page Number control data v0 when value is undefined: Makeswift styles 1`] = `[]`;
+
 exports[`Page Number control data v0 when value is undefined: resolvedValue 1`] = `undefined`;
 
 exports[`Page Number control data v0 when value is undefined: snapshot 1`] = `
@@ -105,6 +109,8 @@ exports[`Page Number control data v0 when value is undefined: snapshot 1`] = `
   },
 }
 `;
+
+exports[`Page Number control data v1 when value is 42: Makeswift styles 1`] = `[]`;
 
 exports[`Page Number control data v1 when value is 42: resolvedValue 1`] = `42`;
 
@@ -162,6 +168,8 @@ exports[`Page Number control data v1 when value is 42: snapshot 1`] = `
 }
 `;
 
+exports[`Page Number control data v1 when value is undefined: Makeswift styles 1`] = `[]`;
+
 exports[`Page Number control data v1 when value is undefined: resolvedValue 1`] = `undefined`;
 
 exports[`Page Number control data v1 when value is undefined: snapshot 1`] = `
@@ -214,6 +222,8 @@ exports[`Page Number control data v1 when value is undefined: snapshot 1`] = `
   },
 }
 `;
+
+exports[`Page when defaultValue is set: Makeswift styles 1`] = `[]`;
 
 exports[`Page when defaultValue is set: resolvedValue 1`] = `23`;
 

@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Page TextArea control data v0 when value is The Prizoner of Azkaban: Makeswift styles 1`] = `[]`;
+
 exports[`Page TextArea control data v0 when value is The Prizoner of Azkaban: resolvedValue 1`] = `"The Prizoner of Azkaban"`;
 
 exports[`Page TextArea control data v0 when value is The Prizoner of Azkaban: snapshot 1`] = `
@@ -53,6 +55,8 @@ exports[`Page TextArea control data v0 when value is The Prizoner of Azkaban: sn
 }
 `;
 
+exports[`Page TextArea control data v0 when value is undefined: Makeswift styles 1`] = `[]`;
+
 exports[`Page TextArea control data v0 when value is undefined: resolvedValue 1`] = `undefined`;
 
 exports[`Page TextArea control data v0 when value is undefined: snapshot 1`] = `
@@ -105,6 +109,8 @@ exports[`Page TextArea control data v0 when value is undefined: snapshot 1`] = `
   },
 }
 `;
+
+exports[`Page TextArea control data v1 when value is The Prizoner of Azkaban: Makeswift styles 1`] = `[]`;
 
 exports[`Page TextArea control data v1 when value is The Prizoner of Azkaban: resolvedValue 1`] = `"The Prizoner of Azkaban"`;
 
@@ -162,6 +168,8 @@ exports[`Page TextArea control data v1 when value is The Prizoner of Azkaban: sn
 }
 `;
 
+exports[`Page TextArea control data v1 when value is undefined: Makeswift styles 1`] = `[]`;
+
 exports[`Page TextArea control data v1 when value is undefined: resolvedValue 1`] = `undefined`;
 
 exports[`Page TextArea control data v1 when value is undefined: snapshot 1`] = `
@@ -214,6 +222,8 @@ exports[`Page TextArea control data v1 when value is undefined: snapshot 1`] = `
   },
 }
 `;
+
+exports[`Page when defaultValue is set: Makeswift styles 1`] = `[]`;
 
 exports[`Page when defaultValue is set: resolvedValue 1`] = `"The Deathly Hallows"`;
 

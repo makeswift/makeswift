@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Page List of checkboxes when value is [true, false, undefined]: Makeswift styles 1`] = `[]`;
+
 exports[`Page List of checkboxes when value is [true, false, undefined]: resolvedValue 1`] = `
 [
   true,
@@ -80,6 +82,8 @@ exports[`Page List of checkboxes when value is [true, false, undefined]: snapsho
   },
 }
 `;
+
+exports[`Page List of colors when value is {"value":[{"swatchId":"[swatch-test-id]","alpha":0.5}],"swatch":{"__typename":"Swatch","hue":238,"saturation":87,"lightness":49},"defaultValue":"rgb(255,0,0)"}: Makeswift styles 1`] = `[]`;
 
 exports[`Page List of colors when value is {"value":[{"swatchId":"[swatch-test-id]","alpha":0.5}],"swatch":{"__typename":"Swatch","hue":238,"saturation":87,"lightness":49},"defaultValue":"rgb(255,0,0)"}: resolvedValue 1`] = `
 [

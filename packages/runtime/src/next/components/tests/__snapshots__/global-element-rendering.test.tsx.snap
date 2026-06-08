@@ -54,36 +54,6 @@ exports[`Page correctly renders a global element 1`] = `
   margin: 0;
 }
 
-@media only screen and (min-width: 769px) {
-  .emotion-4 {
-    font-family: Lato;
-    font-size: 30px;
-    font-weight: 700;
-    line-height: 1.5;
-    font-style: initial;
-  }
-}
-
-@media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-4 {
-    font-family: Lato;
-    font-size: 30px;
-    font-weight: 700;
-    line-height: 1.5;
-    font-style: initial;
-  }
-}
-
-@media only screen and (max-width: 575px) {
-  .emotion-4 {
-    font-family: Lato;
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 1.5;
-    font-style: initial;
-  }
-}
-
 <div
   class="emotion-0 emotion-1"
   id="title"
@@ -92,16 +62,22 @@ exports[`Page correctly renders a global element 1`] = `
     style="position: relative; white-space: pre-wrap; word-wrap: break-word;"
   >
     <p
-      class="emotion-2 emotion-3"
+      class="emotion-2 ms-xebgmj"
     >
       <span
-        class="emotion-4"
+        class="ms-srm1zu"
       >
         About Us
       </span>
     </p>
   </div>
 </div>
+`;
+
+exports[`Page correctly renders a global element: Makeswift styles 1`] = `
+[
+  "@media only screen and (min-width: 769px){.ms-srm1zu{font-family:Lato;font-size:30px;font-weight:700;line-height:1.5;font-style:initial;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-srm1zu{font-family:Lato;font-size:30px;font-weight:700;line-height:1.5;font-style:initial;}}@media only screen and (max-width: 575px){.ms-srm1zu{font-family:Lato;font-size:16px;font-weight:700;line-height:1.5;font-style:initial;}}",
+]
 `;
 
 exports[`Page correctly renders a localized global element 1`] = `
@@ -211,39 +187,6 @@ exports[`Page correctly renders a localized global element 1`] = `
   margin: 0;
 }
 
-@media only screen and (min-width: 769px) {
-  .emotion-4 {
-    color: hsla(238,87%,49%,1);
-    font-family: Lato;
-    font-size: 30px;
-    font-weight: 700;
-    line-height: 1.5;
-    font-style: initial;
-  }
-}
-
-@media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-4 {
-    color: hsla(238,87%,49%,1);
-    font-family: Lato;
-    font-size: 30px;
-    font-weight: 700;
-    line-height: 1.5;
-    font-style: initial;
-  }
-}
-
-@media only screen and (max-width: 575px) {
-  .emotion-4 {
-    color: hsla(238,87%,49%,1);
-    font-family: Lato;
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 1.5;
-    font-style: initial;
-  }
-}
-
 <div
   class="emotion-0 emotion-1"
   id="title"
@@ -252,14 +195,21 @@ exports[`Page correctly renders a localized global element 1`] = `
     style="position: relative; white-space: pre-wrap; word-wrap: break-word;"
   >
     <p
-      class="emotion-2 emotion-3"
+      class="emotion-2 ms-xzb9tw"
     >
       <span
-        class="emotion-4"
+        class="ms-1lo5cxy"
       >
         À propos de nous
       </span>
     </p>
   </div>
 </div>
+`;
+
+exports[`Page correctly renders a localized global element: Makeswift styles 1`] = `
+[
+  "@media only screen and (min-width: 769px){.ms-srm1zu{font-family:Lato;font-size:30px;font-weight:700;line-height:1.5;font-style:initial;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-srm1zu{font-family:Lato;font-size:30px;font-weight:700;line-height:1.5;font-style:initial;}}@media only screen and (max-width: 575px){.ms-srm1zu{font-family:Lato;font-size:16px;font-weight:700;line-height:1.5;font-style:initial;}}",
+  "@media only screen and (min-width: 769px){.ms-1lo5cxy{color:hsla(238,87%,49%,1);font-family:Lato;font-size:30px;font-weight:700;line-height:1.5;font-style:initial;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-1lo5cxy{color:hsla(238,87%,49%,1);font-family:Lato;font-size:30px;font-weight:700;line-height:1.5;font-style:initial;}}@media only screen and (max-width: 575px){.ms-1lo5cxy{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;font-weight:700;line-height:1.5;font-style:initial;}}",
+]
 `;
