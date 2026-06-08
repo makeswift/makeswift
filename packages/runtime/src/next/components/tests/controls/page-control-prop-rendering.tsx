@@ -197,6 +197,9 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
     expect(propSnapshot(getByTestId(testId))).toMatchSnapshot('resolvedValue')
 
     const makeswiftStyleElements = getMakeswiftStyleElements(document, defaultClassNamePrefix)
+    expect([...document.querySelectorAll('style')].map(n => n.textContent)).toMatchSnapshot(
+      'component styles',
+    )
     expect(makeswiftStyleElements).toMatchSnapshot('Makeswift styles')
 
     expect(Number(getByTestId(renderCountTestId)?.textContent)).toBe(1)
