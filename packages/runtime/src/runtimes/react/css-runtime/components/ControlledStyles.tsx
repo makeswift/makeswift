@@ -28,9 +28,11 @@ export function ControlledStyles({ classNameToStyles }: Props): ReactNode {
 function ControlledStyle({
   className,
   styleData,
+  options = {},
 }: {
   className: string,
   styleData: ControlledStyleData,
+  options?: { precedence?: string },
 }): ReactNode {
   const href = `${className}-${styleData.counter}`
 
@@ -41,5 +43,5 @@ function ControlledStyle({
     return pollBoxModel({ element, onBoxModelChange})
   }, [className])
 
-  return <HoistedStyle href={href} css={styleData.css} />
+  return <HoistedStyle href={href} css={styleData.css} precedence={options.precedence} />
 }
