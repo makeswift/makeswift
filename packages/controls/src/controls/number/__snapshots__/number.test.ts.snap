@@ -32,28 +32,28 @@ NumberDefinition {
 
 exports[`Number definition w/ config {"defaultValue":17,"label":"visible"} toData returns v1 data for \`20\` when definition version is 1 1`] = `
 {
-  "@@makeswift/type": "number",
+  "@@makeswift/type": "number::v1",
   "value": 20,
 }
 `;
 
 exports[`Number definition w/ config {"defaultValue":17,"label":"visible"} toData returns v1 data for \`21\` when definition version is 1 1`] = `
 {
-  "@@makeswift/type": "number",
+  "@@makeswift/type": "number::v1",
   "value": 21,
 }
 `;
 
 exports[`Number definition w/ config {"label":"Number"} toData returns v1 data for \`50\` when definition version is 1 1`] = `
 {
-  "@@makeswift/type": "number",
+  "@@makeswift/type": "number::v1",
   "value": 50,
 }
 `;
 
 exports[`Number definition w/ config {"label":"Number"} toData returns v1 data for \`51\` when definition version is 1 1`] = `
 {
-  "@@makeswift/type": "number",
+  "@@makeswift/type": "number::v1",
   "value": 51,
 }
 `;

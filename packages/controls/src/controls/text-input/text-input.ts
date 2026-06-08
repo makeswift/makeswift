@@ -8,7 +8,7 @@ import {
   ControlDataTypeKey,
   type Data,
 } from '../../common'
-import { DataType } from '../../common/data-types'
+import { TextDataTypes } from '../../common/data-types'
 import { type CopyContext } from '../../context'
 import { type DeserializedRecord } from '../../serialization'
 
@@ -47,7 +47,7 @@ class Definition<C extends Config> extends ControlDefinition<
   ValueType<C>,
   ResolvedValueType<C>
 > {
-  private static readonly v1DataType = DataType.Text
+  private static readonly v1DataType = TextDataTypes.textInput
   private static readonly dataSignature = {
     v1: { [ControlDataTypeKey]: this.v1DataType },
   } as const

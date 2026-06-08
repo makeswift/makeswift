@@ -1,31 +1,39 @@
 export const ControlDataTypeKey = '@@makeswift/type'
 
-export const DataType = {
+// TODO: Unify tag serialization for controls that share the same underlying
+// data type. For example, all plain-text controls should write the same tag
+// (e.g. `text`). This requires refactoring `ControlDefinition` so prop editing
+// remains backward-compatible when the host is running an older runtime.
+const DataType = {
   Text: 'text',
   Number: 'number',
 } as const
 
-const LegacyTextDataTypes = ['text-input::v1', 'text-area::v1'] as const
+export const TextDataTypes = {
+  textInput: 'text-input::v1',
+  textArea: 'text-area::v1',
+  code: 'code::v1',
+} as const
 
-const LegacyPropControllerTextDataTypes = [
+const PropControllerTextDataTypes = [
   'prop-controllers::text-input::v1',
   'prop-controllers::text-area::v1',
 ] as const
 
 export const AcceptedTextDataTypes = [
   DataType.Text,
-  ...LegacyTextDataTypes,
-  ...LegacyPropControllerTextDataTypes,
+  TextDataTypes.textInput,
+  TextDataTypes.textArea,
+  TextDataTypes.code,
+  ...PropControllerTextDataTypes,
 ] as const
 
-const LegacyNumberDataTypes = ['number::v1'] as const
+export const NumberDataTypes = { number: 'number::v1' } as const
 
-const LegacyPropControllerNumberDataTypes = [
-  'prop-controllers::number::v1',
-] as const
+const PropControllerNumberDataTypes = ['prop-controllers::number::v1'] as const
 
 export const AcceptedNumberDataTypes = [
   DataType.Number,
-  ...LegacyNumberDataTypes,
-  ...LegacyPropControllerNumberDataTypes,
+  NumberDataTypes.number,
+  ...PropControllerNumberDataTypes,
 ] as const

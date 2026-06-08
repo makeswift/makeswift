@@ -4,7 +4,9 @@ import {
   Code,
   ControlDataTypeKey,
   Number as ModernNumber,
+  NumberDataTypes,
   TextArea as ModernTextArea,
+  TextDataTypes,
   TextInput as ModernTextInput,
 } from '@makeswift/controls'
 
@@ -112,12 +114,13 @@ describe('@makeswift/controls -> @makeswift/prop-controllers interop', () => {
       }
 
       // 2. Host overrides with custom component using modern controls; on next
-      //    edit, modern toData rewrites the marker to canonical 'text'.
+      //    edit, modern toData rewrites the marker to its own legacy marker
+      //    'text-input::v1'.
       const afterModernRead = ModernTextInput().fromData(persisted as never)
       const afterModernEdit = ModernTextInput().toData(afterModernRead!)
 
       expect(afterModernEdit).toEqual({
-        [ControlDataTypeKey]: 'text',
+        [ControlDataTypeKey]: TextDataTypes.textInput,
         value: 'Shop now',
       })
 
@@ -171,7 +174,7 @@ describe('@makeswift/controls -> @makeswift/prop-controllers interop', () => {
       const afterModernEdit = ModernNumber().toData(afterModernRead!)
 
       expect(afterModernEdit).toEqual({
-        [ControlDataTypeKey]: 'number',
+        [ControlDataTypeKey]: NumberDataTypes.number,
         value: 99,
       })
 
