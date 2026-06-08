@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders a makeswift::controls::rich-text-v2::mode::block placeholder when empty: component styles 1`] = `
+exports[`renders a makeswift::controls::rich-text-v2::mode::block placeholder when empty: Makeswift styles 1`] = `
 [
-  ".mswft-112y3vj{display:inline-block;width:0;max-width:100%;white-space:nowrap;opacity:0.333;vertical-align:text-top;}",
+  ".ms-1uc9xwq{display:inline-block;width:0;max-width:100%;white-space:nowrap;opacity:0.333;vertical-align:text-top;}",
 ]
 `;
 
@@ -12,7 +12,7 @@ NodeList [
     style="position:relative;white-space:pre-wrap;word-wrap:break-word"
   >
     <span
-      class="mswft-112y3vj"
+      class="ms-1uc9xwq"
     >
       Write some text...
     </span>
@@ -20,9 +20,9 @@ NodeList [
 ]
 `;
 
-exports[`renders a makeswift::controls::rich-text-v2::mode::inline placeholder when empty: component styles 1`] = `
+exports[`renders a makeswift::controls::rich-text-v2::mode::inline placeholder when empty: Makeswift styles 1`] = `
 [
-  ".mswft-112y3vj{display:inline-block;width:0;max-width:100%;white-space:nowrap;opacity:0.333;vertical-align:text-top;}",
+  ".ms-1uc9xwq{display:inline-block;width:0;max-width:100%;white-space:nowrap;opacity:0.333;vertical-align:text-top;}",
 ]
 `;
 
@@ -32,7 +32,7 @@ NodeList [
     style="position:relative;white-space:pre-wrap;word-wrap:break-word"
   >
     <span
-      class="mswft-112y3vj"
+      class="ms-1uc9xwq"
     >
       Write some text...
     </span>
@@ -40,9 +40,9 @@ NodeList [
 ]
 `;
 
-exports[`renders provided text content: component styles 1`] = `
+exports[`renders provided text content: Makeswift styles 1`] = `
 [
-  ".mswft-ytumd6{-webkit-text-decoration:none;text-decoration:none;}.mswft-1uk1gs8{margin:0;}.mswft-vz2etd{padding:0.5em 10px;font-size:1.25em;font-weight:300;border-left:5px solid rgba(0, 0, 0, 0.1);}.mswft-99zmsg{list-style-position:inside;-webkit-padding-start:20px;padding-inline-start:20px;list-style-type:disc;}.mswft-99zmsg ul{list-style-type:circle;}.mswft-99zmsg ul ul{list-style-type:square;}.mswft-dgqoak{list-style-position:inside;-webkit-padding-start:20px;padding-inline-start:20px;list-style-type:decimal;}@media only screen and (min-width: 769px){.mswft-144fjko{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.mswft-144fjko{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.mswft-144fjko{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}",
+  ".ms-1azh6ix{margin:0;}.ms-1fa0n4z{-webkit-text-decoration:none;text-decoration:none;}@media only screen and (min-width: 769px){.ms-1tgas07{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-1tgas07{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.ms-1tgas07{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 769px){.ms-od306i{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-od306i{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.ms-od306i{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 769px){.ms-4xqcxd{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-4xqcxd{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.ms-4xqcxd{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 769px){.ms-2zg7um{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-2zg7um{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.ms-2zg7um{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 769px){.ms-1ra794u{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-1ra794u{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.ms-1ra794u{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}",
 ]
 `;
 
@@ -52,126 +52,126 @@ NodeList [
     style="position:relative;white-space:pre-wrap;word-wrap:break-word"
   >
     <p
-      class="mswft-1uk1gs8 mswft-1olq3mu"
+      class="ms-1azh6ix ms-1i30e71"
     >
       <span
-        class="mswft-1olq3mu"
+        class="ms-g96q88"
       >
         ﻿
       </span>
       <a
-        class="mswft-ytumd6"
+        class="ms-1fa0n4z"
         href="https://www.bigcommerce.com/adyen"
         target="_blank"
       >
         <span
-          class="mswft-144fjko"
+          class="ms-1tgas07"
         >
           Adyen
         </span>
       </a>
       <span
-        class="mswft-1olq3mu"
+        class="ms-181ycs0"
       >
         ﻿
       </span>
     </p>
     <p
-      class="mswft-1uk1gs8 mswft-1olq3mu"
+      class="ms-1azh6ix ms-1lqxi3i"
     >
       <span
-        class="mswft-1olq3mu"
+        class="ms-mo4lom"
       >
         ﻿
       </span>
       <a
-        class="mswft-ytumd6"
+        class="ms-1fa0n4z"
         href="http://www.authorize.net/"
         target="_blank"
       >
         <span
-          class="mswft-144fjko"
+          class="ms-od306i"
         >
           Authorize.net
         </span>
       </a>
       <span
-        class="mswft-1olq3mu"
+        class="ms-8nyips"
       >
         ﻿
       </span>
     </p>
     <p
-      class="mswft-1uk1gs8 mswft-1olq3mu"
+      class="ms-1azh6ix ms-zxksk4"
     >
       <span
-        class="mswft-1olq3mu"
+        class="ms-idtr0v"
       >
         ﻿
       </span>
       <a
-        class="mswft-ytumd6"
+        class="ms-1fa0n4z"
         href="https://www.bigcommerce.com/bluesnap/"
         target="_blank"
       >
         <span
-          class="mswft-144fjko"
+          class="ms-4xqcxd"
         >
           BlueSnap
         </span>
       </a>
       <span
-        class="mswft-1olq3mu"
+        class="ms-zuts8a"
       >
         ﻿
       </span>
     </p>
     <p
-      class="mswft-1uk1gs8 mswft-1olq3mu"
+      class="ms-1azh6ix ms-1u9to0z"
     >
       <span
-        class="mswft-1olq3mu"
+        class="ms-bg5lhu"
       >
         ﻿
       </span>
       <a
-        class="mswft-ytumd6"
+        class="ms-1fa0n4z"
         href="https://support.bigcommerce.com/s/article/Connecting-with-Checkoutcom/"
         target="_blank"
       >
         <span
-          class="mswft-144fjko"
+          class="ms-2zg7um"
         >
           Checkout.com
         </span>
       </a>
       <span
-        class="mswft-1olq3mu"
+        class="ms-9ztnc3"
       >
         ﻿
       </span>
     </p>
     <p
-      class="mswft-1uk1gs8 mswft-1olq3mu"
+      class="ms-1azh6ix ms-1oa537b"
     >
       <span
-        class="mswft-1olq3mu"
+        class="ms-16hfurf"
       >
         ﻿
       </span>
       <a
-        class="mswft-ytumd6"
+        class="ms-1fa0n4z"
         href="http://www.cybersource.com/"
         target="_blank"
       >
         <span
-          class="mswft-144fjko"
+          class="ms-1ra794u"
         >
           CyberSource Direct
         </span>
       </a>
       <span
-        class="mswft-1olq3mu"
+        class="ms-121zp0f"
       >
         ﻿
       </span>

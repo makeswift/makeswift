@@ -3,12 +3,12 @@ import { Descendant, Element, Text } from 'slate'
 import { RenderElementProps, RenderLeafProps } from 'slate-react'
 
 import { RichTextV2Definition, RichText } from '../../../../controls/rich-text-v2'
-import { useStyle } from '../../use-style'
 import { toText } from '../../../../slate/utils'
 import { RichTextV2Plugin } from '../../../../controls/rich-text-v2/plugin'
 import { RichTextDataV2 } from '../../../../controls/rich-text-v2'
 
 import { ControlValue } from '../control'
+import { useStyle } from '../../css-runtime/hooks/use-style'
 
 type Props = {
   text: RichTextDataV2 | undefined
@@ -53,19 +53,23 @@ const ReadOnlyTextV2 = forwardRef(function ReadOnlyText(
 export default ReadOnlyTextV2
 
 function Placeholder({ text = 'Write some text...' }: { text?: string }) {
+  const { className, renderStaticStyle } = useStyle({
+      display: 'inline-block',
+      width: 0,
+      maxWidth: '100%',
+      whiteSpace: 'nowrap',
+      opacity: 0.333,
+      verticalAlign: 'text-top',
+  })
   return (
-    <span
-      className={useStyle({
-        display: 'inline-block',
-        width: 0,
-        maxWidth: '100%',
-        whiteSpace: 'nowrap',
-        opacity: 0.333,
-        verticalAlign: 'text-top',
-      })}
-    >
-      {text}
-    </span>
+    <>
+      {renderStaticStyle()}
+      <span
+        className={className}
+      >
+        {text}
+      </span>
+    </>
   )
 }
 

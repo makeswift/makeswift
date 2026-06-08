@@ -1,5 +1,4 @@
 import type { KeyboardEvent } from 'react'
-import { cx } from '@emotion/css'
 import { Editor, Transforms, Range, Node, PathRef, Text } from 'slate'
 import { type RenderElementProps } from 'slate-react'
 import { Select, Slate, type DataType } from '@makeswift/controls'
@@ -19,9 +18,11 @@ import { toggleList } from './toggleList'
 import { EditorUtils } from '../utils/editor'
 import isHotkey from 'is-hotkey'
 import { LIST_ITEM_CHILD_POSITION } from './constants'
-import { useStyle } from '../../runtimes/react/use-style'
 import { type RenderElement, Plugin } from '../../controls/rich-text-v2/plugin'
 import { BlockType } from '../../slate/types'
+import { useStyle } from '../../runtimes/react/css-runtime/hooks/use-style'
+import clsx from 'clsx'
+import { CSSObject } from '@emotion/serialize'
 
 export const BlockActions = {
   setBlockKeyForDevice,
@@ -320,15 +321,35 @@ function BlockPluginComponent({
   renderElement,
   ...props
 }: RenderElementProps & { renderElement: RenderElement }) {
-  const blockStyles = [useStyle({ margin: 0 }), props.element.className]
-  const quoteStyles = useStyle({
+  const { className: blockStylesClassName, renderStaticStyle: renderBlockStyle } = useStyle({ margin: 0 })
+  // const blockStyles = [useStyle({ margin: 0 }), props.element.className]
+
+  // const quoteStyles = useStyle({
+  //   padding: '0.5em 10px',
+  //   fontSize: '1.25em',
+  //   fontWeight: '300',
+  //   borderLeft: '5px solid rgba(0, 0, 0, 0.1)',
+  // })
+  const quoteStyles = {
     padding: '0.5em 10px',
     fontSize: '1.25em',
     fontWeight: '300',
     borderLeft: '5px solid rgba(0, 0, 0, 0.1)',
-  })
+  }
+  const { className: quoteStylesClassName, renderStaticStyle: renderQuoteStyle } = useStyle(quoteStyles)
 
-  const unorderedListStyles = useStyle({
+  // const unorderedListStyles = useStyle({
+  //   listStylePosition: 'inside',
+  //   paddingInlineStart: '20px',
+  //   listStyleType: 'disc',
+  //   ul: {
+  //     listStyleType: 'circle',
+  //   },
+  //   'ul ul': {
+  //     listStyleType: 'square',
+  //   },
+  // })
+  const unorderedListStyles: CSSObject = {
     listStylePosition: 'inside',
     paddingInlineStart: '20px',
     listStyleType: 'disc',
@@ -338,87 +359,135 @@ function BlockPluginComponent({
     'ul ul': {
       listStyleType: 'square',
     },
-  })
+  }
+  const { className: unorderedListStylesClassName, renderStaticStyle: renderUnorderedListStyle } = useStyle(unorderedListStyles)
 
-  const orderedListStyles = useStyle({
+
+
+  // const orderedListStyles = useStyle({
+  //   listStylePosition: 'inside',
+  //   paddingInlineStart: '20px',
+  //   listStyleType: 'decimal',
+  // })
+  const orderedListStyles: CSSObject = {
     listStylePosition: 'inside',
     paddingInlineStart: '20px',
     listStyleType: 'decimal',
-  })
+  }
+  const { className: orderedListStylesClassName, renderStaticStyle: renderOrderedListStyle } = useStyle(orderedListStyles)
 
   switch (props.element.type) {
     case BlockType.Default:
     case BlockType.Paragraph:
       return (
-        <p {...props.attributes} className={cx(...blockStyles)}>
-          {renderElement(props)}
-        </p>
+        <>
+          {renderBlockStyle()}
+          <p {...props.attributes} className={clsx(blockStylesClassName, props.element.className)}>
+            {renderElement(props)}
+          </p>
+        </>
       )
     case BlockType.Heading1:
       return (
-        <h1 {...props.attributes} className={cx(...blockStyles)}>
-          {renderElement(props)}
-        </h1>
+        <>
+          {renderBlockStyle()}
+          <h1 {...props.attributes} className={clsx(blockStylesClassName, props.element.className)}>
+            {renderElement(props)}
+          </h1>
+        </>
       )
     case BlockType.Heading2:
       return (
-        <h2 {...props.attributes} className={cx(...blockStyles)}>
-          {renderElement(props)}
-        </h2>
+        <>
+          {renderBlockStyle()}
+          <h2 {...props.attributes} className={clsx(blockStylesClassName, props.element.className)}>
+            {renderElement(props)}
+          </h2>
+        </>
       )
     case BlockType.Heading3:
       return (
-        <h3 {...props.attributes} className={cx(...blockStyles)}>
-          {renderElement(props)}
-        </h3>
+        <>
+          {renderBlockStyle()}
+          <h3 {...props.attributes} className={clsx(blockStylesClassName, props.element.className)}>
+            {renderElement(props)}
+          </h3>
+        </>
       )
     case BlockType.Heading4:
       return (
-        <h4 {...props.attributes} className={cx(...blockStyles)}>
-          {renderElement(props)}
-        </h4>
+        <>
+          {renderBlockStyle()}
+          <h4 {...props.attributes} className={clsx(blockStylesClassName, props.element.className)}>
+            {renderElement(props)}
+          </h4>
+        </>
       )
     case BlockType.Heading5:
       return (
-        <h5 {...props.attributes} className={cx(...blockStyles)}>
-          {renderElement(props)}
-        </h5>
+        <>
+          {renderBlockStyle()}
+          <h5 {...props.attributes} className={clsx(blockStylesClassName, props.element.className)}>
+            {renderElement(props)}
+          </h5>
+        </>
       )
     case BlockType.Heading6:
       return (
-        <h6 {...props.attributes} className={cx(...blockStyles)}>
-          {renderElement(props)}
-        </h6>
+        <>
+          {renderBlockStyle()}
+          <h6 {...props.attributes} className={clsx(blockStylesClassName, props.element.className)}>
+            {renderElement(props)}
+          </h6>
+        </>
       )
     case BlockType.BlockQuote:
       return (
-        <blockquote {...props.attributes} className={cx(...blockStyles, quoteStyles)}>
-          {renderElement(props)}
-        </blockquote>
+        <>
+          {renderBlockStyle()}
+          {renderQuoteStyle()}
+          <blockquote {...props.attributes} className={clsx(blockStylesClassName, quoteStylesClassName, props.element.className)}>
+            {renderElement(props)}
+          </blockquote>
+        </>
       )
     case BlockType.OrderedList:
       return (
-        <ol {...props.attributes} className={cx(...blockStyles, orderedListStyles)}>
-          {renderElement(props)}
-        </ol>
+        <>
+          {renderBlockStyle()}
+          {renderOrderedListStyle()}
+          <ol {...props.attributes} className={clsx(blockStylesClassName, orderedListStylesClassName, props.element.className)}>
+            {renderElement(props)}
+          </ol>
+        </>
       )
     case BlockType.UnorderedList:
       return (
-        <ul {...props.attributes} className={cx(...blockStyles, unorderedListStyles)}>
-          {renderElement(props)}
-        </ul>
+        <>
+          {renderBlockStyle()}
+          {renderUnorderedListStyle()}
+          <ul {...props.attributes} className={clsx(blockStylesClassName, unorderedListStylesClassName, props.element.className)}>
+            {renderElement(props)}
+          </ul>
+        </>
       )
     case BlockType.ListItem:
       return (
-        <li {...props.attributes} className={cx(...blockStyles)}>
-          {renderElement(props)}
-        </li>
+        <>
+          {renderBlockStyle()}
+          <li {...props.attributes} className={clsx(blockStylesClassName, props.element.className)}>
+            {renderElement(props)}
+          </li>
+        </>
       )
     case BlockType.ListItemChild:
       return (
-        <span {...props.attributes} className={cx(...blockStyles)}>
-          {renderElement(props)}
-        </span>
+        <>
+          {renderBlockStyle()}
+          <span {...props.attributes} className={clsx(blockStylesClassName, props.element.className)}>
+            {renderElement(props)}
+          </span>
+        </>
       )
     default:
       return <>{renderElement(props)}</>

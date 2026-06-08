@@ -1,15 +1,15 @@
-import { cx } from '@emotion/css'
 import { type Editor, Element } from 'slate'
 import { type RenderElementProps } from 'slate-react'
 import { Slate } from '@makeswift/controls'
 
 import { Link } from '../../controls/link'
-import { useStyle } from '../../runtimes/react/use-style'
 import { Link as LinkComponent } from '../../components/shared/Link'
 import { type RenderElement, Plugin } from '../../controls/rich-text-v2/plugin'
 
 import { onChange } from './onChange'
 import { getValue } from './getValue'
+import { useStyle } from '../../runtimes/react/css-runtime/hooks/use-style'
+import clsx from 'clsx'
 
 export const withLink = (editor: Editor) => {
   const { isInline } = editor
@@ -27,21 +27,24 @@ function InlinePluginComponent({
   children,
   renderElement,
 }: RenderElementProps & { renderElement: RenderElement }) {
-  const linkStyle = useStyle({ textDecoration: 'none' })
+  const { className: linkClassName, renderStaticStyle: renderLinkStyle } = useStyle({ textDecoration: 'none' })
   switch (element.type) {
     case Slate.InlineType.Link:
       return (
-        <LinkComponent
-          {...attributes}
-          link={element.link ?? undefined}
-          className={cx(linkStyle, element.className)}
-        >
-          {renderElement({
-            element,
-            attributes,
-            children,
-          })}
-        </LinkComponent>
+        <>
+          {renderLinkStyle()}
+          <LinkComponent
+            {...attributes}
+            link={element.link ?? undefined}
+            className={clsx(linkClassName, element.className)}
+          >
+            {renderElement({
+              element,
+              attributes,
+              children,
+            })}
+          </LinkComponent>
+        </>
       )
 
     default:

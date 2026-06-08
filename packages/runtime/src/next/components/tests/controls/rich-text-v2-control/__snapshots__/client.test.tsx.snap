@@ -1,30 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`renders a makeswift::controls::rich-text-v2::mode::block placeholder when empty: Makeswift styles 1`] = `
+[
+  ".ms-1uc9xwq{display:inline-block;width:0;max-width:100%;white-space:nowrap;opacity:0.333;vertical-align:text-top;}",
+]
+`;
+
 exports[`renders a makeswift::controls::rich-text-v2::mode::block placeholder when empty: resolvedValue 1`] = `
 NodeList [
-  .emotion-0 {
-  display: inline-block;
-  width: 0;
-  max-width: 100%;
-  white-space: nowrap;
-  opacity: 0.333;
-  vertical-align: text-top;
-}
-
-.emotion-0 {
-  display: inline-block;
-  width: 0;
-  max-width: 100%;
-  white-space: nowrap;
-  opacity: 0.333;
-  vertical-align: text-top;
-}
-
-<div
+  <div
     style="position: relative; white-space: pre-wrap; word-wrap: break-word;"
   >
     <span
-      class="emotion-0"
+      class="ms-1uc9xwq"
     >
       Write some text...
     </span>
@@ -83,22 +71,19 @@ exports[`renders a makeswift::controls::rich-text-v2::mode::block placeholder wh
 }
 `;
 
+exports[`renders a makeswift::controls::rich-text-v2::mode::inline placeholder when empty: Makeswift styles 1`] = `
+[
+  ".ms-1uc9xwq{display:inline-block;width:0;max-width:100%;white-space:nowrap;opacity:0.333;vertical-align:text-top;}",
+]
+`;
+
 exports[`renders a makeswift::controls::rich-text-v2::mode::inline placeholder when empty: resolvedValue 1`] = `
 NodeList [
-  .emotion-0 {
-  display: inline-block;
-  width: 0;
-  max-width: 100%;
-  white-space: nowrap;
-  opacity: 0.333;
-  vertical-align: text-top;
-}
-
-<div
+  <div
     style="position: relative; white-space: pre-wrap; word-wrap: break-word;"
   >
     <span
-      class="emotion-0"
+      class="ms-1uc9xwq"
     >
       Write some text...
     </span>
@@ -157,165 +142,145 @@ exports[`renders a makeswift::controls::rich-text-v2::mode::inline placeholder w
 }
 `;
 
+exports[`renders provided text content: Makeswift styles 1`] = `
+[
+  ".ms-1uc9xwq{display:inline-block;width:0;max-width:100%;white-space:nowrap;opacity:0.333;vertical-align:text-top;}",
+  ".ms-1azh6ix{margin:0;}",
+  ".ms-1fa0n4z{-webkit-text-decoration:none;text-decoration:none;}",
+  "@media only screen and (min-width: 769px){.ms-1lo5cxy{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-1lo5cxy{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.ms-1lo5cxy{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}",
+  "@media only screen and (min-width: 769px){.ms-b23uss{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-b23uss{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.ms-b23uss{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}",
+  "@media only screen and (min-width: 769px){.ms-si9yss{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-si9yss{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.ms-si9yss{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}",
+  "@media only screen and (min-width: 769px){.ms-16ld4ef{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-16ld4ef{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.ms-16ld4ef{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}",
+  "@media only screen and (min-width: 769px){.ms-w0ggf0{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-w0ggf0{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.ms-w0ggf0{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}",
+]
+`;
+
 exports[`renders provided text content: resolvedValue 1`] = `
 NodeList [
-  .emotion-0 {
-  margin: 0;
-}
-
-.emotion-3 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-@media only screen and (min-width: 769px) {
-  .emotion-4 {
-    color: hsla(238,87%,49%,1);
-    font-family: Lato;
-    font-size: 16px;
-  }
-}
-
-@media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-4 {
-    color: hsla(238,87%,49%,1);
-    font-family: Lato;
-    font-size: 16px;
-  }
-}
-
-@media only screen and (max-width: 575px) {
-  .emotion-4 {
-    color: hsla(238,87%,49%,1);
-    font-family: Lato;
-    font-size: 16px;
-  }
-}
-
-<div
+  <div
     style="position: relative; white-space: pre-wrap; word-wrap: break-word;"
   >
     <p
-      class="emotion-0 emotion-1"
+      class="ms-1azh6ix ms-xebgmj"
     >
       <span
-        class="emotion-1"
+        class="ms-srm1zu"
       >
         ﻿
       </span>
       <a
-        class="emotion-3"
+        class="ms-1fa0n4z"
         href="https://www.bigcommerce.com/adyen"
         target="_blank"
       >
         <span
-          class="emotion-4"
+          class="ms-1lo5cxy"
         >
           Adyen
         </span>
       </a>
       <span
-        class="emotion-1"
+        class="ms-1eoiync"
       >
         ﻿
       </span>
     </p>
     <p
-      class="emotion-0 emotion-1"
+      class="ms-1azh6ix ms-1ipdryk"
     >
       <span
-        class="emotion-1"
+        class="ms-1pwppzr"
       >
         ﻿
       </span>
       <a
-        class="emotion-3"
+        class="ms-1fa0n4z"
         href="http://www.authorize.net/"
         target="_blank"
       >
         <span
-          class="emotion-4"
+          class="ms-b23uss"
         >
           Authorize.net
         </span>
       </a>
       <span
-        class="emotion-1"
+        class="ms-qtuzze"
       >
         ﻿
       </span>
     </p>
     <p
-      class="emotion-0 emotion-1"
+      class="ms-1azh6ix ms-35hyn9"
     >
       <span
-        class="emotion-1"
+        class="ms-1h5446h"
       >
         ﻿
       </span>
       <a
-        class="emotion-3"
+        class="ms-1fa0n4z"
         href="https://www.bigcommerce.com/bluesnap/"
         target="_blank"
       >
         <span
-          class="emotion-4"
+          class="ms-si9yss"
         >
           BlueSnap
         </span>
       </a>
       <span
-        class="emotion-1"
+        class="ms-s17qk1"
       >
         ﻿
       </span>
     </p>
     <p
-      class="emotion-0 emotion-1"
+      class="ms-1azh6ix ms-1euanlv"
     >
       <span
-        class="emotion-1"
+        class="ms-1bh49mb"
       >
         ﻿
       </span>
       <a
-        class="emotion-3"
+        class="ms-1fa0n4z"
         href="https://support.bigcommerce.com/s/article/Connecting-with-Checkoutcom/"
         target="_blank"
       >
         <span
-          class="emotion-4"
+          class="ms-16ld4ef"
         >
           Checkout.com
         </span>
       </a>
       <span
-        class="emotion-1"
+        class="ms-ppt4ll"
       >
         ﻿
       </span>
     </p>
     <p
-      class="emotion-0 emotion-1"
+      class="ms-1azh6ix ms-flcgok"
     >
       <span
-        class="emotion-1"
+        class="ms-1q4y5p7"
       >
         ﻿
       </span>
       <a
-        class="emotion-3"
+        class="ms-1fa0n4z"
         href="http://www.cybersource.com/"
         target="_blank"
       >
         <span
-          class="emotion-4"
+          class="ms-w0ggf0"
         >
           CyberSource Direct
         </span>
       </a>
       <span
-        class="emotion-1"
+        class="ms-1va7icv"
       >
         ﻿
       </span>
