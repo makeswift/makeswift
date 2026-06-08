@@ -153,6 +153,11 @@ const makeswiftComponentDocumentSchema = z.object({
 
 export type MakeswiftComponentDocument = z.infer<typeof makeswiftComponentDocumentSchema>
 
+// When the `unstable_enforceSuccess` query string param is set, the element
+// tree endpoint responds with this body and a 200 status instead of a 404 when
+// the tree can't be found.
+const elementTreeNotFoundSchema = z.object({ notFound: z.literal(true) })
+
 const makeswiftComponentDocumentFallbackSchema = z.object({
   id: z.string(),
   locale: z.string().nullable(),
@@ -1050,57 +1055,78 @@ export class MakeswiftClient {
       allowLocaleFallback?: boolean
     },
   ): Promise<MakeswiftComponentSnapshot> {
-    const searchParams = new URLSearchParams()
-    if (locale) searchParams.set('locale', locale)
-
     const siteVersion = await siteVersionPromise
     const key = deterministicUUID({ id, locale, seed: this.apiKey.split('-').at(0) })
     const baseLocaleWasRequested = locale == null
     const canAttemptLocaleFallback = !baseLocaleWasRequested && allowLocaleFallback
 
-    let response
-    const responseForRequestedLocale = await this.fetch(
-      `v2/element-trees/${encodeURIComponent(id)}?${searchParams.toString()}`,
-      siteVersion,
-    )
+    const requestElementTree = (includeLocale: boolean) => {
+      const searchParams = new URLSearchParams()
+      if (includeLocale && locale) searchParams.set('locale', locale)
+      // Opt into the behavior where a missing element tree is returned as a 200
+      // with a `{ notFound: true }` body instead of a 404, so the response can
+      // be cached like any other successful request.
+      searchParams.set('unstable_enforceSuccess', 'true')
 
-    if (responseForRequestedLocale.status === 404 && canAttemptLocaleFallback) {
-      await failedResponseBody(responseForRequestedLocale)
-      response = await this.fetch(`v2/element-trees/${encodeURIComponent(id)}`, siteVersion)
-    } else {
-      response = responseForRequestedLocale
+      return this.fetch(
+        `v2/element-trees/${encodeURIComponent(id)}?${searchParams.toString()}`,
+        siteVersion,
+      )
     }
 
-    if (!response.ok) {
-      // See comment on `failedResponseBody` for why we always consume the
-      // response body of failed responses.
-      const failedBody = await failedResponseBody(response)
+    // Resolves a response into the parsed document, or `null` when the element
+    // tree wasn't found. "Not found" is signaled either by the
+    // `{ notFound: true }` body (when `unstable_enforceSuccess` is honored) or
+    // by a legacy 404 status (in case the endpoint doesn't honor the param).
+    const parseElementTreeResponse = async (
+      response: Response,
+    ): Promise<MakeswiftComponentDocument | null> => {
       if (response.status === 404) {
-        return {
-          document: {
-            id,
-            locale: locale ?? null,
-            data: null,
-          },
-          key,
-          cacheData: CacheData.empty(),
-          meta: {
-            allowLocaleFallback,
-            requestedLocale: locale ?? null,
-          },
-        }
+        // See comment on `failedResponseBody` for why we always consume the
+        // response body of failed responses.
+        await failedResponseBody(response)
+        return null
       }
 
-      console.error(`Failed to get component snapshot for '${id}':`, {
-        response: failedBody,
-        siteVersion,
-        locale,
-      })
+      if (!response.ok) {
+        const failedBody = await failedResponseBody(response)
+        console.error(`Failed to get component snapshot for '${id}':`, {
+          response: failedBody,
+          siteVersion,
+          locale,
+        })
 
-      throw new Error(`Failed to get component snapshot for '${id}': ${responseError(response)}`)
+        throw new Error(`Failed to get component snapshot for '${id}': ${responseError(response)}`)
+      }
+
+      const json = await response.json()
+      if (elementTreeNotFoundSchema.safeParse(json).success) return null
+
+      return makeswiftComponentDocumentSchema.parse(json)
     }
 
-    const document = makeswiftComponentDocumentSchema.parse(await response.json())
+    let document = await parseElementTreeResponse(await requestElementTree(true))
+
+    if (document == null && canAttemptLocaleFallback) {
+      document = await parseElementTreeResponse(await requestElementTree(false))
+    }
+
+    if (document == null) {
+      return {
+        document: {
+          id,
+          locale: locale ?? null,
+          data: null,
+        },
+        key,
+        cacheData: CacheData.empty(),
+        meta: {
+          allowLocaleFallback,
+          requestedLocale: locale ?? null,
+        },
+      }
+    }
+
     const cacheData = await this.introspect(document.data, siteVersion, locale ?? null)
 
     return {
