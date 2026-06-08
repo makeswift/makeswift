@@ -4,6 +4,8 @@ import { murmur3 } from 'murmurhash-js'
 import { BoxDisplayModel, Breakpoints, ResolvedStyle, Stylesheet } from "@makeswift/controls";
 import { resolvedStyleToCss } from "../lib/resolved-style-to-css";
 
+export const defaultClassNamePrefix = "ms"
+
 /**
  * Converts a styles object into a string which is fit for use as input to a css preprocessor.
  * @param stylesObject
@@ -20,8 +22,9 @@ export function toCss(stylesObject: CSSObject, className: string): string {
   return css
 }
 
-export function generateClassName(elementKey?: string, propPath?: string): string {
-  return `ms-${murmur3(`${elementKey}-${propPath}`).toString(36)}`
+export function generateClassName(elementKey: string, propPath: string, prefix?: string): string {
+  const classNamePrefix = prefix ?? defaultClassNamePrefix
+  return `${classNamePrefix}-${murmur3(`${elementKey}-${propPath}`).toString(36)}`
 }
 
 type OnCssGenerated = ({

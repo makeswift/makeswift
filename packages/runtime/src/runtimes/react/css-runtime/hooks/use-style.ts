@@ -5,6 +5,11 @@ import { UncontrolledStyle } from "../components/UncontrolledStyle"
 import React from "react"
 import { murmur3 } from "murmurhash-js"
 
+
+// TODO will remove this file before initial PR...
+
+// TODO would need to share parts of `generateClassName` with css runtime
+
 /**
  * Unlike the class names generated for controlled styles, this class name is based on a hash of css content.
  * This is useful for deduplication of "uncontrolled" styles that are not subject to change in the way that
