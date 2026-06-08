@@ -15,7 +15,7 @@ import { MakeswiftComponent } from '../../../../runtimes/react/components/Makesw
 import { Page } from '../../page'
 import { isServer } from '../../../../utils/is-server'
 import * as Testing from '../../../testing'
-import { defaultClassNamePrefix } from '../../../../runtimes/react/css-runtime/css-runtime'
+import { getMakeswiftStyleElements } from '../../../tests/test-utils'
 
 const ROOT_ID = '00000000-0000-0000-0000-000000000000'
 const ELEMENT_ID = '11111111-1111-1111-1111-111111111111'
@@ -45,12 +45,6 @@ async function streamToString(stream: ReadableStream) {
 
 async function renderToString(element: ReactNode) {
   return await streamToString(await renderToReadableStream(element))
-}
-
-function getMakeswiftStyleElements(document: Document, classNamePrefix: string) {
-  return [...document.querySelectorAll('style')]
-      .filter(n => n.getAttribute('data-href')?.startsWith(classNamePrefix) && n.textContent != null && n.textContent.length > 0)
-      .map(s => s.textContent)
 }
 
 async function serverSideRender(children: ReactNode) {
@@ -174,7 +168,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
     expect(snapshot).toMatchSnapshot('snapshot')
     expect(propSnapshot(screen.getByTestId(testId))).toMatchSnapshot('resolvedValue')
 
-    const makeswiftStyleElements = getMakeswiftStyleElements(document, defaultClassNamePrefix)
+    const makeswiftStyleElements = getMakeswiftStyleElements(document)
     expect(makeswiftStyleElements).toMatchSnapshot('Makeswift styles')
 
     if (expectedRenders != null) {
@@ -196,7 +190,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
 
     expect(propSnapshot(getByTestId(testId))).toMatchSnapshot('resolvedValue')
 
-    const makeswiftStyleElements = getMakeswiftStyleElements(document, defaultClassNamePrefix)
+    const makeswiftStyleElements = getMakeswiftStyleElements(document)
     expect([...document.querySelectorAll('style')].map(n => n.textContent)).toMatchSnapshot(
       'component styles',
     )
