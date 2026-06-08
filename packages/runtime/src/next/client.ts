@@ -22,8 +22,9 @@ export class Makeswift extends MakeswiftClient {
     return this.getSiteVersion(previewData) != null
   }
 
-  fetchOptions(_siteVersion: SiteVersion): Record<string, unknown> {
+  fetchOptions(siteVersion: SiteVersion): Record<string, unknown> {
     return {
+      cache: siteVersion ? 'no-store' : 'force-cache',
       next: {
         tags: [MAKESWIFT_CACHE_TAG],
       },
