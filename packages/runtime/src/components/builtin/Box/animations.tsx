@@ -1,9 +1,8 @@
 'use client'
 
 import { type CSSObject } from '@emotion/serialize'
-import { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { type ResponsiveValue } from '@makeswift/controls'
-import { useStyle } from '../../../runtimes/react/use-style'
 import { useMediaQuery } from '../../hooks'
 import { gridItemIdentifierClassName } from '../../shared/grid-item'
 import {
@@ -15,6 +14,7 @@ import {
   DEFAULT_ITEM_STAGGER_DURATION,
 } from './constants'
 import { type ResponsiveNumberValue, type ResponsiveSelectValue } from '@makeswift/prop-controllers'
+import { useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
 
 function useElementOnScreen(
   options: IntersectionObserverInit,
@@ -127,7 +127,7 @@ export function useBoxAnimation(
   responsiveDuration: ResponsiveValue<number> | undefined,
   responisveDelay: ResponsiveValue<number> | undefined,
   itemResponsiveAnimationType: ResponsiveValue<BoxAnimateIn> | undefined,
-): [string, () => void, (element: HTMLElement | null) => void] {
+): [string, React.ReactNode, () => void, (element: HTMLElement | null) => void] {
   const [isVisible, setElement] = useElementOnScreen({
     root: null,
     rootMargin: `0px 0px -10% 0px`,
@@ -166,10 +166,13 @@ export function useBoxAnimation(
     setEntered(false)
   }, [])
 
+  const { className: animationClassName, styleElement: animationStyleElement } = useStyle({
+    '@media (prefers-reduced-motion: no-preference)': isEntered ? entered : exited,
+  })
+
   return [
-    useStyle({
-      '@media (prefers-reduced-motion: no-preference)': isEntered ? entered : exited,
-    }),
+    animationClassName,
+    animationStyleElement,
     replayAnimation,
     setElement,
   ]
@@ -180,7 +183,7 @@ export function useItemAnimation(
   responisveDelay: ResponsiveValue<number> | undefined,
   responsiveStagger: ResponsiveValue<number> | undefined,
   index: number,
-) {
+): [string, React.ReactNode] {
   const duration = useMediaQuery(responsiveDuration) || DEFAULT_BOX_ANIMATE_DURATION
   const delay = useMediaQuery(responisveDelay) || DEFAULT_BOX_ANIMATE_DELAY
   const stagger = useMediaQuery(responsiveStagger) || DEFAULT_ITEM_STAGGER_DURATION
@@ -188,9 +191,11 @@ export function useItemAnimation(
   const actualDelay = (delay + delayFromStagger) * 1000
   const actualDuration = duration * 1000
 
-  return useStyle({
+  const { className, styleElement } = useStyle({
     '@media (prefers-reduced-motion: no-preference)': {
       transition: `transform ${actualDuration}ms cubic-bezier(0.16, 0.84, 0.44, 1) ${actualDelay}ms,filter ${actualDuration}ms cubic-bezier(0.16, 0.84, 0.44, 1) ${actualDelay}ms, opacity ${actualDuration}ms ease ${actualDelay}ms`,
     },
   })
+
+  return [className, styleElement]
 }

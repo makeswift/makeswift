@@ -9,7 +9,6 @@ import {
   useRef,
   useState,
 } from 'react'
-import { cx } from '@emotion/css'
 import { v4 as uuid } from 'uuid'
 
 import { Element } from '../../../runtimes/react'
@@ -24,13 +23,14 @@ import {
 import BackgroundsContainer from '../../shared/BackgroundsContainer'
 import { useResponsiveStyle } from '../../utils/responsive-style'
 import { GridItem } from '../../shared/grid-item'
-import { useStyle } from '../../../runtimes/react/use-style'
 import {
   type GridData,
   type ResponsiveBackgroundsData,
   type ResponsiveGapData,
   type ResponsiveIconRadioGroupValue,
 } from '@makeswift/prop-controllers'
+import { useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
+import clsx from 'clsx'
 
 type Props = {
   id?: string
@@ -79,7 +79,7 @@ const Box = forwardRef(function Box(
 ) {
   const innerRef = useRef<HTMLDivElement | null>(null)
   const boxElementObjectRef = useRef<HTMLElement | null>(null)
-  const [animationClassName, replayAnimation, setElement] = useBoxAnimation(
+  const [animationClassName, animationStyle, replayAnimation, setElement] = useBoxAnimation(
     boxAnimateType,
     boxAnimateDuration,
     boxAnimateDelay,
@@ -135,9 +135,8 @@ const Box = forwardRef(function Box(
     [],
   )
 
-  const gridItemClassName = useStyle(
-    useResponsiveStyle([verticalAlign], ([alignItems = 'flex-start']) => ({ alignItems })),
-  )
+  const gridItemCss = useResponsiveStyle([verticalAlign], ([alignItems = 'flex-start']) => ({ alignItems }))
+  const { className: gridItemClassName, styleElement: gridItemStyleElement } = useStyle(gridItemCss)
 
   const [key, setKey] = useState(() => uuid())
 
@@ -160,56 +159,78 @@ const Box = forwardRef(function Box(
     }
   }, [replayAnimation, animationProps])
 
+  const { className: containerFlexClassName, styleElement: containerFlexStyle } = useStyle({ display: 'flex' })
+  const { className: containerResponsiveStyleClassName, styleElement: containerResponsiveStyle } = useStyle(
+    useResponsiveStyle([height], ([alignSelf = 'auto']) => ({ alignSelf }))
+)
+  const containerClassName = clsx(
+    width,
+    margin,
+    borderRadius,
+    containerFlexClassName,
+    containerResponsiveStyleClassName,
+    animationClassName,
+  )
+
+  const { className: innerFlexClassName, styleElement: innerFlexStyle } = useStyle({ display: 'flex', flexWrap: 'wrap', width: '100%' })
+  const { className: innerResponsiveStylesClassName, styleElement: innerResponsiveStyle } = useStyle(
+    useResponsiveStyle([verticalAlign], ([alignContent = 'flex-start']) => ({
+      alignContent,
+    }))
+  )
+  const innerClassName = clsx(
+    padding,
+    boxShadow,
+    border,
+    innerFlexClassName,
+    innerResponsiveStylesClassName
+  )
+
   return (
-    <BackgroundsContainer
-      ref={boxElementCallbackRef}
-      id={id}
-      className={cx(
-        width,
-        margin,
-        borderRadius,
-        useStyle({ display: 'flex' }),
-        useStyle(useResponsiveStyle([height], ([alignSelf = 'auto']) => ({ alignSelf }))),
-        animationClassName,
-      )}
-      backgrounds={backgrounds}
-    >
-      <div
-        ref={innerRef}
-        key={key}
-        className={cx(
-          padding,
-          boxShadow,
-          border,
-          useStyle({ display: 'flex', flexWrap: 'wrap', width: '100%' }),
-          useStyle(
-            useResponsiveStyle([verticalAlign], ([alignContent = 'flex-start']) => ({
-              alignContent,
-            })),
-          ),
-        )}
+    <>
+      {containerFlexStyle}
+      {containerResponsiveStyle}
+      {animationStyle}
+      <BackgroundsContainer
+        ref={boxElementCallbackRef}
+        id={id}
+        className={containerClassName}
+        backgrounds={backgrounds}
       >
-        {children && children.elements.length > 0 ? (
-          children.elements.map((child, index) => (
-            <GridItem
-              key={child.key}
-              className={gridItemClassName}
-              grid={children.columns}
-              index={index}
-              itemAnimateDuration={itemAnimateDuration}
-              itemAnimateDelay={itemAnimateDelay}
-              itemStaggerDuration={itemStaggerDuration}
-              columnGap={columnGap}
-              rowGap={rowGap}
-            >
-              <Element element={child} />
-            </GridItem>
-          ))
-        ) : (
-          <Placeholder hide={hidePlaceholder} />
-        )}
-      </div>
-    </BackgroundsContainer>
+        <>
+          {innerFlexStyle}
+          {innerResponsiveStyle}
+          <div
+            ref={innerRef}
+            key={key}
+            className={innerClassName}
+          >
+            {children && children.elements.length > 0 ? (
+              <>
+                {gridItemStyleElement}
+                {children.elements.map((child, index) => (
+                  <GridItem
+                    key={child.key}
+                    className={gridItemClassName}
+                    grid={children.columns}
+                    index={index}
+                    itemAnimateDuration={itemAnimateDuration}
+                    itemAnimateDelay={itemAnimateDelay}
+                    itemStaggerDuration={itemStaggerDuration}
+                    columnGap={columnGap}
+                    rowGap={rowGap}
+                  >
+                    <Element element={child} />
+                  </GridItem>
+                ))}
+              </>
+            ) : (
+              <Placeholder hide={hidePlaceholder} />
+            )}
+          </div>
+        </>
+      </BackgroundsContainer>
+    </>
   )
 })
 

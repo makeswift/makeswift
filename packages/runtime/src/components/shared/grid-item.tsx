@@ -33,7 +33,7 @@ export function GridItem({
   ...restOfProps
 }: Props) {
   const gridItemClassName = useStyle(useResponsiveGridItem({ grid, index, columnGap, rowGap }))
-  const animationClassName = useItemAnimation(
+  const [animationClassName, animationStyle] = useItemAnimation(
     itemAnimateDuration,
     itemAnimateDelay,
     itemStaggerDuration,
@@ -41,9 +41,12 @@ export function GridItem({
   )
 
   return (
-    <div
-      {...restOfProps}
-      className={cx(gridItemClassName, className, animationClassName, gridItemIdentifierClassName)}
-    />
+    <>
+      {animationStyle}
+      <div
+        {...restOfProps}
+        className={cx(gridItemClassName, className, animationClassName, gridItemIdentifierClassName)}
+      />
+    </>
   )
 }

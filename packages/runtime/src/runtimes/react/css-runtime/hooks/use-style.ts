@@ -1,4 +1,4 @@
-import { useCallback } from "react"
+import { useMemo } from "react"
 import { toCss } from "../css-runtime"
 import { CSSObject } from "@emotion/serialize"
 import { UncontrolledStyle } from "../components/UncontrolledStyle"
@@ -6,9 +6,7 @@ import React from "react"
 import { murmur3 } from "murmurhash-js"
 
 
-// TODO will remove this file before initial PR...
-
-// TODO would need to share parts of `generateClassName` with css runtime
+// TODO share parts of `generateClassName` with css runtime
 
 /**
  * Unlike the class names generated for controlled styles, this class name is based on a hash of css content.
@@ -22,7 +20,7 @@ function generateClassName(styles: CSSObject): string {
 export function useStyle(style: CSSObject, options: { precedence?: string } = {}) {
   const className = generateClassName(style)
   const css = toCss(style, className)
-  const renderStaticStyle = useCallback(() => {
+  const styleElement = useMemo(() => {
     return React.createElement(UncontrolledStyle, {
       className,
       css,
@@ -31,6 +29,6 @@ export function useStyle(style: CSSObject, options: { precedence?: string } = {}
   }, [className, css, options.precedence])
   return {
     className,
-    renderStaticStyle,
+    styleElement,
   }
 }
