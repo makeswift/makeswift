@@ -1,10 +1,10 @@
-import { cx } from '@emotion/css'
 import { ComponentPropsWithoutRef } from 'react'
 import { type ResponsiveValue } from '@makeswift/controls'
-import { useStyle } from '../../runtimes/react/use-style'
 import { useItemAnimation } from '../builtin/Box/animations'
 import { useResponsiveGridItem } from '../utils/responsive-style'
 import { type LengthData, type ResponsiveNumberValue } from '@makeswift/prop-controllers'
+import { useStyle } from '../../runtimes/react/css-runtime/hooks/use-style'
+import clsx from 'clsx'
 
 type BaseProps = {
   className?: string
@@ -32,7 +32,7 @@ export function GridItem({
   itemStaggerDuration,
   ...restOfProps
 }: Props) {
-  const gridItemClassName = useStyle(useResponsiveGridItem({ grid, index, columnGap, rowGap }))
+  const { className: baseClassName, styleElement: baseStyleElement } = useStyle(useResponsiveGridItem({ grid, index, columnGap, rowGap }))
   const [animationClassName, animationStyle] = useItemAnimation(
     itemAnimateDuration,
     itemAnimateDelay,
@@ -42,10 +42,11 @@ export function GridItem({
 
   return (
     <>
+      {baseStyleElement}
       {animationStyle}
       <div
         {...restOfProps}
-        className={cx(gridItemClassName, className, animationClassName, gridItemIdentifierClassName)}
+        className={clsx(baseClassName, className, animationClassName, gridItemIdentifierClassName)}
       />
     </>
   )

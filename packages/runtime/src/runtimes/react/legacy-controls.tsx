@@ -20,7 +20,6 @@ import {
 } from '../../components/utils/responsive-style'
 
 import { RenderHook } from './components'
-import { useStyle } from './use-style'
 
 import {
   Types as PropControllerTypes,
@@ -29,7 +28,6 @@ import {
   Shadows,
   ResponsiveValue,
   BorderPropControllerFormat,
-  ResponsiveBorderData,
   BorderPropControllerData,
   getBorderPropControllerDataResponsiveBorderData,
   getBorderRadiusPropControllerDataResponsiveBorderRadiusData,
@@ -69,43 +67,44 @@ import { useImagePropControllerData } from '../../components/hooks/useImagePropC
 import { useImagesPropControllerData } from '../../components/hooks/useImagesPropControllerData'
 import { useBackgroundsPropControllerData } from '../../components/hooks/useBackgroundsPropControllerData'
 import { useTextInputPropControllerData } from '../../components/hooks/useTextInputPropControllerData'
+import { useStyle } from './css-runtime/hooks/use-style'
 
 export type ResponsiveColor = ResponsiveValue<ColorValue>
 
 function useWidthStyle(
   data: WidthPropControllerData | undefined,
   descriptor: WidthDescriptor,
-): string {
+): { className: string; styleElement: ReactNode} {
   const value = getWidthPropControllerDataResponsiveLengthData(data)
 
   return useStyle(useResponsiveWidth(value, descriptor.options.defaultValue))
 }
 
-function usePaddingStyle(data: PaddingPropControllerData | undefined): string {
+function usePaddingStyle(data: PaddingPropControllerData | undefined): { className: string; styleElement: ReactNode} {
   const value = getPaddingPropControllerDataResponsivePaddingData(data)
 
   return useStyle(useResponsivePadding(value))
 }
 
-function useMarginStyle(data: MarginPropControllerData | undefined): string {
+function useMarginStyle(data: MarginPropControllerData | undefined): { className: string; styleElement: ReactNode} {
   const value = getMarginPropControllerDataResponsiveMarginData(data)
 
   return useStyle(useResponsiveMargin(value))
 }
 
-function useBorderRadiusStyle(data: BorderRadiusPropControllerData | undefined): string {
+function useBorderRadiusStyle(data: BorderRadiusPropControllerData | undefined): { className: string; styleElement: ReactNode} {
   const value = getBorderRadiusPropControllerDataResponsiveBorderRadiusData(data)
 
   return useStyle(useResponsiveBorderRadius(value))
 }
 
-function useShadowsStyle(data: ShadowsPropControllerData | undefined): string {
+function useShadowsStyle(data: ShadowsPropControllerData | undefined): { className: string; styleElement: ReactNode} {
   return useStyle(useResponsiveShadow(useBoxShadow(data) ?? undefined))
 }
 
 function useBorderStyle(
   data: BorderPropControllerData | undefined,
-): string | ResponsiveBorderData | undefined {
+): { className: string; styleElement: ReactNode} {
   const value = getBorderPropControllerDataResponsiveBorderData(data)
   const borderData = useBorderData(value)
 
@@ -129,7 +128,12 @@ export function resolveLegacyDescriptorProp(
               hook={useWidthStyle}
               parameters={[propData, descriptor]}
             >
-              {value => renderFn({ ...props, [propName]: value })}
+              {({ className, styleElement }) => (
+                <>
+                  {styleElement}
+                  {renderFn({ ...props, [propName]: className })}
+                </>
+              )}
             </RenderHook>
           )
 
@@ -146,7 +150,12 @@ export function resolveLegacyDescriptorProp(
         case PaddingPropControllerFormat.ClassName:
           return (
             <RenderHook key={descriptor.type} hook={usePaddingStyle} parameters={[propData]}>
-              {value => renderFn({ ...props, [propName]: value })}
+              {({ className, styleElement }) => (
+                <>
+                  {styleElement}
+                  {renderFn({ ...props, [propName]: className })}
+                </>
+              )}
             </RenderHook>
           )
 
@@ -163,7 +172,12 @@ export function resolveLegacyDescriptorProp(
         case MarginPropControllerFormat.ClassName:
           return (
             <RenderHook key={descriptor.type} hook={useMarginStyle} parameters={[propData]}>
-              {value => renderFn({ ...props, [propName]: value })}
+              {({ className, styleElement }) => (
+                <>
+                  {styleElement}
+                  {renderFn({ ...props, [propName]: className })}
+                </>
+              )}
             </RenderHook>
           )
 
@@ -180,7 +194,12 @@ export function resolveLegacyDescriptorProp(
         case BorderRadiusPropControllerFormat.ClassName:
           return (
             <RenderHook key={descriptor.type} hook={useBorderRadiusStyle} parameters={[propData]}>
-              {value => renderFn({ ...props, [propName]: value })}
+              {({ className, styleElement }) => (
+                <>
+                  {styleElement}
+                  {renderFn({ ...props, [propName]: className })}
+                </>
+              )}
             </RenderHook>
           )
 
@@ -292,7 +311,12 @@ export function resolveLegacyDescriptorProp(
         case Shadows.Format.ClassName:
           return (
             <RenderHook key={descriptor.type} hook={useShadowsStyle} parameters={[propData]}>
-              {value => renderFn({ ...props, [propName]: value })}
+              {({ className, styleElement }) => (
+                <>
+                  {styleElement}
+                  {renderFn({ ...props, [propName]: className })}
+                </>
+              )}
             </RenderHook>
           )
 
@@ -309,7 +333,12 @@ export function resolveLegacyDescriptorProp(
         case BorderPropControllerFormat.ClassName:
           return (
             <RenderHook key={descriptor.type} hook={useBorderStyle} parameters={[propData]}>
-              {value => renderFn({ ...props, [propName]: value })}
+              {({ className, styleElement }) => (
+                <>
+                  {styleElement}
+                  {renderFn({ ...props, [propName]: className })}
+                </>
+              )}
             </RenderHook>
           )
 

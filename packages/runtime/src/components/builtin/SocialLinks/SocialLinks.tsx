@@ -6,8 +6,6 @@ import { type ColorValue as Color, type ResponsiveColor } from '../../utils/type
 import { SocialLinksOptions, SocialLinksOptionType } from './options'
 import GutterContainer from '../../shared/GutterContainer'
 import SocialLinksPlaceholder from './components/SocialLinksPlaceholder'
-import { cx } from '@emotion/css'
-import { useStyle } from '../../../runtimes/react/use-style'
 import { useResponsiveStyle } from '../../utils/responsive-style'
 import {
   type ResponsiveGapData,
@@ -15,6 +13,8 @@ import {
   type ResponsiveSelectValue,
   type ResponsiveIconRadioGroupValue,
 } from '@makeswift/prop-controllers'
+import { useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
+import clsx from 'clsx'
 
 type Props = {
   id?: string
@@ -49,52 +49,56 @@ const SocialLinks = forwardRef(function SocialLinks(
   }: Props,
   ref: Ref<HTMLDivElement>,
 ) {
+  const { className: displayClassName, styleElement: displayStyleElement } = useStyle({ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' })
+  const { className: responsiveStylesClassName, styleElement: responsiveStylesElement } = useStyle(useResponsiveStyle([alignment] as const, ([alignment = 'center']) => ({
+    justifyContent: alignment,
+  })))
   return (
-    <div
-      ref={ref}
-      id={id}
-      className={cx(
-        useStyle({ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }),
-        width,
-        margin,
-        useStyle(
-          useResponsiveStyle([alignment] as const, ([alignment = 'center']) => ({
-            justifyContent: alignment,
-          })),
-        ),
-      )}
-    >
-      {links.length > 0 ? (
-        links.map((link, i) => {
-          const option = SocialLinksOptions.find(o => o.type === link.payload.type)
+    <>
+      {displayStyleElement}
+      {responsiveStylesElement}
+      <div
+        ref={ref}
+        id={id}
+        className={clsx(
+          displayClassName,
+          width,
+          margin,
+          responsiveStylesClassName,
+        )}
+      >
+        {links.length > 0 ? (
+          links.map((link, i) => {
+            const option = SocialLinksOptions.find(o => o.type === link.payload.type)
 
-          if (option == null) return null
+            if (option == null) return null
 
-          return (
-            <GutterContainer
-              key={link.id}
-              gutter={gutter}
-              first={i === 0}
-              last={i === links.length - 1}
-            >
-              <StyledLink
-                backgroundColor={backgroundColor}
-                brandColor={option.brandColor}
-                fill={fill}
-                hoverStyle={hoverStyle}
-                link={{ type: 'OPEN_URL', payload: { url: link.payload.url, openInNewTab } }}
-                shape={shape}
-                size={size}
+            return (
+              <GutterContainer
+                key={link.id}
+                gutter={gutter}
+                first={i === 0}
+                last={i === links.length - 1}
               >
-                {option.icon}
-              </StyledLink>
-            </GutterContainer>
-          )
-        })
-      ) : (
-        <SocialLinksPlaceholder gutter={gutter} />
-      )}
-    </div>
+                <StyledLink
+                  backgroundColor={backgroundColor}
+                  brandColor={option.brandColor}
+                  fill={fill}
+                  hoverStyle={hoverStyle}
+                  link={{ type: 'OPEN_URL', payload: { url: link.payload.url, openInNewTab } }}
+                  shape={shape}
+                  size={size}
+                >
+                  {option.icon}
+                </StyledLink>
+              </GutterContainer>
+            )
+          })
+        ) : (
+          <SocialLinksPlaceholder gutter={gutter} />
+        )}
+      </div>
+    </>
   )
 })
 
@@ -119,51 +123,55 @@ function StyledLink({
   backgroundColor,
   ...restOfProps
 }: StyledLinkProps) {
+  const { className: baseClassName, styleElement: baseStyleElement } = useStyle({
+    display: 'block',
+    color: brandColor,
+    transition: 'transform, opacity 0.18s',
+    svg: { display: 'block' },
+  })
+  const { className: responsiveStylesClassName, styleElement: responsiveStylesElement } = useStyle(useResponsiveStyle(
+    [shape, size, hoverStyle, fill, backgroundColor] as const,
+    ([shape = 'naked', size = 'medium', hoverStyle = 'none', fill, backgroundColor]) => ({
+      padding: shape === 'naked' ? 0 : { small: 10, medium: 12, large: 14 }[size],
+      borderRadius: { circle: '50%', rounded: '8px', naked: 0, square: 0 }[shape],
+      background:
+        shape === 'naked'
+          ? 'transparent'
+          : backgroundColor == null
+            ? 'currentColor'
+            : colorToString(backgroundColor),
+
+      ':hover': {
+        none: {},
+        grow: { transform: 'scale(1.1)' },
+        shrink: { transform: 'scale(0.9)' },
+        fade: { opacity: 0.65 },
+      }[hoverStyle],
+
+      svg: {
+        fill:
+          fill == null
+            ? shape === 'naked' || backgroundColor != null
+              ? 'currentColor'
+              : 'white'
+            : colorToString(fill),
+        width: { small: 16, medium: 20, large: 24 }[size],
+        height: { small: 16, medium: 20, large: 24 }[size],
+      },
+    }),
+  ))
   return (
-    <Link
-      {...restOfProps}
-      className={cx(
-        useStyle({
-          display: 'block',
-          color: brandColor,
-          transition: 'transform, opacity 0.18s',
-          svg: { display: 'block' },
-        }),
-        useStyle(
-          useResponsiveStyle(
-            [shape, size, hoverStyle, fill, backgroundColor] as const,
-            ([shape = 'naked', size = 'medium', hoverStyle = 'none', fill, backgroundColor]) => ({
-              padding: shape === 'naked' ? 0 : { small: 10, medium: 12, large: 14 }[size],
-              borderRadius: { circle: '50%', rounded: '8px', naked: 0, square: 0 }[shape],
-              background:
-                shape === 'naked'
-                  ? 'transparent'
-                  : backgroundColor == null
-                    ? 'currentColor'
-                    : colorToString(backgroundColor),
-
-              ':hover': {
-                none: {},
-                grow: { transform: 'scale(1.1)' },
-                shrink: { transform: 'scale(0.9)' },
-                fade: { opacity: 0.65 },
-              }[hoverStyle],
-
-              svg: {
-                fill:
-                  fill == null
-                    ? shape === 'naked' || backgroundColor != null
-                      ? 'currentColor'
-                      : 'white'
-                    : colorToString(fill),
-                width: { small: 16, medium: 20, large: 24 }[size],
-                height: { small: 16, medium: 20, large: 24 }[size],
-              },
-            }),
-          ),
-        ),
-        className,
-      )}
-    />
+    <>
+      {baseStyleElement}
+      {responsiveStylesElement}
+      <Link
+        {...restOfProps}
+        className={clsx(
+          baseClassName,
+          responsiveStylesClassName,
+          className,
+        )}
+      />
+    </>
   )
 }

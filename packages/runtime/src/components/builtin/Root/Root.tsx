@@ -9,13 +9,13 @@ import {
 
 import { Element } from '../../../runtimes/react/components/Element'
 import { useGlobalStyle } from '../../../runtimes/react/use-global-style'
-import { useStyle } from '../../../runtimes/react/use-style'
 import { useCSSResetEnabled } from '../../../runtimes/react/root-style-registry'
 
 import { GridItem } from '../../shared/grid-item'
 import BackgroundsContainer from '../../shared/BackgroundsContainer'
 
 import Placeholder from './components/Placeholder'
+import { useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
 
 type Props = {
   children?: GridData
@@ -39,26 +39,31 @@ const Root = forwardRef(function Page(
       : [],
   )
 
+  const { className, styleElement } = useStyle({ display: 'flex', flexWrap: 'wrap', width: '100%' })
+
   return (
-    <BackgroundsContainer ref={ref} style={{ background: 'white' }} backgrounds={backgrounds}>
-      <div className={useStyle({ display: 'flex', flexWrap: 'wrap', width: '100%' })}>
-        {children && children.elements.length > 0 ? (
-          children.elements.map((child, index) => (
-            <GridItem
-              key={child.key}
-              grid={children.columns}
-              index={index}
-              columnGap={columnGap}
-              rowGap={rowGap}
-            >
-              <Element element={child} />
-            </GridItem>
-          ))
-        ) : (
-          <Placeholder />
-        )}
-      </div>
-    </BackgroundsContainer>
+    <>
+      {styleElement}
+      <BackgroundsContainer ref={ref} style={{ background: 'white' }} backgrounds={backgrounds}>
+        <div className={className}>
+          {children && children.elements.length > 0 ? (
+            children.elements.map((child, index) => (
+              <GridItem
+                key={child.key}
+                grid={children.columns}
+                index={index}
+                columnGap={columnGap}
+                rowGap={rowGap}
+              >
+                <Element element={child} />
+              </GridItem>
+            ))
+          ) : (
+            <Placeholder />
+          )}
+        </div>
+      </BackgroundsContainer>
+    </>
   )
 })
 

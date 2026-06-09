@@ -1,14 +1,20 @@
-import { cx } from '@emotion/css'
 import { ComponentPropsWithoutRef } from 'react'
 import { RenderElementProps } from 'slate-react'
 import { Slate } from '@makeswift/controls'
 
-import { useStyle } from '../../../../use-style'
 import { Link } from '../../../../../../components/shared/Link'
 import { InlineType } from '../../../../../../slate/types'
+import { useStyle } from '../../../../css-runtime/hooks/use-style'
+import clsx from 'clsx'
 
 function StyledLink({ className, ...restOfProps }: ComponentPropsWithoutRef<typeof Link>) {
-  return <Link {...restOfProps} className={cx(useStyle({ textDecoration: 'none' }), className)} />
+  const { className: baseClassName, styleElement } = useStyle({ textDecoration: 'none' })
+  return (
+    <>
+      {styleElement}
+      <Link {...restOfProps} className={clsx(baseClassName, className)} />
+    </>
+  )
 }
 
 export interface InlineRenderElementProps extends RenderElementProps {
