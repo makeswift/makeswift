@@ -4,7 +4,9 @@ import { CSSObject } from "@emotion/serialize"
 import { UncontrolledStyle } from "../components/UncontrolledStyle"
 import React from "react"
 import { murmur3 } from "murmurhash-js"
+import clsx from "clsx"
 
+// TODO rename file to 'uncontrolled-styles.ts'?
 
 // TODO share parts of `generateClassName` with css runtime
 
@@ -22,6 +24,7 @@ export function useStyle(style: CSSObject, options: { precedence?: string } = {}
   const css = toCss(style, className)
   const styleElement = useMemo(() => {
     return React.createElement(UncontrolledStyle, {
+      key: className,
       className,
       css,
       precedence: options.precedence
@@ -30,5 +33,24 @@ export function useStyle(style: CSSObject, options: { precedence?: string } = {}
   return {
     className,
     styleElement,
+  }
+}
+
+export function composeStyles(...args: Array<string | ReturnType<typeof useStyle> | undefined>) {
+  const classNames: string[] = []
+  const styleElements: React.ReactElement[] = []
+  args.forEach(arg => {
+    if (arg == null) return
+    if (typeof arg === 'string') {
+      classNames.push(arg)
+    } else {
+      classNames.push(arg.className)
+      styleElements.push(arg.styleElement)
+    }
+  })
+  const combinedClassName = clsx(classNames)
+  return {
+    className: combinedClassName,
+    styleElements
   }
 }

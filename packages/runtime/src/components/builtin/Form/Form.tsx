@@ -36,12 +36,10 @@ import { getBox, type BoxModelHandle } from '../../../state/modules/read-write/b
 import { PropControllersHandle } from '../../../state/modules/prop-controller-handles'
 import { DescriptorsPropControllers } from '../../../prop-controllers/instances'
 import { useTableFormFieldRefs } from '../../hooks/useTableFormFieldRefs'
-import { cx } from '@emotion/css'
 import { useResponsiveGridItem, useResponsiveStyle } from '../../utils/responsive-style'
 import { type ResponsiveColor } from '../../utils/types'
 
 import { useMakeswiftHostApiClient } from '../../../runtimes/react/host-api-client'
-import { useStyle } from '../../../runtimes/react/use-style'
 import { useTable } from '../../../runtimes/react/hooks/makeswift-api'
 import {
   type LinkData,
@@ -54,6 +52,8 @@ import {
   type TableFormFieldsData,
   type TableFormFieldsDescriptor,
 } from '@makeswift/prop-controllers'
+import { composeStyles, useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
+import clsx from 'clsx'
 
 const LOCAL_STORAGE_NAMESPACE = '@@makeswift/components/form'
 
@@ -106,20 +106,24 @@ const GridForm = forwardRef(function GridFrom(
   { className, size, ...restOfProps }: GridFormProps,
   ref: ForwardedRef<HTMLFormElement>,
 ) {
+  const styles = composeStyles(
+    useStyle({ display: 'flex', flexWrap: 'wrap', width: '100%' }),
+    useStyle(
+      useResponsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
+        fontSize: getSizeFontSize(size),
+      })),
+    ),
+    className
+  )
   return (
-    <form
-      {...restOfProps}
-      ref={ref}
-      className={cx(
-        useStyle({ display: 'flex', flexWrap: 'wrap', width: '100%' }),
-        useStyle(
-          useResponsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
-            fontSize: getSizeFontSize(size),
-          })),
-        ),
-        className,
-      )}
-    />
+    <>
+      {styles.styleElements}
+      <form
+        {...restOfProps}
+        ref={ref}
+        className={styles.className}
+      />
+    </>
   )
 })
 
@@ -137,16 +141,20 @@ const GridItem = forwardRef(function GridItem(
   { className, grid, index, rowGap, columnGap, ...restOfProps }: GridItemProps,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
+  const styles = composeStyles(
+    useStyle({ alignSelf: 'flex-end', flexDirection: 'column' }),
+    useStyle(useResponsiveGridItem({ grid, index, rowGap, columnGap })),
+    className
+  )
   return (
-    <div
-      {...restOfProps}
-      ref={ref}
-      className={cx(
-        useStyle({ alignSelf: 'flex-end', flexDirection: 'column' }),
-        useStyle(useResponsiveGridItem({ grid, index, rowGap, columnGap })),
-        className,
-      )}
-    />
+    <>
+      {styles.styleElements}
+      <div
+        {...restOfProps}
+        ref={ref}
+        className={styles.className}
+      />
+    </>
   )
 })
 
@@ -167,60 +175,81 @@ type StyledButtonProps = StyledButtonBaseProps &
   Omit<ComponentPropsWithoutRef<typeof Button>, keyof StyledButtonBaseProps>
 
 function StyledButton({ className, size, alignment, ...restOfProps }: StyledButtonProps) {
+  const styles = composeStyles(
+    useStyle({ display: 'flex', alignItems: 'center', justifyContent: 'center' }),
+    useStyle(
+      useResponsiveStyle(
+        [size, alignment] as const,
+        ([size = Sizes.MEDIUM, alignment = Alignments.CENTER]) => ({
+          minHeight: getInputSizeHeight(size),
+          maxHeight: getInputSizeHeight(size),
+          margin: getAlignmentMargin(alignment),
+          paddingTop: 0,
+          paddingBottom: 0,
+        }),
+      ),
+    ),
+    className
+  )
   return (
-    <Button
-      {...restOfProps}
-      as="button"
-      className={cx(
-        useStyle({ display: 'flex', alignItems: 'center', justifyContent: 'center' }),
-        useStyle(
-          useResponsiveStyle(
-            [size, alignment] as const,
-            ([size = Sizes.MEDIUM, alignment = Alignments.CENTER]) => ({
-              minHeight: getInputSizeHeight(size),
-              maxHeight: getInputSizeHeight(size),
-              margin: getAlignmentMargin(alignment),
-              paddingTop: 0,
-              paddingBottom: 0,
-            }),
-          ),
-        ),
-        className,
-      )}
-    />
+    <>
+      {styles.styleElements}
+      <Button
+        {...restOfProps}
+        as="button"
+        className={styles.className}
+      />
+    </>
   )
 }
 
 function ErrorContainer({ className, ...restOfProps }: ComponentPropsWithoutRef<'div'>) {
+  const styles = composeStyles(
+    useStyle({
+      padding: '8px 16px',
+      backgroundColor: '#f19eb9',
+      borderRadius: 4,
+      marginTop: 16,
+    }),
+    className
+  )
   return (
-    <div
-      {...restOfProps}
-      className={cx(
-        useStyle({
-          padding: '8px 16px',
-          backgroundColor: '#f19eb9',
-          borderRadius: 4,
-          marginTop: 16,
-        }),
-        className,
-      )}
-    />
+    <>
+      {styles.styleElements}
+      <div
+        {...restOfProps}
+        className={styles.className}
+      />
+    </>
   )
 }
 
 function IconContainer({ className, ...restOfProps }: ComponentPropsWithoutRef<'div'>) {
-  return <div {...restOfProps} className={cx(useStyle({ fill: 'currentColor' }), className)} />
+  const styles = composeStyles(
+    useStyle({ fill: 'currentColor' }),
+    className
+  )
+  return (
+    <>
+      {styles.styleElements}
+      <div {...restOfProps} className={styles.className} />
+    </>
+  )
 }
 
 function ErrorMessage({ className, ...restOfProps }: ComponentPropsWithoutRef<'p'>) {
+  const styles = composeStyles(
+    useStyle({ fontSize: 12, margin: '8px 0', color: 'rgba(127, 0, 0, 0.95)' }),
+    className
+  )
   return (
-    <p
-      {...restOfProps}
-      className={cx(
-        useStyle({ fontSize: 12, margin: '8px 0', color: 'rgba(127, 0, 0, 0.95)' }),
-        className,
-      )}
-    />
+    <>
+      {styles.styleElements}
+      <p
+        {...restOfProps}
+        className={styles.className}
+      />
+    </>
   )
 }
 
@@ -442,7 +471,7 @@ const Form = forwardRef(function Form(
                   <GridForm
                     ref={setRefEl}
                     id={id}
-                    className={cx(width, margin)}
+                    className={clsx(width, margin)}
                     size={size}
                     onSubmit={formik.handleSubmit}
                     onReset={formik.handleReset}

@@ -6,9 +6,8 @@ import { useFormContext, Sizes, Contrasts, Value } from '../../../../context/For
 import { getContrastBorderColor, getContrastBackgroundColor } from '../../services/responsiveField'
 import { colorToString } from '../../../../../../utils/colorToString'
 import { ColorValue } from '../../../../../../utils/types'
-import { cx } from '@emotion/css'
 import { useResponsiveStyle } from '../../../../../../utils/responsive-style'
-import { useStyle } from '../../../../../../../runtimes/react/use-style'
+import { composeStyles, useStyle } from '../../../../../../../runtimes/react/css-runtime/hooks/use-style'
 
 function getCheckmarkColor({
   swatch: { hue: h, saturation: s, lightness: l } = { hue: 0, saturation: 0, lightness: 0 },
@@ -23,20 +22,24 @@ type ContainerProps = ContainerBaseProps &
   Omit<ComponentPropsWithoutRef<'div'>, keyof ContainerBaseProps>
 
 function Container({ size, className, ...restOfProps }: ContainerProps) {
+  const styles = composeStyles(
+    useStyle({ position: 'relative' }),
+    useStyle(
+      useResponsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
+        height: getSize(size),
+        width: getSize(size),
+      })),
+    ),
+    className
+  )
   return (
-    <div
-      {...restOfProps}
-      className={cx(
-        useStyle({ position: 'relative' }),
-        useStyle(
-          useResponsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
-            height: getSize(size),
-            width: getSize(size),
-          })),
-        ),
-        className,
-      )}
-    />
+    <>
+      {styles.styleElements}
+      <div
+        {...restOfProps}
+        className={styles.className}
+      />
+    </>
   )
 }
 
@@ -48,29 +51,33 @@ type FakeRadioButtonProps = FakeRadioButtonBaseProps &
   Omit<ComponentPropsWithoutRef<'div'>, keyof FakeRadioButtonBaseProps>
 
 function FakeRadioButton({ className, contrast, error, ...restOfProps }: FakeRadioButtonProps) {
+  const styles = composeStyles(
+    FAKE_RADIO_BUTTON_CLASS_NAME,
+    useStyle({
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
+      borderStyle: 'solid',
+      borderRadius: '50%',
+      pointerEvents: 'none',
+      borderWidth: 1,
+    }),
+    useStyle(
+      useResponsiveStyle([contrast] as const, ([contrast = Contrasts.LIGHT]) => ({
+        borderColor: getContrastBorderColor(contrast, error),
+        backgroundColor: getContrastBackgroundColor(contrast),
+      })),
+    ),
+    className
+  )
   return (
-    <div
-      {...restOfProps}
-      className={cx(
-        FAKE_RADIO_BUTTON_CLASS_NAME,
-        useStyle({
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-          borderStyle: 'solid',
-          borderRadius: '50%',
-          pointerEvents: 'none',
-          borderWidth: 1,
-        }),
-        useStyle(
-          useResponsiveStyle([contrast] as const, ([contrast = Contrasts.LIGHT]) => ({
-            borderColor: getContrastBorderColor(contrast, error),
-            backgroundColor: getContrastBackgroundColor(contrast),
-          })),
-        ),
-        className,
-      )}
-    />
+    <>
+      {styles.styleElements}
+      <div
+        {...restOfProps}
+        className={styles.className}
+      />
+    </>
   )
 }
 
@@ -85,76 +92,80 @@ const HiddenRadioButton = forwardRef(function HiddenRadioButton(
   { className, brandColor, contrast, error, ...restOfProps }: HiddenRadioButtonProps,
   ref: ForwardedRef<HTMLInputElement>,
 ) {
-  return (
-    <input
-      {...restOfProps}
-      type="radio"
-      className={cx(
-        useStyle({
+  const styles = composeStyles(
+    useStyle({
+      position: 'absolute',
+      opacity: 0,
+      width: '100%',
+      height: '100%',
+      cursor: 'pointer',
+
+      '&:disabled': {
+        cursor: 'no-drop',
+
+        [`& ~ .${FAKE_RADIO_BUTTON_CLASS_NAME}`]: {
+          opacity: 0.5,
+        },
+      },
+
+      [`&:checked ~ .${FAKE_RADIO_BUTTON_CLASS_NAME}`]: {
+        ...useResponsiveStyle(
+          [brandColor] as const,
+          ([brandColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 }]) => ({
+            backgroundColor: colorToString(brandColor),
+          }),
+        ),
+        borderColor: 'transparent',
+
+        '&::after': {
+          content: '""',
           position: 'absolute',
-          opacity: 0,
-          width: '100%',
-          height: '100%',
-          cursor: 'pointer',
+          boxSizing: 'content-box',
+          top: '50%',
+          left: '50%',
+          width: '50%',
+          height: '50%',
+          borderRadius: '50%',
+          transform: 'translate(-50%, -50%)',
+          ...useResponsiveStyle(
+            [brandColor] as const,
+            ([brandColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 }]) => ({
+              backgroundColor: getCheckmarkColor(brandColor),
+            }),
+          ),
+        },
+      },
 
-          '&:disabled': {
-            cursor: 'no-drop',
+      '&:not(:disabled)': {
+        [`&:focus ~ .${FAKE_RADIO_BUTTON_CLASS_NAME}`]: useResponsiveStyle(
+          [brandColor] as const,
+          ([brandColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 }]) => ({
+            borderColor: colorToString(brandColor),
+          }),
+        ),
+      },
 
-            [`& ~ .${FAKE_RADIO_BUTTON_CLASS_NAME}`]: {
-              opacity: 0.5,
-            },
-          },
-
-          [`&:checked ~ .${FAKE_RADIO_BUTTON_CLASS_NAME}`]: {
-            ...useResponsiveStyle(
-              [brandColor] as const,
-              ([brandColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 }]) => ({
-                backgroundColor: colorToString(brandColor),
-              }),
-            ),
-            borderColor: 'transparent',
-
-            '&::after': {
-              content: '""',
-              position: 'absolute',
-              boxSizing: 'content-box',
-              top: '50%',
-              left: '50%',
-              width: '50%',
-              height: '50%',
-              borderRadius: '50%',
-              transform: 'translate(-50%, -50%)',
-              ...useResponsiveStyle(
-                [brandColor] as const,
-                ([brandColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 }]) => ({
-                  backgroundColor: getCheckmarkColor(brandColor),
-                }),
-              ),
-            },
-          },
-
-          '&:not(:disabled)': {
-            [`&:focus ~ .${FAKE_RADIO_BUTTON_CLASS_NAME}`]: useResponsiveStyle(
-              [brandColor] as const,
-              ([brandColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 }]) => ({
-                borderColor: colorToString(brandColor),
-              }),
-            ),
-          },
-
-          '&:not(:disabled):checked': {
-            [`&:focus ~ .${FAKE_RADIO_BUTTON_CLASS_NAME}`]: useResponsiveStyle(
-              [contrast] as const,
-              ([contrast = Contrasts.LIGHT]) => ({
-                borderColor: getContrastBorderColor(contrast, error),
-              }),
-            ),
-          },
-        }),
-        className,
-      )}
-      ref={ref}
-    />
+      '&:not(:disabled):checked': {
+        [`&:focus ~ .${FAKE_RADIO_BUTTON_CLASS_NAME}`]: useResponsiveStyle(
+          [contrast] as const,
+          ([contrast = Contrasts.LIGHT]) => ({
+            borderColor: getContrastBorderColor(contrast, error),
+          }),
+        ),
+      },
+    }),
+    className
+  )
+  return (
+    <>
+      {styles.styleElements}
+      <input
+        {...restOfProps}
+        type="radio"
+        className={styles.className}
+        ref={ref}
+      />
+    </>
   )
 })
 

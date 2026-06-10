@@ -12,12 +12,12 @@ import { ChevronDown8 } from '../../../../../../icons/ChevronDown8'
 
 import { Link } from '../../../../../../shared/Link'
 import Button from '../../../../../Button'
-import { cx } from '@emotion/css'
-import { useStyle } from '../../../../../../../runtimes/react/use-style'
 import {
   useResponsiveStyle,
   useResponsiveTextStyle,
 } from '../../../../../../utils/responsive-style'
+import { useStyle } from '../../../../../../../runtimes/react/css-runtime/hooks/use-style'
+import clsx from 'clsx'
 
 type DropDownMenuBaseProps = {
   className?: string
@@ -28,11 +28,12 @@ type DropDownMenuProps = DropDownMenuBaseProps &
   Omit<ComponentPropsWithoutRef<'div'>, keyof DropDownMenuBaseProps>
 
 function DropDownMenu({ className, open, ...restOfProps }: DropDownMenuProps) {
+  const { className: baseClassName, styleElement: baseStyleElement } = useStyle({ display: open ? 'flex' : 'none', flexDirection: 'column', padding: 8 })
   return (
     <div
       {...restOfProps}
-      className={cx(
-        useStyle({ display: open ? 'flex' : 'none', flexDirection: 'column', padding: 8 }),
+      className={clsx(
+        baseClassName,
         className,
       )}
     />
@@ -47,7 +48,13 @@ type ButtonLinkProps = ButtonLinkBaseProps &
   Omit<ComponentPropsWithoutRef<typeof Button>, keyof ButtonLinkBaseProps>
 
 function ButtonLink({ className, ...restOfProps }: ButtonLinkProps) {
-  return <Button {...restOfProps} className={cx(useStyle({ margin: '8px 0' }), className)} />
+  const { className: baseClassName, styleElement: baseStyleElement } = useStyle({ margin: '8px 0' })
+  return (
+    <>
+      {baseStyleElement}
+      <Button {...restOfProps} className={clsx(baseClassName, className)} />
+    </>
+  )
 }
 
 type BaseDropDownItemProps = {
@@ -62,25 +69,32 @@ type DropDownItemProps = BaseDropDownItemProps &
 function DropDownItem({ color, className, textStyle, ...restOfProps }: DropDownItemProps) {
   const colorData = useResponsiveColor(color)
 
+  const { className: baseClassName, styleElement: baseStyleElement } = useStyle({
+    textDecoration: 'none',
+    lineHeight: 1.4,
+    padding: '8px 16px',
+    color: 'black',
+  })
+  const { className: responsiveTextStyleClassName, styleElement: responsiveTextStylesElement } = useStyle(useResponsiveTextStyle(textStyle))
+  const { className: responsiveColorClassName, styleElement: responsiveColorStylesElement } = useStyle(useResponsiveStyle([colorData] as const, ([color]) => ({
+    color: color == null ? 'black' : colorToString(color),
+  })))
+
   return (
-    <Link
-      {...restOfProps}
-      className={cx(
-        useStyle({
-          textDecoration: 'none',
-          lineHeight: 1.4,
-          padding: '8px 16px',
-          color: 'black',
-        }),
-        useStyle(useResponsiveTextStyle(textStyle)),
-        useStyle(
-          useResponsiveStyle([colorData] as const, ([color]) => ({
-            color: color == null ? 'black' : colorToString(color),
-          })),
-        ),
-        className,
-      )}
-    />
+    <>
+      {baseStyleElement}
+      {responsiveColorStylesElement}
+      {responsiveTextStylesElement}
+      <Link
+        {...restOfProps}
+        className={clsx(
+          baseClassName,
+          responsiveTextStyleClassName,
+          responsiveColorClassName,
+          className,
+        )}
+      />
+    </>
   )
 }
 

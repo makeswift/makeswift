@@ -12,13 +12,12 @@ import { type Breakpoints, findBreakpointOverride } from '@makeswift/controls'
 
 import { placeholders } from '../../utils/placeholders'
 import { Link } from '../../shared/Link'
-import { cx } from '@emotion/css'
-import { useStyle } from '../../../runtimes/react/use-style'
 import { useResponsiveStyle, useResponsiveWidth } from '../../utils/responsive-style'
 import { useFile } from '../../../runtimes/react/hooks/makeswift-api'
 import { useBreakpoints } from '../../../runtimes/react/hooks/use-breakpoints'
 import { useFrameworkContext } from '../../../runtimes/react/components/hooks/use-framework-context'
 import { match, P } from 'ts-pattern'
+import { composeStyles, useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
 
 type Props = {
   id?: string
@@ -134,7 +133,7 @@ const ImageComponent = forwardRef(function Image(
 
   const dimensions = dataDimensions ?? measuredDimensions
   const Container = link ? Link : 'div'
-  const containerClassName = cx(
+  const containerStyles = composeStyles(
     useStyle({ lineHeight: 0, overflow: 'hidden' }),
     useStyle(useResponsiveWidth(width, dimensions?.width)),
     useStyle(useResponsiveStyle([opacity] as const, ([opacity = 1]) => ({ opacity }))),
@@ -151,20 +150,23 @@ const ImageComponent = forwardRef(function Image(
   if (!dimensions) return null
 
   return (
-    <Container link={link} ref={ref} id={id} className={containerClassName}>
-      <Image
-        src={imageSrc}
-        priority={priority}
-        sizes={imageSizes(breakpoints, width)}
-        alt={altText ?? ''}
-        width={dimensions.width}
-        height={dimensions.height}
-        style={{
-          width: '100%',
-          height: 'auto',
-        }}
-      />
-    </Container>
+    <>
+      {containerStyles.styleElements}
+      <Container link={link} ref={ref} id={id} className={containerStyles.className}>
+        <Image
+          src={imageSrc}
+          priority={priority}
+          sizes={imageSizes(breakpoints, width)}
+          alt={altText ?? ''}
+          width={dimensions.width}
+          height={dimensions.height}
+          style={{
+            width: '100%',
+            height: 'auto',
+          }}
+        />
+      </Container>
+    </>
   )
 })
 
