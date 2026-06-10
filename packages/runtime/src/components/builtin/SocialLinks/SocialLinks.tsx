@@ -13,8 +13,7 @@ import {
   type ResponsiveSelectValue,
   type ResponsiveIconRadioGroupValue,
 } from '@makeswift/prop-controllers'
-import { useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
-import clsx from 'clsx'
+import { composeStyles, useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
 
 type Props = {
   id?: string
@@ -49,23 +48,21 @@ const SocialLinks = forwardRef(function SocialLinks(
   }: Props,
   ref: Ref<HTMLDivElement>,
 ) {
-  const { className: displayClassName, styleElement: displayStyleElement } = useStyle({ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' })
-  const { className: responsiveStylesClassName, styleElement: responsiveStylesElement } = useStyle(useResponsiveStyle([alignment] as const, ([alignment = 'center']) => ({
-    justifyContent: alignment,
-  })))
+  const styles = composeStyles(
+    useStyle({ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }),
+    width,
+    margin,
+    useStyle(useResponsiveStyle([alignment] as const, ([alignment = 'center']) => ({
+      justifyContent: alignment,
+    })))
+  )
   return (
     <>
-      {displayStyleElement}
-      {responsiveStylesElement}
+      {styles.styleElements}
       <div
         ref={ref}
         id={id}
-        className={clsx(
-          displayClassName,
-          width,
-          margin,
-          responsiveStylesClassName,
-        )}
+        className={styles.className}
       >
         {links.length > 0 ? (
           links.map((link, i) => {
@@ -123,54 +120,52 @@ function StyledLink({
   backgroundColor,
   ...restOfProps
 }: StyledLinkProps) {
-  const { className: baseClassName, styleElement: baseStyleElement } = useStyle({
-    display: 'block',
-    color: brandColor,
-    transition: 'transform, opacity 0.18s',
-    svg: { display: 'block' },
-  })
-  const { className: responsiveStylesClassName, styleElement: responsiveStylesElement } = useStyle(useResponsiveStyle(
-    [shape, size, hoverStyle, fill, backgroundColor] as const,
-    ([shape = 'naked', size = 'medium', hoverStyle = 'none', fill, backgroundColor]) => ({
-      padding: shape === 'naked' ? 0 : { small: 10, medium: 12, large: 14 }[size],
-      borderRadius: { circle: '50%', rounded: '8px', naked: 0, square: 0 }[shape],
-      background:
-        shape === 'naked'
-          ? 'transparent'
-          : backgroundColor == null
-            ? 'currentColor'
-            : colorToString(backgroundColor),
-
-      ':hover': {
-        none: {},
-        grow: { transform: 'scale(1.1)' },
-        shrink: { transform: 'scale(0.9)' },
-        fade: { opacity: 0.65 },
-      }[hoverStyle],
-
-      svg: {
-        fill:
-          fill == null
-            ? shape === 'naked' || backgroundColor != null
-              ? 'currentColor'
-              : 'white'
-            : colorToString(fill),
-        width: { small: 16, medium: 20, large: 24 }[size],
-        height: { small: 16, medium: 20, large: 24 }[size],
-      },
+  const styles = composeStyles(
+    useStyle({
+      display: 'block',
+      color: brandColor,
+      transition: 'transform, opacity 0.18s',
+      svg: { display: 'block' },
     }),
-  ))
+    useStyle(useResponsiveStyle(
+      [shape, size, hoverStyle, fill, backgroundColor] as const,
+      ([shape = 'naked', size = 'medium', hoverStyle = 'none', fill, backgroundColor]) => ({
+        padding: shape === 'naked' ? 0 : { small: 10, medium: 12, large: 14 }[size],
+        borderRadius: { circle: '50%', rounded: '8px', naked: 0, square: 0 }[shape],
+        background:
+          shape === 'naked'
+            ? 'transparent'
+            : backgroundColor == null
+              ? 'currentColor'
+              : colorToString(backgroundColor),
+  
+        ':hover': {
+          none: {},
+          grow: { transform: 'scale(1.1)' },
+          shrink: { transform: 'scale(0.9)' },
+          fade: { opacity: 0.65 },
+        }[hoverStyle],
+  
+        svg: {
+          fill:
+            fill == null
+              ? shape === 'naked' || backgroundColor != null
+                ? 'currentColor'
+                : 'white'
+              : colorToString(fill),
+          width: { small: 16, medium: 20, large: 24 }[size],
+          height: { small: 16, medium: 20, large: 24 }[size],
+        },
+      }),
+    )),
+    className
+  )
   return (
     <>
-      {baseStyleElement}
-      {responsiveStylesElement}
+      {styles.styleElements}
       <Link
         {...restOfProps}
-        className={clsx(
-          baseClassName,
-          responsiveStylesClassName,
-          className,
-        )}
+        className={styles.className}
       />
     </>
   )

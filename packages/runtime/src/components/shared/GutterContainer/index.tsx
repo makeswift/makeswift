@@ -1,8 +1,7 @@
 import { ComponentPropsWithoutRef } from 'react'
 import { useResponsiveStyle } from '../../utils/responsive-style'
 import { LengthData, ResponsiveValue } from '@makeswift/prop-controllers'
-import { useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
-import clsx from 'clsx'
+import { composeStyles, useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
 
 type BaseProps = {
   className?: string
@@ -14,19 +13,19 @@ type BaseProps = {
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 export default function GutterContainer({ className, gutter, first, last, ...restOfProps }: Props) {
-  const { className: baseClassName, styleElement: baseStyleElement } = useStyle(useResponsiveStyle([gutter] as const, ([gutter = { value: 0, unit: 'px' }]) => ({
-    paddingLeft: first ? '0px' : `${gutter.value / 2}${gutter.unit}`,
-    paddingRight: last ? '0px' : `${gutter.value / 2}${gutter.unit}`,
-  })))
+  const styles = composeStyles(
+    useStyle(useResponsiveStyle([gutter] as const, ([gutter = { value: 0, unit: 'px' }]) => ({
+      paddingLeft: first ? '0px' : `${gutter.value / 2}${gutter.unit}`,
+      paddingRight: last ? '0px' : `${gutter.value / 2}${gutter.unit}`,
+    }))),
+    className
+  )
   return (
     <>
-      {baseStyleElement}
+      {styles.styleElements}
       <div
         {...restOfProps}
-        className={clsx(
-          baseClassName,
-          className,
-        )}
+        className={styles.className}
       />
     </>
   )

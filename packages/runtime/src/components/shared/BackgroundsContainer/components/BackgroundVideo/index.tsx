@@ -3,32 +3,31 @@ import { useState, useRef, ComponentPropsWithoutRef, ForwardedRef, forwardRef, R
 import { ReactPlayer } from '../../../react-player'
 
 import { useIsomorphicLayoutEffect } from '../../../../hooks/useIsomorphicLayoutEffect'
-import { useStyle } from '../../../../../runtimes/react/css-runtime/hooks/use-style'
-import clsx from 'clsx'
+import { composeStyles, useStyle } from '../../../../../runtimes/react/css-runtime/hooks/use-style'
 
 const Container = forwardRef(function Container(
   { className, ...restOfProps }: ComponentPropsWithoutRef<'div'>,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
-  const { className: baseClassName, styleElement: baseStyleElement } = useStyle({
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    pointerEvents: 'none',
-    overflow: 'hidden',
-  })
+  const styles = composeStyles(
+    useStyle({
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      pointerEvents: 'none',
+      overflow: 'hidden',
+    }),
+    className
+  )
   return (
     <>
-      {baseStyleElement}
+      {styles.styleElements}
       <div
         {...restOfProps}
         ref={ref}
-        className={clsx(
-          baseClassName,
-          className,
-        )}
+        className={styles.className}
       />
     </>
   )

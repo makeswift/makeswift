@@ -5,8 +5,7 @@ import { forwardRef, Ref, useEffect, useState } from 'react'
 import { ReactPlayer } from '../../shared/react-player'
 import { placeholders } from '../../utils/placeholders'
 import { VideoData } from '@makeswift/prop-controllers'
-import { useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
-import clsx from 'clsx'
+import { composeStyles, useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
 
 type Props = {
   id?: string
@@ -32,20 +31,20 @@ const Video = forwardRef(function Video(
     setShouldRenderReactPlayer(true)
   }, [])
 
-  const { className: baseClassName, styleElement: baseStyleElement } = useStyle({ display: 'flex', flexDirection: 'column', overflow: 'hidden' })
+  const styles = composeStyles(
+    useStyle({ display: 'flex', flexDirection: 'column', overflow: 'hidden' }),
+    width,
+    margin,
+    borderRadius,
+  )
 
   return (
     <>
-      {baseStyleElement}
+      {styles.styleElements}
       <div
         ref={ref}
         id={id}
-        className={clsx(
-          baseClassName,
-          width,
-          margin,
-          borderRadius,
-        )}
+        className={styles.className}
       >
         <div style={{ position: 'relative', paddingTop: `${100 / ASPECT_RATIO}%` }}>
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>

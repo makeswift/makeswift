@@ -29,8 +29,7 @@ import {
   type ResponsiveGapData,
   type ResponsiveIconRadioGroupValue,
 } from '@makeswift/prop-controllers'
-import { useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
-import clsx from 'clsx'
+import { composeStyles, useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
 
 type Props = {
   id?: string
@@ -159,51 +158,45 @@ const Box = forwardRef(function Box(
     }
   }, [replayAnimation, animationProps])
 
-  const { className: containerFlexClassName, styleElement: containerFlexStyle } = useStyle({ display: 'flex' })
-  const { className: containerResponsiveStyleClassName, styleElement: containerResponsiveStyle } = useStyle(
-    useResponsiveStyle([height], ([alignSelf = 'auto']) => ({ alignSelf }))
-)
-  const containerClassName = clsx(
+  const containerStyles = composeStyles(
     width,
     margin,
     borderRadius,
-    containerFlexClassName,
-    containerResponsiveStyleClassName,
+    useStyle({ display: 'flex' }),
+    useStyle(
+      useResponsiveStyle([height], ([alignSelf = 'auto']) => ({ alignSelf }))
+    ),
     animationClassName,
   )
 
-  const { className: innerFlexClassName, styleElement: innerFlexStyle } = useStyle({ display: 'flex', flexWrap: 'wrap', width: '100%' })
-  const { className: innerResponsiveStylesClassName, styleElement: innerResponsiveStyle } = useStyle(
-    useResponsiveStyle([verticalAlign], ([alignContent = 'flex-start']) => ({
-      alignContent,
-    }))
-  )
-  const innerClassName = clsx(
+  const innerStyles = composeStyles(
     padding,
     boxShadow,
     border,
-    innerFlexClassName,
-    innerResponsiveStylesClassName
+    useStyle({ display: 'flex', flexWrap: 'wrap', width: '100%' }),
+    useStyle(
+      useResponsiveStyle([verticalAlign], ([alignContent = 'flex-start']) => ({
+        alignContent,
+      }))
+    )
   )
 
   return (
     <>
-      {containerFlexStyle}
-      {containerResponsiveStyle}
+      {containerStyles.styleElements}
       {animationStyle}
       <BackgroundsContainer
         ref={boxElementCallbackRef}
         id={id}
-        className={containerClassName}
+        className={containerStyles.className}
         backgrounds={backgrounds}
       >
         <>
-          {innerFlexStyle}
-          {innerResponsiveStyle}
+          {innerStyles.styleElements}
           <div
             ref={innerRef}
             key={key}
-            className={innerClassName}
+            className={innerStyles.className}
           >
             {children && children.elements.length > 0 ? (
               <>

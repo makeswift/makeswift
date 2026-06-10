@@ -24,8 +24,7 @@ import {
   type ResponsiveSelectValue,
   type ResponsiveIconRadioGroupValue,
 } from '@makeswift/prop-controllers'
-import { useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
-import clsx from 'clsx'
+import { composeStyles, useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
 
 type BaseProps<T extends ElementType> = {
   as?: T
@@ -66,7 +65,7 @@ const Button = forwardRef(function Button<T extends ElementType = 'button'>(
 ) {
   const Component = as ?? Link
 
-  const buttonResponsiveStyles = useResponsiveStyle(
+  const buttonResponsiveCss = useResponsiveStyle(
     [variant, shape, size, textColor, color] as const,
     ([
       variant = 'flat',
@@ -243,39 +242,33 @@ const Button = forwardRef(function Button<T extends ElementType = 'button'>(
     },
   )
 
-  const { className: buttonBaseStylesClassName, styleElement: buttonBaseStylesStyleElement } = useStyle({
-    display: 'table',
-    border: 0,
-    outline: 0,
-    userSelect: 'none',
-    cursor: 'pointer',
-    fontFamily: 'inherit',
-    textDecoration: 'none',
-    textAlign: 'center',
-  })
-  const { className: buttonResponsiveWidthClassName, styleElement: buttonResponsiveWidthStyleElement } = useStyle(useResponsiveWidth(width, 'auto'))
-  const { className: buttonResponsiveStylesClassName, styleElement: buttonResponsiveStylesStyleElement } = useStyle(buttonResponsiveStyles)
-  const { className: buttonStylesResponsiveTextClassName, styleElement: buttonStylesResponsiveTextStyleElement } = useStyle(useResponsiveTextStyle(textStyle))
+  const buttonStyles = composeStyles(
+    useStyle({
+      display: 'table',
+      border: 0,
+      outline: 0,
+      userSelect: 'none',
+      cursor: 'pointer',
+      fontFamily: 'inherit',
+      textDecoration: 'none',
+      textAlign: 'center',
+    }),
+    useStyle(useResponsiveWidth(width, 'auto')),
+    margin,
+    useStyle(buttonResponsiveCss),
+    useStyle(useResponsiveTextStyle(textStyle)),
+    className
+  )
 
   return (
     <>
-      {buttonBaseStylesStyleElement}
-      {buttonResponsiveWidthStyleElement}
-      {buttonResponsiveStylesStyleElement}
-      {buttonStylesResponsiveTextStyleElement}
+      {buttonStyles.styleElements}
       {/* @ts-ignore: `ref` prop doesn't match between `Link` and `T`. */}
       <Component
         {...restOfProps}
         ref={ref}
         id={id}
-        className={clsx(
-          buttonBaseStylesClassName,
-          buttonResponsiveWidthClassName,
-          margin,
-          buttonResponsiveStylesClassName,
-          buttonStylesResponsiveTextClassName,
-          className,
-        )}
+        className={buttonStyles.className}
         link={link}
       >
         {children == null ? 'Button Text' : children}
