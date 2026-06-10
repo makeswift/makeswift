@@ -348,6 +348,7 @@ export {
 } from './width'
 export type {
   ResolveWidthPropControllerValue,
+  ResponsiveWidthLengthData,
   WidthDescriptor,
   WidthPropControllerData,
 } from './width'

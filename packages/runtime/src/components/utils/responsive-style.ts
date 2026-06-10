@@ -9,8 +9,9 @@ import type {
   ResponsiveMarginData,
   ResponsivePaddingData,
   ResponsiveValue,
-  ResponsiveLengthData,
   ResponsiveTextStyleData,
+  ResponsiveWidthLengthData,
+  WidthLengthData,
 } from '@makeswift/prop-controllers'
 
 import {
@@ -69,14 +70,32 @@ export function useResponsiveStyle<
 
 export function responsiveWidth(
   breakpoints: Breakpoints,
-  widthData: ResponsiveLengthData | undefined,
-  defaultValue: LengthData | WidthProperty<string | number> = '100%',
+  widthData: ResponsiveWidthLengthData | undefined,
+  {
+    defaultValue = '100%',
+    minWidth = 20,
+    autoWidth = 'fit-content',
+  }: {
+    defaultValue?: WidthLengthData | WidthProperty<string | number>
+    minWidth?: number
+    autoWidth?: WidthProperty<string | number>
+  } = {},
 ): CSSObject {
+  const resolvedAutoWidth = typeof autoWidth === 'number' ? `${autoWidth}px` : autoWidth
+
   return {
     maxWidth: '100%',
-    ...responsiveStyle(breakpoints, [widthData], ([width = defaultValue]) => ({
-      width: typeof width === 'object' ? `${width.value}${width.unit}` : width,
-    })),
+    ...responsiveStyle(breakpoints, [widthData], ([width = defaultValue]) => {
+      const isAuto = width === 'auto'
+      return {
+        width: isAuto
+          ? resolvedAutoWidth
+          : typeof width === 'object'
+            ? `${width.value}${width.unit}`
+            : width,
+        ...(isAuto && resolvedAutoWidth === 'fit-content' && { minWidth }),
+      }
+    }),
   }
 }
 
@@ -210,8 +229,7 @@ export function responsiveGridItem(
         const excessWidth = `${Number(firstCol) + Number(lastCol)} * ${columnGap.value}${
           columnGap.unit
         } / 2`
-        const iePrecisionError = '0.01px'
-        const flexBasis = `calc(${width} - ${excessWidth} - ${iePrecisionError})`
+        const flexBasis = `calc(${width} - ${excessWidth})`
         const firstRow = rowIndex === 0
         const lastRow = rowIndex === spans.length - 1
 
@@ -220,9 +238,6 @@ export function responsiveGridItem(
           : {
               flexBasis,
               minWidth: flexBasis,
-              // NOTE: IE11 width breaks without max width
-              // https://github.com/philipwalton/flexbugs/issues/3
-              maxWidth: flexBasis,
               paddingLeft: firstCol ? 0 : `${columnGap.value / 2}${columnGap.unit}`,
               paddingRight: lastCol ? 0 : `${columnGap.value / 2}${columnGap.unit}`,
               paddingTop: firstRow ? 0 : `${rowGap.value / 2}${rowGap.unit}`,

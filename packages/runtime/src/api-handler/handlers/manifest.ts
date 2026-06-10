@@ -16,6 +16,7 @@ export type Manifest = {
   localizedPageSSR: boolean
   webhook: boolean
   localizedPagesOnlineByDefault: boolean
+  styleWidthAuto: boolean
 }
 
 export async function manifestHandler(
@@ -40,6 +41,8 @@ export async function manifestHandler(
     webhook: true,
     localizedPagesOnlineByDefault: true,
     previewToken: true,
+    styleWidthAuto: true,
     ...(manifest ?? {}),
   })
 }
+

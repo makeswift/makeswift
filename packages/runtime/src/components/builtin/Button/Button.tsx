@@ -21,10 +21,10 @@ import {
 import { cx } from '@emotion/css'
 import {
   type LinkData,
-  type ResponsiveLengthData,
   type ResponsiveTextStyleData,
   type ResponsiveSelectValue,
   type ResponsiveIconRadioGroupValue,
+  type ResponsiveWidthLengthData,
 } from '@makeswift/prop-controllers'
 
 type BaseProps<T extends ElementType> = {
@@ -38,7 +38,7 @@ type BaseProps<T extends ElementType> = {
   color?: ResponsiveColor | null
   textColor?: ResponsiveColor | null
   textStyle?: ResponsiveTextStyleData
-  width?: ResponsiveLengthData
+  width?: ResponsiveWidthLengthData
   margin?: string
 }
 
@@ -83,7 +83,7 @@ const Button = forwardRef(function Button<T extends ElementType = 'button'>(
           textDecoration: 'none',
           textAlign: 'center',
         }),
-        useStyle(useResponsiveWidth(width, 'auto')),
+        useStyle(useResponsiveWidth(width, { defaultValue: 'auto', autoWidth: 'fit-content' })),
         margin,
         useStyle(
           useResponsiveStyle(
