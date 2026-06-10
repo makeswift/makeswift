@@ -4,7 +4,6 @@ import { z } from 'zod'
 import { deserializeSiteVersion, type SiteVersion } from '../api/site-version'
 
 import { MakeswiftClient } from '../client'
-import { MAKESWIFT_CACHE_TAG } from './cache'
 
 const previewDataSchema = z.object({
   siteVersion: z.string(),
@@ -23,10 +22,6 @@ export class Makeswift extends MakeswiftClient {
   }
 
   fetchOptions(_siteVersion: SiteVersion): Record<string, unknown> {
-    return {
-      next: {
-        tags: [MAKESWIFT_CACHE_TAG],
-      },
-    }
+    return {}
   }
 }
