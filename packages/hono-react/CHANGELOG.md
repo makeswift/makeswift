@@ -1,5 +1,11 @@
 # @makeswift/hono-react
 
+## 0.2.0-canary.2
+
+### Minor Changes
+
+- c658385: fix: move `renderHtml` to a separate entry point so `hono-react/server` can be imported in environments where `react-dom/server` does not provide `renderToReadableStream`.
+
 ## 0.1.9-canary.1
 
 ### Patch Changes

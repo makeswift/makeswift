@@ -16,6 +16,7 @@
   },
   "changesets": [
     "add-slider-control",
-    "control-legacy-data-type-markers"
+    "control-legacy-data-type-markers",
+    "pretty-oranges-type"
   ]
 }
