@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Page Group (heterogenous properties): Makeswift styles 1`] = `[]`;
+
 exports[`Page Group (heterogenous properties): resolvedValue 1`] = `
 {
   "checkbox": true,

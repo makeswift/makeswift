@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Page Link control data { type: 'CALL_PHONE', payload: [Object] }: Makeswift styles 1`] = `[]`;
+
 exports[`Page Link control data { type: 'CALL_PHONE', payload: [Object] }: resolvedValue 1`] = `
 {
   "href": "tel:555-555-5555",
@@ -61,6 +63,8 @@ exports[`Page Link control data { type: 'CALL_PHONE', payload: [Object] }: snaps
   },
 }
 `;
+
+exports[`Page Link control data { type: 'OPEN_URL', payload: [Object] }: Makeswift styles 1`] = `[]`;
 
 exports[`Page Link control data { type: 'OPEN_URL', payload: [Object] }: resolvedValue 1`] = `
 {
@@ -125,6 +129,8 @@ exports[`Page Link control data { type: 'OPEN_URL', payload: [Object] }: snapsho
   },
 }
 `;
+
+exports[`Page Link control data { type: 'SCROLL_TO_ELEMENT', payload: [Object] }: Makeswift styles 1`] = `[]`;
 
 exports[`Page Link control data { type: 'SCROLL_TO_ELEMENT', payload: [Object] }: resolvedValue 1`] = `
 {
@@ -192,6 +198,8 @@ exports[`Page Link control data { type: 'SCROLL_TO_ELEMENT', payload: [Object] }
 }
 `;
 
+exports[`Page Link control data { type: 'SEND_EMAIL', payload: [Object] }: Makeswift styles 1`] = `[]`;
+
 exports[`Page Link control data { type: 'SEND_EMAIL', payload: [Object] }: resolvedValue 1`] = `
 {
   "href": "mailto:bob@gmail.com?subject=hello&body=world",
@@ -256,6 +264,8 @@ exports[`Page Link control data { type: 'SEND_EMAIL', payload: [Object] }: snaps
 }
 `;
 
+exports[`Page Link control data OPEN_PAGE for locale fr-FR fetches pathname slice when not in cache: Makeswift styles 1`] = `[]`;
+
 exports[`Page Link control data OPEN_PAGE for locale fr-FR fetches pathname slice when not in cache: resolvedValue 1`] = `
 {
   "href": "/fr-FR/test-localized-pathname",
@@ -319,6 +329,8 @@ exports[`Page Link control data OPEN_PAGE for locale fr-FR fetches pathname slic
   },
 }
 `;
+
+exports[`Page Link control data OPEN_PAGE for locale fr-FR renders page link when page pathname slice is in cache: Makeswift styles 1`] = `[]`;
 
 exports[`Page Link control data OPEN_PAGE for locale fr-FR renders page link when page pathname slice is in cache: resolvedValue 1`] = `
 {
@@ -397,6 +409,8 @@ exports[`Page Link control data OPEN_PAGE for locale fr-FR renders page link whe
 }
 `;
 
+exports[`Page Link control data OPEN_PAGE for locale fr-FR resolves default link attributes when unable to find pathname slice: Makeswift styles 1`] = `[]`;
+
 exports[`Page Link control data OPEN_PAGE for locale fr-FR resolves default link attributes when unable to find pathname slice: resolvedValue 1`] = `
 {
   "href": "#",
@@ -469,6 +483,8 @@ exports[`Page Link control data OPEN_PAGE for locale fr-FR resolves default link
 }
 `;
 
+exports[`Page Link control data OPEN_PAGE for locale null fetches pathname slice when not in cache: Makeswift styles 1`] = `[]`;
+
 exports[`Page Link control data OPEN_PAGE for locale null fetches pathname slice when not in cache: resolvedValue 1`] = `
 {
   "href": "/test-pathname",
@@ -532,6 +548,8 @@ exports[`Page Link control data OPEN_PAGE for locale null fetches pathname slice
   },
 }
 `;
+
+exports[`Page Link control data OPEN_PAGE for locale null renders page link when page pathname slice is in cache: Makeswift styles 1`] = `[]`;
 
 exports[`Page Link control data OPEN_PAGE for locale null renders page link when page pathname slice is in cache: resolvedValue 1`] = `
 {
@@ -609,6 +627,8 @@ exports[`Page Link control data OPEN_PAGE for locale null renders page link when
 }
 `;
 
+exports[`Page Link control data OPEN_PAGE for locale null resolves default link attributes when unable to find pathname slice: Makeswift styles 1`] = `[]`;
+
 exports[`Page Link control data OPEN_PAGE for locale null resolves default link attributes when unable to find pathname slice: resolvedValue 1`] = `
 {
   "href": "#",
@@ -681,6 +701,8 @@ exports[`Page Link control data OPEN_PAGE for locale null resolves default link 
 }
 `;
 
+exports[`Page Link control data SCROLL_TO_ELEMENT resolves default link attributes when elementIdConfig is not provided: Makeswift styles 1`] = `[]`;
+
 exports[`Page Link control data SCROLL_TO_ELEMENT resolves default link attributes when elementIdConfig is not provided: resolvedValue 1`] = `
 {
   "href": "#",
@@ -746,6 +768,8 @@ exports[`Page Link control data SCROLL_TO_ELEMENT resolves default link attribut
   },
 }
 `;
+
+exports[`Page Link control data SCROLL_TO_ELEMENT resolves scroll target when element key is on screen: Makeswift styles 1`] = `[]`;
 
 exports[`Page Link control data SCROLL_TO_ELEMENT resolves scroll target when element key is on screen: resolvedValue 1`] = `
 {
@@ -822,6 +846,8 @@ exports[`Page Link control data SCROLL_TO_ELEMENT resolves scroll target when el
   },
 }
 `;
+
+exports[`Page Link control data null: Makeswift styles 1`] = `[]`;
 
 exports[`Page Link control data null: resolvedValue 1`] = `
 {

@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Page Slot placeholder rendering builderOnly config hides placeholder when builderOnly is true and not in builder: Makeswift styles 1`] = `[]`;
+
 exports[`Page Slot placeholder rendering builderOnly config hides placeholder when builderOnly is true and not in builder: resolvedValue 1`] = `
 NodeList [
   .emotion-0 {
@@ -133,6 +135,8 @@ exports[`Page Slot placeholder rendering builderOnly config hides placeholder wh
 }
 `;
 
+exports[`Page Slot placeholder rendering builderOnly config shows placeholder when builderOnly is false and in builder: Makeswift styles 1`] = `[]`;
+
 exports[`Page Slot placeholder rendering builderOnly config shows placeholder when builderOnly is false and in builder: resolvedValue 1`] = `
 NodeList [
   .emotion-0 {
@@ -256,6 +260,8 @@ exports[`Page Slot placeholder rendering builderOnly config shows placeholder wh
 }
 `;
 
+exports[`Page Slot placeholder rendering builderOnly config shows placeholder when builderOnly is false and not in builder: Makeswift styles 1`] = `[]`;
+
 exports[`Page Slot placeholder rendering builderOnly config shows placeholder when builderOnly is false and not in builder: resolvedValue 1`] = `
 NodeList [
   .emotion-0 {
@@ -368,6 +374,8 @@ exports[`Page Slot placeholder rendering builderOnly config shows placeholder wh
   },
 }
 `;
+
+exports[`Page Slot placeholder rendering builderOnly config shows placeholder when builderOnly is true and in builder: Makeswift styles 1`] = `[]`;
 
 exports[`Page Slot placeholder rendering builderOnly config shows placeholder when builderOnly is true and in builder: resolvedValue 1`] = `
 NodeList [
@@ -512,6 +520,8 @@ exports[`Page Slot placeholder rendering builderOnly config shows placeholder wh
 }
 `;
 
+exports[`Page Slot placeholder rendering renders a placeholder when empty slot is in the builder: Makeswift styles 1`] = `[]`;
+
 exports[`Page Slot placeholder rendering renders a placeholder when empty slot is in the builder: resolvedValue 1`] = `
 NodeList [
   .emotion-0 {
@@ -615,6 +625,8 @@ exports[`Page Slot placeholder rendering renders a placeholder when empty slot i
 }
 `;
 
+exports[`Page Slot placeholder rendering renders a placeholder when empty slot is not in the builder: Makeswift styles 1`] = `[]`;
+
 exports[`Page Slot placeholder rendering renders a placeholder when empty slot is not in the builder: resolvedValue 1`] = `
 NodeList [
   .emotion-0 {
@@ -707,6 +719,8 @@ exports[`Page Slot placeholder rendering renders a placeholder when empty slot i
   },
 }
 `;
+
+exports[`Page Slot renders a slot with a clickable button: Makeswift styles 1`] = `[]`;
 
 exports[`Page Slot renders a slot with a clickable button: resolvedValue 1`] = `
 NodeList [

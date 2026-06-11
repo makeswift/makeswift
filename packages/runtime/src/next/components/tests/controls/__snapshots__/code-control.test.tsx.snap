@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Page Code control data v0 when value is <div>hi</div>: Makeswift styles 1`] = `[]`;
+
 exports[`Page Code control data v0 when value is <div>hi</div>: resolvedValue 1`] = `
 {
   "value": "<div>hi</div>",
@@ -56,6 +58,8 @@ exports[`Page Code control data v0 when value is <div>hi</div>: snapshot 1`] = `
   },
 }
 `;
+
+exports[`Page Code control data v0 when value is console.log("hello"): Makeswift styles 1`] = `[]`;
 
 exports[`Page Code control data v0 when value is console.log("hello"): resolvedValue 1`] = `
 {
@@ -114,6 +118,8 @@ exports[`Page Code control data v0 when value is console.log("hello"): snapshot 
 }
 `;
 
+exports[`Page Code control data v0 when value is undefined: Makeswift styles 1`] = `[]`;
+
 exports[`Page Code control data v0 when value is undefined: resolvedValue 1`] = `undefined`;
 
 exports[`Page Code control data v0 when value is undefined: snapshot 1`] = `
@@ -166,6 +172,8 @@ exports[`Page Code control data v0 when value is undefined: snapshot 1`] = `
   },
 }
 `;
+
+exports[`Page Code control data v1 when value is <div>hi</div>: Makeswift styles 1`] = `[]`;
 
 exports[`Page Code control data v1 when value is <div>hi</div>: resolvedValue 1`] = `
 {
@@ -227,6 +235,8 @@ exports[`Page Code control data v1 when value is <div>hi</div>: snapshot 1`] = `
 }
 `;
 
+exports[`Page Code control data v1 when value is console.log("hello"): Makeswift styles 1`] = `[]`;
+
 exports[`Page Code control data v1 when value is console.log("hello"): resolvedValue 1`] = `
 {
   "value": "console.log("hello")",
@@ -287,6 +297,8 @@ exports[`Page Code control data v1 when value is console.log("hello"): snapshot 
 }
 `;
 
+exports[`Page Code control data v1 when value is undefined: Makeswift styles 1`] = `[]`;
+
 exports[`Page Code control data v1 when value is undefined: resolvedValue 1`] = `undefined`;
 
 exports[`Page Code control data v1 when value is undefined: snapshot 1`] = `
@@ -339,6 +351,8 @@ exports[`Page Code control data v1 when value is undefined: snapshot 1`] = `
   },
 }
 `;
+
+exports[`Page when defaultValue is set: Makeswift styles 1`] = `[]`;
 
 exports[`Page when defaultValue is set: resolvedValue 1`] = `
 {

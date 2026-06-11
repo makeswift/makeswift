@@ -2,12 +2,11 @@ import { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react'
 import { colorToString } from '../../../../../../utils/colorToString'
 
 import { useFormContext, Size, Sizes, Contrast, Contrasts } from '../../../../context/FormContext'
-import { cx } from '@emotion/css'
-import { useStyle } from '../../../../../../../runtimes/react/use-style'
 import {
   useResponsiveStyle,
   useResponsiveTextStyle,
 } from '../../../../../../utils/responsive-style'
+import { composeStyles, useStyle } from '../../../../../../../runtimes/react/css-runtime/hooks/use-style'
 
 export function getSizeHeight(size: Size): number {
   switch (size) {
@@ -52,24 +51,28 @@ export default function Label<T extends ElementType = 'label'>({
 }: Props<T>): ReactNode {
   const Component = as ?? 'label'
   const { contrast, size, labelTextStyle, labelTextColor } = useFormContext()
+  const styles = composeStyles(
+    useStyle({ display: 'block', margin: '0 0 0.25em 0' }),
+    useStyle(useResponsiveTextStyle(labelTextStyle)),
+    useStyle(
+      useResponsiveStyle(
+        [size, contrast, labelTextColor] as const,
+        ([size = Sizes.MEDIUM, contrast = Contrasts.LIGHT, textColor]) => ({
+          minHeight: getSizeHeight(size),
+          color: textColor == null ? getContrastColor(contrast) : colorToString(textColor),
+        }),
+      ),
+    ),
+    className
+  )
 
   return (
-    <Component
-      {...restOfProps}
-      className={cx(
-        useStyle({ display: 'block', margin: '0 0 0.25em 0' }),
-        useStyle(useResponsiveTextStyle(labelTextStyle)),
-        useStyle(
-          useResponsiveStyle(
-            [size, contrast, labelTextColor] as const,
-            ([size = Sizes.MEDIUM, contrast = Contrasts.LIGHT, textColor]) => ({
-              minHeight: getSizeHeight(size),
-              color: textColor == null ? getContrastColor(contrast) : colorToString(textColor),
-            }),
-          ),
-        ),
-        className,
-      )}
-    />
+    <>
+      {styles.styleElements}
+      <Component
+        {...restOfProps}
+        className={styles.className}
+      />
+    </>
   )
 }

@@ -1,12 +1,11 @@
 'use client'
 
-import { cx } from '@emotion/css'
 import { forwardRef, Ref, useEffect, useState } from 'react'
 
 import { ReactPlayer } from '../../shared/react-player'
-import { useStyle } from '../../../runtimes/react/use-style'
 import { placeholders } from '../../utils/placeholders'
 import { VideoData } from '@makeswift/prop-controllers'
+import { composeStyles, useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
 
 type Props = {
   id?: string
@@ -32,39 +31,44 @@ const Video = forwardRef(function Video(
     setShouldRenderReactPlayer(true)
   }, [])
 
+  const styles = composeStyles(
+    useStyle({ display: 'flex', flexDirection: 'column', overflow: 'hidden' }),
+    width,
+    margin,
+    borderRadius,
+  )
+
   return (
-    <div
-      ref={ref}
-      id={id}
-      className={cx(
-        useStyle({ display: 'flex', flexDirection: 'column', overflow: 'hidden' }),
-        width,
-        margin,
-        borderRadius,
-      )}
-    >
-      <div style={{ position: 'relative', paddingTop: `${100 / ASPECT_RATIO}%` }}>
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
-          {shouldRenderReactPlayer && canPlayUrl === true ? (
-            <ReactPlayer
-              {...video}
-              width="100%"
-              height="100%"
-              config={{
-                vimeo: { playerOptions: { background: video != null && !video.controls } },
-                wistia: {
-                  options: {
-                    endVideoBehavior: video != null && video.loop === true ? 'loop' : 'default',
+    <>
+      {styles.styleElements}
+      <div
+        ref={ref}
+        id={id}
+        className={styles.className}
+      >
+        <div style={{ position: 'relative', paddingTop: `${100 / ASPECT_RATIO}%` }}>
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
+            {shouldRenderReactPlayer && canPlayUrl === true ? (
+              <ReactPlayer
+                {...video}
+                width="100%"
+                height="100%"
+                config={{
+                  vimeo: { playerOptions: { background: video != null && !video.controls } },
+                  wistia: {
+                    options: {
+                      endVideoBehavior: video != null && video.loop === true ? 'loop' : 'default',
+                    },
                   },
-                },
-              }}
-            />
-          ) : (
-            <img width="100%" src={placeholders.video.src} alt="Video Placeholder" />
-          )}
+                }}
+              />
+            ) : (
+              <img width="100%" src={placeholders.video.src} alt="Video Placeholder" />
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 })
 

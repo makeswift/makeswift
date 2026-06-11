@@ -7,6 +7,7 @@ import { APIResourceType, type LocalizedGlobalElement, type GlobalElement } from
 import * as Testing from '../../testing'
 
 import { Page } from '../page'
+import { getMakeswiftStyleElements } from '../../tests/test-utils'
 
 const globalElementId = 'R2xvYmFsRWxlbWVudDpjMzM2MDJiZC00NmFmLTQ0ZWMtODAxZi0zODVmMTEzY2Q1NzA='
 const localizedGlobalElementId =
@@ -209,6 +210,7 @@ async function testGlobalElementRendering({ locale }: { locale: string | null })
     ),
   )
 
+  expect(getMakeswiftStyleElements(document)).toMatchSnapshot('Makeswift styles')
   expect(document.querySelector('#title')).toMatchSnapshot()
 }
 

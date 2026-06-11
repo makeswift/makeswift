@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Page IconRadioGroup control data resolves when value is subscript: Makeswift styles 1`] = `[]`;
+
 exports[`Page IconRadioGroup control data resolves when value is subscript: resolvedValue 1`] = `"subscript"`;
 
 exports[`Page IconRadioGroup control data resolves when value is subscript: snapshot 1`] = `
@@ -52,6 +54,8 @@ exports[`Page IconRadioGroup control data resolves when value is subscript: snap
   },
 }
 `;
+
+exports[`Page IconRadioGroup control data resolves when value is superscript: Makeswift styles 1`] = `[]`;
 
 exports[`Page IconRadioGroup control data resolves when value is superscript: resolvedValue 1`] = `"superscript"`;
 
@@ -106,6 +110,8 @@ exports[`Page IconRadioGroup control data resolves when value is superscript: sn
 }
 `;
 
+exports[`Page IconRadioGroup control data resolves when value is undefined: Makeswift styles 1`] = `[]`;
+
 exports[`Page IconRadioGroup control data resolves when value is undefined: resolvedValue 1`] = `undefined`;
 
 exports[`Page IconRadioGroup control data resolves when value is undefined: snapshot 1`] = `
@@ -158,6 +164,8 @@ exports[`Page IconRadioGroup control data resolves when value is undefined: snap
   },
 }
 `;
+
+exports[`Page resolves value when defaultValue is set: Makeswift styles 1`] = `[]`;
 
 exports[`Page resolves value when defaultValue is set: resolvedValue 1`] = `"superscript"`;
 

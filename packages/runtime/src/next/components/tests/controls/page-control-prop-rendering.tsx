@@ -15,6 +15,7 @@ import { MakeswiftComponent } from '../../../../runtimes/react/components/Makesw
 import { Page } from '../../page'
 import { isServer } from '../../../../utils/is-server'
 import * as Testing from '../../../testing'
+import { getMakeswiftStyleElements } from '../../../tests/test-utils'
 
 const ROOT_ID = '00000000-0000-0000-0000-000000000000'
 const ELEMENT_ID = '11111111-1111-1111-1111-111111111111'
@@ -167,6 +168,9 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
     expect(snapshot).toMatchSnapshot('snapshot')
     expect(propSnapshot(screen.getByTestId(testId))).toMatchSnapshot('resolvedValue')
 
+    const makeswiftStyleElements = getMakeswiftStyleElements(document)
+    expect(makeswiftStyleElements).toMatchSnapshot('Makeswift styles')
+
     if (expectedRenders != null) {
       expect(Number(screen.getByTestId(renderCountTestId).textContent)).toBe(expectedRenders)
     }
@@ -185,9 +189,13 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
       document.querySelector(`[data-testid="${id}"]`)
 
     expect(propSnapshot(getByTestId(testId))).toMatchSnapshot('resolvedValue')
+
+    const makeswiftStyleElements = getMakeswiftStyleElements(document)
     expect([...document.querySelectorAll('style')].map(n => n.textContent)).toMatchSnapshot(
       'component styles',
     )
+    expect(makeswiftStyleElements).toMatchSnapshot('Makeswift styles')
+
     expect(Number(getByTestId(renderCountTestId)?.textContent)).toBe(1)
   }
 }

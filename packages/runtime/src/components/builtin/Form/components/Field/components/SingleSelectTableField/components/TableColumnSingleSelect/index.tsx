@@ -1,6 +1,4 @@
-import { cx } from '@emotion/css'
 import { ComponentPropsWithoutRef, ForwardedRef, forwardRef } from 'react'
-import { useStyle } from '../../../../../../../../../runtimes/react/use-style'
 
 import { useResponsiveStyle } from '../../../../../../../../utils/responsive-style'
 import { useFormContext, Sizes, Contrasts, Value } from '../../../../../../context/FormContext'
@@ -10,6 +8,7 @@ import responsiveField, {
   getContrastColor,
 } from '../../../../services/responsiveField'
 import Label from '../../../Label'
+import { composeStyles, useStyle } from '../../../../../../../../../runtimes/react/css-runtime/hooks/use-style'
 
 type BaseContainerProps = Value & { error?: boolean }
 
@@ -25,43 +24,47 @@ function Container({
   className,
   ...restOfProps
 }: ContainerProps) {
-  return (
-    <div
-      {...restOfProps}
-      className={cx(
-        useStyle(responsiveField({ shape, size, contrast, brandColor, error })),
-        useStyle({
-          display: 'flex',
-          alignItems: 'center',
-          position: 'relative',
-          userSelect: 'none',
-          borderColor: '#f19eb9',
+  const styles = composeStyles(
+    useStyle(responsiveField({ shape, size, contrast, brandColor, error })),
+    useStyle({
+      display: 'flex',
+      alignItems: 'center',
+      position: 'relative',
+      userSelect: 'none',
+      borderColor: '#f19eb9',
 
-          '&:focus, &:focus-within': {
-            borderColor: '#e54e7f',
+      '&:focus, &:focus-within': {
+        borderColor: '#e54e7f',
+      },
+
+      ...useResponsiveStyle(
+        [size, contrast] as const,
+        ([size = Sizes.MEDIUM, contrast = Contrasts.LIGHT]) => ({
+          minHeight: getSizeHeight(size),
+          maxHeight: getSizeHeight(size),
+
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            right: getSizeHorizontalPadding(size),
+            top: '50%',
+            transform: 'translate3d(0, -25%, 0)',
+            border: 'solid 0.35em transparent',
+            borderTopColor: getContrastColor(contrast),
           },
-
-          ...useResponsiveStyle(
-            [size, contrast] as const,
-            ([size = Sizes.MEDIUM, contrast = Contrasts.LIGHT]) => ({
-              minHeight: getSizeHeight(size),
-              maxHeight: getSizeHeight(size),
-
-              '&::after': {
-                content: '""',
-                position: 'absolute',
-                right: getSizeHorizontalPadding(size),
-                top: '50%',
-                transform: 'translate3d(0, -25%, 0)',
-                border: 'solid 0.35em transparent',
-                borderTopColor: getContrastColor(contrast),
-              },
-            }),
-          ),
         }),
-        className,
-      )}
-    />
+      ),
+    }),
+    className,
+  )
+  return (
+    <>
+      {styles.styleElements}
+      <div
+        {...restOfProps}
+        className={styles.className}
+      />
+    </>
   )
 }
 
@@ -69,23 +72,27 @@ const Select = forwardRef(function Select(
   { className, ...restOfProps }: ComponentPropsWithoutRef<'select'>,
   ref: ForwardedRef<HTMLSelectElement>,
 ) {
+  const styles = composeStyles(
+    useStyle({
+      appearance: 'none',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      opacity: 0,
+      width: '100%',
+      height: '100%',
+    }),
+    className
+  )
   return (
-    <select
-      {...restOfProps}
-      ref={ref}
-      className={cx(
-        useStyle({
-          appearance: 'none',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          opacity: 0,
-          width: '100%',
-          height: '100%',
-        }),
-        className,
-      )}
-    />
+    <>
+      {styles.styleElements}
+      <select
+        {...restOfProps}
+        ref={ref}
+        className={styles.className}
+      />
+    </>
   )
 })
 

@@ -1,4 +1,4 @@
-import { useRef, ReactNode } from 'react'
+import { useRef, ReactNode, memo } from 'react'
 
 import { ControlDefinition } from '@makeswift/controls'
 
@@ -28,7 +28,7 @@ function useControlDefs(
 export function ResolveProps({ element, children: renderComponent }: PropsValueProps): ReactNode {
   const [legacyDescriptors, definitions] = useControlDefs(element.type)
 
-  const resolvedProps = useResolvedProps(definitions, element.props, element.key)
+  const { props: resolvedProps, emitted } = useResolvedProps(definitions, element.props, element.key)
 
   const renderFn = Object.entries(legacyDescriptors).reduceRight(
     (renderFn, [propName, descriptor]) =>
@@ -37,5 +37,20 @@ export function ResolveProps({ element, children: renderComponent }: PropsValueP
     renderComponent,
   )
 
-  return renderFn(resolvedProps)
+  return (
+    <>
+      <MemoizedConsumer renderFn={renderFn} resolvedProps={resolvedProps} />
+      {emitted.renderControlledStyles()}
+    </>
+  )
 }
+
+const MemoizedConsumer = memo(function MemoizedConsumer({
+  renderFn,
+  resolvedProps,
+}: {
+  renderFn: (props: Record<string, unknown>) => ReactNode
+  resolvedProps: Record<string, unknown>
+}) {
+  return renderFn(resolvedProps)
+})

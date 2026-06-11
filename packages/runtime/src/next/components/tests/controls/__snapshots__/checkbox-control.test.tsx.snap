@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Page Checkbox control data v0 when value is false: Makeswift styles 1`] = `[]`;
+
 exports[`Page Checkbox control data v0 when value is false: resolvedValue 1`] = `false`;
 
 exports[`Page Checkbox control data v0 when value is false: snapshot 1`] = `
@@ -52,6 +54,8 @@ exports[`Page Checkbox control data v0 when value is false: snapshot 1`] = `
   },
 }
 `;
+
+exports[`Page Checkbox control data v0 when value is true: Makeswift styles 1`] = `[]`;
 
 exports[`Page Checkbox control data v0 when value is true: resolvedValue 1`] = `true`;
 
@@ -106,6 +110,8 @@ exports[`Page Checkbox control data v0 when value is true: snapshot 1`] = `
 }
 `;
 
+exports[`Page Checkbox control data v0 when value is undefined: Makeswift styles 1`] = `[]`;
+
 exports[`Page Checkbox control data v0 when value is undefined: resolvedValue 1`] = `undefined`;
 
 exports[`Page Checkbox control data v0 when value is undefined: snapshot 1`] = `
@@ -158,6 +164,8 @@ exports[`Page Checkbox control data v0 when value is undefined: snapshot 1`] = `
   },
 }
 `;
+
+exports[`Page Checkbox control data v1 when value is false: Makeswift styles 1`] = `[]`;
 
 exports[`Page Checkbox control data v1 when value is false: resolvedValue 1`] = `false`;
 
@@ -215,6 +223,8 @@ exports[`Page Checkbox control data v1 when value is false: snapshot 1`] = `
 }
 `;
 
+exports[`Page Checkbox control data v1 when value is true: Makeswift styles 1`] = `[]`;
+
 exports[`Page Checkbox control data v1 when value is true: resolvedValue 1`] = `true`;
 
 exports[`Page Checkbox control data v1 when value is true: snapshot 1`] = `
@@ -270,6 +280,8 @@ exports[`Page Checkbox control data v1 when value is true: snapshot 1`] = `
   },
 }
 `;
+
+exports[`Page Checkbox control data v1 when value is undefined: Makeswift styles 1`] = `[]`;
 
 exports[`Page Checkbox control data v1 when value is undefined: resolvedValue 1`] = `undefined`;
 

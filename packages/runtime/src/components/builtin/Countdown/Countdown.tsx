@@ -1,8 +1,6 @@
 'use client'
 
-import { cx } from '@emotion/css'
 import { ComponentPropsWithoutRef, ForwardedRef, forwardRef, Ref, useEffect, useState } from 'react'
-import { useStyle } from '../../../runtimes/react/use-style'
 import { colorToString } from '../../utils/colorToString'
 import { useResponsiveStyle } from '../../utils/responsive-style'
 import { type ColorValue as Color, type ResponsiveColor } from '../../utils/types'
@@ -12,6 +10,7 @@ import {
   type ResponsiveIconRadioGroupValue,
   type ResponsiveValue,
 } from '@makeswift/prop-controllers'
+import { composeStyles, useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
 
 type Props = {
   id?: string
@@ -40,15 +39,19 @@ const BLOCK_CLASS_NAME = 'block'
 type BlockProps = ComponentPropsWithoutRef<'div'>
 
 function Block({ className, ...restOfProps }: BlockProps) {
+  const styles = composeStyles(
+    BLOCK_CLASS_NAME,
+    useStyle({ display: 'block', padding: '0.5em', fontSize: '1em' }),
+    className
+  )
   return (
-    <div
-      {...restOfProps}
-      className={cx(
-        BLOCK_CLASS_NAME,
-        useStyle({ display: 'block', padding: '0.5em', fontSize: '1em' }),
-        className,
-      )}
-    />
+    <>
+      {styles.styleElements}
+      <div
+        {...restOfProps}
+        className={styles.className}
+      />
+    </>
   )
 }
 
@@ -57,11 +60,19 @@ const LABEL_CLASS_NAME = 'label'
 type LabelProps = ComponentPropsWithoutRef<'div'>
 
 function Label({ className, ...restOfProps }: LabelProps) {
+  const styles = composeStyles(
+    LABEL_CLASS_NAME,
+    useStyle({ marginTop: '0.25em' }),
+    className
+  )
   return (
-    <div
-      {...restOfProps}
-      className={cx(LABEL_CLASS_NAME, useStyle({ marginTop: '0.25em' }), className)}
-    />
+    <>
+      {styles.styleElements}
+      <div
+        {...restOfProps}
+        className={styles.className}
+      />
+    </>
   )
 }
 
@@ -70,11 +81,19 @@ const SEGMENT_CLASS_NAME = 'segment'
 type SegmentProps = ComponentPropsWithoutRef<'div'>
 
 function Segment({ className, ...restOfProps }: SegmentProps) {
+  const styles = composeStyles(
+    SEGMENT_CLASS_NAME,
+    useStyle({ flex: 1, textAlign: 'center' }),
+    className
+  )
   return (
-    <div
-      {...restOfProps}
-      className={cx(SEGMENT_CLASS_NAME, useStyle({ flex: 1, textAlign: 'center' }), className)}
-    />
+    <>
+      {styles.styleElements}
+      <div
+        {...restOfProps}
+        className={styles.className}
+      />
+    </>
   )
 }
 
@@ -113,167 +132,171 @@ const Container = forwardRef(function Container(
   }: ContainerProps,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
-  return (
-    <div
-      {...restOfProps}
-      ref={ref}
-      className={cx(
-        useStyle({ display: 'flex' }),
-        width,
-        margin,
-        useStyle(
-          useResponsiveStyle([size] as const, ([size = 'medium']) => {
-            switch (size) {
-              case 'small':
-                return { fontSize: 18, [`.${LABEL_CLASS_NAME}`]: { fontSize: 14 } }
+  const styles = composeStyles(
+    useStyle({ display: 'flex' }),
+    width,
+    margin,
+    useStyle(
+      useResponsiveStyle([size] as const, ([size = 'medium']) => {
+        switch (size) {
+          case 'small':
+            return { fontSize: 18, [`.${LABEL_CLASS_NAME}`]: { fontSize: 14 } }
 
-              case 'large':
-                return { fontSize: 32, [`.${LABEL_CLASS_NAME}`]: { fontSize: 18 } }
+          case 'large':
+            return { fontSize: 32, [`.${LABEL_CLASS_NAME}`]: { fontSize: 18 } }
 
-              default:
-                return { fontSize: 24, [`.${LABEL_CLASS_NAME}`]: { fontSize: 16 } }
-            }
-          }),
-        ),
-        useStyle({
-          [`.${SEGMENT_CLASS_NAME}`]: useResponsiveStyle([gap] as const, ([gap]) => ({
-            margin: `0 ${gap == null ? 0 : `${gap.value / 2}${gap.unit}`}`,
+          default:
+            return { fontSize: 24, [`.${LABEL_CLASS_NAME}`]: { fontSize: 16 } }
+        }
+      }),
+    ),
+    useStyle({
+      [`.${SEGMENT_CLASS_NAME}`]: useResponsiveStyle([gap] as const, ([gap]) => ({
+        margin: `0 ${gap == null ? 0 : `${gap.value / 2}${gap.unit}`}`,
 
-            '&:first-child': {
-              marginLeft: 0,
-            },
+        '&:first-child': {
+          marginLeft: 0,
+        },
 
-            '&:last-child': {
-              marginRight: 0,
-            },
-          })),
-        }),
-        useStyle({
-          [`.${BLOCK_CLASS_NAME}`]: useResponsiveStyle([shape] as const, ([shape = 'rounded']) => {
-            switch (shape) {
-              case 'pill':
-                return { borderRadius: 500 }
+        '&:last-child': {
+          marginRight: 0,
+        },
+      })),
+    }),
+    useStyle({
+      [`.${BLOCK_CLASS_NAME}`]: useResponsiveStyle([shape] as const, ([shape = 'rounded']) => {
+        switch (shape) {
+          case 'pill':
+            return { borderRadius: 500 }
 
-              case 'rounded':
-                return { borderRadius: 6 }
+          case 'rounded':
+            return { borderRadius: 6 }
 
-              default:
-                return { borderRadius: 0 }
-            }
-          }),
-        }),
-        useStyle({
-          [`.${BLOCK_CLASS_NAME}`]: useResponsiveStyle(
-            [variant, blockColor, numberColor, numberFont] as const,
-            ([
-              variant = 'filled',
-              blockColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 },
-              numberColor = { swatch: { hue: 0, saturation: 0, lightness: 100 }, alpha: 1 },
-              numberFont = 'sans-serif',
-            ]) => {
-              switch (variant) {
-                case 'filled':
-                  return {
-                    fontFamily: `"${numberFont}"`,
-                    color: colorToString(numberColor),
-                    background: colorToString(blockColor),
-                  }
-
-                case 'filled-split':
-                  return {
-                    position: 'relative',
-                    color: colorToString(numberColor),
-                    fontFamily: `"${numberFont}"`,
-
-                    '> span': {
-                      position: 'relative',
-                      zIndex: 1,
-                    },
-
-                    '::before': {
-                      content: '""',
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 'calc(50% + 1px)',
-                      borderTopLeftRadius: 'inherit',
-                      borderTopRightRadius: 'inherit',
-                      background: colorToString(blockColor),
-                    },
-
-                    '::after': {
-                      content: '""',
-                      position: 'absolute',
-                      left: 0,
-                      right: 0,
-                      top: 'calc(50% + 1px)',
-                      bottom: 0,
-                      borderBottomLeftRadius: 'inherit',
-                      borderBottomRightRadius: 'inherit',
-                      background: colorToString(blockColor),
-                    },
-                  }
-
-                case 'outline':
-                  return {
-                    fontFamily: `"${numberFont}"`,
-                    color: colorToString(numberColor),
-                    background: 'transparent',
-                    border: `2px solid ${colorToString(blockColor)}`,
-                  }
-
-                case 'outline-split':
-                  return {
-                    position: 'relative',
-                    fontFamily: `"${numberFont}"`,
-                    color: colorToString(numberColor),
-                    border: `2px solid ${colorToString(blockColor)}`,
-
-                    '> span': {
-                      position: 'relative',
-                      zIndex: 1,
-                    },
-
-                    '::before': {
-                      content: '""',
-                      position: 'absolute',
-                      top: '50%',
-                      left: 0,
-                      right: 0,
-                      height: 2,
-                      marginTop: -1,
-                      background: colorToString(blockColor),
-                    },
-                  }
-
-                default:
-                  return {
-                    fontFamily: `"${numberFont}"`,
-                    background: 'transparent',
-                    color: colorToString(numberColor),
-                    paddingTop: 0,
-                    paddingBottom: 0,
-                  }
+          default:
+            return { borderRadius: 0 }
+        }
+      }),
+    }),
+    useStyle({
+      [`.${BLOCK_CLASS_NAME}`]: useResponsiveStyle(
+        [variant, blockColor, numberColor, numberFont] as const,
+        ([
+          variant = 'filled',
+          blockColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 },
+          numberColor = { swatch: { hue: 0, saturation: 0, lightness: 100 }, alpha: 1 },
+          numberFont = 'sans-serif',
+        ]) => {
+          switch (variant) {
+            case 'filled':
+              return {
+                fontFamily: `"${numberFont}"`,
+                color: colorToString(numberColor),
+                background: colorToString(blockColor),
               }
-            },
-          ),
+
+            case 'filled-split':
+              return {
+                position: 'relative',
+                color: colorToString(numberColor),
+                fontFamily: `"${numberFont}"`,
+
+                '> span': {
+                  position: 'relative',
+                  zIndex: 1,
+                },
+
+                '::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 'calc(50% + 1px)',
+                  borderTopLeftRadius: 'inherit',
+                  borderTopRightRadius: 'inherit',
+                  background: colorToString(blockColor),
+                },
+
+                '::after': {
+                  content: '""',
+                  position: 'absolute',
+                  left: 0,
+                  right: 0,
+                  top: 'calc(50% + 1px)',
+                  bottom: 0,
+                  borderBottomLeftRadius: 'inherit',
+                  borderBottomRightRadius: 'inherit',
+                  background: colorToString(blockColor),
+                },
+              }
+
+            case 'outline':
+              return {
+                fontFamily: `"${numberFont}"`,
+                color: colorToString(numberColor),
+                background: 'transparent',
+                border: `2px solid ${colorToString(blockColor)}`,
+              }
+
+            case 'outline-split':
+              return {
+                position: 'relative',
+                fontFamily: `"${numberFont}"`,
+                color: colorToString(numberColor),
+                border: `2px solid ${colorToString(blockColor)}`,
+
+                '> span': {
+                  position: 'relative',
+                  zIndex: 1,
+                },
+
+                '::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: '50%',
+                  left: 0,
+                  right: 0,
+                  height: 2,
+                  marginTop: -1,
+                  background: colorToString(blockColor),
+                },
+              }
+
+            default:
+              return {
+                fontFamily: `"${numberFont}"`,
+                background: 'transparent',
+                color: colorToString(numberColor),
+                paddingTop: 0,
+                paddingBottom: 0,
+              }
+          }
+        },
+      ),
+    }),
+    useStyle({
+      [`.${LABEL_CLASS_NAME}`]: useResponsiveStyle(
+        [labelColor, labelFont] as const,
+        ([
+          labelColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 },
+          labelFont = 'sans-serif',
+        ]) => ({
+          fontFamily: `"${labelFont}"`,
+          color: colorToString(labelColor),
         }),
-        useStyle({
-          [`.${LABEL_CLASS_NAME}`]: useResponsiveStyle(
-            [labelColor, labelFont] as const,
-            ([
-              labelColor = { swatch: { hue: 0, saturation: 0, lightness: 0 }, alpha: 1 },
-              labelFont = 'sans-serif',
-            ]) => ({
-              fontFamily: `"${labelFont}"`,
-              color: colorToString(labelColor),
-            }),
-          ),
-        }),
-        className,
-      )}
-    />
+      ),
+    }),
+    className
+  )
+  return (
+    <>
+      {styles.styleElements}
+      <div
+        {...restOfProps}
+        ref={ref}
+        className={styles.className}
+      />
+    </>
   )
 })
 

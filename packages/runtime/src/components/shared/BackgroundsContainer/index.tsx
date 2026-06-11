@@ -1,6 +1,5 @@
 'use client'
 
-import { cx } from '@emotion/css'
 import {
   Children,
   ComponentPropsWithoutRef,
@@ -9,10 +8,11 @@ import {
   ReactElement,
   Ref,
 } from 'react'
-import { useStyle } from '../../../runtimes/react/use-style'
 import { useBackgrounds } from '../../hooks'
 import Backgrounds from './components/Backgrounds'
 import { ResponsiveBackgroundsData } from '@makeswift/prop-controllers'
+import { useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
+import clsx from 'clsx'
 
 type BaseProps = {
   backgrounds: ResponsiveBackgroundsData | undefined
@@ -25,31 +25,36 @@ export default forwardRef<HTMLDivElement | null, Props>(function BackgroundsCont
   { backgrounds, children, className, ...restOfProps }: Props,
   ref: Ref<HTMLDivElement>,
 ) {
-  const widthAndMarginStyle = useStyle({
+  const { className: widthAndMarginClassName, styleElement: widthAndMarginStyleElement } = useStyle({
     width: '100%',
     margin: '0 auto',
   })
+  const { className: baseClassName, styleElement: baseStyleElement } = useStyle({
+    position: 'relative',
+    '> *': {
+      borderRadius: 'inherit',
+      height: 'inherit',
+    },
+    '> :last-child': {
+      position: 'relative',
+    },
+  })
 
   return (
-    <div
-      {...restOfProps}
-      ref={ref}
-      className={cx(
-        useStyle({
-          position: 'relative',
-          '> *': {
-            borderRadius: 'inherit',
-            height: 'inherit',
-          },
-          '> :last-child': {
-            position: 'relative',
-          },
-        }),
-        className ? className : widthAndMarginStyle,
-      )}
-    >
-      <Backgrounds backgrounds={useBackgrounds(backgrounds)} />
-      {Children.only(children)}
-    </div>
+    <>
+      {baseStyleElement}
+      {widthAndMarginStyleElement}
+      <div
+        {...restOfProps}
+        ref={ref}
+        className={clsx(
+          baseClassName,
+          className ? className : widthAndMarginClassName,
+        )}
+      >
+        <Backgrounds backgrounds={useBackgrounds(backgrounds)} />
+        {Children.only(children)}
+      </div>
+    </>
   )
 })

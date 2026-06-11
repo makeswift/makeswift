@@ -10,6 +10,7 @@ import {
 import { MakeswiftApiHandler } from '../api-handler'
 import { RewriteRuleMatches } from '../api-handler/preview'
 import { createReactRuntime } from '../testing'
+import { defaultClassNamePrefix } from '../../runtimes/react/css-runtime/css-runtime'
 
 export type MakeswiftApiHandlerArgs = Partial<Parameters<typeof MakeswiftApiHandler>[1]>
 
@@ -133,3 +134,9 @@ export const apiRequestFixtures = [
   { fixture: pagesRouterApiRequestFixture, router: 'pages' },
   { fixture: appRouterApiRequestFixture, router: 'app' },
 ]
+
+export function getMakeswiftStyleElements(document: Document) {
+  return [...document.querySelectorAll('style')]
+      .filter(n => n.getAttribute('data-href')?.startsWith(defaultClassNamePrefix) && n.textContent != null && n.textContent.length > 0)
+      .map(s => s.textContent)
+}

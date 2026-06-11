@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`renders a makeswift::controls::rich-text-v2::mode::block placeholder when empty: Makeswift styles 1`] = `[]`;
+
 exports[`renders a makeswift::controls::rich-text-v2::mode::block placeholder when empty: component styles 1`] = `
 [
   ".mswft-112y3vj{display:inline-block;width:0;max-width:100%;white-space:nowrap;opacity:0.333;vertical-align:text-top;}",
@@ -19,6 +21,8 @@ NodeList [
   </div>,
 ]
 `;
+
+exports[`renders a makeswift::controls::rich-text-v2::mode::inline placeholder when empty: Makeswift styles 1`] = `[]`;
 
 exports[`renders a makeswift::controls::rich-text-v2::mode::inline placeholder when empty: component styles 1`] = `
 [
@@ -40,9 +44,16 @@ NodeList [
 ]
 `;
 
+exports[`renders provided text content: Makeswift styles 1`] = `
+[
+  "@media only screen and (min-width: 769px){.ms-1uf2tq5{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-1uf2tq5{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.ms-1uf2tq5{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 769px){.ms-wlnewl{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-wlnewl{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.ms-wlnewl{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 769px){.ms-5j4sy1{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-5j4sy1{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.ms-5j4sy1{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 769px){.ms-1yw3pdr{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-1yw3pdr{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.ms-1yw3pdr{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 769px){.ms-1fnoc29{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-1fnoc29{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.ms-1fnoc29{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}",
+]
+`;
+
 exports[`renders provided text content: component styles 1`] = `
 [
-  ".mswft-ytumd6{-webkit-text-decoration:none;text-decoration:none;}.mswft-1uk1gs8{margin:0;}.mswft-vz2etd{padding:0.5em 10px;font-size:1.25em;font-weight:300;border-left:5px solid rgba(0, 0, 0, 0.1);}.mswft-99zmsg{list-style-position:inside;-webkit-padding-start:20px;padding-inline-start:20px;list-style-type:disc;}.mswft-99zmsg ul{list-style-type:circle;}.mswft-99zmsg ul ul{list-style-type:square;}.mswft-dgqoak{list-style-position:inside;-webkit-padding-start:20px;padding-inline-start:20px;list-style-type:decimal;}@media only screen and (min-width: 769px){.mswft-144fjko{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.mswft-144fjko{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.mswft-144fjko{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}",
+  ".mswft-ytumd6{-webkit-text-decoration:none;text-decoration:none;}.mswft-1uk1gs8{margin:0;}.mswft-vz2etd{padding:0.5em 10px;font-size:1.25em;font-weight:300;border-left:5px solid rgba(0, 0, 0, 0.1);}.mswft-99zmsg{list-style-position:inside;-webkit-padding-start:20px;padding-inline-start:20px;list-style-type:disc;}.mswft-99zmsg ul{list-style-type:circle;}.mswft-99zmsg ul ul{list-style-type:square;}.mswft-dgqoak{list-style-position:inside;-webkit-padding-start:20px;padding-inline-start:20px;list-style-type:decimal;}",
+  "@media only screen and (min-width: 769px){.ms-1uf2tq5{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-1uf2tq5{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.ms-1uf2tq5{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 769px){.ms-wlnewl{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-wlnewl{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.ms-wlnewl{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 769px){.ms-5j4sy1{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-5j4sy1{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.ms-5j4sy1{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 769px){.ms-1yw3pdr{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-1yw3pdr{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.ms-1yw3pdr{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 769px){.ms-1fnoc29{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (min-width: 576px) and (max-width: 768px){.ms-1fnoc29{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}@media only screen and (max-width: 575px){.ms-1fnoc29{color:hsla(238,87%,49%,1);font-family:Lato;font-size:16px;}}",
 ]
 `;
 
@@ -52,10 +63,10 @@ NodeList [
     style="position:relative;white-space:pre-wrap;word-wrap:break-word"
   >
     <p
-      class="mswft-1uk1gs8 mswft-1olq3mu"
+      class="mswft-1uk1gs8 ms-1i30e71"
     >
       <span
-        class="mswft-1olq3mu"
+        class="ms-1spjh36"
       >
         ﻿
       </span>
@@ -65,22 +76,22 @@ NodeList [
         target="_blank"
       >
         <span
-          class="mswft-144fjko"
+          class="ms-1uf2tq5"
         >
           Adyen
         </span>
       </a>
       <span
-        class="mswft-1olq3mu"
+        class="ms-1houqnw"
       >
         ﻿
       </span>
     </p>
     <p
-      class="mswft-1uk1gs8 mswft-1olq3mu"
+      class="mswft-1uk1gs8 ms-1lqxi3i"
     >
       <span
-        class="mswft-1olq3mu"
+        class="ms-1nnigf5"
       >
         ﻿
       </span>
@@ -90,22 +101,22 @@ NodeList [
         target="_blank"
       >
         <span
-          class="mswft-144fjko"
+          class="ms-wlnewl"
         >
           Authorize.net
         </span>
       </a>
       <span
-        class="mswft-1olq3mu"
+        class="ms-lxn8"
       >
         ﻿
       </span>
     </p>
     <p
-      class="mswft-1uk1gs8 mswft-1olq3mu"
+      class="mswft-1uk1gs8 ms-zxksk4"
     >
       <span
-        class="mswft-1olq3mu"
+        class="ms-v1mpxj"
       >
         ﻿
       </span>
@@ -115,22 +126,22 @@ NodeList [
         target="_blank"
       >
         <span
-          class="mswft-144fjko"
+          class="ms-5j4sy1"
         >
           BlueSnap
         </span>
       </a>
       <span
-        class="mswft-1olq3mu"
+        class="ms-19uun46"
       >
         ﻿
       </span>
     </p>
     <p
-      class="mswft-1uk1gs8 mswft-1olq3mu"
+      class="mswft-1uk1gs8 ms-1u9to0z"
     >
       <span
-        class="mswft-1olq3mu"
+        class="ms-13peydv"
       >
         ﻿
       </span>
@@ -140,22 +151,22 @@ NodeList [
         target="_blank"
       >
         <span
-          class="mswft-144fjko"
+          class="ms-1yw3pdr"
         >
           Checkout.com
         </span>
       </a>
       <span
-        class="mswft-1olq3mu"
+        class="ms-tktm2w"
       >
         ﻿
       </span>
     </p>
     <p
-      class="mswft-1uk1gs8 mswft-1olq3mu"
+      class="mswft-1uk1gs8 ms-1oa537b"
     >
       <span
-        class="mswft-1olq3mu"
+        class="ms-119jwtm"
       >
         ﻿
       </span>
@@ -165,13 +176,13 @@ NodeList [
         target="_blank"
       >
         <span
-          class="mswft-144fjko"
+          class="ms-1fnoc29"
         >
           CyberSource Direct
         </span>
       </a>
       <span
-        class="mswft-1olq3mu"
+        class="ms-1e583gx"
       >
         ﻿
       </span>
