@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.7-canary.2
+
+### Patch Changes
+
+- c67f4db: fix: await Next.js revalidation within Pages Router revalidation handler.
+
 ## 0.28.7-canary.1
 
 ### Patch Changes

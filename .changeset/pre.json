@@ -17,6 +17,7 @@
   "changesets": [
     "add-slider-control",
     "control-legacy-data-type-markers",
+    "eighty-grapes-repeat",
     "pretty-oranges-type"
   ]
 }

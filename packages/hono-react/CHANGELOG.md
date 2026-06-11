@@ -1,5 +1,12 @@
 # @makeswift/hono-react
 
+## 0.2.0-canary.3
+
+### Patch Changes
+
+- Updated dependencies [c67f4db]
+  - @makeswift/runtime@0.28.7-canary.2
+
 ## 0.2.0-canary.2
 
 ### Minor Changes
