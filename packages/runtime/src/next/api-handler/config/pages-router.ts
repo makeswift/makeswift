@@ -32,7 +32,7 @@ export async function config({
 
     revalidationHandler: async (path?: string): Promise<void> => {
       if (path != null) {
-        res.revalidate(path)
+        await res.revalidate(path)
       } else {
         // No-op, Pages Router does not support tag-based revalidation
       }
