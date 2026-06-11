@@ -24,6 +24,11 @@
       "require": "./dist/cjs/server/index.js",
       "import": "./dist/esm/server/index.js",
       "types": "./dist/types/server/index.d.ts"
+    },
+    "./server/render": {
+      "require": "./dist/cjs/server/render.js",
+      "import": "./dist/esm/server/render.js",
+      "types": "./dist/types/server/render.d.ts"
     }
   },
   "scripts": {
