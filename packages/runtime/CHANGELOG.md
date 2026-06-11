@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.26.5
+
+### Patch Changes
+
+- fix: await Next.js revalidation within Pages Router revalidation handler.
+
 ## 0.26.4
 
 ### Patch Changes
