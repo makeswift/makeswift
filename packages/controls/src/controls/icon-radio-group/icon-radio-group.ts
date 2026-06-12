@@ -14,6 +14,8 @@ import {
 import { DefaultControlInstance, type SendMessage } from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
 
+import { icons, legacyIcons } from './icons'
+
 type IconType = (typeof Definition.Icon)[keyof typeof Definition.Icon]
 
 type Option<T extends string> = {
@@ -46,15 +48,7 @@ class Definition<C extends Config> extends ControlDefinition<
   ResolvedValueType<C>
 > {
   static readonly type = 'makeswift::controls::icon-radio-group' as const
-  static readonly Icon = {
-    TextAlignCenter: 'TextAlignCenter',
-    TextAlignJustify: 'TextAlignJustify',
-    TextAlignLeft: 'TextAlignLeft',
-    TextAlignRight: 'TextAlignRight',
-    Superscript: 'Superscript16',
-    Subscript: 'Subscript16',
-    Code: 'Code16',
-  } as const
+  static readonly Icon = icons
 
   static schema<T, D, V>(
     item: SchemaType<T>,
@@ -72,14 +66,12 @@ class Definition<C extends Config> extends ControlDefinition<
           z.object({
             value: item,
             label: z.string(),
+            // Accept legacy `*16` ids alongside the current names so payloads
+            // serialized by older runtimes still deserialize; the builder maps
+            // both forms to its icon components.
             icon: z.union([
-              z.literal(Definition.Icon.Code),
-              z.literal(Definition.Icon.Subscript),
-              z.literal(Definition.Icon.Superscript),
-              z.literal(Definition.Icon.TextAlignCenter),
-              z.literal(Definition.Icon.TextAlignJustify),
-              z.literal(Definition.Icon.TextAlignLeft),
-              z.literal(Definition.Icon.TextAlignRight),
+              z.nativeEnum(Definition.Icon),
+              z.nativeEnum(legacyIcons),
             ]),
           }),
         )
@@ -212,7 +204,7 @@ type NormedConfig<
       }
     : { readonly defaultValue: T })
 
-export function unstable_IconRadioGroup<
+export function IconRadioGroup<
   const T extends string,
   D extends Config<T>['defaultValue'],
 >(
@@ -221,7 +213,7 @@ export function unstable_IconRadioGroup<
   return new IconRadioGroupDefinition(config as NormedConfig<T, D>)
 }
 
-unstable_IconRadioGroup.Icon = Definition.Icon
+IconRadioGroup.Icon = Definition.Icon
 
 export {
   type IconType as IconRadioGroupIcon,
