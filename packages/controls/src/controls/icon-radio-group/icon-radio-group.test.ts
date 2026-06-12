@@ -1,6 +1,14 @@
+import { deserializeRecord, type SerializedRecord } from '../../serialization'
 import { testDefinition, testResolveValue } from '../../testing/test-definition'
 
-import { unstable_IconRadioGroup as IconRadioGroup } from './icon-radio-group'
+import { IconRadioGroup, IconRadioGroupDefinition } from './icon-radio-group'
+
+function serializedDefinition(options: unknown): SerializedRecord {
+  return {
+    type: IconRadioGroupDefinition.type,
+    config: { options },
+  } as any as SerializedRecord
+}
 
 const options = [
   {
@@ -15,7 +23,7 @@ const options = [
   },
 ] as const
 
-describe('unstable_IconRadioGroup', () => {
+describe('IconRadioGroup', () => {
   describe('constructor', () => {
     test('returns correct definition', () => {
       const def = IconRadioGroup({
@@ -50,6 +58,41 @@ describe('unstable_IconRadioGroup', () => {
     })
   })
 
+  describe('deserialize', () => {
+    test('accepts legacy `*16` icon ids from older runtimes', () => {
+      const def = IconRadioGroupDefinition.deserialize(
+        deserializeRecord(
+          serializedDefinition([
+            { value: 'code', label: 'Code', icon: 'Code16' },
+            { value: 'subscript', label: 'Subscript', icon: 'Subscript16' },
+            {
+              value: 'superscript',
+              label: 'Superscript',
+              icon: 'Superscript16',
+            },
+            { value: 'left', label: 'Left', icon: 'TextAlignLeft' },
+          ]),
+        ),
+      )
+
+      expect(def.config.options.map((option) => option.icon as string)).toEqual(
+        ['Code16', 'Subscript16', 'Superscript16', 'TextAlignLeft'],
+      )
+    })
+
+    test('rejects unknown icon ids', () => {
+      expect(() =>
+        IconRadioGroupDefinition.deserialize(
+          deserializeRecord(
+            serializedDefinition([
+              { value: 'code', label: 'Code', icon: 'NotAnIcon' },
+            ]),
+          ),
+        ),
+      ).toThrow()
+    })
+  })
+
   describe('assignability', () => {
     // FIXME
     // function assignTest(_def: IconRadioGroupDefinition) {}
@@ -69,7 +112,7 @@ describe.each([
     IconRadioGroup({ options, defaultValue: 'code' }),
     ['code', 'superscript'] as const,
   ],
-])('unstable_IconRadioGroup', (def, values) => {
+])('IconRadioGroup', (def, values) => {
   const invalidValues = [null, 17, 'random', { swatchId: 42 }]
   testDefinition(def, values, invalidValues)
   testResolveValue(def, values)
