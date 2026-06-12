@@ -318,9 +318,9 @@ export const getMockedSerializedDescriptorsFromBuilder: (createMessagePort: () =
                 config: {
                   label: 'Inline',
                   options: [
-                    { icon: 'Superscript16', label: 'Superscript', value: 'superscript' },
-                    { icon: 'Subscript16', label: 'Subscript', value: 'subscript' },
-                    { icon: 'Code16', label: 'Code', value: 'code' },
+                    { icon: 'Superscript', label: 'Superscript', value: 'superscript' },
+                    { icon: 'Subscript', label: 'Subscript', value: 'subscript' },
+                    { icon: 'Code', label: 'Code', value: 'code' },
                   ],
                 },
               },
