@@ -5,7 +5,7 @@ import { updateAPIClientCache } from '../../../state/actions/internal/read-write
 import { useMakeswiftHostApiClient } from '../host-api-client'
 
 export function useCacheData(cacheData: CacheData) {
-  const { makeswiftApiClient: apiStore } = useMakeswiftHostApiClient()
+  const { store: apiStore } = useMakeswiftHostApiClient()
 
   // We perform cache hydration immediately on render - this is safe to do per
   // render because updating the API cache is idempotent. For precedence, see:

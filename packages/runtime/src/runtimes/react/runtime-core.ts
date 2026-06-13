@@ -1,7 +1,7 @@
 import { type SerializableReplacementContext } from '@makeswift/controls'
 
 import { MakeswiftHostApiClient } from '../../api/client'
-import * as MakeswiftApiClient from '../../state/makeswift-api-client'
+import { type HttpFetch } from '../../state/api-client/fetch-api-resource'
 import { type SiteVersion } from '../../api/site-version'
 
 import {
@@ -47,7 +47,7 @@ export class RuntimeCore {
   readonly appOrigin: string
   readonly apiOrigin: string
   readonly requestKey: StoreKey | undefined
-  readonly fetch: MakeswiftApiClient.HttpFetch
+  readonly fetch: HttpFetch
 
   constructor({
     appOrigin = 'https://app.makeswift.com',
@@ -60,7 +60,7 @@ export class RuntimeCore {
     apiOrigin?: string
     breakpoints?: BreakpointsInput
     requestKey?: StoreKey
-    fetch: MakeswiftApiClient.HttpFetch
+    fetch: HttpFetch
   }) {
     this.appOrigin = validateOrigin(appOrigin, 'appOrigin')
     this.apiOrigin = validateOrigin(apiOrigin, 'apiOrigin')
