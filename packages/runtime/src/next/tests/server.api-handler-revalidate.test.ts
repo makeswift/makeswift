@@ -88,4 +88,43 @@ describe('MakeswiftApiHandler', () => {
       expect(revalidate).toHaveBeenCalledWith('/some-path')
     })
   })
+
+  function flushMicrotasks() {
+    return new Promise(resolve => setImmediate(resolve))
+  }
+
+  // Pages Router revalidates via the async `res.revalidate`, so the handler
+  // must fully await it before responding.
+  describe('[pages router]', () => {
+    test('does not respond until revalidation completes', async () => {
+      // Arrange
+      let resolveRevalidate: () => void = () => {}
+      const revalidatePromise = new Promise<void>(resolve => {
+        resolveRevalidate = resolve
+      })
+      const { testApiRequest, apiKey, revalidate } = pagesRouterRevalidateFixture()
+      revalidate.mockReturnValue(revalidatePromise)
+
+      // Act
+      let responded = false
+      const requestPromise = testApiRequest({
+        method: 'GET',
+        path: `${PATH}?secret=${apiKey}&path=/some-path`,
+      }).then(result => {
+        responded = true
+        return result
+      })
+
+      // Assert
+      await flushMicrotasks()
+      expect(revalidate).toHaveBeenCalledWith('/some-path')
+      // While revalidation is in flight, the handler should not have responded
+      expect(responded).toBe(false)
+
+      resolveRevalidate()
+      const { statusCode } = await requestPromise
+      expect(responded).toBe(true)
+      expect(statusCode).toBe(200)
+    })
+  })
 })
