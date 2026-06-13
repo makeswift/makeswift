@@ -5,7 +5,7 @@ import { type Measurable } from '../../modules/read-write/box-models'
 import { type DescriptorsByComponentType } from '../../modules/prop-controllers'
 
 import { type DocumentPayload } from '../../shared-api'
-import { type SerializedState as APIClientCache } from '../../makeswift-api-client'
+import { type SerializedState as APIClientCache } from '../../api-client/state'
 
 export const ReadWriteActionTypes = {
   CHANGE_ELEMENT_TREE: 'CHANGE_ELEMENT_TREE',

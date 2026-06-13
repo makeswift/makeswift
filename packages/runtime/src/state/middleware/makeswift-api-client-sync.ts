@@ -11,7 +11,7 @@ export function makeswiftApiClientSyncMiddleware(
 ): Middleware<Dispatch, State, Dispatch> {
   return actionMiddleware(() => next => {
     return (action: Action) => {
-      client.makeswiftApiClient.dispatch(action)
+      client.store.dispatch(action)
 
       return next(action)
     }

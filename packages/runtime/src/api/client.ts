@@ -1,20 +1,18 @@
-import { type FetchableValue } from '@makeswift/controls'
-
-import * as MakeswiftApiClient from '../state/makeswift-api-client'
+import { type State as ApiClientState } from '../state/api-client/state'
+import { type HttpFetch, fetchAPIResource } from '../state/api-client/fetch-api-resource'
+import { configureClientStore } from '../state/api-client/client-store'
 
 import {
+  type File,
+  type GlobalElement,
+  type LocalizedGlobalElement,
+  type PagePathnameSlice,
+  type Swatch,
+  type Table,
+  type Typography,
   APIResourceType,
-  File,
-  GlobalElement,
-  LocalizedGlobalElement,
-  Page,
-  PagePathnameSlice,
-  Site,
-  Snippet,
-  Swatch,
-  Table,
-  Typography,
 } from './types'
+
 import { GraphQLClient } from './graphql/client'
 import { CreateTableRecordMutation } from './graphql/documents'
 import {
@@ -22,16 +20,9 @@ import {
   CreateTableRecordMutationVariables,
 } from './graphql/generated/types'
 
-export type CacheData = MakeswiftApiClient.SerializedState
+import { ApiResourcesClient } from './api-resources-client'
 
-export const CacheData = {
-  empty(): CacheData {
-    return {
-      apiResources: {},
-      localizedResourcesMap: {},
-    }
-  },
-}
+export { CacheData } from './api-resources-client'
 
 /**
  * NOTE(miguel): This "client" is used to fetch Makeswift API resources needed for the host. For
@@ -52,11 +43,9 @@ export const CacheData = {
  * client of the host's API, not Makeswift's, intended to build and continuously maintain a realtime
  * snapshot for use in the builder, not the lives pages.
  */
-export class MakeswiftHostApiClient {
-  graphqlClient: GraphQLClient
-  makeswiftApiClient: MakeswiftApiClient.Store
-  subscribe: MakeswiftApiClient.Store['subscribe']
-  fetch: MakeswiftApiClient.HttpFetch
+export class MakeswiftHostApiClient extends ApiResourcesClient {
+  readonly graphqlClient: GraphQLClient
+  readonly fetch: HttpFetch
 
   constructor({
     uri,
@@ -64,111 +53,34 @@ export class MakeswiftHostApiClient {
     preloadedState,
   }: {
     uri: string
-    fetch: MakeswiftApiClient.HttpFetch
-    preloadedState: Partial<MakeswiftApiClient.State>
+    fetch: HttpFetch
+    preloadedState: Partial<ApiClientState>
   }) {
-    this.graphqlClient = new GraphQLClient(uri)
-    this.makeswiftApiClient = MakeswiftApiClient.configureStore({ preloadedState })
-    this.fetch = fetch
-    this.subscribe = this.makeswiftApiClient.subscribe
-  }
+    super({
+      store: configureClientStore({ preloadedState }),
+    })
 
-  readSwatch(swatchId: string): Swatch | null {
-    return MakeswiftApiClient.getAPIResource(
-      this.makeswiftApiClient.getState(),
-      APIResourceType.Swatch,
-      swatchId,
-    )
+    this.graphqlClient = new GraphQLClient(uri)
+    this.fetch = fetch
   }
 
   async fetchSwatch(swatchId: string): Promise<Swatch | null> {
-    return await this.makeswiftApiClient.dispatch(
-      MakeswiftApiClient.fetchAPIResource(APIResourceType.Swatch, swatchId, this.fetch),
-    )
-  }
-
-  resolveSwatch(swatchId: string | undefined): FetchableValue<Swatch | null> {
-    return this.resolveResource(APIResourceType.Swatch, {
-      id: swatchId,
-      read: id => this.readSwatch(id),
-      fetch: id => this.fetchSwatch(id),
-    })
-  }
-
-  readFile(fileId: string): File | null {
-    return MakeswiftApiClient.getAPIResource(
-      this.makeswiftApiClient.getState(),
-      APIResourceType.File,
-      fileId,
-    )
+    return await this.store.dispatch(fetchAPIResource(APIResourceType.Swatch, swatchId, this.fetch))
   }
 
   async fetchFile(fileId: string): Promise<File | null> {
-    return await this.makeswiftApiClient.dispatch(
-      MakeswiftApiClient.fetchAPIResource(APIResourceType.File, fileId, this.fetch),
-    )
-  }
-
-  resolveFile(fileId: string | undefined): FetchableValue<File | null> {
-    return this.resolveResource(APIResourceType.File, {
-      id: fileId,
-      read: id => this.readFile(id),
-      fetch: id => this.fetchFile(id),
-    })
-  }
-
-  readTypography(typographyId: string): Typography | null {
-    return MakeswiftApiClient.getAPIResource(
-      this.makeswiftApiClient.getState(),
-      APIResourceType.Typography,
-      typographyId,
-    )
+    return await this.store.dispatch(fetchAPIResource(APIResourceType.File, fileId, this.fetch))
   }
 
   async fetchTypography(typographyId: string): Promise<Typography | null> {
-    return await this.makeswiftApiClient.dispatch(
-      MakeswiftApiClient.fetchAPIResource(APIResourceType.Typography, typographyId, this.fetch),
-    )
-  }
-
-  resolveTypography(typographyId: string | undefined): FetchableValue<Typography | null> {
-    return this.resolveResource(APIResourceType.Typography, {
-      id: typographyId,
-      read: id => this.readTypography(id),
-      fetch: id => this.fetchTypography(id),
-    })
-  }
-
-  readGlobalElement(globalElementId: string): GlobalElement | null {
-    return MakeswiftApiClient.getAPIResource(
-      this.makeswiftApiClient.getState(),
-      APIResourceType.GlobalElement,
-      globalElementId,
+    return await this.store.dispatch(
+      fetchAPIResource(APIResourceType.Typography, typographyId, this.fetch),
     )
   }
 
   async fetchGlobalElement(globalElementId: string): Promise<GlobalElement | null> {
-    return await this.makeswiftApiClient.dispatch(
-      MakeswiftApiClient.fetchAPIResource(
-        APIResourceType.GlobalElement,
-        globalElementId,
-        this.fetch,
-      ),
-    )
-  }
-
-  readLocalizedGlobalElement({
-    globalElementId,
-    locale,
-  }: {
-    globalElementId: string
-    locale: string
-  }): LocalizedGlobalElement | null {
-    return MakeswiftApiClient.getAPIResource(
-      this.makeswiftApiClient.getState(),
-      APIResourceType.LocalizedGlobalElement,
-      globalElementId,
-      locale,
+    return await this.store.dispatch(
+      fetchAPIResource(APIResourceType.GlobalElement, globalElementId, this.fetch),
     )
   }
 
@@ -179,28 +91,8 @@ export class MakeswiftHostApiClient {
     globalElementId: string
     locale: string
   }): Promise<LocalizedGlobalElement | null> {
-    return await this.makeswiftApiClient.dispatch(
-      MakeswiftApiClient.fetchAPIResource(
-        APIResourceType.LocalizedGlobalElement,
-        globalElementId,
-        this.fetch,
-        locale,
-      ),
-    )
-  }
-
-  readPagePathnameSlice({
-    pageId,
-    locale,
-  }: {
-    pageId: string
-    locale: string | null
-  }): PagePathnameSlice | null {
-    return MakeswiftApiClient.getAPIResource(
-      this.makeswiftApiClient.getState(),
-      APIResourceType.PagePathnameSlice,
-      pageId,
-      locale,
+    return await this.store.dispatch(
+      fetchAPIResource(APIResourceType.LocalizedGlobalElement, globalElementId, this.fetch, locale),
     )
   }
 
@@ -211,67 +103,13 @@ export class MakeswiftHostApiClient {
     pageId: string
     locale: string | null
   }): Promise<PagePathnameSlice | null> {
-    return await this.makeswiftApiClient.dispatch(
-      MakeswiftApiClient.fetchAPIResource(
-        APIResourceType.PagePathnameSlice,
-        pageId,
-        this.fetch,
-        locale,
-      ),
-    )
-  }
-
-  resolvePagePathnameSlice({
-    pageId,
-    locale,
-  }: {
-    pageId: string | undefined
-    locale: string | null
-  }): FetchableValue<PagePathnameSlice | null> {
-    return this.resolveResource(APIResourceType.PagePathnameSlice, {
-      id: pageId,
-      read: id => this.readPagePathnameSlice({ pageId: id, locale }),
-      fetch: id => this.fetchPagePathnameSlice({ pageId: id, locale }),
-    })
-  }
-
-  resolveResource<R>(
-    type: APIResourceType,
-    {
-      id,
-      read,
-      fetch,
-    }: {
-      id: string | undefined
-      read: (id: string) => R | null
-      fetch: (id: string) => Promise<R | null>
-    },
-  ): FetchableValue<R | null> {
-    const _read = () => (id != null ? read(id) : null)
-    let lastValue: R | null = null
-    return {
-      name: `${type}:${id}`,
-      readStable: () => (lastValue = _read()),
-      subscribe: (onUpdate: () => void) =>
-        this.subscribe(() => {
-          if (_read() !== lastValue) onUpdate()
-        }),
-      fetch: async () => (id != null ? fetch(id) : null),
-    }
-  }
-
-  readTable(tableId: string): Table | null {
-    return MakeswiftApiClient.getAPIResource(
-      this.makeswiftApiClient.getState(),
-      APIResourceType.Table,
-      tableId,
+    return await this.store.dispatch(
+      fetchAPIResource(APIResourceType.PagePathnameSlice, pageId, this.fetch, locale),
     )
   }
 
   async fetchTable(tableId: string): Promise<Table | null> {
-    return await this.makeswiftApiClient.dispatch(
-      MakeswiftApiClient.fetchAPIResource(APIResourceType.Table, tableId, this.fetch),
-    )
+    return await this.store.dispatch(fetchAPIResource(APIResourceType.Table, tableId, this.fetch))
   }
 
   async createTableRecord(tableId: string, columns: any): Promise<void> {
@@ -279,29 +117,5 @@ export class MakeswiftHostApiClient {
       CreateTableRecordMutationResult,
       CreateTableRecordMutationVariables
     >(CreateTableRecordMutation, { input: { data: { tableId, columns } } })
-  }
-
-  readSite(siteId: string): Site | null {
-    return MakeswiftApiClient.getAPIResource(
-      this.makeswiftApiClient.getState(),
-      APIResourceType.Site,
-      siteId,
-    )
-  }
-
-  readPage(pageId: string): Page | null {
-    return MakeswiftApiClient.getAPIResource(
-      this.makeswiftApiClient.getState(),
-      APIResourceType.Page,
-      pageId,
-    )
-  }
-
-  readSnippet(snippetId: string): Snippet | null {
-    return MakeswiftApiClient.getAPIResource(
-      this.makeswiftApiClient.getState(),
-      APIResourceType.Snippet,
-      snippetId,
-    )
   }
 }
