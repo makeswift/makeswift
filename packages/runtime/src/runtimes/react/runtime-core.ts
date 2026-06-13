@@ -1,12 +1,16 @@
-import { type SerializableReplacementContext } from '@makeswift/controls'
+import {
+  type SerializableReplacementContext /*, type SerializedRecord*/,
+} from '@makeswift/controls'
 
 import { MakeswiftHostApiClient } from '../../api/client'
-import * as MakeswiftApiClient from '../../state/makeswift-api-client'
 import { type SiteVersion } from '../../api/site-version'
 
+import * as MakeswiftApiClient from '../../state/makeswift-api-client'
+// import { type ComponentMeta } from '../../state/modules/components-meta'
+
 import {
-  Breakpoints,
-  BreakpointsInput,
+  type Breakpoints,
+  type BreakpointsInput,
   parseBreakpointsInput,
 } from '../../state/modules/breakpoints'
 
@@ -29,6 +33,11 @@ export type StoreKey = {
 }
 
 const VERSION_TAG_LIVE = 'ref:live'
+
+// export type SerializedServerState = {
+//   componentsMeta: ComponentMeta
+//   propControllers: Map<string, Record<string, SerializedRecord>>
+// }
 
 export class RuntimeCore {
   // The unowned entry TTL affects performance, not correctness. The TTL controls how long an unretained store stays

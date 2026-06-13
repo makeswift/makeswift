@@ -13,6 +13,7 @@ import { ComponentIcon } from '../../state/modules/components-meta'
 import type { ComponentType } from '../../state/read-only-state'
 
 import { RuntimeCore } from './runtime-core'
+import { isServer } from '../../utils/is-server'
 
 function validateComponentType(type: string, component?: ComponentType): void {
   const componentName = component?.name ?? 'Component'
@@ -37,6 +38,7 @@ export class ReactRuntimeCore extends RuntimeCore {
       hidden = false,
       description,
       builtinSuspense,
+      server = false,
       props,
     }: {
       type: string
@@ -50,15 +52,16 @@ export class ReactRuntimeCore extends RuntimeCore {
        * Defaults to `true`.
        */
       builtinSuspense?: boolean
+      server?: boolean
       props?: P
     },
   ): () => void {
-    validateComponentType(type, component as unknown as ComponentType)
+    // validateComponentType(type, component as unknown as ComponentType)
 
     const unregisterComponent = this.protoStore.dispatch(
       registerComponentEffect(
         type,
-        { label, icon, hidden, description, builtinSuspense },
+        { label, icon, hidden, description, builtinSuspense, server },
         props ?? {},
       ),
     )
@@ -67,6 +70,12 @@ export class ReactRuntimeCore extends RuntimeCore {
       console.warn(
         'builtinSuspense is ignored in React >= 19.2; components are always wrapped in <Activity>.',
       )
+    }
+
+    if (server && !isServer()) {
+      return () => {
+        unregisterComponent()
+      }
     }
 
     const unregisterReactComponent = this.protoStore.dispatch(

@@ -41,8 +41,9 @@ export type ComponentMeta = {
   label: string
   icon: ComponentIcon
   hidden: boolean
-  description?: string
-  builtinSuspense?: boolean
+  description: string | undefined
+  builtinSuspense: boolean | undefined
+  server: boolean
 }
 
 export type State = Map<string, ComponentMeta>
