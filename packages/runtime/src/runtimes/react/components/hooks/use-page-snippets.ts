@@ -6,7 +6,7 @@ import { type Page as PageType } from '../../../../api'
 import deepEqual from '../../../../utils/deepEqual'
 
 import { useIsInBuilder } from '../../hooks/use-is-in-builder'
-import { useMakeswiftHostApiClient } from '../../host-api-client'
+import { useApiResourcesClient } from '../../hooks/use-api-resources-client'
 
 const filterUsedSnippetProperties = ({
   code,
@@ -61,7 +61,7 @@ export function usePageSnippets({ page }: { page: MakeswiftPageDocument }) {
 }
 
 function useCachedPage(pageId: string | null): PageType | null {
-  const client = useMakeswiftHostApiClient()
+  const client = useApiResourcesClient()
   const getSnapshot = () => (pageId == null ? null : client.readPage(pageId))
 
   const page = useSyncExternalStore(client.subscribe, getSnapshot, getSnapshot)

@@ -5,7 +5,7 @@ import { useMemo, useSyncExternalStore } from 'react'
 import { type Font } from '../../../client'
 import { type Site } from '../../../api'
 import { useIsInBuilder } from '../hooks/use-is-in-builder'
-import { useMakeswiftHostApiClient } from '../host-api-client'
+import { useApiResourcesClient } from '../hooks/use-api-resources-client'
 
 import {
   getGoogleFontsParamFromFonts,
@@ -21,7 +21,7 @@ type Props = {
 
 /**
  * This is experimental, and some of the logic here is duplicated in the `PageHead` component.
- * 
+ *
  * For now we want to avoid putting this on the critical path for rendering Makeswift pages, so we haven't
  * deduplicated the two.
  */
@@ -42,13 +42,11 @@ export function GoogleFontLink({ fonts, siteId }: Props) {
     return null
   }
 
-  return (
-    <PageLink precedence="medium" rel="stylesheet" href={url} />
-  )
+  return <PageLink precedence="medium" rel="stylesheet" href={url} />
 }
 
 function useCachedSite(siteId: string | null): Site | null {
-  const client = useMakeswiftHostApiClient()
+  const client = useApiResourcesClient()
   const getSnapshot = () => (siteId == null ? null : client.readSite(siteId))
 
   return useSyncExternalStore(client.subscribe, getSnapshot, getSnapshot)

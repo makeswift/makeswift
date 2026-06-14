@@ -2,10 +2,10 @@ import { useMemo } from 'react'
 import { type CacheData } from '../../../api/client'
 import { updateAPIClientCache } from '../../../state/actions/internal/read-write-actions'
 
-import { useMakeswiftHostApiClient } from '../host-api-client'
+import { useApiResourcesClient } from './use-api-resources-client'
 
 export function useCacheData(cacheData: CacheData) {
-  const { store: apiStore } = useMakeswiftHostApiClient()
+  const { store: apiStore } = useApiResourcesClient()
 
   // We perform cache hydration immediately on render - this is safe to do per
   // render because updating the API cache is idempotent. For precedence, see:
