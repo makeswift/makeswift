@@ -13,13 +13,6 @@ import {
   APIResourceType,
 } from './types'
 
-import { GraphQLClient } from './graphql/client'
-import { CreateTableRecordMutation } from './graphql/documents'
-import {
-  CreateTableRecordMutationResult,
-  CreateTableRecordMutationVariables,
-} from './graphql/generated/types'
-
 import { ApiResourcesClient } from './api-resources-client'
 
 export { CacheData } from './api-resources-client'
@@ -44,15 +37,12 @@ export { CacheData } from './api-resources-client'
  * snapshot for use in the builder, not the lives pages.
  */
 export class MakeswiftHostApiClient extends ApiResourcesClient {
-  readonly graphqlClient: GraphQLClient
   readonly fetch: HttpFetch
 
   constructor({
-    uri,
     fetch,
     preloadedState,
   }: {
-    uri: string
     fetch: HttpFetch
     preloadedState: Partial<ApiClientState>
   }) {
@@ -60,7 +50,6 @@ export class MakeswiftHostApiClient extends ApiResourcesClient {
       store: configureClientStore({ preloadedState }),
     })
 
-    this.graphqlClient = new GraphQLClient(uri)
     this.fetch = fetch
   }
 
@@ -110,12 +99,5 @@ export class MakeswiftHostApiClient extends ApiResourcesClient {
 
   async fetchTable(tableId: string): Promise<Table | null> {
     return await this.store.dispatch(fetchAPIResource(APIResourceType.Table, tableId, this.fetch))
-  }
-
-  async createTableRecord(tableId: string, columns: any): Promise<void> {
-    await this.graphqlClient.request<
-      CreateTableRecordMutationResult,
-      CreateTableRecordMutationVariables
-    >(CreateTableRecordMutation, { input: { data: { tableId, columns } } })
   }
 }
