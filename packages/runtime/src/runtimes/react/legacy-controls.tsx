@@ -78,7 +78,12 @@ function useWidthStyle(
 ): string {
   const value = getWidthPropControllerDataResponsiveLengthData(data)
 
-  return useStyle(useResponsiveWidth(value, descriptor.options.defaultValue))
+  return useStyle(
+    useResponsiveWidth(value, {
+      defaultValue: descriptor.options.defaultValue,
+      minWidth: descriptor.options.minWidth,
+    }),
+  )
 }
 
 function usePaddingStyle(data: PaddingPropControllerData | undefined): string {
