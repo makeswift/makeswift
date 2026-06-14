@@ -1,5 +1,16 @@
 # @makeswift/hono-react
 
+## 0.2.0
+
+### Minor Changes
+
+- c658385: fix: move `renderHtml` to a separate entry point so `hono-react/server` can be imported in environments where `react-dom/server` does not provide `renderToReadableStream`.
+
+### Patch Changes
+
+- Updated dependencies [c67f4db]
+  - @makeswift/runtime@0.28.7
+
 ## 0.1.8
 
 ### Patch Changes
