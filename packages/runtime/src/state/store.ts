@@ -8,7 +8,7 @@ import {
   compose,
 } from '@reduxjs/toolkit'
 
-import { MakeswiftHostApiClient } from '../api/client'
+import { ApiResourcesClient } from '../api/api-resources-client'
 
 import { actionMiddleware, middlewareOptions, devToolsConfig } from './toolkit'
 import { BuilderActionTypes } from './builder-api/actions'
@@ -157,7 +157,7 @@ export function conditionalReadWriteMiddleware(
 }
 
 export interface ReadWriteStateMixin {
-  readonly hostApiClient: MakeswiftHostApiClient
+  readonly apiResourcesClient: ApiResourcesClient
 
   loadReadWriteStateIfNeeded(): Promise<() => void>
 }
@@ -172,12 +172,12 @@ function withMixin<M extends {}>(mixin: M): StoreEnhancer<M> {
 export function configureReadWriteStore({
   name,
   appOrigin,
-  hostApiClient,
+  apiResourcesClient,
   preloadedState,
 }: {
   name: string
   appOrigin: string
-  hostApiClient: MakeswiftHostApiClient
+  apiResourcesClient: ApiResourcesClient
   preloadedState: Partial<State>
 }) {
   const readWriteMiddlewareRef: ReadWriteMiddlewareRef = {
@@ -240,7 +240,7 @@ export function configureReadWriteStore({
     preloadedState,
 
     middleware: () => [
-      makeswiftApiClientSyncMiddleware(hostApiClient),
+      makeswiftApiClientSyncMiddleware(apiResourcesClient),
       conditionalReadWriteMiddleware(readWriteMiddlewareRef),
     ],
 
@@ -255,7 +255,7 @@ export function configureReadWriteStore({
         ),
 
         withMixin<ReadWriteStateMixin>({
-          hostApiClient,
+          apiResourcesClient,
           loadReadWriteStateIfNeeded: async () => {
             const { isReadOnly } = store.getState()
 

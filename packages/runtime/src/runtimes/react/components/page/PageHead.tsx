@@ -3,8 +3,7 @@ import { useMemo, useSyncExternalStore, ReactNode } from 'react'
 import { type MakeswiftPageDocument } from '../../../../client'
 import { type Site } from '../../../../api'
 
-import { useMakeswiftHostApiClient } from '../../host-api-client'
-
+import { useApiResourcesClient } from '../../hooks/use-api-resources-client'
 import { useFrameworkContext } from '../hooks/use-framework-context'
 import { useIsInBuilder } from '../../hooks/use-is-in-builder'
 import { usePageSnippets } from '../hooks/use-page-snippets'
@@ -130,7 +129,7 @@ export function PageHead({ document: page, metadata = {} }: Props): ReactNode {
 }
 
 function useCachedSite(siteId: string | null): Site | null {
-  const client = useMakeswiftHostApiClient()
+  const client = useApiResourcesClient()
   const getSnapshot = () => (siteId == null ? null : client.readSite(siteId))
 
   const site = useSyncExternalStore(client.subscribe, getSnapshot, getSnapshot)

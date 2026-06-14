@@ -77,12 +77,8 @@ export class RuntimeCore {
     const key = storeCacheKey({ siteVersion, locale })
 
     const createStore = () => {
-      // host API client includes an in-memory cache of the site's resources and thus also has to be versioned
-      const hostApiClient = new MakeswiftHostApiClient({
-        uri: new URL('graphql', this.apiOrigin).href,
-        fetch: this.fetch,
-        preloadedState: { siteVersion, locale },
-      })
+      // API resources client includes an in-memory cache of the site's resources and thus also has to be versioned
+      const apiResourcesClient = this.createApiResourcesClient({ siteVersion, locale })
 
       // TODO: we need to decouple editability from the site version; specifically, previewing
       // a draft version of the site should not lead to switching to the read-write state
@@ -91,7 +87,7 @@ export class RuntimeCore {
       return configureReadWriteStore({
         name: `Runtime read-write store (site version: ${key})`,
         appOrigin: this.appOrigin,
-        hostApiClient,
+        apiResourcesClient,
         preloadedState: { ...this.protoStore.getState(), siteVersion, isReadOnly, locale },
       })
     }
@@ -143,6 +139,20 @@ export class RuntimeCore {
 
   getBreakpoints(): Breakpoints {
     return getBreakpoints(this.protoStore.getState())
+  }
+
+  get graphqlApiEndpoint(): string {
+    return new URL('graphql', this.apiOrigin).href
+  }
+
+  private createApiResourcesClient(preloadedState: {
+    siteVersion: SiteVersion | null
+    locale: string | undefined
+  }) {
+    return new MakeswiftHostApiClient({
+      fetch: this.fetch,
+      preloadedState,
+    })
   }
 
   private shouldUsePersistentStore(key: string): boolean {
