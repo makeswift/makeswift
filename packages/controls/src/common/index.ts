@@ -7,6 +7,8 @@ export {
   ControlDataTypeKey,
   TextDataTypes,
   NumberDataTypes,
+  DateDataTypes,
   AcceptedTextDataTypes,
   AcceptedNumberDataTypes,
+  AcceptedDateDataTypes,
 } from './data-types'

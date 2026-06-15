@@ -37,3 +37,12 @@ export const AcceptedNumberDataTypes = [
   NumberDataTypes.number,
   ...PropControllerNumberDataTypes,
 ] as const
+
+export const DateDataTypes = { date: 'date::v1' } as const
+
+const PropControllerDateDataTypes = ['prop-controllers::date::v1'] as const
+
+export const AcceptedDateDataTypes = [
+  DateDataTypes.date,
+  ...PropControllerDateDataTypes,
+] as const
