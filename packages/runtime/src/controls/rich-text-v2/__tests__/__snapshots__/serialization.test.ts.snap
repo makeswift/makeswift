@@ -110,17 +110,17 @@ RichTextV2Definition {
               "label": "Inline",
               "options": [
                 {
-                  "icon": "Superscript16",
+                  "icon": "Superscript",
                   "label": "Superscript",
                   "value": "superscript",
                 },
                 {
-                  "icon": "Subscript16",
+                  "icon": "Subscript",
                   "label": "Subscript",
                   "value": "subscript",
                 },
                 {
-                  "icon": "Code16",
+                  "icon": "Code",
                   "label": "Code",
                   "value": "code",
                 },
@@ -263,17 +263,17 @@ exports[`RichTextV2 serialization deserialized definition in block mode contains
               "label": "Inline",
               "options": [
                 {
-                  "icon": "Superscript16",
+                  "icon": "Superscript",
                   "label": "Superscript",
                   "value": "superscript",
                 },
                 {
-                  "icon": "Subscript16",
+                  "icon": "Subscript",
                   "label": "Subscript",
                   "value": "subscript",
                 },
                 {
-                  "icon": "Code16",
+                  "icon": "Code",
                   "label": "Code",
                   "value": "code",
                 },
