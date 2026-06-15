@@ -35,8 +35,8 @@ const createStore = ({
   configureReadWriteStore({
     name: 'test-store',
     appOrigin: TestOrigins.appOrigin,
-    hostApiClient: {
-      makeswiftApiClient: {
+    apiResourcesClient: {
+      store: {
         dispatch: jest.fn(),
       },
     } as any,

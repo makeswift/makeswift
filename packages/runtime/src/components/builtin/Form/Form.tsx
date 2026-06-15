@@ -40,7 +40,7 @@ import { cx } from '@emotion/css'
 import { useResponsiveGridItem, useResponsiveStyle } from '../../utils/responsive-style'
 import { type ResponsiveColor } from '../../utils/types'
 
-import { useMakeswiftHostApiClient } from '../../../runtimes/react/host-api-client'
+import { useMakeswiftGraphQLApiClient } from '../../../runtimes/react/hooks/use-graphql-api-client'
 import { useStyle } from '../../../runtimes/react/use-style'
 import { useTable } from '../../../runtimes/react/hooks/makeswift-api'
 import {
@@ -276,7 +276,7 @@ const Form = forwardRef(function Form(
   const fields = useMemo(() => fieldsProp?.fields ?? [], [fieldsProp])
   const grid = useMemo(() => fieldsProp?.grid ?? [], [fieldsProp])
   const table = useTable(tableId ?? null)
-  const client = useMakeswiftHostApiClient()
+  const client = useMakeswiftGraphQLApiClient()
   const [refEl, setRefEl] = useState<HTMLElement | null>(null)
   const [propControllers, setPropControllers] =
     useState<DescriptorsPropControllers<Descriptors> | null>(null)
