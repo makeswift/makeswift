@@ -22,7 +22,7 @@
   "dependencies": {
     "@makeswift/controls": "workspace:*",
     "ts-pattern": "^5.0.8",
-    "zod": "^3.21.4"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@swc/jest": "^0.2.36",
