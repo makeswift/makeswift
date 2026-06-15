@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.7-canary.4
+
+### Patch Changes
+
+- 9ae35cd: refactor: move GraphQL ops into a separate client
+
 ## 0.28.7-canary.3
 
 ### Patch Changes
