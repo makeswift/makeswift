@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.28.7-canary.3
+
+### Patch Changes
+
+- 1374159: Renamed `unstable_IconRadioGroup` to `IconRadioGroup`. The `unstable_IconRadioGroup` export has been removed.
+- Updated dependencies [1374159]
+  - @makeswift/controls@0.1.20-canary.2
+  - @makeswift/prop-controllers@0.4.14-canary.2
+
 ## 0.28.7-canary.2
 
 ### Patch Changes
@@ -492,7 +501,7 @@
     siteVersion: await getSiteVersion(),
     locale,
     allowLocaleFallback: false,
-  });
+  })
   ```
 
 - 6ba02bb: BREAKING: Removes the `DraftModeScript` and `PreviewModeScript` from the runtime. These components are no longer needed for integrating a site with Makeswift, and can be safely removed from any existing code.
@@ -700,11 +709,11 @@
     ```typescript
     Group({
       props: {
-        text: Color({ label: "Text" }),
-        background: Color({ label: "Background" }),
-        dismissable: Checkbox({ label: "Can be dismissed?" }),
+        text: Color({ label: 'Text' }),
+        background: Color({ label: 'Background' }),
+        dismissable: Checkbox({ label: 'Can be dismissed?' }),
       },
-    });
+    })
     ```
 
   For full documentation, visit the [`Group` control reference page](https://docs.makeswift.com/developer/reference/controls/group).
@@ -742,19 +751,19 @@
   We need to import a font within our root layout. In this example I am using `next/font`.
 
   ```tsx
-  import { Grenze_Gotisch, Grenze } from "next/font/google";
+  import { Grenze_Gotisch, Grenze } from 'next/font/google'
 
-  import "@/app/global.css";
-  import "@/makeswift/components";
+  import '@/app/global.css'
+  import '@/makeswift/components'
 
   const GrenzeGotischFont = Grenze_Gotisch({
-    subsets: ["latin"],
-    weight: ["400", "500", "700", "900"],
-    variable: "--font-grenze-gotisch",
-  });
+    subsets: ['latin'],
+    weight: ['400', '500', '700', '900'],
+    variable: '--font-grenze-gotisch',
+  })
 
   export default async function RootLayout() {
-    return <html className={GrenzeGotischFont.variable}>{/* ... */}</html>;
+    return <html className={GrenzeGotischFont.variable}>{/* ... */}</html>
   }
   ```
 
@@ -763,39 +772,39 @@
   Then we need to add this font within our Makeswift route handler `getFonts` option in `./src/app/api/makeswift/[...makeswift]/route.ts`.
 
   ```ts
-  import { MAKESWIFT_SITE_API_KEY } from "@/makeswift/env";
-  import { MakeswiftApiHandler } from "@makeswift/runtime/next/server";
+  import { MAKESWIFT_SITE_API_KEY } from '@/makeswift/env'
+  import { MakeswiftApiHandler } from '@makeswift/runtime/next/server'
 
   const handler = MakeswiftApiHandler(MAKESWIFT_SITE_API_KEY, {
     getFonts() {
       return [
         {
-          family: "var(--font-grenze-gotisch)",
-          label: "Grenze Gotisch",
+          family: 'var(--font-grenze-gotisch)',
+          label: 'Grenze Gotisch',
           variants: [
             {
-              weight: "400",
-              style: "normal",
+              weight: '400',
+              style: 'normal',
             },
             {
-              weight: "500",
-              style: "normal",
+              weight: '500',
+              style: 'normal',
             },
             {
-              weight: "700",
-              style: "normal",
+              weight: '700',
+              style: 'normal',
             },
             {
-              weight: "900",
-              style: "normal",
+              weight: '900',
+              style: 'normal',
             },
           ],
         },
-      ];
+      ]
     },
-  });
+  })
 
-  export { handler as GET, handler as POST };
+  export { handler as GET, handler as POST }
   ```
 
   #### Component:
@@ -843,29 +852,29 @@
   Note since our component's `font` prop isn't optional we must pass a `defaultValue`
 
   ```tsx
-  import { runtime } from "@/makeswift/runtime";
-  import { lazy } from "react";
+  import { runtime } from '@/makeswift/runtime'
+  import { lazy } from 'react'
 
-  import { Style, Font, TextInput } from "@makeswift/runtime/controls";
+  import { Style, Font, TextInput } from '@makeswift/runtime/controls'
 
   runtime.registerComponent(
-    lazy(() => import("./my-component")),
+    lazy(() => import('./my-component')),
     {
-      type: "Font Control Demo",
-      label: "My Component",
+      type: 'Font Control Demo',
+      label: 'My Component',
       props: {
         className: Style(),
         font: Font({
           defaultValue: {
-            fontFamily: "var(--font-grenze-gotisch)",
-            fontStyle: "normal",
+            fontFamily: 'var(--font-grenze-gotisch)',
+            fontStyle: 'normal',
             fontWeight: 700,
           },
         }),
         text: TextInput(),
       },
     },
-  );
+  )
   ```
 
   Now you can visually control fonts outside of `RichText`.
@@ -1054,9 +1063,9 @@
      now result in a TypeScript compilation error:
 
      ```typescript
-     import { Number } from "@makeswift/runtime/controls";
+     import { Number } from '@makeswift/runtime/controls'
 
-     const num = Number({ foo: "bar" }); // error, `foo` is not a valid `Number` param
+     const num = Number({ foo: 'bar' }) // error, `foo` is not a valid `Number` param
      ```
 
      Prior to this version, the arbitrary options were silently ignored.
@@ -1066,12 +1075,12 @@
      to declare the options `as const`.
 
      ```typescript
-     import { Select } from "@makeswift/runtime/controls";
+     import { Select } from '@makeswift/runtime/controls'
 
      const sel = Select({
-       label: "Select",
+       label: 'Select',
        options: [], // error, non-empty array is required
-     });
+     })
      ```
 
      Previously, the `options` array was allowed to be empty.
@@ -1128,11 +1137,11 @@
   all results and aggregate them into an array:
 
   ```tsx
-  import { client } from "@/makeswift/client";
-  import { MakeswiftPage } from "@makeswift/runtime/next";
+  import { client } from '@/makeswift/client'
+  import { MakeswiftPage } from '@makeswift/runtime/next'
 
   async function getAllPages(): Promise<MakeswiftPage[]> {
-    return await client.getPages().toArray();
+    return await client.getPages().toArray()
   }
   ```
 
@@ -1148,40 +1157,40 @@
   localization with the `next-sitemap` library:
 
   ```tsx pages/sitemap.xml.tsx
-  import { getServerSideSitemapLegacy } from "next-sitemap";
-  import { MakeswiftPage } from "@makeswift/runtime/next";
-  import { client } from "@makeswift/client";
+  import { getServerSideSitemapLegacy } from 'next-sitemap'
+  import { MakeswiftPage } from '@makeswift/runtime/next'
+  import { client } from '@makeswift/client'
 
-  const DOMAIN = "https://example.com";
-  const DEFAULT_PRIORITY = 0.75;
-  const DEFAULT_FREQUENCY = "hourly";
+  const DOMAIN = 'https://example.com'
+  const DEFAULT_PRIORITY = 0.75
+  const DEFAULT_FREQUENCY = 'hourly'
 
   function pageToSitemapItem(page: MakeswiftPage) {
-    const pageUrl = new URL(page.path, DOMAIN);
+    const pageUrl = new URL(page.path, DOMAIN)
     return {
       loc: pageUrl.href,
       lastmod: page.createdAt,
       changefreq: page.sitemapFrequency ?? DEFAULT_FREQUENCY,
       priority: page.sitemapPriority ?? DEFAULT_PRIORITY,
-      alternateRefs: page.localizedVariants.map((variant) => {
-        const localizedPath = `/${variant.locale}/${variant.path}`;
-        const localizedPageUrl = new URL(localizedPath, DOMAIN);
+      alternateRefs: page.localizedVariants.map(variant => {
+        const localizedPath = `/${variant.locale}/${variant.path}`
+        const localizedPageUrl = new URL(localizedPath, DOMAIN)
         return {
           hreflang: variant.locale,
           href: localizedPageUrl.href,
-        };
+        }
       }),
-    };
+    }
   }
 
   export async function getServerSideProps(context) {
     const sitemap = client
       .getPages()
-      .filter((page) => !page.excludedFromSearch)
-      .map((page) => pageToSitemapItem(page))
-      .toArray();
+      .filter(page => !page.excludedFromSearch)
+      .map(page => pageToSitemapItem(page))
+      .toArray()
 
-    return getServerSideSitemapLegacy(context, sitemap);
+    return getServerSideSitemapLegacy(context, sitemap)
   }
 
   export default function Sitemap() {}
@@ -1190,32 +1199,32 @@
   Here's another example for Next.js's App Router built-in support for sitemaps:
 
   ```ts app/sitemap.ts
-  import { MetadataRoute } from "next";
-  import { MakeswiftPage } from "@makeswift/runtime/dist/types/next";
-  import { client } from "@/lib/makeswift/client";
+  import { MetadataRoute } from 'next'
+  import { MakeswiftPage } from '@makeswift/runtime/dist/types/next'
+  import { client } from '@/lib/makeswift/client'
 
-  type NextSitemapItem = MetadataRoute.Sitemap[number];
+  type NextSitemapItem = MetadataRoute.Sitemap[number]
 
-  const DOMAIN = "https://example.com";
-  const DEFAULT_PRIORITY = 0.75;
-  const DEFAULT_FREQUENCY = "hourly";
+  const DOMAIN = 'https://example.com'
+  const DEFAULT_PRIORITY = 0.75
+  const DEFAULT_FREQUENCY = 'hourly'
 
   function pageToSitemapEntry(page: MakeswiftPage): NextSitemapItem {
-    const pageUrl = new URL(page.path, DOMAIN);
+    const pageUrl = new URL(page.path, DOMAIN)
     return {
       url: pageUrl.href,
       lastModified: page.createdAt,
       changeFrequency: page.sitemapFrequency ?? DEFAULT_FREQUENCY,
       priority: page.sitemapPriority ?? DEFAULT_PRIORITY,
-    };
+    }
   }
 
   export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return client
       .getPages()
-      .filter((page) => !page.excludedFromSearch)
-      .map((page) => pageToSitemapEntry(page))
-      .toArray();
+      .filter(page => !page.excludedFromSearch)
+      .map(page => pageToSitemapEntry(page))
+      .toArray()
   }
   ```
 
@@ -1399,16 +1408,16 @@
   Add `ReactRuntimeProvider` to your Next.js [Custom App](https://nextjs.org/docs/pages/building-your-application/routing/custom-app). If you don't have a Custom App, you'll need to add one.
 
   ```tsx
-  import { runtime } from "@/makeswift/runtime";
-  import { ReactRuntimeProvider } from "@makeswift/runtime/next";
-  import type { AppProps } from "next/app";
+  import { runtime } from '@/makeswift/runtime'
+  import { ReactRuntimeProvider } from '@makeswift/runtime/next'
+  import type { AppProps } from 'next/app'
 
   export default function App({ Component, pageProps }: AppProps) {
     return (
       <ReactRuntimeProvider runtime={runtime}>
         <Component {...pageProps} />
       </ReactRuntimeProvider>
-    );
+    )
   }
   ```
 
@@ -1478,12 +1487,12 @@
   For example, in `app/layout.tsx`:
 
   ```tsx
-  import { RootStyleRegistry } from "@makeswift/runtime/next";
+  import { RootStyleRegistry } from '@makeswift/runtime/next'
 
   export default function RootLayout({
     children,
   }: Readonly<{
-    children: React.ReactNode;
+    children: React.ReactNode
   }>) {
     return (
       <html lang="en">
@@ -1491,7 +1500,7 @@
           <RootStyleRegistry>{children}</RootStyleRegistry>
         </body>
       </html>
-    );
+    )
   }
   ```
 
@@ -1761,12 +1770,12 @@
   To use this translation merging functionality, make sure to pass an instance of `ReactRuntime` to the Makeswift API handler like so:
 
   ```ts
-  import { MakeswiftApiHandler } from "@makeswift/runtime/next";
-  import { runtime } from "../../../lib/makeswift/register-components";
+  import { MakeswiftApiHandler } from '@makeswift/runtime/next'
+  import { runtime } from '../../../lib/makeswift/register-components'
 
   export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY, {
     runtime,
-  });
+  })
   ```
 
 ## 0.11.2
@@ -1872,16 +1881,16 @@
   Use this method to generate a sitemap for your Makeswift host. Here's an example using the popular library `next-sitemap`:
 
   ```ts
-  import { makeswift } from "@lib/makeswift";
-  import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
-  import { getServerSideSitemapLegacy } from "next-sitemap";
+  import { makeswift } from '@lib/makeswift'
+  import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next'
+  import { getServerSideSitemapLegacy } from 'next-sitemap'
 
   export async function getServerSideProps(
     ctx: GetServerSidePropsContext,
   ): Promise<GetServerSidePropsResult<{}>> {
-    const sitemap = await makeswift.getSitemap();
+    const sitemap = await makeswift.getSitemap()
 
-    return getServerSideSitemapLegacy(ctx, sitemap);
+    return getServerSideSitemapLegacy(ctx, sitemap)
   }
 
   export default function Sitemap() {}
@@ -1890,16 +1899,16 @@
   The `getSitemap` method is paginated with a default page size of `50`. If you want to request more pages or use a different page size pass the `limit` and `after` arguments. Here's an example:
 
   ```ts
-  const sitemap: Sitemap = [];
-  let page;
-  let after: string | undefined = undefined;
+  const sitemap: Sitemap = []
+  let page
+  let after: string | undefined = undefined
 
   do {
-    page = await makeswift.getSitemap({ limit: 10, after });
+    page = await makeswift.getSitemap({ limit: 10, after })
 
-    sitemap.push(...page);
-    after = page.at(-1)?.id;
-  } while (page.length > 0);
+    sitemap.push(...page)
+    after = page.at(-1)?.id
+  } while (page.length > 0)
   ```
 
   If using TypeScript, you can import the `Sitemap` type from `@makeswift/runtime/next`.
@@ -1907,18 +1916,18 @@
   Also, the `getSitemap` method supports filtering results by a pathname prefix using the `pathnamePrefix` parameter. Here's an example using the popular library `next-sitemap`:
 
   ```ts
-  import { makeswift } from "@lib/makeswift";
-  import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
-  import { getServerSideSitemapLegacy } from "next-sitemap";
+  import { makeswift } from '@lib/makeswift'
+  import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next'
+  import { getServerSideSitemapLegacy } from 'next-sitemap'
 
   export async function getServerSideProps(
     ctx: GetServerSidePropsContext,
   ): Promise<GetServerSidePropsResult<{}>> {
     const blogSitemap = await makeswift.getSitemap({
-      pathnamePrefix: "/blog/",
-    });
+      pathnamePrefix: '/blog/',
+    })
 
-    return getServerSideSitemapLegacy(ctx, blogSitemap);
+    return getServerSideSitemapLegacy(ctx, blogSitemap)
   }
 
   export default function BlogSitemap() {}
@@ -2663,9 +2672,9 @@ This version is a BREAKING change. No public APIs have changed but there was a m
   - Create a new file at `pages/api/makeswift/[...makeswift].js` with the following contents:
 
     ```js
-    import { MakeswiftApiHandler } from "@makeswift/runtime/next";
+    import { MakeswiftApiHandler } from '@makeswift/runtime/next'
 
-    export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY);
+    export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY)
     ```
 
   - Update your dynamic optional catch-all route to use the new data fetching APIs,
@@ -2748,9 +2757,9 @@ This version is a BREAKING change. No public APIs have changed but there was a m
   Then create a new file at `pages/api/makeswift/[...makeswift].ts` with the following content:
 
   ```js
-  import { MakeswiftApiHandler } from "@makeswift/runtime/next";
+  import { MakeswiftApiHandler } from '@makeswift/runtime/next'
 
-  export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY);
+  export default MakeswiftApiHandler(process.env.MAKESWIFT_SITE_API_KEY)
   ```
 
   The API handler not only enables Next.js Preview Mode, allowing you to remove your preview route,
@@ -2772,46 +2781,46 @@ This version is a BREAKING change. No public APIs have changed but there was a m
   Pages integrated with Makeswift should go from looking something like this:
 
   ```js
-  import "./path/to/makeswift/register-components";
+  import './path/to/makeswift/register-components'
 
-  export { getStaticPaths, getStaticProps, Page as default };
+  export { getStaticPaths, getStaticProps, Page as default }
   ```
 
   To now looking something like this:
 
   ```js
-  import "./path/to/makeswift/register-components";
+  import './path/to/makeswift/register-components'
 
-  import { Makeswift, Page as MakeswiftPage } from "@makeswift/runtime/next";
+  import { Makeswift, Page as MakeswiftPage } from '@makeswift/runtime/next'
 
   export async function getStaticPaths() {
-    const makeswift = new Makeswift(process.env.MAKESWIFT_SITE_API_KEY);
-    const pages = await makeswift.getPages();
+    const makeswift = new Makeswift(process.env.MAKESWIFT_SITE_API_KEY)
+    const pages = await makeswift.getPages()
 
     return {
-      paths: pages.map((page) => ({
+      paths: pages.map(page => ({
         params: {
-          path: page.path.split("/").filter((segment) => segment !== ""),
+          path: page.path.split('/').filter(segment => segment !== ''),
         },
       })),
-      fallback: "blocking",
-    };
+      fallback: 'blocking',
+    }
   }
 
   export async function getStaticProps(ctx) {
-    const makeswift = new Makeswift(process.env.MAKESWIFT_SITE_API_KEY);
-    const path = "/" + (ctx.params?.path ?? []).join("/");
+    const makeswift = new Makeswift(process.env.MAKESWIFT_SITE_API_KEY)
+    const path = '/' + (ctx.params?.path ?? []).join('/')
     const snapshot = await makeswift.getPageSnapshot(path, {
       preview: ctx.preview,
-    });
+    })
 
-    if (snapshot == null) return { notFound: true };
+    if (snapshot == null) return { notFound: true }
 
-    return { props: { snapshot } };
+    return { props: { snapshot } }
   }
 
   export default function Page({ snapshot }) {
-    return <MakeswiftPage snapshot={snapshot} />;
+    return <MakeswiftPage snapshot={snapshot} />
   }
   ```
 
@@ -2978,16 +2987,16 @@ Make the following changes to your Next.js config file:
   via `next/dynamic` and also removes the need to manually configure `next/image` domains.
 
   ```js
-  const withMakeswift = require("@makeswift/runtime/next/plugin")();
+  const withMakeswift = require('@makeswift/runtime/next/plugin')()
 
   /**
    * @type {import('next').NextConfig}
    */
   const nextConfig = {
     /* config options here */
-  };
+  }
 
-  module.exports = withMakeswift(nextConfig);
+  module.exports = withMakeswift(nextConfig)
   ```
 
 ### Patch Changes
@@ -3184,24 +3193,24 @@ The last release, `0.0.8` didn't properly fix the `useInsertionEffect` issue. Th
   For example:
 
   ```tsx
-  import { ReactRuntime } from "@makeswift/runtime/react";
-  import { Style } from "@makeswift/runtime/controls";
+  import { ReactRuntime } from '@makeswift/runtime/react'
+  import { Style } from '@makeswift/runtime/controls'
 
   ReactRuntime.registerComponent(HelloWorld, {
-    type: "hello-world",
-    label: "Hello, world!",
+    type: 'hello-world',
+    label: 'Hello, world!',
     props: {
       className: Style(),
     },
-  });
+  })
 
   const HelloWorld = forwardRef(function HelloWorld(props, ref) {
     return (
       <p {...props} ref={ref}>
         Hello, world!
       </p>
-    );
-  });
+    )
+  })
   ```
 
   By default `Style` is configured to provide width and margin overlays and panels. This can be overwritten with the `properties` configuration option.
