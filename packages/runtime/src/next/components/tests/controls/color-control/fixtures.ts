@@ -2,7 +2,7 @@ import { type ValueType } from '@makeswift/controls'
 import { ColorDefinition } from '@makeswift/controls'
 
 import { APIResourceType, type Swatch } from '../../../../../api'
-import { type CacheData } from '../../../../../api/client'
+import { type CacheData } from '../../../../../api/api-resources-client'
 
 type SwatchData = Omit<Swatch, 'id'>
 

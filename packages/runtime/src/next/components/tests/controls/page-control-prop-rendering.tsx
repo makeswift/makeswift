@@ -7,7 +7,7 @@ import { ServerInsertedHTMLContext } from 'next/navigation'
 
 import { type Data, type ValueType, type DataType, ControlDefinition } from '@makeswift/controls'
 
-import { type CacheData } from '../../../../api/client'
+import { type CacheData } from '../../../../api/api-resources-client'
 import { ElementData } from '../../../../state/read-only-state'
 import { setIsInBuilder } from '../../../../state/actions/internal/read-only-actions'
 import { ReactRuntime } from '../../../../runtimes/react/react-runtime'

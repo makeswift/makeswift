@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { type CacheData } from '../../../api/client'
+import { type CacheData } from '../../../api/api-resources-client'
 import { updateAPIClientCache } from '../../../state/actions/internal/read-write-actions'
 
 import { useApiResourcesClient } from './use-api-resources-client'
