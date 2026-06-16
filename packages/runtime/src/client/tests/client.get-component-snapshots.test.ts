@@ -5,7 +5,7 @@ import { createReactRuntime } from '../../runtimes/react/testing/react-runtime'
 
 import { server } from '../../mocks/server'
 import { TestWorkingSiteVersion } from '../../testing/fixtures'
-import { CacheData } from '../../api/client'
+import { CacheData } from '../../api/api-resources-client'
 
 const TEST_API_KEY = 'myApiKey'
 const runtime = createReactRuntime()
@@ -134,7 +134,11 @@ describe('unstable_getComponentSnapshots', () => {
         baseUrl,
         () =>
           HttpResponse.json(
-            { object: 'error', code: 'not_found', message: 'Element trees for requested version not found' },
+            {
+              object: 'error',
+              code: 'not_found',
+              message: 'Element trees for requested version not found',
+            },
             { status: 404 },
           ),
         { once: true },
@@ -161,7 +165,11 @@ describe('unstable_getComponentSnapshots', () => {
 
     const httpHandler = jest.fn(() =>
       HttpResponse.json(
-        { object: 'error', code: 'not_found', message: 'Element trees for requested version not found' },
+        {
+          object: 'error',
+          code: 'not_found',
+          message: 'Element trees for requested version not found',
+        },
         { status: 404 },
       ),
     )

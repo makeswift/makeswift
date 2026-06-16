@@ -1,6 +1,6 @@
 import { type SerializableReplacementContext } from '@makeswift/controls'
 
-import { MakeswiftHostApiClient } from '../../api/client'
+import { HostApiResourcesClient } from '../../api/host-api-resources-client'
 import { type HttpFetch } from '../../state/api-client/fetch-api-resource'
 import { type SiteVersion } from '../../api/site-version'
 
@@ -149,7 +149,7 @@ export class RuntimeCore {
     siteVersion: SiteVersion | null
     locale: string | undefined
   }) {
-    return new MakeswiftHostApiClient({
+    return new HostApiResourcesClient({
       fetch: this.fetch,
       preloadedState,
     })
