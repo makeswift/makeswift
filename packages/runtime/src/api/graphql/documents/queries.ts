@@ -6,8 +6,8 @@ import {
   TypographyFragment,
 } from './fragments'
 
-export const IntrospectedResourcesQuery = /* GraphQL */ `
-  query IntrospectedResources($fileIds: [ID!]!, $tableIds: [ID!]!) {
+export const UnversionedResourcesQuery = /* GraphQL */ `
+  query UnversionedResources($fileIds: [ID!]!, $tableIds: [ID!]!) {
     files(ids: $fileIds) {
       ...File
     }

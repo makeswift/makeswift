@@ -150,12 +150,12 @@ export type SiteFragment = {
   }
 }
 
-export type IntrospectedResourcesQueryVariables = Exact<{
+export type UnversionedResourcesQueryVariables = Exact<{
   fileIds: Array<Scalars['ID']> | Scalars['ID']
   tableIds: Array<Scalars['ID']> | Scalars['ID']
 }>
 
-export type IntrospectedResourcesQueryResult = {
+export type UnversionedResourcesQueryResult = {
   files: Array<{
     __typename: 'File'
     id: string
