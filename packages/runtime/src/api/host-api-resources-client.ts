@@ -36,7 +36,7 @@ export { CacheData } from './api-resources-client'
  * client of the host's API, not Makeswift's, intended to build and continuously maintain a realtime
  * snapshot for use in the builder, not the lives pages.
  */
-export class MakeswiftHostApiClient extends ApiResourcesClient {
+export class HostApiResourcesClient extends ApiResourcesClient {
   readonly fetch: HttpFetch
 
   constructor({
