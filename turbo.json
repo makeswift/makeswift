@@ -5,6 +5,9 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
+    "clean": {
+      "cache": false
+    },
     "test": {
       "dependsOn": ["^build"]
     },
