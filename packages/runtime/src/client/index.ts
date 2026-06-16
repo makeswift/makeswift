@@ -9,17 +9,8 @@ import {
   Table,
   Typography,
 } from '../api'
-import { GraphQLClient } from '../api/graphql/client'
-import { FileQuery, IntrospectedResourcesQuery, TableQuery } from '../api/graphql/documents'
-import {
-  FileQueryResult,
-  FileQueryVariables,
-  IntrospectedResourcesQueryResult,
-  IntrospectedResourcesQueryVariables,
-  SnippetLocation,
-  TableQueryResult,
-  TableQueryVariables,
-} from '../api/graphql/generated/types'
+import { MakeswiftGraphQLApiClient } from '../api/graphql-api-client'
+import { type SnippetLocation } from '../api/graphql/generated/types'
 
 import { CacheData } from '../api/api-resources-client'
 import { Descriptor as PropControllerDescriptor } from '../prop-controllers/descriptors'
@@ -48,6 +39,10 @@ import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-
 import { mergeTranslatedContent } from '../state/translations/merge'
 import { getTranslatableContent } from '../state/translations/get'
 import { isNonNullable } from '../utils/isNonNullable'
+import {
+  UnversionedResourcesQueryResult,
+  UnversionedResourcesQueryVariables,
+} from '../api/graphql/generated/types'
 
 export { SnippetLocation } from '../api/graphql/generated/types'
 
@@ -348,7 +343,7 @@ const getFontsAPISchema = z.object({
 export type GetFontsAPI = z.infer<typeof getFontsAPISchema>
 
 export class MakeswiftClient {
-  private graphqlClient: GraphQLClient
+  private graphqlClient: MakeswiftGraphQLApiClient
   private runtime: ReactRuntimeCore
 
   readonly apiKey: string
@@ -363,10 +358,10 @@ export class MakeswiftClient {
     }
 
     this.apiKey = apiKey
-
-    this.graphqlClient = new GraphQLClient(new URL('graphql', runtime.apiOrigin).href, {
-      'makeswift-runtime-version': PACKAGE_VERSION,
+    this.graphqlClient = new MakeswiftGraphQLApiClient({
+      endpoint: runtime.graphqlApiEndpoint,
     })
+
     this.runtime = runtime
   }
 
@@ -568,17 +563,16 @@ export class MakeswiftClient {
   private async getIntrospectedResources(
     {
       swatchIds,
-      ...introspectedResourceIds
-    }: IntrospectedResourcesQueryVariables & { swatchIds: string[] },
+      ...unversionedResourceIds
+    }: UnversionedResourcesQueryVariables & { swatchIds: string[] },
     siteVersion: SiteVersion | null,
-  ): Promise<IntrospectedResourcesQueryResult & { swatches: (Swatch | null)[] }> {
-    const result = await this.graphqlClient.request<
-      IntrospectedResourcesQueryResult,
-      IntrospectedResourcesQueryVariables
-    >(IntrospectedResourcesQuery, introspectedResourceIds)
+  ): Promise<UnversionedResourcesQueryResult & { swatches: (Swatch | null)[] }> {
+    const unversionedResources =
+      await this.graphqlClient.getUnversionedResources(unversionedResourceIds)
+
     const swatches = await this.getSwatches(swatchIds, siteVersion)
 
-    return { ...result, swatches }
+    return { ...unversionedResources, swatches }
   }
 
   // TODO: Consolidate this method with the introspectMany method once the
@@ -1209,12 +1203,7 @@ export class MakeswiftClient {
   }
 
   async getFile(fileId: string): Promise<File | null> {
-    const result = await this.graphqlClient.request<FileQueryResult, FileQueryVariables>(
-      FileQuery,
-      { fileId },
-    )
-
-    return result.file
+    return this.graphqlClient.getFile(fileId)
   }
 
   async getTypography(
@@ -1345,12 +1334,7 @@ export class MakeswiftClient {
   }
 
   async getTable(tableId: string): Promise<Table | null> {
-    const result = await this.graphqlClient.request<TableQueryResult, TableQueryVariables>(
-      TableQuery,
-      { tableId },
-    )
-
-    return result.table
+    return this.graphqlClient.getTable(tableId)
   }
 
   getTranslatableData(elementTree: ElementData): Record<string, Data> {
