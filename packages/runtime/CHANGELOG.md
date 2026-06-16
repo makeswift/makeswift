@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.25.5
+
+### Patch Changes
+
+- Fix build output dependencies
+
 ## 0.25.4
 
 ### Patch Changes
