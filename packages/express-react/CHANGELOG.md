@@ -1,5 +1,12 @@
 # @makeswift/express-react
 
+## 0.0.11
+
+### Patch Changes
+
+- Updated dependencies
+  - @makeswift/runtime@0.26.6
+
 ## 0.0.10
 
 ### Patch Changes
