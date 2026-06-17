@@ -1,17 +1,17 @@
-import { MakeswiftClient } from '../../client'
+import { MakeswiftRestAPIClient } from '../rest-api-client'
 import { http, HttpResponse } from 'msw'
 
-import { createReactRuntime } from '../../runtimes/react/testing/react-runtime'
-
 import { server } from '../../mocks/server'
-import { TestWorkingSiteVersion } from '../../testing/fixtures'
+import { TestOrigins, TestWorkingSiteVersion } from '../../testing/fixtures'
 
 const TEST_API_KEY = 'xxx'
-const runtime = createReactRuntime()
-const baseUrl = `${runtime.apiOrigin}/v3`
+const baseUrl = `${TestOrigins.apiOrigin}/v3`
 
 function createTestClient() {
-  return new MakeswiftClient(TEST_API_KEY, { runtime })
+  return new MakeswiftRestAPIClient({
+    apiKey: TEST_API_KEY,
+    apiOrigin: TestOrigins.apiOrigin,
+  })
 }
 
 let consoleErrorSpy: jest.SpyInstance

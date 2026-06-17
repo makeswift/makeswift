@@ -1,5 +1,5 @@
 import { HttpResponse } from 'msw'
-import { failedResponseBody } from '../../client'
+import { failedResponseBody } from '../rest-api-client'
 
 describe('failedResponseBody', () => {
   test('returns JSON for JSON responses', async () => {

@@ -1,18 +1,26 @@
 import { z } from 'zod'
+
+import {
+  type UnversionedResourcesQueryResult,
+  type UnversionedResourcesQueryVariables,
+} from '../api/graphql/generated/types'
+
 import {
   APIResourceType,
-  File,
-  GlobalElement,
-  LocalizedGlobalElement,
-  PagePathnameSlice,
-  Swatch,
-  Table,
-  Typography,
-} from '../api'
-import { MakeswiftGraphQLApiClient } from '../api/graphql-api-client'
-import { type SnippetLocation } from '../api/graphql/generated/types'
+  type File,
+  type GlobalElement,
+  type LocalizedGlobalElement,
+  type Swatch,
+  type Table,
+  type Typography,
+} from '../api/types'
 
 import { CacheData } from '../api/api-resources-client'
+
+import { MakeswiftGraphQLApiClient } from '../api/graphql-api-client'
+import { MakeswiftRestAPIClient, failedResponseBody } from '../api/rest-api-client'
+import { type SiteVersion } from '../api/site-version'
+
 import { Descriptor as PropControllerDescriptor } from '../prop-controllers/descriptors'
 import {
   getElementChildren,
@@ -22,277 +30,55 @@ import {
   getTableIds,
   getTypographyIds,
 } from '../prop-controllers/introspection'
+
 import { type ReactRuntimeCore } from '../runtimes/react/react-runtime-core'
+
 import {
   type Element,
   type ElementData,
   type Data,
-  type Document,
   getPropControllerDescriptors,
   isElementReference,
 } from '../state/read-only-state'
-import { type SiteVersion } from '../api/site-version'
-import { toIterablePaginationResult } from '../utils/pagination'
-import { deterministicUUID } from '../utils/deterministic-uuid'
-import { Schema } from '@makeswift/controls'
-import { EMBEDDED_DOCUMENT_TYPE, EmbeddedDocument } from '../state/modules/read-only-documents'
+
 import { mergeTranslatedContent } from '../state/translations/merge'
 import { getTranslatableContent } from '../state/translations/get'
+
+import { deterministicUUID } from '../utils/deterministic-uuid'
+import { toIterablePaginationResult } from '../utils/pagination'
 import { isNonNullable } from '../utils/isNonNullable'
+
 import {
-  UnversionedResourcesQueryResult,
-  UnversionedResourcesQueryVariables,
-} from '../api/graphql/generated/types'
+  type MakeswiftComponentDocument,
+  type MakeswiftComponentSnapshot,
+} from './component-snapshot'
+
+import { type MakeswiftPageDocument, type MakeswiftPageSnapshot } from './page-snapshot'
+
+import * as Schema from './schema'
 
 export { SnippetLocation } from '../api/graphql/generated/types'
 
-const makeswiftPageResultSchema = z.object({
-  id: z.string(),
-  path: z.string(),
-  title: z.string().nullable(),
-  description: z.string().nullable(),
-  canonicalUrl: z.string().nullable(),
-  socialImageUrl: z.string().nullable(),
-  sitemapPriority: z.number().nullable(),
-  sitemapFrequency: z
-    .enum(['always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never'])
-    .nullable(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-  publishedAt: z.string().nullable(),
-  isOnline: z.boolean().nullable(),
-  excludedFromSearch: z.boolean().nullable(),
-  locale: z.string(),
-  localizedVariants: z.array(
-    z.object({
-      locale: z.string(),
-      path: z.string(),
-    }),
-  ),
-})
+// TODO: clean up the exports below, as most of them are for internal consumptions only
+// and should not be publicly exposed
+export {
+  type MakeswiftComponentDocument,
+  type MakeswiftComponentDocumentFallback,
+  type MakeswiftComponentSnapshot,
+  type MakeswiftComponentMetadata as MakeswiftComponentSnapshotMetadata,
+  componentDocumentToRootEmbeddedDocument,
+} from './component-snapshot'
 
-const makeswiftGetPagesResultAPISchema = z.object({
-  data: z.array(makeswiftPageResultSchema),
-  hasMore: z.boolean(),
-})
+export {
+  type Snippet,
+  type Font,
+  type MakeswiftPageDocument,
+  type MakeswiftPageSnapshot,
+  pageToRootDocument,
+} from './page-snapshot'
 
-const makeswiftGetPagesParamsSchema = z.object({
-  limit: z.number().optional(),
-  after: z.string().optional(),
-  sortBy: z.enum(['title', 'path', 'description', 'createdAt', 'updatedAt']).optional(),
-  sortDirection: z.enum(['asc', 'desc']).optional(),
-  includeOffline: z.boolean().optional(),
-  pathPrefix: z.string().optional(),
-  locale: z.string().optional(),
-})
-
-function getPagesQueryParams({
-  limit = 100,
-  after,
-  sortBy,
-  sortDirection,
-  includeOffline,
-  pathPrefix,
-  locale,
-}: GetPagesParams): URLSearchParams {
-  const params = new URLSearchParams()
-
-  if (limit != null) params.set('limit', limit.toString())
-  if (after != null) params.set('after', after)
-  if (sortBy != null) params.set('sortBy', sortBy)
-  if (sortDirection != null) params.set('sortDirection', sortDirection)
-  if (includeOffline != null) params.set('includeOffline', includeOffline.toString())
-  if (pathPrefix != null) params.set('pathPrefix', pathPrefix)
-  if (locale != null) params.set('locale', locale)
-
-  return params
-}
-
-type GetPagesParams = z.infer<typeof makeswiftGetPagesParamsSchema>
-export type MakeswiftPage = z.infer<typeof makeswiftPageResultSchema>
-export type MakeswiftGetPagesResult = z.infer<typeof makeswiftGetPagesResultAPISchema>
-
-export type MakeswiftPageDocument = {
-  id: string
-  site: { id: string }
-  data: Element
-  snippets: Snippet[]
-  fonts: Font[]
-  meta: Meta
-  seo: Seo
-  localizedPages: LocalizedPage[]
-  locale: string | null
-}
-
-export function pageToRootDocument(pageDocument: MakeswiftPageDocument): Document {
-  const { locale, localizedPages, id, data } = pageDocument
-  const localizedPage = localizedPages.find(({ parentId }) => parentId == null)
-  return localizedPage
-    ? { key: localizedPage.elementTreeId, rootElement: localizedPage.data, locale }
-    : { key: id, rootElement: data, locale }
-}
-
-export type MakeswiftPageSnapshot = {
-  document: MakeswiftPageDocument
-  cacheData: CacheData
-}
-
-const makeswiftComponentDocumentSchema = z.object({
-  id: z.string(),
-  name: z.string().nullable(),
-  locale: z.string().nullable(),
-  data: Schema.element,
-  siteId: z.string(),
-  inheritsFromParent: z.boolean(),
-})
-
-export type MakeswiftComponentDocument = z.infer<typeof makeswiftComponentDocumentSchema>
-
-const makeswiftComponentDocumentFallbackSchema = z.object({
-  id: z.string(),
-  locale: z.string().nullable(),
-  data: z.null(),
-})
-
-export type MakeswiftComponentDocumentFallback = z.infer<
-  typeof makeswiftComponentDocumentFallbackSchema
->
-
-export type MakeswiftComponentSnapshotMetadata = {
-  allowLocaleFallback: boolean
-  requestedLocale: string | null
-}
-
-export type MakeswiftComponentSnapshot = {
-  document: MakeswiftComponentDocument | MakeswiftComponentDocumentFallback
-  key: string
-  cacheData: CacheData
-  meta: MakeswiftComponentSnapshotMetadata
-}
-
-export const previewTokenPayloadSchema = z.object({
-  payload: z.object({
-    version: z.string(),
-  }),
-})
-
-export type PreviewTokenPayload = z.infer<typeof previewTokenPayloadSchema>
-
-export function componentDocumentToRootEmbeddedDocument({
-  document,
-  documentKey,
-  name,
-  type,
-  description,
-  meta,
-}: {
-  document: MakeswiftComponentDocument | MakeswiftComponentDocumentFallback
-  documentKey: string
-  name: string
-  type: string
-  description?: string
-  meta: MakeswiftComponentSnapshotMetadata
-}): EmbeddedDocument {
-  const { data: rootElement, locale, id } = document
-
-  if (rootElement != null && rootElement.type !== type) {
-    throw new Error(
-      `Type "${rootElement.type}" does not match the expected type "${type}" from the snapshot`,
-    )
-  }
-
-  const rootDocument: EmbeddedDocument = {
-    key: documentKey,
-    rootElement: rootElement ?? {
-      // Fallback rootElement
-      // Create a stable uuid so two different clients will have the same empty element data.
-      // This is needed to make presence feature work for an element that is not yet created.
-      key: deterministicUUID({ id, locale, seed: documentKey }),
-      type,
-      props: {},
-    },
-    locale,
-    id,
-    type,
-    name,
-    meta: { ...meta, description },
-    __type: EMBEDDED_DOCUMENT_TYPE,
-  }
-
-  return rootDocument
-}
-
-// This function attempts to consume the response body of a failed response, and
-// returns either the parsed JSON or raw text. This is useful for logging more
-// detailed error information when an API request fails.
-//
-// Cloudflare Worker Note: The Cloudflare Worker runtime has automatic deadlock
-// prevention (in the form of auto-cancelling responses) that triggers when too
-// many response bodies are unconsumed. This applies for error responses as
-// well. As such, in this client we use this function to consume the response
-// body whenever the request fails, even if we don't end up logging the body
-// itself, to avoid hitting the deadlock prevention.
-export async function failedResponseBody(response: Response): Promise<unknown> {
-  try {
-    const text = await response.text()
-    try {
-      return JSON.parse(text)
-    } catch {
-      return text
-    }
-  } catch (e) {
-    return `Failed to extract response body: ${e}`
-  }
-}
-
-function responseError(response: Response): string {
-  return `${response.status} ${response.statusText}`
-}
-
-export type Snippet = {
-  id: string
-  code: string
-  location: SnippetLocation
-  liveEnabled: boolean
-  builderEnabled: boolean
-  cleanup: string | null
-}
-
-export type Font = { family: string; variants: string[] }
-
-type Meta = {
-  title?: string | null
-  description?: string | null
-  keywords?: string | null
-  socialImage?: {
-    id: string
-    publicUrl: string
-    mimetype: string
-  } | null
-  favicon?: {
-    id: string
-    publicUrl: string
-    mimetype: string
-  } | null
-}
-type Seo = {
-  canonicalUrl?: string | null
-  isIndexingBlocked?: boolean | null
-}
-
-type LocalizedPage = {
-  id: string
-  data: Element
-  elementTreeId: string
-  parentId: string | null
-  meta: Omit<Meta, 'favicon'>
-  seo: Seo
-}
-
-type MakeswiftConfig = {
-  runtime: ReactRuntimeCore
-}
-
+// TODO: remove, leftover from the `getSitemap` method removed in 0.25.0:
+// https://github.com/makeswift/makeswift/releases/tag/%40makeswift%2Fruntime%400.25.0
 export type Sitemap = {
   id: string
   loc: string
@@ -305,50 +91,26 @@ export type Sitemap = {
   }[]
 }[]
 
-const pagePathnameSlicesAPISchema = z.array(
-  z
-    .object({
-      id: z.string(),
-      basePageId: z.string(),
-      pathname: z.string(),
-      localizedPathname: z.string().optional(),
-      __typename: z.literal('PagePathnameSlice'),
-    })
-    .nullable(),
-)
+export type MakeswiftPage = z.infer<typeof Schema.pageData>
+export type MakeswiftGetPagesResult = z.infer<typeof Schema.getPagesResult>
+export type PreviewTokenPayload = z.infer<typeof Schema.previewTokenPayload>
+export type GetFontsAPI = z.infer<typeof Schema.fonts>
 
-const getPageAPISchema = z.object({
-  pathname: z.string(),
-  locale: z.string(),
-  alternate: z.array(
-    z.object({
-      pathname: z.string(),
-      locale: z.string(),
-    }),
-  ),
-})
+type GetPagesParams = z.infer<typeof Schema.getPagesParams>
+type GetPageResult = z.infer<typeof Schema.getPageResult>
 
-type GetPageAPI = z.infer<typeof getPageAPISchema>
-
-const getFontsAPISchema = z.object({
-  googleFonts: z.array(
-    z.object({
-      family: z.string(),
-      variants: z.array(z.string()),
-    }),
-  ),
-  siteId: z.string(),
-})
-
-export type GetFontsAPI = z.infer<typeof getFontsAPISchema>
-
-export class MakeswiftClient {
+export class MakeswiftClient extends MakeswiftRestAPIClient {
   private graphqlClient: MakeswiftGraphQLApiClient
   private runtime: ReactRuntimeCore
 
-  readonly apiKey: string
-
-  constructor(apiKey: string, { runtime }: MakeswiftConfig) {
+  constructor(
+    apiKey: string,
+    {
+      runtime,
+    }: {
+      runtime: ReactRuntimeCore
+    },
+  ) {
     if (typeof apiKey !== 'string') {
       throw new Error(
         'The Makeswift client must be passed a valid Makeswift site API key: ' +
@@ -357,57 +119,16 @@ export class MakeswiftClient {
       )
     }
 
-    this.apiKey = apiKey
+    super({
+      apiKey,
+      apiOrigin: runtime.apiOrigin,
+    })
+
     this.graphqlClient = new MakeswiftGraphQLApiClient({
       endpoint: runtime.graphqlApiEndpoint,
     })
 
     this.runtime = runtime
-  }
-
-  get apiOrigin(): string {
-    return this.runtime.apiOrigin
-  }
-
-  private async fetch(
-    path: string,
-    siteVersion: SiteVersion | null,
-    init?: RequestInit,
-  ): Promise<Response> {
-    const requestUrl = new URL(path, this.apiOrigin)
-
-    const requestHeaders = new Headers({
-      'x-api-key': this.apiKey,
-      'makeswift-site-api-key': this.apiKey,
-      'makeswift-runtime-version': PACKAGE_VERSION,
-    })
-
-    if (siteVersion?.token) {
-      requestUrl.searchParams.set('version', siteVersion.version)
-      requestHeaders.set('makeswift-preview-token', siteVersion.token)
-    }
-
-    if (init?.headers) {
-      new Headers(init.headers).forEach((value, key) => {
-        requestHeaders.set(key, value)
-      })
-    }
-
-    const response = await fetch(requestUrl.toString(), {
-      ...init,
-      headers: requestHeaders,
-      ...(siteVersion != null ? { cache: 'no-store' } : {}),
-      ...this.fetchOptions(siteVersion),
-    })
-
-    return response
-  }
-
-  /**
-   * Override this method to provide additional fetch options, e.g. revalidation, cache tags, etc.
-   */
-  fetchOptions(_siteVersion: SiteVersion | null): Record<string, unknown> {
-    return {}
   }
 
   private getPagesInternal = async ({
@@ -430,7 +151,7 @@ export class MakeswiftClient {
     }
 
     const result = await response.json()
-    const parsedResponse = makeswiftGetPagesResultAPISchema.safeParse(result)
+    const parsedResponse = Schema.getPagesResult.safeParse(result)
     if (!parsedResponse.success) {
       throw new Error(
         `Failed to parse 'getPages' response: ${parsedResponse.error.errors.map(e => e.message).join('; ')}`,
@@ -444,7 +165,7 @@ export class MakeswiftClient {
   async getPage(
     pathname: string,
     { siteVersion = null, locale }: { siteVersion?: SiteVersion | null; locale?: string } = {},
-  ): Promise<GetPageAPI | null> {
+  ): Promise<GetPageResult | null> {
     const url = new URL(`v3/pages/${encodeURIComponent(pathname)}`, this.apiOrigin)
     if (locale) url.searchParams.set('locale', locale)
 
@@ -465,7 +186,7 @@ export class MakeswiftClient {
 
     const json = await response.json()
 
-    return getPageAPISchema.parse(json)
+    return Schema.getPageResult.parse(json)
   }
 
   private async getTypographies(
@@ -556,7 +277,7 @@ export class MakeswiftClient {
     const responseBody = await response.json()
 
     return responseBody.map((item: unknown) =>
-      item != null ? makeswiftComponentDocumentSchema.parse(item) : null,
+      item != null ? Schema.componentDocument.parse(item) : null,
     )
   }
 
@@ -1094,7 +815,7 @@ export class MakeswiftClient {
       throw new Error(`Failed to get component snapshot for '${id}': ${responseError(response)}`)
     }
 
-    const document = makeswiftComponentDocumentSchema.parse(await response.json())
+    const document = Schema.componentDocument.parse(await response.json())
     const cacheData = await this.introspect(document.data, siteVersion, locale ?? null)
 
     return {
@@ -1182,155 +903,8 @@ export class MakeswiftClient {
     })
   }
 
-  async getSwatch(swatchId: string, siteVersion: SiteVersion | null): Promise<Swatch | null> {
-    const response = await this.fetch(`v3/swatches/${swatchId}`, siteVersion)
-
-    if (!response.ok) {
-      const failedBody = await failedResponseBody(response)
-      if (response.status !== 404) {
-        console.error(`Failed to get swatch '${swatchId}'`, {
-          response: failedBody,
-          siteVersion,
-        })
-      }
-
-      return null
-    }
-
-    const swatch = await response.json()
-
-    return swatch
-  }
-
   async getFile(fileId: string): Promise<File | null> {
     return this.graphqlClient.getFile(fileId)
-  }
-
-  async getTypography(
-    typographyId: string,
-    siteVersion: SiteVersion | null,
-  ): Promise<Typography | null> {
-    const response = await this.fetch(`v3/typographies/${typographyId}`, siteVersion)
-
-    if (!response.ok) {
-      const failedBody = await failedResponseBody(response)
-      if (response.status !== 404) {
-        console.error(`Failed to get typography '${typographyId}'`, {
-          response: failedBody,
-          siteVersion,
-        })
-      }
-
-      return null
-    }
-
-    const typography = await response.json()
-
-    return typography
-  }
-
-  async getGlobalElement(
-    globalElementId: string,
-    siteVersion: SiteVersion | null,
-  ): Promise<GlobalElement | null> {
-    const response = await this.fetch(`v3/global-elements/${globalElementId}`, siteVersion)
-
-    if (!response.ok) {
-      const failedBody = await failedResponseBody(response)
-      if (response.status !== 404) {
-        console.error(`Failed to get global element '${globalElementId}'`, {
-          response: failedBody,
-          siteVersion,
-        })
-      }
-
-      return null
-    }
-
-    const globalElement = await response.json()
-
-    return globalElement
-  }
-
-  async getLocalizedGlobalElement(
-    globalElementId: string,
-    locale: string,
-    siteVersion: SiteVersion | null,
-  ): Promise<LocalizedGlobalElement | null> {
-    const response = await this.fetch(
-      `v3/localized-global-elements/${globalElementId}?locale=${locale}`,
-      siteVersion,
-    )
-
-    if (!response.ok) {
-      const failedBody = await failedResponseBody(response)
-      if (response.status !== 404) {
-        console.error(`Failed to get localized global element '${globalElementId}'`, {
-          response: failedBody,
-          siteVersion,
-          locale,
-        })
-      }
-
-      return null
-    }
-
-    const localizedGlobalElement = await response.json()
-
-    return localizedGlobalElement
-  }
-
-  async getPagePathnameSlices(
-    pageIds: string[],
-    siteVersion: SiteVersion | null,
-    { locale }: { locale?: string | null },
-  ): Promise<(PagePathnameSlice | null)[]> {
-    if (pageIds.length === 0) return []
-
-    const url = new URL(`v3/page-pathname-slices/bulk`, this.apiOrigin)
-
-    pageIds.forEach(id => url.searchParams.append('ids', id))
-    if (locale != null) url.searchParams.set('locale', locale)
-
-    const response = await this.fetch(url.pathname + url.search, siteVersion)
-
-    if (!response.ok) {
-      console.error(`Failed to get page pathname slice(s) for ${pageIds.join(', ')}`, {
-        response: await failedResponseBody(response),
-        siteVersion,
-        locale,
-      })
-
-      return []
-    }
-
-    const json = await response.json()
-
-    const pagePathnameSlices = pagePathnameSlicesAPISchema.parse(json)
-
-    // We're mapping the basePageId to be the id, because we're still using the GraphQL
-    // fragment as our APIResource. The id on the APIResource needs to match the pageId
-    // so that we can find the corresponding page pathname slice when we call getPagePathnameSlice(pageId).
-    // TODO: Update this once we move away from the GraphQL fragments.
-    return pagePathnameSlices.map(pagePathnameSlice => {
-      if (pagePathnameSlice == null) return null
-
-      return {
-        ...pagePathnameSlice,
-        id: pagePathnameSlice.basePageId,
-        localizedPathname: pagePathnameSlice.localizedPathname ?? null,
-      }
-    })
-  }
-
-  async getPagePathnameSlice(
-    pageId: string,
-    siteVersion: SiteVersion | null,
-    { locale }: { locale?: string } = {},
-  ): Promise<PagePathnameSlice | null> {
-    const pagePathnameSlices = await this.getPagePathnameSlices([pageId], siteVersion, { locale })
-
-    return pagePathnameSlices.at(0) ?? null
   }
 
   async getTable(tableId: string): Promise<Table | null> {
@@ -1375,7 +949,7 @@ export class MakeswiftClient {
 
     const json = await response.json()
 
-    const parsed = previewTokenPayloadSchema.safeParse(json)
+    const parsed = Schema.previewTokenPayload.safeParse(json)
     if (!parsed.success) {
       throw new Error(
         `Failed to parse preview token payload: ${parsed.error.errors.map(e => e.message).join('; ')}`,
@@ -1399,7 +973,7 @@ export class MakeswiftClient {
 
     const json = await response.json()
 
-    const parsed = getFontsAPISchema.safeParse(json)
+    const parsed = Schema.fonts.safeParse(json)
     if (!parsed.success) {
       console.error('Failed to parse fonts API response', {
         response: json,
@@ -1415,4 +989,30 @@ export class MakeswiftClient {
   private getElementDescriptors() {
     return getPropControllerDescriptors(this.runtime.protoStore.getState())
   }
+}
+
+function getPagesQueryParams({
+  limit = 100,
+  after,
+  sortBy,
+  sortDirection,
+  includeOffline,
+  pathPrefix,
+  locale,
+}: GetPagesParams): URLSearchParams {
+  const params = new URLSearchParams()
+
+  if (limit != null) params.set('limit', limit.toString())
+  if (after != null) params.set('after', after)
+  if (sortBy != null) params.set('sortBy', sortBy)
+  if (sortDirection != null) params.set('sortDirection', sortDirection)
+  if (includeOffline != null) params.set('includeOffline', includeOffline.toString())
+  if (pathPrefix != null) params.set('pathPrefix', pathPrefix)
+  if (locale != null) params.set('locale', locale)
+
+  return params
+}
+
+function responseError(response: Response): string {
+  return `${response.status} ${response.statusText}`
 }
