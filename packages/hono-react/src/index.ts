@@ -4,7 +4,7 @@ export {
   Page,
   Slot,
   RuntimeProvider as ReactRuntimeProvider,
-  DefaultRootStyleRegistry as RootStyleRegistry,
+  RootStyleRegistry,
   GoogleFontLink as Unstable_GoogleFontLink,
   MakeswiftFonts as Unstable_MakeswiftFonts,
 } from '@makeswift/runtime/unstable-framework-support'
