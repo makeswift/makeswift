@@ -9,6 +9,7 @@ const baseUrl = `${TestOrigins.apiOrigin}/v3`
 
 function createTestClient() {
   return new MakeswiftRestAPIClient({
+    fetch: globalThis.fetch,
     apiKey: TEST_API_KEY,
     apiOrigin: TestOrigins.apiOrigin,
   })

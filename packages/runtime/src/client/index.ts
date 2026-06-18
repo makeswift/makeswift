@@ -120,6 +120,7 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
     }
 
     super({
+      fetch: runtime.fetch,
       apiKey,
       apiOrigin: runtime.apiOrigin,
     })
