@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.7-canary.6
+
+### Patch Changes
+
+- b26b1a8: refactor: switch `Makeswift` client to use runtime's `fetch` implementation
+
 ## 0.28.7-canary.5
 
 ### Patch Changes

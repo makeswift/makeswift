@@ -1,5 +1,13 @@
 # @makeswift/hono-react
 
+## 0.2.0-canary.7
+
+### Patch Changes
+
+- b26b1a8: refactor: switch `Makeswift` client to use runtime's `fetch` implementation
+- Updated dependencies [b26b1a8]
+  - @makeswift/runtime@0.28.7-canary.6
+
 ## 0.2.0-canary.6
 
 ### Patch Changes
