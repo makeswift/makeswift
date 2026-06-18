@@ -1,5 +1,5 @@
 import { type State as ApiClientState } from '../state/api-client/state'
-import { type HttpFetch, fetchAPIResource } from '../state/api-client/fetch-api-resource'
+import { fetchAPIResource } from '../state/api-client/fetch-api-resource'
 import { configureClientStore } from '../state/api-client/client-store'
 
 import {
@@ -10,6 +10,7 @@ import {
   type Swatch,
   type Table,
   type Typography,
+  type HttpFetch,
   APIResourceType,
 } from './types'
 
