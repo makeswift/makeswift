@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.7-canary.5
+
+### Patch Changes
+
+- c6dd808: refactor: extract resources fetching etc into a REST API client; removed two undocumented internal exports from the `@makeswift/runtime/client` entrypoint
+
 ## 0.28.7-canary.4
 
 ### Patch Changes
