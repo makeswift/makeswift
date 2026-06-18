@@ -27,6 +27,7 @@ export const CacheData = {
     }
   },
 }
+
 export abstract class ApiResourcesClient {
   readonly store: ApiClientStore
   readonly subscribe: ApiClientStore['subscribe']

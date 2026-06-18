@@ -19,11 +19,10 @@ import {
   type Table,
   type LocalizedGlobalElement,
   type APIResourceLocale,
-} from '../../api'
+  type HttpFetch,
+} from '../../api/types'
 
 import { type State, getHasAPIResource, getAPIResource, getLocalizedResourceId } from './state'
-
-export type HttpFetch = (url: string | URL, init?: RequestInit) => Promise<Response>
 
 type Thunk<ReturnType> = ThunkAction<ReturnType, State, unknown, Action>
 

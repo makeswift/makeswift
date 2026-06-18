@@ -1,7 +1,7 @@
 import { type SerializableReplacementContext } from '@makeswift/controls'
 
 import { HostApiResourcesClient } from '../../api/host-api-resources-client'
-import { type HttpFetch } from '../../state/api-client/fetch-api-resource'
+import { type HttpFetch } from '../../api/types'
 import { type SiteVersion } from '../../api/site-version'
 
 import {

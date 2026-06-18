@@ -4,16 +4,28 @@ import {
   type PagePathnameSlice,
   type Swatch,
   type Typography,
+  type HttpFetch,
 } from './types'
 
 import { type SiteVersion } from './site-version'
 import * as Schema from './schema'
 
 export class MakeswiftRestAPIClient {
+  private _fetch: HttpFetch
+
   readonly apiKey: string
   readonly apiOrigin: string
 
-  constructor({ apiKey, apiOrigin }: { apiKey: string; apiOrigin: string }) {
+  constructor({
+    fetch,
+    apiKey,
+    apiOrigin,
+  }: {
+    fetch: HttpFetch
+    apiKey: string
+    apiOrigin: string
+  }) {
+    this._fetch = fetch
     this.apiKey = apiKey
     this.apiOrigin = apiOrigin
   }
@@ -189,21 +201,13 @@ export class MakeswiftRestAPIClient {
       })
     }
 
-    const response = await fetch(requestUrl.toString(), {
+    const response = await this._fetch(requestUrl.toString(), {
       ...init,
       headers: requestHeaders,
       ...(siteVersion != null ? { cache: 'no-store' } : {}),
-      ...this.fetchOptions(siteVersion),
     })
 
     return response
-  }
-
-  /**
-   * Override this method to provide additional fetch options, e.g. revalidation, cache tags, etc.
-   */
-  protected fetchOptions(_siteVersion: SiteVersion | null): Record<string, unknown> {
-    return {}
   }
 }
 

@@ -1,4 +1,4 @@
-import { type HttpFetch } from '../state/api-client/fetch-api-resource'
+import { type HttpFetch } from '../api/types'
 
 import { MAKESWIFT_CACHE_TAG } from './cache'
 
