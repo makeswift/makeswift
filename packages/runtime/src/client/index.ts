@@ -575,161 +575,17 @@ export class MakeswiftClient {
     return { ...unversionedResources, swatches }
   }
 
-  // TODO: Consolidate this method with the introspectMany method once the
-  // unstable_getComponentSnapshots method is stable and tested in production.
   private async introspect(
-    element: Element,
+    tree: { id: string; data: Element },
     siteVersion: SiteVersion | null,
     locale: string | null,
   ): Promise<CacheData> {
-    const descriptors = this.getElementDescriptors()
-    const swatchIds = new Set<string>()
-    const fileIds = new Set<string>()
-    const typographyIds = new Set<string>()
-    const tableIds = new Set<string>()
-    const pageIds = new Set<string>()
-    const globalElements = new Map<string, GlobalElement | null>()
-    const localizedGlobalElements = new Map<string, LocalizedGlobalElement | null>()
-    const localizedResourcesMap = new Map<string, string | null>()
+    const map = await this.introspectMany([tree], siteVersion, locale)
 
-    const remaining = [element]
-    const seen = new Set<string>()
-    let current: Element | undefined
+    const cacheData = map.get(tree.id)
+    if (cacheData == null) throw new Error(`Failed to introspect tree ${tree.id}`)
 
-    while ((current = remaining.pop())) {
-      let element: ElementData
-
-      if (isElementReference(current)) {
-        const globalElementId = current.value
-        const globalElement = await this.getGlobalElement(globalElementId, siteVersion)
-        let elementData = globalElement?.data
-
-        if (locale) {
-          const localizedGlobalElement = await this.getLocalizedGlobalElement(
-            globalElementId,
-            locale,
-            siteVersion,
-          )
-
-          if (localizedGlobalElement) {
-            // Update the logic here when we can merge element trees
-            elementData = localizedGlobalElement.data
-
-            localizedResourcesMap.set(globalElementId, localizedGlobalElement.id)
-            localizedGlobalElements.set(localizedGlobalElement.id, localizedGlobalElement)
-          } else {
-            // Record that this localized global element doesn't exist so the
-            // client won't try to fetch it again (which would result in a 404).
-            localizedResourcesMap.set(globalElementId, null)
-          }
-        }
-
-        globalElements.set(globalElementId, globalElement)
-
-        if (elementData == null) continue
-
-        element = elementData as ElementData
-      } else {
-        element = current
-      }
-
-      const elementDescriptors = descriptors.get(element.type)
-
-      if (elementDescriptors == null) continue
-
-      getResourcesFromElementDescriptors(elementDescriptors, element.props)
-
-      function getResourcesFromElementDescriptors(
-        elementDescriptors: Record<string, PropControllerDescriptor>,
-        props: ElementData['props'],
-      ) {
-        Object.entries(elementDescriptors).forEach(([propName, descriptor]) => {
-          getSwatchIds(descriptor, props[propName]).forEach(swatchId => {
-            swatchIds.add(swatchId)
-          })
-
-          getFileIds(descriptor, props[propName]).forEach(fileId => fileIds.add(fileId))
-
-          getTypographyIds(descriptor, props[propName]).forEach(typographyId =>
-            typographyIds.add(typographyId),
-          )
-
-          getTableIds(descriptor, props[propName]).forEach(tableId => tableIds.add(tableId))
-
-          getPageIds(descriptor, props[propName]).forEach(pageId => pageIds.add(pageId))
-
-          getElementChildren(descriptor, props[propName]).forEach(child => {
-            if (!seen.has(child.key)) {
-              seen.add(child.key)
-
-              remaining.push(child)
-            }
-          })
-        })
-      }
-    }
-
-    const typographies = await this.getTypographies([...typographyIds], siteVersion)
-
-    typographies.forEach(typography => {
-      typography?.style.forEach(style => {
-        const swatchId = style.value.color?.swatchId
-
-        if (swatchId != null) swatchIds.add(swatchId)
-      })
-    })
-
-    const pagePathnames = await this.getPagePathnameSlices([...pageIds], siteVersion, { locale })
-
-    const { swatches, files, tables } = await this.getIntrospectedResources(
-      {
-        swatchIds: [...swatchIds],
-        fileIds: [...fileIds],
-        tableIds: [...tableIds],
-      },
-      siteVersion,
-    )
-
-    const apiResources = {
-      [APIResourceType.Swatch]: [...swatchIds].map(id => ({
-        id,
-        value: swatches.find(swatch => swatch?.id === id) ?? null,
-      })),
-      [APIResourceType.File]: [...fileIds].map(id => ({
-        id,
-        value: files.find(file => file?.id === id) ?? null,
-      })),
-      [APIResourceType.Typography]: [...typographyIds].map(id => ({
-        id,
-        value: typographies.find(typography => typography?.id === id) ?? null,
-      })),
-      [APIResourceType.Table]: [...tableIds].map(id => ({
-        id,
-        value: tables.find(table => table?.id === id) ?? null,
-      })),
-      [APIResourceType.PagePathnameSlice]: [...pageIds].map(id => ({
-        id,
-        value: pagePathnames.find(pagePathnameSlice => pagePathnameSlice?.id === id) ?? null,
-        locale,
-      })),
-      [APIResourceType.GlobalElement]: [...globalElements.entries()].map(([id, value]) => ({
-        id,
-        value,
-      })),
-      [APIResourceType.LocalizedGlobalElement]: [...localizedGlobalElements.entries()].map(
-        ([id, value]) => ({
-          id,
-          value,
-          locale,
-        }),
-      ),
-    }
-
-    return {
-      apiResources,
-      localizedResourcesMap:
-        locale != null ? { [locale]: Object.fromEntries(localizedResourcesMap.entries()) } : {},
-    }
+    return cacheData
   }
 
   private async introspectMany(
@@ -1014,10 +870,10 @@ export class MakeswiftClient {
     }
 
     const document: MakeswiftPageDocument = await response.json()
-    const baseLocalizedPage = document.localizedPages.find(({ parentId }) => parentId == null)
+    const rootDocument = pageToRootDocument(document)
 
     const cacheData = await this.introspect(
-      baseLocalizedPage?.data ?? document.data,
+      { id: rootDocument.key, data: rootDocument.rootElement },
       siteVersion,
       // The /v3/pages endpoint returns null for document.locale when the requested locale is the default.
       // This legacy behavior is set to change with the upcoming /v4/pages endpoint.
@@ -1095,7 +951,11 @@ export class MakeswiftClient {
     }
 
     const document = makeswiftComponentDocumentSchema.parse(await response.json())
-    const cacheData = await this.introspect(document.data, siteVersion, locale ?? null)
+    const cacheData = await this.introspect(
+      { id: document.id, data: document.data },
+      siteVersion,
+      locale ?? null,
+    )
 
     return {
       document,
