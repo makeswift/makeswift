@@ -15,22 +15,22 @@ runtime.registerComponent(
         label: 'Alignment',
         options: [
           {
-            icon: IconRadioGroup.Icon.TextAlignLeft,
+            icon: 'text-align-left',
             label: 'Left',
             value: 'left',
           },
           {
-            icon: IconRadioGroup.Icon.TextAlignCenter,
+            icon: 'text-align-center',
             label: 'Center',
             value: 'center',
           },
           {
-            icon: IconRadioGroup.Icon.TextAlignRight,
+            icon: 'text-align-right',
             label: 'Right',
             value: 'right',
           },
           {
-            icon: IconRadioGroup.Icon.TextAlignJustify,
+            icon: 'text-align-justify',
             label: 'Justify',
             value: 'justify',
           },
@@ -41,17 +41,17 @@ runtime.registerComponent(
         label: 'Inline Style',
         options: [
           {
-            icon: IconRadioGroup.Icon.Superscript,
+            icon: 'superscript',
             label: 'Superscript',
             value: 'superscript',
           },
           {
-            icon: IconRadioGroup.Icon.Subscript,
+            icon: 'subscript',
             label: 'Subscript',
             value: 'subscript',
           },
           {
-            icon: IconRadioGroup.Icon.Code,
+            icon: 'code',
             label: 'Code',
             value: 'code',
           },

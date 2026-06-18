@@ -7,12 +7,12 @@ IconRadioGroupDefinition {
     "label": "Block type",
     "options": [
       {
-        "icon": "Code",
+        "icon": "code",
         "label": "Code",
         "value": "code",
       },
       {
-        "icon": "Superscript",
+        "icon": "superscript",
         "label": "Superscript",
         "value": "superscript",
       },
@@ -21,12 +21,12 @@ IconRadioGroupDefinition {
 }
 `;
 
-exports[`IconRadioGroup definition w/ config {"options":[{"value":"code","label":"Code","icon":"Code"},{"value":"superscript","label":"Superscript","icon":"Superscript"}],"defaultValue":"code"} toData returns v1 data for \`code\` when definition version is 1 1`] = `"code"`;
+exports[`IconRadioGroup definition w/ config {"options":[{"value":"code","label":"Code","icon":"code"},{"value":"superscript","label":"Superscript","icon":"superscript"}],"defaultValue":"code"} toData returns v1 data for \`code\` when definition version is 1 1`] = `"code"`;
 
-exports[`IconRadioGroup definition w/ config {"options":[{"value":"code","label":"Code","icon":"Code"},{"value":"superscript","label":"Superscript","icon":"Superscript"}],"defaultValue":"code"} toData returns v1 data for \`superscript\` when definition version is 1 1`] = `"superscript"`;
+exports[`IconRadioGroup definition w/ config {"options":[{"value":"code","label":"Code","icon":"code"},{"value":"superscript","label":"Superscript","icon":"superscript"}],"defaultValue":"code"} toData returns v1 data for \`superscript\` when definition version is 1 1`] = `"superscript"`;
 
-exports[`IconRadioGroup definition w/ config {"options":[{"value":"code","label":"Code","icon":"Code"},{"value":"superscript","label":"Superscript","icon":"Superscript"}]} toData returns v1 data for \`code\` when definition version is 1 1`] = `"code"`;
+exports[`IconRadioGroup definition w/ config {"options":[{"value":"code","label":"Code","icon":"code"},{"value":"superscript","label":"Superscript","icon":"superscript"}]} toData returns v1 data for \`code\` when definition version is 1 1`] = `"code"`;
 
-exports[`IconRadioGroup definition w/ config {"options":[{"value":"code","label":"Code","icon":"Code"},{"value":"superscript","label":"Superscript","icon":"Superscript"}]} toData returns v1 data for \`superscript\` when definition version is 1 1`] = `"superscript"`;
+exports[`IconRadioGroup definition w/ config {"options":[{"value":"code","label":"Code","icon":"code"},{"value":"superscript","label":"Superscript","icon":"superscript"}]} toData returns v1 data for \`superscript\` when definition version is 1 1`] = `"superscript"`;
 
-exports[`IconRadioGroup definition w/ config {"options":[{"value":"code","label":"Code","icon":"Code"},{"value":"superscript","label":"Superscript","icon":"Superscript"}]} toData returns v1 data for \`undefined\` when definition version is 1 1`] = `undefined`;
+exports[`IconRadioGroup definition w/ config {"options":[{"value":"code","label":"Code","icon":"code"},{"value":"superscript","label":"Superscript","icon":"superscript"}]} toData returns v1 data for \`undefined\` when definition version is 1 1`] = `undefined`;
