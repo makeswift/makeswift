@@ -67,10 +67,29 @@ describe('IconRadioGroup', () => {
   })
 
   describe('deserialize', () => {
-    test('accepts legacy `*16` icon ids from older runtimes', () => {
+    test('accepts kebab-case icon ids', () => {
       const def = IconRadioGroupDefinition.deserialize(
         deserializeRecord(
           serializedDefinition([
+            { value: 'code', label: 'Code', icon: 'code' },
+            { value: 'subscript', label: 'Subscript', icon: 'subscript' },
+            { value: 'left', label: 'Left', icon: 'text-align-left' },
+            { value: 'sun', label: 'Sun', icon: 'sun' },
+          ]),
+        ),
+      )
+
+      expect(def.config.options.map((option) => option.icon as string)).toEqual(
+        ['code', 'subscript', 'text-align-left', 'sun'],
+      )
+    })
+
+    test('accepts legacy icon ids from older runtimes', () => {
+      const def = IconRadioGroupDefinition.deserialize(
+        deserializeRecord(
+          serializedDefinition([
+            // `*16` ids serialized by the released `unstable_IconRadioGroup`
+            // RichText `InlinePlugin`.
             { value: 'code', label: 'Code', icon: 'Code16' },
             { value: 'subscript', label: 'Subscript', icon: 'Subscript16' },
             {
@@ -78,26 +97,53 @@ describe('IconRadioGroup', () => {
               label: 'Superscript',
               icon: 'Superscript16',
             },
+            // Unsuffixed PascalCase inline ids serialized by the stabilized
+            // pre-kebab `IconRadioGroup` published on the `canary` channel.
+            { value: 'code-pc', label: 'Code', icon: 'Code' },
+            { value: 'subscript-pc', label: 'Subscript', icon: 'Subscript' },
+            {
+              value: 'superscript-pc',
+              label: 'Superscript',
+              icon: 'Superscript',
+            },
+            // Unsuffixed PascalCase ids serialized by the released
+            // `TextAlignPlugin` toolbar.
             { value: 'left', label: 'Left', icon: 'TextAlignLeft' },
+            { value: 'center', label: 'Center', icon: 'TextAlignCenter' },
+            { value: 'right', label: 'Right', icon: 'TextAlignRight' },
+            { value: 'justify', label: 'Justify', icon: 'TextAlignJustify' },
           ]),
         ),
       )
 
       expect(def.config.options.map((option) => option.icon as string)).toEqual(
-        ['Code16', 'Subscript16', 'Superscript16', 'TextAlignLeft'],
+        [
+          'Code16',
+          'Subscript16',
+          'Superscript16',
+          'Code',
+          'Subscript',
+          'Superscript',
+          'TextAlignLeft',
+          'TextAlignCenter',
+          'TextAlignRight',
+          'TextAlignJustify',
+        ],
       )
     })
 
-    test('rejects unknown icon ids', () => {
-      expect(() =>
-        IconRadioGroupDefinition.deserialize(
-          deserializeRecord(
-            serializedDefinition([
-              { value: 'code', label: 'Code', icon: 'NotAnIcon' },
-            ]),
+    test('rejects PascalCase and unknown icon ids', () => {
+      // `AlignLeft` is a PascalCase accessor key, not a serialized icon id, so
+      // it must not deserialize (unlike the legacy inline/text-align ids).
+      for (const icon of ['AlignLeft', 'NotAnIcon']) {
+        expect(() =>
+          IconRadioGroupDefinition.deserialize(
+            deserializeRecord(
+              serializedDefinition([{ value: 'code', label: 'Code', icon }]),
+            ),
           ),
-        ),
-      ).toThrow()
+        ).toThrow()
+      }
     })
   })
 

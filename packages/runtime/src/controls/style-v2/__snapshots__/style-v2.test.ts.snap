@@ -10,22 +10,22 @@ StyleV2Definition {
         "label": "Alignment",
         "options": [
           {
-            "icon": "TextAlignLeft",
+            "icon": "text-align-left",
             "label": "Left Align",
             "value": "left",
           },
           {
-            "icon": "TextAlignCenter",
+            "icon": "text-align-center",
             "label": "Center Align",
             "value": "center",
           },
           {
-            "icon": "TextAlignRight",
+            "icon": "text-align-right",
             "label": "Right Align",
             "value": "right",
           },
           {
-            "icon": "TextAlignJustify",
+            "icon": "text-align-justify",
             "label": "Justify",
             "value": "justify",
           },
