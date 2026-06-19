@@ -76,10 +76,14 @@ export const makeLocalizedGlobalElement = (id: string): LocalizedGlobalElement =
 
 export const makePagePathnameSlice = (
   pageId: string,
-  { pathname = `/${pageId}` }: { pathname?: string } = {},
+  {
+    pathname = `/${pageId}`,
+    localizedPathname,
+  }: { pathname?: string; localizedPathname?: string | null } = {},
 ): PagePathnameSlice => ({
   __typename: 'PagePathnameSlice',
   id: pageId,
   basePageId: pageId,
   pathname,
+  ...(localizedPathname === undefined ? {} : { localizedPathname }),
 })

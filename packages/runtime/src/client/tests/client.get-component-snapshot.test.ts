@@ -4,7 +4,8 @@ import { http, HttpResponse, graphql } from 'msw'
 import { createReactRuntime } from '../../runtimes/react/testing/react-runtime'
 
 import { server } from '../../mocks/server'
-import { TestWorkingSiteVersion } from '../../testing/fixtures'
+import { makePagePathnameSlice, TestWorkingSiteVersion } from '../../testing/fixtures'
+import { Link } from '../../controls'
 
 const TEST_API_KEY = 'myApiKey'
 const runtime = createReactRuntime()
@@ -272,4 +273,120 @@ describe('getComponentSnapshot using v2 element tree endpoint', () => {
       }
     },
   )
+
+  describe('introspects the element tree using the result locale, not the requested locale', () => {
+    const PAGE_ID = 'page-a'
+    const TEST_LINK_COMPONENT_TYPE = 'test-link-component'
+
+    beforeAll(() => {
+      runtime.registerComponent(() => null, {
+        type: TEST_LINK_COMPONENT_TYPE,
+        label: 'Test Component',
+        props: {
+          link: Link({ label: 'Link' }),
+        },
+      })
+    })
+
+    function makeSlicesHandler() {
+      return jest.fn(({ request }: { request: Request }) => {
+        const ids = new URL(request.url).searchParams.getAll('ids')
+        return HttpResponse.json(ids.map(id => makePagePathnameSlice(id)))
+      })
+    }
+
+    function makeLinkDocument(id: string, locale: string | null): MakeswiftComponentDocument {
+      return {
+        id,
+        name: 'Site Header',
+        data: {
+          type: TEST_LINK_COMPONENT_TYPE,
+          key: `${id}-key`,
+          props: { link: { type: 'OPEN_PAGE', payload: { pageId: PAGE_ID, openInNewTab: false } } },
+        },
+        locale,
+        siteId: '0000-0000',
+        inheritsFromParent: false,
+      }
+    }
+
+    test('uses the default locale (null) after falling back from a missing localized tree', async () => {
+      // Arrange
+      const client = createTestClient()
+      const elementTreeId = 'site-header-123'
+      const requestedLocale = 'fr-FR'
+
+      const treeHandler = jest.fn(({ request }: { request: Request }) => {
+        const locale = new URL(request.url).searchParams.get('locale')
+        if (locale === requestedLocale) {
+          return HttpResponse.text('', { status: 404 })
+        }
+        return HttpResponse.json(makeLinkDocument(elementTreeId, null), { status: 200 })
+      })
+      const slicesHandler = makeSlicesHandler()
+
+      server.use(
+        http.get(`${baseUrl}/${encodeURIComponent(elementTreeId)}`, treeHandler),
+        http.get(`${runtime.apiOrigin}/v3/page-pathname-slices/bulk`, slicesHandler),
+        graphql.operation(() => HttpResponse.json({})),
+      )
+
+      // Act
+      const result = await client.getComponentSnapshot(elementTreeId, {
+        siteVersion: TestWorkingSiteVersion,
+        locale: requestedLocale,
+      })
+
+      // Assert
+      expect(result.document.locale).toBeNull()
+
+      // Confirm introspection ran with that result locale (null), not 'fr-FR'.
+      expect(result.cacheData.apiResources.PagePathnameSlice).toEqual([
+        {
+          id: PAGE_ID,
+          value: makePagePathnameSlice(PAGE_ID, { localizedPathname: null }),
+          locale: null,
+        },
+      ])
+
+      expect(slicesHandler).toHaveBeenCalledTimes(1)
+      expect(slicesHandler.mock.calls[0][0].request.url).not.toContain('locale=')
+    })
+
+    test('uses the requested locale when the localized tree exists', async () => {
+      // Arrange
+      const client = createTestClient()
+      const elementTreeId = 'site-header-123'
+      const requestedLocale = 'fr-FR'
+      const document = makeLinkDocument(elementTreeId, requestedLocale)
+
+      const slicesHandler = makeSlicesHandler()
+      server.use(
+        http.get(`${baseUrl}/${encodeURIComponent(elementTreeId)}`, () =>
+          HttpResponse.json(document, { status: 200 }),
+        ),
+        http.get(`${runtime.apiOrigin}/v3/page-pathname-slices/bulk`, slicesHandler),
+        graphql.operation(() => HttpResponse.json({})),
+      )
+
+      // Act
+      const result = await client.getComponentSnapshot(elementTreeId, {
+        siteVersion: TestWorkingSiteVersion,
+        locale: requestedLocale,
+      })
+
+      // Assert
+      expect(result.document.locale).toBe(requestedLocale)
+      expect(result.cacheData.apiResources.PagePathnameSlice).toEqual([
+        {
+          id: PAGE_ID,
+          value: makePagePathnameSlice(PAGE_ID, { localizedPathname: null }),
+          locale: requestedLocale,
+        },
+      ])
+
+      expect(slicesHandler).toHaveBeenCalledTimes(1)
+      expect(slicesHandler.mock.calls[0][0].request.url).toContain(`locale=${requestedLocale}`)
+    })
+  })
 })
