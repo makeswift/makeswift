@@ -45,6 +45,96 @@ describe('getComponentSnapshot using v2 element tree endpoint', () => {
     expect(result.document.data).toBeNull()
   })
 
+  test('return null document data on a 200 `{ notFound: true }` response', async () => {
+    // Arrange
+    const client = createTestClient()
+    const treeId = 'myTree'
+    server.use(
+      http.get(
+        `${baseUrl}/${treeId}`,
+        () => HttpResponse.json({ notFound: true }, { status: 200 }),
+        { once: true },
+      ),
+    )
+
+    // Act
+    const result = await client.getComponentSnapshot(treeId, {
+      siteVersion: TestWorkingSiteVersion,
+    })
+
+    // Assert
+    expect(result.document).not.toBeNull()
+    expect(result.document.id).toBe(treeId)
+    expect(result.document.data).toBeNull()
+  })
+
+  test('omits the `unstable_enforceSuccess` QSP when `unstable_enforceSuccess` is false', async () => {
+    // Arrange
+    const client = createTestClient()
+    const treeId = 'myTree'
+    const httpHandler = jest.fn(({ request }) => {
+      void request
+      return HttpResponse.text('', { status: 404 })
+    })
+    server.use(http.get(`${baseUrl}/${treeId}`, httpHandler))
+
+    // Act
+    await client.getComponentSnapshot(treeId, {
+      siteVersion: TestWorkingSiteVersion,
+      unstable_enforceSuccess: false,
+    })
+
+    // Assert
+    expect(httpHandler.mock.calls[0][0].request.url).not.toContain('unstable_enforceSuccess')
+  })
+
+  test('performs locale fallback on a 200 `{ notFound: true }` response', async () => {
+    // Arrange
+    const client = createTestClient()
+    const localeToTest = 'fr-FR'
+    const treeId = 'myTree123'
+    const elementTreeKey = 'abc123'
+    const document: MakeswiftComponentDocument = {
+      id: treeId,
+      name: 'myElementTree',
+      data: {
+        type: 'myType',
+        key: elementTreeKey,
+        props: {},
+      },
+      locale: null,
+      siteId: 'mySiteId',
+      inheritsFromParent: false,
+    }
+
+    const httpHandler = jest.fn(({ request }) => {
+      const { searchParams } = new URL(request.url)
+      if (searchParams.get('locale') === localeToTest) {
+        return HttpResponse.json({ notFound: true }, { status: 200 })
+      }
+
+      return HttpResponse.json(document, { status: 200 })
+    })
+
+    server.use(
+      http.get(`${baseUrl}/${encodeURIComponent(treeId)}`, httpHandler),
+      graphql.operation(() => {
+        return HttpResponse.json({})
+      }),
+    )
+
+    // Act
+    const result = await client.getComponentSnapshot(treeId, {
+      siteVersion: TestWorkingSiteVersion,
+      locale: localeToTest,
+    })
+
+    // Assert
+    expect(result.document.data?.key).toBe(elementTreeKey)
+    expect(result.document.locale).toBeNull()
+    expect(httpHandler).toHaveBeenCalledTimes(2)
+  })
+
   test('throws on errors other than 404', async () => {
     // Arrange
     const client = createTestClient()

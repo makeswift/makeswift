@@ -760,63 +760,90 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
       siteVersion: siteVersionPromise,
       locale,
       allowLocaleFallback = true,
+      unstable_enforceSuccess = false,
     }: {
       siteVersion: SiteVersion | null | Promise<SiteVersion | null>
       locale?: string
       allowLocaleFallback?: boolean
+      unstable_enforceSuccess?: boolean
     },
   ): Promise<MakeswiftComponentSnapshot> {
-    const searchParams = new URLSearchParams()
-    if (locale) searchParams.set('locale', locale)
-
     const siteVersion = await siteVersionPromise
     const key = deterministicUUID({ id, locale, seed: this.apiKey.split('-').at(0) })
     const baseLocaleWasRequested = locale == null
     const canAttemptLocaleFallback = !baseLocaleWasRequested && allowLocaleFallback
 
-    let response
-    const responseForRequestedLocale = await this.fetch(
-      `v2/element-trees/${encodeURIComponent(id)}?${searchParams.toString()}`,
-      siteVersion,
-    )
-
-    if (responseForRequestedLocale.status === 404 && canAttemptLocaleFallback) {
-      await failedResponseBody(responseForRequestedLocale)
-      response = await this.fetch(`v2/element-trees/${encodeURIComponent(id)}`, siteVersion)
-    } else {
-      response = responseForRequestedLocale
-    }
-
-    if (!response.ok) {
-      // See comment on `failedResponseBody` for why we always consume the
-      // response body of failed responses.
-      const failedBody = await failedResponseBody(response)
-      if (response.status === 404) {
-        return {
-          document: {
-            id,
-            locale: locale ?? null,
-            data: null,
-          },
-          key,
-          cacheData: CacheData.empty(),
-          meta: {
-            allowLocaleFallback,
-            requestedLocale: locale ?? null,
-          },
+    const parseElementTreeResponse = async (
+      response: Response,
+    ): Promise<MakeswiftComponentDocument | null> => {
+      if (!response.ok) {
+        // See comment on `failedResponseBody` for why we always consume the
+        // response body of failed responses.
+        const failedBody = await failedResponseBody(response)
+        if (response.status === 404) {
+          return null
         }
+
+        console.error(`Failed to get component snapshot for '${id}':`, {
+          response: failedBody,
+          siteVersion,
+          locale,
+        })
+
+        throw new Error(`Failed to get component snapshot for '${id}': ${responseError(response)}`)
       }
 
-      console.error(`Failed to get component snapshot for '${id}':`, {
-        response: failedBody,
-        siteVersion,
-        locale,
-      })
-
-      throw new Error(`Failed to get component snapshot for '${id}': ${responseError(response)}`)
+      const responseBody = await response.json()
+      const parsed = Schema.componentDocumentResponse.parse(responseBody)
+      if ('notFound' in parsed) return null
+      return parsed
     }
 
-    const document = Schema.componentDocument.parse(await response.json())
+    const getElementTree = async (
+      searchParams: URLSearchParams,
+    ): Promise<MakeswiftComponentDocument | null> => {
+      const response = await this.fetch(
+        `v2/element-trees/${encodeURIComponent(id)}?${searchParams.toString()}`,
+        siteVersion,
+      )
+      return await parseElementTreeResponse(response)
+    }
+
+    const getPrimaryTree = async (): Promise<MakeswiftComponentDocument | null> => {
+      const searchParams = new URLSearchParams()
+      if (locale) searchParams.set('locale', locale)
+      if (unstable_enforceSuccess) searchParams.set('unstable_enforceSuccess', 'true')
+      return await getElementTree(searchParams)
+    }
+
+    const getFallbackTree = async (): Promise<MakeswiftComponentDocument | null> => {
+      const searchParams = new URLSearchParams()
+      if (unstable_enforceSuccess) searchParams.set('unstable_enforceSuccess', 'true')
+      return await getElementTree(searchParams)
+    }
+
+    const primaryTree = await getPrimaryTree()
+
+    const result =
+      primaryTree == null && canAttemptLocaleFallback ? await getFallbackTree() : primaryTree
+
+    if (result == null) {
+      return {
+        document: {
+          id,
+          locale: locale ?? null,
+          data: null,
+        },
+        key,
+        cacheData: CacheData.empty(),
+        meta: {
+          allowLocaleFallback,
+          requestedLocale: locale ?? null,
+        },
+      }
+    }
+
+    const document = result
     const cacheData = await this.introspect(document.data, siteVersion, document.locale)
 
     return {
