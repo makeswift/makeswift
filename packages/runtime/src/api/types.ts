@@ -66,6 +66,8 @@ export const APIResourceType: { [R in APIResource as R['__typename']]: R['__type
 
 export type APIResourceType = (typeof APIResourceType)[keyof typeof APIResourceType]
 
+export type APIResourceByType<T extends APIResourceType> = Extract<APIResource, { __typename: T }>
+
 export type APIResourceLocale<R extends APIResource | APIResourceType> = R extends
   | LocalizableAPIResource
   | LocalizableAPIResourceType

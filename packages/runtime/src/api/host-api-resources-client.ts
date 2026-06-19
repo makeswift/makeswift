@@ -1,5 +1,5 @@
 import { type State as ApiClientState } from '../state/api-client/state'
-import { fetchAPIResource } from '../state/api-client/fetch-api-resource'
+
 import { configureClientStore } from '../state/api-client/client-store'
 
 import {
@@ -11,12 +11,10 @@ import {
   type Table,
   type Typography,
   type HttpFetch,
-  APIResourceType,
 } from './types'
 
+import { type SiteVersion, ApiHandlerHeaders, serializeSiteVersion } from './site-version'
 import { ApiResourcesClient } from './api-resources-client'
-
-export { CacheData } from './api-resources-client'
 
 /**
  * NOTE(miguel): This "client" is used to fetch Makeswift API resources needed for the host. For
@@ -54,51 +52,74 @@ export class HostApiResourcesClient extends ApiResourcesClient {
     this.fetch = fetch
   }
 
-  async fetchSwatch(swatchId: string): Promise<Swatch | null> {
-    return await this.store.dispatch(fetchAPIResource(APIResourceType.Swatch, swatchId, this.fetch))
+  protected async fetchSwatchImpl(id: string, version: SiteVersion | null): Promise<Swatch | null> {
+    return await this.fetchVersioned<Swatch>(`/api/makeswift/swatches/${id}`, version)
   }
 
-  async fetchFile(fileId: string): Promise<File | null> {
-    return await this.store.dispatch(fetchAPIResource(APIResourceType.File, fileId, this.fetch))
+  protected async fetchFileImpl(id: string, version: SiteVersion | null): Promise<File | null> {
+    return await this.fetchVersioned<File>(`/api/makeswift/files/${id}`, version)
   }
 
-  async fetchTypography(typographyId: string): Promise<Typography | null> {
-    return await this.store.dispatch(
-      fetchAPIResource(APIResourceType.Typography, typographyId, this.fetch),
+  protected async fetchTypographyImpl(
+    id: string,
+    version: SiteVersion | null,
+  ): Promise<Typography | null> {
+    return await this.fetchVersioned<Typography>(`/api/makeswift/typographies/${id}`, version)
+  }
+
+  protected async fetchGlobalElementImpl(
+    id: string,
+    version: SiteVersion | null,
+  ): Promise<GlobalElement | null> {
+    return await this.fetchVersioned<GlobalElement>(`/api/makeswift/global-elements/${id}`, version)
+  }
+
+  protected async fetchLocalizedGlobalElementImpl(
+    id: string,
+    version: SiteVersion | null,
+    locale: string,
+  ): Promise<LocalizedGlobalElement | null> {
+    return await this.fetchVersioned<LocalizedGlobalElement>(
+      `/api/makeswift/localized-global-elements/${id}/${locale}`,
+      version,
     )
   }
 
-  async fetchGlobalElement(globalElementId: string): Promise<GlobalElement | null> {
-    return await this.store.dispatch(
-      fetchAPIResource(APIResourceType.GlobalElement, globalElementId, this.fetch),
-    )
+  protected async fetchPagePathnameSliceImpl(
+    id: string,
+    version: SiteVersion | null,
+    locale: string | null | undefined,
+  ): Promise<PagePathnameSlice | null> {
+    const url = new URL(`/api/makeswift/page-pathname-slices/${id}`, 'http://n')
+
+    if (locale != null) url.searchParams.set('locale', locale)
+
+    return await this.fetchVersioned<PagePathnameSlice>(url.pathname + url.search, version)
   }
 
-  async fetchLocalizedGlobalElement({
-    globalElementId,
-    locale,
-  }: {
-    globalElementId: string
-    locale: string
-  }): Promise<LocalizedGlobalElement | null> {
-    return await this.store.dispatch(
-      fetchAPIResource(APIResourceType.LocalizedGlobalElement, globalElementId, this.fetch, locale),
-    )
+  protected async fetchTableImpl(id: string, version: SiteVersion | null): Promise<Table | null> {
+    return await this.fetchVersioned<Table>(`/api/makeswift/tables/${id}`, version)
   }
 
-  async fetchPagePathnameSlice({
-    pageId,
-    locale,
-  }: {
-    pageId: string
-    locale: string | null
-  }): Promise<PagePathnameSlice | null> {
-    return await this.store.dispatch(
-      fetchAPIResource(APIResourceType.PagePathnameSlice, pageId, this.fetch, locale),
-    )
-  }
+  private async fetchVersioned<T>(url: string, version: SiteVersion | null): Promise<T | null> {
+    const response = await this.fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...(version != null
+          ? { [ApiHandlerHeaders.SiteVersion]: serializeSiteVersion(version) }
+          : {}),
+      },
+    })
 
-  async fetchTable(tableId: string): Promise<Table | null> {
-    return await this.store.dispatch(fetchAPIResource(APIResourceType.Table, tableId, this.fetch))
+    if (response.status === 404) return null
+    if (!response.ok) throw new Error(response.statusText)
+
+    if (response.headers.get('content-type')?.includes('application/json') !== true) {
+      throw new Error(
+        `Expected JSON response from "${url}" but got "${response.headers.get('content-type')}"`,
+      )
+    }
+
+    return response.json()
   }
 }

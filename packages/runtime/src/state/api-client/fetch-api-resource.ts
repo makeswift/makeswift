@@ -1,6 +1,6 @@
 import { type ThunkAction } from '@reduxjs/toolkit'
 
-import { type SiteVersion, ApiHandlerHeaders, serializeSiteVersion } from '../../api/site-version'
+import { type SiteVersion } from '../../api/site-version'
 
 import * as SiteVersionState from '../modules/site-version'
 
@@ -11,15 +11,8 @@ import { setLocalizedResourceId } from '../host-api'
 import {
   APIResourceType,
   type APIResource,
-  type Swatch,
-  type File,
-  type Typography,
-  type GlobalElement,
-  type PagePathnameSlice,
-  type Table,
-  type LocalizedGlobalElement,
+  type APIResourceByType,
   type APIResourceLocale,
-  type HttpFetch,
 } from '../../api/types'
 
 import { type State, getHasAPIResource, getAPIResource, getLocalizedResourceId } from './state'
@@ -29,31 +22,13 @@ type Thunk<ReturnType> = ThunkAction<ReturnType, State, unknown, Action>
 export function fetchAPIResource<T extends APIResourceType>(
   resourceType: T,
   resourceId: string,
-  fetch: HttpFetch,
+  fetchResource: (
+    resourceId: string,
+    version: SiteVersion | null,
+    locale?: APIResourceLocale<T>,
+  ) => Promise<APIResourceByType<T> | null>,
   locale?: APIResourceLocale<T>,
-): Thunk<Promise<Extract<APIResource, { __typename: T }> | null>> {
-  const fetchVersioned = async <T>(url: string, version: SiteVersion | null): Promise<T | null> => {
-    const response = await fetch(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...(version != null
-          ? { [ApiHandlerHeaders.SiteVersion]: serializeSiteVersion(version) }
-          : {}),
-      },
-    })
-
-    if (response.status === 404) return null
-    if (!response.ok) throw new Error(response.statusText)
-
-    if (response.headers.get('content-type')?.includes('application/json') !== true) {
-      throw new Error(
-        `Expected JSON response from "${url}" but got "${response.headers.get('content-type')}"`,
-      )
-    }
-
-    return response.json()
-  }
-
+): Thunk<Promise<APIResourceByType<T> | null>> {
   return async (dispatch, getState) => {
     const state = getState()
     const version = SiteVersionState.getSiteVersion(state.siteVersion)
@@ -66,25 +41,12 @@ export function fetchAPIResource<T extends APIResourceType>(
 
     switch (resourceType) {
       case APIResourceType.Swatch:
-        resource = await fetchVersioned<Swatch>(`/api/makeswift/swatches/${resourceId}`, version)
-        break
-
       case APIResourceType.File:
-        resource = await fetchVersioned<File>(`/api/makeswift/files/${resourceId}`, version)
-        break
-
       case APIResourceType.Typography:
-        resource = await fetchVersioned<Typography>(
-          `/api/makeswift/typographies/${resourceId}`,
-          version,
-        )
-        break
-
       case APIResourceType.GlobalElement:
-        resource = await fetchVersioned<GlobalElement>(
-          `/api/makeswift/global-elements/${resourceId}`,
-          version,
-        )
+      case APIResourceType.PagePathnameSlice:
+      case APIResourceType.Table:
+        resource = await fetchResource(resourceId, version, locale)
         break
 
       case APIResourceType.LocalizedGlobalElement: {
@@ -96,10 +58,7 @@ export function fetchAPIResource<T extends APIResourceType>(
           return null
         }
 
-        resource = await fetchVersioned<LocalizedGlobalElement>(
-          `/api/makeswift/localized-global-elements/${resourceId}/${locale}`,
-          version,
-        )
+        resource = await fetchResource(resourceId, version, locale)
 
         dispatch(
           setLocalizedResourceId({
@@ -112,25 +71,12 @@ export function fetchAPIResource<T extends APIResourceType>(
         break
       }
 
-      case APIResourceType.PagePathnameSlice: {
-        const url = new URL(`/api/makeswift/page-pathname-slices/${resourceId}`, 'http://n')
-
-        if (locale != null) url.searchParams.set('locale', locale)
-
-        resource = await fetchVersioned<PagePathnameSlice>(url.pathname + url.search, version)
-        break
-      }
-
-      case APIResourceType.Table:
-        resource = await fetchVersioned<Table>(`/api/makeswift/tables/${resourceId}`, version)
-        break
-
       default:
         resource = null
     }
 
     dispatch(apiResourceFulfilled(resourceType, resourceId, resource, locale))
 
-    return resource as Extract<APIResource, { __typename: T }> | null
+    return resource as APIResourceByType<T> | null
   }
 }

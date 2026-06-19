@@ -170,7 +170,7 @@ export class MakeswiftRestAPIClient {
   async getPagePathnameSlice(
     pageId: string,
     siteVersion: SiteVersion | null,
-    { locale }: { locale?: string } = {},
+    { locale }: { locale?: string | null } = {},
   ): Promise<PagePathnameSlice | null> {
     const pagePathnameSlices = await this.getPagePathnameSlices([pageId], siteVersion, { locale })
 
