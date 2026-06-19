@@ -5,7 +5,14 @@ import { Table } from '@makeswift/prop-controllers'
 import { createReactRuntime } from '../../runtimes/react/testing/react-runtime'
 
 import { server } from '../../mocks/server'
-import { TestWorkingSiteVersion } from '../../testing/fixtures'
+import { TestWorkingSiteVersion } from '../../testing/fixtures/site-version'
+import {
+  makeSwatch,
+  makeFile,
+  makeTable,
+  makeTypography,
+  makePagePathnameSlice,
+} from '../../testing/fixtures/resources'
 import { Color, Image, Link, unstable_Typography } from '../../controls'
 import { type Element } from '../../state/read-only-state'
 
@@ -30,48 +37,6 @@ runtime.registerComponent(() => null, {
 
 function createTestClient() {
   return new MakeswiftClient(TEST_API_KEY, { runtime })
-}
-
-function makeSwatch(id: string, hue = 0) {
-  return { __typename: 'Swatch' as const, id, hue, saturation: 100, lightness: 50 }
-}
-
-function makeFile(id: string) {
-  return {
-    __typename: 'File' as const,
-    id,
-    name: `file-${id}`,
-    extension: 'png',
-    publicUrl: `https://example.com/${id}`,
-    dimensions: { width: 100, height: 100 },
-  }
-}
-
-function makeTable(id: string) {
-  return { __typename: 'Table' as const, id, name: `table-${id}`, columns: [] }
-}
-
-function makeTypography(id: string, styleSwatchId: string | null = null) {
-  return {
-    __typename: 'Typography' as const,
-    id,
-    name: `typo-${id}`,
-    style: [
-      {
-        deviceId: 'desktop',
-        value: styleSwatchId != null ? { color: { swatchId: styleSwatchId, alpha: 1 } } : {},
-      },
-    ],
-  }
-}
-
-function makePagePathnameSlice(pageId: string, pathname = `/${pageId}`) {
-  return {
-    __typename: 'PagePathnameSlice' as const,
-    id: `slice-${pageId}`,
-    basePageId: pageId,
-    pathname,
-  }
 }
 
 function componentTree(
@@ -676,7 +641,7 @@ describe('introspectMany', () => {
       const client = createTestClient()
 
       // typo-1 has a style swatch 'typo-swatch'; 'direct-swatch' is only in tree-direct.
-      const typo1 = makeTypography('typo-1', 'typo-swatch')
+      const typo1 = makeTypography('typo-1', { swatchId: 'typo-swatch' })
 
       server.use(
         http.get(`${runtime.apiOrigin}/v3/typographies/bulk`, ({ request }) => {
