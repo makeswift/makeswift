@@ -2,6 +2,7 @@ import { type FetchableValue } from '@makeswift/controls'
 
 import { type Store as ApiClientStore } from '../state/api-client/store'
 import * as ApiClientState from '../state/api-client/state'
+import { fetchAPIResource } from '../state/api-client/fetch-api-resource'
 
 import {
   type File,
@@ -16,6 +17,8 @@ import {
   type Typography,
   APIResourceType,
 } from './types'
+
+import { type SiteVersion } from './site-version'
 
 export type CacheData = ApiClientState.SerializedState
 
@@ -37,7 +40,11 @@ export abstract class ApiResourcesClient {
     this.subscribe = this.store.subscribe
   }
 
-  abstract fetchSwatch(swatchId: string): Promise<Swatch | null>
+  async fetchSwatch(swatchId: string): Promise<Swatch | null> {
+    const fetch = (id: string, version: SiteVersion | null) => this.fetchSwatchImpl(id, version)
+
+    return await this.store.dispatch(fetchAPIResource(APIResourceType.Swatch, swatchId, fetch))
+  }
 
   readSwatch(swatchId: string): Swatch | null {
     return ApiClientState.getAPIResource(this.store.getState(), APIResourceType.Swatch, swatchId)
@@ -51,7 +58,11 @@ export abstract class ApiResourcesClient {
     })
   }
 
-  abstract fetchFile(fileId: string): Promise<File | null>
+  async fetchFile(fileId: string): Promise<File | null> {
+    const fetch = (id: string, version: SiteVersion | null) => this.fetchFileImpl(id, version)
+
+    return await this.store.dispatch(fetchAPIResource(APIResourceType.File, fileId, fetch))
+  }
 
   readFile(fileId: string): File | null {
     return ApiClientState.getAPIResource(this.store.getState(), APIResourceType.File, fileId)
@@ -65,7 +76,13 @@ export abstract class ApiResourcesClient {
     })
   }
 
-  abstract fetchTypography(typographyId: string): Promise<Typography | null>
+  async fetchTypography(typographyId: string): Promise<Typography | null> {
+    const fetch = (id: string, version: SiteVersion | null) => this.fetchTypographyImpl(id, version)
+
+    return await this.store.dispatch(
+      fetchAPIResource(APIResourceType.Typography, typographyId, fetch),
+    )
+  }
 
   readTypography(typographyId: string): Typography | null {
     return ApiClientState.getAPIResource(
@@ -83,7 +100,14 @@ export abstract class ApiResourcesClient {
     })
   }
 
-  abstract fetchGlobalElement(globalElementId: string): Promise<GlobalElement | null>
+  async fetchGlobalElement(globalElementId: string): Promise<GlobalElement | null> {
+    const fetch = (id: string, version: SiteVersion | null) =>
+      this.fetchGlobalElementImpl(id, version)
+
+    return await this.store.dispatch(
+      fetchAPIResource(APIResourceType.GlobalElement, globalElementId, fetch),
+    )
+  }
 
   readGlobalElement(globalElementId: string): GlobalElement | null {
     return ApiClientState.getAPIResource(
@@ -93,13 +117,22 @@ export abstract class ApiResourcesClient {
     )
   }
 
-  abstract fetchLocalizedGlobalElement({
+  async fetchLocalizedGlobalElement({
     globalElementId,
     locale,
   }: {
     globalElementId: string
     locale: string
-  }): Promise<LocalizedGlobalElement | null>
+  }): Promise<LocalizedGlobalElement | null> {
+    const fetch = (id: string, version: SiteVersion | null, locale: string | null | undefined) => {
+      if (locale == null) throw new Error('Locale is required to fetch LocalizedGlobalElement')
+      return this.fetchLocalizedGlobalElementImpl(id, version, locale)
+    }
+
+    return await this.store.dispatch(
+      fetchAPIResource(APIResourceType.LocalizedGlobalElement, globalElementId, fetch, locale),
+    )
+  }
 
   readLocalizedGlobalElement({
     globalElementId,
@@ -113,6 +146,21 @@ export abstract class ApiResourcesClient {
       APIResourceType.LocalizedGlobalElement,
       globalElementId,
       locale,
+    )
+  }
+
+  async fetchPagePathnameSlice({
+    pageId,
+    locale,
+  }: {
+    pageId: string
+    locale: string | null
+  }): Promise<PagePathnameSlice | null> {
+    const fetch = (id: string, version: SiteVersion | null, locale: string | null | undefined) =>
+      this.fetchPagePathnameSliceImpl(id, version, locale)
+
+    return await this.store.dispatch(
+      fetchAPIResource(APIResourceType.PagePathnameSlice, pageId, fetch, locale),
     )
   }
 
@@ -130,14 +178,6 @@ export abstract class ApiResourcesClient {
       locale,
     )
   }
-
-  abstract fetchPagePathnameSlice({
-    pageId,
-    locale,
-  }: {
-    pageId: string
-    locale: string | null
-  }): Promise<PagePathnameSlice | null>
 
   resolvePagePathnameSlice({
     pageId,
@@ -178,7 +218,11 @@ export abstract class ApiResourcesClient {
     }
   }
 
-  abstract fetchTable(tableId: string): Promise<Table | null>
+  async fetchTable(tableId: string): Promise<Table | null> {
+    const fetch = (id: string, version: SiteVersion | null) => this.fetchTableImpl(id, version)
+
+    return await this.store.dispatch(fetchAPIResource(APIResourceType.Table, tableId, fetch))
+  }
 
   readTable(tableId: string): Table | null {
     return ApiClientState.getAPIResource(this.store.getState(), APIResourceType.Table, tableId)
@@ -195,4 +239,34 @@ export abstract class ApiResourcesClient {
   readSnippet(snippetId: string): Snippet | null {
     return ApiClientState.getAPIResource(this.store.getState(), APIResourceType.Snippet, snippetId)
   }
+
+  protected abstract fetchSwatchImpl(
+    id: string,
+    version: SiteVersion | null,
+  ): Promise<Swatch | null>
+
+  protected abstract fetchFileImpl(id: string, version: SiteVersion | null): Promise<File | null>
+  protected abstract fetchTypographyImpl(
+    id: string,
+    version: SiteVersion | null,
+  ): Promise<Typography | null>
+
+  protected abstract fetchGlobalElementImpl(
+    id: string,
+    version: SiteVersion | null,
+  ): Promise<GlobalElement | null>
+
+  protected abstract fetchLocalizedGlobalElementImpl(
+    id: string,
+    version: SiteVersion | null,
+    locale: string,
+  ): Promise<LocalizedGlobalElement | null>
+
+  protected abstract fetchPagePathnameSliceImpl(
+    id: string,
+    version: SiteVersion | null,
+    locale: string | null | undefined,
+  ): Promise<PagePathnameSlice | null>
+
+  protected abstract fetchTableImpl(id: string, version: SiteVersion | null): Promise<Table | null>
 }
