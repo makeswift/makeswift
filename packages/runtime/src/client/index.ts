@@ -817,7 +817,7 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
     }
 
     const document = Schema.componentDocument.parse(await response.json())
-    const cacheData = await this.introspect(document.data, siteVersion, locale ?? null)
+    const cacheData = await this.introspect(document.data, siteVersion, document.locale)
 
     return {
       document,
