@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.7-canary.8
+
+### Patch Changes
+
+- ee7c9ba: feat: add experimental option to `getComponentSnapshot` to enforce 200 responses from the Makeswift API.
+
 ## 0.28.7-canary.7
 
 ### Patch Changes
