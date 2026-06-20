@@ -16,3 +16,12 @@ export const componentDocumentFallback = z.object({
   locale: z.string().nullable(),
   data: z.null(),
 })
+
+const unstableNotFoundComponentDocumentResponse = z.object({
+  notFound: z.literal(true),
+})
+
+export const componentDocumentResponse = z.union([
+  unstableNotFoundComponentDocumentResponse,
+  componentDocument,
+])
