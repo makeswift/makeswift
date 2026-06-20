@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.7-canary.7
+
+### Patch Changes
+
+- db0d251: fix: introspect component element trees based on their actual locale, rather than the requested one
+
 ## 0.28.7-canary.6
 
 ### Patch Changes
