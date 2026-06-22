@@ -77,22 +77,22 @@ RichTextV2Definition {
                   "label": "Alignment",
                   "options": [
                     {
-                      "icon": "TextAlignLeft",
+                      "icon": "text-align-left",
                       "label": "Left Align",
                       "value": "left",
                     },
                     {
-                      "icon": "TextAlignCenter",
+                      "icon": "text-align-center",
                       "label": "Center Align",
                       "value": "center",
                     },
                     {
-                      "icon": "TextAlignRight",
+                      "icon": "text-align-right",
                       "label": "Right Align",
                       "value": "right",
                     },
                     {
-                      "icon": "TextAlignJustify",
+                      "icon": "text-align-justify",
                       "label": "Justify",
                       "value": "justify",
                     },
@@ -110,17 +110,17 @@ RichTextV2Definition {
               "label": "Inline",
               "options": [
                 {
-                  "icon": "Superscript",
+                  "icon": "superscript",
                   "label": "Superscript",
                   "value": "superscript",
                 },
                 {
-                  "icon": "Subscript",
+                  "icon": "subscript",
                   "label": "Subscript",
                   "value": "subscript",
                 },
                 {
-                  "icon": "Code",
+                  "icon": "code",
                   "label": "Code",
                   "value": "code",
                 },
@@ -226,22 +226,22 @@ exports[`RichTextV2 serialization deserialized definition in block mode contains
                   "label": "Alignment",
                   "options": [
                     {
-                      "icon": "TextAlignLeft",
+                      "icon": "text-align-left",
                       "label": "Left Align",
                       "value": "left",
                     },
                     {
-                      "icon": "TextAlignCenter",
+                      "icon": "text-align-center",
                       "label": "Center Align",
                       "value": "center",
                     },
                     {
-                      "icon": "TextAlignRight",
+                      "icon": "text-align-right",
                       "label": "Right Align",
                       "value": "right",
                     },
                     {
-                      "icon": "TextAlignJustify",
+                      "icon": "text-align-justify",
                       "label": "Justify",
                       "value": "justify",
                     },
@@ -263,17 +263,17 @@ exports[`RichTextV2 serialization deserialized definition in block mode contains
               "label": "Inline",
               "options": [
                 {
-                  "icon": "Superscript",
+                  "icon": "superscript",
                   "label": "Superscript",
                   "value": "superscript",
                 },
                 {
-                  "icon": "Subscript",
+                  "icon": "subscript",
                   "label": "Subscript",
                   "value": "subscript",
                 },
                 {
-                  "icon": "Code",
+                  "icon": "code",
                   "label": "Code",
                   "value": "code",
                 },

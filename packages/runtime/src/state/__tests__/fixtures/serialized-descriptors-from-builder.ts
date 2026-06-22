@@ -296,10 +296,10 @@ export const getMockedSerializedDescriptorsFromBuilder: (createMessagePort: () =
                     config: {
                       label: 'Alignment',
                       options: [
-                        { icon: 'TextAlignLeft', label: 'Left Align', value: 'left' },
-                        { icon: 'TextAlignCenter', label: 'Center Align', value: 'center' },
-                        { icon: 'TextAlignRight', label: 'Right Align', value: 'right' },
-                        { icon: 'TextAlignJustify', label: 'Justify', value: 'justify' },
+                        { icon: 'text-align-left', label: 'Left Align', value: 'left' },
+                        { icon: 'text-align-center', label: 'Center Align', value: 'center' },
+                        { icon: 'text-align-right', label: 'Right Align', value: 'right' },
+                        { icon: 'text-align-justify', label: 'Justify', value: 'justify' },
                       ],
                       defaultValue: 'left',
                     },
@@ -318,9 +318,9 @@ export const getMockedSerializedDescriptorsFromBuilder: (createMessagePort: () =
                 config: {
                   label: 'Inline',
                   options: [
-                    { icon: 'Superscript', label: 'Superscript', value: 'superscript' },
-                    { icon: 'Subscript', label: 'Subscript', value: 'subscript' },
-                    { icon: 'Code', label: 'Code', value: 'code' },
+                    { icon: 'superscript', label: 'Superscript', value: 'superscript' },
+                    { icon: 'subscript', label: 'Subscript', value: 'subscript' },
+                    { icon: 'code', label: 'Code', value: 'code' },
                   ],
                 },
               },

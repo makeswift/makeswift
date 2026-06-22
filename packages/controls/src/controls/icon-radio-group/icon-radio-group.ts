@@ -66,9 +66,9 @@ class Definition<C extends Config> extends ControlDefinition<
           z.object({
             value: item,
             label: z.string(),
-            // Accept legacy `*16` ids alongside the current names so payloads
-            // serialized by older runtimes still deserialize; the builder maps
-            // both forms to its icon components.
+            // Accept legacy `*16` ids alongside the current kebab-case names so
+            // definitions serialized by older runtimes (e.g. RichText panels)
+            // still deserialize; the builder maps both forms to its icons.
             icon: z.union([
               z.nativeEnum(Definition.Icon),
               z.nativeEnum(legacyIcons),
