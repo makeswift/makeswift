@@ -1,5 +1,20 @@
 # @makeswift/express-react
 
+## 0.1.9
+
+### Patch Changes
+
+- b26b1a8: refactor: switch `Makeswift` client to use runtime's `fetch` implementation
+- Updated dependencies [b26b1a8]
+- Updated dependencies [c67f4db]
+- Updated dependencies [5a4565f]
+- Updated dependencies [9ae35cd]
+- Updated dependencies [1374159]
+- Updated dependencies [ee7c9ba]
+- Updated dependencies [c6dd808]
+- Updated dependencies [db0d251]
+  - @makeswift/runtime@0.28.7
+
 ## 0.1.8
 
 ### Patch Changes
