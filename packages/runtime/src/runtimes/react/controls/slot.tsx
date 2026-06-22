@@ -72,11 +72,19 @@ export function Slot<T extends ElementType = 'div'>({
   })
 
   useEffect(() => {
-    if (element == null || control == null) return
+    if (element == null || control == null) {
+      console.log('[ARR-615:host] Slot useEffect skipped', { element: !!element, control: !!control })
+      return
+    }
+
+    console.log('[ARR-615:host] Slot pollBoxModel started')
 
     return pollBoxModel({
       element,
-      onBoxModelChange: boxModel => control.changeContainerBoxModel(boxModel),
+      onBoxModelChange: boxModel => {
+        console.log('[ARR-615:host] boxModel changed')
+        control.changeContainerBoxModel(boxModel)
+      },
     })
   }, [element, control])
 
