@@ -37,8 +37,8 @@ export type ResponsiveLengthPropControllerData = z.infer<
 >
 
 export type LengthOption =
-  | { value: 'px'; label: 'Pixels'; icon: 'Px16' }
-  | { value: '%'; label: 'Percentage'; icon: 'Percent16' }
+  | { value: 'px'; label: string }
+  | { value: '%'; label: string }
 
 export type ResponsiveLengthOptions = Options<{
   preset?: ResponsiveLengthPropControllerData

@@ -51,6 +51,7 @@ describe('MakeswiftApiHandler', () => {
         webhook: true,
         localizedPagesOnlineByDefault: true,
         previewToken: true,
+        styleWidthAuto: true,
       })
     })
   })

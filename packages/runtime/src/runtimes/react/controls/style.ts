@@ -50,9 +50,12 @@ export function styleV1Css(
         style?.borderRadius,
         style?.textStyle,
       ] as const,
-      ([width, margin, padding, border, borderRadius, textStyle]) => ({
+      ([width, margin, padding, border, borderRadius, textStyle]) => {
+        const widthStr = widthToString(width)
+        return {
         ...(properties.includes(Style.Width) && {
-          width: widthToString(width) ?? '100%',
+          width: widthStr ?? '100%',
+          ...(widthStr === 'fit-content' && { minWidth: '20px' }),
         }),
         ...(properties.includes(Style.Margin) &&
           marginPropertyDataToStyle(margin ?? defaultMargin, defaultMargin)),
@@ -82,12 +85,14 @@ export function styleV1Css(
           textTransform: textStyle?.textTransform ?? [],
           fontStyle: textStyle?.fontStyle ?? [],
         }),
-      }),
+      }},
     ),
   }
 
   function widthToString(widthProperty: WidthPropertyData | undefined): string | null {
     if (widthProperty == null) return null
+
+    if (widthProperty === 'auto') return 'fit-content'
 
     return lengthPercentageDataToString(widthProperty)
   }
