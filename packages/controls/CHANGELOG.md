@@ -1,28 +1,13 @@
 # @makeswift/controls
 
-## 0.1.20-canary.3
-
-### Patch Changes
-
-- 5a4565f: `IconRadioGroup` icon names are now lowercase kebab-case (e.g. `icon: 'align-left'`, `icon: 'sun'`), matching the convention used for component icons in `registerComponent`. The `IconRadioGroup.Icon.*` accessors still work and now resolve to the kebab-case names. The set of available icons has also been expanded to the full builder icon set, with brand/company logos namespaced under a `logo-` prefix (e.g. `icon: 'logo-apple'`, `icon: 'logo-bigcommerce'`). Legacy icon ids serialized by older runtimes still deserialize: the `*16` ids (`Code16`, `Subscript16`, `Superscript16`) from the released `unstable_IconRadioGroup`, plus the unsuffixed PascalCase inline ids (`Code`, `Subscript`, `Superscript`) from the stabilized pre-kebab `IconRadioGroup` published on the `canary` channel.
-
-## 0.1.20-canary.2
-
-### Patch Changes
-
-- 1374159: Renamed `unstable_IconRadioGroup` to `IconRadioGroup`. The `unstable_IconRadioGroup` export has been removed.
-
-## 0.1.20-canary.1
-
-### Patch Changes
-
-- 9c5aecf: Revert the unified `text`/`number` data-type tags back to per-control legacy tags (`text-input::v1`, `text-area::v1`, `code::v1`, `number::v1`). Unifying the tags caused a regression when upgrading the builder's runtime. Controls continue to read every accepted data type, so cross-control interop is preserved.
-
-## 0.1.20-canary.0
+## 0.1.20
 
 ### Patch Changes
 
 - 02a6d2a: Introduce `Slider` control, a numeric input with `min`/`max`/`step` and an optional `defaultValue`, rendered as a slider in the builder property panels.
+- 9c5aecf: Revert the unified `text`/`number` data-type tags back to per-control legacy tags (`text-input::v1`, `text-area::v1`, `code::v1`, `number::v1`). Unifying the tags caused a regression when upgrading the builder's runtime. Controls continue to read every accepted data type, so cross-control interop is preserved.
+- 5a4565f: `IconRadioGroup` icon names are now lowercase kebab-case (e.g. `icon: 'align-left'`, `icon: 'sun'`), matching the convention used for component icons in `registerComponent`. The `IconRadioGroup.Icon.*` accessors still work and now resolve to the kebab-case names. The set of available icons has also been expanded to the full builder icon set, with brand/company logos namespaced under a `logo-` prefix (e.g. `icon: 'logo-apple'`, `icon: 'logo-bigcommerce'`). Legacy icon ids serialized by older runtimes still deserialize: the `*16` ids (`Code16`, `Subscript16`, `Superscript16`) from the released `unstable_IconRadioGroup`, plus the unsuffixed PascalCase inline ids (`Code`, `Subscript`, `Superscript`) from the stabilized pre-kebab `IconRadioGroup` published on the `canary` channel.
+- 1374159: Renamed `unstable_IconRadioGroup` to `IconRadioGroup`. The `unstable_IconRadioGroup` export has been removed.
 
 ## 0.1.19
 

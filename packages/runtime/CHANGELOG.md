@@ -1,74 +1,23 @@
 # @makeswift/runtime
 
-## 0.28.7-canary.9
-
-### Patch Changes
-
-- 5a4565f: `IconRadioGroup` icon names are now lowercase kebab-case (e.g. `icon: 'align-left'`, `icon: 'sun'`), matching the convention used for component icons in `registerComponent`. The `IconRadioGroup.Icon.*` accessors still work and now resolve to the kebab-case names. The set of available icons has also been expanded to the full builder icon set, with brand/company logos namespaced under a `logo-` prefix (e.g. `icon: 'logo-apple'`, `icon: 'logo-bigcommerce'`). Legacy icon ids serialized by older runtimes still deserialize: the `*16` ids (`Code16`, `Subscript16`, `Superscript16`) from the released `unstable_IconRadioGroup`, plus the unsuffixed PascalCase inline ids (`Code`, `Subscript`, `Superscript`) from the stabilized pre-kebab `IconRadioGroup` published on the `canary` channel.
-- Updated dependencies [5a4565f]
-  - @makeswift/controls@0.1.20-canary.3
-  - @makeswift/prop-controllers@0.4.14-canary.3
-
-## 0.28.7-canary.8
-
-### Patch Changes
-
-- ee7c9ba: feat: add experimental option to `getComponentSnapshot` to enforce 200 responses from the Makeswift API.
-
-## 0.28.7-canary.7
-
-### Patch Changes
-
-- db0d251: fix: introspect component element trees based on their actual locale, rather than the requested one
-
-## 0.28.7-canary.6
+## 0.28.7
 
 ### Patch Changes
 
 - b26b1a8: refactor: switch `Makeswift` client to use runtime's `fetch` implementation
-
-## 0.28.7-canary.5
-
-### Patch Changes
-
-- c6dd808: refactor: extract resources fetching etc into a REST API client; removed two undocumented internal exports from the `@makeswift/runtime/client` entrypoint
-
-## 0.28.7-canary.4
-
-### Patch Changes
-
-- 9ae35cd: refactor: move GraphQL ops into a separate client
-
-## 0.28.7-canary.3
-
-### Patch Changes
-
-- 1374159: Renamed `unstable_IconRadioGroup` to `IconRadioGroup`. The `unstable_IconRadioGroup` export has been removed.
-- Updated dependencies [1374159]
-  - @makeswift/controls@0.1.20-canary.2
-  - @makeswift/prop-controllers@0.4.14-canary.2
-
-## 0.28.7-canary.2
-
-### Patch Changes
-
 - c67f4db: fix: await Next.js revalidation within Pages Router revalidation handler.
-
-## 0.28.7-canary.1
-
-### Patch Changes
-
-- Updated dependencies [9c5aecf]
-  - @makeswift/controls@0.1.20-canary.1
-  - @makeswift/prop-controllers@0.4.14-canary.1
-
-## 0.28.7-canary.0
-
-### Patch Changes
-
+- 5a4565f: `IconRadioGroup` icon names are now lowercase kebab-case (e.g. `icon: 'align-left'`, `icon: 'sun'`), matching the convention used for component icons in `registerComponent`. The `IconRadioGroup.Icon.*` accessors still work and now resolve to the kebab-case names. The set of available icons has also been expanded to the full builder icon set, with brand/company logos namespaced under a `logo-` prefix (e.g. `icon: 'logo-apple'`, `icon: 'logo-bigcommerce'`). Legacy icon ids serialized by older runtimes still deserialize: the `*16` ids (`Code16`, `Subscript16`, `Superscript16`) from the released `unstable_IconRadioGroup`, plus the unsuffixed PascalCase inline ids (`Code`, `Subscript`, `Superscript`) from the stabilized pre-kebab `IconRadioGroup` published on the `canary` channel.
+- 9ae35cd: refactor: move GraphQL ops into a separate client
+- 1374159: Renamed `unstable_IconRadioGroup` to `IconRadioGroup`. The `unstable_IconRadioGroup` export has been removed.
+- ee7c9ba: feat: add experimental option to `getComponentSnapshot` to enforce 200 responses from the Makeswift API.
+- c6dd808: refactor: extract resources fetching etc into a REST API client; removed two undocumented internal exports from the `@makeswift/runtime/client` entrypoint
+- db0d251: fix: introspect component element trees based on their actual locale, rather than the requested one
 - Updated dependencies [02a6d2a]
-  - @makeswift/controls@0.1.20-canary.0
-  - @makeswift/prop-controllers@0.4.14-canary.0
+- Updated dependencies [9c5aecf]
+- Updated dependencies [5a4565f]
+- Updated dependencies [1374159]
+  - @makeswift/controls@0.1.20
+  - @makeswift/prop-controllers@0.4.14
 
 ## 0.28.6
 

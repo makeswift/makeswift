@@ -1,73 +1,19 @@
 # @makeswift/react-router
 
-## 0.1.9-canary.9
-
-### Patch Changes
-
-- Updated dependencies [5a4565f]
-  - @makeswift/runtime@0.28.7-canary.9
-
-## 0.1.9-canary.8
-
-### Patch Changes
-
-- Updated dependencies [ee7c9ba]
-  - @makeswift/runtime@0.28.7-canary.8
-
-## 0.1.9-canary.7
-
-### Patch Changes
-
-- Updated dependencies [db0d251]
-  - @makeswift/runtime@0.28.7-canary.7
-
-## 0.1.9-canary.6
+## 0.1.9
 
 ### Patch Changes
 
 - b26b1a8: refactor: switch `Makeswift` client to use runtime's `fetch` implementation
 - Updated dependencies [b26b1a8]
-  - @makeswift/runtime@0.28.7-canary.6
-
-## 0.1.9-canary.5
-
-### Patch Changes
-
-- Updated dependencies [c6dd808]
-  - @makeswift/runtime@0.28.7-canary.5
-
-## 0.1.9-canary.4
-
-### Patch Changes
-
-- Updated dependencies [9ae35cd]
-  - @makeswift/runtime@0.28.7-canary.4
-
-## 0.1.9-canary.3
-
-### Patch Changes
-
-- Updated dependencies [1374159]
-  - @makeswift/runtime@0.28.7-canary.3
-
-## 0.1.9-canary.2
-
-### Patch Changes
-
 - Updated dependencies [c67f4db]
-  - @makeswift/runtime@0.28.7-canary.2
-
-## 0.1.9-canary.1
-
-### Patch Changes
-
-- @makeswift/runtime@0.28.7-canary.1
-
-## 0.1.9-canary.0
-
-### Patch Changes
-
-- @makeswift/runtime@0.28.7-canary.0
+- Updated dependencies [5a4565f]
+- Updated dependencies [9ae35cd]
+- Updated dependencies [1374159]
+- Updated dependencies [ee7c9ba]
+- Updated dependencies [c6dd808]
+- Updated dependencies [db0d251]
+  - @makeswift/runtime@0.28.7
 
 ## 0.1.8
 
