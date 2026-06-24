@@ -15,16 +15,6 @@
     "@makeswift/hono-react": "0.0.0"
   },
   "changesets": [
-    "add-slider-control",
-    "control-legacy-data-type-markers",
-    "dry-suns-enjoy",
-    "eighty-grapes-repeat",
-    "icon-radio-group-kebab-case-icons",
-    "many-worlds-return",
-    "pretty-oranges-type",
-    "release-icon-radio-group-control",
-    "sunny-eagles-lie",
-    "sunny-monkeys-sing",
-    "tasty-days-cough"
+    "empty-pans-fry"
   ]
 }

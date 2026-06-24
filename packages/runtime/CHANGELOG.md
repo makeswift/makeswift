@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.8-canary.0
+
+### Patch Changes
+
+- 62c8f9d: feat: server-side implementation of `ApiResourcesClient` interface
+
 ## 0.28.7
 
 ### Patch Changes
