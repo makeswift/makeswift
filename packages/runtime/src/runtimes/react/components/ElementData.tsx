@@ -5,7 +5,7 @@ import { useBuiltinSuspense } from '../hooks/use-builtin-suspense'
 import { useComponent } from '../hooks/use-component'
 import { canAcceptRef } from '../utils/can-accept-ref'
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'
-import { ResolveProps } from '../controls'
+import { ResolveProps } from './resolve-props'
 import { ActivityOrFallback } from './activity-with-fallback'
 
 type ElementDataProps = {
