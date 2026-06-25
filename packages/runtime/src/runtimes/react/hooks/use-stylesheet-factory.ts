@@ -12,6 +12,7 @@ import {
 } from '@makeswift/controls'
 
 import { resolvedStyleToCss } from '../lib/resolved-style-to-css'
+
 import { pollBoxModel } from '../poll-box-model'
 import { useCache } from '../root-style-registry'
 import { type StylesheetFactory } from '../stylesheet-factory'

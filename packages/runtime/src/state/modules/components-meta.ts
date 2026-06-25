@@ -43,6 +43,7 @@ export type ComponentMeta = {
   hidden: boolean
   description?: string
   builtinSuspense?: boolean
+  server?: boolean
 }
 
 export type State = Map<string, ComponentMeta>
