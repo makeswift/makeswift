@@ -1,12 +1,14 @@
 import { type SerializableReplacementContext } from '@makeswift/controls'
 
+import { ApiResourcesClient } from '../../api/api-resources-client'
 import { HostApiResourcesClient } from '../../api/host-api-resources-client'
+import { MakeswiftApiResourcesClient } from '../../api/makeswift-api-resources-client'
 import { type HttpFetch } from '../../api/types'
 import { type SiteVersion } from '../../api/site-version'
 
 import {
-  Breakpoints,
-  BreakpointsInput,
+  type Breakpoints,
+  type BreakpointsInput,
   parseBreakpointsInput,
 } from '../../state/modules/breakpoints'
 
@@ -43,6 +45,8 @@ export class RuntimeCore {
     ttlCheck: RefCountedMap.TTLCheck.ON_RETAIN | RefCountedMap.TTLCheck.ON_RELEASE,
   })
 
+  private readonly apiKey: string | undefined
+
   readonly protoStore: ProtoStore
   readonly appOrigin: string
   readonly apiOrigin: string
@@ -52,18 +56,21 @@ export class RuntimeCore {
   constructor({
     appOrigin = 'https://app.makeswift.com',
     apiOrigin = 'https://api.makeswift.com',
+    apiKey,
     breakpoints,
     requestKey,
     fetch,
   }: {
     appOrigin?: string
     apiOrigin?: string
+    apiKey?: string
     breakpoints?: BreakpointsInput
     requestKey?: StoreKey
     fetch: HttpFetch
   }) {
     this.appOrigin = validateOrigin(appOrigin, 'appOrigin')
     this.apiOrigin = validateOrigin(apiOrigin, 'apiOrigin')
+    this.apiKey = apiKey
     this.requestKey = requestKey
     this.fetch = fetch
 
@@ -148,7 +155,17 @@ export class RuntimeCore {
   private createApiResourcesClient(preloadedState: {
     siteVersion: SiteVersion | null
     locale: string | undefined
-  }) {
+  }): ApiResourcesClient {
+    if (isServer() && this.apiKey) {
+      return new MakeswiftApiResourcesClient({
+        fetch: this.fetch,
+        apiKey: this.apiKey,
+        apiOrigin: this.apiOrigin,
+        graphqlApiEndpoint: this.graphqlApiEndpoint,
+        preloadedState,
+      })
+    }
+
     return new HostApiResourcesClient({
       fetch: this.fetch,
       preloadedState,
