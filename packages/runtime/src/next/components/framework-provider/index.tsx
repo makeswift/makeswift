@@ -4,7 +4,10 @@ import { type PropsWithChildren, useMemo } from 'react'
 import NextImage from 'next/image'
 
 import { useIsPagesRouter } from '../../hooks/use-is-pages-router'
-import { FrameworkContext } from '../../../runtimes/react/components/framework-context'
+import {
+  type FrameworkContext,
+  FrameworkContextProvider,
+} from '../../../runtimes/react/components/framework-context'
 
 import { context as appRouterContext } from './app-router'
 import { context as pagesRouterContext } from './pages-router'
@@ -15,7 +18,7 @@ export function FrameworkProvider({
   forcePagesRouter,
 }: PropsWithChildren<{ forcePagesRouter?: boolean }>) {
   const isPagesRouter = useIsPagesRouter() || forcePagesRouter
-  const context = useMemo<FrameworkContext>(
+  const context = useMemo<Partial<FrameworkContext>>(
     () => ({
       ...(isPagesRouter ? pagesRouterContext : appRouterContext),
       Image: NextImage,
@@ -24,5 +27,5 @@ export function FrameworkProvider({
     [isPagesRouter],
   )
 
-  return <FrameworkContext.Provider value={context}>{children}</FrameworkContext.Provider>
+  return <FrameworkContextProvider value={context}>{children}</FrameworkContextProvider>
 }

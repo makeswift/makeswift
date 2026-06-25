@@ -20,10 +20,8 @@ export { MakeswiftClient } from '../client'
 export { type BreakpointsInput as Breakpoints } from '../state/modules/breakpoints'
 
 export {
-  FrameworkContext,
-  DefaultHead,
-  DefaultHeadSnippet,
-  DefaultImage,
+  type FrameworkContext,
+  FrameworkContextProvider,
 } from '../runtimes/react/components/framework-context'
 
 export { MakeswiftComponent } from '../runtimes/react/components/MakeswiftComponent'
