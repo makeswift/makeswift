@@ -1,5 +1,4 @@
 import {
-  createContext,
   type ReactNode,
   type PropsWithChildren,
   type CSSProperties,
@@ -8,6 +7,9 @@ import {
   type ForwardRefExoticComponent,
   type RefAttributes,
   forwardRef,
+  createContext,
+  useContext,
+  useMemo,
 } from 'react'
 
 import { type LinkData } from '@makeswift/prop-controllers'
@@ -44,11 +46,11 @@ export type FrameworkContext = {
 }
 
 // React 19 automatically hoists metadata tags to the <head>
-export const DefaultHead = ({ children }: PropsWithChildren) => <>{children}</>
+const DefaultHead = ({ children }: PropsWithChildren) => <>{children}</>
 
-export const DefaultHeadSnippet = BaseHeadSnippet
+const DefaultHeadSnippet = BaseHeadSnippet
 
-export const DefaultImage: ImageComponent = ({ priority, fill, style, ...props }) => (
+const DefaultImage: ImageComponent = ({ priority, fill, style, ...props }) => (
   <img
     {...props}
     style={{
@@ -65,13 +67,29 @@ export const DefaultImage: ImageComponent = ({ priority, fill, style, ...props }
   />
 )
 
-export const DefaultLink: LinkComponent = forwardRef<HTMLAnchorElement, LinkProps>(
+const DefaultLink: LinkComponent = forwardRef<HTMLAnchorElement, LinkProps>(
   ({ linkType, ...props }, ref) => <a {...props} ref={ref} />,
 )
 
-export const FrameworkContext = createContext<FrameworkContext>({
+const FrameworkContext = createContext<Partial<FrameworkContext>>({})
+
+export const FrameworkContextProvider = ({
+  value,
+  children,
+}: PropsWithChildren<{ value: Partial<FrameworkContext> }>) => {
+  const parentContext = useContext(FrameworkContext)
+  const mergedContext = useMemo(() => ({ ...parentContext, ...value }), [parentContext, value])
+
+  return <FrameworkContext.Provider value={mergedContext}>{children}</FrameworkContext.Provider>
+}
+
+const defaultContext: FrameworkContext = {
   Head: DefaultHead,
   HeadSnippet: DefaultHeadSnippet,
   Image: DefaultImage,
   Link: DefaultLink,
-})
+}
+
+export function useFrameworkContext(): FrameworkContext {
+  return { ...defaultContext, ...useContext(FrameworkContext) }
+}

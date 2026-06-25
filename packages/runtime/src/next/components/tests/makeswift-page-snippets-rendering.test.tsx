@@ -1,9 +1,10 @@
 /** @jest-environment jsdom */
 
 import '@testing-library/jest-dom'
-import { type Snippet } from '../../../client'
 
 import { createMakeswiftPageSnapshot, testMakeswiftPageHeadRendering } from '../../testing'
+
+import { createSnippet } from '../../../testing/fixtures'
 
 import { pageDocument } from './__fixtures__/page-document'
 
@@ -20,15 +21,6 @@ jest.mock('next/script', () => ({
     </script>
   )),
 }))
-
-const createSnippet = ({ id, code }: { id: string; code: string }): Snippet => ({
-  id,
-  code,
-  location: 'HEAD',
-  liveEnabled: true,
-  builderEnabled: true,
-  cleanup: null,
-})
 
 const getPageSnippetTags = (container: HTMLElement) =>
   Array.from(container.querySelectorAll('*[data-makeswift-snippet-id]'))
