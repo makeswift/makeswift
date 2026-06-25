@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.8-canary.1
+
+### Patch Changes
+
+- f0a2f34: feat: use `MakeswiftApiResourcesClient` on the server if runtime instance was provided with an API key
+
 ## 0.28.8-canary.0
 
 ### Patch Changes
