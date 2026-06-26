@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.8-canary.2
+
+### Patch Changes
+
+- 9502d2a: feat: stackable `FrameworkContextProvider` with support for partial overrides.
+
 ## 0.28.8-canary.1
 
 ### Patch Changes

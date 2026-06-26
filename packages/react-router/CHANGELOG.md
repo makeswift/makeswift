@@ -1,5 +1,13 @@
 # @makeswift/react-router
 
+## 0.1.10-canary.2
+
+### Patch Changes
+
+- 9502d2a: feat: stackable `FrameworkContextProvider` with support for partial overrides.
+- Updated dependencies [9502d2a]
+  - @makeswift/runtime@0.28.8-canary.2
+
 ## 0.1.10-canary.1
 
 ### Patch Changes
