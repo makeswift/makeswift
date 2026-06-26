@@ -1,0 +1,96 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Provider values override default context 1`] = `
+<div
+  data-testid="test-id"
+>
+  <img
+    alt="example image"
+    loading="lazy"
+    src="https://example.com/image.jpg"
+  />
+  <a
+    data-test-id="custom link"
+    href="https://example.com"
+  >
+    Click here
+  </a>
+</div>
+`;
+
+exports[`Provider values override default context: head 1`] = `
+<head>
+  <title>
+    Document title
+  </title>
+  <script
+    data-makeswift-snippet-id="test-snippet"
+  >
+    console.log("hello")
+  </script>
+</head>
+`;
+
+exports[`Providers are stackable, support partial overrides 1`] = `
+<div
+  data-testid="test-id"
+>
+  <img
+    alt="example image"
+    data-test-id="custom image 2"
+    src="https://example.com/image.jpg"
+  />
+  <a
+    data-test-id="custom link"
+    href="https://example.com"
+  >
+    Click here
+  </a>
+</div>
+`;
+
+exports[`Providers are stackable, support partial overrides: head 1`] = `
+<head>
+  <meta
+    name="extra"
+  />
+  <title>
+    Document title
+  </title>
+  <script
+    data-makeswift-snippet-id="test-snippet"
+  >
+    console.log("hello")
+  </script>
+</head>
+`;
+
+exports[`useFrameworkContext without a provider returns default context 1`] = `
+<div
+  data-testid="test-id"
+>
+  <img
+    alt="example image"
+    loading="lazy"
+    src="https://example.com/image.jpg"
+  />
+  <a
+    href="https://example.com"
+  >
+    Click here
+  </a>
+</div>
+`;
+
+exports[`useFrameworkContext without a provider returns default context: head 1`] = `
+<head>
+  <title>
+    Document title
+  </title>
+  <script
+    data-makeswift-snippet-id="test-snippet"
+  >
+    console.log("hello")
+  </script>
+</head>
+`;

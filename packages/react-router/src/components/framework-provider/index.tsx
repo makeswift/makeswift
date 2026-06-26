@@ -1,21 +1,11 @@
-import { type PropsWithChildren, useState } from 'react'
+import { type PropsWithChildren } from 'react'
 
-import {
-  FrameworkContext,
-  DefaultHead,
-  DefaultHeadSnippet,
-  DefaultImage,
-} from '@makeswift/runtime/unstable-framework-support'
+import { FrameworkContextProvider } from '@makeswift/runtime/unstable-framework-support'
 
 import { Link } from './link'
 
-export function FrameworkProvider({ children }: PropsWithChildren) {
-  const [context] = useState<FrameworkContext>({
-    Head: DefaultHead,
-    HeadSnippet: DefaultHeadSnippet,
-    Image: DefaultImage,
-    Link,
-  })
+const context = { Link }
 
-  return <FrameworkContext.Provider value={context}>{children}</FrameworkContext.Provider>
+export function FrameworkProvider({ children }: PropsWithChildren) {
+  return <FrameworkContextProvider value={context}>{children}</FrameworkContextProvider>
 }
