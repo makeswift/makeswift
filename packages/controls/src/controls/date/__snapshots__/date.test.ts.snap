@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Date constructor call with default value \`2024-01-01T00:00:00.000Z\` returns versioned definition 1`] = `
+DateDefinition {
+  "config": {
+    "defaultValue": "2024-01-01T00:00:00.000Z",
+    "label": "Event date",
+  },
+  "version": 1,
+}
+`;
+
+exports[`Date constructor call with default value \`2024-06-15T12:30:00.000Z\` returns versioned definition 1`] = `
+DateDefinition {
+  "config": {
+    "defaultValue": "2024-06-15T12:30:00.000Z",
+    "label": "Event date",
+  },
+  "version": 1,
+}
+`;
+
+exports[`Date constructor call with default value \`undefined\` returns versioned definition 1`] = `
+DateDefinition {
+  "config": {
+    "defaultValue": undefined,
+    "label": "Event date",
+  },
+  "version": 1,
+}
+`;
+
+exports[`Date constructor creates date with includeTime 1`] = `
+DateDefinition {
+  "config": {
+    "defaultValue": "2024-06-15T12:30:00.000Z",
+    "includeTime": true,
+    "label": "Starts at",
+  },
+  "version": 1,
+}
+`;
+
+exports[`Date definition w/ config {"defaultValue":"2024-01-01T00:00:00.000Z","label":"Event date"} toData returns v1 data for \`2024-01-01T00:00:00.000Z\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "date::v1",
+  "value": "2024-01-01T00:00:00.000Z",
+}
+`;
+
+exports[`Date definition w/ config {"defaultValue":"2024-01-01T00:00:00.000Z","label":"Event date"} toData returns v1 data for \`2024-06-15T12:30:00.000Z\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "date::v1",
+  "value": "2024-06-15T12:30:00.000Z",
+}
+`;
+
+exports[`Date definition w/ config {"label":"Starts at","includeTime":true} toData returns v1 data for \`2024-06-15T12:30:00.000Z\` when definition version is 1 1`] = `
+{
+  "@@makeswift/type": "date::v1",
+  "value": "2024-06-15T12:30:00.000Z",
+}
+`;
+
+exports[`Date definition w/ config {"label":"Starts at","includeTime":true} toData returns v1 data for \`undefined\` when definition version is 1 1`] = `undefined`;
