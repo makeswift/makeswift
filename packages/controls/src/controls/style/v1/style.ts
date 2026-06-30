@@ -23,7 +23,7 @@ import {
   type Resolvable,
   type SchemaType,
 } from '../../definition'
-import { type SendMessage } from '../../instance'
+import { type ControlInstanceArgs } from '../../instance'
 import { ControlDefinitionVisitor } from '../../visitor'
 
 import * as StyleSchema from './schema'
@@ -215,8 +215,8 @@ class Definition<C extends Config> extends ControlDefinition<
     }
   }
 
-  createInstance(sendMessage: SendMessage) {
-    return new StyleControl(sendMessage)
+  createInstance(args: ControlInstanceArgs) {
+    return new StyleControl(args)
   }
 
   accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {

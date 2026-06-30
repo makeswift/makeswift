@@ -25,7 +25,7 @@ import {
   type SchemaType,
   type SchemaTypeAny,
 } from '../../definition'
-import { type SendMessage } from '../../instance'
+import { type ControlInstanceArgs } from '../../instance'
 import { ControlDefinitionVisitor } from '../../visitor'
 
 import { StyleV2Control } from './style-v2-control'
@@ -195,8 +195,8 @@ class Definition<
     }))
   }
 
-  createInstance(sendMessage: SendMessage) {
-    return new StyleV2Control(this.typeDef, sendMessage)
+  createInstance(args: ControlInstanceArgs) {
+    return new StyleV2Control(this.typeDef, args)
   }
 
   accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {

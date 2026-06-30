@@ -21,7 +21,7 @@ import { type Stylesheet } from '../../stylesheet'
 
 import { Color } from '../color'
 import { ControlDefinition, type Resolvable } from '../definition'
-import { DefaultControlInstance, type SendMessage } from '../instance'
+import { DefaultControlInstance, type ControlInstanceArgs } from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
 
 import * as Schema from './schema'
@@ -233,8 +233,8 @@ class Definition extends ControlDefinition<
     }
   }
 
-  createInstance(sendMessage: SendMessage) {
-    return new DefaultControlInstance(sendMessage)
+  createInstance(args: ControlInstanceArgs) {
+    return new DefaultControlInstance(args)
   }
 
   accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {

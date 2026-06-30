@@ -11,7 +11,7 @@ import {
   StableValue,
   type Data,
   type Resolvable,
-  type SendMessage,
+  type ControlInstanceArgs,
   type DeserializedRecord,
   type SchemaType,
   type SchemaTypeAny,
@@ -114,8 +114,8 @@ class Definition extends BaseRichTextDefinition<ReactNode, Config, InstanceType>
     return Definition.fullSchema({ pluginDef: z.any() as SchemaType<ControlDefinition> }).config
   }
 
-  createInstance(sendMessage: SendMessage): InstanceType {
-    return new RichTextV2Control(sendMessage, this)
+  createInstance(args: ControlInstanceArgs) {
+    return new RichTextV2Control(this, args)
   }
 
   resolveValue(

@@ -177,6 +177,45 @@ describe('Group', () => {
     })
   })
 
+  describe('prop resolution', () => {
+    const group = Group({
+      props: {
+        color: Color({ defaultValue: 'red' }),
+        checkbox: Checkbox(),
+        text: TextInput(),
+      },
+    })
+
+    const groupKeys = Object.keys(group.propDefs)
+    const instanceKey = { elementKey: '[test-element]', propPath: 'group-prop' }
+
+    const fixtures = () => {
+      const groupInstance = group.createInstance({
+        instanceKey,
+        sendMessage: () => {},
+      })
+
+      return { groupInstance }
+    }
+
+    test('group instance constructor creates a set of child controls with correct instance keys', async () => {
+      const { groupInstance } = fixtures()
+      const childControls = groupKeys.map((key) => groupInstance.child(key))
+
+      expect(
+        childControls
+          .map((c) => c?.elementKey)
+          .every((key) => key === instanceKey.elementKey),
+      ).toBe(true)
+
+      expect(childControls.map((c) => c?.propPath)).toStrictEqual([
+        'group-prop.color',
+        'group-prop.checkbox',
+        'group-prop.text',
+      ])
+    })
+  })
+
   describe('introspection', () => {
     test('Group data is correctly delegated to subcontrols', () => {
       const group = Group({
