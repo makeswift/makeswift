@@ -4,6 +4,7 @@ import { type ElementData } from '../../../state/read-only-state'
 
 import { useControlDefs } from '../hooks/use-control-defs'
 import { useResolvedProps } from '../hooks/use-resolved-props'
+import { useStylesheetFactory } from '../hooks/use-stylesheet-factory'
 
 import { resolveLegacyDescriptorProp } from '../legacy-controls'
 
@@ -16,7 +17,13 @@ export function ResolveProps({
 }): ReactNode {
   const [legacyDescriptors, definitions] = useControlDefs({ elementType: element.type })
 
-  const resolvedProps = useResolvedProps(definitions, element.props, element.key)
+  const stylesheetFactory = useStylesheetFactory()
+  const resolvedProps = useResolvedProps({
+    propDefs: definitions,
+    propData: element.props,
+    elementKey: element.key,
+    stylesheetFactory,
+  })
 
   const renderFn = Object.entries(legacyDescriptors).reduceRight(
     (renderFn, [propName, descriptor]) =>

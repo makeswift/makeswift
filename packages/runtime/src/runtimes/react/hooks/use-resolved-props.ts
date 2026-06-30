@@ -7,25 +7,13 @@ import {
   type Resolvable,
 } from '@makeswift/controls'
 
-import * as ReactPage from '../../../state/read-only-state'
 import { useResourceResolver } from './use-resource-resolver'
-import { useDocumentKey } from './use-document-context'
-import { useSelector } from './use-selector'
 
-import { useStylesheetFactory } from './use-stylesheet-factory'
-
-import { useResolvableRecord } from './use-resolvable-record'
+import { type StylesheetFactory } from '../stylesheet-factory'
 import { propErrorHandlingProxy } from '../utils/prop-error-handling-proxy'
 
-function useControlInstances(elementKey: string): Record<string, ControlInstance> | null {
-  const documentKey = useDocumentKey()
-
-  return useSelector(state => {
-    if (documentKey == null) return null
-
-    return ReactPage.getPropControllers(state, { documentKey, elementKey })
-  })
-}
+import { useControlInstances } from './use-control-instances'
+import { useResolvableRecord } from './use-resolvable-record'
 
 type CacheItem = {
   data: Data
@@ -33,19 +21,24 @@ type CacheItem = {
   resolvedValue: Resolvable<unknown>
 }
 
-export function useResolvedProps(
-  propDefs: Record<string, ControlDefinition>,
-  elementData: Record<string, Data>,
-  elementKey: string,
-): Record<string, unknown> {
-  const stylesheetFactory = useStylesheetFactory()
+export function useResolvedProps({
+  propDefs,
+  propData,
+  elementKey,
+  stylesheetFactory,
+}: {
+  propDefs: Record<string, ControlDefinition>
+  propData: Record<string, Data>
+  elementKey: string
+  stylesheetFactory: StylesheetFactory
+}): Record<string, unknown> {
   const resourceResolver = useResourceResolver()
   const controls = useControlInstances(elementKey)
 
   const cache = useRef<Record<string, CacheItem>>({}).current
   const resolveProp = useCallback(
     (def: ControlDefinition, propName: string) => {
-      const data = elementData[propName]
+      const data = propData[propName]
       const control = controls?.[propName]
 
       if (
@@ -66,7 +59,7 @@ export function useResolvedProps(
       cache[propName] = { data, control, resolvedValue }
       return resolvedValue
     },
-    [controls, elementData, resourceResolver, stylesheetFactory],
+    [controls, propData, resourceResolver, stylesheetFactory],
   )
 
   const resolvables = useMemo<Record<string, Resolvable<unknown>>>(
