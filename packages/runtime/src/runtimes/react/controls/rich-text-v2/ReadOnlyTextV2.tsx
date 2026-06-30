@@ -2,6 +2,8 @@ import { ForwardedRef, forwardRef, ReactNode } from 'react'
 import { Descendant, Element, Text } from 'slate'
 import { RenderElementProps, RenderLeafProps } from 'slate-react'
 
+import { type ConfigType } from '@makeswift/controls'
+
 import { RichTextV2Definition, RichText } from '../../../../controls/rich-text-v2'
 import { useStyle } from '../../use-style'
 import { toText } from '../../../../slate/utils'
@@ -12,17 +14,14 @@ import { ControlValue } from '../control'
 
 type Props = {
   text: RichTextDataV2 | undefined
-  definition: RichTextV2Definition | undefined
+  config: ConfigType<RichTextV2Definition> | undefined
 }
 
 const ReadOnlyTextV2 = forwardRef(function ReadOnlyText(
-  { text, definition }: Props,
+  { text, config }: Props,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
-  const descendantsAsString = toText(
-    text?.descendants ?? [],
-    definition?.config.mode ?? RichText.Mode.Block,
-  )
+  const descendantsAsString = toText(text?.descendants ?? [], config?.mode ?? RichText.Mode.Block)
 
   return (
     <div
@@ -41,10 +40,7 @@ const ReadOnlyTextV2 = forwardRef(function ReadOnlyText(
       {descendantsAsString === '' ? (
         <Placeholder />
       ) : (
-        <Descendants
-          plugins={definition?.config.plugins ?? []}
-          descendants={text?.descendants ?? []}
-        />
+        <Descendants plugins={config?.plugins ?? []} descendants={text?.descendants ?? []} />
       )}
     </div>
   )

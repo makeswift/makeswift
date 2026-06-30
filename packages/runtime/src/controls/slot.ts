@@ -10,7 +10,7 @@ import {
   type DataType,
 } from '@makeswift/controls'
 
-import { renderSlot } from '../runtimes/react/controls/slot'
+import { renderSlot } from '../runtimes/react/controls/slot/render-slot'
 
 export type SlotPlaceholderConfig = {
   builderOnly?: boolean

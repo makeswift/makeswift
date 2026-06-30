@@ -1,36 +1,47 @@
 'use client'
 
-import { ComponentPropsWithoutRef, ElementType, ReactNode, useEffect, useState, memo } from 'react'
+import {
+  type ComponentPropsWithoutRef,
+  type ElementType,
+  type ReactNode,
+  useEffect,
+  useState,
+  memo,
+} from 'react'
 import { cx } from '@emotion/css'
 
-import { SlotDefinition, SlotControl, type DataType } from '@makeswift/controls'
+import {
+  SlotDefinition,
+  SlotControl,
+  type DataType,
+  type ControlInstanceKey,
+} from '@makeswift/controls'
 
-import { type SlotConfig, type SlotPlaceholderConfig } from '../../../controls/slot'
-import { Element } from '../components/Element'
-import { useIsInBuilder } from '../hooks/use-is-in-builder'
-import { getIndexes } from '../../../components/utils/columns'
-import { useResponsiveStyle } from '../../../components/utils/responsive-style'
-import { useStyle } from '../use-style'
-import { pollBoxModel } from '../poll-box-model'
+import { type SlotConfig, type SlotPlaceholderConfig } from '../../../../controls/slot'
 
-export function renderSlot(props: {
-  data: DataType<SlotDefinition<ReactNode>> | undefined
-  control: SlotControl | null
-  config: SlotConfig
-}): ReactNode {
-  return <SlotValue {...props} />
-}
+import { Element } from '../../components/Element'
+import { getIndexes } from '../../../../components/utils/columns'
+import { useResponsiveStyle } from '../../../../components/utils/responsive-style'
 
-const SlotValue = memo(
+import { useIsInBuilder } from '../../hooks/use-is-in-builder'
+import { useControlInstance } from '../../hooks/use-control-instance'
+
+import { useStyle } from '../../use-style'
+import { pollBoxModel } from '../../poll-box-model'
+
+export const SlotValue = memo(
   ({
     data,
-    control,
+    instanceKey,
     config,
   }: {
     data: DataType<SlotDefinition<ReactNode>> | undefined
-    control: SlotControl | null
+    instanceKey: ControlInstanceKey
     config: SlotConfig
   }): ReactNode => {
+    // FIXME
+    const control = useControlInstance({ instanceKey }) as SlotControl | null
+
     // TODO(miguel): While the UI shouldn't allow the state, we should probably check that at least
     // one element is visible.
     if (data == null || data.elements.length === 0) {
@@ -150,6 +161,7 @@ const DEFAULT_SHOW_PLACEHOLDER_IN_BUILDER_ONLY = false
 const DEFAULT_PLACEHOLDER_HEIGHT_PX = 80
 
 function SlotPlaceholder({ control, placeholder }: SlotPlaceholderProps): ReactNode {
+  console.log('@@ SlotPlaceholder', { control, placeholder })
   const isInBuilder = useIsInBuilder()
   const [element, setElement] = useState<Element | null>(null)
 

@@ -1,3 +1,5 @@
+'use client'
+
 import { cx } from '@emotion/css'
 import { ForwardedRef, forwardRef } from 'react'
 import { Descendant, Text } from 'slate'
