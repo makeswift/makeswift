@@ -9,7 +9,11 @@ import { type IntrospectionTarget } from '../introspection'
 import { type ResourceResolver } from '../resources/resolver'
 import { type Stylesheet } from '../stylesheet'
 
-import { ControlInstance, type SendMessage } from './instance'
+import {
+  ControlInstance,
+  type ControlInstanceKey,
+  type SendMessage,
+} from './instance'
 import { ControlDefinitionVisitor } from './visitor'
 
 export type SchemaType<T> = z.ZodType<T>
@@ -80,7 +84,10 @@ export abstract class ControlDefinition<
     control?: InstanceType,
   ): Resolvable<ResolvedValueType | undefined>
 
-  abstract createInstance(sendMessage: SendMessage<any>): InstanceType
+  abstract createInstance(
+    instanceKey: ControlInstanceKey,
+    sendMessage: SendMessage<any>,
+  ): InstanceType
 
   abstract accept<R>(
     visitor: ControlDefinitionVisitor<R>,
