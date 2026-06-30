@@ -11,7 +11,7 @@ import {
   type Resolvable,
   type SchemaType,
 } from '../definition'
-import { DefaultControlInstance, type SendMessage } from '../instance'
+import { DefaultControlInstance, type ControlInstanceArgs } from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
 
 type Config = z.infer<
@@ -255,8 +255,8 @@ class Definition<C extends Config> extends ControlDefinition<
     }
   }
 
-  createInstance(sendMessage: SendMessage) {
-    return new DefaultControlInstance(sendMessage)
+  createInstance(args: ControlInstanceArgs) {
+    return new DefaultControlInstance(args)
   }
 
   accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {

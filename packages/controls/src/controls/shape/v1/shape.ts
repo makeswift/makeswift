@@ -23,7 +23,7 @@ import {
   type Resolvable,
   type SchemaType,
 } from '../../definition'
-import { type SendMessage } from '../../instance'
+import { type ControlInstanceArgs } from '../../instance'
 import { ControlDefinitionVisitor } from '../../visitor'
 
 import { ShapeControl } from './shape-control'
@@ -191,8 +191,8 @@ class Definition<C extends Config> extends ControlDefinition<
     }
   }
 
-  createInstance(sendMessage: SendMessage): InstanceType<C> {
-    return new ShapeControl(this, sendMessage)
+  createInstance(args: ControlInstanceArgs): ShapeControl<Definition<C>> {
+    return new ShapeControl(this, args)
   }
 
   introspect<R>(data: DataType<C> | undefined, target: IntrospectionTarget<R>) {

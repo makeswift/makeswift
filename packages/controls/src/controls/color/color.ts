@@ -20,7 +20,7 @@ import {
   type Resolvable,
   type SchemaType,
 } from '../definition'
-import { DefaultControlInstance, type SendMessage } from '../instance'
+import { DefaultControlInstance, type ControlInstanceArgs } from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
 
 import { safeColorString, swatchToColorString } from './conversion'
@@ -258,8 +258,8 @@ class Definition<C extends Config> extends ControlDefinition<
     }
   }
 
-  createInstance(sendMessage: SendMessage<any>) {
-    return new DefaultControlInstance(sendMessage)
+  createInstance(args: ControlInstanceArgs) {
+    return new DefaultControlInstance(args)
   }
 
   accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
