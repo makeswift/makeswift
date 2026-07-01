@@ -11,18 +11,14 @@ import {
   isNotNil,
 } from '@makeswift/controls'
 
-import { useCache } from '../root-style-registry'
 import { resolvedStyleToCss } from '../lib/resolved-style-to-css'
+import { pollBoxModel } from '../poll-box-model'
+import { useCache } from '../root-style-registry'
+import { type StylesheetFactory } from '../stylesheet-factory'
+import { useStyles, serializedStyleClassName } from '../use-style'
 
 import { useBreakpoints } from './use-breakpoints'
 import { useCssId } from './use-css-id'
-import { useStyles, serializedStyleClassName } from '../use-style'
-import { pollBoxModel } from '../poll-box-model'
-
-export type StylesheetFactory = {
-  get(propName: string): Stylesheet
-  useDefinedStyles(): void
-}
 
 export function useStylesheetFactory(): StylesheetFactory {
   const breakpoints = useBreakpoints()
