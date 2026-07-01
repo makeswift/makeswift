@@ -51,7 +51,8 @@ export class StylesheetEngine implements Stylesheet {
     private breakpointsData: Breakpoints,
     private elementKey: string,
     private propPathComponents: readonly string[] = [],
-    private onCssGenerated?: OnCssGenerated
+    private onCssGenerated: OnCssGenerated,
+    private classNamePrefix?: string
   ) {}
 
   breakpoints(): Breakpoints {
@@ -63,7 +64,7 @@ export class StylesheetEngine implements Stylesheet {
     onBoxModelChange?: (boxModel: BoxDisplayModel | null) => void
   ): string {
     const joinedPropPath = this.propPathComponents.join('.')
-    const className = generateClassName(this.elementKey, joinedPropPath)
+    const className = generateClassName(this.elementKey, joinedPropPath, this.classNamePrefix)
     const cssObject = resolvedStyleToCss(this.breakpointsData, resolvedStyle)
     const { css, contentHash } = toCss(cssObject, className)
     this.onCssGenerated?.({

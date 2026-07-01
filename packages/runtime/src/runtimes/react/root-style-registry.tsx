@@ -1,15 +1,7 @@
 'use client'
 
-import { type PropsWithChildren, createContext, useContext } from 'react'
-import { defaultClassNamePrefix } from './css-runtime/css-runtime'
-
-const DEFAULT_CSS_RESET_ENABLED = true
-const DEFAULT_CLASS_NAME_PREFIX = defaultClassNamePrefix
-
-const CSSResetEnabledContext = createContext(DEFAULT_CSS_RESET_ENABLED)
-const ClassNamePrefixContext = createContext(DEFAULT_CLASS_NAME_PREFIX)
-
-// TODO still need to thread classNamePrefix through to StylesheetEngine
+import { type PropsWithChildren } from 'react'
+import { StylesContextProvider } from './css-runtime/components/StylesContextProvider'
 
 export type RootStyleProps = {
   /**
@@ -30,18 +22,8 @@ export function RootStyleRegistry({
   enableCssReset,
 }: PropsWithChildren<RootStyleProps>) {
   return (
-    <ClassNamePrefixContext.Provider value={classNamePrefix ?? DEFAULT_CLASS_NAME_PREFIX}>
-      <CSSResetEnabledContext.Provider value={enableCssReset ?? DEFAULT_CSS_RESET_ENABLED}>
-        {children}
-      </CSSResetEnabledContext.Provider>
-    </ClassNamePrefixContext.Provider>
+    <StylesContextProvider classNamePrefix={classNamePrefix} enableCssReset={enableCssReset}>
+      {children}
+    </StylesContextProvider>
   )
-}
-
-export function useClassNamePrefix(): string {
-  return useContext(ClassNamePrefixContext)
-}
-
-export function useCSSResetEnabled(): boolean {
-  return useContext(CSSResetEnabledContext)
 }

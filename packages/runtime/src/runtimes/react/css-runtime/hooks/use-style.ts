@@ -1,9 +1,10 @@
-import { toCss } from "../css-runtime"
+import { defaultClassNamePrefix, toCss } from "../css-runtime"
 import { CSSObject } from "@emotion/serialize"
 import { UncontrolledStyle } from "../components/UncontrolledStyle"
 import React from "react"
 import { murmur3 } from "murmurhash-js"
 import clsx from "clsx"
+import { useStylesContext } from "./use-styles-context"
 
 // TODO rename file to 'uncontrolled-styles.ts'?
 
@@ -14,12 +15,14 @@ import clsx from "clsx"
  * This is useful for deduplication of "uncontrolled" styles that are not subject to change in the way that
  * Makeswift-editable styles are.
  */
-function generateClassName(styles: CSSObject): string {
-  return `ms-${murmur3(JSON.stringify(styles)).toString(36)}`
+function generateClassName(styles: CSSObject, classNamePrefix?: string): string {
+  const prefix = classNamePrefix ?? defaultClassNamePrefix
+  return `${prefix}-${murmur3(JSON.stringify(styles)).toString(36)}`
 }
 
 export function useStyle(style: CSSObject, options: { precedence?: string } = {}) {
-  const className = generateClassName(style)
+  const { classNamePrefix } = useStylesContext()
+  const className = generateClassName(style, classNamePrefix)
   const { css } = toCss(style, className)
   const styleElement = React.createElement(UncontrolledStyle, {
     key: className,

@@ -8,7 +8,6 @@ import {
 } from '@makeswift/prop-controllers'
 
 import { Element } from '../../../runtimes/react/components/Element'
-import { useCSSResetEnabled } from '../../../runtimes/react/root-style-registry'
 
 import { GridItem } from '../../shared/grid-item'
 import BackgroundsContainer from '../../shared/BackgroundsContainer'
@@ -17,6 +16,7 @@ import Placeholder from './components/Placeholder'
 import { useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
 import { GlobalStyle } from '../../../runtimes/react/css-runtime/components/GlobalStyle'
 import { CSSObject } from '@emotion/serialize'
+import { useStylesContext } from '../../../runtimes/react/css-runtime/hooks/use-styles-context'
 
 type Props = {
   children?: GridData
@@ -29,8 +29,8 @@ const Root = forwardRef(function Page(
   { children, backgrounds, rowGap, columnGap }: Props,
   ref: Ref<HTMLDivElement>,
 ) {
-  const cssResetEnabled = useCSSResetEnabled()
-  const cssResetStyles: Array<CSSObject> = cssResetEnabled ? [
+  const { enableCssReset } = useStylesContext()
+  const cssResetStyles: Array<CSSObject> = enableCssReset ? [
     {
       html: {
         boxSizing: 'border-box'

@@ -3,17 +3,18 @@ import { generateClassName, toCss } from "../css-runtime";
 import { useRef } from "react";
 import { HoistedStyle } from "../components/HoistedStyle";
 import React from "react";
+import { useStylesContext } from "./use-styles-context";
 
 export function useLegacyControlledStyle(
   style: CSSObject,
   elementKey: string,
   propName: string,
-  options: { precedence?: string, classNamePrefix?: string } = {},
 ) {
+  const { classNamePrefix } = useStylesContext()
   const className = generateClassName(
     elementKey,
     propName,
-    options.classNamePrefix,
+    classNamePrefix,
   )
 
   const counterRef = useRef(0)
@@ -27,7 +28,6 @@ export function useLegacyControlledStyle(
   const styleElement = React.createElement(HoistedStyle, {
     href,
     css,
-    precedence: options.precedence,
   })
 
   return {

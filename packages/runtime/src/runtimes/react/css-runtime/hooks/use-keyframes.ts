@@ -3,15 +3,16 @@ import { defaultClassNamePrefix } from "../css-runtime";
 import { useMemo } from "react";
 import { HoistedStyle } from "../components/HoistedStyle";
 import React from "react";
+import { useStylesContext } from "./use-styles-context";
 
-export const keyframesNamePrefix = `${defaultClassNamePrefix}-animation`
-
-function generateKeyframesName(cssBody: string) : string {
-  return `${keyframesNamePrefix}-${murmur3(cssBody).toString(36)}`
+function generateKeyframesName(cssBody: string, keyframeNamePrefix?: string) : string {
+  const prefix = keyframeNamePrefix ?? defaultClassNamePrefix
+  return `${prefix}-animation-${murmur3(cssBody).toString(36)}`
 }
 
 export function useKeyframes(cssBody: string): { keyframesName: string, styleElement: React.ReactElement } {
-  const keyframesName = generateKeyframesName(cssBody)
+  const { classNamePrefix: keyframeNamePrefix } = useStylesContext()
+  const keyframesName = generateKeyframesName(cssBody, keyframeNamePrefix)
   const cssString = `@keyframes ${keyframesName} { ${cssBody} }`
 
   const styleElement = useMemo(() => {

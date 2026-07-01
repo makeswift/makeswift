@@ -3,6 +3,7 @@ import { ControlledStyles } from "../components/ControlledStyles"
 import { BoxDisplayModel, Breakpoints, Stylesheet } from "@makeswift/controls"
 import { StylesheetEngine } from "../css-runtime"
 import React from "react"
+import { useStylesContext } from "./use-styles-context"
 
 export type ControlledStyleData = {
   css: string
@@ -20,6 +21,7 @@ export type GetStylesheet = ({ breakpointsData, elementKey, propPathComponents }
 
 export function useControlledStyles() {
   const stylesMap = useRef<Map<string, ControlledStyleData>>(new Map()).current
+  const { classNamePrefix } = useStylesContext()
 
   const getStylesheet = useCallback<GetStylesheet>(({
     breakpointsData,
@@ -36,7 +38,7 @@ export function useControlledStyles() {
         joinedPropPath,
         onBoxModelChange
       })
-    })
+    }, classNamePrefix)
   }, [])
   const styleElements = React.createElement(ControlledStyles, { classNameToStyles: stylesMap })
 
