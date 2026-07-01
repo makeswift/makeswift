@@ -45,6 +45,11 @@ export function useStylesheetFactory(): StylesheetFactory {
         computedStyles[uid] = serialized
 
         const className = serializedStyleClassName(cache, serialized)
+
+        if (styleSheetId.startsWith('cv-')) {
+          console.log(className, styleSheetId, serialized)
+
+        }
         if (!onBoxModelChange) return className
 
         boxModelCallbacks[uid] = onBoxModelChange

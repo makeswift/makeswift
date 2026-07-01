@@ -37,5 +37,15 @@ export function ControlValue({
 
   stylesheetFactory.useDefinedStyles()
 
-  return children(value)
+  /*
+    The empty `<style>` tag is just to trigger a hydration mismatch.
+    
+    The underlying problem of interest is the instability of the `useId` (`useCssId`) result.
+  */
+  return (
+    <>
+      <style href={id}></style>
+      {children(value)}
+    </>
+  )
 }
