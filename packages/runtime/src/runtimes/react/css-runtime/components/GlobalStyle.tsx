@@ -1,7 +1,7 @@
-import { CSSObject, serializeStyles } from "@emotion/serialize"
+import { CSSObject } from "@emotion/serialize"
 import { HoistedStyle } from "./HoistedStyle"
-import { murmur3 } from "murmurhash-js"
-import { defaultClassNamePrefix } from "../css-runtime"
+import { serializeStyles } from "../css-runtime"
+import { DEFAULT_CSS_CLASS_NAME_PREFIX } from "../constants"
 
 type Props = {
   styles: Array<CSSObject>
@@ -12,15 +12,16 @@ type Props = {
   values it discovers first are 'lower' and precedence values it discovers later are 'higher'."
 */
 const precedence = "low"
-const globalStyleHrefPrefix = `${defaultClassNamePrefix}-global`
+const globalStyleHrefPrefix = `${DEFAULT_CSS_CLASS_NAME_PREFIX}-global`
 
 export function GlobalStyle({ styles }: Props) {
-  const href = `${globalStyleHrefPrefix}-${murmur3(JSON.stringify(styles)).toString(36)}`
-  const serialized = serializeStyles(styles)
+  const { content, contentHash } = serializeStyles(styles)
+  const href = `${globalStyleHrefPrefix}-${contentHash}`
+
   return (
     <HoistedStyle
       href={href}
-      css={serialized.styles}
+      css={content}
       precedence={precedence}
     />
   )

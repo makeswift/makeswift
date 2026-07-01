@@ -1,13 +1,12 @@
-import { CSSObject, serializeStyles } from "@emotion/serialize";
+import { CSSObject, serializeStyles as emotionSerializeStyles } from "@emotion/serialize";
 import { serialize, compile, stringify, prefixer, middleware } from 'stylis'
 import { murmur3 } from 'murmurhash-js'
 import { BoxDisplayModel, Breakpoints, ResolvedStyle, Stylesheet } from "@makeswift/controls";
 import { resolvedStyleToCss } from "../lib/resolved-style-to-css";
+import { DEFAULT_CSS_CLASS_NAME_PREFIX } from "./constants";
 
-export const defaultClassNamePrefix = "ms"
-
-function serializeRules(stylesObject: CSSObject): { content: string, contentHash: string} {
-  const emotionSerializationResult = serializeStyles([stylesObject])
+export function serializeStyles(styles: Array<CSSObject>): { content: string, contentHash: string} {
+  const emotionSerializationResult = emotionSerializeStyles(styles)
   return {
     content: emotionSerializationResult.styles,
     contentHash: emotionSerializationResult.name,
@@ -20,14 +19,14 @@ function compileCss({ content, className }: { content: string, className: string
 }
 
 export function toCss(stylesObject: CSSObject, className: string): { css: string, contentHash: string } {
-  const { content, contentHash } = serializeRules(stylesObject)
+  const { content, contentHash } = serializeStyles([stylesObject])
   const css = compileCss({ content, className })
   return { css, contentHash }
 }
 
-export function generateClassName(elementKey: string, propPath: string, prefix?: string): string {
-  const classNamePrefix = prefix ?? defaultClassNamePrefix
-  return `${classNamePrefix}-${murmur3(`${elementKey}-${propPath}`).toString(36)}`
+export function generateClassName({ data, classNamePrefix }: { data: string, classNamePrefix?: string }): string {
+  const prefix = classNamePrefix ?? DEFAULT_CSS_CLASS_NAME_PREFIX
+  return `${prefix}-${murmur3(data).toString(36)}`
 }
 
 type OnCssGenerated = ({
@@ -64,7 +63,10 @@ export class StylesheetEngine implements Stylesheet {
     onBoxModelChange?: (boxModel: BoxDisplayModel | null) => void
   ): string {
     const joinedPropPath = this.propPathComponents.join('.')
-    const className = generateClassName(this.elementKey, joinedPropPath, this.classNamePrefix)
+    const className = generateClassName({
+      data: `${this.elementKey}-${joinedPropPath}`,
+      classNamePrefix: this.classNamePrefix
+    })
     const cssObject = resolvedStyleToCss(this.breakpointsData, resolvedStyle)
     const { css, contentHash } = toCss(cssObject, className)
     this.onCssGenerated?.({
@@ -82,7 +84,7 @@ export class StylesheetEngine implements Stylesheet {
     return new StylesheetEngine(
       this.breakpointsData,
       this.elementKey,
-      [...this.propPathComponents,propName],
+      [...this.propPathComponents, propName],
       this.onCssGenerated
     )
   }

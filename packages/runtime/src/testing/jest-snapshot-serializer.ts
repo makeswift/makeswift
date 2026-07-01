@@ -1,4 +1,4 @@
-import { defaultClassNamePrefix } from "../runtimes/react/css-runtime/css-runtime"
+import { DEFAULT_CSS_CLASS_NAME_PREFIX } from "../runtimes/react/css-runtime/constants"
 import synchronizedPrettier from '@prettier/sync'
 
 function getClassNamesInTree(
@@ -65,7 +65,7 @@ function isElementArray(val: any): boolean {
 }
 
 function isMakeswiftClassName(className: string): boolean {
-  return className.startsWith(`${defaultClassNamePrefix}-`)
+  return className.startsWith(`${DEFAULT_CSS_CLASS_NAME_PREFIX}-`)
 }
 
 function formatRule(rule: CSSRule): string {

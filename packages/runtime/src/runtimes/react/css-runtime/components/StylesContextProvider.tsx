@@ -1,10 +1,9 @@
 'use client'
 
 import { createContext, PropsWithChildren } from "react"
-import { defaultClassNamePrefix } from "../css-runtime"
+import { DEFAULT_CSS_CLASS_NAME_PREFIX } from "../constants"
 
 const DEFAULT_CSS_RESET_ENABLED = true
-const DEFAULT_CLASS_NAME_PREFIX = defaultClassNamePrefix
 
 export type StylesContextValue = {
   classNamePrefix: string
@@ -12,7 +11,7 @@ export type StylesContextValue = {
 }
 
 export const StylesContext = createContext<StylesContextValue>({
-  classNamePrefix: DEFAULT_CLASS_NAME_PREFIX,
+  classNamePrefix: DEFAULT_CSS_CLASS_NAME_PREFIX,
   enableCssReset: DEFAULT_CSS_RESET_ENABLED,
 })
 
@@ -23,7 +22,7 @@ export function StylesContextProvider({
 }: PropsWithChildren<Partial<StylesContextValue>>) {
   return (
     <StylesContext.Provider value={{
-      classNamePrefix: classNamePrefix ?? DEFAULT_CLASS_NAME_PREFIX,
+      classNamePrefix: classNamePrefix ?? DEFAULT_CSS_CLASS_NAME_PREFIX,
       enableCssReset: enableCssReset ?? DEFAULT_CSS_RESET_ENABLED}}
     >
       {children}

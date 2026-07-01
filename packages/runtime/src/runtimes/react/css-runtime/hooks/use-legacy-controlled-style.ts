@@ -11,11 +11,10 @@ export function useLegacyControlledStyle(
   propName: string,
 ) {
   const { classNamePrefix } = useStylesContext()
-  const className = generateClassName(
-    elementKey,
-    propName,
+  const className = generateClassName({
+    data: `${elementKey}-${propName}`,
     classNamePrefix,
-  )
+  })
 
   const counterRef = useRef(0)
   const contentHashRef = useRef<string | null>(null)
