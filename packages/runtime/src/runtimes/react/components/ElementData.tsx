@@ -39,19 +39,24 @@ const ElementDataServer = forwardRef(function ElementDataServer(
   { elementData }: ElementDataProps,
   ref: Ref<unknown>,
 ): ReactNode {
+  console.log('@@ rendering ElementDataServer', elementData.type, elementData.key)
   // lookup and render RSC node for the element; see the `ServerElementsCache` comment
   const rscNode = useServerElementsCache().getElement(elementData.key)
   const isReadOnly = useIsReadOnly()
 
-  if (rscNode == null) {
-    console.warn(
-      `React node not found for server component ${elementData.type}, element key ${elementData.key}`,
-    )
+  if (isReadOnly) {
+    if (rscNode == null) {
+      console.error(
+        `React node not found for server component ${elementData.type}, element key ${elementData.key}`,
+      )
 
-    return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Server component not found" />
+      return (
+        <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Server component not found" />
+      )
+    }
+
+    return rscNode
   }
-
-  if (isReadOnly) return rscNode
 
   return <EditableServerElement initialElementData={elementData}>{rscNode}</EditableServerElement>
 })
@@ -60,6 +65,7 @@ const ElementDataClient = forwardRef(function ElementDataClient(
   { elementData }: ElementDataProps,
   ref: Ref<unknown>,
 ): ReactNode {
+  console.log('@@ rendering ElementDataClient', elementData.type, elementData.key)
   const Component = useComponent(elementData.type)
   const builtinSuspense = useBuiltinSuspense(elementData.type)
 

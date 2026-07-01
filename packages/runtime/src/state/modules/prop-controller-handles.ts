@@ -85,6 +85,7 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
 
     case ActionTypes.REGISTER_PROP_CONTROLLERS: {
       const { documentKey, elementKey, propControllers } = action.payload
+      console.log('@@ REGISTER_PROP_CONTROLLERS', elementKey, propControllers)
 
       return {
         ...state,

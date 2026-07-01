@@ -15,7 +15,7 @@ export async function RscMarkdown({
   filename,
   link,
   list,
-  richText,
+  // richText,
   slot,
   red,
   number = 0,
@@ -27,7 +27,7 @@ export async function RscMarkdown({
   number?: number
   link: { href: string; target?: string }
   list: { href: string; target?: string }[]
-  richText: ReactNode
+  // richText: ReactNode
   slot: ReactNode
 }) {
   const files = Object.keys(markdownFiles)
@@ -52,8 +52,8 @@ export async function RscMarkdown({
       {list?.map((l) => (
         <div>Resolved link: {JSON.stringify(l)}</div>
       ))}
-      <div>Rich text:</div>
-      {richText}
+      {/* <div>Rich text:</div>
+      {richText} */}
       <div>Slot:</div>
       {slot}
       <hr />

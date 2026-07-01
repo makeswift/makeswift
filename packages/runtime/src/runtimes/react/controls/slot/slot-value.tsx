@@ -40,7 +40,9 @@ export const SlotValue = memo(
     config: SlotConfig
   }): ReactNode => {
     // FIXME
+    console.log('@@ SlotValue before instance lookup', { instanceKey })
     const control = useControlInstance({ instanceKey }) as SlotControl | null
+    console.log('@@ SlotValue after instance lookup', { instanceKey, control })
 
     // TODO(miguel): While the UI shouldn't allow the state, we should probably check that at least
     // one element is visible.

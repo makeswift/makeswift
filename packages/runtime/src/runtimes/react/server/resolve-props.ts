@@ -37,12 +37,17 @@ export async function resolveProps(
 
   const resourceResolver = serverResourceResolver(context)
   const propData = element.props
-  const controls: Record<string, ControlInstance> | null = null
+
+  // getPropControllers(state, { documentKey, elementKey })
+
+  const controls: Record<string, ControlInstance> = {}
   const cache: Record<string, CacheItem> = {}
 
   const resolveProp = (def: ControlDefinition, propName: string) => {
     const data = propData[propName]
-    const control = controls?.[propName]
+    const control =
+      controls[propName] ??
+      (controls[propName] = def.createInstance({ elementKey: element.key, propName }, () => {}))
 
     if (
       cache[propName] != null &&
@@ -84,13 +89,13 @@ export async function resolveProps(
   )
 
   // stylesheetFactory.useDefinedStyles()
-  console.log(
-    '@@ resolvedProps',
-    JSON.stringify(
-      { propData, cache: Object.keys(cache), propDefs: Object.keys(propDefs), resolvedProps },
-      null,
-      2,
-    ),
-  )
+  // console.log(
+  //   '@@ resolvedProps',
+  //   JSON.stringify(
+  //     { propData, cache: Object.keys(cache), propDefs: Object.keys(propDefs), resolvedProps },
+  //     null,
+  //     2,
+  //   ),
+  // )
   return resolvedProps
 }

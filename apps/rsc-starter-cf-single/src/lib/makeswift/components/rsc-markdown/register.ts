@@ -26,7 +26,7 @@ export const registerRscMarkdownComponent = (runtime: ReactRuntime) =>
         color: Color(),
         red: Checkbox({ label: 'Red', defaultValue: false }),
         link: Link(),
-        richText: RichText(),
+        // richText: RichText(),
         slot: Slot(),
         list: List({
           label: 'Items',

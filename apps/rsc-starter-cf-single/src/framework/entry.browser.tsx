@@ -66,13 +66,19 @@ async function main() {
   })
 
   // hydration
+  // const browserRoot = (
+  //   <React.StrictMode>
+  //     <GlobalErrorBoundary>
+  //       <BrowserRoot />
+  //     </GlobalErrorBoundary>
+  //   </React.StrictMode>
+  // )
   const browserRoot = (
-    <React.StrictMode>
-      <GlobalErrorBoundary>
-        <BrowserRoot />
-      </GlobalErrorBoundary>
-    </React.StrictMode>
+    <GlobalErrorBoundary>
+      <BrowserRoot />
+    </GlobalErrorBoundary>
   )
+
   if ('__NO_HYDRATE' in globalThis) {
     createRoot(document).render(browserRoot)
   } else {
