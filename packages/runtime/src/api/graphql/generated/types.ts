@@ -46,6 +46,7 @@ export type FileFragment = {
   extension: string | null
   publicUrl: string
   dimensions: { width: number; height: number } | null
+  description: string | null
 }
 
 export type TypographyFragment = {

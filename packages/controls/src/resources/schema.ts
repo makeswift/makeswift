@@ -30,6 +30,7 @@ export const file = z.object({
       height: z.number(),
     })
     .nullable(),
+  description: z.string().nullable().optional(),
 })
 
 export const pagePathnameSlice = z.object({
