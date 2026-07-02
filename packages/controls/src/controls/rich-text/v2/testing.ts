@@ -5,6 +5,7 @@ import { type Resolvable } from '../../definition'
 import {
   ControlInstance,
   DefaultControlInstance,
+  type ControlInstanceKey,
   type SendMessage,
 } from '../../instance'
 
@@ -29,8 +30,11 @@ class Definition extends RichTextDefinition<RenderedNode> {
     }
   }
 
-  createInstance(sendMessage: SendMessage<any>): ControlInstance<any> {
-    return new DefaultControlInstance(sendMessage)
+  createInstance(
+    instanceKey: ControlInstanceKey,
+    sendMessage: SendMessage<any>,
+  ): ControlInstance<any> {
+    return new DefaultControlInstance(instanceKey, sendMessage)
   }
 
   toText(_data: DataType<RichTextDefinition<string>>): string {

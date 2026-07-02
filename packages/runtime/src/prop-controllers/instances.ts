@@ -6,6 +6,7 @@ import {
   type ControlMessage,
   type SendMessage,
   type InstanceType,
+  type ControlInstanceKey,
   ControlInstance,
   DefaultControlInstance,
 } from '@makeswift/controls'
@@ -60,19 +61,27 @@ export type DescriptorsPropControllers<T extends Record<string, Descriptor>> = {
 
 export type AnyPropController = ControlInstance<any> | TableFormFieldsPropController
 
-export function createPropController(
-  descriptor: Descriptor,
-  send: SendMessage<PropControllerMessage>,
-): AnyPropController {
+export function createPropController({
+  descriptor,
+  instanceKey,
+  send,
+}: {
+  descriptor: Descriptor
+  instanceKey: ControlInstanceKey
+  send: SendMessage<PropControllerMessage>
+}): AnyPropController {
   if (!isLegacyDescriptor(descriptor)) {
-    return descriptor.createInstance(send)
+    return descriptor.createInstance(instanceKey, send)
   }
 
   switch (descriptor.type) {
     case PropControllerTypes.TableFormFields:
-      return new TableFormFieldsPropController(send as SendMessage<TableFormFieldsMessage>)
+      return new TableFormFieldsPropController(
+        instanceKey,
+        send as SendMessage<TableFormFieldsMessage>,
+      )
 
     default:
-      return new DefaultControlInstance(send as SendMessage)
+      return new DefaultControlInstance(instanceKey, send as SendMessage)
   }
 }

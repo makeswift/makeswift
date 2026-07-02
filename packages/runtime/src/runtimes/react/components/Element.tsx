@@ -39,6 +39,12 @@ export const Element = memo(
 
     useImperativeHandle(ref, () => imperativeHandleRef.current, [])
 
+    console.log('@@ rendering element', element.type, element.key)
+
+    if (element.type == 'makeswift::components::slot::v1') {
+      console.log('@@ rendering Slot', element)
+    }
+
     return (
       <ElementRegistration componentHandle={imperativeHandleRef.current} elementKey={element.key}>
         <FindDomNode ref={findDomNodeCallbackRef}>

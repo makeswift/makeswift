@@ -1,11 +1,21 @@
 import { type Operation } from 'ot-json0'
 import { type ThunkAction } from '@reduxjs/toolkit'
 
+import { ControlInstance } from '@makeswift/controls'
+
+import { createPropController } from '../../../prop-controllers/instances'
+
+import { type Action } from '../../actions'
+import * as Builder from '../../builder-api/actions'
+
 import { type Measurable } from '../../modules/read-write/box-models'
 import { type DescriptorsByComponentType } from '../../modules/prop-controllers'
-
 import { type DocumentPayload } from '../../shared-api'
 import { type SerializedState as APIClientCache } from '../../api-client/state'
+
+import { getElementPropControllerDescriptors } from '../../read-only-state'
+
+import { type State } from '../../unified-state'
 
 export const ReadWriteActionTypes = {
   CHANGE_ELEMENT_TREE: 'CHANGE_ELEMENT_TREE',
@@ -100,3 +110,47 @@ export function updateAPIClientCache(payload: APIClientCache): UpdateAPIClientCa
 export function clearAPIClientCache(): ClearAPIClientCache {
   return { type: ReadWriteActionTypes.CLEAR_API_CLIENT_CACHE }
 }
+
+export function createPropControllers(
+  documentKey: string,
+  elementKey: string,
+): ThunkAction<Record<string, ControlInstance> | null, State, unknown, Action> {
+  return (dispatch, getState) => {
+    const descriptors = getElementPropControllerDescriptors(getState(), documentKey, elementKey)
+
+    if (descriptors == null) return null
+
+    const propControllers = Object.entries(descriptors).reduce(
+      (acc, [propName, descriptor]) => {
+        const propController = createPropController({
+          descriptor,
+          instanceKey: { elementKey, propName },
+          send: message =>
+            dispatch(
+              Builder.messageBuilderPropController(documentKey, elementKey, propName, message),
+            ),
+        }) as ControlInstance
+
+        return { ...acc, [propName]: propController }
+      },
+      {} as Record<string, ControlInstance>,
+    )
+
+    return propControllers
+  }
+}
+/*
+export function createAndRegisterPropControllers(
+  documentKey: string,
+  elementKey: string,
+): ThunkAction<Record<string, ControlInstance> | null, State, unknown, Action> {
+  return dispatch => {
+    const propControllers = dispatch(createPropControllers(documentKey, elementKey))
+
+    if (propControllers != null)
+      dispatch(ReadOnly.registerPropControllers(documentKey, elementKey, propControllers))
+
+    return propControllers
+  }
+}
+*/

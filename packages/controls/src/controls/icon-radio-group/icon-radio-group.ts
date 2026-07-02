@@ -11,7 +11,11 @@ import {
   type Resolvable,
   type SchemaType,
 } from '../definition'
-import { DefaultControlInstance, type SendMessage } from '../instance'
+import {
+  DefaultControlInstance,
+  type ControlInstanceKey,
+  type SendMessage,
+} from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
 
 import { icons, legacyIcons } from './icons'
@@ -174,8 +178,11 @@ class Definition<C extends Config> extends ControlDefinition<
     }
   }
 
-  createInstance(sendMessage: SendMessage<any>) {
-    return new DefaultControlInstance(sendMessage)
+  createInstance(
+    instanceKey: ControlInstanceKey,
+    sendMessage: SendMessage<any>,
+  ) {
+    return new DefaultControlInstance(instanceKey, sendMessage)
   }
 
   accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {

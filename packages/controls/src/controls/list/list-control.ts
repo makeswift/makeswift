@@ -2,6 +2,7 @@ import { hasAllKeys } from '../../lib/functional'
 
 import {
   ControlInstance,
+  type ControlInstanceKey,
   type ControlMessage,
   type SendMessage,
 } from '../instance'
@@ -23,9 +24,10 @@ export class ListControl<
 
   constructor(
     private readonly definition: Def,
+    instanceKey: ControlInstanceKey,
     sendMessage: SendMessage<Message>,
   ) {
-    super(sendMessage)
+    super(instanceKey, sendMessage)
   }
 
   recv = (message: Message) => {
@@ -53,11 +55,17 @@ export class ListControl<
   }
 
   createItemControl = (id: string) => {
-    return this.definition.itemDef.createInstance((message) =>
-      this.sendMessage({
-        type: ListControl.ITEM_CONTROL_MESSAGE,
-        payload: { message, itemId: id },
-      }),
+    const { elementKey, propName } = this.instanceKey
+    return this.definition.itemDef.createInstance(
+      {
+        elementKey,
+        propName: `${propName}.${id}`,
+      },
+      (message) =>
+        this.sendMessage({
+          type: ListControl.ITEM_CONTROL_MESSAGE,
+          payload: { message, itemId: id },
+        }),
     )
   }
 }

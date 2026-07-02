@@ -1,15 +1,13 @@
 import { ReactNode } from 'react'
 import { RenderLeafProps } from 'slate-react'
-import { RichTextV2Definition } from '../../../../../controls/rich-text-v2'
 import { RichTextV2Plugin } from '../../../../../controls/rich-text-v2/plugin'
 import { ControlValue } from '../../control'
 
 type RichTextV2LeafProps = RenderLeafProps & {
-  definition: RichTextV2Definition
   plugins: RichTextV2Plugin[]
 }
 
-export function RichTextV2Leaf({ definition, plugins, ...props }: RichTextV2LeafProps) {
+export function RichTextV2Leaf({ plugins, ...props }: RichTextV2LeafProps) {
   function initialRenderLeaf({ attributes, children, leaf }: RenderLeafProps): ReactNode {
     return (
       <span className={leaf.className} {...attributes}>

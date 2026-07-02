@@ -1,6 +1,7 @@
 import { ControlDefinition } from '../definition'
 import {
   ControlInstance,
+  type ControlInstanceKey,
   type ControlMessage,
   type SendMessage,
 } from '../instance'
@@ -22,9 +23,10 @@ export class GroupControl<
 
   constructor(
     private readonly definition: Def,
+    instanceKey: ControlInstanceKey,
     sendMessage: SendMessage<Message>,
   ) {
-    super(sendMessage)
+    super(instanceKey, sendMessage)
     this.childControls = new Map(
       Object.entries(this.definition.propDefs).map(([key, def]) => [
         key,
@@ -44,11 +46,17 @@ export class GroupControl<
   child = (key: string) => this.childControls.get(key)
 
   createChildControl = (def: ControlDefinition, key: string) => {
-    return def.createInstance((message) =>
-      this.sendMessage({
-        type: GroupControl.CHILD_CONTROL_MESSAGE,
-        payload: { message, key },
-      }),
+    const { elementKey, propName } = this.instanceKey
+    return def.createInstance(
+      {
+        elementKey,
+        propName: `${propName}.${key}`,
+      },
+      (message) =>
+        this.sendMessage({
+          type: GroupControl.CHILD_CONTROL_MESSAGE,
+          payload: { message, key },
+        }),
     )
   }
 }
