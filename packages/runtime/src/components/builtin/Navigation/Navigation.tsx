@@ -26,9 +26,8 @@ import {
 import { ColorValue as Color, type ResponsiveColor } from '../../utils/types'
 import { colorToString } from '../../utils/colorToString'
 import { useResponsiveColor } from '../../hooks'
-import { cx } from '@emotion/css'
 import { useResponsiveStyle, useResponsiveTextStyle } from '../../utils/responsive-style'
-import { useStyle } from '../../../runtimes/react/use-style'
+import { composeStyles, useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
 
 type Props = {
   id?: string
@@ -63,23 +62,27 @@ const Container = forwardRef(function Container(
   { className, width, margin, textStyle, gutter, ...restOfProps }: ContainerProps,
   ref: ForwardedRef<HTMLElement>,
 ) {
+  const styles = composeStyles(
+    useStyle({ display: 'flex', alignItems: 'center' }),
+    width,
+    margin,
+    useStyle(useResponsiveTextStyle(textStyle)),
+    useStyle(
+      useResponsiveStyle([gutter] as const, ([gutter = { value: 0, unit: 'px' }]) => ({
+        gap: `${gutter.value}${gutter.unit}`,
+      })),
+    ),
+    className
+  )
   return (
-    <nav
-      {...restOfProps}
-      ref={ref}
-      className={cx(
-        useStyle({ display: 'flex', alignItems: 'center' }),
-        width,
-        margin,
-        useStyle(useResponsiveTextStyle(textStyle)),
-        useStyle(
-          useResponsiveStyle([gutter] as const, ([gutter = { value: 0, unit: 'px' }]) => ({
-            gap: `${gutter.value}${gutter.unit}`,
-          })),
-        ),
-        className,
-      )}
-    />
+    <>
+      {styles.styleElements}
+      <nav
+        {...restOfProps}
+        ref={ref}
+        className={styles.className}
+      />
+    </>
   )
 })
 
@@ -97,27 +100,31 @@ function LinksContainer({
   mobileMenuAnimation,
   ...restOfProps
 }: LinksContainerProps) {
-  return (
-    <div
-      {...restOfProps}
-      className={cx(
-        useStyle({
-          display: 'flex',
-          alignItems: 'center',
-          flexGrow: 1,
+  const styles = composeStyles(
+    useStyle({
+      display: 'flex',
+      alignItems: 'center',
+      flexGrow: 1,
+    }),
+    useStyle(
+      useResponsiveStyle(
+        [alignment, mobileMenuAnimation] as const,
+        ([alignment = 'flex-end', mobileMenuAnimation]) => ({
+          display: mobileMenuAnimation == null ? 'flex' : 'none',
+          justifyContent: alignment,
         }),
-        useStyle(
-          useResponsiveStyle(
-            [alignment, mobileMenuAnimation] as const,
-            ([alignment = 'flex-end', mobileMenuAnimation]) => ({
-              display: mobileMenuAnimation == null ? 'flex' : 'none',
-              justifyContent: alignment,
-            }),
-          ),
-        ),
-        className,
-      )}
-    />
+      ),
+    ),
+    className
+  )
+  return (
+    <>
+      {styles.styleElements}
+      <div
+        {...restOfProps}
+        className={styles.className}
+      />
+    </>
   )
 }
 
@@ -137,33 +144,37 @@ function OpenIconContainer({
   color,
   ...restOfProps
 }: OpenIconContainerProps) {
-  return (
-    <button
-      {...restOfProps}
-      className={cx(
-        useStyle({
-          display: 'none',
-          flexGrow: 1,
-          alignItems: 'center',
-          background: 'none',
-          outline: 0,
-          border: 0,
-          padding: 0,
-          fill: 'currentcolor',
+  const styles = composeStyles(
+    useStyle({
+      display: 'none',
+      flexGrow: 1,
+      alignItems: 'center',
+      background: 'none',
+      outline: 0,
+      border: 0,
+      padding: 0,
+      fill: 'currentcolor',
+    }),
+    useStyle(
+      useResponsiveStyle(
+        [mobileMenuAnimation, alignment, color] as const,
+        ([mobileMenuAnimation, alignment = 'flex-end', color]) => ({
+          display: mobileMenuAnimation == null ? 'none' : 'flex',
+          justifyContent: alignment,
+          color: color == null ? 'rgba(161, 168, 194, 0.5)' : colorToString(color),
         }),
-        useStyle(
-          useResponsiveStyle(
-            [mobileMenuAnimation, alignment, color] as const,
-            ([mobileMenuAnimation, alignment = 'flex-end', color]) => ({
-              display: mobileMenuAnimation == null ? 'none' : 'flex',
-              justifyContent: alignment,
-              color: color == null ? 'rgba(161, 168, 194, 0.5)' : colorToString(color),
-            }),
-          ),
-        ),
-        className,
-      )}
-    />
+      ),
+    ),
+    className
+  )
+  return (
+    <>
+      {styles.styleElements}
+      <button
+        {...restOfProps}
+        className={styles.className}
+      />
+    </>
   )
 }
 

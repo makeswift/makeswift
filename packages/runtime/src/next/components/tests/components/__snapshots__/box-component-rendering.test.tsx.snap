@@ -1,43 +1,52 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`correctly renders box component with background image 1`] = `
-.emotion-0 {
+.ms-12226a4 {
+  display: flex;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.ms-u7pdys {
   position: relative;
 }
 
-.emotion-0>* {
+.ms-u7pdys > * {
   border-radius: inherit;
   height: inherit;
 }
 
-.emotion-0>:last-child {
+.ms-u7pdys > :last-child {
   position: relative;
 }
 
-.emotion-1 {
+.ms-qevsl1 {
   max-width: 100%;
 }
 
 @media only screen and (min-width: 769px) {
-  .emotion-1 {
+  .ms-qevsl1 {
     width: 1160px;
   }
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-1 {
+  .ms-qevsl1 {
     width: 1160px;
   }
 }
 
 @media only screen and (max-width: 575px) {
-  .emotion-1 {
+  .ms-qevsl1 {
     width: 1160px;
   }
 }
 
 @media only screen and (min-width: 769px) {
-  .emotion-2 {
+  .ms-lr97xu {
     margin-top: 40px;
     margin-right: auto;
     margin-bottom: 60px;
@@ -46,7 +55,7 @@ exports[`correctly renders box component with background image 1`] = `
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-2 {
+  .ms-lr97xu {
     margin-top: 40px;
     margin-right: auto;
     margin-bottom: 60px;
@@ -55,7 +64,7 @@ exports[`correctly renders box component with background image 1`] = `
 }
 
 @media only screen and (max-width: 575px) {
-  .emotion-2 {
+  .ms-lr97xu {
     margin-top: 40px;
     margin-right: auto;
     margin-bottom: 60px;
@@ -64,7 +73,61 @@ exports[`correctly renders box component with background image 1`] = `
 }
 
 @media only screen and (min-width: 769px) {
-  .emotion-3 {
+  .ms-141ovkx {
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 470px;
+    padding-left: 10px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-141ovkx {
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 470px;
+    padding-left: 10px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-141ovkx {
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 470px;
+    padding-left: 10px;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-1swwcp8 {
+    border-top: 0px solid black;
+    border-right: 0px solid black;
+    border-bottom: 0px solid black;
+    border-left: 0px solid black;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-1swwcp8 {
+    border-top: 0px solid black;
+    border-right: 0px solid black;
+    border-bottom: 0px solid black;
+    border-left: 0px solid black;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-1swwcp8 {
+    border-top: 0px solid black;
+    border-right: 0px solid black;
+    border-bottom: 0px solid black;
+    border-left: 0px solid black;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-1aj0jsq {
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
@@ -73,7 +136,7 @@ exports[`correctly renders box component with background image 1`] = `
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-3 {
+  .ms-1aj0jsq {
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
@@ -82,7 +145,7 @@ exports[`correctly renders box component with background image 1`] = `
 }
 
 @media only screen and (max-width: 575px) {
-  .emotion-3 {
+  .ms-1aj0jsq {
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
@@ -90,47 +153,49 @@ exports[`correctly renders box component with background image 1`] = `
   }
 }
 
-.emotion-4 {
+.ms-1vg8v23 {
   display: flex;
 }
 
 @media only screen and (min-width: 769px) {
-  .emotion-5 {
+  .ms-7cpjp3 {
     -webkit-align-self: auto;
     -ms-flex-item-align: auto;
+    -ms-grid-row-align: auto;
     align-self: auto;
   }
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-5 {
+  .ms-7cpjp3 {
     -webkit-align-self: auto;
     -ms-flex-item-align: auto;
+    -ms-grid-row-align: auto;
     align-self: auto;
   }
 }
 
 @media only screen and (max-width: 575px) {
-  .emotion-5 {
+  .ms-7cpjp3 {
     -webkit-align-self: auto;
     -ms-flex-item-align: auto;
+    -ms-grid-row-align: auto;
     align-self: auto;
   }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .emotion-6 {
+  .ms-g6asym {
     opacity: 1;
     -webkit-transition: all 0ms;
     transition: all 0ms;
   }
-
-  .emotion-6>div>.grid-item {
+  .ms-g6asym > div > .grid-item {
     opacity: 1;
   }
 }
 
-.emotion-7 {
+.ms-187jnny {
   position: absolute;
   top: 0;
   right: 0;
@@ -141,123 +206,61 @@ exports[`correctly renders box component with background image 1`] = `
 }
 
 @media only screen and (min-width: 769px) {
-  .emotion-7 {
+  .ms-187jnny {
     display: block;
   }
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-7 {
+  .ms-187jnny {
     display: block;
   }
 }
 
 @media only screen and (max-width: 575px) {
-  .emotion-7 {
+  .ms-187jnny {
     display: block;
   }
 }
 
 @media only screen and (min-width: 769px) {
-  .emotion-8 {
-    padding-top: 10px;
-    padding-right: 10px;
-    padding-bottom: 470px;
-    padding-left: 10px;
-  }
-}
-
-@media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-8 {
-    padding-top: 10px;
-    padding-right: 10px;
-    padding-bottom: 470px;
-    padding-left: 10px;
-  }
-}
-
-@media only screen and (max-width: 575px) {
-  .emotion-8 {
-    padding-top: 10px;
-    padding-right: 10px;
-    padding-bottom: 470px;
-    padding-left: 10px;
-  }
-}
-
-@media only screen and (min-width: 769px) {
-  .emotion-10 {
-    border-top: 0px solid black;
-    border-right: 0px solid black;
-    border-bottom: 0px solid black;
-    border-left: 0px solid black;
-  }
-}
-
-@media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-10 {
-    border-top: 0px solid black;
-    border-right: 0px solid black;
-    border-bottom: 0px solid black;
-    border-left: 0px solid black;
-  }
-}
-
-@media only screen and (max-width: 575px) {
-  .emotion-10 {
-    border-top: 0px solid black;
-    border-right: 0px solid black;
-    border-bottom: 0px solid black;
-    border-left: 0px solid black;
-  }
-}
-
-.emotion-11 {
-  display: flex;
-  -webkit-box-flex-wrap: wrap;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  width: 100%;
-}
-
-@media only screen and (min-width: 769px) {
-  .emotion-12 {
+  .ms-m001dn {
     -webkit-align-content: flex-start;
-    -ms-flex-line-pack: flex-start;
+    -ms-flex-line-pack: start;
     align-content: flex-start;
   }
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-12 {
+  .ms-m001dn {
     -webkit-align-content: flex-start;
-    -ms-flex-line-pack: flex-start;
+    -ms-flex-line-pack: start;
     align-content: flex-start;
   }
 }
 
 @media only screen and (max-width: 575px) {
-  .emotion-12 {
+  .ms-m001dn {
     -webkit-align-content: flex-start;
-    -ms-flex-line-pack: flex-start;
+    -ms-flex-line-pack: start;
     align-content: flex-start;
   }
 }
 
-.emotion-13 {
+.ms-1fqsart {
   width: 100%;
   background: rgba(161, 168, 194, 0.18);
   height: 80px;
   padding: 8px;
 }
 
+
 <div
-  class="emotion-0 emotion-1 emotion-2 emotion-3 emotion-4 emotion-5 emotion-6"
+  class="ms-u7pdys ms-qevsl1 ms-lr97xu ms-1aj0jsq ms-1vg8v23 ms-7cpjp3 ms-g6asym"
   id="test-box"
 >
   <div
-    class="emotion-7"
+    class="ms-187jnny"
   >
     <div
       style="position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px;"
@@ -278,10 +281,10 @@ exports[`correctly renders box component with background image 1`] = `
     </div>
   </div>
   <div
-    class="emotion-8 emotion-9 emotion-10 emotion-11 emotion-12"
+    class="ms-141ovkx ms-17jlh6l ms-1swwcp8 ms-12226a4 ms-m001dn"
   >
     <div
-      class="emotion-13"
+      class="ms-1fqsart"
       style="visibility: initial;"
     >
       <svg

@@ -5,10 +5,9 @@ import { useFormContext, Sizes } from '../../../../context/FormContext'
 import Label from '../Label'
 import { getSizeHeight as getInputSizeHeight } from '../Input'
 import Checkbox from '../Checkbox'
-import { useStyle } from '../../../../../../../runtimes/react/use-style'
 import { useResponsiveStyle } from '../../../../../../utils/responsive-style'
-import { cx } from '@emotion/css'
 import { TableColumn } from '../../../../types'
+import { composeStyles, useStyle } from '../../../../../../../runtimes/react/css-runtime/hooks/use-style'
 
 type Props = {
   form: FormikProps<{
@@ -43,31 +42,38 @@ export default forwardRef(function CheckboxTableField(
     form.setFieldValue(name, event.currentTarget.checked)
   }
 
+  const labelStyles = composeStyles(
+    useStyle({ display: 'flex', alignItems: 'center', margin: 0 }),
+    useStyle(
+      useResponsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
+        minHeight: getInputSizeHeight(size),
+        maxHeight: getInputSizeHeight(size),
+      })),
+    )
+  )
+  const spanStyle = useStyle({ marginRight: 8 })
+
   return (
-    <Label
-      className={cx(
-        useStyle({ display: 'flex', alignItems: 'center', margin: 0 }),
-        useStyle(
-          useResponsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
-            minHeight: getInputSizeHeight(size),
-            maxHeight: getInputSizeHeight(size),
-          })),
-        ),
-      )}
-      htmlFor={id}
-    >
-      <span className={useStyle({ marginRight: 8 })}>
-        <Checkbox
-          {...restOfProps}
-          aria-label={label}
-          checked={value}
-          onChange={handleChange}
-          ref={ref}
-          id={id}
-          error={error != null}
-        />
-      </span>
-      {label}
-    </Label>
+    <>
+      {labelStyles.styleElements}
+      <Label
+        className={labelStyles.className}
+        htmlFor={id}
+      >
+        {spanStyle.styleElement}
+        <span className={spanStyle.className}>
+          <Checkbox
+            {...restOfProps}
+            aria-label={label}
+            checked={value}
+            onChange={handleChange}
+            ref={ref}
+            id={id}
+            error={error != null}
+          />
+        </span>
+        {label}
+      </Label>
+    </>
   )
 })

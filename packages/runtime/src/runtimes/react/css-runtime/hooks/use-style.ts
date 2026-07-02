@@ -1,0 +1,46 @@
+import { generateClassName, toCss } from "../css-runtime"
+import { CSSObject } from "@emotion/serialize"
+import { UncontrolledStyle } from "../components/UncontrolledStyle"
+import React from "react"
+import clsx from "clsx"
+import { useStylesContext } from "./use-styles-context"
+
+// TODO rename file, separate out?
+
+export function useStyle(style: CSSObject, options: { precedence?: string } = {}) {
+  const { classNamePrefix } = useStylesContext()
+  const className = generateClassName({
+    data: JSON.stringify(style),
+    classNamePrefix,
+  })
+  const { css } = toCss(style, className)
+  const styleElement = React.createElement(UncontrolledStyle, {
+    key: className,
+    className,
+    css,
+    precedence: options.precedence
+  })
+  return {
+    className,
+    styleElement,
+  }
+}
+
+export function composeStyles(...args: Array<string | ReturnType<typeof useStyle> | undefined>) {
+  const classNames: string[] = []
+  const styleElements: React.ReactElement[] = []
+  args.forEach(arg => {
+    if (arg == null) return
+    if (typeof arg === 'string') {
+      classNames.push(arg)
+    } else {
+      classNames.push(arg.className)
+      styleElements.push(arg.styleElement)
+    }
+  })
+  const combinedClassName = clsx(classNames)
+  return {
+    className: combinedClassName,
+    styleElements
+  }
+}

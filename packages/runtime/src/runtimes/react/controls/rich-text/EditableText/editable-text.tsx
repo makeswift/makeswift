@@ -1,6 +1,5 @@
 'use client'
 
-import { cx } from '@emotion/css'
 import { getBox } from 'css-box-model'
 import isHotkey from 'is-hotkey'
 import {
@@ -30,6 +29,7 @@ import { Element, Leaf } from '../components'
 import { Descriptors } from '../rich-text'
 import { useSyncDOMSelection } from './useSyncDOMSelection'
 import { useSyncWithBuilder } from './useSyncWithBuilder'
+import clsx from 'clsx'
 
 type Props = {
   id?: string
@@ -119,7 +119,7 @@ export const EditableText = forwardRef(function EditableText(
         onFocus={handleFocus}
         onKeyDown={handleKeyDown}
         onBlur={handleBlur}
-        className={cx(width, margin)}
+        className={clsx(width, margin)}
         readOnly={editMode !== BuilderEditMode.CONTENT}
         placeholder="Write some text..."
       />

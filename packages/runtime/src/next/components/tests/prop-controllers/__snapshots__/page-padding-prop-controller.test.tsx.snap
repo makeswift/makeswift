@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Page can render PaddingPropController v0 data: rendered 1`] = `
+@media only screen and (min-width: 769px) {
+  .ms-et27w2 {
+    padding-top: 17px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-et27w2 {
+    padding-top: 17px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-et27w2 {
+    padding-top: 17px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+  }
+}
+
+
+<div
+  class="ms-et27w2"
+  data-testid="test-id"
+/>
+`;
+
+exports[`Page can render PaddingPropController v1 data: rendered 1`] = `
+@media only screen and (min-width: 769px) {
+  .ms-et27w2 {
+    padding-top: 17px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-et27w2 {
+    padding-top: 17px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-et27w2 {
+    padding-top: 17px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+  }
+}
+
+
+<div
+  class="ms-et27w2"
+  data-testid="test-id"
+/>
+`;

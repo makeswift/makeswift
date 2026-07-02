@@ -4,7 +4,7 @@ export {
   MakeswiftComponent,
   Slot,
   ReactRuntime,
-  DefaultRootStyleRegistry as RootStyleRegistry,
+  RootStyleRegistry,
 } from '@makeswift/runtime/unstable-framework-support'
 
 export { Makeswift } from './client'

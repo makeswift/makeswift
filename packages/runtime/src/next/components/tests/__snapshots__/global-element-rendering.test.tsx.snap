@@ -1,30 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Page correctly renders a global element 1`] = `
-.emotion-0 {
+.ms-8g3aic {
   max-width: 100%;
 }
 
 @media only screen and (min-width: 769px) {
-  .emotion-0 {
+  .ms-8g3aic {
     width: 700px;
   }
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-0 {
+  .ms-8g3aic {
     width: 700px;
   }
 }
 
 @media only screen and (max-width: 575px) {
-  .emotion-0 {
+  .ms-8g3aic {
     width: 700px;
   }
 }
 
 @media only screen and (min-width: 769px) {
-  .emotion-1 {
+  .ms-1xrw4cs {
     margin-top: 40px;
     margin-right: auto;
     margin-bottom: 20px;
@@ -33,7 +33,7 @@ exports[`Page correctly renders a global element 1`] = `
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-1 {
+  .ms-1xrw4cs {
     margin-top: 40px;
     margin-right: auto;
     margin-bottom: 20px;
@@ -42,7 +42,7 @@ exports[`Page correctly renders a global element 1`] = `
 }
 
 @media only screen and (max-width: 575px) {
-  .emotion-1 {
+  .ms-1xrw4cs {
     margin-top: 40px;
     margin-right: auto;
     margin-bottom: 20px;
@@ -50,12 +50,12 @@ exports[`Page correctly renders a global element 1`] = `
   }
 }
 
-.emotion-2 {
+.ms-1azh6ix {
   margin: 0;
 }
 
 @media only screen and (min-width: 769px) {
-  .emotion-4 {
+  .ms-srm1zu {
     font-family: Lato;
     font-size: 30px;
     font-weight: 700;
@@ -65,7 +65,7 @@ exports[`Page correctly renders a global element 1`] = `
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-4 {
+  .ms-srm1zu {
     font-family: Lato;
     font-size: 30px;
     font-weight: 700;
@@ -75,7 +75,7 @@ exports[`Page correctly renders a global element 1`] = `
 }
 
 @media only screen and (max-width: 575px) {
-  .emotion-4 {
+  .ms-srm1zu {
     font-family: Lato;
     font-size: 16px;
     font-weight: 700;
@@ -84,18 +84,19 @@ exports[`Page correctly renders a global element 1`] = `
   }
 }
 
+
 <div
-  class="emotion-0 emotion-1"
+  class="ms-8g3aic ms-1xrw4cs"
   id="title"
 >
   <div
     style="position: relative; white-space: pre-wrap; word-wrap: break-word;"
   >
     <p
-      class="emotion-2 emotion-3"
+      class="ms-1azh6ix ms-xebgmj"
     >
       <span
-        class="emotion-4"
+        class="ms-srm1zu"
       >
         About Us
       </span>
@@ -105,52 +106,30 @@ exports[`Page correctly renders a global element 1`] = `
 `;
 
 exports[`Page correctly renders a localized global element 1`] = `
-.emotion-0 {
+.ms-8g3aic {
   max-width: 100%;
 }
 
 @media only screen and (min-width: 769px) {
-  .emotion-0 {
+  .ms-8g3aic {
     width: 700px;
   }
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-0 {
+  .ms-8g3aic {
     width: 700px;
   }
 }
 
 @media only screen and (max-width: 575px) {
-  .emotion-0 {
-    width: 700px;
-  }
-}
-
-.emotion-0 {
-  max-width: 100%;
-}
-
-@media only screen and (min-width: 769px) {
-  .emotion-0 {
-    width: 700px;
-  }
-}
-
-@media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-0 {
-    width: 700px;
-  }
-}
-
-@media only screen and (max-width: 575px) {
-  .emotion-0 {
+  .ms-8g3aic {
     width: 700px;
   }
 }
 
 @media only screen and (min-width: 769px) {
-  .emotion-1 {
+  .ms-1xrw4cs {
     margin-top: 40px;
     margin-right: auto;
     margin-bottom: 20px;
@@ -159,7 +138,7 @@ exports[`Page correctly renders a localized global element 1`] = `
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-1 {
+  .ms-1xrw4cs {
     margin-top: 40px;
     margin-right: auto;
     margin-bottom: 20px;
@@ -168,7 +147,7 @@ exports[`Page correctly renders a localized global element 1`] = `
 }
 
 @media only screen and (max-width: 575px) {
-  .emotion-1 {
+  .ms-1xrw4cs {
     margin-top: 40px;
     margin-right: auto;
     margin-bottom: 20px;
@@ -176,44 +155,13 @@ exports[`Page correctly renders a localized global element 1`] = `
   }
 }
 
-@media only screen and (min-width: 769px) {
-  .emotion-1 {
-    margin-top: 40px;
-    margin-right: auto;
-    margin-bottom: 20px;
-    margin-left: auto;
-  }
-}
-
-@media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-1 {
-    margin-top: 40px;
-    margin-right: auto;
-    margin-bottom: 20px;
-    margin-left: auto;
-  }
-}
-
-@media only screen and (max-width: 575px) {
-  .emotion-1 {
-    margin-top: 40px;
-    margin-right: auto;
-    margin-bottom: 20px;
-    margin-left: auto;
-  }
-}
-
-.emotion-2 {
-  margin: 0;
-}
-
-.emotion-2 {
+.ms-1azh6ix {
   margin: 0;
 }
 
 @media only screen and (min-width: 769px) {
-  .emotion-4 {
-    color: hsla(238,87%,49%,1);
+  .ms-1lo5cxy {
+    color: hsla(238, 87%, 49%, 1);
     font-family: Lato;
     font-size: 30px;
     font-weight: 700;
@@ -223,8 +171,8 @@ exports[`Page correctly renders a localized global element 1`] = `
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-4 {
-    color: hsla(238,87%,49%,1);
+  .ms-1lo5cxy {
+    color: hsla(238, 87%, 49%, 1);
     font-family: Lato;
     font-size: 30px;
     font-weight: 700;
@@ -234,8 +182,8 @@ exports[`Page correctly renders a localized global element 1`] = `
 }
 
 @media only screen and (max-width: 575px) {
-  .emotion-4 {
-    color: hsla(238,87%,49%,1);
+  .ms-1lo5cxy {
+    color: hsla(238, 87%, 49%, 1);
     font-family: Lato;
     font-size: 16px;
     font-weight: 700;
@@ -244,18 +192,19 @@ exports[`Page correctly renders a localized global element 1`] = `
   }
 }
 
+
 <div
-  class="emotion-0 emotion-1"
+  class="ms-8g3aic ms-1xrw4cs"
   id="title"
 >
   <div
     style="position: relative; white-space: pre-wrap; word-wrap: break-word;"
   >
     <p
-      class="emotion-2 emotion-3"
+      class="ms-1azh6ix ms-xzb9tw"
     >
       <span
-        class="emotion-4"
+        class="ms-1lo5cxy"
       >
         À propos de nous
       </span>

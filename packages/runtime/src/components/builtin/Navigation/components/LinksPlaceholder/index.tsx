@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import { ResponsiveLengthData } from '@makeswift/prop-controllers'
-import { useStyle } from '../../../../../runtimes/react/use-style'
 import GutterContainer from '../../../../shared/GutterContainer'
+import { useStyle } from '../../../../../runtimes/react/css-runtime/hooks/use-style'
 
 type PlaceholderLinkProps = {
   width: number
@@ -9,16 +9,20 @@ type PlaceholderLinkProps = {
 }
 
 function PlaceholderLink({ width, button }: PlaceholderLinkProps) {
+  const { className, styleElement } = useStyle({
+    width,
+    height: button === true ? 32 : 8,
+    backgroundColor: '#a1a8c2',
+    borderRadius: button === true ? 6 : 2,
+    opacity: 0.4,
+  })
   return (
-    <div
-      className={useStyle({
-        width,
-        height: button === true ? 32 : 8,
-        backgroundColor: '#a1a8c2',
-        borderRadius: button === true ? 6 : 2,
-        opacity: 0.4,
-      })}
-    />
+    <>
+      {styleElement}
+      <div
+        className={className}
+      />
+    </>
   )
 }
 

@@ -1,32 +1,19 @@
 'use client'
 
-import { type PropsWithChildren, useState } from 'react'
-import { useServerInsertedHTML } from 'next/navigation'
+import { type PropsWithChildren } from 'react'
 
 import {
-  createRootStyleCache,
   RootStyleRegistry as ReactRootStyleRegistry,
-  StyleTagSSR,
   type RootStyleProps,
 } from '../runtimes/react/root-style-registry'
 
 export function NextRootStyleRegistry({
   children,
-  cacheKey,
+  classNamePrefix,
   enableCssReset,
 }: PropsWithChildren<RootStyleProps>) {
-  const [cache] = useState(() => createRootStyleCache({ key: cacheKey }))
-
-  useServerInsertedHTML(() => {
-    const { classNames, css } = cache.flush()
-
-    return classNames.length > 0 ? (
-      <StyleTagSSR cacheKey={cache.key} classNames={classNames} css={css} />
-    ) : null
-  })
-
   return (
-    <ReactRootStyleRegistry cache={cache} enableCssReset={enableCssReset}>
+    <ReactRootStyleRegistry classNamePrefix={classNamePrefix} enableCssReset={enableCssReset}>
       {children}
     </ReactRootStyleRegistry>
   )

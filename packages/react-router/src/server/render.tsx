@@ -2,12 +2,10 @@ import { type ReactNode } from 'react'
 
 import { createReadableStreamFromReadable } from '@react-router/node'
 import { renderToPipeableStream } from 'react-dom/server'
-import { PassThrough, Transform } from 'node:stream'
+import { PassThrough } from 'node:stream'
 
 import {
-  createRootStyleCache,
   RootStyleRegistry,
-  styleTagHtml,
   type RootStyleProps,
 } from '@makeswift/runtime/unstable-framework-support'
 
@@ -17,7 +15,7 @@ export function renderHtml(
   children: ReactNode,
   {
     timeout,
-    cacheKey,
+    classNamePrefix,
     enableCssReset,
     responseStatusCode,
     responseHeaders,
@@ -28,29 +26,22 @@ export function renderHtml(
     responseHeaders: Headers
   },
 ): Promise<Response> {
-  const cache = createRootStyleCache({ key: cacheKey })
-
   return new Promise((resolve, reject) => {
     let didError = false
 
     const { pipe, abort } = renderToPipeableStream(
-      <RootStyleRegistry cache={cache} enableCssReset={enableCssReset}>
+      <RootStyleRegistry classNamePrefix={classNamePrefix} enableCssReset={enableCssReset}>
         {children}
       </RootStyleRegistry>,
       {
-        // wait for all Suspense boundaries before streaming for consistent Emotion CSS
+        /*
+          TODO: consider switching to `onShellReady` now that we are no longer
+          relying on a manual mechanism to insert `<style>`s into the `<head>`?
+        */
         onAllReady() {
-          // create a head injection transform with server-side styles
-          const { classNames, css } = cache.flush()
-          const headInjector = createHeadInjectionTransform(
-            styleTagHtml({ cacheKey: cache.key, classNames, css }),
-          )
-
-          // prepare a pipeable response stream with the head transform
+          // prepare a pipeable response stream
           const body = new PassThrough()
-          const responseStream = createReadableStreamFromReadable(
-            classNames.length > 0 ? body.pipe(headInjector) : body,
-          )
+          const responseStream = createReadableStreamFromReadable(body)
 
           // amend response headers with content type
           responseHeaders.set('Content-Type', 'text/html; charset=utf-8')
@@ -78,23 +69,5 @@ export function renderHtml(
     )
 
     setTimeout(abort, timeout ?? DEFAULT_TIMEOUT)
-  })
-}
-
-function createHeadInjectionTransform(snippet: string) {
-  let injected = false
-  return new Transform({
-    transform(chunk, _enc, cb) {
-      if (injected) return cb(null, chunk)
-
-      // inject `snippet` right before the first </head> tag
-      const str = chunk.toString()
-      const idx = str.indexOf('</head>')
-      if (idx === -1) return cb(null, chunk)
-
-      injected = true
-      const out = str.slice(0, idx) + snippet + str.slice(idx)
-      cb(null, out)
-    },
   })
 }

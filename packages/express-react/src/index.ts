@@ -4,7 +4,7 @@ export {
   Page,
   Slot,
   RuntimeProvider as ReactRuntimeProvider,
-  DefaultRootStyleRegistry as RootStyleRegistry,
+  RootStyleRegistry,
   ReactRuntime,
 } from '@makeswift/runtime/unstable-framework-support'
 
