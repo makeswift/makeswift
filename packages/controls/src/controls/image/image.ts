@@ -352,12 +352,17 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
       return url
     }
 
-    return width != null && height != null
-      ? {
-          url,
-          dimensions: { width, height },
-        }
-      : undefined
+    if (width == null || height == null) {
+      console.warn(
+        `Image control: cannot resolve image with \`Image.Format.WithDimensions\` format because it is missing dimensions (url: ${url}).`,
+      )
+      return undefined
+    }
+
+    return {
+      url,
+      dimensions: { width, height },
+    }
   }
 
   createInstance(sendMessage: SendMessage<any>) {
