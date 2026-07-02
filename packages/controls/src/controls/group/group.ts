@@ -24,7 +24,7 @@ import {
   type Resolvable,
   type SchemaType,
 } from '../definition'
-import { type SendMessage } from '../instance'
+import { type ControlInstanceKey, type SendMessage } from '../instance'
 import { ShapeDefinition } from '../shape/v1'
 import { ShapeV2Definition } from '../shape/v2'
 import { ControlDefinitionVisitor } from '../visitor'
@@ -279,8 +279,11 @@ class Definition<C extends Config> extends ControlDefinition<
     }
   }
 
-  createInstance(sendMessage: SendMessage): InstanceType<C> {
-    return new GroupControl(this, sendMessage)
+  createInstance(
+    instanceKey: ControlInstanceKey,
+    sendMessage: SendMessage<any>,
+  ): GroupControl<Definition<C>> {
+    return new GroupControl(this, instanceKey, sendMessage)
   }
 
   accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {

@@ -34,11 +34,14 @@ function createAndRegisterPropControllers(
 
     const propControllers = Object.entries(descriptors).reduce(
       (acc, [propName, descriptor]) => {
-        const propController = createPropController(descriptor, message =>
-          dispatch(
-            Builder.messageBuilderPropController(documentKey, elementKey, propName, message),
-          ),
-        ) as ControlInstance
+        const propController = createPropController({
+          descriptor,
+          instanceKey: { elementKey, propName },
+          send: message =>
+            dispatch(
+              Builder.messageBuilderPropController(documentKey, elementKey, propName, message),
+            ),
+        }) as ControlInstance
 
         return { ...acc, [propName]: propController }
       },

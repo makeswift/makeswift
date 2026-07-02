@@ -12,7 +12,7 @@ import {
 import { Targets, type IntrospectionTarget } from '../../introspection'
 
 import { ControlDefinition, type SchemaType } from '../definition'
-import { type SendMessage } from '../instance'
+import { type ControlInstanceKey, type SendMessage } from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
 
 import { SlotControl } from './slot-control'
@@ -141,8 +141,11 @@ abstract class Definition<
     return { columns: mergedColumns, elements: mergedElements }
   }
 
-  createInstance(sendMessage: SendMessage) {
-    return new SlotControl(sendMessage)
+  createInstance(
+    instanceKey: ControlInstanceKey,
+    sendMessage: SendMessage<any>,
+  ) {
+    return new SlotControl(instanceKey, sendMessage)
   }
 
   accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {

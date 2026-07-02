@@ -7,6 +7,8 @@ export type ControlMessage<Payload = Data> = {
   payload?: Payload
 }
 
+export type ControlInstanceKey = { elementKey: string; propName: string }
+
 export type SendMessage<M extends ControlMessage = ControlMessage> = (
   message: M,
 ) => void
@@ -14,7 +16,10 @@ export type SendMessage<M extends ControlMessage = ControlMessage> = (
 export abstract class ControlInstance<
   M extends ControlMessage = ControlMessage,
 > {
-  constructor(protected readonly sendMessage: SendMessage<M>) {}
+  constructor(
+    public readonly instanceKey: ControlInstanceKey,
+    protected readonly sendMessage: SendMessage<M>,
+  ) {}
 
   abstract recv(message: M): void
   abstract child(key: string): ControlInstance | undefined

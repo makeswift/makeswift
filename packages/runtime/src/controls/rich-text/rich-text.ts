@@ -4,6 +4,7 @@ import {
   SendMessage,
   StableValue,
   type DeserializedRecord,
+  type ControlInstanceKey,
   type ResourceResolver,
   type Stylesheet,
   type Resolvable,
@@ -42,8 +43,8 @@ class Definition extends BaseDefinition {
     }
   }
 
-  createInstance(sendMessage: SendMessage<any>) {
-    return new RichTextControl(sendMessage)
+  createInstance(instanceKey: ControlInstanceKey, sendMessage: SendMessage<any>) {
+    return new RichTextControl(instanceKey, sendMessage)
   }
 }
 

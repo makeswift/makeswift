@@ -1,7 +1,11 @@
 import { type BoxDisplayModel } from '../../../common'
-
 import { ControlDefinition } from '../../definition'
-import { ControlInstance, ControlMessage, SendMessage } from '../../instance'
+import {
+  ControlInstance,
+  ControlMessage,
+  type ControlInstanceKey,
+  type SendMessage,
+} from '../../instance'
 
 type ItemBoxModelChangeMessage = {
   type: typeof StyleV2Control.CHANGE_BOX_MODEL
@@ -23,9 +27,13 @@ export class StyleV2Control extends ControlInstance<Message> {
 
   private readonly control: ControlInstance
 
-  constructor(propDef: ControlDefinition, sendMessage: SendMessage<Message>) {
-    super(sendMessage)
-    this.control = propDef.createInstance((message) =>
+  constructor(
+    propDef: ControlDefinition,
+    instanceKey: ControlInstanceKey,
+    sendMessage: SendMessage<Message>,
+  ) {
+    super(instanceKey, sendMessage)
+    this.control = propDef.createInstance(instanceKey, (message) =>
       this.sendMessage({
         type: StyleV2Control.CHILD_CONTROL_MESSAGE,
         payload: { message },
