@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.21
+
+### Patch Changes
+
+- f6b26bd: In an `Image` control using the `Image.Format.WithDimensions` format, show a warning when resolving an image without dimensions
+
 ## 0.1.20
 
 ### Patch Changes

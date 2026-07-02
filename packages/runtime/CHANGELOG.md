@@ -1,5 +1,16 @@
 # @makeswift/runtime
 
+## 0.28.8
+
+### Patch Changes
+
+- 9502d2a: feat: stackable `FrameworkContextProvider` with support for partial overrides.
+- 62c8f9d: feat: server-side implementation of `ApiResourcesClient` interface
+- f0a2f34: feat: use `MakeswiftApiResourcesClient` on the server if runtime instance was provided with an API key
+- Updated dependencies [f6b26bd]
+  - @makeswift/controls@0.1.21
+  - @makeswift/prop-controllers@0.4.15
+
 ## 0.28.7
 
 ### Patch Changes
