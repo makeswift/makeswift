@@ -2,6 +2,8 @@ export * from './control'
 
 export {
   ControlDefinition,
+  unstable_Cascade,
+  CascadeDefinition,
   Checkbox,
   CheckboxDefinition,
   Code,

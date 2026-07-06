@@ -8,6 +8,7 @@ import {
 } from '@makeswift/controls'
 
 import {
+  CascadeDefinition,
   CheckboxDefinition,
   CodeDefinition,
   ColorDefinition,
@@ -64,6 +65,7 @@ export function deserializeControl(
 export function deserializeUnifiedControlDef(record: DeserializedRecord): ControlDefinition {
   type DeserializeMethod = (data: DeserializedRecord) => ControlDefinition
   const deserializeMethod: Record<string, DeserializeMethod> = {
+    [CascadeDefinition.type]: CascadeDefinition.deserialize,
     [CheckboxDefinition.type]: CheckboxDefinition.deserialize,
     [CodeDefinition.type]: CodeDefinition.deserialize,
     [ColorDefinition.type]: ColorDefinition.deserialize,

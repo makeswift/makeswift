@@ -4,6 +4,7 @@ import {
   serializeObject,
 } from '../../serialization'
 
+import { CascadeDefinition } from '../cascade'
 import { CheckboxDefinition } from '../checkbox'
 import { CodeDefinition } from '../code'
 import { ColorDefinition } from '../color'
@@ -50,6 +51,9 @@ export abstract class ControlSerializationVisitor extends ControlDefinitionVisit
     } as unknown as SerializedRecord
   }
 
+  visitCascade(def: CascadeDefinition): SerializedRecord {
+    return this.serializeConfig(def)
+  }
   visitCode(def: CodeDefinition): SerializedRecord {
     return this.serializeConfig(def, { version: def.version })
   }
