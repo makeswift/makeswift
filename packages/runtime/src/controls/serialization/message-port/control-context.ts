@@ -45,6 +45,10 @@ export function getOutgoingControlContext(): ControlContext | undefined {
  * `context` attached to those calls' payloads. In a real builder cosmos calls
  * this before invoking a control's `getOptions`; the spike uses it in tests
  * and the demo stub.
+ *
+ * Spike limitation: the bridged proxy call must be initiated synchronously
+ * inside `fn`, before any `await` — an `await` first would restore the
+ * outgoing slot and drop the context.
  */
 export function unstable_runWithControlContext<T>(
   context: ControlContext,

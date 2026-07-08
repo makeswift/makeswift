@@ -52,6 +52,27 @@ describe('unstable_Gallery', () => {
       expect(resolved).toMatchSnapshot()
     })
 
+    test('deserialize preserves extra option fields at runtime (.passthrough())', async () => {
+      const def = unstable_Gallery({
+        getOptions: () => ({
+          options: [{ id: 'x', src: '/x.jpg', sku: 'SKU-X' }],
+        }),
+      })
+
+      const deserializedDef = unstable_GalleryDefinition.deserialize({
+        type: unstable_GalleryDefinition.type,
+        config: def.config,
+      })
+
+      const page = await deserializedDef.config.getOptions()
+
+      expect(page.options[0]).toEqual({
+        id: 'x',
+        src: '/x.jpg',
+        sku: 'SKU-X',
+      })
+    })
+
     test('disallows extraneous config properties', () => {
       unstable_Gallery({
         label: undefined,
