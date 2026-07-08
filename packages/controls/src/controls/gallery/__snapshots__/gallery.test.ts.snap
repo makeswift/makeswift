@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`unstable_Gallery constructor preserves extra option fields at the type level 1`] = `
+{
+  "id": "a",
+  "sku": "SKU-A",
+  "src": "/a.jpg",
+}
+`;
+
+exports[`unstable_Gallery constructor preserves extra option fields at the type level 2`] = `
+{
+  "id": "a",
+  "sku": "SKU-A",
+  "src": "/a.jpg",
+}
+`;
+
+exports[`unstable_Gallery definition w/ config {"label":"Product image"} toData returns v1 data for \`{ id: 'a', src: '/a.jpg', label: 'A' }\` when definition version is 1 1`] = `
+{
+  "id": "a",
+  "label": "A",
+  "src": "/a.jpg",
+}
+`;
+
+exports[`unstable_Gallery definition w/ config {"label":"Product image"} toData returns v1 data for \`{ id: 'b', src: '/b.jpg', label: 'B', sku: 'SKU-B' }\` when definition version is 1 1`] = `
+{
+  "id": "b",
+  "label": "B",
+  "sku": "SKU-B",
+  "src": "/b.jpg",
+}
+`;
+
+exports[`unstable_Gallery resolveValue w/ config {"label":"Product image"} resolves data ({ id: 'a', src: '/a.jpg', label: 'A' }) 1`] = `
+{
+  "id": "a",
+  "label": "A",
+  "src": "/a.jpg",
+}
+`;
+
+exports[`unstable_Gallery resolveValue w/ config {"label":"Product image"} resolves data ({ id: 'b', src: '/b.jpg', label: 'B', sku: 'SKU-B' }) 1`] = `
+{
+  "id": "b",
+  "label": "B",
+  "sku": "SKU-B",
+  "src": "/b.jpg",
+}
+`;

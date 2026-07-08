@@ -10,6 +10,7 @@ import { ColorDefinition } from '../color'
 import { ComboboxDefinition } from '../combobox'
 import { ControlDefinition } from '../definition'
 import { FontDefinition } from '../font'
+import { unstable_GalleryDefinition } from '../gallery'
 import { GroupDefinition } from '../group'
 import {
   IconRadioGroupConfig,
@@ -64,6 +65,9 @@ export abstract class ControlSerializationVisitor extends ControlDefinitionVisit
   }
   visitFont(def: FontDefinition): SerializedRecord {
     return this.serializeConfig(def, { version: def.version })
+  }
+  visitGallery(def: unstable_GalleryDefinition): SerializedRecord {
+    return this.serializeConfig(def)
   }
   visitGroup(def: GroupDefinition): SerializedRecord {
     return this.serializeConfig(def)
