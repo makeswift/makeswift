@@ -82,7 +82,7 @@ export function registerComponent(runtime: ReactRuntimeCore) {
           placeholder: 'white',
         }),
         textStyle: TextStyle(),
-        width: Width(),
+        width: Width({ defaultValue: 'auto' }),
         margin: Margin({ format: Margin.Format.ClassName }),
       },
     },

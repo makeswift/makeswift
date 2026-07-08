@@ -4,7 +4,7 @@ import { useState, useEffect, Ref, forwardRef } from 'react'
 
 import {
   LinkData,
-  ResponsiveLengthData,
+  ResponsiveWidthLengthData,
   ImageData,
   ResponsiveOpacityValue,
 } from '@makeswift/prop-controllers'
@@ -25,7 +25,7 @@ type Props = {
   file?: ImageData
   altText?: string
   link?: LinkData
-  width?: ResponsiveLengthData
+  width?: ResponsiveWidthLengthData
   margin?: string
   padding?: string
   border?: string
@@ -47,24 +47,43 @@ function loadImage(src: string): Promise<HTMLImageElement> {
   })
 }
 
-function imageSizes(breakpoints: Breakpoints, width?: Props['width']): string {
+function imageSizes(breakpoints: Breakpoints, width?: Props['width'], intrinsicWidth?: number): string {
   const baseDevice = breakpoints.find(breakpoint => breakpoint.maxWidth == null)
   const baseWidth = baseDevice && width && findBreakpointOverride(breakpoints, width, baseDevice.id)
   const baseWidthSize =
-    baseWidth == null || baseWidth.value.unit !== 'px' ? '100vw' : `${baseWidth.value.value}px`
+    baseWidth == null
+      ? '100vw'
+      : baseWidth.value === 'auto'
+        ? intrinsicWidth != null
+          ? `${intrinsicWidth}px`
+          : '100vw'
+        : baseWidth.value.unit === 'px'
+          ? `${baseWidth.value.value}px`
+          : '100vw'
 
   return breakpoints
     .map(breakpoint => {
       const override = findBreakpointOverride(breakpoints, width, breakpoint.id)
 
-      if (override == null || breakpoint.maxWidth == null || override.value.unit !== 'px') {
+      if (override == null || breakpoint.maxWidth == null) {
         return null
       }
 
-      return `(max-width: ${breakpoint.maxWidth}px) ${Math.min(
-        breakpoint.maxWidth,
-        override.value.value,
-      )}px`
+      if (override.value === 'auto' && intrinsicWidth != null) {
+        return `(max-width: ${breakpoint.maxWidth}px) ${Math.min(
+          breakpoint.maxWidth,
+          intrinsicWidth,
+        )}px`
+      }
+
+      if (typeof override.value === 'object' && override.value.unit === 'px') {
+        return `(max-width: ${breakpoint.maxWidth}px) ${Math.min(
+          breakpoint.maxWidth,
+          override.value.value,
+        )}px`
+      }
+
+      return null
     })
     .filter((size): size is NonNullable<typeof size> => size != null)
     .reduce((sourceSizes, sourceSize) => `${sourceSize}, ${sourceSizes}`, baseWidthSize)
@@ -136,7 +155,7 @@ const ImageComponent = forwardRef(function Image(
   const Container = link ? Link : 'div'
   const containerClassName = cx(
     useStyle({ lineHeight: 0, overflow: 'hidden' }),
-    useStyle(useResponsiveWidth(width, dimensions?.width)),
+    useStyle(useResponsiveWidth(width, { defaultValue: dimensions?.width, autoWidth: dimensions?.width })),
     useStyle(useResponsiveStyle([opacity] as const, ([opacity = 1]) => ({ opacity }))),
     margin,
     padding,
@@ -155,7 +174,7 @@ const ImageComponent = forwardRef(function Image(
       <Image
         src={imageSrc}
         priority={priority}
-        sizes={imageSizes(breakpoints, width)}
+        sizes={imageSizes(breakpoints, width, dimensions?.width)}
         alt={altText ?? ''}
         width={dimensions.width}
         height={dimensions.height}

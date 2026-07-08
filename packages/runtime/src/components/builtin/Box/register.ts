@@ -57,7 +57,6 @@ export function registerComponent(runtime: ReactRuntimeCore) {
         id: ElementID(),
         backgrounds: Backgrounds(),
         width: Width({
-          format: Width.Format.ClassName,
           defaultValue: { value: 100, unit: '%' },
         }),
         height: ResponsiveIconRadioGroup({

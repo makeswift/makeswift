@@ -78,7 +78,7 @@ export function registerComponent(runtime: ReactRuntimeCore) {
           min: 0,
           max: 1000,
           // TODO: This is hardcoded value, import it from LengthInputOptions
-          options: [{ value: 'px', label: 'Pixels', icon: 'Px16' }],
+          options: [{ value: 'px', label: 'px' }],
           hidden:
             getCheckboxPropControllerDataBoolean(
               checkboxPropControllerDataSchema.optional().catch(undefined).parse(props.showLogo),

@@ -34,7 +34,7 @@ export function registerComponent(runtime: ReactRuntimeCore) {
         thickness: ResponsiveLength({
           label: 'Height',
           defaultValue: { value: 1, unit: 'px' },
-          options: [{ value: 'px', label: 'Pixels', icon: 'Px16' }],
+          options: [{ value: 'px', label: 'px' }],
         }),
         color: ResponsiveColor({ placeholder: 'black' }),
         width: Width({
