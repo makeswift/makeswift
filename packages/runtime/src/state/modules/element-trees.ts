@@ -251,18 +251,27 @@ function hasChildren(
 
 function deleteElement(
   { elements, elementIds }: ElementTree,
-  deletedElement: Element,
-  propName: string | null,
+  elementToDelete: Element,
   descriptors: DescriptorsByComponentType,
 ) {
-  if (propName == null || hasChildren(deletedElement, propName, descriptors)) {
-    for (const element of traverseElementTree(deletedElement, descriptors)) {
-      elements.delete(element.key)
-      elementIds.delete(element.key)
+  for (const element of traverseElementTree(elementToDelete, descriptors)) {
+    elements.delete(element.key)
+    elementIds.delete(element.key)
+  }
+}
+
+function deleteChildren(
+  { elements, elementIds }: ElementTree,
+  parentElement: Element,
+  descriptors: DescriptorsByComponentType,
+) {
+  for (const element of traverseElementTree(parentElement, descriptors)) {
+    if(element === parentElement) {
+      continue
     }
-  } else {
-    elements.delete(deletedElement.key)
-    elementIds.delete(deletedElement.key)
+
+    elements.delete(element.key)
+    elementIds.delete(element.key)
   }
 }
 
@@ -272,13 +281,18 @@ function applyDelete(
   rootElements: { before: Element; after: Element },
   path: OperationPath,
 ): ElementTree {
-  const [deleteElementPath, ...parentElementPaths] = getChangedElementsPaths(path)
-  const [deletedElement, propName] = getElementAndPropName(rootElements.before, deleteElementPath)
+  const [targetElementPath, ...parentElementPaths] = getChangedElementsPaths(path)
+  const [targetElement, propName] = getElementAndPropName(rootElements.before, targetElementPath)
 
   const elements = new Map(elementTree.elements)
   const elementIds = new Map(elementTree.elementIds)
 
-  deleteElement({ elements, elementIds }, deletedElement, propName, descriptors)
+  if(propName == null) {
+    deleteElement({ elements, elementIds }, targetElement, descriptors)
+  }
+  else if(hasChildren(targetElement, propName, descriptors)) {
+    deleteChildren({ elements, elementIds }, targetElement, descriptors)
+  }
 
   // Use the "after" state to efficiently update all of parent subtrees in the state
   updateParentElements(elements, parentElementPaths, rootElements.after)
@@ -342,13 +356,19 @@ function applyUpdate(
   path: OperationPath,
 ): ElementTree {
   const [updateElementPath, ...parentElementPaths] = getChangedElementsPaths(path)
-  const [deletedElement, propName] = getElementAndPropName(rootElements.before, updateElementPath)
+  const [targetElement, propName] = getElementAndPropName(rootElements.before, updateElementPath)
   const [insertedElement, _] = getElementAndPropName(rootElements.after, updateElementPath)
 
   const elements = new Map(elementTree.elements)
   const elementIds = new Map(elementTree.elementIds)
 
-  deleteElement({ elements, elementIds }, deletedElement, propName, descriptors)
+  if(propName == null) {
+    deleteElement({ elements, elementIds }, targetElement, descriptors)
+  }
+  else if(hasChildren(targetElement, propName, descriptors)) {
+    deleteChildren({ elements, elementIds }, targetElement, descriptors)
+  }
+
   insertElement({ elements, elementIds }, insertedElement, propName, descriptors)
 
   // Use the "after" state to efficiently update all of parent subtrees in the state
