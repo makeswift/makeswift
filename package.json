@@ -10,6 +10,7 @@
     "format:check": "prettier --check .",
     "build": "turbo run build --filter=!./apps/*",
     "clean": "turbo run clean --filter=!./apps/*",
+    "lint": "turbo run lint --filter=!./apps/*",
     "test": "turbo run test",
     "madge": "turbo run madge"
   },
@@ -17,6 +18,7 @@
     "@changesets/cli": "^2.31.0",
     "@playwright/test": "^1.41.1",
     "@types/node": "^20.14.8",
+    "eslint": "^9.31.0",
     "prettier": "^3.6.2",
     "turbo": "^1.13.3"
   }
