@@ -266,7 +266,7 @@ function deleteChildren(
   descriptors: DescriptorsByComponentType,
 ) {
   for (const element of traverseElementTree(parentElement, descriptors)) {
-    if(element === parentElement) {
+    if (element === parentElement) {
       continue
     }
 
@@ -287,10 +287,9 @@ function applyDelete(
   const elements = new Map(elementTree.elements)
   const elementIds = new Map(elementTree.elementIds)
 
-  if(propName == null) {
+  if (propName == null) {
     deleteElement({ elements, elementIds }, targetElement, descriptors)
-  }
-  else if(hasChildren(targetElement, propName, descriptors)) {
+  } else if (hasChildren(targetElement, propName, descriptors)) {
     deleteChildren({ elements, elementIds }, targetElement, descriptors)
   }
 
@@ -362,10 +361,9 @@ function applyUpdate(
   const elements = new Map(elementTree.elements)
   const elementIds = new Map(elementTree.elementIds)
 
-  if(propName == null) {
+  if (propName == null) {
     deleteElement({ elements, elementIds }, targetElement, descriptors)
-  }
-  else if(hasChildren(targetElement, propName, descriptors)) {
+  } else if (hasChildren(targetElement, propName, descriptors)) {
     deleteChildren({ elements, elementIds }, targetElement, descriptors)
   }
 
