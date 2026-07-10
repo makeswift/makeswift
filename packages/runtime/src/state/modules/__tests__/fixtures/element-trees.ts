@@ -4622,390 +4622,350 @@ export const reparentingElementTree: {
 
 export const deletingImageInBox = {
   oldDocument: {
-    "key": "UGFnZToxMjIxNGZlYy0xZjNhLTQ1ODEtYTI4NC05ZTU1OTVhMDhkZWI=",
-    "rootElement": {
-        "key": "a4c1b856-831e-4cbf-91cc-627a43ed8e81",
-        "props": {
-            "rowGap": {
-                "@@makeswift/type": "prop-controllers::gap-y::v1",
-                "value": [
-                    {
-                        "deviceId": "desktop",
-                        "value": {
-                            "unit": "px",
-                            "value": 10
-                        }
-                    }
-                ]
+    key: 'UGFnZToxMjIxNGZlYy0xZjNhLTQ1ODEtYTI4NC05ZTU1OTVhMDhkZWI=',
+    rootElement: {
+      key: 'a4c1b856-831e-4cbf-91cc-627a43ed8e81',
+      props: {
+        rowGap: {
+          '@@makeswift/type': 'prop-controllers::gap-y::v1',
+          value: [
+            {
+              deviceId: 'desktop',
+              value: {
+                unit: 'px',
+                value: 10,
+              },
             },
-            "children": {
-                "@@makeswift/type": "prop-controllers::grid::v1",
-                "value": {
-                    "columns": [
-                        {
-                            "deviceId": "desktop",
-                            "value": {
-                                "count": 12,
-                                "spans": [
-                                    [
-                                        12
-                                    ]
-                                ]
-                            }
-                        }
-                    ],
-                    "elements": [
-                        {
-                            "key": "ecb2a405-fac7-4b99-a0e0-d7ecb361d949",
-                            "type": "./components/Box/index.js",
-                            "props": {
-                                "padding": [
-                                    {
-                                        "deviceId": "desktop",
-                                        "value": {
-                                            "paddingTop": {
-                                                "value": 10,
-                                                "unit": "px"
-                                            },
-                                            "paddingRight": {
-                                                "value": 10,
-                                                "unit": "px"
-                                            },
-                                            "paddingBottom": {
-                                                "value": 10,
-                                                "unit": "px"
-                                            },
-                                            "paddingLeft": {
-                                                "value": 10,
-                                                "unit": "px"
-                                            }
-                                        }
-                                    }
-                                ],
-                                "children": {
-                                    "@@makeswift/type": "prop-controllers::grid::v1",
-                                    "value": {
-                                        "columns": [
-                                            {
-                                                "deviceId": "desktop",
-                                                "value": {
-                                                    "count": 12,
-                                                    "spans": [
-                                                        [
-                                                            12
-                                                        ]
-                                                    ]
-                                                }
-                                            }
-                                        ],
-                                        "elements": [
-                                            {
-                                                "key": "7cf77563-ee24-4567-99a1-fafbb295106a",
-                                                "type": "./components/Image/index.js",
-                                                "props": {}
-                                            }
-                                        ]
-                                    }
-                                }
-                            }
-                        }
-                    ]
-                }
-            }
+          ],
         },
-        "type": "./components/Root/index.js"
+        children: {
+          '@@makeswift/type': 'prop-controllers::grid::v1',
+          value: {
+            columns: [
+              {
+                deviceId: 'desktop',
+                value: {
+                  count: 12,
+                  spans: [[12]],
+                },
+              },
+            ],
+            elements: [
+              {
+                key: 'ecb2a405-fac7-4b99-a0e0-d7ecb361d949',
+                type: './components/Box/index.js',
+                props: {
+                  padding: [
+                    {
+                      deviceId: 'desktop',
+                      value: {
+                        paddingTop: {
+                          value: 10,
+                          unit: 'px',
+                        },
+                        paddingRight: {
+                          value: 10,
+                          unit: 'px',
+                        },
+                        paddingBottom: {
+                          value: 10,
+                          unit: 'px',
+                        },
+                        paddingLeft: {
+                          value: 10,
+                          unit: 'px',
+                        },
+                      },
+                    },
+                  ],
+                  children: {
+                    '@@makeswift/type': 'prop-controllers::grid::v1',
+                    value: {
+                      columns: [
+                        {
+                          deviceId: 'desktop',
+                          value: {
+                            count: 12,
+                            spans: [[12]],
+                          },
+                        },
+                      ],
+                      elements: [
+                        {
+                          key: '7cf77563-ee24-4567-99a1-fafbb295106a',
+                          type: './components/Image/index.js',
+                          props: {},
+                        },
+                      ],
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+      type: './components/Root/index.js',
     },
-    "locale": null
+    locale: null,
   },
   newDocument: {
-    "key": "UGFnZToxMjIxNGZlYy0xZjNhLTQ1ODEtYTI4NC05ZTU1OTVhMDhkZWI=",
-    "rootElement": {
-        "key": "a4c1b856-831e-4cbf-91cc-627a43ed8e81",
-        "props": {
-            "rowGap": {
-                "@@makeswift/type": "prop-controllers::gap-y::v1",
-                "value": [
-                    {
-                        "deviceId": "desktop",
-                        "value": {
-                            "unit": "px",
-                            "value": 10
-                        }
-                    }
-                ]
+    key: 'UGFnZToxMjIxNGZlYy0xZjNhLTQ1ODEtYTI4NC05ZTU1OTVhMDhkZWI=',
+    rootElement: {
+      key: 'a4c1b856-831e-4cbf-91cc-627a43ed8e81',
+      props: {
+        rowGap: {
+          '@@makeswift/type': 'prop-controllers::gap-y::v1',
+          value: [
+            {
+              deviceId: 'desktop',
+              value: {
+                unit: 'px',
+                value: 10,
+              },
             },
-            "children": {
-                "@@makeswift/type": "prop-controllers::grid::v1",
-                "value": {
-                    "columns": [
-                        {
-                            "deviceId": "desktop",
-                            "value": {
-                                "count": 12,
-                                "spans": [
-                                    [
-                                        12
-                                    ]
-                                ]
-                            }
-                        }
-                    ],
-                    "elements": [
-                        {
-                            "key": "ecb2a405-fac7-4b99-a0e0-d7ecb361d949",
-                            "type": "./components/Box/index.js",
-                            "props": {
-                                "padding": [
-                                    {
-                                        "deviceId": "desktop",
-                                        "value": {
-                                            "paddingTop": {
-                                                "value": 10,
-                                                "unit": "px"
-                                            },
-                                            "paddingRight": {
-                                                "value": 10,
-                                                "unit": "px"
-                                            },
-                                            "paddingBottom": {
-                                                "value": 10,
-                                                "unit": "px"
-                                            },
-                                            "paddingLeft": {
-                                                "value": 10,
-                                                "unit": "px"
-                                            }
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    ]
-                }
-            }
+          ],
         },
-        "type": "./components/Root/index.js"
+        children: {
+          '@@makeswift/type': 'prop-controllers::grid::v1',
+          value: {
+            columns: [
+              {
+                deviceId: 'desktop',
+                value: {
+                  count: 12,
+                  spans: [[12]],
+                },
+              },
+            ],
+            elements: [
+              {
+                key: 'ecb2a405-fac7-4b99-a0e0-d7ecb361d949',
+                type: './components/Box/index.js',
+                props: {
+                  padding: [
+                    {
+                      deviceId: 'desktop',
+                      value: {
+                        paddingTop: {
+                          value: 10,
+                          unit: 'px',
+                        },
+                        paddingRight: {
+                          value: 10,
+                          unit: 'px',
+                        },
+                        paddingBottom: {
+                          value: 10,
+                          unit: 'px',
+                        },
+                        paddingLeft: {
+                          value: 10,
+                          unit: 'px',
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      },
+      type: './components/Root/index.js',
     },
-    "locale": null
+    locale: null,
   },
   operation: [
     {
-        "p": [
-            "props",
-            "children",
-            "value",
-            "elements",
-            0,
-            "props",
-            "children"
-        ],
-        "od": {
-            "@@makeswift/type": "prop-controllers::grid::v1",
-            "value": {
-                "columns": [
-                    {
-                        "deviceId": "desktop",
-                        "value": {
-                            "count": 12,
-                            "spans": [
-                                [
-                                    12
-                                ]
-                            ]
-                        }
-                    }
-                ],
-                "elements": [
-                    {
-                        "key": "7cf77563-ee24-4567-99a1-fafbb295106a",
-                        "type": "./components/Image/index.js",
-                        "props": {}
-                    }
-                ]
-            }
-        }
-    }
-  ]
+      p: ['props', 'children', 'value', 'elements', 0, 'props', 'children'],
+      od: {
+        '@@makeswift/type': 'prop-controllers::grid::v1',
+        value: {
+          columns: [
+            {
+              deviceId: 'desktop',
+              value: {
+                count: 12,
+                spans: [[12]],
+              },
+            },
+          ],
+          elements: [
+            {
+              key: '7cf77563-ee24-4567-99a1-fafbb295106a',
+              type: './components/Image/index.js',
+              props: {},
+            },
+          ],
+        },
+      },
+    },
+  ],
 }
 
 export const resettingBoxWidth = {
-    "oldDocument": {
-        "key": "UGFnZToxMjIxNGZlYy0xZjNhLTQ1ODEtYTI4NC05ZTU1OTVhMDhkZWI=",
-        "rootElement": {
-            "key": "a4c1b856-831e-4cbf-91cc-627a43ed8e81",
-            "props": {
-                "children": {
-                    "@@makeswift/type": "prop-controllers::grid::v1",
-                    "value": {
-                        "columns": [
-                            {
-                                "deviceId": "desktop",
-                                "value": {
-                                    "count": 12,
-                                    "spans": [
-                                        [
-                                            12
-                                        ]
-                                    ]
-                                }
-                            }
-                        ],
-                        "elements": [
-                            {
-                                "key": "ecb2a405-fac7-4b99-a0e0-d7ecb361d949",
-                                "props": {
-                                    "padding": [
-                                        {
-                                            "deviceId": "desktop",
-                                            "value": {
-                                                "paddingBottom": {
-                                                    "unit": "px",
-                                                    "value": 10
-                                                },
-                                                "paddingLeft": {
-                                                    "unit": "px",
-                                                    "value": 10
-                                                },
-                                                "paddingRight": {
-                                                    "unit": "px",
-                                                    "value": 10
-                                                },
-                                                "paddingTop": {
-                                                    "unit": "px",
-                                                    "value": 10
-                                                }
-                                            }
-                                        }
-                                    ],
-                                    "width": {
-                                        "@@makeswift/type": "prop-controllers::width::v1",
-                                        "value": [
-                                            {
-                                                "deviceId": "desktop",
-                                                "value": {
-                                                    "value": 50,
-                                                    "unit": "%"
-                                                }
-                                            }
-                                        ]
-                                    }
-                                },
-                                "type": "./components/Box/index.js"
-                            }
-                        ]
-                    }
+  oldDocument: {
+    key: 'UGFnZToxMjIxNGZlYy0xZjNhLTQ1ODEtYTI4NC05ZTU1OTVhMDhkZWI=',
+    rootElement: {
+      key: 'a4c1b856-831e-4cbf-91cc-627a43ed8e81',
+      props: {
+        children: {
+          '@@makeswift/type': 'prop-controllers::grid::v1',
+          value: {
+            columns: [
+              {
+                deviceId: 'desktop',
+                value: {
+                  count: 12,
+                  spans: [[12]],
                 },
-                "rowGap": {
-                    "@@makeswift/type": "prop-controllers::gap-y::v1",
-                    "value": [
-                        {
-                            "deviceId": "desktop",
-                            "value": {
-                                "unit": "px",
-                                "value": 10
-                            }
-                        }
-                    ]
-                }
-            },
-            "type": "./components/Root/index.js"
-        },
-        "locale": null
-    },
-    "newDocument": {
-        "key": "UGFnZToxMjIxNGZlYy0xZjNhLTQ1ODEtYTI4NC05ZTU1OTVhMDhkZWI=",
-        "rootElement": {
-            "key": "a4c1b856-831e-4cbf-91cc-627a43ed8e81",
-            "props": {
-                "children": {
-                    "@@makeswift/type": "prop-controllers::grid::v1",
-                    "value": {
-                        "columns": [
-                            {
-                                "deviceId": "desktop",
-                                "value": {
-                                    "count": 12,
-                                    "spans": [
-                                        [
-                                            12
-                                        ]
-                                    ]
-                                }
-                            }
-                        ],
-                        "elements": [
-                            {
-                                "key": "ecb2a405-fac7-4b99-a0e0-d7ecb361d949",
-                                "props": {
-                                    "padding": [
-                                        {
-                                            "deviceId": "desktop",
-                                            "value": {
-                                                "paddingBottom": {
-                                                    "unit": "px",
-                                                    "value": 10
-                                                },
-                                                "paddingLeft": {
-                                                    "unit": "px",
-                                                    "value": 10
-                                                },
-                                                "paddingRight": {
-                                                    "unit": "px",
-                                                    "value": 10
-                                                },
-                                                "paddingTop": {
-                                                    "unit": "px",
-                                                    "value": 10
-                                                }
-                                            }
-                                        }
-                                    ]
-                                },
-                                "type": "./components/Box/index.js"
-                            }
-                        ]
-                    }
-                },
-                "rowGap": {
-                    "@@makeswift/type": "prop-controllers::gap-y::v1",
-                    "value": [
-                        {
-                            "deviceId": "desktop",
-                            "value": {
-                                "unit": "px",
-                                "value": 10
-                            }
-                        }
-                    ]
-                }
-            },
-            "type": "./components/Root/index.js"
-        },
-        "locale": null
-    },
-    "operation": [
-        {
-            "p": [
-                "props",
-                "children",
-                "value",
-                "elements",
-                0,
-                "props",
-                "width"
+              },
             ],
-            "od": {
-                "@@makeswift/type": "prop-controllers::width::v1",
-                "value": [
+            elements: [
+              {
+                key: 'ecb2a405-fac7-4b99-a0e0-d7ecb361d949',
+                props: {
+                  padding: [
                     {
-                        "deviceId": "desktop",
-                        "value": {
-                            "value": 50,
-                            "unit": "%"
-                        }
-                    }
-                ]
-            }
-        }
-    ]
+                      deviceId: 'desktop',
+                      value: {
+                        paddingBottom: {
+                          unit: 'px',
+                          value: 10,
+                        },
+                        paddingLeft: {
+                          unit: 'px',
+                          value: 10,
+                        },
+                        paddingRight: {
+                          unit: 'px',
+                          value: 10,
+                        },
+                        paddingTop: {
+                          unit: 'px',
+                          value: 10,
+                        },
+                      },
+                    },
+                  ],
+                  width: {
+                    '@@makeswift/type': 'prop-controllers::width::v1',
+                    value: [
+                      {
+                        deviceId: 'desktop',
+                        value: {
+                          value: 50,
+                          unit: '%',
+                        },
+                      },
+                    ],
+                  },
+                },
+                type: './components/Box/index.js',
+              },
+            ],
+          },
+        },
+        rowGap: {
+          '@@makeswift/type': 'prop-controllers::gap-y::v1',
+          value: [
+            {
+              deviceId: 'desktop',
+              value: {
+                unit: 'px',
+                value: 10,
+              },
+            },
+          ],
+        },
+      },
+      type: './components/Root/index.js',
+    },
+    locale: null,
+  },
+  newDocument: {
+    key: 'UGFnZToxMjIxNGZlYy0xZjNhLTQ1ODEtYTI4NC05ZTU1OTVhMDhkZWI=',
+    rootElement: {
+      key: 'a4c1b856-831e-4cbf-91cc-627a43ed8e81',
+      props: {
+        children: {
+          '@@makeswift/type': 'prop-controllers::grid::v1',
+          value: {
+            columns: [
+              {
+                deviceId: 'desktop',
+                value: {
+                  count: 12,
+                  spans: [[12]],
+                },
+              },
+            ],
+            elements: [
+              {
+                key: 'ecb2a405-fac7-4b99-a0e0-d7ecb361d949',
+                props: {
+                  padding: [
+                    {
+                      deviceId: 'desktop',
+                      value: {
+                        paddingBottom: {
+                          unit: 'px',
+                          value: 10,
+                        },
+                        paddingLeft: {
+                          unit: 'px',
+                          value: 10,
+                        },
+                        paddingRight: {
+                          unit: 'px',
+                          value: 10,
+                        },
+                        paddingTop: {
+                          unit: 'px',
+                          value: 10,
+                        },
+                      },
+                    },
+                  ],
+                },
+                type: './components/Box/index.js',
+              },
+            ],
+          },
+        },
+        rowGap: {
+          '@@makeswift/type': 'prop-controllers::gap-y::v1',
+          value: [
+            {
+              deviceId: 'desktop',
+              value: {
+                unit: 'px',
+                value: 10,
+              },
+            },
+          ],
+        },
+      },
+      type: './components/Root/index.js',
+    },
+    locale: null,
+  },
+  operation: [
+    {
+      p: ['props', 'children', 'value', 'elements', 0, 'props', 'width'],
+      od: {
+        '@@makeswift/type': 'prop-controllers::width::v1',
+        value: [
+          {
+            deviceId: 'desktop',
+            value: {
+              value: 50,
+              unit: '%',
+            },
+          },
+        ],
+      },
+    },
+  ],
 }
