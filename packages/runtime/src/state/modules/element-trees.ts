@@ -293,6 +293,10 @@ function applyDelete(
     deleteChildren({ elements, elementIds }, targetElement, descriptors)
   }
 
+  if (propName !== null && !isElementReference(targetElement)) {
+    delete targetElement.props[propName]
+  }
+
   // Use the "after" state to efficiently update all of parent subtrees in the state
   updateParentElements(elements, parentElementPaths, rootElements.after)
 

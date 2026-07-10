@@ -200,7 +200,11 @@ describe('applyChanges', () => {
     },
   })
 
-  function reduceChangeElementTree(oldDocument: DocumentPayload, newDocument: DocumentPayload, operation: Operation ): ElementTrees.State {
+  function reduceChangeElementTree(
+    oldDocument: DocumentPayload,
+    newDocument: DocumentPayload,
+    operation: Operation,
+  ): ElementTrees.State {
     const descriptors = getPropControllerDescriptors(runtime.protoStore.getState())
 
     const initialState = ElementTrees.reducer(
@@ -269,7 +273,9 @@ describe('applyChanges', () => {
 
     const updatedBoxElement = elements.get(boxElementKey)
     expect(updatedBoxElement).toBeDefined()
-    expect(updatedBoxElement && "props" in updatedBoxElement && !("children" in updatedBoxElement.props))
+    expect(
+      updatedBoxElement && 'props' in updatedBoxElement && !('children' in updatedBoxElement.props),
+    ).toBeTruthy()
   })
 
   test('delete prop on element', () => {
@@ -289,7 +295,8 @@ describe('applyChanges', () => {
 
     const updatedBoxElement = elements.get(boxElementKey)
     expect(updatedBoxElement).toBeDefined()
-    expect(updatedBoxElement && "props" in updatedBoxElement && !("width" in updatedBoxElement.props))
+    expect(
+      updatedBoxElement && 'props' in updatedBoxElement && !('width' in updatedBoxElement.props),
+    ).toBeTruthy()
   })
 })
-
