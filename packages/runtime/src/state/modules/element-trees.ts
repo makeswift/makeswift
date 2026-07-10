@@ -235,18 +235,26 @@ function updateParentElements(
   })
 }
 
-function hasChildren(
+function getPropChildren(
+  element: Element,
+  propName: string,
+  descriptors: DescriptorsByComponentType,
+): Element[] | null {
+  if (isElementReference(element)) return null
+
+  const propDescriptor = descriptors.get(element.type)?.[propName]
+  if (propDescriptor == null) return null
+
+  return Introspection.getElementChildren(propDescriptor, element.props[propName])
+}
+
+function isChildrenProp(
   element: Element,
   propName: string,
   descriptors: DescriptorsByComponentType,
 ): boolean {
-  if (isElementReference(element)) return false
-
-  const propDescriptor = descriptors.get(element.type)?.[propName]
-  if (propDescriptor == null) return false
-
-  const children = Introspection.getElementChildren(propDescriptor, element.props[propName])
-  return children.length > 0
+  const children = getPropChildren(element, propName, descriptors)
+  return children != null
 }
 
 function deleteElement(
@@ -260,18 +268,20 @@ function deleteElement(
   }
 }
 
-function deleteChildren(
-  { elements, elementIds }: ElementTree,
+function deleteChildrenInProp(
+  elementTree: ElementTree,
   parentElement: Element,
+  propName: string,
   descriptors: DescriptorsByComponentType,
 ) {
-  for (const element of traverseElementTree(parentElement, descriptors)) {
-    if (element === parentElement) {
-      continue
-    }
+  const childrenInProp = getPropChildren(parentElement, propName, descriptors)
 
-    elements.delete(element.key)
-    elementIds.delete(element.key)
+  if (childrenInProp == null) {
+    return
+  }
+
+  for (const child of childrenInProp) {
+    deleteElement(elementTree, child, descriptors)
   }
 }
 
@@ -289,8 +299,8 @@ function applyDelete(
 
   if (propName == null) {
     deleteElement({ elements, elementIds }, targetElement, descriptors)
-  } else if (hasChildren(targetElement, propName, descriptors)) {
-    deleteChildren({ elements, elementIds }, targetElement, descriptors)
+  } else if (isChildrenProp(targetElement, propName, descriptors)) {
+    deleteChildrenInProp({ elements, elementIds }, targetElement, propName, descriptors)
   }
 
   if (propName !== null && !isElementReference(targetElement)) {
@@ -312,7 +322,7 @@ function insertElement(
   propName: string | null,
   descriptors: DescriptorsByComponentType,
 ) {
-  if (propName == null || hasChildren(insertedElement, propName, descriptors)) {
+  if (propName == null || isChildrenProp(insertedElement, propName, descriptors)) {
     for (const element of traverseElementTree(insertedElement, descriptors)) {
       elements.set(element.key, element)
       if (!isElementReference(element)) {
@@ -367,8 +377,8 @@ function applyUpdate(
 
   if (propName == null) {
     deleteElement({ elements, elementIds }, targetElement, descriptors)
-  } else if (hasChildren(targetElement, propName, descriptors)) {
-    deleteChildren({ elements, elementIds }, targetElement, descriptors)
+  } else if (isChildrenProp(targetElement, propName, descriptors)) {
+    deleteChildrenInProp({ elements, elementIds }, targetElement, propName, descriptors)
   }
 
   insertElement({ elements, elementIds }, insertedElement, propName, descriptors)

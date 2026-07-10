@@ -299,4 +299,33 @@ describe('applyChanges', () => {
       updatedBoxElement && 'props' in updatedBoxElement && !('width' in updatedBoxElement.props),
     ).toBeTruthy()
   })
+
+  test('delete children from prop in element with multiple child props', () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(jest.fn())
+
+    const { oldDocument, newDocument, operation } = Fixtures.deletingChildrenFromMultislot
+    const documentKey = oldDocument.key
+    const multislotElementKey = 'ecb2a405-fac7-4b99-a0e0-d7ecb361d949'
+
+    const updatedState = reduceChangeElementTree(oldDocument, newDocument, operation)
+
+    expect(consoleError).not.toHaveBeenCalled()
+
+    const elements = ElementTrees.getElements(updatedState, documentKey)
+
+    expect(elements.size).toEqual(2)
+
+    const updatedMultislotElement = elements.get(multislotElementKey)
+    expect(updatedMultislotElement).toBeDefined()
+    expect(
+      updatedMultislotElement &&
+        'props' in updatedMultislotElement &&
+        !('childrenA' in updatedMultislotElement.props),
+    ).toBeTruthy()
+    expect(
+      updatedMultislotElement &&
+        'props' in updatedMultislotElement &&
+        'childrenB' in updatedMultislotElement.props,
+    ).toBeTruthy()
+  })
 })
