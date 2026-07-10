@@ -12,6 +12,8 @@ import { getPropControllerDescriptors } from '../../read-only-state'
 import { Slot } from '../../../controls'
 import { createElementTree } from '../../actions/internal/read-only-actions'
 import { changeElementTree } from '../../actions/internal/read-write-actions'
+import { DocumentPayload } from '../../shared-api'
+import { type Operation } from 'ot-json0'
 
 describe('traverseElementTree', () => {
   const runtime = createReactRuntime()
@@ -198,20 +200,8 @@ describe('applyChanges', () => {
     },
   })
 
-  afterEach(() => {
-    jest.restoreAllMocks()
-  })
-
-  test('handle element reparenting op', () => {
-    const consoleError = jest.spyOn(console, 'error').mockImplementation(jest.fn())
-
+  function reduceChangeElementTree(oldDocument: DocumentPayload, newDocument: DocumentPayload, operation: Operation ): ElementTrees.State {
     const descriptors = getPropControllerDescriptors(runtime.protoStore.getState())
-    const documentKey = '11111111-1111-1111-111111111111'
-
-    const oldDocument = {
-      key: documentKey,
-      rootElement: Fixtures.reparentingElementTree.before,
-    }
 
     const initialState = ElementTrees.reducer(
       ElementTrees.getInitialState(),
@@ -221,22 +211,39 @@ describe('applyChanges', () => {
       }),
     )
 
-    const newDocument = {
-      key: documentKey,
-      rootElement: Fixtures.reparentingElementTree.after,
-    }
-
-    const reparentOp = Fixtures.reparentingElementTree.op
-
     const updatedState = ElementTrees.reducer(
       initialState,
       changeElementTree({
         oldDocument,
         newDocument,
         descriptors,
-        operation: reparentOp,
+        operation,
       }),
     )
+
+    return updatedState
+  }
+
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
+  test('handle element reparenting op', () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(jest.fn())
+
+    const documentKey = '11111111-1111-1111-111111111111'
+
+    const oldDocument = {
+      key: documentKey,
+      rootElement: Fixtures.reparentingElementTree.before,
+    }
+    const newDocument = {
+      key: documentKey,
+      rootElement: Fixtures.reparentingElementTree.after,
+    }
+    const reparentOp = Fixtures.reparentingElementTree.op
+
+    const updatedState = reduceChangeElementTree(oldDocument, newDocument, reparentOp)
 
     expect(consoleError).not.toHaveBeenCalled()
 
@@ -244,4 +251,45 @@ describe('applyChanges', () => {
     const rootKey = Fixtures.reparentingElementTree.before.key
     expect(elements.get(rootKey)).toEqual(Fixtures.reparentingElementTree.after)
   })
+
+  test('delete sole child of element', () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(jest.fn())
+
+    const { oldDocument, newDocument, operation } = Fixtures.deletingImageInBox
+    const documentKey = oldDocument.key
+    const boxElementKey = 'ecb2a405-fac7-4b99-a0e0-d7ecb361d949'
+
+    const updatedState = reduceChangeElementTree(oldDocument, newDocument, operation)
+
+    expect(consoleError).not.toHaveBeenCalled()
+
+    const elements = ElementTrees.getElements(updatedState, documentKey)
+
+    expect(elements.size).toEqual(2)
+
+    const updatedBoxElement = elements.get(boxElementKey)
+    expect(updatedBoxElement).toBeDefined()
+    expect(updatedBoxElement && "props" in updatedBoxElement && !("children" in updatedBoxElement.props))
+  })
+
+  test('delete prop on element', () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(jest.fn())
+
+    const { oldDocument, newDocument, operation } = Fixtures.resettingBoxWidth
+    const documentKey = oldDocument.key
+    const boxElementKey = 'ecb2a405-fac7-4b99-a0e0-d7ecb361d949'
+
+    const updatedState = reduceChangeElementTree(oldDocument, newDocument, operation)
+
+    expect(consoleError).not.toHaveBeenCalled()
+
+    const elements = ElementTrees.getElements(updatedState, documentKey)
+
+    expect(elements.size).toEqual(2)
+
+    const updatedBoxElement = elements.get(boxElementKey)
+    expect(updatedBoxElement).toBeDefined()
+    expect(updatedBoxElement && "props" in updatedBoxElement && !("width" in updatedBoxElement.props))
+  })
 })
+
