@@ -1,7 +1,7 @@
 import * as Documents from '../modules/read-only-documents'
 import * as ElementTrees from '../modules/element-trees'
 import { getTranslatableData } from '../../controls/control'
-import type {DescriptorsByComponentType} from '../modules/prop-controllers'
+import type { DescriptorsByComponentType } from '../modules/prop-controllers'
 
 export function getTranslatableContent(
   descriptors: DescriptorsByComponentType,
@@ -9,10 +9,7 @@ export function getTranslatableContent(
 ): Record<string, Documents.Data> {
   const translatableData: Record<string, Documents.Data> = {}
 
-  for (const element of ElementTrees.traverseElementTree(
-    elementTree,
-    descriptors,
-  )) {
+  for (const element of ElementTrees.traverseElementTree(elementTree, descriptors)) {
     if (Documents.isElementReference(element)) continue
 
     const elementDescriptors = descriptors.get(element.type)

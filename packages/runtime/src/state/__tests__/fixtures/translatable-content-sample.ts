@@ -61,7 +61,11 @@ export const translatableContentSampleElementTree: ElementData = {
                               value: [
                                 {
                                   id: 'bb3d1239-c737-44c1-8a4a-47af38428d90',
-                                  payload: { alpha: 1, swatchId: 'U3dhdGNoOmVjMWZjYTU3LTUwZWYtNDBhOC05Mzg2LWUwYzg0NDgzODY3NA==' },
+                                  payload: {
+                                    alpha: 1,
+                                    swatchId:
+                                      'U3dhdGNoOmVjMWZjYTU3LTUwZWYtNDBhOC05Mzg2LWUwYzg0NDgzODY3NA==',
+                                  },
                                   type: 'color',
                                 },
                               ],
@@ -239,7 +243,8 @@ export const translatableContentSampleElementTree: ElementData = {
                                     ],
                                   },
                                   size: {
-                                    '@@makeswift/type': 'prop-controllers::responsive-icon-radio-group::v1',
+                                    '@@makeswift/type':
+                                      'prop-controllers::responsive-icon-radio-group::v1',
                                     value: [{ deviceId: 'desktop', value: 'large' }],
                                   },
                                   variant: {
@@ -280,7 +285,8 @@ export const translatableContentSampleElementTree: ElementData = {
                                     ],
                                   },
                                   size: {
-                                    '@@makeswift/type': 'prop-controllers::responsive-icon-radio-group::v1',
+                                    '@@makeswift/type':
+                                      'prop-controllers::responsive-icon-radio-group::v1',
                                     value: [{ deviceId: 'desktop', value: 'large' }],
                                   },
                                   variant: {

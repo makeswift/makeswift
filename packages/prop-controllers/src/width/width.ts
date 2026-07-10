@@ -40,7 +40,7 @@ export const WidthPropControllerFormat = {
 } as const
 
 export type WidthPropControllerFormat =
-  typeof WidthPropControllerFormat[keyof typeof WidthPropControllerFormat]
+  (typeof WidthPropControllerFormat)[keyof typeof WidthPropControllerFormat]
 
 type WidthOptions = {
   preset?: WidthPropControllerData
@@ -75,14 +75,14 @@ export type ResolveWidthPropControllerValue<T extends WidthDescriptor> =
     ? undefined extends ResolveOptions<T['options']>['format']
       ? ResponsiveLengthData | undefined
       : ResolveOptions<
-          T['options']
-        >['format'] extends typeof WidthPropControllerFormat.ClassName
-      ? string
-      : ResolveOptions<
-          T['options']
-        >['format'] extends typeof WidthPropControllerFormat.ResponsiveValue
-      ? ResponsiveLengthData | undefined
-      : never
+            T['options']
+          >['format'] extends typeof WidthPropControllerFormat.ClassName
+        ? string
+        : ResolveOptions<
+              T['options']
+            >['format'] extends typeof WidthPropControllerFormat.ResponsiveValue
+          ? ResponsiveLengthData | undefined
+          : never
     : never
 
 /**
@@ -120,7 +120,7 @@ export function createWidthPropControllerDataFromResponsiveLengthData(
         ({
           [ControlDataTypeKey]: WidthPropControllerDataV1Type,
           value: responsiveLengthData,
-        } as const),
+        }) as const,
     )
     .otherwise(() => responsiveLengthData)
 }
