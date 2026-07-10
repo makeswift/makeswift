@@ -94,7 +94,7 @@ export function createElementIDPropControllerDataFromElementID(
         ({
           [ControlDataTypeKey]: ElementIDPropControllerDataV1Type,
           value,
-        } as const),
+        }) as const,
     )
     .otherwise(() => value)
 }

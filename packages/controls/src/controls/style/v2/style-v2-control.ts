@@ -1,5 +1,4 @@
 import { type BoxDisplayModel } from '../../../common'
-
 import { ControlDefinition } from '../../definition'
 import { ControlInstance, ControlMessage, SendMessage } from '../../instance'
 

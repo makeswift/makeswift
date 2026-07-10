@@ -1,17 +1,17 @@
-name: "Bug Report: Makeswift CLI"
+name: 'Bug Report: Makeswift CLI'
 description: Having trouble with the Makeswift CLI? File an issue with this template.
-labels: ["bug", "cli"]
+labels: ['bug', 'cli']
 body:
   - type: textarea
     attributes:
-      label: "Describe the bug"
-      description: "A clear and concise description of what the bug is."
+      label: 'Describe the bug'
+      description: 'A clear and concise description of what the bug is.'
     validations:
       required: true
   - type: textarea
     attributes:
-      label: "Steps to reproduce"
-      description: "An ordered list of steps we can follow to reproduce your issue."
+      label: 'Steps to reproduce'
+      description: 'An ordered list of steps we can follow to reproduce your issue.'
       value: |
         **Steps:**
         1. Go to '...'
@@ -26,12 +26,12 @@ body:
       required: true
   - type: textarea
     attributes:
-      label: "Screenshots/Videos"
-      description: "If applicable, add screenshots and/or videos to help explain your problem."
+      label: 'Screenshots/Videos'
+      description: 'If applicable, add screenshots and/or videos to help explain your problem.'
   - type: textarea
     attributes:
-      label: "Environment"
-      description: "Please provide information about your environment."
+      label: 'Environment'
+      description: 'Please provide information about your environment.'
       value: |
         - **Binaries**
           - Node.js version: `18.19.1`

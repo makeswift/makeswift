@@ -96,7 +96,7 @@ export function createGapYPropControllerDataFromResponsiveGapData(
         ({
           [ControlDataTypeKey]: GapYPropControllerDataV1Type,
           value: responsiveGapData,
-        } as const),
+        }) as const,
     )
     .otherwise(() => responsiveGapData)
 }
