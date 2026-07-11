@@ -86,7 +86,7 @@ export function createCheckboxPropControllerDataFromBoolean(
         ({
           [ControlDataTypeKey]: CheckboxPropControllerDataV1Type,
           value,
-        } as const),
+        }) as const,
     )
     .otherwise(() => value)
 }

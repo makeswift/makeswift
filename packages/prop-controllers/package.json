@@ -17,7 +17,8 @@
     "clean": "rm -rf dist",
     "build": "tsc && tsup",
     "prepublishOnly": "turbo run build --force",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@makeswift/controls": "workspace:*",
@@ -28,6 +29,7 @@
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.12",
     "concurrently": "^8.2.2",
+    "eslint-config": "workspace:*",
     "jest": "^29.7.0",
     "tsup": "^8.0.2",
     "typescript": "^5.1.6"

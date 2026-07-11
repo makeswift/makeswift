@@ -84,7 +84,7 @@ export function createDatePropControllerDataFromString(
         ({
           [ControlDataTypeKey]: DatePropControllerDataV1Type,
           value,
-        } as const),
+        }) as const,
     )
     .otherwise(() => value)
 }

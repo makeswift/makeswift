@@ -2,7 +2,9 @@
  * Sample of the descriptors object that lives in the builder state, some objects are left purposely empty
  */
 
-export const getMockedSerializedDescriptorsFromBuilder: (createMessagePort: () => MessagePort) => Record<string, Record<string, unknown>> = (createMessagePort) => ({
+export const getMockedSerializedDescriptorsFromBuilder: (
+  createMessagePort: () => MessagePort,
+) => Record<string, Record<string, unknown>> = createMessagePort => ({
   'makeswift::components::slot::v1': {
     children: {
       type: 'makeswift::controls::slot',

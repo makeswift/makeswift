@@ -94,7 +94,7 @@ export function createVideoPropControllerDataFromVideoData(
         ({
           [ControlDataTypeKey]: VideoPropControllerDataV1Type,
           value,
-        } as const),
+        }) as const,
     )
     .otherwise(() => value)
 }
