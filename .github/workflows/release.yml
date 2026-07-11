@@ -28,7 +28,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 22
+          node-version: 20
           cache: pnpm
           registry-url: 'https://registry.npmjs.org'
 
@@ -36,8 +36,11 @@ jobs:
         run: pnpm install --ignore-scripts --frozen-lockfile
 
         # npm trusted publishing requires npm 11.5.1 or higher.
+        #
+        #TODO: pnpm publish passes a flag incompatible with npm 12+. Temporarily
+        # pin to 11 until we figure out the underlying issue.
       - name: Update npm
-        run: npm install -g npm@latest
+        run: npm install -g npm@11
 
       - name: Create release pull request or publish to NPM
         uses: changesets/action@v1
@@ -82,7 +85,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 22
+          node-version: 20
           cache: pnpm
           registry-url: 'https://registry.npmjs.org'
 
@@ -91,7 +94,7 @@ jobs:
 
         # npm trusted publishing requires npm 11.5.1 or higher.
       - name: Update npm
-        run: npm install -g npm@latest
+        run: npm install -g npm@11
 
       - name: Merge To Canary Branch
         run: |
