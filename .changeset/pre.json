@@ -12,7 +12,8 @@
     "@makeswift/controls": "0.0.0",
     "@makeswift/express-react": "0.0.0-alpha",
     "@makeswift/react-router": "0.0.0",
-    "@makeswift/hono-react": "0.0.0"
+    "@makeswift/hono-react": "0.0.0",
+    "eslint-config": "0.0.0"
   },
   "changesets": [
     "bumpy-months-bow",
