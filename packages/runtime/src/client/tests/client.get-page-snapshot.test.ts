@@ -175,7 +175,7 @@ describe('getPageSnapshot', () => {
     } catch (e) {}
 
     // Assert
-    expect(resultPromise).rejects.toThrow(
+    await expect(resultPromise).rejects.toThrow(
       "Failed to get page snapshot for 'blog/hello-world': 500 Internal Server Error",
     )
 

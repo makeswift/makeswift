@@ -151,7 +151,7 @@ describe('getComponentSnapshot using v2 element tree endpoint', () => {
     })
 
     // Assert
-    expect(resultPromise).rejects.toThrow(
+    await expect(resultPromise).rejects.toThrow(
       "Failed to get component snapshot for 'myTree': 400 Bad Request",
     )
   })

@@ -1,5 +1,6 @@
 import js from '@eslint/js'
 import importPlugin from 'eslint-plugin-import'
+import jest from 'eslint-plugin-jest'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
@@ -65,6 +66,20 @@ export default tseslint.config(
       'react/prop-types': 'off',
     },
   },
+  // Type-aware linting
+  {
+    files: ['**/src/**/*.{ts,tsx,cts,mts}'],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+      },
+    },
+    rules: {
+      // No hanging promises. Downgraded to a warning while pre-existing
+      // violations are burned down.
+      '@typescript-eslint/no-floating-promises': 'warn',
+    },
+  },
   {
     files: [
       '**/*.{test,spec}.{ts,tsx,js,jsx}',
@@ -75,6 +90,12 @@ export default tseslint.config(
       globals: {
         ...globals.jest,
       },
+    },
+    plugins: {
+      jest,
+    },
+    rules: {
+      'jest/valid-expect': 'error',
     },
   },
   // Rules currently violated by the existing codebase are downgraded to
