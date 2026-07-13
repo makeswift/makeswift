@@ -8,6 +8,7 @@ import { CheckboxDefinition } from '../checkbox'
 import { CodeDefinition } from '../code'
 import { ColorDefinition } from '../color'
 import { ComboboxDefinition } from '../combobox'
+import { DateDefinition } from '../date'
 import { ControlDefinition } from '../definition'
 import { FontDefinition } from '../font'
 import { GroupDefinition } from '../group'
@@ -61,6 +62,9 @@ export abstract class ControlSerializationVisitor extends ControlDefinitionVisit
   }
   visitCombobox(def: ComboboxDefinition): SerializedRecord {
     return this.serializeConfig(def)
+  }
+  visitDate(def: DateDefinition): SerializedRecord {
+    return this.serializeConfig(def, { version: def.version })
   }
   visitFont(def: FontDefinition): SerializedRecord {
     return this.serializeConfig(def, { version: def.version })

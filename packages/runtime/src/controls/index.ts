@@ -10,6 +10,8 @@ export {
   ColorDefinition,
   Combobox,
   ComboboxDefinition,
+  Date,
+  DateDefinition,
   Font,
   FontDefinition,
   Group,

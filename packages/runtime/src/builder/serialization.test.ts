@@ -1,4 +1,10 @@
-import { type DeserializationPlugin, Checkbox, Number, Select } from '@makeswift/controls'
+import {
+  type DeserializationPlugin,
+  Checkbox,
+  Date,
+  Number,
+  Select,
+} from '@makeswift/controls'
 import { Grid, Image, Width } from '@makeswift/prop-controllers'
 
 import {
@@ -28,6 +34,8 @@ describe('deserializeControls', () => {
       checkbox: Checkbox({ label: 'Checkbox', defaultValue: true }),
       number: Number({ label: 'Number', defaultValue: 42 }),
       select: Select({ label: 'Select', options: [{ value: 'red', label: 'Red' }] }),
+      date: Date({ label: 'Date', defaultValue: '2024-01-01T00:00:00.000Z' }),
+      dateWithTime: Date({ label: 'Starts at', includeTime: true }),
     } as const
 
     const [serialized, transferables] = serializeControls(controls)
