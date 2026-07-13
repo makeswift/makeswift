@@ -15,10 +15,11 @@ function getTextByDescendant(descendant: Descendant, mode: RichTextV2Mode): stri
 
   if (Slate.isDefaultElement(descendant)) {
     return mode === RichText.Mode.Inline
-      ? descendant.children.map(descendant => getTextByDescendant(descendant, mode)).join('') ?? ''
-      : descendant.children
+      ? (descendant.children.map(descendant => getTextByDescendant(descendant, mode)).join('') ??
+          '')
+      : (descendant.children
           .map(descendant => getTextByDescendant(descendant, mode))
-          .join(descendant.children.every(isBlock) ? '\n' : '') ?? ''
+          .join(descendant.children.every(isBlock) ? '\n' : '') ?? '')
   }
 
   if (Slate.isBlock(descendant)) {

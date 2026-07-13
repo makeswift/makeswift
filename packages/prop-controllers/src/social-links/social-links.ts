@@ -156,7 +156,7 @@ export function createSocialLinksPropControllerDataFromSocialLinksData(
         ({
           [ControlDataTypeKey]: SocialLinksPropControllerDataV2Type,
           value: data,
-        } as const),
+        }) as const,
     )
     .otherwise(() => data)
 }

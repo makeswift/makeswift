@@ -30,7 +30,7 @@ export const CodeDemo = forwardRef(function CodeDemo(
     <div
       className={`flex flex-col gap-4 p-4 w-full ${className ?? ''}`}
       ref={ref}
-       style={{ backgroundColor: color }}
+      style={{ backgroundColor: color }}
     >
       <Section title="HTML" code={htmlCode} />
       <Section title="CSS" code={cssCode} />

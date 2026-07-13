@@ -1,6 +1,7 @@
-import { createReplacementContext } from "../../context"
-import { typographyWithoutId } from "./__fixtures__/typography-without-id"
-import { unstable_Typography } from "./typography"
+import { createReplacementContext } from '../../context'
+
+import { typographyWithoutId } from './__fixtures__/typography-without-id'
+import { unstable_Typography } from './typography'
 
 describe('Copying Typography', () => {
   test('allows for undefined id', () => {
@@ -9,6 +10,8 @@ describe('Copying Typography', () => {
       copyElement: (e) => e,
     })
 
-    expect(result).toMatchSnapshot('Output data from copying a typography without an id')
+    expect(result).toMatchSnapshot(
+      'Output data from copying a typography without an id',
+    )
   })
 })
