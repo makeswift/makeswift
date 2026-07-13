@@ -207,10 +207,13 @@ describe('applyChanges', () => {
   ): ElementTrees.State {
     const descriptors = getPropControllerDescriptors(runtime.protoStore.getState())
 
+    // Using the same old document will cause element tree state to reference the same
+    // objects as the old document
+    const copyOfOldDocument = structuredClone(oldDocument)
     const initialState = ElementTrees.reducer(
       ElementTrees.getInitialState(),
       createElementTree({
-        document: oldDocument,
+        document: copyOfOldDocument,
         descriptors,
       }),
     )
