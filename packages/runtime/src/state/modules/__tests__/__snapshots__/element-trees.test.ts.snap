@@ -1,5 +1,80 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`applyChanges remove item from List prop 1`] = `
+{
+  "key": "770e1464-9887-4158-92fe-2b5a4810c023",
+  "props": {
+    "delay": 5,
+    "images": {
+      "@@makeswift/type": "prop-controllers::images::v2",
+      "value": [
+        {
+          "key": "image-1",
+          "props": {},
+        },
+        {
+          "key": "image-2",
+          "props": {},
+        },
+      ],
+    },
+    "showArrows": true,
+    "showDots": true,
+  },
+  "type": "./components/Carousel/index.js",
+}
+`;
+
+exports[`applyChanges replace prop value 1`] = `
+{
+  "key": "250be651-9cc3-4483-831e-f24967ea44d7",
+  "props": {
+    "backgrounds": {
+      "@@makeswift/type": "prop-controllers::backgrounds::v2",
+      "value": [
+        {
+          "deviceId": "desktop",
+          "value": [
+            {
+              "id": "cf116a69-9349-4857-b7c9-412ac0535eed",
+              "payload": {
+                "alpha": 1,
+                "swatchId": "U3dhdGNoOjYwNjgxMmE2LWRkZDMtNDUwZi1hMjhjLWQ1NzQ3YmRlYjk2OQ==",
+              },
+              "type": "color",
+            },
+          ],
+        },
+      ],
+    },
+    "padding": [
+      {
+        "deviceId": "desktop",
+        "value": {
+          "paddingBottom": {
+            "unit": "px",
+            "value": 10,
+          },
+          "paddingLeft": {
+            "unit": "px",
+            "value": 10,
+          },
+          "paddingRight": {
+            "unit": "px",
+            "value": 10,
+          },
+          "paddingTop": {
+            "unit": "px",
+            "value": 10,
+          },
+        },
+      },
+    ],
+  },
+  "type": "./components/Box/index.js",
+}
+`;
+
 exports[`resetting an element tree garbage collects all elements that were removed on reset 1`] = `
 [
   "e4e70b30-af46-5f25-93ee-2c550ec4a5f4",

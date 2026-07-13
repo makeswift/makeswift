@@ -12,6 +12,8 @@ import { getPropControllerDescriptors } from '../../read-only-state'
 import { Slot } from '../../../controls'
 import { createElementTree } from '../../actions/internal/read-only-actions'
 import { changeElementTree } from '../../actions/internal/read-write-actions'
+import { DocumentPayload } from '../../shared-api'
+import { type Operation } from 'ot-json0'
 
 describe('traverseElementTree', () => {
   const runtime = createReactRuntime()
@@ -198,35 +200,23 @@ describe('applyChanges', () => {
     },
   })
 
-  afterEach(() => {
-    jest.restoreAllMocks()
-  })
-
-  test('handle element reparenting op', () => {
-    const consoleError = jest.spyOn(console, 'error').mockImplementation(jest.fn())
-
+  function reduceChangeElementTree(
+    oldDocument: DocumentPayload,
+    newDocument: DocumentPayload,
+    operation: Operation,
+  ): ElementTrees.State {
     const descriptors = getPropControllerDescriptors(runtime.protoStore.getState())
-    const documentKey = '11111111-1111-1111-111111111111'
 
-    const oldDocument = {
-      key: documentKey,
-      rootElement: Fixtures.reparentingElementTree.before,
-    }
-
+    // Using the same old document will cause element tree state to reference the same
+    // objects as the old document
+    const copyOfOldDocument = structuredClone(oldDocument)
     const initialState = ElementTrees.reducer(
       ElementTrees.getInitialState(),
       createElementTree({
-        document: oldDocument,
+        document: copyOfOldDocument,
         descriptors,
       }),
     )
-
-    const newDocument = {
-      key: documentKey,
-      rootElement: Fixtures.reparentingElementTree.after,
-    }
-
-    const reparentOp = Fixtures.reparentingElementTree.op
 
     const updatedState = ElementTrees.reducer(
       initialState,
@@ -234,14 +224,149 @@ describe('applyChanges', () => {
         oldDocument,
         newDocument,
         descriptors,
-        operation: reparentOp,
+        operation,
       }),
     )
+
+    return updatedState
+  }
+
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
+  test('handle element reparenting op', () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(jest.fn())
+
+    const documentKey = '11111111-1111-1111-111111111111'
+
+    const oldDocument = {
+      key: documentKey,
+      rootElement: Fixtures.reparentingElementTree.before,
+    }
+    const newDocument = {
+      key: documentKey,
+      rootElement: Fixtures.reparentingElementTree.after,
+    }
+    const reparentOp = Fixtures.reparentingElementTree.op
+
+    const updatedState = reduceChangeElementTree(oldDocument, newDocument, reparentOp)
 
     expect(consoleError).not.toHaveBeenCalled()
 
     const elements = ElementTrees.getElements(updatedState, documentKey)
     const rootKey = Fixtures.reparentingElementTree.before.key
     expect(elements.get(rootKey)).toEqual(Fixtures.reparentingElementTree.after)
+  })
+
+  test('delete sole child of element', () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(jest.fn())
+
+    const { oldDocument, newDocument, operation } = Fixtures.deletingImageInBox
+    const documentKey = oldDocument.key
+    const boxElementKey = 'ecb2a405-fac7-4b99-a0e0-d7ecb361d949'
+
+    const updatedState = reduceChangeElementTree(oldDocument, newDocument, operation)
+
+    expect(consoleError).not.toHaveBeenCalled()
+
+    const elements = ElementTrees.getElements(updatedState, documentKey)
+
+    expect(elements.size).toEqual(2)
+
+    const updatedBoxElement = elements.get(boxElementKey)
+    expect(updatedBoxElement).toBeDefined()
+    expect(
+      updatedBoxElement && 'props' in updatedBoxElement && !('children' in updatedBoxElement.props),
+    ).toBeTruthy()
+  })
+
+  test('delete prop on element', () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(jest.fn())
+
+    const { oldDocument, newDocument, operation } = Fixtures.resettingBoxWidth
+    const documentKey = oldDocument.key
+    const boxElementKey = 'ecb2a405-fac7-4b99-a0e0-d7ecb361d949'
+
+    const updatedState = reduceChangeElementTree(oldDocument, newDocument, operation)
+
+    expect(consoleError).not.toHaveBeenCalled()
+
+    const elements = ElementTrees.getElements(updatedState, documentKey)
+
+    expect(elements.size).toEqual(2)
+
+    const updatedBoxElement = elements.get(boxElementKey)
+    expect(updatedBoxElement).toBeDefined()
+    expect(
+      updatedBoxElement && 'props' in updatedBoxElement && !('width' in updatedBoxElement.props),
+    ).toBeTruthy()
+  })
+
+  test('delete children from prop in element with multiple child props', () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(jest.fn())
+
+    const { oldDocument, newDocument, operation } = Fixtures.deletingChildrenFromMultislot
+    const documentKey = oldDocument.key
+    const multislotElementKey = 'ecb2a405-fac7-4b99-a0e0-d7ecb361d949'
+
+    const updatedState = reduceChangeElementTree(oldDocument, newDocument, operation)
+
+    expect(consoleError).not.toHaveBeenCalled()
+
+    const elements = ElementTrees.getElements(updatedState, documentKey)
+
+    expect(elements.size).toEqual(2)
+
+    const updatedMultislotElement = elements.get(multislotElementKey)
+    expect(updatedMultislotElement).toBeDefined()
+    expect(
+      updatedMultislotElement &&
+        'props' in updatedMultislotElement &&
+        !('childrenA' in updatedMultislotElement.props),
+    ).toBeTruthy()
+    expect(
+      updatedMultislotElement &&
+        'props' in updatedMultislotElement &&
+        'childrenB' in updatedMultislotElement.props,
+    ).toBeTruthy()
+  })
+
+  test('replace prop value', () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(jest.fn())
+
+    const { oldDocument, newDocument, operation } = Fixtures.changingBoxBackground
+    const documentKey = oldDocument.key
+    const boxElementKey = '250be651-9cc3-4483-831e-f24967ea44d7'
+
+    const updatedState = reduceChangeElementTree(oldDocument, newDocument, operation)
+
+    expect(consoleError).not.toHaveBeenCalled()
+
+    const elements = ElementTrees.getElements(updatedState, documentKey)
+
+    expect(elements.size).toEqual(2)
+
+    const updatedBoxElement = elements.get(boxElementKey)
+    expect(updatedBoxElement).toMatchSnapshot()
+  })
+
+  test('remove item from List prop', () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(jest.fn())
+
+    const { oldDocument, newDocument, operation } = Fixtures.removingImageFromCarousel
+    const documentKey = oldDocument.key
+    const carouselElementKey = '770e1464-9887-4158-92fe-2b5a4810c023'
+
+    const updatedState = reduceChangeElementTree(oldDocument, newDocument, operation)
+
+    expect(consoleError).not.toHaveBeenCalled()
+
+    const elements = ElementTrees.getElements(updatedState, documentKey)
+
+    expect(elements.size).toEqual(2)
+
+    const updatedCarouselElement = elements.get(carouselElementKey)
+    expect(updatedCarouselElement).toMatchSnapshot()
   })
 })
