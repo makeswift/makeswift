@@ -285,16 +285,36 @@ function deleteChildrenInProp(
   }
 }
 
-function deleteReferencedElements(
-  elementTree: ElementTree,
-  element: Element,
+function deleteElementOrProp(
+  { elements, elementIds }: ElementTree,
+  targetElement: Element,
   propName: string | null,
   descriptors: DescriptorsByComponentType,
 ) {
   if (propName == null) {
-    deleteElement(elementTree, element, descriptors)
-  } else if (isChildrenProp(element, propName, descriptors)) {
-    deleteChildrenInProp(elementTree, element, propName, descriptors)
+    deleteElement({ elements, elementIds }, targetElement, descriptors)
+    return
+  }
+
+  if (isChildrenProp(targetElement, propName, descriptors)) {
+    deleteChildrenInProp({ elements, elementIds }, targetElement, propName, descriptors)
+  }
+
+  // The provided targetElement might refer to an element from the before/after documents,
+  // not the actual element object from the ElementTree
+  const elementInTree = elements.get(targetElement.key)
+
+  if (!elementInTree) {
+    console.error(
+      `Attempting to remove prop ${propName} from element ${targetElement.key} not found in tree`,
+    )
+    return
+  }
+
+  if (!isElementReference(elementInTree)) {
+    const newProps = { ...elementInTree.props }
+    delete newProps[propName]
+    elements.set(targetElement.key, { ...elementInTree, props: newProps })
   }
 }
 
@@ -310,12 +330,7 @@ function applyDelete(
   const elements = new Map(elementTree.elements)
   const elementIds = new Map(elementTree.elementIds)
 
-  deleteReferencedElements({ elements, elementIds }, targetElement, propName, descriptors)
-
-  const elementFromTree = elementTree.elements.get(targetElement.key)
-  if (propName !== null && elementFromTree && !isElementReference(elementFromTree)) {
-    delete elementFromTree.props[propName]
-  }
+  deleteElementOrProp({ elements, elementIds }, targetElement, propName, descriptors)
 
   // Use the "after" state to efficiently update all of parent subtrees in the state
   updateParentElements(elements, parentElementPaths, rootElements.after)
@@ -385,7 +400,7 @@ function applyUpdate(
   const elements = new Map(elementTree.elements)
   const elementIds = new Map(elementTree.elementIds)
 
-  deleteReferencedElements({ elements, elementIds }, targetElement, propName, descriptors)
+  deleteElementOrProp({ elements, elementIds }, targetElement, propName, descriptors)
 
   insertElement({ elements, elementIds }, insertedElement, propName, descriptors)
 
