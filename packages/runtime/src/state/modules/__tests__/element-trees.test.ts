@@ -331,4 +331,42 @@ describe('applyChanges', () => {
         'childrenB' in updatedMultislotElement.props,
     ).toBeTruthy()
   })
+
+  test('replace prop value', () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(jest.fn())
+
+    const { oldDocument, newDocument, operation } = Fixtures.changingBoxBackground
+    const documentKey = oldDocument.key
+    const boxElementKey = '250be651-9cc3-4483-831e-f24967ea44d7'
+
+    const updatedState = reduceChangeElementTree(oldDocument, newDocument, operation)
+
+    expect(consoleError).not.toHaveBeenCalled()
+
+    const elements = ElementTrees.getElements(updatedState, documentKey)
+
+    expect(elements.size).toEqual(2)
+
+    const updatedBoxElement = elements.get(boxElementKey)
+    expect(updatedBoxElement).toMatchSnapshot()
+  })
+
+  test('remove item from List prop', () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(jest.fn())
+
+    const { oldDocument, newDocument, operation } = Fixtures.removingImageFromCarousel
+    const documentKey = oldDocument.key
+    const carouselElementKey = '770e1464-9887-4158-92fe-2b5a4810c023'
+
+    const updatedState = reduceChangeElementTree(oldDocument, newDocument, operation)
+
+    expect(consoleError).not.toHaveBeenCalled()
+
+    const elements = ElementTrees.getElements(updatedState, documentKey)
+
+    expect(elements.size).toEqual(2)
+
+    const updatedCarouselElement = elements.get(carouselElementKey)
+    expect(updatedCarouselElement).toMatchSnapshot()
+  })
 })

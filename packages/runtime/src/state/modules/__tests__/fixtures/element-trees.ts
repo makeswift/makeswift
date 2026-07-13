@@ -5149,3 +5149,375 @@ export const deletingChildrenFromMultislot = {
     },
   ],
 }
+
+export const changingBoxBackground = {
+  oldDocument: {
+    key: 'UGFnZToxMjIxNGZlYy0xZjNhLTQ1ODEtYTI4NC05ZTU1OTVhMDhkZWI=',
+    rootElement: {
+      key: 'a4c1b856-831e-4cbf-91cc-627a43ed8e81',
+      props: {
+        children: {
+          '@@makeswift/type': 'prop-controllers::grid::v1',
+          value: {
+            columns: [
+              {
+                deviceId: 'desktop',
+                value: {
+                  count: 12,
+                  spans: [[12]],
+                },
+              },
+            ],
+            elements: [
+              {
+                key: '250be651-9cc3-4483-831e-f24967ea44d7',
+                props: {
+                  backgrounds: {
+                    '@@makeswift/type': 'prop-controllers::backgrounds::v2',
+                    value: [
+                      {
+                        deviceId: 'desktop',
+                        value: [
+                          {
+                            id: 'cf116a69-9349-4857-b7c9-412ac0535eed',
+                            payload: {
+                              alpha: 1,
+                              swatchId:
+                                'U3dhdGNoOjg2OWEwN2YyLTMxNzUtNDVjOS04ODRhLWE0ODhhYjhiOTIxYg==',
+                            },
+                            type: 'color',
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  padding: [
+                    {
+                      deviceId: 'desktop',
+                      value: {
+                        paddingBottom: {
+                          unit: 'px',
+                          value: 10,
+                        },
+                        paddingLeft: {
+                          unit: 'px',
+                          value: 10,
+                        },
+                        paddingRight: {
+                          unit: 'px',
+                          value: 10,
+                        },
+                        paddingTop: {
+                          unit: 'px',
+                          value: 10,
+                        },
+                      },
+                    },
+                  ],
+                },
+                type: './components/Box/index.js',
+              },
+            ],
+          },
+        },
+        rowGap: {
+          '@@makeswift/type': 'prop-controllers::gap-y::v1',
+          value: [
+            {
+              deviceId: 'desktop',
+              value: {
+                unit: 'px',
+                value: 10,
+              },
+            },
+          ],
+        },
+      },
+      type: './components/Root/index.js',
+    },
+    locale: null,
+  },
+  newDocument: {
+    key: 'UGFnZToxMjIxNGZlYy0xZjNhLTQ1ODEtYTI4NC05ZTU1OTVhMDhkZWI=',
+    rootElement: {
+      key: 'a4c1b856-831e-4cbf-91cc-627a43ed8e81',
+      props: {
+        children: {
+          '@@makeswift/type': 'prop-controllers::grid::v1',
+          value: {
+            columns: [
+              {
+                deviceId: 'desktop',
+                value: {
+                  count: 12,
+                  spans: [[12]],
+                },
+              },
+            ],
+            elements: [
+              {
+                key: '250be651-9cc3-4483-831e-f24967ea44d7',
+                props: {
+                  padding: [
+                    {
+                      deviceId: 'desktop',
+                      value: {
+                        paddingBottom: {
+                          unit: 'px',
+                          value: 10,
+                        },
+                        paddingLeft: {
+                          unit: 'px',
+                          value: 10,
+                        },
+                        paddingRight: {
+                          unit: 'px',
+                          value: 10,
+                        },
+                        paddingTop: {
+                          unit: 'px',
+                          value: 10,
+                        },
+                      },
+                    },
+                  ],
+                  backgrounds: {
+                    '@@makeswift/type': 'prop-controllers::backgrounds::v2',
+                    value: [
+                      {
+                        deviceId: 'desktop',
+                        value: [
+                          {
+                            type: 'color',
+                            id: 'cf116a69-9349-4857-b7c9-412ac0535eed',
+                            payload: {
+                              swatchId:
+                                'U3dhdGNoOjYwNjgxMmE2LWRkZDMtNDUwZi1hMjhjLWQ1NzQ3YmRlYjk2OQ==',
+                              alpha: 1,
+                            },
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                },
+                type: './components/Box/index.js',
+              },
+            ],
+          },
+        },
+        rowGap: {
+          '@@makeswift/type': 'prop-controllers::gap-y::v1',
+          value: [
+            {
+              deviceId: 'desktop',
+              value: {
+                unit: 'px',
+                value: 10,
+              },
+            },
+          ],
+        },
+      },
+      type: './components/Root/index.js',
+    },
+    locale: null,
+  },
+  operation: [
+    {
+      p: ['props', 'children', 'value', 'elements', 0, 'props', 'backgrounds'],
+      od: {
+        '@@makeswift/type': 'prop-controllers::backgrounds::v2',
+        value: [
+          {
+            deviceId: 'desktop',
+            value: [
+              {
+                id: 'cf116a69-9349-4857-b7c9-412ac0535eed',
+                payload: {
+                  alpha: 1,
+                  swatchId: 'U3dhdGNoOjg2OWEwN2YyLTMxNzUtNDVjOS04ODRhLWE0ODhhYjhiOTIxYg==',
+                },
+                type: 'color',
+              },
+            ],
+          },
+        ],
+      },
+      oi: {
+        '@@makeswift/type': 'prop-controllers::backgrounds::v2',
+        value: [
+          {
+            deviceId: 'desktop',
+            value: [
+              {
+                type: 'color',
+                id: 'cf116a69-9349-4857-b7c9-412ac0535eed',
+                payload: {
+                  swatchId: 'U3dhdGNoOjYwNjgxMmE2LWRkZDMtNDUwZi1hMjhjLWQ1NzQ3YmRlYjk2OQ==',
+                  alpha: 1,
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+}
+
+export const removingImageFromCarousel = {
+  oldDocument: {
+    key: 'UGFnZToxMjIxNGZlYy0xZjNhLTQ1ODEtYTI4NC05ZTU1OTVhMDhkZWI=',
+    rootElement: {
+      key: 'a4c1b856-831e-4cbf-91cc-627a43ed8e81',
+      props: {
+        rowGap: {
+          '@@makeswift/type': 'prop-controllers::gap-y::v1',
+          value: [
+            {
+              deviceId: 'desktop',
+              value: {
+                unit: 'px',
+                value: 10,
+              },
+            },
+          ],
+        },
+        children: {
+          '@@makeswift/type': 'prop-controllers::grid::v1',
+          value: {
+            columns: [
+              {
+                deviceId: 'desktop',
+                value: {
+                  count: 12,
+                  spans: [[12]],
+                },
+              },
+            ],
+            elements: [
+              {
+                key: '770e1464-9887-4158-92fe-2b5a4810c023',
+                type: './components/Carousel/index.js',
+                props: {
+                  images: [
+                    {
+                      key: 'image-1',
+                      props: {},
+                    },
+                    {
+                      key: 'image-2',
+                      props: {},
+                    },
+                    {
+                      key: 'image-3',
+                      props: {},
+                    },
+                  ],
+                  delay: 5,
+                  showArrows: true,
+                  showDots: true,
+                },
+              },
+            ],
+          },
+        },
+      },
+      type: './components/Root/index.js',
+    },
+    locale: null,
+  },
+  newDocument: {
+    key: 'UGFnZToxMjIxNGZlYy0xZjNhLTQ1ODEtYTI4NC05ZTU1OTVhMDhkZWI=',
+    rootElement: {
+      key: 'a4c1b856-831e-4cbf-91cc-627a43ed8e81',
+      props: {
+        rowGap: {
+          '@@makeswift/type': 'prop-controllers::gap-y::v1',
+          value: [
+            {
+              deviceId: 'desktop',
+              value: {
+                unit: 'px',
+                value: 10,
+              },
+            },
+          ],
+        },
+        children: {
+          '@@makeswift/type': 'prop-controllers::grid::v1',
+          value: {
+            columns: [
+              {
+                deviceId: 'desktop',
+                value: {
+                  count: 12,
+                  spans: [[12]],
+                },
+              },
+            ],
+            elements: [
+              {
+                key: '770e1464-9887-4158-92fe-2b5a4810c023',
+                type: './components/Carousel/index.js',
+                props: {
+                  delay: 5,
+                  showArrows: true,
+                  showDots: true,
+                  images: {
+                    '@@makeswift/type': 'prop-controllers::images::v2',
+                    value: [
+                      {
+                        key: 'image-1',
+                        props: {},
+                      },
+                      {
+                        key: 'image-2',
+                        props: {},
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+      type: './components/Root/index.js',
+    },
+    locale: null,
+  },
+  operation: [
+    {
+      p: ['props', 'children', 'value', 'elements', 0, 'props', 'images'],
+      od: [
+        {
+          key: 'image-1',
+          props: {},
+        },
+        {
+          key: 'image-2',
+          props: {},
+        },
+        {
+          key: 'image-3',
+          props: {},
+        },
+      ],
+      oi: {
+        '@@makeswift/type': 'prop-controllers::images::v2',
+        value: [
+          {
+            key: 'image-1',
+            props: {},
+          },
+          {
+            key: 'image-2',
+            props: {},
+          },
+        ],
+      },
+    },
+  ],
+}
