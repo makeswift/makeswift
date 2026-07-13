@@ -285,6 +285,19 @@ function deleteChildrenInProp(
   }
 }
 
+function deleteReferencedElements(
+  elementTree: ElementTree,
+  element: Element,
+  propName: string | null,
+  descriptors: DescriptorsByComponentType,
+) {
+  if (propName == null) {
+    deleteElement(elementTree, element, descriptors)
+  } else if (isChildrenProp(element, propName, descriptors)) {
+    deleteChildrenInProp(elementTree, element, propName, descriptors)
+  }
+}
+
 function applyDelete(
   elementTree: ElementTree,
   descriptors: DescriptorsByComponentType,
@@ -297,11 +310,7 @@ function applyDelete(
   const elements = new Map(elementTree.elements)
   const elementIds = new Map(elementTree.elementIds)
 
-  if (propName == null) {
-    deleteElement({ elements, elementIds }, targetElement, descriptors)
-  } else if (isChildrenProp(targetElement, propName, descriptors)) {
-    deleteChildrenInProp({ elements, elementIds }, targetElement, propName, descriptors)
-  }
+  deleteReferencedElements({ elements, elementIds }, targetElement, propName, descriptors)
 
   const elementFromTree = elementTree.elements.get(targetElement.key)
   if (propName !== null && elementFromTree && !isElementReference(elementFromTree)) {
@@ -376,11 +385,7 @@ function applyUpdate(
   const elements = new Map(elementTree.elements)
   const elementIds = new Map(elementTree.elementIds)
 
-  if (propName == null) {
-    deleteElement({ elements, elementIds }, targetElement, descriptors)
-  } else if (isChildrenProp(targetElement, propName, descriptors)) {
-    deleteChildrenInProp({ elements, elementIds }, targetElement, propName, descriptors)
-  }
+  deleteReferencedElements({ elements, elementIds }, targetElement, propName, descriptors)
 
   insertElement({ elements, elementIds }, insertedElement, propName, descriptors)
 
