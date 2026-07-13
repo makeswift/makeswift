@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.8-canary.4
+
+### Patch Changes
+
+- 09d37fe: Fix accidental deletion of elements from element tree state when deleting props
+
 ## 0.28.8-canary.3
 
 ### Patch Changes
