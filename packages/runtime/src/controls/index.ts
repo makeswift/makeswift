@@ -12,6 +12,10 @@ export {
   ComboboxDefinition,
   Font,
   FontDefinition,
+  unstable_Gallery,
+  unstable_GalleryDefinition,
+  type GalleryOption,
+  type GalleryPage,
   Group,
   GroupDefinition,
   GroupControl,
@@ -49,3 +53,8 @@ export { RichTextV1Definition, RichTextV1Control } from './rich-text'
 export { RichText, RichTextV2Definition, RichTextV2Control } from './rich-text-v2'
 export { Slot, SlotDefinition, SlotControl } from './slot'
 export { unstable_StyleV2, StyleV2Definition, StyleV2Control } from './style-v2/style-v2'
+
+export {
+  unstable_getControlContext,
+  unstable_runWithControlContext,
+} from './serialization/message-port'

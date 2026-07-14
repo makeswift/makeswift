@@ -7,6 +7,12 @@ import {
 
 export { type DeserializedFunction } from '@makeswift/controls'
 
+import {
+  type ControlContext,
+  getOutgoingControlContext,
+  withAmbientControlContext,
+} from './control-context'
+
 declare const SerializedFunctionTag: unique symbol
 
 type ResolveCallPromise<T extends AnyFunction> = (value: SerializedFunctionReturnType<T>) => void
@@ -27,13 +33,15 @@ export function isSerializedFunction(value: any): value is SerializedFunction<An
 type CallID = number
 
 export function serializeFunction<T extends AnyFunction>(func: T): SerializedFunction<T> {
-  type CallMessageEvent = MessageEvent<[CallID, Parameters<T>]>
+  type CallMessageEvent = MessageEvent<[CallID, Parameters<T>, ControlContext?]>
 
   const messageChannel = new MessageChannel()
 
-  messageChannel.port1.onmessage = ({ data: [callId, args] }: CallMessageEvent) => {
+  messageChannel.port1.onmessage = ({
+    data: [callId, args, context],
+  }: CallMessageEvent) => {
     Promise.resolve()
-      .then(() => func.apply(null, args))
+      .then(() => withAmbientControlContext(context, () => func.apply(null, args)))
       .then(result => messageChannel.port1.postMessage([callId, result]))
   }
 
@@ -76,7 +84,12 @@ export function deserializeFunction<T extends AnyFunction>(
       }
 
       const callId = newCall(resolve)
-      serializedFunction.postMessage([callId, args])
+      const context = getOutgoingControlContext()
+      if (context !== undefined) {
+        serializedFunction.postMessage([callId, args, context])
+      } else {
+        serializedFunction.postMessage([callId, args])
+      }
     })
   }
 }

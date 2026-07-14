@@ -13,6 +13,7 @@ import {
   ColorDefinition,
   ComboboxDefinition,
   FontDefinition,
+  unstable_GalleryDefinition,
   GroupDefinition,
   IconRadioGroupDefinition,
   ImageDefinition,
@@ -69,6 +70,7 @@ export function deserializeUnifiedControlDef(record: DeserializedRecord): Contro
     [ColorDefinition.type]: ColorDefinition.deserialize,
     [ComboboxDefinition.type]: ComboboxDefinition.deserialize,
     [FontDefinition.type]: FontDefinition.deserialize,
+    [unstable_GalleryDefinition.type]: unstable_GalleryDefinition.deserialize,
     [GroupDefinition.type]: record =>
       GroupDefinition.deserialize(record, deserializeUnifiedControlDef),
     [IconRadioGroupDefinition.type]: IconRadioGroupDefinition.deserialize,

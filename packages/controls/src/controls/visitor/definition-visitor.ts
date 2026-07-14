@@ -4,6 +4,7 @@ import { ColorDefinition } from '../color'
 import { ComboboxDefinition } from '../combobox'
 import { ControlDefinition } from '../definition'
 import { FontDefinition } from '../font'
+import { unstable_GalleryDefinition } from '../gallery'
 import { GroupDefinition } from '../group'
 import {
   IconRadioGroupConfig,
@@ -29,6 +30,11 @@ abstract class ControlDefinitionVisitor<R> {
   abstract visitColor(def: ColorDefinition, ...args: unknown[]): R
   abstract visitCombobox(def: ComboboxDefinition, ...args: unknown[]): R
   abstract visitFont(def: FontDefinition, ...args: unknown[]): R
+  abstract visitGallery(
+    def: unstable_GalleryDefinition,
+    ...args: unknown[]
+  ): R
+
   abstract visitGroup(def: GroupDefinition, ...args: unknown[]): R
   abstract visitIconRadioGroup<C extends IconRadioGroupConfig>(
     def: IconRadioGroupDefinition<C>,
