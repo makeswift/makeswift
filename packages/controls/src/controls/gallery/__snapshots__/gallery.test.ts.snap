@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`unstable_Gallery definition w/ config {"label":"Product image"} toData returns v1 data for \`{ id: 'a', thumbnailUrl: '/a.jpg', label: 'A', value: '/a.jpg' }\` when definition version is 1 1`] = `
+{
+  "id": "a",
+  "label": "A",
+  "thumbnailUrl": "/a.jpg",
+  "value": "/a.jpg",
+}
+`;
+
+exports[`unstable_Gallery definition w/ config {"label":"Product image"} toData returns v1 data for \`{ id: 'b', thumbnailUrl: '/b.jpg', label: 'B', value: '/b.jpg' }\` when definition version is 1 1`] = `
+{
+  "id": "b",
+  "label": "B",
+  "thumbnailUrl": "/b.jpg",
+  "value": "/b.jpg",
+}
+`;
+
+exports[`unstable_Gallery resolveValue w/ config {"label":"Product image"} resolves data ({ id: 'a', thumbnailUrl: '/a.jpg', label: 'A', value: '/a.jpg' }) 1`] = `"/a.jpg"`;
+
+exports[`unstable_Gallery resolveValue w/ config {"label":"Product image"} resolves data ({ id: 'b', thumbnailUrl: '/b.jpg', label: 'B', value: '/b.jpg' }) 1`] = `"/b.jpg"`;

@@ -10,6 +10,7 @@ import { ColorDefinition } from '../color'
 import { ComboboxDefinition } from '../combobox'
 import { ControlDefinition } from '../definition'
 import { FontDefinition } from '../font'
+import { unstable_GalleryDefinition } from '../gallery'
 import { GroupDefinition } from '../group'
 import {
   IconRadioGroupConfig,
@@ -83,6 +84,14 @@ abstract class MergeTranslationsVisitor extends ControlDefinitionVisitor<Data> {
   visitFont(
     _def: FontDefinition,
     data: DataType<FontDefinition> | undefined,
+    translatedData: Data,
+  ): Data {
+    return this.noOpMerge(data, translatedData)
+  }
+
+  visitGallery(
+    _def: unstable_GalleryDefinition,
+    data: DataType<unstable_GalleryDefinition> | undefined,
     translatedData: Data,
   ): Data {
     return this.noOpMerge(data, translatedData)
