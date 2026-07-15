@@ -37,6 +37,7 @@ export class ReactRuntimeCore extends RuntimeCore {
       hidden = false,
       description,
       builtinSuspense,
+      unstable_migration,
       props,
     }: {
       type: string
@@ -50,6 +51,12 @@ export class ReactRuntimeCore extends RuntimeCore {
        * Defaults to `true`.
        */
       builtinSuspense?: boolean
+      /**
+       * Marks this registration as superseded by `replacementType`. When
+       * `replacementType` differs from `type`, the builder offers a way to
+       * update existing instances.
+       */
+      unstable_migration?: { replacementType: string }
       props?: P
     },
   ): () => void {
@@ -58,7 +65,7 @@ export class ReactRuntimeCore extends RuntimeCore {
     const unregisterComponent = this.protoStore.dispatch(
       registerComponentEffect(
         type,
-        { label, icon, hidden, description, builtinSuspense },
+        { label, icon, hidden, description, builtinSuspense, unstable_migration },
         props ?? {},
       ),
     )
