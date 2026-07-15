@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.8-canary.5
+
+### Patch Changes
+
+- b8e75a5: Add unstable_migration API to component registration
+
 ## 0.28.8-canary.4
 
 ### Patch Changes
