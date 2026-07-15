@@ -43,6 +43,9 @@ export type ComponentMeta = {
   hidden: boolean
   description?: string
   builtinSuspense?: boolean
+  unstable_migration?: {
+    replacementType: string
+  }
 }
 
 export type State = Map<string, ComponentMeta>
