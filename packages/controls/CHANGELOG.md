@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.21-canary.1
+
+### Patch Changes
+
+- 1c508ee: Add the `unstable_Gallery` control, an image-grid picker control.
+
 ## 0.1.21-canary.0
 
 ### Patch Changes
