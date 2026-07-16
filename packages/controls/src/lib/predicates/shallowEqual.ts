@@ -1,8 +1,13 @@
+import { type Data } from '../../common/types'
+
 import { is } from './is'
 
 const { hasOwnProperty } = Object.prototype
 
-export const shallowEqual = (a: unknown, b: unknown): boolean => {
+/**
+ * Shallow equality for scalars, arrays and plain objects.
+ */
+export const shallowEqual = (a: Data, b: Data): boolean => {
   if (is(a, b)) return true
 
   if (

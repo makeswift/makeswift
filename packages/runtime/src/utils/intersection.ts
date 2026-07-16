@@ -1,10 +1,12 @@
+import { type Data } from '@makeswift/controls'
+
 import deepEqual from './deepEqual'
 import keys from './keys'
 
-export default function intersection<A extends Record<string, unknown>, B extends A>(
+export default function intersection<A extends Record<string, Data>, B extends A>(
   a: A,
   b: B,
-  isEqual: (a: unknown, b: unknown) => boolean = deepEqual,
+  isEqual: (a: Data, b: Data) => boolean = deepEqual,
 ): { [K in keyof A]: A[K] | null } {
   const allKeys = [...new Set([...keys(a), ...keys(b)])] as (keyof A)[]
 
