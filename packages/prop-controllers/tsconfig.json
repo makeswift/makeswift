@@ -6,6 +6,7 @@
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
     "moduleResolution": "Node",
+    "types": ["jest"],
     "strict": true,
     "sourceMap": true,
     "resolveJsonModule": true,
