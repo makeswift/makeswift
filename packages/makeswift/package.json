@@ -24,7 +24,8 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "test": "jest --passWithNoTests",
-    "prepublishOnly": "turbo run build --force",
+    "checkEmptyFiles": "EMPTY=$(find dist -type f -empty); if [ -n \"$EMPTY\" ]; then echo \"Error: Empty files found in dist:\"; echo \"$EMPTY\"; exit 1; else echo \"No empty files in dist\"; fi",
+    "prepublishOnly": "turbo run build --force && pnpm checkEmptyFiles",
     "lint": "eslint ."
   },
   "dependencies": {
