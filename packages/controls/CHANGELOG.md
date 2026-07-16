@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.21-canary.2
+
+### Patch Changes
+
+- 683ecd5: Tighten `deepEqual`/`shallowEqual` typings, fix corner-case false positives on object-to-array comparisons
+
 ## 0.1.21-canary.1
 
 ### Patch Changes

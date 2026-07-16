@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.28.8-canary.7
+
+### Patch Changes
+
+- 683ecd5: Tighten `deepEqual`/`shallowEqual` typings, fix corner-case false positives on object-to-array comparisons
+- Updated dependencies [683ecd5]
+  - @makeswift/controls@0.1.21-canary.2
+  - @makeswift/prop-controllers@0.4.15-canary.2
+
 ## 0.28.8-canary.6
 
 ### Patch Changes
