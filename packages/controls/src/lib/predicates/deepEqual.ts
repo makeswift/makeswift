@@ -18,6 +18,8 @@ export const deepEqual = (a: Data, b: Data): boolean => {
   )
     return false
 
+  if (Array.isArray(a) !== Array.isArray(b)) return false
+
   const keysA = Object.keys(a)
   const keysB = Object.keys(b)
 
