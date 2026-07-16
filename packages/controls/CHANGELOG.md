@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.21-canary.3
+
+### Patch Changes
+
+- 85b4e18: fix: explicitly include Jest types in package globals
+
 ## 0.1.21-canary.2
 
 ### Patch Changes
