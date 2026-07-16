@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Editor } from 'slate'
+import { Editor, Range } from 'slate'
 import { type RichTextDTO, richTextDTOtoDAO, richTextDTOtoSelection } from '@makeswift/controls'
 
 import { useIsInBuilder } from '../../../hooks/use-is-in-builder'
@@ -19,13 +19,18 @@ export function useSyncWithBuilder(editor: Editor, text?: RichTextDTO) {
     if (shouldCommit && text && isInBuilder) {
       const nextValue = richTextDTOtoDAO(text)
       const nextSelection = richTextDTOtoSelection(text)
-      if (!deepEqual(editor.children, nextValue) || !deepEqual(editor.selection, nextSelection)) {
+      const sameSelection =
+        editor.selection == null || nextSelection == null
+          ? editor.selection == nextSelection
+          : Range.equals(editor.selection, nextSelection)
+
+      if (!deepEqual(editor.children, nextValue) || !sameSelection) {
         editor.children = nextValue
         editor.selection = nextSelection
         editor.onChange()
       }
     }
-  }, [editor, shouldCommit, text])
+  }, [editor, isInBuilder, shouldCommit, text])
 
   useEffect(() => {
     if (shouldCommit) return

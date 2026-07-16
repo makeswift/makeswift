@@ -2,6 +2,7 @@ import { Editor, NodeEntry, Range, Text } from 'slate'
 import {
   type Breakpoints,
   type BreakpointId,
+  type Data,
   findBreakpointOverride,
   Slate,
 } from '@makeswift/controls'
@@ -87,10 +88,10 @@ const concat = (a: unknown[], b: unknown[]) => a.concat(b)
  * This is a c/p of the intersection of the utils from the root utils folder.
  * The only change is defaulting to undefined instead of to null.
  */
-export default function intersection<A extends Record<string, unknown>, B extends A>(
+export default function intersection<A extends Record<string, Data>, B extends A>(
   a: A,
   b: B,
-  isEqual: (a: unknown, b: unknown) => boolean = deepEqual,
+  isEqual: (a: Data, b: Data) => boolean = deepEqual,
 ): { [K in keyof A]: A[K] | undefined } {
   const allKeys = [...new Set([...keys(a), ...keys(b)])] as (keyof A)[]
 

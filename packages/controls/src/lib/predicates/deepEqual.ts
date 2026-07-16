@@ -1,8 +1,13 @@
+import { type Data } from '../../common/types'
+
 import { shallowEqual } from './shallowEqual'
 
 const { hasOwnProperty } = Object.prototype
 
-export const deepEqual = (a: unknown, b: unknown): boolean => {
+/**
+ * Deep equality for scalars, arrays and plain objects.
+ */
+export const deepEqual = (a: Data, b: Data): boolean => {
   if (shallowEqual(a, b)) return true
 
   if (
@@ -12,6 +17,8 @@ export const deepEqual = (a: unknown, b: unknown): boolean => {
     b === null
   )
     return false
+
+  if (Array.isArray(a) !== Array.isArray(b)) return false
 
   const keysA = Object.keys(a)
   const keysB = Object.keys(b)

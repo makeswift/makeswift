@@ -1,12 +1,12 @@
 import { Editor, Element, NodeEntry, Transforms, Node, Text } from 'slate'
-import { RichTextTypography } from '@makeswift/controls'
+import { type Data, RichTextTypography } from '@makeswift/controls'
 
 import { MakeswiftEditor } from '../types'
 import keys from '../../utils/keys'
 import deepEqual from '../../utils/deepEqual'
 import { shallowMergeTypographies } from './normalizeTypographyDown'
 
-function shallowAnd<A extends Record<string, unknown>, B extends Record<string, unknown>>(
+function shallowAnd<A extends Record<string, Data>, B extends Record<string, Data>>(
   a: A,
   b: B,
 ): A & B {
@@ -60,7 +60,7 @@ function shallowAndTypographies(...typographies: RichTextTypography[]): RichText
   }
 }
 
-function shallowInverseAnd<A extends Record<string, unknown>, B extends Record<string, unknown>>(
+function shallowInverseAnd<A extends Record<string, Data>, B extends Record<string, Data>>(
   a: A,
   b: B,
 ): A & B {
@@ -70,7 +70,7 @@ function shallowInverseAnd<A extends Record<string, unknown>, B extends Record<s
   const xor = {} as A & B
 
   bKeys.forEach(key => {
-    if (!deepEqual(aPrime[key], bPrime[key as any])) xor[key] = aPrime[key]
+    if (!deepEqual(aPrime[key], bPrime[key])) xor[key] = aPrime[key]
   })
 
   return xor
