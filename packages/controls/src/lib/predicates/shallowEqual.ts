@@ -1,9 +1,12 @@
-import { is } from './is'
+import { type Data } from '../../common/types'
 
 const { hasOwnProperty } = Object.prototype
 
-export const shallowEqual = (a: unknown, b: unknown): boolean => {
-  if (is(a, b)) return true
+/**
+ * Shallow equality for scalars, arrays and plain objects.
+ */
+export const shallowEqual = (a: Data, b: Data): boolean => {
+  if (Object.is(a, b)) return true
 
   if (
     typeof a !== 'object' ||
@@ -13,14 +16,19 @@ export const shallowEqual = (a: unknown, b: unknown): boolean => {
   )
     return false
 
+  if (Array.isArray(a) !== Array.isArray(b)) return false
+
   const keysA = Object.keys(a)
   const keysB = Object.keys(b)
 
   if (keysA.length !== keysB.length) return false
 
   for (let i = 0; i < keysA.length; i += 1) {
-    // @ts-expect-error: {}[string] is OK.
-    if (!hasOwnProperty.call(b, keysA[i]) || !is(a[keysA[i]], b[keysA[i]]))
+    if (
+      !hasOwnProperty.call(b, keysA[i]) ||
+      // @ts-expect-error: {}[string] is OK.
+      !Object.is(a[keysA[i]], b[keysA[i]])
+    )
       return false
   }
 
