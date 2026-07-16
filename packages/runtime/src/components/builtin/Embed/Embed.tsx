@@ -2,7 +2,7 @@
 
 /* eslint-env browser */
 
-import { useState, useEffect, forwardRef, Ref, useImperativeHandle } from 'react'
+import { useState, useEffect, useMemo, forwardRef, Ref, useImperativeHandle } from 'react'
 
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect'
 import { useStyle } from '../../../runtimes/react/use-style'
@@ -107,6 +107,13 @@ const Embed = forwardRef(function Embed(
 
   const className = useStyle({ minHeight: 15 })
 
+  // React 19+ resets `innerHTML` whenever the `dangerouslySetInnerHTML`
+  // object's identity changes, even if `__html` is the same string. Memoize
+  // the object so unrelated re-renders don't wipe out DOM produced by the
+  // executed scripts above. See https://github.com/facebook/react/issues/31660
+  // and https://github.com/react/react/issues/31600
+  const dangerouslySetInnerHTML = useMemo(() => ({ __html: html }), [html])
+
   if (shouldRender === false) return null
 
   return (
@@ -114,7 +121,7 @@ const Embed = forwardRef(function Embed(
       ref={setContainer}
       id={id}
       className={cx(className, width, margin)}
-      dangerouslySetInnerHTML={{ __html: html }}
+      dangerouslySetInnerHTML={dangerouslySetInnerHTML}
     />
   )
 })
