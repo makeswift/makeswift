@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.8-canary.8
+
+### Patch Changes
+
+- a649920: Fixes an issue where scripts within the builtin `Embed` component may not have properly persisted DOM manipulations in the builder.
+
 ## 0.28.8-canary.7
 
 ### Patch Changes
