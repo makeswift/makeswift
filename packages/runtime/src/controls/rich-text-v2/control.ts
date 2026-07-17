@@ -127,6 +127,10 @@ export class RichTextV2Control extends ControlInstance<Message> {
     return undefined
   }
 
+  resolvesToRenderableNode(): boolean {
+    return true
+  }
+
   setEditor(editor: Editor) {
     this.editor = editor
     this.sendMessage({

@@ -16,6 +16,10 @@ export class StyleControl extends ControlInstance<Message> {
     return undefined
   }
 
+  resolvesToRenderableNode(): boolean {
+    return false
+  }
+
   changeBoxModel(boxModel: BoxDisplayModel | null): void {
     this.sendMessage({
       type: StyleControl.CHANGE_BOX_MODEL,

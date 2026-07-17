@@ -37,6 +37,10 @@ export class TableFormFieldsPropController extends ControlInstance<TableFormFiel
     return undefined
   }
 
+  resolvesToRenderableNode(): boolean {
+    return false
+  }
+
   tableFormLayoutChange(payload: { layout: BoxDisplayModel }) {
     this.sendMessage({ type: TableFormFieldsMessageType.TABLE_FORM_LAYOUT_CHANGE, payload })
   }

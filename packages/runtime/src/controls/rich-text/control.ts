@@ -91,6 +91,10 @@ export class RichTextControl extends ControlInstance<Message> {
     }
   }
 
+  resolvesToRenderableNode(): boolean {
+    return true
+  }
+
   setSlateEditor(editor: Editor) {
     this.editor = editor
 
