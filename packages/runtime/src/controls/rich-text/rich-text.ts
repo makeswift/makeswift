@@ -1,9 +1,9 @@
 import { ReactNode } from 'react'
 import {
   RichTextV1Definition,
-  SendMessage,
   StableValue,
   type DeserializedRecord,
+  type ControlInstanceArgs,
   type ResourceResolver,
   type Stylesheet,
   type Resolvable,
@@ -42,8 +42,8 @@ class Definition extends BaseDefinition {
     }
   }
 
-  createInstance(sendMessage: SendMessage<any>) {
-    return new RichTextControl(sendMessage)
+  createInstance(args: ControlInstanceArgs) {
+    return new RichTextControl(args)
   }
 }
 

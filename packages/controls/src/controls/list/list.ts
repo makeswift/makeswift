@@ -26,7 +26,7 @@ import {
   type SchemaType,
   type SchemaTypeAny,
 } from '../definition'
-import { type SendMessage } from '../instance'
+import { type ControlInstanceArgs } from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
 
 import { ListControl } from './list-control'
@@ -216,8 +216,8 @@ class Definition<C extends Config> extends ControlDefinition<
     }
   }
 
-  createInstance(sendMessage: SendMessage<any>): InstanceType<C> {
-    return new ListControl(this, sendMessage)
+  createInstance(args: ControlInstanceArgs): ListControl<Definition<C>> {
+    return new ListControl(this, args)
   }
 
   introspect<R>(data: DataType<C> | undefined, target: IntrospectionTarget<R>) {

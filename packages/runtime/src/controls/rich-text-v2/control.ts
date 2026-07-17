@@ -8,7 +8,7 @@ import {
   Slate,
   type BoxDisplayModel,
   type DataType,
-  type SendMessage,
+  type ControlInstanceArgs,
   type Data,
 } from '@makeswift/controls'
 
@@ -91,10 +91,10 @@ export class RichTextV2Control extends ControlInstance<Message> {
   private defaultValue: Slate.Descendant[] | null = null
 
   constructor(
-    send: SendMessage<Message>,
     private readonly descriptor: RichTextV2Definition,
+    args: ControlInstanceArgs<Message>,
   ) {
-    super(send)
+    super(args)
   }
 
   recv = (message: Message): void => {

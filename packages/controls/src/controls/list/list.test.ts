@@ -1,3 +1,5 @@
+import { noOpResourceResolver } from '../../testing/mocks/resource-resolver'
+import { noOpStylesheet } from '../../testing/mocks/stylesheet'
 import { TestSerializationVisitor } from '../../testing/test-serialization-visitor'
 
 import { ControlDataTypeKey } from '../../common'
@@ -123,6 +125,123 @@ describe('List', () => {
         (data) => ListDefinition.deserialize(data, ColorDefinition.deserialize),
       )
       expect(deserialized).toEqual(list)
+    })
+  })
+
+  describe('prop resolution', () => {
+    const list = List({
+      type: Checkbox(),
+    })
+
+    const listData = list.toData([false, false, true, false])
+    const instanceKey = { elementKey: '[test-element]', propPath: 'list-prop' }
+
+    const fixtures = () => {
+      const listInstance = list.createInstance({
+        instanceKey,
+        sendMessage: () => {},
+      })
+
+      const resolveValueContext = [
+        noOpResourceResolver,
+        noOpStylesheet,
+        listInstance,
+      ] as const
+
+      return { listInstance, resolveValueContext }
+    }
+
+    test('resolveValue creates a list of child controls with correct instance keys', async () => {
+      const { listInstance, resolveValueContext } = fixtures()
+
+      expect(
+        listData
+          .map(({ id }) => listInstance.child(id))
+          .filter((c) => c != null),
+      ).toEqual([])
+
+      const resolved = list.resolveValue(listData, ...resolveValueContext)
+      await resolved.triggerResolve()
+
+      const childControls = listData.map(({ id }) => listInstance.child(id))
+
+      expect(
+        childControls
+          .map((c) => c?.elementKey)
+          .every((key) => key === instanceKey.elementKey),
+      ).toBe(true)
+
+      expect(childControls.map((c) => c?.propPath)).toStrictEqual([
+        'list-prop.0',
+        'list-prop.1',
+        'list-prop.2',
+        'list-prop.3',
+      ])
+    })
+
+    test('resolveValue on unchanged list maintains child control identity', async () => {
+      const { listInstance, resolveValueContext } = fixtures()
+
+      const resolved = list.resolveValue(listData, ...resolveValueContext)
+      await resolved.triggerResolve()
+      const childControls = listData.map(({ id }) => listInstance.child(id))
+
+      const resolved2 = list.resolveValue(listData, ...resolveValueContext)
+      await resolved2.triggerResolve()
+      const childControls2 = listData.map(({ id }) => listInstance.child(id))
+
+      childControls2.forEach((item, i) => expect(item).toBe(childControls[i]))
+    })
+
+    test('reordering list data recreates child controls with correct prop paths', async () => {
+      const { listInstance, resolveValueContext } = fixtures()
+
+      const resolved = list.resolveValue(listData, ...resolveValueContext)
+      await resolved.triggerResolve()
+      const childControls = listData.map(({ id }) => listInstance.child(id))
+
+      const listData2 = [...listData].sort((a, b) => b.id.localeCompare(a.id))
+      const resolved2 = list.resolveValue(listData2, ...resolveValueContext)
+      await resolved2.triggerResolve()
+      const childControls2 = listData2.map(({ id }) => listInstance.child(id))
+
+      childControls2.forEach((item, i) =>
+        expect(item).not.toBe(childControls[i]),
+      )
+
+      expect(childControls2.map((c) => c?.propPath)).toStrictEqual([
+        'list-prop.0',
+        'list-prop.1',
+        'list-prop.2',
+        'list-prop.3',
+      ])
+    })
+
+    test('partial reordering of list data recreates only affected child controls', async () => {
+      const { listInstance, resolveValueContext } = fixtures()
+
+      const resolved = list.resolveValue(listData, ...resolveValueContext)
+      await resolved.triggerResolve()
+      const childControls = listData.map(({ id }) => listInstance.child(id))
+
+      const listData2 = [listData[0], listData[2], listData[1], listData[3]]
+      const resolved2 = list.resolveValue(listData2, ...resolveValueContext)
+      await resolved2.triggerResolve()
+      const childControls2 = listData2.map(({ id }) => listInstance.child(id))
+
+      expect(childControls2[0]).toBe(childControls[0])
+      expect(childControls2[1]).not.toBe(childControls[1])
+      expect(childControls2[1]).not.toBe(childControls[2])
+      expect(childControls2[2]).not.toBe(childControls[2])
+      expect(childControls2[2]).not.toBe(childControls[1])
+      expect(childControls2[3]).toBe(childControls[3])
+
+      expect(childControls2.map((c) => c?.propPath)).toStrictEqual([
+        'list-prop.0',
+        'list-prop.1',
+        'list-prop.2',
+        'list-prop.3',
+      ])
     })
   })
 

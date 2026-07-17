@@ -1,9 +1,9 @@
-import { hasAllKeys } from '../../lib/functional'
+import { shallowEqual } from '../../lib/predicates'
 
 import {
   ControlInstance,
+  type ControlInstanceArgs,
   type ControlMessage,
-  type SendMessage,
 } from '../instance'
 
 import { type ListDefinition } from './list'
@@ -23,9 +23,9 @@ export class ListControl<
 
   constructor(
     private readonly definition: Def,
-    sendMessage: SendMessage<Message>,
+    args: ControlInstanceArgs<Message>,
   ) {
-    super(sendMessage)
+    super(args)
   }
 
   recv = (message: Message) => {
@@ -38,13 +38,20 @@ export class ListControl<
 
   child = (key: string) => this.itemControls.get(key)
 
-  childControls = (ids: string[] | undefined) => {
-    if (ids == null || hasAllKeys(this.itemControls, ids)) {
+  childControls = (ids: string[] | undefined): Map<string, ControlInstance> => {
+    const orderedIds: string[] = [...this.itemControls.keys()]
+    // return existing controls if we have a full set of them and they are
+    // already correctly ordered
+    if (ids == null || shallowEqual(ids, orderedIds)) {
       return this.itemControls
     }
 
+    // otherwise recreate controls for new/updated items as needed
     return new Map(
-      ids.map((id) => [id, this.child(id) ?? this.createItemControl(id)]),
+      ids.map((id, index) => {
+        const matchingChild = id === orderedIds[index] ? this.child(id) : null
+        return [id, matchingChild ?? this.createItemControl(index, id)]
+      }),
     )
   }
 
@@ -52,12 +59,18 @@ export class ListControl<
     this.itemControls = children
   }
 
-  createItemControl = (id: string) => {
-    return this.definition.itemDef.createInstance((message) =>
-      this.sendMessage({
-        type: ListControl.ITEM_CONTROL_MESSAGE,
-        payload: { message, itemId: id },
-      }),
-    )
+  createItemControl = (index: number, itemId: string): ControlInstance => {
+    const { elementKey, propPath } = this.instanceKey
+    return this.definition.itemDef.createInstance({
+      instanceKey: {
+        elementKey,
+        propPath: `${propPath}.${index}`,
+      },
+      sendMessage: (message) =>
+        this.sendMessage({
+          type: ListControl.ITEM_CONTROL_MESSAGE,
+          payload: { message, itemId },
+        }),
+    })
   }
 }

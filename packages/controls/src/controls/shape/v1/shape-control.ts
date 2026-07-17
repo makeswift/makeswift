@@ -1,8 +1,8 @@
 import { ControlDefinition } from '../../definition'
 import {
   ControlInstance,
+  type ControlInstanceArgs,
   type ControlMessage,
-  type SendMessage,
 } from '../../instance'
 
 import { ShapeDefinition } from './shape'
@@ -22,9 +22,9 @@ export class ShapeControl<
 
   constructor(
     private readonly definition: Def,
-    sendMessage: SendMessage<Message>,
+    args: ControlInstanceArgs<Message>,
   ) {
-    super(sendMessage)
+    super(args)
     this.childControls = new Map(
       Object.entries(this.definition.keyDefs).map(([key, def]) => [
         key,
@@ -44,11 +44,17 @@ export class ShapeControl<
   child = (key: string) => this.childControls.get(key)
 
   createChildControl = (def: ControlDefinition, key: string) => {
-    return def.createInstance((message) =>
-      this.sendMessage({
-        type: ShapeControl.CHILD_CONTROL_MESSAGE,
-        payload: { message, key },
-      }),
-    )
+    const { elementKey, propPath } = this.instanceKey
+    return def.createInstance({
+      instanceKey: {
+        elementKey,
+        propPath: `${propPath}.${key}`,
+      },
+      sendMessage: (message) =>
+        this.sendMessage({
+          type: ShapeControl.CHILD_CONTROL_MESSAGE,
+          payload: { message, key },
+        }),
+    })
   }
 }

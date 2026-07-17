@@ -3,8 +3,8 @@ import { Types as PropControllerTypes } from '@makeswift/prop-controllers'
 
 import {
   type BoxDisplayModel,
+  type ControlInstanceArgs,
   type ControlMessage,
-  type SendMessage,
   type InstanceType,
   ControlInstance,
   DefaultControlInstance,
@@ -60,19 +60,21 @@ export type DescriptorsPropControllers<T extends Record<string, Descriptor>> = {
 
 export type AnyPropController = ControlInstance<any> | TableFormFieldsPropController
 
-export function createPropController(
-  descriptor: Descriptor,
-  send: SendMessage<PropControllerMessage>,
-): AnyPropController {
+export function createPropController({
+  descriptor,
+  ...args
+}: {
+  descriptor: Descriptor
+} & ControlInstanceArgs): AnyPropController {
   if (!isLegacyDescriptor(descriptor)) {
-    return descriptor.createInstance(send)
+    return descriptor.createInstance(args)
   }
 
   switch (descriptor.type) {
     case PropControllerTypes.TableFormFields:
-      return new TableFormFieldsPropController(send as SendMessage<TableFormFieldsMessage>)
+      return new TableFormFieldsPropController(args)
 
     default:
-      return new DefaultControlInstance(send as SendMessage)
+      return new DefaultControlInstance(args)
   }
 }
