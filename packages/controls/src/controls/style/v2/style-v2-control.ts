@@ -51,6 +51,10 @@ export class StyleV2Control extends ControlInstance<Message> {
     }
   }
 
+  resolvesToRenderableNode(): boolean {
+    return false
+  }
+
   changeBoxModel(boxModel: BoxDisplayModel | null): void {
     this.sendMessage({
       type: StyleV2Control.CHANGE_BOX_MODEL,

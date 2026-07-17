@@ -38,6 +38,8 @@ export class ListControl<
 
   child = (key: string) => this.itemControls.get(key)
 
+  resolvesToRenderableNode = () => false
+
   childControls = (ids: string[] | undefined): Map<string, ControlInstance> => {
     const orderedIds: string[] = [...this.itemControls.keys()]
     // return existing controls if we have a full set of them and they are

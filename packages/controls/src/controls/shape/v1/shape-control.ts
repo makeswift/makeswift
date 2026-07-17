@@ -43,6 +43,8 @@ export class ShapeControl<
 
   child = (key: string) => this.childControls.get(key)
 
+  resolvesToRenderableNode = () => false
+
   createChildControl = (def: ControlDefinition, key: string) => {
     const { elementKey, propPath } = this.instanceKey
     return def.createInstance({

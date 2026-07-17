@@ -42,6 +42,14 @@ export abstract class ControlInstance<
 
   abstract recv(message: M): void
   abstract child(key: string): ControlInstance | undefined
+
+  /**
+   * Returns true if the control resolves to a renderable node.
+   *
+   * In React, that means the resolved value is a `ReactNode`. In other renderers, it is the equivalent
+   * renderable node type.
+   */
+  abstract resolvesToRenderableNode(): boolean
 }
 
 export class DefaultControlInstance extends ControlInstance {
@@ -51,6 +59,10 @@ export class DefaultControlInstance extends ControlInstance {
 
   child(_key: string) {
     return undefined
+  }
+
+  resolvesToRenderableNode(): boolean {
+    return false
   }
 }
 
