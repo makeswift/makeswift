@@ -26,6 +26,10 @@ export class SlotControl extends ControlInstance<Message> {
     return undefined
   }
 
+  resolvesToRenderableNode(): boolean {
+    return true
+  }
+
   changeContainerBoxModel(boxModel: BoxDisplayModel | null): void {
     this.sendMessage({
       type: SlotControl.CONTAINER_BOX_MODEL_CHANGE,
