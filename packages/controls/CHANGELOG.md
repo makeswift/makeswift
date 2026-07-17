@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.21-canary.4
+
+### Patch Changes
+
+- f521bb7: feat: add `instanceKey` (`elementKey` + `propPath`) to control instances
+
 ## 0.1.21-canary.3
 
 ### Patch Changes
