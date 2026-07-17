@@ -16,6 +16,7 @@
     "eslint-config": "0.0.0"
   },
   "changesets": [
+    "brave-moments-change",
     "bumpy-months-bow",
     "common-sheep-walk",
     "crisp-plums-watch",

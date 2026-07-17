@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.21-canary.5
+
+### Patch Changes
+
+- 461939f: feat: add `resolvesToRenderableNode` method to control instances
+
 ## 0.1.21-canary.4
 
 ### Patch Changes

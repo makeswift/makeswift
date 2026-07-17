@@ -1,5 +1,12 @@
 # @makeswift/prop-controllers
 
+## 0.4.15-canary.5
+
+### Patch Changes
+
+- Updated dependencies [461939f]
+  - @makeswift/controls@0.1.21-canary.5
+
 ## 0.4.15-canary.4
 
 ### Patch Changes
