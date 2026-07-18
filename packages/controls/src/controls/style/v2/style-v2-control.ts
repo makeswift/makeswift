@@ -11,42 +11,42 @@ type ItemBoxModelChangeMessage = {
   payload: { boxModel: BoxDisplayModel | null }
 }
 
-type ChildControlMessage = {
-  type: typeof StyleV2Control.CHILD_CONTROL_MESSAGE
+type InnerControlMessage = {
+  type: typeof StyleV2Control.INNER_CONTROL_MESSAGE
   payload: { message: ControlMessage }
 }
 
-type Message = ItemBoxModelChangeMessage | ChildControlMessage
+type Message = ItemBoxModelChangeMessage | InnerControlMessage
 
 export class StyleV2Control extends ControlInstance<Message> {
   static readonly CHANGE_BOX_MODEL =
     'makeswift::controls::style::message::change-box-model'
-  static readonly CHILD_CONTROL_MESSAGE =
-    'makeswift::controls::style-v2::message::child-control-message'
+  static readonly INNER_CONTROL_MESSAGE =
+    'makeswift::controls::style-v2::message::inner-control-message'
 
-  private readonly control: ControlInstance
+  readonly inner: ControlInstance
 
-  constructor(propDef: ControlDefinition, args: ControlInstanceArgs<Message>) {
+  constructor(typeDef: ControlDefinition, args: ControlInstanceArgs<Message>) {
     super(args)
-    this.control = propDef.createInstance({
+    this.inner = typeDef.createInstance({
       ...args,
       sendMessage: (message) =>
         this.sendMessage({
-          type: StyleV2Control.CHILD_CONTROL_MESSAGE,
+          type: StyleV2Control.INNER_CONTROL_MESSAGE,
           payload: { message },
         }),
     })
   }
 
-  child(_key?: string): ControlInstance | undefined {
-    return this.control
+  child(_key: string): ControlInstance | undefined {
+    return undefined
   }
 
   recv = (message: Message) => {
     switch (message.type) {
-      case StyleV2Control.CHILD_CONTROL_MESSAGE: {
-        if (this.control == null) return
-        this.control.recv(message.payload.message)
+      case StyleV2Control.INNER_CONTROL_MESSAGE: {
+        if (this.inner == null) return
+        this.inner.recv(message.payload.message)
       }
     }
   }
