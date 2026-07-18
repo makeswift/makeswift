@@ -38,6 +38,10 @@ export class ListControl<
     }
   }
 
+  isCompositeProp = () => true
+
+  children = () => [...this.itemControlsList]
+
   /**
    *  Returns the control instance for the nested prop identified by `key`,
    *  where `key` is a stringified list item index.

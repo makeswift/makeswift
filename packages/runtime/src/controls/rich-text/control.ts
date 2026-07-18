@@ -67,10 +67,6 @@ export class RichTextControl extends ControlInstance<Message> {
 
   private editor: Editor | null = null
 
-  child(_key: string): ControlInstance | undefined {
-    return undefined
-  }
-
   recv = (message: Message): void => {
     if (!this.editor) return
 
@@ -89,6 +85,18 @@ export class RichTextControl extends ControlInstance<Message> {
         break
       }
     }
+  }
+
+  isCompositeProp(): boolean {
+    return false
+  }
+
+  children(): ControlInstance[] {
+    return []
+  }
+
+  child(_key: string): ControlInstance | undefined {
+    return undefined
   }
 
   resolvesToRenderableNode(): boolean {

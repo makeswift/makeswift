@@ -41,6 +41,10 @@ export class ShapeControl<
     }
   }
 
+  isCompositeProp = () => true
+
+  children = () => [...this.childControls.values()]
+
   child = (key: string) => this.childControls.get(key)
 
   resolvesToRenderableNode = () => false

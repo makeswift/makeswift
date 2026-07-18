@@ -12,6 +12,14 @@ export class StyleControl extends ControlInstance<Message> {
 
   recv = (_message: Message) => {}
 
+  isCompositeProp(): boolean {
+    return false
+  }
+
+  children(): ControlInstance[] {
+    return []
+  }
+
   child(_key: string): ControlInstance | undefined {
     return undefined
   }

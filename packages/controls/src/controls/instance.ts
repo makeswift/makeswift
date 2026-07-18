@@ -43,7 +43,18 @@ export abstract class ControlInstance<
   abstract recv(message: M): void
 
   /**
+   * Returns true if the control represents a composite prop value (a prop that contains other props).
    *
+   * In contrast with `children()`, this return value doesn't change over the control lifetime.
+   */
+  abstract isCompositeProp(): boolean
+
+  /**
+   * Returns a list of child control instances for this control's immediate nested props.
+   */
+  abstract children(): ControlInstance[]
+
+  /**
    * Returns the control instance for the nested prop identified by `key`.
    *
    * For list controls, `key` is a stringified item index.
@@ -62,6 +73,14 @@ export abstract class ControlInstance<
 export class DefaultControlInstance extends ControlInstance {
   recv(_message: ControlMessage) {
     // Do nothing
+  }
+
+  isCompositeProp(): boolean {
+    return false
+  }
+
+  children(): ControlInstance[] {
+    return []
   }
 
   child(_key: string) {
