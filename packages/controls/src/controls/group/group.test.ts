@@ -214,6 +214,18 @@ describe('Group', () => {
         'group-prop.text',
       ])
     })
+
+    test('`children` returns a list of the child controls', async () => {
+      const { groupInstance } = fixtures()
+      const childControls = groupKeys.map((key) => groupInstance.child(key))
+
+      const children = groupInstance.children()
+      expect(children.length).toBe(childControls.length)
+
+      childControls.forEach((c, index) => {
+        expect(children[index]).toBe(c)
+      })
+    })
   })
 
   describe('introspection', () => {
