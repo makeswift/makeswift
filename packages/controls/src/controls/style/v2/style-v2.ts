@@ -148,7 +148,7 @@ class Definition<
         value,
         resolver,
         stylesheet,
-        control?.child(),
+        control?.inner,
       ),
     }))
 

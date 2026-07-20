@@ -154,16 +154,12 @@ describe('List', () => {
     test('resolveValue creates a list of child controls with correct instance keys', async () => {
       const { listInstance, resolveValueContext } = fixtures()
 
-      expect(
-        listData
-          .map(({ id }) => listInstance.child(id))
-          .filter((c) => c != null),
-      ).toEqual([])
+      expect(listInstance.childControls().size).toBe(0)
 
       const resolved = list.resolveValue(listData, ...resolveValueContext)
       await resolved.triggerResolve()
 
-      const childControls = listData.map(({ id }) => listInstance.child(id))
+      const childControls = [...listInstance.childControls().values()]
 
       expect(
         childControls
@@ -184,11 +180,11 @@ describe('List', () => {
 
       const resolved = list.resolveValue(listData, ...resolveValueContext)
       await resolved.triggerResolve()
-      const childControls = listData.map(({ id }) => listInstance.child(id))
+      const childControls = [...listInstance.childControls().values()]
 
       const resolved2 = list.resolveValue(listData, ...resolveValueContext)
       await resolved2.triggerResolve()
-      const childControls2 = listData.map(({ id }) => listInstance.child(id))
+      const childControls2 = [...listInstance.childControls().values()]
 
       childControls2.forEach((item, i) => expect(item).toBe(childControls[i]))
     })
@@ -198,12 +194,12 @@ describe('List', () => {
 
       const resolved = list.resolveValue(listData, ...resolveValueContext)
       await resolved.triggerResolve()
-      const childControls = listData.map(({ id }) => listInstance.child(id))
+      const childControls = [...listInstance.childControls().values()]
 
       const listData2 = [...listData].sort((a, b) => b.id.localeCompare(a.id))
       const resolved2 = list.resolveValue(listData2, ...resolveValueContext)
       await resolved2.triggerResolve()
-      const childControls2 = listData2.map(({ id }) => listInstance.child(id))
+      const childControls2 = [...listInstance.childControls().values()]
 
       childControls2.forEach((item, i) =>
         expect(item).not.toBe(childControls[i]),
@@ -222,12 +218,12 @@ describe('List', () => {
 
       const resolved = list.resolveValue(listData, ...resolveValueContext)
       await resolved.triggerResolve()
-      const childControls = listData.map(({ id }) => listInstance.child(id))
+      const childControls = [...listInstance.childControls().values()]
 
       const listData2 = [listData[0], listData[2], listData[1], listData[3]]
       const resolved2 = list.resolveValue(listData2, ...resolveValueContext)
       await resolved2.triggerResolve()
-      const childControls2 = listData2.map(({ id }) => listInstance.child(id))
+      const childControls2 = [...listInstance.childControls().values()]
 
       expect(childControls2[0]).toBe(childControls[0])
       expect(childControls2[1]).not.toBe(childControls[1])
@@ -242,6 +238,21 @@ describe('List', () => {
         'list-prop.2',
         'list-prop.3',
       ])
+    })
+
+    test('child controls can be accessed through `child(index)`', async () => {
+      const { listInstance, resolveValueContext } = fixtures()
+
+      const resolved = list.resolveValue(listData, ...resolveValueContext)
+      await resolved.triggerResolve()
+      const childControls = [...listInstance.childControls().values()]
+
+      childControls.forEach((c, index) => {
+        expect(listInstance.child(`${index}`)).toBe(c)
+        expect(listInstance.child(`${index}`)?.propPath).toBe(
+          `list-prop.${index}`,
+        )
+      })
     })
   })
 

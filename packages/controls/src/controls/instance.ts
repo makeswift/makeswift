@@ -41,6 +41,13 @@ export abstract class ControlInstance<
   }
 
   abstract recv(message: M): void
+
+  /**
+   *
+   * Returns the control instance for the nested prop identified by `key`.
+   *
+   * For list controls, `key` is a stringified item index.
+   */
   abstract child(key: string): ControlInstance | undefined
 
   /**
