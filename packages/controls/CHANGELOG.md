@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.21-canary.7
+
+### Patch Changes
+
+- 75e23d7: feat: add `children`, `isCompositeProp` methods to `ControlInstance`
+
 ## 0.1.21-canary.6
 
 ### Patch Changes
