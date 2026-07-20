@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.21-canary.6
+
+### Patch Changes
+
+- 96927de: feat: allow to access `List` item controls by index
+
 ## 0.1.21-canary.5
 
 ### Patch Changes
