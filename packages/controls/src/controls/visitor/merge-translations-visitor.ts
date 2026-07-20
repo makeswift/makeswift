@@ -4,6 +4,7 @@ import { Data } from '../../common'
 import { MergeTranslatableDataContext } from '../../context'
 
 import { DataType } from '../associated-types'
+import { CascadeDefinition } from '../cascade'
 import { CheckboxDefinition } from '../checkbox'
 import { CodeDefinition } from '../code'
 import { ColorDefinition } from '../color'
@@ -47,6 +48,14 @@ abstract class MergeTranslationsVisitor extends ControlDefinitionVisitor<Data> {
   private defaultMerge(data: Data, translatedData: Data): Data {
     if (data == null || translatedData == null) return data
     return translatedData
+  }
+
+  visitCascade(
+    _def: CascadeDefinition,
+    data: DataType<CascadeDefinition> | undefined,
+    translatedData: Data,
+  ): Data {
+    return this.noOpMerge(data, translatedData)
   }
 
   visitCode(
