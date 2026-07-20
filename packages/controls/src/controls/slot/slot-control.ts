@@ -22,6 +22,15 @@ export class SlotControl extends ControlInstance<Message> {
     'makeswift::controls::slot::message::item-box-model-change'
 
   recv = (_message: Message) => {}
+
+  isCompositeProp(): boolean {
+    return false
+  }
+
+  children(): ControlInstance[] {
+    return []
+  }
+
   child(_key: string): ControlInstance | undefined {
     return undefined
   }

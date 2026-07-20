@@ -41,6 +41,10 @@ export class GroupControl<
     }
   }
 
+  isCompositeProp = () => true
+
+  children = () => [...this.childControls.values()]
+
   child = (key: string) => this.childControls.get(key)
 
   resolvesToRenderableNode = () => false

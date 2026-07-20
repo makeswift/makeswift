@@ -180,11 +180,11 @@ describe('List', () => {
 
       const resolved = list.resolveValue(listData, ...resolveValueContext)
       await resolved.triggerResolve()
-      const childControls = [...listInstance.childControls().values()]
+      const childControls = listInstance.children()
 
       const resolved2 = list.resolveValue(listData, ...resolveValueContext)
       await resolved2.triggerResolve()
-      const childControls2 = [...listInstance.childControls().values()]
+      const childControls2 = listInstance.children()
 
       childControls2.forEach((item, i) => expect(item).toBe(childControls[i]))
     })
@@ -194,12 +194,12 @@ describe('List', () => {
 
       const resolved = list.resolveValue(listData, ...resolveValueContext)
       await resolved.triggerResolve()
-      const childControls = [...listInstance.childControls().values()]
+      const childControls = listInstance.children()
 
       const listData2 = [...listData].sort((a, b) => b.id.localeCompare(a.id))
       const resolved2 = list.resolveValue(listData2, ...resolveValueContext)
       await resolved2.triggerResolve()
-      const childControls2 = [...listInstance.childControls().values()]
+      const childControls2 = listInstance.children()
 
       childControls2.forEach((item, i) =>
         expect(item).not.toBe(childControls[i]),
@@ -218,12 +218,12 @@ describe('List', () => {
 
       const resolved = list.resolveValue(listData, ...resolveValueContext)
       await resolved.triggerResolve()
-      const childControls = [...listInstance.childControls().values()]
+      const childControls = listInstance.children()
 
       const listData2 = [listData[0], listData[2], listData[1], listData[3]]
       const resolved2 = list.resolveValue(listData2, ...resolveValueContext)
       await resolved2.triggerResolve()
-      const childControls2 = [...listInstance.childControls().values()]
+      const childControls2 = listInstance.children()
 
       expect(childControls2[0]).toBe(childControls[0])
       expect(childControls2[1]).not.toBe(childControls[1])
@@ -245,13 +245,29 @@ describe('List', () => {
 
       const resolved = list.resolveValue(listData, ...resolveValueContext)
       await resolved.triggerResolve()
-      const childControls = [...listInstance.childControls().values()]
+      const childControls = listInstance.children()
 
       childControls.forEach((c, index) => {
         expect(listInstance.child(`${index}`)).toBe(c)
         expect(listInstance.child(`${index}`)?.propPath).toBe(
           `list-prop.${index}`,
         )
+      })
+    })
+
+    test('`children` returns a copy of the child controls list', async () => {
+      const { listInstance, resolveValueContext } = fixtures()
+
+      const resolved = list.resolveValue(listData, ...resolveValueContext)
+      await resolved.triggerResolve()
+
+      const children = listInstance.children()
+      expect(children.length).toBe(listInstance.childControls().size)
+
+      expect(listInstance.children()).not.toBe(children)
+
+      listInstance.children().forEach((c, index) => {
+        expect(children[index]).toBe(c)
       })
     })
   })

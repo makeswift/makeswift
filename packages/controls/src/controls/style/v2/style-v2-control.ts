@@ -38,6 +38,14 @@ export class StyleV2Control extends ControlInstance<Message> {
     })
   }
 
+  isCompositeProp(): boolean {
+    return false
+  }
+
+  children(): ControlInstance[] {
+    return []
+  }
+
   child(_key: string): ControlInstance | undefined {
     return undefined
   }
