@@ -2,7 +2,7 @@ import { type Middleware } from '@reduxjs/toolkit'
 
 import { type Action } from '../../../actions'
 
-import { BuilderActionTypes } from '../../../builder-api/actions'
+import { BuilderActionTypes } from '../../../builder-api/action-types'
 
 import { actionMiddleware } from '../../../toolkit'
 

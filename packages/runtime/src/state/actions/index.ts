@@ -1,9 +1,11 @@
 import { isAction } from '@reduxjs/toolkit'
 
-import { type BuilderAction, BuilderActionTypes } from '../builder-api/actions'
+import { type BuilderAction } from '../builder-api/actions'
+import { BuilderActionTypes } from '../builder-api/action-types'
 import { type HostAction, HostActionTypes } from '../host-api'
 
-import { type InternalAction, InternalActionTypes } from './internal'
+import { type InternalAction } from './internal'
+import { InternalActionTypes } from './internal/action-types'
 
 export { type UnknownAction } from '@reduxjs/toolkit'
 export { type DocumentPayload } from '../shared-api'

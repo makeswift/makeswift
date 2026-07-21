@@ -11,7 +11,7 @@ import {
 import { ApiResourcesClient } from '../api/api-resources-client'
 
 import { actionMiddleware, middlewareOptions, devToolsConfig } from './toolkit'
-import { BuilderActionTypes } from './builder-api/actions'
+import { BuilderActionTypes } from './builder-api/action-types'
 import { HostActionTypes } from './host-api'
 
 import * as Breakpoints from './modules/breakpoints'

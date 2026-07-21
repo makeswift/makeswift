@@ -1,6 +1,6 @@
 import { ElementImperativeHandle } from '../../../runtimes/react/element-imperative-handle'
 import { type Action, type UnknownAction, isKnownAction } from '../../actions'
-import { ReadOnlyActionTypes } from '../../actions/internal/read-only-actions'
+import { ReadOnlyActionTypes } from '../../actions/internal/read-only-action-types'
 
 export type State = Map<string, Map<string, ElementImperativeHandle>>
 

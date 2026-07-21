@@ -7,8 +7,8 @@ import {
 } from '@makeswift/controls'
 
 import { type Action, type UnknownAction, isKnownAction } from '../actions'
-import { InternalActionTypes } from '../actions/internal'
-import { BuilderActionTypes } from '../builder-api/actions'
+import { InternalActionTypes } from '../actions/internal/action-types'
+import { BuilderActionTypes } from '../builder-api/action-types'
 import { isServer } from '../../utils/is-server'
 
 export {

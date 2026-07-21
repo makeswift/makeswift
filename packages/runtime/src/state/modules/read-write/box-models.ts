@@ -7,8 +7,8 @@ import {
 } from 'css-box-model'
 
 import { type Action, type UnknownAction, isKnownAction } from '../../actions'
-import { ReadWriteActionTypes } from '../../actions/internal/read-write-actions'
-import { BuilderActionTypes } from '../../builder-api/actions'
+import { ReadWriteActionTypes } from '../../actions/internal/read-write-action-types'
+import { BuilderActionTypes } from '../../builder-api/action-types'
 
 export type { BoxDisplayModel }
 

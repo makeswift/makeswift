@@ -1,5 +1,5 @@
 import { type Action, type UnknownAction, isKnownAction } from '../actions'
-import { ReadOnlyActionTypes } from '../actions/internal/read-only-actions'
+import { ReadOnlyActionTypes } from '../actions/internal/read-only-action-types'
 
 export const ComponentIcon = {
   Accordion: 'accordion',

@@ -9,8 +9,8 @@ import deepEqual from '../../utils/deepEqual'
 import { Branded } from '../../utils/branded'
 
 import { type Action, type UnknownAction, isKnownAction } from '../actions'
-import { ReadOnlyActionTypes } from '../actions/internal/read-only-actions'
-import { ReadWriteActionTypes } from '../actions/internal/read-write-actions'
+import { ReadOnlyActionTypes } from '../actions/internal/read-only-action-types'
+import { ReadWriteActionTypes } from '../actions/internal/read-write-action-types'
 import { HostActionTypes } from '../host-api'
 
 type CompositeResourceId = Branded<string, 'CompositeResourceId'>

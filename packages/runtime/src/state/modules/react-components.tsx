@@ -1,7 +1,7 @@
 import type { Component, PropsWithoutRef, ReactNode, RefAttributes } from 'react'
 
 import { type Action, type UnknownAction, isKnownAction } from '../actions'
-import { ReadOnlyActionTypes } from '../actions/internal/read-only-actions'
+import { ReadOnlyActionTypes } from '../actions/internal/read-only-action-types'
 
 export type ComponentType<P = Record<string, any>, T = any> =
   | { new (props: PropsWithoutRef<P> & RefAttributes<T>, context?: any): Component<P> }
