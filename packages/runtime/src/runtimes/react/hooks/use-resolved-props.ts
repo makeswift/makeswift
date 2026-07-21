@@ -12,7 +12,6 @@ import { useResourceResolver } from './use-resource-resolver'
 import { type StylesheetFactory } from '../stylesheet-factory'
 import { propErrorHandlingProxy } from '../utils/prop-error-handling-proxy'
 
-import { useControlInstances } from './use-control-instances'
 import { useResolvableRecord } from './use-resolvable-record'
 
 type CacheItem = {
@@ -24,22 +23,23 @@ type CacheItem = {
 export function useResolvedProps({
   propDefs,
   propData,
-  elementKey,
+  controlInstances,
   stylesheetFactory,
+  onResolvedValue,
 }: {
   propDefs: Record<string, ControlDefinition>
   propData: Record<string, Data>
-  elementKey: string
+  controlInstances: Record<string, ControlInstance> | null
   stylesheetFactory: StylesheetFactory
+  onResolvedValue?: (propName: string) => void
 }): Record<string, unknown> {
   const resourceResolver = useResourceResolver()
-  const controls = useControlInstances(elementKey)
 
   const cache = useRef<Record<string, CacheItem>>({}).current
   const resolveProp = useCallback(
     (def: ControlDefinition, propName: string) => {
       const data = propData[propName]
-      const control = controls?.[propName]
+      const control = controlInstances?.[propName]
 
       if (
         cache[propName] != null &&
@@ -56,10 +56,11 @@ export function useResolvedProps({
         control,
       )
 
+      onResolvedValue?.(propName)
       cache[propName] = { data, control, resolvedValue }
       return resolvedValue
     },
-    [controls, propData, resourceResolver, stylesheetFactory],
+    [propData, resourceResolver, controlInstances, stylesheetFactory],
   )
 
   const resolvables = useMemo<Record<string, Resolvable<unknown>>>(

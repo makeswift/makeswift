@@ -1,3 +1,5 @@
+'use client'
+
 import {
   type ReactNode,
   type PropsWithChildren,
@@ -14,7 +16,9 @@ import {
 
 import { type LinkData } from '@makeswift/prop-controllers'
 
-import { type Snippet } from '../../../client'
+import { type Snippet } from '../../../client/page-snapshot'
+
+import { type RenderElementPayload } from '../server/render-element-payload'
 
 import { BaseHeadSnippet } from './page/HeadSnippet'
 
@@ -43,6 +47,10 @@ export type FrameworkContext = {
   HeadSnippet: HeadSnippet
   Image: ImageComponent
   Link: LinkComponent
+  /**
+   * Callback to render a single RSC element on the server and return the result.
+   */
+  renderRSCElement?: (args: RenderElementPayload) => Promise<ReactNode>
 }
 
 // React 19 automatically hoists metadata tags to the <head>

@@ -46,6 +46,7 @@ export type ComponentMeta = {
   unstable_migration?: {
     replacementType: string
   }
+  server?: boolean
 }
 
 export type State = Map<string, ComponentMeta>

@@ -47,6 +47,7 @@ export function fetchAPIResource<T extends APIResourceType>(
       case APIResourceType.PagePathnameSlice:
       case APIResourceType.Table:
         resource = await fetchResource(resourceId, version, locale)
+        console.log(`@@ fetched ${resourceType}`, resource)
         break
 
       case APIResourceType.LocalizedGlobalElement: {

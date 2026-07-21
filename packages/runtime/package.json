@@ -97,6 +97,11 @@
       "require": "./dist/cjs/react/index.js",
       "import": "./dist/esm/react/index.js"
     },
+    "./react/server": {
+      "types": "./dist/types/react/server/index.d.ts",
+      "require": "./dist/cjs/react/server/index.js",
+      "import": "./dist/esm/react/server/index.js"
+    },
     "./react/builtins": {
       "types": "./dist/types/react/builtins/index.d.ts",
       "require": "./dist/cjs/react/builtins/index.js",
