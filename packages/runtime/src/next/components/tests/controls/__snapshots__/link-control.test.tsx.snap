@@ -476,7 +476,71 @@ exports[`Page Link control data OPEN_PAGE for locale null fetches pathname slice
 }
 `;
 
+exports[`Page Link control data OPEN_PAGE for locale null fetches pathname slice when not in cache: resolvedValue 2`] = `
+{
+  "href": "/test-pathname",
+  "target": "_self",
+}
+`;
+
 exports[`Page Link control data OPEN_PAGE for locale null fetches pathname slice when not in cache: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "payload": {
+                    "openInNewTab": false,
+                    "pageId": "[test-page-id]",
+                  },
+                  "type": "OPEN_PAGE",
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`Page Link control data OPEN_PAGE for locale null fetches pathname slice when not in cache: snapshot 2`] = `
 {
   "cacheData": {
     "apiResources": {},

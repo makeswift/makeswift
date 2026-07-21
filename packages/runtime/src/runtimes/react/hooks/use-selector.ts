@@ -1,10 +1,8 @@
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector'
 
-import { useStore } from './use-store'
-import { type State as ReadOnlyState } from '../../../state/read-only-state'
-import { type State as ReadWriteState } from '../../../state/read-write-state'
+import { type State } from '../../../state/unified-state'
 
-type State = ReadOnlyState | ReadWriteState
+import { useStore } from './use-store'
 
 export function useSelector<R>(selector: (state: State) => R): R {
   const store = useStore()

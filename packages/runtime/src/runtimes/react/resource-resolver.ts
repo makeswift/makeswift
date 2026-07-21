@@ -4,6 +4,8 @@ import { getElementId } from '../../state/read-only-state'
 import { ApiResourcesClient } from '../../api/api-resources-client'
 import { Store } from '../../state/store'
 
+export { type ResourceResolver } from '@makeswift/controls'
+
 export const createResourceResolver = ({
   store,
   apiClient,

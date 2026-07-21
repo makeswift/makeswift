@@ -24,6 +24,13 @@ export type SerializedState = {
   localizedResourcesMap: LocalizedResourcesMap.SerializedState
 }
 
+export function getSerializedState(state: State): SerializedState {
+  return {
+    apiResources: APIResources.getSerializedState(state.apiResources),
+    localizedResourcesMap: LocalizedResourcesMap.getSerializedState(state.localizedResourcesMap),
+  }
+}
+
 export function getLocalizedResourceId(
   state: State,
   locale: string,

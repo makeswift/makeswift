@@ -301,6 +301,20 @@ export function unregisterPropControllers(
   }
 }
 
+export function registerPropControllersEffect(
+  documentKey: string,
+  elementKey: string,
+  propControllers: Record<string, ControlInstance>,
+): ThunkAction<() => void, unknown, unknown, ReadOnlyAction> {
+  return dispatch => {
+    dispatch(registerPropControllers(documentKey, elementKey, propControllers))
+
+    return () => {
+      dispatch(unregisterPropControllers(documentKey, elementKey))
+    }
+  }
+}
+
 function registerReactComponent(
   type: string,
   component: ComponentType,

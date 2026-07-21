@@ -4,6 +4,7 @@ import * as Documents from './modules/read-write/read-write-documents'
 import * as BoxModels from './modules/read-write/box-models'
 import * as Pointer from './modules/read-write/pointer'
 import * as ElementImperativeHandles from './modules/read-write/element-imperative-handles'
+import * as ResolvedValueOverrides from './modules/read-write/resolved-value-overrides'
 
 import { type Action } from './actions'
 
@@ -15,6 +16,7 @@ import * as ReadOnlyState from './read-only-state'
 export type { Operation } from './modules/read-write/read-write-documents'
 export type { BoxModelHandle } from './modules/read-write/box-models'
 export { createBox, getBox, parse } from './modules/read-write/box-models'
+export type { ResolvedValueKey, ResolvedValue } from './modules/read-write/resolved-value-overrides'
 
 const reducers = {
   ...ReadOnlyState.reducers,
@@ -22,6 +24,7 @@ const reducers = {
   boxModels: BoxModels.reducer,
   pointer: Pointer.reducer,
   elementImperativeHandles: ElementImperativeHandles.reducer,
+  resolvedValueOverrides: ResolvedValueOverrides.reducer,
 }
 
 export function createRootReducer() {
@@ -33,6 +36,7 @@ export type State = Omit<ReadOnlyState.State, 'documents'> & {
   boxModels: BoxModels.State
   pointer: Pointer.State
   elementImperativeHandles: ElementImperativeHandles.State
+  resolvedValueOverrides: ResolvedValueOverrides.State
 }
 
 export type Dispatch = ThunkDispatch<State, unknown, Action>
@@ -103,6 +107,34 @@ export function getElementImperativeHandlesContainingElement(
   }
 
   return filteredElementImperativeHandles
+}
+
+function getResolvedValueOverridesStateSlice(state: State): ResolvedValueOverrides.State {
+  return state.resolvedValueOverrides
+}
+
+export function hasResolvedValueOverride(
+  state: State,
+  documentKey: string,
+  instanceKey: ResolvedValueOverrides.ResolvedValueKey,
+): boolean {
+  return ResolvedValueOverrides.hasValueOverride(
+    getResolvedValueOverridesStateSlice(state),
+    documentKey,
+    instanceKey,
+  )
+}
+
+export function getResolvedValueOverride(
+  state: State,
+  documentKey: string,
+  instanceKey: ResolvedValueOverrides.ResolvedValueKey,
+): ResolvedValueOverrides.ResolvedValue {
+  return ResolvedValueOverrides.getValueOverride(
+    getResolvedValueOverridesStateSlice(state),
+    documentKey,
+    instanceKey,
+  )
 }
 
 export function setupBuilderProxy(
