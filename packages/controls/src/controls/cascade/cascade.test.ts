@@ -2,9 +2,11 @@ import { type ResourceResolver } from '../../resources/resolver'
 import { type Stylesheet } from '../../stylesheet'
 
 import { Checkbox } from '../checkbox'
+import { Color } from '../color'
 import { Combobox } from '../combobox'
+import { Image } from '../image'
 
-import { unstable_Cascade, CascadeDefinition } from './cascade'
+import { unstable_Cascade, CascadeDefinition, type Step } from './cascade'
 
 // Checkbox/Combobox resolveValue ignore resolver/stylesheet, so stubs are safe.
 const resolver = {} as ResourceResolver
@@ -201,5 +203,68 @@ describe('unstable_Cascade (steps as control factories)', () => {
     })
     const controls = cascade.materializeForSerialization([])
     expect(controls).toHaveLength(1)
+  })
+})
+
+describe('step-control allowlist', () => {
+  const colorStep = (() => Color()) as unknown as Step
+
+  test('fromData throws a descriptive error for an unsupported step control', () => {
+    const cascade = unstable_Cascade({ steps: [colorStep] })
+    expect(() => cascade.fromData([undefined])).toThrow(
+      "unstable_Cascade: step 0 returned unsupported control 'makeswift::controls::color'",
+    )
+  })
+
+  test('resolveValue throws the same error', () => {
+    const cascade = unstable_Cascade({ steps: [colorStep] })
+    expect(() =>
+      cascade.resolveValue([undefined], resolver, stylesheet),
+    ).toThrow(/returned unsupported control/)
+  })
+
+  test('the error names the supported control types', () => {
+    const cascade = unstable_Cascade({ steps: [colorStep] })
+    expect(() => cascade.toData([undefined])).toThrow(
+      /Supported controls: .*makeswift::controls::checkbox.*makeswift::controls::combobox/,
+    )
+  })
+
+  test('rejects Image, including as a downstream step', () => {
+    const cascade = unstable_Cascade({
+      steps: [
+        () => Checkbox({ defaultValue: true }),
+        (() => Image()) as unknown as Step,
+      ],
+    })
+    expect(() => cascade.fromData([])).toThrow(
+      "unstable_Cascade: step 1 returned unsupported control 'makeswift::controls::image'",
+    )
+  })
+
+  test('type-level: slots only accept allowed-control data shapes', () => {
+    const cascade = unstable_Cascade({ steps: [() => Checkbox()] })
+    expect(() =>
+      // @ts-expect-error — not a data shape of any allowed step control
+      cascade.fromData([{ random: 'object' }]),
+    ).toThrow(/step 0 data does not match/)
+  })
+
+  test('throws when a slot’s data does not match its step control', () => {
+    const cascade = unstable_Cascade({ steps: [() => Checkbox()] })
+    expect(() => cascade.fromData([optionP1])).toThrow(
+      /step 0 data does not match control 'makeswift::controls::checkbox'/,
+    )
+  })
+
+  test('type-level: rejects steps that return unsupported controls', () => {
+    expect(() =>
+      unstable_Cascade({
+        steps: [
+          // @ts-expect-error — Color is not a cascade-compatible step control
+          () => Color(),
+        ],
+      }),
+    ).not.toThrow()
   })
 })

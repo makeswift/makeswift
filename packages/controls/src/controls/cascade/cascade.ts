@@ -3,7 +3,6 @@ import { z } from 'zod'
 import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
-import { type Data } from '../../common'
 import { type CopyContext } from '../../context'
 import { type IntrospectionTarget } from '../../introspection'
 import { type ResourceResolver } from '../../resources/resolver'
@@ -11,22 +10,55 @@ import { type DeserializedRecord } from '../../serialization'
 import { isFunction } from '../../serialization/function'
 import { type Stylesheet } from '../../stylesheet'
 
-import { type ResolvedValueType as ResolvedValueType_ } from '../associated-types'
+import {
+  type DataType as DataType_,
+  type ResolvedValueType as ResolvedValueType_,
+  type ValueType as ValueType_,
+} from '../associated-types'
+import { CheckboxDefinition } from '../checkbox'
+import { CodeDefinition } from '../code'
+import { ComboboxDefinition } from '../combobox'
 import {
   ControlDefinition,
   type Resolvable,
   type SchemaType,
 } from '../definition'
+import { IconRadioGroupDefinition } from '../icon-radio-group'
 import { type SendMessage } from '../instance'
+import { NumberDefinition } from '../number'
+import { SelectDefinition } from '../select'
+import { SliderDefinition } from '../slider'
+import { TextAreaDefinition } from '../text-area'
+import { TextInputDefinition } from '../text-input'
 import { ControlDefinitionVisitor } from '../visitor'
 
 import { CascadeControl } from './cascade-control'
 
-type StepControl = ControlDefinition<string, unknown, any, any, any>
+type StepControl =
+  | CheckboxDefinition<any>
+  | CodeDefinition<any>
+  | ComboboxDefinition<any>
+  | IconRadioGroupDefinition<any>
+  | NumberDefinition<any>
+  | SelectDefinition<any>
+  | SliderDefinition<any>
+  | TextAreaDefinition<any>
+  | TextInputDefinition<any>
 
-// A step produces a control from the previous step's ResolvedValue. Step 0
-// takes no argument; step n (n>=1) takes step n-1's ResolvedValue. Inputs are
-// author-annotated (loosely typed).
+type MaterializedStepControl = ControlDefinition<string, unknown, any, any, any>
+
+const COMPATIBLE_STEP_TYPES: ReadonlySet<string> = new Set([
+  CheckboxDefinition.type,
+  CodeDefinition.type,
+  ComboboxDefinition.type,
+  IconRadioGroupDefinition.type,
+  NumberDefinition.type,
+  SelectDefinition.type,
+  SliderDefinition.type,
+  TextAreaDefinition.type,
+  TextInputDefinition.type,
+])
+
 export type Step<D extends StepControl = StepControl> = (prev?: any) => D
 
 export type Steps = readonly Step[]
@@ -37,15 +69,12 @@ type Config<S extends Steps = Steps> = {
   readonly steps: S
 }
 
-// Cascade Data/Value are arrays indexed by step; entry n is step n's control
-// Data/Value. Loosely typed (elements are `Data`, matching `ControlDefinition`'s
-// `DataType extends Data`/`ValueType extends Data` bounds) because the control
-// at each step is materialized dynamically from upstream selections.
-type DataType = Data[]
-type ValueType = Data[]
+type StepData = DataType_<StepControl> | undefined
+type StepValue = ValueType_<StepControl> | undefined
 
-// The last step's control (the return type of the last factory) drives the
-// cascade's ResolvedValue.
+type DataType = StepData[]
+type ValueType = StepValue[]
+
 type LastStep<S extends Steps> = S extends readonly [...any[], infer L]
   ? L extends Step
     ? L
@@ -58,10 +87,6 @@ type ResolvedValueType<S extends Steps> =
 
 type InstanceType<S extends Steps> = CascadeControl<Definition<S>>
 
-// Stub resolver/stylesheet for the data-shaping methods (fromData/toData/
-// copyData), which must materialize the chain to know each step's control but
-// receive no resolver. Valid for the spike because the proven stage controls
-// (Checkbox, Combobox) resolve synchronously and ignore both.
 const NOOP_RESOLVER = {} as ResourceResolver
 const NOOP_STYLESHEET: Stylesheet = {
   child: () => NOOP_STYLESHEET,
@@ -80,21 +105,17 @@ class Definition<S extends Steps> extends ControlDefinition<
   static deserialize(data: DeserializedRecord): CascadeDefinition {
     const steps = (data.config as { steps?: unknown } | undefined)?.steps
 
-    if (isFunction(steps)) {
-      return new CascadeDefinition({
-        label: (data.config as { label?: string }).label,
-        description: (data.config as { description?: string }).description,
-        // Builder-side-only shape: a single callable "materialize chain"
-        // function, not an array of step factories. This instance is never
-        // used for fromData/toData/resolveValue (runtime-only concerns) —
-        // only the builder's cascade controller calls `.steps` as a function.
-        steps: steps as unknown as Steps,
-      })
+    if (!isFunction(steps)) {
+      throw new Error(
+        'unstable_Cascade: serialization is not yet supported (deferred to the builder-integration follow-up)',
+      )
     }
 
-    throw new Error(
-      'unstable_Cascade: serialization is not yet supported (deferred to the builder-integration follow-up)',
-    )
+    return new CascadeDefinition({
+      label: (data.config as { label?: string }).label,
+      description: (data.config as { description?: string }).description,
+      steps: steps as unknown as Steps,
+    })
   }
 
   get steps(): S {
@@ -116,7 +137,6 @@ class Definition<S extends Steps> extends ControlDefinition<
     const config = z.object({
       label: z.string().optional(),
       description: z.string().optional(),
-      // Spike: steps are factory functions, not statically schematizable.
       steps: z.array(z.any()),
     })
 
@@ -129,13 +149,9 @@ class Definition<S extends Steps> extends ControlDefinition<
     return safeParse(this.schema.data, data)
   }
 
-  // Walk the reachable step chain: build each step's control from the previous
-  // step's ResolvedValue, run `visitStep` to collect an entry, and thread that
-  // step's ResolvedValue into the next factory. Stops before a step whose
-  // predecessor resolved to `undefined`.
   private walkSteps<T>(
     visitStep: (
-      control: StepControl,
+      control: MaterializedStepControl,
       index: number,
     ) => { entry: T; resolvedValue: unknown },
   ): T[] {
@@ -143,7 +159,13 @@ class Definition<S extends Steps> extends ControlDefinition<
     let prev: unknown = undefined
     for (let i = 0; i < this.config.steps.length; i++) {
       if (i > 0 && prev === undefined) break
-      const control = this.config.steps[i](prev)
+      const control: MaterializedStepControl = this.config.steps[i](prev)
+      if (!COMPATIBLE_STEP_TYPES.has(control.controlType)) {
+        throw new Error(
+          `unstable_Cascade: step ${i} returned unsupported control ` +
+            `'${control.controlType}' — Supported controls: ${[...COMPATIBLE_STEP_TYPES].join(', ')}`,
+        )
+      }
       const { entry, resolvedValue } = visitStep(control, i)
       entries.push(entry)
       prev = resolvedValue
@@ -151,15 +173,25 @@ class Definition<S extends Steps> extends ControlDefinition<
     return entries
   }
 
-  // Walk the reachable chain from Data: for each step, build its control from
-  // the previous step's ResolvedValue, then compute this step's Resolvable.
-  // Stops before a step whose predecessor resolved to `undefined`.
   private materialize(
     data: DataType | undefined,
     resolver: ResourceResolver,
     stylesheet: Stylesheet,
-  ): Array<{ control: StepControl; resolvable: Resolvable<unknown> }> {
+  ): Array<{
+    control: MaterializedStepControl
+    resolvable: Resolvable<unknown>
+  }> {
     return this.walkSteps((control, i) => {
+      const stepData = data?.[i]
+      if (stepData !== undefined) {
+        const parsed = control.safeParse(stepData)
+        if (!parsed.success) {
+          throw new Error(
+            `unstable_Cascade: step ${i} data does not match control ` +
+              `'${control.controlType}': ${parsed.error}`,
+          )
+        }
+      }
       const resolvable = control.resolveValue(
         data?.[i],
         resolver,
@@ -169,7 +201,6 @@ class Definition<S extends Steps> extends ControlDefinition<
         entry: { control, resolvable },
         resolvedValue: resolvable.readStable(),
       }
-      // why do we need to accumulate all the entries, why can't we just read the last value?
     })
   }
 
@@ -220,8 +251,6 @@ class Definition<S extends Steps> extends ControlDefinition<
     const stableValue = StableValue({
       name: Definition.type,
       read: () => {
-        // Deepest step with a defined resolved value = the "last selected"
-        // step. Terminated/unselected downstream steps read `undefined`.
         for (let i = chain.length - 1; i >= 0; i--) {
           const rv = chain[i].resolvable.readStable()
           if (rv !== undefined) return rv as ResolvedValueType<S>

@@ -41,7 +41,7 @@ function toErrorDescriptor(error: unknown): ErrorDescriptor {
 // list it as a transferable or postMessage throws DataCloneError.
 function collectTransferables(value: unknown, seen: Set<unknown> = new Set()): Transferable[] {
   if (value == null || typeof value !== 'object') return []
-  if (value instanceof MessagePort) return [value]
+  if (isSerializedFunction(value)) return [value]
   if (seen.has(value)) return []
   seen.add(value)
 
