@@ -12,7 +12,6 @@ import { useResourceResolver } from './use-resource-resolver'
 import { type StylesheetFactory } from '../stylesheet-factory'
 import { propErrorHandlingProxy } from '../utils/prop-error-handling-proxy'
 
-import { useControlInstances } from './use-control-instances'
 import { useResolvableRecord } from './use-resolvable-record'
 
 type CacheItem = {
@@ -22,24 +21,25 @@ type CacheItem = {
 }
 
 export function useResolvedProps({
+  elementKey,
   propDefs,
   propData,
-  elementKey,
+  controlInstances,
   stylesheetFactory,
 }: {
+  elementKey: string
   propDefs: Record<string, ControlDefinition>
   propData: Record<string, Data>
-  elementKey: string
+  controlInstances: Record<string, ControlInstance> | null
   stylesheetFactory: StylesheetFactory
 }): Record<string, unknown> {
   const resourceResolver = useResourceResolver()
-  const controls = useControlInstances(elementKey)
 
   const cache = useRef<Record<string, CacheItem>>({}).current
   const resolveProp = useCallback(
     (def: ControlDefinition, propName: string) => {
       const data = propData[propName]
-      const control = controls?.[propName]
+      const control = controlInstances?.[propName]
 
       if (
         cache[propName] != null &&
@@ -59,7 +59,7 @@ export function useResolvedProps({
       cache[propName] = { data, control, resolvedValue }
       return resolvedValue
     },
-    [controls, propData, resourceResolver, stylesheetFactory],
+    [propData, cache, resourceResolver, controlInstances, stylesheetFactory],
   )
 
   const resolvables = useMemo<Record<string, Resolvable<unknown>>>(
@@ -68,12 +68,12 @@ export function useResolvedProps({
         const defaultValue = (def.config as any)?.defaultValue
         return propErrorHandlingProxy(resolveProp(def, propName), defaultValue, error => {
           console.warn(
-            `Error reading value for prop "${propName}", falling back to \`${defaultValue}\`.`,
+            `Error reading value for prop "${propName}" of element ${elementKey}, falling back to \`${defaultValue}\`.`,
             { control: def, error },
           )
         })
       }),
-    [propDefs, resolveProp],
+    [propDefs, resolveProp, elementKey],
   )
 
   const props = useResolvableRecord(resolvables)
@@ -81,8 +81,10 @@ export function useResolvedProps({
   // no need to call `triggerResolve` on the server, all the resources should already be in
   // the host API client's cache (populated from the snapshot's cache)
   useEffect(() => {
-    props.triggerResolve()
-  }, [props])
+    props.triggerResolve().catch(err => {
+      console.log(`Error while resolving props for element ${elementKey}`, err)
+    })
+  }, [props, elementKey])
 
   // the order is important here, the styles are defined in the process of the props resolution,
   // calling `useDefinedStyles` before the props are resolved would effectively be a noop
