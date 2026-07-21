@@ -1,6 +1,7 @@
 import { type HostAction, isHostAction } from '../host-api'
 
-import { type BuilderAction, BuilderActionTypes, hasTransferables } from './actions'
+import { BuilderActionTypes } from './action-types'
+import { type BuilderAction, hasTransferables } from './actions'
 import { MessageChannel } from './message-channel'
 import { setupNavigationListener } from './navigation-listener'
 import { type BuilderApi, type HostNavigationEvent } from './api'

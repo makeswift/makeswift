@@ -1,9 +1,4 @@
-import { type ReadOnlyAction, ReadOnlyActionTypes } from './read-only-actions'
-import { type ReadWriteAction, ReadWriteActionTypes } from './read-write-actions'
-
-export const InternalActionTypes = {
-  ...ReadOnlyActionTypes,
-  ...ReadWriteActionTypes,
-} as const
+import { type ReadOnlyAction } from './read-only-actions'
+import { type ReadWriteAction } from './read-write-actions'
 
 export type InternalAction = ReadOnlyAction | ReadWriteAction

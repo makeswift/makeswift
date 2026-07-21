@@ -7,14 +7,7 @@ import { type DescriptorsByComponentType } from '../../modules/prop-controllers'
 import { type DocumentPayload } from '../../shared-api'
 import { type SerializedState as APIClientCache } from '../../api-client/state'
 
-export const ReadWriteActionTypes = {
-  CHANGE_ELEMENT_TREE: 'CHANGE_ELEMENT_TREE',
-  REGISTER_MEASURABLE: 'REGISTER_MEASURABLE',
-  UNREGISTER_MEASURABLE: 'UNREGISTER_MEASURABLE',
-
-  UPDATE_API_CLIENT_CACHE: 'UPDATE_API_CLIENT_CACHE',
-  CLEAR_API_CLIENT_CACHE: 'CLEAR_API_CLIENT_CACHE',
-} as const
+import { ReadWriteActionTypes } from './read-write-action-types'
 
 type ChangeElementTreeAction = {
   type: typeof ReadWriteActionTypes.CHANGE_ELEMENT_TREE

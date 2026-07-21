@@ -1,6 +1,8 @@
 import { type ThunkAction } from '@reduxjs/toolkit'
 
-import { type Element, type Document, EMBEDDED_DOCUMENT_TYPE } from './modules/read-only-documents'
+import { type Element, type Document, EMBEDDED_DOCUMENT_TYPE } from '../modules/read-only-documents'
+
+import { SharedActionTypes } from './action-types'
 
 type DocumentPayloadBaseDocument = {
   key: string
@@ -20,14 +22,6 @@ type DocumentPayloadEmbeddedDocument = {
 }
 
 export type DocumentPayload = DocumentPayloadBaseDocument | DocumentPayloadEmbeddedDocument
-
-// bidirectional action types, both the host and the builder can dispatch these actions
-export const SharedActionTypes = {
-  MAKESWIFT_CONNECTION_INIT: 'MAKESWIFT_CONNECTION_INIT',
-
-  REGISTER_DOCUMENT: 'REGISTER_DOCUMENT',
-  UNREGISTER_DOCUMENT: 'UNREGISTER_DOCUMENT',
-} as const
 
 type MakeswiftConnectionInitAction = { type: typeof SharedActionTypes.MAKESWIFT_CONNECTION_INIT }
 
