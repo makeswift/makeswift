@@ -2,36 +2,15 @@ import { isAction } from '@reduxjs/toolkit'
 
 import { type Operation } from 'ot-json0'
 
-import { type PropControllerMessage } from '../prop-controllers/instances'
-import { type APIResource, APIResourceLocale } from '../api/types'
+import { type PropControllerMessage } from '../../prop-controllers/instances'
+import { type APIResource, APIResourceLocale } from '../../api/types'
 
-import { BuilderEditMode } from './modules/builder-edit-mode'
-import { type Point } from './modules/read-write/pointer'
+import { BuilderEditMode } from '../modules/builder-edit-mode'
+import { type Point } from '../modules/read-write/pointer'
 
-import { type SharedAction, SharedActionTypes } from './shared-api'
+import { type SharedAction } from '../shared-api'
 
-// actions dispatched by the builder to the host ("Host API")
-export const HostActionTypes = {
-  ...SharedActionTypes,
-
-  INIT: 'INIT',
-  CLEAN_UP: 'CLEAN_UP',
-
-  CHANGE_DOCUMENT: 'CHANGE_DOCUMENT',
-
-  CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP: 'CHANGE_DOCUMENT_ELEMENT_SCROLL_TOP',
-  SCROLL_DOCUMENT_ELEMENT: 'SCROLL_DOCUMENT_ELEMENT',
-
-  MESSAGE_HOST_PROP_CONTROLLER: 'MESSAGE_HOST_PROP_CONTROLLER',
-
-  CHANGE_API_RESOURCE: 'CHANGE_API_RESOURCE',
-  EVICT_API_RESOURCE: 'EVICT_API_RESOURCE',
-
-  SET_BUILDER_EDIT_MODE: 'SET_BUILDER_EDIT_MODE',
-  SET_LOCALIZED_RESOURCE_ID: 'SET_LOCALIZED_RESOURCE_ID',
-
-  BUILDER_POINTER_MOVE: 'BUILDER_POINTER_MOVE',
-} as const
+import { HostActionTypes } from './action-types'
 
 type InitAction = { type: typeof HostActionTypes.INIT }
 

@@ -8,7 +8,7 @@ import { type Action } from '../../actions'
 
 import * as Builder from '../../builder-api/actions'
 
-import { ReadOnlyActionTypes } from '../../actions/internal/read-only-actions'
+import { ReadOnlyActionTypes } from '../../actions/internal/read-only-action-types'
 import * as ReadOnly from '../../actions/internal/read-only-actions'
 
 import { actionMiddleware } from '../../toolkit'

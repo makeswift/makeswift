@@ -3,7 +3,7 @@ import { type Middleware } from '@reduxjs/toolkit'
 import * as BoxModels from '../../modules/read-write/box-models'
 import { type Action } from '../../actions'
 
-import { ReadOnlyActionTypes } from '../../actions/internal/read-only-actions'
+import { ReadOnlyActionTypes } from '../../actions/internal/read-only-action-types'
 import * as ReadWriteActions from '../../actions/internal/read-write-actions'
 
 import { actionMiddleware } from '../../toolkit'

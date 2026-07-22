@@ -1,0 +1,35 @@
+import { SharedActionTypes } from '../shared-api/action-types'
+import { ReadOnlyActionTypes } from '../actions/internal/read-only-action-types'
+
+// actions dispatched by the host to the builder ("Builder API")
+// note that some of these actions (SET_BREAKPOINTS, SET_LOCALE), in addition to
+// being dispatched to the builder, are also internally intercepted by the host
+// as a part of maintaining the runtime's own state
+export const BuilderActionTypes = {
+  ...SharedActionTypes,
+  SET_BREAKPOINTS: ReadOnlyActionTypes.SET_BREAKPOINTS,
+  SET_LOCALE: ReadOnlyActionTypes.SET_LOCALE,
+
+  MAKESWIFT_CONNECTION_CHECK: 'MAKESWIFT_CONNECTION_CHECK',
+
+  MOUNT_COMPONENT: 'MOUNT_COMPONENT',
+  UNMOUNT_COMPONENT: 'UNMOUNT_COMPONENT',
+
+  CHANGE_DOCUMENT_ELEMENT_SIZE: 'CHANGE_DOCUMENT_ELEMENT_SIZE',
+  CHANGE_ELEMENT_BOX_MODELS: 'CHANGE_ELEMENT_BOX_MODELS',
+
+  MESSAGE_BUILDER_PROP_CONTROLLER: 'MESSAGE_BUILDER_PROP_CONTROLLER',
+
+  HANDLE_WHEEL: 'HANDLE_WHEEL',
+  HANDLE_POINTER_MOVE: 'HANDLE_POINTER_MOVE',
+
+  ELEMENT_FROM_POINT_CHANGE: 'ELEMENT_FROM_POINT_CHANGE',
+
+  REGISTER_BUILDER_DOCUMENT: 'REGISTER_BUILDER_DOCUMENT',
+  UNREGISTER_BUILDER_DOCUMENT: 'UNREGISTER_BUILDER_DOCUMENT',
+
+  REGISTER_BUILDER_COMPONENT: 'REGISTER_BUILDER_COMPONENT',
+  UNREGISTER_BUILDER_COMPONENT: 'UNREGISTER_BUILDER_COMPONENT',
+
+  HANDLE_HOST_NAVIGATE: 'HANDLE_HOST_NAVIGATE',
+} as const

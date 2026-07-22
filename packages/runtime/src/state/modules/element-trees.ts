@@ -7,8 +7,8 @@ import * as Introspection from '../../prop-controllers/introspection'
 
 import { type Action, type UnknownAction, isKnownAction } from '../actions'
 
-import { ReadOnlyActionTypes } from '../actions/internal/read-only-actions'
-import { ReadWriteActionTypes } from '../actions/internal/read-write-actions'
+import { ReadOnlyActionTypes } from '../actions/internal/read-only-action-types'
+import { ReadWriteActionTypes } from '../actions/internal/read-write-action-types'
 
 import { getRootElement, type Document } from './read-only-documents'
 import { type DescriptorsByComponentType } from './prop-controllers'

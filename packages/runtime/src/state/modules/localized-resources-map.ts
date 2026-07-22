@@ -1,6 +1,6 @@
 import { mapValues } from '@makeswift/controls'
 import { type Action, type UnknownAction, isKnownAction } from '../actions'
-import { ReadWriteActionTypes } from '../actions/internal/read-write-actions'
+import { ReadWriteActionTypes } from '../actions/internal/read-write-action-types'
 import { HostActionTypes } from '../host-api'
 
 type State = Map<string, Map<string, string | null>>

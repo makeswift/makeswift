@@ -8,51 +8,19 @@ import { type ComponentMeta } from '../modules/components-meta'
 import { type BoxDisplayModel } from '../modules/read-write/box-models'
 
 import { type ElementSize } from '../middleware/read-write/builder-api/element-size'
-import { type DocumentPayload, type SharedAction, SharedActionTypes } from '../shared-api'
+import { type DocumentPayload, type SharedAction } from '../shared-api'
 
 import { type HostNavigationEvent } from './api'
 import {
   type SetBreakpointsAction,
   type SetLocaleAction,
-  ReadOnlyActionTypes,
 } from '../actions/internal/read-only-actions'
 
 export * from '../shared-api'
 export { setBreakpoints } from '../actions/internal/read-only-actions'
 export { setLocale } from '../actions/internal/read-only-actions'
 
-// actions dispatched by the host to the builder ("Builder API")
-// note that some of these actions (SET_BREAKPOINTS, SET_LOCALE), in addition to
-// being dispatched to the builder, are also internally intercepted by the host
-// as a part of maintaining the runtime's own state
-export const BuilderActionTypes = {
-  ...SharedActionTypes,
-  SET_BREAKPOINTS: ReadOnlyActionTypes.SET_BREAKPOINTS,
-  SET_LOCALE: ReadOnlyActionTypes.SET_LOCALE,
-
-  MAKESWIFT_CONNECTION_CHECK: 'MAKESWIFT_CONNECTION_CHECK',
-
-  MOUNT_COMPONENT: 'MOUNT_COMPONENT',
-  UNMOUNT_COMPONENT: 'UNMOUNT_COMPONENT',
-
-  CHANGE_DOCUMENT_ELEMENT_SIZE: 'CHANGE_DOCUMENT_ELEMENT_SIZE',
-  CHANGE_ELEMENT_BOX_MODELS: 'CHANGE_ELEMENT_BOX_MODELS',
-
-  MESSAGE_BUILDER_PROP_CONTROLLER: 'MESSAGE_BUILDER_PROP_CONTROLLER',
-
-  HANDLE_WHEEL: 'HANDLE_WHEEL',
-  HANDLE_POINTER_MOVE: 'HANDLE_POINTER_MOVE',
-
-  ELEMENT_FROM_POINT_CHANGE: 'ELEMENT_FROM_POINT_CHANGE',
-
-  REGISTER_BUILDER_DOCUMENT: 'REGISTER_BUILDER_DOCUMENT',
-  UNREGISTER_BUILDER_DOCUMENT: 'UNREGISTER_BUILDER_DOCUMENT',
-
-  REGISTER_BUILDER_COMPONENT: 'REGISTER_BUILDER_COMPONENT',
-  UNREGISTER_BUILDER_COMPONENT: 'UNREGISTER_BUILDER_COMPONENT',
-
-  HANDLE_HOST_NAVIGATE: 'HANDLE_HOST_NAVIGATE',
-} as const
+import { BuilderActionTypes } from './action-types'
 
 type ActionWithTransferables<A> = A & {
   transferables?: Transferable[]

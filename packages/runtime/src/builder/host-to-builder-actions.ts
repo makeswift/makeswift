@@ -4,13 +4,14 @@ import { isAction } from '@reduxjs/toolkit'
 // and in the builder; they have been since split into two separate action types,
 // REGISTER_COMPONENT and REGISTER_BUILDER_COMPONENT, but we still have to expose what
 // are now internal actions to the builder for backward compatibility with the older runtimes
+import { ReadOnlyActionTypes } from '../state/actions/internal/read-only-action-types'
 import {
   type RegisterComponentAction,
   type UnregisterComponentAction,
-  ReadOnlyActionTypes,
 } from '../state/actions/internal/read-only-actions'
 
-import { type BuilderAction, BuilderActionTypes } from '../state/builder-api/actions'
+import { BuilderActionTypes } from '../state/builder-api/action-types'
+import { type BuilderAction } from '../state/builder-api/actions'
 
 export const HostToBuilderActionTypes = {
   ...BuilderActionTypes,
