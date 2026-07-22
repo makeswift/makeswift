@@ -71,9 +71,12 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
   if (!isKnownAction(action)) return state
 
   switch (action.type) {
-    case SharedActionTypes.REGISTER_DOCUMENT:
+    case SharedActionTypes.REGISTER_DOCUMENT: {
       const { documentKey, document } = action.payload
-      return new Map(state).set(documentKey, { ...document, locale: document.locale ?? null })
+      return document === state.get(documentKey)
+        ? state
+        : new Map(state).set(documentKey, { ...document, locale: document.locale ?? null })
+    }
 
     case SharedActionTypes.UNREGISTER_DOCUMENT: {
       const nextState = new Map(state)
