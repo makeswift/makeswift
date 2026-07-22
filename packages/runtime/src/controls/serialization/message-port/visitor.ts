@@ -7,11 +7,11 @@ import { serializeCascadeChain } from './cascade-chain-serialization'
 export class ClientMessagePortSerializationVisitor extends BaseControlSerializationVisitor {
   private transferables: Transferable[] = []
 
-  constructor() {
+  constructor(hostPortRegistry?: MessagePort[]) {
     const serializeFunctionPlugin: SerializationPlugin<AnyFunction> = {
       match: isFunction,
       serialize: (val: AnyFunction) => {
-        const r = serializeFunction(val)
+        const r = serializeFunction(val, hostPortRegistry)
         this.transferables.push(r)
         return r
       },

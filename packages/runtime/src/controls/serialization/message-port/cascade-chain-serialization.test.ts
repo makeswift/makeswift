@@ -51,4 +51,51 @@ describe('serializeCascadeChain', () => {
     expect(records[0].config.getOptions).toBeInstanceOf(MessagePort)
     port.close()
   })
+
+  test('a newer materialization closes the previous call’s host-side ports', async () => {
+    const cascade = unstable_Cascade({
+      steps: [
+        () =>
+          Combobox({
+            getOptions: async (query: string) => [{ id: query, label: query, value: query }],
+          }),
+      ],
+    })
+
+    const port = serializeCascadeChain(cascade)
+    const materializeChain = deserializeFunction(port)
+    const allPorts: MessagePort[] = []
+
+    try {
+      const [first] = (await materializeChain([])) as unknown as [{ config: { getOptions: unknown } }]
+      const firstGetOptionsPort = first.config.getOptions as MessagePort
+      allPorts.push(firstGetOptionsPort)
+      const firstGetOptions = deserializeFunction(
+        firstGetOptionsPort as Parameters<typeof deserializeFunction>[0],
+      )
+
+      // the first reply's channel is alive before supersession
+      await expect(firstGetOptions('a')).resolves.toEqual([{ id: 'a', label: 'a', value: 'a' }])
+
+      const [second] = (await materializeChain([])) as unknown as [{ config: { getOptions: unknown } }] // supersede: a newer call arrives
+      const secondGetOptionsPort = second.config.getOptions as MessagePort
+      allPorts.push(secondGetOptionsPort)
+      const secondGetOptions = deserializeFunction(
+        secondGetOptionsPort as Parameters<typeof deserializeFunction>[0],
+      )
+
+      // the current call's channel still works after supersession
+      await expect(secondGetOptions('b')).resolves.toEqual([{ id: 'b', label: 'b', value: 'b' }])
+
+      const closed = new Promise(resolve => {
+        firstGetOptionsPort.addEventListener('close', () => resolve('closed'))
+      })
+      const timeout = new Promise(resolve => setTimeout(() => resolve('timeout'), 500))
+
+      await expect(Promise.race([closed, timeout])).resolves.toBe('closed')
+    } finally {
+      allPorts.forEach(p => p.close())
+      port.close()
+    }
+  })
 })

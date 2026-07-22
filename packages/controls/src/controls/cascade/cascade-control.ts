@@ -1,8 +1,8 @@
 import { ControlDefinition } from '../definition'
 import {
   ControlInstance,
+  type ControlInstanceArgs,
   type ControlMessage,
-  type SendMessage,
 } from '../instance'
 
 import { type CascadeDefinition } from './cascade'
@@ -22,9 +22,9 @@ export class CascadeControl<
 
   constructor(
     private readonly definition: Def,
-    sendMessage: SendMessage<Message>,
+    args: ControlInstanceArgs,
   ) {
-    super(sendMessage)
+    super(args)
     // Only step 0 is statically known (it takes no upstream value). Downstream
     // step controls are materialized dynamically from upstream selections by
     // the builder — deferred with the serialization protocol — so they are not
@@ -43,14 +43,26 @@ export class CascadeControl<
     }
   }
 
+  isCompositeProp = () => true
+
+  children = () => [...this.childControls.values()]
+
   child = (key: string) => this.childControls.get(key)
 
+  resolvesToRenderableNode = () => false
+
   createChildControl = (def: ControlDefinition, key: string) => {
-    return def.createInstance((message) =>
-      this.sendMessage({
-        type: CascadeControl.CHILD_CONTROL_MESSAGE,
-        payload: { message, key },
-      }),
-    )
+    const { elementKey, propPath } = this.instanceKey
+    return def.createInstance({
+      instanceKey: {
+        elementKey,
+        propPath: `${propPath}.${key}`,
+      },
+      sendMessage: (message) =>
+        this.sendMessage({
+          type: CascadeControl.CHILD_CONTROL_MESSAGE,
+          payload: { message, key },
+        }),
+    })
   }
 }

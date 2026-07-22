@@ -1,3 +1,4 @@
+import { ControlDataTypeKey } from '../../common'
 import { type ResourceResolver } from '../../resources/resolver'
 import { type Stylesheet } from '../../stylesheet'
 
@@ -20,6 +21,24 @@ describe('unstable_Cascade (steps as control factories)', () => {
     const cascade = unstable_Cascade({ steps: [() => Checkbox()] })
     expect(cascade.controlType).toBe(CascadeDefinition.type)
     expect(CascadeDefinition.type).toBe('makeswift::controls::cascade')
+  })
+
+  test('toData emits cascade::v1 tagged data', () => {
+    const cascade = unstable_Cascade({ steps: [() => Checkbox()] })
+    const data = cascade.toData([true])
+    expect(data).toEqual({
+      [ControlDataTypeKey]: 'cascade::v1',
+      value: [Checkbox().toData(true)],
+    })
+  })
+
+  test('fromData reads both v0 arrays and v1 tagged data', () => {
+    const cascade = unstable_Cascade({ steps: [() => Checkbox()] })
+    const v0 = [Checkbox().toData(true)]
+    expect(cascade.fromData(v0)).toEqual([true])
+    expect(
+      cascade.fromData({ [ControlDataTypeKey]: 'cascade::v1', value: v0 }),
+    ).toEqual([true])
   })
 
   test('threads step 0 resolved value into the step 1 factory', () => {
@@ -61,7 +80,10 @@ describe('unstable_Cascade (steps as control factories)', () => {
     })
     const data = [Checkbox({ defaultValue: false }).toData(true), optionP1]
     const value = cascade.fromData(data)
-    expect(cascade.toData(value!)).toEqual(data)
+    expect(cascade.toData(value!)).toEqual({
+      [ControlDataTypeKey]: 'cascade::v1',
+      value: data,
+    })
   })
 
   test('copyData delegates to each materialized child', () => {
@@ -161,7 +183,10 @@ describe('unstable_Cascade (steps as control factories)', () => {
     const value = cascade.fromData(data)
     received.length = 0 // ignore the fromData materialization; measure toData
     const roundTripped = cascade.toData(value!)
-    expect(roundTripped).toEqual(data)
+    expect(roundTripped).toEqual({
+      [ControlDataTypeKey]: 'cascade::v1',
+      value: data,
+    })
     expect(received).toEqual([true]) // toData's walk threaded checkbox=true into step 1
   })
 
@@ -208,6 +233,42 @@ describe('unstable_Cascade (steps as control factories)', () => {
 
 describe('step-control allowlist', () => {
   const colorStep = (() => Color()) as unknown as Step
+
+  test('resolveValue degrades an invalid slot to undefined instead of throwing', () => {
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+    const cascade = unstable_Cascade({
+      steps: [
+        () => Combobox({ getOptions: async () => [] }),
+        (_p: { id: string }) => Combobox({ getOptions: async () => [] }),
+      ],
+    })
+    // valid product, garbage variant slot → resolves to the product (deepest defined)
+    expect(
+      cascade
+        .resolveValue([optionP1, true as never], resolver, stylesheet)
+        .readStable(),
+    ).toEqual({ id: 'p1' })
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('step 1 data does not match control'),
+    )
+    warn.mockRestore()
+  })
+
+  test('materializeForSerialization is also lenient', () => {
+    const cascade = unstable_Cascade({
+      steps: [() => Checkbox({ defaultValue: true })],
+    })
+    expect(() =>
+      cascade.materializeForSerialization([optionP1 as never]),
+    ).not.toThrow()
+  })
+
+  test('fromData stays strict', () => {
+    const cascade = unstable_Cascade({ steps: [() => Checkbox()] })
+    expect(() => cascade.fromData([optionP1])).toThrow(
+      /step 0 data does not match control/,
+    )
+  })
 
   test('fromData throws a descriptive error for an unsupported step control', () => {
     const cascade = unstable_Cascade({ steps: [colorStep] })

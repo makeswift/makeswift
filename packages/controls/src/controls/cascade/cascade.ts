@@ -1,8 +1,10 @@
+import { match } from 'ts-pattern'
 import { z } from 'zod'
 
 import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
+import { ControlDataTypeKey } from '../../common'
 import { type CopyContext } from '../../context'
 import { type IntrospectionTarget } from '../../introspection'
 import { type ResourceResolver } from '../../resources/resolver'
@@ -23,8 +25,9 @@ import {
   type Resolvable,
   type SchemaType,
 } from '../definition'
+import { unstable_GalleryDefinition } from '../gallery'
 import { IconRadioGroupDefinition } from '../icon-radio-group'
-import { type SendMessage } from '../instance'
+import { type ControlInstanceArgs } from '../instance'
 import { NumberDefinition } from '../number'
 import { SelectDefinition } from '../select'
 import { SliderDefinition } from '../slider'
@@ -38,6 +41,7 @@ type StepControl =
   | CheckboxDefinition<any>
   | CodeDefinition<any>
   | ComboboxDefinition<any>
+  | unstable_GalleryDefinition<any>
   | IconRadioGroupDefinition<any>
   | NumberDefinition<any>
   | SelectDefinition<any>
@@ -47,17 +51,34 @@ type StepControl =
 
 type MaterializedStepControl = ControlDefinition<string, unknown, any, any, any>
 
-const COMPATIBLE_STEP_TYPES: ReadonlySet<string> = new Set([
+const STEP_TYPES = [
   CheckboxDefinition.type,
   CodeDefinition.type,
   ComboboxDefinition.type,
+  unstable_GalleryDefinition.type,
   IconRadioGroupDefinition.type,
   NumberDefinition.type,
   SelectDefinition.type,
   SliderDefinition.type,
   TextAreaDefinition.type,
   TextInputDefinition.type,
-])
+] as const
+
+const COMPATIBLE_STEP_TYPES: ReadonlySet<string> = new Set(STEP_TYPES)
+
+type MutuallyAssignable<A, B> = [A] extends [B]
+  ? [B] extends [A]
+    ? true
+    : false
+  : false
+
+type Assert<T extends true> = T
+
+type _StepTypesMatchUnion = Assert<
+  MutuallyAssignable<(typeof STEP_TYPES)[number], StepControl['controlType']>
+>
+
+export type { _StepTypesMatchUnion as __assertStepTypes }
 
 export type Step<D extends StepControl = StepControl> = (prev?: any) => D
 
@@ -72,7 +93,11 @@ type Config<S extends Steps = Steps> = {
 type StepData = DataType_<StepControl> | undefined
 type StepValue = ValueType_<StepControl> | undefined
 
-type DataType = StepData[]
+type VersionedData = {
+  [ControlDataTypeKey]: typeof Definition.v1DataType
+  value: StepData[]
+}
+type DataType = StepData[] | VersionedData
 type ValueType = StepValue[]
 
 type LastStep<S extends Steps> = S extends readonly [...any[], infer L]
@@ -102,6 +127,11 @@ class Definition<S extends Steps> extends ControlDefinition<
 > {
   static readonly type = 'makeswift::controls::cascade' as const
 
+  static readonly v1DataType = 'cascade::v1' as const
+  static readonly dataSignature = {
+    v1: { [ControlDataTypeKey]: this.v1DataType },
+  } as const
+
   static deserialize(data: DeserializedRecord): CascadeDefinition {
     const steps = (data.config as { steps?: unknown } | undefined)?.steps
 
@@ -111,11 +141,27 @@ class Definition<S extends Steps> extends ControlDefinition<
       )
     }
 
-    return new CascadeDefinition({
-      label: (data.config as { label?: string }).label,
-      description: (data.config as { description?: string }).description,
-      steps: steps as unknown as Steps,
-    })
+    return new CascadeDefinition(
+      {
+        label: (data.config as { label?: string }).label,
+        description: (data.config as { description?: string }).description,
+        steps: steps as unknown as Steps,
+      },
+      (data as { version?: 1 }).version,
+    )
+  }
+
+  static slots(data: DataType | undefined): StepData[] | undefined {
+    return match(data)
+      .with(Definition.dataSignature.v1, ({ value }) => value)
+      .otherwise((value) => value)
+  }
+
+  constructor(
+    config: Config<S>,
+    readonly version?: 1,
+  ) {
+    super(config)
   }
 
   get steps(): S {
@@ -130,7 +176,15 @@ class Definition<S extends Steps> extends ControlDefinition<
     const version = z.literal(1)
     const type = z.literal(Definition.type)
 
-    const data = z.array(z.any()) as unknown as SchemaType<DataType>
+    const versionedData = z.object({
+      [ControlDataTypeKey]: z.literal(Definition.v1DataType),
+      value: z.array(z.any()),
+    })
+
+    const data = z.union([
+      z.array(z.any()),
+      versionedData,
+    ]) as unknown as SchemaType<DataType>
     const value = z.array(z.any()) as unknown as SchemaType<ValueType>
     const resolvedValue = z.any() as unknown as SchemaType<ResolvedValueType<S>>
 
@@ -163,7 +217,7 @@ class Definition<S extends Steps> extends ControlDefinition<
       if (!COMPATIBLE_STEP_TYPES.has(control.controlType)) {
         throw new Error(
           `unstable_Cascade: step ${i} returned unsupported control ` +
-            `'${control.controlType}' — Supported controls: ${[...COMPATIBLE_STEP_TYPES].join(', ')}`,
+            `'${control.controlType}' — Supported controls: ${STEP_TYPES.join(', ')}`,
         )
       }
       const { entry, resolvedValue } = visitStep(control, i)
@@ -174,26 +228,29 @@ class Definition<S extends Steps> extends ControlDefinition<
   }
 
   private materialize(
-    data: DataType | undefined,
+    slots: StepData[] | undefined,
     resolver: ResourceResolver,
     stylesheet: Stylesheet,
+    mode: 'strict' | 'lenient',
   ): Array<{
     control: MaterializedStepControl
     resolvable: Resolvable<unknown>
   }> {
     return this.walkSteps((control, i) => {
-      const stepData = data?.[i]
+      let stepData = slots?.[i]
       if (stepData !== undefined) {
         const parsed = control.safeParse(stepData)
         if (!parsed.success) {
-          throw new Error(
+          const message =
             `unstable_Cascade: step ${i} data does not match control ` +
-              `'${control.controlType}': ${parsed.error}`,
-          )
+            `'${control.controlType}': ${parsed.error}`
+          if (mode === 'strict') throw new Error(message)
+          console.warn(message)
+          stepData = undefined
         }
       }
       const resolvable = control.resolveValue(
-        data?.[i],
+        stepData,
         resolver,
         stylesheet.child(String(i)),
       )
@@ -205,20 +262,28 @@ class Definition<S extends Steps> extends ControlDefinition<
   }
 
   materializeForSerialization(data: DataType | undefined): ControlDefinition[] {
-    return this.materialize(data, NOOP_RESOLVER, NOOP_STYLESHEET).map(
-      ({ control }) => control as unknown as ControlDefinition,
-    )
+    const slots = Definition.slots(data)
+    return this.materialize(
+      slots,
+      NOOP_RESOLVER,
+      NOOP_STYLESHEET,
+      'lenient',
+    ).map(({ control }) => control as unknown as ControlDefinition)
   }
 
   fromData(data: DataType | undefined): ValueType | undefined {
-    if (data == null) return undefined
-    return this.materialize(data, NOOP_RESOLVER, NOOP_STYLESHEET).map(
-      ({ control }, i) => control.fromData(data[i]),
-    )
+    const slots = Definition.slots(data)
+    if (slots == null) return undefined
+    return this.materialize(
+      slots,
+      NOOP_RESOLVER,
+      NOOP_STYLESHEET,
+      'strict',
+    ).map(({ control }, i) => control.fromData(slots[i]))
   }
 
   toData(value: ValueType): DataType {
-    return this.walkSteps((control, i) => {
+    const slots = this.walkSteps((control, i) => {
       const data = control.toData(value[i])
       const resolvable = control.resolveValue(
         data,
@@ -227,16 +292,23 @@ class Definition<S extends Steps> extends ControlDefinition<
       )
       return { entry: data, resolvedValue: resolvable.readStable() }
     })
+    return match(this.version)
+      .with(1, () => ({ ...Definition.dataSignature.v1, value: slots }))
+      .otherwise(() => slots)
   }
 
   copyData(
     data: DataType | undefined,
     context: CopyContext,
   ): DataType | undefined {
-    if (data == null) return undefined
-    return this.materialize(data, NOOP_RESOLVER, NOOP_STYLESHEET).map(
-      ({ control }, i) => control.copyData(data[i], context),
-    )
+    const slots = Definition.slots(data)
+    if (slots == null) return undefined
+    return this.materialize(
+      slots,
+      NOOP_RESOLVER,
+      NOOP_STYLESHEET,
+      'strict',
+    ).map(({ control }, i) => control.copyData(slots[i], context))
   }
 
   resolveValue(
@@ -245,7 +317,8 @@ class Definition<S extends Steps> extends ControlDefinition<
     stylesheet: Stylesheet,
     _control?: InstanceType<S>,
   ): Resolvable<ResolvedValueType<S> | undefined> {
-    const chain = this.materialize(data, resolver, stylesheet)
+    const slots = Definition.slots(data)
+    const chain = this.materialize(slots, resolver, stylesheet, 'lenient')
     const resolvables = chain.map((c) => c.resolvable)
 
     const stableValue = StableValue({
@@ -268,8 +341,8 @@ class Definition<S extends Steps> extends ControlDefinition<
     }
   }
 
-  createInstance(sendMessage: SendMessage): InstanceType<S> {
-    return new CascadeControl(this, sendMessage)
+  createInstance(args: ControlInstanceArgs): InstanceType<S> {
+    return new CascadeControl(this, args)
   }
 
   accept<R>(visitor: ControlDefinitionVisitor<R>, ...args: unknown[]): R {
@@ -277,10 +350,14 @@ class Definition<S extends Steps> extends ControlDefinition<
   }
 
   introspect<R>(data: DataType | undefined, target: IntrospectionTarget<R>) {
-    if (data == null) return []
-    return this.materialize(data, NOOP_RESOLVER, NOOP_STYLESHEET).flatMap(
-      ({ control }, i) => control.introspect(data[i], target) ?? [],
-    )
+    const slots = Definition.slots(data)
+    if (slots == null) return []
+    return this.materialize(
+      slots,
+      NOOP_RESOLVER,
+      NOOP_STYLESHEET,
+      'strict',
+    ).flatMap(({ control }, i) => control.introspect(slots[i], target) ?? [])
   }
 }
 
@@ -289,5 +366,5 @@ export class CascadeDefinition<S extends Steps = Steps> extends Definition<S> {}
 export function unstable_Cascade<const S extends Steps>(
   config: Config<S>,
 ): CascadeDefinition<S> {
-  return new CascadeDefinition<S>(config)
+  return new CascadeDefinition<S>(config, 1)
 }

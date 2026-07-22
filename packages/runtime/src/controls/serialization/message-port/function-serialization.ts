@@ -52,7 +52,10 @@ function collectTransferables(value: unknown, seen: Set<unknown> = new Set()): T
   return []
 }
 
-export function serializeFunction<T extends AnyFunction>(func: T): SerializedFunction<T> {
+export function serializeFunction<T extends AnyFunction>(
+  func: T,
+  hostPortRegistry?: MessagePort[],
+): SerializedFunction<T> {
   type CallMessageEvent = MessageEvent<[CallID, Parameters<T>]>
 
   const messageChannel = new MessageChannel()
@@ -71,6 +74,8 @@ export function serializeFunction<T extends AnyFunction>(func: T): SerializedFun
         },
       )
   }
+
+  hostPortRegistry?.push(messageChannel.port1)
 
   return messageChannel.port2 as SerializedFunction<T>
 }

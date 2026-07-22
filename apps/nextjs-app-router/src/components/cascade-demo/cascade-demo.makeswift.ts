@@ -5,6 +5,7 @@ import {
   Combobox,
   Style,
   unstable_Cascade,
+  unstable_Gallery,
   TextInput,
   List,
   Color,
@@ -52,6 +53,20 @@ async function categoryOptions(showDiscountsOnly: boolean) {
   }))
 }
 
+async function productImageOptions(product: Product) {
+  return {
+    options: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => {
+      const url = `https://picsum.photos/seed/${product.id}-${n}/300/300`
+      return {
+        id: `${product.id}-image-${n}`,
+        thumbnailUrl: url,
+        label: `${product.label} ${n}`,
+        value: { src: url, label: `${product.label} ${n}` },
+      }
+    }),
+  }
+}
+
 async function productOptions(category: Category) {
   return products
     .filter((product) => product.categoryId === category.id)
@@ -96,6 +111,11 @@ runtime.registerComponent(
             Combobox({
               label: 'Product',
               getOptions: () => productOptions(category),
+            }),
+          (product: Product) =>
+            unstable_Gallery({
+              label: 'Product image',
+              getOptions: () => productImageOptions(product),
             }),
         ],
       }),
