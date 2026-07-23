@@ -23,6 +23,6 @@
     "semver": "^7.3.8"
   },
   "devDependencies": {
-    "next": "15.5.18"
+    "next": "15.5.21"
   }
 }
