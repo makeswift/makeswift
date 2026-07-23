@@ -1,5 +1,31 @@
 # @makeswift/runtime
 
+## 0.28.8
+
+### Patch Changes
+
+- 461939f: feat: add `resolvesToRenderableNode` method to control instances
+- f521bb7: feat: add `instanceKey` (`elementKey` + `propPath`) to control instances
+- 9502d2a: feat: stackable `FrameworkContextProvider` with support for partial overrides.
+- b8e75a5: Add unstable_migration API to component registration
+- 62c8f9d: feat: server-side implementation of `ApiResourcesClient` interface
+- 683ecd5: Tighten `deepEqual`/`shallowEqual` typings, fix corner-case false positives on object-to-array comparisons
+- 09d37fe: Fix accidental deletion of elements from element tree state when deleting props
+- 1c508ee: Add the `unstable_Gallery` control, an image-grid picker control.
+- a649920: Fixes an issue where scripts within the builtin `Embed` component may not have properly persisted DOM manipulations in the builder.
+- 85b4e18: fix: explicitly include Jest types in package globals
+- f0a2f34: feat: use `MakeswiftApiResourcesClient` on the server if runtime instance was provided with an API key
+- Updated dependencies [461939f]
+- Updated dependencies [f6b26bd]
+- Updated dependencies [f521bb7]
+- Updated dependencies [96927de]
+- Updated dependencies [683ecd5]
+- Updated dependencies [75e23d7]
+- Updated dependencies [1c508ee]
+- Updated dependencies [85b4e18]
+  - @makeswift/controls@0.1.21
+  - @makeswift/prop-controllers@0.4.15
+
 ## 0.28.7
 
 ### Patch Changes

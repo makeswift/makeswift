@@ -1,5 +1,20 @@
 # @makeswift/prop-controllers
 
+## 0.4.15
+
+### Patch Changes
+
+- 85b4e18: fix: explicitly include Jest types in package globals
+- Updated dependencies [461939f]
+- Updated dependencies [f6b26bd]
+- Updated dependencies [f521bb7]
+- Updated dependencies [96927de]
+- Updated dependencies [683ecd5]
+- Updated dependencies [75e23d7]
+- Updated dependencies [1c508ee]
+- Updated dependencies [85b4e18]
+  - @makeswift/controls@0.1.21
+
 ## 0.4.14
 
 ### Patch Changes
