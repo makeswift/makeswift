@@ -15,7 +15,7 @@
     "algoliasearch": "^5.35.0",
     "clsx": "^2.1.1",
     "lodash.debounce": "^4.0.8",
-    "next": "15.5.18",
+    "next": "15.5.21",
     "react": "^19.0.3",
     "react-dom": "^19.0.3",
     "react-instantsearch": "^7.16.2",
