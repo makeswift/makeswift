@@ -1,5 +1,18 @@
 # @makeswift/controls
 
+## 0.1.21
+
+### Patch Changes
+
+- 461939f: feat: add `resolvesToRenderableNode` method to control instances
+- f6b26bd: In an `Image` control using the `Image.Format.WithDimensions` format, show a warning when resolving an image without dimensions
+- f521bb7: feat: add `instanceKey` (`elementKey` + `propPath`) to control instances
+- 96927de: feat: allow to access `List` item controls by index
+- 683ecd5: Tighten `deepEqual`/`shallowEqual` typings, fix corner-case false positives on object-to-array comparisons
+- 75e23d7: feat: add `children`, `isCompositeProp` methods to `ControlInstance`
+- 1c508ee: Add the `unstable_Gallery` control, an image-grid picker control.
+- 85b4e18: fix: explicitly include Jest types in package globals
+
 ## 0.1.20
 
 ### Patch Changes
