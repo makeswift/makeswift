@@ -98,7 +98,7 @@ describe('unstable_Cascade (steps as control factories)', () => {
     expect(copied).toEqual(data)
   })
 
-  test('resolveValue returns the deepest step with a defined value', () => {
+  test('resolveValue returns the final step’s value when the chain is complete', () => {
     const cascade = unstable_Cascade({
       steps: [
         () => Combobox({ getOptions: async () => [] }),
@@ -110,17 +110,17 @@ describe('unstable_Cascade (steps as control factories)', () => {
     ).toEqual({ id: 'v1' })
   })
 
-  test('an unselected step terminates the chain (resolves to last selected)', () => {
+  test('an unselected final step resolves to undefined (no fallback to earlier steps)', () => {
     const cascade = unstable_Cascade({
       steps: [
         () => Combobox({ getOptions: async () => [] }),
         (_p: { id: string }) => Combobox({ getOptions: async () => [] }),
       ],
     })
-    // product selected, variant not → resolves to product's value
+    // product selected, variant (final step) not → cascade resolves to undefined
     expect(
       cascade.resolveValue([optionP1], resolver, stylesheet).readStable(),
-    ).toEqual({ id: 'p1' })
+    ).toBeUndefined()
   })
 
   test('resolveValue is undefined when step 0 is unselected', () => {
@@ -242,12 +242,13 @@ describe('step-control allowlist', () => {
         (_p: { id: string }) => Combobox({ getOptions: async () => [] }),
       ],
     })
-    // valid product, garbage variant slot → resolves to the product (deepest defined)
+    // valid product, garbage variant (final step) → dropped to undefined, so the
+    // cascade resolves to undefined rather than falling back to the product
     expect(
       cascade
         .resolveValue([optionP1, true as never], resolver, stylesheet)
         .readStable(),
-    ).toEqual({ id: 'p1' })
+    ).toBeUndefined()
     expect(warn).toHaveBeenCalledWith(
       expect.stringContaining('step 1 data does not match control'),
     )

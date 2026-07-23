@@ -324,11 +324,8 @@ class Definition<S extends Steps> extends ControlDefinition<
     const stableValue = StableValue({
       name: Definition.type,
       read: () => {
-        for (let i = chain.length - 1; i >= 0; i--) {
-          const rv = chain[i].resolvable.readStable()
-          if (rv !== undefined) return rv as ResolvedValueType<S>
-        }
-        return undefined
+        const lastStep = chain[this.config.steps.length - 1]
+        return lastStep?.resolvable.readStable() as ResolvedValueType<S> | undefined
       },
       deps: resolvables,
     })
