@@ -13,7 +13,7 @@
     "@formatjs/intl-localematcher": "^0.5.4",
     "@makeswift/runtime": "workspace:^",
     "negotiator": "^0.6.3",
-    "next": "15.5.18",
+    "next": "15.5.21",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
