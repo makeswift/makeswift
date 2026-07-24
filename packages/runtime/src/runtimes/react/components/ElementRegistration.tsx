@@ -38,3 +38,5 @@ export const ElementRegistration = memo(function ElementRegistration({
 
   return <>{children}</>
 })
+
+export default ElementRegistration
