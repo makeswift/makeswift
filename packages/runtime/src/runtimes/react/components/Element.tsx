@@ -1,17 +1,33 @@
 'use client'
 
-import { forwardRef, memo, Ref, useCallback, useImperativeHandle, useRef, ReactNode } from 'react'
+import {
+  type ReactNode,
+  type Ref,
+  type PropsWithChildren,
+  forwardRef,
+  memo,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+  lazy,
+} from 'react'
+
 import {
   isElementReference,
   type Element as ElementDataOrRef,
 } from '../../../state/read-only-state'
-import { ElementRegistration } from './ElementRegistration'
-import { ElementReference } from './ElementReference'
-import { ElementData } from './ElementData'
-import { ElementImperativeHandle } from '../element-imperative-handle'
-import { FindDomNode } from '../find-dom-node'
+
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'
 import { ErrorBoundary } from '../../../components/shared/ErrorBoundary'
+
+import { useIsReadOnly } from '../hooks/use-is-read-only'
+import { ElementImperativeHandle } from '../element-imperative-handle'
+import { FindDomNode } from '../find-dom-node'
+
+import { ElementReference } from './ElementReference'
+import { ElementData } from './ElementData'
+
+const BuilderElementRegistration = lazy(() => import('./ElementRegistration'))
 
 type Props = {
   element: ElementDataOrRef
@@ -39,6 +55,8 @@ export const Element = memo(
 
     useImperativeHandle(ref, () => imperativeHandleRef.current, [])
 
+    const ElementRegistration = useIsReadOnly() ? NoOp : BuilderElementRegistration
+
     return (
       <ElementRegistration componentHandle={imperativeHandleRef.current} elementKey={element.key}>
         <FindDomNode ref={findDomNodeCallbackRef}>
@@ -58,6 +76,10 @@ export const Element = memo(
     )
   }),
 )
+
+function NoOp({ children }: PropsWithChildren) {
+  return children
+}
 
 function ErrorFallback() {
   return <FallbackComponent text={`Error rendering component`} />
