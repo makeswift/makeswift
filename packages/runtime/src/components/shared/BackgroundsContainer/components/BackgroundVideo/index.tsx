@@ -1,4 +1,3 @@
-import { cx } from '@emotion/css'
 import {
   useState,
   useRef,
@@ -9,31 +8,35 @@ import {
 } from 'react'
 
 import { ReactPlayer } from '../../../react-player'
-import { useStyle } from '../../../../../runtimes/react/use-style'
 
 import { useIsomorphicLayoutEffect } from '../../../../hooks/useIsomorphicLayoutEffect'
+import { composeStyles, useStyle } from '../../../../../runtimes/react/css-runtime/hooks/use-style'
 
 const Container = forwardRef(function Container(
   { className, ...restOfProps }: ComponentPropsWithoutRef<'div'>,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
+  const styles = composeStyles(
+    useStyle({
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      pointerEvents: 'none',
+      overflow: 'hidden',
+    }),
+    className
+  )
   return (
-    <div
-      {...restOfProps}
-      ref={ref}
-      className={cx(
-        useStyle({
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          pointerEvents: 'none',
-          overflow: 'hidden',
-        }),
-        className,
-      )}
-    />
+    <>
+      {styles.styleElements}
+      <div
+        {...restOfProps}
+        ref={ref}
+        className={styles.className}
+      />
+    </>
   )
 })
 
@@ -44,19 +47,23 @@ function Mask({
   backgroundColor: string | undefined
   visible: boolean
 }) {
+  const { className, styleElement } = useStyle({
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: backgroundColor,
+    opacity: visible ? 1 : 0,
+    transition: 'opacity 1s',
+  })
   return (
-    <div
-      className={useStyle({
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: backgroundColor,
-        opacity: visible ? 1 : 0,
-        transition: 'opacity 1s',
-      })}
-    />
+    <>
+      {styleElement}
+      <div
+        className={className}
+      />
+    </>
   )
 }
 

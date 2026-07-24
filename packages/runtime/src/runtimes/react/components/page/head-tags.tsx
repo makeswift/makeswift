@@ -1,6 +1,7 @@
 import { type ComponentPropsWithoutRef } from 'react'
 
 import { useFrameworkContext } from '../hooks/use-framework-context'
+import { MakeswiftStyle } from '../../css-runtime/components/makeswift-style'
 
 type PageTitleProps = Omit<ComponentPropsWithoutRef<'title'>, 'children'> & {
   children?: string
@@ -38,19 +39,14 @@ export function PageLink({ precedence, ...props }: PageLinkProps) {
   )
 }
 
-type ReactCanaryStyleProps = {
-  precedence?: 'reset' | 'low' | 'medium' | 'high'
-  href?: string
+type PageStyleProps = {
+  styleElement: React.ReactElement<ComponentPropsWithoutRef<typeof MakeswiftStyle>>
 }
-type PageStyleProps = ComponentPropsWithoutRef<'style'> & ReactCanaryStyleProps
-
-export function PageStyle({ children, precedence, href, ...props }: PageStyleProps) {
+export function PageStyle({ styleElement }: PageStyleProps) {
   const { Head } = useFrameworkContext()
   return (
     <Head>
-      <style {...props} precedence={precedence} href={href}>
-        {children}
-      </style>
+      {styleElement}
     </Head>
   )
 }

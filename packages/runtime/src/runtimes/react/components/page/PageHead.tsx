@@ -10,6 +10,8 @@ import { usePageSnippets } from '../hooks/use-page-snippets'
 
 import { PageTitle, PageMeta, PageLink, PageStyle } from './head-tags'
 import { type PageMetadataSettings } from './page-seo-settings'
+import { CSSObject } from '@emotion/serialize'
+import { useBaseStyles } from '../../css-runtime/hooks/use-base-styles'
 
 const defaultFavicon = {
   id: 'default-favicon',
@@ -21,6 +23,15 @@ const defaultFavicon = {
 type Props = {
   document: MakeswiftPageDocument
   metadata?: PageMetadataSettings
+}
+
+const baseStyles: CSSObject = {
+  html: {
+    fontFamily: 'sans-serif',
+  },
+  'div#__next': {
+    overflow: 'hidden',
+  },
 }
 
 export function PageHead({ document: page, metadata = {} }: Props): ReactNode {
@@ -74,18 +85,11 @@ export function PageHead({ document: page, metadata = {} }: Props): ReactNode {
       .join('|')
   }, [site, page])
 
+  const { styleElement: baseStylesElement } = useBaseStyles({ styles: baseStyles })
+
   return (
     <>
-      <PageStyle precedence="high" href="makeswift-base-styles">
-        {`
-        html {
-            font-family: sans-serif;
-        }
-        div#__next {
-            overflow: hidden;
-        }
-        `}
-      </PageStyle>
+      <PageStyle styleElement={baseStylesElement} />
       {useTitle && title && (
         <>
           <PageTitle>{title}</PageTitle>

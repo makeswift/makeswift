@@ -17,10 +17,11 @@ import { useResponsiveColor } from '../../../../hooks'
 import { Link } from '../../../../shared/Link'
 import Button from '../../../Button'
 import { useIsomorphicLayoutEffect } from '../../../../hooks/useIsomorphicLayoutEffect'
-import { cx, keyframes } from '@emotion/css'
-import { useStyle } from '../../../../../runtimes/react/use-style'
 import { useResponsiveStyle, useResponsiveTextStyle } from '../../../../utils/responsive-style'
 import { LinkData, ResponsiveColorData, ResponsiveTextStyleData } from '@makeswift/prop-controllers'
+import { useKeyframes } from '../../../../../runtimes/react/css-runtime/hooks/use-keyframes'
+import { composeStyles, useStyle } from '../../../../../runtimes/react/css-runtime/hooks/use-style'
+import clsx from 'clsx'
 
 const DROP_DOWN_MENU_WIDTH = 200
 
@@ -36,46 +37,39 @@ type DropDownMenuProps = DropDownMenuBaseProps &
   Omit<ComponentPropsWithoutRef<'div'>, keyof DropDownMenuBaseProps>
 
 function DropDownMenu({ className, position, ...restOfProps }: DropDownMenuProps) {
+  const { className: dropDownMenuStaticStylesClassName, styleElement: dropdownMenuStylesElement } = useStyle({
+    position: 'absolute',
+    top: '100%',
+    left: position === 'left' ? 0 : 'auto',
+    right: position === 'right' ? 0 : 'auto',
+    background: '#fff',
+    margin: 0,
+    padding: '8px 0',
+    borderRadius: 4,
+    boxShadow: '0 3px 10px rgba(0, 0, 0, 0.15)',
+    width: DROP_DOWN_MENU_WIDTH,
+    zIndex: 99,
+    listStyle: 'none',
+    overflow: 'hidden',
+    transformOrigin: '50% 0',
+    willChange: 'transform, opacity',
+    transformStyle: 'preserve-3d',
+    display: 'none',
+  })
   return (
-    <div
-      {...restOfProps}
-      className={cx(
-        DROP_DOWN_MENU_CLASS_NAME,
-        useStyle({
-          position: 'absolute',
-          top: '100%',
-          left: position === 'left' ? 0 : 'auto',
-          right: position === 'right' ? 0 : 'auto',
-          background: '#fff',
-          margin: 0,
-          padding: '8px 0',
-          borderRadius: 4,
-          boxShadow: '0 3px 10px rgba(0, 0, 0, 0.15)',
-          width: DROP_DOWN_MENU_WIDTH,
-          zIndex: 99,
-          listStyle: 'none',
-          overflow: 'hidden',
-          transformOrigin: '50% 0',
-          willChange: 'transform, opacity',
-          transformStyle: 'preserve-3d',
-          display: 'none',
-        }),
-        className,
-      )}
-    />
+    <>
+      {dropdownMenuStylesElement}
+      <div
+        {...restOfProps}
+        className={clsx(
+          DROP_DOWN_MENU_CLASS_NAME,
+          dropDownMenuStaticStylesClassName,
+          className,
+        )}
+      />
+    </>
   )
 }
-
-const dropIn = keyframes`
-  0% {
-      opacity: 0;
-      transform: rotateX(-20deg);
-  }
-  100% {
-      opacity: 1;
-      transform: none;
-  }
-`
 
 type DropDownContainerProps = ComponentPropsWithoutRef<'div'>
 
@@ -83,21 +77,37 @@ const DropDownContainer = forwardRef(function DropDownContainer(
   { className, ...restOfProps }: DropDownContainerProps,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
+  const { keyframesName: dropInKeyframesName, styleElement: dropInKeyframeStyleElement } = useKeyframes(`
+    0% {
+        opacity: 0;
+        transform: rotateX(-20deg);
+    }
+    100% {
+        opacity: 1;
+        transform: none;
+    }
+  `)
+  
+  const { className: baseClassName, styleElement: baseStyleElement } = useStyle({
+    position: 'relative',
+    [`&:hover .${DROP_DOWN_MENU_CLASS_NAME}`]: {
+      display: 'block',
+      animation: `${dropInKeyframesName} 0.25s`,
+    },
+  })
   return (
-    <div
-      {...restOfProps}
-      ref={ref}
-      className={cx(
-        useStyle({
-          position: 'relative',
-          [`&:hover .${DROP_DOWN_MENU_CLASS_NAME}`]: {
-            display: 'block',
-            animation: `${dropIn} 0.25s`,
-          },
-        }),
-        className,
-      )}
-    />
+    <>
+      {dropInKeyframeStyleElement}
+      {baseStyleElement}
+      <div
+        {...restOfProps}
+        ref={ref}
+        className={clsx(
+          baseClassName,
+          className,
+        )}
+      />
+    </>
   )
 })
 
@@ -113,46 +123,51 @@ type DropDownItemProps = BaseDropDownItemProps &
 function DropDownItem({ className, color, textStyle, ...restOfProps }: DropDownItemProps) {
   const colorData = useResponsiveColor(color)
 
-  return (
-    <Link
-      {...restOfProps}
-      className={cx(
-        useStyle({
-          display: 'block',
-          textDecoration: 'none',
-          lineHeight: 1.4,
-          padding: '8px 16px',
-          color: 'black',
-          backgroundColor: 'transparent',
-          transition: 'background-color 0.2s',
-        }),
-        useStyle(useResponsiveTextStyle(textStyle)),
-        useStyle(
-          useResponsiveStyle([colorData, textStyle] as const, ([color, textStyle = {}]) => {
-            const fontSize = textStyle.fontSize || { value: 14, unit: 'px' }
-            const fontWeight = textStyle.fontWeight == null ? 'normal' : textStyle.fontWeight
-            const fontStyle = textStyle.fontStyle || []
-            const letterSpacing = textStyle.letterSpacing == null ? null : textStyle.letterSpacing
-            const textTransform = textStyle.textTransform || []
+  const styles = composeStyles(
+    useStyle({
+      display: 'block',
+      textDecoration: 'none',
+      lineHeight: 1.4,
+      padding: '8px 16px',
+      color: 'black',
+      backgroundColor: 'transparent',
+      transition: 'background-color 0.2s',
+    }),
+    useStyle(useResponsiveTextStyle(textStyle)),
+    useStyle(
+      useResponsiveStyle([colorData, textStyle] as const, ([color, textStyle = {}]) => {
+        const fontSize = textStyle.fontSize || { value: 14, unit: 'px' }
+        const fontWeight = textStyle.fontWeight == null ? 'normal' : textStyle.fontWeight
+        const fontStyle = textStyle.fontStyle || []
+        const letterSpacing = textStyle.letterSpacing == null ? null : textStyle.letterSpacing
+        const textTransform = textStyle.textTransform || []
 
-            return {
-              color: color == null ? 'black' : colorToString(color),
-              fontSize: `${fontSize.value}${fontSize.unit}`,
-              fontWeight,
-              fontStyle: fontStyle.includes('italic') ? 'italic' : 'normal',
-              letterSpacing: letterSpacing == null ? 'normal' : `${letterSpacing}px`,
-              textTransform: textTransform.includes('uppercase') ? 'uppercase' : 'none',
-            }
-          }),
-        ),
-        useStyle({
-          '&:hover': {
-            backgroundColor: 'rgba(0, 0, 0, 0.04)',
-          },
-        }),
-        className,
-      )}
-    />
+        return {
+          color: color == null ? 'black' : colorToString(color),
+          fontSize: `${fontSize.value}${fontSize.unit}`,
+          fontWeight,
+          fontStyle: fontStyle.includes('italic') ? 'italic' : 'normal',
+          letterSpacing: letterSpacing == null ? 'normal' : `${letterSpacing}px`,
+          textTransform: textTransform.includes('uppercase') ? 'uppercase' : 'none',
+        }
+      }),
+    ),
+    useStyle({
+      '&:hover': {
+        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+      },
+    }),
+    className,
+  )
+
+  return (
+    <>
+      {styles.styleElements}
+      <Link
+        {...restOfProps}
+        className={styles.className}
+      />
+    </>
   )
 }
 

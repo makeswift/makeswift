@@ -5,9 +5,8 @@ import { renderToPipeableStream } from 'react-dom/server'
 import { PassThrough, Transform } from 'node:stream'
 
 import {
-  createRootStyleCache,
+  createMakeswiftStylesRegistry,
   RootStyleRegistry,
-  styleTagHtml,
   type RootStyleProps,
 } from '@makeswift/runtime/unstable-framework-support'
 
@@ -17,7 +16,7 @@ export function renderHtml(
   children: ReactNode,
   {
     timeout,
-    cacheKey,
+    classNamePrefix,
     enableCssReset,
     responseStatusCode,
     responseHeaders,
@@ -28,29 +27,31 @@ export function renderHtml(
     responseHeaders: Headers
   },
 ): Promise<Response> {
-  const cache = createRootStyleCache({ key: cacheKey })
+  const stylesRegistry = createMakeswiftStylesRegistry()
 
   return new Promise((resolve, reject) => {
     let didError = false
 
     const { pipe, abort } = renderToPipeableStream(
-      <RootStyleRegistry cache={cache} enableCssReset={enableCssReset}>
+      <RootStyleRegistry
+        stylesRegistry={stylesRegistry}
+        classNamePrefix={classNamePrefix}
+        enableCssReset={enableCssReset}
+        shouldRenderStyleElements={false}
+      >
         {children}
       </RootStyleRegistry>,
       {
-        // wait for all Suspense boundaries before streaming for consistent Emotion CSS
+        // wait for all Suspense boundaries before streaming to ensure all Makeswift styles have been generated & stored in the registry
         onAllReady() {
           // create a head injection transform with server-side styles
-          const { classNames, css } = cache.flush()
           const headInjector = createHeadInjectionTransform(
-            styleTagHtml({ cacheKey: cache.key, classNames, css }),
+            stylesRegistry.serializeToHtmlStyleTags()
           )
 
           // prepare a pipeable response stream with the head transform
           const body = new PassThrough()
-          const responseStream = createReadableStreamFromReadable(
-            classNames.length > 0 ? body.pipe(headInjector) : body,
-          )
+          const responseStream = createReadableStreamFromReadable(body.pipe(headInjector))
 
           // amend response headers with content type
           responseHeaders.set('Content-Type', 'text/html; charset=utf-8')

@@ -25,4 +25,5 @@ export interface Stylesheet {
   ): string
 
   child(id: string): Stylesheet
+  key(): string
 }

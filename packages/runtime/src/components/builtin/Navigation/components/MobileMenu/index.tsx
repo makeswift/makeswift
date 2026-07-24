@@ -7,8 +7,6 @@ import { Times16 } from '../../../../icons/Times16'
 import Button from '../../../Button'
 import DropDownButton from './components/MobileDropDownButton'
 import { useResponsiveColor } from '../../../../hooks'
-import { cx } from '@emotion/css'
-import { useStyle } from '../../../../../runtimes/react/use-style'
 import { useResponsiveStyle } from '../../../../utils/responsive-style'
 import { type ResponsiveColor } from '../../../../utils/types'
 import {
@@ -16,6 +14,8 @@ import {
   type NavigationLinksData,
   type ResponsiveValue,
 } from '@makeswift/prop-controllers'
+import { composeStyles, useStyle } from '../../../../../runtimes/react/css-runtime/hooks/use-style'
+import clsx from 'clsx'
 
 type NavigationButtonProps = NavigationButtonData['payload'] &
   Omit<ComponentPropsWithoutRef<typeof Button>, 'color' | 'textColor'>
@@ -26,13 +26,17 @@ function ButtonLink({
   color,
   ...restOfProps
 }: NavigationButtonProps): ReactNode {
+  const { className: baseClassName, styleElement: baseStyleElement } = useStyle({ margin: '8px 0' })
   return (
-    <Button
-      {...restOfProps}
-      className={cx(useStyle({ margin: '8px 0' }), className)}
-      textColor={useResponsiveColor(textColor)}
-      color={useResponsiveColor(color)}
-    />
+    <>
+      {baseStyleElement}
+      <Button
+        {...restOfProps}
+        className={clsx(baseClassName, className)}
+        textColor={useResponsiveColor(textColor)}
+        color={useResponsiveColor(color)}
+      />
+    </>
   )
 }
 
@@ -53,43 +57,46 @@ function Container({
   open,
   ...restOfProps
 }: ContainerProps) {
-  return (
-    <div
-      {...restOfProps}
-      className={cx(
-        useStyle({
-          position: 'fixed',
-          flexDirection: 'column',
-          width: '100%',
-          padding: '40px 15px',
-          transition: 'transform 300ms ease-in-out',
-          overflowY: 'auto',
-          zIndex: 9999,
-          maxWidth: 575,
-        }),
-        useStyle(
-          useResponsiveStyle(
-            [animation, backgroundColor] as const,
-            ([animation, backgroundColor]) => {
-              if (animation == null) return { display: 'none' }
+  const styles = composeStyles(
+    useStyle({
+      position: 'fixed',
+      flexDirection: 'column',
+      width: '100%',
+      padding: '40px 15px',
+      transition: 'transform 300ms ease-in-out',
+      overflowY: 'auto',
+      zIndex: 9999,
+      maxWidth: 575,
+    }),
+    useStyle(useResponsiveStyle(
+      [animation, backgroundColor] as const,
+      ([animation, backgroundColor]) => {
+        if (animation == null) return { display: 'none' }
+  
+        return {
+          display: 'flex',
+          backgroundColor: backgroundColor == null ? 'black' : colorToString(backgroundColor),
+          transform: open
+            ? `translate3d(0,0,0)`
+            : `translate3d(${{ coverRight: '', coverLeft: '-' }[animation]}100%, 0, 0)`,
+          ...{
+            coverRight: { top: 0, bottom: 0, right: 0 },
+            coverLeft: { top: 0, bottom: 0, left: 0 },
+          }[animation],
+        }
+      },
+    )),
+    className
+  )
 
-              return {
-                display: 'flex',
-                backgroundColor: backgroundColor == null ? 'black' : colorToString(backgroundColor),
-                transform: open
-                  ? `translate3d(0,0,0)`
-                  : `translate3d(${{ coverRight: '', coverLeft: '-' }[animation]}100%, 0, 0)`,
-                ...{
-                  coverRight: { top: 0, bottom: 0, right: 0 },
-                  coverLeft: { top: 0, bottom: 0, left: 0 },
-                }[animation],
-              }
-            },
-          ),
-        ),
-        className,
-      )}
-    />
+  return (
+    <>
+      {styles.styleElements}
+      <div
+        {...restOfProps}
+        className={styles.className}
+      />
+    </>
   )
 }
 
@@ -102,28 +109,31 @@ type CloseIconContainerProps = CloseIconContainerBaseProps &
   Omit<ComponentPropsWithoutRef<'button'>, keyof CloseIconContainerBaseProps>
 
 function CloseIconContainer({ className, color, ...restOfProps }: CloseIconContainerProps) {
+  const styles = composeStyles(
+    useStyle({
+      position: 'absolute',
+      top: 15,
+      right: 15,
+      padding: 0,
+      border: 0,
+      outline: 0,
+      background: 'none',
+      fill: 'currentcolor',
+    }),
+    useStyle(useResponsiveStyle([color] as const, ([color]) => ({
+      color: color == null ? 'rgba(161, 168, 194, 0.5)' : colorToString(color),
+    }))),
+    className
+  )
+
   return (
-    <button
-      {...restOfProps}
-      className={cx(
-        useStyle({
-          position: 'absolute',
-          top: 15,
-          right: 15,
-          padding: 0,
-          border: 0,
-          outline: 0,
-          background: 'none',
-          fill: 'currentcolor',
-        }),
-        useStyle(
-          useResponsiveStyle([color] as const, ([color]) => ({
-            color: color == null ? 'rgba(161, 168, 194, 0.5)' : colorToString(color),
-          })),
-        ),
-        className,
-      )}
-    />
+    <>
+      {styles.styleElements}
+      <button
+        {...restOfProps}
+        className={styles.className}
+      />
+    </>
   )
 }
 

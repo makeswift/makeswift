@@ -7,9 +7,8 @@ import {
 import { type ReactNode } from 'react'
 
 import {
-  createRootStyleCache,
+  createMakeswiftStylesRegistry,
   RootStyleRegistry,
-  styleTagHtml,
   type RootStyleProps,
 } from '@makeswift/runtime/unstable-framework-support'
 
@@ -28,17 +27,23 @@ type RenderOptions = RootStyleProps &
 
 export async function renderHtml(
   children: ReactNode,
-  { cacheKey, enableCssReset, ...renderOptions }: RenderOptions = {},
-): Promise<{ getStyles: () => string; html: ReactDOMServerReadableStream }> {
-  const cache = createRootStyleCache({ key: cacheKey })
-  const getStyles = () => styleTagHtml({ cacheKey: cache.key, ...cache.flush() })
+  { classNamePrefix, enableCssReset, ...renderOptions }: RenderOptions = {},
+): Promise<{ getStyles: () => string, html: ReactDOMServerReadableStream }> {
+  const stylesRegistry = createMakeswiftStylesRegistry()
 
   const html = await renderToReadableStream(
-    <RootStyleRegistry cache={cache} enableCssReset={enableCssReset}>
+    <RootStyleRegistry
+      classNamePrefix={classNamePrefix}
+      enableCssReset={enableCssReset}
+      stylesRegistry={stylesRegistry}
+      shouldRenderStyleElements={false}
+    >
       {children}
     </RootStyleRegistry>,
     { ...renderOptions },
   )
+
+  const getStyles = () => stylesRegistry.serializeToHtmlStyleTags()
 
   return { html, getStyles }
 }

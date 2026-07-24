@@ -1,13 +1,15 @@
-import { type ReactNode } from 'react'
+'use client'
+
+import { type ReactNode, memo } from 'react'
 
 import { type ElementData } from '../../../state/read-only-state'
 
 import { useControlDefs } from '../hooks/use-control-defs'
 import { useResolvedProps } from '../hooks/use-resolved-props'
 import { useControlInstances } from '../hooks/use-control-instances'
-import { useStylesheetFactory } from '../hooks/use-stylesheet-factory'
 
 import { resolveLegacyDescriptorProp } from '../legacy-controls'
+import { useControlledStyles } from '../css-runtime/hooks/use-controlled-styles'
 
 export function ResolveProps({
   element,
@@ -19,22 +21,38 @@ export function ResolveProps({
   const [legacyDescriptors, definitions] = useControlDefs({ elementType: element.type })
 
   const elementKey = element.key
-  const stylesheetFactory = useStylesheetFactory()
+  const { getStylesheet, styleElements } = useControlledStyles({ namespace: elementKey })
   const controlInstances = useControlInstances(elementKey)
   const resolvedProps = useResolvedProps({
     elementKey,
     propDefs: definitions,
     propData: element.props,
     controlInstances,
-    stylesheetFactory,
+    getStylesheet
   })
 
   const renderFn = Object.entries(legacyDescriptors).reduceRight(
     (renderFn, [propName, descriptor]) =>
       props =>
-        resolveLegacyDescriptorProp(descriptor, propName, element.props[propName], props, renderFn),
+        resolveLegacyDescriptorProp(descriptor, propName, element.key, element.props[propName], props, renderFn),
     renderComponent,
   )
 
-  return renderFn(resolvedProps)
+  // TODO comment on importance of order here
+  return (
+    <>
+      <MemoizedConsumer renderFn={renderFn} resolvedProps={resolvedProps} />
+      {styleElements}
+    </>
+  )
 }
+
+const MemoizedConsumer = memo(function MemoizedConsumer({
+  renderFn,
+  resolvedProps,
+}: {
+  renderFn: (props: Record<string, unknown>) => ReactNode
+  resolvedProps: Record<string, unknown>
+}) {
+  return renderFn(resolvedProps)
+})

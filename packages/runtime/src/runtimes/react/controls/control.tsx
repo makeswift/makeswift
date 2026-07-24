@@ -9,13 +9,15 @@ import {
 import { ReactNode } from 'react'
 
 import { useResolvedValue } from '../hooks/use-resolved-value'
-import { useStylesheetFactory } from '../hooks/use-stylesheet-factory'
-import { useCssId } from '../hooks/use-css-id'
+import { useBreakpoints } from '../hooks/use-breakpoints'
+import { useControlledStyles } from '../css-runtime/hooks/use-controlled-styles'
 
 type ControlValueProps = {
   definition: ControlDefinition
   data: DataType<ControlDefinition> | undefined
   children(value: ResolvedValueType<ControlDefinition>): ReactNode
+  elementKey: string
+  propPathComponents: string[]
   control?: InstanceType<ControlDefinition>
 }
 
@@ -23,19 +25,34 @@ export function ControlValue({
   data,
   definition,
   children,
+  elementKey,
+  propPathComponents,
   control,
 }: ControlValueProps): ReactNode {
-  const stylesheetFactory = useStylesheetFactory()
-  const id = `cv-${useCssId()}`
+  const breakpoints = useBreakpoints()
+
+  // Namespaced separately from the "top-level" (see ResolveProps component) to avoid attempted double rendering
+  const { getStylesheet, styleElements } = useControlledStyles({ namespace: `${elementKey}-controlValue-nested`})
+
+  const stylesheet = getStylesheet({
+    breakpointsData: breakpoints,
+    elementKey,
+    propPathComponents,
+  })
+
 
   const value = useResolvedValue(
     data,
     (data, resourceResolver) =>
-      definition.resolveValue(data, resourceResolver, stylesheetFactory.get(id), control),
+      definition.resolveValue(data, resourceResolver, stylesheet, control),
     (definition.config as any)?.defaultValue,
+    [stylesheet.key()]
   )
 
-  stylesheetFactory.useDefinedStyles()
-
-  return children(value)
+  return (
+    <>
+      {children(value)}
+      {styleElements}
+    </>
+  )
 }

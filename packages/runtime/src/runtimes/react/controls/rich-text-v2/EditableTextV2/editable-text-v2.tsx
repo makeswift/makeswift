@@ -11,7 +11,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { createEditor } from 'slate'
+import { createEditor, NodeEntry, Range } from 'slate'
 import isHotkey from 'is-hotkey'
 import {
   withReact,
@@ -21,6 +21,7 @@ import {
   Slate,
   Editable,
 } from 'slate-react'
+import { Text as SlateText } from 'slate'
 
 import {
   RichTextV2Definition,
@@ -38,6 +39,7 @@ import { RichTextV2Element } from './render-element'
 import { RichTextV2Leaf } from './render-leaf'
 import { useSyncRemoteChanges } from './useRemoteChanges'
 import { defaultValue, usePresetValue } from './usePresetValue'
+import { Stylesheet } from '@makeswift/controls'
 
 export type RichTextV2ControlValue = ReactNode
 
@@ -47,9 +49,10 @@ type Props = {
   text?: RichTextDataV2
   definition: RichTextV2Definition
   control: RichTextV2Control | null
+  parentStylesheet: Stylesheet
 }
 
-export function EditableTextV2({ text, definition, control }: Props) {
+export function EditableTextV2({ text, definition, control, parentStylesheet }: Props) {
   const plugins = useMemo(() => definition.config.plugins, [definition])
 
   const [editor] = useState(() =>
@@ -116,18 +119,40 @@ export function EditableTextV2({ text, definition, control }: Props) {
 
   // ------ Rendering ------
 
+  /*
+    This is needed for the css runtime. It tells Slate to "decorate" each leaf node with
+    its root -> leaf path through the editor. This path is used as part of the unique identifier
+    which is hashed into a css class name.
+    
+    For "normal" top-level controls, the unique identifier is simply pulled from the element key and prop path.
+    For RichTextV2 plugins, the "prop path" equivalent is managed by Slate as it creates and manages Slate nodes.
+    For that reason, this decorator exists so that we can surface the Slate-managed path to the css runtime for
+    class name generation (and regeneration, on node insertions/deletions).
+  */
+  const decorate = useCallback(([node, path]: NodeEntry): Range[] => {
+    if (!SlateText.isText(node)) return []
+    return [
+      {
+        anchor: { path, offset: 0 },
+        focus: { path, offset: node.text.length },
+        // @ts-expect-error - this is a custom property that is used by the css runtime
+        _makeswiftLeafPath: `slate-editor-path-[${path.join(',')}]`
+      }
+    ]
+  }, [editor])
+
   const renderElement = useCallback(
     (props: RenderElementProps) => {
-      return <RichTextV2Element {...props} definition={definition} plugins={plugins} />
+      return <RichTextV2Element {...props} definition={definition} plugins={plugins} pathComponents={[]} parentStylesheet={parentStylesheet} />
     },
-    [plugins, definition],
+    [plugins, definition, parentStylesheet],
   )
 
   const renderLeaf = useCallback(
     (props: RenderLeafProps) => {
-      return <RichTextV2Leaf {...props} definition={definition} plugins={plugins} />
+      return <RichTextV2Leaf {...props} definition={definition} plugins={plugins} pathComponents={[]} parentStylesheet={parentStylesheet} />
     },
-    [plugins, definition],
+    [plugins, definition, parentStylesheet],
   )
 
   // ------ Event handlers ------
@@ -187,6 +212,7 @@ export function EditableTextV2({ text, definition, control }: Props) {
   return (
     <Slate editor={editor} value={initialValue}>
       <Editable
+        decorate={decorate}
         renderLeaf={renderLeaf}
         renderElement={renderElement}
         onFocus={handleFocus}

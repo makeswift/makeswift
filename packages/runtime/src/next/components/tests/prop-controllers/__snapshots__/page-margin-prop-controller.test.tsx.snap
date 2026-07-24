@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Page can render MarginPropController v0 data: rendered 1`] = `
+@media only screen and (min-width: 769px) {
+  .ms-icap3d {
+    margin-top: auto;
+    margin-right: auto;
+    margin-bottom: 0px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-icap3d {
+    margin-top: auto;
+    margin-right: auto;
+    margin-bottom: 0px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-icap3d {
+    margin-top: auto;
+    margin-right: auto;
+    margin-bottom: 0px;
+    margin-left: auto;
+  }
+}
+
+
+<div
+  class="ms-icap3d"
+  data-testid="test-id"
+/>
+`;
+
+exports[`Page can render MarginPropController v1 data: rendered 1`] = `
+@media only screen and (min-width: 769px) {
+  .ms-icap3d {
+    margin-top: auto;
+    margin-right: auto;
+    margin-bottom: 0px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-icap3d {
+    margin-top: auto;
+    margin-right: auto;
+    margin-bottom: 0px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-icap3d {
+    margin-top: auto;
+    margin-right: auto;
+    margin-bottom: 0px;
+    margin-left: auto;
+  }
+}
+
+
+<div
+  class="ms-icap3d"
+  data-testid="test-id"
+/>
+`;

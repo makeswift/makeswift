@@ -9,10 +9,11 @@ import {
 
 import { useResourceResolver } from './use-resource-resolver'
 
-import { type StylesheetFactory } from '../stylesheet-factory'
 import { propErrorHandlingProxy } from '../utils/prop-error-handling-proxy'
+import { useBreakpoints } from './use-breakpoints'
 
 import { useResolvableRecord } from './use-resolvable-record'
+import { GetStylesheet } from '../css-runtime/types'
 
 type CacheItem = {
   data: Data
@@ -25,14 +26,15 @@ export function useResolvedProps({
   propDefs,
   propData,
   controlInstances,
-  stylesheetFactory,
+  getStylesheet,
 }: {
   elementKey: string
   propDefs: Record<string, ControlDefinition>
   propData: Record<string, Data>
   controlInstances: Record<string, ControlInstance> | null
-  stylesheetFactory: StylesheetFactory
+  getStylesheet: GetStylesheet
 }): Record<string, unknown> {
+  const breakpoints = useBreakpoints()
   const resourceResolver = useResourceResolver()
 
   const cache = useRef<Record<string, CacheItem>>({}).current
@@ -49,17 +51,23 @@ export function useResolvedProps({
         return cache[propName].resolvedValue
       }
 
+      const stylesheet = getStylesheet({
+        breakpointsData: breakpoints,
+        elementKey,
+        propPathComponents: [propName]
+      })
+
       const resolvedValue = def.resolveValue(
         data,
         resourceResolver,
-        stylesheetFactory.get(propName),
+        stylesheet,
         control,
       )
 
       cache[propName] = { data, control, resolvedValue }
       return resolvedValue
     },
-    [propData, cache, resourceResolver, controlInstances, stylesheetFactory],
+    [propData, cache, resourceResolver, controlInstances, breakpoints, elementKey, getStylesheet],
   )
 
   const resolvables = useMemo<Record<string, Resolvable<unknown>>>(
@@ -86,11 +94,7 @@ export function useResolvedProps({
     })
   }, [props, elementKey])
 
-  // the order is important here, the styles are defined in the process of the props resolution,
-  // calling `useDefinedStyles` before the props are resolved would effectively be a noop
   const resolvedProps = useSyncExternalStore(props.subscribe, props.readStable, props.readStable)
-
-  stylesheetFactory.useDefinedStyles()
 
   return resolvedProps
 }
