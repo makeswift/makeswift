@@ -2,14 +2,13 @@ import { type Middleware, type ThunkAction } from '@reduxjs/toolkit'
 
 import { ControlInstance } from '@makeswift/controls'
 
-import * as PropControllerHandles from '../../modules/prop-controller-handles'
+import * as PropControllers from '../../modules/read-write/prop-controllers'
 
 import { type Action } from '../../actions'
 
 import * as Builder from '../../builder-api/actions'
 
-import { ReadOnlyActionTypes } from '../../actions/internal/read-only-action-types'
-import * as ReadOnly from '../../actions/internal/read-only-actions'
+import { ReadWriteActionTypes } from '../../actions/internal/read-write-action-types'
 
 import { actionMiddleware } from '../../toolkit'
 
@@ -17,7 +16,18 @@ import { createPropController } from '../../../prop-controllers/instances'
 import { HostActionTypes } from '../../host-api'
 
 import * as ReadOnlyState from '../../read-only-state'
-import { type State, type Dispatch } from '../../read-write-state'
+import {
+  type State,
+  type Dispatch,
+  getPropControllersHandle,
+  getPropController,
+} from '../../read-write-state'
+
+import {
+  registerPropControllers,
+  registerPropControllersHandle,
+  unregisterPropControllers,
+} from '../../actions/internal/read-write-actions'
 
 function createAndRegisterPropControllers(
   documentKey: string,
@@ -48,7 +58,7 @@ function createAndRegisterPropControllers(
       {} as Record<string, ControlInstance>,
     )
 
-    dispatch(ReadOnly.registerPropControllers(documentKey, elementKey, propControllers))
+    dispatch(registerPropControllers(documentKey, elementKey, propControllers))
 
     return propControllers
   }
@@ -58,7 +68,7 @@ export function propControllerHandlesMiddleware(): Middleware<Dispatch, State, D
   return actionMiddleware(({ dispatch, getState }) => next => {
     return (action: Action) => {
       switch (action.type) {
-        case ReadOnlyActionTypes.REGISTER_COMPONENT_HANDLE: {
+        case ReadWriteActionTypes.REGISTER_COMPONENT_HANDLE: {
           const { documentKey, elementKey, componentHandle } = action.payload
           const element = ReadOnlyState.getElement(getState(), documentKey, elementKey)
           const propControllers = dispatch(
@@ -68,34 +78,32 @@ export function propControllerHandlesMiddleware(): Middleware<Dispatch, State, D
           if (
             element != null &&
             !ReadOnlyState.isElementReference(element) &&
-            PropControllerHandles.isPropControllersHandle(componentHandle)
+            PropControllers.isPropControllersHandle(componentHandle)
           ) {
-            dispatch(
-              ReadOnly.registerPropControllersHandle(documentKey, elementKey, componentHandle),
-            )
+            dispatch(registerPropControllersHandle(documentKey, elementKey, componentHandle))
             componentHandle.setPropControllers(propControllers)
           }
 
           break
         }
 
-        case ReadOnlyActionTypes.UNREGISTER_COMPONENT_HANDLE: {
+        case ReadWriteActionTypes.UNREGISTER_COMPONENT_HANDLE: {
           const { documentKey, elementKey } = action.payload
-          const handle = ReadOnlyState.getPropControllersHandle(getState(), {
+          const handle = getPropControllersHandle(getState(), {
             documentKey,
             elementKey,
           })
 
           handle?.setPropControllers(null)
 
-          dispatch(ReadOnly.unregisterPropControllers(documentKey, elementKey))
+          dispatch(unregisterPropControllers(documentKey, elementKey))
 
           break
         }
 
         case HostActionTypes.MESSAGE_HOST_PROP_CONTROLLER: {
           const { documentKey, elementKey, propName, message } = action.payload
-          const propController = ReadOnlyState.getPropController(getState(), {
+          const propController = getPropController(getState(), {
             documentKey,
             elementKey,
             propName,

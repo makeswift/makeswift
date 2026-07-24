@@ -1,7 +1,7 @@
 import * as Documents from '../modules/read-only-documents'
 import * as ElementTrees from '../modules/element-trees'
 import { getTranslatableData } from '../../controls/control'
-import type { DescriptorsByComponentType } from '../modules/prop-controllers'
+import type { DescriptorsByComponentType } from '../modules/prop-controller-descriptors'
 
 export function getTranslatableContent(
   descriptors: DescriptorsByComponentType,
