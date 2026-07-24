@@ -1,17 +1,12 @@
 import { type ThunkAction } from '@reduxjs/toolkit'
 
-import { ControlInstance } from '@makeswift/controls'
-
-import { ElementImperativeHandle } from '../../../runtimes/react/element-imperative-handle'
-
 import { type APIResource, APIResourceType, APIResourceLocale } from '../../../api/types'
 import { type Descriptor as PropControllerDescriptor } from '../../../prop-controllers/descriptors'
 
 import { type Breakpoints } from '../../modules/breakpoints'
 import { type ComponentMeta } from '../../modules/components-meta'
-import { type PropControllersHandle } from '../../modules/prop-controller-handles'
 import { type ComponentType } from '../../modules/react-components'
-import { type DescriptorsByComponentType } from '../../modules/prop-controllers'
+import { type DescriptorsByComponentType } from '../../modules/prop-controller-descriptors'
 
 import { type LocaleString, localeStringSchema } from '../../../locale'
 import { type DocumentPayload } from '../../shared-api'
@@ -50,40 +45,6 @@ export type RegisterComponentAction = {
 export type UnregisterComponentAction = {
   type: typeof ReadOnlyActionTypes.UNREGISTER_COMPONENT
   payload: { type: string }
-}
-
-type RegisterComponentHandleAction = {
-  type: typeof ReadOnlyActionTypes.REGISTER_COMPONENT_HANDLE
-  payload: { documentKey: string; elementKey: string; componentHandle: ElementImperativeHandle }
-}
-
-type UnregisterComponentHandleAction = {
-  type: typeof ReadOnlyActionTypes.UNREGISTER_COMPONENT_HANDLE
-  payload: { documentKey: string; elementKey: string }
-}
-
-type RegisterPropControllersHandleAction = {
-  type: typeof ReadOnlyActionTypes.REGISTER_PROP_CONTROLLERS_HANDLE
-  payload: { documentKey: string; elementKey: string; handle: PropControllersHandle }
-}
-
-type UnregisterPropControllersHandleAction = {
-  type: typeof ReadOnlyActionTypes.UNREGISTER_PROP_CONTROLLERS_HANDLE
-  payload: { documentKey: string; elementKey: string }
-}
-
-type RegisterPropControllersAction = {
-  type: typeof ReadOnlyActionTypes.REGISTER_PROP_CONTROLLERS
-  payload: {
-    documentKey: string
-    elementKey: string
-    propControllers: Record<string, ControlInstance>
-  }
-}
-
-type UnregisterPropControllersAction = {
-  type: typeof ReadOnlyActionTypes.UNREGISTER_PROP_CONTROLLERS
-  payload: { documentKey: string; elementKey: string }
 }
 
 type RegisterReactComponentAction = {
@@ -126,12 +87,6 @@ export type ReadOnlyAction =
   | DeleteElementTreeAction
   | RegisterComponentAction
   | UnregisterComponentAction
-  | RegisterComponentHandleAction
-  | UnregisterComponentHandleAction
-  | RegisterPropControllersHandleAction
-  | UnregisterPropControllersHandleAction
-  | RegisterPropControllersAction
-  | UnregisterPropControllersAction
   | RegisterReactComponentAction
   | UnregisterReactComponentAction
   | SetBreakpointsAction
@@ -193,83 +148,6 @@ export function registerComponentEffect(
     return () => {
       dispatch(unregisterComponent(type))
     }
-  }
-}
-
-export function registerComponentHandle(
-  documentKey: string,
-  elementKey: string,
-  componentHandle: ElementImperativeHandle,
-): RegisterComponentHandleAction {
-  return {
-    type: ReadOnlyActionTypes.REGISTER_COMPONENT_HANDLE,
-    payload: { documentKey, elementKey, componentHandle },
-  }
-}
-
-function unregisterComponentHandle(
-  documentKey: string,
-  elementKey: string,
-): UnregisterComponentHandleAction {
-  return {
-    type: ReadOnlyActionTypes.UNREGISTER_COMPONENT_HANDLE,
-    payload: { documentKey, elementKey },
-  }
-}
-
-export function registerComponentHandleEffect(
-  documentKey: string,
-  elementKey: string,
-  componentHandle: ElementImperativeHandle,
-): ThunkAction<() => void, unknown, unknown, ReadOnlyAction> {
-  return dispatch => {
-    dispatch(registerComponentHandle(documentKey, elementKey, componentHandle))
-
-    return () => {
-      dispatch(unregisterComponentHandle(documentKey, elementKey))
-    }
-  }
-}
-
-export function registerPropControllersHandle(
-  documentKey: string,
-  elementKey: string,
-  handle: PropControllersHandle,
-): RegisterPropControllersHandleAction {
-  return {
-    type: ReadOnlyActionTypes.REGISTER_PROP_CONTROLLERS_HANDLE,
-    payload: { documentKey, elementKey, handle },
-  }
-}
-
-export function unregisterPropControllersHandle(
-  documentKey: string,
-  elementKey: string,
-): UnregisterPropControllersHandleAction {
-  return {
-    type: ReadOnlyActionTypes.UNREGISTER_PROP_CONTROLLERS_HANDLE,
-    payload: { documentKey, elementKey },
-  }
-}
-
-export function registerPropControllers(
-  documentKey: string,
-  elementKey: string,
-  propControllers: Record<string, ControlInstance>,
-): RegisterPropControllersAction {
-  return {
-    type: ReadOnlyActionTypes.REGISTER_PROP_CONTROLLERS,
-    payload: { documentKey, elementKey, propControllers },
-  }
-}
-
-export function unregisterPropControllers(
-  documentKey: string,
-  elementKey: string,
-): UnregisterPropControllersAction {
-  return {
-    type: ReadOnlyActionTypes.UNREGISTER_PROP_CONTROLLERS,
-    payload: { documentKey, elementKey },
   }
 }
 

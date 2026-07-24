@@ -6,7 +6,7 @@ import { RichTextV1Control, RichTextV1Definition } from '../../../../controls/ri
 import {
   isPropControllersHandle,
   PropControllersHandle,
-} from '../../../../state/modules/prop-controller-handles'
+} from '../../../../state/modules/read-write/prop-controllers'
 
 import { useIsReadOnly } from '../../hooks/use-is-read-only'
 
