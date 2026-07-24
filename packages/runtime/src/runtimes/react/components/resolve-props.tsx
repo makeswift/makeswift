@@ -20,7 +20,7 @@ export function ResolveProps({
 
   const elementKey = element.key
   const stylesheetFactory = useStylesheetFactory()
-  const controlInstances = useControlInstances(elementKey)
+  const controlInstances = useControlInstances()
   const resolvedProps = useResolvedProps({
     elementKey,
     propDefs: definitions,

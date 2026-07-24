@@ -1,24 +1,70 @@
 'use client'
 
-import { ReactNode, memo, useEffect } from 'react'
-import { ElementImperativeHandle } from '../element-imperative-handle'
+import { ReactNode, memo, useMemo, useEffect } from 'react'
+
+import {
+  createPropControllers,
+  registerComponentHandleEffect,
+  registerPropControllersEffect,
+} from '../../../state/actions/internal/read-write-actions'
+import { mountComponentEffect } from '../../../state/builder-api/actions'
+
 import { useDispatch } from '../hooks/use-dispatch'
 import { useDocumentKey } from '../hooks/use-document-context'
 import { useDisableRegisterElement } from '../hooks/use-disable-register-element'
-import { mountComponentEffect } from '../../../state/builder-api/actions'
-import { registerComponentHandleEffect } from '../../../state/actions/internal/read-write-actions'
 
-type RegisterChildrenAsElementProps = {
-  elementKey: string
-  componentHandle: ElementImperativeHandle
-  children?: ReactNode
-}
+import { ElementImperativeHandle } from '../element-imperative-handle'
+
+import { ControlInstancesProvider } from './control-instances-context'
 
 export const ElementRegistration = memo(function ElementRegistration({
   elementKey,
+  componentType,
   componentHandle,
   children,
-}: RegisterChildrenAsElementProps): ReactNode {
+}: {
+  elementKey: string
+  componentHandle: ElementImperativeHandle
+  componentType: string
+  children?: ReactNode
+}): ReactNode {
+  const dispatch = useDispatch()
+  const documentKey = useDocumentKey()
+
+  const isRegisterElementDisabled = useDisableRegisterElement()
+
+  const controlInstances = useMemo(
+    () =>
+      documentKey
+        ? dispatch(createPropControllers({ documentKey, elementKey, componentType }))
+        : null,
+    [dispatch, documentKey, elementKey, componentType],
+  )
+
+  useEffect(() => {
+    if (documentKey == null || controlInstances == null || isRegisterElementDisabled) return
+
+    return dispatch(registerPropControllersEffect(documentKey, elementKey, controlInstances))
+  }, [dispatch, documentKey, elementKey, controlInstances, isRegisterElementDisabled])
+
+  return (
+    <ControlInstancesProvider value={controlInstances}>
+      <ComponentRegistration elementKey={elementKey} componentHandle={componentHandle}>
+        {children}
+      </ComponentRegistration>
+    </ControlInstancesProvider>
+  )
+})
+
+export const ComponentRegistration = memo(function ElementRegistration({
+  elementKey,
+  componentHandle,
+  children,
+}: {
+  elementKey: string
+  componentHandle: ElementImperativeHandle
+  children?: ReactNode
+}): ReactNode {
   const dispatch = useDispatch()
   const documentKey = useDocumentKey()
 
@@ -28,7 +74,7 @@ export const ElementRegistration = memo(function ElementRegistration({
     if (documentKey == null || isRegisterElementDisabled) return
 
     return dispatch(registerComponentHandleEffect(documentKey, elementKey, componentHandle))
-  }, [dispatch, documentKey, elementKey, isRegisterElementDisabled])
+  }, [dispatch, documentKey, elementKey, componentHandle, isRegisterElementDisabled])
 
   useEffect(() => {
     if (documentKey == null || isRegisterElementDisabled) return
