@@ -8,8 +8,7 @@ import * as Documents from './modules/read-only-documents'
 import * as ElementTrees from './modules/element-trees'
 import * as ReactComponents from './modules/react-components'
 import * as ComponentsMeta from './modules/components-meta'
-import * as PropControllers from './modules/prop-controllers'
-import * as PropControllerHandles from './modules/prop-controller-handles'
+import * as PropControllerDescriptors from './modules/prop-controller-descriptors'
 import * as IsInBuilder from './modules/is-in-builder'
 import * as IsReadOnly from './modules/is-read-only'
 import * as BuilderEditMode from './modules/builder-edit-mode'
@@ -44,8 +43,7 @@ export const reducers = {
   elementTrees: ElementTrees.reducer,
   reactComponents: ReactComponents.reducer,
   componentsMeta: ComponentsMeta.reducer,
-  propControllers: PropControllers.reducer,
-  propControllerHandles: PropControllerHandles.reducer,
+  propControllerDescriptors: PropControllerDescriptors.reducer,
   isInBuilder: IsInBuilder.reducer,
   builderEditMode: BuilderEditMode.reducer,
   breakpoints: Breakpoints.reducer,
@@ -59,8 +57,7 @@ export type State = {
   elementTrees: ElementTrees.State
   reactComponents: ReactComponents.State
   componentsMeta: ComponentsMeta.State
-  propControllers: PropControllers.State
-  propControllerHandles: PropControllerHandles.State
+  propControllerDescriptors: PropControllerDescriptors.State
   isInBuilder: IsInBuilder.State
   builderEditMode: BuilderEditMode.State
   breakpoints: Breakpoints.State
@@ -117,63 +114,23 @@ export function getComponentMeta(state: State, type: string): ComponentsMeta.Com
   return ComponentsMeta.getComponentMeta(getComponentsMetaStateSlice(state), type)
 }
 
-function getPropControllersStateSlice(state: State): PropControllers.State {
-  return state.propControllers
+function getPropControllerDescriptorsStateSlice(state: State): PropControllerDescriptors.State {
+  return state.propControllerDescriptors
 }
 
-export function getPropControllerDescriptors(state: State): PropControllers.State {
-  return PropControllers.getPropControllerDescriptors(getPropControllersStateSlice(state))
+export function getPropControllerDescriptors(state: State): PropControllerDescriptors.State {
+  return PropControllerDescriptors.getPropControllerDescriptors(
+    getPropControllerDescriptorsStateSlice(state),
+  )
 }
 
 export function getComponentPropControllerDescriptors(
   state: State,
   componentType: string,
-): PropControllers.DescriptorsByProp | null {
-  return PropControllers.getComponentPropControllerDescriptors(
-    getPropControllersStateSlice(state),
+): PropControllerDescriptors.DescriptorsByProp | null {
+  return PropControllerDescriptors.getComponentPropControllerDescriptors(
+    getPropControllerDescriptorsStateSlice(state),
     componentType,
-  )
-}
-
-function getPropControllerHandlesStateSlice(state: State): PropControllerHandles.State {
-  return state.propControllerHandles
-}
-
-export function getPropControllers(
-  state: State,
-  { documentKey, elementKey }: { documentKey: string; elementKey: string },
-) {
-  return PropControllerHandles.getPropControllers(
-    getPropControllerHandlesStateSlice(state),
-    documentKey,
-    elementKey,
-  )
-}
-
-export function getPropControllersHandle(
-  state: State,
-  { documentKey, elementKey }: { documentKey: string; elementKey: string },
-) {
-  return PropControllerHandles.getPropControllersHandle(
-    getPropControllerHandlesStateSlice(state),
-    documentKey,
-    elementKey,
-  )
-}
-
-export function getPropController(
-  state: State,
-  {
-    documentKey,
-    elementKey,
-    propName,
-  }: { documentKey: string; elementKey: string; propName: string },
-) {
-  return PropControllerHandles.getPropController(
-    getPropControllerHandlesStateSlice(state),
-    documentKey,
-    elementKey,
-    propName,
   )
 }
 
@@ -203,7 +160,7 @@ export function getElementPropControllerDescriptors(
   state: State,
   documentKey: string,
   elementKey: string,
-): Record<string, PropControllers.PropControllerDescriptor> | null {
+): Record<string, PropControllerDescriptors.PropControllerDescriptor> | null {
   const element = getElement(state, documentKey, elementKey)
 
   if (element == null || Documents.isElementReference(element)) return null

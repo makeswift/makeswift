@@ -3,6 +3,6 @@ export { mergeTranslatedContent } from '../state/translations/merge'
 export type {
   DescriptorsByComponentType,
   DescriptorsByProp,
-} from '../state/modules/prop-controllers'
+} from '../state/modules/prop-controller-descriptors'
 export type { ElementData, Data, Element } from '../state/read-only-state'
 export type { TranslationDto } from '@makeswift/controls'

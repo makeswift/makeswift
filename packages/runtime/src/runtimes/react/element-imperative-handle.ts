@@ -5,7 +5,7 @@ import { isMeasurable, measure } from '../../state/modules/read-write/box-models
 import {
   isPropControllersHandle,
   PropControllersHandle,
-} from '../../state/modules/prop-controller-handles'
+} from '../../state/modules/read-write/prop-controllers'
 
 export class ElementImperativeHandle<
     T extends Record<string, Descriptor> = Record<string, Descriptor>,
