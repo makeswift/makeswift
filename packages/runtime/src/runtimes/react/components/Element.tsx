@@ -40,7 +40,11 @@ export const Element = memo(
     useImperativeHandle(ref, () => imperativeHandleRef.current, [])
 
     return (
-      <ElementRegistration componentHandle={imperativeHandleRef.current} elementKey={element.key}>
+      <ElementRegistration
+        componentHandle={imperativeHandleRef.current}
+        elementKey={element.key}
+        componentType={element.type}
+      >
         <FindDomNode ref={findDomNodeCallbackRef}>
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             {isElementReference(element) ? (

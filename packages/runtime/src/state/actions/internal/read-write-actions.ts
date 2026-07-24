@@ -9,8 +9,15 @@ import { type DescriptorsByComponentType } from '../../modules/prop-controller-d
 import { type Measurable } from '../../modules/read-write/box-models'
 import { type PropControllersHandle } from '../../modules/read-write/prop-controllers'
 
+import { createPropController } from '../../../prop-controllers/instances'
+
+import { type Action } from '../../actions'
+import * as Builder from '../../builder-api/actions'
+
 import { type DocumentPayload } from '../../shared-api'
 import { type SerializedState as APIClientCache } from '../../api-client/state'
+import { getComponentPropControllerDescriptors } from '../../read-only-state'
+import { type State } from '../../unified-state'
 
 import { ReadWriteActionTypes } from './read-write-action-types'
 
@@ -176,6 +183,20 @@ export function unregisterPropControllers(
   }
 }
 
+export function registerPropControllersEffect(
+  documentKey: string,
+  elementKey: string,
+  propControllers: Record<string, ControlInstance>,
+): ThunkAction<() => void, unknown, unknown, ReadWriteAction> {
+  return dispatch => {
+    dispatch(registerPropControllers(documentKey, elementKey, propControllers))
+
+    return () => {
+      dispatch(unregisterPropControllers(documentKey, elementKey))
+    }
+  }
+}
+
 export function registerMeasurable(
   documentKey: string,
   elementKey: string,
@@ -215,3 +236,51 @@ export function updateAPIClientCache(payload: APIClientCache): UpdateAPIClientCa
 export function clearAPIClientCache(): ClearAPIClientCache {
   return { type: ReadWriteActionTypes.CLEAR_API_CLIENT_CACHE }
 }
+
+export function createPropControllers({
+  documentKey,
+  elementKey,
+  componentType,
+}: {
+  documentKey: string
+  elementKey: string
+  componentType: string
+}): ThunkAction<Record<string, ControlInstance> | null, State, unknown, Action> {
+  return (dispatch, getState) => {
+    const descriptors = getComponentPropControllerDescriptors(getState(), componentType)
+    if (descriptors == null) return null
+
+    const propControllers = Object.entries(descriptors).reduce(
+      (acc, [propName, descriptor]) => {
+        const propController = createPropController({
+          descriptor,
+          instanceKey: { elementKey, propPath: propName },
+          sendMessage: message =>
+            dispatch(
+              Builder.messageBuilderPropController(documentKey, elementKey, propName, message),
+            ),
+        }) as ControlInstance
+
+        return { ...acc, [propName]: propController }
+      },
+      {} as Record<string, ControlInstance>,
+    )
+
+    return propControllers
+  }
+}
+/*
+export function createAndRegisterPropControllers(
+  documentKey: string,
+  elementKey: string,
+): ThunkAction<Record<string, ControlInstance> | null, State, unknown, Action> {
+  return dispatch => {
+    const propControllers = dispatch(createPropControllers(documentKey, elementKey))
+
+    if (propControllers != null)
+      dispatch(ReadOnly.registerPropControllers(documentKey, elementKey, propControllers))
+
+    return propControllers
+  }
+}
+*/
