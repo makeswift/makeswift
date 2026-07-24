@@ -6,7 +6,10 @@ import {
 } from '@makeswift/controls'
 
 import { getTranslatableContent } from '../translations/get'
-import { DescriptorsByComponentType, DescriptorsByProp } from '../modules/prop-controllers'
+import {
+  DescriptorsByComponentType,
+  DescriptorsByProp,
+} from '../modules/prop-controller-descriptors'
 
 import { deserializeControls } from '../../builder/serialization'
 import {

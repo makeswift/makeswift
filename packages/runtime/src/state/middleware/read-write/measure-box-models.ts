@@ -3,7 +3,7 @@ import { type Middleware } from '@reduxjs/toolkit'
 import * as BoxModels from '../../modules/read-write/box-models'
 import { type Action } from '../../actions'
 
-import { ReadOnlyActionTypes } from '../../actions/internal/read-only-action-types'
+import { ReadWriteActionTypes } from '../../actions/internal/read-write-action-types'
 import * as ReadWriteActions from '../../actions/internal/read-write-actions'
 
 import { actionMiddleware } from '../../toolkit'
@@ -14,7 +14,7 @@ export function measureBoxModelsMiddleware(): Middleware<Dispatch, State, Dispat
   return actionMiddleware(({ dispatch }) => next => {
     return (action: Action) => {
       switch (action.type) {
-        case ReadOnlyActionTypes.REGISTER_COMPONENT_HANDLE: {
+        case ReadWriteActionTypes.REGISTER_COMPONENT_HANDLE: {
           if (BoxModels.isMeasurable(action.payload.componentHandle)) {
             dispatch(
               ReadWriteActions.registerMeasurable(
@@ -28,7 +28,7 @@ export function measureBoxModelsMiddleware(): Middleware<Dispatch, State, Dispat
           break
         }
 
-        case ReadOnlyActionTypes.UNREGISTER_COMPONENT_HANDLE:
+        case ReadWriteActionTypes.UNREGISTER_COMPONENT_HANDLE:
           dispatch(
             ReadWriteActions.unregisterMeasurable(
               action.payload.documentKey,

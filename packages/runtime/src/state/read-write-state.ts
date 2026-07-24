@@ -3,6 +3,7 @@ import { combineReducers, type ThunkAction, type ThunkDispatch } from '@reduxjs/
 import * as Documents from './modules/read-write/read-write-documents'
 import * as BoxModels from './modules/read-write/box-models'
 import * as Pointer from './modules/read-write/pointer'
+import * as PropControllers from './modules/read-write/prop-controllers'
 import * as ElementImperativeHandles from './modules/read-write/element-imperative-handles'
 
 import { type Action } from './actions'
@@ -21,6 +22,7 @@ const reducers = {
   documents: Documents.reducer,
   boxModels: BoxModels.reducer,
   pointer: Pointer.reducer,
+  propControllers: PropControllers.reducer,
   elementImperativeHandles: ElementImperativeHandles.reducer,
 }
 
@@ -32,6 +34,7 @@ export type State = Omit<ReadOnlyState.State, 'documents'> & {
   documents: Documents.State
   boxModels: BoxModels.State
   pointer: Pointer.State
+  propControllers: PropControllers.State
   elementImperativeHandles: ElementImperativeHandles.State
 }
 
@@ -103,6 +106,48 @@ export function getElementImperativeHandlesContainingElement(
   }
 
   return filteredElementImperativeHandles
+}
+
+function getPropControllersStateSlice(state: State): PropControllers.State {
+  return state.propControllers
+}
+
+export function getPropControllers(
+  state: State,
+  { documentKey, elementKey }: { documentKey: string; elementKey: string },
+) {
+  return PropControllers.getPropControllers(
+    getPropControllersStateSlice(state),
+    documentKey,
+    elementKey,
+  )
+}
+
+export function getPropControllersHandle(
+  state: State,
+  { documentKey, elementKey }: { documentKey: string; elementKey: string },
+) {
+  return PropControllers.getPropControllersHandle(
+    getPropControllersStateSlice(state),
+    documentKey,
+    elementKey,
+  )
+}
+
+export function getPropController(
+  state: State,
+  {
+    documentKey,
+    elementKey,
+    propName,
+  }: { documentKey: string; elementKey: string; propName: string },
+) {
+  return PropControllers.getPropController(
+    getPropControllersStateSlice(state),
+    documentKey,
+    elementKey,
+    propName,
+  )
 }
 
 export function setupBuilderProxy(
