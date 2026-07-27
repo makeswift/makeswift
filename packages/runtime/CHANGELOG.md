@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.8-canary.14
+
+### Patch Changes
+
+- 9381a84: fix: don't register elements when we're not in the builder
+
 ## 0.28.8-canary.13
 
 ### Patch Changes
