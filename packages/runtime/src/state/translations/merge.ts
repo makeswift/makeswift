@@ -6,9 +6,11 @@ import {
   Types as PropControllerTypes,
 } from '@makeswift/prop-controllers'
 import { ReactMergeTranslationsVisitor } from '../../controls/visitors/merge-translations-visitor'
-import { isLegacyDescriptor } from '../../prop-controllers/descriptors'
-import { Descriptor as PropControllerDescriptor } from '../../prop-controllers/descriptors'
-import type { DescriptorsByComponentType } from '../modules/prop-controllers'
+import {
+  isLegacyDescriptor,
+  Descriptor as PropControllerDescriptor,
+} from '../../prop-controllers/descriptors'
+import type { DescriptorsByComponentType } from '../modules/prop-controller-descriptors'
 
 export function mergeTranslatedContent(
   descriptors: DescriptorsByComponentType,
