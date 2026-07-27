@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.8-canary.15
+
+### Patch Changes
+
+- 05f2b8e: refactor: move prop controllers to read-write state
+
 ## 0.28.8-canary.14
 
 ### Patch Changes
