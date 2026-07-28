@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`elementTreeMiddleware correctly tracks document changes: final element ids 1`] = `
+exports[`updateElementTreeMiddleware correctly tracks document changes: final element ids 1`] = `
 Map {
   "68864cd7-e607-4b19-9de2-fafdc9590ffb" => "hero-section",
   "c9e7d4ba-9511-4d70-bda1-9e5804fe6f27" => "cta",
@@ -8,7 +8,7 @@ Map {
 }
 `;
 
-exports[`elementTreeMiddleware correctly tracks document changes: final elements 1`] = `
+exports[`updateElementTreeMiddleware correctly tracks document changes: final elements 1`] = `
 Map {
   "3d357687-70a6-4f18-9f48-91dd8cc9b15c" => {
     "key": "3d357687-70a6-4f18-9f48-91dd8cc9b15c",
@@ -1597,14 +1597,14 @@ Map {
 }
 `;
 
-exports[`elementTreeMiddleware correctly tracks document changes: initial element ids 1`] = `
+exports[`updateElementTreeMiddleware correctly tracks document changes: initial element ids 1`] = `
 Map {
   "68864cd7-e607-4b19-9de2-fafdc9590ffb" => "hero",
   "c9e7d4ba-9511-4d70-bda1-9e5804fe6f27" => "cta",
 }
 `;
 
-exports[`elementTreeMiddleware correctly tracks document changes: initial elements 1`] = `
+exports[`updateElementTreeMiddleware correctly tracks document changes: initial elements 1`] = `
 Map {
   "3d357687-70a6-4f18-9f48-91dd8cc9b15c" => {
     "key": "3d357687-70a6-4f18-9f48-91dd8cc9b15c",
