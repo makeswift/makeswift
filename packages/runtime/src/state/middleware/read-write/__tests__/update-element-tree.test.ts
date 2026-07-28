@@ -1,80 +1,22 @@
 import { configureStore as configureReduxStore } from '@reduxjs/toolkit'
 
-import { ElementImperativeHandle } from '../../runtimes/react/element-imperative-handle'
-import { createReactRuntime } from '../../runtimes/react/testing/react-runtime'
+import { createReactRuntime } from '../../../../runtimes/react/testing/react-runtime'
 
-import { middlewareOptions } from '../toolkit'
+import { middlewareOptions } from '../../../toolkit'
+import { changeDocument } from '../../../host-api'
+import { registerDocument, unregisterDocument } from '../../../shared-api'
+import { createRootReducer } from '../../../read-write-state'
+import * as State from '../../../read-only-state'
 
-import { registerDocument, unregisterDocument } from '../shared-api'
-import { changeDocument } from '../host-api'
-import { registerComponentHandle } from '../actions/internal/read-write-actions'
+import { buildElementTree } from '../../../modules/element-trees'
 
-import { createRootReducer } from '../read-write-state'
-import { readOnlyElementTreeMiddleware } from '../middleware/read-only-element-tree'
-import { propControllerHandlesMiddleware } from '../middleware/read-write/prop-controller-handles'
-import { updateElementTreeMiddleware } from '../middleware/read-write/update-element-tree'
-
-import * as State from '../read-only-state'
+import { readOnlyElementTreeMiddleware } from '../../read-only-element-tree'
+import { updateElementTreeMiddleware } from '../update-element-tree'
 
 import * as RootElementFixtures from './fixtures/root-elements'
 import * as OperationFixtures from './fixtures/operations'
-import { buildElementTree } from '../modules/element-trees'
 
-describe('propControllerHandlesMiddleware', () => {
-  it('registers prop controllers for element data', () => {
-    // Arrange
-    const documentKey = 'documentKey'
-    const element: State.Element = { key: 'elementKey', type: 'type', props: {} }
-    const store = configureReduxStore({
-      reducer: createRootReducer(),
-      middleware: getDefaultMiddleware =>
-        getDefaultMiddleware(middlewareOptions).concat(
-          readOnlyElementTreeMiddleware(),
-          updateElementTreeMiddleware(),
-          propControllerHandlesMiddleware(),
-        ),
-    })
-
-    const setPropControllers = jest.fn()
-    const handle = new ElementImperativeHandle()
-
-    handle.callback(() => ({ setPropControllers }))
-
-    store.dispatch(registerDocument(State.createBaseDocument(documentKey, element, null)))
-
-    // Act
-    store.dispatch(registerComponentHandle(documentKey, element.key, handle))
-
-    // Assert
-    expect(setPropControllers).toHaveBeenCalled()
-  })
-
-  it("doesn't register prop controllers for element references", () => {
-    // Arrange
-    const documentKey = 'documentKey'
-    const element: State.Element = { type: 'reference', key: 'elementKey', value: 'value' }
-    const store = configureReduxStore({
-      reducer: createRootReducer(),
-      middleware: getDefaultMiddleware =>
-        getDefaultMiddleware(middlewareOptions).concat(propControllerHandlesMiddleware()),
-    })
-
-    const setPropControllers = jest.fn()
-    const handle = new ElementImperativeHandle()
-
-    handle.callback(() => ({ setPropControllers }))
-
-    store.dispatch(registerDocument(State.createBaseDocument(documentKey, element, null)))
-
-    // Act
-    store.dispatch(registerComponentHandle(documentKey, element.key, handle))
-
-    // Assert
-    expect(setPropControllers).not.toHaveBeenCalled()
-  })
-})
-
-describe('elementTreeMiddleware', () => {
+describe('updateElementTreeMiddleware', () => {
   it('correctly tracks document changes', () => {
     // Arrange
     const documentKey = 'documentKey'
@@ -93,6 +35,7 @@ describe('elementTreeMiddleware', () => {
     const getElementIds = () => State.getElementIds(store.getState(), documentKey)
     const newElementTree = () =>
       buildElementTree(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
         State.getDocument(store.getState(), documentKey)?.rootElement!,
         State.getPropControllerDescriptors(runtime.protoStore.getState()),
       )
