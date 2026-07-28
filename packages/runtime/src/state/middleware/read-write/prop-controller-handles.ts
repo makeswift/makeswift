@@ -27,6 +27,7 @@ import {
   registerPropControllers,
   registerPropControllersHandle,
   unregisterPropControllers,
+  unregisterPropControllersHandle,
 } from '../../actions/internal/read-write-actions'
 
 function createAndRegisterPropControllers(
@@ -97,6 +98,7 @@ export function propControllerHandlesMiddleware(): Middleware<Dispatch, State, D
           handle?.setPropControllers(null)
 
           dispatch(unregisterPropControllers(documentKey, elementKey))
+          dispatch(unregisterPropControllersHandle(documentKey, elementKey))
 
           break
         }

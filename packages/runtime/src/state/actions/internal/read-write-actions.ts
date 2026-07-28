@@ -110,7 +110,7 @@ export function registerComponentHandle(
   }
 }
 
-function unregisterComponentHandle(
+export function unregisterComponentHandle(
   documentKey: string,
   elementKey: string,
 ): UnregisterComponentHandleAction {
