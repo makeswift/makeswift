@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.8-canary.16
+
+### Patch Changes
+
+- 1e6c66c: fix: unregister prop controllers handle when the component unmounts
+
 ## 0.28.8-canary.15
 
 ### Patch Changes
