@@ -9,4 +9,5 @@ export type Dispatch = ThunkDispatch<State, unknown, Action>
 export type ReadOnlyReducer = Reducer<ReadOnlyState>
 export type ReadWriteDispatch = ThunkDispatch<ReadWriteState, unknown, Action>
 
+export { type ReadWriteState }
 export const isReadWriteState = (state: State): state is ReadWriteState => 'boxModels' in state
