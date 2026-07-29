@@ -20,6 +20,7 @@ import { readOnlyElementTreeMiddleware } from './middleware/read-only-element-tr
 import { makeswiftApiClientSyncMiddleware } from './middleware/makeswift-api-client-sync'
 import { type BreakpointWatch, breakpointWatchMixin } from './mixins/breakpoint-watch'
 
+import { flushActionBuffer } from './actions/internal/read-write-actions'
 import { type Action } from './actions'
 
 import { type State as ReadWriteState } from './read-write-state'
@@ -118,6 +119,7 @@ export function conditionalReadWriteMiddleware(
       }
 
       if (state.isReadOnly) {
+        // `middlewareRef` is set, but we're still somehow in a read-only state
         console.error('Read-write state mismatch', {
           isReadOnly: state.isReadOnly,
           middlewareRef: middlewareRef.current,
@@ -162,7 +164,7 @@ export interface ReadWriteStateMixin {
   loadReadWriteStateIfNeeded(): Promise<() => void>
 }
 
-function withMixin<M extends {}>(mixin: M): StoreEnhancer<M> {
+function withMixin<M extends object>(mixin: M): StoreEnhancer<M> {
   return next => (reducer, preloadedState?) => ({
     ...next(reducer, preloadedState),
     ...mixin,
@@ -221,6 +223,12 @@ export function configureReadWriteStore({
 
       const dispatch = store.dispatch as ReadWriteDispatch
       const builderProxyCleanup = dispatch(setupBuilderProxy(builderProxy))
+
+      // trigger a flush of buffered actions in `conditionalReadWriteMiddleware`;
+      // the `dispatch(setupBuilderProxy(builderProxy))` call above is not sufficient
+      // as it dispatches a thunk action, which is intercepted and handled by the
+      // default thunk middleware and never reaches `conditionalReadWriteMiddleware`
+      dispatch(flushActionBuffer())
 
       readWriteCleanup = () => {
         readWriteMiddlewareRef.current = null

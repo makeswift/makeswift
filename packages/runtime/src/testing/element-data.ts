@@ -6,10 +6,10 @@ import {
   type MakeswiftComponentSnapshot,
 } from '../client'
 import { CacheData } from '../api/api-resources-client'
-import { type ElementData } from '../state/read-only-state'
+import { type Element, type ElementData } from '../state/read-only-state'
 import { MakeswiftComponentType } from '../components/builtin/constants'
 
-export function createRootComponent(elements: ElementData[], rootId?: string) {
+export function createRootComponent(elements: Element[], rootId?: string) {
   return {
     key: rootId ?? uuid(),
     type: MakeswiftComponentType.Root,
@@ -31,27 +31,27 @@ export function createRootComponent(elements: ElementData[], rootId?: string) {
 }
 
 const isDocument = (
-  elementDataOrDocument: ElementData | MakeswiftPageDocument,
-): elementDataOrDocument is MakeswiftPageDocument =>
-  'snippets' in elementDataOrDocument ||
-  'fonts' in elementDataOrDocument ||
-  'meta' in elementDataOrDocument ||
-  'seo' in elementDataOrDocument
+  elementOrDocument: Element | MakeswiftPageDocument,
+): elementOrDocument is MakeswiftPageDocument =>
+  'snippets' in elementOrDocument ||
+  'fonts' in elementOrDocument ||
+  'meta' in elementOrDocument ||
+  'seo' in elementOrDocument
 
 export function createMakeswiftPageSnapshot(
-  elementDataOrDocument: ElementData | MakeswiftPageDocument,
+  elementOrDocument: Element | MakeswiftPageDocument,
   {
     cacheData = {},
     locale = null,
   }: { cacheData?: Partial<MakeswiftPageSnapshot['cacheData']>; locale?: string | null } = {},
 ): MakeswiftPageSnapshot {
   return {
-    document: isDocument(elementDataOrDocument)
-      ? elementDataOrDocument
+    document: isDocument(elementOrDocument)
+      ? elementOrDocument
       : {
           id: 'test-page-id',
           site: { id: 'test-site-id' },
-          data: elementDataOrDocument,
+          data: elementOrDocument,
           snippets: [],
           fonts: [],
           meta: {},

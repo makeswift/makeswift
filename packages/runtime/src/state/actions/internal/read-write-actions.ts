@@ -14,6 +14,10 @@ import { type SerializedState as APIClientCache } from '../../api-client/state'
 
 import { ReadWriteActionTypes } from './read-write-action-types'
 
+type FlushActionBufferAction = {
+  type: typeof ReadWriteActionTypes.FLUSH_ACTION_BUFFER
+}
+
 type ChangeElementTreeAction = {
   type: typeof ReadWriteActionTypes.CHANGE_ELEMENT_TREE
   payload: {
@@ -78,6 +82,7 @@ type ClearAPIClientCache = {
 }
 
 export type ReadWriteAction =
+  | FlushActionBufferAction
   | ChangeElementTreeAction
   | RegisterComponentHandleAction
   | UnregisterComponentHandleAction
@@ -89,6 +94,10 @@ export type ReadWriteAction =
   | UnregisterMeasurableAction
   | UpdateAPIClientCache
   | ClearAPIClientCache
+
+export function flushActionBuffer() {
+  return { type: ReadWriteActionTypes.FLUSH_ACTION_BUFFER }
+}
 
 export function changeElementTree(
   payload: ChangeElementTreeAction['payload'],
