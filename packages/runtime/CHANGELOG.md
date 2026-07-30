@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.8-canary.17
+
+### Patch Changes
+
+- 00c4523: refactor: make element prop controllers available on first render
+
 ## 0.28.8-canary.16
 
 ### Patch Changes
