@@ -95,8 +95,9 @@ describe('Element registration', () => {
 
     const snapshot = createMakeswiftPageSnapshot(createRootComponent([element], ROOT_COMPONENT_KEY))
     const fullElementKey = { documentKey: snapshot.document.id, elementKey }
+    const instanceKey = { elementKey, propPath: 'className' }
 
-    return { runtime, snapshot, fullElementKey, testElementTree, globalElement }
+    return { runtime, snapshot, testElementTree, globalElement, fullElementKey, instanceKey }
   }
 
   test.each([false, true])(
@@ -119,7 +120,7 @@ describe('Element registration', () => {
   )
 
   test('registers element data prop controllers and handles when editing', async () => {
-    const { runtime, snapshot, fullElementKey, testElementTree } = createFixtures()
+    const { runtime, snapshot, fullElementKey, testElementTree, instanceKey } = createFixtures()
     const siteVersion = TestWorkingSiteVersion
     await act(async () => render(testElementTree(<Page snapshot={snapshot} />, siteVersion)))
 
@@ -128,10 +129,14 @@ describe('Element registration', () => {
 
     const propControllers = getPropControllers(state, fullElementKey)
     expect(propControllers).not.toBe(null)
+    expect(propControllers?.['className']?.instanceKey).toStrictEqual(instanceKey)
 
     const handle = getPropControllersHandle(state, fullElementKey)
     expect(handle).toBeInstanceOf(ElementImperativeHandle)
     expect((handle as ElementImperativeHandle).getDomNode()?.innerHTML).toEqual('This is a test')
+    expect(JSON.parse(JSON.stringify(handle))).toEqual({
+      lastPropControllers: { className: { instanceKey } },
+    })
   })
 
   test('does not register reference or global element prop controllers and handles when editing', async () => {

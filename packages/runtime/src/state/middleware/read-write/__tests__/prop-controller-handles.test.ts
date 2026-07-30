@@ -39,9 +39,6 @@ describe('propControllerHandlesMiddleware', () => {
 
     store.dispatch(registerDocument(State.createBaseDocument(documentKey, element, null)))
 
-    const setPropControllers = jest.fn()
-    handle.callback(() => ({ setPropControllers }))
-
     // Register and assert
     expect(
       getPropControllersHandle(store.getState(), { documentKey, elementKey: element.key }),
@@ -51,8 +48,6 @@ describe('propControllerHandlesMiddleware', () => {
     expect(
       getPropControllersHandle(store.getState(), { documentKey, elementKey: element.key }),
     ).toBe(handle)
-
-    expect(setPropControllers).toHaveBeenCalled()
 
     // Unregister and assert
     store.dispatch(unregisterComponentHandle(documentKey, element.key))
@@ -66,9 +61,6 @@ describe('propControllerHandlesMiddleware', () => {
     const { store, documentKey, handle } = createFixtures()
     const element: State.Element = { type: 'reference', key: 'elementKey', value: 'value' }
 
-    const setPropControllers = jest.fn()
-    handle.callback(() => ({ setPropControllers }))
-
     store.dispatch(registerDocument(State.createBaseDocument(documentKey, element, null)))
 
     // Act and assert
@@ -80,7 +72,5 @@ describe('propControllerHandlesMiddleware', () => {
     expect(
       getPropControllersHandle(store.getState(), { documentKey, elementKey: element.key }),
     ).toBe(null)
-
-    expect(setPropControllers).not.toHaveBeenCalled()
   })
 })

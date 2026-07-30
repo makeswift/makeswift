@@ -21,6 +21,8 @@ import { FallbackComponent } from '../../../components/shared/FallbackComponent'
 import { ErrorBoundary } from '../../../components/shared/ErrorBoundary'
 
 import { useIsReadOnly } from '../hooks/use-is-read-only'
+import { useIsRegisterElementDisabled } from '../hooks/use-disable-register-element'
+
 import { ElementImperativeHandle } from '../element-imperative-handle'
 import { FindDomNode } from '../find-dom-node'
 
@@ -55,10 +57,16 @@ export const Element = memo(
 
     useImperativeHandle(ref, () => imperativeHandleRef.current, [])
 
-    const ElementRegistration = useIsReadOnly() ? NoOp : BuilderElementRegistration
+    const isRegisterElementDisabled = useIsRegisterElementDisabled()
+    const ElementRegistration =
+      useIsReadOnly() || isRegisterElementDisabled ? NoOp : BuilderElementRegistration
 
     return (
-      <ElementRegistration componentHandle={imperativeHandleRef.current} elementKey={element.key}>
+      <ElementRegistration
+        componentHandle={imperativeHandleRef.current}
+        elementKey={element.key}
+        componentType={element.type}
+      >
         <FindDomNode ref={findDomNodeCallbackRef}>
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             {isElementReference(element) ? (
