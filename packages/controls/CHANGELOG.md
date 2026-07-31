@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.21-canary.8
+
+### Patch Changes
+
+- 2532e7a: Formalize `ControlInstance<any>` as `AnyControlInstance` to avoid having to suppress warnings about `any` throughout the codebase
+
 ## 0.1.21-canary.7
 
 ### Patch Changes
