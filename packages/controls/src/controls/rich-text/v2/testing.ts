@@ -1,9 +1,8 @@
 import { z } from 'zod'
 
 import { type DataType } from '../../associated-types'
-import { type Resolvable } from '../../definition'
+import { type AnyControlInstance, type Resolvable } from '../../definition'
 import {
-  ControlInstance,
   DefaultControlInstance,
   type ControlInstanceArgs,
 } from '../../instance'
@@ -29,7 +28,7 @@ class Definition extends RichTextDefinition<RenderedNode> {
     }
   }
 
-  createInstance(args: ControlInstanceArgs): ControlInstance<any> {
+  createInstance(args: ControlInstanceArgs): AnyControlInstance {
     return new DefaultControlInstance(args)
   }
 

@@ -6,6 +6,7 @@ import {
   type ControlInstanceArgs,
   type ControlMessage,
   type InstanceType,
+  type AnyControlInstance,
   ControlInstance,
   DefaultControlInstance,
 } from '@makeswift/controls'
@@ -71,7 +72,7 @@ export type DescriptorsPropControllers<T extends Record<string, Descriptor>> = {
     : DescriptorPropController<T[K]>
 }
 
-export type AnyPropController = ControlInstance<any> | TableFormFieldsPropController
+export type AnyPropController = AnyControlInstance | TableFormFieldsPropController
 
 export function createPropController({
   descriptor,

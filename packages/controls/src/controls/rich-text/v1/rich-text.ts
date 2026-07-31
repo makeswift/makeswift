@@ -5,8 +5,11 @@ import { safeParse, type ParseResult } from '../../../lib/zod'
 
 import { type CopyContext } from '../../../context'
 import { type IntrospectionTarget } from '../../../introspection'
-import { ControlDefinition, type SchemaType } from '../../definition'
-import { ControlInstance } from '../../instance'
+import {
+  ControlDefinition,
+  type AnyControlInstance,
+  type SchemaType,
+} from '../../definition'
 import { ControlDefinitionVisitor } from '../../visitor'
 
 import {
@@ -25,7 +28,7 @@ type ValueType = z.infer<typeof Definition.schema.value>
 
 abstract class Definition<
   RuntimeNode,
-  InstanceType extends ControlInstance<any>,
+  InstanceType extends AnyControlInstance,
 > extends ControlDefinition<
   typeof Definition.type,
   unknown,
