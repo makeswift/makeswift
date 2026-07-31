@@ -31,6 +31,7 @@ import { ControlDefinitionVisitor } from '../visitor'
 
 import { GroupControl } from './group-control'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ItemDefinition = ControlDefinition<string, unknown, any, any, any>
 type KeyDefinitions = Record<string, ItemDefinition>
 

@@ -41,6 +41,11 @@ export class GroupControl<
     }
   }
 
+  subscribe = (_listener: () => void): (() => void) => {
+    // No mutable state, nothing to subscribe to
+    return () => {}
+  }
+
   isCompositeProp = () => true
 
   children = () => [...this.childControls.values()]

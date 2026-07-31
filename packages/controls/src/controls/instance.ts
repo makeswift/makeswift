@@ -43,6 +43,11 @@ export abstract class ControlInstance<
   abstract recv(message: M): void
 
   /**
+   * Subscribe to changes to the instance state; returns an unsubscribe function.
+   */
+  abstract subscribe(listener: () => void): () => void
+
+  /**
    * Returns true if the control represents a composite prop value (a prop that contains other props).
    *
    * In contrast with `children()`, this return value doesn't change over the control lifetime.
@@ -73,6 +78,11 @@ export abstract class ControlInstance<
 export class DefaultControlInstance extends ControlInstance {
   recv(_message: ControlMessage) {
     // Do nothing
+  }
+
+  subscribe(_listener: () => void): () => void {
+    // No mutable state, nothing to subscribe to
+    return () => {}
   }
 
   isCompositeProp(): boolean {
