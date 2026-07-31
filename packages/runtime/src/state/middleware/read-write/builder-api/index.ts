@@ -11,19 +11,30 @@ import { HostActionTypes } from '../../../host-api'
 
 import { type State, type Dispatch } from '../../../read-write-state'
 import { initializeBuilderConnection } from './initialize-connection'
+import { BuilderMountChangeActionBuffer } from './builder-mount-change-action-buffer'
+import { ReadWriteActionTypes } from '../../../actions/internal/read-write-action-types'
 
 export function builderAPIMiddleware(
   builderProxy: BuilderAPIProxy,
 ): Middleware<Dispatch, State, Dispatch> {
+  const mountChangeBuffer = new BuilderMountChangeActionBuffer(builderProxy)
+
   return actionMiddleware(({ dispatch }) => next => {
     if (typeof window === 'undefined') return (action: Action) => next(action)
 
     let cleanUp = () => {}
     return (action: Action) => {
       switch (action.type) {
-        case BuilderActionTypes.CHANGE_ELEMENT_BOX_MODELS:
         case BuilderActionTypes.MOUNT_COMPONENT:
         case BuilderActionTypes.UNMOUNT_COMPONENT:
+          mountChangeBuffer.enqueue(action)
+          break
+
+        case ReadWriteActionTypes.FLUSH_MOUNT_CHANGE_ACTIONS:
+          mountChangeBuffer.flush()
+          break
+
+        case BuilderActionTypes.CHANGE_ELEMENT_BOX_MODELS:
         case BuilderActionTypes.CHANGE_DOCUMENT_ELEMENT_SIZE:
         case BuilderActionTypes.MESSAGE_BUILDER_PROP_CONTROLLER:
         case BuilderActionTypes.HANDLE_WHEEL:

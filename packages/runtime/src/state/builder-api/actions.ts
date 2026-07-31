@@ -30,12 +30,12 @@ type MakeswiftConnectionCheckAction = {
   type: typeof BuilderActionTypes.MAKESWIFT_CONNECTION_CHECK
 }
 
-type MountComponentAction = {
+export type MountComponentAction = {
   type: typeof BuilderActionTypes.MOUNT_COMPONENT
   payload: { documentKey: string; elementKey: string }
 }
 
-type UnmountComponentAction = {
+export type UnmountComponentAction = {
   type: typeof BuilderActionTypes.UNMOUNT_COMPONENT
   payload: { documentKey: string; elementKey: string }
 }
