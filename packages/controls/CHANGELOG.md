@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.21-canary.9
+
+### Patch Changes
+
+- bef8d07: feat: add the ability to subscribe to changes in the control instance state
+
 ## 0.1.21-canary.8
 
 ### Patch Changes
