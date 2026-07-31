@@ -21,6 +21,7 @@ export class ListControl<
 
   private itemControlsById: Map<string, ControlInstance> = new Map()
   private itemControlsList: Array<ControlInstance> = []
+  private listeners = new Set<() => void>()
 
   constructor(
     private readonly definition: Def,
@@ -36,6 +37,11 @@ export class ListControl<
         this.childByItemId(itemId)?.recv(itemMessage)
       }
     }
+  }
+
+  subscribe = (listener: () => void): (() => void) => {
+    this.listeners.add(listener)
+    return () => this.listeners.delete(listener)
   }
 
   isCompositeProp = () => true
@@ -82,8 +88,11 @@ export class ListControl<
   }
 
   setChildControls = (children: Map<string, ControlInstance>) => {
+    if (children === this.itemControlsById) return
+
     this.itemControlsById = children
     this.itemControlsList = [...children.values()]
+    this.listeners.forEach((listener) => listener())
   }
 
   createItemControl = (index: number, itemId: string): ControlInstance => {

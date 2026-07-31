@@ -23,6 +23,11 @@ export class SlotControl extends ControlInstance<Message> {
 
   recv = (_message: Message) => {}
 
+  subscribe(_listener: () => void): () => void {
+    // No mutable state, nothing to subscribe to
+    return () => {}
+  }
+
   isCompositeProp(): boolean {
     return false
   }

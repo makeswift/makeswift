@@ -38,6 +38,20 @@ export class StyleV2Control extends ControlInstance<Message> {
     })
   }
 
+  recv = (message: Message) => {
+    switch (message.type) {
+      case StyleV2Control.INNER_CONTROL_MESSAGE: {
+        if (this.inner == null) return
+        this.inner.recv(message.payload.message)
+      }
+    }
+  }
+
+  subscribe(_listener: () => void): () => void {
+    // No mutable state, nothing to subscribe to
+    return () => {}
+  }
+
   isCompositeProp(): boolean {
     return false
   }
@@ -48,15 +62,6 @@ export class StyleV2Control extends ControlInstance<Message> {
 
   child(_key: string): ControlInstance | undefined {
     return undefined
-  }
-
-  recv = (message: Message) => {
-    switch (message.type) {
-      case StyleV2Control.INNER_CONTROL_MESSAGE: {
-        if (this.inner == null) return
-        this.inner.recv(message.payload.message)
-      }
-    }
   }
 
   resolvesToRenderableNode(): boolean {

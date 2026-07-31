@@ -35,6 +35,11 @@ export type TableFormFieldsMessage =
 export class TableFormFieldsPropController extends ControlInstance<TableFormFieldsMessage> {
   recv = () => {}
 
+  subscribe(_listener: () => void): () => void {
+    // No mutable state, nothing to subscribe to
+    return () => {}
+  }
+
   isCompositeProp(): boolean {
     return false
   }
