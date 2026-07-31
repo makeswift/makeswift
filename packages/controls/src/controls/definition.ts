@@ -13,7 +13,11 @@ import { ControlInstance, type ControlInstanceArgs } from './instance'
 import { ControlDefinitionVisitor } from './visitor'
 
 export type SchemaType<T> = z.ZodType<T>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SchemaTypeAny = SchemaType<any> | z.ZodBranded<SchemaType<any>, any>
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyControlInstance = ControlInstance<any>
 
 export type Resolvable<T> = ValueSubscription<T> & {
   triggerResolve(currentValue?: T): Promise<unknown>
@@ -25,7 +29,7 @@ export abstract class ControlDefinition<
   DataType extends Data = Data,
   ValueType extends Data = Data,
   ResolvedValueType = Data | unknown,
-  InstanceType extends ControlInstance<any> = ControlInstance<any>,
+  InstanceType extends AnyControlInstance = AnyControlInstance,
 > {
   // workaround for TypeScript type inference issues: https://bit.ly/4g2RvOQ
   __associatedTypes(_: {
