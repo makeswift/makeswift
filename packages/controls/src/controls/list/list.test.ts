@@ -148,16 +148,26 @@ describe('List', () => {
         listInstance,
       ] as const
 
-      return { listInstance, resolveValueContext }
+      const subscribeCallback = jest.fn()
+      listInstance.subscribe(subscribeCallback)
+
+      return {
+        listInstance,
+        resolveValueContext,
+        subscribeCallback,
+      }
     }
 
-    test('resolveValue creates a list of child controls with correct instance keys', async () => {
-      const { listInstance, resolveValueContext } = fixtures()
-
-      expect(listInstance.childControls().size).toBe(0)
+    test('resolveValue creates a list of child controls with correct instance keys, triggers subscribe callback', async () => {
+      const { listInstance, resolveValueContext, subscribeCallback } =
+        fixtures()
 
       const resolved = list.resolveValue(listData, ...resolveValueContext)
+      expect(listInstance.childControls().size).toBe(0)
+      expect(subscribeCallback).not.toHaveBeenCalled()
+
       await resolved.triggerResolve()
+      expect(subscribeCallback).toHaveBeenCalled()
 
       const childControls = [...listInstance.childControls().values()]
 
@@ -175,30 +185,36 @@ describe('List', () => {
       ])
     })
 
-    test('resolveValue on unchanged list maintains child control identity', async () => {
-      const { listInstance, resolveValueContext } = fixtures()
+    test("resolveValue on unchanged list maintains child control identity, doesn't trigger subscribe callback", async () => {
+      const { listInstance, resolveValueContext, subscribeCallback } =
+        fixtures()
 
       const resolved = list.resolveValue(listData, ...resolveValueContext)
       await resolved.triggerResolve()
+      expect(subscribeCallback).toHaveBeenCalledTimes(1)
       const childControls = listInstance.children()
 
       const resolved2 = list.resolveValue(listData, ...resolveValueContext)
       await resolved2.triggerResolve()
+      expect(subscribeCallback).toHaveBeenCalledTimes(1)
       const childControls2 = listInstance.children()
 
       childControls2.forEach((item, i) => expect(item).toBe(childControls[i]))
     })
 
-    test('reordering list data recreates child controls with correct prop paths', async () => {
-      const { listInstance, resolveValueContext } = fixtures()
+    test('reordering list data recreates child controls with correct prop paths, triggers subscribe callback', async () => {
+      const { listInstance, resolveValueContext, subscribeCallback } =
+        fixtures()
 
       const resolved = list.resolveValue(listData, ...resolveValueContext)
       await resolved.triggerResolve()
+      expect(subscribeCallback).toHaveBeenCalledTimes(1)
       const childControls = listInstance.children()
 
       const listData2 = [...listData].sort((a, b) => b.id.localeCompare(a.id))
       const resolved2 = list.resolveValue(listData2, ...resolveValueContext)
       await resolved2.triggerResolve()
+      expect(subscribeCallback).toHaveBeenCalledTimes(2)
       const childControls2 = listInstance.children()
 
       childControls2.forEach((item, i) =>
@@ -213,16 +229,19 @@ describe('List', () => {
       ])
     })
 
-    test('partial reordering of list data recreates only affected child controls', async () => {
-      const { listInstance, resolveValueContext } = fixtures()
+    test('partial reordering of list data recreates only affected child controls, triggers subscribe callback', async () => {
+      const { listInstance, resolveValueContext, subscribeCallback } =
+        fixtures()
 
       const resolved = list.resolveValue(listData, ...resolveValueContext)
       await resolved.triggerResolve()
+      expect(subscribeCallback).toHaveBeenCalledTimes(1)
       const childControls = listInstance.children()
 
       const listData2 = [listData[0], listData[2], listData[1], listData[3]]
       const resolved2 = list.resolveValue(listData2, ...resolveValueContext)
       await resolved2.triggerResolve()
+      expect(subscribeCallback).toHaveBeenCalledTimes(2)
       const childControls2 = listInstance.children()
 
       expect(childControls2[0]).toBe(childControls[0])

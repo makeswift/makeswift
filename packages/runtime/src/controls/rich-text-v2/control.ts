@@ -123,6 +123,11 @@ export class RichTextV2Control extends ControlInstance<Message> {
     }
   }
 
+  subscribe(_listener: () => void): () => void {
+    // No mutable state, nothing to subscribe to
+    return () => {}
+  }
+
   isCompositeProp(): boolean {
     return false
   }
