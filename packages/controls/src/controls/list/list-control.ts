@@ -92,7 +92,11 @@ export class ListControl<
 
     this.itemControlsById = children
     this.itemControlsList = [...children.values()]
-    this.listeners.forEach((listener) => listener())
+
+    // copy the listeners before notifying them to avoid an infinite loop when
+    // user resubscribes to updates in response to receiving one
+    const listeners = [...this.listeners.values()]
+    listeners.forEach((listener) => listener())
   }
 
   createItemControl = (index: number, itemId: string): ControlInstance => {

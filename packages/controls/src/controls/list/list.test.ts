@@ -229,6 +229,23 @@ describe('List', () => {
       ])
     })
 
+    test("updating list instance's subscription in response to the instance's state update doesn't cause an infinite loop", async () => {
+      const { listInstance, resolveValueContext } = fixtures()
+
+      let unsubscribe = () => {}
+
+      const subscribeCallback = jest.fn(async () => {
+        unsubscribe()
+        unsubscribe = listInstance.subscribe(subscribeCallback)
+      })
+
+      unsubscribe = listInstance.subscribe(subscribeCallback)
+
+      const resolved = list.resolveValue(listData, ...resolveValueContext)
+      await resolved.triggerResolve()
+      expect(subscribeCallback).toHaveBeenCalledTimes(1)
+    })
+
     test('partial reordering of list data recreates only affected child controls, triggers subscribe callback', async () => {
       const { listInstance, resolveValueContext, subscribeCallback } =
         fixtures()
