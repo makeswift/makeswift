@@ -170,7 +170,7 @@ describe('Element registration', () => {
   test.each([false, true])(
     'dispatches MOUNT_COMPONENT to the builder when editing (element reference: %s)',
     async elementReference => {
-      const { runtime, snapshot, testElementTree, fullElementKey } = createFixtures({
+      const { snapshot, testElementTree, fullElementKey } = createFixtures({
         elementReference,
       })
 
@@ -178,8 +178,9 @@ describe('Element registration', () => {
 
       await act(async () => render(testElementTree(<Page snapshot={snapshot} />, siteVersion)))
 
-      runtime.getOrCreateStore({ siteVersion, locale: undefined }).getState()
-      expect(BuilderAPIProxyExecute).toHaveBeenCalledTimes(2)
+      // At this point React might already commit the DOM, and we might get an extra
+      // MESSAGE_BUILDER_PROP_CONTROLLER event with the style's CHANGE_BOX_MODEL message
+      expect(BuilderAPIProxyExecute.mock.calls.length).toBeGreaterThanOrEqual(2)
 
       expect(BuilderAPIProxyExecute).toHaveBeenNthCalledWith(1, {
         type: 'MOUNT_COMPONENT',
