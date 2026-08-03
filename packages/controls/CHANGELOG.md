@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.21-canary.10
+
+### Patch Changes
+
+- ef350b5: fix: infinite loop when resubscribing to list instance updates in response to instance update
+
 ## 0.1.21-canary.9
 
 ### Patch Changes
