@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.8-canary.21
+
+### Patch Changes
+
+- 8cd4a8d: feat: RSC-enabled `Slot` prop rendering
+
 ## 0.28.8-canary.20
 
 ### Patch Changes
