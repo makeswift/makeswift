@@ -8,6 +8,10 @@ import { ElementImperativeHandle } from '../../../runtimes/react/element-imperat
 import { type DescriptorsByComponentType } from '../../modules/prop-controller-descriptors'
 import { type Measurable } from '../../modules/read-write/box-models'
 import { type PropControllersHandle } from '../../modules/read-write/prop-controllers'
+import {
+  type ResolvedValueKey,
+  type ResolvedValue,
+} from '../../modules/read-write/resolved-value-overrides'
 
 import { createPropController } from '../../../prop-controllers/instances'
 
@@ -79,6 +83,16 @@ type UnregisterMeasurableAction = {
   payload: { documentKey: string; elementKey: string }
 }
 
+type SetResolvedValueOverrideAction = {
+  type: typeof ReadWriteActionTypes.SET_RESOLVED_VALUE_OVERRIDE
+  payload: { documentKey: string; instanceKey: ResolvedValueKey; value: ResolvedValue }
+}
+
+type ClearResolvedValueOverrideAction = {
+  type: typeof ReadWriteActionTypes.CLEAR_RESOLVED_VALUE_OVERRIDE
+  payload: { documentKey: string; instanceKey: ResolvedValueKey }
+}
+
 type UpdateAPIClientCache = {
   type: typeof ReadWriteActionTypes.UPDATE_API_CLIENT_CACHE
   payload: APIClientCache
@@ -99,6 +113,8 @@ export type ReadWriteAction =
   | UnregisterPropControllersAction
   | RegisterMeasurableAction
   | UnregisterMeasurableAction
+  | SetResolvedValueOverrideAction
+  | ClearResolvedValueOverrideAction
   | UpdateAPIClientCache
   | ClearAPIClientCache
 
@@ -222,6 +238,24 @@ export function unregisterMeasurable(
   elementKey: string,
 ): UnregisterMeasurableAction {
   return { type: ReadWriteActionTypes.UNREGISTER_MEASURABLE, payload: { documentKey, elementKey } }
+}
+
+export function setResolvedValueOverride(
+  payload: SetResolvedValueOverrideAction['payload'],
+): SetResolvedValueOverrideAction {
+  return {
+    type: ReadWriteActionTypes.SET_RESOLVED_VALUE_OVERRIDE,
+    payload,
+  }
+}
+
+export function clearResolvedValueOverride(
+  payload: ClearResolvedValueOverrideAction['payload'],
+): ClearResolvedValueOverrideAction {
+  return {
+    type: ReadWriteActionTypes.CLEAR_RESOLVED_VALUE_OVERRIDE,
+    payload,
+  }
 }
 
 export function registerMeasurableEffect(
