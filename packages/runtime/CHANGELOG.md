@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.8-canary.22
+
+### Patch Changes
+
+- 29ac9aa: feat: resolved value overrides infra, `Slot` supports overrides
+
 ## 0.28.8-canary.21
 
 ### Patch Changes
