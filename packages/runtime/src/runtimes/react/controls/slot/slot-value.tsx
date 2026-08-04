@@ -1,53 +1,61 @@
 'use client'
 
-import { ComponentPropsWithoutRef, ElementType, ReactNode, useEffect, useState, memo } from 'react'
+import {
+  type ComponentPropsWithoutRef,
+  type ElementType,
+  type ReactNode,
+  useEffect,
+  useState,
+  memo,
+} from 'react'
 import { cx } from '@emotion/css'
 
-import { SlotDefinition, SlotControl, type DataType } from '@makeswift/controls'
+import {
+  SlotDefinition,
+  SlotControl,
+  type DataType,
+  type ControlInstanceKey,
+} from '@makeswift/controls'
 
-import { type SlotConfig, type SlotPlaceholderConfig } from '../../../controls/slot'
-import { Element } from '../components/Element'
-import { useIsInBuilder } from '../hooks/use-is-in-builder'
-import { getIndexes } from '../../../components/utils/columns'
-import { useResponsiveStyle } from '../../../components/utils/responsive-style'
-import { useStyle } from '../use-style'
-import { pollBoxModel } from '../poll-box-model'
+import { type SlotConfig, type SlotPlaceholderConfig } from '../../../../controls/slot'
 
-export function renderSlot(props: {
+import { Element } from '../../components/Element'
+import { getIndexes } from '../../../../components/utils/columns'
+import { useResponsiveStyle } from '../../../../components/utils/responsive-style'
+
+import { useIsInBuilder } from '../../hooks/use-is-in-builder'
+import { useControlInstance } from '../../hooks/use-control-instance'
+
+import { useStyle } from '../../use-style'
+import { pollBoxModel } from '../../poll-box-model'
+
+export const SlotValue = memo(function SlotValue({
+  data,
+  instanceKey,
+  config,
+}: {
   data: DataType<SlotDefinition<ReactNode>> | undefined
-  control: SlotControl | null
+  instanceKey: ControlInstanceKey | undefined
   config: SlotConfig
 }): ReactNode {
-  return <SlotValue {...props} />
-}
+  const control = useControlInstance(instanceKey, SlotControl)
 
-const SlotValue = memo(
-  ({
-    data,
-    control,
-    config,
-  }: {
-    data: DataType<SlotDefinition<ReactNode>> | undefined
-    control: SlotControl | null
-    config: SlotConfig
-  }): ReactNode => {
-    // TODO(miguel): While the UI shouldn't allow the state, we should probably check that at least
-    // one element is visible.
-    if (data == null || data.elements.length === 0) {
-      return <Slot.Placeholder control={control} placeholder={config.unstable_placeholder} />
-    }
+  // TODO(miguel): While the UI shouldn't allow the state, we should probably check that at least
+  // one element is visible.
+  if (data == null || data.elements.length === 0) {
+    return <Slot.Placeholder control={control} placeholder={config.unstable_placeholder} />
+  }
 
-    return (
-      <Slot control={control}>
-        {data.elements.map((element, i) => (
-          <Slot.Item key={element.key} control={control} grid={data.columns} index={i}>
-            <Element element={element} />
-          </Slot.Item>
-        ))}
-      </Slot>
-    )
-  },
-)
+  return (
+    <Slot control={control}>
+      {data.elements.map((element, i) => (
+        <Slot.Item key={element.key} control={control} grid={data.columns} index={i}>
+          <Element element={element} />
+        </Slot.Item>
+      ))}
+    </Slot>
+  )
+})
 
 type SlotProps<T extends ElementType> = {
   as?: T

@@ -5,9 +5,9 @@ import { type ReactNode, useRef, act } from 'react'
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 
-import { ControlInstance } from '@makeswift/controls'
+import { ControlInstance, type ControlInstanceKey } from '@makeswift/controls'
 
-import { Slot } from '../../controls'
+import { Slot, Group, List, TextInput } from '../../controls'
 
 import { createReactRuntime, ReactProvider } from '../../runtimes/react/testing'
 import { Page } from '../../runtimes/react/components/page'
@@ -24,7 +24,7 @@ jest.mock('../../state/builder-api/proxy', () => ({
   })),
 }))
 
-function SlotValue(props: { control: ControlInstance }) {
+function SlotValue({ instanceKey }: { instanceKey: ControlInstanceKey | undefined }) {
   const renderCount = useRef(0)
   ++renderCount.current
 
@@ -32,31 +32,58 @@ function SlotValue(props: { control: ControlInstance }) {
     <div
       data-testid={TEST_ID}
       data-render-count={renderCount.current}
-      data-instance-key={JSON.stringify(props.control?.instanceKey)}
+      data-instance-key={JSON.stringify(instanceKey)}
     >
       Slot placeholder
     </div>
   )
 }
 
-jest.mock('../../runtimes/react/controls/slot', () => ({
-  renderSlot: (props: { control: ControlInstance }) => <SlotValue {...props} />,
+jest.mock('../../runtimes/react/controls/slot/render-slot', () => ({
+  renderSlot: ({ control }: { control: ControlInstance | null }) => (
+    <SlotValue instanceKey={control?.instanceKey} />
+  ),
 }))
 
-function SlotTest({ children }: { children: ReactNode }) {
-  return <div>{children}</div>
+function TestComponent({
+  group: { list },
+}: {
+  group: { list: { title?: string; slot: ReactNode }[] }
+}) {
+  return (
+    <div>
+      {list.map(({ title, slot }, i) => (
+        <div key={i}>
+          <h1>{title}</h1>
+          {slot}
+        </div>
+      ))}
+    </div>
+  )
 }
 
 describe('Slot', () => {
   const createFixtures = () => {
     const componentType = 'slot-test'
+    const groupProp = Group({
+      props: {
+        list: List({
+          type: Group({
+            props: {
+              title: TextInput(),
+              slot: Slot(),
+            },
+          }),
+        }),
+      },
+    })
 
     const runtime = createReactRuntime()
-    runtime.registerComponent(SlotTest, {
+    runtime.registerComponent(TestComponent, {
       type: componentType,
       label: 'Slot Test',
       props: {
-        children: Slot(),
+        group: groupProp,
       },
     })
 
@@ -69,7 +96,11 @@ describe('Slot', () => {
     const elementKey = '11111111-1111-1111-1111-111111111111'
     const elementData = {
       key: elementKey,
-      props: {},
+      props: {
+        group: groupProp.toData({
+          list: [{ title: 'item 1', slot: { elements: [], columns: [] } }],
+        }),
+      },
       type: componentType,
     }
 
@@ -93,7 +124,7 @@ describe('Slot', () => {
     const renderedInstanceKey = element.dataset['instanceKey']
     expect(JSON.parse(renderedInstanceKey ?? 'null')).toEqual({
       elementKey,
-      propPath: 'children',
+      propPath: 'group.list.0.slot',
     })
 
     const renderCount = element.dataset['renderCount']
