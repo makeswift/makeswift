@@ -8,6 +8,7 @@ import {
   useState,
   memo,
 } from 'react'
+
 import { cx } from '@emotion/css'
 
 import {
@@ -29,7 +30,24 @@ import { useControlInstance } from '../../hooks/use-control-instance'
 import { useStyle } from '../../use-style'
 import { pollBoxModel } from '../../poll-box-model'
 
+import { NodeValue } from '../node-value'
+
 export const SlotValue = memo(function SlotValue({
+  instanceKey,
+  ...props
+}: {
+  data: DataType<SlotDefinition<ReactNode>> | undefined
+  instanceKey: ControlInstanceKey | undefined
+  config: SlotConfig
+}): ReactNode {
+  return (
+    <NodeValue instanceKey={instanceKey}>
+      <SlotOrPlaceholder instanceKey={instanceKey} {...props} />
+    </NodeValue>
+  )
+})
+
+const SlotOrPlaceholder = ({
   data,
   instanceKey,
   config,
@@ -37,7 +55,7 @@ export const SlotValue = memo(function SlotValue({
   data: DataType<SlotDefinition<ReactNode>> | undefined
   instanceKey: ControlInstanceKey | undefined
   config: SlotConfig
-}): ReactNode {
+}): ReactNode => {
   const control = useControlInstance(instanceKey, SlotControl)
 
   // TODO(miguel): While the UI shouldn't allow the state, we should probably check that at least
@@ -55,7 +73,7 @@ export const SlotValue = memo(function SlotValue({
       ))}
     </Slot>
   )
-})
+}
 
 type SlotProps<T extends ElementType> = {
   as?: T
