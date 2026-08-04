@@ -12,6 +12,9 @@ import { Slot, Group, List, TextInput } from '../../controls'
 import { createReactRuntime, ReactProvider } from '../../runtimes/react/testing'
 import { Page } from '../../runtimes/react/components/page'
 
+import { setResolvedValueOverride } from '../../state/actions/internal/read-write-actions'
+import { SlotValue } from '../../runtimes/react/controls/slot/slot-value'
+
 import { createRootComponent, createMakeswiftPageSnapshot } from '../../testing/element-data'
 import { TestWorkingSiteVersion } from '../../testing/fixtures/site-version'
 
@@ -24,7 +27,7 @@ jest.mock('../../state/builder-api/proxy', () => ({
   })),
 }))
 
-function SlotValue({ instanceKey }: { instanceKey: ControlInstanceKey | undefined }) {
+function SlotValueWrapper({ instanceKey }: { instanceKey: ControlInstanceKey | undefined }) {
   const renderCount = useRef(0)
   ++renderCount.current
 
@@ -34,14 +37,14 @@ function SlotValue({ instanceKey }: { instanceKey: ControlInstanceKey | undefine
       data-render-count={renderCount.current}
       data-instance-key={JSON.stringify(instanceKey)}
     >
-      Slot placeholder
+      <SlotValue instanceKey={instanceKey} data={undefined} config={{}} />
     </div>
   )
 }
 
 jest.mock('../../runtimes/react/controls/slot/render-slot', () => ({
   renderSlot: ({ control }: { control: ControlInstance | null }) => (
-    <SlotValue instanceKey={control?.instanceKey} />
+    <SlotValueWrapper instanceKey={control?.instanceKey} />
   ),
 }))
 
@@ -63,7 +66,7 @@ function TestComponent({
 }
 
 describe('Slot', () => {
-  const createFixtures = () => {
+  const createFixtures = ({ draft }: { draft?: boolean } = {}) => {
     const componentType = 'slot-test'
     const groupProp = Group({
       props: {
@@ -87,8 +90,9 @@ describe('Slot', () => {
       },
     })
 
-    const testElementTree = (component: ReactNode, { draft }: { draft: boolean }) => (
-      <ReactProvider runtime={runtime} siteVersion={draft ? TestWorkingSiteVersion : null}>
+    const siteVersion = draft ? TestWorkingSiteVersion : null
+    const testElementTree = (component: ReactNode) => (
+      <ReactProvider runtime={runtime} siteVersion={siteVersion}>
         {component}
       </ReactProvider>
     )
@@ -105,20 +109,20 @@ describe('Slot', () => {
     }
 
     const snapshot = createMakeswiftPageSnapshot(createRootComponent([elementData]))
-    return { snapshot, elementKey, testElementTree }
+    return { runtime, siteVersion, snapshot, elementKey, testElementTree }
   }
 
   test('renders with a null control instance on live pages', async () => {
     const { snapshot, testElementTree } = createFixtures()
-    await act(async () => render(testElementTree(<Page snapshot={snapshot} />, { draft: false })))
+    await act(async () => render(testElementTree(<Page snapshot={snapshot} />)))
 
     const renderedInstanceKey = screen.getByTestId(TEST_ID).dataset['instanceKey']
     expect(JSON.parse(renderedInstanceKey ?? 'null')).toBe(null)
   })
 
   test('renders with a corresponding control instance when editing', async () => {
-    const { snapshot, elementKey, testElementTree } = createFixtures()
-    await act(async () => render(testElementTree(<Page snapshot={snapshot} />, { draft: true })))
+    const { snapshot, elementKey, testElementTree } = createFixtures({ draft: true })
+    await act(async () => render(testElementTree(<Page snapshot={snapshot} />)))
 
     const element = screen.getByTestId(TEST_ID)
     const renderedInstanceKey = element.dataset['instanceKey']
@@ -129,5 +133,26 @@ describe('Slot', () => {
 
     const renderCount = element.dataset['renderCount']
     expect(renderCount).toBe('1')
+  })
+
+  test('renders resolved value override when present', async () => {
+    const { runtime, siteVersion, snapshot, elementKey, testElementTree } = createFixtures({
+      draft: true,
+    })
+    await act(async () => render(testElementTree(<Page snapshot={snapshot} />)))
+
+    const store = runtime.getOrCreateStore({ siteVersion, locale: undefined })
+    await act(() =>
+      store.dispatch(
+        setResolvedValueOverride({
+          documentKey: 'test-page-id',
+          instanceKey: { elementKey, propPath: 'group.list.0.slot' },
+          value: <div>Slot value override</div>,
+        }),
+      ),
+    )
+
+    const element = screen.getByTestId(TEST_ID)
+    expect(element?.innerHTML).toEqual('<div>Slot value override</div>')
   })
 })
