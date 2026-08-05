@@ -40,6 +40,10 @@ export abstract class ApiResourcesClient {
     this.subscribe = this.store.subscribe
   }
 
+  get cacheData(): CacheData {
+    return ApiClientState.getSerializedState(this.store.getState())
+  }
+
   async fetchSwatch(swatchId: string): Promise<Swatch | null> {
     const fetch = (id: string, version: SiteVersion | null) => this.fetchSwatchImpl(id, version)
 
