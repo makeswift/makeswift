@@ -6,7 +6,7 @@ type MountChangeAction = UnmountComponentAction | MountComponentAction
 
 /**
  * Allows for queuing MountChangeActions dispatched via React effects into a buffer
- * processed after the completion of the current React commit.
+ * processed after the completion of the current React commit (scheduled using queueMicrotask).
  *
  * Before executing the actions in the buffer, the buffer is processed removing any
  * pairs of MOUNT_COMPONENT and UNMOUNT_COMPONENT actions corresponding to the same
@@ -22,25 +22,34 @@ type MountChangeAction = UnmountComponentAction | MountComponentAction
  */
 export class BuilderMountChangeActionBuffer {
   private readonly builderProxy: BuilderAPIProxy
-  private queuedActions: MountChangeAction[]
+  private scheduledActions: MountChangeAction[]
+  private flushScheduled: boolean
 
   constructor(builderProxy: BuilderAPIProxy) {
     this.builderProxy = builderProxy
-    this.queuedActions = []
+    this.scheduledActions = []
+    this.flushScheduled = false
   }
 
-  enqueue(action: MountChangeAction) {
-    this.queuedActions.push(action)
+  schedule(action: MountChangeAction) {
+    this.scheduledActions.push(action)
+
+    if (!this.flushScheduled) {
+      this.scheduleFlush()
+    }
   }
 
-  flush() {
-    // Process the current queuedActions removing redundant UNMOUNT/MOUNT pairs.
-    const batch = this.queuedActions
-    this.queuedActions = []
+  private scheduleFlush() {
+    this.flushScheduled = true
 
-    const coalescedBatch = coalesceMountChangeActions(batch)
+    queueMicrotask(() => {
+      this.flushScheduled = false
+      const batch = this.scheduledActions
+      this.scheduledActions = []
 
-    coalescedBatch.forEach(action => this.builderProxy.execute(action))
+      const coalescedBatch = coalesceMountChangeActions(batch)
+      coalescedBatch.forEach(action => this.builderProxy.execute(action))
+    })
   }
 }
 

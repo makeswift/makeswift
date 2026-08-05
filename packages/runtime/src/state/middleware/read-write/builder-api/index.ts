@@ -12,7 +12,6 @@ import { HostActionTypes } from '../../../host-api'
 import { type State, type Dispatch } from '../../../read-write-state'
 import { initializeBuilderConnection } from './initialize-connection'
 import { BuilderMountChangeActionBuffer } from './builder-mount-change-action-buffer'
-import { ReadWriteActionTypes } from '../../../actions/internal/read-write-action-types'
 
 export function builderAPIMiddleware(
   builderProxy: BuilderAPIProxy,
@@ -27,11 +26,7 @@ export function builderAPIMiddleware(
       switch (action.type) {
         case BuilderActionTypes.MOUNT_COMPONENT:
         case BuilderActionTypes.UNMOUNT_COMPONENT:
-          mountChangeBuffer.enqueue(action)
-          break
-
-        case ReadWriteActionTypes.FLUSH_MOUNT_CHANGE_ACTIONS:
-          mountChangeBuffer.flush()
+          mountChangeBuffer.schedule(action)
           break
 
         case BuilderActionTypes.CHANGE_ELEMENT_BOX_MODELS:

@@ -102,10 +102,6 @@ type ClearAPIClientCache = {
   type: typeof ReadWriteActionTypes.CLEAR_API_CLIENT_CACHE
 }
 
-type FlushMountChangeActionsAction = {
-  type: typeof ReadWriteActionTypes.FLUSH_MOUNT_CHANGE_ACTIONS
-}
-
 export type ReadWriteAction =
   | FlushActionBufferAction
   | ChangeElementTreeAction
@@ -121,7 +117,6 @@ export type ReadWriteAction =
   | ClearResolvedValueOverrideAction
   | UpdateAPIClientCache
   | ClearAPIClientCache
-  | FlushMountChangeActionsAction
 
 export function flushActionBuffer() {
   return { type: ReadWriteActionTypes.FLUSH_ACTION_BUFFER }
@@ -316,8 +311,4 @@ export function createPropControllers({
 
     return propControllers
   }
-}
-
-export function flushMountChangeActions(): FlushMountChangeActionsAction {
-  return { type: ReadWriteActionTypes.FLUSH_MOUNT_CHANGE_ACTIONS }
 }

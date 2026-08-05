@@ -10,7 +10,6 @@ import { StoreContext } from '../hooks/use-store'
 import { type ReactRuntimeCore } from '../react-runtime-core'
 
 import { PreviewSwitcher } from './preview-switcher/preview-switcher'
-import { flushMountChangeActions } from '../../../state/actions/internal/read-write-actions'
 
 export function RuntimeProvider({
   children,
@@ -36,13 +35,6 @@ export function RuntimeProvider({
     runtime.retainStore({ siteVersion, locale }, store)
     return () => runtime.releaseStore({ siteVersion, locale }, store)
   }, [runtime, siteVersion, locale, store])
-
-  // Flushing after every commit ensures mount/unmount actions dispatched by effects 
-  // within this commit are processed together.
-  // See BuilderMountChangeActionBuffer for more context.
-  useEffect(() => {
-    store.dispatch(flushMountChangeActions())
-  })
 
   // if we're in the read-write mode, the reducers & middleware required for builder
   // interactions are loaded only on client side, lazily and asynchronously
