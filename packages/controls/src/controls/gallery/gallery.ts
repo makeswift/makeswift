@@ -12,6 +12,7 @@ import {
   type SchemaType,
 } from '../definition'
 import { DefaultControlInstance, type ControlInstanceArgs } from '../instance'
+import { PropsQuery } from '../options-context'
 import { ControlDefinitionVisitor } from '../visitor'
 
 export type GalleryOption<T extends Data = Data> = {
@@ -24,13 +25,14 @@ export type GalleryPage<T extends Data = Data> = {
   options: GalleryOption<T>[]
 }
 
-type GetOptionsType<T extends Data> = () =>
-  | GalleryPage<T>
-  | Promise<GalleryPage<T>>
+type GetOptionsType<T extends Data> = (
+  context: any,
+) => GalleryPage<T> | Promise<GalleryPage<T>>
 
 type Config<T extends Data = Data> = {
   label?: string
   description?: string
+  requiredOptionsContext?: PropsQuery
   getOptions: GetOptionsType<T>
 }
 
@@ -72,6 +74,7 @@ class Definition<C extends Config> extends ControlDefinition<
         .function()
         .args()
         .returns(z.union([page, z.promise(page)])),
+      requiredOptionsContext: z.record(z.string()).optional(),
       label: z.string().optional(),
       description: z.string().optional(),
     })
