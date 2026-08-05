@@ -38,7 +38,7 @@ export class BuilderMountChangeActionBuffer {
     const batch = this.queuedActions
     this.queuedActions = []
 
-    const coalescedBatch = removeMountUnmountPairs(batch)
+    const coalescedBatch = coalesceMountChangeActions(batch)
 
     coalescedBatch.forEach(action => this.builderProxy.execute(action))
   }
@@ -53,41 +53,32 @@ function key(a: { payload: { documentKey: string; elementKey: string } }) {
 }
 
 /**
- * Removes pairs of MOUNT_COMPONENT and UNMOUNT_COMPONENT actions from a batch of MountChangeActions.
+ * Coalesces a batch of MountChangeActions into an array of either 0 or 1 MountChangeActions corresponding
+ * to the net result of the batch.
+ *
+ * Removes pairs of MOUNT_COMPONENT and UNMOUNT_COMPONENT actions, if there are actions leftover it returns a single
+ * action corresponding to the leftover type.
  */
-function removeMountUnmountPairs(batch: MountChangeAction[]): MountChangeAction[] {
-  // A positive number of mountsPerElement[key] indicates a net amount of MOUNT_COMPONENTs
-  // A negative number of mountsPerElement[key] indicates a net amount of UNMOUNT_COMPONENTs
-  const mountsPerElement = batch.reduce((mounts, action) => {
-    if (action.type == BuilderActionTypes.MOUNT_COMPONENT) {
-      const current = mounts.get(key(action)) ?? 0
-      mounts.set(key(action), current + 1)
-    }
+function coalesceMountChangeActions(batch: MountChangeAction[]): MountChangeAction[] {
+  const mountsPerElement = new Map<
+    string,
+    { count: number; payload: MountChangeAction['payload'] }
+  >()
 
-    if (action.type == BuilderActionTypes.UNMOUNT_COMPONENT) {
-      const current = mounts.get(key(action)) ?? 0
-      mounts.set(key(action), current - 1)
-    }
+  batch.forEach(action => {
+    const actionKey = key(action)
+    const currentCount = mountsPerElement.get(actionKey)?.count ?? 0
+    mountsPerElement.set(actionKey, {
+      count:
+        action.type === BuilderActionTypes.MOUNT_COMPONENT ? currentCount + 1 : currentCount - 1,
+      payload: action.payload,
+    })
+  })
 
-    return mounts
-  }, new Map<string, number>())
-
-  const coalescedBatch = []
-  for (const action of batch) {
-    const mountsRemaining = mountsPerElement.get(key(action)) ?? 0
-
-    if (action.type == BuilderActionTypes.MOUNT_COMPONENT && mountsRemaining > 0) {
-      coalescedBatch.push(action)
-      mountsPerElement.set(key(action), mountsRemaining - 1)
-      continue
-    }
-
-    if (action.type == BuilderActionTypes.UNMOUNT_COMPONENT && mountsRemaining < 0) {
-      coalescedBatch.push(action)
-      mountsPerElement.set(key(action), mountsRemaining + 1)
-      continue
-    }
-  }
-
-  return coalescedBatch
+  return [...mountsPerElement.values()]
+    .filter(({ count }) => count != 0)
+    .map(({ count, payload }) => ({
+      type: count > 0 ? BuilderActionTypes.MOUNT_COMPONENT : BuilderActionTypes.UNMOUNT_COMPONENT,
+      payload,
+    }))
 }
