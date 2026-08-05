@@ -100,13 +100,30 @@ function startMeasuringElements(): ThunkAction<() => void, State, unknown, Actio
 
 function lockDocumentScroll(): ThunkAction<() => void, State, unknown, Action> {
   return dispatch => {
+    // Adjust root HTML styles so the page is scrollable in the builder.
+    // Specifically, we make two adjustments:
+    //
+    // 1. Set the root element's overflow to hidden. Otherwise, you'll see two
+    //    scrollbars in the builder when viewing the page: one being the native
+    //    scrollbar of the page, and the other being the builder's scrollbar.
+    //
+    // 2. Set the root body element's overflow to initial. There's cases where
+    //    if the body has an overflow property set on it, then the body
+    //    overflow-y property will become auto. This, combined with the
+    //    body/html having a 100% height means that the overflowing content of
+    //    the body won't count towards the scroll height of the root element,
+    //    thus preventing scrolling from the builder.
     const lastDocumentOverflow = window.document.documentElement.style.overflow
     window.document.documentElement.style.overflow = 'hidden'
+
+    const lastBodyOverflow = window.document.body.style.overflow
+    window.document.body.style.overflow = 'initial'
 
     window.document.documentElement.addEventListener('wheel', handleWheelEvent)
 
     return () => {
       window.document.documentElement.style.overflow = lastDocumentOverflow
+      window.document.body.style.overflow = lastBodyOverflow
       window.document.documentElement.removeEventListener('wheel', handleWheelEvent)
     }
 
