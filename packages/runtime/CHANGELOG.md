@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.8-canary.23
+
+### Patch Changes
+
+- f814370: Unset body overflow styles when loaded in builder to allow scrolling
+
 ## 0.28.8-canary.22
 
 ### Patch Changes
