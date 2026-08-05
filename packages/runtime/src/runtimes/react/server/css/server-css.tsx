@@ -1,0 +1,39 @@
+import 'server-only'
+
+import { type Breakpoints, type Stylesheet } from '@makeswift/controls'
+
+import { StylesheetEngine } from './css-runtime'
+
+export class ServerCSSCollector {
+  private styles = new Map<string, string>()
+
+  collect(className: string, css: string) {
+    if (this.styles.has(className)) return
+    this.styles.set(className, css)
+  }
+
+  getAllStyles(): string {
+    return Array.from(this.styles.values()).join('\n')
+  }
+
+  clear() {
+    this.styles.clear()
+  }
+}
+
+export function createCollectingServerStylesheet(
+  collector: ServerCSSCollector,
+  breakpoints: Breakpoints,
+  elementKey?: string,
+): Stylesheet {
+  return new StylesheetEngine(breakpoints, elementKey, undefined, (className, css) => {
+    collector.collect(className, css)
+  })
+}
+
+export function InjectServerCSS({ collector }: { collector: ServerCSSCollector }) {
+  const css = collector.getAllStyles()
+
+  // Always render the style element, even when empty, to ensure consistency between server and client
+  return <style data-makeswift-rsc="true">{css}</style>
+}
