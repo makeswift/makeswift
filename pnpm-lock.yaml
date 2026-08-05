@@ -122,7 +122,7 @@ importers:
         specifier: ^5
         version: 5.1.6
 
-  apps/rsc-starter-cf-single:
+  apps/vite-rsc-hono-react-cloudflare:
     dependencies:
       '@makeswift/hono-react':
         specifier: workspace:*
@@ -157,59 +157,10 @@ importers:
         version: 19.2.3(@types/react@19.2.15)
       '@vitejs/plugin-react':
         specifier: latest
-        version: 6.0.3(vite@8.1.4(@types/node@20.14.11)(esbuild@0.28.1)(jiti@2.4.2))
+        version: 6.0.5(vite@8.1.4(@types/node@20.14.11)(esbuild@0.28.1)(jiti@2.4.2))
       '@vitejs/plugin-rsc':
         specifier: latest
-        version: 0.5.27(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@20.14.11)(esbuild@0.28.1)(jiti@2.4.2))
-      rsc-html-stream:
-        specifier: ^0.0.7
-        version: 0.0.7
-      vite:
-        specifier: ^8.0.10
-        version: 8.1.4(@types/node@20.14.11)(esbuild@0.28.1)(jiti@2.4.2)
-      wrangler:
-        specifier: ^4.84.1
-        version: 4.110.0
-
-  apps/vite-hono-react-cloudflare-rsc:
-    dependencies:
-      '@makeswift/hono-react':
-        specifier: workspace:*
-        version: link:../../packages/hono-react
-      '@makeswift/runtime':
-        specifier: workspace:*
-        version: link:../../packages/runtime
-      '@makeswift/vite-rsc':
-        specifier: workspace:*
-        version: link:../../packages/vite-rsc
-      hono:
-        specifier: ^4.12.21
-        version: 4.12.21
-      react:
-        specifier: ^19.2.5
-        version: 19.2.7
-      react-dom:
-        specifier: ^19.2.5
-        version: 19.2.7(react@19.2.7)
-      react-markdown:
-        specifier: ^10.1.0
-        version: 10.1.0(@types/react@19.2.15)(react@19.2.7)
-    devDependencies:
-      '@cloudflare/vite-plugin':
-        specifier: ^1.33.1
-        version: 1.44.0(vite@8.1.4(@types/node@20.14.11)(esbuild@0.28.1)(jiti@2.4.2))(workerd@1.20260708.1)(wrangler@4.110.0)
-      '@types/react':
-        specifier: ^19.2.15
-        version: 19.2.15
-      '@types/react-dom':
-        specifier: ^19.2.3
-        version: 19.2.3(@types/react@19.2.15)
-      '@vitejs/plugin-react':
-        specifier: ^6.0.1
-        version: 6.0.3(vite@8.1.4(@types/node@20.14.11)(esbuild@0.28.1)(jiti@2.4.2))
-      '@vitejs/plugin-rsc':
-        specifier: ^0.5.24
-        version: 0.5.27(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@20.14.11)(esbuild@0.28.1)(jiti@2.4.2))
+        version: 0.5.32(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@20.14.11)(esbuild@0.28.1)(jiti@2.4.2))
       rsc-html-stream:
         specifier: ^0.0.7
         version: 0.0.7
@@ -3729,8 +3680,8 @@ packages:
     peerDependencies:
       react: '>= 16.8.0'
 
-  '@vitejs/plugin-react@6.0.3':
-    resolution: {integrity: sha512-vmFvco5/QuC2f9Oj+wTk0+9XeDFkHxSamwZKYc7MxYwKICfvUvlMhqKI0VuICPltGqh1neqBKDvO4kes1ya8vg==}
+  '@vitejs/plugin-react@6.0.5':
+    resolution: {integrity: sha512-BOVzne/NL162sMdResB25mUv+vWMF5NoAjNf09TeGlE7ZpszZWSD3winycicLJw72yeVsoCn/2kOhEuCvEShMA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
       '@rolldown/plugin-babel': ^0.1.7 || ^0.2.0
@@ -3744,6 +3695,17 @@ packages:
 
   '@vitejs/plugin-rsc@0.5.27':
     resolution: {integrity: sha512-s1fd5DUkPXk86DDHPM/kP93WrvI0MoA8klxdDZmD1fMSaA9xujfgunsm8ZoUH0FemR+63vNalFsIDR0AJH4ktg==}
+    peerDependencies:
+      react: '*'
+      react-dom: '*'
+      react-server-dom-webpack: '*'
+      vite: '*'
+    peerDependenciesMeta:
+      react-server-dom-webpack:
+        optional: true
+
+  '@vitejs/plugin-rsc@0.5.32':
+    resolution: {integrity: sha512-9lKCNZ3gSV46CA6/r+0ONjUXfGuwIJeGcm60VapwWCEuCrhO0f9IBw3pLv+2usZtE2NztxQq5Rlum6b3XESRgw==}
     peerDependencies:
       react: '*'
       react-dom: '*'
@@ -4743,10 +4705,6 @@ packages:
 
   detect-indent@6.1.0:
     resolution: {integrity: sha512-reYkTUJAZb9gUuZ2RvVCNhVHdg62RHnJ7WJl8ftMi4diZ6NWlciOzQN88pUhSELEwflJht4oQDv0F0BMlwaYtA==}
-    engines: {node: '>=8'}
-
-  detect-libc@2.0.4:
-    resolution: {integrity: sha512-3UDv+G9CsCKO1WKMGw9fwq/SWJYbI0c5Y7LU1AXYoDdbhE2AHQ6N6Nb34sG8Fj7T5APy8qXDCKuuIHd1BR0tVA==}
     engines: {node: '>=8'}
 
   detect-libc@2.1.2:
@@ -8512,6 +8470,11 @@ packages:
     engines: {node: '>=20.16.0'}
     hasBin: true
 
+  srvx@0.12.5:
+    resolution: {integrity: sha512-IuvtDNQg5EIwv3c6dleyau7u8hCyGQ7D6+V/QM799Aud07z0wCUcurKLTRfyG33C8oUY+UWcVBFkfHMcbtmRLA==}
+    engines: {node: '>=20.16.0'}
+    hasBin: true
+
   stable-hash@0.0.5:
     resolution: {integrity: sha512-+L3ccpzibovGXFK+Ap/f8LOS0ahMrHTf3xu7mMLSpEGU0EO9ucaysSylKo9eRDFNhWve/y275iPmIZ4z39a9iA==}
 
@@ -9514,18 +9477,6 @@ packages:
       utf-8-validate:
         optional: true
 
-  ws@8.16.0:
-    resolution: {integrity: sha512-HS0c//TP7Ina87TfiPUz1rQzMhHrl/SG2guqRcTOIUYD2q8uhUdNHZYJUaQ8aTGPzCh+c6oawMKW35nFl1dxyQ==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-
   ws@8.18.0:
     resolution: {integrity: sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==}
     engines: {node: '>=10.0.0'}
@@ -9544,18 +9495,6 @@ packages:
     peerDependencies:
       bufferutil: ^4.0.1
       utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-
-  ws@8.5.0:
-    resolution: {integrity: sha512-BWX0SWVgLPzYwF8lTzEy1egjhS4S4OEAHfsO8o65WOVsrnSRGaSiUaa9e0ggGlkMTtBlmOpEXiie9RUcBO86qg==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: ^5.0.2
     peerDependenciesMeta:
       bufferutil:
         optional: true
@@ -11333,13 +11272,13 @@ snapshots:
       graphql: 16.3.0
       graphql-sse: 1.1.0(graphql@16.3.0)
       graphql-ws: 5.6.3(graphql@16.3.0)
-      isomorphic-ws: 4.0.1(ws@8.5.0)
+      isomorphic-ws: 4.0.1(ws@8.21.0)
       meros: 1.2.0(@types/node@20.14.11)
       subscriptions-transport-ws: 0.11.0(graphql@16.3.0)
       sync-fetch: 0.3.1
       tslib: 2.6.2
       value-or-promise: 1.0.11
-      ws: 8.5.0
+      ws: 8.21.0
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -13040,7 +12979,7 @@ snapshots:
       '@use-gesture/core': 10.2.24
       react: 19.2.3
 
-  '@vitejs/plugin-react@6.0.3(vite@8.1.4(@types/node@20.14.11)(esbuild@0.28.1)(jiti@2.4.2))':
+  '@vitejs/plugin-react@6.0.5(vite@8.1.4(@types/node@20.14.11)(esbuild@0.28.1)(jiti@2.4.2))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
       vite: 8.1.4(@types/node@20.14.11)(esbuild@0.28.1)(jiti@2.4.2)
@@ -13059,7 +12998,7 @@ snapshots:
       vite: 8.1.4(@types/node@20.14.11)(esbuild@0.28.1)(jiti@2.4.2)
       vitefu: 1.1.3(vite@8.1.4(@types/node@20.14.11)(esbuild@0.28.1)(jiti@2.4.2))
 
-  '@vitejs/plugin-rsc@0.5.27(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@20.14.11)(esbuild@0.28.1)(jiti@2.4.2))':
+  '@vitejs/plugin-rsc@0.5.32(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@20.14.11)(esbuild@0.28.1)(jiti@2.4.2))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
       es-module-lexer: 2.3.1
@@ -13067,7 +13006,7 @@ snapshots:
       magic-string: 0.30.21
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
-      srvx: 0.11.22
+      srvx: 0.12.5
       strip-literal: 3.1.0
       turbo-stream: 3.2.0
       vite: 8.1.4(@types/node@20.14.11)(esbuild@0.28.1)(jiti@2.4.2)
@@ -14249,8 +14188,6 @@ snapshots:
   dequal@2.0.3: {}
 
   detect-indent@6.1.0: {}
-
-  detect-libc@2.0.4: {}
 
   detect-libc@2.1.2: {}
 
@@ -16540,9 +16477,9 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  isomorphic-ws@4.0.1(ws@8.5.0):
+  isomorphic-ws@4.0.1(ws@8.21.0):
     dependencies:
-      ws: 8.5.0
+      ws: 8.21.0
 
   istanbul-lib-coverage@3.2.0: {}
 
@@ -17399,7 +17336,7 @@ snapshots:
       whatwg-encoding: 2.0.0
       whatwg-mimetype: 3.0.0
       whatwg-url: 11.0.0
-      ws: 8.16.0
+      ws: 8.21.0
       xml-name-validator: 4.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -17581,7 +17518,7 @@ snapshots:
 
   lightningcss@1.32.0:
     dependencies:
-      detect-libc: 2.0.4
+      detect-libc: 2.1.2
     optionalDependencies:
       lightningcss-android-arm64: 1.32.0
       lightningcss-darwin-arm64: 1.32.0
@@ -19540,6 +19477,8 @@ snapshots:
 
   srvx@0.11.22: {}
 
+  srvx@0.12.5: {}
+
   stable-hash@0.0.5: {}
 
   stack-utils@2.0.5:
@@ -20789,13 +20728,9 @@ snapshots:
 
   ws@7.5.7: {}
 
-  ws@8.16.0: {}
-
   ws@8.18.0: {}
 
   ws@8.21.0: {}
-
-  ws@8.5.0: {}
 
   xml-name-validator@4.0.0: {}
 
