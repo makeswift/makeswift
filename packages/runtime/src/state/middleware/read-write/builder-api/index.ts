@@ -11,12 +11,12 @@ import { HostActionTypes } from '../../../host-api'
 
 import { type State, type Dispatch } from '../../../read-write-state'
 import { initializeBuilderConnection } from './initialize-connection'
-import { BuilderMountChangeActionBuffer } from './builder-mount-change-action-buffer'
+import { MountChangeActionBuffer } from './mount-change-action-buffer'
 
 export function builderAPIMiddleware(
   builderProxy: BuilderAPIProxy,
 ): Middleware<Dispatch, State, Dispatch> {
-  const mountChangeBuffer = new BuilderMountChangeActionBuffer(builderProxy)
+  const mountChangeBuffer = new MountChangeActionBuffer(action => builderProxy.execute(action))
 
   return actionMiddleware(({ dispatch }) => next => {
     if (typeof window === 'undefined') return (action: Action) => next(action)

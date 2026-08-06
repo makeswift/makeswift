@@ -1,6 +1,5 @@
 import { BuilderActionTypes } from '../../../builder-api/action-types'
 import type { MountComponentAction, UnmountComponentAction } from '../../../builder-api/actions'
-import type { BuilderAPIProxy } from '../../../builder-api/proxy'
 
 type MountChangeAction = UnmountComponentAction | MountComponentAction
 
@@ -20,13 +19,11 @@ type MountChangeAction = UnmountComponentAction | MountComponentAction
  * Note that it is safe to remove these actions pairs as these actions do not communicate
  * the location of a component's mount but simply whether it is currently mounted.
  */
-export class BuilderMountChangeActionBuffer {
-  private readonly builderProxy: BuilderAPIProxy
+export class MountChangeActionBuffer {
   private scheduledActions: MountChangeAction[]
   private flushScheduled: boolean
 
-  constructor(builderProxy: BuilderAPIProxy) {
-    this.builderProxy = builderProxy
+  constructor(private readonly execute: (action: MountChangeAction) => void) {
     this.scheduledActions = []
     this.flushScheduled = false
   }
@@ -48,7 +45,7 @@ export class BuilderMountChangeActionBuffer {
       this.scheduledActions = []
 
       const coalescedBatch = coalesceMountChangeActions(batch)
-      coalescedBatch.forEach(action => this.builderProxy.execute(action))
+      coalescedBatch.forEach(action => this.execute(action))
     })
   }
 }
@@ -62,9 +59,6 @@ function key(a: { payload: { documentKey: string; elementKey: string } }) {
 }
 
 /**
- * Coalesces a batch of MountChangeActions into an array of either 0 or 1 MountChangeActions corresponding
- * to the net result of the batch.
- *
  * Removes pairs of MOUNT_COMPONENT and UNMOUNT_COMPONENT actions, if there are actions leftover it returns a single
  * action corresponding to the leftover type.
  */
