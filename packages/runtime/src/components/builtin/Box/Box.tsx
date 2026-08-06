@@ -22,7 +22,7 @@ import {
   type BoxModelHandle,
 } from '../../../state/modules/read-write/box-models'
 import BackgroundsContainer from '../../shared/BackgroundsContainer'
-import { useResponsiveStyle } from '../../utils/responsive-style'
+import { useResponsiveStyle, useResponsiveWidth } from '../../utils/responsive-style'
 import { GridItem } from '../../shared/grid-item'
 import { useStyle } from '../../../runtimes/react/use-style'
 import {
@@ -30,12 +30,13 @@ import {
   type ResponsiveBackgroundsData,
   type ResponsiveGapData,
   type ResponsiveIconRadioGroupValue,
+  type ResponsiveWidthLengthData,
 } from '@makeswift/prop-controllers'
 
 type Props = {
   id?: string
   backgrounds?: ResponsiveBackgroundsData
-  width?: string
+  width?: ResponsiveWidthLengthData
   height?: ResponsiveIconRadioGroupValue<'auto' | 'stretch'>
   verticalAlign?: ResponsiveIconRadioGroupValue<
     'flex-start' | 'center' | 'flex-end' | 'space-between'
@@ -165,7 +166,7 @@ const Box = forwardRef(function Box(
       ref={boxElementCallbackRef}
       id={id}
       className={cx(
-        width,
+        useStyle(useResponsiveWidth(width, { defaultValue: { value: 100, unit: '%' } })),
         margin,
         borderRadius,
         useStyle({ display: 'flex' }),
@@ -181,7 +182,23 @@ const Box = forwardRef(function Box(
           padding,
           boxShadow,
           border,
-          useStyle({ display: 'flex', flexWrap: 'wrap', width: '100%' }),
+          useStyle(
+            useResponsiveStyle(
+              [width, children?.columns] as const,
+              ([width, grid = { spans: [[12]], count: 12 }]) => {
+                const isSingleColumn = grid.spans.every(row => row.length === 1)
+
+                return width === 'auto' && isSingleColumn
+                  ? {
+                      display: 'flex',
+                      flexDirection: 'column',
+                      flexWrap: 'nowrap',
+                      width: '100%',
+                    }
+                  : { display: 'flex', flexDirection: 'row', flexWrap: 'wrap', width: '100%' }
+              },
+            ),
+          ),
           useStyle(
             useResponsiveStyle([verticalAlign], ([alignContent = 'flex-start']) => ({
               alignContent,

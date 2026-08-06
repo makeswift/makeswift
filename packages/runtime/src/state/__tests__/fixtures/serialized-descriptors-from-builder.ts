@@ -892,7 +892,7 @@ export const getMockedSerializedDescriptorsFromBuilder: (
       type: 'ResponsiveLength',
       options: {
         label: 'Height',
-        options: [{ icon: 'Px16', label: 'Pixels', value: 'px' }],
+        options: [{ label: 'px', value: 'px' }],
         defaultValue: { unit: 'px', value: 1 },
       },
       version: 1,

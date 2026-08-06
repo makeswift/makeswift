@@ -27,7 +27,7 @@ export function registerComponent(runtime: ReactRuntimeCore) {
         file: Image(),
         altText: TextInput({ label: 'Alt text' }),
         link: Link({ label: 'On click' }),
-        width: Width(),
+        width: Width({ defaultValue: 'auto' }),
         margin: Margin({ format: Margin.Format.ClassName }),
         padding: Padding({ format: Padding.Format.ClassName }),
         border: Border({ format: Border.Format.ClassName }),

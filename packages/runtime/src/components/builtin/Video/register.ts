@@ -17,6 +17,7 @@ export function registerComponent(runtime: ReactRuntimeCore) {
         width: Width({
           format: Width.Format.ClassName,
           defaultValue: { value: 560, unit: 'px' },
+          minWidth: 300,
         }),
         margin: Margin({ format: Margin.Format.ClassName }),
         borderRadius: BorderRadius({ format: BorderRadius.Format.ClassName }),
