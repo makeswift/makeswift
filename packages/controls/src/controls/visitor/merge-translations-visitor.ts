@@ -8,6 +8,7 @@ import { CheckboxDefinition } from '../checkbox'
 import { CodeDefinition } from '../code'
 import { ColorDefinition } from '../color'
 import { ComboboxDefinition } from '../combobox'
+import { DateDefinition } from '../date'
 import { ControlDefinition } from '../definition'
 import { FontDefinition } from '../font'
 import { unstable_GalleryDefinition } from '../gallery'
@@ -76,6 +77,14 @@ abstract class MergeTranslationsVisitor extends ControlDefinitionVisitor<Data> {
   visitCombobox(
     _def: ComboboxDefinition,
     data: DataType<ComboboxDefinition> | undefined,
+    translatedData: Data,
+  ): Data {
+    return this.noOpMerge(data, translatedData)
+  }
+
+  visitDate(
+    _def: DateDefinition,
+    data: DataType<DateDefinition> | undefined,
     translatedData: Data,
   ): Data {
     return this.noOpMerge(data, translatedData)

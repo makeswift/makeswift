@@ -2,6 +2,7 @@ import { CheckboxDefinition } from '../checkbox'
 import { CodeDefinition } from '../code'
 import { ColorDefinition } from '../color'
 import { ComboboxDefinition } from '../combobox'
+import { DateDefinition } from '../date'
 import { ControlDefinition } from '../definition'
 import { FontDefinition } from '../font'
 import { unstable_GalleryDefinition } from '../gallery'
@@ -29,6 +30,7 @@ abstract class ControlDefinitionVisitor<R> {
   abstract visitCheckbox(def: CheckboxDefinition, ...args: unknown[]): R
   abstract visitColor(def: ColorDefinition, ...args: unknown[]): R
   abstract visitCombobox(def: ComboboxDefinition, ...args: unknown[]): R
+  abstract visitDate(def: DateDefinition, ...args: unknown[]): R
   abstract visitFont(def: FontDefinition, ...args: unknown[]): R
   abstract visitGallery(def: unstable_GalleryDefinition, ...args: unknown[]): R
 

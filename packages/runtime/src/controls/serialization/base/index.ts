@@ -12,6 +12,7 @@ import {
   CodeDefinition,
   ColorDefinition,
   ComboboxDefinition,
+  DateDefinition,
   FontDefinition,
   unstable_GalleryDefinition,
   GroupDefinition,
@@ -69,6 +70,7 @@ export function deserializeUnifiedControlDef(record: DeserializedRecord): Contro
     [CodeDefinition.type]: CodeDefinition.deserialize,
     [ColorDefinition.type]: ColorDefinition.deserialize,
     [ComboboxDefinition.type]: ComboboxDefinition.deserialize,
+    [DateDefinition.type]: DateDefinition.deserialize,
     [FontDefinition.type]: FontDefinition.deserialize,
     [unstable_GalleryDefinition.type]: unstable_GalleryDefinition.deserialize,
     [GroupDefinition.type]: record =>

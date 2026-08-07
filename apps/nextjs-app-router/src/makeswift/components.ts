@@ -1,4 +1,5 @@
 import '@/components/code-demo/code-demo.makeswift'
+import '@/components/date-demo/date-demo.makeswift'
 import '@/components/font-control-demo/font-control-demo.makeswift'
 import '@/components/gallery-demo/gallery-demo.makeswift'
 import '@/components/group-demo/group-demo.makeswift'
