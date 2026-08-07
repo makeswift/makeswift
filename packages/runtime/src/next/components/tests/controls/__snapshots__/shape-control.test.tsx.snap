@@ -30,6 +30,7 @@ exports[`Page Shape (heterogenous properties): snapshot 1`] = `
           "id": "[file-test-id]",
           "value": {
             "__typename": "File",
+            "altText": null,
             "dimensions": {
               "height": 100,
               "width": 100,
