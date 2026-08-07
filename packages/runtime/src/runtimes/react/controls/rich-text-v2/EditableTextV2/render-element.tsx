@@ -1,16 +1,14 @@
 import { RenderElementProps } from 'slate-react'
 
-import { RichTextV2Definition } from '../../../../../controls/rich-text-v2'
 import { RichTextV2Plugin } from '../../../../../controls/rich-text-v2/plugin'
 
 import { ControlValue } from '../../control'
 
 type RichTextV2ElementProps = RenderElementProps & {
-  definition: RichTextV2Definition
   plugins: RichTextV2Plugin[]
 }
 
-export function RichTextV2Element({ definition, plugins, ...props }: RichTextV2ElementProps) {
+export function RichTextV2Element({ plugins, ...props }: RichTextV2ElementProps) {
   function initialRenderElement(props: RenderElementProps) {
     return props.children
   }

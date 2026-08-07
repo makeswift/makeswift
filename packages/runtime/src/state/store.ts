@@ -18,6 +18,8 @@ import * as Breakpoints from './modules/breakpoints'
 
 import { readOnlyElementTreeMiddleware } from './middleware/read-only-element-tree'
 import { makeswiftApiClientSyncMiddleware } from './middleware/makeswift-api-client-sync'
+import { actionListener } from './middleware/action-listener'
+
 import { type BreakpointWatch, breakpointWatchMixin } from './mixins/breakpoint-watch'
 
 import { flushActionBuffer } from './actions/internal/read-write-actions'
@@ -51,6 +53,7 @@ const configureStore = <Items extends readonly StoreEnhancer[] = []>({
 
     middleware: getDefaultMiddleware =>
       getDefaultMiddleware(middlewareOptions).concat([
+        actionListener.middleware,
         readOnlyElementTreeMiddleware(),
         ...(middleware ? middleware() : []),
       ]),

@@ -1,46 +1,32 @@
-import { ReactNode, lazy } from 'react'
+'use client'
 
-import { type DataType } from '@makeswift/controls'
+import { lazy } from 'react'
+
+import { type ConfigType } from '@makeswift/controls'
+
 import {
   RichTextV2Control,
   RichTextV2Definition,
   RichTextDataV2,
 } from '../../../../controls/rich-text-v2'
+
 import { useIsReadOnly } from '../../hooks/use-is-read-only'
-
-export type RichTextV2ControlValue = ReactNode
-
-export type Descriptors = { text?: RichTextV2Definition }
 
 const EditableText = lazy(() => import('./EditableTextV2'))
 const ReadOnlyText = lazy(() => import('./ReadOnlyTextV2'))
 
-const ReadOnlyTextV1 = lazy(() => import('../rich-text/ReadOnlyText'))
-
-export function renderRichTextV2(
-  data: DataType<RichTextV2Definition> | undefined,
-  definition: RichTextV2Definition,
-  control: RichTextV2Control | null,
-): ReactNode {
-  return RichTextV2Definition.isV1Data(data) ? (
-    <ReadOnlyTextV1 text={data} />
-  ) : (
-    <RichTextV2 data={data} definition={definition} control={control} />
-  )
-}
-
-function RichTextV2({
+export function RichTextV2({
   data,
-  definition,
+  config,
   control,
 }: {
   data: RichTextDataV2 | undefined
-  definition: RichTextV2Definition
+  config: ConfigType<RichTextV2Definition>
   control: RichTextV2Control | null
 }) {
   return useIsReadOnly() ? (
-    <ReadOnlyText text={data} definition={definition} />
+    <ReadOnlyText text={data} config={config} />
   ) : (
-    <EditableText text={data} definition={definition} control={control} />
+    <EditableText text={data} config={config} control={control} />
   )
 }

@@ -1,10 +1,9 @@
 'use client'
 
 import {
-  FocusEvent,
-  KeyboardEvent,
-  MouseEvent,
-  ReactNode,
+  type FocusEvent,
+  type KeyboardEvent,
+  type MouseEvent,
   useCallback,
   useEffect,
   useMemo,
@@ -21,6 +20,8 @@ import {
   Slate,
   Editable,
 } from 'slate-react'
+
+import { type ConfigType } from '@makeswift/controls'
 
 import {
   RichTextV2Definition,
@@ -39,18 +40,14 @@ import { RichTextV2Leaf } from './render-leaf'
 import { useSyncRemoteChanges } from './useRemoteChanges'
 import { defaultValue, usePresetValue } from './usePresetValue'
 
-export type RichTextV2ControlValue = ReactNode
-
-export type Descriptors = { text?: RichTextV2Definition }
-
 type Props = {
   text?: RichTextDataV2
-  definition: RichTextV2Definition
+  config: ConfigType<RichTextV2Definition>
   control: RichTextV2Control | null
 }
 
-export function EditableTextV2({ text, definition, control }: Props) {
-  const plugins = useMemo(() => definition.config.plugins, [definition])
+export function EditableTextV2({ text, config, control }: Props) {
+  const plugins = useMemo(() => config.plugins, [config])
 
   const [editor] = useState(() =>
     plugins.reduceRight(
@@ -93,7 +90,7 @@ export function EditableTextV2({ text, definition, control }: Props) {
 
   // ------ Default value ------
 
-  const presetValue = usePresetValue(definition)
+  const presetValue = usePresetValue(config)
 
   const initialValue = useMemo(
     () => (text && RichText.dataToNodes(text)) ?? presetValue,
@@ -118,16 +115,16 @@ export function EditableTextV2({ text, definition, control }: Props) {
 
   const renderElement = useCallback(
     (props: RenderElementProps) => {
-      return <RichTextV2Element {...props} definition={definition} plugins={plugins} />
+      return <RichTextV2Element {...props} plugins={plugins} />
     },
-    [plugins, definition],
+    [plugins],
   )
 
   const renderLeaf = useCallback(
     (props: RenderLeafProps) => {
-      return <RichTextV2Leaf {...props} definition={definition} plugins={plugins} />
+      return <RichTextV2Leaf {...props} plugins={plugins} />
     },
-    [plugins, definition],
+    [plugins],
   )
 
   // ------ Event handlers ------

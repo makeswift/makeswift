@@ -51,6 +51,9 @@ storybook-static
 # Turbo
 .turbo
 
+# Cloudflare CLI
+.wrangler
+
 # TypeScript
 *.tsbuildinfo
 
