@@ -8,9 +8,16 @@ import NextDocument, {
   Main,
   NextScript,
 } from 'next/document'
-import { createMakeswiftStylesRegistry, RootStyleRegistry } from '../unstable-framework-support'
+import {
+  createMakeswiftStylesRegistry,
+  RootStyleProps,
+  RootStyleRegistry,
+  StylesRegistry,
+} from '../unstable-framework-support'
+import { PropsWithChildren, useContext } from 'react'
+import { StylesContext } from '../runtimes/react/css-runtime/components/styles-context-provider'
 
-class PagesRouterDocument extends NextDocument {
+export class Document extends NextDocument {
   static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
     const originalRenderPage = ctx.renderPage
     const stylesRegistry = createMakeswiftStylesRegistry()
@@ -21,13 +28,17 @@ class PagesRouterDocument extends NextDocument {
       pull them from the styles registry and place them in the `<head>` manually.
       This is a special case for pages router, where React hoisting will not work during
       SSR.
+
+      `InnerRootStyleRegistry` is a wrapper component that pulls in user configuration
+      from the outer (userland) `RootStyleRegistry`. This would matter, for example, if
+      the `RootStyleRegistry` in userland was configured with a custom class name prefix.
     */
     ctx.renderPage = () => {
       return originalRenderPage({
         enhanceComponent: Component => props => (
-          <RootStyleRegistry stylesRegistry={stylesRegistry} shouldRenderStyleElements={false}>
+          <InnerRootStyleRegistry stylesRegistry={stylesRegistry}>
             <Component {...props}></Component>
-          </RootStyleRegistry>
+          </InnerRootStyleRegistry>
         ),
       })
     }
@@ -68,4 +79,26 @@ class PagesRouterDocument extends NextDocument {
   }
 }
 
-export const Document = PagesRouterDocument
+function InnerRootStyleRegistry({
+  children,
+  stylesRegistry,
+}: PropsWithChildren<{
+  stylesRegistry: StylesRegistry
+}>) {
+  const outerStylesContext = useContext(StylesContext)
+
+  const outerStylesProps: RootStyleProps = {
+    classNamePrefix: outerStylesContext?.classNamePrefix,
+    enableCssReset: outerStylesContext?.enableCssReset,
+  }
+
+  return (
+    <RootStyleRegistry
+      {...outerStylesProps}
+      stylesRegistry={stylesRegistry}
+      shouldRenderStyleElements={false}
+    >
+      {children}
+    </RootStyleRegistry>
+  )
+}
