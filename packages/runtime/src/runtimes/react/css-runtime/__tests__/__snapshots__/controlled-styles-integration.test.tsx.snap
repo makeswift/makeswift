@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Controlled styles integration: StyleV1Control.All (with no resources): css 1`] = `
+"
+
+Style element content:
+	.ms-p89wwr {max-width: 100%;}
+	@media only screen {.ms-p89wwr {width: 100%; margin-top: 0px; margin-right: auto; margin-bottom: 20px; margin-left: auto; padding-top: 0px; padding-right: 0px; padding-bottom: 20px; padding-left: 20px; border-top: 0 solid black; border-right: 0 solid black; border-bottom: 0 solid black; border-left: 0 solid black; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; font-family: "Dancing Script"; letter-spacing: 1px; font-size: 25px; font-weight: 400;}}
+
+"
+`;
+
+exports[`Controlled styles integration: StyleV1Control.Border (with resources): css 1`] = `
+"
+
+Style element content:
+	@media only screen {.ms-p89wwr {border-top: 10px dashed black; border-right: 5px dashed black; border-bottom: 10px dashed black; border-left: 5px dashed black;}}
+
+Adopted stylesheet content:
+	@media only screen {.ms-p89wwr {border-top: revert; border-right: revert; border-bottom: revert; border-left: revert;}}
+	@media only screen {.ms-p89wwr {border-top: 10px dashed hsla(360,100%,50%,1); border-right: 5px dashed hsla(360,100%,50%,1); border-bottom: 10px dashed hsla(360,100%,50%,1); border-left: 5px dashed hsla(360,100%,50%,1);}}
+
+"
+`;

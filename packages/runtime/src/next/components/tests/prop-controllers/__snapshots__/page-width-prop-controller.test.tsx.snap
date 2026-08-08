@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Page can render WidthPropController v0 data: rendered 1`] = `
+.ms-404r2d {
+  max-width: 100%;
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-404r2d {
+    width: 17px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-404r2d {
+    width: 17px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-404r2d {
+    width: 17px;
+  }
+}
+
+
+<div
+  class="ms-404r2d"
+  data-testid="test-id"
+/>
+`;
+
+exports[`Page can render WidthPropController v1 data: rendered 1`] = `
+.ms-404r2d {
+  max-width: 100%;
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-404r2d {
+    width: 17px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-404r2d {
+    width: 17px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-404r2d {
+    width: 17px;
+  }
+}
+
+
+<div
+  class="ms-404r2d"
+  data-testid="test-id"
+/>
+`;

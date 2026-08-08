@@ -179,7 +179,34 @@ exports[`correctly renders button component with SEND_EMAIL link 1`] = `
 `;
 
 exports[`correctly renders button component with link 1`] = `
-.emotion-0 {
+@media only screen and (min-width: 769px) {
+  .ms-aoseng {
+    margin-top: 60px;
+    margin-right: auto;
+    margin-bottom: 80px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-aoseng {
+    margin-top: 60px;
+    margin-right: auto;
+    margin-bottom: 80px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-aoseng {
+    margin-top: 60px;
+    margin-right: auto;
+    margin-bottom: 80px;
+    margin-left: auto;
+  }
+}
+
+.ms-sybvne {
   display: table;
   border: 0;
   outline: 0;
@@ -194,120 +221,112 @@ exports[`correctly renders button component with link 1`] = `
   text-align: center;
 }
 
-.emotion-1 {
+.ms-1xdgjyv {
   max-width: 100%;
 }
 
 @media only screen and (min-width: 769px) {
-  .emotion-1 {
+  .ms-1xdgjyv {
     width: auto;
   }
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-1 {
+  .ms-1xdgjyv {
     width: auto;
   }
 }
 
 @media only screen and (max-width: 575px) {
-  .emotion-1 {
+  .ms-1xdgjyv {
     width: auto;
   }
 }
 
 @media only screen and (min-width: 769px) {
-  .emotion-2 {
-    margin-top: 60px;
-    margin-right: auto;
-    margin-bottom: 80px;
-    margin-left: auto;
-  }
-}
-
-@media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-2 {
-    margin-top: 60px;
-    margin-right: auto;
-    margin-bottom: 80px;
-    margin-left: auto;
-  }
-}
-
-@media only screen and (max-width: 575px) {
-  .emotion-2 {
-    margin-top: 60px;
-    margin-right: auto;
-    margin-bottom: 80px;
-    margin-left: auto;
-  }
-}
-
-@media only screen and (min-width: 769px) {
-  .emotion-3 {
-    color: hsla(0,0%,100%,1);
+  .ms-wg7e91 {
+    color: hsla(0, 0%, 100%, 1);
     border-radius: 4px;
     padding: 12px 16px;
     font-size: 14px;
-    background: hsla(0,0%,0%,1);
+    background: hsla(0, 0%, 0%, 1);
     border: none;
-    -webkit-transition: color 0.15s ease-in-out,background 0.15s ease-in-out,border 0.15s ease-in-out,box-shadow 0.15s ease-in-out;
-    transition: color 0.15s ease-in-out,background 0.15s ease-in-out,border 0.15s ease-in-out,box-shadow 0.15s ease-in-out;
+    -webkit-transition:
+      color 0.15s ease-in-out,
+      background 0.15s ease-in-out,
+      border 0.15s ease-in-out,
+      box-shadow 0.15s ease-in-out;
+    transition:
+      color 0.15s ease-in-out,
+      background 0.15s ease-in-out,
+      border 0.15s ease-in-out,
+      box-shadow 0.15s ease-in-out;
   }
-
-  .emotion-3:hover {
+  .ms-wg7e91 :hover {
     background: #000000;
   }
-
-  .emotion-3:active {
+  .ms-wg7e91 :active {
     background: #000000;
   }
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-3 {
-    color: hsla(0,0%,100%,1);
+  .ms-wg7e91 {
+    color: hsla(0, 0%, 100%, 1);
     border-radius: 4px;
     padding: 12px 16px;
     font-size: 14px;
-    background: hsla(0,0%,0%,1);
+    background: hsla(0, 0%, 0%, 1);
     border: none;
-    -webkit-transition: color 0.15s ease-in-out,background 0.15s ease-in-out,border 0.15s ease-in-out,box-shadow 0.15s ease-in-out;
-    transition: color 0.15s ease-in-out,background 0.15s ease-in-out,border 0.15s ease-in-out,box-shadow 0.15s ease-in-out;
+    -webkit-transition:
+      color 0.15s ease-in-out,
+      background 0.15s ease-in-out,
+      border 0.15s ease-in-out,
+      box-shadow 0.15s ease-in-out;
+    transition:
+      color 0.15s ease-in-out,
+      background 0.15s ease-in-out,
+      border 0.15s ease-in-out,
+      box-shadow 0.15s ease-in-out;
   }
-
-  .emotion-3:hover {
+  .ms-wg7e91 :hover {
     background: #000000;
   }
-
-  .emotion-3:active {
+  .ms-wg7e91 :active {
     background: #000000;
   }
 }
 
 @media only screen and (max-width: 575px) {
-  .emotion-3 {
-    color: hsla(0,0%,100%,1);
+  .ms-wg7e91 {
+    color: hsla(0, 0%, 100%, 1);
     border-radius: 4px;
     padding: 12px 16px;
     font-size: 14px;
-    background: hsla(0,0%,0%,1);
+    background: hsla(0, 0%, 0%, 1);
     border: none;
-    -webkit-transition: color 0.15s ease-in-out,background 0.15s ease-in-out,border 0.15s ease-in-out,box-shadow 0.15s ease-in-out;
-    transition: color 0.15s ease-in-out,background 0.15s ease-in-out,border 0.15s ease-in-out,box-shadow 0.15s ease-in-out;
+    -webkit-transition:
+      color 0.15s ease-in-out,
+      background 0.15s ease-in-out,
+      border 0.15s ease-in-out,
+      box-shadow 0.15s ease-in-out;
+    transition:
+      color 0.15s ease-in-out,
+      background 0.15s ease-in-out,
+      border 0.15s ease-in-out,
+      box-shadow 0.15s ease-in-out;
   }
-
-  .emotion-3:hover {
+  .ms-wg7e91 :hover {
     background: #000000;
   }
-
-  .emotion-3:active {
+  .ms-wg7e91 :active {
     background: #000000;
   }
 }
+
 
 <a
-  class="emotion-0 emotion-1 emotion-2 emotion-3 emotion-4"
+  class="ms-sybvne ms-1xdgjyv ms-aoseng ms-wg7e91 ms-fxasij"
   data-next-link="true"
   data-next-link-legacy-behavior="false"
   href="https://www.makeswift.com/"

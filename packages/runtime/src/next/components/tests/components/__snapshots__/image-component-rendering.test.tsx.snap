@@ -1,161 +1,162 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`correctly renders image component 1`] = `
-.emotion-0 {
+@media only screen and (min-width: 769px) {
+  .ms-14p1a1q {
+    margin-top: 20px;
+    margin-right: auto;
+    margin-bottom: 25px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-14p1a1q {
+    margin-top: 20px;
+    margin-right: auto;
+    margin-bottom: 25px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-14p1a1q {
+    margin-top: 20px;
+    margin-right: auto;
+    margin-bottom: 25px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-izjuki {
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-izjuki {
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-izjuki {
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-bkaj2n {
+    border-top: 2px solid hsla(360, 97.873924%, 52.965%, 1);
+    border-right: 2px solid hsla(360, 97.873924%, 52.965%, 1);
+    border-bottom: 2px solid hsla(360, 97.873924%, 52.965%, 1);
+    border-left: 2px solid hsla(360, 97.873924%, 52.965%, 1);
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-bkaj2n {
+    border-top: 2px solid hsla(360, 97.873924%, 52.965%, 1);
+    border-right: 2px solid hsla(360, 97.873924%, 52.965%, 1);
+    border-bottom: 2px solid hsla(360, 97.873924%, 52.965%, 1);
+    border-left: 2px solid hsla(360, 97.873924%, 52.965%, 1);
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-bkaj2n {
+    border-top: 2px solid hsla(360, 97.873924%, 52.965%, 1);
+    border-right: 2px solid hsla(360, 97.873924%, 52.965%, 1);
+    border-bottom: 2px solid hsla(360, 97.873924%, 52.965%, 1);
+    border-left: 2px solid hsla(360, 97.873924%, 52.965%, 1);
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-12wlxpx {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-12wlxpx {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-12wlxpx {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+  }
+}
+
+.ms-cqk2i4 {
   line-height: 0;
   overflow: hidden;
 }
 
-.emotion-1 {
+.ms-1oi17rl {
   max-width: 100%;
 }
 
 @media only screen and (min-width: 769px) {
-  .emotion-1 {
+  .ms-1oi17rl {
     width: 90%;
   }
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-1 {
+  .ms-1oi17rl {
     width: 90%;
   }
 }
 
 @media only screen and (max-width: 575px) {
-  .emotion-1 {
+  .ms-1oi17rl {
     width: 90%;
   }
 }
 
 @media only screen and (min-width: 769px) {
-  .emotion-2 {
+  .ms-k7d2qc {
     opacity: 1;
   }
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-2 {
+  .ms-k7d2qc {
     opacity: 1;
   }
 }
 
 @media only screen and (max-width: 575px) {
-  .emotion-2 {
+  .ms-k7d2qc {
     opacity: 1;
   }
 }
 
-@media only screen and (min-width: 769px) {
-  .emotion-3 {
-    margin-top: 20px;
-    margin-right: auto;
-    margin-bottom: 25px;
-    margin-left: auto;
-  }
-}
-
-@media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-3 {
-    margin-top: 20px;
-    margin-right: auto;
-    margin-bottom: 25px;
-    margin-left: auto;
-  }
-}
-
-@media only screen and (max-width: 575px) {
-  .emotion-3 {
-    margin-top: 20px;
-    margin-right: auto;
-    margin-bottom: 25px;
-    margin-left: auto;
-  }
-}
-
-@media only screen and (min-width: 769px) {
-  .emotion-4 {
-    padding-top: 5px;
-    padding-right: 5px;
-    padding-bottom: 5px;
-    padding-left: 5px;
-  }
-}
-
-@media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-4 {
-    padding-top: 5px;
-    padding-right: 5px;
-    padding-bottom: 5px;
-    padding-left: 5px;
-  }
-}
-
-@media only screen and (max-width: 575px) {
-  .emotion-4 {
-    padding-top: 5px;
-    padding-right: 5px;
-    padding-bottom: 5px;
-    padding-left: 5px;
-  }
-}
-
-@media only screen and (min-width: 769px) {
-  .emotion-5 {
-    border-top: 2px solid hsla(360,97.873924%,52.965%,1);
-    border-right: 2px solid hsla(360,97.873924%,52.965%,1);
-    border-bottom: 2px solid hsla(360,97.873924%,52.965%,1);
-    border-left: 2px solid hsla(360,97.873924%,52.965%,1);
-  }
-}
-
-@media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-5 {
-    border-top: 2px solid hsla(360,97.873924%,52.965%,1);
-    border-right: 2px solid hsla(360,97.873924%,52.965%,1);
-    border-bottom: 2px solid hsla(360,97.873924%,52.965%,1);
-    border-left: 2px solid hsla(360,97.873924%,52.965%,1);
-  }
-}
-
-@media only screen and (max-width: 575px) {
-  .emotion-5 {
-    border-top: 2px solid hsla(360,97.873924%,52.965%,1);
-    border-right: 2px solid hsla(360,97.873924%,52.965%,1);
-    border-bottom: 2px solid hsla(360,97.873924%,52.965%,1);
-    border-left: 2px solid hsla(360,97.873924%,52.965%,1);
-  }
-}
-
-@media only screen and (min-width: 769px) {
-  .emotion-6 {
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
-    border-bottom-left-radius: 6px;
-  }
-}
-
-@media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-6 {
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
-    border-bottom-left-radius: 6px;
-  }
-}
-
-@media only screen and (max-width: 575px) {
-  .emotion-6 {
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
-    border-bottom-left-radius: 6px;
-  }
-}
 
 <a
-  class="emotion-0 emotion-1 emotion-2 emotion-3 emotion-4 emotion-5 emotion-6 emotion-7"
+  class="ms-cqk2i4 ms-1oi17rl ms-k7d2qc ms-14p1a1q ms-izjuki ms-bkaj2n ms-12wlxpx ms-jhnmof"
   href="https://www.makeswift.com/"
   id="test-image"
   target="_self"
