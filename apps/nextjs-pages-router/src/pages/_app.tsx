@@ -1,5 +1,8 @@
 import { runtime } from '@/makeswift/runtime'
-import { ReactRuntimeProvider } from '@makeswift/runtime/next'
+import {
+  ReactRuntimeProvider,
+  RootStyleRegistry,
+} from '@makeswift/runtime/next'
 import type { AppProps } from 'next/app'
 import { Grenze_Gotisch, Grenze } from 'next/font/google'
 import { type PageProps } from './[[...path]]'
@@ -30,7 +33,9 @@ export default function App({
         siteVersion={siteVersion}
         locale={locale}
       >
-        <Component {...pageProps} />
+        <RootStyleRegistry>
+          <Component {...pageProps} />
+        </RootStyleRegistry>
       </ReactRuntimeProvider>
     </main>
   )
