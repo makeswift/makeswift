@@ -8,6 +8,7 @@ import { render, screen } from '@testing-library/react'
 import {
   ControlDefinition,
   ControlInstance,
+  Stylesheet,
   type ControlInstanceKey,
   type Data,
 } from '@makeswift/controls'
@@ -25,6 +26,13 @@ import { createRootComponent, createMakeswiftPageSnapshot } from '../../../../te
 import { TestWorkingSiteVersion } from '../../../../testing/fixtures/site-version'
 
 const TEST_ID = 'test-id'
+
+const noOpStylesheet: Stylesheet = {
+  breakpoints: () => [],
+  defineStyle: () => '',
+  child: () => noOpStylesheet,
+  key: () => '',
+}
 
 jest.mock('../../../../state/builder-api/proxy', () => ({
   BuilderAPIProxy: jest.fn(() => ({
@@ -73,6 +81,7 @@ jest.mock('../rich-text-v2/render-rich-text-v2', () => ({
           config={{
             defaultValue: 'One fish, two fish',
           }}
+          parentStylesheet={noOpStylesheet}
         />
       </NodeValueWrapper>
     )
