@@ -4,7 +4,6 @@ import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
 import { ElementData } from '../../../../state/read-only-state'
-import { randomUUID } from 'crypto'
 import {
   Border,
   BorderDescriptor,
@@ -42,7 +41,7 @@ describe('Page', () => {
     const testId = 'test-id'
     const elementData: ElementData = Testing.createRootComponent([
       {
-        key: randomUUID(),
+        key: '00000000-0000-0000-0000-000000000000',
         type: TestComponentType,
         props: {
           border: createBorderPropControllerDataFromResponsiveBorderData(
@@ -76,9 +75,8 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveStyleRule('border-top', '1px solid black', {
-      media: Testing.DESKTOP_MEDIA_QUERY,
-    })
+    const testElement = screen.getByTestId(testId)
+    expect(testElement).toMatchSnapshot('rendered')
   })
 
   test('can render BorderPropController v1 data', async () => {
@@ -106,7 +104,7 @@ describe('Page', () => {
     const testId = 'test-id'
     const elementData: ElementData = Testing.createRootComponent([
       {
-        key: randomUUID(),
+        key: '00000000-0000-0000-0000-000000000000',
         type: TestComponentType,
         props: {
           border: createBorderPropControllerDataFromResponsiveBorderData(
@@ -140,8 +138,7 @@ describe('Page', () => {
       ),
     )
 
-    expect(screen.getByTestId(testId)).toHaveStyleRule('border-top', '1px solid black', {
-      media: Testing.DESKTOP_MEDIA_QUERY,
-    })
+    const testElement = screen.getByTestId(testId)
+    expect(testElement).toMatchSnapshot('rendered')
   })
 })
