@@ -34,7 +34,7 @@ const config: Config = {
     {
       ...baseConfig,
       displayName: 'react-latest',
-      testPathIgnorePatterns: ['\\.react18\\.test\\.'],
+      testPathIgnorePatterns: ['\\.react18\\.test\\.', '/css-runtime/'],
       moduleNameMapper: {
         // Jest/JSDOM resolves react-dom/server to server.browser.js via the "browser"
         // export condition, but it uses MessageChannel which isn't available in Node.js.

@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`styles registry serialization to: props ordered by precedence 1`] = `
+[
+  {
+    "css": "b",
+    "href": "makeswift-css-reset-b",
+    "precedence": "reset",
+  },
+  {
+    "css": "c",
+    "href": "c",
+    "precedence": "medium",
+  },
+  {
+    "css": "a",
+    "href": "makeswift-base-styles-a",
+    "precedence": "high",
+  },
+]
+`;
+
+exports[`styles registry serialization to: stringified HTML style elements ordered by precedence 1`] = `"<style data-href="makeswift-css-reset-b" data-precedence="reset">b</style><style data-href="c" data-precedence="medium">c</style><style data-href="makeswift-base-styles-a" data-precedence="high">a</style>"`;

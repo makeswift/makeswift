@@ -579,6 +579,9 @@ importers:
       '@use-gesture/react':
         specifier: ^10.2.24
         version: 10.2.24(react@19.2.3)
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       color:
         specifier: ^3.1.3
         version: 3.2.1
@@ -627,6 +630,9 @@ importers:
       ky:
         specifier: ^1.14.3
         version: 1.14.3
+      murmurhash-js:
+        specifier: ^1.0.0
+        version: 1.0.0
       ot-json0:
         specifier: ^1.1.0
         version: 1.1.0
@@ -660,6 +666,9 @@ importers:
       slate-react:
         specifier: ^0.91.7
         version: 0.91.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(slate@0.91.4)
+      stylis:
+        specifier: ^4.4.0
+        version: 4.4.0
       ts-pattern:
         specifier: ^5.0.5
         version: 5.0.5
@@ -718,6 +727,9 @@ importers:
       '@types/jsdom':
         specifier: ^21.1.7
         version: 21.1.7
+      '@types/murmurhash-js':
+        specifier: ^1.0.7
+        version: 1.0.7
       '@types/node':
         specifier: ^20.14.8
         version: 20.14.11
@@ -730,6 +742,9 @@ importers:
       '@types/set-cookie-parser':
         specifier: ^2.4.10
         version: 2.4.10
+      '@types/stylis':
+        specifier: ^4.2.7
+        version: 4.2.7
       '@types/use-sync-external-store':
         specifier: ^1.5.0
         version: 1.5.0
@@ -3416,6 +3431,9 @@ packages:
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
 
+  '@types/murmurhash-js@1.0.7':
+    resolution: {integrity: sha512-XM6078Du3jaEJVwpxmPZsJQDMzWabjY4ILQQvW4VPBzTULd+Fjs2Z54s+OrLzDRxgs6J09YyDISnZDlltYAchw==}
+
   '@types/mute-stream@0.0.4':
     resolution: {integrity: sha512-CPM9nzrCPPJHQNA9keH9CVkVI+WR5kMa+7XEs5jcGQ0VoAGnLv242w8lIVgwAEfmE4oufJRaTc9PNLQl0ioAow==}
 
@@ -3473,6 +3491,9 @@ packages:
 
   '@types/statuses@2.0.5':
     resolution: {integrity: sha512-jmIUGWrAiwu3dZpxntxieC+1n/5c3mjrImkmOSQ2NC5uP6cYO4aAZDdSmRcI5C1oiTmqlZGHC+/NmJrKogbP5A==}
+
+  '@types/stylis@4.2.7':
+    resolution: {integrity: sha512-VgDNokpBoKF+wrdvhAAfS55OMQpL6QRglwTwNC3kIgBrzZxA4WsFj+2eLfEA/uMUDzBcEhYmjSbwQakn/i3ajA==}
 
   '@types/through@0.0.30':
     resolution: {integrity: sha512-FvnCJljyxhPM3gkRgWmxmDZyAQSiBQQWLI0A0VFL0K7W1oRUrPJSqNO0NvTnLkBcotdlp3lKvaT0JrnyRDkzOg==}
@@ -4426,6 +4447,10 @@ packages:
   clone@1.0.4:
     resolution: {integrity: sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==}
     engines: {node: '>=0.8'}
+
+  clsx@2.1.1:
+    resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
+    engines: {node: '>=6'}
 
   co@4.6.0:
     resolution: {integrity: sha512-QVb0dM5HvG+uaxitm8wONl7jltx8dqhfU33DcqtOZcLSVIKSDDLDi7+0LbAKiyI8hD9u42m2YxXSkMGWThaecQ==}
@@ -7440,6 +7465,9 @@ packages:
   multipipe@1.0.2:
     resolution: {integrity: sha512-6uiC9OvY71vzSGX8lZvSqscE7ft9nPupJ8fMjrCNRAUy2LREUW42UL+V/NTrogr6rFgRydUrCX4ZitfpSNkSCQ==}
 
+  murmurhash-js@1.0.0:
+    resolution: {integrity: sha512-TvmkNhkv8yct0SVBSy+o8wYzXjE4Zz3PCesbfs8HiCXXdcTuocApFv11UWlNFWKYsP2okqrhb7JNlSm9InBhIw==}
+
   mute-stream@0.0.8:
     resolution: {integrity: sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==}
 
@@ -8777,6 +8805,9 @@ packages:
 
   stylis@4.2.0:
     resolution: {integrity: sha512-Orov6g6BB1sDfYgzWfTHDOxamtX1bE/zo104Dh9e6fqJ3PooipYyfJ0pUmrZO2wAvO8YbEyeFrkV91XTsGMSrw==}
+
+  stylis@4.4.0:
+    resolution: {integrity: sha512-5Z9ZpRzfuH6l/UAvCPAPUo3665Nk2wLaZU3x+TLHKVzIz33+sbJqbtrYoC3KD4/uVOr2Zp+L0LySezP9OHV9yA==}
 
   stylus-lookup@3.0.2:
     resolution: {integrity: sha512-oEQGHSjg/AMaWlKe7gqsnYzan8DLcGIHe0dUaFkucZZ14z4zjENRlQMCHT4FNsiWnJf17YN9OvrCfCoi7VvOyg==}
@@ -12755,6 +12786,8 @@ snapshots:
 
   '@types/ms@2.1.0': {}
 
+  '@types/murmurhash-js@1.0.7': {}
+
   '@types/mute-stream@0.0.4':
     dependencies:
       '@types/node': 20.14.11
@@ -12813,6 +12846,8 @@ snapshots:
   '@types/stack-utils@2.0.1': {}
 
   '@types/statuses@2.0.5': {}
+
+  '@types/stylis@4.2.7': {}
 
   '@types/through@0.0.30':
     dependencies:
@@ -13987,6 +14022,8 @@ snapshots:
       mimic-response: 1.0.1
 
   clone@1.0.4: {}
+
+  clsx@2.1.1: {}
 
   co@4.6.0: {}
 
@@ -18306,6 +18343,8 @@ snapshots:
       duplexer2: 0.1.4
       object-assign: 4.1.1
 
+  murmurhash-js@1.0.0: {}
+
   mute-stream@0.0.8: {}
 
   mute-stream@1.0.0: {}
@@ -19953,6 +19992,8 @@ snapshots:
       react: 19.2.8
 
   stylis@4.2.0: {}
+
+  stylis@4.4.0: {}
 
   stylus-lookup@3.0.2:
     dependencies:
