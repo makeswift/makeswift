@@ -1,4 +1,4 @@
-import { type ReactNode, type Ref, forwardRef, memo } from 'react'
+import { type ReactNode, type Ref, forwardRef, memo, useCallback } from 'react'
 
 import { type ElementData as MakeswiftElementData } from '../../../state/read-only-state'
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'
@@ -75,24 +75,31 @@ const ElementDataClient = forwardRef(function ElementDataClient(
   const Component = useComponent(elementData.type)
   const builtinSuspense = useBuiltinSuspense(elementData.type)
 
+  const forwardRef = Component != null ? canAcceptRef(Component) : undefined
+
+  const renderChildren = useCallback(
+    (props: Record<string, unknown>) => {
+      if (Component == null) {
+        return null
+      }
+      return forwardRef ? (
+        <Component {...props} key={elementData.key} ref={ref} />
+      ) : (
+        <Component {...props} key={elementData.key} />
+      )
+    },
+    [forwardRef, elementData.key, ref, Component],
+  )
+
   if (Component == null) {
     console.warn(`Unknown component '${elementData.type}'`, { elementData })
     return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Component not found" />
   }
 
-  const forwardRef = canAcceptRef(Component)
 
   return (
     <ActivityOrFallback suspenseFallback={builtinSuspense}>
-      <ResolveProps element={elementData}>
-        {props =>
-          forwardRef ? (
-            <Component {...props} key={elementData.key} ref={ref} />
-          ) : (
-            <Component {...props} key={elementData.key} />
-          )
-        }
-      </ResolveProps>
+      <ResolveProps element={elementData}>{renderChildren}</ResolveProps>
     </ActivityOrFallback>
   )
 })

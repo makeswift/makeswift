@@ -1,4 +1,6 @@
-import { type ReactNode } from 'react'
+'use client'
+
+import { type ReactNode, memo } from 'react'
 
 import { type ElementData } from '../../../state/read-only-state'
 
@@ -45,8 +47,22 @@ export function ResolveProps({
 
   return (
     <>
-      {renderFn(resolvedProps)}
+      <MemoizedComponent renderFn={renderFn} resolvedProps={resolvedProps} />
       {styleElements}
     </>
   )
 }
+
+/**
+ * This level of memoization exists so that changes to element data do not lead to re-rendering
+ * a component unless they actually result in changes to that component's resolved prop values.
+ */
+const MemoizedComponent = memo(function MemoizedComponent({
+  renderFn,
+  resolvedProps,
+}: {
+  renderFn: (props: Record<string, unknown>) => ReactNode
+  resolvedProps: Record<string, unknown>
+}) {
+  return renderFn(resolvedProps)
+})
