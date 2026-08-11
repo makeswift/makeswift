@@ -39,4 +39,16 @@ describe('MountChangeActionBuffer', () => {
     expect(mockExecute).toHaveBeenCalledWith(mountComponent('a', '1'))
     expect(mockExecute).toHaveBeenCalledWith(mountComponent('a', '2'))
   })
+
+  it('does not execute any actions when provided a matching pair of mount/unmount', async () => {
+    const buffer = new MountChangeActionBuffer(mockExecute)
+
+    const actions = [mountComponent('a', '1'), unmountComponent('a', '1')]
+
+    actions.forEach(action => buffer.schedule(action))
+
+    await Promise.resolve()
+
+    expect(mockExecute).not.toHaveBeenCalled()
+  })
 })

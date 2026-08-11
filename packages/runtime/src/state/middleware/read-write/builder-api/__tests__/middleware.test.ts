@@ -6,7 +6,7 @@ import { createRootReducer } from '../../../../read-write-state'
 import { handleWheel, mountComponent, unmountComponent } from '../../../../builder-api/actions'
 import { type BuilderAPIProxy } from '../../../../builder-api/proxy'
 
-import { builderAPIMiddleware } from '../index'
+import { builderAPIMiddleware } from '../middleware'
 
 describe('builderAPIMiddleware', () => {
   const mockExecute = jest.fn()
