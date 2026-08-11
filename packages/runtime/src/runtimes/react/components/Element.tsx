@@ -40,22 +40,8 @@ export const Element = memo(
     { element }: Props,
     ref: Ref<ElementImperativeHandle>,
   ): ReactNode | null {
-    const useFindDomNodeRef = useRef(true)
-    const imperativeHandleRef = useRef(new ElementImperativeHandle())
-
-    const findDomNodeCallbackRef = useCallback((current: (() => Element | Text | null) | null) => {
-      if (useFindDomNodeRef.current === true) {
-        imperativeHandleRef.current.callback(() => current?.() ?? null)
-      }
-    }, [])
-
-    const elementCallbackRef = useCallback((current: unknown | null) => {
-      useFindDomNodeRef.current = false
-
-      imperativeHandleRef.current.callback(() => current)
-    }, [])
-
-    useImperativeHandle(ref, () => imperativeHandleRef.current, [])
+    const { imperativeHandleRef, findDomNodeCallbackRef, elementCallbackRef } =
+      useElementImperativeHandle(ref)
 
     const isRegisterElementDisabled = useIsRegisterElementDisabled()
     const ElementRegistration =
@@ -84,6 +70,34 @@ export const Element = memo(
     )
   }),
 )
+
+/**
+ * Creates an `ElementImperativeHandle` instance that reports the element's DOM location to
+ * the builder.
+ *
+ * Uses the element's attached ref when available; otherwise, falls back to React's
+ * `findDOMNode` to locate the rendered DOM node.
+ */
+function useElementImperativeHandle(ref: Ref<ElementImperativeHandle>) {
+  const useFindDomNodeRef = useRef(true)
+  const imperativeHandleRef = useRef(new ElementImperativeHandle())
+
+  const findDomNodeCallbackRef = useCallback((current: (() => Element | Text | null) | null) => {
+    if (useFindDomNodeRef.current === true) {
+      imperativeHandleRef.current.callback(() => current?.() ?? null)
+    }
+  }, [])
+
+  const elementCallbackRef = useCallback((current: unknown | null) => {
+    useFindDomNodeRef.current = false
+
+    imperativeHandleRef.current.callback(() => current)
+  }, [])
+
+  useImperativeHandle(ref, () => imperativeHandleRef.current, [])
+
+  return { imperativeHandleRef, findDomNodeCallbackRef, elementCallbackRef }
+}
 
 function NoOp({ children }: PropsWithChildren) {
   return children
