@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.8-canary.24
+
+### Patch Changes
+
+- d85d403: Fix builder flicker on element reparenting by batching mount change events per React commit
+
 ## 0.28.8-canary.23
 
 ### Patch Changes
