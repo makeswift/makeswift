@@ -9,6 +9,7 @@ export class HonoReactRuntime extends ReactRuntime {
     requestKey?: StoreKey
     appOrigin?: string
     apiOrigin?: string
+    apiKey?: string
     breakpoints?: Breakpoints
   }) {
     super({

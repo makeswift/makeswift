@@ -1,0 +1,43 @@
+import { type PropsWithChildren } from 'react'
+
+import { type CacheData } from '../../../../api/api-resources-client'
+import { type Document } from '../../../../state/modules/read-only-documents'
+
+import { InjectServerCSS } from '../css/server-css'
+import { ClientCSSProvider } from '../css/client-css'
+
+import { type ServerRenderContext, getStore } from '../render-context'
+import { collectServerElements } from '../collect-server-elements'
+import { updateApiResourceCache } from '../update-api-resource-cache'
+
+import { ServerElementsCache } from './server-elements-cache'
+
+export function RSCRenderer({
+  context,
+  document,
+  cacheData,
+  children,
+}: PropsWithChildren<{ context: ServerRenderContext; document: Document; cacheData: CacheData }>) {
+  const serverElements = collectServerElements(context, document, cacheData)
+
+  return (
+    <ServerElementsCache value={serverElements}>
+      <ClientCSSProvider>
+        {children}
+        {/* FIXME: render order and style prop completness are not guaranteed */}
+        <InjectServerCSS collector={context.cssCollector} />
+      </ClientCSSProvider>
+    </ServerElementsCache>
+  )
+}
+
+export function RSCElementRenderer({
+  context,
+  cacheData,
+  children,
+}: PropsWithChildren<{ context: ServerRenderContext; cacheData: CacheData }>) {
+  const store = getStore(context)
+
+  updateApiResourceCache(store, cacheData)
+  return <>{children}</>
+}
