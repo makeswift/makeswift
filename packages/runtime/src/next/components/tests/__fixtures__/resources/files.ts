@@ -7,6 +7,7 @@ export const file1: File = {
   publicUrl:
     'https://storage.googleapis.com/s.mkswft.com/RmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI=/Hill%20Chart.png',
   extension: 'png',
+  altText: null,
   dimensions: {
     width: 2700,
     height: 1119,

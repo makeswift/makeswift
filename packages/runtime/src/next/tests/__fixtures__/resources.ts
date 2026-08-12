@@ -22,6 +22,7 @@ export const file: File = {
   name: 'cat.png',
   extension: 'png',
   publicUrl: 'https://example.com/cat.png',
+  altText: null,
   dimensions: { width: 100, height: 100 },
 }
 

@@ -64,6 +64,7 @@ exports[`Page Image control data v0 with format: makeswift::controls::image::for
           "id": "image-test-id",
           "value": {
             "__typename": "File",
+            "altText": null,
             "dimensions": {
               "height": 100,
               "width": 100,
@@ -203,6 +204,7 @@ exports[`Page Image control data v0 with format: makeswift::controls::image::for
           "id": "image-test-id",
           "value": {
             "__typename": "File",
+            "altText": null,
             "dimensions": {
               "height": 100,
               "width": 100,
@@ -326,6 +328,7 @@ exports[`Page Image control data v0 with format: undefined reading file from cac
           "id": "image-test-id",
           "value": {
             "__typename": "File",
+            "altText": null,
             "dimensions": {
               "height": 100,
               "width": 100,
@@ -638,6 +641,7 @@ exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": 
           "id": "image-test-id",
           "value": {
             "__typename": "File",
+            "altText": null,
             "dimensions": {
               "height": 100,
               "width": 100,
@@ -785,6 +789,7 @@ exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": 
           "id": "image-test-id",
           "value": {
             "__typename": "File",
+            "altText": null,
             "dimensions": {
               "height": 100,
               "width": 100,
@@ -916,6 +921,7 @@ exports[`Page Image control data v1 with value: {"id": "image-test-id", "type": 
           "id": "image-test-id",
           "value": {
             "__typename": "File",
+            "altText": null,
             "dimensions": {
               "height": 100,
               "width": 100,
@@ -1047,6 +1053,7 @@ exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::control
           "id": "image-test-id",
           "value": {
             "__typename": "File",
+            "altText": null,
             "dimensions": {
               "height": 100,
               "width": 100,
@@ -1194,6 +1201,7 @@ exports[`Page ImageDefinition v1 reading v0 data with format: makeswift::control
           "id": "image-test-id",
           "value": {
             "__typename": "File",
+            "altText": null,
             "dimensions": {
               "height": 100,
               "width": 100,
@@ -1325,6 +1333,7 @@ exports[`Page ImageDefinition v1 reading v0 data with format: undefined reading 
           "id": "image-test-id",
           "value": {
             "__typename": "File",
+            "altText": null,
             "dimensions": {
               "height": 100,
               "width": 100,
