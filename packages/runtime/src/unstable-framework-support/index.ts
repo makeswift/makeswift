@@ -29,6 +29,7 @@ export { Page } from '../runtimes/react/components/page'
 export { RuntimeProvider } from '../runtimes/react/components/RuntimeProvider'
 export { Slot } from '../runtimes/react/components/Slot'
 export { RenderElementPayload } from '../runtimes/react/server/render-element-payload'
+export { ServerElementsProvider } from '../runtimes/react/server/components/server-elements-cache'
 
 export { GoogleFontLink } from '../runtimes/react/components/GoogleFontLink'
 export { MakeswiftFonts } from '../runtimes/react/components/MakeswiftFonts'

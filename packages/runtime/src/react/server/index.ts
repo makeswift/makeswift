@@ -9,3 +9,4 @@ export {
   RSCElementRenderer,
   Slot,
 } from '../../runtimes/react/server'
+export { collectServerElements } from '../../runtimes/react/server/collect-server-elements'
