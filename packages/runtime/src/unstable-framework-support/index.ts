@@ -30,6 +30,13 @@ export { RuntimeProvider } from '../runtimes/react/components/RuntimeProvider'
 export { Slot } from '../runtimes/react/components/Slot'
 export { RenderElementPayload } from '../runtimes/react/server/render-element-payload'
 
+// Lets an adapter supply the rendered `server: true` elements itself, rather than
+// going through `Slot`/`RSCRenderer`. A framework that renders its own component
+// tree on the client can then place server components inside it: the tree hydrates
+// from props as usual, and `ElementData` resolves each server element out of this
+// cache by element key.
+export { ServerElementsCache } from '../runtimes/react/server/components/server-elements-cache'
+
 export { GoogleFontLink } from '../runtimes/react/components/GoogleFontLink'
 export { MakeswiftFonts } from '../runtimes/react/components/MakeswiftFonts'
 
