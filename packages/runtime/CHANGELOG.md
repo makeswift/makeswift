@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.8-canary.25
+
+### Patch Changes
+
+- 27f0f37: Add `use client` to `framework-context`
+
 ## 0.28.8-canary.24
 
 ### Patch Changes
