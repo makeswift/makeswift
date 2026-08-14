@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.9-canary.0
+
+### Patch Changes
+
+- b63b811: Fix `ERR_REQUIRE_ESM` error when loading the runtime from a CJS host, due to `ky` being an ESM-only package. `ky` is now bundled into the CJS build, so `dist/cjs` no longer `require`s it.
+
 ## 0.28.8
 
 ### Patch Changes

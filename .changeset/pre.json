@@ -16,32 +16,6 @@
     "eslint-config": "0.0.0"
   },
   "changesets": [
-    "brave-moments-change",
-    "bumpy-months-bow",
-    "cold-knives-accept",
-    "common-sheep-walk",
-    "crisp-plums-watch",
-    "crisp-toys-pull",
-    "curly-tools-slide",
-    "deep-schools-behave",
-    "dirty-parts-ask",
-    "dull-lights-check",
-    "dull-parks-bake",
-    "empty-pans-fry",
-    "fine-books-sit",
-    "forty-books-travel",
-    "frank-apes-knock",
-    "free-camels-lead",
-    "funny-apples-clap",
-    "giant-flowers-work",
-    "giant-humans-read",
-    "great-rocks-slide",
-    "itchy-pigs-sell",
-    "old-adults-beam",
-    "puny-monkeys-talk",
-    "strong-mice-smash",
-    "sweet-vans-invent",
-    "swift-squids-wink",
-    "twenty-years-throw"
+    "olive-donkeys-shave"
   ]
 }
